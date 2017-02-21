@@ -1,0 +1,49 @@
+{
+  "name": "PlayKit.js",
+  "version": "0.0.1-alpha",
+  "main": "dist/playkit.js",
+  "scripts": {
+    "build": "webpack",
+    "dev": "webpack --progress --colors --watch",
+    "test": "mocha --compilers js:babel-core/register --colors ./test/**/*.spec.js",
+    "test:watch": "mocha --compilers js:babel-core/register --colors -w ./test/*.spec.js",
+    "test-cover": "nyc mocha --compilers js:babel-core/register ./test/**/*.spec.js",
+    "start": "node ."
+  },
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.18.2",
+    "babel-eslint": "^7.1.1",
+    "babel-loader": "^6.2.7",
+    "babel-plugin-transform-class-properties": "^6.22.0",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-preset-es2015": "^6.18.0",
+    "chai": "^3.5.0",
+    "eslint": "^3.10.0",
+    "eslint-loader": "^1.6.1",
+    "eslint-plugin-import": "^2.2.0",
+    "flow-bin": "^0.38.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0",
+    "nyc": "^10.1.2",
+    "webpack": "latest",
+    "webpack-dev-server": "latest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kaltura/playkit-js"
+  },
+  "keywords": [
+    "kaltura",
+    "player",
+    "html5 player"
+  ],
+  "license": "AGPLV3",
+  "bugs": {
+    "url": "https://github.com/kaltura/playkit-js/issues"
+  },
+  "homepage": "https://github.com/kaltura/playkit-js",
+  "dependencies": {
+    "webpack-dev-server": "2"
+  }
+}
