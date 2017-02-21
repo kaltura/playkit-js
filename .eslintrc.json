@@ -1,0 +1,14 @@
+{
+  "parser": "babel-eslint",
+  "extends": "eslint:recommended",
+  "plugins": [
+    "import"
+  ],
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "rules":{
+  "no-underscore-dangle": 0
+  }
+}
