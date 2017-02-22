@@ -3,10 +3,10 @@ import {capitlize} from '../../src/util/stringUtils';
 
 chai.should();
 
-describe('capitlize', () => {
+describe( 'capitlize', () => {
 
-  it('should capitlize first letter in string', () => {
-    capitlize("first").charAt(0).should.equal('F');
-  });
+  it( 'should capitlize first letter in string', () => {
+    capitlize( "first" ).charAt( 0 ).should.equal( 'F' );
+  } );
 
-});
+} );
