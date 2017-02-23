@@ -7,14 +7,13 @@ import FakeEvent from './util/FakeEvent';
 import { capitlize } from './util/stringUtils';
 import PlayerEvents from './events';
 import Html5 from './engine/Html5';
-import type { Engine } from './engine/engine';
 
 type ListenerType = (event: FakeEvent) => any;
 
 class Player extends FakeEventTarget {
   eventManager_: EventManager;
   config_: any;
-  engine_: Engine;
+  engine_: IEngine;
   engineEventHandlers_: Map<string, ListenerType>;
 
   constructor() {
