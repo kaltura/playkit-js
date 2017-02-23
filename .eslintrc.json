@@ -1,14 +1,15 @@
 {
   "parser": "babel-eslint",
-  "extends": "eslint:recommended",
+  "extends": [
+    "eslint:recommended",
+    "plugin:flowtype/recommended"
+  ],
   "plugins": [
-    "import"
+    "import",
+    "flowtype"
   ],
   "env": {
     "browser": true,
     "es6": true
-  },
-  "rules":{
-  "no-underscore-dangle": 0
   }
 }
