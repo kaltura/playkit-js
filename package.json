@@ -54,8 +54,5 @@
   "bugs": {
     "url": "https://github.com/kaltura/playkit-js/issues"
   },
-  "homepage": "https://github.com/kaltura/playkit-js",
-  "dependencies": {
-    "webpack-dev-server": "2"
-  }
+  "homepage": "https://github.com/kaltura/playkit-js"
 }
