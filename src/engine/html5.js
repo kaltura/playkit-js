@@ -3,10 +3,8 @@ import FakeEventTarget from '../util/FakeEventTarget';
 import FakeEvent from '../util/FakeEvent';
 import EventManager from '../util/eventManager';
 import PlayerEvents from '../events';
-import type {Engine} from './engine';
 
-
-export default class Html5 extends FakeEventTarget implements Engine {
+export default class Html5 extends FakeEventTarget implements IEngine{
   el_: HTMLVideoElement;
   eventManager_: EventManager;
 
@@ -17,7 +15,7 @@ export default class Html5 extends FakeEventTarget implements Engine {
     this.createVideoElement();
     this.eventManager_ = new EventManager();
     this.attach();
-    this.setSrc();
+    this.src = "/assets/mov_bbb.mp4";
   }
 
   destroy() {
@@ -57,9 +55,13 @@ export default class Html5 extends FakeEventTarget implements Engine {
     }
   }
 
-  setSrc() {
+  set src(source: string): void{
     //Set source
-    this.el_.src = "http://localhost:8080/assets/mov_bbb.mp4";
+    this.el_.src = source;
+  }
+
+  get src(): string{
+    return this.el_.src;
   }
 
   //playback interface
@@ -75,6 +77,10 @@ export default class Html5 extends FakeEventTarget implements Engine {
    */
   pause() {
     return this.el_.pause();
+  }
+
+  load(): void{
+    this.el_.load();
   }
 
   /**
@@ -137,10 +143,16 @@ export default class Html5 extends FakeEventTarget implements Engine {
     return this.el_.seeking;
   }
 
-  played() {
+  get seekable(): TimeRanges{
+    return this.el_.seekable;
   }
 
-  buffered() {
+  get played(): TimeRanges {
+    return this.el_.played;
+  }
+
+  get buffered(): TimeRanges {
+    return this.el_.buffered;
   }
 
   /**
@@ -157,6 +169,90 @@ export default class Html5 extends FakeEventTarget implements Engine {
    */
   get muted(): boolean {
     return this.el_.muted;
+  }
+
+  get defaultMuted(): boolean{
+    return this.el_.defaultMuted;
+  }
+
+  set poster(poster: string){
+    this.el_.poster = poster;
+  }
+
+  get poster(): string{
+    return this.el_.poster;
+  }
+
+  set preload(preload: string){
+    this.el_.preload = preload;
+  }
+
+  get preload(): string{
+    return this.el_.preload;
+  }
+
+  set autoplay(autoplay: boolean){
+    this.el_.autoplay = autoplay;
+  }
+
+  get autoplay(): boolean{
+    return this.el_.autoplay;
+  }
+
+  set loop(loop: boolean){
+    this.el_.loop = loop;
+  }
+
+  get loop(): boolean{
+    return this.el_.loop;
+  }
+
+  set controls(controls: boolean){
+    this.el_.controls = controls;
+  }
+
+  get controls(): boolean{
+    return this.el_.controls;
+  }
+
+  set playbackRate(playbackRate: number){
+    this.el_.playbackRate = playbackRate;
+  }
+
+  get playbackRate(): number{
+    return this.el_.playbackRate;
+  }
+
+  set defaultPlaybackRate(defaultPlaybackRate: number){
+    this.el_.defaultPlaybackRate = defaultPlaybackRate;
+  }
+
+  get defaultPlaybackRate(): number{
+    return this.el_.defaultPlaybackRate;
+  }
+
+  get ended(): boolean{
+    return this.el_.ended;
+  }
+
+  get error(): ?MediaError{
+    return this.el_.error;
+  }
+
+  get networkState(): number{
+    return this.el_.networkState;
+  }
+
+  get readyState(): number{
+    return this.el_.readyState;
+  }
+
+  get videoHeight(): number{
+    return this.el_.videoHeight;
+  }
+
+  get videoWidth(): number{
+    return this.el_.videoWidth;
   }
 
   static TEST_VID: HTMLVideoElement;
