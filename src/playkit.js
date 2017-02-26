@@ -1,6 +1,6 @@
 // @flow
 import Player from "./player";
-import LoggerFactory from "util/logger";
+import LoggerFactory from "util/loggerFactory";
 import * as packageData from "../package.json";
 
 let logger = LoggerFactory.getLogger( 'Playkit' );
