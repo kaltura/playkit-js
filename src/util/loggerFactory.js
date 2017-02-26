@@ -1,0 +1,32 @@
+// @flow
+import * as JsLogger from 'js-logger';
+
+class LoggerFactory {
+  constructor( options?: Object ) {
+    if ( !options ) {
+      JsLogger.useDefaults();
+    } else {
+      JsLogger.useDefaults( options );
+    }
+  }
+
+  getLogger( name?: string ) {
+    if ( !name ) {
+      return JsLogger;
+    }
+    return JsLogger.get( name );
+  }
+}
+
+let loggerFactory = new LoggerFactory( { defaultLevel: JsLogger.DEBUG } );
+let LOG_LEVEL: Map<string,Object> = {
+  "DEBUG": JsLogger.DEBUG,
+  "INFO": JsLogger.INFO,
+  "TIME": JsLogger.TIME,
+  "WARN": JsLogger.WARN,
+  "ERROR": JsLogger.ERROR,
+  "OFF": JsLogger.OFF
+};
+
+export default loggerFactory;
+export {LOG_LEVEL};

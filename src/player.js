@@ -7,8 +7,10 @@ import FakeEvent from './util/FakeEvent';
 import { capitlize } from './util/stringUtils';
 import PlayerEvents from './events';
 import Html5 from './engine/Html5';
+import LoggerFactory from './util/logger';
 
 type ListenerType = (event: FakeEvent) => any;
+let logger = LoggerFactory.getLogger( 'Player' );
 
 class Player extends FakeEventTarget {
   eventManager_: EventManager;
@@ -28,6 +30,7 @@ class Player extends FakeEventTarget {
     this.config_ = Player.defaultConfig_();
     this.selectEngine(this.config_);
     this.attachMedia();
+    logger.info( 'player is ready!' );
   }
 
   destroy() {
