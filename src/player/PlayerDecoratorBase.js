@@ -1,9 +1,5 @@
-/**
- * Created by itayk on 23/02/2017.
- */
-// @flow
+//@flow
 
-import IPlayer from './IPlayer'
 export default class PlayerDecoratorBase implements IPlayer {
   player: IPlayer;
 

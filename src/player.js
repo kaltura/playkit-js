@@ -7,15 +7,13 @@ import FakeEvent from './util/FakeEvent';
 import { capitlize } from './util/stringUtils';
 import PlayerEvents from './events';
 import Html5 from './engine/Html5';
-//import type { Engine } from './engine/engine';
-import IPlayer from './player/IPlayer';
 
 type ListenerType = (event: FakeEvent) => any;
 
 class Player extends FakeEventTarget implements IPlayer {
   eventManager_: EventManager;
   config_: any;
-  //engine_: IEngine;
+  engine_: IEngine;
   engineEventHandlers_: Map<string, ListenerType>;
 
   constructor() {
@@ -69,7 +67,7 @@ class Player extends FakeEventTarget implements IPlayer {
    * @returns {Player}
    */
   play() {
-    return this.engine_.play();
+     this.engine_.play();
   }
 
   /**
