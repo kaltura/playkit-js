@@ -3,11 +3,7 @@ import * as JsLogger from 'js-logger';
 
 class LoggerFactory {
   constructor( options?: Object ) {
-    if ( !options ) {
-      JsLogger.useDefaults();
-    } else {
-      JsLogger.useDefaults( options );
-    }
+    JsLogger.useDefaults( options || {} );
   }
 
   getLogger( name?: string ) {
