@@ -1,34 +1,54 @@
 //@flow
+import lf from "../../util/loggerFactory";
+
+let logger = lf.getLogger( 'PluginManager' );
+
 class PluginManager {
-  registry_: Map<string,Function> = {};
-  plugins_: Map<string,IPlugin> = {};
+  pluginRegistry_: Map<string,Function> = {};
+  pluginRegistryCount_: number = 0;
+  activePlugins_: Map<string,IPlugin> = {};
+  activePluginsCount_: number = 0;
 
   constructor() {}
 
   register( name: string, handler: Function ): void {
-    this.registry_[ name ] = handler;
-  }
-
-  has( name: string ): boolean {
-    return !!this.registry_[ name ];
-  }
-
-  get( name: string ): any {
-    return this.plugins_[ name ];
-  }
-
-  length(): number {
-    return Object.keys( this.plugins_ ).length;
+    if ( !this.has( name ) ) {
+      logger.info( `Plugin <${name}> is registered.` );
+      this.pluginRegistry_[ name ] = handler;
+      this.pluginRegistryCount_++;
+    } else {
+      logger.info( `Plugin <${name}> is already registered, do not register again.` );
+    }
   }
 
   load( name: string, config: Object ): boolean {
-    if ( this.registry_[ name ].isAvailable() ) {
-      this.plugins_[ name ] = new this.registry_[ name ]();
-      this.plugins_[ name ].configure( config );
-      this.plugins_[ name ].setup();
+    logger.info( `Load <${name}> plugin start.` );
+    if ( this.pluginRegistry_[ name ].isAvailable() ) {
+      this.activePlugins_[ name ] = new this.pluginRegistry_[ name ]();
+      this.activePluginsCount_++;
+      this.activePlugins_[ name ].configure( config );
+      this.activePlugins_[ name ].setup();
+      logger.info( `Load <${name}> plugin succeeded.` );
       return true;
     }
+    logger.info( `Load <${name}> plugin failed - plugin is not available.` );
     return false;
+  }
+
+  has( name: string ): boolean {
+    return !!this.pluginRegistry_[ name ];
+  }
+
+  get( name: string ): any {
+    return this.activePlugins_[ name ];
+  }
+
+  registryCount(): number {
+    return this.pluginRegistryCount_;
+  }
+
+  activePluginsCount(): number {
+    return this.activePluginsCount_;
   }
 }
 
