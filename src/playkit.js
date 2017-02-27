@@ -1,36 +1,28 @@
 // @flow
-import PluginManager from "plugin/framework/PluginManager";
-import LoggerFactory from "util/loggerFactory";
+import LoggerFactory from "./util/loggerFactory";
 import Player from "./player";
 import * as packageData from "../package.json";
+import PluginRegistry from './plugin/PluginRegistry';
 
-// All plugins should be bundled
-import NumbersPlugin from "plugin/plugins/numbers/numbers";
+// Test plugins
+// import NumbersPlugin from '../test/plugin/testPlugins/numbersPlugin';
+// import ColorsPlugin from '../test/plugin/testPlugins/colorsPlugin';
 
-let logger = LoggerFactory.getLogger( 'Playkit' );
+let logger = LoggerFactory.getLogger('PlayKit');
 
 export function playkit() {
-  logger.info( "Player factory method called!" );
-
-  // Fake plugin received by the player factory
+  logger.info("Player factory method called!");
+  // Fake plugin configuration received by the player factory
   let fakePluginConf = {
     "plugins": {
       "numbers": {
-        "size": 100
-      }
+        "size": 100,
+        "lastCellValue": 15
+      },
+      "colors": {}
     }
   };
-
-  for ( let pluginName in fakePluginConf.plugins ) {
-    if ( fakePluginConf.plugins.hasOwnProperty( pluginName ) ) {
-      if ( PluginManager.has( pluginName ) ) {
-        let pluginConf = fakePluginConf.plugins[ pluginName ];
-        PluginManager.load( pluginName, pluginConf );
-      }
-    }
-  }
-
-  return new Player();
+  return new Player(fakePluginConf);
 }
 
 export default playkit;
@@ -39,6 +31,6 @@ export default playkit;
 let VERSION = packageData.version;
 export {VERSION};
 
-export function registerPlugin( name, handler ) {
-  PluginManager.register( name, handler );
+export function registerPlugin(name: string, handler: Function) {
+  PluginRegistry.register(name, handler);
 }

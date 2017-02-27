@@ -1,25 +1,31 @@
 // @flow
 
+// Player's dependencies
 import EventManager from './util/eventManager';
 import FakeEventTarget from './util/FakeEventTarget';
-import { isNumber, isFloat } from './util/util';
+import {isNumber, isFloat} from './util/util';
 import FakeEvent from './util/FakeEvent';
-import { capitlize } from './util/stringUtils';
+import {capitlize} from './util/stringUtils';
 import PlayerEvents from './events';
 import Html5 from './engine/Html5';
 import LoggerFactory from './util/loggerFactory';
+import PluginManager from './plugin/PluginManager';
+import PluginRegistry from './plugin/PluginRegistry';
 
+let logger = LoggerFactory.getLogger('Player');
 type ListenerType = (event: FakeEvent) => any;
-let logger = LoggerFactory.getLogger( 'Player' );
 
 class Player extends FakeEventTarget {
+  pluginRegistry_ = PluginRegistry;
+  pluginManager_: PluginManager;
   eventManager_: EventManager;
   config_: any;
   engine_: IEngine;
   engineEventHandlers_: Map<string, ListenerType>;
 
-  constructor() {
+  constructor(config: Object) {
     super();
+    this.pluginManager_ = new PluginManager();
     this.eventManager_ = new EventManager();
     this.engineEventHandlers_ = new Map();
     PlayerEvents.forEach((event) => {
@@ -28,14 +34,16 @@ class Player extends FakeEventTarget {
       });
     });
     this.config_ = Player.defaultConfig_();
+    this.loadPlugins(config.plugins || {});
     this.selectEngine(this.config_);
     this.attachMedia();
-    logger.info( 'player is ready!' );
+    logger.info('player is ready!');
   }
 
   destroy() {
     this.engine_.destroy();
     this.eventManager_.destroy();
+    this.pluginManager_.destroyAll();
     // this.engine_ = null;
     // this.eventManager_ = null;
     this.config_ = null;
@@ -43,6 +51,18 @@ class Player extends FakeEventTarget {
 
   static defaultConfig_() {
     return {};
+  }
+
+  loadPlugins(plugins: Object) {
+    for (let name in plugins) {
+      if (plugins.hasOwnProperty(name)) {
+        if (this.pluginRegistry_.has(name)) {
+          this.pluginManager_.load(name, this.pluginRegistry_.get(name), plugins[name], this);
+        } else {
+          throw new Error();
+        }
+      }
+    }
   }
 
   selectEngine() {
@@ -55,7 +75,6 @@ class Player extends FakeEventTarget {
 
   attachMedia() {
     // Listen to all HTML5-defined events and trigger them on the player
-
     PlayerEvents.forEach((event) => {
       const handler = this.engineEventHandlers_.get(`onEngine${capitlize(event)}_`);
       if (handler) {
@@ -180,8 +199,6 @@ class Player extends FakeEventTarget {
   get muted(): boolean {
     return this.engine_.muted;
   }
-
-  // </editor-fold>
 }
 
 export default Player;
