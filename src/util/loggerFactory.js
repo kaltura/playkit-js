@@ -14,8 +14,8 @@ class LoggerFactory {
   }
 }
 
-let loggerFactory = new LoggerFactory( { defaultLevel: JsLogger.DEBUG } );
-let LOG_LEVEL: Map<string,Object> = {
+let loggerFactory = new LoggerFactory({defaultLevel: JsLogger.DEBUG});
+const LOG_LEVEL: { [level: string]: Object } = {
   "DEBUG": JsLogger.DEBUG,
   "INFO": JsLogger.INFO,
   "TIME": JsLogger.TIME,
