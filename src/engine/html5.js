@@ -3,19 +3,23 @@ import FakeEventTarget from '../util/FakeEventTarget';
 import FakeEvent from '../util/FakeEvent';
 import EventManager from '../util/eventManager';
 import PlayerEvents from '../events';
+import MSHFactory from './mediaSourceHandlers/mediaSourceHandlerFactory';
+import BaseMediaSourceHandler from './mediaSourceHandlers/BaseMediaSourceHandler';
 
 export default class Html5 extends FakeEventTarget implements IEngine{
   el_: HTMLVideoElement;
   eventManager_: EventManager;
+  mediaSourceHandler_: BaseMediaSourceHandler;
 
   static EngineName: string = "html5";
 
-  constructor() {
+  constructor(config: Object) {
     super();
     this.createVideoElement();
     this.eventManager_ = new EventManager();
     this.attach();
-    this.src = "/assets/mov_bbb.mp4";
+    this.mediaSourceHandler_ = MSHFactory.getMediaSourceHandler(this.el_, config);
+    this.mediaSourceHandler_.load(config.source);
   }
 
   destroy() {

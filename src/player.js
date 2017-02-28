@@ -16,7 +16,7 @@ class Player extends FakeEventTarget {
   engine_: IEngine;
   engineEventHandlers_: Map<string, ListenerType>;
 
-  constructor() {
+  constructor(config: ?Object) {
     super();
     this.eventManager_ = new EventManager();
     this.engineEventHandlers_ = new Map();
@@ -25,7 +25,7 @@ class Player extends FakeEventTarget {
         return this.dispatchEvent(event);
       });
     });
-    this.config_ = Player.defaultConfig_();
+    this.config_ = config || Player.defaultConfig_();
     this.selectEngine(this.config_);
     this.attachMedia();
   }
@@ -39,15 +39,18 @@ class Player extends FakeEventTarget {
   }
 
   static defaultConfig_() {
-    return {};
+    return {
+      mimeTypes: ["mp4"],
+      source: "../assets/mov_bbb.mp4"
+    };
   }
 
-  selectEngine() {
-    this.loadEngine();
+  selectEngine(config: Object) {
+    this.loadEngine(config);
   }
 
-  loadEngine() {
-    this.engine_ = new Html5();
+  loadEngine(config: Object) {
+    this.engine_ = new Html5(config);
   }
 
   attachMedia() {
