@@ -2,7 +2,7 @@ import BasePlugin from "../../../src/plugin/BasePlugin";
 import Player from "../../../src/player";
 import * as PlayKit from "../../../src/playkit";
 
-// const pluginName = "numbers";
+const pluginName = "numbers";
 
 export default class NumbersPlugin extends BasePlugin {
   firstCellValue_: number = 0;
@@ -46,4 +46,4 @@ export default class NumbersPlugin extends BasePlugin {
   }
 }
 
-// PlayKit.registerPlugin(pluginName, NumbersPlugin);
+PlayKit.registerPlugin(pluginName, NumbersPlugin);

@@ -1,13 +1,12 @@
 // @flow
-import LoggerFactory from "./util/loggerFactory";
 import Player from "./player";
 import LoggerFactory from "./util/loggerFactory";
 import PluginRegistry from './plugin/PluginRegistry';
 import * as packageData from "../package.json";
 
 // Test plugins
-// import NumbersPlugin from '../test/plugin/testPlugins/numbersPlugin';
-// import ColorsPlugin from '../test/plugin/testPlugins/colorsPlugin';
+import NumbersPlugin from '../test/plugin/testPlugins/numbersPlugin';
+import ColorsPlugin from '../test/plugin/testPlugins/colorsPlugin';
 
 let logger = LoggerFactory.getLogger('Playkit');
 

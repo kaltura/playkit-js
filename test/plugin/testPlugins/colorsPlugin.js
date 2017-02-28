@@ -2,7 +2,7 @@ import BasePlugin from "../../../src/plugin/BasePlugin";
 import Player from "../../../src/player";
 import * as PlayKit from "../../../src/playkit";
 
-// const pluginName = "colors";
+const pluginName = "colors";
 
 export default class ColorsPlugin extends BasePlugin {
   favouriteColor_: string = "";
@@ -38,4 +38,4 @@ export default class ColorsPlugin extends BasePlugin {
   }
 }
 
-// PlayKit.registerPlugin(pluginName, ColorsPlugin);
+PlayKit.registerPlugin(pluginName, ColorsPlugin);
