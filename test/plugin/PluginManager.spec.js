@@ -7,7 +7,7 @@ chai.should();
 
 let pluginManager;
 
-describe.only('PluginManager', () => {
+describe('PluginManager', () => {
 
   before(() => {
     pluginManager = new PluginManager();

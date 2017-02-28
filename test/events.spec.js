@@ -19,10 +19,10 @@ let expectedEvents = [
   'texttrackchange'
 ];
 
-describe( 'events', () => {
+describe('events', () => {
 
-  it( 'should equals player events', () => {
-    events.should.deep.equals( expectedEvents );
-  } );
+  it('should equals player events', () => {
+    events.should.deep.equals(expectedEvents);
+  });
 
-} );
+});

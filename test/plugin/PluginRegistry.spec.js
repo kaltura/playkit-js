@@ -8,15 +8,9 @@ chai.should();
 
 describe('PluginRegistry', () => {
 
-  it('should create all PluginRegistry properties', () => {
-    pluginRegistry.size.should.equal(0);
-    pluginRegistry.registry.should.be.instanceof(Map);
-  });
-
   it('should register new plugins', () => {
-    pluginRegistry.register("numbers", NumbersPlugin);
-    pluginRegistry.register("colors", ColorsPlugin);
     pluginRegistry.size.should.equal(2);
+    pluginRegistry.registry.should.be.instanceof(Map);
   });
 
   it('should get() the correct handler', () => {

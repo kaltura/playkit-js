@@ -27,13 +27,13 @@ export default class PluginManager extends PluginComponentHelper {
   }
 
   destroyAll(): void {
-    let next, names, done;
+    let name, names, done;
     names = this.plugins.keys();
     done = false;
     while (!done) {
-      next = names.next();
-      if (next) {
-        this.destroy(next.value);
+      name = names.next().value;
+      if (name) {
+        this.destroy(name);
       } else {
         done = true;
       }
