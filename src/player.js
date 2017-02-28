@@ -40,7 +40,7 @@ class Player extends FakeEventTarget {
 
   static defaultConfig_() {
     return {
-      mimeTypes: ["mp4"],
+      mimeType: "mp4",
       source: "../assets/mov_bbb.mp4"
     };
   }

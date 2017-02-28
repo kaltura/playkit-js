@@ -13,18 +13,13 @@ export default class BaseMediaSourceHandler {
     return new this(videoElement, config);
   }
 
-  static mimeTypesSupported(mimeTypes: Array<string>): boolean {
-    for (let i = 0; i < mimeTypes.length; i++) {
-      if (this._mimeTypes.includes(mimeTypes[i])) {
-        return true;
-      }
-    }
-    return false;
+  static canPlayType(mimeType: string): boolean {
+    return this._mimeTypes.includes(mimeType);
   }
 
   init(videoElement: HTMLVideoElement, config: Object): BaseMediaSourceHandler {
   }
 
-  load(source: string){
+  load(source: string) {
   }
 }
