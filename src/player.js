@@ -1,11 +1,11 @@
 // @flow
 
-import EventManager from './util/eventManager';
-import FakeEventTarget from './util/FakeEventTarget';
+import EventManager from './events/eventManager';
+import FakeEventTarget from './events/FakeEventTarget';
 import { isNumber, isFloat } from './util/util';
-import FakeEvent from './util/FakeEvent';
+import FakeEvent from './events/FakeEvent';
 import { capitlize } from './util/stringUtils';
-import PlayerEvents from './events';
+import PlayerEvents from './events/events';
 import Html5 from './engine/Html5';
 
 type ListenerType = (event: FakeEvent) => any;

@@ -1,8 +1,8 @@
 //@flow
-import FakeEventTarget from '../util/FakeEventTarget';
-import FakeEvent from '../util/FakeEvent';
-import EventManager from '../util/eventManager';
-import PlayerEvents from '../events';
+import FakeEventTarget from '../events/FakeEventTarget';
+import FakeEvent from '../events/FakeEvent';
+import EventManager from '../events/eventManager';
+import PlayerEvents from '../events/events';
 
 export default class Html5 extends FakeEventTarget implements IEngine{
   el_: HTMLVideoElement;
