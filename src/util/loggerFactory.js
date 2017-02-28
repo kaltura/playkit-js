@@ -2,15 +2,15 @@
 import * as JsLogger from 'js-logger';
 
 class LoggerFactory {
-  constructor( options?: Object ) {
-    JsLogger.useDefaults( options || {} );
+  constructor(options?: Object) {
+    JsLogger.useDefaults(options || {});
   }
 
-  getLogger( name?: string ) {
-    if ( !name ) {
+  getLogger(name?: string) {
+    if (!name) {
       return JsLogger;
     }
-    return JsLogger.get( name );
+    return JsLogger.get(name);
   }
 }
 
