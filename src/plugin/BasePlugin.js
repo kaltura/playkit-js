@@ -4,11 +4,11 @@ import lf from "../util/loggerFactory";
 import {merge} from "../util/util";
 
 export default class BasePlugin implements IPlugin {
-  config: Object = {};
-  defaultConfig: Object = {};
-  name: string;
-  logger: any;
-  player: Player;
+  _config: Object = {};
+  _defaultConfig: Object = {};
+  _name: string;
+  _logger: any;
+  _player: Player;
 
   static createPlugin(name: string, player: Player): BasePlugin {
     return new this(name, player);
@@ -19,28 +19,24 @@ export default class BasePlugin implements IPlugin {
   }
 
   constructor(name: string, player: Player) {
-    this.name = name;
-    this.player = player;
-    this.logger = lf.getLogger(this.name);
+    this._name = name;
+    this._player = player;
+    this._logger = lf.getLogger(this._name);
   }
 
   configure(config: Object): void {
-    this.config = merge(this.defaultConfig, config);
+    this._config = merge(this._defaultConfig, config);
   }
 
   getConfig(attr?: string): Object {
     if (attr) {
-      return this.config[attr];
+      return this._config[attr];
     }
-    return this.config;
+    return this._config;
   }
 
   updateConfig(update: Object): void {
-    this.config = merge(this.config, update);
-  }
-
-  getName(): string {
-    return this.name;
+    this._config = merge(this._config, update);
   }
 
   setup(): void {
@@ -49,6 +45,30 @@ export default class BasePlugin implements IPlugin {
 
   destroy(): void {
     throw new NotImplementedException('Plugin must implement destroy() method');
+  }
+
+  get defaultConfig(): Object {
+    return this._defaultConfig;
+  }
+
+  set defaultConfig(value: Object) {
+    this._defaultConfig = value;
+  }
+
+  get player(): Player {
+    return this._player;
+  }
+
+  get logger() {
+    return this._logger;
+  }
+
+  get config(): Object {
+    return this._config;
+  }
+
+  get name(): string {
+    return this._name;
   }
 }
 

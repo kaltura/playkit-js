@@ -5,36 +5,37 @@ import * as PlayKit from "../../../src/playkit";
 const pluginName = "colors";
 
 export default class ColorsPlugin extends BasePlugin {
-  favouriteColor_: string = "";
-  size_: number = 0;
-  colors_: Array = [];
+  _favouriteColor: string = "";
+  _size: number = 0;
+  _colors: Array = [];
+
+  defaultConfig = {
+    "size": 3,
+    "favouriteColor": "green"
+  };
 
   constructor(name: string, player: Player) {
     super(name, player);
-    this.defaultConfig = {
-      "size": 3,
-      "favouriteColor": "green"
-    };
     this.logger.info(`in <${name}> plugin constructor.`);
   }
 
   configure(userConfig: Object) {
     super.configure(userConfig);
-    this.size_ = this.config.size;
-    this.favouriteColor_ = this.config.favouriteColor;
+    this._size = this.config.size;
+    this._favouriteColor = this.config.favouriteColor;
     this.logger.info("configure", this.config);
   }
 
   setup() {
-    this.colors_ = [this.favouriteColor_, "blue", "pink"];
-    this.logger.info("setup", this.colors_);
+    this._colors = [this._favouriteColor, "blue", "pink"];
+    this.logger.info("setup", this._colors);
   }
 
   destroy() {
-    this.colors_ = [];
-    this.favouriteColor_ = "";
-    this.size_ = 0;
-    this.logger.info("destroy", this.colors_, this.favouriteColor_, this.size_);
+    this._colors = [];
+    this._favouriteColor = "";
+    this._size = 0;
+    this.logger.info("destroy", this._colors, this._favouriteColor, this._size);
   }
 }
 

@@ -20,7 +20,7 @@ describe('BasePlugin', () => {
   });
 
   it('should return the plugin name', () => {
-    basePlugin.getName().should.equal("basePlugin");
+    basePlugin.name.should.equal("basePlugin");
   });
 
   it('should configure plugin config', () => {
