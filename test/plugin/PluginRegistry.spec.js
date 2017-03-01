@@ -13,6 +13,11 @@ describe('PluginRegistry', () => {
     pluginRegistry.registry.should.be.instanceof(Map);
   });
 
+  it('should not register plugins that already registered', () => {
+    pluginRegistry.register("numbers", NumbersPlugin);
+    pluginRegistry.size.should.equal(2);
+  });
+
   it('should get() the correct handler', () => {
     pluginRegistry.get("colors").should.be.instanceof(Function);
     pluginRegistry.get("numbers").should.be.instanceof(Function);
