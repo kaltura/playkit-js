@@ -1,13 +1,12 @@
 // @flow
-
-import EventManager from './util/eventManager';
-import FakeEventTarget from './util/FakeEventTarget';
-import {isNumber, isFloat} from './util/util';
-import FakeEvent from './util/FakeEvent';
-import {capitlize} from './util/stringUtils';
-import PlayerEvents from './events';
-import Html5 from './engine/Html5';
+import EventManager from './events/eventManager';
+import FakeEventTarget from './events/FakeEventTarget';
+import FakeEvent from './events/FakeEvent';
+import PlayerEvents from './events/events';
+import { isNumber, isFloat } from './util/util';
+import { capitlize } from './util/stringUtils';
 import LoggerFactory from './util/loggerFactory';
+import Html5 from './engine/Html5';
 
 type ListenerType = (event: FakeEvent) => any;
 let logger = LoggerFactory.getLogger('Player');
