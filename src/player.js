@@ -10,13 +10,11 @@ import PlayerEvents from './events';
 import Html5 from './engine/Html5';
 import LoggerFactory from './util/loggerFactory';
 import PluginManager from './plugin/PluginManager';
-import PluginRegistry from './plugin/PluginRegistry';
 
 let logger = LoggerFactory.getLogger('Player');
 type ListenerType = (event: FakeEvent) => any;
 
 class Player extends FakeEventTarget {
-  pluginRegistry_ = PluginRegistry;
   pluginManager_: PluginManager;
   eventManager_: EventManager;
   config_: any;
@@ -33,8 +31,8 @@ class Player extends FakeEventTarget {
         return this.dispatchEvent(event);
       });
     });
-    this.config_ = Player.defaultConfig_();
-    this.loadPlugins(config.plugins || {});
+    this.config_ = config || Player.defaultConfig_();
+    this.loadPlugins(this.config_);
     this.selectEngine(this.config_);
     this.attachMedia();
     logger.info('player is ready!');
@@ -43,7 +41,7 @@ class Player extends FakeEventTarget {
   destroy() {
     this.engine_.destroy();
     this.eventManager_.destroy();
-    this.pluginManager_.destroyAll();
+    this.destroyPlugins(this.config_);
     // this.engine_ = null;
     // this.eventManager_ = null;
     this.config_ = null;
@@ -53,14 +51,23 @@ class Player extends FakeEventTarget {
     return {};
   }
 
-  loadPlugins(plugins: Object) {
+  loadPlugins(config: Object): void {
+    let plugins = config.plugins;
     for (let name in plugins) {
       if (plugins.hasOwnProperty(name)) {
-        if (this.pluginRegistry_.has(name)) {
-          this.pluginManager_.load(name, this.pluginRegistry_.get(name), plugins[name], this);
-        } else {
-          throw new Error();
+        if (this.pluginManager_.load(name, this)) {
+          this.pluginManager_.configure(name, plugins[name]);
+          this.pluginManager_.setup(name);
         }
+      }
+    }
+  }
+
+  destroyPlugins(config: Object): void {
+    let plugins = config.plugins;
+    for (let name in plugins) {
+      if (plugins.hasOwnProperty(name)) {
+        this.pluginManager_.destroy(name);
       }
     }
   }

@@ -12,15 +12,15 @@ describe('BasePlugin', () => {
   });
 
   it('should create all BasePlugin properties', () => {
-    basePlugin.logger.should.exist;
-    basePlugin.player.should.exist;
-    basePlugin.name.should.exist;
-    basePlugin.config.should.exist;
-    basePlugin.defaultConfig.should.exist;
+    basePlugin.getLogger().should.exist;
+    basePlugin.getPlayer().should.exist;
+    basePlugin.getName().should.exist;
+    basePlugin.getConfig().should.exist;
+    basePlugin.getDefaultConfig().should.exist;
   });
 
   it('should return the plugin name', () => {
-    basePlugin.name.should.equal("basePlugin");
+    basePlugin.getName().should.equal("basePlugin");
   });
 
   it('should configure plugin config', () => {

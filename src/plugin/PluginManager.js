@@ -1,46 +1,117 @@
 //@flow
-import lf from "../util/loggerFactory";
+import BasePlugin from "./BasePlugin";
 import Player from "../player";
-import PluginComponentHelper from "./PluginComponentHelper";
+import loggerFactory from "../util/loggerFactory";
 
-let logger = lf.getLogger('PluginManager');
+let logger = loggerFactory.getLogger("PluginManager");
 
-export default class PluginManager extends PluginComponentHelper {
+export default class PluginManager {
+  /**
+   *
+   * @type {Map}
+   * @private
+   */
+  static _registry: Map<string,Function> = new Map();
+  /**
+   *
+   * @type {Map}
+   * @private
+   */
+  _plugins: Map<string,BasePlugin> = new Map();
 
-  load(name: string, handler: Function, config: Object, player: Player): boolean {
-    logger.info(`Load <${name}> plugin start.`);
-    if (handler.isValid()) {
-      this.set(name, handler.createPlugin(name, player));
-      this.get(name).configure(config);
-      this.get(name).setup();
-      logger.info(`Load <${name}> plugin succeeded. Total plugin count: ${this.size}`);
+  /**
+   *
+   * @param name
+   * @param handler
+   * @returns {boolean}
+   */
+  static register(name: string, handler: Function): boolean {
+    if (!this._registry.has(name)) {
+      this._registry.set(name, handler);
+      logger.info(`Register <${name}> plugin.`);
       return true;
     }
-    logger.info(`Load <${name}> plugin failed - plugin is not available.`);
+    logger.info(`Plugin <${name}> is already registered, do not register again.`);
     return false;
   }
 
-  destroy(name: string): void {
-    this.get(name).destroy();
-    this.remove(name);
-    logger.info(`Destroy <${name}> plugin.`);
-  }
-
-  destroyAll(): void {
-    let name, names, done;
-    names = this.plugins.keys();
-    done = false;
-    while (!done) {
-      name = names.next().value;
-      if (name) {
-        this.destroy(name);
-      } else {
-        done = true;
-      }
+  /**
+   *
+   * @param name
+   */
+  static unRegister(name: string): void {
+    if (this._registry.has(name)) {
+      this._registry.delete(name);
+      logger.info(`Unregistered <${name}> plugin.`);
     }
   }
 
-  get plugins(): Map<string,IPlugin> {
-    return this.map;
+  /**
+   *
+   * @param name
+   * @param player
+   * @returns {boolean}
+   */
+  load(name: string, player: Player): boolean {
+    if (!PluginManager._registry.has(name)) {
+      throw new Error(`Cannot load <${name}> - plugin isn't registered.`);
+    }
+    if (PluginManager._registry.get(name).isValid()) {
+      this._plugins.set(name, PluginManager._registry.get(name).createPlugin(name, player));
+      logger.info(`Plugin <${name}> has been loaded.`);
+      return true;
+    }
+    logger.info(`Plugin <${name}> isn\'t loaded, isValid()=false.`);
+    return false;
+  }
+
+  /**
+   *
+   * @param name
+   * @param config
+   */
+  configure(name: string, config: Object): void {
+    if (this._plugins.has(name) && this._plugins.get(name).configure) {
+      this._plugins.get(name).configure(config);
+    }
+  }
+
+  /**
+   *
+   * @param name
+   */
+  setup(name: string): void {
+    if (this._plugins.has(name)) {
+      this._plugins.get(name).setup();
+    }
+  }
+
+  /**
+   *
+   * @param name
+   */
+  destroy(name: string): void {
+    if (this._plugins.has(name)) {
+      this._plugins.get(name).destroy();
+    }
+  }
+
+  /**
+   *
+   * @param name
+   * @returns {BasePlugin}
+   */
+  get(name: string): BasePlugin {
+    return this._plugins.get(name);
+  }
+
+  /**
+   *
+   * @param name
+   */
+  remove(name: string): void {
+    if (this._plugins.has(name)) {
+      this._plugins.delete(name);
+    }
   }
 }

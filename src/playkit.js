@@ -1,7 +1,7 @@
 // @flow
 import Player from "./player";
 import LoggerFactory from "./util/loggerFactory";
-import PluginRegistry from './plugin/PluginRegistry';
+import PluginManager from './plugin/PluginManager';
 import * as packageData from "../package.json";
 
 // Test plugins
@@ -32,10 +32,12 @@ export function playkit() {
 
 export default playkit;
 
+export function registerPlugin(name: string, handler: Function) {
+  PluginManager.register(name, handler);
+}
+
 // Export the version
 let VERSION = packageData.version;
 export {VERSION};
 
-export function registerPlugin(name: string, handler: Function) {
-  PluginRegistry.register(name, handler);
-}
+
