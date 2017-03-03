@@ -1,7 +1,4 @@
-import chai from 'chai';
 import events from '../../src/events/events';
-
-chai.should();
 
 let expectedEvents = [
   'play',
@@ -19,10 +16,10 @@ let expectedEvents = [
   'texttrackchange'
 ];
 
-describe( 'events', () => {
+describe('events', () => {
 
-  it( 'should equals player events', () => {
-    events.should.deep.equals( expectedEvents );
-  } );
+  it('should equals player events', () => {
+    events.should.deep.equals(expectedEvents);
+  });
 
-} );
+});
