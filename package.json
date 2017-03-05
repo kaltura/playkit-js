@@ -38,6 +38,8 @@
     "karma-webpack": "^2.0.2",
     "mocha": "^3.2.0",
     "nyc": "^10.1.2",
+    "sinon": "next",
+    "sinon-chai": "^2.8.0",
     "webpack": "latest",
     "webpack-dev-server": "latest"
   },
