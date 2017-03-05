@@ -19,7 +19,7 @@ export default class MediaSourceHandlerProvider {
     }
   }
 
-  static selectMediaSourceHandler(videoElement: HTMLVideoElement, config: Object): BaseMediaSourceHandler | null {
+  static getMediaSourceHandler(videoElement: HTMLVideoElement, config: Object): BaseMediaSourceHandler | null {
     let handlers = this._mediaSourceHandlers;
     for (let i = 0; i < handlers.length; i++) {
       if (handlers[i].canPlayType(config.mimeType))

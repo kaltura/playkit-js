@@ -1,10 +1,12 @@
 //@flow
-import FakeEventTarget from '../util/FakeEventTarget';
-import FakeEvent from '../util/FakeEvent';
-import EventManager from '../util/eventManager';
-import PlayerEvents from '../events';
-import MSHFactory from './mediaSourceHandlers/mediaSourceHandlerFactory';
+import FakeEventTarget from '../events/FakeEventTarget';
+import FakeEvent from '../events/FakeEvent';
+import EventManager from '../events/eventManager';
+import PlayerEvents from '../events/events';
+import MSHProvider from './mediaSourceHandlers/mediaSourceHandlerProvider';
 import BaseMediaSourceHandler from './mediaSourceHandlers/BaseMediaSourceHandler';
+import m from './mediaSourceHandlers/fakeMSE'
+
 
 export default class Html5 extends FakeEventTarget implements IEngine{
   el_: HTMLVideoElement;
@@ -18,7 +20,7 @@ export default class Html5 extends FakeEventTarget implements IEngine{
     this.createVideoElement();
     this.eventManager_ = new EventManager();
     this.attach();
-    this.mediaSourceHandler_ = MSHFactory.getMediaSourceHandler(this.el_, config);
+    this.mediaSourceHandler_ = MSHProvider.getMediaSourceHandler(this.el_, config);
     this.mediaSourceHandler_.load(config.source);
   }
 

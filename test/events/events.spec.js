@@ -1,5 +1,5 @@
 import chai from 'chai';
-import events from '../src/events'
+import events from '../../src/events/events';
 
 chai.should();
 
