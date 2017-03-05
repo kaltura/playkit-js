@@ -56,8 +56,9 @@ export default class PluginManager {
     if (!PluginManager._registry.has(name)) {
       throw new Error(`Cannot load <${name}> - plugin isn't registered.`);
     }
-    if (PluginManager._registry.get(name).isValid()) {
-      this._plugins.set(name, PluginManager._registry.get(name).createPlugin(name, player));
+    let pluginClass = PluginManager._registry.get(name);
+    if (pluginClass != null && pluginClass.isValid()) {
+      this._plugins.set(name, pluginClass.createPlugin(name, player));
       logger.info(`Plugin <${name}> has been loaded.`);
       return true;
     }
@@ -71,8 +72,11 @@ export default class PluginManager {
    * @param config
    */
   configure(name: string, config: Object): void {
-    if (this._plugins.has(name) && this._plugins.get(name).configure) {
-      this._plugins.get(name).configure(config);
+    if (this._plugins.has(name)) {
+      let plugin = this._plugins.get(name);
+      if (plugin != null) {
+        plugin.configure(config)
+      }
     }
   }
 
@@ -82,7 +86,10 @@ export default class PluginManager {
    */
   setup(name: string): void {
     if (this._plugins.has(name)) {
-      this._plugins.get(name).setup();
+      let plugin = this._plugins.get(name);
+      if (plugin != null) {
+        plugin.setup();
+      }
     }
   }
 
@@ -92,7 +99,10 @@ export default class PluginManager {
    */
   destroy(name: string): void {
     if (this._plugins.has(name)) {
-      this._plugins.get(name).destroy();
+      let plugin = this._plugins.get(name);
+      if (plugin != null) {
+        plugin.destroy();
+      }
     }
   }
 
@@ -101,7 +111,7 @@ export default class PluginManager {
    * @param name
    * @returns {BasePlugin}
    */
-  get(name: string): BasePlugin {
+  get(name: string): ?BasePlugin {
     return this._plugins.get(name);
   }
 

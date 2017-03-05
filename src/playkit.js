@@ -4,10 +4,6 @@ import LoggerFactory from "./util/loggerFactory";
 import PluginManager from './plugin/PluginManager';
 import * as packageData from "../package.json";
 
-// Test plugins
-import NumbersPlugin from '../test/plugin/testPlugins/numbersPlugin';
-import ColorsPlugin from '../test/plugin/testPlugins/colorsPlugin';
-
 let logger = LoggerFactory.getLogger('Playkit');
 
 LoggerFactory.getLogger().log("%c Playkit " + packageData.version, "color: yellow; font-size: large");
@@ -15,19 +11,7 @@ LoggerFactory.getLogger().log("%c For more details see https://github.com/kaltur
 
 export function playkit() {
   logger.info("Player factory method called!");
-  // Fake plugin configuration received by the player factory
-  let fakePluginConf = {
-    "plugins": {
-      "numbers": {
-        "size": 100,
-        "lastCellValue": 15
-      },
-      "colors": {
-        "favouriteColor": "purple"
-      }
-    }
-  };
-  return new Player(fakePluginConf);
+  return new Player({});
 }
 
 export default playkit;

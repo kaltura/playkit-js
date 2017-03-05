@@ -41,7 +41,7 @@ export default class BasePlugin implements IPlugin {
    * @returns {boolean}
    */
   static isValid(): boolean {
-    return true;
+    throw new NotImplementedException('Plugin must implement isValid() method');
   }
 
   /**

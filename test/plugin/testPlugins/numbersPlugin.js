@@ -19,6 +19,10 @@ export default class NumbersPlugin extends BasePlugin {
     this.getLogger().info(`in <${name}> plugin constructor.`);
   }
 
+  static isValid(): boolean {
+    return true;
+  }
+
   configure(userConfig: Object) {
     super.configure(userConfig);
     this._size = this.getConfig().size;
