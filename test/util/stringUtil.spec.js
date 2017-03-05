@@ -1,17 +1,14 @@
-import chai from 'chai';
 import {capitlize} from '../../src/util/stringUtils';
 
-chai.should();
+describe('capitlize', () => {
 
-describe( 'capitlize', () => {
+  it('should capitlize first letter in string', () => {
+    capitlize("first").charAt(0).should.equal('F');
+  });
 
-  it( 'should capitlize first letter in string', () => {
-    capitlize( "first" ).charAt( 0 ).should.equal( 'F' );
-  } );
-
-  it( 'should return the argument the same if it\'s not a string', () => {
+  it('should return the argument the same if it\'s not a string', () => {
     let testArg = {"notString": true};
-    capitlize( testArg ).should.equal( testArg );
-  } );
+    capitlize(testArg).should.equal(testArg);
+  });
 
-} );
+});
