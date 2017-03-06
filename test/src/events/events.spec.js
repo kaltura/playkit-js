@@ -1,4 +1,4 @@
-import events from '../../src/events/events';
+import events from '../../../src/events/events';
 
 let expectedEvents = [
   'play',

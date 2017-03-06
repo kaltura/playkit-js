@@ -1,4 +1,4 @@
-import * as util from '../../src/util/util';
+import * as util from '../../../src/util/util';
 
 describe('util', () => {
 

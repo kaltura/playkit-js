@@ -1,4 +1,4 @@
-import {capitlize} from '../../src/util/stringUtils';
+import {capitlize} from '../../../src/util/stringUtils';
 
 describe('capitlize', () => {
 
