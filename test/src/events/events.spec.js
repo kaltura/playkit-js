@@ -1,7 +1,4 @@
-import chai from 'chai';
-import events from '../src/events'
-
-chai.should();
+import events from '../../../src/events/events';
 
 let expectedEvents = [
   'play',

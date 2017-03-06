@@ -9,9 +9,9 @@ let logger = LoggerFactory.getLogger('Playkit');
 LoggerFactory.getLogger().log("%c Playkit " + packageData.version, "color: yellow; font-size: large");
 LoggerFactory.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
 
-export function playkit() {
-  logger.info("Player factory method called!");
-  return new Player({});
+export function playkit(config: Object) {
+  logger.info("playkit() factory method called!");
+  return new Player(config || {});
 }
 
 export default playkit;

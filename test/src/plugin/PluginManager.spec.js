@@ -1,9 +1,6 @@
-import PluginManager from "../../src/plugin/PluginManager";
+import PluginManager from "../../../src/plugin/PluginManager";
 import ColorsPlugin from "./testPlugins/colorsPlugin";
 import NumbersPlugin from "./testPlugins/numbersPlugin";
-import chai from 'chai';
-
-chai.should();
 
 function registerAll() {
   PluginManager.register("numbers", NumbersPlugin);

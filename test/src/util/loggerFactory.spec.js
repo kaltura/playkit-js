@@ -1,8 +1,5 @@
-import chai from 'chai';
-import loggerFactory from '../../src/util/loggerFactory';
-import {LOG_LEVEL} from '../../src/util/loggerFactory';
-
-chai.should();
+import loggerFactory from '../../../src/util/loggerFactory';
+import {LOG_LEVEL} from '../../../src/util/loggerFactory';
 
 let loggerA = null;
 let loggerB = null;

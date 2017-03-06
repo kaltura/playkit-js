@@ -1,6 +1,6 @@
-import BasePlugin from "../../../src/plugin/BasePlugin";
-import Player from "../../../src/player";
-import * as Playkit from "../../../src/playkit";
+import BasePlugin from "../../../../src/plugin/BasePlugin";
+import Player from "../../../../src/player";
+import * as Playkit from "../../../../src/playkit";
 
 const pluginName = "colors";
 

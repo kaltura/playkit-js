@@ -1,7 +1,4 @@
-import BasePlugin from "../../src/plugin/BasePlugin";
-import chai from 'chai';
-
-chai.should();
+import BasePlugin from "../../../src/plugin/BasePlugin";
 
 let basePlugin;
 

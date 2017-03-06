@@ -1,7 +1,4 @@
-import chai from 'chai';
-import {capitlize} from '../../src/util/stringUtils';
-
-chai.should();
+import {capitlize} from '../../../src/util/stringUtils';
 
 describe('capitlize', () => {
 

@@ -1,7 +1,4 @@
-import chai from 'chai';
-import * as util from '../../src/util/util';
-
-chai.should();
+import * as util from '../../../src/util/util';
 
 describe('util', () => {
 
