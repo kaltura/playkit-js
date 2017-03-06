@@ -36,6 +36,18 @@ describe('BasePlugin', () => {
     basePlugin.getConfig().should.deep.equal({'x': 1, 'y': 'hello'});
   });
 
+  it('should throw isValid() exception', () => {
+    let exceptionOccurred = false;
+    try {
+      BasePlugin.isValid();
+    } catch (e) {
+      exceptionOccurred = true;
+      e.name.should.equal('NotImplementedPluginMethodException');
+      e.message.should.equal('Plugin must implement isValid() method')
+    }
+    exceptionOccurred.should.be.true;
+  });
+
   it('should throw setup() exception', () => {
     let exceptionOccurred = false;
     try {

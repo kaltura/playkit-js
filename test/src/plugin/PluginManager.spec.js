@@ -84,6 +84,15 @@ describe('PluginManager.plugins', () => {
     isThrowException.should.be.true;
   });
 
+  it('shouldn\'t load() the plugin', () => {
+    sinon.stub(ColorsPlugin, "isValid", function () {
+      return false;
+    });
+    isLoaded = pluginManager.load("colors", {});
+    isLoaded.should.be.false;
+    ColorsPlugin.isValid.restore();
+  });
+
   it('should load() the plugins', () => {
     isLoaded = pluginManager.load("colors", {});
     isLoaded.should.be.true;
@@ -101,6 +110,28 @@ describe('PluginManager.plugins', () => {
   it('should remove() the specific plugin', () => {
     pluginManager.remove("numbers");
     pluginManager._plugins.size.should.equal(1);
+  });
+
+  it('should configure() the specific plugin', () => {
+    let colorsPlugin = pluginManager.get("colors");
+    let configureSpy = sinon.spy(colorsPlugin, "configure");
+    pluginManager.configure("colors", {'test': 1});
+    configureSpy.should.have.been.calledOnce;
+    configureSpy.should.have.been.calledWithExactly({'test': 1});
+  });
+
+  it('should setup() the specific plugin', () => {
+    let colorsPlugin = pluginManager.get("colors");
+    let setupSpy = sinon.spy(colorsPlugin, "setup");
+    pluginManager.setup("colors");
+    setupSpy.should.have.been.calledOnce;
+  });
+
+  it('should destroy() the specific plugin', () => {
+    let colorsPlugin = pluginManager.get("colors");
+    let destroySpy = sinon.spy(colorsPlugin, "destroy");
+    pluginManager.destroy("colors");
+    destroySpy.should.have.been.calledOnce;
   });
 });
 
