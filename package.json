@@ -5,8 +5,8 @@
   "scripts": {
     "build": "webpack",
     "dev": "webpack --progress --colors --watch",
-    "test": "mocha --compilers js:babel-core/register --colors --recursive",
-    "test:watch": "mocha --compilers js:babel-core/register --colors -w --recursive",
+    "test": "mocha ./test/setup/mocha.js ./test/src --compilers js:babel-core/register --colors --recursive",
+    "test:watch": "mocha ./test/setup/mocha.js ./test/src --compilers js:babel-core/register --colors -w --recursive",
     "test:cover": "cross-env NODE_ENV=test nyc mocha --recursive",
     "start": "webpack-dev-server"
   },
@@ -37,7 +37,10 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.2",
     "mocha": "^3.2.0",
+    "mocha-cli": "^1.0.1",
     "nyc": "^10.1.2",
+    "sinon": "next",
+    "sinon-chai": "^2.8.0",
     "webpack": "latest",
     "webpack-dev-server": "latest"
   },
