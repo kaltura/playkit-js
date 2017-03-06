@@ -7,20 +7,22 @@ let logger = loggerFactory.getLogger("PluginManager");
 
 export default class PluginManager {
   /**
-   *
+   * the registry of the plugins.
+   * maps plugin's name to his class.
    * @type {Map}
    * @private
    */
   static _registry: Map<string,Function> = new Map();
   /**
-   *
+   * the active plugins in the player.
+   * maps plugin's name to his instance.
    * @type {Map}
    * @private
    */
   _plugins: Map<string,BasePlugin> = new Map();
 
   /**
-   *
+   * writes the plugin in the registry.
    * @param name
    * @param handler
    * @returns {boolean}
@@ -36,7 +38,7 @@ export default class PluginManager {
   }
 
   /**
-   *
+   * removes the plugin from the registry.
    * @param name
    */
   static unRegister(name: string): void {
@@ -47,7 +49,7 @@ export default class PluginManager {
   }
 
   /**
-   *
+   * creates a new instance of the plugin in case isValid() of the plugin returns true.
    * @param name
    * @param player
    * @returns {boolean}
@@ -67,7 +69,7 @@ export default class PluginManager {
   }
 
   /**
-   *
+   * calls configure() method of the plugin's impl.
    * @param name
    * @param config
    */
@@ -81,7 +83,7 @@ export default class PluginManager {
   }
 
   /**
-   *
+   * calls setup() method of the plugin's impl.
    * @param name
    */
   setup(name: string): void {
@@ -94,7 +96,7 @@ export default class PluginManager {
   }
 
   /**
-   *
+   * calls destroy() method of the plugin's impl.
    * @param name
    */
   destroy(name: string): void {
@@ -107,7 +109,7 @@ export default class PluginManager {
   }
 
   /**
-   *
+   * returns the plugin's instance.
    * @param name
    * @returns {BasePlugin}
    */
@@ -116,7 +118,7 @@ export default class PluginManager {
   }
 
   /**
-   *
+   * removes the plugin's instance.
    * @param name
    */
   remove(name: string): void {
