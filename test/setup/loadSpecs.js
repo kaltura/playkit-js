@@ -1,8 +1,13 @@
-export function loadSpecs () {
-  const context = require.context('../', true, /\.spec\.js$/)
-  for (const key of context.keys()) {
-    describe(key, () => { context(key) })
+export function loadSpecs() {
+  if (process.env.NODE_ENV !== 'test') {
+    const context = require.context('../src/', true, /\.spec\.js$/);
+    console.log(context);
+    for (const key of context.keys()) {
+      describe(key, () => {
+        context(key)
+      });
+    }
   }
 }
 
-export default loadSpecs
+export default loadSpecs;

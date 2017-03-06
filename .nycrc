@@ -1,6 +1,6 @@
 {
 "exclude": [
-    "test/**/*.spec.js"
+    "test/"
   ],
   "reporter": [
     "text",
