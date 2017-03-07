@@ -5,7 +5,6 @@ import EventManager from '../events/eventManager';
 import PlayerEvents from '../events/events';
 import MSHProvider from './mediaSourceHandlers/mediaSourceHandlerProvider';
 import BaseMediaSourceHandler from './mediaSourceHandlers/BaseMediaSourceHandler';
-import m from './mediaSourceHandlers/fakeMSE'
 
 
 export default class Html5 extends FakeEventTarget implements IEngine{
