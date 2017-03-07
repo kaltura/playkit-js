@@ -1,0 +1,15 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "eslint:recommended",
+    "plugin:flowtype/recommended"
+  ],
+  "plugins": [
+    "import",
+    "flowtype"
+  ],
+  "env": {
+    "browser": true,
+    "es6": true
+  }
+}
