@@ -7,22 +7,22 @@ let logger = loggerFactory.getLogger("PluginManager");
 
 export default class PluginManager {
   /**
-   * the registry of the plugins.
-   * maps plugin's name to his class.
+   * The registry of the plugins.
+   * Maps plugin's name to his class.
    * @type {Map}
    * @private
    */
   static _registry: Map<string,Function> = new Map();
   /**
-   * the active plugins in the player.
-   * maps plugin's name to his instance.
+   * The active plugins in the player.
+   * Maps plugin's name to his instance.
    * @type {Map}
    * @private
    */
   _plugins: Map<string,BasePlugin> = new Map();
 
   /**
-   * writes the plugin in the registry.
+   * Writes the plugin in the registry.
    * @param name
    * @param handler
    * @returns {boolean}
@@ -38,7 +38,7 @@ export default class PluginManager {
   }
 
   /**
-   * removes the plugin from the registry.
+   * Removes the plugin from the registry.
    * @param name
    */
   static unRegister(name: string): void {
@@ -49,7 +49,7 @@ export default class PluginManager {
   }
 
   /**
-   * creates a new instance of the plugin in case isValid() of the plugin returns true.
+   * Creates a new instance of the plugin in case isValid() of the plugin returns true.
    * @param name
    * @param player
    * @returns {boolean}
@@ -69,7 +69,7 @@ export default class PluginManager {
   }
 
   /**
-   * calls configure() method of the plugin's impl.
+   * Calls configure() method of the plugin's impl.
    * @param name
    * @param config
    */
@@ -83,7 +83,7 @@ export default class PluginManager {
   }
 
   /**
-   * calls setup() method of the plugin's impl.
+   * Calls setup() method of the plugin's impl.
    * @param name
    */
   setup(name: string): void {
@@ -96,20 +96,23 @@ export default class PluginManager {
   }
 
   /**
-   * calls destroy() method of the plugin's impl.
-   * @param name
+   * Iterates over all the plugins and calls private _destroy.
    */
-  destroy(name: string): void {
-    if (this._plugins.has(name)) {
-      let plugin = this._plugins.get(name);
-      if (plugin != null) {
-        plugin.destroy();
-      }
-    }
+  destroy(): void {
+    this._plugins.forEach(this._destroy);
   }
 
   /**
-   * returns the plugin's instance.
+   * Calls destroy() method of the plugin's impl.
+   * @param plugin
+   * @private
+   */
+  _destroy(plugin: BasePlugin): void {
+    plugin.destroy();
+  }
+
+  /**
+   * Returns the plugin's instance.
    * @param name
    * @returns {BasePlugin}
    */
@@ -118,7 +121,7 @@ export default class PluginManager {
   }
 
   /**
-   * removes the plugin's instance.
+   * Removes the plugin's instance.
    * @param name
    */
   remove(name: string): void {

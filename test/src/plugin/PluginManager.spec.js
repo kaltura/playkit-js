@@ -61,12 +61,21 @@ describe('PluginManager.registry', () => {
 
 describe('PluginManager.plugins', () => {
 
+  let pluginManager = new PluginManager();
+  let isLoaded = false;
+  let sinonSandbox;
+
   before(() => {
     registerAll();
   });
 
-  let pluginManager = new PluginManager();
-  let isLoaded = false;
+  beforeEach(() => {
+    sinonSandbox = sinon.sandbox.create();
+  });
+
+  afterEach(() => {
+    sinonSandbox.restore();
+  });
 
   it('should create all PluginManager properties', () => {
     pluginManager._plugins.size.should.equal(0);
@@ -85,12 +94,11 @@ describe('PluginManager.plugins', () => {
   });
 
   it('shouldn\'t load() the plugin', () => {
-    sinon.stub(ColorsPlugin, "isValid", function () {
+    sinonSandbox.stub(ColorsPlugin, "isValid", function () {
       return false;
     });
     isLoaded = pluginManager.load("colors", {});
     isLoaded.should.be.false;
-    ColorsPlugin.isValid.restore();
   });
 
   it('should load() the plugins', () => {
@@ -114,7 +122,7 @@ describe('PluginManager.plugins', () => {
 
   it('should configure() the specific plugin', () => {
     let colorsPlugin = pluginManager.get("colors");
-    let configureSpy = sinon.spy(colorsPlugin, "configure");
+    let configureSpy = sinonSandbox.spy(colorsPlugin, "configure");
     pluginManager.configure("colors", {'test': 1});
     configureSpy.should.have.been.calledOnce;
     configureSpy.should.have.been.calledWithExactly({'test': 1});
@@ -122,16 +130,28 @@ describe('PluginManager.plugins', () => {
 
   it('should setup() the specific plugin', () => {
     let colorsPlugin = pluginManager.get("colors");
-    let setupSpy = sinon.spy(colorsPlugin, "setup");
+    let setupSpy = sinonSandbox.spy(colorsPlugin, "setup");
     pluginManager.setup("colors");
     setupSpy.should.have.been.calledOnce;
   });
 
-  it('should destroy() the specific plugin', () => {
+  it('should _destroy() the specific plugin', () => {
     let colorsPlugin = pluginManager.get("colors");
-    let destroySpy = sinon.spy(colorsPlugin, "destroy");
-    pluginManager.destroy("colors");
+    let destroySpy = sinonSandbox.spy(colorsPlugin, "destroy");
+    pluginManager._destroy(colorsPlugin);
     destroySpy.should.have.been.calledOnce;
+  });
+
+  it('should destroy() all the plugins', () => {
+    isLoaded = pluginManager.load("numbers", {});
+    isLoaded.should.be.true;
+    let colorsPlugin = pluginManager.get("colors");
+    let numbersPlugin = pluginManager.get("numbers");
+    let destroyColorsSpy = sinonSandbox.spy(colorsPlugin, "destroy");
+    let destroyNumbersSpy = sinonSandbox.spy(numbersPlugin, "destroy");
+    pluginManager.destroy();
+    destroyColorsSpy.should.have.been.calledOnce;
+    destroyNumbersSpy.should.have.been.calledOnce;
   });
 });
 

@@ -16,7 +16,7 @@ export default class NumbersPlugin extends BasePlugin {
       "firstCellValue": 4,
       "lastCellValue": 6
     });
-    this.getLogger().info(`in <${name}> plugin constructor.`);
+    this._logger.info(`in <${name}> plugin constructor.`);
   }
 
   static isValid(): boolean {
@@ -25,10 +25,10 @@ export default class NumbersPlugin extends BasePlugin {
 
   configure(userConfig: Object) {
     super.configure(userConfig);
-    this._size = this.getConfig().size;
-    this._firstCellValue = this.getConfig().firstCellValue;
-    this._lastCellValue = this.getConfig().lastCellValue;
-    this.getLogger().info("configure", this.getConfig());
+    this._size = this._config.size;
+    this._firstCellValue = this._config.firstCellValue;
+    this._lastCellValue = this._config.lastCellValue;
+    this._logger.info("configure", this._config);
   }
 
   setup() {
@@ -37,7 +37,7 @@ export default class NumbersPlugin extends BasePlugin {
       this._numbers[i] = (i * i) / 2;
     }
     this._numbers[this._size - 1] = this._lastCellValue;
-    this.getLogger().info("setup", this._numbers);
+    this._logger.info("setup", this._numbers);
   }
 
   destroy() {
@@ -45,7 +45,7 @@ export default class NumbersPlugin extends BasePlugin {
     this._firstCellValue = 0;
     this._lastCellValue = 0;
     this._size = 0;
-    this.getLogger().info("destroy", this._numbers, this._firstCellValue, this._lastCellValue, this._size);
+    this._logger.info("destroy", this._numbers, this._firstCellValue, this._lastCellValue, this._size);
   }
 }
 

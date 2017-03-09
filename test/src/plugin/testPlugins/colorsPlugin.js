@@ -14,7 +14,7 @@ export default class ColorsPlugin extends BasePlugin {
       "size": 3,
       "favouriteColor": "green"
     });
-    this.getLogger().info(`in <${name}> plugin constructor.`);
+    this._logger.info(`in <${name}> plugin constructor.`);
   }
 
   static isValid(): boolean {
@@ -23,21 +23,21 @@ export default class ColorsPlugin extends BasePlugin {
 
   configure(userConfig: Object) {
     super.configure(userConfig);
-    this._size = this.getConfig().size;
-    this._favouriteColor = this.getConfig().favouriteColor;
-    this.getLogger().info("configure", this.getConfig());
+    this._size = this._config.size;
+    this._favouriteColor = this._config.favouriteColor;
+    this._logger.info("configure", this._config);
   }
 
   setup() {
     this._colors = [this._favouriteColor, "blue", "pink"];
-    this.getLogger().info("setup", this._colors);
+    this._logger.info("setup", this._colors);
   }
 
   destroy() {
     this._colors = [];
     this._favouriteColor = "";
     this._size = 0;
-    this.getLogger().info("destroy", this._colors, this._favouriteColor, this._size);
+    this._logger.info("destroy", this._colors, this._favouriteColor, this._size);
   }
 }
 

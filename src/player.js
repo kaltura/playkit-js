@@ -3,8 +3,8 @@ import EventManager from './events/eventManager';
 import FakeEventTarget from './events/FakeEventTarget';
 import FakeEvent from './events/FakeEvent';
 import PlayerEvents from './events/events';
-import { isNumber, isFloat } from './util/util';
-import { capitlize } from './util/stringUtils';
+import {isNumber, isFloat} from './util/util';
+import {capitlize} from './util/stringUtils';
 import LoggerFactory from './util/loggerFactory';
 import Html5 from './engine/Html5';
 import PluginManager from './plugin/PluginManager';
@@ -39,7 +39,7 @@ class Player extends FakeEventTarget {
   destroy() {
     this.engine_.destroy();
     this.eventManager_.destroy();
-    this.destroyPlugins(this.config_);
+    this.pluginManager_.destroy();
     // this.engine_ = null;
     // this.eventManager_ = null;
     this.config_ = null;
@@ -57,15 +57,6 @@ class Player extends FakeEventTarget {
           this.pluginManager_.configure(name, plugins[name]);
           this.pluginManager_.setup(name);
         }
-      }
-    }
-  }
-
-  destroyPlugins(config: Object): void {
-    let plugins = config.plugins;
-    for (let name in plugins) {
-      if (plugins.hasOwnProperty(name)) {
-        this.pluginManager_.destroy(name);
       }
     }
   }

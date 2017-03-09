@@ -2,31 +2,37 @@
 import Player from "../player";
 import loggerFactory from "../util/loggerFactory";
 import {merge} from "../util/util";
+import EventManager from '../events/eventManager';
+import FakeEventTarget from '../events/fakeEventTarget';
 
-export default class BasePlugin implements IPlugin {
+export default class BasePlugin extends FakeEventTarget implements IPlugin {
   /**
-   * the runtime configuration of the plugin
+   * The runtime configuration of the plugin.
    */
   _config: Object;
   /**
-   * the default configuration of the plugin
+   * The default configuration of the plugin.
    */
   _defaultConfig: Object;
   /**
-   * the name of the plugin
+   * The name of the plugin.
    */
   _name: string;
   /**
-   * the logger of the plugin
+   * The logger of the plugin.
    */
   _logger: any;
   /**
-   * reference to the actual player
+   * Reference to the actual player.
    */
   _player: Player;
+  /**
+   * The event manager of the plugin.
+   */
+  _eventManager: EventManager;
 
   /**
-   * factory method to create the actual plugin
+   * factory method to create the actual plugin.
    * @param name - plugin name
    * @param player - player reference
    * @returns {BasePlugin}
@@ -36,8 +42,8 @@ export default class BasePlugin implements IPlugin {
   }
 
   /**
-   * returns under what conditions the plugin is valid
-   * default implementation is to always return true
+   * Returns under what conditions the plugin is valid.
+   * Default implementation is to always return true.
    * @returns {boolean}
    */
   static isValid(): boolean {
@@ -50,18 +56,19 @@ export default class BasePlugin implements IPlugin {
    * @param player - player reference
    * @param defaultConfig - default config for the plugin
    */
-  constructor(name: string, player: Player, defaultConfig?: Object) {
+  constructor(name: string, player: Player, defaultConfig: Object = {}) {
+    super();
     this._name = name;
     this._player = player;
+    this._eventManager = new EventManager();
     this._logger = loggerFactory.getLogger(this._name);
-    this._defaultConfig = defaultConfig || {};
-    this._config = this._defaultConfig;
+    this._config = this._defaultConfig = defaultConfig;
   }
 
   /**
-   * runs the config handling logic of the plugin
-   * the default implementation is to merge the default config and the user config
-   * will be call before setup()
+   * Runs the config handling logic of the plugin.
+   * The default implementation is to merge the default config and the user config.
+   * Will be call before setup().
    * @param config
    */
   configure(config: Object): void {
@@ -69,16 +76,16 @@ export default class BasePlugin implements IPlugin {
   }
 
   /**
-   * runs the setup logic of the plugin
-   * plugin must implement this method
+   * Runs the setup logic of the plugin.
+   * Plugin must implement this method.
    */
   setup(): void {
     throw new NotImplementedException('Plugin must implement setup() method');
   }
 
   /**
-   * returns the config of the plugin
-   * if attribute is provided, returns its value
+   * Returns the config of the plugin.
+   * If attribute is provided, returns its value.
    * @param attr
    * @returns {*}
    */
@@ -90,7 +97,7 @@ export default class BasePlugin implements IPlugin {
   }
 
   /**
-   * updates the config of the plugin
+   * Updates the config of the plugin.
    * @param update
    */
   updateConfig(update: Object): void {
@@ -98,43 +105,19 @@ export default class BasePlugin implements IPlugin {
   }
 
   /**
-   * runs the destroy logic of the plugin
-   * plugin must implement this method
+   * Runs the destroy logic of the plugin.
+   * plugin must implement this method.
    */
   destroy(): void {
     throw new NotImplementedException('Plugin must implement destroy() method');
   }
 
   /**
-   * getter for the plugin name
+   * Getter for the plugin's name.
    * @returns {string}
    */
   getName(): string {
     return this._name;
-  }
-
-  /**
-   * getter for the player reference
-   * @returns {Player}
-   */
-  getPlayer(): Player {
-    return this._player;
-  }
-
-  /**
-   * getter for the plugin logger
-   * @returns {any}
-   */
-  getLogger(): any {
-    return this._logger;
-  }
-
-  /**
-   * getter for the default configuration
-   * @returns {Object}
-   */
-  getDefaultConfig(): Object {
-    return this._defaultConfig;
   }
 }
 
