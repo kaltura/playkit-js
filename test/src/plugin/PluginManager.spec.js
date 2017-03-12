@@ -20,6 +20,30 @@ describe('PluginManager.registry', () => {
     unRegisterAll();
   });
 
+  it('shouldn\'t register the plugin because handler is not a function', () => {
+    let exceptionOccurred = false;
+    try {
+      isRegister = PluginManager.register("numbers", {});
+    } catch (e) {
+      exceptionOccurred = true;
+      e.name.should.equal('PluginHandlerIsNotValidException');
+      e.message.should.equal('To activate plugin you must provide a class derived from BasePlugin');
+    }
+    exceptionOccurred.should.be.true;
+  });
+
+  it('shouldn\'t register the plugin because handler isn\'t derived from BasePlugin', () => {
+    let exceptionOccurred = false;
+    try {
+      isRegister = PluginManager.register("numbers", function(){});
+    } catch (e) {
+      exceptionOccurred = true;
+      e.name.should.equal('PluginHandlerIsNotValidException');
+      e.message.should.equal('To activate plugin you must provide a class derived from BasePlugin');
+    }
+    exceptionOccurred.should.be.true;
+  });
+
   it('should register new plugins', () => {
     isRegister = PluginManager.register("numbers", NumbersPlugin);
     isRegister.should.be.true;
@@ -88,7 +112,7 @@ describe('PluginManager.plugins', () => {
       pluginManager.load("bubbles", {});
     } catch (e) {
       isThrowException = true;
-      e.message.should.equal("Cannot load \<bubbles\> - plugin isn't registered.");
+      e.message.should.equal("Cannot load bubbles plugin. Name not found in the registry");
     }
     isThrowException.should.be.true;
   });

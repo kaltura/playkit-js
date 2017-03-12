@@ -1,9 +1,10 @@
 //@flow
 import BasePlugin from "./BasePlugin";
+import PluginError from "./PluginError";
 import Player from "../player";
 import loggerFactory from "../util/loggerFactory";
 
-let logger = loggerFactory.getLogger("PluginManager");
+const logger = loggerFactory.getLogger("PluginManager");
 
 export default class PluginManager {
   /**
@@ -28,9 +29,12 @@ export default class PluginManager {
    * @returns {boolean}
    */
   static register(name: string, handler: Function): boolean {
+    if (typeof handler !== 'function' || handler.prototype instanceof BasePlugin === false) {
+      throw new PluginError(PluginError.TYPE.NOT_VALID_HANDLER).getError();
+    }
     if (!this._registry.has(name)) {
       this._registry.set(name, handler);
-      logger.info(`Register <${name}> plugin.`);
+      logger.info(`Plugin <${name}> has been registered successfully.`);
       return true;
     }
     logger.info(`Plugin <${name}> is already registered, do not register again.`);
@@ -56,7 +60,7 @@ export default class PluginManager {
    */
   load(name: string, player: Player): boolean {
     if (!PluginManager._registry.has(name)) {
-      throw new Error(`Cannot load <${name}> - plugin isn't registered.`);
+      throw new PluginError(PluginError.TYPE.NOT_REGISTERED_PLUGIN, name).getError();
     }
     let pluginClass = PluginManager._registry.get(name);
     if (pluginClass != null && pluginClass.isValid()) {

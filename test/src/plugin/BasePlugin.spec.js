@@ -9,11 +9,10 @@ describe('BasePlugin', () => {
   });
 
   it('should create all BasePlugin properties', () => {
-    basePlugin._logger.should.exist;
-    basePlugin._player.should.exist;
-    basePlugin._player.should.exist;
-    basePlugin._config.should.exist;
-    basePlugin._defaultConfig.should.exist;
+    basePlugin.logger.should.exist;
+    basePlugin.player.should.exist;
+    basePlugin.name.should.exist;
+    basePlugin.eventManager.should.exist;
   });
 
   it('should return the plugin name', () => {

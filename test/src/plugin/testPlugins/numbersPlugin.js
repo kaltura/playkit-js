@@ -10,25 +10,27 @@ export default class NumbersPlugin extends BasePlugin {
   _size: number = 0;
   _numbers: Array = [];
 
+  defaultConfig: Object = {
+    "size": 10,
+    "firstCellValue": 4,
+    "lastCellValue": 6
+  };
+
   constructor(name: string, player: Player) {
-    super(name, player, {
-      "size": 10,
-      "firstCellValue": 4,
-      "lastCellValue": 6
-    });
-    this._logger.info(`in <${name}> plugin constructor.`);
+    super(name, player);
+    this.logger.info(`in <${name}> plugin constructor.`);
   }
 
   static isValid(): boolean {
     return true;
   }
 
-  configure(userConfig: Object) {
-    super.configure(userConfig);
-    this._size = this._config.size;
-    this._firstCellValue = this._config.firstCellValue;
-    this._lastCellValue = this._config.lastCellValue;
-    this._logger.info("configure", this._config);
+  configure(config: Object) {
+    super.configure(config);
+    this._size = this.config.size;
+    this._firstCellValue = this.config.firstCellValue;
+    this._lastCellValue = this.config.lastCellValue;
+    this.logger.info("configure", this.config);
   }
 
   setup() {
@@ -37,7 +39,7 @@ export default class NumbersPlugin extends BasePlugin {
       this._numbers[i] = (i * i) / 2;
     }
     this._numbers[this._size - 1] = this._lastCellValue;
-    this._logger.info("setup", this._numbers);
+    this.logger.info("setup", this._numbers);
   }
 
   destroy() {
@@ -45,7 +47,7 @@ export default class NumbersPlugin extends BasePlugin {
     this._firstCellValue = 0;
     this._lastCellValue = 0;
     this._size = 0;
-    this._logger.info("destroy", this._numbers, this._firstCellValue, this._lastCellValue, this._size);
+    this.logger.info("destroy", this._numbers, this._firstCellValue, this._lastCellValue, this._size);
   }
 }
 

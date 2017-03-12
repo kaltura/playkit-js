@@ -2,39 +2,35 @@
 import Player from "../player";
 import loggerFactory from "../util/loggerFactory";
 import {merge} from "../util/util";
-import EventManager from '../events/eventManager';
-import FakeEventTarget from '../events/fakeEventTarget';
+import EventManager from "../events/eventManager";
+import PluginError from "./PluginError";
 
-export default class BasePlugin extends FakeEventTarget implements IPlugin {
+export default class BasePlugin implements IPlugin {
   /**
    * The runtime configuration of the plugin.
    */
-  _config: Object;
-  /**
-   * The default configuration of the plugin.
-   */
-  _defaultConfig: Object;
+  config: Object;
   /**
    * The name of the plugin.
    */
-  _name: string;
+  name: string;
   /**
    * The logger of the plugin.
    */
-  _logger: any;
+  logger: any;
   /**
    * Reference to the actual player.
    */
-  _player: Player;
+  player: Player;
   /**
    * The event manager of the plugin.
    */
-  _eventManager: EventManager;
+  eventManager: EventManager;
 
   /**
-   * factory method to create the actual plugin.
-   * @param name - plugin name
-   * @param player - player reference
+   * Factory method to create the actual plugin.
+   * @param name
+   * @param player
    * @returns {BasePlugin}
    */
   static createPlugin(name: string, player: Player): BasePlugin {
@@ -43,26 +39,23 @@ export default class BasePlugin extends FakeEventTarget implements IPlugin {
 
   /**
    * Returns under what conditions the plugin is valid.
-   * Default implementation is to always return true.
+   * Plugin must implement this method.
    * @returns {boolean}
    */
   static isValid(): boolean {
-    throw new NotImplementedException('Plugin must implement isValid() method');
+    throw new PluginError(PluginError.TYPE.NOT_IMPLEMENTED_METHOD, 'isValid()').getError();
   }
 
   /**
    * constructor
-   * @param name - name of the plugin
-   * @param player - player reference
-   * @param defaultConfig - default config for the plugin
+   * @param name
+   * @param player
    */
-  constructor(name: string, player: Player, defaultConfig: Object = {}) {
-    super();
-    this._name = name;
-    this._player = player;
-    this._eventManager = new EventManager();
-    this._logger = loggerFactory.getLogger(this._name);
-    this._config = this._defaultConfig = defaultConfig;
+  constructor(name: string, player: Player) {
+    this.name = name;
+    this.player = player;
+    this.eventManager = new EventManager();
+    this.logger = loggerFactory.getLogger(this.name);
   }
 
   /**
@@ -72,7 +65,11 @@ export default class BasePlugin extends FakeEventTarget implements IPlugin {
    * @param config
    */
   configure(config: Object): void {
-    this._config = merge(this._defaultConfig, config);
+    if (this.defaultConfig != null && typeof this.defaultConfig === 'object') {
+      this.config = merge(this.defaultConfig, config);
+    } else {
+      this.config = merge(this.config, config);
+    }
   }
 
   /**
@@ -80,7 +77,7 @@ export default class BasePlugin extends FakeEventTarget implements IPlugin {
    * Plugin must implement this method.
    */
   setup(): void {
-    throw new NotImplementedException('Plugin must implement setup() method');
+    throw new PluginError(PluginError.TYPE.NOT_IMPLEMENTED_METHOD, 'setup()').getError();
   }
 
   /**
@@ -91,9 +88,9 @@ export default class BasePlugin extends FakeEventTarget implements IPlugin {
    */
   getConfig(attr?: string): any {
     if (attr) {
-      return this._config[attr];
+      return this.config[attr];
     }
-    return this._config;
+    return this.config;
   }
 
   /**
@@ -101,7 +98,7 @@ export default class BasePlugin extends FakeEventTarget implements IPlugin {
    * @param update
    */
   updateConfig(update: Object): void {
-    this._config = merge(this._config, update);
+    this.config = merge(this.config, update);
   }
 
   /**
@@ -109,7 +106,7 @@ export default class BasePlugin extends FakeEventTarget implements IPlugin {
    * plugin must implement this method.
    */
   destroy(): void {
-    throw new NotImplementedException('Plugin must implement destroy() method');
+    throw new PluginError(PluginError.TYPE.NOT_IMPLEMENTED_METHOD, 'destroy()').getError();
   }
 
   /**
@@ -117,14 +114,6 @@ export default class BasePlugin extends FakeEventTarget implements IPlugin {
    * @returns {string}
    */
   getName(): string {
-    return this._name;
+    return this.name;
   }
 }
-
-function NotImplementedException(message: string) {
-  return {
-    message: message,
-    name: 'NotImplementedPluginMethodException'
-  }
-}
-
