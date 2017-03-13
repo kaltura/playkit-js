@@ -1,14 +1,15 @@
 // @flow
-
-import EventManager from './util/eventManager';
-import FakeEventTarget from './util/FakeEventTarget';
+import EventManager from './events/eventManager';
+import FakeEventTarget from './events/FakeEventTarget';
+import FakeEvent from './events/FakeEvent';
+import PlayerEvents from './events/events';
 import { isNumber, isFloat } from './util/util';
-import FakeEvent from './util/FakeEvent';
 import { capitlize } from './util/stringUtils';
-import PlayerEvents from './events';
+import LoggerFactory from './util/loggerFactory';
 import Html5 from './engine/Html5';
 
 type ListenerType = (event: FakeEvent) => any;
+let logger = LoggerFactory.getLogger('Player');
 
 class Player extends FakeEventTarget implements IPlayer {
   eventManager_: EventManager;
@@ -28,6 +29,7 @@ class Player extends FakeEventTarget implements IPlayer {
     this.config_ = Player.defaultConfig_();
     this.selectEngine(this.config_);
     this.attachMedia();
+    logger.info('player is ready!');
   }
 
   destroy() {

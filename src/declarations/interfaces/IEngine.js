@@ -1,5 +1,4 @@
 //@flow
-
 declare interface IEngine {
   destroy(): void;
   attach(): void;

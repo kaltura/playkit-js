@@ -1,9 +1,8 @@
 //@flow
-
 export default class PlayerDecoratorBase implements IPlayer {
   player: IPlayer;
 
-  setPlayer( player: IPlayer ) {
+  setPlayer(player: IPlayer) {
     this.player = player;
   }
 
@@ -14,5 +13,4 @@ export default class PlayerDecoratorBase implements IPlayer {
   pause() {
     return this.player.pause();
   }
-
 }
