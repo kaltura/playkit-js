@@ -1,6 +1,6 @@
 //@flow
-import FakeEvent from "./FakeEvent";
-import MultiMap from "../util/MultiMap";
+import FakeEvent from "./fakeEvent";
+import MultiMap from "../util/multiMap";
 
 
 /**
