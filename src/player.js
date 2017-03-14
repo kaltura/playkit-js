@@ -6,7 +6,7 @@ import PlayerEvents from './events/events';
 import { isNumber, isFloat } from './util/util';
 import { capitlize } from './util/stringUtils';
 import LoggerFactory from './util/loggerFactory';
-import Html5 from './engine/Html5';
+import Html5 from './engine/html5';
 
 type ListenerType = (event: FakeEvent) => any;
 let logger = LoggerFactory.getLogger('Player');
