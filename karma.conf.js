@@ -1,11 +1,18 @@
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = 'test';
 }
+
 module.exports = function (config) {
-  config.set({
+  let karmaConf = {
     logLevel: config.LOG_INFO,
     // Run in Chrome
     browsers: ['Chrome'],
+    customLaunchers: {
+      Chrome_travis_ci: {
+        base: 'Chrome',
+        flags: ['--no-sandbox']
+      }
+    },
     // Just run once by default
     singleRun: true,
     // Use the mocha test framework
@@ -44,5 +51,11 @@ module.exports = function (config) {
         reporter: 'html'
       }
     }
-  });
+  };
+
+  if (process.env.TRAVIS) {
+    karmaConf.browsers = ['Chrome_travis_ci'];
+  }
+
+  config.set(karmaConf);
 };
