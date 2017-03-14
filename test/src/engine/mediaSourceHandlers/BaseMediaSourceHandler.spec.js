@@ -1,7 +1,4 @@
-import chai from 'chai';
-import BaseMediaSourceHandler from '../../../src/engine/mediaSourceHandlers/BaseMediaSourceHandler';
-
-chai.should();
+import BaseMediaSourceHandler from '../../../../src/engine/mediaSourceHandlers/BaseMediaSourceHandler';
 
 describe('BaseMediaSourceHandler:isSupported', () => {
 

@@ -1,8 +1,5 @@
-import chai from 'chai';
-import {playkit} from '../src/playkit';
-import fakeMSE from '../src/engine/mediaSourceHandlers/fakeMSE';
-
-chai.should();
+import {playkit} from '../../src/playkit';
+import fakeMSE from '../../src/engine/mediaSourceHandlers/fakeMSE';
 
 describe('playkit:playkit', () => {
   it('should play mp4 stream', (done) => {
