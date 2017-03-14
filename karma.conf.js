@@ -7,6 +7,7 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     // Run in Chrome
     browsers: ['Chrome'],
+    // Create custom launcher in case running with Travis
     customLaunchers: {
       Chrome_travis_ci: {
         base: 'Chrome',

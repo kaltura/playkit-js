@@ -4,6 +4,7 @@ import Playkit from '../../src/playkit';
 describe("Playkit", () => {
 
   it("spec name", function () {
+    true.should.be.false;
   });
 
 });
