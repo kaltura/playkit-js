@@ -1,5 +1,5 @@
 // @flow
-import MultiMap from "../util/MultiMap";
+import MultiMap from "../util/multiMap";
 import FakeEvent from "./FakeEvent";
 
 
