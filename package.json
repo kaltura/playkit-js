@@ -5,9 +5,9 @@
   "scripts": {
     "build": "webpack",
     "dev": "webpack --progress --colors --watch",
-    "test": "mocha ./test/setup/mocha.js ./test/src --compilers js:babel-core/register --colors --recursive -r jsdom-global/register",
-    "test:watch": "mocha ./test/setup/mocha.js ./test/src --compilers js:babel-core/register --colors -w --recursive -r jsdom-global/register",
-    "test:cover": "cross-env NODE_ENV=test nyc mocha --recursive -r jsdom-global/register",
+    "test": "mocha ./test/setup/mocha.js ./test/src --compilers js:babel-core/register --colors --recursive",
+    "test:watch": "mocha ./test/setup/mocha.js ./test/src --compilers js:babel-core/register --colors -w --recursive",
+    "test:cover": "cross-env NODE_ENV=test nyc mocha --recursive",
     "start": "webpack-dev-server"
   },
   "devDependencies": {
@@ -28,8 +28,6 @@
     "eslint-plugin-import": "^2.2.0",
     "flow-bin": "^0.38.0",
     "istanbul": "^0.4.5",
-    "jsdom": "^9.11.0",
-    "jsdom-global": "^2.1.1",
     "karma": "^1.5.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.0.0",
