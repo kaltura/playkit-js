@@ -26,15 +26,22 @@ export default class BasePlugin implements IPlugin {
    * The event manager of the plugin.
    */
   eventManager: EventManager;
+  /**
+   * The default configuration of the plugin.
+   * Inherited plugins should override this property.
+   * @type {{}}
+   */
+  static defaultConfig: Object = {};
 
   /**
    * Factory method to create the actual plugin.
    * @param name
    * @param player
+   * @param config
    * @returns {BasePlugin}
    */
-  static createPlugin(name: string, player: Player): BasePlugin {
-    return new this(name, player);
+  static createPlugin(name: string, player: Player, config: Object = {}): BasePlugin {
+    return new this(name, player, config);
   }
 
   /**
@@ -50,34 +57,14 @@ export default class BasePlugin implements IPlugin {
    * constructor
    * @param name
    * @param player
+   * @param config
    */
-  constructor(name: string, player: Player) {
+  constructor(name: string, player: Player, config: Object) {
     this.name = name;
     this.player = player;
     this.eventManager = new EventManager();
     this.logger = loggerFactory.getLogger(this.name);
-  }
-
-  /**
-   * Runs the config handling logic of the plugin.
-   * The default implementation is to merge the default config and the user config.
-   * Will be call before setup().
-   * @param config
-   */
-  configure(config: Object): void {
-    if (this.defaultConfig != null && typeof this.defaultConfig === 'object') {
-      this.config = merge(this.defaultConfig, config);
-    } else {
-      this.config = merge(this.config, config);
-    }
-  }
-
-  /**
-   * Runs the setup logic of the plugin.
-   * Plugin must implement this method.
-   */
-  setup(): void {
-    throw new PluginError(PluginError.TYPE.NOT_IMPLEMENTED_METHOD, 'setup()').getError();
+    this.config = merge(this.constructor.defaultConfig, config);
   }
 
   /**

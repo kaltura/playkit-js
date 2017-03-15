@@ -1,6 +1,6 @@
 import PluginManager from "../../../src/plugin/PluginManager";
-import ColorsPlugin from "./testPlugins/colorsPlugin";
-import NumbersPlugin from "./testPlugins/numbersPlugin";
+import ColorsPlugin from "./test-plugins/ColorsPlugin";
+import NumbersPlugin from "./test-plugins/NumbersPlugin";
 
 function registerAll() {
   PluginManager.register("numbers", NumbersPlugin);
@@ -14,16 +14,18 @@ function unRegisterAll() {
 
 describe('PluginManager.registry', () => {
 
-  let isRegister = false;
+  beforeEach(() => {
+    registerAll();
+  });
 
-  before(() => {
+  afterEach(() => {
     unRegisterAll();
   });
 
   it('shouldn\'t register the plugin because handler is not a function', () => {
     let exceptionOccurred = false;
     try {
-      isRegister = PluginManager.register("numbers", {});
+      PluginManager.register("numbers", {});
     } catch (e) {
       exceptionOccurred = true;
       e.name.should.equal('PluginHandlerIsNotValidException');
@@ -35,7 +37,8 @@ describe('PluginManager.registry', () => {
   it('shouldn\'t register the plugin because handler isn\'t derived from BasePlugin', () => {
     let exceptionOccurred = false;
     try {
-      isRegister = PluginManager.register("numbers", function(){});
+      PluginManager.register("numbers", function () {
+      });
     } catch (e) {
       exceptionOccurred = true;
       e.name.should.equal('PluginHandlerIsNotValidException');
@@ -45,19 +48,13 @@ describe('PluginManager.registry', () => {
   });
 
   it('should register new plugins', () => {
-    isRegister = PluginManager.register("numbers", NumbersPlugin);
-    isRegister.should.be.true;
-    isRegister = PluginManager.register("colors", ColorsPlugin);
-    isRegister.should.be.true;
     PluginManager._registry.size.should.equal(2);
     PluginManager._registry.should.be.instanceof(Map);
   });
 
   it('should not register plugins that already registered', () => {
-    isRegister = PluginManager.register("numbers", NumbersPlugin);
-    isRegister.should.be.false;
-    isRegister = PluginManager.register("colors", ColorsPlugin);
-    isRegister.should.be.false;
+    PluginManager.register("numbers", NumbersPlugin).should.be.false;
+    PluginManager.register("colors", ColorsPlugin).should.be.false;
     PluginManager._registry.size.should.equal(2);
   });
 
@@ -77,28 +74,23 @@ describe('PluginManager.registry', () => {
     PluginManager._registry.has("colors").should.be.false;
     PluginManager._registry.size.should.equal(1);
   });
-
-  after(function () {
-    unRegisterAll();
-  });
 });
 
 describe('PluginManager.plugins', () => {
 
-  let pluginManager = new PluginManager();
-  let isLoaded = false;
-  let sinonSandbox;
+  let pluginManager;
+  let sandbox;
 
-  before(() => {
+  beforeEach(() => {
+    pluginManager = new PluginManager();
+    sandbox = sinon.sandbox.create();
     registerAll();
   });
 
-  beforeEach(() => {
-    sinonSandbox = sinon.sandbox.create();
-  });
-
   afterEach(() => {
-    sinonSandbox.restore();
+    pluginManager = null;
+    sandbox.restore();
+    unRegisterAll();
   });
 
   it('should create all PluginManager properties', () => {
@@ -107,72 +99,59 @@ describe('PluginManager.plugins', () => {
   });
 
   it('should throw error when try to load() plugin who isn\'t registered', () => {
-    let isThrowException = false;
+    let exceptionOccurred = false;
     try {
-      pluginManager.load("bubbles", {});
+      pluginManager.load("bubbles", {}, {});
     } catch (e) {
-      isThrowException = true;
+      exceptionOccurred = true;
       e.message.should.equal("Cannot load bubbles plugin. Name not found in the registry");
     }
-    isThrowException.should.be.true;
+    exceptionOccurred.should.be.true;
   });
 
   it('shouldn\'t load() the plugin', () => {
-    sinonSandbox.stub(ColorsPlugin, "isValid", function () {
+    sandbox.stub(ColorsPlugin, "isValid", function () {
       return false;
     });
-    isLoaded = pluginManager.load("colors", {});
-    isLoaded.should.be.false;
+    pluginManager.load("colors", {}, {}).should.be.false;
   });
 
   it('should load() the plugins', () => {
-    isLoaded = pluginManager.load("colors", {});
-    isLoaded.should.be.true;
+    pluginManager.load("colors", {}, {}).should.be.true;
     pluginManager._plugins.size.should.equal(1);
-    isLoaded = pluginManager.load("numbers", {});
-    isLoaded.should.be.true;
+    pluginManager.load("numbers", {}, {}).should.be.true;
     pluginManager._plugins.size.should.equal(2);
   });
 
   it('should get() the correct plugin', () => {
+    pluginManager.load("colors", {}, {}).should.be.true;
+    pluginManager.load("numbers", {}, {}).should.be.true;
     pluginManager.get("colors").should.be.instanceof(ColorsPlugin);
     pluginManager.get("numbers").should.be.instanceof(NumbersPlugin);
   });
 
   it('should remove() the specific plugin', () => {
-    pluginManager.remove("numbers");
+    pluginManager.load("numbers", {}, {}).should.be.true;
     pluginManager._plugins.size.should.equal(1);
-  });
-
-  it('should configure() the specific plugin', () => {
-    let colorsPlugin = pluginManager.get("colors");
-    let configureSpy = sinonSandbox.spy(colorsPlugin, "configure");
-    pluginManager.configure("colors", {'test': 1});
-    configureSpy.should.have.been.calledOnce;
-    configureSpy.should.have.been.calledWithExactly({'test': 1});
-  });
-
-  it('should setup() the specific plugin', () => {
-    let colorsPlugin = pluginManager.get("colors");
-    let setupSpy = sinonSandbox.spy(colorsPlugin, "setup");
-    pluginManager.setup("colors");
-    setupSpy.should.have.been.calledOnce;
+    pluginManager.remove("numbers");
+    pluginManager._plugins.size.should.equal(0);
   });
 
   it('should _destroy() the specific plugin', () => {
+    pluginManager.load("colors", {}, {}).should.be.true;
     let colorsPlugin = pluginManager.get("colors");
-    let destroySpy = sinonSandbox.spy(colorsPlugin, "destroy");
+    let destroySpy = sandbox.spy(colorsPlugin, "destroy");
     pluginManager._destroy(colorsPlugin);
     destroySpy.should.have.been.calledOnce;
   });
 
   it('should destroy() all the plugins', () => {
-    isLoaded = pluginManager.load("numbers", {});
-    isLoaded.should.be.true;
+    pluginManager.load("colors", {}, {}).should.be.true;
+    pluginManager.load("numbers", {}, {}).should.be.true;
     let colorsPlugin = pluginManager.get("colors");
     let numbersPlugin = pluginManager.get("numbers");
-    let destroyColorsSpy = sinonSandbox.spy(colorsPlugin, "destroy");
-    let destroyNumbersSpy = sinonSandbox.spy(numbersPlugin, "destroy");
+    let destroyColorsSpy = sandbox.spy(colorsPlugin, "destroy");
+    let destroyNumbersSpy = sandbox.spy(numbersPlugin, "destroy");
     pluginManager.destroy();
     destroyColorsSpy.should.have.been.calledOnce;
     destroyNumbersSpy.should.have.been.calledOnce;

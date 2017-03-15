@@ -9,30 +9,30 @@ export default class ColorsPlugin extends BasePlugin {
   _size: number = 0;
   _colors: Array = [];
 
-  defaultConfig: Object = {
+  static defaultConfig: Object = {
     "size": 3,
     "favouriteColor": "green"
   };
-
-  constructor(name: string, player: Player) {
-    super(name, player);
-    this.logger.info(`in <${name}> plugin constructor.`);
-  }
 
   static isValid(): boolean {
     return true;
   }
 
-  configure(config: Object) {
-    super.configure(config);
-    this._size = this.config.size;
-    this._favouriteColor = this.config.favouriteColor;
-    this.logger.info("configure", this.config);
+  constructor(name: string, player: Player, config: Object) {
+    super(name, player, config);
+    this._configure();
+    this._setup();
   }
 
-  setup() {
+  _configure() {
+    this._size = this.config.size;
+    this._favouriteColor = this.config.favouriteColor;
+    this.logger.info("_configure", this.config);
+  }
+
+  _setup() {
     this._colors = [this._favouriteColor, "blue", "pink"];
-    this.logger.info("setup", this._colors);
+    this.logger.info("_setup", this._colors);
   }
 
   destroy() {

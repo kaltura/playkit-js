@@ -1,11 +1,16 @@
 import BasePlugin from "../../../src/plugin/BasePlugin";
 
-let basePlugin;
-
 describe('BasePlugin', () => {
 
-  before(() => {
-    basePlugin = new BasePlugin("basePlugin", {});
+  let basePlugin;
+  let config = {'x': 1, 'y': 2};
+
+  beforeEach(() => {
+    basePlugin = BasePlugin.createPlugin("basePlugin", {}, config);
+  });
+
+  afterEach(() => {
+    basePlugin = null;
   });
 
   it('should create all BasePlugin properties', () => {
@@ -13,25 +18,24 @@ describe('BasePlugin', () => {
     basePlugin.player.should.exist;
     basePlugin.name.should.exist;
     basePlugin.eventManager.should.exist;
+    basePlugin.config.should.deep.equal(config);
   });
 
   it('should return the plugin name', () => {
     basePlugin.getName().should.equal("basePlugin");
   });
 
-  it('should configure plugin config', () => {
-    let dummyConfig = {'x': 1, 'y': 2};
-    basePlugin.configure(dummyConfig);
-    basePlugin.getConfig().should.deep.equal(dummyConfig);
+  it('should return the plugin config', () => {
+    basePlugin.getConfig().should.deep.equal(config);
   });
 
   it('should return the config attribute value', () => {
     basePlugin.getConfig('x').should.deep.equal(1);
   });
 
-  it('should update plugin config', () => {
-    let dummyUpdate = {'y': 'hello'};
-    basePlugin.updateConfig(dummyUpdate);
+  it('should update the plugin config', () => {
+    let update = {'y': 'hello'};
+    basePlugin.updateConfig(update);
     basePlugin.getConfig().should.deep.equal({'x': 1, 'y': 'hello'});
   });
 
@@ -43,18 +47,6 @@ describe('BasePlugin', () => {
       exceptionOccurred = true;
       e.name.should.equal('NotImplementedPluginMethodException');
       e.message.should.equal('Plugin must implement isValid() method')
-    }
-    exceptionOccurred.should.be.true;
-  });
-
-  it('should throw setup() exception', () => {
-    let exceptionOccurred = false;
-    try {
-      basePlugin.setup();
-    } catch (e) {
-      exceptionOccurred = true;
-      e.name.should.equal('NotImplementedPluginMethodException');
-      e.message.should.equal('Plugin must implement setup() method')
     }
     exceptionOccurred.should.be.true;
   });

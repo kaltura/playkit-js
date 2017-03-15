@@ -10,36 +10,36 @@ export default class NumbersPlugin extends BasePlugin {
   _size: number = 0;
   _numbers: Array = [];
 
-  defaultConfig: Object = {
+  static defaultConfig: Object = {
     "size": 10,
     "firstCellValue": 4,
     "lastCellValue": 6
   };
 
-  constructor(name: string, player: Player) {
-    super(name, player);
-    this.logger.info(`in <${name}> plugin constructor.`);
-  }
-
   static isValid(): boolean {
     return true;
   }
 
-  configure(config: Object) {
-    super.configure(config);
+  constructor(name: string, player: Player, config: Object) {
+    super(name, player, config);
+    this._configure();
+    this._setup();
+  }
+
+  _configure() {
     this._size = this.config.size;
     this._firstCellValue = this.config.firstCellValue;
     this._lastCellValue = this.config.lastCellValue;
-    this.logger.info("configure", this.config);
+    this.logger.info("_configure", this.config);
   }
 
-  setup() {
+  _setup() {
     this._numbers[0] = this._firstCellValue;
     for (let i = 1; i < this._size - 1; i++) {
       this._numbers[i] = (i * i) / 2;
     }
     this._numbers[this._size - 1] = this._lastCellValue;
-    this.logger.info("setup", this._numbers);
+    this.logger.info("_setup", this._numbers);
   }
 
   destroy() {

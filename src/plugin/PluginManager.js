@@ -56,49 +56,23 @@ export default class PluginManager {
    * Creates a new instance of the plugin in case isValid() of the plugin returns true.
    * @param name
    * @param player
+   * @param config
    * @returns {boolean}
    */
-  load(name: string, player: Player): boolean {
+  load(name: string, player: Player, config: Object = {}): boolean {
     if (!PluginManager._registry.has(name)) {
       throw new PluginError(PluginError.TYPE.NOT_REGISTERED_PLUGIN, name).getError();
     }
     let pluginClass = PluginManager._registry.get(name);
     if (pluginClass != null && pluginClass.isValid()) {
-      this._plugins.set(name, pluginClass.createPlugin(name, player));
+      this._plugins.set(name, pluginClass.createPlugin(name, player, config));
       logger.info(`Plugin <${name}> has been loaded.`);
       return true;
     }
     logger.info(`Plugin <${name}> isn\'t loaded, isValid()=false.`);
     return false;
   }
-
-  /**
-   * Calls configure() method of the plugin's impl.
-   * @param name
-   * @param config
-   */
-  configure(name: string, config: Object): void {
-    if (this._plugins.has(name)) {
-      let plugin = this._plugins.get(name);
-      if (plugin != null) {
-        plugin.configure(config)
-      }
-    }
-  }
-
-  /**
-   * Calls setup() method of the plugin's impl.
-   * @param name
-   */
-  setup(name: string): void {
-    if (this._plugins.has(name)) {
-      let plugin = this._plugins.get(name);
-      if (plugin != null) {
-        plugin.setup();
-      }
-    }
-  }
-
+  
   /**
    * Iterates over all the plugins and calls private _destroy.
    */

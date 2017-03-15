@@ -53,10 +53,7 @@ class Player extends FakeEventTarget {
     let plugins = config.plugins;
     for (let name in plugins) {
       if (plugins.hasOwnProperty(name)) {
-        if (this.pluginManager_.load(name, this)) {
-          this.pluginManager_.configure(name, plugins[name]);
-          this.pluginManager_.setup(name);
-        }
+        this.pluginManager_.load(name, this, plugins[name]);
       }
     }
   }
