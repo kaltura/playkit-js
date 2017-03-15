@@ -3,22 +3,25 @@ import EventManager from './events/eventManager';
 import FakeEventTarget from './events/FakeEventTarget';
 import FakeEvent from './events/FakeEvent';
 import PlayerEvents from './events/events';
-import { isNumber, isFloat } from './util/util';
-import { capitlize } from './util/stringUtils';
+import {isNumber, isFloat} from './util/util';
+import {capitlize} from './util/stringUtils';
 import LoggerFactory from './util/loggerFactory';
 import Html5 from './engine/Html5';
+import PluginManager from './plugin/PluginManager';
 
-type ListenerType = (event: FakeEvent) => any;
 let logger = LoggerFactory.getLogger('Player');
+type ListenerType = (event: FakeEvent) => any;
 
 class Player extends FakeEventTarget {
+  pluginManager_: PluginManager;
   eventManager_: EventManager;
   config_: any;
   engine_: IEngine;
   engineEventHandlers_: Map<string, ListenerType>;
 
-  constructor() {
+  constructor(config: Object) {
     super();
+    this.pluginManager_ = new PluginManager();
     this.eventManager_ = new EventManager();
     this.engineEventHandlers_ = new Map();
     PlayerEvents.forEach((event) => {
@@ -26,7 +29,8 @@ class Player extends FakeEventTarget {
         return this.dispatchEvent(event);
       });
     });
-    this.config_ = Player.defaultConfig_();
+    this.config_ = config || Player.defaultConfig_();
+    this.loadPlugins(this.config_);
     this.selectEngine(this.config_);
     this.attachMedia();
     logger.info('player is ready!');
@@ -35,6 +39,7 @@ class Player extends FakeEventTarget {
   destroy() {
     this.engine_.destroy();
     this.eventManager_.destroy();
+    this.pluginManager_.destroy();
     // this.engine_ = null;
     // this.eventManager_ = null;
     this.config_ = null;
@@ -42,6 +47,15 @@ class Player extends FakeEventTarget {
 
   static defaultConfig_() {
     return {};
+  }
+
+  loadPlugins(config: Object): void {
+    let plugins = config.plugins;
+    for (let name in plugins) {
+      if (plugins.hasOwnProperty(name)) {
+        this.pluginManager_.load(name, this, plugins[name]);
+      }
+    }
   }
 
   selectEngine() {
@@ -54,7 +68,6 @@ class Player extends FakeEventTarget {
 
   attachMedia() {
     // Listen to all HTML5-defined events and trigger them on the player
-
     PlayerEvents.forEach((event) => {
       const handler = this.engineEventHandlers_.get(`onEngine${capitlize(event)}_`);
       if (handler) {
