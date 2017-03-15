@@ -11,7 +11,7 @@ import Html5 from './engine/Html5';
 type ListenerType = (event: FakeEvent) => any;
 let logger = LoggerFactory.getLogger('Player');
 
-class Player extends FakeEventTarget {
+class Player extends FakeEventTarget implements IPlayer {
   eventManager_: EventManager;
   config_: any;
   engine_: IEngine;
@@ -69,7 +69,7 @@ class Player extends FakeEventTarget {
    * @returns {Player}
    */
   play() {
-    return this.engine_.play();
+     this.engine_.play();
   }
 
   /**
