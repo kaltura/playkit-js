@@ -1,7 +1,3 @@
-if (!process.env.NODE_ENV) {
-  process.env.NODE_ENV = 'test';
-}
-
 module.exports = function (config) {
   let karmaConf = {
     logLevel: config.LOG_INFO,
