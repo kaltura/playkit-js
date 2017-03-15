@@ -130,19 +130,14 @@ describe('PluginManager.plugins', () => {
     pluginManager.get("numbers").should.be.instanceof(NumbersPlugin);
   });
 
-  it('should remove() the specific plugin', () => {
-    pluginManager.load("numbers", {}, {}).should.be.true;
-    pluginManager._plugins.size.should.equal(1);
-    pluginManager.remove("numbers");
-    pluginManager._plugins.size.should.equal(0);
-  });
-
   it('should _destroy() the specific plugin', () => {
     pluginManager.load("colors", {}, {}).should.be.true;
     let colorsPlugin = pluginManager.get("colors");
     let destroySpy = sandbox.spy(colorsPlugin, "destroy");
-    pluginManager._destroy(colorsPlugin);
+    pluginManager._destroy(colorsPlugin, "colors");
     destroySpy.should.have.been.calledOnce;
+    (pluginManager.get("colors") === undefined).should.be.true;
+    pluginManager._plugins.size.should.equal(0);
   });
 
   it('should destroy() all the plugins', () => {
@@ -155,6 +150,9 @@ describe('PluginManager.plugins', () => {
     pluginManager.destroy();
     destroyColorsSpy.should.have.been.calledOnce;
     destroyNumbersSpy.should.have.been.calledOnce;
+    (pluginManager.get("colors") === undefined).should.be.true;
+    (pluginManager.get("numbers") === undefined).should.be.true;
+    pluginManager._plugins.size.should.equal(0);
   });
 });
 

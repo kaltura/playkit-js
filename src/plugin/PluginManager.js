@@ -72,21 +72,23 @@ export default class PluginManager {
     logger.info(`Plugin <${name}> isn\'t loaded, isValid()=false.`);
     return false;
   }
-  
+
   /**
    * Iterates over all the plugins and calls private _destroy.
    */
   destroy(): void {
-    this._plugins.forEach(this._destroy);
+    this._plugins.forEach(this._destroy.bind(this));
   }
 
   /**
    * Calls destroy() method of the plugin's impl.
    * @param plugin
+   * @param name
    * @private
    */
-  _destroy(plugin: BasePlugin): void {
+  _destroy(plugin: BasePlugin, name: string): void {
     plugin.destroy();
+    this._plugins.delete(name);
   }
 
   /**
@@ -96,15 +98,5 @@ export default class PluginManager {
    */
   get(name: string): ?BasePlugin {
     return this._plugins.get(name);
-  }
-
-  /**
-   * Removes the plugin's instance.
-   * @param name
-   */
-  remove(name: string): void {
-    if (this._plugins.has(name)) {
-      this._plugins.delete(name);
-    }
   }
 }

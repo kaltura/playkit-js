@@ -192,6 +192,8 @@ class Player extends FakeEventTarget {
   get muted(): boolean {
     return this.engine_.muted;
   }
+
+  // </editor-fold>
 }
 
 export default Player;
