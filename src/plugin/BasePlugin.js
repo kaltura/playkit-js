@@ -4,6 +4,7 @@ import loggerFactory from "../util/loggerFactory";
 import {merge} from "../util/util";
 import EventManager from "../events/eventManager";
 import PluginError from "./PluginError";
+import PlayerError from "../util/PlayerError";
 
 export default class BasePlugin implements IPlugin {
   /**
@@ -50,7 +51,7 @@ export default class BasePlugin implements IPlugin {
    * @returns {boolean}
    */
   static isValid(): boolean {
-    throw new PluginError(PluginError.TYPE.NOT_IMPLEMENTED_METHOD, 'isValid()').getError();
+    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'isValid()').getError();
   }
 
   /**
@@ -93,7 +94,7 @@ export default class BasePlugin implements IPlugin {
    * plugin must implement this method.
    */
   destroy(): void {
-    throw new PluginError(PluginError.TYPE.NOT_IMPLEMENTED_METHOD, 'destroy()').getError();
+    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'destroy()').getError();
   }
 
   /**

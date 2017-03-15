@@ -1,11 +1,19 @@
 //@flow
 export default class PlayerError {
+  static TYPE: {[name: string]: Object} = {
+    NOT_IMPLEMENTED_METHOD: {
+      name: "NotImplementedException",
+      message: function (method) {
+        return `${method} method not implemented`;
+      }
+    }
+  };
   name: string;
   message: string;
 
-  constructor(name: string, message: string) {
-    this.name = name;
-    this.message = message;
+  constructor(error: Object, param?: any) {
+    this.name = error.name;
+    this.message = error.message(param);
   }
 
   getError() {
@@ -14,4 +22,5 @@ export default class PlayerError {
       message: this.message
     };
   }
+
 }

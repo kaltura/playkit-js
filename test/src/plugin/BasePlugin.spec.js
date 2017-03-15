@@ -45,8 +45,8 @@ describe('BasePlugin', () => {
       BasePlugin.isValid();
     } catch (e) {
       exceptionOccurred = true;
-      e.name.should.equal('NotImplementedPluginMethodException');
-      e.message.should.equal('Plugin must implement isValid() method')
+      e.name.should.equal('NotImplementedException');
+      e.message.should.equal('isValid() method not implemented');
     }
     exceptionOccurred.should.be.true;
   });
@@ -57,8 +57,8 @@ describe('BasePlugin', () => {
       basePlugin.destroy();
     } catch (e) {
       exceptionOccurred = true;
-      e.name.should.equal('NotImplementedPluginMethodException');
-      e.message.should.equal('Plugin must implement destroy() method')
+      e.name.should.equal('NotImplementedException');
+      e.message.should.equal('destroy() method not implemented');
     }
     exceptionOccurred.should.be.true;
   });

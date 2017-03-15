@@ -3,12 +3,6 @@ import PlayerError from '../util/PlayerError';
 
 export default class PluginError extends PlayerError {
   static TYPE: {[name: string]: Object} = {
-    NOT_IMPLEMENTED_METHOD: {
-      name: "NotImplementedPluginMethodException",
-      message: function (method) {
-        return `Plugin must implement ${method} method`;
-      }
-    },
     NOT_REGISTERED_PLUGIN: {
       name: "PluginNotRegisteredException",
       message: function (name) {
@@ -24,6 +18,6 @@ export default class PluginError extends PlayerError {
   };
 
   constructor(error: Object, param?: any) {
-    super(error.name, error.message(param));
+    super(error, param);
   }
 }
