@@ -23,13 +23,12 @@ module.exports = function (config) {
     reporters: ['progress', 'coverage'],
     // Kind of a copy of your webpack config
     webpack: {
-      devtool: 'source-map',
+      devtool: 'inline-source-map',
       module: {
         rules: [{
           test: /\.js$/,
           use: [{
-            loader: "babel-loader",
-            // options: { presets: ["es2015"] }
+            loader: "babel-loader"
           }],
           exclude: [/node_modules/]
         }]
