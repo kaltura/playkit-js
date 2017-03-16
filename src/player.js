@@ -58,12 +58,12 @@ class Player extends FakeEventTarget {
     }
   }
 
-  selectEngine() {
-    this.loadEngine();
+  selectEngine(config: Object) {
+    this.loadEngine(config);
   }
 
-  loadEngine() {
-    this.engine_ = new Html5();
+  loadEngine(config: Object) {
+    this.engine_ = new Html5(config);
   }
 
   attachMedia() {
