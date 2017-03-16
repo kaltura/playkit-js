@@ -8,7 +8,8 @@
     "test": "mocha ./test/setup/mocha.js ./test/src --compilers js:babel-core/register --colors --recursive",
     "test:watch": "mocha ./test/setup/mocha.js ./test/src --compilers js:babel-core/register --colors -w --recursive",
     "test:cover": "cross-env NODE_ENV=test nyc mocha --recursive",
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "release": "standard-version"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
@@ -41,6 +42,7 @@
     "nyc": "^10.1.2",
     "sinon": "^2.0.0",
     "sinon-chai": "^2.8.0",
+    "standard-version": "^4.0.0",
     "webpack": "latest",
     "webpack-dev-server": "latest"
   },
