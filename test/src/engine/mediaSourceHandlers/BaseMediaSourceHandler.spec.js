@@ -10,6 +10,10 @@ describe('BaseMediaSourceHandler:canPlayType', () => {
   it('should return false', () => {
     BaseMediaSourceHandler.canPlayType('mp4').should.be.false;
   });
+
+  it('should return false for no mime type', () => {
+    BaseMediaSourceHandler.canPlayType().should.be.false;
+  });
 });
 
 describe('BaseMediaSourceHandler:load', () => {

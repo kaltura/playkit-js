@@ -3,45 +3,41 @@ import LoggerFactory from '../../util/loggerFactory';
 import PlayerError from "../../util/PlayerError";
 
 /**
- * @classdesc
  * Base of media source handlers
+ * @classdesc
  */
 export default class BaseMediaSourceHandler {
   /**
    * The supported mime types by the media source handler
-   * @type {Array}
-   * @private
-   * @member
+   * @member {Array} _mimeTypes
    * @static
+   * @private
    */
-  static _mimeTypes: Array<string> = [];
+  static _mimeTypes: Array<string>;
   /**
    * The logger of the media source handler
-   * @type {ILogger}
-   * @private
-   * @member
+   * @member {ILogger} _logger
    * @static
+   * @private
    */
   static _logger: ILogger;
   /**
    * The name of the media source handler
-   * @type {string}
-   * @private
-   * @member
+   * @member {string} _name
    * @static
+   * @private
    */
   static _name: string;
   /**
    * The player wrapper of the media source handler
-   * @type {any}
+   * @member {any} _msPlayer
    * @private
-   * @member
    */
   _msPlayer: any;
   /**
    * Checks if the media source handler is supported
+   * @function isSupported
    * @returns {boolean}
-   * @function
    * @static
    */
   static isSupported(): boolean {
@@ -49,9 +45,9 @@ export default class BaseMediaSourceHandler {
   }
   /**
    * Checks if the media source handler can play a given mime type
+   * @function canPlayType
    * @param {string} mimeType
    * @returns {boolean}
-   * @function
    * @static
    */
   static canPlayType(mimeType: string): boolean {
@@ -59,10 +55,10 @@ export default class BaseMediaSourceHandler {
   }
   /**
    * Factory method to create media source handler
+   * @function createHandler
    * @param {HTMLVideoElement} videoElement - The video element which bind to the media source handler
    * @param {Object} config - The media source handler configuration
    * @returns {BaseMediaSourceHandler}
-   * @function
    * @static
    */
   static createHandler(videoElement: HTMLVideoElement, config: Object): BaseMediaSourceHandler {
@@ -70,25 +66,24 @@ export default class BaseMediaSourceHandler {
   }
   /**
    * Error handler
+   * @function onError
    * @param {Object} error
-   * @function
    * @static
    */
   static onError(error: Object){
     this._logger.error(error);
   }
   /**
-   * Base constructor
+   * @constructor
    * @param {string} name - The name of the media source handler
-   * @class
    */
   constructor(name: string){
     this._logger = LoggerFactory.getLogger(name);
   }
   /**
    * Load the video source
-   * @param source
-   * @function
+   * @function load
+   * @param {string} source - The source to load
    * @abstract
    */
   load(source: string) {
