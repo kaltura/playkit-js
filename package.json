@@ -39,7 +39,7 @@
     "mocha": "^3.2.0",
     "mocha-cli": "^1.0.1",
     "nyc": "^10.1.2",
-    "sinon": "next",
+    "sinon": "^2.0.0",
     "sinon-chai": "^2.8.0",
     "webpack": "latest",
     "webpack-dev-server": "latest"
