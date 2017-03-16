@@ -3,13 +3,15 @@
   "version": "0.0.1-alpha",
   "main": "dist/playkit.js",
   "scripts": {
+    "clean": "rm -rf ./dist",
+    "prebuild": "npm run clean",
     "build": "webpack",
     "dev": "webpack --progress --colors --watch",
     "test": "mocha ./test/setup/mocha.js ./test/src --compilers js:babel-core/register --colors --recursive",
     "test:watch": "mocha ./test/setup/mocha.js ./test/src --compilers js:babel-core/register --colors -w --recursive",
     "test:cover": "cross-env NODE_ENV=test nyc mocha --recursive",
     "start": "webpack-dev-server",
-    "release": "standard-version"
+    "release": "build && standard-version"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
