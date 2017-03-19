@@ -1,10 +1,11 @@
 // @flow
 import Player from "./player";
 import LoggerFactory from "./util/loggerFactory";
-import PluginManager from './plugin/PluginManager';
 import * as packageData from "../package.json";
-import MSHProvider from './engine/mediaSourceHandlers/mediaSourceHandlerProvider';
+import {registerHandler} from './engine/mediaSourceHandlers/mediaSourceHandlerProvider';
 import BaseMediaSourceHandler from './engine/mediaSourceHandlers/BaseMediaSourceHandler';
+import {registerPlugin} from './plugin/PluginManager';
+import BasePlugin from './plugin/BasePlugin';
 
 // playkit version
 let VERSION = packageData.version;
@@ -19,15 +20,11 @@ export function playkit(config: Object = {}) {
 }
 
 // Registration for media source handler
-function registerMediaSourceHandler(handler: BaseMediaSourceHandler){
-  MSHProvider.registerHandler(handler);
-}
+export {registerHandler, BaseMediaSourceHandler};
 
-// Registration for plugin
-function registerPlugin(name: string, handler: Function) {
-  PluginManager.register(name, handler);
-}
+// Export the plugin framework
+export {registerPlugin, BasePlugin};
 
-//exports
-export {registerMediaSourceHandler, BaseMediaSourceHandler ,registerPlugin, VERSION};
+//export version
+export {VERSION};
 export default playkit;

@@ -59,3 +59,6 @@ export default class MediaSourceHandlerProvider {
   }
 }
 
+const registerHandler = MediaSourceHandlerProvider.registerHandler;
+export {registerHandler};
+
