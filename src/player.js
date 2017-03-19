@@ -12,7 +12,7 @@ import PluginManager from './plugin/PluginManager';
 let logger = LoggerFactory.getLogger('Player');
 type ListenerType = (event: FakeEvent) => any;
 
-class Player extends FakeEventTarget {
+class Player extends FakeEventTarget implements IPlayer {
   pluginManager_: PluginManager;
   eventManager_: EventManager;
   config_: any;
@@ -82,7 +82,7 @@ class Player extends FakeEventTarget {
    * @returns {Player}
    */
   play() {
-    return this.engine_.play();
+     this.engine_.play();
   }
 
   /**

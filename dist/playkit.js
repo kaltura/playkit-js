@@ -291,7 +291,7 @@ var _eventManager = __webpack_require__(3);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _FakeEventTarget2 = __webpack_require__(5);
+var _FakeEventTarget2 = __webpack_require__(6);
 
 var _FakeEventTarget3 = _interopRequireDefault(_FakeEventTarget2);
 
@@ -299,11 +299,11 @@ var _FakeEvent = __webpack_require__(1);
 
 var _FakeEvent2 = _interopRequireDefault(_FakeEvent);
 
-var _events = __webpack_require__(6);
+var _events = __webpack_require__(7);
 
 var _events2 = _interopRequireDefault(_events);
 
-var _util = __webpack_require__(9);
+var _util = __webpack_require__(10);
 
 var _stringUtils = __webpack_require__(14);
 
@@ -311,11 +311,11 @@ var _loggerFactory = __webpack_require__(0);
 
 var _loggerFactory2 = _interopRequireDefault(_loggerFactory);
 
-var _Html = __webpack_require__(11);
+var _Html = __webpack_require__(12);
 
 var _Html2 = _interopRequireDefault(_Html);
 
-var _PluginManager = __webpack_require__(4);
+var _PluginManager = __webpack_require__(5);
 
 var _PluginManager2 = _interopRequireDefault(_PluginManager);
 
@@ -570,7 +570,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _MultiMap = __webpack_require__(8);
+var _MultiMap = __webpack_require__(9);
 
 var _MultiMap2 = _interopRequireDefault(_MultiMap);
 
@@ -766,11 +766,179 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _BasePlugin = __webpack_require__(12);
+var _player = __webpack_require__(2);
+
+var _player2 = _interopRequireDefault(_player);
+
+var _loggerFactory = __webpack_require__(0);
+
+var _loggerFactory2 = _interopRequireDefault(_loggerFactory);
+
+var _util = __webpack_require__(10);
+
+var _eventManager = __webpack_require__(3);
+
+var _eventManager2 = _interopRequireDefault(_eventManager);
+
+var _PluginError = __webpack_require__(8);
+
+var _PluginError2 = _interopRequireDefault(_PluginError);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var BasePlugin = function () {
+  _createClass(BasePlugin, null, [{
+    key: "createPlugin",
+
+
+    /**
+     * Factory method to create the actual plugin.
+     * @param name
+     * @param player
+     * @param config
+     * @returns {BasePlugin}
+     */
+
+    /**
+     * The event manager of the plugin.
+     */
+
+    /**
+     * The logger of the plugin.
+     */
+
+    /**
+     * The runtime configuration of the plugin.
+     */
+    value: function createPlugin(name, player) {
+      var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+      return new this(name, player, config);
+    }
+
+    /**
+     * Returns under what conditions the plugin is valid.
+     * Plugin must implement this method.
+     * @returns {boolean}
+     */
+
+    /**
+     * The default configuration of the plugin.
+     * Inherited plugins should override this property.
+     * @type {{}}
+     */
+
+    /**
+     * Reference to the actual player.
+     */
+
+    /**
+     * The name of the plugin.
+     */
+
+  }, {
+    key: "isValid",
+    value: function isValid() {
+      throw new _PluginError2.default(_PluginError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'isValid()').getError();
+    }
+
+    /**
+     * constructor
+     * @param name
+     * @param player
+     * @param config
+     */
+
+  }]);
+
+  function BasePlugin(name, player, config) {
+    _classCallCheck(this, BasePlugin);
+
+    this.name = name;
+    this.player = player;
+    this.eventManager = new _eventManager2.default();
+    this.logger = _loggerFactory2.default.getLogger(this.name);
+    this.config = (0, _util.merge)(this.constructor.defaultConfig, config);
+  }
+
+  /**
+   * Returns the config of the plugin.
+   * If attribute is provided, returns its value.
+   * @param attr
+   * @returns {*}
+   */
+
+
+  _createClass(BasePlugin, [{
+    key: "getConfig",
+    value: function getConfig(attr) {
+      if (attr) {
+        return this.config[attr];
+      }
+      return this.config;
+    }
+
+    /**
+     * Updates the config of the plugin.
+     * @param update
+     */
+
+  }, {
+    key: "updateConfig",
+    value: function updateConfig(update) {
+      this.config = (0, _util.merge)(this.config, update);
+    }
+
+    /**
+     * Runs the destroy logic of the plugin.
+     * plugin must implement this method.
+     */
+
+  }, {
+    key: "destroy",
+    value: function destroy() {
+      throw new _PluginError2.default(_PluginError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'destroy()').getError();
+    }
+
+    /**
+     * Getter for the plugin's name.
+     * @returns {string}
+     */
+
+  }, {
+    key: "getName",
+    value: function getName() {
+      return this.name;
+    }
+  }]);
+
+  return BasePlugin;
+}();
+
+BasePlugin.defaultConfig = {};
+exports.default = BasePlugin;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.registerPlugin = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _BasePlugin = __webpack_require__(4);
 
 var _BasePlugin2 = _interopRequireDefault(_BasePlugin);
 
-var _PluginError = __webpack_require__(7);
+var _PluginError = __webpack_require__(8);
 
 var _PluginError2 = _interopRequireDefault(_PluginError);
 
@@ -885,8 +1053,8 @@ var PluginManager = function () {
       if (typeof handler !== 'function' || handler.prototype instanceof _BasePlugin2.default === false) {
         throw new _PluginError2.default(_PluginError2.default.TYPE.NOT_VALID_HANDLER).getError();
       }
-      if (!this._registry.has(name)) {
-        this._registry.set(name, handler);
+      if (!PluginManager._registry.has(name)) {
+        PluginManager._registry.set(name, handler);
         logger.info("Plugin <" + name + "> has been registered successfully.");
         return true;
       }
@@ -902,8 +1070,8 @@ var PluginManager = function () {
   }, {
     key: "unRegister",
     value: function unRegister(name) {
-      if (this._registry.has(name)) {
-        this._registry.delete(name);
+      if (PluginManager._registry.has(name)) {
+        PluginManager._registry.delete(name);
         logger.info("Unregistered <" + name + "> plugin.");
       }
     }
@@ -915,8 +1083,12 @@ var PluginManager = function () {
 PluginManager._registry = new Map();
 exports.default = PluginManager;
 
+
+var registerPlugin = PluginManager.register;
+exports.registerPlugin = registerPlugin;
+
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -932,7 +1104,7 @@ var _FakeEvent = __webpack_require__(1);
 
 var _FakeEvent2 = _interopRequireDefault(_FakeEvent);
 
-var _MultiMap = __webpack_require__(8);
+var _MultiMap = __webpack_require__(9);
 
 var _MultiMap2 = _interopRequireDefault(_MultiMap);
 
@@ -1062,7 +1234,7 @@ var FakeEventTarget = function () {
 exports.default = FakeEventTarget;
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1119,7 +1291,7 @@ var PLAYER_EVENTS = ['play', 'pause',
 exports.default = PLAYER_EVENTS;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1176,7 +1348,7 @@ PluginError.TYPE = {
 exports.default = PluginError;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1351,7 +1523,7 @@ var MultiMap = function () {
 exports.default = MultiMap;
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1385,12 +1557,12 @@ exports.isFloat = isFloat;
 exports.merge = merge;
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports) {
 
 module.exports = {
 	"name": "PlayKit.js",
-	"version": "0.0.1-alpha",
+	"version": "0.0.1",
 	"main": "dist/playkit.js",
 	"scripts": {
 		"clean": "rm -rf ./dist",
@@ -1458,7 +1630,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1470,7 +1642,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _FakeEventTarget2 = __webpack_require__(5);
+var _FakeEventTarget2 = __webpack_require__(6);
 
 var _FakeEventTarget3 = _interopRequireDefault(_FakeEventTarget2);
 
@@ -1482,7 +1654,7 @@ var _eventManager = __webpack_require__(3);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _events = __webpack_require__(6);
+var _events = __webpack_require__(7);
 
 var _events2 = _interopRequireDefault(_events);
 
@@ -1816,173 +1988,6 @@ var Html5 = function (_FakeEventTarget) {
 
 Html5.EngineName = "html5";
 exports.default = Html5;
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _player = __webpack_require__(2);
-
-var _player2 = _interopRequireDefault(_player);
-
-var _loggerFactory = __webpack_require__(0);
-
-var _loggerFactory2 = _interopRequireDefault(_loggerFactory);
-
-var _util = __webpack_require__(9);
-
-var _eventManager = __webpack_require__(3);
-
-var _eventManager2 = _interopRequireDefault(_eventManager);
-
-var _PluginError = __webpack_require__(7);
-
-var _PluginError2 = _interopRequireDefault(_PluginError);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var BasePlugin = function () {
-  _createClass(BasePlugin, null, [{
-    key: "createPlugin",
-
-
-    /**
-     * Factory method to create the actual plugin.
-     * @param name
-     * @param player
-     * @param config
-     * @returns {BasePlugin}
-     */
-
-    /**
-     * The event manager of the plugin.
-     */
-
-    /**
-     * The logger of the plugin.
-     */
-
-    /**
-     * The runtime configuration of the plugin.
-     */
-    value: function createPlugin(name, player) {
-      var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-      return new this(name, player, config);
-    }
-
-    /**
-     * Returns under what conditions the plugin is valid.
-     * Plugin must implement this method.
-     * @returns {boolean}
-     */
-
-    /**
-     * The default configuration of the plugin.
-     * Inherited plugins should override this property.
-     * @type {{}}
-     */
-
-    /**
-     * Reference to the actual player.
-     */
-
-    /**
-     * The name of the plugin.
-     */
-
-  }, {
-    key: "isValid",
-    value: function isValid() {
-      throw new _PluginError2.default(_PluginError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'isValid()').getError();
-    }
-
-    /**
-     * constructor
-     * @param name
-     * @param player
-     * @param config
-     */
-
-  }]);
-
-  function BasePlugin(name, player, config) {
-    _classCallCheck(this, BasePlugin);
-
-    this.name = name;
-    this.player = player;
-    this.eventManager = new _eventManager2.default();
-    this.logger = _loggerFactory2.default.getLogger(this.name);
-    this.config = (0, _util.merge)(this.constructor.defaultConfig, config);
-  }
-
-  /**
-   * Returns the config of the plugin.
-   * If attribute is provided, returns its value.
-   * @param attr
-   * @returns {*}
-   */
-
-
-  _createClass(BasePlugin, [{
-    key: "getConfig",
-    value: function getConfig(attr) {
-      if (attr) {
-        return this.config[attr];
-      }
-      return this.config;
-    }
-
-    /**
-     * Updates the config of the plugin.
-     * @param update
-     */
-
-  }, {
-    key: "updateConfig",
-    value: function updateConfig(update) {
-      this.config = (0, _util.merge)(this.config, update);
-    }
-
-    /**
-     * Runs the destroy logic of the plugin.
-     * plugin must implement this method.
-     */
-
-  }, {
-    key: "destroy",
-    value: function destroy() {
-      throw new _PluginError2.default(_PluginError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'destroy()').getError();
-    }
-
-    /**
-     * Getter for the plugin's name.
-     * @returns {string}
-     */
-
-  }, {
-    key: "getName",
-    value: function getName() {
-      return this.name;
-    }
-  }]);
-
-  return BasePlugin;
-}();
-
-BasePlugin.defaultConfig = {};
-exports.default = BasePlugin;
 
 /***/ }),
 /* 13 */
@@ -2327,9 +2332,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.VERSION = undefined;
+exports.VERSION = exports.BasePlugin = exports.registerPlugin = undefined;
 exports.playkit = playkit;
-exports.registerPlugin = registerPlugin;
 
 var _player = __webpack_require__(2);
 
@@ -2339,19 +2343,22 @@ var _loggerFactory = __webpack_require__(0);
 
 var _loggerFactory2 = _interopRequireDefault(_loggerFactory);
 
-var _PluginManager = __webpack_require__(4);
-
-var _PluginManager2 = _interopRequireDefault(_PluginManager);
-
-var _package = __webpack_require__(10);
+var _package = __webpack_require__(11);
 
 var packageData = _interopRequireWildcard(_package);
+
+var _PluginManager = __webpack_require__(5);
+
+var _BasePlugin = __webpack_require__(4);
+
+var _BasePlugin2 = _interopRequireDefault(_BasePlugin);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var logger = _loggerFactory2.default.getLogger();
+
 
 logger.log("%c Playkit " + packageData.version, "color: yellow; font-size: large");
 logger.log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
@@ -2364,13 +2371,13 @@ function playkit() {
 
 exports.default = playkit;
 
-// Export registration for plugins
+// Export the plugin framework
 
-function registerPlugin(name, handler) {
-  _PluginManager2.default.register(name, handler);
-}
+exports.registerPlugin = _PluginManager.registerPlugin;
+exports.BasePlugin = _BasePlugin2.default;
 
 // Export the version
+
 var VERSION = packageData.version;
 exports.VERSION = VERSION;
 
