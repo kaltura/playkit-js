@@ -9,7 +9,7 @@ import BaseMediaSourceHandler from './engine/mediaSourceHandlers/BaseMediaSource
 // playkit version
 let VERSION = packageData.version;
 
-let logger = LoggerFactory.getLogger('Playkit');
+let logger = LoggerFactory.getLogger();
 
 LoggerFactory.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
 LoggerFactory.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
@@ -31,5 +31,3 @@ function registerPlugin(name: string, handler: Function) {
 //exports
 export {registerMediaSourceHandler, BaseMediaSourceHandler ,registerPlugin, VERSION};
 export default playkit;
-
-
