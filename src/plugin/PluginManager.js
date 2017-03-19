@@ -32,8 +32,8 @@ export default class PluginManager {
     if (typeof handler !== 'function' || handler.prototype instanceof BasePlugin === false) {
       throw new PluginError(PluginError.TYPE.NOT_VALID_HANDLER).getError();
     }
-    if (!this._registry.has(name)) {
-      this._registry.set(name, handler);
+    if (!PluginManager._registry.has(name)) {
+      PluginManager._registry.set(name, handler);
       logger.info(`Plugin <${name}> has been registered successfully.`);
       return true;
     }
@@ -46,8 +46,8 @@ export default class PluginManager {
    * @param name
    */
   static unRegister(name: string): void {
-    if (this._registry.has(name)) {
-      this._registry.delete(name);
+    if (PluginManager._registry.has(name)) {
+      PluginManager._registry.delete(name);
       logger.info(`Unregistered <${name}> plugin.`);
     }
   }
@@ -100,3 +100,6 @@ export default class PluginManager {
     return this._plugins.get(name);
   }
 }
+
+const registerPlugin = PluginManager.register;
+export {registerPlugin};

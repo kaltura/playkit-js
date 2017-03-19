@@ -1,8 +1,9 @@
 // @flow
 import Player from "./player";
 import LoggerFactory from "./util/loggerFactory";
-import PluginManager from './plugin/PluginManager';
 import * as packageData from "../package.json";
+import {registerPlugin} from './plugin/PluginManager';
+import BasePlugin from './plugin/BasePlugin';
 
 let logger = LoggerFactory.getLogger();
 
@@ -15,10 +16,8 @@ export function playkit(config: Object = {}) {
 
 export default playkit;
 
-// Export registration for plugins
-export function registerPlugin(name: string, handler: Function) {
-  PluginManager.register(name, handler);
-}
+// Export the plugin framework
+export {registerPlugin, BasePlugin};
 
 // Export the version
 let VERSION = packageData.version;
