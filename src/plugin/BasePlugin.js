@@ -3,7 +3,6 @@ import Player from "../player";
 import loggerFactory from "../util/loggerFactory";
 import {merge} from "../util/util";
 import EventManager from "../events/eventManager";
-import PluginError from "./PluginError";
 import PlayerError from "../util/PlayerError";
 
 export default class BasePlugin implements IPlugin {

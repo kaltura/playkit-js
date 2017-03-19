@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 18);
+/******/ 	return __webpack_require__(__webpack_require__.s = 17);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -90,7 +90,7 @@ exports.LOG_LEVEL = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jsLogger = __webpack_require__(17);
+var _jsLogger = __webpack_require__(16);
 
 var JsLogger = _interopRequireWildcard(_jsLogger);
 
@@ -443,15 +443,15 @@ var _events = __webpack_require__(10);
 
 var _events2 = _interopRequireDefault(_events);
 
-var _util = __webpack_require__(13);
+var _util = __webpack_require__(12);
 
-var _stringUtils = __webpack_require__(16);
+var _stringUtils = __webpack_require__(15);
 
 var _loggerFactory = __webpack_require__(0);
 
 var _loggerFactory2 = _interopRequireDefault(_loggerFactory);
 
-var _Html = __webpack_require__(15);
+var _Html = __webpack_require__(14);
 
 var _Html2 = _interopRequireDefault(_Html);
 
@@ -710,7 +710,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _MultiMap = __webpack_require__(12);
+var _MultiMap = __webpack_require__(11);
 
 var _MultiMap2 = _interopRequireDefault(_MultiMap);
 
@@ -930,6 +930,18 @@ var PlayerError = function () {
 }();
 
 PlayerError.TYPE = {
+  NOT_REGISTERED_PLUGIN: {
+    name: "PluginNotRegisteredException",
+    message: function message(name) {
+      return "Cannot load " + name + " plugin. Name not found in the registry";
+    }
+  },
+  NOT_VALID_HANDLER: {
+    name: "PluginHandlerIsNotValidException",
+    message: function message() {
+      return "To activate plugin you must provide a class derived from BasePlugin";
+    }
+  },
   NOT_IMPLEMENTED_METHOD: {
     name: "NotImplementedException",
     message: function message(method) {
@@ -1062,15 +1074,11 @@ var _loggerFactory = __webpack_require__(0);
 
 var _loggerFactory2 = _interopRequireDefault(_loggerFactory);
 
-var _util = __webpack_require__(13);
+var _util = __webpack_require__(12);
 
 var _eventManager = __webpack_require__(4);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
-
-var _PluginError = __webpack_require__(11);
-
-var _PluginError2 = _interopRequireDefault(_PluginError);
 
 var _PlayerError = __webpack_require__(5);
 
@@ -1230,9 +1238,9 @@ var _BasePlugin = __webpack_require__(7);
 
 var _BasePlugin2 = _interopRequireDefault(_BasePlugin);
 
-var _PluginError = __webpack_require__(11);
+var _PlayerError = __webpack_require__(5);
 
-var _PluginError2 = _interopRequireDefault(_PluginError);
+var _PlayerError2 = _interopRequireDefault(_PlayerError);
 
 var _player = __webpack_require__(3);
 
@@ -1284,7 +1292,7 @@ var PluginManager = function () {
       var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
       if (!PluginManager._registry.has(name)) {
-        throw new _PluginError2.default(_PluginError2.default.TYPE.NOT_REGISTERED_PLUGIN, name).getError();
+        throw new _PlayerError2.default(_PlayerError2.default.TYPE.NOT_REGISTERED_PLUGIN, name).getError();
       }
       var pluginClass = PluginManager._registry.get(name);
       if (pluginClass != null && pluginClass.isValid()) {
@@ -1343,7 +1351,7 @@ var PluginManager = function () {
      */
     value: function register(name, handler) {
       if (typeof handler !== 'function' || handler.prototype instanceof _BasePlugin2.default === false) {
-        throw new _PluginError2.default(_PluginError2.default.TYPE.NOT_VALID_HANDLER).getError();
+        throw new _PlayerError2.default(_PlayerError2.default.TYPE.NOT_VALID_HANDLER).getError();
       }
       if (!PluginManager._registry.has(name)) {
         PluginManager._registry.set(name, handler);
@@ -1396,7 +1404,7 @@ var _FakeEvent = __webpack_require__(1);
 
 var _FakeEvent2 = _interopRequireDefault(_FakeEvent);
 
-var _MultiMap = __webpack_require__(12);
+var _MultiMap = __webpack_require__(11);
 
 var _MultiMap2 = _interopRequireDefault(_MultiMap);
 
@@ -1593,57 +1601,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _PlayerError2 = __webpack_require__(5);
-
-var _PlayerError3 = _interopRequireDefault(_PlayerError2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var PluginError = function (_PlayerError) {
-  _inherits(PluginError, _PlayerError);
-
-  function PluginError(error, param) {
-    _classCallCheck(this, PluginError);
-
-    return _possibleConstructorReturn(this, (PluginError.__proto__ || Object.getPrototypeOf(PluginError)).call(this, error, param));
-  }
-
-  return PluginError;
-}(_PlayerError3.default);
-
-PluginError.TYPE = {
-  NOT_REGISTERED_PLUGIN: {
-    name: "PluginNotRegisteredException",
-    message: function message(name) {
-      return "Cannot load " + name + " plugin. Name not found in the registry";
-    }
-  },
-  NOT_VALID_HANDLER: {
-    name: "PluginHandlerIsNotValidException",
-    message: function message() {
-      return "To activate plugin you must provide a class derived from BasePlugin";
-    }
-  }
-};
-exports.default = PluginError;
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1809,7 +1766,7 @@ var MultiMap = function () {
 exports.default = MultiMap;
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1843,7 +1800,7 @@ exports.isFloat = isFloat;
 exports.merge = merge;
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -1916,7 +1873,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2285,7 +2242,7 @@ Html5.EngineName = "html5";
 exports.default = Html5;
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2313,7 +2270,7 @@ function capitlize(string) {
 exports.capitlize = capitlize;
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -2580,7 +2537,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2600,7 +2557,7 @@ var _loggerFactory = __webpack_require__(0);
 
 var _loggerFactory2 = _interopRequireDefault(_loggerFactory);
 
-var _package = __webpack_require__(14);
+var _package = __webpack_require__(13);
 
 var packageData = _interopRequireWildcard(_package);
 
