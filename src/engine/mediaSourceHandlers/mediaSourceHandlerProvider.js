@@ -21,8 +21,8 @@ export default class MediaSourceHandlerProvider {
    * @static
    */
   static registerHandler(handler: BaseMediaSourceHandler): void {
-    if (handler && !this._mediaSourceHandlers.includes(handler)) {
-      this._mediaSourceHandlers.push(handler);
+    if (handler && !MediaSourceHandlerProvider._mediaSourceHandlers.includes(handler)) {
+      MediaSourceHandlerProvider._mediaSourceHandlers.push(handler);
     }
   }
 
@@ -33,9 +33,9 @@ export default class MediaSourceHandlerProvider {
    * @static
    */
   static unregisterHandler(handler: BaseMediaSourceHandler): void {
-    let index = this._mediaSourceHandlers.indexOf(handler);
+    let index = MediaSourceHandlerProvider._mediaSourceHandlers.indexOf(handler);
     if (index > -1) {
-      this._mediaSourceHandlers.splice(index, 1);
+      MediaSourceHandlerProvider._mediaSourceHandlers.splice(index, 1);
     }
   }
 
@@ -49,7 +49,7 @@ export default class MediaSourceHandlerProvider {
    */
   static getMediaSourceHandler(videoElement: HTMLVideoElement, config: Object): BaseMediaSourceHandler | null {
     if (videoElement && config) {
-      let handlers = this._mediaSourceHandlers;
+      let handlers = MediaSourceHandlerProvider._mediaSourceHandlers;
       for (let i = 0; i < handlers.length; i++) {
         if (handlers[i].canPlayType(config.mimeType))
           return handlers[i].createHandler(videoElement, config);

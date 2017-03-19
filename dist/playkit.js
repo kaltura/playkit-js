@@ -993,8 +993,8 @@ var MediaSourceHandlerProvider = function () {
      * @static
      */
     value: function registerHandler(handler) {
-      if (handler && !this._mediaSourceHandlers.includes(handler)) {
-        this._mediaSourceHandlers.push(handler);
+      if (handler && !MediaSourceHandlerProvider._mediaSourceHandlers.includes(handler)) {
+        MediaSourceHandlerProvider._mediaSourceHandlers.push(handler);
       }
     }
 
@@ -1015,9 +1015,9 @@ var MediaSourceHandlerProvider = function () {
   }, {
     key: 'unregisterHandler',
     value: function unregisterHandler(handler) {
-      var index = this._mediaSourceHandlers.indexOf(handler);
+      var index = MediaSourceHandlerProvider._mediaSourceHandlers.indexOf(handler);
       if (index > -1) {
-        this._mediaSourceHandlers.splice(index, 1);
+        MediaSourceHandlerProvider._mediaSourceHandlers.splice(index, 1);
       }
     }
 
@@ -1034,7 +1034,7 @@ var MediaSourceHandlerProvider = function () {
     key: 'getMediaSourceHandler',
     value: function getMediaSourceHandler(videoElement, config) {
       if (videoElement && config) {
-        var handlers = this._mediaSourceHandlers;
+        var handlers = MediaSourceHandlerProvider._mediaSourceHandlers;
         for (var i = 0; i < handlers.length; i++) {
           if (handlers[i].canPlayType(config.mimeType)) return handlers[i].createHandler(videoElement, config);
         }
