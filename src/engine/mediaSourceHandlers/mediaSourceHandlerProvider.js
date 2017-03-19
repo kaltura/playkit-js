@@ -13,6 +13,7 @@ export default class MediaSourceHandlerProvider {
    * @private
    */
   static _mediaSourceHandlers: Array<BaseMediaSourceHandler> = [];
+
   /**
    * Add a media source handler to the registry
    * @function registerHandler
@@ -20,13 +21,11 @@ export default class MediaSourceHandlerProvider {
    * @static
    */
   static registerHandler(handler: BaseMediaSourceHandler): void {
-    if(handler){
-      let index = this._mediaSourceHandlers.indexOf(handler);
-      if (index === -1) {
-        this._mediaSourceHandlers.push(handler);
-      }
+    if (handler && !this._mediaSourceHandlers.includes(handler)) {
+      this._mediaSourceHandlers.push(handler);
     }
   }
+
   /**
    * Remove a media source handler from the registry
    * @function unregisterHandler
@@ -39,6 +38,7 @@ export default class MediaSourceHandlerProvider {
       this._mediaSourceHandlers.splice(index, 1);
     }
   }
+
   /**
    * Get the appropriate media source handler to the video source
    * @function getMediaSourceHandler
@@ -48,7 +48,7 @@ export default class MediaSourceHandlerProvider {
    * @static
    */
   static getMediaSourceHandler(videoElement: HTMLVideoElement, config: Object): BaseMediaSourceHandler | null {
-    if(videoElement && config){
+    if (videoElement && config) {
       let handlers = this._mediaSourceHandlers;
       for (let i = 0; i < handlers.length; i++) {
         if (handlers[i].canPlayType(config.mimeType))

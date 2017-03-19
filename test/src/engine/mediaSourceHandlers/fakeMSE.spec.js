@@ -1,7 +1,7 @@
 import fakeMSE from '../../../../src/engine/mediaSourceHandlers/fakeMSE';
 
 describe('fakeMSE:isSupported', () => {
-  it('should return true', () => {
+  it('should be supported', () => {
     fakeMSE.isSupported().should.be.true;
   });
 });

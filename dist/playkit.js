@@ -973,6 +973,7 @@ var MediaSourceHandlerProvider = function () {
   _createClass(MediaSourceHandlerProvider, null, [{
     key: 'registerHandler',
 
+
     /**
      * Add a media source handler to the registry
      * @function registerHandler
@@ -980,13 +981,11 @@ var MediaSourceHandlerProvider = function () {
      * @static
      */
     value: function registerHandler(handler) {
-      if (handler) {
-        var index = this._mediaSourceHandlers.indexOf(handler);
-        if (index === -1) {
-          this._mediaSourceHandlers.push(handler);
-        }
+      if (handler && !this._mediaSourceHandlers.includes(handler)) {
+        this._mediaSourceHandlers.push(handler);
       }
     }
+
     /**
      * Remove a media source handler from the registry
      * @function unregisterHandler
@@ -1009,6 +1008,7 @@ var MediaSourceHandlerProvider = function () {
         this._mediaSourceHandlers.splice(index, 1);
       }
     }
+
     /**
      * Get the appropriate media source handler to the video source
      * @function getMediaSourceHandler

@@ -1,7 +1,7 @@
 import BaseMediaSourceHandler from '../../../../src/engine/mediaSourceHandlers/BaseMediaSourceHandler';
 
 describe('BaseMediaSourceHandler:isSupported', () => {
-  it('should return true', () => {
+  it('should be supported', () => {
     BaseMediaSourceHandler.isSupported().should.be.true;
   });
 });
