@@ -1,5 +1,4 @@
 //@flow
-
 declare interface IEngine {
   destroy(): void;
   attach(): void;
@@ -32,4 +31,5 @@ declare interface IEngine {
   +readyState: number;
   +videoWidth: number;
   +videoHeight: number;
+  +videoElement: any;
 }

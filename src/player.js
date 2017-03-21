@@ -18,6 +18,7 @@ class Player extends FakeEventTarget implements IPlayer {
   config_: any;
   engine_: IEngine;
   engineEventHandlers_: Map<string, ListenerType>;
+  controller: IPlayer;
 
   constructor(config: Object) {
     super();
@@ -34,6 +35,7 @@ class Player extends FakeEventTarget implements IPlayer {
     this.selectEngine(this.config_);
     this.attachMedia();
     logger.info('player is ready!');
+    return this.controller;
   }
 
   destroy() {
@@ -51,10 +53,23 @@ class Player extends FakeEventTarget implements IPlayer {
 
   loadPlugins(config: Object): void {
     let plugins = config.plugins;
+    this.controller = this;
     for (let name in plugins) {
       if (plugins.hasOwnProperty(name)) {
         this.pluginManager_.load(name, this, plugins[name]);
+        let plugin =  this.pluginManager_.get(name);
+        if (typeof plugin.getPlayerDecorator == "function") {
+          let decorator = plugin.getPlayerDecorator();
+          decorator.setPlayer(this.controller);
+          this.controller = decorator;
+        }
       }
+    }
+  }
+
+  getVideoElement(): any{
+    if (this.engine_){
+      return this.engine_.videoElement;
     }
   }
 
@@ -64,6 +79,7 @@ class Player extends FakeEventTarget implements IPlayer {
 
   loadEngine() {
     this.engine_ = new Html5();
+    this.dispatchEvent(new FakeEvent("EngineAdded"));
   }
 
   attachMedia() {
@@ -77,6 +93,14 @@ class Player extends FakeEventTarget implements IPlayer {
   }
 
   //  <editor-fold desc="playback interface">
+  /**
+   * prepare/load the stream
+   *
+   */
+  prepare() {
+    this.engine_.load();
+  }
+
   /**
    * Start/resume playback
    * @returns {Player}

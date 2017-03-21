@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 16);
+/******/ 	return __webpack_require__(__webpack_require__.s = 18);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -90,7 +90,7 @@ exports.LOG_LEVEL = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jsLogger = __webpack_require__(15);
+var _jsLogger = __webpack_require__(17);
 
 var JsLogger = _interopRequireWildcard(_jsLogger);
 
@@ -284,14 +284,71 @@ exports.default = FakeEvent;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+var PLAYER_EVENTS = ['play', 'pause',
+/**
+ * Fired while the user agent is downloading media data
+ */
+'progress',
+/**
+ * Fires when the loading of an audio/video is aborted
+ */
+'abort',
+/**
+ * Fires when the browser is intentionally not getting media data
+ */
+'suspend',
+/**
+ * Fires when the current playlist is empty
+ */
+'emptied',
+/**
+ * Fires when the browser is trying to get media data, but data is not available
+ */
+'stalled',
+/**
+ * Fires when the browser has loaded meta data for the audio/video
+ */
+'loadedmetadata',
+/**
+ * Fires when the browser has loaded the current frame of the audio/video
+ */
+'loadeddata',
+/**
+ * Fires when the current playback position has changed
+ */
+'timeupdate',
+/**
+ * Fires when the playing speed of the audio/video is changed
+ */
+'ratechange',
+/**
+ * Fires when the volume has been changed
+ */
+'volumechange',
+/**
+ * Fires when the text track has been changed
+ */
+'texttrackchange'];
+exports.default = PLAYER_EVENTS;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _eventManager = __webpack_require__(3);
+var _eventManager = __webpack_require__(4);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _FakeEventTarget2 = __webpack_require__(6);
+var _FakeEventTarget2 = __webpack_require__(8);
 
 var _FakeEventTarget3 = _interopRequireDefault(_FakeEventTarget2);
 
@@ -299,23 +356,23 @@ var _FakeEvent = __webpack_require__(1);
 
 var _FakeEvent2 = _interopRequireDefault(_FakeEvent);
 
-var _events = __webpack_require__(7);
+var _events = __webpack_require__(2);
 
 var _events2 = _interopRequireDefault(_events);
 
-var _util = __webpack_require__(10);
+var _util = __webpack_require__(11);
 
-var _stringUtils = __webpack_require__(14);
+var _stringUtils = __webpack_require__(16);
 
 var _loggerFactory = __webpack_require__(0);
 
 var _loggerFactory2 = _interopRequireDefault(_loggerFactory);
 
-var _Html = __webpack_require__(12);
+var _Html = __webpack_require__(14);
 
 var _Html2 = _interopRequireDefault(_Html);
 
-var _PluginManager = __webpack_require__(5);
+var _PluginManager = __webpack_require__(7);
 
 var _PluginManager2 = _interopRequireDefault(_PluginManager);
 
@@ -333,6 +390,8 @@ var Player = function (_FakeEventTarget) {
   _inherits(Player, _FakeEventTarget);
 
   function Player(config) {
+    var _ret;
+
     _classCallCheck(this, Player);
 
     var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
@@ -350,7 +409,7 @@ var Player = function (_FakeEventTarget) {
     _this.selectEngine(_this.config_);
     _this.attachMedia();
     logger.info('player is ready!');
-    return _this;
+    return _ret = _this.controller, _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(Player, [{
@@ -367,10 +426,24 @@ var Player = function (_FakeEventTarget) {
     key: 'loadPlugins',
     value: function loadPlugins(config) {
       var plugins = config.plugins;
+      this.controller = this;
       for (var name in plugins) {
         if (plugins.hasOwnProperty(name)) {
           this.pluginManager_.load(name, this, plugins[name]);
+          var plugin = this.pluginManager_.get(name);
+          if (typeof plugin.getPlayerDecorator == "function") {
+            var decorator = plugin.getPlayerDecorator();
+            decorator.setPlayer(this.controller);
+            this.controller = decorator;
+          }
         }
+      }
+    }
+  }, {
+    key: 'getVideoElement',
+    value: function getVideoElement() {
+      if (this.engine_) {
+        return this.engine_.videoElement;
       }
     }
   }, {
@@ -382,6 +455,7 @@ var Player = function (_FakeEventTarget) {
     key: 'loadEngine',
     value: function loadEngine() {
       this.engine_ = new _Html2.default();
+      this.dispatchEvent(new _FakeEvent2.default("EngineAdded"));
     }
   }, {
     key: 'attachMedia',
@@ -399,6 +473,17 @@ var Player = function (_FakeEventTarget) {
 
     //  <editor-fold desc="playback interface">
     /**
+     * prepare/load the stream
+     *
+     */
+
+  }, {
+    key: 'prepare',
+    value: function prepare() {
+      this.engine_.load();
+    }
+
+    /**
      * Start/resume playback
      * @returns {Player}
      */
@@ -406,7 +491,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'play',
     value: function play() {
-      return this.engine_.play();
+      this.engine_.play();
     }
 
     /**
@@ -558,7 +643,7 @@ var Player = function (_FakeEventTarget) {
 exports.default = Player;
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -570,7 +655,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _MultiMap = __webpack_require__(9);
+var _MultiMap = __webpack_require__(10);
 
 var _MultiMap2 = _interopRequireDefault(_MultiMap);
 
@@ -754,7 +839,7 @@ var Binding_ = function () {
 exports.default = EventManager;
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -766,7 +851,49 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _player = __webpack_require__(2);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var PlayerDecoratorBase = function () {
+  function PlayerDecoratorBase() {
+    _classCallCheck(this, PlayerDecoratorBase);
+  }
+
+  _createClass(PlayerDecoratorBase, [{
+    key: "setPlayer",
+    value: function setPlayer(player) {
+      this.player = player;
+    }
+  }, {
+    key: "play",
+    value: function play() {
+      return this.player.play();
+    }
+  }, {
+    key: "pause",
+    value: function pause() {
+      return this.player.pause();
+    }
+  }]);
+
+  return PlayerDecoratorBase;
+}();
+
+exports.default = PlayerDecoratorBase;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _player = __webpack_require__(3);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -774,13 +901,13 @@ var _loggerFactory = __webpack_require__(0);
 
 var _loggerFactory2 = _interopRequireDefault(_loggerFactory);
 
-var _util = __webpack_require__(10);
+var _util = __webpack_require__(11);
 
-var _eventManager = __webpack_require__(3);
+var _eventManager = __webpack_require__(4);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _PluginError = __webpack_require__(8);
+var _PluginError = __webpack_require__(9);
 
 var _PluginError2 = _interopRequireDefault(_PluginError);
 
@@ -921,7 +1048,7 @@ BasePlugin.defaultConfig = {};
 exports.default = BasePlugin;
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -934,15 +1061,15 @@ exports.registerPlugin = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _BasePlugin = __webpack_require__(4);
+var _BasePlugin = __webpack_require__(6);
 
 var _BasePlugin2 = _interopRequireDefault(_BasePlugin);
 
-var _PluginError = __webpack_require__(8);
+var _PluginError = __webpack_require__(9);
 
 var _PluginError2 = _interopRequireDefault(_PluginError);
 
-var _player = __webpack_require__(2);
+var _player = __webpack_require__(3);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -1088,7 +1215,7 @@ var registerPlugin = PluginManager.register;
 exports.registerPlugin = registerPlugin;
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1104,7 +1231,7 @@ var _FakeEvent = __webpack_require__(1);
 
 var _FakeEvent2 = _interopRequireDefault(_FakeEvent);
 
-var _MultiMap = __webpack_require__(9);
+var _MultiMap = __webpack_require__(10);
 
 var _MultiMap2 = _interopRequireDefault(_MultiMap);
 
@@ -1234,64 +1361,7 @@ var FakeEventTarget = function () {
 exports.default = FakeEventTarget;
 
 /***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var PLAYER_EVENTS = ['play', 'pause',
-/**
- * Fired while the user agent is downloading media data
- */
-'progress',
-/**
- * Fires when the loading of an audio/video is aborted
- */
-'abort',
-/**
- * Fires when the browser is intentionally not getting media data
- */
-'suspend',
-/**
- * Fires when the current playlist is empty
- */
-'emptied',
-/**
- * Fires when the browser is trying to get media data, but data is not available
- */
-'stalled',
-/**
- * Fires when the browser has loaded meta data for the audio/video
- */
-'loadedmetadata',
-/**
- * Fires when the browser has loaded the current frame of the audio/video
- */
-'loadeddata',
-/**
- * Fires when the current playback position has changed
- */
-'timeupdate',
-/**
- * Fires when the playing speed of the audio/video is changed
- */
-'ratechange',
-/**
- * Fires when the volume has been changed
- */
-'volumechange',
-/**
- * Fires when the text track has been changed
- */
-'texttrackchange'];
-exports.default = PLAYER_EVENTS;
-
-/***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1301,7 +1371,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _PlayerError2 = __webpack_require__(13);
+var _PlayerError2 = __webpack_require__(15);
 
 var _PlayerError3 = _interopRequireDefault(_PlayerError2);
 
@@ -1348,7 +1418,7 @@ PluginError.TYPE = {
 exports.default = PluginError;
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1523,7 +1593,7 @@ var MultiMap = function () {
 exports.default = MultiMap;
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1557,7 +1627,20 @@ exports.isFloat = isFloat;
 exports.merge = merge;
 
 /***/ }),
-/* 11 */
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _PlayerDecoratorBase = __webpack_require__(5);
+
+var _PlayerDecoratorBase2 = _interopRequireDefault(_PlayerDecoratorBase);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ }),
+/* 13 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -1630,7 +1713,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1642,7 +1725,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _FakeEventTarget2 = __webpack_require__(6);
+var _FakeEventTarget2 = __webpack_require__(8);
 
 var _FakeEventTarget3 = _interopRequireDefault(_FakeEventTarget2);
 
@@ -1650,11 +1733,11 @@ var _FakeEvent = __webpack_require__(1);
 
 var _FakeEvent2 = _interopRequireDefault(_FakeEvent);
 
-var _eventManager = __webpack_require__(3);
+var _eventManager = __webpack_require__(4);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _events = __webpack_require__(7);
+var _events = __webpack_require__(2);
 
 var _events2 = _interopRequireDefault(_events);
 
@@ -1786,10 +1869,16 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
+     * Get the video element
+     * @returns {VideoElement}
+     */
+    ,
+
+
+    /**
      * Set the current time in seconds
      * @param to {Number}
      */
-    ,
     set: function set(to) {
       this.el_.currentTime = to;
     }
@@ -1799,6 +1888,11 @@ var Html5 = function (_FakeEventTarget) {
      * @returns {Number}
      */
 
+  }, {
+    key: 'videoElement',
+    get: function get() {
+      return this.el_;
+    }
   }, {
     key: 'duration',
     get: function get() {
@@ -1990,7 +2084,7 @@ Html5.EngineName = "html5";
 exports.default = Html5;
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2028,7 +2122,7 @@ var PlayerError = function () {
 exports.default = PlayerError;
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2056,7 +2150,7 @@ function capitlize(string) {
 exports.capitlize = capitlize;
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -2323,7 +2417,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2332,10 +2426,10 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.VERSION = exports.BasePlugin = exports.registerPlugin = undefined;
+exports.VERSION = exports.Player = exports.PLAYER_EVENTS = exports.PlayerDecoratorBase = exports.IPlayerDecoratorProvider = exports.BasePlugin = exports.registerPlugin = undefined;
 exports.playkit = playkit;
 
-var _player = __webpack_require__(2);
+var _player = __webpack_require__(3);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -2343,22 +2437,33 @@ var _loggerFactory = __webpack_require__(0);
 
 var _loggerFactory2 = _interopRequireDefault(_loggerFactory);
 
-var _package = __webpack_require__(11);
+var _package = __webpack_require__(13);
 
 var packageData = _interopRequireWildcard(_package);
 
-var _PluginManager = __webpack_require__(5);
+var _PluginManager = __webpack_require__(7);
 
-var _BasePlugin = __webpack_require__(4);
+var _BasePlugin = __webpack_require__(6);
 
 var _BasePlugin2 = _interopRequireDefault(_BasePlugin);
+
+var _IPlayerDecoratorProvider = __webpack_require__(12);
+
+var _IPlayerDecoratorProvider2 = _interopRequireDefault(_IPlayerDecoratorProvider);
+
+var _PlayerDecoratorBase = __webpack_require__(5);
+
+var _PlayerDecoratorBase2 = _interopRequireDefault(_PlayerDecoratorBase);
+
+var _events = __webpack_require__(2);
+
+var _events2 = _interopRequireDefault(_events);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var logger = _loggerFactory2.default.getLogger();
-
 
 logger.log("%c Playkit " + packageData.version, "color: yellow; font-size: large");
 logger.log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
@@ -2375,6 +2480,10 @@ exports.default = playkit;
 
 exports.registerPlugin = _PluginManager.registerPlugin;
 exports.BasePlugin = _BasePlugin2.default;
+exports.IPlayerDecoratorProvider = _IPlayerDecoratorProvider2.default;
+exports.PlayerDecoratorBase = _PlayerDecoratorBase2.default;
+exports.PLAYER_EVENTS = _events2.default;
+exports.Player = _player2.default;
 
 // Export the version
 
