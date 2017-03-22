@@ -24,7 +24,7 @@ describe('BaseMediaSourceHandler:load', () => {
     } catch (e) {
       exceptionOccurred = true;
       e.name.should.equal('NotImplementedException');
-      e.message.should.equal('load() method not implemented');
+      e.message.should.equal('load method not implemented');
     }
     exceptionOccurred.should.be.true;
   });

@@ -3,15 +3,17 @@ import MSHProvider from '../../../../src/engine/mediaSourceHandlers/mediaSourceH
 import fakeMSH from '../../../../src/engine/mediaSourceHandlers/fakeMSE';
 
 class handler1 extends BaseMediaSourceHandler{
-  static _mimeTypes = ['mt1'];
+  static _mimeTypes = ['mimeType1'];
   static _name = 'handler1';
 }
 class handler2 extends BaseMediaSourceHandler{
-  static _mimeTypes = ['mt1','mt2'];
+  static _mimeTypes = ['mimeType1','mimeType2'];
   static _name = 'handler2';
 }
 class handler3 extends BaseMediaSourceHandler{
-  static _mimeTypes = ['mt3'];
+  static canPlayType(mimeType: string): boolean {
+    return !!(document.createElement("video").canPlayType(mimeType));
+  };
   static _name = 'handler3';
 }
 let video = document.createElement("video");
@@ -105,13 +107,18 @@ describe('mediaSourceHandlerProvider:getMediaSourceHandler', () => {
   });
 
   it('should provide handler1', () => {
-    let handler = MSHProvider.getMediaSourceHandler(video, {mimeType:'mt1'});
+    let handler = MSHProvider.getMediaSourceHandler(video, {mimeType:'mimeType1'});
     handler.constructor.name.should.equal("handler1");
   });
 
   it('should provide handler2', () => {
-    let handler = MSHProvider.getMediaSourceHandler(video, {mimeType:'mt2'});
+    let handler = MSHProvider.getMediaSourceHandler(video, {mimeType:'mimeType2'});
     handler.constructor.name.should.equal("handler2");
+  });
+
+  it('should provide handler3', () => {
+    let handler = MSHProvider.getMediaSourceHandler(video, {mimeType:'video/mp4'});
+    handler.constructor.name.should.equal("handler3");
   });
 
   it('should provide null for unknown mime type', () => {
@@ -125,7 +132,7 @@ describe('mediaSourceHandlerProvider:getMediaSourceHandler', () => {
   });
 
   it('should provide null for no videoElement param', () => {
-    let handler = MSHProvider.getMediaSourceHandler(undefined, {mimeType:'mt1'});
+    let handler = MSHProvider.getMediaSourceHandler(undefined, {mimeType:'mimeType1'});
     (handler === null).should.be.true;
   });
 

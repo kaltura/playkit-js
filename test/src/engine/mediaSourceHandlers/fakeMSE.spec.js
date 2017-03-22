@@ -7,12 +7,16 @@ describe('fakeMSE:isSupported', () => {
 });
 
 describe('fakeMSE:canPlayType', () => {
-  it('should return true', () => {
-    fakeMSE.canPlayType('mp4').should.be.true;
+  it('should return true for video/mp4', () => {
+    fakeMSE.canPlayType('video/mp4').should.be.true;
+  });
+
+  it('should return true for video/ogg', () => {
+    fakeMSE.canPlayType('video/ogg').should.be.true;
   });
 
   it('should return false for unsupported mime type', () => {
-    fakeMSE.canPlayType('someTime').should.be.false;
+    fakeMSE.canPlayType('someType').should.be.false;
   });
 
   it('should return false for no mime type' , () => {

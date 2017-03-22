@@ -34,6 +34,7 @@ export default class BaseMediaSourceHandler {
    * @private
    */
   _msPlayer: any;
+
   /**
    * Checks if the media source handler is supported
    * @function isSupported
@@ -43,6 +44,7 @@ export default class BaseMediaSourceHandler {
   static isSupported(): boolean {
     return true;
   }
+
   /**
    * Checks if the media source handler can play a given mime type
    * @function canPlayType
@@ -53,6 +55,7 @@ export default class BaseMediaSourceHandler {
   static canPlayType(mimeType: string): boolean {
     return !!(this._mimeTypes && this._mimeTypes.includes(mimeType));
   }
+
   /**
    * Factory method to create media source handler
    * @function createHandler
@@ -64,22 +67,34 @@ export default class BaseMediaSourceHandler {
   static createHandler(videoElement: HTMLVideoElement, config: Object): BaseMediaSourceHandler {
     return new this(videoElement, config);
   }
+
   /**
    * Error handler
    * @function onError
    * @param {Object} error
    * @static
    */
-  static onError(error: Object){
+  static onError(error: Object) {
     this._logger.error(error);
   }
+
+  /**
+   * Destroying the _msPlayer
+   * @function destroy
+   * @static
+   */
+  static destroy() {
+    // should do nothing. implemented by the inheritor if necessary.
+  }
+
   /**
    * @constructor
    * @param {string} name - The name of the media source handler
    */
-  constructor(name: string){
+  constructor(name: string) {
     this._logger = LoggerFactory.getLogger(name);
   }
+
   /**
    * Load the video source
    * @function load
@@ -87,6 +102,6 @@ export default class BaseMediaSourceHandler {
    * @abstract
    */
   load(source: string) {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'load()').getError();
+    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
   }
 }

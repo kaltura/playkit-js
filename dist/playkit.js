@@ -307,6 +307,7 @@ var BaseMediaSourceHandler = function () {
   _createClass(BaseMediaSourceHandler, null, [{
     key: 'isSupported',
 
+
     /**
      * Checks if the media source handler is supported
      * @function isSupported
@@ -330,6 +331,7 @@ var BaseMediaSourceHandler = function () {
     value: function isSupported() {
       return true;
     }
+
     /**
      * Checks if the media source handler can play a given mime type
      * @function canPlayType
@@ -356,6 +358,7 @@ var BaseMediaSourceHandler = function () {
     value: function canPlayType(mimeType) {
       return !!(this._mimeTypes && this._mimeTypes.includes(mimeType));
     }
+
     /**
      * Factory method to create media source handler
      * @function createHandler
@@ -370,6 +373,7 @@ var BaseMediaSourceHandler = function () {
     value: function createHandler(videoElement, config) {
       return new this(videoElement, config);
     }
+
     /**
      * Error handler
      * @function onError
@@ -382,6 +386,19 @@ var BaseMediaSourceHandler = function () {
     value: function onError(error) {
       this._logger.error(error);
     }
+
+    /**
+     * Destroying the _msPlayer
+     * @function destroy
+     * @static
+     */
+
+  }, {
+    key: 'destroy',
+    value: function destroy() {}
+    // should do nothing. implemented by the inheritor if necessary.
+
+
     /**
      * @constructor
      * @param {string} name - The name of the media source handler
@@ -394,6 +411,7 @@ var BaseMediaSourceHandler = function () {
 
     this._logger = _loggerFactory2.default.getLogger(name);
   }
+
   /**
    * Load the video source
    * @function load
@@ -405,7 +423,7 @@ var BaseMediaSourceHandler = function () {
   _createClass(BaseMediaSourceHandler, [{
     key: 'load',
     value: function load(source) {
-      throw new _PlayerError2.default(_PlayerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'load()').getError();
+      throw new _PlayerError2.default(_PlayerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
     }
   }]);
 
@@ -1937,6 +1955,9 @@ var Html5 = function (_FakeEventTarget) {
     key: 'destroy',
     value: function destroy() {
       this.deattach();
+      if (this.mediaSourceHandler_) {
+        this.mediaSourceHandler_.destroy();
+      }
       if (this.el_) {
         this.pause();
         this.el_.removeAttribute('src');

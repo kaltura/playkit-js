@@ -25,6 +25,9 @@ export default class Html5 extends FakeEventTarget implements IEngine{
 
   destroy() {
     this.deattach();
+    if (this.mediaSourceHandler_){
+      this.mediaSourceHandler_.destroy();
+    }
     if (this.el_) {
       this.pause();
       this.el_.removeAttribute('src');
