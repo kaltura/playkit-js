@@ -388,18 +388,6 @@ var BaseMediaSourceHandler = function () {
     }
 
     /**
-     * Destroying the _msPlayer
-     * @function destroy
-     * @static
-     */
-
-  }, {
-    key: 'destroy',
-    value: function destroy() {}
-    // should do nothing. implemented by the inheritor if necessary.
-
-
-    /**
      * @constructor
      * @param {string} name - The name of the media source handler
      */
@@ -424,6 +412,17 @@ var BaseMediaSourceHandler = function () {
     key: 'load',
     value: function load(source) {
       throw new _PlayerError2.default(_PlayerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
+    }
+
+    /**
+     * Destroying the _msPlayer
+     * @function destroy
+     */
+
+  }, {
+    key: 'destroy',
+    value: function destroy() {
+      // should do nothing. implemented by the inheritor if necessary.
     }
   }]);
 

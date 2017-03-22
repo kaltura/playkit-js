@@ -79,15 +79,6 @@ export default class BaseMediaSourceHandler {
   }
 
   /**
-   * Destroying the _msPlayer
-   * @function destroy
-   * @static
-   */
-  static destroy() {
-    // should do nothing. implemented by the inheritor if necessary.
-  }
-
-  /**
    * @constructor
    * @param {string} name - The name of the media source handler
    */
@@ -103,5 +94,13 @@ export default class BaseMediaSourceHandler {
    */
   load(source: string) {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
+  }
+
+  /**
+   * Destroying the _msPlayer
+   * @function destroy
+   */
+  destroy() {
+    // should do nothing. implemented by the inheritor if necessary.
   }
 }
