@@ -1,14 +1,17 @@
 {
   "name": "PlayKit.js",
-  "version": "0.0.1-alpha",
+  "version": "0.0.1",
   "main": "dist/playkit.js",
   "scripts": {
+    "clean": "rm -rf ./dist",
+    "prebuild": "npm run clean",
     "build": "webpack",
     "dev": "webpack --progress --colors --watch",
     "test": "./node_modules/.bin/karma start --single-run",
     "test:watch": "./node_modules/.bin/karma start --auto-watch",
     "test:cover": "./node_modules/.bin/karma start --single-run",
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "release": "npm run build && standard-version"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
@@ -39,8 +42,9 @@
     "mocha": "^3.2.0",
     "mocha-cli": "^1.0.1",
     "nyc": "^10.1.2",
-    "sinon": "next",
+    "sinon": "^2.0.0",
     "sinon-chai": "^2.8.0",
+    "standard-version": "^4.0.0",
     "webpack": "latest",
     "webpack-dev-server": "latest"
   },
