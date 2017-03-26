@@ -9,7 +9,6 @@
     "dev": "webpack --progress --colors --watch",
     "test": "./node_modules/.bin/karma start --single-run",
     "test:watch": "./node_modules/.bin/karma start --auto-watch",
-    "test:cover": "./node_modules/.bin/karma start --single-run",
     "start": "webpack-dev-server",
     "release": "npm run build && standard-version"
   },

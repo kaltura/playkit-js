@@ -1,15 +1,17 @@
 module.exports = function (config) {
+
+  // Create custom launcher in case running with Travis
+  const customLaunchers = {
+    Chrome_travis_ci: {
+      base: 'Chrome',
+      flags: ['--no-sandbox']
+    }
+  };
+
   let karmaConf = {
     logLevel: config.LOG_INFO,
     // Run in Chrome
     browsers: ['Chrome'],
-    // Create custom launcher in case running with Travis
-    customLaunchers: {
-      Chrome_travis_ci: {
-        base: 'Chrome',
-        flags: ['--no-sandbox']
-      }
-    },
     // Just run once by default
     singleRun: true,
     // Use the mocha test framework
@@ -50,6 +52,7 @@ module.exports = function (config) {
   };
 
   if (process.env.TRAVIS) {
+    karmaConf.customLaunchers = customLaunchers;
     karmaConf.browsers = ['Chrome_travis_ci'];
   }
 
