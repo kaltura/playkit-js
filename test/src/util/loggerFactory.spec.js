@@ -1,16 +1,18 @@
 import loggerFactory from '../../../src/util/loggerFactory';
 import {LOG_LEVEL} from '../../../src/util/loggerFactory';
 
-let loggerA = null;
-let loggerB = null;
-
 describe('loggerFactory', () => {
 
-  it('should create two separate loggers', () => {
-    loggerA = loggerFactory.getLogger('loggerA');
-    (loggerA.context.name).should.equal('loggerA');
+  let loggerA = null;
+  let loggerB = null;
 
+  beforeEach(() => {
+    loggerA = loggerFactory.getLogger('loggerA');
     loggerB = loggerFactory.getLogger('loggerB');
+  });
+
+  it('should create two separate loggers', () => {
+    (loggerA.context.name).should.equal('loggerA');
     (loggerB.context.name).should.equal('loggerB');
   });
 
