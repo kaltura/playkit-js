@@ -1,5 +1,4 @@
 module.exports = function (config) {
-
   // Create custom launcher in case running with Travis
   const customLaunchers = {
     Chrome_travis_ci: {
