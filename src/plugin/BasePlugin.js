@@ -5,40 +5,54 @@ import {merge} from "../util/util";
 import EventManager from "../events/eventManager";
 import PluginError from "./PluginError";
 
+/** The BasePlugin responsible to implement the plugin interface.
+ * Contains several default implementations.
+ * Other plugins should extend this class.
+ * @class
+ */
 export default class BasePlugin implements IPlugin {
   /**
    * The runtime configuration of the plugin.
+   * @member
    */
   config: Object;
   /**
    * The name of the plugin.
+   * @member
    */
   name: string;
   /**
    * The logger of the plugin.
+   * @member
    */
   logger: any;
   /**
    * Reference to the actual player.
+   * @member
    */
   player: Player;
   /**
    * The event manager of the plugin.
+   * @member
    */
   eventManager: EventManager;
   /**
    * The default configuration of the plugin.
    * Inherited plugins should override this property.
-   * @type {{}}
+   * @type {Object}
+   * @static
+   * @member
    */
   static defaultConfig: Object = {};
 
   /**
    * Factory method to create the actual plugin.
-   * @param name
-   * @param player
-   * @param config
+   * @param name - The plugin name
+   * @param player - The player reference
+   * @param config - The plugin configuration
    * @returns {BasePlugin}
+   * @static
+   * @public
    */
   static createPlugin(name: string, player: Player, config: Object = {}): BasePlugin {
     return new this(name, player, config);
@@ -48,6 +62,9 @@ export default class BasePlugin implements IPlugin {
    * Returns under what conditions the plugin is valid.
    * Plugin must implement this method.
    * @returns {boolean}
+   * @static
+   * @public
+   * @abstract
    */
   static isValid(): boolean {
     throw new PluginError(PluginError.TYPE.NOT_IMPLEMENTED_METHOD, 'isValid()').getError();
@@ -55,9 +72,11 @@ export default class BasePlugin implements IPlugin {
 
   /**
    * constructor
-   * @param name
-   * @param player
-   * @param config
+   * @param name - The plugin name
+   * @param player - The player reference
+   * @param config - The plugin configuration
+   * @constructor
+   * @private
    */
   constructor(name: string, player: Player, config: Object) {
     this.name = name;
@@ -70,8 +89,9 @@ export default class BasePlugin implements IPlugin {
   /**
    * Returns the config of the plugin.
    * If attribute is provided, returns its value.
-   * @param attr
+   * @param attr - The key in the plugin configuration.
    * @returns {*}
+   * @public
    */
   getConfig(attr?: string): any {
     if (attr) {
@@ -82,7 +102,8 @@ export default class BasePlugin implements IPlugin {
 
   /**
    * Updates the config of the plugin.
-   * @param update
+   * @param update - The updated configuration.
+   * @public
    */
   updateConfig(update: Object): void {
     this.config = merge(this.config, update);
@@ -91,6 +112,8 @@ export default class BasePlugin implements IPlugin {
   /**
    * Runs the destroy logic of the plugin.
    * plugin must implement this method.
+   * @public
+   * @abstract
    */
   destroy(): void {
     throw new PluginError(PluginError.TYPE.NOT_IMPLEMENTED_METHOD, 'destroy()').getError();
@@ -99,6 +122,7 @@ export default class BasePlugin implements IPlugin {
   /**
    * Getter for the plugin's name.
    * @returns {string}
+   * @public
    */
   getName(): string {
     return this.name;

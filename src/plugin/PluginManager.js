@@ -4,29 +4,41 @@ import PluginError from "./PluginError";
 import Player from "../player";
 import loggerFactory from "../util/loggerFactory";
 
+/**
+ * The logger of the PluginManager class.
+ * @private
+ * @const
+ */
 const logger = loggerFactory.getLogger("PluginManager");
 
+/** The PluginManager responsible for register plugins definitions and store plugins instances.
+ * @class
+ */
 export default class PluginManager {
   /**
    * The registry of the plugins.
    * Maps plugin's name to his class.
    * @type {Map}
+   * @static
    * @private
    */
-  static _registry: Map<string,Function> = new Map();
+  static _registry: Map<string, Function> = new Map();
   /**
    * The active plugins in the player.
    * Maps plugin's name to his instance.
    * @type {Map}
    * @private
    */
-  _plugins: Map<string,BasePlugin> = new Map();
+  _plugins: Map<string, BasePlugin> = new Map();
 
   /**
    * Writes the plugin in the registry.
-   * @param name
-   * @param handler
+   * Maps: plugin name -> plugin class.
+   * @param name - The plugin name
+   * @param handler - The plugin class
    * @returns {boolean}
+   * @static
+   * @public
    */
   static register(name: string, handler: Function): boolean {
     if (typeof handler !== 'function' || handler.prototype instanceof BasePlugin === false) {
@@ -43,7 +55,9 @@ export default class PluginManager {
 
   /**
    * Removes the plugin from the registry.
-   * @param name
+   * @param name - The plugin name
+   * @static
+   * @public
    */
   static unRegister(name: string): void {
     if (PluginManager._registry.has(name)) {
@@ -53,11 +67,12 @@ export default class PluginManager {
   }
 
   /**
-   * Creates a new instance of the plugin in case isValid() of the plugin returns true.
-   * @param name
-   * @param player
-   * @param config
+   * Creates and store new instance of the plugin in case isValid() of the plugin returns true.
+   * @param name - The plugin name
+   * @param player - The player reference
+   * @param config - The plugin configuration
    * @returns {boolean}
+   * @public
    */
   load(name: string, player: Player, config: Object = {}): boolean {
     if (!PluginManager._registry.has(name)) {
@@ -75,6 +90,7 @@ export default class PluginManager {
 
   /**
    * Iterates over all the plugins and calls private _destroy.
+   * @public
    */
   destroy(): void {
     this._plugins.forEach(this._destroy.bind(this));
@@ -82,8 +98,8 @@ export default class PluginManager {
 
   /**
    * Calls destroy() method of the plugin's impl.
-   * @param plugin
-   * @param name
+   * @param plugin - The plugin instance
+   * @param name - The plugin name
    * @private
    */
   _destroy(plugin: BasePlugin, name: string): void {
@@ -93,13 +109,18 @@ export default class PluginManager {
 
   /**
    * Returns the plugin's instance.
-   * @param name
+   * @param name - The plugin name
    * @returns {BasePlugin}
+   * @public
    */
   get(name: string): ?BasePlugin {
     return this._plugins.get(name);
   }
 }
 
+/**
+ * Export the register method.
+ * @type {function}
+ */
 const registerPlugin = PluginManager.register;
 export {registerPlugin};
