@@ -1,8 +1,13 @@
-if (!process.env.NODE_ENV) {
-  process.env.NODE_ENV = 'test';
-}
 module.exports = function (config) {
-  config.set({
+  // Create custom launcher in case running with Travis
+  const customLaunchers = {
+    Chrome_travis_ci: {
+      base: 'Chrome',
+      flags: ['--no-sandbox']
+    }
+  };
+
+  let karmaConf = {
     logLevel: config.LOG_INFO,
     // Run in Chrome
     browsers: ['Chrome'],
@@ -43,5 +48,12 @@ module.exports = function (config) {
         reporter: 'html'
       }
     }
-  });
+  };
+
+  if (process.env.TRAVIS) {
+    karmaConf.customLaunchers = customLaunchers;
+    karmaConf.browsers = ['Chrome_travis_ci'];
+  }
+
+  config.set(karmaConf);
 };
