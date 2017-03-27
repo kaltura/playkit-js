@@ -8,7 +8,7 @@ import PluginError from "./PluginError";
 /** The BasePlugin responsible to implement the plugin interface.
  * Contains several default implementations.
  * Other plugins should extend this class.
- * @class
+ * @classdesc
  */
 export default class BasePlugin implements IPlugin {
   /**

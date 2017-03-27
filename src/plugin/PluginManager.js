@@ -12,7 +12,7 @@ import loggerFactory from "../util/loggerFactory";
 const logger = loggerFactory.getLogger("PluginManager");
 
 /** The PluginManager responsible for register plugins definitions and store plugins instances.
- * @class
+ * @classdesc
  */
 export default class PluginManager {
   /**
@@ -70,7 +70,7 @@ export default class PluginManager {
    * Creates and store new instance of the plugin in case isValid() of the plugin returns true.
    * @param name - The plugin name
    * @param player - The player reference
-   * @param config - The plugin configuration
+   * @param {Object} [config={}] - The plugin configuration
    * @returns {boolean}
    * @public
    */
@@ -121,6 +121,7 @@ export default class PluginManager {
 /**
  * Export the register method.
  * @type {function}
+ * @constant
  */
 const registerPlugin = PluginManager.register;
 export {registerPlugin};
