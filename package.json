@@ -7,8 +7,8 @@
     "prebuild": "npm run clean",
     "build": "webpack",
     "dev": "webpack --progress --colors --watch",
-    "test": "./node_modules/.bin/karma start --single-run",
-    "test:watch": "./node_modules/.bin/karma start --auto-watch",
+    "test": "NODE_ENV=test ./node_modules/.bin/karma start --single-run",
+    "test:watch": "NODE_ENV=test ./node_modules/.bin/karma start --auto-watch",
     "start": "webpack-dev-server",
     "release": "npm run build && standard-version"
   },
