@@ -15,5 +15,5 @@ before_install:
 
 script:
 - eslint src/
-- flow check
+- flow check src/
 - test
