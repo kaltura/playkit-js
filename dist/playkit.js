@@ -1007,16 +1007,16 @@ var MediaSourceAdapterManager = function () {
   }
 
   _createClass(MediaSourceAdapterManager, null, [{
-    key: 'registerAdapter',
+    key: 'register',
 
 
     /**
      * Add a media source adapter to the registry
-     * @function registerAdapter
+     * @function register
      * @param {BaseMediaSourceAdapter} adapter
      * @static
      */
-    value: function registerAdapter(adapter) {
+    value: function register(adapter) {
       if (adapter && !MediaSourceAdapterManager._mediaSourceAdapters.includes(adapter)) {
         MediaSourceAdapterManager._mediaSourceAdapters.push(adapter);
       }
@@ -1024,7 +1024,7 @@ var MediaSourceAdapterManager = function () {
 
     /**
      * Remove a media source adapter from the registry
-     * @function unregisterAdapter
+     * @function unregister
      * @param {BaseMediaSourceAdapter} adapter
      * @static
      */
@@ -1037,8 +1037,8 @@ var MediaSourceAdapterManager = function () {
      */
 
   }, {
-    key: 'unregisterAdapter',
-    value: function unregisterAdapter(adapter) {
+    key: 'unregister',
+    value: function unregister(adapter) {
       var index = MediaSourceAdapterManager._mediaSourceAdapters.indexOf(adapter);
       if (index > -1) {
         MediaSourceAdapterManager._mediaSourceAdapters.splice(index, 1);
@@ -1095,7 +1095,7 @@ MediaSourceAdapterManager._mediaSourceAdapters = [];
 exports.default = MediaSourceAdapterManager;
 
 
-var registerAdapter = MediaSourceAdapterManager.registerAdapter;
+var registerAdapter = MediaSourceAdapterManager.register;
 exports.registerAdapter = registerAdapter;
 
 /***/ }),

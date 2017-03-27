@@ -52,5 +52,5 @@ export default class FakeMSE extends BaseMediaSourceAdapter {
 }
 // Register FakeMSE to the media source adapter manager
 if (FakeMSE.isSupported()) {
-  MSAManager.registerAdapter(FakeMSE);
+  MSAManager.register(FakeMSE);
 }

@@ -16,11 +16,11 @@ export default class MediaSourceAdapterManager {
 
   /**
    * Add a media source adapter to the registry
-   * @function registerAdapter
+   * @function register
    * @param {BaseMediaSourceAdapter} adapter
    * @static
    */
-  static registerAdapter(adapter: BaseMediaSourceAdapter): void {
+  static register(adapter: BaseMediaSourceAdapter): void {
     if (adapter && !MediaSourceAdapterManager._mediaSourceAdapters.includes(adapter)) {
       MediaSourceAdapterManager._mediaSourceAdapters.push(adapter);
     }
@@ -28,11 +28,11 @@ export default class MediaSourceAdapterManager {
 
   /**
    * Remove a media source adapter from the registry
-   * @function unregisterAdapter
+   * @function unregister
    * @param {BaseMediaSourceAdapter} adapter
    * @static
    */
-  static unregisterAdapter(adapter: BaseMediaSourceAdapter): void {
+  static unregister(adapter: BaseMediaSourceAdapter): void {
     let index = MediaSourceAdapterManager._mediaSourceAdapters.indexOf(adapter);
     if (index > -1) {
       MediaSourceAdapterManager._mediaSourceAdapters.splice(index, 1);
@@ -77,6 +77,6 @@ export default class MediaSourceAdapterManager {
   }
 }
 
-const registerAdapter = MediaSourceAdapterManager.registerAdapter;
+const registerAdapter = MediaSourceAdapterManager.register;
 export {registerAdapter};
 
