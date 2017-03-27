@@ -1,13 +1,13 @@
 // @flow
-import BaseMediaSourceHandler from './BaseMediaSourceHandler'
-import MSHProvider from './mediaSourceHandlerProvider'
+import BaseMediaSourceAdapter from './BaseMediaSourceAdapter'
+import MSAManager from './mediaSourceAdapterManager'
 
 /**
  * An illustration of media source extension for progressive download
  *@classdesc
- *@extends BaseMediaSourceHandler
+ *@extends BaseMediaSourceAdapter
  */
-export default class FakeMSE extends BaseMediaSourceHandler {
+export default class FakeMSE extends BaseMediaSourceAdapter {
   /**
    * The name of FakeMSE
    * @member {string} _name
@@ -33,7 +33,7 @@ export default class FakeMSE extends BaseMediaSourceHandler {
    * @param {HTMLVideoElement} videoElement - The video element which bind to FakeMSE
    * @param {Object} config - The FakeMSE configuration
    */
-  constructor(videoElement: HTMLVideoElement, config: Object): BaseMediaSourceHandler {
+  constructor(videoElement: HTMLVideoElement, config: Object): BaseMediaSourceAdapter {
     super(FakeMSE._name);
     this._msPlayer = videoElement;
   }
@@ -50,7 +50,7 @@ export default class FakeMSE extends BaseMediaSourceHandler {
     }
   }
 }
-// Register FakeMSE to the media source handler provider
+// Register FakeMSE to the media source adapter manager
 if (FakeMSE.isSupported()) {
-  MSHProvider.registerHandler(FakeMSE);
+  MSAManager.registerAdapter(FakeMSE);
 }

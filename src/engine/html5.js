@@ -3,29 +3,34 @@ import FakeEventTarget from '../events/fakeEventTarget';
 import FakeEvent from '../events/fakeEvent';
 import EventManager from '../events/eventManager';
 import PlayerEvents from '../events/events';
-import MSHProvider from './mediaSourceHandlers/mediaSourceHandlerProvider';
-import BaseMediaSourceHandler from './mediaSourceHandlers/BaseMediaSourceHandler';
+import MSAManager from './mediaSourceAdapters/mediaSourceAdapterManager';
+import BaseMediaSourceAdapter from './mediaSourceAdapters/BaseMediaSourceAdapter';
 
 
 export default class Html5 extends FakeEventTarget implements IEngine {
   el_: HTMLVideoElement;
   eventManager_: EventManager;
-  mediaSourceHandler_: BaseMediaSourceHandler;
+  mediaSourceAdapter_: BaseMediaSourceAdapter;
 
   static EngineName: string = "html5";
 
-  constructor(config: Object) {
+  static canPlayType(mimeType) {
+    return MSAManager.canPlayType(mimeType);
+  }
+
+  constructor(source: Object, config: Object) {
     super();
     this.createVideoElement();
     this.eventManager_ = new EventManager();
+    this.loadmediaSourceAdapter(source, config);
+    this.loadSource(source);
     this.attach();
-    this.selectSource(config);
   }
 
   destroy() {
     this.deattach();
-    if (this.mediaSourceHandler_) {
-      this.mediaSourceHandler_.destroy();
+    if (this.mediaSourceAdapter_) {
+      this.mediaSourceAdapter_.destroy();
     }
     if (this.el_) {
       this.pause();
@@ -62,13 +67,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
   }
 
-  selectSource(config) {
-    if (config) {
-      let mediaSourceObject = MSHProvider.getMediaSourceHandler(this.el_, config.sources, config);
-      this.mediaSourceHandler_ = mediaSourceObject.handler;
-      if (this.mediaSourceHandler_) {
-        this.mediaSourceHandler_.load(mediaSourceObject.source);
-      }
+  loadmediaSourceAdapter(source, config) {
+    this.mediaSourceAdapter_ = MSAManager.getMediaSourceAdapter(this.el_, source, config);
+  }
+
+  loadSource(source: string) {
+    if (this.mediaSourceAdapter_) {
+      this.mediaSourceAdapter_.load(source);
     }
   }
 

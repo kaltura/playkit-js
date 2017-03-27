@@ -3,40 +3,40 @@ import LoggerFactory from '../../util/loggerFactory';
 import PlayerError from "../../util/PlayerError";
 
 /**
- * Base of media source handlers
+ * Base of media source adapters
  * @classdesc
  */
-export default class BaseMediaSourceHandler {
+export default class BaseMediaSourceAdapter {
   /**
-   * The supported mime types by the media source handler
+   * The supported mime types by the media source adapter
    * @member {Array} _mimeTypes
    * @static
    * @private
    */
   static _mimeTypes: Array<string>;
   /**
-   * The logger of the media source handler
+   * The logger of the media source adapter
    * @member {ILogger} _logger
    * @static
    * @private
    */
   static _logger: ILogger;
   /**
-   * The name of the media source handler
+   * The name of the media source adapter
    * @member {string} _name
    * @static
    * @private
    */
   static _name: string;
   /**
-   * The player wrapper of the media source handler
+   * The player wrapper of the media source adapter
    * @member {any} _msPlayer
    * @private
    */
   _msPlayer: any;
 
   /**
-   * Checks if the media source handler is supported
+   * Checks if the media source adapter is supported
    * @function isSupported
    * @returns {boolean}
    * @static
@@ -46,7 +46,7 @@ export default class BaseMediaSourceHandler {
   }
 
   /**
-   * Checks if the media source handler can play a given mime type
+   * Checks if the media source adapter can play a given mime type
    * @function canPlayType
    * @param {string} mimeType
    * @returns {boolean}
@@ -57,14 +57,14 @@ export default class BaseMediaSourceHandler {
   }
 
   /**
-   * Factory method to create media source handler
-   * @function createHandler
-   * @param {HTMLVideoElement} videoElement - The video element which bind to the media source handler
-   * @param {Object} config - The media source handler configuration
-   * @returns {BaseMediaSourceHandler}
+   * Factory method to create media source adapter
+   * @function createAdapter
+   * @param {HTMLVideoElement} videoElement - The video element which bind to the media source adapter
+   * @param {Object} config - The media source adapter configuration
+   * @returns {BaseMediaSourceAdapter}
    * @static
    */
-  static createHandler(videoElement: HTMLVideoElement, config: Object): BaseMediaSourceHandler {
+  static createAdapter(videoElement: HTMLVideoElement, config: Object): BaseMediaSourceAdapter {
     return new this(videoElement, config);
   }
 
@@ -80,7 +80,7 @@ export default class BaseMediaSourceHandler {
 
   /**
    * @constructor
-   * @param {string} name - The name of the media source handler
+   * @param {string} name - The name of the media source adapter
    */
   constructor(name: string) {
     this._logger = LoggerFactory.getLogger(name);

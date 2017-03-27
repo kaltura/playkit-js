@@ -1,4 +1,4 @@
-import fakeMSE from '../../../../src/engine/mediaSourceHandlers/fakeMSE';
+import fakeMSE from '../../../../src/engine/mediaSourceAdapters/fakeMSE';
 
 let video = document.createElement("video");
 
