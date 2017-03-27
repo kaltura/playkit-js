@@ -7,9 +7,8 @@
     "prebuild": "npm run clean",
     "build": "webpack",
     "dev": "webpack --progress --colors --watch",
-    "test": "mocha ./test/setup/mocha.js ./test/src --compilers js:babel-core/register --colors --recursive",
-    "test:watch": "mocha ./test/setup/mocha.js ./test/src --compilers js:babel-core/register --colors -w --recursive",
-    "test:cover": "cross-env NODE_ENV=test nyc mocha --recursive",
+    "test": "./node_modules/.bin/karma start --single-run",
+    "test:watch": "./node_modules/.bin/karma start --auto-watch",
     "start": "webpack-dev-server",
     "release": "npm run build && standard-version"
   },

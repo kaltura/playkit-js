@@ -45,5 +45,4 @@ describe('playkit:playkit', function () {
     });
     player.play();
   });
-
 });

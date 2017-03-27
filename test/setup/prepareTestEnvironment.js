@@ -1,11 +1,8 @@
 import chai from 'chai';
-// import chaiAsPromised from 'chai-as-promised';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon/pkg/sinon';
 
 export function prepareTestEnvironment() {
-  // mocha.setup('bdd');
-  // chai.use(chaiAsPromised);
   chai.should();
   chai.use(sinonChai);
   global.chai = chai;
