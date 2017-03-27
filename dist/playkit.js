@@ -403,7 +403,7 @@ var BaseMediaSourceHandler = function () {
   /**
    * Load the video source
    * @function load
-   * @param {string} source - The source to load
+   * @param {Object} source - The source to load
    * @abstract
    */
 
@@ -1042,21 +1042,29 @@ var MediaSourceHandlerProvider = function () {
      * Get the appropriate media source handler to the video source
      * @function getMediaSourceHandler
      * @param {HTMLVideoElement} videoElement - The video element which will bind to the media source handler
+     * @param {Array<Object>} sources - The video sources
      * @param {Object} config - The player configuration
-     * @returns {BaseMediaSourceHandler|null}
+     * @returns {Object}
      * @static
      */
 
   }, {
     key: 'getMediaSourceHandler',
-    value: function getMediaSourceHandler(videoElement, config) {
-      if (videoElement && config) {
+    value: function getMediaSourceHandler(videoElement, sources, config) {
+      if (videoElement && sources && config) {
         var handlers = MediaSourceHandlerProvider._mediaSourceHandlers;
         for (var i = 0; i < handlers.length; i++) {
-          if (handlers[i].canPlayType(config.mimeType)) return handlers[i].createHandler(videoElement, config);
+          for (var j = 0; j < sources.length; j++) {
+            if (handlers[i].canPlayType(sources[j].mimetype)) {
+              return {
+                handler: handlers[i].createHandler(videoElement, config.engines),
+                source: sources[j]
+              };
+            }
+          }
         }
       }
-      return null;
+      return {};
     }
   }]);
 
@@ -1822,7 +1830,7 @@ exports.merge = merge;
 
 module.exports = {
 	"name": "playkit-js",
-	"version": "0.0.1-alpha",
+	"version": "0.0.1",
 	"main": "dist/playkit.js",
 	"scripts": {
 		"clean": "rm -rf ./dist",
@@ -1945,8 +1953,7 @@ var Html5 = function (_FakeEventTarget) {
     _this.createVideoElement();
     _this.eventManager_ = new _eventManager2.default();
     _this.attach();
-    _this.mediaSourceHandler_ = _mediaSourceHandlerProvider2.default.getMediaSourceHandler(_this.el_, config);
-    _this.mediaSourceHandler_.load(config.source);
+    _this.selectSource(config);
     return _this;
   }
 
@@ -1996,6 +2003,17 @@ var Html5 = function (_FakeEventTarget) {
       this.el_.controls = true;
       if (document && document.body) {
         document.body.appendChild(this.el_);
+      }
+    }
+  }, {
+    key: 'selectSource',
+    value: function selectSource(config) {
+      if (config) {
+        var mediaSourceObject = _mediaSourceHandlerProvider2.default.getMediaSourceHandler(this.el_, config.sources, config);
+        this.mediaSourceHandler_ = mediaSourceObject.handler;
+        if (this.mediaSourceHandler_) {
+          this.mediaSourceHandler_.load(mediaSourceObject.source);
+        }
       }
     }
   }, {
