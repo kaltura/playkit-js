@@ -7,7 +7,7 @@ import MSHProvider from './mediaSourceHandlers/mediaSourceHandlerProvider';
 import BaseMediaSourceHandler from './mediaSourceHandlers/BaseMediaSourceHandler';
 
 
-export default class Html5 extends FakeEventTarget implements IEngine{
+export default class Html5 extends FakeEventTarget implements IEngine {
   el_: HTMLVideoElement;
   eventManager_: EventManager;
   mediaSourceHandler_: BaseMediaSourceHandler;
@@ -19,13 +19,12 @@ export default class Html5 extends FakeEventTarget implements IEngine{
     this.createVideoElement();
     this.eventManager_ = new EventManager();
     this.attach();
-    this.mediaSourceHandler_ = MSHProvider.getMediaSourceHandler(this.el_, config);
-    this.mediaSourceHandler_.load(config.source);
+    this.selectSource(config);
   }
 
   destroy() {
     this.deattach();
-    if (this.mediaSourceHandler_){
+    if (this.mediaSourceHandler_) {
       this.mediaSourceHandler_.destroy();
     }
     if (this.el_) {
@@ -63,12 +62,22 @@ export default class Html5 extends FakeEventTarget implements IEngine{
     }
   }
 
-  set src(source: string): void{
+  selectSource(config) {
+    if (config) {
+      let mediaSourceObject = MSHProvider.getMediaSourceHandler(this.el_, config.sources, config);
+      this.mediaSourceHandler_ = mediaSourceObject.handler;
+      if (this.mediaSourceHandler_) {
+        this.mediaSourceHandler_.load(mediaSourceObject.source);
+      }
+    }
+  }
+
+  set src(source: string): void {
     //Set source
     this.el_.src = source;
   }
 
-  get src(): string{
+  get src(): string {
     return this.el_.src;
   }
 
@@ -87,7 +96,7 @@ export default class Html5 extends FakeEventTarget implements IEngine{
     return this.el_.pause();
   }
 
-  load(): void{
+  load(): void {
     this.el_.load();
   }
 
@@ -151,7 +160,7 @@ export default class Html5 extends FakeEventTarget implements IEngine{
     return this.el_.seeking;
   }
 
-  get seekable(): TimeRanges{
+  get seekable(): TimeRanges {
     return this.el_.seekable;
   }
 
@@ -179,87 +188,87 @@ export default class Html5 extends FakeEventTarget implements IEngine{
     return this.el_.muted;
   }
 
-  get defaultMuted(): boolean{
+  get defaultMuted(): boolean {
     return this.el_.defaultMuted;
   }
 
-  set poster(poster: string){
+  set poster(poster: string) {
     this.el_.poster = poster;
   }
 
-  get poster(): string{
+  get poster(): string {
     return this.el_.poster;
   }
 
-  set preload(preload: string){
+  set preload(preload: string) {
     this.el_.preload = preload;
   }
 
-  get preload(): string{
+  get preload(): string {
     return this.el_.preload;
   }
 
-  set autoplay(autoplay: boolean){
+  set autoplay(autoplay: boolean) {
     this.el_.autoplay = autoplay;
   }
 
-  get autoplay(): boolean{
+  get autoplay(): boolean {
     return this.el_.autoplay;
   }
 
-  set loop(loop: boolean){
+  set loop(loop: boolean) {
     this.el_.loop = loop;
   }
 
-  get loop(): boolean{
+  get loop(): boolean {
     return this.el_.loop;
   }
 
-  set controls(controls: boolean){
+  set controls(controls: boolean) {
     this.el_.controls = controls;
   }
 
-  get controls(): boolean{
+  get controls(): boolean {
     return this.el_.controls;
   }
 
-  set playbackRate(playbackRate: number){
+  set playbackRate(playbackRate: number) {
     this.el_.playbackRate = playbackRate;
   }
 
-  get playbackRate(): number{
+  get playbackRate(): number {
     return this.el_.playbackRate;
   }
 
-  set defaultPlaybackRate(defaultPlaybackRate: number){
+  set defaultPlaybackRate(defaultPlaybackRate: number) {
     this.el_.defaultPlaybackRate = defaultPlaybackRate;
   }
 
-  get defaultPlaybackRate(): number{
+  get defaultPlaybackRate(): number {
     return this.el_.defaultPlaybackRate;
   }
 
-  get ended(): boolean{
+  get ended(): boolean {
     return this.el_.ended;
   }
 
-  get error(): ?MediaError{
+  get error(): ?MediaError {
     return this.el_.error;
   }
 
-  get networkState(): number{
+  get networkState(): number {
     return this.el_.networkState;
   }
 
-  get readyState(): number{
+  get readyState(): number {
     return this.el_.readyState;
   }
 
-  get videoHeight(): number{
+  get videoHeight(): number {
     return this.el_.videoHeight;
   }
 
-  get videoWidth(): number{
+  get videoWidth(): number {
     return this.el_.videoWidth;
   }
 

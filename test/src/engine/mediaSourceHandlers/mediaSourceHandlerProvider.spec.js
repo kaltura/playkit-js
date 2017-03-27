@@ -1,27 +1,31 @@
 import BaseMediaSourceHandler from '../../../../src/engine/mediaSourceHandlers/BaseMediaSourceHandler';
 import MSHProvider from '../../../../src/engine/mediaSourceHandlers/mediaSourceHandlerProvider';
-import fakeMSH from '../../../../src/engine/mediaSourceHandlers/fakeMSE';
 
-class handler1 extends BaseMediaSourceHandler{
-  static _mimeTypes = ['mimeType1'];
+class handler1 extends BaseMediaSourceHandler {
+  static _mimeTypes = ['mimeType0', 'mimeType1'];
   static _name = 'handler1';
 }
-class handler2 extends BaseMediaSourceHandler{
-  static _mimeTypes = ['mimeType1','mimeType2'];
+class handler2 extends BaseMediaSourceHandler {
+  static _mimeTypes = ['mimeType1', 'mimeType2'];
   static _name = 'handler2';
 }
-class handler3 extends BaseMediaSourceHandler{
+class handler3 extends BaseMediaSourceHandler {
   static canPlayType(mimeType: string): boolean {
     return !!(document.createElement("video").canPlayType(mimeType));
   };
+
   static _name = 'handler3';
 }
 let video = document.createElement("video");
+let oldMediaSourceHandlers = MSHProvider._mediaSourceHandlers;
 
 describe('mediaSourceHandlerProvider:registerHandler', () => {
 
-  beforeEach( () => {
+  beforeEach(() => {
     MSHProvider._mediaSourceHandlers = [];
+  });
+  after(() => {
+    MSHProvider._mediaSourceHandlers = oldMediaSourceHandlers;
   });
 
   it('should register handler1', () => {
@@ -63,8 +67,11 @@ describe('mediaSourceHandlerProvider:registerHandler', () => {
 
 describe('mediaSourceHandlerProvider:unregisterHandler', () => {
 
-  beforeEach( () => {
-    MSHProvider._mediaSourceHandlers = [handler1,handler2];
+  beforeEach(() => {
+    MSHProvider._mediaSourceHandlers = [handler1, handler2];
+  });
+  after(() => {
+    MSHProvider._mediaSourceHandlers = oldMediaSourceHandlers;
   });
 
   it('should unregister handler1', () => {
@@ -102,43 +109,65 @@ describe('mediaSourceHandlerProvider:unregisterHandler', () => {
 
 describe('mediaSourceHandlerProvider:getMediaSourceHandler', () => {
 
-  before( () => {
-    MSHProvider._mediaSourceHandlers = [handler1,handler2,handler3];
+  before(() => {
+    MSHProvider._mediaSourceHandlers = [handler1, handler2, handler3];
+  });
+  after(() => {
+    MSHProvider._mediaSourceHandlers = oldMediaSourceHandlers;
   });
 
-  it('should provide handler1', () => {
-    let handler = MSHProvider.getMediaSourceHandler(video, {mimeType:'mimeType1'});
-    handler.constructor.name.should.equal("handler1");
+  it('should provide handler1 & src1', () => {
+    let object = MSHProvider.getMediaSourceHandler(video, [{mimetype: 'mimeType1', src: 'url1'},{mimetype: 'mimeType2', src: 'url2'},{mimetype: 'video/mp4', src: 'url3'}], {});
+    object.handler.constructor.name.should.equal("handler1");
+    object.source.src.should.equal("url1");
   });
 
-  it('should provide handler2', () => {
-    let handler = MSHProvider.getMediaSourceHandler(video, {mimeType:'mimeType2'});
-    handler.constructor.name.should.equal("handler2");
+  it('should provide handler1 & src1', () => {
+    let object = MSHProvider.getMediaSourceHandler(video, [{mimetype: 'mimeType2', src: 'url2'},{mimetype: 'video/mp4', src: 'url3'},{mimetype: 'mimeType1', src: 'url1'}], {});
+    object.handler.constructor.name.should.equal("handler1");
+    object.source.src.should.equal("url1");
   });
 
-  it('should provide handler3', () => {
-    let handler = MSHProvider.getMediaSourceHandler(video, {mimeType:'video/mp4'});
-    handler.constructor.name.should.equal("handler3");
+  it('should provide handler2 & src2', () => {
+    let object = MSHProvider.getMediaSourceHandler(video, [{mimetype: 'mimeType2', src: 'url2'},{mimetype: 'video/mp4', src: 'url3'}], {});
+    object.handler.constructor.name.should.equal("handler2");
+    object.source.src.should.equal("url2");
   });
 
-  it('should provide null for unknown mime type', () => {
-    let handler = MSHProvider.getMediaSourceHandler(video, {mimeType:'someType'});
-    (handler === null).should.be.true;
+  it('should provide handler3 & src3', () => {
+    let object = MSHProvider.getMediaSourceHandler(video, [{mimetype: 'video/mp4', src: 'url3'}], {});
+    object.handler.constructor.name.should.equal("handler3");
+    object.source.src.should.equal("url3");
   });
 
-  it('should provide null for no params', () => {
-    let handler = MSHProvider.getMediaSourceHandler();
-    (handler === null).should.be.true;
+  it('should provide empty object for unknown mime type', () => {
+    let object = MSHProvider.getMediaSourceHandler(video, [{mimetype: 'unknownType'}], {});
+    object.should.be.empty;
   });
 
-  it('should provide null for no videoElement param', () => {
-    let handler = MSHProvider.getMediaSourceHandler(undefined, {mimeType:'mimeType1'});
-    (handler === null).should.be.true;
+  it('should provide empty object for empty sources', () => {
+    let object = MSHProvider.getMediaSourceHandler(video, [], {});
+    object.should.be.empty;
   });
 
-  it('should provide null for no config param', () => {
-    let handler = MSHProvider.getMediaSourceHandler(video);
-    (handler === null).should.be.true;
+  it('should provide empty object for no params', () => {
+    let object = MSHProvider.getMediaSourceHandler();
+    object.should.be.empty;
+  });
+
+  it('should provide empty object for no videoElement param', () => {
+    let object = MSHProvider.getMediaSourceHandler(undefined, [{mimetype: 'mimeType1', src: 'url1'}], {});
+    object.should.be.empty;
+  });
+
+  it('should provide empty object for no sources param', () => {
+    let object = MSHProvider.getMediaSourceHandler(video, undefined, {});
+    object.should.be.empty;
+  });
+
+  it('should provide empty object for no config param', () => {
+    let object = MSHProvider.getMediaSourceHandler(video, [{mimetype: 'mimeType1', src: 'url1'}]);
+    object.should.be.empty;
   });
 });
 

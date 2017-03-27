@@ -89,10 +89,10 @@ export default class BaseMediaSourceHandler {
   /**
    * Load the video source
    * @function load
-   * @param {string} source - The source to load
+   * @param {Object} source - The source to load
    * @abstract
    */
-  load(source: string) {
+  load(source: Object) : void {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
   }
 

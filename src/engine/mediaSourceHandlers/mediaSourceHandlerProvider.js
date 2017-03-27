@@ -43,19 +43,26 @@ export default class MediaSourceHandlerProvider {
    * Get the appropriate media source handler to the video source
    * @function getMediaSourceHandler
    * @param {HTMLVideoElement} videoElement - The video element which will bind to the media source handler
+   * @param {Array<Object>} sources - The video sources
    * @param {Object} config - The player configuration
-   * @returns {BaseMediaSourceHandler|null}
+   * @returns {Object}
    * @static
    */
-  static getMediaSourceHandler(videoElement: HTMLVideoElement, config: Object): BaseMediaSourceHandler | null {
-    if (videoElement && config) {
+  static getMediaSourceHandler(videoElement: HTMLVideoElement, sources: Array<Object>, config: Object): Object {
+    if (videoElement && sources && config) {
       let handlers = MediaSourceHandlerProvider._mediaSourceHandlers;
       for (let i = 0; i < handlers.length; i++) {
-        if (handlers[i].canPlayType(config.mimeType))
-          return handlers[i].createHandler(videoElement, config);
+        for (let j = 0; j < sources.length; j++) {
+          if (handlers[i].canPlayType(sources[j].mimetype)) {
+            return {
+              handler: handlers[i].createHandler(videoElement, config.engines),
+              source: sources[j]
+            };
+          }
+        }
       }
     }
-    return null;
+    return {};
   }
 }
 
