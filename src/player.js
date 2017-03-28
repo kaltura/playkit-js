@@ -101,6 +101,13 @@ class Player extends FakeEventTarget {
   }
 
   /**
+   * Load media
+   */
+  load(): void {
+    this.engine_.load();
+  }
+
+  /**
    * Set the current time in seconds
    * @param to {Number}
    */

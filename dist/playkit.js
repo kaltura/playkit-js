@@ -316,15 +316,14 @@ var BaseMediaSourceAdapter = function () {
      */
 
     /**
-     * The name of the media source adapter
-     * @member {string} _name
-     * @static
+     * The player wrapper of the media source adapter
+     * @member {any} _msPlayer
      * @private
      */
 
     /**
-     * The supported mime types by the media source adapter
-     * @member {Array} _mimeTypes
+     * The logger of the media source adapter
+     * @member {ILogger} _logger
      * @static
      * @private
      */
@@ -341,14 +340,21 @@ var BaseMediaSourceAdapter = function () {
      */
 
     /**
-     * The player wrapper of the media source adapter
-     * @member {any} _msPlayer
+     * The source URL
+     * @member {string} _source
      * @private
      */
 
     /**
-     * The logger of the media source adapter
-     * @member {ILogger} _logger
+     * The name of the media source adapter
+     * @member {string} _name
+     * @static
+     * @private
+     */
+
+    /**
+     * The supported mime types by the media source adapter
+     * @member {Array} _mimeTypes
      * @static
      * @private
      */
@@ -401,16 +407,21 @@ var BaseMediaSourceAdapter = function () {
   }
 
   /**
-   * Load the video source
-   * @function load
-   * @param {Object} source - The source to load
-   * @abstract
+   * src setter
+   * @param {string} source
    */
 
 
   _createClass(BaseMediaSourceAdapter, [{
     key: 'load',
-    value: function load(source) {
+
+
+    /**
+     * Load the video source
+     * @function load
+     * @abstract
+     */
+    value: function load() {
       throw new _PlayerError2.default(_PlayerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
     }
 
@@ -423,6 +434,11 @@ var BaseMediaSourceAdapter = function () {
     key: 'destroy',
     value: function destroy() {
       // should do nothing. implemented by the inheritor if necessary.
+    }
+  }, {
+    key: 'src',
+    set: function set(source) {
+      this._source = source;
     }
   }]);
 
@@ -582,6 +598,16 @@ var Player = function (_FakeEventTarget) {
     key: 'pause',
     value: function pause() {
       return this.engine_.pause();
+    }
+
+    /**
+     * Load media
+     */
+
+  }, {
+    key: 'load',
+    value: function load() {
+      this.engine_.load();
     }
 
     /**
@@ -1978,8 +2004,7 @@ var Html5 = function (_FakeEventTarget) {
 
     _this.createVideoElement();
     _this.eventManager_ = new _eventManager2.default();
-    _this.loadmediaSourceAdapter(source, config);
-    _this.loadSource(source);
+    _this.setSource(source, config);
     _this.attach();
     return _this;
   }
@@ -2033,16 +2058,20 @@ var Html5 = function (_FakeEventTarget) {
       }
     }
   }, {
-    key: 'loadmediaSourceAdapter',
-    value: function loadmediaSourceAdapter(source, config) {
-      this.mediaSourceAdapter_ = _mediaSourceAdapterManager2.default.getMediaSourceAdapter(this.el_, source, config);
+    key: 'setSource',
+    value: function setSource(source, config) {
+      this.loadMediaSourceAdapter(source, config);
+      if (this.mediaSourceAdapter_ && source) {
+        this.mediaSourceAdapter_.src = source.src;
+      }
+      if (config && config.preload === "auto") {
+        this.load();
+      }
     }
   }, {
-    key: 'loadSource',
-    value: function loadSource(source) {
-      if (this.mediaSourceAdapter_) {
-        this.mediaSourceAdapter_.load(source);
-      }
+    key: 'loadMediaSourceAdapter',
+    value: function loadMediaSourceAdapter(source, config) {
+      this.mediaSourceAdapter_ = _mediaSourceAdapterManager2.default.getMediaSourceAdapter(this.el_, source, config);
     }
   }, {
     key: 'play',
@@ -2065,10 +2094,17 @@ var Html5 = function (_FakeEventTarget) {
     value: function pause() {
       return this.el_.pause();
     }
+
+    /**
+     * Load media
+     */
+
   }, {
     key: 'load',
     value: function load() {
-      this.el_.load();
+      if (this.mediaSourceAdapter_) {
+        this.mediaSourceAdapter_.load();
+      }
     }
 
     /**

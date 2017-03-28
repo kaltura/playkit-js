@@ -43,6 +43,7 @@ describe('playkit:playkit', function () {
       player.destroy();
       should.fail();
     });
+    player.load();
     player.play();
   });
 });

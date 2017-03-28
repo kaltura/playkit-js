@@ -39,15 +39,24 @@ export default class FakeMSE extends BaseMediaSourceAdapter {
   }
 
   /**
-   * Load the video source
-   * @function load
-   * @param {Object} source - The source to load
+   * src setter
+   * @param {string} source
    * @override
    */
-  load(source: Object): void {
+  set src(source: string): void {
+    super.src = source;
     if (source) {
-      this._msPlayer.src = source.src;
+      this._msPlayer.src = source;
     }
+  }
+
+  /**
+   * Load the video source
+   * @function load
+   * @override
+   */
+  load(): void {
+    this._msPlayer.load();
   }
 }
 // Register FakeMSE to the media source adapter manager

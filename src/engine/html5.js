@@ -22,8 +22,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     super();
     this.createVideoElement();
     this.eventManager_ = new EventManager();
-    this.loadmediaSourceAdapter(source, config);
-    this.loadSource(source);
+    this.setSource(source, config);
     this.attach();
   }
 
@@ -67,14 +66,18 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
   }
 
-  loadmediaSourceAdapter(source, config) {
-    this.mediaSourceAdapter_ = MSAManager.getMediaSourceAdapter(this.el_, source, config);
+  setSource(source, config) {
+    this.loadMediaSourceAdapter(source, config);
+    if (this.mediaSourceAdapter_ && source) {
+      this.mediaSourceAdapter_.src = source.src;
+    }
+    if (config && config.preload === "auto") {
+      this.load();
+    }
   }
 
-  loadSource(source: string) {
-    if (this.mediaSourceAdapter_) {
-      this.mediaSourceAdapter_.load(source);
-    }
+  loadMediaSourceAdapter(source, config) {
+    this.mediaSourceAdapter_ = MSAManager.getMediaSourceAdapter(this.el_, source, config);
   }
 
   set src(source: string): void {
@@ -101,8 +104,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return this.el_.pause();
   }
 
+  /**
+   * Load media
+   */
   load(): void {
-    this.el_.load();
+    if (this.mediaSourceAdapter_) {
+      this.mediaSourceAdapter_.load();
+    }
   }
 
   /**

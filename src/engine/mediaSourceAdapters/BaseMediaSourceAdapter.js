@@ -34,6 +34,12 @@ export default class BaseMediaSourceAdapter {
    * @private
    */
   _msPlayer: any;
+  /**
+   * The source URL
+   * @member {string} _source
+   * @private
+   */
+  _source: string;
 
   /**
    * Checks if the media source adapter is supported
@@ -87,12 +93,19 @@ export default class BaseMediaSourceAdapter {
   }
 
   /**
+   * src setter
+   * @param {string} source
+   */
+  set src(source: string): void {
+    this._source = source;
+  }
+
+  /**
    * Load the video source
    * @function load
-   * @param {Object} source - The source to load
    * @abstract
    */
-  load(source: Object): void {
+  load(): void {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
   }
 

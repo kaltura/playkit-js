@@ -26,17 +26,19 @@ describe('fakeMSE:canPlayType', () => {
   });
 });
 
-describe('fakeMSE:load', () => {
-  it('should load source', () => {
+describe('fakeMSE:set src', () => {
+  it('should set source', () => {
     let f = new fakeMSE(video);
-    f.load({src: "http://someurl"});
+    f.src = "http://someurl";
+    f._source.should.equal("http://someurl");
     f._msPlayer.src.should.equal("http://someurl/");
   });
 
   it('should do nothing for no source', () => {
     let f = new fakeMSE(video);
     let src = video.src;
-    f.load();
+    f.src = undefined;
+    (f._source === undefined).should.be.true;
     f._msPlayer.src.should.equal(src);
   });
 
