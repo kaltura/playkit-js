@@ -369,6 +369,7 @@ var BaseMediaSourceAdapter = function () {
      * Factory method to create media source adapter
      * @function createAdapter
      * @param {HTMLVideoElement} videoElement - The video element which bind to the media source adapter
+     * @param {string} source - The source URL
      * @param {Object} config - The media source adapter configuration
      * @returns {BaseMediaSourceAdapter}
      * @static
@@ -376,8 +377,8 @@ var BaseMediaSourceAdapter = function () {
 
   }, {
     key: 'createAdapter',
-    value: function createAdapter(videoElement, config) {
-      return new this(videoElement, config);
+    value: function createAdapter(videoElement, source, config) {
+      return new this(videoElement, source, config);
     }
 
     /**
@@ -562,6 +563,9 @@ var Player = function (_FakeEventTarget) {
     key: 'loadEngine',
     value: function loadEngine(source, config) {
       this.engine_ = new _html2.default(source, config);
+      if (config && config.preload === "auto") {
+        this.load();
+      }
     }
   }, {
     key: 'attachMedia',
@@ -1107,7 +1111,7 @@ var MediaSourceAdapterManager = function () {
       if (videoElement && source && config) {
         var adapters = MediaSourceAdapterManager._mediaSourceAdapters;
         for (var i = 0; i < adapters.length; i++) {
-          if (adapters[i].canPlayType(source.mimetype)) return adapters[i].createAdapter(videoElement, config.engines);
+          if (adapters[i].canPlayType(source.mimetype)) return adapters[i].createAdapter(videoElement, source.src, config.engines);
         }
       }
       return null;
@@ -2061,12 +2065,6 @@ var Html5 = function (_FakeEventTarget) {
     key: 'setSource',
     value: function setSource(source, config) {
       this.loadMediaSourceAdapter(source, config);
-      if (this.mediaSourceAdapter_ && source) {
-        this.mediaSourceAdapter_.src = source.src;
-      }
-      if (config && config.preload === "auto") {
-        this.load();
-      }
     }
   }, {
     key: 'loadMediaSourceAdapter',

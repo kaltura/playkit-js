@@ -71,6 +71,9 @@ class Player extends FakeEventTarget {
 
   loadEngine(source: Object, config: Object) {
     this.engine_ = new Html5(source, config);
+    if (config.preload === "auto") {
+      this.load();
+    }
   }
 
   attachMedia() {

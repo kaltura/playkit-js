@@ -31,11 +31,13 @@ export default class FakeMSE extends BaseMediaSourceAdapter {
   /**
    * @constructor
    * @param {HTMLVideoElement} videoElement - The video element which bind to FakeMSE
+   * @param {string} source - The source URL
    * @param {Object} config - The FakeMSE configuration
    */
-  constructor(videoElement: HTMLVideoElement, config: Object): BaseMediaSourceAdapter {
+  constructor(videoElement: HTMLVideoElement, source: string, config: Object): BaseMediaSourceAdapter {
     super(FakeMSE._name);
     this._msPlayer = videoElement;
+    this.src = source;
   }
 
   /**

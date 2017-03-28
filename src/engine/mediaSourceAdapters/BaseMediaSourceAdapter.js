@@ -66,12 +66,13 @@ export default class BaseMediaSourceAdapter {
    * Factory method to create media source adapter
    * @function createAdapter
    * @param {HTMLVideoElement} videoElement - The video element which bind to the media source adapter
+   * @param {string} source - The source URL
    * @param {Object} config - The media source adapter configuration
    * @returns {BaseMediaSourceAdapter}
    * @static
    */
-  static createAdapter(videoElement: HTMLVideoElement, config: Object): BaseMediaSourceAdapter {
-    return new this(videoElement, config);
+  static createAdapter(videoElement: HTMLVideoElement, source: string, config: Object): BaseMediaSourceAdapter {
+    return new this(videoElement, source, config);
   }
 
   /**
