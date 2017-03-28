@@ -1,12 +1,12 @@
 // @flow
 import EventManager from './events/eventManager';
-import FakeEventTarget from './events/FakeEventTarget';
-import FakeEvent from './events/FakeEvent';
+import FakeEventTarget from './events/fakeEventTarget';
+import FakeEvent from './events/fakeEvent';
 import PlayerEvents from './events/events';
 import {isNumber, isFloat} from './util/util';
 import {capitlize} from './util/stringUtils';
 import LoggerFactory from './util/loggerFactory';
-import Html5 from './engine/Html5';
+import Html5 from './engine/html5';
 import PluginManager from './plugin/PluginManager';
 
 let logger = LoggerFactory.getLogger('Player');
