@@ -3,7 +3,7 @@ import Player from "../player";
 import loggerFactory from "../util/loggerFactory";
 import {merge} from "../util/util";
 import EventManager from "../events/eventManager";
-import PluginError from "./PluginError";
+import PlayerError from "../util/PlayerError";
 
 /** The BasePlugin responsible to implement the plugin interface.
  * Contains several default implementations.
@@ -67,7 +67,7 @@ export default class BasePlugin implements IPlugin {
    * @abstract
    */
   static isValid(): boolean {
-    throw new PluginError(PluginError.TYPE.NOT_IMPLEMENTED_METHOD, 'isValid()').getError();
+    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'isValid()').getError();
   }
 
   /**
@@ -116,7 +116,7 @@ export default class BasePlugin implements IPlugin {
    * @abstract
    */
   destroy(): void {
-    throw new PluginError(PluginError.TYPE.NOT_IMPLEMENTED_METHOD, 'destroy()').getError();
+    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'destroy()').getError();
   }
 
   /**
