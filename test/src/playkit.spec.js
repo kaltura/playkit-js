@@ -1,6 +1,4 @@
 import {playkit} from '../../src/playkit';
-// eslint-disable-next-line no-unused-vars
-import nativeAdapter from '../../src/engine/mediaSourceAdapters/nativeAdapter';
 
 describe('playkit:playkit', function () {
 
