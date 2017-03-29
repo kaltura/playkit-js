@@ -14,5 +14,5 @@ before_install:
  - sudo dpkg -i google-chrome*.deb
 
 script:
-- npm eslint
-- npm test
+- npm run eslint
+- npm run test
