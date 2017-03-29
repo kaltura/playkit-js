@@ -14,4 +14,4 @@ before_install:
  - sudo dpkg -i google-chrome*.deb
 
 scripts:
- - only_detect
+ - npm only_detect
