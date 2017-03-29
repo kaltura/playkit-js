@@ -34,6 +34,7 @@ export default class nativeAdapter extends BaseMediaSourceAdapter {
    * @param {string} source - The source URL
    * @param {Object} config - The nativeAdapter configuration
    */
+  // eslint-disable-next-line no-unused-vars
   constructor(videoElement: HTMLVideoElement, source: string, config: Object): BaseMediaSourceAdapter {
     super(nativeAdapter._name);
     this._msPlayer = videoElement;

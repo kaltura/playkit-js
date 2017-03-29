@@ -10,7 +10,9 @@
     "test": "NODE_ENV=test ./node_modules/.bin/karma start --single-run",
     "test:watch": "NODE_ENV=test ./node_modules/.bin/karma start --auto-watch",
     "start": "webpack-dev-server",
-    "release": "npm run build && standard-version"
+    "release": "npm run build && standard-version",
+    "eslint": "eslint .",
+    "prepush": "npm run eslint & npm run test"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
