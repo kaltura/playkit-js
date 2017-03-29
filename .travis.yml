@@ -14,15 +14,6 @@ before_install:
  - sudo dpkg -i google-chrome*.deb
 
 script:
-- eslint src/
-- flow check
+- eslint src
+- eslint test
 - test
-
-cache:
-  directories:
-  - node_modules
-
-notifications:
-  email:
-    recipients:
-      - secure: "RsGUKgnxvaNWCWFNs5U82h7k9Z37VE7gmJFXl8MpJHMWAn8aBO5n7+5N3CYWzUrzXBMYFkQX9ZZnv5CnpGVrjVFPLeU80McbsPKLkjgT58iwuWalqUox+6XH06SSOryQBE9zv5Vt+3Xn8TKfq822nxLOkGdiu1h5dOXmrCxz/rMFAOGRDkvPZgoNbl+pnor01KAOtI79d3tZhp+PCEK3iuBtTP9xDM8vgrm3ddJ8akc6S6HlTgNemz/koIjYWG7XIVBhfpkLoxQSwF+0iQYHU6VQOO+J193AX7BFxOe1Pb9tmYshoiiWA1fKLuwom14EQ/vUBz5P8ax9I79eDKQ2phALCIA90zYPlA6rdOl2bpZ+wIsZ2hIZjBvKNjYj0dPaqId1K8YKYp34r/O9dG6doeroYqM2AWbZd9MgM+6KUDpYQ6newM8T2TGoiZ3MGR8JpnGEKT1QU8vKxlbGVmvSphoqzaWCl7lqcZvLN4cHYT09Bk9H9XvGaAhiu24Q/4qUhtEYwqNS1tMtgF7PmMlytIB0EduYSQErgpjMXcKBPI2ugIHz63KyHgkAmoL83TQ5hNxKJ4M+BCm1BL/El8ArZSTUi1WiFSdQl5at3B0VYj5DxhwSIJyqTsX6M3eK8K4yL+ylVQXCBaE9Ey8KxraR/0ilRB9hHsuKkg4T3bA9vy4="

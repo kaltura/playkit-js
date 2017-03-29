@@ -1,4 +1,5 @@
 import {playkit} from '../../src/playkit';
+// eslint-disable-next-line no-unused-vars
 import nativeAdapter from '../../src/engine/mediaSourceAdapters/nativeAdapter';
 
 describe('playkit:playkit', function () {
@@ -39,6 +40,7 @@ describe('playkit:playkit', function () {
       player.destroy();
       done();
     };
+    // eslint-disable-next-line no-unused-vars
     video.addEventListener('error', function (err) {
       player.destroy();
       should.fail();

@@ -1,5 +1,6 @@
 import nativeAdapter from '../../../../src/engine/mediaSourceAdapters/nativeAdapter';
 
+// eslint-disable-next-line no-unused-vars
 let video = document.createElement("video");
 
 describe('nativeAdapter:isSupported', () => {

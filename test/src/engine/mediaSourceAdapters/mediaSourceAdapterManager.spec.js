@@ -12,8 +12,7 @@ class adapter2 extends BaseMediaSourceAdapter {
 class adapter3 extends BaseMediaSourceAdapter {
   static canPlayType(mimeType: string): boolean {
     return !!(document.createElement("video").canPlayType(mimeType));
-  };
-
+  }
   static _name = 'adapter3';
 }
 let video = document.createElement("video");
