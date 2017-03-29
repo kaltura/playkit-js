@@ -1,5 +1,4 @@
 import {playkit} from '../../src/playkit';
-import nativeAdapter from '../../src/engine/mediaSourceAdapters/nativeAdapter';
 
 describe('playkit:playkit', function () {
 

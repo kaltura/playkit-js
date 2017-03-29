@@ -1,5 +1,6 @@
 //@flow
 import BaseMediaSourceAdapter from './BaseMediaSourceAdapter'
+import nativeAdapter from './nativeAdapter'
 
 /**
  * Media source adapter manager
@@ -12,7 +13,7 @@ export default class MediaSourceAdapterManager {
    * @static
    * @private
    */
-  static _mediaSourceAdapters: Array<BaseMediaSourceAdapter> = [];
+  static _mediaSourceAdapters: Array<BaseMediaSourceAdapter> = [nativeAdapter];
 
   /**
    * Add a media source adapter to the registry
