@@ -33,7 +33,7 @@ export default class nativeAdapter extends BaseMediaSourceAdapter {
    * @param {HTMLVideoElement} videoElement - The video element which bind to nativeAdapter
    * @param {string} source - The source URL
    */
-  constructor(videoElement: HTMLVideoElement, source: string): BaseMediaSourceAdapter {
+  constructor(videoElement: HTMLVideoElement, source: string) {
     super(nativeAdapter._name);
     this._msPlayer = videoElement;
     this._source = source;
