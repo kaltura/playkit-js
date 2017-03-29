@@ -22,7 +22,7 @@ describe('PluginManager.registry', () => {
     unRegisterAll();
   });
 
-  it.only('shouldn\'t register the plugin because handler is not a function', () => {
+  it('shouldn\'t register the plugin because handler is not a function', () => {
     let exceptionOccurred = false;
     try {
       PluginManager.register("numbers", {});

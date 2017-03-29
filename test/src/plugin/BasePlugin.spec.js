@@ -1,6 +1,6 @@
 import BasePlugin from "../../../src/plugin/BasePlugin";
 
-describe.only('BasePlugin', () => {
+describe('BasePlugin', () => {
 
   let basePlugin;
   let config = {'x': 1, 'y': 2};

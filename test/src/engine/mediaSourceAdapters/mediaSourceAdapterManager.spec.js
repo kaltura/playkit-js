@@ -1,20 +1,20 @@
 import BaseMediaSourceAdapter from '../../../../src/engine/mediaSourceAdapters/BaseMediaSourceAdapter';
 import MSAManager from '../../../../src/engine/mediaSourceAdapters/mediaSourceAdapterManager';
 
-class adapter1 extends BaseMediaSourceAdapter {}
-class adapter2 extends BaseMediaSourceAdapter {}
-class adapter3 extends BaseMediaSourceAdapter {}
-
-adapter1._name = 'adapter1';
-adapter1._mimeTypes = ['mimeType0', 'mimeType1'];
-
-adapter2._name = 'adapter2';
-adapter2._mimeTypes = ['mimeType1', 'mimeType2'];
-
-adapter3._name = 'adapter3';
-adapter3.canPlayType = function(mimeType){
-  return !!(document.createElement("video").canPlayType(mimeType));
-};
+class adapter1 extends BaseMediaSourceAdapter {
+  static _mimeTypes = ['mimeType0', 'mimeType1'];
+  static _name = 'adapter1';
+}
+class adapter2 extends BaseMediaSourceAdapter {
+  static _mimeTypes = ['mimeType1', 'mimeType2'];
+  static _name = 'adapter2';
+}
+class adapter3 extends BaseMediaSourceAdapter {
+  static canPlayType(mimeType: string): boolean {
+    return !!(document.createElement("video").canPlayType(mimeType));
+  }
+  static _name = 'adapter3';
+}
 
 let video = document.createElement("video");
 let oldMediaSourceAdapters = MSAManager._mediaSourceAdapters;
