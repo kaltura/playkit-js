@@ -13,7 +13,7 @@ describe('BasePlugin', () => {
     basePlugin = null;
   });
 
-  it.only('should create all BasePlugin properties', () => {
+  it('should create all BasePlugin properties', () => {
     basePlugin.logger.should.exist;
     basePlugin.player.should.exist;
     basePlugin.name.should.exist;
