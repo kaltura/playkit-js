@@ -6,7 +6,9 @@
   ],
   "plugins": [
     "import",
-    "flowtype"
+    "flowtype",
+    "mocha-no-only"
+
   ],
   "env": {
     "browser": true,
@@ -18,5 +20,8 @@
   "globals": {
     "should": true,
     "sinon": true
+  },
+  "rules": {
+    "mocha-no-only/mocha-no-only": ["error"]
   }
 }

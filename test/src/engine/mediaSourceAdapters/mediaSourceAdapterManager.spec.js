@@ -15,6 +15,7 @@ class adapter3 extends BaseMediaSourceAdapter {
   }
   static _name = 'adapter3';
 }
+
 let video = document.createElement("video");
 let oldMediaSourceAdapters = MSAManager._mediaSourceAdapters;
 
