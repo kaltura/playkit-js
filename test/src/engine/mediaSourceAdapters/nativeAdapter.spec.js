@@ -1,7 +1,5 @@
 import nativeAdapter from '../../../../src/engine/mediaSourceAdapters/nativeAdapter';
 
-let video = document.createElement("video");
-
 describe('nativeAdapter:isSupported', () => {
   it('should be supported', () => {
     nativeAdapter.isSupported().should.be.true;
