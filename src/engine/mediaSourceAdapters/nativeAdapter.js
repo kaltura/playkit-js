@@ -1,6 +1,5 @@
 // @flow
 import BaseMediaSourceAdapter from './BaseMediaSourceAdapter'
-import MSAManager from './mediaSourceAdapterManager'
 
 /**
  * An illustration of media source extension for progressive download
