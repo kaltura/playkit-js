@@ -11,7 +11,7 @@
     "test:watch": "NODE_ENV=test ./node_modules/.bin/karma start --auto-watch",
     "start": "webpack-dev-server",
     "release": "npm run build && standard-version",
-    "eslint": "eslint .",
+    "eslint": "eslint . --color",
     "prepush": "npm run eslint & npm run test"
   },
   "devDependencies": {
@@ -30,6 +30,7 @@
     "eslint-loader": "^1.6.1",
     "eslint-plugin-flowtype": "^2.30.0",
     "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-mocha-no-only": "^0.0.5",
     "flow-bin": "^0.38.0",
     "istanbul": "^0.4.5",
     "karma": "^1.5.0",
