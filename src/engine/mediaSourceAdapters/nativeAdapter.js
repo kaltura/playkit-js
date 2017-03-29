@@ -4,20 +4,20 @@ import MSAManager from './mediaSourceAdapterManager'
 
 /**
  * An illustration of media source extension for progressive download
- *@classdesc
- *@extends BaseMediaSourceAdapter
+ * @classdesc
+ * @extends BaseMediaSourceAdapter
  */
-export default class FakeMSE extends BaseMediaSourceAdapter {
+export default class nativeAdapter extends BaseMediaSourceAdapter {
   /**
-   * The name of FakeMSE
+   * The name of Adapter
    * @member {string} _name
    * @static
    * @private
    */
-  static _name = 'FakeMSE';
+  static _name = 'nativeAdapter';
 
   /**
-   * Checks if FakeMSE can play a given mime type
+   * Checks if nativeAdapter can play a given mime type
    * @function canPlayType
    * @param {string} mimeType
    * @returns {boolean}
@@ -30,23 +30,14 @@ export default class FakeMSE extends BaseMediaSourceAdapter {
 
   /**
    * @constructor
-   * @param {HTMLVideoElement} videoElement - The video element which bind to FakeMSE
+   * @param {HTMLVideoElement} videoElement - The video element which bind to nativeAdapter
    * @param {string} source - The source URL
-   * @param {Object} config - The FakeMSE configuration
+   * @param {Object} config - The nativeAdapter configuration
    */
   constructor(videoElement: HTMLVideoElement, source: string, config: Object): BaseMediaSourceAdapter {
-    super(FakeMSE._name);
+    super(nativeAdapter._name);
     this._msPlayer = videoElement;
-    this.src = source;
-  }
-
-  /**
-   * src setter
-   * @param {string} source
-   * @override
-   */
-  set src(source: string): void {
-    super.src = source;
+    this._source = source;
     if (source) {
       this._msPlayer.src = source;
     }
@@ -61,7 +52,7 @@ export default class FakeMSE extends BaseMediaSourceAdapter {
     this._msPlayer.load();
   }
 }
-// Register FakeMSE to the media source adapter manager
-if (FakeMSE.isSupported()) {
-  MSAManager.register(FakeMSE);
+// Register nativeAdapter to the media source adapter manager
+if (nativeAdapter.isSupported()) {
+  MSAManager.register(nativeAdapter);
 }

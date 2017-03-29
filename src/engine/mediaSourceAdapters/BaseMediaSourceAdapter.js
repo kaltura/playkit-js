@@ -94,14 +94,6 @@ export default class BaseMediaSourceAdapter {
   }
 
   /**
-   * src setter
-   * @param {string} source
-   */
-  set src(source: string): void {
-    this._source = source;
-  }
-
-  /**
    * Load the video source
    * @function load
    * @abstract

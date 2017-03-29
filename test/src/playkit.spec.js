@@ -1,5 +1,5 @@
 import {playkit} from '../../src/playkit';
-import fakeMSE from '../../src/engine/mediaSourceAdapters/fakeMSE';
+import nativeAdapter from '../../src/engine/mediaSourceAdapters/nativeAdapter';
 
 describe('playkit:playkit', function () {
 

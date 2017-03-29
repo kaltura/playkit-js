@@ -408,20 +408,14 @@ var BaseMediaSourceAdapter = function () {
   }
 
   /**
-   * src setter
-   * @param {string} source
+   * Load the video source
+   * @function load
+   * @abstract
    */
 
 
   _createClass(BaseMediaSourceAdapter, [{
     key: 'load',
-
-
-    /**
-     * Load the video source
-     * @function load
-     * @abstract
-     */
     value: function load() {
       throw new _PlayerError2.default(_PlayerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
     }
@@ -435,11 +429,6 @@ var BaseMediaSourceAdapter = function () {
     key: 'destroy',
     value: function destroy() {
       // should do nothing. implemented by the inheritor if necessary.
-    }
-  }, {
-    key: 'src',
-    set: function set(source) {
-      this._source = source;
     }
   }]);
 
@@ -563,7 +552,7 @@ var Player = function (_FakeEventTarget) {
     key: 'loadEngine',
     value: function loadEngine(source, config) {
       this.engine_ = new _html2.default(source, config);
-      if (config && config.preload === "auto") {
+      if (config.preload === "auto") {
         this.load();
       }
     }
@@ -2693,8 +2682,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // playkit version
 var VERSION = packageData.version;
 
-
-var logger = _loggerFactory2.default.getLogger();
 
 _loggerFactory2.default.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
 _loggerFactory2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");

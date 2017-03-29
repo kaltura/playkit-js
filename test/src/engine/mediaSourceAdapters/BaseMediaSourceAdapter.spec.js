@@ -16,20 +16,6 @@ describe('BaseMediaSourceAdapter:canPlayType', () => {
   });
 });
 
-describe('BaseMediaSourceAdapter:set src', () => {
-  it('should set the given source', () => {
-    let b = new BaseMediaSourceAdapter();
-    b.src = {src:"some src"};
-    b._source.should.deep.equal({src:"some src"});
-  });
-
-  it('should set undefined for no given source', () => {
-    let b = new BaseMediaSourceAdapter();
-    b.src = undefined;
-    (b._source === undefined).should.be.true;
-  });
-});
-
 describe('BaseMediaSourceAdapter:load', () => {
   it('should throw exception', () => {
     let exceptionOccurred = false;
