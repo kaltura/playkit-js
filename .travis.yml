@@ -14,4 +14,4 @@ before_install:
  - sudo dpkg -i google-chrome*.deb
 
 scripts:
- - mocha-only-detector-glob \"test/**/*.spec.js\"
+ - mocha-only-detector-glob "test/**/*.spec.js"
