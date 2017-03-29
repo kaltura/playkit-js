@@ -38,6 +38,7 @@ describe('playkit:playkit', function () {
       player.destroy();
       done();
     };
+    // eslint-disable-next-line no-unused-vars
     video.addEventListener('error', function (err) {
       player.destroy();
       should.fail();
