@@ -10,7 +10,8 @@
     "test": "NODE_ENV=test ./node_modules/.bin/karma start --single-run",
     "test:watch": "NODE_ENV=test ./node_modules/.bin/karma start --auto-watch",
     "start": "webpack-dev-server",
-    "release": "npm run build && standard-version"
+    "release": "npm run build && standard-version",
+    "only_detect": "mocha-only-detector-glob \"test/**/*.spec.js\""
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
@@ -40,6 +41,7 @@
     "karma-webpack": "^2.0.2",
     "mocha": "^3.2.0",
     "mocha-cli": "^1.0.1",
+    "mocha-only-detector": "^0.1.0",
     "nyc": "^10.1.2",
     "sinon": "^2.0.0",
     "sinon-chai": "^2.8.0",
