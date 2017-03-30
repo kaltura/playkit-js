@@ -20,7 +20,7 @@ export default class BaseMediaSourceAdapter {
    * @static
    * @private
    */
-  static _logger: ILogger;
+  static _logger: ILogger = LoggerFactory.getLogger('BaseMediaSourceAdapter');
   /**
    * The name of the media source adapter
    * @member {string} _name
@@ -48,7 +48,7 @@ export default class BaseMediaSourceAdapter {
    * @static
    */
   static isSupported(): boolean {
-    LoggerFactory.getLogger(this._name).debug('isSupported() - true');
+    this.logger.debug('isSupported() - true');
     return true;
   }
 
@@ -61,7 +61,7 @@ export default class BaseMediaSourceAdapter {
    */
   static canPlayType(mimeType: string): boolean {
     let result = !!(this._mimeTypes && this._mimeTypes.includes(mimeType));
-    LoggerFactory.getLogger(this._name).debug(`canPlayType(${mimeType}) - ${result}`);
+    this.logger.debug(`canPlayType(${mimeType}) - ${result}`);
     return result;
   }
 
@@ -72,7 +72,7 @@ export default class BaseMediaSourceAdapter {
    * @static
    */
   static onError(error: Object) {
-    LoggerFactory.getLogger(this._name).error(error);
+    this.logger.error(error);
     throw error;
   }
 
@@ -83,9 +83,7 @@ export default class BaseMediaSourceAdapter {
    * @protected
    */
   static get logger(): ILogger {
-    if (!this._logger) {
-      this._logger = LoggerFactory.getLogger(this._name);
-    }
+    this._logger.context.name = this._name;
     return this._logger;
   }
 
@@ -94,7 +92,7 @@ export default class BaseMediaSourceAdapter {
    * @param {string} source - The source URL
    */
   constructor(source: string) {
-    LoggerFactory.getLogger(this.constructor._name).info(`constructing for ${source}`);
+    this.constructor.logger.info(`constructing for ${source}`);
     this._source = source;
   }
 
@@ -105,7 +103,7 @@ export default class BaseMediaSourceAdapter {
    */
   load(): void {
     let error = new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
-    LoggerFactory.getLogger(this.constructor._name).error(error.message);
+    this.constructor.logger.error(error.message);
     throw error;
   }
 
@@ -114,7 +112,7 @@ export default class BaseMediaSourceAdapter {
    * @function destroy
    */
   destroy() {
-    LoggerFactory.getLogger(this.constructor._name).debug('destroy');
+    this.constructor.logger.debug('destroy');
     this._source = "";
   }
 }
