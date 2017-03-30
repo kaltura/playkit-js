@@ -64,6 +64,7 @@ class Player extends FakeEventTarget {
       for (let i = 0; i < sources.length; i++) {
         if (Html5.canPlayType(sources[i].mimetype)) {
           this.loadEngine(sources[i], config);
+          break;
         }
       }
     }
