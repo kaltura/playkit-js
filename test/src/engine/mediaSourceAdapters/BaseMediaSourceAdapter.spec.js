@@ -16,6 +16,12 @@ describe('BaseMediaSourceAdapter:canPlayType', () => {
   });
 });
 
+describe('BaseMediaSourceAdapter:get logger', () => {
+  it('should return logger', () => {
+    BaseMediaSourceAdapter.logger.context.name.should.equal('BaseMediaSourceAdapter');
+  });
+});
+
 describe('BaseMediaSourceAdapter:load', () => {
   it('should throw exception', () => {
     let exceptionOccurred = false;

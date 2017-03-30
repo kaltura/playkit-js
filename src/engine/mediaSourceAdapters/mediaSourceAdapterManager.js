@@ -71,7 +71,7 @@ export default class MediaSourceAdapterManager {
       let adapters = MediaSourceAdapterManager._mediaSourceAdapters;
       for (let i = 0; i < adapters.length; i++) {
         if (adapters[i].canPlayType(source.mimetype))
-          return adapters[i].createAdapter(videoElement, source.src, config.engines);
+          return new adapters[i](videoElement, source.src, config.engines);
       }
     }
     return null;
