@@ -1,48 +1,48 @@
-// @flow
-import EventManager from './events/eventManager';
-import FakeEventTarget from './events/fakeEventTarget';
-import FakeEvent from './events/fakeEvent';
-import PlayerEvents from './events/events';
-import {isNumber, isFloat} from './util/util';
-import {capitlize} from './util/stringUtils';
-import LoggerFactory from './util/loggerFactory';
-import Html5 from './engine/html5';
-import PluginManager from './plugin/PluginManager';
+//@flow
+import EventManager from './event/event-manager'
+import FakeEventTarget from './event/fake-event-target'
+import FakeEvent from './event/fake-event'
+import PlayerEvents from './event/events'
+import {isNumber, isFloat} from './utils/util'
+import {capitlize} from './utils/string-util'
+import LoggerFactory from './utils/logger'
+import Html5 from './engines/html5'
+import PluginManager from './plugin/plugin-manager'
 
 let logger = LoggerFactory.getLogger('Player');
 type ListenerType = (event: FakeEvent) => any;
 
 class Player extends FakeEventTarget {
-  pluginManager_: PluginManager;
-  eventManager_: EventManager;
-  config_: any;
-  engine_: IEngine;
-  engineEventHandlers_: Map<string, ListenerType>;
+  _pluginManager: PluginManager;
+  _eventManager: EventManager;
+  _config: any;
+  _engine: IEngine;
+  _engineEventHandlers: Map<string, ListenerType>;
 
   constructor(config: Object) {
     super();
-    this.pluginManager_ = new PluginManager();
-    this.eventManager_ = new EventManager();
-    this.engineEventHandlers_ = new Map();
+    this._pluginManager = new PluginManager();
+    this._eventManager = new EventManager();
+    this._engineEventHandlers = new Map();
     PlayerEvents.forEach((event) => {
-      this.engineEventHandlers_.set(`onEngine${capitlize(event)}_`, (event) => {
+      this._engineEventHandlers.set(`onEngine${capitlize(event)}_`, (event) => {
         return this.dispatchEvent(event);
       });
     });
-    this.config_ = config || Player.defaultConfig_();
-    this.loadPlugins(this.config_);
-    this.selectEngine(this.config_);
+    this._config = config || Player.defaultConfig_();
+    this.loadPlugins(this._config);
+    this.selectEngine(this._config);
     this.attachMedia();
     logger.info('player is ready!');
   }
 
   destroy() {
-    this.engine_.destroy();
-    this.eventManager_.destroy();
-    this.pluginManager_.destroy();
+    this._engine.destroy();
+    this._eventManager.destroy();
+    this._pluginManager.destroy();
     // this.engine_ = null;
     // this.eventManager_ = null;
-    this.config_ = null;
+    this._config = null;
   }
 
   static defaultConfig_() {
@@ -53,7 +53,7 @@ class Player extends FakeEventTarget {
     let plugins = config.plugins;
     for (let name in plugins) {
       if (plugins.hasOwnProperty(name)) {
-        this.pluginManager_.load(name, this, plugins[name]);
+        this._pluginManager.load(name, this, plugins[name]);
       }
     }
   }
@@ -71,7 +71,7 @@ class Player extends FakeEventTarget {
   }
 
   loadEngine(source: Object, config: Object) {
-    this.engine_ = new Html5(source, config);
+    this._engine = new Html5(source, config);
     if (config.preload === "auto") {
       this.load();
     }
@@ -80,20 +80,20 @@ class Player extends FakeEventTarget {
   attachMedia() {
     // Listen to all HTML5-defined events and trigger them on the player
     PlayerEvents.forEach((event) => {
-      const handler = this.engineEventHandlers_.get(`onEngine${capitlize(event)}_`);
+      const handler = this._engineEventHandlers.get(`onEngine${capitlize(event)}_`);
       if (handler) {
-        this.eventManager_.listen(this.engine_, event, handler);
+        this._eventManager.listen(this._engine, event, handler);
       }
     });
   }
 
-  //  <editor-fold desc="playback interface">
+  //  <editor-fold desc="Playback Interface">
   /**
    * Start/resume playback
    * @returns {Player}
    */
   play() {
-    return this.engine_.play();
+    return this._engine.play();
   }
 
   /**
@@ -101,14 +101,14 @@ class Player extends FakeEventTarget {
    * @returns {Player}
    */
   pause() {
-    return this.engine_.pause();
+    return this._engine.pause();
   }
 
   /**
    * Load media
    */
   load(): void {
-    this.engine_.load();
+    this._engine.load();
   }
 
   /**
@@ -121,10 +121,10 @@ class Player extends FakeEventTarget {
       if (to < 0) {
         boundedTo = 0;
       }
-      if (boundedTo > this.engine_.duration) {
-        boundedTo = this.engine_.duration;
+      if (boundedTo > this._engine.duration) {
+        boundedTo = this._engine.duration;
       }
-      this.engine_.currentTime = boundedTo;
+      this._engine.currentTime = boundedTo;
     }
   }
 
@@ -133,7 +133,7 @@ class Player extends FakeEventTarget {
    * @returns {Number}
    */
   get currentTime(): number {
-    return this.engine_.currentTime;
+    return this._engine.currentTime;
   }
 
   /**
@@ -142,7 +142,7 @@ class Player extends FakeEventTarget {
    * @returns {Number}
    */
   get duration(): number {
-    return this.engine_.duration;
+    return this._engine.duration;
   }
 
   /**
@@ -158,7 +158,7 @@ class Player extends FakeEventTarget {
       if (boundedVol > 1) {
         boundedVol = 1;
       }
-      this.engine_.volume = boundedVol;
+      this._engine.volume = boundedVol;
     }
   }
 
@@ -167,7 +167,7 @@ class Player extends FakeEventTarget {
    * @returns {Number}
    */
   get volume(): number {
-    return this.engine_.volume;
+    return this._engine.volume;
   }
 
   // </editor-fold>
@@ -181,7 +181,7 @@ class Player extends FakeEventTarget {
    * @returns {boolean}
    */
   get paused(): boolean {
-    return this.engine_.paused;
+    return this._engine.paused;
   }
 
   /**
@@ -189,7 +189,7 @@ class Player extends FakeEventTarget {
    * @returns {boolean}
    */
   get seeking(): boolean {
-    return this.engine_.seeking;
+    return this._engine.seeking;
   }
 
   buffered() {
@@ -200,7 +200,7 @@ class Player extends FakeEventTarget {
    * @param mute {boolean}
    */
   set muted(mute: boolean) {
-    this.engine_.muted = mute;
+    this._engine.muted = mute;
   }
 
   /**
@@ -208,7 +208,7 @@ class Player extends FakeEventTarget {
    * @returns {boolean}
    */
   get muted(): boolean {
-    return this.engine_.muted;
+    return this._engine.muted;
   }
 
   // </editor-fold>
