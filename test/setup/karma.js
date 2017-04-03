@@ -1,5 +1,5 @@
-import prepareTestEnvironment from './prepareTestEnvironment';
-import loadSpecs from './loadSpecs';
+import prepareTestEnvironment from './prepare-test-environment'
+import loadSpecs from './load-specs'
 
 prepareTestEnvironment();
 loadSpecs();
