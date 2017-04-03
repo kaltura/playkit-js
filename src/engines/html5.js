@@ -7,9 +7,9 @@ import MSAManager from './adapters/adapter-manager'
 import BaseMediaSourceAdapter from './adapters/base-adapter'
 
 export default class Html5 extends FakeEventTarget implements IEngine {
-  el_: HTMLVideoElement;
-  eventManager_: EventManager;
-  mediaSourceAdapter_: BaseMediaSourceAdapter;
+  _el: HTMLVideoElement;
+  _eventManager: EventManager;
+  _mediaSourceAdapter: BaseMediaSourceAdapter;
 
   static EngineName: string = "html5";
 
@@ -20,48 +20,48 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   constructor(source: Object, config: Object) {
     super();
     this.createVideoElement();
-    this.eventManager_ = new EventManager();
+    this._eventManager = new EventManager();
     this.setSource(source, config);
     this.attach();
   }
 
   destroy() {
-    this.deattach();
-    if (this.mediaSourceAdapter_) {
-      this.mediaSourceAdapter_.destroy();
+    this.detach();
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.destroy();
     }
-    if (this.el_) {
+    if (this._el) {
       this.pause();
-      this.el_.removeAttribute('src');
-      if (this.el_.parentNode) {
-        this.el_.parentNode.removeChild(this.el_);
+      this._el.removeAttribute('src');
+      if (this._el.parentNode) {
+        this._el.parentNode.removeChild(this._el);
       }
     }
   }
 
   attach() {
     PlayerEvents.forEach((event) => {
-      this.eventManager_.listen(this.el_, event, () => {
+      this._eventManager.listen(this._el, event, () => {
         this.dispatchEvent(new FakeEvent(event));
       });
     });
   }
 
-  deattach() {
+  detach() {
     PlayerEvents.forEach((event) => {
-      this.eventManager_.unlisten(this.el_, event);
+      this._eventManager.unlisten(this._el, event);
     });
   }
 
   createVideoElement() {
-    this.el_ = document.createElement("video");
+    this._el = document.createElement("video");
     //Set attributes
-    this.el_.style.width = "640px";
-    this.el_.style.height = "360px";
-    this.el_.style.backgroundColor = "black";
-    this.el_.controls = true;
+    this._el.style.width = "640px";
+    this._el.style.height = "360px";
+    this._el.style.backgroundColor = "black";
+    this._el.controls = true;
     if (document && document.body) {
-      document.body.appendChild(this.el_);
+      document.body.appendChild(this._el);
     }
   }
 
@@ -70,16 +70,16 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   loadMediaSourceAdapter(source, config) {
-    this.mediaSourceAdapter_ = MSAManager.getMediaSourceAdapter(this.el_, source, config);
+    this._mediaSourceAdapter = MSAManager.getMediaSourceAdapter(this._el, source, config);
   }
 
   set src(source: string): void {
     //Set source
-    this.el_.src = source;
+    this._el.src = source;
   }
 
   get src(): string {
-    return this.el_.src;
+    return this._el.src;
   }
 
   //playback interface
@@ -87,22 +87,22 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * Start/resume playback
    */
   play(): void {
-    return this.el_.play();
+    return this._el.play();
   }
 
   /**
    * Pause playback
    */
   pause() {
-    return this.el_.pause();
+    return this._el.pause();
   }
 
   /**
    * Load media
    */
   load(): void {
-    if (this.mediaSourceAdapter_) {
-      this.mediaSourceAdapter_.load();
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.load();
     }
   }
 
@@ -111,7 +111,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {Number}
    */
   get currentTime(): number {
-    return this.el_.currentTime;
+    return this._el.currentTime;
   }
 
   /**
@@ -119,7 +119,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @param to {Number}
    */
   set currentTime(to: number) {
-    this.el_.currentTime = to;
+    this._el.currentTime = to;
   }
 
   /**
@@ -127,7 +127,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {Number}
    */
   get duration(): number {
-    return this.el_.duration;
+    return this._el.duration;
   }
 
   /**
@@ -135,7 +135,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @param vol {Number}
    */
   set volume(vol: number) {
-    this.el_.volume = vol;
+    this._el.volume = vol;
   }
 
   /**
@@ -143,7 +143,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {Number}
    */
   get volume(): number {
-    return this.el_.volume;
+    return this._el.volume;
   }
 
   //state
@@ -155,7 +155,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {boolean}
    */
   get paused(): boolean {
-    return this.el_.paused;
+    return this._el.paused;
   }
 
   /**
@@ -163,19 +163,19 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {boolean}
    */
   get seeking(): boolean {
-    return this.el_.seeking;
+    return this._el.seeking;
   }
 
   get seekable(): TimeRanges {
-    return this.el_.seekable;
+    return this._el.seekable;
   }
 
   get played(): TimeRanges {
-    return this.el_.played;
+    return this._el.played;
   }
 
   get buffered(): TimeRanges {
-    return this.el_.buffered;
+    return this._el.buffered;
   }
 
   /**
@@ -183,7 +183,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @param mute {boolean}
    */
   set muted(mute: boolean) {
-    this.el_.muted = mute;
+    this._el.muted = mute;
   }
 
   /**
@@ -191,91 +191,91 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {boolean}
    */
   get muted(): boolean {
-    return this.el_.muted;
+    return this._el.muted;
   }
 
   get defaultMuted(): boolean {
-    return this.el_.defaultMuted;
+    return this._el.defaultMuted;
   }
 
   set poster(poster: string) {
-    this.el_.poster = poster;
+    this._el.poster = poster;
   }
 
   get poster(): string {
-    return this.el_.poster;
+    return this._el.poster;
   }
 
   set preload(preload: string) {
-    this.el_.preload = preload;
+    this._el.preload = preload;
   }
 
   get preload(): string {
-    return this.el_.preload;
+    return this._el.preload;
   }
 
   set autoplay(autoplay: boolean) {
-    this.el_.autoplay = autoplay;
+    this._el.autoplay = autoplay;
   }
 
   get autoplay(): boolean {
-    return this.el_.autoplay;
+    return this._el.autoplay;
   }
 
   set loop(loop: boolean) {
-    this.el_.loop = loop;
+    this._el.loop = loop;
   }
 
   get loop(): boolean {
-    return this.el_.loop;
+    return this._el.loop;
   }
 
   set controls(controls: boolean) {
-    this.el_.controls = controls;
+    this._el.controls = controls;
   }
 
   get controls(): boolean {
-    return this.el_.controls;
+    return this._el.controls;
   }
 
   set playbackRate(playbackRate: number) {
-    this.el_.playbackRate = playbackRate;
+    this._el.playbackRate = playbackRate;
   }
 
   get playbackRate(): number {
-    return this.el_.playbackRate;
+    return this._el.playbackRate;
   }
 
   set defaultPlaybackRate(defaultPlaybackRate: number) {
-    this.el_.defaultPlaybackRate = defaultPlaybackRate;
+    this._el.defaultPlaybackRate = defaultPlaybackRate;
   }
 
   get defaultPlaybackRate(): number {
-    return this.el_.defaultPlaybackRate;
+    return this._el.defaultPlaybackRate;
   }
 
   get ended(): boolean {
-    return this.el_.ended;
+    return this._el.ended;
   }
 
   get error(): ?MediaError {
-    return this.el_.error;
+    return this._el.error;
   }
 
   get networkState(): number {
-    return this.el_.networkState;
+    return this._el.networkState;
   }
 
   get readyState(): number {
-    return this.el_.readyState;
+    return this._el.readyState;
   }
 
   get videoHeight(): number {
-    return this.el_.videoHeight;
+    return this._el.videoHeight;
   }
 
   get videoWidth(): number {
-    return this.el_.videoWidth;
+    return this._el.videoWidth;
   }
 
   static TEST_VID: HTMLVideoElement;

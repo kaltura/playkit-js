@@ -11,14 +11,14 @@ import FakeEvent from './fake-event'
  * @implements {IDestroyable}
  */
 class EventManager {
-  bindingMap_: MultiMap<Binding_> | null;
+  _bindingMap: MultiMap<Binding_> | null;
 
   constructor() {
     /**
      * Maps an event type to an array of event bindings.
      * @private {MultiMap.<!EventManager.Binding_>}
      */
-    this.bindingMap_ = new MultiMap();
+    this._bindingMap = new MultiMap();
   }
 
   /**
@@ -27,7 +27,7 @@ class EventManager {
    */
   destroy() {
     this.removeAll();
-    this.bindingMap_ = null;
+    this._bindingMap = null;
     return Promise.resolve();
   }
 
@@ -40,8 +40,8 @@ class EventManager {
    */
   listen(target: any, type: string, listener: ListenerType) {
     let binding = new Binding_(target, type, listener);
-    if (this.bindingMap_) {
-      this.bindingMap_.push(type, binding);
+    if (this._bindingMap) {
+      this._bindingMap.push(type, binding);
     }
   }
 
@@ -52,16 +52,16 @@ class EventManager {
    * @param {string} type The event type.
    */
   unlisten(target: any, type: string) {
-    if (this.bindingMap_) {
-      let list = this.bindingMap_.get(type);
+    if (this._bindingMap) {
+      let list = this._bindingMap.get(type);
 
       for (let i = 0; i < list.length; ++i) {
         let binding = list[i];
 
         if (binding.target == target) {
           binding.unlisten();
-          if (this.bindingMap_) {
-            this.bindingMap_.remove(type, binding);
+          if (this._bindingMap) {
+            this._bindingMap.remove(type, binding);
           }
         }
       }
@@ -72,14 +72,14 @@ class EventManager {
    * Detaches all event listeners from all targets.
    */
   removeAll() {
-    if (this.bindingMap_) {
-      let listeners = this.bindingMap_.getAll();
+    if (this._bindingMap) {
+      let listeners = this._bindingMap.getAll();
 
       for (let listener of listeners) {
         listener.unlisten();
       }
-      if (this.bindingMap_) {
-        this.bindingMap_.clear();
+      if (this._bindingMap) {
+        this._bindingMap.clear();
       }
     }
   }

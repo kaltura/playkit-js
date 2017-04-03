@@ -501,17 +501,17 @@ var Player = function (_FakeEventTarget) {
 
     var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
 
-    _this.pluginManager_ = new _pluginManager2.default();
-    _this.eventManager_ = new _eventManager2.default();
-    _this.engineEventHandlers_ = new Map();
+    _this._pluginManager = new _pluginManager2.default();
+    _this._eventManager = new _eventManager2.default();
+    _this._engineEventHandlers = new Map();
     _events2.default.forEach(function (event) {
-      _this.engineEventHandlers_.set('onEngine' + (0, _stringUtil.capitlize)(event) + '_', function (event) {
+      _this._engineEventHandlers.set('onEngine' + (0, _stringUtil.capitlize)(event) + '_', function (event) {
         return _this.dispatchEvent(event);
       });
     });
-    _this.config_ = config || Player.defaultConfig_();
-    _this.loadPlugins(_this.config_);
-    _this.selectEngine(_this.config_);
+    _this._config = config || Player.defaultConfig_();
+    _this.loadPlugins(_this._config);
+    _this.selectEngine(_this._config);
     _this.attachMedia();
     logger.info('player is ready!');
     return _this;
@@ -520,12 +520,12 @@ var Player = function (_FakeEventTarget) {
   _createClass(Player, [{
     key: 'destroy',
     value: function destroy() {
-      this.engine_.destroy();
-      this.eventManager_.destroy();
-      this.pluginManager_.destroy();
+      this._engine.destroy();
+      this._eventManager.destroy();
+      this._pluginManager.destroy();
       // this.engine_ = null;
       // this.eventManager_ = null;
-      this.config_ = null;
+      this._config = null;
     }
   }, {
     key: 'loadPlugins',
@@ -533,7 +533,7 @@ var Player = function (_FakeEventTarget) {
       var plugins = config.plugins;
       for (var name in plugins) {
         if (plugins.hasOwnProperty(name)) {
-          this.pluginManager_.load(name, this, plugins[name]);
+          this._pluginManager.load(name, this, plugins[name]);
         }
       }
     }
@@ -553,7 +553,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'loadEngine',
     value: function loadEngine(source, config) {
-      this.engine_ = new _html2.default(source, config);
+      this._engine = new _html2.default(source, config);
       if (config.preload === "auto") {
         this.load();
       }
@@ -565,9 +565,9 @@ var Player = function (_FakeEventTarget) {
 
       // Listen to all HTML5-defined events and trigger them on the player
       _events2.default.forEach(function (event) {
-        var handler = _this2.engineEventHandlers_.get('onEngine' + (0, _stringUtil.capitlize)(event) + '_');
+        var handler = _this2._engineEventHandlers.get('onEngine' + (0, _stringUtil.capitlize)(event) + '_');
         if (handler) {
-          _this2.eventManager_.listen(_this2.engine_, event, handler);
+          _this2._eventManager.listen(_this2._engine, event, handler);
         }
       });
     }
@@ -581,7 +581,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'play',
     value: function play() {
-      return this.engine_.play();
+      return this._engine.play();
     }
 
     /**
@@ -592,7 +592,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'pause',
     value: function pause() {
-      return this.engine_.pause();
+      return this._engine.pause();
     }
 
     /**
@@ -602,7 +602,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'load',
     value: function load() {
-      this.engine_.load();
+      this._engine.load();
     }
 
     /**
@@ -641,10 +641,10 @@ var Player = function (_FakeEventTarget) {
         if (to < 0) {
           boundedTo = 0;
         }
-        if (boundedTo > this.engine_.duration) {
-          boundedTo = this.engine_.duration;
+        if (boundedTo > this._engine.duration) {
+          boundedTo = this._engine.duration;
         }
-        this.engine_.currentTime = boundedTo;
+        this._engine.currentTime = boundedTo;
       }
     }
 
@@ -654,7 +654,7 @@ var Player = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      return this.engine_.currentTime;
+      return this._engine.currentTime;
     }
 
     /**
@@ -666,7 +666,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'duration',
     get: function get() {
-      return this.engine_.duration;
+      return this._engine.duration;
     }
 
     /**
@@ -685,7 +685,7 @@ var Player = function (_FakeEventTarget) {
         if (boundedVol > 1) {
           boundedVol = 1;
         }
-        this.engine_.volume = boundedVol;
+        this._engine.volume = boundedVol;
       }
     }
 
@@ -695,12 +695,12 @@ var Player = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      return this.engine_.volume;
+      return this._engine.volume;
     }
   }, {
     key: 'paused',
     get: function get() {
-      return this.engine_.paused;
+      return this._engine.paused;
     }
 
     /**
@@ -711,12 +711,12 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'seeking',
     get: function get() {
-      return this.engine_.seeking;
+      return this._engine.seeking;
     }
   }, {
     key: 'muted',
     set: function set(mute) {
-      this.engine_.muted = mute;
+      this._engine.muted = mute;
     }
 
     /**
@@ -725,7 +725,7 @@ var Player = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      return this.engine_.muted;
+      return this._engine.muted;
     }
 
     // </editor-fold>
@@ -783,7 +783,7 @@ var EventManager = function () {
      * Maps an event type to an array of event bindings.
      * @private {MultiMap.<!EventManager.Binding_>}
      */
-    this.bindingMap_ = new _multiMap2.default();
+    this._bindingMap = new _multiMap2.default();
   }
 
   /**
@@ -796,7 +796,7 @@ var EventManager = function () {
     key: 'destroy',
     value: function destroy() {
       this.removeAll();
-      this.bindingMap_ = null;
+      this._bindingMap = null;
       return Promise.resolve();
     }
 
@@ -811,8 +811,8 @@ var EventManager = function () {
     key: 'listen',
     value: function listen(target, type, listener) {
       var binding = new Binding_(target, type, listener);
-      if (this.bindingMap_) {
-        this.bindingMap_.push(type, binding);
+      if (this._bindingMap) {
+        this._bindingMap.push(type, binding);
       }
     }
 
@@ -825,16 +825,16 @@ var EventManager = function () {
   }, {
     key: 'unlisten',
     value: function unlisten(target, type) {
-      if (this.bindingMap_) {
-        var list = this.bindingMap_.get(type);
+      if (this._bindingMap) {
+        var list = this._bindingMap.get(type);
 
         for (var i = 0; i < list.length; ++i) {
           var binding = list[i];
 
           if (binding.target == target) {
             binding.unlisten();
-            if (this.bindingMap_) {
-              this.bindingMap_.remove(type, binding);
+            if (this._bindingMap) {
+              this._bindingMap.remove(type, binding);
             }
           }
         }
@@ -848,8 +848,8 @@ var EventManager = function () {
   }, {
     key: 'removeAll',
     value: function removeAll() {
-      if (this.bindingMap_) {
-        var listeners = this.bindingMap_.getAll();
+      if (this._bindingMap) {
+        var listeners = this._bindingMap.getAll();
 
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
@@ -876,8 +876,8 @@ var EventManager = function () {
           }
         }
 
-        if (this.bindingMap_) {
-          this.bindingMap_.clear();
+        if (this._bindingMap) {
+          this._bindingMap.clear();
         }
       }
     }
@@ -1604,7 +1604,7 @@ var FakeEventTarget = function () {
     /**
      * @private {!MultiMap.<FakeEventTarget.ListenerType>}
      */
-    this.listeners_ = new _multiMap2.default();
+    this._listeners = new _multiMap2.default();
 
     /**
      * The target of all dispatched events.  Defaults to |this|.
@@ -1629,7 +1629,7 @@ var FakeEventTarget = function () {
   _createClass(FakeEventTarget, [{
     key: 'addEventListener',
     value: function addEventListener(type, listener) {
-      this.listeners_.push(type, listener);
+      this._listeners.push(type, listener);
     }
 
     /**
@@ -1647,7 +1647,7 @@ var FakeEventTarget = function () {
   }, {
     key: 'removeEventListener',
     value: function removeEventListener(type, listener) {
-      this.listeners_.remove(type, listener);
+      this._listeners.remove(type, listener);
     }
 
     /**
@@ -1667,7 +1667,7 @@ var FakeEventTarget = function () {
       //goog.asserts.assert(event instanceof FakeEvent,
       //    'FakeEventTarget can only dispatch FakeEvents!');
 
-      var list = this.listeners_.get(event.type) || [];
+      var list = this._listeners.get(event.type) || [];
 
       for (var i = 0; i < list.length; ++i) {
         // Do this every time, since events can be re-dispatched from handlers.
@@ -1699,11 +1699,11 @@ var FakeEventTarget = function () {
 
   return FakeEventTarget;
 }();
+
 /**
  * These are the listener types defined in the closure extern for EventTarget.
  * @typedef {EventListener|function(!Event):(boolean|undefined)}
  */
-// FakeEventTarge.ListenerType;
 
 
 exports.default = FakeEventTarget;
@@ -1734,7 +1734,7 @@ var MultiMap = function () {
     _classCallCheck(this, MultiMap);
 
     /** @private {!Object.<string, !Array.<T>>} */
-    this.map_ = new Map();
+    this._map = new Map();
   }
 
   /**
@@ -1747,14 +1747,14 @@ var MultiMap = function () {
   _createClass(MultiMap, [{
     key: "push",
     value: function push(key, value) {
-      if (this.map_.has(key)) {
-        var list = this.map_.get(key);
+      if (this._map.has(key)) {
+        var list = this._map.get(key);
         if (Array.isArray(list)) {
           list.push(value);
-          this.map_.set(key, list);
+          this._map.set(key, list);
         }
       } else {
-        this.map_.set(key, [value]);
+        this._map.set(key, [value]);
       }
     }
 
@@ -1767,7 +1767,7 @@ var MultiMap = function () {
   }, {
     key: "set",
     value: function set(key, values) {
-      this.map_.set(key, values);
+      this._map.set(key, values);
     }
 
     /**
@@ -1779,7 +1779,7 @@ var MultiMap = function () {
   }, {
     key: "has",
     value: function has(key) {
-      return this.map_.has(key);
+      return this._map.has(key);
     }
 
     /**
@@ -1791,7 +1791,7 @@ var MultiMap = function () {
   }, {
     key: "get",
     value: function get(key) {
-      var list = this.map_.get(key);
+      var list = this._map.get(key);
       // slice() clones the list so that it and the map can each be modified
       // without affecting the other.
       return list ? list.slice() : [];
@@ -1811,7 +1811,7 @@ var MultiMap = function () {
       var _iteratorError = undefined;
 
       try {
-        for (var _iterator = this.map_.values()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (var _iterator = this._map.values()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var value = _step.value;
 
           list = list.concat(value);
@@ -1843,8 +1843,8 @@ var MultiMap = function () {
   }, {
     key: "remove",
     value: function remove(key, value) {
-      if (!this.map_.has(key)) return;
-      var list = this.map_.get(key);
+      if (!this._map.has(key)) return;
+      var list = this._map.get(key);
       if (Array.isArray(list)) {
         for (var i = 0; i < list.length; ++i) {
           if (list[i] == value) {
@@ -1864,7 +1864,7 @@ var MultiMap = function () {
   }, {
     key: "keys",
     value: function keys() {
-      return this.map_.keys();
+      return this._map.keys();
     }
 
     /**
@@ -1874,7 +1874,7 @@ var MultiMap = function () {
   }, {
     key: "clear",
     value: function clear() {
-      this.map_.clear();
+      this._map.clear();
     }
   }]);
 
@@ -2150,7 +2150,7 @@ var Html5 = function (_FakeEventTarget) {
     var _this = _possibleConstructorReturn(this, (Html5.__proto__ || Object.getPrototypeOf(Html5)).call(this));
 
     _this.createVideoElement();
-    _this.eventManager_ = new _eventManager2.default();
+    _this._eventManager = new _eventManager2.default();
     _this.setSource(source, config);
     _this.attach();
     return _this;
@@ -2159,15 +2159,15 @@ var Html5 = function (_FakeEventTarget) {
   _createClass(Html5, [{
     key: 'destroy',
     value: function destroy() {
-      this.deattach();
-      if (this.mediaSourceAdapter_) {
-        this.mediaSourceAdapter_.destroy();
+      this.detach();
+      if (this._mediaSourceAdapter) {
+        this._mediaSourceAdapter.destroy();
       }
-      if (this.el_) {
+      if (this._el) {
         this.pause();
-        this.el_.removeAttribute('src');
-        if (this.el_.parentNode) {
-          this.el_.parentNode.removeChild(this.el_);
+        this._el.removeAttribute('src');
+        if (this._el.parentNode) {
+          this._el.parentNode.removeChild(this._el);
         }
       }
     }
@@ -2177,31 +2177,31 @@ var Html5 = function (_FakeEventTarget) {
       var _this2 = this;
 
       _events2.default.forEach(function (event) {
-        _this2.eventManager_.listen(_this2.el_, event, function () {
+        _this2._eventManager.listen(_this2._el, event, function () {
           _this2.dispatchEvent(new _fakeEvent2.default(event));
         });
       });
     }
   }, {
-    key: 'deattach',
-    value: function deattach() {
+    key: 'detach',
+    value: function detach() {
       var _this3 = this;
 
       _events2.default.forEach(function (event) {
-        _this3.eventManager_.unlisten(_this3.el_, event);
+        _this3._eventManager.unlisten(_this3._el, event);
       });
     }
   }, {
     key: 'createVideoElement',
     value: function createVideoElement() {
-      this.el_ = document.createElement("video");
+      this._el = document.createElement("video");
       //Set attributes
-      this.el_.style.width = "640px";
-      this.el_.style.height = "360px";
-      this.el_.style.backgroundColor = "black";
-      this.el_.controls = true;
+      this._el.style.width = "640px";
+      this._el.style.height = "360px";
+      this._el.style.backgroundColor = "black";
+      this._el.controls = true;
       if (document && document.body) {
-        document.body.appendChild(this.el_);
+        document.body.appendChild(this._el);
       }
     }
   }, {
@@ -2212,7 +2212,7 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'loadMediaSourceAdapter',
     value: function loadMediaSourceAdapter(source, config) {
-      this.mediaSourceAdapter_ = _adapterManager2.default.getMediaSourceAdapter(this.el_, source, config);
+      this._mediaSourceAdapter = _adapterManager2.default.getMediaSourceAdapter(this._el, source, config);
     }
   }, {
     key: 'play',
@@ -2223,7 +2223,7 @@ var Html5 = function (_FakeEventTarget) {
      * Start/resume playback
      */
     value: function play() {
-      return this.el_.play();
+      return this._el.play();
     }
 
     /**
@@ -2233,7 +2233,7 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'pause',
     value: function pause() {
-      return this.el_.pause();
+      return this._el.pause();
     }
 
     /**
@@ -2243,8 +2243,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'load',
     value: function load() {
-      if (this.mediaSourceAdapter_) {
-        this.mediaSourceAdapter_.load();
+      if (this._mediaSourceAdapter) {
+        this._mediaSourceAdapter.load();
       }
     }
 
@@ -2269,15 +2269,15 @@ var Html5 = function (_FakeEventTarget) {
     key: 'src',
     set: function set(source) {
       //Set source
-      this.el_.src = source;
+      this._el.src = source;
     },
     get: function get() {
-      return this.el_.src;
+      return this._el.src;
     }
   }, {
     key: 'currentTime',
     get: function get() {
-      return this.el_.currentTime;
+      return this._el.currentTime;
     }
 
     /**
@@ -2286,7 +2286,7 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     set: function set(to) {
-      this.el_.currentTime = to;
+      this._el.currentTime = to;
     }
 
     /**
@@ -2297,7 +2297,7 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'duration',
     get: function get() {
-      return this.el_.duration;
+      return this._el.duration;
     }
 
     /**
@@ -2308,7 +2308,7 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'volume',
     set: function set(vol) {
-      this.el_.volume = vol;
+      this._el.volume = vol;
     }
 
     /**
@@ -2317,12 +2317,12 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      return this.el_.volume;
+      return this._el.volume;
     }
   }, {
     key: 'paused',
     get: function get() {
-      return this.el_.paused;
+      return this._el.paused;
     }
 
     /**
@@ -2333,22 +2333,22 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'seeking',
     get: function get() {
-      return this.el_.seeking;
+      return this._el.seeking;
     }
   }, {
     key: 'seekable',
     get: function get() {
-      return this.el_.seekable;
+      return this._el.seekable;
     }
   }, {
     key: 'played',
     get: function get() {
-      return this.el_.played;
+      return this._el.played;
     }
   }, {
     key: 'buffered',
     get: function get() {
-      return this.el_.buffered;
+      return this._el.buffered;
     }
 
     /**
@@ -2359,7 +2359,7 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'muted',
     set: function set(mute) {
-      this.el_.muted = mute;
+      this._el.muted = mute;
     }
 
     /**
@@ -2368,98 +2368,98 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      return this.el_.muted;
+      return this._el.muted;
     }
   }, {
     key: 'defaultMuted',
     get: function get() {
-      return this.el_.defaultMuted;
+      return this._el.defaultMuted;
     }
   }, {
     key: 'poster',
     set: function set(poster) {
-      this.el_.poster = poster;
+      this._el.poster = poster;
     },
     get: function get() {
-      return this.el_.poster;
+      return this._el.poster;
     }
   }, {
     key: 'preload',
     set: function set(preload) {
-      this.el_.preload = preload;
+      this._el.preload = preload;
     },
     get: function get() {
-      return this.el_.preload;
+      return this._el.preload;
     }
   }, {
     key: 'autoplay',
     set: function set(autoplay) {
-      this.el_.autoplay = autoplay;
+      this._el.autoplay = autoplay;
     },
     get: function get() {
-      return this.el_.autoplay;
+      return this._el.autoplay;
     }
   }, {
     key: 'loop',
     set: function set(loop) {
-      this.el_.loop = loop;
+      this._el.loop = loop;
     },
     get: function get() {
-      return this.el_.loop;
+      return this._el.loop;
     }
   }, {
     key: 'controls',
     set: function set(controls) {
-      this.el_.controls = controls;
+      this._el.controls = controls;
     },
     get: function get() {
-      return this.el_.controls;
+      return this._el.controls;
     }
   }, {
     key: 'playbackRate',
     set: function set(playbackRate) {
-      this.el_.playbackRate = playbackRate;
+      this._el.playbackRate = playbackRate;
     },
     get: function get() {
-      return this.el_.playbackRate;
+      return this._el.playbackRate;
     }
   }, {
     key: 'defaultPlaybackRate',
     set: function set(defaultPlaybackRate) {
-      this.el_.defaultPlaybackRate = defaultPlaybackRate;
+      this._el.defaultPlaybackRate = defaultPlaybackRate;
     },
     get: function get() {
-      return this.el_.defaultPlaybackRate;
+      return this._el.defaultPlaybackRate;
     }
   }, {
     key: 'ended',
     get: function get() {
-      return this.el_.ended;
+      return this._el.ended;
     }
   }, {
     key: 'error',
     get: function get() {
-      return this.el_.error;
+      return this._el.error;
     }
   }, {
     key: 'networkState',
     get: function get() {
-      return this.el_.networkState;
+      return this._el.networkState;
     }
   }, {
     key: 'readyState',
     get: function get() {
-      return this.el_.readyState;
+      return this._el.readyState;
     }
   }, {
     key: 'videoHeight',
     get: function get() {
-      return this.el_.videoHeight;
+      return this._el.videoHeight;
     }
   }, {
     key: 'videoWidth',
     get: function get() {
-      return this.el_.videoWidth;
+      return this._el.videoWidth;
     }
   }], [{
     key: 'isSupported',
@@ -2513,13 +2513,9 @@ function capitlize(string) {
 }
 
 function endsWith(string, searchString) {
-  if (typeof string !== 'string') {
+  if (typeof string !== 'string' || typeof searchString !== 'string') {
     return false;
   }
-  if (typeof searchString !== 'string') {
-    return false;
-  }
-
   return string.indexOf(searchString, string.length - searchString.length) != -1;
 }
 

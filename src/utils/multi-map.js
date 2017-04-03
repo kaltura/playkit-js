@@ -6,11 +6,11 @@
  * @template T
  */
 class MultiMap<T> {
-  map_: Map<string, T[]>;
+  _map: Map<string, T[]>;
 
   constructor() {
     /** @private {!Object.<string, !Array.<T>>} */
-    this.map_ = new Map();
+    this._map = new Map();
   }
 
   /**
@@ -19,14 +19,14 @@ class MultiMap<T> {
    * @param {T} value
    */
   push(key: string, value: T) {
-    if (this.map_.has(key)) {
-      let list = this.map_.get(key);
+    if (this._map.has(key)) {
+      let list = this._map.get(key);
       if (Array.isArray(list)) {
         list.push(value);
-        this.map_.set(key, list);
+        this._map.set(key, list);
       }
     } else {
-      this.map_.set(key, [value]);
+      this._map.set(key, [value]);
     }
   }
 
@@ -36,7 +36,7 @@ class MultiMap<T> {
    * @param {!Array.<T>} values
    */
   set(key: string, values: T[]) {
-    this.map_.set(key, values);
+    this._map.set(key, values);
   }
 
   /**
@@ -45,7 +45,7 @@ class MultiMap<T> {
    * @return {boolean} true if the key exists.
    */
   has(key: string): boolean {
-    return this.map_.has(key);
+    return this._map.has(key);
   }
 
   /**
@@ -54,7 +54,7 @@ class MultiMap<T> {
    * @return {Array.<T>} or null if no suZch key exists.
    */
   get(key: string): Array<T> {
-    let list = this.map_.get(key);
+    let list = this._map.get(key);
     // slice() clones the list so that it and the map can each be modified
     // without affecting the other.
     return list ? list.slice() : [];
@@ -66,7 +66,7 @@ class MultiMap<T> {
    */
   getAll(): T[] {
     let list: T[] = [];
-    for (var value of this.map_.values()) {
+    for (var value of this._map.values()) {
       list = list.concat(value);
     }
     return list;
@@ -78,8 +78,8 @@ class MultiMap<T> {
    * @param {T} value
    */
   remove(key: string, value: T) {
-    if (!this.map_.has(key)) return;
-    let list = this.map_.get(key);
+    if (!this._map.has(key)) return;
+    let list = this._map.get(key);
     if (Array.isArray(list)) {
       for (let i = 0; i < list.length; ++i) {
         if (list[i] == value) {
@@ -96,7 +96,7 @@ class MultiMap<T> {
    */
   // eslint-disable-next-line no-undef
   keys(): Iterator<string> {
-    return this.map_.keys();
+    return this._map.keys();
   }
 
 
@@ -104,7 +104,7 @@ class MultiMap<T> {
    * Clear all keys and values from the multimap.
    */
   clear() {
-    this.map_.clear();
+    this._map.clear();
   }
 }
 

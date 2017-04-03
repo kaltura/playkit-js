@@ -13,14 +13,14 @@ import MultiMap from '../utils/multi-map'
  * @export
  */
 class FakeEventTarget {
-  listeners_: MultiMap<ListenerType>;
+  _listeners: MultiMap<ListenerType>;
   dispatchTarget: FakeEventTarget;
 
   constructor() {
     /**
      * @private {!MultiMap.<FakeEventTarget.ListenerType>}
      */
-    this.listeners_ = new MultiMap();
+    this._listeners = new MultiMap();
 
     /**
      * The target of all dispatched events.  Defaults to |this|.
@@ -41,7 +41,7 @@ class FakeEventTarget {
    * @export
    */
   addEventListener(type: string, listener: ListenerType) {
-    this.listeners_.push(type, listener);
+    this._listeners.push(type, listener);
   }
 
   /**
@@ -56,7 +56,7 @@ class FakeEventTarget {
    * @export
    */
   removeEventListener(type: string, listener: ListenerType) {
-    this.listeners_.remove(type, listener);
+    this._listeners.remove(type, listener);
   }
 
   /**
@@ -73,7 +73,7 @@ class FakeEventTarget {
     //goog.asserts.assert(event instanceof FakeEvent,
     //    'FakeEventTarget can only dispatch FakeEvents!');
 
-    let list = this.listeners_.get(event.type) || [];
+    let list = this._listeners.get(event.type) || [];
 
     for (let i = 0; i < list.length; ++i) {
       // Do this every time, since events can be re-dispatched from handlers.
@@ -102,11 +102,11 @@ class FakeEventTarget {
     return event.defaultPrevented;
   }
 }
+
 /**
  * These are the listener types defined in the closure extern for EventTarget.
  * @typedef {EventListener|function(!Event):(boolean|undefined)}
  */
-// FakeEventTarge.ListenerType;
 declare function ListenerType(event: FakeEvent): (boolean | void);
 
 export default FakeEventTarget;

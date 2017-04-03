@@ -19,13 +19,9 @@ function capitlize(string: string): string {
 }
 
 function endsWith(string: string, searchString: string): boolean {
-  if (typeof string !== 'string') {
+  if (typeof string !== 'string' || typeof searchString !== 'string') {
     return false;
   }
-  if (typeof searchString !== 'string') {
-    return false;
-  }
-
   return string.indexOf(searchString, string.length - searchString.length) != -1;
 }
 
