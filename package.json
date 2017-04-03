@@ -1,5 +1,5 @@
 {
-  "name": "PlayKit.js",
+  "name": "playkit-js",
   "version": "0.0.1",
   "main": "dist/playkit.js",
   "scripts": {
@@ -7,11 +7,12 @@
     "prebuild": "npm run clean",
     "build": "webpack",
     "dev": "webpack --progress --colors --watch",
-    "test": "mocha ./test/setup/mocha.js ./test/src --compilers js:babel-core/register --colors --recursive",
-    "test:watch": "mocha ./test/setup/mocha.js ./test/src --compilers js:babel-core/register --colors -w --recursive",
-    "test:cover": "cross-env NODE_ENV=test nyc mocha --recursive",
+    "test": "NODE_ENV=test ./node_modules/.bin/karma start --single-run",
+    "test:watch": "NODE_ENV=test ./node_modules/.bin/karma start --auto-watch",
     "start": "webpack-dev-server",
-    "release": "npm run build && standard-version"
+    "release": "npm run build && standard-version",
+    "eslint": "eslint . --color",
+    "prepush": "npm run eslint & npm run test"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
@@ -29,6 +30,7 @@
     "eslint-loader": "^1.6.1",
     "eslint-plugin-flowtype": "^2.30.0",
     "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-mocha-no-only": "^0.0.5",
     "flow-bin": "^0.38.0",
     "istanbul": "^0.4.5",
     "karma": "^1.5.0",

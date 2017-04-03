@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 16);
+/******/ 	return __webpack_require__(__webpack_require__.s = 18);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -90,13 +90,22 @@ exports.LOG_LEVEL = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jsLogger = __webpack_require__(15);
+var _jsLogger = __webpack_require__(17);
 
 var JsLogger = _interopRequireWildcard(_jsLogger);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var LOG_LEVEL = {
+  "DEBUG": JsLogger.DEBUG,
+  "INFO": JsLogger.INFO,
+  "TIME": JsLogger.TIME,
+  "WARN": JsLogger.WARN,
+  "ERROR": JsLogger.ERROR,
+  "OFF": JsLogger.OFF
+};
 
 var LoggerFactory = function () {
   function LoggerFactory(options) {
@@ -118,21 +127,176 @@ var LoggerFactory = function () {
   return LoggerFactory;
 }();
 
-var loggerFactory = new LoggerFactory({ defaultLevel: JsLogger.DEBUG });
-var LOG_LEVEL = {
-  "DEBUG": JsLogger.DEBUG,
-  "INFO": JsLogger.INFO,
-  "TIME": JsLogger.TIME,
-  "WARN": JsLogger.WARN,
-  "ERROR": JsLogger.ERROR,
-  "OFF": JsLogger.OFF
-};
+var lf = new LoggerFactory({ defaultLevel: JsLogger.DEBUG });
 
-exports.default = loggerFactory;
+exports.default = lf;
 exports.LOG_LEVEL = LOG_LEVEL;
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _logger = __webpack_require__(0);
+
+var _logger2 = _interopRequireDefault(_logger);
+
+var _playerError = __webpack_require__(5);
+
+var _playerError2 = _interopRequireDefault(_playerError);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Base of media source adapters
+ * @classdesc
+ */
+var BaseMediaSourceAdapter = function () {
+  _createClass(BaseMediaSourceAdapter, null, [{
+    key: 'isSupported',
+
+
+    /**
+     * Checks if the media source adapter is supported
+     * @function isSupported
+     * @returns {boolean}
+     * @static
+     */
+
+    /**
+     * The player wrapper of the media source adapter
+     * @member {any} _msPlayer
+     * @private
+     */
+
+    /**
+     * The logger of the media source adapter
+     * @member {ILogger} _logger
+     * @static
+     * @private
+     */
+    value: function isSupported() {
+      return true;
+    }
+
+    /**
+     * Checks if the media source adapter can play a given mime type
+     * @function canPlayType
+     * @param {string} mimeType
+     * @returns {boolean}
+     * @static
+     */
+
+    /**
+     * The source URL
+     * @member {string} _source
+     * @private
+     */
+
+    /**
+     * The name of the media source adapter
+     * @member {string} _name
+     * @static
+     * @private
+     */
+
+    /**
+     * The supported mime types by the media source adapter
+     * @member {Array} _mimeTypes
+     * @static
+     * @private
+     */
+
+  }, {
+    key: 'canPlayType',
+    value: function canPlayType(mimeType) {
+      return !!(this._mimeTypes && this._mimeTypes.includes(mimeType));
+    }
+
+    /**
+     * Factory method to create media source adapter
+     * @function createAdapter
+     * @param {HTMLVideoElement} videoElement - The video element which bind to the media source adapter
+     * @param {string} source - The source URL
+     * @param {Object} config - The media source adapter configuration
+     * @returns {BaseMediaSourceAdapter}
+     * @static
+     */
+
+  }, {
+    key: 'createAdapter',
+    value: function createAdapter(videoElement, source, config) {
+      return new this(videoElement, source, config);
+    }
+
+    /**
+     * Error handler
+     * @function onError
+     * @param {Object} error
+     * @static
+     */
+
+  }, {
+    key: 'onError',
+    value: function onError(error) {
+      this._logger.error(error);
+    }
+
+    /**
+     * @constructor
+     * @param {string} name - The name of the media source adapter
+     */
+
+  }]);
+
+  function BaseMediaSourceAdapter(name) {
+    _classCallCheck(this, BaseMediaSourceAdapter);
+
+    this._logger = _logger2.default.getLogger(name);
+  }
+
+  /**
+   * Load the video source
+   * @function load
+   * @abstract
+   */
+
+
+  _createClass(BaseMediaSourceAdapter, [{
+    key: 'load',
+    value: function load() {
+      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
+    }
+
+    /**
+     * Destroying the _msPlayer
+     * @function destroy
+     */
+
+  }, {
+    key: 'destroy',
+    value: function destroy() {
+      // should do nothing. implemented by the inheritor if necessary.
+    }
+  }]);
+
+  return BaseMediaSourceAdapter;
+}();
+
+exports.default = BaseMediaSourceAdapter;
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -275,7 +439,7 @@ var FakeEvent = function () {
 exports.default = FakeEvent;
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -287,37 +451,37 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _eventManager = __webpack_require__(3);
+var _eventManager = __webpack_require__(4);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _FakeEventTarget2 = __webpack_require__(5);
+var _fakeEventTarget = __webpack_require__(10);
 
-var _FakeEventTarget3 = _interopRequireDefault(_FakeEventTarget2);
+var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
-var _FakeEvent = __webpack_require__(1);
+var _fakeEvent = __webpack_require__(2);
 
-var _FakeEvent2 = _interopRequireDefault(_FakeEvent);
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _events = __webpack_require__(6);
+var _events = __webpack_require__(9);
 
 var _events2 = _interopRequireDefault(_events);
 
-var _util = __webpack_require__(9);
+var _util = __webpack_require__(12);
 
-var _stringUtils = __webpack_require__(14);
+var _stringUtil = __webpack_require__(16);
 
-var _loggerFactory = __webpack_require__(0);
+var _logger = __webpack_require__(0);
 
-var _loggerFactory2 = _interopRequireDefault(_loggerFactory);
+var _logger2 = _interopRequireDefault(_logger);
 
-var _Html = __webpack_require__(11);
+var _html = __webpack_require__(15);
 
-var _Html2 = _interopRequireDefault(_Html);
+var _html2 = _interopRequireDefault(_html);
 
-var _PluginManager = __webpack_require__(4);
+var _pluginManager = __webpack_require__(8);
 
-var _PluginManager2 = _interopRequireDefault(_PluginManager);
+var _pluginManager2 = _interopRequireDefault(_pluginManager);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -327,7 +491,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var logger = _loggerFactory2.default.getLogger('Player');
+var logger = _logger2.default.getLogger('Player');
 
 var Player = function (_FakeEventTarget) {
   _inherits(Player, _FakeEventTarget);
@@ -337,17 +501,17 @@ var Player = function (_FakeEventTarget) {
 
     var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
 
-    _this.pluginManager_ = new _PluginManager2.default();
-    _this.eventManager_ = new _eventManager2.default();
-    _this.engineEventHandlers_ = new Map();
+    _this._pluginManager = new _pluginManager2.default();
+    _this._eventManager = new _eventManager2.default();
+    _this._engineEventHandlers = new Map();
     _events2.default.forEach(function (event) {
-      _this.engineEventHandlers_.set('onEngine' + (0, _stringUtils.capitlize)(event) + '_', function (event) {
+      _this._engineEventHandlers.set('onEngine' + (0, _stringUtil.capitlize)(event) + '_', function (event) {
         return _this.dispatchEvent(event);
       });
     });
-    _this.config_ = config || Player.defaultConfig_();
-    _this.loadPlugins(_this.config_);
-    _this.selectEngine(_this.config_);
+    _this._config = config || Player.defaultConfig_();
+    _this.loadPlugins(_this._config);
+    _this.selectEngine(_this._config);
     _this.attachMedia();
     logger.info('player is ready!');
     return _this;
@@ -356,12 +520,12 @@ var Player = function (_FakeEventTarget) {
   _createClass(Player, [{
     key: 'destroy',
     value: function destroy() {
-      this.engine_.destroy();
-      this.eventManager_.destroy();
-      this.pluginManager_.destroy();
+      this._engine.destroy();
+      this._eventManager.destroy();
+      this._pluginManager.destroy();
       // this.engine_ = null;
       // this.eventManager_ = null;
-      this.config_ = null;
+      this._config = null;
     }
   }, {
     key: 'loadPlugins',
@@ -369,19 +533,30 @@ var Player = function (_FakeEventTarget) {
       var plugins = config.plugins;
       for (var name in plugins) {
         if (plugins.hasOwnProperty(name)) {
-          this.pluginManager_.load(name, this, plugins[name]);
+          this._pluginManager.load(name, this, plugins[name]);
         }
       }
     }
   }, {
     key: 'selectEngine',
-    value: function selectEngine() {
-      this.loadEngine();
+    value: function selectEngine(config) {
+      if (config && config.sources) {
+        var sources = config.sources;
+        for (var i = 0; i < sources.length; i++) {
+          if (_html2.default.canPlayType(sources[i].mimetype)) {
+            this.loadEngine(sources[i], config);
+            break;
+          }
+        }
+      }
     }
   }, {
     key: 'loadEngine',
-    value: function loadEngine() {
-      this.engine_ = new _Html2.default();
+    value: function loadEngine(source, config) {
+      this._engine = new _html2.default(source, config);
+      if (config.preload === "auto") {
+        this.load();
+      }
     }
   }, {
     key: 'attachMedia',
@@ -390,14 +565,14 @@ var Player = function (_FakeEventTarget) {
 
       // Listen to all HTML5-defined events and trigger them on the player
       _events2.default.forEach(function (event) {
-        var handler = _this2.engineEventHandlers_.get('onEngine' + (0, _stringUtils.capitlize)(event) + '_');
+        var handler = _this2._engineEventHandlers.get('onEngine' + (0, _stringUtil.capitlize)(event) + '_');
         if (handler) {
-          _this2.eventManager_.listen(_this2.engine_, event, handler);
+          _this2._eventManager.listen(_this2._engine, event, handler);
         }
       });
     }
 
-    //  <editor-fold desc="playback interface">
+    //  <editor-fold desc="Playback Interface">
     /**
      * Start/resume playback
      * @returns {Player}
@@ -406,7 +581,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'play',
     value: function play() {
-      return this.engine_.play();
+      return this._engine.play();
     }
 
     /**
@@ -417,7 +592,17 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'pause',
     value: function pause() {
-      return this.engine_.pause();
+      return this._engine.pause();
+    }
+
+    /**
+     * Load media
+     */
+
+  }, {
+    key: 'load',
+    value: function load() {
+      this._engine.load();
     }
 
     /**
@@ -456,10 +641,10 @@ var Player = function (_FakeEventTarget) {
         if (to < 0) {
           boundedTo = 0;
         }
-        if (boundedTo > this.engine_.duration) {
-          boundedTo = this.engine_.duration;
+        if (boundedTo > this._engine.duration) {
+          boundedTo = this._engine.duration;
         }
-        this.engine_.currentTime = boundedTo;
+        this._engine.currentTime = boundedTo;
       }
     }
 
@@ -469,7 +654,7 @@ var Player = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      return this.engine_.currentTime;
+      return this._engine.currentTime;
     }
 
     /**
@@ -481,7 +666,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'duration',
     get: function get() {
-      return this.engine_.duration;
+      return this._engine.duration;
     }
 
     /**
@@ -500,7 +685,7 @@ var Player = function (_FakeEventTarget) {
         if (boundedVol > 1) {
           boundedVol = 1;
         }
-        this.engine_.volume = boundedVol;
+        this._engine.volume = boundedVol;
       }
     }
 
@@ -510,12 +695,12 @@ var Player = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      return this.engine_.volume;
+      return this._engine.volume;
     }
   }, {
     key: 'paused',
     get: function get() {
-      return this.engine_.paused;
+      return this._engine.paused;
     }
 
     /**
@@ -526,12 +711,12 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'seeking',
     get: function get() {
-      return this.engine_.seeking;
+      return this._engine.seeking;
     }
   }, {
     key: 'muted',
     set: function set(mute) {
-      this.engine_.muted = mute;
+      this._engine.muted = mute;
     }
 
     /**
@@ -540,7 +725,7 @@ var Player = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      return this.engine_.muted;
+      return this._engine.muted;
     }
 
     // </editor-fold>
@@ -553,12 +738,12 @@ var Player = function (_FakeEventTarget) {
   }]);
 
   return Player;
-}(_FakeEventTarget3.default);
+}(_fakeEventTarget2.default);
 
 exports.default = Player;
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -570,13 +755,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _MultiMap = __webpack_require__(8);
+var _multiMap = __webpack_require__(11);
 
-var _MultiMap2 = _interopRequireDefault(_MultiMap);
+var _multiMap2 = _interopRequireDefault(_multiMap);
 
-var _FakeEvent = __webpack_require__(1);
+var _fakeEvent = __webpack_require__(2);
 
-var _FakeEvent2 = _interopRequireDefault(_FakeEvent);
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -598,7 +783,7 @@ var EventManager = function () {
      * Maps an event type to an array of event bindings.
      * @private {MultiMap.<!EventManager.Binding_>}
      */
-    this.bindingMap_ = new _MultiMap2.default();
+    this._bindingMap = new _multiMap2.default();
   }
 
   /**
@@ -608,10 +793,10 @@ var EventManager = function () {
 
 
   _createClass(EventManager, [{
-    key: "destroy",
+    key: 'destroy',
     value: function destroy() {
       this.removeAll();
-      this.bindingMap_ = null;
+      this._bindingMap = null;
       return Promise.resolve();
     }
 
@@ -623,11 +808,11 @@ var EventManager = function () {
      */
 
   }, {
-    key: "listen",
+    key: 'listen',
     value: function listen(target, type, listener) {
       var binding = new Binding_(target, type, listener);
-      if (this.bindingMap_) {
-        this.bindingMap_.push(type, binding);
+      if (this._bindingMap) {
+        this._bindingMap.push(type, binding);
       }
     }
 
@@ -638,18 +823,18 @@ var EventManager = function () {
      */
 
   }, {
-    key: "unlisten",
+    key: 'unlisten',
     value: function unlisten(target, type) {
-      if (this.bindingMap_) {
-        var list = this.bindingMap_.get(type);
+      if (this._bindingMap) {
+        var list = this._bindingMap.get(type);
 
         for (var i = 0; i < list.length; ++i) {
           var binding = list[i];
 
           if (binding.target == target) {
             binding.unlisten();
-            if (this.bindingMap_) {
-              this.bindingMap_.remove(type, binding);
+            if (this._bindingMap) {
+              this._bindingMap.remove(type, binding);
             }
           }
         }
@@ -661,10 +846,10 @@ var EventManager = function () {
      */
 
   }, {
-    key: "removeAll",
+    key: 'removeAll',
     value: function removeAll() {
-      if (this.bindingMap_) {
-        var listeners = this.bindingMap_.getAll();
+      if (this._bindingMap) {
+        var listeners = this._bindingMap.getAll();
 
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
@@ -691,8 +876,8 @@ var EventManager = function () {
           }
         }
 
-        if (this.bindingMap_) {
-          this.bindingMap_.clear();
+        if (this._bindingMap) {
+          this._bindingMap.clear();
         }
       }
     }
@@ -737,7 +922,7 @@ var Binding_ = function () {
 
 
   _createClass(Binding_, [{
-    key: "unlisten",
+    key: 'unlisten',
     value: function unlisten() {
       if (!this.target) return;
 
@@ -754,168 +939,6 @@ var Binding_ = function () {
 exports.default = EventManager;
 
 /***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _BasePlugin = __webpack_require__(12);
-
-var _BasePlugin2 = _interopRequireDefault(_BasePlugin);
-
-var _PluginError = __webpack_require__(7);
-
-var _PluginError2 = _interopRequireDefault(_PluginError);
-
-var _player = __webpack_require__(2);
-
-var _player2 = _interopRequireDefault(_player);
-
-var _loggerFactory = __webpack_require__(0);
-
-var _loggerFactory2 = _interopRequireDefault(_loggerFactory);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var logger = _loggerFactory2.default.getLogger("PluginManager");
-
-var PluginManager = function () {
-  function PluginManager() {
-    _classCallCheck(this, PluginManager);
-
-    this._plugins = new Map();
-  }
-  /**
-   * The registry of the plugins.
-   * Maps plugin's name to his class.
-   * @type {Map}
-   * @private
-   */
-
-  /**
-   * The active plugins in the player.
-   * Maps plugin's name to his instance.
-   * @type {Map}
-   * @private
-   */
-
-
-  _createClass(PluginManager, [{
-    key: "load",
-
-
-    /**
-     * Creates a new instance of the plugin in case isValid() of the plugin returns true.
-     * @param name
-     * @param player
-     * @param config
-     * @returns {boolean}
-     */
-    value: function load(name, player) {
-      var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-      if (!PluginManager._registry.has(name)) {
-        throw new _PluginError2.default(_PluginError2.default.TYPE.NOT_REGISTERED_PLUGIN, name).getError();
-      }
-      var pluginClass = PluginManager._registry.get(name);
-      if (pluginClass != null && pluginClass.isValid()) {
-        this._plugins.set(name, pluginClass.createPlugin(name, player, config));
-        logger.info("Plugin <" + name + "> has been loaded.");
-        return true;
-      }
-      logger.info("Plugin <" + name + "> isn't loaded, isValid()=false.");
-      return false;
-    }
-
-    /**
-     * Iterates over all the plugins and calls private _destroy.
-     */
-
-  }, {
-    key: "destroy",
-    value: function destroy() {
-      this._plugins.forEach(this._destroy.bind(this));
-    }
-
-    /**
-     * Calls destroy() method of the plugin's impl.
-     * @param plugin
-     * @param name
-     * @private
-     */
-
-  }, {
-    key: "_destroy",
-    value: function _destroy(plugin, name) {
-      plugin.destroy();
-      this._plugins.delete(name);
-    }
-
-    /**
-     * Returns the plugin's instance.
-     * @param name
-     * @returns {BasePlugin}
-     */
-
-  }, {
-    key: "get",
-    value: function get(name) {
-      return this._plugins.get(name);
-    }
-  }], [{
-    key: "register",
-
-
-    /**
-     * Writes the plugin in the registry.
-     * @param name
-     * @param handler
-     * @returns {boolean}
-     */
-    value: function register(name, handler) {
-      if (typeof handler !== 'function' || handler.prototype instanceof _BasePlugin2.default === false) {
-        throw new _PluginError2.default(_PluginError2.default.TYPE.NOT_VALID_HANDLER).getError();
-      }
-      if (!this._registry.has(name)) {
-        this._registry.set(name, handler);
-        logger.info("Plugin <" + name + "> has been registered successfully.");
-        return true;
-      }
-      logger.info("Plugin <" + name + "> is already registered, do not register again.");
-      return false;
-    }
-
-    /**
-     * Removes the plugin from the registry.
-     * @param name
-     */
-
-  }, {
-    key: "unRegister",
-    value: function unRegister(name) {
-      if (this._registry.has(name)) {
-        this._registry.delete(name);
-        logger.info("Unregistered <" + name + "> plugin.");
-      }
-    }
-  }]);
-
-  return PluginManager;
-}();
-
-PluginManager._registry = new Map();
-exports.default = PluginManager;
-
-/***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -928,141 +951,561 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _FakeEvent = __webpack_require__(1);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _FakeEvent2 = _interopRequireDefault(_FakeEvent);
+var PlayerError = function () {
+  function PlayerError(error, param) {
+    _classCallCheck(this, PlayerError);
 
-var _MultiMap = __webpack_require__(8);
+    this.name = error.name;
+    this.message = error.message(param);
+  }
 
-var _MultiMap2 = _interopRequireDefault(_MultiMap);
+  _createClass(PlayerError, [{
+    key: "getError",
+    value: function getError() {
+      return {
+        name: this.name,
+        message: this.message
+      };
+    }
+  }]);
+
+  return PlayerError;
+}();
+
+PlayerError.TYPE = {
+  NOT_REGISTERED_PLUGIN: {
+    name: "PluginNotRegisteredException",
+    message: function message(name) {
+      return "Cannot load " + name + " plugin. Name not found in the registry";
+    }
+  },
+  NOT_VALID_HANDLER: {
+    name: "PluginHandlerIsNotValidException",
+    message: function message() {
+      return "To activate plugin you must provide a class derived from BasePlugin";
+    }
+  },
+  NOT_IMPLEMENTED_METHOD: {
+    name: "NotImplementedException",
+    message: function message(method) {
+      return method + " method not implemented";
+    }
+  }
+};
+exports.default = PlayerError;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.registerAdapter = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _baseAdapter = __webpack_require__(1);
+
+var _baseAdapter2 = _interopRequireDefault(_baseAdapter);
+
+var _nativeAdapter = __webpack_require__(14);
+
+var _nativeAdapter2 = _interopRequireDefault(_nativeAdapter);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * A work-alike for EventTarget.  Only DOM elements may be true EventTargets,
- * but this can be used as a base class to provide event dispatch to non-DOM
- * classes.  Only FakeEvents should be dispatched.
- *
- * @struct
- * @constructor
- * @implements {EventTarget}
- * @export
+ * Media source adapter manager
+ * @classdesc
  */
-var FakeEventTarget = function () {
-  function FakeEventTarget() {
-    _classCallCheck(this, FakeEventTarget);
-
-    /**
-     * @private {!MultiMap.<FakeEventTarget.ListenerType>}
-     */
-    this.listeners_ = new _MultiMap2.default();
-
-    /**
-     * The target of all dispatched events.  Defaults to |this|.
-     * @type {EventTarget}
-     */
-    this.dispatchTarget = this;
+var MediaSourceAdapterManager = function () {
+  function MediaSourceAdapterManager() {
+    _classCallCheck(this, MediaSourceAdapterManager);
   }
 
-  /**
-   * Add an event listener to this object.
-   *
-   * @param {string} type The event type to listen for.
-   * @param {FakeEventTarget.ListenerType} listener The callback or
-   *   listener object to invoke.
-   * @param {boolean=} opt_capturing Ignored.  FakeEventTargets do not have
-   *   parents, so events neither capture nor bubble.
-   * @override
-   * @export
-   */
+  _createClass(MediaSourceAdapterManager, null, [{
+    key: 'register',
 
 
-  _createClass(FakeEventTarget, [{
-    key: "addEventListener",
-    value: function addEventListener(type, listener) {
-      this.listeners_.push(type, listener);
+    /**
+     * Add a media source adapter to the registry
+     * @function register
+     * @param {BaseMediaSourceAdapter} adapter
+     * @static
+     */
+    value: function register(adapter) {
+      if (adapter && !MediaSourceAdapterManager._mediaSourceAdapters.includes(adapter)) {
+        MediaSourceAdapterManager._mediaSourceAdapters.push(adapter);
+      }
     }
 
     /**
-     * Remove an event listener from this object.
-     *
-     * @param {string} type The event type for which you wish to remove a listener.
-     * @param {FakeEventTarget.ListenerType} listener The callback or
-     *   listener object to remove.
-     * @param {boolean=} opt_capturing Ignored.  FakeEventTargets do not have
-     *   parents, so events neither capture nor bubble.
-     * @override
-     * @export
+     * Remove a media source adapter from the registry
+     * @function unregister
+     * @param {BaseMediaSourceAdapter} adapter
+     * @static
+     */
+
+    /**
+     * The media source adapter registry
+     * @member {Array<BaseMediaSourceAdapter>} _mediaSourceAdapters
+     * @static
+     * @private
      */
 
   }, {
-    key: "removeEventListener",
-    value: function removeEventListener(type, listener) {
-      this.listeners_.remove(type, listener);
+    key: 'unregister',
+    value: function unregister(adapter) {
+      var index = MediaSourceAdapterManager._mediaSourceAdapters.indexOf(adapter);
+      if (index > -1) {
+        MediaSourceAdapterManager._mediaSourceAdapters.splice(index, 1);
+      }
     }
 
     /**
-     * Dispatch an event from this object.
-     *
-     * @param {!Event} event The event to be dispatched from this object.
-     * @return {boolean} True if the default action was prevented.
-     * @override
-     * @export
+     * Checks if one of the registered media source adapters can play a given mime type
+     * @function canPlayType
+     * @param {string} mimeType - The mime type to check
+     * @returns {boolean}
+     * @static
      */
 
   }, {
-    key: "dispatchEvent",
-    value: function dispatchEvent(event) {
-      // In many browsers, it is complex to overwrite properties of actual Events.
-      // Here we expect only to dispatch FakeEvents, which are simpler.
-      //goog.asserts.assert(event instanceof FakeEvent,
-      //    'FakeEventTarget can only dispatch FakeEvents!');
-
-      var list = this.listeners_.get(event.type) || [];
-
-      for (var i = 0; i < list.length; ++i) {
-        // Do this every time, since events can be re-dispatched from handlers.
-        event.target = this.dispatchTarget;
-        event.currentTarget = this.dispatchTarget;
-
-        var listener = list[i];
-        try {
-          if (listener.handleEvent) {
-            listener.handleEvent(event);
-          } else {
-            listener.call(this, event);
-          }
-        } catch (exception) {
-          // Exceptions during event handlers should not affect the caller,
-          // but should appear on the console as uncaught, according to MDN:
-          // http://goo.gl/N6Ff27
-          // TODO: add log
-        }
-
-        if (event.stopped) {
-          break;
+    key: 'canPlayType',
+    value: function canPlayType(mimeType) {
+      var adapters = MediaSourceAdapterManager._mediaSourceAdapters;
+      for (var i = 0; i < adapters.length; i++) {
+        if (adapters[i].canPlayType(mimeType)) {
+          return true;
         }
       }
+      return false;
+    }
 
-      return event.defaultPrevented;
+    /**
+     * Get the appropriate media source adapter to the video source
+     * @function getMediaSourceAdapter
+     * @param {HTMLVideoElement} videoElement - The video element which will bind to the media source adapter
+     * @param {Object} source - The video source
+     * @param {Object} config - The player configuration
+     * @returns {BaseMediaSourceAdapter|null}
+     * @static
+     */
+
+  }, {
+    key: 'getMediaSourceAdapter',
+    value: function getMediaSourceAdapter(videoElement, source, config) {
+      if (videoElement && source && config) {
+        var adapters = MediaSourceAdapterManager._mediaSourceAdapters;
+        for (var i = 0; i < adapters.length; i++) {
+          if (adapters[i].canPlayType(source.mimetype)) return adapters[i].createAdapter(videoElement, source.src, config.engines);
+        }
+      }
+      return null;
     }
   }]);
 
-  return FakeEventTarget;
+  return MediaSourceAdapterManager;
 }();
-/**
- * These are the listener types defined in the closure extern for EventTarget.
- * @typedef {EventListener|function(!Event):(boolean|undefined)}
- */
-// FakeEventTarge.ListenerType;
+
+MediaSourceAdapterManager._mediaSourceAdapters = [_nativeAdapter2.default];
+exports.default = MediaSourceAdapterManager;
 
 
-exports.default = FakeEventTarget;
+var registerAdapter = MediaSourceAdapterManager.register;
+exports.registerAdapter = registerAdapter;
 
 /***/ }),
-/* 6 */
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _player = __webpack_require__(3);
+
+var _player2 = _interopRequireDefault(_player);
+
+var _logger = __webpack_require__(0);
+
+var _logger2 = _interopRequireDefault(_logger);
+
+var _util = __webpack_require__(12);
+
+var _eventManager = __webpack_require__(4);
+
+var _eventManager2 = _interopRequireDefault(_eventManager);
+
+var _playerError = __webpack_require__(5);
+
+var _playerError2 = _interopRequireDefault(_playerError);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/** The BasePlugin responsible to implement the plugin interface.
+ * Contains several default implementations.
+ * Other plugins should extend this class.
+ * @classdesc
+ */
+var BasePlugin = function () {
+  _createClass(BasePlugin, null, [{
+    key: 'createPlugin',
+
+
+    /**
+     * Factory method to create the actual plugin.
+     * @param name - The plugin name
+     * @param player - The player reference
+     * @param config - The plugin configuration
+     * @returns {BasePlugin}
+     * @static
+     * @public
+     */
+
+    /**
+     * The event manager of the plugin.
+     * @member
+     */
+
+    /**
+     * The logger of the plugin.
+     * @member
+     */
+
+    /**
+     * The runtime configuration of the plugin.
+     * @member
+     */
+    value: function createPlugin(name, player) {
+      var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+      return new this(name, player, config);
+    }
+
+    /**
+     * Returns under what conditions the plugin is valid.
+     * Plugin must implement this method.
+     * @returns {boolean}
+     * @static
+     * @public
+     * @abstract
+     */
+
+    /**
+     * The default configuration of the plugin.
+     * Inherited plugins should override this property.
+     * @type {Object}
+     * @static
+     * @member
+     */
+
+    /**
+     * Reference to the actual player.
+     * @member
+     */
+
+    /**
+     * The name of the plugin.
+     * @member
+     */
+
+  }, {
+    key: 'isValid',
+    value: function isValid() {
+      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'isValid()').getError();
+    }
+
+    /**
+     * constructor
+     * @param name - The plugin name
+     * @param player - The player reference
+     * @param config - The plugin configuration
+     * @constructor
+     * @private
+     */
+
+  }]);
+
+  function BasePlugin(name, player, config) {
+    _classCallCheck(this, BasePlugin);
+
+    this.name = name;
+    this.player = player;
+    this.eventManager = new _eventManager2.default();
+    this.logger = _logger2.default.getLogger(this.name);
+    this.config = (0, _util.merge)(this.constructor.defaultConfig, config);
+  }
+
+  /**
+   * Returns the config of the plugin.
+   * If attribute is provided, returns its value.
+   * @param attr - The key in the plugin configuration.
+   * @returns {*}
+   * @public
+   */
+
+
+  _createClass(BasePlugin, [{
+    key: 'getConfig',
+    value: function getConfig(attr) {
+      if (attr) {
+        return this.config[attr];
+      }
+      return this.config;
+    }
+
+    /**
+     * Updates the config of the plugin.
+     * @param update - The updated configuration.
+     * @public
+     */
+
+  }, {
+    key: 'updateConfig',
+    value: function updateConfig(update) {
+      this.config = (0, _util.merge)(this.config, update);
+    }
+
+    /**
+     * Runs the destroy logic of the plugin.
+     * plugin must implement this method.
+     * @public
+     * @abstract
+     */
+
+  }, {
+    key: 'destroy',
+    value: function destroy() {
+      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'destroy()').getError();
+    }
+
+    /**
+     * Getter for the plugin's name.
+     * @returns {string}
+     * @public
+     */
+
+  }, {
+    key: 'getName',
+    value: function getName() {
+      return this.name;
+    }
+  }]);
+
+  return BasePlugin;
+}();
+
+BasePlugin.defaultConfig = {};
+exports.default = BasePlugin;
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.registerPlugin = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _basePlugin = __webpack_require__(7);
+
+var _basePlugin2 = _interopRequireDefault(_basePlugin);
+
+var _playerError = __webpack_require__(5);
+
+var _playerError2 = _interopRequireDefault(_playerError);
+
+var _player = __webpack_require__(3);
+
+var _player2 = _interopRequireDefault(_player);
+
+var _logger = __webpack_require__(0);
+
+var _logger2 = _interopRequireDefault(_logger);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * The logger of the PluginManager class.
+ * @private
+ * @const
+ */
+var logger = _logger2.default.getLogger("PluginManager");
+
+/** The PluginManager responsible for register plugins definitions and store plugins instances.
+ * @classdesc
+ */
+
+var PluginManager = function () {
+  function PluginManager() {
+    _classCallCheck(this, PluginManager);
+
+    this._plugins = new Map();
+  }
+  /**
+   * The registry of the plugins.
+   * Maps plugin's name to his class.
+   * @type {Map}
+   * @static
+   * @private
+   */
+
+  /**
+   * The active plugins in the player.
+   * Maps plugin's name to his instance.
+   * @type {Map}
+   * @private
+   */
+
+
+  _createClass(PluginManager, [{
+    key: 'load',
+
+
+    /**
+     * Creates and store new instance of the plugin in case isValid() of the plugin returns true.
+     * @param name - The plugin name
+     * @param player - The player reference
+     * @param {Object} [config={}] - The plugin configuration
+     * @returns {boolean}
+     * @public
+     */
+    value: function load(name, player) {
+      var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+      if (!PluginManager._registry.has(name)) {
+        throw new _playerError2.default(_playerError2.default.TYPE.NOT_REGISTERED_PLUGIN, name).getError();
+      }
+      var pluginClass = PluginManager._registry.get(name);
+      if (pluginClass != null && pluginClass.isValid()) {
+        this._plugins.set(name, pluginClass.createPlugin(name, player, config));
+        logger.info('Plugin <' + name + '> has been loaded.');
+        return true;
+      }
+      logger.info('Plugin <' + name + '> isn\'t loaded, isValid()=false.');
+      return false;
+    }
+
+    /**
+     * Iterates over all the plugins and calls private _destroy.
+     * @public
+     */
+
+  }, {
+    key: 'destroy',
+    value: function destroy() {
+      this._plugins.forEach(this._destroy.bind(this));
+    }
+
+    /**
+     * Calls destroy() method of the plugin's impl.
+     * @param plugin - The plugin instance
+     * @param name - The plugin name
+     * @private
+     */
+
+  }, {
+    key: '_destroy',
+    value: function _destroy(plugin, name) {
+      plugin.destroy();
+      this._plugins.delete(name);
+    }
+
+    /**
+     * Returns the plugin's instance.
+     * @param name - The plugin name
+     * @returns {BasePlugin}
+     * @public
+     */
+
+  }, {
+    key: 'get',
+    value: function get(name) {
+      return this._plugins.get(name);
+    }
+  }], [{
+    key: 'register',
+
+
+    /**
+     * Writes the plugin in the registry.
+     * Maps: plugin name -> plugin class.
+     * @param name - The plugin name
+     * @param handler - The plugin class
+     * @returns {boolean}
+     * @static
+     * @public
+     */
+    value: function register(name, handler) {
+      if (typeof handler !== 'function' || handler.prototype instanceof _basePlugin2.default === false) {
+        throw new _playerError2.default(_playerError2.default.TYPE.NOT_VALID_HANDLER).getError();
+      }
+      if (!PluginManager._registry.has(name)) {
+        PluginManager._registry.set(name, handler);
+        logger.info('Plugin <' + name + '> has been registered successfully.');
+        return true;
+      }
+      logger.info('Plugin <' + name + '> is already registered, do not register again.');
+      return false;
+    }
+
+    /**
+     * Removes the plugin from the registry.
+     * @param name - The plugin name
+     * @static
+     * @public
+     */
+
+  }, {
+    key: 'unRegister',
+    value: function unRegister(name) {
+      if (PluginManager._registry.has(name)) {
+        PluginManager._registry.delete(name);
+        logger.info('Unregistered <' + name + '> plugin.');
+      }
+    }
+  }]);
+
+  return PluginManager;
+}();
+
+/**
+ * Export the register method.
+ * @type {function}
+ * @constant
+ */
+
+
+PluginManager._registry = new Map();
+exports.default = PluginManager;
+var registerPlugin = PluginManager.register;
+exports.registerPlugin = registerPlugin;
+
+/***/ }),
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1116,10 +1559,11 @@ var PLAYER_EVENTS = ['play', 'pause',
  * Fires when the text track has been changed
  */
 'texttrackchange'];
+
 exports.default = PLAYER_EVENTS;
 
 /***/ }),
-/* 7 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1129,54 +1573,143 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _PlayerError2 = __webpack_require__(13);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _PlayerError3 = _interopRequireDefault(_PlayerError2);
+var _fakeEvent = __webpack_require__(2);
+
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
+
+var _multiMap = __webpack_require__(11);
+
+var _multiMap2 = _interopRequireDefault(_multiMap);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+/**
+ * A work-alike for EventTarget.  Only DOM elements may be true EventTargets,
+ * but this can be used as a base class to provide event dispatch to non-DOM
+ * classes.  Only FakeEvents should be dispatched.
+ *
+ * @struct
+ * @constructor
+ * @implements {EventTarget}
+ * @export
+ */
+var FakeEventTarget = function () {
+  function FakeEventTarget() {
+    _classCallCheck(this, FakeEventTarget);
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+    /**
+     * @private {!MultiMap.<FakeEventTarget.ListenerType>}
+     */
+    this._listeners = new _multiMap2.default();
 
-var PluginError = function (_PlayerError) {
-  _inherits(PluginError, _PlayerError);
-
-  function PluginError(error, param) {
-    _classCallCheck(this, PluginError);
-
-    return _possibleConstructorReturn(this, (PluginError.__proto__ || Object.getPrototypeOf(PluginError)).call(this, error.name, error.message(param)));
+    /**
+     * The target of all dispatched events.  Defaults to |this|.
+     * @type {EventTarget}
+     */
+    this.dispatchTarget = this;
   }
 
-  return PluginError;
-}(_PlayerError3.default);
+  /**
+   * Add an event listener to this object.
+   *
+   * @param {string} type The event type to listen for.
+   * @param {FakeEventTarget.ListenerType} listener The callback or
+   *   listener object to invoke.
+   * @param {boolean=} opt_capturing Ignored.  FakeEventTargets do not have
+   *   parents, so events neither capture nor bubble.
+   * @override
+   * @export
+   */
 
-PluginError.TYPE = {
-  NOT_IMPLEMENTED_METHOD: {
-    name: "NotImplementedPluginMethodException",
-    message: function message(method) {
-      return "Plugin must implement " + method + " method";
+
+  _createClass(FakeEventTarget, [{
+    key: 'addEventListener',
+    value: function addEventListener(type, listener) {
+      this._listeners.push(type, listener);
     }
-  },
-  NOT_REGISTERED_PLUGIN: {
-    name: "PluginNotRegisteredException",
-    message: function message(name) {
-      return "Cannot load " + name + " plugin. Name not found in the registry";
+
+    /**
+     * Remove an event listener from this object.
+     *
+     * @param {string} type The event type for which you wish to remove a listener.
+     * @param {FakeEventTarget.ListenerType} listener The callback or
+     *   listener object to remove.
+     * @param {boolean=} opt_capturing Ignored.  FakeEventTargets do not have
+     *   parents, so events neither capture nor bubble.
+     * @override
+     * @export
+     */
+
+  }, {
+    key: 'removeEventListener',
+    value: function removeEventListener(type, listener) {
+      this._listeners.remove(type, listener);
     }
-  },
-  NOT_VALID_HANDLER: {
-    name: "PluginHandlerIsNotValidException",
-    message: function message() {
-      return "To activate plugin you must provide a class derived from BasePlugin";
+
+    /**
+     * Dispatch an event from this object.
+     *
+     * @param {!Event} event The event to be dispatched from this object.
+     * @return {boolean} True if the default action was prevented.
+     * @override
+     * @export
+     */
+
+  }, {
+    key: 'dispatchEvent',
+    value: function dispatchEvent(event) {
+      // In many browsers, it is complex to overwrite properties of actual Events.
+      // Here we expect only to dispatch FakeEvents, which are simpler.
+      //goog.asserts.assert(event instanceof FakeEvent,
+      //    'FakeEventTarget can only dispatch FakeEvents!');
+
+      var list = this._listeners.get(event.type) || [];
+
+      for (var i = 0; i < list.length; ++i) {
+        // Do this every time, since events can be re-dispatched from handlers.
+        event.target = this.dispatchTarget;
+        event.currentTarget = this.dispatchTarget;
+
+        var listener = list[i];
+        try {
+          if (listener.handleEvent) {
+            listener.handleEvent(event);
+          } else {
+            listener.call(this, event);
+          }
+        } catch (exception) {
+          // Exceptions during event handlers should not affect the caller,
+          // but should appear on the console as uncaught, according to MDN:
+          // http://goo.gl/N6Ff27
+          // TODO: add log
+        }
+
+        if (event.stopped) {
+          break;
+        }
+      }
+
+      return event.defaultPrevented;
     }
-  }
-};
-exports.default = PluginError;
+  }]);
+
+  return FakeEventTarget;
+}();
+
+/**
+ * These are the listener types defined in the closure extern for EventTarget.
+ * @typedef {EventListener|function(!Event):(boolean|undefined)}
+ */
+
+
+exports.default = FakeEventTarget;
 
 /***/ }),
-/* 8 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1201,7 +1734,7 @@ var MultiMap = function () {
     _classCallCheck(this, MultiMap);
 
     /** @private {!Object.<string, !Array.<T>>} */
-    this.map_ = new Map();
+    this._map = new Map();
   }
 
   /**
@@ -1214,14 +1747,14 @@ var MultiMap = function () {
   _createClass(MultiMap, [{
     key: "push",
     value: function push(key, value) {
-      if (this.map_.has(key)) {
-        var list = this.map_.get(key);
+      if (this._map.has(key)) {
+        var list = this._map.get(key);
         if (Array.isArray(list)) {
           list.push(value);
-          this.map_.set(key, list);
+          this._map.set(key, list);
         }
       } else {
-        this.map_.set(key, [value]);
+        this._map.set(key, [value]);
       }
     }
 
@@ -1234,7 +1767,7 @@ var MultiMap = function () {
   }, {
     key: "set",
     value: function set(key, values) {
-      this.map_.set(key, values);
+      this._map.set(key, values);
     }
 
     /**
@@ -1246,7 +1779,7 @@ var MultiMap = function () {
   }, {
     key: "has",
     value: function has(key) {
-      return this.map_.has(key);
+      return this._map.has(key);
     }
 
     /**
@@ -1258,7 +1791,7 @@ var MultiMap = function () {
   }, {
     key: "get",
     value: function get(key) {
-      var list = this.map_.get(key);
+      var list = this._map.get(key);
       // slice() clones the list so that it and the map can each be modified
       // without affecting the other.
       return list ? list.slice() : [];
@@ -1278,7 +1811,7 @@ var MultiMap = function () {
       var _iteratorError = undefined;
 
       try {
-        for (var _iterator = this.map_.values()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (var _iterator = this._map.values()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var value = _step.value;
 
           list = list.concat(value);
@@ -1310,8 +1843,8 @@ var MultiMap = function () {
   }, {
     key: "remove",
     value: function remove(key, value) {
-      if (!this.map_.has(key)) return;
-      var list = this.map_.get(key);
+      if (!this._map.has(key)) return;
+      var list = this._map.get(key);
       if (Array.isArray(list)) {
         for (var i = 0; i < list.length; ++i) {
           if (list[i] == value) {
@@ -1331,7 +1864,7 @@ var MultiMap = function () {
   }, {
     key: "keys",
     value: function keys() {
-      return this.map_.keys();
+      return this._map.keys();
     }
 
     /**
@@ -1341,7 +1874,7 @@ var MultiMap = function () {
   }, {
     key: "clear",
     value: function clear() {
-      this.map_.clear();
+      this._map.clear();
     }
   }]);
 
@@ -1351,7 +1884,7 @@ var MultiMap = function () {
 exports.default = MultiMap;
 
 /***/ }),
-/* 9 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1385,23 +1918,24 @@ exports.isFloat = isFloat;
 exports.merge = merge;
 
 /***/ }),
-/* 10 */
+/* 13 */
 /***/ (function(module, exports) {
 
 module.exports = {
-	"name": "PlayKit.js",
-	"version": "0.0.1-alpha",
+	"name": "playkit-js",
+	"version": "0.0.1",
 	"main": "dist/playkit.js",
 	"scripts": {
 		"clean": "rm -rf ./dist",
 		"prebuild": "npm run clean",
 		"build": "webpack",
 		"dev": "webpack --progress --colors --watch",
-		"test": "mocha ./test/setup/mocha.js ./test/src --compilers js:babel-core/register --colors --recursive",
-		"test:watch": "mocha ./test/setup/mocha.js ./test/src --compilers js:babel-core/register --colors -w --recursive",
-		"test:cover": "cross-env NODE_ENV=test nyc mocha --recursive",
+		"test": "NODE_ENV=test ./node_modules/.bin/karma start --single-run",
+		"test:watch": "NODE_ENV=test ./node_modules/.bin/karma start --auto-watch",
 		"start": "webpack-dev-server",
-		"release": "npm run build && standard-version"
+		"release": "npm run build && standard-version",
+		"eslint": "eslint . --color",
+		"prepush": "npm run eslint & npm run test"
 	},
 	"devDependencies": {
 		"babel-cli": "^6.18.0",
@@ -1419,6 +1953,7 @@ module.exports = {
 		"eslint-loader": "^1.6.1",
 		"eslint-plugin-flowtype": "^2.30.0",
 		"eslint-plugin-import": "^2.2.0",
+		"eslint-plugin-mocha-no-only": "^0.0.5",
 		"flow-bin": "^0.38.0",
 		"istanbul": "^0.4.5",
 		"karma": "^1.5.0",
@@ -1458,7 +1993,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 11 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1470,21 +2005,126 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _FakeEventTarget2 = __webpack_require__(5);
+var _baseAdapter = __webpack_require__(1);
 
-var _FakeEventTarget3 = _interopRequireDefault(_FakeEventTarget2);
+var _baseAdapter2 = _interopRequireDefault(_baseAdapter);
 
-var _FakeEvent = __webpack_require__(1);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _FakeEvent2 = _interopRequireDefault(_FakeEvent);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _eventManager = __webpack_require__(3);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * An illustration of media source extension for progressive download
+ * @classdesc
+ * @extends BaseMediaSourceAdapter
+ */
+var NativeAdapter = function (_BaseMediaSourceAdapt) {
+  _inherits(NativeAdapter, _BaseMediaSourceAdapt);
+
+  _createClass(NativeAdapter, null, [{
+    key: 'canPlayType',
+
+
+    /**
+     * Checks if NativeAdapter can play a given mime type
+     * @function canPlayType
+     * @param {string} mimeType
+     * @returns {boolean}
+     * @static
+     * @override
+     */
+    value: function canPlayType(mimeType) {
+      return !!document.createElement("video").canPlayType(mimeType);
+    }
+
+    /**
+     * @constructor
+     * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
+     * @param {string} source - The source URL
+     */
+
+    /**
+     * The name of Adapter
+     * @member {string} _name
+     * @static
+     * @private
+     */
+
+  }]);
+
+  function NativeAdapter(videoElement, source) {
+    _classCallCheck(this, NativeAdapter);
+
+    var _this = _possibleConstructorReturn(this, (NativeAdapter.__proto__ || Object.getPrototypeOf(NativeAdapter)).call(this, NativeAdapter._name));
+
+    _this._msPlayer = videoElement;
+    _this._source = source;
+    if (source) {
+      _this._msPlayer.src = source;
+    }
+    return _this;
+  }
+
+  /**
+   * Load the video source
+   * @function load
+   * @override
+   */
+
+
+  _createClass(NativeAdapter, [{
+    key: 'load',
+    value: function load() {
+      this._msPlayer.load();
+    }
+  }]);
+
+  return NativeAdapter;
+}(_baseAdapter2.default);
+
+NativeAdapter._name = 'NativeAdapter';
+exports.default = NativeAdapter;
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _fakeEventTarget = __webpack_require__(10);
+
+var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
+
+var _fakeEvent = __webpack_require__(2);
+
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
+
+var _eventManager = __webpack_require__(4);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _events = __webpack_require__(6);
+var _events = __webpack_require__(9);
 
 var _events2 = _interopRequireDefault(_events);
+
+var _adapterManager = __webpack_require__(6);
+
+var _adapterManager2 = _interopRequireDefault(_adapterManager);
+
+var _baseAdapter = __webpack_require__(1);
+
+var _baseAdapter2 = _interopRequireDefault(_baseAdapter);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1497,27 +2137,37 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Html5 = function (_FakeEventTarget) {
   _inherits(Html5, _FakeEventTarget);
 
-  function Html5() {
+  _createClass(Html5, null, [{
+    key: 'canPlayType',
+    value: function canPlayType(mimeType) {
+      return _adapterManager2.default.canPlayType(mimeType);
+    }
+  }]);
+
+  function Html5(source, config) {
     _classCallCheck(this, Html5);
 
     var _this = _possibleConstructorReturn(this, (Html5.__proto__ || Object.getPrototypeOf(Html5)).call(this));
 
     _this.createVideoElement();
-    _this.eventManager_ = new _eventManager2.default();
+    _this._eventManager = new _eventManager2.default();
+    _this.setSource(source, config);
     _this.attach();
-    _this.src = "/assets/mov_bbb.mp4";
     return _this;
   }
 
   _createClass(Html5, [{
     key: 'destroy',
     value: function destroy() {
-      this.deattach();
-      if (this.el_) {
+      this.detach();
+      if (this._mediaSourceAdapter) {
+        this._mediaSourceAdapter.destroy();
+      }
+      if (this._el) {
         this.pause();
-        this.el_.removeAttribute('src');
-        if (this.el_.parentNode) {
-          this.el_.parentNode.removeChild(this.el_);
+        this._el.removeAttribute('src');
+        if (this._el.parentNode) {
+          this._el.parentNode.removeChild(this._el);
         }
       }
     }
@@ -1527,32 +2177,42 @@ var Html5 = function (_FakeEventTarget) {
       var _this2 = this;
 
       _events2.default.forEach(function (event) {
-        _this2.eventManager_.listen(_this2.el_, event, function () {
-          _this2.dispatchEvent(new _FakeEvent2.default(event));
+        _this2._eventManager.listen(_this2._el, event, function () {
+          _this2.dispatchEvent(new _fakeEvent2.default(event));
         });
       });
     }
   }, {
-    key: 'deattach',
-    value: function deattach() {
+    key: 'detach',
+    value: function detach() {
       var _this3 = this;
 
       _events2.default.forEach(function (event) {
-        _this3.eventManager_.unlisten(_this3.el_, event);
+        _this3._eventManager.unlisten(_this3._el, event);
       });
     }
   }, {
     key: 'createVideoElement',
     value: function createVideoElement() {
-      this.el_ = document.createElement("video");
+      this._el = document.createElement("video");
       //Set attributes
-      this.el_.style.width = "640px";
-      this.el_.style.height = "360px";
-      this.el_.style.backgroundColor = "black";
-      this.el_.controls = true;
+      this._el.style.width = "640px";
+      this._el.style.height = "360px";
+      this._el.style.backgroundColor = "black";
+      this._el.controls = true;
       if (document && document.body) {
-        document.body.appendChild(this.el_);
+        document.body.appendChild(this._el);
       }
+    }
+  }, {
+    key: 'setSource',
+    value: function setSource(source, config) {
+      this.loadMediaSourceAdapter(source, config);
+    }
+  }, {
+    key: 'loadMediaSourceAdapter',
+    value: function loadMediaSourceAdapter(source, config) {
+      this._mediaSourceAdapter = _adapterManager2.default.getMediaSourceAdapter(this._el, source, config);
     }
   }, {
     key: 'play',
@@ -1563,7 +2223,7 @@ var Html5 = function (_FakeEventTarget) {
      * Start/resume playback
      */
     value: function play() {
-      return this.el_.play();
+      return this._el.play();
     }
 
     /**
@@ -1573,12 +2233,19 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'pause',
     value: function pause() {
-      return this.el_.pause();
+      return this._el.pause();
     }
+
+    /**
+     * Load media
+     */
+
   }, {
     key: 'load',
     value: function load() {
-      this.el_.load();
+      if (this._mediaSourceAdapter) {
+        this._mediaSourceAdapter.load();
+      }
     }
 
     /**
@@ -1602,15 +2269,15 @@ var Html5 = function (_FakeEventTarget) {
     key: 'src',
     set: function set(source) {
       //Set source
-      this.el_.src = source;
+      this._el.src = source;
     },
     get: function get() {
-      return this.el_.src;
+      return this._el.src;
     }
   }, {
     key: 'currentTime',
     get: function get() {
-      return this.el_.currentTime;
+      return this._el.currentTime;
     }
 
     /**
@@ -1619,7 +2286,7 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     set: function set(to) {
-      this.el_.currentTime = to;
+      this._el.currentTime = to;
     }
 
     /**
@@ -1630,7 +2297,7 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'duration',
     get: function get() {
-      return this.el_.duration;
+      return this._el.duration;
     }
 
     /**
@@ -1641,7 +2308,7 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'volume',
     set: function set(vol) {
-      this.el_.volume = vol;
+      this._el.volume = vol;
     }
 
     /**
@@ -1650,12 +2317,12 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      return this.el_.volume;
+      return this._el.volume;
     }
   }, {
     key: 'paused',
     get: function get() {
-      return this.el_.paused;
+      return this._el.paused;
     }
 
     /**
@@ -1666,22 +2333,22 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'seeking',
     get: function get() {
-      return this.el_.seeking;
+      return this._el.seeking;
     }
   }, {
     key: 'seekable',
     get: function get() {
-      return this.el_.seekable;
+      return this._el.seekable;
     }
   }, {
     key: 'played',
     get: function get() {
-      return this.el_.played;
+      return this._el.played;
     }
   }, {
     key: 'buffered',
     get: function get() {
-      return this.el_.buffered;
+      return this._el.buffered;
     }
 
     /**
@@ -1692,7 +2359,7 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'muted',
     set: function set(mute) {
-      this.el_.muted = mute;
+      this._el.muted = mute;
     }
 
     /**
@@ -1701,98 +2368,98 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      return this.el_.muted;
+      return this._el.muted;
     }
   }, {
     key: 'defaultMuted',
     get: function get() {
-      return this.el_.defaultMuted;
+      return this._el.defaultMuted;
     }
   }, {
     key: 'poster',
     set: function set(poster) {
-      this.el_.poster = poster;
+      this._el.poster = poster;
     },
     get: function get() {
-      return this.el_.poster;
+      return this._el.poster;
     }
   }, {
     key: 'preload',
     set: function set(preload) {
-      this.el_.preload = preload;
+      this._el.preload = preload;
     },
     get: function get() {
-      return this.el_.preload;
+      return this._el.preload;
     }
   }, {
     key: 'autoplay',
     set: function set(autoplay) {
-      this.el_.autoplay = autoplay;
+      this._el.autoplay = autoplay;
     },
     get: function get() {
-      return this.el_.autoplay;
+      return this._el.autoplay;
     }
   }, {
     key: 'loop',
     set: function set(loop) {
-      this.el_.loop = loop;
+      this._el.loop = loop;
     },
     get: function get() {
-      return this.el_.loop;
+      return this._el.loop;
     }
   }, {
     key: 'controls',
     set: function set(controls) {
-      this.el_.controls = controls;
+      this._el.controls = controls;
     },
     get: function get() {
-      return this.el_.controls;
+      return this._el.controls;
     }
   }, {
     key: 'playbackRate',
     set: function set(playbackRate) {
-      this.el_.playbackRate = playbackRate;
+      this._el.playbackRate = playbackRate;
     },
     get: function get() {
-      return this.el_.playbackRate;
+      return this._el.playbackRate;
     }
   }, {
     key: 'defaultPlaybackRate',
     set: function set(defaultPlaybackRate) {
-      this.el_.defaultPlaybackRate = defaultPlaybackRate;
+      this._el.defaultPlaybackRate = defaultPlaybackRate;
     },
     get: function get() {
-      return this.el_.defaultPlaybackRate;
+      return this._el.defaultPlaybackRate;
     }
   }, {
     key: 'ended',
     get: function get() {
-      return this.el_.ended;
+      return this._el.ended;
     }
   }, {
     key: 'error',
     get: function get() {
-      return this.el_.error;
+      return this._el.error;
     }
   }, {
     key: 'networkState',
     get: function get() {
-      return this.el_.networkState;
+      return this._el.networkState;
     }
   }, {
     key: 'readyState',
     get: function get() {
-      return this.el_.readyState;
+      return this._el.readyState;
     }
   }, {
     key: 'videoHeight',
     get: function get() {
-      return this.el_.videoHeight;
+      return this._el.videoHeight;
     }
   }, {
     key: 'videoWidth',
     get: function get() {
-      return this.el_.videoWidth;
+      return this._el.videoWidth;
     }
   }], [{
     key: 'isSupported',
@@ -1809,7 +2476,7 @@ var Html5 = function (_FakeEventTarget) {
   }]);
 
   return Html5;
-}(_FakeEventTarget3.default);
+}(_fakeEventTarget2.default);
 
 //Engine.register("html5", Html5);
 
@@ -1818,215 +2485,11 @@ Html5.EngineName = "html5";
 exports.default = Html5;
 
 /***/ }),
-/* 12 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _player = __webpack_require__(2);
-
-var _player2 = _interopRequireDefault(_player);
-
-var _loggerFactory = __webpack_require__(0);
-
-var _loggerFactory2 = _interopRequireDefault(_loggerFactory);
-
-var _util = __webpack_require__(9);
-
-var _eventManager = __webpack_require__(3);
-
-var _eventManager2 = _interopRequireDefault(_eventManager);
-
-var _PluginError = __webpack_require__(7);
-
-var _PluginError2 = _interopRequireDefault(_PluginError);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var BasePlugin = function () {
-  _createClass(BasePlugin, null, [{
-    key: "createPlugin",
-
-
-    /**
-     * Factory method to create the actual plugin.
-     * @param name
-     * @param player
-     * @param config
-     * @returns {BasePlugin}
-     */
-
-    /**
-     * The event manager of the plugin.
-     */
-
-    /**
-     * The logger of the plugin.
-     */
-
-    /**
-     * The runtime configuration of the plugin.
-     */
-    value: function createPlugin(name, player) {
-      var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-      return new this(name, player, config);
-    }
-
-    /**
-     * Returns under what conditions the plugin is valid.
-     * Plugin must implement this method.
-     * @returns {boolean}
-     */
-
-    /**
-     * The default configuration of the plugin.
-     * Inherited plugins should override this property.
-     * @type {{}}
-     */
-
-    /**
-     * Reference to the actual player.
-     */
-
-    /**
-     * The name of the plugin.
-     */
-
-  }, {
-    key: "isValid",
-    value: function isValid() {
-      throw new _PluginError2.default(_PluginError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'isValid()').getError();
-    }
-
-    /**
-     * constructor
-     * @param name
-     * @param player
-     * @param config
-     */
-
-  }]);
-
-  function BasePlugin(name, player, config) {
-    _classCallCheck(this, BasePlugin);
-
-    this.name = name;
-    this.player = player;
-    this.eventManager = new _eventManager2.default();
-    this.logger = _loggerFactory2.default.getLogger(this.name);
-    this.config = (0, _util.merge)(this.constructor.defaultConfig, config);
-  }
-
-  /**
-   * Returns the config of the plugin.
-   * If attribute is provided, returns its value.
-   * @param attr
-   * @returns {*}
-   */
-
-
-  _createClass(BasePlugin, [{
-    key: "getConfig",
-    value: function getConfig(attr) {
-      if (attr) {
-        return this.config[attr];
-      }
-      return this.config;
-    }
-
-    /**
-     * Updates the config of the plugin.
-     * @param update
-     */
-
-  }, {
-    key: "updateConfig",
-    value: function updateConfig(update) {
-      this.config = (0, _util.merge)(this.config, update);
-    }
-
-    /**
-     * Runs the destroy logic of the plugin.
-     * plugin must implement this method.
-     */
-
-  }, {
-    key: "destroy",
-    value: function destroy() {
-      throw new _PluginError2.default(_PluginError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'destroy()').getError();
-    }
-
-    /**
-     * Getter for the plugin's name.
-     * @returns {string}
-     */
-
-  }, {
-    key: "getName",
-    value: function getName() {
-      return this.name;
-    }
-  }]);
-
-  return BasePlugin;
-}();
-
-BasePlugin.defaultConfig = {};
-exports.default = BasePlugin;
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var PlayerError = function () {
-  function PlayerError(name, message) {
-    _classCallCheck(this, PlayerError);
-
-    this.name = name;
-    this.message = message;
-  }
-
-  _createClass(PlayerError, [{
-    key: "getError",
-    value: function getError() {
-      return {
-        name: this.name,
-        message: this.message
-      };
-    }
-  }]);
-
-  return PlayerError;
-}();
-
-exports.default = PlayerError;
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
 
 /**
  * @file to-title-case.js
@@ -2048,10 +2511,19 @@ function capitlize(string) {
   }
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+function endsWith(string, searchString) {
+  if (typeof string !== 'string' || typeof searchString !== 'string') {
+    return false;
+  }
+  return string.indexOf(searchString, string.length - searchString.length) != -1;
+}
+
 exports.capitlize = capitlize;
+exports.endsWith = endsWith;
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -2318,7 +2790,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2327,34 +2799,43 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.VERSION = undefined;
+exports.VERSION = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerAdapter = undefined;
 exports.playkit = playkit;
-exports.registerPlugin = registerPlugin;
 
-var _player = __webpack_require__(2);
+var _player = __webpack_require__(3);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _loggerFactory = __webpack_require__(0);
+var _logger = __webpack_require__(0);
 
-var _loggerFactory2 = _interopRequireDefault(_loggerFactory);
+var _logger2 = _interopRequireDefault(_logger);
 
-var _PluginManager = __webpack_require__(4);
-
-var _PluginManager2 = _interopRequireDefault(_PluginManager);
-
-var _package = __webpack_require__(10);
+var _package = __webpack_require__(13);
 
 var packageData = _interopRequireWildcard(_package);
+
+var _adapterManager = __webpack_require__(6);
+
+var _baseAdapter = __webpack_require__(1);
+
+var _baseAdapter2 = _interopRequireDefault(_baseAdapter);
+
+var _pluginManager = __webpack_require__(8);
+
+var _basePlugin = __webpack_require__(7);
+
+var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var logger = _loggerFactory2.default.getLogger();
+// Playkit version
+var VERSION = packageData.version;
 
-logger.log("%c Playkit " + packageData.version, "color: yellow; font-size: large");
-logger.log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
+
+_logger2.default.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
+_logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
 
 function playkit() {
   var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -2362,17 +2843,19 @@ function playkit() {
   return new _player2.default(config);
 }
 
-exports.default = playkit;
+// Registration for media source adapter
+exports.registerAdapter = _adapterManager.registerAdapter;
+exports.BaseMediaSourceAdapter = _baseAdapter2.default;
 
-// Export registration for plugins
+// Export the plugin framework
 
-function registerPlugin(name, handler) {
-  _PluginManager2.default.register(name, handler);
-}
+exports.registerPlugin = _pluginManager.registerPlugin;
+exports.BasePlugin = _basePlugin2.default;
 
-// Export the version
-var VERSION = packageData.version;
+//export version
+
 exports.VERSION = VERSION;
+exports.default = playkit;
 
 /***/ })
 /******/ ]);
