@@ -15,19 +15,19 @@ export default class BaseMediaSourceAdapter {
    */
   static _mimeTypes: Array<string>;
   /**
-   * The logger of the media source adapter
-   * @member {ILogger} _logger
-   * @static
-   * @private
-   */
-  static _logger: ILogger;
-  /**
    * The name of the media source adapter
    * @member {string} _name
    * @static
    * @private
    */
   static _name: string;
+  /**
+   * The logger of the media source adapter
+   * @member {ILogger} _logger
+   * @static
+   * @private
+   */
+  static _logger: any;
   /**
    * The player wrapper of the media source adapter
    * @member {any} _msPlayer
@@ -86,14 +86,6 @@ export default class BaseMediaSourceAdapter {
   }
 
   /**
-   * @constructor
-   * @param {string} name - The name of the media source adapter
-   */
-  constructor(name: string) {
-    this._logger = LoggerFactory.getLogger(name);
-  }
-
-  /**
    * Load the video source
    * @function load
    * @abstract
@@ -106,7 +98,20 @@ export default class BaseMediaSourceAdapter {
    * Destroying the _msPlayer
    * @function destroy
    */
-  destroy() {
+  destroy(): void {
     // should do nothing. implemented by the inheritor if necessary.
+  }
+
+  /**
+   * Returns the static logger for the current adapter
+   * @returns {any}
+   * @static
+   * @getter
+   */
+  static get logger(): any {
+    if (!this._logger) {
+      this._logger = LoggerFactory.getLogger(this._name);
+    }
+    return this._logger;
   }
 }

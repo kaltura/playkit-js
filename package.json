@@ -12,6 +12,7 @@
     "start": "webpack-dev-server",
     "release": "npm run build && standard-version",
     "eslint": "eslint . --color",
+    "flow": "flow check",
     "prepush": "npm run eslint & npm run test"
   },
   "devDependencies": {

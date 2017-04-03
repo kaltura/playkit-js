@@ -13,7 +13,7 @@ export default class MediaSourceAdapterManager {
    * @static
    * @private
    */
-  static _mediaSourceAdapters: Array<BaseMediaSourceAdapter> = [nativeAdapter];
+  static _mediaSourceAdapters: Array<any> = [nativeAdapter];
 
   /**
    * Add a media source adapter to the registry
@@ -50,7 +50,7 @@ export default class MediaSourceAdapterManager {
   static canPlayType(mimeType: string): boolean {
     let adapters = MediaSourceAdapterManager._mediaSourceAdapters;
     for (let i = 0; i < adapters.length; i++) {
-      if (adapters[i].canPlayType(mimeType)) {
+      if (typeof adapters[i].canPlayType === 'function' && adapters[i].canPlayType(mimeType)) {
         return true;
       }
     }
@@ -66,12 +66,15 @@ export default class MediaSourceAdapterManager {
    * @returns {BaseMediaSourceAdapter|null}
    * @static
    */
-  static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: Object, config: Object): BaseMediaSourceAdapter | null {
+  static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: Object, config: Object): BaseMediaSourceAdapter
+    | null {
     if (videoElement && source && config) {
       let adapters = MediaSourceAdapterManager._mediaSourceAdapters;
       for (let i = 0; i < adapters.length; i++) {
-        if (adapters[i].canPlayType(source.mimetype))
-          return adapters[i].createAdapter(videoElement, source.src, config.engines);
+        if (typeof adapters[i].canPlayType === 'function' && adapters[i].canPlayType(source.mimetype))
+          if (typeof adapters[i].createAdapter === 'function') {
+            return adapters[i].createAdapter(videoElement, source.src, config.engines);
+          }
       }
     }
     return null;

@@ -33,7 +33,7 @@ export default class nativeAdapter extends BaseMediaSourceAdapter {
    * @param {string} source - The source URL
    */
   constructor(videoElement: HTMLVideoElement, source: string) {
-    super(nativeAdapter._name);
+    super();
     this._msPlayer = videoElement;
     this._source = source;
     if (source) {
@@ -48,5 +48,13 @@ export default class nativeAdapter extends BaseMediaSourceAdapter {
    */
   load(): void {
     this._msPlayer.load();
+  }
+
+  /**
+   * Destroys the video source
+   * @function destroy
+   * @override
+   */
+  destroy(): void {
   }
 }

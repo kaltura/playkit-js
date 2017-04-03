@@ -10,7 +10,7 @@ import BaseMediaSourceAdapter from './mediaSourceAdapters/BaseMediaSourceAdapter
 export default class Html5 extends FakeEventTarget implements IEngine {
   el_: HTMLVideoElement;
   eventManager_: EventManager;
-  mediaSourceAdapter_: BaseMediaSourceAdapter;
+  mediaSourceAdapter_: BaseMediaSourceAdapter | null;
 
   static EngineName: string = "html5";
 
@@ -66,11 +66,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
   }
 
-  setSource(source, config) {
+  setSource(source: Object, config: Object) {
     this.loadMediaSourceAdapter(source, config);
   }
 
-  loadMediaSourceAdapter(source, config) {
+  loadMediaSourceAdapter(source: Object, config: Object) {
     this.mediaSourceAdapter_ = MSAManager.getMediaSourceAdapter(this.el_, source, config);
   }
 

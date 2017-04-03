@@ -2,5 +2,6 @@
 [include]
 [libs]
 src/declarations/
+src/declarations/interfaces
 [options]
 unsafe.enable_getters_and_setters=true
