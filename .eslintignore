@@ -1,2 +1,6 @@
 /src/declarations/*.js
 /src/declarations/**/*.js
+/coverage
+/dist
+karma.conf.js
+webpack.config.js

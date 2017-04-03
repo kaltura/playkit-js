@@ -6,10 +6,22 @@
   ],
   "plugins": [
     "import",
-    "flowtype"
+    "flowtype",
+    "mocha-no-only"
+
   ],
   "env": {
     "browser": true,
-    "es6": true
+    "es6": true,
+    "mocha": true,
+    "amd": true,
+    "commonjs": true
+  },
+  "globals": {
+    "should": true,
+    "sinon": true
+  },
+  "rules": {
+    "mocha-no-only/mocha-no-only": ["error"]
   }
 }

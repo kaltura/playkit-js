@@ -67,19 +67,24 @@ class Player extends FakeEventTarget implements IPlayer {
     }
   }
 
-  getVideoElement(): any{
-    if (this.engine_){
-      return this.engine_.videoElement;
+
+  selectEngine(config: Object) {
+    if (config && config.sources) {
+      let sources = config.sources;
+      for (let i = 0; i < sources.length; i++) {
+        if (Html5.canPlayType(sources[i].mimetype)) {
+          this.loadEngine(sources[i], config);
+          break;
+        }
+      }
     }
   }
 
-  selectEngine() {
-    this.loadEngine();
-  }
-
-  loadEngine() {
-    this.engine_ = new Html5();
-    this.dispatchEvent(new FakeEvent("EngineAdded"));
+  loadEngine(source: Object, config: Object) {
+    this.engine_ = new Html5(source, config);
+    if (config.preload === "auto") {
+      this.load();
+    }
   }
 
   attachMedia() {
@@ -115,6 +120,13 @@ class Player extends FakeEventTarget implements IPlayer {
    */
   pause() {
     return this.engine_.pause();
+  }
+
+  /**
+   * Load media
+   */
+  load(): void {
+    this.engine_.load();
   }
 
   /**

@@ -1,6 +1,6 @@
 //@flow
 import BasePlugin from "./BasePlugin";
-import PluginError from "./PluginError";
+import PlayerError from "../util/PlayerError";
 import Player from "../player";
 import loggerFactory from "../util/loggerFactory";
 
@@ -42,7 +42,7 @@ export default class PluginManager {
    */
   static register(name: string, handler: Function): boolean {
     if (typeof handler !== 'function' || handler.prototype instanceof BasePlugin === false) {
-      throw new PluginError(PluginError.TYPE.NOT_VALID_HANDLER).getError();
+      throw new PlayerError(PlayerError.TYPE.NOT_VALID_HANDLER).getError();
     }
     if (!PluginManager._registry.has(name)) {
       PluginManager._registry.set(name, handler);
@@ -76,7 +76,7 @@ export default class PluginManager {
    */
   load(name: string, player: Player, config: Object = {}): boolean {
     if (!PluginManager._registry.has(name)) {
-      throw new PluginError(PluginError.TYPE.NOT_REGISTERED_PLUGIN, name).getError();
+      throw new PlayerError(PlayerError.TYPE.NOT_REGISTERED_PLUGIN, name).getError();
     }
     let pluginClass = PluginManager._registry.get(name);
     if (pluginClass != null && pluginClass.isValid()) {

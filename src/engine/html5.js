@@ -3,23 +3,33 @@ import FakeEventTarget from '../events/fakeEventTarget';
 import FakeEvent from '../events/fakeEvent';
 import EventManager from '../events/eventManager';
 import PlayerEvents from '../events/events';
+import MSAManager from './mediaSourceAdapters/mediaSourceAdapterManager';
+import BaseMediaSourceAdapter from './mediaSourceAdapters/BaseMediaSourceAdapter';
 
 export default class Html5 extends FakeEventTarget implements IEngine {
   el_: HTMLVideoElement;
   eventManager_: EventManager;
+  mediaSourceAdapter_: BaseMediaSourceAdapter;
 
   static EngineName: string = "html5";
 
-  constructor() {
+  static canPlayType(mimeType) {
+    return MSAManager.canPlayType(mimeType);
+  }
+
+  constructor(source: Object, config: Object) {
     super();
     this.createVideoElement();
     this.eventManager_ = new EventManager();
+    this.setSource(source, config);
     this.attach();
-    this.src = "/assets/mov_bbb.mp4";
   }
 
   destroy() {
     this.deattach();
+    if (this.mediaSourceAdapter_) {
+      this.mediaSourceAdapter_.destroy();
+    }
     if (this.el_) {
       this.pause();
       this.el_.removeAttribute('src');
@@ -55,6 +65,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
   }
 
+  setSource(source, config) {
+    this.loadMediaSourceAdapter(source, config);
+  }
+
+  loadMediaSourceAdapter(source, config) {
+    this.mediaSourceAdapter_ = MSAManager.getMediaSourceAdapter(this.el_, source, config);
+  }
+
   set src(source: string): void {
     //Set source
     this.el_.src = source;
@@ -79,8 +97,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return this.el_.pause();
   }
 
+  /**
+   * Load media
+   */
   load(): void {
-    this.el_.load();
+    if (this.mediaSourceAdapter_) {
+      this.mediaSourceAdapter_.load();
+    }
   }
 
   /**
