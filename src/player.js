@@ -1,13 +1,13 @@
-// @flow
-import EventManager from './events/eventManager';
-import FakeEventTarget from './events/fakeEventTarget';
-import FakeEvent from './events/fakeEvent';
-import PlayerEvents from './events/events';
-import {isNumber, isFloat} from './util/util';
-import {capitlize} from './util/stringUtils';
-import LoggerFactory from './util/loggerFactory';
-import Html5 from './engine/html5';
-import PluginManager from './plugin/PluginManager';
+//@flow
+import EventManager from './event/event-manager'
+import FakeEventTarget from './event/fake-event-target'
+import FakeEvent from './event/fake-event'
+import PlayerEvents from './event/events'
+import {isNumber, isFloat} from './utils/util'
+import {capitlize} from './utils/string-util'
+import LoggerFactory from './utils/logger'
+import Html5 from './engines/html5'
+import PluginManager from './plugin/plugin-manager'
 
 let logger = LoggerFactory.getLogger('Player');
 type ListenerType = (event: FakeEvent) => any;
@@ -87,7 +87,7 @@ class Player extends FakeEventTarget {
     });
   }
 
-  //  <editor-fold desc="playback interface">
+  //  <editor-fold desc="Playback Interface">
   /**
    * Start/resume playback
    * @returns {Player}
