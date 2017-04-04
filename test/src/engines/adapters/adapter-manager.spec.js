@@ -97,7 +97,7 @@ describe('mediaSourceAdapterManager:unregister', () => {
 
   it('should do nothing for null', () => {
     MSAManager._mediaSourceAdapters.length.should.equal(2);
-    MSAManager.unregister(null);
+    MSAManager.unRegister(null);
     MSAManager._mediaSourceAdapters.length.should.equal(2);
   });
 
