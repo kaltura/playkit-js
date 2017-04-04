@@ -1,6 +1,6 @@
 import BasePlugin from '../../../../src/plugin/base-plugin'
+import {registerPlugin} from '../../../../src/plugin/plugin-manager'
 import Player from '../../../../src/player'
-import * as Playkit from '../../../../src/playkit'
 
 const pluginName = "numbers";
 
@@ -51,4 +51,4 @@ export default class NumbersPlugin extends BasePlugin {
   }
 }
 
-Playkit.registerPlugin(pluginName, NumbersPlugin);
+registerPlugin(pluginName, NumbersPlugin);

@@ -28,7 +28,7 @@ export default class StateManager {
   }
 
   _attachListeners(): void {
-    //TODO: load(), stop(), seek()
+    //TODO: load(), seek()
 
     // Transition: {playing/loading} --> {idle}
     this._eventManager.listen(this._player, PlayerEvents.ERROR, () => {
@@ -39,7 +39,7 @@ export default class StateManager {
 
     // Transition: {playing} --> {idle}
     this._eventManager.listen(this._player, PlayerEvents.ENDED, () => {
-      if (this._curState.type === PlayerStates.PLAYING) {
+      if (this._curState.type === PlayerStates.PLAYING || this._curState.type === PlayerStates.PAUSED) {
         this._updateState(PlayerStates.IDLE);
       }
     });
@@ -51,11 +51,6 @@ export default class StateManager {
 
     // Transition: {any} --> {playing}
     this._eventManager.listen(this._player, PlayerEvents.PLAYING, () => {
-      this._updateState(PlayerStates.PLAYING);
-    });
-
-    // Transition: {any} --> {playing}
-    this._eventManager.listen(this._player, PlayerEvents.PLAY, () => {
       this._updateState(PlayerStates.PLAYING);
     });
 
