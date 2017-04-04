@@ -38,6 +38,7 @@ class Player extends FakeEventTarget {
     this.loadPlugins(this._config);
     this.selectEngine(this._config);
     this.attachMedia();
+    logger.info('player is ready!');
   }
 
   destroy() {

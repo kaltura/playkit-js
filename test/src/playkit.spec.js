@@ -1,7 +1,7 @@
 import {playkit} from '../../src/playkit'
 import PlayerStates from '../../src/state/states'
 import sourcesConfig from './configs/sources.json'
-import pluginsConfig from './configs/plugins.json'
+//import pluginsConfig from './configs/plugins.json'
 
 describe('playkit:playkit', function () {
   this.timeout(10000);
@@ -14,8 +14,7 @@ describe('playkit:playkit', function () {
       player.destroy();
       done();
     };
-    // eslint-disable-next-line no-unused-vars
-    video.addEventListener('error', function (err) {
+    video.addEventListener('error', function () {
       player.destroy();
       should.fail();
     });

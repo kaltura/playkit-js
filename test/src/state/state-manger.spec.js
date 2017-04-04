@@ -7,8 +7,7 @@ describe("StateManager", () => {
   let sandbox;
   let stateManager;
   let fakePlayer = {
-    dispatchEvent: function (event) {
-    }
+    dispatchEvent: function () {}
   };
 
   beforeEach(() => {
@@ -61,7 +60,7 @@ describe("StateManager", () => {
       event.type.should.equal(StateManager.EventName);
       (event.payload.oldState === null).should.be.true;
       event.payload.newState.should.be.an.instanceof(State);
-      event.payload.newState.type.should.equal(PlayerStates.IDLE);
+      event.payload.newState.type.should.equal(PlayerStates.IDLE);git
       done();
     });
     stateManager._dispatchEvent();
