@@ -18,7 +18,6 @@ class Player extends FakeEventTarget {
   _config: any;
   _engine: IEngine;
   _engineEventHandlers: Map<string, ListenerType>;
-  _controller: Player = this;
 
   constructor(config: Object) {
     super();
@@ -54,7 +53,8 @@ class Player extends FakeEventTarget {
     let plugins = config.plugins;
     for (let name in plugins) {
       if (plugins.hasOwnProperty(name)) {
-        this._pluginManager.load(name, this._controller, plugins[name]);
+        // eslint-disable-next-line flowtype-errors/show-errors
+        this._pluginManager.load(name, this, plugins[name]);
       }
     }
   }
