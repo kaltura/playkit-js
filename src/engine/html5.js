@@ -66,11 +66,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
   }
 
-  setSource(source: Object, config: Object) {
+  setSource(source: Object, config: Object): void {
     this.loadMediaSourceAdapter(source, config);
   }
 
-  loadMediaSourceAdapter(source: Object, config: Object) {
+  loadMediaSourceAdapter(source: Object, config: Object): void {
     this.mediaSourceAdapter_ = MSAManager.getMediaSourceAdapter(this.el_, source, config);
   }
 
