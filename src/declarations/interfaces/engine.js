@@ -2,7 +2,7 @@
 declare interface IEngine {
   destroy(): void;
   attach(): void;
-  deattach(): void;
+  detach(): void;
   play(): void;
   pause(): void;
   load(): void;
