@@ -1,13 +1,13 @@
-// @flow
-import Player from "./player";
-import LoggerFactory from "./util/loggerFactory";
-import * as packageData from "../package.json";
-import {registerAdapter} from './engine/mediaSourceAdapters/mediaSourceAdapterManager';
-import BaseMediaSourceAdapter from './engine/mediaSourceAdapters/BaseMediaSourceAdapter';
-import {registerPlugin} from './plugin/PluginManager';
-import BasePlugin from './plugin/BasePlugin';
+//@flow
+import Player from './player'
+import LoggerFactory from './utils/logger'
+import * as packageData from '../package.json'
+import {registerAdapter} from './engines/adapters/adapter-manager'
+import BaseMediaSourceAdapter from './engines/adapters/base-adapter'
+import {registerPlugin} from './plugin/plugin-manager'
+import BasePlugin from './plugin/base-plugin'
 
-// playkit version
+// Playkit version
 let VERSION = packageData.version;
 
 LoggerFactory.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
