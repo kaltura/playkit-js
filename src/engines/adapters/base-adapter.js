@@ -15,19 +15,19 @@ export default class BaseMediaSourceAdapter {
    */
   static _mimeTypes: Array<string>;
   /**
-   * The name of the media source adapter
-   * @member {string} _name
-   * @static
-   * @private
-   */
-  static _name: string;
-  /**
    * The logger of the media source adapter
    * @member {ILogger} _logger
    * @static
    * @private
    */
   static _logger: any;
+  /**
+   * The name of the media source adapter
+   * @member {string} _name
+   * @static
+   * @private
+   */
+  static _name: string;
   /**
    * The player wrapper of the media source adapter
    * @member {any} _msPlayer
@@ -65,14 +65,15 @@ export default class BaseMediaSourceAdapter {
   /**
    * Factory method to create media source adapter
    * @function createAdapter
+   * @param {Function} handler - The adapter class to create an instance
    * @param {HTMLVideoElement} videoElement - The video element which bind to the media source adapter
    * @param {string} source - The source URL
    * @param {Object} config - The media source adapter configuration
    * @returns {BaseMediaSourceAdapter}
    * @static
    */
-  static createAdapter(videoElement: HTMLVideoElement, source: string, config: Object): BaseMediaSourceAdapter {
-    return new this(videoElement, source, config);
+  static createAdapter(handler: Function, videoElement: HTMLVideoElement, source: string, config: Object): BaseMediaSourceAdapter {
+    return new handler(videoElement, source, config);
   }
 
   /**
@@ -81,8 +82,16 @@ export default class BaseMediaSourceAdapter {
    * @param {Object} error
    * @static
    */
-  static onError(error: Object) {
+  static onError(error: Object): void {
     this._logger.error(error);
+  }
+
+  /**
+   * @constructor
+   * @param {string} name - The name of the media source adapter
+   */
+  constructor(name: string) {
+    BaseMediaSourceAdapter._logger = LoggerFactory.getLogger(name);
   }
 
   /**
@@ -100,18 +109,5 @@ export default class BaseMediaSourceAdapter {
    */
   destroy(): void {
     // should do nothing. implemented by the inheritor if necessary.
-  }
-
-  /**
-   * Returns the static logger for the current adapter
-   * @returns {any}
-   * @static
-   * @getter
-   */
-  static get logger(): any {
-    if (!this._logger) {
-      this._logger = LoggerFactory.getLogger(this._name);
-    }
-    return this._logger;
   }
 }

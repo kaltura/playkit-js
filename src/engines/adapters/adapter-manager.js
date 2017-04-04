@@ -13,28 +13,28 @@ export default class MediaSourceAdapterManager {
    * @static
    * @private
    */
-  static _mediaSourceAdapters: Array<any> = [NativeAdapter];
+  static _mediaSourceAdapters: Array<Function> = [NativeAdapter];
 
   /**
    * Add a media source adapter to the registry
    * @function register
-   * @param {BaseMediaSourceAdapter} adapter
+   * @param {BaseMediaSourceAdapter} adapterHandler
    * @static
    */
-  static register(adapter: BaseMediaSourceAdapter): void {
-    if (adapter && !MediaSourceAdapterManager._mediaSourceAdapters.includes(adapter)) {
-      MediaSourceAdapterManager._mediaSourceAdapters.push(adapter);
+  static register(adapterHandler: Function): void {
+    if (adapterHandler && !MediaSourceAdapterManager._mediaSourceAdapters.includes(adapterHandler)) {
+      MediaSourceAdapterManager._mediaSourceAdapters.push(adapterHandler);
     }
   }
 
   /**
    * Remove a media source adapter from the registry
-   * @function unregister
-   * @param {BaseMediaSourceAdapter} adapter
+   * @function unRegister
+   * @param {BaseMediaSourceAdapter} adapterHandler
    * @static
    */
-  static unregister(adapter: BaseMediaSourceAdapter): void {
-    let index = MediaSourceAdapterManager._mediaSourceAdapters.indexOf(adapter);
+  static unRegister(adapterHandler: Function): void {
+    let index = MediaSourceAdapterManager._mediaSourceAdapters.indexOf(adapterHandler);
     if (index > -1) {
       MediaSourceAdapterManager._mediaSourceAdapters.splice(index, 1);
     }
@@ -50,7 +50,7 @@ export default class MediaSourceAdapterManager {
   static canPlayType(mimeType: string): boolean {
     let adapters = MediaSourceAdapterManager._mediaSourceAdapters;
     for (let i = 0; i < adapters.length; i++) {
-      if (typeof adapters[i].canPlayType === 'function' && adapters[i].canPlayType(mimeType)) {
+      if (adapters[i].canPlayType(mimeType)) {
         return true;
       }
     }
@@ -71,10 +71,8 @@ export default class MediaSourceAdapterManager {
     if (videoElement && source && config) {
       let adapters = MediaSourceAdapterManager._mediaSourceAdapters;
       for (let i = 0; i < adapters.length; i++) {
-        if (typeof adapters[i].canPlayType === 'function' && adapters[i].canPlayType(source.mimetype))
-          if (typeof adapters[i].createAdapter === 'function') {
-            return adapters[i].createAdapter(videoElement, source.src, config.engines);
-          }
+        if (adapters[i].canPlayType(source.mimetype))
+          return adapters[i].createAdapter(adapters[i], videoElement, source.src, config.engines);
       }
     }
     return null;

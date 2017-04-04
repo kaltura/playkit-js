@@ -13,6 +13,7 @@ class adapter3 extends BaseMediaSourceAdapter {
   static canPlayType(mimeType: string): boolean {
     return !!(document.createElement("video").canPlayType(mimeType));
   }
+
   static _name = 'adapter3';
 }
 
@@ -76,21 +77,21 @@ describe('mediaSourceAdapterManager:unregister', () => {
 
   it('should unregister adapter1', () => {
     MSAManager._mediaSourceAdapters.length.should.equal(2);
-    MSAManager.unregister(adapter1);
+    MSAManager.unRegister(adapter1);
     MSAManager._mediaSourceAdapters.length.should.equal(1);
     MSAManager._mediaSourceAdapters[0].name.should.equal("adapter2");
   });
 
   it('should unregister adapter1 and adapter2', () => {
     MSAManager._mediaSourceAdapters.length.should.equal(2);
-    MSAManager.unregister(adapter1);
-    MSAManager.unregister(adapter2);
+    MSAManager.unRegister(adapter1);
+    MSAManager.unRegister(adapter2);
     MSAManager._mediaSourceAdapters.length.should.equal(0);
   });
 
   it('should do nothing for adapter 3', () => {
     MSAManager._mediaSourceAdapters.length.should.equal(2);
-    MSAManager.unregister(adapter3);
+    MSAManager.unRegister(adapter3);
     MSAManager._mediaSourceAdapters.length.should.equal(2);
   });
 
@@ -102,7 +103,7 @@ describe('mediaSourceAdapterManager:unregister', () => {
 
   it('should do nothing for undefined', () => {
     MSAManager._mediaSourceAdapters.length.should.equal(2);
-    MSAManager.unregister();
+    MSAManager.unRegister();
     MSAManager._mediaSourceAdapters.length.should.equal(2);
   });
 });
