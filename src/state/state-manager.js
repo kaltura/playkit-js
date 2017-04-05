@@ -7,16 +7,65 @@ import PlayerEvents from '../event/events'
 import FakeEvent from '../event/fake-event'
 import LoggerFactory from '../utils/logger'
 
+/**
+ * This class responsible to manage all the state machine of the player.
+ * @classdesc
+ */
 export default class StateManager {
+  /**
+   * The logger of the class.
+   * @member
+   * @type {Logger}
+   * @private
+   */
   _logger: any;
+  /**
+   * Reference to the actual player.
+   * @member
+   * @type {Player}
+   * @private
+   */
   _player: Player;
+  /**
+   * The event manager of the class.
+   * @member
+   * @type {EventManager}
+   * @private
+   */
   _eventManager: EventManager;
+  /**
+   * Holds the current state of the player.
+   * @member
+   * @type {State}
+   * @private
+   */
   _curState: State;
+  /**
+   * Holds the previous state of the player.
+   * @member
+   * @type {State | null}
+   * @private
+   */
   _prevState: State | null;
+  /**
+   * Holds the state history of the player.
+   * @member
+   * @type {Array<State>}
+   * @private
+   */
   _history: Array<State>;
-
+  /**
+   * The event name which the player dispatch from this class.
+   * @static
+   * @public
+   * @type {string}
+   */
   static EventName: string = "playerStateChanged";
 
+  /**
+   * @constructor
+   * @param player - Reference to the player.
+   */
   constructor(player: Player) {
     this._player = player;
     this._logger = LoggerFactory.getLogger("StateManager");
@@ -27,9 +76,11 @@ export default class StateManager {
     this._attachListeners();
   }
 
+  /**
+   * Register to all necessary events which impacts on the player state.
+   * @private
+   */
   _attachListeners(): void {
-    //TODO: load(), seek()
-
     // Transition: {playing/loading} --> {idle}
     this._eventManager.listen(this._player, PlayerEvents.ERROR, () => {
       if (this._curState.type === PlayerStates.PLAYING || this._curState.type === PlayerStates.LOADING) {
@@ -76,6 +127,11 @@ export default class StateManager {
     });
   }
 
+  /**
+   * Updates the player state.
+   * @param type - The type of the new state.
+   * @private
+   */
   _updateState(type: string): void {
     if (this._curState.type !== type) {
       this._curState.duration = Date.now() / 1000;
@@ -86,22 +142,38 @@ export default class StateManager {
     }
   }
 
+  /**
+   * Fires the playerStateChanged event after state has been changed.
+   * @private
+   */
   _dispatchEvent(): void {
-    let event = new FakeEvent(StateManager.EventName, {
-      'oldState': this._prevState,
-      'newState': this._curState
-    });
+    let event = new FakeEvent(StateManager.EventName, {'oldState': this._prevState, 'newState': this._curState});
     this._player.dispatchEvent(event);
   }
 
+  /**
+   * Getter to the current state of the player.
+   * @public
+   * @returns {State}
+   */
   get currentState(): State {
     return this._curState;
   }
 
+  /**
+   * Getter to the previous state of the player.
+   * @public
+   * @returns {State|null}
+   */
   get previousState(): State | null {
     return this._prevState;
   }
 
+  /**
+   * Getter to the state history of the player.
+   * @public
+   * @returns {Array.<State>}
+   */
   get history(): Array<State> {
     return this._history;
   }
