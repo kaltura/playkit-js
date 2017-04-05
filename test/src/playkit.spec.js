@@ -1,7 +1,6 @@
-import {playkit} from '../../src/playkit';
+import {playkit} from '../../src/playkit'
 
 describe('playkit:playkit', function () {
-
   this.timeout(10000);
   let config;
 
@@ -31,6 +30,7 @@ describe('playkit:playkit', function () {
       };
     }
   );
+  
   it('should play mp4 stream', (done) => {
     let player = playkit(config);
     let video = document.getElementsByTagName("video")[0];
