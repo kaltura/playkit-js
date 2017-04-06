@@ -2,10 +2,23 @@
 import Player from '../player'
 import EventManager from '../event/event-manager'
 import State from './state'
-import PlayerStates from './states'
+import PlayerStates from './state-types'
 import PlayerEvents from '../event/events'
 import FakeEvent from '../event/fake-event'
 import LoggerFactory from '../utils/logger'
+
+/**
+ * Define a transition object.
+ */
+type Transition = {
+  type: string,
+  events: {
+    [event: string]: {
+      types: Array<string>,
+      action: Function
+    }
+  }
+};
 
 /**
  * This class responsible to manage all the state machine of the player.
@@ -15,7 +28,7 @@ export default class StateManager {
   /**
    * The logger of the class.
    * @member
-   * @type {Logger}
+   * @type {any}
    * @private
    */
   _logger: any;
@@ -55,12 +68,115 @@ export default class StateManager {
    */
   _history: Array<State>;
   /**
-   * The event name which the player dispatch from this class.
-   * @static
-   * @public
-   * @type {string}
+   * The possible transitions from one state to another.
+   * @type {Array<Transition>}
+   * @private
    */
-  static EventName: string = "playerStateChanged";
+  _transitions: Array<Transition> = [{
+    type: PlayerStates.IDLE,
+    events: {
+      'loadstart': {
+        types: [PlayerStates.LOADING],
+        action: (types: Array<string>) => {
+          this._updateState(types[0]);
+          this._logger.debug(`Player state changed: from ${this._prevState.type} to ${this._curState.type}`);
+          this._dispatchEvent();
+        }
+      }
+    }
+  }, {
+    type: PlayerStates.LOADING,
+    events: {
+      'loadedmetadata': {
+        types: [PlayerStates.PAUSED, PlayerStates.PLAYING],
+        action: (types: Array<string>) => {
+          if (this._player.config.autoPlay) {
+            this._updateState(types[1]);
+          } else {
+            this._updateState(types[0]);
+          }
+          this._logger.debug(`Player state changed: from ${this._prevState.type} to ${this._curState.type}`);
+          this._dispatchEvent();
+        }
+      },
+      'error': {
+        types: [PlayerStates.IDLE],
+        action: (types: Array<string>) => {
+          this._updateState(types[0]);
+          this._logger.debug(`Player state changed: from ${this._prevState.type} to ${this._curState.type}`);
+          this._dispatchEvent();
+        }
+      }
+    }
+  }, {
+    type: PlayerStates.PAUSED,
+    events: {
+      'play': {
+        types: [PlayerStates.PLAYING],
+        action: (types: Array<string>) => {
+          this._updateState(types[0]);
+          this._logger.debug(`Player state changed: from ${this._prevState.type} to ${this._curState.type}`);
+          this._dispatchEvent();
+        },
+      },
+      'ended': {
+        types: [PlayerStates.IDLE],
+        action: (types: Array<string>) => {
+          this._updateState(types[0]);
+          this._logger.debug(`Player state changed: from ${this._prevState.type} to ${this._curState.type}`);
+          this._dispatchEvent();
+        }
+      }
+    }
+  }, {
+    type: PlayerStates.PLAYING,
+    events: {
+      'pause': {
+        types: [PlayerStates.PAUSED],
+        action: (types: Array<string>) => {
+          this._updateState(types[0]);
+          this._logger.debug(`Player state changed: from ${this._prevState.type} to ${this._curState.type}`);
+          this._dispatchEvent();
+        }
+      },
+      'waiting': {
+        types: [PlayerStates.BUFFERING],
+        action: (types: Array<string>) => {
+          this._updateState(types[0]);
+          this._logger.debug(`Player state changed: from ${this._prevState.type} to ${this._curState.type}`);
+          this._dispatchEvent();
+        }
+      },
+      'ended': {
+        types: [PlayerStates.IDLE],
+        action: (types: Array<string>) => {
+          this._updateState(types[0]);
+          this._logger.debug(`Player state changed: from ${this._prevState.type} to ${this._curState.type}`);
+          this._dispatchEvent();
+        }
+      },
+      'error': {
+        types: [PlayerStates.IDLE],
+        action: (types: Array<string>) => {
+          this._updateState(types[0]);
+          this._logger.debug(`Player state changed: from ${this._prevState.type} to ${this._curState.type}`);
+          this._dispatchEvent();
+        }
+      }
+    }
+  }, {
+    type: PlayerStates.BUFFERING,
+    events: {
+      'playing': {
+        types: [PlayerStates.PLAYING],
+        action: (types: Array<string>) => {
+          this._updateState(types[0]);
+          this._logger.debug(`Player state changed: from ${this._prevState.type} to ${this._curState.type}`);
+          this._dispatchEvent();
+        }
+      }
+    }
+  }];
 
   /**
    * @constructor
@@ -81,48 +197,25 @@ export default class StateManager {
    * @private
    */
   _attachListeners(): void {
-    // Transition: {playing/loading} --> {idle}
-    this._eventManager.listen(this._player, PlayerEvents.ERROR, () => {
-      if (this._curState.type === PlayerStates.PLAYING || this._curState.type === PlayerStates.LOADING) {
-        this._updateState(PlayerStates.IDLE);
-      }
-    });
+    this._eventManager.listen(this._player, PlayerEvents.ERROR, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, PlayerEvents.ENDED, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, PlayerEvents.PLAY, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, PlayerEvents.LOAD_START, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, PlayerEvents.PLAYING, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, PlayerEvents.LOADED_METADATA, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, PlayerEvents.PAUSE, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, PlayerEvents.WAITING, this._doTransition.bind(this));
+  }
 
-    // Transition: {playing} --> {idle}
-    this._eventManager.listen(this._player, PlayerEvents.ENDED, () => {
-      if (this._curState.type === PlayerStates.PLAYING || this._curState.type === PlayerStates.PAUSED) {
-        this._updateState(PlayerStates.IDLE);
-      }
-    });
-
-    // Transition: {idle} --> {loading}
-    this._eventManager.listen(this._player, PlayerEvents.LOAD_START, () => {
-      this._updateState(PlayerStates.LOADING);
-    });
-
-    // Transition: {any} --> {playing}
-    this._eventManager.listen(this._player, PlayerEvents.PLAYING, () => {
-      this._updateState(PlayerStates.PLAYING);
-    });
-
-    // Transition: {loading} --> {playing/paused}
-    this._eventManager.listen(this._player, PlayerEvents.LOADED_METADATA, () => {
-      if (this._player.config.autoPlay) {
-        this._updateState(PlayerStates.PLAYING);
-      } else {
-        this._updateState(PlayerStates.PAUSED);
-      }
-    });
-
-    // Transition: {any} --> {paused}
-    this._eventManager.listen(this._player, PlayerEvents.PAUSE, () => {
-      this._updateState(PlayerStates.PAUSED);
-    });
-
-    // Transition: {playing} --> {buffering}
-    this._eventManager.listen(this._player, PlayerEvents.WAITING, () => {
-      if (this._curState.type === PlayerStates.PLAYING) {
-        this._updateState(PlayerStates.BUFFERING);
+  _doTransition(event: FakeEvent): void {
+    this._logger.debug('Do transition request', event);
+    this._transitions.forEach((transition) => {
+      if (this._curState.type === transition.type) {
+        let transitionEvent = transition.events[event.type];
+        if (transitionEvent) {
+          transitionEvent.action(transitionEvent.types);
+        }
+        return;
       }
     });
   }
@@ -138,7 +231,6 @@ export default class StateManager {
       this._history.push(this._curState);
       this._prevState = this._curState;
       this._curState = new State(type);
-      this._dispatchEvent();
     }
   }
 
@@ -147,7 +239,10 @@ export default class StateManager {
    * @private
    */
   _dispatchEvent(): void {
-    let event = new FakeEvent(StateManager.EventName, {'oldState': this._prevState, 'newState': this._curState});
+    let event = new FakeEvent(PlayerEvents.PLAYER_STATE_CHANGED, {
+      'oldState': this._prevState,
+      'newState': this._curState
+    });
     this._player.dispatchEvent(event);
   }
 

@@ -1,6 +1,7 @@
 import State from '../../../src/state/state'
-import PlayerStates from '../../../src/state/states'
+import PlayerStates from '../../../src/state/state-types'
 import StateManager from '../../../src/state/state-manager'
+import PlayerEvents from '../../../src/event/events'
 
 describe("StateManager", () => {
 
@@ -12,7 +13,7 @@ describe("StateManager", () => {
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    sandbox.stub(StateManager.prototype, '_attachListeners', function(){});
+    sandbox.stub(StateManager.prototype, '_attachListeners', function () {});
     stateManager = new StateManager(fakePlayer);
   });
 
@@ -21,7 +22,6 @@ describe("StateManager", () => {
   });
 
   it("should create all state manager properties", () => {
-    StateManager.EventName.should.equal("playerStateChanged");
     stateManager.currentState.should.be.an.instanceof(State);
     stateManager.currentState.type.should.equal(PlayerStates.IDLE);
     (stateManager.previousState === null).should.be.true;
@@ -57,7 +57,7 @@ describe("StateManager", () => {
 
   it("should dispatch initial state event", (done) => {
     sandbox.stub(stateManager._player, 'dispatchEvent', function (event) {
-      event.type.should.equal(StateManager.EventName);
+      event.type.should.equal(PlayerEvents.PLAYER_STATE_CHANGED);
       (event.payload.oldState === null).should.be.true;
       event.payload.newState.should.be.an.instanceof(State);
       event.payload.newState.type.should.equal(PlayerStates.IDLE);
@@ -68,7 +68,7 @@ describe("StateManager", () => {
 
   it("should dispatch new state event", (done) => {
     sandbox.stub(stateManager._player, 'dispatchEvent', function (event) {
-      event.type.should.equal(StateManager.EventName);
+      event.type.should.equal(PlayerEvents.PLAYER_STATE_CHANGED);
       event.payload.oldState.should.be.an.instanceof(State);
       event.payload.oldState.type.should.equal(PlayerStates.IDLE);
       event.payload.newState.should.be.an.instanceof(State);
@@ -76,5 +76,6 @@ describe("StateManager", () => {
       done();
     });
     stateManager._updateState(PlayerStates.LOADING);
+    stateManager._dispatchEvent();
   });
 });

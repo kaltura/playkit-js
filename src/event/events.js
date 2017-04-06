@@ -65,7 +65,11 @@ const PLAYER_EVENTS = {
   /**
    * Fires when the text track has been changed
    */
-  TEXT_TRACK_CHANGE: 'texttrackchange'
+  TEXT_TRACK_CHANGE: 'texttrackchange',
+  /**
+   * Fires when the player state has been changed
+   */
+  PLAYER_STATE_CHANGED: 'playerStateChanged'
 };
 
 export default PLAYER_EVENTS;

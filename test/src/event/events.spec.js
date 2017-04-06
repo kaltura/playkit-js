@@ -20,7 +20,8 @@ describe('events', () => {
       TIME_UPDATE: 'timeupdate',
       RATE_CHANGE: 'ratechange',
       VOLUME_CHANGE: 'volumechange',
-      TEXT_TRACK_CHANGE: 'texttrackchange'
+      TEXT_TRACK_CHANGE: 'texttrackchange',
+      PLAYER_STATE_CHANGED: 'playerStateChanged'
     });
   });
 });

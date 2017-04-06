@@ -1,7 +1,7 @@
 //@flow
 
 /**
- * The possible player states.
+ * The possible player state types.
  * @const
  * @type {{IDLE: string, LOADING: string, PLAYING: string, PAUSED: string, BUFFERING: string}}
  */

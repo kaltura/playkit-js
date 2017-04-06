@@ -1,5 +1,5 @@
 import State from '../../../src/state/state'
-import PlayerStates from '../../../src/state/states'
+import PlayerStates from '../../../src/state/state-types'
 
 describe("State", () => {
   it("should create idle state", () => {

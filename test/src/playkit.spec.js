@@ -1,5 +1,5 @@
 import {playkit} from '../../src/playkit'
-import PlayerStates from '../../src/state/states'
+import PlayerStates from '../../src/state/state-types'
 import sourcesConfig from './configs/sources.json'
 //import pluginsConfig from './configs/plugins.json'
 
