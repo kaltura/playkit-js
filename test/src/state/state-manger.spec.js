@@ -3,17 +3,19 @@ import PlayerStates from '../../../src/state/state-types'
 import StateManager from '../../../src/state/state-manager'
 import PlayerEvents from '../../../src/event/events'
 
+let sandbox;
+let stateManager;
+let fakePlayer = {
+  dispatchEvent: function () {
+  },
+  config: {}
+};
+
 describe("StateManager", () => {
-
-  let sandbox;
-  let stateManager;
-  let fakePlayer = {
-    dispatchEvent: function () {}
-  };
-
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    sandbox.stub(StateManager.prototype, '_attachListeners', function () {});
+    sandbox.stub(StateManager.prototype, '_attachListeners', function () {
+    });
     stateManager = new StateManager(fakePlayer);
   });
 
@@ -77,5 +79,157 @@ describe("StateManager", () => {
     });
     stateManager._updateState(PlayerStates.LOADING);
     stateManager._dispatchEvent();
+  });
+});
+
+describe("StateManager.Transitions:IDLE", () => {
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    sandbox.stub(StateManager.prototype, '_attachListeners', function () {
+    });
+    stateManager = new StateManager(fakePlayer);
+    stateManager._updateState(PlayerStates.IDLE);
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  it('should handle transition from idle to loading', () => {
+    stateManager._doTransition({type: PlayerEvents.LOAD_START});
+    stateManager.currentState.type.should.equal(PlayerStates.LOADING);
+  });
+
+  it('shouldn\'t handle transition from idle because of unregistered event', () => {
+    stateManager._doTransition({type: PlayerEvents.ERROR});
+    stateManager.currentState.type.should.equal(PlayerStates.IDLE);
+  });
+});
+
+describe("StateManager.Transitions:LOADING", () => {
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    sandbox.stub(StateManager.prototype, '_attachListeners', function () {
+    });
+    stateManager = new StateManager(fakePlayer);
+    stateManager._updateState(PlayerStates.LOADING);
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  it('should handle transition from loading to idle', () => {
+    stateManager._doTransition({type: PlayerEvents.ERROR});
+    stateManager.currentState.type.should.equal(PlayerStates.IDLE);
+  });
+
+  it('should handle transition from loading to playing', () => {
+    fakePlayer.config.autoPlay = true;
+    stateManager._doTransition({type: PlayerEvents.LOADED_METADATA});
+    stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+  });
+
+  it('should handle transition from loading to paused', () => {
+    fakePlayer.config.autoPlay = false;
+    stateManager._doTransition({type: PlayerEvents.LOADED_METADATA});
+    stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
+  });
+
+  it('shouldn\'t handle transition from loading because of unregistered event', () => {
+    stateManager._doTransition({type: PlayerEvents.WAITING});
+    stateManager.currentState.type.should.equal(PlayerStates.LOADING);
+  });
+});
+
+describe("StateManager.Transitions:PAUSED", () => {
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    sandbox.stub(StateManager.prototype, '_attachListeners', function () {
+    });
+    stateManager = new StateManager(fakePlayer);
+    stateManager._updateState(PlayerStates.PAUSED);
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  it('should handle transition from paused to playing', () => {
+    stateManager._doTransition({type: PlayerEvents.PLAY});
+    stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+  });
+
+  it('should handle transition from paused to idle', () => {
+    stateManager._doTransition({type: PlayerEvents.ENDED});
+    stateManager.currentState.type.should.equal(PlayerStates.IDLE);
+  });
+
+  it('shouldn\'t handle transition from paused because of unregistered event', () => {
+    stateManager._doTransition({type: PlayerEvents.ERROR});
+    stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
+  });
+});
+
+describe("StateManager.Transitions:BUFFERING", () => {
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    sandbox.stub(StateManager.prototype, '_attachListeners', function () {
+    });
+    stateManager = new StateManager(fakePlayer);
+    stateManager._updateState(PlayerStates.BUFFERING);
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  it('should handle transition from buffering to playing', () => {
+    stateManager._doTransition({type: PlayerEvents.PLAYING});
+    stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+  });
+
+  it('shouldn\'t handle transition from buffering because of unregistered event', () => {
+    stateManager._doTransition({type: PlayerEvents.ERROR});
+    stateManager.currentState.type.should.equal(PlayerStates.BUFFERING);
+  });
+});
+
+describe("StateManager.Transitions:PLAYING", () => {
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    sandbox.stub(StateManager.prototype, '_attachListeners', function () {
+    });
+    stateManager = new StateManager(fakePlayer);
+    stateManager._updateState(PlayerStates.PLAYING);
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  it('should handle transition from playing to idle because of error', () => {
+    stateManager._doTransition({type: PlayerEvents.ERROR});
+    stateManager.currentState.type.should.equal(PlayerStates.IDLE);
+  });
+
+  it('should handle transition from playing to idle because of ended', () => {
+    stateManager._doTransition({type: PlayerEvents.ENDED});
+    stateManager.currentState.type.should.equal(PlayerStates.IDLE);
+  });
+
+  it('should handle transition from playing to buffering', () => {
+    stateManager._doTransition({type: PlayerEvents.WAITING});
+    stateManager.currentState.type.should.equal(PlayerStates.BUFFERING);
+  });
+
+  it('should handle transition from playing to paused', () => {
+    stateManager._doTransition({type: PlayerEvents.PAUSE});
+    stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
+  });
+
+  it('shouldn\'t handle transition from playing because of unregistered event', () => {
+    stateManager._doTransition({type: PlayerEvents.LOADED_METADATA});
+    stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
   });
 });

@@ -5,7 +5,7 @@
  * @const
  * @type {{IDLE: string, LOADING: string, PLAYING: string, PAUSED: string, BUFFERING: string}}
  */
-const PLAYER_STATE: { [state: string]: string } = {
+const PLAYER_STATE_TYPES: { [state: string]: string } = {
   IDLE: "idle",
   LOADING: "loading",
   PLAYING: "playing",
@@ -13,4 +13,4 @@ const PLAYER_STATE: { [state: string]: string } = {
   BUFFERING: "buffering"
 };
 
-export default PLAYER_STATE;
+export default PLAYER_STATE_TYPES;

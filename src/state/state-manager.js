@@ -11,14 +11,10 @@ import LoggerFactory from '../utils/logger'
  * Define a transition object.
  */
 type Transition = {
-  type: string,
-  events: {
-    [event: string]: {
-      types: Array<string>,
-      action: Function
-    }
+  [state: string]: {
+    [event: string]: Function
   }
-};
+}
 
 /**
  * This class responsible to manage all the state machine of the player.
@@ -72,111 +68,62 @@ export default class StateManager {
    * @type {Array<Transition>}
    * @private
    */
-  _transitions: Array<Transition> = [{
-    type: PlayerStates.IDLE,
-    events: {
-      'loadstart': {
-        types: [PlayerStates.LOADING],
-        action: (types: Array<string>) => {
-          this._updateState(types[0]);
-          this._logger.debug(`Player state changed: from ${this._prevState.type} to ${this._curState.type}`);
-          this._dispatchEvent();
+  _transitions: Transition = {
+    [PlayerStates.IDLE]: {
+      [PlayerEvents.LOAD_START]: () => {
+        this._updateState(PlayerStates.LOADING);
+        this._dispatchEvent();
+      }
+    },
+    [PlayerStates.LOADING]: {
+      [PlayerEvents.LOADED_METADATA]: () => {
+        if (this._player.config.autoPlay) {
+          this._updateState(PlayerStates.PLAYING);
+        } else {
+          this._updateState(PlayerStates.PAUSED);
         }
+        this._dispatchEvent();
+      },
+      [PlayerEvents.ERROR]: () => {
+        this._updateState(PlayerStates.IDLE);
+        this._dispatchEvent();
+      }
+    },
+    [PlayerStates.PAUSED]: {
+      [PlayerEvents.PLAY]: () => {
+        this._updateState(PlayerStates.PLAYING);
+        this._dispatchEvent();
+      },
+      [PlayerEvents.ENDED]: () => {
+        this._updateState(PlayerStates.IDLE);
+        this._dispatchEvent();
+      }
+    },
+    [PlayerStates.PLAYING]: {
+      [PlayerEvents.PAUSE]: () => {
+        this._updateState(PlayerStates.PAUSED);
+        this._dispatchEvent();
+      },
+      [PlayerEvents.WAITING]: () => {
+        this._updateState(PlayerStates.BUFFERING);
+        this._dispatchEvent();
+      },
+      [PlayerEvents.ENDED]: () => {
+        this._updateState(PlayerStates.IDLE);
+        this._dispatchEvent();
+      },
+      [PlayerEvents.ERROR]: () => {
+        this._updateState(PlayerStates.IDLE);
+        this._dispatchEvent();
+      }
+    },
+    [PlayerStates.BUFFERING]: {
+      [PlayerEvents.PLAYING]: () => {
+        this._updateState(PlayerStates.PLAYING);
+        this._dispatchEvent();
       }
     }
-  }, {
-    type: PlayerStates.LOADING,
-    events: {
-      'loadedmetadata': {
-        types: [PlayerStates.PAUSED, PlayerStates.PLAYING],
-        action: (types: Array<string>) => {
-          if (this._player.config.autoPlay) {
-            this._updateState(types[1]);
-          } else {
-            this._updateState(types[0]);
-          }
-          this._logger.debug(`Player state changed: from ${this._prevState.type} to ${this._curState.type}`);
-          this._dispatchEvent();
-        }
-      },
-      'error': {
-        types: [PlayerStates.IDLE],
-        action: (types: Array<string>) => {
-          this._updateState(types[0]);
-          this._logger.debug(`Player state changed: from ${this._prevState.type} to ${this._curState.type}`);
-          this._dispatchEvent();
-        }
-      }
-    }
-  }, {
-    type: PlayerStates.PAUSED,
-    events: {
-      'play': {
-        types: [PlayerStates.PLAYING],
-        action: (types: Array<string>) => {
-          this._updateState(types[0]);
-          this._logger.debug(`Player state changed: from ${this._prevState.type} to ${this._curState.type}`);
-          this._dispatchEvent();
-        },
-      },
-      'ended': {
-        types: [PlayerStates.IDLE],
-        action: (types: Array<string>) => {
-          this._updateState(types[0]);
-          this._logger.debug(`Player state changed: from ${this._prevState.type} to ${this._curState.type}`);
-          this._dispatchEvent();
-        }
-      }
-    }
-  }, {
-    type: PlayerStates.PLAYING,
-    events: {
-      'pause': {
-        types: [PlayerStates.PAUSED],
-        action: (types: Array<string>) => {
-          this._updateState(types[0]);
-          this._logger.debug(`Player state changed: from ${this._prevState.type} to ${this._curState.type}`);
-          this._dispatchEvent();
-        }
-      },
-      'waiting': {
-        types: [PlayerStates.BUFFERING],
-        action: (types: Array<string>) => {
-          this._updateState(types[0]);
-          this._logger.debug(`Player state changed: from ${this._prevState.type} to ${this._curState.type}`);
-          this._dispatchEvent();
-        }
-      },
-      'ended': {
-        types: [PlayerStates.IDLE],
-        action: (types: Array<string>) => {
-          this._updateState(types[0]);
-          this._logger.debug(`Player state changed: from ${this._prevState.type} to ${this._curState.type}`);
-          this._dispatchEvent();
-        }
-      },
-      'error': {
-        types: [PlayerStates.IDLE],
-        action: (types: Array<string>) => {
-          this._updateState(types[0]);
-          this._logger.debug(`Player state changed: from ${this._prevState.type} to ${this._curState.type}`);
-          this._dispatchEvent();
-        }
-      }
-    }
-  }, {
-    type: PlayerStates.BUFFERING,
-    events: {
-      'playing': {
-        types: [PlayerStates.PLAYING],
-        action: (types: Array<string>) => {
-          this._updateState(types[0]);
-          this._logger.debug(`Player state changed: from ${this._prevState.type} to ${this._curState.type}`);
-          this._dispatchEvent();
-        }
-      }
-    }
-  }];
+  };
 
   /**
    * @constructor
@@ -207,21 +154,21 @@ export default class StateManager {
     this._eventManager.listen(this._player, PlayerEvents.WAITING, this._doTransition.bind(this));
   }
 
+  /**
+   * Performs a state transition depends on the event which occures in the player system.
+   * @param event - The event occures in the player system.
+   * @private
+   */
   _doTransition(event: FakeEvent): void {
     this._logger.debug('Do transition request', event);
-    this._transitions.forEach((transition) => {
-      if (this._curState.type === transition.type) {
-        let transitionEvent = transition.events[event.type];
-        if (transitionEvent) {
-          transitionEvent.action(transitionEvent.types);
-        }
-        return;
-      }
-    });
+    let transition = this._transitions[this._curState.type];
+    if (typeof transition[event.type] === 'function') {
+      transition[event.type]();
+    }
   }
 
   /**
-   * Updates the player state.
+   * Updates the player's state.
    * @param type - The type of the new state.
    * @private
    */
@@ -231,6 +178,7 @@ export default class StateManager {
       this._history.push(this._curState);
       this._prevState = this._curState;
       this._curState = new State(type);
+      this._logger.debug(`Switch player state: from ${this._prevState.type} to ${this._curState.type}`)
     }
   }
 
