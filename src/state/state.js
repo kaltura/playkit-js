@@ -7,7 +7,7 @@
 export default class State {
   /**
    * The type of the state.
-   * Can be one of those describes in state.js
+   * Can be one of those describes in states.js
    * @member
    * @type {string}
    * @public
