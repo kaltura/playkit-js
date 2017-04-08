@@ -195,6 +195,15 @@ export default class StateManager {
   }
 
   /**
+   * Destroys the state manager.
+   * @public
+   */
+  destroy(): void {
+    this._history = [];
+    this._eventManager.destroy();
+  }
+
+  /**
    * Getter to the current state of the player.
    * @public
    * @returns {State}

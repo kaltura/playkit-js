@@ -45,6 +45,7 @@ class Player extends FakeEventTarget {
     this._engine.destroy();
     this._eventManager.destroy();
     this._pluginManager.destroy();
+    this._stateManager.destroy();
     // this.engine_ = null;
     // this.eventManager_ = null;
     this._config = null;
