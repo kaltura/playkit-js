@@ -21,7 +21,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   constructor(source: Object, config: Object) {
     super();
     this.createVideoElement(config.target);
-    this.eventManager_ = new EventManager();
+    this._eventManager = new EventManager();
     this.setSource(source, config);
     this.attach();
   }
@@ -56,17 +56,17 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
 
   createVideoElement(target) {
-    this.el_ = document.createElement("video");
+    this._el = document.createElement("video");
     //Set attributes
-    this.el_.style.width = "640px";
-    this.el_.style.height = "360px";
-    this.el_.style.backgroundColor = "black";
-    this.el_.controls = true;
+    this._el.style.width = "640px";
+    this._el.style.height = "360px";
+    this._el.style.backgroundColor = "black";
+    this._el.controls = true;
     if (target){
-      document.getElementById(target).appendChild(this.el_);
+      document.getElementById(target).appendChild(this._el);
     } else{
       if (document && document.body) {
-        document.body.appendChild(this.el_);
+        document.body.appendChild(this._el);
       }
     }
   }

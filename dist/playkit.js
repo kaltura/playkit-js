@@ -598,8 +598,8 @@ var Player = function (_FakeEventTarget) {
       this.controller = this;
       for (var name in plugins) {
         if (plugins.hasOwnProperty(name)) {
-          this.pluginManager_.load(name, this, plugins[name]);
-          var plugin = this.pluginManager_.get(name);
+          this._pluginManager.load(name, this, plugins[name]);
+          var plugin = this._pluginManager.get(name);
           if (typeof plugin.getPlayerDecorator == "function") {
             var decorator = plugin.getPlayerDecorator();
             decorator.setPlayer(this.controller);
@@ -657,7 +657,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'getVideoElement',
     value: function getVideoElement() {
-      this.engine_.videoElement;
+      this._engine.videoElement;
     }
 
     /**
@@ -2228,7 +2228,7 @@ var Html5 = function (_FakeEventTarget) {
     var _this = _possibleConstructorReturn(this, (Html5.__proto__ || Object.getPrototypeOf(Html5)).call(this));
 
     _this.createVideoElement(config.target);
-    _this.eventManager_ = new _eventManager2.default();
+    _this._eventManager = new _eventManager2.default();
     _this.setSource(source, config);
     _this.attach();
     return _this;
@@ -2272,17 +2272,17 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'createVideoElement',
     value: function createVideoElement(target) {
-      this.el_ = document.createElement("video");
+      this._el = document.createElement("video");
       //Set attributes
-      this.el_.style.width = "640px";
-      this.el_.style.height = "360px";
-      this.el_.style.backgroundColor = "black";
-      this.el_.controls = true;
+      this._el.style.width = "640px";
+      this._el.style.height = "360px";
+      this._el.style.backgroundColor = "black";
+      this._el.controls = true;
       if (target) {
-        document.getElementById(target).appendChild(this.el_);
+        document.getElementById(target).appendChild(this._el);
       } else {
         if (document && document.body) {
-          document.body.appendChild(this.el_);
+          document.body.appendChild(this._el);
         }
       }
     }

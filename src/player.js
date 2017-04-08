@@ -56,8 +56,8 @@ class Player extends FakeEventTarget {
     this.controller = this;
     for (let name in plugins) {
       if (plugins.hasOwnProperty(name)) {
-        this.pluginManager_.load(name, this, plugins[name]);
-        let plugin =  this.pluginManager_.get(name);
+        this._pluginManager.load(name, this, plugins[name]);
+        let plugin =  this._pluginManager.get(name);
         if (typeof plugin.getPlayerDecorator == "function") {
           let decorator = plugin.getPlayerDecorator();
           decorator.setPlayer(this.controller);
@@ -107,7 +107,7 @@ class Player extends FakeEventTarget {
   }
 
   getVideoElement(){
-    this.engine_.videoElement;
+    this._engine.videoElement;
   }
 
   /**
