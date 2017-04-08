@@ -20,8 +20,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   constructor(source: Object, config: Object) {
     super();
-    this.createVideoElement();
-    this._eventManager = new EventManager();
+    this.createVideoElement(config.target);
+    this.eventManager_ = new EventManager();
     this.setSource(source, config);
     this.attach();
   }
@@ -54,15 +54,20 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     });
   }
 
-  createVideoElement() {
-    this._el = document.createElement("video");
+
+  createVideoElement(target) {
+    this.el_ = document.createElement("video");
     //Set attributes
-    this._el.style.width = "640px";
-    this._el.style.height = "360px";
-    this._el.style.backgroundColor = "black";
-    this._el.controls = true;
-    if (document && document.body) {
-      document.body.appendChild(this._el);
+    this.el_.style.width = "640px";
+    this.el_.style.height = "360px";
+    this.el_.style.backgroundColor = "black";
+    this.el_.controls = true;
+    if (target){
+      document.getElementById(target).appendChild(this.el_);
+    } else{
+      if (document && document.body) {
+        document.body.appendChild(this.el_);
+      }
     }
   }
 

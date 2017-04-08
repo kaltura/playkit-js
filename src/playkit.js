@@ -6,7 +6,9 @@ import {registerAdapter} from './engines/adapters/adapter-manager'
 import BaseMediaSourceAdapter from './engines/adapters/base-adapter'
 import {registerPlugin} from './plugin/plugin-manager'
 import BasePlugin from './plugin/base-plugin'
-
+import IPlayerDecoratorProvider from './declarations/interfaces/IPlayerDecoratorProvider'
+import PlayerDecoratorBase from './player/PlayerDecoratorBase'
+import PLAYER_EVENTS from './event/events'
 // Playkit version
 let VERSION = packageData.version;
 

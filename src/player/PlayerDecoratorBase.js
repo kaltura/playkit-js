@@ -6,6 +6,10 @@ export default class PlayerDecoratorBase implements IPlayer {
     this.player = player;
   }
 
+  load(){
+    return this.player.load();
+  }
+
   play() {
     return this.player.play();
   }

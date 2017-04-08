@@ -99,19 +99,15 @@ class Player extends FakeEventTarget {
 
   //  <editor-fold desc="Playback Interface">
   /**
-   * prepare/load the stream
-   *
-   */
-  prepare() {
-    this.engine_.load();
-  }
-
-  /**
    * Start/resume playback
    * @returns {Player}
    */
   play() {
     return this._engine.play();
+  }
+
+  getVideoElement(){
+    this.engine_.videoElement;
   }
 
   /**

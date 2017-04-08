@@ -1,6 +1,6 @@
 //@flow
 declare interface IPlayer {
-  prepare():void;
+  load():void;
   play():void;
   pause():void;
   getVideoElement():any;

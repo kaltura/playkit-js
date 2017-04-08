@@ -45,7 +45,11 @@ const PLAYER_EVENTS = [
   /**
    * Fires when the text track has been changed
    */
-  'texttrackchange'
+  'texttrackchange',
+  /**
+   * Fires when media is ended
+   */
+  'ended'
 ];
 
 export default PLAYER_EVENTS;
