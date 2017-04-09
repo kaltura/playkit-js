@@ -20,14 +20,14 @@ export default class BaseMediaSourceAdapter {
    * @static
    * @private
    */
-  static _logger: ILogger;
+  static _logger: ILogger = LoggerFactory.getLogger('BaseMediaSourceAdapter');
   /**
    * The name of the media source adapter
    * @member {string} _name
    * @static
    * @private
    */
-  static _name: string;
+  static _name: string = 'BaseMediaSourceAdapter';
   /**
    * The player wrapper of the media source adapter
    * @member {any} _msPlayer
@@ -48,6 +48,7 @@ export default class BaseMediaSourceAdapter {
    * @static
    */
   static isSupported(): boolean {
+    this.logger.debug('isSupported() - true');
     return true;
   }
 
@@ -59,20 +60,9 @@ export default class BaseMediaSourceAdapter {
    * @static
    */
   static canPlayType(mimeType: string): boolean {
-    return !!(this._mimeTypes && this._mimeTypes.includes(mimeType));
-  }
-
-  /**
-   * Factory method to create media source adapter
-   * @function createAdapter
-   * @param {HTMLVideoElement} videoElement - The video element which bind to the media source adapter
-   * @param {string} source - The source URL
-   * @param {Object} config - The media source adapter configuration
-   * @returns {BaseMediaSourceAdapter}
-   * @static
-   */
-  static createAdapter(videoElement: HTMLVideoElement, source: string, config: Object): BaseMediaSourceAdapter {
-    return new this(videoElement, source, config);
+    let result = !!(this._mimeTypes && this._mimeTypes.includes(mimeType));
+    this.logger.debug(`canPlayType(${mimeType}) - ${result}`);
+    return result;
   }
 
   /**
@@ -82,15 +72,28 @@ export default class BaseMediaSourceAdapter {
    * @static
    */
   static onError(error: Object) {
-    this._logger.error(error);
+    this.logger.error(error);
+    throw error;
+  }
+
+  /**
+   * Get the _logger
+   * @returns {ILogger}
+   * @static
+   * @protected
+   */
+  static get logger(): ILogger {
+    this._logger.context.name = this._name;
+    return this._logger;
   }
 
   /**
    * @constructor
-   * @param {string} name - The name of the media source adapter
+   * @param {string} source - The source URL
    */
-  constructor(name: string) {
-    this._logger = LoggerFactory.getLogger(name);
+  constructor(source: string) {
+    this.constructor.logger.info(`constructing for ${source}`);
+    this._source = source;
   }
 
   /**
@@ -99,7 +102,9 @@ export default class BaseMediaSourceAdapter {
    * @abstract
    */
   load(): void {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
+    let error = new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
+    this.constructor.logger.error(error.message);
+    throw error;
   }
 
   /**
@@ -107,6 +112,7 @@ export default class BaseMediaSourceAdapter {
    * @function destroy
    */
   destroy() {
-    // should do nothing. implemented by the inheritor if necessary.
+    this.constructor.logger.debug('destroy');
+    this._source = "";
   }
 }

@@ -24,7 +24,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @override
    */
   static canPlayType(mimeType: string): boolean {
-    return !!(document.createElement("video").canPlayType(mimeType));
+    let result = !!(document.createElement("video").canPlayType(mimeType));
+    nativeAdapter.logger.debug(`canPlayType(${mimeType}) - ${result}`);
+    return result;
   }
 
   /**
@@ -33,9 +35,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @param {string} source - The source URL
    */
   constructor(videoElement: HTMLVideoElement, source: string) {
-    super(NativeAdapter._name);
+    super(source);
     this._msPlayer = videoElement;
-    this._source = source;
     if (source) {
       this._msPlayer.src = source;
     }
@@ -47,6 +48,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @override
    */
   load(): void {
+    nativeAdapter.logger.debug('load');
     this._msPlayer.load();
   }
 }
