@@ -8,6 +8,7 @@ import {capitlize} from './utils/string-util'
 import LoggerFactory from './utils/logger'
 import Html5 from './engines/html5'
 import PluginManager from './plugin/plugin-manager'
+import StateManager from './state/state-manager'
 
 let logger = LoggerFactory.getLogger('Player');
 type ListenerType = (event: FakeEvent) => any;
@@ -18,17 +19,21 @@ class Player extends FakeEventTarget {
   _config: any;
   _engine: IEngine;
   _engineEventHandlers: Map<string, ListenerType>;
+  _stateManager: StateManager;
 
   constructor(config: Object) {
     super();
+    this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
     this._eventManager = new EventManager();
     this._engineEventHandlers = new Map();
-    PlayerEvents.forEach((event) => {
-      this._engineEventHandlers.set(`onEngine${capitlize(event)}_`, (event) => {
-        return this.dispatchEvent(event);
-      });
-    });
+    for (let playerEvent in PlayerEvents) {
+      if (PlayerEvents.hasOwnProperty(playerEvent)) {
+        this._engineEventHandlers.set(`onEngine${capitlize(PlayerEvents[playerEvent])}_`, (event) => {
+          return this.dispatchEvent(event);
+        });
+      }
+    }
     this._config = config || Player.defaultConfig_();
     this.loadPlugins(this._config);
     this.selectEngine(this._config);
@@ -40,6 +45,7 @@ class Player extends FakeEventTarget {
     this._engine.destroy();
     this._eventManager.destroy();
     this._pluginManager.destroy();
+    this._stateManager.destroy();
     // this.engine_ = null;
     // this.eventManager_ = null;
     this._config = null;
@@ -79,12 +85,22 @@ class Player extends FakeEventTarget {
 
   attachMedia() {
     // Listen to all HTML5-defined events and trigger them on the player
-    PlayerEvents.forEach((event) => {
-      const handler = this._engineEventHandlers.get(`onEngine${capitlize(event)}_`);
-      if (handler) {
-        this._eventManager.listen(this._engine, event, handler);
+    for (let playerEvent in PlayerEvents) {
+      if (PlayerEvents.hasOwnProperty(playerEvent)) {
+        const handler = this._engineEventHandlers.get(`onEngine${capitlize(PlayerEvents[playerEvent])}_`);
+        if (handler) {
+          this._eventManager.listen(this._engine, PlayerEvents[playerEvent], handler);
+        }
       }
-    });
+    }
+  }
+
+  /**
+   * Get the player config
+   * @returns {Object}
+   */
+  get config(): Object {
+    return this._config;
   }
 
   //  <editor-fold desc="Playback Interface">
@@ -211,7 +227,7 @@ class Player extends FakeEventTarget {
     return this._engine.muted;
   }
 
-  // </editor-fold>
+// </editor-fold>
 }
 
 export default Player;
