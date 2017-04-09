@@ -40,17 +40,21 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   attach() {
-    PlayerEvents.forEach((event) => {
-      this._eventManager.listen(this._el, event, () => {
-        this.dispatchEvent(new FakeEvent(event));
-      });
-    });
+    for (let playerEvent in PlayerEvents) {
+      if (PlayerEvents.hasOwnProperty(playerEvent)) {
+        this._eventManager.listen(this._el, PlayerEvents[playerEvent], () => {
+          this.dispatchEvent(new FakeEvent(PlayerEvents[playerEvent]));
+        });
+      }
+    }
   }
 
   detach() {
-    PlayerEvents.forEach((event) => {
-      this._eventManager.unlisten(this._el, event);
-    });
+    for (let playerEvent in PlayerEvents) {
+      if (PlayerEvents.hasOwnProperty(playerEvent)) {
+        this._eventManager.unlisten(this._el, PlayerEvents[playerEvent]);
+      }
+    }
   }
 
   createVideoElement() {
