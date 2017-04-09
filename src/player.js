@@ -59,6 +59,7 @@ class Player extends FakeEventTarget {
     let plugins = config.plugins;
     for (let name in plugins) {
       if (plugins.hasOwnProperty(name)) {
+        // eslint-disable-next-line flowtype-errors/show-errors
         this._pluginManager.load(name, this, plugins[name]);
       }
     }

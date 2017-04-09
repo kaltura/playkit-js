@@ -7,8 +7,8 @@
   "plugins": [
     "import",
     "flowtype",
-    "mocha-no-only"
-
+    "mocha-no-only",
+    "flowtype-errors"
   ],
   "env": {
     "browser": true,
@@ -22,6 +22,11 @@
     "sinon": true
   },
   "rules": {
-    "mocha-no-only/mocha-no-only": ["error"]
+    "mocha-no-only/mocha-no-only": [
+      "error"
+    ],
+    "flowtype-errors/show-errors": [
+      "error"
+    ]
   }
 }

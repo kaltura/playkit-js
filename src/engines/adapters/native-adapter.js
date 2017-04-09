@@ -49,4 +49,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   load(): void {
     this._msPlayer.load();
   }
+
+  /**
+   * Destroys the video source
+   * @function destroy
+   * @override
+   */
+  destroy(): void {
+  }
 }
