@@ -7,6 +7,7 @@ declare interface IEngine {
   pause(): void;
   load(): void;
   ready(): void;
+  getVideoElement(): HTMLVideoElement;
   currentTime: number;
   +duration: number;
   volume: number;
