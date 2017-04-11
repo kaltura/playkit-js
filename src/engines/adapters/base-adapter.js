@@ -1,5 +1,4 @@
 //@flow
-import LoggerFactory from '../../utils/logger'
 import PlayerError from "../../utils/player-error"
 
 /**
@@ -79,17 +78,7 @@ export default class BaseMediaSourceAdapter {
   static createAdapter(engine: IEngine, source: Object, config: Object): BaseMediaSourceAdapter {
     return new this(engine, source, config);
   }
-
-  /**
-   * Error handler
-   * @function onError
-   * @param {Object} error
-   * @static
-   */
-  static onError(error: Object) {
-
-  }
-
+  
   /**
    * @constructor
    * @param {string} name - The name of the media source adapter
