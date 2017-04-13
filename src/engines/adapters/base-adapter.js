@@ -13,6 +13,7 @@ export default class BaseMediaSourceAdapter {
    * @private
    */
   static _mimeTypes: Array<string>;
+
   /**
    * The name of the media source adapter
    * @member {string} _name
@@ -20,24 +21,28 @@ export default class BaseMediaSourceAdapter {
    * @private
    */
   static _name: string;
+
   /**
    * The adapter config
    * @member {Object} _config
    * @private
    */
   _config: Object;
+
   /**
    * The owning engine
    * @member {IEngine} _engine
    * @private
    */
   _engine: IEngine;
+
   /**
    * The player wrapper of the media source adapter
    * @member {any} _msPlayer
    * @private
    */
   _msPlayer: any;
+
   /**
    * The source URL
    * @member {string} _source
@@ -69,7 +74,7 @@ export default class BaseMediaSourceAdapter {
   /**
    * Factory method to create media source adapter
    * @function createAdapter
-   * @param {HTMLVideoElement} videoElement - The video element which bind to the media source adapter
+   * @param {IEngine} engine - The video engine that the media source adapter work with
    * @param {Object} source - The source Object
    * @param {Object} config - The media source adapter configuration
    * @returns {BaseMediaSourceAdapter}
@@ -78,10 +83,12 @@ export default class BaseMediaSourceAdapter {
   static createAdapter(engine: IEngine, source: Object, config: Object): BaseMediaSourceAdapter {
     return new this(engine, source, config);
   }
-  
+
   /**
    * @constructor
-   * @param {string} name - The name of the media source adapter
+   * @param engine - The video engine that the media source adapter work with
+   * @param source - The source object
+   * @param config - The media source adapter configuration
    */
   constructor(engine: IEngine, source: Object, config: Object) {
     this._engine = engine;
