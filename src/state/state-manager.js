@@ -73,6 +73,10 @@ export default class StateManager {
       [PlayerEvents.LOAD_START]: () => {
         this._updateState(PlayerStates.LOADING);
         this._dispatchEvent();
+      },
+      [PlayerEvents.PLAY]: () => {
+        this._updateState(PlayerStates.BUFFERING);
+        this._dispatchEvent();
       }
     },
     [PlayerStates.LOADING]: {
