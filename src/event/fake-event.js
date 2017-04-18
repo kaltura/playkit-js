@@ -2,9 +2,8 @@
 /**
  * Create an Event work-alike object based on the dictionary.
  * The event should contain all of the same properties from the dict.
- *
- * @param {string} type
- * @param {Object=} opt_dict
+ * @param {string} type -
+ * @param {Object=} opt_dict -
  * @constructor
  * @extends {Event}
  */
