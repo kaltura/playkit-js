@@ -125,6 +125,10 @@ export default class StateManager {
       [PlayerEvents.PLAYING]: () => {
         this._updateState(PlayerStates.PLAYING);
         this._dispatchEvent();
+      },
+      [PlayerEvents.PAUSE]: () => {
+        this._updateState(PlayerStates.PAUSED);
+        this._dispatchEvent();
       }
     }
   };
