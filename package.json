@@ -12,7 +12,8 @@
     "start": "webpack-dev-server",
     "release": "npm run build && standard-version",
     "eslint": "eslint . --color",
-    "prepush": "npm run eslint & npm run test"
+    "prepush": "npm run eslint & npm run test",
+    "flow": "flow check"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
