@@ -19,5 +19,4 @@ before_install:
 
 script:
 - npm run eslint
-- npm run flow
 - npm run test
