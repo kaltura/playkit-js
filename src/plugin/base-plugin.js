@@ -47,10 +47,10 @@ export default class BasePlugin implements IPlugin {
 
   /**
    * Factory method to create the actual plugin.
-   * @param name - The plugin name
-   * @param player - The player reference
-   * @param config - The plugin configuration
-   * @returns {BasePlugin}
+   * @param {string} name - The plugin name
+   * @param {Player} player - The player reference
+   * @param {Object} config - The plugin configuration
+   * @returns {BasePlugin} - New runtime plugin instance
    * @static
    * @public
    */
@@ -61,7 +61,7 @@ export default class BasePlugin implements IPlugin {
   /**
    * Returns under what conditions the plugin is valid.
    * Plugin must implement this method.
-   * @returns {boolean}
+   * @returns {boolean} - Whether the plugin is valid and can be initiated. Default implementation is true
    * @static
    * @public
    * @abstract
@@ -72,9 +72,9 @@ export default class BasePlugin implements IPlugin {
 
   /**
    * constructor
-   * @param name - The plugin name
-   * @param player - The player reference
-   * @param config - The plugin configuration
+   * @param {string} name - The plugin name
+   * @param {Player} player - The player reference
+   * @param {Object} config - The plugin configuration
    * @constructor
    * @private
    */
@@ -87,10 +87,9 @@ export default class BasePlugin implements IPlugin {
   }
 
   /**
-   * Returns the config of the plugin.
-   * If attribute is provided, returns its value.
-   * @param attr - The key in the plugin configuration.
-   * @returns {*}
+   * Getter for the configuration of the plugin.
+   * @param {string} attr - The key in the plugin configuration (optional).
+   * @returns {*} - If attribute is provided, returns its value. Else, Returns the config of the plugin.
    * @public
    */
   getConfig(attr?: string): any {
@@ -102,8 +101,9 @@ export default class BasePlugin implements IPlugin {
 
   /**
    * Updates the config of the plugin.
-   * @param update - The updated configuration.
+   * @param {Object} update - The updated configuration.
    * @public
+   * @returns {void}
    */
   updateConfig(update: Object): void {
     this.config = merge(this.config, update);
@@ -114,6 +114,7 @@ export default class BasePlugin implements IPlugin {
    * plugin must implement this method.
    * @public
    * @abstract
+   * @returns {void}
    */
   destroy(): void {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'destroy()').getError();
@@ -121,7 +122,7 @@ export default class BasePlugin implements IPlugin {
 
   /**
    * Getter for the plugin's name.
-   * @returns {string}
+   * @returns {string} - The name of the plugin.
    * @public
    */
   getName(): string {
