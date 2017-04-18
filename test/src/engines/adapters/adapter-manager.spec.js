@@ -65,7 +65,7 @@ describe('mediaSourceAdapterManager:register', () => {
   });
 });
 
-describe('mediaSourceAdapterManager:unregister', () => {
+describe('mediaSourceAdapterManager:unRegister', () => {
 
   beforeEach(() => {
     MSAManager._mediaSourceAdapters = [adapter1, adapter2];
@@ -74,35 +74,35 @@ describe('mediaSourceAdapterManager:unregister', () => {
     MSAManager._mediaSourceAdapters = oldMediaSourceAdapters;
   });
 
-  it('should unregister adapter1', () => {
+  it('should unRegister adapter1', () => {
     MSAManager._mediaSourceAdapters.length.should.equal(2);
-    MSAManager.unregister(adapter1);
+    MSAManager.unRegister(adapter1);
     MSAManager._mediaSourceAdapters.length.should.equal(1);
     MSAManager._mediaSourceAdapters[0].name.should.equal("adapter2");
   });
 
-  it('should unregister adapter1 and adapter2', () => {
+  it('should unRegister adapter1 and adapter2', () => {
     MSAManager._mediaSourceAdapters.length.should.equal(2);
-    MSAManager.unregister(adapter1);
-    MSAManager.unregister(adapter2);
+    MSAManager.unRegister(adapter1);
+    MSAManager.unRegister(adapter2);
     MSAManager._mediaSourceAdapters.length.should.equal(0);
   });
 
   it('should do nothing for adapter 3', () => {
     MSAManager._mediaSourceAdapters.length.should.equal(2);
-    MSAManager.unregister(adapter3);
+    MSAManager.unRegister(adapter3);
     MSAManager._mediaSourceAdapters.length.should.equal(2);
   });
 
   it('should do nothing for null', () => {
     MSAManager._mediaSourceAdapters.length.should.equal(2);
-    MSAManager.unregister(null);
+    MSAManager.unRegister(null);
     MSAManager._mediaSourceAdapters.length.should.equal(2);
   });
 
   it('should do nothing for undefined', () => {
     MSAManager._mediaSourceAdapters.length.should.equal(2);
-    MSAManager.unregister();
+    MSAManager.unRegister();
     MSAManager._mediaSourceAdapters.length.should.equal(2);
   });
 });
