@@ -69,7 +69,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
   }
 
-  getVideoElement(): HTMLVideoElement{
+  getVideoElement(): HTMLVideoElement {
     return this._el;
   }
 
@@ -93,6 +93,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   //playback interface
   /**
    * Start/resume playback
+   * @returns {void}
    */
   play(): void {
     return this._el.play();
@@ -100,13 +101,15 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Pause playback
+   * @returns {void}
    */
-  pause() {
+  pause(): void {
     return this._el.pause();
   }
 
   /**
    * Load media
+   * @returns {void}
    */
   load(): void {
     if (this._mediaSourceAdapter) {
@@ -116,7 +119,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Get the current time in seconds
-   * @returns {Number}
+   * @returns {Number} - The current playback time
    */
   get currentTime(): number {
     return this._el.currentTime;
@@ -124,7 +127,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Set the current time in seconds
-   * @param to {Number}
+   * @param {Number} to - The number to set in seconds
    */
   set currentTime(to: number) {
     this._el.currentTime = to;
@@ -132,7 +135,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Get the duration in seconds
-   * @returns {Number}
+   * @returns {Number} - The playback duration
    */
   get duration(): number {
     return this._el.duration;
@@ -140,7 +143,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Set playback volume
-   * @param vol {Number}
+   * @param {Number} vol - The volume to set
    */
   set volume(vol: number) {
     this._el.volume = vol;
@@ -148,7 +151,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Get playback volume
-   * @returns {Number}
+   * @returns {Number} - The volume value of the video element
    */
   get volume(): number {
     return this._el.volume;
@@ -160,7 +163,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Get paused state
-   * @returns {boolean}
+   * @returns {boolean} - The paused value of the video element
    */
   get paused(): boolean {
     return this._el.paused;
@@ -168,7 +171,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Get seeking state
-   * @returns {boolean}
+   * @returns {boolean} - The seeking value of the video element
    */
   get seeking(): boolean {
     return this._el.seeking;
@@ -188,7 +191,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Set player muted state
-   * @param mute {boolean}
+   * @param {boolean} mute - The new mute value
    */
   set muted(mute: boolean) {
     this._el.muted = mute;
@@ -196,7 +199,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Get player muted state
-   * @returns {boolean}
+   * @returns {boolean} - The muted value of the video element
    */
   get muted(): boolean {
     return this._el.muted;
