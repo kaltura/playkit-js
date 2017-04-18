@@ -12,7 +12,8 @@
     "start": "webpack-dev-server",
     "release": "npm run build && standard-version",
     "eslint": "eslint . --color",
-    "prepush": "npm run eslint & npm run test"
+    "flow": "flow check",
+    "prepush": "npm run eslint & npm run test & npm run flow"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
@@ -31,7 +32,7 @@
     "eslint-plugin-flowtype": "^2.30.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-mocha-no-only": "^0.0.5",
-    "flow-bin": "^0.38.0",
+    "flow-bin": "latest",
     "istanbul": "^0.4.5",
     "karma": "^1.5.0",
     "karma-chai": "^0.1.0",
