@@ -26,8 +26,9 @@ export default class MediaSourceAdapterManager {
   /**
    * Add a media source adapter to the registry
    * @function register
-   * @param {BaseMediaSourceAdapter} adapter
+   * @param {BaseMediaSourceAdapter} adapter - The media source adapter to register
    * @static
+   * @returns {void}
    */
   static register(adapter: typeof BaseMediaSourceAdapter): void {
     if (adapter && !MediaSourceAdapterManager._mediaSourceAdapters.includes(adapter)) {
@@ -39,8 +40,9 @@ export default class MediaSourceAdapterManager {
   /**
    * Remove a media source adapter from the registry
    * @function unRegister
-   * @param {BaseMediaSourceAdapter} adapter
+   * @param {BaseMediaSourceAdapter} adapter - The media source adapter to unRegister
    * @static
+   * @returns {void}
    */
   static unRegister(adapter: typeof BaseMediaSourceAdapter): void {
     let index = MediaSourceAdapterManager._mediaSourceAdapters.indexOf(adapter);
@@ -54,8 +56,8 @@ export default class MediaSourceAdapterManager {
    * Checks if one of the registered media source adapters can play a given mime type
    * @function canPlayType
    * @param {string} mimeType - The mime type to check
-   * @returns {boolean}
    * @static
+   * @returns {boolean} - If one of the adapters can play the specific mime type
    */
   static canPlayType(mimeType: string): boolean {
     let adapters = MediaSourceAdapterManager._mediaSourceAdapters;
@@ -74,7 +76,7 @@ export default class MediaSourceAdapterManager {
    * @param {IEngine} engine - The video engine which requires adapter for a given mimeType
    * @param {Object} source - The video source
    * @param {Object} config - The player configuration
-   * @returns {BaseMediaSourceAdapter|null}
+   * @returns {BaseMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists
    * @static
    */
   static getMediaSourceAdapter(engine: IEngine, source: Object, config: Object): ?BaseMediaSourceAdapter {
