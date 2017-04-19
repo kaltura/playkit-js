@@ -2,6 +2,9 @@ import chai from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon/pkg/sinon';
 
+/**
+ * @returns {void}
+ */
 export function prepareTestEnvironment() {
   chai.should();
   chai.use(sinonChai);

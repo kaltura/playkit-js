@@ -37,8 +37,9 @@ class EventManager {
    * @param {EventTarget} target The event target.
    * @param {string} type The event type.
    * @param {EventManager.ListenerType} listener The event listener.
+   * @returns {void}
    */
-  listen(target: any, type: string, listener: ListenerType) {
+  listen(target: any, type: string, listener: ListenerType): void {
     let binding = new Binding_(target, type, listener);
     if (this._bindingMap) {
       this._bindingMap.push(type, binding);
@@ -50,8 +51,9 @@ class EventManager {
    * Detaches an event listener from an event target.
    * @param {EventTarget} target The event target.
    * @param {string} type The event type.
+   * @returns {void}
    */
-  unlisten(target: any, type: string) {
+  unlisten(target: any, type: string): void {
     if (this._bindingMap) {
       let list = this._bindingMap.get(type);
 
@@ -70,8 +72,9 @@ class EventManager {
 
   /**
    * Detaches all event listeners from all targets.
+   * @returns {void}
    */
-  removeAll() {
+  removeAll(): void {
     if (this._bindingMap) {
       let listeners = this._bindingMap.getAll();
 
@@ -120,8 +123,9 @@ class Binding_ {
   /**
    * Detaches the event listener from the event target. This does nothing if the
    * event listener is already detached.
+   * @returns {void}
    */
-  unlisten() {
+  unlisten(): void {
     if (!this.target)
       return;
 

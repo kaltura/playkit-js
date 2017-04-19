@@ -34,9 +34,9 @@ export default class PluginManager {
   /**
    * Writes the plugin in the registry.
    * Maps: plugin name -> plugin class.
-   * @param name - The plugin name
-   * @param handler - The plugin class
-   * @returns {boolean}
+   * @param {string} name - The plugin name
+   * @param {Function} handler - The plugin class
+   * @returns {boolean} - If the registration request succeeded
    * @static
    * @public
    */
@@ -46,32 +46,33 @@ export default class PluginManager {
     }
     if (!PluginManager._registry.has(name)) {
       PluginManager._registry.set(name, handler);
-      logger.info(`Plugin <${name}> has been registered successfully.`);
+      logger.debug(`Plugin <${name}> has been registered successfully.`);
       return true;
     }
-    logger.info(`Plugin <${name}> is already registered, do not register again.`);
+    logger.debug(`Plugin <${name}> is already registered, do not register again.`);
     return false;
   }
 
   /**
    * Removes the plugin from the registry.
-   * @param name - The plugin name
+   * @param {string} name - The plugin name
    * @static
    * @public
+   * @returns {void}
    */
   static unRegister(name: string): void {
     if (PluginManager._registry.has(name)) {
       PluginManager._registry.delete(name);
-      logger.info(`Unregistered <${name}> plugin.`);
+      logger.debug(`Unregistered <${name}> plugin.`);
     }
   }
 
   /**
    * Creates and store new instance of the plugin in case isValid() of the plugin returns true.
-   * @param name - The plugin name
-   * @param player - The player reference
+   * @param {string} name - The plugin name
+   * @param {Player} player - The player reference
    * @param {Object} [config={}] - The plugin configuration
-   * @returns {boolean}
+   * @returns {boolean} - Whether the plugin load was successful
    * @public
    */
   load(name: string, player: Player, config: Object = {}): boolean {
@@ -81,16 +82,17 @@ export default class PluginManager {
     let pluginClass = PluginManager._registry.get(name);
     if (pluginClass != null && pluginClass.isValid()) {
       this._plugins.set(name, pluginClass.createPlugin(name, player, config));
-      logger.info(`Plugin <${name}> has been loaded.`);
+      logger.debug(`Plugin <${name}> has been loaded.`);
       return true;
     }
-    logger.info(`Plugin <${name}> isn\'t loaded, isValid()=false.`);
+    logger.debug(`Plugin <${name}> isn\'t loaded, isValid()=false.`);
     return false;
   }
 
   /**
    * Iterates over all the plugins and calls private _destroy.
    * @public
+   * @returns {void}
    */
   destroy(): void {
     this._plugins.forEach(this._destroy.bind(this));
@@ -98,9 +100,10 @@ export default class PluginManager {
 
   /**
    * Calls destroy() method of the plugin's impl.
-   * @param plugin - The plugin instance
-   * @param name - The plugin name
+   * @param {BasePlugin} plugin - The plugin instance
+   * @param {string} name - The plugin name
    * @private
+   * @returns {void}
    */
   _destroy(plugin: BasePlugin, name: string): void {
     plugin.destroy();
@@ -109,8 +112,8 @@ export default class PluginManager {
 
   /**
    * Returns the plugin's instance.
-   * @param name - The plugin name
-   * @returns {BasePlugin}
+   * @param {string} name - The plugin name
+   * @returns {BasePlugin} - The plugin instance
    * @public
    */
   get(name: string): ?BasePlugin {
