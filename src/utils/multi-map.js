@@ -1,4 +1,5 @@
 //@flow
+
 /**
  * A simple multimap template.
  * @constructor
@@ -15,10 +16,11 @@ class MultiMap<T> {
 
   /**
    * Add a key, value pair to the map.
-   * @param {string} key
-   * @param {T} value
+   * @param {string} key -
+   * @param {T} value  -
+   * @returns {void}
    */
-  push(key: string, value: T) {
+  push(key: string, value: T): void {
     if (this._map.has(key)) {
       let list = this._map.get(key);
       if (Array.isArray(list)) {
@@ -32,16 +34,17 @@ class MultiMap<T> {
 
   /**
    * Set an array of values for the key, overwriting any previous data.
-   * @param {string} key
-   * @param {!Array.<T>} values
+   * @param {string} key -
+   * @param {!Array.<T>} values -
+   * @returns {void}
    */
-  set(key: string, values: T[]) {
+  set(key: string, values: T[]): void {
     this._map.set(key, values);
   }
 
   /**
    * Check for a key.
-   * @param {string} key
+   * @param {string} key -
    * @return {boolean} true if the key exists.
    */
   has(key: string): boolean {
@@ -50,7 +53,7 @@ class MultiMap<T> {
 
   /**
    * Get a list of values by key.
-   * @param {string} key
+   * @param {string} key -
    * @return {Array.<T>} or null if no suZch key exists.
    */
   get(key: string): Array<T> {
@@ -62,7 +65,7 @@ class MultiMap<T> {
 
   /**
    * Get a list of all values.
-   * @return {!Array.<T>}
+   * @returns {!Array.<T>} -
    */
   getAll(): T[] {
     let list: T[] = [];
@@ -74,10 +77,11 @@ class MultiMap<T> {
 
   /**
    * Remove a specific value, if it exists.
-   * @param {string} key
-   * @param {T} value
+   * @param {string} key -
+   * @param {T} value -
+   * @returns {void}
    */
-  remove(key: string, value: T) {
+  remove(key: string, value: T): void {
     if (!this._map.has(key)) return;
     let list = this._map.get(key);
     if (Array.isArray(list)) {
@@ -102,8 +106,9 @@ class MultiMap<T> {
 
   /**
    * Clear all keys and values from the multimap.
+   * @returns {void}
    */
-  clear() {
+  clear(): void {
     this._map.clear();
   }
 }

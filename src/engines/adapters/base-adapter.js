@@ -53,7 +53,7 @@ export default class BaseMediaSourceAdapter {
   /**
    * Checks if the media source adapter is supported
    * @function isSupported
-   * @returns {boolean}
+   * @returns {boolean} - Whether the media source adapter is supported. Default implementation is true
    * @static
    */
   static isSupported(): boolean {
@@ -63,8 +63,8 @@ export default class BaseMediaSourceAdapter {
   /**
    * Checks if the media source adapter can play a given mime type
    * @function canPlayType
-   * @param {string} mimeType
-   * @returns {boolean}
+   * @param {string} mimeType - The mime type to check
+   * @returns {boolean} - Whether the media source adapter can play the specific mime type. Default implementation is to check if the mime type include in the media source mime types array
    * @static
    */
   static canPlayType(mimeType: string): boolean {
@@ -77,7 +77,7 @@ export default class BaseMediaSourceAdapter {
    * @param {IEngine} engine - The video engine that the media source adapter work with
    * @param {Object} source - The source Object
    * @param {Object} config - The media source adapter configuration
-   * @returns {BaseMediaSourceAdapter}
+   * @returns {BaseMediaSourceAdapter} - New instance of the run time media source adapter
    * @static
    */
   static createAdapter(engine: IEngine, source: Object, config: Object): BaseMediaSourceAdapter {
@@ -86,9 +86,9 @@ export default class BaseMediaSourceAdapter {
 
   /**
    * @constructor
-   * @param engine - The video engine that the media source adapter work with
-   * @param source - The source object
-   * @param config - The media source adapter configuration
+   * @param {IEngine} engine - The video engine that the media source adapter work with
+   * @param {Object} source - The source object
+   * @param {Object} config - The media source adapter configuration
    */
   constructor(engine: IEngine, source: Object, config: Object) {
     this._engine = engine;
@@ -99,6 +99,7 @@ export default class BaseMediaSourceAdapter {
    * Load the video source
    * @function load
    * @abstract
+   * @returns {void}
    */
   load(): void {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
@@ -107,6 +108,7 @@ export default class BaseMediaSourceAdapter {
   /**
    * Destroying the _msPlayer
    * @function destroy
+   * @returns {void}
    */
   destroy() {
     // should do nothing. implemented by the inheritor if necessary.

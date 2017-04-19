@@ -97,7 +97,7 @@ class Player extends FakeEventTarget {
 
   /**
    * Get the player config
-   * @returns {Object}
+   * @returns {Object} - The player configuration
    */
   get config(): Object {
     return this._config;
@@ -106,22 +106,23 @@ class Player extends FakeEventTarget {
   //  <editor-fold desc="Playback Interface">
   /**
    * Start/resume playback
-   * @returns {Player}
+   * @returns {void}
    */
-  play() {
+  play(): void {
     return this._engine.play();
   }
 
   /**
    * Pause playback
-   * @returns {Player}
+   * @returns {void}
    */
-  pause() {
+  pause(): void {
     return this._engine.pause();
   }
 
   /**
    * Load media
+   * @returns {void}
    */
   load(): void {
     this._engine.load();
@@ -129,7 +130,7 @@ class Player extends FakeEventTarget {
 
   /**
    * Set the current time in seconds
-   * @param to {Number}
+   * @param {Number} to - The number to set in seconds
    */
   set currentTime(to: number) {
     if (isNumber(to)) {
@@ -146,7 +147,7 @@ class Player extends FakeEventTarget {
 
   /**
    * Get the current time in seconds
-   * @returns {Number}
+   * @returns {Number} - The playback current time
    */
   get currentTime(): number {
     return this._engine.currentTime;
@@ -155,7 +156,7 @@ class Player extends FakeEventTarget {
   /**
    * /**
    * Get the duration in seconds
-   * @returns {Number}
+   * @returns {Number} - The playback duration
    */
   get duration(): number {
     return this._engine.duration;
@@ -163,7 +164,7 @@ class Player extends FakeEventTarget {
 
   /**
    * Set playback volume
-   * @param vol {Number}
+   * @param {Number} vol - The volume to set
    */
   set volume(vol: number) {
     if (isFloat(vol)) {
@@ -180,7 +181,7 @@ class Player extends FakeEventTarget {
 
   /**
    * Get playback volume
-   * @returns {Number}
+   * @returns {Number} - The playback volume
    */
   get volume(): number {
     return this._engine.volume;
@@ -194,15 +195,15 @@ class Player extends FakeEventTarget {
 
   /**
    * Get paused state
-   * @returns {boolean}
+   * @returns {boolean} - Whether the video is paused or not
    */
   get paused(): boolean {
     return this._engine.paused;
   }
 
   /**
-   *
-   * @returns {boolean}
+   * Get seeking state
+   * @returns {boolean} - Whether the video is seeking or not
    */
   get seeking(): boolean {
     return this._engine.seeking;
@@ -213,7 +214,7 @@ class Player extends FakeEventTarget {
 
   /**
    * Set player muted state
-   * @param mute {boolean}
+   * @param {boolean} mute - The mute value
    */
   set muted(mute: boolean) {
     this._engine.muted = mute;
@@ -221,7 +222,7 @@ class Player extends FakeEventTarget {
 
   /**
    * Get player muted state
-   * @returns {boolean}
+   * @returns {boolean} - Whether the video is muted or not
    */
   get muted(): boolean {
     return this._engine.muted;

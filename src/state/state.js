@@ -30,7 +30,7 @@ export default class State {
 
   /**
    * @constructor
-   * @param type - The type of the state.
+   * @param {string} type - The type of the state.
    */
   constructor(type: string) {
     this.type = type;
@@ -40,7 +40,7 @@ export default class State {
 
   /**
    * Getter for the duration of the state.
-   * @returns {number}
+   * @returns {number} - The duration of the state
    */
   get duration(): number {
     return this._duration;
@@ -48,7 +48,7 @@ export default class State {
 
   /**
    * Setter for the duration of the state.
-   * @param endTime - The timestamp of the next state.
+   * @param {number} endTime - The timestamp of the next state.
    */
   set duration(endTime: number): void {
     this._duration = endTime - this._timestamp;

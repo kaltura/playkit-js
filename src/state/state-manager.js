@@ -127,7 +127,7 @@ export default class StateManager {
 
   /**
    * @constructor
-   * @param player - Reference to the player.
+   * @param {Player} player - Reference to the player.
    */
   constructor(player: Player) {
     this._player = player;
@@ -142,6 +142,7 @@ export default class StateManager {
   /**
    * Register to all necessary events which impacts on the player state.
    * @private
+   * @returns {void}
    */
   _attachListeners(): void {
     this._eventManager.listen(this._player, PlayerEvents.ERROR, this._doTransition.bind(this));
@@ -155,9 +156,10 @@ export default class StateManager {
   }
 
   /**
-   * Performs a state transition depends on the event which occures in the player system.
-   * @param event - The event occures in the player system.
+   * Performs a state transition depends on the event which occurs in the player system.
+   * @param {FakeEvent} event - The event occurs in the player system.
    * @private
+   * @returns {void}
    */
   _doTransition(event: FakeEvent): void {
     this._logger.debug('Do transition request', event);
@@ -169,8 +171,9 @@ export default class StateManager {
 
   /**
    * Updates the player's state.
-   * @param type - The type of the new state.
+   * @param {string} type - The type of the new state.
    * @private
+   * @returns {void}
    */
   _updateState(type: string): void {
     if (this._curState.type !== type) {
@@ -185,6 +188,7 @@ export default class StateManager {
   /**
    * Fires the playerStateChanged event after state has been changed.
    * @private
+   * @returns {void}
    */
   _dispatchEvent(): void {
     let event = new FakeEvent(PlayerEvents.PLAYER_STATE_CHANGED, {
@@ -197,6 +201,7 @@ export default class StateManager {
   /**
    * Destroys the state manager.
    * @public
+   * @returns {void}
    */
   destroy(): void {
     this._history = [];
@@ -206,7 +211,7 @@ export default class StateManager {
   /**
    * Getter to the current state of the player.
    * @public
-   * @returns {State}
+   * @returns {State} - The current state object
    */
   get currentState(): State {
     return this._curState;
@@ -215,7 +220,7 @@ export default class StateManager {
   /**
    * Getter to the previous state of the player.
    * @public
-   * @returns {State|null}
+   * @returns {State|null} - The previous state object, or null if such doesn't exists
    */
   get previousState(): State | null {
     return this._prevState;
@@ -224,7 +229,7 @@ export default class StateManager {
   /**
    * Getter to the state history of the player.
    * @public
-   * @returns {Array.<State>}
+   * @returns {Array.<State>} - The full states history objects
    */
   get history(): Array<State> {
     return this._history;

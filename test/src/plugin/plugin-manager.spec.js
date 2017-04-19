@@ -2,11 +2,17 @@ import PluginManager from '../../../src/plugin/plugin-manager'
 import ColorsPlugin from './test-plugins/colors-plugin'
 import NumbersPlugin from './test-plugins/numbers-plugin'
 
+/**
+ * @returns {void}
+ */
 function registerAll() {
   PluginManager.register("numbers", NumbersPlugin);
   PluginManager.register("colors", ColorsPlugin);
 }
 
+/**
+ * @returns {void}
+ */
 function unRegisterAll() {
   PluginManager.unRegister("numbers");
   PluginManager.unRegister("colors");
