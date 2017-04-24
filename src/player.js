@@ -9,6 +9,7 @@ import LoggerFactory from './utils/logger'
 import Html5 from './engines/html5'
 import PluginManager from './plugin/plugin-manager'
 import StateManager from './state/state-manager'
+import {IEngine} from '../src/interfaces/engine'
 
 let logger = LoggerFactory.getLogger('Player');
 type ListenerType = (event: FakeEvent) => any;

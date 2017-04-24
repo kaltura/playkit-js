@@ -1,7 +1,8 @@
 //@flow
 import PlayerError from "../../utils/player-error"
+import {IEngine} from '../../../src/interfaces/engine'
 
-/**
+/**s
  * Base of media source adapters
  * @classdesc
  */

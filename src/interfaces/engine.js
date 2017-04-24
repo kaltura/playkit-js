@@ -1,5 +1,5 @@
 //@flow
-declare interface IEngine {
+export interface IEngine {
   destroy(): void;
   attach(): void;
   detach(): void;

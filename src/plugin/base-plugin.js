@@ -4,6 +4,7 @@ import LoggerFactory from '../utils/logger'
 import {merge} from '../utils/util'
 import EventManager from '../event/event-manager'
 import PlayerError from '../utils/player-error'
+import {IPlugin} from '../interfaces/plugin'
 
 /** The BasePlugin responsible to implement the plugin interface.
  * Contains several default implementations.

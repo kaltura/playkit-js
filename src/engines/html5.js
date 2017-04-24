@@ -5,6 +5,7 @@ import EventManager from '../event/event-manager'
 import PlayerEvents from '../event/events'
 import MSAManager from './adapters/adapter-manager'
 import BaseMediaSourceAdapter from './adapters/base-adapter'
+import {IEngine} from '../../src/interfaces/engine'
 
 export default class Html5 extends FakeEventTarget implements IEngine {
   _el: HTMLVideoElement;
