@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 16);
+/******/ 	return __webpack_require__(__webpack_require__.s = 17);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -90,7 +90,7 @@ exports.LOG_LEVEL = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jsLogger = __webpack_require__(21);
+var _jsLogger = __webpack_require__(22);
 
 var JsLogger = _interopRequireWildcard(_jsLogger);
 
@@ -305,13 +305,13 @@ var _events2 = _interopRequireDefault(_events);
 
 var _util = __webpack_require__(11);
 
-var _stringUtil = __webpack_require__(20);
+var _stringUtil = __webpack_require__(21);
 
 var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _html = __webpack_require__(13);
+var _html = __webpack_require__(14);
 
 var _html2 = _interopRequireDefault(_html);
 
@@ -319,7 +319,7 @@ var _pluginManager = __webpack_require__(7);
 
 var _pluginManager2 = _interopRequireDefault(_pluginManager);
 
-var _stateManager = __webpack_require__(17);
+var _stateManager = __webpack_require__(18);
 
 var _stateManager2 = _interopRequireDefault(_stateManager);
 
@@ -897,7 +897,7 @@ exports.registerMediaSourceManager = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nativeManger = __webpack_require__(15);
+var _nativeManger = __webpack_require__(16);
 
 var _nativeManger2 = _interopRequireDefault(_nativeManger);
 
@@ -1861,6 +1861,13 @@ module.exports = {
 "use strict";
 
 
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -2260,7 +2267,7 @@ Html5.EngineName = "html5";
 exports.default = Html5;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2287,22 +2294,24 @@ var NativeFetcher = function () {
     this._logger = _logger2.default.getLogger(NativeFetcher._name);
     this._engine = engine;
     this._config = config;
-    this._msPlayer = engine.getVideoElement();
+    this._videoElement = engine.getVideoElement();
     this._source = source.url;
     if (source) {
-      this._msPlayer.src = source.url;
+      this._videoElement.src = source.url;
     }
   }
 
   _createClass(NativeFetcher, [{
     key: 'load',
     value: function load() {
-      this._msPlayer.load();
+      this._logger.debug('load');
+      this._videoElement.load();
     }
   }, {
     key: 'destroy',
     value: function destroy() {
-      this._msPlayer.src = "";
+      this._logger.debug('destroy');
+      this._videoElement.src = "";
     }
   }]);
 
@@ -2313,7 +2322,7 @@ NativeFetcher._name = 'NativeFetcher';
 exports.default = NativeFetcher;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2325,13 +2334,17 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nativeFetcher = __webpack_require__(14);
+var _nativeFetcher = __webpack_require__(15);
 
 var _nativeFetcher2 = _interopRequireDefault(_nativeFetcher);
 
 var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
+
+var _mediaSourceManager = __webpack_require__(13);
+
+var _mediaSourceManager2 = _interopRequireDefault(_mediaSourceManager);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2372,14 +2385,14 @@ var NativeManager = function (_MediaSourceManager) {
   }]);
 
   return NativeManager;
-}(MediaSourceManager);
+}(_mediaSourceManager2.default);
 
 NativeManager._name = "NativeManager";
 NativeManager._logger = _logger2.default.getLogger(NativeManager._name);
 exports.default = NativeManager;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2445,7 +2458,7 @@ exports.VERSION = VERSION;
 exports.default = playkit;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2465,11 +2478,11 @@ var _eventManager = __webpack_require__(3);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _state = __webpack_require__(19);
+var _state = __webpack_require__(20);
 
 var _state2 = _interopRequireDefault(_state);
 
-var _stateTypes = __webpack_require__(18);
+var _stateTypes = __webpack_require__(19);
 
 var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
@@ -2736,7 +2749,7 @@ var StateManager = function () {
 exports.default = StateManager;
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2756,7 +2769,7 @@ var PLAYER_STATE_TYPES = {
 exports.default = PLAYER_STATE_TYPES;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2838,7 +2851,7 @@ var State = function () {
 exports.default = State;
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2878,7 +2891,7 @@ exports.capitlize = capitlize;
 exports.endsWith = endsWith;
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!

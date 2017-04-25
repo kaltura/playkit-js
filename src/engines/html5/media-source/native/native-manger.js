@@ -2,7 +2,7 @@
 import NativeFetcher from './native-fetcher'
 import LoggerFactory from '../../../../utils/logger'
 
-export default class NativeManager extends MediaSourceManager {
+export default class NativeManager implements IMediaSourceManager {
   static _name = "NativeManager";
   static _logger = LoggerFactory.getLogger(NativeManager._name);
 

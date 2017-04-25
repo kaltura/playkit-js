@@ -3,18 +3,18 @@ import NativeManager from './native/native-manger'
 
 export default class MediaSourceProvider {
 
-  static _mediaSourceManagers: Array<typeof MediaSourceManager> = [NativeManager];
+  static _mediaSourceManagers: Array<typeof IMediaSourceManager> = [NativeManager];
 
-  static _selectedManager: ?(typeof MediaSourceManager) = null;
+  static _selectedManager: ?(typeof IMediaSourceManager) = null;
 
-  static register(mediaSourceManger: typeof MediaSourceManager): void {
-    if (mediaSourceManger && !MediaSourceProvider._mediaSourceManagers.includes(mediaSourceManger)) {
-      MediaSourceProvider._mediaSourceManagers.push(mediaSourceManger);
+  static register(mediaSourceManager: typeof IMediaSourceManager): void {
+    if (mediaSourceManager && !MediaSourceProvider._mediaSourceManagers.includes(mediaSourceManager)) {
+      MediaSourceProvider._mediaSourceManagers.push(mediaSourceManager);
     }
   }
 
-  static unRegister(mediaSourceManger: typeof MediaSourceManager): void {
-    let index = MediaSourceProvider._mediaSourceManagers.indexOf(mediaSourceManger);
+  static unRegister(mediaSourceManager: typeof IMediaSourceManager): void {
+    let index = MediaSourceProvider._mediaSourceManagers.indexOf(mediaSourceManager);
     if (index > -1) {
       MediaSourceProvider._mediaSourceManagers.splice(index, 1);
     }
