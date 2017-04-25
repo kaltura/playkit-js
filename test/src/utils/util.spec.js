@@ -70,7 +70,7 @@ describe('getQueryVariable', () => {
     sandbox = sinon.sandbox.create();
   });
 
-  it('should retrieve the correct key for a certain value', () => {
+  it('should retrieve the correct value for a certain key', () => {
     sinon.stub(window, 'decodeURIComponent').returns("foo=bar&test={}&num=2");
     util.getQueryVariable('foo').should.equal('bar');
     util.getQueryVariable('test').should.equal('{}');
