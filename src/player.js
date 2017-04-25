@@ -6,7 +6,7 @@ import PlayerEvents from './event/events'
 import {isNumber, isFloat} from './utils/util'
 import {capitlize} from './utils/string-util'
 import LoggerFactory from './utils/logger'
-import Html5 from './engines/html5'
+import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
 import StateManager from './state/state-manager'
 

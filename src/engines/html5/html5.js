@@ -1,20 +1,19 @@
 //@flow
-import FakeEventTarget from '../event/fake-event-target'
-import FakeEvent from '../event/fake-event'
-import EventManager from '../event/event-manager'
-import PlayerEvents from '../event/events'
-import MSAManager from './adapters/adapter-manager'
-import BaseMediaSourceAdapter from './adapters/base-adapter'
+import FakeEventTarget from '../../event/fake-event-target'
+import FakeEvent from '../../event/fake-event'
+import EventManager from '../../event/event-manager'
+import PlayerEvents from '../../event/events'
+import MediaSourceProvider from './media-source/media-source-provider'
 
 export default class Html5 extends FakeEventTarget implements IEngine {
   _el: HTMLVideoElement;
   _eventManager: EventManager;
-  _mediaSourceAdapter: ?BaseMediaSourceAdapter;
+  _mediaSourceFetcher: ?IMediaSourceFetcher;
 
   static EngineName: string = "html5";
 
   static canPlayType(mimeType) {
-    return MSAManager.canPlayType(mimeType);
+    return MediaSourceProvider.canPlayType(mimeType);
   }
 
   constructor(source: Object, config: Object) {
@@ -27,8 +26,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   destroy() {
     this.detach();
-    if (this._mediaSourceAdapter) {
-      this._mediaSourceAdapter.destroy();
+    if (this._mediaSourceFetcher) {
+      this._mediaSourceFetcher.destroy();
     }
     if (this._el) {
       this.pause();
@@ -74,11 +73,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   setSource(source: Object, config: Object) {
-    this.loadMediaSourceAdapter(source, config);
+    this.loadMediaSourceFetcher(source, config);
   }
 
-  loadMediaSourceAdapter(source: Object, config: Object) {
-    this._mediaSourceAdapter = MSAManager.getMediaSourceAdapter((this: Html5), source, config);
+  loadMediaSourceFetcher(source: Object, config: Object) {
+    this._mediaSourceFetcher = MediaSourceProvider.getMediaSourceFetcher((this: Html5), source, config);
   }
 
   set src(source: string): void {
@@ -112,8 +111,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   load(): void {
-    if (this._mediaSourceAdapter) {
-      this._mediaSourceAdapter.load();
+    if (this._mediaSourceFetcher) {
+      this._mediaSourceFetcher.load();
     }
   }
 
