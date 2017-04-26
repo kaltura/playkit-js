@@ -913,35 +913,35 @@ var MediaSourceProvider = function () {
   _createClass(MediaSourceProvider, null, [{
     key: 'register',
     value: function register(mediaSourceManger) {
-      if (mediaSourceManger && !MediaSourceProvider._mediaSourceManagers.includes(mediaSourceManger)) {
-        MediaSourceProvider._mediaSourceManagers.push(mediaSourceManger);
+      if (mediaSourceManger && !MediaSourceProvider._mediaSourceAdapters.includes(mediaSourceManger)) {
+        MediaSourceProvider._mediaSourceAdapters.push(mediaSourceManger);
       }
     }
   }, {
     key: 'unRegister',
     value: function unRegister(mediaSourceManger) {
-      var index = MediaSourceProvider._mediaSourceManagers.indexOf(mediaSourceManger);
+      var index = MediaSourceProvider._mediaSourceAdapters.indexOf(mediaSourceManger);
       if (index > -1) {
-        MediaSourceProvider._mediaSourceManagers.splice(index, 1);
+        MediaSourceProvider._mediaSourceAdapters.splice(index, 1);
       }
     }
   }, {
     key: 'canPlayType',
     value: function canPlayType(mimeType) {
-      var mediaSourceManagers = MediaSourceProvider._mediaSourceManagers;
+      var mediaSourceManagers = MediaSourceProvider._mediaSourceAdapters;
       for (var i = 0; i < mediaSourceManagers.length; i++) {
         if (mediaSourceManagers[i].canPlayType(mimeType)) {
-          MediaSourceProvider._selectedManager = mediaSourceManagers[i];
+          MediaSourceProvider._selectedAdapter = mediaSourceManagers[i];
           return true;
         }
       }
       return false;
     }
   }, {
-    key: 'getMediaSourceFetcher',
+    key: 'getMediaSourceAdapter',
     value: function getMediaSourceFetcher(engine, source, config) {
-      if (engine && source && config && MediaSourceProvider._selectedManager) {
-        return MediaSourceProvider._selectedManager.createFetcher(engine, source, config.engines);
+      if (engine && source && config && MediaSourceProvider._selectedAdapter) {
+        return MediaSourceProvider._selectedAdapter.createFetcher(engine, source, config.engines);
       }
       return null;
     }
@@ -950,8 +950,8 @@ var MediaSourceProvider = function () {
   return MediaSourceProvider;
 }();
 
-MediaSourceProvider._mediaSourceManagers = [_nativeManger2.default];
-MediaSourceProvider._selectedManager = null;
+MediaSourceProvider._mediaSourceAdapters = [_nativeManger2.default];
+MediaSourceProvider._selectedAdapter = null;
 exports.default = MediaSourceProvider;
 
 
@@ -1928,8 +1928,8 @@ var Html5 = function (_FakeEventTarget) {
     key: 'destroy',
     value: function destroy() {
       this.detach();
-      if (this._mediaSourceFetcher) {
-        this._mediaSourceFetcher.destroy();
+      if (this._mediaSourceAdapter) {
+        this._mediaSourceAdapter.destroy();
       }
       if (this._el) {
         this.pause();
@@ -1986,12 +1986,12 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'setSource',
     value: function setSource(source, config) {
-      this.loadMediaSourceFetcher(source, config);
+      this.loadMediaSourceAdapter(source, config);
     }
   }, {
-    key: 'loadMediaSourceFetcher',
+    key: 'loadMediaSourceAdapter',
     value: function loadMediaSourceFetcher(source, config) {
-      this._mediaSourceFetcher = _mediaSourceProvider2.default.getMediaSourceFetcher(this, source, config);
+      this._mediaSourceAdapter = _mediaSourceProvider2.default.getMediaSourceAdapter(this, source, config);
     }
   }, {
     key: 'play',
@@ -2025,8 +2025,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'load',
     value: function load() {
-      if (this._mediaSourceFetcher) {
-        this._mediaSourceFetcher.load();
+      if (this._mediaSourceAdapter) {
+        this._mediaSourceAdapter.load();
       }
     }
 

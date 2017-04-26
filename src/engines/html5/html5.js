@@ -8,7 +8,7 @@ import MediaSourceProvider from './media-source/media-source-provider'
 export default class Html5 extends FakeEventTarget implements IEngine {
   _el: HTMLVideoElement;
   _eventManager: EventManager;
-  _mediaSourceFetcher: ?IMediaSourceFetcher;
+  _mediaSourceAdapter: ?IMediaSourceAdapter;
 
   static EngineName: string = "html5";
 
@@ -26,8 +26,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   destroy() {
     this.detach();
-    if (this._mediaSourceFetcher) {
-      this._mediaSourceFetcher.destroy();
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.destroy();
     }
     if (this._el) {
       this.pause();
@@ -73,11 +73,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   setSource(source: Object, config: Object) {
-    this.loadMediaSourceFetcher(source, config);
+    this.loadMediaSourceAdapter(source, config);
   }
 
-  loadMediaSourceFetcher(source: Object, config: Object) {
-    this._mediaSourceFetcher = MediaSourceProvider.getMediaSourceFetcher((this: Html5), source, config);
+  loadMediaSourceAdapter(source: Object, config: Object) {
+    this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter((this: Html5), source, config);
   }
 
   set src(source: string): void {
@@ -111,8 +111,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   load(): void {
-    if (this._mediaSourceFetcher) {
-      this._mediaSourceFetcher.load();
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.load();
     }
   }
 
