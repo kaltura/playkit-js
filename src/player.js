@@ -9,6 +9,7 @@ import LoggerFactory from './utils/logger'
 import Html5 from './engines/html5'
 import PluginManager from './plugin/plugin-manager'
 import StateManager from './state/state-manager'
+import Track from './track/track'
 
 let logger = LoggerFactory.getLogger('Player');
 type ListenerType = (event: FakeEvent) => any;
@@ -93,6 +94,14 @@ class Player extends FakeEventTarget {
         }
       }
     }
+  }
+
+  getTracks(type?: string): Array<Track> {
+    return this._engine.getTracks(type);
+  }
+
+  selectTrack(track: Track): void {
+    this._engine.selectTrack(track);
   }
 
   /**

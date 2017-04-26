@@ -5,11 +5,13 @@ import EventManager from '../event/event-manager'
 import PlayerEvents from '../event/events'
 import MSAManager from './adapters/adapter-manager'
 import BaseMediaSourceAdapter from './adapters/base-adapter'
+import Track from '../../src/track/track'
 
 export default class Html5 extends FakeEventTarget implements IEngine {
   _el: HTMLVideoElement;
   _eventManager: EventManager;
   _mediaSourceAdapter: ?BaseMediaSourceAdapter;
+  _tracks: Array<Track> = [];
 
   static EngineName: string = "html5";
 
@@ -81,6 +83,16 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._mediaSourceAdapter = MSAManager.getMediaSourceAdapter((this: Html5), source, config);
   }
 
+  getTracks(type?: string): Array<Track> {
+    return !type ? this._tracks : this._tracks.filter((track: Track) => {
+        return track.type === type;
+      });
+  }
+
+  selectTrack(track: Track): void {
+    this._mediaSourceAdapter.selectTrack(track);
+  }
+
   set src(source: string): void {
     //Set source
     this._el.src = source;
@@ -88,6 +100,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   get src(): string {
     return this._el.src;
+  }
+
+  set tracks(value: Array<Track>) {
+    this._tracks = value;
   }
 
   //playback interface

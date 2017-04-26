@@ -1,5 +1,7 @@
 //@flow
 import PlayerError from "../../utils/player-error"
+import Track from '../../track/track'
+import TrackTypes from '../../track/track-types'
 
 /**
  * Base of media source adapters
@@ -112,5 +114,41 @@ export default class BaseMediaSourceAdapter {
    */
   destroy() {
     // should do nothing. implemented by the inheritor if necessary.
+  }
+
+  selectTrack(track: Track) {
+    if (track) {
+      let success = false;
+      switch (track.type) {
+        case TrackTypes.VIDEO: {
+          break;
+        }
+        case TrackTypes.AUDIO: {
+          success = this._selectAudioTrack(track);
+          break;
+        }
+        case TrackTypes.TEXT: {
+          break;
+        }
+      }
+      if (success) {
+        this._markActiveTrack(track);
+      }
+    }
+  }
+
+  _parseTracks() {
+    let parsedVideoTracks = this._getParsedVideoTracks();
+    let parsedAudioTracks = this._getParsedAudioTracks();
+    let parsedTextTracks = this._getParsedTextTracks();
+    this._engine.tracks = parsedVideoTracks.concat(parsedAudioTracks).concat(parsedTextTracks);
+  }
+
+  _markActiveTrack(track: Track) {
+    let tracks = this._engine.getTracks(track.type);
+    for (let i = 0; i < tracks.length; i++) {
+      tracks[i].active = false;
+    }
+    track.active = true;
   }
 }

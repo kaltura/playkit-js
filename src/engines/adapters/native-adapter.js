@@ -1,5 +1,7 @@
 //@flow
 import BaseMediaSourceAdapter from './base-adapter'
+import AudioTrack from '../../track/audio-track'
+import TrackTypes from '../../track/track-types'
 
 /**
  * An illustration of media source extension for progressive download
@@ -40,6 +42,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (source) {
       this._msPlayer.src = source.url;
     }
+    this._msPlayer.addEventListener('loadeddata', this._parseTracks.bind(this));
   }
 
   /**
@@ -49,5 +52,35 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   load(): void {
     this._msPlayer.load();
+  }
+
+  _selectAudioTrack(track: AudioTrack): boolean {
+    if (track && track.type === TrackTypes.AUDIO && this._msPlayer.audioTracks && this._msPlayer.audioTracks.length) {
+      let selectedTrack = this._msPlayer.audioTracks.getTrackById(track.id);
+      if (selectedTrack) {
+        selectedTrack.enabled = true;
+        return true;
+      }
+    }
+    return false;
+  }
+
+  _getParsedVideoTracks() {
+    return [];
+  }
+
+  _getParsedAudioTracks(): Array<AudioTrack> {
+    let audioTracks = this._msPlayer.audioTracks;
+    if (audioTracks) {
+      let parsedTracks = [];
+      for (let i = 0; i < audioTracks.length; i++) {
+        parsedTracks.push(new AudioTrack(audioTracks[i].id, audioTracks[i].enabled, audioTracks[i].language));
+      }
+      return parsedTracks;
+    }
+  }
+
+  _getParsedTextTracks() {
+    return [];
   }
 }
