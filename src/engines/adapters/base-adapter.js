@@ -147,8 +147,7 @@ export default class BaseMediaSourceAdapter {
   _markActiveTrack(track: Track) {
     let tracks = this._engine.getTracks(track.type);
     for (let i = 0; i < tracks.length; i++) {
-      tracks[i].active = false;
+      tracks[i].active = tracks[i].id === track.id;
     }
-    track.active = true;
   }
 }
