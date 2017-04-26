@@ -98,6 +98,10 @@ export default class StateManager {
         this._updateState(PlayerStates.PLAYING);
         this._dispatchEvent();
       },
+      [PlayerEvents.PLAYING]: () => {
+        this._updateState(PlayerStates.PLAYING);
+        this._dispatchEvent();
+      },
       [PlayerEvents.ENDED]: () => {
         this._updateState(PlayerStates.IDLE);
         this._dispatchEvent();
