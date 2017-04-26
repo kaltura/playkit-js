@@ -165,6 +165,11 @@ describe("StateManager.Transitions:PAUSED", () => {
     stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
   });
 
+  it('should handle transition from paused to playing', () => {
+    stateManager._doTransition({type: PlayerEvents.PLAYING});
+    stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+  });
+
   it('should handle transition from paused to idle', () => {
     stateManager._doTransition({type: PlayerEvents.ENDED});
     stateManager.currentState.type.should.equal(PlayerStates.IDLE);
