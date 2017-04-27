@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 17);
+/******/ 	return __webpack_require__(__webpack_require__.s = 15);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -90,7 +90,7 @@ exports.LOG_LEVEL = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jsLogger = __webpack_require__(22);
+var _jsLogger = __webpack_require__(20);
 
 var JsLogger = _interopRequireWildcard(_jsLogger);
 
@@ -305,13 +305,13 @@ var _events2 = _interopRequireDefault(_events);
 
 var _util = __webpack_require__(11);
 
-var _stringUtil = __webpack_require__(21);
+var _stringUtil = __webpack_require__(19);
 
 var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _html = __webpack_require__(14);
+var _html = __webpack_require__(13);
 
 var _html2 = _interopRequireDefault(_html);
 
@@ -319,7 +319,7 @@ var _pluginManager = __webpack_require__(7);
 
 var _pluginManager2 = _interopRequireDefault(_pluginManager);
 
-var _stateManager = __webpack_require__(18);
+var _stateManager = __webpack_require__(16);
 
 var _stateManager2 = _interopRequireDefault(_stateManager);
 
@@ -893,18 +893,26 @@ exports.default = PLAYER_EVENTS;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.registerMediaSourceManager = undefined;
+exports.registerMediaSourceAdapter = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nativeManger = __webpack_require__(16);
+var _nativeAdapter = __webpack_require__(14);
 
-var _nativeManger2 = _interopRequireDefault(_nativeManger);
+var _nativeAdapter2 = _interopRequireDefault(_nativeAdapter);
+
+var _logger = __webpack_require__(0);
+
+var _logger2 = _interopRequireDefault(_logger);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * Media source provider
+ * @classdesc
+ */
 var MediaSourceProvider = function () {
   function MediaSourceProvider() {
     _classCallCheck(this, MediaSourceProvider);
@@ -912,36 +920,105 @@ var MediaSourceProvider = function () {
 
   _createClass(MediaSourceProvider, null, [{
     key: 'register',
-    value: function register(mediaSourceManger) {
-      if (mediaSourceManger && !MediaSourceProvider._mediaSourceAdapters.includes(mediaSourceManger)) {
-        MediaSourceProvider._mediaSourceAdapters.push(mediaSourceManger);
+
+
+    /**
+     * Add a media source adapter to the registry
+     * @function register
+     * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to register
+     * @static
+     * @returns {void}
+     */
+
+    /**
+     * The media source adapter registry
+     * @member {Array<IMediaSourceAdapter>} _mediaSourceAdapters
+     * @static
+     * @private
+     */
+    value: function register(mediaSourceAdapter) {
+      if (mediaSourceAdapter) {
+        if (!MediaSourceProvider._mediaSourceAdapters.includes(mediaSourceAdapter)) {
+          MediaSourceProvider._logger.debug('Adapter <' + mediaSourceAdapter.name + '> has been registered successfully.');
+          MediaSourceProvider._mediaSourceAdapters.push(mediaSourceAdapter);
+        } else {
+          MediaSourceProvider._logger.debug('Adapter <' + mediaSourceAdapter.name + '> is already registered, do not register again.');
+        }
       }
     }
+
+    /**
+     * Remove a media source adapter from the registry
+     * @function unRegister
+     * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to unRegister
+     * @static
+     * @returns {void}
+     */
+
+    /**
+     * The selected adapter for playback
+     * @type {null|IMediaSourceAdapter}
+     * @static
+     * @private
+     */
+
+    /**
+     * The logger of the media source provider
+     * @member {any} _logger
+     * @static
+     * @private
+     */
+
   }, {
     key: 'unRegister',
-    value: function unRegister(mediaSourceManger) {
-      var index = MediaSourceProvider._mediaSourceAdapters.indexOf(mediaSourceManger);
+    value: function unRegister(mediaSourceAdapter) {
+      var index = MediaSourceProvider._mediaSourceAdapters.indexOf(mediaSourceAdapter);
       if (index > -1) {
+        MediaSourceProvider._logger.debug('Unregistered <' + mediaSourceAdapter.name + '> adapter.');
         MediaSourceProvider._mediaSourceAdapters.splice(index, 1);
       }
     }
+
+    /**
+     * Checks if one of the registered media source adapters can play a given mime type
+     * @function canPlayType
+     * @param {string} mimeType - The mime type to check
+     * @static
+     * @returns {boolean} - If one of the adapters can play the specific mime type
+     */
+
   }, {
     key: 'canPlayType',
     value: function canPlayType(mimeType) {
-      var mediaSourceManagers = MediaSourceProvider._mediaSourceAdapters;
-      for (var i = 0; i < mediaSourceManagers.length; i++) {
-        if (mediaSourceManagers[i].canPlayType(mimeType)) {
-          MediaSourceProvider._selectedAdapter = mediaSourceManagers[i];
+      var mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
+      for (var i = 0; i < mediaSourceAdapters.length; i++) {
+        if (mediaSourceAdapters[i].canPlayType(mimeType)) {
+          MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
+          MediaSourceProvider._logger.debug('Selected adapter is <' + MediaSourceProvider._selectedAdapter.name + '>.');
           return true;
         }
       }
       return false;
     }
+
+    /**
+     * Get the appropriate media source adapter to the video source
+     * @function getMediaSourceAdapter
+     * @param {IEngine} engine - The video engine which requires adapter for a given mimeType
+     * @param {Object} source - The video source
+     * @param {Object} config - The player configuration
+     * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists
+     * @static
+     */
+
   }, {
     key: 'getMediaSourceAdapter',
-    value: function getMediaSourceFetcher(engine, source, config) {
-      if (engine && source && config && MediaSourceProvider._selectedAdapter) {
-        return MediaSourceProvider._selectedAdapter.createFetcher(engine, source, config.engines);
+    value: function getMediaSourceAdapter(engine, source, config) {
+      if (engine && source && config) {
+        if (!MediaSourceProvider._selectedAdapter) {
+          MediaSourceProvider.canPlayType(source.mimetype);
+        }
+        return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(engine, source, config.engines) : null;
       }
       return null;
     }
@@ -950,13 +1027,14 @@ var MediaSourceProvider = function () {
   return MediaSourceProvider;
 }();
 
-MediaSourceProvider._mediaSourceAdapters = [_nativeManger2.default];
+MediaSourceProvider._logger = _logger2.default.getLogger('MediaSourceProvider');
+MediaSourceProvider._mediaSourceAdapters = [_nativeAdapter2.default];
 MediaSourceProvider._selectedAdapter = null;
 exports.default = MediaSourceProvider;
 
 
-var registerMediaSourceManager = MediaSourceProvider.register;
-exports.registerMediaSourceManager = registerMediaSourceManager;
+var registerMediaSourceAdapter = MediaSourceProvider.register;
+exports.registerMediaSourceAdapter = registerMediaSourceAdapter;
 
 /***/ }),
 /* 6 */
@@ -1861,13 +1939,6 @@ module.exports = {
 "use strict";
 
 
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -1990,7 +2061,7 @@ var Html5 = function (_FakeEventTarget) {
     }
   }, {
     key: 'loadMediaSourceAdapter',
-    value: function loadMediaSourceFetcher(source, config) {
+    value: function loadMediaSourceAdapter(source, config) {
       this._mediaSourceAdapter = _mediaSourceProvider2.default.getMediaSourceAdapter(this, source, config);
     }
   }, {
@@ -2267,7 +2338,7 @@ Html5.EngineName = "html5";
 exports.default = Html5;
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2287,11 +2358,72 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var NativeFetcher = function () {
-  function NativeFetcher(engine, source, config) {
-    _classCallCheck(this, NativeFetcher);
+/**
+ * An illustration of media source extension for progressive download
+ * @classdesc
+ * @implements {IMediaSourceAdapter}
+ */
+var NativeAdapter = function () {
+  _createClass(NativeAdapter, null, [{
+    key: "name",
 
-    this._logger = _logger2.default.getLogger(NativeFetcher._name);
+    /**
+     * Getter for the adapter name
+     * @returns {string} - The adapter name
+     */
+    get: function get() {
+      return NativeAdapter._name;
+    }
+
+    /**
+     * The adapter logger
+     * @member {any} _logger
+     * @private
+     * @static
+     */
+
+    /**
+     * The name of the Adapter
+     * @member {string} _name
+     * @static
+     * @private
+     */
+
+  }]);
+
+  /**
+   * @constructor
+   * @param {IEngine} engine - The video element which bind to NativeAdapter
+   * @param {string} source - The source URL
+   * @param {Object} config - The media source adapter configuration
+   */
+
+  /**
+   * The adapter config
+   * @member {Object} _config
+   * @private
+   */
+
+  /**
+   * The owning engine
+   * @member {IEngine} _engine
+   * @private
+   */
+
+  /**
+   * The dom video element
+   * @member {HTMLVideoElement} _videoElement
+   * @private
+   */
+
+  /**
+   * The source url
+   * @member {string} _source
+   * @private
+   */
+  function NativeAdapter(engine, source, config) {
+    _classCallCheck(this, NativeAdapter);
+
     this._engine = engine;
     this._config = config;
     this._videoElement = engine.getVideoElement();
@@ -2301,98 +2433,90 @@ var NativeFetcher = function () {
     }
   }
 
-  _createClass(NativeFetcher, [{
-    key: 'load',
+  /**
+   * Checks if NativeAdapter can play a given mime type
+   * @function canPlayType
+   * @param {string} mimeType - The mime type to check
+   * @returns {boolean} - Whether the native adapter can play a specific mime type
+   * @static
+   */
+
+
+  _createClass(NativeAdapter, [{
+    key: "load",
+
+
+    /**
+     * Load the video source
+     * @function load
+     * @returns {void}
+     */
     value: function load() {
-      this._logger.debug('load');
+      NativeAdapter._logger.debug('load');
       this._videoElement.load();
     }
+
+    /**
+     * Clearing the video source
+     * @function destroy
+     * @returns {void}
+     */
+
   }, {
-    key: 'destroy',
+    key: "destroy",
     value: function destroy() {
-      this._logger.debug('destroy');
+      NativeAdapter._logger.debug('destroy');
       this._videoElement.src = "";
     }
-  }]);
-
-  return NativeFetcher;
-}();
-
-NativeFetcher._name = 'NativeFetcher';
-exports.default = NativeFetcher;
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _nativeFetcher = __webpack_require__(15);
-
-var _nativeFetcher2 = _interopRequireDefault(_nativeFetcher);
-
-var _logger = __webpack_require__(0);
-
-var _logger2 = _interopRequireDefault(_logger);
-
-var _mediaSourceManager = __webpack_require__(13);
-
-var _mediaSourceManager2 = _interopRequireDefault(_mediaSourceManager);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var NativeManager = function (_MediaSourceManager) {
-  _inherits(NativeManager, _MediaSourceManager);
-
-  function NativeManager() {
-    _classCallCheck(this, NativeManager);
-
-    return _possibleConstructorReturn(this, (NativeManager.__proto__ || Object.getPrototypeOf(NativeManager)).apply(this, arguments));
-  }
-
-  _createClass(NativeManager, null, [{
-    key: 'createFetcher',
-    value: function createFetcher(engine, source, config) {
-      NativeManager._logger.debug('Creating fetcher');
-      return new _nativeFetcher2.default(engine, source, config);
-    }
-  }, {
-    key: 'canPlayType',
+  }], [{
+    key: "canPlayType",
     value: function canPlayType(mimeType) {
       var canPlayType = !!document.createElement("video").canPlayType(mimeType);
-      NativeManager._logger.debug('canPlayType result for mimeType:' + mimeType + 'is ' + canPlayType.toString());
+      NativeAdapter._logger.debug('canPlayType result for mimeType:' + mimeType + ' is ' + canPlayType.toString());
       return canPlayType;
     }
+
+    /**
+     * Checks if the media source adapter is supported
+     * @function isSupported
+     * @returns {boolean} - Whether the media source adapter is supported. Default implementation is true
+     * @static
+     */
+
   }, {
-    key: 'isSupported',
+    key: "isSupported",
     value: function isSupported() {
-      NativeManager._logger.debug('isSupported:true');
+      NativeAdapter._logger.debug('isSupported:true');
       return true;
+    }
+
+    /**
+     * Factory method to create media source adapter
+     * @function createAdapter
+     * @param {IEngine} engine - The video engine that the media source adapter work with
+     * @param {Object} source - The source Object
+     * @param {Object} config - The media source adapter configuration
+     * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter
+     * @static
+     */
+
+  }, {
+    key: "createAdapter",
+    value: function createAdapter(engine, source, config) {
+      NativeAdapter._logger.debug('Creating adapter');
+      return new this(engine, source, config);
     }
   }]);
 
-  return NativeManager;
-}(_mediaSourceManager2.default);
+  return NativeAdapter;
+}();
 
-NativeManager._name = "NativeManager";
-NativeManager._logger = _logger2.default.getLogger(NativeManager._name);
-exports.default = NativeManager;
+NativeAdapter._name = "NativeAdapter";
+NativeAdapter._logger = _logger2.default.getLogger(NativeAdapter._name);
+exports.default = NativeAdapter;
 
 /***/ }),
-/* 17 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2401,7 +2525,7 @@ exports.default = NativeManager;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.VERSION = exports.BasePlugin = exports.registerPlugin = exports.registerMediaSourceManager = undefined;
+exports.VERSION = exports.BasePlugin = exports.registerPlugin = exports.registerMediaSourceAdapter = undefined;
 exports.playkit = playkit;
 
 var _player = __webpack_require__(2);
@@ -2444,8 +2568,8 @@ function playkit() {
   return new _player2.default(config);
 }
 
-// Registration for media source managers
-exports.registerMediaSourceManager = _mediaSourceProvider.registerMediaSourceManager;
+// Registration for media source adapters
+exports.registerMediaSourceAdapter = _mediaSourceProvider.registerMediaSourceAdapter;
 
 // Export the plugin framework
 
@@ -2458,7 +2582,7 @@ exports.VERSION = VERSION;
 exports.default = playkit;
 
 /***/ }),
-/* 18 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2478,11 +2602,11 @@ var _eventManager = __webpack_require__(3);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _state = __webpack_require__(20);
+var _state = __webpack_require__(18);
 
 var _state2 = _interopRequireDefault(_state);
 
-var _stateTypes = __webpack_require__(19);
+var _stateTypes = __webpack_require__(17);
 
 var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
@@ -2542,17 +2666,22 @@ var StateManager = function () {
    */
   function StateManager(player) {
     var _this = this,
+        _PlayerStates$IDLE,
         _PlayerStates$LOADING,
         _PlayerStates$PAUSED,
         _PlayerStates$PLAYING,
+        _PlayerStates$BUFFERI,
         _transitions;
 
     _classCallCheck(this, StateManager);
 
-    this._transitions = (_transitions = {}, _defineProperty(_transitions, _stateTypes2.default.IDLE, _defineProperty({}, _events2.default.LOAD_START, function () {
+    this._transitions = (_transitions = {}, _defineProperty(_transitions, _stateTypes2.default.IDLE, (_PlayerStates$IDLE = {}, _defineProperty(_PlayerStates$IDLE, _events2.default.LOAD_START, function () {
       _this._updateState(_stateTypes2.default.LOADING);
       _this._dispatchEvent();
-    })), _defineProperty(_transitions, _stateTypes2.default.LOADING, (_PlayerStates$LOADING = {}, _defineProperty(_PlayerStates$LOADING, _events2.default.LOADED_METADATA, function () {
+    }), _defineProperty(_PlayerStates$IDLE, _events2.default.PLAY, function () {
+      _this._updateState(_stateTypes2.default.BUFFERING);
+      _this._dispatchEvent();
+    }), _PlayerStates$IDLE)), _defineProperty(_transitions, _stateTypes2.default.LOADING, (_PlayerStates$LOADING = {}, _defineProperty(_PlayerStates$LOADING, _events2.default.LOADED_METADATA, function () {
       if (_this._player.config.autoPlay) {
         _this._updateState(_stateTypes2.default.PLAYING);
       } else {
@@ -2563,6 +2692,9 @@ var StateManager = function () {
       _this._updateState(_stateTypes2.default.IDLE);
       _this._dispatchEvent();
     }), _PlayerStates$LOADING)), _defineProperty(_transitions, _stateTypes2.default.PAUSED, (_PlayerStates$PAUSED = {}, _defineProperty(_PlayerStates$PAUSED, _events2.default.PLAY, function () {
+      _this._updateState(_stateTypes2.default.PLAYING);
+      _this._dispatchEvent();
+    }), _defineProperty(_PlayerStates$PAUSED, _events2.default.PLAYING, function () {
       _this._updateState(_stateTypes2.default.PLAYING);
       _this._dispatchEvent();
     }), _defineProperty(_PlayerStates$PAUSED, _events2.default.ENDED, function () {
@@ -2580,10 +2712,13 @@ var StateManager = function () {
     }), _defineProperty(_PlayerStates$PLAYING, _events2.default.ERROR, function () {
       _this._updateState(_stateTypes2.default.IDLE);
       _this._dispatchEvent();
-    }), _PlayerStates$PLAYING)), _defineProperty(_transitions, _stateTypes2.default.BUFFERING, _defineProperty({}, _events2.default.PLAYING, function () {
+    }), _PlayerStates$PLAYING)), _defineProperty(_transitions, _stateTypes2.default.BUFFERING, (_PlayerStates$BUFFERI = {}, _defineProperty(_PlayerStates$BUFFERI, _events2.default.PLAYING, function () {
       _this._updateState(_stateTypes2.default.PLAYING);
       _this._dispatchEvent();
-    })), _transitions);
+    }), _defineProperty(_PlayerStates$BUFFERI, _events2.default.PAUSE, function () {
+      _this._updateState(_stateTypes2.default.PAUSED);
+      _this._dispatchEvent();
+    }), _PlayerStates$BUFFERI)), _transitions);
 
     this._player = player;
     this._logger = _logger2.default.getLogger("StateManager");
@@ -2749,7 +2884,7 @@ var StateManager = function () {
 exports.default = StateManager;
 
 /***/ }),
-/* 19 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2769,7 +2904,7 @@ var PLAYER_STATE_TYPES = {
 exports.default = PLAYER_STATE_TYPES;
 
 /***/ }),
-/* 20 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2851,7 +2986,7 @@ var State = function () {
 exports.default = State;
 
 /***/ }),
-/* 21 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2891,7 +3026,7 @@ exports.capitlize = capitlize;
 exports.endsWith = endsWith;
 
 /***/ }),
-/* 22 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
