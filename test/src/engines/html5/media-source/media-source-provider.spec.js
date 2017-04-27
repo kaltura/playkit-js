@@ -1,5 +1,5 @@
-import MediaSourceProvider from '../../../../src/engines/html5/media-source/media-source-provider'
-import {adapter1, adapter2, adapter3} from './test-adapters'
+import MediaSourceProvider from '../../../../../src/engines/html5/media-source/media-source-provider'
+import {adapter1, adapter2, adapter3} from './test-adapters/test-adapters'
 
 let video = document.createElement("video");
 let fakeEngine = {
