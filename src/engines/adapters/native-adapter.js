@@ -1,5 +1,6 @@
 //@flow
 import BaseMediaSourceAdapter from './base-adapter'
+import {IEngine} from '../../../src/interfaces/engine'
 
 /**
  * An illustration of media source extension for progressive download

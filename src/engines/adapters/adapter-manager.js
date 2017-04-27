@@ -2,6 +2,7 @@
 import BaseMediaSourceAdapter from './base-adapter'
 import NativeAdapter from './native-adapter'
 import LoggerFactory from '../../utils/logger'
+import {IEngine} from '../../../src/interfaces/engine'
 
 /**
  * Media source adapter manager
