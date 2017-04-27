@@ -1,5 +1,5 @@
 //@flow
-import NativeAdapter from './native-adapter'
+import NativeAdapter from './adapters/native-adapter'
 import LoggerFactory from '../../../utils/logger'
 
 /**
@@ -91,8 +91,11 @@ export default class MediaSourceProvider {
    * @static
    */
   static getMediaSourceAdapter(engine: IEngine, source: Object, config: Object): ?IMediaSourceAdapter {
-    if (engine && source && config && MediaSourceProvider._selectedAdapter) {
-      return MediaSourceProvider._selectedAdapter.createAdapter(engine, source, config.engines);
+    if (engine && source && config) {
+      if (!MediaSourceProvider._selectedAdapter) {
+        MediaSourceProvider.canPlayType(source.mimetype);
+      }
+      return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(engine, source, config.engines) : null;
     }
     return null;
   }

@@ -1,5 +1,5 @@
 //@flow
-import LoggerFactory from '../../../utils/logger'
+import LoggerFactory from '../../../../utils/logger'
 
 /**
  * An illustration of media source extension for progressive download

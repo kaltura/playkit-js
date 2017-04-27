@@ -1,5 +1,5 @@
 import MediaSourceProvider from '../../../../../src/engines/html5/media-source/media-source-provider'
-import {adapter1, adapter2, adapter3} from './test-adapters/test-adapters'
+import {adapter1, adapter2, adapter3} from './adapters/test-adapters/test-adapters'
 
 let video = document.createElement("video");
 let fakeEngine = {
@@ -147,25 +147,21 @@ describe('mediaSourceAdapterManager:getMediaSourceAdapter', () => {
   });
 
   it('should provide adapter1', () => {
-    MediaSourceProvider.canPlayType('mimeType1').should.be.true;
     let adapter = MediaSourceProvider.getMediaSourceAdapter(fakeEngine, {mimetype: 'mimeType1', url: 'url1'}, {});
     adapter.constructor.name.should.equal("adapter1");
   });
 
   it('should provide adapter2', () => {
-    MediaSourceProvider.canPlayType('mimeType2').should.be.true;
     let adapter = MediaSourceProvider.getMediaSourceAdapter(fakeEngine, {mimetype: 'mimeType2', url: 'url3'}, {});
     adapter.constructor.name.should.equal("adapter2");
   });
 
   it('should provide adapter3', () => {
-    MediaSourceProvider.canPlayType('video/mp4').should.be.true;
     let adapter = MediaSourceProvider.getMediaSourceAdapter(fakeEngine, {mimetype: 'video/mp4', url: 'url3'}, {});
     adapter.constructor.name.should.equal("adapter3");
   });
 
   it('should provide null for unknown mime type', () => {
-    MediaSourceProvider.canPlayType('unknownType').should.be.false;
     let adapter = MediaSourceProvider.getMediaSourceAdapter(fakeEngine, {mimetype: 'unknownType'}, {});
     (adapter === null).should.be.true;
   });
