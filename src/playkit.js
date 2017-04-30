@@ -2,8 +2,7 @@
 import Player from './player'
 import LoggerFactory from './utils/logger'
 import * as packageData from '../package.json'
-import {registerAdapter} from './engines/adapters/adapter-manager'
-import BaseMediaSourceAdapter from './engines/adapters/base-adapter'
+import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider'
 import {registerPlugin} from './plugin/plugin-manager'
 import BasePlugin from './plugin/base-plugin'
 
@@ -21,8 +20,8 @@ export function playkit(config: Object = {}) {
   return new Player(config);
 }
 
-// Registration for media source adapter
-export {registerAdapter, BaseMediaSourceAdapter};
+// Registration for media source adapters
+export {registerMediaSourceAdapter};
 
 // Export the plugin framework
 export {registerPlugin, BasePlugin};
