@@ -878,7 +878,15 @@ var PLAYER_EVENTS = {
   /**
    * Fires when the player state has been changed
    */
-  PLAYER_STATE_CHANGED: 'playerStateChanged'
+  PLAYER_STATE_CHANGED: 'playerStateChanged',
+  /**
+   * Fires when the seeking attribute is set to false indicating that seeking has ended
+   */
+  SEEKED: 'seeked',
+  /**
+   * Fires when the seeking attribute is set to true indicating that seeking is active
+   */
+  SEEKING: 'seeking'
 };
 
 exports.default = PLAYER_EVENTS;
