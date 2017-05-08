@@ -1,5 +1,5 @@
 //@flow
-const PLAYER_EVENTS = {
+const PLAYER_EVENTS: { [event: string]: string } = {
   PLAY: 'play',
   PAUSE: 'pause',
   /**
