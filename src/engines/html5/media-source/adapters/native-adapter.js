@@ -47,25 +47,18 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @private
    */
   _videoElement: HTMLVideoElement;
-  /**
-   * The source url
-   * @member {string} _source
-   * @private
-   */
-  _source: string;
 
   /**
    * @constructor
    * @param {IEngine} engine - The video element which bind to NativeAdapter
-   * @param {string} source - The source URL
+   * @param {Source} source - The source URL
    * @param {Object} config - The media source adapter configuration
    */
-  constructor(engine: IEngine, source: Object, config: Object) {
+  constructor(engine: IEngine, source: Source, config: Object) {
     this._engine = engine;
     this._config = config;
     this._videoElement = engine.getVideoElement();
-    this._source = source.url;
-    if (source) {
+    if (source != null) {
       this._videoElement.src = source.url;
     }
   }
@@ -103,7 +96,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter
    * @static
    */
-  static createAdapter(engine: IEngine, source: Object, config: Object): IMediaSourceAdapter {
+  static createAdapter(engine: IEngine, source: Source, config: Object): IMediaSourceAdapter {
     NativeAdapter._logger.debug('Creating adapter');
     return new this(engine, source, config);
   }

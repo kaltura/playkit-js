@@ -46,7 +46,6 @@ describe('NativeAdapterInstance', () => {
     nativeInstance._engine.should.exist;
     nativeInstance._config.should.exist;
     nativeInstance._videoElement.should.exist;
-    nativeInstance._source.should.exist;
     nativeInstance._videoElement.src.should.equals(window.location.origin + '/url3');
   });
 });
