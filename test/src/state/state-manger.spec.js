@@ -100,6 +100,11 @@ describe("StateManager.Transitions:IDLE", () => {
     stateManager.currentState.type.should.equal(PlayerStates.LOADING);
   });
 
+  it('should handle transition from idle to buffering', () => {
+    stateManager._doTransition({type: PlayerEvents.PLAY});
+    stateManager.currentState.type.should.equal(PlayerStates.BUFFERING);
+  });
+
   it('shouldn\'t handle transition from idle because of unregistered event', () => {
     stateManager._doTransition({type: PlayerEvents.ERROR});
     stateManager.currentState.type.should.equal(PlayerStates.IDLE);
@@ -160,6 +165,11 @@ describe("StateManager.Transitions:PAUSED", () => {
     stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
   });
 
+  it('should handle transition from paused to playing', () => {
+    stateManager._doTransition({type: PlayerEvents.PLAYING});
+    stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+  });
+
   it('should handle transition from paused to idle', () => {
     stateManager._doTransition({type: PlayerEvents.ENDED});
     stateManager.currentState.type.should.equal(PlayerStates.IDLE);
@@ -187,6 +197,11 @@ describe("StateManager.Transitions:BUFFERING", () => {
   it('should handle transition from buffering to playing', () => {
     stateManager._doTransition({type: PlayerEvents.PLAYING});
     stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+  });
+
+  it('should handle transition from buffering to paused', () => {
+    stateManager._doTransition({type: PlayerEvents.PAUSE});
+    stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
   });
 
   it('shouldn\'t handle transition from buffering because of unregistered event', () => {

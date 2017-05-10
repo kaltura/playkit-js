@@ -1,22 +1,21 @@
 //@flow
-import FakeEventTarget from '../event/fake-event-target'
-import FakeEvent from '../event/fake-event'
-import EventManager from '../event/event-manager'
-import PlayerEvents from '../event/events'
-import MSAManager from './adapters/adapter-manager'
-import BaseMediaSourceAdapter from './adapters/base-adapter'
-import Track from '../../src/track/track'
+import FakeEventTarget from '../../event/fake-event-target'
+import FakeEvent from '../../event/fake-event'
+import EventManager from '../../event/event-manager'
+import PlayerEvents from '../../event/events'
+import MediaSourceProvider from './media-source/media-source-provider'
+import Track from '../../../src/track/track'
 
 export default class Html5 extends FakeEventTarget implements IEngine {
   _el: HTMLVideoElement;
   _eventManager: EventManager;
-  _mediaSourceAdapter: ?BaseMediaSourceAdapter;
+  _mediaSourceAdapter: ?IMediaSourceAdapter;
   _tracks: Array<Track> = [];
 
   static EngineName: string = "html5";
 
   static canPlayType(mimeType) {
-    return MSAManager.canPlayType(mimeType);
+    return MediaSourceProvider.canPlayType(mimeType);
   }
 
   constructor(source: Object, config: Object) {
@@ -80,13 +79,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   loadMediaSourceAdapter(source: Object, config: Object) {
-    this._mediaSourceAdapter = MSAManager.getMediaSourceAdapter((this: Html5), source, config);
+    this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter((this: Html5), source, config);
   }
 
   getTracks(type?: string): Array<Track> {
     return !type ? this._tracks : this._tracks.filter((track: Track) => {
-        return track.type === type;
-      });
+      return track.type === type;
+    });
   }
 
   selectTrack(track: Track): void {

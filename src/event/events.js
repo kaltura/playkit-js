@@ -1,5 +1,5 @@
 //@flow
-const PLAYER_EVENTS = {
+const PLAYER_EVENTS: { [event: string]: string } = {
   PLAY: 'play',
   PAUSE: 'pause',
   /**
@@ -69,7 +69,15 @@ const PLAYER_EVENTS = {
   /**
    * Fires when the player state has been changed
    */
-  PLAYER_STATE_CHANGED: 'playerStateChanged'
+  PLAYER_STATE_CHANGED: 'playerStateChanged',
+  /**
+   * Fires when the seeking attribute is set to false indicating that seeking has ended
+   */
+  SEEKED: 'seeked',
+  /**
+   * Fires when the seeking attribute is set to true indicating that seeking is active
+   */
+  SEEKING: 'seeking'
 };
 
 export default PLAYER_EVENTS;

@@ -73,6 +73,10 @@ export default class StateManager {
       [PlayerEvents.LOAD_START]: () => {
         this._updateState(PlayerStates.LOADING);
         this._dispatchEvent();
+      },
+      [PlayerEvents.PLAY]: () => {
+        this._updateState(PlayerStates.BUFFERING);
+        this._dispatchEvent();
       }
     },
     [PlayerStates.LOADING]: {
@@ -91,6 +95,10 @@ export default class StateManager {
     },
     [PlayerStates.PAUSED]: {
       [PlayerEvents.PLAY]: () => {
+        this._updateState(PlayerStates.PLAYING);
+        this._dispatchEvent();
+      },
+      [PlayerEvents.PLAYING]: () => {
         this._updateState(PlayerStates.PLAYING);
         this._dispatchEvent();
       },
@@ -120,6 +128,10 @@ export default class StateManager {
     [PlayerStates.BUFFERING]: {
       [PlayerEvents.PLAYING]: () => {
         this._updateState(PlayerStates.PLAYING);
+        this._dispatchEvent();
+      },
+      [PlayerEvents.PAUSE]: () => {
+        this._updateState(PlayerStates.PAUSED);
         this._dispatchEvent();
       }
     }

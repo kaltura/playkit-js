@@ -90,7 +90,7 @@ exports.LOG_LEVEL = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jsLogger = __webpack_require__(21);
+var _jsLogger = __webpack_require__(20);
 
 var JsLogger = _interopRequireWildcard(_jsLogger);
 
@@ -150,9 +150,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /**
  * Create an Event work-alike object based on the dictionary.
  * The event should contain all of the same properties from the dict.
- *
- * @param {string} type
- * @param {Object=} opt_dict
+ * @param {string} type -
+ * @param {Object=} opt_dict -
  * @constructor
  * @extends {Event}
  */
@@ -288,170 +287,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _playerError = __webpack_require__(6);
-
-var _playerError2 = _interopRequireDefault(_playerError);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * Base of media source adapters
- * @classdesc
- */
-var BaseMediaSourceAdapter = function () {
-  _createClass(BaseMediaSourceAdapter, null, [{
-    key: "isSupported",
-
-
-    /**
-     * Checks if the media source adapter is supported
-     * @function isSupported
-     * @returns {boolean}
-     * @static
-     */
-
-
-    /**
-     * The player wrapper of the media source adapter
-     * @member {any} _msPlayer
-     * @private
-     */
-
-
-    /**
-     * The adapter config
-     * @member {Object} _config
-     * @private
-     */
-
-    /**
-     * The supported mime types by the media source adapter
-     * @member {Array} _mimeTypes
-     * @static
-     * @private
-     */
-    value: function isSupported() {
-      return true;
-    }
-
-    /**
-     * Checks if the media source adapter can play a given mime type
-     * @function canPlayType
-     * @param {string} mimeType
-     * @returns {boolean}
-     * @static
-     */
-
-
-    /**
-     * The source URL
-     * @member {string} _source
-     * @private
-     */
-
-
-    /**
-     * The owning engine
-     * @member {IEngine} _engine
-     * @private
-     */
-
-
-    /**
-     * The name of the media source adapter
-     * @member {string} name
-     * @static
-     * @public
-     */
-
-  }, {
-    key: "canPlayType",
-    value: function canPlayType(mimeType) {
-      return !!(this._mimeTypes && this._mimeTypes.includes(mimeType));
-    }
-
-    /**
-     * Factory method to create media source adapter
-     * @function createAdapter
-     * @param {IEngine} engine - The video engine that the media source adapter work with
-     * @param {Object} source - The source Object
-     * @param {Object} config - The media source adapter configuration
-     * @returns {BaseMediaSourceAdapter}
-     * @static
-     */
-
-  }, {
-    key: "createAdapter",
-    value: function createAdapter(engine, source, config) {
-      return new this(engine, source, config);
-    }
-
-    /**
-     * @constructor
-     * @param engine - The video engine that the media source adapter work with
-     * @param source - The source object
-     * @param config - The media source adapter configuration
-     */
-
-  }]);
-
-  function BaseMediaSourceAdapter(engine, source, config) {
-    _classCallCheck(this, BaseMediaSourceAdapter);
-
-    this._engine = engine;
-    this._config = config;
-  }
-
-  /**
-   * Load the video source
-   * @function load
-   * @abstract
-   */
-
-
-  _createClass(BaseMediaSourceAdapter, [{
-    key: "load",
-    value: function load() {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
-    }
-
-    /**
-     * Destroying the _msPlayer
-     * @function destroy
-     */
-
-  }, {
-    key: "destroy",
-    value: function destroy() {
-      // should do nothing. implemented by the inheritor if necessary.
-    }
-  }]);
-
-  return BaseMediaSourceAdapter;
-}();
-
-exports.default = BaseMediaSourceAdapter;
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _eventManager = __webpack_require__(4);
+var _eventManager = __webpack_require__(3);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _fakeEventTarget = __webpack_require__(10);
+var _fakeEventTarget = __webpack_require__(8);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
@@ -459,23 +299,27 @@ var _fakeEvent = __webpack_require__(1);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _events = __webpack_require__(5);
+var _events = __webpack_require__(4);
 
 var _events2 = _interopRequireDefault(_events);
 
+var _stateTypes = __webpack_require__(9);
+
+var _stateTypes2 = _interopRequireDefault(_stateTypes);
+
 var _util = __webpack_require__(12);
 
-var _stringUtil = __webpack_require__(20);
+var _stringUtil = __webpack_require__(19);
 
 var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _html = __webpack_require__(15);
+var _html = __webpack_require__(14);
 
 var _html2 = _interopRequireDefault(_html);
 
-var _pluginManager = __webpack_require__(9);
+var _pluginManager = __webpack_require__(7);
 
 var _pluginManager2 = _interopRequireDefault(_pluginManager);
 
@@ -578,7 +422,7 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Get the player config
-     * @returns {Object}
+     * @returns {Object} - The player configuration
      */
 
   }, {
@@ -588,7 +432,7 @@ var Player = function (_FakeEventTarget) {
     //  <editor-fold desc="Playback Interface">
     /**
      * Start/resume playback
-     * @returns {Player}
+     * @returns {void}
      */
     value: function play() {
       return this._engine.play();
@@ -596,7 +440,7 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Pause playback
-     * @returns {Player}
+     * @returns {void}
      */
 
   }, {
@@ -607,6 +451,7 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Load media
+     * @returns {void}
      */
 
   }, {
@@ -617,7 +462,7 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Set the current time in seconds
-     * @param to {Number}
+     * @param {Number} to - The number to set in seconds
      */
 
   }, {
@@ -631,7 +476,7 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Get paused state
-     * @returns {boolean}
+     * @returns {boolean} - Whether the video is paused or not
      */
 
   }, {
@@ -640,7 +485,7 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Set player muted state
-     * @param mute {boolean}
+     * @param {boolean} mute - The mute value
      */
 
   }, {
@@ -665,7 +510,7 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Get the current time in seconds
-     * @returns {Number}
+     * @returns {Number} - The playback current time
      */
     ,
     get: function get() {
@@ -675,7 +520,7 @@ var Player = function (_FakeEventTarget) {
     /**
      * /**
      * Get the duration in seconds
-     * @returns {Number}
+     * @returns {Number} - The playback duration
      */
 
   }, {
@@ -686,7 +531,7 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Set playback volume
-     * @param vol {Number}
+     * @param {Number} vol - The volume to set
      */
 
   }, {
@@ -706,7 +551,7 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Get playback volume
-     * @returns {Number}
+     * @returns {Number} - The playback volume
      */
     ,
     get: function get() {
@@ -719,8 +564,8 @@ var Player = function (_FakeEventTarget) {
     }
 
     /**
-     *
-     * @returns {boolean}
+     * Get seeking state
+     * @returns {boolean} - Whether the video is seeking or not
      */
 
   }, {
@@ -736,11 +581,46 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Get player muted state
-     * @returns {boolean}
+     * @returns {boolean} - Whether the video is muted or not
      */
     ,
     get: function get() {
       return this._engine.muted;
+    }
+
+    /**
+     * Get the player source
+     * @returns {string} - The current source of the player
+     */
+
+  }, {
+    key: 'src',
+    get: function get() {
+      return this._engine.src;
+    }
+
+    /**
+     * Get the player events
+     * @returns {Object} - The events of the player
+     * @constructor
+     */
+
+  }, {
+    key: 'Event',
+    get: function get() {
+      return _events2.default;
+    }
+
+    /**
+     * Get the player states
+     * @returns {Object} - The states of the player
+     * @constructor
+     */
+
+  }, {
+    key: 'State',
+    get: function get() {
+      return _stateTypes2.default;
     }
 
     // </editor-fold>
@@ -758,7 +638,7 @@ var Player = function (_FakeEventTarget) {
 exports.default = Player;
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -770,7 +650,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _multiMap = __webpack_require__(11);
+var _multiMap = __webpack_require__(10);
 
 var _multiMap2 = _interopRequireDefault(_multiMap);
 
@@ -820,6 +700,7 @@ var EventManager = function () {
      * @param {EventTarget} target The event target.
      * @param {string} type The event type.
      * @param {EventManager.ListenerType} listener The event listener.
+     * @returns {void}
      */
 
   }, {
@@ -835,6 +716,7 @@ var EventManager = function () {
      * Detaches an event listener from an event target.
      * @param {EventTarget} target The event target.
      * @param {string} type The event type.
+     * @returns {void}
      */
 
   }, {
@@ -858,6 +740,7 @@ var EventManager = function () {
 
     /**
      * Detaches all event listeners from all targets.
+     * @returns {void}
      */
 
   }, {
@@ -933,6 +816,7 @@ var Binding_ = function () {
   /**
    * Detaches the event listener from the event target. This does nothing if the
    * event listener is already detached.
+   * @returns {void}
    */
 
 
@@ -954,7 +838,7 @@ var Binding_ = function () {
 exports.default = EventManager;
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1033,10 +917,171 @@ var PLAYER_EVENTS = {
   /**
    * Fires when the player state has been changed
    */
-  PLAYER_STATE_CHANGED: 'playerStateChanged'
+  PLAYER_STATE_CHANGED: 'playerStateChanged',
+  /**
+   * Fires when the seeking attribute is set to false indicating that seeking has ended
+   */
+  SEEKED: 'seeked',
+  /**
+   * Fires when the seeking attribute is set to true indicating that seeking is active
+   */
+  SEEKING: 'seeking'
 };
 
 exports.default = PLAYER_EVENTS;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.registerMediaSourceAdapter = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _nativeAdapter = __webpack_require__(15);
+
+var _nativeAdapter2 = _interopRequireDefault(_nativeAdapter);
+
+var _logger = __webpack_require__(0);
+
+var _logger2 = _interopRequireDefault(_logger);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Media source provider
+ * @classdesc
+ */
+var MediaSourceProvider = function () {
+  function MediaSourceProvider() {
+    _classCallCheck(this, MediaSourceProvider);
+  }
+
+  _createClass(MediaSourceProvider, null, [{
+    key: 'register',
+
+
+    /**
+     * Add a media source adapter to the registry
+     * @function register
+     * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to register
+     * @static
+     * @returns {void}
+     */
+
+    /**
+     * The media source adapter registry
+     * @member {Array<IMediaSourceAdapter>} _mediaSourceAdapters
+     * @static
+     * @private
+     */
+    value: function register(mediaSourceAdapter) {
+      if (mediaSourceAdapter) {
+        if (!MediaSourceProvider._mediaSourceAdapters.includes(mediaSourceAdapter)) {
+          MediaSourceProvider._logger.debug('Adapter <' + mediaSourceAdapter.name + '> has been registered successfully.');
+          MediaSourceProvider._mediaSourceAdapters.push(mediaSourceAdapter);
+        } else {
+          MediaSourceProvider._logger.debug('Adapter <' + mediaSourceAdapter.name + '> is already registered, do not register again.');
+        }
+      }
+    }
+
+    /**
+     * Remove a media source adapter from the registry
+     * @function unRegister
+     * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to unRegister
+     * @static
+     * @returns {void}
+     */
+
+    /**
+     * The selected adapter for playback
+     * @type {null|IMediaSourceAdapter}
+     * @static
+     * @private
+     */
+
+    /**
+     * The logger of the media source provider
+     * @member {any} _logger
+     * @static
+     * @private
+     */
+
+  }, {
+    key: 'unRegister',
+    value: function unRegister(mediaSourceAdapter) {
+      var index = MediaSourceProvider._mediaSourceAdapters.indexOf(mediaSourceAdapter);
+      if (index > -1) {
+        MediaSourceProvider._logger.debug('Unregistered <' + mediaSourceAdapter.name + '> adapter.');
+        MediaSourceProvider._mediaSourceAdapters.splice(index, 1);
+      }
+    }
+
+    /**
+     * Checks if one of the registered media source adapters can play a given mime type
+     * @function canPlayType
+     * @param {string} mimeType - The mime type to check
+     * @static
+     * @returns {boolean} - If one of the adapters can play the specific mime type
+     */
+
+  }, {
+    key: 'canPlayType',
+    value: function canPlayType(mimeType) {
+      var mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
+      for (var i = 0; i < mediaSourceAdapters.length; i++) {
+        if (mediaSourceAdapters[i].canPlayType(mimeType)) {
+          MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
+          MediaSourceProvider._logger.debug('Selected adapter is <' + MediaSourceProvider._selectedAdapter.name + '>.');
+          return true;
+        }
+      }
+      return false;
+    }
+
+    /**
+     * Get the appropriate media source adapter to the video source
+     * @function getMediaSourceAdapter
+     * @param {IEngine} engine - The video engine which requires adapter for a given mimeType
+     * @param {Object} source - The video source
+     * @param {Object} config - The player configuration
+     * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists
+     * @static
+     */
+
+  }, {
+    key: 'getMediaSourceAdapter',
+    value: function getMediaSourceAdapter(engine, source, config) {
+      if (engine && source && config) {
+        if (!MediaSourceProvider._selectedAdapter) {
+          MediaSourceProvider.canPlayType(source.mimetype);
+        }
+        return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(engine, source, config.engines) : null;
+      }
+      return null;
+    }
+  }]);
+
+  return MediaSourceProvider;
+}();
+
+MediaSourceProvider._logger = _logger2.default.getLogger('MediaSourceProvider');
+MediaSourceProvider._mediaSourceAdapters = [_nativeAdapter2.default];
+MediaSourceProvider._selectedAdapter = null;
+exports.default = MediaSourceProvider;
+
+
+var registerMediaSourceAdapter = MediaSourceProvider.register;
+exports.registerMediaSourceAdapter = registerMediaSourceAdapter;
 
 /***/ }),
 /* 6 */
@@ -1051,211 +1096,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var PlayerError = function () {
-  function PlayerError(error, param) {
-    _classCallCheck(this, PlayerError);
-
-    this.name = error.name;
-    this.message = error.message(param);
-  }
-
-  _createClass(PlayerError, [{
-    key: "getError",
-    value: function getError() {
-      return {
-        name: this.name,
-        message: this.message
-      };
-    }
-  }]);
-
-  return PlayerError;
-}();
-
-PlayerError.TYPE = {
-  NOT_REGISTERED_PLUGIN: {
-    name: "PluginNotRegisteredException",
-    message: function message(name) {
-      return "Cannot load " + name + " plugin. Name not found in the registry";
-    }
-  },
-  NOT_VALID_HANDLER: {
-    name: "PluginHandlerIsNotValidException",
-    message: function message() {
-      return "To activate plugin you must provide a class derived from BasePlugin";
-    }
-  },
-  NOT_IMPLEMENTED_METHOD: {
-    name: "NotImplementedException",
-    message: function message(method) {
-      return method + " method not implemented";
-    }
-  }
-};
-exports.default = PlayerError;
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.registerAdapter = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _baseAdapter = __webpack_require__(2);
-
-var _baseAdapter2 = _interopRequireDefault(_baseAdapter);
-
-var _nativeAdapter = __webpack_require__(14);
-
-var _nativeAdapter2 = _interopRequireDefault(_nativeAdapter);
-
-var _logger = __webpack_require__(0);
-
-var _logger2 = _interopRequireDefault(_logger);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * Media source adapter manager
- * @classdesc
- */
-var MediaSourceAdapterManager = function () {
-  function MediaSourceAdapterManager() {
-    _classCallCheck(this, MediaSourceAdapterManager);
-  }
-
-  _createClass(MediaSourceAdapterManager, null, [{
-    key: 'register',
-
-
-    /**
-     * Add a media source adapter to the registry
-     * @function register
-     * @param {BaseMediaSourceAdapter} adapter
-     * @static
-     */
-
-    /**
-     * The logger of the media source manager
-     * @member {any} _logger
-     * @static
-     * @private
-     */
-    value: function register(adapter) {
-      if (adapter && !MediaSourceAdapterManager._mediaSourceAdapters.includes(adapter)) {
-        MediaSourceAdapterManager._logger.debug('Adapter <' + adapter.name + '> has been registered successfully.');
-        MediaSourceAdapterManager._mediaSourceAdapters.push(adapter);
-      }
-    }
-
-    /**
-     * Remove a media source adapter from the registry
-     * @function unRegister
-     * @param {BaseMediaSourceAdapter} adapter
-     * @static
-     */
-
-    /**
-     * The media source adapter registry
-     * @member {Array<BaseMediaSourceAdapter>} _mediaSourceAdapters
-     * @static
-     * @private
-     */
-
-  }, {
-    key: 'unRegister',
-    value: function unRegister(adapter) {
-      var index = MediaSourceAdapterManager._mediaSourceAdapters.indexOf(adapter);
-      if (index > -1) {
-        MediaSourceAdapterManager._logger.debug('Unregistered <' + adapter.name + '> adapter.');
-        MediaSourceAdapterManager._mediaSourceAdapters.splice(index, 1);
-      }
-    }
-
-    /**
-     * Checks if one of the registered media source adapters can play a given mime type
-     * @function canPlayType
-     * @param {string} mimeType - The mime type to check
-     * @returns {boolean}
-     * @static
-     */
-
-  }, {
-    key: 'canPlayType',
-    value: function canPlayType(mimeType) {
-      var adapters = MediaSourceAdapterManager._mediaSourceAdapters;
-      for (var i = 0; i < adapters.length; i++) {
-        MediaSourceAdapterManager._logger.debug('Checking canPlayType for <' + adapters[i].name + '> adapter.');
-        if (adapters[i].canPlayType(mimeType)) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    /**
-     * Get the appropriate media source adapter to the video source
-     * @function getMediaSourceAdapter
-     * @param {IEngine} engine - The video engine which requires adapter for a given mimeType
-     * @param {Object} source - The video source
-     * @param {Object} config - The player configuration
-     * @returns {BaseMediaSourceAdapter|null}
-     * @static
-     */
-
-  }, {
-    key: 'getMediaSourceAdapter',
-    value: function getMediaSourceAdapter(engine, source, config) {
-      if (engine && source && config) {
-        var adapters = MediaSourceAdapterManager._mediaSourceAdapters;
-        for (var i = 0; i < adapters.length; i++) {
-          MediaSourceAdapterManager._logger.debug('Checking canPlayType for <' + adapters[i].name + '> adapter.');
-          if (adapters[i].canPlayType(source.mimetype)) {
-            MediaSourceAdapterManager._logger.debug('Creating <' + adapters[i].name + '> adapter.');
-            return adapters[i].createAdapter(engine, source, config.engines);
-          }
-        }
-      }
-      return null;
-    }
-  }]);
-
-  return MediaSourceAdapterManager;
-}();
-
-MediaSourceAdapterManager._logger = _logger2.default.getLogger('MediaSourceAdapterManager');
-MediaSourceAdapterManager._mediaSourceAdapters = [_nativeAdapter2.default];
-exports.default = MediaSourceAdapterManager;
-
-
-var registerAdapter = MediaSourceAdapterManager.register;
-exports.registerAdapter = registerAdapter;
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _player = __webpack_require__(3);
+var _player = __webpack_require__(2);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -1265,11 +1106,11 @@ var _logger2 = _interopRequireDefault(_logger);
 
 var _util = __webpack_require__(12);
 
-var _eventManager = __webpack_require__(4);
+var _eventManager = __webpack_require__(3);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _playerError = __webpack_require__(6);
+var _playerError = __webpack_require__(11);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
@@ -1289,10 +1130,10 @@ var BasePlugin = function () {
 
     /**
      * Factory method to create the actual plugin.
-     * @param name - The plugin name
-     * @param player - The player reference
-     * @param config - The plugin configuration
-     * @returns {BasePlugin}
+     * @param {string} name - The plugin name
+     * @param {Player} player - The player reference
+     * @param {Object} config - The plugin configuration
+     * @returns {BasePlugin} - New runtime plugin instance
      * @static
      * @public
      */
@@ -1320,7 +1161,7 @@ var BasePlugin = function () {
     /**
      * Returns under what conditions the plugin is valid.
      * Plugin must implement this method.
-     * @returns {boolean}
+     * @returns {boolean} - Whether the plugin is valid and can be initiated. Default implementation is true
      * @static
      * @public
      * @abstract
@@ -1352,9 +1193,9 @@ var BasePlugin = function () {
 
     /**
      * constructor
-     * @param name - The plugin name
-     * @param player - The player reference
-     * @param config - The plugin configuration
+     * @param {string} name - The plugin name
+     * @param {Player} player - The player reference
+     * @param {Object} config - The plugin configuration
      * @constructor
      * @private
      */
@@ -1372,10 +1213,9 @@ var BasePlugin = function () {
   }
 
   /**
-   * Returns the config of the plugin.
-   * If attribute is provided, returns its value.
-   * @param attr - The key in the plugin configuration.
-   * @returns {*}
+   * Getter for the configuration of the plugin.
+   * @param {string} attr - The key in the plugin configuration (optional).
+   * @returns {*} - If attribute is provided, returns its value. Else, Returns the config of the plugin.
    * @public
    */
 
@@ -1391,8 +1231,9 @@ var BasePlugin = function () {
 
     /**
      * Updates the config of the plugin.
-     * @param update - The updated configuration.
+     * @param {Object} update - The updated configuration.
      * @public
+     * @returns {void}
      */
 
   }, {
@@ -1406,6 +1247,7 @@ var BasePlugin = function () {
      * plugin must implement this method.
      * @public
      * @abstract
+     * @returns {void}
      */
 
   }, {
@@ -1416,7 +1258,7 @@ var BasePlugin = function () {
 
     /**
      * Getter for the plugin's name.
-     * @returns {string}
+     * @returns {string} - The name of the plugin.
      * @public
      */
 
@@ -1434,7 +1276,7 @@ BasePlugin.defaultConfig = {};
 exports.default = BasePlugin;
 
 /***/ }),
-/* 9 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1447,15 +1289,15 @@ exports.registerPlugin = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _basePlugin = __webpack_require__(8);
+var _basePlugin = __webpack_require__(6);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
-var _playerError = __webpack_require__(6);
+var _playerError = __webpack_require__(11);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
-var _player = __webpack_require__(3);
+var _player = __webpack_require__(2);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -1506,10 +1348,10 @@ var PluginManager = function () {
 
     /**
      * Creates and store new instance of the plugin in case isValid() of the plugin returns true.
-     * @param name - The plugin name
-     * @param player - The player reference
+     * @param {string} name - The plugin name
+     * @param {Player} player - The player reference
      * @param {Object} [config={}] - The plugin configuration
-     * @returns {boolean}
+     * @returns {boolean} - Whether the plugin load was successful
      * @public
      */
     value: function load(name, player) {
@@ -1521,16 +1363,17 @@ var PluginManager = function () {
       var pluginClass = PluginManager._registry.get(name);
       if (pluginClass != null && pluginClass.isValid()) {
         this._plugins.set(name, pluginClass.createPlugin(name, player, config));
-        logger.info('Plugin <' + name + '> has been loaded.');
+        logger.debug('Plugin <' + name + '> has been loaded.');
         return true;
       }
-      logger.info('Plugin <' + name + '> isn\'t loaded, isValid()=false.');
+      logger.debug('Plugin <' + name + '> isn\'t loaded, isValid()=false.');
       return false;
     }
 
     /**
      * Iterates over all the plugins and calls private _destroy.
      * @public
+     * @returns {void}
      */
 
   }, {
@@ -1541,9 +1384,10 @@ var PluginManager = function () {
 
     /**
      * Calls destroy() method of the plugin's impl.
-     * @param plugin - The plugin instance
-     * @param name - The plugin name
+     * @param {BasePlugin} plugin - The plugin instance
+     * @param {string} name - The plugin name
      * @private
+     * @returns {void}
      */
 
   }, {
@@ -1555,8 +1399,8 @@ var PluginManager = function () {
 
     /**
      * Returns the plugin's instance.
-     * @param name - The plugin name
-     * @returns {BasePlugin}
+     * @param {string} name - The plugin name
+     * @returns {BasePlugin} - The plugin instance
      * @public
      */
 
@@ -1572,9 +1416,9 @@ var PluginManager = function () {
     /**
      * Writes the plugin in the registry.
      * Maps: plugin name -> plugin class.
-     * @param name - The plugin name
-     * @param handler - The plugin class
-     * @returns {boolean}
+     * @param {string} name - The plugin name
+     * @param {Function} handler - The plugin class
+     * @returns {boolean} - If the registration request succeeded
      * @static
      * @public
      */
@@ -1584,18 +1428,19 @@ var PluginManager = function () {
       }
       if (!PluginManager._registry.has(name)) {
         PluginManager._registry.set(name, handler);
-        logger.info('Plugin <' + name + '> has been registered successfully.');
+        logger.debug('Plugin <' + name + '> has been registered successfully.');
         return true;
       }
-      logger.info('Plugin <' + name + '> is already registered, do not register again.');
+      logger.debug('Plugin <' + name + '> is already registered, do not register again.');
       return false;
     }
 
     /**
      * Removes the plugin from the registry.
-     * @param name - The plugin name
+     * @param {string} name - The plugin name
      * @static
      * @public
+     * @returns {void}
      */
 
   }, {
@@ -1603,7 +1448,7 @@ var PluginManager = function () {
     value: function unRegister(name) {
       if (PluginManager._registry.has(name)) {
         PluginManager._registry.delete(name);
-        logger.info('Unregistered <' + name + '> plugin.');
+        logger.debug('Unregistered <' + name + '> plugin.');
       }
     }
   }]);
@@ -1624,7 +1469,7 @@ var registerPlugin = PluginManager.register;
 exports.registerPlugin = registerPlugin;
 
 /***/ }),
-/* 10 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1640,7 +1485,7 @@ var _fakeEvent = __webpack_require__(1);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _multiMap = __webpack_require__(11);
+var _multiMap = __webpack_require__(10);
 
 var _multiMap2 = _interopRequireDefault(_multiMap);
 
@@ -1770,7 +1615,27 @@ var FakeEventTarget = function () {
 exports.default = FakeEventTarget;
 
 /***/ }),
-/* 11 */
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var PLAYER_STATE_TYPES = {
+  IDLE: "idle",
+  LOADING: "loading",
+  PLAYING: "playing",
+  PAUSED: "paused",
+  BUFFERING: "buffering"
+};
+
+exports.default = PLAYER_STATE_TYPES;
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1800,8 +1665,9 @@ var MultiMap = function () {
 
   /**
    * Add a key, value pair to the map.
-   * @param {string} key
-   * @param {T} value
+   * @param {string} key -
+   * @param {T} value  -
+   * @returns {void}
    */
 
 
@@ -1821,8 +1687,9 @@ var MultiMap = function () {
 
     /**
      * Set an array of values for the key, overwriting any previous data.
-     * @param {string} key
-     * @param {!Array.<T>} values
+     * @param {string} key -
+     * @param {!Array.<T>} values -
+     * @returns {void}
      */
 
   }, {
@@ -1833,7 +1700,7 @@ var MultiMap = function () {
 
     /**
      * Check for a key.
-     * @param {string} key
+     * @param {string} key -
      * @return {boolean} true if the key exists.
      */
 
@@ -1845,7 +1712,7 @@ var MultiMap = function () {
 
     /**
      * Get a list of values by key.
-     * @param {string} key
+     * @param {string} key -
      * @return {Array.<T>} or null if no suZch key exists.
      */
 
@@ -1860,7 +1727,7 @@ var MultiMap = function () {
 
     /**
      * Get a list of all values.
-     * @return {!Array.<T>}
+     * @returns {!Array.<T>} -
      */
 
   }, {
@@ -1897,8 +1764,9 @@ var MultiMap = function () {
 
     /**
      * Remove a specific value, if it exists.
-     * @param {string} key
-     * @param {T} value
+     * @param {string} key -
+     * @param {T} value -
+     * @returns {void}
      */
 
   }, {
@@ -1930,6 +1798,7 @@ var MultiMap = function () {
 
     /**
      * Clear all keys and values from the multimap.
+     * @returns {void}
      */
 
   }, {
@@ -1945,7 +1814,7 @@ var MultiMap = function () {
 exports.default = MultiMap;
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1954,18 +1823,94 @@ exports.default = MultiMap;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var PlayerError = function () {
+  function PlayerError(error, param) {
+    _classCallCheck(this, PlayerError);
+
+    this.name = error.name;
+    this.message = error.message(param);
+  }
+
+  _createClass(PlayerError, [{
+    key: "getError",
+    value: function getError() {
+      return {
+        name: this.name,
+        message: this.message
+      };
+    }
+  }]);
+
+  return PlayerError;
+}();
+
+PlayerError.TYPE = {
+  NOT_REGISTERED_PLUGIN: {
+    name: "PluginNotRegisteredException",
+    message: function message(name) {
+      return "Cannot load " + name + " plugin. Name not found in the registry";
+    }
+  },
+  NOT_VALID_HANDLER: {
+    name: "PluginHandlerIsNotValidException",
+    message: function message() {
+      return "To activate plugin you must provide a class derived from BasePlugin";
+    }
+  },
+  NOT_IMPLEMENTED_METHOD: {
+    name: "NotImplementedException",
+    message: function message(method) {
+      return method + " method not implemented";
+    }
+  }
+};
+exports.default = PlayerError;
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * @param {number} n - A certain number
+ * @returns {boolean} - If the input is a number
+ */
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 function isNumber(n) {
   return Number(n) === n;
 }
 
+/**
+ * @param {number} n - A certain number
+ * @returns {boolean} - If the input is an integer
+ */
 function isInt(n) {
   return isNumber(n) && n % 1 === 0;
 }
 
+/**
+ * @param {number} n - A certain number
+ * @returns {boolean} - If the input is a float
+ */
 function isFloat(n) {
   return isNumber(n) && n % 1 !== 0;
 }
 
+/**
+ * @param {Object} obj1 - Certain object
+ * @param {Object} obj2 - Certain object
+ * @returns {*} - The merged object.
+ */
 function merge(obj1, obj2) {
   if (!obj1 && !obj2) return {};
   if (!obj1) return obj2;
@@ -1996,7 +1941,8 @@ module.exports = {
 		"start": "webpack-dev-server",
 		"release": "npm run build && standard-version",
 		"eslint": "eslint . --color",
-		"prepush": "npm run eslint & npm run test"
+		"flow": "flow check",
+		"prepush": "npm run eslint & npm run test & npm run flow"
 	},
 	"devDependencies": {
 		"babel-cli": "^6.18.0",
@@ -2066,105 +2012,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _baseAdapter = __webpack_require__(2);
-
-var _baseAdapter2 = _interopRequireDefault(_baseAdapter);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/**
- * An illustration of media source extension for progressive download
- * @classdesc
- * @extends BaseMediaSourceAdapter
- */
-var NativeAdapter = function (_BaseMediaSourceAdapt) {
-  _inherits(NativeAdapter, _BaseMediaSourceAdapt);
-
-  _createClass(NativeAdapter, null, [{
-    key: 'canPlayType',
-
-
-    /**
-     * Checks if NativeAdapter can play a given mime type
-     * @function canPlayType
-     * @param {string} mimeType
-     * @returns {boolean}
-     * @static
-     * @override
-     */
-    value: function canPlayType(mimeType) {
-      return !!document.createElement("video").canPlayType(mimeType);
-    }
-
-    /**
-     * @constructor
-     * @param {IEngine} engine - The video element which bind to NativeAdapter
-     * @param {string} source - The source URL
-     * @param {Object} config - The media source adapter configuration
-     */
-
-    /**
-     * The name of Adapter
-     * @member {string} name
-     * @static
-     * @public
-     */
-
-  }]);
-
-  function NativeAdapter(engine, source, config) {
-    _classCallCheck(this, NativeAdapter);
-
-    var _this = _possibleConstructorReturn(this, (NativeAdapter.__proto__ || Object.getPrototypeOf(NativeAdapter)).call(this, engine, source, config));
-
-    _this._msPlayer = engine.getVideoElement();
-    _this._source = source.url;
-    if (source) {
-      _this._msPlayer.src = source.url;
-    }
-    return _this;
-  }
-
-  /**
-   * Load the video source
-   * @function load
-   * @override
-   */
-
-
-  _createClass(NativeAdapter, [{
-    key: 'load',
-    value: function load() {
-      this._msPlayer.load();
-    }
-  }]);
-
-  return NativeAdapter;
-}(_baseAdapter2.default);
-
-NativeAdapter.name = 'NativeAdapter';
-exports.default = NativeAdapter;
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _fakeEventTarget = __webpack_require__(10);
+var _fakeEventTarget = __webpack_require__(8);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
@@ -2172,21 +2020,17 @@ var _fakeEvent = __webpack_require__(1);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _eventManager = __webpack_require__(4);
+var _eventManager = __webpack_require__(3);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _events = __webpack_require__(5);
+var _events = __webpack_require__(4);
 
 var _events2 = _interopRequireDefault(_events);
 
-var _adapterManager = __webpack_require__(7);
+var _mediaSourceProvider = __webpack_require__(5);
 
-var _adapterManager2 = _interopRequireDefault(_adapterManager);
-
-var _baseAdapter = __webpack_require__(2);
-
-var _baseAdapter2 = _interopRequireDefault(_baseAdapter);
+var _mediaSourceProvider2 = _interopRequireDefault(_mediaSourceProvider);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2202,7 +2046,7 @@ var Html5 = function (_FakeEventTarget) {
   _createClass(Html5, null, [{
     key: 'canPlayType',
     value: function canPlayType(mimeType) {
-      return _adapterManager2.default.canPlayType(mimeType);
+      return _mediaSourceProvider2.default.canPlayType(mimeType);
     }
   }]);
 
@@ -2285,7 +2129,7 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'loadMediaSourceAdapter',
     value: function loadMediaSourceAdapter(source, config) {
-      this._mediaSourceAdapter = _adapterManager2.default.getMediaSourceAdapter(this, source, config);
+      this._mediaSourceAdapter = _mediaSourceProvider2.default.getMediaSourceAdapter(this, source, config);
     }
   }, {
     key: 'play',
@@ -2294,6 +2138,7 @@ var Html5 = function (_FakeEventTarget) {
     //playback interface
     /**
      * Start/resume playback
+     * @returns {void}
      */
     value: function play() {
       return this._el.play();
@@ -2301,6 +2146,7 @@ var Html5 = function (_FakeEventTarget) {
 
     /**
      * Pause playback
+     * @returns {void}
      */
 
   }, {
@@ -2311,6 +2157,7 @@ var Html5 = function (_FakeEventTarget) {
 
     /**
      * Load media
+     * @returns {void}
      */
 
   }, {
@@ -2323,7 +2170,7 @@ var Html5 = function (_FakeEventTarget) {
 
     /**
      * Get the current time in seconds
-     * @returns {Number}
+     * @returns {Number} - The current playback time
      */
 
   }, {
@@ -2335,7 +2182,7 @@ var Html5 = function (_FakeEventTarget) {
 
     /**
      * Get paused state
-     * @returns {boolean}
+     * @returns {boolean} - The paused value of the video element
      */
 
   }, {
@@ -2355,7 +2202,7 @@ var Html5 = function (_FakeEventTarget) {
 
     /**
      * Set the current time in seconds
-     * @param to {Number}
+     * @param {Number} to - The number to set in seconds
      */
     ,
     set: function set(to) {
@@ -2364,7 +2211,7 @@ var Html5 = function (_FakeEventTarget) {
 
     /**
      * Get the duration in seconds
-     * @returns {Number}
+     * @returns {Number} - The playback duration
      */
 
   }, {
@@ -2375,7 +2222,7 @@ var Html5 = function (_FakeEventTarget) {
 
     /**
      * Set playback volume
-     * @param vol {Number}
+     * @param {Number} vol - The volume to set
      */
 
   }, {
@@ -2386,7 +2233,7 @@ var Html5 = function (_FakeEventTarget) {
 
     /**
      * Get playback volume
-     * @returns {Number}
+     * @returns {Number} - The volume value of the video element
      */
     ,
     get: function get() {
@@ -2400,7 +2247,7 @@ var Html5 = function (_FakeEventTarget) {
 
     /**
      * Get seeking state
-     * @returns {boolean}
+     * @returns {boolean} - The seeking value of the video element
      */
 
   }, {
@@ -2426,7 +2273,7 @@ var Html5 = function (_FakeEventTarget) {
 
     /**
      * Set player muted state
-     * @param mute {boolean}
+     * @param {boolean} mute - The new mute value
      */
 
   }, {
@@ -2437,7 +2284,7 @@ var Html5 = function (_FakeEventTarget) {
 
     /**
      * Get player muted state
-     * @returns {boolean}
+     * @returns {boolean} - The muted value of the video element
      */
     ,
     get: function get() {
@@ -2558,6 +2405,184 @@ Html5.EngineName = "html5";
 exports.default = Html5;
 
 /***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _logger = __webpack_require__(0);
+
+var _logger2 = _interopRequireDefault(_logger);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * An illustration of media source extension for progressive download
+ * @classdesc
+ * @implements {IMediaSourceAdapter}
+ */
+var NativeAdapter = function () {
+  _createClass(NativeAdapter, null, [{
+    key: "name",
+
+    /**
+     * Getter for the adapter name
+     * @returns {string} - The adapter name
+     */
+    get: function get() {
+      return NativeAdapter._name;
+    }
+
+    /**
+     * The adapter logger
+     * @member {any} _logger
+     * @private
+     * @static
+     */
+
+    /**
+     * The name of the Adapter
+     * @member {string} _name
+     * @static
+     * @private
+     */
+
+  }]);
+
+  /**
+   * @constructor
+   * @param {IEngine} engine - The video element which bind to NativeAdapter
+   * @param {string} source - The source URL
+   * @param {Object} config - The media source adapter configuration
+   */
+
+  /**
+   * The adapter config
+   * @member {Object} _config
+   * @private
+   */
+
+  /**
+   * The owning engine
+   * @member {IEngine} _engine
+   * @private
+   */
+
+  /**
+   * The dom video element
+   * @member {HTMLVideoElement} _videoElement
+   * @private
+   */
+
+  /**
+   * The source url
+   * @member {string} _source
+   * @private
+   */
+  function NativeAdapter(engine, source, config) {
+    _classCallCheck(this, NativeAdapter);
+
+    this._engine = engine;
+    this._config = config;
+    this._videoElement = engine.getVideoElement();
+    this._source = source.url;
+    if (source) {
+      this._videoElement.src = source.url;
+    }
+  }
+
+  /**
+   * Checks if NativeAdapter can play a given mime type
+   * @function canPlayType
+   * @param {string} mimeType - The mime type to check
+   * @returns {boolean} - Whether the native adapter can play a specific mime type
+   * @static
+   */
+
+
+  _createClass(NativeAdapter, [{
+    key: "load",
+
+
+    /**
+     * Load the video source
+     * @function load
+     * @returns {void}
+     */
+    value: function load() {
+      NativeAdapter._logger.debug('load');
+      this._videoElement.load();
+    }
+
+    /**
+     * Clearing the video source
+     * @function destroy
+     * @returns {void}
+     */
+
+  }, {
+    key: "destroy",
+    value: function destroy() {
+      NativeAdapter._logger.debug('destroy');
+      this._videoElement.src = "";
+    }
+  }], [{
+    key: "canPlayType",
+    value: function canPlayType(mimeType) {
+      var canPlayType = !!document.createElement("video").canPlayType(mimeType);
+      NativeAdapter._logger.debug('canPlayType result for mimeType:' + mimeType + ' is ' + canPlayType.toString());
+      return canPlayType;
+    }
+
+    /**
+     * Checks if the media source adapter is supported
+     * @function isSupported
+     * @returns {boolean} - Whether the media source adapter is supported. Default implementation is true
+     * @static
+     */
+
+  }, {
+    key: "isSupported",
+    value: function isSupported() {
+      NativeAdapter._logger.debug('isSupported:true');
+      return true;
+    }
+
+    /**
+     * Factory method to create media source adapter
+     * @function createAdapter
+     * @param {IEngine} engine - The video engine that the media source adapter work with
+     * @param {Object} source - The source Object
+     * @param {Object} config - The media source adapter configuration
+     * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter
+     * @static
+     */
+
+  }, {
+    key: "createAdapter",
+    value: function createAdapter(engine, source, config) {
+      NativeAdapter._logger.debug('Creating adapter');
+      return new this(engine, source, config);
+    }
+  }]);
+
+  return NativeAdapter;
+}();
+
+NativeAdapter._name = "NativeAdapter";
+NativeAdapter._logger = _logger2.default.getLogger(NativeAdapter._name);
+exports.default = NativeAdapter;
+
+/***/ }),
 /* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2567,10 +2592,10 @@ exports.default = Html5;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.VERSION = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerAdapter = undefined;
+exports.VERSION = exports.BasePlugin = exports.registerPlugin = exports.registerMediaSourceAdapter = undefined;
 exports.playkit = playkit;
 
-var _player = __webpack_require__(3);
+var _player = __webpack_require__(2);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -2582,15 +2607,11 @@ var _package = __webpack_require__(13);
 
 var packageData = _interopRequireWildcard(_package);
 
-var _adapterManager = __webpack_require__(7);
+var _mediaSourceProvider = __webpack_require__(5);
 
-var _baseAdapter = __webpack_require__(2);
+var _pluginManager = __webpack_require__(7);
 
-var _baseAdapter2 = _interopRequireDefault(_baseAdapter);
-
-var _pluginManager = __webpack_require__(9);
-
-var _basePlugin = __webpack_require__(8);
+var _basePlugin = __webpack_require__(6);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
@@ -2601,19 +2622,21 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // Playkit version
 var VERSION = packageData.version;
 
-
 _logger2.default.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
 _logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
 
+/**
+ * @param {Object} config - The configuration of the player
+ * @returns {Player} - The player instance
+ */
 function playkit() {
   var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
   return new _player2.default(config);
 }
 
-// Registration for media source adapter
-exports.registerAdapter = _adapterManager.registerAdapter;
-exports.BaseMediaSourceAdapter = _baseAdapter2.default;
+// Registration for media source adapters
+exports.registerMediaSourceAdapter = _mediaSourceProvider.registerMediaSourceAdapter;
 
 // Export the plugin framework
 
@@ -2638,23 +2661,23 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _player = __webpack_require__(3);
+var _player = __webpack_require__(2);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _eventManager = __webpack_require__(4);
+var _eventManager = __webpack_require__(3);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _state = __webpack_require__(19);
+var _state = __webpack_require__(18);
 
 var _state2 = _interopRequireDefault(_state);
 
-var _stateTypes = __webpack_require__(18);
+var _stateTypes = __webpack_require__(9);
 
 var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
-var _events = __webpack_require__(5);
+var _events = __webpack_require__(4);
 
 var _events2 = _interopRequireDefault(_events);
 
@@ -2685,7 +2708,7 @@ var StateManager = function () {
 
   /**
    * @constructor
-   * @param player - Reference to the player.
+   * @param {Player} player - Reference to the player.
    */
 
   /**
@@ -2710,17 +2733,22 @@ var StateManager = function () {
    */
   function StateManager(player) {
     var _this = this,
+        _PlayerStates$IDLE,
         _PlayerStates$LOADING,
         _PlayerStates$PAUSED,
         _PlayerStates$PLAYING,
+        _PlayerStates$BUFFERI,
         _transitions;
 
     _classCallCheck(this, StateManager);
 
-    this._transitions = (_transitions = {}, _defineProperty(_transitions, _stateTypes2.default.IDLE, _defineProperty({}, _events2.default.LOAD_START, function () {
+    this._transitions = (_transitions = {}, _defineProperty(_transitions, _stateTypes2.default.IDLE, (_PlayerStates$IDLE = {}, _defineProperty(_PlayerStates$IDLE, _events2.default.LOAD_START, function () {
       _this._updateState(_stateTypes2.default.LOADING);
       _this._dispatchEvent();
-    })), _defineProperty(_transitions, _stateTypes2.default.LOADING, (_PlayerStates$LOADING = {}, _defineProperty(_PlayerStates$LOADING, _events2.default.LOADED_METADATA, function () {
+    }), _defineProperty(_PlayerStates$IDLE, _events2.default.PLAY, function () {
+      _this._updateState(_stateTypes2.default.BUFFERING);
+      _this._dispatchEvent();
+    }), _PlayerStates$IDLE)), _defineProperty(_transitions, _stateTypes2.default.LOADING, (_PlayerStates$LOADING = {}, _defineProperty(_PlayerStates$LOADING, _events2.default.LOADED_METADATA, function () {
       if (_this._player.config.autoPlay) {
         _this._updateState(_stateTypes2.default.PLAYING);
       } else {
@@ -2731,6 +2759,9 @@ var StateManager = function () {
       _this._updateState(_stateTypes2.default.IDLE);
       _this._dispatchEvent();
     }), _PlayerStates$LOADING)), _defineProperty(_transitions, _stateTypes2.default.PAUSED, (_PlayerStates$PAUSED = {}, _defineProperty(_PlayerStates$PAUSED, _events2.default.PLAY, function () {
+      _this._updateState(_stateTypes2.default.PLAYING);
+      _this._dispatchEvent();
+    }), _defineProperty(_PlayerStates$PAUSED, _events2.default.PLAYING, function () {
       _this._updateState(_stateTypes2.default.PLAYING);
       _this._dispatchEvent();
     }), _defineProperty(_PlayerStates$PAUSED, _events2.default.ENDED, function () {
@@ -2748,10 +2779,13 @@ var StateManager = function () {
     }), _defineProperty(_PlayerStates$PLAYING, _events2.default.ERROR, function () {
       _this._updateState(_stateTypes2.default.IDLE);
       _this._dispatchEvent();
-    }), _PlayerStates$PLAYING)), _defineProperty(_transitions, _stateTypes2.default.BUFFERING, _defineProperty({}, _events2.default.PLAYING, function () {
+    }), _PlayerStates$PLAYING)), _defineProperty(_transitions, _stateTypes2.default.BUFFERING, (_PlayerStates$BUFFERI = {}, _defineProperty(_PlayerStates$BUFFERI, _events2.default.PLAYING, function () {
       _this._updateState(_stateTypes2.default.PLAYING);
       _this._dispatchEvent();
-    })), _transitions);
+    }), _defineProperty(_PlayerStates$BUFFERI, _events2.default.PAUSE, function () {
+      _this._updateState(_stateTypes2.default.PAUSED);
+      _this._dispatchEvent();
+    }), _PlayerStates$BUFFERI)), _transitions);
 
     this._player = player;
     this._logger = _logger2.default.getLogger("StateManager");
@@ -2765,6 +2799,7 @@ var StateManager = function () {
   /**
    * Register to all necessary events which impacts on the player state.
    * @private
+   * @returns {void}
    */
 
   /**
@@ -2809,9 +2844,10 @@ var StateManager = function () {
     }
 
     /**
-     * Performs a state transition depends on the event which occures in the player system.
-     * @param event - The event occures in the player system.
+     * Performs a state transition depends on the event which occurs in the player system.
+     * @param {FakeEvent} event - The event occurs in the player system.
      * @private
+     * @returns {void}
      */
 
   }, {
@@ -2826,8 +2862,9 @@ var StateManager = function () {
 
     /**
      * Updates the player's state.
-     * @param type - The type of the new state.
+     * @param {string} type - The type of the new state.
      * @private
+     * @returns {void}
      */
 
   }, {
@@ -2845,6 +2882,7 @@ var StateManager = function () {
     /**
      * Fires the playerStateChanged event after state has been changed.
      * @private
+     * @returns {void}
      */
 
   }, {
@@ -2860,6 +2898,7 @@ var StateManager = function () {
     /**
      * Destroys the state manager.
      * @public
+     * @returns {void}
      */
 
   }, {
@@ -2872,7 +2911,7 @@ var StateManager = function () {
     /**
      * Getter to the current state of the player.
      * @public
-     * @returns {State}
+     * @returns {State} - The current state object
      */
 
   }, {
@@ -2884,7 +2923,7 @@ var StateManager = function () {
     /**
      * Getter to the previous state of the player.
      * @public
-     * @returns {State|null}
+     * @returns {State|null} - The previous state object, or null if such doesn't exists
      */
 
   }, {
@@ -2896,7 +2935,7 @@ var StateManager = function () {
     /**
      * Getter to the state history of the player.
      * @public
-     * @returns {Array.<State>}
+     * @returns {Array.<State>} - The full states history objects
      */
 
   }, {
@@ -2921,26 +2960,6 @@ exports.default = StateManager;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var PLAYER_STATE_TYPES = {
-  IDLE: "idle",
-  LOADING: "loading",
-  PLAYING: "playing",
-  PAUSED: "paused",
-  BUFFERING: "buffering"
-};
-
-exports.default = PLAYER_STATE_TYPES;
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -2954,7 +2973,7 @@ var State = function () {
 
   /**
    * @constructor
-   * @param type - The type of the state.
+   * @param {string} type - The type of the state.
    */
 
   /**
@@ -2973,7 +2992,7 @@ var State = function () {
 
   /**
    * Getter for the duration of the state.
-   * @returns {number}
+   * @returns {number} - The duration of the state
    */
 
   /**
@@ -3000,7 +3019,7 @@ var State = function () {
 
     /**
      * Setter for the duration of the state.
-     * @param endTime - The timestamp of the next state.
+     * @param {number} endTime - The timestamp of the next state.
      */
     ,
     set: function set(endTime) {
@@ -3014,19 +3033,16 @@ var State = function () {
 exports.default = State;
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 /**
- * @file to-title-case.js
- *
  * Uppercase the first letter of a string
- *
- * @param  {String} string String to be uppercased
- * @return {String}
+ * @param  {String} string - String to be uppercased
+ * @return {String} - The uppercased string
  * @private
  * @method toTitleCase
  */
@@ -3041,6 +3057,11 @@ function capitlize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+/**
+ * @param {string} string - Certain string
+ * @param {string} searchString - Certain string
+ * @returns {boolean} - Whether the string: string is ending with string: searchString
+ */
 function endsWith(string, searchString) {
   if (typeof string !== 'string' || typeof searchString !== 'string') {
     return false;
@@ -3052,7 +3073,7 @@ exports.capitlize = capitlize;
 exports.endsWith = endsWith;
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!

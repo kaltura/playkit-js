@@ -3,10 +3,11 @@ import EventManager from './event/event-manager'
 import FakeEventTarget from './event/fake-event-target'
 import FakeEvent from './event/fake-event'
 import PlayerEvents from './event/events'
+import PlayerStates from './state/state-types'
 import {isNumber, isFloat} from './utils/util'
 import {capitlize} from './utils/string-util'
 import LoggerFactory from './utils/logger'
-import Html5 from './engines/html5'
+import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
 import StateManager from './state/state-manager'
 import Track from './track/track'
@@ -235,6 +236,32 @@ class Player extends FakeEventTarget {
    */
   get muted(): boolean {
     return this._engine.muted;
+  }
+
+  /**
+   * Get the player source
+   * @returns {string} - The current source of the player
+   */
+  get src(): string {
+    return this._engine.src;
+  }
+
+  /**
+   * Get the player events
+   * @returns {Object} - The events of the player
+   * @constructor
+   */
+  get Event(): { [event: string]: string } {
+    return PlayerEvents;
+  }
+
+  /**
+   * Get the player states
+   * @returns {Object} - The states of the player
+   * @constructor
+   */
+  get State(): { [state: string]: string } {
+    return PlayerStates;
   }
 
 // </editor-fold>
