@@ -1,7 +1,10 @@
 //@flow
+import Track from '../../src/track/track'
+
 declare interface IMediaSourceAdapter {
   load(): void;
   destroy(): void;
+  selectTrack(track: Track): void;
   static name: string;
   static isSupported(): boolean;
   static canPlayType(mimeType: string): boolean;

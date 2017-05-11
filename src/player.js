@@ -22,6 +22,7 @@ class Player extends FakeEventTarget {
   _engine: IEngine;
   _engineEventHandlers: Map<string, ListenerType>;
   _stateManager: StateManager;
+  _tracks: Array<Track> = [];
 
   constructor(config: Object) {
     super();
@@ -79,7 +80,7 @@ class Player extends FakeEventTarget {
   }
 
   loadEngine(source: Object, config: Object) {
-    this._engine = new Html5(source, config);
+    this._engine = new Html5(this, source, config);
     if (config.preload === "auto") {
       this.load();
     }
@@ -95,10 +96,6 @@ class Player extends FakeEventTarget {
         }
       }
     }
-  }
-
-  getTracks(type?: string): Array<Track> {
-    return this._engine.getTracks(type);
   }
 
   selectTrack(track: Track): void {
@@ -136,6 +133,16 @@ class Player extends FakeEventTarget {
    */
   load(): void {
     this._engine.load();
+  }
+
+  getTracks(type?: string): Array<Track> {
+    return !type ? this._tracks : this._tracks.filter((track: Track) => {
+      return track.type === type;
+    });
+  }
+
+  set tracks(value: Array<Track>) {
+    this._tracks = value;
   }
 
   /**

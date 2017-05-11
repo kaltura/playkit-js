@@ -5,12 +5,13 @@ import EventManager from '../../event/event-manager'
 import PlayerEvents from '../../event/events'
 import MediaSourceProvider from './media-source/media-source-provider'
 import Track from '../../../src/track/track'
+import Player from '../../player'
 
 export default class Html5 extends FakeEventTarget implements IEngine {
   _el: HTMLVideoElement;
   _eventManager: EventManager;
   _mediaSourceAdapter: ?IMediaSourceAdapter;
-  _tracks: Array<Track> = [];
+  _player: Player;
 
   static EngineName: string = "html5";
 
@@ -18,8 +19,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return MediaSourceProvider.canPlayType(mimeType);
   }
 
-  constructor(source: Object, config: Object) {
+  constructor(player: Player, source: Object, config: Object) {
     super();
+    this._player = player;
     this.createVideoElement();
     this._eventManager = new EventManager();
     this.setSource(source, config);
@@ -82,14 +84,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter((this: Html5), source, config);
   }
 
-  getTracks(type?: string): Array<Track> {
-    return !type ? this._tracks : this._tracks.filter((track: Track) => {
-      return track.type === type;
-    });
-  }
-
   selectTrack(track: Track): void {
     this._mediaSourceAdapter.selectTrack(track);
+  }
+
+  get player(): Player {
+    return this._player;
   }
 
   set src(source: string): void {
@@ -99,10 +99,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   get src(): string {
     return this._el.src;
-  }
-
-  set tracks(value: Array<Track>) {
-    this._tracks = value;
   }
 
   //playback interface

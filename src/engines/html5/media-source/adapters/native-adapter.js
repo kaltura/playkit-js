@@ -122,7 +122,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   }
 
   /**
-   * Clearing the video source
+   * Clear the video source
    * @function destroy
    * @returns {void}
    */
@@ -131,57 +131,81 @@ export default class NativeAdapter implements IMediaSourceAdapter {
     this._videoElement.src = "";
   }
 
+  /**
+   * Select a track
+   * @function selectTrack
+   * @param {Track} track - the track to select
+   * @returns {void}
+   * @public
+   */
   selectTrack(track: Track) {
     if (track) {
-      let success = false;
       switch (track.type) {
         case TrackTypes.VIDEO: {
           break;
         }
         case TrackTypes.AUDIO: {
-          success = this._selectAudioTrack(track);
+          this._selectAudioTrack(track);
           break;
         }
         case TrackTypes.TEXT: {
           break;
         }
       }
-      if (success) {
-        this._markActiveTrack(track);
-      }
     }
   }
 
+  /**
+   * Parse the tracks
+   * @function _parseTracks
+   * @returns {void}
+   * @private
+   */
   _parseTracks() {
-    let parsedVideoTracks = this._getParsedVideoTracks();
-    let parsedAudioTracks = this._getParsedAudioTracks();
-    let parsedTextTracks = this._getParsedTextTracks();
-    this._engine.tracks = parsedVideoTracks.concat(parsedAudioTracks).concat(parsedTextTracks);
+    this._engine.player.tracks = this._parsedVideoTracks.concat(this._parsedAudioTracks).concat(this._parsedTextTracks);
   }
 
+  /**
+   * Mark the selected track as active
+   * @function _markActiveTrack
+   * @param {Track} track - the track to mark
+   * @returns {void}
+   * @private
+   */
   _markActiveTrack(track: Track) {
-    let tracks = this._engine.getTracks(track.type);
+    let tracks = this._engine.player.getTracks(track.type);
     for (let i = 0; i < tracks.length; i++) {
       tracks[i].active = tracks[i].id === track.id;
     }
   }
 
-  _selectAudioTrack(track: AudioTrack): boolean {
+  /**
+   * Select an audio track
+   * @function _selectAudioTrack
+   * @param {Track} track - the  audio track to select
+   * @returns {void}
+   * @private
+   */
+  _selectAudioTrack(track: AudioTrack) {
     if (track && track.type === TrackTypes.AUDIO && this._videoElement.audioTracks && this._videoElement.audioTracks.length) {
       let selectedTrack = this._videoElement.audioTracks.getTrackById(track.id);
       if (selectedTrack) {
         selectedTrack.enabled = true;
-        return true;
+        this._markActiveTrack(track);
       }
     }
-    return false;
   }
 
-  _getParsedVideoTracks() {
+  get _parsedVideoTracks() {
     return [];
   }
 
-  _getParsedAudioTracks(): Array<AudioTrack> {
+  /**
+   * Get the parsed audio tracks
+   * @returns {Array<AudioTrack>}
+   * @private
+   */
+  get _parsedAudioTracks(): Array<AudioTrack> {
     let audioTracks = this._videoElement.audioTracks;
     if (audioTracks) {
       let parsedTracks = [];
@@ -192,7 +216,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
     }
   }
 
-  _getParsedTextTracks() {
+  get _parsedTextTracks() {
     return [];
   }
 }
