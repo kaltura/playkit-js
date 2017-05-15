@@ -10,13 +10,14 @@ module.exports = function (config) {
   let karmaConf = {
     logLevel: config.LOG_INFO,
     // Run in Chrome
-    browsers: ['Chrome'],
+    browsers: ['Chrome', 'Safari'],
     // Just run once by default
     singleRun: true,
     // Use the mocha test framework
     frameworks: ['mocha'],
     files: [
-      'test/setup/karma.js'
+      'test/setup/karma.js',
+      {pattern: 'src/assets/audios.mp4', included: false}
     ],
     exclude: ['src/declarations/**/*.js'],
     preprocessors: {
