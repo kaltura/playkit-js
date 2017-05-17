@@ -1,5 +1,7 @@
 import NativeAdapter from '../../../../../../src/engines/html5/media-source/adapters/native-adapter'
-import AudioTrack from '../../../../../../src/track/audio-track'
+import VideoTrack from '../../../../../../flow-typed/classes/track/video-track'
+import AudioTrack from '../../../../../../flow-typed/classes/track/audio-track'
+import TextTrack from '../../../../../../flow-typed/classes/track/text-track'
 
 describe('NativeAdapter:isSupported', () => {
   it('should be supported', () => {
@@ -8,12 +10,20 @@ describe('NativeAdapter:isSupported', () => {
 });
 
 describe('NativeAdapter:canPlayType', () => {
-  it('should return true for video/mp4', () => {
-    NativeAdapter.canPlayType('video/mp4').should.be.true;
+  let video;
+  before(function () {
+    video = document.createElement('video');
+  });
+  it('should return video/mp4 support', () => {
+    NativeAdapter.canPlayType('video/mp4').should.equals(!!video.canPlayType('video/mp4'));
   });
 
-  it('should return true for video/ogg', () => {
-    NativeAdapter.canPlayType('video/ogg').should.be.true;
+  it('should return video/ogg support', () => {
+    NativeAdapter.canPlayType('video/ogg').should.equals(!!video.canPlayType('video/ogg'));
+  });
+
+  it('should return application/x-mpegURL support', () => {
+    NativeAdapter.canPlayType('application/x-mpegURL').should.equals(!!video.canPlayType('application/x-mpegURL'));
   });
 
   it('should return false for unsupported mime type', () => {
@@ -52,18 +62,42 @@ describe('NativeAdapterInstance', () => {
   });
 });
 
-describe('NativeAdapter:selectTrack', function () {
-  let video ;
+describe.only('NativeAdapter:getTracks', function () {
+  let video = document.createElement('video');
   let fakeEngine = {
     getVideoElement: function () {
       return video;
-    },
-    player: {
-      getTracks(type?: string): Array<Track> {
-        return !type ? this.tracks : this.tracks.filter((track) => {
-          return track.type === type;
-        });
-      }
+    }
+  };
+  let nativeInstance = NativeAdapter.createAdapter(fakeEngine, {}, {});
+  nativeInstance._tracks = [new VideoTrack(), new AudioTrack(), new AudioTrack(), new TextTrack(), new TextTrack(), new TextTrack()];
+
+  it('should return all tracks for no type', () => {
+    nativeInstance.getTracks().length.should.equals(6);
+  });
+
+  it('should return video tracks', () => {
+    nativeInstance.getTracks('video').length.should.equals(1);
+  });
+
+  it('should return audio tracks', () => {
+    nativeInstance.getTracks('audio').length.should.equals(2);
+  });
+
+  it('should return text tracks', () => {
+    nativeInstance.getTracks('text').length.should.equals(3);
+  });
+
+  it('should return all tracks for unknown type', () => {
+    nativeInstance.getTracks('some').length.should.equals(6);
+  });
+});
+
+describe.only('NativeAdapter:selectTrack', function () {
+  let video;
+  let fakeEngine = {
+    getVideoElement: function () {
+      return video;
     }
   };
   let nativeInstance;
@@ -81,16 +115,16 @@ describe('NativeAdapter:selectTrack', function () {
     nativeInstance = null;
   });
 
-  it('should select the last audio track', (done) => {
+  it('should select a new audio track', (done) => {
     nativeInstance._engine.getVideoElement().addEventListener('loadeddata', function () {
       if (nativeInstance._engine.getVideoElement().audioTracks) {
         nativeInstance._engine.getVideoElement().audioTracks.getTrackById('2').enabled.should.be.true;
-        nativeInstance._engine.player.tracks[0].active.should.be.true;
-        nativeInstance.selectTrack(new AudioTrack('4', false));
+        nativeInstance.getTracks()[0].active.should.be.true;
+        nativeInstance.selectTrack(new AudioTrack({id: '4'}));
         nativeInstance._engine.getVideoElement().audioTracks.getTrackById('4').enabled.should.be.true;
-        nativeInstance._engine.player.tracks[0].active.should.be.false;
-        nativeInstance._engine.player.tracks[1].active.should.be.false;
-        nativeInstance._engine.player.tracks[2].active.should.be.true;
+        nativeInstance.getTracks()[0].active.should.be.false;
+        nativeInstance.getTracks()[1].active.should.be.false;
+        nativeInstance.getTracks()[2].active.should.be.true;
       }
       done();
     });
@@ -100,12 +134,27 @@ describe('NativeAdapter:selectTrack', function () {
     nativeInstance._engine.getVideoElement().addEventListener('loadeddata', function () {
       if (nativeInstance._engine.getVideoElement().audioTracks) {
         nativeInstance._engine.getVideoElement().audioTracks.getTrackById('2').enabled.should.be.true;
-        nativeInstance._engine.player.tracks[0].active.should.be.true;
-        nativeInstance.selectTrack(new AudioTrack('2', false));
+        nativeInstance.getTracks()[0].active.should.be.true;
+        nativeInstance.selectTrack(new AudioTrack({id: '2'}));
         nativeInstance._engine.getVideoElement().audioTracks.getTrackById('2').enabled.should.be.true;
-        nativeInstance._engine.player.tracks[0].active.should.be.true;
-        nativeInstance._engine.player.tracks[1].active.should.be.false;
-        nativeInstance._engine.player.tracks[2].active.should.be.false;
+        nativeInstance.getTracks()[0].active.should.be.true;
+        nativeInstance.getTracks()[1].active.should.be.false;
+        nativeInstance.getTracks()[2].active.should.be.false;
+      }
+      done();
+    });
+  });
+
+  it('should not select non exist audio track', (done) => {
+    nativeInstance._engine.getVideoElement().addEventListener('loadeddata', function () {
+      if (nativeInstance._engine.getVideoElement().audioTracks) {
+        nativeInstance._engine.getVideoElement().audioTracks.getTrackById('2').enabled.should.be.true;
+        nativeInstance.getTracks()[0].active.should.be.true;
+        nativeInstance.selectTrack(new AudioTrack({id: '0'}));
+        nativeInstance._engine.getVideoElement().audioTracks.getTrackById('2').enabled.should.be.true;
+        nativeInstance.getTracks()[0].active.should.be.true;
+        nativeInstance.getTracks()[1].active.should.be.false;
+        nativeInstance.getTracks()[2].active.should.be.false;
       }
       done();
     });

@@ -1,9 +1,10 @@
 //@flow
-import Track from '../../src/track/track'
+import Track from '../classes/track/track'
 
 declare interface IMediaSourceAdapter {
   load(): void;
   destroy(): void;
+  getTracks(type?: string): Array<Track>;
   selectTrack(track: Track): void;
   static name: string;
   static isSupported(): boolean;

@@ -10,7 +10,7 @@ import LoggerFactory from './utils/logger'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
 import StateManager from './state/state-manager'
-import Track from './track/track'
+import Track from '../flow-typed/classes/track/track'
 
 let logger = LoggerFactory.getLogger('Player');
 type ListenerType = (event: FakeEvent) => any;
@@ -22,7 +22,6 @@ class Player extends FakeEventTarget {
   _engine: IEngine;
   _engineEventHandlers: Map<string, ListenerType>;
   _stateManager: StateManager;
-  _tracks: Array<Track> = [];
 
   constructor(config: Object) {
     super();
@@ -80,7 +79,7 @@ class Player extends FakeEventTarget {
   }
 
   loadEngine(source: Object, config: Object) {
-    this._engine = new Html5(this, source, config);
+    this._engine = new Html5(source, config);
     if (config.preload === "auto") {
       this.load();
     }
@@ -96,6 +95,10 @@ class Player extends FakeEventTarget {
         }
       }
     }
+  }
+
+  getTracks(type?: string): Array<Track> {
+    return this._engine.getTracks(type);
   }
 
   selectTrack(track: Track): void {
@@ -133,16 +136,6 @@ class Player extends FakeEventTarget {
    */
   load(): void {
     this._engine.load();
-  }
-
-  getTracks(type?: string): Array<Track> {
-    return !type ? this._tracks : this._tracks.filter((track: Track) => {
-      return track.type === type;
-    });
-  }
-
-  set tracks(value: Array<Track>) {
-    this._tracks = value;
   }
 
   /**

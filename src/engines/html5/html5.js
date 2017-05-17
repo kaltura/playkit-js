@@ -4,7 +4,7 @@ import FakeEvent from '../../event/fake-event'
 import EventManager from '../../event/event-manager'
 import PlayerEvents from '../../event/events'
 import MediaSourceProvider from './media-source/media-source-provider'
-import Track from '../../../src/track/track'
+import Track from '../../../flow-typed/classes/track/track'
 import Player from '../../player'
 
 export default class Html5 extends FakeEventTarget implements IEngine {
@@ -19,9 +19,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return MediaSourceProvider.canPlayType(mimeType);
   }
 
-  constructor(player: Player, source: Object, config: Object) {
+  constructor(source: Object, config: Object) {
     super();
-    this._player = player;
     this.createVideoElement();
     this._eventManager = new EventManager();
     this.setSource(source, config);
@@ -84,12 +83,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter((this: Html5), source, config);
   }
 
-  selectTrack(track: Track): void {
-    this._mediaSourceAdapter.selectTrack(track);
+  getTracks(type?: string): Array<Track> {
+    return this._mediaSourceAdapter.getTracks(type);
   }
 
-  get player(): Player {
-    return this._player;
+  selectTrack(track: Track): void {
+    this._mediaSourceAdapter.selectTrack(track);
   }
 
   set src(source: string): void {

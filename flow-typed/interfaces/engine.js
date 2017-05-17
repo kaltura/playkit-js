@@ -1,5 +1,5 @@
 //@flow
-import Track from '../../src/track/track'
+import Track from '../classes/track/track'
 
 declare interface IEngine {
   destroy(): void;
@@ -9,9 +9,9 @@ declare interface IEngine {
   pause(): void;
   load(): void;
   ready(): void;
+  getTracks(type?: string): Array<Track>;
   selectTrack(track: Track): void;
   getVideoElement(): HTMLVideoElement;
-  +player: Player;
   currentTime: number;
   +duration: number;
   volume: number;

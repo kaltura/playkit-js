@@ -1,8 +1,10 @@
 //@flow
 import LoggerFactory from '../../../../utils/logger'
-import Track from '../../../../track/track'
-import TrackTypes from '../../../../track/track-types'
-import AudioTrack from '../../../../track/audio-track'
+import Track from '../../../../../flow-typed/classes/track/track'
+import TrackTypes from '../../../../../flow-typed/classes/track/track-types'
+import VideoTrack from '../../../../../flow-typed/classes/track/video-track'
+import AudioTrack from '../../../../../flow-typed/classes/track/audio-track'
+import TextTrack from '../../../../../flow-typed/classes/track/text-track'
 /**
  * An illustration of media source extension for progressive download
  * @classdesc
@@ -55,6 +57,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @private
    */
   _source: string;
+  _tracks: Array<Track> = [];
 
   /**
    * @constructor
@@ -131,6 +134,20 @@ export default class NativeAdapter implements IMediaSourceAdapter {
     this._videoElement.src = "";
   }
 
+  getTracks(type?: string): Array<Track> {
+    return !type ? this._tracks : this._tracks.filter((track: Track) => {
+      if (type === TrackTypes.VIDEO) {
+        return track instanceof VideoTrack;
+      } else if (type === TrackTypes.AUDIO) {
+        return track instanceof AudioTrack;
+      } else if (type === TrackTypes.TEXT) {
+        return track instanceof TextTrack;
+      } else {
+        return true;
+      }
+    });
+  }
+
   /**
    * Select a track
    * @function selectTrack
@@ -140,17 +157,12 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    */
   selectTrack(track: Track) {
     if (track) {
-      switch (track.type) {
-        case TrackTypes.VIDEO: {
-          break;
-        }
-        case TrackTypes.AUDIO: {
-          this._selectAudioTrack(track);
-          break;
-        }
-        case TrackTypes.TEXT: {
-          break;
-        }
+      if (track instanceof VideoTrack) {
+        this._selectVideoTrack(track);
+      } else if (track instanceof AudioTrack) {
+        this._selectAudioTrack(track);
+      } else if (track instanceof TextTrack) {
+        this._selectTextTrack(track);
       }
     }
   }
@@ -162,7 +174,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @private
    */
   _parseTracks() {
-    this._engine.player.tracks = this._parsedVideoTracks.concat(this._parsedAudioTracks).concat(this._parsedTextTracks);
+    this._tracks = this._parsedVideoTracks.concat(this._parsedAudioTracks).concat(this._parsedTextTracks);
   }
 
   /**
@@ -173,10 +185,14 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @private
    */
   _markActiveTrack(track: Track) {
-    let tracks = this._engine.player.getTracks(track.type);
+    let tracks = this.getTracks(track.type);
     for (let i = 0; i < tracks.length; i++) {
       tracks[i].active = tracks[i].id === track.id;
     }
+  }
+
+  _selectVideoTrack(track: VideoTrack) {
+
   }
 
   /**
@@ -187,7 +203,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @private
    */
   _selectAudioTrack(track: AudioTrack) {
-    if (track && track.type === TrackTypes.AUDIO && this._videoElement.audioTracks && this._videoElement.audioTracks.length) {
+    if (track && (track instanceof AudioTrack) && this._videoElement.audioTracks && this._videoElement.audioTracks.length) {
       let selectedTrack = this._videoElement.audioTracks.getTrackById(track.id);
       if (selectedTrack) {
         selectedTrack.enabled = true;
@@ -196,7 +212,16 @@ export default class NativeAdapter implements IMediaSourceAdapter {
     }
   }
 
-  get _parsedVideoTracks() {
+  _selectTextTrack(track: TextTrack) {
+
+  }
+
+  /**
+   * Get the parsed video tracks
+   * @returns {Array<VideoTrack>}
+   * @private
+   */
+  get _parsedVideoTracks(): Array<VideoTrack> {
     return [];
   }
 
@@ -207,16 +232,26 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    */
   get _parsedAudioTracks(): Array<AudioTrack> {
     let audioTracks = this._videoElement.audioTracks;
+    let parsedTracks = [];
     if (audioTracks) {
-      let parsedTracks = [];
       for (let i = 0; i < audioTracks.length; i++) {
-        parsedTracks.push(new AudioTrack(audioTracks[i].id, audioTracks[i].enabled, audioTracks[i].language));
+        let settings = {
+          id: audioTracks[i].id,
+          active: audioTracks[i].enabled,
+          label: audioTracks[i].language
+        };
+        parsedTracks.push(new AudioTrack(settings));
       }
-      return parsedTracks;
     }
+    return parsedTracks;
   }
 
-  get _parsedTextTracks() {
+  /**
+   * Get the parsed text tracks
+   * @returns {Array<TextTrack>}
+   * @private
+   */
+  get _parsedTextTracks(): Array<TextTrack> {
     return [];
   }
 }
