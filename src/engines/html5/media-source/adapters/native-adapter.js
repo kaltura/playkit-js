@@ -58,22 +58,6 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    */
   _source: string;
   _tracks: Array<Track>;
-  /**
-   * @constructor
-   * @param {IEngine} engine - The video element which bind to NativeAdapter
-   * @param {string} source - The source URL
-   * @param {Object} config - The media source adapter configuration
-   */
-  constructor(engine: IEngine, source: Object, config: Object) {
-    this._engine = engine;
-    this._config = config;
-    this._videoElement = engine.getVideoElement();
-    this._source = source.url;
-    if (source) {
-      this._videoElement.src = source.url;
-    }
-    this.addBindings();
-  }
 
   /**
    * Checks if NativeAdapter can play a given mime type
@@ -113,8 +97,21 @@ export default class NativeAdapter implements IMediaSourceAdapter {
     return new this(engine, source, config);
   }
 
-  addBindings(): void {
-    this._videoElement.addEventListener('loadeddata', this._parseTracks.bind(this));
+  /**
+   * @constructor
+   * @param {IEngine} engine - The video element which bind to NativeAdapter
+   * @param {string} source - The source URL
+   * @param {Object} config - The media source adapter configuration
+   */
+  constructor(engine: IEngine, source: Object, config: Object) {
+    this._engine = engine;
+    this._config = config;
+    this._videoElement = engine.getVideoElement();
+    this._source = source.url;
+    if (source) {
+      this._videoElement.src = source.url;
+    }
+    this._parseTracks().then();
   }
 
   /**
@@ -141,11 +138,20 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   /**
    * Parse the tracks
    * @function _parseTracks
-   * @returns {void}
+   * @returns {Promise}
    * @private
    */
-  _parseTracks(): void {
-    this._tracks = this._tracks || this._parsedVideoTracks.concat(this._parsedAudioTracks).concat(this._parsedTextTracks);
+  _parseTracks(): Promise {
+    return new Promise((resolve) => {
+      if (this._tracks) {
+        resolve();
+      } else {
+        this._videoElement.addEventListener('loadeddata', () => {
+          this._tracks = this._parsedVideoTracks.concat(this._parsedAudioTracks).concat(this._parsedTextTracks);
+          resolve();
+        });
+      }
+    });
   }
 
   /**
@@ -200,15 +206,8 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   }
 
   getTracks(type?: string): Promise {
-    return new Promise((resolve) => {
-      if (this._tracks) {
-        resolve(this._getTracksByType(type));
-      } else {
-        this._videoElement.addEventListener('loadeddata', () => {
-          this._parseTracks();
-          resolve(this._getTracksByType(type));
-        });
-      }
+    return this._parseTracks().then(() => {
+      return this._getTracksByType(type);
     });
   }
 
