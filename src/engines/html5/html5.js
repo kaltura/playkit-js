@@ -83,7 +83,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter((this: Html5), source, config);
   }
 
-  getTracks(type?: string): Array<Track> {
+  getTracks(type?: string): Promise {
     return this._mediaSourceAdapter.getTracks(type);
   }
 

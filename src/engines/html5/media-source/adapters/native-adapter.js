@@ -57,8 +57,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @private
    */
   _source: string;
-  _tracks: Array<Track> = [];
-
+  _tracks: Array<Track>;
   /**
    * @constructor
    * @param {IEngine} engine - The video element which bind to NativeAdapter
@@ -73,7 +72,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
     if (source) {
       this._videoElement.src = source.url;
     }
-    this._videoElement.addEventListener('loadeddata', this._parseTracks.bind(this));
+    this.addBindings();
   }
 
   /**
@@ -114,6 +113,10 @@ export default class NativeAdapter implements IMediaSourceAdapter {
     return new this(engine, source, config);
   }
 
+  addBindings(): void {
+    this._videoElement.addEventListener('loadeddata', this._parseTracks.bind(this));
+  }
+
   /**
    * Load the video source
    * @function load
@@ -132,9 +135,84 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   destroy(): void {
     NativeAdapter._logger.debug('destroy');
     this._videoElement.src = "";
+    this._tracks = null;
   }
 
-  getTracks(type?: string): Array<Track> {
+  /**
+   * Parse the tracks
+   * @function _parseTracks
+   * @returns {void}
+   * @private
+   */
+  _parseTracks(): void {
+    this._tracks = this._tracks || this._parsedVideoTracks.concat(this._parsedAudioTracks).concat(this._parsedTextTracks);
+  }
+
+  /**
+   * Get the parsed video tracks
+   * @returns {Array<VideoTrack>}
+   * @private
+   */
+  get _parsedVideoTracks(): Array<VideoTrack> {
+    let videoTracks = this._videoElement.videoTracks;
+    let parsedTracks = [];
+    if (videoTracks) {
+      for (let i = 0; i < videoTracks.length; i++) {
+        let settings = {
+          id: videoTracks[i].id,
+          active: videoTracks[i].selected,
+          label: videoTracks[i].language
+        };
+        parsedTracks.push(new VideoTrack(settings));
+      }
+    }
+    return parsedTracks;
+  }
+
+  /**
+   * Get the parsed audio tracks
+   * @returns {Array<AudioTrack>}
+   * @private
+   */
+  get _parsedAudioTracks(): Array<AudioTrack> {
+    let audioTracks = this._videoElement.audioTracks;
+    let parsedTracks = [];
+    if (audioTracks) {
+      for (let i = 0; i < audioTracks.length; i++) {
+        let settings = {
+          id: audioTracks[i].id,
+          active: audioTracks[i].enabled,
+          label: audioTracks[i].language
+        };
+        parsedTracks.push(new AudioTrack(settings));
+      }
+    }
+    return parsedTracks;
+  }
+
+  /**
+   * Get the parsed text tracks
+   * @returns {Array<TextTrack>}
+   * @private
+   */
+  get _parsedTextTracks(): Array<TextTrack> {
+    return [];
+  }
+
+  getTracks(type?: string): Promise {
+    return new Promise((resolve) => {
+      if (this._tracks) {
+        resolve(this._getTracksByType(type));
+      } else {
+        this._videoElement.addEventListener('loadeddata', () => {
+          this._parseTracks();
+          resolve(this._getTracksByType(type));
+        });
+      }
+    });
+  }
+
+  _getTracksByType(type?: string): Array<Track> {
     return !type ? this._tracks : this._tracks.filter((track: Track) => {
       if (type === TrackTypes.VIDEO) {
         return track instanceof VideoTrack;
@@ -167,30 +245,6 @@ export default class NativeAdapter implements IMediaSourceAdapter {
     }
   }
 
-  /**
-   * Parse the tracks
-   * @function _parseTracks
-   * @returns {void}
-   * @private
-   */
-  _parseTracks() {
-    this._tracks = this._parsedVideoTracks.concat(this._parsedAudioTracks).concat(this._parsedTextTracks);
-  }
-
-  /**
-   * Mark the selected track as active
-   * @function _markActiveTrack
-   * @param {Track} track - the track to mark
-   * @returns {void}
-   * @private
-   */
-  _markActiveTrack(track: Track) {
-    let tracks = this.getTracks(track.type);
-    for (let i = 0; i < tracks.length; i++) {
-      tracks[i].active = tracks[i].id === track.id;
-    }
-  }
-
   _selectVideoTrack(track: VideoTrack) {
 
   }
@@ -217,41 +271,16 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   }
 
   /**
-   * Get the parsed video tracks
-   * @returns {Array<VideoTrack>}
+   * Mark the selected track as active
+   * @function _markActiveTrack
+   * @param {Track} track - the track to mark
+   * @returns {void}
    * @private
    */
-  get _parsedVideoTracks(): Array<VideoTrack> {
-    return [];
-  }
-
-  /**
-   * Get the parsed audio tracks
-   * @returns {Array<AudioTrack>}
-   * @private
-   */
-  get _parsedAudioTracks(): Array<AudioTrack> {
-    let audioTracks = this._videoElement.audioTracks;
-    let parsedTracks = [];
-    if (audioTracks) {
-      for (let i = 0; i < audioTracks.length; i++) {
-        let settings = {
-          id: audioTracks[i].id,
-          active: audioTracks[i].enabled,
-          label: audioTracks[i].language
-        };
-        parsedTracks.push(new AudioTrack(settings));
-      }
+  _markActiveTrack(track: Track) {
+    let tracks = this.getTracks(track.type);
+    for (let i = 0; i < tracks.length; i++) {
+      tracks[i].active = tracks[i].id === track.id;
     }
-    return parsedTracks;
-  }
-
-  /**
-   * Get the parsed text tracks
-   * @returns {Array<TextTrack>}
-   * @private
-   */
-  get _parsedTextTracks(): Array<TextTrack> {
-    return [];
   }
 }

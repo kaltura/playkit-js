@@ -97,7 +97,7 @@ class Player extends FakeEventTarget {
     }
   }
 
-  getTracks(type?: string): Array<Track> {
+  getTracks(type?: string): Promise {
     return this._engine.getTracks(type);
   }
 

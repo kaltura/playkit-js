@@ -1,25 +1,40 @@
 import {playkit} from '../../src/playkit'
 import PlayerStates from '../../src/state/state-types'
 import sourcesConfig from './configs/sources.json'
+import AudioTrack from '../../flow-typed/classes/track/audio-track'
 //import pluginsConfig from './configs/plugins.json'
 
 describe('playkit:playkit', function () {
   this.timeout(10000);
 
   it('should play mp4 stream', (done) => {
+
     let config = sourcesConfig.mp4_none_hls_dash;
     let player = playkit(config);
-    let video = document.getElementsByTagName("video")[0];
-    video.onplaying = function () {
-      player.destroy();
-      done();
-    };
-    video.addEventListener('error', function () {
-      player.destroy();
-      should.fail();
+    player.getTracks().then((tracks)=>{
+      tracks.length.should.be.equal(3);
     });
-    player.load();
-    player.play();
+    setTimeout(()=>{
+      player.getTracks().then((tracks)=>{
+        tracks.length.should.be.equal(3);
+        done();
+      })
+    },1000);
+    // video.onplaying = function () {
+    //   // player.destroy();
+    //   console.error(player.getTracks('audio'));
+    //   setTimeout(() => {
+    //     player.selectTrack(player.getTracks('audio')[0]);
+    //     console.error(player.getTracks('audio'));
+    //     // done();
+    //   }, 8000);
+    // };
+    // video.addEventListener('error', function () {
+    //   // player.destroy();
+    //   should.fail();
+    // });
+    // // player.load();
+    // // player.play();
   });
 
   it('should switch player states during playback', (done) => {

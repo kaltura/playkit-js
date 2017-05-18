@@ -62,7 +62,7 @@ describe('NativeAdapterInstance', () => {
   });
 });
 
-describe.only('NativeAdapter:getTracks', function () {
+describe('NativeAdapter:getTracks dummy', function () {
   let video = document.createElement('video');
   let fakeEngine = {
     getVideoElement: function () {
@@ -72,28 +72,112 @@ describe.only('NativeAdapter:getTracks', function () {
   let nativeInstance = NativeAdapter.createAdapter(fakeEngine, {}, {});
   nativeInstance._tracks = [new VideoTrack(), new AudioTrack(), new AudioTrack(), new TextTrack(), new TextTrack(), new TextTrack()];
 
-  it('should return all tracks for no type', () => {
-    nativeInstance.getTracks().length.should.equals(6);
+  it('should return all tracks for no type', (done) => {
+    nativeInstance.getTracks().then((tracks) => {
+      tracks.length.should.be.equal(6);
+      done();
+    });
   });
 
-  it('should return video tracks', () => {
-    nativeInstance.getTracks('video').length.should.equals(1);
+  it('should return video tracks', (done) => {
+    nativeInstance.getTracks('video').then((tracks) => {
+      tracks.length.should.be.equal(1);
+      done();
+    });
   });
 
-  it('should return audio tracks', () => {
-    nativeInstance.getTracks('audio').length.should.equals(2);
+  it('should return audio tracks', (done) => {
+    nativeInstance.getTracks('audio').then((tracks) => {
+      tracks.length.should.be.equal(2);
+      done();
+    });
   });
 
-  it('should return text tracks', () => {
-    nativeInstance.getTracks('text').length.should.equals(3);
+  it('should return text tracks', (done) => {
+    nativeInstance.getTracks('text').then((tracks) => {
+      tracks.length.should.be.equal(3);
+      done();
+    });
   });
 
-  it('should return all tracks for unknown type', () => {
-    nativeInstance.getTracks('some').length.should.equals(6);
+  it('should return all tracks for unknown type', (done) => {
+    nativeInstance.getTracks('some').then((tracks) => {
+      tracks.length.should.be.equal(6);
+      done();
+    });
   });
 });
 
-describe.only('NativeAdapter:selectTrack', function () {
+describe.only('NativeAdapter:getTracks real', function () {
+  let video;
+  let fakeEngine = {
+    getVideoElement: function () {
+      return video;
+    }
+  };
+  let nativeInstance;
+
+  beforeEach(() => {
+    video = document.createElement("video");
+    nativeInstance = NativeAdapter.createAdapter(fakeEngine, {
+      mimetype: 'video/mp4',
+      url: '/base/src/assets/audios.mp4'
+    }, {});
+  });
+
+  afterEach(() => {
+    nativeInstance.destroy();
+    nativeInstance = null;
+  });
+
+  it('should return all tracks for no type', (done) => {
+    nativeInstance.getTracks().then((tracks) => {
+      let videoTracksLength = (video.videoTracks ? video.videoTracks.length : 0);
+      let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
+      let textTracksLength = (video.textTracks ? video.textTracks.length : 0);
+      let totalTracksLength = videoTracksLength + audioTracksLength + textTracksLength;
+      tracks.length.should.be.equal(totalTracksLength);
+      done();
+    });
+  });
+
+  it('should return video tracks', (done) => {
+    nativeInstance.getTracks('video').then((tracks) => {
+      let videoTracksLength = (video.videoTracks ? video.videoTracks.length : 0);
+      tracks.length.should.be.equal(videoTracksLength);
+      done();
+    });
+  });
+
+  it('should return audio tracks', (done) => {
+    nativeInstance.getTracks('audio').then((tracks) => {
+      let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
+      tracks.length.should.be.equal(audioTracksLength);
+      done();
+    });
+  });
+
+  it('should return text tracks', (done) => {
+    nativeInstance.getTracks('text').then((tracks) => {
+      let textTracksLength = (video.textTracks ? video.textTracks.length : 0);
+      tracks.length.should.be.equal(textTracksLength);
+      done();
+    });
+  });
+
+  it('should return all tracks for unknown type', (done) => {
+    nativeInstance.getTracks('some').then((tracks) => {
+      let videoTracksLength = (video.videoTracks ? video.videoTracks.length : 0);
+      let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
+      let textTracksLength = (video.textTracks ? video.textTracks.length : 0);
+      let totalTracksLength = videoTracksLength + audioTracksLength + textTracksLength;
+      tracks.length.should.be.equal(totalTracksLength);
+      done();
+    });
+  });
+});
+
+describe('NativeAdapter:selectTrack', function () {
   let video;
   let fakeEngine = {
     getVideoElement: function () {
