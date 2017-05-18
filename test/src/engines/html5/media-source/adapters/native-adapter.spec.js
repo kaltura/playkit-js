@@ -112,6 +112,7 @@ describe.only('NativeAdapter:_parseTracks', function () {
           track.label.should.equals(video.audioTracks.getTrackById(track.id).label || video.audioTracks.getTrackById(track.id).language);
         }
         if(track instanceof TextTrack) {
+          track.kind.should.equals(video.textTracks.getTrackById(track.id).kind);
           track.active.should.equals(video.textTracks.getTrackById(track.id).mode === 'showing');
           track.label.should.equals(video.textTracks.getTrackById(track.id).label || video.textTracks.getTrackById(track.id).language);
         }

@@ -206,14 +206,13 @@ export default class NativeAdapter implements IMediaSourceAdapter {
     let parsedTracks = [];
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
-        if(textTracks[i].kind === 'subtitles' || textTracks[i].kind === 'captions') {
-          let settings = {
-            id: textTracks[i].id,
-            active: textTracks[i].mode === 'showing',
-            label: textTracks[i].label || textTracks[i].language
-          };
-          parsedTracks.push(new TextTrack(settings));
-        }
+        let settings = {
+          kind: textTracks[i].kind,
+          id: textTracks[i].id,
+          active: textTracks[i].mode === 'showing',
+          label: textTracks[i].label || textTracks[i].language
+        };
+        parsedTracks.push(new TextTrack(settings));
       }
     }
     return parsedTracks;
