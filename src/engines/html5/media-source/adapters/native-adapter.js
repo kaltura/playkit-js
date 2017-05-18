@@ -147,7 +147,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
         resolve();
       } else {
         this._videoElement.addEventListener('loadeddata', () => {
-          this._tracks = this._parsedVideoTracks.concat(this._parsedAudioTracks).concat(this._parsedTextTracks);
+          this._tracks = this._tracks || this._parsedVideoTracks.concat(this._parsedAudioTracks).concat(this._parsedTextTracks);
           resolve();
         });
       }
@@ -167,7 +167,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
         let settings = {
           id: videoTracks[i].id,
           active: videoTracks[i].selected,
-          label: videoTracks[i].language
+          label: videoTracks[i].label || videoTracks[i].language
         };
         parsedTracks.push(new VideoTrack(settings));
       }
@@ -188,7 +188,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
         let settings = {
           id: audioTracks[i].id,
           active: audioTracks[i].enabled,
-          label: audioTracks[i].language
+          label: audioTracks[i].label || audioTracks[i].language
         };
         parsedTracks.push(new AudioTrack(settings));
       }
@@ -202,7 +202,21 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @private
    */
   get _parsedTextTracks(): Array<TextTrack> {
-    return [];
+    let textTracks = this._videoElement.textTracks;
+    let parsedTracks = [];
+    if (textTracks) {
+      for (let i = 0; i < textTracks.length; i++) {
+        if(textTracks[i].kind === 'subtitles' || textTracks[i].kind === 'captions') {
+          let settings = {
+            id: textTracks[i].id,
+            active: textTracks[i].mode === 'showing',
+            label: textTracks[i].label || textTracks[i].language
+          };
+          parsedTracks.push(new TextTrack(settings));
+        }
+      }
+    }
+    return parsedTracks;
   }
 
   getTracks(type?: string): Promise {

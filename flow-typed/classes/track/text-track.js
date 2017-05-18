@@ -1,4 +1,4 @@
 //@flow
 import Track from './track'
 
-export default class AudioTrack extends Track {}
+export default class textTrack extends Track {}

@@ -62,6 +62,65 @@ describe('NativeAdapterInstance', () => {
   });
 });
 
+describe.only('NativeAdapter:_parseTracks', function () {
+  let video;
+  let track1 = document.createElement("track");
+  let track2 = document.createElement("track");
+  track1.id = '0';
+  track1.kind = 'subtitles';
+  track1.label = 'English';
+  track1.default = true;
+  track2.id = '1';
+  track2.kind = 'captions';
+  track2.srclang = 'fr';
+  let fakeEngine = {
+    getVideoElement: function () {
+      return video;
+    }
+  };
+  let nativeInstance;
+
+  beforeEach(() => {
+    video = document.createElement("video");
+    video.appendChild(track1);
+    video.appendChild(track2);
+    nativeInstance = NativeAdapter.createAdapter(fakeEngine, {
+      mimetype: 'video/mp4',
+      url: '/base/src/assets/audios.mp4'
+    }, {});
+  });
+
+  afterEach(() => {
+    nativeInstance.destroy();
+    nativeInstance = null;
+  });
+
+  it('should parse tracks', (done) => {
+    nativeInstance._parseTracks().then(() => {
+      let videoTracksLength = (video.videoTracks ? video.videoTracks.length : 0);
+      let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
+      let textTracksLength = (video.textTracks ? video.textTracks.length : 0);
+      let totalTracksLength = videoTracksLength + audioTracksLength + textTracksLength;
+      nativeInstance._tracks.length.should.be.equal(totalTracksLength);
+      nativeInstance._tracks.map((track) => {
+        if(track instanceof VideoTrack) {
+          track.active.should.equals(video.videoTracks.getTrackById(track.id).selected);
+          track.label.should.equals(video.videoTracks.getTrackById(track.id).label || video.videoTracks.getTrackById(track.id).language);
+        }
+        if(track instanceof AudioTrack) {
+          track.active.should.equals(video.audioTracks.getTrackById(track.id).enabled);
+          track.label.should.equals(video.audioTracks.getTrackById(track.id).label || video.audioTracks.getTrackById(track.id).language);
+        }
+        if(track instanceof TextTrack) {
+          track.active.should.equals(video.textTracks.getTrackById(track.id).mode === 'showing');
+          track.label.should.equals(video.textTracks.getTrackById(track.id).label || video.textTracks.getTrackById(track.id).language);
+        }
+      });
+      done();
+    });
+  });
+});
+
 describe('NativeAdapter:getTracks dummy', function () {
   let video = document.createElement('video');
   let fakeEngine = {
@@ -108,8 +167,15 @@ describe('NativeAdapter:getTracks dummy', function () {
   });
 });
 
-describe.only('NativeAdapter:getTracks real', function () {
+describe('NativeAdapter:getTracks real', function () {
   let video;
+  let track1 = document.createElement("track");
+  let track2 = document.createElement("track");
+  track1.kind = 'subtitles';
+  track1.label = 'English';
+  track1.default = true;
+  track2.kind = 'captions';
+  track2.srclang = 'fr';
   let fakeEngine = {
     getVideoElement: function () {
       return video;
@@ -119,6 +185,8 @@ describe.only('NativeAdapter:getTracks real', function () {
 
   beforeEach(() => {
     video = document.createElement("video");
+    video.appendChild(track1);
+    video.appendChild(track2);
     nativeInstance = NativeAdapter.createAdapter(fakeEngine, {
       mimetype: 'video/mp4',
       url: '/base/src/assets/audios.mp4'
