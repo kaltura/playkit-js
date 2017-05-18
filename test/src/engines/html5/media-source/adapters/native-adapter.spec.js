@@ -62,7 +62,7 @@ describe('NativeAdapterInstance', () => {
   });
 });
 
-describe.only('NativeAdapter:_parseTracks', function () {
+describe('NativeAdapter:_parseTracks', function () {
   let video;
   let track1 = document.createElement("track");
   let track2 = document.createElement("track");
@@ -86,7 +86,7 @@ describe.only('NativeAdapter:_parseTracks', function () {
     video.appendChild(track2);
     nativeInstance = NativeAdapter.createAdapter(fakeEngine, {
       mimetype: 'video/mp4',
-      url: '/base/src/assets/audios.mp4'
+      url: 'http://qa-apache-testing-ubu-01.dev.kaltura.com/p/1091/sp/109100/playManifest/entryId/0_2hv7lhga/flavorIds/0_cxckre0q,0_yual4izy,0_qswhyfht,0_ozgle3np/format/applehttp/protocol/http/a.m3u8'
     }, {});
   });
 
@@ -104,17 +104,20 @@ describe.only('NativeAdapter:_parseTracks', function () {
       nativeInstance._tracks.length.should.be.equal(totalTracksLength);
       nativeInstance._tracks.map((track) => {
         if(track instanceof VideoTrack) {
-          track.active.should.equals(video.videoTracks.getTrackById(track.id).selected);
-          track.label.should.equals(video.videoTracks.getTrackById(track.id).label || video.videoTracks.getTrackById(track.id).language);
+          track.id.should.equals(video.videoTracks[track.index].id);
+          track.active.should.equals(video.videoTracks[track.index].selected);
+          track.label.should.equals(video.videoTracks[track.index].label || video.videoTracks[track.index].language);
         }
         if(track instanceof AudioTrack) {
-          track.active.should.equals(video.audioTracks.getTrackById(track.id).enabled);
-          track.label.should.equals(video.audioTracks.getTrackById(track.id).label || video.audioTracks.getTrackById(track.id).language);
+          track.id.should.equals(video.audioTracks[track.index].id);
+          track.active.should.equals(video.audioTracks[track.index].enabled);
+          track.label.should.equals(video.audioTracks[track.index].label || video.audioTracks[track.index].language);
         }
         if(track instanceof TextTrack) {
-          track.kind.should.equals(video.textTracks.getTrackById(track.id).kind);
-          track.active.should.equals(video.textTracks.getTrackById(track.id).mode === 'showing');
-          track.label.should.equals(video.textTracks.getTrackById(track.id).label || video.textTracks.getTrackById(track.id).language);
+          track.kind.should.equals(video.textTracks[track.index].kind);
+          track.id.should.equals(video.textTracks[track.index].id);
+          track.active.should.equals(video.textTracks[track.index].mode === 'showing');
+          track.label.should.equals(video.textTracks[track.index].label || video.textTracks[track.index].language);
         }
       });
       done();
@@ -246,7 +249,7 @@ describe('NativeAdapter:getTracks real', function () {
   });
 });
 
-describe('NativeAdapter:selectTrack', function () {
+describe.only('NativeAdapter:selectTrack', function () {
   let video;
   let fakeEngine = {
     getVideoElement: function () {

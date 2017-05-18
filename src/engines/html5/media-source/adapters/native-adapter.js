@@ -167,7 +167,8 @@ export default class NativeAdapter implements IMediaSourceAdapter {
         let settings = {
           id: videoTracks[i].id,
           active: videoTracks[i].selected,
-          label: videoTracks[i].label || videoTracks[i].language
+          label: videoTracks[i].label || videoTracks[i].language,
+          index: i
         };
         parsedTracks.push(new VideoTrack(settings));
       }
@@ -188,7 +189,8 @@ export default class NativeAdapter implements IMediaSourceAdapter {
         let settings = {
           id: audioTracks[i].id,
           active: audioTracks[i].enabled,
-          label: audioTracks[i].label || audioTracks[i].language
+          label: audioTracks[i].label || audioTracks[i].language,
+          index: i
         };
         parsedTracks.push(new AudioTrack(settings));
       }
@@ -210,7 +212,8 @@ export default class NativeAdapter implements IMediaSourceAdapter {
           kind: textTracks[i].kind,
           id: textTracks[i].id,
           active: textTracks[i].mode === 'showing',
-          label: textTracks[i].label || textTracks[i].language
+          label: textTracks[i].label || textTracks[i].language,
+          index: i
         };
         parsedTracks.push(new TextTrack(settings));
       }
@@ -258,6 +261,13 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   }
 
   _selectVideoTrack(track: VideoTrack) {
+    if ((track instanceof VideoTrack) && this._videoElement.videoTracks) {
+      let selectedTrack = this._videoElement.videoTracks[track.index];
+      if (selectedTrack) {
+        selectedTrack.selected = true;
+        this._markActiveTrack(track);
+      }
+    }
 
   }
 
@@ -269,8 +279,8 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @private
    */
   _selectAudioTrack(track: AudioTrack) {
-    if (track && (track instanceof AudioTrack) && this._videoElement.audioTracks && this._videoElement.audioTracks.length) {
-      let selectedTrack = this._videoElement.audioTracks.getTrackById(track.id);
+    if ((track instanceof AudioTrack) && this._videoElement.audioTracks) {
+      let selectedTrack = this._videoElement.audioTracks[track.index];
       if (selectedTrack) {
         selectedTrack.enabled = true;
         this._markActiveTrack(track);
@@ -279,7 +289,13 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   }
 
   _selectTextTrack(track: TextTrack) {
-
+    if ((track instanceof TextTrack) && (track.kind === 'subtitles' || track.kind === 'caption') && this._videoElement.textTracks) {
+      let selectedTrack = this._videoElement.textTracks[track.index];
+      if (selectedTrack) {
+        selectedTrack.mode = 'showing';
+        this._markActiveTrack(track);
+      }
+    }
   }
 
   /**
@@ -290,9 +306,19 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @private
    */
   _markActiveTrack(track: Track) {
-    let tracks = this.getTracks(track.type);
-    for (let i = 0; i < tracks.length; i++) {
-      tracks[i].active = tracks[i].id === track.id;
+    let type;
+    if (track instanceof VideoTrack) {
+      type = 'video';
+    } else if (track instanceof AudioTrack) {
+      type = 'audio';
+    } else if (track instanceof TextTrack) {
+      type = 'text';
+    }
+    if (type) {
+      let tracks = this.getTracks(type);
+      for (let i = 0; i < tracks.length; i++) {
+        tracks[i].active = track.index === i;
+      }
     }
   }
 }

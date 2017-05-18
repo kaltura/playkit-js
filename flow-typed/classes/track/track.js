@@ -3,6 +3,7 @@ export default class Track {
   _id: string;
   _active: boolean;
   _label: string;
+  _index: number;
 
   get id(): string {
     return this._id;
@@ -20,9 +21,14 @@ export default class Track {
     return this._label;
   }
 
+  get index(): number {
+    return this._index;
+  }
+
   constructor(settings: Object = {}) {
     this._id = settings.id;
     this._active = settings.active;
     this._label = settings.label;
+    this._index = settings.index;
   }
 }
