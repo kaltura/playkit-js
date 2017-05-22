@@ -7,7 +7,7 @@ declare interface IEngine {
   detach(): void;
   play(): void;
   pause(): void;
-  load(): void;
+  load(): Promise;
   ready(): void;
   getTracks(type?: string): Promise;
   selectTrack(track: Track): void;

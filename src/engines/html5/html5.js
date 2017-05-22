@@ -119,12 +119,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Load media
-   * @returns {void}
+   * @returns {Promise}
    */
-  load(): void {
-    if (this._mediaSourceAdapter) {
-      this._mediaSourceAdapter.load();
-    }
+  load(): Promise {
+    return this._mediaSourceAdapter ? this._mediaSourceAdapter.load() : Promise.resolve();
   }
 
   /**

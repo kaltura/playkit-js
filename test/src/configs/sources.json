@@ -21,5 +21,14 @@
         "id": "1_rsrdfext_11611,mpegdash"
       }
     ]
+  },
+  "corrupted_url": {
+    "sources": [
+      {
+        "mimetype": "video/mp4",
+        "url": "some corrupted url",
+        "id": "1_rsrdfext_10081,url"
+      }
+    ]
   }
 }

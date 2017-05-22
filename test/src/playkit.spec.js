@@ -11,36 +11,18 @@ describe('playkit:playkit', function () {
 
     let config = sourcesConfig.mp4_none_hls_dash;
     let player = playkit(config);
-    player.getTracks().then((tracks)=>{
-      tracks.length.should.be.equal(3);
-    });
-    setTimeout(()=>{
-      player.getTracks().then((tracks)=>{
-        tracks.length.should.be.equal(3);
+    player.load().then(() => {
+      player.play().then(() => {
+        player.destroy();
         done();
-      })
-    },1000);
-    // video.onplaying = function () {
-    //   // player.destroy();
-    //   console.error(player.getTracks('audio'));
-    //   setTimeout(() => {
-    //     player.selectTrack(player.getTracks('audio')[0]);
-    //     console.error(player.getTracks('audio'));
-    //     // done();
-    //   }, 8000);
-    // };
-    // video.addEventListener('error', function () {
-    //   // player.destroy();
-    //   should.fail();
-    // });
-    // // player.load();
-    // // player.play();
+      });
+    });
   });
 
   it('should switch player states during playback', (done) => {
     let config = sourcesConfig.mp4_none_hls_dash;
     let player = playkit(config);
-    let video = document.getElementsByTagName("video")[0];
+    let video = player._engine.getVideoElement();
 
     player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
 

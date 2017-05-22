@@ -22,6 +22,7 @@ class Player extends FakeEventTarget {
   _engine: IEngine;
   _engineEventHandlers: Map<string, ListenerType>;
   _stateManager: StateManager;
+  _loadRequested: boolean = false;
 
   constructor(config: Object) {
     super();
@@ -51,6 +52,7 @@ class Player extends FakeEventTarget {
     // this.engine_ = null;
     // this.eventManager_ = null;
     this._config = null;
+    this._loadRequested = false;
   }
 
   static defaultConfig_() {
@@ -116,9 +118,14 @@ class Player extends FakeEventTarget {
   //  <editor-fold desc="Playback Interface">
   /**
    * Start/resume playback
-   * @returns {void}
+   * @returns {Promise}
    */
-  play(): void {
+  play(): Promise {
+    if (!this._loadRequested) {
+      return this.load().then(() => {
+        return this._engine.play();
+      })
+    }
     return this._engine.play();
   }
 
@@ -132,10 +139,11 @@ class Player extends FakeEventTarget {
 
   /**
    * Load media
-   * @returns {void}
+   * @returns {Promise}
    */
-  load(): void {
-    this._engine.load();
+  load(): Promise {
+    this._loadRequested = true;
+    return this._engine.load();
   }
 
   /**

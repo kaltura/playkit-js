@@ -57,7 +57,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @private
    */
   _source: string;
-  _tracks: Array<Track>;
+  _tracks: Array<Track> = [];
 
   /**
    * Checks if NativeAdapter can play a given mime type
@@ -108,20 +108,29 @@ export default class NativeAdapter implements IMediaSourceAdapter {
     this._config = config;
     this._videoElement = engine.getVideoElement();
     this._source = source.url;
-    if (source) {
-      this._videoElement.src = source.url;
-    }
-    this._parseTracks().then();
   }
 
   /**
    * Load the video source
    * @function load
-   * @returns {void}
+   * @returns {Promise}
    */
-  load(): void {
-    NativeAdapter._logger.debug('load');
-    this._videoElement.load();
+  load(): Promise {
+    return new Promise((resolve, reject) => {
+      let onLoadedData = () => {
+        this._videoElement.removeEventListener('loadeddata', onLoadedData);
+        this._tracks = this._parsedTracks;
+        NativeAdapter._logger.debug('load');
+        resolve();
+      };
+      let onError = (error) => {
+        this._videoElement.removeEventListener('error', onError);
+        reject(error);
+      };
+      this._videoElement.addEventListener('loadeddata', onLoadedData);
+      this._videoElement.addEventListener('error', onError);
+      this._videoElement.src = this._source;
+    });
   }
 
   /**
@@ -132,26 +141,17 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   destroy(): void {
     NativeAdapter._logger.debug('destroy');
     this._videoElement.src = "";
-    this._tracks = null;
+    this._tracks = [];
   }
 
   /**
-   * Parse the tracks
-   * @function _parseTracks
-   * @returns {Promise}
+   * Get the parsed tracks
+   * @function _parsedTracks
+   * @returns {Array<Track>}
    * @private
    */
-  _parseTracks(): Promise {
-    return new Promise((resolve) => {
-      if (this._tracks) {
-        resolve();
-      } else {
-        this._videoElement.addEventListener('loadeddata', () => {
-          this._tracks = this._tracks || this._parsedVideoTracks.concat(this._parsedAudioTracks).concat(this._parsedTextTracks);
-          resolve();
-        });
-      }
-    });
+  get _parsedTracks(): Array<Track> {
+    return this._parsedVideoTracks.concat(this._parsedAudioTracks).concat(this._parsedTextTracks);
   }
 
   /**
@@ -221,10 +221,8 @@ export default class NativeAdapter implements IMediaSourceAdapter {
     return parsedTracks;
   }
 
-  getTracks(type?: string): Promise {
-    return this._parseTracks().then(() => {
-      return this._getTracksByType(type);
-    });
+  getTracks(type?: string): Array<Track> {
+    return this._getTracksByType(type);
   }
 
   _getTracksByType(type?: string): Array<Track> {
@@ -261,14 +259,13 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   }
 
   _selectVideoTrack(track: VideoTrack) {
-    if ((track instanceof VideoTrack) && this._videoElement.videoTracks) {
-      let selectedTrack = this._videoElement.videoTracks[track.index];
-      if (selectedTrack) {
-        selectedTrack.selected = true;
-        this._markActiveTrack(track);
+    let videoTracks = this._videoElement.videoTracks;
+    if ((track instanceof VideoTrack) && videoTracks && videoTracks[track.index]) {
+      for (let i = 0; i < VideoTrack.length; i++) {
+        VideoTrack[i].selected = track.index === i;
       }
+      this._markActiveTrack(track);
     }
-
   }
 
   /**
@@ -279,22 +276,22 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @private
    */
   _selectAudioTrack(track: AudioTrack) {
-    if ((track instanceof AudioTrack) && this._videoElement.audioTracks) {
-      let selectedTrack = this._videoElement.audioTracks[track.index];
-      if (selectedTrack) {
-        selectedTrack.enabled = true;
-        this._markActiveTrack(track);
+    let audioTracks = this._videoElement.audioTracks;
+    if ((track instanceof AudioTrack) && audioTracks && audioTracks[track.index]) {
+      for (let i = 0; i < audioTracks.length; i++) {
+        audioTracks[i].enabled = track.index === i;
       }
+      this._markActiveTrack(track);
     }
   }
 
   _selectTextTrack(track: TextTrack) {
-    if ((track instanceof TextTrack) && (track.kind === 'subtitles' || track.kind === 'caption') && this._videoElement.textTracks) {
-      let selectedTrack = this._videoElement.textTracks[track.index];
-      if (selectedTrack) {
-        selectedTrack.mode = 'showing';
-        this._markActiveTrack(track);
+    let textTracks = this._videoElement.textTracks;
+    if ((track instanceof TextTrack) && (track.kind === 'subtitles' || track.kind === 'caption') && textTracks && textTracks[track.index]) {
+      for (let i = 0; i < textTracks.length; i++) {
+        textTracks[i].mode = track.index === i ? 'showing' : 'disabled'
       }
+      this._markActiveTrack(track);
     }
   }
 
