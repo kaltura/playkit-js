@@ -118,7 +118,7 @@ class Player extends FakeEventTarget {
   //  <editor-fold desc="Playback Interface">
   /**
    * Start/resume playback
-   * @returns {Promise}
+   * @returns {Promise} - The play promise
    */
   play(): Promise {
     if (!this._loadRequested) {
@@ -139,7 +139,7 @@ class Player extends FakeEventTarget {
 
   /**
    * Load media
-   * @returns {Promise}
+   * @returns {Promise} - The load promise
    */
   load(): Promise {
     this._loadRequested = true;

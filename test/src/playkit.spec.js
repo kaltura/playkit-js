@@ -1,8 +1,6 @@
 import {playkit} from '../../src/playkit'
 import PlayerStates from '../../src/state/state-types'
 import sourcesConfig from './configs/sources.json'
-import AudioTrack from '../../flow-typed/classes/track/audio-track'
-//import pluginsConfig from './configs/plugins.json'
 
 describe('playkit:playkit', function () {
   this.timeout(10000);

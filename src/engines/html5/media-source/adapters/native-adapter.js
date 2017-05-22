@@ -25,7 +25,6 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   static get name(): string {
     return NativeAdapter._name;
   }
-
   /**
    * The adapter logger
    * @member {any} _logger
@@ -57,6 +56,11 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @private
    */
   _source: string;
+  /**
+   * The tracks
+   * @type {Array<Track>}
+   * @private
+   */
   _tracks: Array<Track> = [];
 
   /**
@@ -113,7 +117,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   /**
    * Load the video source
    * @function load
-   * @returns {Promise}
+   * @returns {Promise} - The load promise
    */
   load(): Promise {
     return new Promise((resolve, reject) => {
@@ -147,7 +151,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   /**
    * Get the parsed tracks
    * @function _parsedTracks
-   * @returns {Array<Track>}
+   * @returns {Array<Track>} - The parsed tracks
    * @private
    */
   get _parsedTracks(): Array<Track> {
@@ -156,7 +160,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
 
   /**
    * Get the parsed video tracks
-   * @returns {Array<VideoTrack>}
+   * @returns {Array<VideoTrack>} - The parsed video tracks
    * @private
    */
   get _parsedVideoTracks(): Array<VideoTrack> {
@@ -178,7 +182,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
 
   /**
    * Get the parsed audio tracks
-   * @returns {Array<AudioTrack>}
+   * @returns {Array<AudioTrack>} - The parsed audio tracks
    * @private
    */
   get _parsedAudioTracks(): Array<AudioTrack> {
@@ -200,7 +204,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
 
   /**
    * Get the parsed text tracks
-   * @returns {Array<TextTrack>}
+   * @returns {Array<TextTrack>} - The parsed text tracks
    * @private
    */
   get _parsedTextTracks(): Array<TextTrack> {
@@ -221,10 +225,24 @@ export default class NativeAdapter implements IMediaSourceAdapter {
     return parsedTracks;
   }
 
+  /**
+   * Returns the tracks according to the filter. if no filter given returns the all tracks.
+   * @function getTracks
+   * @param {string} [type] - a tracks filter, should be 'video', 'audio' or 'text'.
+   * @returns {Array<Track>} - The parsed tracks.
+   * @public
+   */
   getTracks(type?: string): Array<Track> {
     return this._getTracksByType(type);
   }
 
+  /**
+   * Returns the tracks according to the filter. if no filter given returns the all tracks.
+   * @function _getTracksByType
+   * @param {string} [type] - a tracks filter, should be 'video', 'audio' or 'text'.
+   * @returns {Array<Track>} - The parsed tracks.
+   * @private
+   */
   _getTracksByType(type?: string): Array<Track> {
     return !type ? this._tracks : this._tracks.filter((track: Track) => {
       if (type === TrackTypes.VIDEO) {
@@ -258,6 +276,13 @@ export default class NativeAdapter implements IMediaSourceAdapter {
     }
   }
 
+  /**
+   * Select a video track
+   * @function _selectVideoTrack
+   * @param {VideoTrack} track - the track to select
+   * @returns {void}
+   * @private
+   */
   _selectVideoTrack(track: VideoTrack) {
     let videoTracks = this._videoElement.videoTracks;
     if ((track instanceof VideoTrack) && videoTracks && videoTracks[track.index]) {
@@ -271,7 +296,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   /**
    * Select an audio track
    * @function _selectAudioTrack
-   * @param {Track} track - the  audio track to select
+   * @param {AudioTrack} track - the  audio track to select
    * @returns {void}
    * @private
    */
@@ -285,6 +310,13 @@ export default class NativeAdapter implements IMediaSourceAdapter {
     }
   }
 
+  /**
+   * Select a text track
+   * @function _selectTextTrack
+   * @param {TextTrack} track - the track to select
+   * @returns {void}
+   * @private
+   */
   _selectTextTrack(track: TextTrack) {
     let textTracks = this._videoElement.textTracks;
     if ((track instanceof TextTrack) && (track.kind === 'subtitles' || track.kind === 'caption') && textTracks && textTracks[track.index]) {
