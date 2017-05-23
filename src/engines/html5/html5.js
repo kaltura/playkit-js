@@ -4,13 +4,11 @@ import FakeEvent from '../../event/fake-event'
 import EventManager from '../../event/event-manager'
 import PlayerEvents from '../../event/events'
 import MediaSourceProvider from './media-source/media-source-provider'
-import Player from '../../player'
 
 export default class Html5 extends FakeEventTarget implements IEngine {
   _el: HTMLVideoElement;
   _eventManager: EventManager;
   _mediaSourceAdapter: ?IMediaSourceAdapter;
-  _player: Player;
 
   static EngineName: string = "html5";
 
