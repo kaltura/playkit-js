@@ -4,7 +4,6 @@ import FakeEvent from '../../event/fake-event'
 import EventManager from '../../event/event-manager'
 import PlayerEvents from '../../event/events'
 import MediaSourceProvider from './media-source/media-source-provider'
-import Track from '../../../flow-typed/classes/track/track'
 import Player from '../../player'
 
 export default class Html5 extends FakeEventTarget implements IEngine {
@@ -83,12 +82,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter((this: Html5), source, config);
   }
 
-  getTracks(type?: string): Promise {
-    return this._mediaSourceAdapter.getTracks(type);
+  getTracks(type?: string): Array<Track> {
+    return this._mediaSourceAdapter ? this._mediaSourceAdapter.getTracks(type) : [];
   }
 
   selectTrack(track: Track): void {
-    this._mediaSourceAdapter.selectTrack(track);
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.selectTrack(track);
+    }
   }
 
   set src(source: string): void {
@@ -119,9 +120,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Load media
-   * @returns {Promise} - The load promise
+   * @returns {Promise<*>} - The load promise
    */
-  load(): Promise {
+  load(): Promise<*> {
     return this._mediaSourceAdapter ? this._mediaSourceAdapter.load() : Promise.resolve();
   }
 

@@ -7,9 +7,9 @@ declare interface IEngine {
   detach(): void;
   play(): void;
   pause(): void;
-  load(): Promise;
+  load(): Promise<*>;
   ready(): void;
-  getTracks(type?: string): Promise;
+  getTracks(type?: string): Array<Track>;
   selectTrack(track: Track): void;
   getVideoElement(): HTMLVideoElement;
   currentTime: number;

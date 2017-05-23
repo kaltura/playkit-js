@@ -25,6 +25,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   static get name(): string {
     return NativeAdapter._name;
   }
+
   /**
    * The adapter logger
    * @member {any} _logger
@@ -117,9 +118,9 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   /**
    * Load the video source
    * @function load
-   * @returns {Promise} - The load promise
+   * @returns {Promise<*>} - The load promise
    */
-  load(): Promise {
+  load(): Promise<*> {
     return new Promise((resolve, reject) => {
       let onLoadedData = () => {
         this._videoElement.removeEventListener('loadeddata', onLoadedData);
@@ -144,7 +145,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    */
   destroy(): void {
     NativeAdapter._logger.debug('destroy');
-    this._videoElement.src = "";
+    this._videoElement.removeAttribute('src');
     this._tracks = [];
   }
 

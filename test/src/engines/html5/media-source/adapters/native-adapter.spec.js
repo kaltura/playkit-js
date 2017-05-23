@@ -310,6 +310,11 @@ describe('NativeAdapter:getTracks real', function () {
       done();
     });
   });
+
+  it('should return empty array before loading', () => {
+    let tracks = nativeInstance.getTracks();
+    tracks.length.should.be.equal(0);
+  });
 });
 
 describe('NativeAdapter:selectTrack - audio', function () {
