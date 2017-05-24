@@ -22,7 +22,6 @@ class Player extends FakeEventTarget {
   _engine: IEngine;
   _engineEventHandlers: Map<string, ListenerType>;
   _stateManager: StateManager;
-  _loadRequested: boolean = false;
 
   constructor(config: Object) {
     super();
@@ -52,7 +51,6 @@ class Player extends FakeEventTarget {
     // this.engine_ = null;
     // this.eventManager_ = null;
     this._config = null;
-    this._loadRequested = false;
   }
 
   static defaultConfig_() {
@@ -121,7 +119,7 @@ class Player extends FakeEventTarget {
    * @returns {Promise} - The play promise
    */
   play(): Promise {
-    if (!this._loadRequested) {
+    if (!this._engine.src) {
       return this.load().then(() => {
         return this._engine.play();
       })
@@ -142,7 +140,6 @@ class Player extends FakeEventTarget {
    * @returns {Promise} - The load promise
    */
   load(): Promise {
-    this._loadRequested = true;
     return this._engine.load();
   }
 

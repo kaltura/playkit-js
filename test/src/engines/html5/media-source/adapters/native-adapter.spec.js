@@ -84,7 +84,7 @@ describe('NativeAdapter: load', () => {
       url: '/base/src/assets/audios.mp4'
     }, {});
 
-    nativeInstance.load().then(()=>{
+    nativeInstance.load().then(() => {
       done();
     });
   });
@@ -95,7 +95,7 @@ describe('NativeAdapter: load', () => {
       url: 'some corrupted_url'
     }, {});
 
-    nativeInstance.load().catch((error)=>{
+    nativeInstance.load().catch((error) => {
       error.should.be.exist;
       done();
     });
@@ -104,6 +104,7 @@ describe('NativeAdapter: load', () => {
 
 describe('NativeAdapter: destroy', () => {
   let video, nativeInstance;
+  let track1 = document.createElement("track");
   let fakeEngine = {
     getVideoElement: function () {
       return video;
@@ -123,10 +124,10 @@ describe('NativeAdapter: destroy', () => {
   });
 
   it('should destroyed', (done) => {
-    nativeInstance.load().then(()=>{
-      nativeInstance._videoElement.src.includes('/base/src/assets/audios.mp4').should.be.true;
+    video.appendChild(track1);
+    nativeInstance.load().then(() => {
+      nativeInstance._tracks.filter((track)=>{return track instanceof TextTrack;}).length.should.equal(1);
       nativeInstance.destroy();
-      nativeInstance._videoElement.src.should.equal('');
       nativeInstance._tracks.length.should.equal(0);
       done();
     });

@@ -145,7 +145,6 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    */
   destroy(): void {
     NativeAdapter._logger.debug('destroy');
-    this._videoElement.removeAttribute('src');
     this._tracks = [];
   }
 
