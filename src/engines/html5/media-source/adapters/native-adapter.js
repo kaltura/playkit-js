@@ -1,10 +1,10 @@
 //@flow
 import LoggerFactory from '../../../../utils/logger'
-import Track from '../../../../../flow-typed/classes/track/track'
-import TrackTypes from '../../../../../flow-typed/classes/track/track-types'
-import VideoTrack from '../../../../../flow-typed/classes/track/video-track'
-import AudioTrack from '../../../../../flow-typed/classes/track/audio-track'
-import TextTrack from '../../../../../flow-typed/classes/track/text-track'
+import Track from '../../../../track/track'
+import TrackTypes from '../../../../track/track-types'
+import VideoTrack from '../../../../track/video-track'
+import AudioTrack from '../../../../track/audio-track'
+import TextTrack from '../../../../track/text-track'
 /**
  * An illustration of media source extension for progressive download
  * @classdesc

@@ -1,7 +1,7 @@
 import NativeAdapter from '../../../../../../src/engines/html5/media-source/adapters/native-adapter'
-import VideoTrack from '../../../../../../flow-typed/classes/track/video-track'
-import AudioTrack from '../../../../../../flow-typed/classes/track/audio-track'
-import TextTrack from '../../../../../../flow-typed/classes/track/text-track'
+import VideoTrack from '../../../../../../src/track/video-track'
+import AudioTrack from '../../../../../../src/track/audio-track'
+import TextTrack from '../../../../../../src/track/text-track'
 
 describe('NativeAdapter:isSupported', () => {
   it('should be supported', () => {

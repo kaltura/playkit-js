@@ -5,6 +5,7 @@ import * as packageData from '../package.json'
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider'
 import {registerPlugin} from './plugin/plugin-manager'
 import BasePlugin from './plugin/base-plugin'
+import * as TRACK from './track/index'
 
 // Playkit version
 let VERSION = packageData.version;
@@ -25,6 +26,9 @@ export {registerMediaSourceAdapter};
 
 // Export the plugin framework
 export {registerPlugin, BasePlugin};
+
+// Export the tracks classes
+export {TRACK};
 
 //export version
 export {VERSION};

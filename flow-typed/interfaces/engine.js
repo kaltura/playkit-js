@@ -1,5 +1,5 @@
 //@flow
-import Track from '../classes/track/track'
+import Track from '../../src/track/track'
 
 declare interface IEngine {
   destroy(): void;
