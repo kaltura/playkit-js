@@ -3,6 +3,7 @@ export default class Track {
   _id: string;
   _active: boolean;
   _label: string;
+  _language: string;
   _index: number;
 
   get id(): string {
@@ -21,6 +22,10 @@ export default class Track {
     return this._label;
   }
 
+  get language(): string {
+    return this._language;
+  }
+
   get index(): number {
     return this._index;
   }
@@ -29,6 +34,7 @@ export default class Track {
     this._id = settings.id;
     this._active = settings.active;
     this._label = settings.label;
+    this._language = settings.language;
     this._index = settings.index;
   }
 }

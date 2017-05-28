@@ -171,7 +171,8 @@ export default class NativeAdapter implements IMediaSourceAdapter {
         let settings = {
           id: videoTracks[i].id,
           active: videoTracks[i].selected,
-          label: videoTracks[i].label || videoTracks[i].language,
+          label: videoTracks[i].label,
+          language: videoTracks[i].language,
           index: i
         };
         parsedTracks.push(new VideoTrack(settings));
@@ -193,7 +194,8 @@ export default class NativeAdapter implements IMediaSourceAdapter {
         let settings = {
           id: audioTracks[i].id,
           active: audioTracks[i].enabled,
-          label: audioTracks[i].label || audioTracks[i].language,
+          label: audioTracks[i].label,
+          language: audioTracks[i].language,
           index: i
         };
         parsedTracks.push(new AudioTrack(settings));
@@ -216,7 +218,8 @@ export default class NativeAdapter implements IMediaSourceAdapter {
           kind: textTracks[i].kind,
           id: textTracks[i].id,
           active: textTracks[i].mode === 'showing',
-          label: textTracks[i].label || textTracks[i].language,
+          label: textTracks[i].label,
+          language: textTracks[i].language,
           index: i
         };
         parsedTracks.push(new TextTrack(settings));
@@ -319,7 +322,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    */
   _selectTextTrack(track: TextTrack) {
     let textTracks = this._videoElement.textTracks;
-    if ((track instanceof TextTrack) && (track.kind === 'subtitles' || track.kind === 'caption') && textTracks && textTracks[track.index]) {
+    if ((track instanceof TextTrack) && (track.kind === 'subtitles' || track.kind === 'captions') && textTracks && textTracks[track.index]) {
       for (let i = 0; i < textTracks.length; i++) {
         textTracks[i].mode = track.index === i ? 'showing' : 'disabled'
       }

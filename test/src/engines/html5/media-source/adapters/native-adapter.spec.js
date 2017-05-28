@@ -144,7 +144,7 @@ describe('NativeAdapter:_parsedTracks', function () {
   track1.label = 'English';
   track1.default = true;
   track2.id = '1';
-  track2.kind = 'caption';
+  track2.kind = 'captions';
   track2.srclang = 'fr';
   let fakeEngine = {
     getVideoElement: function () {
@@ -180,18 +180,21 @@ describe('NativeAdapter:_parsedTracks', function () {
         if (track instanceof VideoTrack) {
           track.id.should.equal(video.videoTracks[track.index].id);
           track.active.should.equal(video.videoTracks[track.index].selected);
-          track.label.should.equal(video.videoTracks[track.index].label || video.videoTracks[track.index].language);
+          track.label.should.equal(video.videoTracks[track.index].label);
+          track.language.should.equal(video.videoTracks[track.index].language);
         }
         if (track instanceof AudioTrack) {
           track.id.should.equal(video.audioTracks[track.index].id);
           track.active.should.equal(video.audioTracks[track.index].enabled);
-          track.label.should.equal(video.audioTracks[track.index].label || video.audioTracks[track.index].language);
+          track.label.should.equal(video.audioTracks[track.index].label);
+          track.language.should.equal(video.audioTracks[track.index].language);
         }
         if (track instanceof TextTrack) {
           track.kind.should.equal(video.textTracks[track.index].kind);
           track.id.should.equal(video.textTracks[track.index].id);
           track.active.should.equal(video.textTracks[track.index].mode === 'showing');
-          track.label.should.equal(video.textTracks[track.index].label || video.textTracks[track.index].language);
+          track.label.should.equal(video.textTracks[track.index].label);
+          track.language.should.equal(video.textTracks[track.index].language);
         }
       });
       done();
@@ -242,7 +245,7 @@ describe('NativeAdapter:getTracks real', function () {
   track1.kind = 'subtitles';
   track1.label = 'English';
   track1.default = true;
-  track2.kind = 'caption';
+  track2.kind = 'captions';
   track2.srclang = 'fr';
   let fakeEngine = {
     getVideoElement: function () {
@@ -458,7 +461,7 @@ describe('NativeAdapter:selectTrack - text', function () {
     });
   });
 
-  it('should select a new caption track', (done) => {
+  it('should select a new captions track', (done) => {
     video.appendChild(track1);
     video.appendChild(track2);
     nativeInstance.load().then(() => {
@@ -468,7 +471,7 @@ describe('NativeAdapter:selectTrack - text', function () {
         nativeInstance._engine.getVideoElement().textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.true;
         tracks[1].active.should.be.false;
-        nativeInstance.selectTrack(new TextTrack({index: 1, kind: 'caption'}));
+        nativeInstance.selectTrack(new TextTrack({index: 1, kind: 'captions'}));
         nativeInstance._engine.getVideoElement().textTracks[0].mode.should.be.equal('disabled');
         nativeInstance._engine.getVideoElement().textTracks[1].mode.should.be.equal('showing');
         tracks[0].active.should.be.false;
