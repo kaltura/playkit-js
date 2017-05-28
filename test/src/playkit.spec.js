@@ -3,17 +3,26 @@ import PlayerStates from '../../src/state/state-types'
 import sourcesConfig from './configs/sources.json'
 
 describe('playkit:playkit', function () {
+
   this.timeout(10000);
 
-  it('should play mp4 stream', (done) => {
+  let player;
+  let config = sourcesConfig.mp4_none_hls_dash;
 
-    let config = sourcesConfig.mp4_none_hls_dash;
-    let player = playkit(config);
+  beforeEach(function () {
+    player = playkit(config);
+  });
+
+  afterEach(function () {
+    player.destroy();
+  });
+
+  it('should play mp4 stream', (done) => {
+    player._engine.getVideoElement().addEventListener('playing', () => {
+      done();
+    });
     player.load().then(() => {
-      player.play().then(() => {
-        player.destroy();
-        done();
-      });
+      player.play();
     });
   });
 

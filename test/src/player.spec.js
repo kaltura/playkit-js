@@ -15,17 +15,19 @@ describe("play", () => {
   });
 
   it("should success before load", (done) => {
-    player.play().then(() => {
+    player._engine.getVideoElement().addEventListener('playing', () => {
       done();
     });
+    player.play();
   });
 
   it("should success after load", (done) => {
+    player._engine.getVideoElement().addEventListener('playing', () => {
+      done();
+    });
     player.load()
       .then(() => {
-        player.play().then(() => {
-          done();
-        });
+        player.play();
       });
   });
 });

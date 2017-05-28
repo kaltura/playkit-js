@@ -116,15 +116,15 @@ class Player extends FakeEventTarget {
   //  <editor-fold desc="Playback Interface">
   /**
    * Start/resume playback
-   * @returns {Promise} - The play promise
+   * @returns {void}
    */
-  play(): Promise {
+  play(): void {
     if (!this._engine.src) {
-      return this.load().then(() => {
-        return this._engine.play();
+      this.load().then(() => {
+        this._engine.play();
       })
     }
-    return this._engine.play();
+    this._engine.play();
   }
 
   /**
