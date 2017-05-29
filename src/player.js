@@ -10,7 +10,11 @@ import LoggerFactory from './utils/logger'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
 import StateManager from './state/state-manager'
+import TrackTypes from './track/track-types'
 import Track from './track/track'
+import VideoTrack from './track/video-track'
+import AudioTrack from './track/audio-track'
+import TextTrack from './track/text-track'
 
 let logger = LoggerFactory.getLogger('Player');
 type ListenerType = (event: FakeEvent) => any;
@@ -22,6 +26,7 @@ class Player extends FakeEventTarget {
   _engine: IEngine;
   _engineEventHandlers: Map<string, ListenerType>;
   _stateManager: StateManager;
+  _tracks: Array<Track> = [];
 
   constructor(config: Object) {
     super();
@@ -51,6 +56,7 @@ class Player extends FakeEventTarget {
     // this.engine_ = null;
     // this.eventManager_ = null;
     this._config = null;
+    this._tracks = [];
   }
 
   static defaultConfig_() {
@@ -97,12 +103,67 @@ class Player extends FakeEventTarget {
     }
   }
 
-  getTracks(type?: string): Promise {
-    return this._engine.getTracks(type);
+  /**
+   * Returns the tracks according to the filter. if no filter given returns the all tracks.
+   * @function getTracks
+   * @param {string} [type] - a tracks filter, should be 'video', 'audio' or 'text'.
+   * @returns {Array<Track>} - The parsed tracks.
+   * @public
+   */
+  getTracks(type?: string): Array<Track> {
+    return this._getTracksByType(type);
+  }
+
+  /**
+   * Returns the tracks according to the filter. if no filter given returns the all tracks.
+   * @function _getTracksByType
+   * @param {string} [type] - a tracks filter, should be 'video', 'audio' or 'text'.
+   * @returns {Array<Track>} - The parsed tracks.
+   * @private
+   */
+  _getTracksByType(type?: string): Array<Track> {
+    return !type ? this._tracks : this._tracks.filter((track: Track) => {
+      if (type === TrackTypes.VIDEO) {
+        return track instanceof VideoTrack;
+      } else if (type === TrackTypes.AUDIO) {
+        return track instanceof AudioTrack;
+      } else if (type === TrackTypes.TEXT) {
+        return track instanceof TextTrack;
+      } else {
+        return true;
+      }
+    });
   }
 
   selectTrack(track: Track): void {
-    this._engine.selectTrack(track);
+    let success = this._engine.selectTrack(track);
+    if (success) {
+      this._markActiveTrack(track)
+    }
+  }
+
+  /**
+   * Mark the selected track as active
+   * @function _markActiveTrack
+   * @param {Track} track - the track to mark
+   * @returns {void}
+   * @private
+   */
+  _markActiveTrack(track: Track) {
+    let type;
+    if (track instanceof VideoTrack) {
+      type = 'video';
+    } else if (track instanceof AudioTrack) {
+      type = 'audio';
+    } else if (track instanceof TextTrack) {
+      type = 'text';
+    }
+    if (type) {
+      let tracks = this.getTracks(type);
+      for (let i = 0; i < tracks.length; i++) {
+        tracks[i].active = track.index === i;
+      }
+    }
   }
 
   /**
@@ -140,7 +201,9 @@ class Player extends FakeEventTarget {
    * @returns {Promise} - The load promise
    */
   load(): Promise {
-    return this._engine.load();
+    return this._engine.load().then((data) => {
+      this._tracks = data.tracks;
+    });
   }
 
   /**

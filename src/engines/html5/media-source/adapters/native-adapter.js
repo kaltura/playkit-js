@@ -1,7 +1,6 @@
 //@flow
 import LoggerFactory from '../../../../utils/logger'
 import Track from '../../../../track/track'
-import TrackTypes from '../../../../track/track-types'
 import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'
 import TextTrack from '../../../../track/text-track'
@@ -57,12 +56,6 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @private
    */
   _source: string;
-  /**
-   * The tracks
-   * @type {Array<Track>}
-   * @private
-   */
-  _tracks: Array<Track> = [];
 
   /**
    * Checks if NativeAdapter can play a given mime type
@@ -118,18 +111,19 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   /**
    * Load the video source
    * @function load
-   * @returns {Promise<*>} - The load promise
+   * @returns {Promise<Object>} - The loaded data
    */
-  load(): Promise<*> {
+  load(): Promise<Object> {
     return new Promise((resolve, reject) => {
       let onLoadedData = () => {
         this._videoElement.removeEventListener('loadeddata', onLoadedData);
-        this._tracks = this._parsedTracks;
+        let data = {tracks: this._parsedTracks};
+        resolve(data);
         NativeAdapter._logger.debug('load');
-        resolve();
       };
       let onError = (error) => {
         this._videoElement.removeEventListener('error', onError);
+        NativeAdapter._logger.error(error);
         reject(error);
       };
       this._videoElement.addEventListener('loadeddata', onLoadedData);
@@ -145,7 +139,6 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    */
   destroy(): void {
     NativeAdapter._logger.debug('destroy');
-    this._tracks = [];
   }
 
   /**
@@ -229,128 +222,76 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   }
 
   /**
-   * Returns the tracks according to the filter. if no filter given returns the all tracks.
-   * @function getTracks
-   * @param {string} [type] - a tracks filter, should be 'video', 'audio' or 'text'.
-   * @returns {Array<Track>} - The parsed tracks.
-   * @public
-   */
-  getTracks(type?: string): Array<Track> {
-    return this._getTracksByType(type);
-  }
-
-  /**
-   * Returns the tracks according to the filter. if no filter given returns the all tracks.
-   * @function _getTracksByType
-   * @param {string} [type] - a tracks filter, should be 'video', 'audio' or 'text'.
-   * @returns {Array<Track>} - The parsed tracks.
-   * @private
-   */
-  _getTracksByType(type?: string): Array<Track> {
-    return !type ? this._tracks : this._tracks.filter((track: Track) => {
-      if (type === TrackTypes.VIDEO) {
-        return track instanceof VideoTrack;
-      } else if (type === TrackTypes.AUDIO) {
-        return track instanceof AudioTrack;
-      } else if (type === TrackTypes.TEXT) {
-        return track instanceof TextTrack;
-      } else {
-        return true;
-      }
-    });
-  }
-
-  /**
    * Select a track
    * @function selectTrack
    * @param {Track} track - the track to select
-   * @returns {void}
+   * @returns {boolean} - success
    * @public
    */
-  selectTrack(track: Track) {
+  selectTrack(track: Track): boolean {
     if (track) {
       if (track instanceof VideoTrack) {
-        this._selectVideoTrack(track);
+        return this._selectVideoTrack(track);
       } else if (track instanceof AudioTrack) {
-        this._selectAudioTrack(track);
+        return this._selectAudioTrack(track);
       } else if (track instanceof TextTrack) {
-        this._selectTextTrack(track);
+        return this._selectTextTrack(track);
       }
     }
+    return false;
   }
 
   /**
    * Select a video track
    * @function _selectVideoTrack
    * @param {VideoTrack} track - the track to select
-   * @returns {void}
+   * @returns {boolean} - success
    * @private
    */
-  _selectVideoTrack(track: VideoTrack) {
+  _selectVideoTrack(track: VideoTrack): boolean {
     let videoTracks = this._videoElement.videoTracks;
     if ((track instanceof VideoTrack) && videoTracks && videoTracks[track.index]) {
       for (let i = 0; i < VideoTrack.length; i++) {
         VideoTrack[i].selected = track.index === i;
       }
-      this._markActiveTrack(track);
+      return true;
     }
+    return false;
   }
 
   /**
    * Select an audio track
    * @function _selectAudioTrack
    * @param {AudioTrack} track - the  audio track to select
-   * @returns {void}
+   * @returns {boolean} - success
    * @private
    */
-  _selectAudioTrack(track: AudioTrack) {
+  _selectAudioTrack(track: AudioTrack): boolean {
     let audioTracks = this._videoElement.audioTracks;
     if ((track instanceof AudioTrack) && audioTracks && audioTracks[track.index]) {
       for (let i = 0; i < audioTracks.length; i++) {
         audioTracks[i].enabled = track.index === i;
       }
-      this._markActiveTrack(track);
+      return true;
     }
+    return false;
   }
 
   /**
    * Select a text track
    * @function _selectTextTrack
    * @param {TextTrack} track - the track to select
-   * @returns {void}
+   * @returns {boolean} - success
    * @private
    */
-  _selectTextTrack(track: TextTrack) {
+  _selectTextTrack(track: TextTrack): boolean {
     let textTracks = this._videoElement.textTracks;
     if ((track instanceof TextTrack) && (track.kind === 'subtitles' || track.kind === 'captions') && textTracks && textTracks[track.index]) {
       for (let i = 0; i < textTracks.length; i++) {
         textTracks[i].mode = track.index === i ? 'showing' : 'disabled'
       }
-      this._markActiveTrack(track);
+      return true;
     }
-  }
-
-  /**
-   * Mark the selected track as active
-   * @function _markActiveTrack
-   * @param {Track} track - the track to mark
-   * @returns {void}
-   * @private
-   */
-  _markActiveTrack(track: Track) {
-    let type;
-    if (track instanceof VideoTrack) {
-      type = 'video';
-    } else if (track instanceof AudioTrack) {
-      type = 'audio';
-    } else if (track instanceof TextTrack) {
-      type = 'text';
-    }
-    if (type) {
-      let tracks = this.getTracks(type);
-      for (let i = 0; i < tracks.length; i++) {
-        tracks[i].active = track.index === i;
-      }
-    }
+    return false;
   }
 }

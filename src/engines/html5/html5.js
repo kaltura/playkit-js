@@ -80,14 +80,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter((this: Html5), source, config);
   }
 
-  getTracks(type?: string): Array<Track> {
-    return this._mediaSourceAdapter ? this._mediaSourceAdapter.getTracks(type) : [];
-  }
-
-  selectTrack(track: Track): void {
+  selectTrack(track: Track): boolean {
     if (this._mediaSourceAdapter) {
-      this._mediaSourceAdapter.selectTrack(track);
+      return this._mediaSourceAdapter.selectTrack(track);
     }
+    return false;
   }
 
   set src(source: string): void {
@@ -118,10 +115,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Load media
-   * @returns {Promise<*>} - The load promise
+   * @returns {Promise<Object>} - The loaded data
    */
-  load(): Promise<*> {
-    return this._mediaSourceAdapter ? this._mediaSourceAdapter.load() : Promise.resolve();
+  load(): Promise<Object> {
+    return this._mediaSourceAdapter ? this._mediaSourceAdapter.load() : Promise.resolve({});
   }
 
   /**

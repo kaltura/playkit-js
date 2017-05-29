@@ -2,10 +2,9 @@
 import Track from '../../src/track/track'
 
 declare interface IMediaSourceAdapter {
-  load(): Promise<*>;
+  load(): Promise<Object>;
   destroy(): void;
-  getTracks(type?: string): Array<Track>;
-  selectTrack(track: Track): void;
+  selectTrack(track: Track): boolean;
   static name: string;
   static isSupported(): boolean;
   static canPlayType(mimeType: string): boolean;
