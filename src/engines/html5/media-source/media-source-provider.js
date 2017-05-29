@@ -90,7 +90,7 @@ export default class MediaSourceProvider {
    * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists
    * @static
    */
-  static getMediaSourceAdapter(engine: IEngine, source: Source, config: Object): ?IMediaSourceAdapter {
+  static getMediaSourceAdapter(engine: IEngine, source: ?Source, config: Object): ?IMediaSourceAdapter {
     if (engine && source && config) {
       if (!MediaSourceProvider._selectedAdapter) {
         MediaSourceProvider.canPlayType(source.mimetype);

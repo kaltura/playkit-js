@@ -29,7 +29,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @type {Source}
    * @private
    */
-  _source: Source;
+  _source: ?Source;
 
   /**
    * @type {string} - The engine name.

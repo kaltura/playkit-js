@@ -54,7 +54,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @param {Source} source - The source URL
    * @param {Object} config - The media source adapter configuration
    */
-  constructor(engine: IEngine, source: Source, config: Object) {
+  constructor(engine: IEngine, source: ?Source, config: Object) {
     this._engine = engine;
     this._config = config;
     this._videoElement = engine.getVideoElement();
