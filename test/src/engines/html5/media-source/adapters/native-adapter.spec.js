@@ -125,10 +125,8 @@ describe('NativeAdapter: destroy', () => {
   it('should destroyed', (done) => {
     nativeInstance.load().then(() => {
       nativeInstance._loadPromise.should.be.exist;
-      nativeInstance._eventManager.should.be.exist;
       nativeInstance.destroy();
       (!nativeInstance._loadPromise).should.be.true;
-      (!nativeInstance._eventManager).should.be.true;
       done();
     });
   });
@@ -138,11 +136,9 @@ describe('NativeAdapter:_parsedTracks', function () {
   let video;
   let track1 = document.createElement("track");
   let track2 = document.createElement("track");
-  track1.id = '0';
   track1.kind = 'subtitles';
   track1.label = 'English';
   track1.default = true;
-  track2.id = '1';
   track2.kind = 'captions';
   track2.srclang = 'fr';
   let fakeEngine = {
@@ -189,7 +185,6 @@ describe('NativeAdapter:_parsedTracks', function () {
         }
         if (track instanceof TextTrack) {
           track.kind.should.equal(video.textTracks[track.index].kind);
-          track.id.should.equal(video.textTracks[track.index].id);
           track.active.should.equal(video.textTracks[track.index].mode === 'showing');
           track.label.should.equal(video.textTracks[track.index].label);
           track.language.should.equal(video.textTracks[track.index].language);
@@ -286,11 +281,9 @@ describe('NativeAdapter:selectTrack - text', function () {
     video = document.createElement("video");
     track1 = document.createElement("track");
     track2 = document.createElement("track");
-    track1.id = '0';
     track1.kind = 'subtitles';
     track1.label = 'English';
     track1.default = true;
-    track2.id = '1';
     track2.kind = 'subtitles';
     track2.srclang = 'fr';
     video.appendChild(track1);

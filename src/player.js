@@ -198,9 +198,9 @@ class Player extends FakeEventTarget {
 
   /**
    * Load media
-   * @returns {Promise} - The load promise
+   * @returns {Promise<*>} - The load promise
    */
-  load(): Promise {
+  load(): Promise<*> {
     return this._engine.load().then((data) => {
       this._tracks = data.tracks;
     });

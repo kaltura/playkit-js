@@ -272,11 +272,9 @@ describe('selectTrack - text', function () {
     video = player._engine.getVideoElement();
     track1 = document.createElement("track");
     track2 = document.createElement("track");
-    track1.id = '0';
     track1.kind = 'subtitles';
     track1.label = 'English';
     track1.default = true;
-    track2.id = '1';
     track2.kind = 'subtitles';
     track2.srclang = 'fr';
     video.appendChild(track1);

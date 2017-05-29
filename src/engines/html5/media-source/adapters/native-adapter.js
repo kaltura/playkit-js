@@ -70,7 +70,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @type {Promise<Object>}
    * @private
    */
-  _loadPromise : Promise<Object>;
+  _loadPromise: Promise<Object> | null;
 
   /**
    * Checks if NativeAdapter can play a given mime type
@@ -157,7 +157,6 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   destroy(): void {
     NativeAdapter._logger.debug('destroy');
     this._eventManager.destroy();
-    this._eventManager = null;
     this._loadPromise = null;
   }
 
@@ -173,10 +172,10 @@ export default class NativeAdapter implements IMediaSourceAdapter {
 
   /**
    * Get the parsed video tracks
-   * @returns {Array<VideoTrack>} - The parsed video tracks
+   * @returns {Array<Track>} - The parsed video tracks
    * @private
    */
-  get _parsedVideoTracks(): Array<VideoTrack> {
+  get _parsedVideoTracks(): Array<Track> {
     let videoTracks = this._videoElement.videoTracks;
     let parsedTracks = [];
     if (videoTracks) {
@@ -196,10 +195,10 @@ export default class NativeAdapter implements IMediaSourceAdapter {
 
   /**
    * Get the parsed audio tracks
-   * @returns {Array<AudioTrack>} - The parsed audio tracks
+   * @returns {Array<Track>} - The parsed audio tracks
    * @private
    */
-  get _parsedAudioTracks(): Array<AudioTrack> {
+  get _parsedAudioTracks(): Array<Track> {
     let audioTracks = this._videoElement.audioTracks;
     let parsedTracks = [];
     if (audioTracks) {
@@ -219,17 +218,16 @@ export default class NativeAdapter implements IMediaSourceAdapter {
 
   /**
    * Get the parsed text tracks
-   * @returns {Array<TextTrack>} - The parsed text tracks
+   * @returns {Array<Track>} - The parsed text tracks
    * @private
    */
-  get _parsedTextTracks(): Array<TextTrack> {
+  get _parsedTextTracks(): Array<Track> {
     let textTracks = this._videoElement.textTracks;
     let parsedTracks = [];
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
         let settings = {
           kind: textTracks[i].kind,
-          id: textTracks[i].id,
           active: textTracks[i].mode === 'showing',
           label: textTracks[i].label,
           language: textTracks[i].language,
@@ -271,8 +269,8 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   _selectVideoTrack(track: VideoTrack): boolean {
     let videoTracks = this._videoElement.videoTracks;
     if ((track instanceof VideoTrack) && videoTracks && videoTracks[track.index]) {
-      for (let i = 0; i < VideoTrack.length; i++) {
-        VideoTrack[i].selected = track.index === i;
+      for (let i = 0; i < videoTracks.length; i++) {
+        videoTracks[i].selected = track.index === i;
       }
       return true;
     }

@@ -4,7 +4,7 @@ import Track from './track'
 export default class textTrack extends Track {
   _kind: string;
 
-  get kind() {
+  get kind(): string {
     return this._kind;
   }
 
