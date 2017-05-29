@@ -1,5 +1,6 @@
 //@flow
 import LoggerFactory from '../../../../utils/logger'
+import EventManager from '../../../../event/event-manager'
 import Track from '../../../../track/track'
 import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'
@@ -56,6 +57,20 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @private
    */
   _source: string;
+  /**
+   * The event manager of the class.
+   * @member {EventManager} - _eventManager
+   * @type {EventManager}
+   * @private
+   */
+  _eventManager: EventManager;
+  /**
+   * The load promise
+   * @member {Promise<Object>} - _loadPromise
+   * @type {Promise<Object>}
+   * @private
+   */
+  _loadPromise : Promise<Object>;
 
   /**
    * Checks if NativeAdapter can play a given mime type
@@ -106,6 +121,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
     this._config = config;
     this._videoElement = engine.getVideoElement();
     this._source = source.url;
+    this._eventManager = new EventManager();
   }
 
   /**
@@ -114,22 +130,23 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @returns {Promise<Object>} - The loaded data
    */
   load(): Promise<Object> {
-    return new Promise((resolve, reject) => {
-      let onLoadedData = () => {
-        this._videoElement.removeEventListener('loadeddata', onLoadedData);
-        let data = {tracks: this._parsedTracks};
-        resolve(data);
-        NativeAdapter._logger.debug('load');
-      };
-      let onError = (error) => {
-        this._videoElement.removeEventListener('error', onError);
-        NativeAdapter._logger.error(error);
-        reject(error);
-      };
-      this._videoElement.addEventListener('loadeddata', onLoadedData);
-      this._videoElement.addEventListener('error', onError);
-      this._videoElement.src = this._source;
-    });
+    if (!this._loadPromise) {
+      this._loadPromise = new Promise((resolve, reject) => {
+        this._eventManager.listen(this._videoElement, 'loadedmetadata', () => {
+          this._eventManager.unlisten(this._videoElement, 'loadedmetadata');
+          let data = {tracks: this._parsedTracks};
+          NativeAdapter._logger.debug('load');
+          resolve(data);
+        });
+        this._eventManager.listen(this._videoElement, 'error', (error) => {
+          this._eventManager.unlisten(this._videoElement, 'error');
+          NativeAdapter._logger.error(error);
+          reject(error);
+        });
+        this._videoElement.src = this._source;
+      });
+    }
+    return this._loadPromise;
   }
 
   /**
@@ -139,6 +156,9 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    */
   destroy(): void {
     NativeAdapter._logger.debug('destroy');
+    this._eventManager.destroy();
+    this._eventManager = null;
+    this._loadPromise = null;
   }
 
   /**

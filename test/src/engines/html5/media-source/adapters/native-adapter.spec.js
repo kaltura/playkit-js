@@ -102,6 +102,38 @@ describe('NativeAdapter: load', () => {
   });
 });
 
+describe('NativeAdapter: destroy', () => {
+  let video, nativeInstance;
+  let fakeEngine = {
+    getVideoElement: function () {
+      return video;
+    }
+  };
+
+  beforeEach(function () {
+    video = document.createElement("video");
+    nativeInstance = NativeAdapter.createAdapter(fakeEngine, {
+      mimetype: 'video/mp4',
+      url: '/base/src/assets/audios.mp4'
+    }, {});
+  });
+
+  afterEach(() => {
+    nativeInstance = null;
+  });
+
+  it('should destroyed', (done) => {
+    nativeInstance.load().then(() => {
+      nativeInstance._loadPromise.should.be.exist;
+      nativeInstance._eventManager.should.be.exist;
+      nativeInstance.destroy();
+      (!nativeInstance._loadPromise).should.be.true;
+      (!nativeInstance._eventManager).should.be.true;
+      done();
+    });
+  });
+});
+
 describe('NativeAdapter:_parsedTracks', function () {
   let video;
   let track1 = document.createElement("track");
