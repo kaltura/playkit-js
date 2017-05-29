@@ -1,6 +1,7 @@
 //@flow
 import LoggerFactory from '../../../../utils/logger'
 import EventManager from '../../../../event/event-manager'
+import PlayerEvents from '../../../../event/events'
 import Track from '../../../../track/track'
 import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'
@@ -132,14 +133,14 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   load(): Promise<Object> {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
-        this._eventManager.listen(this._videoElement, 'loadedmetadata', () => {
-          this._eventManager.unlisten(this._videoElement, 'loadedmetadata');
+        this._eventManager.listen(this._videoElement, PlayerEvents['LOADED_METADATA'], () => {
+          this._eventManager.unlisten(this._videoElement, PlayerEvents['LOADED_METADATA']);
           let data = {tracks: this._parsedTracks};
           NativeAdapter._logger.debug('load');
           resolve(data);
         });
-        this._eventManager.listen(this._videoElement, 'error', (error) => {
-          this._eventManager.unlisten(this._videoElement, 'error');
+        this._eventManager.listen(this._videoElement, PlayerEvents['ERROR'], (error) => {
+          this._eventManager.unlisten(this._videoElement, PlayerEvents['ERROR']);
           NativeAdapter._logger.error(error);
           reject(error);
         });
