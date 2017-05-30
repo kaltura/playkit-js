@@ -10,7 +10,7 @@
     "test": "NODE_ENV=test ./node_modules/.bin/karma start --single-run",
     "test:watch": "NODE_ENV=test ./node_modules/.bin/karma start --auto-watch",
     "start": "webpack-dev-server",
-    "release": "npm run build && standard-version",
+    "release": "NODE_ENV=production npm run build -- -p && standard-version",
     "eslint": "eslint . --color",
     "flow": "flow check",
     "prepush": "npm run eslint & npm run test & npm run flow"
@@ -48,6 +48,7 @@
     "sinon": "^2.0.0",
     "sinon-chai": "^2.8.0",
     "standard-version": "^4.0.0",
+    "uglifyjs-webpack-plugin": "^0.4.3",
     "webpack": "latest",
     "webpack-dev-server": "latest"
   },
