@@ -41,12 +41,6 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    */
   _config: Object;
   /**
-   * The owning engine
-   * @member {IEngine} _engine
-   * @private
-   */
-  _engine: IEngine;
-  /**
    * The dom video element
    * @member {HTMLVideoElement} _videoElement
    * @private
@@ -100,27 +94,26 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   /**
    * Factory method to create media source adapter
    * @function createAdapter
-   * @param {IEngine} engine - The video engine that the media source adapter work with
+   * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with
    * @param {Object} source - The source Object
    * @param {Object} config - The media source adapter configuration
    * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter
    * @static
    */
-  static createAdapter(engine: IEngine, source: Object, config: Object): IMediaSourceAdapter {
+  static createAdapter(videoElement: HTMLVideoElement, source: Object, config: Object): IMediaSourceAdapter {
     NativeAdapter._logger.debug('Creating adapter');
-    return new this(engine, source, config);
+    return new this(videoElement, source, config);
   }
 
   /**
    * @constructor
-   * @param {IEngine} engine - The video element which bind to NativeAdapter
+   * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
    * @param {string} source - The source URL
    * @param {Object} config - The media source adapter configuration
    */
-  constructor(engine: IEngine, source: Object, config: Object) {
-    this._engine = engine;
+  constructor(videoElement: HTMLVideoElement, source: Object, config: Object) {
     this._config = config;
-    this._videoElement = engine.getVideoElement();
+    this._videoElement = videoElement;
     this._source = source.url;
     this._eventManager = new EventManager();
   }

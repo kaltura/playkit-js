@@ -1387,7 +1387,7 @@ var MediaSourceProvider = function () {
     /**
      * Get the appropriate media source adapter to the video source
      * @function getMediaSourceAdapter
-     * @param {IEngine} engine - The video engine which requires adapter for a given mimeType
+     * @param {HTMLVideoElement} videoElement - The video element which requires adapter for a given mimeType
      * @param {Object} source - The video source
      * @param {Object} config - The player configuration
      * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists
@@ -1396,12 +1396,12 @@ var MediaSourceProvider = function () {
 
   }, {
     key: 'getMediaSourceAdapter',
-    value: function getMediaSourceAdapter(engine, source, config) {
-      if (engine && source && config) {
+    value: function getMediaSourceAdapter(videoElement, source, config) {
+      if (videoElement && source && config) {
         if (!MediaSourceProvider._selectedAdapter) {
           MediaSourceProvider.canPlayType(source.mimetype);
         }
-        return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(engine, source, config.engines) : null;
+        return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config.engines) : null;
       }
       return null;
     }
@@ -2479,7 +2479,7 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'loadMediaSourceAdapter',
     value: function loadMediaSourceAdapter(source, config) {
-      this._mediaSourceAdapter = _mediaSourceProvider2.default.getMediaSourceAdapter(this, source, config);
+      this._mediaSourceAdapter = _mediaSourceProvider2.default.getMediaSourceAdapter(this.getVideoElement(), source, config);
     }
   }, {
     key: 'selectVideoTrack',
@@ -2846,12 +2846,6 @@ var NativeAdapter = function () {
      */
 
     /**
-     * The owning engine
-     * @member {IEngine} _engine
-     * @private
-     */
-
-    /**
      * The dom video element
      * @member {HTMLVideoElement} _videoElement
      * @private
@@ -2899,7 +2893,7 @@ var NativeAdapter = function () {
     /**
      * Factory method to create media source adapter
      * @function createAdapter
-     * @param {IEngine} engine - The video engine that the media source adapter work with
+     * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with
      * @param {Object} source - The source Object
      * @param {Object} config - The media source adapter configuration
      * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter
@@ -2908,14 +2902,14 @@ var NativeAdapter = function () {
 
   }, {
     key: 'createAdapter',
-    value: function createAdapter(engine, source, config) {
+    value: function createAdapter(videoElement, source, config) {
       NativeAdapter._logger.debug('Creating adapter');
-      return new this(engine, source, config);
+      return new this(videoElement, source, config);
     }
 
     /**
      * @constructor
-     * @param {IEngine} engine - The video element which bind to NativeAdapter
+     * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
      * @param {string} source - The source URL
      * @param {Object} config - The media source adapter configuration
      */
@@ -2947,12 +2941,11 @@ var NativeAdapter = function () {
 
   }]);
 
-  function NativeAdapter(engine, source, config) {
+  function NativeAdapter(videoElement, source, config) {
     _classCallCheck(this, NativeAdapter);
 
-    this._engine = engine;
     this._config = config;
-    this._videoElement = engine.getVideoElement();
+    this._videoElement = videoElement;
     this._source = source.url;
     this._eventManager = new _eventManager2.default();
   }

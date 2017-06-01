@@ -37,15 +37,10 @@ describe('NativeAdapter:canPlayType', () => {
 
 describe('NativeAdapterInstance', () => {
   let video = document.createElement("video");
-  let fakeEngine = {
-    getVideoElement: function () {
-      return video;
-    }
-  };
   let nativeInstance;
 
   beforeEach(() => {
-    nativeInstance = NativeAdapter.createAdapter(fakeEngine, {url: 'url3'}, {});
+    nativeInstance = NativeAdapter.createAdapter(video, {url: 'url3'}, {});
   });
 
   afterEach(() => {
@@ -54,7 +49,6 @@ describe('NativeAdapterInstance', () => {
   });
 
   it('should create all native adapter properties', () => {
-    nativeInstance._engine.should.exist;
     nativeInstance._config.should.exist;
     nativeInstance._videoElement.should.exist;
     nativeInstance._source.should.exist;
@@ -63,11 +57,6 @@ describe('NativeAdapterInstance', () => {
 
 describe('NativeAdapter: load', () => {
   let video, nativeInstance;
-  let fakeEngine = {
-    getVideoElement: function () {
-      return video;
-    }
-  };
 
   beforeEach(function () {
     video = document.createElement("video");
@@ -79,7 +68,7 @@ describe('NativeAdapter: load', () => {
   });
 
   it('should success', (done) => {
-    nativeInstance = NativeAdapter.createAdapter(fakeEngine, {
+    nativeInstance = NativeAdapter.createAdapter(video, {
       mimetype: 'video/mp4',
       url: '/base/src/assets/audios.mp4'
     }, {});
@@ -90,7 +79,7 @@ describe('NativeAdapter: load', () => {
   });
 
   it('should failed', (done) => {
-    nativeInstance = NativeAdapter.createAdapter(fakeEngine, {
+    nativeInstance = NativeAdapter.createAdapter(video, {
       mimetype: 'video/mp4',
       url: 'some corrupted_url'
     }, {});
@@ -104,15 +93,10 @@ describe('NativeAdapter: load', () => {
 
 describe('NativeAdapter: destroy', () => {
   let video, nativeInstance;
-  let fakeEngine = {
-    getVideoElement: function () {
-      return video;
-    }
-  };
 
   beforeEach(function () {
     video = document.createElement("video");
-    nativeInstance = NativeAdapter.createAdapter(fakeEngine, {
+    nativeInstance = NativeAdapter.createAdapter(video, {
       mimetype: 'video/mp4',
       url: '/base/src/assets/audios.mp4'
     }, {});
@@ -141,16 +125,11 @@ describe('NativeAdapter:_getParsedTracks', function () {
   track1.default = true;
   track2.kind = 'captions';
   track2.srclang = 'fr';
-  let fakeEngine = {
-    getVideoElement: function () {
-      return video;
-    }
-  };
   let nativeInstance;
 
   beforeEach(() => {
     video = document.createElement("video");
-    nativeInstance = NativeAdapter.createAdapter(fakeEngine, {
+    nativeInstance = NativeAdapter.createAdapter(video, {
       mimetype: 'video/mp4',
       url: '/base/src/assets/audios.mp4'
     }, {});
@@ -202,16 +181,11 @@ describe('NativeAdapter:_getParsedTracks', function () {
 
 describe('NativeAdapter:selectAudioTrack', function () {
   let video;
-  let fakeEngine = {
-    getVideoElement: function () {
-      return video;
-    }
-  };
   let nativeInstance;
 
   beforeEach(() => {
     video = document.createElement("video");
-    nativeInstance = NativeAdapter.createAdapter(fakeEngine, {
+    nativeInstance = NativeAdapter.createAdapter(video, {
       mimetype: 'video/mp4',
       url: '/base/src/assets/audios.mp4'
     }, {});
@@ -224,14 +198,14 @@ describe('NativeAdapter:selectAudioTrack', function () {
 
   it('should select a new audio track', (done) => {
     nativeInstance.load().then(() => {
-      if (nativeInstance._engine.getVideoElement().audioTracks) {
-        nativeInstance._engine.getVideoElement().audioTracks[0].enabled.should.be.true;
-        nativeInstance._engine.getVideoElement().audioTracks[1].enabled.should.be.false;
-        nativeInstance._engine.getVideoElement().audioTracks[2].enabled.should.be.false;
+      if (nativeInstance._videoElement.audioTracks) {
+        nativeInstance._videoElement.audioTracks[0].enabled.should.be.true;
+        nativeInstance._videoElement.audioTracks[1].enabled.should.be.false;
+        nativeInstance._videoElement.audioTracks[2].enabled.should.be.false;
         nativeInstance.selectAudioTrack(new AudioTrack({index: 2}));
-        nativeInstance._engine.getVideoElement().audioTracks[0].enabled.should.be.false;
-        nativeInstance._engine.getVideoElement().audioTracks[1].enabled.should.be.false;
-        nativeInstance._engine.getVideoElement().audioTracks[2].enabled.should.be.true;
+        nativeInstance._videoElement.audioTracks[0].enabled.should.be.false;
+        nativeInstance._videoElement.audioTracks[1].enabled.should.be.false;
+        nativeInstance._videoElement.audioTracks[2].enabled.should.be.true;
       }
       done();
     });
@@ -239,14 +213,14 @@ describe('NativeAdapter:selectAudioTrack', function () {
 
   it('should not change the selected audio track', (done) => {
     nativeInstance.load().then(() => {
-      if (nativeInstance._engine.getVideoElement().audioTracks) {
-        nativeInstance._engine.getVideoElement().audioTracks[0].enabled.should.be.true;
-        nativeInstance._engine.getVideoElement().audioTracks[1].enabled.should.be.false;
-        nativeInstance._engine.getVideoElement().audioTracks[2].enabled.should.be.false;
+      if (nativeInstance._videoElement.audioTracks) {
+        nativeInstance._videoElement.audioTracks[0].enabled.should.be.true;
+        nativeInstance._videoElement.audioTracks[1].enabled.should.be.false;
+        nativeInstance._videoElement.audioTracks[2].enabled.should.be.false;
         nativeInstance.selectAudioTrack(new AudioTrack({index: 0}));
-        nativeInstance._engine.getVideoElement().audioTracks[0].enabled.should.be.true;
-        nativeInstance._engine.getVideoElement().audioTracks[1].enabled.should.be.false;
-        nativeInstance._engine.getVideoElement().audioTracks[2].enabled.should.be.false;
+        nativeInstance._videoElement.audioTracks[0].enabled.should.be.true;
+        nativeInstance._videoElement.audioTracks[1].enabled.should.be.false;
+        nativeInstance._videoElement.audioTracks[2].enabled.should.be.false;
       }
       done();
     });
@@ -254,14 +228,14 @@ describe('NativeAdapter:selectAudioTrack', function () {
 
   it('should not change the selected for non exist audio track', (done) => {
     nativeInstance.load().then(() => {
-      if (nativeInstance._engine.getVideoElement().audioTracks) {
-        nativeInstance._engine.getVideoElement().audioTracks[0].enabled.should.be.true;
-        nativeInstance._engine.getVideoElement().audioTracks[1].enabled.should.be.false;
-        nativeInstance._engine.getVideoElement().audioTracks[2].enabled.should.be.false;
+      if (nativeInstance._videoElement.audioTracks) {
+        nativeInstance._videoElement.audioTracks[0].enabled.should.be.true;
+        nativeInstance._videoElement.audioTracks[1].enabled.should.be.false;
+        nativeInstance._videoElement.audioTracks[2].enabled.should.be.false;
         nativeInstance.selectAudioTrack(new AudioTrack({index: 3}));
-        nativeInstance._engine.getVideoElement().audioTracks[0].enabled.should.be.true;
-        nativeInstance._engine.getVideoElement().audioTracks[1].enabled.should.be.false;
-        nativeInstance._engine.getVideoElement().audioTracks[2].enabled.should.be.false;
+        nativeInstance._videoElement.audioTracks[0].enabled.should.be.true;
+        nativeInstance._videoElement.audioTracks[1].enabled.should.be.false;
+        nativeInstance._videoElement.audioTracks[2].enabled.should.be.false;
       }
       done();
     });
@@ -270,11 +244,6 @@ describe('NativeAdapter:selectAudioTrack', function () {
 
 describe('NativeAdapter:selectTextTrack', function () {
   let video, track1, track2;
-  let fakeEngine = {
-    getVideoElement: function () {
-      return video;
-    }
-  };
   let nativeInstance;
 
   beforeEach(() => {
@@ -288,7 +257,7 @@ describe('NativeAdapter:selectTextTrack', function () {
     track2.srclang = 'fr';
     video.appendChild(track1);
     video.appendChild(track2);
-    nativeInstance = NativeAdapter.createAdapter(fakeEngine, {
+    nativeInstance = NativeAdapter.createAdapter(video, {
       mimetype: 'video/mp4',
       url: '/base/src/assets/audios.mp4'
     }, {});
@@ -301,12 +270,12 @@ describe('NativeAdapter:selectTextTrack', function () {
 
   it('should select a new subtitles track', (done) => {
     nativeInstance.load().then(() => {
-      if (nativeInstance._engine.getVideoElement().textTracks) {
-        nativeInstance._engine.getVideoElement().textTracks[0].mode.should.be.equal('showing');
-        nativeInstance._engine.getVideoElement().textTracks[1].mode.should.be.equal('disabled');
+      if (nativeInstance._videoElement.textTracks) {
+        nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
+        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
         nativeInstance.selectTextTrack(new TextTrack({index: 1, kind: 'subtitles'})).should.be.true;
-        nativeInstance._engine.getVideoElement().textTracks[0].mode.should.be.equal('disabled');
-        nativeInstance._engine.getVideoElement().textTracks[1].mode.should.be.equal('showing');
+        nativeInstance._videoElement.textTracks[0].mode.should.be.equal('disabled');
+        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('showing');
       }
       done();
     });
@@ -316,12 +285,12 @@ describe('NativeAdapter:selectTextTrack', function () {
     video.appendChild(track1);
     video.appendChild(track2);
     nativeInstance.load().then(() => {
-      if (nativeInstance._engine.getVideoElement().textTracks) {
-        nativeInstance._engine.getVideoElement().textTracks[0].mode.should.be.equal('showing');
-        nativeInstance._engine.getVideoElement().textTracks[1].mode.should.be.equal('disabled');
+      if (nativeInstance._videoElement.textTracks) {
+        nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
+        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
         nativeInstance.selectTextTrack(new TextTrack({index: 1, kind: 'captions'})).should.be.true;
-        nativeInstance._engine.getVideoElement().textTracks[0].mode.should.be.equal('disabled');
-        nativeInstance._engine.getVideoElement().textTracks[1].mode.should.be.equal('showing');
+        nativeInstance._videoElement.textTracks[0].mode.should.be.equal('disabled');
+        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('showing');
       }
       done();
     });
@@ -331,12 +300,12 @@ describe('NativeAdapter:selectTextTrack', function () {
     video.appendChild(track1);
     video.appendChild(track2);
     nativeInstance.load().then(() => {
-      if (nativeInstance._engine.getVideoElement().textTracks) {
-        nativeInstance._engine.getVideoElement().textTracks[0].mode.should.be.equal('showing');
-        nativeInstance._engine.getVideoElement().textTracks[1].mode.should.be.equal('disabled');
+      if (nativeInstance._videoElement.textTracks) {
+        nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
+        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
         nativeInstance.selectTextTrack(new TextTrack({index: 0, kind: 'subtitles'})).should.be.true;
-        nativeInstance._engine.getVideoElement().textTracks[0].mode.should.be.equal('showing');
-        nativeInstance._engine.getVideoElement().textTracks[1].mode.should.be.equal('disabled');
+        nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
+        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
       }
       done();
     });
@@ -346,12 +315,12 @@ describe('NativeAdapter:selectTextTrack', function () {
     video.appendChild(track1);
     video.appendChild(track2);
     nativeInstance.load().then(() => {
-      if (nativeInstance._engine.getVideoElement().textTracks) {
-        nativeInstance._engine.getVideoElement().textTracks[0].mode.should.be.equal('showing');
-        nativeInstance._engine.getVideoElement().textTracks[1].mode.should.be.equal('disabled');
+      if (nativeInstance._videoElement.textTracks) {
+        nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
+        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
         nativeInstance.selectTextTrack(new TextTrack({index: 3, kind: 'subtitles'})).should.be.false;
-        nativeInstance._engine.getVideoElement().textTracks[0].mode.should.be.equal('showing');
-        nativeInstance._engine.getVideoElement().textTracks[1].mode.should.be.equal('disabled');
+        nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
+        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
       }
       done();
     });
@@ -361,12 +330,12 @@ describe('NativeAdapter:selectTextTrack', function () {
     video.appendChild(track1);
     video.appendChild(track2);
     nativeInstance.load().then(() => {
-      if (nativeInstance._engine.getVideoElement().textTracks) {
-        nativeInstance._engine.getVideoElement().textTracks[0].mode.should.be.equal('showing');
-        nativeInstance._engine.getVideoElement().textTracks[1].mode.should.be.equal('disabled');
+      if (nativeInstance._videoElement.textTracks) {
+        nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
+        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
         nativeInstance.selectTextTrack(new TextTrack({index: 1, kind: 'metadata'})).should.be.false;
-        nativeInstance._engine.getVideoElement().textTracks[0].mode.should.be.equal('showing');
-        nativeInstance._engine.getVideoElement().textTracks[1].mode.should.be.equal('disabled');
+        nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
+        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
       }
       done();
     });
