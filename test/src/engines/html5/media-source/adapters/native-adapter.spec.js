@@ -26,15 +26,10 @@ describe('NativeAdapter:canPlayType', () => {
 
 describe('NativeAdapterInstance', () => {
   let video = document.createElement("video");
-  let fakeEngine = {
-    getVideoElement: function () {
-      return video;
-    }
-  };
   let nativeInstance;
 
   beforeEach(() => {
-    nativeInstance = NativeAdapter.createAdapter(fakeEngine, {mimetype: 'video/mp4', url: 'url3'}, {});
+    nativeInstance = NativeAdapter.createAdapter(video, {mimetype: 'video/mp4', url: 'url3'}, {});
   });
 
   afterEach(() => {
@@ -43,7 +38,6 @@ describe('NativeAdapterInstance', () => {
   });
 
   it('should create all native adapter properties', () => {
-    nativeInstance._engine.should.exist;
     nativeInstance._config.should.exist;
     nativeInstance._videoElement.should.exist;
     nativeInstance._source.should.exist;
