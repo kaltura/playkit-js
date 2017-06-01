@@ -386,3 +386,14 @@ describe('selectTrack - text', function () {
   });
 });
 
+describe('Track enum', function () {
+  it('should return the track enum', function () {
+    let config = sourcesConfig.mp4_none_hls_dash;
+    let player = new Player(config);
+    player.Track.VIDEO.should.be.equal('video');
+    player.Track.AUDIO.should.be.equal('audio');
+    player.Track.TEXT.should.be.equal('text');
+  });
+});
+
+

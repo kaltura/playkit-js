@@ -133,14 +133,14 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   load(): Promise<Object> {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
-        this._eventManager.listen(this._videoElement, PlayerEvents['LOADED_METADATA'], () => {
-          this._eventManager.unlisten(this._videoElement, PlayerEvents['LOADED_METADATA']);
-          let data = {tracks: this._parsedTracks};
+        this._eventManager.listen(this._videoElement, PlayerEvents.LOADED_METADATA, () => {
+          this._eventManager.unlisten(this._videoElement, PlayerEvents.LOADED_METADATA);
+          let data = {tracks: this._getParsedTracks()};
           NativeAdapter._logger.debug('load');
           resolve(data);
         });
-        this._eventManager.listen(this._videoElement, PlayerEvents['ERROR'], (error) => {
-          this._eventManager.unlisten(this._videoElement, PlayerEvents['ERROR']);
+        this._eventManager.listen(this._videoElement, PlayerEvents.ERROR, (error) => {
+          this._eventManager.unlisten(this._videoElement, PlayerEvents.ERROR);
           NativeAdapter._logger.error(error);
           reject(error);
         });
@@ -163,20 +163,24 @@ export default class NativeAdapter implements IMediaSourceAdapter {
 
   /**
    * Get the parsed tracks
-   * @function _parsedTracks
+   * @function _getParsedTracks
    * @returns {Array<Track>} - The parsed tracks
    * @private
    */
-  get _parsedTracks(): Array<Track> {
-    return this._parsedVideoTracks.concat(this._parsedAudioTracks).concat(this._parsedTextTracks);
+  _getParsedTracks(): Array<Track> {
+    let videoTracks = this._getParsedVideoTracks();
+    let audioTracks = this._getParsedAudioTracks();
+    let textTracks = this._getParsedTextTracks();
+    return videoTracks.concat(audioTracks).concat(textTracks);
   }
 
   /**
    * Get the parsed video tracks
+   * @function _getParsedVideoTracks
    * @returns {Array<Track>} - The parsed video tracks
    * @private
    */
-  get _parsedVideoTracks(): Array<Track> {
+  _getParsedVideoTracks(): Array<Track> {
     let videoTracks = this._videoElement.videoTracks;
     let parsedTracks = [];
     if (videoTracks) {
@@ -196,10 +200,11 @@ export default class NativeAdapter implements IMediaSourceAdapter {
 
   /**
    * Get the parsed audio tracks
+   * @function _getParsedAudioTracks
    * @returns {Array<Track>} - The parsed audio tracks
    * @private
    */
-  get _parsedAudioTracks(): Array<Track> {
+  _getParsedAudioTracks(): Array<Track> {
     let audioTracks = this._videoElement.audioTracks;
     let parsedTracks = [];
     if (audioTracks) {
@@ -219,10 +224,11 @@ export default class NativeAdapter implements IMediaSourceAdapter {
 
   /**
    * Get the parsed text tracks
+   * @function _getParsedTextTracks
    * @returns {Array<Track>} - The parsed text tracks
    * @private
    */
-  get _parsedTextTracks(): Array<Track> {
+  _getParsedTextTracks(): Array<Track> {
     let textTracks = this._videoElement.textTracks;
     let parsedTracks = [];
     if (textTracks) {
@@ -241,37 +247,17 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   }
 
   /**
-   * Select a track
-   * @function selectTrack
-   * @param {Track} track - the track to select
+   * Select a video track
+   * @function selectVideoTrack
+   * @param {VideoTrack} videoTrack - the track to select
    * @returns {boolean} - success
    * @public
    */
-  selectTrack(track: Track): boolean {
-    if (track) {
-      if (track instanceof VideoTrack) {
-        return this._selectVideoTrack(track);
-      } else if (track instanceof AudioTrack) {
-        return this._selectAudioTrack(track);
-      } else if (track instanceof TextTrack) {
-        return this._selectTextTrack(track);
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Select a video track
-   * @function _selectVideoTrack
-   * @param {VideoTrack} track - the track to select
-   * @returns {boolean} - success
-   * @private
-   */
-  _selectVideoTrack(track: VideoTrack): boolean {
+  selectVideoTrack(videoTrack: VideoTrack): boolean {
     let videoTracks = this._videoElement.videoTracks;
-    if ((track instanceof VideoTrack) && videoTracks && videoTracks[track.index]) {
+    if ((videoTrack instanceof VideoTrack) && videoTracks && videoTracks[videoTrack.index]) {
       for (let i = 0; i < videoTracks.length; i++) {
-        videoTracks[i].selected = track.index === i;
+        videoTracks[i].selected = videoTrack.index === i;
       }
       return true;
     }
@@ -280,16 +266,16 @@ export default class NativeAdapter implements IMediaSourceAdapter {
 
   /**
    * Select an audio track
-   * @function _selectAudioTrack
-   * @param {AudioTrack} track - the  audio track to select
+   * @function selectAudioTrack
+   * @param {AudioTrack} audioTrack - the  audio track to select
    * @returns {boolean} - success
-   * @private
+   * @public
    */
-  _selectAudioTrack(track: AudioTrack): boolean {
+  selectAudioTrack(audioTrack: AudioTrack): boolean {
     let audioTracks = this._videoElement.audioTracks;
-    if ((track instanceof AudioTrack) && audioTracks && audioTracks[track.index]) {
+    if ((audioTrack instanceof AudioTrack) && audioTracks && audioTracks[audioTrack.index]) {
       for (let i = 0; i < audioTracks.length; i++) {
-        audioTracks[i].enabled = track.index === i;
+        audioTracks[i].enabled = audioTrack.index === i;
       }
       return true;
     }
@@ -298,16 +284,16 @@ export default class NativeAdapter implements IMediaSourceAdapter {
 
   /**
    * Select a text track
-   * @function _selectTextTrack
-   * @param {TextTrack} track - the track to select
+   * @function selectTextTrack
+   * @param {TextTrack} textTrack - the track to select
    * @returns {boolean} - success
-   * @private
+   * @public
    */
-  _selectTextTrack(track: TextTrack): boolean {
+  selectTextTrack(textTrack: TextTrack): boolean {
     let textTracks = this._videoElement.textTracks;
-    if ((track instanceof TextTrack) && (track.kind === 'subtitles' || track.kind === 'captions') && textTracks && textTracks[track.index]) {
+    if ((textTrack instanceof TextTrack) && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
       for (let i = 0; i < textTracks.length; i++) {
-        textTracks[i].mode = track.index === i ? 'showing' : 'disabled'
+        textTracks[i].mode = textTrack.index === i ? 'showing' : 'disabled'
       }
       return true;
     }

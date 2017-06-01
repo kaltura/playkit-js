@@ -4,6 +4,9 @@ import FakeEvent from '../../event/fake-event'
 import EventManager from '../../event/event-manager'
 import PlayerEvents from '../../event/events'
 import MediaSourceProvider from './media-source/media-source-provider'
+import VideoTrack from '../../track/video-track'
+import AudioTrack from '../../track/audio-track'
+import TextTrack from '../../track/text-track'
 
 export default class Html5 extends FakeEventTarget implements IEngine {
   _el: HTMLVideoElement;
@@ -80,9 +83,23 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter((this: Html5), source, config);
   }
 
-  selectTrack(track: Track): boolean {
+  selectVideoTrack(videoTrack: VideoTrack): boolean {
     if (this._mediaSourceAdapter) {
-      return this._mediaSourceAdapter.selectTrack(track);
+      return this._mediaSourceAdapter.selectVideoTrack(videoTrack);
+    }
+    return false;
+  }
+
+  selectAudioTrack(audioTrack: AudioTrack): boolean {
+    if (this._mediaSourceAdapter) {
+      return this._mediaSourceAdapter.selectAudioTrack(audioTrack);
+    }
+    return false;
+  }
+
+  selectTextTrack(textTrack: TextTrack): boolean {
+    if (this._mediaSourceAdapter) {
+      return this._mediaSourceAdapter.selectTextTrack(textTrack);
     }
     return false;
   }

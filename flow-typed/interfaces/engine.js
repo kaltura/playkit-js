@@ -1,5 +1,7 @@
 //@flow
-import Track from '../../src/track/track'
+import VideoTrack from '../../src/track/video-track'
+import AudioTrack from '../../src/track/audio-track'
+import TextTrack from '../../src/track/text-track'
 
 declare interface IEngine {
   destroy(): void;
@@ -9,7 +11,9 @@ declare interface IEngine {
   pause(): void;
   load(): Promise<Object>;
   ready(): void;
-  selectTrack(track: Track): boolean;
+  selectVideoTrack(videoTrack: VideoTrack): boolean;
+  selectAudioTrack(audioTrack: AudioTrack): boolean;
+  selectTextTrack(textTrack: TextTrack): boolean;
   getVideoElement(): HTMLVideoElement;
   currentTime: number;
   +duration: number;

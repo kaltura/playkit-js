@@ -13,7 +13,7 @@
     "release": "npm run build && standard-version",
     "eslint": "eslint . --color",
     "flow": "flow check",
-    "prepush": "npm run eslint & npm run test & npm run flow"
+    "prepush": "npm run eslint && npm run test && npm run flow"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",

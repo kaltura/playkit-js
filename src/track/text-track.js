@@ -1,7 +1,7 @@
 //@flow
 import Track from './track'
 
-export default class textTrack extends Track {
+export default class TextTrack extends Track {
   _kind: string;
 
   get kind(): string {

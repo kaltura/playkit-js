@@ -135,11 +135,38 @@ class Player extends FakeEventTarget {
     });
   }
 
+  /**
+   * Select a track
+   * @function selectTrack
+   * @param {Track} track - the track to select
+   * @returns {void}
+   * @public
+   */
   selectTrack(track: Track): void {
-    let success = this._engine.selectTrack(track);
+    let success = this._selectTrackByType(track);
     if (success) {
       this._markActiveTrack(track)
     }
+  }
+
+  /**
+   * Select a track by type
+   * @function _selectTrackByType
+   * @param {Track} track - the track to select
+   * @returns {boolean} - success
+   * @private
+   */
+  _selectTrackByType(track: Track): boolean {
+    if (track) {
+      if (track instanceof VideoTrack) {
+        return this._engine.selectVideoTrack(track);
+      } else if (track instanceof AudioTrack) {
+        return this._engine.selectAudioTrack(track);
+      } else if (track instanceof TextTrack) {
+        return this._engine.selectTextTrack(track);
+      }
+    }
+    return false;
   }
 
   /**
@@ -152,11 +179,11 @@ class Player extends FakeEventTarget {
   _markActiveTrack(track: Track) {
     let type;
     if (track instanceof VideoTrack) {
-      type = 'video';
+      type = TrackTypes.VIDEO;
     } else if (track instanceof AudioTrack) {
-      type = 'audio';
+      type = TrackTypes.AUDIO;
     } else if (track instanceof TextTrack) {
-      type = 'text';
+      type = TrackTypes.TEXT;
     }
     if (type) {
       let tracks = this.getTracks(type);
@@ -317,7 +344,6 @@ class Player extends FakeEventTarget {
   /**
    * Get the player events
    * @returns {Object} - The events of the player
-   * @constructor
    */
   get Event(): { [event: string]: string } {
     return PlayerEvents;
@@ -326,10 +352,17 @@ class Player extends FakeEventTarget {
   /**
    * Get the player states
    * @returns {Object} - The states of the player
-   * @constructor
    */
   get State(): { [state: string]: string } {
     return PlayerStates;
+  }
+
+  /**
+   * Get the player tracks types
+   * @returns {Object} - The tracks types of the player
+   */
+  get Track(): { [track: string]: string } {
+    return TrackTypes;
   }
 
 // </editor-fold>
