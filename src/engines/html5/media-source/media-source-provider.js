@@ -84,18 +84,18 @@ export default class MediaSourceProvider {
   /**
    * Get the appropriate media source adapter to the video source
    * @function getMediaSourceAdapter
-   * @param {IEngine} engine - The video engine which requires adapter for a given mimeType
+   * @param {HTMLVideoElement} videoElement - The video element which requires adapter for a given mimeType
    * @param {Object} source - The video source
    * @param {Object} config - The player configuration
    * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists
    * @static
    */
-  static getMediaSourceAdapter(engine: IEngine, source: Object, config: Object): ?IMediaSourceAdapter {
-    if (engine && source && config) {
+  static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: Object, config: Object): ?IMediaSourceAdapter {
+    if (videoElement && source && config) {
       if (!MediaSourceProvider._selectedAdapter) {
         MediaSourceProvider.canPlayType(source.mimetype);
       }
-      return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(engine, source, config.engines) : null;
+      return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config.engines) : null;
     }
     return null;
   }

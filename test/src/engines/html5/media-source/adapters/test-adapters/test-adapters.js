@@ -8,8 +8,8 @@ class adapter1 implements IMediaSourceAdapter {
     return ['mimeType0', 'mimeType1'].includes(mimeType);
   }
 
-  static createAdapter(engine: IEngine, source: Object, config: Object): IMediaSourceAdapter {
-    return new this(engine, source, config);
+  static createAdapter(videoElement: HTMLVideoElement, source: Object, config: Object): IMediaSourceAdapter {
+    return new this(videoElement, source, config);
   }
 
   constructor() {
@@ -32,8 +32,8 @@ class adapter2 implements IMediaSourceAdapter {
     return ['mimeType1', 'mimeType2'].includes(mimeType);
   }
 
-  static createAdapter(engine: IEngine, source: Object, config: Object): IMediaSourceAdapter {
-    return new this(engine, source, config);
+  static createAdapter(videoElement: HTMLVideoElement, source: Object, config: Object): IMediaSourceAdapter {
+    return new this(videoElement, source, config);
   }
 
   constructor() {
@@ -56,8 +56,8 @@ class adapter3 implements IMediaSourceAdapter {
     return !!(document.createElement("video").canPlayType(mimeType));
   }
 
-  static createAdapter(engine: IEngine, source: Object, config: Object): IMediaSourceAdapter {
-    return new this(engine, source, config);
+  static createAdapter(videoElement: HTMLVideoElement, source: Object, config: Object): IMediaSourceAdapter {
+    return new this(videoElement, source, config);
   }
 
   constructor() {
