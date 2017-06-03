@@ -1202,7 +1202,7 @@ var MediaSourceProvider = function () {
     /**
      * Get the appropriate media source adapter to the video source
      * @function getMediaSourceAdapter
-     * @param {IEngine} engine - The video engine which requires adapter for a given mimeType
+     * @param {HTMLVideoElement} videoElement - The video element which requires adapter for a given mimeType
      * @param {Source} source - The video source
      * @param {Object} config - The player configuration
      * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists
@@ -1211,12 +1211,12 @@ var MediaSourceProvider = function () {
 
   }, {
     key: 'getMediaSourceAdapter',
-    value: function getMediaSourceAdapter(engine, source, config) {
-      if (engine && source && config) {
+    value: function getMediaSourceAdapter(videoElement, source, config) {
+      if (videoElement && source && config) {
         if (!MediaSourceProvider._selectedAdapter) {
           MediaSourceProvider.canPlayType(source.mimetype);
         }
-        return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(engine, source, config.engines) : null;
+        return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config.engines) : null;
       }
       return null;
     }
@@ -2080,7 +2080,7 @@ exports.merge = merge;
 
 module.exports = {
 	"name": "playkit-js",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"main": "dist/playkit.js",
 	"scripts": {
 		"clean": "rm -rf ./dist",
@@ -2090,7 +2090,7 @@ module.exports = {
 		"test": "NODE_ENV=test ./node_modules/.bin/karma start --single-run",
 		"test:watch": "NODE_ENV=test ./node_modules/.bin/karma start --auto-watch",
 		"start": "webpack-dev-server",
-		"release": "npm run build && standard-version",
+		"release": "NODE_ENV=production npm run build -- -p && git add --all dist && git commit -m'Update dist' && standard-version",
 		"eslint": "eslint . --color",
 		"flow": "flow check",
 		"prepush": "npm run eslint & npm run test & npm run flow"
@@ -2128,6 +2128,7 @@ module.exports = {
 		"sinon": "^2.0.0",
 		"sinon-chai": "^2.8.0",
 		"standard-version": "^4.0.0",
+		"uglifyjs-webpack-plugin": "^0.4.3",
 		"webpack": "latest",
 		"webpack-dev-server": "latest"
 	},
@@ -2908,7 +2909,7 @@ var NativeAdapter = function () {
 
   /**
    * @constructor
-   * @param {IEngine} engine - The video element which bind to NativeAdapter
+   * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
    * @param {Source} source - The source URL
    * @param {Object} config - The media source adapter configuration
    */
@@ -2920,22 +2921,15 @@ var NativeAdapter = function () {
    */
 
   /**
-   * The owning engine
-   * @member {IEngine} _engine
-   * @private
-   */
-
-  /**
    * The dom video element
    * @member {HTMLVideoElement} _videoElement
    * @private
    */
-  function NativeAdapter(engine, source, config) {
+  function NativeAdapter(videoElement, source, config) {
     _classCallCheck(this, NativeAdapter);
 
-    this._engine = engine;
     this._config = config;
-    this._videoElement = engine.getVideoElement();
+    this._videoElement = videoElement;
     if (source != null) {
       this._videoElement.src = source.url;
     }
@@ -3001,7 +2995,7 @@ var NativeAdapter = function () {
     /**
      * Factory method to create media source adapter
      * @function createAdapter
-     * @param {IEngine} engine - The video engine that the media source adapter work with
+     * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with
      * @param {Object} source - The source Object
      * @param {Object} config - The media source adapter configuration
      * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter
@@ -3010,9 +3004,9 @@ var NativeAdapter = function () {
 
   }, {
     key: "createAdapter",
-    value: function createAdapter(engine, source, config) {
+    value: function createAdapter(videoElement, source, config) {
       NativeAdapter._logger.debug('Creating adapter');
-      return new this(engine, source, config);
+      return new this(videoElement, source, config);
     }
   }]);
 

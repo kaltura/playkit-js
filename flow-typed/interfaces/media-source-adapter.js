@@ -5,5 +5,5 @@ declare interface IMediaSourceAdapter {
   static name: string;
   static isSupported(): boolean;
   static canPlayType(mimeType: string): boolean;
-  static createAdapter(engine: IEngine, source: Source, config: Object): IMediaSourceAdapter;
+  static createAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): IMediaSourceAdapter;
 }

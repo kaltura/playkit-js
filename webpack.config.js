@@ -3,6 +3,9 @@
 const webpack = require("webpack");
 const path = require("path");
 const libraryName = "Playkit";
+const PROD = (process.env.NODE_ENV === 'production')
+
+let plugins = PROD ? [new webpack.optimize.UglifyJsPlugin({sourceMap: true})]: [];
 
 module.exports = {
   context: __dirname + "/src",
@@ -17,6 +20,7 @@ module.exports = {
     umdNamedDefine: true
   },
   devtool: 'source-map',
+  plugins: plugins,
   module: {
     rules: [{
         test: /\.js$/,
