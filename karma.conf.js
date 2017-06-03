@@ -10,7 +10,12 @@ module.exports = function (config) {
   let karmaConf = {
     logLevel: config.LOG_INFO,
     // Run in Chrome
-    browsers: ['Chrome'],
+    browsers: [
+      'Chrome',
+      'IE',
+      'Firefox',
+      'Safari'
+    ],
     // Just run once by default
     singleRun: true,
     // Use the mocha test framework
@@ -52,7 +57,8 @@ module.exports = function (config) {
 
   if (process.env.TRAVIS) {
     karmaConf.customLaunchers = customLaunchers;
-    karmaConf.browsers = ['Chrome_travis_ci'];
+    // The Internet Explorer is working only by Windows environments, so it is not supported by Travis (because it uses Linux)
+    karmaConf.browsers = ['Chrome_travis_ci', 'Firefox', 'Safari'];
   }
 
   config.set(karmaConf);
