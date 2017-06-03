@@ -1,4 +1,5 @@
 import NativeAdapter from '../../../../../../src/engines/html5/media-source/adapters/native-adapter'
+import Env from '../../../../../../src/utils/env'
 
 describe('NativeAdapter:isSupported', () => {
   it('should be supported', () => {
@@ -11,8 +12,12 @@ describe('NativeAdapter:canPlayType', () => {
     NativeAdapter.canPlayType('video/mp4').should.be.true;
   });
 
-  it('should return true for video/ogg', () => {
-    NativeAdapter.canPlayType('video/ogg').should.be.true;
+  it('should return true and false for video/ogg', () => {
+    if (Env.isSafari()) {
+      NativeAdapter.canPlayType('video/ogg').should.be.false;
+    } else {
+      NativeAdapter.canPlayType('video/ogg').should.be.true;
+    }
   });
 
   it('should return false for unsupported mime type', () => {
