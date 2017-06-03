@@ -140,7 +140,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   _loadMediaSourceAdapter(config: Object): void {
-    this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter((this: Html5), this._source, config);
+    this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter(this.getVideoElement(), this._source, config);
   }
 
   /**
