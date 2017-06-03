@@ -1,4 +1,5 @@
 import {playkit} from '../../src/playkit'
+import Player from '../../src/player'
 import PlayerStates from '../../src/state/state-types'
 import sourcesConfig from './configs/sources.json'
 //import pluginsConfig from './configs/plugins.json'
@@ -9,6 +10,24 @@ describe('playkit:playkit', function () {
   it('should play mp4 stream', (done) => {
     let config = sourcesConfig.mp4_none_hls_dash;
     let player = playkit(config);
+    let video = document.getElementsByTagName("video")[0];
+    video.onplaying = function () {
+      player.destroy();
+      done();
+    };
+    video.addEventListener('error', function () {
+      player.destroy();
+      should.fail();
+    });
+    player.load();
+    player.play();
+  });
+
+  it('should create player without sources and set the sources later', (done) => {
+    let config = sourcesConfig.mp4_none_hls_dash;
+    let player = playkit();
+    player.should.be.instanceOf(Player);
+    player.configure(config);
     let video = document.getElementsByTagName("video")[0];
     video.onplaying = function () {
       player.destroy();

@@ -6,25 +6,65 @@ import PlayerEvents from '../../event/events'
 import MediaSourceProvider from './media-source/media-source-provider'
 
 export default class Html5 extends FakeEventTarget implements IEngine {
+  /**
+   * The video element.
+   * @type {HTMLVideoElement}
+   * @private
+   */
   _el: HTMLVideoElement;
+  /**
+   * The event manager of the engine.
+   * @type {EventManager}
+   * @private
+   */
   _eventManager: EventManager;
+  /**
+   * The selected media source adapter of the engine.
+   * @type {IMediaSourceAdapter}
+   * @private
+   */
   _mediaSourceAdapter: ?IMediaSourceAdapter;
+  /**
+   * The selected source to play.
+   * @type {Source}
+   * @private
+   */
+  _source: ?Source;
 
+  /**
+   * @type {string} - The engine name.
+   */
   static EngineName: string = "html5";
 
+  /**
+   * Checks if the engine can play a given mime type.
+   * @param {string} mimeType - The mime type to check.
+   * @returns {boolean} - Whether the engine can play the mime type.
+   */
   static canPlayType(mimeType) {
     return MediaSourceProvider.canPlayType(mimeType);
   }
 
-  constructor(source: Object, config: Object) {
+  /**
+   * @constructor
+   * @param {Source} source - The selected source object.
+   * @param {Object} config - The player configuration.
+   */
+  constructor(source: Source, config: Object) {
     super();
-    this.createVideoElement();
+    this._source = source;
+    this._createVideoElement();
     this._eventManager = new EventManager();
-    this.setSource(source, config);
+    this._loadMediaSourceAdapter(config);
     this.attach();
   }
 
-  destroy() {
+  /**
+   * Destroys the engine.
+   * @public
+   * @returns {void}
+   */
+  destroy(): void {
     this.detach();
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.destroy();
@@ -36,9 +76,16 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         this._el.parentNode.removeChild(this._el);
       }
     }
+    this._eventManager.destroy();
+    this._source = null;
   }
 
-  attach() {
+  /**
+   * Listen to the video element events and triggers them from the engine.
+   * @public
+   * @returns {void}
+   */
+  attach(): void {
     for (let playerEvent in PlayerEvents) {
       if (PlayerEvents.hasOwnProperty(playerEvent)) {
         this._eventManager.listen(this._el, PlayerEvents[playerEvent], () => {
@@ -48,7 +95,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
   }
 
-  detach() {
+  /**
+   * Remove the listeners of the video element events.
+   * @public
+   * @returns {void}
+   */
+  detach(): void {
     for (let playerEvent in PlayerEvents) {
       if (PlayerEvents.hasOwnProperty(playerEvent)) {
         this._eventManager.unlisten(this._el, PlayerEvents[playerEvent]);
@@ -56,7 +108,20 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
   }
 
-  createVideoElement() {
+  /**
+   * @returns {HTMLVideoElement} - The video element.
+   * @public
+   */
+  getVideoElement(): HTMLVideoElement {
+    return this._el;
+  }
+
+  /**
+   * Creates a video element dom object.
+   * @private
+   * @returns {void}
+   */
+  _createVideoElement(): void {
     this._el = document.createElement("video");
     //Set attributes
     this._el.style.width = "640px";
@@ -68,30 +133,42 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
   }
 
-  getVideoElement(): HTMLVideoElement {
-    return this._el;
+  /**
+   * Loads the appropriate media source extension adapter.
+   * @param {Object} config - The media source extension configuration.
+   * @private
+   * @returns {void}
+   */
+  _loadMediaSourceAdapter(config: Object): void {
+    this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter(this.getVideoElement(), this._source, config);
   }
 
-  setSource(source: Object, config: Object) {
-    this.loadMediaSourceAdapter(source, config);
-  }
-
-  loadMediaSourceAdapter(source: Object, config: Object) {
-    this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter((this.getVideoElement(): HTMLVideoElement), source, config);
-  }
-
+  /**
+   * Set a source.
+   * @param {string} source - Source to set.
+   * @public
+   * @returns {void}
+   */
   set src(source: string): void {
-    //Set source
     this._el.src = source;
   }
 
+  /**
+   * Get the source url.
+   * @returns {string} - The source url.
+   * @public
+   */
   get src(): string {
+    if (this._source != null) {
+      return this._source.url;
+    }
     return this._el.src;
   }
 
   //playback interface
   /**
-   * Start/resume playback
+   * Start/resume playback.
+   * @public
    * @returns {void}
    */
   play(): void {
@@ -99,7 +176,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
-   * Pause playback
+   * Pause playback.
+   * @public
    * @returns {void}
    */
   pause(): void {
@@ -107,7 +185,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
-   * Load media
+   * Load media.
+   * @public
    * @returns {void}
    */
   load(): void {
@@ -117,179 +196,327 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
-   * Get the current time in seconds
-   * @returns {Number} - The current playback time
+   * Get the current time in seconds.
+   * @returns {Number} - The current playback time.
+   * @public
    */
   get currentTime(): number {
     return this._el.currentTime;
   }
 
   /**
-   * Set the current time in seconds
-   * @param {Number} to - The number to set in seconds
+   * Set the current time in seconds.
+   * @param {Number} to - The number to set in seconds.
+   * @public
+   * @returns {void}
    */
-  set currentTime(to: number) {
+  set currentTime(to: number): void {
     this._el.currentTime = to;
   }
 
   /**
-   * Get the duration in seconds
-   * @returns {Number} - The playback duration
+   * Get the duration in seconds.
+   * @returns {Number} - The playback duration.
+   * @public
    */
   get duration(): number {
     return this._el.duration;
   }
 
   /**
-   * Set playback volume
-   * @param {Number} vol - The volume to set
+   * Set playback volume.
+   * @param {Number} vol - The volume to set.
+   * @public
+   * @returns {void}
    */
-  set volume(vol: number) {
+  set volume(vol: number): void {
     this._el.volume = vol;
   }
 
   /**
-   * Get playback volume
-   * @returns {Number} - The volume value of the video element
+   * Get playback volume.
+   * @returns {Number} - The volume value of the video element.
+   * @public
    */
   get volume(): number {
     return this._el.volume;
   }
 
-  //state
   ready() {
   }
 
   /**
-   * Get paused state
-   * @returns {boolean} - The paused value of the video element
+   * Get paused state.
+   * @returns {boolean} - The paused value of the video element.
+   * @public
    */
   get paused(): boolean {
     return this._el.paused;
   }
 
   /**
-   * Get seeking state
-   * @returns {boolean} - The seeking value of the video element
+   * Get seeking state.
+   * @returns {boolean} - The seeking value of the video element.
+   * @public
    */
   get seeking(): boolean {
     return this._el.seeking;
   }
 
+  /**
+   * Get the first seekable range (part) of the video in seconds.
+   * @returns {TimeRanges} - First seekable range (part) of the video in seconds.
+   * @public
+   */
   get seekable(): TimeRanges {
     return this._el.seekable;
   }
 
+  /**
+   * Get the first played range (part) of the video in seconds.
+   * @returns {TimeRanges} - First played range (part) of the video in seconds.
+   * @public
+   */
   get played(): TimeRanges {
     return this._el.played;
   }
 
+  /**
+   * Get the first buffered range (part) of the video in seconds.
+   * @returns {TimeRanges} - First buffered range (part) of the video in seconds.
+   * @public
+   */
   get buffered(): TimeRanges {
     return this._el.buffered;
   }
 
   /**
-   * Set player muted state
-   * @param {boolean} mute - The new mute value
+   * Set player muted state.
+   * @param {boolean} mute - The new mute value.
+   * @public
+   * @returns {void}
    */
-  set muted(mute: boolean) {
+  set muted(mute: boolean): void {
     this._el.muted = mute;
   }
 
   /**
-   * Get player muted state
-   * @returns {boolean} - The muted value of the video element
+   * Get player muted state.
+   * @returns {boolean} - The muted value of the video element.
+   * @public
    */
   get muted(): boolean {
     return this._el.muted;
   }
 
+  /**
+   * Get the default mute value.
+   * @returns {boolean} - The defaultMuted of the video element.
+   * @public
+   */
   get defaultMuted(): boolean {
     return this._el.defaultMuted;
   }
 
-  set poster(poster: string) {
+  /**
+   * Sets an image to be shown while the video is downloading, or until the user hits the play button.
+   * @param {string} poster - The image url to be shown.
+   * @returns {void}
+   * @public
+   */
+  set poster(poster: string): void {
     this._el.poster = poster;
   }
 
+  /**
+   * Gets an image to be shown while the video is downloading, or until the user hits the play button.
+   * @returns {poster} - The image url.
+   * @public
+   */
   get poster(): string {
     return this._el.poster;
   }
 
-  set preload(preload: string) {
+  /**
+   * Specifies if and how the author thinks that the video should be loaded when the page loads.
+   * @param {string} preload - The preload value.
+   * @public
+   * @returns {void}
+   */
+  set preload(preload: string): void {
     this._el.preload = preload;
   }
 
+  /**
+   * Gets the preload value of the video element.
+   * @returns {string} - The preload value.
+   * @public
+   */
   get preload(): string {
     return this._el.preload;
   }
 
-  set autoplay(autoplay: boolean) {
+  /**
+   * Set if the video will automatically start playing as soon as it can do so without stopping.
+   * @param {boolean} autoplay - The autoplay value.
+   * @public
+   * @returns {void}
+   */
+  set autoplay(autoplay: boolean): void {
     this._el.autoplay = autoplay;
   }
 
+  /**
+   * Gets the autoplay value of the video element.
+   * @returns {boolean} - The autoplay value.
+   * @public
+   */
   get autoplay(): boolean {
     return this._el.autoplay;
   }
 
+  /**
+   * Set to specifies that the video will start over again, every time it is finished.
+   * @param {boolean} loop - the loop value.
+   * @public
+   * @returns {void}
+   */
   set loop(loop: boolean) {
     this._el.loop = loop;
   }
 
+  /**
+   * Gets the loop value of the video element.
+   * @returns {boolean} - The loop value.
+   * @public
+   */
   get loop(): boolean {
     return this._el.loop;
   }
 
-  set controls(controls: boolean) {
+  /**
+   * Set to specifies that video controls should be displayed.
+   * @param {boolean} controls - the controls value.
+   * @public
+   * @returns {void}
+   */
+  set controls(controls: boolean): void {
     this._el.controls = controls;
   }
 
+  /**
+   * Gets the controls value of the video element.
+   * @returns {boolean} - The controls value.
+   * @public
+   */
   get controls(): boolean {
     return this._el.controls;
   }
 
-  set playbackRate(playbackRate: number) {
+  /**
+   * Sets the current playback speed of the audio/video.
+   * @param {Number} playbackRate - The playback speed value.
+   * @public
+   * @returns {void}
+   */
+  set playbackRate(playbackRate: number): void {
     this._el.playbackRate = playbackRate;
   }
 
+  /**
+   * Gets the current playback speed of the audio/video.
+   * @returns {Number} - The current playback speed value.
+   * @public
+   */
   get playbackRate(): number {
     return this._el.playbackRate;
   }
 
+  /**
+   * Sets the default playback speed of the audio/video.
+   * @param {Number} defaultPlaybackRate - The default playback speed value.
+   * @public
+   * @returns {void}
+   */
   set defaultPlaybackRate(defaultPlaybackRate: number) {
     this._el.defaultPlaybackRate = defaultPlaybackRate;
   }
 
+  /**
+   * Gets the default playback speed of the audio/video.
+   * @returns {Number} - The default playback speed value.
+   * @public
+   */
   get defaultPlaybackRate(): number {
     return this._el.defaultPlaybackRate;
   }
 
+  /**
+   * The ended property returns whether the playback of the audio/video has ended.
+   * @returns {boolean} - The ended value.
+   * @public
+   */
   get ended(): boolean {
     return this._el.ended;
   }
 
+  /**
+   * The error property returns a MediaError object.
+   * @returns {MediaError} - The MediaError object has a code property containing the error state of the audio/video.
+   * @public
+   */
   get error(): ?MediaError {
     return this._el.error;
   }
 
+  /**
+   * @returns {Number} - The current network state (activity) of the audio/video.
+   * @public
+   */
   get networkState(): number {
     return this._el.networkState;
   }
 
+  /**
+   * Indicates if the audio/video is ready to play or not.
+   * @returns {Number} - The current ready state of the audio/video.
+   * 0 = HAVE_NOTHING - no information whether or not the audio/video is ready.
+   * 1 = HAVE_METADATA - metadata for the audio/video is ready.
+   * 2 = HAVE_CURRENT_DATA - data for the current playback position is available, but not enough data to play next frame/millisecond.
+   * 3 = HAVE_FUTURE_DATA - data for the current and at least the next frame is available.
+   * 4 = HAVE_ENOUGH_DATA - enough data available to start playing.
+   */
   get readyState(): number {
     return this._el.readyState;
   }
 
+  /**
+   * @returns {Number} - The height of the video player, in pixels.
+   * @public
+   */
   get videoHeight(): number {
     return this._el.videoHeight;
   }
 
+  /**
+   * @returns {Number} - The width of the video player, in pixels.
+   * @public
+   */
   get videoWidth(): number {
     return this._el.videoWidth;
   }
 
+  /**
+   * Test video element to check if html5 engine is supported.
+   */
   static TEST_VID: HTMLVideoElement;
 
+  /**
+   * Checks if the html5 engine is supported.
+   * @returns {boolean} - The isSupported result.
+   * @static
+   * @public
+   */
   static isSupported() {
     try {
       Html5.TEST_VID = document.createElement('video');
@@ -297,9 +524,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     } catch (e) {
       return false;
     }
-
     return !!Html5.TEST_VID.canPlayType;
   }
 }
-
-//Engine.register("html5", Html5);
