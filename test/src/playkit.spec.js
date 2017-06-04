@@ -3,7 +3,6 @@ import Player from '../../src/player'
 import PlayerStates from '../../src/state/state-types'
 import PlayerEvents from '../../src/event/events'
 import sourcesConfig from './configs/sources.json'
-import Env from '../../src/utils/env'
 //import pluginsConfig from './configs/plugins.json'
 
 describe('playkit:playkit', function () {
@@ -12,12 +11,11 @@ describe('playkit:playkit', function () {
   it('should play mp4 stream', (done) => {
     let config = sourcesConfig.mp4_none_hls_dash;
     let player = playkit(config);
-    let video = document.getElementsByTagName("video")[0];
-    video.onplaying = function () {
+    player.addEventListener(PlayerEvents.PLAYING, function () {
       player.destroy();
       done();
-    };
-    video.addEventListener('error', function () {
+    });
+    player.addEventListener(PlayerEvents.ERROR, function () {
       player.destroy();
       should.fail();
     });
@@ -30,12 +28,11 @@ describe('playkit:playkit', function () {
     let player = playkit();
     player.should.be.instanceOf(Player);
     player.configure(config);
-    let video = document.getElementsByTagName("video")[0];
-    video.onplaying = function () {
+    player.addEventListener(PlayerEvents.PLAYING, function () {
       player.destroy();
       done();
-    };
-    video.addEventListener('error', function () {
+    });
+    player.addEventListener(PlayerEvents.ERROR, function () {
       player.destroy();
       should.fail();
     });
@@ -46,13 +43,20 @@ describe('playkit:playkit', function () {
   it('should switch player states during playback', (done) => {
     let config = sourcesConfig.mp4_none_hls_dash;
     let player = playkit(config);
-    let video = document.getElementsByTagName("video")[0];
 
+    /**
+     * onLoadStart handler
+     * @returns {void}
+     */
     function onLoadStart() {
       player.removeEventListener(PlayerEvents.LOAD_START, onLoadStart);
       player._stateManager.currentState.type.should.equal(PlayerStates.LOADING);
     }
 
+    /**
+     * onLoadedMetadata handler
+     * @returns {void}
+     */
     function onLoadedMetadata() {
       player.removeEventListener(PlayerEvents.LOADED_METADATA, onLoadedMetadata);
       if (player.config.autoPlay) {
@@ -62,14 +66,22 @@ describe('playkit:playkit', function () {
       }
     }
 
+    /**
+     * onPlaying handler
+     * @returns {void}
+     */
     function onPlaying() {
       player.removeEventListener(PlayerEvents.PLAYING, onPlaying);
       player._stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
       setTimeout(() => {
         player.pause();
-      }, 1000);
+      }, 100);
     }
 
+    /**
+     * onPause handler
+     * @returns {void}
+     */
     function onPause() {
       player.removeEventListener(PlayerEvents.PAUSE, onPause);
       player._stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
@@ -77,21 +89,22 @@ describe('playkit:playkit', function () {
       player.play();
     }
 
+    /**
+     * onEnded handler
+     * @returns {void}
+     */
     function onEnded() {
       player.removeEventListener(PlayerEvents.ENDED, onEnded);
       player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
       player.destroy();
       done();
     }
-
     player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
-
     player.addEventListener(PlayerEvents.LOAD_START, onLoadStart);
     player.addEventListener(PlayerEvents.LOADED_METADATA, onLoadedMetadata);
     player.addEventListener(PlayerEvents.PLAYING, onPlaying);
     player.addEventListener(PlayerEvents.PAUSE, onPause);
     player.addEventListener(PlayerEvents.ENDED, onEnded);
-
     player.load();
     player.play();
   });
