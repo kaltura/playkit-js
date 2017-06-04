@@ -7,12 +7,17 @@ describe('NativeAdapter:isSupported', () => {
 });
 
 describe('NativeAdapter:canPlayType', () => {
-  it('should return true for video/mp4', () => {
-    NativeAdapter.canPlayType('video/mp4').should.be.true;
+  let video;
+  before(function () {
+    video = document.createElement('video');
   });
 
-  it('should return true for video/ogg', () => {
-    NativeAdapter.canPlayType('video/ogg').should.be.true;
+  it('should return video/mp4 support', () => {
+    NativeAdapter.canPlayType('video/mp4').should.equal(!!video.canPlayType('video/mp4'));
+  });
+
+  it('should return video/ogg support', () => {
+    NativeAdapter.canPlayType('video/ogg').should.equal(!!video.canPlayType('video/ogg'));
   });
 
   it('should return false for unsupported mime type', () => {

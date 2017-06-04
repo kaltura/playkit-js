@@ -3,9 +3,9 @@
 const webpack = require("webpack");
 const path = require("path");
 const libraryName = "Playkit";
-const PROD = (process.env.NODE_ENV === 'production')
+const PROD = (process.env.NODE_ENV === 'production');
 
-let plugins = PROD ? [new webpack.optimize.UglifyJsPlugin({sourceMap: true})]: [];
+let plugins = PROD ? [new webpack.optimize.UglifyJsPlugin({sourceMap: true})] : [];
 
 module.exports = {
   context: __dirname + "/src",
@@ -23,24 +23,34 @@ module.exports = {
   plugins: plugins,
   module: {
     rules: [{
-        test: /\.js$/,
-        use: [{
-          loader: "babel-loader",
-          // options: { presets: ["es2015"] }
-        }],
-        exclude: [/node_modules/]
-      },
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        enforce: 'pre',
-        use: [{loader: 'eslint-loader', options: {rules: {semi: 0}}}],
-      }
-    ]},
+      test: /\.js$/,
+      use: [{
+        loader: "babel-loader"
+      }],
+      exclude: [
+        /node_modules/
+      ]
+    }, {
+      test: /\.js$/,
+      exclude: /node_modules/,
+      enforce: 'pre',
+      use: [{
+        loader: 'eslint-loader',
+        options: {
+          rules: {
+            semi: 0
+          }
+        }
+      }],
+    }]
+  },
   devServer: {
     contentBase: __dirname + "/src"
   },
   resolve: {
-    modules: [path.resolve(__dirname, "src"), "node_modules"]
+    modules: [
+      path.resolve(__dirname, "src"),
+      "node_modules"
+    ]
   }
 };
