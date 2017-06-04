@@ -116,7 +116,7 @@ describe('PluginManager.plugins', () => {
   });
 
   it('shouldn\'t load() the plugin', () => {
-    sandbox.stub(ColorsPlugin, "isValid", function () {
+    sandbox.stub(ColorsPlugin, "isValid").callsFake(function () {
       return false;
     });
     pluginManager.load("colors", {}, {}).should.be.false;
