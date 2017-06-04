@@ -69,7 +69,6 @@ module.exports = function (config) {
 
   if (process.env.TRAVIS) {
     karmaConf.customLaunchers = customLaunchers;
-    // The Internet Explorer is working only by Windows environments, so it is not supported by Travis (because it uses Linux)
     karmaConf.browsers = [
       'Chrome_travis_ci'
     ];
