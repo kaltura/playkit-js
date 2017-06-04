@@ -14,7 +14,7 @@ let fakePlayer = {
 describe("StateManager", () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    sandbox.stub(StateManager.prototype, '_attachListeners', function () {
+    sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function () {
     });
     stateManager = new StateManager(fakePlayer);
   });
@@ -58,7 +58,7 @@ describe("StateManager", () => {
   });
 
   it("should dispatch initial state event", (done) => {
-    sandbox.stub(stateManager._player, 'dispatchEvent', function (event) {
+    sandbox.stub(stateManager._player, 'dispatchEvent').callsFake(function (event) {
       event.type.should.equal(PlayerEvents.PLAYER_STATE_CHANGED);
       (event.payload.oldState === null).should.be.true;
       event.payload.newState.should.be.an.instanceof(State);
@@ -69,7 +69,7 @@ describe("StateManager", () => {
   });
 
   it("should dispatch new state event", (done) => {
-    sandbox.stub(stateManager._player, 'dispatchEvent', function (event) {
+    sandbox.stub(stateManager._player, 'dispatchEvent').callsFake(function (event) {
       event.type.should.equal(PlayerEvents.PLAYER_STATE_CHANGED);
       event.payload.oldState.should.be.an.instanceof(State);
       event.payload.oldState.type.should.equal(PlayerStates.IDLE);
@@ -85,7 +85,7 @@ describe("StateManager", () => {
 describe("StateManager.Transitions:IDLE", () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    sandbox.stub(StateManager.prototype, '_attachListeners', function () {
+    sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function () {
     });
     stateManager = new StateManager(fakePlayer);
     stateManager._updateState(PlayerStates.IDLE);
@@ -114,7 +114,7 @@ describe("StateManager.Transitions:IDLE", () => {
 describe("StateManager.Transitions:LOADING", () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    sandbox.stub(StateManager.prototype, '_attachListeners', function () {
+    sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function () {
     });
     stateManager = new StateManager(fakePlayer);
     stateManager._updateState(PlayerStates.LOADING);
@@ -150,7 +150,7 @@ describe("StateManager.Transitions:LOADING", () => {
 describe("StateManager.Transitions:PAUSED", () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    sandbox.stub(StateManager.prototype, '_attachListeners', function () {
+    sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function () {
     });
     stateManager = new StateManager(fakePlayer);
     stateManager._updateState(PlayerStates.PAUSED);
@@ -184,7 +184,7 @@ describe("StateManager.Transitions:PAUSED", () => {
 describe("StateManager.Transitions:BUFFERING", () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    sandbox.stub(StateManager.prototype, '_attachListeners', function () {
+    sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function () {
     });
     stateManager = new StateManager(fakePlayer);
     stateManager._updateState(PlayerStates.BUFFERING);
@@ -213,7 +213,7 @@ describe("StateManager.Transitions:BUFFERING", () => {
 describe("StateManager.Transitions:PLAYING", () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    sandbox.stub(StateManager.prototype, '_attachListeners', function () {
+    sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function () {
     });
     stateManager = new StateManager(fakePlayer);
     stateManager._updateState(PlayerStates.PLAYING);
