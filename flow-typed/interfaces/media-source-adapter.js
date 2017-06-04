@@ -4,6 +4,7 @@ import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
 
 declare interface IMediaSourceAdapter {
+  +src: string;
   load(): Promise<Object>;
   destroy(): void;
   selectVideoTrack(videoTrack: VideoTrack): boolean;
@@ -12,5 +13,5 @@ declare interface IMediaSourceAdapter {
   static name: string;
   static isSupported(): boolean;
   static canPlayType(mimeType: string): boolean;
-  static createAdapter(videoElement: HTMLVideoElement, source: Object, config: Object): IMediaSourceAdapter;
+  static createAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): IMediaSourceAdapter;
 }

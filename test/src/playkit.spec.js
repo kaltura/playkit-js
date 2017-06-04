@@ -1,25 +1,45 @@
 import {playkit} from '../../src/playkit'
+import Player from '../../src/player'
 import PlayerStates from '../../src/state/state-types'
+import PlayerEvents from '../../src/event/events'
 import sourcesConfig from './configs/sources.json'
+import {removeVideoElementsFromTestPage} from './utils/test-utils'
 
 describe('playkit:playkit', function () {
 
   this.timeout(10000);
 
-  let player;
-  let config = sourcesConfig.mp4_none_hls_dash;
-
-  beforeEach(function () {
-    player = playkit(config);
-  });
-
-  afterEach(function () {
-    player.destroy();
+  after(() => {
+    removeVideoElementsFromTestPage();
   });
 
   it('should play mp4 stream', (done) => {
-    player._engine.getVideoElement().addEventListener('playing', () => {
+    let config = sourcesConfig.mp4_none_hls_dash;
+    let player = playkit(config);
+    player.addEventListener(PlayerEvents.PLAYING, function () {
+      player.destroy();
       done();
+    });
+    player.addEventListener(PlayerEvents.ERROR, function () {
+      player.destroy();
+      should.fail();
+    });
+    player.load();
+    player.play();
+  });
+
+  it('should create player without sources and set the sources later', (done) => {
+    let config = sourcesConfig.mp4_none_hls_dash;
+    let player = playkit();
+    player.should.be.instanceOf(Player);
+    player.configure(config);
+    player.addEventListener(PlayerEvents.PLAYING, function () {
+      player.destroy();
+      done();
+    });
+    player.addEventListener(PlayerEvents.ERROR, function () {
+      player.destroy();
+      should.fail();
     });
     player.load().then(() => {
       player.play();
@@ -29,48 +49,70 @@ describe('playkit:playkit', function () {
   it('should switch player states during playback', (done) => {
     let config = sourcesConfig.mp4_none_hls_dash;
     let player = playkit(config);
-    let video = player._engine.getVideoElement();
 
-    player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
-
-    video.onloadstart = function () {
+    /**
+     * onLoadStart handler
+     * @returns {void}
+     */
+    function onLoadStart() {
+      player.removeEventListener(PlayerEvents.LOAD_START, onLoadStart);
       player._stateManager.currentState.type.should.equal(PlayerStates.LOADING);
-    };
+    }
 
-    video.onloadedmetadata = function () {
+    /**
+     * onLoadedMetadata handler
+     * @returns {void}
+     */
+    function onLoadedMetadata() {
+      player.removeEventListener(PlayerEvents.LOADED_METADATA, onLoadedMetadata);
       if (player.config.autoPlay) {
         player._stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
       } else {
         player._stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
       }
-    };
+    }
 
-    video.onplaying = function () {
+    /**
+     * onPlaying handler
+     * @returns {void}
+     */
+    function onPlaying() {
+      player.removeEventListener(PlayerEvents.PLAYING, onPlaying);
       player._stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
-    };
-
-    video.onpause = function () {
-      player._stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
-    };
-
-    video.onended = function () {
-      player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
-      player._stateManager.history.should.have.lengthOf(5);
-      player._stateManager.history[0].type.should.equal(PlayerStates.IDLE);
-      player._stateManager.history[1].type.should.equal(PlayerStates.LOADING);
-      player._stateManager.history[2].type.should.equal(PlayerStates.PAUSED);
-      player._stateManager.history[3].type.should.equal(PlayerStates.PLAYING);
-      player._stateManager.history[4].type.should.equal(PlayerStates.PAUSED);
-      player.destroy();
-      done();
-    };
-
-    setTimeout(() => {
-      player.play();
       setTimeout(() => {
         player.pause();
-        player.currentTime = player.duration;
-      }, 500);
-    }, 1000);
+      }, 100);
+    }
+
+    /**
+     * onPause handler
+     * @returns {void}
+     */
+    function onPause() {
+      player.removeEventListener(PlayerEvents.PAUSE, onPause);
+      player._stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
+      player.currentTime = player.duration - 1;
+      player.play();
+    }
+
+    /**
+     * onEnded handler
+     * @returns {void}
+     */
+    function onEnded() {
+      player.removeEventListener(PlayerEvents.ENDED, onEnded);
+      player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
+      player.destroy();
+      done();
+    }
+
+    player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
+    player.addEventListener(PlayerEvents.LOAD_START, onLoadStart);
+    player.addEventListener(PlayerEvents.LOADED_METADATA, onLoadedMetadata);
+    player.addEventListener(PlayerEvents.PLAYING, onPlaying);
+    player.addEventListener(PlayerEvents.PAUSE, onPause);
+    player.addEventListener(PlayerEvents.ENDED, onEnded);
+    player.load();
+    player.play();
   });
 });

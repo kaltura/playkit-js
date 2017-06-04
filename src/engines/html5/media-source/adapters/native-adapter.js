@@ -41,17 +41,17 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    */
   _config: Object;
   /**
-   * The dom video element
-   * @member {HTMLVideoElement} _videoElement
-   * @private
-   */
-  _videoElement: HTMLVideoElement;
-  /**
    * The source url
    * @member {string} _source
    * @private
    */
   _source: string;
+  /**
+   * The dom video element
+   * @member {HTMLVideoElement} _videoElement
+   * @private
+   */
+  _videoElement: HTMLVideoElement;
   /**
    * The event manager of the class.
    * @member {EventManager} - _eventManager
@@ -100,7 +100,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter
    * @static
    */
-  static createAdapter(videoElement: HTMLVideoElement, source: Object, config: Object): IMediaSourceAdapter {
+  static createAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): IMediaSourceAdapter {
     NativeAdapter._logger.debug('Creating adapter');
     return new this(videoElement, source, config);
   }
@@ -108,14 +108,16 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   /**
    * @constructor
    * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
-   * @param {string} source - The source URL
+   * @param {Source} source - The source object
    * @param {Object} config - The media source adapter configuration
    */
-  constructor(videoElement: HTMLVideoElement, source: Object, config: Object) {
+  constructor(videoElement: HTMLVideoElement, source: ?Source, config: Object) {
     this._config = config;
     this._videoElement = videoElement;
-    this._source = source.url;
     this._eventManager = new EventManager();
+    if (source != null) {
+      this._source = source.url;
+    }
   }
 
   /**
@@ -298,6 +300,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
       }
     }
   }
+
   _disableAudioTracks(): void {
     let audioTracks = this._videoElement.audioTracks;
     if (audioTracks) {
@@ -306,6 +309,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
       }
     }
   }
+
   _disableTextTracks(): void {
     let textTracks = this._videoElement.textTracks;
     if (textTracks) {
@@ -313,5 +317,9 @@ export default class NativeAdapter implements IMediaSourceAdapter {
         textTracks[i].mode = 'disabled';
       }
     }
+  }
+
+  get src(): string {
+    return this._videoElement.src;
   }
 }

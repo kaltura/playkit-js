@@ -4,21 +4,26 @@ import sourcesConfig from './configs/sources.json'
 import VideoTrack from '../../src/track/video-track'
 import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
+import {removeVideoElementsFromTestPage} from './utils/test-utils'
 
-
-//TODO: Player tests
 describe("play", () => {
   let config, player;
-  beforeEach(function () {
+
+  beforeEach(() => {
     config = sourcesConfig.mp4_none_hls_dash;
     player = new Player(config);
   });
-  afterEach(function () {
+
+  afterEach(() => {
     player.destroy();
   });
 
+  after(() => {
+    removeVideoElementsFromTestPage();
+  });
+
   it("should success before load", (done) => {
-    player._engine.getVideoElement().addEventListener('playing', () => {
+    player.addEventListener('playing', () => {
       done();
     });
     player.play();
@@ -28,14 +33,18 @@ describe("play", () => {
     player._engine.getVideoElement().addEventListener('playing', () => {
       done();
     });
-    player.load()
-      .then(() => {
-        player.play();
-      });
+    player.load().then(() => {
+      player.play();
+    });
   });
 });
 
 describe("load", () => {
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+  });
+
   it("should success", (done) => {
     let config = sourcesConfig.mp4_none_hls_dash;
     let player = new Player(config);
@@ -80,7 +89,21 @@ describe("load", () => {
 describe('getTracks dummy', function () {
   let config = sourcesConfig.mp4_none_hls_dash;
   let player = new Player(config);
-  player._tracks = [new VideoTrack(), new AudioTrack(), new AudioTrack(), new TextTrack(), new TextTrack(), new TextTrack()];
+
+  before(() => {
+    player._tracks = [
+      new VideoTrack(),
+      new AudioTrack(),
+      new AudioTrack(),
+      new TextTrack(),
+      new TextTrack(),
+      new TextTrack()
+    ];
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+  });
 
   it('should return all tracks for no type', () => {
     player.getTracks().length.should.be.equal(6);
@@ -104,14 +127,21 @@ describe('getTracks dummy', function () {
 });
 
 describe('getTracks real', function () {
-  let config, player, video;
-  let track1 = document.createElement("track");
-  let track2 = document.createElement("track");
-  track1.kind = 'subtitles';
-  track1.label = 'English';
-  track1.default = true;
-  track2.kind = 'captions';
-  track2.srclang = 'fr';
+  let config;
+  let player;
+  let video;
+  let track1;
+  let track2;
+
+  before(() => {
+    track1 = document.createElement("track");
+    track2 = document.createElement("track");
+    track1.kind = 'subtitles';
+    track1.label = 'English';
+    track1.default = true;
+    track2.kind = 'captions';
+    track2.srclang = 'fr';
+  });
 
   beforeEach(() => {
     config = sourcesConfig.mp4_none_hls_dash;
@@ -123,6 +153,10 @@ describe('getTracks real', function () {
 
   afterEach(() => {
     player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
   });
 
   it('should return all tracks for no type', (done) => {
@@ -188,6 +222,10 @@ describe('selectTrack - audio', function () {
 
   afterEach(() => {
     player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
   });
 
   it('should select a new audio track', (done) => {
@@ -283,6 +321,10 @@ describe('selectTrack - text', function () {
 
   afterEach(() => {
     player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
   });
 
   it('should select a new subtitles track', (done) => {
@@ -387,6 +429,10 @@ describe('selectTrack - text', function () {
 });
 
 describe('Track enum', function () {
+  after(() => {
+    removeVideoElementsFromTestPage();
+  });
+
   it('should return the track enum', function () {
     let config = sourcesConfig.mp4_none_hls_dash;
     let player = new Player(config);
