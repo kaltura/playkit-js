@@ -183,7 +183,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    */
   get src(): string {
-    return this._mediaSourceAdapter.src;
+    if (this._mediaSourceAdapter) {
+      return this._mediaSourceAdapter.src;
+    }
+    return "";
   }
 
   //playback interface
