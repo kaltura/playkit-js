@@ -1,14 +1,14 @@
 const isWindows = /^win/.test(process.platform);
+const isMacOS = /^darwin/.test(process.platform);
+// Create custom launcher in case running with Travis
+const customLaunchers = {
+  Chrome_travis_ci: {
+    base: 'Chrome',
+    flags: ['--no-sandbox']
+  }
+};
 
 module.exports = function (config) {
-  // Create custom launcher in case running with Travis
-  const customLaunchers = {
-    Chrome_travis_ci: {
-      base: 'Chrome',
-      flags: ['--no-sandbox']
-    }
-  };
-
   let karmaConf = {
     logLevel: config.LOG_INFO,
     // Run in Chrome
@@ -19,18 +19,31 @@ module.exports = function (config) {
     // Just run once by default
     singleRun: true,
     // Use the mocha test framework
-    frameworks: ['mocha'],
+    frameworks: [
+      'mocha'
+    ],
     files: [
       'test/setup/karma.js'
     ],
-    exclude: ['src/declarations/**/*.js'],
+    exclude: [
+      'src/declarations/**/*.js'
+    ],
     preprocessors: {
       // Preprocess with webpack and our sourcemap loader
-      'src/**/*.js': ['webpack', 'sourcemap'],
-      'test/setup/karma.js': ['webpack', 'sourcemap']
+      'src/**/*.js': [
+        'webpack',
+        'sourcemap'
+      ],
+      'test/setup/karma.js': [
+        'webpack',
+        'sourcemap'
+      ]
     },
     // Report results in this format
-    reporters: ['progress', 'coverage'],
+    reporters: [
+      'progress',
+      'coverage'
+    ],
     // Kind of a copy of your webpack config
     webpack: {
       devtool: 'inline-source-map',
@@ -40,7 +53,9 @@ module.exports = function (config) {
           use: [{
             loader: "babel-loader"
           }],
-          exclude: [/node_modules/]
+          exclude: [
+            /node_modules/
+          ]
         }]
       }
     },
@@ -58,11 +73,13 @@ module.exports = function (config) {
   if (process.env.TRAVIS) {
     karmaConf.customLaunchers = customLaunchers;
     // The Internet Explorer is working only by Windows environments, so it is not supported by Travis (because it uses Linux)
-    karmaConf.browsers = ['Chrome_travis_ci'];
+    karmaConf.browsers = [
+      'Chrome_travis_ci'
+    ];
   } else {
     if (isWindows) {
       karmaConf.browsers.push('IE');
-    } else {
+    } else if (isMacOS) {
       karmaConf.browsers.push('Safari');
     }
   }

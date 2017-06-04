@@ -1,5 +1,4 @@
 import NativeAdapter from '../../../../../../src/engines/html5/media-source/adapters/native-adapter'
-import Env from '../../../../../../src/utils/env'
 
 describe('NativeAdapter:isSupported', () => {
   it('should be supported', () => {
