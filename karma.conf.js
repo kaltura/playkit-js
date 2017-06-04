@@ -25,9 +25,6 @@ module.exports = function (config) {
     files: [
       'test/setup/karma.js'
     ],
-    exclude: [
-      'src/declarations/**/*.js'
-    ],
     preprocessors: {
       // Preprocess with webpack and our sourcemap loader
       'src/**/*.js': [
