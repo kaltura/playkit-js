@@ -2087,13 +2087,13 @@ module.exports = {
 		"prebuild": "npm run clean",
 		"build": "webpack",
 		"dev": "webpack --progress --colors --watch",
-		"test": "NODE_ENV=test ./node_modules/.bin/karma start --single-run",
-		"test:watch": "NODE_ENV=test ./node_modules/.bin/karma start --auto-watch",
+		"test": "NODE_ENV=test karma start",
+		"test:watch": "NODE_ENV=test karma start --auto-watch",
 		"start": "webpack-dev-server",
 		"release": "NODE_ENV=production npm run build -- -p && git add --all dist && git commit -m'Update dist' && standard-version",
 		"eslint": "eslint . --color",
 		"flow": "flow check",
-		"prepush": "npm run eslint & npm run test & npm run flow"
+		"prepush": "npm run eslint && npm run test && npm run flow"
 	},
 	"devDependencies": {
 		"babel-cli": "^6.18.0",
@@ -2119,7 +2119,10 @@ module.exports = {
 		"karma-chrome-launcher": "^2.0.0",
 		"karma-cli": "^1.0.1",
 		"karma-coverage": "^1.1.1",
+		"karma-firefox-launcher": "^1.0.1",
+		"karma-ie-launcher": "^1.0.0",
 		"karma-mocha": "^1.3.0",
+		"karma-safari-launcher": "^1.0.0",
 		"karma-sourcemap-loader": "^0.3.7",
 		"karma-webpack": "^2.0.2",
 		"mocha": "^3.2.0",
@@ -2364,7 +2367,7 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: '_loadMediaSourceAdapter',
     value: function _loadMediaSourceAdapter(config) {
-      this._mediaSourceAdapter = _mediaSourceProvider2.default.getMediaSourceAdapter(this, this._source, config);
+      this._mediaSourceAdapter = _mediaSourceProvider2.default.getMediaSourceAdapter(this.getVideoElement(), this._source, config);
     }
 
     /**
