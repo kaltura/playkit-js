@@ -618,11 +618,41 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var logger = _logger2.default.getLogger('Player');
-
+/**
+ * The HTML5 player class.
+ * @classdesc
+ */
 var Player = function (_FakeEventTarget) {
   _inherits(Player, _FakeEventTarget);
 
+  /**
+   * @param {Object} config - The configuration for the player instance.
+   * @constructor
+   */
+
+  /**
+   * The state manager of the player.
+   * @type {StateManager}
+   * @private
+   */
+
+  /**
+   * The playback engine.
+   * @type {IEngine}
+   * @private
+   */
+
+  /**
+   * The event manager of the player.
+   * @type {EventManager}
+   * @private
+   */
+
+  /**
+   * The player class logger.
+   * @type {any}
+   * @private
+   */
   function Player(config) {
     _classCallCheck(this, Player);
 
@@ -630,6 +660,7 @@ var Player = function (_FakeEventTarget) {
 
     _this._tracks = [];
 
+    _this._logger = _logger2.default.getLogger('Player');
     _this._stateManager = new _stateManager2.default(_this);
     _this._pluginManager = new _pluginManager2.default();
     _this._eventManager = new _eventManager2.default();
@@ -641,29 +672,83 @@ var Player = function (_FakeEventTarget) {
         });
       }
     }
-    _this._config = config || Player.defaultConfig_();
-    _this.loadPlugins(_this._config);
-    _this.selectEngine(_this._config);
-    _this.attachMedia();
-    logger.info('player is ready!');
+    _this.configure(config);
     return _this;
   }
 
+  /**
+   * Configures the player according to given configuration.
+   * @param {Object} config - The configuration for the player instance.
+   * @returns {void}
+   */
+
+  /**
+   * The event handlers of the playback engine.
+   * @type {Map<string, ListenerType>}
+   * @private
+   */
+
+  /**
+   * The runtime configuration of the player.
+   * @type {Object}
+   * @private
+   */
+
+  /**
+   * The plugin manager of the player.
+   * @type {PluginManager}
+   * @private
+   */
+
+
   _createClass(Player, [{
+    key: 'configure',
+    value: function configure(config) {
+      if (this._config) {
+        this._config = (0, _util.merge)(this._config, config);
+      } else {
+        this._config = config || Player._defaultConfig();
+      }
+      this._loadPlugins(this._config);
+      this._selectEngine(this._config);
+      this._attachMedia();
+    }
+
+    /**
+     * Destroys the player.
+     * @returns {void}
+     * @public
+     */
+
+  }, {
     key: 'destroy',
     value: function destroy() {
       this._engine.destroy();
       this._eventManager.destroy();
       this._pluginManager.destroy();
       this._stateManager.destroy();
-      // this.engine_ = null;
-      // this.eventManager_ = null;
-      this._config = null;
+      this._eventManager.destroy();
+      this._config = {};
       this._tracks = [];
     }
+
+    /**
+     * @returns {Object} - The default configuration of the player.
+     * @private
+     * @static
+     */
+
   }, {
-    key: 'loadPlugins',
-    value: function loadPlugins(config) {
+    key: '_loadPlugins',
+
+
+    /**
+     *
+     * @param {Object} config - The configuration of the player instance.
+     * @private
+     * @returns {void}
+     */
+    value: function _loadPlugins(config) {
       var plugins = config.plugins;
       for (var name in plugins) {
         if (plugins.hasOwnProperty(name)) {
@@ -671,36 +756,61 @@ var Player = function (_FakeEventTarget) {
         }
       }
     }
+
+    /**
+     * Select the engine to create based on the given configured sources.
+     * @param {Object} config - The configuration of the player instance.
+     * @private
+     * @returns {void}
+     */
+
   }, {
-    key: 'selectEngine',
-    value: function selectEngine(config) {
+    key: '_selectEngine',
+    value: function _selectEngine(config) {
       if (config && config.sources) {
         var sources = config.sources;
         for (var i = 0; i < sources.length; i++) {
           if (_html2.default.canPlayType(sources[i].mimetype)) {
-            this.loadEngine(sources[i], config);
+            this._loadEngine(sources[i], config);
             break;
           }
         }
       }
     }
+
+    /**
+     * Loads the selected engine.
+     * @param {Source} source - The selected source object.
+     * @param {Object} config - The configuration of the player instance.
+     * @private
+     * @returns {void}
+     */
+
   }, {
-    key: 'loadEngine',
-    value: function loadEngine(source, config) {
+    key: '_loadEngine',
+    value: function _loadEngine(source, config) {
       this._engine = new _html2.default(source, config);
       if (config.preload === "auto") {
         this.load();
       }
     }
+
+    /**
+     * Listen to all HTML5 defined events and trigger them on the player
+     * @private
+     * @returns {void}
+     */
+
   }, {
-    key: 'attachMedia',
-    value: function attachMedia() {
-      // Listen to all HTML5-defined events and trigger them on the player
-      for (var playerEvent in _events2.default) {
-        if (_events2.default.hasOwnProperty(playerEvent)) {
-          var handler = this._engineEventHandlers.get('onEngine' + (0, _stringUtil.capitlize)(_events2.default[playerEvent]) + '_');
-          if (handler) {
-            this._eventManager.listen(this._engine, _events2.default[playerEvent], handler);
+    key: '_attachMedia',
+    value: function _attachMedia() {
+      if (this._engine) {
+        for (var playerEvent in _events2.default) {
+          if (_events2.default.hasOwnProperty(playerEvent)) {
+            var handler = this._engineEventHandlers.get('onEngine' + (0, _stringUtil.capitlize)(_events2.default[playerEvent]) + '_');
+            if (handler) {
+              this._eventManager.listen(this._engine, _events2.default[playerEvent], handler);
+            }
           }
         }
       }
@@ -812,8 +922,9 @@ var Player = function (_FakeEventTarget) {
     }
 
     /**
-     * Get the player config
-     * @returns {Object} - The player configuration
+     * Get the player config.
+     * @returns {Object} - The player configuration.
+     * @public
      */
 
   }, {
@@ -822,34 +933,42 @@ var Player = function (_FakeEventTarget) {
 
     //  <editor-fold desc="Playback Interface">
     /**
-     * Start/resume playback
+     * Start/resume playback.
      * @returns {void}
+     * @public
      */
     value: function play() {
       var _this2 = this;
 
-      if (!this._engine.src) {
-        this.load().then(function () {
-          _this2._engine.play();
-        });
+      if (this._engine) {
+        if (this._engine.src) {
+          this._engine.play();
+        } else {
+          this.load().then(function () {
+            _this2._engine.play();
+          });
+        }
       }
-      this._engine.play();
     }
 
     /**
-     * Pause playback
+     * Pause playback.
      * @returns {void}
+     * @public
      */
 
   }, {
     key: 'pause',
     value: function pause() {
-      return this._engine.pause();
+      if (this._engine) {
+        return this._engine.pause();
+      }
     }
 
     /**
-     * Load media
-     * @returns {Promise<*>} - The load promise
+     * Load media.
+     * @public
+     * @returns {Promise<*>} - The load promise.
      */
 
   }, {
@@ -857,14 +976,19 @@ var Player = function (_FakeEventTarget) {
     value: function load() {
       var _this3 = this;
 
-      return this._engine.load().then(function (data) {
-        _this3._tracks = data.tracks;
-      });
+      if (this._engine) {
+        return this._engine.load().then(function (data) {
+          _this3._tracks = data.tracks;
+        });
+      } else {
+        return Promise.resolve();
+      }
     }
 
     /**
-     * Set the current time in seconds
-     * @param {Number} to - The number to set in seconds
+     * Set the current time in seconds.
+     * @param {Number} to - The number to set in seconds.
+     * @public
      */
 
   }, {
@@ -877,8 +1001,9 @@ var Player = function (_FakeEventTarget) {
     value: function ready() {}
 
     /**
-     * Get paused state
-     * @returns {boolean} - Whether the video is paused or not
+     * Get paused state.
+     * @returns {?boolean} - Whether the video is paused or not.
+     * @public
      */
 
   }, {
@@ -886,8 +1011,10 @@ var Player = function (_FakeEventTarget) {
     value: function buffered() {}
 
     /**
-     * Set player muted state
-     * @param {boolean} mute - The mute value
+     * Set player muted state.
+     * @param {boolean} mute - The mute value.
+     * @returns {void}
+     * @public
      */
 
   }, {
@@ -898,112 +1025,140 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'currentTime',
     set: function set(to) {
-      if ((0, _util.isNumber)(to)) {
-        var boundedTo = to;
-        if (to < 0) {
-          boundedTo = 0;
+      if (this._engine) {
+        if ((0, _util.isNumber)(to)) {
+          var boundedTo = to;
+          if (to < 0) {
+            boundedTo = 0;
+          }
+          if (boundedTo > this._engine.duration) {
+            boundedTo = this._engine.duration;
+          }
+          this._engine.currentTime = boundedTo;
         }
-        if (boundedTo > this._engine.duration) {
-          boundedTo = this._engine.duration;
-        }
-        this._engine.currentTime = boundedTo;
       }
     }
 
     /**
-     * Get the current time in seconds
-     * @returns {Number} - The playback current time
+     * Get the current time in seconds.
+     * @returns {?Number} - The playback current time.
+     * @public
      */
     ,
     get: function get() {
-      return this._engine.currentTime;
+      if (this._engine) {
+        return this._engine.currentTime;
+      }
     }
 
     /**
-     * /**
-     * Get the duration in seconds
-     * @returns {Number} - The playback duration
+     * Get the duration in seconds.
+     * @returns {?Number} - The playback duration.
+     * @public
      */
 
   }, {
     key: 'duration',
     get: function get() {
-      return this._engine.duration;
+      if (this._engine) {
+        return this._engine.duration;
+      }
     }
 
     /**
-     * Set playback volume
-     * @param {Number} vol - The volume to set
+     * Set playback volume.
+     * @param {Number} vol - The volume to set.
+     * @returns {void}
+     * @public
      */
 
   }, {
     key: 'volume',
     set: function set(vol) {
-      if ((0, _util.isFloat)(vol)) {
-        var boundedVol = vol;
-        if (boundedVol < 0) {
-          boundedVol = 0;
+      if (this._engine) {
+        if ((0, _util.isFloat)(vol)) {
+          var boundedVol = vol;
+          if (boundedVol < 0) {
+            boundedVol = 0;
+          }
+          if (boundedVol > 1) {
+            boundedVol = 1;
+          }
+          this._engine.volume = boundedVol;
         }
-        if (boundedVol > 1) {
-          boundedVol = 1;
-        }
-        this._engine.volume = boundedVol;
       }
     }
 
     /**
-     * Get playback volume
-     * @returns {Number} - The playback volume
+     * Get playback volume.
+     * @returns {?Number} - The playback volume.
+     * @public
      */
     ,
     get: function get() {
-      return this._engine.volume;
+      if (this._engine) {
+        return this._engine.volume;
+      }
     }
   }, {
     key: 'paused',
     get: function get() {
-      return this._engine.paused;
+      if (this._engine) {
+        return this._engine.paused;
+      }
     }
 
     /**
-     * Get seeking state
-     * @returns {boolean} - Whether the video is seeking or not
+     * Get seeking state.
+     * @returns {?boolean} - Whether the video is seeking or not.
+     * @public
      */
 
   }, {
     key: 'seeking',
     get: function get() {
-      return this._engine.seeking;
+      if (this._engine) {
+        return this._engine.seeking;
+      }
     }
   }, {
     key: 'muted',
     set: function set(mute) {
-      this._engine.muted = mute;
+      if (this._engine) {
+        this._engine.muted = mute;
+      }
     }
 
     /**
-     * Get player muted state
-     * @returns {boolean} - Whether the video is muted or not
+     * Get player muted state.
+     * @returns {?boolean} - Whether the video is muted or not.
+     * @public
      */
     ,
     get: function get() {
-      return this._engine.muted;
+      if (this._engine) {
+        return this._engine.muted;
+      }
     }
 
     /**
-     * Get the player source
-     * @returns {string} - The current source of the player
+     * Get the player source.
+     * @returns {?string} - The current source of the player.
+     * @public
      */
 
   }, {
     key: 'src',
     get: function get() {
-      return this._engine.src;
+      if (this._engine) {
+        return this._engine.src;
+      }
     }
 
     /**
-     * Get the player events
-     * @returns {Object} - The events of the player
+     * Get the player events.
+     * @returns {Object} - The events of the player.
+     * @public
      */
 
   }, {
@@ -1013,8 +1168,9 @@ var Player = function (_FakeEventTarget) {
     }
 
     /**
-     * Get the player states
-     * @returns {Object} - The states of the player
+     * Get the player states.
+     * @returns {Object} - The states of the player.
+     * @public
      */
 
   }, {
@@ -1024,8 +1180,9 @@ var Player = function (_FakeEventTarget) {
     }
 
     /**
-     * Get the player tracks types
-     * @returns {Object} - The tracks types of the player
+     * Get the player tracks types.
+     * @returns {Object} - The tracks types of the player.
+     * @public
      */
 
   }, {
@@ -1037,8 +1194,8 @@ var Player = function (_FakeEventTarget) {
     // </editor-fold>
 
   }], [{
-    key: 'defaultConfig_',
-    value: function defaultConfig_() {
+    key: '_defaultConfig',
+    value: function _defaultConfig() {
       return {};
     }
   }]);
@@ -1388,7 +1545,7 @@ var MediaSourceProvider = function () {
      * Get the appropriate media source adapter to the video source
      * @function getMediaSourceAdapter
      * @param {HTMLVideoElement} videoElement - The video element which requires adapter for a given mimeType
-     * @param {Object} source - The video source
+     * @param {Source} source - The video source
      * @param {Object} config - The player configuration
      * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists
      * @static
@@ -2272,8 +2429,8 @@ module.exports = {
 		"prebuild": "npm run clean",
 		"build": "webpack",
 		"dev": "webpack --progress --colors --watch",
-		"test": "NODE_ENV=test ./node_modules/.bin/karma start --single-run --color",
-		"test:watch": "NODE_ENV=test ./node_modules/.bin/karma start --auto-watch",
+		"test": "NODE_ENV=test karma start",
+		"test:watch": "NODE_ENV=test karma start --auto-watch",
 		"start": "webpack-dev-server",
 		"release": "NODE_ENV=production npm run build -- -p && git add --all dist && git commit -m'Update dist' && standard-version",
 		"eslint": "eslint . --color",
@@ -2304,6 +2461,8 @@ module.exports = {
 		"karma-chrome-launcher": "^2.0.0",
 		"karma-cli": "^1.0.1",
 		"karma-coverage": "^1.1.1",
+		"karma-firefox-launcher": "^1.0.1",
+		"karma-ie-launcher": "^1.0.0",
 		"karma-mocha": "^1.3.0",
 		"karma-safari-launcher": "^1.0.0",
 		"karma-sourcemap-loader": "^0.3.7",
@@ -2395,9 +2554,52 @@ var Html5 = function (_FakeEventTarget) {
 
   _createClass(Html5, null, [{
     key: 'canPlayType',
+
+
+    /**
+     * Checks if the engine can play a given mime type.
+     * @param {string} mimeType - The mime type to check.
+     * @returns {boolean} - Whether the engine can play the mime type.
+     */
+
+    /**
+     * The selected source to play.
+     * @type {Source}
+     * @private
+     */
+
+    /**
+     * The event manager of the engine.
+     * @type {EventManager}
+     * @private
+     */
     value: function canPlayType(mimeType) {
       return _mediaSourceProvider2.default.canPlayType(mimeType);
     }
+
+    /**
+     * @constructor
+     * @param {Source} source - The selected source object.
+     * @param {Object} config - The player configuration.
+     */
+
+
+    /**
+     * @type {string} - The engine name.
+     */
+
+    /**
+     * The selected media source adapter of the engine.
+     * @type {IMediaSourceAdapter}
+     * @private
+     */
+
+    /**
+     * The video element.
+     * @type {HTMLVideoElement}
+     * @private
+     */
+
   }]);
 
   function Html5(source, config) {
@@ -2405,12 +2607,20 @@ var Html5 = function (_FakeEventTarget) {
 
     var _this = _possibleConstructorReturn(this, (Html5.__proto__ || Object.getPrototypeOf(Html5)).call(this));
 
-    _this.createVideoElement();
+    _this._source = source;
+    _this._createVideoElement();
     _this._eventManager = new _eventManager2.default();
-    _this.setSource(source, config);
+    _this._loadMediaSourceAdapter(config);
     _this.attach();
     return _this;
   }
+
+  /**
+   * Destroys the engine.
+   * @public
+   * @returns {void}
+   */
+
 
   _createClass(Html5, [{
     key: 'destroy',
@@ -2426,7 +2636,16 @@ var Html5 = function (_FakeEventTarget) {
           this._el.parentNode.removeChild(this._el);
         }
       }
+      this._eventManager.destroy();
+      this._source = null;
     }
+
+    /**
+     * Listen to the video element events and triggers them from the engine.
+     * @public
+     * @returns {void}
+     */
+
   }, {
     key: 'attach',
     value: function attach() {
@@ -2444,6 +2663,13 @@ var Html5 = function (_FakeEventTarget) {
         _loop(playerEvent);
       }
     }
+
+    /**
+     * Remove the listeners of the video element events.
+     * @public
+     * @returns {void}
+     */
+
   }, {
     key: 'detach',
     value: function detach() {
@@ -2453,9 +2679,27 @@ var Html5 = function (_FakeEventTarget) {
         }
       }
     }
+
+    /**
+     * @returns {HTMLVideoElement} - The video element.
+     * @public
+     */
+
   }, {
-    key: 'createVideoElement',
-    value: function createVideoElement() {
+    key: 'getVideoElement',
+    value: function getVideoElement() {
+      return this._el;
+    }
+
+    /**
+     * Creates a video element dom object.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_createVideoElement',
+    value: function _createVideoElement() {
       this._el = document.createElement("video");
       //Set attributes
       this._el.style.width = "640px";
@@ -2466,20 +2710,18 @@ var Html5 = function (_FakeEventTarget) {
         document.body.appendChild(this._el);
       }
     }
+
+    /**
+     * Loads the appropriate media source extension adapter.
+     * @param {Object} config - The media source extension configuration.
+     * @private
+     * @returns {void}
+     */
+
   }, {
-    key: 'getVideoElement',
-    value: function getVideoElement() {
-      return this._el;
-    }
-  }, {
-    key: 'setSource',
-    value: function setSource(source, config) {
-      this.loadMediaSourceAdapter(source, config);
-    }
-  }, {
-    key: 'loadMediaSourceAdapter',
-    value: function loadMediaSourceAdapter(source, config) {
-      this._mediaSourceAdapter = _mediaSourceProvider2.default.getMediaSourceAdapter(this.getVideoElement(), source, config);
+    key: '_loadMediaSourceAdapter',
+    value: function _loadMediaSourceAdapter(config) {
+      this._mediaSourceAdapter = _mediaSourceProvider2.default.getMediaSourceAdapter(this.getVideoElement(), this._source, config);
     }
   }, {
     key: 'selectVideoTrack',
@@ -2505,13 +2747,22 @@ var Html5 = function (_FakeEventTarget) {
       }
       return false;
     }
+
+    /**
+     * Set a source.
+     * @param {string} source - Source to set.
+     * @public
+     * @returns {void}
+     */
+
   }, {
     key: 'play',
 
 
     //playback interface
     /**
-     * Start/resume playback
+     * Start/resume playback.
+     * @public
      * @returns {void}
      */
     value: function play() {
@@ -2519,7 +2770,8 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
-     * Pause playback
+     * Pause playback.
+     * @public
      * @returns {void}
      */
 
@@ -2530,7 +2782,8 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
-     * Load media
+     * Load media.
+     * @public
      * @returns {Promise<Object>} - The loaded data
      */
 
@@ -2541,30 +2794,35 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
-     * Get the current time in seconds
-     * @returns {Number} - The current playback time
+     * Get the current time in seconds.
+     * @returns {Number} - The current playback time.
+     * @public
      */
 
   }, {
     key: 'ready',
-
-
-    //state
     value: function ready() {}
 
     /**
-     * Get paused state
-     * @returns {boolean} - The paused value of the video element
+     * Get paused state.
+     * @returns {boolean} - The paused value of the video element.
+     * @public
      */
 
   }, {
     key: 'src',
     set: function set(source) {
-      //Set source
       this._el.src = source;
-    },
+    }
+
+    /**
+     * Get the source url.
+     * @returns {string} - The source url.
+     * @public
+     */
+    ,
     get: function get() {
-      return this._el.src;
+      return this._mediaSourceAdapter.src;
     }
   }, {
     key: 'currentTime',
@@ -2573,8 +2831,10 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
-     * Set the current time in seconds
-     * @param {Number} to - The number to set in seconds
+     * Set the current time in seconds.
+     * @param {Number} to - The number to set in seconds.
+     * @public
+     * @returns {void}
      */
     ,
     set: function set(to) {
@@ -2582,8 +2842,9 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
-     * Get the duration in seconds
-     * @returns {Number} - The playback duration
+     * Get the duration in seconds.
+     * @returns {Number} - The playback duration.
+     * @public
      */
 
   }, {
@@ -2593,8 +2854,10 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
-     * Set playback volume
-     * @param {Number} vol - The volume to set
+     * Set playback volume.
+     * @param {Number} vol - The volume to set.
+     * @public
+     * @returns {void}
      */
 
   }, {
@@ -2604,8 +2867,9 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
-     * Get playback volume
-     * @returns {Number} - The volume value of the video element
+     * Get playback volume.
+     * @returns {Number} - The volume value of the video element.
+     * @public
      */
     ,
     get: function get() {
@@ -2618,8 +2882,9 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
-     * Get seeking state
-     * @returns {boolean} - The seeking value of the video element
+     * Get seeking state.
+     * @returns {boolean} - The seeking value of the video element.
+     * @public
      */
 
   }, {
@@ -2627,16 +2892,37 @@ var Html5 = function (_FakeEventTarget) {
     get: function get() {
       return this._el.seeking;
     }
+
+    /**
+     * Get the first seekable range (part) of the video in seconds.
+     * @returns {TimeRanges} - First seekable range (part) of the video in seconds.
+     * @public
+     */
+
   }, {
     key: 'seekable',
     get: function get() {
       return this._el.seekable;
     }
+
+    /**
+     * Get the first played range (part) of the video in seconds.
+     * @returns {TimeRanges} - First played range (part) of the video in seconds.
+     * @public
+     */
+
   }, {
     key: 'played',
     get: function get() {
       return this._el.played;
     }
+
+    /**
+     * Get the first buffered range (part) of the video in seconds.
+     * @returns {TimeRanges} - First buffered range (part) of the video in seconds.
+     * @public
+     */
+
   }, {
     key: 'buffered',
     get: function get() {
@@ -2644,8 +2930,10 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
-     * Set player muted state
-     * @param {boolean} mute - The new mute value
+     * Set player muted state.
+     * @param {boolean} mute - The new mute value.
+     * @public
+     * @returns {void}
      */
 
   }, {
@@ -2655,106 +2943,275 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
-     * Get player muted state
-     * @returns {boolean} - The muted value of the video element
+     * Get player muted state.
+     * @returns {boolean} - The muted value of the video element.
+     * @public
      */
     ,
     get: function get() {
       return this._el.muted;
     }
+
+    /**
+     * Get the default mute value.
+     * @returns {boolean} - The defaultMuted of the video element.
+     * @public
+     */
+
   }, {
     key: 'defaultMuted',
     get: function get() {
       return this._el.defaultMuted;
     }
+
+    /**
+     * Sets an image to be shown while the video is downloading, or until the user hits the play button.
+     * @param {string} poster - The image url to be shown.
+     * @returns {void}
+     * @public
+     */
+
   }, {
     key: 'poster',
     set: function set(poster) {
       this._el.poster = poster;
-    },
+    }
+
+    /**
+     * Gets an image to be shown while the video is downloading, or until the user hits the play button.
+     * @returns {poster} - The image url.
+     * @public
+     */
+    ,
     get: function get() {
       return this._el.poster;
     }
+
+    /**
+     * Specifies if and how the author thinks that the video should be loaded when the page loads.
+     * @param {string} preload - The preload value.
+     * @public
+     * @returns {void}
+     */
+
   }, {
     key: 'preload',
     set: function set(preload) {
       this._el.preload = preload;
-    },
+    }
+
+    /**
+     * Gets the preload value of the video element.
+     * @returns {string} - The preload value.
+     * @public
+     */
+    ,
     get: function get() {
       return this._el.preload;
     }
+
+    /**
+     * Set if the video will automatically start playing as soon as it can do so without stopping.
+     * @param {boolean} autoplay - The autoplay value.
+     * @public
+     * @returns {void}
+     */
+
   }, {
     key: 'autoplay',
     set: function set(autoplay) {
       this._el.autoplay = autoplay;
-    },
+    }
+
+    /**
+     * Gets the autoplay value of the video element.
+     * @returns {boolean} - The autoplay value.
+     * @public
+     */
+    ,
     get: function get() {
       return this._el.autoplay;
     }
+
+    /**
+     * Set to specifies that the video will start over again, every time it is finished.
+     * @param {boolean} loop - the loop value.
+     * @public
+     * @returns {void}
+     */
+
   }, {
     key: 'loop',
     set: function set(loop) {
       this._el.loop = loop;
-    },
+    }
+
+    /**
+     * Gets the loop value of the video element.
+     * @returns {boolean} - The loop value.
+     * @public
+     */
+    ,
     get: function get() {
       return this._el.loop;
     }
+
+    /**
+     * Set to specifies that video controls should be displayed.
+     * @param {boolean} controls - the controls value.
+     * @public
+     * @returns {void}
+     */
+
   }, {
     key: 'controls',
     set: function set(controls) {
       this._el.controls = controls;
-    },
+    }
+
+    /**
+     * Gets the controls value of the video element.
+     * @returns {boolean} - The controls value.
+     * @public
+     */
+    ,
     get: function get() {
       return this._el.controls;
     }
+
+    /**
+     * Sets the current playback speed of the audio/video.
+     * @param {Number} playbackRate - The playback speed value.
+     * @public
+     * @returns {void}
+     */
+
   }, {
     key: 'playbackRate',
     set: function set(playbackRate) {
       this._el.playbackRate = playbackRate;
-    },
+    }
+
+    /**
+     * Gets the current playback speed of the audio/video.
+     * @returns {Number} - The current playback speed value.
+     * @public
+     */
+    ,
     get: function get() {
       return this._el.playbackRate;
     }
+
+    /**
+     * Sets the default playback speed of the audio/video.
+     * @param {Number} defaultPlaybackRate - The default playback speed value.
+     * @public
+     * @returns {void}
+     */
+
   }, {
     key: 'defaultPlaybackRate',
     set: function set(defaultPlaybackRate) {
       this._el.defaultPlaybackRate = defaultPlaybackRate;
-    },
+    }
+
+    /**
+     * Gets the default playback speed of the audio/video.
+     * @returns {Number} - The default playback speed value.
+     * @public
+     */
+    ,
     get: function get() {
       return this._el.defaultPlaybackRate;
     }
+
+    /**
+     * The ended property returns whether the playback of the audio/video has ended.
+     * @returns {boolean} - The ended value.
+     * @public
+     */
+
   }, {
     key: 'ended',
     get: function get() {
       return this._el.ended;
     }
+
+    /**
+     * The error property returns a MediaError object.
+     * @returns {MediaError} - The MediaError object has a code property containing the error state of the audio/video.
+     * @public
+     */
+
   }, {
     key: 'error',
     get: function get() {
       return this._el.error;
     }
+
+    /**
+     * @returns {Number} - The current network state (activity) of the audio/video.
+     * @public
+     */
+
   }, {
     key: 'networkState',
     get: function get() {
       return this._el.networkState;
     }
+
+    /**
+     * Indicates if the audio/video is ready to play or not.
+     * @returns {Number} - The current ready state of the audio/video.
+     * 0 = HAVE_NOTHING - no information whether or not the audio/video is ready.
+     * 1 = HAVE_METADATA - metadata for the audio/video is ready.
+     * 2 = HAVE_CURRENT_DATA - data for the current playback position is available, but not enough data to play next frame/millisecond.
+     * 3 = HAVE_FUTURE_DATA - data for the current and at least the next frame is available.
+     * 4 = HAVE_ENOUGH_DATA - enough data available to start playing.
+     */
+
   }, {
     key: 'readyState',
     get: function get() {
       return this._el.readyState;
     }
+
+    /**
+     * @returns {Number} - The height of the video player, in pixels.
+     * @public
+     */
+
   }, {
     key: 'videoHeight',
     get: function get() {
       return this._el.videoHeight;
     }
+
+    /**
+     * @returns {Number} - The width of the video player, in pixels.
+     * @public
+     */
+
   }, {
     key: 'videoWidth',
     get: function get() {
       return this._el.videoWidth;
     }
+
+    /**
+     * Test video element to check if html5 engine is supported.
+     */
+
   }], [{
     key: 'isSupported',
+
+
+    /**
+     * Checks if the html5 engine is supported.
+     * @returns {boolean} - The isSupported result.
+     * @static
+     * @public
+     */
     value: function isSupported() {
       try {
         Html5.TEST_VID = document.createElement('video');
@@ -2762,16 +3219,12 @@ var Html5 = function (_FakeEventTarget) {
       } catch (e) {
         return false;
       }
-
       return !!Html5.TEST_VID.canPlayType;
     }
   }]);
 
   return Html5;
 }(_fakeEventTarget2.default);
-
-//Engine.register("html5", Html5);
-
 
 Html5.EngineName = "html5";
 exports.default = Html5;
@@ -2846,14 +3299,14 @@ var NativeAdapter = function () {
      */
 
     /**
-     * The dom video element
-     * @member {HTMLVideoElement} _videoElement
+     * The source url
+     * @member {string} _source
      * @private
      */
 
     /**
-     * The source url
-     * @member {string} _source
+     * The dom video element
+     * @member {HTMLVideoElement} _videoElement
      * @private
      */
 
@@ -2910,7 +3363,7 @@ var NativeAdapter = function () {
     /**
      * @constructor
      * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
-     * @param {string} source - The source URL
+     * @param {Source} source - The source object
      * @param {Object} config - The media source adapter configuration
      */
 
@@ -2946,8 +3399,10 @@ var NativeAdapter = function () {
 
     this._config = config;
     this._videoElement = videoElement;
-    this._source = source.url;
     this._eventManager = new _eventManager2.default();
+    if (source != null) {
+      this._source = source.url;
+    }
   }
 
   /**
@@ -2967,7 +3422,7 @@ var NativeAdapter = function () {
           _this._eventManager.listen(_this._videoElement, _events2.default.LOADED_METADATA, function () {
             _this._eventManager.unlisten(_this._videoElement, _events2.default.LOADED_METADATA);
             var data = { tracks: _this._getParsedTracks() };
-            NativeAdapter._logger.debug('load');
+            NativeAdapter._logger.debug('The source has been loaded successfully');
             resolve(data);
           });
           _this._eventManager.listen(_this._videoElement, _events2.default.ERROR, function (error) {
@@ -3105,9 +3560,8 @@ var NativeAdapter = function () {
     value: function selectVideoTrack(videoTrack) {
       var videoTracks = this._videoElement.videoTracks;
       if (videoTrack instanceof _videoTrack2.default && videoTracks && videoTracks[videoTrack.index]) {
-        for (var i = 0; i < videoTracks.length; i++) {
-          videoTracks[i].selected = videoTrack.index === i;
-        }
+        this._disableVideoTracks();
+        videoTracks[videoTrack.index].selected = true;
         return true;
       }
       return false;
@@ -3126,9 +3580,8 @@ var NativeAdapter = function () {
     value: function selectAudioTrack(audioTrack) {
       var audioTracks = this._videoElement.audioTracks;
       if (audioTrack instanceof _audioTrack2.default && audioTracks && audioTracks[audioTrack.index]) {
-        for (var i = 0; i < audioTracks.length; i++) {
-          audioTracks[i].enabled = audioTrack.index === i;
-        }
+        this._disableAudioTracks();
+        audioTracks[audioTrack.index].enabled = true;
         return true;
       }
       return false;
@@ -3147,12 +3600,46 @@ var NativeAdapter = function () {
     value: function selectTextTrack(textTrack) {
       var textTracks = this._videoElement.textTracks;
       if (textTrack instanceof _textTrack2.default && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
-        for (var i = 0; i < textTracks.length; i++) {
-          textTracks[i].mode = textTrack.index === i ? 'showing' : 'disabled';
-        }
+        this._disableTextTracks();
+        textTracks[textTrack.index].mode = 'showing';
         return true;
       }
       return false;
+    }
+  }, {
+    key: '_disableVideoTracks',
+    value: function _disableVideoTracks() {
+      var videoTracks = this._videoElement.videoTracks;
+      if (videoTracks) {
+        for (var i = 0; i < videoTracks.length; i++) {
+          videoTracks[i].selected = false;
+        }
+      }
+    }
+  }, {
+    key: '_disableAudioTracks',
+    value: function _disableAudioTracks() {
+      var audioTracks = this._videoElement.audioTracks;
+      if (audioTracks) {
+        for (var i = 0; i < audioTracks.length; i++) {
+          audioTracks[i].enabled = false;
+        }
+      }
+    }
+  }, {
+    key: '_disableTextTracks',
+    value: function _disableTextTracks() {
+      var textTracks = this._videoElement.textTracks;
+      if (textTracks) {
+        for (var i = 0; i < textTracks.length; i++) {
+          textTracks[i].mode = 'disabled';
+        }
+      }
+    }
+  }, {
+    key: 'src',
+    get: function get() {
+      return this._videoElement.src;
     }
   }]);
 
