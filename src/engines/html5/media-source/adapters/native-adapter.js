@@ -129,7 +129,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
         this._eventManager.listen(this._videoElement, PlayerEvents.LOADED_METADATA, () => {
           this._eventManager.unlisten(this._videoElement, PlayerEvents.LOADED_METADATA);
           let data = {tracks: this._getParsedTracks()};
-          NativeAdapter._logger.debug('load');
+          NativeAdapter._logger.debug('The source has been loaded successfully');
           resolve(data);
         });
         this._eventManager.listen(this._videoElement, PlayerEvents.ERROR, (error) => {
@@ -249,9 +249,8 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   selectVideoTrack(videoTrack: VideoTrack): boolean {
     let videoTracks = this._videoElement.videoTracks;
     if ((videoTrack instanceof VideoTrack) && videoTracks && videoTracks[videoTrack.index]) {
-      for (let i = 0; i < videoTracks.length; i++) {
-        videoTracks[i].selected = videoTrack.index === i;
-      }
+      this._disableVideoTracks();
+      videoTracks[videoTrack.index].selected = true;
       return true;
     }
     return false;
@@ -267,9 +266,8 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   selectAudioTrack(audioTrack: AudioTrack): boolean {
     let audioTracks = this._videoElement.audioTracks;
     if ((audioTrack instanceof AudioTrack) && audioTracks && audioTracks[audioTrack.index]) {
-      for (let i = 0; i < audioTracks.length; i++) {
-        audioTracks[i].enabled = audioTrack.index === i;
-      }
+      this._disableAudioTracks();
+      audioTracks[audioTrack.index].enabled = true;
       return true;
     }
     return false;
@@ -285,11 +283,35 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   selectTextTrack(textTrack: TextTrack): boolean {
     let textTracks = this._videoElement.textTracks;
     if ((textTrack instanceof TextTrack) && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
-      for (let i = 0; i < textTracks.length; i++) {
-        textTracks[i].mode = textTrack.index === i ? 'showing' : 'disabled'
-      }
+      this._disableTextTracks();
+      textTracks[textTrack.index].mode = 'showing';
       return true;
     }
     return false;
+  }
+
+  _disableVideoTracks(): void {
+    let videoTracks = this._videoElement.videoTracks;
+    if (videoTracks) {
+      for (let i = 0; i < videoTracks.length; i++) {
+        videoTracks[i].selected = false;
+      }
+    }
+  }
+  _disableAudioTracks(): void {
+    let audioTracks = this._videoElement.audioTracks;
+    if (audioTracks) {
+      for (let i = 0; i < audioTracks.length; i++) {
+        audioTracks[i].enabled = false;
+      }
+    }
+  }
+  _disableTextTracks(): void {
+    let textTracks = this._videoElement.textTracks;
+    if (textTracks) {
+      for (let i = 0; i < textTracks.length; i++) {
+        textTracks[i].mode = 'disabled';
+      }
+    }
   }
 }
