@@ -1,3 +1,5 @@
+const isWindows = /^win/.test(process.platform);
+
 module.exports = function (config) {
   // Create custom launcher in case running with Travis
   const customLaunchers = {
@@ -12,9 +14,7 @@ module.exports = function (config) {
     // Run in Chrome
     browsers: [
       'Chrome',
-      'IE',
-      'Firefox',
-      'Safari'
+      'Firefox'
     ],
     // Just run once by default
     singleRun: true,
@@ -59,6 +59,12 @@ module.exports = function (config) {
     karmaConf.customLaunchers = customLaunchers;
     // The Internet Explorer is working only by Windows environments, so it is not supported by Travis (because it uses Linux)
     karmaConf.browsers = ['Chrome_travis_ci', 'Firefox', 'Safari'];
+  } else {
+    if (isWindows) {
+      karmaConf.browsers.push('IE');
+    } else {
+      karmaConf.browsers.push('Safari');
+    }
   }
 
   config.set(karmaConf);
