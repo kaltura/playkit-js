@@ -4,6 +4,9 @@ import FakeEvent from '../../event/fake-event'
 import EventManager from '../../event/event-manager'
 import PlayerEvents from '../../event/events'
 import MediaSourceProvider from './media-source/media-source-provider'
+import VideoTrack from '../../track/video-track'
+import AudioTrack from '../../track/audio-track'
+import TextTrack from '../../track/text-track'
 
 export default class Html5 extends FakeEventTarget implements IEngine {
   /**
@@ -144,6 +147,42 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Select a new video track.
+   * @param {VideoTrack} videoTrack - The video track object to set.
+   * @returns {boolean} - Whether the video track selection succeeded.
+   */
+  selectVideoTrack(videoTrack: VideoTrack): boolean {
+    if (this._mediaSourceAdapter) {
+      return this._mediaSourceAdapter.selectVideoTrack(videoTrack);
+    }
+    return false;
+  }
+
+  /**
+   * Select a new audio track.
+   * @param {AudioTrack} audioTrack - The video track object to set.
+   * @returns {boolean} - Whether the audio track selection succeeded.
+   */
+  selectAudioTrack(audioTrack: AudioTrack): boolean {
+    if (this._mediaSourceAdapter) {
+      return this._mediaSourceAdapter.selectAudioTrack(audioTrack);
+    }
+    return false;
+  }
+
+  /**
+   * Select a new text track.
+   * @param {TextTrack} textTrack - The text track object to set.
+   * @returns {boolean} - Whether the text track selection succeeded.
+   */
+  selectTextTrack(textTrack: TextTrack): boolean {
+    if (this._mediaSourceAdapter) {
+      return this._mediaSourceAdapter.selectTextTrack(textTrack);
+    }
+    return false;
+  }
+
+  /**
    * Set a source.
    * @param {string} source - Source to set.
    * @public
@@ -159,10 +198,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    */
   get src(): string {
-    if (this._source != null) {
-      return this._source.url;
+    if (this._mediaSourceAdapter) {
+      return this._mediaSourceAdapter.src;
     }
-    return this._el.src;
+    return "";
   }
 
   //playback interface
@@ -187,12 +226,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * Load media.
    * @public
-   * @returns {void}
+   * @returns {Promise<Object>} - The loaded data
    */
-  load(): void {
-    if (this._mediaSourceAdapter) {
-      this._mediaSourceAdapter.load();
-    }
+  load(): Promise<Object> {
+    return this._mediaSourceAdapter ? this._mediaSourceAdapter.load() : Promise.resolve({});
   }
 
   /**
