@@ -1,7 +1,8 @@
 //@flow
 import LoggerFactory from '../../../../utils/logger'
+import FakeEventTarget from '../../../../event/fake-event-target'
 import EventManager from '../../../../event/event-manager'
-import PlayerEvents from '../../../../event/events'
+import {HTML5_EVENTS as Html5Events} from '../../../../event/events'
 import Track from '../../../../track/track'
 import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'
@@ -11,7 +12,7 @@ import TextTrack from '../../../../track/text-track'
  * @classdesc
  * @implements {IMediaSourceAdapter}
  */
-export default class NativeAdapter implements IMediaSourceAdapter {
+export default class NativeAdapter extends FakeEventTarget implements IMediaSourceAdapter {
   /**
    * The name of the Adapter
    * @member {string} _name
@@ -112,6 +113,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @param {Object} config - The media source adapter configuration
    */
   constructor(videoElement: HTMLVideoElement, source: ?Source, config: Object) {
+    super();
     this._config = config;
     this._videoElement = videoElement;
     this._eventManager = new EventManager();
@@ -128,14 +130,14 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   load(): Promise<Object> {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
-        this._eventManager.listen(this._videoElement, PlayerEvents.LOADED_METADATA, () => {
-          this._eventManager.unlisten(this._videoElement, PlayerEvents.LOADED_METADATA);
+        this._eventManager.listen(this._videoElement, Html5Events.LOADED_METADATA, () => {
+          this._eventManager.unlisten(this._videoElement, Html5Events.LOADED_METADATA);
           let data = {tracks: this._getParsedTracks()};
           NativeAdapter._logger.debug('The source has been loaded successfully');
           resolve(data);
         });
-        this._eventManager.listen(this._videoElement, PlayerEvents.ERROR, (error) => {
-          this._eventManager.unlisten(this._videoElement, PlayerEvents.ERROR);
+        this._eventManager.listen(this._videoElement, Html5Events.ERROR, (error) => {
+          this._eventManager.unlisten(this._videoElement, Html5Events.ERROR);
           NativeAdapter._logger.error(error);
           reject(error);
         });

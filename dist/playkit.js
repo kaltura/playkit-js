@@ -90,7 +90,7 @@ exports.LOG_LEVEL = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jsLogger = __webpack_require__(25);
+var _jsLogger = __webpack_require__(24);
 
 var JsLogger = _interopRequireWildcard(_jsLogger);
 
@@ -147,35 +147,122 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * General track representation of the player.
+ * @classdesc
+ */
 var Track = function () {
   _createClass(Track, [{
     key: "id",
+
+
+    /**
+     * Getter for the track id.
+     * @public
+     * @returns {?string} - The track id.
+     */
+
+    /**
+     * The language of the track.
+     * @member
+     * @type {string}
+     * @private
+     */
+
+    /**
+     * The active mode of the track.
+     * @member
+     * @type {boolean}
+     * @private
+     */
     get: function get() {
       return this._id;
     }
+
+    /**
+     * Getter for the active mode of the track.
+     * @public
+     * @returns {boolean} - The active mode of the track.
+     */
+
+    /**
+     * The index of the track.
+     * @member
+     * @type {number}
+     * @private
+     */
+
+    /**
+     * The label of the track.
+     * @member
+     * @type {string}
+     * @private
+     */
+
+    /**
+     * The id of the track.
+     * @member
+     * @type {string}
+     * @private
+     */
+
   }, {
     key: "active",
     get: function get() {
       return this._active;
-    },
+    }
+
+    /**
+     * Setter for the active mode of the track.
+     * @public
+     * @param {boolean} value - Whether the track is active or not.
+     */
+    ,
     set: function set(value) {
       this._active = value;
     }
+
+    /**
+     * Getter for the label of the track.
+     * @public
+     * @returns {string} - The label of the track.
+     */
+
   }, {
     key: "label",
     get: function get() {
       return this._label;
     }
+
+    /**
+     * Getter for the language of the track.
+     * @public
+     * @returns {string} - The language of the track.
+     */
+
   }, {
     key: "language",
     get: function get() {
       return this._language;
     }
+
+    /**
+     * Getter for the index of the track.
+     * @public
+     * @returns {number} - The index of the track.
+     */
+
   }, {
     key: "index",
     get: function get() {
       return this._index;
     }
+
+    /**
+     * @constructor
+     * @param {Object} settings - The track settings object.
+     */
+
   }]);
 
   function Track() {
@@ -208,7 +295,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _multiMap = __webpack_require__(14);
+var _multiMap = __webpack_require__(15);
 
 var _multiMap2 = _interopRequireDefault(_multiMap);
 
@@ -554,7 +641,7 @@ var _eventManager = __webpack_require__(2);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _fakeEventTarget = __webpack_require__(12);
+var _fakeEventTarget = __webpack_require__(9);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
@@ -564,15 +651,11 @@ var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
 var _events = __webpack_require__(8);
 
-var _events2 = _interopRequireDefault(_events);
-
-var _stateTypes = __webpack_require__(13);
+var _stateTypes = __webpack_require__(14);
 
 var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
-var _util = __webpack_require__(16);
-
-var _stringUtil = __webpack_require__(24);
+var _util = __webpack_require__(10);
 
 var _logger = __webpack_require__(0);
 
@@ -582,7 +665,7 @@ var _html = __webpack_require__(18);
 
 var _html2 = _interopRequireDefault(_html);
 
-var _pluginManager = __webpack_require__(11);
+var _pluginManager = __webpack_require__(13);
 
 var _pluginManager2 = _interopRequireDefault(_pluginManager);
 
@@ -637,6 +720,43 @@ var Player = function (_FakeEventTarget) {
    */
 
   /**
+   * The runtime configuration of the player.
+   * @type {Object}
+   * @private
+   */
+
+  /**
+   * The plugin manager of the player.
+   * @type {PluginManager}
+   * @private
+   */
+  function Player(config) {
+    _classCallCheck(this, Player);
+
+    var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
+
+    _this._tracks = [];
+    _this._logger = _logger2.default.getLogger('Player');
+    _this._stateManager = new _stateManager2.default(_this);
+    _this._pluginManager = new _pluginManager2.default();
+    _this._eventManager = new _eventManager2.default();
+    _this.configure(config);
+    return _this;
+  }
+
+  /**
+   * Configures the player according to given configuration.
+   * @param {Object} config - The configuration for the player instance.
+   * @returns {void}
+   */
+
+  /**
+   * The tracks of the player.
+   * @type {Array<Track>}
+   * @private
+   */
+
+  /**
    * The playback engine.
    * @type {IEngine}
    * @private
@@ -651,52 +771,6 @@ var Player = function (_FakeEventTarget) {
   /**
    * The player class logger.
    * @type {any}
-   * @private
-   */
-  function Player(config) {
-    _classCallCheck(this, Player);
-
-    var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
-
-    _this._tracks = [];
-
-    _this._logger = _logger2.default.getLogger('Player');
-    _this._stateManager = new _stateManager2.default(_this);
-    _this._pluginManager = new _pluginManager2.default();
-    _this._eventManager = new _eventManager2.default();
-    _this._engineEventHandlers = new Map();
-    for (var playerEvent in _events2.default) {
-      if (_events2.default.hasOwnProperty(playerEvent)) {
-        _this._engineEventHandlers.set('onEngine' + (0, _stringUtil.capitlize)(_events2.default[playerEvent]) + '_', function (event) {
-          return _this.dispatchEvent(event);
-        });
-      }
-    }
-    _this.configure(config);
-    return _this;
-  }
-
-  /**
-   * Configures the player according to given configuration.
-   * @param {Object} config - The configuration for the player instance.
-   * @returns {void}
-   */
-
-  /**
-   * The event handlers of the playback engine.
-   * @type {Map<string, ListenerType>}
-   * @private
-   */
-
-  /**
-   * The runtime configuration of the player.
-   * @type {Object}
-   * @private
-   */
-
-  /**
-   * The plugin manager of the player.
-   * @type {PluginManager}
    * @private
    */
 
@@ -727,7 +801,6 @@ var Player = function (_FakeEventTarget) {
       this._eventManager.destroy();
       this._pluginManager.destroy();
       this._stateManager.destroy();
-      this._eventManager.destroy();
       this._config = {};
       this._tracks = [];
     }
@@ -751,9 +824,7 @@ var Player = function (_FakeEventTarget) {
     value: function _loadPlugins(config) {
       var plugins = config.plugins;
       for (var name in plugins) {
-        if (plugins.hasOwnProperty(name)) {
-          this._pluginManager.load(name, this, plugins[name]);
-        }
+        this._pluginManager.load(name, this, plugins[name]);
       }
     }
 
@@ -804,15 +875,18 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_attachMedia',
     value: function _attachMedia() {
+      var _this2 = this;
+
       if (this._engine) {
-        for (var playerEvent in _events2.default) {
-          if (_events2.default.hasOwnProperty(playerEvent)) {
-            var handler = this._engineEventHandlers.get('onEngine' + (0, _stringUtil.capitlize)(_events2.default[playerEvent]) + '_');
-            if (handler) {
-              this._eventManager.listen(this._engine, _events2.default[playerEvent], handler);
-            }
-          }
+        for (var playerEvent in _events.HTML5_EVENTS) {
+          this._eventManager.listen(this._engine, _events.HTML5_EVENTS[playerEvent], function (event) {
+            return _this2.dispatchEvent(event);
+          });
         }
+        // listen and dispatch adaptive bitrate changed event
+        this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGE, function (event) {
+          return _this2.dispatchEvent(event);
+        });
       }
     }
 
@@ -868,6 +942,7 @@ var Player = function (_FakeEventTarget) {
       var success = this._selectTrackByType(track);
       if (success) {
         this._markActiveTrack(track);
+        this._dispatchTrackEvent(track);
       }
     }
 
@@ -882,14 +957,12 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_selectTrackByType',
     value: function _selectTrackByType(track) {
-      if (track) {
-        if (track instanceof _videoTrack2.default) {
-          return this._engine.selectVideoTrack(track);
-        } else if (track instanceof _audioTrack2.default) {
-          return this._engine.selectAudioTrack(track);
-        } else if (track instanceof _textTrack2.default) {
-          return this._engine.selectTextTrack(track);
-        }
+      if (track instanceof _videoTrack2.default) {
+        return this._engine.selectVideoTrack(track);
+      } else if (track instanceof _audioTrack2.default) {
+        return this._engine.selectAudioTrack(track);
+      } else if (track instanceof _textTrack2.default) {
+        return this._engine.selectTextTrack(track);
       }
       return false;
     }
@@ -922,6 +995,30 @@ var Player = function (_FakeEventTarget) {
     }
 
     /**
+     * Dispatch track changed event
+     * @function _dispatchTrackEvent
+     * @param {Track} track - the track to dispatch
+     * @returns {void}
+     * @private
+     */
+
+  }, {
+    key: '_dispatchTrackEvent',
+    value: function _dispatchTrackEvent(track) {
+      var eventType = void 0;
+      if (track instanceof _videoTrack2.default) {
+        eventType = _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGE;
+      } else if (track instanceof _audioTrack2.default) {
+        eventType = _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGE;
+      } else if (track instanceof _textTrack2.default) {
+        eventType = _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGE;
+      }
+      if (eventType) {
+        this.dispatchEvent(new _fakeEvent2.default(eventType, track));
+      }
+    }
+
+    /**
      * Get the player config.
      * @returns {Object} - The player configuration.
      * @public
@@ -938,14 +1035,14 @@ var Player = function (_FakeEventTarget) {
      * @public
      */
     value: function play() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (this._engine) {
         if (this._engine.src) {
           this._engine.play();
         } else {
           this.load().then(function () {
-            _this2._engine.play();
+            _this3._engine.play();
           });
         }
       }
@@ -974,11 +1071,11 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'load',
     value: function load() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this._engine) {
         return this._engine.load().then(function (data) {
-          _this3._tracks = data.tracks;
+          _this4._tracks = data.tracks;
         });
       } else {
         return Promise.resolve();
@@ -1164,7 +1261,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'Event',
     get: function get() {
-      return _events2.default;
+      return _events.PLAYER_EVENTS;
     }
 
     /**
@@ -1228,6 +1325,10 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/**
+ * Audio track representation of the player.
+ * @classdesc
+ */
 var AudioTrack = function (_Track) {
   _inherits(AudioTrack, _Track);
 
@@ -1267,14 +1368,39 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/**
+ * Text track representation of the player.
+ * @classdesc
+ */
 var TextTrack = function (_Track) {
   _inherits(TextTrack, _Track);
 
   _createClass(TextTrack, [{
     key: 'kind',
+
+
+    /**
+     * Getter for the kind of the text track.
+     * @public
+     * @returns {string} - The kind of the text track.
+     */
     get: function get() {
       return this._kind;
     }
+
+    /**
+     * @constructor
+     * @param {Object} settings - The track settings object.
+     */
+
+    /**
+     * The kind of the text track:
+     * subtitles/captions/metadata.
+     * @member
+     * @type {string}
+     * @private
+     */
+
   }]);
 
   function TextTrack() {
@@ -1316,6 +1442,10 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/**
+ * Video track representation of the player.
+ * @classdesc
+ */
 var VideoTrack = function (_Track) {
   _inherits(VideoTrack, _Track);
 
@@ -1340,69 +1470,111 @@ exports.default = VideoTrack;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var PLAYER_EVENTS = {
-  PLAY: 'play',
-  PAUSE: 'pause',
-  /**
-   * Fired when the media begins to play (either for the first time, after having been paused, or after ending and then restarting)
-   */
-  PLAYING: 'playing',
-  /**
-   * Fired while the user agent is downloading media data
-   */
-  PROGRESS: 'progress',
+exports.CUSTOM_EVENTS = exports.HTML5_EVENTS = exports.PLAYER_EVENTS = undefined;
+
+var _util = __webpack_require__(10);
+
+var HTML5_EVENTS = {
   /**
    * Fires when the loading of an audio/video is aborted
    */
   ABORT: 'abort',
   /**
-   * Fires when an error occurs.  The element's error attribute contains more information
+   * Fires when the browser can start playing the audio/video
    */
-  ERROR: 'error',
+  CAN_PLAY: 'canplay',
   /**
-   * Fires when the browser is intentionally not getting media data
+   * Fires when the browser can play through the audio/video without stopping for buffering
    */
-  SUSPEND: 'suspend',
+  CAN_PLAY_THROUGH: 'canplaythrough',
+  /**
+   * Fires when the duration of the audio/video is changed
+   */
+  DURATION_CHANGE: 'durationchange',
   /**
    * Fires when the current playlist is empty
    */
   EMPTIED: 'emptied',
   /**
-   * Fires when playback completes
+   * Fires when the current playlist is ended
    */
   ENDED: 'ended',
   /**
-   * Fires when the requested operation (such as playback) is delayed pending the completion of another operation (such as a seek)
+   * Fires when an error occurred during the loading of an audio/video
    */
-  WAITING: 'waiting',
-  /**
-   * Fires when the browser is trying to get media data, but data is not available
-   */
-  STALLED: 'stalled',
-  /**
-   * Fires when the video is starting to load
-   */
-  LOAD_START: 'loadstart',
-  /**
-   * Fires when the browser has loaded meta data for the audio/video
-   */
-  LOADED_METADATA: 'loadedmetadata',
+  ERROR: 'error',
   /**
    * Fires when the browser has loaded the current frame of the audio/video
    */
   LOADED_DATA: 'loadeddata',
   /**
-   * Fires when the current playback position has changed
+   * Fires when the browser has loaded meta data for the audio/video
    */
-  TIME_UPDATE: 'timeupdate',
+  LOADED_METADATA: 'loadedmetadata',
+  /**
+   * Fires when the browser starts looking for the audio/video
+   */
+  LOAD_START: 'loadstart',
+  /**
+   * Fires when the audio/video has been paused
+   */
+  PAUSE: 'pause',
+  /**
+   * Fires when the audio/video has been started or is no longer paused
+   */
+  PLAY: 'play',
+  /**
+   * Fires when the audio/video is playing after having been paused or stopped for buffering
+   */
+  PLAYING: 'playing',
+  /**
+   * Fires when the browser is downloading the audio/video
+   */
+  PROGRESS: 'progress',
   /**
    * Fires when the playing speed of the audio/video is changed
    */
   RATE_CHANGE: 'ratechange',
   /**
+   * Fires when the user is finished moving/skipping to a new position in the audio/video
+   */
+  SEEKED: 'seeked',
+  /**
+   * Fires when the user starts moving/skipping to a new position in the audio/video
+   */
+  SEEKING: 'seeking',
+  /**
+   * Fires when the browser is trying to get media data, but data is not available
+   */
+  STALLED: 'stalled',
+  /**
+   * Fires when the browser is intentionally not getting media data
+   */
+  SUSPEND: 'suspend',
+  /**
+   * Fires when the current playback position has changed
+   */
+  TIME_UPDATE: 'timeupdate',
+  /**
    * Fires when the volume has been changed
    */
   VOLUME_CHANGE: 'volumechange',
+  /**
+   * Fires when the video stops because it needs to buffer the next frame
+   */
+  WAITING: 'waiting'
+};
+
+
+var CUSTOM_EVENTS = {
+  /**
+   * Fires when the video track has been changed
+   */
+  VIDEO_TRACK_CHANGE: 'videotrackchange',
+  /**
+   * Fires when the audio track has been changed
+   */
+  AUDIO_TRACK_CHANGE: 'audiotrackchange',
   /**
    * Fires when the text track has been changed
    */
@@ -1410,21 +1582,215 @@ var PLAYER_EVENTS = {
   /**
    * Fires when the player state has been changed
    */
-  PLAYER_STATE_CHANGED: 'playerStateChanged',
-  /**
-   * Fires when the seeking attribute is set to false indicating that seeking has ended
-   */
-  SEEKED: 'seeked',
-  /**
-   * Fires when the seeking attribute is set to true indicating that seeking is active
-   */
-  SEEKING: 'seeking'
+  PLAYER_STATE_CHANGED: 'playerStateChanged'
 };
 
-exports.default = PLAYER_EVENTS;
+var PLAYER_EVENTS = (0, _util.merge)((0, _util.merge)({}, HTML5_EVENTS), CUSTOM_EVENTS);
+
+exports.PLAYER_EVENTS = PLAYER_EVENTS;
+exports.HTML5_EVENTS = HTML5_EVENTS;
+exports.CUSTOM_EVENTS = CUSTOM_EVENTS;
 
 /***/ }),
 /* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _fakeEvent = __webpack_require__(3);
+
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
+
+var _multiMap = __webpack_require__(15);
+
+var _multiMap2 = _interopRequireDefault(_multiMap);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * A work-alike for EventTarget.  Only DOM elements may be true EventTargets,
+ * but this can be used as a base class to provide event dispatch to non-DOM
+ * classes.  Only FakeEvents should be dispatched.
+ *
+ * @struct
+ * @constructor
+ * @implements {EventTarget}
+ * @export
+ */
+var FakeEventTarget = function () {
+  function FakeEventTarget() {
+    _classCallCheck(this, FakeEventTarget);
+
+    /**
+     * @private {!MultiMap.<FakeEventTarget.ListenerType>}
+     */
+    this._listeners = new _multiMap2.default();
+
+    /**
+     * The target of all dispatched events.  Defaults to |this|.
+     * @type {EventTarget}
+     */
+    this.dispatchTarget = this;
+  }
+
+  /**
+   * Add an event listener to this object.
+   *
+   * @param {string} type The event type to listen for.
+   * @param {FakeEventTarget.ListenerType} listener The callback or
+   *   listener object to invoke.
+   * @param {boolean=} opt_capturing Ignored.  FakeEventTargets do not have
+   *   parents, so events neither capture nor bubble.
+   * @override
+   * @export
+   */
+
+
+  _createClass(FakeEventTarget, [{
+    key: 'addEventListener',
+    value: function addEventListener(type, listener) {
+      this._listeners.push(type, listener);
+    }
+
+    /**
+     * Remove an event listener from this object.
+     *
+     * @param {string} type The event type for which you wish to remove a listener.
+     * @param {FakeEventTarget.ListenerType} listener The callback or
+     *   listener object to remove.
+     * @param {boolean=} opt_capturing Ignored.  FakeEventTargets do not have
+     *   parents, so events neither capture nor bubble.
+     * @override
+     * @export
+     */
+
+  }, {
+    key: 'removeEventListener',
+    value: function removeEventListener(type, listener) {
+      this._listeners.remove(type, listener);
+    }
+
+    /**
+     * Dispatch an event from this object.
+     *
+     * @param {!Event} event The event to be dispatched from this object.
+     * @return {boolean} True if the default action was prevented.
+     * @override
+     * @export
+     */
+
+  }, {
+    key: 'dispatchEvent',
+    value: function dispatchEvent(event) {
+      // In many browsers, it is complex to overwrite properties of actual Events.
+      // Here we expect only to dispatch FakeEvents, which are simpler.
+      //goog.asserts.assert(event instanceof FakeEvent,
+      //    'FakeEventTarget can only dispatch FakeEvents!');
+
+      var list = this._listeners.get(event.type) || [];
+
+      for (var i = 0; i < list.length; ++i) {
+        // Do this every time, since events can be re-dispatched from handlers.
+        event.target = this.dispatchTarget;
+        event.currentTarget = this.dispatchTarget;
+
+        var listener = list[i];
+        try {
+          if (listener.handleEvent) {
+            listener.handleEvent(event);
+          } else {
+            listener.call(this, event);
+          }
+        } catch (exception) {
+          // Exceptions during event handlers should not affect the caller,
+          // but should appear on the console as uncaught, according to MDN:
+          // http://goo.gl/N6Ff27
+          // TODO: add log
+        }
+
+        if (event.stopped) {
+          break;
+        }
+      }
+
+      return event.defaultPrevented;
+    }
+  }]);
+
+  return FakeEventTarget;
+}();
+
+/**
+ * These are the listener types defined in the closure extern for EventTarget.
+ * @typedef {EventListener|function(!Event):(boolean|undefined)}
+ */
+
+
+exports.default = FakeEventTarget;
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * @param {number} n - A certain number
+ * @returns {boolean} - If the input is a number
+ */
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+function isNumber(n) {
+  return Number(n) === n;
+}
+
+/**
+ * @param {number} n - A certain number
+ * @returns {boolean} - If the input is an integer
+ */
+function isInt(n) {
+  return isNumber(n) && n % 1 === 0;
+}
+
+/**
+ * @param {number} n - A certain number
+ * @returns {boolean} - If the input is a float
+ */
+function isFloat(n) {
+  return isNumber(n) && n % 1 !== 0;
+}
+
+/**
+ * @param {Object} obj1 - Certain object
+ * @param {Object} obj2 - Certain object
+ * @returns {*} - The merged object.
+ */
+function merge(obj1, obj2) {
+  if (!obj1 && !obj2) return {};
+  if (!obj1) return obj2;
+  if (!obj2) return obj1;
+  return Object.assign(obj1, obj2);
+}
+
+exports.isNumber = isNumber;
+exports.isInt = isInt;
+exports.isFloat = isFloat;
+exports.merge = merge;
+
+/***/ }),
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1577,7 +1943,7 @@ var registerMediaSourceAdapter = MediaSourceProvider.register;
 exports.registerMediaSourceAdapter = registerMediaSourceAdapter;
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1597,13 +1963,13 @@ var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _util = __webpack_require__(16);
+var _util = __webpack_require__(10);
 
 var _eventManager = __webpack_require__(2);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _playerError = __webpack_require__(15);
+var _playerError = __webpack_require__(16);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
@@ -1769,7 +2135,7 @@ BasePlugin.defaultConfig = {};
 exports.default = BasePlugin;
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1782,11 +2148,11 @@ exports.registerPlugin = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _basePlugin = __webpack_require__(10);
+var _basePlugin = __webpack_require__(12);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
-var _playerError = __webpack_require__(15);
+var _playerError = __webpack_require__(16);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
@@ -1962,153 +2328,7 @@ var registerPlugin = PluginManager.register;
 exports.registerPlugin = registerPlugin;
 
 /***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _fakeEvent = __webpack_require__(3);
-
-var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
-
-var _multiMap = __webpack_require__(14);
-
-var _multiMap2 = _interopRequireDefault(_multiMap);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * A work-alike for EventTarget.  Only DOM elements may be true EventTargets,
- * but this can be used as a base class to provide event dispatch to non-DOM
- * classes.  Only FakeEvents should be dispatched.
- *
- * @struct
- * @constructor
- * @implements {EventTarget}
- * @export
- */
-var FakeEventTarget = function () {
-  function FakeEventTarget() {
-    _classCallCheck(this, FakeEventTarget);
-
-    /**
-     * @private {!MultiMap.<FakeEventTarget.ListenerType>}
-     */
-    this._listeners = new _multiMap2.default();
-
-    /**
-     * The target of all dispatched events.  Defaults to |this|.
-     * @type {EventTarget}
-     */
-    this.dispatchTarget = this;
-  }
-
-  /**
-   * Add an event listener to this object.
-   *
-   * @param {string} type The event type to listen for.
-   * @param {FakeEventTarget.ListenerType} listener The callback or
-   *   listener object to invoke.
-   * @param {boolean=} opt_capturing Ignored.  FakeEventTargets do not have
-   *   parents, so events neither capture nor bubble.
-   * @override
-   * @export
-   */
-
-
-  _createClass(FakeEventTarget, [{
-    key: 'addEventListener',
-    value: function addEventListener(type, listener) {
-      this._listeners.push(type, listener);
-    }
-
-    /**
-     * Remove an event listener from this object.
-     *
-     * @param {string} type The event type for which you wish to remove a listener.
-     * @param {FakeEventTarget.ListenerType} listener The callback or
-     *   listener object to remove.
-     * @param {boolean=} opt_capturing Ignored.  FakeEventTargets do not have
-     *   parents, so events neither capture nor bubble.
-     * @override
-     * @export
-     */
-
-  }, {
-    key: 'removeEventListener',
-    value: function removeEventListener(type, listener) {
-      this._listeners.remove(type, listener);
-    }
-
-    /**
-     * Dispatch an event from this object.
-     *
-     * @param {!Event} event The event to be dispatched from this object.
-     * @return {boolean} True if the default action was prevented.
-     * @override
-     * @export
-     */
-
-  }, {
-    key: 'dispatchEvent',
-    value: function dispatchEvent(event) {
-      // In many browsers, it is complex to overwrite properties of actual Events.
-      // Here we expect only to dispatch FakeEvents, which are simpler.
-      //goog.asserts.assert(event instanceof FakeEvent,
-      //    'FakeEventTarget can only dispatch FakeEvents!');
-
-      var list = this._listeners.get(event.type) || [];
-
-      for (var i = 0; i < list.length; ++i) {
-        // Do this every time, since events can be re-dispatched from handlers.
-        event.target = this.dispatchTarget;
-        event.currentTarget = this.dispatchTarget;
-
-        var listener = list[i];
-        try {
-          if (listener.handleEvent) {
-            listener.handleEvent(event);
-          } else {
-            listener.call(this, event);
-          }
-        } catch (exception) {
-          // Exceptions during event handlers should not affect the caller,
-          // but should appear on the console as uncaught, according to MDN:
-          // http://goo.gl/N6Ff27
-          // TODO: add log
-        }
-
-        if (event.stopped) {
-          break;
-        }
-      }
-
-      return event.defaultPrevented;
-    }
-  }]);
-
-  return FakeEventTarget;
-}();
-
-/**
- * These are the listener types defined in the closure extern for EventTarget.
- * @typedef {EventListener|function(!Event):(boolean|undefined)}
- */
-
-
-exports.default = FakeEventTarget;
-
-/***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2128,7 +2348,7 @@ var PLAYER_STATE_TYPES = {
 exports.default = PLAYER_STATE_TYPES;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2307,7 +2527,7 @@ var MultiMap = function () {
 exports.default = MultiMap;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2365,58 +2585,6 @@ PlayerError.TYPE = {
 exports.default = PlayerError;
 
 /***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * @param {number} n - A certain number
- * @returns {boolean} - If the input is a number
- */
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-function isNumber(n) {
-  return Number(n) === n;
-}
-
-/**
- * @param {number} n - A certain number
- * @returns {boolean} - If the input is an integer
- */
-function isInt(n) {
-  return isNumber(n) && n % 1 === 0;
-}
-
-/**
- * @param {number} n - A certain number
- * @returns {boolean} - If the input is a float
- */
-function isFloat(n) {
-  return isNumber(n) && n % 1 !== 0;
-}
-
-/**
- * @param {Object} obj1 - Certain object
- * @param {Object} obj2 - Certain object
- * @returns {*} - The merged object.
- */
-function merge(obj1, obj2) {
-  if (!obj1 && !obj2) return {};
-  if (!obj1) return obj2;
-  if (!obj2) return obj1;
-  return Object.assign(obj1, obj2);
-}
-
-exports.isNumber = isNumber;
-exports.isInt = isInt;
-exports.isFloat = isFloat;
-exports.merge = merge;
-
-/***/ }),
 /* 17 */
 /***/ (function(module, exports) {
 
@@ -2429,7 +2597,11 @@ module.exports = {
 		"prebuild": "npm run clean",
 		"build": "webpack",
 		"dev": "webpack --progress --colors --watch",
-		"test": "NODE_ENV=test karma start",
+		"test": "NODE_ENV=test karma start --color",
+		"test:chrome": "NODE_ENV=test karma start --color --browsers Chrome",
+		"test:chrome:dots": "NODE_ENV=test karma start --color --browsers Chrome --reporters dots",
+		"test:firefox": "NODE_ENV=test karma start --color --browsers Firefox",
+		"test:safari": "NODE_ENV=test karma start --color --browsers Safari",
 		"test:watch": "NODE_ENV=test karma start --auto-watch",
 		"start": "webpack-dev-server",
 		"release": "NODE_ENV=production npm run build -- -p && git add --all dist && git commit -m'Update dist' && standard-version",
@@ -2509,7 +2681,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _fakeEventTarget = __webpack_require__(12);
+var _fakeEventTarget = __webpack_require__(9);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
@@ -2523,9 +2695,7 @@ var _eventManager2 = _interopRequireDefault(_eventManager);
 
 var _events = __webpack_require__(8);
 
-var _events2 = _interopRequireDefault(_events);
-
-var _mediaSourceProvider = __webpack_require__(9);
+var _mediaSourceProvider = __webpack_require__(11);
 
 var _mediaSourceProvider2 = _interopRequireDefault(_mediaSourceProvider);
 
@@ -2652,15 +2822,19 @@ var Html5 = function (_FakeEventTarget) {
       var _this2 = this;
 
       var _loop = function _loop(playerEvent) {
-        if (_events2.default.hasOwnProperty(playerEvent)) {
-          _this2._eventManager.listen(_this2._el, _events2.default[playerEvent], function () {
-            _this2.dispatchEvent(new _fakeEvent2.default(_events2.default[playerEvent]));
-          });
-        }
+        _this2._eventManager.listen(_this2._el, _events.HTML5_EVENTS[playerEvent], function () {
+          _this2.dispatchEvent(new _fakeEvent2.default(_events.HTML5_EVENTS[playerEvent]));
+        });
       };
 
-      for (var playerEvent in _events2.default) {
+      for (var playerEvent in _events.HTML5_EVENTS) {
         _loop(playerEvent);
+      }
+      if (this._mediaSourceAdapter) {
+        // listen and dispatch adaptive bitrate changed event
+        this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGE, function (event) {
+          _this2.dispatchEvent(event);
+        });
       }
     }
 
@@ -2673,10 +2847,12 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'detach',
     value: function detach() {
-      for (var playerEvent in _events2.default) {
-        if (_events2.default.hasOwnProperty(playerEvent)) {
-          this._eventManager.unlisten(this._el, _events2.default[playerEvent]);
-        }
+      for (var playerEvent in _events.HTML5_EVENTS) {
+        this._eventManager.unlisten(this._el, _events.HTML5_EVENTS[playerEvent]);
+      }
+      if (this._mediaSourceAdapter) {
+        // unlisten to adaptive bitrate changed
+        this._eventManager.unlisten(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGE);
       }
     }
 
@@ -2723,6 +2899,13 @@ var Html5 = function (_FakeEventTarget) {
     value: function _loadMediaSourceAdapter(config) {
       this._mediaSourceAdapter = _mediaSourceProvider2.default.getMediaSourceAdapter(this.getVideoElement(), this._source, config);
     }
+
+    /**
+     * Select a new video track.
+     * @param {VideoTrack} videoTrack - The video track object to set.
+     * @returns {boolean} - Whether the video track selection succeeded.
+     */
+
   }, {
     key: 'selectVideoTrack',
     value: function selectVideoTrack(videoTrack) {
@@ -2731,6 +2914,13 @@ var Html5 = function (_FakeEventTarget) {
       }
       return false;
     }
+
+    /**
+     * Select a new audio track.
+     * @param {AudioTrack} audioTrack - The video track object to set.
+     * @returns {boolean} - Whether the audio track selection succeeded.
+     */
+
   }, {
     key: 'selectAudioTrack',
     value: function selectAudioTrack(audioTrack) {
@@ -2739,6 +2929,13 @@ var Html5 = function (_FakeEventTarget) {
       }
       return false;
     }
+
+    /**
+     * Select a new text track.
+     * @param {TextTrack} textTrack - The text track object to set.
+     * @returns {boolean} - Whether the text track selection succeeded.
+     */
+
   }, {
     key: 'selectTextTrack',
     value: function selectTextTrack(textTrack) {
@@ -2822,7 +3019,10 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      return this._mediaSourceAdapter.src;
+      if (this._mediaSourceAdapter) {
+        return this._mediaSourceAdapter.src;
+      }
+      return "";
     }
   }, {
     key: 'currentTime',
@@ -3246,13 +3446,15 @@ var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
+var _fakeEventTarget = __webpack_require__(9);
+
+var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
+
 var _eventManager = __webpack_require__(2);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
 var _events = __webpack_require__(8);
-
-var _events2 = _interopRequireDefault(_events);
 
 var _track = __webpack_require__(1);
 
@@ -3274,12 +3476,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 /**
  * An illustration of media source extension for progressive download
  * @classdesc
  * @implements {IMediaSourceAdapter}
  */
-var NativeAdapter = function () {
+var NativeAdapter = function (_FakeEventTarget) {
+  _inherits(NativeAdapter, _FakeEventTarget);
+
   _createClass(NativeAdapter, null, [{
     key: 'canPlayType',
 
@@ -3397,12 +3605,15 @@ var NativeAdapter = function () {
   function NativeAdapter(videoElement, source, config) {
     _classCallCheck(this, NativeAdapter);
 
-    this._config = config;
-    this._videoElement = videoElement;
-    this._eventManager = new _eventManager2.default();
+    var _this = _possibleConstructorReturn(this, (NativeAdapter.__proto__ || Object.getPrototypeOf(NativeAdapter)).call(this));
+
+    _this._config = config;
+    _this._videoElement = videoElement;
+    _this._eventManager = new _eventManager2.default();
     if (source != null) {
-      this._source = source.url;
+      _this._source = source.url;
     }
+    return _this;
   }
 
   /**
@@ -3415,22 +3626,22 @@ var NativeAdapter = function () {
   _createClass(NativeAdapter, [{
     key: 'load',
     value: function load() {
-      var _this = this;
+      var _this2 = this;
 
       if (!this._loadPromise) {
         this._loadPromise = new Promise(function (resolve, reject) {
-          _this._eventManager.listen(_this._videoElement, _events2.default.LOADED_METADATA, function () {
-            _this._eventManager.unlisten(_this._videoElement, _events2.default.LOADED_METADATA);
-            var data = { tracks: _this._getParsedTracks() };
+          _this2._eventManager.listen(_this2._videoElement, _events.HTML5_EVENTS.LOADED_METADATA, function () {
+            _this2._eventManager.unlisten(_this2._videoElement, _events.HTML5_EVENTS.LOADED_METADATA);
+            var data = { tracks: _this2._getParsedTracks() };
             NativeAdapter._logger.debug('The source has been loaded successfully');
             resolve(data);
           });
-          _this._eventManager.listen(_this._videoElement, _events2.default.ERROR, function (error) {
-            _this._eventManager.unlisten(_this._videoElement, _events2.default.ERROR);
+          _this2._eventManager.listen(_this2._videoElement, _events.HTML5_EVENTS.ERROR, function (error) {
+            _this2._eventManager.unlisten(_this2._videoElement, _events.HTML5_EVENTS.ERROR);
             NativeAdapter._logger.error(error);
             reject(error);
           });
-          _this._videoElement.src = _this._source;
+          _this2._videoElement.src = _this2._source;
         });
       }
       return this._loadPromise;
@@ -3606,6 +3817,13 @@ var NativeAdapter = function () {
       }
       return false;
     }
+
+    /**
+     * Disables all the existing video tracks.
+     * @private
+     * @returns {void}
+     */
+
   }, {
     key: '_disableVideoTracks',
     value: function _disableVideoTracks() {
@@ -3616,6 +3834,13 @@ var NativeAdapter = function () {
         }
       }
     }
+
+    /**
+     * Disables all the existing audio tracks.
+     * @private
+     * @returns {void}
+     */
+
   }, {
     key: '_disableAudioTracks',
     value: function _disableAudioTracks() {
@@ -3626,6 +3851,13 @@ var NativeAdapter = function () {
         }
       }
     }
+
+    /**
+     * Disables all the existing text tracks.
+     * @private
+     * @returns {void}
+     */
+
   }, {
     key: '_disableTextTracks',
     value: function _disableTextTracks() {
@@ -3636,6 +3868,13 @@ var NativeAdapter = function () {
         }
       }
     }
+
+    /**
+     * Getter for the src that the adapter plays on the video element.
+     * @public
+     * @returns {string} - The src url.
+     */
+
   }, {
     key: 'src',
     get: function get() {
@@ -3644,7 +3883,7 @@ var NativeAdapter = function () {
   }]);
 
   return NativeAdapter;
-}();
+}(_fakeEventTarget2.default);
 
 NativeAdapter._name = "NativeAdapter";
 NativeAdapter._logger = _logger2.default.getLogger(NativeAdapter._name);
@@ -3660,7 +3899,7 @@ exports.default = NativeAdapter;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.VERSION = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BasePlugin = exports.registerPlugin = exports.registerMediaSourceAdapter = undefined;
+exports.VERSION = exports.LoggerFactory = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BasePlugin = exports.registerPlugin = exports.registerMediaSourceAdapter = undefined;
 exports.playkit = playkit;
 
 var _player = __webpack_require__(4);
@@ -3675,11 +3914,11 @@ var _package = __webpack_require__(17);
 
 var packageData = _interopRequireWildcard(_package);
 
-var _mediaSourceProvider = __webpack_require__(9);
+var _mediaSourceProvider = __webpack_require__(11);
 
-var _pluginManager = __webpack_require__(11);
+var _pluginManager = __webpack_require__(13);
 
-var _basePlugin = __webpack_require__(10);
+var _basePlugin = __webpack_require__(12);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
@@ -3734,6 +3973,10 @@ exports.VideoTrack = _videoTrack2.default;
 exports.AudioTrack = _audioTrack2.default;
 exports.TextTrack = _textTrack2.default;
 
+// Export the logger factory
+
+exports.LoggerFactory = _logger2.default;
+
 //export version
 
 exports.VERSION = VERSION;
@@ -3764,13 +4007,11 @@ var _state = __webpack_require__(22);
 
 var _state2 = _interopRequireDefault(_state);
 
-var _stateTypes = __webpack_require__(13);
+var _stateTypes = __webpack_require__(14);
 
 var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
 var _events = __webpack_require__(8);
-
-var _events2 = _interopRequireDefault(_events);
 
 var _fakeEvent = __webpack_require__(3);
 
@@ -3833,47 +4074,47 @@ var StateManager = function () {
 
     _classCallCheck(this, StateManager);
 
-    this._transitions = (_transitions = {}, _defineProperty(_transitions, _stateTypes2.default.IDLE, (_PlayerStates$IDLE = {}, _defineProperty(_PlayerStates$IDLE, _events2.default.LOAD_START, function () {
+    this._transitions = (_transitions = {}, _defineProperty(_transitions, _stateTypes2.default.IDLE, (_PlayerStates$IDLE = {}, _defineProperty(_PlayerStates$IDLE, _events.HTML5_EVENTS.LOAD_START, function () {
       _this._updateState(_stateTypes2.default.LOADING);
       _this._dispatchEvent();
-    }), _defineProperty(_PlayerStates$IDLE, _events2.default.PLAY, function () {
+    }), _defineProperty(_PlayerStates$IDLE, _events.HTML5_EVENTS.PLAY, function () {
       _this._updateState(_stateTypes2.default.BUFFERING);
       _this._dispatchEvent();
-    }), _PlayerStates$IDLE)), _defineProperty(_transitions, _stateTypes2.default.LOADING, (_PlayerStates$LOADING = {}, _defineProperty(_PlayerStates$LOADING, _events2.default.LOADED_METADATA, function () {
+    }), _PlayerStates$IDLE)), _defineProperty(_transitions, _stateTypes2.default.LOADING, (_PlayerStates$LOADING = {}, _defineProperty(_PlayerStates$LOADING, _events.HTML5_EVENTS.LOADED_METADATA, function () {
       if (_this._player.config.autoPlay) {
         _this._updateState(_stateTypes2.default.PLAYING);
       } else {
         _this._updateState(_stateTypes2.default.PAUSED);
       }
       _this._dispatchEvent();
-    }), _defineProperty(_PlayerStates$LOADING, _events2.default.ERROR, function () {
+    }), _defineProperty(_PlayerStates$LOADING, _events.HTML5_EVENTS.ERROR, function () {
       _this._updateState(_stateTypes2.default.IDLE);
       _this._dispatchEvent();
-    }), _PlayerStates$LOADING)), _defineProperty(_transitions, _stateTypes2.default.PAUSED, (_PlayerStates$PAUSED = {}, _defineProperty(_PlayerStates$PAUSED, _events2.default.PLAY, function () {
+    }), _PlayerStates$LOADING)), _defineProperty(_transitions, _stateTypes2.default.PAUSED, (_PlayerStates$PAUSED = {}, _defineProperty(_PlayerStates$PAUSED, _events.HTML5_EVENTS.PLAY, function () {
       _this._updateState(_stateTypes2.default.PLAYING);
       _this._dispatchEvent();
-    }), _defineProperty(_PlayerStates$PAUSED, _events2.default.PLAYING, function () {
+    }), _defineProperty(_PlayerStates$PAUSED, _events.HTML5_EVENTS.PLAYING, function () {
       _this._updateState(_stateTypes2.default.PLAYING);
       _this._dispatchEvent();
-    }), _defineProperty(_PlayerStates$PAUSED, _events2.default.ENDED, function () {
+    }), _defineProperty(_PlayerStates$PAUSED, _events.HTML5_EVENTS.ENDED, function () {
       _this._updateState(_stateTypes2.default.IDLE);
       _this._dispatchEvent();
-    }), _PlayerStates$PAUSED)), _defineProperty(_transitions, _stateTypes2.default.PLAYING, (_PlayerStates$PLAYING = {}, _defineProperty(_PlayerStates$PLAYING, _events2.default.PAUSE, function () {
+    }), _PlayerStates$PAUSED)), _defineProperty(_transitions, _stateTypes2.default.PLAYING, (_PlayerStates$PLAYING = {}, _defineProperty(_PlayerStates$PLAYING, _events.HTML5_EVENTS.PAUSE, function () {
       _this._updateState(_stateTypes2.default.PAUSED);
       _this._dispatchEvent();
-    }), _defineProperty(_PlayerStates$PLAYING, _events2.default.WAITING, function () {
+    }), _defineProperty(_PlayerStates$PLAYING, _events.HTML5_EVENTS.WAITING, function () {
       _this._updateState(_stateTypes2.default.BUFFERING);
       _this._dispatchEvent();
-    }), _defineProperty(_PlayerStates$PLAYING, _events2.default.ENDED, function () {
+    }), _defineProperty(_PlayerStates$PLAYING, _events.HTML5_EVENTS.ENDED, function () {
       _this._updateState(_stateTypes2.default.IDLE);
       _this._dispatchEvent();
-    }), _defineProperty(_PlayerStates$PLAYING, _events2.default.ERROR, function () {
+    }), _defineProperty(_PlayerStates$PLAYING, _events.HTML5_EVENTS.ERROR, function () {
       _this._updateState(_stateTypes2.default.IDLE);
       _this._dispatchEvent();
-    }), _PlayerStates$PLAYING)), _defineProperty(_transitions, _stateTypes2.default.BUFFERING, (_PlayerStates$BUFFERI = {}, _defineProperty(_PlayerStates$BUFFERI, _events2.default.PLAYING, function () {
+    }), _PlayerStates$PLAYING)), _defineProperty(_transitions, _stateTypes2.default.BUFFERING, (_PlayerStates$BUFFERI = {}, _defineProperty(_PlayerStates$BUFFERI, _events.HTML5_EVENTS.PLAYING, function () {
       _this._updateState(_stateTypes2.default.PLAYING);
       _this._dispatchEvent();
-    }), _defineProperty(_PlayerStates$BUFFERI, _events2.default.PAUSE, function () {
+    }), _defineProperty(_PlayerStates$BUFFERI, _events.HTML5_EVENTS.PAUSE, function () {
       _this._updateState(_stateTypes2.default.PAUSED);
       _this._dispatchEvent();
     }), _PlayerStates$BUFFERI)), _transitions);
@@ -3924,14 +4165,14 @@ var StateManager = function () {
   _createClass(StateManager, [{
     key: '_attachListeners',
     value: function _attachListeners() {
-      this._eventManager.listen(this._player, _events2.default.ERROR, this._doTransition.bind(this));
-      this._eventManager.listen(this._player, _events2.default.ENDED, this._doTransition.bind(this));
-      this._eventManager.listen(this._player, _events2.default.PLAY, this._doTransition.bind(this));
-      this._eventManager.listen(this._player, _events2.default.LOAD_START, this._doTransition.bind(this));
-      this._eventManager.listen(this._player, _events2.default.PLAYING, this._doTransition.bind(this));
-      this._eventManager.listen(this._player, _events2.default.LOADED_METADATA, this._doTransition.bind(this));
-      this._eventManager.listen(this._player, _events2.default.PAUSE, this._doTransition.bind(this));
-      this._eventManager.listen(this._player, _events2.default.WAITING, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _events.HTML5_EVENTS.ERROR, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _events.HTML5_EVENTS.ENDED, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _events.HTML5_EVENTS.PLAY, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _events.HTML5_EVENTS.LOAD_START, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _events.HTML5_EVENTS.PLAYING, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _events.HTML5_EVENTS.LOADED_METADATA, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _events.HTML5_EVENTS.PAUSE, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _events.HTML5_EVENTS.WAITING, this._doTransition.bind(this));
     }
 
     /**
@@ -3979,7 +4220,7 @@ var StateManager = function () {
   }, {
     key: '_dispatchEvent',
     value: function _dispatchEvent() {
-      var event = new _fakeEvent2.default(_events2.default.PLAYER_STATE_CHANGED, {
+      var event = new _fakeEvent2.default(_events.CUSTOM_EVENTS.PLAYER_STATE_CHANGED, {
         'oldState': this._prevState,
         'newState': this._curState
       });
@@ -4143,46 +4384,6 @@ exports.default = TRACK_TYPES;
 
 /***/ }),
 /* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * Uppercase the first letter of a string
- * @param  {String} string - String to be uppercased
- * @return {String} - The uppercased string
- * @private
- * @method toTitleCase
- */
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-function capitlize(string) {
-  if (typeof string !== 'string') {
-    return string;
-  }
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-/**
- * @param {string} string - Certain string
- * @param {string} searchString - Certain string
- * @returns {boolean} - Whether the string: string is ending with string: searchString
- */
-function endsWith(string, searchString) {
-  if (typeof string !== 'string' || typeof searchString !== 'string') {
-    return false;
-  }
-  return string.indexOf(searchString, string.length - searchString.length) != -1;
-}
-
-exports.capitlize = capitlize;
-exports.endsWith = endsWith;
-
-/***/ }),
-/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!

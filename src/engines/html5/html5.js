@@ -2,7 +2,7 @@
 import FakeEventTarget from '../../event/fake-event-target'
 import FakeEvent from '../../event/fake-event'
 import EventManager from '../../event/event-manager'
-import PlayerEvents from '../../event/events'
+import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../../event/events'
 import MediaSourceProvider from './media-source/media-source-provider'
 import VideoTrack from '../../track/video-track'
 import AudioTrack from '../../track/audio-track'
@@ -89,12 +89,15 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   attach(): void {
-    for (let playerEvent in PlayerEvents) {
-      if (PlayerEvents.hasOwnProperty(playerEvent)) {
-        this._eventManager.listen(this._el, PlayerEvents[playerEvent], () => {
-          this.dispatchEvent(new FakeEvent(PlayerEvents[playerEvent]));
-        });
-      }
+    for (let playerEvent in Html5Events) {
+      this._eventManager.listen(this._el, Html5Events[playerEvent], () => {
+        this.dispatchEvent(new FakeEvent(Html5Events[playerEvent]));
+      });
+    }
+    if (this._mediaSourceAdapter) { // listen and dispatch adaptive bitrate changed event
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGE, (event) => {
+        this.dispatchEvent(event);
+      });
     }
   }
 
@@ -104,10 +107,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   detach(): void {
-    for (let playerEvent in PlayerEvents) {
-      if (PlayerEvents.hasOwnProperty(playerEvent)) {
-        this._eventManager.unlisten(this._el, PlayerEvents[playerEvent]);
-      }
+    for (let playerEvent in Html5Events) {
+      this._eventManager.unlisten(this._el, Html5Events[playerEvent]);
+    }
+    if (this._mediaSourceAdapter) { // unlisten to adaptive bitrate changed
+      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGE);
     }
   }
 
