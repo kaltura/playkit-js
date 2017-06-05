@@ -96,15 +96,15 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
   /**
    * Fires when the video track has been changed
    */
-  VIDEO_TRACK_CHANGE: 'videotrackchange',
+  VIDEO_TRACK_CHANGED: 'videotrackchanged',
   /**
    * Fires when the audio track has been changed
    */
-  AUDIO_TRACK_CHANGE: 'audiotrackchange',
+  AUDIO_TRACK_CHANGED: 'audiotrackchanged',
   /**
    * Fires when the text track has been changed
    */
-  TEXT_TRACK_CHANGE: 'texttrackchange',
+  TEXT_TRACK_CHANGED: 'texttrackchanged',
   /**
    * Fires when the player state has been changed
    */

@@ -232,7 +232,7 @@ describe('selectTrack - audio', function () {
   it('should select a new audio track', (done) => {
     player.load().then(() => {
       if (video.audioTracks) {
-        player.addEventListener(CustomEvents.AUDIO_TRACK_CHANGE, (event) => {
+        player.addEventListener(CustomEvents.AUDIO_TRACK_CHANGED, (event) => {
           (event.payload instanceof AudioTrack).should.be.true;
           event.payload.index.should.equal(2);
           video.audioTracks[0].enabled.should.be.false;
@@ -335,7 +335,7 @@ describe('selectTrack - text', function () {
 
   it('should select a new subtitles track', (done) => {
     player.load().then(() => {
-      player.addEventListener(CustomEvents.TEXT_TRACK_CHANGE, (event) => {
+      player.addEventListener(CustomEvents.TEXT_TRACK_CHANGED, (event) => {
         (event.payload instanceof TextTrack).should.be.true;
         event.payload.index.should.equal(1);
         video.textTracks[0].mode.should.be.equal('disabled');
@@ -357,7 +357,7 @@ describe('selectTrack - text', function () {
 
   it('should select a new captions track', (done) => {
     player.load().then(() => {
-      player.addEventListener(CustomEvents.TEXT_TRACK_CHANGE, (event) => {
+      player.addEventListener(CustomEvents.TEXT_TRACK_CHANGED, (event) => {
         (event.payload instanceof TextTrack).should.be.true;
         event.payload.index.should.equal(1);
         video.textTracks[0].mode.should.be.equal('disabled');

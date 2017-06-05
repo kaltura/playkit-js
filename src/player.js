@@ -174,7 +174,7 @@ class Player extends FakeEventTarget {
         });
       }
       // listen and dispatch adaptive bitrate changed event
-      this._eventManager.listen(this._engine, CustomEvents.VIDEO_TRACK_CHANGE, (event) => {
+      this._eventManager.listen(this._engine, CustomEvents.VIDEO_TRACK_CHANGED, (event) => {
         return this.dispatchEvent(event);
       });
     }
@@ -279,11 +279,11 @@ class Player extends FakeEventTarget {
   _dispatchTrackEvent(track: Track): void {
     let eventType;
     if (track instanceof VideoTrack) {
-      eventType = CustomEvents.VIDEO_TRACK_CHANGE;
+      eventType = CustomEvents.VIDEO_TRACK_CHANGED;
     } else if (track instanceof AudioTrack) {
-      eventType = CustomEvents.AUDIO_TRACK_CHANGE;
+      eventType = CustomEvents.AUDIO_TRACK_CHANGED;
     } else if (track instanceof TextTrack) {
-      eventType = CustomEvents.TEXT_TRACK_CHANGE;
+      eventType = CustomEvents.TEXT_TRACK_CHANGED;
     }
     if (eventType) {
       this.dispatchEvent(new FakeEvent(eventType, track));

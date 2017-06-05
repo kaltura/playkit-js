@@ -95,7 +95,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       });
     }
     if (this._mediaSourceAdapter) { // listen and dispatch adaptive bitrate changed event
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGE, (event: FakeEvent) => {
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
         this.dispatchEvent(event);
       });
     }
@@ -111,7 +111,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.unlisten(this._el, Html5Events[playerEvent]);
     }
     if (this._mediaSourceAdapter) { // unlisten to adaptive bitrate changed
-      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGE);
+      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGED);
     }
   }
 

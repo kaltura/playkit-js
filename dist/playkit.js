@@ -1030,7 +1030,7 @@ var Player = function (_FakeEventTarget) {
           });
         }
         // listen and dispatch adaptive bitrate changed event
-        this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGE, function (event) {
+        this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, function (event) {
           return _this2.dispatchEvent(event);
         });
       }
@@ -1153,11 +1153,11 @@ var Player = function (_FakeEventTarget) {
     value: function _dispatchTrackEvent(track) {
       var eventType = void 0;
       if (track instanceof _videoTrack2.default) {
-        eventType = _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGE;
+        eventType = _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED;
       } else if (track instanceof _audioTrack2.default) {
-        eventType = _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGE;
+        eventType = _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED;
       } else if (track instanceof _textTrack2.default) {
-        eventType = _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGE;
+        eventType = _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED;
       }
       if (eventType) {
         this.dispatchEvent(new _fakeEvent2.default(eventType, track));
@@ -1716,15 +1716,15 @@ var CUSTOM_EVENTS = {
   /**
    * Fires when the video track has been changed
    */
-  VIDEO_TRACK_CHANGE: 'videotrackchange',
+  VIDEO_TRACK_CHANGED: 'videotrackchanged',
   /**
    * Fires when the audio track has been changed
    */
-  AUDIO_TRACK_CHANGE: 'audiotrackchange',
+  AUDIO_TRACK_CHANGED: 'audiotrackchanged',
   /**
    * Fires when the text track has been changed
    */
-  TEXT_TRACK_CHANGE: 'texttrackchange',
+  TEXT_TRACK_CHANGED: 'texttrackchanged',
   /**
    * Fires when the player state has been changed
    */
@@ -2602,7 +2602,7 @@ module.exports = {
 		"test:chrome:dots": "NODE_ENV=test karma start --color --browsers Chrome --reporters dots",
 		"test:firefox": "NODE_ENV=test karma start --color --browsers Firefox",
 		"test:safari": "NODE_ENV=test karma start --color --browsers Safari",
-		"test:watch": "NODE_ENV=test karma start --auto-watch",
+		"test:watch": "NODE_ENV=test karma start --color --auto-watch",
 		"start": "webpack-dev-server",
 		"release": "NODE_ENV=production npm run build -- -p && git add --all dist && git commit -m'Update dist' && standard-version",
 		"eslint": "eslint . --color",
@@ -2832,7 +2832,7 @@ var Html5 = function (_FakeEventTarget) {
       }
       if (this._mediaSourceAdapter) {
         // listen and dispatch adaptive bitrate changed event
-        this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGE, function (event) {
+        this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, function (event) {
           _this2.dispatchEvent(event);
         });
       }
@@ -2852,7 +2852,7 @@ var Html5 = function (_FakeEventTarget) {
       }
       if (this._mediaSourceAdapter) {
         // unlisten to adaptive bitrate changed
-        this._eventManager.unlisten(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGE);
+        this._eventManager.unlisten(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED);
       }
     }
 

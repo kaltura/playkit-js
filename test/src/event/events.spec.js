@@ -28,9 +28,9 @@ describe('events', () => {
       WAITING: 'waiting',
     });
     events.CUSTOM_EVENTS.should.deep.equals({
-      VIDEO_TRACK_CHANGE: 'videotrackchange',
-      AUDIO_TRACK_CHANGE: 'audiotrackchange',
-      TEXT_TRACK_CHANGE: 'texttrackchange',
+      VIDEO_TRACK_CHANGED: 'videotrackchanged',
+      AUDIO_TRACK_CHANGED: 'audiotrackchanged',
+      TEXT_TRACK_CHANGED: 'texttrackchanged',
       PLAYER_STATE_CHANGED: 'playerstatechanged'
     });
     events.PLAYER_EVENTS.should.deep.equals(merge(events.HTML5_EVENTS, events.CUSTOM_EVENTS));
