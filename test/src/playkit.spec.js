@@ -3,10 +3,15 @@ import Player from '../../src/player'
 import PlayerStates from '../../src/state/state-types'
 import PlayerEvents from '../../src/event/events'
 import sourcesConfig from './configs/sources.json'
-//import pluginsConfig from './configs/plugins.json'
+import {removeVideoElementsFromTestPage} from './utils/test-utils'
 
 describe('playkit:playkit', function () {
+
   this.timeout(10000);
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+  });
 
   it('should play mp4 stream', (done) => {
     let config = sourcesConfig.mp4_none_hls_dash;
@@ -36,8 +41,9 @@ describe('playkit:playkit', function () {
       player.destroy();
       should.fail();
     });
-    player.load();
-    player.play();
+    player.load().then(() => {
+      player.play();
+    });
   });
 
   it('should switch player states during playback', (done) => {
@@ -99,6 +105,7 @@ describe('playkit:playkit', function () {
       player.destroy();
       done();
     }
+
     player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
     player.addEventListener(PlayerEvents.LOAD_START, onLoadStart);
     player.addEventListener(PlayerEvents.LOADED_METADATA, onLoadedMetadata);

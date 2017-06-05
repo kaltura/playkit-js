@@ -10,6 +10,11 @@ import LoggerFactory from './utils/logger'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
 import StateManager from './state/state-manager'
+import TrackTypes from './track/track-types'
+import Track from './track/track'
+import VideoTrack from './track/video-track'
+import AudioTrack from './track/audio-track'
+import TextTrack from './track/text-track'
 
 type ListenerType = (event: FakeEvent) => any;
 
@@ -60,6 +65,12 @@ class Player extends FakeEventTarget {
    * @private
    */
   _stateManager: StateManager;
+  /**
+   * The tracks of the player.
+   * @type {Array<Track>}
+   * @private
+   */
+  _tracks: Array<Track>;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -67,6 +78,7 @@ class Player extends FakeEventTarget {
    */
   constructor(config: Object) {
     super();
+    this._tracks = [];
     this._logger = LoggerFactory.getLogger('Player');
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
@@ -108,8 +120,8 @@ class Player extends FakeEventTarget {
     this._eventManager.destroy();
     this._pluginManager.destroy();
     this._stateManager.destroy();
-    this._eventManager.destroy();
     this._config = {};
+    this._tracks = [];
   }
 
   /**
@@ -187,6 +199,96 @@ class Player extends FakeEventTarget {
   }
 
   /**
+   * Returns the tracks according to the filter. if no filter given returns the all tracks.
+   * @function getTracks
+   * @param {string} [type] - a tracks filter, should be 'video', 'audio' or 'text'.
+   * @returns {Array<Track>} - The parsed tracks.
+   * @public
+   */
+  getTracks(type?: string): Array<Track> {
+    return this._getTracksByType(type);
+  }
+
+  /**
+   * Returns the tracks according to the filter. if no filter given returns the all tracks.
+   * @function _getTracksByType
+   * @param {string} [type] - a tracks filter, should be 'video', 'audio' or 'text'.
+   * @returns {Array<Track>} - The parsed tracks.
+   * @private
+   */
+  _getTracksByType(type?: string): Array<Track> {
+    return !type ? this._tracks : this._tracks.filter((track: Track) => {
+      if (type === TrackTypes.VIDEO) {
+        return track instanceof VideoTrack;
+      } else if (type === TrackTypes.AUDIO) {
+        return track instanceof AudioTrack;
+      } else if (type === TrackTypes.TEXT) {
+        return track instanceof TextTrack;
+      } else {
+        return true;
+      }
+    });
+  }
+
+  /**
+   * Select a track
+   * @function selectTrack
+   * @param {Track} track - the track to select
+   * @returns {void}
+   * @public
+   */
+  selectTrack(track: Track): void {
+    let success = this._selectTrackByType(track);
+    if (success) {
+      this._markActiveTrack(track)
+    }
+  }
+
+  /**
+   * Select a track by type
+   * @function _selectTrackByType
+   * @param {Track} track - the track to select
+   * @returns {boolean} - success
+   * @private
+   */
+  _selectTrackByType(track: Track): boolean {
+    if (track) {
+      if (track instanceof VideoTrack) {
+        return this._engine.selectVideoTrack(track);
+      } else if (track instanceof AudioTrack) {
+        return this._engine.selectAudioTrack(track);
+      } else if (track instanceof TextTrack) {
+        return this._engine.selectTextTrack(track);
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Mark the selected track as active
+   * @function _markActiveTrack
+   * @param {Track} track - the track to mark
+   * @returns {void}
+   * @private
+   */
+  _markActiveTrack(track: Track) {
+    let type;
+    if (track instanceof VideoTrack) {
+      type = TrackTypes.VIDEO;
+    } else if (track instanceof AudioTrack) {
+      type = TrackTypes.AUDIO;
+    } else if (track instanceof TextTrack) {
+      type = TrackTypes.TEXT;
+    }
+    if (type) {
+      let tracks = this.getTracks(type);
+      for (let i = 0; i < tracks.length; i++) {
+        tracks[i].active = track.index === i;
+      }
+    }
+  }
+
+  /**
    * Get the player config.
    * @returns {Object} - The player configuration.
    * @public
@@ -203,7 +305,13 @@ class Player extends FakeEventTarget {
    */
   play(): void {
     if (this._engine) {
-      return this._engine.play();
+      if (this._engine.src) {
+        this._engine.play();
+      } else {
+        this.load().then(() => {
+          this._engine.play();
+        });
+      }
     }
   }
 
@@ -220,12 +328,16 @@ class Player extends FakeEventTarget {
 
   /**
    * Load media.
-   * @returns {void}
    * @public
+   * @returns {Promise<*>} - The load promise.
    */
-  load(): void {
+  load(): Promise<*> {
     if (this._engine) {
-      this._engine.load();
+      return this._engine.load().then((data) => {
+        this._tracks = data.tracks;
+      });
+    } else {
+      return Promise.resolve();
     }
   }
 
@@ -384,6 +496,15 @@ class Player extends FakeEventTarget {
    */
   get State(): { [state: string]: string } {
     return PlayerStates;
+  }
+
+  /**
+   * Get the player tracks types.
+   * @returns {Object} - The tracks types of the player.
+   * @public
+   */
+  get Track(): { [track: string]: string } {
+    return TrackTypes;
   }
 
 // </editor-fold>

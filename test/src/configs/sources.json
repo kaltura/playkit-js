@@ -3,7 +3,7 @@
     "sources": [
       {
         "mimetype": "video/mp4",
-        "url": "http://techslides.com/demos/sample-videos/small.mp4",
+        "url": "/base/src/assets/audios.mp4",
         "id": "1_rsrdfext_10081,url"
       },
       {
@@ -19,6 +19,15 @@
         "mimetype": "application/dash+xml",
         "url": "https://cdnapisec.kaltura.com/p/1082342/sp/108234200/playManifest/entryId/1_rsrdfext/protocol/https/format/mpegdash/falvorIds/1_ha0nqwz8,1_gw7u4nf1,1_rql6sqaa,1_sufd1yd9,1_9xvkk7a5,1_4typ4pat,1_n75294r4/ks/OGM0ZWM0Y2IwOWI5ZjM0MDcyZmQ3YmYxNzBiMGEwNGYxNWQ0ZTcyOXwxMDgyMzQyOzEwODIzNDI7MTQ5MDExNTg5MzswOzE0OTAwMjk0OTMuMTY3ODswO3ZpZXc6Kix3aWRnZXQ6MTs7/a.mpd",
         "id": "1_rsrdfext_11611,mpegdash"
+      }
+    ]
+  },
+  "corrupted_url": {
+    "sources": [
+      {
+        "mimetype": "video/mp4",
+        "url": "some corrupted url",
+        "id": "1_rsrdfext_10081,url"
       }
     ]
   }

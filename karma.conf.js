@@ -11,22 +11,23 @@ const customLaunchers = {
 module.exports = function (config) {
   let karmaConf = {
     logLevel: config.LOG_INFO,
-    // Run in Chrome
     browsers: [
       'Chrome',
       'Firefox'
     ],
-    // Just run once by default
+    concurrency: 1,
     singleRun: true,
-    // Use the mocha test framework
+    colors: true,
     frameworks: [
       'mocha'
     ],
     files: [
-      'test/setup/karma.js'
+      'test/setup/karma.js', {
+        pattern: 'src/assets/audios.mp4',
+        included: false
+      }
     ],
     preprocessors: {
-      // Preprocess with webpack and our sourcemap loader
       'src/**/*.js': [
         'webpack',
         'sourcemap'
@@ -36,12 +37,10 @@ module.exports = function (config) {
         'sourcemap'
       ]
     },
-    // Report results in this format
     reporters: [
       'progress',
       'coverage'
     ],
-    // Kind of a copy of your webpack config
     webpack: {
       devtool: 'inline-source-map',
       module: {
@@ -57,11 +56,10 @@ module.exports = function (config) {
       }
     },
     webpackServer: {
-      noInfo: true // Please don't spam the console when running in karma!
+      noInfo: true
     },
     client: {
       mocha: {
-        // change Karma's debug.html to the mocha web reporter
         reporter: 'html'
       }
     }
