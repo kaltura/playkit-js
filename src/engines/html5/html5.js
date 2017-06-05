@@ -27,12 +27,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _mediaSourceAdapter: ?IMediaSourceAdapter;
-  /**
-   * The selected source to play.
-   * @type {Source}
-   * @private
-   */
-  _source: ?Source;
 
   /**
    * @type {string} - The engine name.
@@ -55,10 +49,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   constructor(source: Source, config: Object) {
     super();
-    this._source = source;
     this._createVideoElement();
     this._eventManager = new EventManager();
-    this._loadMediaSourceAdapter(config);
+    this._loadMediaSourceAdapter(source, config);
     this.attach();
   }
 
@@ -80,7 +73,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       }
     }
     this._eventManager.destroy();
-    this._source = null;
   }
 
   /**
@@ -138,12 +130,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Loads the appropriate media source extension adapter.
+   * @param {Source} source - The selected source object.
    * @param {Object} config - The media source extension configuration.
    * @private
    * @returns {void}
    */
-  _loadMediaSourceAdapter(config: Object): void {
-    this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter(this.getVideoElement(), this._source, config);
+  _loadMediaSourceAdapter(source: Source, config: Object): void {
+    this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter(this.getVideoElement(), source, config);
   }
 
   /**

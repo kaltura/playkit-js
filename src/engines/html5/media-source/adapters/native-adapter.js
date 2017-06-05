@@ -41,11 +41,11 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    */
   _config: Object;
   /**
-   * The source url
-   * @member {string} _source
+   * The source object
+   * @member {Source} _sourceObj
    * @private
    */
-  _source: string;
+  _sourceObj: ?Source;
   /**
    * The dom video element
    * @member {HTMLVideoElement} _videoElement
@@ -65,7 +65,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @type {Promise<Object>}
    * @private
    */
-  _loadPromise: Promise<Object> | null;
+  _loadPromise: ?Promise<Object>;
 
   /**
    * Checks if NativeAdapter can play a given mime type
@@ -111,13 +111,11 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @param {Source} source - The source object
    * @param {Object} config - The media source adapter configuration
    */
-  constructor(videoElement: HTMLVideoElement, source: ?Source, config: Object) {
+  constructor(videoElement: HTMLVideoElement, source: Source, config: Object) {
     this._config = config;
     this._videoElement = videoElement;
+    this._sourceObj = source;
     this._eventManager = new EventManager();
-    if (source != null) {
-      this._source = source.url;
-    }
   }
 
   /**
@@ -139,7 +137,9 @@ export default class NativeAdapter implements IMediaSourceAdapter {
           NativeAdapter._logger.error(error);
           reject(error);
         });
-        this._videoElement.src = this._source;
+        if (this._sourceObj && this._sourceObj.url) {
+          this._videoElement.src = this._sourceObj.url;
+        }
       });
     }
     return this._loadPromise;
