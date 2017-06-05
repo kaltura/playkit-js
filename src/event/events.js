@@ -108,7 +108,7 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
   /**
    * Fires when the player state has been changed
    */
-  PLAYER_STATE_CHANGED: 'playerStateChanged'
+  PLAYER_STATE_CHANGED: 'playerstatechanged'
 };
 
 const PLAYER_EVENTS: { [event: string]: string } = merge(merge({}, HTML5_EVENTS), CUSTOM_EVENTS);

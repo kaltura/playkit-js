@@ -19,13 +19,17 @@ export default class NativeAdapter extends FakeEventTarget implements IMediaSour
    * @static
    * @private
    */
-  static _name = "NativeAdapter";
+  static _name: string = 'NativeAdapter';
   /**
    * Getter for the adapter name
    * @returns {string} - The adapter name
    */
   static get name(): string {
     return NativeAdapter._name;
+  }
+
+  static set name(name: string): void {
+    // Do nothing. Just a workaround for flow issue with static getter in an inheritor. See: https://github.com/facebook/flow/issues/3008.
   }
 
   /**

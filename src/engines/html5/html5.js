@@ -95,7 +95,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       });
     }
     if (this._mediaSourceAdapter) { // listen and dispatch adaptive bitrate changed event
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGE, (event) => {
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGE, (event: FakeEvent) => {
         this.dispatchEvent(event);
       });
     }

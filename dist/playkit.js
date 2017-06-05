@@ -1728,7 +1728,7 @@ var CUSTOM_EVENTS = {
   /**
    * Fires when the player state has been changed
    */
-  PLAYER_STATE_CHANGED: 'playerStateChanged'
+  PLAYER_STATE_CHANGED: 'playerstatechanged'
 };
 
 var PLAYER_EVENTS = (0, _util.merge)((0, _util.merge)({}, HTML5_EVENTS), CUSTOM_EVENTS);
@@ -3585,19 +3585,22 @@ var NativeAdapter = function (_FakeEventTarget) {
     get: function get() {
       return NativeAdapter._name;
     }
+    /**
+     * The name of the Adapter
+     * @member {string} _name
+     * @static
+     * @private
+     */
+    ,
+    set: function set(name) {}
+    // Do nothing. Just a workaround for flow issue with static getter in an inheritor. See: https://github.com/facebook/flow/issues/3008.
+
 
     /**
      * The adapter logger
      * @member {any} _logger
      * @private
      * @static
-     */
-
-    /**
-     * The name of the Adapter
-     * @member {string} _name
-     * @static
-     * @private
      */
 
   }]);
@@ -3885,7 +3888,7 @@ var NativeAdapter = function (_FakeEventTarget) {
   return NativeAdapter;
 }(_fakeEventTarget2.default);
 
-NativeAdapter._name = "NativeAdapter";
+NativeAdapter._name = 'NativeAdapter';
 NativeAdapter._logger = _logger2.default.getLogger(NativeAdapter._name);
 exports.default = NativeAdapter;
 
