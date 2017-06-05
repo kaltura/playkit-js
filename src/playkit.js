@@ -1,6 +1,7 @@
 //@flow
 import Player from './player'
 import LoggerFactory from './utils/logger'
+import FakeEventTarget from './event/fake-event-target'
 import * as packageData from '../package.json'
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider'
 import {registerPlugin} from './plugin/plugin-manager'
@@ -35,6 +36,9 @@ export {Track, VideoTrack, AudioTrack, TextTrack};
 
 // Export the logger factory
 export {LoggerFactory}
+
+// Export the FakeEventTarget class
+export {FakeEventTarget}
 
 //export version
 export {VERSION};
