@@ -166,7 +166,7 @@ class Player extends FakeEventTarget {
    * @private
    * @returns {void}
    */
-  _attachMedia() {
+  _attachMedia(): void {
     if (this._engine) {
       for (let playerEvent in Html5Events) {
         this._eventManager.listen(this._engine, Html5Events[playerEvent], (event) => {
