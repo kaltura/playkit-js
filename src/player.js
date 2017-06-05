@@ -120,7 +120,6 @@ class Player extends FakeEventTarget {
     this._eventManager.destroy();
     this._pluginManager.destroy();
     this._stateManager.destroy();
-    this._eventManager.destroy();
     this._config = {};
     this._tracks = [];
   }
