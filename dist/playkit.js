@@ -637,11 +637,157 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _fakeEvent = __webpack_require__(3);
+
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
+
+var _multiMap = __webpack_require__(15);
+
+var _multiMap2 = _interopRequireDefault(_multiMap);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * A work-alike for EventTarget.  Only DOM elements may be true EventTargets,
+ * but this can be used as a base class to provide event dispatch to non-DOM
+ * classes.  Only FakeEvents should be dispatched.
+ *
+ * @struct
+ * @constructor
+ * @implements {EventTarget}
+ * @export
+ */
+var FakeEventTarget = function () {
+  function FakeEventTarget() {
+    _classCallCheck(this, FakeEventTarget);
+
+    /**
+     * @private {!MultiMap.<FakeEventTarget.ListenerType>}
+     */
+    this._listeners = new _multiMap2.default();
+
+    /**
+     * The target of all dispatched events.  Defaults to |this|.
+     * @type {EventTarget}
+     */
+    this.dispatchTarget = this;
+  }
+
+  /**
+   * Add an event listener to this object.
+   *
+   * @param {string} type The event type to listen for.
+   * @param {FakeEventTarget.ListenerType} listener The callback or
+   *   listener object to invoke.
+   * @param {boolean=} opt_capturing Ignored.  FakeEventTargets do not have
+   *   parents, so events neither capture nor bubble.
+   * @override
+   * @export
+   */
+
+
+  _createClass(FakeEventTarget, [{
+    key: 'addEventListener',
+    value: function addEventListener(type, listener) {
+      this._listeners.push(type, listener);
+    }
+
+    /**
+     * Remove an event listener from this object.
+     *
+     * @param {string} type The event type for which you wish to remove a listener.
+     * @param {FakeEventTarget.ListenerType} listener The callback or
+     *   listener object to remove.
+     * @param {boolean=} opt_capturing Ignored.  FakeEventTargets do not have
+     *   parents, so events neither capture nor bubble.
+     * @override
+     * @export
+     */
+
+  }, {
+    key: 'removeEventListener',
+    value: function removeEventListener(type, listener) {
+      this._listeners.remove(type, listener);
+    }
+
+    /**
+     * Dispatch an event from this object.
+     *
+     * @param {!Event} event The event to be dispatched from this object.
+     * @return {boolean} True if the default action was prevented.
+     * @override
+     * @export
+     */
+
+  }, {
+    key: 'dispatchEvent',
+    value: function dispatchEvent(event) {
+      // In many browsers, it is complex to overwrite properties of actual Events.
+      // Here we expect only to dispatch FakeEvents, which are simpler.
+      //goog.asserts.assert(event instanceof FakeEvent,
+      //    'FakeEventTarget can only dispatch FakeEvents!');
+
+      var list = this._listeners.get(event.type) || [];
+
+      for (var i = 0; i < list.length; ++i) {
+        // Do this every time, since events can be re-dispatched from handlers.
+        event.target = this.dispatchTarget;
+        event.currentTarget = this.dispatchTarget;
+
+        var listener = list[i];
+        try {
+          if (listener.handleEvent) {
+            listener.handleEvent(event);
+          } else {
+            listener.call(this, event);
+          }
+        } catch (exception) {
+          // Exceptions during event handlers should not affect the caller,
+          // but should appear on the console as uncaught, according to MDN:
+          // http://goo.gl/N6Ff27
+          // TODO: add log
+        }
+
+        if (event.stopped) {
+          break;
+        }
+      }
+
+      return event.defaultPrevented;
+    }
+  }]);
+
+  return FakeEventTarget;
+}();
+
+/**
+ * These are the listener types defined in the closure extern for EventTarget.
+ * @typedef {EventListener|function(!Event):(boolean|undefined)}
+ */
+
+
+exports.default = FakeEventTarget;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _eventManager = __webpack_require__(2);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _fakeEventTarget = __webpack_require__(9);
+var _fakeEventTarget = __webpack_require__(4);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
@@ -649,7 +795,7 @@ var _fakeEvent = __webpack_require__(3);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _events = __webpack_require__(8);
+var _events = __webpack_require__(9);
 
 var _stateTypes = __webpack_require__(14);
 
@@ -681,15 +827,15 @@ var _track = __webpack_require__(1);
 
 var _track2 = _interopRequireDefault(_track);
 
-var _videoTrack = __webpack_require__(7);
+var _videoTrack = __webpack_require__(8);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(5);
+var _audioTrack = __webpack_require__(6);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(6);
+var _textTrack = __webpack_require__(7);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
@@ -1303,7 +1449,7 @@ var Player = function (_FakeEventTarget) {
 exports.default = Player;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1344,7 +1490,7 @@ var AudioTrack = function (_Track) {
 exports.default = AudioTrack;
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1420,7 +1566,7 @@ var TextTrack = function (_Track) {
 exports.default = TextTrack;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1461,7 +1607,7 @@ var VideoTrack = function (_Track) {
 exports.default = VideoTrack;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1590,152 +1736,6 @@ var PLAYER_EVENTS = (0, _util.merge)((0, _util.merge)({}, HTML5_EVENTS), CUSTOM_
 exports.PLAYER_EVENTS = PLAYER_EVENTS;
 exports.HTML5_EVENTS = HTML5_EVENTS;
 exports.CUSTOM_EVENTS = CUSTOM_EVENTS;
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _fakeEvent = __webpack_require__(3);
-
-var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
-
-var _multiMap = __webpack_require__(15);
-
-var _multiMap2 = _interopRequireDefault(_multiMap);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * A work-alike for EventTarget.  Only DOM elements may be true EventTargets,
- * but this can be used as a base class to provide event dispatch to non-DOM
- * classes.  Only FakeEvents should be dispatched.
- *
- * @struct
- * @constructor
- * @implements {EventTarget}
- * @export
- */
-var FakeEventTarget = function () {
-  function FakeEventTarget() {
-    _classCallCheck(this, FakeEventTarget);
-
-    /**
-     * @private {!MultiMap.<FakeEventTarget.ListenerType>}
-     */
-    this._listeners = new _multiMap2.default();
-
-    /**
-     * The target of all dispatched events.  Defaults to |this|.
-     * @type {EventTarget}
-     */
-    this.dispatchTarget = this;
-  }
-
-  /**
-   * Add an event listener to this object.
-   *
-   * @param {string} type The event type to listen for.
-   * @param {FakeEventTarget.ListenerType} listener The callback or
-   *   listener object to invoke.
-   * @param {boolean=} opt_capturing Ignored.  FakeEventTargets do not have
-   *   parents, so events neither capture nor bubble.
-   * @override
-   * @export
-   */
-
-
-  _createClass(FakeEventTarget, [{
-    key: 'addEventListener',
-    value: function addEventListener(type, listener) {
-      this._listeners.push(type, listener);
-    }
-
-    /**
-     * Remove an event listener from this object.
-     *
-     * @param {string} type The event type for which you wish to remove a listener.
-     * @param {FakeEventTarget.ListenerType} listener The callback or
-     *   listener object to remove.
-     * @param {boolean=} opt_capturing Ignored.  FakeEventTargets do not have
-     *   parents, so events neither capture nor bubble.
-     * @override
-     * @export
-     */
-
-  }, {
-    key: 'removeEventListener',
-    value: function removeEventListener(type, listener) {
-      this._listeners.remove(type, listener);
-    }
-
-    /**
-     * Dispatch an event from this object.
-     *
-     * @param {!Event} event The event to be dispatched from this object.
-     * @return {boolean} True if the default action was prevented.
-     * @override
-     * @export
-     */
-
-  }, {
-    key: 'dispatchEvent',
-    value: function dispatchEvent(event) {
-      // In many browsers, it is complex to overwrite properties of actual Events.
-      // Here we expect only to dispatch FakeEvents, which are simpler.
-      //goog.asserts.assert(event instanceof FakeEvent,
-      //    'FakeEventTarget can only dispatch FakeEvents!');
-
-      var list = this._listeners.get(event.type) || [];
-
-      for (var i = 0; i < list.length; ++i) {
-        // Do this every time, since events can be re-dispatched from handlers.
-        event.target = this.dispatchTarget;
-        event.currentTarget = this.dispatchTarget;
-
-        var listener = list[i];
-        try {
-          if (listener.handleEvent) {
-            listener.handleEvent(event);
-          } else {
-            listener.call(this, event);
-          }
-        } catch (exception) {
-          // Exceptions during event handlers should not affect the caller,
-          // but should appear on the console as uncaught, according to MDN:
-          // http://goo.gl/N6Ff27
-          // TODO: add log
-        }
-
-        if (event.stopped) {
-          break;
-        }
-      }
-
-      return event.defaultPrevented;
-    }
-  }]);
-
-  return FakeEventTarget;
-}();
-
-/**
- * These are the listener types defined in the closure extern for EventTarget.
- * @typedef {EventListener|function(!Event):(boolean|undefined)}
- */
-
-
-exports.default = FakeEventTarget;
 
 /***/ }),
 /* 10 */
@@ -1955,7 +1955,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _player = __webpack_require__(4);
+var _player = __webpack_require__(5);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -2156,7 +2156,7 @@ var _playerError = __webpack_require__(16);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
-var _player = __webpack_require__(4);
+var _player = __webpack_require__(5);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -2681,7 +2681,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _fakeEventTarget = __webpack_require__(9);
+var _fakeEventTarget = __webpack_require__(4);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
@@ -2693,21 +2693,21 @@ var _eventManager = __webpack_require__(2);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _events = __webpack_require__(8);
+var _events = __webpack_require__(9);
 
 var _mediaSourceProvider = __webpack_require__(11);
 
 var _mediaSourceProvider2 = _interopRequireDefault(_mediaSourceProvider);
 
-var _videoTrack = __webpack_require__(7);
+var _videoTrack = __webpack_require__(8);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(5);
+var _audioTrack = __webpack_require__(6);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(6);
+var _textTrack = __webpack_require__(7);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
@@ -3446,7 +3446,7 @@ var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _fakeEventTarget = __webpack_require__(9);
+var _fakeEventTarget = __webpack_require__(4);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
@@ -3454,21 +3454,21 @@ var _eventManager = __webpack_require__(2);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _events = __webpack_require__(8);
+var _events = __webpack_require__(9);
 
 var _track = __webpack_require__(1);
 
 var _track2 = _interopRequireDefault(_track);
 
-var _videoTrack = __webpack_require__(7);
+var _videoTrack = __webpack_require__(8);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(5);
+var _audioTrack = __webpack_require__(6);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(6);
+var _textTrack = __webpack_require__(7);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
@@ -3899,16 +3899,20 @@ exports.default = NativeAdapter;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.VERSION = exports.LoggerFactory = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BasePlugin = exports.registerPlugin = exports.registerMediaSourceAdapter = undefined;
+exports.VERSION = exports.FakeEventTarget = exports.LoggerFactory = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BasePlugin = exports.registerPlugin = exports.registerMediaSourceAdapter = undefined;
 exports.playkit = playkit;
 
-var _player = __webpack_require__(4);
+var _player = __webpack_require__(5);
 
 var _player2 = _interopRequireDefault(_player);
 
 var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
+
+var _fakeEventTarget = __webpack_require__(4);
+
+var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
 var _package = __webpack_require__(17);
 
@@ -3926,15 +3930,15 @@ var _track = __webpack_require__(1);
 
 var _track2 = _interopRequireDefault(_track);
 
-var _videoTrack = __webpack_require__(7);
+var _videoTrack = __webpack_require__(8);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(5);
+var _audioTrack = __webpack_require__(6);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(6);
+var _textTrack = __webpack_require__(7);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
@@ -3944,6 +3948,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // Playkit version
 var VERSION = packageData.version;
+
 
 _logger2.default.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
 _logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
@@ -3977,6 +3982,10 @@ exports.TextTrack = _textTrack2.default;
 
 exports.LoggerFactory = _logger2.default;
 
+// Export the FakeEventTarget class
+
+exports.FakeEventTarget = _fakeEventTarget2.default;
+
 //export version
 
 exports.VERSION = VERSION;
@@ -3995,7 +4004,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _player = __webpack_require__(4);
+var _player = __webpack_require__(5);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -4011,7 +4020,7 @@ var _stateTypes = __webpack_require__(14);
 
 var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
-var _events = __webpack_require__(8);
+var _events = __webpack_require__(9);
 
 var _fakeEvent = __webpack_require__(3);
 
