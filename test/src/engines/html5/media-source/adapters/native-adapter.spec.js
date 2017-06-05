@@ -66,7 +66,7 @@ describe('NativeAdapterInstance', () => {
   it('should create all native adapter properties', () => {
     nativeInstance._config.should.exist;
     nativeInstance._videoElement.should.exist;
-    nativeInstance._source.should.exist;
+    nativeInstance._sourceObj.should.exist;
   });
 });
 
