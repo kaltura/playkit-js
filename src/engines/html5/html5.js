@@ -146,6 +146,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter(this.getVideoElement(), this._source, config);
   }
 
+  /**
+   * Select a new video track.
+   * @param {VideoTrack} videoTrack - The video track object to set.
+   * @returns {boolean} - Whether the video track selection succeeded.
+   */
   selectVideoTrack(videoTrack: VideoTrack): boolean {
     if (this._mediaSourceAdapter) {
       return this._mediaSourceAdapter.selectVideoTrack(videoTrack);
@@ -153,6 +158,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return false;
   }
 
+  /**
+   * Select a new audio track.
+   * @param {AudioTrack} audioTrack - The video track object to set.
+   * @returns {boolean} - Whether the audio track selection succeeded.
+   */
   selectAudioTrack(audioTrack: AudioTrack): boolean {
     if (this._mediaSourceAdapter) {
       return this._mediaSourceAdapter.selectAudioTrack(audioTrack);
@@ -160,6 +170,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return false;
   }
 
+  /**
+   * Select a new text track.
+   * @param {TextTrack} textTrack - The text track object to set.
+   * @returns {boolean} - Whether the text track selection succeeded.
+   */
   selectTextTrack(textTrack: TextTrack): boolean {
     if (this._mediaSourceAdapter) {
       return this._mediaSourceAdapter.selectTextTrack(textTrack);

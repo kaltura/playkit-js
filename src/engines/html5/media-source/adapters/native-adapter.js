@@ -292,6 +292,11 @@ export default class NativeAdapter implements IMediaSourceAdapter {
     return false;
   }
 
+  /**
+   * Disables all the existing video tracks.
+   * @private
+   * @returns {void}
+   */
   _disableVideoTracks(): void {
     let videoTracks = this._videoElement.videoTracks;
     if (videoTracks) {
@@ -301,6 +306,11 @@ export default class NativeAdapter implements IMediaSourceAdapter {
     }
   }
 
+  /**
+   * Disables all the existing audio tracks.
+   * @private
+   * @returns {void}
+   */
   _disableAudioTracks(): void {
     let audioTracks = this._videoElement.audioTracks;
     if (audioTracks) {
@@ -310,6 +320,11 @@ export default class NativeAdapter implements IMediaSourceAdapter {
     }
   }
 
+  /**
+   * Disables all the existing text tracks.
+   * @private
+   * @returns {void}
+   */
   _disableTextTracks(): void {
     let textTracks = this._videoElement.textTracks;
     if (textTracks) {
@@ -319,6 +334,11 @@ export default class NativeAdapter implements IMediaSourceAdapter {
     }
   }
 
+  /**
+   * Getter for the src that the adapter plays on the video element.
+   * @public
+   * @returns {string} - The src url.
+   */
   get src(): string {
     return this._videoElement.src;
   }

@@ -1,5 +1,8 @@
 //@flow
 import Track from './track'
 
-export default class VideoTrack extends Track {
-}
+/**
+ * Video track representation of the player.
+ * @classdesc
+ */
+export default class VideoTrack extends Track {}

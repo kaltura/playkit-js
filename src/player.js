@@ -65,7 +65,12 @@ class Player extends FakeEventTarget {
    * @private
    */
   _stateManager: StateManager;
-  _tracks: Array<Track> = [];
+  /**
+   * The tracks of the player.
+   * @type {Array<Track>}
+   * @private
+   */
+  _tracks: Array<Track>;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -73,6 +78,7 @@ class Player extends FakeEventTarget {
    */
   constructor(config: Object) {
     super();
+    this._tracks = [];
     this._logger = LoggerFactory.getLogger('Player');
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();

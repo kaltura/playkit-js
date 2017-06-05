@@ -1,5 +1,4 @@
 //@flow
-
 const TRACK_TYPES: {[track: string]: string} = {
   VIDEO: "video",
   AUDIO: "audio",
