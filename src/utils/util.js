@@ -37,4 +37,20 @@ function merge(obj1: Object, obj2: Object): Object {
   return Object.assign(obj1, obj2);
 }
 
-export {isNumber, isInt, isFloat, merge};
+/**
+ * @param {string} variable - The key in the query string
+ * @returns {boolean} - The query string value
+ */
+function getQueryVariable(variable: string): ?string {
+  let query = decodeURIComponent(window.location.search.substring(1));
+  let vars = query.split("&");
+  for (let i = 0; i < vars.length; i++) {
+    let pair = vars[i].split("=");
+    if (pair[0] === variable) {
+      return pair[1];
+    }
+  }
+  return null;
+}
+
+export {isNumber, isInt, isFloat, merge, getQueryVariable};

@@ -1,5 +1,6 @@
 //@flow
-import * as JsLogger from 'js-logger';
+import * as JsLogger from 'js-logger'
+import {getQueryVariable} from './util'
 
 const LOG_LEVEL: { [level: string]: Object } = {
   "DEBUG": JsLogger.DEBUG,
@@ -23,7 +24,18 @@ class LoggerFactory {
   }
 }
 
-const lf = new LoggerFactory({defaultLevel: JsLogger.DEBUG});
+let logLevel;
+
+(function () {
+  let queryLogLevel = getQueryVariable('logLevel');
+  if (!queryLogLevel) {
+    logLevel = LOG_LEVEL.OFF;
+  } else {
+    logLevel = LOG_LEVEL[queryLogLevel.toUpperCase()];
+  }
+})();
+
+const lf = new LoggerFactory({defaultLevel: logLevel});
 
 export default lf;
 export {LOG_LEVEL};

@@ -1,6 +1,6 @@
 import * as util from '../../../src/utils/util'
 
-describe('util', () => {
+describe('isNumber', () => {
   it('should return if a certain input is a number', () => {
     util.isNumber(-3).should.be.true;
     util.isNumber(2).should.be.true;
@@ -8,14 +8,18 @@ describe('util', () => {
     util.isNumber('hello').should.be.false;
     util.isNumber({}).should.be.false;
   });
+});
 
+describe('isInt', () => {
   it('should return if a certain input is a number of type integer', () => {
     util.isInt(3).should.be.true;
     util.isInt(3.1).should.be.false;
     util.isInt('hello').should.be.false;
     util.isInt({}).should.be.false;
   });
+});
 
+describe('isFloat', () => {
   it('should return if a certain input is a number of type float', () => {
     util.isFloat(3.1).should.be.true;
     util.isFloat(6.455).should.be.true;
@@ -23,7 +27,9 @@ describe('util', () => {
     util.isFloat('hello').should.be.false;
     util.isFloat({}).should.be.false;
   });
+});
 
+describe('merge', () => {
   it('should merge 2 objects', () => {
     let obj1 = {x: 1}, obj2 = {y: 2};
     util.merge(obj1, obj2).should.deep.equals({x: 1, y: 2});
@@ -56,3 +62,29 @@ describe('util', () => {
     util.merge(obj1, obj2).should.deep.equals({});
   });
 });
+
+describe('getQueryVariable', () => {
+  let sandbox;
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+  });
+
+  it('should retrieve the correct value for a certain key', () => {
+    sinon.stub(window, 'decodeURIComponent').returns("foo=bar&test={}&num=2");
+    util.getQueryVariable('foo').should.equal('bar');
+    util.getQueryVariable('test').should.equal('{}');
+    util.getQueryVariable('num').should.equal('2');
+  });
+
+  it('should return null', () => {
+    (util.getQueryVariable('bar') === null).should.be.true;
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+});
+
+
+
