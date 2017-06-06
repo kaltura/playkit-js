@@ -336,8 +336,8 @@ describe('selectTrack - text', function () {
   it('should select a new subtitles track', (done) => {
     player.load().then(() => {
       player.addEventListener(CustomEvents.TEXT_TRACK_CHANGED, (event) => {
-        (event.payload instanceof TextTrack).should.be.true;
-        event.payload.index.should.equal(1);
+        (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
+        event.payload.selectedTextTrack.index.should.equal(1);
         video.textTracks[0].mode.should.be.equal('disabled');
         video.textTracks[1].mode.should.be.equal('showing');
         tracks[0].active.should.be.false;
@@ -358,8 +358,8 @@ describe('selectTrack - text', function () {
   it('should select a new captions track', (done) => {
     player.load().then(() => {
       player.addEventListener(CustomEvents.TEXT_TRACK_CHANGED, (event) => {
-        (event.payload instanceof TextTrack).should.be.true;
-        event.payload.index.should.equal(1);
+        (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
+        event.payload.selectedTextTrack.index.should.equal(1);
         video.textTracks[0].mode.should.be.equal('disabled');
         video.textTracks[1].mode.should.be.equal('showing');
         tracks[0].active.should.be.false;
