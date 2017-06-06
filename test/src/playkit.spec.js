@@ -3,7 +3,7 @@ import Player from '../../src/player'
 import PlayerStates from '../../src/state/state-types'
 import * as PlayerEvents from '../../src/event/events'
 import sourcesConfig from './configs/sources.json'
-import {removeVideoElementsFromTestPage} from './utils/test-utils'
+import {removeVideoElementsFromTestPage} from '../../src/utils/test-utils'
 
 describe('playkit:playkit', function () {
 

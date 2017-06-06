@@ -1,7 +1,6 @@
 //@flow
 import Player from './player'
 import LoggerFactory from './utils/logger'
-import FakeEventTarget from './event/fake-event-target'
 import * as packageData from '../package.json'
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider'
 import {registerPlugin} from './plugin/plugin-manager'
@@ -10,6 +9,10 @@ import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
+import FakeEventTarget from './event/fake-event-target'
+import FakeEvent from './event/fake-event'
+import {CUSTOM_EVENTS as CustomEvents} from './event/events'
+import * as TestUtils from './utils/test-utils'
 
 // Playkit version
 let VERSION = packageData.version;
@@ -25,8 +28,11 @@ export function playkit(config: Object = {}) {
   return new Player(config);
 }
 
-// Registration for media source adapters
-export {registerMediaSourceAdapter};
+// Export the test utils
+export {TestUtils};
+
+// Export the media source adapters necessary utils
+export {registerMediaSourceAdapter, FakeEventTarget, FakeEvent, CustomEvents};
 
 // Export the plugin framework
 export {registerPlugin, BasePlugin};
@@ -35,10 +41,7 @@ export {registerPlugin, BasePlugin};
 export {Track, VideoTrack, AudioTrack, TextTrack};
 
 // Export the logger factory
-export {LoggerFactory}
-
-// Export the FakeEventTarget class
-export {FakeEventTarget}
+export {LoggerFactory};
 
 //export version
 export {VERSION};

@@ -173,8 +173,9 @@ class Player extends FakeEventTarget {
           return this.dispatchEvent(event);
         });
       }
-      // listen and dispatch adaptive bitrate changed event
+      // Listen and dispatch adaptive bitrate changed event
       this._eventManager.listen(this._engine, CustomEvents.VIDEO_TRACK_CHANGED, (event) => {
+        this._markActiveTrack(event.payload.selectedVideoTrack);
         return this.dispatchEvent(event);
       });
     }

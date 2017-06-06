@@ -113,5 +113,4 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
 
 const PLAYER_EVENTS: { [event: string]: string } = merge(merge({}, HTML5_EVENTS), CUSTOM_EVENTS);
 
-
 export {PLAYER_EVENTS, HTML5_EVENTS, CUSTOM_EVENTS};

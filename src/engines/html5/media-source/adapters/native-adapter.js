@@ -132,8 +132,9 @@ export default class NativeAdapter extends FakeEventTarget implements IMediaSour
   load(): Promise<Object> {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
-        this._eventManager.listen(this._videoElement, Html5Events.LOADED_METADATA, () => {
-          this._eventManager.unlisten(this._videoElement, Html5Events.LOADED_METADATA);
+        // We're using 'loadeddata' event for native hls (on 'loadedmetadata' native hls doesn't have tracks yet).
+        this._eventManager.listen(this._videoElement, Html5Events.LOADED_DATA, () => {
+          this._eventManager.unlisten(this._videoElement, Html5Events.LOADED_DATA);
           let data = {tracks: this._getParsedTracks()};
           NativeAdapter._logger.debug('The source has been loaded successfully');
           resolve(data);

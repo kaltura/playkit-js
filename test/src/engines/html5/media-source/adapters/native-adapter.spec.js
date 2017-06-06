@@ -2,7 +2,7 @@ import NativeAdapter from '../../../../../../src/engines/html5/media-source/adap
 import VideoTrack from '../../../../../../src/track/video-track'
 import AudioTrack from '../../../../../../src/track/audio-track'
 import TextTrack from '../../../../../../src/track/text-track'
-import {removeVideoElementsFromTestPage} from '../../../../utils/test-utils'
+import {removeVideoElementsFromTestPage} from '../../../../../../src/utils/test-utils'
 
 describe('NativeAdapter:isSupported', () => {
   it('should be supported', () => {
