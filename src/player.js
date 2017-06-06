@@ -279,15 +279,19 @@ class Player extends FakeEventTarget {
    */
   _dispatchTrackEvent(track: Track): void {
     let eventType;
+    let payload;
     if (track instanceof VideoTrack) {
       eventType = CustomEvents.VIDEO_TRACK_CHANGED;
+      payload = {selectedVideoTrack: track};
     } else if (track instanceof AudioTrack) {
       eventType = CustomEvents.AUDIO_TRACK_CHANGED;
+      payload = {selectedAudioTrack: track};
     } else if (track instanceof TextTrack) {
       eventType = CustomEvents.TEXT_TRACK_CHANGED;
+      payload = {selectedTextTrack: track};
     }
     if (eventType) {
-      this.dispatchEvent(new FakeEvent(eventType, track));
+      this.dispatchEvent(new FakeEvent(eventType, payload));
     }
   }
 

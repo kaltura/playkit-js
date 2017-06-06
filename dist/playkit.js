@@ -1284,15 +1284,19 @@ var Player = function (_FakeEventTarget) {
     key: '_dispatchTrackEvent',
     value: function _dispatchTrackEvent(track) {
       var eventType = void 0;
+      var payload = void 0;
       if (track instanceof _videoTrack2.default) {
         eventType = _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED;
+        payload = { selectedVideoTrack: track };
       } else if (track instanceof _audioTrack2.default) {
         eventType = _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED;
+        payload = { selectedAudioTrack: track };
       } else if (track instanceof _textTrack2.default) {
         eventType = _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED;
+        payload = { selectedTextTrack: track };
       }
       if (eventType) {
-        this.dispatchEvent(new _fakeEvent2.default(eventType, track));
+        this.dispatchEvent(new _fakeEvent2.default(eventType, payload));
       }
     }
 
