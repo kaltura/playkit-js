@@ -1,8 +1,10 @@
 //@flow
 import LoggerFactory from '../../../../utils/logger'
+import FakeEvent from '../../../../event/fake-event'
 import FakeEventTarget from '../../../../event/fake-event-target'
 import EventManager from '../../../../event/event-manager'
 import {HTML5_EVENTS as Html5Events} from '../../../../event/events'
+import {CUSTOM_EVENTS as CustomEvents} from '../../../../event/events'
 import Track from '../../../../track/track'
 import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'
@@ -252,24 +254,26 @@ export default class NativeAdapter extends FakeEventTarget implements IMediaSour
    * Select a video track
    * @function selectVideoTrack
    * @param {VideoTrack} videoTrack - the track to select
-   * @returns {boolean} - success
+   * @returns {void}
    * @public
    */
-  selectVideoTrack(videoTrack: VideoTrack): boolean {
+  selectVideoTrack(videoTrack: VideoTrack): void {
     let videoTracks = this._videoElement.videoTracks;
     if ((videoTrack instanceof VideoTrack) && videoTracks && videoTracks[videoTrack.index]) {
       this._disableVideoTracks();
       videoTracks[videoTrack.index].selected = true;
-      return true;
+      let fakeEvent = new FakeEvent(CustomEvents.VIDEO_TRACK_CHANGED, {
+        selectedVideoTrack: videoTrack
+      });
+      this.dispatchEvent(fakeEvent);
     }
-    return false;
   }
 
   /**
    * Select an audio track
    * @function selectAudioTrack
    * @param {AudioTrack} audioTrack - the  audio track to select
-   * @returns {boolean} - success
+   * @returns {void}
    * @public
    */
   selectAudioTrack(audioTrack: AudioTrack): boolean {
@@ -277,16 +281,18 @@ export default class NativeAdapter extends FakeEventTarget implements IMediaSour
     if ((audioTrack instanceof AudioTrack) && audioTracks && audioTracks[audioTrack.index]) {
       this._disableAudioTracks();
       audioTracks[audioTrack.index].enabled = true;
-      return true;
+      let fakeEvent = new FakeEvent(CustomEvents.AUDIO_TRACK_CHANGED, {
+        selectedAudioTrack: audioTrack
+      });
+      this.dispatchEvent(fakeEvent);
     }
-    return false;
   }
 
   /**
    * Select a text track
    * @function selectTextTrack
    * @param {TextTrack} textTrack - the track to select
-   * @returns {boolean} - success
+   * @returns {void}
    * @public
    */
   selectTextTrack(textTrack: TextTrack): boolean {
@@ -294,9 +300,11 @@ export default class NativeAdapter extends FakeEventTarget implements IMediaSour
     if ((textTrack instanceof TextTrack) && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
       this._disableTextTracks();
       textTracks[textTrack.index].mode = 'showing';
-      return true;
+      let fakeEvent = new FakeEvent(CustomEvents.TEXT_TRACK_CHANGED, {
+        selectedTextTrack: textTrack
+      });
+      this.dispatchEvent(fakeEvent);
     }
-    return false;
   }
 
   /**

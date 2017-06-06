@@ -90,6 +90,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
         this.dispatchEvent(event);
       });
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.AUDIO_TRACK_CHANGED, (event: FakeEvent) => {
+        return this.dispatchEvent(event);
+      });
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.TEXT_TRACK_CHANGED, (event: FakeEvent) => {
+        return this.dispatchEvent(event);
+      });
     }
   }
 
@@ -104,6 +110,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
     if (this._mediaSourceAdapter) { // unlisten to adaptive bitrate changed
       this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGED);
+      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.AUDIO_TRACK_CHANGED);
+      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.TEXT_TRACK_CHANGED);
     }
   }
 
@@ -146,37 +154,34 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * Select a new video track.
    * @param {VideoTrack} videoTrack - The video track object to set.
-   * @returns {boolean} - Whether the video track selection succeeded.
+   * @returns {void}
    */
-  selectVideoTrack(videoTrack: VideoTrack): boolean {
+  selectVideoTrack(videoTrack: VideoTrack): void {
     if (this._mediaSourceAdapter) {
-      return this._mediaSourceAdapter.selectVideoTrack(videoTrack);
+      this._mediaSourceAdapter.selectVideoTrack(videoTrack);
     }
-    return false;
   }
 
   /**
    * Select a new audio track.
    * @param {AudioTrack} audioTrack - The video track object to set.
-   * @returns {boolean} - Whether the audio track selection succeeded.
+   * @returns {void}
    */
-  selectAudioTrack(audioTrack: AudioTrack): boolean {
+  selectAudioTrack(audioTrack: AudioTrack): void {
     if (this._mediaSourceAdapter) {
-      return this._mediaSourceAdapter.selectAudioTrack(audioTrack);
+      this._mediaSourceAdapter.selectAudioTrack(audioTrack);
     }
-    return false;
   }
 
   /**
    * Select a new text track.
    * @param {TextTrack} textTrack - The text track object to set.
-   * @returns {boolean} - Whether the text track selection succeeded.
+   * @returns {void}
    */
-  selectTextTrack(textTrack: TextTrack): boolean {
+  selectTextTrack(textTrack: TextTrack): void {
     if (this._mediaSourceAdapter) {
-      return this._mediaSourceAdapter.selectTextTrack(textTrack);
+      this._mediaSourceAdapter.selectTextTrack(textTrack);
     }
-    return false;
   }
 
   /**

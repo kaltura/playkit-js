@@ -1,7 +1,7 @@
 //@flow
 import EventManager from './event/event-manager'
-import FakeEventTarget from './event/fake-event-target'
 import FakeEvent from './event/fake-event'
+import FakeEventTarget from './event/fake-event-target'
 import {PLAYER_EVENTS as PlayerEvents, HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from './event/events'
 import PlayerStates from './state/state-types'
 import {isNumber, isFloat, merge} from './utils/util'
@@ -169,13 +169,20 @@ class Player extends FakeEventTarget {
   _attachMedia(): void {
     if (this._engine) {
       for (let playerEvent in Html5Events) {
-        this._eventManager.listen(this._engine, Html5Events[playerEvent], (event) => {
+        this._eventManager.listen(this._engine, Html5Events[playerEvent], (event: FakeEvent) => {
           return this.dispatchEvent(event);
         });
       }
-      // Listen and dispatch adaptive bitrate changed event
-      this._eventManager.listen(this._engine, CustomEvents.VIDEO_TRACK_CHANGED, (event) => {
+      this._eventManager.listen(this._engine, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
         this._markActiveTrack(event.payload.selectedVideoTrack);
+        return this.dispatchEvent(event);
+      });
+      this._eventManager.listen(this._engine, CustomEvents.AUDIO_TRACK_CHANGED, (event: FakeEvent) => {
+        this._markActiveTrack(event.payload.selectedAudioTrack);
+        return this.dispatchEvent(event);
+      });
+      this._eventManager.listen(this._engine, CustomEvents.TEXT_TRACK_CHANGED, (event: FakeEvent) => {
+        this._markActiveTrack(event.payload.selectedTextTrack);
         return this.dispatchEvent(event);
       });
     }
@@ -221,29 +228,13 @@ class Player extends FakeEventTarget {
    * @public
    */
   selectTrack(track: Track): void {
-    let success = this._selectTrackByType(track);
-    if (success) {
-      this._markActiveTrack(track);
-      this._dispatchTrackEvent(track);
-    }
-  }
-
-  /**
-   * Select a track by type
-   * @function _selectTrackByType
-   * @param {Track} track - the track to select
-   * @returns {boolean} - success
-   * @private
-   */
-  _selectTrackByType(track: Track): boolean {
     if (track instanceof VideoTrack) {
-      return this._engine.selectVideoTrack(track);
+      this._engine.selectVideoTrack(track);
     } else if (track instanceof AudioTrack) {
-      return this._engine.selectAudioTrack(track);
+      this._engine.selectAudioTrack(track);
     } else if (track instanceof TextTrack) {
-      return this._engine.selectTextTrack(track);
+      this._engine.selectTextTrack(track);
     }
-    return false;
   }
 
   /**
@@ -267,31 +258,6 @@ class Player extends FakeEventTarget {
       for (let i = 0; i < tracks.length; i++) {
         tracks[i].active = track.index === i;
       }
-    }
-  }
-
-  /**
-   * Dispatch track changed event
-   * @function _dispatchTrackEvent
-   * @param {Track} track - the track to dispatch
-   * @returns {void}
-   * @private
-   */
-  _dispatchTrackEvent(track: Track): void {
-    let eventType;
-    let payload;
-    if (track instanceof VideoTrack) {
-      eventType = CustomEvents.VIDEO_TRACK_CHANGED;
-      payload = {selectedVideoTrack: track};
-    } else if (track instanceof AudioTrack) {
-      eventType = CustomEvents.AUDIO_TRACK_CHANGED;
-      payload = {selectedAudioTrack: track};
-    } else if (track instanceof TextTrack) {
-      eventType = CustomEvents.TEXT_TRACK_CHANGED;
-      payload = {selectedTextTrack: track};
-    }
-    if (eventType) {
-      this.dispatchEvent(new FakeEvent(eventType, payload));
     }
   }
 

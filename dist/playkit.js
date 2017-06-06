@@ -86,62 +86,6 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.LOG_LEVEL = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _jsLogger = __webpack_require__(25);
-
-var JsLogger = _interopRequireWildcard(_jsLogger);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var LOG_LEVEL = {
-  "DEBUG": JsLogger.DEBUG,
-  "INFO": JsLogger.INFO,
-  "TIME": JsLogger.TIME,
-  "WARN": JsLogger.WARN,
-  "ERROR": JsLogger.ERROR,
-  "OFF": JsLogger.OFF
-};
-
-var LoggerFactory = function () {
-  function LoggerFactory(options) {
-    _classCallCheck(this, LoggerFactory);
-
-    JsLogger.useDefaults(options || {});
-  }
-
-  _createClass(LoggerFactory, [{
-    key: "getLogger",
-    value: function getLogger(name) {
-      if (!name) {
-        return JsLogger;
-      }
-      return JsLogger.get(name);
-    }
-  }]);
-
-  return LoggerFactory;
-}();
-
-var lf = new LoggerFactory({ defaultLevel: JsLogger.DEBUG });
-
-exports.default = lf;
-exports.LOG_LEVEL = LOG_LEVEL;
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -273,6 +217,62 @@ var FakeEvent = function () {
 }();
 
 exports.default = FakeEvent;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.LOG_LEVEL = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jsLogger = __webpack_require__(25);
+
+var JsLogger = _interopRequireWildcard(_jsLogger);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var LOG_LEVEL = {
+  "DEBUG": JsLogger.DEBUG,
+  "INFO": JsLogger.INFO,
+  "TIME": JsLogger.TIME,
+  "WARN": JsLogger.WARN,
+  "ERROR": JsLogger.ERROR,
+  "OFF": JsLogger.OFF
+};
+
+var LoggerFactory = function () {
+  function LoggerFactory(options) {
+    _classCallCheck(this, LoggerFactory);
+
+    JsLogger.useDefaults(options || {});
+  }
+
+  _createClass(LoggerFactory, [{
+    key: "getLogger",
+    value: function getLogger(name) {
+      if (!name) {
+        return JsLogger;
+      }
+      return JsLogger.get(name);
+    }
+  }]);
+
+  return LoggerFactory;
+}();
+
+var lf = new LoggerFactory({ defaultLevel: JsLogger.DEBUG });
+
+exports.default = lf;
+exports.LOG_LEVEL = LOG_LEVEL;
 
 /***/ }),
 /* 2 */
@@ -572,7 +572,7 @@ var _multiMap = __webpack_require__(15);
 
 var _multiMap2 = _interopRequireDefault(_multiMap);
 
-var _fakeEvent = __webpack_require__(1);
+var _fakeEvent = __webpack_require__(0);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
@@ -768,7 +768,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _fakeEvent = __webpack_require__(1);
+var _fakeEvent = __webpack_require__(0);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
@@ -918,13 +918,13 @@ var _eventManager = __webpack_require__(4);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
+var _fakeEvent = __webpack_require__(0);
+
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
+
 var _fakeEventTarget = __webpack_require__(5);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
-
-var _fakeEvent = __webpack_require__(1);
-
-var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
 var _events = __webpack_require__(3);
 
@@ -934,7 +934,7 @@ var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
 var _util = __webpack_require__(10);
 
-var _logger = __webpack_require__(0);
+var _logger = __webpack_require__(1);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -1160,9 +1160,16 @@ var Player = function (_FakeEventTarget) {
             return _this2.dispatchEvent(event);
           });
         }
-        // Listen and dispatch adaptive bitrate changed event
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, function (event) {
           _this2._markActiveTrack(event.payload.selectedVideoTrack);
+          return _this2.dispatchEvent(event);
+        });
+        this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED, function (event) {
+          _this2._markActiveTrack(event.payload.selectedAudioTrack);
+          return _this2.dispatchEvent(event);
+        });
+        this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED, function (event) {
+          _this2._markActiveTrack(event.payload.selectedTextTrack);
           return _this2.dispatchEvent(event);
         });
       }
@@ -1217,32 +1224,13 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'selectTrack',
     value: function selectTrack(track) {
-      var success = this._selectTrackByType(track);
-      if (success) {
-        this._markActiveTrack(track);
-        this._dispatchTrackEvent(track);
-      }
-    }
-
-    /**
-     * Select a track by type
-     * @function _selectTrackByType
-     * @param {Track} track - the track to select
-     * @returns {boolean} - success
-     * @private
-     */
-
-  }, {
-    key: '_selectTrackByType',
-    value: function _selectTrackByType(track) {
       if (track instanceof _videoTrack2.default) {
-        return this._engine.selectVideoTrack(track);
+        this._engine.selectVideoTrack(track);
       } else if (track instanceof _audioTrack2.default) {
-        return this._engine.selectAudioTrack(track);
+        this._engine.selectAudioTrack(track);
       } else if (track instanceof _textTrack2.default) {
-        return this._engine.selectTextTrack(track);
+        this._engine.selectTextTrack(track);
       }
-      return false;
     }
 
     /**
@@ -1269,34 +1257,6 @@ var Player = function (_FakeEventTarget) {
         for (var i = 0; i < tracks.length; i++) {
           tracks[i].active = track.index === i;
         }
-      }
-    }
-
-    /**
-     * Dispatch track changed event
-     * @function _dispatchTrackEvent
-     * @param {Track} track - the track to dispatch
-     * @returns {void}
-     * @private
-     */
-
-  }, {
-    key: '_dispatchTrackEvent',
-    value: function _dispatchTrackEvent(track) {
-      var eventType = void 0;
-      var payload = void 0;
-      if (track instanceof _videoTrack2.default) {
-        eventType = _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED;
-        payload = { selectedVideoTrack: track };
-      } else if (track instanceof _audioTrack2.default) {
-        eventType = _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED;
-        payload = { selectedAudioTrack: track };
-      } else if (track instanceof _textTrack2.default) {
-        eventType = _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED;
-        payload = { selectedTextTrack: track };
-      }
-      if (eventType) {
-        this.dispatchEvent(new _fakeEvent2.default(eventType, payload));
       }
     }
 
@@ -1812,7 +1772,7 @@ var _nativeAdapter = __webpack_require__(20);
 
 var _nativeAdapter2 = _interopRequireDefault(_nativeAdapter);
 
-var _logger = __webpack_require__(0);
+var _logger = __webpack_require__(1);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -1964,7 +1924,7 @@ var _player = __webpack_require__(6);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _logger = __webpack_require__(0);
+var _logger = __webpack_require__(1);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -2165,7 +2125,7 @@ var _player = __webpack_require__(6);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _logger = __webpack_require__(0);
+var _logger = __webpack_require__(1);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -2809,7 +2769,7 @@ var _fakeEventTarget = __webpack_require__(5);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
-var _fakeEvent = __webpack_require__(1);
+var _fakeEvent = __webpack_require__(0);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
@@ -2951,6 +2911,12 @@ var Html5 = function (_FakeEventTarget) {
         this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, function (event) {
           _this2.dispatchEvent(event);
         });
+        this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED, function (event) {
+          return _this2.dispatchEvent(event);
+        });
+        this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED, function (event) {
+          return _this2.dispatchEvent(event);
+        });
       }
     }
 
@@ -2969,6 +2935,8 @@ var Html5 = function (_FakeEventTarget) {
       if (this._mediaSourceAdapter) {
         // unlisten to adaptive bitrate changed
         this._eventManager.unlisten(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED);
+        this._eventManager.unlisten(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED);
+        this._eventManager.unlisten(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED);
       }
     }
 
@@ -3020,46 +2988,43 @@ var Html5 = function (_FakeEventTarget) {
     /**
      * Select a new video track.
      * @param {VideoTrack} videoTrack - The video track object to set.
-     * @returns {boolean} - Whether the video track selection succeeded.
+     * @returns {void}
      */
 
   }, {
     key: 'selectVideoTrack',
     value: function selectVideoTrack(videoTrack) {
       if (this._mediaSourceAdapter) {
-        return this._mediaSourceAdapter.selectVideoTrack(videoTrack);
+        this._mediaSourceAdapter.selectVideoTrack(videoTrack);
       }
-      return false;
     }
 
     /**
      * Select a new audio track.
      * @param {AudioTrack} audioTrack - The video track object to set.
-     * @returns {boolean} - Whether the audio track selection succeeded.
+     * @returns {void}
      */
 
   }, {
     key: 'selectAudioTrack',
     value: function selectAudioTrack(audioTrack) {
       if (this._mediaSourceAdapter) {
-        return this._mediaSourceAdapter.selectAudioTrack(audioTrack);
+        this._mediaSourceAdapter.selectAudioTrack(audioTrack);
       }
-      return false;
     }
 
     /**
      * Select a new text track.
      * @param {TextTrack} textTrack - The text track object to set.
-     * @returns {boolean} - Whether the text track selection succeeded.
+     * @returns {void}
      */
 
   }, {
     key: 'selectTextTrack',
     value: function selectTextTrack(textTrack) {
       if (this._mediaSourceAdapter) {
-        return this._mediaSourceAdapter.selectTextTrack(textTrack);
+        this._mediaSourceAdapter.selectTextTrack(textTrack);
       }
-      return false;
     }
 
     /**
@@ -3559,9 +3524,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _logger = __webpack_require__(0);
+var _logger = __webpack_require__(1);
 
 var _logger2 = _interopRequireDefault(_logger);
+
+var _fakeEvent = __webpack_require__(0);
+
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
 var _fakeEventTarget = __webpack_require__(5);
 
@@ -3883,7 +3852,7 @@ var NativeAdapter = function (_FakeEventTarget) {
      * Select a video track
      * @function selectVideoTrack
      * @param {VideoTrack} videoTrack - the track to select
-     * @returns {boolean} - success
+     * @returns {void}
      * @public
      */
 
@@ -3894,16 +3863,18 @@ var NativeAdapter = function (_FakeEventTarget) {
       if (videoTrack instanceof _videoTrack2.default && videoTracks && videoTracks[videoTrack.index]) {
         this._disableVideoTracks();
         videoTracks[videoTrack.index].selected = true;
-        return true;
+        var fakeEvent = new _fakeEvent2.default(_events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, {
+          selectedVideoTrack: videoTrack
+        });
+        this.dispatchEvent(fakeEvent);
       }
-      return false;
     }
 
     /**
      * Select an audio track
      * @function selectAudioTrack
      * @param {AudioTrack} audioTrack - the  audio track to select
-     * @returns {boolean} - success
+     * @returns {void}
      * @public
      */
 
@@ -3914,16 +3885,18 @@ var NativeAdapter = function (_FakeEventTarget) {
       if (audioTrack instanceof _audioTrack2.default && audioTracks && audioTracks[audioTrack.index]) {
         this._disableAudioTracks();
         audioTracks[audioTrack.index].enabled = true;
-        return true;
+        var fakeEvent = new _fakeEvent2.default(_events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED, {
+          selectedAudioTrack: audioTrack
+        });
+        this.dispatchEvent(fakeEvent);
       }
-      return false;
     }
 
     /**
      * Select a text track
      * @function selectTextTrack
      * @param {TextTrack} textTrack - the track to select
-     * @returns {boolean} - success
+     * @returns {void}
      * @public
      */
 
@@ -3934,9 +3907,11 @@ var NativeAdapter = function (_FakeEventTarget) {
       if (textTrack instanceof _textTrack2.default && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
         this._disableTextTracks();
         textTracks[textTrack.index].mode = 'showing';
-        return true;
+        var fakeEvent = new _fakeEvent2.default(_events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED, {
+          selectedTextTrack: textTrack
+        });
+        this.dispatchEvent(fakeEvent);
       }
-      return false;
     }
 
     /**
@@ -4027,7 +4002,7 @@ var _player = __webpack_require__(6);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _logger = __webpack_require__(0);
+var _logger = __webpack_require__(1);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -4063,7 +4038,7 @@ var _fakeEventTarget = __webpack_require__(5);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
-var _fakeEvent = __webpack_require__(1);
+var _fakeEvent = __webpack_require__(0);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
@@ -4155,11 +4130,11 @@ var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
 var _events = __webpack_require__(3);
 
-var _fakeEvent = __webpack_require__(1);
+var _fakeEvent = __webpack_require__(0);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _logger = __webpack_require__(0);
+var _logger = __webpack_require__(1);
 
 var _logger2 = _interopRequireDefault(_logger);
 
