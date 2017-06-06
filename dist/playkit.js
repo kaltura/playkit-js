@@ -16,9 +16,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
+/******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/ 		}
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -1712,6 +1712,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _track = __webpack_require__(2);
 
 var _track2 = _interopRequireDefault(_track);
@@ -1731,10 +1733,43 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var VideoTrack = function (_Track) {
   _inherits(VideoTrack, _Track);
 
+  _createClass(VideoTrack, [{
+    key: 'bandwidth',
+
+
+    /**
+     * Getter for the kind of the text track.
+     * @public
+     * @returns {string} - The kind of the text track.
+     */
+    get: function get() {
+      return this._bandwidth;
+    }
+
+    /**
+     * @constructor
+     * @param {Object} settings - The track settings object.
+     */
+
+    /**
+     * The kind of the text track:
+     * subtitles/captions/metadata.
+     * @member
+     * @type {string}
+     * @private
+     */
+
+  }]);
+
   function VideoTrack() {
+    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
     _classCallCheck(this, VideoTrack);
 
-    return _possibleConstructorReturn(this, (VideoTrack.__proto__ || Object.getPrototypeOf(VideoTrack)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (VideoTrack.__proto__ || Object.getPrototypeOf(VideoTrack)).call(this, settings));
+
+    _this._bandwidth = settings.bandwidth;
+    return _this;
   }
 
   return VideoTrack;
@@ -2627,13 +2662,14 @@ function createTitle(title) {
 
 /**
  * Create a button which represents a track element.
- * @param {Track} track - The track instance.
+ * @param {string} innerText - The inner text.
+ * @param {number} id - The id.
  * @returns {Element} - The track button element.
  */
-function createTrackButton(track) {
+function createTrackButton(innerText, id) {
   var element = document.createElement("BUTTON");
-  element.innerText = track.label;
-  element.id = track.index;
+  element.innerText = innerText;
+  element.id = id;
   document.body.appendChild(element);
   return element;
 }
@@ -2648,7 +2684,7 @@ function createVideoTrackButtons(player, videoTracks) {
   createTitle("Video Tracks");
 
   var _loop = function _loop(i) {
-    var element = createTrackButton(videoTracks[i]);
+    var element = createTrackButton(videoTracks[i].bandwidth || videoTracks[i].label || videoTracks[i].language, videoTracks[i].index);
     element.onclick = function () {
       player.selectTrack(videoTracks[i]);
     };
@@ -2669,7 +2705,7 @@ function createAudioTrackButtons(player, audioTracks) {
   createTitle("Audio Tracks");
 
   var _loop2 = function _loop2(i) {
-    var element = createTrackButton(audioTracks[i]);
+    var element = createTrackButton(audioTracks[i].label || audioTracks[i].language, audioTracks[i].index);
     element.onclick = function () {
       player.selectTrack(audioTracks[i]);
     };
@@ -2690,7 +2726,7 @@ function createTextTrackButtons(player, textTracks) {
   createTitle("Text Tracks");
 
   var _loop3 = function _loop3(i) {
-    var element = createTrackButton(textTracks[i]);
+    var element = createTrackButton(textTracks[i].label || textTracks[i].language, textTracks[i].index);
     element.onclick = function () {
       player.selectTrack(textTracks[i]);
     };
@@ -3780,6 +3816,7 @@ var NativeAdapter = function (_FakeEventTarget) {
       NativeAdapter._logger.debug('destroy');
       this._eventManager.destroy();
       this._loadPromise = null;
+      this._sourceObj = null;
     }
 
     /**
