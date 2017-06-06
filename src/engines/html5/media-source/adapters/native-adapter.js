@@ -277,7 +277,7 @@ export default class NativeAdapter extends FakeEventTarget implements IMediaSour
    * @returns {void}
    * @public
    */
-  selectAudioTrack(audioTrack: AudioTrack): boolean {
+  selectAudioTrack(audioTrack: AudioTrack): void {
     let audioTracks = this._videoElement.audioTracks;
     if ((audioTrack instanceof AudioTrack) && audioTracks && audioTracks[audioTrack.index]) {
       this._disableAudioTracks();
@@ -296,7 +296,7 @@ export default class NativeAdapter extends FakeEventTarget implements IMediaSour
    * @returns {void}
    * @public
    */
-  selectTextTrack(textTrack: TextTrack): boolean {
+  selectTextTrack(textTrack: TextTrack): void {
     let textTracks = this._videoElement.textTracks;
     if ((textTrack instanceof TextTrack) && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
       this._disableTextTracks();
