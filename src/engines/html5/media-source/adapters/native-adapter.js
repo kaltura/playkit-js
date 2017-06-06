@@ -163,6 +163,7 @@ export default class NativeAdapter extends FakeEventTarget implements IMediaSour
     NativeAdapter._logger.debug('destroy');
     this._eventManager.destroy();
     this._loadPromise = null;
+    this._sourceObj = null;
   }
 
   /**

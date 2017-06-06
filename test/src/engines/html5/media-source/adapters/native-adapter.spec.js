@@ -134,8 +134,10 @@ describe('NativeAdapter: destroy', () => {
   it('should destroyed', (done) => {
     nativeInstance.load().then(() => {
       nativeInstance._loadPromise.should.be.exist;
+      nativeInstance._sourceObj.should.be.exist;
       nativeInstance.destroy();
       (!nativeInstance._loadPromise).should.be.true;
+      (!nativeInstance._sourceObj).should.be.true;
       done();
     });
   });

@@ -26,13 +26,14 @@ function createTitle(title) {
 
 /**
  * Create a button which represents a track element.
- * @param {Track} track - The track instance.
+ * @param {string} innerText - The inner text.
+ * @param {number} id - The id.
  * @returns {Element} - The track button element.
  */
-function createTrackButton(track) {
+function createTrackButton(innerText, id) {
   let element = document.createElement("BUTTON");
-  element.innerText = track.label;
-  element.id = track.index;
+  element.innerText = innerText;
+  element.id = id;
   document.body.appendChild(element);
   return element;
 }
@@ -46,7 +47,7 @@ function createTrackButton(track) {
 function createVideoTrackButtons(player, videoTracks) {
   createTitle("Video Tracks");
   for (let i = 0; i < videoTracks.length; i++) {
-    let element = createTrackButton(videoTracks[i]);
+    let element = createTrackButton(videoTracks[i].bandwidth || videoTracks[i].label || videoTracks[i].language, videoTracks[i].index);
     element.onclick = function () {
       player.selectTrack(videoTracks[i]);
     };
@@ -62,7 +63,7 @@ function createVideoTrackButtons(player, videoTracks) {
 function createAudioTrackButtons(player, audioTracks) {
   createTitle("Audio Tracks");
   for (let i = 0; i < audioTracks.length; i++) {
-    let element = createTrackButton(audioTracks[i]);
+    let element = createTrackButton(audioTracks[i].label || audioTracks[i].language, audioTracks[i].index);
     element.onclick = function () {
       player.selectTrack(audioTracks[i]);
     };
@@ -78,7 +79,7 @@ function createAudioTrackButtons(player, audioTracks) {
 function createTextTrackButtons(player, textTracks) {
   createTitle("Text Tracks");
   for (let i = 0; i < textTracks.length; i++) {
-    let element = createTrackButton(textTracks[i]);
+    let element = createTrackButton(textTracks[i].label || textTracks[i].language, textTracks[i].index);
     element.onclick = function () {
       player.selectTrack(textTracks[i]);
     };
