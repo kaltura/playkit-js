@@ -5,6 +5,7 @@ node_js:
   - "node"
 
 cache:
+  yarn: true
   directories:
     - node_modules
 
@@ -19,4 +20,5 @@ before_install:
 
 script:
 - npm run eslint
+- npm run flow
 - npm run test

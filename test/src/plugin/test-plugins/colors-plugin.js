@@ -1,6 +1,6 @@
 import BasePlugin from '../../../../src/plugin/base-plugin'
+import {registerPlugin} from '../../../../src/plugin/plugin-manager'
 import Player from '../../../../src/player'
-import * as Playkit from '../../../../src/playkit'
 
 const pluginName = "colors";
 
@@ -43,4 +43,4 @@ export default class ColorsPlugin extends BasePlugin {
   }
 }
 
-Playkit.registerPlugin(pluginName, ColorsPlugin);
+registerPlugin(pluginName, ColorsPlugin);

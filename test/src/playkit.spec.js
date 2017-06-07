@@ -1,48 +1,117 @@
 import {playkit} from '../../src/playkit'
+import Player from '../../src/player'
+import PlayerStates from '../../src/state/state-types'
+import PlayerEvents from '../../src/event/events'
+import sourcesConfig from './configs/sources.json'
+import {removeVideoElementsFromTestPage} from './utils/test-utils'
 
 describe('playkit:playkit', function () {
-  this.timeout(10000);
-  let config;
 
-  before(() => {
-      config = {
-        "sources": [
-          {
-            "mimetype": "video/mp4",
-            "src": "http://techslides.com/demos/sample-videos/small.mp4",
-            "id": "1_rsrdfext_10081,url"
-          },
-          {
-            "src": "https://cdnapisec.kaltura.com/p/1082342/sp/108234200/playManifest/entryId/1_rsrdfext/protocol/https/format/hdnetworkmanifest/falvorIds/1_ha0nqwz8,1_gw7u4nf1,1_rql6sqaa,1_sufd1yd9,1_9xvkk7a5,1_4typ4pat,1_n75294r4/ks/OGM0ZWM0Y2IwOWI5ZjM0MDcyZmQ3YmYxNzBiMGEwNGYxNWQ0ZTcyOXwxMDgyMzQyOzEwODIzNDI7MTQ5MDExNTg5MzswOzE0OTAwMjk0OTMuMTY3ODswO3ZpZXc6Kix3aWRnZXQ6MTs7/a.mp4",
-            "id": "1_rsrdfext_10101,hdnetworkmanifest"
-          },
-          {
-            "mimetype": "application/x-mpegURL",
-            "src": "https://cdnapisec.kaltura.com/p/1082342/sp/108234200/playManifest/entryId/1_rsrdfext/protocol/https/format/applehttp/falvorIds/1_ha0nqwz8,1_gw7u4nf1,1_rql6sqaa,1_sufd1yd9,1_9xvkk7a5,1_4typ4pat,1_n75294r4/ks/OGM0ZWM0Y2IwOWI5ZjM0MDcyZmQ3YmYxNzBiMGEwNGYxNWQ0ZTcyOXwxMDgyMzQyOzEwODIzNDI7MTQ5MDExNTg5MzswOzE0OTAwMjk0OTMuMTY3ODswO3ZpZXc6Kix3aWRnZXQ6MTs7/a.m3u8",
-            "id": "1_rsrdfext_10091,applehttp"
-          },
-          {
-            "mimetype": "application/dash+xml",
-            "src": "https://cdnapisec.kaltura.com/p/1082342/sp/108234200/playManifest/entryId/1_rsrdfext/protocol/https/format/mpegdash/falvorIds/1_ha0nqwz8,1_gw7u4nf1,1_rql6sqaa,1_sufd1yd9,1_9xvkk7a5,1_4typ4pat,1_n75294r4/ks/OGM0ZWM0Y2IwOWI5ZjM0MDcyZmQ3YmYxNzBiMGEwNGYxNWQ0ZTcyOXwxMDgyMzQyOzEwODIzNDI7MTQ5MDExNTg5MzswOzE0OTAwMjk0OTMuMTY3ODswO3ZpZXc6Kix3aWRnZXQ6MTs7/a.mpd",
-            "id": "1_rsrdfext_11611,mpegdash"
-          }
-        ]
-      };
-    }
-  );
-  
+  this.timeout(10000);
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+  });
+
   it('should play mp4 stream', (done) => {
+    let config = sourcesConfig.mp4_none_hls_dash;
     let player = playkit(config);
-    let video = document.getElementsByTagName("video")[0];
-    video.onplaying = function () {
+    player.addEventListener(PlayerEvents.PLAYING, function () {
       player.destroy();
       done();
-    };
-    // eslint-disable-next-line no-unused-vars
-    video.addEventListener('error', function (err) {
+    });
+    player.addEventListener(PlayerEvents.ERROR, function () {
       player.destroy();
       should.fail();
     });
+    player.load();
+    player.play();
+  });
+
+  it('should create player without sources and set the sources later', (done) => {
+    let config = sourcesConfig.mp4_none_hls_dash;
+    let player = playkit();
+    player.should.be.instanceOf(Player);
+    player.configure(config);
+    player.addEventListener(PlayerEvents.PLAYING, function () {
+      player.destroy();
+      done();
+    });
+    player.addEventListener(PlayerEvents.ERROR, function () {
+      player.destroy();
+      should.fail();
+    });
+    player.load().then(() => {
+      player.play();
+    });
+  });
+
+  it('should switch player states during playback', (done) => {
+    let config = sourcesConfig.mp4_none_hls_dash;
+    let player = playkit(config);
+
+    /**
+     * onLoadStart handler
+     * @returns {void}
+     */
+    function onLoadStart() {
+      player.removeEventListener(PlayerEvents.LOAD_START, onLoadStart);
+      player._stateManager.currentState.type.should.equal(PlayerStates.LOADING);
+    }
+
+    /**
+     * onLoadedMetadata handler
+     * @returns {void}
+     */
+    function onLoadedMetadata() {
+      player.removeEventListener(PlayerEvents.LOADED_METADATA, onLoadedMetadata);
+      if (player.config.autoPlay) {
+        player._stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+      } else {
+        player._stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
+      }
+    }
+
+    /**
+     * onPlaying handler
+     * @returns {void}
+     */
+    function onPlaying() {
+      player.removeEventListener(PlayerEvents.PLAYING, onPlaying);
+      player._stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+      setTimeout(() => {
+        player.pause();
+      }, 100);
+    }
+
+    /**
+     * onPause handler
+     * @returns {void}
+     */
+    function onPause() {
+      player.removeEventListener(PlayerEvents.PAUSE, onPause);
+      player._stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
+      player.currentTime = player.duration - 1;
+      player.play();
+    }
+
+    /**
+     * onEnded handler
+     * @returns {void}
+     */
+    function onEnded() {
+      player.removeEventListener(PlayerEvents.ENDED, onEnded);
+      player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
+      player.destroy();
+      done();
+    }
+
+    player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
+    player.addEventListener(PlayerEvents.LOAD_START, onLoadStart);
+    player.addEventListener(PlayerEvents.LOADED_METADATA, onLoadedMetadata);
+    player.addEventListener(PlayerEvents.PLAYING, onPlaying);
+    player.addEventListener(PlayerEvents.PAUSE, onPause);
+    player.addEventListener(PlayerEvents.ENDED, onEnded);
     player.load();
     player.play();
   });

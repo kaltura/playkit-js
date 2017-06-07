@@ -1,5 +1,4 @@
-/src/declarations/*.js
-/src/declarations/**/*.js
+/flow-typed/
 /coverage
 /dist
 karma.conf.js
