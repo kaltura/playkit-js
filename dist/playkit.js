@@ -1874,6 +1874,10 @@ var _playerError2 = _interopRequireDefault(_playerError);
 
 var _events = __webpack_require__(4);
 
+var _logger = __webpack_require__(0);
+
+var _logger2 = _interopRequireDefault(_logger);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1881,6 +1885,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+/* eslint-disable no-unused-vars */
+
 
 var BaseMediaSourceAdapter = function (_FakeEventTarget) {
   _inherits(BaseMediaSourceAdapter, _FakeEventTarget);
@@ -1888,17 +1894,17 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
   _createClass(BaseMediaSourceAdapter, null, [{
     key: 'isSupported',
     value: function isSupported() {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'static isSupported').getError();
+      return true;
     }
   }, {
     key: 'canPlayType',
-    value: function canPlayType() {
+    value: function canPlayType(mimeType) {
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayType').getError();
     }
   }, {
     key: 'createAdapter',
-    value: function createAdapter() {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'static createAdapter').getError();
+    value: function createAdapter(videoElement, source, config) {
+      return new this(videoElement, source, config);
     }
   }, {
     key: 'name',
@@ -1910,10 +1916,15 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
     }
   }]);
 
-  function BaseMediaSourceAdapter() {
+  function BaseMediaSourceAdapter(videoElement, source, config) {
     _classCallCheck(this, BaseMediaSourceAdapter);
 
-    return _possibleConstructorReturn(this, (BaseMediaSourceAdapter.__proto__ || Object.getPrototypeOf(BaseMediaSourceAdapter)).call(this));
+    var _this = _possibleConstructorReturn(this, (BaseMediaSourceAdapter.__proto__ || Object.getPrototypeOf(BaseMediaSourceAdapter)).call(this));
+
+    _this._videoElement = videoElement;
+    _this._sourceObj = source;
+    _this._config = config;
+    return _this;
   }
 
   _createClass(BaseMediaSourceAdapter, [{
@@ -1928,21 +1939,21 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
     }
   }, {
     key: 'selectVideoTrack',
-    value: function selectVideoTrack() {
+    value: function selectVideoTrack(videoTrack) {
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'selectVideoTrack').getError();
     }
   }, {
     key: 'selectAudioTrack',
-    value: function selectAudioTrack() {
+    value: function selectAudioTrack(audioTrack) {
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'selectAudioTrack').getError();
     }
   }, {
     key: 'selectTextTrack',
-    value: function selectTextTrack() {
+    value: function selectTextTrack(textTrack) {
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'selectTextTrack').getError();
     }
   }, {
-    key: 'trigger',
+    key: '_trigger',
 
 
     /**
@@ -1951,7 +1962,7 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
      * @param {Object} payload - The event payload.
      * @returns {void}
      */
-    value: function trigger(name, payload) {
+    value: function _trigger(name, payload) {
       this.dispatchEvent(new _fakeEvent2.default(name, payload));
     }
   }, {
@@ -1959,12 +1970,34 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
     get: function get() {
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'get src').getError();
     }
+
+    /**
+     * The adapter config
+     * @member {Object} _config
+     * @private
+     */
+
+
+    /**
+     * The source object
+     * @member {Source} _sourceObj
+     * @private
+     */
+
+
+    /**
+     * The dom video element
+     * @member {HTMLVideoElement} _videoElement
+     * @private
+     */
+
   }]);
 
   return BaseMediaSourceAdapter;
 }(_fakeEventTarget2.default);
 
 BaseMediaSourceAdapter.CustomEvents = _events.CUSTOM_EVENTS;
+BaseMediaSourceAdapter.getLogger = _logger2.default.getLogger;
 exports.default = BaseMediaSourceAdapter;
 
 /***/ }),
@@ -3680,10 +3713,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _logger = __webpack_require__(0);
-
-var _logger2 = _interopRequireDefault(_logger);
-
 var _eventManager = __webpack_require__(3);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
@@ -3739,24 +3768,6 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      */
 
     /**
-     * The adapter config
-     * @member {Object} _config
-     * @private
-     */
-
-    /**
-     * The source object
-     * @member {Source} _sourceObj
-     * @private
-     */
-
-    /**
-     * The dom video element
-     * @member {HTMLVideoElement} _videoElement
-     * @private
-     */
-
-    /**
      * The event manager of the class.
      * @member {EventManager} - _eventManager
      * @type {EventManager}
@@ -3770,40 +3781,9 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      * @private
      */
     value: function canPlayType(mimeType) {
-      var canPlayType = !!document.createElement("video").canPlayType(mimeType);
+      var canPlayType = typeof mimeType === 'string' ? !!document.createElement("video").canPlayType(mimeType.toLowerCase()) : false;
       NativeAdapter._logger.debug('canPlayType result for mimeType:' + mimeType + ' is ' + canPlayType.toString());
       return canPlayType;
-    }
-
-    /**
-     * Checks if the media source adapter is supported
-     * @function isSupported
-     * @returns {boolean} - Whether the media source adapter is supported. Default implementation is true
-     * @static
-     */
-
-  }, {
-    key: 'isSupported',
-    value: function isSupported() {
-      NativeAdapter._logger.debug('isSupported:true');
-      return true;
-    }
-
-    /**
-     * Factory method to create media source adapter
-     * @function createAdapter
-     * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with
-     * @param {Object} source - The source Object
-     * @param {Object} config - The media source adapter configuration
-     * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter
-     * @static
-     */
-
-  }, {
-    key: 'createAdapter',
-    value: function createAdapter(videoElement, source, config) {
-      NativeAdapter._logger.debug('Creating adapter');
-      return new this(videoElement, source, config);
     }
 
     /**
@@ -3819,10 +3799,18 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
     /**
      * Getter for the adapter name
      * @returns {string} - The adapter name
+     * @static
      */
     get: function get() {
       return NativeAdapter._name;
     }
+
+    /**
+     * @param {string} name - The adapter name.
+     * @returns {void}
+     * @static
+     */
+
     /**
      * The name of the Adapter
      * @member {string} _name
@@ -3846,11 +3834,10 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   function NativeAdapter(videoElement, source, config) {
     _classCallCheck(this, NativeAdapter);
 
-    var _this = _possibleConstructorReturn(this, (NativeAdapter.__proto__ || Object.getPrototypeOf(NativeAdapter)).call(this));
+    NativeAdapter._logger.debug('Creating adapter');
 
-    _this._config = config;
-    _this._videoElement = videoElement;
-    _this._sourceObj = source;
+    var _this = _possibleConstructorReturn(this, (NativeAdapter.__proto__ || Object.getPrototypeOf(NativeAdapter)).call(this, videoElement, source, config));
+
     _this._eventManager = new _eventManager2.default();
     return _this;
   }
@@ -3900,8 +3887,8 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
     value: function destroy() {
       NativeAdapter._logger.debug('destroy');
       this._eventManager.destroy();
-      this._loadPromise = null;
       this._sourceObj = null;
+      this._loadPromise = null;
     }
 
     /**
@@ -4016,7 +4003,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
       if (videoTrack instanceof _videoTrack2.default && videoTracks && videoTracks[videoTrack.index]) {
         this._disableVideoTracks();
         videoTracks[videoTrack.index].selected = true;
-        this.trigger(_baseMediaSourceAdapter2.default.CustomEvents.VIDEO_TRACK_CHANGED, { selectedVideoTrack: videoTrack });
+        this._trigger(_baseMediaSourceAdapter2.default.CustomEvents.VIDEO_TRACK_CHANGED, { selectedVideoTrack: videoTrack });
       }
     }
 
@@ -4035,7 +4022,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
       if (audioTrack instanceof _audioTrack2.default && audioTracks && audioTracks[audioTrack.index]) {
         this._disableAudioTracks();
         audioTracks[audioTrack.index].enabled = true;
-        this.trigger(_baseMediaSourceAdapter2.default.CustomEvents.AUDIO_TRACK_CHANGED, { selectedAudioTrack: audioTrack });
+        this._trigger(_baseMediaSourceAdapter2.default.CustomEvents.AUDIO_TRACK_CHANGED, { selectedAudioTrack: audioTrack });
       }
     }
 
@@ -4054,7 +4041,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
       if (textTrack instanceof _textTrack2.default && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
         this._disableTextTracks();
         textTracks[textTrack.index].mode = 'showing';
-        this.trigger(_baseMediaSourceAdapter2.default.CustomEvents.TEXT_TRACK_CHANGED, { selectedTextTrack: textTrack });
+        this._trigger(_baseMediaSourceAdapter2.default.CustomEvents.TEXT_TRACK_CHANGED, { selectedTextTrack: textTrack });
       }
     }
 
@@ -4126,7 +4113,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
 }(_baseMediaSourceAdapter2.default);
 
 NativeAdapter._name = 'NativeAdapter';
-NativeAdapter._logger = _logger2.default.getLogger(NativeAdapter._name);
+NativeAdapter._logger = _baseMediaSourceAdapter2.default.getLogger(NativeAdapter._name);
 exports.default = NativeAdapter;
 
 /***/ }),
@@ -4806,7 +4793,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.VERSION = exports.LoggerFactory = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerMediaSourceAdapter = exports.TestUtils = undefined;
+exports.VERSION = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerMediaSourceAdapter = exports.TestUtils = undefined;
 exports.playkit = playkit;
 
 var _player = __webpack_require__(5);
@@ -4892,10 +4879,6 @@ exports.Track = _track2.default;
 exports.VideoTrack = _videoTrack2.default;
 exports.AudioTrack = _audioTrack2.default;
 exports.TextTrack = _textTrack2.default;
-
-// Export the logger factory
-
-exports.LoggerFactory = _logger2.default;
 
 //export version
 

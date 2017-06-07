@@ -1,5 +1,4 @@
 //@flow
-import LoggerFactory from '../../../../utils/logger'
 import EventManager from '../../../../event/event-manager'
 import {HTML5_EVENTS as Html5Events} from '../../../../event/events'
 import Track from '../../../../track/track'
@@ -24,11 +23,17 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   /**
    * Getter for the adapter name
    * @returns {string} - The adapter name
+   * @static
    */
   static get name(): string {
     return NativeAdapter._name;
   }
 
+  /**
+   * @param {string} name - The adapter name.
+   * @returns {void}
+   * @static
+   */
   static set name(name: string): void {
     // Do nothing. Just a workaround for flow issue with static getter in an inheritor. See: https://github.com/facebook/flow/issues/3008.
   }
@@ -39,25 +44,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    * @static
    */
-  static _logger = LoggerFactory.getLogger(NativeAdapter._name);
-  /**
-   * The adapter config
-   * @member {Object} _config
-   * @private
-   */
-  _config: Object;
-  /**
-   * The source object
-   * @member {Source} _sourceObj
-   * @private
-   */
-  _sourceObj: ?Source;
-  /**
-   * The dom video element
-   * @member {HTMLVideoElement} _videoElement
-   * @private
-   */
-  _videoElement: HTMLVideoElement;
+  static _logger = BaseMediaSourceAdapter.getLogger(NativeAdapter._name);
   /**
    * The event manager of the class.
    * @member {EventManager} - _eventManager
@@ -81,34 +68,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @static
    */
   static canPlayType(mimeType: string): boolean {
-    let canPlayType = !!(document.createElement("video").canPlayType(mimeType));
+    let canPlayType = (typeof mimeType === 'string') ?
+      !!(document.createElement("video").canPlayType(mimeType.toLowerCase())) : false;
     NativeAdapter._logger.debug('canPlayType result for mimeType:' + mimeType + ' is ' + canPlayType.toString());
     return canPlayType;
-  }
-
-  /**
-   * Checks if the media source adapter is supported
-   * @function isSupported
-   * @returns {boolean} - Whether the media source adapter is supported. Default implementation is true
-   * @static
-   */
-  static isSupported(): boolean {
-    NativeAdapter._logger.debug('isSupported:true');
-    return true;
-  }
-
-  /**
-   * Factory method to create media source adapter
-   * @function createAdapter
-   * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with
-   * @param {Object} source - The source Object
-   * @param {Object} config - The media source adapter configuration
-   * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter
-   * @static
-   */
-  static createAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): IMediaSourceAdapter {
-    NativeAdapter._logger.debug('Creating adapter');
-    return new this(videoElement, source, config);
   }
 
   /**
@@ -118,10 +81,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @param {Object} config - The media source adapter configuration
    */
   constructor(videoElement: HTMLVideoElement, source: Source, config: Object) {
-    super();
-    this._config = config;
-    this._videoElement = videoElement;
-    this._sourceObj = source;
+    NativeAdapter._logger.debug('Creating adapter');
+    super(videoElement, source, config);
     this._eventManager = new EventManager();
   }
 
@@ -161,8 +122,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   destroy(): void {
     NativeAdapter._logger.debug('destroy');
     this._eventManager.destroy();
-    this._loadPromise = null;
     this._sourceObj = null;
+    this._loadPromise = null;
   }
 
   /**
@@ -262,7 +223,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if ((videoTrack instanceof VideoTrack) && videoTracks && videoTracks[videoTrack.index]) {
       this._disableVideoTracks();
       videoTracks[videoTrack.index].selected = true;
-      this.trigger(BaseMediaSourceAdapter.CustomEvents.VIDEO_TRACK_CHANGED, {selectedVideoTrack: videoTrack});
+      this._trigger(BaseMediaSourceAdapter.CustomEvents.VIDEO_TRACK_CHANGED, {selectedVideoTrack: videoTrack});
     }
   }
 
@@ -278,7 +239,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if ((audioTrack instanceof AudioTrack) && audioTracks && audioTracks[audioTrack.index]) {
       this._disableAudioTracks();
       audioTracks[audioTrack.index].enabled = true;
-      this.trigger(BaseMediaSourceAdapter.CustomEvents.AUDIO_TRACK_CHANGED, {selectedAudioTrack: audioTrack});
+      this._trigger(BaseMediaSourceAdapter.CustomEvents.AUDIO_TRACK_CHANGED, {selectedAudioTrack: audioTrack});
     }
   }
 
@@ -294,7 +255,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if ((textTrack instanceof TextTrack) && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
       this._disableTextTracks();
       textTracks[textTrack.index].mode = 'showing';
-      this.trigger(BaseMediaSourceAdapter.CustomEvents.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack});
+      this._trigger(BaseMediaSourceAdapter.CustomEvents.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack});
     }
   }
 

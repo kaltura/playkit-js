@@ -38,9 +38,6 @@ export {registerPlugin, BasePlugin};
 // Export the tracks classes
 export {Track, VideoTrack, AudioTrack, TextTrack};
 
-// Export the logger factory
-export {LoggerFactory};
-
 //export version
 export {VERSION};
 export default playkit;
