@@ -1,20 +1,19 @@
 //@flow
 import LoggerFactory from '../../../../utils/logger'
-import FakeEvent from '../../../../event/fake-event'
-import FakeEventTarget from '../../../../event/fake-event-target'
 import EventManager from '../../../../event/event-manager'
 import {HTML5_EVENTS as Html5Events} from '../../../../event/events'
-import {CUSTOM_EVENTS as CustomEvents} from '../../../../event/events'
 import Track from '../../../../track/track'
 import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'
 import TextTrack from '../../../../track/text-track'
+import BaseMediaSourceAdapter from '../base-media-source-adapter'
+
 /**
  * An illustration of media source extension for progressive download
  * @classdesc
  * @implements {IMediaSourceAdapter}
  */
-export default class NativeAdapter extends FakeEventTarget implements IMediaSourceAdapter {
+export default class NativeAdapter extends BaseMediaSourceAdapter {
   /**
    * The name of the Adapter
    * @member {string} _name
@@ -263,10 +262,7 @@ export default class NativeAdapter extends FakeEventTarget implements IMediaSour
     if ((videoTrack instanceof VideoTrack) && videoTracks && videoTracks[videoTrack.index]) {
       this._disableVideoTracks();
       videoTracks[videoTrack.index].selected = true;
-      let fakeEvent = new FakeEvent(CustomEvents.VIDEO_TRACK_CHANGED, {
-        selectedVideoTrack: videoTrack
-      });
-      this.dispatchEvent(fakeEvent);
+      this.trigger(BaseMediaSourceAdapter.CustomEvents.VIDEO_TRACK_CHANGED, {selectedVideoTrack: videoTrack});
     }
   }
 
@@ -282,10 +278,7 @@ export default class NativeAdapter extends FakeEventTarget implements IMediaSour
     if ((audioTrack instanceof AudioTrack) && audioTracks && audioTracks[audioTrack.index]) {
       this._disableAudioTracks();
       audioTracks[audioTrack.index].enabled = true;
-      let fakeEvent = new FakeEvent(CustomEvents.AUDIO_TRACK_CHANGED, {
-        selectedAudioTrack: audioTrack
-      });
-      this.dispatchEvent(fakeEvent);
+      this.trigger(BaseMediaSourceAdapter.CustomEvents.AUDIO_TRACK_CHANGED, {selectedAudioTrack: audioTrack});
     }
   }
 
@@ -301,10 +294,7 @@ export default class NativeAdapter extends FakeEventTarget implements IMediaSour
     if ((textTrack instanceof TextTrack) && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
       this._disableTextTracks();
       textTracks[textTrack.index].mode = 'showing';
-      let fakeEvent = new FakeEvent(CustomEvents.TEXT_TRACK_CHANGED, {
-        selectedTextTrack: textTrack
-      });
-      this.dispatchEvent(fakeEvent);
+      this.trigger(BaseMediaSourceAdapter.CustomEvents.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack});
     }
   }
 
