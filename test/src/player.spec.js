@@ -5,7 +5,7 @@ import sourcesConfig from './configs/sources.json'
 import VideoTrack from '../../src/track/video-track'
 import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
-import {removeVideoElementsFromTestPage} from '../../src/utils/test-utils'
+import {removeVideoElementsFromTestPage} from './utils/test-utils'
 
 describe("play", () => {
   let config, player;

@@ -10,7 +10,6 @@ import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
-import * as TestUtils from './utils/test-utils'
 
 // Playkit version
 let VERSION = packageData.version;
@@ -25,9 +24,6 @@ LoggerFactory.getLogger().log("%c For more details see https://github.com/kaltur
 export function playkit(config: Object = {}) {
   return new Player(config);
 }
-
-// Export the test utils
-export {TestUtils};
 
 // Export the media source adapters necessary utils
 export {registerMediaSourceAdapter, BaseMediaSourceAdapter};

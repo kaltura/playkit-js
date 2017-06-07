@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 26);
+/******/ 	return __webpack_require__(__webpack_require__.s = 25);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -90,7 +90,7 @@ exports.LOG_LEVEL = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jsLogger = __webpack_require__(25);
+var _jsLogger = __webpack_require__(24);
 
 var JsLogger = _interopRequireWildcard(_jsLogger);
 
@@ -792,7 +792,7 @@ var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _html = __webpack_require__(20);
+var _html = __webpack_require__(19);
 
 var _html2 = _interopRequireDefault(_html);
 
@@ -800,11 +800,11 @@ var _pluginManager = __webpack_require__(15);
 
 var _pluginManager2 = _interopRequireDefault(_pluginManager);
 
-var _stateManager = __webpack_require__(22);
+var _stateManager = __webpack_require__(21);
 
 var _stateManager2 = _interopRequireDefault(_stateManager);
 
-var _trackTypes = __webpack_require__(24);
+var _trackTypes = __webpack_require__(23);
 
 var _trackTypes2 = _interopRequireDefault(_trackTypes);
 
@@ -2014,7 +2014,7 @@ exports.registerMediaSourceAdapter = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nativeAdapter = __webpack_require__(21);
+var _nativeAdapter = __webpack_require__(20);
 
 var _nativeAdapter2 = _interopRequireDefault(_nativeAdapter);
 
@@ -2739,126 +2739,6 @@ exports.default = MultiMap;
 
 /***/ }),
 /* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-/* eslint-disable no-unused-vars */
-
-/**
- * Removes all the video elements that created by the test from the document.
- * @returns {void}
- */
-function removeVideoElementsFromTestPage() {
-  var element = document.getElementsByTagName("video");
-  for (var i = element.length - 1; i >= 0; i--) {
-    element[i].parentNode.removeChild(element[i]);
-  }
-}
-
-/**
- * Creates a given title.
- * @param {string} title - The title text.
- * @returns {void}
- */
-function createTitle(title) {
-  var header = document.createElement("header");
-  var h4 = document.createElement("h4");
-  h4.textContent = title;
-  header.appendChild(h4);
-  document.body.appendChild(header);
-}
-
-/**
- * Create a button which represents a track element.
- * @param {string} innerText - The inner text.
- * @param {number} id - The id.
- * @returns {Element} - The track button element.
- */
-function createTrackButton(innerText, id) {
-  var element = document.createElement("BUTTON");
-  element.innerText = innerText;
-  element.id = id;
-  document.body.appendChild(element);
-  return element;
-}
-
-/**
- * Create buttons for all video tracks.
- * @param {Player} player - The player instance.
- * @param {VideoTrack} videoTracks - The video track instances.
- * @returns {void}
- */
-function createVideoTrackButtons(player, videoTracks) {
-  createTitle("Video Tracks");
-
-  var _loop = function _loop(i) {
-    var element = createTrackButton(videoTracks[i].bandwidth || videoTracks[i].label || videoTracks[i].language, videoTracks[i].index);
-    element.onclick = function () {
-      player.selectTrack(videoTracks[i]);
-    };
-  };
-
-  for (var i = 0; i < videoTracks.length; i++) {
-    _loop(i);
-  }
-}
-
-/**
- * Create buttons for all audio tracks.
- * @param {Player} player - The player instance.
- * @param {AudioTrack} audioTracks - The audio track instances.
- * @returns {void}
- */
-function createAudioTrackButtons(player, audioTracks) {
-  createTitle("Audio Tracks");
-
-  var _loop2 = function _loop2(i) {
-    var element = createTrackButton(audioTracks[i].label || audioTracks[i].language, audioTracks[i].index);
-    element.onclick = function () {
-      player.selectTrack(audioTracks[i]);
-    };
-  };
-
-  for (var i = 0; i < audioTracks.length; i++) {
-    _loop2(i);
-  }
-}
-
-/**
- * Create buttons for all text tracks.
- * @param {Player} player - The player instance.
- * @param {TextTrack} textTracks - The text track instances.
- * @returns {void}
- */
-function createTextTrackButtons(player, textTracks) {
-  createTitle("Text Tracks");
-
-  var _loop3 = function _loop3(i) {
-    var element = createTrackButton(textTracks[i].label || textTracks[i].language, textTracks[i].index);
-    element.onclick = function () {
-      player.selectTrack(textTracks[i]);
-    };
-  };
-
-  for (var i = 0; i < textTracks.length; i++) {
-    _loop3(i);
-  }
-}
-
-exports.removeVideoElementsFromTestPage = removeVideoElementsFromTestPage;
-exports.createTitle = createTitle;
-exports.createTrackButton = createTrackButton;
-exports.createTextTrackButtons = createTextTrackButtons;
-exports.createAudioTrackButtons = createAudioTrackButtons;
-exports.createVideoTrackButtons = createVideoTrackButtons;
-
-/***/ }),
-/* 19 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -2942,7 +2822,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3701,7 +3581,7 @@ Html5.EngineName = "html5";
 exports.default = Html5;
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4117,7 +3997,7 @@ NativeAdapter._logger = _baseMediaSourceAdapter2.default.getLogger(NativeAdapter
 exports.default = NativeAdapter;
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4137,7 +4017,7 @@ var _eventManager = __webpack_require__(3);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _state = __webpack_require__(23);
+var _state = __webpack_require__(22);
 
 var _state2 = _interopRequireDefault(_state);
 
@@ -4417,7 +4297,7 @@ var StateManager = function () {
 exports.default = StateManager;
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4499,7 +4379,7 @@ var State = function () {
 exports.default = State;
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4517,7 +4397,7 @@ var TRACK_TYPES = {
 exports.default = TRACK_TYPES;
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -4784,7 +4664,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4793,7 +4673,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.VERSION = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerMediaSourceAdapter = exports.TestUtils = undefined;
+exports.VERSION = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerMediaSourceAdapter = undefined;
 exports.playkit = playkit;
 
 var _player = __webpack_require__(5);
@@ -4804,7 +4684,7 @@ var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _package = __webpack_require__(19);
+var _package = __webpack_require__(18);
 
 var packageData = _interopRequireWildcard(_package);
 
@@ -4836,16 +4716,13 @@ var _textTrack = __webpack_require__(7);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _testUtils = __webpack_require__(18);
-
-var TestUtils = _interopRequireWildcard(_testUtils);
-
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Playkit version
 var VERSION = packageData.version;
+
 
 _logger2.default.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
 _logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
@@ -4860,11 +4737,7 @@ function playkit() {
   return new _player2.default(config);
 }
 
-// Export the test utils
-exports.TestUtils = TestUtils;
-
 // Export the media source adapters necessary utils
-
 exports.registerMediaSourceAdapter = _mediaSourceProvider.registerMediaSourceAdapter;
 exports.BaseMediaSourceAdapter = _baseMediaSourceAdapter2.default;
 
