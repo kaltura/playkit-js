@@ -2,10 +2,6 @@
 import FakeEvent from '../../../event/fake-event'
 import FakeEventTarget from '../../../event/fake-event-target'
 import PlayerError from '../../../utils/player-error'
-import Track from '../../../track/track'
-import VideoTrack from '../../../track/video-track'
-import AudioTrack from '../../../track/audio-track'
-import TextTrack from '../../../track/text-track'
 import {CUSTOM_EVENTS} from '../../../event/events'
 
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
@@ -14,7 +10,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
 
   static get name(): string {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'get name').getError();
-  };
+  }
 
   static set name(name: string): void {
     // Do nothing. Just a workaround for flow issue with static getter in an inheritor. See: https://github.com/facebook/flow/issues/3008.
@@ -24,11 +20,11 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'static isSupported').getError();
   }
 
-  static canPlayType(mimeType: string): boolean {
+  static canPlayType(/* mimeType: string */): boolean {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayType').getError();
   }
 
-  static createAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): IMediaSourceAdapter {
+  static createAdapter(/* videoElement: HTMLVideoElement, source: Source, config: Object */): IMediaSourceAdapter {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'static createAdapter').getError();
   }
 
@@ -44,15 +40,15 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'destroy').getError();
   }
 
-  selectVideoTrack(videoTrack: VideoTrack): void {
+  selectVideoTrack(/* videoTrack: VideoTrack */): void {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'selectVideoTrack').getError();
   }
 
-  selectAudioTrack(audioTrack: AudioTrack): void {
+  selectAudioTrack(/* audioTrack: AudioTrack */): void {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'selectAudioTrack').getError();
   }
 
-  selectTextTrack(textTrack: TextTrack): void {
+  selectTextTrack(/* textTrack: TextTrack */): void {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'selectTextTrack').getError();
   }
 
@@ -64,6 +60,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * Dispatch an adapter event forward.
    * @param {string} name - The name of the event.
    * @param {Object} payload - The event payload.
+   * @returns {void}
    */
   trigger(name: string, payload: Object): void {
     this.dispatchEvent(new FakeEvent(name, payload));
