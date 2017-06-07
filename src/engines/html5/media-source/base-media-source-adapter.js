@@ -7,7 +7,9 @@ import {CUSTOM_EVENTS} from '../../../event/events'
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
 
   static CustomEvents: { [event: string]: string } = CUSTOM_EVENTS;
-
+  
+  static getLogger: Function = LoggerFactory.getLogger; 
+  
   static get name(): string {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'get name').getError();
   }
@@ -17,15 +19,15 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   }
 
   static isSupported(): boolean {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'static isSupported').getError();
+    return true;
   }
 
   static canPlayType(/* mimeType: string */): boolean {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayType').getError();
   }
 
-  static createAdapter(/* videoElement: HTMLVideoElement, source: Source, config: Object */): IMediaSourceAdapter {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'static createAdapter').getError();
+  static createAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): IMediaSourceAdapter {
+    return new this(videoElement, source, config);
   }
 
   constructor() {
