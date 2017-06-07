@@ -71,7 +71,11 @@ class Player extends FakeEventTarget {
    * @private
    */
   _tracks: Array<Track>;
-
+  /**
+   * The current controller of the player (used for decorators).
+   * @type {any}
+   * @private
+   */
   _controller: any;
 
   /**

@@ -16,9 +16,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 20);
+/******/ 	return __webpack_require__(__webpack_require__.s = 21);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -90,7 +90,7 @@ exports.LOG_LEVEL = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jsLogger = __webpack_require__(19);
+var _jsLogger = __webpack_require__(26);
 
 var JsLogger = _interopRequireWildcard(_jsLogger);
 
@@ -145,158 +145,345 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _logger = __webpack_require__(0);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _logger2 = _interopRequireDefault(_logger);
+/**
+ * General track representation of the player.
+ * @classdesc
+ */
+var Track = function () {
+  _createClass(Track, [{
+    key: "id",
 
-var _playerError = __webpack_require__(6);
 
-var _playerError2 = _interopRequireDefault(_playerError);
+    /**
+     * Getter for the track id.
+     * @public
+     * @returns {?string} - The track id.
+     */
+
+    /**
+     * The language of the track.
+     * @member
+     * @type {string}
+     * @private
+     */
+
+    /**
+     * The active mode of the track.
+     * @member
+     * @type {boolean}
+     * @private
+     */
+    get: function get() {
+      return this._id;
+    }
+
+    /**
+     * Getter for the active mode of the track.
+     * @public
+     * @returns {boolean} - The active mode of the track.
+     */
+
+    /**
+     * The index of the track.
+     * @member
+     * @type {number}
+     * @private
+     */
+
+    /**
+     * The label of the track.
+     * @member
+     * @type {string}
+     * @private
+     */
+
+    /**
+     * The id of the track.
+     * @member
+     * @type {string}
+     * @private
+     */
+
+  }, {
+    key: "active",
+    get: function get() {
+      return this._active;
+    }
+
+    /**
+     * Setter for the active mode of the track.
+     * @public
+     * @param {boolean} value - Whether the track is active or not.
+     */
+    ,
+    set: function set(value) {
+      this._active = value;
+    }
+
+    /**
+     * Getter for the label of the track.
+     * @public
+     * @returns {string} - The label of the track.
+     */
+
+  }, {
+    key: "label",
+    get: function get() {
+      return this._label;
+    }
+
+    /**
+     * Getter for the language of the track.
+     * @public
+     * @returns {string} - The language of the track.
+     */
+
+  }, {
+    key: "language",
+    get: function get() {
+      return this._language;
+    }
+
+    /**
+     * Getter for the index of the track.
+     * @public
+     * @returns {number} - The index of the track.
+     */
+
+  }, {
+    key: "index",
+    get: function get() {
+      return this._index;
+    }
+
+    /**
+     * @constructor
+     * @param {Object} settings - The track settings object.
+     */
+
+  }]);
+
+  function Track() {
+    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _classCallCheck(this, Track);
+
+    this._id = settings.id;
+    this._active = settings.active;
+    this._label = settings.label;
+    this._language = settings.language;
+    this._index = settings.index;
+  }
+
+  return Track;
+}();
+
+exports.default = Track;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _multiMap = __webpack_require__(14);
+
+var _multiMap2 = _interopRequireDefault(_multiMap);
+
+var _fakeEvent = __webpack_require__(3);
+
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * Base of media source adapters
- * @classdesc
+ * Creates a new EventManager. An EventManager maintains a collection of "event
+ * bindings" between event targets and event listeners.
+ *
+ * @struct
+ * @constructor
+ * @implements {IDestroyable}
  */
-var BaseMediaSourceAdapter = function () {
-  _createClass(BaseMediaSourceAdapter, null, [{
-    key: 'isSupported',
-
-
-    /**
-     * Checks if the media source adapter is supported
-     * @function isSupported
-     * @returns {boolean}
-     * @static
-     */
+var EventManager = function () {
+  function EventManager() {
+    _classCallCheck(this, EventManager);
 
     /**
-     * The player wrapper of the media source adapter
-     * @member {any} _msPlayer
-     * @private
+     * Maps an event type to an array of event bindings.
+     * @private {MultiMap.<!EventManager.Binding_>}
      */
-
-    /**
-     * The logger of the media source adapter
-     * @member {ILogger} _logger
-     * @static
-     * @private
-     */
-    value: function isSupported() {
-      return true;
-    }
-
-    /**
-     * Checks if the media source adapter can play a given mime type
-     * @function canPlayType
-     * @param {string} mimeType
-     * @returns {boolean}
-     * @static
-     */
-
-    /**
-     * The source URL
-     * @member {string} _source
-     * @private
-     */
-
-    /**
-     * The name of the media source adapter
-     * @member {string} _name
-     * @static
-     * @private
-     */
-
-    /**
-     * The supported mime types by the media source adapter
-     * @member {Array} _mimeTypes
-     * @static
-     * @private
-     */
-
-  }, {
-    key: 'canPlayType',
-    value: function canPlayType(mimeType) {
-      return !!(this._mimeTypes && this._mimeTypes.includes(mimeType));
-    }
-
-    /**
-     * Factory method to create media source adapter
-     * @function createAdapter
-     * @param {HTMLVideoElement} videoElement - The video element which bind to the media source adapter
-     * @param {string} source - The source URL
-     * @param {Object} config - The media source adapter configuration
-     * @returns {BaseMediaSourceAdapter}
-     * @static
-     */
-
-  }, {
-    key: 'createAdapter',
-    value: function createAdapter(videoElement, source, config) {
-      return new this(videoElement, source, config);
-    }
-
-    /**
-     * Error handler
-     * @function onError
-     * @param {Object} error
-     * @static
-     */
-
-  }, {
-    key: 'onError',
-    value: function onError(error) {
-      this._logger.error(error);
-    }
-
-    /**
-     * @constructor
-     * @param {string} name - The name of the media source adapter
-     */
-
-  }]);
-
-  function BaseMediaSourceAdapter(name) {
-    _classCallCheck(this, BaseMediaSourceAdapter);
-
-    this._logger = _logger2.default.getLogger(name);
+    this._bindingMap = new _multiMap2.default();
   }
 
   /**
-   * Load the video source
-   * @function load
-   * @abstract
+   * Detaches all event listeners.
+   * @override
    */
 
 
-  _createClass(BaseMediaSourceAdapter, [{
-    key: 'load',
-    value: function load() {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
+  _createClass(EventManager, [{
+    key: 'destroy',
+    value: function destroy() {
+      this.removeAll();
+      this._bindingMap = null;
+      return Promise.resolve();
     }
 
     /**
-     * Destroying the _msPlayer
-     * @function destroy
+     * Attaches an event listener to an event target.
+     * @param {EventTarget} target The event target.
+     * @param {string} type The event type.
+     * @param {EventManager.ListenerType} listener The event listener.
+     * @returns {void}
      */
 
   }, {
-    key: 'destroy',
-    value: function destroy() {
-      // should do nothing. implemented by the inheritor if necessary.
+    key: 'listen',
+    value: function listen(target, type, listener) {
+      var binding = new Binding_(target, type, listener);
+      if (this._bindingMap) {
+        this._bindingMap.push(type, binding);
+      }
+    }
+
+    /**
+     * Detaches an event listener from an event target.
+     * @param {EventTarget} target The event target.
+     * @param {string} type The event type.
+     * @returns {void}
+     */
+
+  }, {
+    key: 'unlisten',
+    value: function unlisten(target, type) {
+      if (this._bindingMap) {
+        var list = this._bindingMap.get(type);
+
+        for (var i = 0; i < list.length; ++i) {
+          var binding = list[i];
+
+          if (binding.target == target) {
+            binding.unlisten();
+            if (this._bindingMap) {
+              this._bindingMap.remove(type, binding);
+            }
+          }
+        }
+      }
+    }
+
+    /**
+     * Detaches all event listeners from all targets.
+     * @returns {void}
+     */
+
+  }, {
+    key: 'removeAll',
+    value: function removeAll() {
+      if (this._bindingMap) {
+        var listeners = this._bindingMap.getAll();
+
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = listeners[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var listener = _step.value;
+
+            listener.unlisten();
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+
+        if (this._bindingMap) {
+          this._bindingMap.clear();
+        }
+      }
     }
   }]);
 
-  return BaseMediaSourceAdapter;
+  return EventManager;
 }();
 
-exports.default = BaseMediaSourceAdapter;
+/**
+ * @typedef {function(!Event)}
+ */
+
+
+/**
+ * Creates a new Binding_ and attaches the event listener to the event target.
+ * @param {EventTarget} target The event target.
+ * @param {string} type The event type.
+ * @param {EventManager.ListenerType} listener The event listener.
+ * @constructor
+ * @private
+ */
+var Binding_ = function () {
+  function Binding_(target, type, listener) {
+    _classCallCheck(this, Binding_);
+
+    /** @type {EventTarget} */
+    this.target = target;
+
+    /** @type {string} */
+    this.type = type;
+
+    /** @type {?EventManager.ListenerType} */
+    this.listener = listener;
+
+    this.target.addEventListener(type, listener, false);
+  }
+
+  /**
+   * Detaches the event listener from the event target. This does nothing if the
+   * event listener is already detached.
+   * @returns {void}
+   */
+
+
+  _createClass(Binding_, [{
+    key: 'unlisten',
+    value: function unlisten() {
+      if (!this.target) return;
+
+      this.target.removeEventListener(this.type, this.listener, false);
+
+      this.target = null;
+      this.listener = null;
+    }
+  }]);
+
+  return Binding_;
+}();
+
+exports.default = EventManager;
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -313,9 +500,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /**
  * Create an Event work-alike object based on the dictionary.
  * The event should contain all of the same properties from the dict.
- *
- * @param {string} type
- * @param {Object=} opt_dict
+ * @param {string} type -
+ * @param {Object=} opt_dict -
  * @constructor
  * @extends {Event}
  */
@@ -439,68 +625,6 @@ var FakeEvent = function () {
 exports.default = FakeEvent;
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var PLAYER_EVENTS = ['play', 'pause',
-/**
- * Fired while the user agent is downloading media data
- */
-'progress',
-/**
- * Fires when the loading of an audio/video is aborted
- */
-'abort',
-/**
- * Fires when the browser is intentionally not getting media data
- */
-'suspend',
-/**
- * Fires when the current playlist is empty
- */
-'emptied',
-/**
- * Fires when the browser is trying to get media data, but data is not available
- */
-'stalled',
-/**
- * Fires when the browser has loaded meta data for the audio/video
- */
-'loadedmetadata',
-/**
- * Fires when the browser has loaded the current frame of the audio/video
- */
-'loadeddata',
-/**
- * Fires when the current playback position has changed
- */
-'timeupdate',
-/**
- * Fires when the playing speed of the audio/video is changed
- */
-'ratechange',
-/**
- * Fires when the volume has been changed
- */
-'volumechange',
-/**
- * Fires when the text track has been changed
- */
-'texttrackchange',
-/**
- * Fires when media is ended
- */
-'ended'];
-
-exports.default = PLAYER_EVENTS;
-
-/***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -513,37 +637,65 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _eventManager = __webpack_require__(5);
+var _eventManager = __webpack_require__(2);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _fakeEventTarget = __webpack_require__(11);
+var _fakeEventTarget = __webpack_require__(12);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
-var _fakeEvent = __webpack_require__(2);
+var _fakeEvent = __webpack_require__(3);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _events = __webpack_require__(3);
+var _events = __webpack_require__(8);
 
 var _events2 = _interopRequireDefault(_events);
 
-var _util = __webpack_require__(13);
+var _stateTypes = __webpack_require__(13);
 
-var _stringUtil = __webpack_require__(18);
+var _stateTypes2 = _interopRequireDefault(_stateTypes);
+
+var _util = __webpack_require__(16);
+
+var _stringUtil = __webpack_require__(25);
 
 var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _html = __webpack_require__(17);
+var _html = __webpack_require__(19);
 
 var _html2 = _interopRequireDefault(_html);
 
-var _pluginManager = __webpack_require__(10);
+var _pluginManager = __webpack_require__(11);
 
 var _pluginManager2 = _interopRequireDefault(_pluginManager);
+
+var _stateManager = __webpack_require__(22);
+
+var _stateManager2 = _interopRequireDefault(_stateManager);
+
+var _trackTypes = __webpack_require__(24);
+
+var _trackTypes2 = _interopRequireDefault(_trackTypes);
+
+var _track = __webpack_require__(1);
+
+var _track2 = _interopRequireDefault(_track);
+
+var _videoTrack = __webpack_require__(7);
+
+var _videoTrack2 = _interopRequireDefault(_videoTrack);
+
+var _audioTrack = __webpack_require__(5);
+
+var _audioTrack2 = _interopRequireDefault(_audioTrack);
+
+var _textTrack = __webpack_require__(6);
+
+var _textTrack2 = _interopRequireDefault(_textTrack);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -553,11 +705,41 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var logger = _logger2.default.getLogger('Player');
-
+/**
+ * The HTML5 player class.
+ * @classdesc
+ */
 var Player = function (_FakeEventTarget) {
   _inherits(Player, _FakeEventTarget);
 
+  /**
+   * @param {Object} config - The configuration for the player instance.
+   * @constructor
+   */
+
+  /**
+   * The tracks of the player.
+   * @type {Array<Track>}
+   * @private
+   */
+
+  /**
+   * The event handlers of the playback engine.
+   * @type {Map<string, ListenerType>}
+   * @private
+   */
+
+  /**
+   * The runtime configuration of the player.
+   * @type {Object}
+   * @private
+   */
+
+  /**
+   * The plugin manager of the player.
+   * @type {PluginManager}
+   * @private
+   */
   function Player(config) {
     var _ret;
 
@@ -565,125 +747,365 @@ var Player = function (_FakeEventTarget) {
 
     var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
 
+    _this._controller = _this;
+    _this._tracks = [];
+    _this._logger = _logger2.default.getLogger('Player');
+    _this._stateManager = new _stateManager2.default(_this);
     _this._pluginManager = new _pluginManager2.default();
     _this._eventManager = new _eventManager2.default();
     _this._engineEventHandlers = new Map();
-    _events2.default.forEach(function (event) {
-      _this._engineEventHandlers.set('onEngine' + (0, _stringUtil.capitlize)(event) + '_', function (event) {
-        return _this.dispatchEvent(event);
-      });
-    });
-    _this._config = config || Player.defaultConfig_();
-    _this.loadPlugins(_this._config);
-    _this.selectEngine(_this._config);
-    _this.attachMedia();
-    logger.info('player is ready!');
-    return _ret = _this.controller, _possibleConstructorReturn(_this, _ret);
+    for (var playerEvent in _events2.default) {
+      if (_events2.default.hasOwnProperty(playerEvent)) {
+        _this._engineEventHandlers.set('onEngine' + (0, _stringUtil.capitlize)(_events2.default[playerEvent]) + '_', function (event) {
+          return _this.dispatchEvent(event);
+        });
+      }
+    }
+    _this.configure(config);
+    return _ret = _this._controller, _possibleConstructorReturn(_this, _ret);
   }
 
+  /**
+   * Configures the player according to given configuration.
+   * @param {Object} config - The configuration for the player instance.
+   * @returns {void}
+   */
+
+  /**
+   * The current controller of the player (used for decorators).
+   * @type {any}
+   * @private
+   */
+
+  /**
+   * The state manager of the player.
+   * @type {StateManager}
+   * @private
+   */
+
+  /**
+   * The playback engine.
+   * @type {IEngine}
+   * @private
+   */
+
+  /**
+   * The event manager of the player.
+   * @type {EventManager}
+   * @private
+   */
+
+  /**
+   * The player class logger.
+   * @type {any}
+   * @private
+   */
+
+
   _createClass(Player, [{
+    key: 'configure',
+    value: function configure(config) {
+      if (this._config) {
+        this._config = (0, _util.merge)(this._config, config);
+      } else {
+        this._config = config || Player._defaultConfig();
+      }
+      this._loadPlugins(this._config);
+      this._selectEngine(this._config);
+      this._attachMedia();
+    }
+
+    /**
+     * Destroys the player.
+     * @returns {void}
+     * @public
+     */
+
+  }, {
     key: 'destroy',
     value: function destroy() {
       this._engine.destroy();
       this._eventManager.destroy();
       this._pluginManager.destroy();
-      // this.engine_ = null;
-      // this.eventManager_ = null;
-      this._config = null;
+      this._stateManager.destroy();
+      this._config = {};
+      this._tracks = [];
     }
+
+    /**
+     * @returns {Object} - The default configuration of the player.
+     * @private
+     * @static
+     */
+
   }, {
-    key: 'loadPlugins',
-    value: function loadPlugins(config) {
+    key: '_loadPlugins',
+
+
+    /**
+     *
+     * @param {Object} config - The configuration of the player instance.
+     * @private
+     * @returns {void}
+     */
+    value: function _loadPlugins(config) {
       var plugins = config.plugins;
-      this.controller = this;
       for (var name in plugins) {
-        if (plugins.hasOwnProperty(name)) {
-          this._pluginManager.load(name, this, plugins[name]);
-          var plugin = this._pluginManager.get(name);
-          if (typeof plugin.getPlayerDecorator == "function") {
-            var decorator = plugin.getPlayerDecorator();
-            decorator.setPlayer(this.controller);
-            this.controller = decorator;
-          }
+        this._pluginManager.load(name, this, plugins[name]);
+        var plugin = this._pluginManager.get(name);
+        if (plugin && typeof plugin.getPlayerDecorator === "function") {
+          var decorator = plugin.getPlayerDecorator();
+          decorator.setPlayer(this._controller);
+          this._controller = decorator;
         }
       }
     }
+
+    /**
+     * Select the engine to create based on the given configured sources.
+     * @param {Object} config - The configuration of the player instance.
+     * @private
+     * @returns {void}
+     */
+
   }, {
-    key: 'selectEngine',
-    value: function selectEngine(config) {
+    key: '_selectEngine',
+    value: function _selectEngine(config) {
       if (config && config.sources) {
         var sources = config.sources;
         for (var i = 0; i < sources.length; i++) {
           if (_html2.default.canPlayType(sources[i].mimetype)) {
-            this.loadEngine(sources[i], config);
+            this._loadEngine(sources[i], config);
             break;
           }
         }
       }
     }
+
+    /**
+     * Loads the selected engine.
+     * @param {Source} source - The selected source object.
+     * @param {Object} config - The configuration of the player instance.
+     * @private
+     * @returns {void}
+     */
+
   }, {
-    key: 'loadEngine',
-    value: function loadEngine(source, config) {
+    key: '_loadEngine',
+    value: function _loadEngine(source, config) {
       this._engine = new _html2.default(source, config);
       if (config.preload === "auto") {
         this.load();
       }
     }
-  }, {
-    key: 'attachMedia',
-    value: function attachMedia() {
-      var _this2 = this;
 
-      // Listen to all HTML5-defined events and trigger them on the player
-      _events2.default.forEach(function (event) {
-        var handler = _this2._engineEventHandlers.get('onEngine' + (0, _stringUtil.capitlize)(event) + '_');
-        if (handler) {
-          _this2._eventManager.listen(_this2._engine, event, handler);
+    /**
+     * Listen to all HTML5 defined events and trigger them on the player
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_attachMedia',
+    value: function _attachMedia() {
+      if (this._engine) {
+        for (var playerEvent in _events2.default) {
+          if (_events2.default.hasOwnProperty(playerEvent)) {
+            var handler = this._engineEventHandlers.get('onEngine' + (0, _stringUtil.capitlize)(_events2.default[playerEvent]) + '_');
+            if (handler) {
+              this._eventManager.listen(this._engine, _events2.default[playerEvent], handler);
+            }
+          }
+        }
+      }
+    }
+
+    /**
+     * Returns the tracks according to the filter. if no filter given returns the all tracks.
+     * @function getTracks
+     * @param {string} [type] - a tracks filter, should be 'video', 'audio' or 'text'.
+     * @returns {Array<Track>} - The parsed tracks.
+     * @public
+     */
+
+  }, {
+    key: 'getTracks',
+    value: function getTracks(type) {
+      return this._getTracksByType(type);
+    }
+
+    /**
+     * Returns the tracks according to the filter. if no filter given returns the all tracks.
+     * @function _getTracksByType
+     * @param {string} [type] - a tracks filter, should be 'video', 'audio' or 'text'.
+     * @returns {Array<Track>} - The parsed tracks.
+     * @private
+     */
+
+  }, {
+    key: '_getTracksByType',
+    value: function _getTracksByType(type) {
+      return !type ? this._tracks : this._tracks.filter(function (track) {
+        if (type === _trackTypes2.default.VIDEO) {
+          return track instanceof _videoTrack2.default;
+        } else if (type === _trackTypes2.default.AUDIO) {
+          return track instanceof _audioTrack2.default;
+        } else if (type === _trackTypes2.default.TEXT) {
+          return track instanceof _textTrack2.default;
+        } else {
+          return true;
         }
       });
     }
 
-    //  <editor-fold desc="Playback Interface">
     /**
-     * Start/resume playback
-     * @returns {Player}
+     * Select a track
+     * @function selectTrack
+     * @param {Track} track - the track to select
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: 'selectTrack',
+    value: function selectTrack(track) {
+      var success = this._selectTrackByType(track);
+      if (success) {
+        this._markActiveTrack(track);
+      }
+    }
+
+    /**
+     * Select a track by type
+     * @function _selectTrackByType
+     * @param {Track} track - the track to select
+     * @returns {boolean} - success
+     * @private
+     */
+
+  }, {
+    key: '_selectTrackByType',
+    value: function _selectTrackByType(track) {
+      if (track) {
+        if (track instanceof _videoTrack2.default) {
+          return this._engine.selectVideoTrack(track);
+        } else if (track instanceof _audioTrack2.default) {
+          return this._engine.selectAudioTrack(track);
+        } else if (track instanceof _textTrack2.default) {
+          return this._engine.selectTextTrack(track);
+        }
+      }
+      return false;
+    }
+
+    /**
+     * Mark the selected track as active
+     * @function _markActiveTrack
+     * @param {Track} track - the track to mark
+     * @returns {void}
+     * @private
+     */
+
+  }, {
+    key: '_markActiveTrack',
+    value: function _markActiveTrack(track) {
+      var type = void 0;
+      if (track instanceof _videoTrack2.default) {
+        type = _trackTypes2.default.VIDEO;
+      } else if (track instanceof _audioTrack2.default) {
+        type = _trackTypes2.default.AUDIO;
+      } else if (track instanceof _textTrack2.default) {
+        type = _trackTypes2.default.TEXT;
+      }
+      if (type) {
+        var tracks = this.getTracks(type);
+        for (var i = 0; i < tracks.length; i++) {
+          tracks[i].active = track.index === i;
+        }
+      }
+    }
+
+    /**
+     * Get the player config.
+     * @returns {Object} - The player configuration.
+     * @public
      */
 
   }, {
     key: 'play',
+
+
+    //  <editor-fold desc="Playback Interface">
+    /**
+     * Start/resume playback.
+     * @returns {void}
+     * @public
+     */
     value: function play() {
-      return this._engine.play();
-    }
-  }, {
-    key: 'getVideoElement',
-    value: function getVideoElement() {
-      this._engine.videoElement;
+      var _this2 = this;
+
+      if (this._engine) {
+        if (this._engine.src) {
+          this._engine.play();
+        } else {
+          this.load().then(function () {
+            _this2._engine.play();
+          });
+        }
+      }
     }
 
     /**
-     * Pause playback
-     * @returns {Player}
+     * Pause playback.
+     * @returns {void}
+     * @public
      */
 
   }, {
     key: 'pause',
     value: function pause() {
-      return this._engine.pause();
+      if (this._engine) {
+        return this._engine.pause();
+      }
     }
 
     /**
-     * Load media
+     * Load media.
+     * @public
+     * @returns {Promise<*>} - The load promise.
      */
 
   }, {
     key: 'load',
     value: function load() {
-      this._engine.load();
+      var _this3 = this;
+
+      if (this._engine) {
+        return this._engine.load().then(function (data) {
+          _this3._tracks = data.tracks;
+        });
+      } else {
+        return Promise.resolve();
+      }
     }
 
     /**
-     * Set the current time in seconds
-     * @param to {Number}
+     * @returns {HTMLVideoElement} - The video element.
+     * @public
+     */
+
+  }, {
+    key: 'getVideoElement',
+    value: function getVideoElement() {
+      if (this._engine) {
+        return this._engine.getVideoElement();
+      }
+    }
+
+    /**
+     * Set the current time in seconds.
+     * @param {Number} to - The number to set in seconds.
+     * @public
      */
 
   }, {
@@ -696,8 +1118,9 @@ var Player = function (_FakeEventTarget) {
     value: function ready() {}
 
     /**
-     * Get paused state
-     * @returns {boolean}
+     * Get paused state.
+     * @returns {?boolean} - Whether the video is paused or not.
+     * @public
      */
 
   }, {
@@ -705,110 +1128,191 @@ var Player = function (_FakeEventTarget) {
     value: function buffered() {}
 
     /**
-     * Set player muted state
-     * @param mute {boolean}
+     * Set player muted state.
+     * @param {boolean} mute - The mute value.
+     * @returns {void}
+     * @public
      */
 
   }, {
+    key: 'config',
+    get: function get() {
+      return this._config;
+    }
+  }, {
     key: 'currentTime',
     set: function set(to) {
-      if ((0, _util.isNumber)(to)) {
-        var boundedTo = to;
-        if (to < 0) {
-          boundedTo = 0;
+      if (this._engine) {
+        if ((0, _util.isNumber)(to)) {
+          var boundedTo = to;
+          if (to < 0) {
+            boundedTo = 0;
+          }
+          if (boundedTo > this._engine.duration) {
+            boundedTo = this._engine.duration;
+          }
+          this._engine.currentTime = boundedTo;
         }
-        if (boundedTo > this._engine.duration) {
-          boundedTo = this._engine.duration;
-        }
-        this._engine.currentTime = boundedTo;
       }
     }
 
     /**
-     * Get the current time in seconds
-     * @returns {Number}
+     * Get the current time in seconds.
+     * @returns {?Number} - The playback current time.
+     * @public
      */
     ,
     get: function get() {
-      return this._engine.currentTime;
+      if (this._engine) {
+        return this._engine.currentTime;
+      }
     }
 
     /**
-     * /**
-     * Get the duration in seconds
-     * @returns {Number}
+     * Get the duration in seconds.
+     * @returns {?Number} - The playback duration.
+     * @public
      */
 
   }, {
     key: 'duration',
     get: function get() {
-      return this._engine.duration;
+      if (this._engine) {
+        return this._engine.duration;
+      }
     }
 
     /**
-     * Set playback volume
-     * @param vol {Number}
+     * Set playback volume.
+     * @param {Number} vol - The volume to set.
+     * @returns {void}
+     * @public
      */
 
   }, {
     key: 'volume',
     set: function set(vol) {
-      if ((0, _util.isFloat)(vol)) {
-        var boundedVol = vol;
-        if (boundedVol < 0) {
-          boundedVol = 0;
+      if (this._engine) {
+        if ((0, _util.isFloat)(vol)) {
+          var boundedVol = vol;
+          if (boundedVol < 0) {
+            boundedVol = 0;
+          }
+          if (boundedVol > 1) {
+            boundedVol = 1;
+          }
+          this._engine.volume = boundedVol;
         }
-        if (boundedVol > 1) {
-          boundedVol = 1;
-        }
-        this._engine.volume = boundedVol;
       }
     }
 
     /**
-     * Get playback volume
-     * @returns {Number}
+     * Get playback volume.
+     * @returns {?Number} - The playback volume.
+     * @public
      */
     ,
     get: function get() {
-      return this._engine.volume;
+      if (this._engine) {
+        return this._engine.volume;
+      }
     }
   }, {
     key: 'paused',
     get: function get() {
-      return this._engine.paused;
+      if (this._engine) {
+        return this._engine.paused;
+      }
     }
 
     /**
-     *
-     * @returns {boolean}
+     * Get seeking state.
+     * @returns {?boolean} - Whether the video is seeking or not.
+     * @public
      */
 
   }, {
     key: 'seeking',
     get: function get() {
-      return this._engine.seeking;
+      if (this._engine) {
+        return this._engine.seeking;
+      }
     }
   }, {
     key: 'muted',
     set: function set(mute) {
-      this._engine.muted = mute;
+      if (this._engine) {
+        this._engine.muted = mute;
+      }
     }
 
     /**
-     * Get player muted state
-     * @returns {boolean}
+     * Get player muted state.
+     * @returns {?boolean} - Whether the video is muted or not.
+     * @public
      */
     ,
     get: function get() {
-      return this._engine.muted;
+      if (this._engine) {
+        return this._engine.muted;
+      }
+    }
+
+    /**
+     * Get the player source.
+     * @returns {?string} - The current source of the player.
+     * @public
+     */
+
+  }, {
+    key: 'src',
+    get: function get() {
+      if (this._engine) {
+        return this._engine.src;
+      }
+    }
+
+    /**
+     * Get the player events.
+     * @returns {Object} - The events of the player.
+     * @public
+     */
+
+  }, {
+    key: 'Event',
+    get: function get() {
+      return _events2.default;
+    }
+
+    /**
+     * Get the player states.
+     * @returns {Object} - The states of the player.
+     * @public
+     */
+
+  }, {
+    key: 'State',
+    get: function get() {
+      return _stateTypes2.default;
+    }
+
+    /**
+     * Get the player tracks types.
+     * @returns {Object} - The tracks types of the player.
+     * @public
+     */
+
+  }, {
+    key: 'Track',
+    get: function get() {
+      return _trackTypes2.default;
     }
 
     // </editor-fold>
 
   }], [{
-    key: 'defaultConfig_',
-    value: function defaultConfig_() {
+    key: '_defaultConfig',
+    value: function _defaultConfig() {
       return {};
     }
   }]);
@@ -829,190 +1333,35 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _track = __webpack_require__(1);
 
-var _multiMap = __webpack_require__(12);
-
-var _multiMap2 = _interopRequireDefault(_multiMap);
-
-var _fakeEvent = __webpack_require__(2);
-
-var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
+var _track2 = _interopRequireDefault(_track);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/**
- * Creates a new EventManager. An EventManager maintains a collection of "event
- * bindings" between event targets and event listeners.
- *
- * @struct
- * @constructor
- * @implements {IDestroyable}
- */
-var EventManager = function () {
-  function EventManager() {
-    _classCallCheck(this, EventManager);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-    /**
-     * Maps an event type to an array of event bindings.
-     * @private {MultiMap.<!EventManager.Binding_>}
-     */
-    this._bindingMap = new _multiMap2.default();
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Audio track representation of the player.
+ * @classdesc
+ */
+var AudioTrack = function (_Track) {
+  _inherits(AudioTrack, _Track);
+
+  function AudioTrack() {
+    _classCallCheck(this, AudioTrack);
+
+    return _possibleConstructorReturn(this, (AudioTrack.__proto__ || Object.getPrototypeOf(AudioTrack)).apply(this, arguments));
   }
 
-  /**
-   * Detaches all event listeners.
-   * @override
-   */
+  return AudioTrack;
+}(_track2.default);
 
-
-  _createClass(EventManager, [{
-    key: 'destroy',
-    value: function destroy() {
-      this.removeAll();
-      this._bindingMap = null;
-      return Promise.resolve();
-    }
-
-    /**
-     * Attaches an event listener to an event target.
-     * @param {EventTarget} target The event target.
-     * @param {string} type The event type.
-     * @param {EventManager.ListenerType} listener The event listener.
-     */
-
-  }, {
-    key: 'listen',
-    value: function listen(target, type, listener) {
-      var binding = new Binding_(target, type, listener);
-      if (this._bindingMap) {
-        this._bindingMap.push(type, binding);
-      }
-    }
-
-    /**
-     * Detaches an event listener from an event target.
-     * @param {EventTarget} target The event target.
-     * @param {string} type The event type.
-     */
-
-  }, {
-    key: 'unlisten',
-    value: function unlisten(target, type) {
-      if (this._bindingMap) {
-        var list = this._bindingMap.get(type);
-
-        for (var i = 0; i < list.length; ++i) {
-          var binding = list[i];
-
-          if (binding.target == target) {
-            binding.unlisten();
-            if (this._bindingMap) {
-              this._bindingMap.remove(type, binding);
-            }
-          }
-        }
-      }
-    }
-
-    /**
-     * Detaches all event listeners from all targets.
-     */
-
-  }, {
-    key: 'removeAll',
-    value: function removeAll() {
-      if (this._bindingMap) {
-        var listeners = this._bindingMap.getAll();
-
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-          for (var _iterator = listeners[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var listener = _step.value;
-
-            listener.unlisten();
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-              _iterator.return();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
-        }
-
-        if (this._bindingMap) {
-          this._bindingMap.clear();
-        }
-      }
-    }
-  }]);
-
-  return EventManager;
-}();
-
-/**
- * @typedef {function(!Event)}
- */
-
-
-/**
- * Creates a new Binding_ and attaches the event listener to the event target.
- * @param {EventTarget} target The event target.
- * @param {string} type The event type.
- * @param {EventManager.ListenerType} listener The event listener.
- * @constructor
- * @private
- */
-var Binding_ = function () {
-  function Binding_(target, type, listener) {
-    _classCallCheck(this, Binding_);
-
-    /** @type {EventTarget} */
-    this.target = target;
-
-    /** @type {string} */
-    this.type = type;
-
-    /** @type {?EventManager.ListenerType} */
-    this.listener = listener;
-
-    this.target.addEventListener(type, listener, false);
-  }
-
-  /**
-   * Detaches the event listener from the event target. This does nothing if the
-   * event listener is already detached.
-   */
-
-
-  _createClass(Binding_, [{
-    key: 'unlisten',
-    value: function unlisten() {
-      if (!this.target) return;
-
-      this.target.removeEventListener(this.type, this.listener, false);
-
-      this.target = null;
-      this.listener = null;
-    }
-  }]);
-
-  return Binding_;
-}();
-
-exports.default = EventManager;
+exports.default = AudioTrack;
 
 /***/ }),
 /* 6 */
@@ -1027,50 +1376,68 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _track = __webpack_require__(1);
+
+var _track2 = _interopRequireDefault(_track);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var PlayerError = function () {
-  function PlayerError(error, param) {
-    _classCallCheck(this, PlayerError);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-    this.name = error.name;
-    this.message = error.message(param);
-  }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-  _createClass(PlayerError, [{
-    key: "getError",
-    value: function getError() {
-      return {
-        name: this.name,
-        message: this.message
-      };
+/**
+ * Text track representation of the player.
+ * @classdesc
+ */
+var TextTrack = function (_Track) {
+  _inherits(TextTrack, _Track);
+
+  _createClass(TextTrack, [{
+    key: 'kind',
+
+
+    /**
+     * Getter for the kind of the text track.
+     * @public
+     * @returns {string} - The kind of the text track.
+     */
+    get: function get() {
+      return this._kind;
     }
+
+    /**
+     * @constructor
+     * @param {Object} settings - The track settings object.
+     */
+
+    /**
+     * The kind of the text track:
+     * subtitles/captions/metadata.
+     * @member
+     * @type {string}
+     * @private
+     */
+
   }]);
 
-  return PlayerError;
-}();
+  function TextTrack() {
+    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-PlayerError.TYPE = {
-  NOT_REGISTERED_PLUGIN: {
-    name: "PluginNotRegisteredException",
-    message: function message(name) {
-      return "Cannot load " + name + " plugin. Name not found in the registry";
-    }
-  },
-  NOT_VALID_HANDLER: {
-    name: "PluginHandlerIsNotValidException",
-    message: function message() {
-      return "To activate plugin you must provide a class derived from BasePlugin";
-    }
-  },
-  NOT_IMPLEMENTED_METHOD: {
-    name: "NotImplementedException",
-    message: function message(method) {
-      return method + " method not implemented";
-    }
+    _classCallCheck(this, TextTrack);
+
+    var _this = _possibleConstructorReturn(this, (TextTrack.__proto__ || Object.getPrototypeOf(TextTrack)).call(this, settings));
+
+    _this._kind = settings.kind;
+    return _this;
   }
-};
-exports.default = PlayerError;
+
+  return TextTrack;
+}(_track2.default);
+
+exports.default = TextTrack;
 
 /***/ }),
 /* 7 */
@@ -1082,122 +1449,36 @@ exports.default = PlayerError;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.registerAdapter = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _track = __webpack_require__(1);
 
-var _baseAdapter = __webpack_require__(1);
-
-var _baseAdapter2 = _interopRequireDefault(_baseAdapter);
-
-var _nativeAdapter = __webpack_require__(16);
-
-var _nativeAdapter2 = _interopRequireDefault(_nativeAdapter);
+var _track2 = _interopRequireDefault(_track);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 /**
- * Media source adapter manager
+ * Video track representation of the player.
  * @classdesc
  */
-var MediaSourceAdapterManager = function () {
-  function MediaSourceAdapterManager() {
-    _classCallCheck(this, MediaSourceAdapterManager);
+var VideoTrack = function (_Track) {
+  _inherits(VideoTrack, _Track);
+
+  function VideoTrack() {
+    _classCallCheck(this, VideoTrack);
+
+    return _possibleConstructorReturn(this, (VideoTrack.__proto__ || Object.getPrototypeOf(VideoTrack)).apply(this, arguments));
   }
 
-  _createClass(MediaSourceAdapterManager, null, [{
-    key: 'register',
+  return VideoTrack;
+}(_track2.default);
 
-
-    /**
-     * Add a media source adapter to the registry
-     * @function register
-     * @param {BaseMediaSourceAdapter} adapter
-     * @static
-     */
-    value: function register(adapter) {
-      if (adapter && !MediaSourceAdapterManager._mediaSourceAdapters.includes(adapter)) {
-        MediaSourceAdapterManager._mediaSourceAdapters.push(adapter);
-      }
-    }
-
-    /**
-     * Remove a media source adapter from the registry
-     * @function unregister
-     * @param {BaseMediaSourceAdapter} adapter
-     * @static
-     */
-
-    /**
-     * The media source adapter registry
-     * @member {Array<BaseMediaSourceAdapter>} _mediaSourceAdapters
-     * @static
-     * @private
-     */
-
-  }, {
-    key: 'unregister',
-    value: function unregister(adapter) {
-      var index = MediaSourceAdapterManager._mediaSourceAdapters.indexOf(adapter);
-      if (index > -1) {
-        MediaSourceAdapterManager._mediaSourceAdapters.splice(index, 1);
-      }
-    }
-
-    /**
-     * Checks if one of the registered media source adapters can play a given mime type
-     * @function canPlayType
-     * @param {string} mimeType - The mime type to check
-     * @returns {boolean}
-     * @static
-     */
-
-  }, {
-    key: 'canPlayType',
-    value: function canPlayType(mimeType) {
-      var adapters = MediaSourceAdapterManager._mediaSourceAdapters;
-      for (var i = 0; i < adapters.length; i++) {
-        if (adapters[i].canPlayType(mimeType)) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    /**
-     * Get the appropriate media source adapter to the video source
-     * @function getMediaSourceAdapter
-     * @param {HTMLVideoElement} videoElement - The video element which will bind to the media source adapter
-     * @param {Object} source - The video source
-     * @param {Object} config - The player configuration
-     * @returns {BaseMediaSourceAdapter|null}
-     * @static
-     */
-
-  }, {
-    key: 'getMediaSourceAdapter',
-    value: function getMediaSourceAdapter(videoElement, source, config) {
-      if (videoElement && source && config) {
-        var adapters = MediaSourceAdapterManager._mediaSourceAdapters;
-        for (var i = 0; i < adapters.length; i++) {
-          if (adapters[i].canPlayType(source.mimetype)) return adapters[i].createAdapter(videoElement, source.src, config.engines);
-        }
-      }
-      return null;
-    }
-  }]);
-
-  return MediaSourceAdapterManager;
-}();
-
-MediaSourceAdapterManager._mediaSourceAdapters = [_nativeAdapter2.default];
-exports.default = MediaSourceAdapterManager;
-
-
-var registerAdapter = MediaSourceAdapterManager.register;
-exports.registerAdapter = registerAdapter;
+exports.default = VideoTrack;
 
 /***/ }),
 /* 8 */
@@ -1209,45 +1490,244 @@ exports.registerAdapter = registerAdapter;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+var PLAYER_EVENTS = {
+  PLAY: 'play',
+  PAUSE: 'pause',
+  /**
+   * Fired when the media begins to play (either for the first time, after having been paused, or after ending and then restarting)
+   */
+  PLAYING: 'playing',
+  /**
+   * Fired while the user agent is downloading media data
+   */
+  PROGRESS: 'progress',
+  /**
+   * Fires when the loading of an audio/video is aborted
+   */
+  ABORT: 'abort',
+  /**
+   * Fires when an error occurs.  The element's error attribute contains more information
+   */
+  ERROR: 'error',
+  /**
+   * Fires when the browser is intentionally not getting media data
+   */
+  SUSPEND: 'suspend',
+  /**
+   * Fires when the current playlist is empty
+   */
+  EMPTIED: 'emptied',
+  /**
+   * Fires when playback completes
+   */
+  ENDED: 'ended',
+  /**
+   * Fires when the requested operation (such as playback) is delayed pending the completion of another operation (such as a seek)
+   */
+  WAITING: 'waiting',
+  /**
+   * Fires when the browser is trying to get media data, but data is not available
+   */
+  STALLED: 'stalled',
+  /**
+   * Fires when the video is starting to load
+   */
+  LOAD_START: 'loadstart',
+  /**
+   * Fires when the browser has loaded meta data for the audio/video
+   */
+  LOADED_METADATA: 'loadedmetadata',
+  /**
+   * Fires when the browser has loaded the current frame of the audio/video
+   */
+  LOADED_DATA: 'loadeddata',
+  /**
+   * Fires when the current playback position has changed
+   */
+  TIME_UPDATE: 'timeupdate',
+  /**
+   * Fires when the playing speed of the audio/video is changed
+   */
+  RATE_CHANGE: 'ratechange',
+  /**
+   * Fires when the volume has been changed
+   */
+  VOLUME_CHANGE: 'volumechange',
+  /**
+   * Fires when the text track has been changed
+   */
+  TEXT_TRACK_CHANGE: 'texttrackchange',
+  /**
+   * Fires when the player state has been changed
+   */
+  PLAYER_STATE_CHANGED: 'playerStateChanged',
+  /**
+   * Fires when the seeking attribute is set to false indicating that seeking has ended
+   */
+  SEEKED: 'seeked',
+  /**
+   * Fires when the seeking attribute is set to true indicating that seeking is active
+   */
+  SEEKING: 'seeking'
+};
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var PlayerDecoratorBase = function () {
-  function PlayerDecoratorBase() {
-    _classCallCheck(this, PlayerDecoratorBase);
-  }
-
-  _createClass(PlayerDecoratorBase, [{
-    key: "setPlayer",
-    value: function setPlayer(player) {
-      this.player = player;
-    }
-  }, {
-    key: "load",
-    value: function load() {
-      return this.player.load();
-    }
-  }, {
-    key: "play",
-    value: function play() {
-      return this.player.play();
-    }
-  }, {
-    key: "pause",
-    value: function pause() {
-      return this.player.pause();
-    }
-  }]);
-
-  return PlayerDecoratorBase;
-}();
-
-exports.default = PlayerDecoratorBase;
+exports.default = PLAYER_EVENTS;
 
 /***/ }),
 /* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.registerMediaSourceAdapter = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _nativeAdapter = __webpack_require__(20);
+
+var _nativeAdapter2 = _interopRequireDefault(_nativeAdapter);
+
+var _logger = __webpack_require__(0);
+
+var _logger2 = _interopRequireDefault(_logger);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Media source provider
+ * @classdesc
+ */
+var MediaSourceProvider = function () {
+  function MediaSourceProvider() {
+    _classCallCheck(this, MediaSourceProvider);
+  }
+
+  _createClass(MediaSourceProvider, null, [{
+    key: 'register',
+
+
+    /**
+     * Add a media source adapter to the registry
+     * @function register
+     * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to register
+     * @static
+     * @returns {void}
+     */
+
+    /**
+     * The media source adapter registry
+     * @member {Array<IMediaSourceAdapter>} _mediaSourceAdapters
+     * @static
+     * @private
+     */
+    value: function register(mediaSourceAdapter) {
+      if (mediaSourceAdapter) {
+        if (!MediaSourceProvider._mediaSourceAdapters.includes(mediaSourceAdapter)) {
+          MediaSourceProvider._logger.debug('Adapter <' + mediaSourceAdapter.name + '> has been registered successfully.');
+          MediaSourceProvider._mediaSourceAdapters.push(mediaSourceAdapter);
+        } else {
+          MediaSourceProvider._logger.debug('Adapter <' + mediaSourceAdapter.name + '> is already registered, do not register again.');
+        }
+      }
+    }
+
+    /**
+     * Remove a media source adapter from the registry
+     * @function unRegister
+     * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to unRegister
+     * @static
+     * @returns {void}
+     */
+
+    /**
+     * The selected adapter for playback
+     * @type {null|IMediaSourceAdapter}
+     * @static
+     * @private
+     */
+
+    /**
+     * The logger of the media source provider
+     * @member {any} _logger
+     * @static
+     * @private
+     */
+
+  }, {
+    key: 'unRegister',
+    value: function unRegister(mediaSourceAdapter) {
+      var index = MediaSourceProvider._mediaSourceAdapters.indexOf(mediaSourceAdapter);
+      if (index > -1) {
+        MediaSourceProvider._logger.debug('Unregistered <' + mediaSourceAdapter.name + '> adapter.');
+        MediaSourceProvider._mediaSourceAdapters.splice(index, 1);
+      }
+    }
+
+    /**
+     * Checks if one of the registered media source adapters can play a given mime type
+     * @function canPlayType
+     * @param {string} mimeType - The mime type to check
+     * @static
+     * @returns {boolean} - If one of the adapters can play the specific mime type
+     */
+
+  }, {
+    key: 'canPlayType',
+    value: function canPlayType(mimeType) {
+      var mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
+      for (var i = 0; i < mediaSourceAdapters.length; i++) {
+        if (mediaSourceAdapters[i].canPlayType(mimeType)) {
+          MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
+          MediaSourceProvider._logger.debug('Selected adapter is <' + MediaSourceProvider._selectedAdapter.name + '>.');
+          return true;
+        }
+      }
+      return false;
+    }
+
+    /**
+     * Get the appropriate media source adapter to the video source
+     * @function getMediaSourceAdapter
+     * @param {HTMLVideoElement} videoElement - The video element which requires adapter for a given mimeType
+     * @param {Source} source - The selected source object
+     * @param {Object} config - The player configuration
+     * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists
+     * @static
+     */
+
+  }, {
+    key: 'getMediaSourceAdapter',
+    value: function getMediaSourceAdapter(videoElement, source, config) {
+      if (videoElement && source && config) {
+        if (!MediaSourceProvider._selectedAdapter) {
+          MediaSourceProvider.canPlayType(source.mimetype);
+        }
+        return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config.engines) : null;
+      }
+      return null;
+    }
+  }]);
+
+  return MediaSourceProvider;
+}();
+
+MediaSourceProvider._logger = _logger2.default.getLogger('MediaSourceProvider');
+MediaSourceProvider._mediaSourceAdapters = [_nativeAdapter2.default];
+MediaSourceProvider._selectedAdapter = null;
+exports.default = MediaSourceProvider;
+
+
+var registerMediaSourceAdapter = MediaSourceProvider.register;
+exports.registerMediaSourceAdapter = registerMediaSourceAdapter;
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1267,13 +1747,13 @@ var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _util = __webpack_require__(13);
+var _util = __webpack_require__(16);
 
-var _eventManager = __webpack_require__(5);
+var _eventManager = __webpack_require__(2);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _playerError = __webpack_require__(6);
+var _playerError = __webpack_require__(15);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
@@ -1293,10 +1773,10 @@ var BasePlugin = function () {
 
     /**
      * Factory method to create the actual plugin.
-     * @param name - The plugin name
-     * @param player - The player reference
-     * @param config - The plugin configuration
-     * @returns {BasePlugin}
+     * @param {string} name - The plugin name
+     * @param {Player} player - The player reference
+     * @param {Object} config - The plugin configuration
+     * @returns {BasePlugin} - New runtime plugin instance
      * @static
      * @public
      */
@@ -1324,7 +1804,7 @@ var BasePlugin = function () {
     /**
      * Returns under what conditions the plugin is valid.
      * Plugin must implement this method.
-     * @returns {boolean}
+     * @returns {boolean} - Whether the plugin is valid and can be initiated. Default implementation is true
      * @static
      * @public
      * @abstract
@@ -1356,9 +1836,9 @@ var BasePlugin = function () {
 
     /**
      * constructor
-     * @param name - The plugin name
-     * @param player - The player reference
-     * @param config - The plugin configuration
+     * @param {string} name - The plugin name
+     * @param {Player} player - The player reference
+     * @param {Object} config - The plugin configuration
      * @constructor
      * @private
      */
@@ -1376,10 +1856,9 @@ var BasePlugin = function () {
   }
 
   /**
-   * Returns the config of the plugin.
-   * If attribute is provided, returns its value.
-   * @param attr - The key in the plugin configuration.
-   * @returns {*}
+   * Getter for the configuration of the plugin.
+   * @param {string} attr - The key in the plugin configuration (optional).
+   * @returns {*} - If attribute is provided, returns its value. Else, Returns the config of the plugin.
    * @public
    */
 
@@ -1395,8 +1874,9 @@ var BasePlugin = function () {
 
     /**
      * Updates the config of the plugin.
-     * @param update - The updated configuration.
+     * @param {Object} update - The updated configuration.
      * @public
+     * @returns {void}
      */
 
   }, {
@@ -1410,6 +1890,7 @@ var BasePlugin = function () {
      * plugin must implement this method.
      * @public
      * @abstract
+     * @returns {void}
      */
 
   }, {
@@ -1420,7 +1901,7 @@ var BasePlugin = function () {
 
     /**
      * Getter for the plugin's name.
-     * @returns {string}
+     * @returns {string} - The name of the plugin.
      * @public
      */
 
@@ -1438,7 +1919,7 @@ BasePlugin.defaultConfig = {};
 exports.default = BasePlugin;
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1451,11 +1932,11 @@ exports.registerPlugin = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _basePlugin = __webpack_require__(9);
+var _basePlugin = __webpack_require__(10);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
-var _playerError = __webpack_require__(6);
+var _playerError = __webpack_require__(15);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
@@ -1510,10 +1991,10 @@ var PluginManager = function () {
 
     /**
      * Creates and store new instance of the plugin in case isValid() of the plugin returns true.
-     * @param name - The plugin name
-     * @param player - The player reference
+     * @param {string} name - The plugin name
+     * @param {Player} player - The player reference
      * @param {Object} [config={}] - The plugin configuration
-     * @returns {boolean}
+     * @returns {boolean} - Whether the plugin load was successful
      * @public
      */
     value: function load(name, player) {
@@ -1525,16 +2006,17 @@ var PluginManager = function () {
       var pluginClass = PluginManager._registry.get(name);
       if (pluginClass != null && pluginClass.isValid()) {
         this._plugins.set(name, pluginClass.createPlugin(name, player, config));
-        logger.info('Plugin <' + name + '> has been loaded.');
+        logger.debug('Plugin <' + name + '> has been loaded.');
         return true;
       }
-      logger.info('Plugin <' + name + '> isn\'t loaded, isValid()=false.');
+      logger.debug('Plugin <' + name + '> isn\'t loaded, isValid()=false.');
       return false;
     }
 
     /**
      * Iterates over all the plugins and calls private _destroy.
      * @public
+     * @returns {void}
      */
 
   }, {
@@ -1545,9 +2027,10 @@ var PluginManager = function () {
 
     /**
      * Calls destroy() method of the plugin's impl.
-     * @param plugin - The plugin instance
-     * @param name - The plugin name
+     * @param {BasePlugin} plugin - The plugin instance
+     * @param {string} name - The plugin name
      * @private
+     * @returns {void}
      */
 
   }, {
@@ -1559,8 +2042,8 @@ var PluginManager = function () {
 
     /**
      * Returns the plugin's instance.
-     * @param name - The plugin name
-     * @returns {BasePlugin}
+     * @param {string} name - The plugin name
+     * @returns {BasePlugin} - The plugin instance
      * @public
      */
 
@@ -1576,9 +2059,9 @@ var PluginManager = function () {
     /**
      * Writes the plugin in the registry.
      * Maps: plugin name -> plugin class.
-     * @param name - The plugin name
-     * @param handler - The plugin class
-     * @returns {boolean}
+     * @param {string} name - The plugin name
+     * @param {Function} handler - The plugin class
+     * @returns {boolean} - If the registration request succeeded
      * @static
      * @public
      */
@@ -1588,18 +2071,19 @@ var PluginManager = function () {
       }
       if (!PluginManager._registry.has(name)) {
         PluginManager._registry.set(name, handler);
-        logger.info('Plugin <' + name + '> has been registered successfully.');
+        logger.debug('Plugin <' + name + '> has been registered successfully.');
         return true;
       }
-      logger.info('Plugin <' + name + '> is already registered, do not register again.');
+      logger.debug('Plugin <' + name + '> is already registered, do not register again.');
       return false;
     }
 
     /**
      * Removes the plugin from the registry.
-     * @param name - The plugin name
+     * @param {string} name - The plugin name
      * @static
      * @public
+     * @returns {void}
      */
 
   }, {
@@ -1607,7 +2091,7 @@ var PluginManager = function () {
     value: function unRegister(name) {
       if (PluginManager._registry.has(name)) {
         PluginManager._registry.delete(name);
-        logger.info('Unregistered <' + name + '> plugin.');
+        logger.debug('Unregistered <' + name + '> plugin.');
       }
     }
   }]);
@@ -1628,7 +2112,7 @@ var registerPlugin = PluginManager.register;
 exports.registerPlugin = registerPlugin;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1640,11 +2124,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _fakeEvent = __webpack_require__(2);
+var _fakeEvent = __webpack_require__(3);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _multiMap = __webpack_require__(12);
+var _multiMap = __webpack_require__(14);
 
 var _multiMap2 = _interopRequireDefault(_multiMap);
 
@@ -1774,7 +2258,27 @@ var FakeEventTarget = function () {
 exports.default = FakeEventTarget;
 
 /***/ }),
-/* 12 */
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var PLAYER_STATE_TYPES = {
+  IDLE: "idle",
+  LOADING: "loading",
+  PLAYING: "playing",
+  PAUSED: "paused",
+  BUFFERING: "buffering"
+};
+
+exports.default = PLAYER_STATE_TYPES;
+
+/***/ }),
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1804,8 +2308,9 @@ var MultiMap = function () {
 
   /**
    * Add a key, value pair to the map.
-   * @param {string} key
-   * @param {T} value
+   * @param {string} key -
+   * @param {T} value  -
+   * @returns {void}
    */
 
 
@@ -1825,8 +2330,9 @@ var MultiMap = function () {
 
     /**
      * Set an array of values for the key, overwriting any previous data.
-     * @param {string} key
-     * @param {!Array.<T>} values
+     * @param {string} key -
+     * @param {!Array.<T>} values -
+     * @returns {void}
      */
 
   }, {
@@ -1837,7 +2343,7 @@ var MultiMap = function () {
 
     /**
      * Check for a key.
-     * @param {string} key
+     * @param {string} key -
      * @return {boolean} true if the key exists.
      */
 
@@ -1849,7 +2355,7 @@ var MultiMap = function () {
 
     /**
      * Get a list of values by key.
-     * @param {string} key
+     * @param {string} key -
      * @return {Array.<T>} or null if no suZch key exists.
      */
 
@@ -1864,7 +2370,7 @@ var MultiMap = function () {
 
     /**
      * Get a list of all values.
-     * @return {!Array.<T>}
+     * @returns {!Array.<T>} -
      */
 
   }, {
@@ -1901,8 +2407,9 @@ var MultiMap = function () {
 
     /**
      * Remove a specific value, if it exists.
-     * @param {string} key
-     * @param {T} value
+     * @param {string} key -
+     * @param {T} value -
+     * @returns {void}
      */
 
   }, {
@@ -1934,6 +2441,7 @@ var MultiMap = function () {
 
     /**
      * Clear all keys and values from the multimap.
+     * @returns {void}
      */
 
   }, {
@@ -1949,7 +2457,7 @@ var MultiMap = function () {
 exports.default = MultiMap;
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1958,18 +2466,94 @@ exports.default = MultiMap;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var PlayerError = function () {
+  function PlayerError(error, param) {
+    _classCallCheck(this, PlayerError);
+
+    this.name = error.name;
+    this.message = error.message(param);
+  }
+
+  _createClass(PlayerError, [{
+    key: "getError",
+    value: function getError() {
+      return {
+        name: this.name,
+        message: this.message
+      };
+    }
+  }]);
+
+  return PlayerError;
+}();
+
+PlayerError.TYPE = {
+  NOT_REGISTERED_PLUGIN: {
+    name: "PluginNotRegisteredException",
+    message: function message(name) {
+      return "Cannot load " + name + " plugin. Name not found in the registry";
+    }
+  },
+  NOT_VALID_HANDLER: {
+    name: "PluginHandlerIsNotValidException",
+    message: function message() {
+      return "To activate plugin you must provide a class derived from BasePlugin";
+    }
+  },
+  NOT_IMPLEMENTED_METHOD: {
+    name: "NotImplementedException",
+    message: function message(method) {
+      return method + " method not implemented";
+    }
+  }
+};
+exports.default = PlayerError;
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * @param {number} n - A certain number
+ * @returns {boolean} - If the input is a number
+ */
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 function isNumber(n) {
   return Number(n) === n;
 }
 
+/**
+ * @param {number} n - A certain number
+ * @returns {boolean} - If the input is an integer
+ */
 function isInt(n) {
   return isNumber(n) && n % 1 === 0;
 }
 
+/**
+ * @param {number} n - A certain number
+ * @returns {boolean} - If the input is a float
+ */
 function isFloat(n) {
   return isNumber(n) && n % 1 !== 0;
 }
 
+/**
+ * @param {Object} obj1 - Certain object
+ * @param {Object} obj2 - Certain object
+ * @returns {*} - The merged object.
+ */
 function merge(obj1, obj2) {
   if (!obj1 && !obj2) return {};
   if (!obj1) return obj2;
@@ -1983,37 +2567,77 @@ exports.isFloat = isFloat;
 exports.merge = merge;
 
 /***/ }),
-/* 14 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _PlayerDecoratorBase = __webpack_require__(8);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-var _PlayerDecoratorBase2 = _interopRequireDefault(_PlayerDecoratorBase);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var PlayerDecoratorBase = function () {
+  function PlayerDecoratorBase() {
+    _classCallCheck(this, PlayerDecoratorBase);
+  }
+
+  _createClass(PlayerDecoratorBase, [{
+    key: "setPlayer",
+    value: function setPlayer(player) {
+      this.player = player;
+    }
+  }, {
+    key: "load",
+    value: function load() {
+      return this.player.load();
+    }
+  }, {
+    key: "play",
+    value: function play() {
+      return this.player.play();
+    }
+  }, {
+    key: "pause",
+    value: function pause() {
+      return this.player.pause();
+    }
+  }, {
+    key: "getVideoElement",
+    value: function getVideoElement() {
+      return this.player.getVideoElement();
+    }
+  }]);
+
+  return PlayerDecoratorBase;
+}();
+
+exports.default = PlayerDecoratorBase;
 
 /***/ }),
-/* 15 */
+/* 18 */
 /***/ (function(module, exports) {
 
 module.exports = {
 	"name": "playkit-js",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"main": "dist/playkit.js",
 	"scripts": {
 		"clean": "rm -rf ./dist",
 		"prebuild": "npm run clean",
 		"build": "webpack",
 		"dev": "webpack --progress --colors --watch",
-		"test": "NODE_ENV=test ./node_modules/.bin/karma start --single-run",
-		"test:watch": "NODE_ENV=test ./node_modules/.bin/karma start --auto-watch",
+		"test": "NODE_ENV=test karma start",
+		"test:watch": "NODE_ENV=test karma start --auto-watch",
 		"start": "webpack-dev-server",
-		"release": "npm run build && standard-version",
+		"release": "NODE_ENV=production npm run build -- -p && git add --all dist && git commit -m'Update dist' && standard-version",
 		"eslint": "eslint . --color",
-		"prepush": "npm run eslint & npm run test"
+		"flow": "flow check",
+		"prepush": "npm run eslint && npm run test && npm run flow"
 	},
 	"devDependencies": {
 		"babel-cli": "^6.18.0",
@@ -2032,14 +2656,17 @@ module.exports = {
 		"eslint-plugin-flowtype": "^2.30.0",
 		"eslint-plugin-import": "^2.2.0",
 		"eslint-plugin-mocha-no-only": "^0.0.5",
-		"flow-bin": "^0.38.0",
+		"flow-bin": "latest",
 		"istanbul": "^0.4.5",
 		"karma": "^1.5.0",
 		"karma-chai": "^0.1.0",
 		"karma-chrome-launcher": "^2.0.0",
 		"karma-cli": "^1.0.1",
 		"karma-coverage": "^1.1.1",
+		"karma-firefox-launcher": "^1.0.1",
+		"karma-ie-launcher": "^1.0.0",
 		"karma-mocha": "^1.3.0",
+		"karma-safari-launcher": "^1.0.0",
 		"karma-sourcemap-loader": "^0.3.7",
 		"karma-webpack": "^2.0.2",
 		"mocha": "^3.2.0",
@@ -2048,6 +2675,7 @@ module.exports = {
 		"sinon": "^2.0.0",
 		"sinon-chai": "^2.8.0",
 		"standard-version": "^4.0.0",
+		"uglifyjs-webpack-plugin": "^0.4.3",
 		"webpack": "latest",
 		"webpack-dev-server": "latest"
 	},
@@ -2071,7 +2699,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 16 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2083,126 +2711,37 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _baseAdapter = __webpack_require__(1);
-
-var _baseAdapter2 = _interopRequireDefault(_baseAdapter);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/**
- * An illustration of media source extension for progressive download
- * @classdesc
- * @extends BaseMediaSourceAdapter
- */
-var NativeAdapter = function (_BaseMediaSourceAdapt) {
-  _inherits(NativeAdapter, _BaseMediaSourceAdapt);
-
-  _createClass(NativeAdapter, null, [{
-    key: 'canPlayType',
-
-
-    /**
-     * Checks if NativeAdapter can play a given mime type
-     * @function canPlayType
-     * @param {string} mimeType
-     * @returns {boolean}
-     * @static
-     * @override
-     */
-    value: function canPlayType(mimeType) {
-      return !!document.createElement("video").canPlayType(mimeType);
-    }
-
-    /**
-     * @constructor
-     * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
-     * @param {string} source - The source URL
-     */
-
-    /**
-     * The name of Adapter
-     * @member {string} _name
-     * @static
-     * @private
-     */
-
-  }]);
-
-  function NativeAdapter(videoElement, source) {
-    _classCallCheck(this, NativeAdapter);
-
-    var _this = _possibleConstructorReturn(this, (NativeAdapter.__proto__ || Object.getPrototypeOf(NativeAdapter)).call(this, NativeAdapter._name));
-
-    _this._msPlayer = videoElement;
-    _this._source = source;
-    if (source) {
-      _this._msPlayer.src = source;
-    }
-    return _this;
-  }
-
-  /**
-   * Load the video source
-   * @function load
-   * @override
-   */
-
-
-  _createClass(NativeAdapter, [{
-    key: 'load',
-    value: function load() {
-      this._msPlayer.load();
-    }
-  }]);
-
-  return NativeAdapter;
-}(_baseAdapter2.default);
-
-NativeAdapter._name = 'NativeAdapter';
-exports.default = NativeAdapter;
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _fakeEventTarget = __webpack_require__(11);
+var _fakeEventTarget = __webpack_require__(12);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
-var _fakeEvent = __webpack_require__(2);
+var _fakeEvent = __webpack_require__(3);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _eventManager = __webpack_require__(5);
+var _eventManager = __webpack_require__(2);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _events = __webpack_require__(3);
+var _events = __webpack_require__(8);
 
 var _events2 = _interopRequireDefault(_events);
 
-var _adapterManager = __webpack_require__(7);
+var _mediaSourceProvider = __webpack_require__(9);
 
-var _adapterManager2 = _interopRequireDefault(_adapterManager);
+var _mediaSourceProvider2 = _interopRequireDefault(_mediaSourceProvider);
 
-var _baseAdapter = __webpack_require__(1);
+var _videoTrack = __webpack_require__(7);
 
-var _baseAdapter2 = _interopRequireDefault(_baseAdapter);
+var _videoTrack2 = _interopRequireDefault(_videoTrack);
+
+var _audioTrack = __webpack_require__(5);
+
+var _audioTrack2 = _interopRequireDefault(_audioTrack);
+
+var _textTrack = __webpack_require__(6);
+
+var _textTrack2 = _interopRequireDefault(_textTrack);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2217,9 +2756,46 @@ var Html5 = function (_FakeEventTarget) {
 
   _createClass(Html5, null, [{
     key: 'canPlayType',
+
+
+    /**
+     * Checks if the engine can play a given mime type.
+     * @param {string} mimeType - The mime type to check.
+     * @returns {boolean} - Whether the engine can play the mime type.
+     */
+
+    /**
+     * The selected media source adapter of the engine.
+     * @type {IMediaSourceAdapter}
+     * @private
+     */
+
+    /**
+     * The video element.
+     * @type {HTMLVideoElement}
+     * @private
+     */
     value: function canPlayType(mimeType) {
-      return _adapterManager2.default.canPlayType(mimeType);
+      return _mediaSourceProvider2.default.canPlayType(mimeType);
     }
+
+    /**
+     * @constructor
+     * @param {Source} source - The selected source object.
+     * @param {Object} config - The player configuration.
+     */
+
+
+    /**
+     * @type {string} - The engine name.
+     */
+
+    /**
+     * The event manager of the engine.
+     * @type {EventManager}
+     * @private
+     */
+
   }]);
 
   function Html5(source, config) {
@@ -2227,12 +2803,19 @@ var Html5 = function (_FakeEventTarget) {
 
     var _this = _possibleConstructorReturn(this, (Html5.__proto__ || Object.getPrototypeOf(Html5)).call(this));
 
-    _this.createVideoElement(config.target);
+    _this._createVideoElement(config.target);
     _this._eventManager = new _eventManager2.default();
-    _this.setSource(source, config);
+    _this._loadMediaSourceAdapter(source, config);
     _this.attach();
     return _this;
   }
+
+  /**
+   * Destroys the engine.
+   * @public
+   * @returns {void}
+   */
+
 
   _createClass(Html5, [{
     key: 'destroy',
@@ -2248,68 +2831,172 @@ var Html5 = function (_FakeEventTarget) {
           this._el.parentNode.removeChild(this._el);
         }
       }
+      this._eventManager.destroy();
     }
+
+    /**
+     * Listen to the video element events and triggers them from the engine.
+     * @public
+     * @returns {void}
+     */
+
   }, {
     key: 'attach',
     value: function attach() {
       var _this2 = this;
 
-      _events2.default.forEach(function (event) {
-        _this2._eventManager.listen(_this2._el, event, function () {
-          _this2.dispatchEvent(new _fakeEvent2.default(event));
-        });
-      });
+      var _loop = function _loop(playerEvent) {
+        if (_events2.default.hasOwnProperty(playerEvent)) {
+          _this2._eventManager.listen(_this2._el, _events2.default[playerEvent], function () {
+            _this2.dispatchEvent(new _fakeEvent2.default(_events2.default[playerEvent]));
+          });
+        }
+      };
+
+      for (var playerEvent in _events2.default) {
+        _loop(playerEvent);
+      }
     }
+
+    /**
+     * Remove the listeners of the video element events.
+     * @public
+     * @returns {void}
+     */
+
   }, {
     key: 'detach',
     value: function detach() {
-      var _this3 = this;
-
-      _events2.default.forEach(function (event) {
-        _this3._eventManager.unlisten(_this3._el, event);
-      });
+      for (var playerEvent in _events2.default) {
+        if (_events2.default.hasOwnProperty(playerEvent)) {
+          this._eventManager.unlisten(this._el, _events2.default[playerEvent]);
+        }
+      }
     }
+
+    /**
+     * @returns {HTMLVideoElement} - The video element.
+     * @public
+     */
+
   }, {
-    key: 'createVideoElement',
-    value: function createVideoElement(target) {
+    key: 'getVideoElement',
+    value: function getVideoElement() {
+      return this._el;
+    }
+
+    /**
+     * Creates a video element dom object.
+     * @param {string} target - The target id.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_createVideoElement',
+    value: function _createVideoElement(target) {
       this._el = document.createElement("video");
       //Set attributes
       this._el.style.width = "640px";
       this._el.style.height = "360px";
       this._el.style.backgroundColor = "black";
       this._el.controls = true;
-      if (target) {
-        document.getElementById(target).appendChild(this._el);
-      } else {
-        if (document && document.body) {
-          document.body.appendChild(this._el);
+      if (document && document.body) {
+        var container = document.body;
+        if (target) {
+          var targetElement = document.getElementById(target);
+          if (targetElement) {
+            container = targetElement;
+          }
         }
+        container.appendChild(this._el);
       }
     }
+
+    /**
+     * Loads the appropriate media source extension adapter.
+     * @param {Source} source - The selected source object.
+     * @param {Object} config - The media source extension configuration.
+     * @private
+     * @returns {void}
+     */
+
   }, {
-    key: 'setSource',
-    value: function setSource(source, config) {
-      this.loadMediaSourceAdapter(source, config);
+    key: '_loadMediaSourceAdapter',
+    value: function _loadMediaSourceAdapter(source, config) {
+      this._mediaSourceAdapter = _mediaSourceProvider2.default.getMediaSourceAdapter(this.getVideoElement(), source, config);
     }
+
+    /**
+     * Select a new video track.
+     * @param {VideoTrack} videoTrack - The video track object to set.
+     * @returns {boolean} - Whether the video track selection succeeded.
+     */
+
   }, {
-    key: 'loadMediaSourceAdapter',
-    value: function loadMediaSourceAdapter(source, config) {
-      this._mediaSourceAdapter = _adapterManager2.default.getMediaSourceAdapter(this._el, source, config);
+    key: 'selectVideoTrack',
+    value: function selectVideoTrack(videoTrack) {
+      if (this._mediaSourceAdapter) {
+        return this._mediaSourceAdapter.selectVideoTrack(videoTrack);
+      }
+      return false;
     }
+
+    /**
+     * Select a new audio track.
+     * @param {AudioTrack} audioTrack - The video track object to set.
+     * @returns {boolean} - Whether the audio track selection succeeded.
+     */
+
+  }, {
+    key: 'selectAudioTrack',
+    value: function selectAudioTrack(audioTrack) {
+      if (this._mediaSourceAdapter) {
+        return this._mediaSourceAdapter.selectAudioTrack(audioTrack);
+      }
+      return false;
+    }
+
+    /**
+     * Select a new text track.
+     * @param {TextTrack} textTrack - The text track object to set.
+     * @returns {boolean} - Whether the text track selection succeeded.
+     */
+
+  }, {
+    key: 'selectTextTrack',
+    value: function selectTextTrack(textTrack) {
+      if (this._mediaSourceAdapter) {
+        return this._mediaSourceAdapter.selectTextTrack(textTrack);
+      }
+      return false;
+    }
+
+    /**
+     * Set a source.
+     * @param {string} source - Source to set.
+     * @public
+     * @returns {void}
+     */
+
   }, {
     key: 'play',
 
 
     //playback interface
     /**
-     * Start/resume playback
+     * Start/resume playback.
+     * @public
+     * @returns {void}
      */
     value: function play() {
       return this._el.play();
     }
 
     /**
-     * Pause playback
+     * Pause playback.
+     * @public
+     * @returns {void}
      */
 
   }, {
@@ -2319,42 +3006,50 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
-     * Load media
+     * Load media.
+     * @public
+     * @returns {Promise<Object>} - The loaded data
      */
 
   }, {
     key: 'load',
     value: function load() {
-      if (this._mediaSourceAdapter) {
-        this._mediaSourceAdapter.load();
-      }
+      return this._mediaSourceAdapter ? this._mediaSourceAdapter.load() : Promise.resolve({});
     }
 
     /**
-     * Get the current time in seconds
-     * @returns {Number}
+     * Get the current time in seconds.
+     * @returns {Number} - The current playback time.
+     * @public
      */
 
   }, {
     key: 'ready',
-
-
-    //state
     value: function ready() {}
 
     /**
-     * Get paused state
-     * @returns {boolean}
+     * Get paused state.
+     * @returns {boolean} - The paused value of the video element.
+     * @public
      */
 
   }, {
     key: 'src',
     set: function set(source) {
-      //Set source
       this._el.src = source;
-    },
+    }
+
+    /**
+     * Get the source url.
+     * @returns {string} - The source url.
+     * @public
+     */
+    ,
     get: function get() {
-      return this._el.src;
+      if (this._mediaSourceAdapter) {
+        return this._mediaSourceAdapter.src;
+      }
+      return "";
     }
   }, {
     key: 'currentTime',
@@ -2363,30 +3058,22 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
-     * Get the video element
-     * @returns {VideoElement}
+     * Set the current time in seconds.
+     * @param {Number} to - The number to set in seconds.
+     * @public
+     * @returns {void}
      */
     ,
-
-
-    /**
-     * Set the current time in seconds
-     * @param to {Number}
-     */
     set: function set(to) {
       this._el.currentTime = to;
     }
 
     /**
-     * Get the duration in seconds
-     * @returns {Number}
+     * Get the duration in seconds.
+     * @returns {Number} - The playback duration.
+     * @public
      */
 
-  }, {
-    key: 'videoElement',
-    get: function get() {
-      return this.el_;
-    }
   }, {
     key: 'duration',
     get: function get() {
@@ -2394,8 +3081,10 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
-     * Set playback volume
-     * @param vol {Number}
+     * Set playback volume.
+     * @param {Number} vol - The volume to set.
+     * @public
+     * @returns {void}
      */
 
   }, {
@@ -2405,8 +3094,9 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
-     * Get playback volume
-     * @returns {Number}
+     * Get playback volume.
+     * @returns {Number} - The volume value of the video element.
+     * @public
      */
     ,
     get: function get() {
@@ -2419,8 +3109,9 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
-     * Get seeking state
-     * @returns {boolean}
+     * Get seeking state.
+     * @returns {boolean} - The seeking value of the video element.
+     * @public
      */
 
   }, {
@@ -2428,16 +3119,37 @@ var Html5 = function (_FakeEventTarget) {
     get: function get() {
       return this._el.seeking;
     }
+
+    /**
+     * Get the first seekable range (part) of the video in seconds.
+     * @returns {TimeRanges} - First seekable range (part) of the video in seconds.
+     * @public
+     */
+
   }, {
     key: 'seekable',
     get: function get() {
       return this._el.seekable;
     }
+
+    /**
+     * Get the first played range (part) of the video in seconds.
+     * @returns {TimeRanges} - First played range (part) of the video in seconds.
+     * @public
+     */
+
   }, {
     key: 'played',
     get: function get() {
       return this._el.played;
     }
+
+    /**
+     * Get the first buffered range (part) of the video in seconds.
+     * @returns {TimeRanges} - First buffered range (part) of the video in seconds.
+     * @public
+     */
+
   }, {
     key: 'buffered',
     get: function get() {
@@ -2445,8 +3157,10 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
-     * Set player muted state
-     * @param mute {boolean}
+     * Set player muted state.
+     * @param {boolean} mute - The new mute value.
+     * @public
+     * @returns {void}
      */
 
   }, {
@@ -2456,106 +3170,275 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
-     * Get player muted state
-     * @returns {boolean}
+     * Get player muted state.
+     * @returns {boolean} - The muted value of the video element.
+     * @public
      */
     ,
     get: function get() {
       return this._el.muted;
     }
+
+    /**
+     * Get the default mute value.
+     * @returns {boolean} - The defaultMuted of the video element.
+     * @public
+     */
+
   }, {
     key: 'defaultMuted',
     get: function get() {
       return this._el.defaultMuted;
     }
+
+    /**
+     * Sets an image to be shown while the video is downloading, or until the user hits the play button.
+     * @param {string} poster - The image url to be shown.
+     * @returns {void}
+     * @public
+     */
+
   }, {
     key: 'poster',
     set: function set(poster) {
       this._el.poster = poster;
-    },
+    }
+
+    /**
+     * Gets an image to be shown while the video is downloading, or until the user hits the play button.
+     * @returns {poster} - The image url.
+     * @public
+     */
+    ,
     get: function get() {
       return this._el.poster;
     }
+
+    /**
+     * Specifies if and how the author thinks that the video should be loaded when the page loads.
+     * @param {string} preload - The preload value.
+     * @public
+     * @returns {void}
+     */
+
   }, {
     key: 'preload',
     set: function set(preload) {
       this._el.preload = preload;
-    },
+    }
+
+    /**
+     * Gets the preload value of the video element.
+     * @returns {string} - The preload value.
+     * @public
+     */
+    ,
     get: function get() {
       return this._el.preload;
     }
+
+    /**
+     * Set if the video will automatically start playing as soon as it can do so without stopping.
+     * @param {boolean} autoplay - The autoplay value.
+     * @public
+     * @returns {void}
+     */
+
   }, {
     key: 'autoplay',
     set: function set(autoplay) {
       this._el.autoplay = autoplay;
-    },
+    }
+
+    /**
+     * Gets the autoplay value of the video element.
+     * @returns {boolean} - The autoplay value.
+     * @public
+     */
+    ,
     get: function get() {
       return this._el.autoplay;
     }
+
+    /**
+     * Set to specifies that the video will start over again, every time it is finished.
+     * @param {boolean} loop - the loop value.
+     * @public
+     * @returns {void}
+     */
+
   }, {
     key: 'loop',
     set: function set(loop) {
       this._el.loop = loop;
-    },
+    }
+
+    /**
+     * Gets the loop value of the video element.
+     * @returns {boolean} - The loop value.
+     * @public
+     */
+    ,
     get: function get() {
       return this._el.loop;
     }
+
+    /**
+     * Set to specifies that video controls should be displayed.
+     * @param {boolean} controls - the controls value.
+     * @public
+     * @returns {void}
+     */
+
   }, {
     key: 'controls',
     set: function set(controls) {
       this._el.controls = controls;
-    },
+    }
+
+    /**
+     * Gets the controls value of the video element.
+     * @returns {boolean} - The controls value.
+     * @public
+     */
+    ,
     get: function get() {
       return this._el.controls;
     }
+
+    /**
+     * Sets the current playback speed of the audio/video.
+     * @param {Number} playbackRate - The playback speed value.
+     * @public
+     * @returns {void}
+     */
+
   }, {
     key: 'playbackRate',
     set: function set(playbackRate) {
       this._el.playbackRate = playbackRate;
-    },
+    }
+
+    /**
+     * Gets the current playback speed of the audio/video.
+     * @returns {Number} - The current playback speed value.
+     * @public
+     */
+    ,
     get: function get() {
       return this._el.playbackRate;
     }
+
+    /**
+     * Sets the default playback speed of the audio/video.
+     * @param {Number} defaultPlaybackRate - The default playback speed value.
+     * @public
+     * @returns {void}
+     */
+
   }, {
     key: 'defaultPlaybackRate',
     set: function set(defaultPlaybackRate) {
       this._el.defaultPlaybackRate = defaultPlaybackRate;
-    },
+    }
+
+    /**
+     * Gets the default playback speed of the audio/video.
+     * @returns {Number} - The default playback speed value.
+     * @public
+     */
+    ,
     get: function get() {
       return this._el.defaultPlaybackRate;
     }
+
+    /**
+     * The ended property returns whether the playback of the audio/video has ended.
+     * @returns {boolean} - The ended value.
+     * @public
+     */
+
   }, {
     key: 'ended',
     get: function get() {
       return this._el.ended;
     }
+
+    /**
+     * The error property returns a MediaError object.
+     * @returns {MediaError} - The MediaError object has a code property containing the error state of the audio/video.
+     * @public
+     */
+
   }, {
     key: 'error',
     get: function get() {
       return this._el.error;
     }
+
+    /**
+     * @returns {Number} - The current network state (activity) of the audio/video.
+     * @public
+     */
+
   }, {
     key: 'networkState',
     get: function get() {
       return this._el.networkState;
     }
+
+    /**
+     * Indicates if the audio/video is ready to play or not.
+     * @returns {Number} - The current ready state of the audio/video.
+     * 0 = HAVE_NOTHING - no information whether or not the audio/video is ready.
+     * 1 = HAVE_METADATA - metadata for the audio/video is ready.
+     * 2 = HAVE_CURRENT_DATA - data for the current playback position is available, but not enough data to play next frame/millisecond.
+     * 3 = HAVE_FUTURE_DATA - data for the current and at least the next frame is available.
+     * 4 = HAVE_ENOUGH_DATA - enough data available to start playing.
+     */
+
   }, {
     key: 'readyState',
     get: function get() {
       return this._el.readyState;
     }
+
+    /**
+     * @returns {Number} - The height of the video player, in pixels.
+     * @public
+     */
+
   }, {
     key: 'videoHeight',
     get: function get() {
       return this._el.videoHeight;
     }
+
+    /**
+     * @returns {Number} - The width of the video player, in pixels.
+     * @public
+     */
+
   }, {
     key: 'videoWidth',
     get: function get() {
       return this._el.videoWidth;
     }
+
+    /**
+     * Test video element to check if html5 engine is supported.
+     */
+
   }], [{
     key: 'isSupported',
+
+
+    /**
+     * Checks if the html5 engine is supported.
+     * @returns {boolean} - The isSupported result.
+     * @static
+     * @public
+     */
     value: function isSupported() {
       try {
         Html5.TEST_VID = document.createElement('video');
@@ -2563,7 +3446,6 @@ var Html5 = function (_FakeEventTarget) {
       } catch (e) {
         return false;
       }
-
       return !!Html5.TEST_VID.canPlayType;
     }
   }]);
@@ -2571,26 +3453,970 @@ var Html5 = function (_FakeEventTarget) {
   return Html5;
 }(_fakeEventTarget2.default);
 
-//Engine.register("html5", Html5);
-
-
 Html5.EngineName = "html5";
 exports.default = Html5;
 
 /***/ }),
-/* 18 */
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _logger = __webpack_require__(0);
+
+var _logger2 = _interopRequireDefault(_logger);
+
+var _eventManager = __webpack_require__(2);
+
+var _eventManager2 = _interopRequireDefault(_eventManager);
+
+var _events = __webpack_require__(8);
+
+var _events2 = _interopRequireDefault(_events);
+
+var _track = __webpack_require__(1);
+
+var _track2 = _interopRequireDefault(_track);
+
+var _videoTrack = __webpack_require__(7);
+
+var _videoTrack2 = _interopRequireDefault(_videoTrack);
+
+var _audioTrack = __webpack_require__(5);
+
+var _audioTrack2 = _interopRequireDefault(_audioTrack);
+
+var _textTrack = __webpack_require__(6);
+
+var _textTrack2 = _interopRequireDefault(_textTrack);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * An illustration of media source extension for progressive download
+ * @classdesc
+ * @implements {IMediaSourceAdapter}
+ */
+var NativeAdapter = function () {
+  _createClass(NativeAdapter, null, [{
+    key: 'canPlayType',
+
+
+    /**
+     * Checks if NativeAdapter can play a given mime type
+     * @function canPlayType
+     * @param {string} mimeType - The mime type to check
+     * @returns {boolean} - Whether the native adapter can play a specific mime type
+     * @static
+     */
+
+    /**
+     * The adapter config
+     * @member {Object} _config
+     * @private
+     */
+
+    /**
+     * The source object
+     * @member {Source} _sourceObj
+     * @private
+     */
+
+    /**
+     * The dom video element
+     * @member {HTMLVideoElement} _videoElement
+     * @private
+     */
+
+    /**
+     * The event manager of the class.
+     * @member {EventManager} - _eventManager
+     * @type {EventManager}
+     * @private
+     */
+
+    /**
+     * The load promise
+     * @member {Promise<Object>} - _loadPromise
+     * @type {Promise<Object>}
+     * @private
+     */
+    value: function canPlayType(mimeType) {
+      var canPlayType = !!document.createElement("video").canPlayType(mimeType);
+      NativeAdapter._logger.debug('canPlayType result for mimeType:' + mimeType + ' is ' + canPlayType.toString());
+      return canPlayType;
+    }
+
+    /**
+     * Checks if the media source adapter is supported
+     * @function isSupported
+     * @returns {boolean} - Whether the media source adapter is supported. Default implementation is true
+     * @static
+     */
+
+  }, {
+    key: 'isSupported',
+    value: function isSupported() {
+      NativeAdapter._logger.debug('isSupported:true');
+      return true;
+    }
+
+    /**
+     * Factory method to create media source adapter
+     * @function createAdapter
+     * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with
+     * @param {Object} source - The source Object
+     * @param {Object} config - The media source adapter configuration
+     * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter
+     * @static
+     */
+
+  }, {
+    key: 'createAdapter',
+    value: function createAdapter(videoElement, source, config) {
+      NativeAdapter._logger.debug('Creating adapter');
+      return new this(videoElement, source, config);
+    }
+
+    /**
+     * @constructor
+     * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
+     * @param {Source} source - The source object
+     * @param {Object} config - The media source adapter configuration
+     */
+
+  }, {
+    key: 'name',
+
+    /**
+     * Getter for the adapter name
+     * @returns {string} - The adapter name
+     */
+    get: function get() {
+      return NativeAdapter._name;
+    }
+
+    /**
+     * The adapter logger
+     * @member {any} _logger
+     * @private
+     * @static
+     */
+
+    /**
+     * The name of the Adapter
+     * @member {string} _name
+     * @static
+     * @private
+     */
+
+  }]);
+
+  function NativeAdapter(videoElement, source, config) {
+    _classCallCheck(this, NativeAdapter);
+
+    this._config = config;
+    this._videoElement = videoElement;
+    this._sourceObj = source;
+    this._eventManager = new _eventManager2.default();
+  }
+
+  /**
+   * Load the video source
+   * @function load
+   * @returns {Promise<Object>} - The loaded data
+   */
+
+
+  _createClass(NativeAdapter, [{
+    key: 'load',
+    value: function load() {
+      var _this = this;
+
+      if (!this._loadPromise) {
+        this._loadPromise = new Promise(function (resolve, reject) {
+          _this._eventManager.listen(_this._videoElement, _events2.default.LOADED_METADATA, function () {
+            _this._eventManager.unlisten(_this._videoElement, _events2.default.LOADED_METADATA);
+            var data = { tracks: _this._getParsedTracks() };
+            NativeAdapter._logger.debug('The source has been loaded successfully');
+            resolve(data);
+          });
+          _this._eventManager.listen(_this._videoElement, _events2.default.ERROR, function (error) {
+            _this._eventManager.unlisten(_this._videoElement, _events2.default.ERROR);
+            NativeAdapter._logger.error(error);
+            reject(error);
+          });
+          if (_this._sourceObj && _this._sourceObj.url) {
+            _this._videoElement.src = _this._sourceObj.url;
+          }
+        });
+      }
+      return this._loadPromise;
+    }
+
+    /**
+     * Clear the video source
+     * @function destroy
+     * @returns {void}
+     */
+
+  }, {
+    key: 'destroy',
+    value: function destroy() {
+      NativeAdapter._logger.debug('destroy');
+      this._eventManager.destroy();
+      this._loadPromise = null;
+    }
+
+    /**
+     * Get the parsed tracks
+     * @function _getParsedTracks
+     * @returns {Array<Track>} - The parsed tracks
+     * @private
+     */
+
+  }, {
+    key: '_getParsedTracks',
+    value: function _getParsedTracks() {
+      var videoTracks = this._getParsedVideoTracks();
+      var audioTracks = this._getParsedAudioTracks();
+      var textTracks = this._getParsedTextTracks();
+      return videoTracks.concat(audioTracks).concat(textTracks);
+    }
+
+    /**
+     * Get the parsed video tracks
+     * @function _getParsedVideoTracks
+     * @returns {Array<Track>} - The parsed video tracks
+     * @private
+     */
+
+  }, {
+    key: '_getParsedVideoTracks',
+    value: function _getParsedVideoTracks() {
+      var videoTracks = this._videoElement.videoTracks;
+      var parsedTracks = [];
+      if (videoTracks) {
+        for (var i = 0; i < videoTracks.length; i++) {
+          var settings = {
+            id: videoTracks[i].id,
+            active: videoTracks[i].selected,
+            label: videoTracks[i].label,
+            language: videoTracks[i].language,
+            index: i
+          };
+          parsedTracks.push(new _videoTrack2.default(settings));
+        }
+      }
+      return parsedTracks;
+    }
+
+    /**
+     * Get the parsed audio tracks
+     * @function _getParsedAudioTracks
+     * @returns {Array<Track>} - The parsed audio tracks
+     * @private
+     */
+
+  }, {
+    key: '_getParsedAudioTracks',
+    value: function _getParsedAudioTracks() {
+      var audioTracks = this._videoElement.audioTracks;
+      var parsedTracks = [];
+      if (audioTracks) {
+        for (var i = 0; i < audioTracks.length; i++) {
+          var settings = {
+            id: audioTracks[i].id,
+            active: audioTracks[i].enabled,
+            label: audioTracks[i].label,
+            language: audioTracks[i].language,
+            index: i
+          };
+          parsedTracks.push(new _audioTrack2.default(settings));
+        }
+      }
+      return parsedTracks;
+    }
+
+    /**
+     * Get the parsed text tracks
+     * @function _getParsedTextTracks
+     * @returns {Array<Track>} - The parsed text tracks
+     * @private
+     */
+
+  }, {
+    key: '_getParsedTextTracks',
+    value: function _getParsedTextTracks() {
+      var textTracks = this._videoElement.textTracks;
+      var parsedTracks = [];
+      if (textTracks) {
+        for (var i = 0; i < textTracks.length; i++) {
+          var settings = {
+            kind: textTracks[i].kind,
+            active: textTracks[i].mode === 'showing',
+            label: textTracks[i].label,
+            language: textTracks[i].language,
+            index: i
+          };
+          parsedTracks.push(new _textTrack2.default(settings));
+        }
+      }
+      return parsedTracks;
+    }
+
+    /**
+     * Select a video track
+     * @function selectVideoTrack
+     * @param {VideoTrack} videoTrack - the track to select
+     * @returns {boolean} - success
+     * @public
+     */
+
+  }, {
+    key: 'selectVideoTrack',
+    value: function selectVideoTrack(videoTrack) {
+      var videoTracks = this._videoElement.videoTracks;
+      if (videoTrack instanceof _videoTrack2.default && videoTracks && videoTracks[videoTrack.index]) {
+        this._disableVideoTracks();
+        videoTracks[videoTrack.index].selected = true;
+        return true;
+      }
+      return false;
+    }
+
+    /**
+     * Select an audio track
+     * @function selectAudioTrack
+     * @param {AudioTrack} audioTrack - the  audio track to select
+     * @returns {boolean} - success
+     * @public
+     */
+
+  }, {
+    key: 'selectAudioTrack',
+    value: function selectAudioTrack(audioTrack) {
+      var audioTracks = this._videoElement.audioTracks;
+      if (audioTrack instanceof _audioTrack2.default && audioTracks && audioTracks[audioTrack.index]) {
+        this._disableAudioTracks();
+        audioTracks[audioTrack.index].enabled = true;
+        return true;
+      }
+      return false;
+    }
+
+    /**
+     * Select a text track
+     * @function selectTextTrack
+     * @param {TextTrack} textTrack - the track to select
+     * @returns {boolean} - success
+     * @public
+     */
+
+  }, {
+    key: 'selectTextTrack',
+    value: function selectTextTrack(textTrack) {
+      var textTracks = this._videoElement.textTracks;
+      if (textTrack instanceof _textTrack2.default && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
+        this._disableTextTracks();
+        textTracks[textTrack.index].mode = 'showing';
+        return true;
+      }
+      return false;
+    }
+
+    /**
+     * Disables all the existing video tracks.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_disableVideoTracks',
+    value: function _disableVideoTracks() {
+      var videoTracks = this._videoElement.videoTracks;
+      if (videoTracks) {
+        for (var i = 0; i < videoTracks.length; i++) {
+          videoTracks[i].selected = false;
+        }
+      }
+    }
+
+    /**
+     * Disables all the existing audio tracks.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_disableAudioTracks',
+    value: function _disableAudioTracks() {
+      var audioTracks = this._videoElement.audioTracks;
+      if (audioTracks) {
+        for (var i = 0; i < audioTracks.length; i++) {
+          audioTracks[i].enabled = false;
+        }
+      }
+    }
+
+    /**
+     * Disables all the existing text tracks.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_disableTextTracks',
+    value: function _disableTextTracks() {
+      var textTracks = this._videoElement.textTracks;
+      if (textTracks) {
+        for (var i = 0; i < textTracks.length; i++) {
+          textTracks[i].mode = 'disabled';
+        }
+      }
+    }
+
+    /**
+     * Getter for the src that the adapter plays on the video element.
+     * @public
+     * @returns {string} - The src url.
+     */
+
+  }, {
+    key: 'src',
+    get: function get() {
+      return this._videoElement.src;
+    }
+  }]);
+
+  return NativeAdapter;
+}();
+
+NativeAdapter._name = "NativeAdapter";
+NativeAdapter._logger = _logger2.default.getLogger(NativeAdapter._name);
+exports.default = NativeAdapter;
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.VERSION = exports.LoggerFactory = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.PlayerDecoratorBase = exports.BasePlugin = exports.registerPlugin = exports.registerMediaSourceAdapter = undefined;
+exports.playkit = playkit;
+
+var _player = __webpack_require__(4);
+
+var _player2 = _interopRequireDefault(_player);
+
+var _logger = __webpack_require__(0);
+
+var _logger2 = _interopRequireDefault(_logger);
+
+var _package = __webpack_require__(18);
+
+var packageData = _interopRequireWildcard(_package);
+
+var _mediaSourceProvider = __webpack_require__(9);
+
+var _pluginManager = __webpack_require__(11);
+
+var _basePlugin = __webpack_require__(10);
+
+var _basePlugin2 = _interopRequireDefault(_basePlugin);
+
+var _track = __webpack_require__(1);
+
+var _track2 = _interopRequireDefault(_track);
+
+var _videoTrack = __webpack_require__(7);
+
+var _videoTrack2 = _interopRequireDefault(_videoTrack);
+
+var _audioTrack = __webpack_require__(5);
+
+var _audioTrack2 = _interopRequireDefault(_audioTrack);
+
+var _textTrack = __webpack_require__(6);
+
+var _textTrack2 = _interopRequireDefault(_textTrack);
+
+var _playerDecoratorBase = __webpack_require__(17);
+
+var _playerDecoratorBase2 = _interopRequireDefault(_playerDecoratorBase);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// Playkit version
+var VERSION = packageData.version;
+
+
+_logger2.default.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
+_logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
+
+/**
+ * @param {Object} config - The configuration of the player
+ * @returns {Player} - The player instance
+ */
+function playkit() {
+  var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  return new _player2.default(config);
+}
+
+// Registration for media source adapters
+exports.registerMediaSourceAdapter = _mediaSourceProvider.registerMediaSourceAdapter;
+
+// Export the plugin framework
+
+exports.registerPlugin = _pluginManager.registerPlugin;
+exports.BasePlugin = _basePlugin2.default;
+exports.PlayerDecoratorBase = _playerDecoratorBase2.default;
+
+// Export the tracks classes
+
+exports.Track = _track2.default;
+exports.VideoTrack = _videoTrack2.default;
+exports.AudioTrack = _audioTrack2.default;
+exports.TextTrack = _textTrack2.default;
+
+// Export the logger factory
+
+exports.LoggerFactory = _logger2.default;
+
+//export version
+
+exports.VERSION = VERSION;
+exports.default = playkit;
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _player = __webpack_require__(4);
+
+var _player2 = _interopRequireDefault(_player);
+
+var _eventManager = __webpack_require__(2);
+
+var _eventManager2 = _interopRequireDefault(_eventManager);
+
+var _state = __webpack_require__(23);
+
+var _state2 = _interopRequireDefault(_state);
+
+var _stateTypes = __webpack_require__(13);
+
+var _stateTypes2 = _interopRequireDefault(_stateTypes);
+
+var _events = __webpack_require__(8);
+
+var _events2 = _interopRequireDefault(_events);
+
+var _fakeEvent = __webpack_require__(3);
+
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
+
+var _logger = __webpack_require__(0);
+
+var _logger2 = _interopRequireDefault(_logger);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * This class responsible to manage all the state machine of the player.
+ * @classdesc
+ */
+
+
+/**
+ * Define a transition object.
+ */
+var StateManager = function () {
+
+  /**
+   * @constructor
+   * @param {Player} player - Reference to the player.
+   */
+
+  /**
+   * Holds the state history of the player.
+   * @member
+   * @type {Array<State>}
+   * @private
+   */
+
+  /**
+   * Holds the current state of the player.
+   * @member
+   * @type {State}
+   * @private
+   */
+
+  /**
+   * Reference to the actual player.
+   * @member
+   * @type {Player}
+   * @private
+   */
+  function StateManager(player) {
+    var _this = this,
+        _PlayerStates$IDLE,
+        _PlayerStates$LOADING,
+        _PlayerStates$PAUSED,
+        _PlayerStates$PLAYING,
+        _PlayerStates$BUFFERI,
+        _transitions;
+
+    _classCallCheck(this, StateManager);
+
+    this._transitions = (_transitions = {}, _defineProperty(_transitions, _stateTypes2.default.IDLE, (_PlayerStates$IDLE = {}, _defineProperty(_PlayerStates$IDLE, _events2.default.LOAD_START, function () {
+      _this._updateState(_stateTypes2.default.LOADING);
+      _this._dispatchEvent();
+    }), _defineProperty(_PlayerStates$IDLE, _events2.default.PLAY, function () {
+      _this._updateState(_stateTypes2.default.BUFFERING);
+      _this._dispatchEvent();
+    }), _PlayerStates$IDLE)), _defineProperty(_transitions, _stateTypes2.default.LOADING, (_PlayerStates$LOADING = {}, _defineProperty(_PlayerStates$LOADING, _events2.default.LOADED_METADATA, function () {
+      if (_this._player.config.autoPlay) {
+        _this._updateState(_stateTypes2.default.PLAYING);
+      } else {
+        _this._updateState(_stateTypes2.default.PAUSED);
+      }
+      _this._dispatchEvent();
+    }), _defineProperty(_PlayerStates$LOADING, _events2.default.ERROR, function () {
+      _this._updateState(_stateTypes2.default.IDLE);
+      _this._dispatchEvent();
+    }), _PlayerStates$LOADING)), _defineProperty(_transitions, _stateTypes2.default.PAUSED, (_PlayerStates$PAUSED = {}, _defineProperty(_PlayerStates$PAUSED, _events2.default.PLAY, function () {
+      _this._updateState(_stateTypes2.default.PLAYING);
+      _this._dispatchEvent();
+    }), _defineProperty(_PlayerStates$PAUSED, _events2.default.PLAYING, function () {
+      _this._updateState(_stateTypes2.default.PLAYING);
+      _this._dispatchEvent();
+    }), _defineProperty(_PlayerStates$PAUSED, _events2.default.ENDED, function () {
+      _this._updateState(_stateTypes2.default.IDLE);
+      _this._dispatchEvent();
+    }), _PlayerStates$PAUSED)), _defineProperty(_transitions, _stateTypes2.default.PLAYING, (_PlayerStates$PLAYING = {}, _defineProperty(_PlayerStates$PLAYING, _events2.default.PAUSE, function () {
+      _this._updateState(_stateTypes2.default.PAUSED);
+      _this._dispatchEvent();
+    }), _defineProperty(_PlayerStates$PLAYING, _events2.default.WAITING, function () {
+      _this._updateState(_stateTypes2.default.BUFFERING);
+      _this._dispatchEvent();
+    }), _defineProperty(_PlayerStates$PLAYING, _events2.default.ENDED, function () {
+      _this._updateState(_stateTypes2.default.IDLE);
+      _this._dispatchEvent();
+    }), _defineProperty(_PlayerStates$PLAYING, _events2.default.ERROR, function () {
+      _this._updateState(_stateTypes2.default.IDLE);
+      _this._dispatchEvent();
+    }), _PlayerStates$PLAYING)), _defineProperty(_transitions, _stateTypes2.default.BUFFERING, (_PlayerStates$BUFFERI = {}, _defineProperty(_PlayerStates$BUFFERI, _events2.default.PLAYING, function () {
+      _this._updateState(_stateTypes2.default.PLAYING);
+      _this._dispatchEvent();
+    }), _defineProperty(_PlayerStates$BUFFERI, _events2.default.PAUSE, function () {
+      _this._updateState(_stateTypes2.default.PAUSED);
+      _this._dispatchEvent();
+    }), _PlayerStates$BUFFERI)), _transitions);
+
+    this._player = player;
+    this._logger = _logger2.default.getLogger("StateManager");
+    this._eventManager = new _eventManager2.default();
+    this._history = [];
+    this._prevState = null;
+    this._curState = new _state2.default(_stateTypes2.default.IDLE);
+    this._attachListeners();
+  }
+
+  /**
+   * Register to all necessary events which impacts on the player state.
+   * @private
+   * @returns {void}
+   */
+
+  /**
+   * The possible transitions from one state to another.
+   * @type {Array<Transition>}
+   * @private
+   */
+
+  /**
+   * Holds the previous state of the player.
+   * @member
+   * @type {State | null}
+   * @private
+   */
+
+  /**
+   * The event manager of the class.
+   * @member
+   * @type {EventManager}
+   * @private
+   */
+
+  /**
+   * The logger of the class.
+   * @member
+   * @type {any}
+   * @private
+   */
+
+
+  _createClass(StateManager, [{
+    key: '_attachListeners',
+    value: function _attachListeners() {
+      this._eventManager.listen(this._player, _events2.default.ERROR, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _events2.default.ENDED, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _events2.default.PLAY, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _events2.default.LOAD_START, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _events2.default.PLAYING, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _events2.default.LOADED_METADATA, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _events2.default.PAUSE, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _events2.default.WAITING, this._doTransition.bind(this));
+    }
+
+    /**
+     * Performs a state transition depends on the event which occurs in the player system.
+     * @param {FakeEvent} event - The event occurs in the player system.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_doTransition',
+    value: function _doTransition(event) {
+      this._logger.debug('Do transition request', event);
+      var transition = this._transitions[this._curState.type];
+      if (typeof transition[event.type] === 'function') {
+        transition[event.type]();
+      }
+    }
+
+    /**
+     * Updates the player's state.
+     * @param {string} type - The type of the new state.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_updateState',
+    value: function _updateState(type) {
+      if (this._curState.type !== type) {
+        this._curState.duration = Date.now() / 1000;
+        this._history.push(this._curState);
+        this._prevState = this._curState;
+        this._curState = new _state2.default(type);
+        this._logger.debug('Switch player state: from ' + this._prevState.type + ' to ' + this._curState.type);
+      }
+    }
+
+    /**
+     * Fires the playerStateChanged event after state has been changed.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_dispatchEvent',
+    value: function _dispatchEvent() {
+      var event = new _fakeEvent2.default(_events2.default.PLAYER_STATE_CHANGED, {
+        'oldState': this._prevState,
+        'newState': this._curState
+      });
+      this._player.dispatchEvent(event);
+    }
+
+    /**
+     * Destroys the state manager.
+     * @public
+     * @returns {void}
+     */
+
+  }, {
+    key: 'destroy',
+    value: function destroy() {
+      this._history = [];
+      this._eventManager.destroy();
+    }
+
+    /**
+     * Getter to the current state of the player.
+     * @public
+     * @returns {State} - The current state object
+     */
+
+  }, {
+    key: 'currentState',
+    get: function get() {
+      return this._curState;
+    }
+
+    /**
+     * Getter to the previous state of the player.
+     * @public
+     * @returns {State|null} - The previous state object, or null if such doesn't exists
+     */
+
+  }, {
+    key: 'previousState',
+    get: function get() {
+      return this._prevState;
+    }
+
+    /**
+     * Getter to the state history of the player.
+     * @public
+     * @returns {Array.<State>} - The full states history objects
+     */
+
+  }, {
+    key: 'history',
+    get: function get() {
+      return this._history;
+    }
+  }]);
+
+  return StateManager;
+}();
+
+exports.default = StateManager;
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * This class describes a player state.
+ * @classdesc
+ */
+var State = function () {
+
+  /**
+   * @constructor
+   * @param {string} type - The type of the state.
+   */
+
+  /**
+   * The duration that the player was in this state.
+   * @member
+   * @type {number}
+   * @private
+   */
+  function State(type) {
+    _classCallCheck(this, State);
+
+    this.type = type;
+    this._duration = 0;
+    this._timestamp = Date.now() / 1000;
+  }
+
+  /**
+   * Getter for the duration of the state.
+   * @returns {number} - The duration of the state
+   */
+
+  /**
+   * The timestamp that this state started.
+   * @member
+   * @type {number}
+   * @private
+   */
+
+  /**
+   * The type of the state.
+   * Can be one of those describes in states.js
+   * @member
+   * @type {string}
+   * @public
+   */
+
+
+  _createClass(State, [{
+    key: "duration",
+    get: function get() {
+      return this._duration;
+    }
+
+    /**
+     * Setter for the duration of the state.
+     * @param {number} endTime - The timestamp of the next state.
+     */
+    ,
+    set: function set(endTime) {
+      this._duration = endTime - this._timestamp;
+    }
+  }]);
+
+  return State;
+}();
+
+exports.default = State;
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var TRACK_TYPES = {
+  VIDEO: "video",
+  AUDIO: "audio",
+  TEXT: "text"
+};
+
+exports.default = TRACK_TYPES;
+
+/***/ }),
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 /**
- * @file to-title-case.js
- *
  * Uppercase the first letter of a string
- *
- * @param  {String} string String to be uppercased
- * @return {String}
+ * @param  {String} string - String to be uppercased
+ * @return {String} - The uppercased string
  * @private
  * @method toTitleCase
  */
@@ -2605,6 +4431,11 @@ function capitlize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+/**
+ * @param {string} string - Certain string
+ * @param {string} searchString - Certain string
+ * @returns {boolean} - Whether the string: string is ending with string: searchString
+ */
 function endsWith(string, searchString) {
   if (typeof string !== 'string' || typeof searchString !== 'string') {
     return false;
@@ -2616,7 +4447,7 @@ exports.capitlize = capitlize;
 exports.endsWith = endsWith;
 
 /***/ }),
-/* 19 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -2881,89 +4712,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 	}
 }(this));
 
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.VERSION = exports.Player = exports.PLAYER_EVENTS = exports.PlayerDecoratorBase = exports.IPlayerDecoratorProvider = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerAdapter = undefined;
-exports.playkit = playkit;
-
-var _player = __webpack_require__(4);
-
-var _player2 = _interopRequireDefault(_player);
-
-var _logger = __webpack_require__(0);
-
-var _logger2 = _interopRequireDefault(_logger);
-
-var _package = __webpack_require__(15);
-
-var packageData = _interopRequireWildcard(_package);
-
-var _adapterManager = __webpack_require__(7);
-
-var _baseAdapter = __webpack_require__(1);
-
-var _baseAdapter2 = _interopRequireDefault(_baseAdapter);
-
-var _pluginManager = __webpack_require__(10);
-
-var _basePlugin = __webpack_require__(9);
-
-var _basePlugin2 = _interopRequireDefault(_basePlugin);
-
-var _IPlayerDecoratorProvider = __webpack_require__(14);
-
-var _IPlayerDecoratorProvider2 = _interopRequireDefault(_IPlayerDecoratorProvider);
-
-var _PlayerDecoratorBase = __webpack_require__(8);
-
-var _PlayerDecoratorBase2 = _interopRequireDefault(_PlayerDecoratorBase);
-
-var _events = __webpack_require__(3);
-
-var _events2 = _interopRequireDefault(_events);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// Playkit version
-var VERSION = packageData.version;
-
-_logger2.default.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
-_logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
-
-function playkit() {
-  var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-  return new _player2.default(config);
-}
-
-// Registration for media source adapter
-exports.registerAdapter = _adapterManager.registerAdapter;
-exports.BaseMediaSourceAdapter = _baseAdapter2.default;
-
-// Export the plugin framework
-
-exports.registerPlugin = _pluginManager.registerPlugin;
-exports.BasePlugin = _basePlugin2.default;
-exports.IPlayerDecoratorProvider = _IPlayerDecoratorProvider2.default;
-exports.PlayerDecoratorBase = _PlayerDecoratorBase2.default;
-exports.PLAYER_EVENTS = _events2.default;
-exports.Player = _player2.default;
-
-//export version
-
-exports.VERSION = VERSION;
-exports.default = playkit;
 
 /***/ })
 /******/ ]);
