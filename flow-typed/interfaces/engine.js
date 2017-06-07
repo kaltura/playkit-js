@@ -11,9 +11,9 @@ declare interface IEngine {
   pause(): void;
   load(): Promise<Object>;
   ready(): void;
-  selectVideoTrack(videoTrack: VideoTrack): boolean;
-  selectAudioTrack(audioTrack: AudioTrack): boolean;
-  selectTextTrack(textTrack: TextTrack): boolean;
+  selectVideoTrack(videoTrack: VideoTrack): void;
+  selectAudioTrack(audioTrack: AudioTrack): void;
+  selectTextTrack(textTrack: TextTrack): void;
   getVideoElement(): HTMLVideoElement;
   currentTime: number;
   +duration: number;

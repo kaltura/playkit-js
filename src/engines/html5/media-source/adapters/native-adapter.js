@@ -1,7 +1,10 @@
 //@flow
 import LoggerFactory from '../../../../utils/logger'
+import FakeEvent from '../../../../event/fake-event'
+import FakeEventTarget from '../../../../event/fake-event-target'
 import EventManager from '../../../../event/event-manager'
-import PlayerEvents from '../../../../event/events'
+import {HTML5_EVENTS as Html5Events} from '../../../../event/events'
+import {CUSTOM_EVENTS as CustomEvents} from '../../../../event/events'
 import Track from '../../../../track/track'
 import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'
@@ -11,20 +14,24 @@ import TextTrack from '../../../../track/text-track'
  * @classdesc
  * @implements {IMediaSourceAdapter}
  */
-export default class NativeAdapter implements IMediaSourceAdapter {
+export default class NativeAdapter extends FakeEventTarget implements IMediaSourceAdapter {
   /**
    * The name of the Adapter
    * @member {string} _name
    * @static
    * @private
    */
-  static _name = "NativeAdapter";
+  static _name: string = 'NativeAdapter';
   /**
    * Getter for the adapter name
    * @returns {string} - The adapter name
    */
   static get name(): string {
     return NativeAdapter._name;
+  }
+
+  static set name(name: string): void {
+    // Do nothing. Just a workaround for flow issue with static getter in an inheritor. See: https://github.com/facebook/flow/issues/3008.
   }
 
   /**
@@ -112,6 +119,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * @param {Object} config - The media source adapter configuration
    */
   constructor(videoElement: HTMLVideoElement, source: Source, config: Object) {
+    super();
     this._config = config;
     this._videoElement = videoElement;
     this._sourceObj = source;
@@ -126,14 +134,15 @@ export default class NativeAdapter implements IMediaSourceAdapter {
   load(): Promise<Object> {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
-        this._eventManager.listen(this._videoElement, PlayerEvents.LOADED_METADATA, () => {
-          this._eventManager.unlisten(this._videoElement, PlayerEvents.LOADED_METADATA);
+        // We're using 'loadeddata' event for native hls (on 'loadedmetadata' native hls doesn't have tracks yet).
+        this._eventManager.listen(this._videoElement, Html5Events.LOADED_DATA, () => {
+          this._eventManager.unlisten(this._videoElement, Html5Events.LOADED_DATA);
           let data = {tracks: this._getParsedTracks()};
           NativeAdapter._logger.debug('The source has been loaded successfully');
           resolve(data);
         });
-        this._eventManager.listen(this._videoElement, PlayerEvents.ERROR, (error) => {
-          this._eventManager.unlisten(this._videoElement, PlayerEvents.ERROR);
+        this._eventManager.listen(this._videoElement, Html5Events.ERROR, (error) => {
+          this._eventManager.unlisten(this._videoElement, Html5Events.ERROR);
           NativeAdapter._logger.error(error);
           reject(error);
         });
@@ -154,6 +163,7 @@ export default class NativeAdapter implements IMediaSourceAdapter {
     NativeAdapter._logger.debug('destroy');
     this._eventManager.destroy();
     this._loadPromise = null;
+    this._sourceObj = null;
   }
 
   /**
@@ -245,51 +255,57 @@ export default class NativeAdapter implements IMediaSourceAdapter {
    * Select a video track
    * @function selectVideoTrack
    * @param {VideoTrack} videoTrack - the track to select
-   * @returns {boolean} - success
+   * @returns {void}
    * @public
    */
-  selectVideoTrack(videoTrack: VideoTrack): boolean {
+  selectVideoTrack(videoTrack: VideoTrack): void {
     let videoTracks = this._videoElement.videoTracks;
     if ((videoTrack instanceof VideoTrack) && videoTracks && videoTracks[videoTrack.index]) {
       this._disableVideoTracks();
       videoTracks[videoTrack.index].selected = true;
-      return true;
+      let fakeEvent = new FakeEvent(CustomEvents.VIDEO_TRACK_CHANGED, {
+        selectedVideoTrack: videoTrack
+      });
+      this.dispatchEvent(fakeEvent);
     }
-    return false;
   }
 
   /**
    * Select an audio track
    * @function selectAudioTrack
    * @param {AudioTrack} audioTrack - the  audio track to select
-   * @returns {boolean} - success
+   * @returns {void}
    * @public
    */
-  selectAudioTrack(audioTrack: AudioTrack): boolean {
+  selectAudioTrack(audioTrack: AudioTrack): void {
     let audioTracks = this._videoElement.audioTracks;
     if ((audioTrack instanceof AudioTrack) && audioTracks && audioTracks[audioTrack.index]) {
       this._disableAudioTracks();
       audioTracks[audioTrack.index].enabled = true;
-      return true;
+      let fakeEvent = new FakeEvent(CustomEvents.AUDIO_TRACK_CHANGED, {
+        selectedAudioTrack: audioTrack
+      });
+      this.dispatchEvent(fakeEvent);
     }
-    return false;
   }
 
   /**
    * Select a text track
    * @function selectTextTrack
    * @param {TextTrack} textTrack - the track to select
-   * @returns {boolean} - success
+   * @returns {void}
    * @public
    */
-  selectTextTrack(textTrack: TextTrack): boolean {
+  selectTextTrack(textTrack: TextTrack): void {
     let textTracks = this._videoElement.textTracks;
     if ((textTrack instanceof TextTrack) && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
       this._disableTextTracks();
       textTracks[textTrack.index].mode = 'showing';
-      return true;
+      let fakeEvent = new FakeEvent(CustomEvents.TEXT_TRACK_CHANGED, {
+        selectedTextTrack: textTrack
+      });
+      this.dispatchEvent(fakeEvent);
     }
-    return false;
   }
 
   /**

@@ -9,6 +9,9 @@ import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
+import FakeEventTarget from './event/fake-event-target'
+import FakeEvent from './event/fake-event'
+import {CUSTOM_EVENTS as CustomEvents} from './event/events'
 
 // Playkit version
 let VERSION = packageData.version;
@@ -24,8 +27,8 @@ export function playkit(config: Object = {}) {
   return new Player(config);
 }
 
-// Registration for media source adapters
-export {registerMediaSourceAdapter};
+// Export the media source adapters necessary utils
+export {registerMediaSourceAdapter, FakeEventTarget, FakeEvent, CustomEvents};
 
 // Export the plugin framework
 export {registerPlugin, BasePlugin};
@@ -34,7 +37,7 @@ export {registerPlugin, BasePlugin};
 export {Track, VideoTrack, AudioTrack, TextTrack};
 
 // Export the logger factory
-export {LoggerFactory}
+export {LoggerFactory};
 
 //export version
 export {VERSION};
