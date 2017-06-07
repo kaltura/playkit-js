@@ -47,7 +47,7 @@ function createTrackButton(innerText, id) {
 function createVideoTrackButtons(player, videoTracks) {
   createTitle("Video Tracks");
   for (let i = 0; i < videoTracks.length; i++) {
-    let element = createTrackButton(videoTracks[i].bandwidth || videoTracks[i].label || videoTracks[i].language, videoTracks[i].index);
+    let element = createTrackButton(videoTracks[i].label || videoTracks[i].bandwidth || videoTracks[i].language, videoTracks[i].index);
     element.onclick = function () {
       player.selectTrack(videoTracks[i]);
     };
