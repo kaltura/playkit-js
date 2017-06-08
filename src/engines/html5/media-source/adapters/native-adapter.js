@@ -20,23 +20,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   static _name: string = 'NativeAdapter';
-  /**
-   * Getter for the adapter name
-   * @returns {string} - The adapter name
-   * @static
-   */
-  static get name(): string {
-    return NativeAdapter._name;
-  }
-
-  /**
-   * @param {string} name - The adapter name.
-   * @returns {void}
-   * @static
-   */
-  static set name(name: string): void {
-    // Do nothing. Just a workaround for flow issue with static getter in an inheritor. See: https://github.com/facebook/flow/issues/3008.
-  }
 
   /**
    * The adapter logger
@@ -61,15 +44,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _loadPromise: ?Promise<Object>;
 
   /**
-   * Checks if NativeAdapter can play a given mime type
+   * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
    * @param {string} mimeType - The mime type to check
    * @returns {boolean} - Whether the native adapter can play a specific mime type
    * @static
    */
   static canPlayType(mimeType: string): boolean {
-    let canPlayType = (typeof mimeType === 'string') ?
-      !!(document.createElement("video").canPlayType(mimeType.toLowerCase())) : false;
+    let canPlayType = (typeof mimeType === 'string') ? !!(document.createElement("video").canPlayType(mimeType.toLowerCase())) : false;
     NativeAdapter._logger.debug('canPlayType result for mimeType:' + mimeType + ' is ' + canPlayType.toString());
     return canPlayType;
   }

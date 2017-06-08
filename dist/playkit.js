@@ -1893,27 +1893,75 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
 
   _createClass(BaseMediaSourceAdapter, null, [{
     key: 'isSupported',
+
+
+    /**
+     * Checks if the media source adapter is supported.
+     * @function isSupported
+     * @returns {boolean} - Whether the media source adapter is supported.
+     * @static
+     */
+
+
+    /**
+     * The adapter config.
+     * @member {Object} _config
+     * @private
+     */
+
+
+    /**
+     * The source object.
+     * @member {Source} _sourceObj
+     * @private
+     */
+
+
+    /**
+     * The dom video element.
+     * @member {HTMLVideoElement} _videoElement
+     * @private
+     */
+
+
+    /**
+     * Passing the custom events to the actual media source adapter.
+     * @static
+     */
     value: function isSupported() {
       return true;
     }
-  }, {
-    key: 'canPlayType',
-    value: function canPlayType(mimeType) {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayType').getError();
-    }
+
+    /**
+     * Factory method to create media source adapter.
+     * @function createAdapter
+     * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with.
+     * @param {Object} source - The source Object.
+     * @param {Object} config - The media source adapter configuration.
+     * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter.
+     * @static
+     */
+
+
+    /**
+     * Passing the getLogger function to the actual media source adapter.
+     * @type {Function}
+     * @static
+     */
+
   }, {
     key: 'createAdapter',
     value: function createAdapter(videoElement, source, config) {
       return new this(videoElement, source, config);
     }
-  }, {
-    key: 'name',
-    get: function get() {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'get name').getError();
-    },
-    set: function set(name) {
-      // Do nothing. Just a workaround for flow issue with static getter in an inheritor. See: https://github.com/facebook/flow/issues/3008.
-    }
+
+    /**
+     * @constructor
+     * @param {HTMLVideoElement} videoElement - The video element which bind to media source adapter.
+     * @param {Source} source - The source object.
+     * @param {Object} config - The media source adapter configuration.
+     */
+
   }]);
 
   function BaseMediaSourceAdapter(videoElement, source, config) {
@@ -1927,7 +1975,23 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
     return _this;
   }
 
+  /**
+   * Dispatch an adapter event forward.
+   * @param {string} name - The name of the event.
+   * @param {Object} payload - The event payload.
+   * @returns {void}
+   */
+
+
   _createClass(BaseMediaSourceAdapter, [{
+    key: '_trigger',
+    value: function _trigger(name, payload) {
+      this.dispatchEvent(new _fakeEvent2.default(name, payload));
+    }
+
+    /** Must implemented methods by the derived media source adapter **/
+
+  }, {
     key: 'load',
     value: function load() {
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
@@ -1953,44 +2017,15 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'selectTextTrack').getError();
     }
   }, {
-    key: '_trigger',
-
-
-    /**
-     * Dispatch an adapter event forward.
-     * @param {string} name - The name of the event.
-     * @param {Object} payload - The event payload.
-     * @returns {void}
-     */
-    value: function _trigger(name, payload) {
-      this.dispatchEvent(new _fakeEvent2.default(name, payload));
-    }
-  }, {
     key: 'src',
     get: function get() {
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'get src').getError();
     }
-
-    /**
-     * The adapter config
-     * @member {Object} _config
-     * @private
-     */
-
-
-    /**
-     * The source object
-     * @member {Source} _sourceObj
-     * @private
-     */
-
-
-    /**
-     * The dom video element
-     * @member {HTMLVideoElement} _videoElement
-     * @private
-     */
-
+  }], [{
+    key: 'canPlayType',
+    value: function canPlayType(mimeType) {
+      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayType').getError();
+    }
   }]);
 
   return BaseMediaSourceAdapter;
@@ -3640,7 +3675,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
 
 
     /**
-     * Checks if NativeAdapter can play a given mime type
+     * Checks if NativeAdapter can play a given mime type.
      * @function canPlayType
      * @param {string} mimeType - The mime type to check
      * @returns {boolean} - Whether the native adapter can play a specific mime type
@@ -3660,6 +3695,13 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      * @type {Promise<Object>}
      * @private
      */
+
+    /**
+     * The name of the Adapter
+     * @member {string} _name
+     * @static
+     * @private
+     */
     value: function canPlayType(mimeType) {
       var canPlayType = typeof mimeType === 'string' ? !!document.createElement("video").canPlayType(mimeType.toLowerCase()) : false;
       NativeAdapter._logger.debug('canPlayType result for mimeType:' + mimeType + ' is ' + canPlayType.toString());
@@ -3672,34 +3714,6 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      * @param {Source} source - The source object
      * @param {Object} config - The media source adapter configuration
      */
-
-  }, {
-    key: 'name',
-
-    /**
-     * Getter for the adapter name
-     * @returns {string} - The adapter name
-     * @static
-     */
-    get: function get() {
-      return NativeAdapter._name;
-    }
-
-    /**
-     * @param {string} name - The adapter name.
-     * @returns {void}
-     * @static
-     */
-
-    /**
-     * The name of the Adapter
-     * @member {string} _name
-     * @static
-     * @private
-     */
-    ,
-    set: function set(name) {}
-    // Do nothing. Just a workaround for flow issue with static getter in an inheritor. See: https://github.com/facebook/flow/issues/3008.
 
 
     /**
