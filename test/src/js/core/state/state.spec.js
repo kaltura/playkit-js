@@ -1,5 +1,5 @@
-import State from '../../../src/state/state'
-import PlayerStates from '../../../src/state/state-types'
+import State from '../../../../../src/js/core/state/state'
+import PlayerStates from '../../../../../src/js/core/state/state-types'
 
 describe("State", () => {
   it("should create idle state", () => {

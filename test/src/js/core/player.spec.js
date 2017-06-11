@@ -1,9 +1,9 @@
 // eslint-disable-next-line no-unused-vars
-import Player from '../../src/player'
-import sourcesConfig from './configs/sources.json'
-import VideoTrack from '../../src/track/video-track'
-import AudioTrack from '../../src/track/audio-track'
-import TextTrack from '../../src/track/text-track'
+import Player from '../../../../src/js/core/player'
+import sourcesConfig from '../../configs/sources.json'
+import VideoTrack from '../../../../src/js/core/track/video-track'
+import AudioTrack from '../../../../src/js/core/track/audio-track'
+import TextTrack from '../../../../src/js/core/track/text-track'
 import {removeVideoElementsFromTestPage} from './utils/test-utils'
 
 describe("play", () => {

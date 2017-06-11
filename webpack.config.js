@@ -10,7 +10,7 @@ let plugins = PROD ? [new webpack.optimize.UglifyJsPlugin({sourceMap: true})] : 
 module.exports = {
   context: __dirname + "/src",
   entry: {
-    playkit: "playkit.js"
+    playkit: "js/playkit.js"
   },
   output: {
     path: __dirname + "/dist",

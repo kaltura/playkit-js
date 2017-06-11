@@ -1,4 +1,4 @@
-import PluginManager from '../../../src/plugin/plugin-manager'
+import PluginManager from '../../../../../src/js/core/plugin/plugin-manager'
 import ColorsPlugin from './test-plugins/colors-plugin'
 import NumbersPlugin from './test-plugins/numbers-plugin'
 

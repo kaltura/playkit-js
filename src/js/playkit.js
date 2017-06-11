@@ -1,14 +1,14 @@
 //@flow
-import Player from './player'
-import LoggerFactory from './utils/logger'
-import * as packageData from '../package.json'
-import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider'
-import {registerPlugin} from './plugin/plugin-manager'
-import BasePlugin from './plugin/base-plugin'
-import Track from './track/track'
-import VideoTrack from './track/video-track'
-import AudioTrack from './track/audio-track'
-import TextTrack from './track/text-track'
+import Player from './core/player'
+import LoggerFactory from './core/utils/logger'
+import * as packageData from '../../package.json'
+import {registerMediaSourceAdapter} from './core/engines/html5/media-source/media-source-provider'
+import {registerPlugin} from './core/plugin/plugin-manager'
+import BasePlugin from './core/plugin/base-plugin'
+import Track from './core/track/track'
+import VideoTrack from './core/track/video-track'
+import AudioTrack from './core/track/audio-track'
+import TextTrack from './core/track/text-track'
 
 // Playkit version
 let VERSION = packageData.version;

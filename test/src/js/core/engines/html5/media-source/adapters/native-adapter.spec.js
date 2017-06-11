@@ -1,8 +1,8 @@
-import NativeAdapter from '../../../../../../src/engines/html5/media-source/adapters/native-adapter'
-import VideoTrack from '../../../../../../src/track/video-track'
-import AudioTrack from '../../../../../../src/track/audio-track'
-import TextTrack from '../../../../../../src/track/text-track'
-import {removeVideoElementsFromTestPage} from '../../../../utils/test-utils'
+import NativeAdapter from '../../../../../../../../src/js/core/engines/html5/media-source/adapters/native-adapter'
+import VideoTrack from '../../../../../../../../src/js/core/track/video-track'
+import AudioTrack from '../../../../../../../../src/js/core/track/audio-track'
+import TextTrack from '../../../../../../../../src/js/core/track/text-track'
+import {removeVideoElementsFromTestPage} from '../../../../../../js/core/utils/test-utils'
 
 describe('NativeAdapter:isSupported', () => {
   it('should be supported', () => {

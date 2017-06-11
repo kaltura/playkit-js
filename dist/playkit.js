@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 20);
+/******/ 	return __webpack_require__(__webpack_require__.s = 25);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -90,7 +90,7 @@ exports.LOG_LEVEL = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jsLogger = __webpack_require__(25);
+var _jsLogger = __webpack_require__(24);
 
 var JsLogger = _interopRequireWildcard(_jsLogger);
 
@@ -147,35 +147,122 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * General track representation of the player.
+ * @classdesc
+ */
 var Track = function () {
   _createClass(Track, [{
     key: "id",
+
+
+    /**
+     * Getter for the track id.
+     * @public
+     * @returns {?string} - The track id.
+     */
+
+    /**
+     * The language of the track.
+     * @member
+     * @type {string}
+     * @private
+     */
+
+    /**
+     * The active mode of the track.
+     * @member
+     * @type {boolean}
+     * @private
+     */
     get: function get() {
       return this._id;
     }
+
+    /**
+     * Getter for the active mode of the track.
+     * @public
+     * @returns {boolean} - The active mode of the track.
+     */
+
+    /**
+     * The index of the track.
+     * @member
+     * @type {number}
+     * @private
+     */
+
+    /**
+     * The label of the track.
+     * @member
+     * @type {string}
+     * @private
+     */
+
+    /**
+     * The id of the track.
+     * @member
+     * @type {string}
+     * @private
+     */
+
   }, {
     key: "active",
     get: function get() {
       return this._active;
-    },
+    }
+
+    /**
+     * Setter for the active mode of the track.
+     * @public
+     * @param {boolean} value - Whether the track is active or not.
+     */
+    ,
     set: function set(value) {
       this._active = value;
     }
+
+    /**
+     * Getter for the label of the track.
+     * @public
+     * @returns {string} - The label of the track.
+     */
+
   }, {
     key: "label",
     get: function get() {
       return this._label;
     }
+
+    /**
+     * Getter for the language of the track.
+     * @public
+     * @returns {string} - The language of the track.
+     */
+
   }, {
     key: "language",
     get: function get() {
       return this._language;
     }
+
+    /**
+     * Getter for the index of the track.
+     * @public
+     * @returns {number} - The index of the track.
+     */
+
   }, {
     key: "index",
     get: function get() {
       return this._index;
     }
+
+    /**
+     * @constructor
+     * @param {Object} settings - The track settings object.
+     */
+
   }]);
 
   function Track() {
@@ -572,7 +659,7 @@ var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
 var _util = __webpack_require__(16);
 
-var _stringUtil = __webpack_require__(24);
+var _stringUtil = __webpack_require__(23);
 
 var _logger = __webpack_require__(0);
 
@@ -586,11 +673,11 @@ var _pluginManager = __webpack_require__(11);
 
 var _pluginManager2 = _interopRequireDefault(_pluginManager);
 
-var _stateManager = __webpack_require__(21);
+var _stateManager = __webpack_require__(20);
 
 var _stateManager2 = _interopRequireDefault(_stateManager);
 
-var _trackTypes = __webpack_require__(23);
+var _trackTypes = __webpack_require__(22);
 
 var _trackTypes2 = _interopRequireDefault(_trackTypes);
 
@@ -659,7 +746,6 @@ var Player = function (_FakeEventTarget) {
     var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
 
     _this._tracks = [];
-
     _this._logger = _logger2.default.getLogger('Player');
     _this._stateManager = new _stateManager2.default(_this);
     _this._pluginManager = new _pluginManager2.default();
@@ -680,6 +766,12 @@ var Player = function (_FakeEventTarget) {
    * Configures the player according to given configuration.
    * @param {Object} config - The configuration for the player instance.
    * @returns {void}
+   */
+
+  /**
+   * The tracks of the player.
+   * @type {Array<Track>}
+   * @private
    */
 
   /**
@@ -727,7 +819,6 @@ var Player = function (_FakeEventTarget) {
       this._eventManager.destroy();
       this._pluginManager.destroy();
       this._stateManager.destroy();
-      this._eventManager.destroy();
       this._config = {};
       this._tracks = [];
     }
@@ -1228,6 +1319,10 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/**
+ * Audio track representation of the player.
+ * @classdesc
+ */
 var AudioTrack = function (_Track) {
   _inherits(AudioTrack, _Track);
 
@@ -1267,14 +1362,39 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/**
+ * Text track representation of the player.
+ * @classdesc
+ */
 var TextTrack = function (_Track) {
   _inherits(TextTrack, _Track);
 
   _createClass(TextTrack, [{
     key: 'kind',
+
+
+    /**
+     * Getter for the kind of the text track.
+     * @public
+     * @returns {string} - The kind of the text track.
+     */
     get: function get() {
       return this._kind;
     }
+
+    /**
+     * @constructor
+     * @param {Object} settings - The track settings object.
+     */
+
+    /**
+     * The kind of the text track:
+     * subtitles/captions/metadata.
+     * @member
+     * @type {string}
+     * @private
+     */
+
   }]);
 
   function TextTrack() {
@@ -1316,6 +1436,10 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/**
+ * Video track representation of the player.
+ * @classdesc
+ */
 var VideoTrack = function (_Track) {
   _inherits(VideoTrack, _Track);
 
@@ -1545,7 +1669,7 @@ var MediaSourceProvider = function () {
      * Get the appropriate media source adapter to the video source
      * @function getMediaSourceAdapter
      * @param {HTMLVideoElement} videoElement - The video element which requires adapter for a given mimeType
-     * @param {Source} source - The video source
+     * @param {Source} source - The selected source object
      * @param {Object} config - The player configuration
      * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists
      * @static
@@ -2563,14 +2687,14 @@ var Html5 = function (_FakeEventTarget) {
      */
 
     /**
-     * The selected source to play.
-     * @type {Source}
+     * The selected media source adapter of the engine.
+     * @type {IMediaSourceAdapter}
      * @private
      */
 
     /**
-     * The event manager of the engine.
-     * @type {EventManager}
+     * The video element.
+     * @type {HTMLVideoElement}
      * @private
      */
     value: function canPlayType(mimeType) {
@@ -2589,14 +2713,8 @@ var Html5 = function (_FakeEventTarget) {
      */
 
     /**
-     * The selected media source adapter of the engine.
-     * @type {IMediaSourceAdapter}
-     * @private
-     */
-
-    /**
-     * The video element.
-     * @type {HTMLVideoElement}
+     * The event manager of the engine.
+     * @type {EventManager}
      * @private
      */
 
@@ -2607,10 +2725,9 @@ var Html5 = function (_FakeEventTarget) {
 
     var _this = _possibleConstructorReturn(this, (Html5.__proto__ || Object.getPrototypeOf(Html5)).call(this));
 
-    _this._source = source;
     _this._createVideoElement();
     _this._eventManager = new _eventManager2.default();
-    _this._loadMediaSourceAdapter(config);
+    _this._loadMediaSourceAdapter(source, config);
     _this.attach();
     return _this;
   }
@@ -2637,7 +2754,6 @@ var Html5 = function (_FakeEventTarget) {
         }
       }
       this._eventManager.destroy();
-      this._source = null;
     }
 
     /**
@@ -2713,6 +2829,7 @@ var Html5 = function (_FakeEventTarget) {
 
     /**
      * Loads the appropriate media source extension adapter.
+     * @param {Source} source - The selected source object.
      * @param {Object} config - The media source extension configuration.
      * @private
      * @returns {void}
@@ -2720,9 +2837,16 @@ var Html5 = function (_FakeEventTarget) {
 
   }, {
     key: '_loadMediaSourceAdapter',
-    value: function _loadMediaSourceAdapter(config) {
-      this._mediaSourceAdapter = _mediaSourceProvider2.default.getMediaSourceAdapter(this.getVideoElement(), this._source, config);
+    value: function _loadMediaSourceAdapter(source, config) {
+      this._mediaSourceAdapter = _mediaSourceProvider2.default.getMediaSourceAdapter(this.getVideoElement(), source, config);
     }
+
+    /**
+     * Select a new video track.
+     * @param {VideoTrack} videoTrack - The video track object to set.
+     * @returns {boolean} - Whether the video track selection succeeded.
+     */
+
   }, {
     key: 'selectVideoTrack',
     value: function selectVideoTrack(videoTrack) {
@@ -2731,6 +2855,13 @@ var Html5 = function (_FakeEventTarget) {
       }
       return false;
     }
+
+    /**
+     * Select a new audio track.
+     * @param {AudioTrack} audioTrack - The video track object to set.
+     * @returns {boolean} - Whether the audio track selection succeeded.
+     */
+
   }, {
     key: 'selectAudioTrack',
     value: function selectAudioTrack(audioTrack) {
@@ -2739,6 +2870,13 @@ var Html5 = function (_FakeEventTarget) {
       }
       return false;
     }
+
+    /**
+     * Select a new text track.
+     * @param {TextTrack} textTrack - The text track object to set.
+     * @returns {boolean} - Whether the text track selection succeeded.
+     */
+
   }, {
     key: 'selectTextTrack',
     value: function selectTextTrack(textTrack) {
@@ -2822,7 +2960,10 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      return this._mediaSourceAdapter.src;
+      if (this._mediaSourceAdapter) {
+        return this._mediaSourceAdapter.src;
+      }
+      return "";
     }
   }, {
     key: 'currentTime',
@@ -3299,8 +3440,8 @@ var NativeAdapter = function () {
      */
 
     /**
-     * The source url
-     * @member {string} _source
+     * The source object
+     * @member {Source} _sourceObj
      * @private
      */
 
@@ -3399,10 +3540,8 @@ var NativeAdapter = function () {
 
     this._config = config;
     this._videoElement = videoElement;
+    this._sourceObj = source;
     this._eventManager = new _eventManager2.default();
-    if (source != null) {
-      this._source = source.url;
-    }
   }
 
   /**
@@ -3430,7 +3569,9 @@ var NativeAdapter = function () {
             NativeAdapter._logger.error(error);
             reject(error);
           });
-          _this._videoElement.src = _this._source;
+          if (_this._sourceObj && _this._sourceObj.url) {
+            _this._videoElement.src = _this._sourceObj.url;
+          }
         });
       }
       return this._loadPromise;
@@ -3606,6 +3747,13 @@ var NativeAdapter = function () {
       }
       return false;
     }
+
+    /**
+     * Disables all the existing video tracks.
+     * @private
+     * @returns {void}
+     */
+
   }, {
     key: '_disableVideoTracks',
     value: function _disableVideoTracks() {
@@ -3616,6 +3764,13 @@ var NativeAdapter = function () {
         }
       }
     }
+
+    /**
+     * Disables all the existing audio tracks.
+     * @private
+     * @returns {void}
+     */
+
   }, {
     key: '_disableAudioTracks',
     value: function _disableAudioTracks() {
@@ -3626,6 +3781,13 @@ var NativeAdapter = function () {
         }
       }
     }
+
+    /**
+     * Disables all the existing text tracks.
+     * @private
+     * @returns {void}
+     */
+
   }, {
     key: '_disableTextTracks',
     value: function _disableTextTracks() {
@@ -3636,6 +3798,13 @@ var NativeAdapter = function () {
         }
       }
     }
+
+    /**
+     * Getter for the src that the adapter plays on the video element.
+     * @public
+     * @returns {string} - The src url.
+     */
+
   }, {
     key: 'src',
     get: function get() {
@@ -3660,95 +3829,6 @@ exports.default = NativeAdapter;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.VERSION = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BasePlugin = exports.registerPlugin = exports.registerMediaSourceAdapter = undefined;
-exports.playkit = playkit;
-
-var _player = __webpack_require__(4);
-
-var _player2 = _interopRequireDefault(_player);
-
-var _logger = __webpack_require__(0);
-
-var _logger2 = _interopRequireDefault(_logger);
-
-var _package = __webpack_require__(17);
-
-var packageData = _interopRequireWildcard(_package);
-
-var _mediaSourceProvider = __webpack_require__(9);
-
-var _pluginManager = __webpack_require__(11);
-
-var _basePlugin = __webpack_require__(10);
-
-var _basePlugin2 = _interopRequireDefault(_basePlugin);
-
-var _track = __webpack_require__(1);
-
-var _track2 = _interopRequireDefault(_track);
-
-var _videoTrack = __webpack_require__(7);
-
-var _videoTrack2 = _interopRequireDefault(_videoTrack);
-
-var _audioTrack = __webpack_require__(5);
-
-var _audioTrack2 = _interopRequireDefault(_audioTrack);
-
-var _textTrack = __webpack_require__(6);
-
-var _textTrack2 = _interopRequireDefault(_textTrack);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// Playkit version
-var VERSION = packageData.version;
-
-_logger2.default.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
-_logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
-
-/**
- * @param {Object} config - The configuration of the player
- * @returns {Player} - The player instance
- */
-function playkit() {
-  var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-  return new _player2.default(config);
-}
-
-// Registration for media source adapters
-exports.registerMediaSourceAdapter = _mediaSourceProvider.registerMediaSourceAdapter;
-
-// Export the plugin framework
-
-exports.registerPlugin = _pluginManager.registerPlugin;
-exports.BasePlugin = _basePlugin2.default;
-
-// Export the tracks classes
-
-exports.Track = _track2.default;
-exports.VideoTrack = _videoTrack2.default;
-exports.AudioTrack = _audioTrack2.default;
-exports.TextTrack = _textTrack2.default;
-
-//export version
-
-exports.VERSION = VERSION;
-exports.default = playkit;
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -3760,7 +3840,7 @@ var _eventManager = __webpack_require__(2);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _state = __webpack_require__(22);
+var _state = __webpack_require__(21);
 
 var _state2 = _interopRequireDefault(_state);
 
@@ -4042,7 +4122,7 @@ var StateManager = function () {
 exports.default = StateManager;
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4124,7 +4204,7 @@ var State = function () {
 exports.default = State;
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4142,7 +4222,7 @@ var TRACK_TYPES = {
 exports.default = TRACK_TYPES;
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4182,7 +4262,7 @@ exports.capitlize = capitlize;
 exports.endsWith = endsWith;
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -4447,6 +4527,99 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 	}
 }(this));
 
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.VERSION = exports.LoggerFactory = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BasePlugin = exports.registerPlugin = exports.registerMediaSourceAdapter = undefined;
+exports.playkit = playkit;
+
+var _player = __webpack_require__(4);
+
+var _player2 = _interopRequireDefault(_player);
+
+var _logger = __webpack_require__(0);
+
+var _logger2 = _interopRequireDefault(_logger);
+
+var _package = __webpack_require__(17);
+
+var packageData = _interopRequireWildcard(_package);
+
+var _mediaSourceProvider = __webpack_require__(9);
+
+var _pluginManager = __webpack_require__(11);
+
+var _basePlugin = __webpack_require__(10);
+
+var _basePlugin2 = _interopRequireDefault(_basePlugin);
+
+var _track = __webpack_require__(1);
+
+var _track2 = _interopRequireDefault(_track);
+
+var _videoTrack = __webpack_require__(7);
+
+var _videoTrack2 = _interopRequireDefault(_videoTrack);
+
+var _audioTrack = __webpack_require__(5);
+
+var _audioTrack2 = _interopRequireDefault(_audioTrack);
+
+var _textTrack = __webpack_require__(6);
+
+var _textTrack2 = _interopRequireDefault(_textTrack);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// Playkit version
+var VERSION = packageData.version;
+
+_logger2.default.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
+_logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
+
+/**
+ * @param {Object} config - The configuration of the player
+ * @returns {Player} - The player instance
+ */
+function playkit() {
+  var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  return new _player2.default(config);
+}
+
+// Registration for media source adapters
+exports.registerMediaSourceAdapter = _mediaSourceProvider.registerMediaSourceAdapter;
+
+// Export the plugin framework
+
+exports.registerPlugin = _pluginManager.registerPlugin;
+exports.BasePlugin = _basePlugin2.default;
+
+// Export the tracks classes
+
+exports.Track = _track2.default;
+exports.VideoTrack = _videoTrack2.default;
+exports.AudioTrack = _audioTrack2.default;
+exports.TextTrack = _textTrack2.default;
+
+// Export the logger factory
+
+exports.LoggerFactory = _logger2.default;
+
+//export version
+
+exports.VERSION = VERSION;
+exports.default = playkit;
 
 /***/ })
 /******/ ]);
