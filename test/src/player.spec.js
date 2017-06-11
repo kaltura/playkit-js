@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import Player from '../../src/player'
+import {CUSTOM_EVENTS as CustomEvents} from '../../src/event/events'
 import sourcesConfig from './configs/sources.json'
 import VideoTrack from '../../src/track/video-track'
 import AudioTrack from '../../src/track/audio-track'
@@ -30,7 +31,7 @@ describe("play", () => {
   });
 
   it("should success after load", (done) => {
-    player._engine.getVideoElement().addEventListener('playing', () => {
+    player.addEventListener('playing', () => {
       done();
     });
     player.load().then(() => {
@@ -231,6 +232,17 @@ describe('selectTrack - audio', function () {
   it('should select a new audio track', (done) => {
     player.load().then(() => {
       if (video.audioTracks) {
+        player.addEventListener(CustomEvents.AUDIO_TRACK_CHANGED, (event) => {
+          (event.payload instanceof AudioTrack).should.be.true;
+          event.payload.index.should.equal(2);
+          video.audioTracks[0].enabled.should.be.false;
+          video.audioTracks[1].enabled.should.be.false;
+          video.audioTracks[2].enabled.should.be.true;
+          tracks[0].active.should.be.false;
+          tracks[1].active.should.be.false;
+          tracks[2].active.should.be.true;
+          done();
+        });
         let tracks = player._tracks.filter((track) => {
           return track instanceof AudioTrack;
         });
@@ -241,12 +253,6 @@ describe('selectTrack - audio', function () {
         tracks[1].active.should.be.false;
         tracks[2].active.should.be.false;
         player.selectTrack(new AudioTrack({index: 2}));
-        video.audioTracks[0].enabled.should.be.false;
-        video.audioTracks[1].enabled.should.be.false;
-        video.audioTracks[2].enabled.should.be.true;
-        tracks[0].active.should.be.false;
-        tracks[1].active.should.be.false;
-        tracks[2].active.should.be.true;
       }
       done();
     });
@@ -329,100 +335,98 @@ describe('selectTrack - text', function () {
 
   it('should select a new subtitles track', (done) => {
     player.load().then(() => {
-      if (video.textTracks) {
-        let tracks = player._tracks.filter((track) => {
-          return track instanceof TextTrack;
-        });
-        video.textTracks[0].mode.should.be.equal('showing');
-        video.textTracks[1].mode.should.be.equal('disabled');
-        tracks[0].active.should.be.true;
-        tracks[1].active.should.be.false;
-        player.selectTrack(new TextTrack({index: 1, kind: 'subtitles'}));
+      player.addEventListener(CustomEvents.TEXT_TRACK_CHANGED, (event) => {
+        (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
+        event.payload.selectedTextTrack.index.should.equal(1);
         video.textTracks[0].mode.should.be.equal('disabled');
         video.textTracks[1].mode.should.be.equal('showing');
         tracks[0].active.should.be.false;
         tracks[1].active.should.be.true;
-      }
-      done();
+        done();
+      });
+      let tracks = player._tracks.filter((track) => {
+        return track instanceof TextTrack;
+      });
+      video.textTracks[0].mode.should.be.equal('showing');
+      video.textTracks[1].mode.should.be.equal('disabled');
+      tracks[0].active.should.be.true;
+      tracks[1].active.should.be.false;
+      player.selectTrack(new TextTrack({index: 1, kind: 'subtitles'}));
     });
   });
 
   it('should select a new captions track', (done) => {
     player.load().then(() => {
-      if (video.textTracks) {
-        let tracks = player._tracks.filter((track) => {
-          return track instanceof TextTrack;
-        });
-        video.textTracks[0].mode.should.be.equal('showing');
-        video.textTracks[1].mode.should.be.equal('disabled');
-        tracks[0].active.should.be.true;
-        tracks[1].active.should.be.false;
-        player.selectTrack(new TextTrack({index: 1, kind: 'captions'}));
+      player.addEventListener(CustomEvents.TEXT_TRACK_CHANGED, (event) => {
+        (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
+        event.payload.selectedTextTrack.index.should.equal(1);
         video.textTracks[0].mode.should.be.equal('disabled');
         video.textTracks[1].mode.should.be.equal('showing');
         tracks[0].active.should.be.false;
         tracks[1].active.should.be.true;
-      }
-      done();
+        done();
+      });
+      let tracks = player._tracks.filter((track) => {
+        return track instanceof TextTrack;
+      });
+      video.textTracks[0].mode.should.be.equal('showing');
+      video.textTracks[1].mode.should.be.equal('disabled');
+      tracks[0].active.should.be.true;
+      tracks[1].active.should.be.false;
+      player.selectTrack(new TextTrack({index: 1, kind: 'captions'}));
     });
   });
 
   it('should not change the selected text track', (done) => {
     player.load().then(() => {
-      if (video.textTracks) {
-        let tracks = player._tracks.filter((track) => {
-          return track instanceof TextTrack;
-        });
-        video.textTracks[0].mode.should.be.equal('showing');
-        video.textTracks[1].mode.should.be.equal('disabled');
-        tracks[0].active.should.be.true;
-        tracks[1].active.should.be.false;
-        player.selectTrack(new TextTrack({index: 0, kind: 'subtitles'}));
-        video.textTracks[0].mode.should.be.equal('showing');
-        video.textTracks[1].mode.should.be.equal('disabled');
-        tracks[0].active.should.be.true;
-        tracks[1].active.should.be.false;
-      }
+      let tracks = player._tracks.filter((track) => {
+        return track instanceof TextTrack;
+      });
+      video.textTracks[0].mode.should.be.equal('showing');
+      video.textTracks[1].mode.should.be.equal('disabled');
+      tracks[0].active.should.be.true;
+      tracks[1].active.should.be.false;
+      player.selectTrack(new TextTrack({index: 0, kind: 'subtitles'}));
+      video.textTracks[0].mode.should.be.equal('showing');
+      video.textTracks[1].mode.should.be.equal('disabled');
+      tracks[0].active.should.be.true;
+      tracks[1].active.should.be.false;
       done();
     });
   });
 
   it('should not change the selected for non exist text track', (done) => {
     player.load().then(() => {
-      if (video.textTracks) {
-        let tracks = player._tracks.filter((track) => {
-          return track instanceof TextTrack;
-        });
-        video.textTracks[0].mode.should.be.equal('showing');
-        video.textTracks[1].mode.should.be.equal('disabled');
-        tracks[0].active.should.be.true;
-        tracks[1].active.should.be.false;
-        player.selectTrack(new TextTrack({index: 3, kind: 'subtitles'}));
-        video.textTracks[0].mode.should.be.equal('showing');
-        video.textTracks[1].mode.should.be.equal('disabled');
-        tracks[0].active.should.be.true;
-        tracks[1].active.should.be.false;
-      }
+      let tracks = player._tracks.filter((track) => {
+        return track instanceof TextTrack;
+      });
+      video.textTracks[0].mode.should.be.equal('showing');
+      video.textTracks[1].mode.should.be.equal('disabled');
+      tracks[0].active.should.be.true;
+      tracks[1].active.should.be.false;
+      player.selectTrack(new TextTrack({index: 3, kind: 'subtitles'}));
+      video.textTracks[0].mode.should.be.equal('showing');
+      video.textTracks[1].mode.should.be.equal('disabled');
+      tracks[0].active.should.be.true;
+      tracks[1].active.should.be.false;
       done();
     });
   });
 
   it('should not change the selected for metadata text track', (done) => {
     player.load().then(() => {
-      if (video.textTracks) {
-        let tracks = player._tracks.filter((track) => {
-          return track instanceof TextTrack;
-        });
-        video.textTracks[0].mode.should.be.equal('showing');
-        video.textTracks[1].mode.should.be.equal('disabled');
-        tracks[0].active.should.be.true;
-        tracks[1].active.should.be.false;
-        player.selectTrack(new TextTrack({index: 1, kind: 'metadata'}));
-        video.textTracks[0].mode.should.be.equal('showing');
-        video.textTracks[1].mode.should.be.equal('disabled');
-        tracks[0].active.should.be.true;
-        tracks[1].active.should.be.false;
-      }
+      let tracks = player._tracks.filter((track) => {
+        return track instanceof TextTrack;
+      });
+      video.textTracks[0].mode.should.be.equal('showing');
+      video.textTracks[1].mode.should.be.equal('disabled');
+      tracks[0].active.should.be.true;
+      tracks[1].active.should.be.false;
+      player.selectTrack(new TextTrack({index: 1, kind: 'metadata'}));
+      video.textTracks[0].mode.should.be.equal('showing');
+      video.textTracks[1].mode.should.be.equal('disabled');
+      tracks[0].active.should.be.true;
+      tracks[1].active.should.be.false;
       done();
     });
   });

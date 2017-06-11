@@ -1,84 +1,116 @@
 //@flow
-const PLAYER_EVENTS: { [event: string]: string } = {
-  PLAY: 'play',
-  PAUSE: 'pause',
-  /**
-   * Fired when the media begins to play (either for the first time, after having been paused, or after ending and then restarting)
-   */
-  PLAYING: 'playing',
-  /**
-   * Fired while the user agent is downloading media data
-   */
-  PROGRESS: 'progress',
+import {merge} from '../utils/util'
+
+const HTML5_EVENTS: { [event: string]: string } = {
   /**
    * Fires when the loading of an audio/video is aborted
    */
   ABORT: 'abort',
   /**
-   * Fires when an error occurs.  The element's error attribute contains more information
+   * Fires when the browser can start playing the audio/video
    */
-  ERROR: 'error',
+  CAN_PLAY: 'canplay',
   /**
-   * Fires when the browser is intentionally not getting media data
+   * Fires when the browser can play through the audio/video without stopping for buffering
    */
-  SUSPEND: 'suspend',
+  CAN_PLAY_THROUGH: 'canplaythrough',
+  /**
+   * Fires when the duration of the audio/video is changed
+   */
+  DURATION_CHANGE: 'durationchange',
   /**
    * Fires when the current playlist is empty
    */
   EMPTIED: 'emptied',
   /**
-   * Fires when playback completes
+   * Fires when the current playlist is ended
    */
   ENDED: 'ended',
   /**
-   * Fires when the requested operation (such as playback) is delayed pending the completion of another operation (such as a seek)
+   * Fires when an error occurred during the loading of an audio/video
    */
-  WAITING: 'waiting',
-  /**
-   * Fires when the browser is trying to get media data, but data is not available
-   */
-  STALLED: 'stalled',
-  /**
-   * Fires when the video is starting to load
-   */
-  LOAD_START: 'loadstart',
-  /**
-   * Fires when the browser has loaded meta data for the audio/video
-   */
-  LOADED_METADATA: 'loadedmetadata',
+  ERROR: 'error',
   /**
    * Fires when the browser has loaded the current frame of the audio/video
    */
   LOADED_DATA: 'loadeddata',
   /**
-   * Fires when the current playback position has changed
+   * Fires when the browser has loaded meta data for the audio/video
    */
-  TIME_UPDATE: 'timeupdate',
+  LOADED_METADATA: 'loadedmetadata',
+  /**
+   * Fires when the browser starts looking for the audio/video
+   */
+  LOAD_START: 'loadstart',
+  /**
+   * Fires when the audio/video has been paused
+   */
+  PAUSE: 'pause',
+  /**
+   * Fires when the audio/video has been started or is no longer paused
+   */
+  PLAY: 'play',
+  /**
+   * Fires when the audio/video is playing after having been paused or stopped for buffering
+   */
+  PLAYING: 'playing',
+  /**
+   * Fires when the browser is downloading the audio/video
+   */
+  PROGRESS: 'progress',
   /**
    * Fires when the playing speed of the audio/video is changed
    */
   RATE_CHANGE: 'ratechange',
   /**
+   * Fires when the user is finished moving/skipping to a new position in the audio/video
+   */
+  SEEKED: 'seeked',
+  /**
+   * Fires when the user starts moving/skipping to a new position in the audio/video
+   */
+  SEEKING: 'seeking',
+  /**
+   * Fires when the browser is trying to get media data, but data is not available
+   */
+  STALLED: 'stalled',
+  /**
+   * Fires when the browser is intentionally not getting media data
+   */
+  SUSPEND: 'suspend',
+  /**
+   * Fires when the current playback position has changed
+   */
+  TIME_UPDATE: 'timeupdate',
+  /**
    * Fires when the volume has been changed
    */
   VOLUME_CHANGE: 'volumechange',
   /**
+   * Fires when the video stops because it needs to buffer the next frame
+   */
+  WAITING: 'waiting',
+};
+
+const CUSTOM_EVENTS: { [event: string]: string } = {
+  /**
+   * Fires when the video track has been changed
+   */
+  VIDEO_TRACK_CHANGED: 'videotrackchanged',
+  /**
+   * Fires when the audio track has been changed
+   */
+  AUDIO_TRACK_CHANGED: 'audiotrackchanged',
+  /**
    * Fires when the text track has been changed
    */
-  TEXT_TRACK_CHANGE: 'texttrackchange',
+  TEXT_TRACK_CHANGED: 'texttrackchanged',
   /**
    * Fires when the player state has been changed
    */
-  PLAYER_STATE_CHANGED: 'playerStateChanged',
-  /**
-   * Fires when the seeking attribute is set to false indicating that seeking has ended
-   */
-  SEEKED: 'seeked',
-  /**
-   * Fires when the seeking attribute is set to true indicating that seeking is active
-   */
-  SEEKING: 'seeking'
+  PLAYER_STATE_CHANGED: 'playerstatechanged'
 };
 
-export default PLAYER_EVENTS;
+const PLAYER_EVENTS: { [event: string]: string } = merge(merge({}, HTML5_EVENTS), CUSTOM_EVENTS);
 
+export {PLAYER_EVENTS, HTML5_EVENTS, CUSTOM_EVENTS};

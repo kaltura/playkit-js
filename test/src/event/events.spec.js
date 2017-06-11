@@ -1,29 +1,38 @@
-import events from '../../../src/event/events'
+import * as events from '../../../src/event/events'
+import {merge} from '../../../src/utils/util'
 
 describe('events', () => {
   it('should equals player events', () => {
-    events.should.deep.equals({
-      PLAY: 'play',
-      PAUSE: 'pause',
-      PLAYING: 'playing',
-      PROGRESS: 'progress',
+    events.HTML5_EVENTS.should.deep.equals({
       ABORT: 'abort',
-      ERROR: 'error',
-      SUSPEND: 'suspend',
+      CAN_PLAY: 'canplay',
+      CAN_PLAY_THROUGH: 'canplaythrough',
+      DURATION_CHANGE: 'durationchange',
       EMPTIED: 'emptied',
       ENDED: 'ended',
-      WAITING: 'waiting',
-      STALLED: 'stalled',
-      LOAD_START: 'loadstart',
-      LOADED_METADATA: 'loadedmetadata',
+      ERROR: 'error',
       LOADED_DATA: 'loadeddata',
-      TIME_UPDATE: 'timeupdate',
+      LOADED_METADATA: 'loadedmetadata',
+      LOAD_START: 'loadstart',
+      PAUSE: 'pause',
+      PLAY: 'play',
+      PLAYING: 'playing',
+      PROGRESS: 'progress',
       RATE_CHANGE: 'ratechange',
-      VOLUME_CHANGE: 'volumechange',
-      TEXT_TRACK_CHANGE: 'texttrackchange',
-      PLAYER_STATE_CHANGED: 'playerStateChanged',
       SEEKED: 'seeked',
-      SEEKING: 'seeking'
+      SEEKING: 'seeking',
+      STALLED: 'stalled',
+      SUSPEND: 'suspend',
+      TIME_UPDATE: 'timeupdate',
+      VOLUME_CHANGE: 'volumechange',
+      WAITING: 'waiting',
     });
+    events.CUSTOM_EVENTS.should.deep.equals({
+      VIDEO_TRACK_CHANGED: 'videotrackchanged',
+      AUDIO_TRACK_CHANGED: 'audiotrackchanged',
+      TEXT_TRACK_CHANGED: 'texttrackchanged',
+      PLAYER_STATE_CHANGED: 'playerstatechanged'
+    });
+    events.PLAYER_EVENTS.should.deep.equals(merge(events.HTML5_EVENTS, events.CUSTOM_EVENTS));
   });
 });

@@ -2,7 +2,7 @@
 import FakeEventTarget from '../../event/fake-event-target'
 import FakeEvent from '../../event/fake-event'
 import EventManager from '../../event/event-manager'
-import PlayerEvents from '../../event/events'
+import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../../event/events'
 import MediaSourceProvider from './media-source/media-source-provider'
 import VideoTrack from '../../track/video-track'
 import AudioTrack from '../../track/audio-track'
@@ -81,12 +81,21 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   attach(): void {
-    for (let playerEvent in PlayerEvents) {
-      if (PlayerEvents.hasOwnProperty(playerEvent)) {
-        this._eventManager.listen(this._el, PlayerEvents[playerEvent], () => {
-          this.dispatchEvent(new FakeEvent(PlayerEvents[playerEvent]));
-        });
-      }
+    for (let playerEvent in Html5Events) {
+      this._eventManager.listen(this._el, Html5Events[playerEvent], () => {
+        this.dispatchEvent(new FakeEvent(Html5Events[playerEvent]));
+      });
+    }
+    if (this._mediaSourceAdapter) { // listen and dispatch adaptive bitrate changed event
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
+        this.dispatchEvent(event);
+      });
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.AUDIO_TRACK_CHANGED, (event: FakeEvent) => {
+        return this.dispatchEvent(event);
+      });
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.TEXT_TRACK_CHANGED, (event: FakeEvent) => {
+        return this.dispatchEvent(event);
+      });
     }
   }
 
@@ -96,10 +105,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   detach(): void {
-    for (let playerEvent in PlayerEvents) {
-      if (PlayerEvents.hasOwnProperty(playerEvent)) {
-        this._eventManager.unlisten(this._el, PlayerEvents[playerEvent]);
-      }
+    for (let playerEvent in Html5Events) {
+      this._eventManager.unlisten(this._el, Html5Events[playerEvent]);
+    }
+    if (this._mediaSourceAdapter) { // unlisten to adaptive bitrate changed
+      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGED);
+      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.AUDIO_TRACK_CHANGED);
+      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.TEXT_TRACK_CHANGED);
     }
   }
 
@@ -142,37 +154,46 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * Select a new video track.
    * @param {VideoTrack} videoTrack - The video track object to set.
-   * @returns {boolean} - Whether the video track selection succeeded.
+   * @returns {void}
    */
-  selectVideoTrack(videoTrack: VideoTrack): boolean {
+  selectVideoTrack(videoTrack: VideoTrack): void {
     if (this._mediaSourceAdapter) {
-      return this._mediaSourceAdapter.selectVideoTrack(videoTrack);
+      this._mediaSourceAdapter.selectVideoTrack(videoTrack);
     }
-    return false;
   }
 
   /**
    * Select a new audio track.
    * @param {AudioTrack} audioTrack - The video track object to set.
-   * @returns {boolean} - Whether the audio track selection succeeded.
+   * @returns {void}
    */
-  selectAudioTrack(audioTrack: AudioTrack): boolean {
+  selectAudioTrack(audioTrack: AudioTrack): void {
     if (this._mediaSourceAdapter) {
-      return this._mediaSourceAdapter.selectAudioTrack(audioTrack);
+      this._mediaSourceAdapter.selectAudioTrack(audioTrack);
     }
-    return false;
   }
 
   /**
    * Select a new text track.
    * @param {TextTrack} textTrack - The text track object to set.
-   * @returns {boolean} - Whether the text track selection succeeded.
+   * @returns {void}
    */
-  selectTextTrack(textTrack: TextTrack): boolean {
+  selectTextTrack(textTrack: TextTrack): void {
     if (this._mediaSourceAdapter) {
-      return this._mediaSourceAdapter.selectTextTrack(textTrack);
+      this._mediaSourceAdapter.selectTextTrack(textTrack);
     }
-    return false;
+  }
+
+  /**
+   * Enables adaptive bitrate switching according to the media source extension logic.
+   * @function enableAdaptiveBitrate
+   * @returns {void}
+   * @public
+   */
+  enableAdaptiveBitrate(): void {
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.enableAdaptiveBitrate();
+    }
   }
 
   /**
