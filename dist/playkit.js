@@ -1922,12 +1922,6 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
      * @member {HTMLVideoElement} _videoElement
      * @private
      */
-
-
-    /**
-     * Passing the custom events to the actual media source adapter.
-     * @static
-     */
     value: function isSupported() {
       return true;
     }
@@ -1976,14 +1970,75 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
   }
 
   /**
-   * Dispatch an adapter event forward.
-   * @param {string} name - The name of the event.
-   * @param {Object} payload - The event payload.
+   * Destroys the media source adapter.
+   * @function destroy
    * @returns {void}
    */
 
 
   _createClass(BaseMediaSourceAdapter, [{
+    key: 'destroy',
+    value: function destroy() {
+      this._sourceObj = null;
+      this._config = null;
+    }
+
+    /**
+     * Triggers a 'videotrackchanged' event.
+     * @function selectVideoTrack
+     * @param {VideoTrack} videoTrack - The track to select.
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: 'selectVideoTrack',
+    value: function selectVideoTrack(videoTrack) {
+      if (videoTrack) {
+        this._trigger(_events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, { selectedVideoTrack: videoTrack });
+      }
+    }
+
+    /**
+     * Triggers a 'audiotrackchanged' event.
+     * @function selectAudioTrack
+     * @param {VideoTrack} audioTrack - The track to select.
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: 'selectAudioTrack',
+    value: function selectAudioTrack(audioTrack) {
+      if (audioTrack) {
+        this._trigger(_events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED, { selectedAudioTrack: audioTrack });
+      }
+    }
+
+    /**
+     * Triggers a 'texttrackchanged' event.
+     * @function selectTextTrack
+     * @param {VideoTrack} textTrack - The track to select.
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: 'selectTextTrack',
+    value: function selectTextTrack(textTrack) {
+      if (textTrack) {
+        this._trigger(_events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED, { selectedTextTrack: textTrack });
+      }
+    }
+
+    /**
+     * Dispatch an adapter event forward.
+     * @param {string} name - The name of the event.
+     * @param {Object} payload - The event payload.
+     * @returns {void}
+     */
+
+  }, {
     key: '_trigger',
     value: function _trigger(name, payload) {
       this.dispatchEvent(new _fakeEvent2.default(name, payload));
@@ -1995,26 +2050,6 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
     key: 'load',
     value: function load() {
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
-    }
-  }, {
-    key: 'destroy',
-    value: function destroy() {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'destroy').getError();
-    }
-  }, {
-    key: 'selectVideoTrack',
-    value: function selectVideoTrack(videoTrack) {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'selectVideoTrack').getError();
-    }
-  }, {
-    key: 'selectAudioTrack',
-    value: function selectAudioTrack(audioTrack) {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'selectAudioTrack').getError();
-    }
-  }, {
-    key: 'selectTextTrack',
-    value: function selectTextTrack(textTrack) {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'selectTextTrack').getError();
     }
   }, {
     key: 'src',
@@ -2031,7 +2066,6 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
   return BaseMediaSourceAdapter;
 }(_fakeEventTarget2.default);
 
-BaseMediaSourceAdapter.CustomEvents = _events.CUSTOM_EVENTS;
 BaseMediaSourceAdapter.getLogger = _logger2.default.getLogger;
 exports.default = BaseMediaSourceAdapter;
 
@@ -3626,6 +3660,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _eventManager = __webpack_require__(3);
@@ -3771,7 +3807,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
     }
 
     /**
-     * Clear the video source
+     * Destroys the native adapter.
      * @function destroy
      * @returns {void}
      */
@@ -3780,8 +3816,8 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
     key: 'destroy',
     value: function destroy() {
       NativeAdapter._logger.debug('destroy');
+      _get(NativeAdapter.prototype.__proto__ || Object.getPrototypeOf(NativeAdapter.prototype), 'destroy', this).call(this);
       this._eventManager.destroy();
-      this._sourceObj = null;
       this._loadPromise = null;
     }
 
@@ -3897,7 +3933,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
       if (videoTrack instanceof _videoTrack2.default && videoTracks && videoTracks[videoTrack.index]) {
         this._disableVideoTracks();
         videoTracks[videoTrack.index].selected = true;
-        this._trigger(_baseMediaSourceAdapter2.default.CustomEvents.VIDEO_TRACK_CHANGED, { selectedVideoTrack: videoTrack });
+        _get(NativeAdapter.prototype.__proto__ || Object.getPrototypeOf(NativeAdapter.prototype), 'selectVideoTrack', this).call(this, videoTrack);
       }
     }
 
@@ -3916,7 +3952,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
       if (audioTrack instanceof _audioTrack2.default && audioTracks && audioTracks[audioTrack.index]) {
         this._disableAudioTracks();
         audioTracks[audioTrack.index].enabled = true;
-        this._trigger(_baseMediaSourceAdapter2.default.CustomEvents.AUDIO_TRACK_CHANGED, { selectedAudioTrack: audioTrack });
+        _get(NativeAdapter.prototype.__proto__ || Object.getPrototypeOf(NativeAdapter.prototype), 'selectAudioTrack', this).call(this, audioTrack);
       }
     }
 
@@ -3935,7 +3971,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
       if (textTrack instanceof _textTrack2.default && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
         this._disableTextTracks();
         textTracks[textTrack.index].mode = 'showing';
-        this._trigger(_baseMediaSourceAdapter2.default.CustomEvents.TEXT_TRACK_CHANGED, { selectedTextTrack: textTrack });
+        _get(NativeAdapter.prototype.__proto__ || Object.getPrototypeOf(NativeAdapter.prototype), 'selectTextTrack', this).call(this, textTrack);
       }
     }
 
