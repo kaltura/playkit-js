@@ -86,62 +86,6 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.LOG_LEVEL = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _jsLogger = __webpack_require__(24);
-
-var JsLogger = _interopRequireWildcard(_jsLogger);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var LOG_LEVEL = {
-  "DEBUG": JsLogger.DEBUG,
-  "INFO": JsLogger.INFO,
-  "TIME": JsLogger.TIME,
-  "WARN": JsLogger.WARN,
-  "ERROR": JsLogger.ERROR,
-  "OFF": JsLogger.OFF
-};
-
-var LoggerFactory = function () {
-  function LoggerFactory(options) {
-    _classCallCheck(this, LoggerFactory);
-
-    JsLogger.useDefaults(options || {});
-  }
-
-  _createClass(LoggerFactory, [{
-    key: "getLogger",
-    value: function getLogger(name) {
-      if (!name) {
-        return JsLogger;
-      }
-      return JsLogger.get(name);
-    }
-  }]);
-
-  return LoggerFactory;
-}();
-
-var lf = new LoggerFactory({ defaultLevel: JsLogger.DEBUG });
-
-exports.default = lf;
-exports.LOG_LEVEL = LOG_LEVEL;
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -281,6 +225,62 @@ var Track = function () {
 }();
 
 exports.default = Track;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.LOG_LEVEL = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jsLogger = __webpack_require__(24);
+
+var JsLogger = _interopRequireWildcard(_jsLogger);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var LOG_LEVEL = {
+  "DEBUG": JsLogger.DEBUG,
+  "INFO": JsLogger.INFO,
+  "TIME": JsLogger.TIME,
+  "WARN": JsLogger.WARN,
+  "ERROR": JsLogger.ERROR,
+  "OFF": JsLogger.OFF
+};
+
+var LoggerFactory = function () {
+  function LoggerFactory(options) {
+    _classCallCheck(this, LoggerFactory);
+
+    JsLogger.useDefaults(options || {});
+  }
+
+  _createClass(LoggerFactory, [{
+    key: "getLogger",
+    value: function getLogger(name) {
+      if (!name) {
+        return JsLogger;
+      }
+      return JsLogger.get(name);
+    }
+  }]);
+
+  return LoggerFactory;
+}();
+
+var lf = new LoggerFactory({ defaultLevel: JsLogger.DEBUG });
+
+exports.default = lf;
+exports.LOG_LEVEL = LOG_LEVEL;
 
 /***/ }),
 /* 2 */
@@ -426,6 +426,199 @@ exports.default = FakeEvent;
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _track = __webpack_require__(0);
+
+var _track2 = _interopRequireDefault(_track);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Audio track representation of the player.
+ * @classdesc
+ */
+var AudioTrack = function (_Track) {
+  _inherits(AudioTrack, _Track);
+
+  function AudioTrack() {
+    _classCallCheck(this, AudioTrack);
+
+    return _possibleConstructorReturn(this, (AudioTrack.__proto__ || Object.getPrototypeOf(AudioTrack)).apply(this, arguments));
+  }
+
+  return AudioTrack;
+}(_track2.default);
+
+exports.default = AudioTrack;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _track = __webpack_require__(0);
+
+var _track2 = _interopRequireDefault(_track);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Text track representation of the player.
+ * @classdesc
+ */
+var TextTrack = function (_Track) {
+  _inherits(TextTrack, _Track);
+
+  _createClass(TextTrack, [{
+    key: 'kind',
+
+
+    /**
+     * Getter for the kind of the text track.
+     * @public
+     * @returns {string} - The kind of the text track.
+     */
+    get: function get() {
+      return this._kind;
+    }
+
+    /**
+     * @constructor
+     * @param {Object} settings - The track settings object.
+     */
+
+    /**
+     * The kind of the text track:
+     * subtitles/captions/metadata.
+     * @member
+     * @type {string}
+     * @private
+     */
+
+  }]);
+
+  function TextTrack() {
+    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _classCallCheck(this, TextTrack);
+
+    var _this = _possibleConstructorReturn(this, (TextTrack.__proto__ || Object.getPrototypeOf(TextTrack)).call(this, settings));
+
+    _this._kind = settings.kind;
+    return _this;
+  }
+
+  return TextTrack;
+}(_track2.default);
+
+exports.default = TextTrack;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _track = __webpack_require__(0);
+
+var _track2 = _interopRequireDefault(_track);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Video track representation of the player.
+ * @classdesc
+ */
+var VideoTrack = function (_Track) {
+  _inherits(VideoTrack, _Track);
+
+  _createClass(VideoTrack, [{
+    key: 'bandwidth',
+
+
+    /**
+     * Getter for the kind of the text track.
+     * @public
+     * @returns {string} - The kind of the text track.
+     */
+    get: function get() {
+      return this._bandwidth;
+    }
+
+    /**
+     * @constructor
+     * @param {Object} settings - The track settings object.
+     */
+
+    /**
+     * The kind of the text track:
+     * subtitles/captions/metadata.
+     * @member
+     * @type {string}
+     * @private
+     */
+
+  }]);
+
+  function VideoTrack() {
+    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _classCallCheck(this, VideoTrack);
+
+    var _this = _possibleConstructorReturn(this, (VideoTrack.__proto__ || Object.getPrototypeOf(VideoTrack)).call(this, settings));
+
+    _this._bandwidth = settings.bandwidth;
+    return _this;
+  }
+
+  return VideoTrack;
+}(_track2.default);
+
+exports.default = VideoTrack;
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -625,7 +818,7 @@ var Binding_ = function () {
 exports.default = EventManager;
 
 /***/ }),
-/* 4 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -756,7 +949,7 @@ exports.HTML5_EVENTS = HTML5_EVENTS;
 exports.CUSTOM_EVENTS = CUSTOM_EVENTS;
 
 /***/ }),
-/* 5 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -768,7 +961,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _eventManager = __webpack_require__(3);
+var _eventManager = __webpack_require__(6);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
@@ -780,7 +973,7 @@ var _fakeEventTarget = __webpack_require__(9);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
-var _events = __webpack_require__(4);
+var _events = __webpack_require__(7);
 
 var _stateTypes = __webpack_require__(16);
 
@@ -788,7 +981,7 @@ var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
 var _util = __webpack_require__(11);
 
-var _logger = __webpack_require__(0);
+var _logger = __webpack_require__(1);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -808,19 +1001,19 @@ var _trackTypes = __webpack_require__(23);
 
 var _trackTypes2 = _interopRequireDefault(_trackTypes);
 
-var _track = __webpack_require__(1);
+var _track = __webpack_require__(0);
 
 var _track2 = _interopRequireDefault(_track);
 
-var _videoTrack = __webpack_require__(8);
+var _videoTrack = __webpack_require__(5);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(6);
+var _audioTrack = __webpack_require__(3);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(7);
+var _textTrack = __webpack_require__(4);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
@@ -1078,12 +1271,29 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'selectTrack',
     value: function selectTrack(track) {
-      if (track instanceof _videoTrack2.default) {
-        this._engine.selectVideoTrack(track);
-      } else if (track instanceof _audioTrack2.default) {
-        this._engine.selectAudioTrack(track);
-      } else if (track instanceof _textTrack2.default) {
-        this._engine.selectTextTrack(track);
+      if (this._engine) {
+        if (track instanceof _videoTrack2.default) {
+          this._engine.selectVideoTrack(track);
+        } else if (track instanceof _audioTrack2.default) {
+          this._engine.selectAudioTrack(track);
+        } else if (track instanceof _textTrack2.default) {
+          this._engine.selectTextTrack(track);
+        }
+      }
+    }
+
+    /**
+     * Enables adaptive bitrate switching.
+     * @function enableAdaptiveBitrate
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: 'enableAdaptiveBitrate',
+    value: function enableAdaptiveBitrate() {
+      if (this._engine) {
+        this._engine.enableAdaptiveBitrate();
       }
     }
 
@@ -1399,199 +1609,6 @@ var Player = function (_FakeEventTarget) {
 exports.default = Player;
 
 /***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _track = __webpack_require__(1);
-
-var _track2 = _interopRequireDefault(_track);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/**
- * Audio track representation of the player.
- * @classdesc
- */
-var AudioTrack = function (_Track) {
-  _inherits(AudioTrack, _Track);
-
-  function AudioTrack() {
-    _classCallCheck(this, AudioTrack);
-
-    return _possibleConstructorReturn(this, (AudioTrack.__proto__ || Object.getPrototypeOf(AudioTrack)).apply(this, arguments));
-  }
-
-  return AudioTrack;
-}(_track2.default);
-
-exports.default = AudioTrack;
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _track = __webpack_require__(1);
-
-var _track2 = _interopRequireDefault(_track);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/**
- * Text track representation of the player.
- * @classdesc
- */
-var TextTrack = function (_Track) {
-  _inherits(TextTrack, _Track);
-
-  _createClass(TextTrack, [{
-    key: 'kind',
-
-
-    /**
-     * Getter for the kind of the text track.
-     * @public
-     * @returns {string} - The kind of the text track.
-     */
-    get: function get() {
-      return this._kind;
-    }
-
-    /**
-     * @constructor
-     * @param {Object} settings - The track settings object.
-     */
-
-    /**
-     * The kind of the text track:
-     * subtitles/captions/metadata.
-     * @member
-     * @type {string}
-     * @private
-     */
-
-  }]);
-
-  function TextTrack() {
-    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-    _classCallCheck(this, TextTrack);
-
-    var _this = _possibleConstructorReturn(this, (TextTrack.__proto__ || Object.getPrototypeOf(TextTrack)).call(this, settings));
-
-    _this._kind = settings.kind;
-    return _this;
-  }
-
-  return TextTrack;
-}(_track2.default);
-
-exports.default = TextTrack;
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _track = __webpack_require__(1);
-
-var _track2 = _interopRequireDefault(_track);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/**
- * Video track representation of the player.
- * @classdesc
- */
-var VideoTrack = function (_Track) {
-  _inherits(VideoTrack, _Track);
-
-  _createClass(VideoTrack, [{
-    key: 'bandwidth',
-
-
-    /**
-     * Getter for the kind of the text track.
-     * @public
-     * @returns {string} - The kind of the text track.
-     */
-    get: function get() {
-      return this._bandwidth;
-    }
-
-    /**
-     * @constructor
-     * @param {Object} settings - The track settings object.
-     */
-
-    /**
-     * The kind of the text track:
-     * subtitles/captions/metadata.
-     * @member
-     * @type {string}
-     * @private
-     */
-
-  }]);
-
-  function VideoTrack() {
-    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-    _classCallCheck(this, VideoTrack);
-
-    var _this = _possibleConstructorReturn(this, (VideoTrack.__proto__ || Object.getPrototypeOf(VideoTrack)).call(this, settings));
-
-    _this._bandwidth = settings.bandwidth;
-    return _this;
-  }
-
-  return VideoTrack;
-}(_track2.default);
-
-exports.default = VideoTrack;
-
-/***/ }),
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1872,11 +1889,27 @@ var _playerError = __webpack_require__(10);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
-var _events = __webpack_require__(4);
+var _events = __webpack_require__(7);
 
-var _logger = __webpack_require__(0);
+var _logger = __webpack_require__(1);
 
 var _logger2 = _interopRequireDefault(_logger);
+
+var _track = __webpack_require__(0);
+
+var _track2 = _interopRequireDefault(_track);
+
+var _videoTrack = __webpack_require__(5);
+
+var _videoTrack2 = _interopRequireDefault(_videoTrack);
+
+var _audioTrack = __webpack_require__(3);
+
+var _audioTrack2 = _interopRequireDefault(_audioTrack);
+
+var _textTrack = __webpack_require__(4);
+
+var _textTrack2 = _interopRequireDefault(_textTrack);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1989,50 +2022,21 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
     }
 
     /**
-     * Triggers a 'videotrackchanged' event.
-     * @function selectVideoTrack
-     * @param {VideoTrack} videoTrack - The track to select.
+     * Triggers the appropriate track changed event.
+     * @param {Track} track - The selected track.
+     * @private
      * @returns {void}
-     * @public
      */
 
   }, {
-    key: 'selectVideoTrack',
-    value: function selectVideoTrack(videoTrack) {
-      if (videoTrack) {
-        this._trigger(BaseMediaSourceAdapter.CustomEvents.VIDEO_TRACK_CHANGED, { selectedVideoTrack: videoTrack });
-      }
-    }
-
-    /**
-     * Triggers a 'audiotrackchanged' event.
-     * @function selectAudioTrack
-     * @param {VideoTrack} audioTrack - The track to select.
-     * @returns {void}
-     * @public
-     */
-
-  }, {
-    key: 'selectAudioTrack',
-    value: function selectAudioTrack(audioTrack) {
-      if (audioTrack) {
-        this._trigger(BaseMediaSourceAdapter.CustomEvents.AUDIO_TRACK_CHANGED, { selectedAudioTrack: audioTrack });
-      }
-    }
-
-    /**
-     * Triggers a 'texttrackchanged' event.
-     * @function selectTextTrack
-     * @param {VideoTrack} textTrack - The track to select.
-     * @returns {void}
-     * @public
-     */
-
-  }, {
-    key: 'selectTextTrack',
-    value: function selectTextTrack(textTrack) {
-      if (textTrack) {
-        this._trigger(BaseMediaSourceAdapter.CustomEvents.TEXT_TRACK_CHANGED, { selectedTextTrack: textTrack });
+    key: '_onTrackChanged',
+    value: function _onTrackChanged(track) {
+      if (track instanceof _videoTrack2.default) {
+        this._trigger(BaseMediaSourceAdapter.CustomEvents.VIDEO_TRACK_CHANGED, { selectedVideoTrack: track });
+      } else if (track instanceof _audioTrack2.default) {
+        this._trigger(BaseMediaSourceAdapter.CustomEvents.AUDIO_TRACK_CHANGED, { selectedAudioTrack: track });
+      } else if (track instanceof _textTrack2.default) {
+        this._trigger(BaseMediaSourceAdapter.CustomEvents.TEXT_TRACK_CHANGED, { selectedTextTrack: track });
       }
     }
 
@@ -2055,6 +2059,26 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
     key: 'load',
     value: function load() {
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
+    }
+  }, {
+    key: 'selectVideoTrack',
+    value: function selectVideoTrack(videoTrack) {
+      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'selectVideoTrack').getError();
+    }
+  }, {
+    key: 'selectAudioTrack',
+    value: function selectAudioTrack(audioTrack) {
+      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'selectAudioTrack').getError();
+    }
+  }, {
+    key: 'selectTextTrack',
+    value: function selectTextTrack(textTrack) {
+      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'selectTextTrack').getError();
+    }
+  }, {
+    key: 'enableAdaptiveBitrate',
+    value: function enableAdaptiveBitrate() {
+      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'enableAdaptiveBitrate').getError();
     }
   }, {
     key: 'src',
@@ -2093,7 +2117,7 @@ var _nativeAdapter = __webpack_require__(20);
 
 var _nativeAdapter2 = _interopRequireDefault(_nativeAdapter);
 
-var _logger = __webpack_require__(0);
+var _logger = __webpack_require__(1);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -2131,10 +2155,10 @@ var MediaSourceProvider = function () {
     value: function register(mediaSourceAdapter) {
       if (mediaSourceAdapter) {
         if (!MediaSourceProvider._mediaSourceAdapters.includes(mediaSourceAdapter)) {
-          MediaSourceProvider._logger.debug('Adapter <' + mediaSourceAdapter.name + '> has been registered successfully.');
+          MediaSourceProvider._logger.debug('Adapter <' + mediaSourceAdapter.name + '> has been registered successfully');
           MediaSourceProvider._mediaSourceAdapters.push(mediaSourceAdapter);
         } else {
-          MediaSourceProvider._logger.debug('Adapter <' + mediaSourceAdapter.name + '> is already registered, do not register again.');
+          MediaSourceProvider._logger.debug('Adapter <' + mediaSourceAdapter.name + '> is already registered, do not register again');
         }
       }
     }
@@ -2166,7 +2190,7 @@ var MediaSourceProvider = function () {
     value: function unRegister(mediaSourceAdapter) {
       var index = MediaSourceProvider._mediaSourceAdapters.indexOf(mediaSourceAdapter);
       if (index > -1) {
-        MediaSourceProvider._logger.debug('Unregistered <' + mediaSourceAdapter.name + '> adapter.');
+        MediaSourceProvider._logger.debug('Unregistered <' + mediaSourceAdapter.name + '> adapter');
         MediaSourceProvider._mediaSourceAdapters.splice(index, 1);
       }
     }
@@ -2186,7 +2210,7 @@ var MediaSourceProvider = function () {
       for (var i = 0; i < mediaSourceAdapters.length; i++) {
         if (mediaSourceAdapters[i].canPlayType(mimeType)) {
           MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
-          MediaSourceProvider._logger.debug('Selected adapter is <' + MediaSourceProvider._selectedAdapter.name + '>.');
+          MediaSourceProvider._logger.debug('Selected adapter is <' + MediaSourceProvider._selectedAdapter.name + '>');
           return true;
         }
       }
@@ -2241,17 +2265,17 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _player = __webpack_require__(5);
+var _player = __webpack_require__(8);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _logger = __webpack_require__(0);
+var _logger = __webpack_require__(1);
 
 var _logger2 = _interopRequireDefault(_logger);
 
 var _util = __webpack_require__(11);
 
-var _eventManager = __webpack_require__(3);
+var _eventManager = __webpack_require__(6);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
@@ -2442,11 +2466,11 @@ var _playerError = __webpack_require__(10);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
-var _player = __webpack_require__(5);
+var _player = __webpack_require__(8);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _logger = __webpack_require__(0);
+var _logger = __webpack_require__(1);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -2508,10 +2532,10 @@ var PluginManager = function () {
       var pluginClass = PluginManager._registry.get(name);
       if (pluginClass != null && pluginClass.isValid()) {
         this._plugins.set(name, pluginClass.createPlugin(name, player, config));
-        logger.debug('Plugin <' + name + '> has been loaded.');
+        logger.debug('Plugin <' + name + '> has been loaded');
         return true;
       }
-      logger.debug('Plugin <' + name + '> isn\'t loaded, isValid()=false.');
+      logger.debug('Plugin <' + name + '> isn\'t loaded, isValid()=false');
       return false;
     }
 
@@ -2573,10 +2597,10 @@ var PluginManager = function () {
       }
       if (!PluginManager._registry.has(name)) {
         PluginManager._registry.set(name, handler);
-        logger.debug('Plugin <' + name + '> has been registered successfully.');
+        logger.debug('Plugin <' + name + '> has been registered successfully');
         return true;
       }
-      logger.debug('Plugin <' + name + '> is already registered, do not register again.');
+      logger.debug('Plugin <' + name + '> is already registered, do not register again');
       return false;
     }
 
@@ -2917,25 +2941,25 @@ var _fakeEvent = __webpack_require__(2);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _eventManager = __webpack_require__(3);
+var _eventManager = __webpack_require__(6);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _events = __webpack_require__(4);
+var _events = __webpack_require__(7);
 
 var _mediaSourceProvider = __webpack_require__(13);
 
 var _mediaSourceProvider2 = _interopRequireDefault(_mediaSourceProvider);
 
-var _videoTrack = __webpack_require__(8);
+var _videoTrack = __webpack_require__(5);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(6);
+var _audioTrack = __webpack_require__(3);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(7);
+var _textTrack = __webpack_require__(4);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
@@ -3168,6 +3192,21 @@ var Html5 = function (_FakeEventTarget) {
     value: function selectTextTrack(textTrack) {
       if (this._mediaSourceAdapter) {
         this._mediaSourceAdapter.selectTextTrack(textTrack);
+      }
+    }
+
+    /**
+     * Enables adaptive bitrate switching according to the media source extension logic.
+     * @function enableAdaptiveBitrate
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: 'enableAdaptiveBitrate',
+    value: function enableAdaptiveBitrate() {
+      if (this._mediaSourceAdapter) {
+        this._mediaSourceAdapter.enableAdaptiveBitrate();
       }
     }
 
@@ -3670,25 +3709,25 @@ var _get = function get(object, property, receiver) { if (object === null) objec
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _eventManager = __webpack_require__(3);
+var _eventManager = __webpack_require__(6);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _events = __webpack_require__(4);
+var _events = __webpack_require__(7);
 
-var _track = __webpack_require__(1);
+var _track = __webpack_require__(0);
 
 var _track2 = _interopRequireDefault(_track);
 
-var _videoTrack = __webpack_require__(8);
+var _videoTrack = __webpack_require__(5);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(6);
+var _audioTrack = __webpack_require__(3);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(7);
+var _textTrack = __webpack_require__(4);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
@@ -3939,7 +3978,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
       if (videoTrack instanceof _videoTrack2.default && videoTracks && videoTracks[videoTrack.index]) {
         this._disableVideoTracks();
         videoTracks[videoTrack.index].selected = true;
-        _get(NativeAdapter.prototype.__proto__ || Object.getPrototypeOf(NativeAdapter.prototype), 'selectVideoTrack', this).call(this, videoTrack);
+        this._onTrackChanged(videoTrack);
       }
     }
 
@@ -3958,7 +3997,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
       if (audioTrack instanceof _audioTrack2.default && audioTracks && audioTracks[audioTrack.index]) {
         this._disableAudioTracks();
         audioTracks[audioTrack.index].enabled = true;
-        _get(NativeAdapter.prototype.__proto__ || Object.getPrototypeOf(NativeAdapter.prototype), 'selectAudioTrack', this).call(this, audioTrack);
+        this._onTrackChanged(audioTrack);
       }
     }
 
@@ -3977,7 +4016,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
       if (textTrack instanceof _textTrack2.default && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
         this._disableTextTracks();
         textTracks[textTrack.index].mode = 'showing';
-        _get(NativeAdapter.prototype.__proto__ || Object.getPrototypeOf(NativeAdapter.prototype), 'selectTextTrack', this).call(this, textTrack);
+        this._onTrackChanged(textTrack);
       }
     }
 
@@ -4065,11 +4104,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _player = __webpack_require__(5);
+var _player = __webpack_require__(8);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _eventManager = __webpack_require__(3);
+var _eventManager = __webpack_require__(6);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
@@ -4081,13 +4120,13 @@ var _stateTypes = __webpack_require__(16);
 
 var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
-var _events = __webpack_require__(4);
+var _events = __webpack_require__(7);
 
 var _fakeEvent = __webpack_require__(2);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _logger = __webpack_require__(0);
+var _logger = __webpack_require__(1);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -4732,11 +4771,11 @@ Object.defineProperty(exports, "__esModule", {
 exports.VERSION = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerMediaSourceAdapter = undefined;
 exports.playkit = playkit;
 
-var _player = __webpack_require__(5);
+var _player = __webpack_require__(8);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _logger = __webpack_require__(0);
+var _logger = __webpack_require__(1);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -4756,19 +4795,19 @@ var _basePlugin = __webpack_require__(14);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
-var _track = __webpack_require__(1);
+var _track = __webpack_require__(0);
 
 var _track2 = _interopRequireDefault(_track);
 
-var _videoTrack = __webpack_require__(8);
+var _videoTrack = __webpack_require__(5);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(6);
+var _audioTrack = __webpack_require__(3);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(7);
+var _textTrack = __webpack_require__(4);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
