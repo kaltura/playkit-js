@@ -2,6 +2,7 @@
 import Player from './player'
 import LoggerFactory from './utils/logger'
 import * as packageData from '../package.json'
+import BaseMediaSourceAdapter from './engines/html5/media-source/base-media-source-adapter'
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider'
 import {registerPlugin} from './plugin/plugin-manager'
 import BasePlugin from './plugin/base-plugin'
@@ -24,17 +25,14 @@ export function playkit(config: Object = {}) {
   return new Player(config);
 }
 
-// Registration for media source adapters
-export {registerMediaSourceAdapter};
+// Export the media source adapters necessary utils
+export {registerMediaSourceAdapter, BaseMediaSourceAdapter};
 
 // Export the plugin framework
 export {registerPlugin, BasePlugin};
 
 // Export the tracks classes
 export {Track, VideoTrack, AudioTrack, TextTrack};
-
-// Export the logger factory
-export {LoggerFactory}
 
 //export version
 export {VERSION};

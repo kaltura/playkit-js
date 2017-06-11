@@ -1,11 +1,10 @@
 //@flow
 import EventManager from './event/event-manager'
-import FakeEventTarget from './event/fake-event-target'
 import FakeEvent from './event/fake-event'
-import PlayerEvents from './event/events'
+import FakeEventTarget from './event/fake-event-target'
+import {PLAYER_EVENTS as PlayerEvents, HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from './event/events'
 import PlayerStates from './state/state-types'
 import {isNumber, isFloat, merge} from './utils/util'
-import {capitlize} from './utils/string-util'
 import LoggerFactory from './utils/logger'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
@@ -15,8 +14,6 @@ import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
-
-type ListenerType = (event: FakeEvent) => any;
 
 /**
  * The HTML5 player class.
@@ -54,12 +51,6 @@ class Player extends FakeEventTarget {
    */
   _engine: IEngine;
   /**
-   * The event handlers of the playback engine.
-   * @type {Map<string, ListenerType>}
-   * @private
-   */
-  _engineEventHandlers: Map<string, ListenerType>;
-  /**
    * The state manager of the player.
    * @type {StateManager}
    * @private
@@ -83,14 +74,6 @@ class Player extends FakeEventTarget {
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
     this._eventManager = new EventManager();
-    this._engineEventHandlers = new Map();
-    for (let playerEvent in PlayerEvents) {
-      if (PlayerEvents.hasOwnProperty(playerEvent)) {
-        this._engineEventHandlers.set(`onEngine${capitlize(PlayerEvents[playerEvent])}_`, (event) => {
-          return this.dispatchEvent(event);
-        });
-      }
-    }
     this.configure(config);
   }
 
@@ -142,9 +125,7 @@ class Player extends FakeEventTarget {
   _loadPlugins(config: Object): void {
     let plugins = config.plugins;
     for (let name in plugins) {
-      if (plugins.hasOwnProperty(name)) {
-        this._pluginManager.load(name, this, plugins[name]);
-      }
+      this._pluginManager.load(name, this, plugins[name]);
     }
   }
 
@@ -187,14 +168,23 @@ class Player extends FakeEventTarget {
    */
   _attachMedia(): void {
     if (this._engine) {
-      for (let playerEvent in PlayerEvents) {
-        if (PlayerEvents.hasOwnProperty(playerEvent)) {
-          const handler = this._engineEventHandlers.get(`onEngine${capitlize(PlayerEvents[playerEvent])}_`);
-          if (handler) {
-            this._eventManager.listen(this._engine, PlayerEvents[playerEvent], handler);
-          }
-        }
+      for (let playerEvent in Html5Events) {
+        this._eventManager.listen(this._engine, Html5Events[playerEvent], (event: FakeEvent) => {
+          return this.dispatchEvent(event);
+        });
       }
+      this._eventManager.listen(this._engine, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
+        this._markActiveTrack(event.payload.selectedVideoTrack);
+        return this.dispatchEvent(event);
+      });
+      this._eventManager.listen(this._engine, CustomEvents.AUDIO_TRACK_CHANGED, (event: FakeEvent) => {
+        this._markActiveTrack(event.payload.selectedAudioTrack);
+        return this.dispatchEvent(event);
+      });
+      this._eventManager.listen(this._engine, CustomEvents.TEXT_TRACK_CHANGED, (event: FakeEvent) => {
+        this._markActiveTrack(event.payload.selectedTextTrack);
+        return this.dispatchEvent(event);
+      });
     }
   }
 
@@ -238,30 +228,27 @@ class Player extends FakeEventTarget {
    * @public
    */
   selectTrack(track: Track): void {
-    let success = this._selectTrackByType(track);
-    if (success) {
-      this._markActiveTrack(track)
+    if (this._engine) {
+      if (track instanceof VideoTrack) {
+        this._engine.selectVideoTrack(track);
+      } else if (track instanceof AudioTrack) {
+        this._engine.selectAudioTrack(track);
+      } else if (track instanceof TextTrack) {
+        this._engine.selectTextTrack(track);
+      }
     }
   }
 
   /**
-   * Select a track by type
-   * @function _selectTrackByType
-   * @param {Track} track - the track to select
-   * @returns {boolean} - success
-   * @private
+   * Enables adaptive bitrate switching.
+   * @function enableAdaptiveBitrate
+   * @returns {void}
+   * @public
    */
-  _selectTrackByType(track: Track): boolean {
-    if (track) {
-      if (track instanceof VideoTrack) {
-        return this._engine.selectVideoTrack(track);
-      } else if (track instanceof AudioTrack) {
-        return this._engine.selectAudioTrack(track);
-      } else if (track instanceof TextTrack) {
-        return this._engine.selectTextTrack(track);
-      }
+  enableAdaptiveBitrate(): void {
+    if (this._engine) {
+      this._engine.enableAdaptiveBitrate();
     }
-    return false;
   }
 
   /**

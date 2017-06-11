@@ -1,7 +1,7 @@
 import State from '../../../src/state/state'
 import PlayerStates from '../../../src/state/state-types'
 import StateManager from '../../../src/state/state-manager'
-import PlayerEvents from '../../../src/event/events'
+import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../../../src/event/events'
 
 let sandbox;
 let stateManager;
@@ -59,7 +59,7 @@ describe("StateManager", () => {
 
   it("should dispatch initial state event", (done) => {
     sandbox.stub(stateManager._player, 'dispatchEvent').callsFake(function (event) {
-      event.type.should.equal(PlayerEvents.PLAYER_STATE_CHANGED);
+      event.type.should.equal(CustomEvents.PLAYER_STATE_CHANGED);
       (event.payload.oldState === null).should.be.true;
       event.payload.newState.should.be.an.instanceof(State);
       event.payload.newState.type.should.equal(PlayerStates.IDLE);
@@ -70,7 +70,7 @@ describe("StateManager", () => {
 
   it("should dispatch new state event", (done) => {
     sandbox.stub(stateManager._player, 'dispatchEvent').callsFake(function (event) {
-      event.type.should.equal(PlayerEvents.PLAYER_STATE_CHANGED);
+      event.type.should.equal(CustomEvents.PLAYER_STATE_CHANGED);
       event.payload.oldState.should.be.an.instanceof(State);
       event.payload.oldState.type.should.equal(PlayerStates.IDLE);
       event.payload.newState.should.be.an.instanceof(State);
@@ -96,17 +96,17 @@ describe("StateManager.Transitions:IDLE", () => {
   });
 
   it('should handle transition from idle to loading', () => {
-    stateManager._doTransition({type: PlayerEvents.LOAD_START});
+    stateManager._doTransition({type: Html5Events.LOAD_START});
     stateManager.currentState.type.should.equal(PlayerStates.LOADING);
   });
 
   it('should handle transition from idle to buffering', () => {
-    stateManager._doTransition({type: PlayerEvents.PLAY});
+    stateManager._doTransition({type: Html5Events.PLAY});
     stateManager.currentState.type.should.equal(PlayerStates.BUFFERING);
   });
 
   it('shouldn\'t handle transition from idle because of unregistered event', () => {
-    stateManager._doTransition({type: PlayerEvents.ERROR});
+    stateManager._doTransition({type: Html5Events.ERROR});
     stateManager.currentState.type.should.equal(PlayerStates.IDLE);
   });
 });
@@ -125,24 +125,24 @@ describe("StateManager.Transitions:LOADING", () => {
   });
 
   it('should handle transition from loading to idle', () => {
-    stateManager._doTransition({type: PlayerEvents.ERROR});
+    stateManager._doTransition({type: Html5Events.ERROR});
     stateManager.currentState.type.should.equal(PlayerStates.IDLE);
   });
 
   it('should handle transition from loading to playing', () => {
     fakePlayer.config.autoPlay = true;
-    stateManager._doTransition({type: PlayerEvents.LOADED_METADATA});
+    stateManager._doTransition({type: Html5Events.LOADED_METADATA});
     stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
   });
 
   it('should handle transition from loading to paused', () => {
     fakePlayer.config.autoPlay = false;
-    stateManager._doTransition({type: PlayerEvents.LOADED_METADATA});
+    stateManager._doTransition({type: Html5Events.LOADED_METADATA});
     stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
   });
 
   it('shouldn\'t handle transition from loading because of unregistered event', () => {
-    stateManager._doTransition({type: PlayerEvents.WAITING});
+    stateManager._doTransition({type: Html5Events.WAITING});
     stateManager.currentState.type.should.equal(PlayerStates.LOADING);
   });
 });
@@ -161,22 +161,22 @@ describe("StateManager.Transitions:PAUSED", () => {
   });
 
   it('should handle transition from paused to playing', () => {
-    stateManager._doTransition({type: PlayerEvents.PLAY});
+    stateManager._doTransition({type: Html5Events.PLAY});
     stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
   });
 
   it('should handle transition from paused to playing', () => {
-    stateManager._doTransition({type: PlayerEvents.PLAYING});
+    stateManager._doTransition({type: Html5Events.PLAYING});
     stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
   });
 
   it('should handle transition from paused to idle', () => {
-    stateManager._doTransition({type: PlayerEvents.ENDED});
+    stateManager._doTransition({type: Html5Events.ENDED});
     stateManager.currentState.type.should.equal(PlayerStates.IDLE);
   });
 
   it('shouldn\'t handle transition from paused because of unregistered event', () => {
-    stateManager._doTransition({type: PlayerEvents.ERROR});
+    stateManager._doTransition({type: Html5Events.ERROR});
     stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
   });
 });
@@ -195,17 +195,17 @@ describe("StateManager.Transitions:BUFFERING", () => {
   });
 
   it('should handle transition from buffering to playing', () => {
-    stateManager._doTransition({type: PlayerEvents.PLAYING});
+    stateManager._doTransition({type: Html5Events.PLAYING});
     stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
   });
 
   it('should handle transition from buffering to paused', () => {
-    stateManager._doTransition({type: PlayerEvents.PAUSE});
+    stateManager._doTransition({type: Html5Events.PAUSE});
     stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
   });
 
   it('shouldn\'t handle transition from buffering because of unregistered event', () => {
-    stateManager._doTransition({type: PlayerEvents.ERROR});
+    stateManager._doTransition({type: Html5Events.ERROR});
     stateManager.currentState.type.should.equal(PlayerStates.BUFFERING);
   });
 });
@@ -224,27 +224,27 @@ describe("StateManager.Transitions:PLAYING", () => {
   });
 
   it('should handle transition from playing to idle because of error', () => {
-    stateManager._doTransition({type: PlayerEvents.ERROR});
+    stateManager._doTransition({type: Html5Events.ERROR});
     stateManager.currentState.type.should.equal(PlayerStates.IDLE);
   });
 
   it('should handle transition from playing to idle because of ended', () => {
-    stateManager._doTransition({type: PlayerEvents.ENDED});
+    stateManager._doTransition({type: Html5Events.ENDED});
     stateManager.currentState.type.should.equal(PlayerStates.IDLE);
   });
 
   it('should handle transition from playing to buffering', () => {
-    stateManager._doTransition({type: PlayerEvents.WAITING});
+    stateManager._doTransition({type: Html5Events.WAITING});
     stateManager.currentState.type.should.equal(PlayerStates.BUFFERING);
   });
 
   it('should handle transition from playing to paused', () => {
-    stateManager._doTransition({type: PlayerEvents.PAUSE});
+    stateManager._doTransition({type: Html5Events.PAUSE});
     stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
   });
 
   it('shouldn\'t handle transition from playing because of unregistered event', () => {
-    stateManager._doTransition({type: PlayerEvents.LOADED_METADATA});
+    stateManager._doTransition({type: Html5Events.LOADED_METADATA});
     stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
   });
 });
