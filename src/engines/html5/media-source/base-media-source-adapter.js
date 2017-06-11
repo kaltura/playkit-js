@@ -3,7 +3,7 @@
 import FakeEvent from '../../../event/fake-event'
 import FakeEventTarget from '../../../event/fake-event-target'
 import PlayerError from '../../../utils/player-error'
-import {CUSTOM_EVENTS as CustomEvents} from '../../../event/events'
+import {CUSTOM_EVENTS} from '../../../event/events'
 import LoggerFactory from '../../../utils/logger'
 
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
@@ -96,7 +96,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    */
   selectVideoTrack(videoTrack: VideoTrack): void {
     if (videoTrack) {
-      this._trigger(CustomEvents.VIDEO_TRACK_CHANGED, {selectedVideoTrack: videoTrack});
+      this._trigger(BaseMediaSourceAdapter.CustomEvents.VIDEO_TRACK_CHANGED, {selectedVideoTrack: videoTrack});
     }
   }
 
@@ -109,7 +109,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    */
   selectAudioTrack(audioTrack: AudioTrack): void {
     if (audioTrack) {
-      this._trigger(CustomEvents.AUDIO_TRACK_CHANGED, {selectedAudioTrack: audioTrack});
+      this._trigger(BaseMediaSourceAdapter.CustomEvents.AUDIO_TRACK_CHANGED, {selectedAudioTrack: audioTrack});
     }
   }
 
@@ -122,7 +122,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    */
   selectTextTrack(textTrack: TextTrack): void {
     if (textTrack) {
-      this._trigger(CustomEvents.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack});
+      this._trigger(BaseMediaSourceAdapter.CustomEvents.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack});
     }
   }
 

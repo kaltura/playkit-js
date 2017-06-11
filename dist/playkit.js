@@ -1922,6 +1922,11 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
      * @member {HTMLVideoElement} _videoElement
      * @private
      */
+
+    /**
+     * Passing the custom events to the actual media source adapter.
+     * @static
+     */
     value: function isSupported() {
       return true;
     }
@@ -1995,7 +2000,7 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
     key: 'selectVideoTrack',
     value: function selectVideoTrack(videoTrack) {
       if (videoTrack) {
-        this._trigger(_events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, { selectedVideoTrack: videoTrack });
+        this._trigger(BaseMediaSourceAdapter.CustomEvents.VIDEO_TRACK_CHANGED, { selectedVideoTrack: videoTrack });
       }
     }
 
@@ -2011,7 +2016,7 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
     key: 'selectAudioTrack',
     value: function selectAudioTrack(audioTrack) {
       if (audioTrack) {
-        this._trigger(_events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED, { selectedAudioTrack: audioTrack });
+        this._trigger(BaseMediaSourceAdapter.CustomEvents.AUDIO_TRACK_CHANGED, { selectedAudioTrack: audioTrack });
       }
     }
 
@@ -2027,7 +2032,7 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
     key: 'selectTextTrack',
     value: function selectTextTrack(textTrack) {
       if (textTrack) {
-        this._trigger(_events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED, { selectedTextTrack: textTrack });
+        this._trigger(BaseMediaSourceAdapter.CustomEvents.TEXT_TRACK_CHANGED, { selectedTextTrack: textTrack });
       }
     }
 
@@ -2066,6 +2071,7 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
   return BaseMediaSourceAdapter;
 }(_fakeEventTarget2.default);
 
+BaseMediaSourceAdapter.CustomEvents = _events.CUSTOM_EVENTS;
 BaseMediaSourceAdapter.getLogger = _logger2.default.getLogger;
 exports.default = BaseMediaSourceAdapter;
 
