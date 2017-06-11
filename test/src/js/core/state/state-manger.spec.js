@@ -1,7 +1,7 @@
-import State from '../../../src/state/state'
-import PlayerStates from '../../../src/state/state-types'
-import StateManager from '../../../src/state/state-manager'
-import PlayerEvents from '../../../src/event/events'
+import State from '../../../../../src/js/core/state/state'
+import PlayerStates from '../../../../../src/js/core/state/state-types'
+import StateManager from '../../../../../src/js/core/state/state-manager'
+import PlayerEvents from '../../../../../src/js/core/event/events'
 
 let sandbox;
 let stateManager;

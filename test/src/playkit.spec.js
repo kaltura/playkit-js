@@ -1,9 +1,9 @@
-import {playkit} from '../../src/playkit'
-import Player from '../../src/player'
-import PlayerStates from '../../src/state/state-types'
-import PlayerEvents from '../../src/event/events'
+import {playkit} from '../../src/js/playkit'
+import Player from '../../src/js/core/player'
+import PlayerStates from '../../src/js/core/state/state-types'
+import PlayerEvents from '../../src/js/core/event/events'
 import sourcesConfig from './configs/sources.json'
-import {removeVideoElementsFromTestPage} from './utils/test-utils'
+import {removeVideoElementsFromTestPage} from './js/core/utils/test-utils'
 
 describe('playkit:playkit', function () {
 

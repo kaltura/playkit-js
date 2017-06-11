@@ -1,6 +1,6 @@
-import BasePlugin from '../../../../src/plugin/base-plugin'
-import {registerPlugin} from '../../../../src/plugin/plugin-manager'
-import Player from '../../../../src/player'
+import BasePlugin from '../../../../../../src/js/core/plugin/base-plugin'
+import {registerPlugin} from '../../../../../../src/js/core/plugin/plugin-manager'
+import Player from '../../../../../../src/js/core/player'
 
 const pluginName = "colors";
 

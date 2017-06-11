@@ -1,5 +1,5 @@
-import LoggerFactory from '../../../src/utils/logger'
-import {LOG_LEVEL} from '../../../src/utils/logger'
+import LoggerFactory from '../../../../../src/js/core/utils/logger'
+import {LOG_LEVEL} from '../../../../../src/js/core/utils/logger'
 
 describe('LoggerFactory', () => {
 

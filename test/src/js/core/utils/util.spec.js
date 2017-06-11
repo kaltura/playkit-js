@@ -1,4 +1,4 @@
-import * as util from '../../../src/utils/util'
+import * as util from '../../../../../src/js/core/utils/util'
 
 describe('util', () => {
   it('should return if a certain input is a number', () => {

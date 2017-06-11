@@ -1,4 +1,4 @@
-import events from '../../../src/event/events'
+import events from '../../../../../src/js/core/event/events'
 
 describe('events', () => {
   it('should equals player events', () => {

@@ -1,4 +1,4 @@
-import PlayerStates from '../../../src/state/state-types'
+import PlayerStates from '../../../../../src/js/core/state/state-types'
 
 describe("States", () => {
   it("should equal possible player states", () => {

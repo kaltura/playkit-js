@@ -1,4 +1,4 @@
-import {capitlize, endsWith} from '../../../src/utils/string-util'
+import {capitlize, endsWith} from '../../../../../src/js/core/utils/string-util'
 
 describe('capitlize', () => {
   it('should capitlize first letter in string', () => {
