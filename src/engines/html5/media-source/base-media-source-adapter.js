@@ -7,6 +7,11 @@ import {CUSTOM_EVENTS as CustomEvents} from '../../../event/events'
 import LoggerFactory from '../../../utils/logger'
 
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
+  /**
+   * Passing the custom events to the actual media source adapter.
+   * @static
+   */
+  static CustomEvents: { [event: string]: string } = CUSTOM_EVENTS;
 
   /**
    * Passing the getLogger function to the actual media source adapter.
