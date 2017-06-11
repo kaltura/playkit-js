@@ -205,7 +205,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if ((videoTrack instanceof VideoTrack) && videoTracks && videoTracks[videoTrack.index]) {
       this._disableVideoTracks();
       videoTracks[videoTrack.index].selected = true;
-      super.selectVideoTrack(videoTrack);
+      this._onTrackChanged(videoTrack);
     }
   }
 
@@ -221,7 +221,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if ((audioTrack instanceof AudioTrack) && audioTracks && audioTracks[audioTrack.index]) {
       this._disableAudioTracks();
       audioTracks[audioTrack.index].enabled = true;
-      super.selectAudioTrack(audioTrack);
+      this._onTrackChanged(audioTrack);
     }
   }
 
@@ -237,7 +237,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if ((textTrack instanceof TextTrack) && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
       this._disableTextTracks();
       textTracks[textTrack.index].mode = 'showing';
-      super.selectTextTrack(textTrack);
+      this._onTrackChanged(textTrack);
     }
   }
 

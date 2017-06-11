@@ -5,6 +5,10 @@ import FakeEventTarget from '../../../event/fake-event-target'
 import PlayerError from '../../../utils/player-error'
 import {CUSTOM_EVENTS} from '../../../event/events'
 import LoggerFactory from '../../../utils/logger'
+import Track from '../../../track/track'
+import VideoTrack from '../../../track/video-track'
+import AudioTrack from '../../../track/audio-track'
+import TextTrack from '../../../track/text-track'
 
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
   /**
@@ -88,41 +92,18 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   }
 
   /**
-   * Triggers a 'videotrackchanged' event.
-   * @function selectVideoTrack
-   * @param {VideoTrack} videoTrack - The track to select.
+   * Triggers the appropriate track changed event.
+   * @param {Track} track - The selected track.
+   * @private
    * @returns {void}
-   * @public
    */
-  selectVideoTrack(videoTrack: VideoTrack): void {
-    if (videoTrack) {
-      this._trigger(BaseMediaSourceAdapter.CustomEvents.VIDEO_TRACK_CHANGED, {selectedVideoTrack: videoTrack});
-    }
-  }
-
-  /**
-   * Triggers a 'audiotrackchanged' event.
-   * @function selectAudioTrack
-   * @param {VideoTrack} audioTrack - The track to select.
-   * @returns {void}
-   * @public
-   */
-  selectAudioTrack(audioTrack: AudioTrack): void {
-    if (audioTrack) {
-      this._trigger(BaseMediaSourceAdapter.CustomEvents.AUDIO_TRACK_CHANGED, {selectedAudioTrack: audioTrack});
-    }
-  }
-
-  /**
-   * Triggers a 'texttrackchanged' event.
-   * @function selectTextTrack
-   * @param {VideoTrack} textTrack - The track to select.
-   * @returns {void}
-   * @public
-   */
-  selectTextTrack(textTrack: TextTrack): void {
-    if (textTrack) {
-      this._trigger(BaseMediaSourceAdapter.CustomEvents.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack});
+  _onTrackChanged(track: Track): void {
+    if (track instanceof VideoTrack) {
+      this._trigger(BaseMediaSourceAdapter.CustomEvents.VIDEO_TRACK_CHANGED, {selectedVideoTrack: track});
+    } else if (track instanceof AudioTrack) {
+      this._trigger(BaseMediaSourceAdapter.CustomEvents.AUDIO_TRACK_CHANGED, {selectedAudioTrack: track});
+    } else if (track instanceof TextTrack) {
+      this._trigger(BaseMediaSourceAdapter.CustomEvents.TEXT_TRACK_CHANGED, {selectedTextTrack: track});
     }
   }
 
@@ -144,6 +125,22 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
 
   load(): Promise<Object> {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
+  }
+
+  selectVideoTrack(videoTrack: VideoTrack): void {
+    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'selectVideoTrack').getError();
+  }
+
+  selectAudioTrack(audioTrack: AudioTrack): void {
+    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'selectAudioTrack').getError();
+  }
+
+  selectTextTrack(textTrack: TextTrack): void {
+    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'selectTextTrack').getError();
+  }
+
+  enableAdaptiveBitrate(): void {
+    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'enableAdaptiveBitrate').getError();
   }
 
   get src(): string {

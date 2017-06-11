@@ -185,6 +185,18 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Enables adaptive bitrate switching according to the media source extension logic.
+   * @function enableAdaptiveBitrate
+   * @returns {void}
+   * @public
+   */
+  enableAdaptiveBitrate(): void {
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.enableAdaptiveBitrate();
+    }
+  }
+
+  /**
    * Set a source.
    * @param {string} source - Source to set.
    * @public

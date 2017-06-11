@@ -228,12 +228,26 @@ class Player extends FakeEventTarget {
    * @public
    */
   selectTrack(track: Track): void {
-    if (track instanceof VideoTrack) {
-      this._engine.selectVideoTrack(track);
-    } else if (track instanceof AudioTrack) {
-      this._engine.selectAudioTrack(track);
-    } else if (track instanceof TextTrack) {
-      this._engine.selectTextTrack(track);
+    if (this._engine) {
+      if (track instanceof VideoTrack) {
+        this._engine.selectVideoTrack(track);
+      } else if (track instanceof AudioTrack) {
+        this._engine.selectAudioTrack(track);
+      } else if (track instanceof TextTrack) {
+        this._engine.selectTextTrack(track);
+      }
+    }
+  }
+
+  /**
+   * Enables adaptive bitrate switching.
+   * @function enableAdaptiveBitrate
+   * @returns {void}
+   * @public
+   */
+  enableAdaptiveBitrate(): void {
+    if (this._engine) {
+      this._engine.enableAdaptiveBitrate();
     }
   }
 
