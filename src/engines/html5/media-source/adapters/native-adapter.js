@@ -97,14 +97,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
-   * Clear the video source
+   * Destroys the native adapter.
    * @function destroy
    * @returns {void}
    */
   destroy(): void {
     NativeAdapter._logger.debug('destroy');
+    super.destroy();
     this._eventManager.destroy();
-    this._sourceObj = null;
     this._loadPromise = null;
   }
 
@@ -205,7 +205,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if ((videoTrack instanceof VideoTrack) && videoTracks && videoTracks[videoTrack.index]) {
       this._disableVideoTracks();
       videoTracks[videoTrack.index].selected = true;
-      this._trigger(BaseMediaSourceAdapter.CustomEvents.VIDEO_TRACK_CHANGED, {selectedVideoTrack: videoTrack});
+      super.selectVideoTrack(videoTrack);
     }
   }
 
@@ -221,7 +221,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if ((audioTrack instanceof AudioTrack) && audioTracks && audioTracks[audioTrack.index]) {
       this._disableAudioTracks();
       audioTracks[audioTrack.index].enabled = true;
-      this._trigger(BaseMediaSourceAdapter.CustomEvents.AUDIO_TRACK_CHANGED, {selectedAudioTrack: audioTrack});
+      super.selectAudioTrack(audioTrack);
     }
   }
 
@@ -237,7 +237,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if ((textTrack instanceof TextTrack) && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
       this._disableTextTracks();
       textTracks[textTrack.index].mode = 'showing';
-      this._trigger(BaseMediaSourceAdapter.CustomEvents.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack});
+      super.selectTextTrack(textTrack);
     }
   }
 

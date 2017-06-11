@@ -3,16 +3,10 @@
 import FakeEvent from '../../../event/fake-event'
 import FakeEventTarget from '../../../event/fake-event-target'
 import PlayerError from '../../../utils/player-error'
-import {CUSTOM_EVENTS} from '../../../event/events'
+import {CUSTOM_EVENTS as CustomEvents} from '../../../event/events'
 import LoggerFactory from '../../../utils/logger'
 
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
-
-  /**
-   * Passing the custom events to the actual media source adapter.
-   * @static
-   */
-  static CustomEvents: { [event: string]: string } = CUSTOM_EVENTS;
 
   /**
    * Passing the getLogger function to the actual media source adapter.
@@ -26,7 +20,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @member {Object} _config
    * @private
    */
-  _config: Object;
+  _config: ?Object;
 
   /**
    * The source object.
@@ -79,6 +73,55 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   }
 
   /**
+   * Destroys the media source adapter.
+   * @function destroy
+   * @returns {void}
+   */
+  destroy(): void {
+    this._sourceObj = null;
+    this._config = null;
+  }
+
+  /**
+   * Triggers a 'videotrackchanged' event.
+   * @function selectVideoTrack
+   * @param {VideoTrack} videoTrack - The track to select.
+   * @returns {void}
+   * @public
+   */
+  selectVideoTrack(videoTrack: VideoTrack): void {
+    if (videoTrack) {
+      this._trigger(CustomEvents.VIDEO_TRACK_CHANGED, {selectedVideoTrack: videoTrack});
+    }
+  }
+
+  /**
+   * Triggers a 'audiotrackchanged' event.
+   * @function selectAudioTrack
+   * @param {VideoTrack} audioTrack - The track to select.
+   * @returns {void}
+   * @public
+   */
+  selectAudioTrack(audioTrack: AudioTrack): void {
+    if (audioTrack) {
+      this._trigger(CustomEvents.AUDIO_TRACK_CHANGED, {selectedAudioTrack: audioTrack});
+    }
+  }
+
+  /**
+   * Triggers a 'texttrackchanged' event.
+   * @function selectTextTrack
+   * @param {VideoTrack} textTrack - The track to select.
+   * @returns {void}
+   * @public
+   */
+  selectTextTrack(textTrack: TextTrack): void {
+    if (textTrack) {
+      this._trigger(CustomEvents.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack});
+    }
+  }
+
+  /**
    * Dispatch an adapter event forward.
    * @param {string} name - The name of the event.
    * @param {Object} payload - The event payload.
@@ -96,22 +139,6 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
 
   load(): Promise<Object> {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
-  }
-
-  destroy(): void {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'destroy').getError();
-  }
-
-  selectVideoTrack(videoTrack: VideoTrack): void {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'selectVideoTrack').getError();
-  }
-
-  selectAudioTrack(audioTrack: AudioTrack): void {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'selectAudioTrack').getError();
-  }
-
-  selectTextTrack(textTrack: TextTrack): void {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'selectTextTrack').getError();
   }
 
   get src(): string {
