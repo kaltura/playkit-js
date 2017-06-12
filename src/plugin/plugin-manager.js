@@ -46,10 +46,10 @@ export default class PluginManager {
     }
     if (!PluginManager._registry.has(name)) {
       PluginManager._registry.set(name, handler);
-      logger.debug(`Plugin <${name}> has been registered successfully.`);
+      logger.debug(`Plugin <${name}> has been registered successfully`);
       return true;
     }
-    logger.debug(`Plugin <${name}> is already registered, do not register again.`);
+    logger.debug(`Plugin <${name}> is already registered, do not register again`);
     return false;
   }
 
@@ -82,10 +82,10 @@ export default class PluginManager {
     let pluginClass = PluginManager._registry.get(name);
     if (pluginClass != null && pluginClass.isValid()) {
       this._plugins.set(name, pluginClass.createPlugin(name, player, config));
-      logger.debug(`Plugin <${name}> has been loaded.`);
+      logger.debug(`Plugin <${name}> has been loaded`);
       return true;
     }
-    logger.debug(`Plugin <${name}> isn\'t loaded, isValid()=false.`);
+    logger.debug(`Plugin <${name}> isn\'t loaded, isValid()=false`);
     return false;
   }
 

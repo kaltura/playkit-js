@@ -7,10 +7,11 @@ declare interface IMediaSourceAdapter {
   +src: string;
   load(): Promise<Object>;
   destroy(): void;
-  selectVideoTrack(videoTrack: VideoTrack): boolean;
-  selectAudioTrack(audioTrack: AudioTrack): boolean;
-  selectTextTrack(textTrack: TextTrack): boolean;
-  static name: string;
+  selectVideoTrack(videoTrack: VideoTrack): void;
+  selectAudioTrack(audioTrack: AudioTrack): void;
+  selectTextTrack(textTrack: TextTrack): void;
+  enableAdaptiveBitrate(): void;
+  static +name: string;
   static isSupported(): boolean;
   static canPlayType(mimeType: string): boolean;
   static createAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): IMediaSourceAdapter;
