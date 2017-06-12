@@ -62,6 +62,12 @@ class Player extends FakeEventTarget {
    * @private
    */
   _tracks: Array<Track>;
+  /**
+   * The current controller of the player (used for decorators).
+   * @type {any}
+   * @private
+   */
+  _controller: any;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -69,12 +75,14 @@ class Player extends FakeEventTarget {
    */
   constructor(config: Object) {
     super();
+    this._controller = this;
     this._tracks = [];
     this._logger = LoggerFactory.getLogger('Player');
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
     this._eventManager = new EventManager();
     this.configure(config);
+    return this._controller;
   }
 
   /**
@@ -88,9 +96,9 @@ class Player extends FakeEventTarget {
     } else {
       this._config = config || Player._defaultConfig();
     }
-    this._loadPlugins(this._config);
     this._selectEngine(this._config);
     this._attachMedia();
+    this._loadPlugins(this._config);
   }
 
   /**
@@ -126,6 +134,12 @@ class Player extends FakeEventTarget {
     let plugins = config.plugins;
     for (let name in plugins) {
       this._pluginManager.load(name, this, plugins[name]);
+      let plugin = this._pluginManager.get(name);
+      if (plugin && typeof plugin.getPlayerDecorator === "function") {
+        let decorator = plugin.getPlayerDecorator();
+        decorator.setPlayer(this._controller);
+        this._controller = decorator;
+      }
     }
   }
 
@@ -325,6 +339,16 @@ class Player extends FakeEventTarget {
       });
     } else {
       return Promise.resolve();
+    }
+  }
+
+  /**
+   * @returns {HTMLVideoElement} - The video element.
+   * @public
+   */
+  getVideoElement(): ?HTMLVideoElement {
+    if (this._engine) {
+      return this._engine.getVideoElement();
     }
   }
 

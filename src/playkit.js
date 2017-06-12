@@ -10,6 +10,7 @@ import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
+import PlayerDecoratorBase from './player/player-decorator-base'
 
 // Playkit version
 let VERSION = packageData.version;
@@ -29,7 +30,7 @@ export function playkit(config: Object = {}) {
 export {registerMediaSourceAdapter, BaseMediaSourceAdapter};
 
 // Export the plugin framework
-export {registerPlugin, BasePlugin};
+export {registerPlugin, BasePlugin, PlayerDecoratorBase};
 
 // Export the tracks classes
 export {Track, VideoTrack, AudioTrack, TextTrack};
