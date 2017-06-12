@@ -11,11 +11,11 @@ export default class PlayerDecoratorBase implements IPlayer {
   }
 
   play(): void {
-    return this.player.play();
+    this.player.play();
   }
 
   pause(): void {
-    return this.player.pause();
+    this.player.pause();
   }
 
   getVideoElement(): ?HTMLVideoElement {

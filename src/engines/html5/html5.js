@@ -132,19 +132,25 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _createVideoElement(target: string): void {
     this._el = document.createElement("video");
     //Set attributes
+    this._el.id = "kaltura-player";
     this._el.style.width = "640px";
     this._el.style.height = "360px";
     this._el.style.backgroundColor = "black";
     this._el.controls = true;
     if (document && document.body) {
-      let container = document.body;
       if (target) {
         let targetElement = document.getElementById(target);
         if (targetElement) {
-          container = targetElement;
+          targetElement.appendChild(this._el);
+          document.body.appendChild(targetElement);
         }
+      } else {
+        let container = document.createElement("div");
+        container.id = "kaltura-player-container";
+        container.style.position = "absolute";
+        container.appendChild(this._el);
+        document.body.appendChild(container);
       }
-      container.appendChild(this._el);
     }
   }
 

@@ -96,9 +96,9 @@ class Player extends FakeEventTarget {
     } else {
       this._config = config || Player._defaultConfig();
     }
-    this._loadPlugins(this._config);
     this._selectEngine(this._config);
     this._attachMedia();
+    this._loadPlugins(this._config);
   }
 
   /**

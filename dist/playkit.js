@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 26);
+/******/ 	return __webpack_require__(__webpack_require__.s = 22);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -240,7 +240,7 @@ exports.LOG_LEVEL = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jsLogger = __webpack_require__(25);
+var _jsLogger = __webpack_require__(26);
 
 var JsLogger = _interopRequireWildcard(_jsLogger);
 
@@ -993,11 +993,11 @@ var _pluginManager = __webpack_require__(15);
 
 var _pluginManager2 = _interopRequireDefault(_pluginManager);
 
-var _stateManager = __webpack_require__(22);
+var _stateManager = __webpack_require__(23);
 
 var _stateManager2 = _interopRequireDefault(_stateManager);
 
-var _trackTypes = __webpack_require__(24);
+var _trackTypes = __webpack_require__(25);
 
 var _trackTypes2 = _interopRequireDefault(_trackTypes);
 
@@ -1116,9 +1116,9 @@ var Player = function (_FakeEventTarget) {
       } else {
         this._config = config || Player._defaultConfig();
       }
-      this._loadPlugins(this._config);
       this._selectEngine(this._config);
       this._attachMedia();
+      this._loadPlugins(this._config);
     }
 
     /**
@@ -2897,12 +2897,12 @@ var PlayerDecoratorBase = function () {
   }, {
     key: "play",
     value: function play() {
-      return this.player.play();
+      this.player.play();
     }
   }, {
     key: "pause",
     value: function pause() {
-      return this.player.pause();
+      this.player.pause();
     }
   }, {
     key: "getVideoElement",
@@ -3211,19 +3211,25 @@ var Html5 = function (_FakeEventTarget) {
     value: function _createVideoElement(target) {
       this._el = document.createElement("video");
       //Set attributes
+      this._el.id = "kaltura-player";
       this._el.style.width = "640px";
       this._el.style.height = "360px";
       this._el.style.backgroundColor = "black";
       this._el.controls = true;
       if (document && document.body) {
-        var container = document.body;
         if (target) {
           var targetElement = document.getElementById(target);
           if (targetElement) {
-            container = targetElement;
+            targetElement.appendChild(this._el);
+            document.body.appendChild(targetElement);
           }
+        } else {
+          var container = document.createElement("div");
+          container.id = "kaltura-player-container";
+          container.style.position = "absolute";
+          container.appendChild(this._el);
+          document.body.appendChild(container);
         }
-        container.appendChild(this._el);
       }
     }
 
@@ -4189,6 +4195,105 @@ exports.default = NativeAdapter;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.VERSION = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.PlayerDecoratorBase = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerMediaSourceAdapter = undefined;
+exports.playkit = playkit;
+
+var _player = __webpack_require__(8);
+
+var _player2 = _interopRequireDefault(_player);
+
+var _logger = __webpack_require__(1);
+
+var _logger2 = _interopRequireDefault(_logger);
+
+var _package = __webpack_require__(19);
+
+var packageData = _interopRequireWildcard(_package);
+
+var _baseMediaSourceAdapter = __webpack_require__(12);
+
+var _baseMediaSourceAdapter2 = _interopRequireDefault(_baseMediaSourceAdapter);
+
+var _mediaSourceProvider = __webpack_require__(13);
+
+var _pluginManager = __webpack_require__(15);
+
+var _basePlugin = __webpack_require__(14);
+
+var _basePlugin2 = _interopRequireDefault(_basePlugin);
+
+var _track = __webpack_require__(0);
+
+var _track2 = _interopRequireDefault(_track);
+
+var _videoTrack = __webpack_require__(5);
+
+var _videoTrack2 = _interopRequireDefault(_videoTrack);
+
+var _audioTrack = __webpack_require__(3);
+
+var _audioTrack2 = _interopRequireDefault(_audioTrack);
+
+var _textTrack = __webpack_require__(4);
+
+var _textTrack2 = _interopRequireDefault(_textTrack);
+
+var _playerDecoratorBase = __webpack_require__(18);
+
+var _playerDecoratorBase2 = _interopRequireDefault(_playerDecoratorBase);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// Playkit version
+var VERSION = packageData.version;
+
+_logger2.default.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
+_logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
+
+/**
+ * @param {Object} config - The configuration of the player
+ * @returns {Player} - The player instance
+ */
+function playkit() {
+  var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  return new _player2.default(config);
+}
+
+// Export the media source adapters necessary utils
+exports.registerMediaSourceAdapter = _mediaSourceProvider.registerMediaSourceAdapter;
+exports.BaseMediaSourceAdapter = _baseMediaSourceAdapter2.default;
+
+// Export the plugin framework
+
+exports.registerPlugin = _pluginManager.registerPlugin;
+exports.BasePlugin = _basePlugin2.default;
+exports.PlayerDecoratorBase = _playerDecoratorBase2.default;
+
+// Export the tracks classes
+
+exports.Track = _track2.default;
+exports.VideoTrack = _videoTrack2.default;
+exports.AudioTrack = _audioTrack2.default;
+exports.TextTrack = _textTrack2.default;
+
+//export version
+
+exports.VERSION = VERSION;
+exports.default = playkit;
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -4200,7 +4305,7 @@ var _eventManager = __webpack_require__(6);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _state = __webpack_require__(23);
+var _state = __webpack_require__(24);
 
 var _state2 = _interopRequireDefault(_state);
 
@@ -4480,7 +4585,7 @@ var StateManager = function () {
 exports.default = StateManager;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4562,7 +4667,7 @@ var State = function () {
 exports.default = State;
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4580,7 +4685,7 @@ var TRACK_TYPES = {
 exports.default = TRACK_TYPES;
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -4845,105 +4950,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 	}
 }(this));
 
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.VERSION = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.PlayerDecoratorBase = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerMediaSourceAdapter = undefined;
-exports.playkit = playkit;
-
-var _player = __webpack_require__(8);
-
-var _player2 = _interopRequireDefault(_player);
-
-var _logger = __webpack_require__(1);
-
-var _logger2 = _interopRequireDefault(_logger);
-
-var _package = __webpack_require__(19);
-
-var packageData = _interopRequireWildcard(_package);
-
-var _baseMediaSourceAdapter = __webpack_require__(12);
-
-var _baseMediaSourceAdapter2 = _interopRequireDefault(_baseMediaSourceAdapter);
-
-var _mediaSourceProvider = __webpack_require__(13);
-
-var _pluginManager = __webpack_require__(15);
-
-var _basePlugin = __webpack_require__(14);
-
-var _basePlugin2 = _interopRequireDefault(_basePlugin);
-
-var _track = __webpack_require__(0);
-
-var _track2 = _interopRequireDefault(_track);
-
-var _videoTrack = __webpack_require__(5);
-
-var _videoTrack2 = _interopRequireDefault(_videoTrack);
-
-var _audioTrack = __webpack_require__(3);
-
-var _audioTrack2 = _interopRequireDefault(_audioTrack);
-
-var _textTrack = __webpack_require__(4);
-
-var _textTrack2 = _interopRequireDefault(_textTrack);
-
-var _playerDecoratorBase = __webpack_require__(18);
-
-var _playerDecoratorBase2 = _interopRequireDefault(_playerDecoratorBase);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// Playkit version
-var VERSION = packageData.version;
-
-_logger2.default.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
-_logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
-
-/**
- * @param {Object} config - The configuration of the player
- * @returns {Player} - The player instance
- */
-function playkit() {
-  var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-  return new _player2.default(config);
-}
-
-// Export the media source adapters necessary utils
-exports.registerMediaSourceAdapter = _mediaSourceProvider.registerMediaSourceAdapter;
-exports.BaseMediaSourceAdapter = _baseMediaSourceAdapter2.default;
-
-// Export the plugin framework
-
-exports.registerPlugin = _pluginManager.registerPlugin;
-exports.BasePlugin = _basePlugin2.default;
-exports.PlayerDecoratorBase = _playerDecoratorBase2.default;
-
-// Export the tracks classes
-
-exports.Track = _track2.default;
-exports.VideoTrack = _videoTrack2.default;
-exports.AudioTrack = _audioTrack2.default;
-exports.TextTrack = _textTrack2.default;
-
-//export version
-
-exports.VERSION = VERSION;
-exports.default = playkit;
 
 /***/ })
 /******/ ]);
