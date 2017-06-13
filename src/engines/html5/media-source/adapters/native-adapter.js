@@ -14,8 +14,8 @@ import BaseMediaSourceAdapter from '../base-media-source-adapter'
  */
 export default class NativeAdapter extends BaseMediaSourceAdapter {
   /**
-   * The name of the Adapter
-   * @member {string} _name
+   * The id of the Adapter
+   * @member {string} id
    * @static
    * @public
    */
