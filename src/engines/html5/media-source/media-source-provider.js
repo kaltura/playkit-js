@@ -39,10 +39,10 @@ export default class MediaSourceProvider {
   static register(mediaSourceAdapter: typeof IMediaSourceAdapter): void {
     if (mediaSourceAdapter) {
       if (!MediaSourceProvider._mediaSourceAdapters.includes(mediaSourceAdapter)) {
-        MediaSourceProvider._logger.debug(`Adapter <${mediaSourceAdapter.name}> has been registered successfully`);
+        MediaSourceProvider._logger.debug(`Adapter <${mediaSourceAdapter.id}> has been registered successfully`);
         MediaSourceProvider._mediaSourceAdapters.push(mediaSourceAdapter);
       } else {
-        MediaSourceProvider._logger.debug(`Adapter <${mediaSourceAdapter.name}> is already registered, do not register again`);
+        MediaSourceProvider._logger.debug(`Adapter <${mediaSourceAdapter.id}> is already registered, do not register again`);
       }
     }
   }
@@ -57,7 +57,7 @@ export default class MediaSourceProvider {
   static unRegister(mediaSourceAdapter: typeof IMediaSourceAdapter): void {
     let index = MediaSourceProvider._mediaSourceAdapters.indexOf(mediaSourceAdapter);
     if (index > -1) {
-      MediaSourceProvider._logger.debug(`Unregistered <${mediaSourceAdapter.name}> adapter`);
+      MediaSourceProvider._logger.debug(`Unregistered <${mediaSourceAdapter.id}> adapter`);
       MediaSourceProvider._mediaSourceAdapters.splice(index, 1);
     }
   }
@@ -74,7 +74,7 @@ export default class MediaSourceProvider {
     for (let i = 0; i < mediaSourceAdapters.length; i++) {
       if (mediaSourceAdapters[i].canPlayType(mimeType)) {
         MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
-        MediaSourceProvider._logger.debug(`Selected adapter is <${MediaSourceProvider._selectedAdapter.name}>`);
+        MediaSourceProvider._logger.debug(`Selected adapter is <${MediaSourceProvider._selectedAdapter.id}>`);
         return true;
       }
     }
