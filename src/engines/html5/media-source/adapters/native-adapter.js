@@ -14,12 +14,12 @@ import BaseMediaSourceAdapter from '../base-media-source-adapter'
  */
 export default class NativeAdapter extends BaseMediaSourceAdapter {
   /**
-   * The name of the Adapter
-   * @member {string} _name
+   * The id of the Adapter
+   * @member {string} id
    * @static
-   * @private
+   * @public
    */
-  static _name: string = 'NativeAdapter';
+  static id: string = 'NativeAdapter';
 
   /**
    * The adapter logger
@@ -27,7 +27,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    * @static
    */
-  static _logger = BaseMediaSourceAdapter.getLogger(NativeAdapter._name);
+  static _logger = BaseMediaSourceAdapter.getLogger(NativeAdapter.id);
   /**
    * The event manager of the class.
    * @member {EventManager} - _eventManager
