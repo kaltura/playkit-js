@@ -11,7 +11,7 @@ declare interface IMediaSourceAdapter {
   selectAudioTrack(audioTrack: AudioTrack): void;
   selectTextTrack(textTrack: TextTrack): void;
   enableAdaptiveBitrate(): void;
-  static +name: string;
+  static +id: string;
   static isSupported(): boolean;
   static canPlayType(mimeType: string): boolean;
   static createAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): IMediaSourceAdapter;
