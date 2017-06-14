@@ -939,7 +939,15 @@ var CUSTOM_EVENTS = {
   /**
    * Fires when the player state has been changed
    */
-  PLAYER_STATE_CHANGED: 'playerstatechanged'
+  PLAYER_STATE_CHANGED: 'playerstatechanged',
+  /**
+   * Fires on the first play
+   */
+  FIRST_PLAY: 'firstplay',
+  /**
+   * Fires on replay
+   */
+  REPLAY: 'replay'
 };
 
 var PLAYER_EVENTS = (0, _util.merge)([HTML5_EVENTS, CUSTOM_EVENTS]);
@@ -1059,7 +1067,7 @@ var Player = function (_FakeEventTarget) {
 
     var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
 
-    _this._tracks = [];
+    _this._initializeMembers();
     _this._logger = _logger2.default.getLogger('Player');
     _this._stateManager = new _stateManager2.default(_this);
     _this._pluginManager = new _pluginManager2.default();
@@ -1102,11 +1110,7 @@ var Player = function (_FakeEventTarget) {
   _createClass(Player, [{
     key: 'configure',
     value: function configure(config) {
-      if (this._config) {
-        this._config = (0, _util.merge)([this._config, config]);
-      } else {
-        this._config = config || Player._defaultConfig();
-      }
+      this._config = (0, _util.merge)([this._config, config || Player._defaultConfig()]);
       this._loadPlugins(this._config);
       this._selectEngine(this._config);
       this._attachMedia();
@@ -1125,8 +1129,7 @@ var Player = function (_FakeEventTarget) {
       this._eventManager.destroy();
       this._pluginManager.destroy();
       this._stateManager.destroy();
-      this._config = {};
-      this._tracks = [];
+      this._initializeMembers();
     }
 
     /**
@@ -1136,8 +1139,11 @@ var Player = function (_FakeEventTarget) {
      */
 
   }, {
-    key: '_loadPlugins',
-
+    key: '_initializeMembers',
+    value: function _initializeMembers() {
+      this._config = {};
+      this._tracks = [];
+    }
 
     /**
      *
@@ -1145,6 +1151,9 @@ var Player = function (_FakeEventTarget) {
      * @private
      * @returns {void}
      */
+
+  }, {
+    key: '_loadPlugins',
     value: function _loadPlugins(config) {
       var plugins = config.plugins;
       for (var name in plugins) {
@@ -1219,6 +1228,8 @@ var Player = function (_FakeEventTarget) {
           _this2._markActiveTrack(event.payload.selectedTextTrack);
           return _this2.dispatchEvent(event);
         });
+        this._eventManager.listen(this, _events.HTML5_EVENTS.PLAY, this._onPlay.bind(this));
+        this._eventManager.listen(this, _events.HTML5_EVENTS.ENDED, this._onEnded.bind(this));
       }
     }
 
@@ -1325,6 +1336,36 @@ var Player = function (_FakeEventTarget) {
     }
 
     /**
+     * @function _onPlay
+     * @return {void}
+     * @private
+     */
+
+  }, {
+    key: '_onPlay',
+    value: function _onPlay() {
+      this._eventManager.unlisten(this, _events.HTML5_EVENTS.PLAY);
+      this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.FIRST_PLAY));
+    }
+
+    /**
+     * @function _onEnded
+     * @return {void}
+     * @private
+     */
+
+  }, {
+    key: '_onEnded',
+    value: function _onEnded() {
+      var _this3 = this;
+
+      this._eventManager.listen(this, _events.HTML5_EVENTS.PLAY, function () {
+        _this3._eventManager.unlisten(_this3, _events.HTML5_EVENTS.PLAY);
+        _this3.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.REPLAY));
+      });
+    }
+
+    /**
      * Get the player config.
      * @returns {Object} - The player configuration.
      * @public
@@ -1341,14 +1382,14 @@ var Player = function (_FakeEventTarget) {
      * @public
      */
     value: function play() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this._engine) {
         if (this._engine.src) {
           this._engine.play();
         } else {
           this.load().then(function () {
-            _this3._engine.play();
+            _this4._engine.play();
           });
         }
       }
@@ -1377,11 +1418,11 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'load',
     value: function load() {
-      var _this4 = this;
+      var _this5 = this;
 
       if (this._engine) {
         return this._engine.load().then(function (data) {
-          _this4._tracks = data.tracks;
+          _this5._tracks = data.tracks;
         });
       } else {
         return Promise.resolve();

@@ -69,7 +69,7 @@ class Player extends FakeEventTarget {
    */
   constructor(config: Object) {
     super();
-    this._tracks = [];
+    this._initializeMembers();
     this._logger = LoggerFactory.getLogger('Player');
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
@@ -83,11 +83,7 @@ class Player extends FakeEventTarget {
    * @returns {void}
    */
   configure(config: Object): void {
-    if (this._config) {
-      this._config = merge([this._config, config]);
-    } else {
-      this._config = config || Player._defaultConfig();
-    }
+    this._config = merge([this._config, config || Player._defaultConfig()]);
     this._loadPlugins(this._config);
     this._selectEngine(this._config);
     this._attachMedia();
@@ -103,8 +99,7 @@ class Player extends FakeEventTarget {
     this._eventManager.destroy();
     this._pluginManager.destroy();
     this._stateManager.destroy();
-    this._config = {};
-    this._tracks = [];
+    this._initializeMembers();
   }
 
   /**
@@ -114,6 +109,11 @@ class Player extends FakeEventTarget {
    */
   static _defaultConfig(): Object {
     return {};
+  }
+
+  _initializeMembers(): void {
+    this._config = {};
+    this._tracks = [];
   }
 
   /**
@@ -185,6 +185,8 @@ class Player extends FakeEventTarget {
         this._markActiveTrack(event.payload.selectedTextTrack);
         return this.dispatchEvent(event);
       });
+      this._eventManager.listen(this, Html5Events.PLAY, this._onPlay.bind(this));
+      this._eventManager.listen(this, Html5Events.ENDED, this._onEnded.bind(this));
     }
   }
 
@@ -273,6 +275,28 @@ class Player extends FakeEventTarget {
         tracks[i].active = track.index === i;
       }
     }
+  }
+
+  /**
+   * @function _onPlay
+   * @return {void}
+   * @private
+   */
+  _onPlay(): void {
+    this._eventManager.unlisten(this, Html5Events.PLAY);
+    this.dispatchEvent(new FakeEvent(CustomEvents.FIRST_PLAY));
+  }
+
+  /**
+   * @function _onEnded
+   * @return {void}
+   * @private
+   */
+  _onEnded(): void {
+    this._eventManager.listen(this, Html5Events.PLAY, () => {
+      this._eventManager.unlisten(this, Html5Events.PLAY);
+      this.dispatchEvent(new FakeEvent(CustomEvents.REPLAY));
+    });
   }
 
   /**
