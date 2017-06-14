@@ -83,7 +83,7 @@ export default class BasePlugin implements IPlugin {
     this.player = player;
     this.eventManager = new EventManager();
     this.logger = LoggerFactory.getLogger(this.name);
-    this.config = merge(this.constructor.defaultConfig, config);
+    this.config = merge([this.constructor.defaultConfig, config]);
   }
 
   /**
@@ -106,7 +106,7 @@ export default class BasePlugin implements IPlugin {
    * @returns {void}
    */
   updateConfig(update: Object): void {
-    this.config = merge(this.config, update);
+    this.config = merge([this.config, update]);
   }
 
   /**

@@ -33,6 +33,6 @@ describe('events', () => {
       TEXT_TRACK_CHANGED: 'texttrackchanged',
       PLAYER_STATE_CHANGED: 'playerstatechanged'
     });
-    events.PLAYER_EVENTS.should.deep.equals(merge(events.HTML5_EVENTS, events.CUSTOM_EVENTS));
+    events.PLAYER_EVENTS.should.deep.equals(merge([events.HTML5_EVENTS, events.CUSTOM_EVENTS]));
   });
 });
