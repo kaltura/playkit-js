@@ -111,6 +111,6 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
   PLAYER_STATE_CHANGED: 'playerstatechanged'
 };
 
-const PLAYER_EVENTS: { [event: string]: string } = merge(merge({}, HTML5_EVENTS), CUSTOM_EVENTS);
+const PLAYER_EVENTS: { [event: string]: string } = merge([HTML5_EVENTS, CUSTOM_EVENTS]);
 
 export {PLAYER_EVENTS, HTML5_EVENTS, CUSTOM_EVENTS};
