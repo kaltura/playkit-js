@@ -942,7 +942,7 @@ var CUSTOM_EVENTS = {
   PLAYER_STATE_CHANGED: 'playerstatechanged'
 };
 
-var PLAYER_EVENTS = (0, _util.merge)((0, _util.merge)({}, HTML5_EVENTS), CUSTOM_EVENTS);
+var PLAYER_EVENTS = (0, _util.merge)([HTML5_EVENTS, CUSTOM_EVENTS]);
 
 exports.PLAYER_EVENTS = PLAYER_EVENTS;
 exports.HTML5_EVENTS = HTML5_EVENTS;
@@ -1103,7 +1103,7 @@ var Player = function (_FakeEventTarget) {
     key: 'configure',
     value: function configure(config) {
       if (this._config) {
-        this._config = (0, _util.merge)(this._config, config);
+        this._config = (0, _util.merge)([this._config, config]);
       } else {
         this._config = config || Player._defaultConfig();
       }
@@ -1848,15 +1848,37 @@ function isFloat(n) {
 }
 
 /**
- * @param {Object} obj1 - Certain object
- * @param {Object} obj2 - Certain object
- * @returns {*} - The merged object.
+ * @param {Array<Object>} objects - The objects to merge
+ * @returns {Object} - The merged object.
  */
-function merge(obj1, obj2) {
-  if (!obj1 && !obj2) return {};
-  if (!obj1) return obj2;
-  if (!obj2) return obj1;
-  return Object.assign(obj1, obj2);
+function merge(objects) {
+  var target = {};
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = objects[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var obj = _step.value;
+
+      Object.assign(target, obj);
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  return target;
 }
 
 exports.isNumber = isNumber;
@@ -2378,7 +2400,7 @@ var BasePlugin = function () {
     this.player = player;
     this.eventManager = new _eventManager2.default();
     this.logger = _logger2.default.getLogger(this.name);
-    this.config = (0, _util.merge)(this.constructor.defaultConfig, config);
+    this.config = (0, _util.merge)([this.constructor.defaultConfig, config]);
   }
 
   /**
@@ -2408,7 +2430,7 @@ var BasePlugin = function () {
   }, {
     key: 'updateConfig',
     value: function updateConfig(update) {
-      this.config = (0, _util.merge)(this.config, update);
+      this.config = (0, _util.merge)([this.config, update]);
     }
 
     /**
@@ -3778,8 +3800,8 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      */
 
     /**
-     * The name of the Adapter
-     * @member {string} _name
+     * The id of the Adapter
+     * @member {string} id
      * @static
      * @public
      */
@@ -4018,6 +4040,19 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
         textTracks[textTrack.index].mode = 'showing';
         this._onTrackChanged(textTrack);
       }
+    }
+
+    /**
+     * Enables adaptive bitrate
+     * @function enableAdaptiveBitrate
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: 'enableAdaptiveBitrate',
+    value: function enableAdaptiveBitrate() {
+      NativeAdapter._logger.debug('Enabling adaptive bitrate not supported');
     }
 
     /**
