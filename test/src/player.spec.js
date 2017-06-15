@@ -490,7 +490,7 @@ describe('events', () => {
     });
 
     it('should fire replay', function(done) {
-      this.timeout(4000);
+      this.timeout(8000);
 
       player.addEventListener(Html5Events.LOADED_METADATA, () => {
         player.currentTime = player.duration - 1;
