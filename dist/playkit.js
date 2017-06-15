@@ -925,17 +925,21 @@ var HTML5_EVENTS = {
 
 var CUSTOM_EVENTS = {
   /**
-   * Fires when the video track has been changed
+   * Fires when the active video track has been changed
    */
   VIDEO_TRACK_CHANGED: 'videotrackchanged',
   /**
-   * Fires when the audio track has been changed
+   * Fires when the active audio track has been changed
    */
   AUDIO_TRACK_CHANGED: 'audiotrackchanged',
   /**
-   * Fires when the text track has been changed
+   * Fires when the active text track has been changed
    */
   TEXT_TRACK_CHANGED: 'texttrackchanged',
+  /**
+   * Fires when the player tracks have been changed
+   */
+  TRACKS_CHANGED: 'trackschanged',
   /**
    * Fires when the player state has been changed
    */
@@ -1038,43 +1042,6 @@ var Player = function (_FakeEventTarget) {
    */
 
   /**
-   * The state manager of the player.
-   * @type {StateManager}
-   * @private
-   */
-
-  /**
-   * The runtime configuration of the player.
-   * @type {Object}
-   * @private
-   */
-
-  /**
-   * The plugin manager of the player.
-   * @type {PluginManager}
-   * @private
-   */
-  function Player(config) {
-    _classCallCheck(this, Player);
-
-    var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
-
-    _this._tracks = [];
-    _this._logger = _logger2.default.getLogger('Player');
-    _this._stateManager = new _stateManager2.default(_this);
-    _this._pluginManager = new _pluginManager2.default();
-    _this._eventManager = new _eventManager2.default();
-    _this.configure(config);
-    return _this;
-  }
-
-  /**
-   * Configures the player according to given configuration.
-   * @param {Object} config - The configuration for the player instance.
-   * @returns {void}
-   */
-
-  /**
    * The tracks of the player.
    * @type {Array<Track>}
    * @private
@@ -1095,6 +1062,55 @@ var Player = function (_FakeEventTarget) {
   /**
    * The player class logger.
    * @type {any}
+   * @private
+   */
+  function Player(config) {
+    _classCallCheck(this, Player);
+
+    var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
+
+    _this._tracks = [];
+    _this._logger = _logger2.default.getLogger('Player');
+    _this._stateManager = new _stateManager2.default(_this);
+    _this._pluginManager = new _pluginManager2.default();
+    _this._eventManager = new _eventManager2.default();
+    _this._readyPromise = new Promise(function (resolve, reject) {
+      _this._eventManager.listen(_this, _events.CUSTOM_EVENTS.TRACKS_CHANGED, function () {
+        resolve();
+      });
+      _this._eventManager.listen(_this, _events.HTML5_EVENTS.ERROR, reject);
+    });
+    _this.configure(config);
+    return _this;
+  }
+
+  /**
+   * Configures the player according to given configuration.
+   * @param {Object} config - The configuration for the player instance.
+   * @returns {void}
+   */
+
+  /**
+   * The player ready promise
+   * @type {Promise<*>}
+   * @private
+   */
+
+  /**
+   * The state manager of the player.
+   * @type {StateManager}
+   * @private
+   */
+
+  /**
+   * The runtime configuration of the player.
+   * @type {Object}
+   * @private
+   */
+
+  /**
+   * The plugin manager of the player.
+   * @type {PluginManager}
    * @private
    */
 
@@ -1127,6 +1143,7 @@ var Player = function (_FakeEventTarget) {
       this._stateManager.destroy();
       this._config = {};
       this._tracks = [];
+      this._readyPromise = null;
     }
 
     /**
@@ -1331,24 +1348,60 @@ var Player = function (_FakeEventTarget) {
      */
 
   }, {
-    key: 'play',
+    key: 'ready',
 
 
     //  <editor-fold desc="Playback Interface">
+    /**
+     * The player readiness
+     * @public
+     * @returns {Promise<*>} - The ready promise
+     */
+    value: function ready() {
+      return this._readyPromise ? this._readyPromise : Promise.resolve();
+    }
+
+    /**
+     * Load media
+     * @public
+     * @returns {void}
+     */
+
+  }, {
+    key: 'load',
+    value: function load() {
+      var _this3 = this;
+
+      if (this._engine) {
+        this._engine.load().then(function (data) {
+          _this3._tracks = data.tracks;
+          _this3.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.TRACKS_CHANGED, { tracks: _this3._tracks }));
+        }).catch(function (error) {
+          _this3.dispatchEvent(new _fakeEvent2.default(_events.HTML5_EVENTS.ERROR, error));
+        });
+      } else {
+        this._config.preload = 'auto';
+      }
+    }
+
     /**
      * Start/resume playback.
      * @returns {void}
      * @public
      */
+
+  }, {
+    key: 'play',
     value: function play() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this._engine) {
         if (this._engine.src) {
           this._engine.play();
         } else {
-          this.load().then(function () {
-            _this3._engine.play();
+          this.load();
+          this.ready().then(function () {
+            _this4._engine.play();
           });
         }
       }
@@ -1369,43 +1422,8 @@ var Player = function (_FakeEventTarget) {
     }
 
     /**
-     * Load media.
-     * @public
-     * @returns {Promise<*>} - The load promise.
-     */
-
-  }, {
-    key: 'load',
-    value: function load() {
-      var _this4 = this;
-
-      if (this._engine) {
-        return this._engine.load().then(function (data) {
-          _this4._tracks = data.tracks;
-        });
-      } else {
-        return Promise.resolve();
-      }
-    }
-
-    /**
      * Set the current time in seconds.
      * @param {Number} to - The number to set in seconds.
-     * @public
-     */
-
-  }, {
-    key: 'ready',
-
-
-    // </editor-fold>
-
-    // <editor-fold desc="State">
-    value: function ready() {}
-
-    /**
-     * Get paused state.
-     * @returns {?boolean} - Whether the video is paused or not.
      * @public
      */
 
@@ -1503,6 +1521,16 @@ var Player = function (_FakeEventTarget) {
         return this._engine.volume;
       }
     }
+
+    // </editor-fold>
+
+    // <editor-fold desc="State">
+    /**
+     * Get paused state.
+     * @returns {?boolean} - Whether the video is paused or not.
+     * @public
+     */
+
   }, {
     key: 'paused',
     get: function get() {

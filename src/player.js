@@ -62,6 +62,12 @@ class Player extends FakeEventTarget {
    * @private
    */
   _tracks: Array<Track>;
+  /**
+   * The player ready promise
+   * @type {Promise<*>}
+   * @private
+   */
+  _readyPromise: ?Promise<*>;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -74,6 +80,12 @@ class Player extends FakeEventTarget {
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
     this._eventManager = new EventManager();
+    this._readyPromise = new Promise((resolve, reject) => {
+      this._eventManager.listen(this, CustomEvents.TRACKS_CHANGED, () => {
+        resolve();
+      });
+      this._eventManager.listen(this, Html5Events.ERROR, reject);
+    });
     this.configure(config);
   }
 
@@ -105,6 +117,7 @@ class Player extends FakeEventTarget {
     this._stateManager.destroy();
     this._config = {};
     this._tracks = [];
+    this._readyPromise = null;
   }
 
   /**
@@ -286,6 +299,33 @@ class Player extends FakeEventTarget {
 
   //  <editor-fold desc="Playback Interface">
   /**
+   * The player readiness
+   * @public
+   * @returns {Promise<*>} - The ready promise
+   */
+  ready(): Promise<*> {
+    return this._readyPromise ? this._readyPromise : Promise.resolve();
+  }
+
+  /**
+   * Load media
+   * @public
+   * @returns {void}
+   */
+  load(): void {
+    if (this._engine) {
+      this._engine.load().then((data) => {
+        this._tracks = data.tracks;
+        this.dispatchEvent(new FakeEvent(CustomEvents.TRACKS_CHANGED, {tracks: this._tracks}));
+      }).catch((error) => {
+        this.dispatchEvent(new FakeEvent(Html5Events.ERROR, error));
+      });
+    } else {
+      this._config.preload = 'auto';
+    }
+  }
+
+  /**
    * Start/resume playback.
    * @returns {void}
    * @public
@@ -295,7 +335,8 @@ class Player extends FakeEventTarget {
       if (this._engine.src) {
         this._engine.play();
       } else {
-        this.load().then(() => {
+        this.load();
+        this.ready().then(() => {
           this._engine.play();
         });
       }
@@ -310,21 +351,6 @@ class Player extends FakeEventTarget {
   pause(): void {
     if (this._engine) {
       return this._engine.pause();
-    }
-  }
-
-  /**
-   * Load media.
-   * @public
-   * @returns {Promise<*>} - The load promise.
-   */
-  load(): Promise<*> {
-    if (this._engine) {
-      return this._engine.load().then((data) => {
-        this._tracks = data.tracks;
-      });
-    } else {
-      return Promise.resolve();
     }
   }
 
@@ -405,9 +431,6 @@ class Player extends FakeEventTarget {
   // </editor-fold>
 
   // <editor-fold desc="State">
-  ready() {
-  }
-
   /**
    * Get paused state.
    * @returns {?boolean} - Whether the video is paused or not.
