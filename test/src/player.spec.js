@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import Player from '../../src/player'
-import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../../src/event/events'
+import {CUSTOM_EVENTS as CustomEvents} from '../../src/event/events'
 import sourcesConfig from './configs/sources.json'
 import VideoTrack from '../../src/track/video-track'
 import AudioTrack from '../../src/track/audio-track'
@@ -447,6 +447,7 @@ describe('Track enum', function () {
 });
 
 describe('events', () => {
+
   describe('firstPlay', () => {
     let config;
     let player;
@@ -472,37 +473,5 @@ describe('events', () => {
     });
   });
 
-  describe('replay', () => {
-    let config;
-    let player;
-
-    beforeEach(() => {
-      config = sourcesConfig.mp4_none_hls_dash;
-      player = new Player(config);
-    });
-
-    afterEach(() => {
-      player.destroy();
-    });
-
-    after(() => {
-      removeVideoElementsFromTestPage();
-    });
-
-    it('should fire replay', function(done) {
-      this.timeout(8000);
-
-      player.addEventListener(Html5Events.LOADED_METADATA, () => {
-        player.currentTime = player.duration - 1;
-        player.play();
-      });
-      player.addEventListener(Html5Events.ENDED, () => {
-        player.play();
-      });
-      player.addEventListener(CustomEvents.REPLAY, () => {
-        done();
-      });
-    });
-  });
 });
 

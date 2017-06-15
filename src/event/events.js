@@ -112,11 +112,7 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
   /**
    * Fires on the first play
    */
-  FIRST_PLAY: 'firstplay',
-  /**
-   * Fires on replay
-   */
-  REPLAY: 'replay'
+  FIRST_PLAY: 'firstplay'
 };
 
 const PLAYER_EVENTS: { [event: string]: string } = merge([HTML5_EVENTS, CUSTOM_EVENTS]);

@@ -62,6 +62,12 @@ class Player extends FakeEventTarget {
    * @private
    */
   _tracks: Array<Track>;
+  /**
+   * Whether the play is the first or not
+   * @type {boolean}
+   * @private
+   */
+  _firstPlay: boolean;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -69,7 +75,8 @@ class Player extends FakeEventTarget {
    */
   constructor(config: Object) {
     super();
-    this._initializeMembers();
+    this._tracks = [];
+    this._firstPlay = true;
     this._logger = LoggerFactory.getLogger('Player');
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
@@ -99,7 +106,9 @@ class Player extends FakeEventTarget {
     this._eventManager.destroy();
     this._pluginManager.destroy();
     this._stateManager.destroy();
-    this._initializeMembers();
+    this._config = {};
+    this._tracks = [];
+    this._firstPlay = true;
   }
 
   /**
@@ -109,11 +118,6 @@ class Player extends FakeEventTarget {
    */
   static _defaultConfig(): Object {
     return {};
-  }
-
-  _initializeMembers(): void {
-    this._config = {};
-    this._tracks = [];
   }
 
   /**
@@ -186,7 +190,6 @@ class Player extends FakeEventTarget {
         return this.dispatchEvent(event);
       });
       this._eventManager.listen(this, Html5Events.PLAY, this._onPlay.bind(this));
-      this._eventManager.listen(this, Html5Events.ENDED, this._onEnded.bind(this));
     }
   }
 
@@ -283,20 +286,10 @@ class Player extends FakeEventTarget {
    * @private
    */
   _onPlay(): void {
-    this._eventManager.unlisten(this, Html5Events.PLAY);
-    this.dispatchEvent(new FakeEvent(CustomEvents.FIRST_PLAY));
-  }
-
-  /**
-   * @function _onEnded
-   * @return {void}
-   * @private
-   */
-  _onEnded(): void {
-    this._eventManager.listen(this, Html5Events.PLAY, () => {
-      this._eventManager.unlisten(this, Html5Events.PLAY);
-      this.dispatchEvent(new FakeEvent(CustomEvents.REPLAY));
-    });
+    if (this._firstPlay) {
+      this._firstPlay = false;
+      this.dispatchEvent(new FakeEvent(CustomEvents.FIRST_PLAY));
+    }
   }
 
   /**

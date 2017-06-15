@@ -943,11 +943,7 @@ var CUSTOM_EVENTS = {
   /**
    * Fires on the first play
    */
-  FIRST_PLAY: 'firstplay',
-  /**
-   * Fires on replay
-   */
-  REPLAY: 'replay'
+  FIRST_PLAY: 'firstplay'
 };
 
 var PLAYER_EVENTS = (0, _util.merge)([HTML5_EVENTS, CUSTOM_EVENTS]);
@@ -1046,43 +1042,6 @@ var Player = function (_FakeEventTarget) {
    */
 
   /**
-   * The state manager of the player.
-   * @type {StateManager}
-   * @private
-   */
-
-  /**
-   * The runtime configuration of the player.
-   * @type {Object}
-   * @private
-   */
-
-  /**
-   * The plugin manager of the player.
-   * @type {PluginManager}
-   * @private
-   */
-  function Player(config) {
-    _classCallCheck(this, Player);
-
-    var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
-
-    _this._initializeMembers();
-    _this._logger = _logger2.default.getLogger('Player');
-    _this._stateManager = new _stateManager2.default(_this);
-    _this._pluginManager = new _pluginManager2.default();
-    _this._eventManager = new _eventManager2.default();
-    _this.configure(config);
-    return _this;
-  }
-
-  /**
-   * Configures the player according to given configuration.
-   * @param {Object} config - The configuration for the player instance.
-   * @returns {void}
-   */
-
-  /**
    * The tracks of the player.
    * @type {Array<Track>}
    * @private
@@ -1103,6 +1062,50 @@ var Player = function (_FakeEventTarget) {
   /**
    * The player class logger.
    * @type {any}
+   * @private
+   */
+  function Player(config) {
+    _classCallCheck(this, Player);
+
+    var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
+
+    _this._tracks = [];
+    _this._firstPlay = true;
+    _this._logger = _logger2.default.getLogger('Player');
+    _this._stateManager = new _stateManager2.default(_this);
+    _this._pluginManager = new _pluginManager2.default();
+    _this._eventManager = new _eventManager2.default();
+    _this.configure(config);
+    return _this;
+  }
+
+  /**
+   * Configures the player according to given configuration.
+   * @param {Object} config - The configuration for the player instance.
+   * @returns {void}
+   */
+
+  /**
+   * Whether the play is the first or not
+   * @type {boolean}
+   * @private
+   */
+
+  /**
+   * The state manager of the player.
+   * @type {StateManager}
+   * @private
+   */
+
+  /**
+   * The runtime configuration of the player.
+   * @type {Object}
+   * @private
+   */
+
+  /**
+   * The plugin manager of the player.
+   * @type {PluginManager}
    * @private
    */
 
@@ -1129,7 +1132,9 @@ var Player = function (_FakeEventTarget) {
       this._eventManager.destroy();
       this._pluginManager.destroy();
       this._stateManager.destroy();
-      this._initializeMembers();
+      this._config = {};
+      this._tracks = [];
+      this._firstPlay = true;
     }
 
     /**
@@ -1139,11 +1144,8 @@ var Player = function (_FakeEventTarget) {
      */
 
   }, {
-    key: '_initializeMembers',
-    value: function _initializeMembers() {
-      this._config = {};
-      this._tracks = [];
-    }
+    key: '_loadPlugins',
+
 
     /**
      *
@@ -1151,9 +1153,6 @@ var Player = function (_FakeEventTarget) {
      * @private
      * @returns {void}
      */
-
-  }, {
-    key: '_loadPlugins',
     value: function _loadPlugins(config) {
       var plugins = config.plugins;
       for (var name in plugins) {
@@ -1229,7 +1228,6 @@ var Player = function (_FakeEventTarget) {
           return _this2.dispatchEvent(event);
         });
         this._eventManager.listen(this, _events.HTML5_EVENTS.PLAY, this._onPlay.bind(this));
-        this._eventManager.listen(this, _events.HTML5_EVENTS.ENDED, this._onEnded.bind(this));
       }
     }
 
@@ -1344,25 +1342,10 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_onPlay',
     value: function _onPlay() {
-      this._eventManager.unlisten(this, _events.HTML5_EVENTS.PLAY);
-      this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.FIRST_PLAY));
-    }
-
-    /**
-     * @function _onEnded
-     * @return {void}
-     * @private
-     */
-
-  }, {
-    key: '_onEnded',
-    value: function _onEnded() {
-      var _this3 = this;
-
-      this._eventManager.listen(this, _events.HTML5_EVENTS.PLAY, function () {
-        _this3._eventManager.unlisten(_this3, _events.HTML5_EVENTS.PLAY);
-        _this3.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.REPLAY));
-      });
+      if (this._firstPlay) {
+        this._firstPlay = false;
+        this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.FIRST_PLAY));
+      }
     }
 
     /**
@@ -1382,14 +1365,14 @@ var Player = function (_FakeEventTarget) {
      * @public
      */
     value: function play() {
-      var _this4 = this;
+      var _this3 = this;
 
       if (this._engine) {
         if (this._engine.src) {
           this._engine.play();
         } else {
           this.load().then(function () {
-            _this4._engine.play();
+            _this3._engine.play();
           });
         }
       }
@@ -1418,11 +1401,11 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'load',
     value: function load() {
-      var _this5 = this;
+      var _this4 = this;
 
       if (this._engine) {
         return this._engine.load().then(function (data) {
-          _this5._tracks = data.tracks;
+          _this4._tracks = data.tracks;
         });
       } else {
         return Promise.resolve();
