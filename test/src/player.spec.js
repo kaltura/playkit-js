@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import Player from '../../src/player'
-import {CUSTOM_EVENTS as CustomEvents} from '../../src/event/events'
+import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../../src/event/events'
 import sourcesConfig from './configs/sources.json'
 import VideoTrack from '../../src/track/video-track'
 import AudioTrack from '../../src/track/audio-track'
@@ -465,13 +465,23 @@ describe('events', () => {
       removeVideoElementsFromTestPage();
     });
 
-    it('should fire first play', (done) => {
+    it('should fire first play only once', (done) => {
+      let counter = 0;
+      let onPlaying = () => {
+        player.removeEventListener(Html5Events.PLAYING, onPlaying);
+        player.pause();
+        player.play();
+        setTimeout(() => {
+          counter.should.equal(1);
+          done();
+        }, 0);
+      };
       player.addEventListener(CustomEvents.FIRST_PLAY, () => {
-        done();
+        counter++;
       });
+      player.addEventListener(Html5Events.PLAYING, onPlaying);
       player.play();
     });
   });
-
 });
 
