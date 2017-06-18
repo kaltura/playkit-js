@@ -5,7 +5,8 @@
   "scripts": {
     "clean": "rm -rf ./dist",
     "prebuild": "npm run clean",
-    "build": "webpack",
+    "build:prod": "NODE_ENV=production webpack",
+    "build:test": "NODE_ENV=test webpack",
     "dev": "webpack --progress --colors --watch",
     "test": "NODE_ENV=test karma start --color",
     "test:chrome": "NODE_ENV=test karma start --color --browsers Chrome",
@@ -14,11 +15,25 @@
     "test:safari": "NODE_ENV=test karma start --color --browsers Safari",
     "test:watch": "NODE_ENV=test karma start --color --auto-watch",
     "start": "webpack-dev-server",
-    "release": "NODE_ENV=production npm run build -- -p && git add --all dist && git commit -m'Update dist' && standard-version",
+    "release": "npm run build:prod && npm run commit:dist && standard-version",
+    "publish": "git push --follow-tags --no-verify origin develop",
     "eslint": "eslint . --color",
     "flow": "flow check",
-    "prepush": "npm run eslint && npm run test && npm run flow"
+    "eslint:flow:test": "npm run eslint && npm run flow && npm run test",
+    "commit:dist": "git add --all dist && (git commit -m 'chore: update dist' || exit 0)",
+    "prepush-msg:build": "echo '\nRunning build before push...\n' && exit 0",
+    "prepush-msg:dist": "echo '\nAdding dist files to a seperate commit...\n' && exit 0",
+    "prepush-msg:done": "echo '\nPre push tasks are done.\n' && exit 0"
   },
+  "pre-push": [
+    "prepush-msg:build",
+    "prebuild",
+    "build:test",
+    "build:prod",
+    "prepush-msg:dist",
+    "commit:dist",
+    "prepush-msg:done"
+  ],
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-core": "^6.18.2",
@@ -52,6 +67,7 @@
     "mocha": "^3.2.0",
     "mocha-cli": "^1.0.1",
     "nyc": "^10.1.2",
+    "pre-push": "^0.1.1",
     "sinon": "^2.0.0",
     "sinon-chai": "^2.8.0",
     "standard-version": "^4.0.0",
