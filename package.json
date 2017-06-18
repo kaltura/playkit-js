@@ -1,6 +1,7 @@
 {
   "name": "playkit-js",
   "version": "0.1.0",
+  "main": "dist/playkit.js",
   "scripts": {
     "clean": "rm -rf ./dist",
     "prebuild": "npm run clean",
@@ -18,7 +19,7 @@
     "eslint": "eslint . --color",
     "flow": "flow check",
     "eslint:flow:test": "npm run eslint && npm run flow && npm run test",
-    "commit:dist": "git add . && (git commit -m 'update dist' || exit 0)",
+    "commit:dist": "git add --all dist && (git commit -m 'update dist' || exit 0)",
     "prepush-msg:build": "echo '\nRunning build before push...\n' && exit 0",
     "prepush-msg:dist": "echo '\nAdding dist files to a seperate commit...\n' && exit 0",
     "prepush-msg:done": "echo '\nPre push tasks are done.\n' && exit 0"
