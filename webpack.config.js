@@ -2,25 +2,21 @@
 
 const webpack = require("webpack");
 const path = require("path");
-const libraryName = "Playkit";
 const PROD = (process.env.NODE_ENV === 'production');
-
-let plugins = PROD ? [new webpack.optimize.UglifyJsPlugin({sourceMap: true})] : [];
 
 module.exports = {
   context: __dirname + "/src",
-  entry: {
-    playkit: "playkit.js"
-  },
+  entry: PROD ? {"playkit.min": "playkit.js"} : {"playkit": "playkit.js"},
   output: {
     path: __dirname + "/dist",
     filename: '[name].js',
-    library: libraryName,
+    library: 'Playkit',
     libraryTarget: 'umd',
-    umdNamedDefine: true
+    umdNamedDefine: true,
+    devtoolModuleFilenameTemplate: "webpack:///core/[absolute-resource-path]",
   },
   devtool: 'source-map',
-  plugins: plugins,
+  plugins: PROD ? [new webpack.optimize.UglifyJsPlugin({sourceMap: true})] : [],
   module: {
     rules: [{
       test: /\.js$/,

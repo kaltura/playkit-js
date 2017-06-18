@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.2.0"></a>
+# [0.2.0](https://github.com/kaltura/playkit-js/compare/v0.1.0...v0.2.0) (2017-06-18)
+
+
+### Bug Fixes
+
+* **mse adapter:** change mse adapter api from name to id due to minified issues ([#56](https://github.com/kaltura/playkit-js/issues/56)) ([8be0401](https://github.com/kaltura/playkit-js/commit/8be0401))
+* **native adapter:** implement enableAdaptiveBitrate method ([#59](https://github.com/kaltura/playkit-js/issues/59)) ([90f3027](https://github.com/kaltura/playkit-js/commit/90f3027))
+
+
+### Features
+
+* **events:** tracks events and adaptive bitrate api ([#53](https://github.com/kaltura/playkit-js/issues/53)) ([0867479](https://github.com/kaltura/playkit-js/commit/0867479))
+* **logger:** export logger factory ([#50](https://github.com/kaltura/playkit-js/issues/50)) ([b29b2f1](https://github.com/kaltura/playkit-js/commit/b29b2f1))
+* **player:** handle creation of player without initial config ([#46](https://github.com/kaltura/playkit-js/issues/46)) ([e2204a5](https://github.com/kaltura/playkit-js/commit/e2204a5))
+* **tracks:** add tracks framework ([#40](https://github.com/kaltura/playkit-js/issues/40)) ([f5152bb](https://github.com/kaltura/playkit-js/commit/f5152bb))
+
+
+
 <a name="0.1.0"></a>
 # 0.1.0 (2017-05-30)
 
