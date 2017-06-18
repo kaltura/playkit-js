@@ -31,7 +31,8 @@ describe('events', () => {
       VIDEO_TRACK_CHANGED: 'videotrackchanged',
       AUDIO_TRACK_CHANGED: 'audiotrackchanged',
       TEXT_TRACK_CHANGED: 'texttrackchanged',
-      PLAYER_STATE_CHANGED: 'playerstatechanged'
+      PLAYER_STATE_CHANGED: 'playerstatechanged',
+      FIRST_PLAY: 'firstplay'
     });
     events.PLAYER_EVENTS.should.deep.equals(merge([events.HTML5_EVENTS, events.CUSTOM_EVENTS]));
   });
