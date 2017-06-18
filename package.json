@@ -17,7 +17,10 @@
     "release": "NODE_ENV=production npm run build -- -p && git add --all dist && git commit -m'Update dist' && standard-version",
     "eslint": "eslint . --color",
     "flow": "flow check",
-    "prepush": "npm run eslint && npm run test && npm run flow"
+    "prepush": "npm run eslint && npm run test && npm run flow",
+    "docs:generate": "documentation build src -f html -o docs",
+    "docs:serve": "documentation serve src",
+    "docs:watch": "documentation serve --watch src"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
@@ -31,6 +34,7 @@
     "babel-register": "^6.23.0",
     "chai": "^3.5.0",
     "cross-env": "^3.1.4",
+    "documentation": "^4.0.0-rc.1",
     "eslint": "^3.10.0",
     "eslint-loader": "^1.6.1",
     "eslint-plugin-flowtype": "^2.30.0",
