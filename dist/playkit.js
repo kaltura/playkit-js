@@ -13523,7 +13523,7 @@ exports.default = MultiMap;
 
 module.exports = {
 	"name": "playkit-js",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"main": "dist/playkit.js",
 	"scripts": {
 		"clean": "rm -rf ./dist",
@@ -13546,7 +13546,10 @@ module.exports = {
 		"commit:dist": "git add --all dist && (git commit -m 'chore: update dist' || exit 0)",
 		"prepush-msg:build": "echo '\nRunning build before push...\n' && exit 0",
 		"prepush-msg:dist": "echo '\nAdding dist files to a seperate commit...\n' && exit 0",
-		"prepush-msg:done": "echo '\nPre push tasks are done.\n' && exit 0"
+		"prepush-msg:done": "echo '\nPre push tasks are done.\n' && exit 0",
+		"docs:generate": "documentation build src -f html -o docs",
+		"docs:serve": "documentation serve src",
+		"docs:watch": "documentation serve --watch src"
 	},
 	"pre-push": [
 		"prepush-msg:build",
@@ -13569,6 +13572,7 @@ module.exports = {
 		"babel-register": "^6.23.0",
 		"chai": "^3.5.0",
 		"cross-env": "^3.1.4",
+		"documentation": "^4.0.0-rc.1",
 		"eslint": "^3.10.0",
 		"eslint-loader": "^1.6.1",
 		"eslint-plugin-flowtype": "^2.30.0",
