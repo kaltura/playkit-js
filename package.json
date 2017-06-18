@@ -16,10 +16,11 @@
     "test:watch": "NODE_ENV=test karma start --color --auto-watch",
     "start": "webpack-dev-server",
     "release": "npm run build:prod && npm run commit:dist && standard-version",
+    "publish": "git push --follow-tags --no-verify origin develop",
     "eslint": "eslint . --color",
     "flow": "flow check",
     "eslint:flow:test": "npm run eslint && npm run flow && npm run test",
-    "commit:dist": "git add --all dist && (git commit -m 'update dist' || exit 0)",
+    "commit:dist": "git add --all dist && (git commit -m 'chore: update dist' || exit 0)",
     "prepush-msg:build": "echo '\nRunning build before push...\n' && exit 0",
     "prepush-msg:dist": "echo '\nAdding dist files to a seperate commit...\n' && exit 0",
     "prepush-msg:done": "echo '\nPre push tasks are done.\n' && exit 0"
