@@ -2901,7 +2901,7 @@ exports.CUSTOM_EVENTS = exports.HTML5_EVENTS = exports.PLAYER_EVENTS = undefined
 
 var cov_8bz2gle5l = function () {
   var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/event/events.js',
-      hash = '31696c3382bff1b81148584526a84fcb3ae38eef',
+      hash = 'd1d3f2952158e885b3161f24647de6f7f94918a7',
       global = new Function('return this')(),
       gcv = '__coverage__',
       coverageData = {
@@ -2934,7 +2934,7 @@ var cov_8bz2gle5l = function () {
         },
         end: {
           line: 114,
-          column: 96
+          column: 87
         }
       }
     },
@@ -3071,7 +3071,7 @@ var CUSTOM_EVENTS = (++cov_8bz2gle5l.s[1], {
   PLAYER_STATE_CHANGED: 'playerstatechanged'
 });
 
-var PLAYER_EVENTS = (++cov_8bz2gle5l.s[2], (0, _util.merge)((0, _util.merge)({}, HTML5_EVENTS), CUSTOM_EVENTS));
+var PLAYER_EVENTS = (++cov_8bz2gle5l.s[2], (0, _util.merge)([HTML5_EVENTS, CUSTOM_EVENTS]));
 
 exports.PLAYER_EVENTS = PLAYER_EVENTS;
 exports.HTML5_EVENTS = HTML5_EVENTS;
@@ -3090,7 +3090,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var cov_4x54fj3w8 = function () {
   var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/player.js',
-      hash = 'ed22eaa0f256ab1064193f8842eab9440e037c51',
+      hash = '0356db72605358c70384696c1e09557146760538',
       global = new Function('return this')(),
       gcv = '__coverage__',
       coverageData = {
@@ -3183,7 +3183,7 @@ var cov_4x54fj3w8 = function () {
         },
         end: {
           line: 87,
-          column: 49
+          column: 51
         }
       },
       '9': {
@@ -6934,7 +6934,7 @@ var Player = function (_FakeEventTarget) {
         ++cov_4x54fj3w8.b[0][0];
         ++cov_4x54fj3w8.s[8];
 
-        this._config = (0, _util.merge)(this._config, config);
+        this._config = (0, _util.merge)([this._config, config]);
       } else {
         ++cov_4x54fj3w8.b[0][1];
         ++cov_4x54fj3w8.s[9];
@@ -8673,7 +8673,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var cov_1e2a9y1nho = function () {
   var path = "/Users/dan.ziv/WebstormProjects/playkit-js/src/utils/util.js",
-      hash = "ea664b852c133b4295c6c17f28ece6ee24b1228c",
+      hash = "6c569da676227dcfcd4197182982081ccde0f483",
       global = new Function('return this')(),
       gcv = "__coverage__",
       coverageData = {
@@ -8711,72 +8711,42 @@ var cov_1e2a9y1nho = function () {
       },
       "3": {
         start: {
-          line: 34,
-          column: 2
+          line: 33,
+          column: 15
         },
         end: {
-          line: 34,
-          column: 32
+          line: 33,
+          column: 17
         }
       },
       "4": {
         start: {
           line: 34,
-          column: 22
+          column: 2
         },
         end: {
-          line: 34,
-          column: 32
+          line: 36,
+          column: 3
         }
       },
       "5": {
         start: {
           line: 35,
-          column: 2
+          column: 4
         },
         end: {
           line: 35,
-          column: 25
+          column: 31
         }
       },
       "6": {
         start: {
-          line: 35,
-          column: 13
-        },
-        end: {
-          line: 35,
-          column: 25
-        }
-      },
-      "7": {
-        start: {
-          line: 36,
-          column: 2
-        },
-        end: {
-          line: 36,
-          column: 25
-        }
-      },
-      "8": {
-        start: {
-          line: 36,
-          column: 13
-        },
-        end: {
-          line: 36,
-          column: 25
-        }
-      },
-      "9": {
-        start: {
           line: 37,
           column: 2
         },
         end: {
           line: 37,
-          column: 35
+          column: 16
         }
       }
     },
@@ -8857,25 +8827,25 @@ var cov_1e2a9y1nho = function () {
         name: "merge",
         decl: {
           start: {
-            line: 33,
+            line: 32,
             column: 9
           },
           end: {
-            line: 33,
+            line: 32,
             column: 14
           }
         },
         loc: {
           start: {
-            line: 33,
-            column: 51
+            line: 32,
+            column: 47
           },
           end: {
             line: 38,
             column: 1
           }
         },
-        line: 33
+        line: 32
       }
     },
     branchMap: {
@@ -8944,138 +8914,6 @@ var cov_1e2a9y1nho = function () {
           }
         }],
         line: 25
-      },
-      "2": {
-        loc: {
-          start: {
-            line: 34,
-            column: 2
-          },
-          end: {
-            line: 34,
-            column: 32
-          }
-        },
-        type: "if",
-        locations: [{
-          start: {
-            line: 34,
-            column: 2
-          },
-          end: {
-            line: 34,
-            column: 32
-          }
-        }, {
-          start: {
-            line: 34,
-            column: 2
-          },
-          end: {
-            line: 34,
-            column: 32
-          }
-        }],
-        line: 34
-      },
-      "3": {
-        loc: {
-          start: {
-            line: 34,
-            column: 6
-          },
-          end: {
-            line: 34,
-            column: 20
-          }
-        },
-        type: "binary-expr",
-        locations: [{
-          start: {
-            line: 34,
-            column: 6
-          },
-          end: {
-            line: 34,
-            column: 11
-          }
-        }, {
-          start: {
-            line: 34,
-            column: 15
-          },
-          end: {
-            line: 34,
-            column: 20
-          }
-        }],
-        line: 34
-      },
-      "4": {
-        loc: {
-          start: {
-            line: 35,
-            column: 2
-          },
-          end: {
-            line: 35,
-            column: 25
-          }
-        },
-        type: "if",
-        locations: [{
-          start: {
-            line: 35,
-            column: 2
-          },
-          end: {
-            line: 35,
-            column: 25
-          }
-        }, {
-          start: {
-            line: 35,
-            column: 2
-          },
-          end: {
-            line: 35,
-            column: 25
-          }
-        }],
-        line: 35
-      },
-      "5": {
-        loc: {
-          start: {
-            line: 36,
-            column: 2
-          },
-          end: {
-            line: 36,
-            column: 25
-          }
-        },
-        type: "if",
-        locations: [{
-          start: {
-            line: 36,
-            column: 2
-          },
-          end: {
-            line: 36,
-            column: 25
-          }
-        }, {
-          start: {
-            line: 36,
-            column: 2
-          },
-          end: {
-            line: 36,
-            column: 25
-          }
-        }],
-        line: 36
       }
     },
     s: {
@@ -9085,10 +8923,7 @@ var cov_1e2a9y1nho = function () {
       "3": 0,
       "4": 0,
       "5": 0,
-      "6": 0,
-      "7": 0,
-      "8": 0,
-      "9": 0
+      "6": 0
     },
     f: {
       "0": 0,
@@ -9098,11 +8933,7 @@ var cov_1e2a9y1nho = function () {
     },
     b: {
       "0": [0, 0],
-      "1": [0, 0],
-      "2": [0, 0],
-      "3": [0, 0],
-      "4": [0, 0],
-      "5": [0, 0]
+      "1": [0, 0]
     },
     _coverageSchema: "332fd63041d2c1bcb487cc26dd0d5f7d97098a6c"
   },
@@ -9146,36 +8977,42 @@ function isFloat(n) {
 }
 
 /**
- * @param {Object} obj1 - Certain object
- * @param {Object} obj2 - Certain object
- * @returns {*} - The merged object.
+ * @param {Array<Object>} objects - The objects to merge
+ * @returns {Object} - The merged object.
  */
-function merge(obj1, obj2) {
+function merge(objects) {
   ++cov_1e2a9y1nho.f[3];
-  ++cov_1e2a9y1nho.s[3];
 
-  if ((++cov_1e2a9y1nho.b[3][0], !obj1) && (++cov_1e2a9y1nho.b[3][1], !obj2)) {
-      ++cov_1e2a9y1nho.b[2][0];
-      ++cov_1e2a9y1nho.s[4];
-      return {};
-    } else {
-    ++cov_1e2a9y1nho.b[2][1];
-  }++cov_1e2a9y1nho.s[5];
-  if (!obj1) {
-      ++cov_1e2a9y1nho.b[4][0];
-      ++cov_1e2a9y1nho.s[6];
-      return obj2;
-    } else {
-    ++cov_1e2a9y1nho.b[4][1];
-  }++cov_1e2a9y1nho.s[7];
-  if (!obj2) {
-      ++cov_1e2a9y1nho.b[5][0];
-      ++cov_1e2a9y1nho.s[8];
-      return obj1;
-    } else {
-    ++cov_1e2a9y1nho.b[5][1];
-  }++cov_1e2a9y1nho.s[9];
-  return Object.assign(obj1, obj2);
+  var target = (++cov_1e2a9y1nho.s[3], {});
+  ++cov_1e2a9y1nho.s[4];
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = objects[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var obj = _step.value;
+      ++cov_1e2a9y1nho.s[5];
+
+      Object.assign(target, obj);
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  ++cov_1e2a9y1nho.s[6];
+  return target;
 }
 
 exports.isNumber = isNumber;
@@ -11053,7 +10890,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var cov_cf3lk8xb7 = function () {
   var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/plugin/base-plugin.js',
-      hash = 'b93075e71247494eb5f7f1a75dbe8f8bac56b647',
+      hash = '779a262c90febbaa75c8b894f8d5e112253ed3f0',
       global = new Function('return this')(),
       gcv = '__coverage__',
       coverageData = {
@@ -11126,7 +10963,7 @@ var cov_cf3lk8xb7 = function () {
         },
         end: {
           line: 86,
-          column: 64
+          column: 66
         }
       },
       '7': {
@@ -11166,7 +11003,7 @@ var cov_cf3lk8xb7 = function () {
         },
         end: {
           line: 109,
-          column: 45
+          column: 47
         }
       },
       '11': {
@@ -11586,7 +11423,7 @@ var BasePlugin = function () {
     ++cov_cf3lk8xb7.s[5];
     this.logger = _logger2.default.getLogger(this.name);
     ++cov_cf3lk8xb7.s[6];
-    this.config = (0, _util.merge)(this.constructor.defaultConfig, config);
+    this.config = (0, _util.merge)([this.constructor.defaultConfig, config]);
   }
 
   /**
@@ -11628,7 +11465,7 @@ var BasePlugin = function () {
       ++cov_cf3lk8xb7.f[4];
       ++cov_cf3lk8xb7.s[10];
 
-      this.config = (0, _util.merge)(this.config, update);
+      this.config = (0, _util.merge)([this.config, update]);
     }
 
     /**
@@ -13687,6 +13524,7 @@ exports.default = MultiMap;
 module.exports = {
 	"name": "playkit-js",
 	"version": "0.1.0",
+	"main": "dist/playkit.js",
 	"scripts": {
 		"clean": "rm -rf ./dist",
 		"prebuild": "npm run clean",
@@ -13704,7 +13542,7 @@ module.exports = {
 		"eslint": "eslint . --color",
 		"flow": "flow check",
 		"eslint:flow:test": "npm run eslint && npm run flow && npm run test",
-		"commit:dist": "git add . && (git commit -m 'update dist' || exit 0)",
+		"commit:dist": "git add --all dist && (git commit -m 'update dist' || exit 0)",
 		"prepush-msg:build": "echo '\nRunning build before push...\n' && exit 0",
 		"prepush-msg:dist": "echo '\nAdding dist files to a seperate commit...\n' && exit 0",
 		"prepush-msg:done": "echo '\nPre push tasks are done.\n' && exit 0"
@@ -17713,7 +17551,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var cov_udhe4wxvj = function () {
   var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/engines/html5/media-source/adapters/native-adapter.js',
-      hash = '9fa4a683b7a15e559189cbc61e6eaa79049bd914',
+      hash = 'ef61cee86cc62f12899a3d971846c72b41c66d74',
       global = new Function('return this')(),
       gcv = '__coverage__',
       coverageData = {
@@ -18361,131 +18199,141 @@ var cov_udhe4wxvj = function () {
       },
       '64': {
         start: {
-          line: 250,
-          column: 22
-        },
-        end: {
-          line: 250,
-          column: 52
-        }
-      },
-      '65': {
-        start: {
           line: 251,
           column: 4
         },
         end: {
-          line: 255,
-          column: 5
+          line: 251,
+          column: 75
+        }
+      },
+      '65': {
+        start: {
+          line: 260,
+          column: 22
+        },
+        end: {
+          line: 260,
+          column: 52
         }
       },
       '66': {
         start: {
-          line: 252,
-          column: 6
+          line: 261,
+          column: 4
         },
         end: {
-          line: 254,
-          column: 7
+          line: 265,
+          column: 5
         }
       },
       '67': {
         start: {
-          line: 253,
-          column: 8
+          line: 262,
+          column: 6
         },
         end: {
-          line: 253,
-          column: 40
+          line: 264,
+          column: 7
         }
       },
       '68': {
         start: {
-          line: 264,
-          column: 22
+          line: 263,
+          column: 8
         },
         end: {
-          line: 264,
-          column: 52
+          line: 263,
+          column: 40
         }
       },
       '69': {
         start: {
-          line: 265,
-          column: 4
+          line: 274,
+          column: 22
         },
         end: {
-          line: 269,
-          column: 5
+          line: 274,
+          column: 52
         }
       },
       '70': {
         start: {
-          line: 266,
-          column: 6
+          line: 275,
+          column: 4
         },
         end: {
-          line: 268,
-          column: 7
+          line: 279,
+          column: 5
         }
       },
       '71': {
         start: {
-          line: 267,
-          column: 8
+          line: 276,
+          column: 6
         },
         end: {
-          line: 267,
-          column: 39
+          line: 278,
+          column: 7
         }
       },
       '72': {
         start: {
-          line: 278,
-          column: 21
+          line: 277,
+          column: 8
         },
         end: {
-          line: 278,
-          column: 50
+          line: 277,
+          column: 39
         }
       },
       '73': {
         start: {
-          line: 279,
-          column: 4
+          line: 288,
+          column: 21
         },
         end: {
-          line: 283,
-          column: 5
+          line: 288,
+          column: 50
         }
       },
       '74': {
         start: {
-          line: 280,
-          column: 6
+          line: 289,
+          column: 4
         },
         end: {
-          line: 282,
-          column: 7
+          line: 293,
+          column: 5
         }
       },
       '75': {
         start: {
-          line: 281,
-          column: 8
+          line: 290,
+          column: 6
         },
         end: {
-          line: 281,
-          column: 40
+          line: 292,
+          column: 7
         }
       },
       '76': {
         start: {
-          line: 292,
+          line: 291,
+          column: 8
+        },
+        end: {
+          line: 291,
+          column: 40
+        }
+      },
+      '77': {
+        start: {
+          line: 302,
           column: 4
         },
         end: {
-          line: 292,
+          line: 302,
           column: 34
         }
       }
@@ -18831,97 +18679,121 @@ var cov_udhe4wxvj = function () {
         name: '(anonymous_14)',
         decl: {
           start: {
-            line: 249,
+            line: 250,
             column: 2
           },
           end: {
-            line: 249,
+            line: 250,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 249,
-            column: 30
+            line: 250,
+            column: 32
           },
           end: {
-            line: 256,
+            line: 252,
             column: 3
           }
         },
-        line: 249
+        line: 250
       },
       '15': {
         name: '(anonymous_15)',
         decl: {
           start: {
-            line: 263,
+            line: 259,
             column: 2
           },
           end: {
-            line: 263,
+            line: 259,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 263,
+            line: 259,
             column: 30
           },
           end: {
-            line: 270,
+            line: 266,
             column: 3
           }
         },
-        line: 263
+        line: 259
       },
       '16': {
         name: '(anonymous_16)',
         decl: {
           start: {
-            line: 277,
+            line: 273,
             column: 2
           },
           end: {
-            line: 277,
+            line: 273,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 277,
-            column: 29
+            line: 273,
+            column: 30
           },
           end: {
-            line: 284,
+            line: 280,
             column: 3
           }
         },
-        line: 277
+        line: 273
       },
       '17': {
         name: '(anonymous_17)',
         decl: {
           start: {
-            line: 291,
+            line: 287,
             column: 2
           },
           end: {
-            line: 291,
+            line: 287,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 291,
-            column: 20
+            line: 287,
+            column: 29
           },
           end: {
-            line: 293,
+            line: 294,
             column: 3
           }
         },
-        line: 291
+        line: 287
+      },
+      '18': {
+        name: '(anonymous_18)',
+        decl: {
+          start: {
+            line: 301,
+            column: 2
+          },
+          end: {
+            line: 301,
+            column: 3
+          }
+        },
+        loc: {
+          start: {
+            line: 301,
+            column: 20
+          },
+          end: {
+            line: 303,
+            column: 3
+          }
+        },
+        line: 301
       }
     },
     branchMap: {
@@ -19402,101 +19274,101 @@ var cov_udhe4wxvj = function () {
       '13': {
         loc: {
           start: {
-            line: 251,
+            line: 261,
             column: 4
           },
           end: {
-            line: 255,
+            line: 265,
             column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 251,
+            line: 261,
             column: 4
           },
           end: {
-            line: 255,
+            line: 265,
             column: 5
           }
         }, {
           start: {
-            line: 251,
+            line: 261,
             column: 4
           },
           end: {
-            line: 255,
+            line: 265,
             column: 5
           }
         }],
-        line: 251
+        line: 261
       },
       '14': {
         loc: {
           start: {
-            line: 265,
+            line: 275,
             column: 4
           },
           end: {
-            line: 269,
+            line: 279,
             column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 265,
+            line: 275,
             column: 4
           },
           end: {
-            line: 269,
+            line: 279,
             column: 5
           }
         }, {
           start: {
-            line: 265,
+            line: 275,
             column: 4
           },
           end: {
-            line: 269,
+            line: 279,
             column: 5
           }
         }],
-        line: 265
+        line: 275
       },
       '15': {
         loc: {
           start: {
-            line: 279,
+            line: 289,
             column: 4
           },
           end: {
-            line: 283,
+            line: 293,
             column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 279,
+            line: 289,
             column: 4
           },
           end: {
-            line: 283,
+            line: 293,
             column: 5
           }
         }, {
           start: {
-            line: 279,
+            line: 289,
             column: 4
           },
           end: {
-            line: 283,
+            line: 293,
             column: 5
           }
         }],
-        line: 279
+        line: 289
       }
     },
     s: {
@@ -19576,7 +19448,8 @@ var cov_udhe4wxvj = function () {
       '73': 0,
       '74': 0,
       '75': 0,
-      '76': 0
+      '76': 0,
+      '77': 0
     },
     f: {
       '0': 0,
@@ -19596,7 +19469,8 @@ var cov_udhe4wxvj = function () {
       '14': 0,
       '15': 0,
       '16': 0,
-      '17': 0
+      '17': 0,
+      '18': 0
     },
     b: {
       '0': [0, 0],
@@ -20052,6 +19926,22 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
     }
 
     /**
+     * Enables adaptive bitrate
+     * @function enableAdaptiveBitrate
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: 'enableAdaptiveBitrate',
+    value: function enableAdaptiveBitrate() {
+      ++cov_udhe4wxvj.f[14];
+      ++cov_udhe4wxvj.s[64];
+
+      NativeAdapter._logger.debug('Enabling adaptive bitrate not supported');
+    }
+
+    /**
      * Disables all the existing video tracks.
      * @private
      * @returns {void}
@@ -20060,16 +19950,16 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_disableVideoTracks',
     value: function _disableVideoTracks() {
-      ++cov_udhe4wxvj.f[14];
+      ++cov_udhe4wxvj.f[15];
 
-      var videoTracks = (++cov_udhe4wxvj.s[64], this._videoElement.videoTracks);
-      ++cov_udhe4wxvj.s[65];
+      var videoTracks = (++cov_udhe4wxvj.s[65], this._videoElement.videoTracks);
+      ++cov_udhe4wxvj.s[66];
       if (videoTracks) {
         ++cov_udhe4wxvj.b[13][0];
-        ++cov_udhe4wxvj.s[66];
+        ++cov_udhe4wxvj.s[67];
 
         for (var i = 0; i < videoTracks.length; i++) {
-          ++cov_udhe4wxvj.s[67];
+          ++cov_udhe4wxvj.s[68];
 
           videoTracks[i].selected = false;
         }
@@ -20087,16 +19977,16 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_disableAudioTracks',
     value: function _disableAudioTracks() {
-      ++cov_udhe4wxvj.f[15];
+      ++cov_udhe4wxvj.f[16];
 
-      var audioTracks = (++cov_udhe4wxvj.s[68], this._videoElement.audioTracks);
-      ++cov_udhe4wxvj.s[69];
+      var audioTracks = (++cov_udhe4wxvj.s[69], this._videoElement.audioTracks);
+      ++cov_udhe4wxvj.s[70];
       if (audioTracks) {
         ++cov_udhe4wxvj.b[14][0];
-        ++cov_udhe4wxvj.s[70];
+        ++cov_udhe4wxvj.s[71];
 
         for (var i = 0; i < audioTracks.length; i++) {
-          ++cov_udhe4wxvj.s[71];
+          ++cov_udhe4wxvj.s[72];
 
           audioTracks[i].enabled = false;
         }
@@ -20114,16 +20004,16 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_disableTextTracks',
     value: function _disableTextTracks() {
-      ++cov_udhe4wxvj.f[16];
+      ++cov_udhe4wxvj.f[17];
 
-      var textTracks = (++cov_udhe4wxvj.s[72], this._videoElement.textTracks);
-      ++cov_udhe4wxvj.s[73];
+      var textTracks = (++cov_udhe4wxvj.s[73], this._videoElement.textTracks);
+      ++cov_udhe4wxvj.s[74];
       if (textTracks) {
         ++cov_udhe4wxvj.b[15][0];
-        ++cov_udhe4wxvj.s[74];
+        ++cov_udhe4wxvj.s[75];
 
         for (var i = 0; i < textTracks.length; i++) {
-          ++cov_udhe4wxvj.s[75];
+          ++cov_udhe4wxvj.s[76];
 
           textTracks[i].mode = 'disabled';
         }
@@ -20141,8 +20031,8 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: 'src',
     get: function get() {
-      ++cov_udhe4wxvj.f[17];
-      ++cov_udhe4wxvj.s[76];
+      ++cov_udhe4wxvj.f[18];
+      ++cov_udhe4wxvj.s[77];
 
       return this._videoElement.src;
     }
