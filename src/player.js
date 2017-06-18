@@ -84,7 +84,7 @@ class Player extends FakeEventTarget {
    */
   configure(config: Object): void {
     if (this._config) {
-      this._config = merge(this._config, config);
+      this._config = merge([this._config, config]);
     } else {
       this._config = config || Player._defaultConfig();
     }

@@ -26,15 +26,15 @@ function isFloat(n: number): boolean {
 }
 
 /**
- * @param {Object} obj1 - Certain object
- * @param {Object} obj2 - Certain object
- * @returns {*} - The merged object.
+ * @param {Array<Object>} objects - The objects to merge
+ * @returns {Object} - The merged object.
  */
-function merge(obj1: Object, obj2: Object): Object {
-  if (!obj1 && !obj2) return {};
-  if (!obj1) return obj2;
-  if (!obj2) return obj1;
-  return Object.assign(obj1, obj2);
+function merge(objects: Array<Object>): Object {
+  let target = {};
+  for (let obj of objects) {
+    Object.assign(target, obj);
+  }
+  return target;
 }
 
 export {isNumber, isInt, isFloat, merge};
