@@ -62,6 +62,12 @@ class Player extends FakeEventTarget {
    * @private
    */
   _tracks: Array<Track>;
+  /**
+   * Whether the play is the first or not
+   * @type {boolean}
+   * @private
+   */
+  _firstPlay: boolean;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -70,6 +76,7 @@ class Player extends FakeEventTarget {
   constructor(config: Object) {
     super();
     this._tracks = [];
+    this._firstPlay = true;
     this._logger = LoggerFactory.getLogger('Player');
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
@@ -83,11 +90,7 @@ class Player extends FakeEventTarget {
    * @returns {void}
    */
   configure(config: Object): void {
-    if (this._config) {
-      this._config = merge([this._config, config]);
-    } else {
-      this._config = config || Player._defaultConfig();
-    }
+    this._config = merge([this._config, config || Player._defaultConfig()]);
     this._loadPlugins(this._config);
     this._selectEngine(this._config);
     this._attachMedia();
@@ -105,6 +108,7 @@ class Player extends FakeEventTarget {
     this._stateManager.destroy();
     this._config = {};
     this._tracks = [];
+    this._firstPlay = true;
   }
 
   /**
@@ -185,6 +189,7 @@ class Player extends FakeEventTarget {
         this._markActiveTrack(event.payload.selectedTextTrack);
         return this.dispatchEvent(event);
       });
+      this._eventManager.listen(this, Html5Events.PLAY, this._onPlay.bind(this));
     }
   }
 
@@ -272,6 +277,18 @@ class Player extends FakeEventTarget {
       for (let i = 0; i < tracks.length; i++) {
         tracks[i].active = track.index === i;
       }
+    }
+  }
+
+  /**
+   * @function _onPlay
+   * @return {void}
+   * @private
+   */
+  _onPlay(): void {
+    if (this._firstPlay) {
+      this._firstPlay = false;
+      this.dispatchEvent(new FakeEvent(CustomEvents.FIRST_PLAY));
     }
   }
 
