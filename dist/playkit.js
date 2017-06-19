@@ -14401,12 +14401,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _class = function () {
-  function _class() {
-    _classCallCheck(this, _class);
+var PlayerMiddlewareBase = function () {
+  function PlayerMiddlewareBase() {
+    _classCallCheck(this, PlayerMiddlewareBase);
   }
 
-  _createClass(_class, [{
+  _createClass(PlayerMiddlewareBase, [{
     key: "load",
     value: function load(next) {
       ++cov_fuo02nesm.f[0];
@@ -14456,10 +14456,10 @@ var _class = function () {
     }
   }]);
 
-  return _class;
+  return PlayerMiddlewareBase;
 }();
 
-exports.default = _class;
+exports.default = PlayerMiddlewareBase;
 
 /***/ }),
 /* 20 */
@@ -21755,6 +21755,8 @@ var _playerMiddleware = __webpack_require__(15);
 
 var _playerMiddlewareBase = __webpack_require__(19);
 
+var _playerMiddlewareBase2 = _interopRequireDefault(_playerMiddlewareBase);
+
 var _basePlugin = __webpack_require__(16);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
@@ -21808,7 +21810,7 @@ exports.BaseMediaSourceAdapter = _baseMediaSourceAdapter2.default;
 exports.registerPlugin = _pluginManager.registerPlugin;
 exports.BasePlugin = _basePlugin2.default;
 exports.PlayerMiddlewareActions = _playerMiddleware.PlayerMiddlewareActions;
-exports.PlayerMiddlewareBase = _playerMiddlewareBase.PlayerMiddlewareBase;
+exports.PlayerMiddlewareBase = _playerMiddlewareBase2.default;
 
 // Export the tracks classes
 
