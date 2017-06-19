@@ -1,5 +1,5 @@
 // @flow
-export default class {
+export default class PlayerMiddlewareBase {
   load(next: Function): Promise<*> {
     if (next) {
       return next();

@@ -6,7 +6,7 @@ import BaseMediaSourceAdapter from './engines/html5/media-source/base-media-sour
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider'
 import {registerPlugin} from './plugin/plugin-manager'
 import {PlayerMiddlewareActions} from './middleware/player-middleware'
-import {PlayerMiddlewareBase} from './middleware/player-middleware-base'
+import PlayerMiddlewareBase from './middleware/player-middleware-base'
 import BasePlugin from './plugin/base-plugin'
 import Track from './track/track'
 import VideoTrack from './track/video-track'
