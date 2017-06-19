@@ -4,6 +4,7 @@ import Middleware from './middleware'
 export default class PlayerMiddleware {
 
   static Actions: { [action: string]: string } = {
+    LOAD: 'load',
     PLAY: 'play',
     PAUSE: 'pause'
   };
@@ -18,10 +19,15 @@ export default class PlayerMiddleware {
     this._middleware.use(playerMiddleware);
   }
 
+  load(callback: Function): Promise<*> {
+    return Promise.resolve(this._middleware.run(PlayerMiddleware.Actions.LOAD, callback));
+  }
+
   play(callback: Function): void {
     this._middleware.run(PlayerMiddleware.Actions.PLAY, callback);
   }
-}
 
-const PlayerMiddlewareActions = PlayerMiddleware.Actions;
-export {PlayerMiddlewareActions};
+  pause(callback: Function): void {
+    this._middleware.run(PlayerMiddleware.Actions.PAUSE, callback);
+  }
+}

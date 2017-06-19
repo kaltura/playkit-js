@@ -338,8 +338,12 @@ class Player extends FakeEventTarget {
    */
   pause(): void {
     if (this._engine) {
-      return this._engine.pause();
+      this._playerMiddleware.pause(this._pause.bind(this));
     }
+  }
+
+  _pause(): void {
+    this._engine.pause();
   }
 
   /**
@@ -349,12 +353,16 @@ class Player extends FakeEventTarget {
    */
   load(): Promise<*> {
     if (this._engine) {
-      return this._engine.load().then((data) => {
-        this._tracks = data.tracks;
-      });
+      return this._playerMiddleware.load(this._load.bind(this));
     } else {
       return Promise.resolve();
     }
+  }
+
+  _load(): Promise<*> {
+    return this._engine.load().then((data) => {
+      this._tracks = data.tracks;
+    });
   }
 
   /**

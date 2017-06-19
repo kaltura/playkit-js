@@ -49,7 +49,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   constructor(source: Source, config: Object) {
     super();
-    this._createVideoElement();
+    this._createVideoElement(config.target);
     this._eventManager = new EventManager();
     this._loadMediaSourceAdapter(source, config);
     this.attach();
@@ -125,18 +125,33 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Creates a video element dom object.
+   * @param {string} target - The target id.
    * @private
    * @returns {void}
    */
-  _createVideoElement(): void {
+  _createVideoElement(target: string): void {
     this._el = document.createElement("video");
     //Set attributes
+    this._el.id = "kaltura-player";
     this._el.style.width = "640px";
     this._el.style.height = "360px";
     this._el.style.backgroundColor = "black";
     this._el.controls = true;
     if (document && document.body) {
-      document.body.appendChild(this._el);
+      let body = document.body;
+      if (target) {
+        let targetElement = document.getElementById(target);
+        if (targetElement) {
+          targetElement.appendChild(this._el);
+          body.appendChild(targetElement);
+        }
+      } else {
+        let container = document.createElement("div");
+        container.id = "kaltura-player-container";
+        container.style.position = "absolute";
+        container.appendChild(this._el);
+        body.appendChild(container);
+      }
     }
   }
 
