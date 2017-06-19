@@ -14,6 +14,7 @@ import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
+import PlayerMiddleware from './middleware/player-middleware'
 
 /**
  * The HTML5 player class.
@@ -69,6 +70,8 @@ class Player extends FakeEventTarget {
    */
   _firstPlay: boolean;
 
+  _playerMiddleware: PlayerMiddleware;
+
   /**
    * @param {Object} config - The configuration for the player instance.
    * @constructor
@@ -81,6 +84,7 @@ class Player extends FakeEventTarget {
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
     this._eventManager = new EventManager();
+    this._playerMiddleware = new PlayerMiddleware();
     this.configure(config);
   }
 
@@ -91,9 +95,9 @@ class Player extends FakeEventTarget {
    */
   configure(config: Object): void {
     this._config = merge([this._config, config || Player._defaultConfig()]);
-    this._loadPlugins(this._config);
     this._selectEngine(this._config);
     this._attachMedia();
+    this._loadPlugins(this._config);
   }
 
   /**
@@ -130,6 +134,10 @@ class Player extends FakeEventTarget {
     let plugins = config.plugins;
     for (let name in plugins) {
       this._pluginManager.load(name, this, plugins[name]);
+      let plugin = this._pluginManager.get(name);
+      if (plugin && typeof plugin.getPlayerMiddleware === "function") {
+        this._playerMiddleware.use(plugin.getPlayerMiddleware());
+      }
     }
   }
 
@@ -310,13 +318,17 @@ class Player extends FakeEventTarget {
   play(): void {
     if (this._engine) {
       if (this._engine.src) {
-        this._engine.play();
+        this._playerMiddleware.play(this._play.bind(this));
       } else {
         this.load().then(() => {
-          this._engine.play();
+          this._playerMiddleware.play(this._play.bind(this));
         });
       }
     }
+  }
+
+  _play(): void {
+    this._engine.play();
   }
 
   /**
@@ -342,6 +354,16 @@ class Player extends FakeEventTarget {
       });
     } else {
       return Promise.resolve();
+    }
+  }
+
+  /**
+   * @returns {HTMLVideoElement} - The video element.
+   * @public
+   */
+  getVideoElement(): ?HTMLVideoElement {
+    if (this._engine) {
+      return this._engine.getVideoElement();
     }
   }
 

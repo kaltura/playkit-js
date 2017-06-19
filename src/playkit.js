@@ -5,6 +5,8 @@ import * as packageData from '../package.json'
 import BaseMediaSourceAdapter from './engines/html5/media-source/base-media-source-adapter'
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider'
 import {registerPlugin} from './plugin/plugin-manager'
+import {PlayerMiddlewareActions} from './middleware/player-middleware'
+import {PlayerMiddlewareBase} from './middleware/player-middleware-base'
 import BasePlugin from './plugin/base-plugin'
 import Track from './track/track'
 import VideoTrack from './track/video-track'
@@ -29,7 +31,7 @@ export function playkit(config: Object = {}) {
 export {registerMediaSourceAdapter, BaseMediaSourceAdapter};
 
 // Export the plugin framework
-export {registerPlugin, BasePlugin};
+export {registerPlugin, BasePlugin, PlayerMiddlewareActions, PlayerMiddlewareBase};
 
 // Export the tracks classes
 export {Track, VideoTrack, AudioTrack, TextTrack};
