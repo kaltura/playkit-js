@@ -87,7 +87,7 @@ describe("ready", () => {
         let player;
 
         beforeEach(() => {
-          player = new Player(config);
+          player = new Player();
         });
 
         afterEach(() => {
@@ -112,15 +112,6 @@ describe("ready", () => {
             });
         });
 
-        it("should success ready -> load -> configure", (done) => {
-          player.ready()
-            .then(() => {
-              done();
-            });
-          player.load();
-          player.configure(config);
-        });
-
         it("should success ready -> configure -> load", (done) => {
           player.ready()
             .then(() => {
@@ -128,24 +119,6 @@ describe("ready", () => {
             });
           player.configure(config);
           player.load();
-        });
-
-        it("should success load -> configure -> ready", (done) => {
-          player.load();
-          player.configure(config);
-          player.ready()
-            .then(() => {
-              done();
-            });
-        });
-
-        it("should success load -> ready -> configure", (done) => {
-          player.load();
-          player.ready()
-            .then(() => {
-              done();
-            });
-          player.configure(config);
         });
       });
     });
@@ -188,7 +161,7 @@ describe("ready", () => {
 
         beforeEach(() => {
           config.preload = 'auto';
-          player = new Player(config);
+          player = new Player();
         });
 
         afterEach(() => {
@@ -299,7 +272,7 @@ describe("ready", () => {
         let player;
 
         beforeEach(() => {
-          player = new Player(config);
+          player = new Player();
         });
 
         afterEach(() => {
@@ -326,16 +299,6 @@ describe("ready", () => {
       });
         });
 
-        it("should fail ready -> load -> configure", (done) => {
-          player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
-          player.load();
-          player.configure(config);
-        });
-
         it("should fail ready -> configure -> load", (done) => {
           player.ready()
       .catch((error) => {
@@ -344,26 +307,6 @@ describe("ready", () => {
       });
           player.configure(config);
           player.load();
-        });
-
-        it("should fail load -> configure -> ready", (done) => {
-          player.load();
-          player.configure(config);
-          player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
-        });
-
-        it("should fail load -> ready -> configure", (done) => {
-          player.load();
-          player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
-          player.configure(config);
         });
       });
     });
@@ -408,7 +351,7 @@ describe("ready", () => {
 
         beforeEach(() => {
           config.preload = 'auto';
-          player = new Player(config);
+          player = new Player();
         });
 
         afterEach(() => {

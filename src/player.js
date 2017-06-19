@@ -337,8 +337,6 @@ class Player extends FakeEventTarget {
       }).catch((error) => {
         this.dispatchEvent(new FakeEvent(Html5Events.ERROR, error));
       });
-    } else {
-      this._config.preload = 'auto';
     }
   }
 
