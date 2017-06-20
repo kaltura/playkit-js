@@ -16,9 +16,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -87,13 +87,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_1cwksiggh8 = function () {
-  var path = "/Users/dan.ziv/WebstormProjects/playkit-js/src/track/track.js",
-      hash = "6dc46309d967c997a49d2065f6f047fa393af1d5",
+var cov_1iyditnah6 = function () {
+  var path = "/Users/yair.ansbacher/Desktop/repos/playkit-js/src/track/track.js",
+      hash = "3e0bc50cc1740171cfdc148e2c73296edfc565c9",
       global = new Function('return this')(),
       gcv = "__coverage__",
       coverageData = {
-    path: "/Users/dan.ziv/WebstormProjects/playkit-js/src/track/track.js",
+    path: "/Users/yair.ansbacher/Desktop/repos/playkit-js/src/track/track.js",
     statementMap: {
       "0": {
         start: {
@@ -472,8 +472,8 @@ var Track = function () {
      * @private
      */
     get: function get() {
-      ++cov_1cwksiggh8.f[0];
-      ++cov_1cwksiggh8.s[0];
+      ++cov_1iyditnah6.f[0];
+      ++cov_1iyditnah6.s[0];
 
       return this._id;
     }
@@ -508,8 +508,8 @@ var Track = function () {
   }, {
     key: "active",
     get: function get() {
-      ++cov_1cwksiggh8.f[1];
-      ++cov_1cwksiggh8.s[1];
+      ++cov_1iyditnah6.f[1];
+      ++cov_1iyditnah6.s[1];
 
       return this._active;
     }
@@ -521,8 +521,8 @@ var Track = function () {
      */
     ,
     set: function set(value) {
-      ++cov_1cwksiggh8.f[2];
-      ++cov_1cwksiggh8.s[2];
+      ++cov_1iyditnah6.f[2];
+      ++cov_1iyditnah6.s[2];
 
       this._active = value;
     }
@@ -536,8 +536,8 @@ var Track = function () {
   }, {
     key: "label",
     get: function get() {
-      ++cov_1cwksiggh8.f[3];
-      ++cov_1cwksiggh8.s[3];
+      ++cov_1iyditnah6.f[3];
+      ++cov_1iyditnah6.s[3];
 
       return this._label;
     }
@@ -551,8 +551,8 @@ var Track = function () {
   }, {
     key: "language",
     get: function get() {
-      ++cov_1cwksiggh8.f[4];
-      ++cov_1cwksiggh8.s[4];
+      ++cov_1iyditnah6.f[4];
+      ++cov_1iyditnah6.s[4];
 
       return this._language;
     }
@@ -566,8 +566,8 @@ var Track = function () {
   }, {
     key: "index",
     get: function get() {
-      ++cov_1cwksiggh8.f[5];
-      ++cov_1cwksiggh8.s[5];
+      ++cov_1iyditnah6.f[5];
+      ++cov_1iyditnah6.s[5];
 
       return this._index;
     }
@@ -580,21 +580,21 @@ var Track = function () {
   }]);
 
   function Track() {
-    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (++cov_1cwksiggh8.b[0][0], {});
+    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (++cov_1iyditnah6.b[0][0], {});
 
     _classCallCheck(this, Track);
 
-    ++cov_1cwksiggh8.f[6];
-    ++cov_1cwksiggh8.s[6];
+    ++cov_1iyditnah6.f[6];
+    ++cov_1iyditnah6.s[6];
 
     this._id = settings.id;
-    ++cov_1cwksiggh8.s[7];
+    ++cov_1iyditnah6.s[7];
     this._active = settings.active;
-    ++cov_1cwksiggh8.s[8];
+    ++cov_1iyditnah6.s[8];
     this._label = settings.label;
-    ++cov_1cwksiggh8.s[9];
+    ++cov_1iyditnah6.s[9];
     this._language = settings.language;
-    ++cov_1cwksiggh8.s[10];
+    ++cov_1iyditnah6.s[10];
     this._index = settings.index;
   }
 
@@ -615,13 +615,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.LOG_LEVEL = undefined;
 
-var cov_1wsa0jyoh5 = function () {
-  var path = "/Users/dan.ziv/WebstormProjects/playkit-js/src/utils/logger.js",
-      hash = "745a4e8c13b0a5a71e29c84209897bddfd5a3c13",
+var cov_ns8nzreho = function () {
+  var path = "/Users/yair.ansbacher/Desktop/repos/playkit-js/src/utils/logger.js",
+      hash = "a6b896eaf5daf19cfba1654b25e185ece0aab7e4",
       global = new Function('return this')(),
       gcv = "__coverage__",
       coverageData = {
-    path: "/Users/dan.ziv/WebstormProjects/playkit-js/src/utils/logger.js",
+    path: "/Users/yair.ansbacher/Desktop/repos/playkit-js/src/utils/logger.js",
     statementMap: {
       "0": {
         start: {
@@ -840,7 +840,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var LOG_LEVEL = (++cov_1wsa0jyoh5.s[0], {
+var LOG_LEVEL = (++cov_ns8nzreho.s[0], {
   "DEBUG": JsLogger.DEBUG,
   "INFO": JsLogger.INFO,
   "TIME": JsLogger.TIME,
@@ -853,27 +853,27 @@ var LoggerFactory = function () {
   function LoggerFactory(options) {
     _classCallCheck(this, LoggerFactory);
 
-    ++cov_1wsa0jyoh5.f[0];
-    ++cov_1wsa0jyoh5.s[1];
+    ++cov_ns8nzreho.f[0];
+    ++cov_ns8nzreho.s[1];
 
-    JsLogger.useDefaults((++cov_1wsa0jyoh5.b[0][0], options) || (++cov_1wsa0jyoh5.b[0][1], {}));
+    JsLogger.useDefaults((++cov_ns8nzreho.b[0][0], options) || (++cov_ns8nzreho.b[0][1], {}));
   }
 
   _createClass(LoggerFactory, [{
     key: "getLogger",
     value: function getLogger(name) {
-      ++cov_1wsa0jyoh5.f[1];
-      ++cov_1wsa0jyoh5.s[2];
+      ++cov_ns8nzreho.f[1];
+      ++cov_ns8nzreho.s[2];
 
       if (!name) {
-        ++cov_1wsa0jyoh5.b[1][0];
-        ++cov_1wsa0jyoh5.s[3];
+        ++cov_ns8nzreho.b[1][0];
+        ++cov_ns8nzreho.s[3];
 
         return JsLogger;
       } else {
-        ++cov_1wsa0jyoh5.b[1][1];
+        ++cov_ns8nzreho.b[1][1];
       }
-      ++cov_1wsa0jyoh5.s[4];
+      ++cov_ns8nzreho.s[4];
       return JsLogger.get(name);
     }
   }]);
@@ -881,7 +881,7 @@ var LoggerFactory = function () {
   return LoggerFactory;
 }();
 
-var lf = (++cov_1wsa0jyoh5.s[5], new LoggerFactory({ defaultLevel: JsLogger.DEBUG }));
+var lf = (++cov_ns8nzreho.s[5], new LoggerFactory({ defaultLevel: JsLogger.DEBUG }));
 
 exports.default = lf;
 exports.LOG_LEVEL = LOG_LEVEL;
@@ -897,13 +897,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_1za3vvb0b6 = function () {
-  var path = "/Users/dan.ziv/WebstormProjects/playkit-js/src/event/fake-event.js",
-      hash = "90642d66c4e95ff117bad138330fe141e881dbb0",
+var cov_2jf72pqibw = function () {
+  var path = "/Users/yair.ansbacher/Desktop/repos/playkit-js/src/event/fake-event.js",
+      hash = "b024e1e5169c7f16c94e487148a1e9c69e0de587",
       global = new Function('return this')(),
       gcv = "__coverage__",
       coverageData = {
-    path: "/Users/dan.ziv/WebstormProjects/playkit-js/src/event/fake-event.js",
+    path: "/Users/yair.ansbacher/Desktop/repos/playkit-js/src/event/fake-event.js",
     statementMap: {
       "0": {
         start: {
@@ -1215,8 +1215,8 @@ var FakeEvent = function () {
   function FakeEvent(type, payload) {
     _classCallCheck(this, FakeEvent);
 
-    ++cov_1za3vvb0b6.f[0];
-    ++cov_1za3vvb0b6.s[0];
+    ++cov_2jf72pqibw.f[0];
+    ++cov_2jf72pqibw.s[0];
 
     // These Properties below cannot be set by dict.  They are all provided for
     // compatibility with native events.
@@ -1225,11 +1225,11 @@ var FakeEvent = function () {
     this.bubbles = false;
 
     /** @const {boolean} */
-    ++cov_1za3vvb0b6.s[1];
+    ++cov_2jf72pqibw.s[1];
     this.cancelable = false;
 
     /** @const {boolean} */
-    ++cov_1za3vvb0b6.s[2];
+    ++cov_2jf72pqibw.s[2];
     this.defaultPrevented = false;
 
     /**
@@ -1239,33 +1239,33 @@ var FakeEvent = function () {
      * @const {number}
      * @see https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp
      */
-    ++cov_1za3vvb0b6.s[3];
-    this.timeStamp = window.performance ? (++cov_1za3vvb0b6.b[0][0], window.performance.now()) : (++cov_1za3vvb0b6.b[0][1], Date.now());
+    ++cov_2jf72pqibw.s[3];
+    this.timeStamp = window.performance ? (++cov_2jf72pqibw.b[0][0], window.performance.now()) : (++cov_2jf72pqibw.b[0][1], Date.now());
 
     /** @const {string} */
-    ++cov_1za3vvb0b6.s[4];
+    ++cov_2jf72pqibw.s[4];
     this.type = type;
 
     /** @const {boolean} */
-    ++cov_1za3vvb0b6.s[5];
+    ++cov_2jf72pqibw.s[5];
     this.isTrusted = false;
 
     /** @type {EventTarget} */
-    ++cov_1za3vvb0b6.s[6];
+    ++cov_2jf72pqibw.s[6];
     this.currentTarget = null;
 
     /** @type {EventTarget} */
-    ++cov_1za3vvb0b6.s[7];
+    ++cov_2jf72pqibw.s[7];
     this.target = null;
 
     /**
      * Non-standard property read by FakeEventTarget to stop processing listeners.
      * @type {boolean}
      */
-    ++cov_1za3vvb0b6.s[8];
+    ++cov_2jf72pqibw.s[8];
     this.stopped = false;
 
-    ++cov_1za3vvb0b6.s[9];
+    ++cov_2jf72pqibw.s[9];
     this.payload = payload;
   }
 
@@ -1297,7 +1297,7 @@ var FakeEvent = function () {
   _createClass(FakeEvent, [{
     key: "preventDefault",
     value: function preventDefault() {
-      ++cov_1za3vvb0b6.f[1];
+      ++cov_2jf72pqibw.f[1];
     }
 
     /**
@@ -1309,8 +1309,8 @@ var FakeEvent = function () {
   }, {
     key: "stopImmediatePropagation",
     value: function stopImmediatePropagation() {
-      ++cov_1za3vvb0b6.f[2];
-      ++cov_1za3vvb0b6.s[10];
+      ++cov_2jf72pqibw.f[2];
+      ++cov_2jf72pqibw.s[10];
 
       this.stopped = true;
     }
@@ -1324,7 +1324,7 @@ var FakeEvent = function () {
   }, {
     key: "stopPropagation",
     value: function stopPropagation() {
-      ++cov_1za3vvb0b6.f[3];
+      ++cov_2jf72pqibw.f[3];
     }
   }]);
 
@@ -1344,13 +1344,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_1u2dfg434a = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/track/audio-track.js',
-      hash = 'cb94d9c60e0745536a2f23d3c520691d5a021a9d',
+var cov_1i3g5br52t = function () {
+  var path = '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/track/audio-track.js',
+      hash = '94ffbfb50205a0917d0327d3e8b780516ab02aeb',
       global = new Function('return this')(),
       gcv = '__coverage__',
       coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/track/audio-track.js',
+    path: '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/track/audio-track.js',
     statementMap: {},
     fnMap: {},
     branchMap: {},
@@ -1410,13 +1410,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_bifclksei = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/track/text-track.js',
-      hash = 'a7e1c9292cee70801bb96c9ab3bae6098bbb8269',
+var cov_imclma7gs = function () {
+  var path = '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/track/text-track.js',
+      hash = '72b1e18230d90d957c31071473b138aa128e4334',
       global = new Function('return this')(),
       gcv = '__coverage__',
       coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/track/text-track.js',
+    path: '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/track/text-track.js',
     statementMap: {
       '0': {
         start: {
@@ -1580,8 +1580,8 @@ var TextTrack = function (_Track) {
      * @returns {string} - The kind of the text track.
      */
     get: function get() {
-      ++cov_bifclksei.f[0];
-      ++cov_bifclksei.s[0];
+      ++cov_imclma7gs.f[0];
+      ++cov_imclma7gs.s[0];
 
       return this._kind;
     }
@@ -1602,16 +1602,16 @@ var TextTrack = function (_Track) {
   }]);
 
   function TextTrack() {
-    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (++cov_bifclksei.b[0][0], {});
+    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (++cov_imclma7gs.b[0][0], {});
 
     _classCallCheck(this, TextTrack);
 
-    ++cov_bifclksei.f[1];
-    ++cov_bifclksei.s[1];
+    ++cov_imclma7gs.f[1];
+    ++cov_imclma7gs.s[1];
 
     var _this = _possibleConstructorReturn(this, (TextTrack.__proto__ || Object.getPrototypeOf(TextTrack)).call(this, settings));
 
-    ++cov_bifclksei.s[2];
+    ++cov_imclma7gs.s[2];
 
     _this._kind = settings.kind;
     return _this;
@@ -1633,13 +1633,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_1rlnzx43jq = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/track/video-track.js',
-      hash = '3141e08af88d354f73d1271474e9ae5be991bb6a',
+var cov_9yayqwtsi = function () {
+  var path = '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/track/video-track.js',
+      hash = 'f78bd8c501138c47a2f0963364683dcec304c12f',
       global = new Function('return this')(),
       gcv = '__coverage__',
       coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/track/video-track.js',
+    path: '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/track/video-track.js',
     statementMap: {
       '0': {
         start: {
@@ -1803,8 +1803,8 @@ var VideoTrack = function (_Track) {
      * @returns {string} - The kind of the text track.
      */
     get: function get() {
-      ++cov_1rlnzx43jq.f[0];
-      ++cov_1rlnzx43jq.s[0];
+      ++cov_9yayqwtsi.f[0];
+      ++cov_9yayqwtsi.s[0];
 
       return this._bandwidth;
     }
@@ -1825,16 +1825,16 @@ var VideoTrack = function (_Track) {
   }]);
 
   function VideoTrack() {
-    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (++cov_1rlnzx43jq.b[0][0], {});
+    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (++cov_9yayqwtsi.b[0][0], {});
 
     _classCallCheck(this, VideoTrack);
 
-    ++cov_1rlnzx43jq.f[1];
-    ++cov_1rlnzx43jq.s[1];
+    ++cov_9yayqwtsi.f[1];
+    ++cov_9yayqwtsi.s[1];
 
     var _this = _possibleConstructorReturn(this, (VideoTrack.__proto__ || Object.getPrototypeOf(VideoTrack)).call(this, settings));
 
-    ++cov_1rlnzx43jq.s[2];
+    ++cov_9yayqwtsi.s[2];
 
     _this._bandwidth = settings.bandwidth;
     return _this;
@@ -1856,13 +1856,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_1sq2747ikp = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/event/event-manager.js',
-      hash = '7e867cecd4773fdf3dac54a2fa1cf8bc73b3ec6b',
+var cov_ehttsuswg = function () {
+  var path = '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/event/event-manager.js',
+      hash = '7df293ec043504263625acb5c0d7fe11590fd766',
       global = new Function('return this')(),
       gcv = '__coverage__',
       coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/event/event-manager.js',
+    path: '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/event/event-manager.js',
     statementMap: {
       '0': {
         start: {
@@ -2656,8 +2656,8 @@ var EventManager = function () {
   function EventManager() {
     _classCallCheck(this, EventManager);
 
-    ++cov_1sq2747ikp.f[0];
-    ++cov_1sq2747ikp.s[0];
+    ++cov_ehttsuswg.f[0];
+    ++cov_ehttsuswg.s[0];
 
     /**
      * Maps an event type to an array of event bindings.
@@ -2675,13 +2675,13 @@ var EventManager = function () {
   _createClass(EventManager, [{
     key: 'destroy',
     value: function destroy() {
-      ++cov_1sq2747ikp.f[1];
-      ++cov_1sq2747ikp.s[1];
+      ++cov_ehttsuswg.f[1];
+      ++cov_ehttsuswg.s[1];
 
       this.removeAll();
-      ++cov_1sq2747ikp.s[2];
+      ++cov_ehttsuswg.s[2];
       this._bindingMap = null;
-      ++cov_1sq2747ikp.s[3];
+      ++cov_ehttsuswg.s[3];
       return Promise.resolve();
     }
 
@@ -2696,17 +2696,17 @@ var EventManager = function () {
   }, {
     key: 'listen',
     value: function listen(target, type, listener) {
-      ++cov_1sq2747ikp.f[2];
+      ++cov_ehttsuswg.f[2];
 
-      var binding = (++cov_1sq2747ikp.s[4], new Binding_(target, type, listener));
-      ++cov_1sq2747ikp.s[5];
+      var binding = (++cov_ehttsuswg.s[4], new Binding_(target, type, listener));
+      ++cov_ehttsuswg.s[5];
       if (this._bindingMap) {
-        ++cov_1sq2747ikp.b[0][0];
-        ++cov_1sq2747ikp.s[6];
+        ++cov_ehttsuswg.b[0][0];
+        ++cov_ehttsuswg.s[6];
 
         this._bindingMap.push(type, binding);
       } else {
-        ++cov_1sq2747ikp.b[0][1];
+        ++cov_ehttsuswg.b[0][1];
       }
     }
 
@@ -2720,39 +2720,39 @@ var EventManager = function () {
   }, {
     key: 'unlisten',
     value: function unlisten(target, type) {
-      ++cov_1sq2747ikp.f[3];
-      ++cov_1sq2747ikp.s[7];
+      ++cov_ehttsuswg.f[3];
+      ++cov_ehttsuswg.s[7];
 
       if (this._bindingMap) {
-        ++cov_1sq2747ikp.b[1][0];
+        ++cov_ehttsuswg.b[1][0];
 
-        var list = (++cov_1sq2747ikp.s[8], this._bindingMap.get(type));
+        var list = (++cov_ehttsuswg.s[8], this._bindingMap.get(type));
 
-        ++cov_1sq2747ikp.s[9];
+        ++cov_ehttsuswg.s[9];
         for (var i = 0; i < list.length; ++i) {
-          var binding = (++cov_1sq2747ikp.s[10], list[i]);
+          var binding = (++cov_ehttsuswg.s[10], list[i]);
 
-          ++cov_1sq2747ikp.s[11];
+          ++cov_ehttsuswg.s[11];
           if (binding.target == target) {
-            ++cov_1sq2747ikp.b[2][0];
-            ++cov_1sq2747ikp.s[12];
+            ++cov_ehttsuswg.b[2][0];
+            ++cov_ehttsuswg.s[12];
 
             binding.unlisten();
-            ++cov_1sq2747ikp.s[13];
+            ++cov_ehttsuswg.s[13];
             if (this._bindingMap) {
-              ++cov_1sq2747ikp.b[3][0];
-              ++cov_1sq2747ikp.s[14];
+              ++cov_ehttsuswg.b[3][0];
+              ++cov_ehttsuswg.s[14];
 
               this._bindingMap.remove(type, binding);
             } else {
-              ++cov_1sq2747ikp.b[3][1];
+              ++cov_ehttsuswg.b[3][1];
             }
           } else {
-            ++cov_1sq2747ikp.b[2][1];
+            ++cov_ehttsuswg.b[2][1];
           }
         }
       } else {
-        ++cov_1sq2747ikp.b[1][1];
+        ++cov_ehttsuswg.b[1][1];
       }
     }
 
@@ -2764,15 +2764,15 @@ var EventManager = function () {
   }, {
     key: 'removeAll',
     value: function removeAll() {
-      ++cov_1sq2747ikp.f[4];
-      ++cov_1sq2747ikp.s[15];
+      ++cov_ehttsuswg.f[4];
+      ++cov_ehttsuswg.s[15];
 
       if (this._bindingMap) {
-        ++cov_1sq2747ikp.b[4][0];
+        ++cov_ehttsuswg.b[4][0];
 
-        var listeners = (++cov_1sq2747ikp.s[16], this._bindingMap.getAll());
+        var listeners = (++cov_ehttsuswg.s[16], this._bindingMap.getAll());
 
-        ++cov_1sq2747ikp.s[17];
+        ++cov_ehttsuswg.s[17];
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
         var _iteratorError = undefined;
@@ -2780,7 +2780,7 @@ var EventManager = function () {
         try {
           for (var _iterator = listeners[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var listener = _step.value;
-            ++cov_1sq2747ikp.s[18];
+            ++cov_ehttsuswg.s[18];
 
             listener.unlisten();
           }
@@ -2799,17 +2799,17 @@ var EventManager = function () {
           }
         }
 
-        ++cov_1sq2747ikp.s[19];
+        ++cov_ehttsuswg.s[19];
         if (this._bindingMap) {
-          ++cov_1sq2747ikp.b[5][0];
-          ++cov_1sq2747ikp.s[20];
+          ++cov_ehttsuswg.b[5][0];
+          ++cov_ehttsuswg.s[20];
 
           this._bindingMap.clear();
         } else {
-          ++cov_1sq2747ikp.b[5][1];
+          ++cov_ehttsuswg.b[5][1];
         }
       } else {
-        ++cov_1sq2747ikp.b[4][1];
+        ++cov_ehttsuswg.b[4][1];
       }
     }
   }]);
@@ -2834,21 +2834,21 @@ var Binding_ = function () {
   function Binding_(target, type, listener) {
     _classCallCheck(this, Binding_);
 
-    ++cov_1sq2747ikp.f[5];
-    ++cov_1sq2747ikp.s[21];
+    ++cov_ehttsuswg.f[5];
+    ++cov_ehttsuswg.s[21];
 
     /** @type {EventTarget} */
     this.target = target;
 
     /** @type {string} */
-    ++cov_1sq2747ikp.s[22];
+    ++cov_ehttsuswg.s[22];
     this.type = type;
 
     /** @type {?EventManager.ListenerType} */
-    ++cov_1sq2747ikp.s[23];
+    ++cov_ehttsuswg.s[23];
     this.listener = listener;
 
-    ++cov_1sq2747ikp.s[24];
+    ++cov_ehttsuswg.s[24];
     this.target.addEventListener(type, listener, false);
   }
 
@@ -2862,22 +2862,22 @@ var Binding_ = function () {
   _createClass(Binding_, [{
     key: 'unlisten',
     value: function unlisten() {
-      ++cov_1sq2747ikp.f[6];
-      ++cov_1sq2747ikp.s[25];
+      ++cov_ehttsuswg.f[6];
+      ++cov_ehttsuswg.s[25];
 
       if (!this.target) {
-          ++cov_1sq2747ikp.b[6][0];
-          ++cov_1sq2747ikp.s[26];
+          ++cov_ehttsuswg.b[6][0];
+          ++cov_ehttsuswg.s[26];
 
           return;
         } else {
-        ++cov_1sq2747ikp.b[6][1];
-      }++cov_1sq2747ikp.s[27];
+        ++cov_ehttsuswg.b[6][1];
+      }++cov_ehttsuswg.s[27];
       this.target.removeEventListener(this.type, this.listener, false);
 
-      ++cov_1sq2747ikp.s[28];
+      ++cov_ehttsuswg.s[28];
       this.target = null;
-      ++cov_1sq2747ikp.s[29];
+      ++cov_ehttsuswg.s[29];
       this.listener = null;
     }
   }]);
@@ -2899,13 +2899,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.CUSTOM_EVENTS = exports.HTML5_EVENTS = exports.PLAYER_EVENTS = undefined;
 
-var cov_8bz2gle5l = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/event/events.js',
-      hash = 'f701d63cb929e8fc2ca1075fb31ebc4add21e170',
+var cov_2i6ydx3el1 = function () {
+  var path = '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/event/events.js',
+      hash = 'ceebcdc34aaa7ec09af6b57c504ae264ac0dd682',
       global = new Function('return this')(),
       gcv = '__coverage__',
       coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/event/events.js',
+    path: '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/event/events.js',
     statementMap: {
       '0': {
         start: {
@@ -2923,17 +2923,17 @@ var cov_8bz2gle5l = function () {
           column: 51
         },
         end: {
-          line: 116,
+          line: 120,
           column: 1
         }
       },
       '2': {
         start: {
-          line: 118,
+          line: 122,
           column: 51
         },
         end: {
-          line: 118,
+          line: 122,
           column: 87
         }
       }
@@ -2961,7 +2961,7 @@ var cov_8bz2gle5l = function () {
 
 var _util = __webpack_require__(11);
 
-var HTML5_EVENTS = (++cov_8bz2gle5l.s[0], {
+var HTML5_EVENTS = (++cov_2i6ydx3el1.s[0], {
   /**
    * Fires when the loading of an audio/video is aborted
    */
@@ -3052,19 +3052,23 @@ var HTML5_EVENTS = (++cov_8bz2gle5l.s[0], {
   WAITING: 'waiting'
 });
 
-var CUSTOM_EVENTS = (++cov_8bz2gle5l.s[1], {
+var CUSTOM_EVENTS = (++cov_2i6ydx3el1.s[1], {
   /**
-   * Fires when the video track has been changed
+   * Fires when the active video track has been changed
    */
   VIDEO_TRACK_CHANGED: 'videotrackchanged',
   /**
-   * Fires when the audio track has been changed
+   * Fires when the active audio track has been changed
    */
   AUDIO_TRACK_CHANGED: 'audiotrackchanged',
   /**
-   * Fires when the text track has been changed
+   * Fires when the active text track has been changed
    */
   TEXT_TRACK_CHANGED: 'texttrackchanged',
+  /**
+   * Fires when the player tracks have been changed
+   */
+  TRACKS_CHANGED: 'trackschanged',
   /**
    * Fires when the player state has been changed
    */
@@ -3075,7 +3079,7 @@ var CUSTOM_EVENTS = (++cov_8bz2gle5l.s[1], {
   FIRST_PLAY: 'firstplay'
 });
 
-var PLAYER_EVENTS = (++cov_8bz2gle5l.s[2], (0, _util.merge)([HTML5_EVENTS, CUSTOM_EVENTS]));
+var PLAYER_EVENTS = (++cov_2i6ydx3el1.s[2], (0, _util.merge)([HTML5_EVENTS, CUSTOM_EVENTS]));
 
 exports.PLAYER_EVENTS = PLAYER_EVENTS;
 exports.HTML5_EVENTS = HTML5_EVENTS;
@@ -3092,122 +3096,122 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_4x54fj3w8 = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/player.js',
-      hash = '0ad8c0307a8bbdac1ca2ff33dc35175f0829d22d',
+var cov_1tmg352ddi = function () {
+  var path = '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/player.js',
+      hash = '7565632bdc56b3fc284cf82a24d1d6147bcedcc8',
       global = new Function('return this')(),
       gcv = '__coverage__',
       coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/player.js',
+    path: '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/player.js',
     statementMap: {
       '0': {
         start: {
-          line: 77,
+          line: 83,
           column: 4
         },
         end: {
-          line: 77,
+          line: 83,
           column: 12
         }
       },
       '1': {
         start: {
-          line: 78,
+          line: 84,
           column: 4
         },
         end: {
-          line: 78,
+          line: 84,
           column: 22
         }
       },
       '2': {
         start: {
-          line: 79,
+          line: 85,
           column: 4
         },
         end: {
-          line: 79,
+          line: 85,
           column: 27
         }
       },
       '3': {
         start: {
-          line: 80,
+          line: 86,
           column: 4
         },
         end: {
-          line: 80,
+          line: 86,
           column: 53
         }
       },
       '4': {
         start: {
-          line: 81,
+          line: 87,
           column: 4
         },
         end: {
-          line: 81,
+          line: 87,
           column: 48
         }
       },
       '5': {
         start: {
-          line: 82,
+          line: 88,
           column: 4
         },
         end: {
-          line: 82,
+          line: 88,
           column: 46
         }
       },
       '6': {
         start: {
-          line: 83,
+          line: 89,
           column: 4
         },
         end: {
-          line: 83,
+          line: 89,
           column: 44
         }
       },
       '7': {
         start: {
-          line: 84,
+          line: 90,
           column: 4
         },
         end: {
-          line: 84,
-          column: 27
+          line: 95,
+          column: 7
         }
       },
       '8': {
         start: {
-          line: 93,
-          column: 4
+          line: 91,
+          column: 6
         },
         end: {
           line: 93,
-          column: 76
+          column: 9
         }
       },
       '9': {
         start: {
-          line: 94,
-          column: 4
+          line: 92,
+          column: 8
         },
         end: {
-          line: 94,
-          column: 36
+          line: 92,
+          column: 18
         }
       },
       '10': {
         start: {
-          line: 95,
-          column: 4
+          line: 94,
+          column: 6
         },
         end: {
-          line: 95,
-          column: 37
+          line: 94,
+          column: 65
         }
       },
       '11': {
@@ -3217,7 +3221,7 @@ var cov_4x54fj3w8 = function () {
         },
         end: {
           line: 96,
-          column: 24
+          column: 27
         }
       },
       '12': {
@@ -3227,7 +3231,7 @@ var cov_4x54fj3w8 = function () {
         },
         end: {
           line: 105,
-          column: 27
+          column: 76
         }
       },
       '13': {
@@ -3237,7 +3241,7 @@ var cov_4x54fj3w8 = function () {
         },
         end: {
           line: 106,
-          column: 33
+          column: 36
         }
       },
       '14': {
@@ -3247,7 +3251,7 @@ var cov_4x54fj3w8 = function () {
         },
         end: {
           line: 107,
-          column: 34
+          column: 37
         }
       },
       '15': {
@@ -3257,37 +3261,37 @@ var cov_4x54fj3w8 = function () {
         },
         end: {
           line: 108,
-          column: 33
+          column: 24
         }
       },
       '16': {
         start: {
-          line: 109,
+          line: 117,
           column: 4
         },
         end: {
-          line: 109,
-          column: 22
+          line: 117,
+          column: 27
         }
       },
       '17': {
         start: {
-          line: 110,
+          line: 118,
           column: 4
         },
         end: {
-          line: 110,
-          column: 22
+          line: 118,
+          column: 33
         }
       },
       '18': {
         start: {
-          line: 111,
+          line: 119,
           column: 4
         },
         end: {
-          line: 111,
-          column: 27
+          line: 119,
+          column: 34
         }
       },
       '19': {
@@ -3297,1046 +3301,1126 @@ var cov_4x54fj3w8 = function () {
         },
         end: {
           line: 120,
-          column: 14
+          column: 33
         }
       },
       '20': {
         start: {
-          line: 130,
-          column: 18
+          line: 121,
+          column: 4
         },
         end: {
-          line: 130,
-          column: 32
+          line: 121,
+          column: 22
         }
       },
       '21': {
         start: {
-          line: 131,
+          line: 122,
           column: 4
         },
         end: {
-          line: 133,
-          column: 5
+          line: 122,
+          column: 22
         }
       },
       '22': {
         start: {
-          line: 132,
-          column: 6
+          line: 123,
+          column: 4
         },
         end: {
-          line: 132,
-          column: 58
+          line: 123,
+          column: 30
         }
       },
       '23': {
         start: {
-          line: 143,
+          line: 124,
           column: 4
         },
         end: {
-          line: 151,
-          column: 5
+          line: 124,
+          column: 27
         }
       },
       '24': {
         start: {
-          line: 144,
-          column: 20
+          line: 133,
+          column: 4
         },
         end: {
-          line: 144,
-          column: 34
+          line: 133,
+          column: 14
         }
       },
       '25': {
+        start: {
+          line: 143,
+          column: 18
+        },
+        end: {
+          line: 143,
+          column: 32
+        }
+      },
+      '26': {
+        start: {
+          line: 144,
+          column: 4
+        },
+        end: {
+          line: 146,
+          column: 5
+        }
+      },
+      '27': {
         start: {
           line: 145,
           column: 6
         },
         end: {
-          line: 150,
-          column: 7
-        }
-      },
-      '26': {
-        start: {
-          line: 146,
-          column: 8
-        },
-        end: {
-          line: 149,
-          column: 9
-        }
-      },
-      '27': {
-        start: {
-          line: 147,
-          column: 10
-        },
-        end: {
-          line: 147,
-          column: 47
+          line: 145,
+          column: 58
         }
       },
       '28': {
         start: {
-          line: 148,
-          column: 10
+          line: 156,
+          column: 4
         },
         end: {
-          line: 148,
-          column: 16
+          line: 164,
+          column: 5
         }
       },
       '29': {
         start: {
-          line: 162,
-          column: 4
+          line: 157,
+          column: 20
         },
         end: {
-          line: 162,
-          column: 45
+          line: 157,
+          column: 34
         }
       },
       '30': {
         start: {
-          line: 163,
-          column: 4
+          line: 158,
+          column: 6
         },
         end: {
-          line: 165,
-          column: 5
+          line: 163,
+          column: 7
         }
       },
       '31': {
         start: {
-          line: 164,
-          column: 6
+          line: 159,
+          column: 8
         },
         end: {
-          line: 164,
-          column: 18
+          line: 162,
+          column: 9
         }
       },
       '32': {
         start: {
-          line: 174,
-          column: 4
+          line: 160,
+          column: 10
         },
         end: {
-          line: 193,
-          column: 5
+          line: 160,
+          column: 47
         }
       },
       '33': {
         start: {
-          line: 175,
-          column: 6
+          line: 161,
+          column: 10
         },
         end: {
-          line: 179,
-          column: 7
+          line: 161,
+          column: 16
         }
       },
       '34': {
         start: {
-          line: 176,
-          column: 8
+          line: 175,
+          column: 4
         },
         end: {
-          line: 178,
-          column: 11
+          line: 175,
+          column: 45
         }
       },
       '35': {
         start: {
-          line: 177,
-          column: 10
+          line: 176,
+          column: 4
         },
         end: {
-          line: 177,
-          column: 43
+          line: 178,
+          column: 5
         }
       },
       '36': {
         start: {
-          line: 180,
+          line: 177,
           column: 6
         },
         end: {
-          line: 183,
-          column: 9
+          line: 177,
+          column: 18
         }
       },
       '37': {
         start: {
-          line: 181,
-          column: 8
+          line: 187,
+          column: 4
         },
         end: {
-          line: 181,
-          column: 64
+          line: 206,
+          column: 5
         }
       },
       '38': {
-        start: {
-          line: 182,
-          column: 8
-        },
-        end: {
-          line: 182,
-          column: 41
-        }
-      },
-      '39': {
-        start: {
-          line: 184,
-          column: 6
-        },
-        end: {
-          line: 187,
-          column: 9
-        }
-      },
-      '40': {
-        start: {
-          line: 185,
-          column: 8
-        },
-        end: {
-          line: 185,
-          column: 64
-        }
-      },
-      '41': {
-        start: {
-          line: 186,
-          column: 8
-        },
-        end: {
-          line: 186,
-          column: 41
-        }
-      },
-      '42': {
         start: {
           line: 188,
           column: 6
         },
         end: {
+          line: 192,
+          column: 7
+        }
+      },
+      '39': {
+        start: {
+          line: 189,
+          column: 8
+        },
+        end: {
           line: 191,
+          column: 11
+        }
+      },
+      '40': {
+        start: {
+          line: 190,
+          column: 10
+        },
+        end: {
+          line: 190,
+          column: 43
+        }
+      },
+      '41': {
+        start: {
+          line: 193,
+          column: 6
+        },
+        end: {
+          line: 196,
           column: 9
+        }
+      },
+      '42': {
+        start: {
+          line: 194,
+          column: 8
+        },
+        end: {
+          line: 194,
+          column: 64
         }
       },
       '43': {
         start: {
-          line: 189,
+          line: 195,
           column: 8
         },
         end: {
-          line: 189,
-          column: 63
+          line: 195,
+          column: 41
         }
       },
       '44': {
         start: {
-          line: 190,
-          column: 8
+          line: 197,
+          column: 6
         },
         end: {
-          line: 190,
-          column: 41
+          line: 200,
+          column: 9
         }
       },
       '45': {
         start: {
-          line: 192,
-          column: 6
+          line: 198,
+          column: 8
         },
         end: {
-          line: 192,
-          column: 81
+          line: 198,
+          column: 64
         }
       },
       '46': {
         start: {
-          line: 204,
-          column: 4
+          line: 199,
+          column: 8
         },
         end: {
-          line: 204,
-          column: 39
+          line: 199,
+          column: 41
         }
       },
       '47': {
         start: {
-          line: 215,
-          column: 4
+          line: 201,
+          column: 6
         },
         end: {
-          line: 225,
-          column: 7
+          line: 204,
+          column: 9
         }
       },
       '48': {
         start: {
-          line: 216,
-          column: 6
+          line: 202,
+          column: 8
         },
         end: {
-          line: 224,
-          column: 7
+          line: 202,
+          column: 63
         }
       },
       '49': {
         start: {
-          line: 217,
+          line: 203,
           column: 8
         },
         end: {
-          line: 217,
-          column: 43
+          line: 203,
+          column: 41
         }
       },
       '50': {
         start: {
-          line: 218,
-          column: 13
+          line: 205,
+          column: 6
         },
         end: {
-          line: 224,
-          column: 7
+          line: 205,
+          column: 81
         }
       },
       '51': {
         start: {
-          line: 219,
-          column: 8
+          line: 217,
+          column: 4
         },
         end: {
-          line: 219,
-          column: 43
+          line: 217,
+          column: 39
         }
       },
       '52': {
         start: {
-          line: 220,
-          column: 13
+          line: 228,
+          column: 4
         },
         end: {
-          line: 224,
+          line: 238,
           column: 7
         }
       },
       '53': {
         start: {
-          line: 221,
-          column: 8
+          line: 229,
+          column: 6
         },
         end: {
-          line: 221,
-          column: 42
+          line: 237,
+          column: 7
         }
       },
       '54': {
         start: {
-          line: 223,
+          line: 230,
           column: 8
         },
         end: {
-          line: 223,
-          column: 20
+          line: 230,
+          column: 43
         }
       },
       '55': {
         start: {
-          line: 236,
-          column: 4
+          line: 231,
+          column: 13
         },
         end: {
-          line: 244,
-          column: 5
+          line: 237,
+          column: 7
         }
       },
       '56': {
         start: {
-          line: 237,
-          column: 6
+          line: 232,
+          column: 8
         },
         end: {
-          line: 243,
-          column: 7
+          line: 232,
+          column: 43
         }
       },
       '57': {
         start: {
-          line: 238,
-          column: 8
+          line: 233,
+          column: 13
         },
         end: {
-          line: 238,
-          column: 45
+          line: 237,
+          column: 7
         }
       },
       '58': {
         start: {
-          line: 239,
-          column: 13
+          line: 234,
+          column: 8
         },
         end: {
-          line: 243,
-          column: 7
+          line: 234,
+          column: 42
         }
       },
       '59': {
         start: {
-          line: 240,
+          line: 236,
           column: 8
         },
         end: {
-          line: 240,
-          column: 45
+          line: 236,
+          column: 20
         }
       },
       '60': {
         start: {
-          line: 241,
-          column: 13
+          line: 249,
+          column: 4
         },
         end: {
-          line: 243,
-          column: 7
+          line: 257,
+          column: 5
         }
       },
       '61': {
         start: {
-          line: 242,
-          column: 8
+          line: 250,
+          column: 6
         },
         end: {
-          line: 242,
-          column: 44
+          line: 256,
+          column: 7
         }
       },
       '62': {
         start: {
-          line: 254,
-          column: 4
+          line: 251,
+          column: 8
         },
         end: {
-          line: 256,
-          column: 5
+          line: 251,
+          column: 45
         }
       },
       '63': {
         start: {
-          line: 255,
-          column: 6
+          line: 252,
+          column: 13
         },
         end: {
-          line: 255,
-          column: 43
+          line: 256,
+          column: 7
         }
       },
       '64': {
         start: {
-          line: 268,
-          column: 4
+          line: 253,
+          column: 8
         },
         end: {
-          line: 274,
-          column: 5
+          line: 253,
+          column: 45
         }
       },
       '65': {
         start: {
-          line: 269,
-          column: 6
+          line: 254,
+          column: 13
         },
         end: {
-          line: 269,
-          column: 30
+          line: 256,
+          column: 7
         }
       },
       '66': {
         start: {
-          line: 270,
-          column: 11
+          line: 255,
+          column: 8
         },
         end: {
-          line: 274,
-          column: 5
+          line: 255,
+          column: 44
         }
       },
       '67': {
         start: {
-          line: 271,
-          column: 6
+          line: 267,
+          column: 4
         },
         end: {
-          line: 271,
-          column: 30
+          line: 269,
+          column: 5
         }
       },
       '68': {
         start: {
-          line: 272,
-          column: 11
+          line: 268,
+          column: 6
         },
         end: {
-          line: 274,
-          column: 5
+          line: 268,
+          column: 43
         }
       },
       '69': {
         start: {
-          line: 273,
-          column: 6
+          line: 281,
+          column: 4
         },
         end: {
-          line: 273,
-          column: 29
+          line: 287,
+          column: 5
         }
       },
       '70': {
         start: {
-          line: 275,
-          column: 4
+          line: 282,
+          column: 6
         },
         end: {
-          line: 280,
-          column: 5
+          line: 282,
+          column: 30
         }
       },
       '71': {
         start: {
-          line: 276,
-          column: 19
+          line: 283,
+          column: 11
         },
         end: {
-          line: 276,
-          column: 39
+          line: 287,
+          column: 5
         }
       },
       '72': {
         start: {
-          line: 277,
+          line: 284,
           column: 6
         },
         end: {
-          line: 279,
-          column: 7
+          line: 284,
+          column: 30
         }
       },
       '73': {
         start: {
-          line: 278,
-          column: 8
+          line: 285,
+          column: 11
         },
         end: {
-          line: 278,
-          column: 45
+          line: 287,
+          column: 5
         }
       },
       '74': {
         start: {
-          line: 289,
-          column: 4
+          line: 286,
+          column: 6
         },
         end: {
-          line: 292,
-          column: 5
+          line: 286,
+          column: 29
         }
       },
       '75': {
         start: {
-          line: 290,
-          column: 6
+          line: 288,
+          column: 4
         },
         end: {
-          line: 290,
-          column: 30
+          line: 293,
+          column: 5
         }
       },
       '76': {
         start: {
-          line: 291,
-          column: 6
+          line: 289,
+          column: 19
         },
         end: {
-          line: 291,
-          column: 65
+          line: 289,
+          column: 39
         }
       },
       '77': {
         start: {
-          line: 301,
-          column: 4
+          line: 290,
+          column: 6
         },
         end: {
-          line: 301,
-          column: 24
+          line: 292,
+          column: 7
         }
       },
       '78': {
         start: {
-          line: 311,
-          column: 4
+          line: 291,
+          column: 8
         },
         end: {
-          line: 319,
-          column: 5
+          line: 291,
+          column: 45
         }
       },
       '79': {
         start: {
-          line: 312,
-          column: 6
+          line: 302,
+          column: 4
         },
         end: {
-          line: 318,
-          column: 7
+          line: 305,
+          column: 5
         }
       },
       '80': {
         start: {
-          line: 313,
-          column: 8
+          line: 303,
+          column: 6
         },
         end: {
-          line: 313,
-          column: 28
+          line: 303,
+          column: 30
         }
       },
       '81': {
         start: {
-          line: 315,
-          column: 8
+          line: 304,
+          column: 6
         },
         end: {
-          line: 317,
-          column: 11
+          line: 304,
+          column: 65
         }
       },
       '82': {
         start: {
-          line: 316,
-          column: 10
+          line: 314,
+          column: 4
         },
         end: {
-          line: 316,
-          column: 30
+          line: 314,
+          column: 24
         }
       },
       '83': {
         start: {
-          line: 328,
+          line: 324,
           column: 4
         },
         end: {
-          line: 330,
-          column: 5
+          line: 324,
+          column: 71
         }
       },
       '84': {
         start: {
-          line: 329,
-          column: 6
+          line: 333,
+          column: 4
         },
         end: {
-          line: 329,
-          column: 34
+          line: 340,
+          column: 5
         }
       },
       '85': {
         start: {
-          line: 339,
-          column: 4
+          line: 334,
+          column: 6
         },
         end: {
-          line: 345,
-          column: 5
+          line: 339,
+          column: 9
         }
       },
       '86': {
         start: {
-          line: 340,
-          column: 6
+          line: 335,
+          column: 8
         },
         end: {
-          line: 342,
-          column: 9
+          line: 335,
+          column: 35
         }
       },
       '87': {
         start: {
-          line: 341,
+          line: 336,
           column: 8
         },
         end: {
-          line: 341,
-          column: 35
+          line: 336,
+          column: 95
         }
       },
       '88': {
         start: {
-          line: 344,
-          column: 6
+          line: 338,
+          column: 8
         },
         end: {
-          line: 344,
-          column: 31
+          line: 338,
+          column: 68
         }
       },
       '89': {
         start: {
-          line: 354,
+          line: 349,
           column: 4
         },
         end: {
-          line: 365,
+          line: 358,
           column: 5
         }
       },
       '90': {
         start: {
-          line: 355,
+          line: 350,
           column: 6
         },
         end: {
-          line: 364,
+          line: 357,
           column: 7
         }
       },
       '91': {
         start: {
-          line: 356,
-          column: 24
+          line: 351,
+          column: 8
         },
         end: {
-          line: 356,
-          column: 26
+          line: 351,
+          column: 28
         }
       },
       '92': {
         start: {
-          line: 357,
+          line: 353,
           column: 8
         },
         end: {
-          line: 359,
-          column: 9
+          line: 353,
+          column: 20
         }
       },
       '93': {
         start: {
-          line: 358,
-          column: 10
+          line: 354,
+          column: 8
         },
         end: {
-          line: 358,
-          column: 24
+          line: 356,
+          column: 11
         }
       },
       '94': {
         start: {
-          line: 360,
-          column: 8
+          line: 355,
+          column: 10
         },
         end: {
-          line: 362,
-          column: 9
+          line: 355,
+          column: 30
         }
       },
       '95': {
         start: {
-          line: 361,
-          column: 10
+          line: 367,
+          column: 4
         },
         end: {
-          line: 361,
-          column: 44
+          line: 369,
+          column: 5
         }
       },
       '96': {
         start: {
-          line: 363,
-          column: 8
+          line: 368,
+          column: 6
         },
         end: {
-          line: 363,
-          column: 45
+          line: 368,
+          column: 34
         }
       },
       '97': {
         start: {
-          line: 374,
+          line: 378,
           column: 4
         },
         end: {
-          line: 376,
+          line: 389,
           column: 5
         }
       },
       '98': {
         start: {
-          line: 375,
+          line: 379,
           column: 6
         },
         end: {
-          line: 375,
-          column: 38
+          line: 388,
+          column: 7
         }
       },
       '99': {
         start: {
-          line: 385,
-          column: 4
+          line: 380,
+          column: 24
         },
         end: {
-          line: 387,
-          column: 5
+          line: 380,
+          column: 26
         }
       },
       '100': {
         start: {
-          line: 386,
-          column: 6
+          line: 381,
+          column: 8
         },
         end: {
-          line: 386,
-          column: 35
+          line: 383,
+          column: 9
         }
       },
       '101': {
         start: {
-          line: 397,
-          column: 4
+          line: 382,
+          column: 10
         },
         end: {
-          line: 408,
-          column: 5
+          line: 382,
+          column: 24
         }
       },
       '102': {
         start: {
-          line: 398,
-          column: 6
+          line: 384,
+          column: 8
         },
         end: {
-          line: 407,
-          column: 7
+          line: 386,
+          column: 9
         }
       },
       '103': {
         start: {
-          line: 399,
-          column: 25
+          line: 385,
+          column: 10
         },
         end: {
-          line: 399,
-          column: 28
+          line: 385,
+          column: 44
         }
       },
       '104': {
         start: {
-          line: 400,
+          line: 387,
           column: 8
         },
         end: {
-          line: 402,
-          column: 9
+          line: 387,
+          column: 45
         }
       },
       '105': {
         start: {
-          line: 401,
-          column: 10
+          line: 398,
+          column: 4
         },
         end: {
-          line: 401,
-          column: 25
+          line: 400,
+          column: 5
         }
       },
       '106': {
         start: {
-          line: 403,
-          column: 8
+          line: 399,
+          column: 6
         },
         end: {
-          line: 405,
-          column: 9
+          line: 399,
+          column: 38
         }
       },
       '107': {
         start: {
-          line: 404,
-          column: 10
+          line: 409,
+          column: 4
         },
         end: {
-          line: 404,
-          column: 25
+          line: 411,
+          column: 5
         }
       },
       '108': {
         start: {
-          line: 406,
-          column: 8
+          line: 410,
+          column: 6
         },
         end: {
-          line: 406,
-          column: 41
+          line: 410,
+          column: 35
         }
       },
       '109': {
         start: {
-          line: 417,
+          line: 421,
           column: 4
         },
         end: {
-          line: 419,
+          line: 432,
           column: 5
         }
       },
       '110': {
         start: {
-          line: 418,
+          line: 422,
           column: 6
         },
         end: {
-          line: 418,
-          column: 33
+          line: 431,
+          column: 7
         }
       },
       '111': {
         start: {
-          line: 434,
-          column: 4
+          line: 423,
+          column: 25
         },
         end: {
-          line: 436,
-          column: 5
+          line: 423,
+          column: 28
         }
       },
       '112': {
         start: {
-          line: 435,
-          column: 6
+          line: 424,
+          column: 8
         },
         end: {
-          line: 435,
-          column: 33
+          line: 426,
+          column: 9
         }
       },
       '113': {
         start: {
-          line: 445,
-          column: 4
+          line: 425,
+          column: 10
         },
         end: {
-          line: 447,
-          column: 5
+          line: 425,
+          column: 25
         }
       },
       '114': {
         start: {
-          line: 446,
-          column: 6
+          line: 427,
+          column: 8
         },
         end: {
-          line: 446,
-          column: 34
+          line: 429,
+          column: 9
         }
       },
       '115': {
         start: {
-          line: 460,
-          column: 4
+          line: 428,
+          column: 10
         },
         end: {
-          line: 462,
-          column: 5
+          line: 428,
+          column: 25
         }
       },
       '116': {
         start: {
-          line: 461,
-          column: 6
+          line: 430,
+          column: 8
         },
         end: {
-          line: 461,
-          column: 32
+          line: 430,
+          column: 41
         }
       },
       '117': {
         start: {
-          line: 471,
+          line: 441,
           column: 4
         },
         end: {
-          line: 473,
+          line: 443,
           column: 5
         }
       },
       '118': {
         start: {
-          line: 472,
+          line: 442,
           column: 6
         },
         end: {
-          line: 472,
-          column: 32
+          line: 442,
+          column: 33
         }
       },
       '119': {
         start: {
-          line: 482,
+          line: 455,
           column: 4
         },
         end: {
-          line: 484,
+          line: 457,
           column: 5
         }
       },
       '120': {
         start: {
-          line: 483,
+          line: 456,
           column: 6
         },
         end: {
-          line: 483,
-          column: 30
+          line: 456,
+          column: 33
         }
       },
       '121': {
         start: {
-          line: 493,
+          line: 466,
           column: 4
         },
         end: {
-          line: 493,
-          column: 24
+          line: 468,
+          column: 5
         }
       },
       '122': {
         start: {
-          line: 502,
-          column: 4
+          line: 467,
+          column: 6
         },
         end: {
-          line: 502,
-          column: 24
+          line: 467,
+          column: 34
         }
       },
       '123': {
         start: {
-          line: 511,
+          line: 481,
           column: 4
         },
         end: {
-          line: 511,
+          line: 483,
+          column: 5
+        }
+      },
+      '124': {
+        start: {
+          line: 482,
+          column: 6
+        },
+        end: {
+          line: 482,
+          column: 32
+        }
+      },
+      '125': {
+        start: {
+          line: 492,
+          column: 4
+        },
+        end: {
+          line: 494,
+          column: 5
+        }
+      },
+      '126': {
+        start: {
+          line: 493,
+          column: 6
+        },
+        end: {
+          line: 493,
+          column: 32
+        }
+      },
+      '127': {
+        start: {
+          line: 503,
+          column: 4
+        },
+        end: {
+          line: 505,
+          column: 5
+        }
+      },
+      '128': {
+        start: {
+          line: 504,
+          column: 6
+        },
+        end: {
+          line: 504,
+          column: 30
+        }
+      },
+      '129': {
+        start: {
+          line: 514,
+          column: 4
+        },
+        end: {
+          line: 514,
+          column: 24
+        }
+      },
+      '130': {
+        start: {
+          line: 523,
+          column: 4
+        },
+        end: {
+          line: 523,
+          column: 24
+        }
+      },
+      '131': {
+        start: {
+          line: 532,
+          column: 4
+        },
+        end: {
+          line: 532,
           column: 22
         }
       }
@@ -4346,2283 +4430,2388 @@ var cov_4x54fj3w8 = function () {
         name: '(anonymous_0)',
         decl: {
           start: {
-            line: 76,
+            line: 82,
             column: 2
           },
           end: {
-            line: 76,
+            line: 82,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 76,
+            line: 82,
             column: 30
-          },
-          end: {
-            line: 85,
-            column: 3
-          }
-        },
-        line: 76
-      },
-      '1': {
-        name: '(anonymous_1)',
-        decl: {
-          start: {
-            line: 92,
-            column: 2
-          },
-          end: {
-            line: 92,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 92,
-            column: 34
           },
           end: {
             line: 97,
             column: 3
           }
         },
-        line: 92
+        line: 82
+      },
+      '1': {
+        name: '(anonymous_1)',
+        decl: {
+          start: {
+            line: 90,
+            column: 37
+          },
+          end: {
+            line: 90,
+            column: 38
+          }
+        },
+        loc: {
+          start: {
+            line: 90,
+            column: 58
+          },
+          end: {
+            line: 95,
+            column: 5
+          }
+        },
+        line: 90
       },
       '2': {
         name: '(anonymous_2)',
         decl: {
           start: {
-            line: 104,
-            column: 2
+            line: 91,
+            column: 67
           },
           end: {
-            line: 104,
-            column: 3
+            line: 91,
+            column: 68
           }
         },
         loc: {
           start: {
-            line: 104,
-            column: 18
+            line: 91,
+            column: 73
           },
           end: {
-            line: 112,
-            column: 3
+            line: 93,
+            column: 7
           }
         },
-        line: 104
+        line: 91
       },
       '3': {
         name: '(anonymous_3)',
         decl: {
           start: {
-            line: 119,
+            line: 104,
             column: 2
           },
           end: {
-            line: 119,
+            line: 104,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 119,
+            line: 104,
             column: 34
           },
           end: {
-            line: 121,
+            line: 109,
             column: 3
           }
         },
-        line: 119
+        line: 104
       },
       '4': {
         name: '(anonymous_4)',
         decl: {
           start: {
-            line: 129,
+            line: 116,
             column: 2
           },
           end: {
-            line: 129,
+            line: 116,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 129,
-            column: 37
+            line: 116,
+            column: 18
+          },
+          end: {
+            line: 125,
+            column: 3
+          }
+        },
+        line: 116
+      },
+      '5': {
+        name: '(anonymous_5)',
+        decl: {
+          start: {
+            line: 132,
+            column: 2
+          },
+          end: {
+            line: 132,
+            column: 3
+          }
+        },
+        loc: {
+          start: {
+            line: 132,
+            column: 34
           },
           end: {
             line: 134,
             column: 3
           }
         },
-        line: 129
-      },
-      '5': {
-        name: '(anonymous_5)',
-        decl: {
-          start: {
-            line: 142,
-            column: 2
-          },
-          end: {
-            line: 142,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 142,
-            column: 38
-          },
-          end: {
-            line: 152,
-            column: 3
-          }
-        },
-        line: 142
+        line: 132
       },
       '6': {
         name: '(anonymous_6)',
         decl: {
           start: {
-            line: 161,
+            line: 142,
             column: 2
           },
           end: {
-            line: 161,
+            line: 142,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 161,
-            column: 52
+            line: 142,
+            column: 37
           },
           end: {
-            line: 166,
+            line: 147,
             column: 3
           }
         },
-        line: 161
+        line: 142
       },
       '7': {
         name: '(anonymous_7)',
         decl: {
           start: {
-            line: 173,
+            line: 155,
             column: 2
           },
           end: {
-            line: 173,
+            line: 155,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 173,
-            column: 23
+            line: 155,
+            column: 38
           },
           end: {
-            line: 194,
+            line: 165,
             column: 3
           }
         },
-        line: 173
+        line: 155
       },
       '8': {
         name: '(anonymous_8)',
         decl: {
           start: {
-            line: 176,
-            column: 74
+            line: 174,
+            column: 2
           },
           end: {
-            line: 176,
-            column: 75
+            line: 174,
+            column: 3
           }
         },
         loc: {
           start: {
-            line: 176,
-            column: 96
+            line: 174,
+            column: 52
           },
           end: {
-            line: 178,
-            column: 9
+            line: 179,
+            column: 3
           }
         },
-        line: 176
+        line: 174
       },
       '9': {
         name: '(anonymous_9)',
         decl: {
           start: {
-            line: 180,
-            column: 80
+            line: 186,
+            column: 2
           },
           end: {
-            line: 180,
-            column: 81
+            line: 186,
+            column: 3
           }
         },
         loc: {
           start: {
-            line: 180,
-            column: 102
+            line: 186,
+            column: 23
           },
           end: {
-            line: 183,
-            column: 7
+            line: 207,
+            column: 3
           }
         },
-        line: 180
+        line: 186
       },
       '10': {
         name: '(anonymous_10)',
         decl: {
           start: {
-            line: 184,
-            column: 80
+            line: 189,
+            column: 74
           },
           end: {
-            line: 184,
-            column: 81
+            line: 189,
+            column: 75
           }
         },
         loc: {
           start: {
-            line: 184,
-            column: 102
+            line: 189,
+            column: 96
           },
           end: {
-            line: 187,
-            column: 7
+            line: 191,
+            column: 9
           }
         },
-        line: 184
+        line: 189
       },
       '11': {
         name: '(anonymous_11)',
         decl: {
           start: {
-            line: 188,
-            column: 79
+            line: 193,
+            column: 80
           },
           end: {
-            line: 188,
-            column: 80
+            line: 193,
+            column: 81
           }
         },
         loc: {
           start: {
-            line: 188,
-            column: 101
+            line: 193,
+            column: 102
           },
           end: {
-            line: 191,
+            line: 196,
             column: 7
           }
         },
-        line: 188
+        line: 193
       },
       '12': {
         name: '(anonymous_12)',
         decl: {
           start: {
-            line: 203,
-            column: 2
+            line: 197,
+            column: 80
           },
           end: {
-            line: 203,
-            column: 3
+            line: 197,
+            column: 81
           }
         },
         loc: {
           start: {
-            line: 203,
-            column: 41
+            line: 197,
+            column: 102
           },
           end: {
-            line: 205,
-            column: 3
+            line: 200,
+            column: 7
           }
         },
-        line: 203
+        line: 197
       },
       '13': {
         name: '(anonymous_13)',
         decl: {
           start: {
-            line: 214,
-            column: 2
+            line: 201,
+            column: 79
           },
           end: {
-            line: 214,
-            column: 3
+            line: 201,
+            column: 80
           }
         },
         loc: {
           start: {
-            line: 214,
-            column: 48
+            line: 201,
+            column: 101
           },
           end: {
-            line: 226,
-            column: 3
+            line: 204,
+            column: 7
           }
         },
-        line: 214
+        line: 201
       },
       '14': {
         name: '(anonymous_14)',
         decl: {
           start: {
-            line: 215,
-            column: 54
+            line: 216,
+            column: 2
           },
           end: {
-            line: 215,
-            column: 55
+            line: 216,
+            column: 3
           }
         },
         loc: {
           start: {
-            line: 215,
-            column: 72
+            line: 216,
+            column: 41
           },
           end: {
-            line: 225,
-            column: 5
+            line: 218,
+            column: 3
           }
         },
-        line: 215
+        line: 216
       },
       '15': {
         name: '(anonymous_15)',
         decl: {
           start: {
-            line: 235,
+            line: 227,
             column: 2
           },
           end: {
-            line: 235,
+            line: 227,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 235,
-            column: 34
+            line: 227,
+            column: 48
           },
           end: {
-            line: 245,
+            line: 239,
             column: 3
           }
         },
-        line: 235
+        line: 227
       },
       '16': {
         name: '(anonymous_16)',
         decl: {
           start: {
-            line: 253,
-            column: 2
+            line: 228,
+            column: 54
           },
           end: {
-            line: 253,
-            column: 3
+            line: 228,
+            column: 55
           }
         },
         loc: {
           start: {
-            line: 253,
-            column: 32
+            line: 228,
+            column: 72
           },
           end: {
-            line: 257,
-            column: 3
+            line: 238,
+            column: 5
           }
         },
-        line: 253
+        line: 228
       },
       '17': {
         name: '(anonymous_17)',
         decl: {
           start: {
-            line: 266,
+            line: 248,
             column: 2
           },
           end: {
-            line: 266,
+            line: 248,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 266,
-            column: 33
+            line: 248,
+            column: 34
           },
           end: {
-            line: 281,
+            line: 258,
             column: 3
           }
         },
-        line: 266
+        line: 248
       },
       '18': {
         name: '(anonymous_18)',
         decl: {
           start: {
-            line: 288,
+            line: 266,
             column: 2
           },
           end: {
-            line: 288,
+            line: 266,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 288,
-            column: 18
+            line: 266,
+            column: 32
           },
           end: {
-            line: 293,
+            line: 270,
             column: 3
           }
         },
-        line: 288
+        line: 266
       },
       '19': {
         name: '(anonymous_19)',
         decl: {
           start: {
-            line: 300,
+            line: 279,
             column: 2
           },
           end: {
-            line: 300,
+            line: 279,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 300,
-            column: 23
+            line: 279,
+            column: 33
           },
           end: {
-            line: 302,
+            line: 294,
             column: 3
           }
         },
-        line: 300
+        line: 279
       },
       '20': {
         name: '(anonymous_20)',
         decl: {
           start: {
-            line: 310,
+            line: 301,
             column: 2
           },
           end: {
-            line: 310,
+            line: 301,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 310,
-            column: 15
+            line: 301,
+            column: 18
           },
           end: {
-            line: 320,
+            line: 306,
             column: 3
           }
         },
-        line: 310
+        line: 301
       },
       '21': {
         name: '(anonymous_21)',
         decl: {
           start: {
-            line: 315,
-            column: 25
+            line: 313,
+            column: 2
           },
           end: {
-            line: 315,
-            column: 26
+            line: 313,
+            column: 3
           }
         },
         loc: {
           start: {
-            line: 315,
-            column: 31
+            line: 313,
+            column: 23
           },
           end: {
-            line: 317,
-            column: 9
+            line: 315,
+            column: 3
           }
         },
-        line: 315
+        line: 313
       },
       '22': {
         name: '(anonymous_22)',
         decl: {
           start: {
-            line: 327,
+            line: 323,
             column: 2
           },
           end: {
-            line: 327,
+            line: 323,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 327,
-            column: 16
+            line: 323,
+            column: 22
           },
           end: {
-            line: 331,
+            line: 325,
             column: 3
           }
         },
-        line: 327
+        line: 323
       },
       '23': {
         name: '(anonymous_23)',
         decl: {
           start: {
-            line: 338,
+            line: 332,
             column: 2
           },
           end: {
-            line: 338,
+            line: 332,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 338,
-            column: 21
+            line: 332,
+            column: 15
           },
           end: {
-            line: 346,
+            line: 341,
             column: 3
           }
         },
-        line: 338
+        line: 332
       },
       '24': {
         name: '(anonymous_24)',
         decl: {
           start: {
-            line: 340,
-            column: 38
+            line: 334,
+            column: 31
           },
           end: {
-            line: 340,
-            column: 39
+            line: 334,
+            column: 32
           }
         },
         loc: {
           start: {
-            line: 340,
-            column: 48
+            line: 334,
+            column: 41
           },
           end: {
-            line: 342,
+            line: 337,
             column: 7
           }
         },
-        line: 340
+        line: 334
       },
       '25': {
         name: '(anonymous_25)',
         decl: {
           start: {
-            line: 353,
+            line: 337,
+            column: 15
+          },
+          end: {
+            line: 337,
+            column: 16
+          }
+        },
+        loc: {
+          start: {
+            line: 337,
+            column: 26
+          },
+          end: {
+            line: 339,
+            column: 7
+          }
+        },
+        line: 337
+      },
+      '26': {
+        name: '(anonymous_26)',
+        decl: {
+          start: {
+            line: 348,
             column: 2
           },
           end: {
-            line: 353,
+            line: 348,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 353,
-            column: 36
+            line: 348,
+            column: 15
+          },
+          end: {
+            line: 359,
+            column: 3
+          }
+        },
+        line: 348
+      },
+      '27': {
+        name: '(anonymous_27)',
+        decl: {
+          start: {
+            line: 354,
+            column: 26
+          },
+          end: {
+            line: 354,
+            column: 27
+          }
+        },
+        loc: {
+          start: {
+            line: 354,
+            column: 32
+          },
+          end: {
+            line: 356,
+            column: 9
+          }
+        },
+        line: 354
+      },
+      '28': {
+        name: '(anonymous_28)',
+        decl: {
+          start: {
+            line: 366,
+            column: 2
           },
           end: {
             line: 366,
             column: 3
           }
         },
-        line: 353
-      },
-      '26': {
-        name: '(anonymous_26)',
-        decl: {
+        loc: {
           start: {
-            line: 373,
-            column: 2
+            line: 366,
+            column: 16
           },
           end: {
-            line: 373,
+            line: 370,
             column: 3
           }
         },
-        loc: {
+        line: 366
+      },
+      '29': {
+        name: '(anonymous_29)',
+        decl: {
           start: {
-            line: 373,
-            column: 29
+            line: 377,
+            column: 2
           },
           end: {
             line: 377,
             column: 3
           }
         },
-        line: 373
+        loc: {
+          start: {
+            line: 377,
+            column: 36
+          },
+          end: {
+            line: 390,
+            column: 3
+          }
+        },
+        line: 377
       },
-      '27': {
-        name: '(anonymous_27)',
+      '30': {
+        name: '(anonymous_30)',
         decl: {
           start: {
-            line: 384,
+            line: 397,
             column: 2
           },
           end: {
-            line: 384,
+            line: 397,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 384,
+            line: 397,
+            column: 29
+          },
+          end: {
+            line: 401,
+            column: 3
+          }
+        },
+        line: 397
+      },
+      '31': {
+        name: '(anonymous_31)',
+        decl: {
+          start: {
+            line: 408,
+            column: 2
+          },
+          end: {
+            line: 408,
+            column: 3
+          }
+        },
+        loc: {
+          start: {
+            line: 408,
             column: 26
           },
           end: {
-            line: 388,
+            line: 412,
             column: 3
           }
         },
-        line: 384
+        line: 408
       },
-      '28': {
-        name: '(anonymous_28)',
+      '32': {
+        name: '(anonymous_32)',
         decl: {
           start: {
-            line: 396,
+            line: 420,
             column: 2
-          },
-          end: {
-            line: 396,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 396,
-            column: 32
-          },
-          end: {
-            line: 409,
-            column: 3
-          }
-        },
-        line: 396
-      },
-      '29': {
-        name: '(anonymous_29)',
-        decl: {
-          start: {
-            line: 416,
-            column: 2
-          },
-          end: {
-            line: 416,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 416,
-            column: 24
           },
           end: {
             line: 420,
             column: 3
           }
         },
-        line: 416
-      },
-      '30': {
-        name: '(anonymous_30)',
-        decl: {
-          start: {
-            line: 425,
-            column: 2
-          },
-          end: {
-            line: 425,
-            column: 3
-          }
-        },
         loc: {
           start: {
-            line: 425,
-            column: 10
-          },
-          end: {
-            line: 426,
-            column: 3
-          }
-        },
-        line: 425
-      },
-      '31': {
-        name: '(anonymous_31)',
-        decl: {
-          start: {
-            line: 433,
-            column: 2
+            line: 420,
+            column: 32
           },
           end: {
             line: 433,
             column: 3
           }
         },
-        loc: {
-          start: {
-            line: 433,
-            column: 25
-          },
-          end: {
-            line: 437,
-            column: 3
-          }
-        },
-        line: 433
-      },
-      '32': {
-        name: '(anonymous_32)',
-        decl: {
-          start: {
-            line: 444,
-            column: 2
-          },
-          end: {
-            line: 444,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 444,
-            column: 26
-          },
-          end: {
-            line: 448,
-            column: 3
-          }
-        },
-        line: 444
+        line: 420
       },
       '33': {
         name: '(anonymous_33)',
         decl: {
           start: {
-            line: 450,
+            line: 440,
             column: 2
           },
           end: {
-            line: 450,
+            line: 440,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 450,
-            column: 13
+            line: 440,
+            column: 24
           },
           end: {
-            line: 451,
+            line: 444,
             column: 3
           }
         },
-        line: 450
+        line: 440
       },
       '34': {
         name: '(anonymous_34)',
         decl: {
           start: {
-            line: 459,
+            line: 454,
             column: 2
           },
           end: {
-            line: 459,
+            line: 454,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 459,
-            column: 33
+            line: 454,
+            column: 25
           },
           end: {
-            line: 463,
+            line: 458,
             column: 3
           }
         },
-        line: 459
+        line: 454
       },
       '35': {
         name: '(anonymous_35)',
         decl: {
           start: {
-            line: 470,
+            line: 465,
             column: 2
           },
           end: {
-            line: 470,
+            line: 465,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 470,
-            column: 24
+            line: 465,
+            column: 26
           },
           end: {
-            line: 474,
+            line: 469,
             column: 3
           }
         },
-        line: 470
+        line: 465
       },
       '36': {
         name: '(anonymous_36)',
         decl: {
           start: {
-            line: 481,
+            line: 471,
             column: 2
           },
           end: {
-            line: 481,
+            line: 471,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 481,
-            column: 21
+            line: 471,
+            column: 13
           },
           end: {
-            line: 485,
+            line: 472,
             column: 3
           }
         },
-        line: 481
+        line: 471
       },
       '37': {
         name: '(anonymous_37)',
         decl: {
           start: {
-            line: 492,
+            line: 480,
             column: 2
           },
           end: {
-            line: 492,
+            line: 480,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 492,
-            column: 43
+            line: 480,
+            column: 33
           },
           end: {
-            line: 494,
+            line: 484,
             column: 3
           }
         },
-        line: 492
+        line: 480
       },
       '38': {
         name: '(anonymous_38)',
         decl: {
           start: {
-            line: 501,
+            line: 491,
             column: 2
           },
           end: {
-            line: 501,
+            line: 491,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 501,
-            column: 43
+            line: 491,
+            column: 24
           },
           end: {
-            line: 503,
+            line: 495,
             column: 3
           }
         },
-        line: 501
+        line: 491
       },
       '39': {
         name: '(anonymous_39)',
         decl: {
           start: {
-            line: 510,
+            line: 502,
             column: 2
           },
           end: {
-            line: 510,
+            line: 502,
             column: 3
           }
         },
         loc: {
           start: {
-            line: 510,
-            column: 43
+            line: 502,
+            column: 21
           },
           end: {
-            line: 512,
+            line: 506,
             column: 3
           }
         },
-        line: 510
+        line: 502
+      },
+      '40': {
+        name: '(anonymous_40)',
+        decl: {
+          start: {
+            line: 513,
+            column: 2
+          },
+          end: {
+            line: 513,
+            column: 3
+          }
+        },
+        loc: {
+          start: {
+            line: 513,
+            column: 43
+          },
+          end: {
+            line: 515,
+            column: 3
+          }
+        },
+        line: 513
+      },
+      '41': {
+        name: '(anonymous_41)',
+        decl: {
+          start: {
+            line: 522,
+            column: 2
+          },
+          end: {
+            line: 522,
+            column: 3
+          }
+        },
+        loc: {
+          start: {
+            line: 522,
+            column: 43
+          },
+          end: {
+            line: 524,
+            column: 3
+          }
+        },
+        line: 522
+      },
+      '42': {
+        name: '(anonymous_42)',
+        decl: {
+          start: {
+            line: 531,
+            column: 2
+          },
+          end: {
+            line: 531,
+            column: 3
+          }
+        },
+        loc: {
+          start: {
+            line: 531,
+            column: 43
+          },
+          end: {
+            line: 533,
+            column: 3
+          }
+        },
+        line: 531
       }
     },
     branchMap: {
       '0': {
         loc: {
           start: {
-            line: 93,
+            line: 105,
             column: 40
           },
           end: {
-            line: 93,
+            line: 105,
             column: 73
           }
         },
         type: 'binary-expr',
         locations: [{
           start: {
-            line: 93,
+            line: 105,
             column: 40
           },
           end: {
-            line: 93,
+            line: 105,
             column: 46
           }
         }, {
           start: {
-            line: 93,
+            line: 105,
             column: 50
           },
           end: {
-            line: 93,
+            line: 105,
             column: 73
           }
         }],
-        line: 93
+        line: 105
       },
       '1': {
         loc: {
           start: {
-            line: 143,
+            line: 156,
             column: 4
           },
           end: {
-            line: 151,
+            line: 164,
             column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 143,
+            line: 156,
             column: 4
           },
           end: {
-            line: 151,
+            line: 164,
             column: 5
           }
         }, {
           start: {
-            line: 143,
+            line: 156,
             column: 4
           },
           end: {
-            line: 151,
+            line: 164,
             column: 5
           }
         }],
-        line: 143
+        line: 156
       },
       '2': {
         loc: {
           start: {
-            line: 143,
+            line: 156,
             column: 8
           },
           end: {
-            line: 143,
+            line: 156,
             column: 32
           }
         },
         type: 'binary-expr',
         locations: [{
           start: {
-            line: 143,
+            line: 156,
             column: 8
           },
           end: {
-            line: 143,
+            line: 156,
             column: 14
           }
         }, {
           start: {
-            line: 143,
+            line: 156,
             column: 18
           },
           end: {
-            line: 143,
+            line: 156,
             column: 32
           }
         }],
-        line: 143
+        line: 156
       },
       '3': {
         loc: {
           start: {
-            line: 146,
+            line: 159,
             column: 8
           },
           end: {
-            line: 149,
+            line: 162,
             column: 9
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 146,
+            line: 159,
             column: 8
           },
           end: {
-            line: 149,
+            line: 162,
             column: 9
           }
         }, {
           start: {
-            line: 146,
+            line: 159,
             column: 8
           },
           end: {
-            line: 149,
+            line: 162,
             column: 9
           }
         }],
-        line: 146
+        line: 159
       },
       '4': {
         loc: {
           start: {
-            line: 163,
+            line: 176,
             column: 4
           },
           end: {
-            line: 165,
+            line: 178,
             column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 163,
+            line: 176,
             column: 4
           },
           end: {
-            line: 165,
+            line: 178,
             column: 5
           }
         }, {
           start: {
-            line: 163,
+            line: 176,
             column: 4
           },
           end: {
-            line: 165,
+            line: 178,
             column: 5
           }
         }],
-        line: 163
+        line: 176
       },
       '5': {
         loc: {
           start: {
-            line: 174,
+            line: 187,
             column: 4
           },
           end: {
-            line: 193,
+            line: 206,
             column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 174,
+            line: 187,
             column: 4
           },
           end: {
-            line: 193,
+            line: 206,
             column: 5
           }
         }, {
           start: {
-            line: 174,
+            line: 187,
             column: 4
           },
           end: {
-            line: 193,
+            line: 206,
             column: 5
           }
         }],
-        line: 174
+        line: 187
       },
       '6': {
         loc: {
           start: {
-            line: 215,
+            line: 228,
             column: 11
           },
           end: {
-            line: 225,
+            line: 238,
             column: 6
           }
         },
         type: 'cond-expr',
         locations: [{
           start: {
-            line: 215,
+            line: 228,
             column: 19
           },
           end: {
-            line: 215,
+            line: 228,
             column: 31
           }
         }, {
           start: {
-            line: 215,
+            line: 228,
             column: 34
           },
           end: {
-            line: 225,
+            line: 238,
             column: 6
           }
         }],
-        line: 215
+        line: 228
       },
       '7': {
         loc: {
           start: {
-            line: 216,
+            line: 229,
             column: 6
           },
           end: {
-            line: 224,
+            line: 237,
             column: 7
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 216,
+            line: 229,
             column: 6
           },
           end: {
-            line: 224,
+            line: 237,
             column: 7
           }
         }, {
           start: {
-            line: 216,
+            line: 229,
             column: 6
           },
           end: {
-            line: 224,
+            line: 237,
             column: 7
           }
         }],
-        line: 216
+        line: 229
       },
       '8': {
         loc: {
           start: {
-            line: 218,
+            line: 231,
             column: 13
           },
           end: {
-            line: 224,
+            line: 237,
             column: 7
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 218,
+            line: 231,
             column: 13
           },
           end: {
-            line: 224,
+            line: 237,
             column: 7
           }
         }, {
           start: {
-            line: 218,
+            line: 231,
             column: 13
           },
           end: {
-            line: 224,
+            line: 237,
             column: 7
           }
         }],
-        line: 218
+        line: 231
       },
       '9': {
         loc: {
           start: {
-            line: 220,
+            line: 233,
             column: 13
           },
           end: {
-            line: 224,
+            line: 237,
             column: 7
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 220,
+            line: 233,
             column: 13
           },
           end: {
-            line: 224,
+            line: 237,
             column: 7
           }
         }, {
           start: {
-            line: 220,
+            line: 233,
             column: 13
           },
           end: {
-            line: 224,
+            line: 237,
             column: 7
           }
         }],
-        line: 220
+        line: 233
       },
       '10': {
         loc: {
           start: {
-            line: 236,
+            line: 249,
             column: 4
           },
           end: {
-            line: 244,
+            line: 257,
             column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 236,
+            line: 249,
             column: 4
           },
           end: {
-            line: 244,
+            line: 257,
             column: 5
           }
         }, {
           start: {
-            line: 236,
+            line: 249,
             column: 4
           },
           end: {
-            line: 244,
+            line: 257,
             column: 5
           }
         }],
-        line: 236
+        line: 249
       },
       '11': {
         loc: {
           start: {
-            line: 237,
+            line: 250,
             column: 6
           },
           end: {
-            line: 243,
+            line: 256,
             column: 7
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 237,
+            line: 250,
             column: 6
           },
           end: {
-            line: 243,
+            line: 256,
             column: 7
           }
         }, {
           start: {
-            line: 237,
+            line: 250,
             column: 6
           },
           end: {
-            line: 243,
+            line: 256,
             column: 7
           }
         }],
-        line: 237
+        line: 250
       },
       '12': {
         loc: {
           start: {
-            line: 239,
+            line: 252,
             column: 13
           },
           end: {
-            line: 243,
+            line: 256,
             column: 7
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 239,
+            line: 252,
             column: 13
           },
           end: {
-            line: 243,
+            line: 256,
             column: 7
           }
         }, {
           start: {
-            line: 239,
+            line: 252,
             column: 13
           },
           end: {
-            line: 243,
+            line: 256,
             column: 7
           }
         }],
-        line: 239
+        line: 252
       },
       '13': {
         loc: {
           start: {
-            line: 241,
+            line: 254,
             column: 13
           },
           end: {
-            line: 243,
+            line: 256,
             column: 7
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 241,
+            line: 254,
             column: 13
           },
           end: {
-            line: 243,
+            line: 256,
             column: 7
           }
         }, {
           start: {
-            line: 241,
+            line: 254,
             column: 13
           },
           end: {
-            line: 243,
+            line: 256,
             column: 7
-          }
-        }],
-        line: 241
-      },
-      '14': {
-        loc: {
-          start: {
-            line: 254,
-            column: 4
-          },
-          end: {
-            line: 256,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 254,
-            column: 4
-          },
-          end: {
-            line: 256,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 254,
-            column: 4
-          },
-          end: {
-            line: 256,
-            column: 5
           }
         }],
         line: 254
       },
-      '15': {
+      '14': {
         loc: {
           start: {
-            line: 268,
+            line: 267,
             column: 4
           },
           end: {
-            line: 274,
+            line: 269,
             column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 268,
+            line: 267,
             column: 4
           },
           end: {
-            line: 274,
+            line: 269,
             column: 5
           }
         }, {
           start: {
-            line: 268,
+            line: 267,
             column: 4
           },
           end: {
-            line: 274,
+            line: 269,
             column: 5
           }
         }],
-        line: 268
+        line: 267
+      },
+      '15': {
+        loc: {
+          start: {
+            line: 281,
+            column: 4
+          },
+          end: {
+            line: 287,
+            column: 5
+          }
+        },
+        type: 'if',
+        locations: [{
+          start: {
+            line: 281,
+            column: 4
+          },
+          end: {
+            line: 287,
+            column: 5
+          }
+        }, {
+          start: {
+            line: 281,
+            column: 4
+          },
+          end: {
+            line: 287,
+            column: 5
+          }
+        }],
+        line: 281
       },
       '16': {
         loc: {
           start: {
-            line: 270,
+            line: 283,
             column: 11
           },
           end: {
-            line: 274,
+            line: 287,
             column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 270,
+            line: 283,
             column: 11
           },
           end: {
-            line: 274,
+            line: 287,
             column: 5
           }
         }, {
           start: {
-            line: 270,
+            line: 283,
             column: 11
           },
           end: {
-            line: 274,
+            line: 287,
             column: 5
           }
         }],
-        line: 270
+        line: 283
       },
       '17': {
         loc: {
           start: {
-            line: 272,
+            line: 285,
             column: 11
           },
           end: {
-            line: 274,
+            line: 287,
             column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 272,
+            line: 285,
             column: 11
           },
           end: {
-            line: 274,
+            line: 287,
             column: 5
           }
         }, {
           start: {
-            line: 272,
+            line: 285,
             column: 11
           },
           end: {
-            line: 274,
+            line: 287,
             column: 5
           }
         }],
-        line: 272
+        line: 285
       },
       '18': {
         loc: {
           start: {
-            line: 275,
+            line: 288,
             column: 4
           },
           end: {
-            line: 280,
+            line: 293,
             column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 275,
+            line: 288,
             column: 4
           },
           end: {
-            line: 280,
+            line: 293,
             column: 5
           }
         }, {
           start: {
-            line: 275,
+            line: 288,
             column: 4
           },
           end: {
-            line: 280,
+            line: 293,
             column: 5
           }
         }],
-        line: 275
+        line: 288
       },
       '19': {
         loc: {
           start: {
-            line: 289,
+            line: 302,
             column: 4
           },
           end: {
-            line: 292,
+            line: 305,
             column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 289,
+            line: 302,
             column: 4
           },
           end: {
-            line: 292,
+            line: 305,
             column: 5
           }
         }, {
           start: {
-            line: 289,
+            line: 302,
             column: 4
           },
           end: {
-            line: 292,
+            line: 305,
             column: 5
           }
         }],
-        line: 289
+        line: 302
       },
       '20': {
         loc: {
           start: {
-            line: 311,
-            column: 4
+            line: 324,
+            column: 11
           },
           end: {
-            line: 319,
-            column: 5
+            line: 324,
+            column: 70
           }
         },
-        type: 'if',
+        type: 'cond-expr',
         locations: [{
           start: {
-            line: 311,
-            column: 4
+            line: 324,
+            column: 32
           },
           end: {
-            line: 319,
-            column: 5
+            line: 324,
+            column: 50
           }
         }, {
           start: {
-            line: 311,
-            column: 4
+            line: 324,
+            column: 53
           },
           end: {
-            line: 319,
-            column: 5
+            line: 324,
+            column: 70
           }
         }],
-        line: 311
+        line: 324
       },
       '21': {
         loc: {
           start: {
-            line: 312,
-            column: 6
+            line: 333,
+            column: 4
           },
           end: {
-            line: 318,
-            column: 7
+            line: 340,
+            column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 312,
-            column: 6
+            line: 333,
+            column: 4
           },
           end: {
-            line: 318,
-            column: 7
+            line: 340,
+            column: 5
           }
         }, {
           start: {
-            line: 312,
-            column: 6
+            line: 333,
+            column: 4
           },
           end: {
-            line: 318,
-            column: 7
+            line: 340,
+            column: 5
           }
         }],
-        line: 312
+        line: 333
       },
       '22': {
         loc: {
           start: {
-            line: 328,
+            line: 349,
             column: 4
           },
           end: {
-            line: 330,
+            line: 358,
             column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 328,
+            line: 349,
             column: 4
           },
           end: {
-            line: 330,
+            line: 358,
             column: 5
           }
         }, {
           start: {
-            line: 328,
+            line: 349,
             column: 4
           },
           end: {
-            line: 330,
+            line: 358,
             column: 5
           }
         }],
-        line: 328
+        line: 349
       },
       '23': {
         loc: {
           start: {
-            line: 339,
-            column: 4
+            line: 350,
+            column: 6
           },
           end: {
-            line: 345,
-            column: 5
+            line: 357,
+            column: 7
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 339,
-            column: 4
+            line: 350,
+            column: 6
           },
           end: {
-            line: 345,
-            column: 5
+            line: 357,
+            column: 7
           }
         }, {
           start: {
-            line: 339,
-            column: 4
+            line: 350,
+            column: 6
           },
           end: {
-            line: 345,
-            column: 5
+            line: 357,
+            column: 7
           }
         }],
-        line: 339
+        line: 350
       },
       '24': {
         loc: {
           start: {
-            line: 354,
+            line: 367,
             column: 4
           },
           end: {
-            line: 365,
+            line: 369,
             column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 354,
+            line: 367,
             column: 4
           },
           end: {
-            line: 365,
+            line: 369,
             column: 5
           }
         }, {
           start: {
-            line: 354,
+            line: 367,
             column: 4
           },
           end: {
-            line: 365,
+            line: 369,
             column: 5
           }
         }],
-        line: 354
+        line: 367
       },
       '25': {
         loc: {
           start: {
-            line: 355,
-            column: 6
+            line: 378,
+            column: 4
           },
           end: {
-            line: 364,
-            column: 7
+            line: 389,
+            column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 355,
-            column: 6
+            line: 378,
+            column: 4
           },
           end: {
-            line: 364,
-            column: 7
+            line: 389,
+            column: 5
           }
         }, {
           start: {
-            line: 355,
-            column: 6
+            line: 378,
+            column: 4
           },
           end: {
-            line: 364,
-            column: 7
+            line: 389,
+            column: 5
           }
         }],
-        line: 355
+        line: 378
       },
       '26': {
         loc: {
           start: {
-            line: 357,
-            column: 8
+            line: 379,
+            column: 6
           },
           end: {
-            line: 359,
-            column: 9
+            line: 388,
+            column: 7
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 357,
-            column: 8
+            line: 379,
+            column: 6
           },
           end: {
-            line: 359,
-            column: 9
+            line: 388,
+            column: 7
           }
         }, {
           start: {
-            line: 357,
-            column: 8
+            line: 379,
+            column: 6
           },
           end: {
-            line: 359,
-            column: 9
+            line: 388,
+            column: 7
           }
         }],
-        line: 357
+        line: 379
       },
       '27': {
         loc: {
           start: {
-            line: 360,
+            line: 381,
             column: 8
           },
           end: {
-            line: 362,
+            line: 383,
             column: 9
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 360,
+            line: 381,
             column: 8
           },
           end: {
-            line: 362,
+            line: 383,
             column: 9
           }
         }, {
           start: {
-            line: 360,
+            line: 381,
             column: 8
           },
           end: {
-            line: 362,
+            line: 383,
             column: 9
           }
         }],
-        line: 360
+        line: 381
       },
       '28': {
         loc: {
           start: {
-            line: 374,
-            column: 4
+            line: 384,
+            column: 8
           },
           end: {
-            line: 376,
-            column: 5
+            line: 386,
+            column: 9
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 374,
-            column: 4
+            line: 384,
+            column: 8
           },
           end: {
-            line: 376,
-            column: 5
+            line: 386,
+            column: 9
           }
         }, {
           start: {
-            line: 374,
-            column: 4
+            line: 384,
+            column: 8
           },
           end: {
-            line: 376,
-            column: 5
+            line: 386,
+            column: 9
           }
         }],
-        line: 374
+        line: 384
       },
       '29': {
         loc: {
           start: {
-            line: 385,
+            line: 398,
             column: 4
           },
           end: {
-            line: 387,
+            line: 400,
             column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 385,
+            line: 398,
             column: 4
           },
           end: {
-            line: 387,
+            line: 400,
             column: 5
           }
         }, {
           start: {
-            line: 385,
-            column: 4
-          },
-          end: {
-            line: 387,
-            column: 5
-          }
-        }],
-        line: 385
-      },
-      '30': {
-        loc: {
-          start: {
-            line: 397,
-            column: 4
-          },
-          end: {
-            line: 408,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 397,
-            column: 4
-          },
-          end: {
-            line: 408,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 397,
-            column: 4
-          },
-          end: {
-            line: 408,
-            column: 5
-          }
-        }],
-        line: 397
-      },
-      '31': {
-        loc: {
-          start: {
             line: 398,
-            column: 6
+            column: 4
           },
           end: {
-            line: 407,
-            column: 7
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 398,
-            column: 6
-          },
-          end: {
-            line: 407,
-            column: 7
-          }
-        }, {
-          start: {
-            line: 398,
-            column: 6
-          },
-          end: {
-            line: 407,
-            column: 7
+            line: 400,
+            column: 5
           }
         }],
         line: 398
       },
-      '32': {
+      '30': {
         loc: {
           start: {
-            line: 400,
-            column: 8
+            line: 409,
+            column: 4
           },
           end: {
-            line: 402,
-            column: 9
+            line: 411,
+            column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 400,
-            column: 8
+            line: 409,
+            column: 4
           },
           end: {
-            line: 402,
-            column: 9
+            line: 411,
+            column: 5
           }
         }, {
           start: {
-            line: 400,
-            column: 8
+            line: 409,
+            column: 4
           },
           end: {
-            line: 402,
-            column: 9
+            line: 411,
+            column: 5
           }
         }],
-        line: 400
+        line: 409
+      },
+      '31': {
+        loc: {
+          start: {
+            line: 421,
+            column: 4
+          },
+          end: {
+            line: 432,
+            column: 5
+          }
+        },
+        type: 'if',
+        locations: [{
+          start: {
+            line: 421,
+            column: 4
+          },
+          end: {
+            line: 432,
+            column: 5
+          }
+        }, {
+          start: {
+            line: 421,
+            column: 4
+          },
+          end: {
+            line: 432,
+            column: 5
+          }
+        }],
+        line: 421
+      },
+      '32': {
+        loc: {
+          start: {
+            line: 422,
+            column: 6
+          },
+          end: {
+            line: 431,
+            column: 7
+          }
+        },
+        type: 'if',
+        locations: [{
+          start: {
+            line: 422,
+            column: 6
+          },
+          end: {
+            line: 431,
+            column: 7
+          }
+        }, {
+          start: {
+            line: 422,
+            column: 6
+          },
+          end: {
+            line: 431,
+            column: 7
+          }
+        }],
+        line: 422
       },
       '33': {
         loc: {
           start: {
-            line: 403,
+            line: 424,
             column: 8
           },
           end: {
-            line: 405,
+            line: 426,
             column: 9
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 403,
+            line: 424,
             column: 8
           },
           end: {
-            line: 405,
+            line: 426,
             column: 9
           }
         }, {
           start: {
-            line: 403,
+            line: 424,
             column: 8
           },
           end: {
-            line: 405,
+            line: 426,
             column: 9
           }
         }],
-        line: 403
+        line: 424
       },
       '34': {
         loc: {
           start: {
-            line: 417,
-            column: 4
+            line: 427,
+            column: 8
           },
           end: {
-            line: 419,
-            column: 5
+            line: 429,
+            column: 9
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 417,
-            column: 4
+            line: 427,
+            column: 8
           },
           end: {
-            line: 419,
-            column: 5
+            line: 429,
+            column: 9
           }
         }, {
           start: {
-            line: 417,
-            column: 4
+            line: 427,
+            column: 8
           },
           end: {
-            line: 419,
-            column: 5
+            line: 429,
+            column: 9
           }
         }],
-        line: 417
+        line: 427
       },
       '35': {
         loc: {
           start: {
-            line: 434,
+            line: 441,
             column: 4
           },
           end: {
-            line: 436,
+            line: 443,
             column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 434,
+            line: 441,
             column: 4
           },
           end: {
-            line: 436,
+            line: 443,
             column: 5
           }
         }, {
           start: {
-            line: 434,
+            line: 441,
             column: 4
           },
           end: {
-            line: 436,
+            line: 443,
             column: 5
           }
         }],
-        line: 434
+        line: 441
       },
       '36': {
         loc: {
           start: {
-            line: 445,
+            line: 455,
             column: 4
           },
           end: {
-            line: 447,
+            line: 457,
             column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 445,
+            line: 455,
             column: 4
           },
           end: {
-            line: 447,
+            line: 457,
             column: 5
           }
         }, {
           start: {
-            line: 445,
+            line: 455,
             column: 4
           },
           end: {
-            line: 447,
+            line: 457,
             column: 5
           }
         }],
-        line: 445
+        line: 455
       },
       '37': {
         loc: {
           start: {
-            line: 460,
+            line: 466,
             column: 4
           },
           end: {
-            line: 462,
+            line: 468,
             column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 460,
+            line: 466,
             column: 4
           },
           end: {
-            line: 462,
+            line: 468,
             column: 5
           }
         }, {
           start: {
-            line: 460,
+            line: 466,
             column: 4
           },
           end: {
-            line: 462,
+            line: 468,
             column: 5
           }
         }],
-        line: 460
+        line: 466
       },
       '38': {
         loc: {
           start: {
-            line: 471,
+            line: 481,
             column: 4
           },
           end: {
-            line: 473,
+            line: 483,
             column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 471,
+            line: 481,
             column: 4
           },
           end: {
-            line: 473,
+            line: 483,
             column: 5
           }
         }, {
           start: {
-            line: 471,
+            line: 481,
             column: 4
           },
           end: {
-            line: 473,
+            line: 483,
             column: 5
           }
         }],
-        line: 471
+        line: 481
       },
       '39': {
         loc: {
           start: {
-            line: 482,
+            line: 492,
             column: 4
           },
           end: {
-            line: 484,
+            line: 494,
             column: 5
           }
         },
         type: 'if',
         locations: [{
           start: {
-            line: 482,
+            line: 492,
             column: 4
           },
           end: {
-            line: 484,
+            line: 494,
             column: 5
           }
         }, {
           start: {
-            line: 482,
+            line: 492,
             column: 4
           },
           end: {
-            line: 484,
+            line: 494,
             column: 5
           }
         }],
-        line: 482
+        line: 492
+      },
+      '40': {
+        loc: {
+          start: {
+            line: 503,
+            column: 4
+          },
+          end: {
+            line: 505,
+            column: 5
+          }
+        },
+        type: 'if',
+        locations: [{
+          start: {
+            line: 503,
+            column: 4
+          },
+          end: {
+            line: 505,
+            column: 5
+          }
+        }, {
+          start: {
+            line: 503,
+            column: 4
+          },
+          end: {
+            line: 505,
+            column: 5
+          }
+        }],
+        line: 503
       }
     },
     s: {
@@ -6749,7 +6938,15 @@ var cov_4x54fj3w8 = function () {
       '120': 0,
       '121': 0,
       '122': 0,
-      '123': 0
+      '123': 0,
+      '124': 0,
+      '125': 0,
+      '126': 0,
+      '127': 0,
+      '128': 0,
+      '129': 0,
+      '130': 0,
+      '131': 0
     },
     f: {
       '0': 0,
@@ -6791,7 +6988,10 @@ var cov_4x54fj3w8 = function () {
       '36': 0,
       '37': 0,
       '38': 0,
-      '39': 0
+      '39': 0,
+      '40': 0,
+      '41': 0,
+      '42': 0
     },
     b: {
       '0': [0, 0],
@@ -6833,7 +7033,8 @@ var cov_4x54fj3w8 = function () {
       '36': [0, 0],
       '37': [0, 0],
       '38': [0, 0],
-      '39': [0, 0]
+      '39': [0, 0],
+      '40': [0, 0]
     },
     _coverageSchema: '332fd63041d2c1bcb487cc26dd0d5f7d97098a6c'
   },
@@ -6926,6 +7127,81 @@ var Player = function (_FakeEventTarget) {
    */
 
   /**
+   * The player ready promise
+   * @type {Promise<*>}
+   * @private
+   */
+
+  /**
+   * The state manager of the player.
+   * @type {StateManager}
+   * @private
+   */
+
+  /**
+   * The runtime configuration of the player.
+   * @type {Object}
+   * @private
+   */
+
+  /**
+   * The plugin manager of the player.
+   * @type {PluginManager}
+   * @private
+   */
+  function Player(config) {
+    _classCallCheck(this, Player);
+
+    ++cov_1tmg352ddi.f[0];
+    ++cov_1tmg352ddi.s[0];
+
+    var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
+
+    ++cov_1tmg352ddi.s[1];
+
+    _this._tracks = [];
+    ++cov_1tmg352ddi.s[2];
+    _this._firstPlay = true;
+    ++cov_1tmg352ddi.s[3];
+    _this._logger = _logger2.default.getLogger('Player');
+    ++cov_1tmg352ddi.s[4];
+    _this._stateManager = new _stateManager2.default(_this);
+    ++cov_1tmg352ddi.s[5];
+    _this._pluginManager = new _pluginManager2.default();
+    ++cov_1tmg352ddi.s[6];
+    _this._eventManager = new _eventManager2.default();
+    ++cov_1tmg352ddi.s[7];
+    _this._readyPromise = new Promise(function (resolve, reject) {
+      ++cov_1tmg352ddi.f[1];
+      ++cov_1tmg352ddi.s[8];
+
+      _this._eventManager.listen(_this, _events.CUSTOM_EVENTS.TRACKS_CHANGED, function () {
+        ++cov_1tmg352ddi.f[2];
+        ++cov_1tmg352ddi.s[9];
+
+        resolve();
+      });
+      ++cov_1tmg352ddi.s[10];
+      _this._eventManager.listen(_this, _events.HTML5_EVENTS.ERROR, reject);
+    });
+    ++cov_1tmg352ddi.s[11];
+    _this.configure(config);
+    return _this;
+  }
+
+  /**
+   * Configures the player according to given configuration.
+   * @param {Object} config - The configuration for the player instance.
+   * @returns {void}
+   */
+
+  /**
+   * Whether the play is the first or not
+   * @type {boolean}
+   * @private
+   */
+
+  /**
    * The tracks of the player.
    * @type {Array<Track>}
    * @private
@@ -6948,75 +7224,20 @@ var Player = function (_FakeEventTarget) {
    * @type {any}
    * @private
    */
-  function Player(config) {
-    _classCallCheck(this, Player);
-
-    ++cov_4x54fj3w8.f[0];
-    ++cov_4x54fj3w8.s[0];
-
-    var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
-
-    ++cov_4x54fj3w8.s[1];
-
-    _this._tracks = [];
-    ++cov_4x54fj3w8.s[2];
-    _this._firstPlay = true;
-    ++cov_4x54fj3w8.s[3];
-    _this._logger = _logger2.default.getLogger('Player');
-    ++cov_4x54fj3w8.s[4];
-    _this._stateManager = new _stateManager2.default(_this);
-    ++cov_4x54fj3w8.s[5];
-    _this._pluginManager = new _pluginManager2.default();
-    ++cov_4x54fj3w8.s[6];
-    _this._eventManager = new _eventManager2.default();
-    ++cov_4x54fj3w8.s[7];
-    _this.configure(config);
-    return _this;
-  }
-
-  /**
-   * Configures the player according to given configuration.
-   * @param {Object} config - The configuration for the player instance.
-   * @returns {void}
-   */
-
-  /**
-   * Whether the play is the first or not
-   * @type {boolean}
-   * @private
-   */
-
-  /**
-   * The state manager of the player.
-   * @type {StateManager}
-   * @private
-   */
-
-  /**
-   * The runtime configuration of the player.
-   * @type {Object}
-   * @private
-   */
-
-  /**
-   * The plugin manager of the player.
-   * @type {PluginManager}
-   * @private
-   */
 
 
   _createClass(Player, [{
     key: 'configure',
     value: function configure(config) {
-      ++cov_4x54fj3w8.f[1];
-      ++cov_4x54fj3w8.s[8];
+      ++cov_1tmg352ddi.f[3];
+      ++cov_1tmg352ddi.s[12];
 
-      this._config = (0, _util.merge)([this._config, (++cov_4x54fj3w8.b[0][0], config) || (++cov_4x54fj3w8.b[0][1], Player._defaultConfig())]);
-      ++cov_4x54fj3w8.s[9];
+      this._config = (0, _util.merge)([this._config, (++cov_1tmg352ddi.b[0][0], config) || (++cov_1tmg352ddi.b[0][1], Player._defaultConfig())]);
+      ++cov_1tmg352ddi.s[13];
       this._loadPlugins(this._config);
-      ++cov_4x54fj3w8.s[10];
+      ++cov_1tmg352ddi.s[14];
       this._selectEngine(this._config);
-      ++cov_4x54fj3w8.s[11];
+      ++cov_1tmg352ddi.s[15];
       this._attachMedia();
     }
 
@@ -7029,21 +7250,23 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'destroy',
     value: function destroy() {
-      ++cov_4x54fj3w8.f[2];
-      ++cov_4x54fj3w8.s[12];
+      ++cov_1tmg352ddi.f[4];
+      ++cov_1tmg352ddi.s[16];
 
       this._engine.destroy();
-      ++cov_4x54fj3w8.s[13];
+      ++cov_1tmg352ddi.s[17];
       this._eventManager.destroy();
-      ++cov_4x54fj3w8.s[14];
+      ++cov_1tmg352ddi.s[18];
       this._pluginManager.destroy();
-      ++cov_4x54fj3w8.s[15];
+      ++cov_1tmg352ddi.s[19];
       this._stateManager.destroy();
-      ++cov_4x54fj3w8.s[16];
+      ++cov_1tmg352ddi.s[20];
       this._config = {};
-      ++cov_4x54fj3w8.s[17];
+      ++cov_1tmg352ddi.s[21];
       this._tracks = [];
-      ++cov_4x54fj3w8.s[18];
+      ++cov_1tmg352ddi.s[22];
+      this._readyPromise = null;
+      ++cov_1tmg352ddi.s[23];
       this._firstPlay = true;
     }
 
@@ -7064,12 +7287,12 @@ var Player = function (_FakeEventTarget) {
      * @returns {void}
      */
     value: function _loadPlugins(config) {
-      ++cov_4x54fj3w8.f[4];
+      ++cov_1tmg352ddi.f[6];
 
-      var plugins = (++cov_4x54fj3w8.s[20], config.plugins);
-      ++cov_4x54fj3w8.s[21];
+      var plugins = (++cov_1tmg352ddi.s[25], config.plugins);
+      ++cov_1tmg352ddi.s[26];
       for (var name in plugins) {
-        ++cov_4x54fj3w8.s[22];
+        ++cov_1tmg352ddi.s[27];
 
         this._pluginManager.load(name, this, plugins[name]);
       }
@@ -7085,30 +7308,30 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_selectEngine',
     value: function _selectEngine(config) {
-      ++cov_4x54fj3w8.f[5];
-      ++cov_4x54fj3w8.s[23];
+      ++cov_1tmg352ddi.f[7];
+      ++cov_1tmg352ddi.s[28];
 
-      if ((++cov_4x54fj3w8.b[2][0], config) && (++cov_4x54fj3w8.b[2][1], config.sources)) {
-        ++cov_4x54fj3w8.b[1][0];
+      if ((++cov_1tmg352ddi.b[2][0], config) && (++cov_1tmg352ddi.b[2][1], config.sources)) {
+        ++cov_1tmg352ddi.b[1][0];
 
-        var sources = (++cov_4x54fj3w8.s[24], config.sources);
-        ++cov_4x54fj3w8.s[25];
+        var sources = (++cov_1tmg352ddi.s[29], config.sources);
+        ++cov_1tmg352ddi.s[30];
         for (var i = 0; i < sources.length; i++) {
-          ++cov_4x54fj3w8.s[26];
+          ++cov_1tmg352ddi.s[31];
 
           if (_html2.default.canPlayType(sources[i].mimetype)) {
-            ++cov_4x54fj3w8.b[3][0];
-            ++cov_4x54fj3w8.s[27];
+            ++cov_1tmg352ddi.b[3][0];
+            ++cov_1tmg352ddi.s[32];
 
             this._loadEngine(sources[i], config);
-            ++cov_4x54fj3w8.s[28];
+            ++cov_1tmg352ddi.s[33];
             break;
           } else {
-            ++cov_4x54fj3w8.b[3][1];
+            ++cov_1tmg352ddi.b[3][1];
           }
         }
       } else {
-        ++cov_4x54fj3w8.b[1][1];
+        ++cov_1tmg352ddi.b[1][1];
       }
     }
 
@@ -7123,18 +7346,18 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_loadEngine',
     value: function _loadEngine(source, config) {
-      ++cov_4x54fj3w8.f[6];
-      ++cov_4x54fj3w8.s[29];
+      ++cov_1tmg352ddi.f[8];
+      ++cov_1tmg352ddi.s[34];
 
       this._engine = new _html2.default(source, config);
-      ++cov_4x54fj3w8.s[30];
+      ++cov_1tmg352ddi.s[35];
       if (config.preload === "auto") {
-        ++cov_4x54fj3w8.b[4][0];
-        ++cov_4x54fj3w8.s[31];
+        ++cov_1tmg352ddi.b[4][0];
+        ++cov_1tmg352ddi.s[36];
 
         this.load();
       } else {
-        ++cov_4x54fj3w8.b[4][1];
+        ++cov_1tmg352ddi.b[4][1];
       }
     }
 
@@ -7149,54 +7372,54 @@ var Player = function (_FakeEventTarget) {
     value: function _attachMedia() {
       var _this2 = this;
 
-      ++cov_4x54fj3w8.f[7];
-      ++cov_4x54fj3w8.s[32];
+      ++cov_1tmg352ddi.f[9];
+      ++cov_1tmg352ddi.s[37];
 
       if (this._engine) {
-        ++cov_4x54fj3w8.b[5][0];
-        ++cov_4x54fj3w8.s[33];
+        ++cov_1tmg352ddi.b[5][0];
+        ++cov_1tmg352ddi.s[38];
 
         for (var playerEvent in _events.HTML5_EVENTS) {
-          ++cov_4x54fj3w8.s[34];
+          ++cov_1tmg352ddi.s[39];
 
           this._eventManager.listen(this._engine, _events.HTML5_EVENTS[playerEvent], function (event) {
-            ++cov_4x54fj3w8.f[8];
-            ++cov_4x54fj3w8.s[35];
+            ++cov_1tmg352ddi.f[10];
+            ++cov_1tmg352ddi.s[40];
 
             return _this2.dispatchEvent(event);
           });
         }
-        ++cov_4x54fj3w8.s[36];
+        ++cov_1tmg352ddi.s[41];
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, function (event) {
-          ++cov_4x54fj3w8.f[9];
-          ++cov_4x54fj3w8.s[37];
+          ++cov_1tmg352ddi.f[11];
+          ++cov_1tmg352ddi.s[42];
 
           _this2._markActiveTrack(event.payload.selectedVideoTrack);
-          ++cov_4x54fj3w8.s[38];
+          ++cov_1tmg352ddi.s[43];
           return _this2.dispatchEvent(event);
         });
-        ++cov_4x54fj3w8.s[39];
+        ++cov_1tmg352ddi.s[44];
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED, function (event) {
-          ++cov_4x54fj3w8.f[10];
-          ++cov_4x54fj3w8.s[40];
+          ++cov_1tmg352ddi.f[12];
+          ++cov_1tmg352ddi.s[45];
 
           _this2._markActiveTrack(event.payload.selectedAudioTrack);
-          ++cov_4x54fj3w8.s[41];
+          ++cov_1tmg352ddi.s[46];
           return _this2.dispatchEvent(event);
         });
-        ++cov_4x54fj3w8.s[42];
+        ++cov_1tmg352ddi.s[47];
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED, function (event) {
-          ++cov_4x54fj3w8.f[11];
-          ++cov_4x54fj3w8.s[43];
+          ++cov_1tmg352ddi.f[13];
+          ++cov_1tmg352ddi.s[48];
 
           _this2._markActiveTrack(event.payload.selectedTextTrack);
-          ++cov_4x54fj3w8.s[44];
+          ++cov_1tmg352ddi.s[49];
           return _this2.dispatchEvent(event);
         });
-        ++cov_4x54fj3w8.s[45];
+        ++cov_1tmg352ddi.s[50];
         this._eventManager.listen(this, _events.HTML5_EVENTS.PLAY, this._onPlay.bind(this));
       } else {
-        ++cov_4x54fj3w8.b[5][1];
+        ++cov_1tmg352ddi.b[5][1];
       }
     }
 
@@ -7211,8 +7434,8 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'getTracks',
     value: function getTracks(type) {
-      ++cov_4x54fj3w8.f[12];
-      ++cov_4x54fj3w8.s[46];
+      ++cov_1tmg352ddi.f[14];
+      ++cov_1tmg352ddi.s[51];
 
       return this._getTracksByType(type);
     }
@@ -7228,37 +7451,37 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_getTracksByType',
     value: function _getTracksByType(type) {
-      ++cov_4x54fj3w8.f[13];
-      ++cov_4x54fj3w8.s[47];
+      ++cov_1tmg352ddi.f[15];
+      ++cov_1tmg352ddi.s[52];
 
-      return !type ? (++cov_4x54fj3w8.b[6][0], this._tracks) : (++cov_4x54fj3w8.b[6][1], this._tracks.filter(function (track) {
-        ++cov_4x54fj3w8.f[14];
-        ++cov_4x54fj3w8.s[48];
+      return !type ? (++cov_1tmg352ddi.b[6][0], this._tracks) : (++cov_1tmg352ddi.b[6][1], this._tracks.filter(function (track) {
+        ++cov_1tmg352ddi.f[16];
+        ++cov_1tmg352ddi.s[53];
 
         if (type === _trackTypes2.default.VIDEO) {
-          ++cov_4x54fj3w8.b[7][0];
-          ++cov_4x54fj3w8.s[49];
+          ++cov_1tmg352ddi.b[7][0];
+          ++cov_1tmg352ddi.s[54];
 
           return track instanceof _videoTrack2.default;
         } else {
-            ++cov_4x54fj3w8.b[7][1];
-            ++cov_4x54fj3w8.s[50];
+            ++cov_1tmg352ddi.b[7][1];
+            ++cov_1tmg352ddi.s[55];
             if (type === _trackTypes2.default.AUDIO) {
-              ++cov_4x54fj3w8.b[8][0];
-              ++cov_4x54fj3w8.s[51];
+              ++cov_1tmg352ddi.b[8][0];
+              ++cov_1tmg352ddi.s[56];
 
               return track instanceof _audioTrack2.default;
             } else {
-                ++cov_4x54fj3w8.b[8][1];
-                ++cov_4x54fj3w8.s[52];
+                ++cov_1tmg352ddi.b[8][1];
+                ++cov_1tmg352ddi.s[57];
                 if (type === _trackTypes2.default.TEXT) {
-                  ++cov_4x54fj3w8.b[9][0];
-                  ++cov_4x54fj3w8.s[53];
+                  ++cov_1tmg352ddi.b[9][0];
+                  ++cov_1tmg352ddi.s[58];
 
                   return track instanceof _textTrack2.default;
                 } else {
-                  ++cov_4x54fj3w8.b[9][1];
-                  ++cov_4x54fj3w8.s[54];
+                  ++cov_1tmg352ddi.b[9][1];
+                  ++cov_1tmg352ddi.s[59];
 
                   return true;
                 }
@@ -7278,41 +7501,41 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'selectTrack',
     value: function selectTrack(track) {
-      ++cov_4x54fj3w8.f[15];
-      ++cov_4x54fj3w8.s[55];
+      ++cov_1tmg352ddi.f[17];
+      ++cov_1tmg352ddi.s[60];
 
       if (this._engine) {
-        ++cov_4x54fj3w8.b[10][0];
-        ++cov_4x54fj3w8.s[56];
+        ++cov_1tmg352ddi.b[10][0];
+        ++cov_1tmg352ddi.s[61];
 
         if (track instanceof _videoTrack2.default) {
-          ++cov_4x54fj3w8.b[11][0];
-          ++cov_4x54fj3w8.s[57];
+          ++cov_1tmg352ddi.b[11][0];
+          ++cov_1tmg352ddi.s[62];
 
           this._engine.selectVideoTrack(track);
         } else {
-            ++cov_4x54fj3w8.b[11][1];
-            ++cov_4x54fj3w8.s[58];
+            ++cov_1tmg352ddi.b[11][1];
+            ++cov_1tmg352ddi.s[63];
             if (track instanceof _audioTrack2.default) {
-              ++cov_4x54fj3w8.b[12][0];
-              ++cov_4x54fj3w8.s[59];
+              ++cov_1tmg352ddi.b[12][0];
+              ++cov_1tmg352ddi.s[64];
 
               this._engine.selectAudioTrack(track);
             } else {
-                ++cov_4x54fj3w8.b[12][1];
-                ++cov_4x54fj3w8.s[60];
+                ++cov_1tmg352ddi.b[12][1];
+                ++cov_1tmg352ddi.s[65];
                 if (track instanceof _textTrack2.default) {
-                  ++cov_4x54fj3w8.b[13][0];
-                  ++cov_4x54fj3w8.s[61];
+                  ++cov_1tmg352ddi.b[13][0];
+                  ++cov_1tmg352ddi.s[66];
 
                   this._engine.selectTextTrack(track);
                 } else {
-                  ++cov_4x54fj3w8.b[13][1];
+                  ++cov_1tmg352ddi.b[13][1];
                 }
               }
           }
       } else {
-        ++cov_4x54fj3w8.b[10][1];
+        ++cov_1tmg352ddi.b[10][1];
       }
     }
 
@@ -7326,16 +7549,16 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'enableAdaptiveBitrate',
     value: function enableAdaptiveBitrate() {
-      ++cov_4x54fj3w8.f[16];
-      ++cov_4x54fj3w8.s[62];
+      ++cov_1tmg352ddi.f[18];
+      ++cov_1tmg352ddi.s[67];
 
       if (this._engine) {
-        ++cov_4x54fj3w8.b[14][0];
-        ++cov_4x54fj3w8.s[63];
+        ++cov_1tmg352ddi.b[14][0];
+        ++cov_1tmg352ddi.s[68];
 
         this._engine.enableAdaptiveBitrate();
       } else {
-        ++cov_4x54fj3w8.b[14][1];
+        ++cov_1tmg352ddi.b[14][1];
       }
     }
 
@@ -7350,48 +7573,48 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_markActiveTrack',
     value: function _markActiveTrack(track) {
-      ++cov_4x54fj3w8.f[17];
+      ++cov_1tmg352ddi.f[19];
 
       var type = void 0;
-      ++cov_4x54fj3w8.s[64];
+      ++cov_1tmg352ddi.s[69];
       if (track instanceof _videoTrack2.default) {
-        ++cov_4x54fj3w8.b[15][0];
-        ++cov_4x54fj3w8.s[65];
+        ++cov_1tmg352ddi.b[15][0];
+        ++cov_1tmg352ddi.s[70];
 
         type = _trackTypes2.default.VIDEO;
       } else {
-          ++cov_4x54fj3w8.b[15][1];
-          ++cov_4x54fj3w8.s[66];
+          ++cov_1tmg352ddi.b[15][1];
+          ++cov_1tmg352ddi.s[71];
           if (track instanceof _audioTrack2.default) {
-            ++cov_4x54fj3w8.b[16][0];
-            ++cov_4x54fj3w8.s[67];
+            ++cov_1tmg352ddi.b[16][0];
+            ++cov_1tmg352ddi.s[72];
 
             type = _trackTypes2.default.AUDIO;
           } else {
-              ++cov_4x54fj3w8.b[16][1];
-              ++cov_4x54fj3w8.s[68];
+              ++cov_1tmg352ddi.b[16][1];
+              ++cov_1tmg352ddi.s[73];
               if (track instanceof _textTrack2.default) {
-                ++cov_4x54fj3w8.b[17][0];
-                ++cov_4x54fj3w8.s[69];
+                ++cov_1tmg352ddi.b[17][0];
+                ++cov_1tmg352ddi.s[74];
 
                 type = _trackTypes2.default.TEXT;
               } else {
-                ++cov_4x54fj3w8.b[17][1];
+                ++cov_1tmg352ddi.b[17][1];
               }
             }
-        }++cov_4x54fj3w8.s[70];
+        }++cov_1tmg352ddi.s[75];
       if (type) {
-        ++cov_4x54fj3w8.b[18][0];
+        ++cov_1tmg352ddi.b[18][0];
 
-        var tracks = (++cov_4x54fj3w8.s[71], this.getTracks(type));
-        ++cov_4x54fj3w8.s[72];
+        var tracks = (++cov_1tmg352ddi.s[76], this.getTracks(type));
+        ++cov_1tmg352ddi.s[77];
         for (var i = 0; i < tracks.length; i++) {
-          ++cov_4x54fj3w8.s[73];
+          ++cov_1tmg352ddi.s[78];
 
           tracks[i].active = track.index === i;
         }
       } else {
-        ++cov_4x54fj3w8.b[18][1];
+        ++cov_1tmg352ddi.b[18][1];
       }
     }
 
@@ -7404,18 +7627,18 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_onPlay',
     value: function _onPlay() {
-      ++cov_4x54fj3w8.f[18];
-      ++cov_4x54fj3w8.s[74];
+      ++cov_1tmg352ddi.f[20];
+      ++cov_1tmg352ddi.s[79];
 
       if (this._firstPlay) {
-        ++cov_4x54fj3w8.b[19][0];
-        ++cov_4x54fj3w8.s[75];
+        ++cov_1tmg352ddi.b[19][0];
+        ++cov_1tmg352ddi.s[80];
 
         this._firstPlay = false;
-        ++cov_4x54fj3w8.s[76];
+        ++cov_1tmg352ddi.s[81];
         this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.FIRST_PLAY));
       } else {
-        ++cov_4x54fj3w8.b[19][1];
+        ++cov_1tmg352ddi.b[19][1];
       }
     }
 
@@ -7426,43 +7649,96 @@ var Player = function (_FakeEventTarget) {
      */
 
   }, {
-    key: 'play',
+    key: 'ready',
 
 
     //  <editor-fold desc="Playback Interface">
+    /**
+     * The player readiness
+     * @public
+     * @returns {Promise<*>} - The ready promise
+     */
+    value: function ready() {
+      ++cov_1tmg352ddi.f[22];
+      ++cov_1tmg352ddi.s[83];
+
+      return this._readyPromise ? (++cov_1tmg352ddi.b[20][0], this._readyPromise) : (++cov_1tmg352ddi.b[20][1], Promise.resolve());
+    }
+
+    /**
+     * Load media
+     * @public
+     * @returns {void}
+     */
+
+  }, {
+    key: 'load',
+    value: function load() {
+      var _this3 = this;
+
+      ++cov_1tmg352ddi.f[23];
+      ++cov_1tmg352ddi.s[84];
+
+      if (this._engine) {
+        ++cov_1tmg352ddi.b[21][0];
+        ++cov_1tmg352ddi.s[85];
+
+        this._engine.load().then(function (data) {
+          ++cov_1tmg352ddi.f[24];
+          ++cov_1tmg352ddi.s[86];
+
+          _this3._tracks = data.tracks;
+          ++cov_1tmg352ddi.s[87];
+          _this3.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.TRACKS_CHANGED, { tracks: _this3._tracks }));
+        }).catch(function (error) {
+          ++cov_1tmg352ddi.f[25];
+          ++cov_1tmg352ddi.s[88];
+
+          _this3.dispatchEvent(new _fakeEvent2.default(_events.HTML5_EVENTS.ERROR, error));
+        });
+      } else {
+        ++cov_1tmg352ddi.b[21][1];
+      }
+    }
+
     /**
      * Start/resume playback.
      * @returns {void}
      * @public
      */
-    value: function play() {
-      var _this3 = this;
 
-      ++cov_4x54fj3w8.f[20];
-      ++cov_4x54fj3w8.s[78];
+  }, {
+    key: 'play',
+    value: function play() {
+      var _this4 = this;
+
+      ++cov_1tmg352ddi.f[26];
+      ++cov_1tmg352ddi.s[89];
 
       if (this._engine) {
-        ++cov_4x54fj3w8.b[20][0];
-        ++cov_4x54fj3w8.s[79];
+        ++cov_1tmg352ddi.b[22][0];
+        ++cov_1tmg352ddi.s[90];
 
         if (this._engine.src) {
-          ++cov_4x54fj3w8.b[21][0];
-          ++cov_4x54fj3w8.s[80];
+          ++cov_1tmg352ddi.b[23][0];
+          ++cov_1tmg352ddi.s[91];
 
           this._engine.play();
         } else {
-          ++cov_4x54fj3w8.b[21][1];
-          ++cov_4x54fj3w8.s[81];
+          ++cov_1tmg352ddi.b[23][1];
+          ++cov_1tmg352ddi.s[92];
 
-          this.load().then(function () {
-            ++cov_4x54fj3w8.f[21];
-            ++cov_4x54fj3w8.s[82];
+          this.load();
+          ++cov_1tmg352ddi.s[93];
+          this.ready().then(function () {
+            ++cov_1tmg352ddi.f[27];
+            ++cov_1tmg352ddi.s[94];
 
-            _this3._engine.play();
+            _this4._engine.play();
           });
         }
       } else {
-        ++cov_4x54fj3w8.b[20][1];
+        ++cov_1tmg352ddi.b[22][1];
       }
     }
 
@@ -7475,48 +7751,16 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'pause',
     value: function pause() {
-      ++cov_4x54fj3w8.f[22];
-      ++cov_4x54fj3w8.s[83];
+      ++cov_1tmg352ddi.f[28];
+      ++cov_1tmg352ddi.s[95];
 
       if (this._engine) {
-        ++cov_4x54fj3w8.b[22][0];
-        ++cov_4x54fj3w8.s[84];
+        ++cov_1tmg352ddi.b[24][0];
+        ++cov_1tmg352ddi.s[96];
 
         return this._engine.pause();
       } else {
-        ++cov_4x54fj3w8.b[22][1];
-      }
-    }
-
-    /**
-     * Load media.
-     * @public
-     * @returns {Promise<*>} - The load promise.
-     */
-
-  }, {
-    key: 'load',
-    value: function load() {
-      var _this4 = this;
-
-      ++cov_4x54fj3w8.f[23];
-      ++cov_4x54fj3w8.s[85];
-
-      if (this._engine) {
-        ++cov_4x54fj3w8.b[23][0];
-        ++cov_4x54fj3w8.s[86];
-
-        return this._engine.load().then(function (data) {
-          ++cov_4x54fj3w8.f[24];
-          ++cov_4x54fj3w8.s[87];
-
-          _this4._tracks = data.tracks;
-        });
-      } else {
-        ++cov_4x54fj3w8.b[23][1];
-        ++cov_4x54fj3w8.s[88];
-
-        return Promise.resolve();
+        ++cov_1tmg352ddi.b[24][1];
       }
     }
 
@@ -7527,26 +7771,9 @@ var Player = function (_FakeEventTarget) {
      */
 
   }, {
-    key: 'ready',
-
-
-    // </editor-fold>
-
-    // <editor-fold desc="State">
-    value: function ready() {
-      ++cov_4x54fj3w8.f[30];
-    }
-
-    /**
-     * Get paused state.
-     * @returns {?boolean} - Whether the video is paused or not.
-     * @public
-     */
-
-  }, {
     key: 'buffered',
     value: function buffered() {
-      ++cov_4x54fj3w8.f[33];
+      ++cov_1tmg352ddi.f[36];
     }
 
     /**
@@ -7559,50 +7786,50 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'config',
     get: function get() {
-      ++cov_4x54fj3w8.f[19];
-      ++cov_4x54fj3w8.s[77];
+      ++cov_1tmg352ddi.f[21];
+      ++cov_1tmg352ddi.s[82];
 
       return this._config;
     }
   }, {
     key: 'currentTime',
     set: function set(to) {
-      ++cov_4x54fj3w8.f[25];
-      ++cov_4x54fj3w8.s[89];
+      ++cov_1tmg352ddi.f[29];
+      ++cov_1tmg352ddi.s[97];
 
       if (this._engine) {
-        ++cov_4x54fj3w8.b[24][0];
-        ++cov_4x54fj3w8.s[90];
+        ++cov_1tmg352ddi.b[25][0];
+        ++cov_1tmg352ddi.s[98];
 
         if ((0, _util.isNumber)(to)) {
-          ++cov_4x54fj3w8.b[25][0];
+          ++cov_1tmg352ddi.b[26][0];
 
-          var boundedTo = (++cov_4x54fj3w8.s[91], to);
-          ++cov_4x54fj3w8.s[92];
+          var boundedTo = (++cov_1tmg352ddi.s[99], to);
+          ++cov_1tmg352ddi.s[100];
           if (to < 0) {
-            ++cov_4x54fj3w8.b[26][0];
-            ++cov_4x54fj3w8.s[93];
+            ++cov_1tmg352ddi.b[27][0];
+            ++cov_1tmg352ddi.s[101];
 
             boundedTo = 0;
           } else {
-            ++cov_4x54fj3w8.b[26][1];
+            ++cov_1tmg352ddi.b[27][1];
           }
-          ++cov_4x54fj3w8.s[94];
+          ++cov_1tmg352ddi.s[102];
           if (boundedTo > this._engine.duration) {
-            ++cov_4x54fj3w8.b[27][0];
-            ++cov_4x54fj3w8.s[95];
+            ++cov_1tmg352ddi.b[28][0];
+            ++cov_1tmg352ddi.s[103];
 
             boundedTo = this._engine.duration;
           } else {
-            ++cov_4x54fj3w8.b[27][1];
+            ++cov_1tmg352ddi.b[28][1];
           }
-          ++cov_4x54fj3w8.s[96];
+          ++cov_1tmg352ddi.s[104];
           this._engine.currentTime = boundedTo;
         } else {
-          ++cov_4x54fj3w8.b[25][1];
+          ++cov_1tmg352ddi.b[26][1];
         }
       } else {
-        ++cov_4x54fj3w8.b[24][1];
+        ++cov_1tmg352ddi.b[25][1];
       }
     }
 
@@ -7613,16 +7840,16 @@ var Player = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_4x54fj3w8.f[26];
-      ++cov_4x54fj3w8.s[97];
+      ++cov_1tmg352ddi.f[30];
+      ++cov_1tmg352ddi.s[105];
 
       if (this._engine) {
-        ++cov_4x54fj3w8.b[28][0];
-        ++cov_4x54fj3w8.s[98];
+        ++cov_1tmg352ddi.b[29][0];
+        ++cov_1tmg352ddi.s[106];
 
         return this._engine.currentTime;
       } else {
-        ++cov_4x54fj3w8.b[28][1];
+        ++cov_1tmg352ddi.b[29][1];
       }
     }
 
@@ -7635,16 +7862,16 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'duration',
     get: function get() {
-      ++cov_4x54fj3w8.f[27];
-      ++cov_4x54fj3w8.s[99];
+      ++cov_1tmg352ddi.f[31];
+      ++cov_1tmg352ddi.s[107];
 
       if (this._engine) {
-        ++cov_4x54fj3w8.b[29][0];
-        ++cov_4x54fj3w8.s[100];
+        ++cov_1tmg352ddi.b[30][0];
+        ++cov_1tmg352ddi.s[108];
 
         return this._engine.duration;
       } else {
-        ++cov_4x54fj3w8.b[29][1];
+        ++cov_1tmg352ddi.b[30][1];
       }
     }
 
@@ -7658,42 +7885,42 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'volume',
     set: function set(vol) {
-      ++cov_4x54fj3w8.f[28];
-      ++cov_4x54fj3w8.s[101];
+      ++cov_1tmg352ddi.f[32];
+      ++cov_1tmg352ddi.s[109];
 
       if (this._engine) {
-        ++cov_4x54fj3w8.b[30][0];
-        ++cov_4x54fj3w8.s[102];
+        ++cov_1tmg352ddi.b[31][0];
+        ++cov_1tmg352ddi.s[110];
 
         if ((0, _util.isFloat)(vol)) {
-          ++cov_4x54fj3w8.b[31][0];
+          ++cov_1tmg352ddi.b[32][0];
 
-          var boundedVol = (++cov_4x54fj3w8.s[103], vol);
-          ++cov_4x54fj3w8.s[104];
+          var boundedVol = (++cov_1tmg352ddi.s[111], vol);
+          ++cov_1tmg352ddi.s[112];
           if (boundedVol < 0) {
-            ++cov_4x54fj3w8.b[32][0];
-            ++cov_4x54fj3w8.s[105];
+            ++cov_1tmg352ddi.b[33][0];
+            ++cov_1tmg352ddi.s[113];
 
             boundedVol = 0;
           } else {
-            ++cov_4x54fj3w8.b[32][1];
+            ++cov_1tmg352ddi.b[33][1];
           }
-          ++cov_4x54fj3w8.s[106];
+          ++cov_1tmg352ddi.s[114];
           if (boundedVol > 1) {
-            ++cov_4x54fj3w8.b[33][0];
-            ++cov_4x54fj3w8.s[107];
+            ++cov_1tmg352ddi.b[34][0];
+            ++cov_1tmg352ddi.s[115];
 
             boundedVol = 1;
           } else {
-            ++cov_4x54fj3w8.b[33][1];
+            ++cov_1tmg352ddi.b[34][1];
           }
-          ++cov_4x54fj3w8.s[108];
+          ++cov_1tmg352ddi.s[116];
           this._engine.volume = boundedVol;
         } else {
-          ++cov_4x54fj3w8.b[31][1];
+          ++cov_1tmg352ddi.b[32][1];
         }
       } else {
-        ++cov_4x54fj3w8.b[30][1];
+        ++cov_1tmg352ddi.b[31][1];
       }
     }
 
@@ -7704,31 +7931,41 @@ var Player = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_4x54fj3w8.f[29];
-      ++cov_4x54fj3w8.s[109];
+      ++cov_1tmg352ddi.f[33];
+      ++cov_1tmg352ddi.s[117];
 
       if (this._engine) {
-        ++cov_4x54fj3w8.b[34][0];
-        ++cov_4x54fj3w8.s[110];
+        ++cov_1tmg352ddi.b[35][0];
+        ++cov_1tmg352ddi.s[118];
 
         return this._engine.volume;
       } else {
-        ++cov_4x54fj3w8.b[34][1];
+        ++cov_1tmg352ddi.b[35][1];
       }
     }
+
+    // </editor-fold>
+
+    // <editor-fold desc="State">
+    /**
+     * Get paused state.
+     * @returns {?boolean} - Whether the video is paused or not.
+     * @public
+     */
+
   }, {
     key: 'paused',
     get: function get() {
-      ++cov_4x54fj3w8.f[31];
-      ++cov_4x54fj3w8.s[111];
+      ++cov_1tmg352ddi.f[34];
+      ++cov_1tmg352ddi.s[119];
 
       if (this._engine) {
-        ++cov_4x54fj3w8.b[35][0];
-        ++cov_4x54fj3w8.s[112];
+        ++cov_1tmg352ddi.b[36][0];
+        ++cov_1tmg352ddi.s[120];
 
         return this._engine.paused;
       } else {
-        ++cov_4x54fj3w8.b[35][1];
+        ++cov_1tmg352ddi.b[36][1];
       }
     }
 
@@ -7741,31 +7978,31 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'seeking',
     get: function get() {
-      ++cov_4x54fj3w8.f[32];
-      ++cov_4x54fj3w8.s[113];
+      ++cov_1tmg352ddi.f[35];
+      ++cov_1tmg352ddi.s[121];
 
       if (this._engine) {
-        ++cov_4x54fj3w8.b[36][0];
-        ++cov_4x54fj3w8.s[114];
+        ++cov_1tmg352ddi.b[37][0];
+        ++cov_1tmg352ddi.s[122];
 
         return this._engine.seeking;
       } else {
-        ++cov_4x54fj3w8.b[36][1];
+        ++cov_1tmg352ddi.b[37][1];
       }
     }
   }, {
     key: 'muted',
     set: function set(mute) {
-      ++cov_4x54fj3w8.f[34];
-      ++cov_4x54fj3w8.s[115];
+      ++cov_1tmg352ddi.f[37];
+      ++cov_1tmg352ddi.s[123];
 
       if (this._engine) {
-        ++cov_4x54fj3w8.b[37][0];
-        ++cov_4x54fj3w8.s[116];
+        ++cov_1tmg352ddi.b[38][0];
+        ++cov_1tmg352ddi.s[124];
 
         this._engine.muted = mute;
       } else {
-        ++cov_4x54fj3w8.b[37][1];
+        ++cov_1tmg352ddi.b[38][1];
       }
     }
 
@@ -7776,16 +8013,16 @@ var Player = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_4x54fj3w8.f[35];
-      ++cov_4x54fj3w8.s[117];
+      ++cov_1tmg352ddi.f[38];
+      ++cov_1tmg352ddi.s[125];
 
       if (this._engine) {
-        ++cov_4x54fj3w8.b[38][0];
-        ++cov_4x54fj3w8.s[118];
+        ++cov_1tmg352ddi.b[39][0];
+        ++cov_1tmg352ddi.s[126];
 
         return this._engine.muted;
       } else {
-        ++cov_4x54fj3w8.b[38][1];
+        ++cov_1tmg352ddi.b[39][1];
       }
     }
 
@@ -7798,16 +8035,16 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'src',
     get: function get() {
-      ++cov_4x54fj3w8.f[36];
-      ++cov_4x54fj3w8.s[119];
+      ++cov_1tmg352ddi.f[39];
+      ++cov_1tmg352ddi.s[127];
 
       if (this._engine) {
-        ++cov_4x54fj3w8.b[39][0];
-        ++cov_4x54fj3w8.s[120];
+        ++cov_1tmg352ddi.b[40][0];
+        ++cov_1tmg352ddi.s[128];
 
         return this._engine.src;
       } else {
-        ++cov_4x54fj3w8.b[39][1];
+        ++cov_1tmg352ddi.b[40][1];
       }
     }
 
@@ -7820,8 +8057,8 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'Event',
     get: function get() {
-      ++cov_4x54fj3w8.f[37];
-      ++cov_4x54fj3w8.s[121];
+      ++cov_1tmg352ddi.f[40];
+      ++cov_1tmg352ddi.s[129];
 
       return _events.PLAYER_EVENTS;
     }
@@ -7835,8 +8072,8 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'State',
     get: function get() {
-      ++cov_4x54fj3w8.f[38];
-      ++cov_4x54fj3w8.s[122];
+      ++cov_1tmg352ddi.f[41];
+      ++cov_1tmg352ddi.s[130];
 
       return _stateTypes2.default;
     }
@@ -7850,8 +8087,8 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'Track',
     get: function get() {
-      ++cov_4x54fj3w8.f[39];
-      ++cov_4x54fj3w8.s[123];
+      ++cov_1tmg352ddi.f[42];
+      ++cov_1tmg352ddi.s[131];
 
       return _trackTypes2.default;
     }
@@ -7861,8 +8098,8 @@ var Player = function (_FakeEventTarget) {
   }], [{
     key: '_defaultConfig',
     value: function _defaultConfig() {
-      ++cov_4x54fj3w8.f[3];
-      ++cov_4x54fj3w8.s[19];
+      ++cov_1tmg352ddi.f[5];
+      ++cov_1tmg352ddi.s[24];
 
       return {};
     }
@@ -7884,13 +8121,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_1n1jsxoboj = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/event/fake-event-target.js',
-      hash = '453d089f44ea2ec3652230de20b5912879d1f705',
+var cov_nmn0iv6w7 = function () {
+  var path = '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/event/fake-event-target.js',
+      hash = 'e73224f3eacb2270d979380d1ae812d4961f2b92',
       global = new Function('return this')(),
       gcv = '__coverage__',
       coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/event/fake-event-target.js',
+    path: '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/event/fake-event-target.js',
     statementMap: {
       '0': {
         start: {
@@ -8321,8 +8558,8 @@ var FakeEventTarget = function () {
   function FakeEventTarget() {
     _classCallCheck(this, FakeEventTarget);
 
-    ++cov_1n1jsxoboj.f[0];
-    ++cov_1n1jsxoboj.s[0];
+    ++cov_nmn0iv6w7.f[0];
+    ++cov_nmn0iv6w7.s[0];
 
     /**
      * @private {!MultiMap.<FakeEventTarget.ListenerType>}
@@ -8333,7 +8570,7 @@ var FakeEventTarget = function () {
      * The target of all dispatched events.  Defaults to |this|.
      * @type {EventTarget}
      */
-    ++cov_1n1jsxoboj.s[1];
+    ++cov_nmn0iv6w7.s[1];
     this.dispatchTarget = this;
   }
 
@@ -8353,8 +8590,8 @@ var FakeEventTarget = function () {
   _createClass(FakeEventTarget, [{
     key: 'addEventListener',
     value: function addEventListener(type, listener) {
-      ++cov_1n1jsxoboj.f[1];
-      ++cov_1n1jsxoboj.s[2];
+      ++cov_nmn0iv6w7.f[1];
+      ++cov_nmn0iv6w7.s[2];
 
       this._listeners.push(type, listener);
     }
@@ -8374,8 +8611,8 @@ var FakeEventTarget = function () {
   }, {
     key: 'removeEventListener',
     value: function removeEventListener(type, listener) {
-      ++cov_1n1jsxoboj.f[2];
-      ++cov_1n1jsxoboj.s[3];
+      ++cov_nmn0iv6w7.f[2];
+      ++cov_nmn0iv6w7.s[3];
 
       this._listeners.remove(type, listener);
     }
@@ -8392,37 +8629,37 @@ var FakeEventTarget = function () {
   }, {
     key: 'dispatchEvent',
     value: function dispatchEvent(event) {
-      ++cov_1n1jsxoboj.f[3];
+      ++cov_nmn0iv6w7.f[3];
 
       // In many browsers, it is complex to overwrite properties of actual Events.
       // Here we expect only to dispatch FakeEvents, which are simpler.
       //goog.asserts.assert(event instanceof FakeEvent,
       //    'FakeEventTarget can only dispatch FakeEvents!');
 
-      var list = (++cov_1n1jsxoboj.s[4], (++cov_1n1jsxoboj.b[0][0], this._listeners.get(event.type)) || (++cov_1n1jsxoboj.b[0][1], []));
+      var list = (++cov_nmn0iv6w7.s[4], (++cov_nmn0iv6w7.b[0][0], this._listeners.get(event.type)) || (++cov_nmn0iv6w7.b[0][1], []));
 
-      ++cov_1n1jsxoboj.s[5];
+      ++cov_nmn0iv6w7.s[5];
       for (var i = 0; i < list.length; ++i) {
-        ++cov_1n1jsxoboj.s[6];
+        ++cov_nmn0iv6w7.s[6];
 
         // Do this every time, since events can be re-dispatched from handlers.
         event.target = this.dispatchTarget;
-        ++cov_1n1jsxoboj.s[7];
+        ++cov_nmn0iv6w7.s[7];
         event.currentTarget = this.dispatchTarget;
 
-        var listener = (++cov_1n1jsxoboj.s[8], list[i]);
-        ++cov_1n1jsxoboj.s[9];
+        var listener = (++cov_nmn0iv6w7.s[8], list[i]);
+        ++cov_nmn0iv6w7.s[9];
         try {
-          ++cov_1n1jsxoboj.s[10];
+          ++cov_nmn0iv6w7.s[10];
 
           if (listener.handleEvent) {
-            ++cov_1n1jsxoboj.b[1][0];
-            ++cov_1n1jsxoboj.s[11];
+            ++cov_nmn0iv6w7.b[1][0];
+            ++cov_nmn0iv6w7.s[11];
 
             listener.handleEvent(event);
           } else {
-            ++cov_1n1jsxoboj.b[1][1];
-            ++cov_1n1jsxoboj.s[12];
+            ++cov_nmn0iv6w7.b[1][1];
+            ++cov_nmn0iv6w7.s[12];
 
             listener.call(this, event);
           }
@@ -8433,18 +8670,18 @@ var FakeEventTarget = function () {
           // TODO: add log
         }
 
-        ++cov_1n1jsxoboj.s[13];
+        ++cov_nmn0iv6w7.s[13];
         if (event.stopped) {
-          ++cov_1n1jsxoboj.b[2][0];
-          ++cov_1n1jsxoboj.s[14];
+          ++cov_nmn0iv6w7.b[2][0];
+          ++cov_nmn0iv6w7.s[14];
 
           break;
         } else {
-          ++cov_1n1jsxoboj.b[2][1];
+          ++cov_nmn0iv6w7.b[2][1];
         }
       }
 
-      ++cov_1n1jsxoboj.s[15];
+      ++cov_nmn0iv6w7.s[15];
       return event.defaultPrevented;
     }
   }]);
@@ -8471,13 +8708,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_zk60s9pil = function () {
-  var path = "/Users/dan.ziv/WebstormProjects/playkit-js/src/utils/player-error.js",
-      hash = "f6b9424ead904442c692b1e5698a6302398a47dd",
+var cov_1jh4fcquh0 = function () {
+  var path = "/Users/yair.ansbacher/Desktop/repos/playkit-js/src/utils/player-error.js",
+      hash = "a3107fc89f446204123663af161c1e983a266c92",
       global = new Function('return this')(),
       gcv = "__coverage__",
       coverageData = {
-    path: "/Users/dan.ziv/WebstormProjects/playkit-js/src/utils/player-error.js",
+    path: "/Users/yair.ansbacher/Desktop/repos/playkit-js/src/utils/player-error.js",
     statementMap: {
       "0": {
         start: {
@@ -8699,19 +8936,19 @@ var PlayerError = function () {
   function PlayerError(error, param) {
     _classCallCheck(this, PlayerError);
 
-    ++cov_zk60s9pil.f[3];
-    ++cov_zk60s9pil.s[3];
+    ++cov_1jh4fcquh0.f[3];
+    ++cov_1jh4fcquh0.s[3];
 
     this.name = error.name;
-    ++cov_zk60s9pil.s[4];
+    ++cov_1jh4fcquh0.s[4];
     this.message = error.message(param);
   }
 
   _createClass(PlayerError, [{
     key: "getError",
     value: function getError() {
-      ++cov_zk60s9pil.f[4];
-      ++cov_zk60s9pil.s[5];
+      ++cov_1jh4fcquh0.f[4];
+      ++cov_1jh4fcquh0.s[5];
 
       return {
         name: this.name,
@@ -8727,8 +8964,8 @@ PlayerError.TYPE = {
   NOT_REGISTERED_PLUGIN: {
     name: "PluginNotRegisteredException",
     message: function message(name) {
-      ++cov_zk60s9pil.f[0];
-      ++cov_zk60s9pil.s[0];
+      ++cov_1jh4fcquh0.f[0];
+      ++cov_1jh4fcquh0.s[0];
 
       return "Cannot load " + name + " plugin. Name not found in the registry";
     }
@@ -8736,8 +8973,8 @@ PlayerError.TYPE = {
   NOT_VALID_HANDLER: {
     name: "PluginHandlerIsNotValidException",
     message: function message() {
-      ++cov_zk60s9pil.f[1];
-      ++cov_zk60s9pil.s[1];
+      ++cov_1jh4fcquh0.f[1];
+      ++cov_1jh4fcquh0.s[1];
 
       return "To activate plugin you must provide a class derived from BasePlugin";
     }
@@ -8745,8 +8982,8 @@ PlayerError.TYPE = {
   NOT_IMPLEMENTED_METHOD: {
     name: "NotImplementedException",
     message: function message(method) {
-      ++cov_zk60s9pil.f[2];
-      ++cov_zk60s9pil.s[2];
+      ++cov_1jh4fcquh0.f[2];
+      ++cov_1jh4fcquh0.s[2];
 
       return method + " method not implemented";
     }
@@ -8770,13 +9007,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_1e2a9y1nho = function () {
-  var path = "/Users/dan.ziv/WebstormProjects/playkit-js/src/utils/util.js",
-      hash = "6c569da676227dcfcd4197182982081ccde0f483",
+var cov_2i1wen1o2h = function () {
+  var path = "/Users/yair.ansbacher/Desktop/repos/playkit-js/src/utils/util.js",
+      hash = "319ae00cc069aaceea6e24f9ef971bc78d2e1b0b",
       global = new Function('return this')(),
       gcv = "__coverage__",
       coverageData = {
-    path: "/Users/dan.ziv/WebstormProjects/playkit-js/src/utils/util.js",
+    path: "/Users/yair.ansbacher/Desktop/repos/playkit-js/src/utils/util.js",
     statementMap: {
       "0": {
         start: {
@@ -9047,8 +9284,8 @@ var cov_1e2a9y1nho = function () {
 }();
 
 function isNumber(n) {
-  ++cov_1e2a9y1nho.f[0];
-  ++cov_1e2a9y1nho.s[0];
+  ++cov_2i1wen1o2h.f[0];
+  ++cov_2i1wen1o2h.s[0];
 
   return Number(n) === n;
 }
@@ -9058,10 +9295,10 @@ function isNumber(n) {
  * @returns {boolean} - If the input is an integer
  */
 function isInt(n) {
-  ++cov_1e2a9y1nho.f[1];
-  ++cov_1e2a9y1nho.s[1];
+  ++cov_2i1wen1o2h.f[1];
+  ++cov_2i1wen1o2h.s[1];
 
-  return (++cov_1e2a9y1nho.b[0][0], isNumber(n)) && (++cov_1e2a9y1nho.b[0][1], n % 1 === 0);
+  return (++cov_2i1wen1o2h.b[0][0], isNumber(n)) && (++cov_2i1wen1o2h.b[0][1], n % 1 === 0);
 }
 
 /**
@@ -9069,10 +9306,10 @@ function isInt(n) {
  * @returns {boolean} - If the input is a float
  */
 function isFloat(n) {
-  ++cov_1e2a9y1nho.f[2];
-  ++cov_1e2a9y1nho.s[2];
+  ++cov_2i1wen1o2h.f[2];
+  ++cov_2i1wen1o2h.s[2];
 
-  return (++cov_1e2a9y1nho.b[1][0], isNumber(n)) && (++cov_1e2a9y1nho.b[1][1], n % 1 !== 0);
+  return (++cov_2i1wen1o2h.b[1][0], isNumber(n)) && (++cov_2i1wen1o2h.b[1][1], n % 1 !== 0);
 }
 
 /**
@@ -9080,10 +9317,10 @@ function isFloat(n) {
  * @returns {Object} - The merged object.
  */
 function merge(objects) {
-  ++cov_1e2a9y1nho.f[3];
+  ++cov_2i1wen1o2h.f[3];
 
-  var target = (++cov_1e2a9y1nho.s[3], {});
-  ++cov_1e2a9y1nho.s[4];
+  var target = (++cov_2i1wen1o2h.s[3], {});
+  ++cov_2i1wen1o2h.s[4];
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;
   var _iteratorError = undefined;
@@ -9091,7 +9328,7 @@ function merge(objects) {
   try {
     for (var _iterator = objects[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
       var obj = _step.value;
-      ++cov_1e2a9y1nho.s[5];
+      ++cov_2i1wen1o2h.s[5];
 
       Object.assign(target, obj);
     }
@@ -9110,7 +9347,7 @@ function merge(objects) {
     }
   }
 
-  ++cov_1e2a9y1nho.s[6];
+  ++cov_2i1wen1o2h.s[6];
   return target;
 }
 
@@ -9130,13 +9367,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_1q473uea5y = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/engines/html5/media-source/base-media-source-adapter.js',
-      hash = 'c1c48cb7926e91e07b807e5d968e747461704844',
+var cov_fyq355ekv = function () {
+  var path = '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/engines/html5/media-source/base-media-source-adapter.js',
+      hash = 'eac3a1ac2250071bd6d3f22b8a02a1be5cf4fbb1',
       global = new Function('return this')(),
       gcv = '__coverage__',
       coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/engines/html5/media-source/base-media-source-adapter.js',
+    path: '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/engines/html5/media-source/base-media-source-adapter.js',
     statementMap: {
       '0': {
         start: {
@@ -9916,8 +10153,8 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
      * @static
      */
     value: function isSupported() {
-      ++cov_1q473uea5y.f[0];
-      ++cov_1q473uea5y.s[0];
+      ++cov_fyq355ekv.f[0];
+      ++cov_fyq355ekv.s[0];
 
       return true;
     }
@@ -9942,8 +10179,8 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
   }, {
     key: 'createAdapter',
     value: function createAdapter(videoElement, source, config) {
-      ++cov_1q473uea5y.f[1];
-      ++cov_1q473uea5y.s[1];
+      ++cov_fyq355ekv.f[1];
+      ++cov_fyq355ekv.s[1];
 
       return new this(videoElement, source, config);
     }
@@ -9960,17 +10197,17 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
   function BaseMediaSourceAdapter(videoElement, source, config) {
     _classCallCheck(this, BaseMediaSourceAdapter);
 
-    ++cov_1q473uea5y.f[2];
-    ++cov_1q473uea5y.s[2];
+    ++cov_fyq355ekv.f[2];
+    ++cov_fyq355ekv.s[2];
 
     var _this = _possibleConstructorReturn(this, (BaseMediaSourceAdapter.__proto__ || Object.getPrototypeOf(BaseMediaSourceAdapter)).call(this));
 
-    ++cov_1q473uea5y.s[3];
+    ++cov_fyq355ekv.s[3];
 
     _this._videoElement = videoElement;
-    ++cov_1q473uea5y.s[4];
+    ++cov_fyq355ekv.s[4];
     _this._sourceObj = source;
-    ++cov_1q473uea5y.s[5];
+    ++cov_fyq355ekv.s[5];
     _this._config = config;
     return _this;
   }
@@ -9985,11 +10222,11 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
   _createClass(BaseMediaSourceAdapter, [{
     key: 'destroy',
     value: function destroy() {
-      ++cov_1q473uea5y.f[3];
-      ++cov_1q473uea5y.s[6];
+      ++cov_fyq355ekv.f[3];
+      ++cov_fyq355ekv.s[6];
 
       this._sourceObj = null;
-      ++cov_1q473uea5y.s[7];
+      ++cov_fyq355ekv.s[7];
       this._config = null;
     }
 
@@ -10003,32 +10240,32 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
   }, {
     key: '_onTrackChanged',
     value: function _onTrackChanged(track) {
-      ++cov_1q473uea5y.f[4];
-      ++cov_1q473uea5y.s[8];
+      ++cov_fyq355ekv.f[4];
+      ++cov_fyq355ekv.s[8];
 
       if (track instanceof _videoTrack2.default) {
-        ++cov_1q473uea5y.b[0][0];
-        ++cov_1q473uea5y.s[9];
+        ++cov_fyq355ekv.b[0][0];
+        ++cov_fyq355ekv.s[9];
 
         this._trigger(BaseMediaSourceAdapter.CustomEvents.VIDEO_TRACK_CHANGED, { selectedVideoTrack: track });
       } else {
-          ++cov_1q473uea5y.b[0][1];
-          ++cov_1q473uea5y.s[10];
+          ++cov_fyq355ekv.b[0][1];
+          ++cov_fyq355ekv.s[10];
           if (track instanceof _audioTrack2.default) {
-            ++cov_1q473uea5y.b[1][0];
-            ++cov_1q473uea5y.s[11];
+            ++cov_fyq355ekv.b[1][0];
+            ++cov_fyq355ekv.s[11];
 
             this._trigger(BaseMediaSourceAdapter.CustomEvents.AUDIO_TRACK_CHANGED, { selectedAudioTrack: track });
           } else {
-              ++cov_1q473uea5y.b[1][1];
-              ++cov_1q473uea5y.s[12];
+              ++cov_fyq355ekv.b[1][1];
+              ++cov_fyq355ekv.s[12];
               if (track instanceof _textTrack2.default) {
-                ++cov_1q473uea5y.b[2][0];
-                ++cov_1q473uea5y.s[13];
+                ++cov_fyq355ekv.b[2][0];
+                ++cov_fyq355ekv.s[13];
 
                 this._trigger(BaseMediaSourceAdapter.CustomEvents.TEXT_TRACK_CHANGED, { selectedTextTrack: track });
               } else {
-                ++cov_1q473uea5y.b[2][1];
+                ++cov_fyq355ekv.b[2][1];
               }
             }
         }
@@ -10044,8 +10281,8 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
   }, {
     key: '_trigger',
     value: function _trigger(name, payload) {
-      ++cov_1q473uea5y.f[5];
-      ++cov_1q473uea5y.s[14];
+      ++cov_fyq355ekv.f[5];
+      ++cov_fyq355ekv.s[14];
 
       this.dispatchEvent(new _fakeEvent2.default(name, payload));
     }
@@ -10055,56 +10292,56 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
   }, {
     key: 'load',
     value: function load() {
-      ++cov_1q473uea5y.f[7];
-      ++cov_1q473uea5y.s[16];
+      ++cov_fyq355ekv.f[7];
+      ++cov_fyq355ekv.s[16];
 
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
     }
   }, {
     key: 'selectVideoTrack',
     value: function selectVideoTrack(videoTrack) {
-      ++cov_1q473uea5y.f[8];
-      ++cov_1q473uea5y.s[17];
+      ++cov_fyq355ekv.f[8];
+      ++cov_fyq355ekv.s[17];
 
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'selectVideoTrack').getError();
     }
   }, {
     key: 'selectAudioTrack',
     value: function selectAudioTrack(audioTrack) {
-      ++cov_1q473uea5y.f[9];
-      ++cov_1q473uea5y.s[18];
+      ++cov_fyq355ekv.f[9];
+      ++cov_fyq355ekv.s[18];
 
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'selectAudioTrack').getError();
     }
   }, {
     key: 'selectTextTrack',
     value: function selectTextTrack(textTrack) {
-      ++cov_1q473uea5y.f[10];
-      ++cov_1q473uea5y.s[19];
+      ++cov_fyq355ekv.f[10];
+      ++cov_fyq355ekv.s[19];
 
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'selectTextTrack').getError();
     }
   }, {
     key: 'enableAdaptiveBitrate',
     value: function enableAdaptiveBitrate() {
-      ++cov_1q473uea5y.f[11];
-      ++cov_1q473uea5y.s[20];
+      ++cov_fyq355ekv.f[11];
+      ++cov_fyq355ekv.s[20];
 
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'enableAdaptiveBitrate').getError();
     }
   }, {
     key: 'src',
     get: function get() {
-      ++cov_1q473uea5y.f[12];
-      ++cov_1q473uea5y.s[21];
+      ++cov_fyq355ekv.f[12];
+      ++cov_fyq355ekv.s[21];
 
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'get src').getError();
     }
   }], [{
     key: 'canPlayType',
     value: function canPlayType(mimeType) {
-      ++cov_1q473uea5y.f[6];
-      ++cov_1q473uea5y.s[15];
+      ++cov_fyq355ekv.f[6];
+      ++cov_fyq355ekv.s[15];
 
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayType').getError();
     }
@@ -10129,13 +10366,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.registerMediaSourceAdapter = undefined;
 
-var cov_jkjoyzlgj = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/engines/html5/media-source/media-source-provider.js',
-      hash = 'd4a182c1235cb47b6fa9b921f21591b0d396c64b',
+var cov_28zayul19l = function () {
+  var path = '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/engines/html5/media-source/media-source-provider.js',
+      hash = '564333c39477ed35e6aec6791fdf85993bae49fe',
       global = new Function('return this')(),
       gcv = '__coverage__',
       coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/engines/html5/media-source/media-source-provider.js',
+    path: '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/engines/html5/media-source/media-source-provider.js',
     statementMap: {
       '0': {
         start: {
@@ -10825,28 +11062,28 @@ var MediaSourceProvider = function () {
      * @private
      */
     value: function register(mediaSourceAdapter) {
-      ++cov_jkjoyzlgj.f[0];
-      ++cov_jkjoyzlgj.s[0];
+      ++cov_28zayul19l.f[0];
+      ++cov_28zayul19l.s[0];
 
       if (mediaSourceAdapter) {
-        ++cov_jkjoyzlgj.b[0][0];
-        ++cov_jkjoyzlgj.s[1];
+        ++cov_28zayul19l.b[0][0];
+        ++cov_28zayul19l.s[1];
 
         if (!MediaSourceProvider._mediaSourceAdapters.includes(mediaSourceAdapter)) {
-          ++cov_jkjoyzlgj.b[1][0];
-          ++cov_jkjoyzlgj.s[2];
+          ++cov_28zayul19l.b[1][0];
+          ++cov_28zayul19l.s[2];
 
           MediaSourceProvider._logger.debug('Adapter <' + mediaSourceAdapter.id + '> has been registered successfully');
-          ++cov_jkjoyzlgj.s[3];
+          ++cov_28zayul19l.s[3];
           MediaSourceProvider._mediaSourceAdapters.push(mediaSourceAdapter);
         } else {
-          ++cov_jkjoyzlgj.b[1][1];
-          ++cov_jkjoyzlgj.s[4];
+          ++cov_28zayul19l.b[1][1];
+          ++cov_28zayul19l.s[4];
 
           MediaSourceProvider._logger.debug('Adapter <' + mediaSourceAdapter.id + '> is already registered, do not register again');
         }
       } else {
-        ++cov_jkjoyzlgj.b[0][1];
+        ++cov_28zayul19l.b[0][1];
       }
     }
 
@@ -10875,19 +11112,19 @@ var MediaSourceProvider = function () {
   }, {
     key: 'unRegister',
     value: function unRegister(mediaSourceAdapter) {
-      ++cov_jkjoyzlgj.f[1];
+      ++cov_28zayul19l.f[1];
 
-      var index = (++cov_jkjoyzlgj.s[5], MediaSourceProvider._mediaSourceAdapters.indexOf(mediaSourceAdapter));
-      ++cov_jkjoyzlgj.s[6];
+      var index = (++cov_28zayul19l.s[5], MediaSourceProvider._mediaSourceAdapters.indexOf(mediaSourceAdapter));
+      ++cov_28zayul19l.s[6];
       if (index > -1) {
-        ++cov_jkjoyzlgj.b[2][0];
-        ++cov_jkjoyzlgj.s[7];
+        ++cov_28zayul19l.b[2][0];
+        ++cov_28zayul19l.s[7];
 
         MediaSourceProvider._logger.debug('Unregistered <' + mediaSourceAdapter.id + '> adapter');
-        ++cov_jkjoyzlgj.s[8];
+        ++cov_28zayul19l.s[8];
         MediaSourceProvider._mediaSourceAdapters.splice(index, 1);
       } else {
-        ++cov_jkjoyzlgj.b[2][1];
+        ++cov_28zayul19l.b[2][1];
       }
     }
 
@@ -10902,27 +11139,27 @@ var MediaSourceProvider = function () {
   }, {
     key: 'canPlayType',
     value: function canPlayType(mimeType) {
-      ++cov_jkjoyzlgj.f[2];
+      ++cov_28zayul19l.f[2];
 
-      var mediaSourceAdapters = (++cov_jkjoyzlgj.s[9], MediaSourceProvider._mediaSourceAdapters);
-      ++cov_jkjoyzlgj.s[10];
+      var mediaSourceAdapters = (++cov_28zayul19l.s[9], MediaSourceProvider._mediaSourceAdapters);
+      ++cov_28zayul19l.s[10];
       for (var i = 0; i < mediaSourceAdapters.length; i++) {
-        ++cov_jkjoyzlgj.s[11];
+        ++cov_28zayul19l.s[11];
 
         if (mediaSourceAdapters[i].canPlayType(mimeType)) {
-          ++cov_jkjoyzlgj.b[3][0];
-          ++cov_jkjoyzlgj.s[12];
+          ++cov_28zayul19l.b[3][0];
+          ++cov_28zayul19l.s[12];
 
           MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
-          ++cov_jkjoyzlgj.s[13];
+          ++cov_28zayul19l.s[13];
           MediaSourceProvider._logger.debug('Selected adapter is <' + MediaSourceProvider._selectedAdapter.id + '>');
-          ++cov_jkjoyzlgj.s[14];
+          ++cov_28zayul19l.s[14];
           return true;
         } else {
-          ++cov_jkjoyzlgj.b[3][1];
+          ++cov_28zayul19l.b[3][1];
         }
       }
-      ++cov_jkjoyzlgj.s[15];
+      ++cov_28zayul19l.s[15];
       return false;
     }
 
@@ -10939,27 +11176,27 @@ var MediaSourceProvider = function () {
   }, {
     key: 'getMediaSourceAdapter',
     value: function getMediaSourceAdapter(videoElement, source, config) {
-      ++cov_jkjoyzlgj.f[3];
-      ++cov_jkjoyzlgj.s[16];
+      ++cov_28zayul19l.f[3];
+      ++cov_28zayul19l.s[16];
 
-      if ((++cov_jkjoyzlgj.b[5][0], videoElement) && (++cov_jkjoyzlgj.b[5][1], source) && (++cov_jkjoyzlgj.b[5][2], config)) {
-        ++cov_jkjoyzlgj.b[4][0];
-        ++cov_jkjoyzlgj.s[17];
+      if ((++cov_28zayul19l.b[5][0], videoElement) && (++cov_28zayul19l.b[5][1], source) && (++cov_28zayul19l.b[5][2], config)) {
+        ++cov_28zayul19l.b[4][0];
+        ++cov_28zayul19l.s[17];
 
         if (!MediaSourceProvider._selectedAdapter) {
-          ++cov_jkjoyzlgj.b[6][0];
-          ++cov_jkjoyzlgj.s[18];
+          ++cov_28zayul19l.b[6][0];
+          ++cov_28zayul19l.s[18];
 
           MediaSourceProvider.canPlayType(source.mimetype);
         } else {
-          ++cov_jkjoyzlgj.b[6][1];
+          ++cov_28zayul19l.b[6][1];
         }
-        ++cov_jkjoyzlgj.s[19];
-        return MediaSourceProvider._selectedAdapter ? (++cov_jkjoyzlgj.b[7][0], MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config.engines)) : (++cov_jkjoyzlgj.b[7][1], null);
+        ++cov_28zayul19l.s[19];
+        return MediaSourceProvider._selectedAdapter ? (++cov_28zayul19l.b[7][0], MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config.engines)) : (++cov_28zayul19l.b[7][1], null);
       } else {
-        ++cov_jkjoyzlgj.b[4][1];
+        ++cov_28zayul19l.b[4][1];
       }
-      ++cov_jkjoyzlgj.s[20];
+      ++cov_28zayul19l.s[20];
       return null;
     }
   }]);
@@ -10973,7 +11210,7 @@ MediaSourceProvider._selectedAdapter = null;
 exports.default = MediaSourceProvider;
 
 
-var registerMediaSourceAdapter = (++cov_jkjoyzlgj.s[21], MediaSourceProvider.register);
+var registerMediaSourceAdapter = (++cov_28zayul19l.s[21], MediaSourceProvider.register);
 exports.registerMediaSourceAdapter = registerMediaSourceAdapter;
 
 /***/ }),
@@ -10987,13 +11224,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_cf3lk8xb7 = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/plugin/base-plugin.js',
-      hash = '779a262c90febbaa75c8b894f8d5e112253ed3f0',
+var cov_295zm4o5cr = function () {
+  var path = '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/plugin/base-plugin.js',
+      hash = 'b43cb655f71e445c769acf20ec2f739da2f656c9',
       global = new Function('return this')(),
       gcv = '__coverage__',
       coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/plugin/base-plugin.js',
+    path: '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/plugin/base-plugin.js',
     statementMap: {
       '0': {
         start: {
@@ -11454,9 +11691,9 @@ var BasePlugin = function () {
      * @member
      */
     value: function createPlugin(name, player) {
-      var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : (++cov_cf3lk8xb7.b[0][0], {});
-      ++cov_cf3lk8xb7.f[0];
-      ++cov_cf3lk8xb7.s[0];
+      var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : (++cov_295zm4o5cr.b[0][0], {});
+      ++cov_295zm4o5cr.f[0];
+      ++cov_295zm4o5cr.s[0];
 
       return new this(name, player, config);
     }
@@ -11491,8 +11728,8 @@ var BasePlugin = function () {
   }, {
     key: 'isValid',
     value: function isValid() {
-      ++cov_cf3lk8xb7.f[1];
-      ++cov_cf3lk8xb7.s[1];
+      ++cov_295zm4o5cr.f[1];
+      ++cov_295zm4o5cr.s[1];
 
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'isValid()').getError();
     }
@@ -11511,17 +11748,17 @@ var BasePlugin = function () {
   function BasePlugin(name, player, config) {
     _classCallCheck(this, BasePlugin);
 
-    ++cov_cf3lk8xb7.f[2];
-    ++cov_cf3lk8xb7.s[2];
+    ++cov_295zm4o5cr.f[2];
+    ++cov_295zm4o5cr.s[2];
 
     this.name = name;
-    ++cov_cf3lk8xb7.s[3];
+    ++cov_295zm4o5cr.s[3];
     this.player = player;
-    ++cov_cf3lk8xb7.s[4];
+    ++cov_295zm4o5cr.s[4];
     this.eventManager = new _eventManager2.default();
-    ++cov_cf3lk8xb7.s[5];
+    ++cov_295zm4o5cr.s[5];
     this.logger = _logger2.default.getLogger(this.name);
-    ++cov_cf3lk8xb7.s[6];
+    ++cov_295zm4o5cr.s[6];
     this.config = (0, _util.merge)([this.constructor.defaultConfig, config]);
   }
 
@@ -11536,18 +11773,18 @@ var BasePlugin = function () {
   _createClass(BasePlugin, [{
     key: 'getConfig',
     value: function getConfig(attr) {
-      ++cov_cf3lk8xb7.f[3];
-      ++cov_cf3lk8xb7.s[7];
+      ++cov_295zm4o5cr.f[3];
+      ++cov_295zm4o5cr.s[7];
 
       if (attr) {
-        ++cov_cf3lk8xb7.b[1][0];
-        ++cov_cf3lk8xb7.s[8];
+        ++cov_295zm4o5cr.b[1][0];
+        ++cov_295zm4o5cr.s[8];
 
         return this.config[attr];
       } else {
-        ++cov_cf3lk8xb7.b[1][1];
+        ++cov_295zm4o5cr.b[1][1];
       }
-      ++cov_cf3lk8xb7.s[9];
+      ++cov_295zm4o5cr.s[9];
       return this.config;
     }
 
@@ -11561,8 +11798,8 @@ var BasePlugin = function () {
   }, {
     key: 'updateConfig',
     value: function updateConfig(update) {
-      ++cov_cf3lk8xb7.f[4];
-      ++cov_cf3lk8xb7.s[10];
+      ++cov_295zm4o5cr.f[4];
+      ++cov_295zm4o5cr.s[10];
 
       this.config = (0, _util.merge)([this.config, update]);
     }
@@ -11578,8 +11815,8 @@ var BasePlugin = function () {
   }, {
     key: 'destroy',
     value: function destroy() {
-      ++cov_cf3lk8xb7.f[5];
-      ++cov_cf3lk8xb7.s[11];
+      ++cov_295zm4o5cr.f[5];
+      ++cov_295zm4o5cr.s[11];
 
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'destroy()').getError();
     }
@@ -11593,8 +11830,8 @@ var BasePlugin = function () {
   }, {
     key: 'getName',
     value: function getName() {
-      ++cov_cf3lk8xb7.f[6];
-      ++cov_cf3lk8xb7.s[12];
+      ++cov_295zm4o5cr.f[6];
+      ++cov_295zm4o5cr.s[12];
 
       return this.name;
     }
@@ -11618,13 +11855,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.registerPlugin = undefined;
 
-var cov_2hprl18w1l = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/plugin/plugin-manager.js',
-      hash = '9d7db08f43ce1c9f9a27b2ee3e0b5d344e02b586',
+var cov_1hvh6ntcna = function () {
+  var path = '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/plugin/plugin-manager.js',
+      hash = '4296cb4e18d138f4552b2f0c0547eb59e97fa7b0',
       global = new Function('return this')(),
       gcv = '__coverage__',
       coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/plugin/plugin-manager.js',
+    path: '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/plugin/plugin-manager.js',
     statementMap: {
       '0': {
         start: {
@@ -12375,7 +12612,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * @private
  * @const
  */
-var logger = (++cov_2hprl18w1l.s[0], _logger2.default.getLogger("PluginManager"));
+var logger = (++cov_1hvh6ntcna.s[0], _logger2.default.getLogger("PluginManager"));
 
 /** The PluginManager responsible for register plugins definitions and store plugins instances.
  * @classdesc
@@ -12416,35 +12653,35 @@ var PluginManager = function () {
      * @public
      */
     value: function load(name, player) {
-      var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : (++cov_2hprl18w1l.b[4][0], {});
-      ++cov_2hprl18w1l.f[2];
-      ++cov_2hprl18w1l.s[12];
+      var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : (++cov_1hvh6ntcna.b[4][0], {});
+      ++cov_1hvh6ntcna.f[2];
+      ++cov_1hvh6ntcna.s[12];
 
       if (!PluginManager._registry.has(name)) {
-        ++cov_2hprl18w1l.b[5][0];
-        ++cov_2hprl18w1l.s[13];
+        ++cov_1hvh6ntcna.b[5][0];
+        ++cov_1hvh6ntcna.s[13];
 
         throw new _playerError2.default(_playerError2.default.TYPE.NOT_REGISTERED_PLUGIN, name).getError();
       } else {
-        ++cov_2hprl18w1l.b[5][1];
+        ++cov_1hvh6ntcna.b[5][1];
       }
-      var pluginClass = (++cov_2hprl18w1l.s[14], PluginManager._registry.get(name));
-      ++cov_2hprl18w1l.s[15];
-      if ((++cov_2hprl18w1l.b[7][0], pluginClass != null) && (++cov_2hprl18w1l.b[7][1], pluginClass.isValid())) {
-        ++cov_2hprl18w1l.b[6][0];
-        ++cov_2hprl18w1l.s[16];
+      var pluginClass = (++cov_1hvh6ntcna.s[14], PluginManager._registry.get(name));
+      ++cov_1hvh6ntcna.s[15];
+      if ((++cov_1hvh6ntcna.b[7][0], pluginClass != null) && (++cov_1hvh6ntcna.b[7][1], pluginClass.isValid())) {
+        ++cov_1hvh6ntcna.b[6][0];
+        ++cov_1hvh6ntcna.s[16];
 
         this._plugins.set(name, pluginClass.createPlugin(name, player, config));
-        ++cov_2hprl18w1l.s[17];
+        ++cov_1hvh6ntcna.s[17];
         logger.debug('Plugin <' + name + '> has been loaded');
-        ++cov_2hprl18w1l.s[18];
+        ++cov_1hvh6ntcna.s[18];
         return true;
       } else {
-        ++cov_2hprl18w1l.b[6][1];
+        ++cov_1hvh6ntcna.b[6][1];
       }
-      ++cov_2hprl18w1l.s[19];
+      ++cov_1hvh6ntcna.s[19];
       logger.debug('Plugin <' + name + '> isn\'t loaded, isValid()=false');
-      ++cov_2hprl18w1l.s[20];
+      ++cov_1hvh6ntcna.s[20];
       return false;
     }
 
@@ -12457,8 +12694,8 @@ var PluginManager = function () {
   }, {
     key: 'destroy',
     value: function destroy() {
-      ++cov_2hprl18w1l.f[3];
-      ++cov_2hprl18w1l.s[21];
+      ++cov_1hvh6ntcna.f[3];
+      ++cov_1hvh6ntcna.s[21];
 
       this._plugins.forEach(this._destroy.bind(this));
     }
@@ -12474,11 +12711,11 @@ var PluginManager = function () {
   }, {
     key: '_destroy',
     value: function _destroy(plugin, name) {
-      ++cov_2hprl18w1l.f[4];
-      ++cov_2hprl18w1l.s[22];
+      ++cov_1hvh6ntcna.f[4];
+      ++cov_1hvh6ntcna.s[22];
 
       plugin.destroy();
-      ++cov_2hprl18w1l.s[23];
+      ++cov_1hvh6ntcna.s[23];
       this._plugins.delete(name);
     }
 
@@ -12492,8 +12729,8 @@ var PluginManager = function () {
   }, {
     key: 'get',
     value: function get(name) {
-      ++cov_2hprl18w1l.f[5];
-      ++cov_2hprl18w1l.s[24];
+      ++cov_1hvh6ntcna.f[5];
+      ++cov_1hvh6ntcna.s[24];
 
       return this._plugins.get(name);
     }
@@ -12511,33 +12748,33 @@ var PluginManager = function () {
      * @public
      */
     value: function register(name, handler) {
-      ++cov_2hprl18w1l.f[0];
-      ++cov_2hprl18w1l.s[1];
+      ++cov_1hvh6ntcna.f[0];
+      ++cov_1hvh6ntcna.s[1];
 
-      if ((++cov_2hprl18w1l.b[1][0], typeof handler !== 'function') || (++cov_2hprl18w1l.b[1][1], handler.prototype instanceof _basePlugin2.default === false)) {
-        ++cov_2hprl18w1l.b[0][0];
-        ++cov_2hprl18w1l.s[2];
+      if ((++cov_1hvh6ntcna.b[1][0], typeof handler !== 'function') || (++cov_1hvh6ntcna.b[1][1], handler.prototype instanceof _basePlugin2.default === false)) {
+        ++cov_1hvh6ntcna.b[0][0];
+        ++cov_1hvh6ntcna.s[2];
 
         throw new _playerError2.default(_playerError2.default.TYPE.NOT_VALID_HANDLER).getError();
       } else {
-        ++cov_2hprl18w1l.b[0][1];
+        ++cov_1hvh6ntcna.b[0][1];
       }
-      ++cov_2hprl18w1l.s[3];
+      ++cov_1hvh6ntcna.s[3];
       if (!PluginManager._registry.has(name)) {
-        ++cov_2hprl18w1l.b[2][0];
-        ++cov_2hprl18w1l.s[4];
+        ++cov_1hvh6ntcna.b[2][0];
+        ++cov_1hvh6ntcna.s[4];
 
         PluginManager._registry.set(name, handler);
-        ++cov_2hprl18w1l.s[5];
+        ++cov_1hvh6ntcna.s[5];
         logger.debug('Plugin <' + name + '> has been registered successfully');
-        ++cov_2hprl18w1l.s[6];
+        ++cov_1hvh6ntcna.s[6];
         return true;
       } else {
-        ++cov_2hprl18w1l.b[2][1];
+        ++cov_1hvh6ntcna.b[2][1];
       }
-      ++cov_2hprl18w1l.s[7];
+      ++cov_1hvh6ntcna.s[7];
       logger.debug('Plugin <' + name + '> is already registered, do not register again');
-      ++cov_2hprl18w1l.s[8];
+      ++cov_1hvh6ntcna.s[8];
       return false;
     }
 
@@ -12552,18 +12789,18 @@ var PluginManager = function () {
   }, {
     key: 'unRegister',
     value: function unRegister(name) {
-      ++cov_2hprl18w1l.f[1];
-      ++cov_2hprl18w1l.s[9];
+      ++cov_1hvh6ntcna.f[1];
+      ++cov_1hvh6ntcna.s[9];
 
       if (PluginManager._registry.has(name)) {
-        ++cov_2hprl18w1l.b[3][0];
-        ++cov_2hprl18w1l.s[10];
+        ++cov_1hvh6ntcna.b[3][0];
+        ++cov_1hvh6ntcna.s[10];
 
         PluginManager._registry.delete(name);
-        ++cov_2hprl18w1l.s[11];
+        ++cov_1hvh6ntcna.s[11];
         logger.debug('Unregistered <' + name + '> plugin.');
       } else {
-        ++cov_2hprl18w1l.b[3][1];
+        ++cov_1hvh6ntcna.b[3][1];
       }
     }
   }]);
@@ -12580,7 +12817,7 @@ var PluginManager = function () {
 
 PluginManager._registry = new Map();
 exports.default = PluginManager;
-var registerPlugin = (++cov_2hprl18w1l.s[25], PluginManager.register);
+var registerPlugin = (++cov_1hvh6ntcna.s[25], PluginManager.register);
 exports.registerPlugin = registerPlugin;
 
 /***/ }),
@@ -12594,13 +12831,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_2ash98nnh4 = function () {
-  var path = "/Users/dan.ziv/WebstormProjects/playkit-js/src/state/state-types.js",
-      hash = "565a43305310077205f08574714177c5d8e1d96c",
+var cov_ety7rsr7d = function () {
+  var path = "/Users/yair.ansbacher/Desktop/repos/playkit-js/src/state/state-types.js",
+      hash = "67708284e1e30ce02aaf0c43c55b0d67182ad910",
       global = new Function('return this')(),
       gcv = "__coverage__",
       coverageData = {
-    path: "/Users/dan.ziv/WebstormProjects/playkit-js/src/state/state-types.js",
+    path: "/Users/yair.ansbacher/Desktop/repos/playkit-js/src/state/state-types.js",
     statementMap: {
       "0": {
         start: {
@@ -12632,7 +12869,7 @@ var cov_2ash98nnh4 = function () {
   return coverage[path] = coverageData;
 }();
 
-var PLAYER_STATE_TYPES = (++cov_2ash98nnh4.s[0], {
+var PLAYER_STATE_TYPES = (++cov_ety7rsr7d.s[0], {
   IDLE: "idle",
   LOADING: "loading",
   PLAYING: "playing",
@@ -12653,13 +12890,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_pg7voulsz = function () {
-  var path = "/Users/dan.ziv/WebstormProjects/playkit-js/src/utils/multi-map.js",
-      hash = "388b4881ee702c40fa3c29e18d2cef3d8e867bdd",
+var cov_16snpoijz5 = function () {
+  var path = "/Users/yair.ansbacher/Desktop/repos/playkit-js/src/utils/multi-map.js",
+      hash = "382445991208741738fa9caccb23f4f3e4836d94",
       global = new Function('return this')(),
       gcv = "__coverage__",
       coverageData = {
-    path: "/Users/dan.ziv/WebstormProjects/playkit-js/src/utils/multi-map.js",
+    path: "/Users/yair.ansbacher/Desktop/repos/playkit-js/src/utils/multi-map.js",
     statementMap: {
       "0": {
         start: {
@@ -13402,8 +13639,8 @@ var MultiMap = function () {
   function MultiMap() {
     _classCallCheck(this, MultiMap);
 
-    ++cov_pg7voulsz.f[0];
-    ++cov_pg7voulsz.s[0];
+    ++cov_16snpoijz5.f[0];
+    ++cov_16snpoijz5.s[0];
 
     /** @private {!Object.<string, !Array.<T>>} */
     this._map = new Map();
@@ -13420,27 +13657,27 @@ var MultiMap = function () {
   _createClass(MultiMap, [{
     key: "push",
     value: function push(key, value) {
-      ++cov_pg7voulsz.f[1];
-      ++cov_pg7voulsz.s[1];
+      ++cov_16snpoijz5.f[1];
+      ++cov_16snpoijz5.s[1];
 
       if (this._map.has(key)) {
-        ++cov_pg7voulsz.b[0][0];
+        ++cov_16snpoijz5.b[0][0];
 
-        var list = (++cov_pg7voulsz.s[2], this._map.get(key));
-        ++cov_pg7voulsz.s[3];
+        var list = (++cov_16snpoijz5.s[2], this._map.get(key));
+        ++cov_16snpoijz5.s[3];
         if (Array.isArray(list)) {
-          ++cov_pg7voulsz.b[1][0];
-          ++cov_pg7voulsz.s[4];
+          ++cov_16snpoijz5.b[1][0];
+          ++cov_16snpoijz5.s[4];
 
           list.push(value);
-          ++cov_pg7voulsz.s[5];
+          ++cov_16snpoijz5.s[5];
           this._map.set(key, list);
         } else {
-          ++cov_pg7voulsz.b[1][1];
+          ++cov_16snpoijz5.b[1][1];
         }
       } else {
-        ++cov_pg7voulsz.b[0][1];
-        ++cov_pg7voulsz.s[6];
+        ++cov_16snpoijz5.b[0][1];
+        ++cov_16snpoijz5.s[6];
 
         this._map.set(key, [value]);
       }
@@ -13456,8 +13693,8 @@ var MultiMap = function () {
   }, {
     key: "set",
     value: function set(key, values) {
-      ++cov_pg7voulsz.f[2];
-      ++cov_pg7voulsz.s[7];
+      ++cov_16snpoijz5.f[2];
+      ++cov_16snpoijz5.s[7];
 
       this._map.set(key, values);
     }
@@ -13471,8 +13708,8 @@ var MultiMap = function () {
   }, {
     key: "has",
     value: function has(key) {
-      ++cov_pg7voulsz.f[3];
-      ++cov_pg7voulsz.s[8];
+      ++cov_16snpoijz5.f[3];
+      ++cov_16snpoijz5.s[8];
 
       return this._map.has(key);
     }
@@ -13486,13 +13723,13 @@ var MultiMap = function () {
   }, {
     key: "get",
     value: function get(key) {
-      ++cov_pg7voulsz.f[4];
+      ++cov_16snpoijz5.f[4];
 
-      var list = (++cov_pg7voulsz.s[9], this._map.get(key));
+      var list = (++cov_16snpoijz5.s[9], this._map.get(key));
       // slice() clones the list so that it and the map can each be modified
       // without affecting the other.
-      ++cov_pg7voulsz.s[10];
-      return list ? (++cov_pg7voulsz.b[2][0], list.slice()) : (++cov_pg7voulsz.b[2][1], []);
+      ++cov_16snpoijz5.s[10];
+      return list ? (++cov_16snpoijz5.b[2][0], list.slice()) : (++cov_16snpoijz5.b[2][1], []);
     }
 
     /**
@@ -13503,10 +13740,10 @@ var MultiMap = function () {
   }, {
     key: "getAll",
     value: function getAll() {
-      ++cov_pg7voulsz.f[5];
+      ++cov_16snpoijz5.f[5];
 
-      var list = (++cov_pg7voulsz.s[11], []);
-      ++cov_pg7voulsz.s[12];
+      var list = (++cov_16snpoijz5.s[11], []);
+      ++cov_16snpoijz5.s[12];
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
@@ -13514,7 +13751,7 @@ var MultiMap = function () {
       try {
         for (var _iterator = this._map.values()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var value = _step.value;
-          ++cov_pg7voulsz.s[13];
+          ++cov_16snpoijz5.s[13];
 
           list = list.concat(value);
         }
@@ -13533,7 +13770,7 @@ var MultiMap = function () {
         }
       }
 
-      ++cov_pg7voulsz.s[14];
+      ++cov_16snpoijz5.s[14];
       return list;
     }
 
@@ -13547,37 +13784,37 @@ var MultiMap = function () {
   }, {
     key: "remove",
     value: function remove(key, value) {
-      ++cov_pg7voulsz.f[6];
-      ++cov_pg7voulsz.s[15];
+      ++cov_16snpoijz5.f[6];
+      ++cov_16snpoijz5.s[15];
 
       if (!this._map.has(key)) {
-          ++cov_pg7voulsz.b[3][0];
-          ++cov_pg7voulsz.s[16];
+          ++cov_16snpoijz5.b[3][0];
+          ++cov_16snpoijz5.s[16];
           return;
         } else {
-        ++cov_pg7voulsz.b[3][1];
-      }var list = (++cov_pg7voulsz.s[17], this._map.get(key));
-      ++cov_pg7voulsz.s[18];
+        ++cov_16snpoijz5.b[3][1];
+      }var list = (++cov_16snpoijz5.s[17], this._map.get(key));
+      ++cov_16snpoijz5.s[18];
       if (Array.isArray(list)) {
-        ++cov_pg7voulsz.b[4][0];
-        ++cov_pg7voulsz.s[19];
+        ++cov_16snpoijz5.b[4][0];
+        ++cov_16snpoijz5.s[19];
 
         for (var i = 0; i < list.length; ++i) {
-          ++cov_pg7voulsz.s[20];
+          ++cov_16snpoijz5.s[20];
 
           if (list[i] == value) {
-            ++cov_pg7voulsz.b[5][0];
-            ++cov_pg7voulsz.s[21];
+            ++cov_16snpoijz5.b[5][0];
+            ++cov_16snpoijz5.s[21];
 
             list.splice(i, 1);
-            ++cov_pg7voulsz.s[22];
+            ++cov_16snpoijz5.s[22];
             --i;
           } else {
-            ++cov_pg7voulsz.b[5][1];
+            ++cov_16snpoijz5.b[5][1];
           }
         }
       } else {
-        ++cov_pg7voulsz.b[4][1];
+        ++cov_16snpoijz5.b[4][1];
       }
     }
 
@@ -13590,8 +13827,8 @@ var MultiMap = function () {
   }, {
     key: "keys",
     value: function keys() {
-      ++cov_pg7voulsz.f[7];
-      ++cov_pg7voulsz.s[23];
+      ++cov_16snpoijz5.f[7];
+      ++cov_16snpoijz5.s[23];
 
       return this._map.keys();
     }
@@ -13604,8 +13841,8 @@ var MultiMap = function () {
   }, {
     key: "clear",
     value: function clear() {
-      ++cov_pg7voulsz.f[8];
-      ++cov_pg7voulsz.s[24];
+      ++cov_16snpoijz5.f[8];
+      ++cov_16snpoijz5.s[24];
 
       this._map.clear();
     }
@@ -13727,13 +13964,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_22t8x5qbf1 = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/engines/html5/html5.js',
-      hash = '9f5ab6a43d9275c1b55b20f561638d3285a3cb2e',
+var cov_25y6voq6d8 = function () {
+  var path = '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/engines/html5/html5.js',
+      hash = 'a96975230c2c0a956ca51c72c9cddfad335a3629',
       global = new Function('return this')(),
       gcv = '__coverage__',
       coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/engines/html5/html5.js',
+    path: '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/engines/html5/html5.js',
     statementMap: {
       '0': {
         start: {
@@ -16688,8 +16925,8 @@ var Html5 = function (_FakeEventTarget) {
      * @private
      */
     value: function canPlayType(mimeType) {
-      ++cov_22t8x5qbf1.f[0];
-      ++cov_22t8x5qbf1.s[0];
+      ++cov_25y6voq6d8.f[0];
+      ++cov_25y6voq6d8.s[0];
 
       return _mediaSourceProvider2.default.canPlayType(mimeType);
     }
@@ -16716,19 +16953,19 @@ var Html5 = function (_FakeEventTarget) {
   function Html5(source, config) {
     _classCallCheck(this, Html5);
 
-    ++cov_22t8x5qbf1.f[1];
-    ++cov_22t8x5qbf1.s[1];
+    ++cov_25y6voq6d8.f[1];
+    ++cov_25y6voq6d8.s[1];
 
     var _this = _possibleConstructorReturn(this, (Html5.__proto__ || Object.getPrototypeOf(Html5)).call(this));
 
-    ++cov_22t8x5qbf1.s[2];
+    ++cov_25y6voq6d8.s[2];
 
     _this._createVideoElement();
-    ++cov_22t8x5qbf1.s[3];
+    ++cov_25y6voq6d8.s[3];
     _this._eventManager = new _eventManager2.default();
-    ++cov_22t8x5qbf1.s[4];
+    ++cov_25y6voq6d8.s[4];
     _this._loadMediaSourceAdapter(source, config);
-    ++cov_22t8x5qbf1.s[5];
+    ++cov_25y6voq6d8.s[5];
     _this.attach();
     return _this;
   }
@@ -16743,40 +16980,40 @@ var Html5 = function (_FakeEventTarget) {
   _createClass(Html5, [{
     key: 'destroy',
     value: function destroy() {
-      ++cov_22t8x5qbf1.f[2];
-      ++cov_22t8x5qbf1.s[6];
+      ++cov_25y6voq6d8.f[2];
+      ++cov_25y6voq6d8.s[6];
 
       this.detach();
-      ++cov_22t8x5qbf1.s[7];
+      ++cov_25y6voq6d8.s[7];
       if (this._mediaSourceAdapter) {
-        ++cov_22t8x5qbf1.b[0][0];
-        ++cov_22t8x5qbf1.s[8];
+        ++cov_25y6voq6d8.b[0][0];
+        ++cov_25y6voq6d8.s[8];
 
         this._mediaSourceAdapter.destroy();
       } else {
-        ++cov_22t8x5qbf1.b[0][1];
+        ++cov_25y6voq6d8.b[0][1];
       }
-      ++cov_22t8x5qbf1.s[9];
+      ++cov_25y6voq6d8.s[9];
       if (this._el) {
-        ++cov_22t8x5qbf1.b[1][0];
-        ++cov_22t8x5qbf1.s[10];
+        ++cov_25y6voq6d8.b[1][0];
+        ++cov_25y6voq6d8.s[10];
 
         this.pause();
-        ++cov_22t8x5qbf1.s[11];
+        ++cov_25y6voq6d8.s[11];
         this._el.removeAttribute('src');
-        ++cov_22t8x5qbf1.s[12];
+        ++cov_25y6voq6d8.s[12];
         if (this._el.parentNode) {
-          ++cov_22t8x5qbf1.b[2][0];
-          ++cov_22t8x5qbf1.s[13];
+          ++cov_25y6voq6d8.b[2][0];
+          ++cov_25y6voq6d8.s[13];
 
           this._el.parentNode.removeChild(this._el);
         } else {
-          ++cov_22t8x5qbf1.b[2][1];
+          ++cov_25y6voq6d8.b[2][1];
         }
       } else {
-        ++cov_22t8x5qbf1.b[1][1];
+        ++cov_25y6voq6d8.b[1][1];
       }
-      ++cov_22t8x5qbf1.s[14];
+      ++cov_25y6voq6d8.s[14];
       this._eventManager.destroy();
     }
 
@@ -16791,15 +17028,15 @@ var Html5 = function (_FakeEventTarget) {
     value: function attach() {
       var _this2 = this;
 
-      ++cov_22t8x5qbf1.f[3];
-      ++cov_22t8x5qbf1.s[15];
+      ++cov_25y6voq6d8.f[3];
+      ++cov_25y6voq6d8.s[15];
 
       var _loop = function _loop(playerEvent) {
-        ++cov_22t8x5qbf1.s[16];
+        ++cov_25y6voq6d8.s[16];
 
         _this2._eventManager.listen(_this2._el, _events.HTML5_EVENTS[playerEvent], function () {
-          ++cov_22t8x5qbf1.f[4];
-          ++cov_22t8x5qbf1.s[17];
+          ++cov_25y6voq6d8.f[4];
+          ++cov_25y6voq6d8.s[17];
 
           _this2.dispatchEvent(new _fakeEvent2.default(_events.HTML5_EVENTS[playerEvent]));
         });
@@ -16808,33 +17045,33 @@ var Html5 = function (_FakeEventTarget) {
       for (var playerEvent in _events.HTML5_EVENTS) {
         _loop(playerEvent);
       }
-      ++cov_22t8x5qbf1.s[18];
+      ++cov_25y6voq6d8.s[18];
       if (this._mediaSourceAdapter) {
-        ++cov_22t8x5qbf1.b[3][0];
-        ++cov_22t8x5qbf1.s[19];
+        ++cov_25y6voq6d8.b[3][0];
+        ++cov_25y6voq6d8.s[19];
         // listen and dispatch adaptive bitrate changed event
         this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, function (event) {
-          ++cov_22t8x5qbf1.f[5];
-          ++cov_22t8x5qbf1.s[20];
+          ++cov_25y6voq6d8.f[5];
+          ++cov_25y6voq6d8.s[20];
 
           _this2.dispatchEvent(event);
         });
-        ++cov_22t8x5qbf1.s[21];
+        ++cov_25y6voq6d8.s[21];
         this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED, function (event) {
-          ++cov_22t8x5qbf1.f[6];
-          ++cov_22t8x5qbf1.s[22];
+          ++cov_25y6voq6d8.f[6];
+          ++cov_25y6voq6d8.s[22];
 
           return _this2.dispatchEvent(event);
         });
-        ++cov_22t8x5qbf1.s[23];
+        ++cov_25y6voq6d8.s[23];
         this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED, function (event) {
-          ++cov_22t8x5qbf1.f[7];
-          ++cov_22t8x5qbf1.s[24];
+          ++cov_25y6voq6d8.f[7];
+          ++cov_25y6voq6d8.s[24];
 
           return _this2.dispatchEvent(event);
         });
       } else {
-        ++cov_22t8x5qbf1.b[3][1];
+        ++cov_25y6voq6d8.b[3][1];
       }
     }
 
@@ -16847,26 +17084,26 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'detach',
     value: function detach() {
-      ++cov_22t8x5qbf1.f[8];
-      ++cov_22t8x5qbf1.s[25];
+      ++cov_25y6voq6d8.f[8];
+      ++cov_25y6voq6d8.s[25];
 
       for (var playerEvent in _events.HTML5_EVENTS) {
-        ++cov_22t8x5qbf1.s[26];
+        ++cov_25y6voq6d8.s[26];
 
         this._eventManager.unlisten(this._el, _events.HTML5_EVENTS[playerEvent]);
       }
-      ++cov_22t8x5qbf1.s[27];
+      ++cov_25y6voq6d8.s[27];
       if (this._mediaSourceAdapter) {
-        ++cov_22t8x5qbf1.b[4][0];
-        ++cov_22t8x5qbf1.s[28];
+        ++cov_25y6voq6d8.b[4][0];
+        ++cov_25y6voq6d8.s[28];
         // unlisten to adaptive bitrate changed
         this._eventManager.unlisten(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED);
-        ++cov_22t8x5qbf1.s[29];
+        ++cov_25y6voq6d8.s[29];
         this._eventManager.unlisten(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED);
-        ++cov_22t8x5qbf1.s[30];
+        ++cov_25y6voq6d8.s[30];
         this._eventManager.unlisten(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED);
       } else {
-        ++cov_22t8x5qbf1.b[4][1];
+        ++cov_25y6voq6d8.b[4][1];
       }
     }
 
@@ -16878,8 +17115,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'getVideoElement',
     value: function getVideoElement() {
-      ++cov_22t8x5qbf1.f[9];
-      ++cov_22t8x5qbf1.s[31];
+      ++cov_25y6voq6d8.f[9];
+      ++cov_25y6voq6d8.s[31];
 
       return this._el;
     }
@@ -16893,27 +17130,27 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: '_createVideoElement',
     value: function _createVideoElement() {
-      ++cov_22t8x5qbf1.f[10];
-      ++cov_22t8x5qbf1.s[32];
+      ++cov_25y6voq6d8.f[10];
+      ++cov_25y6voq6d8.s[32];
 
       this._el = document.createElement("video");
       //Set attributes
-      ++cov_22t8x5qbf1.s[33];
+      ++cov_25y6voq6d8.s[33];
       this._el.style.width = "640px";
-      ++cov_22t8x5qbf1.s[34];
+      ++cov_25y6voq6d8.s[34];
       this._el.style.height = "360px";
-      ++cov_22t8x5qbf1.s[35];
+      ++cov_25y6voq6d8.s[35];
       this._el.style.backgroundColor = "black";
-      ++cov_22t8x5qbf1.s[36];
+      ++cov_25y6voq6d8.s[36];
       this._el.controls = true;
-      ++cov_22t8x5qbf1.s[37];
-      if ((++cov_22t8x5qbf1.b[6][0], document) && (++cov_22t8x5qbf1.b[6][1], document.body)) {
-        ++cov_22t8x5qbf1.b[5][0];
-        ++cov_22t8x5qbf1.s[38];
+      ++cov_25y6voq6d8.s[37];
+      if ((++cov_25y6voq6d8.b[6][0], document) && (++cov_25y6voq6d8.b[6][1], document.body)) {
+        ++cov_25y6voq6d8.b[5][0];
+        ++cov_25y6voq6d8.s[38];
 
         document.body.appendChild(this._el);
       } else {
-        ++cov_22t8x5qbf1.b[5][1];
+        ++cov_25y6voq6d8.b[5][1];
       }
     }
 
@@ -16928,8 +17165,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: '_loadMediaSourceAdapter',
     value: function _loadMediaSourceAdapter(source, config) {
-      ++cov_22t8x5qbf1.f[11];
-      ++cov_22t8x5qbf1.s[39];
+      ++cov_25y6voq6d8.f[11];
+      ++cov_25y6voq6d8.s[39];
 
       this._mediaSourceAdapter = _mediaSourceProvider2.default.getMediaSourceAdapter(this.getVideoElement(), source, config);
     }
@@ -16943,16 +17180,16 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'selectVideoTrack',
     value: function selectVideoTrack(videoTrack) {
-      ++cov_22t8x5qbf1.f[12];
-      ++cov_22t8x5qbf1.s[40];
+      ++cov_25y6voq6d8.f[12];
+      ++cov_25y6voq6d8.s[40];
 
       if (this._mediaSourceAdapter) {
-        ++cov_22t8x5qbf1.b[7][0];
-        ++cov_22t8x5qbf1.s[41];
+        ++cov_25y6voq6d8.b[7][0];
+        ++cov_25y6voq6d8.s[41];
 
         this._mediaSourceAdapter.selectVideoTrack(videoTrack);
       } else {
-        ++cov_22t8x5qbf1.b[7][1];
+        ++cov_25y6voq6d8.b[7][1];
       }
     }
 
@@ -16965,16 +17202,16 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'selectAudioTrack',
     value: function selectAudioTrack(audioTrack) {
-      ++cov_22t8x5qbf1.f[13];
-      ++cov_22t8x5qbf1.s[42];
+      ++cov_25y6voq6d8.f[13];
+      ++cov_25y6voq6d8.s[42];
 
       if (this._mediaSourceAdapter) {
-        ++cov_22t8x5qbf1.b[8][0];
-        ++cov_22t8x5qbf1.s[43];
+        ++cov_25y6voq6d8.b[8][0];
+        ++cov_25y6voq6d8.s[43];
 
         this._mediaSourceAdapter.selectAudioTrack(audioTrack);
       } else {
-        ++cov_22t8x5qbf1.b[8][1];
+        ++cov_25y6voq6d8.b[8][1];
       }
     }
 
@@ -16987,16 +17224,16 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'selectTextTrack',
     value: function selectTextTrack(textTrack) {
-      ++cov_22t8x5qbf1.f[14];
-      ++cov_22t8x5qbf1.s[44];
+      ++cov_25y6voq6d8.f[14];
+      ++cov_25y6voq6d8.s[44];
 
       if (this._mediaSourceAdapter) {
-        ++cov_22t8x5qbf1.b[9][0];
-        ++cov_22t8x5qbf1.s[45];
+        ++cov_25y6voq6d8.b[9][0];
+        ++cov_25y6voq6d8.s[45];
 
         this._mediaSourceAdapter.selectTextTrack(textTrack);
       } else {
-        ++cov_22t8x5qbf1.b[9][1];
+        ++cov_25y6voq6d8.b[9][1];
       }
     }
 
@@ -17010,16 +17247,16 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'enableAdaptiveBitrate',
     value: function enableAdaptiveBitrate() {
-      ++cov_22t8x5qbf1.f[15];
-      ++cov_22t8x5qbf1.s[46];
+      ++cov_25y6voq6d8.f[15];
+      ++cov_25y6voq6d8.s[46];
 
       if (this._mediaSourceAdapter) {
-        ++cov_22t8x5qbf1.b[10][0];
-        ++cov_22t8x5qbf1.s[47];
+        ++cov_25y6voq6d8.b[10][0];
+        ++cov_25y6voq6d8.s[47];
 
         this._mediaSourceAdapter.enableAdaptiveBitrate();
       } else {
-        ++cov_22t8x5qbf1.b[10][1];
+        ++cov_25y6voq6d8.b[10][1];
       }
     }
 
@@ -17041,8 +17278,8 @@ var Html5 = function (_FakeEventTarget) {
      * @returns {void}
      */
     value: function play() {
-      ++cov_22t8x5qbf1.f[18];
-      ++cov_22t8x5qbf1.s[52];
+      ++cov_25y6voq6d8.f[18];
+      ++cov_25y6voq6d8.s[52];
 
       return this._el.play();
     }
@@ -17056,8 +17293,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'pause',
     value: function pause() {
-      ++cov_22t8x5qbf1.f[19];
-      ++cov_22t8x5qbf1.s[53];
+      ++cov_25y6voq6d8.f[19];
+      ++cov_25y6voq6d8.s[53];
 
       return this._el.pause();
     }
@@ -17071,10 +17308,10 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'load',
     value: function load() {
-      ++cov_22t8x5qbf1.f[20];
-      ++cov_22t8x5qbf1.s[54];
+      ++cov_25y6voq6d8.f[20];
+      ++cov_25y6voq6d8.s[54];
 
-      return this._mediaSourceAdapter ? (++cov_22t8x5qbf1.b[12][0], this._mediaSourceAdapter.load()) : (++cov_22t8x5qbf1.b[12][1], Promise.resolve({}));
+      return this._mediaSourceAdapter ? (++cov_25y6voq6d8.b[12][0], this._mediaSourceAdapter.load()) : (++cov_25y6voq6d8.b[12][1], Promise.resolve({}));
     }
 
     /**
@@ -17086,7 +17323,7 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'ready',
     value: function ready() {
-      ++cov_22t8x5qbf1.f[26];
+      ++cov_25y6voq6d8.f[26];
     }
 
     /**
@@ -17098,8 +17335,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'src',
     set: function set(source) {
-      ++cov_22t8x5qbf1.f[16];
-      ++cov_22t8x5qbf1.s[48];
+      ++cov_25y6voq6d8.f[16];
+      ++cov_25y6voq6d8.s[48];
 
       this._el.src = source;
     }
@@ -17111,25 +17348,25 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_22t8x5qbf1.f[17];
-      ++cov_22t8x5qbf1.s[49];
+      ++cov_25y6voq6d8.f[17];
+      ++cov_25y6voq6d8.s[49];
 
       if (this._mediaSourceAdapter) {
-        ++cov_22t8x5qbf1.b[11][0];
-        ++cov_22t8x5qbf1.s[50];
+        ++cov_25y6voq6d8.b[11][0];
+        ++cov_25y6voq6d8.s[50];
 
         return this._mediaSourceAdapter.src;
       } else {
-        ++cov_22t8x5qbf1.b[11][1];
+        ++cov_25y6voq6d8.b[11][1];
       }
-      ++cov_22t8x5qbf1.s[51];
+      ++cov_25y6voq6d8.s[51];
       return "";
     }
   }, {
     key: 'currentTime',
     get: function get() {
-      ++cov_22t8x5qbf1.f[21];
-      ++cov_22t8x5qbf1.s[55];
+      ++cov_25y6voq6d8.f[21];
+      ++cov_25y6voq6d8.s[55];
 
       return this._el.currentTime;
     }
@@ -17142,8 +17379,8 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     set: function set(to) {
-      ++cov_22t8x5qbf1.f[22];
-      ++cov_22t8x5qbf1.s[56];
+      ++cov_25y6voq6d8.f[22];
+      ++cov_25y6voq6d8.s[56];
 
       this._el.currentTime = to;
     }
@@ -17157,8 +17394,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'duration',
     get: function get() {
-      ++cov_22t8x5qbf1.f[23];
-      ++cov_22t8x5qbf1.s[57];
+      ++cov_25y6voq6d8.f[23];
+      ++cov_25y6voq6d8.s[57];
 
       return this._el.duration;
     }
@@ -17173,8 +17410,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'volume',
     set: function set(vol) {
-      ++cov_22t8x5qbf1.f[24];
-      ++cov_22t8x5qbf1.s[58];
+      ++cov_25y6voq6d8.f[24];
+      ++cov_25y6voq6d8.s[58];
 
       this._el.volume = vol;
     }
@@ -17186,16 +17423,16 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_22t8x5qbf1.f[25];
-      ++cov_22t8x5qbf1.s[59];
+      ++cov_25y6voq6d8.f[25];
+      ++cov_25y6voq6d8.s[59];
 
       return this._el.volume;
     }
   }, {
     key: 'paused',
     get: function get() {
-      ++cov_22t8x5qbf1.f[27];
-      ++cov_22t8x5qbf1.s[60];
+      ++cov_25y6voq6d8.f[27];
+      ++cov_25y6voq6d8.s[60];
 
       return this._el.paused;
     }
@@ -17209,8 +17446,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'seeking',
     get: function get() {
-      ++cov_22t8x5qbf1.f[28];
-      ++cov_22t8x5qbf1.s[61];
+      ++cov_25y6voq6d8.f[28];
+      ++cov_25y6voq6d8.s[61];
 
       return this._el.seeking;
     }
@@ -17224,8 +17461,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'seekable',
     get: function get() {
-      ++cov_22t8x5qbf1.f[29];
-      ++cov_22t8x5qbf1.s[62];
+      ++cov_25y6voq6d8.f[29];
+      ++cov_25y6voq6d8.s[62];
 
       return this._el.seekable;
     }
@@ -17239,8 +17476,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'played',
     get: function get() {
-      ++cov_22t8x5qbf1.f[30];
-      ++cov_22t8x5qbf1.s[63];
+      ++cov_25y6voq6d8.f[30];
+      ++cov_25y6voq6d8.s[63];
 
       return this._el.played;
     }
@@ -17254,8 +17491,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'buffered',
     get: function get() {
-      ++cov_22t8x5qbf1.f[31];
-      ++cov_22t8x5qbf1.s[64];
+      ++cov_25y6voq6d8.f[31];
+      ++cov_25y6voq6d8.s[64];
 
       return this._el.buffered;
     }
@@ -17270,8 +17507,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'muted',
     set: function set(mute) {
-      ++cov_22t8x5qbf1.f[32];
-      ++cov_22t8x5qbf1.s[65];
+      ++cov_25y6voq6d8.f[32];
+      ++cov_25y6voq6d8.s[65];
 
       this._el.muted = mute;
     }
@@ -17283,8 +17520,8 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_22t8x5qbf1.f[33];
-      ++cov_22t8x5qbf1.s[66];
+      ++cov_25y6voq6d8.f[33];
+      ++cov_25y6voq6d8.s[66];
 
       return this._el.muted;
     }
@@ -17298,8 +17535,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'defaultMuted',
     get: function get() {
-      ++cov_22t8x5qbf1.f[34];
-      ++cov_22t8x5qbf1.s[67];
+      ++cov_25y6voq6d8.f[34];
+      ++cov_25y6voq6d8.s[67];
 
       return this._el.defaultMuted;
     }
@@ -17314,8 +17551,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'poster',
     set: function set(poster) {
-      ++cov_22t8x5qbf1.f[35];
-      ++cov_22t8x5qbf1.s[68];
+      ++cov_25y6voq6d8.f[35];
+      ++cov_25y6voq6d8.s[68];
 
       this._el.poster = poster;
     }
@@ -17327,8 +17564,8 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_22t8x5qbf1.f[36];
-      ++cov_22t8x5qbf1.s[69];
+      ++cov_25y6voq6d8.f[36];
+      ++cov_25y6voq6d8.s[69];
 
       return this._el.poster;
     }
@@ -17343,8 +17580,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'preload',
     set: function set(preload) {
-      ++cov_22t8x5qbf1.f[37];
-      ++cov_22t8x5qbf1.s[70];
+      ++cov_25y6voq6d8.f[37];
+      ++cov_25y6voq6d8.s[70];
 
       this._el.preload = preload;
     }
@@ -17356,8 +17593,8 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_22t8x5qbf1.f[38];
-      ++cov_22t8x5qbf1.s[71];
+      ++cov_25y6voq6d8.f[38];
+      ++cov_25y6voq6d8.s[71];
 
       return this._el.preload;
     }
@@ -17372,8 +17609,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'autoplay',
     set: function set(autoplay) {
-      ++cov_22t8x5qbf1.f[39];
-      ++cov_22t8x5qbf1.s[72];
+      ++cov_25y6voq6d8.f[39];
+      ++cov_25y6voq6d8.s[72];
 
       this._el.autoplay = autoplay;
     }
@@ -17385,8 +17622,8 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_22t8x5qbf1.f[40];
-      ++cov_22t8x5qbf1.s[73];
+      ++cov_25y6voq6d8.f[40];
+      ++cov_25y6voq6d8.s[73];
 
       return this._el.autoplay;
     }
@@ -17401,8 +17638,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'loop',
     set: function set(loop) {
-      ++cov_22t8x5qbf1.f[41];
-      ++cov_22t8x5qbf1.s[74];
+      ++cov_25y6voq6d8.f[41];
+      ++cov_25y6voq6d8.s[74];
 
       this._el.loop = loop;
     }
@@ -17414,8 +17651,8 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_22t8x5qbf1.f[42];
-      ++cov_22t8x5qbf1.s[75];
+      ++cov_25y6voq6d8.f[42];
+      ++cov_25y6voq6d8.s[75];
 
       return this._el.loop;
     }
@@ -17430,8 +17667,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'controls',
     set: function set(controls) {
-      ++cov_22t8x5qbf1.f[43];
-      ++cov_22t8x5qbf1.s[76];
+      ++cov_25y6voq6d8.f[43];
+      ++cov_25y6voq6d8.s[76];
 
       this._el.controls = controls;
     }
@@ -17443,8 +17680,8 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_22t8x5qbf1.f[44];
-      ++cov_22t8x5qbf1.s[77];
+      ++cov_25y6voq6d8.f[44];
+      ++cov_25y6voq6d8.s[77];
 
       return this._el.controls;
     }
@@ -17459,8 +17696,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'playbackRate',
     set: function set(playbackRate) {
-      ++cov_22t8x5qbf1.f[45];
-      ++cov_22t8x5qbf1.s[78];
+      ++cov_25y6voq6d8.f[45];
+      ++cov_25y6voq6d8.s[78];
 
       this._el.playbackRate = playbackRate;
     }
@@ -17472,8 +17709,8 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_22t8x5qbf1.f[46];
-      ++cov_22t8x5qbf1.s[79];
+      ++cov_25y6voq6d8.f[46];
+      ++cov_25y6voq6d8.s[79];
 
       return this._el.playbackRate;
     }
@@ -17488,8 +17725,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'defaultPlaybackRate',
     set: function set(defaultPlaybackRate) {
-      ++cov_22t8x5qbf1.f[47];
-      ++cov_22t8x5qbf1.s[80];
+      ++cov_25y6voq6d8.f[47];
+      ++cov_25y6voq6d8.s[80];
 
       this._el.defaultPlaybackRate = defaultPlaybackRate;
     }
@@ -17501,8 +17738,8 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_22t8x5qbf1.f[48];
-      ++cov_22t8x5qbf1.s[81];
+      ++cov_25y6voq6d8.f[48];
+      ++cov_25y6voq6d8.s[81];
 
       return this._el.defaultPlaybackRate;
     }
@@ -17516,8 +17753,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'ended',
     get: function get() {
-      ++cov_22t8x5qbf1.f[49];
-      ++cov_22t8x5qbf1.s[82];
+      ++cov_25y6voq6d8.f[49];
+      ++cov_25y6voq6d8.s[82];
 
       return this._el.ended;
     }
@@ -17531,8 +17768,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'error',
     get: function get() {
-      ++cov_22t8x5qbf1.f[50];
-      ++cov_22t8x5qbf1.s[83];
+      ++cov_25y6voq6d8.f[50];
+      ++cov_25y6voq6d8.s[83];
 
       return this._el.error;
     }
@@ -17545,8 +17782,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'networkState',
     get: function get() {
-      ++cov_22t8x5qbf1.f[51];
-      ++cov_22t8x5qbf1.s[84];
+      ++cov_25y6voq6d8.f[51];
+      ++cov_25y6voq6d8.s[84];
 
       return this._el.networkState;
     }
@@ -17564,8 +17801,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'readyState',
     get: function get() {
-      ++cov_22t8x5qbf1.f[52];
-      ++cov_22t8x5qbf1.s[85];
+      ++cov_25y6voq6d8.f[52];
+      ++cov_25y6voq6d8.s[85];
 
       return this._el.readyState;
     }
@@ -17578,8 +17815,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'videoHeight',
     get: function get() {
-      ++cov_22t8x5qbf1.f[53];
-      ++cov_22t8x5qbf1.s[86];
+      ++cov_25y6voq6d8.f[53];
+      ++cov_25y6voq6d8.s[86];
 
       return this._el.videoHeight;
     }
@@ -17592,8 +17829,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'videoWidth',
     get: function get() {
-      ++cov_22t8x5qbf1.f[54];
-      ++cov_22t8x5qbf1.s[87];
+      ++cov_25y6voq6d8.f[54];
+      ++cov_25y6voq6d8.s[87];
 
       return this._el.videoWidth;
     }
@@ -17613,21 +17850,21 @@ var Html5 = function (_FakeEventTarget) {
      * @public
      */
     value: function isSupported() {
-      ++cov_22t8x5qbf1.f[55];
-      ++cov_22t8x5qbf1.s[88];
+      ++cov_25y6voq6d8.f[55];
+      ++cov_25y6voq6d8.s[88];
 
       try {
-        ++cov_22t8x5qbf1.s[89];
+        ++cov_25y6voq6d8.s[89];
 
         Html5.TEST_VID = document.createElement('video');
-        ++cov_22t8x5qbf1.s[90];
+        ++cov_25y6voq6d8.s[90];
         Html5.TEST_VID.volume = 0.5;
       } catch (e) {
-        ++cov_22t8x5qbf1.s[91];
+        ++cov_25y6voq6d8.s[91];
 
         return false;
       }
-      ++cov_22t8x5qbf1.s[92];
+      ++cov_25y6voq6d8.s[92];
       return !!Html5.TEST_VID.canPlayType;
     }
   }]);
@@ -17649,13 +17886,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_udhe4wxvj = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/engines/html5/media-source/adapters/native-adapter.js',
-      hash = 'ef61cee86cc62f12899a3d971846c72b41c66d74',
+var cov_1y73avflw5 = function () {
+  var path = '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/engines/html5/media-source/adapters/native-adapter.js',
+      hash = 'a6de1d3b49572aad2db02c89de77a4d7af222fbe',
       global = new Function('return this')(),
       gcv = '__coverage__',
       coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/engines/html5/media-source/adapters/native-adapter.js',
+    path: '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/engines/html5/media-source/adapters/native-adapter.js',
     statementMap: {
       '0': {
         start: {
@@ -19681,12 +19918,12 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      * @public
      */
     value: function canPlayType(mimeType) {
-      ++cov_udhe4wxvj.f[0];
+      ++cov_1y73avflw5.f[0];
 
-      var canPlayType = (++cov_udhe4wxvj.s[0], typeof mimeType === 'string' ? (++cov_udhe4wxvj.b[0][0], !!document.createElement("video").canPlayType(mimeType.toLowerCase())) : (++cov_udhe4wxvj.b[0][1], false));
-      ++cov_udhe4wxvj.s[1];
+      var canPlayType = (++cov_1y73avflw5.s[0], typeof mimeType === 'string' ? (++cov_1y73avflw5.b[0][0], !!document.createElement("video").canPlayType(mimeType.toLowerCase())) : (++cov_1y73avflw5.b[0][1], false));
+      ++cov_1y73avflw5.s[1];
       NativeAdapter._logger.debug('canPlayType result for mimeType:' + mimeType + ' is ' + canPlayType.toString());
-      ++cov_udhe4wxvj.s[2];
+      ++cov_1y73avflw5.s[2];
       return canPlayType;
     }
 
@@ -19710,15 +19947,15 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   function NativeAdapter(videoElement, source, config) {
     _classCallCheck(this, NativeAdapter);
 
-    ++cov_udhe4wxvj.f[1];
-    ++cov_udhe4wxvj.s[3];
+    ++cov_1y73avflw5.f[1];
+    ++cov_1y73avflw5.s[3];
 
     NativeAdapter._logger.debug('Creating adapter');
-    ++cov_udhe4wxvj.s[4];
+    ++cov_1y73avflw5.s[4];
 
     var _this = _possibleConstructorReturn(this, (NativeAdapter.__proto__ || Object.getPrototypeOf(NativeAdapter)).call(this, videoElement, source, config));
 
-    ++cov_udhe4wxvj.s[5];
+    ++cov_1y73avflw5.s[5];
 
     _this._eventManager = new _eventManager2.default();
     return _this;
@@ -19736,54 +19973,54 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
     value: function load() {
       var _this2 = this;
 
-      ++cov_udhe4wxvj.f[2];
-      ++cov_udhe4wxvj.s[6];
+      ++cov_1y73avflw5.f[2];
+      ++cov_1y73avflw5.s[6];
 
       if (!this._loadPromise) {
-        ++cov_udhe4wxvj.b[1][0];
-        ++cov_udhe4wxvj.s[7];
+        ++cov_1y73avflw5.b[1][0];
+        ++cov_1y73avflw5.s[7];
 
         this._loadPromise = new Promise(function (resolve, reject) {
-          ++cov_udhe4wxvj.f[3];
-          ++cov_udhe4wxvj.s[8];
+          ++cov_1y73avflw5.f[3];
+          ++cov_1y73avflw5.s[8];
 
           // We're using 'loadeddata' event for native hls (on 'loadedmetadata' native hls doesn't have tracks yet).
           _this2._eventManager.listen(_this2._videoElement, _events.HTML5_EVENTS.LOADED_DATA, function () {
-            ++cov_udhe4wxvj.f[4];
-            ++cov_udhe4wxvj.s[9];
+            ++cov_1y73avflw5.f[4];
+            ++cov_1y73avflw5.s[9];
 
             _this2._eventManager.unlisten(_this2._videoElement, _events.HTML5_EVENTS.LOADED_DATA);
-            var data = (++cov_udhe4wxvj.s[10], { tracks: _this2._getParsedTracks() });
-            ++cov_udhe4wxvj.s[11];
+            var data = (++cov_1y73avflw5.s[10], { tracks: _this2._getParsedTracks() });
+            ++cov_1y73avflw5.s[11];
             NativeAdapter._logger.debug('The source has been loaded successfully');
-            ++cov_udhe4wxvj.s[12];
+            ++cov_1y73avflw5.s[12];
             resolve(data);
           });
-          ++cov_udhe4wxvj.s[13];
+          ++cov_1y73avflw5.s[13];
           _this2._eventManager.listen(_this2._videoElement, _events.HTML5_EVENTS.ERROR, function (error) {
-            ++cov_udhe4wxvj.f[5];
-            ++cov_udhe4wxvj.s[14];
+            ++cov_1y73avflw5.f[5];
+            ++cov_1y73avflw5.s[14];
 
             _this2._eventManager.unlisten(_this2._videoElement, _events.HTML5_EVENTS.ERROR);
-            ++cov_udhe4wxvj.s[15];
+            ++cov_1y73avflw5.s[15];
             NativeAdapter._logger.error(error);
-            ++cov_udhe4wxvj.s[16];
+            ++cov_1y73avflw5.s[16];
             reject(error);
           });
-          ++cov_udhe4wxvj.s[17];
-          if ((++cov_udhe4wxvj.b[3][0], _this2._sourceObj) && (++cov_udhe4wxvj.b[3][1], _this2._sourceObj.url)) {
-            ++cov_udhe4wxvj.b[2][0];
-            ++cov_udhe4wxvj.s[18];
+          ++cov_1y73avflw5.s[17];
+          if ((++cov_1y73avflw5.b[3][0], _this2._sourceObj) && (++cov_1y73avflw5.b[3][1], _this2._sourceObj.url)) {
+            ++cov_1y73avflw5.b[2][0];
+            ++cov_1y73avflw5.s[18];
 
             _this2._videoElement.src = _this2._sourceObj.url;
           } else {
-            ++cov_udhe4wxvj.b[2][1];
+            ++cov_1y73avflw5.b[2][1];
           }
         });
       } else {
-        ++cov_udhe4wxvj.b[1][1];
+        ++cov_1y73avflw5.b[1][1];
       }
-      ++cov_udhe4wxvj.s[19];
+      ++cov_1y73avflw5.s[19];
       return this._loadPromise;
     }
 
@@ -19796,15 +20033,15 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: 'destroy',
     value: function destroy() {
-      ++cov_udhe4wxvj.f[6];
-      ++cov_udhe4wxvj.s[20];
+      ++cov_1y73avflw5.f[6];
+      ++cov_1y73avflw5.s[20];
 
       NativeAdapter._logger.debug('destroy');
-      ++cov_udhe4wxvj.s[21];
+      ++cov_1y73avflw5.s[21];
       _get(NativeAdapter.prototype.__proto__ || Object.getPrototypeOf(NativeAdapter.prototype), 'destroy', this).call(this);
-      ++cov_udhe4wxvj.s[22];
+      ++cov_1y73avflw5.s[22];
       this._eventManager.destroy();
-      ++cov_udhe4wxvj.s[23];
+      ++cov_1y73avflw5.s[23];
       this._loadPromise = null;
     }
 
@@ -19818,12 +20055,12 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_getParsedTracks',
     value: function _getParsedTracks() {
-      ++cov_udhe4wxvj.f[7];
+      ++cov_1y73avflw5.f[7];
 
-      var videoTracks = (++cov_udhe4wxvj.s[24], this._getParsedVideoTracks());
-      var audioTracks = (++cov_udhe4wxvj.s[25], this._getParsedAudioTracks());
-      var textTracks = (++cov_udhe4wxvj.s[26], this._getParsedTextTracks());
-      ++cov_udhe4wxvj.s[27];
+      var videoTracks = (++cov_1y73avflw5.s[24], this._getParsedVideoTracks());
+      var audioTracks = (++cov_1y73avflw5.s[25], this._getParsedAudioTracks());
+      var textTracks = (++cov_1y73avflw5.s[26], this._getParsedTextTracks());
+      ++cov_1y73avflw5.s[27];
       return videoTracks.concat(audioTracks).concat(textTracks);
     }
 
@@ -19837,30 +20074,30 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_getParsedVideoTracks',
     value: function _getParsedVideoTracks() {
-      ++cov_udhe4wxvj.f[8];
+      ++cov_1y73avflw5.f[8];
 
-      var videoTracks = (++cov_udhe4wxvj.s[28], this._videoElement.videoTracks);
-      var parsedTracks = (++cov_udhe4wxvj.s[29], []);
-      ++cov_udhe4wxvj.s[30];
+      var videoTracks = (++cov_1y73avflw5.s[28], this._videoElement.videoTracks);
+      var parsedTracks = (++cov_1y73avflw5.s[29], []);
+      ++cov_1y73avflw5.s[30];
       if (videoTracks) {
-        ++cov_udhe4wxvj.b[4][0];
-        ++cov_udhe4wxvj.s[31];
+        ++cov_1y73avflw5.b[4][0];
+        ++cov_1y73avflw5.s[31];
 
         for (var i = 0; i < videoTracks.length; i++) {
-          var settings = (++cov_udhe4wxvj.s[32], {
+          var settings = (++cov_1y73avflw5.s[32], {
             id: videoTracks[i].id,
             active: videoTracks[i].selected,
             label: videoTracks[i].label,
             language: videoTracks[i].language,
             index: i
           });
-          ++cov_udhe4wxvj.s[33];
+          ++cov_1y73avflw5.s[33];
           parsedTracks.push(new _videoTrack2.default(settings));
         }
       } else {
-        ++cov_udhe4wxvj.b[4][1];
+        ++cov_1y73avflw5.b[4][1];
       }
-      ++cov_udhe4wxvj.s[34];
+      ++cov_1y73avflw5.s[34];
       return parsedTracks;
     }
 
@@ -19874,30 +20111,30 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_getParsedAudioTracks',
     value: function _getParsedAudioTracks() {
-      ++cov_udhe4wxvj.f[9];
+      ++cov_1y73avflw5.f[9];
 
-      var audioTracks = (++cov_udhe4wxvj.s[35], this._videoElement.audioTracks);
-      var parsedTracks = (++cov_udhe4wxvj.s[36], []);
-      ++cov_udhe4wxvj.s[37];
+      var audioTracks = (++cov_1y73avflw5.s[35], this._videoElement.audioTracks);
+      var parsedTracks = (++cov_1y73avflw5.s[36], []);
+      ++cov_1y73avflw5.s[37];
       if (audioTracks) {
-        ++cov_udhe4wxvj.b[5][0];
-        ++cov_udhe4wxvj.s[38];
+        ++cov_1y73avflw5.b[5][0];
+        ++cov_1y73avflw5.s[38];
 
         for (var i = 0; i < audioTracks.length; i++) {
-          var settings = (++cov_udhe4wxvj.s[39], {
+          var settings = (++cov_1y73avflw5.s[39], {
             id: audioTracks[i].id,
             active: audioTracks[i].enabled,
             label: audioTracks[i].label,
             language: audioTracks[i].language,
             index: i
           });
-          ++cov_udhe4wxvj.s[40];
+          ++cov_1y73avflw5.s[40];
           parsedTracks.push(new _audioTrack2.default(settings));
         }
       } else {
-        ++cov_udhe4wxvj.b[5][1];
+        ++cov_1y73avflw5.b[5][1];
       }
-      ++cov_udhe4wxvj.s[41];
+      ++cov_1y73avflw5.s[41];
       return parsedTracks;
     }
 
@@ -19911,30 +20148,30 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_getParsedTextTracks',
     value: function _getParsedTextTracks() {
-      ++cov_udhe4wxvj.f[10];
+      ++cov_1y73avflw5.f[10];
 
-      var textTracks = (++cov_udhe4wxvj.s[42], this._videoElement.textTracks);
-      var parsedTracks = (++cov_udhe4wxvj.s[43], []);
-      ++cov_udhe4wxvj.s[44];
+      var textTracks = (++cov_1y73avflw5.s[42], this._videoElement.textTracks);
+      var parsedTracks = (++cov_1y73avflw5.s[43], []);
+      ++cov_1y73avflw5.s[44];
       if (textTracks) {
-        ++cov_udhe4wxvj.b[6][0];
-        ++cov_udhe4wxvj.s[45];
+        ++cov_1y73avflw5.b[6][0];
+        ++cov_1y73avflw5.s[45];
 
         for (var i = 0; i < textTracks.length; i++) {
-          var settings = (++cov_udhe4wxvj.s[46], {
+          var settings = (++cov_1y73avflw5.s[46], {
             kind: textTracks[i].kind,
             active: textTracks[i].mode === 'showing',
             label: textTracks[i].label,
             language: textTracks[i].language,
             index: i
           });
-          ++cov_udhe4wxvj.s[47];
+          ++cov_1y73avflw5.s[47];
           parsedTracks.push(new _textTrack2.default(settings));
         }
       } else {
-        ++cov_udhe4wxvj.b[6][1];
+        ++cov_1y73avflw5.b[6][1];
       }
-      ++cov_udhe4wxvj.s[48];
+      ++cov_1y73avflw5.s[48];
       return parsedTracks;
     }
 
@@ -19949,21 +20186,21 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: 'selectVideoTrack',
     value: function selectVideoTrack(videoTrack) {
-      ++cov_udhe4wxvj.f[11];
+      ++cov_1y73avflw5.f[11];
 
-      var videoTracks = (++cov_udhe4wxvj.s[49], this._videoElement.videoTracks);
-      ++cov_udhe4wxvj.s[50];
-      if ((++cov_udhe4wxvj.b[8][0], videoTrack instanceof _videoTrack2.default) && (++cov_udhe4wxvj.b[8][1], videoTracks) && (++cov_udhe4wxvj.b[8][2], videoTracks[videoTrack.index])) {
-        ++cov_udhe4wxvj.b[7][0];
-        ++cov_udhe4wxvj.s[51];
+      var videoTracks = (++cov_1y73avflw5.s[49], this._videoElement.videoTracks);
+      ++cov_1y73avflw5.s[50];
+      if ((++cov_1y73avflw5.b[8][0], videoTrack instanceof _videoTrack2.default) && (++cov_1y73avflw5.b[8][1], videoTracks) && (++cov_1y73avflw5.b[8][2], videoTracks[videoTrack.index])) {
+        ++cov_1y73avflw5.b[7][0];
+        ++cov_1y73avflw5.s[51];
 
         this._disableVideoTracks();
-        ++cov_udhe4wxvj.s[52];
+        ++cov_1y73avflw5.s[52];
         videoTracks[videoTrack.index].selected = true;
-        ++cov_udhe4wxvj.s[53];
+        ++cov_1y73avflw5.s[53];
         this._onTrackChanged(videoTrack);
       } else {
-        ++cov_udhe4wxvj.b[7][1];
+        ++cov_1y73avflw5.b[7][1];
       }
     }
 
@@ -19978,21 +20215,21 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: 'selectAudioTrack',
     value: function selectAudioTrack(audioTrack) {
-      ++cov_udhe4wxvj.f[12];
+      ++cov_1y73avflw5.f[12];
 
-      var audioTracks = (++cov_udhe4wxvj.s[54], this._videoElement.audioTracks);
-      ++cov_udhe4wxvj.s[55];
-      if ((++cov_udhe4wxvj.b[10][0], audioTrack instanceof _audioTrack2.default) && (++cov_udhe4wxvj.b[10][1], audioTracks) && (++cov_udhe4wxvj.b[10][2], audioTracks[audioTrack.index])) {
-        ++cov_udhe4wxvj.b[9][0];
-        ++cov_udhe4wxvj.s[56];
+      var audioTracks = (++cov_1y73avflw5.s[54], this._videoElement.audioTracks);
+      ++cov_1y73avflw5.s[55];
+      if ((++cov_1y73avflw5.b[10][0], audioTrack instanceof _audioTrack2.default) && (++cov_1y73avflw5.b[10][1], audioTracks) && (++cov_1y73avflw5.b[10][2], audioTracks[audioTrack.index])) {
+        ++cov_1y73avflw5.b[9][0];
+        ++cov_1y73avflw5.s[56];
 
         this._disableAudioTracks();
-        ++cov_udhe4wxvj.s[57];
+        ++cov_1y73avflw5.s[57];
         audioTracks[audioTrack.index].enabled = true;
-        ++cov_udhe4wxvj.s[58];
+        ++cov_1y73avflw5.s[58];
         this._onTrackChanged(audioTrack);
       } else {
-        ++cov_udhe4wxvj.b[9][1];
+        ++cov_1y73avflw5.b[9][1];
       }
     }
 
@@ -20007,21 +20244,21 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: 'selectTextTrack',
     value: function selectTextTrack(textTrack) {
-      ++cov_udhe4wxvj.f[13];
+      ++cov_1y73avflw5.f[13];
 
-      var textTracks = (++cov_udhe4wxvj.s[59], this._videoElement.textTracks);
-      ++cov_udhe4wxvj.s[60];
-      if ((++cov_udhe4wxvj.b[12][0], textTrack instanceof _textTrack2.default) && ((++cov_udhe4wxvj.b[12][1], textTrack.kind === 'subtitles') || (++cov_udhe4wxvj.b[12][2], textTrack.kind === 'captions')) && (++cov_udhe4wxvj.b[12][3], textTracks) && (++cov_udhe4wxvj.b[12][4], textTracks[textTrack.index])) {
-        ++cov_udhe4wxvj.b[11][0];
-        ++cov_udhe4wxvj.s[61];
+      var textTracks = (++cov_1y73avflw5.s[59], this._videoElement.textTracks);
+      ++cov_1y73avflw5.s[60];
+      if ((++cov_1y73avflw5.b[12][0], textTrack instanceof _textTrack2.default) && ((++cov_1y73avflw5.b[12][1], textTrack.kind === 'subtitles') || (++cov_1y73avflw5.b[12][2], textTrack.kind === 'captions')) && (++cov_1y73avflw5.b[12][3], textTracks) && (++cov_1y73avflw5.b[12][4], textTracks[textTrack.index])) {
+        ++cov_1y73avflw5.b[11][0];
+        ++cov_1y73avflw5.s[61];
 
         this._disableTextTracks();
-        ++cov_udhe4wxvj.s[62];
+        ++cov_1y73avflw5.s[62];
         textTracks[textTrack.index].mode = 'showing';
-        ++cov_udhe4wxvj.s[63];
+        ++cov_1y73avflw5.s[63];
         this._onTrackChanged(textTrack);
       } else {
-        ++cov_udhe4wxvj.b[11][1];
+        ++cov_1y73avflw5.b[11][1];
       }
     }
 
@@ -20035,8 +20272,8 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: 'enableAdaptiveBitrate',
     value: function enableAdaptiveBitrate() {
-      ++cov_udhe4wxvj.f[14];
-      ++cov_udhe4wxvj.s[64];
+      ++cov_1y73avflw5.f[14];
+      ++cov_1y73avflw5.s[64];
 
       NativeAdapter._logger.debug('Enabling adaptive bitrate not supported');
     }
@@ -20050,21 +20287,21 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_disableVideoTracks',
     value: function _disableVideoTracks() {
-      ++cov_udhe4wxvj.f[15];
+      ++cov_1y73avflw5.f[15];
 
-      var videoTracks = (++cov_udhe4wxvj.s[65], this._videoElement.videoTracks);
-      ++cov_udhe4wxvj.s[66];
+      var videoTracks = (++cov_1y73avflw5.s[65], this._videoElement.videoTracks);
+      ++cov_1y73avflw5.s[66];
       if (videoTracks) {
-        ++cov_udhe4wxvj.b[13][0];
-        ++cov_udhe4wxvj.s[67];
+        ++cov_1y73avflw5.b[13][0];
+        ++cov_1y73avflw5.s[67];
 
         for (var i = 0; i < videoTracks.length; i++) {
-          ++cov_udhe4wxvj.s[68];
+          ++cov_1y73avflw5.s[68];
 
           videoTracks[i].selected = false;
         }
       } else {
-        ++cov_udhe4wxvj.b[13][1];
+        ++cov_1y73avflw5.b[13][1];
       }
     }
 
@@ -20077,21 +20314,21 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_disableAudioTracks',
     value: function _disableAudioTracks() {
-      ++cov_udhe4wxvj.f[16];
+      ++cov_1y73avflw5.f[16];
 
-      var audioTracks = (++cov_udhe4wxvj.s[69], this._videoElement.audioTracks);
-      ++cov_udhe4wxvj.s[70];
+      var audioTracks = (++cov_1y73avflw5.s[69], this._videoElement.audioTracks);
+      ++cov_1y73avflw5.s[70];
       if (audioTracks) {
-        ++cov_udhe4wxvj.b[14][0];
-        ++cov_udhe4wxvj.s[71];
+        ++cov_1y73avflw5.b[14][0];
+        ++cov_1y73avflw5.s[71];
 
         for (var i = 0; i < audioTracks.length; i++) {
-          ++cov_udhe4wxvj.s[72];
+          ++cov_1y73avflw5.s[72];
 
           audioTracks[i].enabled = false;
         }
       } else {
-        ++cov_udhe4wxvj.b[14][1];
+        ++cov_1y73avflw5.b[14][1];
       }
     }
 
@@ -20104,21 +20341,21 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_disableTextTracks',
     value: function _disableTextTracks() {
-      ++cov_udhe4wxvj.f[17];
+      ++cov_1y73avflw5.f[17];
 
-      var textTracks = (++cov_udhe4wxvj.s[73], this._videoElement.textTracks);
-      ++cov_udhe4wxvj.s[74];
+      var textTracks = (++cov_1y73avflw5.s[73], this._videoElement.textTracks);
+      ++cov_1y73avflw5.s[74];
       if (textTracks) {
-        ++cov_udhe4wxvj.b[15][0];
-        ++cov_udhe4wxvj.s[75];
+        ++cov_1y73avflw5.b[15][0];
+        ++cov_1y73avflw5.s[75];
 
         for (var i = 0; i < textTracks.length; i++) {
-          ++cov_udhe4wxvj.s[76];
+          ++cov_1y73avflw5.s[76];
 
           textTracks[i].mode = 'disabled';
         }
       } else {
-        ++cov_udhe4wxvj.b[15][1];
+        ++cov_1y73avflw5.b[15][1];
       }
     }
 
@@ -20131,8 +20368,8 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: 'src',
     get: function get() {
-      ++cov_udhe4wxvj.f[18];
-      ++cov_udhe4wxvj.s[77];
+      ++cov_1y73avflw5.f[18];
+      ++cov_1y73avflw5.s[77];
 
       return this._videoElement.src;
     }
@@ -20157,13 +20394,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.VERSION = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerMediaSourceAdapter = undefined;
 
-var cov_20xm2vhcxv = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/playkit.js',
-      hash = '41a93c22161f871816b17909358b7d5656c1361d',
+var cov_1y7301na2o = function () {
+  var path = '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/playkit.js',
+      hash = 'caf747a1b1f272f5cc126894304d15a5c23a35a3',
       global = new Function('return this')(),
       gcv = '__coverage__',
       coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/playkit.js',
+    path: '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/playkit.js',
     statementMap: {
       '0': {
         start: {
@@ -20329,11 +20566,11 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Playkit version
-var VERSION = (++cov_20xm2vhcxv.s[0], packageData.version);
+var VERSION = (++cov_1y7301na2o.s[0], packageData.version);
 
-++cov_20xm2vhcxv.s[1];
+++cov_1y7301na2o.s[1];
 _logger2.default.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
-++cov_20xm2vhcxv.s[2];
+++cov_1y7301na2o.s[2];
 _logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
 
 /**
@@ -20341,9 +20578,9 @@ _logger2.default.getLogger().log("%c For more details see https://github.com/kal
  * @returns {Player} - The player instance
  */
 function playkit() {
-  var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (++cov_20xm2vhcxv.b[0][0], {});
-  ++cov_20xm2vhcxv.f[0];
-  ++cov_20xm2vhcxv.s[3];
+  var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (++cov_1y7301na2o.b[0][0], {});
+  ++cov_1y7301na2o.f[0];
+  ++cov_1y7301na2o.s[3];
 
   return new _player2.default(config);
 }
@@ -20380,13 +20617,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_2h1b1a0826 = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/state/state-manager.js',
-      hash = '3a70e3141aaba57aade87a383ca1e399323ba50a',
+var cov_2iydy41r2b = function () {
+  var path = '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/state/state-manager.js',
+      hash = '3b1509562cbdc5e7185e4bdc95aecec139febc77',
       global = new Function('return this')(),
       gcv = '__coverage__',
       coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/state/state-manager.js',
+    path: '/Users/yair.ansbacher/Desktop/repos/playkit-js/src/state/state-manager.js',
     statementMap: {
       '0': {
         start: {
@@ -21805,122 +22042,122 @@ var StateManager = function () {
     _classCallCheck(this, StateManager);
 
     this._transitions = (_transitions = {}, _defineProperty(_transitions, _stateTypes2.default.IDLE, (_PlayerStates$IDLE = {}, _defineProperty(_PlayerStates$IDLE, _events.HTML5_EVENTS.LOAD_START, function () {
-      ++cov_2h1b1a0826.f[0];
-      ++cov_2h1b1a0826.s[0];
+      ++cov_2iydy41r2b.f[0];
+      ++cov_2iydy41r2b.s[0];
 
       _this._updateState(_stateTypes2.default.LOADING);
-      ++cov_2h1b1a0826.s[1];
+      ++cov_2iydy41r2b.s[1];
       _this._dispatchEvent();
     }), _defineProperty(_PlayerStates$IDLE, _events.HTML5_EVENTS.PLAY, function () {
-      ++cov_2h1b1a0826.f[1];
-      ++cov_2h1b1a0826.s[2];
+      ++cov_2iydy41r2b.f[1];
+      ++cov_2iydy41r2b.s[2];
 
       _this._updateState(_stateTypes2.default.BUFFERING);
-      ++cov_2h1b1a0826.s[3];
+      ++cov_2iydy41r2b.s[3];
       _this._dispatchEvent();
     }), _PlayerStates$IDLE)), _defineProperty(_transitions, _stateTypes2.default.LOADING, (_PlayerStates$LOADING = {}, _defineProperty(_PlayerStates$LOADING, _events.HTML5_EVENTS.LOADED_METADATA, function () {
-      ++cov_2h1b1a0826.f[2];
-      ++cov_2h1b1a0826.s[4];
+      ++cov_2iydy41r2b.f[2];
+      ++cov_2iydy41r2b.s[4];
 
       if (_this._player.config.autoPlay) {
-        ++cov_2h1b1a0826.b[0][0];
-        ++cov_2h1b1a0826.s[5];
+        ++cov_2iydy41r2b.b[0][0];
+        ++cov_2iydy41r2b.s[5];
 
         _this._updateState(_stateTypes2.default.PLAYING);
       } else {
-        ++cov_2h1b1a0826.b[0][1];
-        ++cov_2h1b1a0826.s[6];
+        ++cov_2iydy41r2b.b[0][1];
+        ++cov_2iydy41r2b.s[6];
 
         _this._updateState(_stateTypes2.default.PAUSED);
       }
-      ++cov_2h1b1a0826.s[7];
+      ++cov_2iydy41r2b.s[7];
       _this._dispatchEvent();
     }), _defineProperty(_PlayerStates$LOADING, _events.HTML5_EVENTS.ERROR, function () {
-      ++cov_2h1b1a0826.f[3];
-      ++cov_2h1b1a0826.s[8];
+      ++cov_2iydy41r2b.f[3];
+      ++cov_2iydy41r2b.s[8];
 
       _this._updateState(_stateTypes2.default.IDLE);
-      ++cov_2h1b1a0826.s[9];
+      ++cov_2iydy41r2b.s[9];
       _this._dispatchEvent();
     }), _PlayerStates$LOADING)), _defineProperty(_transitions, _stateTypes2.default.PAUSED, (_PlayerStates$PAUSED = {}, _defineProperty(_PlayerStates$PAUSED, _events.HTML5_EVENTS.PLAY, function () {
-      ++cov_2h1b1a0826.f[4];
-      ++cov_2h1b1a0826.s[10];
+      ++cov_2iydy41r2b.f[4];
+      ++cov_2iydy41r2b.s[10];
 
       _this._updateState(_stateTypes2.default.PLAYING);
-      ++cov_2h1b1a0826.s[11];
+      ++cov_2iydy41r2b.s[11];
       _this._dispatchEvent();
     }), _defineProperty(_PlayerStates$PAUSED, _events.HTML5_EVENTS.PLAYING, function () {
-      ++cov_2h1b1a0826.f[5];
-      ++cov_2h1b1a0826.s[12];
+      ++cov_2iydy41r2b.f[5];
+      ++cov_2iydy41r2b.s[12];
 
       _this._updateState(_stateTypes2.default.PLAYING);
-      ++cov_2h1b1a0826.s[13];
+      ++cov_2iydy41r2b.s[13];
       _this._dispatchEvent();
     }), _defineProperty(_PlayerStates$PAUSED, _events.HTML5_EVENTS.ENDED, function () {
-      ++cov_2h1b1a0826.f[6];
-      ++cov_2h1b1a0826.s[14];
+      ++cov_2iydy41r2b.f[6];
+      ++cov_2iydy41r2b.s[14];
 
       _this._updateState(_stateTypes2.default.IDLE);
-      ++cov_2h1b1a0826.s[15];
+      ++cov_2iydy41r2b.s[15];
       _this._dispatchEvent();
     }), _PlayerStates$PAUSED)), _defineProperty(_transitions, _stateTypes2.default.PLAYING, (_PlayerStates$PLAYING = {}, _defineProperty(_PlayerStates$PLAYING, _events.HTML5_EVENTS.PAUSE, function () {
-      ++cov_2h1b1a0826.f[7];
-      ++cov_2h1b1a0826.s[16];
+      ++cov_2iydy41r2b.f[7];
+      ++cov_2iydy41r2b.s[16];
 
       _this._updateState(_stateTypes2.default.PAUSED);
-      ++cov_2h1b1a0826.s[17];
+      ++cov_2iydy41r2b.s[17];
       _this._dispatchEvent();
     }), _defineProperty(_PlayerStates$PLAYING, _events.HTML5_EVENTS.WAITING, function () {
-      ++cov_2h1b1a0826.f[8];
-      ++cov_2h1b1a0826.s[18];
+      ++cov_2iydy41r2b.f[8];
+      ++cov_2iydy41r2b.s[18];
 
       _this._updateState(_stateTypes2.default.BUFFERING);
-      ++cov_2h1b1a0826.s[19];
+      ++cov_2iydy41r2b.s[19];
       _this._dispatchEvent();
     }), _defineProperty(_PlayerStates$PLAYING, _events.HTML5_EVENTS.ENDED, function () {
-      ++cov_2h1b1a0826.f[9];
-      ++cov_2h1b1a0826.s[20];
+      ++cov_2iydy41r2b.f[9];
+      ++cov_2iydy41r2b.s[20];
 
       _this._updateState(_stateTypes2.default.IDLE);
-      ++cov_2h1b1a0826.s[21];
+      ++cov_2iydy41r2b.s[21];
       _this._dispatchEvent();
     }), _defineProperty(_PlayerStates$PLAYING, _events.HTML5_EVENTS.ERROR, function () {
-      ++cov_2h1b1a0826.f[10];
-      ++cov_2h1b1a0826.s[22];
+      ++cov_2iydy41r2b.f[10];
+      ++cov_2iydy41r2b.s[22];
 
       _this._updateState(_stateTypes2.default.IDLE);
-      ++cov_2h1b1a0826.s[23];
+      ++cov_2iydy41r2b.s[23];
       _this._dispatchEvent();
     }), _PlayerStates$PLAYING)), _defineProperty(_transitions, _stateTypes2.default.BUFFERING, (_PlayerStates$BUFFERI = {}, _defineProperty(_PlayerStates$BUFFERI, _events.HTML5_EVENTS.PLAYING, function () {
-      ++cov_2h1b1a0826.f[11];
-      ++cov_2h1b1a0826.s[24];
+      ++cov_2iydy41r2b.f[11];
+      ++cov_2iydy41r2b.s[24];
 
       _this._updateState(_stateTypes2.default.PLAYING);
-      ++cov_2h1b1a0826.s[25];
+      ++cov_2iydy41r2b.s[25];
       _this._dispatchEvent();
     }), _defineProperty(_PlayerStates$BUFFERI, _events.HTML5_EVENTS.PAUSE, function () {
-      ++cov_2h1b1a0826.f[12];
-      ++cov_2h1b1a0826.s[26];
+      ++cov_2iydy41r2b.f[12];
+      ++cov_2iydy41r2b.s[26];
 
       _this._updateState(_stateTypes2.default.PAUSED);
-      ++cov_2h1b1a0826.s[27];
+      ++cov_2iydy41r2b.s[27];
       _this._dispatchEvent();
     }), _PlayerStates$BUFFERI)), _transitions);
-    ++cov_2h1b1a0826.f[13];
-    ++cov_2h1b1a0826.s[28];
+    ++cov_2iydy41r2b.f[13];
+    ++cov_2iydy41r2b.s[28];
 
     this._player = player;
-    ++cov_2h1b1a0826.s[29];
+    ++cov_2iydy41r2b.s[29];
     this._logger = _logger2.default.getLogger("StateManager");
-    ++cov_2h1b1a0826.s[30];
+    ++cov_2iydy41r2b.s[30];
     this._eventManager = new _eventManager2.default();
-    ++cov_2h1b1a0826.s[31];
+    ++cov_2iydy41r2b.s[31];
     this._history = [];
-    ++cov_2h1b1a0826.s[32];
+    ++cov_2iydy41r2b.s[32];
     this._prevState = null;
-    ++cov_2h1b1a0826.s[33];
+    ++cov_2iydy41r2b.s[33];
     this._curState = new _state2.default(_stateTypes2.default.IDLE);
-    ++cov_2h1b1a0826.s[34];
+    ++cov_2iydy41r2b.s[34];
     this._attachListeners();
   }
 
@@ -21961,23 +22198,23 @@ var StateManager = function () {
   _createClass(StateManager, [{
     key: '_attachListeners',
     value: function _attachListeners() {
-      ++cov_2h1b1a0826.f[14];
-      ++cov_2h1b1a0826.s[35];
+      ++cov_2iydy41r2b.f[14];
+      ++cov_2iydy41r2b.s[35];
 
       this._eventManager.listen(this._player, _events.HTML5_EVENTS.ERROR, this._doTransition.bind(this));
-      ++cov_2h1b1a0826.s[36];
+      ++cov_2iydy41r2b.s[36];
       this._eventManager.listen(this._player, _events.HTML5_EVENTS.ENDED, this._doTransition.bind(this));
-      ++cov_2h1b1a0826.s[37];
+      ++cov_2iydy41r2b.s[37];
       this._eventManager.listen(this._player, _events.HTML5_EVENTS.PLAY, this._doTransition.bind(this));
-      ++cov_2h1b1a0826.s[38];
+      ++cov_2iydy41r2b.s[38];
       this._eventManager.listen(this._player, _events.HTML5_EVENTS.LOAD_START, this._doTransition.bind(this));
-      ++cov_2h1b1a0826.s[39];
+      ++cov_2iydy41r2b.s[39];
       this._eventManager.listen(this._player, _events.HTML5_EVENTS.PLAYING, this._doTransition.bind(this));
-      ++cov_2h1b1a0826.s[40];
+      ++cov_2iydy41r2b.s[40];
       this._eventManager.listen(this._player, _events.HTML5_EVENTS.LOADED_METADATA, this._doTransition.bind(this));
-      ++cov_2h1b1a0826.s[41];
+      ++cov_2iydy41r2b.s[41];
       this._eventManager.listen(this._player, _events.HTML5_EVENTS.PAUSE, this._doTransition.bind(this));
-      ++cov_2h1b1a0826.s[42];
+      ++cov_2iydy41r2b.s[42];
       this._eventManager.listen(this._player, _events.HTML5_EVENTS.WAITING, this._doTransition.bind(this));
     }
 
@@ -21991,19 +22228,19 @@ var StateManager = function () {
   }, {
     key: '_doTransition',
     value: function _doTransition(event) {
-      ++cov_2h1b1a0826.f[15];
-      ++cov_2h1b1a0826.s[43];
+      ++cov_2iydy41r2b.f[15];
+      ++cov_2iydy41r2b.s[43];
 
       this._logger.debug('Do transition request', event);
-      var transition = (++cov_2h1b1a0826.s[44], this._transitions[this._curState.type]);
-      ++cov_2h1b1a0826.s[45];
+      var transition = (++cov_2iydy41r2b.s[44], this._transitions[this._curState.type]);
+      ++cov_2iydy41r2b.s[45];
       if (typeof transition[event.type] === 'function') {
-        ++cov_2h1b1a0826.b[1][0];
-        ++cov_2h1b1a0826.s[46];
+        ++cov_2iydy41r2b.b[1][0];
+        ++cov_2iydy41r2b.s[46];
 
         transition[event.type]();
       } else {
-        ++cov_2h1b1a0826.b[1][1];
+        ++cov_2iydy41r2b.b[1][1];
       }
     }
 
@@ -22017,24 +22254,24 @@ var StateManager = function () {
   }, {
     key: '_updateState',
     value: function _updateState(type) {
-      ++cov_2h1b1a0826.f[16];
-      ++cov_2h1b1a0826.s[47];
+      ++cov_2iydy41r2b.f[16];
+      ++cov_2iydy41r2b.s[47];
 
       if (this._curState.type !== type) {
-        ++cov_2h1b1a0826.b[2][0];
-        ++cov_2h1b1a0826.s[48];
+        ++cov_2iydy41r2b.b[2][0];
+        ++cov_2iydy41r2b.s[48];
 
         this._curState.duration = Date.now() / 1000;
-        ++cov_2h1b1a0826.s[49];
+        ++cov_2iydy41r2b.s[49];
         this._history.push(this._curState);
-        ++cov_2h1b1a0826.s[50];
+        ++cov_2iydy41r2b.s[50];
         this._prevState = this._curState;
-        ++cov_2h1b1a0826.s[51];
+        ++cov_2iydy41r2b.s[51];
         this._curState = new _state2.default(type);
-        ++cov_2h1b1a0826.s[52];
+        ++cov_2iydy41r2b.s[52];
         this._logger.debug('Switch player state: from ' + this._prevState.type + ' to ' + this._curState.type);
       } else {
-        ++cov_2h1b1a0826.b[2][1];
+        ++cov_2iydy41r2b.b[2][1];
       }
     }
 
@@ -22047,13 +22284,13 @@ var StateManager = function () {
   }, {
     key: '_dispatchEvent',
     value: function _dispatchEvent() {
-      ++cov_2h1b1a0826.f[17];
+      ++cov_2iydy41r2b.f[17];
 
-      var event = (++cov_2h1b1a0826.s[53], new _fakeEvent2.default(_events.CUSTOM_EVENTS.PLAYER_STATE_CHANGED, {
+      var event = (++cov_2iydy41r2b.s[53], new _fakeEvent2.default(_events.CUSTOM_EVENTS.PLAYER_STATE_CHANGED, {
         'oldState': this._prevState,
         'newState': this._curState
       }));
-      ++cov_2h1b1a0826.s[54];
+      ++cov_2iydy41r2b.s[54];
       this._player.dispatchEvent(event);
     }
 
@@ -22066,11 +22303,11 @@ var StateManager = function () {
   }, {
     key: 'destroy',
     value: function destroy() {
-      ++cov_2h1b1a0826.f[18];
-      ++cov_2h1b1a0826.s[55];
+      ++cov_2iydy41r2b.f[18];
+      ++cov_2iydy41r2b.s[55];
 
       this._history = [];
-      ++cov_2h1b1a0826.s[56];
+      ++cov_2iydy41r2b.s[56];
       this._eventManager.destroy();
     }
 
@@ -22083,8 +22320,8 @@ var StateManager = function () {
   }, {
     key: 'currentState',
     get: function get() {
-      ++cov_2h1b1a0826.f[19];
-      ++cov_2h1b1a0826.s[57];
+      ++cov_2iydy41r2b.f[19];
+      ++cov_2iydy41r2b.s[57];
 
       return this._curState;
     }
@@ -22098,8 +22335,8 @@ var StateManager = function () {
   }, {
     key: 'previousState',
     get: function get() {
-      ++cov_2h1b1a0826.f[20];
-      ++cov_2h1b1a0826.s[58];
+      ++cov_2iydy41r2b.f[20];
+      ++cov_2iydy41r2b.s[58];
 
       return this._prevState;
     }
@@ -22113,8 +22350,8 @@ var StateManager = function () {
   }, {
     key: 'history',
     get: function get() {
-      ++cov_2h1b1a0826.f[21];
-      ++cov_2h1b1a0826.s[59];
+      ++cov_2iydy41r2b.f[21];
+      ++cov_2iydy41r2b.s[59];
 
       return this._history;
     }
@@ -22136,13 +22373,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_2d6y5fvzj2 = function () {
-  var path = "/Users/dan.ziv/WebstormProjects/playkit-js/src/state/state.js",
-      hash = "47c4a49befef6a6e85ec873d7c3017bcb26b2d81",
+var cov_1b73gobyjx = function () {
+  var path = "/Users/yair.ansbacher/Desktop/repos/playkit-js/src/state/state.js",
+      hash = "06ee15f3b17f73625605cbf33659d364a2a02073",
       global = new Function('return this')(),
       gcv = "__coverage__",
       coverageData = {
-    path: "/Users/dan.ziv/WebstormProjects/playkit-js/src/state/state.js",
+    path: "/Users/yair.ansbacher/Desktop/repos/playkit-js/src/state/state.js",
     statementMap: {
       "0": {
         start: {
@@ -22319,13 +22556,13 @@ var State = function () {
   function State(type) {
     _classCallCheck(this, State);
 
-    ++cov_2d6y5fvzj2.f[0];
-    ++cov_2d6y5fvzj2.s[0];
+    ++cov_1b73gobyjx.f[0];
+    ++cov_1b73gobyjx.s[0];
 
     this.type = type;
-    ++cov_2d6y5fvzj2.s[1];
+    ++cov_1b73gobyjx.s[1];
     this._duration = 0;
-    ++cov_2d6y5fvzj2.s[2];
+    ++cov_1b73gobyjx.s[2];
     this._timestamp = Date.now() / 1000;
   }
 
@@ -22353,8 +22590,8 @@ var State = function () {
   _createClass(State, [{
     key: "duration",
     get: function get() {
-      ++cov_2d6y5fvzj2.f[1];
-      ++cov_2d6y5fvzj2.s[3];
+      ++cov_1b73gobyjx.f[1];
+      ++cov_1b73gobyjx.s[3];
 
       return this._duration;
     }
@@ -22365,8 +22602,8 @@ var State = function () {
      */
     ,
     set: function set(endTime) {
-      ++cov_2d6y5fvzj2.f[2];
-      ++cov_2d6y5fvzj2.s[4];
+      ++cov_1b73gobyjx.f[2];
+      ++cov_1b73gobyjx.s[4];
 
       this._duration = endTime - this._timestamp;
     }
@@ -22388,13 +22625,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_bjj14sztj = function () {
-  var path = "/Users/dan.ziv/WebstormProjects/playkit-js/src/track/track-types.js",
-      hash = "e2fcdc786a5d95e81a682e5d247965e194697026",
+var cov_24r8blpqgd = function () {
+  var path = "/Users/yair.ansbacher/Desktop/repos/playkit-js/src/track/track-types.js",
+      hash = "178e1456733be0d4553d4186ecd39a5c6d5da20f",
       global = new Function('return this')(),
       gcv = "__coverage__",
       coverageData = {
-    path: "/Users/dan.ziv/WebstormProjects/playkit-js/src/track/track-types.js",
+    path: "/Users/yair.ansbacher/Desktop/repos/playkit-js/src/track/track-types.js",
     statementMap: {
       "0": {
         start: {
@@ -22426,7 +22663,7 @@ var cov_bjj14sztj = function () {
   return coverage[path] = coverageData;
 }();
 
-var TRACK_TYPES = (++cov_bjj14sztj.s[0], {
+var TRACK_TYPES = (++cov_24r8blpqgd.s[0], {
   VIDEO: "video",
   AUDIO: "audio",
   TEXT: "text"
