@@ -879,5 +879,31 @@ describe('events', () => {
       player.play();
     });
   });
+
+  describe('source selected', () => {
+    let config;
+    let player;
+
+    beforeEach(() => {
+      config = sourcesConfig.mp4_none_hls_dash;
+      player = new Player();
+    });
+
+    afterEach(() => {
+      player.destroy();
+    });
+
+    after(() => {
+      removeVideoElementsFromTestPage();
+    });
+
+    it('should fire source selected', (done) => {
+      player.addEventListener(CustomEvents.SOURCE_SELECTED, (event) => {
+        event.payload.selectedSource.id.should.equal('1_rsrdfext_10081,url');
+        done();
+      });
+      player.configure(config);
+    });
+  });
 });
 

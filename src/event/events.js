@@ -116,7 +116,11 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
   /**
    * Fires on the first play
    */
-  FIRST_PLAY: 'firstplay'
+  FIRST_PLAY: 'firstplay',
+  /**
+   * Fires when the player has selected the source to play
+   */
+  SOURCE_SELECTED: 'sourceselected'
 };
 
 const PLAYER_EVENTS: { [event: string]: string } = merge([HTML5_EVENTS, CUSTOM_EVENTS]);
