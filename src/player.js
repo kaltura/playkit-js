@@ -157,6 +157,7 @@ class Player extends FakeEventTarget {
       let sources = config.sources;
       for (let i = 0; i < sources.length; i++) {
         if (Html5.canPlayType(sources[i].mimetype)) {
+          this.dispatchEvent(new FakeEvent(CustomEvents.SOURCE_SELECTED, {selectedSource: sources[i]}));
           this._loadEngine(sources[i], config);
           break;
         }
@@ -312,6 +313,17 @@ class Player extends FakeEventTarget {
    */
   get config(): Object {
     return this._config;
+  }
+
+  /**
+   * Set player session id
+   * @param {string} sessionId - the player session id to set
+   * @returns {void}
+   * @public
+   */
+  set sessionId(sessionId: string): void {
+    this._config.session = this._config.session || {};
+    this._config.session.id = sessionId;
   }
 
   //  <editor-fold desc="Playback Interface">

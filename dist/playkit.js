@@ -16,9 +16,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -947,7 +947,11 @@ var CUSTOM_EVENTS = {
   /**
    * Fires on the first play
    */
-  FIRST_PLAY: 'firstplay'
+  FIRST_PLAY: 'firstplay',
+  /**
+   * Fires when the player has selected the source to play
+   */
+  SOURCE_SELECTED: 'sourceselected'
 };
 
 var PLAYER_EVENTS = (0, _util.merge)([HTML5_EVENTS, CUSTOM_EVENTS]);
@@ -1191,6 +1195,7 @@ var Player = function (_FakeEventTarget) {
         var sources = config.sources;
         for (var i = 0; i < sources.length; i++) {
           if (_html2.default.canPlayType(sources[i].mimetype)) {
+            this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.SOURCE_SELECTED, { selectedSource: sources[i] }));
             this._loadEngine(sources[i], config);
             break;
           }
@@ -1464,6 +1469,20 @@ var Player = function (_FakeEventTarget) {
     key: 'config',
     get: function get() {
       return this._config;
+    }
+
+    /**
+     * Set player session id
+     * @param {string} sessionId - the player session id to set
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: 'sessionId',
+    set: function set(sessionId) {
+      this._config.session = this._config.session || {};
+      this._config.session.id = sessionId;
     }
   }, {
     key: 'currentTime',
