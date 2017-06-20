@@ -1,3 +1,4 @@
+//@flow
 class adapter1 implements IMediaSourceAdapter {
   static _name = 'adapter1';
   static get name() {
