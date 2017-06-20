@@ -213,7 +213,7 @@ export default class Env {
 
   // Detect small mobile device (smartphones)
   static isDeviceLessThan480P(): boolean {
-    return matchMedia('only screen and (max-device-width: 480px)').matches;
+    return window.matchMedia('only screen and (max-device-width: 480px)').matches;
   }
 
   static hasMouseEvents(): boolean {
@@ -245,8 +245,8 @@ export default class Env {
       {s: 'Mac OS X', r: /Mac OS X/},
       {s: 'Mac OS', r: /(MacPPC|MacIntel|Mac_PowerPC|Macintosh)/},
     ];
-    for (let id in clientStrings) {
-      let cs = clientStrings[id];
+
+    for (let cs of clientStrings) {
       if (cs.r.test(Env.userAgent)) {
         os = cs.s;
         break;

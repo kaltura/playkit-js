@@ -1,3 +1,4 @@
+//@flow
 import BasePlugin from '../../../../src/plugin/base-plugin'
 import {registerPlugin} from '../../../../src/plugin/plugin-manager'
 import Player from '../../../../src/player'
@@ -7,7 +8,7 @@ const pluginName = "colors";
 export default class ColorsPlugin extends BasePlugin {
   _favouriteColor: string = "";
   _size: number = 0;
-  _colors: Array = [];
+  _colors: Array<any> = [];
 
   static defaultConfig: Object = {
     "size": 3,
