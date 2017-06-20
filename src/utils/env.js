@@ -1,4 +1,3 @@
-//@flow
 export default class Env {
   static userAgent = navigator.userAgent;
 
