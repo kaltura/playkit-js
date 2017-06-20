@@ -13,7 +13,7 @@ module.exports = {
     library: 'Playkit',
     libraryTarget: 'umd',
     umdNamedDefine: true,
-    devtoolModuleFilenameTemplate: "webpack:///core/[absolute-resource-path]",
+    devtoolModuleFilenameTemplate: "webpack:///core/[resource-path]",
   },
   devtool: 'source-map',
   plugins: PROD ? [new webpack.optimize.UglifyJsPlugin({sourceMap: true})] : [],
@@ -28,7 +28,9 @@ module.exports = {
       ]
     }, {
       test: /\.js$/,
-      exclude: /node_modules/,
+      exclude: [
+        /node_modules/
+      ],
       enforce: 'pre',
       use: [{
         loader: 'eslint-loader',
