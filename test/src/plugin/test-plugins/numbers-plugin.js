@@ -1,3 +1,4 @@
+//@flow
 import BasePlugin from '../../../../src/plugin/base-plugin'
 import {registerPlugin} from '../../../../src/plugin/plugin-manager'
 import Player from '../../../../src/player'
@@ -8,7 +9,7 @@ export default class NumbersPlugin extends BasePlugin {
   _firstCellValue: number = 0;
   _lastCellValue: number = 0;
   _size: number = 0;
-  _numbers: Array = [];
+  _numbers: Array<any> = [];
 
   static defaultConfig: Object = {
     "size": 10,
