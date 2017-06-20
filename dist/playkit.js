@@ -2916,7 +2916,7 @@ module.exports = {
 	"pre-push": [
 		"prepush-msg:build",
 		"prebuild",
-		"build:test",
+		"build",
 		"build:prod",
 		"prepush-msg:dist",
 		"commit:dist",
