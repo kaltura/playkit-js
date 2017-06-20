@@ -3,14 +3,75 @@ import Player from '../../src/player'
 import PlayerStates from '../../src/state/state-types'
 import * as PlayerEvents from '../../src/event/events'
 import sourcesConfig from './configs/sources.json'
-import {removeVideoElementsFromTestPage} from './utils/test-utils'
+import * as TestUtils from './utils/test-utils'
+import VideoTrack from '../../src/track/video-track'
+import AudioTrack from '../../src/track/audio-track'
+import TextTrack from '../../src/track/text-track'
+
+describe.skip('[debugging and testing manually]', () => {
+
+  let player, track1, track2, video, tracks, videoTracks, textTracks, audioTracks;
+  let config = sourcesConfig.mp4_none_hls_dash;
+
+
+  before(() => {
+    track1 = document.createElement("track");
+    track2 = document.createElement("track");
+    track1.src = '/base/src/assets/en.vtt';
+    track1.kind = 'subtitles';
+    track1.label = 'English';
+    track1.default = true;
+    track2.src = '/base/src/assets/he.vtt';
+    track2.kind = 'captions';
+    track2.srclang = 'he';
+  });
+
+  beforeEach(() => {
+    config = sourcesConfig.mp4_none_hls_dash;
+    player = new Player();
+  });
+
+  /**
+   * @function displayTracksOnScreen
+   * @return {void}
+   */
+  function displayTracksOnScreen() {
+    tracks = player.getTracks() || [];
+    videoTracks = [];
+    textTracks = [];
+    audioTracks = [];
+    tracks.filter((track) => {
+      if (track instanceof AudioTrack) {
+        audioTracks.push(track);
+      } else if (track instanceof VideoTrack) {
+        videoTracks.push(track);
+      } else if (track instanceof TextTrack) {
+        textTracks.push(track);
+      }
+    });
+    TestUtils.createVideoTrackButtons(player, videoTracks);
+    TestUtils.createAudioTrackButtons(player, audioTracks);
+    TestUtils.createTextTrackButtons(player, textTracks);
+  }
+
+  it('should play mp4 stream', () => {
+    player.load();
+    player.ready().then(() => {
+      displayTracksOnScreen();
+    });
+    player.configure(config);
+    video = player._engine.getVideoElement();
+    video.appendChild(track1);
+    video.appendChild(track2);
+  });
+});
 
 describe('playkit:playkit', function () {
 
   this.timeout(10000);
 
   after(() => {
-    removeVideoElementsFromTestPage();
+    TestUtils.removeVideoElementsFromTestPage();
   });
 
   it('should play mp4 stream', (done) => {
@@ -41,7 +102,8 @@ describe('playkit:playkit', function () {
       player.destroy();
       should.fail();
     });
-    player.load().then(() => {
+    player.load();
+    player.ready().then(() => {
       player.play();
     });
   });
