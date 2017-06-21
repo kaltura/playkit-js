@@ -64,6 +64,12 @@ class Player extends FakeEventTarget {
    */
   _tracks: Array<Track>;
   /**
+   * The player ready promise
+   * @type {Promise<*>}
+   * @private
+   */
+  _readyPromise: ?Promise<*>;
+  /**
    * Whether the play is the first or not
    * @type {boolean}
    * @private
@@ -85,6 +91,12 @@ class Player extends FakeEventTarget {
     this._pluginManager = new PluginManager();
     this._eventManager = new EventManager();
     this._playerMiddleware = new PlayerMiddleware();
+    this._readyPromise = new Promise((resolve, reject) => {
+      this._eventManager.listen(this, CustomEvents.TRACKS_CHANGED, () => {
+        resolve();
+      });
+      this._eventManager.listen(this, Html5Events.ERROR, reject);
+    });
     this.configure(config);
   }
 
@@ -112,6 +124,7 @@ class Player extends FakeEventTarget {
     this._stateManager.destroy();
     this._config = {};
     this._tracks = [];
+    this._readyPromise = null;
     this._firstPlay = true;
   }
 
@@ -152,6 +165,7 @@ class Player extends FakeEventTarget {
       let sources = config.sources;
       for (let i = 0; i < sources.length; i++) {
         if (Html5.canPlayType(sources[i].mimetype)) {
+          this.dispatchEvent(new FakeEvent(CustomEvents.SOURCE_SELECTED, {selectedSource: sources[i]}));
           this._loadEngine(sources[i], config);
           break;
         }
@@ -309,7 +323,41 @@ class Player extends FakeEventTarget {
     return this._config;
   }
 
+  /**
+   * Set player session id
+   * @param {string} sessionId - the player session id to set
+   * @returns {void}
+   * @public
+   */
+  set sessionId(sessionId: string): void {
+    this._config.session = this._config.session || {};
+    this._config.session.id = sessionId;
+  }
+
   //  <editor-fold desc="Playback Interface">
+  /**
+   * The player readiness
+   * @public
+   * @returns {Promise<*>} - The ready promise
+   */
+  ready(): Promise<*> {
+    return this._readyPromise ? this._readyPromise : Promise.resolve();
+  }
+
+  /**
+   * Load media
+   * @public
+   * @returns {void}
+   */
+  load(): void {
+    this._engine.load().then((data) => {
+      this._tracks = data.tracks;
+      this.dispatchEvent(new FakeEvent(CustomEvents.TRACKS_CHANGED, {tracks: this._tracks}));
+    }).catch((error) => {
+      this.dispatchEvent(new FakeEvent(Html5Events.ERROR, error));
+    });
+  }
+
   /**
    * Start/resume playback.
    * @returns {void}
@@ -317,18 +365,19 @@ class Player extends FakeEventTarget {
    */
   play(): void {
     if (this._engine) {
-      if (this._engine.src) {
-        this._playerMiddleware.play(this._play.bind(this));
-      } else {
-        this.load().then(() => {
-          this._playerMiddleware.play(this._play.bind(this));
-        });
-      }
+      this._playerMiddleware.play(this._play.bind(this));
     }
   }
 
   _play(): void {
-    this._engine.play();
+    if (this._engine.src) {
+      this._engine.play();
+    } else {
+      this.load();
+      this.ready().then(() => {
+        this._engine.play();
+      });
+    }
   }
 
   /**
@@ -344,25 +393,6 @@ class Player extends FakeEventTarget {
 
   _pause(): void {
     this._engine.pause();
-  }
-
-  /**
-   * Load media.
-   * @public
-   * @returns {Promise<*>} - The load promise.
-   */
-  load(): Promise<*> {
-    if (this._engine) {
-      return this._playerMiddleware.load(this._load.bind(this));
-    } else {
-      return Promise.resolve();
-    }
-  }
-
-  _load(): Promise<*> {
-    return this._engine.load().then((data) => {
-      this._tracks = data.tracks;
-    });
   }
 
   /**
@@ -452,9 +482,6 @@ class Player extends FakeEventTarget {
   // </editor-fold>
 
   // <editor-fold desc="State">
-  ready() {
-  }
-
   /**
    * Get paused state.
    * @returns {?boolean} - Whether the video is paused or not.

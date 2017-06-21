@@ -1,5 +1,6 @@
 // @flow
 import MultiMap from '../utils/multi-map'
+import PlayerMiddlewareBase from './player-middleware-base'
 import LoggerFactory from '../utils/logger'
 
 export default class Middleware {
@@ -13,7 +14,7 @@ export default class Middleware {
     this._logger = LoggerFactory.getLogger("Middleware");
   }
 
-  use(playerMiddleware: Object): void {
+  use(playerMiddleware: PlayerMiddlewareBase): void {
     for (let action in this._actions) {
       if (typeof playerMiddleware[this._actions[action]] === 'function') {
         this._logger.debug("Register middleware for action " + this._actions[action], playerMiddleware);
@@ -26,20 +27,20 @@ export default class Middleware {
     this._logger.debug("Start middleware chain for action " + action);
     let middlewares = this._middlewares.get(action);
     if (middlewares && middlewares.length > 0) {
-      return this._executeMiddleware(middlewares, () => {
+      this._executeMiddleware(middlewares, () => {
         this._logger.debug("Finish middleware chain for action " + action);
         if (callback) {
-          return callback();
+          callback();
         }
       });
     }
   }
 
   _executeMiddleware(middlewares: Array<Function>, callback: Function): void {
-    // eslint-disable-next-line no-unused-vars
+    /* eslint-disable-next-line no-unused-vars */
     const composition = middlewares.reduceRight((next, fn) => v => {
-      return fn(next);
+      fn(next);
     }, callback);
-    return composition();
+    composition();
   }
 }

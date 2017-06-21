@@ -94,17 +94,21 @@ const HTML5_EVENTS: { [event: string]: string } = {
 
 const CUSTOM_EVENTS: { [event: string]: string } = {
   /**
-   * Fires when the video track has been changed
+   * Fires when the active video track has been changed
    */
   VIDEO_TRACK_CHANGED: 'videotrackchanged',
   /**
-   * Fires when the audio track has been changed
+   * Fires when the active audio track has been changed
    */
   AUDIO_TRACK_CHANGED: 'audiotrackchanged',
   /**
-   * Fires when the text track has been changed
+   * Fires when the active text track has been changed
    */
   TEXT_TRACK_CHANGED: 'texttrackchanged',
+  /**
+   * Fires when the player tracks have been changed
+   */
+  TRACKS_CHANGED: 'trackschanged',
   /**
    * Fires when the player state has been changed
    */
@@ -112,7 +116,11 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
   /**
    * Fires on the first play
    */
-  FIRST_PLAY: 'firstplay'
+  FIRST_PLAY: 'firstplay',
+  /**
+   * Fires when the player has selected the source to play
+   */
+  SOURCE_SELECTED: 'sourceselected'
 };
 
 const PLAYER_EVENTS: { [event: string]: string } = merge([HTML5_EVENTS, CUSTOM_EVENTS]);

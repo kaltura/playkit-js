@@ -1,10 +1,10 @@
 // @flow
 import Middleware from './middleware'
+import PlayerMiddlewareBase from './player-middleware-base'
 
 export default class PlayerMiddleware {
 
   static Actions: { [action: string]: string } = {
-    LOAD: 'load',
     PLAY: 'play',
     PAUSE: 'pause'
   };
@@ -15,12 +15,8 @@ export default class PlayerMiddleware {
     this._middleware = new Middleware(PlayerMiddleware.Actions);
   }
 
-  use(playerMiddleware: Object): void {
+  use(playerMiddleware: PlayerMiddlewareBase): void {
     this._middleware.use(playerMiddleware);
-  }
-
-  load(callback: Function): Promise<*> {
-    return Promise.resolve(this._middleware.run(PlayerMiddleware.Actions.LOAD, callback));
   }
 
   play(callback: Function): void {
