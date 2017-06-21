@@ -791,6 +791,52 @@ describe('selectTrack - text', () => {
   });
 });
 
+describe('hideTextTrack', () => {
+  let config, player, video, track1, track2;
+
+  beforeEach(() => {
+    config = sourcesConfig.mp4_none_hls_dash;
+    player = new Player(config);
+    video = player._engine.getVideoElement();
+    track1 = document.createElement("track");
+    track2 = document.createElement("track");
+    track1.kind = 'subtitles';
+    track1.label = 'English';
+    track1.default = true;
+    track2.kind = 'subtitles';
+    track2.srclang = 'fr';
+    video.appendChild(track1);
+    video.appendChild(track2);
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+  });
+
+  it('should disable the active text track', (done) => {
+    player.ready().then(() => {
+      let tracks = player._tracks.filter((track) => {
+        return track instanceof TextTrack;
+      });
+      video.textTracks[0].mode.should.be.equal('showing');
+      video.textTracks[1].mode.should.be.equal('disabled');
+      tracks[0].active.should.be.true;
+      tracks[1].active.should.be.false;
+      player.hideTextTrack();
+      video.textTracks[0].mode.should.be.equal('disabled');
+      video.textTracks[1].mode.should.be.equal('disabled');
+      tracks[0].active.should.be.false;
+      tracks[1].active.should.be.false;
+      done();
+    });
+    player.load();
+  });
+});
+
 describe('Track enum', function () {
   after(() => {
     removeVideoElementsFromTestPage();

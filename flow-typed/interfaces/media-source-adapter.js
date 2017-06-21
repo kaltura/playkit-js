@@ -10,6 +10,7 @@ declare interface IMediaSourceAdapter {
   selectVideoTrack(videoTrack: VideoTrack): void;
   selectAudioTrack(audioTrack: AudioTrack): void;
   selectTextTrack(textTrack: TextTrack): void;
+  hideTextTrack(): void;
   enableAdaptiveBitrate(): void;
   static +id: string;
   static isSupported(): boolean;
