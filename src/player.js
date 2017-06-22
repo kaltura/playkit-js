@@ -106,6 +106,7 @@ class Player extends FakeEventTarget {
     this._loadPlugins(this._config);
     this._selectEngine(this._config);
     this._attachMedia();
+    this._handlePlaybackConfig();
   }
 
   /**
@@ -204,6 +205,17 @@ class Player extends FakeEventTarget {
         return this.dispatchEvent(event);
       });
       this._eventManager.listen(this, Html5Events.PLAY, this._onPlay.bind(this));
+    }
+  }
+
+  _handlePlaybackConfig(): void {
+    if (this._config.playback) {
+      if (this._config.playback.muted) {
+        this.muted = true;
+      }
+      if (this._config.playback.autoplay) {
+        this.play();
+      }
     }
   }
 
