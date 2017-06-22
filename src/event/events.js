@@ -120,7 +120,18 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
   /**
    * Fires when the player has selected the source to play
    */
-  SOURCE_SELECTED: 'sourceselected'
+  SOURCE_SELECTED: 'sourceselected',
+  /**
+   * Ads events
+   */
+  AD_LOADED: 'adloaded',
+  AD_PLAYING: 'adplaying',
+  AD_PAUSED: 'adpaused',
+  AD_CLICK: 'adclick',
+  AD_SKIPPED: 'adskipped',
+  AD_COMPLETE: 'adcomplete',
+  AD_ERROR: 'aderror',
+  ALL_ADS_COMPLETED: 'alladscompleted'
 };
 
 const PLAYER_EVENTS: { [event: string]: string } = merge([HTML5_EVENTS, CUSTOM_EVENTS]);
