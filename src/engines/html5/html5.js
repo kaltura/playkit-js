@@ -31,15 +31,19 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * @type {string} - The engine name.
    */
-  static EngineName: string = "html5";
+  static id: string = "html5";
 
   /**
    * Checks if the engine can play a given mime type.
    * @param {string} mimeType - The mime type to check.
    * @returns {boolean} - Whether the engine can play the mime type.
    */
-  static canPlayType(mimeType) {
+  static canPlayType(mimeType: string): boolean {
     return MediaSourceProvider.canPlayType(mimeType);
+  }
+
+  static createEngine(source: Source, config: Object): IEngine {
+    return new this(source, config);
   }
 
   /**

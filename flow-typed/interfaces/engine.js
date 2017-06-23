@@ -4,6 +4,9 @@ import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
 
 declare interface IEngine {
+  static id: string;
+  static canPlayType(mimeType: string): boolean;
+  static createEngine(source: Source, config: Object): IEngine;
   destroy(): void;
   attach(): void;
   detach(): void;

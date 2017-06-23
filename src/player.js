@@ -23,9 +23,10 @@ class Player extends FakeEventTarget {
   /**
    * The player class logger.
    * @type {any}
+   * @static
    * @private
    */
-  _logger: any;
+  static _logger: any = LoggerFactory.getLogger('Player');
   /**
    * The plugin manager of the player.
    * @type {PluginManager}
@@ -75,6 +76,8 @@ class Player extends FakeEventTarget {
    */
   _firstPlay: boolean;
 
+  static _engines: Array<typeof IEngine> = [Html5];
+
   /**
    * @param {Object} config - The configuration for the player instance.
    * @constructor
@@ -83,7 +86,6 @@ class Player extends FakeEventTarget {
     super();
     this._tracks = [];
     this._firstPlay = true;
-    this._logger = LoggerFactory.getLogger('Player');
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
     this._eventManager = new EventManager();
@@ -103,10 +105,13 @@ class Player extends FakeEventTarget {
    */
   configure(config: Object): void {
     this._config = merge([this._config, config || Player._defaultConfig()]);
-    this._loadPlugins(this._config);
-    this._selectEngine(this._config);
-    this._attachMedia();
-    this._handlePlaybackConfig();
+    if (this._selectEngine()) {
+      this._attachMedia();
+      this._loadPlugins();
+      this._handlePlaybackConfig();
+    } else {
+      Player._logger.warn("No playable engine was found to play the given sources");
+    }
   }
 
   /**
@@ -134,14 +139,22 @@ class Player extends FakeEventTarget {
     return {};
   }
 
+  static registerEngine(engine: typeof IEngine): void {
+    if (!Player._engines.includes(engine)) {
+      Player._logger.debug(`Engine <${engine.id}> has been registered successfully`);
+      Player._engines.push(engine);
+    } else {
+      Player._logger.debug(`Engine <${engine.id}> is already registered, do not register again`);
+    }
+  }
+
   /**
-   *
-   * @param {Object} config - The configuration of the player instance.
+   * Loads the configured plugins.
    * @private
    * @returns {void}
    */
-  _loadPlugins(config: Object): void {
-    let plugins = config.plugins;
+  _loadPlugins(): void {
+    let plugins = this._config.plugins;
     for (let name in plugins) {
       this._pluginManager.load(name, this, plugins[name]);
     }
@@ -149,33 +162,59 @@ class Player extends FakeEventTarget {
 
   /**
    * Select the engine to create based on the given configured sources.
-   * @param {Object} config - The configuration of the player instance.
    * @private
-   * @returns {void}
+   * @returns {boolean}
    */
-  _selectEngine(config: Object): void {
-    if (config && config.sources) {
-      let sources = config.sources;
-      for (let i = 0; i < sources.length; i++) {
-        if (Html5.canPlayType(sources[i].mimetype)) {
+  _selectEngine(): boolean {
+    let engineSelected = false;
+    if (this._config.sources) {
+      if (this._config.playback && this._config.playback.mediaSourceAdapterPriority) {
+        engineSelected = this._selectEngineByPriority();
+      } else {
+        engineSelected = this._selectFirstEngineWhoCanPlay();
+      }
+    }
+    return engineSelected;
+  }
+
+  _selectEngineByPriority(): void {
+    let mediaSourceAdapterPriority = this._config.playback.mediaSourceAdapterPriority;
+    let sources = this._config.sources;
+    for (let priority of mediaSourceAdapterPriority) {
+      let engineId = priority.engine;
+      let mediaSourceAdapterId = priority.mediaSourceAdapter;
+      let engine = Player._engines.find((engine) => {
+        return (engine.id === engineId);
+      });
+    }
+    return false;
+  }
+
+  _selectFirstEngineWhoCanPlay(): boolean {
+    let sources = this._config.sources;
+    for (let i = 0; i < sources.length; i++) {
+      for (let j = 0; j < Player._engines.length; j++) {
+        let engine = Player._engines[j];
+        if (engine.canPlayType(sources[i].mimetype)) {
           this.dispatchEvent(new FakeEvent(CustomEvents.SOURCE_SELECTED, {selectedSource: sources[i]}));
-          this._loadEngine(sources[i], config);
-          break;
+          this._loadEngine(engine, sources[i]);
+          return true;
         }
       }
     }
+    return false;
   }
 
   /**
    * Loads the selected engine.
+   * @param {IEngine} engine - The selected engine.
    * @param {Source} source - The selected source object.
-   * @param {Object} config - The configuration of the player instance.
    * @private
    * @returns {void}
    */
-  _loadEngine(source: Source, config: Object): void {
-    this._engine = new Html5(source, config);
-    if (config.preload === "auto") {
+  _loadEngine(engine: typeof IEngine, source: Source): void {
+    this._engine = engine.createEngine(source, this._config);
+    if (this._config.preload === "auto") {
       this.load();
     }
   }
