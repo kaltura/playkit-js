@@ -50,5 +50,3 @@ export default class NumbersPlugin extends BasePlugin {
     this.logger.info("destroy", this._numbers, this._firstCellValue, this._lastCellValue, this._size);
   }
 }
-
-registerPlugin(pluginName, NumbersPlugin);

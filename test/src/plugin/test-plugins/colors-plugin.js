@@ -42,5 +42,3 @@ export default class ColorsPlugin extends BasePlugin {
     this.logger.info("destroy", this._colors, this._favouriteColor, this._size);
   }
 }
-
-registerPlugin(pluginName, ColorsPlugin);
