@@ -834,6 +834,11 @@ describe('events', () => {
     });
 
     it('should fire tracks changed', function (done) {
+      /**
+       * Handles assertions after tracks changed event.
+       * @param {Object} data - The event data.
+       * @returns {void}
+       */
       function onTracksChanged(data) {
         player.removeEventListener(CustomEvents.TRACKS_CHANGED, onTracksChanged);
         let videoTracksLength = (video.videoTracks ? video.videoTracks.length : 0);

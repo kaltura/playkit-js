@@ -1,8 +1,5 @@
 import BasePlugin from '../../../../src/plugin/base-plugin'
-import {registerPlugin} from '../../../../src/plugin/plugin-manager'
 import Player from '../../../../src/player'
-
-const pluginName = "numbers";
 
 export default class NumbersPlugin extends BasePlugin {
   _firstCellValue: number = 0;
