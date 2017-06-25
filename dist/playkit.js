@@ -16,9 +16,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
+/******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/ 		}
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -970,6 +970,9 @@ exports.CUSTOM_EVENTS = CUSTOM_EVENTS;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.registerEngine = undefined;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -1029,6 +1032,10 @@ var _textTrack = __webpack_require__(4);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
+var _defaultConfig2 = __webpack_require__(26);
+
+var _defaultConfig3 = _interopRequireDefault(_defaultConfig2);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1044,34 +1051,94 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Player = function (_FakeEventTarget) {
   _inherits(Player, _FakeEventTarget);
 
-  /**
-   * @param {Object} config - The configuration for the player instance.
-   * @constructor
-   */
+  _createClass(Player, null, [{
+    key: 'registerEngine',
 
-  /**
-   * The player ready promise
-   * @type {Promise<*>}
-   * @private
-   */
 
-  /**
-   * The state manager of the player.
-   * @type {StateManager}
-   * @private
-   */
+    /**
+     * Register an engine in the player cache.
+     * @param {IEngine} engine - The engine to register.
+     * @static
+     * @public
+     * @returns {void}
+     */
 
-  /**
-   * The runtime configuration of the player.
-   * @type {Object}
-   * @private
-   */
+    /**
+     * The player class logger.
+     * @type {any}
+     * @static
+     * @private
+     */
+    value: function registerEngine(engine) {
+      if (!Player._engines.includes(engine)) {
+        Player._logger.debug('Engine <' + engine.id + '> has been registered successfully');
+        Player._engines.push(engine);
+      } else {
+        Player._logger.debug('Engine <' + engine.id + '> is already registered, do not register again');
+      }
+    }
 
-  /**
-   * The plugin manager of the player.
-   * @type {PluginManager}
-   * @private
-   */
+    /**
+     * @param {Object} config - The configuration for the player instance.
+     * @constructor
+     */
+
+    /**
+     * The available engines of the player.
+     * @type {Array<typeof IEngine>}
+     * @private
+     */
+
+    /**
+     * The plugin manager of the player.
+     * @type {PluginManager}
+     * @private
+     */
+
+    /**
+     * The event manager of the player.
+     * @type {EventManager}
+     * @private
+     */
+
+    /**
+     * The runtime configuration of the player.
+     * @type {Object}
+     * @private
+     */
+
+    /**
+     * The playback engine.
+     * @type {IEngine}
+     * @private
+     */
+
+    /**
+     * The state manager of the player.
+     * @type {StateManager}
+     * @private
+     */
+
+    /**
+     * The tracks of the player.
+     * @type {Array<Track>}
+     * @private
+     */
+
+    /**
+     * The player ready promise
+     * @type {Promise<*>}
+     * @private
+     */
+
+    /**
+     * Whether the play is the first or not
+     * @type {boolean}
+     * @private
+     */
+
+  }]);
+
   function Player(config) {
     _classCallCheck(this, Player);
 
@@ -1079,7 +1146,6 @@ var Player = function (_FakeEventTarget) {
 
     _this._tracks = [];
     _this._firstPlay = true;
-    _this._logger = _logger2.default.getLogger('Player');
     _this._stateManager = new _stateManager2.default(_this);
     _this._pluginManager = new _pluginManager2.default();
     _this._eventManager = new _eventManager2.default();
@@ -1099,44 +1165,18 @@ var Player = function (_FakeEventTarget) {
    * @returns {void}
    */
 
-  /**
-   * Whether the play is the first or not
-   * @type {boolean}
-   * @private
-   */
-
-  /**
-   * The tracks of the player.
-   * @type {Array<Track>}
-   * @private
-   */
-
-  /**
-   * The playback engine.
-   * @type {IEngine}
-   * @private
-   */
-
-  /**
-   * The event manager of the player.
-   * @type {EventManager}
-   * @private
-   */
-
-  /**
-   * The player class logger.
-   * @type {any}
-   * @private
-   */
-
 
   _createClass(Player, [{
     key: 'configure',
     value: function configure(config) {
-      this._config = (0, _util.merge)([this._config, config || Player._defaultConfig()]);
-      this._loadPlugins(this._config);
-      this._selectEngine(this._config);
-      this._attachMedia();
+      this._config = (0, _util.merge)([config, Player._defaultConfig()]);
+      if (this._selectEngine()) {
+        this._attachMedia();
+        this._loadPlugins();
+        this._handlePlaybackConfig();
+      } else {
+        Player._logger.warn("No playable engine was found to play the given sources");
+      }
     }
 
     /**
@@ -1169,13 +1209,12 @@ var Player = function (_FakeEventTarget) {
 
 
     /**
-     *
-     * @param {Object} config - The configuration of the player instance.
+     * Loads the configured plugins.
      * @private
      * @returns {void}
      */
-    value: function _loadPlugins(config) {
-      var plugins = config.plugins;
+    value: function _loadPlugins() {
+      var plugins = this._config.plugins;
       for (var name in plugins) {
         this._pluginManager.load(name, this, plugins[name]);
       }
@@ -1183,39 +1222,126 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Select the engine to create based on the given configured sources.
-     * @param {Object} config - The configuration of the player instance.
+     * @private
+     * @returns {boolean} - Whether a proper engine was found to play the given sources.
+     */
+
+  }, {
+    key: '_selectEngine',
+    value: function _selectEngine() {
+      var engineSelected = false;
+      if (this._config.sources) {
+        if (this._config.playback && this._config.playback.mediaSourceAdapterPriority) {
+          engineSelected = this._selectEngineByPriority();
+        } else {
+          engineSelected = this._selectFirstEngineWhoCanPlay();
+        }
+      }
+      return engineSelected;
+    }
+
+    /**
+     * Selects an <engine, adapter> tuple to play a source according to a given priority.
+     * @return {boolean} - Whether a proper <engine, adapter> was found to play the given sources
+     * according to the priority.
      * @private
      * @returns {void}
      */
 
   }, {
-    key: '_selectEngine',
-    value: function _selectEngine(config) {
-      if (config && config.sources) {
-        var sources = config.sources;
-        for (var i = 0; i < sources.length; i++) {
-          if (_html2.default.canPlayType(sources[i].mimetype)) {
-            this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.SOURCE_SELECTED, { selectedSource: sources[i] }));
-            this._loadEngine(sources[i], config);
-            break;
+    key: '_selectEngineByPriority',
+    value: function _selectEngineByPriority() {
+      var _this2 = this;
+
+      var mediaSourceAdapterPriority = this._config.playback.mediaSourceAdapterPriority;
+      var sources = this._config.sources;
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        var _loop = function _loop() {
+          var priority = _step.value;
+
+          var engineId = priority.engine.toLowerCase();
+          var mediaSourceAdapterId = priority.mediaSourceAdapter.toLowerCase();
+          var engine = Player._engines.find(function (engine) {
+            return engine.id === engineId;
+          });
+          if (engine) {
+            var canPlayResult = engine.canPlayType(sources, mediaSourceAdapterId);
+            var canPlay = canPlayResult.canPlay;
+            var source = canPlayResult.source;
+            if (canPlay && source) {
+              _this2._loadEngine(engine, source);
+              return {
+                v: true
+              };
+            }
+          }
+        };
+
+        for (var _iterator = mediaSourceAdapterPriority[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var _ret = _loop();
+
+          if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
           }
         }
       }
+
+      return false;
+    }
+
+    /**
+     * Selects the first <engine, adapter> tuple that can play a source.
+     * @return {boolean} - Whether a proper <engine, adapter> was found to play the given sources.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_selectFirstEngineWhoCanPlay',
+    value: function _selectFirstEngineWhoCanPlay() {
+      var sources = this._config.sources;
+      for (var i = 0; i < Player._engines.length; i++) {
+        var _engine = Player._engines[i];
+        var canPlayResult = _engine.canPlayType(sources, '');
+        var canPlay = canPlayResult.canPlay;
+        var source = canPlayResult.source;
+        if (canPlay && source) {
+          this._loadEngine(_engine, source);
+          return true;
+        }
+      }
+      return false;
     }
 
     /**
      * Loads the selected engine.
+     * @param {IEngine} engine - The selected engine.
      * @param {Source} source - The selected source object.
-     * @param {Object} config - The configuration of the player instance.
      * @private
      * @returns {void}
      */
 
   }, {
     key: '_loadEngine',
-    value: function _loadEngine(source, config) {
-      this._engine = new _html2.default(source, config);
-      if (config.preload === "auto") {
+    value: function _loadEngine(engine, source) {
+      this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.SOURCE_SELECTED, { selectedSource: source }));
+      this._engine = engine.createEngine(source, this._config);
+      if (this._config.preload === "auto") {
         this.load();
       }
     }
@@ -1229,27 +1355,39 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_attachMedia',
     value: function _attachMedia() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (this._engine) {
         for (var playerEvent in _events.HTML5_EVENTS) {
           this._eventManager.listen(this._engine, _events.HTML5_EVENTS[playerEvent], function (event) {
-            return _this2.dispatchEvent(event);
+            return _this3.dispatchEvent(event);
           });
         }
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, function (event) {
-          _this2._markActiveTrack(event.payload.selectedVideoTrack);
-          return _this2.dispatchEvent(event);
+          _this3._markActiveTrack(event.payload.selectedVideoTrack);
+          return _this3.dispatchEvent(event);
         });
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED, function (event) {
-          _this2._markActiveTrack(event.payload.selectedAudioTrack);
-          return _this2.dispatchEvent(event);
+          _this3._markActiveTrack(event.payload.selectedAudioTrack);
+          return _this3.dispatchEvent(event);
         });
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED, function (event) {
-          _this2._markActiveTrack(event.payload.selectedTextTrack);
-          return _this2.dispatchEvent(event);
+          _this3._markActiveTrack(event.payload.selectedTextTrack);
+          return _this3.dispatchEvent(event);
         });
         this._eventManager.listen(this, _events.HTML5_EVENTS.PLAY, this._onPlay.bind(this));
+      }
+    }
+  }, {
+    key: '_handlePlaybackConfig',
+    value: function _handlePlaybackConfig() {
+      if (this._config.playback) {
+        if (this._config.playback.muted) {
+          this.muted = true;
+        }
+        if (this._config.playback.autoplay) {
+          this.play();
+        }
       }
     }
 
@@ -1399,14 +1537,14 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'load',
     value: function load() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this._engine) {
         this._engine.load().then(function (data) {
-          _this3._tracks = data.tracks;
-          _this3.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.TRACKS_CHANGED, { tracks: _this3._tracks }));
+          _this4._tracks = data.tracks;
+          _this4.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.TRACKS_CHANGED, { tracks: _this4._tracks }));
         }).catch(function (error) {
-          _this3.dispatchEvent(new _fakeEvent2.default(_events.HTML5_EVENTS.ERROR, error));
+          _this4.dispatchEvent(new _fakeEvent2.default(_events.HTML5_EVENTS.ERROR, error));
         });
       }
     }
@@ -1420,7 +1558,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'play',
     value: function play() {
-      var _this4 = this;
+      var _this5 = this;
 
       if (this._engine) {
         if (this._engine.src) {
@@ -1428,7 +1566,7 @@ var Player = function (_FakeEventTarget) {
         } else {
           this.load();
           this.ready().then(function () {
-            _this4._engine.play();
+            _this5._engine.play();
           });
         }
       }
@@ -1668,14 +1806,20 @@ var Player = function (_FakeEventTarget) {
   }], [{
     key: '_defaultConfig',
     value: function _defaultConfig() {
-      return {};
+      return _defaultConfig3.default;
     }
   }]);
 
   return Player;
 }(_fakeEventTarget2.default);
 
+Player._logger = _logger2.default.getLogger('Player');
+Player._engines = [_html2.default];
 exports.default = Player;
+
+
+var registerEngine = Player.registerEngine;
+exports.registerEngine = registerEngine;
 
 /***/ }),
 /* 9 */
@@ -2230,15 +2374,15 @@ var MediaSourceProvider = function () {
 
 
     /**
-     * Add a media source adapter to the registry
+     * Add a media source adapter to the registry.
      * @function register
-     * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to register
+     * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to register.
      * @static
      * @returns {void}
      */
 
     /**
-     * The media source adapter registry
+     * The media source adapter registry.
      * @member {Array<IMediaSourceAdapter>} _mediaSourceAdapters
      * @static
      * @private
@@ -2255,22 +2399,22 @@ var MediaSourceProvider = function () {
     }
 
     /**
-     * Remove a media source adapter from the registry
+     * Remove a media source adapter from the registry.
      * @function unRegister
-     * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to unRegister
+     * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to unRegister.
      * @static
      * @returns {void}
      */
 
     /**
-     * The selected adapter for playback
+     * The selected adapter for playback.
      * @type {null|IMediaSourceAdapter}
      * @static
      * @private
      */
 
     /**
-     * The logger of the media source provider
+     * The logger of the media source provider.
      * @member {any} _logger
      * @static
      * @private
@@ -2287,34 +2431,57 @@ var MediaSourceProvider = function () {
     }
 
     /**
-     * Checks if one of the registered media source adapters can play a given mime type
+     * Checks if one of the registered media source adapters can play a given source with
+     * priority to a given media source adapter (optional).
      * @function canPlayType
-     * @param {string} mimeType - The mime type to check
+     * @param {Array<Source>} sources - The sources to check.
+     * @param {string} priority - Preferred media source adapter id (optional).
      * @static
-     * @returns {boolean} - If one of the adapters can play the specific mime type
+     * @public
+     * @returns {CanPlayResult} - An object which includes whether one of the adapters can play a given source.
      */
 
   }, {
     key: 'canPlayType',
-    value: function canPlayType(mimeType) {
-      var mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
-      for (var i = 0; i < mediaSourceAdapters.length; i++) {
-        if (mediaSourceAdapters[i].canPlayType(mimeType)) {
-          MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
-          MediaSourceProvider._logger.debug('Selected adapter is <' + MediaSourceProvider._selectedAdapter.id + '>');
-          return true;
+    value: function canPlayType(sources, priority) {
+      if (priority) {
+        var mediaSourceAdapter = MediaSourceProvider._mediaSourceAdapters.find(function (mediaSourceAdapter) {
+          return mediaSourceAdapter.id.toLowerCase().startsWith(priority);
+        });
+        if (mediaSourceAdapter) {
+          for (var i = 0; i < sources.length; i++) {
+            var source = sources[i];
+            var mimeType = source.mimetype;
+            if (mediaSourceAdapter.canPlayType(mimeType)) {
+              MediaSourceProvider._selectedAdapter = mediaSourceAdapter;
+              return { canPlay: true, source: source };
+            }
+          }
         }
+        return { canPlay: false, source: null };
+      } else {
+        for (var _i = 0; _i < MediaSourceProvider._mediaSourceAdapters.length; _i++) {
+          var _mediaSourceAdapter = MediaSourceProvider._mediaSourceAdapters[_i];
+          for (var j = 0; j < sources.length; j++) {
+            var _source = sources[j];
+            var _mimeType = _source.mimetype;
+            if (_mediaSourceAdapter.canPlayType(_mimeType)) {
+              MediaSourceProvider._selectedAdapter = _mediaSourceAdapter;
+              return { canPlay: true, source: _source };
+            }
+          }
+        }
+        return { canPlay: false, source: null };
       }
-      return false;
     }
 
     /**
-     * Get the appropriate media source adapter to the video source
+     * Get the appropriate media source adapter to the video source.
      * @function getMediaSourceAdapter
-     * @param {HTMLVideoElement} videoElement - The video element which requires adapter for a given mimeType
-     * @param {Source} source - The selected source object
-     * @param {Object} config - The player configuration
-     * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists
+     * @param {HTMLVideoElement} videoElement - The video element which requires adapter for a given mimeType.
+     * @param {Source} source - The selected source object.
+     * @param {Object} config - The player configuration.
+     * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists.
      * @static
      */
 
@@ -2322,10 +2489,7 @@ var MediaSourceProvider = function () {
     key: 'getMediaSourceAdapter',
     value: function getMediaSourceAdapter(videoElement, source, config) {
       if (videoElement && source && config) {
-        if (!MediaSourceProvider._selectedAdapter) {
-          MediaSourceProvider.canPlayType(source.mimetype);
-        }
-        return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config.engines) : null;
+        return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config) : null;
       }
       return null;
     }
@@ -3081,13 +3245,16 @@ var Html5 = function (_FakeEventTarget) {
   _inherits(Html5, _FakeEventTarget);
 
   _createClass(Html5, null, [{
-    key: 'canPlayType',
+    key: 'createEngine',
 
 
     /**
-     * Checks if the engine can play a given mime type.
-     * @param {string} mimeType - The mime type to check.
-     * @returns {boolean} - Whether the engine can play the mime type.
+     * Factory method to create an engine.
+     * @param {Source} source - The selected source object.
+     * @param {Object} config - The player configuration.
+     * @returns {IEngine} - New instance of the run time engine.
+     * @public
+     * @static
      */
 
     /**
@@ -3101,25 +3268,42 @@ var Html5 = function (_FakeEventTarget) {
      * @type {HTMLVideoElement}
      * @private
      */
-    value: function canPlayType(mimeType) {
-      return _mediaSourceProvider2.default.canPlayType(mimeType);
+    value: function createEngine(source, config) {
+      return new this(source, config);
     }
 
     /**
-     * @constructor
-     * @param {Source} source - The selected source object.
-     * @param {Object} config - The player configuration.
+     * Checks if the engine can play a given sources.
+     * @param {Array<Source>} sources - The sources to check.
+     * @param {string} priority - Preferred media source adapter id (optional).
+     * @static
+     * @public
+     * @returns {boolean} - Whether the engine can play the mime type.
      */
 
 
     /**
-     * @type {string} - The engine name.
+     * @type {string} - The engine id.
      */
 
     /**
      * The event manager of the engine.
      * @type {EventManager}
      * @private
+     */
+
+  }, {
+    key: 'canPlayType',
+    value: function canPlayType(sources) {
+      var priority = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+
+      return _mediaSourceProvider2.default.canPlayType(sources, priority);
+    }
+
+    /**
+     * @constructor
+     * @param {Source} source - The selected source object.
+     * @param {Object} config - The player configuration.
      */
 
   }]);
@@ -3129,8 +3313,8 @@ var Html5 = function (_FakeEventTarget) {
 
     var _this = _possibleConstructorReturn(this, (Html5.__proto__ || Object.getPrototypeOf(Html5)).call(this));
 
-    _this._createVideoElement();
     _this._eventManager = new _eventManager2.default();
+    _this._createVideoElement();
     _this._loadMediaSourceAdapter(source, config);
     _this.attach();
     return _this;
@@ -3797,7 +3981,7 @@ var Html5 = function (_FakeEventTarget) {
   return Html5;
 }(_fakeEventTarget2.default);
 
-Html5.EngineName = "html5";
+Html5.id = "html5";
 exports.default = Html5;
 
 /***/ }),
@@ -4971,6 +5155,42 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 	}
 }(this));
 
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports) {
+
+module.exports = {
+	"id": 0,
+	"type": "VOD",
+	"session": {
+		"id": ""
+	},
+	"metadata": {
+		"key": "value"
+	},
+	"playback": {
+		"autoplay": false,
+		"muted": false,
+		"textLanguage": "en",
+		"audioLanguage": "en",
+		"mediaSourceAdapterPriority": [
+			{
+				"engine": "html5",
+				"mediaSourceAdapter": "hls"
+			},
+			{
+				"engine": "html5",
+				"mediaSourceAdapter": "dash"
+			},
+			{
+				"engine": "html5",
+				"mediaSourceAdapter": "native"
+			}
+		]
+	},
+	"plugins": {}
+};
 
 /***/ })
 /******/ ]);

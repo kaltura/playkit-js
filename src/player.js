@@ -85,9 +85,10 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Register an engine in the player cache.
-   * @param {typeof IEngine} engine - The engine to register.
+   * @param {IEngine} engine - The engine to register.
    * @static
    * @public
+   * @returns {void}
    */
   static registerEngine(engine: typeof IEngine): void {
     if (!Player._engines.includes(engine)) {
@@ -193,6 +194,7 @@ export default class Player extends FakeEventTarget {
    * @return {boolean} - Whether a proper <engine, adapter> was found to play the given sources
    * according to the priority.
    * @private
+   * @returns {void}
    */
   _selectEngineByPriority(): boolean {
     let mediaSourceAdapterPriority = this._config.playback.mediaSourceAdapterPriority;
@@ -220,6 +222,7 @@ export default class Player extends FakeEventTarget {
    * Selects the first <engine, adapter> tuple that can play a source.
    * @return {boolean} - Whether a proper <engine, adapter> was found to play the given sources.
    * @private
+   * @returns {void}
    */
   _selectFirstEngineWhoCanPlay(): boolean {
     let sources = this._config.sources;
