@@ -14,12 +14,13 @@ import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
+import DefaultPlayerConfig from './default-config.json'
 
 /**
  * The HTML5 player class.
  * @classdesc
  */
-class Player extends FakeEventTarget {
+export default class Player extends FakeEventTarget {
   /**
    * The player class logger.
    * @type {any}
@@ -75,8 +76,27 @@ class Player extends FakeEventTarget {
    * @private
    */
   _firstPlay: boolean;
-
+  /**
+   * The available engines of the player.
+   * @type {Array<typeof IEngine>}
+   * @private
+   */
   static _engines: Array<typeof IEngine> = [Html5];
+
+  /**
+   * Register an engine in the player cache.
+   * @param {typeof IEngine} engine - The engine to register.
+   * @static
+   * @public
+   */
+  static registerEngine(engine: typeof IEngine): void {
+    if (!Player._engines.includes(engine)) {
+      Player._logger.debug(`Engine <${engine.id}> has been registered successfully`);
+      Player._engines.push(engine);
+    } else {
+      Player._logger.debug(`Engine <${engine.id}> is already registered, do not register again`);
+    }
+  }
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -104,7 +124,7 @@ class Player extends FakeEventTarget {
    * @returns {void}
    */
   configure(config: Object): void {
-    this._config = merge([this._config, config || Player._defaultConfig()]);
+    this._config = merge([config, Player._defaultConfig()]);
     if (this._selectEngine()) {
       this._attachMedia();
       this._loadPlugins();
@@ -136,16 +156,7 @@ class Player extends FakeEventTarget {
    * @static
    */
   static _defaultConfig(): Object {
-    return {};
-  }
-
-  static registerEngine(engine: typeof IEngine): void {
-    if (!Player._engines.includes(engine)) {
-      Player._logger.debug(`Engine <${engine.id}> has been registered successfully`);
-      Player._engines.push(engine);
-    } else {
-      Player._logger.debug(`Engine <${engine.id}> is already registered, do not register again`);
-    }
+    return DefaultPlayerConfig;
   }
 
   /**
@@ -163,7 +174,7 @@ class Player extends FakeEventTarget {
   /**
    * Select the engine to create based on the given configured sources.
    * @private
-   * @returns {boolean}
+   * @returns {boolean} - Whether a proper engine was found to play the given sources.
    */
   _selectEngine(): boolean {
     let engineSelected = false;
@@ -177,29 +188,49 @@ class Player extends FakeEventTarget {
     return engineSelected;
   }
 
-  _selectEngineByPriority(): void {
+  /**
+   * Selects an <engine, adapter> tuple to play a source according to a given priority.
+   * @return {boolean} - Whether a proper <engine, adapter> was found to play the given sources
+   * according to the priority.
+   * @private
+   */
+  _selectEngineByPriority(): boolean {
     let mediaSourceAdapterPriority = this._config.playback.mediaSourceAdapterPriority;
     let sources = this._config.sources;
     for (let priority of mediaSourceAdapterPriority) {
-      let engineId = priority.engine;
-      let mediaSourceAdapterId = priority.mediaSourceAdapter;
+      let engineId = priority.engine.toLowerCase();
+      let mediaSourceAdapterId = priority.mediaSourceAdapter.toLowerCase();
       let engine = Player._engines.find((engine) => {
         return (engine.id === engineId);
       });
+      if (engine) {
+        let canPlayResult = engine.canPlayType(sources, mediaSourceAdapterId);
+        let canPlay = canPlayResult.canPlay;
+        let source = canPlayResult.source;
+        if (canPlay && source) {
+          this._loadEngine(engine, source);
+          return true;
+        }
+      }
     }
     return false;
   }
 
+  /**
+   * Selects the first <engine, adapter> tuple that can play a source.
+   * @return {boolean} - Whether a proper <engine, adapter> was found to play the given sources.
+   * @private
+   */
   _selectFirstEngineWhoCanPlay(): boolean {
     let sources = this._config.sources;
-    for (let i = 0; i < sources.length; i++) {
-      for (let j = 0; j < Player._engines.length; j++) {
-        let engine = Player._engines[j];
-        if (engine.canPlayType(sources[i].mimetype)) {
-          this.dispatchEvent(new FakeEvent(CustomEvents.SOURCE_SELECTED, {selectedSource: sources[i]}));
-          this._loadEngine(engine, sources[i]);
-          return true;
-        }
+    for (let i = 0; i < Player._engines.length; i++) {
+      let engine = Player._engines[i];
+      let canPlayResult = engine.canPlayType(sources, '');
+      let canPlay = canPlayResult.canPlay;
+      let source = canPlayResult.source;
+      if (canPlay && source) {
+        this._loadEngine(engine, source);
+        return true;
       }
     }
     return false;
@@ -213,6 +244,7 @@ class Player extends FakeEventTarget {
    * @returns {void}
    */
   _loadEngine(engine: typeof IEngine, source: Source): void {
+    this.dispatchEvent(new FakeEvent(CustomEvents.SOURCE_SELECTED, {selectedSource: source}));
     this._engine = engine.createEngine(source, this._config);
     if (this._config.preload === "auto") {
       this.load();
@@ -598,4 +630,5 @@ class Player extends FakeEventTarget {
 // </editor-fold>
 }
 
-export default Player;
+const registerEngine = Player.registerEngine;
+export {registerEngine};

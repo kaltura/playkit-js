@@ -29,21 +29,32 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _mediaSourceAdapter: ?IMediaSourceAdapter;
 
   /**
-   * @type {string} - The engine name.
+   * @type {string} - The engine id.
    */
   static id: string = "html5";
 
   /**
-   * Checks if the engine can play a given mime type.
-   * @param {string} mimeType - The mime type to check.
-   * @returns {boolean} - Whether the engine can play the mime type.
+   * Factory method to create an engine.
+   * @param {Source} source - The selected source object.
+   * @param {Object} config - The player configuration.
+   * @returns {IEngine} - New instance of the run time engine.
+   * @public
+   * @static
    */
-  static canPlayType(mimeType: string): boolean {
-    return MediaSourceProvider.canPlayType(mimeType);
-  }
-
   static createEngine(source: Source, config: Object): IEngine {
     return new this(source, config);
+  }
+
+  /**
+   * Checks if the engine can play a given sources.
+   * @param {Array<Source>} sources - The sources to check.
+   * @param {string} priority - Preferred media source adapter id (optional).
+   * @static
+   * @public
+   * @returns {boolean} - Whether the engine can play the mime type.
+   */
+  static canPlayType(sources: Array<Source>, priority: string = ''): CanPlayResult {
+    return MediaSourceProvider.canPlayType(sources, priority);
   }
 
   /**
@@ -53,8 +64,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   constructor(source: Source, config: Object) {
     super();
-    this._createVideoElement();
     this._eventManager = new EventManager();
+    this._createVideoElement();
     this._loadMediaSourceAdapter(source, config);
     this.attach();
   }

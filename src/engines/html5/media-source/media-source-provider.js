@@ -8,21 +8,21 @@ import LoggerFactory from '../../../utils/logger'
  */
 export default class MediaSourceProvider {
   /**
-   * The logger of the media source provider
+   * The logger of the media source provider.
    * @member {any} _logger
    * @static
    * @private
    */
   static _logger: any = LoggerFactory.getLogger('MediaSourceProvider');
   /**
-   * The media source adapter registry
+   * The media source adapter registry.
    * @member {Array<IMediaSourceAdapter>} _mediaSourceAdapters
    * @static
    * @private
    */
   static _mediaSourceAdapters: Array<typeof IMediaSourceAdapter> = [NativeAdapter];
   /**
-   * The selected adapter for playback
+   * The selected adapter for playback.
    * @type {null|IMediaSourceAdapter}
    * @static
    * @private
@@ -30,9 +30,9 @@ export default class MediaSourceProvider {
   static _selectedAdapter: ?(typeof IMediaSourceAdapter) = null;
 
   /**
-   * Add a media source adapter to the registry
+   * Add a media source adapter to the registry.
    * @function register
-   * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to register
+   * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to register.
    * @static
    * @returns {void}
    */
@@ -48,9 +48,9 @@ export default class MediaSourceProvider {
   }
 
   /**
-   * Remove a media source adapter from the registry
+   * Remove a media source adapter from the registry.
    * @function unRegister
-   * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to unRegister
+   * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to unRegister.
    * @static
    * @returns {void}
    */
@@ -63,39 +63,59 @@ export default class MediaSourceProvider {
   }
 
   /**
-   * Checks if one of the registered media source adapters can play a given mime type
+   * Checks if one of the registered media source adapters can play a given source with
+   * priority to a given media source adapter (optional).
    * @function canPlayType
-   * @param {string} mimeType - The mime type to check
+   * @param {Array<Source>} sources - The sources to check.
+   * @param {string} priority - Preferred media source adapter id (optional).
    * @static
-   * @returns {boolean} - If one of the adapters can play the specific mime type
+   * @public
+   * @returns {CanPlayResult} - An object which includes whether one of the adapters can play a given source.
    */
-  static canPlayType(mimeType: string): boolean {
-    let mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
-    for (let i = 0; i < mediaSourceAdapters.length; i++) {
-      if (mediaSourceAdapters[i].canPlayType(mimeType)) {
-        MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
-        MediaSourceProvider._logger.debug(`Selected adapter is <${MediaSourceProvider._selectedAdapter.id}>`);
-        return true;
+  static canPlayType(sources: Array<Source>, priority: string): CanPlayResult {
+    if (priority) {
+      let mediaSourceAdapter = MediaSourceProvider._mediaSourceAdapters.find((mediaSourceAdapter) => {
+        return mediaSourceAdapter.id.toLowerCase().startsWith(priority);
+      });
+      if (mediaSourceAdapter) {
+        for (let i = 0; i < sources.length; i++) {
+          let source = sources[i];
+          let mimeType = source.mimetype;
+          if (mediaSourceAdapter.canPlayType(mimeType)) {
+            MediaSourceProvider._selectedAdapter = mediaSourceAdapter;
+            return {canPlay: true, source: source};
+          }
+        }
       }
+      return {canPlay: false, source: null};
+    } else {
+      for (let i = 0; i < MediaSourceProvider._mediaSourceAdapters.length; i++) {
+        let mediaSourceAdapter = MediaSourceProvider._mediaSourceAdapters[i];
+        for (let j = 0; j < sources.length; j++) {
+          let source = sources[j];
+          let mimeType = source.mimetype;
+          if (mediaSourceAdapter.canPlayType(mimeType)) {
+            MediaSourceProvider._selectedAdapter = mediaSourceAdapter;
+            return {canPlay: true, source: source};
+          }
+        }
+      }
+      return {canPlay: false, source: null};
     }
-    return false;
   }
 
   /**
-   * Get the appropriate media source adapter to the video source
+   * Get the appropriate media source adapter to the video source.
    * @function getMediaSourceAdapter
-   * @param {HTMLVideoElement} videoElement - The video element which requires adapter for a given mimeType
-   * @param {Source} source - The selected source object
-   * @param {Object} config - The player configuration
-   * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists
+   * @param {HTMLVideoElement} videoElement - The video element which requires adapter for a given mimeType.
+   * @param {Source} source - The selected source object.
+   * @param {Object} config - The player configuration.
+   * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists.
    * @static
    */
   static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): ?IMediaSourceAdapter {
     if (videoElement && source && config) {
-      if (!MediaSourceProvider._selectedAdapter) {
-        MediaSourceProvider.canPlayType(source.mimetype);
-      }
-      return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config.engines) : null;
+      return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config) : null;
     }
     return null;
   }

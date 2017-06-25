@@ -1,0 +1,32 @@
+{
+  "id": 0,
+  "type": "VOD",
+  "session": {
+    "id": ""
+  },
+  "metadata": {
+    "key": "value"
+  },
+  "playback": {
+    "autoplay": false,
+    "muted": false,
+    "textLanguage": "en",
+    "audioLanguage": "en",
+    "mediaSourceAdapterPriority": [
+      {
+        "engine": "html5",
+        "mediaSourceAdapter": "hls"
+      },
+      {
+        "engine": "html5",
+        "mediaSourceAdapter": "dash"
+      },
+      {
+        "engine": "html5",
+        "mediaSourceAdapter": "native"
+      }
+    ]
+  },
+  "plugins": {
+  }
+}
