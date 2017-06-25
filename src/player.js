@@ -111,9 +111,7 @@ export default class Player extends FakeEventTarget {
     this._pluginManager = new PluginManager();
     this._eventManager = new EventManager();
     this._readyPromise = new Promise((resolve, reject) => {
-      this._eventManager.listen(this, CustomEvents.TRACKS_CHANGED, () => {
-        resolve();
-      });
+      this._eventManager.listen(this, CustomEvents.TRACKS_CHANGED, resolve);
       this._eventManager.listen(this, Html5Events.ERROR, reject);
     });
     this.configure(config);

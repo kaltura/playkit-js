@@ -1150,9 +1150,7 @@ var Player = function (_FakeEventTarget) {
     _this._pluginManager = new _pluginManager2.default();
     _this._eventManager = new _eventManager2.default();
     _this._readyPromise = new Promise(function (resolve, reject) {
-      _this._eventManager.listen(_this, _events.CUSTOM_EVENTS.TRACKS_CHANGED, function () {
-        resolve();
-      });
+      _this._eventManager.listen(_this, _events.CUSTOM_EVENTS.TRACKS_CHANGED, resolve);
       _this._eventManager.listen(_this, _events.HTML5_EVENTS.ERROR, reject);
     });
     _this.configure(config);
