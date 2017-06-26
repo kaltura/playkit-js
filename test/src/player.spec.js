@@ -260,10 +260,10 @@ describe("ready", () => {
         it("should fail load -> ready", (done) => {
           player.load();
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
         });
       });
 
@@ -282,10 +282,10 @@ describe("ready", () => {
         it("should fail configure -> ready -> load", (done) => {
           player.configure(config);
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
           player.load();
         });
 
@@ -293,18 +293,18 @@ describe("ready", () => {
           player.configure(config);
           player.load();
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
         });
 
         it("should fail ready -> configure -> load", (done) => {
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
           player.configure(config);
           player.load();
         });
@@ -328,20 +328,20 @@ describe("ready", () => {
 
         it("should fail ready -> load", (done) => {
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
           player.load();
         });
 
         it("should fail load -> ready", (done) => {
           player.load();
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
         });
       });
 
@@ -361,10 +361,10 @@ describe("ready", () => {
         it("should fail configure -> ready -> load", (done) => {
           player.configure(config);
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
           player.load();
         });
 
@@ -372,28 +372,28 @@ describe("ready", () => {
           player.configure(config);
           player.load();
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
         });
 
         it("should fail ready -> load -> configure", (done) => {
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
           player.load();
           player.configure(config);
         });
 
         it("should fail ready -> configure -> load", (done) => {
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
           player.configure(config);
           player.load();
         });
@@ -402,19 +402,19 @@ describe("ready", () => {
           player.load();
           player.configure(config);
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
         });
 
         it("should fail load -> ready -> configure", (done) => {
           player.load();
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
           player.configure(config);
         });
       });
@@ -428,10 +428,11 @@ describe("ready", () => {
 });
 
 describe('getTracks dummy', () => {
-  let config = sourcesConfig.mp4_none_hls_dash;
-  let player = new Player(config);
+  let player, config;
 
   before(() => {
+    config = sourcesConfig.mp4_none_hls_dash;
+    player = new Player(config);
     player._tracks = [
       new VideoTrack(),
       new AudioTrack(),
@@ -522,12 +523,12 @@ describe('getTracks real', () => {
   });
 
   it('should return audio tracks', (done) => {
+    player.load();
     player.ready().then(() => {
       let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
       player.getTracks('audio').length.should.be.equal(audioTracksLength);
       done();
     });
-    player.load();
   });
 
   it('should return text tracks', (done) => {
@@ -877,20 +878,28 @@ describe('events', () => {
     after(() => {
       removeVideoElementsFromTestPage();
     });
+
     it('should fire tracks changed', function (done) {
-      player.load();
-      player.addEventListener(CustomEvents.TRACKS_CHANGED, (data) => {
+      /**
+       * Handles assertions after tracks changed event.
+       * @param {Object} data - The event data.
+       * @returns {void}
+       */
+      function onTracksChanged(data) {
+        player.removeEventListener(CustomEvents.TRACKS_CHANGED, onTracksChanged);
         let videoTracksLength = (video.videoTracks ? video.videoTracks.length : 0);
         let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
         let textTracksLength = (video.textTracks ? video.textTracks.length : 0);
         let totalTracksLength = videoTracksLength + audioTracksLength + textTracksLength;
         data.payload.tracks.length.should.be.equal(totalTracksLength);
         done();
-      });
+      }
+      player.addEventListener(CustomEvents.TRACKS_CHANGED, onTracksChanged);
+      player.load();
     });
   });
 
-  describe('firstPlay', () => {
+  describe('first play', () => {
     let config;
     let player;
 

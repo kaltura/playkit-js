@@ -9,10 +9,8 @@ import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
 
 describe.skip('[debugging and testing manually]', () => {
-
   let player, track1, track2, video, tracks, videoTracks, textTracks, audioTracks;
   let config = sourcesConfig.mp4_none_hls_dash;
-
 
   before(() => {
     track1 = document.createElement("track");
