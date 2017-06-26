@@ -1167,13 +1167,14 @@ var Player = function (_FakeEventTarget) {
   _createClass(Player, [{
     key: 'configure',
     value: function configure(config) {
-      this._config = (0, _util.merge)([config, Player._defaultConfig()]);
+      //TODO: Need to find a solution to a deep copy of the default configuration
+      this._config = (0, _util.merge)([Player._defaultConfig(), config]);
       if (this._selectEngine()) {
         this._attachMedia();
         this._loadPlugins();
         this._handlePlaybackConfig();
       } else {
-        Player._logger.warn("No playable engine was found to play the given sources");
+        Player._logger.warn("No playable engines was found to play the given sources");
       }
     }
 
@@ -1219,9 +1220,9 @@ var Player = function (_FakeEventTarget) {
     }
 
     /**
-     * Select the engine to create based on the given configured sources.
+     * Selects the engine to create based on a given configuration.
      * @private
-     * @returns {boolean} - Whether a proper engine was found to play the given sources.
+     * @returns {boolean} - Whether a proper engine was found.
      */
 
   }, {
@@ -1229,7 +1230,7 @@ var Player = function (_FakeEventTarget) {
     value: function _selectEngine() {
       var engineSelected = false;
       if (this._config.sources) {
-        if (this._config.playback && this._config.playback.mediaSourceAdapterPriority) {
+        if (this._config.playback && this._config.playback.streamPriority) {
           engineSelected = this._selectEngineByPriority();
         } else {
           engineSelected = this._selectFirstEngineWhoCanPlay();
@@ -1239,7 +1240,7 @@ var Player = function (_FakeEventTarget) {
     }
 
     /**
-     * Selects an <engine, adapter> tuple to play a source according to a given priority.
+     * Selects an engine to play a source according to a given stream priority.
      * @return {boolean} - Whether a proper <engine, adapter> was found to play the given sources
      * according to the priority.
      * @private
@@ -1251,7 +1252,7 @@ var Player = function (_FakeEventTarget) {
     value: function _selectEngineByPriority() {
       var _this2 = this;
 
-      var mediaSourceAdapterPriority = this._config.playback.mediaSourceAdapterPriority;
+      var streamPriority = this._config.playback.streamPriority;
       var sources = this._config.sources;
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
@@ -1262,24 +1263,25 @@ var Player = function (_FakeEventTarget) {
           var priority = _step.value;
 
           var engineId = priority.engine.toLowerCase();
-          var mediaSourceAdapterId = priority.mediaSourceAdapter.toLowerCase();
+          var format = priority.format.toLowerCase();
           var engine = Player._engines.find(function (engine) {
             return engine.id === engineId;
           });
           if (engine) {
-            var canPlayResult = engine.canPlayType(sources, mediaSourceAdapterId);
-            var canPlay = canPlayResult.canPlay;
-            var source = canPlayResult.source;
-            if (canPlay && source) {
-              _this2._loadEngine(engine, source);
-              return {
-                v: true
-              };
+            var formatSources = sources[format];
+            if (formatSources.length > 0) {
+              var source = formatSources[0];
+              if (engine.canPlayType(source.mimetype)) {
+                _this2._loadEngine(engine, source);
+                return {
+                  v: true
+                };
+              }
             }
           }
         };
 
-        for (var _iterator = mediaSourceAdapterPriority[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (var _iterator = streamPriority[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var _ret = _loop();
 
           if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
@@ -1315,12 +1317,12 @@ var Player = function (_FakeEventTarget) {
       var sources = this._config.sources;
       for (var i = 0; i < Player._engines.length; i++) {
         var _engine = Player._engines[i];
-        var canPlayResult = _engine.canPlayType(sources, '');
-        var canPlay = canPlayResult.canPlay;
-        var source = canPlayResult.source;
-        if (canPlay && source) {
-          this._loadEngine(_engine, source);
-          return true;
+        for (var j = 0; j < sources.length; j++) {
+          var source = sources[j];
+          if (_engine.canPlayType(source.mimetype)) {
+            this._loadEngine(_engine, source);
+            return true;
+          }
         }
       }
       return false;
@@ -1446,6 +1448,24 @@ var Player = function (_FakeEventTarget) {
         } else if (track instanceof _textTrack2.default) {
           this._engine.selectTextTrack(track);
         }
+      }
+    }
+
+    /**
+     * Hide the text track
+     * @function hideTextTrack
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: 'hideTextTrack',
+    value: function hideTextTrack() {
+      if (this._engine) {
+        this._engine.hideTextTrack();
+        this._getTracksByType(_trackTypes2.default.TEXT).map(function (track) {
+          return track.active = false;
+        });
       }
     }
 
@@ -2309,6 +2329,11 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'selectTextTrack').getError();
     }
   }, {
+    key: 'hideTextTrack',
+    value: function hideTextTrack() {
+      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'hideTextTrack').getError();
+    }
+  }, {
     key: 'enableAdaptiveBitrate',
     value: function enableAdaptiveBitrate() {
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'enableAdaptiveBitrate').getError();
@@ -2429,48 +2454,25 @@ var MediaSourceProvider = function () {
     }
 
     /**
-     * Checks if one of the registered media source adapters can play a given source with
-     * priority to a given media source adapter (optional).
+     * Checks if one of the registered media source adapters can play a given mime type.
      * @function canPlayType
-     * @param {Array<Source>} sources - The sources to check.
-     * @param {string} priority - Preferred media source adapter id (optional).
+     * @param {string} mimeType - The mime type to check.
      * @static
-     * @public
-     * @returns {CanPlayResult} - An object which includes whether one of the adapters can play a given source.
+     * @returns {boolean} - If one of the adapters can play the specific mime type.
      */
 
   }, {
     key: 'canPlayType',
-    value: function canPlayType(sources, priority) {
-      if (priority) {
-        var mediaSourceAdapter = MediaSourceProvider._mediaSourceAdapters.find(function (mediaSourceAdapter) {
-          return mediaSourceAdapter.id.toLowerCase().startsWith(priority);
-        });
-        if (mediaSourceAdapter) {
-          for (var i = 0; i < sources.length; i++) {
-            var source = sources[i];
-            var mimeType = source.mimetype;
-            if (mediaSourceAdapter.canPlayType(mimeType)) {
-              MediaSourceProvider._selectedAdapter = mediaSourceAdapter;
-              return { canPlay: true, source: source };
-            }
-          }
+    value: function canPlayType(mimeType) {
+      var mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
+      for (var i = 0; i < mediaSourceAdapters.length; i++) {
+        if (mediaSourceAdapters[i].canPlayType(mimeType)) {
+          MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
+          MediaSourceProvider._logger.debug('Selected adapter is <' + MediaSourceProvider._selectedAdapter.id + '>');
+          return true;
         }
-        return { canPlay: false, source: null };
-      } else {
-        for (var _i = 0; _i < MediaSourceProvider._mediaSourceAdapters.length; _i++) {
-          var _mediaSourceAdapter = MediaSourceProvider._mediaSourceAdapters[_i];
-          for (var j = 0; j < sources.length; j++) {
-            var _source = sources[j];
-            var _mimeType = _source.mimetype;
-            if (_mediaSourceAdapter.canPlayType(_mimeType)) {
-              MediaSourceProvider._selectedAdapter = _mediaSourceAdapter;
-              return { canPlay: true, source: _source };
-            }
-          }
-        }
-        return { canPlay: false, source: null };
       }
+      return false;
     }
 
     /**
@@ -2490,6 +2492,18 @@ var MediaSourceProvider = function () {
         return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config) : null;
       }
       return null;
+    }
+
+    /**
+     * Destroys the media source adapter provider necessary props.
+     * @static
+     * @returns {void}
+     */
+
+  }, {
+    key: 'destroy',
+    value: function destroy() {
+      MediaSourceProvider._selectedAdapter = null;
     }
   }]);
 
@@ -3271,12 +3285,11 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
-     * Checks if the engine can play a given sources.
-     * @param {Array<Source>} sources - The sources to check.
-     * @param {string} priority - Preferred media source adapter id (optional).
-     * @static
-     * @public
+     * Checks if the engine can play a given mime type.
+     * @param {string} mimeType - The mime type to check.
      * @returns {boolean} - Whether the engine can play the mime type.
+     * @public
+     * @static
      */
 
 
@@ -3292,10 +3305,8 @@ var Html5 = function (_FakeEventTarget) {
 
   }, {
     key: 'canPlayType',
-    value: function canPlayType(sources) {
-      var priority = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-
-      return _mediaSourceProvider2.default.canPlayType(sources, priority);
+    value: function canPlayType(mimeType) {
+      return _mediaSourceProvider2.default.canPlayType(mimeType);
     }
 
     /**
@@ -3331,6 +3342,7 @@ var Html5 = function (_FakeEventTarget) {
       this.detach();
       if (this._mediaSourceAdapter) {
         this._mediaSourceAdapter.destroy();
+        _mediaSourceProvider2.default.destroy();
       }
       if (this._el) {
         this.pause();
@@ -3363,7 +3375,6 @@ var Html5 = function (_FakeEventTarget) {
         _loop(playerEvent);
       }
       if (this._mediaSourceAdapter) {
-        // listen and dispatch adaptive bitrate changed event
         this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, function (event) {
           _this2.dispatchEvent(event);
         });
@@ -3480,6 +3491,21 @@ var Html5 = function (_FakeEventTarget) {
     value: function selectTextTrack(textTrack) {
       if (this._mediaSourceAdapter) {
         this._mediaSourceAdapter.selectTextTrack(textTrack);
+      }
+    }
+
+    /**
+     * Hide the text track
+     * @function hideTextTrack
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: 'hideTextTrack',
+    value: function hideTextTrack() {
+      if (this._mediaSourceAdapter) {
+        this._mediaSourceAdapter.hideTextTrack();
       }
     }
 
@@ -4306,6 +4332,19 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
         textTracks[textTrack.index].mode = 'showing';
         this._onTrackChanged(textTrack);
       }
+    }
+
+    /**
+     * Hide the text track
+     * @function hideTextTrack
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: 'hideTextTrack',
+    value: function hideTextTrack() {
+      this._disableTextTracks();
     }
 
     /**
@@ -5159,31 +5198,21 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 /***/ (function(module, exports) {
 
 module.exports = {
-	"id": 0,
-	"type": "VOD",
-	"session": {
-		"id": ""
-	},
-	"metadata": {
-		"key": "value"
-	},
 	"playback": {
 		"autoplay": false,
 		"muted": false,
-		"textLanguage": "en",
-		"audioLanguage": "en",
-		"mediaSourceAdapterPriority": [
+		"streamPriority": [
 			{
 				"engine": "html5",
-				"mediaSourceAdapter": "hls"
+				"format": "hls"
 			},
 			{
 				"engine": "html5",
-				"mediaSourceAdapter": "dash"
+				"format": "dash"
 			},
 			{
 				"engine": "html5",
-				"mediaSourceAdapter": "native"
+				"format": "progressive"
 			}
 		]
 	},
