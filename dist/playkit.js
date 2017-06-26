@@ -1233,8 +1233,8 @@ var Player = function (_FakeEventTarget) {
         var _loop = function _loop() {
           var priority = _step.value;
 
-          var engineId = priority.engine.toLowerCase();
-          var format = priority.format.toLowerCase();
+          var engineId = typeof priority.engine === 'string' ? priority.engine.toLowerCase() : '';
+          var format = typeof priority.format === 'string' ? priority.format.toLowerCase() : '';
           var engine = Player._engines.find(function (engine) {
             return engine.id === engineId;
           });
