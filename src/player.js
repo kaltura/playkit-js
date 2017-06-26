@@ -4,7 +4,7 @@ import FakeEvent from './event/fake-event'
 import FakeEventTarget from './event/fake-event-target'
 import {PLAYER_EVENTS as PlayerEvents, HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from './event/events'
 import PlayerStates from './state/state-types'
-import {isNumber, isFloat, merge} from './utils/util'
+import {isNumber, isFloat, mergeDeep, copyDeep} from './utils/util'
 import LoggerFactory from './utils/logger'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
@@ -109,8 +109,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   configure(config: Object): void {
-    //TODO: Need to find a solution to a deep copy of the default configuration
-    this._config = merge([Player._defaultConfig(), config]);
+    this._config = mergeDeep(Player._defaultConfig(), config);
     if (this._selectEngine()) {
       this._attachMedia();
       this._loadPlugins();
@@ -142,7 +141,7 @@ export default class Player extends FakeEventTarget {
    * @static
    */
   static _defaultConfig(): Object {
-    return merge([{}, DefaultPlayerConfig]);
+    return copyDeep(DefaultPlayerConfig);
   }
 
   /**
@@ -184,7 +183,7 @@ export default class Player extends FakeEventTarget {
       let engine = Player._engines.find((engine) => engine.id === engineId);
       if (engine) {
         let formatSources = sources[format];
-        if (formatSources.length > 0) {
+        if (formatSources && formatSources.length > 0) {
           let source = formatSources[0];
           if (engine.canPlayType(source.mimetype)) {
             this._loadEngine(engine, source);

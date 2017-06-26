@@ -66,7 +66,6 @@ describe.skip('[debugging and testing manually]', () => {
 });
 
 describe('playkit:playkit', function () {
-
   this.timeout(10000);
 
   after(() => {
