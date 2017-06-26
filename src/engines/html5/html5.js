@@ -46,15 +46,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
-   * Checks if the engine can play a given sources.
-   * @param {Array<Source>} sources - The sources to check.
-   * @param {string} priority - Preferred media source adapter id (optional).
-   * @static
-   * @public
+   * Checks if the engine can play a given mime type.
+   * @param {string} mimeType - The mime type to check.
    * @returns {boolean} - Whether the engine can play the mime type.
+   * @public
+   * @static
    */
-  static canPlayType(sources: Array<Source>, priority: string = ''): CanPlayResult {
-    return MediaSourceProvider.canPlayType(sources, priority);
+  static canPlayType(mimeType): boolean {
+    return MediaSourceProvider.canPlayType(mimeType);
   }
 
   /**
@@ -79,6 +78,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this.detach();
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.destroy();
+      MediaSourceProvider.destroy();
     }
     if (this._el) {
       this.pause();
@@ -101,7 +101,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         this.dispatchEvent(new FakeEvent(Html5Events[playerEvent]));
       });
     }
-    if (this._mediaSourceAdapter) { // listen and dispatch adaptive bitrate changed event
+    if (this._mediaSourceAdapter) {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
         this.dispatchEvent(event);
       });

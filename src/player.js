@@ -123,13 +123,14 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   configure(config: Object): void {
-    this._config = merge([config, Player._defaultConfig()]);
+    //TODO: Need to find a solution to a deep copy of the default configuration
+    this._config = merge([Player._defaultConfig(), config]);
     if (this._selectEngine()) {
       this._attachMedia();
       this._loadPlugins();
       this._handlePlaybackConfig();
     } else {
-      Player._logger.warn("No playable engine was found to play the given sources");
+      Player._logger.warn("No playable engines was found to play the given sources");
     }
   }
 
@@ -171,14 +172,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Select the engine to create based on the given configured sources.
+   * Selects the engine to create based on a given configuration.
    * @private
-   * @returns {boolean} - Whether a proper engine was found to play the given sources.
+   * @returns {boolean} - Whether a proper engine was found.
    */
   _selectEngine(): boolean {
     let engineSelected = false;
     if (this._config.sources) {
-      if (this._config.playback && this._config.playback.mediaSourceAdapterPriority) {
+      if (this._config.playback && this._config.playback.streamPriority) {
         engineSelected = this._selectEngineByPriority();
       } else {
         engineSelected = this._selectFirstEngineWhoCanPlay();
@@ -188,28 +189,29 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Selects an <engine, adapter> tuple to play a source according to a given priority.
+   * Selects an engine to play a source according to a given stream priority.
    * @return {boolean} - Whether a proper <engine, adapter> was found to play the given sources
    * according to the priority.
    * @private
    * @returns {void}
    */
   _selectEngineByPriority(): boolean {
-    let mediaSourceAdapterPriority = this._config.playback.mediaSourceAdapterPriority;
+    let streamPriority = this._config.playback.streamPriority;
     let sources = this._config.sources;
-    for (let priority of mediaSourceAdapterPriority) {
+    for (let priority of streamPriority) {
       let engineId = priority.engine.toLowerCase();
-      let mediaSourceAdapterId = priority.mediaSourceAdapter.toLowerCase();
+      let format = priority.format.toLowerCase();
       let engine = Player._engines.find((engine) => {
         return (engine.id === engineId);
       });
       if (engine) {
-        let canPlayResult = engine.canPlayType(sources, mediaSourceAdapterId);
-        let canPlay = canPlayResult.canPlay;
-        let source = canPlayResult.source;
-        if (canPlay && source) {
-          this._loadEngine(engine, source);
-          return true;
+        let formatSources = sources[format];
+        if (formatSources.length > 0) {
+          let source = formatSources[0];
+          if (engine.canPlayType(source.mimetype)) {
+            this._loadEngine(engine, source);
+            return true;
+          }
         }
       }
     }
@@ -226,12 +228,12 @@ export default class Player extends FakeEventTarget {
     let sources = this._config.sources;
     for (let i = 0; i < Player._engines.length; i++) {
       let engine = Player._engines[i];
-      let canPlayResult = engine.canPlayType(sources, '');
-      let canPlay = canPlayResult.canPlay;
-      let source = canPlayResult.source;
-      if (canPlay && source) {
-        this._loadEngine(engine, source);
-        return true;
+      for (let j = 0; j < sources.length; j++) {
+        let source = sources[j];
+        if (engine.canPlayType(source.mimetype)) {
+          this._loadEngine(engine, source);
+          return true;
+        }
       }
     }
     return false;

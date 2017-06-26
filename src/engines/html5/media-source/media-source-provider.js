@@ -63,45 +63,22 @@ export default class MediaSourceProvider {
   }
 
   /**
-   * Checks if one of the registered media source adapters can play a given source with
-   * priority to a given media source adapter (optional).
+   * Checks if one of the registered media source adapters can play a given mime type.
    * @function canPlayType
-   * @param {Array<Source>} sources - The sources to check.
-   * @param {string} priority - Preferred media source adapter id (optional).
+   * @param {string} mimeType - The mime type to check.
    * @static
-   * @public
-   * @returns {CanPlayResult} - An object which includes whether one of the adapters can play a given source.
+   * @returns {boolean} - If one of the adapters can play the specific mime type.
    */
-  static canPlayType(sources: Array<Source>, priority: string): CanPlayResult {
-    if (priority) {
-      let mediaSourceAdapter = MediaSourceProvider._mediaSourceAdapters.find((mediaSourceAdapter) => {
-        return mediaSourceAdapter.id.toLowerCase().startsWith(priority);
-      });
-      if (mediaSourceAdapter) {
-        for (let i = 0; i < sources.length; i++) {
-          let source = sources[i];
-          let mimeType = source.mimetype;
-          if (mediaSourceAdapter.canPlayType(mimeType)) {
-            MediaSourceProvider._selectedAdapter = mediaSourceAdapter;
-            return {canPlay: true, source: source};
-          }
-        }
+  static canPlayType(mimeType: string): boolean {
+    let mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
+    for (let i = 0; i < mediaSourceAdapters.length; i++) {
+      if (mediaSourceAdapters[i].canPlayType(mimeType)) {
+        MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
+        MediaSourceProvider._logger.debug(`Selected adapter is <${MediaSourceProvider._selectedAdapter.id}>`);
+        return true;
       }
-      return {canPlay: false, source: null};
-    } else {
-      for (let i = 0; i < MediaSourceProvider._mediaSourceAdapters.length; i++) {
-        let mediaSourceAdapter = MediaSourceProvider._mediaSourceAdapters[i];
-        for (let j = 0; j < sources.length; j++) {
-          let source = sources[j];
-          let mimeType = source.mimetype;
-          if (mediaSourceAdapter.canPlayType(mimeType)) {
-            MediaSourceProvider._selectedAdapter = mediaSourceAdapter;
-            return {canPlay: true, source: source};
-          }
-        }
-      }
-      return {canPlay: false, source: null};
     }
+    return false;
   }
 
   /**
@@ -118,6 +95,15 @@ export default class MediaSourceProvider {
       return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config) : null;
     }
     return null;
+  }
+
+  /**
+   * Destroys the media source adapter provider necessary props.
+   * @static
+   * @returns {void}
+   */
+  static destroy(): void {
+    MediaSourceProvider._selectedAdapter = null;
   }
 }
 
