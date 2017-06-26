@@ -185,6 +185,18 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Hide the text track
+   * @function hideTextTrack
+   * @returns {void}
+   * @public
+   */
+  hideTextTrack(): void {
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.hideTextTrack();
+    }
+  }
+
+  /**
    * Enables adaptive bitrate switching according to the media source extension logic.
    * @function enableAdaptiveBitrate
    * @returns {void}

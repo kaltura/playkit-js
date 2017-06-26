@@ -259,6 +259,19 @@ class Player extends FakeEventTarget {
   }
 
   /**
+   * Hide the text track
+   * @function hideTextTrack
+   * @returns {void}
+   * @public
+   */
+  hideTextTrack(): void {
+    if (this._engine) {
+      this._engine.hideTextTrack();
+      this._getTracksByType(TrackTypes.TEXT).map(track => track.active = false);
+    }
+  }
+
+  /**
    * Enables adaptive bitrate switching.
    * @function enableAdaptiveBitrate
    * @returns {void}

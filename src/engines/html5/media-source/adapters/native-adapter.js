@@ -242,6 +242,16 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
+   * Hide the text track
+   * @function hideTextTrack
+   * @returns {void}
+   * @public
+   */
+  hideTextTrack(): void {
+    this._disableTextTracks();
+  }
+
+  /**
    * Enables adaptive bitrate
    * @function enableAdaptiveBitrate
    * @returns {void}

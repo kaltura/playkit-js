@@ -379,3 +379,50 @@ describe('NativeAdapter:selectTextTrack', function () {
     });
   });
 });
+
+describe('NativeAdapter:hideTextTrack', function () {
+  let video;
+  let track1;
+  let track2;
+  let nativeInstance;
+
+  beforeEach(() => {
+    video = document.createElement("video");
+    track1 = document.createElement("track");
+    track2 = document.createElement("track");
+    track1.kind = 'subtitles';
+    track1.label = 'English';
+    track1.default = true;
+    track2.kind = 'subtitles';
+    track2.srclang = 'fr';
+    video.appendChild(track1);
+    video.appendChild(track2);
+    nativeInstance = NativeAdapter.createAdapter(video, {
+      mimetype: 'video/mp4',
+      url: '/base/src/assets/audios.mp4'
+    }, {});
+  });
+
+  afterEach(() => {
+    nativeInstance.destroy();
+    nativeInstance = null;
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+  });
+
+  it('should disable the active text track', (done) => {
+    nativeInstance.load().then(() => {
+      if (nativeInstance._videoElement.textTracks) {
+        nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
+        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
+        nativeInstance.hideTextTrack();
+        nativeInstance._videoElement.textTracks[0].mode.should.be.equal('disabled');
+        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
+      }
+      done();
+    });
+  });
+});
+
