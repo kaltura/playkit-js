@@ -16,9 +16,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
+/******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/ 		}
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -1314,6 +1314,24 @@ var Player = function (_FakeEventTarget) {
     }
 
     /**
+     * Hide the text track
+     * @function hideTextTrack
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: 'hideTextTrack',
+    value: function hideTextTrack() {
+      if (this._engine) {
+        this._engine.hideTextTrack();
+        this._getTracksByType(_trackTypes2.default.TEXT).map(function (track) {
+          return track.active = false;
+        });
+      }
+    }
+
+    /**
      * Enables adaptive bitrate switching.
      * @function enableAdaptiveBitrate
      * @returns {void}
@@ -2165,6 +2183,11 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
     key: 'selectTextTrack',
     value: function selectTextTrack(textTrack) {
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'selectTextTrack').getError();
+    }
+  }, {
+    key: 'hideTextTrack',
+    value: function hideTextTrack() {
+      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'hideTextTrack').getError();
     }
   }, {
     key: 'enableAdaptiveBitrate',
@@ -3302,6 +3325,21 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
+     * Hide the text track
+     * @function hideTextTrack
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: 'hideTextTrack',
+    value: function hideTextTrack() {
+      if (this._mediaSourceAdapter) {
+        this._mediaSourceAdapter.hideTextTrack();
+      }
+    }
+
+    /**
      * Enables adaptive bitrate switching according to the media source extension logic.
      * @function enableAdaptiveBitrate
      * @returns {void}
@@ -4124,6 +4162,19 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
         textTracks[textTrack.index].mode = 'showing';
         this._onTrackChanged(textTrack);
       }
+    }
+
+    /**
+     * Hide the text track
+     * @function hideTextTrack
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: 'hideTextTrack',
+    value: function hideTextTrack() {
+      this._disableTextTracks();
     }
 
     /**

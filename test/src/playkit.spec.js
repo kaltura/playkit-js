@@ -55,7 +55,6 @@ describe.skip('[debugging and testing manually]', () => {
   }
 
   it('should play mp4 stream', () => {
-    player.load();
     player.ready().then(() => {
       displayTracksOnScreen();
     });
@@ -63,6 +62,8 @@ describe.skip('[debugging and testing manually]', () => {
     video = player._engine.getVideoElement();
     video.appendChild(track1);
     video.appendChild(track2);
+    player.load();
+    window.player = player;
   });
 });
 
