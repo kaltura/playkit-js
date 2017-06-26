@@ -48,9 +48,9 @@ function isObject(item: any) {
 /**
  * @param {any} target - The target object.
  * @param {any} sources - The objects to merge.
- * @returns {void}
+ * @returns {Object} - The merged object.
  */
-function mergeDeep(target: any, ...sources: any): void {
+function mergeDeep(target: any, ...sources: any): Object {
   if (!sources.length) {
     return target;
   }
