@@ -111,7 +111,9 @@ export default class Player extends FakeEventTarget {
     this._pluginManager = new PluginManager();
     this._eventManager = new EventManager();
     this._readyPromise = new Promise((resolve, reject) => {
-      this._eventManager.listen(this, CustomEvents.TRACKS_CHANGED, resolve);
+      this._eventManager.listen(this, CustomEvents.TRACKS_CHANGED, () => {
+        resolve();
+      });
       this._eventManager.listen(this, Html5Events.ERROR, reject);
     });
     this.configure(config);
@@ -190,10 +192,9 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Selects an engine to play a source according to a given stream priority.
-   * @return {boolean} - Whether a proper <engine, adapter> was found to play the given sources
+   * @return {boolean} - Whether a proper engine was found to play the given sources
    * according to the priority.
    * @private
-   * @returns {void}
    */
   _selectEngineByPriority(): boolean {
     let streamPriority = this._config.playback.streamPriority;
@@ -201,9 +202,7 @@ export default class Player extends FakeEventTarget {
     for (let priority of streamPriority) {
       let engineId = priority.engine.toLowerCase();
       let format = priority.format.toLowerCase();
-      let engine = Player._engines.find((engine) => {
-        return (engine.id === engineId);
-      });
+      let engine = Player._engines.find((engine) => engine.id === engineId);
       if (engine) {
         let formatSources = sources[format];
         if (formatSources.length > 0) {
@@ -219,10 +218,9 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Selects the first <engine, adapter> tuple that can play a source.
-   * @return {boolean} - Whether a proper <engine, adapter> was found to play the given sources.
+   * Selects the first engine who can play a source.
+   * @return {boolean} - Whether a proper engine was found to play the given sources.
    * @private
-   * @returns {void}
    */
   _selectFirstEngineWhoCanPlay(): boolean {
     let sources = this._config.sources;
@@ -249,9 +247,6 @@ export default class Player extends FakeEventTarget {
   _loadEngine(engine: typeof IEngine, source: Source): void {
     this.dispatchEvent(new FakeEvent(CustomEvents.SOURCE_SELECTED, {selectedSource: source}));
     this._engine = engine.createEngine(source, this._config);
-    if (this._config.preload === "auto") {
-      this.load();
-    }
   }
 
   /**
@@ -286,6 +281,9 @@ export default class Player extends FakeEventTarget {
     if (this._config.playback) {
       if (this._config.playback.muted) {
         this.muted = true;
+      }
+      if (this._config.playback.preload === "auto") {
+        this.load();
       }
       if (this._config.playback.autoplay) {
         this.play();
