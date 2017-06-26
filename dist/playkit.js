@@ -1032,9 +1032,9 @@ var _textTrack = __webpack_require__(4);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _defaultConfig2 = __webpack_require__(26);
+var _playerConfig = __webpack_require__(26);
 
-var _defaultConfig3 = _interopRequireDefault(_defaultConfig2);
+var _playerConfig2 = _interopRequireDefault(_playerConfig);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1824,7 +1824,7 @@ var Player = function (_FakeEventTarget) {
   }], [{
     key: '_defaultConfig',
     value: function _defaultConfig() {
-      return _defaultConfig3.default;
+      return _playerConfig2.default;
     }
   }]);
 
@@ -5199,6 +5199,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 module.exports = {
 	"playback": {
+		"preload": "none",
 		"autoplay": false,
 		"muted": false,
 		"streamPriority": [
