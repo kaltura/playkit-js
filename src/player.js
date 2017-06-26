@@ -178,8 +178,8 @@ export default class Player extends FakeEventTarget {
     let streamPriority = this._config.playback.streamPriority;
     let sources = this._config.sources;
     for (let priority of streamPriority) {
-      let engineId = priority.engine.toLowerCase();
-      let format = priority.format.toLowerCase();
+      let engineId = (typeof priority.engine === 'string') ? priority.engine.toLowerCase() : '';
+      let format = (typeof priority.format === 'string') ? priority.format.toLowerCase() : '';
       let engine = Player._engines.find((engine) => engine.id === engineId);
       if (engine) {
         let formatSources = sources[format];
