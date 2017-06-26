@@ -1145,8 +1145,7 @@ var Player = function (_FakeEventTarget) {
   _createClass(Player, [{
     key: 'configure',
     value: function configure(config) {
-      //TODO: Need to find a solution to a deep copy of the default configuration
-      this._config = (0, _util.merge)([Player._defaultConfig(), config]);
+      this._config = (0, _util.mergeDeep)(Player._defaultConfig(), config);
       if (this._selectEngine()) {
         this._attachMedia();
         this._loadPlugins();
@@ -1241,7 +1240,7 @@ var Player = function (_FakeEventTarget) {
           });
           if (engine) {
             var formatSources = sources[format];
-            if (formatSources.length > 0) {
+            if (formatSources && formatSources.length > 0) {
               var source = formatSources[0];
               if (engine.canPlayType(source.mimetype)) {
                 _this2._loadEngine(engine, source);
@@ -1772,7 +1771,7 @@ var Player = function (_FakeEventTarget) {
   }], [{
     key: '_defaultConfig',
     value: function _defaultConfig() {
-      return (0, _util.merge)([{}, _playerConfig2.default]);
+      return (0, _util.copyDeep)(_playerConfig2.default);
     }
   }]);
 
@@ -2002,6 +2001,13 @@ exports.default = PlayerError;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function isNumber(n) {
   return Number(n) === n;
 }
@@ -2056,10 +2062,74 @@ function merge(objects) {
   return target;
 }
 
+/**
+ * @param {any} item - The item to check.
+ * @returns {boolean} - Whether the item is an object.
+ */
+function isObject(item) {
+  return item && (typeof item === "undefined" ? "undefined" : _typeof(item)) === 'object' && !Array.isArray(item);
+}
+
+/**
+ * @param {any} target - The target object.
+ * @param {any} sources - The objects to merge.
+ * @returns {void}
+ */
+function mergeDeep(target) {
+  for (var _len = arguments.length, sources = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    sources[_key - 1] = arguments[_key];
+  }
+
+  if (!sources.length) {
+    return target;
+  }
+  var source = sources.shift();
+  if (isObject(target) && isObject(source)) {
+    for (var key in source) {
+      if (isObject(source[key])) {
+        if (!target[key]) Object.assign(target, _defineProperty({}, key, {}));
+        mergeDeep(target[key], source[key]);
+      } else {
+        Object.assign(target, _defineProperty({}, key, source[key]));
+      }
+    }
+  }
+  return mergeDeep.apply(undefined, [target].concat(_toConsumableArray(sources)));
+}
+
+/**
+ * @param {any} data - The data to copy.
+ * @returns {any} - The copied data.
+ */
+function copyDeep(data) {
+  var node = void 0;
+  if (Array.isArray(data)) {
+    node = data.length > 0 ? data.slice(0) : [];
+    node.forEach(function (e, i) {
+      if ((typeof e === "undefined" ? "undefined" : _typeof(e)) === "object" && e !== {} || Array.isArray(e) && e.length > 0) {
+        node[i] = copyDeep(e);
+      }
+    });
+  } else if ((typeof data === "undefined" ? "undefined" : _typeof(data)) === "object") {
+    node = Object.assign({}, data);
+    Object.keys(node).forEach(function (key) {
+      if (_typeof(node[key]) === "object" && node[key] !== {} || Array.isArray(node[key]) && node[key].length > 0) {
+        node[key] = copyDeep(node[key]);
+      }
+    });
+  } else {
+    node = data;
+  }
+  return node;
+}
+
 exports.isNumber = isNumber;
 exports.isInt = isInt;
 exports.isFloat = isFloat;
+exports.isObject = isObject;
 exports.merge = merge;
+exports.mergeDeep = mergeDeep;
+exports.copyDeep = copyDeep;
 
 /***/ }),
 /* 12 */
