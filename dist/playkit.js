@@ -2073,7 +2073,7 @@ function isObject(item) {
 /**
  * @param {any} target - The target object.
  * @param {any} sources - The objects to merge.
- * @returns {void}
+ * @returns {Object} - The merged object.
  */
 function mergeDeep(target) {
   for (var _len = arguments.length, sources = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
