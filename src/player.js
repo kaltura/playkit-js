@@ -14,7 +14,7 @@ import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
-import DefaultPlayerConfig from './default-config.json'
+import DefaultPlayerConfig from './player-config.json'
 
 /**
  * The HTML5 player class.

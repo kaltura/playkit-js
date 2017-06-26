@@ -1,5 +1,6 @@
 {
   "playback": {
+    "preload": "none",
     "autoplay": false,
     "muted": false,
     "streamPriority": [
