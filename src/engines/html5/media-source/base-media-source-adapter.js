@@ -139,6 +139,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'selectTextTrack').getError();
   }
 
+  hideTextTrack(): void {
+    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'hideTextTrack').getError();
+  }
+
   enableAdaptiveBitrate(): void {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'enableAdaptiveBitrate').getError();
   }
