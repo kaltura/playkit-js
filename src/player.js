@@ -84,22 +84,6 @@ export default class Player extends FakeEventTarget {
   static _engines: Array<typeof IEngine> = [Html5];
 
   /**
-   * Register an engine in the player cache.
-   * @param {IEngine} engine - The engine to register.
-   * @static
-   * @public
-   * @returns {void}
-   */
-  static registerEngine(engine: typeof IEngine): void {
-    if (!Player._engines.includes(engine)) {
-      Player._logger.debug(`Engine <${engine.id}> has been registered successfully`);
-      Player._engines.push(engine);
-    } else {
-      Player._logger.debug(`Engine <${engine.id}> is already registered, do not register again`);
-    }
-  }
-
-  /**
    * @param {Object} config - The configuration for the player instance.
    * @constructor
    */
@@ -158,7 +142,7 @@ export default class Player extends FakeEventTarget {
    * @static
    */
   static _defaultConfig(): Object {
-    return DefaultPlayerConfig;
+    return merge([{}, DefaultPlayerConfig]);
   }
 
   /**
@@ -179,15 +163,10 @@ export default class Player extends FakeEventTarget {
    * @returns {boolean} - Whether a proper engine was found.
    */
   _selectEngine(): boolean {
-    let engineSelected = false;
-    if (this._config.sources) {
-      if (this._config.playback && this._config.playback.streamPriority) {
-        engineSelected = this._selectEngineByPriority();
-      } else {
-        engineSelected = this._selectFirstEngineWhoCanPlay();
-      }
+    if (this._config.sources && this._config.playback && this._config.playback.streamPriority) {
+      return this._selectEngineByPriority();
     }
-    return engineSelected;
+    return false;
   }
 
   /**
@@ -211,26 +190,6 @@ export default class Player extends FakeEventTarget {
             this._loadEngine(engine, source);
             return true;
           }
-        }
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Selects the first engine who can play a source.
-   * @return {boolean} - Whether a proper engine was found to play the given sources.
-   * @private
-   */
-  _selectFirstEngineWhoCanPlay(): boolean {
-    let sources = this._config.sources;
-    for (let i = 0; i < Player._engines.length; i++) {
-      let engine = Player._engines[i];
-      for (let j = 0; j < sources.length; j++) {
-        let source = sources[j];
-        if (engine.canPlayType(source.mimetype)) {
-          this._loadEngine(engine, source);
-          return true;
         }
       }
     }
@@ -643,6 +602,3 @@ export default class Player extends FakeEventTarget {
 
 // </editor-fold>
 }
-
-const registerEngine = Player.registerEngine;
-export {registerEngine};
