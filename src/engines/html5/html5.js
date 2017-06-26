@@ -29,16 +29,30 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _mediaSourceAdapter: ?IMediaSourceAdapter;
 
   /**
-   * @type {string} - The engine name.
+   * @type {string} - The engine id.
    */
-  static EngineName: string = "html5";
+  static id: string = "html5";
+
+  /**
+   * Factory method to create an engine.
+   * @param {Source} source - The selected source object.
+   * @param {Object} config - The player configuration.
+   * @returns {IEngine} - New instance of the run time engine.
+   * @public
+   * @static
+   */
+  static createEngine(source: Source, config: Object): IEngine {
+    return new this(source, config);
+  }
 
   /**
    * Checks if the engine can play a given mime type.
    * @param {string} mimeType - The mime type to check.
    * @returns {boolean} - Whether the engine can play the mime type.
+   * @public
+   * @static
    */
-  static canPlayType(mimeType) {
+  static canPlayType(mimeType): boolean {
     return MediaSourceProvider.canPlayType(mimeType);
   }
 
@@ -49,8 +63,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   constructor(source: Source, config: Object) {
     super();
-    this._createVideoElement();
     this._eventManager = new EventManager();
+    this._createVideoElement();
     this._loadMediaSourceAdapter(source, config);
     this.attach();
   }
@@ -64,6 +78,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this.detach();
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.destroy();
+      MediaSourceProvider.destroy();
     }
     if (this._el) {
       this.pause();
@@ -86,7 +101,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         this.dispatchEvent(new FakeEvent(Html5Events[playerEvent]));
       });
     }
-    if (this._mediaSourceAdapter) { // listen and dispatch adaptive bitrate changed event
+    if (this._mediaSourceAdapter) {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
         this.dispatchEvent(event);
       });

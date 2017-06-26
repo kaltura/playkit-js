@@ -4,7 +4,7 @@ import FakeEvent from './event/fake-event'
 import FakeEventTarget from './event/fake-event-target'
 import {PLAYER_EVENTS as PlayerEvents, HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from './event/events'
 import PlayerStates from './state/state-types'
-import {isNumber, isFloat, merge} from './utils/util'
+import {isNumber, isFloat, mergeDeep, copyDeep} from './utils/util'
 import LoggerFactory from './utils/logger'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
@@ -14,18 +14,20 @@ import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
+import DefaultPlayerConfig from './player-config.json'
 
 /**
  * The HTML5 player class.
  * @classdesc
  */
-class Player extends FakeEventTarget {
+export default class Player extends FakeEventTarget {
   /**
    * The player class logger.
    * @type {any}
+   * @static
    * @private
    */
-  _logger: any;
+  static _logger: any = LoggerFactory.getLogger('Player');
   /**
    * The plugin manager of the player.
    * @type {PluginManager}
@@ -74,6 +76,12 @@ class Player extends FakeEventTarget {
    * @private
    */
   _firstPlay: boolean;
+  /**
+   * The available engines of the player.
+   * @type {Array<typeof IEngine>}
+   * @private
+   */
+  static _engines: Array<typeof IEngine> = [Html5];
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -83,7 +91,6 @@ class Player extends FakeEventTarget {
     super();
     this._tracks = [];
     this._firstPlay = true;
-    this._logger = LoggerFactory.getLogger('Player');
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
     this._eventManager = new EventManager();
@@ -102,10 +109,14 @@ class Player extends FakeEventTarget {
    * @returns {void}
    */
   configure(config: Object): void {
-    this._config = merge([this._config, config || Player._defaultConfig()]);
-    this._loadPlugins(this._config);
-    this._selectEngine(this._config);
-    this._attachMedia();
+    this._config = mergeDeep(Player._defaultConfig(), config);
+    if (this._selectEngine()) {
+      this._attachMedia();
+      this._loadPlugins();
+      this._handlePlaybackConfig();
+    } else {
+      Player._logger.warn("No playable engines was found to play the given sources");
+    }
   }
 
   /**
@@ -130,53 +141,70 @@ class Player extends FakeEventTarget {
    * @static
    */
   static _defaultConfig(): Object {
-    return {};
+    return copyDeep(DefaultPlayerConfig);
   }
 
   /**
-   *
-   * @param {Object} config - The configuration of the player instance.
+   * Loads the configured plugins.
    * @private
    * @returns {void}
    */
-  _loadPlugins(config: Object): void {
-    let plugins = config.plugins;
+  _loadPlugins(): void {
+    let plugins = this._config.plugins;
     for (let name in plugins) {
       this._pluginManager.load(name, this, plugins[name]);
     }
   }
 
   /**
-   * Select the engine to create based on the given configured sources.
-   * @param {Object} config - The configuration of the player instance.
+   * Selects the engine to create based on a given configuration.
    * @private
-   * @returns {void}
+   * @returns {boolean} - Whether a proper engine was found.
    */
-  _selectEngine(config: Object): void {
-    if (config && config.sources) {
-      let sources = config.sources;
-      for (let i = 0; i < sources.length; i++) {
-        if (Html5.canPlayType(sources[i].mimetype)) {
-          this.dispatchEvent(new FakeEvent(CustomEvents.SOURCE_SELECTED, {selectedSource: sources[i]}));
-          this._loadEngine(sources[i], config);
-          break;
+  _selectEngine(): boolean {
+    if (this._config.sources && this._config.playback && this._config.playback.streamPriority) {
+      return this._selectEngineByPriority();
+    }
+    return false;
+  }
+
+  /**
+   * Selects an engine to play a source according to a given stream priority.
+   * @return {boolean} - Whether a proper engine was found to play the given sources
+   * according to the priority.
+   * @private
+   */
+  _selectEngineByPriority(): boolean {
+    let streamPriority = this._config.playback.streamPriority;
+    let sources = this._config.sources;
+    for (let priority of streamPriority) {
+      let engineId = (typeof priority.engine === 'string') ? priority.engine.toLowerCase() : '';
+      let format = (typeof priority.format === 'string') ? priority.format.toLowerCase() : '';
+      let engine = Player._engines.find((engine) => engine.id === engineId);
+      if (engine) {
+        let formatSources = sources[format];
+        if (formatSources && formatSources.length > 0) {
+          let source = formatSources[0];
+          if (engine.canPlayType(source.mimetype)) {
+            this._loadEngine(engine, source);
+            return true;
+          }
         }
       }
     }
+    return false;
   }
 
   /**
    * Loads the selected engine.
+   * @param {IEngine} engine - The selected engine.
    * @param {Source} source - The selected source object.
-   * @param {Object} config - The configuration of the player instance.
    * @private
    * @returns {void}
    */
-  _loadEngine(source: Source, config: Object): void {
-    this._engine = new Html5(source, config);
-    if (config.preload === "auto") {
-      this.load();
-    }
+  _loadEngine(engine: typeof IEngine, source: Source): void {
+    this.dispatchEvent(new FakeEvent(CustomEvents.SOURCE_SELECTED, {selectedSource: source}));
+    this._engine = engine.createEngine(source, this._config);
   }
 
   /**
@@ -204,6 +232,20 @@ class Player extends FakeEventTarget {
         return this.dispatchEvent(event);
       });
       this._eventManager.listen(this, Html5Events.PLAY, this._onPlay.bind(this));
+    }
+  }
+
+  _handlePlaybackConfig(): void {
+    if (this._config.playback) {
+      if (this._config.playback.muted) {
+        this.muted = true;
+      }
+      if (this._config.playback.preload === "auto") {
+        this.load();
+      }
+      if (this._config.playback.autoplay) {
+        this.play();
+      }
     }
   }
 
@@ -559,5 +601,3 @@ class Player extends FakeEventTarget {
 
 // </editor-fold>
 }
-
-export default Player;

@@ -71,8 +71,9 @@ describe('NativeAdapterInstance', () => {
 });
 
 describe('NativeAdapter: load', function () {
-  let video, nativeInstance;
   this.timeout(10000);
+
+  let video, nativeInstance;
 
   beforeEach(() => {
     video = document.createElement("video");
@@ -111,7 +112,9 @@ describe('NativeAdapter: load', function () {
   });
 });
 
-describe('NativeAdapter: destroy', () => {
+describe('NativeAdapter: destroy', function () {
+  this.timeout(10000);
+
   let video, nativeInstance;
 
   beforeEach(() => {
@@ -144,6 +147,8 @@ describe('NativeAdapter: destroy', () => {
 });
 
 describe('NativeAdapter:_getParsedTracks', function () {
+  this.timeout(10000);
+
   let video;
   let track1;
   let track2;
@@ -216,6 +221,8 @@ describe('NativeAdapter:_getParsedTracks', function () {
 });
 
 describe('NativeAdapter:selectAudioTrack', function () {
+  this.timeout(10000);
+
   let video;
   let nativeInstance;
 
@@ -283,6 +290,8 @@ describe('NativeAdapter:selectAudioTrack', function () {
 });
 
 describe('NativeAdapter:selectTextTrack', function () {
+  this.timeout(10000);
+
   let video;
   let track1;
   let track2;
@@ -381,6 +390,8 @@ describe('NativeAdapter:selectTextTrack', function () {
 });
 
 describe('NativeAdapter:hideTextTrack', function () {
+  this.timeout(10000);
+
   let video;
   let track1;
   let track2;

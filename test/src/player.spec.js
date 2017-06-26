@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import Player from '../../src/player'
 import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../../src/event/events'
 import sourcesConfig from './configs/sources.json'
@@ -7,7 +6,9 @@ import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
 import {removeVideoElementsFromTestPage} from './utils/test-utils'
 
-describe("play", () => {
+describe("play", function () {
+  this.timeout(10000);
+
   let config, player;
 
   beforeEach(() => {
@@ -82,7 +83,8 @@ describe("ready", () => {
         });
       });
 
-      describe("passing config in configure", () => {
+      describe("passing config in configure", function () {
+        this.timeout(10000);
 
         let player;
 
@@ -125,12 +127,13 @@ describe("ready", () => {
 
     describe("preload auto", () => {
 
-      describe("passing config in constructor", () => {
+      describe("passing config in constructor", function () {
+        this.timeout(10000);
 
         let player;
 
         beforeEach(() => {
-          config.preload = 'auto';
+          config.playback = {preload: 'auto'};
           player = new Player(config);
         });
 
@@ -160,7 +163,7 @@ describe("ready", () => {
         let player;
 
         beforeEach(() => {
-          config.preload = 'auto';
+          config.playback = {preload: 'auto'};
           player = new Player();
         });
 
@@ -236,7 +239,8 @@ describe("ready", () => {
 
     describe("preload none", () => {
 
-      describe("passing config in constructor", () => {
+      describe("passing config in constructor", function () {
+        this.timeout(10000);
 
         let player;
 
@@ -267,7 +271,8 @@ describe("ready", () => {
         });
       });
 
-      describe("passing config in configure", () => {
+      describe("passing config in configure", function () {
+        this.timeout(10000);
 
         let player;
 
@@ -318,7 +323,7 @@ describe("ready", () => {
         let player;
 
         beforeEach(() => {
-          config.preload = 'auto';
+          config.playback = {preload: 'auto'};
           player = new Player(config);
         });
 
@@ -350,7 +355,7 @@ describe("ready", () => {
         let player;
 
         beforeEach(() => {
-          config.preload = 'auto';
+          config.playback = {preload: 'auto'};
           player = new Player();
         });
 
@@ -468,7 +473,9 @@ describe('getTracks dummy', () => {
   });
 });
 
-describe('getTracks real', () => {
+describe('getTracks real', function () {
+  this.timeout(10000);
+
   let config;
   let player;
   let video;
@@ -558,7 +565,9 @@ describe('getTracks real', () => {
   });
 });
 
-describe('selectTrack - audio', () => {
+describe('selectTrack - audio', function () {
+  this.timeout(10000);
+
   let config, player, video;
 
   beforeEach(() => {
@@ -628,7 +637,7 @@ describe('selectTrack - audio', () => {
       }
       done();
     });
-    config.preload = 'auto';
+    config.playback = {preload: 'auto'};
     player.configure(config);
     video = player._engine.getVideoElement();
     player.load();
@@ -662,7 +671,9 @@ describe('selectTrack - audio', () => {
   });
 });
 
-describe('selectTrack - text', () => {
+describe('selectTrack - text', function () {
+  this.timeout(10000);
+
   let config, player, video, track1, track2;
 
   beforeEach(() => {
@@ -792,7 +803,9 @@ describe('selectTrack - text', () => {
   });
 });
 
-describe('hideTextTrack', () => {
+describe('hideTextTrack', function () {
+  this.timeout(10000);
+
   let config, player, video, track1, track2;
 
   beforeEach(() => {
@@ -853,7 +866,9 @@ describe('Track enum', function () {
 });
 
 describe('events', () => {
-  describe('tracks changed', () => {
+  describe('tracks changed', function () {
+    this.timeout(10000);
+
     let config, player, video, track1, track2;
 
     beforeEach(() => {
@@ -894,12 +909,15 @@ describe('events', () => {
         data.payload.tracks.length.should.be.equal(totalTracksLength);
         done();
       }
+
       player.addEventListener(CustomEvents.TRACKS_CHANGED, onTracksChanged);
       player.load();
     });
   });
 
-  describe('first play', () => {
+  describe('first play', function () {
+    this.timeout(10000);
+
     let config;
     let player;
 
