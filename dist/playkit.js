@@ -970,7 +970,6 @@ exports.CUSTOM_EVENTS = CUSTOM_EVENTS;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.registerEngine = undefined;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -1051,94 +1050,17 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Player = function (_FakeEventTarget) {
   _inherits(Player, _FakeEventTarget);
 
-  _createClass(Player, null, [{
-    key: 'registerEngine',
+  /**
+   * @param {Object} config - The configuration for the player instance.
+   * @constructor
+   */
 
-
-    /**
-     * Register an engine in the player cache.
-     * @param {IEngine} engine - The engine to register.
-     * @static
-     * @public
-     * @returns {void}
-     */
-
-    /**
-     * The player class logger.
-     * @type {any}
-     * @static
-     * @private
-     */
-    value: function registerEngine(engine) {
-      if (!Player._engines.includes(engine)) {
-        Player._logger.debug('Engine <' + engine.id + '> has been registered successfully');
-        Player._engines.push(engine);
-      } else {
-        Player._logger.debug('Engine <' + engine.id + '> is already registered, do not register again');
-      }
-    }
-
-    /**
-     * @param {Object} config - The configuration for the player instance.
-     * @constructor
-     */
-
-    /**
-     * The available engines of the player.
-     * @type {Array<typeof IEngine>}
-     * @private
-     */
-
-    /**
-     * The plugin manager of the player.
-     * @type {PluginManager}
-     * @private
-     */
-
-    /**
-     * The event manager of the player.
-     * @type {EventManager}
-     * @private
-     */
-
-    /**
-     * The runtime configuration of the player.
-     * @type {Object}
-     * @private
-     */
-
-    /**
-     * The playback engine.
-     * @type {IEngine}
-     * @private
-     */
-
-    /**
-     * The state manager of the player.
-     * @type {StateManager}
-     * @private
-     */
-
-    /**
-     * The tracks of the player.
-     * @type {Array<Track>}
-     * @private
-     */
-
-    /**
-     * The player ready promise
-     * @type {Promise<*>}
-     * @private
-     */
-
-    /**
-     * Whether the play is the first or not
-     * @type {boolean}
-     * @private
-     */
-
-  }]);
-
+  /**
+   * The player class logger.
+   * @type {any}
+   * @static
+   * @private
+   */
   function Player(config) {
     _classCallCheck(this, Player);
 
@@ -1163,6 +1085,60 @@ var Player = function (_FakeEventTarget) {
    * Configures the player according to given configuration.
    * @param {Object} config - The configuration for the player instance.
    * @returns {void}
+   */
+
+  /**
+   * The available engines of the player.
+   * @type {Array<typeof IEngine>}
+   * @private
+   */
+
+  /**
+   * The plugin manager of the player.
+   * @type {PluginManager}
+   * @private
+   */
+
+  /**
+   * The event manager of the player.
+   * @type {EventManager}
+   * @private
+   */
+
+  /**
+   * The runtime configuration of the player.
+   * @type {Object}
+   * @private
+   */
+
+  /**
+   * The playback engine.
+   * @type {IEngine}
+   * @private
+   */
+
+  /**
+   * The state manager of the player.
+   * @type {StateManager}
+   * @private
+   */
+
+  /**
+   * The tracks of the player.
+   * @type {Array<Track>}
+   * @private
+   */
+
+  /**
+   * The player ready promise
+   * @type {Promise<*>}
+   * @private
+   */
+
+  /**
+   * Whether the play is the first or not
+   * @type {boolean}
+   * @private
    */
 
 
@@ -1230,15 +1206,10 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_selectEngine',
     value: function _selectEngine() {
-      var engineSelected = false;
-      if (this._config.sources) {
-        if (this._config.playback && this._config.playback.streamPriority) {
-          engineSelected = this._selectEngineByPriority();
-        } else {
-          engineSelected = this._selectFirstEngineWhoCanPlay();
-        }
+      if (this._config.sources && this._config.playback && this._config.playback.streamPriority) {
+        return this._selectEngineByPriority();
       }
-      return engineSelected;
+      return false;
     }
 
     /**
@@ -1302,29 +1273,6 @@ var Player = function (_FakeEventTarget) {
         }
       }
 
-      return false;
-    }
-
-    /**
-     * Selects the first engine who can play a source.
-     * @return {boolean} - Whether a proper engine was found to play the given sources.
-     * @private
-     */
-
-  }, {
-    key: '_selectFirstEngineWhoCanPlay',
-    value: function _selectFirstEngineWhoCanPlay() {
-      var sources = this._config.sources;
-      for (var i = 0; i < Player._engines.length; i++) {
-        var _engine = Player._engines[i];
-        for (var j = 0; j < sources.length; j++) {
-          var source = sources[j];
-          if (_engine.canPlayType(source.mimetype)) {
-            this._loadEngine(_engine, source);
-            return true;
-          }
-        }
-      }
       return false;
     }
 
@@ -1824,7 +1772,7 @@ var Player = function (_FakeEventTarget) {
   }], [{
     key: '_defaultConfig',
     value: function _defaultConfig() {
-      return _playerConfig2.default;
+      return (0, _util.merge)([{}, _playerConfig2.default]);
     }
   }]);
 
@@ -1834,10 +1782,6 @@ var Player = function (_FakeEventTarget) {
 Player._logger = _logger2.default.getLogger('Player');
 Player._engines = [_html2.default];
 exports.default = Player;
-
-
-var registerEngine = Player.registerEngine;
-exports.registerEngine = registerEngine;
 
 /***/ }),
 /* 9 */
