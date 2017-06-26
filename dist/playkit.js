@@ -1150,7 +1150,9 @@ var Player = function (_FakeEventTarget) {
     _this._pluginManager = new _pluginManager2.default();
     _this._eventManager = new _eventManager2.default();
     _this._readyPromise = new Promise(function (resolve, reject) {
-      _this._eventManager.listen(_this, _events.CUSTOM_EVENTS.TRACKS_CHANGED, resolve);
+      _this._eventManager.listen(_this, _events.CUSTOM_EVENTS.TRACKS_CHANGED, function () {
+        resolve();
+      });
       _this._eventManager.listen(_this, _events.HTML5_EVENTS.ERROR, reject);
     });
     _this.configure(config);
@@ -1241,10 +1243,9 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Selects an engine to play a source according to a given stream priority.
-     * @return {boolean} - Whether a proper <engine, adapter> was found to play the given sources
+     * @return {boolean} - Whether a proper engine was found to play the given sources
      * according to the priority.
      * @private
-     * @returns {void}
      */
 
   }, {
@@ -1305,10 +1306,9 @@ var Player = function (_FakeEventTarget) {
     }
 
     /**
-     * Selects the first <engine, adapter> tuple that can play a source.
-     * @return {boolean} - Whether a proper <engine, adapter> was found to play the given sources.
+     * Selects the first engine who can play a source.
+     * @return {boolean} - Whether a proper engine was found to play the given sources.
      * @private
-     * @returns {void}
      */
 
   }, {
@@ -1341,9 +1341,6 @@ var Player = function (_FakeEventTarget) {
     value: function _loadEngine(engine, source) {
       this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.SOURCE_SELECTED, { selectedSource: source }));
       this._engine = engine.createEngine(source, this._config);
-      if (this._config.preload === "auto") {
-        this.load();
-      }
     }
 
     /**
@@ -1384,6 +1381,9 @@ var Player = function (_FakeEventTarget) {
       if (this._config.playback) {
         if (this._config.playback.muted) {
           this.muted = true;
+        }
+        if (this._config.playback.preload === "auto") {
+          this.load();
         }
         if (this._config.playback.autoplay) {
           this.play();
@@ -2489,6 +2489,9 @@ var MediaSourceProvider = function () {
     key: 'getMediaSourceAdapter',
     value: function getMediaSourceAdapter(videoElement, source, config) {
       if (videoElement && source && config) {
+        if (!MediaSourceProvider._selectedAdapter) {
+          MediaSourceProvider.canPlayType(source.mimetype);
+        }
         return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config) : null;
       }
       return null;
