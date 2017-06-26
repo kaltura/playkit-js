@@ -14,6 +14,7 @@ declare interface IEngine {
   selectVideoTrack(videoTrack: VideoTrack): void;
   selectAudioTrack(audioTrack: AudioTrack): void;
   selectTextTrack(textTrack: TextTrack): void;
+  hideTextTrack(): void;
   enableAdaptiveBitrate(): void;
   getVideoElement(): HTMLVideoElement;
   currentTime: number;
