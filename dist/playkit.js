@@ -1145,7 +1145,7 @@ var Player = function (_FakeEventTarget) {
   _createClass(Player, [{
     key: 'configure',
     value: function configure(config) {
-      this._config = (0, _util.mergeDeep)(this._config || Player._defaultConfig(), config);
+      this._config = (0, _util.mergeDeep)(this._config || Player._defaultConfig, config);
       if (this._selectEngine()) {
         this._attachMedia();
         this._loadPlugins();
@@ -1771,7 +1771,7 @@ var Player = function (_FakeEventTarget) {
 
   }], [{
     key: '_defaultConfig',
-    value: function _defaultConfig() {
+    get: function get() {
       return (0, _util.copyDeep)(_playerConfig2.default);
     }
   }]);
