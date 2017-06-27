@@ -125,7 +125,9 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   destroy(): void {
-    this._engine.destroy();
+    if (this._engine) {
+      this._engine.destroy();
+    }
     this._eventManager.destroy();
     this._pluginManager.destroy();
     this._stateManager.destroy();
