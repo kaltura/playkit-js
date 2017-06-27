@@ -1061,49 +1061,9 @@ var Player = function (_FakeEventTarget) {
   _inherits(Player, _FakeEventTarget);
 
   /**
+   * @param {string} targetId - The target div id to append the player.
    * @param {Object} config - The configuration for the player instance.
    * @constructor
-   */
-
-  /**
-   * The player DOM element container.
-   * @type {HTMLElement}
-   * @private
-   */
-
-  /**
-   * The player class logger.
-   * @type {any}
-   * @static
-   * @private
-   */
-  function Player(config) {
-    _classCallCheck(this, Player);
-
-    var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
-
-    _this._tracks = [];
-    _this._config = {};
-    _this._firstPlay = true;
-    _this._stateManager = new _stateManager2.default(_this);
-    _this._pluginManager = new _pluginManager2.default();
-    _this._eventManager = new _eventManager2.default();
-    _this._createReadyPromise();
-    _this._appendPlayerContainer(config);
-    _this.configure(config);
-    return _this;
-  }
-
-  /**
-   * Configures the player according to given configuration.
-   * @param {Object} config - The configuration for the player instance.
-   * @returns {void}
-   */
-
-  /**
-   * The available engines of the player.
-   * @type {Array<typeof IEngine>}
-   * @private
    */
 
   /**
@@ -1154,6 +1114,48 @@ var Player = function (_FakeEventTarget) {
    * @private
    */
 
+  /**
+   * The player DOM element container.
+   * @type {HTMLElement}
+   * @private
+   */
+
+  /**
+   * The player class logger.
+   * @type {any}
+   * @static
+   * @private
+   */
+  function Player(targetId, config) {
+    _classCallCheck(this, Player);
+
+    var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
+
+    _this._tracks = [];
+    _this._config = {};
+    _this._firstPlay = true;
+    _this._stateManager = new _stateManager2.default(_this);
+    _this._pluginManager = new _pluginManager2.default();
+    _this._eventManager = new _eventManager2.default();
+    _this._createReadyPromise();
+    _this._appendPlayerContainer(targetId);
+    _this.configure(config);
+    return _this;
+  }
+
+  /**
+   * Configures the player according to given configuration.
+   * @param {Object} config - The configuration for the player instance.
+   * @returns {void}
+   */
+
+  /**
+   * The available engines of the player.
+   * @type {Array<typeof IEngine>}
+   * @private
+   * @static
+   */
+
 
   _createClass(Player, [{
     key: 'configure',
@@ -1164,6 +1166,7 @@ var Player = function (_FakeEventTarget) {
       }
       // Merge new config
       this._config = (0, _util.mergeDeep)((0, _util.isEmptyObject)(this._config) ? Player._defaultConfig : this._config, config);
+      // Create engine
       if (this._selectEngine()) {
         this._appendEngineEl();
         this._attachMedia();
@@ -1398,24 +1401,24 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Creates the player container
-     * @param {Object} config - the player config
+     * @param {string} targetId - The target div id to append the player.
      * @private
      * @returns {void}
      */
 
   }, {
     key: '_appendPlayerContainer',
-    value: function _appendPlayerContainer(config) {
-      if (config.targetId) {
+    value: function _appendPlayerContainer(targetId) {
+      if (targetId) {
         if (this._el === undefined) {
           this._createPlayerContainer();
-          var parentNode = document.getElementById(config.targetId);
+          var parentNode = document.getElementById(targetId);
           if (parentNode != null && this._el != null) {
             parentNode.appendChild(this._el);
           }
         }
       } else {
-        throw new Error("targetId is not found, it must be set in the config");
+        throw new Error("targetId is not found, it must be pass on initialization");
       }
     }
 
@@ -4617,7 +4620,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.VERSION = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerMediaSourceAdapter = undefined;
-exports.playkit = playkit;
+exports.loadPlayer = loadPlayer;
 
 var _player = __webpack_require__(8);
 
@@ -4671,13 +4674,12 @@ _logger2.default.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-s
 _logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
 
 /**
+ * @param {string} targetId - The target div id to append the player.
  * @param {Object} config - The configuration of the player
  * @returns {Player} - The player instance
  */
-function playkit() {
-  var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-  return new _player2.default(config);
+function loadPlayer(targetId, config) {
+  return new _player2.default(targetId, config || {});
 }
 
 // Export the media source adapters necessary utils
@@ -4699,7 +4701,7 @@ exports.TextTrack = _textTrack2.default;
 //export version
 
 exports.VERSION = VERSION;
-exports.default = playkit;
+exports.default = loadPlayer;
 
 /***/ }),
 /* 22 */
