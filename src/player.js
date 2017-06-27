@@ -109,7 +109,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   configure(config: Object): void {
-      this._config = mergeDeep(this._config || Player._defaultConfig(), config);
+      this._config = mergeDeep(this._config || Player._defaultConfig, config);
       if (this._selectEngine()) {
         this._attachMedia();
         this._loadPlugins();
@@ -140,7 +140,7 @@ export default class Player extends FakeEventTarget {
    * @private
    * @static
    */
-  static _defaultConfig(): Object {
+  static get _defaultConfig(): Object {
     return copyDeep(DefaultPlayerConfig);
   }
 
