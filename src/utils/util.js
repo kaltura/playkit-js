@@ -100,4 +100,15 @@ function copyDeep(data: any): any {
   return node;
 }
 
-export {isNumber, isInt, isFloat, isObject, merge, mergeDeep, copyDeep};
+/**
+ * Generates unique id.
+ * @param {number} length - The length of the id.
+ * @returns {string} - The generated id.
+ */
+function id(length: ?number) {
+  let from = 2;
+  let to = from + (length ? length : 1);
+  return '_' + Math.random().toString(36).substr(from, to);
+}
+
+export {isNumber, isInt, isFloat, isObject, merge, mergeDeep, copyDeep, id};

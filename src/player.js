@@ -4,7 +4,7 @@ import FakeEvent from './event/fake-event'
 import FakeEventTarget from './event/fake-event-target'
 import {PLAYER_EVENTS as PlayerEvents, HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from './event/events'
 import PlayerStates from './state/state-types'
-import {isNumber, isFloat, mergeDeep, copyDeep} from './utils/util'
+import {isNumber, isFloat, mergeDeep, copyDeep, id} from './utils/util'
 import LoggerFactory from './utils/logger'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
@@ -14,8 +14,15 @@ import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
-import DefaultPlayerConfig from './player-config.json'
-import './style.css'
+import DefaultPlayerConfig from './assets/player-config.json'
+import './assets/style.css'
+
+/**
+ * The player container class name.
+ * @type {string}
+ * @const
+ */
+const CONTAINER_CLASS_NAME: string = 'playkit-container';
 
 /**
  * The HTML5 player class.
@@ -84,11 +91,11 @@ export default class Player extends FakeEventTarget {
    */
   static _engines: Array<typeof IEngine> = [Html5];
   /**
-   * The player DOM element container
+   * The player DOM element container.
    * @type {HTMLElement}
    * @private
    */
-  _el: HTMLElement | null;
+  _el: HTMLElement;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -117,12 +124,12 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   configure(config: Object): void {
-    //Destroy current engine on new sources
-    if ((this._engine !== undefined) && config.sources){
+    // Destroy current engine (if exists) on new sources
+    if (this._engine && config.sources) {
       this._engine.destroy();
-      this._config.sources = null;
+      this._config.sources = {};
     }
-    //Merge new config
+    // Merge new config
     this._config = mergeDeep(this._config || Player._defaultConfig, config);
     if (this._selectEngine()) {
       this._appendEngineEl();
@@ -265,41 +272,45 @@ export default class Player extends FakeEventTarget {
     }
   }
 
-
-  /**
-   * Creates the player container
-   * @private
-   * @returns {void}
-   */
-  _createPlayerContainer(): void{
-    this._el = document.createElement("div");
-    this._el.id = "123"; //TODO add random ID
-    this._el.className = "playkit-container";
-    this._el.setAttribute('tabindex', '-1');
-  }
-
   /**
    * Creates the player container
    * @param {Object} config - the player config
    * @private
    * @returns {void}
    */
-  _appendPlayerContainer(config: Object): void{
-    if (config.targetId){
+  _appendPlayerContainer(config: Object): void {
+    if (config.targetId) {
       if (this._el === undefined) {
         this._createPlayerContainer();
-        let parentNode: HTMLElement | null = document.getElementById(config.targetId);
-        if ((parentNode !== null) && (this._el !== null)) {
+        let parentNode = document.getElementById(config.targetId);
+        if ((parentNode != null) && (this._el != null)) {
           parentNode.appendChild(this._el);
         }
       }
     } else {
-      Player._logger.error("targetId is not found, it must be set in config");
+      throw new Error("targetId is not found, it must be set in the config");
     }
   }
 
-  _appendEngineEl(){
-    if ((this._el !== null) && (this._engine != null)){
+  /**
+   * Creates the player container.
+   * @private
+   * @returns {void}
+   */
+  _createPlayerContainer(): void {
+    this._el = document.createElement("div");
+    this._el.id = id(5);
+    this._el.className = CONTAINER_CLASS_NAME;
+    this._el.setAttribute('tabindex', '-1');
+  }
+
+  /**
+   * Appends the engine's video element to the player's div container.
+   * @private
+   * @returns {void}
+   */
+  _appendEngineEl(): void {
+    if ((this._el != null) && (this._engine != null)) {
       this._el.appendChild(this._engine.getVideoElement())
     }
   }
