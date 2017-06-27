@@ -1164,7 +1164,9 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'destroy',
     value: function destroy() {
-      this._engine.destroy();
+      if (this._engine) {
+        this._engine.destroy();
+      }
       this._eventManager.destroy();
       this._pluginManager.destroy();
       this._stateManager.destroy();
