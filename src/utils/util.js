@@ -107,8 +107,21 @@ function copyDeep(data: any): any {
  */
 function id(length: ?number) {
   let from = 2;
-  let to = from + (length ? length : 1);
+  let to = from + (length ? length - 2 : 0);
   return '_' + Math.random().toString(36).substr(from, to);
 }
 
-export {isNumber, isInt, isFloat, isObject, merge, mergeDeep, copyDeep, id};
+/**
+ * Checks if an object is an empy object.
+ * @param {Object} obj - The object to check
+ * @returns {boolean} - Whether the object is empty.
+ */
+function isEmptyObject(obj: Object): boolean {
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key))
+      return false;
+  }
+  return true;
+}
+
+export {isNumber, isInt, isFloat, isObject, merge, mergeDeep, copyDeep, id, isEmptyObject};

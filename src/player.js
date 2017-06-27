@@ -4,7 +4,7 @@ import FakeEvent from './event/fake-event'
 import FakeEventTarget from './event/fake-event-target'
 import {PLAYER_EVENTS as PlayerEvents, HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from './event/events'
 import PlayerStates from './state/state-types'
-import {isNumber, isFloat, mergeDeep, copyDeep, id} from './utils/util'
+import {isNumber, isFloat, mergeDeep, copyDeep, id, isEmptyObject} from './utils/util'
 import LoggerFactory from './utils/logger'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
@@ -104,16 +104,12 @@ export default class Player extends FakeEventTarget {
   constructor(config: Object) {
     super();
     this._tracks = [];
+    this._config = {};
     this._firstPlay = true;
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
     this._eventManager = new EventManager();
-    this._readyPromise = new Promise((resolve, reject) => {
-      this._eventManager.listen(this, CustomEvents.TRACKS_CHANGED, () => {
-        resolve();
-      });
-      this._eventManager.listen(this, Html5Events.ERROR, reject);
-    });
+    this._createReadyPromise();
     this._appendPlayerContainer(config);
     this.configure(config);
   }
@@ -126,17 +122,46 @@ export default class Player extends FakeEventTarget {
   configure(config: Object): void {
     // Destroy current engine (if exists) on new sources
     if (this._engine && config.sources) {
-      this._engine.destroy();
-      this._config.sources = {};
+      this._reset();
     }
     // Merge new config
-    this._config = mergeDeep(this._config || Player._defaultConfig, config);
+    this._config = mergeDeep(isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
     if (this._selectEngine()) {
       this._appendEngineEl();
       this._attachMedia();
       this._loadPlugins();
       this._handlePlaybackConfig();
     }
+  }
+
+  /**
+   * Reset the necessary components before change media.
+   * @private
+   * @returns {void}
+   */
+  _reset(): void {
+    if (this._engine) {
+      this._engine.destroy();
+    }
+    this._config = {};
+    this._tracks = [];
+    this._firstPlay = true;
+    this._eventManager.removeAll();
+    this._createReadyPromise();
+  }
+
+  /**
+   * Creates the ready promise.
+   * @private
+   * @returns {void}
+   */
+  _createReadyPromise(): void {
+    this._readyPromise = new Promise((resolve, reject) => {
+      this._eventManager.listen(this, CustomEvents.TRACKS_CHANGED, () => {
+        resolve();
+      });
+      this._eventManager.listen(this, Html5Events.ERROR, reject);
+    });
   }
 
   /**
