@@ -117,6 +117,11 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   configure(config: Object): void {
+    //Destroy current engine on new sources
+    if ((this._engine !== undefined) && config.sources){
+      this._engine.destroy();
+      this._config.sources = null;
+    }
     //Merge new config
     this._config = mergeDeep(this._config || Player._defaultConfig, config);
     if (this._selectEngine()) {
