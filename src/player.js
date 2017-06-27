@@ -37,6 +37,13 @@ export default class Player extends FakeEventTarget {
    */
   static _logger: any = LoggerFactory.getLogger('Player');
   /**
+   * The available engines of the player.
+   * @type {Array<typeof IEngine>}
+   * @private
+   * @static
+   */
+  static _engines: Array<typeof IEngine> = [Html5];
+  /**
    * The plugin manager of the player.
    * @type {PluginManager}
    * @private
@@ -85,12 +92,6 @@ export default class Player extends FakeEventTarget {
    */
   _firstPlay: boolean;
   /**
-   * The available engines of the player.
-   * @type {Array<typeof IEngine>}
-   * @private
-   */
-  static _engines: Array<typeof IEngine> = [Html5];
-  /**
    * The player DOM element container.
    * @type {HTMLElement}
    * @private
@@ -98,10 +99,11 @@ export default class Player extends FakeEventTarget {
   _el: HTMLElement;
 
   /**
+   * @param {string} targetId - The target div id to append the player.
    * @param {Object} config - The configuration for the player instance.
    * @constructor
    */
-  constructor(config: Object) {
+  constructor(targetId: string, config: Object) {
     super();
     this._tracks = [];
     this._config = {};
@@ -110,7 +112,7 @@ export default class Player extends FakeEventTarget {
     this._pluginManager = new PluginManager();
     this._eventManager = new EventManager();
     this._createReadyPromise();
-    this._appendPlayerContainer(config);
+    this._appendPlayerContainer(targetId);
     this.configure(config);
   }
 
@@ -126,6 +128,7 @@ export default class Player extends FakeEventTarget {
     }
     // Merge new config
     this._config = mergeDeep(isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
+    // Create engine
     if (this._selectEngine()) {
       this._appendEngineEl();
       this._attachMedia();
@@ -299,21 +302,21 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Creates the player container
-   * @param {Object} config - the player config
+   * @param {string} targetId - The target div id to append the player.
    * @private
    * @returns {void}
    */
-  _appendPlayerContainer(config: Object): void {
-    if (config.targetId) {
+  _appendPlayerContainer(targetId: string): void {
+    if (targetId) {
       if (this._el === undefined) {
         this._createPlayerContainer();
-        let parentNode = document.getElementById(config.targetId);
+        let parentNode = document.getElementById(targetId);
         if ((parentNode != null) && (this._el != null)) {
           parentNode.appendChild(this._el);
         }
       }
     } else {
-      throw new Error("targetId is not found, it must be set in the config");
+      throw new Error("targetId is not found, it must be pass on initialization");
     }
   }
 

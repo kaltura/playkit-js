@@ -18,11 +18,12 @@ LoggerFactory.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size
 LoggerFactory.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
 
 /**
+ * @param {string} targetId - The target div id to append the player.
  * @param {Object} config - The configuration of the player
  * @returns {Player} - The player instance
  */
-export function playkit(config: Object = {}) {
-  return new Player(config);
+export function loadPlayer(targetId: string, config: ?Object) {
+  return new Player(targetId, config || {});
 }
 
 // Export the media source adapters necessary utils
@@ -36,4 +37,4 @@ export {Track, VideoTrack, AudioTrack, TextTrack};
 
 //export version
 export {VERSION};
-export default playkit;
+export default loadPlayer;

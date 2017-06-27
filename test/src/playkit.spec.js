@@ -1,18 +1,21 @@
-import {playkit} from '../../src/playkit'
+import {loadPlayer} from '../../src/playkit'
 import Player from '../../src/player'
 import PlayerStates from '../../src/state/state-types'
 import * as PlayerEvents from '../../src/event/events'
 import sourcesConfig from './configs/sources.json'
-import * as TestUtils from './utils/test-utils'
 import VideoTrack from '../../src/track/video-track'
 import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
+import * as TestUtils from './utils/test-utils'
+
+const targetId = 'player-placeholder_playkit.spec';
 
 describe.skip('[debugging and testing manually]', () => {
-  let player, track1, track2, video, tracks, videoTracks, textTracks, audioTracks;
-  let config = sourcesConfig.mp4_none_hls_dash;
+  let player, track1, track2, video, tracks, videoTracks, textTracks, audioTracks, config;
 
   before(() => {
+    config = TestUtils.getConfigStructure();
+    config.sources = sourcesConfig.Mp4HlsDash;
     track1 = document.createElement("track");
     track2 = document.createElement("track");
     track1.src = '/base/src/assets/en.vtt';
@@ -25,8 +28,7 @@ describe.skip('[debugging and testing manually]', () => {
   });
 
   beforeEach(() => {
-    config = sourcesConfig.mp4_none_hls_dash;
-    player = new Player();
+    player = loadPlayer(targetId);
   });
 
   /**
@@ -65,16 +67,19 @@ describe.skip('[debugging and testing manually]', () => {
   });
 });
 
-describe('playkit:playkit', function () {
+describe('loadPlayer', function () {
   this.timeout(10000);
 
-  after(() => {
-    TestUtils.removeVideoElementsFromTestPage();
+  let player, config;
+
+  before(() => {
+    TestUtils.createElement('DIV', targetId);
   });
 
   it('should play mp4 stream', (done) => {
-    let config = sourcesConfig.mp4_none_hls_dash;
-    let player = playkit(config);
+    config = TestUtils.getConfigStructure();
+    config.sources = sourcesConfig.Mp4HlsDash;
+    player = loadPlayer(targetId, config);
     player.addEventListener(PlayerEvents.HTML5_EVENTS.PLAYING, function () {
       player.destroy();
       done();
@@ -88,8 +93,9 @@ describe('playkit:playkit', function () {
   });
 
   it('should create player without sources and set the sources later', (done) => {
-    let config = sourcesConfig.mp4_none_hls_dash;
-    let player = playkit();
+    config = TestUtils.getConfigStructure();
+    config.sources = sourcesConfig.Mp4HlsDash;
+    player = loadPlayer(targetId);
     player.should.be.instanceOf(Player);
     player.configure(config);
     player.addEventListener(PlayerEvents.HTML5_EVENTS.PLAYING, function () {
@@ -107,8 +113,9 @@ describe('playkit:playkit', function () {
   });
 
   it('should switch player states during playback', (done) => {
-    let config = sourcesConfig.mp4_none_hls_dash;
-    let player = playkit(config);
+    config = TestUtils.getConfigStructure();
+    config.sources = sourcesConfig.Mp4HlsDash;
+    player = loadPlayer(targetId, config);
 
     /**
      * onLoadStart handler
@@ -174,5 +181,10 @@ describe('playkit:playkit', function () {
     player.addEventListener(PlayerEvents.HTML5_EVENTS.ENDED, onEnded);
     player.load();
     player.play();
+  });
+
+  after(() => {
+    TestUtils.removeVideoElementsFromTestPage();
+    TestUtils.removeElemenet(targetId);
   });
 });
