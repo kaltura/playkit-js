@@ -1083,16 +1083,12 @@ var Player = function (_FakeEventTarget) {
     var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
 
     _this._tracks = [];
+    _this._config = {};
     _this._firstPlay = true;
     _this._stateManager = new _stateManager2.default(_this);
     _this._pluginManager = new _pluginManager2.default();
     _this._eventManager = new _eventManager2.default();
-    _this._readyPromise = new Promise(function (resolve, reject) {
-      _this._eventManager.listen(_this, _events.CUSTOM_EVENTS.TRACKS_CHANGED, function () {
-        resolve();
-      });
-      _this._eventManager.listen(_this, _events.HTML5_EVENTS.ERROR, reject);
-    });
+    _this._createReadyPromise();
     _this._appendPlayerContainer(config);
     _this.configure(config);
     return _this;
@@ -1164,17 +1160,54 @@ var Player = function (_FakeEventTarget) {
     value: function configure(config) {
       // Destroy current engine (if exists) on new sources
       if (this._engine && config.sources) {
-        this._engine.destroy();
-        this._config.sources = {};
+        this._reset();
       }
       // Merge new config
-      this._config = (0, _util.mergeDeep)(this._config || Player._defaultConfig, config);
+      this._config = (0, _util.mergeDeep)((0, _util.isEmptyObject)(this._config) ? Player._defaultConfig : this._config, config);
       if (this._selectEngine()) {
         this._appendEngineEl();
         this._attachMedia();
         this._loadPlugins();
         this._handlePlaybackConfig();
       }
+    }
+
+    /**
+     * Reset the necessary components before change media.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_reset',
+    value: function _reset() {
+      if (this._engine) {
+        this._engine.destroy();
+      }
+      this._config = {};
+      this._tracks = [];
+      this._firstPlay = true;
+      this._eventManager.removeAll();
+      this._createReadyPromise();
+    }
+
+    /**
+     * Creates the ready promise.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_createReadyPromise',
+    value: function _createReadyPromise() {
+      var _this2 = this;
+
+      this._readyPromise = new Promise(function (resolve, reject) {
+        _this2._eventManager.listen(_this2, _events.CUSTOM_EVENTS.TRACKS_CHANGED, function () {
+          resolve();
+        });
+        _this2._eventManager.listen(_this2, _events.HTML5_EVENTS.ERROR, reject);
+      });
     }
 
     /**
@@ -1245,7 +1278,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_selectEngineByPriority',
     value: function _selectEngineByPriority() {
-      var _this2 = this;
+      var _this3 = this;
 
       var streamPriority = this._config.playback.streamPriority;
       var sources = this._config.sources;
@@ -1267,7 +1300,7 @@ var Player = function (_FakeEventTarget) {
             if (formatSources && formatSources.length > 0) {
               var source = formatSources[0];
               if (engine.canPlayType(source.mimetype)) {
-                _this2._loadEngine(engine, source);
+                _this3._loadEngine(engine, source);
                 return {
                   v: true
                 };
@@ -1324,25 +1357,25 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_attachMedia',
     value: function _attachMedia() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this._engine) {
         for (var playerEvent in _events.HTML5_EVENTS) {
           this._eventManager.listen(this._engine, _events.HTML5_EVENTS[playerEvent], function (event) {
-            return _this3.dispatchEvent(event);
+            return _this4.dispatchEvent(event);
           });
         }
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, function (event) {
-          _this3._markActiveTrack(event.payload.selectedVideoTrack);
-          return _this3.dispatchEvent(event);
+          _this4._markActiveTrack(event.payload.selectedVideoTrack);
+          return _this4.dispatchEvent(event);
         });
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED, function (event) {
-          _this3._markActiveTrack(event.payload.selectedAudioTrack);
-          return _this3.dispatchEvent(event);
+          _this4._markActiveTrack(event.payload.selectedAudioTrack);
+          return _this4.dispatchEvent(event);
         });
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED, function (event) {
-          _this3._markActiveTrack(event.payload.selectedTextTrack);
-          return _this3.dispatchEvent(event);
+          _this4._markActiveTrack(event.payload.selectedTextTrack);
+          return _this4.dispatchEvent(event);
         });
         this._eventManager.listen(this, _events.HTML5_EVENTS.PLAY, this._onPlay.bind(this));
       }
@@ -1579,14 +1612,14 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'load',
     value: function load() {
-      var _this4 = this;
+      var _this5 = this;
 
       if (this._engine) {
         this._engine.load().then(function (data) {
-          _this4._tracks = data.tracks;
-          _this4.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.TRACKS_CHANGED, { tracks: _this4._tracks }));
+          _this5._tracks = data.tracks;
+          _this5.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.TRACKS_CHANGED, { tracks: _this5._tracks }));
         }).catch(function (error) {
-          _this4.dispatchEvent(new _fakeEvent2.default(_events.HTML5_EVENTS.ERROR, error));
+          _this5.dispatchEvent(new _fakeEvent2.default(_events.HTML5_EVENTS.ERROR, error));
         });
       }
     }
@@ -1600,7 +1633,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'play',
     value: function play() {
-      var _this5 = this;
+      var _this6 = this;
 
       if (this._engine) {
         if (this._engine.src) {
@@ -1608,7 +1641,7 @@ var Player = function (_FakeEventTarget) {
         } else {
           this.load();
           this.ready().then(function () {
-            _this5._engine.play();
+            _this6._engine.play();
           });
         }
       }
@@ -2003,8 +2036,20 @@ function copyDeep(data) {
  */
 function id(length) {
   var from = 2;
-  var to = from + (length ? length : 1);
+  var to = from + (length ? length - 2 : 0);
   return '_' + Math.random().toString(36).substr(from, to);
+}
+
+/**
+ * Checks if an object is an empy object.
+ * @param {Object} obj - The object to check
+ * @returns {boolean} - Whether the object is empty.
+ */
+function isEmptyObject(obj) {
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) return false;
+  }
+  return true;
 }
 
 exports.isNumber = isNumber;
@@ -2015,6 +2060,7 @@ exports.merge = merge;
 exports.mergeDeep = mergeDeep;
 exports.copyDeep = copyDeep;
 exports.id = id;
+exports.isEmptyObject = isEmptyObject;
 
 /***/ }),
 /* 10 */
