@@ -91,6 +91,15 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Get the engine's id
+   * @public
+   * @returns {string} the engine's id
+   */
+  get id(): string{
+    return Html5.id;
+  }
+
+  /**
    * Listen to the video element events and triggers them from the engine.
    * @public
    * @returns {void}
@@ -145,14 +154,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _createVideoElement(): void {
     this._el = document.createElement("video");
-    //Set attributes
-    this._el.style.width = "640px";
-    this._el.style.height = "360px";
-    this._el.style.backgroundColor = "black";
-    this._el.controls = true;
-    if (document && document.body) {
-      document.body.appendChild(this._el);
-    }
+    this._el.className = "playkit-engine-html5";
+    this._el.id = "1234"; //TODO: set random id
+    this._el.controls = false;
   }
 
   /**

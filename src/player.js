@@ -83,6 +83,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   static _engines: Array<typeof IEngine> = [Html5];
+  /**
+   * The player DOM element container
+   * @type {HTMLElement}
+   * @private
+   */
+  _el: HTMLElement | null;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -101,6 +107,7 @@ export default class Player extends FakeEventTarget {
       });
       this._eventManager.listen(this, Html5Events.ERROR, reject);
     });
+    this._appendPlayerContainer(config);
     this.configure(config);
   }
 
@@ -110,12 +117,14 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   configure(config: Object): void {
-      this._config = mergeDeep(this._config || Player._defaultConfig, config);
-      if (this._selectEngine()) {
-        this._attachMedia();
-        this._loadPlugins();
-        this._handlePlaybackConfig();
-      }
+    //Merge new config
+    this._config = mergeDeep(this._config || Player._defaultConfig, config);
+    if (this._selectEngine()) {
+      this._appendEngineEl();
+      this._attachMedia();
+      this._loadPlugins();
+      this._handlePlaybackConfig();
+    }
   }
 
   /**
@@ -248,6 +257,45 @@ export default class Player extends FakeEventTarget {
       if (this._config.playback.autoplay) {
         this.play();
       }
+    }
+  }
+
+
+  /**
+   * Creates the player container
+   * @private
+   * @returns {void}
+   */
+  _createPlayerContainer(): void{
+    this._el = document.createElement("div");
+    this._el.id = "123"; //TODO add random ID
+    this._el.className = "playkit-container";
+    this._el.setAttribute('tabindex', '-1');
+  }
+
+  /**
+   * Creates the player container
+   * @param {Object} config - the player config
+   * @private
+   * @returns {void}
+   */
+  _appendPlayerContainer(config: Object): void{
+    if (config.targetId){
+      if (this._el === undefined) {
+        this._createPlayerContainer();
+        let parentNode: HTMLElement | null = document.getElementById(config.targetId);
+        if ((parentNode !== null) && (this._el !== null)) {
+          parentNode.appendChild(this._el);
+        }
+      }
+    } else {
+      Player._logger.error("targetId is not found, it must be set in config");
+    }
+  }
+
+  _appendEngineEl(){
+    if ((this._el !== null) && (this._engine != null)){
+      this._el.appendChild(this._engine.getVideoElement())
     }
   }
 
