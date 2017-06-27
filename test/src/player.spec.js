@@ -1,4 +1,5 @@
 import Player from '../../src/player'
+import PlayerStates from '../../src/state/state-types'
 import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../../src/event/events'
 import sourcesConfig from './configs/sources.json'
 import VideoTrack from '../../src/track/video-track'
@@ -50,7 +51,7 @@ describe("play", function () {
   });
 });
 
-describe("ready", () => {
+describe("ready", function () {
 
   describe("success", () => {
 
@@ -907,7 +908,7 @@ describe('Track enum', function () {
   });
 });
 
-describe('events', () => {
+describe('events', function () {
   describe('tracks changed', function () {
     this.timeout(10000);
 
@@ -1038,6 +1039,140 @@ describe('events', () => {
         done();
       });
       player.configure(config);
+    });
+  });
+});
+
+describe('states', function () {
+  this.timeout(10000);
+
+  let player, config;
+
+  before(() => {
+    createElement('DIV', targetId);
+  });
+
+  beforeEach(() => {
+    config = getConfigStructure();
+    config.sources = sourcesConfig.Mp4HlsDash;
+    player = new Player(targetId, config);
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElemenet(targetId);
+  });
+
+  it('should switch player states during playback', (done) => {
+    /**
+     * onLoadStart handler
+     * @returns {void}
+     */
+    function onLoadStart() {
+      player.removeEventListener(Html5Events.LOAD_START, onLoadStart);
+      player._stateManager.currentState.type.should.equal(PlayerStates.LOADING);
+    }
+
+    /**
+     * onLoadedMetadata handler
+     * @returns {void}
+     */
+    function onLoadedMetadata() {
+      player.removeEventListener(Html5Events.LOADED_METADATA, onLoadedMetadata);
+      if (player.config.autoplay) {
+        player._stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+      } else {
+        player._stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
+      }
+    }
+
+    /**
+     * onPlaying handler
+     * @returns {void}
+     */
+    function onPlaying() {
+      player.removeEventListener(Html5Events.PLAYING, onPlaying);
+      player._stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+      setTimeout(() => {
+        player.pause();
+      }, 100);
+    }
+
+    /**
+     * onPause handler
+     * @returns {void}
+     */
+    function onPause() {
+      player.removeEventListener(Html5Events.PAUSE, onPause);
+      player._stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
+      player.currentTime = player.duration - 1;
+      player.play();
+    }
+
+    /**
+     * onEnded handler
+     * @returns {void}
+     */
+    function onEnded() {
+      player.removeEventListener(Html5Events.ENDED, onEnded);
+      player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
+      player.destroy();
+      done();
+    }
+
+    player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
+    player.addEventListener(Html5Events.LOAD_START, onLoadStart);
+    player.addEventListener(Html5Events.LOADED_METADATA, onLoadedMetadata);
+    player.addEventListener(Html5Events.PLAYING, onPlaying);
+    player.addEventListener(Html5Events.PAUSE, onPause);
+    player.addEventListener(Html5Events.ENDED, onEnded);
+    player.load();
+    player.play();
+  });
+});
+
+describe.only('configure', function () {
+  this.timeout(10000);
+
+  let player, config;
+
+  before(() => {
+    createElement('DIV', targetId);
+  });
+
+  beforeEach(() => {
+    config = getConfigStructure();
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElemenet(targetId);
+  });
+
+  it('should create player without sources and set the sources later', (done) => {
+    config.sources = sourcesConfig.Mp4HlsDash;
+    player = new Player(targetId);
+    player.should.be.instanceOf(Player);
+    player.configure(config);
+    player.addEventListener(Html5Events.PLAYING, function () {
+      player.destroy();
+      done();
+    });
+    player.addEventListener(Html5Events.ERROR, function () {
+      player.destroy();
+      should.fail();
+    });
+    player.load();
+    player.ready().then(() => {
+      player.play();
     });
   });
 });

@@ -3,6 +3,7 @@ import VideoTrack from '../../../../../../src/track/video-track'
 import AudioTrack from '../../../../../../src/track/audio-track'
 import TextTrack from '../../../../../../src/track/text-track'
 import {removeVideoElementsFromTestPage} from '../../../../utils/test-utils'
+import sourcesConfig from '../../../../configs/sources.json'
 
 describe('NativeAdapter:isSupported', () => {
   it('should be supported', () => {
@@ -89,22 +90,14 @@ describe('NativeAdapter: load', function () {
   });
 
   it('should success', (done) => {
-    nativeInstance = NativeAdapter.createAdapter(video, {
-      mimetype: 'video/mp4',
-      url: '/base/src/assets/audios.mp4'
-    }, {});
-
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4HlsDash.progressive[0], {});
     nativeInstance.load().then(() => {
       done();
     });
   });
 
   it('should failed', (done) => {
-    nativeInstance = NativeAdapter.createAdapter(video, {
-      mimetype: 'video/mp4',
-      url: 'some corrupted_url'
-    }, {});
-
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.CorruptedUrl.progressive[0], {});
     nativeInstance.load().catch((error) => {
       error.should.be.exist;
       done();
@@ -119,10 +112,7 @@ describe('NativeAdapter: destroy', function () {
 
   beforeEach(() => {
     video = document.createElement("video");
-    nativeInstance = NativeAdapter.createAdapter(video, {
-      mimetype: 'video/mp4',
-      url: '/base/src/assets/audios.mp4'
-    }, {});
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4HlsDash.progressive[0], {});
   });
 
   afterEach(() => {
@@ -166,10 +156,7 @@ describe('NativeAdapter:_getParsedTracks', function () {
 
   beforeEach(() => {
     video = document.createElement("video");
-    nativeInstance = NativeAdapter.createAdapter(video, {
-      mimetype: 'video/mp4',
-      url: '/base/src/assets/audios.mp4'
-    }, {});
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4HlsDash.progressive[0], {});
   });
 
   afterEach(() => {
@@ -228,10 +215,7 @@ describe('NativeAdapter:selectAudioTrack', function () {
 
   beforeEach(() => {
     video = document.createElement("video");
-    nativeInstance = NativeAdapter.createAdapter(video, {
-      mimetype: 'video/mp4',
-      url: '/base/src/assets/audios.mp4'
-    }, {});
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4HlsDash.progressive[0], {});
   });
 
   afterEach(() => {
@@ -308,10 +292,7 @@ describe('NativeAdapter:selectTextTrack', function () {
     track2.srclang = 'fr';
     video.appendChild(track1);
     video.appendChild(track2);
-    nativeInstance = NativeAdapter.createAdapter(video, {
-      mimetype: 'video/mp4',
-      url: '/base/src/assets/audios.mp4'
-    }, {});
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4HlsDash.progressive[0], {});
   });
 
   afterEach(() => {
@@ -408,10 +389,7 @@ describe('NativeAdapter:hideTextTrack', function () {
     track2.srclang = 'fr';
     video.appendChild(track1);
     video.appendChild(track2);
-    nativeInstance = NativeAdapter.createAdapter(video, {
-      mimetype: 'video/mp4',
-      url: '/base/src/assets/audios.mp4'
-    }, {});
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4HlsDash.progressive[0], {});
   });
 
   afterEach(() => {
