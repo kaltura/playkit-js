@@ -1145,13 +1145,11 @@ var Player = function (_FakeEventTarget) {
   _createClass(Player, [{
     key: 'configure',
     value: function configure(config) {
-      this._config = (0, _util.mergeDeep)(Player._defaultConfig(), config);
+      this._config = (0, _util.mergeDeep)(this._config || Player._defaultConfig, config);
       if (this._selectEngine()) {
         this._attachMedia();
         this._loadPlugins();
         this._handlePlaybackConfig();
-      } else {
-        Player._logger.warn("No playable engines was found to play the given sources");
       }
     }
 
@@ -1274,6 +1272,7 @@ var Player = function (_FakeEventTarget) {
         }
       }
 
+      Player._logger.warn("No playable engines was found to play the given sources");
       return false;
     }
 
@@ -1772,7 +1771,7 @@ var Player = function (_FakeEventTarget) {
 
   }], [{
     key: '_defaultConfig',
-    value: function _defaultConfig() {
+    get: function get() {
       return (0, _util.copyDeep)(_playerConfig2.default);
     }
   }]);
