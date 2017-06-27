@@ -126,12 +126,18 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
    */
   AD_LOADED: 'adloaded',
   AD_PLAYING: 'adplaying',
+  AD_RESUMED: 'adresumed',
   AD_PAUSED: 'adpaused',
-  AD_CLICK: 'adclick',
+  AD_CLICKED: 'adclicked',
   AD_SKIPPED: 'adskipped',
-  AD_COMPLETE: 'adcomplete',
+  AD_COMPLETED: 'adcompleted',
   AD_ERROR: 'aderror',
-  ALL_ADS_COMPLETED: 'alladscompleted'
+  ALL_ADS_COMPLETED: 'alladscompleted',
+  AD_BREAK_START: 'adbreakstart',
+  AD_BREAK_END: 'adbreakend',
+  AD_FIRST_QUARTILE: 'adfirstquartile',
+  AD_MIDPOINT: 'admidpoint',
+  AD_THIRD_QUARTILE: 'adthirdquartile'
 };
 
 const PLAYER_EVENTS: { [event: string]: string } = merge([HTML5_EVENTS, CUSTOM_EVENTS]);
