@@ -109,14 +109,12 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   configure(config: Object): void {
-    this._config = mergeDeep(Player._defaultConfig(), config);
-    if (this._selectEngine()) {
-      this._attachMedia();
-      this._loadPlugins();
-      this._handlePlaybackConfig();
-    } else {
-      Player._logger.warn("No playable engines was found to play the given sources");
-    }
+      this._config = mergeDeep(this._config || Player._defaultConfig(), config);
+      if (this._selectEngine()) {
+        this._attachMedia();
+        this._loadPlugins();
+        this._handlePlaybackConfig();
+      }
   }
 
   /**
@@ -194,6 +192,7 @@ export default class Player extends FakeEventTarget {
         }
       }
     }
+    Player._logger.warn("No playable engines was found to play the given sources");
     return false;
   }
 
