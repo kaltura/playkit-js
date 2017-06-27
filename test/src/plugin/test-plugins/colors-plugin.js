@@ -1,8 +1,5 @@
 import BasePlugin from '../../../../src/plugin/base-plugin'
-import {registerPlugin} from '../../../../src/plugin/plugin-manager'
 import Player from '../../../../src/player'
-
-const pluginName = "colors";
 
 export default class ColorsPlugin extends BasePlugin {
   _favouriteColor: string = "";
@@ -42,5 +39,3 @@ export default class ColorsPlugin extends BasePlugin {
     this.logger.info("destroy", this._colors, this._favouriteColor, this._size);
   }
 }
-
-registerPlugin(pluginName, ColorsPlugin);

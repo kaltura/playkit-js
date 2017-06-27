@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import Player from '../../src/player'
 import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../../src/event/events'
 import sourcesConfig from './configs/sources.json'
@@ -7,7 +6,9 @@ import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
 import {removeVideoElementsFromTestPage} from './utils/test-utils'
 
-describe("play", () => {
+describe("play", function () {
+  this.timeout(10000);
+
   let config, player;
 
   beforeEach(() => {
@@ -82,7 +83,8 @@ describe("ready", () => {
         });
       });
 
-      describe("passing config in configure", () => {
+      describe("passing config in configure", function () {
+        this.timeout(10000);
 
         let player;
 
@@ -125,12 +127,13 @@ describe("ready", () => {
 
     describe("preload auto", () => {
 
-      describe("passing config in constructor", () => {
+      describe("passing config in constructor", function () {
+        this.timeout(10000);
 
         let player;
 
         beforeEach(() => {
-          config.preload = 'auto';
+          config.playback = {preload: 'auto'};
           player = new Player(config);
         });
 
@@ -160,7 +163,7 @@ describe("ready", () => {
         let player;
 
         beforeEach(() => {
-          config.preload = 'auto';
+          config.playback = {preload: 'auto'};
           player = new Player();
         });
 
@@ -236,7 +239,8 @@ describe("ready", () => {
 
     describe("preload none", () => {
 
-      describe("passing config in constructor", () => {
+      describe("passing config in constructor", function () {
+        this.timeout(10000);
 
         let player;
 
@@ -260,14 +264,15 @@ describe("ready", () => {
         it("should fail load -> ready", (done) => {
           player.load();
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
         });
       });
 
-      describe("passing config in configure", () => {
+      describe("passing config in configure", function () {
+        this.timeout(10000);
 
         let player;
 
@@ -282,10 +287,10 @@ describe("ready", () => {
         it("should fail configure -> ready -> load", (done) => {
           player.configure(config);
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
           player.load();
         });
 
@@ -293,18 +298,18 @@ describe("ready", () => {
           player.configure(config);
           player.load();
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
         });
 
         it("should fail ready -> configure -> load", (done) => {
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
           player.configure(config);
           player.load();
         });
@@ -318,7 +323,7 @@ describe("ready", () => {
         let player;
 
         beforeEach(() => {
-          config.preload = 'auto';
+          config.playback = {preload: 'auto'};
           player = new Player(config);
         });
 
@@ -328,20 +333,20 @@ describe("ready", () => {
 
         it("should fail ready -> load", (done) => {
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
           player.load();
         });
 
         it("should fail load -> ready", (done) => {
           player.load();
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
         });
       });
 
@@ -350,7 +355,7 @@ describe("ready", () => {
         let player;
 
         beforeEach(() => {
-          config.preload = 'auto';
+          config.playback = {preload: 'auto'};
           player = new Player();
         });
 
@@ -361,10 +366,10 @@ describe("ready", () => {
         it("should fail configure -> ready -> load", (done) => {
           player.configure(config);
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
           player.load();
         });
 
@@ -372,28 +377,28 @@ describe("ready", () => {
           player.configure(config);
           player.load();
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
         });
 
         it("should fail ready -> load -> configure", (done) => {
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
           player.load();
           player.configure(config);
         });
 
         it("should fail ready -> configure -> load", (done) => {
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
           player.configure(config);
           player.load();
         });
@@ -402,19 +407,19 @@ describe("ready", () => {
           player.load();
           player.configure(config);
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
         });
 
         it("should fail load -> ready -> configure", (done) => {
           player.load();
           player.ready()
-      .catch((error) => {
-        error.type.should.be.equal('error');
-        done();
-      });
+            .catch((error) => {
+              error.type.should.be.equal('error');
+              done();
+            });
           player.configure(config);
         });
       });
@@ -428,10 +433,11 @@ describe("ready", () => {
 });
 
 describe('getTracks dummy', () => {
-  let config = sourcesConfig.mp4_none_hls_dash;
-  let player = new Player(config);
+  let player, config;
 
   before(() => {
+    config = sourcesConfig.mp4_none_hls_dash;
+    player = new Player(config);
     player._tracks = [
       new VideoTrack(),
       new AudioTrack(),
@@ -467,7 +473,9 @@ describe('getTracks dummy', () => {
   });
 });
 
-describe('getTracks real', () => {
+describe('getTracks real', function () {
+  this.timeout(10000);
+
   let config;
   let player;
   let video;
@@ -522,12 +530,12 @@ describe('getTracks real', () => {
   });
 
   it('should return audio tracks', (done) => {
+    player.load();
     player.ready().then(() => {
       let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
       player.getTracks('audio').length.should.be.equal(audioTracksLength);
       done();
     });
-    player.load();
   });
 
   it('should return text tracks', (done) => {
@@ -557,7 +565,9 @@ describe('getTracks real', () => {
   });
 });
 
-describe('selectTrack - audio', () => {
+describe('selectTrack - audio', function () {
+  this.timeout(10000);
+
   let config, player, video;
 
   beforeEach(() => {
@@ -627,7 +637,7 @@ describe('selectTrack - audio', () => {
       }
       done();
     });
-    config.preload = 'auto';
+    config.playback = {preload: 'auto'};
     player.configure(config);
     video = player._engine.getVideoElement();
     player.load();
@@ -661,7 +671,9 @@ describe('selectTrack - audio', () => {
   });
 });
 
-describe('selectTrack - text', () => {
+describe('selectTrack - text', function () {
+  this.timeout(10000);
+
   let config, player, video, track1, track2;
 
   beforeEach(() => {
@@ -791,6 +803,54 @@ describe('selectTrack - text', () => {
   });
 });
 
+describe('hideTextTrack', function () {
+  this.timeout(10000);
+
+  let config, player, video, track1, track2;
+
+  beforeEach(() => {
+    config = sourcesConfig.mp4_none_hls_dash;
+    player = new Player(config);
+    video = player._engine.getVideoElement();
+    track1 = document.createElement("track");
+    track2 = document.createElement("track");
+    track1.kind = 'subtitles';
+    track1.label = 'English';
+    track1.default = true;
+    track2.kind = 'subtitles';
+    track2.srclang = 'fr';
+    video.appendChild(track1);
+    video.appendChild(track2);
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+  });
+
+  it('should disable the active text track', (done) => {
+    player.ready().then(() => {
+      let tracks = player._tracks.filter((track) => {
+        return track instanceof TextTrack;
+      });
+      video.textTracks[0].mode.should.be.equal('showing');
+      video.textTracks[1].mode.should.be.equal('disabled');
+      tracks[0].active.should.be.true;
+      tracks[1].active.should.be.false;
+      player.hideTextTrack();
+      video.textTracks[0].mode.should.be.equal('disabled');
+      video.textTracks[1].mode.should.be.equal('disabled');
+      tracks[0].active.should.be.false;
+      tracks[1].active.should.be.false;
+      done();
+    });
+    player.load();
+  });
+});
+
 describe('Track enum', function () {
   after(() => {
     removeVideoElementsFromTestPage();
@@ -806,7 +866,9 @@ describe('Track enum', function () {
 });
 
 describe('events', () => {
-  describe('tracks changed', () => {
+  describe('tracks changed', function () {
+    this.timeout(10000);
+
     let config, player, video, track1, track2;
 
     beforeEach(() => {
@@ -831,20 +893,31 @@ describe('events', () => {
     after(() => {
       removeVideoElementsFromTestPage();
     });
+
     it('should fire tracks changed', function (done) {
-      player.load();
-      player.addEventListener(CustomEvents.TRACKS_CHANGED, (data) => {
+      /**
+       * Handles assertions after tracks changed event.
+       * @param {Object} data - The event data.
+       * @returns {void}
+       */
+      function onTracksChanged(data) {
+        player.removeEventListener(CustomEvents.TRACKS_CHANGED, onTracksChanged);
         let videoTracksLength = (video.videoTracks ? video.videoTracks.length : 0);
         let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
         let textTracksLength = (video.textTracks ? video.textTracks.length : 0);
         let totalTracksLength = videoTracksLength + audioTracksLength + textTracksLength;
         data.payload.tracks.length.should.be.equal(totalTracksLength);
         done();
-      });
+      }
+
+      player.addEventListener(CustomEvents.TRACKS_CHANGED, onTracksChanged);
+      player.load();
     });
   });
 
-  describe('firstPlay', () => {
+  describe('first play', function () {
+    this.timeout(10000);
+
     let config;
     let player;
 

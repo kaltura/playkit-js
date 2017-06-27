@@ -4,6 +4,9 @@ import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
 
 declare interface IEngine {
+  static id: string;
+  static createEngine(source: Source, config: Object): IEngine;
+  static canPlayType(mimeType: string): boolean;
   destroy(): void;
   attach(): void;
   detach(): void;
@@ -14,6 +17,7 @@ declare interface IEngine {
   selectVideoTrack(videoTrack: VideoTrack): void;
   selectAudioTrack(audioTrack: AudioTrack): void;
   selectTextTrack(textTrack: TextTrack): void;
+  hideTextTrack(): void;
   enableAdaptiveBitrate(): void;
   getVideoElement(): HTMLVideoElement;
   currentTime: number;

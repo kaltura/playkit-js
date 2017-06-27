@@ -8,21 +8,21 @@ import LoggerFactory from '../../../utils/logger'
  */
 export default class MediaSourceProvider {
   /**
-   * The logger of the media source provider
+   * The logger of the media source provider.
    * @member {any} _logger
    * @static
    * @private
    */
   static _logger: any = LoggerFactory.getLogger('MediaSourceProvider');
   /**
-   * The media source adapter registry
+   * The media source adapter registry.
    * @member {Array<IMediaSourceAdapter>} _mediaSourceAdapters
    * @static
    * @private
    */
   static _mediaSourceAdapters: Array<typeof IMediaSourceAdapter> = [NativeAdapter];
   /**
-   * The selected adapter for playback
+   * The selected adapter for playback.
    * @type {null|IMediaSourceAdapter}
    * @static
    * @private
@@ -30,9 +30,9 @@ export default class MediaSourceProvider {
   static _selectedAdapter: ?(typeof IMediaSourceAdapter) = null;
 
   /**
-   * Add a media source adapter to the registry
+   * Add a media source adapter to the registry.
    * @function register
-   * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to register
+   * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to register.
    * @static
    * @returns {void}
    */
@@ -48,9 +48,9 @@ export default class MediaSourceProvider {
   }
 
   /**
-   * Remove a media source adapter from the registry
+   * Remove a media source adapter from the registry.
    * @function unRegister
-   * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to unRegister
+   * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to unRegister.
    * @static
    * @returns {void}
    */
@@ -63,11 +63,11 @@ export default class MediaSourceProvider {
   }
 
   /**
-   * Checks if one of the registered media source adapters can play a given mime type
+   * Checks if one of the registered media source adapters can play a given mime type.
    * @function canPlayType
-   * @param {string} mimeType - The mime type to check
+   * @param {string} mimeType - The mime type to check.
    * @static
-   * @returns {boolean} - If one of the adapters can play the specific mime type
+   * @returns {boolean} - If one of the adapters can play the specific mime type.
    */
   static canPlayType(mimeType: string): boolean {
     let mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
@@ -82,12 +82,12 @@ export default class MediaSourceProvider {
   }
 
   /**
-   * Get the appropriate media source adapter to the video source
+   * Get the appropriate media source adapter to the video source.
    * @function getMediaSourceAdapter
-   * @param {HTMLVideoElement} videoElement - The video element which requires adapter for a given mimeType
-   * @param {Source} source - The selected source object
-   * @param {Object} config - The player configuration
-   * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists
+   * @param {HTMLVideoElement} videoElement - The video element which requires adapter for a given mimeType.
+   * @param {Source} source - The selected source object.
+   * @param {Object} config - The player configuration.
+   * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists.
    * @static
    */
   static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): ?IMediaSourceAdapter {
@@ -95,9 +95,18 @@ export default class MediaSourceProvider {
       if (!MediaSourceProvider._selectedAdapter) {
         MediaSourceProvider.canPlayType(source.mimetype);
       }
-      return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config.engines) : null;
+      return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config) : null;
     }
     return null;
+  }
+
+  /**
+   * Destroys the media source adapter provider necessary props.
+   * @static
+   * @returns {void}
+   */
+  static destroy(): void {
+    MediaSourceProvider._selectedAdapter = null;
   }
 }
 
