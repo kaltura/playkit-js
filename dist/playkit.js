@@ -1144,7 +1144,7 @@ var Player = function (_FakeEventTarget) {
   }
 
   /**
-   * Configures the player according to given configuration.
+   * Configures the player according to a given configuration.
    * @param {Object} config - The configuration for the player instance.
    * @returns {void}
    */
@@ -1160,18 +1160,46 @@ var Player = function (_FakeEventTarget) {
   _createClass(Player, [{
     key: 'configure',
     value: function configure(config) {
-      // Destroy current engine (if exists) on new sources
-      if (this._engine && config.sources) {
-        this._reset();
-      }
-      // Merge new config
+      var engine = this._engine;
+      this._maybeResetPlayer(config);
       this._config = (0, _util.mergeDeep)((0, _util.isEmptyObject)(this._config) ? Player._defaultConfig : this._config, config);
-      // Create engine
       if (this._selectEngine()) {
         this._appendEngineEl();
         this._attachMedia();
-        this._loadPlugins();
+        this._maybeLoadPlugins(engine);
         this._handlePlaybackConfig();
+      }
+    }
+
+    /**
+     * Resets the player in case of new sources with existing engine.
+     * @param {Object} config - The player configuration.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_maybeResetPlayer',
+    value: function _maybeResetPlayer(config) {
+      if (this._engine && config.sources) {
+        Player._logger.debug('New sources on existing engine: reset engine to change media');
+        this._reset();
+      }
+    }
+
+    /**
+     * Loads the plugins in case engine created for the first time.
+     * @param {?IEngine} engine - The engine before the enter to configure method.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_maybeLoadPlugins',
+    value: function _maybeLoadPlugins(engine) {
+      if (this._engine && !engine) {
+        Player._logger.debug('Engine created for the first time: load plugins');
+        this._loadPlugins();
       }
     }
 
