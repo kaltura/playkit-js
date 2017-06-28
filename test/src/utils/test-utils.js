@@ -1,6 +1,57 @@
 /* eslint-disable no-unused-vars */
 
 /**
+ * Configuration structure of the player.
+ * @returns {Object} - The configuration structure of the player.
+ */
+function getConfigStructure() {
+  return {
+    "sources": {},
+    "playback": {
+      "preload": "none",
+      "autoplay": false,
+      "muted": false,
+      "streamPriority": [
+        {
+          "engine": "html5",
+          "format": "hls"
+        },
+        {
+          "engine": "html5",
+          "format": "dash"
+        },
+        {
+          "engine": "html5",
+          "format": "progressive"
+        }
+      ]
+    }
+  }
+}
+
+/**
+ * Creates a dom element.
+ * @param {string} type - The element type.
+ * @param {string} id - The element id.
+ * @returns {void}
+ */
+function createElement(type, id) {
+  let element = document.createElement(type);
+  element.id = id;
+  document.body.appendChild(element);
+}
+
+/**
+ * Removes a dom element.
+ * @param {string} id - The element id.
+ * @returns {void}
+ */
+function removeElemenet(id) {
+  let element = document.getElementById(id);
+  element.parentNode.removeChild(element);
+}
+
+/**
  * Removes all the video elements that created by the test from the document.
  * @returns {void}
  */
@@ -92,5 +143,8 @@ export {
   createTrackButton,
   createTextTrackButtons,
   createAudioTrackButtons,
-  createVideoTrackButtons
+  createVideoTrackButtons,
+  createElement,
+  removeElemenet,
+  getConfigStructure
 };

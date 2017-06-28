@@ -240,7 +240,7 @@ exports.LOG_LEVEL = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jsLogger = __webpack_require__(25);
+var _jsLogger = __webpack_require__(27);
 
 var JsLogger = _interopRequireWildcard(_jsLogger);
 
@@ -829,7 +829,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.CUSTOM_EVENTS = exports.HTML5_EVENTS = exports.PLAYER_EVENTS = undefined;
 
-var _util = __webpack_require__(11);
+var _util = __webpack_require__(9);
 
 var HTML5_EVENTS = {
   /**
@@ -983,7 +983,7 @@ var _fakeEvent = __webpack_require__(2);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _fakeEventTarget = __webpack_require__(9);
+var _fakeEventTarget = __webpack_require__(10);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
@@ -993,7 +993,7 @@ var _stateTypes = __webpack_require__(16);
 
 var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
-var _util = __webpack_require__(11);
+var _util = __webpack_require__(9);
 
 var _logger = __webpack_require__(1);
 
@@ -1031,9 +1031,11 @@ var _textTrack = __webpack_require__(4);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _playerConfig = __webpack_require__(26);
+var _playerConfig = __webpack_require__(31);
 
 var _playerConfig2 = _interopRequireDefault(_playerConfig);
+
+__webpack_require__(28);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1044,53 +1046,24 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 /**
+ * The player container class name.
+ * @type {string}
+ * @const
+ */
+var CONTAINER_CLASS_NAME = 'playkit-container';
+
+/**
  * The HTML5 player class.
  * @classdesc
  */
+
 var Player = function (_FakeEventTarget) {
   _inherits(Player, _FakeEventTarget);
 
   /**
+   * @param {string} targetId - The target div id to append the player.
    * @param {Object} config - The configuration for the player instance.
    * @constructor
-   */
-
-  /**
-   * The player class logger.
-   * @type {any}
-   * @static
-   * @private
-   */
-  function Player(config) {
-    _classCallCheck(this, Player);
-
-    var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
-
-    _this._tracks = [];
-    _this._firstPlay = true;
-    _this._stateManager = new _stateManager2.default(_this);
-    _this._pluginManager = new _pluginManager2.default();
-    _this._eventManager = new _eventManager2.default();
-    _this._readyPromise = new Promise(function (resolve, reject) {
-      _this._eventManager.listen(_this, _events.CUSTOM_EVENTS.TRACKS_CHANGED, function () {
-        resolve();
-      });
-      _this._eventManager.listen(_this, _events.HTML5_EVENTS.ERROR, reject);
-    });
-    _this.configure(config);
-    return _this;
-  }
-
-  /**
-   * Configures the player according to given configuration.
-   * @param {Object} config - The configuration for the player instance.
-   * @returns {void}
-   */
-
-  /**
-   * The available engines of the player.
-   * @type {Array<typeof IEngine>}
-   * @private
    */
 
   /**
@@ -1141,16 +1114,131 @@ var Player = function (_FakeEventTarget) {
    * @private
    */
 
+  /**
+   * The player DOM element container.
+   * @type {HTMLElement}
+   * @private
+   */
+
+  /**
+   * The player class logger.
+   * @type {any}
+   * @static
+   * @private
+   */
+  function Player(targetId, config) {
+    _classCallCheck(this, Player);
+
+    var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
+
+    _this._tracks = [];
+    _this._config = {};
+    _this._firstPlay = true;
+    _this._stateManager = new _stateManager2.default(_this);
+    _this._pluginManager = new _pluginManager2.default();
+    _this._eventManager = new _eventManager2.default();
+    _this._createReadyPromise();
+    _this._appendPlayerContainer(targetId);
+    _this.configure(config);
+    return _this;
+  }
+
+  /**
+   * Configures the player according to a given configuration.
+   * @param {Object} config - The configuration for the player instance.
+   * @returns {void}
+   */
+
+  /**
+   * The available engines of the player.
+   * @type {Array<typeof IEngine>}
+   * @private
+   * @static
+   */
+
 
   _createClass(Player, [{
     key: 'configure',
     value: function configure(config) {
-      this._config = (0, _util.mergeDeep)(this._config || Player._defaultConfig, config);
+      var engine = this._engine;
+      this._maybeResetPlayer(config);
+      this._config = (0, _util.mergeDeep)((0, _util.isEmptyObject)(this._config) ? Player._defaultConfig : this._config, config);
       if (this._selectEngine()) {
+        this._appendEngineEl();
         this._attachMedia();
-        this._loadPlugins();
+        this._maybeLoadPlugins(engine);
         this._handlePlaybackConfig();
       }
+    }
+
+    /**
+     * Resets the player in case of new sources with existing engine.
+     * @param {Object} config - The player configuration.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_maybeResetPlayer',
+    value: function _maybeResetPlayer(config) {
+      if (this._engine && config.sources) {
+        Player._logger.debug('New sources on existing engine: reset engine to change media');
+        this._reset();
+      }
+    }
+
+    /**
+     * Loads the plugins in case engine created for the first time.
+     * @param {?IEngine} engine - The engine before the enter to configure method.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_maybeLoadPlugins',
+    value: function _maybeLoadPlugins(engine) {
+      if (this._engine && !engine) {
+        Player._logger.debug('Engine created for the first time: load plugins');
+        this._loadPlugins();
+      }
+    }
+
+    /**
+     * Reset the necessary components before change media.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_reset',
+    value: function _reset() {
+      if (this._engine) {
+        this._engine.destroy();
+      }
+      this._config = {};
+      this._tracks = [];
+      this._firstPlay = true;
+      this._eventManager.removeAll();
+      this._createReadyPromise();
+    }
+
+    /**
+     * Creates the ready promise.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_createReadyPromise',
+    value: function _createReadyPromise() {
+      var _this2 = this;
+
+      this._readyPromise = new Promise(function (resolve, reject) {
+        _this2._eventManager.listen(_this2, _events.CUSTOM_EVENTS.TRACKS_CHANGED, function () {
+          resolve();
+        });
+        _this2._eventManager.listen(_this2, _events.HTML5_EVENTS.ERROR, reject);
+      });
     }
 
     /**
@@ -1221,7 +1309,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_selectEngineByPriority',
     value: function _selectEngineByPriority() {
-      var _this2 = this;
+      var _this3 = this;
 
       var streamPriority = this._config.playback.streamPriority;
       var sources = this._config.sources;
@@ -1243,7 +1331,7 @@ var Player = function (_FakeEventTarget) {
             if (formatSources && formatSources.length > 0) {
               var source = formatSources[0];
               if (engine.canPlayType(source.mimetype)) {
-                _this2._loadEngine(engine, source);
+                _this3._loadEngine(engine, source);
                 return {
                   v: true
                 };
@@ -1300,25 +1388,25 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_attachMedia',
     value: function _attachMedia() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this._engine) {
         for (var playerEvent in _events.HTML5_EVENTS) {
           this._eventManager.listen(this._engine, _events.HTML5_EVENTS[playerEvent], function (event) {
-            return _this3.dispatchEvent(event);
+            return _this4.dispatchEvent(event);
           });
         }
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, function (event) {
-          _this3._markActiveTrack(event.payload.selectedVideoTrack);
-          return _this3.dispatchEvent(event);
+          _this4._markActiveTrack(event.payload.selectedVideoTrack);
+          return _this4.dispatchEvent(event);
         });
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED, function (event) {
-          _this3._markActiveTrack(event.payload.selectedAudioTrack);
-          return _this3.dispatchEvent(event);
+          _this4._markActiveTrack(event.payload.selectedAudioTrack);
+          return _this4.dispatchEvent(event);
         });
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED, function (event) {
-          _this3._markActiveTrack(event.payload.selectedTextTrack);
-          return _this3.dispatchEvent(event);
+          _this4._markActiveTrack(event.payload.selectedTextTrack);
+          return _this4.dispatchEvent(event);
         });
         this._eventManager.listen(this, _events.HTML5_EVENTS.PLAY, this._onPlay.bind(this));
       }
@@ -1336,6 +1424,58 @@ var Player = function (_FakeEventTarget) {
         if (this._config.playback.autoplay) {
           this.play();
         }
+      }
+    }
+
+    /**
+     * Creates the player container
+     * @param {string} targetId - The target div id to append the player.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_appendPlayerContainer',
+    value: function _appendPlayerContainer(targetId) {
+      if (targetId) {
+        if (this._el === undefined) {
+          this._createPlayerContainer();
+          var parentNode = document.getElementById(targetId);
+          if (parentNode != null && this._el != null) {
+            parentNode.appendChild(this._el);
+          }
+        }
+      } else {
+        throw new Error("targetId is not found, it must be pass on initialization");
+      }
+    }
+
+    /**
+     * Creates the player container.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_createPlayerContainer',
+    value: function _createPlayerContainer() {
+      this._el = document.createElement("div");
+      this._el.id = (0, _util.uniqueId)(5);
+      this._el.className = CONTAINER_CLASS_NAME;
+      this._el.setAttribute('tabindex', '-1');
+    }
+
+    /**
+     * Appends the engine's video element to the player's div container.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_appendEngineEl',
+    value: function _appendEngineEl() {
+      if (this._el != null && this._engine != null) {
+        this._el.appendChild(this._engine.getVideoElement());
       }
     }
 
@@ -1503,14 +1643,14 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'load',
     value: function load() {
-      var _this4 = this;
+      var _this5 = this;
 
       if (this._engine) {
         this._engine.load().then(function (data) {
-          _this4._tracks = data.tracks;
-          _this4.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.TRACKS_CHANGED, { tracks: _this4._tracks }));
+          _this5._tracks = data.tracks;
+          _this5.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.TRACKS_CHANGED, { tracks: _this5._tracks }));
         }).catch(function (error) {
-          _this4.dispatchEvent(new _fakeEvent2.default(_events.HTML5_EVENTS.ERROR, error));
+          _this5.dispatchEvent(new _fakeEvent2.default(_events.HTML5_EVENTS.ERROR, error));
         });
       }
     }
@@ -1524,7 +1664,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'play',
     value: function play() {
-      var _this5 = this;
+      var _this6 = this;
 
       if (this._engine) {
         if (this._engine.src) {
@@ -1532,7 +1672,7 @@ var Player = function (_FakeEventTarget) {
         } else {
           this.load();
           this.ready().then(function () {
-            _this5._engine.play();
+            _this6._engine.play();
           });
         }
       }
@@ -1790,6 +1930,176 @@ exports.default = Player;
 "use strict";
 
 
+/**
+ * @param {number} n - A certain number
+ * @returns {boolean} - If the input is a number
+ */
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function isNumber(n) {
+  return Number(n) === n;
+}
+
+/**
+ * @param {number} n - A certain number
+ * @returns {boolean} - If the input is an integer
+ */
+function isInt(n) {
+  return isNumber(n) && n % 1 === 0;
+}
+
+/**
+ * @param {number} n - A certain number
+ * @returns {boolean} - If the input is a float
+ */
+function isFloat(n) {
+  return isNumber(n) && n % 1 !== 0;
+}
+
+/**
+ * @param {Array<Object>} objects - The objects to merge
+ * @returns {Object} - The merged object.
+ */
+function merge(objects) {
+  var target = {};
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = objects[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var obj = _step.value;
+
+      Object.assign(target, obj);
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  return target;
+}
+
+/**
+ * @param {any} item - The item to check.
+ * @returns {boolean} - Whether the item is an object.
+ */
+function isObject(item) {
+  return item && (typeof item === "undefined" ? "undefined" : _typeof(item)) === 'object' && !Array.isArray(item);
+}
+
+/**
+ * @param {any} target - The target object.
+ * @param {any} sources - The objects to merge.
+ * @returns {Object} - The merged object.
+ */
+function mergeDeep(target) {
+  for (var _len = arguments.length, sources = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    sources[_key - 1] = arguments[_key];
+  }
+
+  if (!sources.length) {
+    return target;
+  }
+  var source = sources.shift();
+  if (isObject(target) && isObject(source)) {
+    for (var key in source) {
+      if (isObject(source[key])) {
+        if (!target[key]) Object.assign(target, _defineProperty({}, key, {}));
+        mergeDeep(target[key], source[key]);
+      } else {
+        Object.assign(target, _defineProperty({}, key, source[key]));
+      }
+    }
+  }
+  return mergeDeep.apply(undefined, [target].concat(_toConsumableArray(sources)));
+}
+
+/**
+ * @param {any} data - The data to copy.
+ * @returns {any} - The copied data.
+ */
+function copyDeep(data) {
+  var node = void 0;
+  if (Array.isArray(data)) {
+    node = data.length > 0 ? data.slice(0) : [];
+    node.forEach(function (e, i) {
+      if ((typeof e === "undefined" ? "undefined" : _typeof(e)) === "object" && e !== {} || Array.isArray(e) && e.length > 0) {
+        node[i] = copyDeep(e);
+      }
+    });
+  } else if ((typeof data === "undefined" ? "undefined" : _typeof(data)) === "object") {
+    node = Object.assign({}, data);
+    Object.keys(node).forEach(function (key) {
+      if (_typeof(node[key]) === "object" && node[key] !== {} || Array.isArray(node[key]) && node[key].length > 0) {
+        node[key] = copyDeep(node[key]);
+      }
+    });
+  } else {
+    node = data;
+  }
+  return node;
+}
+
+/**
+ * Generates unique id.
+ * @param {number} length - The length of the id.
+ * @returns {string} - The generated id.
+ */
+function uniqueId(length) {
+  var from = 2;
+  var to = from + (!length || length < 0 ? 0 : length - 2);
+  return '_' + Math.random().toString(36).substr(from, to);
+}
+
+/**
+ * Checks if an object is an empy object.
+ * @param {Object} obj - The object to check
+ * @returns {boolean} - Whether the object is empty.
+ */
+function isEmptyObject(obj) {
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) return false;
+  }
+  return true;
+}
+
+exports.isNumber = isNumber;
+exports.isInt = isInt;
+exports.isFloat = isFloat;
+exports.isObject = isObject;
+exports.merge = merge;
+exports.mergeDeep = mergeDeep;
+exports.copyDeep = copyDeep;
+exports.uniqueId = uniqueId;
+exports.isEmptyObject = isEmptyObject;
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -1930,7 +2240,7 @@ var FakeEventTarget = function () {
 exports.default = FakeEventTarget;
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1988,151 +2298,6 @@ PlayerError.TYPE = {
 exports.default = PlayerError;
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * @param {number} n - A certain number
- * @returns {boolean} - If the input is a number
- */
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function isNumber(n) {
-  return Number(n) === n;
-}
-
-/**
- * @param {number} n - A certain number
- * @returns {boolean} - If the input is an integer
- */
-function isInt(n) {
-  return isNumber(n) && n % 1 === 0;
-}
-
-/**
- * @param {number} n - A certain number
- * @returns {boolean} - If the input is a float
- */
-function isFloat(n) {
-  return isNumber(n) && n % 1 !== 0;
-}
-
-/**
- * @param {Array<Object>} objects - The objects to merge
- * @returns {Object} - The merged object.
- */
-function merge(objects) {
-  var target = {};
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
-
-  try {
-    for (var _iterator = objects[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var obj = _step.value;
-
-      Object.assign(target, obj);
-    }
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator.return) {
-        _iterator.return();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
-  }
-
-  return target;
-}
-
-/**
- * @param {any} item - The item to check.
- * @returns {boolean} - Whether the item is an object.
- */
-function isObject(item) {
-  return item && (typeof item === "undefined" ? "undefined" : _typeof(item)) === 'object' && !Array.isArray(item);
-}
-
-/**
- * @param {any} target - The target object.
- * @param {any} sources - The objects to merge.
- * @returns {Object} - The merged object.
- */
-function mergeDeep(target) {
-  for (var _len = arguments.length, sources = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    sources[_key - 1] = arguments[_key];
-  }
-
-  if (!sources.length) {
-    return target;
-  }
-  var source = sources.shift();
-  if (isObject(target) && isObject(source)) {
-    for (var key in source) {
-      if (isObject(source[key])) {
-        if (!target[key]) Object.assign(target, _defineProperty({}, key, {}));
-        mergeDeep(target[key], source[key]);
-      } else {
-        Object.assign(target, _defineProperty({}, key, source[key]));
-      }
-    }
-  }
-  return mergeDeep.apply(undefined, [target].concat(_toConsumableArray(sources)));
-}
-
-/**
- * @param {any} data - The data to copy.
- * @returns {any} - The copied data.
- */
-function copyDeep(data) {
-  var node = void 0;
-  if (Array.isArray(data)) {
-    node = data.length > 0 ? data.slice(0) : [];
-    node.forEach(function (e, i) {
-      if ((typeof e === "undefined" ? "undefined" : _typeof(e)) === "object" && e !== {} || Array.isArray(e) && e.length > 0) {
-        node[i] = copyDeep(e);
-      }
-    });
-  } else if ((typeof data === "undefined" ? "undefined" : _typeof(data)) === "object") {
-    node = Object.assign({}, data);
-    Object.keys(node).forEach(function (key) {
-      if (_typeof(node[key]) === "object" && node[key] !== {} || Array.isArray(node[key]) && node[key].length > 0) {
-        node[key] = copyDeep(node[key]);
-      }
-    });
-  } else {
-    node = data;
-  }
-  return node;
-}
-
-exports.isNumber = isNumber;
-exports.isInt = isInt;
-exports.isFloat = isFloat;
-exports.isObject = isObject;
-exports.merge = merge;
-exports.mergeDeep = mergeDeep;
-exports.copyDeep = copyDeep;
-
-/***/ }),
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2149,11 +2314,11 @@ var _fakeEvent = __webpack_require__(2);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _fakeEventTarget = __webpack_require__(9);
+var _fakeEventTarget = __webpack_require__(10);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
-var _playerError = __webpack_require__(10);
+var _playerError = __webpack_require__(11);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
@@ -2558,13 +2723,13 @@ var _logger = __webpack_require__(1);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _util = __webpack_require__(11);
+var _util = __webpack_require__(9);
 
 var _eventManager = __webpack_require__(6);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _playerError = __webpack_require__(10);
+var _playerError = __webpack_require__(11);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
@@ -2747,7 +2912,7 @@ var _basePlugin = __webpack_require__(14);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
-var _playerError = __webpack_require__(10);
+var _playerError = __webpack_require__(11);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
@@ -3173,6 +3338,7 @@ module.exports = {
 		"babel-register": "^6.23.0",
 		"chai": "^3.5.0",
 		"cross-env": "^3.1.4",
+		"css-loader": "^0.28.4",
 		"eslint": "^3.10.0",
 		"eslint-loader": "^1.6.1",
 		"eslint-plugin-flowtype": "^2.30.0",
@@ -3197,6 +3363,7 @@ module.exports = {
 		"sinon": "^2.0.0",
 		"sinon-chai": "^2.8.0",
 		"standard-version": "^4.0.0",
+		"style-loader": "^0.18.2",
 		"uglifyjs-webpack-plugin": "^0.4.3",
 		"webpack": "latest",
 		"webpack-dev-server": "latest"
@@ -3233,7 +3400,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _fakeEventTarget = __webpack_require__(9);
+var _fakeEventTarget = __webpack_require__(10);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
@@ -3263,6 +3430,8 @@ var _textTrack = __webpack_require__(4);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
+var _util = __webpack_require__(9);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -3270,6 +3439,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * The engine video element class name.
+ * @type {string}
+ * @const
+ */
+var VIDEO_ELEMENT_CLASS_NAME = 'playkit-engine-html5';
+
+/**
+ * Html5 engine for playback.
+ * @classdesc
+ */
 
 var Html5 = function (_FakeEventTarget) {
   _inherits(Html5, _FakeEventTarget);
@@ -3373,13 +3554,20 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
-     * Listen to the video element events and triggers them from the engine.
+     * Get the engine's id
      * @public
-     * @returns {void}
+     * @returns {string} the engine's id
      */
 
   }, {
     key: 'attach',
+
+
+    /**
+     * Listen to the video element events and triggers them from the engine.
+     * @public
+     * @returns {void}
+     */
     value: function attach() {
       var _this2 = this;
 
@@ -3446,14 +3634,9 @@ var Html5 = function (_FakeEventTarget) {
     key: '_createVideoElement',
     value: function _createVideoElement() {
       this._el = document.createElement("video");
-      //Set attributes
-      this._el.style.width = "640px";
-      this._el.style.height = "360px";
-      this._el.style.backgroundColor = "black";
-      this._el.controls = true;
-      if (document && document.body) {
-        document.body.appendChild(this._el);
-      }
+      this._el.id = (0, _util.uniqueId)(5);
+      this._el.className = VIDEO_ELEMENT_CLASS_NAME;
+      this._el.controls = false;
     }
 
     /**
@@ -3603,6 +3786,11 @@ var Html5 = function (_FakeEventTarget) {
      * @public
      */
 
+  }, {
+    key: 'id',
+    get: function get() {
+      return Html5.id;
+    }
   }, {
     key: 'src',
     set: function set(source) {
@@ -4460,7 +4648,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.VERSION = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerMediaSourceAdapter = undefined;
-exports.playkit = playkit;
+exports.loadPlayer = loadPlayer;
 
 var _player = __webpack_require__(8);
 
@@ -4514,13 +4702,12 @@ _logger2.default.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-s
 _logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
 
 /**
+ * @param {string} targetId - The target div id to append the player.
  * @param {Object} config - The configuration of the player
  * @returns {Player} - The player instance
  */
-function playkit() {
-  var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-  return new _player2.default(config);
+function loadPlayer(targetId, config) {
+  return new _player2.default(targetId, config || {});
 }
 
 // Export the media source adapters necessary utils
@@ -4542,7 +4729,7 @@ exports.TextTrack = _textTrack2.default;
 //export version
 
 exports.VERSION = VERSION;
-exports.default = playkit;
+exports.default = loadPlayer;
 
 /***/ }),
 /* 22 */
@@ -4643,7 +4830,7 @@ var StateManager = function () {
       _this._updateState(_stateTypes2.default.BUFFERING);
       _this._dispatchEvent();
     }), _PlayerStates$IDLE)), _defineProperty(_transitions, _stateTypes2.default.LOADING, (_PlayerStates$LOADING = {}, _defineProperty(_PlayerStates$LOADING, _events.HTML5_EVENTS.LOADED_METADATA, function () {
-      if (_this._player.config.autoPlay) {
+      if (_this._player.config.playback.autoplay) {
         _this._updateState(_stateTypes2.default.PLAYING);
       } else {
         _this._updateState(_stateTypes2.default.PAUSED);
@@ -4948,6 +5135,102 @@ exports.default = TRACK_TYPES;
 /* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
+exports = module.exports = __webpack_require__(26)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".playkit-container {\n  width: 100%;\n  height: 100%;\n  background-color: #000;\n  color: #fff;\n  outline: none;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n  -webkit-tap-highlight-color: transparent;\n}\n\n*[class^=\"playkit-engine-\"] {\n  width: 100%;\n  height: 100%;\n  background-color: #000;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
+
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
  * js-logger - http://github.com/jonnyreeves/js-logger
  * Jonny Reeves, http://jonnyreeves.co.uk/
@@ -5212,7 +5495,492 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 26 */
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(25);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// Prepare cssTransformation
+var transform;
+
+var options = {}
+options.transform = transform
+// add the styles to the DOM
+var update = __webpack_require__(29)(content, options);
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../node_modules/css-loader/index.js!./style.css", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!./style.css");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+
+var stylesInDom = {};
+
+var	memoize = function (fn) {
+	var memo;
+
+	return function () {
+		if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+		return memo;
+	};
+};
+
+var isOldIE = memoize(function () {
+	// Test for IE <= 9 as proposed by Browserhacks
+	// @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
+	// Tests for existence of standard globals is to allow style-loader
+	// to operate correctly into non-standard environments
+	// @see https://github.com/webpack-contrib/style-loader/issues/177
+	return window && document && document.all && !window.atob;
+});
+
+var getElement = (function (fn) {
+	var memo = {};
+
+	return function(selector) {
+		if (typeof memo[selector] === "undefined") {
+			memo[selector] = fn.call(this, selector);
+		}
+
+		return memo[selector]
+	};
+})(function (target) {
+	return document.querySelector(target)
+});
+
+var singleton = null;
+var	singletonCounter = 0;
+var	stylesInsertedAtTop = [];
+
+var	fixUrls = __webpack_require__(30);
+
+module.exports = function(list, options) {
+	if (typeof DEBUG !== "undefined" && DEBUG) {
+		if (typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+	}
+
+	options = options || {};
+
+	options.attrs = typeof options.attrs === "object" ? options.attrs : {};
+
+	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+	// tags it will allow on a page
+	if (!options.singleton) options.singleton = isOldIE();
+
+	// By default, add <style> tags to the <head> element
+	if (!options.insertInto) options.insertInto = "head";
+
+	// By default, add <style> tags to the bottom of the target
+	if (!options.insertAt) options.insertAt = "bottom";
+
+	var styles = listToStyles(list, options);
+
+	addStylesToDom(styles, options);
+
+	return function update (newList) {
+		var mayRemove = [];
+
+		for (var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+
+			domStyle.refs--;
+			mayRemove.push(domStyle);
+		}
+
+		if(newList) {
+			var newStyles = listToStyles(newList, options);
+			addStylesToDom(newStyles, options);
+		}
+
+		for (var i = 0; i < mayRemove.length; i++) {
+			var domStyle = mayRemove[i];
+
+			if(domStyle.refs === 0) {
+				for (var j = 0; j < domStyle.parts.length; j++) domStyle.parts[j]();
+
+				delete stylesInDom[domStyle.id];
+			}
+		}
+	};
+};
+
+function addStylesToDom (styles, options) {
+	for (var i = 0; i < styles.length; i++) {
+		var item = styles[i];
+		var domStyle = stylesInDom[item.id];
+
+		if(domStyle) {
+			domStyle.refs++;
+
+			for(var j = 0; j < domStyle.parts.length; j++) {
+				domStyle.parts[j](item.parts[j]);
+			}
+
+			for(; j < item.parts.length; j++) {
+				domStyle.parts.push(addStyle(item.parts[j], options));
+			}
+		} else {
+			var parts = [];
+
+			for(var j = 0; j < item.parts.length; j++) {
+				parts.push(addStyle(item.parts[j], options));
+			}
+
+			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+		}
+	}
+}
+
+function listToStyles (list, options) {
+	var styles = [];
+	var newStyles = {};
+
+	for (var i = 0; i < list.length; i++) {
+		var item = list[i];
+		var id = options.base ? item[0] + options.base : item[0];
+		var css = item[1];
+		var media = item[2];
+		var sourceMap = item[3];
+		var part = {css: css, media: media, sourceMap: sourceMap};
+
+		if(!newStyles[id]) styles.push(newStyles[id] = {id: id, parts: [part]});
+		else newStyles[id].parts.push(part);
+	}
+
+	return styles;
+}
+
+function insertStyleElement (options, style) {
+	var target = getElement(options.insertInto)
+
+	if (!target) {
+		throw new Error("Couldn't find a style target. This probably means that the value for the 'insertInto' parameter is invalid.");
+	}
+
+	var lastStyleElementInsertedAtTop = stylesInsertedAtTop[stylesInsertedAtTop.length - 1];
+
+	if (options.insertAt === "top") {
+		if (!lastStyleElementInsertedAtTop) {
+			target.insertBefore(style, target.firstChild);
+		} else if (lastStyleElementInsertedAtTop.nextSibling) {
+			target.insertBefore(style, lastStyleElementInsertedAtTop.nextSibling);
+		} else {
+			target.appendChild(style);
+		}
+		stylesInsertedAtTop.push(style);
+	} else if (options.insertAt === "bottom") {
+		target.appendChild(style);
+	} else {
+		throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
+	}
+}
+
+function removeStyleElement (style) {
+	if (style.parentNode === null) return false;
+	style.parentNode.removeChild(style);
+
+	var idx = stylesInsertedAtTop.indexOf(style);
+	if(idx >= 0) {
+		stylesInsertedAtTop.splice(idx, 1);
+	}
+}
+
+function createStyleElement (options) {
+	var style = document.createElement("style");
+
+	options.attrs.type = "text/css";
+
+	addAttrs(style, options.attrs);
+	insertStyleElement(options, style);
+
+	return style;
+}
+
+function createLinkElement (options) {
+	var link = document.createElement("link");
+
+	options.attrs.type = "text/css";
+	options.attrs.rel = "stylesheet";
+
+	addAttrs(link, options.attrs);
+	insertStyleElement(options, link);
+
+	return link;
+}
+
+function addAttrs (el, attrs) {
+	Object.keys(attrs).forEach(function (key) {
+		el.setAttribute(key, attrs[key]);
+	});
+}
+
+function addStyle (obj, options) {
+	var style, update, remove, result;
+
+	// If a transform function was defined, run it on the css
+	if (options.transform && obj.css) {
+	    result = options.transform(obj.css);
+
+	    if (result) {
+	    	// If transform returns a value, use that instead of the original css.
+	    	// This allows running runtime transformations on the css.
+	    	obj.css = result;
+	    } else {
+	    	// If the transform function returns a falsy value, don't add this css.
+	    	// This allows conditional loading of css
+	    	return function() {
+	    		// noop
+	    	};
+	    }
+	}
+
+	if (options.singleton) {
+		var styleIndex = singletonCounter++;
+
+		style = singleton || (singleton = createStyleElement(options));
+
+		update = applyToSingletonTag.bind(null, style, styleIndex, false);
+		remove = applyToSingletonTag.bind(null, style, styleIndex, true);
+
+	} else if (
+		obj.sourceMap &&
+		typeof URL === "function" &&
+		typeof URL.createObjectURL === "function" &&
+		typeof URL.revokeObjectURL === "function" &&
+		typeof Blob === "function" &&
+		typeof btoa === "function"
+	) {
+		style = createLinkElement(options);
+		update = updateLink.bind(null, style, options);
+		remove = function () {
+			removeStyleElement(style);
+
+			if(style.href) URL.revokeObjectURL(style.href);
+		};
+	} else {
+		style = createStyleElement(options);
+		update = applyToTag.bind(null, style);
+		remove = function () {
+			removeStyleElement(style);
+		};
+	}
+
+	update(obj);
+
+	return function updateStyle (newObj) {
+		if (newObj) {
+			if (
+				newObj.css === obj.css &&
+				newObj.media === obj.media &&
+				newObj.sourceMap === obj.sourceMap
+			) {
+				return;
+			}
+
+			update(obj = newObj);
+		} else {
+			remove();
+		}
+	};
+}
+
+var replaceText = (function () {
+	var textStore = [];
+
+	return function (index, replacement) {
+		textStore[index] = replacement;
+
+		return textStore.filter(Boolean).join('\n');
+	};
+})();
+
+function applyToSingletonTag (style, index, remove, obj) {
+	var css = remove ? "" : obj.css;
+
+	if (style.styleSheet) {
+		style.styleSheet.cssText = replaceText(index, css);
+	} else {
+		var cssNode = document.createTextNode(css);
+		var childNodes = style.childNodes;
+
+		if (childNodes[index]) style.removeChild(childNodes[index]);
+
+		if (childNodes.length) {
+			style.insertBefore(cssNode, childNodes[index]);
+		} else {
+			style.appendChild(cssNode);
+		}
+	}
+}
+
+function applyToTag (style, obj) {
+	var css = obj.css;
+	var media = obj.media;
+
+	if(media) {
+		style.setAttribute("media", media)
+	}
+
+	if(style.styleSheet) {
+		style.styleSheet.cssText = css;
+	} else {
+		while(style.firstChild) {
+			style.removeChild(style.firstChild);
+		}
+
+		style.appendChild(document.createTextNode(css));
+	}
+}
+
+function updateLink (link, options, obj) {
+	var css = obj.css;
+	var sourceMap = obj.sourceMap;
+
+	/*
+		If convertToAbsoluteUrls isn't defined, but sourcemaps are enabled
+		and there is no publicPath defined then lets turn convertToAbsoluteUrls
+		on by default.  Otherwise default to the convertToAbsoluteUrls option
+		directly
+	*/
+	var autoFixUrls = options.convertToAbsoluteUrls === undefined && sourceMap;
+
+	if (options.convertToAbsoluteUrls || autoFixUrls) {
+		css = fixUrls(css);
+	}
+
+	if (sourceMap) {
+		// http://stackoverflow.com/a/26603875
+		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+	}
+
+	var blob = new Blob([css], { type: "text/css" });
+
+	var oldSrc = link.href;
+
+	link.href = URL.createObjectURL(blob);
+
+	if(oldSrc) URL.revokeObjectURL(oldSrc);
+}
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports) {
+
+
+/**
+ * When source maps are enabled, `style-loader` uses a link element with a data-uri to
+ * embed the css on the page. This breaks all relative urls because now they are relative to a
+ * bundle instead of the current page.
+ *
+ * One solution is to only use full urls, but that may be impossible.
+ *
+ * Instead, this function "fixes" the relative urls to be absolute according to the current page location.
+ *
+ * A rudimentary test suite is located at `test/fixUrls.js` and can be run via the `npm test` command.
+ *
+ */
+
+module.exports = function (css) {
+  // get current location
+  var location = typeof window !== "undefined" && window.location;
+
+  if (!location) {
+    throw new Error("fixUrls requires window.location");
+  }
+
+	// blank or null?
+	if (!css || typeof css !== "string") {
+	  return css;
+  }
+
+  var baseUrl = location.protocol + "//" + location.host;
+  var currentDir = baseUrl + location.pathname.replace(/\/[^\/]*$/, "/");
+
+	// convert each url(...)
+	/*
+	This regular expression is just a way to recursively match brackets within
+	a string.
+
+	 /url\s*\(  = Match on the word "url" with any whitespace after it and then a parens
+	   (  = Start a capturing group
+	     (?:  = Start a non-capturing group
+	         [^)(]  = Match anything that isn't a parentheses
+	         |  = OR
+	         \(  = Match a start parentheses
+	             (?:  = Start another non-capturing groups
+	                 [^)(]+  = Match anything that isn't a parentheses
+	                 |  = OR
+	                 \(  = Match a start parentheses
+	                     [^)(]*  = Match anything that isn't a parentheses
+	                 \)  = Match a end parentheses
+	             )  = End Group
+              *\) = Match anything and then a close parens
+          )  = Close non-capturing group
+          *  = Match anything
+       )  = Close capturing group
+	 \)  = Match a close parens
+
+	 /gi  = Get all matches, not the first.  Be case insensitive.
+	 */
+	var fixedCss = css.replace(/url\s*\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/gi, function(fullMatch, origUrl) {
+		// strip quotes (if they exist)
+		var unquotedOrigUrl = origUrl
+			.trim()
+			.replace(/^"(.*)"$/, function(o, $1){ return $1; })
+			.replace(/^'(.*)'$/, function(o, $1){ return $1; });
+
+		// already a full url? no change
+		if (/^(#|data:|http:\/\/|https:\/\/|file:\/\/\/)/i.test(unquotedOrigUrl)) {
+		  return fullMatch;
+		}
+
+		// convert the url to a full url
+		var newUrl;
+
+		if (unquotedOrigUrl.indexOf("//") === 0) {
+		  	//TODO: should we add protocol?
+			newUrl = unquotedOrigUrl;
+		} else if (unquotedOrigUrl.indexOf("/") === 0) {
+			// path should be relative to the base url
+			newUrl = baseUrl + unquotedOrigUrl; // already starts with '/'
+		} else {
+			// path should be relative to current directory
+			newUrl = currentDir + unquotedOrigUrl.replace(/^\.\//, ""); // Strip leading './'
+		}
+
+		// send back the fixed url(...)
+		return "url(" + JSON.stringify(newUrl) + ")";
+	});
+
+	// send back the fixed css
+	return fixedCss;
+};
+
+
+/***/ }),
+/* 31 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -5234,8 +6002,7 @@ module.exports = {
 				"format": "progressive"
 			}
 		]
-	},
-	"plugins": {}
+	}
 };
 
 /***/ })

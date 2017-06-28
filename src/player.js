@@ -4,7 +4,7 @@ import FakeEvent from './event/fake-event'
 import FakeEventTarget from './event/fake-event-target'
 import {PLAYER_EVENTS as PlayerEvents, HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from './event/events'
 import PlayerStates from './state/state-types'
-import {isNumber, isFloat, mergeDeep, copyDeep} from './utils/util'
+import {isNumber, isFloat, mergeDeep, copyDeep, uniqueId, isEmptyObject} from './utils/util'
 import LoggerFactory from './utils/logger'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
@@ -15,6 +15,14 @@ import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
 import DefaultPlayerConfig from './player-config.json'
+import './assets/style.css'
+
+/**
+ * The player container class name.
+ * @type {string}
+ * @const
+ */
+const CONTAINER_CLASS_NAME: string = 'playkit-container';
 
 /**
  * The HTML5 player class.
@@ -28,6 +36,13 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   static _logger: any = LoggerFactory.getLogger('Player');
+  /**
+   * The available engines of the player.
+   * @type {Array<typeof IEngine>}
+   * @private
+   * @static
+   */
+  static _engines: Array<typeof IEngine> = [Html5];
   /**
    * The plugin manager of the player.
    * @type {PluginManager}
@@ -77,44 +92,101 @@ export default class Player extends FakeEventTarget {
    */
   _firstPlay: boolean;
   /**
-   * The available engines of the player.
-   * @type {Array<typeof IEngine>}
+   * The player DOM element container.
+   * @type {HTMLElement}
    * @private
    */
-  static _engines: Array<typeof IEngine> = [Html5];
+  _el: HTMLElement;
 
   /**
+   * @param {string} targetId - The target div id to append the player.
    * @param {Object} config - The configuration for the player instance.
    * @constructor
    */
-  constructor(config: Object) {
+  constructor(targetId: string, config: Object) {
     super();
     this._tracks = [];
+    this._config = {};
     this._firstPlay = true;
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
     this._eventManager = new EventManager();
+    this._createReadyPromise();
+    this._appendPlayerContainer(targetId);
+    this.configure(config);
+  }
+
+  /**
+   * Configures the player according to a given configuration.
+   * @param {Object} config - The configuration for the player instance.
+   * @returns {void}
+   */
+  configure(config: Object): void {
+    let engine = this._engine;
+    this._maybeResetPlayer(config);
+    this._config = mergeDeep(isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
+    if (this._selectEngine()) {
+      this._appendEngineEl();
+      this._attachMedia();
+      this._maybeLoadPlugins(engine);
+      this._handlePlaybackConfig();
+    }
+  }
+
+  /**
+   * Resets the player in case of new sources with existing engine.
+   * @param {Object} config - The player configuration.
+   * @private
+   * @returns {void}
+   */
+  _maybeResetPlayer(config: Object): void {
+    if (this._engine && config.sources) {
+      Player._logger.debug('New sources on existing engine: reset engine to change media');
+      this._reset();
+    }
+  }
+
+  /**
+   * Loads the plugins in case engine created for the first time.
+   * @param {?IEngine} engine - The engine before the enter to configure method.
+   * @private
+   * @returns {void}
+   */
+  _maybeLoadPlugins(engine: ?IEngine) {
+    if (this._engine && !engine) {
+      Player._logger.debug('Engine created for the first time: load plugins');
+      this._loadPlugins();
+    }
+  }
+
+  /**
+   * Reset the necessary components before change media.
+   * @private
+   * @returns {void}
+   */
+  _reset(): void {
+    if (this._engine) {
+      this._engine.destroy();
+    }
+    this._config = {};
+    this._tracks = [];
+    this._firstPlay = true;
+    this._eventManager.removeAll();
+    this._createReadyPromise();
+  }
+
+  /**
+   * Creates the ready promise.
+   * @private
+   * @returns {void}
+   */
+  _createReadyPromise(): void {
     this._readyPromise = new Promise((resolve, reject) => {
       this._eventManager.listen(this, CustomEvents.TRACKS_CHANGED, () => {
         resolve();
       });
       this._eventManager.listen(this, Html5Events.ERROR, reject);
     });
-    this.configure(config);
-  }
-
-  /**
-   * Configures the player according to given configuration.
-   * @param {Object} config - The configuration for the player instance.
-   * @returns {void}
-   */
-  configure(config: Object): void {
-      this._config = mergeDeep(this._config || Player._defaultConfig, config);
-      if (this._selectEngine()) {
-        this._attachMedia();
-        this._loadPlugins();
-        this._handlePlaybackConfig();
-      }
   }
 
   /**
@@ -247,6 +319,49 @@ export default class Player extends FakeEventTarget {
       if (this._config.playback.autoplay) {
         this.play();
       }
+    }
+  }
+
+  /**
+   * Creates the player container
+   * @param {string} targetId - The target div id to append the player.
+   * @private
+   * @returns {void}
+   */
+  _appendPlayerContainer(targetId: string): void {
+    if (targetId) {
+      if (this._el === undefined) {
+        this._createPlayerContainer();
+        let parentNode = document.getElementById(targetId);
+        if ((parentNode != null) && (this._el != null)) {
+          parentNode.appendChild(this._el);
+        }
+      }
+    } else {
+      throw new Error("targetId is not found, it must be pass on initialization");
+    }
+  }
+
+  /**
+   * Creates the player container.
+   * @private
+   * @returns {void}
+   */
+  _createPlayerContainer(): void {
+    this._el = document.createElement("div");
+    this._el.id = uniqueId(5);
+    this._el.className = CONTAINER_CLASS_NAME;
+    this._el.setAttribute('tabindex', '-1');
+  }
+
+  /**
+   * Appends the engine's video element to the player's div container.
+   * @private
+   * @returns {void}
+   */
+  _appendEngineEl(): void {
+    if ((this._el != null) && (this._engine != null)) {
+      this._el.appendChild(this._engine.getVideoElement())
     }
   }
 

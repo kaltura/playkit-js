@@ -100,4 +100,28 @@ function copyDeep(data: any): any {
   return node;
 }
 
-export {isNumber, isInt, isFloat, isObject, merge, mergeDeep, copyDeep};
+/**
+ * Generates unique id.
+ * @param {number} length - The length of the id.
+ * @returns {string} - The generated id.
+ */
+function uniqueId(length: ?number) {
+  let from = 2;
+  let to = from + ((!length || length < 0) ? 0 : length - 2);
+  return '_' + Math.random().toString(36).substr(from, to);
+}
+
+/**
+ * Checks if an object is an empy object.
+ * @param {Object} obj - The object to check
+ * @returns {boolean} - Whether the object is empty.
+ */
+function isEmptyObject(obj: Object): boolean {
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key))
+      return false;
+  }
+  return true;
+}
+
+export {isNumber, isInt, isFloat, isObject, merge, mergeDeep, copyDeep, uniqueId, isEmptyObject};
