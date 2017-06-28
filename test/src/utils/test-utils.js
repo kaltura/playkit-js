@@ -46,7 +46,7 @@ function createElement(type, id) {
  * @param {string} id - The element id.
  * @returns {void}
  */
-function removeElemenet(id) {
+function removeElement(id) {
   let element = document.getElementById(id);
   element.parentNode.removeChild(element);
 }
@@ -145,6 +145,6 @@ export {
   createAudioTrackButtons,
   createVideoTrackButtons,
   createElement,
-  removeElemenet,
+  removeElement,
   getConfigStructure
 };
