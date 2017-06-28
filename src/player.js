@@ -4,7 +4,7 @@ import FakeEvent from './event/fake-event'
 import FakeEventTarget from './event/fake-event-target'
 import {PLAYER_EVENTS as PlayerEvents, HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from './event/events'
 import PlayerStates from './state/state-types'
-import {isNumber, isFloat, mergeDeep, copyDeep, id, isEmptyObject} from './utils/util'
+import {isNumber, isFloat, mergeDeep, copyDeep, uniqueId, isEmptyObject} from './utils/util'
 import LoggerFactory from './utils/logger'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
@@ -349,7 +349,7 @@ export default class Player extends FakeEventTarget {
    */
   _createPlayerContainer(): void {
     this._el = document.createElement("div");
-    this._el.id = id(5);
+    this._el.id = uniqueId(5);
     this._el.className = CONTAINER_CLASS_NAME;
     this._el.setAttribute('tabindex', '-1');
   }

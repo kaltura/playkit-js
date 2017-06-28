@@ -95,9 +95,10 @@ describe('util', () => {
 
   describe('id', function () {
     it('should create unique id', function () {
-      util.id().length.should.equals(3);
-      util.id(3).length.should.equals(4);
-      util.id().should.contains('_');
+      util.uniqueId().length.should.equals(3);
+      util.uniqueId(-2).length.should.equals(3);
+      util.uniqueId(3).length.should.equals(4);
+      util.uniqueId().should.contains('_');
     });
   });
 

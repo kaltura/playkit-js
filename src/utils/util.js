@@ -105,9 +105,9 @@ function copyDeep(data: any): any {
  * @param {number} length - The length of the id.
  * @returns {string} - The generated id.
  */
-function id(length: ?number) {
+function uniqueId(length: ?number) {
   let from = 2;
-  let to = from + (length ? length - 2 : 0);
+  let to = from + ((!length || length < 0) ? 0 : length - 2);
   return '_' + Math.random().toString(36).substr(from, to);
 }
 
@@ -124,4 +124,4 @@ function isEmptyObject(obj: Object): boolean {
   return true;
 }
 
-export {isNumber, isInt, isFloat, isObject, merge, mergeDeep, copyDeep, id, isEmptyObject};
+export {isNumber, isInt, isFloat, isObject, merge, mergeDeep, copyDeep, uniqueId, isEmptyObject};
