@@ -1135,7 +1135,7 @@ describe('states', function () {
   });
 });
 
-describe.only('configure', function () {
+describe('configure', function () {
   this.timeout(10000);
 
   let player, config;
