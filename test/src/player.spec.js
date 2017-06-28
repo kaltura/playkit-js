@@ -5,7 +5,7 @@ import sourcesConfig from './configs/sources.json'
 import VideoTrack from '../../src/track/video-track'
 import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
-import {removeVideoElementsFromTestPage, createElement, removeElemenet, getConfigStructure} from './utils/test-utils'
+import {removeVideoElementsFromTestPage, createElement, removeElement, getConfigStructure} from './utils/test-utils'
 
 const targetId = 'player-placeholder_player.spec';
 
@@ -30,7 +30,7 @@ describe("play", function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
-    removeElemenet(targetId);
+    removeElement(targetId);
   });
 
   it("should success before load", (done) => {
@@ -441,7 +441,7 @@ describe("ready", function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
-    removeElemenet(targetId);
+    removeElement(targetId);
   });
 });
 
@@ -465,7 +465,7 @@ describe('getTracks dummy', () => {
 
   after(() => {
     removeVideoElementsFromTestPage();
-    removeElemenet(targetId);
+    removeElement(targetId);
   });
 
   it('should return all tracks for no type', () => {
@@ -524,7 +524,7 @@ describe('getTracks real', function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
-    removeElemenet(targetId);
+    removeElement(targetId);
   });
 
   it('should return all tracks using ready', (done) => {
@@ -605,7 +605,7 @@ describe('selectTrack - audio', function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
-    removeElemenet(targetId);
+    removeElement(targetId);
   });
 
   it('should select a new audio track', (done) => {
@@ -727,7 +727,7 @@ describe('selectTrack - text', function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
-    removeElemenet(targetId);
+    removeElement(targetId);
   });
 
   it('should select a new subtitles track', (done) => {
@@ -865,7 +865,7 @@ describe('hideTextTrack', function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
-    removeElemenet(targetId);
+    removeElement(targetId);
   });
 
   it('should disable the active text track', (done) => {
@@ -895,7 +895,7 @@ describe('Track enum', function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
-    removeElemenet(targetId);
+    removeElement(targetId);
   });
 
   it('should return the track enum', () => {
@@ -940,7 +940,7 @@ describe('events', function () {
 
     after(() => {
       removeVideoElementsFromTestPage();
-      removeElemenet(targetId);
+      removeElement(targetId);
     });
 
     it('should fire tracks changed', function (done) {
@@ -987,7 +987,7 @@ describe('events', function () {
 
     after(() => {
       removeVideoElementsFromTestPage();
-      removeElemenet(targetId);
+      removeElement(targetId);
     });
 
     it('should fire first play only once', (done) => {
@@ -1030,7 +1030,7 @@ describe('events', function () {
 
     after(() => {
       removeVideoElementsFromTestPage();
-      removeElemenet(targetId);
+      removeElement(targetId);
     });
 
     it('should fire source selected', (done) => {
@@ -1064,7 +1064,7 @@ describe('states', function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
-    removeElemenet(targetId);
+    removeElement(targetId);
   });
 
   it('should switch player states during playback', (done) => {
@@ -1154,7 +1154,7 @@ describe('configure', function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
-    removeElemenet(targetId);
+    removeElement(targetId);
   });
 
   it('should create player without sources and set the sources later', (done) => {
