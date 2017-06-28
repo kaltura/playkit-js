@@ -4830,7 +4830,7 @@ var StateManager = function () {
       _this._updateState(_stateTypes2.default.BUFFERING);
       _this._dispatchEvent();
     }), _PlayerStates$IDLE)), _defineProperty(_transitions, _stateTypes2.default.LOADING, (_PlayerStates$LOADING = {}, _defineProperty(_PlayerStates$LOADING, _events.HTML5_EVENTS.LOADED_METADATA, function () {
-      if (_this._player.config.autoplay) {
+      if (_this._player.config.playback.autoplay) {
         _this._updateState(_stateTypes2.default.PLAYING);
       } else {
         _this._updateState(_stateTypes2.default.PAUSED);
