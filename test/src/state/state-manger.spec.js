@@ -8,7 +8,9 @@ let stateManager;
 let fakePlayer = {
   dispatchEvent: function () {
   },
-  config: {}
+  config: {
+    playback: {}
+  }
 };
 
 describe("StateManager", () => {
@@ -130,13 +132,13 @@ describe("StateManager.Transitions:LOADING", () => {
   });
 
   it('should handle transition from loading to playing', () => {
-    fakePlayer.config.autoPlay = true;
+    fakePlayer.config.playback.autoplay = true;
     stateManager._doTransition({type: Html5Events.LOADED_METADATA});
     stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
   });
 
   it('should handle transition from loading to paused', () => {
-    fakePlayer.config.autoPlay = false;
+    fakePlayer.config.playback.autoplay = false;
     stateManager._doTransition({type: Html5Events.LOADED_METADATA});
     stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
   });

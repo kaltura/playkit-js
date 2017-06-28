@@ -92,4 +92,22 @@ describe('util', () => {
       resObject.should.deep.equals({x: 2, y: 1});
     });
   });
+
+  describe('id', function () {
+    it('should create unique id', function () {
+      util.uniqueId().length.should.equals(3);
+      util.uniqueId(-2).length.should.equals(3);
+      util.uniqueId(3).length.should.equals(4);
+      util.uniqueId().should.contains('_');
+    });
+  });
+
+  describe('isEmptyObject', function () {
+    it('should return if an object is an empty object', function () {
+      util.isEmptyObject(null).should.be.true;
+      util.isEmptyObject(undefined).should.be.true;
+      util.isEmptyObject({}).should.be.true;
+      util.isEmptyObject({x: 1}).should.be.false;
+    });
+  });
 });

@@ -1,19 +1,27 @@
 import Player from '../../src/player'
+import PlayerStates from '../../src/state/state-types'
 import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../../src/event/events'
 import sourcesConfig from './configs/sources.json'
 import VideoTrack from '../../src/track/video-track'
 import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
-import {removeVideoElementsFromTestPage} from './utils/test-utils'
+import {removeVideoElementsFromTestPage, createElement, removeElemenet, getConfigStructure} from './utils/test-utils'
+
+const targetId = 'player-placeholder_player.spec';
 
 describe("play", function () {
   this.timeout(10000);
 
   let config, player;
 
+  before(() => {
+    createElement('DIV', targetId);
+    config = getConfigStructure();
+    config.sources = sourcesConfig.Mp4HlsDash;
+  });
+
   beforeEach(() => {
-    config = sourcesConfig.mp4_none_hls_dash;
-    player = new Player(config);
+    player = new Player(targetId, config);
   });
 
   afterEach(() => {
@@ -22,6 +30,7 @@ describe("play", function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
+    removeElemenet(targetId);
   });
 
   it("should success before load", (done) => {
@@ -42,14 +51,16 @@ describe("play", function () {
   });
 });
 
-describe("ready", () => {
+describe("ready", function () {
 
   describe("success", () => {
 
     let config;
 
     before(() => {
-      config = sourcesConfig.mp4_none_hls_dash;
+      createElement('DIV', targetId);
+      config = getConfigStructure();
+      config.sources = sourcesConfig.Mp4HlsDash;
     });
 
     describe("preload none", () => {
@@ -59,7 +70,7 @@ describe("ready", () => {
         let player;
 
         beforeEach(() => {
-          player = new Player(config);
+          player = new Player(targetId, config);
         });
 
         afterEach(() => {
@@ -89,7 +100,7 @@ describe("ready", () => {
         let player;
 
         beforeEach(() => {
-          player = new Player();
+          player = new Player(targetId);
         });
 
         afterEach(() => {
@@ -133,8 +144,8 @@ describe("ready", () => {
         let player;
 
         beforeEach(() => {
-          config.playback = {preload: 'auto'};
-          player = new Player(config);
+          config.playback.preload = 'auto';
+          player = new Player(targetId, config);
         });
 
         afterEach(() => {
@@ -163,8 +174,8 @@ describe("ready", () => {
         let player;
 
         beforeEach(() => {
-          config.playback = {preload: 'auto'};
-          player = new Player();
+          config.playback.preload = 'auto';
+          player = new Player(targetId);
         });
 
         afterEach(() => {
@@ -234,7 +245,8 @@ describe("ready", () => {
     let config;
 
     before(() => {
-      config = sourcesConfig.corrupted_url;
+      config = getConfigStructure();
+      config.sources = sourcesConfig.CorruptedUrl;
     });
 
     describe("preload none", () => {
@@ -245,7 +257,7 @@ describe("ready", () => {
         let player;
 
         beforeEach(() => {
-          player = new Player(config);
+          player = new Player(targetId, config);
         });
 
         afterEach(() => {
@@ -277,7 +289,7 @@ describe("ready", () => {
         let player;
 
         beforeEach(() => {
-          player = new Player();
+          player = new Player(targetId);
         });
 
         afterEach(() => {
@@ -323,8 +335,8 @@ describe("ready", () => {
         let player;
 
         beforeEach(() => {
-          config.playback = {preload: 'auto'};
-          player = new Player(config);
+          config.playback.preload = 'auto';
+          player = new Player(targetId, config);
         });
 
         afterEach(() => {
@@ -355,8 +367,8 @@ describe("ready", () => {
         let player;
 
         beforeEach(() => {
-          config.playback = {preload: 'auto'};
-          player = new Player();
+          config.playback.preload = 'auto';
+          player = new Player(targetId);
         });
 
         afterEach(() => {
@@ -429,6 +441,7 @@ describe("ready", () => {
 
   after(() => {
     removeVideoElementsFromTestPage();
+    removeElemenet(targetId);
   });
 });
 
@@ -436,8 +449,10 @@ describe('getTracks dummy', () => {
   let player, config;
 
   before(() => {
-    config = sourcesConfig.mp4_none_hls_dash;
-    player = new Player(config);
+    createElement('DIV', targetId);
+    config = getConfigStructure();
+    config.sources = sourcesConfig.Mp4HlsDash;
+    player = new Player(targetId, config);
     player._tracks = [
       new VideoTrack(),
       new AudioTrack(),
@@ -450,6 +465,7 @@ describe('getTracks dummy', () => {
 
   after(() => {
     removeVideoElementsFromTestPage();
+    removeElemenet(targetId);
   });
 
   it('should return all tracks for no type', () => {
@@ -483,6 +499,7 @@ describe('getTracks real', function () {
   let track2;
 
   before(() => {
+    createElement('DIV', targetId);
     track1 = document.createElement("track");
     track2 = document.createElement("track");
     track1.kind = 'subtitles';
@@ -493,8 +510,9 @@ describe('getTracks real', function () {
   });
 
   beforeEach(() => {
-    config = sourcesConfig.mp4_none_hls_dash;
-    player = new Player(config);
+    config = getConfigStructure();
+    config.sources = sourcesConfig.Mp4HlsDash;
+    player = new Player(targetId, config);
     video = player._engine.getVideoElement();
     video.appendChild(track1);
     video.appendChild(track2);
@@ -506,6 +524,7 @@ describe('getTracks real', function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
+    removeElemenet(targetId);
   });
 
   it('should return all tracks using ready', (done) => {
@@ -570,9 +589,14 @@ describe('selectTrack - audio', function () {
 
   let config, player, video;
 
+  before(() => {
+    createElement('DIV', targetId);
+  });
+
   beforeEach(() => {
-    config = sourcesConfig.mp4_none_hls_dash;
-    player = new Player();
+    config = getConfigStructure();
+    config.sources = sourcesConfig.Mp4HlsDash;
+    player = new Player(targetId);
   });
 
   afterEach(() => {
@@ -581,10 +605,10 @@ describe('selectTrack - audio', function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
+    removeElemenet(targetId);
   });
 
   it('should select a new audio track', (done) => {
-    player.load();
     player.ready().then(() => {
       if (video.audioTracks) {
         player.addEventListener(CustomEvents.AUDIO_TRACK_CHANGED, (event) => {
@@ -612,6 +636,7 @@ describe('selectTrack - audio', function () {
       done();
     });
     player.configure(config);
+    player.load();
     video = player._engine.getVideoElement();
   });
 
@@ -665,8 +690,8 @@ describe('selectTrack - audio', function () {
       }
       done();
     });
-    player.load();
     player.configure(config);
+    player.load();
     video = player._engine.getVideoElement();
   });
 });
@@ -676,9 +701,14 @@ describe('selectTrack - text', function () {
 
   let config, player, video, track1, track2;
 
+  before(() => {
+    createElement('DIV', targetId);
+  });
+
   beforeEach(() => {
-    config = sourcesConfig.mp4_none_hls_dash;
-    player = new Player(config);
+    config = getConfigStructure();
+    config.sources = sourcesConfig.Mp4HlsDash;
+    player = new Player(targetId, config);
     video = player._engine.getVideoElement();
     track1 = document.createElement("track");
     track2 = document.createElement("track");
@@ -697,6 +727,7 @@ describe('selectTrack - text', function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
+    removeElemenet(targetId);
   });
 
   it('should select a new subtitles track', (done) => {
@@ -808,9 +839,14 @@ describe('hideTextTrack', function () {
 
   let config, player, video, track1, track2;
 
+  before(() => {
+    createElement('DIV', targetId);
+  });
+
   beforeEach(() => {
-    config = sourcesConfig.mp4_none_hls_dash;
-    player = new Player(config);
+    config = getConfigStructure();
+    config.sources = sourcesConfig.Mp4HlsDash;
+    player = new Player(targetId, config);
     video = player._engine.getVideoElement();
     track1 = document.createElement("track");
     track2 = document.createElement("track");
@@ -829,6 +865,7 @@ describe('hideTextTrack', function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
+    removeElemenet(targetId);
   });
 
   it('should disable the active text track', (done) => {
@@ -852,28 +889,39 @@ describe('hideTextTrack', function () {
 });
 
 describe('Track enum', function () {
+  before(() => {
+    createElement('DIV', targetId);
+  });
+
   after(() => {
     removeVideoElementsFromTestPage();
+    removeElemenet(targetId);
   });
 
   it('should return the track enum', () => {
-    let config = sourcesConfig.mp4_none_hls_dash;
-    let player = new Player(config);
+    let config = getConfigStructure();
+    config.sources = sourcesConfig.Mp4HlsDash;
+    let player = new Player(targetId, config);
     player.Track.VIDEO.should.be.equal('video');
     player.Track.AUDIO.should.be.equal('audio');
     player.Track.TEXT.should.be.equal('text');
   });
 });
 
-describe('events', () => {
+describe('events', function () {
   describe('tracks changed', function () {
     this.timeout(10000);
 
     let config, player, video, track1, track2;
 
+    before(() => {
+      createElement('DIV', targetId);
+    });
+
     beforeEach(() => {
-      config = sourcesConfig.mp4_none_hls_dash;
-      player = new Player(config);
+      config = getConfigStructure();
+      config.sources = sourcesConfig.Mp4HlsDash;
+      player = new Player(targetId, config);
       video = player._engine.getVideoElement();
       track1 = document.createElement("track");
       track2 = document.createElement("track");
@@ -892,6 +940,7 @@ describe('events', () => {
 
     after(() => {
       removeVideoElementsFromTestPage();
+      removeElemenet(targetId);
     });
 
     it('should fire tracks changed', function (done) {
@@ -921,9 +970,15 @@ describe('events', () => {
     let config;
     let player;
 
+    before(() => {
+      createElement('DIV', targetId);
+    });
+
     beforeEach(() => {
-      config = sourcesConfig.mp4_none_hls_dash;
-      player = new Player(config);
+      config = getConfigStructure();
+      config.sources = sourcesConfig.Mp4HlsDash;
+      player = new Player(targetId, config);
+
     });
 
     afterEach(() => {
@@ -932,6 +987,7 @@ describe('events', () => {
 
     after(() => {
       removeVideoElementsFromTestPage();
+      removeElemenet(targetId);
     });
 
     it('should fire first play only once', (done) => {
@@ -957,9 +1013,15 @@ describe('events', () => {
     let config;
     let player;
 
+    before(() => {
+      createElement('DIV', targetId);
+    });
+
     beforeEach(() => {
-      config = sourcesConfig.mp4_none_hls_dash;
-      player = new Player();
+      config = getConfigStructure();
+      config.sources = sourcesConfig.Mp4HlsDash;
+      player = new Player(targetId);
+
     });
 
     afterEach(() => {
@@ -968,6 +1030,7 @@ describe('events', () => {
 
     after(() => {
       removeVideoElementsFromTestPage();
+      removeElemenet(targetId);
     });
 
     it('should fire source selected', (done) => {
@@ -980,3 +1043,136 @@ describe('events', () => {
   });
 });
 
+describe('states', function () {
+  this.timeout(10000);
+
+  let player, config;
+
+  before(() => {
+    createElement('DIV', targetId);
+  });
+
+  beforeEach(() => {
+    config = getConfigStructure();
+    config.sources = sourcesConfig.Mp4HlsDash;
+    player = new Player(targetId, config);
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElemenet(targetId);
+  });
+
+  it('should switch player states during playback', (done) => {
+    /**
+     * onLoadStart handler
+     * @returns {void}
+     */
+    function onLoadStart() {
+      player.removeEventListener(Html5Events.LOAD_START, onLoadStart);
+      player._stateManager.currentState.type.should.equal(PlayerStates.LOADING);
+    }
+
+    /**
+     * onLoadedMetadata handler
+     * @returns {void}
+     */
+    function onLoadedMetadata() {
+      player.removeEventListener(Html5Events.LOADED_METADATA, onLoadedMetadata);
+      if (player.config.autoplay) {
+        player._stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+      } else {
+        player._stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
+      }
+    }
+
+    /**
+     * onPlaying handler
+     * @returns {void}
+     */
+    function onPlaying() {
+      player.removeEventListener(Html5Events.PLAYING, onPlaying);
+      player._stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+      setTimeout(() => {
+        player.pause();
+      }, 100);
+    }
+
+    /**
+     * onPause handler
+     * @returns {void}
+     */
+    function onPause() {
+      player.removeEventListener(Html5Events.PAUSE, onPause);
+      player._stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
+      player.currentTime = player.duration - 1;
+      player.play();
+    }
+
+    /**
+     * onEnded handler
+     * @returns {void}
+     */
+    function onEnded() {
+      player.removeEventListener(Html5Events.ENDED, onEnded);
+      player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
+      player.destroy();
+      done();
+    }
+
+    player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
+    player.addEventListener(Html5Events.LOAD_START, onLoadStart);
+    player.addEventListener(Html5Events.LOADED_METADATA, onLoadedMetadata);
+    player.addEventListener(Html5Events.PLAYING, onPlaying);
+    player.addEventListener(Html5Events.PAUSE, onPause);
+    player.addEventListener(Html5Events.ENDED, onEnded);
+    player.load();
+    player.play();
+  });
+});
+
+describe('configure', function () {
+  this.timeout(10000);
+
+  let player, config;
+
+  before(() => {
+    createElement('DIV', targetId);
+  });
+
+  beforeEach(() => {
+    config = getConfigStructure();
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElemenet(targetId);
+  });
+
+  it('should create player without sources and set the sources later', (done) => {
+    config.sources = sourcesConfig.Mp4HlsDash;
+    player = new Player(targetId);
+    player.should.be.instanceOf(Player);
+    player.configure(config);
+    player.addEventListener(Html5Events.PLAYING, function () {
+      player.destroy();
+      done();
+    });
+    player.addEventListener(Html5Events.ERROR, function () {
+      player.destroy();
+      should.fail();
+    });
+    player.load();
+    player.ready().then(() => {
+      player.play();
+    });
+  });
+});

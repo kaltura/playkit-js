@@ -7,7 +7,19 @@ import MediaSourceProvider from './media-source/media-source-provider'
 import VideoTrack from '../../track/video-track'
 import AudioTrack from '../../track/audio-track'
 import TextTrack from '../../track/text-track'
+import {uniqueId} from '../../utils/util'
 
+/**
+ * The engine video element class name.
+ * @type {string}
+ * @const
+ */
+const VIDEO_ELEMENT_CLASS_NAME: string = 'playkit-engine-html5';
+
+/**
+ * Html5 engine for playback.
+ * @classdesc
+ */
 export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * The video element.
@@ -91,6 +103,15 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Get the engine's id
+   * @public
+   * @returns {string} the engine's id
+   */
+  get id(): string {
+    return Html5.id;
+  }
+
+  /**
    * Listen to the video element events and triggers them from the engine.
    * @public
    * @returns {void}
@@ -145,14 +166,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _createVideoElement(): void {
     this._el = document.createElement("video");
-    //Set attributes
-    this._el.style.width = "640px";
-    this._el.style.height = "360px";
-    this._el.style.backgroundColor = "black";
-    this._el.controls = true;
-    if (document && document.body) {
-      document.body.appendChild(this._el);
-    }
+    this._el.id = uniqueId(5);
+    this._el.className = VIDEO_ELEMENT_CLASS_NAME;
+    this._el.controls = false;
   }
 
   /**
