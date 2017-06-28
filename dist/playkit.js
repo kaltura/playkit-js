@@ -1460,7 +1460,7 @@ var Player = function (_FakeEventTarget) {
     key: '_createPlayerContainer',
     value: function _createPlayerContainer() {
       this._el = document.createElement("div");
-      this._el.id = (0, _util.id)(5);
+      this._el.id = (0, _util.uniqueId)(5);
       this._el.className = CONTAINER_CLASS_NAME;
       this._el.setAttribute('tabindex', '-1');
     }
@@ -2065,9 +2065,9 @@ function copyDeep(data) {
  * @param {number} length - The length of the id.
  * @returns {string} - The generated id.
  */
-function id(length) {
+function uniqueId(length) {
   var from = 2;
-  var to = from + (length ? length - 2 : 0);
+  var to = from + (!length || length < 0 ? 0 : length - 2);
   return '_' + Math.random().toString(36).substr(from, to);
 }
 
@@ -2090,7 +2090,7 @@ exports.isObject = isObject;
 exports.merge = merge;
 exports.mergeDeep = mergeDeep;
 exports.copyDeep = copyDeep;
-exports.id = id;
+exports.uniqueId = uniqueId;
 exports.isEmptyObject = isEmptyObject;
 
 /***/ }),
@@ -3634,7 +3634,7 @@ var Html5 = function (_FakeEventTarget) {
     key: '_createVideoElement',
     value: function _createVideoElement() {
       this._el = document.createElement("video");
-      this._el.id = (0, _util.id)(5);
+      this._el.id = (0, _util.uniqueId)(5);
       this._el.className = VIDEO_ELEMENT_CLASS_NAME;
       this._el.controls = false;
     }
