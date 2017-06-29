@@ -63,7 +63,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   constructor(videoElement: HTMLVideoElement, source: Source) {
     NativeAdapter._logger.debug('Creating adapter');
-    super(videoElement, source, {});
+    super(videoElement, source);
     this._eventManager = new EventManager();
   }
 
