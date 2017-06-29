@@ -777,6 +777,18 @@ function isEmptyObject(obj) {
   return true;
 }
 
+/**
+ * Checks for nested object properties.
+ * @param {Object} obj - The object to check.
+ * @param {string} path - The path to check.
+ * @returns {boolean} - The value in this path.
+ */
+function getNestedValue(obj, path) {
+  return path.split(".").reduce(function (o, x) {
+    return typeof o === "undefined" || o === null ? o : o[x];
+  }, obj);
+}
+
 exports.isNumber = isNumber;
 exports.isInt = isInt;
 exports.isFloat = isFloat;
@@ -786,6 +798,7 @@ exports.mergeDeep = mergeDeep;
 exports.copyDeep = copyDeep;
 exports.uniqueId = uniqueId;
 exports.isEmptyObject = isEmptyObject;
+exports.getNestedValue = getNestedValue;
 
 /***/ }),
 /* 7 */
