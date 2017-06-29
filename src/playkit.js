@@ -10,6 +10,7 @@ import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
+import * as Utils from './utils/util'
 
 // Playkit version
 let VERSION = packageData.version;
@@ -34,6 +35,9 @@ export {registerPlugin, BasePlugin};
 
 // Export the tracks classes
 export {Track, VideoTrack, AudioTrack, TextTrack};
+
+// Export utils library
+export {Utils};
 
 //export version
 export {VERSION};
