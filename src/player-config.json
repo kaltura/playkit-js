@@ -3,6 +3,14 @@
     "preload": "none",
     "autoplay": false,
     "muted": false,
+    "options": {
+      "html5": {
+        "hls": {
+        },
+        "dash": {
+        }
+      }
+    },
     "streamPriority": [
       {
         "engine": "html5",

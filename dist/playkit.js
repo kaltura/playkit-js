@@ -2402,7 +2402,7 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
      * @function createAdapter
      * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with.
      * @param {Object} source - The source Object.
-     * @param {Object} config - The media source adapter configuration.
+     * @param {Object} config - The player configuration.
      * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter.
      * @static
      */
@@ -2429,7 +2429,9 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
 
   }]);
 
-  function BaseMediaSourceAdapter(videoElement, source, config) {
+  function BaseMediaSourceAdapter(videoElement, source) {
+    var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
     _classCallCheck(this, BaseMediaSourceAdapter);
 
     var _this = _possibleConstructorReturn(this, (BaseMediaSourceAdapter.__proto__ || Object.getPrototypeOf(BaseMediaSourceAdapter)).call(this));
@@ -4313,7 +4315,6 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      * @constructor
      * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
      * @param {Source} source - The source object
-     * @param {Object} config - The media source adapter configuration
      */
 
 
@@ -4326,12 +4327,12 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
 
   }]);
 
-  function NativeAdapter(videoElement, source, config) {
+  function NativeAdapter(videoElement, source) {
     _classCallCheck(this, NativeAdapter);
 
     NativeAdapter._logger.debug('Creating adapter');
 
-    var _this = _possibleConstructorReturn(this, (NativeAdapter.__proto__ || Object.getPrototypeOf(NativeAdapter)).call(this, videoElement, source, config));
+    var _this = _possibleConstructorReturn(this, (NativeAdapter.__proto__ || Object.getPrototypeOf(NativeAdapter)).call(this, videoElement, source));
 
     _this._eventManager = new _eventManager2.default();
     return _this;
@@ -5988,6 +5989,12 @@ module.exports = {
 		"preload": "none",
 		"autoplay": false,
 		"muted": false,
+		"options": {
+			"html5": {
+				"hls": {},
+				"dash": {}
+			}
+		},
 		"streamPriority": [
 			{
 				"engine": "html5",
