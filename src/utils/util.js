@@ -124,4 +124,16 @@ function isEmptyObject(obj: Object): boolean {
   return true;
 }
 
-export {isNumber, isInt, isFloat, isObject, merge, mergeDeep, copyDeep, uniqueId, isEmptyObject};
+/**
+ * Checks for nested object properties.
+ * @param {Object} obj - The object to check.
+ * @param {string} path - The path to check.
+ * @returns {boolean} - The value in this path.
+ */
+function getNestedValue(obj: Object, path: string): any {
+  return path.split(".").reduce(function (o, x) {
+    return (typeof o === "undefined" || o === null) ? o : o[x];
+  }, obj);
+}
+
+export {isNumber, isInt, isFloat, isObject, merge, mergeDeep, copyDeep, uniqueId, isEmptyObject, getNestedValue};

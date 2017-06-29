@@ -110,4 +110,21 @@ describe('util', () => {
       util.isEmptyObject({x: 1}).should.be.false;
     });
   });
+
+
+  describe('getNestedValue', function () {
+    let o;
+
+    before(function () {
+      o = {a: {b: {c: {d: {e: 1}}}}};
+    });
+
+    it('should return the value at an object property path', function () {
+      util.getNestedValue(o, 'a.b').should.deep.equals({c: {d: {e: 1}}});
+      util.getNestedValue(o, 'a.b.c').should.deep.equals({d: {e: 1}});
+      util.getNestedValue(o, 'a.b.c.d').should.deep.equals({e: 1});
+      util.getNestedValue(o, 'a.b.c.d.e').should.deep.equals(1);
+      (util.getNestedValue(o, 'a.o') === undefined).should.be.true;
+    });
+  });
 });
