@@ -2402,7 +2402,7 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
      * @function createAdapter
      * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with.
      * @param {Object} source - The source Object.
-     * @param {Object} config - The media source adapter configuration.
+     * @param {Object} config - The player configuration.
      * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter.
      * @static
      */
