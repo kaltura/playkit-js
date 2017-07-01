@@ -780,13 +780,35 @@ function isEmptyObject(obj) {
 /**
  * Checks for nested object properties.
  * @param {Object} obj - The object to check.
- * @param {string} path - The path to check.
+ * @param {string} propertyPath - The path to check.
  * @returns {boolean} - The value in this path.
  */
-function getNestedValue(obj, path) {
-  return path.split(".").reduce(function (o, x) {
+function getPropertyPath(obj, propertyPath) {
+  return propertyPath.split(".").reduce(function (o, x) {
     return typeof o === "undefined" || o === null ? o : o[x];
   }, obj);
+}
+
+/**
+ * Checks for nested object properties.
+ * @param {Object} obj - The object to check.
+ * @param {string} propertyPath - The path to check.
+ * @returns {boolean} - Whether the path exists in the object.
+ */
+function hasPropertyPath(obj, propertyPath) {
+  if (!propertyPath) {
+    return false;
+  }
+  var properties = propertyPath.split('.');
+  for (var i = 0; i < properties.length; i++) {
+    var prop = properties[i];
+    if (!obj || !obj.hasOwnProperty(prop)) {
+      return false;
+    } else {
+      obj = obj[prop];
+    }
+  }
+  return true;
 }
 
 exports.isNumber = isNumber;
@@ -798,7 +820,8 @@ exports.mergeDeep = mergeDeep;
 exports.copyDeep = copyDeep;
 exports.uniqueId = uniqueId;
 exports.isEmptyObject = isEmptyObject;
-exports.getNestedValue = getNestedValue;
+exports.getPropertyPath = getPropertyPath;
+exports.hasPropertyPath = hasPropertyPath;
 
 /***/ }),
 /* 7 */
