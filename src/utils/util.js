@@ -124,4 +124,50 @@ function isEmptyObject(obj: Object): boolean {
   return true;
 }
 
-export {isNumber, isInt, isFloat, isObject, merge, mergeDeep, copyDeep, uniqueId, isEmptyObject};
+/**
+ * Checks for nested object properties.
+ * @param {Object} obj - The object to check.
+ * @param {string} propertyPath - The path to check.
+ * @returns {boolean} - The value in this path.
+ */
+function getPropertyPath(obj: Object, propertyPath: string): any {
+  return propertyPath.split(".").reduce(function (o, x) {
+    return (typeof o === "undefined" || o === null) ? o : o[x];
+  }, obj);
+}
+
+/**
+ * Checks for nested object properties.
+ * @param {Object} obj - The object to check.
+ * @param {string} propertyPath - The path to check.
+ * @returns {boolean} - Whether the path exists in the object.
+ */
+function hasPropertyPath(obj: Object, propertyPath: string): boolean {
+  if (!propertyPath) {
+    return false;
+  }
+  let properties = propertyPath.split('.');
+  for (let i = 0; i < properties.length; i++) {
+    let prop = properties[i];
+    if (!obj || !obj.hasOwnProperty(prop)) {
+      return false;
+    } else {
+      obj = obj[prop];
+    }
+  }
+  return true;
+}
+
+export {
+  isNumber,
+  isInt,
+  isFloat,
+  isObject,
+  merge,
+  mergeDeep,
+  copyDeep,
+  uniqueId,
+  isEmptyObject,
+  getPropertyPath,
+  hasPropertyPath
+};

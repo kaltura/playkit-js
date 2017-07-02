@@ -624,6 +624,212 @@ exports.default = VideoTrack;
 "use strict";
 
 
+/**
+ * @param {number} n - A certain number
+ * @returns {boolean} - If the input is a number
+ */
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function isNumber(n) {
+  return Number(n) === n;
+}
+
+/**
+ * @param {number} n - A certain number
+ * @returns {boolean} - If the input is an integer
+ */
+function isInt(n) {
+  return isNumber(n) && n % 1 === 0;
+}
+
+/**
+ * @param {number} n - A certain number
+ * @returns {boolean} - If the input is a float
+ */
+function isFloat(n) {
+  return isNumber(n) && n % 1 !== 0;
+}
+
+/**
+ * @param {Array<Object>} objects - The objects to merge
+ * @returns {Object} - The merged object.
+ */
+function merge(objects) {
+  var target = {};
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = objects[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var obj = _step.value;
+
+      Object.assign(target, obj);
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  return target;
+}
+
+/**
+ * @param {any} item - The item to check.
+ * @returns {boolean} - Whether the item is an object.
+ */
+function isObject(item) {
+  return item && (typeof item === "undefined" ? "undefined" : _typeof(item)) === 'object' && !Array.isArray(item);
+}
+
+/**
+ * @param {any} target - The target object.
+ * @param {any} sources - The objects to merge.
+ * @returns {Object} - The merged object.
+ */
+function mergeDeep(target) {
+  for (var _len = arguments.length, sources = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    sources[_key - 1] = arguments[_key];
+  }
+
+  if (!sources.length) {
+    return target;
+  }
+  var source = sources.shift();
+  if (isObject(target) && isObject(source)) {
+    for (var key in source) {
+      if (isObject(source[key])) {
+        if (!target[key]) Object.assign(target, _defineProperty({}, key, {}));
+        mergeDeep(target[key], source[key]);
+      } else {
+        Object.assign(target, _defineProperty({}, key, source[key]));
+      }
+    }
+  }
+  return mergeDeep.apply(undefined, [target].concat(_toConsumableArray(sources)));
+}
+
+/**
+ * @param {any} data - The data to copy.
+ * @returns {any} - The copied data.
+ */
+function copyDeep(data) {
+  var node = void 0;
+  if (Array.isArray(data)) {
+    node = data.length > 0 ? data.slice(0) : [];
+    node.forEach(function (e, i) {
+      if ((typeof e === "undefined" ? "undefined" : _typeof(e)) === "object" && e !== {} || Array.isArray(e) && e.length > 0) {
+        node[i] = copyDeep(e);
+      }
+    });
+  } else if ((typeof data === "undefined" ? "undefined" : _typeof(data)) === "object") {
+    node = Object.assign({}, data);
+    Object.keys(node).forEach(function (key) {
+      if (_typeof(node[key]) === "object" && node[key] !== {} || Array.isArray(node[key]) && node[key].length > 0) {
+        node[key] = copyDeep(node[key]);
+      }
+    });
+  } else {
+    node = data;
+  }
+  return node;
+}
+
+/**
+ * Generates unique id.
+ * @param {number} length - The length of the id.
+ * @returns {string} - The generated id.
+ */
+function uniqueId(length) {
+  var from = 2;
+  var to = from + (!length || length < 0 ? 0 : length - 2);
+  return '_' + Math.random().toString(36).substr(from, to);
+}
+
+/**
+ * Checks if an object is an empy object.
+ * @param {Object} obj - The object to check
+ * @returns {boolean} - Whether the object is empty.
+ */
+function isEmptyObject(obj) {
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) return false;
+  }
+  return true;
+}
+
+/**
+ * Checks for nested object properties.
+ * @param {Object} obj - The object to check.
+ * @param {string} propertyPath - The path to check.
+ * @returns {boolean} - The value in this path.
+ */
+function getPropertyPath(obj, propertyPath) {
+  return propertyPath.split(".").reduce(function (o, x) {
+    return typeof o === "undefined" || o === null ? o : o[x];
+  }, obj);
+}
+
+/**
+ * Checks for nested object properties.
+ * @param {Object} obj - The object to check.
+ * @param {string} propertyPath - The path to check.
+ * @returns {boolean} - Whether the path exists in the object.
+ */
+function hasPropertyPath(obj, propertyPath) {
+  if (!propertyPath) {
+    return false;
+  }
+  var properties = propertyPath.split('.');
+  for (var i = 0; i < properties.length; i++) {
+    var prop = properties[i];
+    if (!obj || !obj.hasOwnProperty(prop)) {
+      return false;
+    } else {
+      obj = obj[prop];
+    }
+  }
+  return true;
+}
+
+exports.isNumber = isNumber;
+exports.isInt = isInt;
+exports.isFloat = isFloat;
+exports.isObject = isObject;
+exports.merge = merge;
+exports.mergeDeep = mergeDeep;
+exports.copyDeep = copyDeep;
+exports.uniqueId = uniqueId;
+exports.isEmptyObject = isEmptyObject;
+exports.getPropertyPath = getPropertyPath;
+exports.hasPropertyPath = hasPropertyPath;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -818,7 +1024,7 @@ var Binding_ = function () {
 exports.default = EventManager;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -829,7 +1035,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.CUSTOM_EVENTS = exports.HTML5_EVENTS = exports.PLAYER_EVENTS = undefined;
 
-var _util = __webpack_require__(9);
+var _util = __webpack_require__(6);
 
 var HTML5_EVENTS = {
   /**
@@ -961,7 +1167,7 @@ exports.HTML5_EVENTS = HTML5_EVENTS;
 exports.CUSTOM_EVENTS = CUSTOM_EVENTS;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -975,7 +1181,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _eventManager = __webpack_require__(6);
+var _eventManager = __webpack_require__(7);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
@@ -987,13 +1193,13 @@ var _fakeEventTarget = __webpack_require__(10);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
-var _events = __webpack_require__(7);
+var _events = __webpack_require__(8);
 
 var _stateTypes = __webpack_require__(16);
 
 var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
-var _util = __webpack_require__(9);
+var _util = __webpack_require__(6);
 
 var _logger = __webpack_require__(1);
 
@@ -1924,176 +2130,6 @@ Player._engines = [_html2.default];
 exports.default = Player;
 
 /***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * @param {number} n - A certain number
- * @returns {boolean} - If the input is a number
- */
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function isNumber(n) {
-  return Number(n) === n;
-}
-
-/**
- * @param {number} n - A certain number
- * @returns {boolean} - If the input is an integer
- */
-function isInt(n) {
-  return isNumber(n) && n % 1 === 0;
-}
-
-/**
- * @param {number} n - A certain number
- * @returns {boolean} - If the input is a float
- */
-function isFloat(n) {
-  return isNumber(n) && n % 1 !== 0;
-}
-
-/**
- * @param {Array<Object>} objects - The objects to merge
- * @returns {Object} - The merged object.
- */
-function merge(objects) {
-  var target = {};
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
-
-  try {
-    for (var _iterator = objects[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var obj = _step.value;
-
-      Object.assign(target, obj);
-    }
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator.return) {
-        _iterator.return();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
-  }
-
-  return target;
-}
-
-/**
- * @param {any} item - The item to check.
- * @returns {boolean} - Whether the item is an object.
- */
-function isObject(item) {
-  return item && (typeof item === "undefined" ? "undefined" : _typeof(item)) === 'object' && !Array.isArray(item);
-}
-
-/**
- * @param {any} target - The target object.
- * @param {any} sources - The objects to merge.
- * @returns {Object} - The merged object.
- */
-function mergeDeep(target) {
-  for (var _len = arguments.length, sources = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    sources[_key - 1] = arguments[_key];
-  }
-
-  if (!sources.length) {
-    return target;
-  }
-  var source = sources.shift();
-  if (isObject(target) && isObject(source)) {
-    for (var key in source) {
-      if (isObject(source[key])) {
-        if (!target[key]) Object.assign(target, _defineProperty({}, key, {}));
-        mergeDeep(target[key], source[key]);
-      } else {
-        Object.assign(target, _defineProperty({}, key, source[key]));
-      }
-    }
-  }
-  return mergeDeep.apply(undefined, [target].concat(_toConsumableArray(sources)));
-}
-
-/**
- * @param {any} data - The data to copy.
- * @returns {any} - The copied data.
- */
-function copyDeep(data) {
-  var node = void 0;
-  if (Array.isArray(data)) {
-    node = data.length > 0 ? data.slice(0) : [];
-    node.forEach(function (e, i) {
-      if ((typeof e === "undefined" ? "undefined" : _typeof(e)) === "object" && e !== {} || Array.isArray(e) && e.length > 0) {
-        node[i] = copyDeep(e);
-      }
-    });
-  } else if ((typeof data === "undefined" ? "undefined" : _typeof(data)) === "object") {
-    node = Object.assign({}, data);
-    Object.keys(node).forEach(function (key) {
-      if (_typeof(node[key]) === "object" && node[key] !== {} || Array.isArray(node[key]) && node[key].length > 0) {
-        node[key] = copyDeep(node[key]);
-      }
-    });
-  } else {
-    node = data;
-  }
-  return node;
-}
-
-/**
- * Generates unique id.
- * @param {number} length - The length of the id.
- * @returns {string} - The generated id.
- */
-function uniqueId(length) {
-  var from = 2;
-  var to = from + (!length || length < 0 ? 0 : length - 2);
-  return '_' + Math.random().toString(36).substr(from, to);
-}
-
-/**
- * Checks if an object is an empy object.
- * @param {Object} obj - The object to check
- * @returns {boolean} - Whether the object is empty.
- */
-function isEmptyObject(obj) {
-  for (var key in obj) {
-    if (obj.hasOwnProperty(key)) return false;
-  }
-  return true;
-}
-
-exports.isNumber = isNumber;
-exports.isInt = isInt;
-exports.isFloat = isFloat;
-exports.isObject = isObject;
-exports.merge = merge;
-exports.mergeDeep = mergeDeep;
-exports.copyDeep = copyDeep;
-exports.uniqueId = uniqueId;
-exports.isEmptyObject = isEmptyObject;
-
-/***/ }),
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2322,7 +2358,7 @@ var _playerError = __webpack_require__(11);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
-var _events = __webpack_require__(7);
+var _events = __webpack_require__(8);
 
 var _logger = __webpack_require__(1);
 
@@ -2717,7 +2753,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _player = __webpack_require__(8);
+var _player = __webpack_require__(9);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -2725,9 +2761,9 @@ var _logger = __webpack_require__(1);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _util = __webpack_require__(9);
+var _util = __webpack_require__(6);
 
-var _eventManager = __webpack_require__(6);
+var _eventManager = __webpack_require__(7);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
@@ -2918,7 +2954,7 @@ var _playerError = __webpack_require__(11);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
-var _player = __webpack_require__(8);
+var _player = __webpack_require__(9);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -3410,11 +3446,11 @@ var _fakeEvent = __webpack_require__(2);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _eventManager = __webpack_require__(6);
+var _eventManager = __webpack_require__(7);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _events = __webpack_require__(7);
+var _events = __webpack_require__(8);
 
 var _mediaSourceProvider = __webpack_require__(13);
 
@@ -3432,7 +3468,7 @@ var _textTrack = __webpack_require__(4);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _util = __webpack_require__(9);
+var _util = __webpack_require__(6);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4231,11 +4267,11 @@ var _get = function get(object, property, receiver) { if (object === null) objec
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _eventManager = __webpack_require__(6);
+var _eventManager = __webpack_require__(7);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _events = __webpack_require__(7);
+var _events = __webpack_require__(8);
 
 var _track = __webpack_require__(0);
 
@@ -4648,10 +4684,10 @@ exports.default = NativeAdapter;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.VERSION = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerMediaSourceAdapter = undefined;
+exports.VERSION = exports.Utils = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerMediaSourceAdapter = undefined;
 exports.loadPlayer = loadPlayer;
 
-var _player = __webpack_require__(8);
+var _player = __webpack_require__(9);
 
 var _player2 = _interopRequireDefault(_player);
 
@@ -4691,13 +4727,16 @@ var _textTrack = __webpack_require__(4);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
+var _util = __webpack_require__(6);
+
+var Utils = _interopRequireWildcard(_util);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Playkit version
 var VERSION = packageData.version;
-
 
 _logger2.default.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
 _logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
@@ -4727,6 +4766,10 @@ exports.VideoTrack = _videoTrack2.default;
 exports.AudioTrack = _audioTrack2.default;
 exports.TextTrack = _textTrack2.default;
 
+// Export utils library
+
+exports.Utils = Utils;
+
 //export version
 
 exports.VERSION = VERSION;
@@ -4745,11 +4788,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _player = __webpack_require__(8);
+var _player = __webpack_require__(9);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _eventManager = __webpack_require__(6);
+var _eventManager = __webpack_require__(7);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
@@ -4761,7 +4804,7 @@ var _stateTypes = __webpack_require__(16);
 
 var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
-var _events = __webpack_require__(7);
+var _events = __webpack_require__(8);
 
 var _fakeEvent = __webpack_require__(2);
 
