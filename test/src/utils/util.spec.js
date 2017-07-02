@@ -110,4 +110,38 @@ describe('util', () => {
       util.isEmptyObject({x: 1}).should.be.false;
     });
   });
+
+
+  describe('getPropertyPath', function () {
+    let o;
+
+    before(function () {
+      o = {a: {b: {c: {d: {e: 1}}}}};
+    });
+
+    it('should return the value at an object property path', function () {
+      util.getPropertyPath(o, 'a.b').should.deep.equals({c: {d: {e: 1}}});
+      util.getPropertyPath(o, 'a.b.c').should.deep.equals({d: {e: 1}});
+      util.getPropertyPath(o, 'a.b.c.d').should.deep.equals({e: 1});
+      util.getPropertyPath(o, 'a.b.c.d.e').should.deep.equals(1);
+      (util.getPropertyPath(o, 'a.o') === undefined).should.be.true;
+    });
+  });
+
+  describe('hasPropertyPath', function () {
+    let o;
+
+    before(function () {
+      o = {a: {b: {c: {d: {e: 1}}}}};
+    });
+
+    it('should return if an object has the property path', function () {
+      util.hasPropertyPath(o, 'a.b').should.be.true;
+      util.hasPropertyPath(o, 'a.b.c').should.be.true;
+      util.hasPropertyPath(o, 'a.b.c.d').should.be.true;
+      util.hasPropertyPath(o, 'a.b.c.d.e').should.be.true;
+      util.hasPropertyPath(o, 'a.o').should.be.false;
+      util.hasPropertyPath(o, 'a.b.c.d.e.f').should.be.false;
+    });
+  });
 });
