@@ -7,7 +7,19 @@ import MediaSourceProvider from './media-source/media-source-provider'
 import VideoTrack from '../../track/video-track'
 import AudioTrack from '../../track/audio-track'
 import TextTrack from '../../track/text-track'
+import {uniqueId} from '../../utils/util'
 
+/**
+ * The engine video element class name.
+ * @type {string}
+ * @const
+ */
+const VIDEO_ELEMENT_CLASS_NAME: string = 'playkit-engine-html5';
+
+/**
+ * Html5 engine for playback.
+ * @classdesc
+ */
 export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * The video element.
@@ -64,7 +76,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   constructor(source: Source, config: Object) {
     super();
     this._eventManager = new EventManager();
-    this._createVideoElement(config.target);
+    this._createVideoElement();
     this._loadMediaSourceAdapter(source, config);
     this.attach();
   }
@@ -88,6 +100,15 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       }
     }
     this._eventManager.destroy();
+  }
+
+  /**
+   * Get the engine's id
+   * @public
+   * @returns {string} the engine's id
+   */
+  get id(): string {
+    return Html5.id;
   }
 
   /**
@@ -140,34 +161,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Creates a video element dom object.
-   * @param {string} target - The target id.
    * @private
    * @returns {void}
    */
-  _createVideoElement(target: string): void {
+  _createVideoElement(): void {
     this._el = document.createElement("video");
-    //Set attributes
-    this._el.id = "kaltura-player";
-    this._el.style.width = "640px";
-    this._el.style.height = "360px";
-    this._el.style.backgroundColor = "black";
-    this._el.controls = true;
-    if (document && document.body) {
-      let body = document.body;
-      if (target) {
-        let targetElement = document.getElementById(target);
-        if (targetElement) {
-          targetElement.appendChild(this._el);
-          body.appendChild(targetElement);
-        }
-      } else {
-        let container = document.createElement("div");
-        container.id = "kaltura-player-container";
-        container.style.position = "absolute";
-        container.appendChild(this._el);
-        body.appendChild(container);
-      }
-    }
+    this._el.id = uniqueId(5);
+    this._el.className = VIDEO_ELEMENT_CLASS_NAME;
+    this._el.controls = false;
   }
 
   /**

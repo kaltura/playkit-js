@@ -20,6 +20,7 @@ declare interface IEngine {
   hideTextTrack(): void;
   enableAdaptiveBitrate(): void;
   getVideoElement(): HTMLVideoElement;
+  +id: string;
   currentTime: number;
   +duration: number;
   volume: number;
