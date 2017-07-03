@@ -398,6 +398,18 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Get an object includes the active video/audio/text tracks
+   * @return {{video: VideoTrack, audio: AudioTrack, text: TextTrack}} - The active tracks object
+   */
+  getActiveTracks(): Object {
+    return {
+      video: this._getTracksByType(TrackTypes.VIDEO).find(track => track.active),
+      audio: this._getTracksByType(TrackTypes.AUDIO).find(track => track.active),
+      text: this._getTracksByType(TrackTypes.TEXT).find(track => track.active),
+    };
+  }
+
+  /**
    * Select a track
    * @function selectTrack
    * @param {Track} track - the track to select

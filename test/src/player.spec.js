@@ -17,7 +17,7 @@ describe("play", function () {
   before(() => {
     createElement('DIV', targetId);
     config = getConfigStructure();
-    config.sources = sourcesConfig.Mp4HlsDash;
+    config.sources = sourcesConfig.Mp4;
   });
 
   beforeEach(() => {
@@ -60,7 +60,7 @@ describe("ready", function () {
     before(() => {
       createElement('DIV', targetId);
       config = getConfigStructure();
-      config.sources = sourcesConfig.Mp4HlsDash;
+      config.sources = sourcesConfig.Mp4;
     });
 
     describe("preload none", () => {
@@ -451,7 +451,7 @@ describe('getTracks dummy', () => {
   before(() => {
     createElement('DIV', targetId);
     config = getConfigStructure();
-    config.sources = sourcesConfig.Mp4HlsDash;
+    config.sources = sourcesConfig.Mp4;
     player = new Player(targetId, config);
     player._tracks = [
       new VideoTrack(),
@@ -511,7 +511,7 @@ describe('getTracks real', function () {
 
   beforeEach(() => {
     config = getConfigStructure();
-    config.sources = sourcesConfig.Mp4HlsDash;
+    config.sources = sourcesConfig.Mp4;
     player = new Player(targetId, config);
     video = player._engine.getVideoElement();
     video.appendChild(track1);
@@ -595,7 +595,7 @@ describe('selectTrack - audio', function () {
 
   beforeEach(() => {
     config = getConfigStructure();
-    config.sources = sourcesConfig.Mp4HlsDash;
+    config.sources = sourcesConfig.Mp4;
     player = new Player(targetId);
   });
 
@@ -662,7 +662,7 @@ describe('selectTrack - audio', function () {
       }
       done();
     });
-    config.playback = {preload: 'auto'};
+    config.playback.preload = 'auto';
     player.configure(config);
     video = player._engine.getVideoElement();
     player.load();
@@ -707,7 +707,7 @@ describe('selectTrack - text', function () {
 
   beforeEach(() => {
     config = getConfigStructure();
-    config.sources = sourcesConfig.Mp4HlsDash;
+    config.sources = sourcesConfig.Mp4;
     player = new Player(targetId, config);
     video = player._engine.getVideoElement();
     track1 = document.createElement("track");
@@ -834,6 +834,78 @@ describe('selectTrack - text', function () {
   });
 });
 
+describe('getActiveTracks', function () {
+  this.timeout(10000);
+
+  let config, player, video, track1, track2;
+
+  before(() => {
+    createElement('DIV', targetId);
+  });
+
+  beforeEach(() => {
+    config = getConfigStructure();
+    config.sources = sourcesConfig.Mp4;
+    player = new Player(targetId, config);
+    video = player._engine.getVideoElement();
+    track1 = document.createElement("track");
+    track2 = document.createElement("track");
+    track1.kind = 'subtitles';
+    track1.label = 'English';
+    track1.default = true;
+    track2.kind = 'subtitles';
+    track2.srclang = 'fr';
+    video.appendChild(track1);
+    video.appendChild(track2);
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElement(targetId);
+  });
+
+  it('should get the active tracks before and after switching', (done) => {
+    player.ready().then(() => {
+      player.addEventListener(CustomEvents.TEXT_TRACK_CHANGED, () => {
+        player.addEventListener(CustomEvents.AUDIO_TRACK_CHANGED, () => {
+          player.getActiveTracks().audio.should.deep.equals(audioTracks[2]);
+          done();
+        });
+        player.getActiveTracks().text.should.deep.equals(textTracks[1]);
+        if (audioTracks.length) {
+          player.selectTrack(new AudioTrack({index: 2}));
+        }
+        else {
+          done();
+        }
+      });
+      let videoTracks = player._tracks.filter((track) => {
+        return track instanceof VideoTrack;
+      });
+      let audioTracks = player._tracks.filter((track) => {
+        return track instanceof AudioTrack;
+      });
+      let textTracks = player._tracks.filter((track) => {
+        return track instanceof TextTrack;
+      });
+      if (videoTracks.length) {
+        player.getActiveTracks().video.should.deep.equals(videoTracks[0]);
+      }
+      if (audioTracks.length) {
+        player.getActiveTracks().audio.should.deep.equals(audioTracks[0]);
+      }
+      player.getActiveTracks().text.should.deep.equals(textTracks[0]);
+      player.selectTrack(new TextTrack({index: 1, kind: 'subtitles'}));
+    });
+    player.load();
+  });
+
+});
+
 describe('hideTextTrack', function () {
   this.timeout(10000);
 
@@ -845,7 +917,7 @@ describe('hideTextTrack', function () {
 
   beforeEach(() => {
     config = getConfigStructure();
-    config.sources = sourcesConfig.Mp4HlsDash;
+    config.sources = sourcesConfig.Mp4;
     player = new Player(targetId, config);
     video = player._engine.getVideoElement();
     track1 = document.createElement("track");
@@ -900,7 +972,7 @@ describe('Track enum', function () {
 
   it('should return the track enum', () => {
     let config = getConfigStructure();
-    config.sources = sourcesConfig.Mp4HlsDash;
+    config.sources = sourcesConfig.Mp4;
     let player = new Player(targetId, config);
     player.Track.VIDEO.should.be.equal('video');
     player.Track.AUDIO.should.be.equal('audio');
@@ -920,7 +992,7 @@ describe('events', function () {
 
     beforeEach(() => {
       config = getConfigStructure();
-      config.sources = sourcesConfig.Mp4HlsDash;
+      config.sources = sourcesConfig.Mp4;
       player = new Player(targetId, config);
       video = player._engine.getVideoElement();
       track1 = document.createElement("track");
@@ -976,7 +1048,7 @@ describe('events', function () {
 
     beforeEach(() => {
       config = getConfigStructure();
-      config.sources = sourcesConfig.Mp4HlsDash;
+      config.sources = sourcesConfig.Mp4;
       player = new Player(targetId, config);
 
     });
@@ -1019,7 +1091,7 @@ describe('events', function () {
 
     beforeEach(() => {
       config = getConfigStructure();
-      config.sources = sourcesConfig.Mp4HlsDash;
+      config.sources = sourcesConfig.Mp4;
       player = new Player(targetId);
 
     });
@@ -1054,7 +1126,7 @@ describe('states', function () {
 
   beforeEach(() => {
     config = getConfigStructure();
-    config.sources = sourcesConfig.Mp4HlsDash;
+    config.sources = sourcesConfig.Mp4;
     player = new Player(targetId, config);
   });
 
@@ -1158,7 +1230,7 @@ describe('configure', function () {
   });
 
   it('should create player without sources and set the sources later', (done) => {
-    config.sources = sourcesConfig.Mp4HlsDash;
+    config.sources = sourcesConfig.Mp4;
     player = new Player(targetId);
     player.should.be.instanceOf(Player);
     player.configure(config);
