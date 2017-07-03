@@ -90,7 +90,7 @@ describe('NativeAdapter: load', function () {
   });
 
   it('should success', (done) => {
-    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4HlsDash.progressive[0], {});
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {});
     nativeInstance.load().then(() => {
       done();
     });
@@ -112,7 +112,7 @@ describe('NativeAdapter: destroy', function () {
 
   beforeEach(() => {
     video = document.createElement("video");
-    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4HlsDash.progressive[0], {});
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {});
   });
 
   afterEach(() => {
@@ -156,7 +156,7 @@ describe('NativeAdapter:_getParsedTracks', function () {
 
   beforeEach(() => {
     video = document.createElement("video");
-    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4HlsDash.progressive[0], {});
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {});
   });
 
   afterEach(() => {
@@ -215,7 +215,7 @@ describe('NativeAdapter:selectAudioTrack', function () {
 
   beforeEach(() => {
     video = document.createElement("video");
-    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4HlsDash.progressive[0], {});
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {});
   });
 
   afterEach(() => {
@@ -292,7 +292,7 @@ describe('NativeAdapter:selectTextTrack', function () {
     track2.srclang = 'fr';
     video.appendChild(track1);
     video.appendChild(track2);
-    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4HlsDash.progressive[0], {});
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {});
   });
 
   afterEach(() => {
@@ -389,7 +389,7 @@ describe('NativeAdapter:hideTextTrack', function () {
     track2.srclang = 'fr';
     video.appendChild(track1);
     video.appendChild(track2);
-    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4HlsDash.progressive[0], {});
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {});
   });
 
   afterEach(() => {
