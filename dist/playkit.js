@@ -578,25 +578,58 @@ var VideoTrack = function (_Track) {
 
 
     /**
-     * Getter for the kind of the text track.
      * @public
-     * @returns {string} - The kind of the text track.
+     * @returns {number} - The bandwidth of the video track
+     */
+
+
+    /**
+     * @member {number} _width - The width of the video track
+     * @type {number}
+     * @private
      */
     get: function get() {
       return this._bandwidth;
     }
 
     /**
-     * @constructor
-     * @param {Object} settings - The track settings object.
+     * @public
+     * @returns {number} - The width of the video track
+     */
+
+
+    /**
+     * @member {number} _height - The height of the video track
+     * @type {number}
+     * @private
      */
 
     /**
-     * The kind of the text track:
-     * subtitles/captions/metadata.
-     * @member
-     * @type {string}
+     * @member {number} _bandwidth - The bandwidth of the video track
+     * @type {number}
      * @private
+     */
+
+  }, {
+    key: 'width',
+    get: function get() {
+      return this._width;
+    }
+
+    /**
+     * @public
+     * @returns {number} - The height of the video track
+     */
+
+  }, {
+    key: 'height',
+    get: function get() {
+      return this._height;
+    }
+
+    /**
+     * @constructor
+     * @param {Object} settings - The track settings object
      */
 
   }]);
@@ -609,6 +642,8 @@ var VideoTrack = function (_Track) {
     var _this = _possibleConstructorReturn(this, (VideoTrack.__proto__ || Object.getPrototypeOf(VideoTrack)).call(this, settings));
 
     _this._bandwidth = settings.bandwidth;
+    _this._width = settings.width;
+    _this._height = settings.height;
     return _this;
   }
 
@@ -1721,6 +1756,27 @@ var Player = function (_FakeEventTarget) {
           return true;
         }
       });
+    }
+
+    /**
+     * Get an object includes the active video/audio/text tracks
+     * @return {{video: VideoTrack, audio: AudioTrack, text: TextTrack}} - The active tracks object
+     */
+
+  }, {
+    key: 'getActiveTracks',
+    value: function getActiveTracks() {
+      return {
+        video: this._getTracksByType(_trackTypes2.default.VIDEO).find(function (track) {
+          return track.active;
+        }),
+        audio: this._getTracksByType(_trackTypes2.default.AUDIO).find(function (track) {
+          return track.active;
+        }),
+        text: this._getTracksByType(_trackTypes2.default.TEXT).find(function (track) {
+          return track.active;
+        })
+      };
     }
 
     /**
