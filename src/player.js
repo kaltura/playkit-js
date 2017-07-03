@@ -101,6 +101,10 @@ export default class Player extends FakeEventTarget {
 
   _playerMiddleware: PlayerMiddleware;
 
+  getView(): HTMLElement {
+    return this._el;
+  }
+
   /**
    * @param {string} targetId - The target div id to append the player.
    * @param {Object} config - The configuration for the player instance.

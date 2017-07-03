@@ -124,7 +124,7 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
   /**
    * Ads events
    */
-  AD_LOADED: 'adloaded',
+  ADS_LOADED: 'adsloaded',
   AD_PLAYING: 'adplaying',
   AD_RESUMED: 'adresumed',
   AD_PAUSED: 'adpaused',

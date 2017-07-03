@@ -4,6 +4,7 @@ import LoggerFactory from '../utils/logger'
 import {merge} from '../utils/util'
 import EventManager from '../event/event-manager'
 import PlayerError from '../utils/player-error'
+import FakeEvent from '../event/fake-event'
 
 /** The BasePlugin responsible to implement the plugin interface.
  * Contains several default implementations.
@@ -127,5 +128,10 @@ export default class BasePlugin implements IPlugin {
    */
   getName(): string {
     return this.name;
+  }
+
+  dispatchEvent(name: string, payload: any): void {
+    this.logger.debug("Fire event: " + name, payload);
+    this.player.dispatchEvent(new FakeEvent(name, payload));
   }
 }
