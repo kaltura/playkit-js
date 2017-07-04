@@ -125,7 +125,7 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
    * Ads events
    */
   ADS_LOADED: 'adsloaded',
-  AD_PLAYING: 'adplaying',
+  AD_STARTED: 'adstarted',
   AD_RESUMED: 'adresumed',
   AD_PAUSED: 'adpaused',
   AD_CLICKED: 'adclicked',
@@ -137,7 +137,10 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
   AD_BREAK_END: 'adbreakend',
   AD_FIRST_QUARTILE: 'adfirstquartile',
   AD_MIDPOINT: 'admidpoint',
-  AD_THIRD_QUARTILE: 'adthirdquartile'
+  AD_THIRD_QUARTILE: 'adthirdquartile',
+  USER_CLOSED_AD: 'userclosedad',
+  AD_VOLUME_CHANGED: 'advolumechanged',
+  AD_MUTED: 'admuted'
 };
 
 const PLAYER_EVENTS: { [event: string]: string } = merge([HTML5_EVENTS, CUSTOM_EVENTS]);

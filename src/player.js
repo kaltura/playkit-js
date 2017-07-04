@@ -16,6 +16,7 @@ import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
 import PlayerMiddleware from './middleware/player-middleware'
 import DefaultPlayerConfig from './player-config.json'
+import UAParser from 'ua-parser-js'
 import './assets/style.css'
 
 /**
@@ -101,8 +102,14 @@ export default class Player extends FakeEventTarget {
 
   _playerMiddleware: PlayerMiddleware;
 
+  _env: Object;
+
   getView(): HTMLElement {
     return this._el;
+  }
+
+  get env(): Object {
+    return this._env;
   }
 
   /**
@@ -119,6 +126,7 @@ export default class Player extends FakeEventTarget {
     this._pluginManager = new PluginManager();
     this._eventManager = new EventManager();
     this._playerMiddleware = new PlayerMiddleware();
+    this._env = new UAParser().getResult();
     this._createReadyPromise();
     this._appendPlayerContainer(targetId);
     this.configure(config);
@@ -131,9 +139,9 @@ export default class Player extends FakeEventTarget {
    */
   configure(config: Object): void {
     let engine = this._engine;
-    this._maybeResetPlayer(config);
     this._config = mergeDeep(isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
-    if (this._selectEngine()) {
+    this._maybeResetPlayer(config);
+    if (isEmptyObject(this._engine) && this._selectEngine()) {
       this._appendEngineEl();
       this._attachMedia();
       this._maybeLoadPlugins(engine);
@@ -328,7 +336,8 @@ export default class Player extends FakeEventTarget {
       if (this._config.playback.preload === "auto") {
         this.load();
       }
-      if (this._config.playback.autoplay) {
+      if (this._config.playback.autoplay &&
+        (this._env.device.type !== "mobile" || this._config.playback.muted)) {
         this.play();
       }
     }
