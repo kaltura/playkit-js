@@ -1957,12 +1957,14 @@ var Player = function (_FakeEventTarget) {
     value: function load() {
       var _this5 = this;
 
-      this._engine.load().then(function (data) {
-        _this5._tracks = data.tracks;
-        _this5.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.TRACKS_CHANGED, { tracks: _this5._tracks }));
-      }).catch(function (error) {
-        _this5.dispatchEvent(new _fakeEvent2.default(_events.HTML5_EVENTS.ERROR, error));
-      });
+      if (this._engine) {
+        this._engine.load().then(function (data) {
+          _this5._tracks = data.tracks;
+          _this5.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.TRACKS_CHANGED, { tracks: _this5._tracks }));
+        }).catch(function (error) {
+          _this5.dispatchEvent(new _fakeEvent2.default(_events.HTML5_EVENTS.ERROR, error));
+        });
+      }
     }
 
     /**
@@ -4997,14 +4999,10 @@ var Middleware = function () {
 
       this._logger.debug("Start middleware chain for action " + action);
       var middlewares = this._middlewares.get(action);
-      if (middlewares && middlewares.length > 0) {
-        this._executeMiddleware(middlewares, function () {
-          _this._logger.debug("Finish middleware chain for action " + action);
-          if (callback) {
-            callback();
-          }
-        });
-      }
+      this._executeMiddleware(middlewares, function () {
+        _this._logger.debug("Finish middleware chain for action " + action);
+        callback();
+      });
     }
 
     /**
@@ -5018,9 +5016,13 @@ var Middleware = function () {
   }, {
     key: '_executeMiddleware',
     value: function _executeMiddleware(middlewares, callback) {
-      middlewares.reduceRight(function (next, fn) {
-        fn(next);
-      }, callback);
+      if (middlewares.length > 0) {
+        middlewares.reduceRight(function (next, fn) {
+          fn(next);
+        }, callback);
+      } else {
+        callback();
+      }
     }
   }]);
 
