@@ -64,14 +64,10 @@ export default class Middleware {
   run(action: string, callback: Function): void {
     this._logger.debug("Start middleware chain for action " + action);
     let middlewares = this._middlewares.get(action);
-    if (middlewares && middlewares.length > 0) {
-      this._executeMiddleware(middlewares, () => {
-        this._logger.debug("Finish middleware chain for action " + action);
-        if (callback) {
-          callback();
-        }
-      });
-    }
+    this._executeMiddleware(middlewares, () => {
+      this._logger.debug("Finish middleware chain for action " + action);
+      callback();
+    });
   }
 
   /**
@@ -82,8 +78,12 @@ export default class Middleware {
    * @returns {void}
    */
   _executeMiddleware(middlewares: Array<Function>, callback: Function): void {
-    middlewares.reduceRight((next, fn) => {
-      fn(next);
-    }, callback);
+    if (middlewares.length > 0) {
+      middlewares.reduceRight((next, fn) => {
+        fn(next);
+      }, callback);
+    } else {
+      callback();
+    }
   }
 }

@@ -552,12 +552,14 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   load(): void {
-    this._engine.load().then((data) => {
-      this._tracks = data.tracks;
-      this.dispatchEvent(new FakeEvent(CustomEvents.TRACKS_CHANGED, {tracks: this._tracks}));
-    }).catch((error) => {
-      this.dispatchEvent(new FakeEvent(Html5Events.ERROR, error));
-    });
+    if (this._engine) {
+      this._engine.load().then((data) => {
+        this._tracks = data.tracks;
+        this.dispatchEvent(new FakeEvent(CustomEvents.TRACKS_CHANGED, {tracks: this._tracks}));
+      }).catch((error) => {
+        this.dispatchEvent(new FakeEvent(Html5Events.ERROR, error));
+      });
+    }
   }
 
   /**
