@@ -130,6 +130,12 @@ export default class BasePlugin implements IPlugin {
     return this.name;
   }
 
+  /**
+   * Dispatch an event via the plugin.
+   * @param {string} name - The event name.
+   * @param {any} payload - The event payload.
+   * @returns {void}
+   */
   dispatchEvent(name: string, payload: any): void {
     this.logger.debug("Fire event: " + name, payload);
     this.player.dispatchEvent(new FakeEvent(name, payload));

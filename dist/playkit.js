@@ -1520,7 +1520,7 @@ var Player = function (_FakeEventTarget) {
         this._pluginManager.load(name, this, plugins[name]);
         var plugin = this._pluginManager.get(name);
         if (plugin && typeof plugin.getPlayerMiddleware === "function") {
-          this._playerMiddleware.use(plugin.getPlayerMiddleware());
+          this._playbackMiddleware.use(plugin.getPlayerMiddleware());
         }
       }
     }
@@ -1904,7 +1904,7 @@ var Player = function (_FakeEventTarget) {
     key: 'play',
     value: function play() {
       if (this._engine) {
-        this._playerMiddleware.play(this._play.bind(this));
+        this._playbackMiddleware.play(this._play.bind(this));
       }
     }
   }, {
@@ -1932,7 +1932,7 @@ var Player = function (_FakeEventTarget) {
     key: 'pause',
     value: function pause() {
       if (this._engine) {
-        this._playerMiddleware.pause(this._pause.bind(this));
+        this._playbackMiddleware.pause(this._pause.bind(this));
       }
     }
   }, {

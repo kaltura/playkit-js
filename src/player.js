@@ -14,7 +14,7 @@ import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
-import PlayerMiddleware from './middleware/player-middleware'
+import PlaybackMiddleware from './middleware/playback-middleware'
 import DefaultPlayerConfig from './player-config.json'
 import UAParser from 'ua-parser-js'
 import './assets/style.css'
@@ -99,18 +99,18 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _el: HTMLElement;
-
-  _playerMiddleware: PlayerMiddleware;
-
+  /**
+   * The playback middleware of the player.
+   * @type {PlaybackMiddleware}
+   * @private
+   */
+  _playbackMiddleware: PlaybackMiddleware;
+  /**
+   * The environment(os,device,browser) object of the player.
+   * @type {Object}
+   * @private
+   */
   _env: Object;
-
-  getView(): HTMLElement {
-    return this._el;
-  }
-
-  get env(): Object {
-    return this._env;
-  }
 
   /**
    * @param {string} targetId - The target div id to append the player.
@@ -125,7 +125,7 @@ export default class Player extends FakeEventTarget {
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
     this._eventManager = new EventManager();
-    this._playerMiddleware = new PlayerMiddleware();
+    this._playbackMiddleware = new PlaybackMiddleware();
     this._env = new UAParser().getResult();
     this._createReadyPromise();
     this._appendPlayerContainer(targetId);
@@ -242,8 +242,8 @@ export default class Player extends FakeEventTarget {
     for (let name in plugins) {
       this._pluginManager.load(name, this, plugins[name]);
       let plugin = this._pluginManager.get(name);
-      if (plugin && typeof plugin.getPlayerMiddleware === "function") {
-        this._playerMiddleware.use(plugin.getPlayerMiddleware());
+      if (plugin && typeof plugin.getMiddlewareImpl === "function") {
+        this._playbackMiddleware.use(plugin.getMiddlewareImpl());
       }
     }
   }
@@ -387,6 +387,15 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Gets the view of the player (i.e the dom container object).
+   * @return {HTMLElement} - The dom container.
+   * @public
+   */
+  getView(): HTMLElement {
+    return this._el;
+  }
+
+  /**
    * Returns the tracks according to the filter. if no filter given returns the all tracks.
    * @function getTracks
    * @param {string} [type] - a tracks filter, should be 'video', 'audio' or 'text'.
@@ -499,6 +508,15 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Getter for the environment of the player instance.
+   * @return {Object} - The current environment object.
+   * @public
+   */
+  get env(): Object {
+    return this._env;
+  }
+
+  /**
    * Get the player config.
    * @returns {Object} - The player configuration.
    * @public
@@ -549,10 +567,15 @@ export default class Player extends FakeEventTarget {
    */
   play(): void {
     if (this._engine) {
-      this._playerMiddleware.play(this._play.bind(this));
+      this._playbackMiddleware.play(this._play.bind(this));
     }
   }
 
+  /**
+   * Start/resume the engine playback.
+   * @private
+   * @returns {void}
+   */
   _play(): void {
     if (this._engine.src) {
       this._engine.play();
@@ -571,10 +594,15 @@ export default class Player extends FakeEventTarget {
    */
   pause(): void {
     if (this._engine) {
-      this._playerMiddleware.pause(this._pause.bind(this));
+      this._playbackMiddleware.pause(this._pause.bind(this));
     }
   }
 
+  /**
+   * Starts the engine pause.
+   * @private
+   * @returns {void}
+   */
   _pause(): void {
     this._engine.pause();
   }

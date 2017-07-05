@@ -1,6 +1,6 @@
 // @flow
-import PlayerMiddlewareBase from '../../src/middleware/player-middleware-base';
+import BaseMiddleware from '../../src/middleware/base-middleware';
 
 declare interface IPlayerMiddlewareProvider {
-  getPlayerMiddleware(): PlayerMiddlewareBase;
+  getMiddlewareImpl(): BaseMiddleware;
 }
