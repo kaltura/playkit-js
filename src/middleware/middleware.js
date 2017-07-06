@@ -78,6 +78,7 @@ export default class Middleware {
    * @returns {void}
    */
   _executeMiddleware(middlewares: Array<Function>, callback: Function): void {
+    // eslint-disable-next-line no-unused-vars
     const composition = middlewares.reduceRight((next, fn) => v => {
       fn(next);
     }, callback);

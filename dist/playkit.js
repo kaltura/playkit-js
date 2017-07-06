@@ -5145,13 +5145,12 @@ var Middleware = function () {
   }, {
     key: '_executeMiddleware',
     value: function _executeMiddleware(middlewares, callback) {
-      if (middlewares.length > 0) {
-        middlewares.reduceRight(function (next, fn) {
+      var composition = middlewares.reduceRight(function (next, fn) {
+        return function (v) {
           fn(next);
-        }, callback);
-      } else {
-        callback();
-      }
+        };
+      }, callback);
+      composition();
     }
   }]);
 

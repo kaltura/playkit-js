@@ -1,34 +1,38 @@
 import BaseMiddleware from '../../../src/middleware/base-middleware'
 import PlaybackMiddleware from '../../../src/middleware/playback-middleware'
+import LoggerFactory from '../../../src/utils/logger'
 
 class PM1 extends BaseMiddleware {
   id = 'PM1';
+  logger = LoggerFactory.getLogger(this.id);
 
   play(next) {
-    console.log(this.id + ':play');
+    this.logger.debug('play');
     this.callNext(next);
   }
 
   pause(next) {
-    console.log(this.id + ':pause');
+    this.logger.debug('pause');
     this.callNext(next);
   }
 }
 
 class PM2 extends BaseMiddleware {
   id = 'PM2';
+  logger = LoggerFactory.getLogger(this.id);
 
   play(next) {
-    console.log(this.id + ':play');
+    this.logger.debug('play');
     this.callNext(next);
   }
 }
 
 class PM3 extends BaseMiddleware {
   id = 'PM3';
+  logger = LoggerFactory.getLogger(this.id);
 
   pause(next) {
-    console.log(this.id + ':pause');
+    this.logger.debug('pause');
     this.callNext(next);
   }
 }

@@ -1,44 +1,48 @@
 import BaseMiddleware from '../../../src/middleware/base-middleware'
 import Middleware from '../../../src/middleware/middleware'
+import LoggerFactory from '../../../src/utils/logger'
 
 class M1 extends BaseMiddleware {
   id = 'M1';
+  logger = LoggerFactory.getLogger(this.id);
 
   drink(next) {
-    console.log(this.id + ':drink');
+    this.logger.debug('drink');
     this.callNext(next);
   }
 
   eat(next) {
-    console.log(this.id + ':eat');
+    this.logger.debug('eat');
     this.callNext(next);
   }
 }
 
 class M2 extends BaseMiddleware {
   id = 'M2';
+  logger = LoggerFactory.getLogger(this.id);
 
   drink(next) {
-    console.log(this.id + ':drink');
+    this.logger.debug('drink');
     this.callNext(next);
   }
 
   eat(next) {
-    console.log(this.id + ':eat');
+    this.logger.debug('eat');
     this.callNext(next);
   }
 }
 
 class M3 extends BaseMiddleware {
   id = 'M3';
+  logger = LoggerFactory.getLogger(this.id);
 
   drink(next) {
-    console.log(this.id + ':drink');
+    this.logger.debug('drink');
     this.callNext(next);
   }
 
   eat(next) {
-    console.log(this.id + ':eat');
+    this.logger.debug('eat');
     this.callNext(next);
   }
 }
