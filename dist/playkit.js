@@ -1753,13 +1753,36 @@ var Player = function (_FakeEventTarget) {
         if (this._config.playback.muted) {
           this.muted = true;
         }
+        if (this._config.playback.playsinline) {
+          this.playsinline = true;
+        }
         if (this._config.playback.preload === "auto") {
           this.load();
         }
-        if (this._config.playback.autoplay && (this._env.device.type !== "mobile" || this._config.playback.muted)) {
+        if (this._canAutoPlay()) {
           this.play();
         }
       }
+    }
+
+    /**
+     * Determine whether we can auto playing or not.
+     * @returns {boolean} - Whether an auto play can be done.
+     * @private
+     */
+
+  }, {
+    key: '_canAutoPlay',
+    value: function _canAutoPlay() {
+      if (!this._config.playback.autoplay) {
+        return false;
+      }
+      var device = this._env.device.type;
+      var os = this._env.os.name;
+      if (device === 'mobile' || device === 'tablet') {
+        return os === 'iOS' ? this.muted && this.playsinline : this.muted;
+      }
+      return true;
     }
 
     /**
@@ -2108,10 +2131,10 @@ var Player = function (_FakeEventTarget) {
     value: function buffered() {}
 
     /**
-     * Set player muted state.
-     * @param {boolean} mute - The mute value.
-     * @returns {void}
-     * @public
+     * Set playsinline attribute.
+     * Relevant for iOS 10 and up:
+     * Elements will now be allowed to play inline, and will not automatically enter fullscreen mode when playback begins.
+     * @param {boolean} playsinline - Whether the video should plays in line.
      */
 
   }, {
@@ -2254,6 +2277,34 @@ var Player = function (_FakeEventTarget) {
         return this._engine.seeking;
       }
     }
+  }, {
+    key: 'playsinline',
+    set: function set(playsinline) {
+      if (this._engine) {
+        this._engine.playsinline = playsinline;
+      }
+    }
+
+    /**
+     * Get playsinline attribute.
+     * Relevant for iOS 10 and up:
+     * Elements will now be allowed to play inline, and will not automatically enter fullscreen mode when playback begins.
+     * @returns {boolean} - Whether the video plays in line.
+     */
+    ,
+    get: function get() {
+      if (this._engine) {
+        return this._engine.playsinline;
+      }
+    }
+
+    /**
+     * Set player muted state.
+     * @param {boolean} mute - The mute value.
+     * @returns {void}
+     * @public
+     */
+
   }, {
     key: 'muted',
     set: function set(mute) {
@@ -4499,6 +4550,28 @@ var Html5 = function (_FakeEventTarget) {
     key: 'videoWidth',
     get: function get() {
       return this._el.videoWidth;
+    }
+
+    /**
+     * @param {boolean} playsinline - Whether to set on the video tag the playsinline attribute.
+     */
+
+  }, {
+    key: 'playsinline',
+    set: function set(playsinline) {
+      if (playsinline) {
+        this._el.setAttribute('playsinline', '');
+      } else {
+        this._el.removeAttribute('playsinline');
+      }
+    }
+
+    /**
+     * @returns {boolean} - Whether the video tag has an attribute of playsinline.
+     */
+    ,
+    get: function get() {
+      return this._el.getAttribute('playsinline') === '';
     }
 
     /**
@@ -7514,6 +7587,7 @@ module.exports = __webpack_amd_options__;
 
 module.exports = {
 	"playback": {
+		"playsinline": false,
 		"preload": "none",
 		"autoplay": false,
 		"muted": false,
