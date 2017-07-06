@@ -333,14 +333,33 @@ export default class Player extends FakeEventTarget {
       if (this._config.playback.muted) {
         this.muted = true;
       }
+      if (this._config.playback.playsinline) {
+        this.playsinline = true;
+      }
       if (this._config.playback.preload === "auto") {
         this.load();
       }
-      if (this._config.playback.autoplay &&
-        (this._env.device.type !== "mobile" || this._config.playback.muted)) {
+      if (this._canAutoPlay()) {
         this.play();
       }
     }
+  }
+
+  /**
+   * Determine whether we can auto playing or not.
+   * @returns {boolean} - Whether an auto play can be done.
+   * @private
+   */
+  _canAutoPlay(): ?boolean {
+    if (!this._config.playback.autoplay) {
+      return false;
+    }
+    let device = this._env.device.type;
+    let os = this._env.os.name;
+    if (device === 'mobile' || device === 'tablet') {
+      return (os === 'iOS') ? this.muted && this.playsinline : this.muted;
+    }
+    return true;
   }
 
   /**
@@ -731,6 +750,30 @@ export default class Player extends FakeEventTarget {
   }
 
   buffered() {
+  }
+
+  /**
+   * Set playsinline attribute.
+   * Relevant for iOS 10 and up:
+   * Elements will now be allowed to play inline, and will not automatically enter fullscreen mode when playback begins.
+   * @param {boolean} playsinline - Whether the video should plays in line.
+   */
+  set playsinline(playsinline: boolean): void {
+    if (this._engine) {
+      this._engine.playsinline = playsinline;
+    }
+  }
+
+  /**
+   * Get playsinline attribute.
+   * Relevant for iOS 10 and up:
+   * Elements will now be allowed to play inline, and will not automatically enter fullscreen mode when playback begins.
+   * @returns {boolean} - Whether the video plays in line.
+   */
+  get playsinline(): ?boolean {
+    if (this._engine) {
+      return this._engine.playsinline;
+    }
   }
 
   /**

@@ -45,4 +45,5 @@ declare interface IEngine {
   +readyState: number;
   +videoWidth: number;
   +videoHeight: number;
+  playsinline: boolean;
 }

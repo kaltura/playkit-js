@@ -601,6 +601,24 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * @param {boolean} playsinline - Whether to set on the video tag the playsinline attribute.
+   */
+  set playsinline(playsinline: boolean): void {
+    if (playsinline) {
+      this._el.setAttribute('playsinline', '');
+    } else {
+      this._el.removeAttribute('playsinline');
+    }
+  }
+
+  /**
+   * @returns {boolean} - Whether the video tag has an attribute of playsinline.
+   */
+  get playsinline(): boolean {
+    return this._el.getAttribute('playsinline') === '';
+  }
+
+  /**
    * Test video element to check if html5 engine is supported.
    */
   static TEST_VID: HTMLVideoElement;
