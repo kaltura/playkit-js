@@ -5145,6 +5145,7 @@ var Middleware = function () {
   }, {
     key: '_executeMiddleware',
     value: function _executeMiddleware(middlewares, callback) {
+      // eslint-disable-next-line no-unused-vars
       var composition = middlewares.reduceRight(function (next, fn) {
         return function (v) {
           fn(next);
