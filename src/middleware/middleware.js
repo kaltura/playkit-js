@@ -78,12 +78,9 @@ export default class Middleware {
    * @returns {void}
    */
   _executeMiddleware(middlewares: Array<Function>, callback: Function): void {
-    if (middlewares.length > 0) {
-      middlewares.reduceRight((next, fn) => {
-        fn(next);
-      }, callback);
-    } else {
-      callback();
-    }
+    const composition = middlewares.reduceRight((next, fn) => v => {
+      fn(next);
+    }, callback);
+    composition();
   }
 }
