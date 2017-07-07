@@ -124,7 +124,7 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
   /**
    * Fired when ad data is available.
    */
-  ADS_LOADED: 'adsloaded',
+  AD_LOADED: 'adloaded',
   /**
    * Fired when the ad starts playing.
    */
