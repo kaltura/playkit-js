@@ -1196,7 +1196,7 @@ var CUSTOM_EVENTS = {
   /**
    * Fired when ad data is available.
    */
-  ADS_LOADED: 'adsloaded',
+  AD_LOADED: 'adloaded',
   /**
    * Fired when the ad starts playing.
    */
