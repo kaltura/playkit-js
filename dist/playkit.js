@@ -240,7 +240,7 @@ exports.LOG_LEVEL = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jsLogger = __webpack_require__(27);
+var _jsLogger = __webpack_require__(28);
 
 var JsLogger = _interopRequireWildcard(_jsLogger);
 
@@ -1272,11 +1272,11 @@ var _textTrack = __webpack_require__(4);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _playerConfig = __webpack_require__(31);
+var _playerConfig = __webpack_require__(32);
 
 var _playerConfig2 = _interopRequireDefault(_playerConfig);
 
-__webpack_require__(28);
+__webpack_require__(29);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4349,6 +4349,8 @@ var _baseMediaSourceAdapter = __webpack_require__(12);
 
 var _baseMediaSourceAdapter2 = _interopRequireDefault(_baseMediaSourceAdapter);
 
+var _resolution = __webpack_require__(25);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -4392,6 +4394,12 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      */
 
     /**
+     * The original progressive sources
+     * @member {Array<Object>} - _progressiveSources
+     * @private
+     */
+
+    /**
      * The id of the Adapter
      * @member {string} id
      * @static
@@ -4407,6 +4415,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      * @constructor
      * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
      * @param {Source} source - The source object
+     * @param {Object} config - The player configuration
      */
 
 
@@ -4419,7 +4428,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
 
   }]);
 
-  function NativeAdapter(videoElement, source) {
+  function NativeAdapter(videoElement, source, config) {
     _classCallCheck(this, NativeAdapter);
 
     NativeAdapter._logger.debug('Creating adapter');
@@ -4427,17 +4436,31 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
     var _this = _possibleConstructorReturn(this, (NativeAdapter.__proto__ || Object.getPrototypeOf(NativeAdapter)).call(this, videoElement, source));
 
     _this._eventManager = new _eventManager2.default();
+    _this._progressiveSources = config.sources.progressive;
     return _this;
   }
 
-  /**
-   * Load the video source
-   * @function load
-   * @returns {Promise<Object>} - The loaded data
-   */
-
-
   _createClass(NativeAdapter, [{
+    key: '_setProgressiveSource',
+    value: function _setProgressiveSource() {
+      var suitableTrack = (0, _resolution.getSuitableSourceForResolution)(this._progressiveSources, this._videoElement.offsetWidth, this._videoElement.offsetHeight);
+      if (suitableTrack) {
+        this._sourceObj = suitableTrack;
+      }
+    }
+  }, {
+    key: '_isProgressivePlayback',
+    value: function _isProgressivePlayback() {
+      return this._sourceObj.mimetype === 'video/mp4';
+    }
+
+    /**
+     * Load the video source
+     * @function load
+     * @returns {Promise<Object>} - The loaded data
+     */
+
+  }, {
     key: 'load',
     value: function load() {
       var _this2 = this;
@@ -4456,6 +4479,9 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
             NativeAdapter._logger.error(error);
             reject(error);
           });
+          if (_this2._isProgressivePlayback()) {
+            _this2._setProgressiveSource();
+          }
           if (_this2._sourceObj && _this2._sourceObj.url) {
             _this2._videoElement.src = _this2._sourceObj.url;
           }
@@ -4477,6 +4503,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
       _get(NativeAdapter.prototype.__proto__ || Object.getPrototypeOf(NativeAdapter.prototype), 'destroy', this).call(this);
       this._eventManager.destroy();
       this._loadPromise = null;
+      this._progressiveSources = [];
     }
 
     /**
@@ -4505,11 +4532,59 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_getParsedVideoTracks',
     value: function _getParsedVideoTracks() {
+      if (this._isProgressivePlayback()) {
+        return this._getParsedProgressiveVideoTracks();
+      } else {
+        return this._getParsedAdaptiveVideoTracks();
+      }
+    }
+
+    /**
+     * Get the parsed progressive video tracks
+     * @function _getParsedProgressiveVideoTracks
+     * @returns {Array<Track>} - The parsed progressive video tracks
+     * @private
+     */
+
+  }, {
+    key: '_getParsedProgressiveVideoTracks',
+    value: function _getParsedProgressiveVideoTracks() {
+      var videoTracks = this._progressiveSources;
+      var parsedTracks = [];
+      if (videoTracks) {
+        for (var i = 0; i < videoTracks.length; i++) {
+          var settings = {
+            id: videoTracks[i].id,
+            bandwidth: videoTracks[i].bandwidth,
+            width: videoTracks[i].width,
+            height: videoTracks[i].height,
+            active: videoTracks[i].id === this._sourceObj.id,
+            label: videoTracks[i].label,
+            index: i
+          };
+          parsedTracks.push(new _videoTrack2.default(settings));
+        }
+      }
+      return parsedTracks;
+    }
+
+    /**
+     * Get the parsed adaptive video tracks
+     * @function _getParsedAdaptiveVideoTracks
+     * @returns {Array<Track>} - The parsed adaptive video tracks
+     * @private
+     */
+
+  }, {
+    key: '_getParsedAdaptiveVideoTracks',
+    value: function _getParsedAdaptiveVideoTracks() {
+      //TODO check adaptation in safari hls
       var videoTracks = this._videoElement.videoTracks;
       var parsedTracks = [];
       if (videoTracks) {
         for (var i = 0; i < videoTracks.length; i++) {
           var settings = {
+            //TODO calculate width/height/bandwidth
             id: videoTracks[i].id,
             active: videoTracks[i].selected,
             label: videoTracks[i].label,
@@ -4587,6 +4662,52 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: 'selectVideoTrack',
     value: function selectVideoTrack(videoTrack) {
+      if (this._isProgressivePlayback()) {
+        this._selectProgressiveVideoTrack(videoTrack);
+      } else {
+        this.selectAdaptiveVideoTrack(videoTrack);
+      }
+    }
+
+    /**
+     * Select a progressive video track
+     * @function _selectProgressiveVideoTrack
+     * @param {VideoTrack} videoTrack - the track to select
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: '_selectProgressiveVideoTrack',
+    value: function _selectProgressiveVideoTrack(videoTrack) {
+      var _this3 = this;
+
+      var videoTracks = this._progressiveSources;
+      if (videoTrack instanceof _videoTrack2.default && videoTracks && videoTracks[videoTrack.index]) {
+        var currentTime = this._videoElement.currentTime;
+        var paused = this._videoElement.paused;
+        this._sourceObj = videoTracks[videoTrack.index];
+        this._videoElement.src = this._sourceObj.url;
+        this._videoElement.currentTime = currentTime;
+        paused ? this._videoElement.load() : this._videoElement.play();
+        this._eventManager.listen(this._videoElement, _events.HTML5_EVENTS.LOADED_DATA, function () {
+          _this3._eventManager.unlisten(_this3._videoElement, _events.HTML5_EVENTS.LOADED_DATA);
+          _this3._onTrackChanged(videoTrack);
+        });
+      }
+    }
+
+    /**
+     * Select a native video track
+     * @function selectAdaptiveVideoTrack
+     * @param {VideoTrack} videoTrack - the track to select
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: 'selectAdaptiveVideoTrack',
+    value: function selectAdaptiveVideoTrack(videoTrack) {
       var videoTracks = this._videoElement.videoTracks;
       if (videoTrack instanceof _videoTrack2.default && videoTracks && videoTracks[videoTrack.index]) {
         this._disableVideoTracks();
@@ -5235,7 +5356,137 @@ exports.default = TRACK_TYPES;
 /* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(26)(undefined);
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+
+/**
+ * Calculates the most suitable source to the container size
+ * @function getSuitableSourceForResolution
+ * @param {Array<Object>} tracks - The tracks
+ * @param {number} width - The width to calculate with
+ * @param {number} height - The height to calculate with
+ * @returns {Object} - The most suitable source to the container size
+ */
+function getSuitableSourceForResolution() {
+  var tracks = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  var width = arguments[1];
+  var height = arguments[2];
+
+  var mostSuitableWidth = null;
+  if (height) {
+    var mostSuitableWidthTracks = [];
+    var minWidthDiff = Infinity;
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = tracks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var track = _step.value;
+        // first filter the most width suitable
+        var widthDiff = Math.abs(track.width - width);
+        if (widthDiff < minWidthDiff) {
+          minWidthDiff = widthDiff;
+          mostSuitableWidthTracks = [track];
+        } else if (widthDiff === minWidthDiff) {
+          mostSuitableWidthTracks.push(track);
+        }
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+
+    var videoRatio = width / height;
+    var mostSuitableWidthAndRatioTracks = [];
+    var minRatioDiff = Infinity;
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
+
+    try {
+      for (var _iterator2 = mostSuitableWidthTracks[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        var _track = _step2.value;
+        // filter the most ratio suitable from the width filter results
+        if (_track.height) {
+          var ratioDiff = Math.abs(_track.width / _track.height - videoRatio);
+          if (ratioDiff < minRatioDiff) {
+            minRatioDiff = ratioDiff;
+            mostSuitableWidthAndRatioTracks = [_track];
+          } else if (ratioDiff === minRatioDiff) {
+            mostSuitableWidthAndRatioTracks.push(_track);
+          }
+        }
+      }
+    } catch (err) {
+      _didIteratorError2 = true;
+      _iteratorError2 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+          _iterator2.return();
+        }
+      } finally {
+        if (_didIteratorError2) {
+          throw _iteratorError2;
+        }
+      }
+    }
+
+    var maxBandwidth = 0;
+    var _iteratorNormalCompletion3 = true;
+    var _didIteratorError3 = false;
+    var _iteratorError3 = undefined;
+
+    try {
+      for (var _iterator3 = mostSuitableWidthAndRatioTracks[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        var _track2 = _step3.value;
+        // select the top bitrate from the ratio filter results
+        if (_track2.bandwidth > maxBandwidth) {
+          maxBandwidth = _track2.bandwidth;
+          mostSuitableWidth = _track2;
+        }
+      }
+    } catch (err) {
+      _didIteratorError3 = true;
+      _iteratorError3 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion3 && _iterator3.return) {
+          _iterator3.return();
+        }
+      } finally {
+        if (_didIteratorError3) {
+          throw _iteratorError3;
+        }
+      }
+    }
+  }
+  return mostSuitableWidth;
+}
+
+exports.getSuitableSourceForResolution = getSuitableSourceForResolution;
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(27)(undefined);
 // imports
 
 
@@ -5246,7 +5497,7 @@ exports.push([module.i, ".playkit-container {\n  width: 100%;\n  height: 100%;\n
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports) {
 
 /*
@@ -5328,7 +5579,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -5595,13 +5846,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(25);
+var content = __webpack_require__(26);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -5609,7 +5860,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(29)(content, options);
+var update = __webpack_require__(30)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -5626,7 +5877,7 @@ if(false) {
 }
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -5672,7 +5923,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(30);
+var	fixUrls = __webpack_require__(31);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -5985,7 +6236,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports) {
 
 
@@ -6080,7 +6331,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports) {
 
 module.exports = {
