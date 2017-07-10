@@ -700,7 +700,7 @@ var strings = {
    * Uppercase the first letter of a string
    * @param  {String} string - String to be uppercased
    * @return {String} - The uppercased string
-   * @private
+   * @public
    * @method toTitleCase
    */
   capitlize: function capitlize(string) {
@@ -891,7 +891,7 @@ var objects = {
    * @param {any} thisObj - The handler context.
    * @param {Function} fn - The handler.
    * @returns {Function} - The new bound function.
-   * @private
+   * @public
    */
   bind: function bind(thisObj, fn) {
     return function () {
@@ -918,7 +918,7 @@ var dom = {
    * Loads script asynchronously.
    * @param {string} url - The url to load.
    * @return {Promise} - The loading promise.
-   * @private
+   * @public
    */
   loadScriptAsync: function loadScriptAsync(url) {
     return new Promise(function (resolve, reject) {
