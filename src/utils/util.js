@@ -32,7 +32,7 @@ const strings = {
    * Uppercase the first letter of a string
    * @param  {String} string - String to be uppercased
    * @return {String} - The uppercased string
-   * @private
+   * @public
    * @method toTitleCase
    */
   capitlize: function (string: string): string {
@@ -201,7 +201,7 @@ const objects = {
    * @param {any} thisObj - The handler context.
    * @param {Function} fn - The handler.
    * @returns {Function} - The new bound function.
-   * @private
+   * @public
    */
   bind: function (thisObj: any, fn: Function): Function {
     return function () {
@@ -228,7 +228,7 @@ const dom = {
    * Loads script asynchronously.
    * @param {string} url - The url to load.
    * @return {Promise} - The loading promise.
-   * @private
+   * @public
    */
   loadScriptAsync(url: string): Promise<*> {
     return new Promise((resolve, reject) => {
