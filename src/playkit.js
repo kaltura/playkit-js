@@ -16,6 +16,9 @@ import * as Utils from './utils/util'
 // Playkit version
 let VERSION = packageData.version;
 
+// Playkit name
+let PLAYER_NAME = 'kaltura-playkit-js';
+
 LoggerFactory.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
 LoggerFactory.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
 
@@ -40,6 +43,10 @@ export {Track, VideoTrack, AudioTrack, TextTrack};
 // Export utils library
 export {Utils};
 
-//export version
+// Export version
 export {VERSION};
+
+// Export player name
+export {PLAYER_NAME};
+
 export default loadPlayer;

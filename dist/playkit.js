@@ -659,11 +659,6 @@ exports.default = VideoTrack;
 "use strict";
 
 
-/**
- * @param {number} n - A certain number
- * @returns {boolean} - If the input is a number
- */
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -674,189 +669,312 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-function isNumber(n) {
-  return Number(n) === n;
-}
+var numbers = {
+  /**
+   * @param {number} n - A certain number
+   * @returns {boolean} - If the input is a number
+   */
+  isNumber: function isNumber(n) {
+    return Number(n) === n;
+  },
 
-/**
- * @param {number} n - A certain number
- * @returns {boolean} - If the input is an integer
- */
-function isInt(n) {
-  return isNumber(n) && n % 1 === 0;
-}
+  /**
+   * @param {number} n - A certain number
+   * @returns {boolean} - If the input is an integer
+   */
+  isInt: function isInt(n) {
+    return this.isNumber(n) && n % 1 === 0;
+  },
 
-/**
- * @param {number} n - A certain number
- * @returns {boolean} - If the input is a float
- */
-function isFloat(n) {
-  return isNumber(n) && n % 1 !== 0;
-}
+  /**
+   * @param {number} n - A certain number
+   * @returns {boolean} - If the input is a float
+   */
+  isFloat: function isFloat(n) {
+    return this.isNumber(n) && n % 1 !== 0;
+  }
+};
 
-/**
- * @param {Array<Object>} objects - The objects to merge
- * @returns {Object} - The merged object.
- */
-function merge(objects) {
-  var target = {};
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
-
-  try {
-    for (var _iterator = objects[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var obj = _step.value;
-
-      Object.assign(target, obj);
+var strings = {
+  /**
+   * Uppercase the first letter of a string
+   * @param  {String} string - String to be uppercased
+   * @return {String} - The uppercased string
+   * @private
+   * @method toTitleCase
+   */
+  capitlize: function capitlize(string) {
+    if (typeof string !== 'string') {
+      return string;
     }
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator.return) {
-        _iterator.return();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
-  }
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  },
 
-  return target;
-}
-
-/**
- * @param {any} item - The item to check.
- * @returns {boolean} - Whether the item is an object.
- */
-function isObject(item) {
-  return item && (typeof item === "undefined" ? "undefined" : _typeof(item)) === 'object' && !Array.isArray(item);
-}
-
-/**
- * @param {any} target - The target object.
- * @param {any} sources - The objects to merge.
- * @returns {Object} - The merged object.
- */
-function mergeDeep(target) {
-  for (var _len = arguments.length, sources = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    sources[_key - 1] = arguments[_key];
-  }
-
-  if (!sources.length) {
-    return target;
-  }
-  var source = sources.shift();
-  if (isObject(target) && isObject(source)) {
-    for (var key in source) {
-      if (isObject(source[key])) {
-        if (!target[key]) Object.assign(target, _defineProperty({}, key, {}));
-        mergeDeep(target[key], source[key]);
-      } else {
-        Object.assign(target, _defineProperty({}, key, source[key]));
-      }
-    }
-  }
-  return mergeDeep.apply(undefined, [target].concat(_toConsumableArray(sources)));
-}
-
-/**
- * @param {any} data - The data to copy.
- * @returns {any} - The copied data.
- */
-function copyDeep(data) {
-  var node = void 0;
-  if (Array.isArray(data)) {
-    node = data.length > 0 ? data.slice(0) : [];
-    node.forEach(function (e, i) {
-      if ((typeof e === "undefined" ? "undefined" : _typeof(e)) === "object" && e !== {} || Array.isArray(e) && e.length > 0) {
-        node[i] = copyDeep(e);
-      }
-    });
-  } else if ((typeof data === "undefined" ? "undefined" : _typeof(data)) === "object") {
-    node = Object.assign({}, data);
-    Object.keys(node).forEach(function (key) {
-      if (_typeof(node[key]) === "object" && node[key] !== {} || Array.isArray(node[key]) && node[key].length > 0) {
-        node[key] = copyDeep(node[key]);
-      }
-    });
-  } else {
-    node = data;
-  }
-  return node;
-}
-
-/**
- * Generates unique id.
- * @param {number} length - The length of the id.
- * @returns {string} - The generated id.
- */
-function uniqueId(length) {
-  var from = 2;
-  var to = from + (!length || length < 0 ? 0 : length - 2);
-  return '_' + Math.random().toString(36).substr(from, to);
-}
-
-/**
- * Checks if an object is an empy object.
- * @param {Object} obj - The object to check
- * @returns {boolean} - Whether the object is empty.
- */
-function isEmptyObject(obj) {
-  for (var key in obj) {
-    if (obj.hasOwnProperty(key)) return false;
-  }
-  return true;
-}
-
-/**
- * Checks for nested object properties.
- * @param {Object} obj - The object to check.
- * @param {string} propertyPath - The path to check.
- * @returns {boolean} - The value in this path.
- */
-function getPropertyPath(obj, propertyPath) {
-  return propertyPath.split(".").reduce(function (o, x) {
-    return typeof o === "undefined" || o === null ? o : o[x];
-  }, obj);
-}
-
-/**
- * Checks for nested object properties.
- * @param {Object} obj - The object to check.
- * @param {string} propertyPath - The path to check.
- * @returns {boolean} - Whether the path exists in the object.
- */
-function hasPropertyPath(obj, propertyPath) {
-  if (!propertyPath) {
-    return false;
-  }
-  var properties = propertyPath.split('.');
-  for (var i = 0; i < properties.length; i++) {
-    var prop = properties[i];
-    if (!obj || !obj.hasOwnProperty(prop)) {
+  /**
+   * @param {string} string - Certain string
+   * @param {string} searchString - Certain string
+   * @returns {boolean} - Whether the string: string is ending with string: searchString
+   */
+  endsWith: function endsWith(string, searchString) {
+    if (typeof string !== 'string' || typeof searchString !== 'string') {
       return false;
-    } else {
-      obj = obj[prop];
     }
+    return string.indexOf(searchString, string.length - searchString.length) != -1;
   }
-  return true;
-}
+};
 
-exports.isNumber = isNumber;
-exports.isInt = isInt;
-exports.isFloat = isFloat;
-exports.isObject = isObject;
-exports.merge = merge;
-exports.mergeDeep = mergeDeep;
-exports.copyDeep = copyDeep;
-exports.uniqueId = uniqueId;
-exports.isEmptyObject = isEmptyObject;
-exports.getPropertyPath = getPropertyPath;
-exports.hasPropertyPath = hasPropertyPath;
+var objects = {
+  /**
+   * @param {Array<Object>} objects - The objects to merge
+   * @returns {Object} - The merged object.
+   */
+  merge: function merge(objects) {
+    var target = {};
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = objects[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var obj = _step.value;
+
+        Object.assign(target, obj);
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+
+    return target;
+  },
+
+  /**
+   * @param {any} item - The item to check.
+   * @returns {boolean} - Whether the item is an object.
+   */
+  isObject: function isObject(item) {
+    return item && (typeof item === 'undefined' ? 'undefined' : _typeof(item)) === 'object' && !Array.isArray(item);
+  },
+
+  /**
+   * @param {any} target - The target object.
+   * @param {any} sources - The objects to merge.
+   * @returns {Object} - The merged object.
+   */
+  mergeDeep: function mergeDeep(target) {
+    for (var _len = arguments.length, sources = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      sources[_key - 1] = arguments[_key];
+    }
+
+    if (!sources.length) {
+      return target;
+    }
+    var source = sources.shift();
+    if (this.isObject(target) && this.isObject(source)) {
+      for (var key in source) {
+        if (this.isObject(source[key])) {
+          if (!target[key]) Object.assign(target, _defineProperty({}, key, {}));
+          this.mergeDeep(target[key], source[key]);
+        } else {
+          Object.assign(target, _defineProperty({}, key, source[key]));
+        }
+      }
+    }
+    return this.mergeDeep.apply(this, [target].concat(_toConsumableArray(sources)));
+  },
+
+  /**
+   * @param {any} data - The data to copy.
+   * @returns {any} - The copied data.
+   */
+  copyDeep: function copyDeep(data) {
+    var _this = this;
+
+    var node = void 0;
+    if (Array.isArray(data)) {
+      node = data.length > 0 ? data.slice(0) : [];
+      node.forEach(function (e, i) {
+        if ((typeof e === 'undefined' ? 'undefined' : _typeof(e)) === "object" && e !== {} || Array.isArray(e) && e.length > 0) {
+          node[i] = _this.copyDeep(e);
+        }
+      });
+    } else if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) === "object") {
+      node = Object.assign({}, data);
+      Object.keys(node).forEach(function (key) {
+        if (_typeof(node[key]) === "object" && node[key] !== {} || Array.isArray(node[key]) && node[key].length > 0) {
+          node[key] = _this.copyDeep(node[key]);
+        }
+      });
+    } else {
+      node = data;
+    }
+    return node;
+  },
+
+  /**
+   * Checks if an object is an empy object.
+   * @param {Object} obj - The object to check
+   * @returns {boolean} - Whether the object is empty.
+   */
+  isEmptyObject: function isEmptyObject(obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  },
+
+  /**
+   * Checks for nested object properties.
+   * @param {Object} obj - The object to check.
+   * @param {string} propertyPath - The path to check.
+   * @returns {boolean} - The value in this path.
+   */
+  getPropertyPath: function getPropertyPath(obj, propertyPath) {
+    return propertyPath.split(".").reduce(function (o, x) {
+      return typeof o === "undefined" || o === null ? o : o[x];
+    }, obj);
+  },
+
+  /**
+   * Checks for nested object properties.
+   * @param {Object} obj - The object to check.
+   * @param {string} propertyPath - The path to check.
+   * @returns {boolean} - Whether the path exists in the object.
+   */
+  hasPropertyPath: function hasPropertyPath(obj, propertyPath) {
+    if (!propertyPath) {
+      return false;
+    }
+    var properties = propertyPath.split('.');
+    for (var i = 0; i < properties.length; i++) {
+      var prop = properties[i];
+      if (!obj || !obj.hasOwnProperty(prop)) {
+        return false;
+      } else {
+        obj = obj[prop];
+      }
+    }
+    return true;
+  },
+
+  /**
+   * Creates deferred promise which can resolved/rejected outside the promise scope.
+   * @returns {DeferredPromise} - The promise with resolve and reject props.
+   */
+  defer: function defer() {
+    var res = void 0,
+        rej = void 0;
+    // $FlowFixMe
+    var promise = new Promise(function (resolve, reject) {
+      res = resolve;
+      rej = reject;
+    });
+    // $FlowFixMe
+    promise.resolve = res;
+    // $FlowFixMe
+    promise.reject = rej;
+    return promise;
+  },
+
+  /**
+   * Binds an handler to a desired context.
+   * @param {any} thisObj - The handler context.
+   * @param {Function} fn - The handler.
+   * @returns {Function} - The new bound function.
+   * @private
+   */
+  bind: function bind(thisObj, fn) {
+    return function () {
+      fn.apply(thisObj, arguments);
+    };
+  }
+};
+
+var generators = {
+  /**
+   * Generates unique id.
+   * @param {number} length - The length of the id.
+   * @returns {string} - The generated id.
+   */
+  uniqueId: function uniqueId(length) {
+    var from = 2;
+    var to = from + (!length || length < 0 ? 0 : length - 2);
+    return '_' + Math.random().toString(36).substr(from, to);
+  }
+};
+
+var dom = {
+  /**
+   * Loads script asynchronously.
+   * @return {Promise} - The loading promise.
+   * @private
+   */
+  loadScriptAsync: function loadScriptAsync(url) {
+    return new Promise(function (resolve, reject) {
+      var r = false,
+          t = document.getElementsByTagName("script")[0],
+          s = document.createElement("script");
+      s.type = "text/javascript";
+      s.src = url;
+      s.async = true;
+      s.onload = s.onreadystatechange = function () {
+        if (!r && (!this.readyState || this.readyState === "complete")) {
+          r = true;
+          resolve(this);
+        }
+      };
+      s.onerror = s.onabort = reject;
+      if (t && t.parentNode) {
+        t.parentNode.insertBefore(s, t);
+      }
+    });
+  }
+};
+
+var http = {
+  execute: function execute(url, params) {
+    var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "POST";
+    var headers = arguments[3];
+
+    var request = new XMLHttpRequest();
+    return new Promise(function (resolve, reject) {
+      request.onreadystatechange = function () {
+        if (request.readyState === 4) {
+          if (request.status === 200) {
+            var jsonResponse = JSON.parse(request.responseText);
+            resolve(jsonResponse);
+          } else {
+            reject(request.responseText);
+          }
+        }
+      };
+      request.open(method, url);
+      if (headers) {
+        headers.forEach(function (value, key) {
+          request.setRequestHeader(key, value);
+        });
+      }
+      request.send(params);
+    });
+  }
+};
+
+exports.numbers = numbers;
+exports.strings = strings;
+exports.objects = objects;
+exports.generators = generators;
+exports.dom = dom;
+exports.http = http;
 
 /***/ }),
 /* 7 */
@@ -1072,6 +1190,10 @@ exports.CUSTOM_EVENTS = exports.HTML5_EVENTS = exports.PLAYER_EVENTS = undefined
 
 var _util = __webpack_require__(6);
 
+var Utils = _interopRequireWildcard(_util);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 var HTML5_EVENTS = {
   /**
    * Fires when the loading of an audio/video is aborted
@@ -1263,7 +1385,7 @@ var CUSTOM_EVENTS = {
   AD_MUTED: 'admuted'
 };
 
-var PLAYER_EVENTS = (0, _util.merge)([HTML5_EVENTS, CUSTOM_EVENTS]);
+var PLAYER_EVENTS = Utils.objects.merge([HTML5_EVENTS, CUSTOM_EVENTS]);
 
 exports.PLAYER_EVENTS = PLAYER_EVENTS;
 exports.HTML5_EVENTS = HTML5_EVENTS;
@@ -1303,6 +1425,8 @@ var _stateTypes = __webpack_require__(18);
 var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
 var _util = __webpack_require__(6);
+
+var Utils = _interopRequireWildcard(_util);
 
 var _logger = __webpack_require__(0);
 
@@ -1353,6 +1477,8 @@ var _uaParserJs = __webpack_require__(34);
 var _uaParserJs2 = _interopRequireDefault(_uaParserJs);
 
 __webpack_require__(31);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1492,9 +1618,9 @@ var Player = function (_FakeEventTarget) {
     key: 'configure',
     value: function configure(config) {
       var engine = this._engine;
-      this._config = (0, _util.mergeDeep)((0, _util.isEmptyObject)(this._config) ? Player._defaultConfig : this._config, config);
+      this._config = Utils.objects.mergeDeep(Utils.objects.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
       this._maybeResetPlayer(config);
-      if ((0, _util.isEmptyObject)(this._engine) && this._selectEngine()) {
+      if (Utils.objects.isEmptyObject(this._engine) && this._selectEngine()) {
         this._appendEngineEl();
         this._attachMedia();
         this._maybeLoadPlugins(engine);
@@ -1818,7 +1944,7 @@ var Player = function (_FakeEventTarget) {
     key: '_createPlayerContainer',
     value: function _createPlayerContainer() {
       this._el = document.createElement("div");
-      this._el.id = (0, _util.uniqueId)(5);
+      this._el.id = Utils.generators.uniqueId(5);
       this._el.className = CONTAINER_CLASS_NAME;
       this._el.setAttribute('tabindex', '-1');
     }
@@ -2172,7 +2298,7 @@ var Player = function (_FakeEventTarget) {
     key: 'currentTime',
     set: function set(to) {
       if (this._engine) {
-        if ((0, _util.isNumber)(to)) {
+        if (Utils.numbers.isNumber(to)) {
           var boundedTo = to;
           if (to < 0) {
             boundedTo = 0;
@@ -2222,7 +2348,7 @@ var Player = function (_FakeEventTarget) {
     key: 'volume',
     set: function set(vol) {
       if (this._engine) {
-        if ((0, _util.isFloat)(vol)) {
+        if (Utils.numbers.isFloat(vol)) {
           var boundedVol = vol;
           if (boundedVol < 0) {
             boundedVol = 0;
@@ -2380,7 +2506,7 @@ var Player = function (_FakeEventTarget) {
   }], [{
     key: '_defaultConfig',
     get: function get() {
-      return (0, _util.copyDeep)(_playerConfig2.default);
+      return Utils.objects.copyDeep(_playerConfig2.default);
     }
   }]);
 
@@ -3254,6 +3380,8 @@ var _logger2 = _interopRequireDefault(_logger);
 
 var _util = __webpack_require__(6);
 
+var Utils = _interopRequireWildcard(_util);
+
 var _eventManager = __webpack_require__(7);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
@@ -3265,6 +3393,8 @@ var _playerError2 = _interopRequireDefault(_playerError);
 var _fakeEvent = __webpack_require__(2);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3361,7 +3491,8 @@ var BasePlugin = function () {
     this.player = player;
     this.eventManager = new _eventManager2.default();
     this.logger = _logger2.default.getLogger(this.name);
-    this.config = (0, _util.merge)([this.constructor.defaultConfig, config]);
+    this.config = {};
+    Utils.objects.mergeDeep(this.config, this.constructor.defaultConfig, config);
   }
 
   /**
@@ -3391,7 +3522,7 @@ var BasePlugin = function () {
   }, {
     key: 'updateConfig',
     value: function updateConfig(update) {
-      this.config = (0, _util.merge)([this.config, update]);
+      this.config = Utils.objects.mergeDeep(this.config, update);
     }
 
     /**
@@ -3801,6 +3932,10 @@ var _textTrack2 = _interopRequireDefault(_textTrack);
 
 var _util = __webpack_require__(6);
 
+var Utils = _interopRequireWildcard(_util);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -4003,7 +4138,7 @@ var Html5 = function (_FakeEventTarget) {
     key: '_createVideoElement',
     value: function _createVideoElement() {
       this._el = document.createElement("video");
-      this._el.id = (0, _util.uniqueId)(5);
+      this._el.id = Utils.generators.uniqueId(5);
       this._el.className = VIDEO_ELEMENT_CLASS_NAME;
       this._el.controls = false;
     }
@@ -5270,7 +5405,7 @@ exports.default = PlaybackMiddleware;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.VERSION = exports.Utils = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BaseMiddleware = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerMediaSourceAdapter = undefined;
+exports.PLAYER_NAME = exports.VERSION = exports.Utils = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BaseMiddleware = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerMediaSourceAdapter = undefined;
 exports.loadPlayer = loadPlayer;
 
 var _player = __webpack_require__(9);
@@ -5328,6 +5463,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // Playkit version
 var VERSION = packageData.version;
 
+// Playkit name
+
+var PLAYER_NAME = 'kaltura-playkit-js';
 
 _logger2.default.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
 _logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
@@ -5362,9 +5500,13 @@ exports.TextTrack = _textTrack2.default;
 
 exports.Utils = Utils;
 
-//export version
+// Export version
 
 exports.VERSION = VERSION;
+
+// Export player name
+
+exports.PLAYER_NAME = PLAYER_NAME;
 exports.default = loadPlayer;
 
 /***/ }),

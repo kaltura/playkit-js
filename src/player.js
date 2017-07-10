@@ -4,7 +4,7 @@ import FakeEvent from './event/fake-event'
 import FakeEventTarget from './event/fake-event-target'
 import {PLAYER_EVENTS as PlayerEvents, HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from './event/events'
 import PlayerStates from './state/state-types'
-import {isNumber, isFloat, mergeDeep, copyDeep, uniqueId, isEmptyObject} from './utils/util'
+import * as Utils from './utils/util'
 import LoggerFactory from './utils/logger'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
@@ -139,9 +139,9 @@ export default class Player extends FakeEventTarget {
    */
   configure(config: Object): void {
     let engine = this._engine;
-    this._config = mergeDeep(isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
+    this._config = Utils.objects.mergeDeep(Utils.objects.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
     this._maybeResetPlayer(config);
-    if (isEmptyObject(this._engine) && this._selectEngine()) {
+    if (Utils.objects.isEmptyObject(this._engine) && this._selectEngine()) {
       this._appendEngineEl();
       this._attachMedia();
       this._maybeLoadPlugins(engine);
@@ -229,7 +229,7 @@ export default class Player extends FakeEventTarget {
    * @static
    */
   static get _defaultConfig(): Object {
-    return copyDeep(DefaultPlayerConfig);
+    return Utils.objects.copyDeep(DefaultPlayerConfig);
   }
 
   /**
@@ -389,7 +389,7 @@ export default class Player extends FakeEventTarget {
    */
   _createPlayerContainer(): void {
     this._el = document.createElement("div");
-    this._el.id = uniqueId(5);
+    this._el.id = Utils.generators.uniqueId(5);
     this._el.className = CONTAINER_CLASS_NAME;
     this._el.setAttribute('tabindex', '-1');
   }
@@ -657,7 +657,7 @@ export default class Player extends FakeEventTarget {
    */
   set currentTime(to: number): void {
     if (this._engine) {
-      if (isNumber(to)) {
+      if (Utils.numbers.isNumber(to)) {
         let boundedTo = to;
         if (to < 0) {
           boundedTo = 0;
@@ -700,7 +700,7 @@ export default class Player extends FakeEventTarget {
    */
   set volume(vol: number): void {
     if (this._engine) {
-      if (isFloat(vol)) {
+      if (Utils.numbers.isFloat(vol)) {
         let boundedVol = vol;
         if (boundedVol < 0) {
           boundedVol = 0;

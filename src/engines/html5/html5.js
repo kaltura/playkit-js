@@ -7,7 +7,7 @@ import MediaSourceProvider from './media-source/media-source-provider'
 import VideoTrack from '../../track/video-track'
 import AudioTrack from '../../track/audio-track'
 import TextTrack from '../../track/text-track'
-import {uniqueId} from '../../utils/util'
+import * as Utils from '../../utils/util'
 
 /**
  * The engine video element class name.
@@ -166,7 +166,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _createVideoElement(): void {
     this._el = document.createElement("video");
-    this._el.id = uniqueId(5);
+    this._el.id = Utils.generators.uniqueId(5);
     this._el.className = VIDEO_ELEMENT_CLASS_NAME;
     this._el.controls = false;
   }
