@@ -916,6 +916,7 @@ var generators = {
 var dom = {
   /**
    * Loads script asynchronously.
+   * @param {string} url - The url to load.
    * @return {Promise} - The loading promise.
    * @private
    */
