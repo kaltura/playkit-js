@@ -2068,6 +2068,18 @@ var Player = function (_FakeEventTarget) {
         return this._engine.volume;
       }
     }
+  }, {
+    key: 'playbackRate',
+    set: function set(rate) {
+      if (this._engine) {
+        this._engine.playbackRate = rate;
+      }
+    },
+    get: function get() {
+      if (this._engine) {
+        return this._engine.playbackRate;
+      }
+    }
 
     // </editor-fold>
 

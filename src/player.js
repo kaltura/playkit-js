@@ -638,6 +638,18 @@ export default class Player extends FakeEventTarget {
     }
   }
 
+  set playbackRate(rate: number): void {
+    if (this._engine) {
+      this._engine.playbackRate = rate;
+    }
+  }
+
+  get playbackRate(): ?number{
+    if (this._engine) {
+      return this._engine.playbackRate;
+    }
+  }
+
   // </editor-fold>
 
   // <editor-fold desc="State">
