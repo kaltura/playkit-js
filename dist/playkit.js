@@ -435,234 +435,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _track = __webpack_require__(1);
-
-var _track2 = _interopRequireDefault(_track);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/**
- * Audio track representation of the player.
- * @classdesc
- */
-var AudioTrack = function (_Track) {
-  _inherits(AudioTrack, _Track);
-
-  function AudioTrack() {
-    _classCallCheck(this, AudioTrack);
-
-    return _possibleConstructorReturn(this, (AudioTrack.__proto__ || Object.getPrototypeOf(AudioTrack)).apply(this, arguments));
-  }
-
-  return AudioTrack;
-}(_track2.default);
-
-exports.default = AudioTrack;
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _track = __webpack_require__(1);
-
-var _track2 = _interopRequireDefault(_track);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/**
- * Text track representation of the player.
- * @classdesc
- */
-var TextTrack = function (_Track) {
-  _inherits(TextTrack, _Track);
-
-  _createClass(TextTrack, [{
-    key: 'kind',
-
-
-    /**
-     * Getter for the kind of the text track.
-     * @public
-     * @returns {string} - The kind of the text track.
-     */
-    get: function get() {
-      return this._kind;
-    }
-
-    /**
-     * @constructor
-     * @param {Object} settings - The track settings object.
-     */
-
-    /**
-     * The kind of the text track:
-     * subtitles/captions/metadata.
-     * @member
-     * @type {string}
-     * @private
-     */
-
-  }]);
-
-  function TextTrack() {
-    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-    _classCallCheck(this, TextTrack);
-
-    var _this = _possibleConstructorReturn(this, (TextTrack.__proto__ || Object.getPrototypeOf(TextTrack)).call(this, settings));
-
-    _this._kind = settings.kind;
-    return _this;
-  }
-
-  return TextTrack;
-}(_track2.default);
-
-exports.default = TextTrack;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _track = __webpack_require__(1);
-
-var _track2 = _interopRequireDefault(_track);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-/**
- * Video track representation of the player.
- * @classdesc
- */
-var VideoTrack = function (_Track) {
-  _inherits(VideoTrack, _Track);
-
-  _createClass(VideoTrack, [{
-    key: 'bandwidth',
-
-
-    /**
-     * @public
-     * @returns {number} - The bandwidth of the video track
-     */
-
-
-    /**
-     * @member {number} _width - The width of the video track
-     * @type {number}
-     * @private
-     */
-    get: function get() {
-      return this._bandwidth;
-    }
-
-    /**
-     * @public
-     * @returns {number} - The width of the video track
-     */
-
-
-    /**
-     * @member {number} _height - The height of the video track
-     * @type {number}
-     * @private
-     */
-
-    /**
-     * @member {number} _bandwidth - The bandwidth of the video track
-     * @type {number}
-     * @private
-     */
-
-  }, {
-    key: 'width',
-    get: function get() {
-      return this._width;
-    }
-
-    /**
-     * @public
-     * @returns {number} - The height of the video track
-     */
-
-  }, {
-    key: 'height',
-    get: function get() {
-      return this._height;
-    }
-
-    /**
-     * @constructor
-     * @param {Object} settings - The track settings object
-     */
-
-  }]);
-
-  function VideoTrack() {
-    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-    _classCallCheck(this, VideoTrack);
-
-    var _this = _possibleConstructorReturn(this, (VideoTrack.__proto__ || Object.getPrototypeOf(VideoTrack)).call(this, settings));
-
-    _this._bandwidth = settings.bandwidth;
-    _this._width = settings.width;
-    _this._height = settings.height;
-    return _this;
-  }
-
-  return VideoTrack;
-}(_track2.default);
-
-exports.default = VideoTrack;
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -915,16 +687,51 @@ var _Generator = {
 
 var _Dom = {
   /**
+   * Adds a node to the end of the list of children of a specified parent node.
+   * @param {Element} parent - The parent node.
+   * @param {Element} child - The child node.
+   * @returns {void}
+   */
+  appendChild: function appendChild(parent, child) {
+    if (parent && child && parent.appendChild) {
+      parent.appendChild(child);
+    }
+  },
+
+
+  /**
+   * Returns a reference to the element by its ID.
+   * @param {string} id - The desired id.
+   * @returns {Element} - The element with the desired id.
+   */
+  getElementById: function getElementById(id) {
+    return document.getElementById(id);
+  },
+
+
+  /**
+   * Creates the HTML element specified by tagName.
+   * @param {string} tagName - The tag name.
+   * @returns {Element} - The element just created.
+   */
+  createElement: function createElement(tagName) {
+    return document.createElement(tagName);
+  },
+
+
+  /**
    * Loads script asynchronously.
    * @param {string} url - The url to load.
    * @return {Promise} - The loading promise.
    * @public
    */
   loadScriptAsync: function loadScriptAsync(url) {
+    var _this2 = this;
+
     return new Promise(function (resolve, reject) {
       var r = false,
           t = document.getElementsByTagName("script")[0],
-          s = document.createElement("script");
+          s = _this2.createElement("script");
       s.type = "text/javascript";
       s.src = url;
       s.async = true;
@@ -976,6 +783,234 @@ exports.Object = _Object;
 exports.Generator = _Generator;
 exports.Dom = _Dom;
 exports.Http = _Http;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _track = __webpack_require__(1);
+
+var _track2 = _interopRequireDefault(_track);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Audio track representation of the player.
+ * @classdesc
+ */
+var AudioTrack = function (_Track) {
+  _inherits(AudioTrack, _Track);
+
+  function AudioTrack() {
+    _classCallCheck(this, AudioTrack);
+
+    return _possibleConstructorReturn(this, (AudioTrack.__proto__ || Object.getPrototypeOf(AudioTrack)).apply(this, arguments));
+  }
+
+  return AudioTrack;
+}(_track2.default);
+
+exports.default = AudioTrack;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _track = __webpack_require__(1);
+
+var _track2 = _interopRequireDefault(_track);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Text track representation of the player.
+ * @classdesc
+ */
+var TextTrack = function (_Track) {
+  _inherits(TextTrack, _Track);
+
+  _createClass(TextTrack, [{
+    key: 'kind',
+
+
+    /**
+     * Getter for the kind of the text track.
+     * @public
+     * @returns {string} - The kind of the text track.
+     */
+    get: function get() {
+      return this._kind;
+    }
+
+    /**
+     * @constructor
+     * @param {Object} settings - The track settings object.
+     */
+
+    /**
+     * The kind of the text track:
+     * subtitles/captions/metadata.
+     * @member
+     * @type {string}
+     * @private
+     */
+
+  }]);
+
+  function TextTrack() {
+    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _classCallCheck(this, TextTrack);
+
+    var _this = _possibleConstructorReturn(this, (TextTrack.__proto__ || Object.getPrototypeOf(TextTrack)).call(this, settings));
+
+    _this._kind = settings.kind;
+    return _this;
+  }
+
+  return TextTrack;
+}(_track2.default);
+
+exports.default = TextTrack;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _track = __webpack_require__(1);
+
+var _track2 = _interopRequireDefault(_track);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Video track representation of the player.
+ * @classdesc
+ */
+var VideoTrack = function (_Track) {
+  _inherits(VideoTrack, _Track);
+
+  _createClass(VideoTrack, [{
+    key: 'bandwidth',
+
+
+    /**
+     * @public
+     * @returns {number} - The bandwidth of the video track
+     */
+
+
+    /**
+     * @member {number} _width - The width of the video track
+     * @type {number}
+     * @private
+     */
+    get: function get() {
+      return this._bandwidth;
+    }
+
+    /**
+     * @public
+     * @returns {number} - The width of the video track
+     */
+
+
+    /**
+     * @member {number} _height - The height of the video track
+     * @type {number}
+     * @private
+     */
+
+    /**
+     * @member {number} _bandwidth - The bandwidth of the video track
+     * @type {number}
+     * @private
+     */
+
+  }, {
+    key: 'width',
+    get: function get() {
+      return this._width;
+    }
+
+    /**
+     * @public
+     * @returns {number} - The height of the video track
+     */
+
+  }, {
+    key: 'height',
+    get: function get() {
+      return this._height;
+    }
+
+    /**
+     * @constructor
+     * @param {Object} settings - The track settings object
+     */
+
+  }]);
+
+  function VideoTrack() {
+    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _classCallCheck(this, VideoTrack);
+
+    var _this = _possibleConstructorReturn(this, (VideoTrack.__proto__ || Object.getPrototypeOf(VideoTrack)).call(this, settings));
+
+    _this._bandwidth = settings.bandwidth;
+    _this._width = settings.width;
+    _this._height = settings.height;
+    return _this;
+  }
+
+  return VideoTrack;
+}(_track2.default);
+
+exports.default = VideoTrack;
 
 /***/ }),
 /* 7 */
@@ -1189,7 +1224,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.CUSTOM_EVENTS = exports.HTML5_EVENTS = exports.PLAYER_EVENTS = undefined;
 
-var _util = __webpack_require__(6);
+var _util = __webpack_require__(3);
 
 var Utils = _interopRequireWildcard(_util);
 
@@ -1425,7 +1460,7 @@ var _stateTypes = __webpack_require__(18);
 
 var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
-var _util = __webpack_require__(6);
+var _util = __webpack_require__(3);
 
 var Utils = _interopRequireWildcard(_util);
 
@@ -1453,15 +1488,15 @@ var _track = __webpack_require__(1);
 
 var _track2 = _interopRequireDefault(_track);
 
-var _videoTrack = __webpack_require__(5);
+var _videoTrack = __webpack_require__(6);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(3);
+var _audioTrack = __webpack_require__(4);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(4);
+var _textTrack = __webpack_require__(5);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
@@ -1560,7 +1595,7 @@ var Player = function (_FakeEventTarget) {
 
   /**
    * The player DOM element container.
-   * @type {HTMLElement}
+   * @type {HTMLDivElement}
    * @private
    */
 
@@ -1925,10 +1960,8 @@ var Player = function (_FakeEventTarget) {
       if (targetId) {
         if (this._el === undefined) {
           this._createPlayerContainer();
-          var parentNode = document.getElementById(targetId);
-          if (parentNode != null && this._el != null) {
-            parentNode.appendChild(this._el);
-          }
+          var parentNode = Utils.Dom.getElementById(targetId);
+          Utils.Dom.appendChild(parentNode, this._el);
         }
       } else {
         throw new Error("targetId is not found, it must be pass on initialization");
@@ -1944,7 +1977,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_createPlayerContainer',
     value: function _createPlayerContainer() {
-      this._el = document.createElement("div");
+      this._el = Utils.Dom.createElement("div");
       this._el.id = Utils.Generator.uniqueId(5);
       this._el.className = CONTAINER_CLASS_NAME;
       this._el.setAttribute('tabindex', '-1');
@@ -1960,7 +1993,7 @@ var Player = function (_FakeEventTarget) {
     key: '_appendEngineEl',
     value: function _appendEngineEl() {
       if (this._el != null && this._engine != null) {
-        this._el.appendChild(this._engine.getVideoElement());
+        Utils.Dom.appendChild(this._el, this._engine.getVideoElement());
       }
     }
 
@@ -2371,6 +2404,30 @@ var Player = function (_FakeEventTarget) {
     get: function get() {
       if (this._engine) {
         return this._engine.volume;
+      }
+    }
+
+    /**
+     * Sets the playbackRate property.
+     * @param {number} rate - The playback speed of the video.
+     */
+
+  }, {
+    key: 'playbackRate',
+    set: function set(rate) {
+      if (this._engine) {
+        this._engine.playbackRate = rate;
+      }
+    }
+
+    /**
+     * Gets the current playback speed of the video.
+     * @returns {number} - The current playback speed of the video.
+     */
+    ,
+    get: function get() {
+      if (this._engine) {
+        return this._engine.playbackRate;
       }
     }
 
@@ -2986,15 +3043,15 @@ var _track = __webpack_require__(1);
 
 var _track2 = _interopRequireDefault(_track);
 
-var _videoTrack = __webpack_require__(5);
+var _videoTrack = __webpack_require__(6);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(3);
+var _audioTrack = __webpack_require__(4);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(4);
+var _textTrack = __webpack_require__(5);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
@@ -3379,7 +3436,7 @@ var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _util = __webpack_require__(6);
+var _util = __webpack_require__(3);
 
 var Utils = _interopRequireWildcard(_util);
 
@@ -3919,19 +3976,19 @@ var _mediaSourceProvider = __webpack_require__(15);
 
 var _mediaSourceProvider2 = _interopRequireDefault(_mediaSourceProvider);
 
-var _videoTrack = __webpack_require__(5);
+var _videoTrack = __webpack_require__(6);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(3);
+var _audioTrack = __webpack_require__(4);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(4);
+var _textTrack = __webpack_require__(5);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _util = __webpack_require__(6);
+var _util = __webpack_require__(3);
 
 var Utils = _interopRequireWildcard(_util);
 
@@ -4138,7 +4195,7 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: '_createVideoElement',
     value: function _createVideoElement() {
-      this._el = document.createElement("video");
+      this._el = Utils.Dom.createElement("video");
       this._el.id = Utils.Generator.uniqueId(5);
       this._el.className = VIDEO_ELEMENT_CLASS_NAME;
       this._el.controls = false;
@@ -4726,7 +4783,7 @@ var Html5 = function (_FakeEventTarget) {
      */
     value: function isSupported() {
       try {
-        Html5.TEST_VID = document.createElement('video');
+        Html5.TEST_VID = Utils.Dom.createElement('video');
         Html5.TEST_VID.volume = 0.5;
       } catch (e) {
         return false;
@@ -4766,21 +4823,27 @@ var _track = __webpack_require__(1);
 
 var _track2 = _interopRequireDefault(_track);
 
-var _videoTrack = __webpack_require__(5);
+var _videoTrack = __webpack_require__(6);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(3);
+var _audioTrack = __webpack_require__(4);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(4);
+var _textTrack = __webpack_require__(5);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
 var _baseMediaSourceAdapter = __webpack_require__(14);
 
 var _baseMediaSourceAdapter2 = _interopRequireDefault(_baseMediaSourceAdapter);
+
+var _util = __webpack_require__(3);
+
+var Utils = _interopRequireWildcard(_util);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4831,7 +4894,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      * @public
      */
     value: function canPlayType(mimeType) {
-      var canPlayType = typeof mimeType === 'string' ? !!document.createElement("video").canPlayType(mimeType.toLowerCase()) : false;
+      var canPlayType = typeof mimeType === 'string' ? !!Utils.Dom.createElement("video").canPlayType(mimeType.toLowerCase()) : false;
       NativeAdapter._logger.debug('canPlayType result for mimeType:' + mimeType + ' is ' + canPlayType.toString());
       return canPlayType;
     }
@@ -5441,19 +5504,19 @@ var _track = __webpack_require__(1);
 
 var _track2 = _interopRequireDefault(_track);
 
-var _videoTrack = __webpack_require__(5);
+var _videoTrack = __webpack_require__(6);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(3);
+var _audioTrack = __webpack_require__(4);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(4);
+var _textTrack = __webpack_require__(5);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _util = __webpack_require__(6);
+var _util = __webpack_require__(3);
 
 var Utils = _interopRequireWildcard(_util);
 
