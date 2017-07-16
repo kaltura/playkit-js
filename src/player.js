@@ -95,10 +95,10 @@ export default class Player extends FakeEventTarget {
   _firstPlay: boolean;
   /**
    * The player DOM element container.
-   * @type {HTMLElement}
+   * @type {HTMLDivElement}
    * @private
    */
-  _el: HTMLElement;
+  _el: HTMLDivElement;
   /**
    * The playback middleware of the player.
    * @type {PlaybackMiddleware}
@@ -372,10 +372,8 @@ export default class Player extends FakeEventTarget {
     if (targetId) {
       if (this._el === undefined) {
         this._createPlayerContainer();
-        let parentNode = document.getElementById(targetId);
-        if ((parentNode != null) && (this._el != null)) {
-          parentNode.appendChild(this._el);
-        }
+        let parentNode = Utils.Dom.getElementById(targetId);
+        Utils.Dom.appendChild(parentNode, this._el);
       }
     } else {
       throw new Error("targetId is not found, it must be pass on initialization");
@@ -388,7 +386,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _createPlayerContainer(): void {
-    this._el = document.createElement("div");
+    this._el = Utils.Dom.createElement("div");
     this._el.id = Utils.Generator.uniqueId(5);
     this._el.className = CONTAINER_CLASS_NAME;
     this._el.setAttribute('tabindex', '-1');
@@ -401,7 +399,7 @@ export default class Player extends FakeEventTarget {
    */
   _appendEngineEl(): void {
     if ((this._el != null) && (this._engine != null)) {
-      this._el.appendChild(this._engine.getVideoElement())
+      Utils.Dom.appendChild(this._el, this._engine.getVideoElement());
     }
   }
 

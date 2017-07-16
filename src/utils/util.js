@@ -225,6 +225,36 @@ const _Generator = {
 
 const _Dom = {
   /**
+   * Adds a node to the end of the list of children of a specified parent node.
+   * @param {Element} parent - The parent node.
+   * @param {Element} child - The child node.
+   * @returns {void}
+   */
+  appendChild(parent: ?Element, child: ?Element): void {
+    if (parent && child && parent.appendChild) {
+      parent.appendChild(child);
+    }
+  },
+
+  /**
+   * Returns a reference to the element by its ID.
+   * @param {string} id - The desired id.
+   * @returns {Element} - The element with the desired id.
+   */
+  getElementById(id: string): any {
+    return document.getElementById(id);
+  },
+
+  /**
+   * Creates the HTML element specified by tagName.
+   * @param {string} tagName - The tag name.
+   * @returns {Element} - The element just created.
+   */
+  createElement(tagName: string): any {
+    return document.createElement(tagName);
+  },
+
+  /**
    * Loads script asynchronously.
    * @param {string} url - The url to load.
    * @return {Promise} - The loading promise.
@@ -234,7 +264,7 @@ const _Dom = {
     return new Promise((resolve, reject) => {
       let r = false,
         t = document.getElementsByTagName("script")[0],
-        s = document.createElement("script");
+        s = this.createElement("script");
       s.type = "text/javascript";
       s.src = url;
       s.async = true;

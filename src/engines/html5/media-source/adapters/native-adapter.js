@@ -6,6 +6,7 @@ import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'
 import TextTrack from '../../../../track/text-track'
 import BaseMediaSourceAdapter from '../base-media-source-adapter'
+import * as Utils from '../../../../utils/util'
 
 /**
  * An illustration of media source extension for progressive download
@@ -51,7 +52,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @static
    */
   static canPlayType(mimeType: string): boolean {
-    let canPlayType = (typeof mimeType === 'string') ? !!(document.createElement("video").canPlayType(mimeType.toLowerCase())) : false;
+    let canPlayType = (typeof mimeType === 'string') ? !!(Utils.Dom.createElement("video").canPlayType(mimeType.toLowerCase())) : false;
     NativeAdapter._logger.debug('canPlayType result for mimeType:' + mimeType + ' is ' + canPlayType.toString());
     return canPlayType;
   }

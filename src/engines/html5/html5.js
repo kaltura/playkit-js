@@ -165,7 +165,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   _createVideoElement(): void {
-    this._el = document.createElement("video");
+    this._el = Utils.Dom.createElement("video");
     this._el.id = Utils.Generator.uniqueId(5);
     this._el.className = VIDEO_ELEMENT_CLASS_NAME;
     this._el.controls = false;
@@ -631,7 +631,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   static isSupported() {
     try {
-      Html5.TEST_VID = document.createElement('video');
+      Html5.TEST_VID = Utils.Dom.createElement('video');
       Html5.TEST_VID.volume = 0.5;
     } catch (e) {
       return false;
