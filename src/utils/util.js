@@ -1,7 +1,7 @@
 //@flow
 "use strict";
 
-const numbers = {
+const _Number = {
   /**
    * @param {number} n - A certain number
    * @returns {boolean} - If the input is a number
@@ -27,7 +27,7 @@ const numbers = {
   }
 };
 
-const strings = {
+const _String = {
   /**
    * Uppercase the first letter of a string
    * @param  {String} string - String to be uppercased
@@ -55,7 +55,7 @@ const strings = {
   }
 };
 
-const objects = {
+const _Object = {
   /**
    * @param {Array<Object>} objects - The objects to merge
    * @returns {Object} - The merged object.
@@ -210,7 +210,7 @@ const objects = {
   }
 };
 
-const generators = {
+const _Generator = {
   /**
    * Generates unique id.
    * @param {number} length - The length of the id.
@@ -223,7 +223,7 @@ const generators = {
   }
 };
 
-const dom = {
+const _Dom = {
   /**
    * Loads script asynchronously.
    * @param {string} url - The url to load.
@@ -252,7 +252,7 @@ const dom = {
   }
 };
 
-const http = {
+const _Http = {
   execute: function (url: string, params: any, method: string = "POST", headers?: Map<string, string>): Promise<any> {
     let request = new XMLHttpRequest();
     return new Promise((resolve, reject) => {
@@ -277,4 +277,11 @@ const http = {
   }
 };
 
-export {numbers, strings, objects, generators, dom, http};
+export {
+  _Number as Number,
+  _String as String,
+  _Object as Object,
+  _Generator as Generator,
+  _Dom as Dom,
+  _Http as Http
+};

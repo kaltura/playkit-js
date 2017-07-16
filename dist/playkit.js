@@ -669,7 +669,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var numbers = {
+var _Number = {
   /**
    * @param {number} n - A certain number
    * @returns {boolean} - If the input is a number
@@ -695,7 +695,7 @@ var numbers = {
   }
 };
 
-var strings = {
+var _String = {
   /**
    * Uppercase the first letter of a string
    * @param  {String} string - String to be uppercased
@@ -723,7 +723,7 @@ var strings = {
   }
 };
 
-var objects = {
+var _Object = {
   /**
    * @param {Array<Object>} objects - The objects to merge
    * @returns {Object} - The merged object.
@@ -900,7 +900,7 @@ var objects = {
   }
 };
 
-var generators = {
+var _Generator = {
   /**
    * Generates unique id.
    * @param {number} length - The length of the id.
@@ -913,7 +913,7 @@ var generators = {
   }
 };
 
-var dom = {
+var _Dom = {
   /**
    * Loads script asynchronously.
    * @param {string} url - The url to load.
@@ -942,7 +942,7 @@ var dom = {
   }
 };
 
-var http = {
+var _Http = {
   execute: function execute(url, params) {
     var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "POST";
     var headers = arguments[3];
@@ -970,12 +970,12 @@ var http = {
   }
 };
 
-exports.numbers = numbers;
-exports.strings = strings;
-exports.objects = objects;
-exports.generators = generators;
-exports.dom = dom;
-exports.http = http;
+exports.Number = _Number;
+exports.String = _String;
+exports.Object = _Object;
+exports.Generator = _Generator;
+exports.Dom = _Dom;
+exports.Http = _Http;
 
 /***/ }),
 /* 7 */
@@ -1386,7 +1386,7 @@ var CUSTOM_EVENTS = {
   AD_MUTED: 'admuted'
 };
 
-var PLAYER_EVENTS = Utils.objects.merge([HTML5_EVENTS, CUSTOM_EVENTS]);
+var PLAYER_EVENTS = Utils.Object.merge([HTML5_EVENTS, CUSTOM_EVENTS]);
 
 exports.PLAYER_EVENTS = PLAYER_EVENTS;
 exports.HTML5_EVENTS = HTML5_EVENTS;
@@ -1619,9 +1619,9 @@ var Player = function (_FakeEventTarget) {
     key: 'configure',
     value: function configure(config) {
       var engine = this._engine;
-      this._config = Utils.objects.mergeDeep(Utils.objects.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
+      this._config = Utils.Object.mergeDeep(Utils.Object.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
       this._maybeResetPlayer(config);
-      if (Utils.objects.isEmptyObject(this._engine) && this._selectEngine()) {
+      if (Utils.Object.isEmptyObject(this._engine) && this._selectEngine()) {
         this._appendEngineEl();
         this._attachMedia();
         this._maybeLoadPlugins(engine);
@@ -1945,7 +1945,7 @@ var Player = function (_FakeEventTarget) {
     key: '_createPlayerContainer',
     value: function _createPlayerContainer() {
       this._el = document.createElement("div");
-      this._el.id = Utils.generators.uniqueId(5);
+      this._el.id = Utils.Generator.uniqueId(5);
       this._el.className = CONTAINER_CLASS_NAME;
       this._el.setAttribute('tabindex', '-1');
     }
@@ -2299,7 +2299,7 @@ var Player = function (_FakeEventTarget) {
     key: 'currentTime',
     set: function set(to) {
       if (this._engine) {
-        if (Utils.numbers.isNumber(to)) {
+        if (Utils.Number.isNumber(to)) {
           var boundedTo = to;
           if (to < 0) {
             boundedTo = 0;
@@ -2349,7 +2349,7 @@ var Player = function (_FakeEventTarget) {
     key: 'volume',
     set: function set(vol) {
       if (this._engine) {
-        if (Utils.numbers.isFloat(vol)) {
+        if (Utils.Number.isFloat(vol)) {
           var boundedVol = vol;
           if (boundedVol < 0) {
             boundedVol = 0;
@@ -2507,7 +2507,7 @@ var Player = function (_FakeEventTarget) {
   }], [{
     key: '_defaultConfig',
     get: function get() {
-      return Utils.objects.copyDeep(_playerConfig2.default);
+      return Utils.Object.copyDeep(_playerConfig2.default);
     }
   }]);
 
@@ -3493,7 +3493,7 @@ var BasePlugin = function () {
     this.eventManager = new _eventManager2.default();
     this.logger = _logger2.default.getLogger(this.name);
     this.config = {};
-    Utils.objects.mergeDeep(this.config, this.constructor.defaultConfig, config);
+    Utils.Object.mergeDeep(this.config, this.constructor.defaultConfig, config);
   }
 
   /**
@@ -3523,7 +3523,7 @@ var BasePlugin = function () {
   }, {
     key: 'updateConfig',
     value: function updateConfig(update) {
-      this.config = Utils.objects.mergeDeep(this.config, update);
+      this.config = Utils.Object.mergeDeep(this.config, update);
     }
 
     /**
@@ -4139,7 +4139,7 @@ var Html5 = function (_FakeEventTarget) {
     key: '_createVideoElement',
     value: function _createVideoElement() {
       this._el = document.createElement("video");
-      this._el.id = Utils.generators.uniqueId(5);
+      this._el.id = Utils.Generator.uniqueId(5);
       this._el.className = VIDEO_ELEMENT_CLASS_NAME;
       this._el.controls = false;
     }

@@ -139,9 +139,9 @@ export default class Player extends FakeEventTarget {
    */
   configure(config: Object): void {
     let engine = this._engine;
-    this._config = Utils.objects.mergeDeep(Utils.objects.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
+    this._config = Utils.Object.mergeDeep(Utils.Object.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
     this._maybeResetPlayer(config);
-    if (Utils.objects.isEmptyObject(this._engine) && this._selectEngine()) {
+    if (Utils.Object.isEmptyObject(this._engine) && this._selectEngine()) {
       this._appendEngineEl();
       this._attachMedia();
       this._maybeLoadPlugins(engine);
@@ -229,7 +229,7 @@ export default class Player extends FakeEventTarget {
    * @static
    */
   static get _defaultConfig(): Object {
-    return Utils.objects.copyDeep(DefaultPlayerConfig);
+    return Utils.Object.copyDeep(DefaultPlayerConfig);
   }
 
   /**
@@ -389,7 +389,7 @@ export default class Player extends FakeEventTarget {
    */
   _createPlayerContainer(): void {
     this._el = document.createElement("div");
-    this._el.id = Utils.generators.uniqueId(5);
+    this._el.id = Utils.Generator.uniqueId(5);
     this._el.className = CONTAINER_CLASS_NAME;
     this._el.setAttribute('tabindex', '-1');
   }
@@ -657,7 +657,7 @@ export default class Player extends FakeEventTarget {
    */
   set currentTime(to: number): void {
     if (this._engine) {
-      if (Utils.numbers.isNumber(to)) {
+      if (Utils.Number.isNumber(to)) {
         let boundedTo = to;
         if (to < 0) {
           boundedTo = 0;
@@ -700,7 +700,7 @@ export default class Player extends FakeEventTarget {
    */
   set volume(vol: number): void {
     if (this._engine) {
-      if (Utils.numbers.isFloat(vol)) {
+      if (Utils.Number.isFloat(vol)) {
         let boundedVol = vol;
         if (boundedVol < 0) {
           boundedVol = 0;

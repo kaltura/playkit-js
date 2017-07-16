@@ -191,6 +191,6 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
   AD_MUTED: 'admuted'
 };
 
-const PLAYER_EVENTS: { [event: string]: string } = Utils.objects.merge([HTML5_EVENTS, CUSTOM_EVENTS]);
+const PLAYER_EVENTS: { [event: string]: string } = Utils.Object.merge([HTML5_EVENTS, CUSTOM_EVENTS]);
 
 export {PLAYER_EVENTS, HTML5_EVENTS, CUSTOM_EVENTS};
