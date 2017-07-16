@@ -722,6 +722,26 @@ export default class Player extends FakeEventTarget {
     }
   }
 
+  /**
+   * Sets the playbackRate property.
+   * @param {number} rate - The playback speed of the video.
+   */
+  set playbackRate(rate: number): void {
+    if (this._engine) {
+      this._engine.playbackRate = rate;
+    }
+  }
+
+  /**
+   * Gets the current playback speed of the video.
+   * @returns {number} - The current playback speed of the video.
+   */
+  get playbackRate(): ?number {
+    if (this._engine) {
+      return this._engine.playbackRate;
+    }
+  }
+
   // </editor-fold>
 
   // <editor-fold desc="State">
