@@ -7,7 +7,7 @@ import MediaSourceProvider from './media-source/media-source-provider'
 import VideoTrack from '../../track/video-track'
 import AudioTrack from '../../track/audio-track'
 import TextTrack from '../../track/text-track'
-import {uniqueId} from '../../utils/util'
+import * as Utils from '../../utils/util'
 
 /**
  * The engine video element class name.
@@ -165,8 +165,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   _createVideoElement(): void {
-    this._el = document.createElement("video");
-    this._el.id = uniqueId(5);
+    this._el = Utils.Dom.createElement("video");
+    this._el.id = Utils.Generator.uniqueId(5);
     this._el.className = VIDEO_ELEMENT_CLASS_NAME;
     this._el.controls = false;
   }
@@ -601,6 +601,24 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * @param {boolean} playsinline - Whether to set on the video tag the playsinline attribute.
+   */
+  set playsinline(playsinline: boolean): void {
+    if (playsinline) {
+      this._el.setAttribute('playsinline', '');
+    } else {
+      this._el.removeAttribute('playsinline');
+    }
+  }
+
+  /**
+   * @returns {boolean} - Whether the video tag has an attribute of playsinline.
+   */
+  get playsinline(): boolean {
+    return this._el.getAttribute('playsinline') === '';
+  }
+
+  /**
    * Test video element to check if html5 engine is supported.
    */
   static TEST_VID: HTMLVideoElement;
@@ -613,7 +631,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   static isSupported() {
     try {
-      Html5.TEST_VID = document.createElement('video');
+      Html5.TEST_VID = Utils.Dom.createElement('video');
       Html5.TEST_VID.volume = 0.5;
     } catch (e) {
       return false;
