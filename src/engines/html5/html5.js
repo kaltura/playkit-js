@@ -282,11 +282,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Load media.
+   * @param {number} startTime - Optional time to start the video from.
    * @public
    * @returns {Promise<Object>} - The loaded data
    */
-  load(): Promise<Object> {
-    return this._mediaSourceAdapter ? this._mediaSourceAdapter.load() : Promise.resolve({});
+  load(startTime: ?number): Promise<Object> {
+    return this._mediaSourceAdapter ? this._mediaSourceAdapter.load(startTime) : Promise.resolve({});
   }
 
   /**

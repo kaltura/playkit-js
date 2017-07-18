@@ -12,7 +12,7 @@ declare interface IEngine {
   detach(): void;
   play(): void;
   pause(): void;
-  load(): Promise<Object>;
+  load(startTime: ?number): Promise<Object>;
   ready(): void;
   selectVideoTrack(videoTrack: VideoTrack): void;
   selectAudioTrack(audioTrack: AudioTrack): void;

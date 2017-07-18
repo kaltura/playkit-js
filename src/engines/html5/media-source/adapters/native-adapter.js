@@ -70,10 +70,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   /**
    * Load the video source
+   * @param {number} startTime - Optional time to start the video from.
    * @function load
    * @returns {Promise<Object>} - The loaded data
    */
-  load(): Promise<Object> {
+  load(startTime: ?number): Promise<Object> {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
         // We're using 'loadeddata' event for native hls (on 'loadedmetadata' native hls doesn't have tracks yet).
@@ -90,6 +91,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         });
         if (this._sourceObj && this._sourceObj.url) {
           this._videoElement.src = this._sourceObj.url;
+        }
+        if (startTime) {
+          this._videoElement.currentTime = startTime;
         }
       });
     }
