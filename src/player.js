@@ -141,11 +141,30 @@ export default class Player extends FakeEventTarget {
     let engine = this._engine;
     this._config = Utils.Object.mergeDeep(Utils.Object.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
     this._maybeResetPlayer(config);
-    if (Utils.Object.isEmptyObject(this._engine) && this._selectEngine()) {
+    this._maybeConfigurePlugins(config);
+    if (this._selectEngine()) {
       this._appendEngineEl();
       this._attachMedia();
       this._maybeLoadPlugins(engine);
       this._handlePlaybackConfig();
+    }
+  }
+
+  /**
+   * Updates the configuration of the plugins.
+   * @param {Object} config - The player configuration.
+   * @private
+   * @returns {void}
+   */
+  _maybeConfigurePlugins(config: Object): void {
+    if (!Utils.Object.isEmptyObject(this._engine) && config.plugins) {
+      let names = Object.keys(config.plugins);
+      for (let i = 0; i < names.length; i++) {
+        let plugin = this._pluginManager.get(names[i]);
+        if (plugin) {
+          plugin.updateConfig(config.plugins[names[i]]);
+        }
+      }
     }
   }
 
@@ -254,7 +273,7 @@ export default class Player extends FakeEventTarget {
    * @returns {boolean} - Whether a proper engine was found.
    */
   _selectEngine(): boolean {
-    if (this._config.sources && this._config.playback && this._config.playback.streamPriority) {
+    if (Utils.Object.isEmptyObject(this._engine) && this._config.sources && this._config.playback && this._config.playback.streamPriority) {
       return this._selectEngineByPriority();
     }
     return false;
