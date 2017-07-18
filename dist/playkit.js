@@ -1656,11 +1656,32 @@ var Player = function (_FakeEventTarget) {
       var engine = this._engine;
       this._config = Utils.Object.mergeDeep(Utils.Object.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
       this._maybeResetPlayer(config);
-      if (Utils.Object.isEmptyObject(this._engine) && this._selectEngine()) {
+      this._maybeConfigurePlugins(config);
+      if (this._selectEngine()) {
         this._appendEngineEl();
         this._attachMedia();
         this._maybeLoadPlugins(engine);
         this._handlePlaybackConfig();
+      }
+    }
+
+    /**
+     * Updates the configuration of the plugins.
+     * @param {Object} config - The player configuration.
+     * @private
+     */
+
+  }, {
+    key: '_maybeConfigurePlugins',
+    value: function _maybeConfigurePlugins(config) {
+      if (!Utils.Object.isEmptyObject(this._engine) && config.plugins) {
+        var names = Object.keys(config.plugins);
+        for (var i = 0; i < names.length; i++) {
+          var plugin = this._pluginManager.get(names[i]);
+          if (plugin) {
+            plugin.updateConfig(config.plugins[names[i]]);
+          }
+        }
       }
     }
 
@@ -1790,7 +1811,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_selectEngine',
     value: function _selectEngine() {
-      if (this._config.sources && this._config.playback && this._config.playback.streamPriority) {
+      if (Utils.Object.isEmptyObject(this._engine) && this._config.sources && this._config.playback && this._config.playback.streamPriority) {
         return this._selectEngineByPriority();
       }
       return false;

@@ -154,6 +154,7 @@ export default class Player extends FakeEventTarget {
    * Updates the configuration of the plugins.
    * @param {Object} config - The player configuration.
    * @private
+   * @returns {void}
    */
   _maybeConfigurePlugins(config: Object): void {
     if (!Utils.Object.isEmptyObject(this._engine) && config.plugins) {
