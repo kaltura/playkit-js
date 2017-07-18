@@ -1669,6 +1669,7 @@ var Player = function (_FakeEventTarget) {
      * Updates the configuration of the plugins.
      * @param {Object} config - The player configuration.
      * @private
+     * @returns {void}
      */
 
   }, {
