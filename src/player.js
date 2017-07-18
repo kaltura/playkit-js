@@ -4,7 +4,7 @@ import FakeEvent from './event/fake-event'
 import FakeEventTarget from './event/fake-event-target'
 import {PLAYER_EVENTS as PlayerEvents, HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from './event/events'
 import PlayerStates from './state/state-types'
-import {isNumber, isFloat, mergeDeep, copyDeep, uniqueId, isEmptyObject} from './utils/util'
+import * as Utils from './utils/util'
 import LoggerFactory from './utils/logger'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
@@ -14,7 +14,9 @@ import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
+import PlaybackMiddleware from './middleware/playback-middleware'
 import DefaultPlayerConfig from './player-config.json'
+import UAParser from 'ua-parser-js'
 import './assets/style.css'
 
 /**
@@ -93,10 +95,22 @@ export default class Player extends FakeEventTarget {
   _firstPlay: boolean;
   /**
    * The player DOM element container.
-   * @type {HTMLElement}
+   * @type {HTMLDivElement}
    * @private
    */
-  _el: HTMLElement;
+  _el: HTMLDivElement;
+  /**
+   * The playback middleware of the player.
+   * @type {PlaybackMiddleware}
+   * @private
+   */
+  _playbackMiddleware: PlaybackMiddleware;
+  /**
+   * The environment(os,device,browser) object of the player.
+   * @type {Object}
+   * @private
+   */
+  _env: Object;
 
   /**
    * @param {string} targetId - The target div id to append the player.
@@ -111,6 +125,8 @@ export default class Player extends FakeEventTarget {
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
     this._eventManager = new EventManager();
+    this._playbackMiddleware = new PlaybackMiddleware();
+    this._env = new UAParser().getResult();
     this._createReadyPromise();
     this._appendPlayerContainer(targetId);
     this.configure(config);
@@ -123,9 +139,9 @@ export default class Player extends FakeEventTarget {
    */
   configure(config: Object): void {
     let engine = this._engine;
+    this._config = Utils.Object.mergeDeep(Utils.Object.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
     this._maybeResetPlayer(config);
-    this._config = mergeDeep(isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
-    if (this._selectEngine()) {
+    if (Utils.Object.isEmptyObject(this._engine) && this._selectEngine()) {
       this._appendEngineEl();
       this._attachMedia();
       this._maybeLoadPlugins(engine);
@@ -213,7 +229,7 @@ export default class Player extends FakeEventTarget {
    * @static
    */
   static get _defaultConfig(): Object {
-    return copyDeep(DefaultPlayerConfig);
+    return Utils.Object.copyDeep(DefaultPlayerConfig);
   }
 
   /**
@@ -225,6 +241,10 @@ export default class Player extends FakeEventTarget {
     let plugins = this._config.plugins;
     for (let name in plugins) {
       this._pluginManager.load(name, this, plugins[name]);
+      let plugin = this._pluginManager.get(name);
+      if (plugin && typeof plugin.getMiddlewareImpl === "function") {
+        this._playbackMiddleware.use(plugin.getMiddlewareImpl());
+      }
     }
   }
 
@@ -313,13 +333,33 @@ export default class Player extends FakeEventTarget {
       if (this._config.playback.muted) {
         this.muted = true;
       }
+      if (this._config.playback.playsinline) {
+        this.playsinline = true;
+      }
       if (this._config.playback.preload === "auto") {
         this.load();
       }
-      if (this._config.playback.autoplay) {
+      if (this._canAutoPlay()) {
         this.play();
       }
     }
+  }
+
+  /**
+   * Determine whether we can auto playing or not.
+   * @returns {boolean} - Whether an auto play can be done.
+   * @private
+   */
+  _canAutoPlay(): ?boolean {
+    if (!this._config.playback.autoplay) {
+      return false;
+    }
+    let device = this._env.device.type;
+    let os = this._env.os.name;
+    if (device === 'mobile' || device === 'tablet') {
+      return (os === 'iOS') ? this.muted && this.playsinline : this.muted;
+    }
+    return true;
   }
 
   /**
@@ -332,10 +372,8 @@ export default class Player extends FakeEventTarget {
     if (targetId) {
       if (this._el === undefined) {
         this._createPlayerContainer();
-        let parentNode = document.getElementById(targetId);
-        if ((parentNode != null) && (this._el != null)) {
-          parentNode.appendChild(this._el);
-        }
+        let parentNode = Utils.Dom.getElementById(targetId);
+        Utils.Dom.appendChild(parentNode, this._el);
       }
     } else {
       throw new Error("targetId is not found, it must be pass on initialization");
@@ -348,8 +386,8 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _createPlayerContainer(): void {
-    this._el = document.createElement("div");
-    this._el.id = uniqueId(5);
+    this._el = Utils.Dom.createElement("div");
+    this._el.id = Utils.Generator.uniqueId(5);
     this._el.className = CONTAINER_CLASS_NAME;
     this._el.setAttribute('tabindex', '-1');
   }
@@ -361,8 +399,17 @@ export default class Player extends FakeEventTarget {
    */
   _appendEngineEl(): void {
     if ((this._el != null) && (this._engine != null)) {
-      this._el.appendChild(this._engine.getVideoElement())
+      Utils.Dom.appendChild(this._el, this._engine.getVideoElement());
     }
+  }
+
+  /**
+   * Gets the view of the player (i.e the dom container object).
+   * @return {HTMLElement} - The dom container.
+   * @public
+   */
+  getView(): HTMLElement {
+    return this._el;
   }
 
   /**
@@ -490,6 +537,15 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Getter for the environment of the player instance.
+   * @return {Object} - The current environment object.
+   * @public
+   */
+  get env(): Object {
+    return this._env;
+  }
+
+  /**
    * Get the player config.
    * @returns {Object} - The player configuration.
    * @public
@@ -542,14 +598,23 @@ export default class Player extends FakeEventTarget {
    */
   play(): void {
     if (this._engine) {
-      if (this._engine.src) {
+      this._playbackMiddleware.play(this._play.bind(this));
+    }
+  }
+
+  /**
+   * Start/resume the engine playback.
+   * @private
+   * @returns {void}
+   */
+  _play(): void {
+    if (this._engine.src) {
+      this._engine.play();
+    } else {
+      this.load();
+      this.ready().then(() => {
         this._engine.play();
-      } else {
-        this.load();
-        this.ready().then(() => {
-          this._engine.play();
-        });
-      }
+      });
     }
   }
 
@@ -560,7 +625,26 @@ export default class Player extends FakeEventTarget {
    */
   pause(): void {
     if (this._engine) {
-      return this._engine.pause();
+      this._playbackMiddleware.pause(this._pause.bind(this));
+    }
+  }
+
+  /**
+   * Starts the engine pause.
+   * @private
+   * @returns {void}
+   */
+  _pause(): void {
+    this._engine.pause();
+  }
+
+  /**
+   * @returns {HTMLVideoElement} - The video element.
+   * @public
+   */
+  getVideoElement(): ?HTMLVideoElement {
+    if (this._engine) {
+      return this._engine.getVideoElement();
     }
   }
 
@@ -571,7 +655,7 @@ export default class Player extends FakeEventTarget {
    */
   set currentTime(to: number): void {
     if (this._engine) {
-      if (isNumber(to)) {
+      if (Utils.Number.isNumber(to)) {
         let boundedTo = to;
         if (to < 0) {
           boundedTo = 0;
@@ -614,7 +698,7 @@ export default class Player extends FakeEventTarget {
    */
   set volume(vol: number): void {
     if (this._engine) {
-      if (isFloat(vol)) {
+      if (Utils.Number.isFloat(vol)) {
         let boundedVol = vol;
         if (boundedVol < 0) {
           boundedVol = 0;
@@ -638,13 +722,21 @@ export default class Player extends FakeEventTarget {
     }
   }
 
+  /**
+   * Sets the playbackRate property.
+   * @param {number} rate - The playback speed of the video.
+   */
   set playbackRate(rate: number): void {
     if (this._engine) {
       this._engine.playbackRate = rate;
     }
   }
 
-  get playbackRate(): ?number{
+  /**
+   * Gets the current playback speed of the video.
+   * @returns {number} - The current playback speed of the video.
+   */
+  get playbackRate(): ?number {
     if (this._engine) {
       return this._engine.playbackRate;
     }
@@ -676,6 +768,30 @@ export default class Player extends FakeEventTarget {
   }
 
   buffered() {
+  }
+
+  /**
+   * Set playsinline attribute.
+   * Relevant for iOS 10 and up:
+   * Elements will now be allowed to play inline, and will not automatically enter fullscreen mode when playback begins.
+   * @param {boolean} playsinline - Whether the video should plays in line.
+   */
+  set playsinline(playsinline: boolean): void {
+    if (this._engine) {
+      this._engine.playsinline = playsinline;
+    }
+  }
+
+  /**
+   * Get playsinline attribute.
+   * Relevant for iOS 10 and up:
+   * Elements will now be allowed to play inline, and will not automatically enter fullscreen mode when playback begins.
+   * @returns {boolean} - Whether the video plays in line.
+   */
+  get playsinline(): ?boolean {
+    if (this._engine) {
+      return this._engine.playsinline;
+    }
   }
 
   /**
