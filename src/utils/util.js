@@ -1,173 +1,317 @@
 //@flow
 "use strict";
 
-/**
- * @param {number} n - A certain number
- * @returns {boolean} - If the input is a number
- */
-function isNumber(n: number): boolean {
-  return Number(n) === n;
-}
+const _Number = {
+  /**
+   * @param {number} n - A certain number
+   * @returns {boolean} - If the input is a number
+   */
+  isNumber: function (n: number): boolean {
+    return Number(n) === n;
+  },
 
-/**
- * @param {number} n - A certain number
- * @returns {boolean} - If the input is an integer
- */
-function isInt(n: number): boolean {
-  return isNumber(n) && n % 1 === 0;
-}
+  /**
+   * @param {number} n - A certain number
+   * @returns {boolean} - If the input is an integer
+   */
+  isInt: function (n: number): boolean {
+    return this.isNumber(n) && n % 1 === 0;
+  },
 
-/**
- * @param {number} n - A certain number
- * @returns {boolean} - If the input is a float
- */
-function isFloat(n: number): boolean {
-  return isNumber(n) && n % 1 !== 0;
-}
-
-/**
- * @param {Array<Object>} objects - The objects to merge
- * @returns {Object} - The merged object.
- */
-function merge(objects: Array<Object>): Object {
-  let target = {};
-  for (let obj of objects) {
-    Object.assign(target, obj);
+  /**
+   * @param {number} n - A certain number
+   * @returns {boolean} - If the input is a float
+   */
+  isFloat: function (n: number): boolean {
+    return this.isNumber(n) && n % 1 !== 0;
   }
-  return target;
-}
+};
 
-/**
- * @param {any} item - The item to check.
- * @returns {boolean} - Whether the item is an object.
- */
-function isObject(item: any) {
-  return (item && typeof item === 'object' && !Array.isArray(item));
-}
+const _String = {
+  /**
+   * Uppercase the first letter of a string
+   * @param  {String} string - String to be uppercased
+   * @return {String} - The uppercased string
+   * @public
+   * @method toTitleCase
+   */
+  capitlize: function (string: string): string {
+    if (typeof string !== 'string') {
+      return string;
+    }
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  },
 
-/**
- * @param {any} target - The target object.
- * @param {any} sources - The objects to merge.
- * @returns {Object} - The merged object.
- */
-function mergeDeep(target: any, ...sources: any): Object {
-  if (!sources.length) {
+  /**
+   * @param {string} string - Certain string
+   * @param {string} searchString - Certain string
+   * @returns {boolean} - Whether the string: string is ending with string: searchString
+   */
+  endsWith: function (string: string, searchString: string): boolean {
+    if (typeof string !== 'string' || typeof searchString !== 'string') {
+      return false;
+    }
+    return string.indexOf(searchString, string.length - searchString.length) != -1;
+  }
+};
+
+const _Object = {
+  /**
+   * @param {Array<Object>} objects - The objects to merge
+   * @returns {Object} - The merged object.
+   */
+  merge: function (objects: Array<Object>): Object {
+    let target = {};
+    for (let obj of objects) {
+      Object.assign(target, obj);
+    }
     return target;
-  }
-  const source = sources.shift();
-  if (isObject(target) && isObject(source)) {
-    for (const key in source) {
-      if (isObject(source[key])) {
-        if (!target[key]) Object.assign(target, {[key]: {}});
-        mergeDeep(target[key], source[key]);
-      } else {
-        Object.assign(target, {[key]: source[key]});
+  },
+
+  /**
+   * @param {any} item - The item to check.
+   * @returns {boolean} - Whether the item is an object.
+   */
+  isObject: function (item: any) {
+    return (item && typeof item === 'object' && !Array.isArray(item));
+  },
+
+  /**
+   * @param {any} target - The target object.
+   * @param {any} sources - The objects to merge.
+   * @returns {Object} - The merged object.
+   */
+  mergeDeep: function (target: any, ...sources: any): Object {
+    if (!sources.length) {
+      return target;
+    }
+    const source = sources.shift();
+    if (this.isObject(target) && this.isObject(source)) {
+      for (const key in source) {
+        if (this.isObject(source[key])) {
+          if (!target[key]) Object.assign(target, {[key]: {}});
+          this.mergeDeep(target[key], source[key]);
+        } else {
+          Object.assign(target, {[key]: source[key]});
+        }
       }
     }
-  }
-  return mergeDeep(target, ...sources);
-}
+    return this.mergeDeep(target, ...sources);
+  },
 
-/**
- * @param {any} data - The data to copy.
- * @returns {any} - The copied data.
- */
-function copyDeep(data: any): any {
-  let node;
-  if (Array.isArray(data)) {
-    node = data.length > 0 ? data.slice(0) : [];
-    node.forEach((e, i) => {
-      if (
-        (typeof e === "object" && e !== {}) ||
-        (Array.isArray(e) && e.length > 0)
-      ) {
-        node[i] = copyDeep(e);
-      }
-    });
-  } else if (typeof data === "object") {
-    node = Object.assign({}, data);
-    Object.keys(node).forEach((key) => {
-      if (
-        (typeof node[key] === "object" && node[key] !== {}) ||
-        (Array.isArray(node[key]) && node[key].length > 0)
-      ) {
-        node[key] = copyDeep(node[key]);
-      }
-    });
-  } else {
-    node = data;
-  }
-  return node;
-}
-
-/**
- * Generates unique id.
- * @param {number} length - The length of the id.
- * @returns {string} - The generated id.
- */
-function uniqueId(length: ?number) {
-  let from = 2;
-  let to = from + ((!length || length < 0) ? 0 : length - 2);
-  return '_' + Math.random().toString(36).substr(from, to);
-}
-
-/**
- * Checks if an object is an empy object.
- * @param {Object} obj - The object to check
- * @returns {boolean} - Whether the object is empty.
- */
-function isEmptyObject(obj: Object): boolean {
-  for (let key in obj) {
-    if (obj.hasOwnProperty(key))
-      return false;
-  }
-  return true;
-}
-
-/**
- * Checks for nested object properties.
- * @param {Object} obj - The object to check.
- * @param {string} propertyPath - The path to check.
- * @returns {boolean} - The value in this path.
- */
-function getPropertyPath(obj: Object, propertyPath: string): any {
-  return propertyPath.split(".").reduce(function (o, x) {
-    return (typeof o === "undefined" || o === null) ? o : o[x];
-  }, obj);
-}
-
-/**
- * Checks for nested object properties.
- * @param {Object} obj - The object to check.
- * @param {string} propertyPath - The path to check.
- * @returns {boolean} - Whether the path exists in the object.
- */
-function hasPropertyPath(obj: Object, propertyPath: string): boolean {
-  if (!propertyPath) {
-    return false;
-  }
-  let properties = propertyPath.split('.');
-  for (let i = 0; i < properties.length; i++) {
-    let prop = properties[i];
-    if (!obj || !obj.hasOwnProperty(prop)) {
-      return false;
+  /**
+   * @param {any} data - The data to copy.
+   * @returns {any} - The copied data.
+   */
+  copyDeep: function (data: any): any {
+    let node;
+    if (Array.isArray(data)) {
+      node = data.length > 0 ? data.slice(0) : [];
+      node.forEach((e, i) => {
+        if (
+          (typeof e === "object" && e !== {}) ||
+          (Array.isArray(e) && e.length > 0)
+        ) {
+          node[i] = this.copyDeep(e);
+        }
+      });
+    } else if (typeof data === "object") {
+      node = Object.assign({}, data);
+      Object.keys(node).forEach((key) => {
+        if (
+          (typeof node[key] === "object" && node[key] !== {}) ||
+          (Array.isArray(node[key]) && node[key].length > 0)
+        ) {
+          node[key] = this.copyDeep(node[key]);
+        }
+      });
     } else {
-      obj = obj[prop];
+      node = data;
     }
+    return node;
+  },
+
+  /**
+   * Checks if an object is an empy object.
+   * @param {Object} obj - The object to check
+   * @returns {boolean} - Whether the object is empty.
+   */
+  isEmptyObject: function (obj: Object): boolean {
+    for (let key in obj) {
+      if (obj.hasOwnProperty(key))
+        return false;
+    }
+    return true;
+  },
+
+  /**
+   * Checks for nested object properties.
+   * @param {Object} obj - The object to check.
+   * @param {string} propertyPath - The path to check.
+   * @returns {boolean} - The value in this path.
+   */
+  getPropertyPath: function (obj: Object, propertyPath: string): any {
+    return propertyPath.split(".").reduce(function (o, x) {
+      return (typeof o === "undefined" || o === null) ? o : o[x];
+    }, obj);
+  },
+
+  /**
+   * Checks for nested object properties.
+   * @param {Object} obj - The object to check.
+   * @param {string} propertyPath - The path to check.
+   * @returns {boolean} - Whether the path exists in the object.
+   */
+  hasPropertyPath: function (obj: Object, propertyPath: string): boolean {
+    if (!propertyPath) {
+      return false;
+    }
+    let properties = propertyPath.split('.');
+    for (let i = 0; i < properties.length; i++) {
+      let prop = properties[i];
+      if (!obj || !obj.hasOwnProperty(prop)) {
+        return false;
+      } else {
+        obj = obj[prop];
+      }
+    }
+    return true;
+  },
+
+  /**
+   * Creates deferred promise which can resolved/rejected outside the promise scope.
+   * @returns {DeferredPromise} - The promise with resolve and reject props.
+   */
+  defer: function (): DeferredPromise {
+    let res, rej;
+    // $FlowFixMe
+    let promise = new Promise((resolve, reject) => {
+      res = resolve;
+      rej = reject;
+    });
+    // $FlowFixMe
+    promise.resolve = res;
+    // $FlowFixMe
+    promise.reject = rej;
+    return promise;
+  },
+
+  /**
+   * Binds an handler to a desired context.
+   * @param {any} thisObj - The handler context.
+   * @param {Function} fn - The handler.
+   * @returns {Function} - The new bound function.
+   * @public
+   */
+  bind: function (thisObj: any, fn: Function): Function {
+    return function () {
+      fn.apply(thisObj, arguments);
+    };
   }
-  return true;
-}
+};
+
+const _Generator = {
+  /**
+   * Generates unique id.
+   * @param {number} length - The length of the id.
+   * @returns {string} - The generated id.
+   */
+  uniqueId: function (length: ?number) {
+    let from = 2;
+    let to = from + ((!length || length < 0) ? 0 : length - 2);
+    return '_' + Math.random().toString(36).substr(from, to);
+  }
+};
+
+const _Dom = {
+  /**
+   * Adds a node to the end of the list of children of a specified parent node.
+   * @param {Element} parent - The parent node.
+   * @param {Element} child - The child node.
+   * @returns {void}
+   */
+  appendChild(parent: ?Element, child: ?Element): void {
+    if (parent && child && parent.appendChild) {
+      parent.appendChild(child);
+    }
+  },
+
+  /**
+   * Returns a reference to the element by its ID.
+   * @param {string} id - The desired id.
+   * @returns {Element} - The element with the desired id.
+   */
+  getElementById(id: string): any {
+    return document.getElementById(id);
+  },
+
+  /**
+   * Creates the HTML element specified by tagName.
+   * @param {string} tagName - The tag name.
+   * @returns {Element} - The element just created.
+   */
+  createElement(tagName: string): any {
+    return document.createElement(tagName);
+  },
+
+  /**
+   * Loads script asynchronously.
+   * @param {string} url - The url to load.
+   * @return {Promise} - The loading promise.
+   * @public
+   */
+  loadScriptAsync(url: string): Promise<*> {
+    return new Promise((resolve, reject) => {
+      let r = false,
+        t = document.getElementsByTagName("script")[0],
+        s = this.createElement("script");
+      s.type = "text/javascript";
+      s.src = url;
+      s.async = true;
+      s.onload = s.onreadystatechange = function () {
+        if (!r && (!this.readyState || this.readyState === "complete")) {
+          r = true;
+          resolve(this);
+        }
+      };
+      s.onerror = s.onabort = reject;
+      if (t && t.parentNode) {
+        t.parentNode.insertBefore(s, t);
+      }
+    });
+  }
+};
+
+const _Http = {
+  execute: function (url: string, params: any, method: string = "POST", headers?: Map<string, string>): Promise<any> {
+    let request = new XMLHttpRequest();
+    return new Promise((resolve, reject) => {
+      request.onreadystatechange = function () {
+        if (request.readyState === 4) {
+          if (request.status === 200) {
+            let jsonResponse = JSON.parse(request.responseText);
+            resolve(jsonResponse);
+          } else {
+            reject(request.responseText);
+          }
+        }
+      };
+      request.open(method, url);
+      if (headers) {
+        headers.forEach((value, key) => {
+          request.setRequestHeader(key, value);
+        });
+      }
+      request.send(params);
+    });
+  }
+};
 
 export {
-  isNumber,
-  isInt,
-  isFloat,
-  isObject,
-  merge,
-  mergeDeep,
-  copyDeep,
-  uniqueId,
-  isEmptyObject,
-  getPropertyPath,
-  hasPropertyPath
+  _Number as Number,
+  _String as String,
+  _Object as Object,
+  _Generator as Generator,
+  _Dom as Dom,
+  _Http as Http
 };
