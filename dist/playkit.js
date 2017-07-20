@@ -3109,13 +3109,10 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
     }
 
     /**
-     * Factory method to create media source adapter.
-     * @function createAdapter
-     * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with.
-     * @param {Object} source - The source Object.
-     * @param {Object} config - The player configuration.
-     * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter.
-     * @static
+     * @constructor
+     * @param {HTMLVideoElement} videoElement - The video element which bind to media source adapter.
+     * @param {Source} source - The source object.
+     * @param {Object} config - The media source adapter configuration.
      */
 
 
@@ -3123,19 +3120,6 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
      * Passing the getLogger function to the actual media source adapter.
      * @type {Function}
      * @static
-     */
-
-  }, {
-    key: 'createAdapter',
-    value: function createAdapter(videoElement, source, config) {
-      return new this(videoElement, source, config);
-    }
-
-    /**
-     * @constructor
-     * @param {HTMLVideoElement} videoElement - The video element which bind to media source adapter.
-     * @param {Source} source - The source object.
-     * @param {Object} config - The media source adapter configuration.
      */
 
   }]);
@@ -4900,9 +4884,13 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
     }
 
     /**
-     * @constructor
-     * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
-     * @param {Source} source - The source object
+     * Factory method to create media source adapter.
+     * @function createAdapter
+     * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with.
+     * @param {Object} source - The source Object.
+     * @param {Object} config - The player configuration.
+     * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter.
+     * @static
      */
 
 
@@ -4911,6 +4899,18 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      * @member {any} _logger
      * @private
      * @static
+     */
+
+  }, {
+    key: 'createAdapter',
+    value: function createAdapter(videoElement, source, config) {
+      return new this(videoElement, source, config);
+    }
+
+    /**
+     * @constructor
+     * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
+     * @param {Source} source - The source object
      */
 
   }]);
