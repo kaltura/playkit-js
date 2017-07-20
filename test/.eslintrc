@@ -1,0 +1,5 @@
+{
+  "rules": {
+    "flowtype/no-types-missing-file-annotation": "off"
+  }
+}
