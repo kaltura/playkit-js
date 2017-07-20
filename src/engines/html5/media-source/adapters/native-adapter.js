@@ -65,6 +65,19 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
+   * Factory method to create media source adapter.
+   * @function createAdapter
+   * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with.
+   * @param {Object} source - The source Object.
+   * @param {Object} config - The player configuration.
+   * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter.
+   * @static
+   */
+  static createAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): IMediaSourceAdapter {
+    return new this(videoElement, source, config);
+  }
+
+  /**
    * @constructor
    * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
    * @param {Source} source - The source object
