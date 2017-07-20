@@ -2197,7 +2197,8 @@ var Player = function (_FakeEventTarget) {
       var _this5 = this;
 
       if (this._engine) {
-        this._engine.load().then(function (data) {
+        var startTime = this._config.playback.startTime;
+        this._engine.load(startTime).then(function (data) {
           _this5._tracks = data.tracks;
           _this5.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.TRACKS_CHANGED, { tracks: _this5._tracks }));
         }).catch(function (error) {
@@ -4306,14 +4307,15 @@ var Html5 = function (_FakeEventTarget) {
 
     /**
      * Load media.
+     * @param {number} startTime - Optional time to start the video from.
      * @public
      * @returns {Promise<Object>} - The loaded data
      */
 
   }, {
     key: 'load',
-    value: function load() {
-      return this._mediaSourceAdapter ? this._mediaSourceAdapter.load() : Promise.resolve({});
+    value: function load(startTime) {
+      return this._mediaSourceAdapter ? this._mediaSourceAdapter.load(startTime) : Promise.resolve({});
     }
 
     /**
@@ -4968,13 +4970,14 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
 
     /**
      * Load the video source
+     * @param {number} startTime - Optional time to start the video from.
      * @function load
      * @returns {Promise<Object>} - The loaded data
      */
 
   }, {
     key: 'load',
-    value: function load() {
+    value: function load(startTime) {
       var _this2 = this;
 
       if (!this._loadPromise) {
@@ -4996,6 +4999,9 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
           }
           if (_this2._sourceObj && _this2._sourceObj.url) {
             _this2._videoElement.src = _this2._sourceObj.url;
+          }
+          if (startTime) {
+            _this2._videoElement.currentTime = startTime;
           }
         });
       }

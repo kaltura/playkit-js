@@ -582,7 +582,8 @@ export default class Player extends FakeEventTarget {
    */
   load(): void {
     if (this._engine) {
-      this._engine.load().then((data) => {
+      let startTime = this._config.playback.startTime;
+      this._engine.load(startTime).then((data) => {
         this._tracks = data.tracks;
         this.dispatchEvent(new FakeEvent(CustomEvents.TRACKS_CHANGED, {tracks: this._tracks}));
       }).catch((error) => {
