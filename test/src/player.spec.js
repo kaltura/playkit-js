@@ -490,7 +490,6 @@ describe('getTracks dummy', () => {
 });
 
 describe('getTracks real', function () {
-  this.timeout(10000);
 
   let config;
   let player;
@@ -511,7 +510,7 @@ describe('getTracks real', function () {
 
   beforeEach(() => {
     config = getConfigStructure();
-    config.sources = sourcesConfig.Mp4;
+    config.sources = sourcesConfig.MultipleSources;
     player = new Player(targetId, config);
     video = player._engine.getVideoElement();
     video.appendChild(track1);
@@ -529,7 +528,7 @@ describe('getTracks real', function () {
 
   it('should return all tracks using ready', (done) => {
     player.ready().then(() => {
-      let videoTracksLength = (video.videoTracks ? video.videoTracks.length : 0);
+      let videoTracksLength = 2;
       let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
       let textTracksLength = (video.textTracks ? video.textTracks.length : 0);
       let totalTracksLength = videoTracksLength + audioTracksLength + textTracksLength;
@@ -541,7 +540,7 @@ describe('getTracks real', function () {
 
   it('should return video tracks', (done) => {
     player.ready().then(() => {
-      let videoTracksLength = (video.videoTracks ? video.videoTracks.length : 0);
+      let videoTracksLength = 2;
       player.getTracks('video').length.should.be.equal(videoTracksLength);
       done();
     });
@@ -568,7 +567,7 @@ describe('getTracks real', function () {
 
   it('should return all tracks for unknown type', (done) => {
     player.ready().then(() => {
-      let videoTracksLength = (video.videoTracks ? video.videoTracks.length : 0);
+      let videoTracksLength = 2;
       let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
       let textTracksLength = (video.textTracks ? video.textTracks.length : 0);
       let totalTracksLength = videoTracksLength + audioTracksLength + textTracksLength;
@@ -584,8 +583,78 @@ describe('getTracks real', function () {
   });
 });
 
+describe('selectTrack - video', function () {
+
+  let config, player, video;
+
+  before(() => {
+    createElement('DIV', targetId);
+  });
+
+  beforeEach(() => {
+    config = getConfigStructure();
+    config.sources = sourcesConfig.MultipleSources;
+    player = new Player(targetId);
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElement(targetId);
+  });
+
+  it('should select a new video track', (done) => {
+    player.ready().then(() => {
+      player.addEventListener(CustomEvents.VIDEO_TRACK_CHANGED, (event) => {
+        (event.payload.selectedVideoTrack instanceof VideoTrack).should.be.true;
+        event.payload.selectedVideoTrack.index.should.equal(1);
+        (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.false;
+        (video.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.true;
+        tracks[0].active.should.be.false;
+        tracks[1].active.should.be.true;
+        done();
+      });
+      let tracks = player._tracks.filter((track) => {
+        return track instanceof VideoTrack;
+      });
+      (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.true;
+      (video.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.false;
+      tracks[0].active.should.be.true;
+      tracks[1].active.should.be.false;
+      player.selectTrack(new VideoTrack({index: 1}));
+    });
+    player.configure(config);
+    player.load();
+    video = player._engine.getVideoElement();
+  });
+
+  it('should not change the selected for non exist video track', (done) => {
+    player.ready().then(() => {
+      let tracks = player._tracks.filter((track) => {
+        return track instanceof VideoTrack;
+      });
+      (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.true;
+      (video.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.false;
+      tracks[0].active.should.be.true;
+      tracks[1].active.should.be.false;
+      player.selectTrack(new VideoTrack({index: 2}));
+      (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.true;
+      (video.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.false;
+      tracks[0].active.should.be.true;
+      tracks[1].active.should.be.false;
+      done();
+    });
+    player.configure(config);
+    player.load();
+    video = player._engine.getVideoElement();
+  });
+});
+
 describe('selectTrack - audio', function () {
-  this.timeout(10000);
+  this.timeout(4000);
 
   let config, player, video;
 
@@ -612,8 +681,8 @@ describe('selectTrack - audio', function () {
     player.ready().then(() => {
       if (video.audioTracks) {
         player.addEventListener(CustomEvents.AUDIO_TRACK_CHANGED, (event) => {
-          (event.payload instanceof AudioTrack).should.be.true;
-          event.payload.index.should.equal(2);
+          (event.payload.selectedAudioTrack instanceof AudioTrack).should.be.true;
+          event.payload.selectedAudioTrack.index.should.equal(2);
           video.audioTracks[0].enabled.should.be.false;
           video.audioTracks[1].enabled.should.be.false;
           video.audioTracks[2].enabled.should.be.true;
@@ -632,8 +701,9 @@ describe('selectTrack - audio', function () {
         tracks[1].active.should.be.false;
         tracks[2].active.should.be.false;
         player.selectTrack(new AudioTrack({index: 2}));
+      } else {
+        done();
       }
-      done();
     });
     player.configure(config);
     player.load();
@@ -659,8 +729,10 @@ describe('selectTrack - audio', function () {
         tracks[0].active.should.be.true;
         tracks[1].active.should.be.false;
         tracks[2].active.should.be.false;
+        done();
+      } else {
+        done();
       }
-      done();
     });
     config.playback.preload = 'auto';
     player.configure(config);
@@ -687,8 +759,10 @@ describe('selectTrack - audio', function () {
         tracks[0].active.should.be.true;
         tracks[1].active.should.be.false;
         tracks[2].active.should.be.false;
+        done();
+      } else {
+        done();
       }
-      done();
     });
     player.configure(config);
     player.load();
@@ -835,7 +909,6 @@ describe('selectTrack - text', function () {
 });
 
 describe('getActiveTracks', function () {
-  this.timeout(10000);
 
   let config, player, video, track1, track2;
 
@@ -845,7 +918,7 @@ describe('getActiveTracks', function () {
 
   beforeEach(() => {
     config = getConfigStructure();
-    config.sources = sourcesConfig.Mp4;
+    config.sources = sourcesConfig.MultipleSources;
     player = new Player(targetId, config);
     video = player._engine.getVideoElement();
     track1 = document.createElement("track");
@@ -871,17 +944,21 @@ describe('getActiveTracks', function () {
   it('should get the active tracks before and after switching', (done) => {
     player.ready().then(() => {
       player.addEventListener(CustomEvents.TEXT_TRACK_CHANGED, () => {
-        player.addEventListener(CustomEvents.AUDIO_TRACK_CHANGED, () => {
-          player.getActiveTracks().audio.should.deep.equals(audioTracks[2]);
-          done();
+        player.addEventListener(CustomEvents.VIDEO_TRACK_CHANGED, () => {
+          player.addEventListener(CustomEvents.AUDIO_TRACK_CHANGED, () => {
+            player.getActiveTracks().audio.should.deep.equals(audioTracks[2]);
+            done();
+          });
+          player.getActiveTracks().video.should.deep.equals(videoTracks[1]);
+          if (audioTracks.length) {
+            player.selectTrack(new AudioTrack({index: 2}));
+          }
+          else {
+            done();
+          }
         });
         player.getActiveTracks().text.should.deep.equals(textTracks[1]);
-        if (audioTracks.length) {
-          player.selectTrack(new AudioTrack({index: 2}));
-        }
-        else {
-          done();
-        }
+        player.selectTrack(new VideoTrack({index: 1}));
       });
       let videoTracks = player._tracks.filter((track) => {
         return track instanceof VideoTrack;
@@ -892,13 +969,12 @@ describe('getActiveTracks', function () {
       let textTracks = player._tracks.filter((track) => {
         return track instanceof TextTrack;
       });
-      if (videoTracks.length) {
-        player.getActiveTracks().video.should.deep.equals(videoTracks[0]);
-      }
+      player.getActiveTracks().video.should.deep.equals(videoTracks[0]);
+      player.getActiveTracks().text.should.deep.equals(textTracks[0]);
       if (audioTracks.length) {
         player.getActiveTracks().audio.should.deep.equals(audioTracks[0]);
       }
-      player.getActiveTracks().text.should.deep.equals(textTracks[0]);
+
       player.selectTrack(new TextTrack({index: 1, kind: 'subtitles'}));
     });
     player.load();
@@ -1023,7 +1099,7 @@ describe('events', function () {
        */
       function onTracksChanged(data) {
         player.removeEventListener(CustomEvents.TRACKS_CHANGED, onTracksChanged);
-        let videoTracksLength = (video.videoTracks ? video.videoTracks.length : 0);
+        let videoTracksLength = 1;
         let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
         let textTracksLength = (video.textTracks ? video.textTracks.length : 0);
         let totalTracksLength = videoTracksLength + audioTracksLength + textTracksLength;
