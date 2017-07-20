@@ -6,6 +6,7 @@ import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'
 import TextTrack from '../../../../track/text-track'
 import BaseMediaSourceAdapter from '../base-media-source-adapter'
+import {getSuitableSourceForResolution} from '../../../../utils/resolution'
 import * as Utils from '../../../../utils/util'
 
 /**
@@ -43,6 +44,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _loadPromise: ?Promise<Object>;
+  /**
+   * The original progressive sources
+   * @member {Array<Object>} - _progressiveSources
+   * @private
+   */
+  _progressiveSources: Array<Object>;
 
   /**
    * Checks if NativeAdapter can play a given mime type.
@@ -61,11 +68,36 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @constructor
    * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
    * @param {Source} source - The source object
+   * @param {Object} config - The player configuration
    */
-  constructor(videoElement: HTMLVideoElement, source: Source) {
+  constructor(videoElement: HTMLVideoElement, source: Source, config: Object) {
     NativeAdapter._logger.debug('Creating adapter');
     super(videoElement, source);
     this._eventManager = new EventManager();
+    this._progressiveSources = config.sources.progressive;
+  }
+
+  /**
+   * Set the suitable progressive source according the current resolution
+   * @function _setProgressiveSource
+   * @returns {void}
+   * @private
+   */
+  _setProgressiveSource(): void {
+    let suitableTrack = getSuitableSourceForResolution(this._progressiveSources, this._videoElement.offsetWidth, this._videoElement.offsetHeight);
+    if (suitableTrack) {
+      this._sourceObj = suitableTrack;
+    }
+  }
+
+  /**
+   * Checks if the playback source is progressive
+   * @function _isProgressivePlayback
+   * @returns {boolean} - is progressive source
+   * @private
+   */
+  _isProgressivePlayback(): boolean {
+    return this._sourceObj.mimetype === 'video/mp4';
   }
 
   /**
@@ -88,6 +120,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           NativeAdapter._logger.error(error);
           reject(error);
         });
+        if (this._isProgressivePlayback()) {
+          this._setProgressiveSource();
+        }
         if (this._sourceObj && this._sourceObj.url) {
           this._videoElement.src = this._sourceObj.url;
         }
@@ -106,6 +141,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     super.destroy();
     this._eventManager.destroy();
     this._loadPromise = null;
+    this._progressiveSources = [];
   }
 
   /**
@@ -128,11 +164,53 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _getParsedVideoTracks(): Array<Track> {
+    if (this._isProgressivePlayback()) {
+      return this._getParsedProgressiveVideoTracks();
+    } else {
+      return this._getParsedAdaptiveVideoTracks();
+    }
+  }
+
+  /**
+   * Get the parsed progressive video tracks
+   * @function _getParsedProgressiveVideoTracks
+   * @returns {Array<Track>} - The parsed progressive video tracks
+   * @private
+   */
+  _getParsedProgressiveVideoTracks(): Array<Track> {
+    let videoTracks = this._progressiveSources;
+    let parsedTracks = [];
+    if (videoTracks) {
+      for (let i = 0; i < videoTracks.length; i++) {
+        let settings = {
+          id: videoTracks[i].id,
+          bandwidth: videoTracks[i].bandwidth,
+          width: videoTracks[i].width,
+          height: videoTracks[i].height,
+          active: videoTracks[i].id === this._sourceObj.id,
+          label: videoTracks[i].label,
+          index: i
+        };
+        parsedTracks.push(new VideoTrack(settings));
+      }
+    }
+    return parsedTracks;
+  }
+
+  /**
+   * Get the parsed adaptive video tracks
+   * @function _getParsedAdaptiveVideoTracks
+   * @returns {Array<Track>} - The parsed adaptive video tracks
+   * @private
+   */
+  _getParsedAdaptiveVideoTracks(): Array<Track> {
+    //TODO check adaptation in safari hls
     let videoTracks = this._videoElement.videoTracks;
     let parsedTracks = [];
     if (videoTracks) {
       for (let i = 0; i < videoTracks.length; i++) {
         let settings = {
+          //TODO calculate width/height/bandwidth
           id: videoTracks[i].id,
           active: videoTracks[i].selected,
           label: videoTracks[i].label,
@@ -201,6 +279,47 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    */
   selectVideoTrack(videoTrack: VideoTrack): void {
+    if (this._isProgressivePlayback()) {
+      this._selectProgressiveVideoTrack(videoTrack);
+    } else {
+      this.selectAdaptiveVideoTrack(videoTrack);
+    }
+  }
+
+  /**
+   * Select a progressive video track
+   * @function _selectProgressiveVideoTrack
+   * @param {VideoTrack} videoTrack - the track to select
+   * @returns {void}
+   * @public
+   */
+  _selectProgressiveVideoTrack(videoTrack: VideoTrack): void {
+    let videoTracks = this._progressiveSources;
+    if ((videoTrack instanceof VideoTrack) && videoTracks && videoTracks[videoTrack.index]) {
+      let currentTime = this._videoElement.currentTime;
+      let paused = this._videoElement.paused;
+      this._sourceObj = videoTracks[videoTrack.index];
+      this._eventManager.listen(this._videoElement, Html5Events.LOADED_DATA, () => {
+        this._eventManager.unlisten(this._videoElement, Html5Events.LOADED_DATA);
+        this._eventManager.listen(this._videoElement, Html5Events.SEEKED, () => {
+          this._eventManager.unlisten(this._videoElement, Html5Events.SEEKED);
+          this._onTrackChanged(videoTrack);
+        });
+        this._videoElement.currentTime = currentTime;
+      });
+      this._videoElement.src = this._sourceObj.url;
+      paused ? this._videoElement.load() : this._videoElement.play();
+    }
+  }
+
+  /**
+   * Select a native video track
+   * @function selectAdaptiveVideoTrack
+   * @param {VideoTrack} videoTrack - the track to select
+   * @returns {void}
+   * @public
+   */
+  selectAdaptiveVideoTrack(videoTrack: VideoTrack): void {
     let videoTracks = this._videoElement.videoTracks;
     if ((videoTrack instanceof VideoTrack) && videoTracks && videoTracks[videoTrack.index]) {
       this._disableVideoTracks();
