@@ -36,7 +36,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @member {Source} _sourceObj
    * @private
    */
-  _sourceObj: ?Source;
+  _sourceObj: Source | Object;
 
   /**
    * The dom video element.
@@ -53,19 +53,6 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    */
   static isSupported(): boolean {
     return true;
-  }
-
-  /**
-   * Factory method to create media source adapter.
-   * @function createAdapter
-   * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with.
-   * @param {Object} source - The source Object.
-   * @param {Object} config - The player configuration.
-   * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter.
-   * @static
-   */
-  static createAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): IMediaSourceAdapter {
-    return new this(videoElement, source, config);
   }
 
   /**
@@ -87,7 +74,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @returns {void}
    */
   destroy(): void {
-    this._sourceObj = null;
+    this._sourceObj = {};
     this._config = null;
   }
 
