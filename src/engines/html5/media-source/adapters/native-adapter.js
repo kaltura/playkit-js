@@ -77,6 +77,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     this._progressiveSources = config.sources.progressive;
   }
 
+  /**
+   * Set the suitable progressive source according the current resolution
+   * @function _setProgressiveSource
+   * @returns {void}
+   * @private
+   */
   _setProgressiveSource(): void {
     let suitableTrack = getSuitableSourceForResolution(this._progressiveSources, this._videoElement.offsetWidth, this._videoElement.offsetHeight);
     if (suitableTrack) {
@@ -84,7 +90,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
-  _isProgressivePlayback(): void {
+  /**
+   * Checks if the playback source is progressive
+   * @function _isProgressivePlayback
+   * @returns {boolean} - is progressive source
+   * @private
+   */
+  _isProgressivePlayback(): boolean {
     return this._sourceObj.mimetype === 'video/mp4';
   }
 
@@ -287,13 +299,16 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       let currentTime = this._videoElement.currentTime;
       let paused = this._videoElement.paused;
       this._sourceObj = videoTracks[videoTrack.index];
-      this._videoElement.src = this._sourceObj.url;
-      this._videoElement.currentTime = currentTime;
-      paused ? this._videoElement.load() : this._videoElement.play();
       this._eventManager.listen(this._videoElement, Html5Events.LOADED_DATA, () => {
         this._eventManager.unlisten(this._videoElement, Html5Events.LOADED_DATA);
-        this._onTrackChanged(videoTrack);
+        this._eventManager.listen(this._videoElement, Html5Events.SEEKED, () => {
+          this._eventManager.unlisten(this._videoElement, Html5Events.SEEKED);
+          this._onTrackChanged(videoTrack);
+        });
+        this._videoElement.currentTime = currentTime;
       });
+      this._videoElement.src = this._sourceObj.url;
+      paused ? this._videoElement.load() : this._videoElement.play();
     }
   }
 

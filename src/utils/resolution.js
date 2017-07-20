@@ -8,9 +8,9 @@
  * @param {number} height - The height to calculate with
  * @returns {Object} - The most suitable source to the container size
  */
-function getSuitableSourceForResolution(tracks = [], width, height): Object {
+function getSuitableSourceForResolution(tracks: Array<Object>, width: number, height: number): ?Object {
   let mostSuitableWidth = null;
-  if (height) {
+  if (height && tracks) {
     let mostSuitableWidthTracks = [];
     let minWidthDiff = Infinity;
     for (let track of tracks) { // first filter the most width suitable
@@ -23,7 +23,7 @@ function getSuitableSourceForResolution(tracks = [], width, height): Object {
       }
     }
     let videoRatio = width / height;
-    let mostSuitableWidthAndRatioTracks = [];
+    let mostSuitableWidthAndRatioTracks = mostSuitableWidthTracks;
     let minRatioDiff = Infinity;
     for (let track of mostSuitableWidthTracks) {  // filter the most ratio suitable from the width filter results
       if (track.height) {
@@ -38,8 +38,8 @@ function getSuitableSourceForResolution(tracks = [], width, height): Object {
     }
     let maxBandwidth = 0;
     for (let track of mostSuitableWidthAndRatioTracks) { // select the top bitrate from the ratio filter results
-      if (track.bandwidth > maxBandwidth) {
-        maxBandwidth = track.bandwidth;
+      if (track.bandwidth > maxBandwidth || !track.bandwidth) {
+        maxBandwidth = track.bandwidth || maxBandwidth;
         mostSuitableWidth = track;
       }
     }
