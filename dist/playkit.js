@@ -90,7 +90,7 @@ exports.LOG_LEVEL = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jsLogger = __webpack_require__(30);
+var _jsLogger = __webpack_require__(31);
 
 var JsLogger = _interopRequireWildcard(_jsLogger);
 
@@ -1504,15 +1504,15 @@ var _playbackMiddleware = __webpack_require__(23);
 
 var _playbackMiddleware2 = _interopRequireDefault(_playbackMiddleware);
 
-var _playerConfig = __webpack_require__(36);
+var _playerConfig = __webpack_require__(37);
 
 var _playerConfig2 = _interopRequireDefault(_playerConfig);
 
-var _uaParserJs = __webpack_require__(34);
+var _uaParserJs = __webpack_require__(35);
 
 var _uaParserJs2 = _interopRequireDefault(_uaParserJs);
 
-__webpack_require__(31);
+__webpack_require__(32);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -3110,13 +3110,10 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
     }
 
     /**
-     * Factory method to create media source adapter.
-     * @function createAdapter
-     * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with.
-     * @param {Object} source - The source Object.
-     * @param {Object} config - The player configuration.
-     * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter.
-     * @static
+     * @constructor
+     * @param {HTMLVideoElement} videoElement - The video element which bind to media source adapter.
+     * @param {Source} source - The source object.
+     * @param {Object} config - The media source adapter configuration.
      */
 
 
@@ -3124,19 +3121,6 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
      * Passing the getLogger function to the actual media source adapter.
      * @type {Function}
      * @static
-     */
-
-  }, {
-    key: 'createAdapter',
-    value: function createAdapter(videoElement, source, config) {
-      return new this(videoElement, source, config);
-    }
-
-    /**
-     * @constructor
-     * @param {HTMLVideoElement} videoElement - The video element which bind to media source adapter.
-     * @param {Source} source - The source object.
-     * @param {Object} config - The media source adapter configuration.
      */
 
   }]);
@@ -3164,7 +3148,7 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
   _createClass(BaseMediaSourceAdapter, [{
     key: 'destroy',
     value: function destroy() {
-      this._sourceObj = null;
+      this._sourceObj = {};
       this._config = null;
     }
 
@@ -4841,6 +4825,8 @@ var _baseMediaSourceAdapter = __webpack_require__(14);
 
 var _baseMediaSourceAdapter2 = _interopRequireDefault(_baseMediaSourceAdapter);
 
+var _resolution = __webpack_require__(28);
+
 var _util = __webpack_require__(3);
 
 var Utils = _interopRequireWildcard(_util);
@@ -4890,6 +4876,12 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      */
 
     /**
+     * The original progressive sources
+     * @member {Array<Object>} - _progressiveSources
+     * @private
+     */
+
+    /**
      * The id of the Adapter
      * @member {string} id
      * @static
@@ -4902,9 +4894,13 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
     }
 
     /**
-     * @constructor
-     * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
-     * @param {Source} source - The source object
+     * Factory method to create media source adapter.
+     * @function createAdapter
+     * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with.
+     * @param {Object} source - The source Object.
+     * @param {Object} config - The player configuration.
+     * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter.
+     * @static
      */
 
 
@@ -4915,9 +4911,22 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      * @static
      */
 
+  }, {
+    key: 'createAdapter',
+    value: function createAdapter(videoElement, source, config) {
+      return new this(videoElement, source, config);
+    }
+
+    /**
+     * @constructor
+     * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
+     * @param {Source} source - The source object
+     * @param {Object} config - The player configuration
+     */
+
   }]);
 
-  function NativeAdapter(videoElement, source) {
+  function NativeAdapter(videoElement, source, config) {
     _classCallCheck(this, NativeAdapter);
 
     NativeAdapter._logger.debug('Creating adapter');
@@ -4925,18 +4934,48 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
     var _this = _possibleConstructorReturn(this, (NativeAdapter.__proto__ || Object.getPrototypeOf(NativeAdapter)).call(this, videoElement, source));
 
     _this._eventManager = new _eventManager2.default();
+    _this._progressiveSources = config.sources.progressive;
     return _this;
   }
 
   /**
-   * Load the video source
-   * @param {number} startTime - Optional time to start the video from.
-   * @function load
-   * @returns {Promise<Object>} - The loaded data
+   * Set the suitable progressive source according the current resolution
+   * @function _setProgressiveSource
+   * @returns {void}
+   * @private
    */
 
 
   _createClass(NativeAdapter, [{
+    key: '_setProgressiveSource',
+    value: function _setProgressiveSource() {
+      var suitableTrack = (0, _resolution.getSuitableSourceForResolution)(this._progressiveSources, this._videoElement.offsetWidth, this._videoElement.offsetHeight);
+      if (suitableTrack) {
+        this._sourceObj = suitableTrack;
+      }
+    }
+
+    /**
+     * Checks if the playback source is progressive
+     * @function _isProgressivePlayback
+     * @returns {boolean} - is progressive source
+     * @private
+     */
+
+  }, {
+    key: '_isProgressivePlayback',
+    value: function _isProgressivePlayback() {
+      return this._sourceObj.mimetype === 'video/mp4';
+    }
+
+    /**
+     * Load the video source
+     * @param {number} startTime - Optional time to start the video from.
+     * @function load
+     * @returns {Promise<Object>} - The loaded data
+     */
+
+  }, {
     key: 'load',
     value: function load(startTime) {
       var _this2 = this;
@@ -4955,6 +4994,9 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
             NativeAdapter._logger.error(error);
             reject(error);
           });
+          if (_this2._isProgressivePlayback()) {
+            _this2._setProgressiveSource();
+          }
           if (_this2._sourceObj && _this2._sourceObj.url) {
             _this2._videoElement.src = _this2._sourceObj.url;
           }
@@ -4979,6 +5021,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
       _get(NativeAdapter.prototype.__proto__ || Object.getPrototypeOf(NativeAdapter.prototype), 'destroy', this).call(this);
       this._eventManager.destroy();
       this._loadPromise = null;
+      this._progressiveSources = [];
     }
 
     /**
@@ -5007,11 +5050,59 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_getParsedVideoTracks',
     value: function _getParsedVideoTracks() {
+      if (this._isProgressivePlayback()) {
+        return this._getParsedProgressiveVideoTracks();
+      } else {
+        return this._getParsedAdaptiveVideoTracks();
+      }
+    }
+
+    /**
+     * Get the parsed progressive video tracks
+     * @function _getParsedProgressiveVideoTracks
+     * @returns {Array<Track>} - The parsed progressive video tracks
+     * @private
+     */
+
+  }, {
+    key: '_getParsedProgressiveVideoTracks',
+    value: function _getParsedProgressiveVideoTracks() {
+      var videoTracks = this._progressiveSources;
+      var parsedTracks = [];
+      if (videoTracks) {
+        for (var i = 0; i < videoTracks.length; i++) {
+          var settings = {
+            id: videoTracks[i].id,
+            bandwidth: videoTracks[i].bandwidth,
+            width: videoTracks[i].width,
+            height: videoTracks[i].height,
+            active: videoTracks[i].id === this._sourceObj.id,
+            label: videoTracks[i].label,
+            index: i
+          };
+          parsedTracks.push(new _videoTrack2.default(settings));
+        }
+      }
+      return parsedTracks;
+    }
+
+    /**
+     * Get the parsed adaptive video tracks
+     * @function _getParsedAdaptiveVideoTracks
+     * @returns {Array<Track>} - The parsed adaptive video tracks
+     * @private
+     */
+
+  }, {
+    key: '_getParsedAdaptiveVideoTracks',
+    value: function _getParsedAdaptiveVideoTracks() {
+      //TODO check adaptation in safari hls
       var videoTracks = this._videoElement.videoTracks;
       var parsedTracks = [];
       if (videoTracks) {
         for (var i = 0; i < videoTracks.length; i++) {
           var settings = {
+            //TODO calculate width/height/bandwidth
             id: videoTracks[i].id,
             active: videoTracks[i].selected,
             label: videoTracks[i].label,
@@ -5089,6 +5180,55 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: 'selectVideoTrack',
     value: function selectVideoTrack(videoTrack) {
+      if (this._isProgressivePlayback()) {
+        this._selectProgressiveVideoTrack(videoTrack);
+      } else {
+        this.selectAdaptiveVideoTrack(videoTrack);
+      }
+    }
+
+    /**
+     * Select a progressive video track
+     * @function _selectProgressiveVideoTrack
+     * @param {VideoTrack} videoTrack - the track to select
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: '_selectProgressiveVideoTrack',
+    value: function _selectProgressiveVideoTrack(videoTrack) {
+      var _this3 = this;
+
+      var videoTracks = this._progressiveSources;
+      if (videoTrack instanceof _videoTrack2.default && videoTracks && videoTracks[videoTrack.index]) {
+        var currentTime = this._videoElement.currentTime;
+        var paused = this._videoElement.paused;
+        this._sourceObj = videoTracks[videoTrack.index];
+        this._eventManager.listen(this._videoElement, _events.HTML5_EVENTS.LOADED_DATA, function () {
+          _this3._eventManager.unlisten(_this3._videoElement, _events.HTML5_EVENTS.LOADED_DATA);
+          _this3._eventManager.listen(_this3._videoElement, _events.HTML5_EVENTS.SEEKED, function () {
+            _this3._eventManager.unlisten(_this3._videoElement, _events.HTML5_EVENTS.SEEKED);
+            _this3._onTrackChanged(videoTrack);
+          });
+          _this3._videoElement.currentTime = currentTime;
+        });
+        this._videoElement.src = this._sourceObj.url;
+        paused ? this._videoElement.load() : this._videoElement.play();
+      }
+    }
+
+    /**
+     * Select a native video track
+     * @function selectAdaptiveVideoTrack
+     * @param {VideoTrack} videoTrack - the track to select
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: 'selectAdaptiveVideoTrack',
+    value: function selectAdaptiveVideoTrack(videoTrack) {
       var videoTracks = this._videoElement.videoTracks;
       if (videoTrack instanceof _videoTrack2.default && videoTracks && videoTracks[videoTrack.index]) {
         this._disableVideoTracks();
@@ -5983,7 +6123,133 @@ exports.default = TRACK_TYPES;
 /* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(29)(undefined);
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+
+/**
+ * Calculates the most suitable source to the container size
+ * @function getSuitableSourceForResolution
+ * @param {Array<Object>} tracks - The tracks
+ * @param {number} width - The width to calculate with
+ * @param {number} height - The height to calculate with
+ * @returns {Object} - The most suitable source to the container size
+ */
+function getSuitableSourceForResolution(tracks, width, height) {
+  var mostSuitableWidth = null;
+  if (height && tracks) {
+    var mostSuitableWidthTracks = [];
+    var minWidthDiff = Infinity;
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = tracks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var track = _step.value;
+        // first filter the most width suitable
+        var widthDiff = Math.abs(track.width - width);
+        if (widthDiff < minWidthDiff) {
+          minWidthDiff = widthDiff;
+          mostSuitableWidthTracks = [track];
+        } else if (widthDiff === minWidthDiff) {
+          mostSuitableWidthTracks.push(track);
+        }
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+
+    var videoRatio = width / height;
+    var mostSuitableWidthAndRatioTracks = mostSuitableWidthTracks;
+    var minRatioDiff = Infinity;
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
+
+    try {
+      for (var _iterator2 = mostSuitableWidthTracks[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        var _track = _step2.value;
+        // filter the most ratio suitable from the width filter results
+        if (_track.height) {
+          var ratioDiff = Math.abs(_track.width / _track.height - videoRatio);
+          if (ratioDiff < minRatioDiff) {
+            minRatioDiff = ratioDiff;
+            mostSuitableWidthAndRatioTracks = [_track];
+          } else if (ratioDiff === minRatioDiff) {
+            mostSuitableWidthAndRatioTracks.push(_track);
+          }
+        }
+      }
+    } catch (err) {
+      _didIteratorError2 = true;
+      _iteratorError2 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+          _iterator2.return();
+        }
+      } finally {
+        if (_didIteratorError2) {
+          throw _iteratorError2;
+        }
+      }
+    }
+
+    var maxBandwidth = 0;
+    var _iteratorNormalCompletion3 = true;
+    var _didIteratorError3 = false;
+    var _iteratorError3 = undefined;
+
+    try {
+      for (var _iterator3 = mostSuitableWidthAndRatioTracks[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        var _track2 = _step3.value;
+        // select the top bitrate from the ratio filter results
+        if (_track2.bandwidth > maxBandwidth || !_track2.bandwidth) {
+          maxBandwidth = _track2.bandwidth || maxBandwidth;
+          mostSuitableWidth = _track2;
+        }
+      }
+    } catch (err) {
+      _didIteratorError3 = true;
+      _iteratorError3 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion3 && _iterator3.return) {
+          _iterator3.return();
+        }
+      } finally {
+        if (_didIteratorError3) {
+          throw _iteratorError3;
+        }
+      }
+    }
+  }
+  return mostSuitableWidth;
+}
+
+exports.getSuitableSourceForResolution = getSuitableSourceForResolution;
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(30)(undefined);
 // imports
 
 
@@ -5994,7 +6260,7 @@ exports.push([module.i, ".playkit-container {\n  position: relative;\n  width: 1
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports) {
 
 /*
@@ -6076,7 +6342,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -6343,13 +6609,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(28);
+var content = __webpack_require__(29);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -6357,7 +6623,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(32)(content, options);
+var update = __webpack_require__(33)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -6374,7 +6640,7 @@ if(false) {
 }
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -6420,7 +6686,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(33);
+var	fixUrls = __webpack_require__(34);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -6733,7 +6999,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports) {
 
 
@@ -6828,7 +7094,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -7749,7 +8015,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         exports.UAParser = UAParser;
     } else {
         // requirejs env (optional)
-        if ("function" === FUNC_TYPE && __webpack_require__(35)) {
+        if ("function" === FUNC_TYPE && __webpack_require__(36)) {
             !(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
                 return UAParser;
             }.call(exports, __webpack_require__, exports, module),
@@ -7785,7 +8051,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
@@ -7794,7 +8060,7 @@ module.exports = __webpack_amd_options__;
 /* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports) {
 
 module.exports = {
