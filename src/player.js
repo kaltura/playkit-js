@@ -650,6 +650,31 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Skip on an ad.
+   * @public
+   * @returns {void}
+   */
+  skipAd(): void {
+    let adsPlugin = this._pluginManager.get('ima');
+    if (adsPlugin && adsPlugin.skipAd) {
+      adsPlugin.skipAd();
+    }
+  }
+
+  /**
+   * Start to play ad on demand.
+   * @param {string} adTagUrl - The ad tag url to play.
+   * @public
+   * @returns void
+   */
+  playAdNow(adTagUrl: string): void {
+    let adsPlugin = this._pluginManager.get('ima');
+    if (adsPlugin && adsPlugin.playAsNow) {
+      adsPlugin.playAdNow(adTagUrl);
+    }
+  }
+
+  /**
    * Set the current time in seconds.
    * @param {Number} to - The number to set in seconds.
    * @public
