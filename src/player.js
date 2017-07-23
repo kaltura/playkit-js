@@ -8,6 +8,7 @@ import * as Utils from './utils/util'
 import LoggerFactory from './utils/logger'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
+import BasePlugin from './plugin/base-plugin'
 import StateManager from './state/state-manager'
 import TrackTypes from './track/track-types'
 import Track from './track/track'
@@ -655,8 +656,8 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   skipAd(): void {
-    let adsPlugin = this._pluginManager.get('ima');
-    if (adsPlugin && adsPlugin.skipAd) {
+    let adsPlugin: ?BasePlugin = this._pluginManager.get('ima');
+    if (adsPlugin && typeof adsPlugin.skipAd === 'function') {
       adsPlugin.skipAd();
     }
   }
@@ -668,8 +669,8 @@ export default class Player extends FakeEventTarget {
    * @returns void
    */
   playAdNow(adTagUrl: string): void {
-    let adsPlugin = this._pluginManager.get('ima');
-    if (adsPlugin && adsPlugin.playAsNow) {
+    let adsPlugin: ?BasePlugin = this._pluginManager.get('ima');
+    if (adsPlugin && typeof adsPlugin.playAdNow === 'function') {
       adsPlugin.playAdNow(adTagUrl);
     }
   }
