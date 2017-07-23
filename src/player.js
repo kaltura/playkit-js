@@ -139,9 +139,9 @@ export default class Player extends FakeEventTarget {
    */
   configure(config: Object): void {
     let engine = this._engine;
-    this._config = Utils.Object.mergeDeep(Utils.Object.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
     this._maybeResetPlayer(config);
-    if (Utils.Object.isEmptyObject(this._engine) && this._selectEngine()) {
+    this._config = Utils.Object.mergeDeep(Utils.Object.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
+    if (this._selectEngine()) {
       this._appendEngineEl();
       this._attachMedia();
       this._maybeLoadPlugins(engine);
@@ -184,7 +184,6 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.destroy();
     }
-    this._config = {};
     this._tracks = [];
     this._firstPlay = true;
     this._eventManager.removeAll();
