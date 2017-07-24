@@ -665,7 +665,7 @@ export default class Player extends FakeEventTarget {
    * Start to play ad on demand.
    * @param {string} adTagUrl - The ad tag url to play.
    * @public
-   * @returns void
+   * @returns {void}
    */
   playAdNow(adTagUrl: string): void {
     let adsPlugin: ?BasePlugin = this._pluginManager.get('ima');
