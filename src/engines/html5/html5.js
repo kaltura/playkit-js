@@ -247,7 +247,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   isAdaptiveBitrateEnabled(): boolean {
     if (this._mediaSourceAdapter) {
-      this._mediaSourceAdapter.isAdaptiveBitrateEnabled();
+      return this._mediaSourceAdapter.isAdaptiveBitrateEnabled();
     }
     return false;
   }

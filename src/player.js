@@ -508,7 +508,7 @@ export default class Player extends FakeEventTarget {
    */
   isAdaptiveBitrateEnabled(): boolean {
     if (this._engine) {
-      this._engine.isAdaptiveBitrateEnabled();
+      return this._engine.isAdaptiveBitrateEnabled();
     }
     return false;
   }

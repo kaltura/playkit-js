@@ -394,7 +394,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    */
   enableAdaptiveBitrate(): void {
-    NativeAdapter._logger.debug('Enabling adaptive bitrate not supported');
+    NativeAdapter._logger.warn('Enabling adaptive bitrate is not supported for native playback');
   }
 
   /**

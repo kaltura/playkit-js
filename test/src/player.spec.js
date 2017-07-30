@@ -1356,3 +1356,44 @@ describe('config', function () {
     player.config.playback.streamPriority.should.deep.equal(getConfigStructure().playback.streamPriority);
   });
 });
+
+describe('abr', function () {
+  let player, config;
+
+  before(() => {
+    createElement('DIV', targetId);
+  });
+
+  beforeEach(() => {
+    config = getConfigStructure();
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElement(targetId);
+  });
+
+  it('should return false for progressive playback abr', function () {
+    config.sources = sourcesConfig.Mp4;
+    player = new Player(targetId, config);
+    player.enableAdaptiveBitrate();
+    player.isAdaptiveBitrateEnabled().should.be.false;
+  });
+
+  it('should return false for adaptive playback abr', function (done) {
+    debugger;
+    config.sources = sourcesConfig.Hls;
+    player = new Player(targetId, config);
+    if (player._engine) {
+      player.enableAdaptiveBitrate();
+      player.isAdaptiveBitrateEnabled().should.be.true;
+      done();
+    } else {
+      done();
+    }
+  });
+});
