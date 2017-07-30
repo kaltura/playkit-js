@@ -398,6 +398,18 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
+   * Checking if adaptive bitrate switching is enabled.
+   * For progressive playback will always returns false.
+   * For adaptive playback will always returns true.
+   * @function isAdaptiveBitrateEnabled
+   * @returns {boolean} - Whether adaptive bitrate is enabled.
+   * @public
+   */
+  isAdaptiveBitrateEnabled(): boolean {
+    return !this._isProgressivePlayback();
+  }
+
+  /**
    * Disables all the existing video tracks.
    * @private
    * @returns {void}

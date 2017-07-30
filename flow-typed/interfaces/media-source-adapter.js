@@ -12,6 +12,7 @@ declare interface IMediaSourceAdapter {
   selectTextTrack(textTrack: TextTrack): void;
   hideTextTrack(): void;
   enableAdaptiveBitrate(): void;
+  isAdaptiveBitrateEnabled(): boolean;
   static +id: string;
   static isSupported(): boolean;
   static canPlayType(mimeType: string): boolean;

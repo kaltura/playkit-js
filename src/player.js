@@ -500,6 +500,19 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Checking if adaptive bitrate switching is enabled.
+   * @function isAdaptiveBitrateEnabled
+   * @returns {boolean} - Whether adaptive bitrate is enabled.
+   * @public
+   */
+  isAdaptiveBitrateEnabled(): boolean {
+    if (this._engine) {
+      this._engine.isAdaptiveBitrateEnabled();
+    }
+    return false;
+  }
+
+  /**
    * Mark the selected track as active
    * @function _markActiveTrack
    * @param {Track} track - the track to mark
