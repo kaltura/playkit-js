@@ -36,7 +36,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @member {Source} _sourceObj
    * @private
    */
-  _sourceObj: Source | Object;
+  _sourceObj: ?Source;
 
   /**
    * The dom video element.
@@ -74,7 +74,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @returns {void}
    */
   destroy(): void {
-    this._sourceObj = {};
+    this._sourceObj = null;
     this._config = null;
   }
 
