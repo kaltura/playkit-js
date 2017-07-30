@@ -1218,6 +1218,7 @@ exports.CUSTOM_EVENTS = CUSTOM_EVENTS;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -1329,6 +1330,7 @@ exports.default = VideoTrack;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = undefined;
 
 var _track = __webpack_require__(2);
 
@@ -1370,6 +1372,7 @@ exports.default = AudioTrack;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -1446,10 +1449,13 @@ exports.default = TextTrack;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = undefined;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _class, _temp;
 
 var _eventManager = __webpack_require__(4);
 
@@ -1544,8 +1550,7 @@ var CONTAINER_CLASS_NAME = 'playkit-container';
  * The HTML5 player class.
  * @classdesc
  */
-
-var Player = function (_FakeEventTarget) {
+var Player = (_temp = _class = function (_FakeEventTarget) {
   _inherits(Player, _FakeEventTarget);
 
   /**
@@ -1836,7 +1841,9 @@ var Player = function (_FakeEventTarget) {
             if (formatSources && formatSources.length > 0) {
               var source = formatSources[0];
               if (engine.canPlayType(source.mimetype)) {
+                Player._logger.debug('Source selected: ', formatSources);
                 _this3._loadEngine(engine, source);
+                _this3.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.SOURCE_SELECTED, { selectedSource: formatSources }));
                 return {
                   v: true
                 };
@@ -1880,7 +1887,6 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_loadEngine',
     value: function _loadEngine(engine, source) {
-      this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.SOURCE_SELECTED, { selectedSource: source }));
       this._engine = engine.createEngine(source, this._config);
     }
 
@@ -2314,14 +2320,14 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Get the player config.
-     * @returns {Object} - The player configuration.
+     * @returns {Object} - A copy of the player configuration.
      * @public
      */
 
   }, {
     key: 'config',
     get: function get() {
-      return this._config;
+      return Utils.Object.mergeDeep({}, this._config);
     }
 
     /**
@@ -2578,10 +2584,7 @@ var Player = function (_FakeEventTarget) {
   }]);
 
   return Player;
-}(_fakeEventTarget2.default);
-
-Player._logger = _logger2.default.getLogger('Player');
-Player._engines = [_html2.default];
+}(_fakeEventTarget2.default), _class._logger = _logger2.default.getLogger('Player'), _class._engines = [_html2.default], _temp);
 exports.default = Player;
 
 /***/ }),
@@ -2922,9 +2925,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _class, _temp;
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var PlayerError = function () {
+var PlayerError = (_temp = _class = function () {
   function PlayerError(error, param) {
     _classCallCheck(this, PlayerError);
 
@@ -2943,9 +2948,7 @@ var PlayerError = function () {
   }]);
 
   return PlayerError;
-}();
-
-PlayerError.TYPE = {
+}(), _class.TYPE = {
   NOT_REGISTERED_PLUGIN: {
     name: "PluginNotRegisteredException",
     message: function message(name) {
@@ -2964,7 +2967,7 @@ PlayerError.TYPE = {
       return method + " method not implemented";
     }
   }
-};
+}, _temp);
 exports.default = PlayerError;
 
 /***/ }),
@@ -3047,9 +3050,11 @@ exports.default = PLAYER_STATE_TYPES;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.registerMediaSourceAdapter = undefined;
+exports.registerMediaSourceAdapter = exports.default = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _class, _temp;
 
 var _nativeAdapter = __webpack_require__(22);
 
@@ -3067,7 +3072,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * Media source provider
  * @classdesc
  */
-var MediaSourceProvider = function () {
+var MediaSourceProvider = (_temp = _class = function () {
   function MediaSourceProvider() {
     _classCallCheck(this, MediaSourceProvider);
   }
@@ -3191,11 +3196,7 @@ var MediaSourceProvider = function () {
   }]);
 
   return MediaSourceProvider;
-}();
-
-MediaSourceProvider._logger = _logger2.default.getLogger('MediaSourceProvider');
-MediaSourceProvider._mediaSourceAdapters = [_nativeAdapter2.default];
-MediaSourceProvider._selectedAdapter = null;
+}(), _class._logger = _logger2.default.getLogger('MediaSourceProvider'), _class._mediaSourceAdapters = [_nativeAdapter2.default], _class._selectedAdapter = null, _temp);
 exports.default = MediaSourceProvider;
 
 
@@ -3212,8 +3213,13 @@ exports.registerMediaSourceAdapter = registerMediaSourceAdapter;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _class, _temp;
+/* eslint-disable no-unused-vars */
+
 
 var _fakeEvent = __webpack_require__(1);
 
@@ -3256,10 +3262,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-/* eslint-disable no-unused-vars */
 
-
-var BaseMediaSourceAdapter = function (_FakeEventTarget) {
+var BaseMediaSourceAdapter = (_temp = _class = function (_FakeEventTarget) {
   _inherits(BaseMediaSourceAdapter, _FakeEventTarget);
 
   _createClass(BaseMediaSourceAdapter, null, [{
@@ -3422,10 +3426,7 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
   }]);
 
   return BaseMediaSourceAdapter;
-}(_fakeEventTarget2.default);
-
-BaseMediaSourceAdapter.CustomEvents = _events.CUSTOM_EVENTS;
-BaseMediaSourceAdapter.getLogger = _logger2.default.getLogger;
+}(_fakeEventTarget2.default), _class.CustomEvents = _events.CUSTOM_EVENTS, _class.getLogger = _logger2.default.getLogger, _temp);
 exports.default = BaseMediaSourceAdapter;
 
 /***/ }),
@@ -3438,9 +3439,11 @@ exports.default = BaseMediaSourceAdapter;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.registerPlugin = undefined;
+exports.registerPlugin = exports.default = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _class, _temp;
 
 var _basePlugin = __webpack_require__(18);
 
@@ -3472,8 +3475,7 @@ var logger = _logger2.default.getLogger("PluginManager");
 /** The PluginManager responsible for register plugins definitions and store plugins instances.
  * @classdesc
  */
-
-var PluginManager = function () {
+var PluginManager = (_temp = _class = function () {
   function PluginManager() {
     _classCallCheck(this, PluginManager);
 
@@ -3607,7 +3609,7 @@ var PluginManager = function () {
   }]);
 
   return PluginManager;
-}();
+}(), _class._registry = new Map(), _temp);
 
 /**
  * Export the register method.
@@ -3615,8 +3617,6 @@ var PluginManager = function () {
  * @constant
  */
 
-
-PluginManager._registry = new Map();
 exports.default = PluginManager;
 var registerPlugin = PluginManager.register;
 exports.registerPlugin = registerPlugin;
@@ -3631,8 +3631,11 @@ exports.registerPlugin = registerPlugin;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _class, _temp;
 
 var _player = __webpack_require__(9);
 
@@ -3669,7 +3672,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * Other plugins should extend this class.
  * @classdesc
  */
-var BasePlugin = function () {
+var BasePlugin = (_temp = _class = function () {
   _createClass(BasePlugin, null, [{
     key: 'createPlugin',
 
@@ -3831,9 +3834,7 @@ var BasePlugin = function () {
   }]);
 
   return BasePlugin;
-}();
-
-BasePlugin.defaultConfig = {};
+}(), _class.defaultConfig = {}, _temp);
 exports.default = BasePlugin;
 
 /***/ }),
@@ -4227,8 +4228,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _class, _temp;
 
 var _fakeEventTarget = __webpack_require__(11);
 
@@ -4285,8 +4289,7 @@ var VIDEO_ELEMENT_CLASS_NAME = 'playkit-engine-html5';
  * Html5 engine for playback.
  * @classdesc
  */
-
-var Html5 = function (_FakeEventTarget) {
+var Html5 = (_temp = _class = function (_FakeEventTarget) {
   _inherits(Html5, _FakeEventTarget);
 
   _createClass(Html5, null, [{
@@ -5066,9 +5069,7 @@ var Html5 = function (_FakeEventTarget) {
   }]);
 
   return Html5;
-}(_fakeEventTarget2.default);
-
-Html5.id = "html5";
+}(_fakeEventTarget2.default), _class.id = "html5", _temp);
 exports.default = Html5;
 
 /***/ }),
@@ -5081,10 +5082,13 @@ exports.default = Html5;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = undefined;
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _class, _temp;
 
 var _eventManager = __webpack_require__(4);
 
@@ -5128,12 +5132,14 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var ID = 'NativeAdapter';
+
 /**
  * An illustration of media source extension for progressive download
  * @classdesc
  * @implements {IMediaSourceAdapter}
  */
-var NativeAdapter = function (_BaseMediaSourceAdapt) {
+var NativeAdapter = (_temp = _class = function (_BaseMediaSourceAdapt) {
   _inherits(NativeAdapter, _BaseMediaSourceAdapt);
 
   _createClass(NativeAdapter, null, [{
@@ -5653,10 +5659,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }]);
 
   return NativeAdapter;
-}(_baseMediaSourceAdapter2.default);
-
-NativeAdapter.id = 'NativeAdapter';
-NativeAdapter._logger = _baseMediaSourceAdapter2.default.getLogger(NativeAdapter.id);
+}(_baseMediaSourceAdapter2.default), _class.id = ID, _class._logger = _baseMediaSourceAdapter2.default.getLogger(ID), _temp);
 exports.default = NativeAdapter;
 
 /***/ }),
@@ -5795,6 +5798,7 @@ exports.getSuitableSourceForResolution = getSuitableSourceForResolution;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -6195,8 +6199,11 @@ exports.default = TRACK_TYPES;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _class, _temp;
 
 var _middleware = __webpack_require__(28);
 
@@ -6213,7 +6220,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /**
  * The playback middleware.
  */
-var PlaybackMiddleware = function () {
+var PlaybackMiddleware = (_temp = _class = function () {
 
   /**
    * @constructor
@@ -6277,12 +6284,10 @@ var PlaybackMiddleware = function () {
   }]);
 
   return PlaybackMiddleware;
-}();
-
-PlaybackMiddleware.Actions = {
+}(), _class.Actions = {
   PLAY: 'play',
   PAUSE: 'pause'
-};
+}, _temp);
 exports.default = PlaybackMiddleware;
 
 /***/ }),
@@ -6295,6 +6300,7 @@ exports.default = PlaybackMiddleware;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -8045,10 +8051,12 @@ module.exports = {
 		"babel-loader": "^6.2.7",
 		"babel-plugin-istanbul": "^4.0.0",
 		"babel-plugin-transform-class-properties": "^6.22.0",
+		"babel-plugin-transform-decorators-legacy": "^1.3.4",
 		"babel-plugin-transform-flow-strip-types": "^6.22.0",
 		"babel-preset-es2015": "^6.18.0",
 		"babel-register": "^6.23.0",
 		"chai": "^3.5.0",
+		"core-decorators": "^0.19.0",
 		"cross-env": "^3.1.4",
 		"css-loader": "^0.28.4",
 		"eslint": "^3.10.0",
