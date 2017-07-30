@@ -324,6 +324,7 @@ export default class Player extends FakeEventTarget {
         this._markActiveTrack(event.payload.selectedTextTrack);
         return this.dispatchEvent(event);
       });
+      this._eventManager.listen(this._engine, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this, Html5Events.PLAY, this._onPlay.bind(this));
     }
   }
@@ -498,6 +499,19 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.enableAdaptiveBitrate();
     }
+  }
+
+  /**
+   * Checking if adaptive bitrate switching is enabled.
+   * @function isAdaptiveBitrateEnabled
+   * @returns {boolean} - Whether adaptive bitrate is enabled.
+   * @public
+   */
+  isAdaptiveBitrateEnabled(): boolean {
+    if (this._engine) {
+      return this._engine.isAdaptiveBitrateEnabled();
+    }
+    return false;
   }
 
   /**

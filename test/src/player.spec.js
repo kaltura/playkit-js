@@ -1189,6 +1189,52 @@ describe('events', function () {
       player.configure(config);
     });
   });
+
+  describe('abr mode changed', () => {
+    let config;
+    let player;
+
+    before(() => {
+      createElement('DIV', targetId);
+    });
+
+    beforeEach(() => {
+      config = getConfigStructure();
+    });
+
+    afterEach(() => {
+      player.destroy();
+    });
+
+    after(() => {
+      removeVideoElementsFromTestPage();
+      removeElement(targetId);
+    });
+
+    it('should fire abr mode changed for progressive playback', (done) => {
+      config.sources = sourcesConfig.Mp4;
+      player = new Player(targetId, config);
+      player.addEventListener(CustomEvents.ABR_MODE_CHANGED, (event) => {
+        event.payload.mode.should.equal('manual');
+        done();
+      });
+      player.load();
+    });
+
+    it('should fire abr mode changed for adaptive playback', (done) => {
+      config.sources = sourcesConfig.Hls;
+      player = new Player(targetId, config);
+      player.addEventListener(CustomEvents.ABR_MODE_CHANGED, (event) => {
+        event.payload.mode.should.equal('auto');
+        done();
+      });
+      if (player._engine) {
+        player.load();
+      } else {
+        done();
+      }
+    });
+  });
 });
 
 describe('states', function () {
@@ -1354,5 +1400,43 @@ describe('config', function () {
     player = new Player(targetId, config);
     player.config.playback.streamPriority = {};
     player.config.playback.streamPriority.should.deep.equal(getConfigStructure().playback.streamPriority);
+  });
+});
+
+describe('abr', function () {
+  let player, config;
+
+  before(() => {
+    createElement('DIV', targetId);
+  });
+
+  beforeEach(() => {
+    config = getConfigStructure();
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElement(targetId);
+  });
+
+  it('should return false for progressive playback abr', function () {
+    config.sources = sourcesConfig.Mp4;
+    player = new Player(targetId, config);
+    player.enableAdaptiveBitrate();
+    player.isAdaptiveBitrateEnabled().should.be.false;
+  });
+
+  it('should return true for adaptive playback abr', function (done) {
+    config.sources = sourcesConfig.Hls;
+    player = new Player(targetId, config);
+    if (player._engine) {
+      player.enableAdaptiveBitrate();
+      player.isAdaptiveBitrateEnabled().should.be.true;
+    }
+    done();
   });
 });

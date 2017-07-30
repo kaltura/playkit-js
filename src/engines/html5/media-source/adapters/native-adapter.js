@@ -139,6 +139,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         }
         if (this._sourceObj && this._sourceObj.url) {
           this._videoElement.src = this._sourceObj.url;
+          this._trigger(BaseMediaSourceAdapter.CustomEvents.ABR_MODE_CHANGED, {mode: this._isProgressivePlayback() ? 'manual' : 'auto'});
         }
         if (startTime) {
           this._videoElement.currentTime = startTime;
@@ -394,7 +395,19 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    */
   enableAdaptiveBitrate(): void {
-    NativeAdapter._logger.debug('Enabling adaptive bitrate not supported');
+    NativeAdapter._logger.warn('Enabling adaptive bitrate is not supported for native playback');
+  }
+
+  /**
+   * Checking if adaptive bitrate switching is enabled.
+   * For progressive playback will always returns false.
+   * For adaptive playback will always returns true.
+   * @function isAdaptiveBitrateEnabled
+   * @returns {boolean} - Whether adaptive bitrate is enabled.
+   * @public
+   */
+  isAdaptiveBitrateEnabled(): boolean {
+    return !this._isProgressivePlayback();
   }
 
   /**
