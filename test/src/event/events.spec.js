@@ -52,7 +52,8 @@ describe('events', () => {
       AD_THIRD_QUARTILE: 'adthirdquartile',
       USER_CLOSED_AD: 'userclosedad',
       AD_VOLUME_CHANGED: 'advolumechanged',
-      AD_MUTED: 'admuted'
+      AD_MUTED: 'admuted',
+      AD_PROGRESS: 'adprogress'
     });
     events.PLAYER_EVENTS.should.deep.equals(ObjectUtils.merge([events.HTML5_EVENTS, events.CUSTOM_EVENTS]));
   });

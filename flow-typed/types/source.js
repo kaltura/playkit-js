@@ -2,7 +2,7 @@
 declare type Source = {
   mimetype: string,
   url: string,
-  id: string,
+  id: ?string,
   bandwidth: ?number,
   width: ?number,
   height: ?number
