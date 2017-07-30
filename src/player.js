@@ -277,7 +277,9 @@ export default class Player extends FakeEventTarget {
         if (formatSources && formatSources.length > 0) {
           let source = formatSources[0];
           if (engine.canPlayType(source.mimetype)) {
+            Player._logger.debug('Source selected: ', formatSources);
             this._loadEngine(engine, source);
+            this.dispatchEvent(new FakeEvent(CustomEvents.SOURCE_SELECTED, {selectedSource: formatSources}));
             return true;
           }
         }
@@ -295,7 +297,6 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _loadEngine(engine: typeof IEngine, source: Source): void {
-    this.dispatchEvent(new FakeEvent(CustomEvents.SOURCE_SELECTED, {selectedSource: source}));
     this._engine = engine.createEngine(source, this._config);
   }
 

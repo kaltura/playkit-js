@@ -1183,7 +1183,7 @@ describe('events', function () {
 
     it('should fire source selected', (done) => {
       player.addEventListener(CustomEvents.SOURCE_SELECTED, (event) => {
-        event.payload.selectedSource.id.should.equal('1_rsrdfext_10081,url');
+        event.payload.selectedSource[0].id.should.equal('1_rsrdfext_10081,url');
         done();
       });
       player.configure(config);
