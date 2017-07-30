@@ -4162,12 +4162,15 @@ var Html5 = function (_FakeEventTarget) {
       }
       if (this._mediaSourceAdapter) {
         this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, function (event) {
-          _this2.dispatchEvent(event);
+          return _this2.dispatchEvent(event);
         });
         this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED, function (event) {
           return _this2.dispatchEvent(event);
         });
         this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED, function (event) {
+          return _this2.dispatchEvent(event);
+        });
+        this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.ABR_MODE_CHANGED, function (event) {
           return _this2.dispatchEvent(event);
         });
       }
