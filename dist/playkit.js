@@ -2315,14 +2315,14 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Get the player config.
-     * @returns {Object} - The player configuration.
+     * @returns {Object} - A copy of the player configuration.
      * @public
      */
 
   }, {
     key: 'config',
     get: function get() {
-      return this._config;
+      return Utils.Object.mergeDeep({}, this._config);
     }
 
     /**
