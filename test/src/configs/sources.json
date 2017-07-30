@@ -1,4 +1,12 @@
 {
+  "Hls": {
+    "hls": [
+      {
+        "mimetype": "application/x-mpegurl",
+        "url": "http://cdnbakmi.kaltura.com/p/243342/sp/24334200/playManifest/entryId/0_uka1msg4/flavorIds/1_vqhfu6uy,1_80sohj7p/format/applehttp/protocol/http/a.m3u8"
+      }
+    ]
+  },
   "Mp4": {
     "progressive": [
       {
@@ -14,18 +22,18 @@
         "mimetype": "video/mp4",
         "url": "/base/test/src/assets/audios.mp4?0",
         "id": "id1",
-        "width" : 200,
-        "height" : 100,
-        "bandwidth" : 100000,
+        "width": 200,
+        "height": 100,
+        "bandwidth": 100000,
         "label": "label1"
       },
       {
         "mimetype": "video/mp4",
         "url": "/base/test/src/assets/audios.mp4?1",
         "id": "id2",
-        "width" : 100,
-        "height" : 50,
-        "bandwidth" : 200000,
+        "width": 100,
+        "height": 50,
+        "bandwidth": 200000,
         "label": "label2"
       }
     ]

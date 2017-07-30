@@ -278,7 +278,9 @@ export default class Player extends FakeEventTarget {
         if (formatSources && formatSources.length > 0) {
           let source = formatSources[0];
           if (engine.canPlayType(source.mimetype)) {
+            Player._logger.debug('Source selected: ', formatSources);
             this._loadEngine(engine, source);
+            this.dispatchEvent(new FakeEvent(CustomEvents.SOURCE_SELECTED, {selectedSource: formatSources}));
             return true;
           }
         }
@@ -296,7 +298,6 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _loadEngine(engine: typeof IEngine, source: Source): void {
-    this.dispatchEvent(new FakeEvent(CustomEvents.SOURCE_SELECTED, {selectedSource: source}));
     this._engine = engine.createEngine(source, this._config);
   }
 
@@ -324,6 +325,7 @@ export default class Player extends FakeEventTarget {
         this._markActiveTrack(event.payload.selectedTextTrack);
         return this.dispatchEvent(event);
       });
+      this._eventManager.listen(this._engine, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this, Html5Events.PLAY, this._onPlay.bind(this));
     }
   }
@@ -501,6 +503,20 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Checking if adaptive bitrate switching is enabled.
+   * @function isAdaptiveBitrateEnabled
+   * @returns {boolean} - Whether adaptive bitrate is enabled.
+   * @public
+   */
+  isAdaptiveBitrateEnabled(): boolean {
+    if (this._engine) {
+      return this._engine.isAdaptiveBitrateEnabled();
+    }
+    return false;
+  }
+
+  /**
+   >>>>>>> 820944794b5f8b9fe702c4550da43f5ef8cf8344
    * Mark the selected track as active
    * @function _markActiveTrack
    * @param {Track} track - the track to mark
@@ -547,11 +563,11 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Get the player config.
-   * @returns {Object} - The player configuration.
+   * @returns {Object} - A copy of the player configuration.
    * @public
    */
   get config(): Object {
-    return this._config;
+    return Utils.Object.mergeDeep({}, this._config);
   }
 
   /**

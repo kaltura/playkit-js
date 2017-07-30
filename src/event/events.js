@@ -110,6 +110,10 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
    */
   TRACKS_CHANGED: 'trackschanged',
   /**
+   * Fires when the abr mode change from 'auto' to 'manual' or vice versa
+   */
+  ABR_MODE_CHANGED: 'abrmodechanged',
+  /**
    * Fires when the player state has been changed
    */
   PLAYER_STATE_CHANGED: 'playerstatechanged',

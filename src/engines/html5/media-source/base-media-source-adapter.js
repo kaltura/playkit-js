@@ -134,6 +134,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'enableAdaptiveBitrate').getError();
   }
 
+  isAdaptiveBitrateEnabled(): boolean {
+    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'isAdaptiveBitrateEnabled').getError();
+  }
+
   get src(): string {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'get src').getError();
   }
