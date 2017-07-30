@@ -1839,7 +1839,9 @@ var Player = function (_FakeEventTarget) {
             if (formatSources && formatSources.length > 0) {
               var source = formatSources[0];
               if (engine.canPlayType(source.mimetype)) {
+                Player._logger.debug('Source selected: ', formatSources);
                 _this3._loadEngine(engine, source);
+                _this3.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.SOURCE_SELECTED, { selectedSource: formatSources }));
                 return {
                   v: true
                 };
@@ -1883,7 +1885,6 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_loadEngine',
     value: function _loadEngine(engine, source) {
-      this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.SOURCE_SELECTED, { selectedSource: source }));
       this._engine = engine.createEngine(source, this._config);
     }
 
@@ -2145,7 +2146,7 @@ var Player = function (_FakeEventTarget) {
     key: 'isAdaptiveBitrateEnabled',
     value: function isAdaptiveBitrateEnabled() {
       if (this._engine) {
-        this._engine.isAdaptiveBitrateEnabled();
+        return this._engine.isAdaptiveBitrateEnabled();
       }
       return false;
     }
@@ -2333,14 +2334,14 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Get the player config.
-     * @returns {Object} - The player configuration.
+     * @returns {Object} - A copy of the player configuration.
      * @public
      */
 
   }, {
     key: 'config',
     get: function get() {
-      return this._config;
+      return Utils.Object.mergeDeep({}, this._config);
     }
 
     /**
@@ -4315,7 +4316,7 @@ var Html5 = function (_FakeEventTarget) {
     key: 'isAdaptiveBitrateEnabled',
     value: function isAdaptiveBitrateEnabled() {
       if (this._mediaSourceAdapter) {
-        this._mediaSourceAdapter.isAdaptiveBitrateEnabled();
+        return this._mediaSourceAdapter.isAdaptiveBitrateEnabled();
       }
       return false;
     }
@@ -5346,7 +5347,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: 'enableAdaptiveBitrate',
     value: function enableAdaptiveBitrate() {
-      NativeAdapter._logger.debug('Enabling adaptive bitrate not supported');
+      NativeAdapter._logger.warn('Enabling adaptive bitrate is not supported for native playback');
     }
 
     /**
