@@ -49,7 +49,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @member {Array<Object>} - _progressiveSources
    * @private
    */
-  _progressiveSources: Array<Object>;
+  _progressiveSources: Array<Source>;
 
   /**
    * Checks if NativeAdapter can play a given mime type.
@@ -110,7 +110,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _isProgressivePlayback(): boolean {
-    return this._sourceObj.mimetype === 'video/mp4';
+    return this._sourceObj ? this._sourceObj.mimetype === 'video/mp4' : false;
   }
 
   /**
@@ -205,8 +205,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           bandwidth: videoTracks[i].bandwidth,
           width: videoTracks[i].width,
           height: videoTracks[i].height,
-          active: videoTracks[i].id === this._sourceObj.id,
-          label: videoTracks[i].label,
+          active: this._sourceObj ? videoTracks[i].id === this._sourceObj.id : false,
           index: i
         };
         parsedTracks.push(new VideoTrack(settings));
@@ -325,7 +324,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         });
         this._videoElement.currentTime = currentTime;
       });
-      this._videoElement.src = this._sourceObj.url;
+      this._videoElement.src = this._sourceObj ? this._sourceObj.url : "";
       paused ? this._videoElement.load() : this._videoElement.play();
     }
   }

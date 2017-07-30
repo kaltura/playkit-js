@@ -275,7 +275,6 @@ describe('NativeAdapter: _getParsedTracks', function () {
         if (track instanceof VideoTrack) {
           track.id.should.equal(sourcesConfig.MultipleSources.progressive[track.index].id);
           track.active.should.equal(track.id === nativeInstance._sourceObj.id);
-          track.label.should.equal(sourcesConfig.MultipleSources.progressive[track.index].label);
           track.width.should.equal(sourcesConfig.MultipleSources.progressive[track.index].width);
           track.height.should.equal(sourcesConfig.MultipleSources.progressive[track.index].height);
           track.bandwidth.should.equal(sourcesConfig.MultipleSources.progressive[track.index].bandwidth);

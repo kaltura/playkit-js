@@ -3437,7 +3437,7 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
   _createClass(BaseMediaSourceAdapter, [{
     key: 'destroy',
     value: function destroy() {
-      this._sourceObj = {};
+      this._sourceObj = null;
       this._config = null;
     }
 
@@ -5063,7 +5063,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_isProgressivePlayback',
     value: function _isProgressivePlayback() {
-      return this._sourceObj.mimetype === 'video/mp4';
+      return this._sourceObj ? this._sourceObj.mimetype === 'video/mp4' : false;
     }
 
     /**
@@ -5175,8 +5175,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
             bandwidth: videoTracks[i].bandwidth,
             width: videoTracks[i].width,
             height: videoTracks[i].height,
-            active: videoTracks[i].id === this._sourceObj.id,
-            label: videoTracks[i].label,
+            active: this._sourceObj ? videoTracks[i].id === this._sourceObj.id : false,
             index: i
           };
           parsedTracks.push(new _videoTrack2.default(settings));
@@ -5312,7 +5311,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
           });
           _this3._videoElement.currentTime = currentTime;
         });
-        this._videoElement.src = this._sourceObj.url;
+        this._videoElement.src = this._sourceObj ? this._sourceObj.url : "";
         paused ? this._videoElement.load() : this._videoElement.play();
       }
     }
