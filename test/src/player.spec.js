@@ -1190,7 +1190,7 @@ describe('events', function () {
     });
   });
 
-  describe.only('abr mode changed', () => {
+  describe('abr mode changed', () => {
     let config;
     let player;
 
