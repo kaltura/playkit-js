@@ -1385,7 +1385,6 @@ describe('abr', function () {
   });
 
   it('should return false for adaptive playback abr', function (done) {
-    debugger;
     config.sources = sourcesConfig.Hls;
     player = new Player(targetId, config);
     if (player._engine) {
