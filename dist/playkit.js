@@ -5058,6 +5058,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
           }
           if (_this2._sourceObj && _this2._sourceObj.url) {
             _this2._videoElement.src = _this2._sourceObj.url;
+            _this2._trigger(_baseMediaSourceAdapter2.default.CustomEvents.ABR_MODE_CHANGED, { mode: _this2._isProgressivePlayback() ? 'manual' : 'auto' });
           }
           if (startTime) {
             _this2._videoElement.currentTime = startTime;
