@@ -1056,7 +1056,7 @@ describe('Track enum', function () {
   });
 });
 
-describe.only('events', function () {
+describe('events', function () {
   describe('tracks changed', function () {
     this.timeout(10000);
 
@@ -1190,7 +1190,7 @@ describe.only('events', function () {
     });
   });
 
-  describe.only('abr mode changed', () => {
+  describe('abr mode changed', () => {
     let config;
     let player;
 
