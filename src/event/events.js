@@ -192,7 +192,11 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
   /**
    * Fired when the ad volume has been muted.
    */
-  AD_MUTED: 'admuted'
+  AD_MUTED: 'admuted',
+  /**
+   * Fired on ad time progress.
+   */
+  AD_PROGRESS: 'adprogress'
 };
 
 const PLAYER_EVENTS: { [event: string]: string } = Utils.Object.merge([HTML5_EVENTS, CUSTOM_EVENTS]);
