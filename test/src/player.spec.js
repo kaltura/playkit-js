@@ -1056,7 +1056,7 @@ describe('Track enum', function () {
   });
 });
 
-describe('events', function () {
+describe.only('events', function () {
   describe('tracks changed', function () {
     this.timeout(10000);
 
@@ -1187,6 +1187,52 @@ describe('events', function () {
         done();
       });
       player.configure(config);
+    });
+  });
+
+  describe.only('abr mode changed', () => {
+    let config;
+    let player;
+
+    before(() => {
+      createElement('DIV', targetId);
+    });
+
+    beforeEach(() => {
+      config = getConfigStructure();
+    });
+
+    afterEach(() => {
+      player.destroy();
+    });
+
+    after(() => {
+      removeVideoElementsFromTestPage();
+      removeElement(targetId);
+    });
+
+    it('should fire abr mode changed for progressive playback', (done) => {
+      config.sources = sourcesConfig.Mp4;
+      player = new Player(targetId, config);
+      player.addEventListener(CustomEvents.ABR_MODE_CHANGED, (event) => {
+        event.payload.mode.should.equal('manual');
+        done();
+      });
+      player.load();
+    });
+
+    it('should fire abr mode changed for adaptive playback', (done) => {
+      config.sources = sourcesConfig.Hls;
+      player = new Player(targetId, config);
+      player.addEventListener(CustomEvents.ABR_MODE_CHANGED, (event) => {
+        event.payload.mode.should.equal('auto');
+        done();
+      });
+      if (player._engine) {
+        player.load();
+      } else {
+        done();
+      }
     });
   });
 });
