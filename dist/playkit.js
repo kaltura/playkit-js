@@ -1921,6 +1921,9 @@ var Player = function (_FakeEventTarget) {
           _this4._markActiveTrack(event.payload.selectedTextTrack);
           return _this4.dispatchEvent(event);
         });
+        this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.ABR_MODE_CHANGED, function (event) {
+          return _this4.dispatchEvent(event);
+        });
         this._eventManager.listen(this, _events.HTML5_EVENTS.PLAY, this._onPlay.bind(this));
       }
     }

@@ -324,6 +324,7 @@ export default class Player extends FakeEventTarget {
         this._markActiveTrack(event.payload.selectedTextTrack);
         return this.dispatchEvent(event);
       });
+      this._eventManager.listen(this._engine, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this, Html5Events.PLAY, this._onPlay.bind(this));
     }
   }
