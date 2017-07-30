@@ -516,7 +516,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   >>>>>>> 820944794b5f8b9fe702c4550da43f5ef8cf8344
    * Mark the selected track as active
    * @function _markActiveTrack
    * @param {Track} track - the track to mark
