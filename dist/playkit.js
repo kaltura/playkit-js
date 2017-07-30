@@ -1037,7 +1037,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _multiMap = __webpack_require__(12);
+var _multiMap = __webpack_require__(13);
 
 var _multiMap2 = _interopRequireDefault(_multiMap);
 
@@ -1434,7 +1434,11 @@ var CUSTOM_EVENTS = {
   /**
    * Fired when the ad volume has been muted.
    */
-  AD_MUTED: 'admuted'
+  AD_MUTED: 'admuted',
+  /**
+   * Fired on ad time progress.
+   */
+  AD_PROGRESS: 'adprogress'
 };
 
 var PLAYER_EVENTS = Utils.Object.merge([HTML5_EVENTS, CUSTOM_EVENTS]);
@@ -1466,7 +1470,7 @@ var _fakeEvent = __webpack_require__(2);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _fakeEventTarget = __webpack_require__(11);
+var _fakeEventTarget = __webpack_require__(12);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
@@ -1491,6 +1495,10 @@ var _html2 = _interopRequireDefault(_html);
 var _pluginManager = __webpack_require__(17);
 
 var _pluginManager2 = _interopRequireDefault(_pluginManager);
+
+var _basePlugin = __webpack_require__(11);
+
+var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
 var _stateManager = __webpack_require__(25);
 
@@ -2317,6 +2325,37 @@ var Player = function (_FakeEventTarget) {
     }
 
     /**
+     * Skip on an ad.
+     * @public
+     * @returns {void}
+     */
+
+  }, {
+    key: 'skipAd',
+    value: function skipAd() {
+      var adsPlugin = this._pluginManager.get('ima');
+      if (adsPlugin && typeof adsPlugin.skipAd === 'function') {
+        adsPlugin.skipAd();
+      }
+    }
+
+    /**
+     * Start to play ad on demand.
+     * @param {string} adTagUrl - The ad tag url to play.
+     * @public
+     * @returns {void}
+     */
+
+  }, {
+    key: 'playAdNow',
+    value: function playAdNow(adTagUrl) {
+      var adsPlugin = this._pluginManager.get('ima');
+      if (adsPlugin && typeof adsPlugin.playAdNow === 'function') {
+        adsPlugin.playAdNow(adTagUrl);
+      }
+    }
+
+    /**
      * Set the current time in seconds.
      * @param {Number} to - The number to set in seconds.
      * @public
@@ -2674,11 +2713,226 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _player = __webpack_require__(9);
+
+var _player2 = _interopRequireDefault(_player);
+
+var _logger = __webpack_require__(0);
+
+var _logger2 = _interopRequireDefault(_logger);
+
+var _util = __webpack_require__(3);
+
+var Utils = _interopRequireWildcard(_util);
+
+var _eventManager = __webpack_require__(7);
+
+var _eventManager2 = _interopRequireDefault(_eventManager);
+
+var _playerError = __webpack_require__(14);
+
+var _playerError2 = _interopRequireDefault(_playerError);
+
 var _fakeEvent = __webpack_require__(2);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _multiMap = __webpack_require__(12);
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/** The BasePlugin responsible to implement the plugin interface.
+ * Contains several default implementations.
+ * Other plugins should extend this class.
+ * @classdesc
+ */
+var BasePlugin = function () {
+  _createClass(BasePlugin, null, [{
+    key: 'createPlugin',
+
+
+    /**
+     * Factory method to create the actual plugin.
+     * @param {string} name - The plugin name
+     * @param {Player} player - The player reference
+     * @param {Object} config - The plugin configuration
+     * @returns {BasePlugin} - New runtime plugin instance
+     * @static
+     * @public
+     */
+
+    /**
+     * The event manager of the plugin.
+     * @member
+     */
+
+    /**
+     * The logger of the plugin.
+     * @member
+     */
+
+    /**
+     * The runtime configuration of the plugin.
+     * @member
+     */
+    value: function createPlugin(name, player) {
+      var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+      return new this(name, player, config);
+    }
+
+    /**
+     * Returns under what conditions the plugin is valid.
+     * Plugin must implement this method.
+     * @returns {boolean} - Whether the plugin is valid and can be initiated. Default implementation is true
+     * @static
+     * @public
+     * @abstract
+     */
+
+    /**
+     * The default configuration of the plugin.
+     * Inherited plugins should override this property.
+     * @type {Object}
+     * @static
+     * @member
+     */
+
+    /**
+     * Reference to the actual player.
+     * @member
+     */
+
+    /**
+     * The name of the plugin.
+     * @member
+     */
+
+  }, {
+    key: 'isValid',
+    value: function isValid() {
+      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'isValid()').getError();
+    }
+
+    /**
+     * constructor
+     * @param {string} name - The plugin name
+     * @param {Player} player - The player reference
+     * @param {Object} config - The plugin configuration
+     * @constructor
+     * @private
+     */
+
+  }]);
+
+  function BasePlugin(name, player, config) {
+    _classCallCheck(this, BasePlugin);
+
+    this.name = name;
+    this.player = player;
+    this.eventManager = new _eventManager2.default();
+    this.logger = _logger2.default.getLogger(this.name);
+    this.config = {};
+    Utils.Object.mergeDeep(this.config, this.constructor.defaultConfig, config);
+  }
+
+  /**
+   * Getter for the configuration of the plugin.
+   * @param {string} attr - The key in the plugin configuration (optional).
+   * @returns {*} - If attribute is provided, returns its value. Else, Returns the config of the plugin.
+   * @public
+   */
+
+
+  _createClass(BasePlugin, [{
+    key: 'getConfig',
+    value: function getConfig(attr) {
+      if (attr) {
+        return this.config[attr];
+      }
+      return this.config;
+    }
+
+    /**
+     * Updates the config of the plugin.
+     * @param {Object} update - The updated configuration.
+     * @public
+     * @returns {void}
+     */
+
+  }, {
+    key: 'updateConfig',
+    value: function updateConfig(update) {
+      this.config = Utils.Object.mergeDeep(this.config, update);
+    }
+
+    /**
+     * Runs the destroy logic of the plugin.
+     * plugin must implement this method.
+     * @public
+     * @abstract
+     * @returns {void}
+     */
+
+  }, {
+    key: 'destroy',
+    value: function destroy() {
+      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'destroy()').getError();
+    }
+
+    /**
+     * Getter for the plugin's name.
+     * @returns {string} - The name of the plugin.
+     * @public
+     */
+
+  }, {
+    key: 'getName',
+    value: function getName() {
+      return this.name;
+    }
+
+    /**
+     * Dispatch an event via the plugin.
+     * @param {string} name - The event name.
+     * @param {any} payload - The event payload.
+     * @returns {void}
+     */
+
+  }, {
+    key: 'dispatchEvent',
+    value: function dispatchEvent(name, payload) {
+      this.logger.debug("Fire event: " + name, payload);
+      this.player.dispatchEvent(new _fakeEvent2.default(name, payload));
+    }
+  }]);
+
+  return BasePlugin;
+}();
+
+BasePlugin.defaultConfig = {};
+exports.default = BasePlugin;
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _fakeEvent = __webpack_require__(2);
+
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
+
+var _multiMap = __webpack_require__(13);
 
 var _multiMap2 = _interopRequireDefault(_multiMap);
 
@@ -2808,7 +3062,7 @@ var FakeEventTarget = function () {
 exports.default = FakeEventTarget;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2987,7 +3241,7 @@ var MultiMap = function () {
 exports.default = MultiMap;
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3045,7 +3299,7 @@ PlayerError.TYPE = {
 exports.default = PlayerError;
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3061,11 +3315,11 @@ var _fakeEvent = __webpack_require__(2);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _fakeEventTarget = __webpack_require__(11);
+var _fakeEventTarget = __webpack_require__(12);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
-var _playerError = __webpack_require__(13);
+var _playerError = __webpack_require__(14);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
@@ -3276,7 +3530,7 @@ BaseMediaSourceAdapter.getLogger = _logger2.default.getLogger;
 exports.default = BaseMediaSourceAdapter;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3441,221 +3695,6 @@ var registerMediaSourceAdapter = MediaSourceProvider.register;
 exports.registerMediaSourceAdapter = registerMediaSourceAdapter;
 
 /***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _player = __webpack_require__(9);
-
-var _player2 = _interopRequireDefault(_player);
-
-var _logger = __webpack_require__(0);
-
-var _logger2 = _interopRequireDefault(_logger);
-
-var _util = __webpack_require__(3);
-
-var Utils = _interopRequireWildcard(_util);
-
-var _eventManager = __webpack_require__(7);
-
-var _eventManager2 = _interopRequireDefault(_eventManager);
-
-var _playerError = __webpack_require__(13);
-
-var _playerError2 = _interopRequireDefault(_playerError);
-
-var _fakeEvent = __webpack_require__(2);
-
-var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/** The BasePlugin responsible to implement the plugin interface.
- * Contains several default implementations.
- * Other plugins should extend this class.
- * @classdesc
- */
-var BasePlugin = function () {
-  _createClass(BasePlugin, null, [{
-    key: 'createPlugin',
-
-
-    /**
-     * Factory method to create the actual plugin.
-     * @param {string} name - The plugin name
-     * @param {Player} player - The player reference
-     * @param {Object} config - The plugin configuration
-     * @returns {BasePlugin} - New runtime plugin instance
-     * @static
-     * @public
-     */
-
-    /**
-     * The event manager of the plugin.
-     * @member
-     */
-
-    /**
-     * The logger of the plugin.
-     * @member
-     */
-
-    /**
-     * The runtime configuration of the plugin.
-     * @member
-     */
-    value: function createPlugin(name, player) {
-      var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-      return new this(name, player, config);
-    }
-
-    /**
-     * Returns under what conditions the plugin is valid.
-     * Plugin must implement this method.
-     * @returns {boolean} - Whether the plugin is valid and can be initiated. Default implementation is true
-     * @static
-     * @public
-     * @abstract
-     */
-
-    /**
-     * The default configuration of the plugin.
-     * Inherited plugins should override this property.
-     * @type {Object}
-     * @static
-     * @member
-     */
-
-    /**
-     * Reference to the actual player.
-     * @member
-     */
-
-    /**
-     * The name of the plugin.
-     * @member
-     */
-
-  }, {
-    key: 'isValid',
-    value: function isValid() {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'isValid()').getError();
-    }
-
-    /**
-     * constructor
-     * @param {string} name - The plugin name
-     * @param {Player} player - The player reference
-     * @param {Object} config - The plugin configuration
-     * @constructor
-     * @private
-     */
-
-  }]);
-
-  function BasePlugin(name, player, config) {
-    _classCallCheck(this, BasePlugin);
-
-    this.name = name;
-    this.player = player;
-    this.eventManager = new _eventManager2.default();
-    this.logger = _logger2.default.getLogger(this.name);
-    this.config = {};
-    Utils.Object.mergeDeep(this.config, this.constructor.defaultConfig, config);
-  }
-
-  /**
-   * Getter for the configuration of the plugin.
-   * @param {string} attr - The key in the plugin configuration (optional).
-   * @returns {*} - If attribute is provided, returns its value. Else, Returns the config of the plugin.
-   * @public
-   */
-
-
-  _createClass(BasePlugin, [{
-    key: 'getConfig',
-    value: function getConfig(attr) {
-      if (attr) {
-        return this.config[attr];
-      }
-      return this.config;
-    }
-
-    /**
-     * Updates the config of the plugin.
-     * @param {Object} update - The updated configuration.
-     * @public
-     * @returns {void}
-     */
-
-  }, {
-    key: 'updateConfig',
-    value: function updateConfig(update) {
-      this.config = Utils.Object.mergeDeep(this.config, update);
-    }
-
-    /**
-     * Runs the destroy logic of the plugin.
-     * plugin must implement this method.
-     * @public
-     * @abstract
-     * @returns {void}
-     */
-
-  }, {
-    key: 'destroy',
-    value: function destroy() {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'destroy()').getError();
-    }
-
-    /**
-     * Getter for the plugin's name.
-     * @returns {string} - The name of the plugin.
-     * @public
-     */
-
-  }, {
-    key: 'getName',
-    value: function getName() {
-      return this.name;
-    }
-
-    /**
-     * Dispatch an event via the plugin.
-     * @param {string} name - The event name.
-     * @param {any} payload - The event payload.
-     * @returns {void}
-     */
-
-  }, {
-    key: 'dispatchEvent',
-    value: function dispatchEvent(name, payload) {
-      this.logger.debug("Fire event: " + name, payload);
-      this.player.dispatchEvent(new _fakeEvent2.default(name, payload));
-    }
-  }]);
-
-  return BasePlugin;
-}();
-
-BasePlugin.defaultConfig = {};
-exports.default = BasePlugin;
-
-/***/ }),
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3669,11 +3708,11 @@ exports.registerPlugin = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _basePlugin = __webpack_require__(16);
+var _basePlugin = __webpack_require__(11);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
-var _playerError = __webpack_require__(13);
+var _playerError = __webpack_require__(14);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
@@ -3983,7 +4022,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _fakeEventTarget = __webpack_require__(11);
+var _fakeEventTarget = __webpack_require__(12);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
@@ -3997,7 +4036,7 @@ var _eventManager2 = _interopRequireDefault(_eventManager);
 
 var _events = __webpack_require__(8);
 
-var _mediaSourceProvider = __webpack_require__(15);
+var _mediaSourceProvider = __webpack_require__(16);
 
 var _mediaSourceProvider2 = _interopRequireDefault(_mediaSourceProvider);
 
@@ -4880,7 +4919,7 @@ var _textTrack = __webpack_require__(5);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _baseMediaSourceAdapter = __webpack_require__(14);
+var _baseMediaSourceAdapter = __webpack_require__(15);
 
 var _baseMediaSourceAdapter2 = _interopRequireDefault(_baseMediaSourceAdapter);
 
@@ -5460,7 +5499,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _multiMap = __webpack_require__(12);
+var _multiMap = __webpack_require__(13);
 
 var _multiMap2 = _interopRequireDefault(_multiMap);
 
@@ -5705,11 +5744,11 @@ var _package = __webpack_require__(19);
 
 var packageData = _interopRequireWildcard(_package);
 
-var _baseMediaSourceAdapter = __webpack_require__(14);
+var _baseMediaSourceAdapter = __webpack_require__(15);
 
 var _baseMediaSourceAdapter2 = _interopRequireDefault(_baseMediaSourceAdapter);
 
-var _mediaSourceProvider = __webpack_require__(15);
+var _mediaSourceProvider = __webpack_require__(16);
 
 var _pluginManager = __webpack_require__(17);
 
@@ -5717,7 +5756,7 @@ var _baseMiddleware = __webpack_require__(10);
 
 var _baseMiddleware2 = _interopRequireDefault(_baseMiddleware);
 
-var _basePlugin = __webpack_require__(16);
+var _basePlugin = __webpack_require__(11);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
