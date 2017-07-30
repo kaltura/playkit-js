@@ -1056,7 +1056,7 @@ describe('Track enum', function () {
   });
 });
 
-describe.only('events', function () {
+describe('events', function () {
   describe('tracks changed', function () {
     this.timeout(10000);
 
