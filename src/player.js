@@ -547,11 +547,11 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Get the player config.
-   * @returns {Object} - A copy of the player configuration.
+   * @returns {Object} - The player configuration.
    * @public
    */
   get config(): Object {
-    return Utils.Object.mergeDeep({}, this._config);
+    return this._config;
   }
 
   /**
