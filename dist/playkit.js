@@ -1836,7 +1836,9 @@ var Player = function (_FakeEventTarget) {
             if (formatSources && formatSources.length > 0) {
               var source = formatSources[0];
               if (engine.canPlayType(source.mimetype)) {
+                Player._logger.debug('Source selected: ', formatSources);
                 _this3._loadEngine(engine, source);
+                _this3.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.SOURCE_SELECTED, { selectedSource: formatSources }));
                 return {
                   v: true
                 };
@@ -1880,7 +1882,6 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_loadEngine',
     value: function _loadEngine(engine, source) {
-      this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.SOURCE_SELECTED, { selectedSource: source }));
       this._engine = engine.createEngine(source, this._config);
     }
 
