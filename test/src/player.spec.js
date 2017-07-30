@@ -1384,15 +1384,13 @@ describe('abr', function () {
     player.isAdaptiveBitrateEnabled().should.be.false;
   });
 
-  it('should return false for adaptive playback abr', function (done) {
+  it('should return true for adaptive playback abr', function (done) {
     config.sources = sourcesConfig.Hls;
     player = new Player(targetId, config);
     if (player._engine) {
       player.enableAdaptiveBitrate();
       player.isAdaptiveBitrateEnabled().should.be.true;
-      done();
-    } else {
-      done();
     }
+    done();
   });
 });
