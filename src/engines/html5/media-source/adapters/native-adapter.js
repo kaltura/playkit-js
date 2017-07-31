@@ -11,7 +11,7 @@ import * as Utils from '../../../../utils/util'
 
 /**
  * @namespace NativeAdapter
- * @memberof PlayKitJS.MediaSource
+ * @memberof PlayKitJS.Engines.Html5.MediaSource
  * @class
  * @extends BaseMediaSourceAdapter
  */
@@ -25,7 +25,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @member {string}
    * @static
    * @public
-   * @memberof PlayKitJS.MediaSource.NativeAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
    */
   static id: string = 'NativeAdapter';
 
@@ -35,7 +35,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {boolean}
    * @static
    * @public
-   * @memberof PlayKitJS.MediaSource.NativeAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
    */
   static canPlayType(mimeType: string): boolean {
     let canPlayType = (typeof mimeType === 'string') ? !!(Utils.Dom.createElement("video").canPlayType(mimeType.toLowerCase())) : false;
@@ -51,7 +51,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {IMediaSourceAdapter}
    * @static
    * @public
-   * @memberof PlayKitJS.MediaSource.NativeAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
    */
   static createAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): IMediaSourceAdapter {
     return new this(videoElement, source, config);
@@ -75,7 +75,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @function load
    * @returns {Promise<Object>}
    * @public
-   * @memberof PlayKitJS.MediaSource.NativeAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
    * @instance
    */
   load(startTime: ?number): Promise<Object> {
@@ -112,7 +112,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @function destroy
    * @returns {void}
    * @public
-   * @memberof PlayKitJS.MediaSource.NativeAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
    * @instance
    */
   destroy(): void {
@@ -128,7 +128,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @param {VideoTrack}
    * @returns {void}
    * @public
-   * @memberof PlayKitJS.MediaSource.NativeAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
    * @instance
    */
   selectVideoTrack(videoTrack: VideoTrack): void {
@@ -144,7 +144,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @param {VideoTrack} videoTrack
    * @returns {void}
    * @public
-   * @memberof PlayKitJS.MediaSource.NativeAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
    * @instance
    */
   selectAdaptiveVideoTrack(videoTrack: VideoTrack): void {
@@ -161,7 +161,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @param {AudioTrack} audioTrack
    * @returns {void}
    * @public
-   * @memberof PlayKitJS.MediaSource.NativeAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
    * @instance
    */
   selectAudioTrack(audioTrack: AudioTrack): void {
@@ -178,7 +178,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @param {TextTrack} textTrack
    * @returns {void}
    * @public
-   * @memberof PlayKitJS.MediaSource.NativeAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
    * @instance
    */
   selectTextTrack(textTrack: TextTrack): void {
@@ -194,7 +194,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @function hideTextTrack
    * @returns {void}
    * @public
-   * @memberof PlayKitJS.MediaSource.NativeAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
    * @instance
    */
   hideTextTrack(): void {
@@ -206,7 +206,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @function enableAdaptiveBitrate
    * @returns {void}
    * @public
-   * @memberof PlayKitJS.MediaSource.NativeAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
    * @instance
    */
   enableAdaptiveBitrate(): void {
@@ -217,7 +217,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @function isAdaptiveBitrateEnabled
    * @returns {boolean}
    * @public
-   * @memberof PlayKitJS.MediaSource.NativeAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
    * @instance
    */
   isAdaptiveBitrateEnabled(): boolean {
@@ -226,7 +226,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   /**
    * @public
-   * @memberof PlayKitJS.MediaSource.NativeAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
    * @instance
    * @returns {string}
    */

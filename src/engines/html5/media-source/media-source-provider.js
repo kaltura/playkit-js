@@ -4,12 +4,12 @@ import LoggerFactory from '../../../utils/logger'
 
 /**
  * @namespace MediaSource
- * @memberof PlayKitJS
+ * @memberof PlayKitJS.Engines.Html5
  */
 
 /**
  * @namespace MediaSourceProvider
- * @memberof PlayKitJS.MediaSource
+ * @memberof PlayKitJS.Engines.Html5.MediaSource
  */
 export default class MediaSourceProvider {
   static _logger: any = LoggerFactory.getLogger('MediaSourceProvider');
@@ -21,7 +21,7 @@ export default class MediaSourceProvider {
    * @param {IMediaSourceAdapter} mediaSourceAdapter
    * @static
    * @public
-   * @memberof PlayKitJS.MediaSource.MediaSourceProvider
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.MediaSourceProvider
    * @returns {void}
    */
   static register(mediaSourceAdapter: typeof IMediaSourceAdapter): void {
@@ -40,7 +40,7 @@ export default class MediaSourceProvider {
    * @param {IMediaSourceAdapter} mediaSourceAdapter
    * @static
    * @public
-   * @memberof PlayKitJS.MediaSource.MediaSourceProvider
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.MediaSourceProvider
    * @returns {void}
    */
   static unRegister(mediaSourceAdapter: typeof IMediaSourceAdapter): void {
@@ -56,7 +56,7 @@ export default class MediaSourceProvider {
    * @param {string} mimeType
    * @static
    * @public
-   * @memberof PlayKitJS.MediaSource.MediaSourceProvider
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.MediaSourceProvider
    * @returns {boolean}
    */
   static canPlayType(mimeType: string): boolean {
@@ -79,7 +79,7 @@ export default class MediaSourceProvider {
    * @returns {IMediaSourceAdapter | null}
    * @static
    * @public
-   * @memberof PlayKitJS.MediaSource.MediaSourceProvider
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.MediaSourceProvider
    */
   static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): ?IMediaSourceAdapter {
     if (videoElement && source && config) {
@@ -95,7 +95,7 @@ export default class MediaSourceProvider {
    * @static
    * @returns {void}
    * @public
-   * @memberof PlayKitJS.MediaSource.MediaSourceProvider
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.MediaSourceProvider
    */
   static destroy(): void {
     MediaSourceProvider._selectedAdapter = null;

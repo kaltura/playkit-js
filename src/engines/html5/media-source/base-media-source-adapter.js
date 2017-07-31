@@ -12,7 +12,7 @@ import TextTrack from '../../../track/text-track'
 
 /**
  * @namespace BaseMediaSourceAdapter
- * @memberof PlayKitJS.MediaSource
+ * @memberof PlayKitJS.Engines.Html5.MediaSource
  * @abstract
  */
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
@@ -28,7 +28,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @returns {boolean}
    * @static
    * @public
-   * @memberof PlayKitJS.MediaSource.BaseMediaSourceAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
    */
   static isSupported(): boolean {
     return true;
@@ -39,7 +39,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @param {string} mimeType
    * @static
    * @public
-   * @memberof PlayKitJS.MediaSource.BaseMediaSourceAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
    */
   static canPlayType(mimeType: string): boolean {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayType').getError();
@@ -48,7 +48,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /**
    * Must be implemented by derived adapter.
    * @public
-   * @memberof PlayKitJS.MediaSource.BaseMediaSourceAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
    * @returns {Promise<Object>}
    * @instance
    */
@@ -59,7 +59,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /**
    * Must be implemented by derived adapter.
    * @public
-   * @memberof PlayKitJS.MediaSource.BaseMediaSourceAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
    * @returns {void}
    * @instance
    */
@@ -70,7 +70,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /**
    * Must be implemented by derived adapter.
    * @public
-   * @memberof PlayKitJS.MediaSource.BaseMediaSourceAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
    * @returns {void}
    * @instance
    */
@@ -81,7 +81,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /**
    * Must be implemented by derived adapter.
    * @public
-   * @memberof PlayKitJS.MediaSource.BaseMediaSourceAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
    * @returns {void}
    * @instance
    */
@@ -92,7 +92,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /**
    * Must be implemented by derived adapter.
    * @public
-   * @memberof PlayKitJS.MediaSource.BaseMediaSourceAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
    * @returns {void}
    * @instance
    */
@@ -103,7 +103,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /**
    * Must be implemented by derived adapter.
    * @public
-   * @memberof PlayKitJS.MediaSource.BaseMediaSourceAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
    * @returns {void}
    * @instance
    */
@@ -114,7 +114,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /**
    * Must be implemented by derived adapter.
    * @public
-   * @memberof PlayKitJS.MediaSource.BaseMediaSourceAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
    * @returns {boolean}
    * @instance
    */
@@ -125,7 +125,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /**
    * Must be implemented by derived adapter.
    * @public
-   * @memberof PlayKitJS.MediaSource.BaseMediaSourceAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
    * @instance
    */
   get src(): string {
@@ -150,7 +150,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @function destroy
    * @returns {void}
    * @public
-   * @memberof PlayKitJS.MediaSource.BaseMediaSourceAdapter
+   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
    * @instance
    */
   destroy(): void {
