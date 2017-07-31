@@ -21,8 +21,14 @@ import UAParser from 'ua-parser-js'
 import './assets/style.css'
 
 /**
+ * @namespace Engines
+ * @memberof PlayKitJS
+ */
+
+/**
  * @namespace Player
  * @memberof PlayKitJS
+ * @class
  */
 export default class Player extends FakeEventTarget {
   static CONTAINER_CLASS_NAME: string = 'playkit-container';
@@ -64,6 +70,7 @@ export default class Player extends FakeEventTarget {
    * @param {Object} config
    * @returns {void}
    * @memberof PlayKitJS.Player
+   * @instance
    * @public
    */
   configure(config: Object): void {
@@ -82,6 +89,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   destroy(): void {
     if (this._engine) {
@@ -100,6 +108,7 @@ export default class Player extends FakeEventTarget {
    * @return {HTMLElement}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   getView(): HTMLElement {
     return this._el;
@@ -111,6 +120,7 @@ export default class Player extends FakeEventTarget {
    * @returns {Array<Track>}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   getTracks(type: ?string): Array<Track> {
     return this._getTracksByType(type);
@@ -121,6 +131,7 @@ export default class Player extends FakeEventTarget {
    * @return {Object}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   getActiveTracks(): Object {
     return {
@@ -136,6 +147,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   selectTrack(track: Track): void {
     if (this._engine) {
@@ -154,6 +166,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   hideTextTrack(): void {
     if (this._engine) {
@@ -167,6 +180,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   enableAdaptiveBitrate(): void {
     if (this._engine) {
@@ -179,6 +193,7 @@ export default class Player extends FakeEventTarget {
    * @returns {boolean}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   isAdaptiveBitrateEnabled(): boolean {
     if (this._engine) {
@@ -192,6 +207,7 @@ export default class Player extends FakeEventTarget {
    * @returns {HTMLVideoElement}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   getVideoElement(): ?HTMLVideoElement {
     if (this._engine) {
@@ -204,6 +220,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   skipAd(): void {
     let adsPlugin: ?BasePlugin = this._pluginManager.get('ima');
@@ -218,6 +235,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   playAdNow(adTagUrl: string): void {
     let adsPlugin: ?BasePlugin = this._pluginManager.get('ima');
@@ -232,6 +250,7 @@ export default class Player extends FakeEventTarget {
    * @readonly
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get env(): Object {
     return this._env;
@@ -242,6 +261,7 @@ export default class Player extends FakeEventTarget {
    * @readonly
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get config(): Object {
     return Utils.Object.mergeDeep({}, this._config);
@@ -252,6 +272,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   set sessionId(sessionId: string): void {
     this._config.session = this._config.session || {};
@@ -264,6 +285,7 @@ export default class Player extends FakeEventTarget {
    * @function ready
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   ready(): Promise<*> {
     return this._readyPromise ? this._readyPromise : Promise.resolve();
@@ -274,6 +296,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   load(): void {
     if (this._engine) {
@@ -292,6 +315,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   play(): void {
     if (this._engine) {
@@ -304,6 +328,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   pause(): void {
     if (this._engine) {
@@ -315,6 +340,7 @@ export default class Player extends FakeEventTarget {
    * @param {number} to
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   set currentTime(to: number): void {
     if (this._engine) {
@@ -335,6 +361,7 @@ export default class Player extends FakeEventTarget {
    * @returns {number | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get currentTime(): ?number {
     if (this._engine) {
@@ -346,6 +373,7 @@ export default class Player extends FakeEventTarget {
    * @returns {number | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get duration(): ?number {
     if (this._engine) {
@@ -358,6 +386,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   set volume(vol: number): void {
     if (this._engine) {
@@ -378,6 +407,7 @@ export default class Player extends FakeEventTarget {
    * @returns {number | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get volume(): ?number {
     if (this._engine) {
@@ -389,6 +419,7 @@ export default class Player extends FakeEventTarget {
    * @param {number} rate
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   set playbackRate(rate: number): void {
     if (this._engine) {
@@ -400,6 +431,7 @@ export default class Player extends FakeEventTarget {
    * @returns {number | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get playbackRate(): ?number {
     if (this._engine) {
@@ -411,6 +443,7 @@ export default class Player extends FakeEventTarget {
    * @returns {TimeRanges | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get seekable(): ?TimeRanges {
     if (this._engine) {
@@ -422,6 +455,7 @@ export default class Player extends FakeEventTarget {
    * @returns {TimeRanges | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get buffered(): ?TimeRanges {
     if (this._engine) {
@@ -433,6 +467,7 @@ export default class Player extends FakeEventTarget {
    * @returns {boolean | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get defaultMuted(): ?boolean {
     if (this._engine) {
@@ -445,6 +480,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   set poster(poster: string): void {
     if (this._engine) {
@@ -456,6 +492,7 @@ export default class Player extends FakeEventTarget {
    * @returns {poster | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get poster(): ?string {
     if (this._engine) {
@@ -467,6 +504,7 @@ export default class Player extends FakeEventTarget {
    * @param {boolean} loop
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    * @returns {void}
    */
   set loop(loop: boolean) {
@@ -479,6 +517,7 @@ export default class Player extends FakeEventTarget {
    * @returns {boolean | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get loop(): ?boolean {
     if (this._engine) {
@@ -490,6 +529,7 @@ export default class Player extends FakeEventTarget {
    * @param {boolean} controls
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    * @returns {void}
    */
   set controls(controls: boolean): void {
@@ -502,6 +542,7 @@ export default class Player extends FakeEventTarget {
    * @returns {boolean | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get controls(): ?boolean {
     if (this._engine) {
@@ -513,6 +554,7 @@ export default class Player extends FakeEventTarget {
    * @param {number} defaultPlaybackRate
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    * @returns {void}
    */
   set defaultPlaybackRate(defaultPlaybackRate: number) {
@@ -525,6 +567,7 @@ export default class Player extends FakeEventTarget {
    * @returns {number | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get defaultPlaybackRate(): ?number {
     if (this._engine) {
@@ -536,6 +579,7 @@ export default class Player extends FakeEventTarget {
    * @returns {MediaError | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get error(): ?MediaError {
     if (this._engine) {
@@ -547,6 +591,7 @@ export default class Player extends FakeEventTarget {
    * @returns {number | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get videoHeight(): ?number {
     if (this._engine) {
@@ -558,6 +603,7 @@ export default class Player extends FakeEventTarget {
    * @returns {number | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get videoWidth(): ?number {
     if (this._engine) {
@@ -570,6 +616,7 @@ export default class Player extends FakeEventTarget {
    * @param {boolean} playsinline
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   set playsinline(playsinline: boolean): void {
     if (this._engine) {
@@ -581,6 +628,7 @@ export default class Player extends FakeEventTarget {
    * @returns {boolean | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get playsinline(): ?boolean {
     if (this._engine) {
@@ -595,6 +643,7 @@ export default class Player extends FakeEventTarget {
    * @returns {boolean | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get paused(): ?boolean {
     if (this._engine) {
@@ -606,6 +655,7 @@ export default class Player extends FakeEventTarget {
    * @returns {boolean | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get ended(): ?boolean {
     if (this._engine) {
@@ -617,6 +667,7 @@ export default class Player extends FakeEventTarget {
    * @returns {TimeRanges | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get played(): ?TimeRanges {
     if (this._engine) {
@@ -628,6 +679,7 @@ export default class Player extends FakeEventTarget {
    * @returns {boolean | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get seeking(): ?boolean {
     if (this._engine) {
@@ -639,6 +691,7 @@ export default class Player extends FakeEventTarget {
    * @returns {number | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get networkState(): ?number {
     if (this._engine) {
@@ -655,6 +708,7 @@ export default class Player extends FakeEventTarget {
    * 4 = HAVE_ENOUGH_DATA - enough data available to start playing.
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get readyState(): ?number {
     if (this._engine) {
@@ -667,6 +721,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   set muted(mute: boolean): void {
     if (this._engine) {
@@ -678,6 +733,7 @@ export default class Player extends FakeEventTarget {
    * @returns {boolean | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get muted(): ?boolean {
     if (this._engine) {
@@ -691,6 +747,7 @@ export default class Player extends FakeEventTarget {
    * @returns {string | null}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get src(): ?string {
     if (this._engine) {
@@ -702,6 +759,7 @@ export default class Player extends FakeEventTarget {
    * @returns {Object}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get Event(): { [event: string]: string } {
     return PlayerEvents;
@@ -711,6 +769,7 @@ export default class Player extends FakeEventTarget {
    * @returns {Object}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get State(): { [state: string]: string } {
     return PlayerStates;
@@ -720,6 +779,7 @@ export default class Player extends FakeEventTarget {
    * @returns {Object}
    * @memberof PlayKitJS.Player
    * @public
+   * @instance
    */
   get Track(): { [track: string]: string } {
     return TrackTypes;
