@@ -8,8 +8,6 @@ declare interface IEngine {
   static createEngine(source: Source, config: Object): IEngine;
   static canPlayType(mimeType: string): boolean;
   destroy(): void;
-  attach(): void;
-  detach(): void;
   play(): void;
   pause(): void;
   load(startTime: ?number): Promise<Object>;

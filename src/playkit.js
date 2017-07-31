@@ -1,3 +1,7 @@
+/**
+ * @namespace PlayKitJS
+ */
+
 //@flow
 import Player from './player'
 import LoggerFactory from './utils/logger'
@@ -23,9 +27,11 @@ LoggerFactory.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size
 LoggerFactory.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
 
 /**
- * @param {string} targetId - The target div id to append the player.
- * @param {Object} config - The configuration of the player
- * @returns {Player} - The player instance
+ * @param {string} targetId
+ * @param {Object} config
+ * @returns {Player}
+ * @public
+ * @memberof PlayKitJS
  */
 export function loadPlayer(targetId: string, config: ?Object) {
   return new Player(targetId, config || {});
