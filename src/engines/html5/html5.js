@@ -69,11 +69,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return !!Html5.TEST_VID.canPlayType;
   }
 
-  /**
-   * @constructor
-   * @param {Source} source
-   * @param {Object} config
-   */
   constructor(source: Source, config: Object) {
     super();
     this._eventManager = new EventManager();

@@ -1063,7 +1063,7 @@ var EventManager = function () {
 
     /**
      * Maps an event type to an array of event bindings.
-     * @private {MultiMap.<!EventManager.Binding_>}
+     * @private {MultiMap.<!EventManager.Binding>}
      */
     this._bindingMap = new _multiMap2.default();
   }
@@ -1177,7 +1177,7 @@ var EventManager = function () {
 
 
 /**
- * Creates a new Binding_ and attaches the event listener to the event target.
+ * Creates a new Binding and attaches the event listener to the event target.
  * @param {EventTarget} target The event target.
  * @param {string} type The event type.
  * @param {EventManager.ListenerType} listener The event listener.
