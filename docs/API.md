@@ -1,9 +1,6 @@
 # Player API
 
 ### Configuration
-Configuration parameters could be provided to PlaykitJS only via `loadPlayer` factory method:
-`loadPlayer(..., config: Object)`
-
 The player holds the following default configuration:
 ```json
 {
