@@ -56,25 +56,12 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   }
 
   /**
-   * Factory method to create media source adapter.
-   * @function createAdapter
-   * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with.
-   * @param {Object} source - The source Object.
-   * @param {Object} config - The media source adapter configuration.
-   * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter.
-   * @static
-   */
-  static createAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): IMediaSourceAdapter {
-    return new this(videoElement, source, config);
-  }
-
-  /**
    * @constructor
    * @param {HTMLVideoElement} videoElement - The video element which bind to media source adapter.
    * @param {Source} source - The source object.
    * @param {Object} config - The media source adapter configuration.
    */
-  constructor(videoElement: HTMLVideoElement, source: Source, config: Object) {
+  constructor(videoElement: HTMLVideoElement, source: Source, config: Object = {}) {
     super();
     this._videoElement = videoElement;
     this._sourceObj = source;
@@ -139,8 +126,16 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'selectTextTrack').getError();
   }
 
+  hideTextTrack(): void {
+    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'hideTextTrack').getError();
+  }
+
   enableAdaptiveBitrate(): void {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'enableAdaptiveBitrate').getError();
+  }
+
+  isAdaptiveBitrateEnabled(): boolean {
+    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'isAdaptiveBitrateEnabled').getError();
   }
 
   get src(): string {

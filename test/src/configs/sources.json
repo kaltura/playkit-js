@@ -1,32 +1,57 @@
 {
-  "mp4_none_hls_dash": {
-    "sources": [
+  "Hls": {
+    "hls": [
       {
-        "mimetype": "video/mp4",
-        "url": "/base/src/assets/audios.mp4",
-        "id": "1_rsrdfext_10081,url"
-      },
-      {
-        "url": "https://cdnapisec.kaltura.com/p/1082342/sp/108234200/playManifest/entryId/1_rsrdfext/protocol/https/format/hdnetworkmanifest/falvorIds/1_ha0nqwz8,1_gw7u4nf1,1_rql6sqaa,1_sufd1yd9,1_9xvkk7a5,1_4typ4pat,1_n75294r4/ks/OGM0ZWM0Y2IwOWI5ZjM0MDcyZmQ3YmYxNzBiMGEwNGYxNWQ0ZTcyOXwxMDgyMzQyOzEwODIzNDI7MTQ5MDExNTg5MzswOzE0OTAwMjk0OTMuMTY3ODswO3ZpZXc6Kix3aWRnZXQ6MTs7/a.mp4",
-        "id": "1_rsrdfext_10101,hdnetworkmanifest"
-      },
-      {
-        "mimetype": "application/x-mpegURL",
-        "url": "https://cdnapisec.kaltura.com/p/1082342/sp/108234200/playManifest/entryId/1_rsrdfext/protocol/https/format/applehttp/falvorIds/1_ha0nqwz8,1_gw7u4nf1,1_rql6sqaa,1_sufd1yd9,1_9xvkk7a5,1_4typ4pat,1_n75294r4/ks/OGM0ZWM0Y2IwOWI5ZjM0MDcyZmQ3YmYxNzBiMGEwNGYxNWQ0ZTcyOXwxMDgyMzQyOzEwODIzNDI7MTQ5MDExNTg5MzswOzE0OTAwMjk0OTMuMTY3ODswO3ZpZXc6Kix3aWRnZXQ6MTs7/a.m3u8",
-        "id": "1_rsrdfext_10091,applehttp"
-      },
-      {
-        "mimetype": "application/dash+xml",
-        "url": "https://cdnapisec.kaltura.com/p/1082342/sp/108234200/playManifest/entryId/1_rsrdfext/protocol/https/format/mpegdash/falvorIds/1_ha0nqwz8,1_gw7u4nf1,1_rql6sqaa,1_sufd1yd9,1_9xvkk7a5,1_4typ4pat,1_n75294r4/ks/OGM0ZWM0Y2IwOWI5ZjM0MDcyZmQ3YmYxNzBiMGEwNGYxNWQ0ZTcyOXwxMDgyMzQyOzEwODIzNDI7MTQ5MDExNTg5MzswOzE0OTAwMjk0OTMuMTY3ODswO3ZpZXc6Kix3aWRnZXQ6MTs7/a.mpd",
-        "id": "1_rsrdfext_11611,mpegdash"
+        "mimetype": "application/x-mpegurl",
+        "url": "http://cdnbakmi.kaltura.com/p/243342/sp/24334200/playManifest/entryId/0_uka1msg4/flavorIds/1_vqhfu6uy,1_80sohj7p/format/applehttp/protocol/http/a.m3u8"
       }
     ]
   },
-  "corrupted_url": {
-    "sources": [
+  "Mp4": {
+    "progressive": [
       {
         "mimetype": "video/mp4",
-        "url": "some corrupted url",
+        "url": "/base/test/src/assets/audios.mp4",
+        "id": "1_rsrdfext_10081,url"
+      }
+    ]
+  },
+  "MultipleSources": {
+    "progressive": [
+      {
+        "mimetype": "video/mp4",
+        "url": "/base/test/src/assets/audios.mp4?0",
+        "id": "id1",
+        "width": 200,
+        "height": 100,
+        "bandwidth": 100000,
+        "label": "label1"
+      },
+      {
+        "mimetype": "video/mp4",
+        "url": "/base/test/src/assets/audios.mp4?1",
+        "id": "id2",
+        "width": 100,
+        "height": 50,
+        "bandwidth": 200000,
+        "label": "label2"
+      }
+    ]
+  },
+  "UnknownMimetype": {
+    "progressive": [
+      {
+        "mimetype": "someMimeType",
+        "url": "some/url",
+        "id": "someId"
+      }
+    ]
+  },
+  "CorruptedUrl": {
+    "progressive": [
+      {
+        "mimetype": "video/mp4",
+        "url": "some/corrupted/url",
         "id": "1_rsrdfext_10081,url"
       }
     ]

@@ -7,7 +7,19 @@ import MediaSourceProvider from './media-source/media-source-provider'
 import VideoTrack from '../../track/video-track'
 import AudioTrack from '../../track/audio-track'
 import TextTrack from '../../track/text-track'
+import * as Utils from '../../utils/util'
 
+/**
+ * The engine video element class name.
+ * @type {string}
+ * @const
+ */
+const VIDEO_ELEMENT_CLASS_NAME: string = 'playkit-engine-html5';
+
+/**
+ * Html5 engine for playback.
+ * @classdesc
+ */
 export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * The video element.
@@ -29,16 +41,30 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _mediaSourceAdapter: ?IMediaSourceAdapter;
 
   /**
-   * @type {string} - The engine name.
+   * @type {string} - The engine id.
    */
-  static EngineName: string = "html5";
+  static id: string = "html5";
+
+  /**
+   * Factory method to create an engine.
+   * @param {Source} source - The selected source object.
+   * @param {Object} config - The player configuration.
+   * @returns {IEngine} - New instance of the run time engine.
+   * @public
+   * @static
+   */
+  static createEngine(source: Source, config: Object): IEngine {
+    return new this(source, config);
+  }
 
   /**
    * Checks if the engine can play a given mime type.
    * @param {string} mimeType - The mime type to check.
    * @returns {boolean} - Whether the engine can play the mime type.
+   * @public
+   * @static
    */
-  static canPlayType(mimeType) {
+  static canPlayType(mimeType): boolean {
     return MediaSourceProvider.canPlayType(mimeType);
   }
 
@@ -49,8 +75,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   constructor(source: Source, config: Object) {
     super();
-    this._createVideoElement();
     this._eventManager = new EventManager();
+    this._createVideoElement();
     this._loadMediaSourceAdapter(source, config);
     this.attach();
   }
@@ -64,6 +90,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this.detach();
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.destroy();
+      MediaSourceProvider.destroy();
     }
     if (this._el) {
       this.pause();
@@ -73,6 +100,15 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       }
     }
     this._eventManager.destroy();
+  }
+
+  /**
+   * Get the engine's id
+   * @public
+   * @returns {string} the engine's id
+   */
+  get id(): string {
+    return Html5.id;
   }
 
   /**
@@ -86,16 +122,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         this.dispatchEvent(new FakeEvent(Html5Events[playerEvent]));
       });
     }
-    if (this._mediaSourceAdapter) { // listen and dispatch adaptive bitrate changed event
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
-        this.dispatchEvent(event);
-      });
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.AUDIO_TRACK_CHANGED, (event: FakeEvent) => {
-        return this.dispatchEvent(event);
-      });
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.TEXT_TRACK_CHANGED, (event: FakeEvent) => {
-        return this.dispatchEvent(event);
-      });
+    if (this._mediaSourceAdapter) {
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.AUDIO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.TEXT_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
     }
   }
 
@@ -129,15 +160,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   _createVideoElement(): void {
-    this._el = document.createElement("video");
-    //Set attributes
-    this._el.style.width = "640px";
-    this._el.style.height = "360px";
-    this._el.style.backgroundColor = "black";
-    this._el.controls = true;
-    if (document && document.body) {
-      document.body.appendChild(this._el);
-    }
+    this._el = Utils.Dom.createElement("video");
+    this._el.id = Utils.Generator.uniqueId(5);
+    this._el.className = VIDEO_ELEMENT_CLASS_NAME;
+    this._el.controls = false;
   }
 
   /**
@@ -185,6 +211,18 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Hide the text track
+   * @function hideTextTrack
+   * @returns {void}
+   * @public
+   */
+  hideTextTrack(): void {
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.hideTextTrack();
+    }
+  }
+
+  /**
    * Enables adaptive bitrate switching according to the media source extension logic.
    * @function enableAdaptiveBitrate
    * @returns {void}
@@ -194,6 +232,19 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.enableAdaptiveBitrate();
     }
+  }
+
+  /**
+   * Checking if adaptive bitrate switching is enabled.
+   * @function isAdaptiveBitrateEnabled
+   * @returns {boolean} - Whether adaptive bitrate is enabled.
+   * @public
+   */
+  isAdaptiveBitrateEnabled(): boolean {
+    if (this._mediaSourceAdapter) {
+      return this._mediaSourceAdapter.isAdaptiveBitrateEnabled();
+    }
+    return false;
   }
 
   /**
@@ -239,11 +290,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Load media.
+   * @param {number} startTime - Optional time to start the video from.
    * @public
    * @returns {Promise<Object>} - The loaded data
    */
-  load(): Promise<Object> {
-    return this._mediaSourceAdapter ? this._mediaSourceAdapter.load() : Promise.resolve({});
+  load(startTime: ?number): Promise<Object> {
+    return this._mediaSourceAdapter ? this._mediaSourceAdapter.load(startTime) : Promise.resolve({});
   }
 
   /**
@@ -558,6 +610,24 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * @param {boolean} playsinline - Whether to set on the video tag the playsinline attribute.
+   */
+  set playsinline(playsinline: boolean): void {
+    if (playsinline) {
+      this._el.setAttribute('playsinline', '');
+    } else {
+      this._el.removeAttribute('playsinline');
+    }
+  }
+
+  /**
+   * @returns {boolean} - Whether the video tag has an attribute of playsinline.
+   */
+  get playsinline(): boolean {
+    return this._el.getAttribute('playsinline') === '';
+  }
+
+  /**
    * Test video element to check if html5 engine is supported.
    */
   static TEST_VID: HTMLVideoElement;
@@ -570,7 +640,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   static isSupported() {
     try {
-      Html5.TEST_VID = document.createElement('video');
+      Html5.TEST_VID = Utils.Dom.createElement('video');
       Html5.TEST_VID.volume = 0.5;
     } catch (e) {
       return false;

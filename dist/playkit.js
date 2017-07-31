@@ -16,9 +16,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
+/******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/ 		}
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 21);
+/******/ 	return __webpack_require__(__webpack_require__.s = 24);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -86,358 +86,62 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.LOG_LEVEL = undefined;
 
-var cov_1cwksiggh8 = function () {
-  var path = "/Users/dan.ziv/WebstormProjects/playkit-js/src/track/track.js",
-      hash = "6dc46309d967c997a49d2065f6f047fa393af1d5",
-      global = new Function('return this')(),
-      gcv = "__coverage__",
-      coverageData = {
-    path: "/Users/dan.ziv/WebstormProjects/playkit-js/src/track/track.js",
-    statementMap: {
-      "0": {
-        start: {
-          line: 50,
-          column: 4
-        },
-        end: {
-          line: 50,
-          column: 20
-        }
-      },
-      "1": {
-        start: {
-          line: 59,
-          column: 4
-        },
-        end: {
-          line: 59,
-          column: 24
-        }
-      },
-      "2": {
-        start: {
-          line: 68,
-          column: 4
-        },
-        end: {
-          line: 68,
-          column: 25
-        }
-      },
-      "3": {
-        start: {
-          line: 77,
-          column: 4
-        },
-        end: {
-          line: 77,
-          column: 23
-        }
-      },
-      "4": {
-        start: {
-          line: 86,
-          column: 4
-        },
-        end: {
-          line: 86,
-          column: 26
-        }
-      },
-      "5": {
-        start: {
-          line: 95,
-          column: 4
-        },
-        end: {
-          line: 95,
-          column: 23
-        }
-      },
-      "6": {
-        start: {
-          line: 103,
-          column: 4
-        },
-        end: {
-          line: 103,
-          column: 27
-        }
-      },
-      "7": {
-        start: {
-          line: 104,
-          column: 4
-        },
-        end: {
-          line: 104,
-          column: 35
-        }
-      },
-      "8": {
-        start: {
-          line: 105,
-          column: 4
-        },
-        end: {
-          line: 105,
-          column: 33
-        }
-      },
-      "9": {
-        start: {
-          line: 106,
-          column: 4
-        },
-        end: {
-          line: 106,
-          column: 39
-        }
-      },
-      "10": {
-        start: {
-          line: 107,
-          column: 4
-        },
-        end: {
-          line: 107,
-          column: 33
-        }
-      }
-    },
-    fnMap: {
-      "0": {
-        name: "(anonymous_0)",
-        decl: {
-          start: {
-            line: 49,
-            column: 2
-          },
-          end: {
-            line: 49,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 49,
-            column: 20
-          },
-          end: {
-            line: 51,
-            column: 3
-          }
-        },
-        line: 49
-      },
-      "1": {
-        name: "(anonymous_1)",
-        decl: {
-          start: {
-            line: 58,
-            column: 2
-          },
-          end: {
-            line: 58,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 58,
-            column: 24
-          },
-          end: {
-            line: 60,
-            column: 3
-          }
-        },
-        line: 58
-      },
-      "2": {
-        name: "(anonymous_2)",
-        decl: {
-          start: {
-            line: 67,
-            column: 2
-          },
-          end: {
-            line: 67,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 67,
-            column: 29
-          },
-          end: {
-            line: 69,
-            column: 3
-          }
-        },
-        line: 67
-      },
-      "3": {
-        name: "(anonymous_3)",
-        decl: {
-          start: {
-            line: 76,
-            column: 2
-          },
-          end: {
-            line: 76,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 76,
-            column: 22
-          },
-          end: {
-            line: 78,
-            column: 3
-          }
-        },
-        line: 76
-      },
-      "4": {
-        name: "(anonymous_4)",
-        decl: {
-          start: {
-            line: 85,
-            column: 2
-          },
-          end: {
-            line: 85,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 85,
-            column: 25
-          },
-          end: {
-            line: 87,
-            column: 3
-          }
-        },
-        line: 85
-      },
-      "5": {
-        name: "(anonymous_5)",
-        decl: {
-          start: {
-            line: 94,
-            column: 2
-          },
-          end: {
-            line: 94,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 94,
-            column: 22
-          },
-          end: {
-            line: 96,
-            column: 3
-          }
-        },
-        line: 94
-      },
-      "6": {
-        name: "(anonymous_6)",
-        decl: {
-          start: {
-            line: 102,
-            column: 2
-          },
-          end: {
-            line: 102,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 102,
-            column: 37
-          },
-          end: {
-            line: 108,
-            column: 3
-          }
-        },
-        line: 102
-      }
-    },
-    branchMap: {
-      "0": {
-        loc: {
-          start: {
-            line: 102,
-            column: 14
-          },
-          end: {
-            line: 102,
-            column: 35
-          }
-        },
-        type: "default-arg",
-        locations: [{
-          start: {
-            line: 102,
-            column: 33
-          },
-          end: {
-            line: 102,
-            column: 35
-          }
-        }],
-        line: 102
-      }
-    },
-    s: {
-      "0": 0,
-      "1": 0,
-      "2": 0,
-      "3": 0,
-      "4": 0,
-      "5": 0,
-      "6": 0,
-      "7": 0,
-      "8": 0,
-      "9": 0,
-      "10": 0
-    },
-    f: {
-      "0": 0,
-      "1": 0,
-      "2": 0,
-      "3": 0,
-      "4": 0,
-      "5": 0,
-      "6": 0
-    },
-    b: {
-      "0": [0]
-    },
-    _coverageSchema: "332fd63041d2c1bcb487cc26dd0d5f7d97098a6c"
-  },
-      coverage = global[gcv] || (global[gcv] = {});
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
+var _jsLogger = __webpack_require__(31);
+
+var JsLogger = _interopRequireWildcard(_jsLogger);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var LOG_LEVEL = {
+  "DEBUG": JsLogger.DEBUG,
+  "INFO": JsLogger.INFO,
+  "TIME": JsLogger.TIME,
+  "WARN": JsLogger.WARN,
+  "ERROR": JsLogger.ERROR,
+  "OFF": JsLogger.OFF
+};
+
+var LoggerFactory = function () {
+  function LoggerFactory(options) {
+    _classCallCheck(this, LoggerFactory);
+
+    JsLogger.useDefaults(options || {});
   }
 
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
+  _createClass(LoggerFactory, [{
+    key: "getLogger",
+    value: function getLogger(name) {
+      if (!name) {
+        return JsLogger;
+      }
+      return JsLogger.get(name);
+    }
+  }]);
+
+  return LoggerFactory;
 }();
+
+var lf = new LoggerFactory({ defaultLevel: JsLogger.DEBUG });
+
+exports.default = lf;
+exports.LOG_LEVEL = LOG_LEVEL;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -472,9 +176,6 @@ var Track = function () {
      * @private
      */
     get: function get() {
-      ++cov_1cwksiggh8.f[0];
-      ++cov_1cwksiggh8.s[0];
-
       return this._id;
     }
 
@@ -508,9 +209,6 @@ var Track = function () {
   }, {
     key: "active",
     get: function get() {
-      ++cov_1cwksiggh8.f[1];
-      ++cov_1cwksiggh8.s[1];
-
       return this._active;
     }
 
@@ -521,9 +219,6 @@ var Track = function () {
      */
     ,
     set: function set(value) {
-      ++cov_1cwksiggh8.f[2];
-      ++cov_1cwksiggh8.s[2];
-
       this._active = value;
     }
 
@@ -536,9 +231,6 @@ var Track = function () {
   }, {
     key: "label",
     get: function get() {
-      ++cov_1cwksiggh8.f[3];
-      ++cov_1cwksiggh8.s[3];
-
       return this._label;
     }
 
@@ -551,9 +243,6 @@ var Track = function () {
   }, {
     key: "language",
     get: function get() {
-      ++cov_1cwksiggh8.f[4];
-      ++cov_1cwksiggh8.s[4];
-
       return this._language;
     }
 
@@ -566,9 +255,6 @@ var Track = function () {
   }, {
     key: "index",
     get: function get() {
-      ++cov_1cwksiggh8.f[5];
-      ++cov_1cwksiggh8.s[5];
-
       return this._index;
     }
 
@@ -580,21 +266,14 @@ var Track = function () {
   }]);
 
   function Track() {
-    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (++cov_1cwksiggh8.b[0][0], {});
+    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
     _classCallCheck(this, Track);
 
-    ++cov_1cwksiggh8.f[6];
-    ++cov_1cwksiggh8.s[6];
-
     this._id = settings.id;
-    ++cov_1cwksiggh8.s[7];
     this._active = settings.active;
-    ++cov_1cwksiggh8.s[8];
     this._label = settings.label;
-    ++cov_1cwksiggh8.s[9];
     this._language = settings.language;
-    ++cov_1cwksiggh8.s[10];
     this._index = settings.index;
   }
 
@@ -602,289 +281,6 @@ var Track = function () {
 }();
 
 exports.default = Track;
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.LOG_LEVEL = undefined;
-
-var cov_1wsa0jyoh5 = function () {
-  var path = "/Users/dan.ziv/WebstormProjects/playkit-js/src/utils/logger.js",
-      hash = "745a4e8c13b0a5a71e29c84209897bddfd5a3c13",
-      global = new Function('return this')(),
-      gcv = "__coverage__",
-      coverageData = {
-    path: "/Users/dan.ziv/WebstormProjects/playkit-js/src/utils/logger.js",
-    statementMap: {
-      "0": {
-        start: {
-          line: 4,
-          column: 47
-        },
-        end: {
-          line: 11,
-          column: 1
-        }
-      },
-      "1": {
-        start: {
-          line: 15,
-          column: 4
-        },
-        end: {
-          line: 15,
-          column: 40
-        }
-      },
-      "2": {
-        start: {
-          line: 19,
-          column: 4
-        },
-        end: {
-          line: 21,
-          column: 5
-        }
-      },
-      "3": {
-        start: {
-          line: 20,
-          column: 6
-        },
-        end: {
-          line: 20,
-          column: 22
-        }
-      },
-      "4": {
-        start: {
-          line: 22,
-          column: 4
-        },
-        end: {
-          line: 22,
-          column: 30
-        }
-      },
-      "5": {
-        start: {
-          line: 26,
-          column: 11
-        },
-        end: {
-          line: 26,
-          column: 60
-        }
-      }
-    },
-    fnMap: {
-      "0": {
-        name: "(anonymous_0)",
-        decl: {
-          start: {
-            line: 14,
-            column: 2
-          },
-          end: {
-            line: 14,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 14,
-            column: 32
-          },
-          end: {
-            line: 16,
-            column: 3
-          }
-        },
-        line: 14
-      },
-      "1": {
-        name: "(anonymous_1)",
-        decl: {
-          start: {
-            line: 18,
-            column: 2
-          },
-          end: {
-            line: 18,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 18,
-            column: 27
-          },
-          end: {
-            line: 23,
-            column: 3
-          }
-        },
-        line: 18
-      }
-    },
-    branchMap: {
-      "0": {
-        loc: {
-          start: {
-            line: 15,
-            column: 25
-          },
-          end: {
-            line: 15,
-            column: 38
-          }
-        },
-        type: "binary-expr",
-        locations: [{
-          start: {
-            line: 15,
-            column: 25
-          },
-          end: {
-            line: 15,
-            column: 32
-          }
-        }, {
-          start: {
-            line: 15,
-            column: 36
-          },
-          end: {
-            line: 15,
-            column: 38
-          }
-        }],
-        line: 15
-      },
-      "1": {
-        loc: {
-          start: {
-            line: 19,
-            column: 4
-          },
-          end: {
-            line: 21,
-            column: 5
-          }
-        },
-        type: "if",
-        locations: [{
-          start: {
-            line: 19,
-            column: 4
-          },
-          end: {
-            line: 21,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 19,
-            column: 4
-          },
-          end: {
-            line: 21,
-            column: 5
-          }
-        }],
-        line: 19
-      }
-    },
-    s: {
-      "0": 0,
-      "1": 0,
-      "2": 0,
-      "3": 0,
-      "4": 0,
-      "5": 0
-    },
-    f: {
-      "0": 0,
-      "1": 0
-    },
-    b: {
-      "0": [0, 0],
-      "1": [0, 0]
-    },
-    _coverageSchema: "332fd63041d2c1bcb487cc26dd0d5f7d97098a6c"
-  },
-      coverage = global[gcv] || (global[gcv] = {});
-
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
-  }
-
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
-}();
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _jsLogger = __webpack_require__(25);
-
-var JsLogger = _interopRequireWildcard(_jsLogger);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var LOG_LEVEL = (++cov_1wsa0jyoh5.s[0], {
-  "DEBUG": JsLogger.DEBUG,
-  "INFO": JsLogger.INFO,
-  "TIME": JsLogger.TIME,
-  "WARN": JsLogger.WARN,
-  "ERROR": JsLogger.ERROR,
-  "OFF": JsLogger.OFF
-});
-
-var LoggerFactory = function () {
-  function LoggerFactory(options) {
-    _classCallCheck(this, LoggerFactory);
-
-    ++cov_1wsa0jyoh5.f[0];
-    ++cov_1wsa0jyoh5.s[1];
-
-    JsLogger.useDefaults((++cov_1wsa0jyoh5.b[0][0], options) || (++cov_1wsa0jyoh5.b[0][1], {}));
-  }
-
-  _createClass(LoggerFactory, [{
-    key: "getLogger",
-    value: function getLogger(name) {
-      ++cov_1wsa0jyoh5.f[1];
-      ++cov_1wsa0jyoh5.s[2];
-
-      if (!name) {
-        ++cov_1wsa0jyoh5.b[1][0];
-        ++cov_1wsa0jyoh5.s[3];
-
-        return JsLogger;
-      } else {
-        ++cov_1wsa0jyoh5.b[1][1];
-      }
-      ++cov_1wsa0jyoh5.s[4];
-      return JsLogger.get(name);
-    }
-  }]);
-
-  return LoggerFactory;
-}();
-
-var lf = (++cov_1wsa0jyoh5.s[5], new LoggerFactory({ defaultLevel: JsLogger.DEBUG }));
-
-exports.default = lf;
-exports.LOG_LEVEL = LOG_LEVEL;
 
 /***/ }),
 /* 2 */
@@ -896,292 +292,6 @@ exports.LOG_LEVEL = LOG_LEVEL;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var cov_1za3vvb0b6 = function () {
-  var path = "/Users/dan.ziv/WebstormProjects/playkit-js/src/event/fake-event.js",
-      hash = "90642d66c4e95ff117bad138330fe141e881dbb0",
-      global = new Function('return this')(),
-      gcv = "__coverage__",
-      coverageData = {
-    path: "/Users/dan.ziv/WebstormProjects/playkit-js/src/event/fake-event.js",
-    statementMap: {
-      "0": {
-        start: {
-          line: 54,
-          column: 4
-        },
-        end: {
-          line: 54,
-          column: 25
-        }
-      },
-      "1": {
-        start: {
-          line: 57,
-          column: 4
-        },
-        end: {
-          line: 57,
-          column: 28
-        }
-      },
-      "2": {
-        start: {
-          line: 60,
-          column: 4
-        },
-        end: {
-          line: 60,
-          column: 34
-        }
-      },
-      "3": {
-        start: {
-          line: 69,
-          column: 4
-        },
-        end: {
-          line: 69,
-          column: 80
-        }
-      },
-      "4": {
-        start: {
-          line: 72,
-          column: 4
-        },
-        end: {
-          line: 72,
-          column: 21
-        }
-      },
-      "5": {
-        start: {
-          line: 75,
-          column: 4
-        },
-        end: {
-          line: 75,
-          column: 27
-        }
-      },
-      "6": {
-        start: {
-          line: 78,
-          column: 4
-        },
-        end: {
-          line: 78,
-          column: 30
-        }
-      },
-      "7": {
-        start: {
-          line: 81,
-          column: 4
-        },
-        end: {
-          line: 81,
-          column: 23
-        }
-      },
-      "8": {
-        start: {
-          line: 88,
-          column: 4
-        },
-        end: {
-          line: 88,
-          column: 25
-        }
-      },
-      "9": {
-        start: {
-          line: 90,
-          column: 4
-        },
-        end: {
-          line: 90,
-          column: 27
-        }
-      },
-      "10": {
-        start: {
-          line: 107,
-          column: 4
-        },
-        end: {
-          line: 107,
-          column: 24
-        }
-      }
-    },
-    fnMap: {
-      "0": {
-        name: "(anonymous_0)",
-        decl: {
-          start: {
-            line: 49,
-            column: 2
-          },
-          end: {
-            line: 49,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 49,
-            column: 42
-          },
-          end: {
-            line: 91,
-            column: 3
-          }
-        },
-        line: 49
-      },
-      "1": {
-        name: "(anonymous_1)",
-        decl: {
-          start: {
-            line: 98,
-            column: 2
-          },
-          end: {
-            line: 98,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 98,
-            column: 19
-          },
-          end: {
-            line: 99,
-            column: 3
-          }
-        },
-        line: 98
-      },
-      "2": {
-        name: "(anonymous_2)",
-        decl: {
-          start: {
-            line: 106,
-            column: 2
-          },
-          end: {
-            line: 106,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 106,
-            column: 29
-          },
-          end: {
-            line: 108,
-            column: 3
-          }
-        },
-        line: 106
-      },
-      "3": {
-        name: "(anonymous_3)",
-        decl: {
-          start: {
-            line: 115,
-            column: 2
-          },
-          end: {
-            line: 115,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 115,
-            column: 20
-          },
-          end: {
-            line: 116,
-            column: 3
-          }
-        },
-        line: 115
-      }
-    },
-    branchMap: {
-      "0": {
-        loc: {
-          start: {
-            line: 69,
-            column: 21
-          },
-          end: {
-            line: 69,
-            column: 79
-          }
-        },
-        type: "cond-expr",
-        locations: [{
-          start: {
-            line: 69,
-            column: 42
-          },
-          end: {
-            line: 69,
-            column: 66
-          }
-        }, {
-          start: {
-            line: 69,
-            column: 69
-          },
-          end: {
-            line: 69,
-            column: 79
-          }
-        }],
-        line: 69
-      }
-    },
-    s: {
-      "0": 0,
-      "1": 0,
-      "2": 0,
-      "3": 0,
-      "4": 0,
-      "5": 0,
-      "6": 0,
-      "7": 0,
-      "8": 0,
-      "9": 0,
-      "10": 0
-    },
-    f: {
-      "0": 0,
-      "1": 0,
-      "2": 0,
-      "3": 0
-    },
-    b: {
-      "0": [0, 0]
-    },
-    _coverageSchema: "332fd63041d2c1bcb487cc26dd0d5f7d97098a6c"
-  },
-      coverage = global[gcv] || (global[gcv] = {});
-
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
-  }
-
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
-}();
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -1215,9 +325,6 @@ var FakeEvent = function () {
   function FakeEvent(type, payload) {
     _classCallCheck(this, FakeEvent);
 
-    ++cov_1za3vvb0b6.f[0];
-    ++cov_1za3vvb0b6.s[0];
-
     // These Properties below cannot be set by dict.  They are all provided for
     // compatibility with native events.
 
@@ -1225,11 +332,9 @@ var FakeEvent = function () {
     this.bubbles = false;
 
     /** @const {boolean} */
-    ++cov_1za3vvb0b6.s[1];
     this.cancelable = false;
 
     /** @const {boolean} */
-    ++cov_1za3vvb0b6.s[2];
     this.defaultPrevented = false;
 
     /**
@@ -1239,33 +344,26 @@ var FakeEvent = function () {
      * @const {number}
      * @see https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp
      */
-    ++cov_1za3vvb0b6.s[3];
-    this.timeStamp = window.performance ? (++cov_1za3vvb0b6.b[0][0], window.performance.now()) : (++cov_1za3vvb0b6.b[0][1], Date.now());
+    this.timeStamp = window.performance ? window.performance.now() : Date.now();
 
     /** @const {string} */
-    ++cov_1za3vvb0b6.s[4];
     this.type = type;
 
     /** @const {boolean} */
-    ++cov_1za3vvb0b6.s[5];
     this.isTrusted = false;
 
     /** @type {EventTarget} */
-    ++cov_1za3vvb0b6.s[6];
     this.currentTarget = null;
 
     /** @type {EventTarget} */
-    ++cov_1za3vvb0b6.s[7];
     this.target = null;
 
     /**
      * Non-standard property read by FakeEventTarget to stop processing listeners.
      * @type {boolean}
      */
-    ++cov_1za3vvb0b6.s[8];
     this.stopped = false;
 
-    ++cov_1za3vvb0b6.s[9];
     this.payload = payload;
   }
 
@@ -1296,9 +394,7 @@ var FakeEvent = function () {
 
   _createClass(FakeEvent, [{
     key: "preventDefault",
-    value: function preventDefault() {
-      ++cov_1za3vvb0b6.f[1];
-    }
+    value: function preventDefault() {}
 
     /**
      * Stops processing event listeners for this event.  Provided for compatibility
@@ -1309,9 +405,6 @@ var FakeEvent = function () {
   }, {
     key: "stopImmediatePropagation",
     value: function stopImmediatePropagation() {
-      ++cov_1za3vvb0b6.f[2];
-      ++cov_1za3vvb0b6.s[10];
-
       this.stopped = true;
     }
 
@@ -1323,9 +416,7 @@ var FakeEvent = function () {
 
   }, {
     key: "stopPropagation",
-    value: function stopPropagation() {
-      ++cov_1za3vvb0b6.f[3];
-    }
+    value: function stopPropagation() {}
   }]);
 
   return FakeEvent;
@@ -1344,32 +435,379 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_1u2dfg434a = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/track/audio-track.js',
-      hash = 'cb94d9c60e0745536a2f23d3c520691d5a021a9d',
-      global = new Function('return this')(),
-      gcv = '__coverage__',
-      coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/track/audio-track.js',
-    statementMap: {},
-    fnMap: {},
-    branchMap: {},
-    s: {},
-    f: {},
-    b: {},
-    _coverageSchema: '332fd63041d2c1bcb487cc26dd0d5f7d97098a6c'
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _Number = {
+  /**
+   * @param {number} n - A certain number
+   * @returns {boolean} - If the input is a number
+   */
+  isNumber: function isNumber(n) {
+    return Number(n) === n;
   },
-      coverage = global[gcv] || (global[gcv] = {});
 
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
+  /**
+   * @param {number} n - A certain number
+   * @returns {boolean} - If the input is an integer
+   */
+  isInt: function isInt(n) {
+    return this.isNumber(n) && n % 1 === 0;
+  },
+
+  /**
+   * @param {number} n - A certain number
+   * @returns {boolean} - If the input is a float
+   */
+  isFloat: function isFloat(n) {
+    return this.isNumber(n) && n % 1 !== 0;
   }
+};
 
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
-}();
+var _String = {
+  /**
+   * Uppercase the first letter of a string
+   * @param  {String} string - String to be uppercased
+   * @return {String} - The uppercased string
+   * @public
+   * @method toTitleCase
+   */
+  capitlize: function capitlize(string) {
+    if (typeof string !== 'string') {
+      return string;
+    }
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  },
 
-var _track = __webpack_require__(0);
+  /**
+   * @param {string} string - Certain string
+   * @param {string} searchString - Certain string
+   * @returns {boolean} - Whether the string: string is ending with string: searchString
+   */
+  endsWith: function endsWith(string, searchString) {
+    if (typeof string !== 'string' || typeof searchString !== 'string') {
+      return false;
+    }
+    return string.indexOf(searchString, string.length - searchString.length) != -1;
+  }
+};
+
+var _Object = {
+  /**
+   * @param {Array<Object>} objects - The objects to merge
+   * @returns {Object} - The merged object.
+   */
+  merge: function merge(objects) {
+    var target = {};
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = objects[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var obj = _step.value;
+
+        Object.assign(target, obj);
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+
+    return target;
+  },
+
+  /**
+   * @param {any} item - The item to check.
+   * @returns {boolean} - Whether the item is an object.
+   */
+  isObject: function isObject(item) {
+    return item && (typeof item === 'undefined' ? 'undefined' : _typeof(item)) === 'object' && !Array.isArray(item);
+  },
+
+  /**
+   * @param {any} target - The target object.
+   * @param {any} sources - The objects to merge.
+   * @returns {Object} - The merged object.
+   */
+  mergeDeep: function mergeDeep(target) {
+    for (var _len = arguments.length, sources = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      sources[_key - 1] = arguments[_key];
+    }
+
+    if (!sources.length) {
+      return target;
+    }
+    var source = sources.shift();
+    if (this.isObject(target) && this.isObject(source)) {
+      for (var key in source) {
+        if (this.isObject(source[key])) {
+          if (!target[key]) Object.assign(target, _defineProperty({}, key, {}));
+          this.mergeDeep(target[key], source[key]);
+        } else {
+          Object.assign(target, _defineProperty({}, key, source[key]));
+        }
+      }
+    }
+    return this.mergeDeep.apply(this, [target].concat(_toConsumableArray(sources)));
+  },
+
+  /**
+   * @param {any} data - The data to copy.
+   * @returns {any} - The copied data.
+   */
+  copyDeep: function copyDeep(data) {
+    var _this = this;
+
+    var node = void 0;
+    if (Array.isArray(data)) {
+      node = data.length > 0 ? data.slice(0) : [];
+      node.forEach(function (e, i) {
+        if ((typeof e === 'undefined' ? 'undefined' : _typeof(e)) === "object" && e !== {} || Array.isArray(e) && e.length > 0) {
+          node[i] = _this.copyDeep(e);
+        }
+      });
+    } else if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) === "object") {
+      node = Object.assign({}, data);
+      Object.keys(node).forEach(function (key) {
+        if (_typeof(node[key]) === "object" && node[key] !== {} || Array.isArray(node[key]) && node[key].length > 0) {
+          node[key] = _this.copyDeep(node[key]);
+        }
+      });
+    } else {
+      node = data;
+    }
+    return node;
+  },
+
+  /**
+   * Checks if an object is an empy object.
+   * @param {Object} obj - The object to check
+   * @returns {boolean} - Whether the object is empty.
+   */
+  isEmptyObject: function isEmptyObject(obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  },
+
+  /**
+   * Checks for nested object properties.
+   * @param {Object} obj - The object to check.
+   * @param {string} propertyPath - The path to check.
+   * @returns {boolean} - The value in this path.
+   */
+  getPropertyPath: function getPropertyPath(obj, propertyPath) {
+    return propertyPath.split(".").reduce(function (o, x) {
+      return typeof o === "undefined" || o === null ? o : o[x];
+    }, obj);
+  },
+
+  /**
+   * Checks for nested object properties.
+   * @param {Object} obj - The object to check.
+   * @param {string} propertyPath - The path to check.
+   * @returns {boolean} - Whether the path exists in the object.
+   */
+  hasPropertyPath: function hasPropertyPath(obj, propertyPath) {
+    if (!propertyPath) {
+      return false;
+    }
+    var properties = propertyPath.split('.');
+    for (var i = 0; i < properties.length; i++) {
+      var prop = properties[i];
+      if (!obj || !obj.hasOwnProperty(prop)) {
+        return false;
+      } else {
+        obj = obj[prop];
+      }
+    }
+    return true;
+  },
+
+  /**
+   * Creates deferred promise which can resolved/rejected outside the promise scope.
+   * @returns {DeferredPromise} - The promise with resolve and reject props.
+   */
+  defer: function defer() {
+    var res = void 0,
+        rej = void 0;
+    // $FlowFixMe
+    var promise = new Promise(function (resolve, reject) {
+      res = resolve;
+      rej = reject;
+    });
+    // $FlowFixMe
+    promise.resolve = res;
+    // $FlowFixMe
+    promise.reject = rej;
+    return promise;
+  },
+
+  /**
+   * Binds an handler to a desired context.
+   * @param {any} thisObj - The handler context.
+   * @param {Function} fn - The handler.
+   * @returns {Function} - The new bound function.
+   * @public
+   */
+  bind: function bind(thisObj, fn) {
+    return function () {
+      fn.apply(thisObj, arguments);
+    };
+  }
+};
+
+var _Generator = {
+  /**
+   * Generates unique id.
+   * @param {number} length - The length of the id.
+   * @returns {string} - The generated id.
+   */
+  uniqueId: function uniqueId(length) {
+    var from = 2;
+    var to = from + (!length || length < 0 ? 0 : length - 2);
+    return '_' + Math.random().toString(36).substr(from, to);
+  },
+
+  /**
+   * Generates GUID.
+   * @return {string} - GUID
+   * @private
+   */
+  guid: function guid() {
+    var S4 = function S4() {
+      return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);
+    };
+    return S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4();
+  }
+};
+
+var _Dom = {
+  /**
+   * Adds a node to the end of the list of children of a specified parent node.
+   * @param {Element} parent - The parent node.
+   * @param {Element} child - The child node.
+   * @returns {void}
+   */
+  appendChild: function appendChild(parent, child) {
+    if (parent && child && parent.appendChild) {
+      parent.appendChild(child);
+    }
+  },
+
+
+  /**
+   * Returns a reference to the element by its ID.
+   * @param {string} id - The desired id.
+   * @returns {Element} - The element with the desired id.
+   */
+  getElementById: function getElementById(id) {
+    return document.getElementById(id);
+  },
+
+
+  /**
+   * Creates the HTML element specified by tagName.
+   * @param {string} tagName - The tag name.
+   * @returns {Element} - The element just created.
+   */
+  createElement: function createElement(tagName) {
+    return document.createElement(tagName);
+  },
+
+
+  /**
+   * Loads script asynchronously.
+   * @param {string} url - The url to load.
+   * @return {Promise} - The loading promise.
+   * @public
+   */
+  loadScriptAsync: function loadScriptAsync(url) {
+    var _this2 = this;
+
+    return new Promise(function (resolve, reject) {
+      var r = false,
+          t = document.getElementsByTagName("script")[0],
+          s = _this2.createElement("script");
+      s.type = "text/javascript";
+      s.src = url;
+      s.async = true;
+      s.onload = s.onreadystatechange = function () {
+        if (!r && (!this.readyState || this.readyState === "complete")) {
+          r = true;
+          resolve(this);
+        }
+      };
+      s.onerror = s.onabort = reject;
+      if (t && t.parentNode) {
+        t.parentNode.insertBefore(s, t);
+      }
+    });
+  }
+};
+
+var _Http = {
+  execute: function execute(url, params) {
+    var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "POST";
+    var headers = arguments[3];
+
+    var request = new XMLHttpRequest();
+    return new Promise(function (resolve, reject) {
+      request.onreadystatechange = function () {
+        if (request.readyState === 4) {
+          if (request.status === 200) {
+            var jsonResponse = JSON.parse(request.responseText);
+            resolve(jsonResponse);
+          } else {
+            reject(request.responseText);
+          }
+        }
+      };
+      request.open(method, url);
+      if (headers) {
+        headers.forEach(function (value, key) {
+          request.setRequestHeader(key, value);
+        });
+      }
+      request.send(params);
+    });
+  }
+};
+
+exports.Number = _Number;
+exports.String = _String;
+exports.Object = _Object;
+exports.Generator = _Generator;
+exports.Dom = _Dom;
+exports.Http = _Http;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _track = __webpack_require__(1);
 
 var _track2 = _interopRequireDefault(_track);
 
@@ -1400,7 +838,7 @@ var AudioTrack = function (_Track) {
 exports.default = AudioTrack;
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1410,148 +848,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_bifclksei = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/track/text-track.js',
-      hash = 'a7e1c9292cee70801bb96c9ab3bae6098bbb8269',
-      global = new Function('return this')(),
-      gcv = '__coverage__',
-      coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/track/text-track.js',
-    statementMap: {
-      '0': {
-        start: {
-          line: 24,
-          column: 4
-        },
-        end: {
-          line: 24,
-          column: 22
-        }
-      },
-      '1': {
-        start: {
-          line: 32,
-          column: 4
-        },
-        end: {
-          line: 32,
-          column: 20
-        }
-      },
-      '2': {
-        start: {
-          line: 33,
-          column: 4
-        },
-        end: {
-          line: 33,
-          column: 31
-        }
-      }
-    },
-    fnMap: {
-      '0': {
-        name: '(anonymous_0)',
-        decl: {
-          start: {
-            line: 23,
-            column: 2
-          },
-          end: {
-            line: 23,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 23,
-            column: 21
-          },
-          end: {
-            line: 25,
-            column: 3
-          }
-        },
-        line: 23
-      },
-      '1': {
-        name: '(anonymous_1)',
-        decl: {
-          start: {
-            line: 31,
-            column: 2
-          },
-          end: {
-            line: 31,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 31,
-            column: 37
-          },
-          end: {
-            line: 34,
-            column: 3
-          }
-        },
-        line: 31
-      }
-    },
-    branchMap: {
-      '0': {
-        loc: {
-          start: {
-            line: 31,
-            column: 14
-          },
-          end: {
-            line: 31,
-            column: 35
-          }
-        },
-        type: 'default-arg',
-        locations: [{
-          start: {
-            line: 31,
-            column: 33
-          },
-          end: {
-            line: 31,
-            column: 35
-          }
-        }],
-        line: 31
-      }
-    },
-    s: {
-      '0': 0,
-      '1': 0,
-      '2': 0
-    },
-    f: {
-      '0': 0,
-      '1': 0
-    },
-    b: {
-      '0': [0]
-    },
-    _coverageSchema: '332fd63041d2c1bcb487cc26dd0d5f7d97098a6c'
-  },
-      coverage = global[gcv] || (global[gcv] = {});
-
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
-  }
-
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
-}();
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _track = __webpack_require__(0);
+var _track = __webpack_require__(1);
 
 var _track2 = _interopRequireDefault(_track);
 
@@ -1580,9 +879,6 @@ var TextTrack = function (_Track) {
      * @returns {string} - The kind of the text track.
      */
     get: function get() {
-      ++cov_bifclksei.f[0];
-      ++cov_bifclksei.s[0];
-
       return this._kind;
     }
 
@@ -1602,16 +898,11 @@ var TextTrack = function (_Track) {
   }]);
 
   function TextTrack() {
-    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (++cov_bifclksei.b[0][0], {});
+    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
     _classCallCheck(this, TextTrack);
 
-    ++cov_bifclksei.f[1];
-    ++cov_bifclksei.s[1];
-
     var _this = _possibleConstructorReturn(this, (TextTrack.__proto__ || Object.getPrototypeOf(TextTrack)).call(this, settings));
-
-    ++cov_bifclksei.s[2];
 
     _this._kind = settings.kind;
     return _this;
@@ -1623,7 +914,7 @@ var TextTrack = function (_Track) {
 exports.default = TextTrack;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1633,148 +924,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_1rlnzx43jq = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/track/video-track.js',
-      hash = '3141e08af88d354f73d1271474e9ae5be991bb6a',
-      global = new Function('return this')(),
-      gcv = '__coverage__',
-      coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/track/video-track.js',
-    statementMap: {
-      '0': {
-        start: {
-          line: 24,
-          column: 4
-        },
-        end: {
-          line: 24,
-          column: 27
-        }
-      },
-      '1': {
-        start: {
-          line: 32,
-          column: 4
-        },
-        end: {
-          line: 32,
-          column: 20
-        }
-      },
-      '2': {
-        start: {
-          line: 33,
-          column: 4
-        },
-        end: {
-          line: 33,
-          column: 41
-        }
-      }
-    },
-    fnMap: {
-      '0': {
-        name: '(anonymous_0)',
-        decl: {
-          start: {
-            line: 23,
-            column: 2
-          },
-          end: {
-            line: 23,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 23,
-            column: 26
-          },
-          end: {
-            line: 25,
-            column: 3
-          }
-        },
-        line: 23
-      },
-      '1': {
-        name: '(anonymous_1)',
-        decl: {
-          start: {
-            line: 31,
-            column: 2
-          },
-          end: {
-            line: 31,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 31,
-            column: 37
-          },
-          end: {
-            line: 34,
-            column: 3
-          }
-        },
-        line: 31
-      }
-    },
-    branchMap: {
-      '0': {
-        loc: {
-          start: {
-            line: 31,
-            column: 14
-          },
-          end: {
-            line: 31,
-            column: 35
-          }
-        },
-        type: 'default-arg',
-        locations: [{
-          start: {
-            line: 31,
-            column: 33
-          },
-          end: {
-            line: 31,
-            column: 35
-          }
-        }],
-        line: 31
-      }
-    },
-    s: {
-      '0': 0,
-      '1': 0,
-      '2': 0
-    },
-    f: {
-      '0': 0,
-      '1': 0
-    },
-    b: {
-      '0': [0]
-    },
-    _coverageSchema: '332fd63041d2c1bcb487cc26dd0d5f7d97098a6c'
-  },
-      coverage = global[gcv] || (global[gcv] = {});
-
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
-  }
-
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
-}();
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _track = __webpack_require__(0);
+var _track = __webpack_require__(1);
 
 var _track2 = _interopRequireDefault(_track);
 
@@ -1798,45 +950,72 @@ var VideoTrack = function (_Track) {
 
 
     /**
-     * Getter for the kind of the text track.
      * @public
-     * @returns {string} - The kind of the text track.
+     * @returns {number} - The bandwidth of the video track
+     */
+
+
+    /**
+     * @member {number} _width - The width of the video track
+     * @type {number}
+     * @private
      */
     get: function get() {
-      ++cov_1rlnzx43jq.f[0];
-      ++cov_1rlnzx43jq.s[0];
-
       return this._bandwidth;
     }
 
     /**
-     * @constructor
-     * @param {Object} settings - The track settings object.
+     * @public
+     * @returns {number} - The width of the video track
+     */
+
+
+    /**
+     * @member {number} _height - The height of the video track
+     * @type {number}
+     * @private
      */
 
     /**
-     * The kind of the text track:
-     * subtitles/captions/metadata.
-     * @member
-     * @type {string}
+     * @member {number} _bandwidth - The bandwidth of the video track
+     * @type {number}
      * @private
+     */
+
+  }, {
+    key: 'width',
+    get: function get() {
+      return this._width;
+    }
+
+    /**
+     * @public
+     * @returns {number} - The height of the video track
+     */
+
+  }, {
+    key: 'height',
+    get: function get() {
+      return this._height;
+    }
+
+    /**
+     * @constructor
+     * @param {Object} settings - The track settings object
      */
 
   }]);
 
   function VideoTrack() {
-    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (++cov_1rlnzx43jq.b[0][0], {});
+    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
     _classCallCheck(this, VideoTrack);
 
-    ++cov_1rlnzx43jq.f[1];
-    ++cov_1rlnzx43jq.s[1];
-
     var _this = _possibleConstructorReturn(this, (VideoTrack.__proto__ || Object.getPrototypeOf(VideoTrack)).call(this, settings));
 
-    ++cov_1rlnzx43jq.s[2];
-
     _this._bandwidth = settings.bandwidth;
+    _this._width = settings.width;
+    _this._height = settings.height;
     return _this;
   }
 
@@ -1846,7 +1025,7 @@ var VideoTrack = function (_Track) {
 exports.default = VideoTrack;
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1856,783 +1035,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_1sq2747ikp = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/event/event-manager.js',
-      hash = '7e867cecd4773fdf3dac54a2fa1cf8bc73b3ec6b',
-      global = new Function('return this')(),
-      gcv = '__coverage__',
-      coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/event/event-manager.js',
-    statementMap: {
-      '0': {
-        start: {
-          line: 21,
-          column: 4
-        },
-        end: {
-          line: 21,
-          column: 38
-        }
-      },
-      '1': {
-        start: {
-          line: 29,
-          column: 4
-        },
-        end: {
-          line: 29,
-          column: 21
-        }
-      },
-      '2': {
-        start: {
-          line: 30,
-          column: 4
-        },
-        end: {
-          line: 30,
-          column: 28
-        }
-      },
-      '3': {
-        start: {
-          line: 31,
-          column: 4
-        },
-        end: {
-          line: 31,
-          column: 29
-        }
-      },
-      '4': {
-        start: {
-          line: 43,
-          column: 18
-        },
-        end: {
-          line: 43,
-          column: 54
-        }
-      },
-      '5': {
-        start: {
-          line: 44,
-          column: 4
-        },
-        end: {
-          line: 46,
-          column: 5
-        }
-      },
-      '6': {
-        start: {
-          line: 45,
-          column: 6
-        },
-        end: {
-          line: 45,
-          column: 43
-        }
-      },
-      '7': {
-        start: {
-          line: 57,
-          column: 4
-        },
-        end: {
-          line: 70,
-          column: 5
-        }
-      },
-      '8': {
-        start: {
-          line: 58,
-          column: 17
-        },
-        end: {
-          line: 58,
-          column: 43
-        }
-      },
-      '9': {
-        start: {
-          line: 60,
-          column: 6
-        },
-        end: {
-          line: 69,
-          column: 7
-        }
-      },
-      '10': {
-        start: {
-          line: 61,
-          column: 22
-        },
-        end: {
-          line: 61,
-          column: 29
-        }
-      },
-      '11': {
-        start: {
-          line: 63,
-          column: 8
-        },
-        end: {
-          line: 68,
-          column: 9
-        }
-      },
-      '12': {
-        start: {
-          line: 64,
-          column: 10
-        },
-        end: {
-          line: 64,
-          column: 29
-        }
-      },
-      '13': {
-        start: {
-          line: 65,
-          column: 10
-        },
-        end: {
-          line: 67,
-          column: 11
-        }
-      },
-      '14': {
-        start: {
-          line: 66,
-          column: 12
-        },
-        end: {
-          line: 66,
-          column: 51
-        }
-      },
-      '15': {
-        start: {
-          line: 78,
-          column: 4
-        },
-        end: {
-          line: 87,
-          column: 5
-        }
-      },
-      '16': {
-        start: {
-          line: 79,
-          column: 22
-        },
-        end: {
-          line: 79,
-          column: 47
-        }
-      },
-      '17': {
-        start: {
-          line: 81,
-          column: 6
-        },
-        end: {
-          line: 83,
-          column: 7
-        }
-      },
-      '18': {
-        start: {
-          line: 82,
-          column: 8
-        },
-        end: {
-          line: 82,
-          column: 28
-        }
-      },
-      '19': {
-        start: {
-          line: 84,
-          column: 6
-        },
-        end: {
-          line: 86,
-          column: 7
-        }
-      },
-      '20': {
-        start: {
-          line: 85,
-          column: 8
-        },
-        end: {
-          line: 85,
-          column: 33
-        }
-      },
-      '21': {
-        start: {
-          line: 111,
-          column: 4
-        },
-        end: {
-          line: 111,
-          column: 25
-        }
-      },
-      '22': {
-        start: {
-          line: 114,
-          column: 4
-        },
-        end: {
-          line: 114,
-          column: 21
-        }
-      },
-      '23': {
-        start: {
-          line: 117,
-          column: 4
-        },
-        end: {
-          line: 117,
-          column: 29
-        }
-      },
-      '24': {
-        start: {
-          line: 119,
-          column: 4
-        },
-        end: {
-          line: 119,
-          column: 56
-        }
-      },
-      '25': {
-        start: {
-          line: 129,
-          column: 4
-        },
-        end: {
-          line: 130,
-          column: 13
-        }
-      },
-      '26': {
-        start: {
-          line: 130,
-          column: 6
-        },
-        end: {
-          line: 130,
-          column: 13
-        }
-      },
-      '27': {
-        start: {
-          line: 132,
-          column: 4
-        },
-        end: {
-          line: 132,
-          column: 69
-        }
-      },
-      '28': {
-        start: {
-          line: 134,
-          column: 4
-        },
-        end: {
-          line: 134,
-          column: 23
-        }
-      },
-      '29': {
-        start: {
-          line: 135,
-          column: 4
-        },
-        end: {
-          line: 135,
-          column: 25
-        }
-      }
-    },
-    fnMap: {
-      '0': {
-        name: '(anonymous_0)',
-        decl: {
-          start: {
-            line: 16,
-            column: 2
-          },
-          end: {
-            line: 16,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 16,
-            column: 16
-          },
-          end: {
-            line: 22,
-            column: 3
-          }
-        },
-        line: 16
-      },
-      '1': {
-        name: '(anonymous_1)',
-        decl: {
-          start: {
-            line: 28,
-            column: 2
-          },
-          end: {
-            line: 28,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 28,
-            column: 12
-          },
-          end: {
-            line: 32,
-            column: 3
-          }
-        },
-        line: 28
-      },
-      '2': {
-        name: '(anonymous_2)',
-        decl: {
-          start: {
-            line: 42,
-            column: 2
-          },
-          end: {
-            line: 42,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 42,
-            column: 66
-          },
-          end: {
-            line: 47,
-            column: 3
-          }
-        },
-        line: 42
-      },
-      '3': {
-        name: '(anonymous_3)',
-        decl: {
-          start: {
-            line: 56,
-            column: 2
-          },
-          end: {
-            line: 56,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 56,
-            column: 44
-          },
-          end: {
-            line: 71,
-            column: 3
-          }
-        },
-        line: 56
-      },
-      '4': {
-        name: '(anonymous_4)',
-        decl: {
-          start: {
-            line: 77,
-            column: 2
-          },
-          end: {
-            line: 77,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 77,
-            column: 20
-          },
-          end: {
-            line: 88,
-            column: 3
-          }
-        },
-        line: 77
-      },
-      '5': {
-        name: '(anonymous_5)',
-        decl: {
-          start: {
-            line: 109,
-            column: 2
-          },
-          end: {
-            line: 109,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 109,
-            column: 38
-          },
-          end: {
-            line: 120,
-            column: 3
-          }
-        },
-        line: 109
-      },
-      '6': {
-        name: '(anonymous_6)',
-        decl: {
-          start: {
-            line: 128,
-            column: 2
-          },
-          end: {
-            line: 128,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 128,
-            column: 19
-          },
-          end: {
-            line: 136,
-            column: 3
-          }
-        },
-        line: 128
-      }
-    },
-    branchMap: {
-      '0': {
-        loc: {
-          start: {
-            line: 44,
-            column: 4
-          },
-          end: {
-            line: 46,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 44,
-            column: 4
-          },
-          end: {
-            line: 46,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 44,
-            column: 4
-          },
-          end: {
-            line: 46,
-            column: 5
-          }
-        }],
-        line: 44
-      },
-      '1': {
-        loc: {
-          start: {
-            line: 57,
-            column: 4
-          },
-          end: {
-            line: 70,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 57,
-            column: 4
-          },
-          end: {
-            line: 70,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 57,
-            column: 4
-          },
-          end: {
-            line: 70,
-            column: 5
-          }
-        }],
-        line: 57
-      },
-      '2': {
-        loc: {
-          start: {
-            line: 63,
-            column: 8
-          },
-          end: {
-            line: 68,
-            column: 9
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 63,
-            column: 8
-          },
-          end: {
-            line: 68,
-            column: 9
-          }
-        }, {
-          start: {
-            line: 63,
-            column: 8
-          },
-          end: {
-            line: 68,
-            column: 9
-          }
-        }],
-        line: 63
-      },
-      '3': {
-        loc: {
-          start: {
-            line: 65,
-            column: 10
-          },
-          end: {
-            line: 67,
-            column: 11
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 65,
-            column: 10
-          },
-          end: {
-            line: 67,
-            column: 11
-          }
-        }, {
-          start: {
-            line: 65,
-            column: 10
-          },
-          end: {
-            line: 67,
-            column: 11
-          }
-        }],
-        line: 65
-      },
-      '4': {
-        loc: {
-          start: {
-            line: 78,
-            column: 4
-          },
-          end: {
-            line: 87,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 78,
-            column: 4
-          },
-          end: {
-            line: 87,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 78,
-            column: 4
-          },
-          end: {
-            line: 87,
-            column: 5
-          }
-        }],
-        line: 78
-      },
-      '5': {
-        loc: {
-          start: {
-            line: 84,
-            column: 6
-          },
-          end: {
-            line: 86,
-            column: 7
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 84,
-            column: 6
-          },
-          end: {
-            line: 86,
-            column: 7
-          }
-        }, {
-          start: {
-            line: 84,
-            column: 6
-          },
-          end: {
-            line: 86,
-            column: 7
-          }
-        }],
-        line: 84
-      },
-      '6': {
-        loc: {
-          start: {
-            line: 129,
-            column: 4
-          },
-          end: {
-            line: 130,
-            column: 13
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 129,
-            column: 4
-          },
-          end: {
-            line: 130,
-            column: 13
-          }
-        }, {
-          start: {
-            line: 129,
-            column: 4
-          },
-          end: {
-            line: 130,
-            column: 13
-          }
-        }],
-        line: 129
-      }
-    },
-    s: {
-      '0': 0,
-      '1': 0,
-      '2': 0,
-      '3': 0,
-      '4': 0,
-      '5': 0,
-      '6': 0,
-      '7': 0,
-      '8': 0,
-      '9': 0,
-      '10': 0,
-      '11': 0,
-      '12': 0,
-      '13': 0,
-      '14': 0,
-      '15': 0,
-      '16': 0,
-      '17': 0,
-      '18': 0,
-      '19': 0,
-      '20': 0,
-      '21': 0,
-      '22': 0,
-      '23': 0,
-      '24': 0,
-      '25': 0,
-      '26': 0,
-      '27': 0,
-      '28': 0,
-      '29': 0
-    },
-    f: {
-      '0': 0,
-      '1': 0,
-      '2': 0,
-      '3': 0,
-      '4': 0,
-      '5': 0,
-      '6': 0
-    },
-    b: {
-      '0': [0, 0],
-      '1': [0, 0],
-      '2': [0, 0],
-      '3': [0, 0],
-      '4': [0, 0],
-      '5': [0, 0],
-      '6': [0, 0]
-    },
-    _coverageSchema: '332fd63041d2c1bcb487cc26dd0d5f7d97098a6c'
-  },
-      coverage = global[gcv] || (global[gcv] = {});
-
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
-  }
-
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
-}();
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _multiMap = __webpack_require__(17);
+var _multiMap = __webpack_require__(13);
 
 var _multiMap2 = _interopRequireDefault(_multiMap);
 
@@ -2656,9 +1061,6 @@ var EventManager = function () {
   function EventManager() {
     _classCallCheck(this, EventManager);
 
-    ++cov_1sq2747ikp.f[0];
-    ++cov_1sq2747ikp.s[0];
-
     /**
      * Maps an event type to an array of event bindings.
      * @private {MultiMap.<!EventManager.Binding_>}
@@ -2675,13 +1077,8 @@ var EventManager = function () {
   _createClass(EventManager, [{
     key: 'destroy',
     value: function destroy() {
-      ++cov_1sq2747ikp.f[1];
-      ++cov_1sq2747ikp.s[1];
-
       this.removeAll();
-      ++cov_1sq2747ikp.s[2];
       this._bindingMap = null;
-      ++cov_1sq2747ikp.s[3];
       return Promise.resolve();
     }
 
@@ -2696,17 +1093,9 @@ var EventManager = function () {
   }, {
     key: 'listen',
     value: function listen(target, type, listener) {
-      ++cov_1sq2747ikp.f[2];
-
-      var binding = (++cov_1sq2747ikp.s[4], new Binding_(target, type, listener));
-      ++cov_1sq2747ikp.s[5];
+      var binding = new Binding_(target, type, listener);
       if (this._bindingMap) {
-        ++cov_1sq2747ikp.b[0][0];
-        ++cov_1sq2747ikp.s[6];
-
         this._bindingMap.push(type, binding);
-      } else {
-        ++cov_1sq2747ikp.b[0][1];
       }
     }
 
@@ -2720,39 +1109,19 @@ var EventManager = function () {
   }, {
     key: 'unlisten',
     value: function unlisten(target, type) {
-      ++cov_1sq2747ikp.f[3];
-      ++cov_1sq2747ikp.s[7];
-
       if (this._bindingMap) {
-        ++cov_1sq2747ikp.b[1][0];
+        var list = this._bindingMap.get(type);
 
-        var list = (++cov_1sq2747ikp.s[8], this._bindingMap.get(type));
-
-        ++cov_1sq2747ikp.s[9];
         for (var i = 0; i < list.length; ++i) {
-          var binding = (++cov_1sq2747ikp.s[10], list[i]);
+          var binding = list[i];
 
-          ++cov_1sq2747ikp.s[11];
           if (binding.target == target) {
-            ++cov_1sq2747ikp.b[2][0];
-            ++cov_1sq2747ikp.s[12];
-
             binding.unlisten();
-            ++cov_1sq2747ikp.s[13];
             if (this._bindingMap) {
-              ++cov_1sq2747ikp.b[3][0];
-              ++cov_1sq2747ikp.s[14];
-
               this._bindingMap.remove(type, binding);
-            } else {
-              ++cov_1sq2747ikp.b[3][1];
             }
-          } else {
-            ++cov_1sq2747ikp.b[2][1];
           }
         }
-      } else {
-        ++cov_1sq2747ikp.b[1][1];
       }
     }
 
@@ -2764,15 +1133,9 @@ var EventManager = function () {
   }, {
     key: 'removeAll',
     value: function removeAll() {
-      ++cov_1sq2747ikp.f[4];
-      ++cov_1sq2747ikp.s[15];
-
       if (this._bindingMap) {
-        ++cov_1sq2747ikp.b[4][0];
+        var listeners = this._bindingMap.getAll();
 
-        var listeners = (++cov_1sq2747ikp.s[16], this._bindingMap.getAll());
-
-        ++cov_1sq2747ikp.s[17];
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
         var _iteratorError = undefined;
@@ -2780,7 +1143,6 @@ var EventManager = function () {
         try {
           for (var _iterator = listeners[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
             var listener = _step.value;
-            ++cov_1sq2747ikp.s[18];
 
             listener.unlisten();
           }
@@ -2799,17 +1161,9 @@ var EventManager = function () {
           }
         }
 
-        ++cov_1sq2747ikp.s[19];
         if (this._bindingMap) {
-          ++cov_1sq2747ikp.b[5][0];
-          ++cov_1sq2747ikp.s[20];
-
           this._bindingMap.clear();
-        } else {
-          ++cov_1sq2747ikp.b[5][1];
         }
-      } else {
-        ++cov_1sq2747ikp.b[4][1];
       }
     }
   }]);
@@ -2834,21 +1188,15 @@ var Binding_ = function () {
   function Binding_(target, type, listener) {
     _classCallCheck(this, Binding_);
 
-    ++cov_1sq2747ikp.f[5];
-    ++cov_1sq2747ikp.s[21];
-
     /** @type {EventTarget} */
     this.target = target;
 
     /** @type {string} */
-    ++cov_1sq2747ikp.s[22];
     this.type = type;
 
     /** @type {?EventManager.ListenerType} */
-    ++cov_1sq2747ikp.s[23];
     this.listener = listener;
 
-    ++cov_1sq2747ikp.s[24];
     this.target.addEventListener(type, listener, false);
   }
 
@@ -2862,22 +1210,11 @@ var Binding_ = function () {
   _createClass(Binding_, [{
     key: 'unlisten',
     value: function unlisten() {
-      ++cov_1sq2747ikp.f[6];
-      ++cov_1sq2747ikp.s[25];
+      if (!this.target) return;
 
-      if (!this.target) {
-          ++cov_1sq2747ikp.b[6][0];
-          ++cov_1sq2747ikp.s[26];
-
-          return;
-        } else {
-        ++cov_1sq2747ikp.b[6][1];
-      }++cov_1sq2747ikp.s[27];
       this.target.removeEventListener(this.type, this.listener, false);
 
-      ++cov_1sq2747ikp.s[28];
       this.target = null;
-      ++cov_1sq2747ikp.s[29];
       this.listener = null;
     }
   }]);
@@ -2888,7 +1225,7 @@ var Binding_ = function () {
 exports.default = EventManager;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2899,69 +1236,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.CUSTOM_EVENTS = exports.HTML5_EVENTS = exports.PLAYER_EVENTS = undefined;
 
-var cov_8bz2gle5l = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/event/events.js',
-      hash = 'f701d63cb929e8fc2ca1075fb31ebc4add21e170',
-      global = new Function('return this')(),
-      gcv = '__coverage__',
-      coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/event/events.js',
-    statementMap: {
-      '0': {
-        start: {
-          line: 4,
-          column: 50
-        },
-        end: {
-          line: 93,
-          column: 1
-        }
-      },
-      '1': {
-        start: {
-          line: 95,
-          column: 51
-        },
-        end: {
-          line: 116,
-          column: 1
-        }
-      },
-      '2': {
-        start: {
-          line: 118,
-          column: 51
-        },
-        end: {
-          line: 118,
-          column: 87
-        }
-      }
-    },
-    fnMap: {},
-    branchMap: {},
-    s: {
-      '0': 0,
-      '1': 0,
-      '2': 0
-    },
-    f: {},
-    b: {},
-    _coverageSchema: '332fd63041d2c1bcb487cc26dd0d5f7d97098a6c'
-  },
-      coverage = global[gcv] || (global[gcv] = {});
+var _util = __webpack_require__(3);
 
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
-  }
+var Utils = _interopRequireWildcard(_util);
 
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
-}();
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-var _util = __webpack_require__(11);
-
-var HTML5_EVENTS = (++cov_8bz2gle5l.s[0], {
+var HTML5_EVENTS = {
   /**
    * Fires when the loading of an audio/video is aborted
    */
@@ -3050,21 +1331,30 @@ var HTML5_EVENTS = (++cov_8bz2gle5l.s[0], {
    * Fires when the video stops because it needs to buffer the next frame
    */
   WAITING: 'waiting'
-});
+};
 
-var CUSTOM_EVENTS = (++cov_8bz2gle5l.s[1], {
+
+var CUSTOM_EVENTS = {
   /**
-   * Fires when the video track has been changed
+   * Fires when the active video track has been changed
    */
   VIDEO_TRACK_CHANGED: 'videotrackchanged',
   /**
-   * Fires when the audio track has been changed
+   * Fires when the active audio track has been changed
    */
   AUDIO_TRACK_CHANGED: 'audiotrackchanged',
   /**
-   * Fires when the text track has been changed
+   * Fires when the active text track has been changed
    */
   TEXT_TRACK_CHANGED: 'texttrackchanged',
+  /**
+   * Fires when the player tracks have been changed
+   */
+  TRACKS_CHANGED: 'trackschanged',
+  /**
+   * Fires when the abr mode change from 'auto' to 'manual' or vice versa
+   */
+  ABR_MODE_CHANGED: 'abrmodechanged',
   /**
    * Fires when the player state has been changed
    */
@@ -3072,17 +1362,93 @@ var CUSTOM_EVENTS = (++cov_8bz2gle5l.s[1], {
   /**
    * Fires on the first play
    */
-  FIRST_PLAY: 'firstplay'
-});
+  FIRST_PLAY: 'firstplay',
+  /**
+   * Fires when the player has selected the source to play
+   */
+  SOURCE_SELECTED: 'sourceselected',
+  /**
+   * Fired when ad data is available.
+   */
+  AD_LOADED: 'adloaded',
+  /**
+   * Fired when the ad starts playing.
+   */
+  AD_STARTED: 'adstarted',
+  /**
+   * Fired when the ad is resumed.
+   */
+  AD_RESUMED: 'adresumed',
+  /**
+   * Fired when the ad is paused.
+   */
+  AD_PAUSED: 'adpaused',
+  /**
+   * Fired when the ad is clicked.
+   */
+  AD_CLICKED: 'adclicked',
+  /**
+   * Fired when the ad is skipped by the user.
+   */
+  AD_SKIPPED: 'adskipped',
+  /**
+   * Fired when the ad completes playing.
+   */
+  AD_COMPLETED: 'adcompleted',
+  /**
+   * Fired when an error occurred while the ad was loading or playing.
+   */
+  AD_ERROR: 'aderror',
+  /**
+   * Fired when the ads manager is done playing all the ads.
+   */
+  ALL_ADS_COMPLETED: 'alladscompleted',
+  /**
+   * Fired when content should be paused. This usually happens right before an ad is about to cover the content.
+   */
+  AD_BREAK_START: 'adbreakstart',
+  /**
+   * Fired when content should be resumed. This usually happens when an ad finishes or collapses.
+   */
+  AD_BREAK_END: 'adbreakend',
+  /**
+   * Fired when the ad playhead crosses first quartile.
+   */
+  AD_FIRST_QUARTILE: 'adfirstquartile',
+  /**
+   * Fired when the ad playhead crosses midpoint.
+   */
+  AD_MIDPOINT: 'admidpoint',
+  /**
+   * Fired when the ad playhead crosses third quartile.
+   */
+  AD_THIRD_QUARTILE: 'adthirdquartile',
+  /**
+   * Fired when the ad is closed by the user.
+   */
+  USER_CLOSED_AD: 'userclosedad',
+  /**
+   * Fired when the ad volume has changed.
+   */
+  AD_VOLUME_CHANGED: 'advolumechanged',
+  /**
+   * Fired when the ad volume has been muted.
+   */
+  AD_MUTED: 'admuted',
+  /**
+   * Fired on ad time progress.
+   */
+  AD_PROGRESS: 'adprogress'
+};
 
-var PLAYER_EVENTS = (++cov_8bz2gle5l.s[2], (0, _util.merge)([HTML5_EVENTS, CUSTOM_EVENTS]));
+var PLAYER_EVENTS = Utils.Object.merge([HTML5_EVENTS, CUSTOM_EVENTS]);
 
 exports.PLAYER_EVENTS = PLAYER_EVENTS;
 exports.HTML5_EVENTS = HTML5_EVENTS;
 exports.CUSTOM_EVENTS = CUSTOM_EVENTS;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3092,3764 +1458,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_4x54fj3w8 = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/player.js',
-      hash = '0ad8c0307a8bbdac1ca2ff33dc35175f0829d22d',
-      global = new Function('return this')(),
-      gcv = '__coverage__',
-      coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/player.js',
-    statementMap: {
-      '0': {
-        start: {
-          line: 77,
-          column: 4
-        },
-        end: {
-          line: 77,
-          column: 12
-        }
-      },
-      '1': {
-        start: {
-          line: 78,
-          column: 4
-        },
-        end: {
-          line: 78,
-          column: 22
-        }
-      },
-      '2': {
-        start: {
-          line: 79,
-          column: 4
-        },
-        end: {
-          line: 79,
-          column: 27
-        }
-      },
-      '3': {
-        start: {
-          line: 80,
-          column: 4
-        },
-        end: {
-          line: 80,
-          column: 53
-        }
-      },
-      '4': {
-        start: {
-          line: 81,
-          column: 4
-        },
-        end: {
-          line: 81,
-          column: 48
-        }
-      },
-      '5': {
-        start: {
-          line: 82,
-          column: 4
-        },
-        end: {
-          line: 82,
-          column: 46
-        }
-      },
-      '6': {
-        start: {
-          line: 83,
-          column: 4
-        },
-        end: {
-          line: 83,
-          column: 44
-        }
-      },
-      '7': {
-        start: {
-          line: 84,
-          column: 4
-        },
-        end: {
-          line: 84,
-          column: 27
-        }
-      },
-      '8': {
-        start: {
-          line: 93,
-          column: 4
-        },
-        end: {
-          line: 93,
-          column: 76
-        }
-      },
-      '9': {
-        start: {
-          line: 94,
-          column: 4
-        },
-        end: {
-          line: 94,
-          column: 36
-        }
-      },
-      '10': {
-        start: {
-          line: 95,
-          column: 4
-        },
-        end: {
-          line: 95,
-          column: 37
-        }
-      },
-      '11': {
-        start: {
-          line: 96,
-          column: 4
-        },
-        end: {
-          line: 96,
-          column: 24
-        }
-      },
-      '12': {
-        start: {
-          line: 105,
-          column: 4
-        },
-        end: {
-          line: 105,
-          column: 27
-        }
-      },
-      '13': {
-        start: {
-          line: 106,
-          column: 4
-        },
-        end: {
-          line: 106,
-          column: 33
-        }
-      },
-      '14': {
-        start: {
-          line: 107,
-          column: 4
-        },
-        end: {
-          line: 107,
-          column: 34
-        }
-      },
-      '15': {
-        start: {
-          line: 108,
-          column: 4
-        },
-        end: {
-          line: 108,
-          column: 33
-        }
-      },
-      '16': {
-        start: {
-          line: 109,
-          column: 4
-        },
-        end: {
-          line: 109,
-          column: 22
-        }
-      },
-      '17': {
-        start: {
-          line: 110,
-          column: 4
-        },
-        end: {
-          line: 110,
-          column: 22
-        }
-      },
-      '18': {
-        start: {
-          line: 111,
-          column: 4
-        },
-        end: {
-          line: 111,
-          column: 27
-        }
-      },
-      '19': {
-        start: {
-          line: 120,
-          column: 4
-        },
-        end: {
-          line: 120,
-          column: 14
-        }
-      },
-      '20': {
-        start: {
-          line: 130,
-          column: 18
-        },
-        end: {
-          line: 130,
-          column: 32
-        }
-      },
-      '21': {
-        start: {
-          line: 131,
-          column: 4
-        },
-        end: {
-          line: 133,
-          column: 5
-        }
-      },
-      '22': {
-        start: {
-          line: 132,
-          column: 6
-        },
-        end: {
-          line: 132,
-          column: 58
-        }
-      },
-      '23': {
-        start: {
-          line: 143,
-          column: 4
-        },
-        end: {
-          line: 151,
-          column: 5
-        }
-      },
-      '24': {
-        start: {
-          line: 144,
-          column: 20
-        },
-        end: {
-          line: 144,
-          column: 34
-        }
-      },
-      '25': {
-        start: {
-          line: 145,
-          column: 6
-        },
-        end: {
-          line: 150,
-          column: 7
-        }
-      },
-      '26': {
-        start: {
-          line: 146,
-          column: 8
-        },
-        end: {
-          line: 149,
-          column: 9
-        }
-      },
-      '27': {
-        start: {
-          line: 147,
-          column: 10
-        },
-        end: {
-          line: 147,
-          column: 47
-        }
-      },
-      '28': {
-        start: {
-          line: 148,
-          column: 10
-        },
-        end: {
-          line: 148,
-          column: 16
-        }
-      },
-      '29': {
-        start: {
-          line: 162,
-          column: 4
-        },
-        end: {
-          line: 162,
-          column: 45
-        }
-      },
-      '30': {
-        start: {
-          line: 163,
-          column: 4
-        },
-        end: {
-          line: 165,
-          column: 5
-        }
-      },
-      '31': {
-        start: {
-          line: 164,
-          column: 6
-        },
-        end: {
-          line: 164,
-          column: 18
-        }
-      },
-      '32': {
-        start: {
-          line: 174,
-          column: 4
-        },
-        end: {
-          line: 193,
-          column: 5
-        }
-      },
-      '33': {
-        start: {
-          line: 175,
-          column: 6
-        },
-        end: {
-          line: 179,
-          column: 7
-        }
-      },
-      '34': {
-        start: {
-          line: 176,
-          column: 8
-        },
-        end: {
-          line: 178,
-          column: 11
-        }
-      },
-      '35': {
-        start: {
-          line: 177,
-          column: 10
-        },
-        end: {
-          line: 177,
-          column: 43
-        }
-      },
-      '36': {
-        start: {
-          line: 180,
-          column: 6
-        },
-        end: {
-          line: 183,
-          column: 9
-        }
-      },
-      '37': {
-        start: {
-          line: 181,
-          column: 8
-        },
-        end: {
-          line: 181,
-          column: 64
-        }
-      },
-      '38': {
-        start: {
-          line: 182,
-          column: 8
-        },
-        end: {
-          line: 182,
-          column: 41
-        }
-      },
-      '39': {
-        start: {
-          line: 184,
-          column: 6
-        },
-        end: {
-          line: 187,
-          column: 9
-        }
-      },
-      '40': {
-        start: {
-          line: 185,
-          column: 8
-        },
-        end: {
-          line: 185,
-          column: 64
-        }
-      },
-      '41': {
-        start: {
-          line: 186,
-          column: 8
-        },
-        end: {
-          line: 186,
-          column: 41
-        }
-      },
-      '42': {
-        start: {
-          line: 188,
-          column: 6
-        },
-        end: {
-          line: 191,
-          column: 9
-        }
-      },
-      '43': {
-        start: {
-          line: 189,
-          column: 8
-        },
-        end: {
-          line: 189,
-          column: 63
-        }
-      },
-      '44': {
-        start: {
-          line: 190,
-          column: 8
-        },
-        end: {
-          line: 190,
-          column: 41
-        }
-      },
-      '45': {
-        start: {
-          line: 192,
-          column: 6
-        },
-        end: {
-          line: 192,
-          column: 81
-        }
-      },
-      '46': {
-        start: {
-          line: 204,
-          column: 4
-        },
-        end: {
-          line: 204,
-          column: 39
-        }
-      },
-      '47': {
-        start: {
-          line: 215,
-          column: 4
-        },
-        end: {
-          line: 225,
-          column: 7
-        }
-      },
-      '48': {
-        start: {
-          line: 216,
-          column: 6
-        },
-        end: {
-          line: 224,
-          column: 7
-        }
-      },
-      '49': {
-        start: {
-          line: 217,
-          column: 8
-        },
-        end: {
-          line: 217,
-          column: 43
-        }
-      },
-      '50': {
-        start: {
-          line: 218,
-          column: 13
-        },
-        end: {
-          line: 224,
-          column: 7
-        }
-      },
-      '51': {
-        start: {
-          line: 219,
-          column: 8
-        },
-        end: {
-          line: 219,
-          column: 43
-        }
-      },
-      '52': {
-        start: {
-          line: 220,
-          column: 13
-        },
-        end: {
-          line: 224,
-          column: 7
-        }
-      },
-      '53': {
-        start: {
-          line: 221,
-          column: 8
-        },
-        end: {
-          line: 221,
-          column: 42
-        }
-      },
-      '54': {
-        start: {
-          line: 223,
-          column: 8
-        },
-        end: {
-          line: 223,
-          column: 20
-        }
-      },
-      '55': {
-        start: {
-          line: 236,
-          column: 4
-        },
-        end: {
-          line: 244,
-          column: 5
-        }
-      },
-      '56': {
-        start: {
-          line: 237,
-          column: 6
-        },
-        end: {
-          line: 243,
-          column: 7
-        }
-      },
-      '57': {
-        start: {
-          line: 238,
-          column: 8
-        },
-        end: {
-          line: 238,
-          column: 45
-        }
-      },
-      '58': {
-        start: {
-          line: 239,
-          column: 13
-        },
-        end: {
-          line: 243,
-          column: 7
-        }
-      },
-      '59': {
-        start: {
-          line: 240,
-          column: 8
-        },
-        end: {
-          line: 240,
-          column: 45
-        }
-      },
-      '60': {
-        start: {
-          line: 241,
-          column: 13
-        },
-        end: {
-          line: 243,
-          column: 7
-        }
-      },
-      '61': {
-        start: {
-          line: 242,
-          column: 8
-        },
-        end: {
-          line: 242,
-          column: 44
-        }
-      },
-      '62': {
-        start: {
-          line: 254,
-          column: 4
-        },
-        end: {
-          line: 256,
-          column: 5
-        }
-      },
-      '63': {
-        start: {
-          line: 255,
-          column: 6
-        },
-        end: {
-          line: 255,
-          column: 43
-        }
-      },
-      '64': {
-        start: {
-          line: 268,
-          column: 4
-        },
-        end: {
-          line: 274,
-          column: 5
-        }
-      },
-      '65': {
-        start: {
-          line: 269,
-          column: 6
-        },
-        end: {
-          line: 269,
-          column: 30
-        }
-      },
-      '66': {
-        start: {
-          line: 270,
-          column: 11
-        },
-        end: {
-          line: 274,
-          column: 5
-        }
-      },
-      '67': {
-        start: {
-          line: 271,
-          column: 6
-        },
-        end: {
-          line: 271,
-          column: 30
-        }
-      },
-      '68': {
-        start: {
-          line: 272,
-          column: 11
-        },
-        end: {
-          line: 274,
-          column: 5
-        }
-      },
-      '69': {
-        start: {
-          line: 273,
-          column: 6
-        },
-        end: {
-          line: 273,
-          column: 29
-        }
-      },
-      '70': {
-        start: {
-          line: 275,
-          column: 4
-        },
-        end: {
-          line: 280,
-          column: 5
-        }
-      },
-      '71': {
-        start: {
-          line: 276,
-          column: 19
-        },
-        end: {
-          line: 276,
-          column: 39
-        }
-      },
-      '72': {
-        start: {
-          line: 277,
-          column: 6
-        },
-        end: {
-          line: 279,
-          column: 7
-        }
-      },
-      '73': {
-        start: {
-          line: 278,
-          column: 8
-        },
-        end: {
-          line: 278,
-          column: 45
-        }
-      },
-      '74': {
-        start: {
-          line: 289,
-          column: 4
-        },
-        end: {
-          line: 292,
-          column: 5
-        }
-      },
-      '75': {
-        start: {
-          line: 290,
-          column: 6
-        },
-        end: {
-          line: 290,
-          column: 30
-        }
-      },
-      '76': {
-        start: {
-          line: 291,
-          column: 6
-        },
-        end: {
-          line: 291,
-          column: 65
-        }
-      },
-      '77': {
-        start: {
-          line: 301,
-          column: 4
-        },
-        end: {
-          line: 301,
-          column: 24
-        }
-      },
-      '78': {
-        start: {
-          line: 311,
-          column: 4
-        },
-        end: {
-          line: 319,
-          column: 5
-        }
-      },
-      '79': {
-        start: {
-          line: 312,
-          column: 6
-        },
-        end: {
-          line: 318,
-          column: 7
-        }
-      },
-      '80': {
-        start: {
-          line: 313,
-          column: 8
-        },
-        end: {
-          line: 313,
-          column: 28
-        }
-      },
-      '81': {
-        start: {
-          line: 315,
-          column: 8
-        },
-        end: {
-          line: 317,
-          column: 11
-        }
-      },
-      '82': {
-        start: {
-          line: 316,
-          column: 10
-        },
-        end: {
-          line: 316,
-          column: 30
-        }
-      },
-      '83': {
-        start: {
-          line: 328,
-          column: 4
-        },
-        end: {
-          line: 330,
-          column: 5
-        }
-      },
-      '84': {
-        start: {
-          line: 329,
-          column: 6
-        },
-        end: {
-          line: 329,
-          column: 34
-        }
-      },
-      '85': {
-        start: {
-          line: 339,
-          column: 4
-        },
-        end: {
-          line: 345,
-          column: 5
-        }
-      },
-      '86': {
-        start: {
-          line: 340,
-          column: 6
-        },
-        end: {
-          line: 342,
-          column: 9
-        }
-      },
-      '87': {
-        start: {
-          line: 341,
-          column: 8
-        },
-        end: {
-          line: 341,
-          column: 35
-        }
-      },
-      '88': {
-        start: {
-          line: 344,
-          column: 6
-        },
-        end: {
-          line: 344,
-          column: 31
-        }
-      },
-      '89': {
-        start: {
-          line: 354,
-          column: 4
-        },
-        end: {
-          line: 365,
-          column: 5
-        }
-      },
-      '90': {
-        start: {
-          line: 355,
-          column: 6
-        },
-        end: {
-          line: 364,
-          column: 7
-        }
-      },
-      '91': {
-        start: {
-          line: 356,
-          column: 24
-        },
-        end: {
-          line: 356,
-          column: 26
-        }
-      },
-      '92': {
-        start: {
-          line: 357,
-          column: 8
-        },
-        end: {
-          line: 359,
-          column: 9
-        }
-      },
-      '93': {
-        start: {
-          line: 358,
-          column: 10
-        },
-        end: {
-          line: 358,
-          column: 24
-        }
-      },
-      '94': {
-        start: {
-          line: 360,
-          column: 8
-        },
-        end: {
-          line: 362,
-          column: 9
-        }
-      },
-      '95': {
-        start: {
-          line: 361,
-          column: 10
-        },
-        end: {
-          line: 361,
-          column: 44
-        }
-      },
-      '96': {
-        start: {
-          line: 363,
-          column: 8
-        },
-        end: {
-          line: 363,
-          column: 45
-        }
-      },
-      '97': {
-        start: {
-          line: 374,
-          column: 4
-        },
-        end: {
-          line: 376,
-          column: 5
-        }
-      },
-      '98': {
-        start: {
-          line: 375,
-          column: 6
-        },
-        end: {
-          line: 375,
-          column: 38
-        }
-      },
-      '99': {
-        start: {
-          line: 385,
-          column: 4
-        },
-        end: {
-          line: 387,
-          column: 5
-        }
-      },
-      '100': {
-        start: {
-          line: 386,
-          column: 6
-        },
-        end: {
-          line: 386,
-          column: 35
-        }
-      },
-      '101': {
-        start: {
-          line: 397,
-          column: 4
-        },
-        end: {
-          line: 408,
-          column: 5
-        }
-      },
-      '102': {
-        start: {
-          line: 398,
-          column: 6
-        },
-        end: {
-          line: 407,
-          column: 7
-        }
-      },
-      '103': {
-        start: {
-          line: 399,
-          column: 25
-        },
-        end: {
-          line: 399,
-          column: 28
-        }
-      },
-      '104': {
-        start: {
-          line: 400,
-          column: 8
-        },
-        end: {
-          line: 402,
-          column: 9
-        }
-      },
-      '105': {
-        start: {
-          line: 401,
-          column: 10
-        },
-        end: {
-          line: 401,
-          column: 25
-        }
-      },
-      '106': {
-        start: {
-          line: 403,
-          column: 8
-        },
-        end: {
-          line: 405,
-          column: 9
-        }
-      },
-      '107': {
-        start: {
-          line: 404,
-          column: 10
-        },
-        end: {
-          line: 404,
-          column: 25
-        }
-      },
-      '108': {
-        start: {
-          line: 406,
-          column: 8
-        },
-        end: {
-          line: 406,
-          column: 41
-        }
-      },
-      '109': {
-        start: {
-          line: 417,
-          column: 4
-        },
-        end: {
-          line: 419,
-          column: 5
-        }
-      },
-      '110': {
-        start: {
-          line: 418,
-          column: 6
-        },
-        end: {
-          line: 418,
-          column: 33
-        }
-      },
-      '111': {
-        start: {
-          line: 434,
-          column: 4
-        },
-        end: {
-          line: 436,
-          column: 5
-        }
-      },
-      '112': {
-        start: {
-          line: 435,
-          column: 6
-        },
-        end: {
-          line: 435,
-          column: 33
-        }
-      },
-      '113': {
-        start: {
-          line: 445,
-          column: 4
-        },
-        end: {
-          line: 447,
-          column: 5
-        }
-      },
-      '114': {
-        start: {
-          line: 446,
-          column: 6
-        },
-        end: {
-          line: 446,
-          column: 34
-        }
-      },
-      '115': {
-        start: {
-          line: 460,
-          column: 4
-        },
-        end: {
-          line: 462,
-          column: 5
-        }
-      },
-      '116': {
-        start: {
-          line: 461,
-          column: 6
-        },
-        end: {
-          line: 461,
-          column: 32
-        }
-      },
-      '117': {
-        start: {
-          line: 471,
-          column: 4
-        },
-        end: {
-          line: 473,
-          column: 5
-        }
-      },
-      '118': {
-        start: {
-          line: 472,
-          column: 6
-        },
-        end: {
-          line: 472,
-          column: 32
-        }
-      },
-      '119': {
-        start: {
-          line: 482,
-          column: 4
-        },
-        end: {
-          line: 484,
-          column: 5
-        }
-      },
-      '120': {
-        start: {
-          line: 483,
-          column: 6
-        },
-        end: {
-          line: 483,
-          column: 30
-        }
-      },
-      '121': {
-        start: {
-          line: 493,
-          column: 4
-        },
-        end: {
-          line: 493,
-          column: 24
-        }
-      },
-      '122': {
-        start: {
-          line: 502,
-          column: 4
-        },
-        end: {
-          line: 502,
-          column: 24
-        }
-      },
-      '123': {
-        start: {
-          line: 511,
-          column: 4
-        },
-        end: {
-          line: 511,
-          column: 22
-        }
-      }
-    },
-    fnMap: {
-      '0': {
-        name: '(anonymous_0)',
-        decl: {
-          start: {
-            line: 76,
-            column: 2
-          },
-          end: {
-            line: 76,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 76,
-            column: 30
-          },
-          end: {
-            line: 85,
-            column: 3
-          }
-        },
-        line: 76
-      },
-      '1': {
-        name: '(anonymous_1)',
-        decl: {
-          start: {
-            line: 92,
-            column: 2
-          },
-          end: {
-            line: 92,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 92,
-            column: 34
-          },
-          end: {
-            line: 97,
-            column: 3
-          }
-        },
-        line: 92
-      },
-      '2': {
-        name: '(anonymous_2)',
-        decl: {
-          start: {
-            line: 104,
-            column: 2
-          },
-          end: {
-            line: 104,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 104,
-            column: 18
-          },
-          end: {
-            line: 112,
-            column: 3
-          }
-        },
-        line: 104
-      },
-      '3': {
-        name: '(anonymous_3)',
-        decl: {
-          start: {
-            line: 119,
-            column: 2
-          },
-          end: {
-            line: 119,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 119,
-            column: 34
-          },
-          end: {
-            line: 121,
-            column: 3
-          }
-        },
-        line: 119
-      },
-      '4': {
-        name: '(anonymous_4)',
-        decl: {
-          start: {
-            line: 129,
-            column: 2
-          },
-          end: {
-            line: 129,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 129,
-            column: 37
-          },
-          end: {
-            line: 134,
-            column: 3
-          }
-        },
-        line: 129
-      },
-      '5': {
-        name: '(anonymous_5)',
-        decl: {
-          start: {
-            line: 142,
-            column: 2
-          },
-          end: {
-            line: 142,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 142,
-            column: 38
-          },
-          end: {
-            line: 152,
-            column: 3
-          }
-        },
-        line: 142
-      },
-      '6': {
-        name: '(anonymous_6)',
-        decl: {
-          start: {
-            line: 161,
-            column: 2
-          },
-          end: {
-            line: 161,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 161,
-            column: 52
-          },
-          end: {
-            line: 166,
-            column: 3
-          }
-        },
-        line: 161
-      },
-      '7': {
-        name: '(anonymous_7)',
-        decl: {
-          start: {
-            line: 173,
-            column: 2
-          },
-          end: {
-            line: 173,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 173,
-            column: 23
-          },
-          end: {
-            line: 194,
-            column: 3
-          }
-        },
-        line: 173
-      },
-      '8': {
-        name: '(anonymous_8)',
-        decl: {
-          start: {
-            line: 176,
-            column: 74
-          },
-          end: {
-            line: 176,
-            column: 75
-          }
-        },
-        loc: {
-          start: {
-            line: 176,
-            column: 96
-          },
-          end: {
-            line: 178,
-            column: 9
-          }
-        },
-        line: 176
-      },
-      '9': {
-        name: '(anonymous_9)',
-        decl: {
-          start: {
-            line: 180,
-            column: 80
-          },
-          end: {
-            line: 180,
-            column: 81
-          }
-        },
-        loc: {
-          start: {
-            line: 180,
-            column: 102
-          },
-          end: {
-            line: 183,
-            column: 7
-          }
-        },
-        line: 180
-      },
-      '10': {
-        name: '(anonymous_10)',
-        decl: {
-          start: {
-            line: 184,
-            column: 80
-          },
-          end: {
-            line: 184,
-            column: 81
-          }
-        },
-        loc: {
-          start: {
-            line: 184,
-            column: 102
-          },
-          end: {
-            line: 187,
-            column: 7
-          }
-        },
-        line: 184
-      },
-      '11': {
-        name: '(anonymous_11)',
-        decl: {
-          start: {
-            line: 188,
-            column: 79
-          },
-          end: {
-            line: 188,
-            column: 80
-          }
-        },
-        loc: {
-          start: {
-            line: 188,
-            column: 101
-          },
-          end: {
-            line: 191,
-            column: 7
-          }
-        },
-        line: 188
-      },
-      '12': {
-        name: '(anonymous_12)',
-        decl: {
-          start: {
-            line: 203,
-            column: 2
-          },
-          end: {
-            line: 203,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 203,
-            column: 41
-          },
-          end: {
-            line: 205,
-            column: 3
-          }
-        },
-        line: 203
-      },
-      '13': {
-        name: '(anonymous_13)',
-        decl: {
-          start: {
-            line: 214,
-            column: 2
-          },
-          end: {
-            line: 214,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 214,
-            column: 48
-          },
-          end: {
-            line: 226,
-            column: 3
-          }
-        },
-        line: 214
-      },
-      '14': {
-        name: '(anonymous_14)',
-        decl: {
-          start: {
-            line: 215,
-            column: 54
-          },
-          end: {
-            line: 215,
-            column: 55
-          }
-        },
-        loc: {
-          start: {
-            line: 215,
-            column: 72
-          },
-          end: {
-            line: 225,
-            column: 5
-          }
-        },
-        line: 215
-      },
-      '15': {
-        name: '(anonymous_15)',
-        decl: {
-          start: {
-            line: 235,
-            column: 2
-          },
-          end: {
-            line: 235,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 235,
-            column: 34
-          },
-          end: {
-            line: 245,
-            column: 3
-          }
-        },
-        line: 235
-      },
-      '16': {
-        name: '(anonymous_16)',
-        decl: {
-          start: {
-            line: 253,
-            column: 2
-          },
-          end: {
-            line: 253,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 253,
-            column: 32
-          },
-          end: {
-            line: 257,
-            column: 3
-          }
-        },
-        line: 253
-      },
-      '17': {
-        name: '(anonymous_17)',
-        decl: {
-          start: {
-            line: 266,
-            column: 2
-          },
-          end: {
-            line: 266,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 266,
-            column: 33
-          },
-          end: {
-            line: 281,
-            column: 3
-          }
-        },
-        line: 266
-      },
-      '18': {
-        name: '(anonymous_18)',
-        decl: {
-          start: {
-            line: 288,
-            column: 2
-          },
-          end: {
-            line: 288,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 288,
-            column: 18
-          },
-          end: {
-            line: 293,
-            column: 3
-          }
-        },
-        line: 288
-      },
-      '19': {
-        name: '(anonymous_19)',
-        decl: {
-          start: {
-            line: 300,
-            column: 2
-          },
-          end: {
-            line: 300,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 300,
-            column: 23
-          },
-          end: {
-            line: 302,
-            column: 3
-          }
-        },
-        line: 300
-      },
-      '20': {
-        name: '(anonymous_20)',
-        decl: {
-          start: {
-            line: 310,
-            column: 2
-          },
-          end: {
-            line: 310,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 310,
-            column: 15
-          },
-          end: {
-            line: 320,
-            column: 3
-          }
-        },
-        line: 310
-      },
-      '21': {
-        name: '(anonymous_21)',
-        decl: {
-          start: {
-            line: 315,
-            column: 25
-          },
-          end: {
-            line: 315,
-            column: 26
-          }
-        },
-        loc: {
-          start: {
-            line: 315,
-            column: 31
-          },
-          end: {
-            line: 317,
-            column: 9
-          }
-        },
-        line: 315
-      },
-      '22': {
-        name: '(anonymous_22)',
-        decl: {
-          start: {
-            line: 327,
-            column: 2
-          },
-          end: {
-            line: 327,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 327,
-            column: 16
-          },
-          end: {
-            line: 331,
-            column: 3
-          }
-        },
-        line: 327
-      },
-      '23': {
-        name: '(anonymous_23)',
-        decl: {
-          start: {
-            line: 338,
-            column: 2
-          },
-          end: {
-            line: 338,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 338,
-            column: 21
-          },
-          end: {
-            line: 346,
-            column: 3
-          }
-        },
-        line: 338
-      },
-      '24': {
-        name: '(anonymous_24)',
-        decl: {
-          start: {
-            line: 340,
-            column: 38
-          },
-          end: {
-            line: 340,
-            column: 39
-          }
-        },
-        loc: {
-          start: {
-            line: 340,
-            column: 48
-          },
-          end: {
-            line: 342,
-            column: 7
-          }
-        },
-        line: 340
-      },
-      '25': {
-        name: '(anonymous_25)',
-        decl: {
-          start: {
-            line: 353,
-            column: 2
-          },
-          end: {
-            line: 353,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 353,
-            column: 36
-          },
-          end: {
-            line: 366,
-            column: 3
-          }
-        },
-        line: 353
-      },
-      '26': {
-        name: '(anonymous_26)',
-        decl: {
-          start: {
-            line: 373,
-            column: 2
-          },
-          end: {
-            line: 373,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 373,
-            column: 29
-          },
-          end: {
-            line: 377,
-            column: 3
-          }
-        },
-        line: 373
-      },
-      '27': {
-        name: '(anonymous_27)',
-        decl: {
-          start: {
-            line: 384,
-            column: 2
-          },
-          end: {
-            line: 384,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 384,
-            column: 26
-          },
-          end: {
-            line: 388,
-            column: 3
-          }
-        },
-        line: 384
-      },
-      '28': {
-        name: '(anonymous_28)',
-        decl: {
-          start: {
-            line: 396,
-            column: 2
-          },
-          end: {
-            line: 396,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 396,
-            column: 32
-          },
-          end: {
-            line: 409,
-            column: 3
-          }
-        },
-        line: 396
-      },
-      '29': {
-        name: '(anonymous_29)',
-        decl: {
-          start: {
-            line: 416,
-            column: 2
-          },
-          end: {
-            line: 416,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 416,
-            column: 24
-          },
-          end: {
-            line: 420,
-            column: 3
-          }
-        },
-        line: 416
-      },
-      '30': {
-        name: '(anonymous_30)',
-        decl: {
-          start: {
-            line: 425,
-            column: 2
-          },
-          end: {
-            line: 425,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 425,
-            column: 10
-          },
-          end: {
-            line: 426,
-            column: 3
-          }
-        },
-        line: 425
-      },
-      '31': {
-        name: '(anonymous_31)',
-        decl: {
-          start: {
-            line: 433,
-            column: 2
-          },
-          end: {
-            line: 433,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 433,
-            column: 25
-          },
-          end: {
-            line: 437,
-            column: 3
-          }
-        },
-        line: 433
-      },
-      '32': {
-        name: '(anonymous_32)',
-        decl: {
-          start: {
-            line: 444,
-            column: 2
-          },
-          end: {
-            line: 444,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 444,
-            column: 26
-          },
-          end: {
-            line: 448,
-            column: 3
-          }
-        },
-        line: 444
-      },
-      '33': {
-        name: '(anonymous_33)',
-        decl: {
-          start: {
-            line: 450,
-            column: 2
-          },
-          end: {
-            line: 450,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 450,
-            column: 13
-          },
-          end: {
-            line: 451,
-            column: 3
-          }
-        },
-        line: 450
-      },
-      '34': {
-        name: '(anonymous_34)',
-        decl: {
-          start: {
-            line: 459,
-            column: 2
-          },
-          end: {
-            line: 459,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 459,
-            column: 33
-          },
-          end: {
-            line: 463,
-            column: 3
-          }
-        },
-        line: 459
-      },
-      '35': {
-        name: '(anonymous_35)',
-        decl: {
-          start: {
-            line: 470,
-            column: 2
-          },
-          end: {
-            line: 470,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 470,
-            column: 24
-          },
-          end: {
-            line: 474,
-            column: 3
-          }
-        },
-        line: 470
-      },
-      '36': {
-        name: '(anonymous_36)',
-        decl: {
-          start: {
-            line: 481,
-            column: 2
-          },
-          end: {
-            line: 481,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 481,
-            column: 21
-          },
-          end: {
-            line: 485,
-            column: 3
-          }
-        },
-        line: 481
-      },
-      '37': {
-        name: '(anonymous_37)',
-        decl: {
-          start: {
-            line: 492,
-            column: 2
-          },
-          end: {
-            line: 492,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 492,
-            column: 43
-          },
-          end: {
-            line: 494,
-            column: 3
-          }
-        },
-        line: 492
-      },
-      '38': {
-        name: '(anonymous_38)',
-        decl: {
-          start: {
-            line: 501,
-            column: 2
-          },
-          end: {
-            line: 501,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 501,
-            column: 43
-          },
-          end: {
-            line: 503,
-            column: 3
-          }
-        },
-        line: 501
-      },
-      '39': {
-        name: '(anonymous_39)',
-        decl: {
-          start: {
-            line: 510,
-            column: 2
-          },
-          end: {
-            line: 510,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 510,
-            column: 43
-          },
-          end: {
-            line: 512,
-            column: 3
-          }
-        },
-        line: 510
-      }
-    },
-    branchMap: {
-      '0': {
-        loc: {
-          start: {
-            line: 93,
-            column: 40
-          },
-          end: {
-            line: 93,
-            column: 73
-          }
-        },
-        type: 'binary-expr',
-        locations: [{
-          start: {
-            line: 93,
-            column: 40
-          },
-          end: {
-            line: 93,
-            column: 46
-          }
-        }, {
-          start: {
-            line: 93,
-            column: 50
-          },
-          end: {
-            line: 93,
-            column: 73
-          }
-        }],
-        line: 93
-      },
-      '1': {
-        loc: {
-          start: {
-            line: 143,
-            column: 4
-          },
-          end: {
-            line: 151,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 143,
-            column: 4
-          },
-          end: {
-            line: 151,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 143,
-            column: 4
-          },
-          end: {
-            line: 151,
-            column: 5
-          }
-        }],
-        line: 143
-      },
-      '2': {
-        loc: {
-          start: {
-            line: 143,
-            column: 8
-          },
-          end: {
-            line: 143,
-            column: 32
-          }
-        },
-        type: 'binary-expr',
-        locations: [{
-          start: {
-            line: 143,
-            column: 8
-          },
-          end: {
-            line: 143,
-            column: 14
-          }
-        }, {
-          start: {
-            line: 143,
-            column: 18
-          },
-          end: {
-            line: 143,
-            column: 32
-          }
-        }],
-        line: 143
-      },
-      '3': {
-        loc: {
-          start: {
-            line: 146,
-            column: 8
-          },
-          end: {
-            line: 149,
-            column: 9
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 146,
-            column: 8
-          },
-          end: {
-            line: 149,
-            column: 9
-          }
-        }, {
-          start: {
-            line: 146,
-            column: 8
-          },
-          end: {
-            line: 149,
-            column: 9
-          }
-        }],
-        line: 146
-      },
-      '4': {
-        loc: {
-          start: {
-            line: 163,
-            column: 4
-          },
-          end: {
-            line: 165,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 163,
-            column: 4
-          },
-          end: {
-            line: 165,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 163,
-            column: 4
-          },
-          end: {
-            line: 165,
-            column: 5
-          }
-        }],
-        line: 163
-      },
-      '5': {
-        loc: {
-          start: {
-            line: 174,
-            column: 4
-          },
-          end: {
-            line: 193,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 174,
-            column: 4
-          },
-          end: {
-            line: 193,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 174,
-            column: 4
-          },
-          end: {
-            line: 193,
-            column: 5
-          }
-        }],
-        line: 174
-      },
-      '6': {
-        loc: {
-          start: {
-            line: 215,
-            column: 11
-          },
-          end: {
-            line: 225,
-            column: 6
-          }
-        },
-        type: 'cond-expr',
-        locations: [{
-          start: {
-            line: 215,
-            column: 19
-          },
-          end: {
-            line: 215,
-            column: 31
-          }
-        }, {
-          start: {
-            line: 215,
-            column: 34
-          },
-          end: {
-            line: 225,
-            column: 6
-          }
-        }],
-        line: 215
-      },
-      '7': {
-        loc: {
-          start: {
-            line: 216,
-            column: 6
-          },
-          end: {
-            line: 224,
-            column: 7
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 216,
-            column: 6
-          },
-          end: {
-            line: 224,
-            column: 7
-          }
-        }, {
-          start: {
-            line: 216,
-            column: 6
-          },
-          end: {
-            line: 224,
-            column: 7
-          }
-        }],
-        line: 216
-      },
-      '8': {
-        loc: {
-          start: {
-            line: 218,
-            column: 13
-          },
-          end: {
-            line: 224,
-            column: 7
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 218,
-            column: 13
-          },
-          end: {
-            line: 224,
-            column: 7
-          }
-        }, {
-          start: {
-            line: 218,
-            column: 13
-          },
-          end: {
-            line: 224,
-            column: 7
-          }
-        }],
-        line: 218
-      },
-      '9': {
-        loc: {
-          start: {
-            line: 220,
-            column: 13
-          },
-          end: {
-            line: 224,
-            column: 7
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 220,
-            column: 13
-          },
-          end: {
-            line: 224,
-            column: 7
-          }
-        }, {
-          start: {
-            line: 220,
-            column: 13
-          },
-          end: {
-            line: 224,
-            column: 7
-          }
-        }],
-        line: 220
-      },
-      '10': {
-        loc: {
-          start: {
-            line: 236,
-            column: 4
-          },
-          end: {
-            line: 244,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 236,
-            column: 4
-          },
-          end: {
-            line: 244,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 236,
-            column: 4
-          },
-          end: {
-            line: 244,
-            column: 5
-          }
-        }],
-        line: 236
-      },
-      '11': {
-        loc: {
-          start: {
-            line: 237,
-            column: 6
-          },
-          end: {
-            line: 243,
-            column: 7
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 237,
-            column: 6
-          },
-          end: {
-            line: 243,
-            column: 7
-          }
-        }, {
-          start: {
-            line: 237,
-            column: 6
-          },
-          end: {
-            line: 243,
-            column: 7
-          }
-        }],
-        line: 237
-      },
-      '12': {
-        loc: {
-          start: {
-            line: 239,
-            column: 13
-          },
-          end: {
-            line: 243,
-            column: 7
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 239,
-            column: 13
-          },
-          end: {
-            line: 243,
-            column: 7
-          }
-        }, {
-          start: {
-            line: 239,
-            column: 13
-          },
-          end: {
-            line: 243,
-            column: 7
-          }
-        }],
-        line: 239
-      },
-      '13': {
-        loc: {
-          start: {
-            line: 241,
-            column: 13
-          },
-          end: {
-            line: 243,
-            column: 7
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 241,
-            column: 13
-          },
-          end: {
-            line: 243,
-            column: 7
-          }
-        }, {
-          start: {
-            line: 241,
-            column: 13
-          },
-          end: {
-            line: 243,
-            column: 7
-          }
-        }],
-        line: 241
-      },
-      '14': {
-        loc: {
-          start: {
-            line: 254,
-            column: 4
-          },
-          end: {
-            line: 256,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 254,
-            column: 4
-          },
-          end: {
-            line: 256,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 254,
-            column: 4
-          },
-          end: {
-            line: 256,
-            column: 5
-          }
-        }],
-        line: 254
-      },
-      '15': {
-        loc: {
-          start: {
-            line: 268,
-            column: 4
-          },
-          end: {
-            line: 274,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 268,
-            column: 4
-          },
-          end: {
-            line: 274,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 268,
-            column: 4
-          },
-          end: {
-            line: 274,
-            column: 5
-          }
-        }],
-        line: 268
-      },
-      '16': {
-        loc: {
-          start: {
-            line: 270,
-            column: 11
-          },
-          end: {
-            line: 274,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 270,
-            column: 11
-          },
-          end: {
-            line: 274,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 270,
-            column: 11
-          },
-          end: {
-            line: 274,
-            column: 5
-          }
-        }],
-        line: 270
-      },
-      '17': {
-        loc: {
-          start: {
-            line: 272,
-            column: 11
-          },
-          end: {
-            line: 274,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 272,
-            column: 11
-          },
-          end: {
-            line: 274,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 272,
-            column: 11
-          },
-          end: {
-            line: 274,
-            column: 5
-          }
-        }],
-        line: 272
-      },
-      '18': {
-        loc: {
-          start: {
-            line: 275,
-            column: 4
-          },
-          end: {
-            line: 280,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 275,
-            column: 4
-          },
-          end: {
-            line: 280,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 275,
-            column: 4
-          },
-          end: {
-            line: 280,
-            column: 5
-          }
-        }],
-        line: 275
-      },
-      '19': {
-        loc: {
-          start: {
-            line: 289,
-            column: 4
-          },
-          end: {
-            line: 292,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 289,
-            column: 4
-          },
-          end: {
-            line: 292,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 289,
-            column: 4
-          },
-          end: {
-            line: 292,
-            column: 5
-          }
-        }],
-        line: 289
-      },
-      '20': {
-        loc: {
-          start: {
-            line: 311,
-            column: 4
-          },
-          end: {
-            line: 319,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 311,
-            column: 4
-          },
-          end: {
-            line: 319,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 311,
-            column: 4
-          },
-          end: {
-            line: 319,
-            column: 5
-          }
-        }],
-        line: 311
-      },
-      '21': {
-        loc: {
-          start: {
-            line: 312,
-            column: 6
-          },
-          end: {
-            line: 318,
-            column: 7
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 312,
-            column: 6
-          },
-          end: {
-            line: 318,
-            column: 7
-          }
-        }, {
-          start: {
-            line: 312,
-            column: 6
-          },
-          end: {
-            line: 318,
-            column: 7
-          }
-        }],
-        line: 312
-      },
-      '22': {
-        loc: {
-          start: {
-            line: 328,
-            column: 4
-          },
-          end: {
-            line: 330,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 328,
-            column: 4
-          },
-          end: {
-            line: 330,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 328,
-            column: 4
-          },
-          end: {
-            line: 330,
-            column: 5
-          }
-        }],
-        line: 328
-      },
-      '23': {
-        loc: {
-          start: {
-            line: 339,
-            column: 4
-          },
-          end: {
-            line: 345,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 339,
-            column: 4
-          },
-          end: {
-            line: 345,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 339,
-            column: 4
-          },
-          end: {
-            line: 345,
-            column: 5
-          }
-        }],
-        line: 339
-      },
-      '24': {
-        loc: {
-          start: {
-            line: 354,
-            column: 4
-          },
-          end: {
-            line: 365,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 354,
-            column: 4
-          },
-          end: {
-            line: 365,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 354,
-            column: 4
-          },
-          end: {
-            line: 365,
-            column: 5
-          }
-        }],
-        line: 354
-      },
-      '25': {
-        loc: {
-          start: {
-            line: 355,
-            column: 6
-          },
-          end: {
-            line: 364,
-            column: 7
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 355,
-            column: 6
-          },
-          end: {
-            line: 364,
-            column: 7
-          }
-        }, {
-          start: {
-            line: 355,
-            column: 6
-          },
-          end: {
-            line: 364,
-            column: 7
-          }
-        }],
-        line: 355
-      },
-      '26': {
-        loc: {
-          start: {
-            line: 357,
-            column: 8
-          },
-          end: {
-            line: 359,
-            column: 9
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 357,
-            column: 8
-          },
-          end: {
-            line: 359,
-            column: 9
-          }
-        }, {
-          start: {
-            line: 357,
-            column: 8
-          },
-          end: {
-            line: 359,
-            column: 9
-          }
-        }],
-        line: 357
-      },
-      '27': {
-        loc: {
-          start: {
-            line: 360,
-            column: 8
-          },
-          end: {
-            line: 362,
-            column: 9
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 360,
-            column: 8
-          },
-          end: {
-            line: 362,
-            column: 9
-          }
-        }, {
-          start: {
-            line: 360,
-            column: 8
-          },
-          end: {
-            line: 362,
-            column: 9
-          }
-        }],
-        line: 360
-      },
-      '28': {
-        loc: {
-          start: {
-            line: 374,
-            column: 4
-          },
-          end: {
-            line: 376,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 374,
-            column: 4
-          },
-          end: {
-            line: 376,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 374,
-            column: 4
-          },
-          end: {
-            line: 376,
-            column: 5
-          }
-        }],
-        line: 374
-      },
-      '29': {
-        loc: {
-          start: {
-            line: 385,
-            column: 4
-          },
-          end: {
-            line: 387,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 385,
-            column: 4
-          },
-          end: {
-            line: 387,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 385,
-            column: 4
-          },
-          end: {
-            line: 387,
-            column: 5
-          }
-        }],
-        line: 385
-      },
-      '30': {
-        loc: {
-          start: {
-            line: 397,
-            column: 4
-          },
-          end: {
-            line: 408,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 397,
-            column: 4
-          },
-          end: {
-            line: 408,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 397,
-            column: 4
-          },
-          end: {
-            line: 408,
-            column: 5
-          }
-        }],
-        line: 397
-      },
-      '31': {
-        loc: {
-          start: {
-            line: 398,
-            column: 6
-          },
-          end: {
-            line: 407,
-            column: 7
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 398,
-            column: 6
-          },
-          end: {
-            line: 407,
-            column: 7
-          }
-        }, {
-          start: {
-            line: 398,
-            column: 6
-          },
-          end: {
-            line: 407,
-            column: 7
-          }
-        }],
-        line: 398
-      },
-      '32': {
-        loc: {
-          start: {
-            line: 400,
-            column: 8
-          },
-          end: {
-            line: 402,
-            column: 9
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 400,
-            column: 8
-          },
-          end: {
-            line: 402,
-            column: 9
-          }
-        }, {
-          start: {
-            line: 400,
-            column: 8
-          },
-          end: {
-            line: 402,
-            column: 9
-          }
-        }],
-        line: 400
-      },
-      '33': {
-        loc: {
-          start: {
-            line: 403,
-            column: 8
-          },
-          end: {
-            line: 405,
-            column: 9
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 403,
-            column: 8
-          },
-          end: {
-            line: 405,
-            column: 9
-          }
-        }, {
-          start: {
-            line: 403,
-            column: 8
-          },
-          end: {
-            line: 405,
-            column: 9
-          }
-        }],
-        line: 403
-      },
-      '34': {
-        loc: {
-          start: {
-            line: 417,
-            column: 4
-          },
-          end: {
-            line: 419,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 417,
-            column: 4
-          },
-          end: {
-            line: 419,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 417,
-            column: 4
-          },
-          end: {
-            line: 419,
-            column: 5
-          }
-        }],
-        line: 417
-      },
-      '35': {
-        loc: {
-          start: {
-            line: 434,
-            column: 4
-          },
-          end: {
-            line: 436,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 434,
-            column: 4
-          },
-          end: {
-            line: 436,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 434,
-            column: 4
-          },
-          end: {
-            line: 436,
-            column: 5
-          }
-        }],
-        line: 434
-      },
-      '36': {
-        loc: {
-          start: {
-            line: 445,
-            column: 4
-          },
-          end: {
-            line: 447,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 445,
-            column: 4
-          },
-          end: {
-            line: 447,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 445,
-            column: 4
-          },
-          end: {
-            line: 447,
-            column: 5
-          }
-        }],
-        line: 445
-      },
-      '37': {
-        loc: {
-          start: {
-            line: 460,
-            column: 4
-          },
-          end: {
-            line: 462,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 460,
-            column: 4
-          },
-          end: {
-            line: 462,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 460,
-            column: 4
-          },
-          end: {
-            line: 462,
-            column: 5
-          }
-        }],
-        line: 460
-      },
-      '38': {
-        loc: {
-          start: {
-            line: 471,
-            column: 4
-          },
-          end: {
-            line: 473,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 471,
-            column: 4
-          },
-          end: {
-            line: 473,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 471,
-            column: 4
-          },
-          end: {
-            line: 473,
-            column: 5
-          }
-        }],
-        line: 471
-      },
-      '39': {
-        loc: {
-          start: {
-            line: 482,
-            column: 4
-          },
-          end: {
-            line: 484,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 482,
-            column: 4
-          },
-          end: {
-            line: 484,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 482,
-            column: 4
-          },
-          end: {
-            line: 484,
-            column: 5
-          }
-        }],
-        line: 482
-      }
-    },
-    s: {
-      '0': 0,
-      '1': 0,
-      '2': 0,
-      '3': 0,
-      '4': 0,
-      '5': 0,
-      '6': 0,
-      '7': 0,
-      '8': 0,
-      '9': 0,
-      '10': 0,
-      '11': 0,
-      '12': 0,
-      '13': 0,
-      '14': 0,
-      '15': 0,
-      '16': 0,
-      '17': 0,
-      '18': 0,
-      '19': 0,
-      '20': 0,
-      '21': 0,
-      '22': 0,
-      '23': 0,
-      '24': 0,
-      '25': 0,
-      '26': 0,
-      '27': 0,
-      '28': 0,
-      '29': 0,
-      '30': 0,
-      '31': 0,
-      '32': 0,
-      '33': 0,
-      '34': 0,
-      '35': 0,
-      '36': 0,
-      '37': 0,
-      '38': 0,
-      '39': 0,
-      '40': 0,
-      '41': 0,
-      '42': 0,
-      '43': 0,
-      '44': 0,
-      '45': 0,
-      '46': 0,
-      '47': 0,
-      '48': 0,
-      '49': 0,
-      '50': 0,
-      '51': 0,
-      '52': 0,
-      '53': 0,
-      '54': 0,
-      '55': 0,
-      '56': 0,
-      '57': 0,
-      '58': 0,
-      '59': 0,
-      '60': 0,
-      '61': 0,
-      '62': 0,
-      '63': 0,
-      '64': 0,
-      '65': 0,
-      '66': 0,
-      '67': 0,
-      '68': 0,
-      '69': 0,
-      '70': 0,
-      '71': 0,
-      '72': 0,
-      '73': 0,
-      '74': 0,
-      '75': 0,
-      '76': 0,
-      '77': 0,
-      '78': 0,
-      '79': 0,
-      '80': 0,
-      '81': 0,
-      '82': 0,
-      '83': 0,
-      '84': 0,
-      '85': 0,
-      '86': 0,
-      '87': 0,
-      '88': 0,
-      '89': 0,
-      '90': 0,
-      '91': 0,
-      '92': 0,
-      '93': 0,
-      '94': 0,
-      '95': 0,
-      '96': 0,
-      '97': 0,
-      '98': 0,
-      '99': 0,
-      '100': 0,
-      '101': 0,
-      '102': 0,
-      '103': 0,
-      '104': 0,
-      '105': 0,
-      '106': 0,
-      '107': 0,
-      '108': 0,
-      '109': 0,
-      '110': 0,
-      '111': 0,
-      '112': 0,
-      '113': 0,
-      '114': 0,
-      '115': 0,
-      '116': 0,
-      '117': 0,
-      '118': 0,
-      '119': 0,
-      '120': 0,
-      '121': 0,
-      '122': 0,
-      '123': 0
-    },
-    f: {
-      '0': 0,
-      '1': 0,
-      '2': 0,
-      '3': 0,
-      '4': 0,
-      '5': 0,
-      '6': 0,
-      '7': 0,
-      '8': 0,
-      '9': 0,
-      '10': 0,
-      '11': 0,
-      '12': 0,
-      '13': 0,
-      '14': 0,
-      '15': 0,
-      '16': 0,
-      '17': 0,
-      '18': 0,
-      '19': 0,
-      '20': 0,
-      '21': 0,
-      '22': 0,
-      '23': 0,
-      '24': 0,
-      '25': 0,
-      '26': 0,
-      '27': 0,
-      '28': 0,
-      '29': 0,
-      '30': 0,
-      '31': 0,
-      '32': 0,
-      '33': 0,
-      '34': 0,
-      '35': 0,
-      '36': 0,
-      '37': 0,
-      '38': 0,
-      '39': 0
-    },
-    b: {
-      '0': [0, 0],
-      '1': [0, 0],
-      '2': [0, 0],
-      '3': [0, 0],
-      '4': [0, 0],
-      '5': [0, 0],
-      '6': [0, 0],
-      '7': [0, 0],
-      '8': [0, 0],
-      '9': [0, 0],
-      '10': [0, 0],
-      '11': [0, 0],
-      '12': [0, 0],
-      '13': [0, 0],
-      '14': [0, 0],
-      '15': [0, 0],
-      '16': [0, 0],
-      '17': [0, 0],
-      '18': [0, 0],
-      '19': [0, 0],
-      '20': [0, 0],
-      '21': [0, 0],
-      '22': [0, 0],
-      '23': [0, 0],
-      '24': [0, 0],
-      '25': [0, 0],
-      '26': [0, 0],
-      '27': [0, 0],
-      '28': [0, 0],
-      '29': [0, 0],
-      '30': [0, 0],
-      '31': [0, 0],
-      '32': [0, 0],
-      '33': [0, 0],
-      '34': [0, 0],
-      '35': [0, 0],
-      '36': [0, 0],
-      '37': [0, 0],
-      '38': [0, 0],
-      '39': [0, 0]
-    },
-    _coverageSchema: '332fd63041d2c1bcb487cc26dd0d5f7d97098a6c'
-  },
-      coverage = global[gcv] || (global[gcv] = {});
-
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
-  }
-
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
-}();
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _eventManager = __webpack_require__(6);
+var _eventManager = __webpack_require__(7);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
@@ -6857,53 +1470,75 @@ var _fakeEvent = __webpack_require__(2);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _fakeEventTarget = __webpack_require__(9);
+var _fakeEventTarget = __webpack_require__(12);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
-var _events = __webpack_require__(7);
+var _events = __webpack_require__(8);
 
-var _stateTypes = __webpack_require__(16);
+var _stateTypes = __webpack_require__(18);
 
 var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
-var _util = __webpack_require__(11);
+var _util = __webpack_require__(3);
 
-var _logger = __webpack_require__(1);
+var Utils = _interopRequireWildcard(_util);
+
+var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _html = __webpack_require__(19);
+var _html = __webpack_require__(20);
 
 var _html2 = _interopRequireDefault(_html);
 
-var _pluginManager = __webpack_require__(15);
+var _pluginManager = __webpack_require__(17);
 
 var _pluginManager2 = _interopRequireDefault(_pluginManager);
 
-var _stateManager = __webpack_require__(22);
+var _basePlugin = __webpack_require__(11);
+
+var _basePlugin2 = _interopRequireDefault(_basePlugin);
+
+var _stateManager = __webpack_require__(25);
 
 var _stateManager2 = _interopRequireDefault(_stateManager);
 
-var _trackTypes = __webpack_require__(24);
+var _trackTypes = __webpack_require__(27);
 
 var _trackTypes2 = _interopRequireDefault(_trackTypes);
 
-var _track = __webpack_require__(0);
+var _track = __webpack_require__(1);
 
 var _track2 = _interopRequireDefault(_track);
 
-var _videoTrack = __webpack_require__(5);
+var _videoTrack = __webpack_require__(6);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(3);
+var _audioTrack = __webpack_require__(4);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(4);
+var _textTrack = __webpack_require__(5);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
+
+var _playbackMiddleware = __webpack_require__(23);
+
+var _playbackMiddleware2 = _interopRequireDefault(_playbackMiddleware);
+
+var _playerConfig = __webpack_require__(37);
+
+var _playerConfig2 = _interopRequireDefault(_playerConfig);
+
+var _uaParserJs = __webpack_require__(35);
+
+var _uaParserJs2 = _interopRequireDefault(_uaParserJs);
+
+__webpack_require__(32);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6914,26 +1549,29 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 /**
+ * The player container class name.
+ * @type {string}
+ * @const
+ */
+var CONTAINER_CLASS_NAME = 'playkit-container';
+
+/**
  * The HTML5 player class.
  * @classdesc
  */
+
 var Player = function (_FakeEventTarget) {
   _inherits(Player, _FakeEventTarget);
 
   /**
+   * @param {string} targetId - The target div id to append the player.
    * @param {Object} config - The configuration for the player instance.
    * @constructor
    */
 
   /**
-   * The tracks of the player.
-   * @type {Array<Track>}
-   * @private
-   */
-
-  /**
-   * The playback engine.
-   * @type {IEngine}
+   * The plugin manager of the player.
+   * @type {PluginManager}
    * @private
    */
 
@@ -6944,45 +1582,14 @@ var Player = function (_FakeEventTarget) {
    */
 
   /**
-   * The player class logger.
-   * @type {any}
+   * The runtime configuration of the player.
+   * @type {Object}
    * @private
    */
-  function Player(config) {
-    _classCallCheck(this, Player);
-
-    ++cov_4x54fj3w8.f[0];
-    ++cov_4x54fj3w8.s[0];
-
-    var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
-
-    ++cov_4x54fj3w8.s[1];
-
-    _this._tracks = [];
-    ++cov_4x54fj3w8.s[2];
-    _this._firstPlay = true;
-    ++cov_4x54fj3w8.s[3];
-    _this._logger = _logger2.default.getLogger('Player');
-    ++cov_4x54fj3w8.s[4];
-    _this._stateManager = new _stateManager2.default(_this);
-    ++cov_4x54fj3w8.s[5];
-    _this._pluginManager = new _pluginManager2.default();
-    ++cov_4x54fj3w8.s[6];
-    _this._eventManager = new _eventManager2.default();
-    ++cov_4x54fj3w8.s[7];
-    _this.configure(config);
-    return _this;
-  }
 
   /**
-   * Configures the player according to given configuration.
-   * @param {Object} config - The configuration for the player instance.
-   * @returns {void}
-   */
-
-  /**
-   * Whether the play is the first or not
-   * @type {boolean}
+   * The playback engine.
+   * @type {IEngine}
    * @private
    */
 
@@ -6993,31 +1600,161 @@ var Player = function (_FakeEventTarget) {
    */
 
   /**
-   * The runtime configuration of the player.
+   * The tracks of the player.
+   * @type {Array<Track>}
+   * @private
+   */
+
+  /**
+   * The player ready promise
+   * @type {Promise<*>}
+   * @private
+   */
+
+  /**
+   * Whether the play is the first or not
+   * @type {boolean}
+   * @private
+   */
+
+  /**
+   * The player DOM element container.
+   * @type {HTMLDivElement}
+   * @private
+   */
+
+  /**
+   * The playback middleware of the player.
+   * @type {PlaybackMiddleware}
+   * @private
+   */
+
+  /**
+   * The environment(os,device,browser) object of the player.
    * @type {Object}
    * @private
    */
 
   /**
-   * The plugin manager of the player.
-   * @type {PluginManager}
+   * The player class logger.
+   * @type {any}
+   * @static
    * @private
+   */
+  function Player(targetId, config) {
+    _classCallCheck(this, Player);
+
+    var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
+
+    _this._tracks = [];
+    _this._config = {};
+    _this._firstPlay = true;
+    _this._stateManager = new _stateManager2.default(_this);
+    _this._pluginManager = new _pluginManager2.default();
+    _this._eventManager = new _eventManager2.default();
+    _this._playbackMiddleware = new _playbackMiddleware2.default();
+    _this._env = new _uaParserJs2.default().getResult();
+    _this._createReadyPromise();
+    _this._appendPlayerContainer(targetId);
+    _this.configure(config);
+    return _this;
+  }
+
+  /**
+   * Configures the player according to a given configuration.
+   * @param {Object} config - The configuration for the player instance.
+   * @returns {void}
+   */
+
+  /**
+   * The available engines of the player.
+   * @type {Array<typeof IEngine>}
+   * @private
+   * @static
    */
 
 
   _createClass(Player, [{
     key: 'configure',
     value: function configure(config) {
-      ++cov_4x54fj3w8.f[1];
-      ++cov_4x54fj3w8.s[8];
+      var engine = this._engine;
+      this._maybeResetPlayer(config);
+      this._config = Utils.Object.mergeDeep(Utils.Object.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
+      if (this._selectEngine()) {
+        this._appendEngineEl();
+        this._attachMedia();
+        this._maybeLoadPlugins(engine);
+        this._handlePlaybackConfig();
+      }
+    }
 
-      this._config = (0, _util.merge)([this._config, (++cov_4x54fj3w8.b[0][0], config) || (++cov_4x54fj3w8.b[0][1], Player._defaultConfig())]);
-      ++cov_4x54fj3w8.s[9];
-      this._loadPlugins(this._config);
-      ++cov_4x54fj3w8.s[10];
-      this._selectEngine(this._config);
-      ++cov_4x54fj3w8.s[11];
-      this._attachMedia();
+    /**
+     * Resets the player in case of new sources with existing engine.
+     * @param {Object} config - The player configuration.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_maybeResetPlayer',
+    value: function _maybeResetPlayer(config) {
+      if (this._engine && config.sources) {
+        Player._logger.debug('New sources on existing engine: reset engine to change media');
+        this._reset();
+      }
+    }
+
+    /**
+     * Loads the plugins in case engine created for the first time.
+     * @param {?IEngine} engine - The engine before the enter to configure method.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_maybeLoadPlugins',
+    value: function _maybeLoadPlugins(engine) {
+      if (this._engine && !engine) {
+        Player._logger.debug('Engine created for the first time: load plugins');
+        this._loadPlugins();
+      }
+    }
+
+    /**
+     * Reset the necessary components before change media.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_reset',
+    value: function _reset() {
+      if (this._engine) {
+        this._engine.destroy();
+      }
+      this._tracks = [];
+      this._firstPlay = true;
+      this._eventManager.removeAll();
+      this._createReadyPromise();
+    }
+
+    /**
+     * Creates the ready promise.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_createReadyPromise',
+    value: function _createReadyPromise() {
+      var _this2 = this;
+
+      this._readyPromise = new Promise(function (resolve, reject) {
+        _this2._eventManager.listen(_this2, _events.CUSTOM_EVENTS.TRACKS_CHANGED, function () {
+          resolve();
+        });
+        _this2._eventManager.listen(_this2, _events.HTML5_EVENTS.ERROR, reject);
+      });
     }
 
     /**
@@ -7029,21 +1766,15 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'destroy',
     value: function destroy() {
-      ++cov_4x54fj3w8.f[2];
-      ++cov_4x54fj3w8.s[12];
-
-      this._engine.destroy();
-      ++cov_4x54fj3w8.s[13];
+      if (this._engine) {
+        this._engine.destroy();
+      }
       this._eventManager.destroy();
-      ++cov_4x54fj3w8.s[14];
       this._pluginManager.destroy();
-      ++cov_4x54fj3w8.s[15];
       this._stateManager.destroy();
-      ++cov_4x54fj3w8.s[16];
       this._config = {};
-      ++cov_4x54fj3w8.s[17];
       this._tracks = [];
-      ++cov_4x54fj3w8.s[18];
+      this._readyPromise = null;
       this._firstPlay = true;
     }
 
@@ -7058,84 +1789,115 @@ var Player = function (_FakeEventTarget) {
 
 
     /**
-     *
-     * @param {Object} config - The configuration of the player instance.
+     * Loads the configured plugins.
      * @private
      * @returns {void}
      */
-    value: function _loadPlugins(config) {
-      ++cov_4x54fj3w8.f[4];
-
-      var plugins = (++cov_4x54fj3w8.s[20], config.plugins);
-      ++cov_4x54fj3w8.s[21];
+    value: function _loadPlugins() {
+      var plugins = this._config.plugins;
       for (var name in plugins) {
-        ++cov_4x54fj3w8.s[22];
-
         this._pluginManager.load(name, this, plugins[name]);
+        var plugin = this._pluginManager.get(name);
+        if (plugin && typeof plugin.getMiddlewareImpl === "function") {
+          this._playbackMiddleware.use(plugin.getMiddlewareImpl());
+        }
       }
     }
 
     /**
-     * Select the engine to create based on the given configured sources.
-     * @param {Object} config - The configuration of the player instance.
+     * Selects the engine to create based on a given configuration.
      * @private
-     * @returns {void}
+     * @returns {boolean} - Whether a proper engine was found.
      */
 
   }, {
     key: '_selectEngine',
-    value: function _selectEngine(config) {
-      ++cov_4x54fj3w8.f[5];
-      ++cov_4x54fj3w8.s[23];
+    value: function _selectEngine() {
+      if (this._config.sources && this._config.playback && this._config.playback.streamPriority) {
+        return this._selectEngineByPriority();
+      }
+      return false;
+    }
 
-      if ((++cov_4x54fj3w8.b[2][0], config) && (++cov_4x54fj3w8.b[2][1], config.sources)) {
-        ++cov_4x54fj3w8.b[1][0];
+    /**
+     * Selects an engine to play a source according to a given stream priority.
+     * @return {boolean} - Whether a proper engine was found to play the given sources
+     * according to the priority.
+     * @private
+     */
 
-        var sources = (++cov_4x54fj3w8.s[24], config.sources);
-        ++cov_4x54fj3w8.s[25];
-        for (var i = 0; i < sources.length; i++) {
-          ++cov_4x54fj3w8.s[26];
+  }, {
+    key: '_selectEngineByPriority',
+    value: function _selectEngineByPriority() {
+      var _this3 = this;
 
-          if (_html2.default.canPlayType(sources[i].mimetype)) {
-            ++cov_4x54fj3w8.b[3][0];
-            ++cov_4x54fj3w8.s[27];
+      var streamPriority = this._config.playback.streamPriority;
+      var sources = this._config.sources;
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
 
-            this._loadEngine(sources[i], config);
-            ++cov_4x54fj3w8.s[28];
-            break;
-          } else {
-            ++cov_4x54fj3w8.b[3][1];
+      try {
+        var _loop = function _loop() {
+          var priority = _step.value;
+
+          var engineId = typeof priority.engine === 'string' ? priority.engine.toLowerCase() : '';
+          var format = typeof priority.format === 'string' ? priority.format.toLowerCase() : '';
+          var engine = Player._engines.find(function (engine) {
+            return engine.id === engineId;
+          });
+          if (engine) {
+            var formatSources = sources[format];
+            if (formatSources && formatSources.length > 0) {
+              var source = formatSources[0];
+              if (engine.canPlayType(source.mimetype)) {
+                Player._logger.debug('Source selected: ', formatSources);
+                _this3._loadEngine(engine, source);
+                _this3.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.SOURCE_SELECTED, { selectedSource: formatSources }));
+                return {
+                  v: true
+                };
+              }
+            }
+          }
+        };
+
+        for (var _iterator = streamPriority[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var _ret = _loop();
+
+          if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
           }
         }
-      } else {
-        ++cov_4x54fj3w8.b[1][1];
       }
+
+      Player._logger.warn("No playable engines was found to play the given sources");
+      return false;
     }
 
     /**
      * Loads the selected engine.
+     * @param {IEngine} engine - The selected engine.
      * @param {Source} source - The selected source object.
-     * @param {Object} config - The configuration of the player instance.
      * @private
      * @returns {void}
      */
 
   }, {
     key: '_loadEngine',
-    value: function _loadEngine(source, config) {
-      ++cov_4x54fj3w8.f[6];
-      ++cov_4x54fj3w8.s[29];
-
-      this._engine = new _html2.default(source, config);
-      ++cov_4x54fj3w8.s[30];
-      if (config.preload === "auto") {
-        ++cov_4x54fj3w8.b[4][0];
-        ++cov_4x54fj3w8.s[31];
-
-        this.load();
-      } else {
-        ++cov_4x54fj3w8.b[4][1];
-      }
+    value: function _loadEngine(engine, source) {
+      this._engine = engine.createEngine(source, this._config);
     }
 
     /**
@@ -7147,57 +1909,131 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_attachMedia',
     value: function _attachMedia() {
-      var _this2 = this;
-
-      ++cov_4x54fj3w8.f[7];
-      ++cov_4x54fj3w8.s[32];
+      var _this4 = this;
 
       if (this._engine) {
-        ++cov_4x54fj3w8.b[5][0];
-        ++cov_4x54fj3w8.s[33];
-
         for (var playerEvent in _events.HTML5_EVENTS) {
-          ++cov_4x54fj3w8.s[34];
-
           this._eventManager.listen(this._engine, _events.HTML5_EVENTS[playerEvent], function (event) {
-            ++cov_4x54fj3w8.f[8];
-            ++cov_4x54fj3w8.s[35];
-
-            return _this2.dispatchEvent(event);
+            return _this4.dispatchEvent(event);
           });
         }
-        ++cov_4x54fj3w8.s[36];
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, function (event) {
-          ++cov_4x54fj3w8.f[9];
-          ++cov_4x54fj3w8.s[37];
-
-          _this2._markActiveTrack(event.payload.selectedVideoTrack);
-          ++cov_4x54fj3w8.s[38];
-          return _this2.dispatchEvent(event);
+          _this4._markActiveTrack(event.payload.selectedVideoTrack);
+          return _this4.dispatchEvent(event);
         });
-        ++cov_4x54fj3w8.s[39];
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED, function (event) {
-          ++cov_4x54fj3w8.f[10];
-          ++cov_4x54fj3w8.s[40];
-
-          _this2._markActiveTrack(event.payload.selectedAudioTrack);
-          ++cov_4x54fj3w8.s[41];
-          return _this2.dispatchEvent(event);
+          _this4._markActiveTrack(event.payload.selectedAudioTrack);
+          return _this4.dispatchEvent(event);
         });
-        ++cov_4x54fj3w8.s[42];
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED, function (event) {
-          ++cov_4x54fj3w8.f[11];
-          ++cov_4x54fj3w8.s[43];
-
-          _this2._markActiveTrack(event.payload.selectedTextTrack);
-          ++cov_4x54fj3w8.s[44];
-          return _this2.dispatchEvent(event);
+          _this4._markActiveTrack(event.payload.selectedTextTrack);
+          return _this4.dispatchEvent(event);
         });
-        ++cov_4x54fj3w8.s[45];
+        this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.ABR_MODE_CHANGED, function (event) {
+          return _this4.dispatchEvent(event);
+        });
         this._eventManager.listen(this, _events.HTML5_EVENTS.PLAY, this._onPlay.bind(this));
-      } else {
-        ++cov_4x54fj3w8.b[5][1];
       }
+    }
+  }, {
+    key: '_handlePlaybackConfig',
+    value: function _handlePlaybackConfig() {
+      if (this._config.playback) {
+        if (this._config.playback.muted) {
+          this.muted = true;
+        }
+        if (this._config.playback.playsinline) {
+          this.playsinline = true;
+        }
+        if (this._config.playback.preload === "auto") {
+          this.load();
+        }
+        if (this._canAutoPlay()) {
+          this.play();
+        }
+      }
+    }
+
+    /**
+     * Determine whether we can auto playing or not.
+     * @returns {boolean} - Whether an auto play can be done.
+     * @private
+     */
+
+  }, {
+    key: '_canAutoPlay',
+    value: function _canAutoPlay() {
+      if (!this._config.playback.autoplay) {
+        return false;
+      }
+      var device = this._env.device.type;
+      var os = this._env.os.name;
+      if (device === 'mobile' || device === 'tablet') {
+        return os === 'iOS' ? this.muted && this.playsinline : this.muted;
+      }
+      return true;
+    }
+
+    /**
+     * Creates the player container
+     * @param {string} targetId - The target div id to append the player.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_appendPlayerContainer',
+    value: function _appendPlayerContainer(targetId) {
+      if (targetId) {
+        if (this._el === undefined) {
+          this._createPlayerContainer();
+          var parentNode = Utils.Dom.getElementById(targetId);
+          Utils.Dom.appendChild(parentNode, this._el);
+        }
+      } else {
+        throw new Error("targetId is not found, it must be pass on initialization");
+      }
+    }
+
+    /**
+     * Creates the player container.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_createPlayerContainer',
+    value: function _createPlayerContainer() {
+      this._el = Utils.Dom.createElement("div");
+      this._el.id = Utils.Generator.uniqueId(5);
+      this._el.className = CONTAINER_CLASS_NAME;
+      this._el.setAttribute('tabindex', '-1');
+    }
+
+    /**
+     * Appends the engine's video element to the player's div container.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_appendEngineEl',
+    value: function _appendEngineEl() {
+      if (this._el != null && this._engine != null) {
+        Utils.Dom.appendChild(this._el, this._engine.getVideoElement());
+      }
+    }
+
+    /**
+     * Gets the view of the player (i.e the dom container object).
+     * @return {HTMLElement} - The dom container.
+     * @public
+     */
+
+  }, {
+    key: 'getView',
+    value: function getView() {
+      return this._el;
     }
 
     /**
@@ -7211,9 +2047,6 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'getTracks',
     value: function getTracks(type) {
-      ++cov_4x54fj3w8.f[12];
-      ++cov_4x54fj3w8.s[46];
-
       return this._getTracksByType(type);
     }
 
@@ -7228,43 +2061,38 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_getTracksByType',
     value: function _getTracksByType(type) {
-      ++cov_4x54fj3w8.f[13];
-      ++cov_4x54fj3w8.s[47];
-
-      return !type ? (++cov_4x54fj3w8.b[6][0], this._tracks) : (++cov_4x54fj3w8.b[6][1], this._tracks.filter(function (track) {
-        ++cov_4x54fj3w8.f[14];
-        ++cov_4x54fj3w8.s[48];
-
+      return !type ? this._tracks : this._tracks.filter(function (track) {
         if (type === _trackTypes2.default.VIDEO) {
-          ++cov_4x54fj3w8.b[7][0];
-          ++cov_4x54fj3w8.s[49];
-
           return track instanceof _videoTrack2.default;
+        } else if (type === _trackTypes2.default.AUDIO) {
+          return track instanceof _audioTrack2.default;
+        } else if (type === _trackTypes2.default.TEXT) {
+          return track instanceof _textTrack2.default;
         } else {
-            ++cov_4x54fj3w8.b[7][1];
-            ++cov_4x54fj3w8.s[50];
-            if (type === _trackTypes2.default.AUDIO) {
-              ++cov_4x54fj3w8.b[8][0];
-              ++cov_4x54fj3w8.s[51];
+          return true;
+        }
+      });
+    }
 
-              return track instanceof _audioTrack2.default;
-            } else {
-                ++cov_4x54fj3w8.b[8][1];
-                ++cov_4x54fj3w8.s[52];
-                if (type === _trackTypes2.default.TEXT) {
-                  ++cov_4x54fj3w8.b[9][0];
-                  ++cov_4x54fj3w8.s[53];
+    /**
+     * Get an object includes the active video/audio/text tracks
+     * @return {{video: VideoTrack, audio: AudioTrack, text: TextTrack}} - The active tracks object
+     */
 
-                  return track instanceof _textTrack2.default;
-                } else {
-                  ++cov_4x54fj3w8.b[9][1];
-                  ++cov_4x54fj3w8.s[54];
-
-                  return true;
-                }
-              }
-          }
-      }));
+  }, {
+    key: 'getActiveTracks',
+    value: function getActiveTracks() {
+      return {
+        video: this._getTracksByType(_trackTypes2.default.VIDEO).find(function (track) {
+          return track.active;
+        }),
+        audio: this._getTracksByType(_trackTypes2.default.AUDIO).find(function (track) {
+          return track.active;
+        }),
+        text: this._getTracksByType(_trackTypes2.default.TEXT).find(function (track) {
+          return track.active;
+        })
+      };
     }
 
     /**
@@ -7278,41 +2106,32 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'selectTrack',
     value: function selectTrack(track) {
-      ++cov_4x54fj3w8.f[15];
-      ++cov_4x54fj3w8.s[55];
-
       if (this._engine) {
-        ++cov_4x54fj3w8.b[10][0];
-        ++cov_4x54fj3w8.s[56];
-
         if (track instanceof _videoTrack2.default) {
-          ++cov_4x54fj3w8.b[11][0];
-          ++cov_4x54fj3w8.s[57];
-
           this._engine.selectVideoTrack(track);
-        } else {
-            ++cov_4x54fj3w8.b[11][1];
-            ++cov_4x54fj3w8.s[58];
-            if (track instanceof _audioTrack2.default) {
-              ++cov_4x54fj3w8.b[12][0];
-              ++cov_4x54fj3w8.s[59];
+        } else if (track instanceof _audioTrack2.default) {
+          this._engine.selectAudioTrack(track);
+        } else if (track instanceof _textTrack2.default) {
+          this._engine.selectTextTrack(track);
+        }
+      }
+    }
 
-              this._engine.selectAudioTrack(track);
-            } else {
-                ++cov_4x54fj3w8.b[12][1];
-                ++cov_4x54fj3w8.s[60];
-                if (track instanceof _textTrack2.default) {
-                  ++cov_4x54fj3w8.b[13][0];
-                  ++cov_4x54fj3w8.s[61];
+    /**
+     * Hide the text track
+     * @function hideTextTrack
+     * @returns {void}
+     * @public
+     */
 
-                  this._engine.selectTextTrack(track);
-                } else {
-                  ++cov_4x54fj3w8.b[13][1];
-                }
-              }
-          }
-      } else {
-        ++cov_4x54fj3w8.b[10][1];
+  }, {
+    key: 'hideTextTrack',
+    value: function hideTextTrack() {
+      if (this._engine) {
+        this._engine.hideTextTrack();
+        this._getTracksByType(_trackTypes2.default.TEXT).map(function (track) {
+          return track.active = false;
+        });
       }
     }
 
@@ -7326,17 +2145,25 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'enableAdaptiveBitrate',
     value: function enableAdaptiveBitrate() {
-      ++cov_4x54fj3w8.f[16];
-      ++cov_4x54fj3w8.s[62];
-
       if (this._engine) {
-        ++cov_4x54fj3w8.b[14][0];
-        ++cov_4x54fj3w8.s[63];
-
         this._engine.enableAdaptiveBitrate();
-      } else {
-        ++cov_4x54fj3w8.b[14][1];
       }
+    }
+
+    /**
+     * Checking if adaptive bitrate switching is enabled.
+     * @function isAdaptiveBitrateEnabled
+     * @returns {boolean} - Whether adaptive bitrate is enabled.
+     * @public
+     */
+
+  }, {
+    key: 'isAdaptiveBitrateEnabled',
+    value: function isAdaptiveBitrateEnabled() {
+      if (this._engine) {
+        return this._engine.isAdaptiveBitrateEnabled();
+      }
+      return false;
     }
 
     /**
@@ -7350,48 +2177,19 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_markActiveTrack',
     value: function _markActiveTrack(track) {
-      ++cov_4x54fj3w8.f[17];
-
       var type = void 0;
-      ++cov_4x54fj3w8.s[64];
       if (track instanceof _videoTrack2.default) {
-        ++cov_4x54fj3w8.b[15][0];
-        ++cov_4x54fj3w8.s[65];
-
         type = _trackTypes2.default.VIDEO;
-      } else {
-          ++cov_4x54fj3w8.b[15][1];
-          ++cov_4x54fj3w8.s[66];
-          if (track instanceof _audioTrack2.default) {
-            ++cov_4x54fj3w8.b[16][0];
-            ++cov_4x54fj3w8.s[67];
-
-            type = _trackTypes2.default.AUDIO;
-          } else {
-              ++cov_4x54fj3w8.b[16][1];
-              ++cov_4x54fj3w8.s[68];
-              if (track instanceof _textTrack2.default) {
-                ++cov_4x54fj3w8.b[17][0];
-                ++cov_4x54fj3w8.s[69];
-
-                type = _trackTypes2.default.TEXT;
-              } else {
-                ++cov_4x54fj3w8.b[17][1];
-              }
-            }
-        }++cov_4x54fj3w8.s[70];
+      } else if (track instanceof _audioTrack2.default) {
+        type = _trackTypes2.default.AUDIO;
+      } else if (track instanceof _textTrack2.default) {
+        type = _trackTypes2.default.TEXT;
+      }
       if (type) {
-        ++cov_4x54fj3w8.b[18][0];
-
-        var tracks = (++cov_4x54fj3w8.s[71], this.getTracks(type));
-        ++cov_4x54fj3w8.s[72];
+        var tracks = this.getTracks(type);
         for (var i = 0; i < tracks.length; i++) {
-          ++cov_4x54fj3w8.s[73];
-
           tracks[i].active = track.index === i;
         }
-      } else {
-        ++cov_4x54fj3w8.b[18][1];
       }
     }
 
@@ -7404,65 +2202,86 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_onPlay',
     value: function _onPlay() {
-      ++cov_4x54fj3w8.f[18];
-      ++cov_4x54fj3w8.s[74];
-
       if (this._firstPlay) {
-        ++cov_4x54fj3w8.b[19][0];
-        ++cov_4x54fj3w8.s[75];
-
         this._firstPlay = false;
-        ++cov_4x54fj3w8.s[76];
         this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.FIRST_PLAY));
-      } else {
-        ++cov_4x54fj3w8.b[19][1];
       }
     }
 
     /**
-     * Get the player config.
-     * @returns {Object} - The player configuration.
+     * Getter for the environment of the player instance.
+     * @return {Object} - The current environment object.
      * @public
      */
 
   }, {
-    key: 'play',
+    key: 'ready',
 
 
     //  <editor-fold desc="Playback Interface">
+    /**
+     * The player readiness
+     * @public
+     * @returns {Promise<*>} - The ready promise
+     */
+    value: function ready() {
+      return this._readyPromise ? this._readyPromise : Promise.resolve();
+    }
+
+    /**
+     * Load media
+     * @public
+     * @returns {void}
+     */
+
+  }, {
+    key: 'load',
+    value: function load() {
+      var _this5 = this;
+
+      if (this._engine) {
+        var startTime = this._config.playback.startTime;
+        this._engine.load(startTime).then(function (data) {
+          _this5._tracks = data.tracks;
+          _this5.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.TRACKS_CHANGED, { tracks: _this5._tracks }));
+        }).catch(function (error) {
+          _this5.dispatchEvent(new _fakeEvent2.default(_events.HTML5_EVENTS.ERROR, error));
+        });
+      }
+    }
+
     /**
      * Start/resume playback.
      * @returns {void}
      * @public
      */
+
+  }, {
+    key: 'play',
     value: function play() {
-      var _this3 = this;
-
-      ++cov_4x54fj3w8.f[20];
-      ++cov_4x54fj3w8.s[78];
-
       if (this._engine) {
-        ++cov_4x54fj3w8.b[20][0];
-        ++cov_4x54fj3w8.s[79];
+        this._playbackMiddleware.play(this._play.bind(this));
+      }
+    }
 
-        if (this._engine.src) {
-          ++cov_4x54fj3w8.b[21][0];
-          ++cov_4x54fj3w8.s[80];
+    /**
+     * Start/resume the engine playback.
+     * @private
+     * @returns {void}
+     */
 
-          this._engine.play();
-        } else {
-          ++cov_4x54fj3w8.b[21][1];
-          ++cov_4x54fj3w8.s[81];
+  }, {
+    key: '_play',
+    value: function _play() {
+      var _this6 = this;
 
-          this.load().then(function () {
-            ++cov_4x54fj3w8.f[21];
-            ++cov_4x54fj3w8.s[82];
-
-            _this3._engine.play();
-          });
-        }
+      if (this._engine.src) {
+        this._engine.play();
       } else {
-        ++cov_4x54fj3w8.b[20][1];
+        this.load();
+        this.ready().then(function () {
+          _this6._engine.play();
+        });
       }
     }
 
@@ -7475,48 +2294,64 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'pause',
     value: function pause() {
-      ++cov_4x54fj3w8.f[22];
-      ++cov_4x54fj3w8.s[83];
-
       if (this._engine) {
-        ++cov_4x54fj3w8.b[22][0];
-        ++cov_4x54fj3w8.s[84];
-
-        return this._engine.pause();
-      } else {
-        ++cov_4x54fj3w8.b[22][1];
+        this._playbackMiddleware.pause(this._pause.bind(this));
       }
     }
 
     /**
-     * Load media.
-     * @public
-     * @returns {Promise<*>} - The load promise.
+     * Starts the engine pause.
+     * @private
+     * @returns {void}
      */
 
   }, {
-    key: 'load',
-    value: function load() {
-      var _this4 = this;
+    key: '_pause',
+    value: function _pause() {
+      this._engine.pause();
+    }
 
-      ++cov_4x54fj3w8.f[23];
-      ++cov_4x54fj3w8.s[85];
+    /**
+     * @returns {HTMLVideoElement} - The video element.
+     * @public
+     */
 
+  }, {
+    key: 'getVideoElement',
+    value: function getVideoElement() {
       if (this._engine) {
-        ++cov_4x54fj3w8.b[23][0];
-        ++cov_4x54fj3w8.s[86];
+        return this._engine.getVideoElement();
+      }
+    }
 
-        return this._engine.load().then(function (data) {
-          ++cov_4x54fj3w8.f[24];
-          ++cov_4x54fj3w8.s[87];
+    /**
+     * Skip on an ad.
+     * @public
+     * @returns {void}
+     */
 
-          _this4._tracks = data.tracks;
-        });
-      } else {
-        ++cov_4x54fj3w8.b[23][1];
-        ++cov_4x54fj3w8.s[88];
+  }, {
+    key: 'skipAd',
+    value: function skipAd() {
+      var adsPlugin = this._pluginManager.get('ima');
+      if (adsPlugin && typeof adsPlugin.skipAd === 'function') {
+        adsPlugin.skipAd();
+      }
+    }
 
-        return Promise.resolve();
+    /**
+     * Start to play ad on demand.
+     * @param {string} adTagUrl - The ad tag url to play.
+     * @public
+     * @returns {void}
+     */
+
+  }, {
+    key: 'playAdNow',
+    value: function playAdNow(adTagUrl) {
+      var adsPlugin = this._pluginManager.get('ima');
+      if (adsPlugin && typeof adsPlugin.playAdNow === 'function') {
+        adsPlugin.playAdNow(adTagUrl);
       }
     }
 
@@ -7527,82 +2362,61 @@ var Player = function (_FakeEventTarget) {
      */
 
   }, {
-    key: 'ready',
-
-
-    // </editor-fold>
-
-    // <editor-fold desc="State">
-    value: function ready() {
-      ++cov_4x54fj3w8.f[30];
-    }
+    key: 'buffered',
+    value: function buffered() {}
 
     /**
-     * Get paused state.
-     * @returns {?boolean} - Whether the video is paused or not.
-     * @public
+     * Set playsinline attribute.
+     * Relevant for iOS 10 and up:
+     * Elements will now be allowed to play inline, and will not automatically enter fullscreen mode when playback begins.
+     * @param {boolean} playsinline - Whether the video should plays in line.
      */
 
   }, {
-    key: 'buffered',
-    value: function buffered() {
-      ++cov_4x54fj3w8.f[33];
+    key: 'env',
+    get: function get() {
+      return this._env;
     }
 
     /**
-     * Set player muted state.
-     * @param {boolean} mute - The mute value.
-     * @returns {void}
+     * Get the player config.
+     * @returns {Object} - A copy of the player configuration.
      * @public
      */
 
   }, {
     key: 'config',
     get: function get() {
-      ++cov_4x54fj3w8.f[19];
-      ++cov_4x54fj3w8.s[77];
+      return Utils.Object.mergeDeep({}, this._config);
+    }
 
-      return this._config;
+    /**
+     * Set player session id
+     * @param {string} sessionId - the player session id to set
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: 'sessionId',
+    set: function set(sessionId) {
+      this._config.session = this._config.session || {};
+      this._config.session.id = sessionId;
     }
   }, {
     key: 'currentTime',
     set: function set(to) {
-      ++cov_4x54fj3w8.f[25];
-      ++cov_4x54fj3w8.s[89];
-
       if (this._engine) {
-        ++cov_4x54fj3w8.b[24][0];
-        ++cov_4x54fj3w8.s[90];
-
-        if ((0, _util.isNumber)(to)) {
-          ++cov_4x54fj3w8.b[25][0];
-
-          var boundedTo = (++cov_4x54fj3w8.s[91], to);
-          ++cov_4x54fj3w8.s[92];
+        if (Utils.Number.isNumber(to)) {
+          var boundedTo = to;
           if (to < 0) {
-            ++cov_4x54fj3w8.b[26][0];
-            ++cov_4x54fj3w8.s[93];
-
             boundedTo = 0;
-          } else {
-            ++cov_4x54fj3w8.b[26][1];
           }
-          ++cov_4x54fj3w8.s[94];
           if (boundedTo > this._engine.duration) {
-            ++cov_4x54fj3w8.b[27][0];
-            ++cov_4x54fj3w8.s[95];
-
             boundedTo = this._engine.duration;
-          } else {
-            ++cov_4x54fj3w8.b[27][1];
           }
-          ++cov_4x54fj3w8.s[96];
           this._engine.currentTime = boundedTo;
-        } else {
-          ++cov_4x54fj3w8.b[25][1];
         }
-      } else {
-        ++cov_4x54fj3w8.b[24][1];
       }
     }
 
@@ -7613,16 +2427,8 @@ var Player = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_4x54fj3w8.f[26];
-      ++cov_4x54fj3w8.s[97];
-
       if (this._engine) {
-        ++cov_4x54fj3w8.b[28][0];
-        ++cov_4x54fj3w8.s[98];
-
         return this._engine.currentTime;
-      } else {
-        ++cov_4x54fj3w8.b[28][1];
       }
     }
 
@@ -7635,16 +2441,8 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'duration',
     get: function get() {
-      ++cov_4x54fj3w8.f[27];
-      ++cov_4x54fj3w8.s[99];
-
       if (this._engine) {
-        ++cov_4x54fj3w8.b[29][0];
-        ++cov_4x54fj3w8.s[100];
-
         return this._engine.duration;
-      } else {
-        ++cov_4x54fj3w8.b[29][1];
       }
     }
 
@@ -7658,42 +2456,17 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'volume',
     set: function set(vol) {
-      ++cov_4x54fj3w8.f[28];
-      ++cov_4x54fj3w8.s[101];
-
       if (this._engine) {
-        ++cov_4x54fj3w8.b[30][0];
-        ++cov_4x54fj3w8.s[102];
-
-        if ((0, _util.isFloat)(vol)) {
-          ++cov_4x54fj3w8.b[31][0];
-
-          var boundedVol = (++cov_4x54fj3w8.s[103], vol);
-          ++cov_4x54fj3w8.s[104];
+        if (Utils.Number.isFloat(vol)) {
+          var boundedVol = vol;
           if (boundedVol < 0) {
-            ++cov_4x54fj3w8.b[32][0];
-            ++cov_4x54fj3w8.s[105];
-
             boundedVol = 0;
-          } else {
-            ++cov_4x54fj3w8.b[32][1];
           }
-          ++cov_4x54fj3w8.s[106];
           if (boundedVol > 1) {
-            ++cov_4x54fj3w8.b[33][0];
-            ++cov_4x54fj3w8.s[107];
-
             boundedVol = 1;
-          } else {
-            ++cov_4x54fj3w8.b[33][1];
           }
-          ++cov_4x54fj3w8.s[108];
           this._engine.volume = boundedVol;
-        } else {
-          ++cov_4x54fj3w8.b[31][1];
         }
-      } else {
-        ++cov_4x54fj3w8.b[30][1];
       }
     }
 
@@ -7704,31 +2477,49 @@ var Player = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_4x54fj3w8.f[29];
-      ++cov_4x54fj3w8.s[109];
-
       if (this._engine) {
-        ++cov_4x54fj3w8.b[34][0];
-        ++cov_4x54fj3w8.s[110];
-
         return this._engine.volume;
-      } else {
-        ++cov_4x54fj3w8.b[34][1];
       }
     }
+
+    /**
+     * Sets the playbackRate property.
+     * @param {number} rate - The playback speed of the video.
+     */
+
+  }, {
+    key: 'playbackRate',
+    set: function set(rate) {
+      if (this._engine) {
+        this._engine.playbackRate = rate;
+      }
+    }
+
+    /**
+     * Gets the current playback speed of the video.
+     * @returns {number} - The current playback speed of the video.
+     */
+    ,
+    get: function get() {
+      if (this._engine) {
+        return this._engine.playbackRate;
+      }
+    }
+
+    // </editor-fold>
+
+    // <editor-fold desc="State">
+    /**
+     * Get paused state.
+     * @returns {?boolean} - Whether the video is paused or not.
+     * @public
+     */
+
   }, {
     key: 'paused',
     get: function get() {
-      ++cov_4x54fj3w8.f[31];
-      ++cov_4x54fj3w8.s[111];
-
       if (this._engine) {
-        ++cov_4x54fj3w8.b[35][0];
-        ++cov_4x54fj3w8.s[112];
-
         return this._engine.paused;
-      } else {
-        ++cov_4x54fj3w8.b[35][1];
       }
     }
 
@@ -7741,31 +2532,43 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'seeking',
     get: function get() {
-      ++cov_4x54fj3w8.f[32];
-      ++cov_4x54fj3w8.s[113];
-
       if (this._engine) {
-        ++cov_4x54fj3w8.b[36][0];
-        ++cov_4x54fj3w8.s[114];
-
         return this._engine.seeking;
-      } else {
-        ++cov_4x54fj3w8.b[36][1];
       }
     }
   }, {
+    key: 'playsinline',
+    set: function set(playsinline) {
+      if (this._engine) {
+        this._engine.playsinline = playsinline;
+      }
+    }
+
+    /**
+     * Get playsinline attribute.
+     * Relevant for iOS 10 and up:
+     * Elements will now be allowed to play inline, and will not automatically enter fullscreen mode when playback begins.
+     * @returns {boolean} - Whether the video plays in line.
+     */
+    ,
+    get: function get() {
+      if (this._engine) {
+        return this._engine.playsinline;
+      }
+    }
+
+    /**
+     * Set player muted state.
+     * @param {boolean} mute - The mute value.
+     * @returns {void}
+     * @public
+     */
+
+  }, {
     key: 'muted',
     set: function set(mute) {
-      ++cov_4x54fj3w8.f[34];
-      ++cov_4x54fj3w8.s[115];
-
       if (this._engine) {
-        ++cov_4x54fj3w8.b[37][0];
-        ++cov_4x54fj3w8.s[116];
-
         this._engine.muted = mute;
-      } else {
-        ++cov_4x54fj3w8.b[37][1];
       }
     }
 
@@ -7776,16 +2579,8 @@ var Player = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_4x54fj3w8.f[35];
-      ++cov_4x54fj3w8.s[117];
-
       if (this._engine) {
-        ++cov_4x54fj3w8.b[38][0];
-        ++cov_4x54fj3w8.s[118];
-
         return this._engine.muted;
-      } else {
-        ++cov_4x54fj3w8.b[38][1];
       }
     }
 
@@ -7798,16 +2593,8 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'src',
     get: function get() {
-      ++cov_4x54fj3w8.f[36];
-      ++cov_4x54fj3w8.s[119];
-
       if (this._engine) {
-        ++cov_4x54fj3w8.b[39][0];
-        ++cov_4x54fj3w8.s[120];
-
         return this._engine.src;
-      } else {
-        ++cov_4x54fj3w8.b[39][1];
       }
     }
 
@@ -7820,9 +2607,6 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'Event',
     get: function get() {
-      ++cov_4x54fj3w8.f[37];
-      ++cov_4x54fj3w8.s[121];
-
       return _events.PLAYER_EVENTS;
     }
 
@@ -7835,9 +2619,6 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'State',
     get: function get() {
-      ++cov_4x54fj3w8.f[38];
-      ++cov_4x54fj3w8.s[122];
-
       return _stateTypes2.default;
     }
 
@@ -7850,9 +2631,6 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'Track',
     get: function get() {
-      ++cov_4x54fj3w8.f[39];
-      ++cov_4x54fj3w8.s[123];
-
       return _trackTypes2.default;
     }
 
@@ -7860,21 +2638,20 @@ var Player = function (_FakeEventTarget) {
 
   }], [{
     key: '_defaultConfig',
-    value: function _defaultConfig() {
-      ++cov_4x54fj3w8.f[3];
-      ++cov_4x54fj3w8.s[19];
-
-      return {};
+    get: function get() {
+      return Utils.Object.copyDeep(_playerConfig2.default);
     }
   }]);
 
   return Player;
 }(_fakeEventTarget2.default);
 
+Player._logger = _logger2.default.getLogger('Player');
+Player._engines = [_html2.default];
 exports.default = Player;
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7884,414 +2661,270 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_1n1jsxoboj = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/event/fake-event-target.js',
-      hash = '453d089f44ea2ec3652230de20b5912879d1f705',
-      global = new Function('return this')(),
-      gcv = '__coverage__',
-      coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/event/fake-event-target.js',
-    statementMap: {
-      '0': {
-        start: {
-          line: 23,
-          column: 4
-        },
-        end: {
-          line: 23,
-          column: 37
-        }
-      },
-      '1': {
-        start: {
-          line: 29,
-          column: 4
-        },
-        end: {
-          line: 29,
-          column: 31
-        }
-      },
-      '2': {
-        start: {
-          line: 44,
-          column: 4
-        },
-        end: {
-          line: 44,
-          column: 41
-        }
-      },
-      '3': {
-        start: {
-          line: 59,
-          column: 4
-        },
-        end: {
-          line: 59,
-          column: 43
-        }
-      },
-      '4': {
-        start: {
-          line: 76,
-          column: 15
-        },
-        end: {
-          line: 76,
-          column: 52
-        }
-      },
-      '5': {
-        start: {
-          line: 78,
-          column: 4
-        },
-        end: {
-          line: 100,
-          column: 5
-        }
-      },
-      '6': {
-        start: {
-          line: 80,
-          column: 6
-        },
-        end: {
-          line: 80,
-          column: 41
-        }
-      },
-      '7': {
-        start: {
-          line: 81,
-          column: 6
-        },
-        end: {
-          line: 81,
-          column: 48
-        }
-      },
-      '8': {
-        start: {
-          line: 83,
-          column: 21
-        },
-        end: {
-          line: 83,
-          column: 28
-        }
-      },
-      '9': {
-        start: {
-          line: 84,
-          column: 6
-        },
-        end: {
-          line: 95,
-          column: 7
-        }
-      },
-      '10': {
-        start: {
-          line: 85,
-          column: 8
-        },
-        end: {
-          line: 89,
-          column: 9
-        }
-      },
-      '11': {
-        start: {
-          line: 86,
-          column: 10
-        },
-        end: {
-          line: 86,
-          column: 38
-        }
-      },
-      '12': {
-        start: {
-          line: 88,
-          column: 10
-        },
-        end: {
-          line: 88,
-          column: 37
-        }
-      },
-      '13': {
-        start: {
-          line: 97,
-          column: 6
-        },
-        end: {
-          line: 99,
-          column: 7
-        }
-      },
-      '14': {
-        start: {
-          line: 98,
-          column: 8
-        },
-        end: {
-          line: 98,
-          column: 14
-        }
-      },
-      '15': {
-        start: {
-          line: 102,
-          column: 4
-        },
-        end: {
-          line: 102,
-          column: 34
-        }
-      }
-    },
-    fnMap: {
-      '0': {
-        name: '(anonymous_0)',
-        decl: {
-          start: {
-            line: 19,
-            column: 2
-          },
-          end: {
-            line: 19,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 19,
-            column: 16
-          },
-          end: {
-            line: 30,
-            column: 3
-          }
-        },
-        line: 19
-      },
-      '1': {
-        name: '(anonymous_1)',
-        decl: {
-          start: {
-            line: 43,
-            column: 2
-          },
-          end: {
-            line: 43,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 43,
-            column: 57
-          },
-          end: {
-            line: 45,
-            column: 3
-          }
-        },
-        line: 43
-      },
-      '2': {
-        name: '(anonymous_2)',
-        decl: {
-          start: {
-            line: 58,
-            column: 2
-          },
-          end: {
-            line: 58,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 58,
-            column: 60
-          },
-          end: {
-            line: 60,
-            column: 3
-          }
-        },
-        line: 58
-      },
-      '3': {
-        name: '(anonymous_3)',
-        decl: {
-          start: {
-            line: 70,
-            column: 2
-          },
-          end: {
-            line: 70,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 70,
-            column: 34
-          },
-          end: {
-            line: 103,
-            column: 3
-          }
-        },
-        line: 70
-      }
-    },
-    branchMap: {
-      '0': {
-        loc: {
-          start: {
-            line: 76,
-            column: 15
-          },
-          end: {
-            line: 76,
-            column: 52
-          }
-        },
-        type: 'binary-expr',
-        locations: [{
-          start: {
-            line: 76,
-            column: 15
-          },
-          end: {
-            line: 76,
-            column: 46
-          }
-        }, {
-          start: {
-            line: 76,
-            column: 50
-          },
-          end: {
-            line: 76,
-            column: 52
-          }
-        }],
-        line: 76
-      },
-      '1': {
-        loc: {
-          start: {
-            line: 85,
-            column: 8
-          },
-          end: {
-            line: 89,
-            column: 9
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 85,
-            column: 8
-          },
-          end: {
-            line: 89,
-            column: 9
-          }
-        }, {
-          start: {
-            line: 85,
-            column: 8
-          },
-          end: {
-            line: 89,
-            column: 9
-          }
-        }],
-        line: 85
-      },
-      '2': {
-        loc: {
-          start: {
-            line: 97,
-            column: 6
-          },
-          end: {
-            line: 99,
-            column: 7
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 97,
-            column: 6
-          },
-          end: {
-            line: 99,
-            column: 7
-          }
-        }, {
-          start: {
-            line: 97,
-            column: 6
-          },
-          end: {
-            line: 99,
-            column: 7
-          }
-        }],
-        line: 97
-      }
-    },
-    s: {
-      '0': 0,
-      '1': 0,
-      '2': 0,
-      '3': 0,
-      '4': 0,
-      '5': 0,
-      '6': 0,
-      '7': 0,
-      '8': 0,
-      '9': 0,
-      '10': 0,
-      '11': 0,
-      '12': 0,
-      '13': 0,
-      '14': 0,
-      '15': 0
-    },
-    f: {
-      '0': 0,
-      '1': 0,
-      '2': 0,
-      '3': 0
-    },
-    b: {
-      '0': [0, 0],
-      '1': [0, 0],
-      '2': [0, 0]
-    },
-    _coverageSchema: '332fd63041d2c1bcb487cc26dd0d5f7d97098a6c'
-  },
-      coverage = global[gcv] || (global[gcv] = {});
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Base middleware.
+ * @classdesc
+ */
+var BaseMiddleware = function () {
+  function BaseMiddleware() {
+    _classCallCheck(this, BaseMiddleware);
   }
 
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
+  _createClass(BaseMiddleware, [{
+    key: "callNext",
+
+
+    /**
+     * Calls the next handler in the middleware chain.
+     * @param {Function} next - The next handler in the middleware chain.
+     * @returns {void}
+     */
+    value: function callNext(next) {
+      if (next) {
+        next();
+      }
+    }
+    /**
+     * Id of the middleware instance.
+     * @public
+     */
+
+  }]);
+
+  return BaseMiddleware;
 }();
+
+exports.default = BaseMiddleware;
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _player = __webpack_require__(9);
+
+var _player2 = _interopRequireDefault(_player);
+
+var _logger = __webpack_require__(0);
+
+var _logger2 = _interopRequireDefault(_logger);
+
+var _util = __webpack_require__(3);
+
+var Utils = _interopRequireWildcard(_util);
+
+var _eventManager = __webpack_require__(7);
+
+var _eventManager2 = _interopRequireDefault(_eventManager);
+
+var _playerError = __webpack_require__(14);
+
+var _playerError2 = _interopRequireDefault(_playerError);
+
+var _fakeEvent = __webpack_require__(2);
+
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/** The BasePlugin responsible to implement the plugin interface.
+ * Contains several default implementations.
+ * Other plugins should extend this class.
+ * @classdesc
+ */
+var BasePlugin = function () {
+  _createClass(BasePlugin, null, [{
+    key: 'createPlugin',
+
+
+    /**
+     * Factory method to create the actual plugin.
+     * @param {string} name - The plugin name
+     * @param {Player} player - The player reference
+     * @param {Object} config - The plugin configuration
+     * @returns {BasePlugin} - New runtime plugin instance
+     * @static
+     * @public
+     */
+
+    /**
+     * The event manager of the plugin.
+     * @member
+     */
+
+    /**
+     * The logger of the plugin.
+     * @member
+     */
+
+    /**
+     * The runtime configuration of the plugin.
+     * @member
+     */
+    value: function createPlugin(name, player) {
+      var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+      return new this(name, player, config);
+    }
+
+    /**
+     * Returns under what conditions the plugin is valid.
+     * Plugin must implement this method.
+     * @returns {boolean} - Whether the plugin is valid and can be initiated. Default implementation is true
+     * @static
+     * @public
+     * @abstract
+     */
+
+    /**
+     * The default configuration of the plugin.
+     * Inherited plugins should override this property.
+     * @type {Object}
+     * @static
+     * @member
+     */
+
+    /**
+     * Reference to the actual player.
+     * @member
+     */
+
+    /**
+     * The name of the plugin.
+     * @member
+     */
+
+  }, {
+    key: 'isValid',
+    value: function isValid() {
+      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'isValid()').getError();
+    }
+
+    /**
+     * constructor
+     * @param {string} name - The plugin name
+     * @param {Player} player - The player reference
+     * @param {Object} config - The plugin configuration
+     * @constructor
+     * @private
+     */
+
+  }]);
+
+  function BasePlugin(name, player, config) {
+    _classCallCheck(this, BasePlugin);
+
+    this.name = name;
+    this.player = player;
+    this.eventManager = new _eventManager2.default();
+    this.logger = _logger2.default.getLogger(this.name);
+    this.config = {};
+    Utils.Object.mergeDeep(this.config, this.constructor.defaultConfig, config);
+  }
+
+  /**
+   * Getter for the configuration of the plugin.
+   * @param {string} attr - The key in the plugin configuration (optional).
+   * @returns {*} - If attribute is provided, returns its value. Else, Returns the config of the plugin.
+   * @public
+   */
+
+
+  _createClass(BasePlugin, [{
+    key: 'getConfig',
+    value: function getConfig(attr) {
+      if (attr) {
+        return this.config[attr];
+      }
+      return this.config;
+    }
+
+    /**
+     * Updates the config of the plugin.
+     * @param {Object} update - The updated configuration.
+     * @public
+     * @returns {void}
+     */
+
+  }, {
+    key: 'updateConfig',
+    value: function updateConfig(update) {
+      this.config = Utils.Object.mergeDeep(this.config, update);
+    }
+
+    /**
+     * Runs the destroy logic of the plugin.
+     * plugin must implement this method.
+     * @public
+     * @abstract
+     * @returns {void}
+     */
+
+  }, {
+    key: 'destroy',
+    value: function destroy() {
+      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'destroy()').getError();
+    }
+
+    /**
+     * Getter for the plugin's name.
+     * @returns {string} - The name of the plugin.
+     * @public
+     */
+
+  }, {
+    key: 'getName',
+    value: function getName() {
+      return this.name;
+    }
+
+    /**
+     * Dispatch an event via the plugin.
+     * @param {string} name - The event name.
+     * @param {any} payload - The event payload.
+     * @returns {void}
+     */
+
+  }, {
+    key: 'dispatchEvent',
+    value: function dispatchEvent(name, payload) {
+      this.logger.debug("Fire event: " + name, payload);
+      this.player.dispatchEvent(new _fakeEvent2.default(name, payload));
+    }
+  }]);
+
+  return BasePlugin;
+}();
+
+BasePlugin.defaultConfig = {};
+exports.default = BasePlugin;
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -8299,7 +2932,7 @@ var _fakeEvent = __webpack_require__(2);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _multiMap = __webpack_require__(17);
+var _multiMap = __webpack_require__(13);
 
 var _multiMap2 = _interopRequireDefault(_multiMap);
 
@@ -8321,9 +2954,6 @@ var FakeEventTarget = function () {
   function FakeEventTarget() {
     _classCallCheck(this, FakeEventTarget);
 
-    ++cov_1n1jsxoboj.f[0];
-    ++cov_1n1jsxoboj.s[0];
-
     /**
      * @private {!MultiMap.<FakeEventTarget.ListenerType>}
      */
@@ -8333,7 +2963,6 @@ var FakeEventTarget = function () {
      * The target of all dispatched events.  Defaults to |this|.
      * @type {EventTarget}
      */
-    ++cov_1n1jsxoboj.s[1];
     this.dispatchTarget = this;
   }
 
@@ -8353,9 +2982,6 @@ var FakeEventTarget = function () {
   _createClass(FakeEventTarget, [{
     key: 'addEventListener',
     value: function addEventListener(type, listener) {
-      ++cov_1n1jsxoboj.f[1];
-      ++cov_1n1jsxoboj.s[2];
-
       this._listeners.push(type, listener);
     }
 
@@ -8374,9 +3000,6 @@ var FakeEventTarget = function () {
   }, {
     key: 'removeEventListener',
     value: function removeEventListener(type, listener) {
-      ++cov_1n1jsxoboj.f[2];
-      ++cov_1n1jsxoboj.s[3];
-
       this._listeners.remove(type, listener);
     }
 
@@ -8392,38 +3015,23 @@ var FakeEventTarget = function () {
   }, {
     key: 'dispatchEvent',
     value: function dispatchEvent(event) {
-      ++cov_1n1jsxoboj.f[3];
-
       // In many browsers, it is complex to overwrite properties of actual Events.
       // Here we expect only to dispatch FakeEvents, which are simpler.
       //goog.asserts.assert(event instanceof FakeEvent,
       //    'FakeEventTarget can only dispatch FakeEvents!');
 
-      var list = (++cov_1n1jsxoboj.s[4], (++cov_1n1jsxoboj.b[0][0], this._listeners.get(event.type)) || (++cov_1n1jsxoboj.b[0][1], []));
+      var list = this._listeners.get(event.type) || [];
 
-      ++cov_1n1jsxoboj.s[5];
       for (var i = 0; i < list.length; ++i) {
-        ++cov_1n1jsxoboj.s[6];
-
         // Do this every time, since events can be re-dispatched from handlers.
         event.target = this.dispatchTarget;
-        ++cov_1n1jsxoboj.s[7];
         event.currentTarget = this.dispatchTarget;
 
-        var listener = (++cov_1n1jsxoboj.s[8], list[i]);
-        ++cov_1n1jsxoboj.s[9];
+        var listener = list[i];
         try {
-          ++cov_1n1jsxoboj.s[10];
-
           if (listener.handleEvent) {
-            ++cov_1n1jsxoboj.b[1][0];
-            ++cov_1n1jsxoboj.s[11];
-
             listener.handleEvent(event);
           } else {
-            ++cov_1n1jsxoboj.b[1][1];
-            ++cov_1n1jsxoboj.s[12];
-
             listener.call(this, event);
           }
         } catch (exception) {
@@ -8433,18 +3041,11 @@ var FakeEventTarget = function () {
           // TODO: add log
         }
 
-        ++cov_1n1jsxoboj.s[13];
         if (event.stopped) {
-          ++cov_1n1jsxoboj.b[2][0];
-          ++cov_1n1jsxoboj.s[14];
-
           break;
-        } else {
-          ++cov_1n1jsxoboj.b[2][1];
         }
       }
 
-      ++cov_1n1jsxoboj.s[15];
       return event.defaultPrevented;
     }
   }]);
@@ -8461,7 +3062,7 @@ var FakeEventTarget = function () {
 exports.default = FakeEventTarget;
 
 /***/ }),
-/* 10 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8471,225 +3072,184 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_zk60s9pil = function () {
-  var path = "/Users/dan.ziv/WebstormProjects/playkit-js/src/utils/player-error.js",
-      hash = "f6b9424ead904442c692b1e5698a6302398a47dd",
-      global = new Function('return this')(),
-      gcv = "__coverage__",
-      coverageData = {
-    path: "/Users/dan.ziv/WebstormProjects/playkit-js/src/utils/player-error.js",
-    statementMap: {
-      "0": {
-        start: {
-          line: 7,
-          column: 8
-        },
-        end: {
-          line: 7,
-          column: 76
-        }
-      },
-      "1": {
-        start: {
-          line: 13,
-          column: 8
-        },
-        end: {
-          line: 13,
-          column: 85
-        }
-      },
-      "2": {
-        start: {
-          line: 19,
-          column: 8
-        },
-        end: {
-          line: 19,
-          column: 50
-        }
-      },
-      "3": {
-        start: {
-          line: 28,
-          column: 4
-        },
-        end: {
-          line: 28,
-          column: 27
-        }
-      },
-      "4": {
-        start: {
-          line: 29,
-          column: 4
-        },
-        end: {
-          line: 29,
-          column: 40
-        }
-      },
-      "5": {
-        start: {
-          line: 33,
-          column: 4
-        },
-        end: {
-          line: 36,
-          column: 6
-        }
-      }
-    },
-    fnMap: {
-      "0": {
-        name: "(anonymous_0)",
-        decl: {
-          start: {
-            line: 6,
-            column: 15
-          },
-          end: {
-            line: 6,
-            column: 16
-          }
-        },
-        loc: {
-          start: {
-            line: 6,
-            column: 31
-          },
-          end: {
-            line: 8,
-            column: 7
-          }
-        },
-        line: 6
-      },
-      "1": {
-        name: "(anonymous_1)",
-        decl: {
-          start: {
-            line: 12,
-            column: 15
-          },
-          end: {
-            line: 12,
-            column: 16
-          }
-        },
-        loc: {
-          start: {
-            line: 12,
-            column: 27
-          },
-          end: {
-            line: 14,
-            column: 7
-          }
-        },
-        line: 12
-      },
-      "2": {
-        name: "(anonymous_2)",
-        decl: {
-          start: {
-            line: 18,
-            column: 15
-          },
-          end: {
-            line: 18,
-            column: 16
-          }
-        },
-        loc: {
-          start: {
-            line: 18,
-            column: 33
-          },
-          end: {
-            line: 20,
-            column: 7
-          }
-        },
-        line: 18
-      },
-      "3": {
-        name: "(anonymous_3)",
-        decl: {
-          start: {
-            line: 27,
-            column: 2
-          },
-          end: {
-            line: 27,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 27,
-            column: 42
-          },
-          end: {
-            line: 30,
-            column: 3
-          }
-        },
-        line: 27
-      },
-      "4": {
-        name: "(anonymous_4)",
-        decl: {
-          start: {
-            line: 32,
-            column: 2
-          },
-          end: {
-            line: 32,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 32,
-            column: 13
-          },
-          end: {
-            line: 37,
-            column: 3
-          }
-        },
-        line: 32
-      }
-    },
-    branchMap: {},
-    s: {
-      "0": 0,
-      "1": 0,
-      "2": 0,
-      "3": 0,
-      "4": 0,
-      "5": 0
-    },
-    f: {
-      "0": 0,
-      "1": 0,
-      "2": 0,
-      "3": 0,
-      "4": 0
-    },
-    b: {},
-    _coverageSchema: "332fd63041d2c1bcb487cc26dd0d5f7d97098a6c"
-  },
-      coverage = global[gcv] || (global[gcv] = {});
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * A simple multimap template.
+ * @constructor
+ * @struct
+ * @template T
+ */
+var MultiMap = function () {
+  function MultiMap() {
+    _classCallCheck(this, MultiMap);
+
+    /** @private {!Object.<string, !Array.<T>>} */
+    this._map = new Map();
   }
 
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
+  /**
+   * Add a key, value pair to the map.
+   * @param {string} key -
+   * @param {T} value  -
+   * @returns {void}
+   */
+
+
+  _createClass(MultiMap, [{
+    key: "push",
+    value: function push(key, value) {
+      if (this._map.has(key)) {
+        var list = this._map.get(key);
+        if (Array.isArray(list)) {
+          list.push(value);
+          this._map.set(key, list);
+        }
+      } else {
+        this._map.set(key, [value]);
+      }
+    }
+
+    /**
+     * Set an array of values for the key, overwriting any previous data.
+     * @param {string} key -
+     * @param {!Array.<T>} values -
+     * @returns {void}
+     */
+
+  }, {
+    key: "set",
+    value: function set(key, values) {
+      this._map.set(key, values);
+    }
+
+    /**
+     * Check for a key.
+     * @param {string} key -
+     * @return {boolean} true if the key exists.
+     */
+
+  }, {
+    key: "has",
+    value: function has(key) {
+      return this._map.has(key);
+    }
+
+    /**
+     * Get a list of values by key.
+     * @param {string} key -
+     * @return {Array.<T>} or null if no suZch key exists.
+     */
+
+  }, {
+    key: "get",
+    value: function get(key) {
+      var list = this._map.get(key);
+      // slice() clones the list so that it and the map can each be modified
+      // without affecting the other.
+      return list ? list.slice() : [];
+    }
+
+    /**
+     * Get a list of all values.
+     * @returns {!Array.<T>} -
+     */
+
+  }, {
+    key: "getAll",
+    value: function getAll() {
+      var list = [];
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this._map.values()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var value = _step.value;
+
+          list = list.concat(value);
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return list;
+    }
+
+    /**
+     * Remove a specific value, if it exists.
+     * @param {string} key -
+     * @param {T} value -
+     * @returns {void}
+     */
+
+  }, {
+    key: "remove",
+    value: function remove(key, value) {
+      if (!this._map.has(key)) return;
+      var list = this._map.get(key);
+      if (Array.isArray(list)) {
+        for (var i = 0; i < list.length; ++i) {
+          if (list[i] == value) {
+            list.splice(i, 1);
+            --i;
+          }
+        }
+      }
+    }
+
+    /**
+     * Get all keys from the multimap.
+     * @return {!Array.<string>}
+     */
+    // eslint-disable-next-line no-undef
+
+  }, {
+    key: "keys",
+    value: function keys() {
+      return this._map.keys();
+    }
+
+    /**
+     * Clear all keys and values from the multimap.
+     * @returns {void}
+     */
+
+  }, {
+    key: "clear",
+    value: function clear() {
+      this._map.clear();
+    }
+  }]);
+
+  return MultiMap;
 }();
+
+exports.default = MultiMap;
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -8699,20 +3259,13 @@ var PlayerError = function () {
   function PlayerError(error, param) {
     _classCallCheck(this, PlayerError);
 
-    ++cov_zk60s9pil.f[3];
-    ++cov_zk60s9pil.s[3];
-
     this.name = error.name;
-    ++cov_zk60s9pil.s[4];
     this.message = error.message(param);
   }
 
   _createClass(PlayerError, [{
     key: "getError",
     value: function getError() {
-      ++cov_zk60s9pil.f[4];
-      ++cov_zk60s9pil.s[5];
-
       return {
         name: this.name,
         message: this.message
@@ -8727,27 +3280,18 @@ PlayerError.TYPE = {
   NOT_REGISTERED_PLUGIN: {
     name: "PluginNotRegisteredException",
     message: function message(name) {
-      ++cov_zk60s9pil.f[0];
-      ++cov_zk60s9pil.s[0];
-
       return "Cannot load " + name + " plugin. Name not found in the registry";
     }
   },
   NOT_VALID_HANDLER: {
     name: "PluginHandlerIsNotValidException",
     message: function message() {
-      ++cov_zk60s9pil.f[1];
-      ++cov_zk60s9pil.s[1];
-
       return "To activate plugin you must provide a class derived from BasePlugin";
     }
   },
   NOT_IMPLEMENTED_METHOD: {
     name: "NotImplementedException",
     message: function message(method) {
-      ++cov_zk60s9pil.f[2];
-      ++cov_zk60s9pil.s[2];
-
       return method + " method not implemented";
     }
   }
@@ -8755,372 +3299,7 @@ PlayerError.TYPE = {
 exports.default = PlayerError;
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * @param {number} n - A certain number
- * @returns {boolean} - If the input is a number
- */
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var cov_1e2a9y1nho = function () {
-  var path = "/Users/dan.ziv/WebstormProjects/playkit-js/src/utils/util.js",
-      hash = "6c569da676227dcfcd4197182982081ccde0f483",
-      global = new Function('return this')(),
-      gcv = "__coverage__",
-      coverageData = {
-    path: "/Users/dan.ziv/WebstormProjects/playkit-js/src/utils/util.js",
-    statementMap: {
-      "0": {
-        start: {
-          line: 9,
-          column: 2
-        },
-        end: {
-          line: 9,
-          column: 25
-        }
-      },
-      "1": {
-        start: {
-          line: 17,
-          column: 2
-        },
-        end: {
-          line: 17,
-          column: 36
-        }
-      },
-      "2": {
-        start: {
-          line: 25,
-          column: 2
-        },
-        end: {
-          line: 25,
-          column: 36
-        }
-      },
-      "3": {
-        start: {
-          line: 33,
-          column: 15
-        },
-        end: {
-          line: 33,
-          column: 17
-        }
-      },
-      "4": {
-        start: {
-          line: 34,
-          column: 2
-        },
-        end: {
-          line: 36,
-          column: 3
-        }
-      },
-      "5": {
-        start: {
-          line: 35,
-          column: 4
-        },
-        end: {
-          line: 35,
-          column: 31
-        }
-      },
-      "6": {
-        start: {
-          line: 37,
-          column: 2
-        },
-        end: {
-          line: 37,
-          column: 16
-        }
-      }
-    },
-    fnMap: {
-      "0": {
-        name: "isNumber",
-        decl: {
-          start: {
-            line: 8,
-            column: 9
-          },
-          end: {
-            line: 8,
-            column: 17
-          }
-        },
-        loc: {
-          start: {
-            line: 8,
-            column: 38
-          },
-          end: {
-            line: 10,
-            column: 1
-          }
-        },
-        line: 8
-      },
-      "1": {
-        name: "isInt",
-        decl: {
-          start: {
-            line: 16,
-            column: 9
-          },
-          end: {
-            line: 16,
-            column: 14
-          }
-        },
-        loc: {
-          start: {
-            line: 16,
-            column: 35
-          },
-          end: {
-            line: 18,
-            column: 1
-          }
-        },
-        line: 16
-      },
-      "2": {
-        name: "isFloat",
-        decl: {
-          start: {
-            line: 24,
-            column: 9
-          },
-          end: {
-            line: 24,
-            column: 16
-          }
-        },
-        loc: {
-          start: {
-            line: 24,
-            column: 37
-          },
-          end: {
-            line: 26,
-            column: 1
-          }
-        },
-        line: 24
-      },
-      "3": {
-        name: "merge",
-        decl: {
-          start: {
-            line: 32,
-            column: 9
-          },
-          end: {
-            line: 32,
-            column: 14
-          }
-        },
-        loc: {
-          start: {
-            line: 32,
-            column: 47
-          },
-          end: {
-            line: 38,
-            column: 1
-          }
-        },
-        line: 32
-      }
-    },
-    branchMap: {
-      "0": {
-        loc: {
-          start: {
-            line: 17,
-            column: 9
-          },
-          end: {
-            line: 17,
-            column: 35
-          }
-        },
-        type: "binary-expr",
-        locations: [{
-          start: {
-            line: 17,
-            column: 9
-          },
-          end: {
-            line: 17,
-            column: 20
-          }
-        }, {
-          start: {
-            line: 17,
-            column: 24
-          },
-          end: {
-            line: 17,
-            column: 35
-          }
-        }],
-        line: 17
-      },
-      "1": {
-        loc: {
-          start: {
-            line: 25,
-            column: 9
-          },
-          end: {
-            line: 25,
-            column: 35
-          }
-        },
-        type: "binary-expr",
-        locations: [{
-          start: {
-            line: 25,
-            column: 9
-          },
-          end: {
-            line: 25,
-            column: 20
-          }
-        }, {
-          start: {
-            line: 25,
-            column: 24
-          },
-          end: {
-            line: 25,
-            column: 35
-          }
-        }],
-        line: 25
-      }
-    },
-    s: {
-      "0": 0,
-      "1": 0,
-      "2": 0,
-      "3": 0,
-      "4": 0,
-      "5": 0,
-      "6": 0
-    },
-    f: {
-      "0": 0,
-      "1": 0,
-      "2": 0,
-      "3": 0
-    },
-    b: {
-      "0": [0, 0],
-      "1": [0, 0]
-    },
-    _coverageSchema: "332fd63041d2c1bcb487cc26dd0d5f7d97098a6c"
-  },
-      coverage = global[gcv] || (global[gcv] = {});
-
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
-  }
-
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
-}();
-
-function isNumber(n) {
-  ++cov_1e2a9y1nho.f[0];
-  ++cov_1e2a9y1nho.s[0];
-
-  return Number(n) === n;
-}
-
-/**
- * @param {number} n - A certain number
- * @returns {boolean} - If the input is an integer
- */
-function isInt(n) {
-  ++cov_1e2a9y1nho.f[1];
-  ++cov_1e2a9y1nho.s[1];
-
-  return (++cov_1e2a9y1nho.b[0][0], isNumber(n)) && (++cov_1e2a9y1nho.b[0][1], n % 1 === 0);
-}
-
-/**
- * @param {number} n - A certain number
- * @returns {boolean} - If the input is a float
- */
-function isFloat(n) {
-  ++cov_1e2a9y1nho.f[2];
-  ++cov_1e2a9y1nho.s[2];
-
-  return (++cov_1e2a9y1nho.b[1][0], isNumber(n)) && (++cov_1e2a9y1nho.b[1][1], n % 1 !== 0);
-}
-
-/**
- * @param {Array<Object>} objects - The objects to merge
- * @returns {Object} - The merged object.
- */
-function merge(objects) {
-  ++cov_1e2a9y1nho.f[3];
-
-  var target = (++cov_1e2a9y1nho.s[3], {});
-  ++cov_1e2a9y1nho.s[4];
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
-
-  try {
-    for (var _iterator = objects[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var obj = _step.value;
-      ++cov_1e2a9y1nho.s[5];
-
-      Object.assign(target, obj);
-    }
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator.return) {
-        _iterator.return();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
-  }
-
-  ++cov_1e2a9y1nho.s[6];
-  return target;
-}
-
-exports.isNumber = isNumber;
-exports.isInt = isInt;
-exports.isFloat = isFloat;
-exports.merge = merge;
-
-/***/ }),
-/* 12 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9129,706 +3308,6 @@ exports.merge = merge;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var cov_1q473uea5y = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/engines/html5/media-source/base-media-source-adapter.js',
-      hash = 'c1c48cb7926e91e07b807e5d968e747461704844',
-      global = new Function('return this')(),
-      gcv = '__coverage__',
-      coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/engines/html5/media-source/base-media-source-adapter.js',
-    statementMap: {
-      '0': {
-        start: {
-          line: 55,
-          column: 4
-        },
-        end: {
-          line: 55,
-          column: 16
-        }
-      },
-      '1': {
-        start: {
-          line: 68,
-          column: 4
-        },
-        end: {
-          line: 68,
-          column: 50
-        }
-      },
-      '2': {
-        start: {
-          line: 78,
-          column: 4
-        },
-        end: {
-          line: 78,
-          column: 12
-        }
-      },
-      '3': {
-        start: {
-          line: 79,
-          column: 4
-        },
-        end: {
-          line: 79,
-          column: 38
-        }
-      },
-      '4': {
-        start: {
-          line: 80,
-          column: 4
-        },
-        end: {
-          line: 80,
-          column: 29
-        }
-      },
-      '5': {
-        start: {
-          line: 81,
-          column: 4
-        },
-        end: {
-          line: 81,
-          column: 26
-        }
-      },
-      '6': {
-        start: {
-          line: 90,
-          column: 4
-        },
-        end: {
-          line: 90,
-          column: 27
-        }
-      },
-      '7': {
-        start: {
-          line: 91,
-          column: 4
-        },
-        end: {
-          line: 91,
-          column: 24
-        }
-      },
-      '8': {
-        start: {
-          line: 101,
-          column: 4
-        },
-        end: {
-          line: 107,
-          column: 5
-        }
-      },
-      '9': {
-        start: {
-          line: 102,
-          column: 6
-        },
-        end: {
-          line: 102,
-          column: 106
-        }
-      },
-      '10': {
-        start: {
-          line: 103,
-          column: 11
-        },
-        end: {
-          line: 107,
-          column: 5
-        }
-      },
-      '11': {
-        start: {
-          line: 104,
-          column: 6
-        },
-        end: {
-          line: 104,
-          column: 106
-        }
-      },
-      '12': {
-        start: {
-          line: 105,
-          column: 11
-        },
-        end: {
-          line: 107,
-          column: 5
-        }
-      },
-      '13': {
-        start: {
-          line: 106,
-          column: 6
-        },
-        end: {
-          line: 106,
-          column: 104
-        }
-      },
-      '14': {
-        start: {
-          line: 117,
-          column: 4
-        },
-        end: {
-          line: 117,
-          column: 53
-        }
-      },
-      '15': {
-        start: {
-          line: 123,
-          column: 4
-        },
-        end: {
-          line: 123,
-          column: 100
-        }
-      },
-      '16': {
-        start: {
-          line: 127,
-          column: 4
-        },
-        end: {
-          line: 127,
-          column: 86
-        }
-      },
-      '17': {
-        start: {
-          line: 131,
-          column: 4
-        },
-        end: {
-          line: 131,
-          column: 98
-        }
-      },
-      '18': {
-        start: {
-          line: 135,
-          column: 4
-        },
-        end: {
-          line: 135,
-          column: 98
-        }
-      },
-      '19': {
-        start: {
-          line: 139,
-          column: 4
-        },
-        end: {
-          line: 139,
-          column: 97
-        }
-      },
-      '20': {
-        start: {
-          line: 143,
-          column: 4
-        },
-        end: {
-          line: 143,
-          column: 103
-        }
-      },
-      '21': {
-        start: {
-          line: 147,
-          column: 4
-        },
-        end: {
-          line: 147,
-          column: 89
-        }
-      }
-    },
-    fnMap: {
-      '0': {
-        name: '(anonymous_0)',
-        decl: {
-          start: {
-            line: 54,
-            column: 2
-          },
-          end: {
-            line: 54,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 54,
-            column: 32
-          },
-          end: {
-            line: 56,
-            column: 3
-          }
-        },
-        line: 54
-      },
-      '1': {
-        name: '(anonymous_1)',
-        decl: {
-          start: {
-            line: 67,
-            column: 2
-          },
-          end: {
-            line: 67,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 67,
-            column: 108
-          },
-          end: {
-            line: 69,
-            column: 3
-          }
-        },
-        line: 67
-      },
-      '2': {
-        name: '(anonymous_2)',
-        decl: {
-          start: {
-            line: 77,
-            column: 2
-          },
-          end: {
-            line: 77,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 77,
-            column: 78
-          },
-          end: {
-            line: 82,
-            column: 3
-          }
-        },
-        line: 77
-      },
-      '3': {
-        name: '(anonymous_3)',
-        decl: {
-          start: {
-            line: 89,
-            column: 2
-          },
-          end: {
-            line: 89,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 89,
-            column: 18
-          },
-          end: {
-            line: 92,
-            column: 3
-          }
-        },
-        line: 89
-      },
-      '4': {
-        name: '(anonymous_4)',
-        decl: {
-          start: {
-            line: 100,
-            column: 2
-          },
-          end: {
-            line: 100,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 100,
-            column: 38
-          },
-          end: {
-            line: 108,
-            column: 3
-          }
-        },
-        line: 100
-      },
-      '5': {
-        name: '(anonymous_5)',
-        decl: {
-          start: {
-            line: 116,
-            column: 2
-          },
-          end: {
-            line: 116,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 116,
-            column: 48
-          },
-          end: {
-            line: 118,
-            column: 3
-          }
-        },
-        line: 116
-      },
-      '6': {
-        name: '(anonymous_6)',
-        decl: {
-          start: {
-            line: 122,
-            column: 2
-          },
-          end: {
-            line: 122,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 122,
-            column: 48
-          },
-          end: {
-            line: 124,
-            column: 3
-          }
-        },
-        line: 122
-      },
-      '7': {
-        name: '(anonymous_7)',
-        decl: {
-          start: {
-            line: 126,
-            column: 2
-          },
-          end: {
-            line: 126,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 126,
-            column: 26
-          },
-          end: {
-            line: 128,
-            column: 3
-          }
-        },
-        line: 126
-      },
-      '8': {
-        name: '(anonymous_8)',
-        decl: {
-          start: {
-            line: 130,
-            column: 2
-          },
-          end: {
-            line: 130,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 130,
-            column: 49
-          },
-          end: {
-            line: 132,
-            column: 3
-          }
-        },
-        line: 130
-      },
-      '9': {
-        name: '(anonymous_9)',
-        decl: {
-          start: {
-            line: 134,
-            column: 2
-          },
-          end: {
-            line: 134,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 134,
-            column: 49
-          },
-          end: {
-            line: 136,
-            column: 3
-          }
-        },
-        line: 134
-      },
-      '10': {
-        name: '(anonymous_10)',
-        decl: {
-          start: {
-            line: 138,
-            column: 2
-          },
-          end: {
-            line: 138,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 138,
-            column: 46
-          },
-          end: {
-            line: 140,
-            column: 3
-          }
-        },
-        line: 138
-      },
-      '11': {
-        name: '(anonymous_11)',
-        decl: {
-          start: {
-            line: 142,
-            column: 2
-          },
-          end: {
-            line: 142,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 142,
-            column: 32
-          },
-          end: {
-            line: 144,
-            column: 3
-          }
-        },
-        line: 142
-      },
-      '12': {
-        name: '(anonymous_12)',
-        decl: {
-          start: {
-            line: 146,
-            column: 2
-          },
-          end: {
-            line: 146,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 146,
-            column: 20
-          },
-          end: {
-            line: 148,
-            column: 3
-          }
-        },
-        line: 146
-      }
-    },
-    branchMap: {
-      '0': {
-        loc: {
-          start: {
-            line: 101,
-            column: 4
-          },
-          end: {
-            line: 107,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 101,
-            column: 4
-          },
-          end: {
-            line: 107,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 101,
-            column: 4
-          },
-          end: {
-            line: 107,
-            column: 5
-          }
-        }],
-        line: 101
-      },
-      '1': {
-        loc: {
-          start: {
-            line: 103,
-            column: 11
-          },
-          end: {
-            line: 107,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 103,
-            column: 11
-          },
-          end: {
-            line: 107,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 103,
-            column: 11
-          },
-          end: {
-            line: 107,
-            column: 5
-          }
-        }],
-        line: 103
-      },
-      '2': {
-        loc: {
-          start: {
-            line: 105,
-            column: 11
-          },
-          end: {
-            line: 107,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 105,
-            column: 11
-          },
-          end: {
-            line: 107,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 105,
-            column: 11
-          },
-          end: {
-            line: 107,
-            column: 5
-          }
-        }],
-        line: 105
-      }
-    },
-    s: {
-      '0': 0,
-      '1': 0,
-      '2': 0,
-      '3': 0,
-      '4': 0,
-      '5': 0,
-      '6': 0,
-      '7': 0,
-      '8': 0,
-      '9': 0,
-      '10': 0,
-      '11': 0,
-      '12': 0,
-      '13': 0,
-      '14': 0,
-      '15': 0,
-      '16': 0,
-      '17': 0,
-      '18': 0,
-      '19': 0,
-      '20': 0,
-      '21': 0
-    },
-    f: {
-      '0': 0,
-      '1': 0,
-      '2': 0,
-      '3': 0,
-      '4': 0,
-      '5': 0,
-      '6': 0,
-      '7': 0,
-      '8': 0,
-      '9': 0,
-      '10': 0,
-      '11': 0,
-      '12': 0
-    },
-    b: {
-      '0': [0, 0],
-      '1': [0, 0],
-      '2': [0, 0]
-    },
-    _coverageSchema: '332fd63041d2c1bcb487cc26dd0d5f7d97098a6c'
-  },
-      coverage = global[gcv] || (global[gcv] = {});
-
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
-  }
-
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
-}();
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -9836,33 +3315,33 @@ var _fakeEvent = __webpack_require__(2);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _fakeEventTarget = __webpack_require__(9);
+var _fakeEventTarget = __webpack_require__(12);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
-var _playerError = __webpack_require__(10);
+var _playerError = __webpack_require__(14);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
-var _events = __webpack_require__(7);
+var _events = __webpack_require__(8);
 
-var _logger = __webpack_require__(1);
+var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _track = __webpack_require__(0);
+var _track = __webpack_require__(1);
 
 var _track2 = _interopRequireDefault(_track);
 
-var _videoTrack = __webpack_require__(5);
+var _videoTrack = __webpack_require__(6);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(3);
+var _audioTrack = __webpack_require__(4);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(4);
+var _textTrack = __webpack_require__(5);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
@@ -9916,36 +3395,7 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
      * @static
      */
     value: function isSupported() {
-      ++cov_1q473uea5y.f[0];
-      ++cov_1q473uea5y.s[0];
-
       return true;
-    }
-
-    /**
-     * Factory method to create media source adapter.
-     * @function createAdapter
-     * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with.
-     * @param {Object} source - The source Object.
-     * @param {Object} config - The media source adapter configuration.
-     * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter.
-     * @static
-     */
-
-
-    /**
-     * Passing the getLogger function to the actual media source adapter.
-     * @type {Function}
-     * @static
-     */
-
-  }, {
-    key: 'createAdapter',
-    value: function createAdapter(videoElement, source, config) {
-      ++cov_1q473uea5y.f[1];
-      ++cov_1q473uea5y.s[1];
-
-      return new this(videoElement, source, config);
     }
 
     /**
@@ -9955,22 +3405,24 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
      * @param {Object} config - The media source adapter configuration.
      */
 
+
+    /**
+     * Passing the getLogger function to the actual media source adapter.
+     * @type {Function}
+     * @static
+     */
+
   }]);
 
-  function BaseMediaSourceAdapter(videoElement, source, config) {
-    _classCallCheck(this, BaseMediaSourceAdapter);
+  function BaseMediaSourceAdapter(videoElement, source) {
+    var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-    ++cov_1q473uea5y.f[2];
-    ++cov_1q473uea5y.s[2];
+    _classCallCheck(this, BaseMediaSourceAdapter);
 
     var _this = _possibleConstructorReturn(this, (BaseMediaSourceAdapter.__proto__ || Object.getPrototypeOf(BaseMediaSourceAdapter)).call(this));
 
-    ++cov_1q473uea5y.s[3];
-
     _this._videoElement = videoElement;
-    ++cov_1q473uea5y.s[4];
     _this._sourceObj = source;
-    ++cov_1q473uea5y.s[5];
     _this._config = config;
     return _this;
   }
@@ -9985,11 +3437,7 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
   _createClass(BaseMediaSourceAdapter, [{
     key: 'destroy',
     value: function destroy() {
-      ++cov_1q473uea5y.f[3];
-      ++cov_1q473uea5y.s[6];
-
       this._sourceObj = null;
-      ++cov_1q473uea5y.s[7];
       this._config = null;
     }
 
@@ -10003,35 +3451,13 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
   }, {
     key: '_onTrackChanged',
     value: function _onTrackChanged(track) {
-      ++cov_1q473uea5y.f[4];
-      ++cov_1q473uea5y.s[8];
-
       if (track instanceof _videoTrack2.default) {
-        ++cov_1q473uea5y.b[0][0];
-        ++cov_1q473uea5y.s[9];
-
         this._trigger(BaseMediaSourceAdapter.CustomEvents.VIDEO_TRACK_CHANGED, { selectedVideoTrack: track });
-      } else {
-          ++cov_1q473uea5y.b[0][1];
-          ++cov_1q473uea5y.s[10];
-          if (track instanceof _audioTrack2.default) {
-            ++cov_1q473uea5y.b[1][0];
-            ++cov_1q473uea5y.s[11];
-
-            this._trigger(BaseMediaSourceAdapter.CustomEvents.AUDIO_TRACK_CHANGED, { selectedAudioTrack: track });
-          } else {
-              ++cov_1q473uea5y.b[1][1];
-              ++cov_1q473uea5y.s[12];
-              if (track instanceof _textTrack2.default) {
-                ++cov_1q473uea5y.b[2][0];
-                ++cov_1q473uea5y.s[13];
-
-                this._trigger(BaseMediaSourceAdapter.CustomEvents.TEXT_TRACK_CHANGED, { selectedTextTrack: track });
-              } else {
-                ++cov_1q473uea5y.b[2][1];
-              }
-            }
-        }
+      } else if (track instanceof _audioTrack2.default) {
+        this._trigger(BaseMediaSourceAdapter.CustomEvents.AUDIO_TRACK_CHANGED, { selectedAudioTrack: track });
+      } else if (track instanceof _textTrack2.default) {
+        this._trigger(BaseMediaSourceAdapter.CustomEvents.TEXT_TRACK_CHANGED, { selectedTextTrack: track });
+      }
     }
 
     /**
@@ -10044,9 +3470,6 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
   }, {
     key: '_trigger',
     value: function _trigger(name, payload) {
-      ++cov_1q473uea5y.f[5];
-      ++cov_1q473uea5y.s[14];
-
       this.dispatchEvent(new _fakeEvent2.default(name, payload));
     }
 
@@ -10055,57 +3478,46 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
   }, {
     key: 'load',
     value: function load() {
-      ++cov_1q473uea5y.f[7];
-      ++cov_1q473uea5y.s[16];
-
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
     }
   }, {
     key: 'selectVideoTrack',
     value: function selectVideoTrack(videoTrack) {
-      ++cov_1q473uea5y.f[8];
-      ++cov_1q473uea5y.s[17];
-
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'selectVideoTrack').getError();
     }
   }, {
     key: 'selectAudioTrack',
     value: function selectAudioTrack(audioTrack) {
-      ++cov_1q473uea5y.f[9];
-      ++cov_1q473uea5y.s[18];
-
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'selectAudioTrack').getError();
     }
   }, {
     key: 'selectTextTrack',
     value: function selectTextTrack(textTrack) {
-      ++cov_1q473uea5y.f[10];
-      ++cov_1q473uea5y.s[19];
-
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'selectTextTrack').getError();
+    }
+  }, {
+    key: 'hideTextTrack',
+    value: function hideTextTrack() {
+      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'hideTextTrack').getError();
     }
   }, {
     key: 'enableAdaptiveBitrate',
     value: function enableAdaptiveBitrate() {
-      ++cov_1q473uea5y.f[11];
-      ++cov_1q473uea5y.s[20];
-
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'enableAdaptiveBitrate').getError();
+    }
+  }, {
+    key: 'isAdaptiveBitrateEnabled',
+    value: function isAdaptiveBitrateEnabled() {
+      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'isAdaptiveBitrateEnabled').getError();
     }
   }, {
     key: 'src',
     get: function get() {
-      ++cov_1q473uea5y.f[12];
-      ++cov_1q473uea5y.s[21];
-
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'get src').getError();
     }
   }], [{
     key: 'canPlayType',
     value: function canPlayType(mimeType) {
-      ++cov_1q473uea5y.f[6];
-      ++cov_1q473uea5y.s[15];
-
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayType').getError();
     }
   }]);
@@ -10118,7 +3530,7 @@ BaseMediaSourceAdapter.getLogger = _logger2.default.getLogger;
 exports.default = BaseMediaSourceAdapter;
 
 /***/ }),
-/* 13 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10129,667 +3541,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.registerMediaSourceAdapter = undefined;
 
-var cov_jkjoyzlgj = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/engines/html5/media-source/media-source-provider.js',
-      hash = 'd4a182c1235cb47b6fa9b921f21591b0d396c64b',
-      global = new Function('return this')(),
-      gcv = '__coverage__',
-      coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/engines/html5/media-source/media-source-provider.js',
-    statementMap: {
-      '0': {
-        start: {
-          line: 40,
-          column: 4
-        },
-        end: {
-          line: 47,
-          column: 5
-        }
-      },
-      '1': {
-        start: {
-          line: 41,
-          column: 6
-        },
-        end: {
-          line: 46,
-          column: 7
-        }
-      },
-      '2': {
-        start: {
-          line: 42,
-          column: 8
-        },
-        end: {
-          line: 42,
-          column: 113
-        }
-      },
-      '3': {
-        start: {
-          line: 43,
-          column: 8
-        },
-        end: {
-          line: 43,
-          column: 74
-        }
-      },
-      '4': {
-        start: {
-          line: 45,
-          column: 8
-        },
-        end: {
-          line: 45,
-          column: 125
-        }
-      },
-      '5': {
-        start: {
-          line: 58,
-          column: 16
-        },
-        end: {
-          line: 58,
-          column: 84
-        }
-      },
-      '6': {
-        start: {
-          line: 59,
-          column: 4
-        },
-        end: {
-          line: 62,
-          column: 5
-        }
-      },
-      '7': {
-        start: {
-          line: 60,
-          column: 6
-        },
-        end: {
-          line: 60,
-          column: 91
-        }
-      },
-      '8': {
-        start: {
-          line: 61,
-          column: 6
-        },
-        end: {
-          line: 61,
-          column: 64
-        }
-      },
-      '9': {
-        start: {
-          line: 73,
-          column: 30
-        },
-        end: {
-          line: 73,
-          column: 70
-        }
-      },
-      '10': {
-        start: {
-          line: 74,
-          column: 4
-        },
-        end: {
-          line: 80,
-          column: 5
-        }
-      },
-      '11': {
-        start: {
-          line: 75,
-          column: 6
-        },
-        end: {
-          line: 79,
-          column: 7
-        }
-      },
-      '12': {
-        start: {
-          line: 76,
-          column: 8
-        },
-        end: {
-          line: 76,
-          column: 70
-        }
-      },
-      '13': {
-        start: {
-          line: 77,
-          column: 8
-        },
-        end: {
-          line: 77,
-          column: 110
-        }
-      },
-      '14': {
-        start: {
-          line: 78,
-          column: 8
-        },
-        end: {
-          line: 78,
-          column: 20
-        }
-      },
-      '15': {
-        start: {
-          line: 81,
-          column: 4
-        },
-        end: {
-          line: 81,
-          column: 17
-        }
-      },
-      '16': {
-        start: {
-          line: 94,
-          column: 4
-        },
-        end: {
-          line: 99,
-          column: 5
-        }
-      },
-      '17': {
-        start: {
-          line: 95,
-          column: 6
-        },
-        end: {
-          line: 97,
-          column: 7
-        }
-      },
-      '18': {
-        start: {
-          line: 96,
-          column: 8
-        },
-        end: {
-          line: 96,
-          column: 57
-        }
-      },
-      '19': {
-        start: {
-          line: 98,
-          column: 6
-        },
-        end: {
-          line: 98,
-          column: 148
-        }
-      },
-      '20': {
-        start: {
-          line: 100,
-          column: 4
-        },
-        end: {
-          line: 100,
-          column: 16
-        }
-      },
-      '21': {
-        start: {
-          line: 104,
-          column: 35
-        },
-        end: {
-          line: 104,
-          column: 63
-        }
-      }
-    },
-    fnMap: {
-      '0': {
-        name: '(anonymous_0)',
-        decl: {
-          start: {
-            line: 39,
-            column: 2
-          },
-          end: {
-            line: 39,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 39,
-            column: 72
-          },
-          end: {
-            line: 48,
-            column: 3
-          }
-        },
-        line: 39
-      },
-      '1': {
-        name: '(anonymous_1)',
-        decl: {
-          start: {
-            line: 57,
-            column: 2
-          },
-          end: {
-            line: 57,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 57,
-            column: 74
-          },
-          end: {
-            line: 63,
-            column: 3
-          }
-        },
-        line: 57
-      },
-      '2': {
-        name: '(anonymous_2)',
-        decl: {
-          start: {
-            line: 72,
-            column: 2
-          },
-          end: {
-            line: 72,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 72,
-            column: 48
-          },
-          end: {
-            line: 82,
-            column: 3
-          }
-        },
-        line: 72
-      },
-      '3': {
-        name: '(anonymous_3)',
-        decl: {
-          start: {
-            line: 93,
-            column: 2
-          },
-          end: {
-            line: 93,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 93,
-            column: 117
-          },
-          end: {
-            line: 101,
-            column: 3
-          }
-        },
-        line: 93
-      }
-    },
-    branchMap: {
-      '0': {
-        loc: {
-          start: {
-            line: 40,
-            column: 4
-          },
-          end: {
-            line: 47,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 40,
-            column: 4
-          },
-          end: {
-            line: 47,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 40,
-            column: 4
-          },
-          end: {
-            line: 47,
-            column: 5
-          }
-        }],
-        line: 40
-      },
-      '1': {
-        loc: {
-          start: {
-            line: 41,
-            column: 6
-          },
-          end: {
-            line: 46,
-            column: 7
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 41,
-            column: 6
-          },
-          end: {
-            line: 46,
-            column: 7
-          }
-        }, {
-          start: {
-            line: 41,
-            column: 6
-          },
-          end: {
-            line: 46,
-            column: 7
-          }
-        }],
-        line: 41
-      },
-      '2': {
-        loc: {
-          start: {
-            line: 59,
-            column: 4
-          },
-          end: {
-            line: 62,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 59,
-            column: 4
-          },
-          end: {
-            line: 62,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 59,
-            column: 4
-          },
-          end: {
-            line: 62,
-            column: 5
-          }
-        }],
-        line: 59
-      },
-      '3': {
-        loc: {
-          start: {
-            line: 75,
-            column: 6
-          },
-          end: {
-            line: 79,
-            column: 7
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 75,
-            column: 6
-          },
-          end: {
-            line: 79,
-            column: 7
-          }
-        }, {
-          start: {
-            line: 75,
-            column: 6
-          },
-          end: {
-            line: 79,
-            column: 7
-          }
-        }],
-        line: 75
-      },
-      '4': {
-        loc: {
-          start: {
-            line: 94,
-            column: 4
-          },
-          end: {
-            line: 99,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 94,
-            column: 4
-          },
-          end: {
-            line: 99,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 94,
-            column: 4
-          },
-          end: {
-            line: 99,
-            column: 5
-          }
-        }],
-        line: 94
-      },
-      '5': {
-        loc: {
-          start: {
-            line: 94,
-            column: 8
-          },
-          end: {
-            line: 94,
-            column: 40
-          }
-        },
-        type: 'binary-expr',
-        locations: [{
-          start: {
-            line: 94,
-            column: 8
-          },
-          end: {
-            line: 94,
-            column: 20
-          }
-        }, {
-          start: {
-            line: 94,
-            column: 24
-          },
-          end: {
-            line: 94,
-            column: 30
-          }
-        }, {
-          start: {
-            line: 94,
-            column: 34
-          },
-          end: {
-            line: 94,
-            column: 40
-          }
-        }],
-        line: 94
-      },
-      '6': {
-        loc: {
-          start: {
-            line: 95,
-            column: 6
-          },
-          end: {
-            line: 97,
-            column: 7
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 95,
-            column: 6
-          },
-          end: {
-            line: 97,
-            column: 7
-          }
-        }, {
-          start: {
-            line: 95,
-            column: 6
-          },
-          end: {
-            line: 97,
-            column: 7
-          }
-        }],
-        line: 95
-      },
-      '7': {
-        loc: {
-          start: {
-            line: 98,
-            column: 13
-          },
-          end: {
-            line: 98,
-            column: 147
-          }
-        },
-        type: 'cond-expr',
-        locations: [{
-          start: {
-            line: 98,
-            column: 52
-          },
-          end: {
-            line: 98,
-            column: 140
-          }
-        }, {
-          start: {
-            line: 98,
-            column: 143
-          },
-          end: {
-            line: 98,
-            column: 147
-          }
-        }],
-        line: 98
-      }
-    },
-    s: {
-      '0': 0,
-      '1': 0,
-      '2': 0,
-      '3': 0,
-      '4': 0,
-      '5': 0,
-      '6': 0,
-      '7': 0,
-      '8': 0,
-      '9': 0,
-      '10': 0,
-      '11': 0,
-      '12': 0,
-      '13': 0,
-      '14': 0,
-      '15': 0,
-      '16': 0,
-      '17': 0,
-      '18': 0,
-      '19': 0,
-      '20': 0,
-      '21': 0
-    },
-    f: {
-      '0': 0,
-      '1': 0,
-      '2': 0,
-      '3': 0
-    },
-    b: {
-      '0': [0, 0],
-      '1': [0, 0],
-      '2': [0, 0],
-      '3': [0, 0],
-      '4': [0, 0],
-      '5': [0, 0, 0],
-      '6': [0, 0],
-      '7': [0, 0]
-    },
-    _coverageSchema: '332fd63041d2c1bcb487cc26dd0d5f7d97098a6c'
-  },
-      coverage = global[gcv] || (global[gcv] = {});
-
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
-  }
-
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
-}();
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nativeAdapter = __webpack_require__(20);
+var _nativeAdapter = __webpack_require__(21);
 
 var _nativeAdapter2 = _interopRequireDefault(_nativeAdapter);
 
-var _logger = __webpack_require__(1);
+var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -10811,62 +3569,47 @@ var MediaSourceProvider = function () {
 
 
     /**
-     * Add a media source adapter to the registry
+     * Add a media source adapter to the registry.
      * @function register
-     * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to register
+     * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to register.
      * @static
      * @returns {void}
      */
 
     /**
-     * The media source adapter registry
+     * The media source adapter registry.
      * @member {Array<IMediaSourceAdapter>} _mediaSourceAdapters
      * @static
      * @private
      */
     value: function register(mediaSourceAdapter) {
-      ++cov_jkjoyzlgj.f[0];
-      ++cov_jkjoyzlgj.s[0];
-
       if (mediaSourceAdapter) {
-        ++cov_jkjoyzlgj.b[0][0];
-        ++cov_jkjoyzlgj.s[1];
-
         if (!MediaSourceProvider._mediaSourceAdapters.includes(mediaSourceAdapter)) {
-          ++cov_jkjoyzlgj.b[1][0];
-          ++cov_jkjoyzlgj.s[2];
-
           MediaSourceProvider._logger.debug('Adapter <' + mediaSourceAdapter.id + '> has been registered successfully');
-          ++cov_jkjoyzlgj.s[3];
           MediaSourceProvider._mediaSourceAdapters.push(mediaSourceAdapter);
         } else {
-          ++cov_jkjoyzlgj.b[1][1];
-          ++cov_jkjoyzlgj.s[4];
-
           MediaSourceProvider._logger.debug('Adapter <' + mediaSourceAdapter.id + '> is already registered, do not register again');
         }
-      } else {
-        ++cov_jkjoyzlgj.b[0][1];
       }
     }
 
     /**
-     * Remove a media source adapter from the registry
+     * Remove a media source adapter from the registry.
      * @function unRegister
-     * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to unRegister
+     * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to unRegister.
      * @static
      * @returns {void}
      */
 
     /**
-     * The selected adapter for playback
+     * The selected adapter for playback.
      * @type {null|IMediaSourceAdapter}
      * @static
      * @private
      */
 
     /**
-     * The logger of the media source provider
+     * The logger of the media source provider.
      * @member {any} _logger
      * @static
      * @private
@@ -10875,92 +3618,67 @@ var MediaSourceProvider = function () {
   }, {
     key: 'unRegister',
     value: function unRegister(mediaSourceAdapter) {
-      ++cov_jkjoyzlgj.f[1];
-
-      var index = (++cov_jkjoyzlgj.s[5], MediaSourceProvider._mediaSourceAdapters.indexOf(mediaSourceAdapter));
-      ++cov_jkjoyzlgj.s[6];
+      var index = MediaSourceProvider._mediaSourceAdapters.indexOf(mediaSourceAdapter);
       if (index > -1) {
-        ++cov_jkjoyzlgj.b[2][0];
-        ++cov_jkjoyzlgj.s[7];
-
         MediaSourceProvider._logger.debug('Unregistered <' + mediaSourceAdapter.id + '> adapter');
-        ++cov_jkjoyzlgj.s[8];
         MediaSourceProvider._mediaSourceAdapters.splice(index, 1);
-      } else {
-        ++cov_jkjoyzlgj.b[2][1];
       }
     }
 
     /**
-     * Checks if one of the registered media source adapters can play a given mime type
+     * Checks if one of the registered media source adapters can play a given mime type.
      * @function canPlayType
-     * @param {string} mimeType - The mime type to check
+     * @param {string} mimeType - The mime type to check.
      * @static
-     * @returns {boolean} - If one of the adapters can play the specific mime type
+     * @returns {boolean} - If one of the adapters can play the specific mime type.
      */
 
   }, {
     key: 'canPlayType',
     value: function canPlayType(mimeType) {
-      ++cov_jkjoyzlgj.f[2];
-
-      var mediaSourceAdapters = (++cov_jkjoyzlgj.s[9], MediaSourceProvider._mediaSourceAdapters);
-      ++cov_jkjoyzlgj.s[10];
+      var mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
       for (var i = 0; i < mediaSourceAdapters.length; i++) {
-        ++cov_jkjoyzlgj.s[11];
-
         if (mediaSourceAdapters[i].canPlayType(mimeType)) {
-          ++cov_jkjoyzlgj.b[3][0];
-          ++cov_jkjoyzlgj.s[12];
-
           MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
-          ++cov_jkjoyzlgj.s[13];
           MediaSourceProvider._logger.debug('Selected adapter is <' + MediaSourceProvider._selectedAdapter.id + '>');
-          ++cov_jkjoyzlgj.s[14];
           return true;
-        } else {
-          ++cov_jkjoyzlgj.b[3][1];
         }
       }
-      ++cov_jkjoyzlgj.s[15];
       return false;
     }
 
     /**
-     * Get the appropriate media source adapter to the video source
+     * Get the appropriate media source adapter to the video source.
      * @function getMediaSourceAdapter
-     * @param {HTMLVideoElement} videoElement - The video element which requires adapter for a given mimeType
-     * @param {Source} source - The selected source object
-     * @param {Object} config - The player configuration
-     * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists
+     * @param {HTMLVideoElement} videoElement - The video element which requires adapter for a given mimeType.
+     * @param {Source} source - The selected source object.
+     * @param {Object} config - The player configuration.
+     * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists.
      * @static
      */
 
   }, {
     key: 'getMediaSourceAdapter',
     value: function getMediaSourceAdapter(videoElement, source, config) {
-      ++cov_jkjoyzlgj.f[3];
-      ++cov_jkjoyzlgj.s[16];
-
-      if ((++cov_jkjoyzlgj.b[5][0], videoElement) && (++cov_jkjoyzlgj.b[5][1], source) && (++cov_jkjoyzlgj.b[5][2], config)) {
-        ++cov_jkjoyzlgj.b[4][0];
-        ++cov_jkjoyzlgj.s[17];
-
+      if (videoElement && source && config) {
         if (!MediaSourceProvider._selectedAdapter) {
-          ++cov_jkjoyzlgj.b[6][0];
-          ++cov_jkjoyzlgj.s[18];
-
           MediaSourceProvider.canPlayType(source.mimetype);
-        } else {
-          ++cov_jkjoyzlgj.b[6][1];
         }
-        ++cov_jkjoyzlgj.s[19];
-        return MediaSourceProvider._selectedAdapter ? (++cov_jkjoyzlgj.b[7][0], MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config.engines)) : (++cov_jkjoyzlgj.b[7][1], null);
-      } else {
-        ++cov_jkjoyzlgj.b[4][1];
+        return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config) : null;
       }
-      ++cov_jkjoyzlgj.s[20];
       return null;
+    }
+
+    /**
+     * Destroys the media source adapter provider necessary props.
+     * @static
+     * @returns {void}
+     */
+
+  }, {
+    key: 'destroy',
+    value: function destroy() {
+      MediaSourceProvider._selectedAdapter = null;
     }
   }]);
 
@@ -10973,641 +3691,11 @@ MediaSourceProvider._selectedAdapter = null;
 exports.default = MediaSourceProvider;
 
 
-var registerMediaSourceAdapter = (++cov_jkjoyzlgj.s[21], MediaSourceProvider.register);
+var registerMediaSourceAdapter = MediaSourceProvider.register;
 exports.registerMediaSourceAdapter = registerMediaSourceAdapter;
 
 /***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var cov_cf3lk8xb7 = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/plugin/base-plugin.js',
-      hash = '779a262c90febbaa75c8b894f8d5e112253ed3f0',
-      global = new Function('return this')(),
-      gcv = '__coverage__',
-      coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/plugin/base-plugin.js',
-    statementMap: {
-      '0': {
-        start: {
-          line: 58,
-          column: 4
-        },
-        end: {
-          line: 58,
-          column: 42
-        }
-      },
-      '1': {
-        start: {
-          line: 70,
-          column: 4
-        },
-        end: {
-          line: 70,
-          column: 91
-        }
-      },
-      '2': {
-        start: {
-          line: 82,
-          column: 4
-        },
-        end: {
-          line: 82,
-          column: 21
-        }
-      },
-      '3': {
-        start: {
-          line: 83,
-          column: 4
-        },
-        end: {
-          line: 83,
-          column: 25
-        }
-      },
-      '4': {
-        start: {
-          line: 84,
-          column: 4
-        },
-        end: {
-          line: 84,
-          column: 43
-        }
-      },
-      '5': {
-        start: {
-          line: 85,
-          column: 4
-        },
-        end: {
-          line: 85,
-          column: 53
-        }
-      },
-      '6': {
-        start: {
-          line: 86,
-          column: 4
-        },
-        end: {
-          line: 86,
-          column: 66
-        }
-      },
-      '7': {
-        start: {
-          line: 96,
-          column: 4
-        },
-        end: {
-          line: 98,
-          column: 5
-        }
-      },
-      '8': {
-        start: {
-          line: 97,
-          column: 6
-        },
-        end: {
-          line: 97,
-          column: 31
-        }
-      },
-      '9': {
-        start: {
-          line: 99,
-          column: 4
-        },
-        end: {
-          line: 99,
-          column: 23
-        }
-      },
-      '10': {
-        start: {
-          line: 109,
-          column: 4
-        },
-        end: {
-          line: 109,
-          column: 47
-        }
-      },
-      '11': {
-        start: {
-          line: 120,
-          column: 4
-        },
-        end: {
-          line: 120,
-          column: 91
-        }
-      },
-      '12': {
-        start: {
-          line: 129,
-          column: 4
-        },
-        end: {
-          line: 129,
-          column: 21
-        }
-      }
-    },
-    fnMap: {
-      '0': {
-        name: '(anonymous_0)',
-        decl: {
-          start: {
-            line: 57,
-            column: 2
-          },
-          end: {
-            line: 57,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 57,
-            column: 85
-          },
-          end: {
-            line: 59,
-            column: 3
-          }
-        },
-        line: 57
-      },
-      '1': {
-        name: '(anonymous_1)',
-        decl: {
-          start: {
-            line: 69,
-            column: 2
-          },
-          end: {
-            line: 69,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 69,
-            column: 28
-          },
-          end: {
-            line: 71,
-            column: 3
-          }
-        },
-        line: 69
-      },
-      '2': {
-        name: '(anonymous_2)',
-        decl: {
-          start: {
-            line: 81,
-            column: 2
-          },
-          end: {
-            line: 81,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 81,
-            column: 60
-          },
-          end: {
-            line: 87,
-            column: 3
-          }
-        },
-        line: 81
-      },
-      '3': {
-        name: '(anonymous_3)',
-        decl: {
-          start: {
-            line: 95,
-            column: 2
-          },
-          end: {
-            line: 95,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 95,
-            column: 32
-          },
-          end: {
-            line: 100,
-            column: 3
-          }
-        },
-        line: 95
-      },
-      '4': {
-        name: '(anonymous_4)',
-        decl: {
-          start: {
-            line: 108,
-            column: 2
-          },
-          end: {
-            line: 108,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 108,
-            column: 37
-          },
-          end: {
-            line: 110,
-            column: 3
-          }
-        },
-        line: 108
-      },
-      '5': {
-        name: '(anonymous_5)',
-        decl: {
-          start: {
-            line: 119,
-            column: 2
-          },
-          end: {
-            line: 119,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 119,
-            column: 18
-          },
-          end: {
-            line: 121,
-            column: 3
-          }
-        },
-        line: 119
-      },
-      '6': {
-        name: '(anonymous_6)',
-        decl: {
-          start: {
-            line: 128,
-            column: 2
-          },
-          end: {
-            line: 128,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 128,
-            column: 20
-          },
-          end: {
-            line: 130,
-            column: 3
-          }
-        },
-        line: 128
-      }
-    },
-    branchMap: {
-      '0': {
-        loc: {
-          start: {
-            line: 57,
-            column: 52
-          },
-          end: {
-            line: 57,
-            column: 71
-          }
-        },
-        type: 'default-arg',
-        locations: [{
-          start: {
-            line: 57,
-            column: 69
-          },
-          end: {
-            line: 57,
-            column: 71
-          }
-        }],
-        line: 57
-      },
-      '1': {
-        loc: {
-          start: {
-            line: 96,
-            column: 4
-          },
-          end: {
-            line: 98,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 96,
-            column: 4
-          },
-          end: {
-            line: 98,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 96,
-            column: 4
-          },
-          end: {
-            line: 98,
-            column: 5
-          }
-        }],
-        line: 96
-      }
-    },
-    s: {
-      '0': 0,
-      '1': 0,
-      '2': 0,
-      '3': 0,
-      '4': 0,
-      '5': 0,
-      '6': 0,
-      '7': 0,
-      '8': 0,
-      '9': 0,
-      '10': 0,
-      '11': 0,
-      '12': 0
-    },
-    f: {
-      '0': 0,
-      '1': 0,
-      '2': 0,
-      '3': 0,
-      '4': 0,
-      '5': 0,
-      '6': 0
-    },
-    b: {
-      '0': [0],
-      '1': [0, 0]
-    },
-    _coverageSchema: '332fd63041d2c1bcb487cc26dd0d5f7d97098a6c'
-  },
-      coverage = global[gcv] || (global[gcv] = {});
-
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
-  }
-
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
-}();
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _player = __webpack_require__(8);
-
-var _player2 = _interopRequireDefault(_player);
-
-var _logger = __webpack_require__(1);
-
-var _logger2 = _interopRequireDefault(_logger);
-
-var _util = __webpack_require__(11);
-
-var _eventManager = __webpack_require__(6);
-
-var _eventManager2 = _interopRequireDefault(_eventManager);
-
-var _playerError = __webpack_require__(10);
-
-var _playerError2 = _interopRequireDefault(_playerError);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/** The BasePlugin responsible to implement the plugin interface.
- * Contains several default implementations.
- * Other plugins should extend this class.
- * @classdesc
- */
-var BasePlugin = function () {
-  _createClass(BasePlugin, null, [{
-    key: 'createPlugin',
-
-
-    /**
-     * Factory method to create the actual plugin.
-     * @param {string} name - The plugin name
-     * @param {Player} player - The player reference
-     * @param {Object} config - The plugin configuration
-     * @returns {BasePlugin} - New runtime plugin instance
-     * @static
-     * @public
-     */
-
-    /**
-     * The event manager of the plugin.
-     * @member
-     */
-
-    /**
-     * The logger of the plugin.
-     * @member
-     */
-
-    /**
-     * The runtime configuration of the plugin.
-     * @member
-     */
-    value: function createPlugin(name, player) {
-      var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : (++cov_cf3lk8xb7.b[0][0], {});
-      ++cov_cf3lk8xb7.f[0];
-      ++cov_cf3lk8xb7.s[0];
-
-      return new this(name, player, config);
-    }
-
-    /**
-     * Returns under what conditions the plugin is valid.
-     * Plugin must implement this method.
-     * @returns {boolean} - Whether the plugin is valid and can be initiated. Default implementation is true
-     * @static
-     * @public
-     * @abstract
-     */
-
-    /**
-     * The default configuration of the plugin.
-     * Inherited plugins should override this property.
-     * @type {Object}
-     * @static
-     * @member
-     */
-
-    /**
-     * Reference to the actual player.
-     * @member
-     */
-
-    /**
-     * The name of the plugin.
-     * @member
-     */
-
-  }, {
-    key: 'isValid',
-    value: function isValid() {
-      ++cov_cf3lk8xb7.f[1];
-      ++cov_cf3lk8xb7.s[1];
-
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'isValid()').getError();
-    }
-
-    /**
-     * constructor
-     * @param {string} name - The plugin name
-     * @param {Player} player - The player reference
-     * @param {Object} config - The plugin configuration
-     * @constructor
-     * @private
-     */
-
-  }]);
-
-  function BasePlugin(name, player, config) {
-    _classCallCheck(this, BasePlugin);
-
-    ++cov_cf3lk8xb7.f[2];
-    ++cov_cf3lk8xb7.s[2];
-
-    this.name = name;
-    ++cov_cf3lk8xb7.s[3];
-    this.player = player;
-    ++cov_cf3lk8xb7.s[4];
-    this.eventManager = new _eventManager2.default();
-    ++cov_cf3lk8xb7.s[5];
-    this.logger = _logger2.default.getLogger(this.name);
-    ++cov_cf3lk8xb7.s[6];
-    this.config = (0, _util.merge)([this.constructor.defaultConfig, config]);
-  }
-
-  /**
-   * Getter for the configuration of the plugin.
-   * @param {string} attr - The key in the plugin configuration (optional).
-   * @returns {*} - If attribute is provided, returns its value. Else, Returns the config of the plugin.
-   * @public
-   */
-
-
-  _createClass(BasePlugin, [{
-    key: 'getConfig',
-    value: function getConfig(attr) {
-      ++cov_cf3lk8xb7.f[3];
-      ++cov_cf3lk8xb7.s[7];
-
-      if (attr) {
-        ++cov_cf3lk8xb7.b[1][0];
-        ++cov_cf3lk8xb7.s[8];
-
-        return this.config[attr];
-      } else {
-        ++cov_cf3lk8xb7.b[1][1];
-      }
-      ++cov_cf3lk8xb7.s[9];
-      return this.config;
-    }
-
-    /**
-     * Updates the config of the plugin.
-     * @param {Object} update - The updated configuration.
-     * @public
-     * @returns {void}
-     */
-
-  }, {
-    key: 'updateConfig',
-    value: function updateConfig(update) {
-      ++cov_cf3lk8xb7.f[4];
-      ++cov_cf3lk8xb7.s[10];
-
-      this.config = (0, _util.merge)([this.config, update]);
-    }
-
-    /**
-     * Runs the destroy logic of the plugin.
-     * plugin must implement this method.
-     * @public
-     * @abstract
-     * @returns {void}
-     */
-
-  }, {
-    key: 'destroy',
-    value: function destroy() {
-      ++cov_cf3lk8xb7.f[5];
-      ++cov_cf3lk8xb7.s[11];
-
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'destroy()').getError();
-    }
-
-    /**
-     * Getter for the plugin's name.
-     * @returns {string} - The name of the plugin.
-     * @public
-     */
-
-  }, {
-    key: 'getName',
-    value: function getName() {
-      ++cov_cf3lk8xb7.f[6];
-      ++cov_cf3lk8xb7.s[12];
-
-      return this.name;
-    }
-  }]);
-
-  return BasePlugin;
-}();
-
-BasePlugin.defaultConfig = {};
-exports.default = BasePlugin;
-
-/***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11618,751 +3706,21 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.registerPlugin = undefined;
 
-var cov_2hprl18w1l = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/plugin/plugin-manager.js',
-      hash = '9d7db08f43ce1c9f9a27b2ee3e0b5d344e02b586',
-      global = new Function('return this')(),
-      gcv = '__coverage__',
-      coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/plugin/plugin-manager.js',
-    statementMap: {
-      '0': {
-        start: {
-          line: 12,
-          column: 15
-        },
-        end: {
-          line: 12,
-          column: 55
-        }
-      },
-      '1': {
-        start: {
-          line: 44,
-          column: 4
-        },
-        end: {
-          line: 46,
-          column: 5
-        }
-      },
-      '2': {
-        start: {
-          line: 45,
-          column: 6
-        },
-        end: {
-          line: 45,
-          column: 75
-        }
-      },
-      '3': {
-        start: {
-          line: 47,
-          column: 4
-        },
-        end: {
-          line: 51,
-          column: 5
-        }
-      },
-      '4': {
-        start: {
-          line: 48,
-          column: 6
-        },
-        end: {
-          line: 48,
-          column: 49
-        }
-      },
-      '5': {
-        start: {
-          line: 49,
-          column: 6
-        },
-        end: {
-          line: 49,
-          column: 72
-        }
-      },
-      '6': {
-        start: {
-          line: 50,
-          column: 6
-        },
-        end: {
-          line: 50,
-          column: 18
-        }
-      },
-      '7': {
-        start: {
-          line: 52,
-          column: 4
-        },
-        end: {
-          line: 52,
-          column: 82
-        }
-      },
-      '8': {
-        start: {
-          line: 53,
-          column: 4
-        },
-        end: {
-          line: 53,
-          column: 17
-        }
-      },
-      '9': {
-        start: {
-          line: 64,
-          column: 4
-        },
-        end: {
-          line: 67,
-          column: 5
-        }
-      },
-      '10': {
-        start: {
-          line: 65,
-          column: 6
-        },
-        end: {
-          line: 65,
-          column: 43
-        }
-      },
-      '11': {
-        start: {
-          line: 66,
-          column: 6
-        },
-        end: {
-          line: 66,
-          column: 53
-        }
-      },
-      '12': {
-        start: {
-          line: 79,
-          column: 4
-        },
-        end: {
-          line: 81,
-          column: 5
-        }
-      },
-      '13': {
-        start: {
-          line: 80,
-          column: 6
-        },
-        end: {
-          line: 80,
-          column: 85
-        }
-      },
-      '14': {
-        start: {
-          line: 82,
-          column: 22
-        },
-        end: {
-          line: 82,
-          column: 55
-        }
-      },
-      '15': {
-        start: {
-          line: 83,
-          column: 4
-        },
-        end: {
-          line: 87,
-          column: 5
-        }
-      },
-      '16': {
-        start: {
-          line: 84,
-          column: 6
-        },
-        end: {
-          line: 84,
-          column: 78
-        }
-      },
-      '17': {
-        start: {
-          line: 85,
-          column: 6
-        },
-        end: {
-          line: 85,
-          column: 55
-        }
-      },
-      '18': {
-        start: {
-          line: 86,
-          column: 6
-        },
-        end: {
-          line: 86,
-          column: 18
-        }
-      },
-      '19': {
-        start: {
-          line: 88,
-          column: 4
-        },
-        end: {
-          line: 88,
-          column: 68
-        }
-      },
-      '20': {
-        start: {
-          line: 89,
-          column: 4
-        },
-        end: {
-          line: 89,
-          column: 17
-        }
-      },
-      '21': {
-        start: {
-          line: 98,
-          column: 4
-        },
-        end: {
-          line: 98,
-          column: 52
-        }
-      },
-      '22': {
-        start: {
-          line: 109,
-          column: 4
-        },
-        end: {
-          line: 109,
-          column: 21
-        }
-      },
-      '23': {
-        start: {
-          line: 110,
-          column: 4
-        },
-        end: {
-          line: 110,
-          column: 31
-        }
-      },
-      '24': {
-        start: {
-          line: 120,
-          column: 4
-        },
-        end: {
-          line: 120,
-          column: 35
-        }
-      },
-      '25': {
-        start: {
-          line: 129,
-          column: 23
-        },
-        end: {
-          line: 129,
-          column: 45
-        }
-      }
-    },
-    fnMap: {
-      '0': {
-        name: '(anonymous_0)',
-        decl: {
-          start: {
-            line: 43,
-            column: 2
-          },
-          end: {
-            line: 43,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 43,
-            column: 60
-          },
-          end: {
-            line: 54,
-            column: 3
-          }
-        },
-        line: 43
-      },
-      '1': {
-        name: '(anonymous_1)',
-        decl: {
-          start: {
-            line: 63,
-            column: 2
-          },
-          end: {
-            line: 63,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 63,
-            column: 40
-          },
-          end: {
-            line: 68,
-            column: 3
-          }
-        },
-        line: 63
-      },
-      '2': {
-        name: '(anonymous_2)',
-        decl: {
-          start: {
-            line: 78,
-            column: 2
-          },
-          end: {
-            line: 78,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 78,
-            column: 67
-          },
-          end: {
-            line: 90,
-            column: 3
-          }
-        },
-        line: 78
-      },
-      '3': {
-        name: '(anonymous_3)',
-        decl: {
-          start: {
-            line: 97,
-            column: 2
-          },
-          end: {
-            line: 97,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 97,
-            column: 18
-          },
-          end: {
-            line: 99,
-            column: 3
-          }
-        },
-        line: 97
-      },
-      '4': {
-        name: '(anonymous_4)',
-        decl: {
-          start: {
-            line: 108,
-            column: 2
-          },
-          end: {
-            line: 108,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 108,
-            column: 51
-          },
-          end: {
-            line: 111,
-            column: 3
-          }
-        },
-        line: 108
-      },
-      '5': {
-        name: '(anonymous_5)',
-        decl: {
-          start: {
-            line: 119,
-            column: 2
-          },
-          end: {
-            line: 119,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 119,
-            column: 33
-          },
-          end: {
-            line: 121,
-            column: 3
-          }
-        },
-        line: 119
-      }
-    },
-    branchMap: {
-      '0': {
-        loc: {
-          start: {
-            line: 44,
-            column: 4
-          },
-          end: {
-            line: 46,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 44,
-            column: 4
-          },
-          end: {
-            line: 46,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 44,
-            column: 4
-          },
-          end: {
-            line: 46,
-            column: 5
-          }
-        }],
-        line: 44
-      },
-      '1': {
-        loc: {
-          start: {
-            line: 44,
-            column: 8
-          },
-          end: {
-            line: 44,
-            column: 90
-          }
-        },
-        type: 'binary-expr',
-        locations: [{
-          start: {
-            line: 44,
-            column: 8
-          },
-          end: {
-            line: 44,
-            column: 37
-          }
-        }, {
-          start: {
-            line: 44,
-            column: 41
-          },
-          end: {
-            line: 44,
-            column: 90
-          }
-        }],
-        line: 44
-      },
-      '2': {
-        loc: {
-          start: {
-            line: 47,
-            column: 4
-          },
-          end: {
-            line: 51,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 47,
-            column: 4
-          },
-          end: {
-            line: 51,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 47,
-            column: 4
-          },
-          end: {
-            line: 51,
-            column: 5
-          }
-        }],
-        line: 47
-      },
-      '3': {
-        loc: {
-          start: {
-            line: 64,
-            column: 4
-          },
-          end: {
-            line: 67,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 64,
-            column: 4
-          },
-          end: {
-            line: 67,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 64,
-            column: 4
-          },
-          end: {
-            line: 67,
-            column: 5
-          }
-        }],
-        line: 64
-      },
-      '4': {
-        loc: {
-          start: {
-            line: 78,
-            column: 37
-          },
-          end: {
-            line: 78,
-            column: 56
-          }
-        },
-        type: 'default-arg',
-        locations: [{
-          start: {
-            line: 78,
-            column: 54
-          },
-          end: {
-            line: 78,
-            column: 56
-          }
-        }],
-        line: 78
-      },
-      '5': {
-        loc: {
-          start: {
-            line: 79,
-            column: 4
-          },
-          end: {
-            line: 81,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 79,
-            column: 4
-          },
-          end: {
-            line: 81,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 79,
-            column: 4
-          },
-          end: {
-            line: 81,
-            column: 5
-          }
-        }],
-        line: 79
-      },
-      '6': {
-        loc: {
-          start: {
-            line: 83,
-            column: 4
-          },
-          end: {
-            line: 87,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 83,
-            column: 4
-          },
-          end: {
-            line: 87,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 83,
-            column: 4
-          },
-          end: {
-            line: 87,
-            column: 5
-          }
-        }],
-        line: 83
-      },
-      '7': {
-        loc: {
-          start: {
-            line: 83,
-            column: 8
-          },
-          end: {
-            line: 83,
-            column: 52
-          }
-        },
-        type: 'binary-expr',
-        locations: [{
-          start: {
-            line: 83,
-            column: 8
-          },
-          end: {
-            line: 83,
-            column: 27
-          }
-        }, {
-          start: {
-            line: 83,
-            column: 31
-          },
-          end: {
-            line: 83,
-            column: 52
-          }
-        }],
-        line: 83
-      }
-    },
-    s: {
-      '0': 0,
-      '1': 0,
-      '2': 0,
-      '3': 0,
-      '4': 0,
-      '5': 0,
-      '6': 0,
-      '7': 0,
-      '8': 0,
-      '9': 0,
-      '10': 0,
-      '11': 0,
-      '12': 0,
-      '13': 0,
-      '14': 0,
-      '15': 0,
-      '16': 0,
-      '17': 0,
-      '18': 0,
-      '19': 0,
-      '20': 0,
-      '21': 0,
-      '22': 0,
-      '23': 0,
-      '24': 0,
-      '25': 0
-    },
-    f: {
-      '0': 0,
-      '1': 0,
-      '2': 0,
-      '3': 0,
-      '4': 0,
-      '5': 0
-    },
-    b: {
-      '0': [0, 0],
-      '1': [0, 0],
-      '2': [0, 0],
-      '3': [0, 0],
-      '4': [0],
-      '5': [0, 0],
-      '6': [0, 0],
-      '7': [0, 0]
-    },
-    _coverageSchema: '332fd63041d2c1bcb487cc26dd0d5f7d97098a6c'
-  },
-      coverage = global[gcv] || (global[gcv] = {});
-
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
-  }
-
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
-}();
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _basePlugin = __webpack_require__(14);
+var _basePlugin = __webpack_require__(11);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
-var _playerError = __webpack_require__(10);
+var _playerError = __webpack_require__(14);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
-var _player = __webpack_require__(8);
+var _player = __webpack_require__(9);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _logger = __webpack_require__(1);
+var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -12375,7 +3733,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * @private
  * @const
  */
-var logger = (++cov_2hprl18w1l.s[0], _logger2.default.getLogger("PluginManager"));
+var logger = _logger2.default.getLogger("PluginManager");
 
 /** The PluginManager responsible for register plugins definitions and store plugins instances.
  * @classdesc
@@ -12416,35 +3774,18 @@ var PluginManager = function () {
      * @public
      */
     value: function load(name, player) {
-      var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : (++cov_2hprl18w1l.b[4][0], {});
-      ++cov_2hprl18w1l.f[2];
-      ++cov_2hprl18w1l.s[12];
+      var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
       if (!PluginManager._registry.has(name)) {
-        ++cov_2hprl18w1l.b[5][0];
-        ++cov_2hprl18w1l.s[13];
-
         throw new _playerError2.default(_playerError2.default.TYPE.NOT_REGISTERED_PLUGIN, name).getError();
-      } else {
-        ++cov_2hprl18w1l.b[5][1];
       }
-      var pluginClass = (++cov_2hprl18w1l.s[14], PluginManager._registry.get(name));
-      ++cov_2hprl18w1l.s[15];
-      if ((++cov_2hprl18w1l.b[7][0], pluginClass != null) && (++cov_2hprl18w1l.b[7][1], pluginClass.isValid())) {
-        ++cov_2hprl18w1l.b[6][0];
-        ++cov_2hprl18w1l.s[16];
-
+      var pluginClass = PluginManager._registry.get(name);
+      if (pluginClass != null && pluginClass.isValid()) {
         this._plugins.set(name, pluginClass.createPlugin(name, player, config));
-        ++cov_2hprl18w1l.s[17];
         logger.debug('Plugin <' + name + '> has been loaded');
-        ++cov_2hprl18w1l.s[18];
         return true;
-      } else {
-        ++cov_2hprl18w1l.b[6][1];
       }
-      ++cov_2hprl18w1l.s[19];
       logger.debug('Plugin <' + name + '> isn\'t loaded, isValid()=false');
-      ++cov_2hprl18w1l.s[20];
       return false;
     }
 
@@ -12457,9 +3798,6 @@ var PluginManager = function () {
   }, {
     key: 'destroy',
     value: function destroy() {
-      ++cov_2hprl18w1l.f[3];
-      ++cov_2hprl18w1l.s[21];
-
       this._plugins.forEach(this._destroy.bind(this));
     }
 
@@ -12474,11 +3812,7 @@ var PluginManager = function () {
   }, {
     key: '_destroy',
     value: function _destroy(plugin, name) {
-      ++cov_2hprl18w1l.f[4];
-      ++cov_2hprl18w1l.s[22];
-
       plugin.destroy();
-      ++cov_2hprl18w1l.s[23];
       this._plugins.delete(name);
     }
 
@@ -12492,9 +3826,6 @@ var PluginManager = function () {
   }, {
     key: 'get',
     value: function get(name) {
-      ++cov_2hprl18w1l.f[5];
-      ++cov_2hprl18w1l.s[24];
-
       return this._plugins.get(name);
     }
   }], [{
@@ -12511,33 +3842,15 @@ var PluginManager = function () {
      * @public
      */
     value: function register(name, handler) {
-      ++cov_2hprl18w1l.f[0];
-      ++cov_2hprl18w1l.s[1];
-
-      if ((++cov_2hprl18w1l.b[1][0], typeof handler !== 'function') || (++cov_2hprl18w1l.b[1][1], handler.prototype instanceof _basePlugin2.default === false)) {
-        ++cov_2hprl18w1l.b[0][0];
-        ++cov_2hprl18w1l.s[2];
-
+      if (typeof handler !== 'function' || handler.prototype instanceof _basePlugin2.default === false) {
         throw new _playerError2.default(_playerError2.default.TYPE.NOT_VALID_HANDLER).getError();
-      } else {
-        ++cov_2hprl18w1l.b[0][1];
       }
-      ++cov_2hprl18w1l.s[3];
       if (!PluginManager._registry.has(name)) {
-        ++cov_2hprl18w1l.b[2][0];
-        ++cov_2hprl18w1l.s[4];
-
         PluginManager._registry.set(name, handler);
-        ++cov_2hprl18w1l.s[5];
         logger.debug('Plugin <' + name + '> has been registered successfully');
-        ++cov_2hprl18w1l.s[6];
         return true;
-      } else {
-        ++cov_2hprl18w1l.b[2][1];
       }
-      ++cov_2hprl18w1l.s[7];
       logger.debug('Plugin <' + name + '> is already registered, do not register again');
-      ++cov_2hprl18w1l.s[8];
       return false;
     }
 
@@ -12552,18 +3865,9 @@ var PluginManager = function () {
   }, {
     key: 'unRegister',
     value: function unRegister(name) {
-      ++cov_2hprl18w1l.f[1];
-      ++cov_2hprl18w1l.s[9];
-
       if (PluginManager._registry.has(name)) {
-        ++cov_2hprl18w1l.b[3][0];
-        ++cov_2hprl18w1l.s[10];
-
         PluginManager._registry.delete(name);
-        ++cov_2hprl18w1l.s[11];
         logger.debug('Unregistered <' + name + '> plugin.');
-      } else {
-        ++cov_2hprl18w1l.b[3][1];
       }
     }
   }]);
@@ -12580,11 +3884,11 @@ var PluginManager = function () {
 
 PluginManager._registry = new Map();
 exports.default = PluginManager;
-var registerPlugin = (++cov_2hprl18w1l.s[25], PluginManager.register);
+var registerPlugin = PluginManager.register;
 exports.registerPlugin = registerPlugin;
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12593,1042 +3897,29 @@ exports.registerPlugin = registerPlugin;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var cov_2ash98nnh4 = function () {
-  var path = "/Users/dan.ziv/WebstormProjects/playkit-js/src/state/state-types.js",
-      hash = "565a43305310077205f08574714177c5d8e1d96c",
-      global = new Function('return this')(),
-      gcv = "__coverage__",
-      coverageData = {
-    path: "/Users/dan.ziv/WebstormProjects/playkit-js/src/state/state-types.js",
-    statementMap: {
-      "0": {
-        start: {
-          line: 8,
-          column: 56
-        },
-        end: {
-          line: 14,
-          column: 1
-        }
-      }
-    },
-    fnMap: {},
-    branchMap: {},
-    s: {
-      "0": 0
-    },
-    f: {},
-    b: {},
-    _coverageSchema: "332fd63041d2c1bcb487cc26dd0d5f7d97098a6c"
-  },
-      coverage = global[gcv] || (global[gcv] = {});
-
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
-  }
-
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
-}();
-
-var PLAYER_STATE_TYPES = (++cov_2ash98nnh4.s[0], {
+var PLAYER_STATE_TYPES = {
   IDLE: "idle",
   LOADING: "loading",
   PLAYING: "playing",
   PAUSED: "paused",
   BUFFERING: "buffering"
-});
+};
 
 exports.default = PLAYER_STATE_TYPES;
 
 /***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var cov_pg7voulsz = function () {
-  var path = "/Users/dan.ziv/WebstormProjects/playkit-js/src/utils/multi-map.js",
-      hash = "388b4881ee702c40fa3c29e18d2cef3d8e867bdd",
-      global = new Function('return this')(),
-      gcv = "__coverage__",
-      coverageData = {
-    path: "/Users/dan.ziv/WebstormProjects/playkit-js/src/utils/multi-map.js",
-    statementMap: {
-      "0": {
-        start: {
-          line: 14,
-          column: 4
-        },
-        end: {
-          line: 14,
-          column: 26
-        }
-      },
-      "1": {
-        start: {
-          line: 24,
-          column: 4
-        },
-        end: {
-          line: 32,
-          column: 5
-        }
-      },
-      "2": {
-        start: {
-          line: 25,
-          column: 17
-        },
-        end: {
-          line: 25,
-          column: 35
-        }
-      },
-      "3": {
-        start: {
-          line: 26,
-          column: 6
-        },
-        end: {
-          line: 29,
-          column: 7
-        }
-      },
-      "4": {
-        start: {
-          line: 27,
-          column: 8
-        },
-        end: {
-          line: 27,
-          column: 25
-        }
-      },
-      "5": {
-        start: {
-          line: 28,
-          column: 8
-        },
-        end: {
-          line: 28,
-          column: 33
-        }
-      },
-      "6": {
-        start: {
-          line: 31,
-          column: 6
-        },
-        end: {
-          line: 31,
-          column: 34
-        }
-      },
-      "7": {
-        start: {
-          line: 42,
-          column: 4
-        },
-        end: {
-          line: 42,
-          column: 31
-        }
-      },
-      "8": {
-        start: {
-          line: 51,
-          column: 4
-        },
-        end: {
-          line: 51,
-          column: 30
-        }
-      },
-      "9": {
-        start: {
-          line: 60,
-          column: 15
-        },
-        end: {
-          line: 60,
-          column: 33
-        }
-      },
-      "10": {
-        start: {
-          line: 63,
-          column: 4
-        },
-        end: {
-          line: 63,
-          column: 36
-        }
-      },
-      "11": {
-        start: {
-          line: 71,
-          column: 20
-        },
-        end: {
-          line: 71,
-          column: 22
-        }
-      },
-      "12": {
-        start: {
-          line: 72,
-          column: 4
-        },
-        end: {
-          line: 74,
-          column: 5
-        }
-      },
-      "13": {
-        start: {
-          line: 73,
-          column: 6
-        },
-        end: {
-          line: 73,
-          column: 32
-        }
-      },
-      "14": {
-        start: {
-          line: 75,
-          column: 4
-        },
-        end: {
-          line: 75,
-          column: 16
-        }
-      },
-      "15": {
-        start: {
-          line: 85,
-          column: 4
-        },
-        end: {
-          line: 85,
-          column: 36
-        }
-      },
-      "16": {
-        start: {
-          line: 85,
-          column: 29
-        },
-        end: {
-          line: 85,
-          column: 36
-        }
-      },
-      "17": {
-        start: {
-          line: 86,
-          column: 15
-        },
-        end: {
-          line: 86,
-          column: 33
-        }
-      },
-      "18": {
-        start: {
-          line: 87,
-          column: 4
-        },
-        end: {
-          line: 94,
-          column: 5
-        }
-      },
-      "19": {
-        start: {
-          line: 88,
-          column: 6
-        },
-        end: {
-          line: 93,
-          column: 7
-        }
-      },
-      "20": {
-        start: {
-          line: 89,
-          column: 8
-        },
-        end: {
-          line: 92,
-          column: 9
-        }
-      },
-      "21": {
-        start: {
-          line: 90,
-          column: 10
-        },
-        end: {
-          line: 90,
-          column: 28
-        }
-      },
-      "22": {
-        start: {
-          line: 91,
-          column: 10
-        },
-        end: {
-          line: 91,
-          column: 14
-        }
-      },
-      "23": {
-        start: {
-          line: 103,
-          column: 4
-        },
-        end: {
-          line: 103,
-          column: 28
-        }
-      },
-      "24": {
-        start: {
-          line: 112,
-          column: 4
-        },
-        end: {
-          line: 112,
-          column: 22
-        }
-      }
-    },
-    fnMap: {
-      "0": {
-        name: "(anonymous_0)",
-        decl: {
-          start: {
-            line: 12,
-            column: 2
-          },
-          end: {
-            line: 12,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 12,
-            column: 16
-          },
-          end: {
-            line: 15,
-            column: 3
-          }
-        },
-        line: 12
-      },
-      "1": {
-        name: "(anonymous_1)",
-        decl: {
-          start: {
-            line: 23,
-            column: 2
-          },
-          end: {
-            line: 23,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 23,
-            column: 36
-          },
-          end: {
-            line: 33,
-            column: 3
-          }
-        },
-        line: 23
-      },
-      "2": {
-        name: "(anonymous_2)",
-        decl: {
-          start: {
-            line: 41,
-            column: 2
-          },
-          end: {
-            line: 41,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 41,
-            column: 38
-          },
-          end: {
-            line: 43,
-            column: 3
-          }
-        },
-        line: 41
-      },
-      "3": {
-        name: "(anonymous_3)",
-        decl: {
-          start: {
-            line: 50,
-            column: 2
-          },
-          end: {
-            line: 50,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 50,
-            column: 28
-          },
-          end: {
-            line: 52,
-            column: 3
-          }
-        },
-        line: 50
-      },
-      "4": {
-        name: "(anonymous_4)",
-        decl: {
-          start: {
-            line: 59,
-            column: 2
-          },
-          end: {
-            line: 59,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 59,
-            column: 29
-          },
-          end: {
-            line: 64,
-            column: 3
-          }
-        },
-        line: 59
-      },
-      "5": {
-        name: "(anonymous_5)",
-        decl: {
-          start: {
-            line: 70,
-            column: 2
-          },
-          end: {
-            line: 70,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 70,
-            column: 16
-          },
-          end: {
-            line: 76,
-            column: 3
-          }
-        },
-        line: 70
-      },
-      "6": {
-        name: "(anonymous_6)",
-        decl: {
-          start: {
-            line: 84,
-            column: 2
-          },
-          end: {
-            line: 84,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 84,
-            column: 38
-          },
-          end: {
-            line: 95,
-            column: 3
-          }
-        },
-        line: 84
-      },
-      "7": {
-        name: "(anonymous_7)",
-        decl: {
-          start: {
-            line: 102,
-            column: 2
-          },
-          end: {
-            line: 102,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 102,
-            column: 27
-          },
-          end: {
-            line: 104,
-            column: 3
-          }
-        },
-        line: 102
-      },
-      "8": {
-        name: "(anonymous_8)",
-        decl: {
-          start: {
-            line: 111,
-            column: 2
-          },
-          end: {
-            line: 111,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 111,
-            column: 16
-          },
-          end: {
-            line: 113,
-            column: 3
-          }
-        },
-        line: 111
-      }
-    },
-    branchMap: {
-      "0": {
-        loc: {
-          start: {
-            line: 24,
-            column: 4
-          },
-          end: {
-            line: 32,
-            column: 5
-          }
-        },
-        type: "if",
-        locations: [{
-          start: {
-            line: 24,
-            column: 4
-          },
-          end: {
-            line: 32,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 24,
-            column: 4
-          },
-          end: {
-            line: 32,
-            column: 5
-          }
-        }],
-        line: 24
-      },
-      "1": {
-        loc: {
-          start: {
-            line: 26,
-            column: 6
-          },
-          end: {
-            line: 29,
-            column: 7
-          }
-        },
-        type: "if",
-        locations: [{
-          start: {
-            line: 26,
-            column: 6
-          },
-          end: {
-            line: 29,
-            column: 7
-          }
-        }, {
-          start: {
-            line: 26,
-            column: 6
-          },
-          end: {
-            line: 29,
-            column: 7
-          }
-        }],
-        line: 26
-      },
-      "2": {
-        loc: {
-          start: {
-            line: 63,
-            column: 11
-          },
-          end: {
-            line: 63,
-            column: 35
-          }
-        },
-        type: "cond-expr",
-        locations: [{
-          start: {
-            line: 63,
-            column: 18
-          },
-          end: {
-            line: 63,
-            column: 30
-          }
-        }, {
-          start: {
-            line: 63,
-            column: 33
-          },
-          end: {
-            line: 63,
-            column: 35
-          }
-        }],
-        line: 63
-      },
-      "3": {
-        loc: {
-          start: {
-            line: 85,
-            column: 4
-          },
-          end: {
-            line: 85,
-            column: 36
-          }
-        },
-        type: "if",
-        locations: [{
-          start: {
-            line: 85,
-            column: 4
-          },
-          end: {
-            line: 85,
-            column: 36
-          }
-        }, {
-          start: {
-            line: 85,
-            column: 4
-          },
-          end: {
-            line: 85,
-            column: 36
-          }
-        }],
-        line: 85
-      },
-      "4": {
-        loc: {
-          start: {
-            line: 87,
-            column: 4
-          },
-          end: {
-            line: 94,
-            column: 5
-          }
-        },
-        type: "if",
-        locations: [{
-          start: {
-            line: 87,
-            column: 4
-          },
-          end: {
-            line: 94,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 87,
-            column: 4
-          },
-          end: {
-            line: 94,
-            column: 5
-          }
-        }],
-        line: 87
-      },
-      "5": {
-        loc: {
-          start: {
-            line: 89,
-            column: 8
-          },
-          end: {
-            line: 92,
-            column: 9
-          }
-        },
-        type: "if",
-        locations: [{
-          start: {
-            line: 89,
-            column: 8
-          },
-          end: {
-            line: 92,
-            column: 9
-          }
-        }, {
-          start: {
-            line: 89,
-            column: 8
-          },
-          end: {
-            line: 92,
-            column: 9
-          }
-        }],
-        line: 89
-      }
-    },
-    s: {
-      "0": 0,
-      "1": 0,
-      "2": 0,
-      "3": 0,
-      "4": 0,
-      "5": 0,
-      "6": 0,
-      "7": 0,
-      "8": 0,
-      "9": 0,
-      "10": 0,
-      "11": 0,
-      "12": 0,
-      "13": 0,
-      "14": 0,
-      "15": 0,
-      "16": 0,
-      "17": 0,
-      "18": 0,
-      "19": 0,
-      "20": 0,
-      "21": 0,
-      "22": 0,
-      "23": 0,
-      "24": 0
-    },
-    f: {
-      "0": 0,
-      "1": 0,
-      "2": 0,
-      "3": 0,
-      "4": 0,
-      "5": 0,
-      "6": 0,
-      "7": 0,
-      "8": 0
-    },
-    b: {
-      "0": [0, 0],
-      "1": [0, 0],
-      "2": [0, 0],
-      "3": [0, 0],
-      "4": [0, 0],
-      "5": [0, 0]
-    },
-    _coverageSchema: "332fd63041d2c1bcb487cc26dd0d5f7d97098a6c"
-  },
-      coverage = global[gcv] || (global[gcv] = {});
-
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
-  }
-
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
-}();
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * A simple multimap template.
- * @constructor
- * @struct
- * @template T
- */
-var MultiMap = function () {
-  function MultiMap() {
-    _classCallCheck(this, MultiMap);
-
-    ++cov_pg7voulsz.f[0];
-    ++cov_pg7voulsz.s[0];
-
-    /** @private {!Object.<string, !Array.<T>>} */
-    this._map = new Map();
-  }
-
-  /**
-   * Add a key, value pair to the map.
-   * @param {string} key -
-   * @param {T} value  -
-   * @returns {void}
-   */
-
-
-  _createClass(MultiMap, [{
-    key: "push",
-    value: function push(key, value) {
-      ++cov_pg7voulsz.f[1];
-      ++cov_pg7voulsz.s[1];
-
-      if (this._map.has(key)) {
-        ++cov_pg7voulsz.b[0][0];
-
-        var list = (++cov_pg7voulsz.s[2], this._map.get(key));
-        ++cov_pg7voulsz.s[3];
-        if (Array.isArray(list)) {
-          ++cov_pg7voulsz.b[1][0];
-          ++cov_pg7voulsz.s[4];
-
-          list.push(value);
-          ++cov_pg7voulsz.s[5];
-          this._map.set(key, list);
-        } else {
-          ++cov_pg7voulsz.b[1][1];
-        }
-      } else {
-        ++cov_pg7voulsz.b[0][1];
-        ++cov_pg7voulsz.s[6];
-
-        this._map.set(key, [value]);
-      }
-    }
-
-    /**
-     * Set an array of values for the key, overwriting any previous data.
-     * @param {string} key -
-     * @param {!Array.<T>} values -
-     * @returns {void}
-     */
-
-  }, {
-    key: "set",
-    value: function set(key, values) {
-      ++cov_pg7voulsz.f[2];
-      ++cov_pg7voulsz.s[7];
-
-      this._map.set(key, values);
-    }
-
-    /**
-     * Check for a key.
-     * @param {string} key -
-     * @return {boolean} true if the key exists.
-     */
-
-  }, {
-    key: "has",
-    value: function has(key) {
-      ++cov_pg7voulsz.f[3];
-      ++cov_pg7voulsz.s[8];
-
-      return this._map.has(key);
-    }
-
-    /**
-     * Get a list of values by key.
-     * @param {string} key -
-     * @return {Array.<T>} or null if no suZch key exists.
-     */
-
-  }, {
-    key: "get",
-    value: function get(key) {
-      ++cov_pg7voulsz.f[4];
-
-      var list = (++cov_pg7voulsz.s[9], this._map.get(key));
-      // slice() clones the list so that it and the map can each be modified
-      // without affecting the other.
-      ++cov_pg7voulsz.s[10];
-      return list ? (++cov_pg7voulsz.b[2][0], list.slice()) : (++cov_pg7voulsz.b[2][1], []);
-    }
-
-    /**
-     * Get a list of all values.
-     * @returns {!Array.<T>} -
-     */
-
-  }, {
-    key: "getAll",
-    value: function getAll() {
-      ++cov_pg7voulsz.f[5];
-
-      var list = (++cov_pg7voulsz.s[11], []);
-      ++cov_pg7voulsz.s[12];
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = this._map.values()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var value = _step.value;
-          ++cov_pg7voulsz.s[13];
-
-          list = list.concat(value);
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
-
-      ++cov_pg7voulsz.s[14];
-      return list;
-    }
-
-    /**
-     * Remove a specific value, if it exists.
-     * @param {string} key -
-     * @param {T} value -
-     * @returns {void}
-     */
-
-  }, {
-    key: "remove",
-    value: function remove(key, value) {
-      ++cov_pg7voulsz.f[6];
-      ++cov_pg7voulsz.s[15];
-
-      if (!this._map.has(key)) {
-          ++cov_pg7voulsz.b[3][0];
-          ++cov_pg7voulsz.s[16];
-          return;
-        } else {
-        ++cov_pg7voulsz.b[3][1];
-      }var list = (++cov_pg7voulsz.s[17], this._map.get(key));
-      ++cov_pg7voulsz.s[18];
-      if (Array.isArray(list)) {
-        ++cov_pg7voulsz.b[4][0];
-        ++cov_pg7voulsz.s[19];
-
-        for (var i = 0; i < list.length; ++i) {
-          ++cov_pg7voulsz.s[20];
-
-          if (list[i] == value) {
-            ++cov_pg7voulsz.b[5][0];
-            ++cov_pg7voulsz.s[21];
-
-            list.splice(i, 1);
-            ++cov_pg7voulsz.s[22];
-            --i;
-          } else {
-            ++cov_pg7voulsz.b[5][1];
-          }
-        }
-      } else {
-        ++cov_pg7voulsz.b[4][1];
-      }
-    }
-
-    /**
-     * Get all keys from the multimap.
-     * @return {!Array.<string>}
-     */
-    // eslint-disable-next-line no-undef
-
-  }, {
-    key: "keys",
-    value: function keys() {
-      ++cov_pg7voulsz.f[7];
-      ++cov_pg7voulsz.s[23];
-
-      return this._map.keys();
-    }
-
-    /**
-     * Clear all keys and values from the multimap.
-     * @returns {void}
-     */
-
-  }, {
-    key: "clear",
-    value: function clear() {
-      ++cov_pg7voulsz.f[8];
-      ++cov_pg7voulsz.s[24];
-
-      this._map.clear();
-    }
-  }]);
-
-  return MultiMap;
-}();
-
-exports.default = MultiMap;
-
-/***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports) {
 
 module.exports = {
 	"name": "playkit-js",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"main": "dist/playkit.js",
 	"scripts": {
 		"clean": "rm -rf ./dist",
 		"prebuild": "npm run clean",
 		"build:prod": "NODE_ENV=production webpack",
-		"build:test": "NODE_ENV=test webpack",
+		"build": "webpack",
 		"dev": "webpack --progress --colors --watch",
 		"test": "NODE_ENV=test karma start --color",
 		"test:chrome": "NODE_ENV=test karma start --color --browsers Chrome",
@@ -13645,15 +3936,12 @@ module.exports = {
 		"commit:dist": "git add --all dist && (git commit -m 'chore: update dist' || exit 0)",
 		"prepush-msg:build": "echo '\nRunning build before push...\n' && exit 0",
 		"prepush-msg:dist": "echo '\nAdding dist files to a seperate commit...\n' && exit 0",
-		"prepush-msg:done": "echo '\nPre push tasks are done.\n' && exit 0",
-		"docs:generate": "documentation build src -f html -o docs",
-		"docs:serve": "documentation serve src",
-		"docs:watch": "documentation serve --watch src"
+		"prepush-msg:done": "echo '\nPre push tasks are done.\n' && exit 0"
 	},
 	"pre-push": [
 		"prepush-msg:build",
 		"prebuild",
-		"build:test",
+		"build",
 		"build:prod",
 		"prepush-msg:dist",
 		"commit:dist",
@@ -13671,7 +3959,7 @@ module.exports = {
 		"babel-register": "^6.23.0",
 		"chai": "^3.5.0",
 		"cross-env": "^3.1.4",
-		"documentation": "^4.0.0-rc.1",
+		"css-loader": "^0.28.4",
 		"eslint": "^3.10.0",
 		"eslint-loader": "^1.6.1",
 		"eslint-plugin-flowtype": "^2.30.0",
@@ -13692,11 +3980,11 @@ module.exports = {
 		"karma-webpack": "^2.0.2",
 		"mocha": "^3.2.0",
 		"mocha-cli": "^1.0.1",
-		"nyc": "^10.1.2",
 		"pre-push": "^0.1.1",
 		"sinon": "^2.0.0",
 		"sinon-chai": "^2.8.0",
 		"standard-version": "^4.0.0",
+		"style-loader": "^0.18.2",
 		"uglifyjs-webpack-plugin": "^0.4.3",
 		"webpack": "latest",
 		"webpack-dev-server": "latest"
@@ -13716,12 +4004,13 @@ module.exports = {
 	},
 	"homepage": "https://github.com/kaltura/playkit-js",
 	"dependencies": {
-		"js-logger": "^1.3.0"
+		"js-logger": "^1.3.0",
+		"ua-parser-js": "^0.7.13"
 	}
 };
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13731,2905 +4020,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_22t8x5qbf1 = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/engines/html5/html5.js',
-      hash = '9f5ab6a43d9275c1b55b20f561638d3285a3cb2e',
-      global = new Function('return this')(),
-      gcv = '__coverage__',
-      coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/engines/html5/html5.js',
-    statementMap: {
-      '0': {
-        start: {
-          line: 42,
-          column: 4
-        },
-        end: {
-          line: 42,
-          column: 53
-        }
-      },
-      '1': {
-        start: {
-          line: 51,
-          column: 4
-        },
-        end: {
-          line: 51,
-          column: 12
-        }
-      },
-      '2': {
-        start: {
-          line: 52,
-          column: 4
-        },
-        end: {
-          line: 52,
-          column: 31
-        }
-      },
-      '3': {
-        start: {
-          line: 53,
-          column: 4
-        },
-        end: {
-          line: 53,
-          column: 44
-        }
-      },
-      '4': {
-        start: {
-          line: 54,
-          column: 4
-        },
-        end: {
-          line: 54,
-          column: 49
-        }
-      },
-      '5': {
-        start: {
-          line: 55,
-          column: 4
-        },
-        end: {
-          line: 55,
-          column: 18
-        }
-      },
-      '6': {
-        start: {
-          line: 64,
-          column: 4
-        },
-        end: {
-          line: 64,
-          column: 18
-        }
-      },
-      '7': {
-        start: {
-          line: 65,
-          column: 4
-        },
-        end: {
-          line: 67,
-          column: 5
-        }
-      },
-      '8': {
-        start: {
-          line: 66,
-          column: 6
-        },
-        end: {
-          line: 66,
-          column: 41
-        }
-      },
-      '9': {
-        start: {
-          line: 68,
-          column: 4
-        },
-        end: {
-          line: 74,
-          column: 5
-        }
-      },
-      '10': {
-        start: {
-          line: 69,
-          column: 6
-        },
-        end: {
-          line: 69,
-          column: 19
-        }
-      },
-      '11': {
-        start: {
-          line: 70,
-          column: 6
-        },
-        end: {
-          line: 70,
-          column: 38
-        }
-      },
-      '12': {
-        start: {
-          line: 71,
-          column: 6
-        },
-        end: {
-          line: 73,
-          column: 7
-        }
-      },
-      '13': {
-        start: {
-          line: 72,
-          column: 8
-        },
-        end: {
-          line: 72,
-          column: 50
-        }
-      },
-      '14': {
-        start: {
-          line: 75,
-          column: 4
-        },
-        end: {
-          line: 75,
-          column: 33
-        }
-      },
-      '15': {
-        start: {
-          line: 84,
-          column: 4
-        },
-        end: {
-          line: 88,
-          column: 5
-        }
-      },
-      '16': {
-        start: {
-          line: 85,
-          column: 6
-        },
-        end: {
-          line: 87,
-          column: 9
-        }
-      },
-      '17': {
-        start: {
-          line: 86,
-          column: 8
-        },
-        end: {
-          line: 86,
-          column: 68
-        }
-      },
-      '18': {
-        start: {
-          line: 89,
-          column: 4
-        },
-        end: {
-          line: 99,
-          column: 5
-        }
-      },
-      '19': {
-        start: {
-          line: 90,
-          column: 6
-        },
-        end: {
-          line: 92,
-          column: 9
-        }
-      },
-      '20': {
-        start: {
-          line: 91,
-          column: 8
-        },
-        end: {
-          line: 91,
-          column: 34
-        }
-      },
-      '21': {
-        start: {
-          line: 93,
-          column: 6
-        },
-        end: {
-          line: 95,
-          column: 9
-        }
-      },
-      '22': {
-        start: {
-          line: 94,
-          column: 8
-        },
-        end: {
-          line: 94,
-          column: 41
-        }
-      },
-      '23': {
-        start: {
-          line: 96,
-          column: 6
-        },
-        end: {
-          line: 98,
-          column: 9
-        }
-      },
-      '24': {
-        start: {
-          line: 97,
-          column: 8
-        },
-        end: {
-          line: 97,
-          column: 41
-        }
-      },
-      '25': {
-        start: {
-          line: 108,
-          column: 4
-        },
-        end: {
-          line: 110,
-          column: 5
-        }
-      },
-      '26': {
-        start: {
-          line: 109,
-          column: 6
-        },
-        end: {
-          line: 109,
-          column: 70
-        }
-      },
-      '27': {
-        start: {
-          line: 111,
-          column: 4
-        },
-        end: {
-          line: 115,
-          column: 5
-        }
-      },
-      '28': {
-        start: {
-          line: 112,
-          column: 6
-        },
-        end: {
-          line: 112,
-          column: 94
-        }
-      },
-      '29': {
-        start: {
-          line: 113,
-          column: 6
-        },
-        end: {
-          line: 113,
-          column: 94
-        }
-      },
-      '30': {
-        start: {
-          line: 114,
-          column: 6
-        },
-        end: {
-          line: 114,
-          column: 93
-        }
-      },
-      '31': {
-        start: {
-          line: 123,
-          column: 4
-        },
-        end: {
-          line: 123,
-          column: 20
-        }
-      },
-      '32': {
-        start: {
-          line: 132,
-          column: 4
-        },
-        end: {
-          line: 132,
-          column: 47
-        }
-      },
-      '33': {
-        start: {
-          line: 134,
-          column: 4
-        },
-        end: {
-          line: 134,
-          column: 35
-        }
-      },
-      '34': {
-        start: {
-          line: 135,
-          column: 4
-        },
-        end: {
-          line: 135,
-          column: 36
-        }
-      },
-      '35': {
-        start: {
-          line: 136,
-          column: 4
-        },
-        end: {
-          line: 136,
-          column: 45
-        }
-      },
-      '36': {
-        start: {
-          line: 137,
-          column: 4
-        },
-        end: {
-          line: 137,
-          column: 29
-        }
-      },
-      '37': {
-        start: {
-          line: 138,
-          column: 4
-        },
-        end: {
-          line: 140,
-          column: 5
-        }
-      },
-      '38': {
-        start: {
-          line: 139,
-          column: 6
-        },
-        end: {
-          line: 139,
-          column: 42
-        }
-      },
-      '39': {
-        start: {
-          line: 151,
-          column: 4
-        },
-        end: {
-          line: 151,
-          column: 113
-        }
-      },
-      '40': {
-        start: {
-          line: 160,
-          column: 4
-        },
-        end: {
-          line: 162,
-          column: 5
-        }
-      },
-      '41': {
-        start: {
-          line: 161,
-          column: 6
-        },
-        end: {
-          line: 161,
-          column: 60
-        }
-      },
-      '42': {
-        start: {
-          line: 171,
-          column: 4
-        },
-        end: {
-          line: 173,
-          column: 5
-        }
-      },
-      '43': {
-        start: {
-          line: 172,
-          column: 6
-        },
-        end: {
-          line: 172,
-          column: 60
-        }
-      },
-      '44': {
-        start: {
-          line: 182,
-          column: 4
-        },
-        end: {
-          line: 184,
-          column: 5
-        }
-      },
-      '45': {
-        start: {
-          line: 183,
-          column: 6
-        },
-        end: {
-          line: 183,
-          column: 58
-        }
-      },
-      '46': {
-        start: {
-          line: 194,
-          column: 4
-        },
-        end: {
-          line: 196,
-          column: 5
-        }
-      },
-      '47': {
-        start: {
-          line: 195,
-          column: 6
-        },
-        end: {
-          line: 195,
-          column: 55
-        }
-      },
-      '48': {
-        start: {
-          line: 206,
-          column: 4
-        },
-        end: {
-          line: 206,
-          column: 26
-        }
-      },
-      '49': {
-        start: {
-          line: 215,
-          column: 4
-        },
-        end: {
-          line: 217,
-          column: 5
-        }
-      },
-      '50': {
-        start: {
-          line: 216,
-          column: 6
-        },
-        end: {
-          line: 216,
-          column: 42
-        }
-      },
-      '51': {
-        start: {
-          line: 218,
-          column: 4
-        },
-        end: {
-          line: 218,
-          column: 14
-        }
-      },
-      '52': {
-        start: {
-          line: 228,
-          column: 4
-        },
-        end: {
-          line: 228,
-          column: 27
-        }
-      },
-      '53': {
-        start: {
-          line: 237,
-          column: 4
-        },
-        end: {
-          line: 237,
-          column: 28
-        }
-      },
-      '54': {
-        start: {
-          line: 246,
-          column: 4
-        },
-        end: {
-          line: 246,
-          column: 92
-        }
-      },
-      '55': {
-        start: {
-          line: 255,
-          column: 4
-        },
-        end: {
-          line: 255,
-          column: 32
-        }
-      },
-      '56': {
-        start: {
-          line: 265,
-          column: 4
-        },
-        end: {
-          line: 265,
-          column: 30
-        }
-      },
-      '57': {
-        start: {
-          line: 274,
-          column: 4
-        },
-        end: {
-          line: 274,
-          column: 29
-        }
-      },
-      '58': {
-        start: {
-          line: 284,
-          column: 4
-        },
-        end: {
-          line: 284,
-          column: 26
-        }
-      },
-      '59': {
-        start: {
-          line: 293,
-          column: 4
-        },
-        end: {
-          line: 293,
-          column: 27
-        }
-      },
-      '60': {
-        start: {
-          line: 305,
-          column: 4
-        },
-        end: {
-          line: 305,
-          column: 27
-        }
-      },
-      '61': {
-        start: {
-          line: 314,
-          column: 4
-        },
-        end: {
-          line: 314,
-          column: 28
-        }
-      },
-      '62': {
-        start: {
-          line: 323,
-          column: 4
-        },
-        end: {
-          line: 323,
-          column: 29
-        }
-      },
-      '63': {
-        start: {
-          line: 332,
-          column: 4
-        },
-        end: {
-          line: 332,
-          column: 27
-        }
-      },
-      '64': {
-        start: {
-          line: 341,
-          column: 4
-        },
-        end: {
-          line: 341,
-          column: 29
-        }
-      },
-      '65': {
-        start: {
-          line: 351,
-          column: 4
-        },
-        end: {
-          line: 351,
-          column: 26
-        }
-      },
-      '66': {
-        start: {
-          line: 360,
-          column: 4
-        },
-        end: {
-          line: 360,
-          column: 26
-        }
-      },
-      '67': {
-        start: {
-          line: 369,
-          column: 4
-        },
-        end: {
-          line: 369,
-          column: 33
-        }
-      },
-      '68': {
-        start: {
-          line: 379,
-          column: 4
-        },
-        end: {
-          line: 379,
-          column: 29
-        }
-      },
-      '69': {
-        start: {
-          line: 388,
-          column: 4
-        },
-        end: {
-          line: 388,
-          column: 27
-        }
-      },
-      '70': {
-        start: {
-          line: 398,
-          column: 4
-        },
-        end: {
-          line: 398,
-          column: 31
-        }
-      },
-      '71': {
-        start: {
-          line: 407,
-          column: 4
-        },
-        end: {
-          line: 407,
-          column: 28
-        }
-      },
-      '72': {
-        start: {
-          line: 417,
-          column: 4
-        },
-        end: {
-          line: 417,
-          column: 33
-        }
-      },
-      '73': {
-        start: {
-          line: 426,
-          column: 4
-        },
-        end: {
-          line: 426,
-          column: 29
-        }
-      },
-      '74': {
-        start: {
-          line: 436,
-          column: 4
-        },
-        end: {
-          line: 436,
-          column: 25
-        }
-      },
-      '75': {
-        start: {
-          line: 445,
-          column: 4
-        },
-        end: {
-          line: 445,
-          column: 25
-        }
-      },
-      '76': {
-        start: {
-          line: 455,
-          column: 4
-        },
-        end: {
-          line: 455,
-          column: 33
-        }
-      },
-      '77': {
-        start: {
-          line: 464,
-          column: 4
-        },
-        end: {
-          line: 464,
-          column: 29
-        }
-      },
-      '78': {
-        start: {
-          line: 474,
-          column: 4
-        },
-        end: {
-          line: 474,
-          column: 41
-        }
-      },
-      '79': {
-        start: {
-          line: 483,
-          column: 4
-        },
-        end: {
-          line: 483,
-          column: 33
-        }
-      },
-      '80': {
-        start: {
-          line: 493,
-          column: 4
-        },
-        end: {
-          line: 493,
-          column: 55
-        }
-      },
-      '81': {
-        start: {
-          line: 502,
-          column: 4
-        },
-        end: {
-          line: 502,
-          column: 40
-        }
-      },
-      '82': {
-        start: {
-          line: 511,
-          column: 4
-        },
-        end: {
-          line: 511,
-          column: 26
-        }
-      },
-      '83': {
-        start: {
-          line: 520,
-          column: 4
-        },
-        end: {
-          line: 520,
-          column: 26
-        }
-      },
-      '84': {
-        start: {
-          line: 528,
-          column: 4
-        },
-        end: {
-          line: 528,
-          column: 33
-        }
-      },
-      '85': {
-        start: {
-          line: 541,
-          column: 4
-        },
-        end: {
-          line: 541,
-          column: 31
-        }
-      },
-      '86': {
-        start: {
-          line: 549,
-          column: 4
-        },
-        end: {
-          line: 549,
-          column: 32
-        }
-      },
-      '87': {
-        start: {
-          line: 557,
-          column: 4
-        },
-        end: {
-          line: 557,
-          column: 31
-        }
-      },
-      '88': {
-        start: {
-          line: 572,
-          column: 4
-        },
-        end: {
-          line: 577,
-          column: 5
-        }
-      },
-      '89': {
-        start: {
-          line: 573,
-          column: 6
-        },
-        end: {
-          line: 573,
-          column: 55
-        }
-      },
-      '90': {
-        start: {
-          line: 574,
-          column: 6
-        },
-        end: {
-          line: 574,
-          column: 34
-        }
-      },
-      '91': {
-        start: {
-          line: 576,
-          column: 6
-        },
-        end: {
-          line: 576,
-          column: 19
-        }
-      },
-      '92': {
-        start: {
-          line: 578,
-          column: 4
-        },
-        end: {
-          line: 578,
-          column: 40
-        }
-      }
-    },
-    fnMap: {
-      '0': {
-        name: '(anonymous_0)',
-        decl: {
-          start: {
-            line: 41,
-            column: 2
-          },
-          end: {
-            line: 41,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 41,
-            column: 31
-          },
-          end: {
-            line: 43,
-            column: 3
-          }
-        },
-        line: 41
-      },
-      '1': {
-        name: '(anonymous_1)',
-        decl: {
-          start: {
-            line: 50,
-            column: 2
-          },
-          end: {
-            line: 50,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 50,
-            column: 46
-          },
-          end: {
-            line: 56,
-            column: 3
-          }
-        },
-        line: 50
-      },
-      '2': {
-        name: '(anonymous_2)',
-        decl: {
-          start: {
-            line: 63,
-            column: 2
-          },
-          end: {
-            line: 63,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 63,
-            column: 18
-          },
-          end: {
-            line: 76,
-            column: 3
-          }
-        },
-        line: 63
-      },
-      '3': {
-        name: '(anonymous_3)',
-        decl: {
-          start: {
-            line: 83,
-            column: 2
-          },
-          end: {
-            line: 83,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 83,
-            column: 17
-          },
-          end: {
-            line: 100,
-            column: 3
-          }
-        },
-        line: 83
-      },
-      '4': {
-        name: '(anonymous_4)',
-        decl: {
-          start: {
-            line: 85,
-            column: 68
-          },
-          end: {
-            line: 85,
-            column: 69
-          }
-        },
-        loc: {
-          start: {
-            line: 85,
-            column: 74
-          },
-          end: {
-            line: 87,
-            column: 7
-          }
-        },
-        line: 85
-      },
-      '5': {
-        name: '(anonymous_5)',
-        decl: {
-          start: {
-            line: 90,
-            column: 92
-          },
-          end: {
-            line: 90,
-            column: 93
-          }
-        },
-        loc: {
-          start: {
-            line: 90,
-            column: 114
-          },
-          end: {
-            line: 92,
-            column: 7
-          }
-        },
-        line: 90
-      },
-      '6': {
-        name: '(anonymous_6)',
-        decl: {
-          start: {
-            line: 93,
-            column: 92
-          },
-          end: {
-            line: 93,
-            column: 93
-          }
-        },
-        loc: {
-          start: {
-            line: 93,
-            column: 114
-          },
-          end: {
-            line: 95,
-            column: 7
-          }
-        },
-        line: 93
-      },
-      '7': {
-        name: '(anonymous_7)',
-        decl: {
-          start: {
-            line: 96,
-            column: 91
-          },
-          end: {
-            line: 96,
-            column: 92
-          }
-        },
-        loc: {
-          start: {
-            line: 96,
-            column: 113
-          },
-          end: {
-            line: 98,
-            column: 7
-          }
-        },
-        line: 96
-      },
-      '8': {
-        name: '(anonymous_8)',
-        decl: {
-          start: {
-            line: 107,
-            column: 2
-          },
-          end: {
-            line: 107,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 107,
-            column: 17
-          },
-          end: {
-            line: 116,
-            column: 3
-          }
-        },
-        line: 107
-      },
-      '9': {
-        name: '(anonymous_9)',
-        decl: {
-          start: {
-            line: 122,
-            column: 2
-          },
-          end: {
-            line: 122,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 122,
-            column: 38
-          },
-          end: {
-            line: 124,
-            column: 3
-          }
-        },
-        line: 122
-      },
-      '10': {
-        name: '(anonymous_10)',
-        decl: {
-          start: {
-            line: 131,
-            column: 2
-          },
-          end: {
-            line: 131,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 131,
-            column: 30
-          },
-          end: {
-            line: 141,
-            column: 3
-          }
-        },
-        line: 131
-      },
-      '11': {
-        name: '(anonymous_11)',
-        decl: {
-          start: {
-            line: 150,
-            column: 2
-          },
-          end: {
-            line: 150,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 150,
-            column: 64
-          },
-          end: {
-            line: 152,
-            column: 3
-          }
-        },
-        line: 150
-      },
-      '12': {
-        name: '(anonymous_12)',
-        decl: {
-          start: {
-            line: 159,
-            column: 2
-          },
-          end: {
-            line: 159,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 159,
-            column: 49
-          },
-          end: {
-            line: 163,
-            column: 3
-          }
-        },
-        line: 159
-      },
-      '13': {
-        name: '(anonymous_13)',
-        decl: {
-          start: {
-            line: 170,
-            column: 2
-          },
-          end: {
-            line: 170,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 170,
-            column: 49
-          },
-          end: {
-            line: 174,
-            column: 3
-          }
-        },
-        line: 170
-      },
-      '14': {
-        name: '(anonymous_14)',
-        decl: {
-          start: {
-            line: 181,
-            column: 2
-          },
-          end: {
-            line: 181,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 181,
-            column: 46
-          },
-          end: {
-            line: 185,
-            column: 3
-          }
-        },
-        line: 181
-      },
-      '15': {
-        name: '(anonymous_15)',
-        decl: {
-          start: {
-            line: 193,
-            column: 2
-          },
-          end: {
-            line: 193,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 193,
-            column: 32
-          },
-          end: {
-            line: 197,
-            column: 3
-          }
-        },
-        line: 193
-      },
-      '16': {
-        name: '(anonymous_16)',
-        decl: {
-          start: {
-            line: 205,
-            column: 2
-          },
-          end: {
-            line: 205,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 205,
-            column: 32
-          },
-          end: {
-            line: 207,
-            column: 3
-          }
-        },
-        line: 205
-      },
-      '17': {
-        name: '(anonymous_17)',
-        decl: {
-          start: {
-            line: 214,
-            column: 2
-          },
-          end: {
-            line: 214,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 214,
-            column: 20
-          },
-          end: {
-            line: 219,
-            column: 3
-          }
-        },
-        line: 214
-      },
-      '18': {
-        name: '(anonymous_18)',
-        decl: {
-          start: {
-            line: 227,
-            column: 2
-          },
-          end: {
-            line: 227,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 227,
-            column: 15
-          },
-          end: {
-            line: 229,
-            column: 3
-          }
-        },
-        line: 227
-      },
-      '19': {
-        name: '(anonymous_19)',
-        decl: {
-          start: {
-            line: 236,
-            column: 2
-          },
-          end: {
-            line: 236,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 236,
-            column: 16
-          },
-          end: {
-            line: 238,
-            column: 3
-          }
-        },
-        line: 236
-      },
-      '20': {
-        name: '(anonymous_20)',
-        decl: {
-          start: {
-            line: 245,
-            column: 2
-          },
-          end: {
-            line: 245,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 245,
-            column: 26
-          },
-          end: {
-            line: 247,
-            column: 3
-          }
-        },
-        line: 245
-      },
-      '21': {
-        name: '(anonymous_21)',
-        decl: {
-          start: {
-            line: 254,
-            column: 2
-          },
-          end: {
-            line: 254,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 254,
-            column: 28
-          },
-          end: {
-            line: 256,
-            column: 3
-          }
-        },
-        line: 254
-      },
-      '22': {
-        name: '(anonymous_22)',
-        decl: {
-          start: {
-            line: 264,
-            column: 2
-          },
-          end: {
-            line: 264,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 264,
-            column: 36
-          },
-          end: {
-            line: 266,
-            column: 3
-          }
-        },
-        line: 264
-      },
-      '23': {
-        name: '(anonymous_23)',
-        decl: {
-          start: {
-            line: 273,
-            column: 2
-          },
-          end: {
-            line: 273,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 273,
-            column: 25
-          },
-          end: {
-            line: 275,
-            column: 3
-          }
-        },
-        line: 273
-      },
-      '24': {
-        name: '(anonymous_24)',
-        decl: {
-          start: {
-            line: 283,
-            column: 2
-          },
-          end: {
-            line: 283,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 283,
-            column: 32
-          },
-          end: {
-            line: 285,
-            column: 3
-          }
-        },
-        line: 283
-      },
-      '25': {
-        name: '(anonymous_25)',
-        decl: {
-          start: {
-            line: 292,
-            column: 2
-          },
-          end: {
-            line: 292,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 292,
-            column: 23
-          },
-          end: {
-            line: 294,
-            column: 3
-          }
-        },
-        line: 292
-      },
-      '26': {
-        name: '(anonymous_26)',
-        decl: {
-          start: {
-            line: 296,
-            column: 2
-          },
-          end: {
-            line: 296,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 296,
-            column: 10
-          },
-          end: {
-            line: 297,
-            column: 3
-          }
-        },
-        line: 296
-      },
-      '27': {
-        name: '(anonymous_27)',
-        decl: {
-          start: {
-            line: 304,
-            column: 2
-          },
-          end: {
-            line: 304,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 304,
-            column: 24
-          },
-          end: {
-            line: 306,
-            column: 3
-          }
-        },
-        line: 304
-      },
-      '28': {
-        name: '(anonymous_28)',
-        decl: {
-          start: {
-            line: 313,
-            column: 2
-          },
-          end: {
-            line: 313,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 313,
-            column: 25
-          },
-          end: {
-            line: 315,
-            column: 3
-          }
-        },
-        line: 313
-      },
-      '29': {
-        name: '(anonymous_29)',
-        decl: {
-          start: {
-            line: 322,
-            column: 2
-          },
-          end: {
-            line: 322,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 322,
-            column: 29
-          },
-          end: {
-            line: 324,
-            column: 3
-          }
-        },
-        line: 322
-      },
-      '30': {
-        name: '(anonymous_30)',
-        decl: {
-          start: {
-            line: 331,
-            column: 2
-          },
-          end: {
-            line: 331,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 331,
-            column: 27
-          },
-          end: {
-            line: 333,
-            column: 3
-          }
-        },
-        line: 331
-      },
-      '31': {
-        name: '(anonymous_31)',
-        decl: {
-          start: {
-            line: 340,
-            column: 2
-          },
-          end: {
-            line: 340,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 340,
-            column: 29
-          },
-          end: {
-            line: 342,
-            column: 3
-          }
-        },
-        line: 340
-      },
-      '32': {
-        name: '(anonymous_32)',
-        decl: {
-          start: {
-            line: 350,
-            column: 2
-          },
-          end: {
-            line: 350,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 350,
-            column: 33
-          },
-          end: {
-            line: 352,
-            column: 3
-          }
-        },
-        line: 350
-      },
-      '33': {
-        name: '(anonymous_33)',
-        decl: {
-          start: {
-            line: 359,
-            column: 2
-          },
-          end: {
-            line: 359,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 359,
-            column: 23
-          },
-          end: {
-            line: 361,
-            column: 3
-          }
-        },
-        line: 359
-      },
-      '34': {
-        name: '(anonymous_34)',
-        decl: {
-          start: {
-            line: 368,
-            column: 2
-          },
-          end: {
-            line: 368,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 368,
-            column: 30
-          },
-          end: {
-            line: 370,
-            column: 3
-          }
-        },
-        line: 368
-      },
-      '35': {
-        name: '(anonymous_35)',
-        decl: {
-          start: {
-            line: 378,
-            column: 2
-          },
-          end: {
-            line: 378,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 378,
-            column: 35
-          },
-          end: {
-            line: 380,
-            column: 3
-          }
-        },
-        line: 378
-      },
-      '36': {
-        name: '(anonymous_36)',
-        decl: {
-          start: {
-            line: 387,
-            column: 2
-          },
-          end: {
-            line: 387,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 387,
-            column: 23
-          },
-          end: {
-            line: 389,
-            column: 3
-          }
-        },
-        line: 387
-      },
-      '37': {
-        name: '(anonymous_37)',
-        decl: {
-          start: {
-            line: 397,
-            column: 2
-          },
-          end: {
-            line: 397,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 397,
-            column: 37
-          },
-          end: {
-            line: 399,
-            column: 3
-          }
-        },
-        line: 397
-      },
-      '38': {
-        name: '(anonymous_38)',
-        decl: {
-          start: {
-            line: 406,
-            column: 2
-          },
-          end: {
-            line: 406,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 406,
-            column: 24
-          },
-          end: {
-            line: 408,
-            column: 3
-          }
-        },
-        line: 406
-      },
-      '39': {
-        name: '(anonymous_39)',
-        decl: {
-          start: {
-            line: 416,
-            column: 2
-          },
-          end: {
-            line: 416,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 416,
-            column: 40
-          },
-          end: {
-            line: 418,
-            column: 3
-          }
-        },
-        line: 416
-      },
-      '40': {
-        name: '(anonymous_40)',
-        decl: {
-          start: {
-            line: 425,
-            column: 2
-          },
-          end: {
-            line: 425,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 425,
-            column: 26
-          },
-          end: {
-            line: 427,
-            column: 3
-          }
-        },
-        line: 425
-      },
-      '41': {
-        name: '(anonymous_41)',
-        decl: {
-          start: {
-            line: 435,
-            column: 2
-          },
-          end: {
-            line: 435,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 435,
-            column: 26
-          },
-          end: {
-            line: 437,
-            column: 3
-          }
-        },
-        line: 435
-      },
-      '42': {
-        name: '(anonymous_42)',
-        decl: {
-          start: {
-            line: 444,
-            column: 2
-          },
-          end: {
-            line: 444,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 444,
-            column: 22
-          },
-          end: {
-            line: 446,
-            column: 3
-          }
-        },
-        line: 444
-      },
-      '43': {
-        name: '(anonymous_43)',
-        decl: {
-          start: {
-            line: 454,
-            column: 2
-          },
-          end: {
-            line: 454,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 454,
-            column: 40
-          },
-          end: {
-            line: 456,
-            column: 3
-          }
-        },
-        line: 454
-      },
-      '44': {
-        name: '(anonymous_44)',
-        decl: {
-          start: {
-            line: 463,
-            column: 2
-          },
-          end: {
-            line: 463,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 463,
-            column: 26
-          },
-          end: {
-            line: 465,
-            column: 3
-          }
-        },
-        line: 463
-      },
-      '45': {
-        name: '(anonymous_45)',
-        decl: {
-          start: {
-            line: 473,
-            column: 2
-          },
-          end: {
-            line: 473,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 473,
-            column: 47
-          },
-          end: {
-            line: 475,
-            column: 3
-          }
-        },
-        line: 473
-      },
-      '46': {
-        name: '(anonymous_46)',
-        decl: {
-          start: {
-            line: 482,
-            column: 2
-          },
-          end: {
-            line: 482,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 482,
-            column: 29
-          },
-          end: {
-            line: 484,
-            column: 3
-          }
-        },
-        line: 482
-      },
-      '47': {
-        name: '(anonymous_47)',
-        decl: {
-          start: {
-            line: 492,
-            column: 2
-          },
-          end: {
-            line: 492,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 492,
-            column: 55
-          },
-          end: {
-            line: 494,
-            column: 3
-          }
-        },
-        line: 492
-      },
-      '48': {
-        name: '(anonymous_48)',
-        decl: {
-          start: {
-            line: 501,
-            column: 2
-          },
-          end: {
-            line: 501,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 501,
-            column: 36
-          },
-          end: {
-            line: 503,
-            column: 3
-          }
-        },
-        line: 501
-      },
-      '49': {
-        name: '(anonymous_49)',
-        decl: {
-          start: {
-            line: 510,
-            column: 2
-          },
-          end: {
-            line: 510,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 510,
-            column: 23
-          },
-          end: {
-            line: 512,
-            column: 3
-          }
-        },
-        line: 510
-      },
-      '50': {
-        name: '(anonymous_50)',
-        decl: {
-          start: {
-            line: 519,
-            column: 2
-          },
-          end: {
-            line: 519,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 519,
-            column: 27
-          },
-          end: {
-            line: 521,
-            column: 3
-          }
-        },
-        line: 519
-      },
-      '51': {
-        name: '(anonymous_51)',
-        decl: {
-          start: {
-            line: 527,
-            column: 2
-          },
-          end: {
-            line: 527,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 527,
-            column: 29
-          },
-          end: {
-            line: 529,
-            column: 3
-          }
-        },
-        line: 527
-      },
-      '52': {
-        name: '(anonymous_52)',
-        decl: {
-          start: {
-            line: 540,
-            column: 2
-          },
-          end: {
-            line: 540,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 540,
-            column: 27
-          },
-          end: {
-            line: 542,
-            column: 3
-          }
-        },
-        line: 540
-      },
-      '53': {
-        name: '(anonymous_53)',
-        decl: {
-          start: {
-            line: 548,
-            column: 2
-          },
-          end: {
-            line: 548,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 548,
-            column: 28
-          },
-          end: {
-            line: 550,
-            column: 3
-          }
-        },
-        line: 548
-      },
-      '54': {
-        name: '(anonymous_54)',
-        decl: {
-          start: {
-            line: 556,
-            column: 2
-          },
-          end: {
-            line: 556,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 556,
-            column: 27
-          },
-          end: {
-            line: 558,
-            column: 3
-          }
-        },
-        line: 556
-      },
-      '55': {
-        name: '(anonymous_55)',
-        decl: {
-          start: {
-            line: 571,
-            column: 2
-          },
-          end: {
-            line: 571,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 571,
-            column: 23
-          },
-          end: {
-            line: 579,
-            column: 3
-          }
-        },
-        line: 571
-      }
-    },
-    branchMap: {
-      '0': {
-        loc: {
-          start: {
-            line: 65,
-            column: 4
-          },
-          end: {
-            line: 67,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 65,
-            column: 4
-          },
-          end: {
-            line: 67,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 65,
-            column: 4
-          },
-          end: {
-            line: 67,
-            column: 5
-          }
-        }],
-        line: 65
-      },
-      '1': {
-        loc: {
-          start: {
-            line: 68,
-            column: 4
-          },
-          end: {
-            line: 74,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 68,
-            column: 4
-          },
-          end: {
-            line: 74,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 68,
-            column: 4
-          },
-          end: {
-            line: 74,
-            column: 5
-          }
-        }],
-        line: 68
-      },
-      '2': {
-        loc: {
-          start: {
-            line: 71,
-            column: 6
-          },
-          end: {
-            line: 73,
-            column: 7
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 71,
-            column: 6
-          },
-          end: {
-            line: 73,
-            column: 7
-          }
-        }, {
-          start: {
-            line: 71,
-            column: 6
-          },
-          end: {
-            line: 73,
-            column: 7
-          }
-        }],
-        line: 71
-      },
-      '3': {
-        loc: {
-          start: {
-            line: 89,
-            column: 4
-          },
-          end: {
-            line: 99,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 89,
-            column: 4
-          },
-          end: {
-            line: 99,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 89,
-            column: 4
-          },
-          end: {
-            line: 99,
-            column: 5
-          }
-        }],
-        line: 89
-      },
-      '4': {
-        loc: {
-          start: {
-            line: 111,
-            column: 4
-          },
-          end: {
-            line: 115,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 111,
-            column: 4
-          },
-          end: {
-            line: 115,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 111,
-            column: 4
-          },
-          end: {
-            line: 115,
-            column: 5
-          }
-        }],
-        line: 111
-      },
-      '5': {
-        loc: {
-          start: {
-            line: 138,
-            column: 4
-          },
-          end: {
-            line: 140,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 138,
-            column: 4
-          },
-          end: {
-            line: 140,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 138,
-            column: 4
-          },
-          end: {
-            line: 140,
-            column: 5
-          }
-        }],
-        line: 138
-      },
-      '6': {
-        loc: {
-          start: {
-            line: 138,
-            column: 8
-          },
-          end: {
-            line: 138,
-            column: 33
-          }
-        },
-        type: 'binary-expr',
-        locations: [{
-          start: {
-            line: 138,
-            column: 8
-          },
-          end: {
-            line: 138,
-            column: 16
-          }
-        }, {
-          start: {
-            line: 138,
-            column: 20
-          },
-          end: {
-            line: 138,
-            column: 33
-          }
-        }],
-        line: 138
-      },
-      '7': {
-        loc: {
-          start: {
-            line: 160,
-            column: 4
-          },
-          end: {
-            line: 162,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 160,
-            column: 4
-          },
-          end: {
-            line: 162,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 160,
-            column: 4
-          },
-          end: {
-            line: 162,
-            column: 5
-          }
-        }],
-        line: 160
-      },
-      '8': {
-        loc: {
-          start: {
-            line: 171,
-            column: 4
-          },
-          end: {
-            line: 173,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 171,
-            column: 4
-          },
-          end: {
-            line: 173,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 171,
-            column: 4
-          },
-          end: {
-            line: 173,
-            column: 5
-          }
-        }],
-        line: 171
-      },
-      '9': {
-        loc: {
-          start: {
-            line: 182,
-            column: 4
-          },
-          end: {
-            line: 184,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 182,
-            column: 4
-          },
-          end: {
-            line: 184,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 182,
-            column: 4
-          },
-          end: {
-            line: 184,
-            column: 5
-          }
-        }],
-        line: 182
-      },
-      '10': {
-        loc: {
-          start: {
-            line: 194,
-            column: 4
-          },
-          end: {
-            line: 196,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 194,
-            column: 4
-          },
-          end: {
-            line: 196,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 194,
-            column: 4
-          },
-          end: {
-            line: 196,
-            column: 5
-          }
-        }],
-        line: 194
-      },
-      '11': {
-        loc: {
-          start: {
-            line: 215,
-            column: 4
-          },
-          end: {
-            line: 217,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 215,
-            column: 4
-          },
-          end: {
-            line: 217,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 215,
-            column: 4
-          },
-          end: {
-            line: 217,
-            column: 5
-          }
-        }],
-        line: 215
-      },
-      '12': {
-        loc: {
-          start: {
-            line: 246,
-            column: 11
-          },
-          end: {
-            line: 246,
-            column: 91
-          }
-        },
-        type: 'cond-expr',
-        locations: [{
-          start: {
-            line: 246,
-            column: 38
-          },
-          end: {
-            line: 246,
-            column: 69
-          }
-        }, {
-          start: {
-            line: 246,
-            column: 72
-          },
-          end: {
-            line: 246,
-            column: 91
-          }
-        }],
-        line: 246
-      }
-    },
-    s: {
-      '0': 0,
-      '1': 0,
-      '2': 0,
-      '3': 0,
-      '4': 0,
-      '5': 0,
-      '6': 0,
-      '7': 0,
-      '8': 0,
-      '9': 0,
-      '10': 0,
-      '11': 0,
-      '12': 0,
-      '13': 0,
-      '14': 0,
-      '15': 0,
-      '16': 0,
-      '17': 0,
-      '18': 0,
-      '19': 0,
-      '20': 0,
-      '21': 0,
-      '22': 0,
-      '23': 0,
-      '24': 0,
-      '25': 0,
-      '26': 0,
-      '27': 0,
-      '28': 0,
-      '29': 0,
-      '30': 0,
-      '31': 0,
-      '32': 0,
-      '33': 0,
-      '34': 0,
-      '35': 0,
-      '36': 0,
-      '37': 0,
-      '38': 0,
-      '39': 0,
-      '40': 0,
-      '41': 0,
-      '42': 0,
-      '43': 0,
-      '44': 0,
-      '45': 0,
-      '46': 0,
-      '47': 0,
-      '48': 0,
-      '49': 0,
-      '50': 0,
-      '51': 0,
-      '52': 0,
-      '53': 0,
-      '54': 0,
-      '55': 0,
-      '56': 0,
-      '57': 0,
-      '58': 0,
-      '59': 0,
-      '60': 0,
-      '61': 0,
-      '62': 0,
-      '63': 0,
-      '64': 0,
-      '65': 0,
-      '66': 0,
-      '67': 0,
-      '68': 0,
-      '69': 0,
-      '70': 0,
-      '71': 0,
-      '72': 0,
-      '73': 0,
-      '74': 0,
-      '75': 0,
-      '76': 0,
-      '77': 0,
-      '78': 0,
-      '79': 0,
-      '80': 0,
-      '81': 0,
-      '82': 0,
-      '83': 0,
-      '84': 0,
-      '85': 0,
-      '86': 0,
-      '87': 0,
-      '88': 0,
-      '89': 0,
-      '90': 0,
-      '91': 0,
-      '92': 0
-    },
-    f: {
-      '0': 0,
-      '1': 0,
-      '2': 0,
-      '3': 0,
-      '4': 0,
-      '5': 0,
-      '6': 0,
-      '7': 0,
-      '8': 0,
-      '9': 0,
-      '10': 0,
-      '11': 0,
-      '12': 0,
-      '13': 0,
-      '14': 0,
-      '15': 0,
-      '16': 0,
-      '17': 0,
-      '18': 0,
-      '19': 0,
-      '20': 0,
-      '21': 0,
-      '22': 0,
-      '23': 0,
-      '24': 0,
-      '25': 0,
-      '26': 0,
-      '27': 0,
-      '28': 0,
-      '29': 0,
-      '30': 0,
-      '31': 0,
-      '32': 0,
-      '33': 0,
-      '34': 0,
-      '35': 0,
-      '36': 0,
-      '37': 0,
-      '38': 0,
-      '39': 0,
-      '40': 0,
-      '41': 0,
-      '42': 0,
-      '43': 0,
-      '44': 0,
-      '45': 0,
-      '46': 0,
-      '47': 0,
-      '48': 0,
-      '49': 0,
-      '50': 0,
-      '51': 0,
-      '52': 0,
-      '53': 0,
-      '54': 0,
-      '55': 0
-    },
-    b: {
-      '0': [0, 0],
-      '1': [0, 0],
-      '2': [0, 0],
-      '3': [0, 0],
-      '4': [0, 0],
-      '5': [0, 0],
-      '6': [0, 0],
-      '7': [0, 0],
-      '8': [0, 0],
-      '9': [0, 0],
-      '10': [0, 0],
-      '11': [0, 0],
-      '12': [0, 0]
-    },
-    _coverageSchema: '332fd63041d2c1bcb487cc26dd0d5f7d97098a6c'
-  },
-      coverage = global[gcv] || (global[gcv] = {});
-
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
-  }
-
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
-}();
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _fakeEventTarget = __webpack_require__(9);
+var _fakeEventTarget = __webpack_require__(12);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
@@ -16637,27 +4030,33 @@ var _fakeEvent = __webpack_require__(2);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _eventManager = __webpack_require__(6);
+var _eventManager = __webpack_require__(7);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _events = __webpack_require__(7);
+var _events = __webpack_require__(8);
 
-var _mediaSourceProvider = __webpack_require__(13);
+var _mediaSourceProvider = __webpack_require__(16);
 
 var _mediaSourceProvider2 = _interopRequireDefault(_mediaSourceProvider);
 
-var _videoTrack = __webpack_require__(5);
+var _videoTrack = __webpack_require__(6);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(3);
+var _audioTrack = __webpack_require__(4);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(4);
+var _textTrack = __webpack_require__(5);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
+
+var _util = __webpack_require__(3);
+
+var Utils = _interopRequireWildcard(_util);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -16667,17 +4066,32 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/**
+ * The engine video element class name.
+ * @type {string}
+ * @const
+ */
+var VIDEO_ELEMENT_CLASS_NAME = 'playkit-engine-html5';
+
+/**
+ * Html5 engine for playback.
+ * @classdesc
+ */
+
 var Html5 = function (_FakeEventTarget) {
   _inherits(Html5, _FakeEventTarget);
 
   _createClass(Html5, null, [{
-    key: 'canPlayType',
+    key: 'createEngine',
 
 
     /**
-     * Checks if the engine can play a given mime type.
-     * @param {string} mimeType - The mime type to check.
-     * @returns {boolean} - Whether the engine can play the mime type.
+     * Factory method to create an engine.
+     * @param {Source} source - The selected source object.
+     * @param {Object} config - The player configuration.
+     * @returns {IEngine} - New instance of the run time engine.
+     * @public
+     * @static
      */
 
     /**
@@ -16691,10 +4105,32 @@ var Html5 = function (_FakeEventTarget) {
      * @type {HTMLVideoElement}
      * @private
      */
-    value: function canPlayType(mimeType) {
-      ++cov_22t8x5qbf1.f[0];
-      ++cov_22t8x5qbf1.s[0];
+    value: function createEngine(source, config) {
+      return new this(source, config);
+    }
 
+    /**
+     * Checks if the engine can play a given mime type.
+     * @param {string} mimeType - The mime type to check.
+     * @returns {boolean} - Whether the engine can play the mime type.
+     * @public
+     * @static
+     */
+
+
+    /**
+     * @type {string} - The engine id.
+     */
+
+    /**
+     * The event manager of the engine.
+     * @type {EventManager}
+     * @private
+     */
+
+  }, {
+    key: 'canPlayType',
+    value: function canPlayType(mimeType) {
       return _mediaSourceProvider2.default.canPlayType(mimeType);
     }
 
@@ -16704,35 +4140,16 @@ var Html5 = function (_FakeEventTarget) {
      * @param {Object} config - The player configuration.
      */
 
-
-    /**
-     * @type {string} - The engine name.
-     */
-
-    /**
-     * The event manager of the engine.
-     * @type {EventManager}
-     * @private
-     */
-
   }]);
 
   function Html5(source, config) {
     _classCallCheck(this, Html5);
 
-    ++cov_22t8x5qbf1.f[1];
-    ++cov_22t8x5qbf1.s[1];
-
     var _this = _possibleConstructorReturn(this, (Html5.__proto__ || Object.getPrototypeOf(Html5)).call(this));
 
-    ++cov_22t8x5qbf1.s[2];
-
-    _this._createVideoElement();
-    ++cov_22t8x5qbf1.s[3];
     _this._eventManager = new _eventManager2.default();
-    ++cov_22t8x5qbf1.s[4];
+    _this._createVideoElement();
     _this._loadMediaSourceAdapter(source, config);
-    ++cov_22t8x5qbf1.s[5];
     _this.attach();
     return _this;
   }
@@ -16747,64 +4164,41 @@ var Html5 = function (_FakeEventTarget) {
   _createClass(Html5, [{
     key: 'destroy',
     value: function destroy() {
-      ++cov_22t8x5qbf1.f[2];
-      ++cov_22t8x5qbf1.s[6];
-
       this.detach();
-      ++cov_22t8x5qbf1.s[7];
       if (this._mediaSourceAdapter) {
-        ++cov_22t8x5qbf1.b[0][0];
-        ++cov_22t8x5qbf1.s[8];
-
         this._mediaSourceAdapter.destroy();
-      } else {
-        ++cov_22t8x5qbf1.b[0][1];
+        _mediaSourceProvider2.default.destroy();
       }
-      ++cov_22t8x5qbf1.s[9];
       if (this._el) {
-        ++cov_22t8x5qbf1.b[1][0];
-        ++cov_22t8x5qbf1.s[10];
-
         this.pause();
-        ++cov_22t8x5qbf1.s[11];
         this._el.removeAttribute('src');
-        ++cov_22t8x5qbf1.s[12];
         if (this._el.parentNode) {
-          ++cov_22t8x5qbf1.b[2][0];
-          ++cov_22t8x5qbf1.s[13];
-
           this._el.parentNode.removeChild(this._el);
-        } else {
-          ++cov_22t8x5qbf1.b[2][1];
         }
-      } else {
-        ++cov_22t8x5qbf1.b[1][1];
       }
-      ++cov_22t8x5qbf1.s[14];
       this._eventManager.destroy();
     }
+
+    /**
+     * Get the engine's id
+     * @public
+     * @returns {string} the engine's id
+     */
+
+  }, {
+    key: 'attach',
+
 
     /**
      * Listen to the video element events and triggers them from the engine.
      * @public
      * @returns {void}
      */
-
-  }, {
-    key: 'attach',
     value: function attach() {
       var _this2 = this;
 
-      ++cov_22t8x5qbf1.f[3];
-      ++cov_22t8x5qbf1.s[15];
-
       var _loop = function _loop(playerEvent) {
-        ++cov_22t8x5qbf1.s[16];
-
         _this2._eventManager.listen(_this2._el, _events.HTML5_EVENTS[playerEvent], function () {
-          ++cov_22t8x5qbf1.f[4];
-          ++cov_22t8x5qbf1.s[17];
-
           _this2.dispatchEvent(new _fakeEvent2.default(_events.HTML5_EVENTS[playerEvent]));
         });
       };
@@ -16812,33 +4206,19 @@ var Html5 = function (_FakeEventTarget) {
       for (var playerEvent in _events.HTML5_EVENTS) {
         _loop(playerEvent);
       }
-      ++cov_22t8x5qbf1.s[18];
       if (this._mediaSourceAdapter) {
-        ++cov_22t8x5qbf1.b[3][0];
-        ++cov_22t8x5qbf1.s[19];
-        // listen and dispatch adaptive bitrate changed event
         this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, function (event) {
-          ++cov_22t8x5qbf1.f[5];
-          ++cov_22t8x5qbf1.s[20];
-
-          _this2.dispatchEvent(event);
+          return _this2.dispatchEvent(event);
         });
-        ++cov_22t8x5qbf1.s[21];
         this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED, function (event) {
-          ++cov_22t8x5qbf1.f[6];
-          ++cov_22t8x5qbf1.s[22];
-
           return _this2.dispatchEvent(event);
         });
-        ++cov_22t8x5qbf1.s[23];
         this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED, function (event) {
-          ++cov_22t8x5qbf1.f[7];
-          ++cov_22t8x5qbf1.s[24];
-
           return _this2.dispatchEvent(event);
         });
-      } else {
-        ++cov_22t8x5qbf1.b[3][1];
+        this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.ABR_MODE_CHANGED, function (event) {
+          return _this2.dispatchEvent(event);
+        });
       }
     }
 
@@ -16851,26 +4231,14 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'detach',
     value: function detach() {
-      ++cov_22t8x5qbf1.f[8];
-      ++cov_22t8x5qbf1.s[25];
-
       for (var playerEvent in _events.HTML5_EVENTS) {
-        ++cov_22t8x5qbf1.s[26];
-
         this._eventManager.unlisten(this._el, _events.HTML5_EVENTS[playerEvent]);
       }
-      ++cov_22t8x5qbf1.s[27];
       if (this._mediaSourceAdapter) {
-        ++cov_22t8x5qbf1.b[4][0];
-        ++cov_22t8x5qbf1.s[28];
         // unlisten to adaptive bitrate changed
         this._eventManager.unlisten(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED);
-        ++cov_22t8x5qbf1.s[29];
         this._eventManager.unlisten(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED);
-        ++cov_22t8x5qbf1.s[30];
         this._eventManager.unlisten(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED);
-      } else {
-        ++cov_22t8x5qbf1.b[4][1];
       }
     }
 
@@ -16882,9 +4250,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'getVideoElement',
     value: function getVideoElement() {
-      ++cov_22t8x5qbf1.f[9];
-      ++cov_22t8x5qbf1.s[31];
-
       return this._el;
     }
 
@@ -16897,28 +4262,10 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: '_createVideoElement',
     value: function _createVideoElement() {
-      ++cov_22t8x5qbf1.f[10];
-      ++cov_22t8x5qbf1.s[32];
-
-      this._el = document.createElement("video");
-      //Set attributes
-      ++cov_22t8x5qbf1.s[33];
-      this._el.style.width = "640px";
-      ++cov_22t8x5qbf1.s[34];
-      this._el.style.height = "360px";
-      ++cov_22t8x5qbf1.s[35];
-      this._el.style.backgroundColor = "black";
-      ++cov_22t8x5qbf1.s[36];
-      this._el.controls = true;
-      ++cov_22t8x5qbf1.s[37];
-      if ((++cov_22t8x5qbf1.b[6][0], document) && (++cov_22t8x5qbf1.b[6][1], document.body)) {
-        ++cov_22t8x5qbf1.b[5][0];
-        ++cov_22t8x5qbf1.s[38];
-
-        document.body.appendChild(this._el);
-      } else {
-        ++cov_22t8x5qbf1.b[5][1];
-      }
+      this._el = Utils.Dom.createElement("video");
+      this._el.id = Utils.Generator.uniqueId(5);
+      this._el.className = VIDEO_ELEMENT_CLASS_NAME;
+      this._el.controls = false;
     }
 
     /**
@@ -16932,9 +4279,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: '_loadMediaSourceAdapter',
     value: function _loadMediaSourceAdapter(source, config) {
-      ++cov_22t8x5qbf1.f[11];
-      ++cov_22t8x5qbf1.s[39];
-
       this._mediaSourceAdapter = _mediaSourceProvider2.default.getMediaSourceAdapter(this.getVideoElement(), source, config);
     }
 
@@ -16947,16 +4291,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'selectVideoTrack',
     value: function selectVideoTrack(videoTrack) {
-      ++cov_22t8x5qbf1.f[12];
-      ++cov_22t8x5qbf1.s[40];
-
       if (this._mediaSourceAdapter) {
-        ++cov_22t8x5qbf1.b[7][0];
-        ++cov_22t8x5qbf1.s[41];
-
         this._mediaSourceAdapter.selectVideoTrack(videoTrack);
-      } else {
-        ++cov_22t8x5qbf1.b[7][1];
       }
     }
 
@@ -16969,16 +4305,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'selectAudioTrack',
     value: function selectAudioTrack(audioTrack) {
-      ++cov_22t8x5qbf1.f[13];
-      ++cov_22t8x5qbf1.s[42];
-
       if (this._mediaSourceAdapter) {
-        ++cov_22t8x5qbf1.b[8][0];
-        ++cov_22t8x5qbf1.s[43];
-
         this._mediaSourceAdapter.selectAudioTrack(audioTrack);
-      } else {
-        ++cov_22t8x5qbf1.b[8][1];
       }
     }
 
@@ -16991,16 +4319,23 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'selectTextTrack',
     value: function selectTextTrack(textTrack) {
-      ++cov_22t8x5qbf1.f[14];
-      ++cov_22t8x5qbf1.s[44];
-
       if (this._mediaSourceAdapter) {
-        ++cov_22t8x5qbf1.b[9][0];
-        ++cov_22t8x5qbf1.s[45];
-
         this._mediaSourceAdapter.selectTextTrack(textTrack);
-      } else {
-        ++cov_22t8x5qbf1.b[9][1];
+      }
+    }
+
+    /**
+     * Hide the text track
+     * @function hideTextTrack
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: 'hideTextTrack',
+    value: function hideTextTrack() {
+      if (this._mediaSourceAdapter) {
+        this._mediaSourceAdapter.hideTextTrack();
       }
     }
 
@@ -17014,17 +4349,25 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'enableAdaptiveBitrate',
     value: function enableAdaptiveBitrate() {
-      ++cov_22t8x5qbf1.f[15];
-      ++cov_22t8x5qbf1.s[46];
-
       if (this._mediaSourceAdapter) {
-        ++cov_22t8x5qbf1.b[10][0];
-        ++cov_22t8x5qbf1.s[47];
-
         this._mediaSourceAdapter.enableAdaptiveBitrate();
-      } else {
-        ++cov_22t8x5qbf1.b[10][1];
       }
+    }
+
+    /**
+     * Checking if adaptive bitrate switching is enabled.
+     * @function isAdaptiveBitrateEnabled
+     * @returns {boolean} - Whether adaptive bitrate is enabled.
+     * @public
+     */
+
+  }, {
+    key: 'isAdaptiveBitrateEnabled',
+    value: function isAdaptiveBitrateEnabled() {
+      if (this._mediaSourceAdapter) {
+        return this._mediaSourceAdapter.isAdaptiveBitrateEnabled();
+      }
+      return false;
     }
 
     /**
@@ -17045,9 +4388,6 @@ var Html5 = function (_FakeEventTarget) {
      * @returns {void}
      */
     value: function play() {
-      ++cov_22t8x5qbf1.f[18];
-      ++cov_22t8x5qbf1.s[52];
-
       return this._el.play();
     }
 
@@ -17060,25 +4400,20 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'pause',
     value: function pause() {
-      ++cov_22t8x5qbf1.f[19];
-      ++cov_22t8x5qbf1.s[53];
-
       return this._el.pause();
     }
 
     /**
      * Load media.
+     * @param {number} startTime - Optional time to start the video from.
      * @public
      * @returns {Promise<Object>} - The loaded data
      */
 
   }, {
     key: 'load',
-    value: function load() {
-      ++cov_22t8x5qbf1.f[20];
-      ++cov_22t8x5qbf1.s[54];
-
-      return this._mediaSourceAdapter ? (++cov_22t8x5qbf1.b[12][0], this._mediaSourceAdapter.load()) : (++cov_22t8x5qbf1.b[12][1], Promise.resolve({}));
+    value: function load(startTime) {
+      return this._mediaSourceAdapter ? this._mediaSourceAdapter.load(startTime) : Promise.resolve({});
     }
 
     /**
@@ -17089,9 +4424,7 @@ var Html5 = function (_FakeEventTarget) {
 
   }, {
     key: 'ready',
-    value: function ready() {
-      ++cov_22t8x5qbf1.f[26];
-    }
+    value: function ready() {}
 
     /**
      * Get paused state.
@@ -17100,11 +4433,13 @@ var Html5 = function (_FakeEventTarget) {
      */
 
   }, {
+    key: 'id',
+    get: function get() {
+      return Html5.id;
+    }
+  }, {
     key: 'src',
     set: function set(source) {
-      ++cov_22t8x5qbf1.f[16];
-      ++cov_22t8x5qbf1.s[48];
-
       this._el.src = source;
     }
 
@@ -17115,26 +4450,14 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_22t8x5qbf1.f[17];
-      ++cov_22t8x5qbf1.s[49];
-
       if (this._mediaSourceAdapter) {
-        ++cov_22t8x5qbf1.b[11][0];
-        ++cov_22t8x5qbf1.s[50];
-
         return this._mediaSourceAdapter.src;
-      } else {
-        ++cov_22t8x5qbf1.b[11][1];
       }
-      ++cov_22t8x5qbf1.s[51];
       return "";
     }
   }, {
     key: 'currentTime',
     get: function get() {
-      ++cov_22t8x5qbf1.f[21];
-      ++cov_22t8x5qbf1.s[55];
-
       return this._el.currentTime;
     }
 
@@ -17146,9 +4469,6 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     set: function set(to) {
-      ++cov_22t8x5qbf1.f[22];
-      ++cov_22t8x5qbf1.s[56];
-
       this._el.currentTime = to;
     }
 
@@ -17161,9 +4481,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'duration',
     get: function get() {
-      ++cov_22t8x5qbf1.f[23];
-      ++cov_22t8x5qbf1.s[57];
-
       return this._el.duration;
     }
 
@@ -17177,9 +4494,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'volume',
     set: function set(vol) {
-      ++cov_22t8x5qbf1.f[24];
-      ++cov_22t8x5qbf1.s[58];
-
       this._el.volume = vol;
     }
 
@@ -17190,17 +4504,11 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_22t8x5qbf1.f[25];
-      ++cov_22t8x5qbf1.s[59];
-
       return this._el.volume;
     }
   }, {
     key: 'paused',
     get: function get() {
-      ++cov_22t8x5qbf1.f[27];
-      ++cov_22t8x5qbf1.s[60];
-
       return this._el.paused;
     }
 
@@ -17213,9 +4521,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'seeking',
     get: function get() {
-      ++cov_22t8x5qbf1.f[28];
-      ++cov_22t8x5qbf1.s[61];
-
       return this._el.seeking;
     }
 
@@ -17228,9 +4533,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'seekable',
     get: function get() {
-      ++cov_22t8x5qbf1.f[29];
-      ++cov_22t8x5qbf1.s[62];
-
       return this._el.seekable;
     }
 
@@ -17243,9 +4545,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'played',
     get: function get() {
-      ++cov_22t8x5qbf1.f[30];
-      ++cov_22t8x5qbf1.s[63];
-
       return this._el.played;
     }
 
@@ -17258,9 +4557,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'buffered',
     get: function get() {
-      ++cov_22t8x5qbf1.f[31];
-      ++cov_22t8x5qbf1.s[64];
-
       return this._el.buffered;
     }
 
@@ -17274,9 +4570,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'muted',
     set: function set(mute) {
-      ++cov_22t8x5qbf1.f[32];
-      ++cov_22t8x5qbf1.s[65];
-
       this._el.muted = mute;
     }
 
@@ -17287,9 +4580,6 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_22t8x5qbf1.f[33];
-      ++cov_22t8x5qbf1.s[66];
-
       return this._el.muted;
     }
 
@@ -17302,9 +4592,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'defaultMuted',
     get: function get() {
-      ++cov_22t8x5qbf1.f[34];
-      ++cov_22t8x5qbf1.s[67];
-
       return this._el.defaultMuted;
     }
 
@@ -17318,9 +4605,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'poster',
     set: function set(poster) {
-      ++cov_22t8x5qbf1.f[35];
-      ++cov_22t8x5qbf1.s[68];
-
       this._el.poster = poster;
     }
 
@@ -17331,9 +4615,6 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_22t8x5qbf1.f[36];
-      ++cov_22t8x5qbf1.s[69];
-
       return this._el.poster;
     }
 
@@ -17347,9 +4628,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'preload',
     set: function set(preload) {
-      ++cov_22t8x5qbf1.f[37];
-      ++cov_22t8x5qbf1.s[70];
-
       this._el.preload = preload;
     }
 
@@ -17360,9 +4638,6 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_22t8x5qbf1.f[38];
-      ++cov_22t8x5qbf1.s[71];
-
       return this._el.preload;
     }
 
@@ -17376,9 +4651,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'autoplay',
     set: function set(autoplay) {
-      ++cov_22t8x5qbf1.f[39];
-      ++cov_22t8x5qbf1.s[72];
-
       this._el.autoplay = autoplay;
     }
 
@@ -17389,9 +4661,6 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_22t8x5qbf1.f[40];
-      ++cov_22t8x5qbf1.s[73];
-
       return this._el.autoplay;
     }
 
@@ -17405,9 +4674,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'loop',
     set: function set(loop) {
-      ++cov_22t8x5qbf1.f[41];
-      ++cov_22t8x5qbf1.s[74];
-
       this._el.loop = loop;
     }
 
@@ -17418,9 +4684,6 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_22t8x5qbf1.f[42];
-      ++cov_22t8x5qbf1.s[75];
-
       return this._el.loop;
     }
 
@@ -17434,9 +4697,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'controls',
     set: function set(controls) {
-      ++cov_22t8x5qbf1.f[43];
-      ++cov_22t8x5qbf1.s[76];
-
       this._el.controls = controls;
     }
 
@@ -17447,9 +4707,6 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_22t8x5qbf1.f[44];
-      ++cov_22t8x5qbf1.s[77];
-
       return this._el.controls;
     }
 
@@ -17463,9 +4720,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'playbackRate',
     set: function set(playbackRate) {
-      ++cov_22t8x5qbf1.f[45];
-      ++cov_22t8x5qbf1.s[78];
-
       this._el.playbackRate = playbackRate;
     }
 
@@ -17476,9 +4730,6 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_22t8x5qbf1.f[46];
-      ++cov_22t8x5qbf1.s[79];
-
       return this._el.playbackRate;
     }
 
@@ -17492,9 +4743,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'defaultPlaybackRate',
     set: function set(defaultPlaybackRate) {
-      ++cov_22t8x5qbf1.f[47];
-      ++cov_22t8x5qbf1.s[80];
-
       this._el.defaultPlaybackRate = defaultPlaybackRate;
     }
 
@@ -17505,9 +4753,6 @@ var Html5 = function (_FakeEventTarget) {
      */
     ,
     get: function get() {
-      ++cov_22t8x5qbf1.f[48];
-      ++cov_22t8x5qbf1.s[81];
-
       return this._el.defaultPlaybackRate;
     }
 
@@ -17520,9 +4765,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'ended',
     get: function get() {
-      ++cov_22t8x5qbf1.f[49];
-      ++cov_22t8x5qbf1.s[82];
-
       return this._el.ended;
     }
 
@@ -17535,9 +4777,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'error',
     get: function get() {
-      ++cov_22t8x5qbf1.f[50];
-      ++cov_22t8x5qbf1.s[83];
-
       return this._el.error;
     }
 
@@ -17549,9 +4788,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'networkState',
     get: function get() {
-      ++cov_22t8x5qbf1.f[51];
-      ++cov_22t8x5qbf1.s[84];
-
       return this._el.networkState;
     }
 
@@ -17568,9 +4804,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'readyState',
     get: function get() {
-      ++cov_22t8x5qbf1.f[52];
-      ++cov_22t8x5qbf1.s[85];
-
       return this._el.readyState;
     }
 
@@ -17582,9 +4815,6 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'videoHeight',
     get: function get() {
-      ++cov_22t8x5qbf1.f[53];
-      ++cov_22t8x5qbf1.s[86];
-
       return this._el.videoHeight;
     }
 
@@ -17596,10 +4826,29 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'videoWidth',
     get: function get() {
-      ++cov_22t8x5qbf1.f[54];
-      ++cov_22t8x5qbf1.s[87];
-
       return this._el.videoWidth;
+    }
+
+    /**
+     * @param {boolean} playsinline - Whether to set on the video tag the playsinline attribute.
+     */
+
+  }, {
+    key: 'playsinline',
+    set: function set(playsinline) {
+      if (playsinline) {
+        this._el.setAttribute('playsinline', '');
+      } else {
+        this._el.removeAttribute('playsinline');
+      }
+    }
+
+    /**
+     * @returns {boolean} - Whether the video tag has an attribute of playsinline.
+     */
+    ,
+    get: function get() {
+      return this._el.getAttribute('playsinline') === '';
     }
 
     /**
@@ -17617,21 +4866,12 @@ var Html5 = function (_FakeEventTarget) {
      * @public
      */
     value: function isSupported() {
-      ++cov_22t8x5qbf1.f[55];
-      ++cov_22t8x5qbf1.s[88];
-
       try {
-        ++cov_22t8x5qbf1.s[89];
-
-        Html5.TEST_VID = document.createElement('video');
-        ++cov_22t8x5qbf1.s[90];
+        Html5.TEST_VID = Utils.Dom.createElement('video');
         Html5.TEST_VID.volume = 0.5;
       } catch (e) {
-        ++cov_22t8x5qbf1.s[91];
-
         return false;
       }
-      ++cov_22t8x5qbf1.s[92];
       return !!Html5.TEST_VID.canPlayType;
     }
   }]);
@@ -17639,11 +4879,11 @@ var Html5 = function (_FakeEventTarget) {
   return Html5;
 }(_fakeEventTarget2.default);
 
-Html5.EngineName = "html5";
+Html5.id = "html5";
 exports.default = Html5;
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -17653,1988 +4893,43 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_udhe4wxvj = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/engines/html5/media-source/adapters/native-adapter.js',
-      hash = 'ef61cee86cc62f12899a3d971846c72b41c66d74',
-      global = new Function('return this')(),
-      gcv = '__coverage__',
-      coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/engines/html5/media-source/adapters/native-adapter.js',
-    statementMap: {
-      '0': {
-        start: {
-          line: 54,
-          column: 22
-        },
-        end: {
-          line: 54,
-          column: 134
-        }
-      },
-      '1': {
-        start: {
-          line: 55,
-          column: 4
-        },
-        end: {
-          line: 55,
-          column: 113
-        }
-      },
-      '2': {
-        start: {
-          line: 56,
-          column: 4
-        },
-        end: {
-          line: 56,
-          column: 23
-        }
-      },
-      '3': {
-        start: {
-          line: 66,
-          column: 4
-        },
-        end: {
-          line: 66,
-          column: 52
-        }
-      },
-      '4': {
-        start: {
-          line: 67,
-          column: 4
-        },
-        end: {
-          line: 67,
-          column: 40
-        }
-      },
-      '5': {
-        start: {
-          line: 68,
-          column: 4
-        },
-        end: {
-          line: 68,
-          column: 44
-        }
-      },
-      '6': {
-        start: {
-          line: 77,
-          column: 4
-        },
-        end: {
-          line: 95,
-          column: 5
-        }
-      },
-      '7': {
-        start: {
-          line: 78,
-          column: 6
-        },
-        end: {
-          line: 94,
-          column: 9
-        }
-      },
-      '8': {
-        start: {
-          line: 80,
-          column: 8
-        },
-        end: {
-          line: 85,
-          column: 11
-        }
-      },
-      '9': {
-        start: {
-          line: 81,
-          column: 10
-        },
-        end: {
-          line: 81,
-          column: 83
-        }
-      },
-      '10': {
-        start: {
-          line: 82,
-          column: 21
-        },
-        end: {
-          line: 82,
-          column: 54
-        }
-      },
-      '11': {
-        start: {
-          line: 83,
-          column: 10
-        },
-        end: {
-          line: 83,
-          column: 81
-        }
-      },
-      '12': {
-        start: {
-          line: 84,
-          column: 10
-        },
-        end: {
-          line: 84,
-          column: 24
-        }
-      },
-      '13': {
-        start: {
-          line: 86,
-          column: 8
-        },
-        end: {
-          line: 90,
-          column: 11
-        }
-      },
-      '14': {
-        start: {
-          line: 87,
-          column: 10
-        },
-        end: {
-          line: 87,
-          column: 77
-        }
-      },
-      '15': {
-        start: {
-          line: 88,
-          column: 10
-        },
-        end: {
-          line: 88,
-          column: 45
-        }
-      },
-      '16': {
-        start: {
-          line: 89,
-          column: 10
-        },
-        end: {
-          line: 89,
-          column: 24
-        }
-      },
-      '17': {
-        start: {
-          line: 91,
-          column: 8
-        },
-        end: {
-          line: 93,
-          column: 9
-        }
-      },
-      '18': {
-        start: {
-          line: 92,
-          column: 10
-        },
-        end: {
-          line: 92,
-          column: 55
-        }
-      },
-      '19': {
-        start: {
-          line: 96,
-          column: 4
-        },
-        end: {
-          line: 96,
-          column: 29
-        }
-      },
-      '20': {
-        start: {
-          line: 105,
-          column: 4
-        },
-        end: {
-          line: 105,
-          column: 43
-        }
-      },
-      '21': {
-        start: {
-          line: 106,
-          column: 4
-        },
-        end: {
-          line: 106,
-          column: 20
-        }
-      },
-      '22': {
-        start: {
-          line: 107,
-          column: 4
-        },
-        end: {
-          line: 107,
-          column: 33
-        }
-      },
-      '23': {
-        start: {
-          line: 108,
-          column: 4
-        },
-        end: {
-          line: 108,
-          column: 29
-        }
-      },
-      '24': {
-        start: {
-          line: 118,
-          column: 22
-        },
-        end: {
-          line: 118,
-          column: 50
-        }
-      },
-      '25': {
-        start: {
-          line: 119,
-          column: 22
-        },
-        end: {
-          line: 119,
-          column: 50
-        }
-      },
-      '26': {
-        start: {
-          line: 120,
-          column: 21
-        },
-        end: {
-          line: 120,
-          column: 48
-        }
-      },
-      '27': {
-        start: {
-          line: 121,
-          column: 4
-        },
-        end: {
-          line: 121,
-          column: 62
-        }
-      },
-      '28': {
-        start: {
-          line: 131,
-          column: 22
-        },
-        end: {
-          line: 131,
-          column: 52
-        }
-      },
-      '29': {
-        start: {
-          line: 132,
-          column: 23
-        },
-        end: {
-          line: 132,
-          column: 25
-        }
-      },
-      '30': {
-        start: {
-          line: 133,
-          column: 4
-        },
-        end: {
-          line: 144,
-          column: 5
-        }
-      },
-      '31': {
-        start: {
-          line: 134,
-          column: 6
-        },
-        end: {
-          line: 143,
-          column: 7
-        }
-      },
-      '32': {
-        start: {
-          line: 135,
-          column: 23
-        },
-        end: {
-          line: 141,
-          column: 9
-        }
-      },
-      '33': {
-        start: {
-          line: 142,
-          column: 8
-        },
-        end: {
-          line: 142,
-          column: 52
-        }
-      },
-      '34': {
-        start: {
-          line: 145,
-          column: 4
-        },
-        end: {
-          line: 145,
-          column: 24
-        }
-      },
-      '35': {
-        start: {
-          line: 155,
-          column: 22
-        },
-        end: {
-          line: 155,
-          column: 52
-        }
-      },
-      '36': {
-        start: {
-          line: 156,
-          column: 23
-        },
-        end: {
-          line: 156,
-          column: 25
-        }
-      },
-      '37': {
-        start: {
-          line: 157,
-          column: 4
-        },
-        end: {
-          line: 168,
-          column: 5
-        }
-      },
-      '38': {
-        start: {
-          line: 158,
-          column: 6
-        },
-        end: {
-          line: 167,
-          column: 7
-        }
-      },
-      '39': {
-        start: {
-          line: 159,
-          column: 23
-        },
-        end: {
-          line: 165,
-          column: 9
-        }
-      },
-      '40': {
-        start: {
-          line: 166,
-          column: 8
-        },
-        end: {
-          line: 166,
-          column: 52
-        }
-      },
-      '41': {
-        start: {
-          line: 169,
-          column: 4
-        },
-        end: {
-          line: 169,
-          column: 24
-        }
-      },
-      '42': {
-        start: {
-          line: 179,
-          column: 21
-        },
-        end: {
-          line: 179,
-          column: 50
-        }
-      },
-      '43': {
-        start: {
-          line: 180,
-          column: 23
-        },
-        end: {
-          line: 180,
-          column: 25
-        }
-      },
-      '44': {
-        start: {
-          line: 181,
-          column: 4
-        },
-        end: {
-          line: 192,
-          column: 5
-        }
-      },
-      '45': {
-        start: {
-          line: 182,
-          column: 6
-        },
-        end: {
-          line: 191,
-          column: 7
-        }
-      },
-      '46': {
-        start: {
-          line: 183,
-          column: 23
-        },
-        end: {
-          line: 189,
-          column: 9
-        }
-      },
-      '47': {
-        start: {
-          line: 190,
-          column: 8
-        },
-        end: {
-          line: 190,
-          column: 51
-        }
-      },
-      '48': {
-        start: {
-          line: 193,
-          column: 4
-        },
-        end: {
-          line: 193,
-          column: 24
-        }
-      },
-      '49': {
-        start: {
-          line: 204,
-          column: 22
-        },
-        end: {
-          line: 204,
-          column: 52
-        }
-      },
-      '50': {
-        start: {
-          line: 205,
-          column: 4
-        },
-        end: {
-          line: 209,
-          column: 5
-        }
-      },
-      '51': {
-        start: {
-          line: 206,
-          column: 6
-        },
-        end: {
-          line: 206,
-          column: 33
-        }
-      },
-      '52': {
-        start: {
-          line: 207,
-          column: 6
-        },
-        end: {
-          line: 207,
-          column: 52
-        }
-      },
-      '53': {
-        start: {
-          line: 208,
-          column: 6
-        },
-        end: {
-          line: 208,
-          column: 39
-        }
-      },
-      '54': {
-        start: {
-          line: 220,
-          column: 22
-        },
-        end: {
-          line: 220,
-          column: 52
-        }
-      },
-      '55': {
-        start: {
-          line: 221,
-          column: 4
-        },
-        end: {
-          line: 225,
-          column: 5
-        }
-      },
-      '56': {
-        start: {
-          line: 222,
-          column: 6
-        },
-        end: {
-          line: 222,
-          column: 33
-        }
-      },
-      '57': {
-        start: {
-          line: 223,
-          column: 6
-        },
-        end: {
-          line: 223,
-          column: 51
-        }
-      },
-      '58': {
-        start: {
-          line: 224,
-          column: 6
-        },
-        end: {
-          line: 224,
-          column: 39
-        }
-      },
-      '59': {
-        start: {
-          line: 236,
-          column: 21
-        },
-        end: {
-          line: 236,
-          column: 50
-        }
-      },
-      '60': {
-        start: {
-          line: 237,
-          column: 4
-        },
-        end: {
-          line: 241,
-          column: 5
-        }
-      },
-      '61': {
-        start: {
-          line: 238,
-          column: 6
-        },
-        end: {
-          line: 238,
-          column: 32
-        }
-      },
-      '62': {
-        start: {
-          line: 239,
-          column: 6
-        },
-        end: {
-          line: 239,
-          column: 51
-        }
-      },
-      '63': {
-        start: {
-          line: 240,
-          column: 6
-        },
-        end: {
-          line: 240,
-          column: 38
-        }
-      },
-      '64': {
-        start: {
-          line: 251,
-          column: 4
-        },
-        end: {
-          line: 251,
-          column: 75
-        }
-      },
-      '65': {
-        start: {
-          line: 260,
-          column: 22
-        },
-        end: {
-          line: 260,
-          column: 52
-        }
-      },
-      '66': {
-        start: {
-          line: 261,
-          column: 4
-        },
-        end: {
-          line: 265,
-          column: 5
-        }
-      },
-      '67': {
-        start: {
-          line: 262,
-          column: 6
-        },
-        end: {
-          line: 264,
-          column: 7
-        }
-      },
-      '68': {
-        start: {
-          line: 263,
-          column: 8
-        },
-        end: {
-          line: 263,
-          column: 40
-        }
-      },
-      '69': {
-        start: {
-          line: 274,
-          column: 22
-        },
-        end: {
-          line: 274,
-          column: 52
-        }
-      },
-      '70': {
-        start: {
-          line: 275,
-          column: 4
-        },
-        end: {
-          line: 279,
-          column: 5
-        }
-      },
-      '71': {
-        start: {
-          line: 276,
-          column: 6
-        },
-        end: {
-          line: 278,
-          column: 7
-        }
-      },
-      '72': {
-        start: {
-          line: 277,
-          column: 8
-        },
-        end: {
-          line: 277,
-          column: 39
-        }
-      },
-      '73': {
-        start: {
-          line: 288,
-          column: 21
-        },
-        end: {
-          line: 288,
-          column: 50
-        }
-      },
-      '74': {
-        start: {
-          line: 289,
-          column: 4
-        },
-        end: {
-          line: 293,
-          column: 5
-        }
-      },
-      '75': {
-        start: {
-          line: 290,
-          column: 6
-        },
-        end: {
-          line: 292,
-          column: 7
-        }
-      },
-      '76': {
-        start: {
-          line: 291,
-          column: 8
-        },
-        end: {
-          line: 291,
-          column: 40
-        }
-      },
-      '77': {
-        start: {
-          line: 302,
-          column: 4
-        },
-        end: {
-          line: 302,
-          column: 34
-        }
-      }
-    },
-    fnMap: {
-      '0': {
-        name: '(anonymous_0)',
-        decl: {
-          start: {
-            line: 53,
-            column: 2
-          },
-          end: {
-            line: 53,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 53,
-            column: 48
-          },
-          end: {
-            line: 57,
-            column: 3
-          }
-        },
-        line: 53
-      },
-      '1': {
-        name: '(anonymous_1)',
-        decl: {
-          start: {
-            line: 65,
-            column: 2
-          },
-          end: {
-            line: 65,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 65,
-            column: 78
-          },
-          end: {
-            line: 69,
-            column: 3
-          }
-        },
-        line: 65
-      },
-      '2': {
-        name: '(anonymous_2)',
-        decl: {
-          start: {
-            line: 76,
-            column: 2
-          },
-          end: {
-            line: 76,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 76,
-            column: 26
-          },
-          end: {
-            line: 97,
-            column: 3
-          }
-        },
-        line: 76
-      },
-      '3': {
-        name: '(anonymous_3)',
-        decl: {
-          start: {
-            line: 78,
-            column: 38
-          },
-          end: {
-            line: 78,
-            column: 39
-          }
-        },
-        loc: {
-          start: {
-            line: 78,
-            column: 59
-          },
-          end: {
-            line: 94,
-            column: 7
-          }
-        },
-        line: 78
-      },
-      '4': {
-        name: '(anonymous_4)',
-        decl: {
-          start: {
-            line: 80,
-            column: 79
-          },
-          end: {
-            line: 80,
-            column: 80
-          }
-        },
-        loc: {
-          start: {
-            line: 80,
-            column: 85
-          },
-          end: {
-            line: 85,
-            column: 9
-          }
-        },
-        line: 80
-      },
-      '5': {
-        name: '(anonymous_5)',
-        decl: {
-          start: {
-            line: 86,
-            column: 73
-          },
-          end: {
-            line: 86,
-            column: 74
-          }
-        },
-        loc: {
-          start: {
-            line: 86,
-            column: 84
-          },
-          end: {
-            line: 90,
-            column: 9
-          }
-        },
-        line: 86
-      },
-      '6': {
-        name: '(anonymous_6)',
-        decl: {
-          start: {
-            line: 104,
-            column: 2
-          },
-          end: {
-            line: 104,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 104,
-            column: 18
-          },
-          end: {
-            line: 109,
-            column: 3
-          }
-        },
-        line: 104
-      },
-      '7': {
-        name: '(anonymous_7)',
-        decl: {
-          start: {
-            line: 117,
-            column: 2
-          },
-          end: {
-            line: 117,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 117,
-            column: 35
-          },
-          end: {
-            line: 122,
-            column: 3
-          }
-        },
-        line: 117
-      },
-      '8': {
-        name: '(anonymous_8)',
-        decl: {
-          start: {
-            line: 130,
-            column: 2
-          },
-          end: {
-            line: 130,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 130,
-            column: 40
-          },
-          end: {
-            line: 146,
-            column: 3
-          }
-        },
-        line: 130
-      },
-      '9': {
-        name: '(anonymous_9)',
-        decl: {
-          start: {
-            line: 154,
-            column: 2
-          },
-          end: {
-            line: 154,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 154,
-            column: 40
-          },
-          end: {
-            line: 170,
-            column: 3
-          }
-        },
-        line: 154
-      },
-      '10': {
-        name: '(anonymous_10)',
-        decl: {
-          start: {
-            line: 178,
-            column: 2
-          },
-          end: {
-            line: 178,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 178,
-            column: 39
-          },
-          end: {
-            line: 194,
-            column: 3
-          }
-        },
-        line: 178
-      },
-      '11': {
-        name: '(anonymous_11)',
-        decl: {
-          start: {
-            line: 203,
-            column: 2
-          },
-          end: {
-            line: 203,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 203,
-            column: 49
-          },
-          end: {
-            line: 210,
-            column: 3
-          }
-        },
-        line: 203
-      },
-      '12': {
-        name: '(anonymous_12)',
-        decl: {
-          start: {
-            line: 219,
-            column: 2
-          },
-          end: {
-            line: 219,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 219,
-            column: 49
-          },
-          end: {
-            line: 226,
-            column: 3
-          }
-        },
-        line: 219
-      },
-      '13': {
-        name: '(anonymous_13)',
-        decl: {
-          start: {
-            line: 235,
-            column: 2
-          },
-          end: {
-            line: 235,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 235,
-            column: 46
-          },
-          end: {
-            line: 242,
-            column: 3
-          }
-        },
-        line: 235
-      },
-      '14': {
-        name: '(anonymous_14)',
-        decl: {
-          start: {
-            line: 250,
-            column: 2
-          },
-          end: {
-            line: 250,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 250,
-            column: 32
-          },
-          end: {
-            line: 252,
-            column: 3
-          }
-        },
-        line: 250
-      },
-      '15': {
-        name: '(anonymous_15)',
-        decl: {
-          start: {
-            line: 259,
-            column: 2
-          },
-          end: {
-            line: 259,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 259,
-            column: 30
-          },
-          end: {
-            line: 266,
-            column: 3
-          }
-        },
-        line: 259
-      },
-      '16': {
-        name: '(anonymous_16)',
-        decl: {
-          start: {
-            line: 273,
-            column: 2
-          },
-          end: {
-            line: 273,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 273,
-            column: 30
-          },
-          end: {
-            line: 280,
-            column: 3
-          }
-        },
-        line: 273
-      },
-      '17': {
-        name: '(anonymous_17)',
-        decl: {
-          start: {
-            line: 287,
-            column: 2
-          },
-          end: {
-            line: 287,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 287,
-            column: 29
-          },
-          end: {
-            line: 294,
-            column: 3
-          }
-        },
-        line: 287
-      },
-      '18': {
-        name: '(anonymous_18)',
-        decl: {
-          start: {
-            line: 301,
-            column: 2
-          },
-          end: {
-            line: 301,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 301,
-            column: 20
-          },
-          end: {
-            line: 303,
-            column: 3
-          }
-        },
-        line: 301
-      }
-    },
-    branchMap: {
-      '0': {
-        loc: {
-          start: {
-            line: 54,
-            column: 22
-          },
-          end: {
-            line: 54,
-            column: 134
-          }
-        },
-        type: 'cond-expr',
-        locations: [{
-          start: {
-            line: 54,
-            column: 55
-          },
-          end: {
-            line: 54,
-            column: 126
-          }
-        }, {
-          start: {
-            line: 54,
-            column: 129
-          },
-          end: {
-            line: 54,
-            column: 134
-          }
-        }],
-        line: 54
-      },
-      '1': {
-        loc: {
-          start: {
-            line: 77,
-            column: 4
-          },
-          end: {
-            line: 95,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 77,
-            column: 4
-          },
-          end: {
-            line: 95,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 77,
-            column: 4
-          },
-          end: {
-            line: 95,
-            column: 5
-          }
-        }],
-        line: 77
-      },
-      '2': {
-        loc: {
-          start: {
-            line: 91,
-            column: 8
-          },
-          end: {
-            line: 93,
-            column: 9
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 91,
-            column: 8
-          },
-          end: {
-            line: 93,
-            column: 9
-          }
-        }, {
-          start: {
-            line: 91,
-            column: 8
-          },
-          end: {
-            line: 93,
-            column: 9
-          }
-        }],
-        line: 91
-      },
-      '3': {
-        loc: {
-          start: {
-            line: 91,
-            column: 12
-          },
-          end: {
-            line: 91,
-            column: 50
-          }
-        },
-        type: 'binary-expr',
-        locations: [{
-          start: {
-            line: 91,
-            column: 12
-          },
-          end: {
-            line: 91,
-            column: 27
-          }
-        }, {
-          start: {
-            line: 91,
-            column: 31
-          },
-          end: {
-            line: 91,
-            column: 50
-          }
-        }],
-        line: 91
-      },
-      '4': {
-        loc: {
-          start: {
-            line: 133,
-            column: 4
-          },
-          end: {
-            line: 144,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 133,
-            column: 4
-          },
-          end: {
-            line: 144,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 133,
-            column: 4
-          },
-          end: {
-            line: 144,
-            column: 5
-          }
-        }],
-        line: 133
-      },
-      '5': {
-        loc: {
-          start: {
-            line: 157,
-            column: 4
-          },
-          end: {
-            line: 168,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 157,
-            column: 4
-          },
-          end: {
-            line: 168,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 157,
-            column: 4
-          },
-          end: {
-            line: 168,
-            column: 5
-          }
-        }],
-        line: 157
-      },
-      '6': {
-        loc: {
-          start: {
-            line: 181,
-            column: 4
-          },
-          end: {
-            line: 192,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 181,
-            column: 4
-          },
-          end: {
-            line: 192,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 181,
-            column: 4
-          },
-          end: {
-            line: 192,
-            column: 5
-          }
-        }],
-        line: 181
-      },
-      '7': {
-        loc: {
-          start: {
-            line: 205,
-            column: 4
-          },
-          end: {
-            line: 209,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 205,
-            column: 4
-          },
-          end: {
-            line: 209,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 205,
-            column: 4
-          },
-          end: {
-            line: 209,
-            column: 5
-          }
-        }],
-        line: 205
-      },
-      '8': {
-        loc: {
-          start: {
-            line: 205,
-            column: 8
-          },
-          end: {
-            line: 205,
-            column: 90
-          }
-        },
-        type: 'binary-expr',
-        locations: [{
-          start: {
-            line: 205,
-            column: 9
-          },
-          end: {
-            line: 205,
-            column: 41
-          }
-        }, {
-          start: {
-            line: 205,
-            column: 46
-          },
-          end: {
-            line: 205,
-            column: 57
-          }
-        }, {
-          start: {
-            line: 205,
-            column: 61
-          },
-          end: {
-            line: 205,
-            column: 90
-          }
-        }],
-        line: 205
-      },
-      '9': {
-        loc: {
-          start: {
-            line: 221,
-            column: 4
-          },
-          end: {
-            line: 225,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 221,
-            column: 4
-          },
-          end: {
-            line: 225,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 221,
-            column: 4
-          },
-          end: {
-            line: 225,
-            column: 5
-          }
-        }],
-        line: 221
-      },
-      '10': {
-        loc: {
-          start: {
-            line: 221,
-            column: 8
-          },
-          end: {
-            line: 221,
-            column: 90
-          }
-        },
-        type: 'binary-expr',
-        locations: [{
-          start: {
-            line: 221,
-            column: 9
-          },
-          end: {
-            line: 221,
-            column: 41
-          }
-        }, {
-          start: {
-            line: 221,
-            column: 46
-          },
-          end: {
-            line: 221,
-            column: 57
-          }
-        }, {
-          start: {
-            line: 221,
-            column: 61
-          },
-          end: {
-            line: 221,
-            column: 90
-          }
-        }],
-        line: 221
-      },
-      '11': {
-        loc: {
-          start: {
-            line: 237,
-            column: 4
-          },
-          end: {
-            line: 241,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 237,
-            column: 4
-          },
-          end: {
-            line: 241,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 237,
-            column: 4
-          },
-          end: {
-            line: 241,
-            column: 5
-          }
-        }],
-        line: 237
-      },
-      '12': {
-        loc: {
-          start: {
-            line: 237,
-            column: 8
-          },
-          end: {
-            line: 237,
-            column: 154
-          }
-        },
-        type: 'binary-expr',
-        locations: [{
-          start: {
-            line: 237,
-            column: 9
-          },
-          end: {
-            line: 237,
-            column: 39
-          }
-        }, {
-          start: {
-            line: 237,
-            column: 45
-          },
-          end: {
-            line: 237,
-            column: 75
-          }
-        }, {
-          start: {
-            line: 237,
-            column: 79
-          },
-          end: {
-            line: 237,
-            column: 108
-          }
-        }, {
-          start: {
-            line: 237,
-            column: 113
-          },
-          end: {
-            line: 237,
-            column: 123
-          }
-        }, {
-          start: {
-            line: 237,
-            column: 127
-          },
-          end: {
-            line: 237,
-            column: 154
-          }
-        }],
-        line: 237
-      },
-      '13': {
-        loc: {
-          start: {
-            line: 261,
-            column: 4
-          },
-          end: {
-            line: 265,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 261,
-            column: 4
-          },
-          end: {
-            line: 265,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 261,
-            column: 4
-          },
-          end: {
-            line: 265,
-            column: 5
-          }
-        }],
-        line: 261
-      },
-      '14': {
-        loc: {
-          start: {
-            line: 275,
-            column: 4
-          },
-          end: {
-            line: 279,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 275,
-            column: 4
-          },
-          end: {
-            line: 279,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 275,
-            column: 4
-          },
-          end: {
-            line: 279,
-            column: 5
-          }
-        }],
-        line: 275
-      },
-      '15': {
-        loc: {
-          start: {
-            line: 289,
-            column: 4
-          },
-          end: {
-            line: 293,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 289,
-            column: 4
-          },
-          end: {
-            line: 293,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 289,
-            column: 4
-          },
-          end: {
-            line: 293,
-            column: 5
-          }
-        }],
-        line: 289
-      }
-    },
-    s: {
-      '0': 0,
-      '1': 0,
-      '2': 0,
-      '3': 0,
-      '4': 0,
-      '5': 0,
-      '6': 0,
-      '7': 0,
-      '8': 0,
-      '9': 0,
-      '10': 0,
-      '11': 0,
-      '12': 0,
-      '13': 0,
-      '14': 0,
-      '15': 0,
-      '16': 0,
-      '17': 0,
-      '18': 0,
-      '19': 0,
-      '20': 0,
-      '21': 0,
-      '22': 0,
-      '23': 0,
-      '24': 0,
-      '25': 0,
-      '26': 0,
-      '27': 0,
-      '28': 0,
-      '29': 0,
-      '30': 0,
-      '31': 0,
-      '32': 0,
-      '33': 0,
-      '34': 0,
-      '35': 0,
-      '36': 0,
-      '37': 0,
-      '38': 0,
-      '39': 0,
-      '40': 0,
-      '41': 0,
-      '42': 0,
-      '43': 0,
-      '44': 0,
-      '45': 0,
-      '46': 0,
-      '47': 0,
-      '48': 0,
-      '49': 0,
-      '50': 0,
-      '51': 0,
-      '52': 0,
-      '53': 0,
-      '54': 0,
-      '55': 0,
-      '56': 0,
-      '57': 0,
-      '58': 0,
-      '59': 0,
-      '60': 0,
-      '61': 0,
-      '62': 0,
-      '63': 0,
-      '64': 0,
-      '65': 0,
-      '66': 0,
-      '67': 0,
-      '68': 0,
-      '69': 0,
-      '70': 0,
-      '71': 0,
-      '72': 0,
-      '73': 0,
-      '74': 0,
-      '75': 0,
-      '76': 0,
-      '77': 0
-    },
-    f: {
-      '0': 0,
-      '1': 0,
-      '2': 0,
-      '3': 0,
-      '4': 0,
-      '5': 0,
-      '6': 0,
-      '7': 0,
-      '8': 0,
-      '9': 0,
-      '10': 0,
-      '11': 0,
-      '12': 0,
-      '13': 0,
-      '14': 0,
-      '15': 0,
-      '16': 0,
-      '17': 0,
-      '18': 0
-    },
-    b: {
-      '0': [0, 0],
-      '1': [0, 0],
-      '2': [0, 0],
-      '3': [0, 0],
-      '4': [0, 0],
-      '5': [0, 0],
-      '6': [0, 0],
-      '7': [0, 0],
-      '8': [0, 0, 0],
-      '9': [0, 0],
-      '10': [0, 0, 0],
-      '11': [0, 0],
-      '12': [0, 0, 0, 0, 0],
-      '13': [0, 0],
-      '14': [0, 0],
-      '15': [0, 0]
-    },
-    _coverageSchema: '332fd63041d2c1bcb487cc26dd0d5f7d97098a6c'
-  },
-      coverage = global[gcv] || (global[gcv] = {});
-
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
-  }
-
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
-}();
-
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _eventManager = __webpack_require__(6);
+var _eventManager = __webpack_require__(7);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _events = __webpack_require__(7);
+var _events = __webpack_require__(8);
 
-var _track = __webpack_require__(0);
+var _track = __webpack_require__(1);
 
 var _track2 = _interopRequireDefault(_track);
 
-var _videoTrack = __webpack_require__(5);
+var _videoTrack = __webpack_require__(6);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(3);
+var _audioTrack = __webpack_require__(4);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(4);
+var _textTrack = __webpack_require__(5);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _baseMediaSourceAdapter = __webpack_require__(12);
+var _baseMediaSourceAdapter = __webpack_require__(15);
 
 var _baseMediaSourceAdapter2 = _interopRequireDefault(_baseMediaSourceAdapter);
+
+var _resolution = __webpack_require__(28);
+
+var _util = __webpack_require__(3);
+
+var Utils = _interopRequireWildcard(_util);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19679,26 +4974,31 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      */
 
     /**
+     * The original progressive sources
+     * @member {Array<Object>} - _progressiveSources
+     * @private
+     */
+
+    /**
      * The id of the Adapter
      * @member {string} id
      * @static
      * @public
      */
     value: function canPlayType(mimeType) {
-      ++cov_udhe4wxvj.f[0];
-
-      var canPlayType = (++cov_udhe4wxvj.s[0], typeof mimeType === 'string' ? (++cov_udhe4wxvj.b[0][0], !!document.createElement("video").canPlayType(mimeType.toLowerCase())) : (++cov_udhe4wxvj.b[0][1], false));
-      ++cov_udhe4wxvj.s[1];
+      var canPlayType = typeof mimeType === 'string' ? !!Utils.Dom.createElement("video").canPlayType(mimeType.toLowerCase()) : false;
       NativeAdapter._logger.debug('canPlayType result for mimeType:' + mimeType + ' is ' + canPlayType.toString());
-      ++cov_udhe4wxvj.s[2];
       return canPlayType;
     }
 
     /**
-     * @constructor
-     * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
-     * @param {Source} source - The source object
-     * @param {Object} config - The media source adapter configuration
+     * Factory method to create media source adapter.
+     * @function createAdapter
+     * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with.
+     * @param {Object} source - The source Object.
+     * @param {Object} config - The player configuration.
+     * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter.
+     * @static
      */
 
 
@@ -19709,85 +5009,101 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      * @static
      */
 
+  }, {
+    key: 'createAdapter',
+    value: function createAdapter(videoElement, source, config) {
+      return new this(videoElement, source, config);
+    }
+
+    /**
+     * @constructor
+     * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
+     * @param {Source} source - The source object
+     * @param {Object} config - The player configuration
+     */
+
   }]);
 
   function NativeAdapter(videoElement, source, config) {
     _classCallCheck(this, NativeAdapter);
 
-    ++cov_udhe4wxvj.f[1];
-    ++cov_udhe4wxvj.s[3];
-
     NativeAdapter._logger.debug('Creating adapter');
-    ++cov_udhe4wxvj.s[4];
 
-    var _this = _possibleConstructorReturn(this, (NativeAdapter.__proto__ || Object.getPrototypeOf(NativeAdapter)).call(this, videoElement, source, config));
-
-    ++cov_udhe4wxvj.s[5];
+    var _this = _possibleConstructorReturn(this, (NativeAdapter.__proto__ || Object.getPrototypeOf(NativeAdapter)).call(this, videoElement, source));
 
     _this._eventManager = new _eventManager2.default();
+    _this._progressiveSources = config.sources.progressive;
     return _this;
   }
 
   /**
-   * Load the video source
-   * @function load
-   * @returns {Promise<Object>} - The loaded data
+   * Set the suitable progressive source according the current resolution
+   * @function _setProgressiveSource
+   * @returns {void}
+   * @private
    */
 
 
   _createClass(NativeAdapter, [{
+    key: '_setProgressiveSource',
+    value: function _setProgressiveSource() {
+      var suitableTrack = (0, _resolution.getSuitableSourceForResolution)(this._progressiveSources, this._videoElement.offsetWidth, this._videoElement.offsetHeight);
+      if (suitableTrack) {
+        this._sourceObj = suitableTrack;
+      }
+    }
+
+    /**
+     * Checks if the playback source is progressive
+     * @function _isProgressivePlayback
+     * @returns {boolean} - is progressive source
+     * @private
+     */
+
+  }, {
+    key: '_isProgressivePlayback',
+    value: function _isProgressivePlayback() {
+      return this._sourceObj ? this._sourceObj.mimetype === 'video/mp4' : false;
+    }
+
+    /**
+     * Load the video source
+     * @param {number} startTime - Optional time to start the video from.
+     * @function load
+     * @returns {Promise<Object>} - The loaded data
+     */
+
+  }, {
     key: 'load',
-    value: function load() {
+    value: function load(startTime) {
       var _this2 = this;
 
-      ++cov_udhe4wxvj.f[2];
-      ++cov_udhe4wxvj.s[6];
-
       if (!this._loadPromise) {
-        ++cov_udhe4wxvj.b[1][0];
-        ++cov_udhe4wxvj.s[7];
-
         this._loadPromise = new Promise(function (resolve, reject) {
-          ++cov_udhe4wxvj.f[3];
-          ++cov_udhe4wxvj.s[8];
-
           // We're using 'loadeddata' event for native hls (on 'loadedmetadata' native hls doesn't have tracks yet).
           _this2._eventManager.listen(_this2._videoElement, _events.HTML5_EVENTS.LOADED_DATA, function () {
-            ++cov_udhe4wxvj.f[4];
-            ++cov_udhe4wxvj.s[9];
-
             _this2._eventManager.unlisten(_this2._videoElement, _events.HTML5_EVENTS.LOADED_DATA);
-            var data = (++cov_udhe4wxvj.s[10], { tracks: _this2._getParsedTracks() });
-            ++cov_udhe4wxvj.s[11];
+            var data = { tracks: _this2._getParsedTracks() };
             NativeAdapter._logger.debug('The source has been loaded successfully');
-            ++cov_udhe4wxvj.s[12];
             resolve(data);
           });
-          ++cov_udhe4wxvj.s[13];
           _this2._eventManager.listen(_this2._videoElement, _events.HTML5_EVENTS.ERROR, function (error) {
-            ++cov_udhe4wxvj.f[5];
-            ++cov_udhe4wxvj.s[14];
-
             _this2._eventManager.unlisten(_this2._videoElement, _events.HTML5_EVENTS.ERROR);
-            ++cov_udhe4wxvj.s[15];
             NativeAdapter._logger.error(error);
-            ++cov_udhe4wxvj.s[16];
             reject(error);
           });
-          ++cov_udhe4wxvj.s[17];
-          if ((++cov_udhe4wxvj.b[3][0], _this2._sourceObj) && (++cov_udhe4wxvj.b[3][1], _this2._sourceObj.url)) {
-            ++cov_udhe4wxvj.b[2][0];
-            ++cov_udhe4wxvj.s[18];
-
+          if (_this2._isProgressivePlayback()) {
+            _this2._setProgressiveSource();
+          }
+          if (_this2._sourceObj && _this2._sourceObj.url) {
             _this2._videoElement.src = _this2._sourceObj.url;
-          } else {
-            ++cov_udhe4wxvj.b[2][1];
+            _this2._trigger(_baseMediaSourceAdapter2.default.CustomEvents.ABR_MODE_CHANGED, { mode: _this2._isProgressivePlayback() ? 'manual' : 'auto' });
+          }
+          if (startTime) {
+            _this2._videoElement.currentTime = startTime;
           }
         });
-      } else {
-        ++cov_udhe4wxvj.b[1][1];
       }
-      ++cov_udhe4wxvj.s[19];
       return this._loadPromise;
     }
 
@@ -19800,16 +5116,11 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: 'destroy',
     value: function destroy() {
-      ++cov_udhe4wxvj.f[6];
-      ++cov_udhe4wxvj.s[20];
-
       NativeAdapter._logger.debug('destroy');
-      ++cov_udhe4wxvj.s[21];
       _get(NativeAdapter.prototype.__proto__ || Object.getPrototypeOf(NativeAdapter.prototype), 'destroy', this).call(this);
-      ++cov_udhe4wxvj.s[22];
       this._eventManager.destroy();
-      ++cov_udhe4wxvj.s[23];
       this._loadPromise = null;
+      this._progressiveSources = [];
     }
 
     /**
@@ -19822,12 +5133,9 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_getParsedTracks',
     value: function _getParsedTracks() {
-      ++cov_udhe4wxvj.f[7];
-
-      var videoTracks = (++cov_udhe4wxvj.s[24], this._getParsedVideoTracks());
-      var audioTracks = (++cov_udhe4wxvj.s[25], this._getParsedAudioTracks());
-      var textTracks = (++cov_udhe4wxvj.s[26], this._getParsedTextTracks());
-      ++cov_udhe4wxvj.s[27];
+      var videoTracks = this._getParsedVideoTracks();
+      var audioTracks = this._getParsedAudioTracks();
+      var textTracks = this._getParsedTextTracks();
       return videoTracks.concat(audioTracks).concat(textTracks);
     }
 
@@ -19841,30 +5149,67 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_getParsedVideoTracks',
     value: function _getParsedVideoTracks() {
-      ++cov_udhe4wxvj.f[8];
+      if (this._isProgressivePlayback()) {
+        return this._getParsedProgressiveVideoTracks();
+      } else {
+        return this._getParsedAdaptiveVideoTracks();
+      }
+    }
 
-      var videoTracks = (++cov_udhe4wxvj.s[28], this._videoElement.videoTracks);
-      var parsedTracks = (++cov_udhe4wxvj.s[29], []);
-      ++cov_udhe4wxvj.s[30];
+    /**
+     * Get the parsed progressive video tracks
+     * @function _getParsedProgressiveVideoTracks
+     * @returns {Array<Track>} - The parsed progressive video tracks
+     * @private
+     */
+
+  }, {
+    key: '_getParsedProgressiveVideoTracks',
+    value: function _getParsedProgressiveVideoTracks() {
+      var videoTracks = this._progressiveSources;
+      var parsedTracks = [];
       if (videoTracks) {
-        ++cov_udhe4wxvj.b[4][0];
-        ++cov_udhe4wxvj.s[31];
-
         for (var i = 0; i < videoTracks.length; i++) {
-          var settings = (++cov_udhe4wxvj.s[32], {
+          var settings = {
+            id: videoTracks[i].id,
+            bandwidth: videoTracks[i].bandwidth,
+            width: videoTracks[i].width,
+            height: videoTracks[i].height,
+            active: this._sourceObj ? videoTracks[i].id === this._sourceObj.id : false,
+            index: i
+          };
+          parsedTracks.push(new _videoTrack2.default(settings));
+        }
+      }
+      return parsedTracks;
+    }
+
+    /**
+     * Get the parsed adaptive video tracks
+     * @function _getParsedAdaptiveVideoTracks
+     * @returns {Array<Track>} - The parsed adaptive video tracks
+     * @private
+     */
+
+  }, {
+    key: '_getParsedAdaptiveVideoTracks',
+    value: function _getParsedAdaptiveVideoTracks() {
+      //TODO check adaptation in safari hls
+      var videoTracks = this._videoElement.videoTracks;
+      var parsedTracks = [];
+      if (videoTracks) {
+        for (var i = 0; i < videoTracks.length; i++) {
+          var settings = {
+            //TODO calculate width/height/bandwidth
             id: videoTracks[i].id,
             active: videoTracks[i].selected,
             label: videoTracks[i].label,
             language: videoTracks[i].language,
             index: i
-          });
-          ++cov_udhe4wxvj.s[33];
+          };
           parsedTracks.push(new _videoTrack2.default(settings));
         }
-      } else {
-        ++cov_udhe4wxvj.b[4][1];
       }
-      ++cov_udhe4wxvj.s[34];
       return parsedTracks;
     }
 
@@ -19878,30 +5223,20 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_getParsedAudioTracks',
     value: function _getParsedAudioTracks() {
-      ++cov_udhe4wxvj.f[9];
-
-      var audioTracks = (++cov_udhe4wxvj.s[35], this._videoElement.audioTracks);
-      var parsedTracks = (++cov_udhe4wxvj.s[36], []);
-      ++cov_udhe4wxvj.s[37];
+      var audioTracks = this._videoElement.audioTracks;
+      var parsedTracks = [];
       if (audioTracks) {
-        ++cov_udhe4wxvj.b[5][0];
-        ++cov_udhe4wxvj.s[38];
-
         for (var i = 0; i < audioTracks.length; i++) {
-          var settings = (++cov_udhe4wxvj.s[39], {
+          var settings = {
             id: audioTracks[i].id,
             active: audioTracks[i].enabled,
             label: audioTracks[i].label,
             language: audioTracks[i].language,
             index: i
-          });
-          ++cov_udhe4wxvj.s[40];
+          };
           parsedTracks.push(new _audioTrack2.default(settings));
         }
-      } else {
-        ++cov_udhe4wxvj.b[5][1];
       }
-      ++cov_udhe4wxvj.s[41];
       return parsedTracks;
     }
 
@@ -19915,30 +5250,20 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_getParsedTextTracks',
     value: function _getParsedTextTracks() {
-      ++cov_udhe4wxvj.f[10];
-
-      var textTracks = (++cov_udhe4wxvj.s[42], this._videoElement.textTracks);
-      var parsedTracks = (++cov_udhe4wxvj.s[43], []);
-      ++cov_udhe4wxvj.s[44];
+      var textTracks = this._videoElement.textTracks;
+      var parsedTracks = [];
       if (textTracks) {
-        ++cov_udhe4wxvj.b[6][0];
-        ++cov_udhe4wxvj.s[45];
-
         for (var i = 0; i < textTracks.length; i++) {
-          var settings = (++cov_udhe4wxvj.s[46], {
+          var settings = {
             kind: textTracks[i].kind,
             active: textTracks[i].mode === 'showing',
             label: textTracks[i].label,
             language: textTracks[i].language,
             index: i
-          });
-          ++cov_udhe4wxvj.s[47];
+          };
           parsedTracks.push(new _textTrack2.default(settings));
         }
-      } else {
-        ++cov_udhe4wxvj.b[6][1];
       }
-      ++cov_udhe4wxvj.s[48];
       return parsedTracks;
     }
 
@@ -19953,21 +5278,60 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: 'selectVideoTrack',
     value: function selectVideoTrack(videoTrack) {
-      ++cov_udhe4wxvj.f[11];
-
-      var videoTracks = (++cov_udhe4wxvj.s[49], this._videoElement.videoTracks);
-      ++cov_udhe4wxvj.s[50];
-      if ((++cov_udhe4wxvj.b[8][0], videoTrack instanceof _videoTrack2.default) && (++cov_udhe4wxvj.b[8][1], videoTracks) && (++cov_udhe4wxvj.b[8][2], videoTracks[videoTrack.index])) {
-        ++cov_udhe4wxvj.b[7][0];
-        ++cov_udhe4wxvj.s[51];
-
-        this._disableVideoTracks();
-        ++cov_udhe4wxvj.s[52];
-        videoTracks[videoTrack.index].selected = true;
-        ++cov_udhe4wxvj.s[53];
-        this._onTrackChanged(videoTrack);
+      if (this._isProgressivePlayback()) {
+        this._selectProgressiveVideoTrack(videoTrack);
       } else {
-        ++cov_udhe4wxvj.b[7][1];
+        this.selectAdaptiveVideoTrack(videoTrack);
+      }
+    }
+
+    /**
+     * Select a progressive video track
+     * @function _selectProgressiveVideoTrack
+     * @param {VideoTrack} videoTrack - the track to select
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: '_selectProgressiveVideoTrack',
+    value: function _selectProgressiveVideoTrack(videoTrack) {
+      var _this3 = this;
+
+      var videoTracks = this._progressiveSources;
+      if (videoTrack instanceof _videoTrack2.default && videoTracks && videoTracks[videoTrack.index]) {
+        var currentTime = this._videoElement.currentTime;
+        var paused = this._videoElement.paused;
+        this._sourceObj = videoTracks[videoTrack.index];
+        this._eventManager.listen(this._videoElement, _events.HTML5_EVENTS.LOADED_DATA, function () {
+          _this3._eventManager.unlisten(_this3._videoElement, _events.HTML5_EVENTS.LOADED_DATA);
+          _this3._eventManager.listen(_this3._videoElement, _events.HTML5_EVENTS.SEEKED, function () {
+            _this3._eventManager.unlisten(_this3._videoElement, _events.HTML5_EVENTS.SEEKED);
+            _this3._onTrackChanged(videoTrack);
+          });
+          _this3._videoElement.currentTime = currentTime;
+        });
+        this._videoElement.src = this._sourceObj ? this._sourceObj.url : "";
+        paused ? this._videoElement.load() : this._videoElement.play();
+      }
+    }
+
+    /**
+     * Select a native video track
+     * @function selectAdaptiveVideoTrack
+     * @param {VideoTrack} videoTrack - the track to select
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: 'selectAdaptiveVideoTrack',
+    value: function selectAdaptiveVideoTrack(videoTrack) {
+      var videoTracks = this._videoElement.videoTracks;
+      if (videoTrack instanceof _videoTrack2.default && videoTracks && videoTracks[videoTrack.index]) {
+        this._disableVideoTracks();
+        videoTracks[videoTrack.index].selected = true;
+        this._onTrackChanged(videoTrack);
       }
     }
 
@@ -19982,21 +5346,11 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: 'selectAudioTrack',
     value: function selectAudioTrack(audioTrack) {
-      ++cov_udhe4wxvj.f[12];
-
-      var audioTracks = (++cov_udhe4wxvj.s[54], this._videoElement.audioTracks);
-      ++cov_udhe4wxvj.s[55];
-      if ((++cov_udhe4wxvj.b[10][0], audioTrack instanceof _audioTrack2.default) && (++cov_udhe4wxvj.b[10][1], audioTracks) && (++cov_udhe4wxvj.b[10][2], audioTracks[audioTrack.index])) {
-        ++cov_udhe4wxvj.b[9][0];
-        ++cov_udhe4wxvj.s[56];
-
+      var audioTracks = this._videoElement.audioTracks;
+      if (audioTrack instanceof _audioTrack2.default && audioTracks && audioTracks[audioTrack.index]) {
         this._disableAudioTracks();
-        ++cov_udhe4wxvj.s[57];
         audioTracks[audioTrack.index].enabled = true;
-        ++cov_udhe4wxvj.s[58];
         this._onTrackChanged(audioTrack);
-      } else {
-        ++cov_udhe4wxvj.b[9][1];
       }
     }
 
@@ -20011,22 +5365,25 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: 'selectTextTrack',
     value: function selectTextTrack(textTrack) {
-      ++cov_udhe4wxvj.f[13];
-
-      var textTracks = (++cov_udhe4wxvj.s[59], this._videoElement.textTracks);
-      ++cov_udhe4wxvj.s[60];
-      if ((++cov_udhe4wxvj.b[12][0], textTrack instanceof _textTrack2.default) && ((++cov_udhe4wxvj.b[12][1], textTrack.kind === 'subtitles') || (++cov_udhe4wxvj.b[12][2], textTrack.kind === 'captions')) && (++cov_udhe4wxvj.b[12][3], textTracks) && (++cov_udhe4wxvj.b[12][4], textTracks[textTrack.index])) {
-        ++cov_udhe4wxvj.b[11][0];
-        ++cov_udhe4wxvj.s[61];
-
+      var textTracks = this._videoElement.textTracks;
+      if (textTrack instanceof _textTrack2.default && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
         this._disableTextTracks();
-        ++cov_udhe4wxvj.s[62];
         textTracks[textTrack.index].mode = 'showing';
-        ++cov_udhe4wxvj.s[63];
         this._onTrackChanged(textTrack);
-      } else {
-        ++cov_udhe4wxvj.b[11][1];
       }
+    }
+
+    /**
+     * Hide the text track
+     * @function hideTextTrack
+     * @returns {void}
+     * @public
+     */
+
+  }, {
+    key: 'hideTextTrack',
+    value: function hideTextTrack() {
+      this._disableTextTracks();
     }
 
     /**
@@ -20039,10 +5396,22 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: 'enableAdaptiveBitrate',
     value: function enableAdaptiveBitrate() {
-      ++cov_udhe4wxvj.f[14];
-      ++cov_udhe4wxvj.s[64];
+      NativeAdapter._logger.warn('Enabling adaptive bitrate is not supported for native playback');
+    }
 
-      NativeAdapter._logger.debug('Enabling adaptive bitrate not supported');
+    /**
+     * Checking if adaptive bitrate switching is enabled.
+     * For progressive playback will always returns false.
+     * For adaptive playback will always returns true.
+     * @function isAdaptiveBitrateEnabled
+     * @returns {boolean} - Whether adaptive bitrate is enabled.
+     * @public
+     */
+
+  }, {
+    key: 'isAdaptiveBitrateEnabled',
+    value: function isAdaptiveBitrateEnabled() {
+      return !this._isProgressivePlayback();
     }
 
     /**
@@ -20054,21 +5423,11 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_disableVideoTracks',
     value: function _disableVideoTracks() {
-      ++cov_udhe4wxvj.f[15];
-
-      var videoTracks = (++cov_udhe4wxvj.s[65], this._videoElement.videoTracks);
-      ++cov_udhe4wxvj.s[66];
+      var videoTracks = this._videoElement.videoTracks;
       if (videoTracks) {
-        ++cov_udhe4wxvj.b[13][0];
-        ++cov_udhe4wxvj.s[67];
-
         for (var i = 0; i < videoTracks.length; i++) {
-          ++cov_udhe4wxvj.s[68];
-
           videoTracks[i].selected = false;
         }
-      } else {
-        ++cov_udhe4wxvj.b[13][1];
       }
     }
 
@@ -20081,21 +5440,11 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_disableAudioTracks',
     value: function _disableAudioTracks() {
-      ++cov_udhe4wxvj.f[16];
-
-      var audioTracks = (++cov_udhe4wxvj.s[69], this._videoElement.audioTracks);
-      ++cov_udhe4wxvj.s[70];
+      var audioTracks = this._videoElement.audioTracks;
       if (audioTracks) {
-        ++cov_udhe4wxvj.b[14][0];
-        ++cov_udhe4wxvj.s[71];
-
         for (var i = 0; i < audioTracks.length; i++) {
-          ++cov_udhe4wxvj.s[72];
-
           audioTracks[i].enabled = false;
         }
-      } else {
-        ++cov_udhe4wxvj.b[14][1];
       }
     }
 
@@ -20108,21 +5457,11 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_disableTextTracks',
     value: function _disableTextTracks() {
-      ++cov_udhe4wxvj.f[17];
-
-      var textTracks = (++cov_udhe4wxvj.s[73], this._videoElement.textTracks);
-      ++cov_udhe4wxvj.s[74];
+      var textTracks = this._videoElement.textTracks;
       if (textTracks) {
-        ++cov_udhe4wxvj.b[15][0];
-        ++cov_udhe4wxvj.s[75];
-
         for (var i = 0; i < textTracks.length; i++) {
-          ++cov_udhe4wxvj.s[76];
-
           textTracks[i].mode = 'disabled';
         }
-      } else {
-        ++cov_udhe4wxvj.b[15][1];
       }
     }
 
@@ -20135,9 +5474,6 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: 'src',
     get: function get() {
-      ++cov_udhe4wxvj.f[18];
-      ++cov_udhe4wxvj.s[77];
-
       return this._videoElement.src;
     }
   }]);
@@ -20150,230 +5486,6 @@ NativeAdapter._logger = _baseMediaSourceAdapter2.default.getLogger(NativeAdapter
 exports.default = NativeAdapter;
 
 /***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.VERSION = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerMediaSourceAdapter = undefined;
-
-var cov_20xm2vhcxv = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/playkit.js',
-      hash = '41a93c22161f871816b17909358b7d5656c1361d',
-      global = new Function('return this')(),
-      gcv = '__coverage__',
-      coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/playkit.js',
-    statementMap: {
-      '0': {
-        start: {
-          line: 15,
-          column: 14
-        },
-        end: {
-          line: 15,
-          column: 33
-        }
-      },
-      '1': {
-        start: {
-          line: 17,
-          column: 0
-        },
-        end: {
-          line: 17,
-          column: 90
-        }
-      },
-      '2': {
-        start: {
-          line: 18,
-          column: 0
-        },
-        end: {
-          line: 18,
-          column: 113
-        }
-      },
-      '3': {
-        start: {
-          line: 25,
-          column: 2
-        },
-        end: {
-          line: 25,
-          column: 28
-        }
-      }
-    },
-    fnMap: {
-      '0': {
-        name: 'playkit',
-        decl: {
-          start: {
-            line: 24,
-            column: 16
-          },
-          end: {
-            line: 24,
-            column: 23
-          }
-        },
-        loc: {
-          start: {
-            line: 24,
-            column: 45
-          },
-          end: {
-            line: 26,
-            column: 1
-          }
-        },
-        line: 24
-      }
-    },
-    branchMap: {
-      '0': {
-        loc: {
-          start: {
-            line: 24,
-            column: 24
-          },
-          end: {
-            line: 24,
-            column: 43
-          }
-        },
-        type: 'default-arg',
-        locations: [{
-          start: {
-            line: 24,
-            column: 41
-          },
-          end: {
-            line: 24,
-            column: 43
-          }
-        }],
-        line: 24
-      }
-    },
-    s: {
-      '0': 0,
-      '1': 0,
-      '2': 0,
-      '3': 0
-    },
-    f: {
-      '0': 0
-    },
-    b: {
-      '0': [0]
-    },
-    _coverageSchema: '332fd63041d2c1bcb487cc26dd0d5f7d97098a6c'
-  },
-      coverage = global[gcv] || (global[gcv] = {});
-
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
-  }
-
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
-}();
-
-exports.playkit = playkit;
-
-var _player = __webpack_require__(8);
-
-var _player2 = _interopRequireDefault(_player);
-
-var _logger = __webpack_require__(1);
-
-var _logger2 = _interopRequireDefault(_logger);
-
-var _package = __webpack_require__(18);
-
-var packageData = _interopRequireWildcard(_package);
-
-var _baseMediaSourceAdapter = __webpack_require__(12);
-
-var _baseMediaSourceAdapter2 = _interopRequireDefault(_baseMediaSourceAdapter);
-
-var _mediaSourceProvider = __webpack_require__(13);
-
-var _pluginManager = __webpack_require__(15);
-
-var _basePlugin = __webpack_require__(14);
-
-var _basePlugin2 = _interopRequireDefault(_basePlugin);
-
-var _track = __webpack_require__(0);
-
-var _track2 = _interopRequireDefault(_track);
-
-var _videoTrack = __webpack_require__(5);
-
-var _videoTrack2 = _interopRequireDefault(_videoTrack);
-
-var _audioTrack = __webpack_require__(3);
-
-var _audioTrack2 = _interopRequireDefault(_audioTrack);
-
-var _textTrack = __webpack_require__(4);
-
-var _textTrack2 = _interopRequireDefault(_textTrack);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// Playkit version
-var VERSION = (++cov_20xm2vhcxv.s[0], packageData.version);
-
-++cov_20xm2vhcxv.s[1];
-_logger2.default.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
-++cov_20xm2vhcxv.s[2];
-_logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
-
-/**
- * @param {Object} config - The configuration of the player
- * @returns {Player} - The player instance
- */
-function playkit() {
-  var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (++cov_20xm2vhcxv.b[0][0], {});
-  ++cov_20xm2vhcxv.f[0];
-  ++cov_20xm2vhcxv.s[3];
-
-  return new _player2.default(config);
-}
-
-// Export the media source adapters necessary utils
-exports.registerMediaSourceAdapter = _mediaSourceProvider.registerMediaSourceAdapter;
-exports.BaseMediaSourceAdapter = _baseMediaSourceAdapter2.default;
-
-// Export the plugin framework
-
-exports.registerPlugin = _pluginManager.registerPlugin;
-exports.BasePlugin = _basePlugin2.default;
-
-// Export the tracks classes
-
-exports.Track = _track2.default;
-exports.VideoTrack = _videoTrack2.default;
-exports.AudioTrack = _audioTrack2.default;
-exports.TextTrack = _textTrack2.default;
-
-//export version
-
-exports.VERSION = VERSION;
-exports.default = playkit;
-
-/***/ }),
 /* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -20384,1374 +5496,378 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_2h1b1a0826 = function () {
-  var path = '/Users/dan.ziv/WebstormProjects/playkit-js/src/state/state-manager.js',
-      hash = '3a70e3141aaba57aade87a383ca1e399323ba50a',
-      global = new Function('return this')(),
-      gcv = '__coverage__',
-      coverageData = {
-    path: '/Users/dan.ziv/WebstormProjects/playkit-js/src/state/state-manager.js',
-    statementMap: {
-      '0': {
-        start: {
-          line: 74,
-          column: 8
-        },
-        end: {
-          line: 74,
-          column: 48
-        }
-      },
-      '1': {
-        start: {
-          line: 75,
-          column: 8
-        },
-        end: {
-          line: 75,
-          column: 30
-        }
-      },
-      '2': {
-        start: {
-          line: 78,
-          column: 8
-        },
-        end: {
-          line: 78,
-          column: 50
-        }
-      },
-      '3': {
-        start: {
-          line: 79,
-          column: 8
-        },
-        end: {
-          line: 79,
-          column: 30
-        }
-      },
-      '4': {
-        start: {
-          line: 84,
-          column: 8
-        },
-        end: {
-          line: 88,
-          column: 9
-        }
-      },
-      '5': {
-        start: {
-          line: 85,
-          column: 10
-        },
-        end: {
-          line: 85,
-          column: 50
-        }
-      },
-      '6': {
-        start: {
-          line: 87,
-          column: 10
-        },
-        end: {
-          line: 87,
-          column: 49
-        }
-      },
-      '7': {
-        start: {
-          line: 89,
-          column: 8
-        },
-        end: {
-          line: 89,
-          column: 30
-        }
-      },
-      '8': {
-        start: {
-          line: 92,
-          column: 8
-        },
-        end: {
-          line: 92,
-          column: 45
-        }
-      },
-      '9': {
-        start: {
-          line: 93,
-          column: 8
-        },
-        end: {
-          line: 93,
-          column: 30
-        }
-      },
-      '10': {
-        start: {
-          line: 98,
-          column: 8
-        },
-        end: {
-          line: 98,
-          column: 48
-        }
-      },
-      '11': {
-        start: {
-          line: 99,
-          column: 8
-        },
-        end: {
-          line: 99,
-          column: 30
-        }
-      },
-      '12': {
-        start: {
-          line: 102,
-          column: 8
-        },
-        end: {
-          line: 102,
-          column: 48
-        }
-      },
-      '13': {
-        start: {
-          line: 103,
-          column: 8
-        },
-        end: {
-          line: 103,
-          column: 30
-        }
-      },
-      '14': {
-        start: {
-          line: 106,
-          column: 8
-        },
-        end: {
-          line: 106,
-          column: 45
-        }
-      },
-      '15': {
-        start: {
-          line: 107,
-          column: 8
-        },
-        end: {
-          line: 107,
-          column: 30
-        }
-      },
-      '16': {
-        start: {
-          line: 112,
-          column: 8
-        },
-        end: {
-          line: 112,
-          column: 47
-        }
-      },
-      '17': {
-        start: {
-          line: 113,
-          column: 8
-        },
-        end: {
-          line: 113,
-          column: 30
-        }
-      },
-      '18': {
-        start: {
-          line: 116,
-          column: 8
-        },
-        end: {
-          line: 116,
-          column: 50
-        }
-      },
-      '19': {
-        start: {
-          line: 117,
-          column: 8
-        },
-        end: {
-          line: 117,
-          column: 30
-        }
-      },
-      '20': {
-        start: {
-          line: 120,
-          column: 8
-        },
-        end: {
-          line: 120,
-          column: 45
-        }
-      },
-      '21': {
-        start: {
-          line: 121,
-          column: 8
-        },
-        end: {
-          line: 121,
-          column: 30
-        }
-      },
-      '22': {
-        start: {
-          line: 124,
-          column: 8
-        },
-        end: {
-          line: 124,
-          column: 45
-        }
-      },
-      '23': {
-        start: {
-          line: 125,
-          column: 8
-        },
-        end: {
-          line: 125,
-          column: 30
-        }
-      },
-      '24': {
-        start: {
-          line: 130,
-          column: 8
-        },
-        end: {
-          line: 130,
-          column: 48
-        }
-      },
-      '25': {
-        start: {
-          line: 131,
-          column: 8
-        },
-        end: {
-          line: 131,
-          column: 30
-        }
-      },
-      '26': {
-        start: {
-          line: 134,
-          column: 8
-        },
-        end: {
-          line: 134,
-          column: 47
-        }
-      },
-      '27': {
-        start: {
-          line: 135,
-          column: 8
-        },
-        end: {
-          line: 135,
-          column: 30
-        }
-      },
-      '28': {
-        start: {
-          line: 145,
-          column: 4
-        },
-        end: {
-          line: 145,
-          column: 26
-        }
-      },
-      '29': {
-        start: {
-          line: 146,
-          column: 4
-        },
-        end: {
-          line: 146,
-          column: 59
-        }
-      },
-      '30': {
-        start: {
-          line: 147,
-          column: 4
-        },
-        end: {
-          line: 147,
-          column: 44
-        }
-      },
-      '31': {
-        start: {
-          line: 148,
-          column: 4
-        },
-        end: {
-          line: 148,
-          column: 23
-        }
-      },
-      '32': {
-        start: {
-          line: 149,
-          column: 4
-        },
-        end: {
-          line: 149,
-          column: 27
-        }
-      },
-      '33': {
-        start: {
-          line: 150,
-          column: 4
-        },
-        end: {
-          line: 150,
-          column: 50
-        }
-      },
-      '34': {
-        start: {
-          line: 151,
-          column: 4
-        },
-        end: {
-          line: 151,
-          column: 28
-        }
-      },
-      '35': {
-        start: {
-          line: 160,
-          column: 4
-        },
-        end: {
-          line: 160,
-          column: 94
-        }
-      },
-      '36': {
-        start: {
-          line: 161,
-          column: 4
-        },
-        end: {
-          line: 161,
-          column: 94
-        }
-      },
-      '37': {
-        start: {
-          line: 162,
-          column: 4
-        },
-        end: {
-          line: 162,
-          column: 93
-        }
-      },
-      '38': {
-        start: {
-          line: 163,
-          column: 4
-        },
-        end: {
-          line: 163,
-          column: 99
-        }
-      },
-      '39': {
-        start: {
-          line: 164,
-          column: 4
-        },
-        end: {
-          line: 164,
-          column: 96
-        }
-      },
-      '40': {
-        start: {
-          line: 165,
-          column: 4
-        },
-        end: {
-          line: 165,
-          column: 104
-        }
-      },
-      '41': {
-        start: {
-          line: 166,
-          column: 4
-        },
-        end: {
-          line: 166,
-          column: 94
-        }
-      },
-      '42': {
-        start: {
-          line: 167,
-          column: 4
-        },
-        end: {
-          line: 167,
-          column: 96
-        }
-      },
-      '43': {
-        start: {
-          line: 177,
-          column: 4
-        },
-        end: {
-          line: 177,
-          column: 55
-        }
-      },
-      '44': {
-        start: {
-          line: 178,
-          column: 21
-        },
-        end: {
-          line: 178,
-          column: 59
-        }
-      },
-      '45': {
-        start: {
-          line: 179,
-          column: 4
-        },
-        end: {
-          line: 181,
-          column: 5
-        }
-      },
-      '46': {
-        start: {
-          line: 180,
-          column: 6
-        },
-        end: {
-          line: 180,
-          column: 31
-        }
-      },
-      '47': {
-        start: {
-          line: 191,
-          column: 4
-        },
-        end: {
-          line: 197,
-          column: 5
-        }
-      },
-      '48': {
-        start: {
-          line: 192,
-          column: 6
-        },
-        end: {
-          line: 192,
-          column: 50
-        }
-      },
-      '49': {
-        start: {
-          line: 193,
-          column: 6
-        },
-        end: {
-          line: 193,
-          column: 41
-        }
-      },
-      '50': {
-        start: {
-          line: 194,
-          column: 6
-        },
-        end: {
-          line: 194,
-          column: 39
-        }
-      },
-      '51': {
-        start: {
-          line: 195,
-          column: 6
-        },
-        end: {
-          line: 195,
-          column: 39
-        }
-      },
-      '52': {
-        start: {
-          line: 196,
-          column: 6
-        },
-        end: {
-          line: 196,
-          column: 103
-        }
-      },
-      '53': {
-        start: {
-          line: 206,
-          column: 16
-        },
-        end: {
-          line: 209,
-          column: 6
-        }
-      },
-      '54': {
-        start: {
-          line: 210,
-          column: 4
-        },
-        end: {
-          line: 210,
-          column: 38
-        }
-      },
-      '55': {
-        start: {
-          line: 219,
-          column: 4
-        },
-        end: {
-          line: 219,
-          column: 23
-        }
-      },
-      '56': {
-        start: {
-          line: 220,
-          column: 4
-        },
-        end: {
-          line: 220,
-          column: 33
-        }
-      },
-      '57': {
-        start: {
-          line: 229,
-          column: 4
-        },
-        end: {
-          line: 229,
-          column: 26
-        }
-      },
-      '58': {
-        start: {
-          line: 238,
-          column: 4
-        },
-        end: {
-          line: 238,
-          column: 27
-        }
-      },
-      '59': {
-        start: {
-          line: 247,
-          column: 4
-        },
-        end: {
-          line: 247,
-          column: 25
-        }
-      }
-    },
-    fnMap: {
-      '0': {
-        name: '(anonymous_0)',
-        decl: {
-          start: {
-            line: 73,
-            column: 32
-          },
-          end: {
-            line: 73,
-            column: 33
-          }
-        },
-        loc: {
-          start: {
-            line: 73,
-            column: 38
-          },
-          end: {
-            line: 76,
-            column: 7
-          }
-        },
-        line: 73
-      },
-      '1': {
-        name: '(anonymous_1)',
-        decl: {
-          start: {
-            line: 77,
-            column: 26
-          },
-          end: {
-            line: 77,
-            column: 27
-          }
-        },
-        loc: {
-          start: {
-            line: 77,
-            column: 32
-          },
-          end: {
-            line: 80,
-            column: 7
-          }
-        },
-        line: 77
-      },
-      '2': {
-        name: '(anonymous_2)',
-        decl: {
-          start: {
-            line: 83,
-            column: 37
-          },
-          end: {
-            line: 83,
-            column: 38
-          }
-        },
-        loc: {
-          start: {
-            line: 83,
-            column: 43
-          },
-          end: {
-            line: 90,
-            column: 7
-          }
-        },
-        line: 83
-      },
-      '3': {
-        name: '(anonymous_3)',
-        decl: {
-          start: {
-            line: 91,
-            column: 27
-          },
-          end: {
-            line: 91,
-            column: 28
-          }
-        },
-        loc: {
-          start: {
-            line: 91,
-            column: 33
-          },
-          end: {
-            line: 94,
-            column: 7
-          }
-        },
-        line: 91
-      },
-      '4': {
-        name: '(anonymous_4)',
-        decl: {
-          start: {
-            line: 97,
-            column: 26
-          },
-          end: {
-            line: 97,
-            column: 27
-          }
-        },
-        loc: {
-          start: {
-            line: 97,
-            column: 32
-          },
-          end: {
-            line: 100,
-            column: 7
-          }
-        },
-        line: 97
-      },
-      '5': {
-        name: '(anonymous_5)',
-        decl: {
-          start: {
-            line: 101,
-            column: 29
-          },
-          end: {
-            line: 101,
-            column: 30
-          }
-        },
-        loc: {
-          start: {
-            line: 101,
-            column: 35
-          },
-          end: {
-            line: 104,
-            column: 7
-          }
-        },
-        line: 101
-      },
-      '6': {
-        name: '(anonymous_6)',
-        decl: {
-          start: {
-            line: 105,
-            column: 27
-          },
-          end: {
-            line: 105,
-            column: 28
-          }
-        },
-        loc: {
-          start: {
-            line: 105,
-            column: 33
-          },
-          end: {
-            line: 108,
-            column: 7
-          }
-        },
-        line: 105
-      },
-      '7': {
-        name: '(anonymous_7)',
-        decl: {
-          start: {
-            line: 111,
-            column: 27
-          },
-          end: {
-            line: 111,
-            column: 28
-          }
-        },
-        loc: {
-          start: {
-            line: 111,
-            column: 33
-          },
-          end: {
-            line: 114,
-            column: 7
-          }
-        },
-        line: 111
-      },
-      '8': {
-        name: '(anonymous_8)',
-        decl: {
-          start: {
-            line: 115,
-            column: 29
-          },
-          end: {
-            line: 115,
-            column: 30
-          }
-        },
-        loc: {
-          start: {
-            line: 115,
-            column: 35
-          },
-          end: {
-            line: 118,
-            column: 7
-          }
-        },
-        line: 115
-      },
-      '9': {
-        name: '(anonymous_9)',
-        decl: {
-          start: {
-            line: 119,
-            column: 27
-          },
-          end: {
-            line: 119,
-            column: 28
-          }
-        },
-        loc: {
-          start: {
-            line: 119,
-            column: 33
-          },
-          end: {
-            line: 122,
-            column: 7
-          }
-        },
-        line: 119
-      },
-      '10': {
-        name: '(anonymous_10)',
-        decl: {
-          start: {
-            line: 123,
-            column: 27
-          },
-          end: {
-            line: 123,
-            column: 28
-          }
-        },
-        loc: {
-          start: {
-            line: 123,
-            column: 33
-          },
-          end: {
-            line: 126,
-            column: 7
-          }
-        },
-        line: 123
-      },
-      '11': {
-        name: '(anonymous_11)',
-        decl: {
-          start: {
-            line: 129,
-            column: 29
-          },
-          end: {
-            line: 129,
-            column: 30
-          }
-        },
-        loc: {
-          start: {
-            line: 129,
-            column: 35
-          },
-          end: {
-            line: 132,
-            column: 7
-          }
-        },
-        line: 129
-      },
-      '12': {
-        name: '(anonymous_12)',
-        decl: {
-          start: {
-            line: 133,
-            column: 27
-          },
-          end: {
-            line: 133,
-            column: 28
-          }
-        },
-        loc: {
-          start: {
-            line: 133,
-            column: 33
-          },
-          end: {
-            line: 136,
-            column: 7
-          }
-        },
-        line: 133
-      },
-      '13': {
-        name: '(anonymous_13)',
-        decl: {
-          start: {
-            line: 144,
-            column: 2
-          },
-          end: {
-            line: 144,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 144,
-            column: 30
-          },
-          end: {
-            line: 152,
-            column: 3
-          }
-        },
-        line: 144
-      },
-      '14': {
-        name: '(anonymous_14)',
-        decl: {
-          start: {
-            line: 159,
-            column: 2
-          },
-          end: {
-            line: 159,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 159,
-            column: 27
-          },
-          end: {
-            line: 168,
-            column: 3
-          }
-        },
-        line: 159
-      },
-      '15': {
-        name: '(anonymous_15)',
-        decl: {
-          start: {
-            line: 176,
-            column: 2
-          },
-          end: {
-            line: 176,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 176,
-            column: 40
-          },
-          end: {
-            line: 182,
-            column: 3
-          }
-        },
-        line: 176
-      },
-      '16': {
-        name: '(anonymous_16)',
-        decl: {
-          start: {
-            line: 190,
-            column: 2
-          },
-          end: {
-            line: 190,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 190,
-            column: 35
-          },
-          end: {
-            line: 198,
-            column: 3
-          }
-        },
-        line: 190
-      },
-      '17': {
-        name: '(anonymous_17)',
-        decl: {
-          start: {
-            line: 205,
-            column: 2
-          },
-          end: {
-            line: 205,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 205,
-            column: 25
-          },
-          end: {
-            line: 211,
-            column: 3
-          }
-        },
-        line: 205
-      },
-      '18': {
-        name: '(anonymous_18)',
-        decl: {
-          start: {
-            line: 218,
-            column: 2
-          },
-          end: {
-            line: 218,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 218,
-            column: 18
-          },
-          end: {
-            line: 221,
-            column: 3
-          }
-        },
-        line: 218
-      },
-      '19': {
-        name: '(anonymous_19)',
-        decl: {
-          start: {
-            line: 228,
-            column: 2
-          },
-          end: {
-            line: 228,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 228,
-            column: 28
-          },
-          end: {
-            line: 230,
-            column: 3
-          }
-        },
-        line: 228
-      },
-      '20': {
-        name: '(anonymous_20)',
-        decl: {
-          start: {
-            line: 237,
-            column: 2
-          },
-          end: {
-            line: 237,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 237,
-            column: 36
-          },
-          end: {
-            line: 239,
-            column: 3
-          }
-        },
-        line: 237
-      },
-      '21': {
-        name: '(anonymous_21)',
-        decl: {
-          start: {
-            line: 246,
-            column: 2
-          },
-          end: {
-            line: 246,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 246,
-            column: 30
-          },
-          end: {
-            line: 248,
-            column: 3
-          }
-        },
-        line: 246
-      }
-    },
-    branchMap: {
-      '0': {
-        loc: {
-          start: {
-            line: 84,
-            column: 8
-          },
-          end: {
-            line: 88,
-            column: 9
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 84,
-            column: 8
-          },
-          end: {
-            line: 88,
-            column: 9
-          }
-        }, {
-          start: {
-            line: 84,
-            column: 8
-          },
-          end: {
-            line: 88,
-            column: 9
-          }
-        }],
-        line: 84
-      },
-      '1': {
-        loc: {
-          start: {
-            line: 179,
-            column: 4
-          },
-          end: {
-            line: 181,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 179,
-            column: 4
-          },
-          end: {
-            line: 181,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 179,
-            column: 4
-          },
-          end: {
-            line: 181,
-            column: 5
-          }
-        }],
-        line: 179
-      },
-      '2': {
-        loc: {
-          start: {
-            line: 191,
-            column: 4
-          },
-          end: {
-            line: 197,
-            column: 5
-          }
-        },
-        type: 'if',
-        locations: [{
-          start: {
-            line: 191,
-            column: 4
-          },
-          end: {
-            line: 197,
-            column: 5
-          }
-        }, {
-          start: {
-            line: 191,
-            column: 4
-          },
-          end: {
-            line: 197,
-            column: 5
-          }
-        }],
-        line: 191
-      }
-    },
-    s: {
-      '0': 0,
-      '1': 0,
-      '2': 0,
-      '3': 0,
-      '4': 0,
-      '5': 0,
-      '6': 0,
-      '7': 0,
-      '8': 0,
-      '9': 0,
-      '10': 0,
-      '11': 0,
-      '12': 0,
-      '13': 0,
-      '14': 0,
-      '15': 0,
-      '16': 0,
-      '17': 0,
-      '18': 0,
-      '19': 0,
-      '20': 0,
-      '21': 0,
-      '22': 0,
-      '23': 0,
-      '24': 0,
-      '25': 0,
-      '26': 0,
-      '27': 0,
-      '28': 0,
-      '29': 0,
-      '30': 0,
-      '31': 0,
-      '32': 0,
-      '33': 0,
-      '34': 0,
-      '35': 0,
-      '36': 0,
-      '37': 0,
-      '38': 0,
-      '39': 0,
-      '40': 0,
-      '41': 0,
-      '42': 0,
-      '43': 0,
-      '44': 0,
-      '45': 0,
-      '46': 0,
-      '47': 0,
-      '48': 0,
-      '49': 0,
-      '50': 0,
-      '51': 0,
-      '52': 0,
-      '53': 0,
-      '54': 0,
-      '55': 0,
-      '56': 0,
-      '57': 0,
-      '58': 0,
-      '59': 0
-    },
-    f: {
-      '0': 0,
-      '1': 0,
-      '2': 0,
-      '3': 0,
-      '4': 0,
-      '5': 0,
-      '6': 0,
-      '7': 0,
-      '8': 0,
-      '9': 0,
-      '10': 0,
-      '11': 0,
-      '12': 0,
-      '13': 0,
-      '14': 0,
-      '15': 0,
-      '16': 0,
-      '17': 0,
-      '18': 0,
-      '19': 0,
-      '20': 0,
-      '21': 0
-    },
-    b: {
-      '0': [0, 0],
-      '1': [0, 0],
-      '2': [0, 0]
-    },
-    _coverageSchema: '332fd63041d2c1bcb487cc26dd0d5f7d97098a6c'
-  },
-      coverage = global[gcv] || (global[gcv] = {});
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
+var _multiMap = __webpack_require__(13);
+
+var _multiMap2 = _interopRequireDefault(_multiMap);
+
+var _baseMiddleware = __webpack_require__(10);
+
+var _baseMiddleware2 = _interopRequireDefault(_baseMiddleware);
+
+var _logger = __webpack_require__(0);
+
+var _logger2 = _interopRequireDefault(_logger);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Generic middleware implementation.
+ */
+var Middleware = function () {
+
+  /**
+   * @constructor
+   * @param {Object} actions - The actions for the middleware.
+   */
+
+  /**
+   * The actions supported by the middleware.
+   * @private
+   * @member
+   */
+  function Middleware(actions) {
+    _classCallCheck(this, Middleware);
+
+    this._actions = actions;
+    this._middlewares = new _multiMap2.default();
+    this._logger = _logger2.default.getLogger("Middleware");
   }
 
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
+  /**
+   * Registers a middleware instance to the middleware chain.
+   * @param {BaseMiddleware} middlewareInstance - The middleware instance.
+   * @public
+   * @returns {void}
+   */
+
+  /**
+   * The logger of the middleware.
+   * @private
+   * @member
+   */
+
+  /**
+   * The registered middlewares.
+   * @private
+   * @member
+   */
+
+
+  _createClass(Middleware, [{
+    key: 'use',
+    value: function use(middlewareInstance) {
+      for (var _action in this._actions) {
+        var apiAction = this._actions[_action];
+        // $FlowFixMe
+        if (typeof middlewareInstance[apiAction] === 'function') {
+          this._logger.debug('Register <' + middlewareInstance.id + '> for action ' + apiAction);
+          // $FlowFixMe
+          this._middlewares.push(apiAction, middlewareInstance[apiAction].bind(middlewareInstance));
+        }
+      }
+    }
+
+    /**
+     * Runs a middleware chain for a specific action.
+     * @param {string} action - The action to run.
+     * @param {Function} callback - The callback function.
+     * @public
+     * @returns {void}
+     */
+
+  }, {
+    key: 'run',
+    value: function run(action, callback) {
+      var _this = this;
+
+      this._logger.debug("Start middleware chain for action " + action);
+      var middlewares = this._middlewares.get(action);
+      this._executeMiddleware(middlewares, function () {
+        _this._logger.debug("Finish middleware chain for action " + action);
+        callback();
+      });
+    }
+
+    /**
+     * Executes all the middlewares one by one.
+     * @param {Array<Function>} middlewares - The middlewares for a specific action.
+     * @param {Function} callback - The callback function.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_executeMiddleware',
+    value: function _executeMiddleware(middlewares, callback) {
+      // eslint-disable-next-line no-unused-vars
+      var composition = middlewares.reduceRight(function (next, fn) {
+        return function (v) {
+          fn(next);
+        };
+      }, callback);
+      composition();
+    }
+  }]);
+
+  return Middleware;
 }();
+
+exports.default = Middleware;
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _player = __webpack_require__(8);
+var _middleware = __webpack_require__(22);
+
+var _middleware2 = _interopRequireDefault(_middleware);
+
+var _baseMiddleware = __webpack_require__(10);
+
+var _baseMiddleware2 = _interopRequireDefault(_baseMiddleware);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * The playback middleware.
+ */
+var PlaybackMiddleware = function () {
+
+  /**
+   * @constructor
+   */
+
+  /**
+   * The middleware implementation.
+   * @private
+   * @member
+   */
+  function PlaybackMiddleware() {
+    _classCallCheck(this, PlaybackMiddleware);
+
+    this._middleware = new _middleware2.default(PlaybackMiddleware.Actions);
+  }
+
+  /**
+   * Registers a playback middleware instance to the middleware chain.
+   * @param {BaseMiddleware} middlewareInstance - The middleware instance.
+   * @public
+   * @returns {void}
+   */
+
+  /**
+   * The actions of the playback middleware.
+   * @static
+   */
+
+
+  _createClass(PlaybackMiddleware, [{
+    key: 'use',
+    value: function use(middlewareInstance) {
+      this._middleware.use(middlewareInstance);
+    }
+
+    /**
+     * Runs a play chain.
+     * @param {Function} callback - The last play handler in the chain.
+     * @public
+     * @returns {void}
+     */
+
+  }, {
+    key: 'play',
+    value: function play(callback) {
+      this._middleware.run(PlaybackMiddleware.Actions.PLAY, callback);
+    }
+
+    /**
+     * Runs a pause chain.
+     * @param {Function} callback - The last pause handler in the chain.
+     * @public
+     * @returns {void}
+     */
+
+  }, {
+    key: 'pause',
+    value: function pause(callback) {
+      this._middleware.run(PlaybackMiddleware.Actions.PAUSE, callback);
+    }
+  }]);
+
+  return PlaybackMiddleware;
+}();
+
+PlaybackMiddleware.Actions = {
+  PLAY: 'play',
+  PAUSE: 'pause'
+};
+exports.default = PlaybackMiddleware;
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.PLAYER_NAME = exports.VERSION = exports.Utils = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BaseMiddleware = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerMediaSourceAdapter = undefined;
+exports.loadPlayer = loadPlayer;
+
+var _player = __webpack_require__(9);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _eventManager = __webpack_require__(6);
+var _logger = __webpack_require__(0);
+
+var _logger2 = _interopRequireDefault(_logger);
+
+var _package = __webpack_require__(19);
+
+var packageData = _interopRequireWildcard(_package);
+
+var _baseMediaSourceAdapter = __webpack_require__(15);
+
+var _baseMediaSourceAdapter2 = _interopRequireDefault(_baseMediaSourceAdapter);
+
+var _mediaSourceProvider = __webpack_require__(16);
+
+var _pluginManager = __webpack_require__(17);
+
+var _baseMiddleware = __webpack_require__(10);
+
+var _baseMiddleware2 = _interopRequireDefault(_baseMiddleware);
+
+var _basePlugin = __webpack_require__(11);
+
+var _basePlugin2 = _interopRequireDefault(_basePlugin);
+
+var _track = __webpack_require__(1);
+
+var _track2 = _interopRequireDefault(_track);
+
+var _videoTrack = __webpack_require__(6);
+
+var _videoTrack2 = _interopRequireDefault(_videoTrack);
+
+var _audioTrack = __webpack_require__(4);
+
+var _audioTrack2 = _interopRequireDefault(_audioTrack);
+
+var _textTrack = __webpack_require__(5);
+
+var _textTrack2 = _interopRequireDefault(_textTrack);
+
+var _util = __webpack_require__(3);
+
+var Utils = _interopRequireWildcard(_util);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// Playkit version
+var VERSION = packageData.version;
+
+// Playkit name
+
+var PLAYER_NAME = 'kaltura-playkit-js';
+
+_logger2.default.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
+_logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
+
+/**
+ * @param {string} targetId - The target div id to append the player.
+ * @param {Object} config - The configuration of the player
+ * @returns {Player} - The player instance
+ */
+function loadPlayer(targetId, config) {
+  return new _player2.default(targetId, config || {});
+}
+
+// Export the media source adapters necessary utils
+exports.registerMediaSourceAdapter = _mediaSourceProvider.registerMediaSourceAdapter;
+exports.BaseMediaSourceAdapter = _baseMediaSourceAdapter2.default;
+
+// Export the plugin framework
+
+exports.registerPlugin = _pluginManager.registerPlugin;
+exports.BasePlugin = _basePlugin2.default;
+exports.BaseMiddleware = _baseMiddleware2.default;
+
+// Export the tracks classes
+
+exports.Track = _track2.default;
+exports.VideoTrack = _videoTrack2.default;
+exports.AudioTrack = _audioTrack2.default;
+exports.TextTrack = _textTrack2.default;
+
+// Export utils library
+
+exports.Utils = Utils;
+
+// Export version
+
+exports.VERSION = VERSION;
+
+// Export player name
+
+exports.PLAYER_NAME = PLAYER_NAME;
+exports.default = loadPlayer;
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _player = __webpack_require__(9);
+
+var _player2 = _interopRequireDefault(_player);
+
+var _eventManager = __webpack_require__(7);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _state = __webpack_require__(23);
+var _state = __webpack_require__(26);
 
 var _state2 = _interopRequireDefault(_state);
 
-var _stateTypes = __webpack_require__(16);
+var _stateTypes = __webpack_require__(18);
 
 var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
-var _events = __webpack_require__(7);
+var _events = __webpack_require__(8);
 
 var _fakeEvent = __webpack_require__(2);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _logger = __webpack_require__(1);
+var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -21809,122 +5925,56 @@ var StateManager = function () {
     _classCallCheck(this, StateManager);
 
     this._transitions = (_transitions = {}, _defineProperty(_transitions, _stateTypes2.default.IDLE, (_PlayerStates$IDLE = {}, _defineProperty(_PlayerStates$IDLE, _events.HTML5_EVENTS.LOAD_START, function () {
-      ++cov_2h1b1a0826.f[0];
-      ++cov_2h1b1a0826.s[0];
-
       _this._updateState(_stateTypes2.default.LOADING);
-      ++cov_2h1b1a0826.s[1];
       _this._dispatchEvent();
     }), _defineProperty(_PlayerStates$IDLE, _events.HTML5_EVENTS.PLAY, function () {
-      ++cov_2h1b1a0826.f[1];
-      ++cov_2h1b1a0826.s[2];
-
       _this._updateState(_stateTypes2.default.BUFFERING);
-      ++cov_2h1b1a0826.s[3];
       _this._dispatchEvent();
     }), _PlayerStates$IDLE)), _defineProperty(_transitions, _stateTypes2.default.LOADING, (_PlayerStates$LOADING = {}, _defineProperty(_PlayerStates$LOADING, _events.HTML5_EVENTS.LOADED_METADATA, function () {
-      ++cov_2h1b1a0826.f[2];
-      ++cov_2h1b1a0826.s[4];
-
-      if (_this._player.config.autoPlay) {
-        ++cov_2h1b1a0826.b[0][0];
-        ++cov_2h1b1a0826.s[5];
-
+      if (_this._player.config.playback.autoplay) {
         _this._updateState(_stateTypes2.default.PLAYING);
       } else {
-        ++cov_2h1b1a0826.b[0][1];
-        ++cov_2h1b1a0826.s[6];
-
         _this._updateState(_stateTypes2.default.PAUSED);
       }
-      ++cov_2h1b1a0826.s[7];
       _this._dispatchEvent();
     }), _defineProperty(_PlayerStates$LOADING, _events.HTML5_EVENTS.ERROR, function () {
-      ++cov_2h1b1a0826.f[3];
-      ++cov_2h1b1a0826.s[8];
-
       _this._updateState(_stateTypes2.default.IDLE);
-      ++cov_2h1b1a0826.s[9];
       _this._dispatchEvent();
     }), _PlayerStates$LOADING)), _defineProperty(_transitions, _stateTypes2.default.PAUSED, (_PlayerStates$PAUSED = {}, _defineProperty(_PlayerStates$PAUSED, _events.HTML5_EVENTS.PLAY, function () {
-      ++cov_2h1b1a0826.f[4];
-      ++cov_2h1b1a0826.s[10];
-
       _this._updateState(_stateTypes2.default.PLAYING);
-      ++cov_2h1b1a0826.s[11];
       _this._dispatchEvent();
     }), _defineProperty(_PlayerStates$PAUSED, _events.HTML5_EVENTS.PLAYING, function () {
-      ++cov_2h1b1a0826.f[5];
-      ++cov_2h1b1a0826.s[12];
-
       _this._updateState(_stateTypes2.default.PLAYING);
-      ++cov_2h1b1a0826.s[13];
       _this._dispatchEvent();
     }), _defineProperty(_PlayerStates$PAUSED, _events.HTML5_EVENTS.ENDED, function () {
-      ++cov_2h1b1a0826.f[6];
-      ++cov_2h1b1a0826.s[14];
-
       _this._updateState(_stateTypes2.default.IDLE);
-      ++cov_2h1b1a0826.s[15];
       _this._dispatchEvent();
     }), _PlayerStates$PAUSED)), _defineProperty(_transitions, _stateTypes2.default.PLAYING, (_PlayerStates$PLAYING = {}, _defineProperty(_PlayerStates$PLAYING, _events.HTML5_EVENTS.PAUSE, function () {
-      ++cov_2h1b1a0826.f[7];
-      ++cov_2h1b1a0826.s[16];
-
       _this._updateState(_stateTypes2.default.PAUSED);
-      ++cov_2h1b1a0826.s[17];
       _this._dispatchEvent();
     }), _defineProperty(_PlayerStates$PLAYING, _events.HTML5_EVENTS.WAITING, function () {
-      ++cov_2h1b1a0826.f[8];
-      ++cov_2h1b1a0826.s[18];
-
       _this._updateState(_stateTypes2.default.BUFFERING);
-      ++cov_2h1b1a0826.s[19];
       _this._dispatchEvent();
     }), _defineProperty(_PlayerStates$PLAYING, _events.HTML5_EVENTS.ENDED, function () {
-      ++cov_2h1b1a0826.f[9];
-      ++cov_2h1b1a0826.s[20];
-
       _this._updateState(_stateTypes2.default.IDLE);
-      ++cov_2h1b1a0826.s[21];
       _this._dispatchEvent();
     }), _defineProperty(_PlayerStates$PLAYING, _events.HTML5_EVENTS.ERROR, function () {
-      ++cov_2h1b1a0826.f[10];
-      ++cov_2h1b1a0826.s[22];
-
       _this._updateState(_stateTypes2.default.IDLE);
-      ++cov_2h1b1a0826.s[23];
       _this._dispatchEvent();
     }), _PlayerStates$PLAYING)), _defineProperty(_transitions, _stateTypes2.default.BUFFERING, (_PlayerStates$BUFFERI = {}, _defineProperty(_PlayerStates$BUFFERI, _events.HTML5_EVENTS.PLAYING, function () {
-      ++cov_2h1b1a0826.f[11];
-      ++cov_2h1b1a0826.s[24];
-
       _this._updateState(_stateTypes2.default.PLAYING);
-      ++cov_2h1b1a0826.s[25];
       _this._dispatchEvent();
     }), _defineProperty(_PlayerStates$BUFFERI, _events.HTML5_EVENTS.PAUSE, function () {
-      ++cov_2h1b1a0826.f[12];
-      ++cov_2h1b1a0826.s[26];
-
       _this._updateState(_stateTypes2.default.PAUSED);
-      ++cov_2h1b1a0826.s[27];
       _this._dispatchEvent();
     }), _PlayerStates$BUFFERI)), _transitions);
-    ++cov_2h1b1a0826.f[13];
-    ++cov_2h1b1a0826.s[28];
 
     this._player = player;
-    ++cov_2h1b1a0826.s[29];
     this._logger = _logger2.default.getLogger("StateManager");
-    ++cov_2h1b1a0826.s[30];
     this._eventManager = new _eventManager2.default();
-    ++cov_2h1b1a0826.s[31];
     this._history = [];
-    ++cov_2h1b1a0826.s[32];
     this._prevState = null;
-    ++cov_2h1b1a0826.s[33];
     this._curState = new _state2.default(_stateTypes2.default.IDLE);
-    ++cov_2h1b1a0826.s[34];
     this._attachListeners();
   }
 
@@ -21965,23 +6015,13 @@ var StateManager = function () {
   _createClass(StateManager, [{
     key: '_attachListeners',
     value: function _attachListeners() {
-      ++cov_2h1b1a0826.f[14];
-      ++cov_2h1b1a0826.s[35];
-
       this._eventManager.listen(this._player, _events.HTML5_EVENTS.ERROR, this._doTransition.bind(this));
-      ++cov_2h1b1a0826.s[36];
       this._eventManager.listen(this._player, _events.HTML5_EVENTS.ENDED, this._doTransition.bind(this));
-      ++cov_2h1b1a0826.s[37];
       this._eventManager.listen(this._player, _events.HTML5_EVENTS.PLAY, this._doTransition.bind(this));
-      ++cov_2h1b1a0826.s[38];
       this._eventManager.listen(this._player, _events.HTML5_EVENTS.LOAD_START, this._doTransition.bind(this));
-      ++cov_2h1b1a0826.s[39];
       this._eventManager.listen(this._player, _events.HTML5_EVENTS.PLAYING, this._doTransition.bind(this));
-      ++cov_2h1b1a0826.s[40];
       this._eventManager.listen(this._player, _events.HTML5_EVENTS.LOADED_METADATA, this._doTransition.bind(this));
-      ++cov_2h1b1a0826.s[41];
       this._eventManager.listen(this._player, _events.HTML5_EVENTS.PAUSE, this._doTransition.bind(this));
-      ++cov_2h1b1a0826.s[42];
       this._eventManager.listen(this._player, _events.HTML5_EVENTS.WAITING, this._doTransition.bind(this));
     }
 
@@ -21995,19 +6035,10 @@ var StateManager = function () {
   }, {
     key: '_doTransition',
     value: function _doTransition(event) {
-      ++cov_2h1b1a0826.f[15];
-      ++cov_2h1b1a0826.s[43];
-
       this._logger.debug('Do transition request', event);
-      var transition = (++cov_2h1b1a0826.s[44], this._transitions[this._curState.type]);
-      ++cov_2h1b1a0826.s[45];
+      var transition = this._transitions[this._curState.type];
       if (typeof transition[event.type] === 'function') {
-        ++cov_2h1b1a0826.b[1][0];
-        ++cov_2h1b1a0826.s[46];
-
         transition[event.type]();
-      } else {
-        ++cov_2h1b1a0826.b[1][1];
       }
     }
 
@@ -22021,24 +6052,12 @@ var StateManager = function () {
   }, {
     key: '_updateState',
     value: function _updateState(type) {
-      ++cov_2h1b1a0826.f[16];
-      ++cov_2h1b1a0826.s[47];
-
       if (this._curState.type !== type) {
-        ++cov_2h1b1a0826.b[2][0];
-        ++cov_2h1b1a0826.s[48];
-
         this._curState.duration = Date.now() / 1000;
-        ++cov_2h1b1a0826.s[49];
         this._history.push(this._curState);
-        ++cov_2h1b1a0826.s[50];
         this._prevState = this._curState;
-        ++cov_2h1b1a0826.s[51];
         this._curState = new _state2.default(type);
-        ++cov_2h1b1a0826.s[52];
         this._logger.debug('Switch player state: from ' + this._prevState.type + ' to ' + this._curState.type);
-      } else {
-        ++cov_2h1b1a0826.b[2][1];
       }
     }
 
@@ -22051,13 +6070,10 @@ var StateManager = function () {
   }, {
     key: '_dispatchEvent',
     value: function _dispatchEvent() {
-      ++cov_2h1b1a0826.f[17];
-
-      var event = (++cov_2h1b1a0826.s[53], new _fakeEvent2.default(_events.CUSTOM_EVENTS.PLAYER_STATE_CHANGED, {
+      var event = new _fakeEvent2.default(_events.CUSTOM_EVENTS.PLAYER_STATE_CHANGED, {
         'oldState': this._prevState,
         'newState': this._curState
-      }));
-      ++cov_2h1b1a0826.s[54];
+      });
       this._player.dispatchEvent(event);
     }
 
@@ -22070,11 +6086,7 @@ var StateManager = function () {
   }, {
     key: 'destroy',
     value: function destroy() {
-      ++cov_2h1b1a0826.f[18];
-      ++cov_2h1b1a0826.s[55];
-
       this._history = [];
-      ++cov_2h1b1a0826.s[56];
       this._eventManager.destroy();
     }
 
@@ -22087,9 +6099,6 @@ var StateManager = function () {
   }, {
     key: 'currentState',
     get: function get() {
-      ++cov_2h1b1a0826.f[19];
-      ++cov_2h1b1a0826.s[57];
-
       return this._curState;
     }
 
@@ -22102,9 +6111,6 @@ var StateManager = function () {
   }, {
     key: 'previousState',
     get: function get() {
-      ++cov_2h1b1a0826.f[20];
-      ++cov_2h1b1a0826.s[58];
-
       return this._prevState;
     }
 
@@ -22117,9 +6123,6 @@ var StateManager = function () {
   }, {
     key: 'history',
     get: function get() {
-      ++cov_2h1b1a0826.f[21];
-      ++cov_2h1b1a0826.s[59];
-
       return this._history;
     }
   }]);
@@ -22130,7 +6133,7 @@ var StateManager = function () {
 exports.default = StateManager;
 
 /***/ }),
-/* 23 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22139,165 +6142,6 @@ exports.default = StateManager;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var cov_2d6y5fvzj2 = function () {
-  var path = "/Users/dan.ziv/WebstormProjects/playkit-js/src/state/state.js",
-      hash = "47c4a49befef6a6e85ec873d7c3017bcb26b2d81",
-      global = new Function('return this')(),
-      gcv = "__coverage__",
-      coverageData = {
-    path: "/Users/dan.ziv/WebstormProjects/playkit-js/src/state/state.js",
-    statementMap: {
-      "0": {
-        start: {
-          line: 36,
-          column: 4
-        },
-        end: {
-          line: 36,
-          column: 21
-        }
-      },
-      "1": {
-        start: {
-          line: 37,
-          column: 4
-        },
-        end: {
-          line: 37,
-          column: 23
-        }
-      },
-      "2": {
-        start: {
-          line: 38,
-          column: 4
-        },
-        end: {
-          line: 38,
-          column: 40
-        }
-      },
-      "3": {
-        start: {
-          line: 46,
-          column: 4
-        },
-        end: {
-          line: 46,
-          column: 26
-        }
-      },
-      "4": {
-        start: {
-          line: 54,
-          column: 4
-        },
-        end: {
-          line: 54,
-          column: 47
-        }
-      }
-    },
-    fnMap: {
-      "0": {
-        name: "(anonymous_0)",
-        decl: {
-          start: {
-            line: 35,
-            column: 2
-          },
-          end: {
-            line: 35,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 35,
-            column: 28
-          },
-          end: {
-            line: 39,
-            column: 3
-          }
-        },
-        line: 35
-      },
-      "1": {
-        name: "(anonymous_1)",
-        decl: {
-          start: {
-            line: 45,
-            column: 2
-          },
-          end: {
-            line: 45,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 45,
-            column: 25
-          },
-          end: {
-            line: 47,
-            column: 3
-          }
-        },
-        line: 45
-      },
-      "2": {
-        name: "(anonymous_2)",
-        decl: {
-          start: {
-            line: 53,
-            column: 2
-          },
-          end: {
-            line: 53,
-            column: 3
-          }
-        },
-        loc: {
-          start: {
-            line: 53,
-            column: 38
-          },
-          end: {
-            line: 55,
-            column: 3
-          }
-        },
-        line: 53
-      }
-    },
-    branchMap: {},
-    s: {
-      "0": 0,
-      "1": 0,
-      "2": 0,
-      "3": 0,
-      "4": 0
-    },
-    f: {
-      "0": 0,
-      "1": 0,
-      "2": 0
-    },
-    b: {},
-    _coverageSchema: "332fd63041d2c1bcb487cc26dd0d5f7d97098a6c"
-  },
-      coverage = global[gcv] || (global[gcv] = {});
-
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
-  }
-
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
-}();
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -22323,13 +6167,8 @@ var State = function () {
   function State(type) {
     _classCallCheck(this, State);
 
-    ++cov_2d6y5fvzj2.f[0];
-    ++cov_2d6y5fvzj2.s[0];
-
     this.type = type;
-    ++cov_2d6y5fvzj2.s[1];
     this._duration = 0;
-    ++cov_2d6y5fvzj2.s[2];
     this._timestamp = Date.now() / 1000;
   }
 
@@ -22357,9 +6196,6 @@ var State = function () {
   _createClass(State, [{
     key: "duration",
     get: function get() {
-      ++cov_2d6y5fvzj2.f[1];
-      ++cov_2d6y5fvzj2.s[3];
-
       return this._duration;
     }
 
@@ -22369,9 +6205,6 @@ var State = function () {
      */
     ,
     set: function set(endTime) {
-      ++cov_2d6y5fvzj2.f[2];
-      ++cov_2d6y5fvzj2.s[4];
-
       this._duration = endTime - this._timestamp;
     }
   }]);
@@ -22382,7 +6215,25 @@ var State = function () {
 exports.default = State;
 
 /***/ }),
-/* 24 */
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var TRACK_TYPES = {
+  VIDEO: "video",
+  AUDIO: "audio",
+  TEXT: "text"
+};
+
+exports.default = TRACK_TYPES;
+
+/***/ }),
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22392,54 +6243,219 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var cov_bjj14sztj = function () {
-  var path = "/Users/dan.ziv/WebstormProjects/playkit-js/src/track/track-types.js",
-      hash = "e2fcdc786a5d95e81a682e5d247965e194697026",
-      global = new Function('return this')(),
-      gcv = "__coverage__",
-      coverageData = {
-    path: "/Users/dan.ziv/WebstormProjects/playkit-js/src/track/track-types.js",
-    statementMap: {
-      "0": {
-        start: {
-          line: 2,
-          column: 47
-        },
-        end: {
-          line: 6,
-          column: 1
+
+/**
+ * Calculates the most suitable source to the container size
+ * @function getSuitableSourceForResolution
+ * @param {Array<Object>} tracks - The tracks
+ * @param {number} width - The width to calculate with
+ * @param {number} height - The height to calculate with
+ * @returns {Object} - The most suitable source to the container size
+ */
+function getSuitableSourceForResolution(tracks, width, height) {
+  var mostSuitableWidth = null;
+  if (height && tracks) {
+    var mostSuitableWidthTracks = [];
+    var minWidthDiff = Infinity;
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = tracks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var track = _step.value;
+        // first filter the most width suitable
+        var widthDiff = Math.abs(track.width - width);
+        if (widthDiff < minWidthDiff) {
+          minWidthDiff = widthDiff;
+          mostSuitableWidthTracks = [track];
+        } else if (widthDiff === minWidthDiff) {
+          mostSuitableWidthTracks.push(track);
         }
       }
-    },
-    fnMap: {},
-    branchMap: {},
-    s: {
-      "0": 0
-    },
-    f: {},
-    b: {},
-    _coverageSchema: "332fd63041d2c1bcb487cc26dd0d5f7d97098a6c"
-  },
-      coverage = global[gcv] || (global[gcv] = {});
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
 
-  if (coverage[path] && coverage[path].hash === hash) {
-    return coverage[path];
+    var videoRatio = width / height;
+    var mostSuitableWidthAndRatioTracks = mostSuitableWidthTracks;
+    var minRatioDiff = Infinity;
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
+
+    try {
+      for (var _iterator2 = mostSuitableWidthTracks[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        var _track = _step2.value;
+        // filter the most ratio suitable from the width filter results
+        if (_track.height) {
+          var ratioDiff = Math.abs(_track.width / _track.height - videoRatio);
+          if (ratioDiff < minRatioDiff) {
+            minRatioDiff = ratioDiff;
+            mostSuitableWidthAndRatioTracks = [_track];
+          } else if (ratioDiff === minRatioDiff) {
+            mostSuitableWidthAndRatioTracks.push(_track);
+          }
+        }
+      }
+    } catch (err) {
+      _didIteratorError2 = true;
+      _iteratorError2 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+          _iterator2.return();
+        }
+      } finally {
+        if (_didIteratorError2) {
+          throw _iteratorError2;
+        }
+      }
+    }
+
+    var maxBandwidth = 0;
+    var _iteratorNormalCompletion3 = true;
+    var _didIteratorError3 = false;
+    var _iteratorError3 = undefined;
+
+    try {
+      for (var _iterator3 = mostSuitableWidthAndRatioTracks[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        var _track2 = _step3.value;
+        // select the top bitrate from the ratio filter results
+        if (_track2.bandwidth > maxBandwidth || !_track2.bandwidth) {
+          maxBandwidth = _track2.bandwidth || maxBandwidth;
+          mostSuitableWidth = _track2;
+        }
+      }
+    } catch (err) {
+      _didIteratorError3 = true;
+      _iteratorError3 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion3 && _iterator3.return) {
+          _iterator3.return();
+        }
+      } finally {
+        if (_didIteratorError3) {
+          throw _iteratorError3;
+        }
+      }
+    }
   }
+  return mostSuitableWidth;
+}
 
-  coverageData.hash = hash;
-  return coverage[path] = coverageData;
-}();
-
-var TRACK_TYPES = (++cov_bjj14sztj.s[0], {
-  VIDEO: "video",
-  AUDIO: "audio",
-  TEXT: "text"
-});
-
-exports.default = TRACK_TYPES;
+exports.getSuitableSourceForResolution = getSuitableSourceForResolution;
 
 /***/ }),
-/* 25 */
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(30)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".playkit-container {\n  position: relative;\n  width: 100%;\n  height: 100%;\n  color: #fff;\n  outline: none;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n  -webkit-tap-highlight-color: transparent;\n}\n\n*[class^=\"playkit-engine-\"] {\n  width: 100%;\n  height: 100%;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
+
+
+/***/ }),
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -22704,6 +6720,1490 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 	}
 }(this));
 
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(29);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// Prepare cssTransformation
+var transform;
+
+var options = {}
+options.transform = transform
+// add the styles to the DOM
+var update = __webpack_require__(33)(content, options);
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../node_modules/css-loader/index.js!./style.css", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!./style.css");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+
+var stylesInDom = {};
+
+var	memoize = function (fn) {
+	var memo;
+
+	return function () {
+		if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+		return memo;
+	};
+};
+
+var isOldIE = memoize(function () {
+	// Test for IE <= 9 as proposed by Browserhacks
+	// @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
+	// Tests for existence of standard globals is to allow style-loader
+	// to operate correctly into non-standard environments
+	// @see https://github.com/webpack-contrib/style-loader/issues/177
+	return window && document && document.all && !window.atob;
+});
+
+var getElement = (function (fn) {
+	var memo = {};
+
+	return function(selector) {
+		if (typeof memo[selector] === "undefined") {
+			memo[selector] = fn.call(this, selector);
+		}
+
+		return memo[selector]
+	};
+})(function (target) {
+	return document.querySelector(target)
+});
+
+var singleton = null;
+var	singletonCounter = 0;
+var	stylesInsertedAtTop = [];
+
+var	fixUrls = __webpack_require__(34);
+
+module.exports = function(list, options) {
+	if (typeof DEBUG !== "undefined" && DEBUG) {
+		if (typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+	}
+
+	options = options || {};
+
+	options.attrs = typeof options.attrs === "object" ? options.attrs : {};
+
+	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+	// tags it will allow on a page
+	if (!options.singleton) options.singleton = isOldIE();
+
+	// By default, add <style> tags to the <head> element
+	if (!options.insertInto) options.insertInto = "head";
+
+	// By default, add <style> tags to the bottom of the target
+	if (!options.insertAt) options.insertAt = "bottom";
+
+	var styles = listToStyles(list, options);
+
+	addStylesToDom(styles, options);
+
+	return function update (newList) {
+		var mayRemove = [];
+
+		for (var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+
+			domStyle.refs--;
+			mayRemove.push(domStyle);
+		}
+
+		if(newList) {
+			var newStyles = listToStyles(newList, options);
+			addStylesToDom(newStyles, options);
+		}
+
+		for (var i = 0; i < mayRemove.length; i++) {
+			var domStyle = mayRemove[i];
+
+			if(domStyle.refs === 0) {
+				for (var j = 0; j < domStyle.parts.length; j++) domStyle.parts[j]();
+
+				delete stylesInDom[domStyle.id];
+			}
+		}
+	};
+};
+
+function addStylesToDom (styles, options) {
+	for (var i = 0; i < styles.length; i++) {
+		var item = styles[i];
+		var domStyle = stylesInDom[item.id];
+
+		if(domStyle) {
+			domStyle.refs++;
+
+			for(var j = 0; j < domStyle.parts.length; j++) {
+				domStyle.parts[j](item.parts[j]);
+			}
+
+			for(; j < item.parts.length; j++) {
+				domStyle.parts.push(addStyle(item.parts[j], options));
+			}
+		} else {
+			var parts = [];
+
+			for(var j = 0; j < item.parts.length; j++) {
+				parts.push(addStyle(item.parts[j], options));
+			}
+
+			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+		}
+	}
+}
+
+function listToStyles (list, options) {
+	var styles = [];
+	var newStyles = {};
+
+	for (var i = 0; i < list.length; i++) {
+		var item = list[i];
+		var id = options.base ? item[0] + options.base : item[0];
+		var css = item[1];
+		var media = item[2];
+		var sourceMap = item[3];
+		var part = {css: css, media: media, sourceMap: sourceMap};
+
+		if(!newStyles[id]) styles.push(newStyles[id] = {id: id, parts: [part]});
+		else newStyles[id].parts.push(part);
+	}
+
+	return styles;
+}
+
+function insertStyleElement (options, style) {
+	var target = getElement(options.insertInto)
+
+	if (!target) {
+		throw new Error("Couldn't find a style target. This probably means that the value for the 'insertInto' parameter is invalid.");
+	}
+
+	var lastStyleElementInsertedAtTop = stylesInsertedAtTop[stylesInsertedAtTop.length - 1];
+
+	if (options.insertAt === "top") {
+		if (!lastStyleElementInsertedAtTop) {
+			target.insertBefore(style, target.firstChild);
+		} else if (lastStyleElementInsertedAtTop.nextSibling) {
+			target.insertBefore(style, lastStyleElementInsertedAtTop.nextSibling);
+		} else {
+			target.appendChild(style);
+		}
+		stylesInsertedAtTop.push(style);
+	} else if (options.insertAt === "bottom") {
+		target.appendChild(style);
+	} else {
+		throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
+	}
+}
+
+function removeStyleElement (style) {
+	if (style.parentNode === null) return false;
+	style.parentNode.removeChild(style);
+
+	var idx = stylesInsertedAtTop.indexOf(style);
+	if(idx >= 0) {
+		stylesInsertedAtTop.splice(idx, 1);
+	}
+}
+
+function createStyleElement (options) {
+	var style = document.createElement("style");
+
+	options.attrs.type = "text/css";
+
+	addAttrs(style, options.attrs);
+	insertStyleElement(options, style);
+
+	return style;
+}
+
+function createLinkElement (options) {
+	var link = document.createElement("link");
+
+	options.attrs.type = "text/css";
+	options.attrs.rel = "stylesheet";
+
+	addAttrs(link, options.attrs);
+	insertStyleElement(options, link);
+
+	return link;
+}
+
+function addAttrs (el, attrs) {
+	Object.keys(attrs).forEach(function (key) {
+		el.setAttribute(key, attrs[key]);
+	});
+}
+
+function addStyle (obj, options) {
+	var style, update, remove, result;
+
+	// If a transform function was defined, run it on the css
+	if (options.transform && obj.css) {
+	    result = options.transform(obj.css);
+
+	    if (result) {
+	    	// If transform returns a value, use that instead of the original css.
+	    	// This allows running runtime transformations on the css.
+	    	obj.css = result;
+	    } else {
+	    	// If the transform function returns a falsy value, don't add this css.
+	    	// This allows conditional loading of css
+	    	return function() {
+	    		// noop
+	    	};
+	    }
+	}
+
+	if (options.singleton) {
+		var styleIndex = singletonCounter++;
+
+		style = singleton || (singleton = createStyleElement(options));
+
+		update = applyToSingletonTag.bind(null, style, styleIndex, false);
+		remove = applyToSingletonTag.bind(null, style, styleIndex, true);
+
+	} else if (
+		obj.sourceMap &&
+		typeof URL === "function" &&
+		typeof URL.createObjectURL === "function" &&
+		typeof URL.revokeObjectURL === "function" &&
+		typeof Blob === "function" &&
+		typeof btoa === "function"
+	) {
+		style = createLinkElement(options);
+		update = updateLink.bind(null, style, options);
+		remove = function () {
+			removeStyleElement(style);
+
+			if(style.href) URL.revokeObjectURL(style.href);
+		};
+	} else {
+		style = createStyleElement(options);
+		update = applyToTag.bind(null, style);
+		remove = function () {
+			removeStyleElement(style);
+		};
+	}
+
+	update(obj);
+
+	return function updateStyle (newObj) {
+		if (newObj) {
+			if (
+				newObj.css === obj.css &&
+				newObj.media === obj.media &&
+				newObj.sourceMap === obj.sourceMap
+			) {
+				return;
+			}
+
+			update(obj = newObj);
+		} else {
+			remove();
+		}
+	};
+}
+
+var replaceText = (function () {
+	var textStore = [];
+
+	return function (index, replacement) {
+		textStore[index] = replacement;
+
+		return textStore.filter(Boolean).join('\n');
+	};
+})();
+
+function applyToSingletonTag (style, index, remove, obj) {
+	var css = remove ? "" : obj.css;
+
+	if (style.styleSheet) {
+		style.styleSheet.cssText = replaceText(index, css);
+	} else {
+		var cssNode = document.createTextNode(css);
+		var childNodes = style.childNodes;
+
+		if (childNodes[index]) style.removeChild(childNodes[index]);
+
+		if (childNodes.length) {
+			style.insertBefore(cssNode, childNodes[index]);
+		} else {
+			style.appendChild(cssNode);
+		}
+	}
+}
+
+function applyToTag (style, obj) {
+	var css = obj.css;
+	var media = obj.media;
+
+	if(media) {
+		style.setAttribute("media", media)
+	}
+
+	if(style.styleSheet) {
+		style.styleSheet.cssText = css;
+	} else {
+		while(style.firstChild) {
+			style.removeChild(style.firstChild);
+		}
+
+		style.appendChild(document.createTextNode(css));
+	}
+}
+
+function updateLink (link, options, obj) {
+	var css = obj.css;
+	var sourceMap = obj.sourceMap;
+
+	/*
+		If convertToAbsoluteUrls isn't defined, but sourcemaps are enabled
+		and there is no publicPath defined then lets turn convertToAbsoluteUrls
+		on by default.  Otherwise default to the convertToAbsoluteUrls option
+		directly
+	*/
+	var autoFixUrls = options.convertToAbsoluteUrls === undefined && sourceMap;
+
+	if (options.convertToAbsoluteUrls || autoFixUrls) {
+		css = fixUrls(css);
+	}
+
+	if (sourceMap) {
+		// http://stackoverflow.com/a/26603875
+		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+	}
+
+	var blob = new Blob([css], { type: "text/css" });
+
+	var oldSrc = link.href;
+
+	link.href = URL.createObjectURL(blob);
+
+	if(oldSrc) URL.revokeObjectURL(oldSrc);
+}
+
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports) {
+
+
+/**
+ * When source maps are enabled, `style-loader` uses a link element with a data-uri to
+ * embed the css on the page. This breaks all relative urls because now they are relative to a
+ * bundle instead of the current page.
+ *
+ * One solution is to only use full urls, but that may be impossible.
+ *
+ * Instead, this function "fixes" the relative urls to be absolute according to the current page location.
+ *
+ * A rudimentary test suite is located at `test/fixUrls.js` and can be run via the `npm test` command.
+ *
+ */
+
+module.exports = function (css) {
+  // get current location
+  var location = typeof window !== "undefined" && window.location;
+
+  if (!location) {
+    throw new Error("fixUrls requires window.location");
+  }
+
+	// blank or null?
+	if (!css || typeof css !== "string") {
+	  return css;
+  }
+
+  var baseUrl = location.protocol + "//" + location.host;
+  var currentDir = baseUrl + location.pathname.replace(/\/[^\/]*$/, "/");
+
+	// convert each url(...)
+	/*
+	This regular expression is just a way to recursively match brackets within
+	a string.
+
+	 /url\s*\(  = Match on the word "url" with any whitespace after it and then a parens
+	   (  = Start a capturing group
+	     (?:  = Start a non-capturing group
+	         [^)(]  = Match anything that isn't a parentheses
+	         |  = OR
+	         \(  = Match a start parentheses
+	             (?:  = Start another non-capturing groups
+	                 [^)(]+  = Match anything that isn't a parentheses
+	                 |  = OR
+	                 \(  = Match a start parentheses
+	                     [^)(]*  = Match anything that isn't a parentheses
+	                 \)  = Match a end parentheses
+	             )  = End Group
+              *\) = Match anything and then a close parens
+          )  = Close non-capturing group
+          *  = Match anything
+       )  = Close capturing group
+	 \)  = Match a close parens
+
+	 /gi  = Get all matches, not the first.  Be case insensitive.
+	 */
+	var fixedCss = css.replace(/url\s*\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/gi, function(fullMatch, origUrl) {
+		// strip quotes (if they exist)
+		var unquotedOrigUrl = origUrl
+			.trim()
+			.replace(/^"(.*)"$/, function(o, $1){ return $1; })
+			.replace(/^'(.*)'$/, function(o, $1){ return $1; });
+
+		// already a full url? no change
+		if (/^(#|data:|http:\/\/|https:\/\/|file:\/\/\/)/i.test(unquotedOrigUrl)) {
+		  return fullMatch;
+		}
+
+		// convert the url to a full url
+		var newUrl;
+
+		if (unquotedOrigUrl.indexOf("//") === 0) {
+		  	//TODO: should we add protocol?
+			newUrl = unquotedOrigUrl;
+		} else if (unquotedOrigUrl.indexOf("/") === 0) {
+			// path should be relative to the base url
+			newUrl = baseUrl + unquotedOrigUrl; // already starts with '/'
+		} else {
+			// path should be relative to current directory
+			newUrl = currentDir + unquotedOrigUrl.replace(/^\.\//, ""); // Strip leading './'
+		}
+
+		// send back the fixed url(...)
+		return "url(" + JSON.stringify(newUrl) + ")";
+	});
+
+	// send back the fixed css
+	return fixedCss;
+};
+
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_RESULT__;/**
+ * UAParser.js v0.7.13
+ * Lightweight JavaScript-based User-Agent string parser
+ * https://github.com/faisalman/ua-parser-js
+ *
+ * Copyright © 2012-2016 Faisal Salman <fyzlman@gmail.com>
+ * Dual licensed under GPLv2 & MIT
+ */
+
+(function (window, undefined) {
+
+    'use strict';
+
+    //////////////
+    // Constants
+    /////////////
+
+
+    var LIBVERSION  = '0.7.13',
+        EMPTY       = '',
+        UNKNOWN     = '?',
+        FUNC_TYPE   = 'function',
+        UNDEF_TYPE  = 'undefined',
+        OBJ_TYPE    = 'object',
+        STR_TYPE    = 'string',
+        MAJOR       = 'major', // deprecated
+        MODEL       = 'model',
+        NAME        = 'name',
+        TYPE        = 'type',
+        VENDOR      = 'vendor',
+        VERSION     = 'version',
+        ARCHITECTURE= 'architecture',
+        CONSOLE     = 'console',
+        MOBILE      = 'mobile',
+        TABLET      = 'tablet',
+        SMARTTV     = 'smarttv',
+        WEARABLE    = 'wearable',
+        EMBEDDED    = 'embedded';
+
+
+    ///////////
+    // Helper
+    //////////
+
+
+    var util = {
+        extend : function (regexes, extensions) {
+            var margedRegexes = {};
+            for (var i in regexes) {
+                if (extensions[i] && extensions[i].length % 2 === 0) {
+                    margedRegexes[i] = extensions[i].concat(regexes[i]);
+                } else {
+                    margedRegexes[i] = regexes[i];
+                }
+            }
+            return margedRegexes;
+        },
+        has : function (str1, str2) {
+          if (typeof str1 === "string") {
+            return str2.toLowerCase().indexOf(str1.toLowerCase()) !== -1;
+          } else {
+            return false;
+          }
+        },
+        lowerize : function (str) {
+            return str.toLowerCase();
+        },
+        major : function (version) {
+            return typeof(version) === STR_TYPE ? version.replace(/[^\d\.]/g,'').split(".")[0] : undefined;
+        },
+        trim : function (str) {
+          return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+        }
+    };
+
+
+    ///////////////
+    // Map helper
+    //////////////
+
+
+    var mapper = {
+
+        rgx : function (ua, arrays) {
+
+            //var result = {},
+            var i = 0, j, k, p, q, matches, match;//, args = arguments;
+
+            /*// construct object barebones
+            for (p = 0; p < args[1].length; p++) {
+                q = args[1][p];
+                result[typeof q === OBJ_TYPE ? q[0] : q] = undefined;
+            }*/
+
+            // loop through all regexes maps
+            while (i < arrays.length && !matches) {
+
+                var regex = arrays[i],       // even sequence (0,2,4,..)
+                    props = arrays[i + 1];   // odd sequence (1,3,5,..)
+                j = k = 0;
+
+                // try matching uastring with regexes
+                while (j < regex.length && !matches) {
+
+                    matches = regex[j++].exec(ua);
+
+                    if (!!matches) {
+                        for (p = 0; p < props.length; p++) {
+                            match = matches[++k];
+                            q = props[p];
+                            // check if given property is actually array
+                            if (typeof q === OBJ_TYPE && q.length > 0) {
+                                if (q.length == 2) {
+                                    if (typeof q[1] == FUNC_TYPE) {
+                                        // assign modified match
+                                        this[q[0]] = q[1].call(this, match);
+                                    } else {
+                                        // assign given value, ignore regex match
+                                        this[q[0]] = q[1];
+                                    }
+                                } else if (q.length == 3) {
+                                    // check whether function or regex
+                                    if (typeof q[1] === FUNC_TYPE && !(q[1].exec && q[1].test)) {
+                                        // call function (usually string mapper)
+                                        this[q[0]] = match ? q[1].call(this, match, q[2]) : undefined;
+                                    } else {
+                                        // sanitize match using given regex
+                                        this[q[0]] = match ? match.replace(q[1], q[2]) : undefined;
+                                    }
+                                } else if (q.length == 4) {
+                                        this[q[0]] = match ? q[3].call(this, match.replace(q[1], q[2])) : undefined;
+                                }
+                            } else {
+                                this[q] = match ? match : undefined;
+                            }
+                        }
+                    }
+                }
+                i += 2;
+            }
+            //console.log(this);
+            //return this;
+        },
+
+        str : function (str, map) {
+
+            for (var i in map) {
+                // check if array
+                if (typeof map[i] === OBJ_TYPE && map[i].length > 0) {
+                    for (var j = 0; j < map[i].length; j++) {
+                        if (util.has(map[i][j], str)) {
+                            return (i === UNKNOWN) ? undefined : i;
+                        }
+                    }
+                } else if (util.has(map[i], str)) {
+                    return (i === UNKNOWN) ? undefined : i;
+                }
+            }
+            return str;
+        }
+    };
+
+
+    ///////////////
+    // String map
+    //////////////
+
+
+    var maps = {
+
+        browser : {
+            oldsafari : {
+                version : {
+                    '1.0'   : '/8',
+                    '1.2'   : '/1',
+                    '1.3'   : '/3',
+                    '2.0'   : '/412',
+                    '2.0.2' : '/416',
+                    '2.0.3' : '/417',
+                    '2.0.4' : '/419',
+                    '?'     : '/'
+                }
+            }
+        },
+
+        device : {
+            amazon : {
+                model : {
+                    'Fire Phone' : ['SD', 'KF']
+                }
+            },
+            sprint : {
+                model : {
+                    'Evo Shift 4G' : '7373KT'
+                },
+                vendor : {
+                    'HTC'       : 'APA',
+                    'Sprint'    : 'Sprint'
+                }
+            }
+        },
+
+        os : {
+            windows : {
+                version : {
+                    'ME'        : '4.90',
+                    'NT 3.11'   : 'NT3.51',
+                    'NT 4.0'    : 'NT4.0',
+                    '2000'      : 'NT 5.0',
+                    'XP'        : ['NT 5.1', 'NT 5.2'],
+                    'Vista'     : 'NT 6.0',
+                    '7'         : 'NT 6.1',
+                    '8'         : 'NT 6.2',
+                    '8.1'       : 'NT 6.3',
+                    '10'        : ['NT 6.4', 'NT 10.0'],
+                    'RT'        : 'ARM'
+                }
+            }
+        }
+    };
+
+
+    //////////////
+    // Regex map
+    /////////////
+
+
+    var regexes = {
+
+        browser : [[
+
+            // Presto based
+            /(opera\smini)\/([\w\.-]+)/i,                                       // Opera Mini
+            /(opera\s[mobiletab]+).+version\/([\w\.-]+)/i,                      // Opera Mobi/Tablet
+            /(opera).+version\/([\w\.]+)/i,                                     // Opera > 9.80
+            /(opera)[\/\s]+([\w\.]+)/i                                          // Opera < 9.80
+            ], [NAME, VERSION], [
+
+            /(opios)[\/\s]+([\w\.]+)/i                                          // Opera mini on iphone >= 8.0
+            ], [[NAME, 'Opera Mini'], VERSION], [
+
+            /\s(opr)\/([\w\.]+)/i                                               // Opera Webkit
+            ], [[NAME, 'Opera'], VERSION], [
+
+            // Mixed
+            /(kindle)\/([\w\.]+)/i,                                             // Kindle
+            /(lunascape|maxthon|netfront|jasmine|blazer)[\/\s]?([\w\.]+)*/i,
+                                                                                // Lunascape/Maxthon/Netfront/Jasmine/Blazer
+
+            // Trident based
+            /(avant\s|iemobile|slim|baidu)(?:browser)?[\/\s]?([\w\.]*)/i,
+                                                                                // Avant/IEMobile/SlimBrowser/Baidu
+            /(?:ms|\()(ie)\s([\w\.]+)/i,                                        // Internet Explorer
+
+            // Webkit/KHTML based
+            /(rekonq)\/([\w\.]+)*/i,                                            // Rekonq
+            /(chromium|flock|rockmelt|midori|epiphany|silk|skyfire|ovibrowser|bolt|iron|vivaldi|iridium|phantomjs|bowser)\/([\w\.-]+)/i
+                                                                                // Chromium/Flock/RockMelt/Midori/Epiphany/Silk/Skyfire/Bolt/Iron/Iridium/PhantomJS/Bowser
+            ], [NAME, VERSION], [
+
+            /(trident).+rv[:\s]([\w\.]+).+like\sgecko/i                         // IE11
+            ], [[NAME, 'IE'], VERSION], [
+
+            /(edge)\/((\d+)?[\w\.]+)/i                                          // Microsoft Edge
+            ], [NAME, VERSION], [
+
+            /(yabrowser)\/([\w\.]+)/i                                           // Yandex
+            ], [[NAME, 'Yandex'], VERSION], [
+
+            /(puffin)\/([\w\.]+)/i                                              // Puffin
+            ], [[NAME, 'Puffin'], VERSION], [
+
+            /(uc\s?browser)[\/\s]?([\w\.]+)/i,
+            /ucweb.+(ucbrowser)[\/\s]?([\w\.]+)/i,
+            /juc.+(ucweb)[\/\s]?([\w\.]+)/i,
+            /(ucbrowser)\/([\w\.]+)/i
+                                                                                // UCBrowser
+            ], [[NAME, 'UCBrowser'], VERSION], [
+
+            /(comodo_dragon)\/([\w\.]+)/i                                       // Comodo Dragon
+            ], [[NAME, /_/g, ' '], VERSION], [
+
+            /(micromessenger)\/([\w\.]+)/i                                      // WeChat
+            ], [[NAME, 'WeChat'], VERSION], [
+
+            /m?(qqbrowser)[\/\s]?([\w\.]+)/i                                    // QQBrowser
+            ], [NAME, VERSION], [
+
+            /xiaomi\/miuibrowser\/([\w\.]+)/i                                   // MIUI Browser
+            ], [VERSION, [NAME, 'MIUI Browser']], [
+
+            /;fbav\/([\w\.]+);/i                                                // Facebook App for iOS & Android
+            ], [VERSION, [NAME, 'Facebook']], [
+
+            /(headlesschrome) ([\w\.]+)/i                                       // Chrome Headless
+            ], [VERSION, [NAME, 'Chrome Headless']], [
+
+            /\swv\).+(chrome)\/([\w\.]+)/i                                      // Chrome WebView
+            ], [[NAME, /(.+)/, '$1 WebView'], VERSION], [
+
+            /android.+samsungbrowser\/([\w\.]+)/i,
+            /android.+version\/([\w\.]+)\s+(?:mobile\s?safari|safari)*/i        // Android Browser
+            ], [VERSION, [NAME, 'Android Browser']], [
+
+            /(chrome|omniweb|arora|[tizenoka]{5}\s?browser)\/v?([\w\.]+)/i
+                                                                                // Chrome/OmniWeb/Arora/Tizen/Nokia
+            ], [NAME, VERSION], [
+
+            /(dolfin)\/([\w\.]+)/i                                              // Dolphin
+            ], [[NAME, 'Dolphin'], VERSION], [
+
+            /((?:android.+)crmo|crios)\/([\w\.]+)/i                             // Chrome for Android/iOS
+            ], [[NAME, 'Chrome'], VERSION], [
+
+            /(coast)\/([\w\.]+)/i                                               // Opera Coast
+            ], [[NAME, 'Opera Coast'], VERSION], [
+
+            /fxios\/([\w\.-]+)/i                                                // Firefox for iOS
+            ], [VERSION, [NAME, 'Firefox']], [
+
+            /version\/([\w\.]+).+?mobile\/\w+\s(safari)/i                       // Mobile Safari
+            ], [VERSION, [NAME, 'Mobile Safari']], [
+
+            /version\/([\w\.]+).+?(mobile\s?safari|safari)/i                    // Safari & Safari Mobile
+            ], [VERSION, NAME], [
+
+            /webkit.+?(mobile\s?safari|safari)(\/[\w\.]+)/i                     // Safari < 3.0
+            ], [NAME, [VERSION, mapper.str, maps.browser.oldsafari.version]], [
+
+            /(konqueror)\/([\w\.]+)/i,                                          // Konqueror
+            /(webkit|khtml)\/([\w\.]+)/i
+            ], [NAME, VERSION], [
+
+            // Gecko based
+            /(navigator|netscape)\/([\w\.-]+)/i                                 // Netscape
+            ], [[NAME, 'Netscape'], VERSION], [
+            /(swiftfox)/i,                                                      // Swiftfox
+            /(icedragon|iceweasel|camino|chimera|fennec|maemo\sbrowser|minimo|conkeror)[\/\s]?([\w\.\+]+)/i,
+                                                                                // IceDragon/Iceweasel/Camino/Chimera/Fennec/Maemo/Minimo/Conkeror
+            /(firefox|seamonkey|k-meleon|icecat|iceape|firebird|phoenix)\/([\w\.-]+)/i,
+                                                                                // Firefox/SeaMonkey/K-Meleon/IceCat/IceApe/Firebird/Phoenix
+            /(mozilla)\/([\w\.]+).+rv\:.+gecko\/\d+/i,                          // Mozilla
+
+            // Other
+            /(polaris|lynx|dillo|icab|doris|amaya|w3m|netsurf|sleipnir)[\/\s]?([\w\.]+)/i,
+                                                                                // Polaris/Lynx/Dillo/iCab/Doris/Amaya/w3m/NetSurf/Sleipnir
+            /(links)\s\(([\w\.]+)/i,                                            // Links
+            /(gobrowser)\/?([\w\.]+)*/i,                                        // GoBrowser
+            /(ice\s?browser)\/v?([\w\._]+)/i,                                   // ICE Browser
+            /(mosaic)[\/\s]([\w\.]+)/i                                          // Mosaic
+            ], [NAME, VERSION]
+
+            /* /////////////////////
+            // Media players BEGIN
+            ////////////////////////
+
+            , [
+
+            /(apple(?:coremedia|))\/((\d+)[\w\._]+)/i,                          // Generic Apple CoreMedia
+            /(coremedia) v((\d+)[\w\._]+)/i
+            ], [NAME, VERSION], [
+
+            /(aqualung|lyssna|bsplayer)\/((\d+)?[\w\.-]+)/i                     // Aqualung/Lyssna/BSPlayer
+            ], [NAME, VERSION], [
+
+            /(ares|ossproxy)\s((\d+)[\w\.-]+)/i                                 // Ares/OSSProxy
+            ], [NAME, VERSION], [
+
+            /(audacious|audimusicstream|amarok|bass|core|dalvik|gnomemplayer|music on console|nsplayer|psp-internetradioplayer|videos)\/((\d+)[\w\.-]+)/i,
+                                                                                // Audacious/AudiMusicStream/Amarok/BASS/OpenCORE/Dalvik/GnomeMplayer/MoC
+                                                                                // NSPlayer/PSP-InternetRadioPlayer/Videos
+            /(clementine|music player daemon)\s((\d+)[\w\.-]+)/i,               // Clementine/MPD
+            /(lg player|nexplayer)\s((\d+)[\d\.]+)/i,
+            /player\/(nexplayer|lg player)\s((\d+)[\w\.-]+)/i                   // NexPlayer/LG Player
+            ], [NAME, VERSION], [
+            /(nexplayer)\s((\d+)[\w\.-]+)/i                                     // Nexplayer
+            ], [NAME, VERSION], [
+
+            /(flrp)\/((\d+)[\w\.-]+)/i                                          // Flip Player
+            ], [[NAME, 'Flip Player'], VERSION], [
+
+            /(fstream|nativehost|queryseekspider|ia-archiver|facebookexternalhit)/i
+                                                                                // FStream/NativeHost/QuerySeekSpider/IA Archiver/facebookexternalhit
+            ], [NAME], [
+
+            /(gstreamer) souphttpsrc (?:\([^\)]+\)){0,1} libsoup\/((\d+)[\w\.-]+)/i
+                                                                                // Gstreamer
+            ], [NAME, VERSION], [
+
+            /(htc streaming player)\s[\w_]+\s\/\s((\d+)[\d\.]+)/i,              // HTC Streaming Player
+            /(java|python-urllib|python-requests|wget|libcurl)\/((\d+)[\w\.-_]+)/i,
+                                                                                // Java/urllib/requests/wget/cURL
+            /(lavf)((\d+)[\d\.]+)/i                                             // Lavf (FFMPEG)
+            ], [NAME, VERSION], [
+
+            /(htc_one_s)\/((\d+)[\d\.]+)/i                                      // HTC One S
+            ], [[NAME, /_/g, ' '], VERSION], [
+
+            /(mplayer)(?:\s|\/)(?:(?:sherpya-){0,1}svn)(?:-|\s)(r\d+(?:-\d+[\w\.-]+){0,1})/i
+                                                                                // MPlayer SVN
+            ], [NAME, VERSION], [
+
+            /(mplayer)(?:\s|\/|[unkow-]+)((\d+)[\w\.-]+)/i                      // MPlayer
+            ], [NAME, VERSION], [
+
+            /(mplayer)/i,                                                       // MPlayer (no other info)
+            /(yourmuze)/i,                                                      // YourMuze
+            /(media player classic|nero showtime)/i                             // Media Player Classic/Nero ShowTime
+            ], [NAME], [
+
+            /(nero (?:home|scout))\/((\d+)[\w\.-]+)/i                           // Nero Home/Nero Scout
+            ], [NAME, VERSION], [
+
+            /(nokia\d+)\/((\d+)[\w\.-]+)/i                                      // Nokia
+            ], [NAME, VERSION], [
+
+            /\s(songbird)\/((\d+)[\w\.-]+)/i                                    // Songbird/Philips-Songbird
+            ], [NAME, VERSION], [
+
+            /(winamp)3 version ((\d+)[\w\.-]+)/i,                               // Winamp
+            /(winamp)\s((\d+)[\w\.-]+)/i,
+            /(winamp)mpeg\/((\d+)[\w\.-]+)/i
+            ], [NAME, VERSION], [
+
+            /(ocms-bot|tapinradio|tunein radio|unknown|winamp|inlight radio)/i  // OCMS-bot/tap in radio/tunein/unknown/winamp (no other info)
+                                                                                // inlight radio
+            ], [NAME], [
+
+            /(quicktime|rma|radioapp|radioclientapplication|soundtap|totem|stagefright|streamium)\/((\d+)[\w\.-]+)/i
+                                                                                // QuickTime/RealMedia/RadioApp/RadioClientApplication/
+                                                                                // SoundTap/Totem/Stagefright/Streamium
+            ], [NAME, VERSION], [
+
+            /(smp)((\d+)[\d\.]+)/i                                              // SMP
+            ], [NAME, VERSION], [
+
+            /(vlc) media player - version ((\d+)[\w\.]+)/i,                     // VLC Videolan
+            /(vlc)\/((\d+)[\w\.-]+)/i,
+            /(xbmc|gvfs|xine|xmms|irapp)\/((\d+)[\w\.-]+)/i,                    // XBMC/gvfs/Xine/XMMS/irapp
+            /(foobar2000)\/((\d+)[\d\.]+)/i,                                    // Foobar2000
+            /(itunes)\/((\d+)[\d\.]+)/i                                         // iTunes
+            ], [NAME, VERSION], [
+
+            /(wmplayer)\/((\d+)[\w\.-]+)/i,                                     // Windows Media Player
+            /(windows-media-player)\/((\d+)[\w\.-]+)/i
+            ], [[NAME, /-/g, ' '], VERSION], [
+
+            /windows\/((\d+)[\w\.-]+) upnp\/[\d\.]+ dlnadoc\/[\d\.]+ (home media server)/i
+                                                                                // Windows Media Server
+            ], [VERSION, [NAME, 'Windows']], [
+
+            /(com\.riseupradioalarm)\/((\d+)[\d\.]*)/i                          // RiseUP Radio Alarm
+            ], [NAME, VERSION], [
+
+            /(rad.io)\s((\d+)[\d\.]+)/i,                                        // Rad.io
+            /(radio.(?:de|at|fr))\s((\d+)[\d\.]+)/i
+            ], [[NAME, 'rad.io'], VERSION]
+
+            //////////////////////
+            // Media players END
+            ////////////////////*/
+
+        ],
+
+        cpu : [[
+
+            /(?:(amd|x(?:(?:86|64)[_-])?|wow|win)64)[;\)]/i                     // AMD64
+            ], [[ARCHITECTURE, 'amd64']], [
+
+            /(ia32(?=;))/i                                                      // IA32 (quicktime)
+            ], [[ARCHITECTURE, util.lowerize]], [
+
+            /((?:i[346]|x)86)[;\)]/i                                            // IA32
+            ], [[ARCHITECTURE, 'ia32']], [
+
+            // PocketPC mistakenly identified as PowerPC
+            /windows\s(ce|mobile);\sppc;/i
+            ], [[ARCHITECTURE, 'arm']], [
+
+            /((?:ppc|powerpc)(?:64)?)(?:\smac|;|\))/i                           // PowerPC
+            ], [[ARCHITECTURE, /ower/, '', util.lowerize]], [
+
+            /(sun4\w)[;\)]/i                                                    // SPARC
+            ], [[ARCHITECTURE, 'sparc']], [
+
+            /((?:avr32|ia64(?=;))|68k(?=\))|arm(?:64|(?=v\d+;))|(?=atmel\s)avr|(?:irix|mips|sparc)(?:64)?(?=;)|pa-risc)/i
+                                                                                // IA64, 68K, ARM/64, AVR/32, IRIX/64, MIPS/64, SPARC/64, PA-RISC
+            ], [[ARCHITECTURE, util.lowerize]]
+        ],
+
+        device : [[
+
+            /\((ipad|playbook);[\w\s\);-]+(rim|apple)/i                         // iPad/PlayBook
+            ], [MODEL, VENDOR, [TYPE, TABLET]], [
+
+            /applecoremedia\/[\w\.]+ \((ipad)/                                  // iPad
+            ], [MODEL, [VENDOR, 'Apple'], [TYPE, TABLET]], [
+
+            /(apple\s{0,1}tv)/i                                                 // Apple TV
+            ], [[MODEL, 'Apple TV'], [VENDOR, 'Apple']], [
+
+            /(archos)\s(gamepad2?)/i,                                           // Archos
+            /(hp).+(touchpad)/i,                                                // HP TouchPad
+            /(hp).+(tablet)/i,                                                  // HP Tablet
+            /(kindle)\/([\w\.]+)/i,                                             // Kindle
+            /\s(nook)[\w\s]+build\/(\w+)/i,                                     // Nook
+            /(dell)\s(strea[kpr\s\d]*[\dko])/i                                  // Dell Streak
+            ], [VENDOR, MODEL, [TYPE, TABLET]], [
+
+            /(kf[A-z]+)\sbuild\/[\w\.]+.*silk\//i                               // Kindle Fire HD
+            ], [MODEL, [VENDOR, 'Amazon'], [TYPE, TABLET]], [
+            /(sd|kf)[0349hijorstuw]+\sbuild\/[\w\.]+.*silk\//i                  // Fire Phone
+            ], [[MODEL, mapper.str, maps.device.amazon.model], [VENDOR, 'Amazon'], [TYPE, MOBILE]], [
+
+            /\((ip[honed|\s\w*]+);.+(apple)/i                                   // iPod/iPhone
+            ], [MODEL, VENDOR, [TYPE, MOBILE]], [
+            /\((ip[honed|\s\w*]+);/i                                            // iPod/iPhone
+            ], [MODEL, [VENDOR, 'Apple'], [TYPE, MOBILE]], [
+
+            /(blackberry)[\s-]?(\w+)/i,                                         // BlackBerry
+            /(blackberry|benq|palm(?=\-)|sonyericsson|acer|asus|dell|huawei|meizu|motorola|polytron)[\s_-]?([\w-]+)*/i,
+                                                                                // BenQ/Palm/Sony-Ericsson/Acer/Asus/Dell/Huawei/Meizu/Motorola/Polytron
+            /(hp)\s([\w\s]+\w)/i,                                               // HP iPAQ
+            /(asus)-?(\w+)/i                                                    // Asus
+            ], [VENDOR, MODEL, [TYPE, MOBILE]], [
+            /\(bb10;\s(\w+)/i                                                   // BlackBerry 10
+            ], [MODEL, [VENDOR, 'BlackBerry'], [TYPE, MOBILE]], [
+                                                                                // Asus Tablets
+            /android.+(transfo[prime\s]{4,10}\s\w+|eeepc|slider\s\w+|nexus 7|padfone)/i
+            ], [MODEL, [VENDOR, 'Asus'], [TYPE, TABLET]], [
+
+            /(sony)\s(tablet\s[ps])\sbuild\//i,                                  // Sony
+            /(sony)?(?:sgp.+)\sbuild\//i
+            ], [[VENDOR, 'Sony'], [MODEL, 'Xperia Tablet'], [TYPE, TABLET]], [
+            /(?:sony)?(?:(?:(?:c|d)\d{4})|(?:so[-l].+))\sbuild\//i
+            ], [[VENDOR, 'Sony'], [MODEL, 'Xperia Phone'], [TYPE, MOBILE]], [
+
+            /\s(ouya)\s/i,                                                      // Ouya
+            /(nintendo)\s([wids3u]+)/i                                          // Nintendo
+            ], [VENDOR, MODEL, [TYPE, CONSOLE]], [
+
+            /android.+;\s(shield)\sbuild/i                                      // Nvidia
+            ], [MODEL, [VENDOR, 'Nvidia'], [TYPE, CONSOLE]], [
+
+            /(playstation\s[34portablevi]+)/i                                   // Playstation
+            ], [MODEL, [VENDOR, 'Sony'], [TYPE, CONSOLE]], [
+
+            /(sprint\s(\w+))/i                                                  // Sprint Phones
+            ], [[VENDOR, mapper.str, maps.device.sprint.vendor], [MODEL, mapper.str, maps.device.sprint.model], [TYPE, MOBILE]], [
+
+            /(lenovo)\s?(S(?:5000|6000)+(?:[-][\w+]))/i                         // Lenovo tablets
+            ], [VENDOR, MODEL, [TYPE, TABLET]], [
+
+            /(htc)[;_\s-]+([\w\s]+(?=\))|\w+)*/i,                               // HTC
+            /(zte)-(\w+)*/i,                                                    // ZTE
+            /(alcatel|geeksphone|huawei|lenovo|nexian|panasonic|(?=;\s)sony)[_\s-]?([\w-]+)*/i
+                                                                                // Alcatel/GeeksPhone/Huawei/Lenovo/Nexian/Panasonic/Sony
+            ], [VENDOR, [MODEL, /_/g, ' '], [TYPE, MOBILE]], [
+
+            /(nexus\s9)/i                                                       // HTC Nexus 9
+            ], [MODEL, [VENDOR, 'HTC'], [TYPE, TABLET]], [
+
+            /(nexus\s6p)/i                                                      // Huawei Nexus 6P
+            ], [MODEL, [VENDOR, 'Huawei'], [TYPE, MOBILE]], [
+
+            /(microsoft);\s(lumia[\s\w]+)/i                                     // Microsoft Lumia
+            ], [VENDOR, MODEL, [TYPE, MOBILE]], [
+
+            /[\s\(;](xbox(?:\sone)?)[\s\);]/i                                   // Microsoft Xbox
+            ], [MODEL, [VENDOR, 'Microsoft'], [TYPE, CONSOLE]], [
+            /(kin\.[onetw]{3})/i                                                // Microsoft Kin
+            ], [[MODEL, /\./g, ' '], [VENDOR, 'Microsoft'], [TYPE, MOBILE]], [
+
+                                                                                // Motorola
+            /\s(milestone|droid(?:[2-4x]|\s(?:bionic|x2|pro|razr))?(:?\s4g)?)[\w\s]+build\//i,
+            /mot[\s-]?(\w+)*/i,
+            /(XT\d{3,4}) build\//i,
+            /(nexus\s6)/i
+            ], [MODEL, [VENDOR, 'Motorola'], [TYPE, MOBILE]], [
+            /android.+\s(mz60\d|xoom[\s2]{0,2})\sbuild\//i
+            ], [MODEL, [VENDOR, 'Motorola'], [TYPE, TABLET]], [
+
+            /hbbtv\/\d+\.\d+\.\d+\s+\([\w\s]*;\s*(\w[^;]*);([^;]*)/i            // HbbTV devices
+            ], [[VENDOR, util.trim], [MODEL, util.trim], [TYPE, SMARTTV]], [
+
+            /hbbtv.+maple;(\d+)/i
+            ], [[MODEL, /^/, 'SmartTV'], [VENDOR, 'Samsung'], [TYPE, SMARTTV]], [
+
+            /\(dtv[\);].+(aquos)/i                                              // Sharp
+            ], [MODEL, [VENDOR, 'Sharp'], [TYPE, SMARTTV]], [
+
+            /android.+((sch-i[89]0\d|shw-m380s|gt-p\d{4}|gt-n\d+|sgh-t8[56]9|nexus 10))/i,
+            /((SM-T\w+))/i
+            ], [[VENDOR, 'Samsung'], MODEL, [TYPE, TABLET]], [                  // Samsung
+            /smart-tv.+(samsung)/i
+            ], [VENDOR, [TYPE, SMARTTV], MODEL], [
+            /((s[cgp]h-\w+|gt-\w+|galaxy\snexus|sm-\w[\w\d]+))/i,
+            /(sam[sung]*)[\s-]*(\w+-?[\w-]*)*/i,
+            /sec-((sgh\w+))/i
+            ], [[VENDOR, 'Samsung'], MODEL, [TYPE, MOBILE]], [
+
+            /sie-(\w+)*/i                                                       // Siemens
+            ], [MODEL, [VENDOR, 'Siemens'], [TYPE, MOBILE]], [
+
+            /(maemo|nokia).*(n900|lumia\s\d+)/i,                                // Nokia
+            /(nokia)[\s_-]?([\w-]+)*/i
+            ], [[VENDOR, 'Nokia'], MODEL, [TYPE, MOBILE]], [
+
+            /android\s3\.[\s\w;-]{10}(a\d{3})/i                                 // Acer
+            ], [MODEL, [VENDOR, 'Acer'], [TYPE, TABLET]], [
+
+            /android\s3\.[\s\w;-]{10}(lg?)-([06cv9]{3,4})/i                     // LG Tablet
+            ], [[VENDOR, 'LG'], MODEL, [TYPE, TABLET]], [
+            /(lg) netcast\.tv/i                                                 // LG SmartTV
+            ], [VENDOR, MODEL, [TYPE, SMARTTV]], [
+            /(nexus\s[45])/i,                                                   // LG
+            /lg[e;\s\/-]+(\w+)*/i
+            ], [MODEL, [VENDOR, 'LG'], [TYPE, MOBILE]], [
+
+            /android.+(ideatab[a-z0-9\-\s]+)/i                                  // Lenovo
+            ], [MODEL, [VENDOR, 'Lenovo'], [TYPE, TABLET]], [
+
+            /linux;.+((jolla));/i                                               // Jolla
+            ], [VENDOR, MODEL, [TYPE, MOBILE]], [
+
+            /((pebble))app\/[\d\.]+\s/i                                         // Pebble
+            ], [VENDOR, MODEL, [TYPE, WEARABLE]], [
+
+            /android.+;\s(oppo)\s?([\w\s]+)\sbuild/i                            // OPPO
+            ], [VENDOR, MODEL, [TYPE, MOBILE]], [
+
+            /crkey/i                                                            // Google Chromecast
+            ], [[MODEL, 'Chromecast'], [VENDOR, 'Google']], [
+
+            /android.+;\s(glass)\s\d/i                                          // Google Glass
+            ], [MODEL, [VENDOR, 'Google'], [TYPE, WEARABLE]], [
+
+            /android.+;\s(pixel c)\s/i                                          // Google Pixel C
+            ], [MODEL, [VENDOR, 'Google'], [TYPE, TABLET]], [
+
+            /android.+;\s(pixel xl|pixel)\s/i                                   // Google Pixel
+            ], [MODEL, [VENDOR, 'Google'], [TYPE, MOBILE]], [
+
+            /android.+(\w+)\s+build\/hm\1/i,                                    // Xiaomi Hongmi 'numeric' models
+            /android.+(hm[\s\-_]*note?[\s_]*(?:\d\w)?)\s+build/i,               // Xiaomi Hongmi
+            /android.+(mi[\s\-_]*(?:one|one[\s_]plus|note lte)?[\s_]*(?:\d\w)?)\s+build/i    // Xiaomi Mi
+            ], [[MODEL, /_/g, ' '], [VENDOR, 'Xiaomi'], [TYPE, MOBILE]], [
+
+            /android.+a000(1)\s+build/i                                         // OnePlus
+            ], [MODEL, [VENDOR, 'OnePlus'], [TYPE, MOBILE]], [
+
+            /\s(tablet)[;\/]/i,                                                 // Unidentifiable Tablet
+            /\s(mobile)(?:[;\/]|\ssafari)/i                                     // Unidentifiable Mobile
+            ], [[TYPE, util.lowerize], VENDOR, MODEL]
+
+            /*//////////////////////////
+            // TODO: move to string map
+            ////////////////////////////
+
+            /(C6603)/i                                                          // Sony Xperia Z C6603
+            ], [[MODEL, 'Xperia Z C6603'], [VENDOR, 'Sony'], [TYPE, MOBILE]], [
+            /(C6903)/i                                                          // Sony Xperia Z 1
+            ], [[MODEL, 'Xperia Z 1'], [VENDOR, 'Sony'], [TYPE, MOBILE]], [
+
+            /(SM-G900[F|H])/i                                                   // Samsung Galaxy S5
+            ], [[MODEL, 'Galaxy S5'], [VENDOR, 'Samsung'], [TYPE, MOBILE]], [
+            /(SM-G7102)/i                                                       // Samsung Galaxy Grand 2
+            ], [[MODEL, 'Galaxy Grand 2'], [VENDOR, 'Samsung'], [TYPE, MOBILE]], [
+            /(SM-G530H)/i                                                       // Samsung Galaxy Grand Prime
+            ], [[MODEL, 'Galaxy Grand Prime'], [VENDOR, 'Samsung'], [TYPE, MOBILE]], [
+            /(SM-G313HZ)/i                                                      // Samsung Galaxy V
+            ], [[MODEL, 'Galaxy V'], [VENDOR, 'Samsung'], [TYPE, MOBILE]], [
+            /(SM-T805)/i                                                        // Samsung Galaxy Tab S 10.5
+            ], [[MODEL, 'Galaxy Tab S 10.5'], [VENDOR, 'Samsung'], [TYPE, TABLET]], [
+            /(SM-G800F)/i                                                       // Samsung Galaxy S5 Mini
+            ], [[MODEL, 'Galaxy S5 Mini'], [VENDOR, 'Samsung'], [TYPE, MOBILE]], [
+            /(SM-T311)/i                                                        // Samsung Galaxy Tab 3 8.0
+            ], [[MODEL, 'Galaxy Tab 3 8.0'], [VENDOR, 'Samsung'], [TYPE, TABLET]], [
+
+            /(T3C)/i                                                            // Advan Vandroid T3C
+            ], [MODEL, [VENDOR, 'Advan'], [TYPE, TABLET]], [
+            /(ADVAN T1J\+)/i                                                    // Advan Vandroid T1J+
+            ], [[MODEL, 'Vandroid T1J+'], [VENDOR, 'Advan'], [TYPE, TABLET]], [
+            /(ADVAN S4A)/i                                                      // Advan Vandroid S4A
+            ], [[MODEL, 'Vandroid S4A'], [VENDOR, 'Advan'], [TYPE, MOBILE]], [
+
+            /(V972M)/i                                                          // ZTE V972M
+            ], [MODEL, [VENDOR, 'ZTE'], [TYPE, MOBILE]], [
+
+            /(i-mobile)\s(IQ\s[\d\.]+)/i                                        // i-mobile IQ
+            ], [VENDOR, MODEL, [TYPE, MOBILE]], [
+            /(IQ6.3)/i                                                          // i-mobile IQ IQ 6.3
+            ], [[MODEL, 'IQ 6.3'], [VENDOR, 'i-mobile'], [TYPE, MOBILE]], [
+            /(i-mobile)\s(i-style\s[\d\.]+)/i                                   // i-mobile i-STYLE
+            ], [VENDOR, MODEL, [TYPE, MOBILE]], [
+            /(i-STYLE2.1)/i                                                     // i-mobile i-STYLE 2.1
+            ], [[MODEL, 'i-STYLE 2.1'], [VENDOR, 'i-mobile'], [TYPE, MOBILE]], [
+
+            /(mobiistar touch LAI 512)/i                                        // mobiistar touch LAI 512
+            ], [[MODEL, 'Touch LAI 512'], [VENDOR, 'mobiistar'], [TYPE, MOBILE]], [
+
+            /////////////
+            // END TODO
+            ///////////*/
+
+        ],
+
+        engine : [[
+
+            /windows.+\sedge\/([\w\.]+)/i                                       // EdgeHTML
+            ], [VERSION, [NAME, 'EdgeHTML']], [
+
+            /(presto)\/([\w\.]+)/i,                                             // Presto
+            /(webkit|trident|netfront|netsurf|amaya|lynx|w3m)\/([\w\.]+)/i,     // WebKit/Trident/NetFront/NetSurf/Amaya/Lynx/w3m
+            /(khtml|tasman|links)[\/\s]\(?([\w\.]+)/i,                          // KHTML/Tasman/Links
+            /(icab)[\/\s]([23]\.[\d\.]+)/i                                      // iCab
+            ], [NAME, VERSION], [
+
+            /rv\:([\w\.]+).*(gecko)/i                                           // Gecko
+            ], [VERSION, NAME]
+        ],
+
+        os : [[
+
+            // Windows based
+            /microsoft\s(windows)\s(vista|xp)/i                                 // Windows (iTunes)
+            ], [NAME, VERSION], [
+            /(windows)\snt\s6\.2;\s(arm)/i,                                     // Windows RT
+            /(windows\sphone(?:\sos)*)[\s\/]?([\d\.\s]+\w)*/i,                  // Windows Phone
+            /(windows\smobile|windows)[\s\/]?([ntce\d\.\s]+\w)/i
+            ], [NAME, [VERSION, mapper.str, maps.os.windows.version]], [
+            /(win(?=3|9|n)|win\s9x\s)([nt\d\.]+)/i
+            ], [[NAME, 'Windows'], [VERSION, mapper.str, maps.os.windows.version]], [
+
+            // Mobile/Embedded OS
+            /\((bb)(10);/i                                                      // BlackBerry 10
+            ], [[NAME, 'BlackBerry'], VERSION], [
+            /(blackberry)\w*\/?([\w\.]+)*/i,                                    // Blackberry
+            /(tizen)[\/\s]([\w\.]+)/i,                                          // Tizen
+            /(android|webos|palm\sos|qnx|bada|rim\stablet\sos|meego|contiki)[\/\s-]?([\w\.]+)*/i,
+                                                                                // Android/WebOS/Palm/QNX/Bada/RIM/MeeGo/Contiki
+            /linux;.+(sailfish);/i                                              // Sailfish OS
+            ], [NAME, VERSION], [
+            /(symbian\s?os|symbos|s60(?=;))[\/\s-]?([\w\.]+)*/i                 // Symbian
+            ], [[NAME, 'Symbian'], VERSION], [
+            /\((series40);/i                                                    // Series 40
+            ], [NAME], [
+            /mozilla.+\(mobile;.+gecko.+firefox/i                               // Firefox OS
+            ], [[NAME, 'Firefox OS'], VERSION], [
+
+            // Console
+            /(nintendo|playstation)\s([wids34portablevu]+)/i,                   // Nintendo/Playstation
+
+            // GNU/Linux based
+            /(mint)[\/\s\(]?(\w+)*/i,                                           // Mint
+            /(mageia|vectorlinux)[;\s]/i,                                       // Mageia/VectorLinux
+            /(joli|[kxln]?ubuntu|debian|[open]*suse|gentoo|(?=\s)arch|slackware|fedora|mandriva|centos|pclinuxos|redhat|zenwalk|linpus)[\/\s-]?(?!chrom)([\w\.-]+)*/i,
+                                                                                // Joli/Ubuntu/Debian/SUSE/Gentoo/Arch/Slackware
+                                                                                // Fedora/Mandriva/CentOS/PCLinuxOS/RedHat/Zenwalk/Linpus
+            /(hurd|linux)\s?([\w\.]+)*/i,                                       // Hurd/Linux
+            /(gnu)\s?([\w\.]+)*/i                                               // GNU
+            ], [NAME, VERSION], [
+
+            /(cros)\s[\w]+\s([\w\.]+\w)/i                                       // Chromium OS
+            ], [[NAME, 'Chromium OS'], VERSION],[
+
+            // Solaris
+            /(sunos)\s?([\w\.]+\d)*/i                                           // Solaris
+            ], [[NAME, 'Solaris'], VERSION], [
+
+            // BSD based
+            /\s([frentopc-]{0,4}bsd|dragonfly)\s?([\w\.]+)*/i                   // FreeBSD/NetBSD/OpenBSD/PC-BSD/DragonFly
+            ], [NAME, VERSION],[
+
+            /(haiku)\s(\w+)/i                                                  // Haiku
+            ], [NAME, VERSION],[
+
+            /(ip[honead]+)(?:.*os\s([\w]+)*\slike\smac|;\sopera)/i              // iOS
+            ], [[NAME, 'iOS'], [VERSION, /_/g, '.']], [
+
+            /(mac\sos\sx)\s?([\w\s\.]+\w)*/i,
+            /(macintosh|mac(?=_powerpc)\s)/i                                    // Mac OS
+            ], [[NAME, 'Mac OS'], [VERSION, /_/g, '.']], [
+
+            // Other
+            /((?:open)?solaris)[\/\s-]?([\w\.]+)*/i,                            // Solaris
+            /(aix)\s((\d)(?=\.|\)|\s)[\w\.]*)*/i,                               // AIX
+            /(plan\s9|minix|beos|os\/2|amigaos|morphos|risc\sos|openvms)/i,
+                                                                                // Plan9/Minix/BeOS/OS2/AmigaOS/MorphOS/RISCOS/OpenVMS
+            /(unix)\s?([\w\.]+)*/i                                              // UNIX
+            ], [NAME, VERSION]
+        ]
+    };
+
+
+    /////////////////
+    // Constructor
+    ////////////////
+
+    var Browser = function (name, version) {
+        this[NAME] = name;
+        this[VERSION] = version;
+    };
+    var CPU = function (arch) {
+        this[ARCHITECTURE] = arch;
+    };
+    var Device = function (vendor, model, type) {
+        this[VENDOR] = vendor;
+        this[MODEL] = model;
+        this[TYPE] = type;
+    };
+    var Engine = Browser;
+    var OS = Browser;
+
+    var UAParser = function (uastring, extensions) {
+
+        if (!(this instanceof UAParser)) {
+            return new UAParser(uastring, extensions).getResult();
+        }
+
+        var ua = uastring || ((window && window.navigator && window.navigator.userAgent) ? window.navigator.userAgent : EMPTY);
+        var rgxmap = extensions ? util.extend(regexes, extensions) : regexes;
+        var browser = new Browser();
+        var cpu = new CPU();
+        var device = new Device();
+        var engine = new Engine();
+        var os = new OS();
+
+        this.getBrowser = function () {
+            mapper.rgx.call(browser, ua, rgxmap.browser);
+            browser.major = util.major(browser.version); // deprecated
+            return browser;
+        };
+        this.getCPU = function () {
+            mapper.rgx.call(cpu, ua, rgxmap.cpu);
+            return cpu;
+        };
+        this.getDevice = function () {
+            mapper.rgx.call(device, ua, rgxmap.device);
+            return device;
+        };
+        this.getEngine = function () {
+            mapper.rgx.call(engine, ua, rgxmap.engine);
+            return engine;
+        };
+        this.getOS = function () {
+            mapper.rgx.call(os, ua, rgxmap.os);
+            return os;
+        };
+        this.getResult = function () {
+            return {
+                ua      : this.getUA(),
+                browser : this.getBrowser(),
+                engine  : this.getEngine(),
+                os      : this.getOS(),
+                device  : this.getDevice(),
+                cpu     : this.getCPU()
+            };
+        };
+        this.getUA = function () {
+            return ua;
+        };
+        this.setUA = function (uastring) {
+            ua = uastring;
+            browser = new Browser();
+            cpu = new CPU();
+            device = new Device();
+            engine = new Engine();
+            os = new OS();
+            return this;
+        };
+        return this;
+    };
+
+    UAParser.VERSION = LIBVERSION;
+    UAParser.BROWSER = {
+        NAME    : NAME,
+        MAJOR   : MAJOR, // deprecated
+        VERSION : VERSION
+    };
+    UAParser.CPU = {
+        ARCHITECTURE : ARCHITECTURE
+    };
+    UAParser.DEVICE = {
+        MODEL   : MODEL,
+        VENDOR  : VENDOR,
+        TYPE    : TYPE,
+        CONSOLE : CONSOLE,
+        MOBILE  : MOBILE,
+        SMARTTV : SMARTTV,
+        TABLET  : TABLET,
+        WEARABLE: WEARABLE,
+        EMBEDDED: EMBEDDED
+    };
+    UAParser.ENGINE = {
+        NAME    : NAME,
+        VERSION : VERSION
+    };
+    UAParser.OS = {
+        NAME    : NAME,
+        VERSION : VERSION
+    };
+    //UAParser.Utils = util;
+
+    ///////////
+    // Export
+    //////////
+
+
+    // check js environment
+    if (typeof(exports) !== UNDEF_TYPE) {
+        // nodejs env
+        if (typeof module !== UNDEF_TYPE && module.exports) {
+            exports = module.exports = UAParser;
+        }
+        exports.UAParser = UAParser;
+    } else {
+        // requirejs env (optional)
+        if ("function" === FUNC_TYPE && __webpack_require__(36)) {
+            !(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
+                return UAParser;
+            }.call(exports, __webpack_require__, exports, module),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+        } else {
+            // browser env
+            window.UAParser = UAParser;
+        }
+    }
+
+    // jQuery/Zepto specific (optional)
+    // Note:
+    //   In AMD env the global scope should be kept clean, but jQuery is an exception.
+    //   jQuery always exports to global scope, unless jQuery.noConflict(true) is used,
+    //   and we should catch that.
+    var $ = window.jQuery || window.Zepto;
+    if (typeof $ !== UNDEF_TYPE) {
+        var parser = new UAParser();
+        $.ua = parser.getResult();
+        $.ua.get = function () {
+            return parser.getUA();
+        };
+        $.ua.set = function (uastring) {
+            parser.setUA(uastring);
+            var result = parser.getResult();
+            for (var prop in result) {
+                $.ua[prop] = result[prop];
+            }
+        };
+    }
+
+})(typeof window === 'object' ? window : this);
+
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports) {
+
+/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
+module.exports = __webpack_amd_options__;
+
+/* WEBPACK VAR INJECTION */}.call(exports, {}))
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports) {
+
+module.exports = {
+	"playback": {
+		"playsinline": false,
+		"preload": "none",
+		"autoplay": false,
+		"muted": false,
+		"options": {
+			"html5": {
+				"hls": {},
+				"dash": {}
+			}
+		},
+		"streamPriority": [
+			{
+				"engine": "html5",
+				"format": "hls"
+			},
+			{
+				"engine": "html5",
+				"format": "dash"
+			},
+			{
+				"engine": "html5",
+				"format": "progressive"
+			}
+		]
+	}
+};
 
 /***/ })
 /******/ ]);

@@ -1,9 +1,10 @@
 //@flow
 import Player from '../player'
 import LoggerFactory from '../utils/logger'
-import {merge} from '../utils/util'
+import * as Utils from '../utils/util'
 import EventManager from '../event/event-manager'
 import PlayerError from '../utils/player-error'
+import FakeEvent from '../event/fake-event'
 
 /** The BasePlugin responsible to implement the plugin interface.
  * Contains several default implementations.
@@ -83,7 +84,8 @@ export default class BasePlugin implements IPlugin {
     this.player = player;
     this.eventManager = new EventManager();
     this.logger = LoggerFactory.getLogger(this.name);
-    this.config = merge([this.constructor.defaultConfig, config]);
+    this.config = {};
+    Utils.Object.mergeDeep(this.config, this.constructor.defaultConfig, config);
   }
 
   /**
@@ -106,7 +108,7 @@ export default class BasePlugin implements IPlugin {
    * @returns {void}
    */
   updateConfig(update: Object): void {
-    this.config = merge([this.config, update]);
+    this.config = Utils.Object.mergeDeep(this.config, update);
   }
 
   /**
@@ -127,5 +129,16 @@ export default class BasePlugin implements IPlugin {
    */
   getName(): string {
     return this.name;
+  }
+
+  /**
+   * Dispatch an event via the plugin.
+   * @param {string} name - The event name.
+   * @param {any} payload - The event payload.
+   * @returns {void}
+   */
+  dispatchEvent(name: string, payload: any): void {
+    this.logger.debug("Fire event: " + name, payload);
+    this.player.dispatchEvent(new FakeEvent(name, payload));
   }
 }

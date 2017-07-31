@@ -22,8 +22,21 @@ module.exports = function (config) {
       'mocha'
     ],
     files: [
-      'test/setup/karma.js', {
-        pattern: 'src/assets/audios.mp4',
+      'test/setup/karma.js',
+      {
+        pattern: 'test/src/assets/mov_bbb.mp4',
+        included: false
+      },
+      {
+        pattern: 'test/src/assets/audios.mp4',
+        included: false
+      },
+      {
+        pattern: 'test/src/assets/en.vtt',
+        included: false
+      },
+      {
+        pattern: 'test/src/assets/he.vtt',
         included: false
       }
     ],
@@ -51,6 +64,12 @@ module.exports = function (config) {
           }],
           exclude: [
             /node_modules/
+          ]
+        }, {
+          test: /\.css$/,
+          use: [
+            {loader: "style-loader"},
+            {loader: "css-loader"}
           ]
         }]
       }
