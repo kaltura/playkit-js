@@ -8201,7 +8201,8 @@ module.exports = {
 				"engine": "html5",
 				"format": "progressive"
 			}
-		]
+		],
+		"plugins": {}
 	}
 };
 
