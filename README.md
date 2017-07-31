@@ -49,7 +49,7 @@ Finally, add the bundle as a script tag in your page, and initialize the player
 <div id="videoContainer" style="height:360px;width:640px">
 <script type="text/javascript">
 var config = {...};
-var player = playkit.loadPlayer("videoContainer", config);
+var player = Playkit.loadPlayer("videoContainer", config);
 player.play();
 </script>
 ```
