@@ -33,8 +33,28 @@ The player holds the following default configuration:
 ```
 Which in runtime will be merged with the input of the user.
 
-### Getters
-Example  | Returns
+## Methods
+Signature  | Returns
+------------- | -------------
+```player.configure(config: Object)```  | ```void``` 
+```player.destroy()```  | ```void``` 
+```player.getView()```  | ```HTMLElement``` 
+```player.getTracks(type: string?)```  | ```Array<Track>``` 
+```player.getActiveTracks()```  | ```{video: VideoTrack, audio: AudioTrack, text: TextTrack}``` 
+```player.selectTrack(track: Track)```  | ```void``` 
+```player.hideTextTrack()```  | ```void``` 
+```player.enableAdaptiveBitrate()```  | ```void``` 
+```player.isAdaptiveBitrateEnabled()```  | ```boolean``` 
+```player.ready()```  | ```Promise<any>``` 
+```player.load()```  | ```void``` 
+```player.play()```  | ```void``` 
+```player.pause()```  | ```void``` 
+```player.getVideoElement()```  | ```HTMLVideoElement``` 
+```player.skipAd()```  | ```void``` 
+```player.playAdNow(adTagUrl: string)```  | ```void``` 
+
+## Getters
+Signature  | Returns
 ------------- | -------------
 ```player.src```  | ```string``` 
 ```player.muted```  | ```boolean``` 
@@ -47,8 +67,8 @@ Example  | Returns
 ```player.config```  | ```Object``` 
 ```player.env```  | ```Object``` 
 
-### Setters
-Example  | Parameters
+## Setters
+Signature  | Parameters
 ------------- | -------------
 ```player.sessionId```  | ```sessionId (string)``` 
 ```player.currentTime```  | ```to (number)``` 
@@ -57,7 +77,7 @@ Example  | Parameters
 ```player.playsinline```  | ```playsinline (boolean)``` 
 ```player.muted```  | ```mute (boolean)``` 
 
-### Events
+## Events
 An event enum can be access in the following way:
 ```js
 player.Event.EVENT_NAME
@@ -134,7 +154,7 @@ Enum  | Payload
 ```FIRST_PLAY```| - 
 ```SOURCE_SELECTED```|```{selectedSource: Array<Source>}```
 
-### States
+## States
 During playback the state of the player changes.
 A state enum can be access in the following way:
 ```js
@@ -159,4 +179,4 @@ player.addEventListener(player.Event.PLAYER_STATE_CHANGED, (event) => {
     console.log('Underflow');
   }
 });
-```
+``
