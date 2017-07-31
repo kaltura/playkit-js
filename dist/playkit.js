@@ -1636,6 +1636,12 @@ var Player = function (_FakeEventTarget) {
    */
 
   /**
+   * The environment(os,device,browser) object of the player.
+   * @type {HTMLDivElement}
+   * @private
+   */
+
+  /**
    * The player class logger.
    * @type {any}
    * @static
@@ -1655,7 +1661,7 @@ var Player = function (_FakeEventTarget) {
     _this._playbackMiddleware = new _playbackMiddleware2.default();
     _this._env = new _uaParserJs2.default().getResult();
     _this._createReadyPromise();
-    _this._appendPlayerContainer(targetId);
+    _this._appendPlayerContainer(targetId, config.metadata.poster);
     _this.configure(config);
     return _this;
   }
@@ -1977,18 +1983,25 @@ var Player = function (_FakeEventTarget) {
     /**
      * Creates the player container
      * @param {string} targetId - The target div id to append the player.
+     * @param {string} poster - The target div id to append the player.
      * @private
      * @returns {void}
      */
 
   }, {
     key: '_appendPlayerContainer',
-    value: function _appendPlayerContainer(targetId) {
+    value: function _appendPlayerContainer(targetId, poster) {
       if (targetId) {
         if (this._el === undefined) {
           this._createPlayerContainer();
           var parentNode = Utils.Dom.getElementById(targetId);
           Utils.Dom.appendChild(parentNode, this._el);
+        }
+        if (this._elPoster === undefined) {
+          this._elPoster = Utils.Dom.createElement("div");
+          this._elPoster.id = "playkit-poster-1234";
+          this._elPoster.style.backgroundImage = 'url("' + poster + '")';
+          Utils.Dom.appendChild(this._el, this._elPoster);
         }
       } else {
         throw new Error("targetId is not found, it must be pass on initialization");
@@ -6367,7 +6380,7 @@ exports = module.exports = __webpack_require__(30)(undefined);
 
 
 // module
-exports.push([module.i, ".playkit-container {\n  position: relative;\n  width: 100%;\n  height: 100%;\n  color: #fff;\n  outline: none;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n  -webkit-tap-highlight-color: transparent;\n}\n\n*[class^=\"playkit-engine-\"] {\n  width: 100%;\n  height: 100%;\n}\n", ""]);
+exports.push([module.i, ".playkit-container {\n  position: relative;\n  width: 100%;\n  height: 100%;\n  color: #fff;\n  outline: none;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n  -webkit-tap-highlight-color: transparent;\n}\n\n*[class^=\"playkit-engine-\"] {\n  width: 100%;\n  height: 100%;\n}\n\n*[class^=\"playkit-poster-\"] {\n  position: absolute;\n  top: 0px;\n  bottom: 0px;\n  left: 0px;\n  right: 0px;\n  display: block;\n  background-size: contain;\n  background-position: center center;\n  background-repeat: no-repeat;\n}\n", ""]);
 
 // exports
 
