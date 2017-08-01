@@ -1234,6 +1234,13 @@ exports.default = EventManager;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+
+/**
+ * @namespace EventType
+ * @memberof Enums
+ * @typedef {EventType}
+ */
 var EventType = exports.EventType = {
   /**
    * @namespace Html5
@@ -5980,7 +5987,7 @@ var VERSION = packageData.version;
 
 var PLAYER_NAME = 'kaltura-playkit-js';
 
-_logger2.default.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
+_logger2.default.getLogger().log("%c Playkit " + VERSION, "color: blue; font-size: large");
 _logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
 
 /**
