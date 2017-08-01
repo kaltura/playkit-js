@@ -5,7 +5,7 @@ import MultiMap from '../utils/multi-map'
 /**
  * These are the listener types defined in the closure extern for EventTarget.
  * @typedef {EventListener|function(!Event):(boolean|undefined)}
- * @memberof PlayKitJS.FakeEventTarget
+ * @memberof Classes.FakeEventTarget
  */
 declare function ListenerType(event: FakeEvent): (boolean | void);
 
@@ -14,15 +14,15 @@ declare function ListenerType(event: FakeEvent): (boolean | void);
  * but this can be used as a base class to provide event dispatch to non-DOM
  * classes.  Only FakeEvents should be dispatched.
  * @namespace FakeEventTarget
- * @memberof PlayKitJS
- * @class
+ * @memberof Classes
+ * @class FakeEventTarget
  */
 export default class FakeEventTarget {
   _listeners: MultiMap<ListenerType>;
   /**
    * The target of all dispatched events.  Defaults to |this|.
    * @type {EventTarget}
-   * @memberof PlayKitJS.FakeEventTarget
+   * @memberof Classes.FakeEventTarget
    * @public
    * @instance
    */
@@ -38,7 +38,7 @@ export default class FakeEventTarget {
    * @param {string} type - The event type to listen for.
    * @param {FakeEventTarget.ListenerType} listener - The callback or listener object to invoke.
    * @override
-   * @memberof PlayKitJS.FakeEventTarget
+   * @memberof Classes.FakeEventTarget
    * @public
    * @instance
    */
@@ -51,7 +51,7 @@ export default class FakeEventTarget {
    * @param {string} type - The event type for which you wish to remove a listener.
    * @param {FakeEventTarget.ListenerType} listener - The callback or listener object to remove.
    * @override
-   * @memberof PlayKitJS.FakeEventTarget
+   * @memberof Classes.FakeEventTarget
    * @public
    * @instance
    */
@@ -64,7 +64,7 @@ export default class FakeEventTarget {
    * @param {!Event} event - The event to be dispatched from this object.
    * @return {boolean} - True if the default action was prevented.
    * @override
-   * @memberof PlayKitJS.FakeEventTarget
+   * @memberof Classes.FakeEventTarget
    * @public
    * @instance
    */

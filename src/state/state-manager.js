@@ -2,14 +2,11 @@
 import Player from '../player'
 import EventManager from '../event/event-manager'
 import State from './state'
-import PlayerStates from './state-types'
-import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../event/events'
+import {StateType} from './state-type'
+import {EventType} from '../event/event-type'
 import FakeEvent from '../event/fake-event'
 import LoggerFactory from '../utils/logger'
 
-/**
- * Define a transition object.
- */
 type Transition = {
   [state: string]: {
     [event: string]: Function
@@ -17,162 +14,155 @@ type Transition = {
 }
 
 /**
- * This class responsible to manage all the state machine of the player.
- * @classdesc
+ * @namespace StateManager
+ * @class StateManager
+ * @memberof Classes
  */
 export default class StateManager {
-  /**
-   * The logger of the class.
-   * @member
-   * @type {any}
-   * @private
-   */
   _logger: any;
-  /**
-   * Reference to the actual player.
-   * @member
-   * @type {Player}
-   * @private
-   */
   _player: Player;
-  /**
-   * The event manager of the class.
-   * @member
-   * @type {EventManager}
-   * @private
-   */
   _eventManager: EventManager;
-  /**
-   * Holds the current state of the player.
-   * @member
-   * @type {State}
-   * @private
-   */
   _curState: State;
-  /**
-   * Holds the previous state of the player.
-   * @member
-   * @type {State | null}
-   * @private
-   */
   _prevState: State | null;
-  /**
-   * Holds the state history of the player.
-   * @member
-   * @type {Array<State>}
-   * @private
-   */
   _history: Array<State>;
-  /**
-   * The possible transitions from one state to another.
-   * @type {Array<Transition>}
-   * @private
-   */
   _transitions: Transition = {
-    [PlayerStates.IDLE]: {
-      [Html5Events.LOAD_START]: () => {
-        this._updateState(PlayerStates.LOADING);
+    [StateType.IDLE]: {
+      [EventType.Html5.LOAD_START]: () => {
+        this._updateState(StateType.LOADING);
         this._dispatchEvent();
       },
-      [Html5Events.PLAY]: () => {
-        this._updateState(PlayerStates.BUFFERING);
+      [EventType.Html5.PLAY]: () => {
+        this._updateState(StateType.BUFFERING);
         this._dispatchEvent();
       }
     },
-    [PlayerStates.LOADING]: {
-      [Html5Events.LOADED_METADATA]: () => {
+    [StateType.LOADING]: {
+      [EventType.Html5.LOADED_METADATA]: () => {
         if (this._player.config.playback.autoplay) {
-          this._updateState(PlayerStates.PLAYING);
+          this._updateState(StateType.PLAYING);
         } else {
-          this._updateState(PlayerStates.PAUSED);
+          this._updateState(StateType.PAUSED);
         }
         this._dispatchEvent();
       },
-      [Html5Events.ERROR]: () => {
-        this._updateState(PlayerStates.IDLE);
+      [EventType.Html5.ERROR]: () => {
+        this._updateState(StateType.IDLE);
         this._dispatchEvent();
       }
     },
-    [PlayerStates.PAUSED]: {
-      [Html5Events.PLAY]: () => {
-        this._updateState(PlayerStates.PLAYING);
+    [StateType.PAUSED]: {
+      [EventType.Html5.PLAY]: () => {
+        this._updateState(StateType.PLAYING);
         this._dispatchEvent();
       },
-      [Html5Events.PLAYING]: () => {
-        this._updateState(PlayerStates.PLAYING);
+      [EventType.Html5.PLAYING]: () => {
+        this._updateState(StateType.PLAYING);
         this._dispatchEvent();
       },
-      [Html5Events.ENDED]: () => {
-        this._updateState(PlayerStates.IDLE);
+      [EventType.Html5.ENDED]: () => {
+        this._updateState(StateType.IDLE);
         this._dispatchEvent();
       }
     },
-    [PlayerStates.PLAYING]: {
-      [Html5Events.PAUSE]: () => {
-        this._updateState(PlayerStates.PAUSED);
+    [StateType.PLAYING]: {
+      [EventType.Html5.PAUSE]: () => {
+        this._updateState(StateType.PAUSED);
         this._dispatchEvent();
       },
-      [Html5Events.WAITING]: () => {
-        this._updateState(PlayerStates.BUFFERING);
+      [EventType.Html5.WAITING]: () => {
+        this._updateState(StateType.BUFFERING);
         this._dispatchEvent();
       },
-      [Html5Events.ENDED]: () => {
-        this._updateState(PlayerStates.IDLE);
+      [EventType.Html5.ENDED]: () => {
+        this._updateState(StateType.IDLE);
         this._dispatchEvent();
       },
-      [Html5Events.ERROR]: () => {
-        this._updateState(PlayerStates.IDLE);
+      [EventType.Html5.ERROR]: () => {
+        this._updateState(StateType.IDLE);
         this._dispatchEvent();
       }
     },
-    [PlayerStates.BUFFERING]: {
-      [Html5Events.PLAYING]: () => {
-        this._updateState(PlayerStates.PLAYING);
+    [StateType.BUFFERING]: {
+      [EventType.Html5.PLAYING]: () => {
+        this._updateState(StateType.PLAYING);
         this._dispatchEvent();
       },
-      [Html5Events.PAUSE]: () => {
-        this._updateState(PlayerStates.PAUSED);
+      [EventType.Html5.PAUSE]: () => {
+        this._updateState(StateType.PAUSED);
         this._dispatchEvent();
       }
     }
   };
 
-  /**
-   * @constructor
-   * @param {Player} player - Reference to the player.
-   */
   constructor(player: Player) {
     this._player = player;
     this._logger = LoggerFactory.getLogger("StateManager");
     this._eventManager = new EventManager();
     this._history = [];
     this._prevState = null;
-    this._curState = new State(PlayerStates.IDLE);
+    this._curState = new State(StateType.IDLE);
     this._attachListeners();
   }
 
   /**
-   * Register to all necessary events which impacts on the player state.
-   * @private
-   * @returns {void}
+   * Get the current state of the player.
+   * @public
+   * @returns {State} - The current state of the player.
+   * @instance
+   * @readonly
+   * @memberof Classes.StateManager
    */
-  _attachListeners(): void {
-    this._eventManager.listen(this._player, Html5Events.ERROR, this._doTransition.bind(this));
-    this._eventManager.listen(this._player, Html5Events.ENDED, this._doTransition.bind(this));
-    this._eventManager.listen(this._player, Html5Events.PLAY, this._doTransition.bind(this));
-    this._eventManager.listen(this._player, Html5Events.LOAD_START, this._doTransition.bind(this));
-    this._eventManager.listen(this._player, Html5Events.PLAYING, this._doTransition.bind(this));
-    this._eventManager.listen(this._player, Html5Events.LOADED_METADATA, this._doTransition.bind(this));
-    this._eventManager.listen(this._player, Html5Events.PAUSE, this._doTransition.bind(this));
-    this._eventManager.listen(this._player, Html5Events.WAITING, this._doTransition.bind(this));
+  get currentState(): State {
+    return this._curState;
   }
 
   /**
-   * Performs a state transition depends on the event which occurs in the player system.
-   * @param {FakeEvent} event - The event occurs in the player system.
-   * @private
-   * @returns {void}
+   * Get the previous state of the player.
+   * @public
+   * @returns {State|null} - The previous state of the player (null if no state was before).
+   * @instance
+   * @readonly
+   * @memberof Classes.StateManager
    */
+  get previousState(): State | null {
+    return this._prevState;
+  }
+
+  /**
+   * Get the state history of the player.
+   * @public
+   * @returns {Array<State>} - The state history of the player.
+   * @instance
+   * @readonly
+   * @memberof Classes.StateManager
+   */
+  get history(): Array<State> {
+    return this._history;
+  }
+
+  /**
+   * Destroys the state manager.
+   * @public
+   * @returns {void}
+   * @instance
+   * @memberof Classes.StateManager
+   */
+  destroy(): void {
+    this._history = [];
+    this._eventManager.destroy();
+  }
+
+  _attachListeners(): void {
+    this._eventManager.listen(this._player, EventType.Html5.ERROR, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, EventType.Html5.ENDED, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, EventType.Html5.PLAY, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, EventType.Html5.LOAD_START, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, EventType.Html5.PLAYING, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, EventType.Html5.LOADED_METADATA, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, EventType.Html5.PAUSE, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, EventType.Html5.WAITING, this._doTransition.bind(this));
+  }
+
   _doTransition(event: FakeEvent): void {
     this._logger.debug('Do transition request', event);
     let transition = this._transitions[this._curState.type];
@@ -181,12 +171,6 @@ export default class StateManager {
     }
   }
 
-  /**
-   * Updates the player's state.
-   * @param {string} type - The type of the new state.
-   * @private
-   * @returns {void}
-   */
   _updateState(type: string): void {
     if (this._curState.type !== type) {
       this._curState.duration = Date.now() / 1000;
@@ -197,53 +181,12 @@ export default class StateManager {
     }
   }
 
-  /**
-   * Fires the playerStateChanged event after state has been changed.
-   * @private
-   * @returns {void}
-   */
   _dispatchEvent(): void {
-    let event = new FakeEvent(CustomEvents.PLAYER_STATE_CHANGED, {
+    let event = new FakeEvent(EventType.Player.PLAYER_STATE_CHANGED, {
       'oldState': this._prevState,
       'newState': this._curState
     });
     this._player.dispatchEvent(event);
   }
 
-  /**
-   * Destroys the state manager.
-   * @public
-   * @returns {void}
-   */
-  destroy(): void {
-    this._history = [];
-    this._eventManager.destroy();
-  }
-
-  /**
-   * Getter to the current state of the player.
-   * @public
-   * @returns {State} - The current state object
-   */
-  get currentState(): State {
-    return this._curState;
-  }
-
-  /**
-   * Getter to the previous state of the player.
-   * @public
-   * @returns {State|null} - The previous state object, or null if such doesn't exists
-   */
-  get previousState(): State | null {
-    return this._prevState;
-  }
-
-  /**
-   * Getter to the state history of the player.
-   * @public
-   * @returns {Array.<State>} - The full states history objects
-   */
-  get history(): Array<State> {
-    return this._history;
-  }
 }

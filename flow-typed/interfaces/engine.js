@@ -3,21 +3,40 @@ import VideoTrack from '../../src/track/video-track'
 import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
 
-declare interface IEngine {
+/**
+ * @namespace IEngine
+ * @memberof Interfaces
+ * @interface IEngine
+ */
+export interface IEngine {
   static id: string;
+
   static createEngine(source: Source, config: Object): IEngine;
+
   static canPlayType(mimeType: string): boolean;
+
   destroy(): void;
+
   play(): void;
+
   pause(): void;
+
   load(startTime: ?number): Promise<Object>;
+
   selectVideoTrack(videoTrack: VideoTrack): void;
+
   selectAudioTrack(audioTrack: AudioTrack): void;
+
   selectTextTrack(textTrack: TextTrack): void;
+
   hideTextTrack(): void;
+
   enableAdaptiveBitrate(): void;
+
   isAdaptiveBitrateEnabled(): boolean;
+
   getVideoElement(): HTMLVideoElement;
+
   +id: string;
   currentTime: number;
   +duration: number;

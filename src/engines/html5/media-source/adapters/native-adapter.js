@@ -1,6 +1,6 @@
 //@flow
 import EventManager from '../../../../event/event-manager'
-import {HTML5_EVENTS as Html5Events} from '../../../../event/events'
+import {EventType} from '../../../../event/event-type'
 import Track from '../../../../track/track'
 import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'
@@ -11,21 +11,20 @@ import * as Utils from '../../../../utils/util'
 
 /**
  * @namespace NativeAdapter
- * @memberof PlayKitJS.Engines.Html5.MediaSource
- * @class
- * @extends BaseMediaSourceAdapter
+ * @memberof Classes.MediaSource
+ * @class NativeAdapter
+ * @extends {BaseMediaSourceAdapter}
  */
 export default class NativeAdapter extends BaseMediaSourceAdapter {
   _eventManager: EventManager;
   _loadPromise: ?Promise<Object>;
   _progressiveSources: Array<Source>;
   static _logger = BaseMediaSourceAdapter.getLogger(NativeAdapter.id);
-
   /**
    * @member {string}
    * @static
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
+   * @memberof Classes.MediaSource.NativeAdapter
    */
   static id: string = 'NativeAdapter';
 
@@ -35,7 +34,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {boolean}
    * @static
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
+   * @memberof Classes.MediaSource.NativeAdapter
    */
   static canPlayType(mimeType: string): boolean {
     let canPlayType = (typeof mimeType === 'string') ? !!(Utils.Dom.createElement("video").canPlayType(mimeType.toLowerCase())) : false;
@@ -51,7 +50,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {IMediaSourceAdapter}
    * @static
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
+   * @memberof Classes.MediaSource.NativeAdapter
    */
   static createAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): IMediaSourceAdapter {
     return new this(videoElement, source, config);
@@ -69,21 +68,21 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @function load
    * @returns {Promise<Object>}
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
+   * @memberof Classes.MediaSource.NativeAdapter
    * @instance
    */
   load(startTime: ?number): Promise<Object> {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
         // We're using 'loadeddata' event for native hls (on 'loadedmetadata' native hls doesn't have tracks yet).
-        this._eventManager.listen(this._videoElement, Html5Events.LOADED_DATA, () => {
-          this._eventManager.unlisten(this._videoElement, Html5Events.LOADED_DATA);
+        this._eventManager.listen(this._videoElement, EventType.Html5.LOADED_DATA, () => {
+          this._eventManager.unlisten(this._videoElement, EventType.Html5.LOADED_DATA);
           let data = {tracks: this._getParsedTracks()};
           NativeAdapter._logger.debug('The source has been loaded successfully');
           resolve(data);
         });
-        this._eventManager.listen(this._videoElement, Html5Events.ERROR, (error) => {
-          this._eventManager.unlisten(this._videoElement, Html5Events.ERROR);
+        this._eventManager.listen(this._videoElement, EventType.Html5.ERROR, (error) => {
+          this._eventManager.unlisten(this._videoElement, EventType.Html5.ERROR);
           NativeAdapter._logger.error(error);
           reject(error);
         });
@@ -92,7 +91,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         }
         if (this._sourceObj && this._sourceObj.url) {
           this._videoElement.src = this._sourceObj.url;
-          this._trigger(BaseMediaSourceAdapter.CustomEvents.ABR_MODE_CHANGED, {mode: this._isProgressivePlayback() ? 'manual' : 'auto'});
+          this._trigger(BaseMediaSourceAdapter.EventType.Player.ABR_MODE_CHANGED, {mode: this._isProgressivePlayback() ? 'manual' : 'auto'});
         }
         if (startTime) {
           this._videoElement.currentTime = startTime;
@@ -106,7 +105,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @function destroy
    * @returns {void}
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
+   * @memberof Classes.MediaSource.NativeAdapter
    * @instance
    */
   destroy(): void {
@@ -119,10 +118,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   /**
    * @function selectVideoTrack
-   * @param {VideoTrack}
+   * @param {VideoTrack} videoTrack
    * @returns {void}
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
+   * @memberof Classes.MediaSource.NativeAdapter
    * @instance
    */
   selectVideoTrack(videoTrack: VideoTrack): void {
@@ -138,7 +137,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @param {VideoTrack} videoTrack
    * @returns {void}
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
+   * @memberof Classes.MediaSource.NativeAdapter
    * @instance
    */
   selectAdaptiveVideoTrack(videoTrack: VideoTrack): void {
@@ -155,7 +154,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @param {AudioTrack} audioTrack
    * @returns {void}
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
+   * @memberof Classes.MediaSource.NativeAdapter
    * @instance
    */
   selectAudioTrack(audioTrack: AudioTrack): void {
@@ -172,7 +171,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @param {TextTrack} textTrack
    * @returns {void}
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
+   * @memberof Classes.MediaSource.NativeAdapter
    * @instance
    */
   selectTextTrack(textTrack: TextTrack): void {
@@ -188,7 +187,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @function hideTextTrack
    * @returns {void}
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
+   * @memberof Classes.MediaSource.NativeAdapter
    * @instance
    */
   hideTextTrack(): void {
@@ -200,7 +199,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @function enableAdaptiveBitrate
    * @returns {void}
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
+   * @memberof Classes.MediaSource.NativeAdapter
    * @instance
    */
   enableAdaptiveBitrate(): void {
@@ -211,7 +210,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @function isAdaptiveBitrateEnabled
    * @returns {boolean}
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
+   * @memberof Classes.MediaSource.NativeAdapter
    * @instance
    */
   isAdaptiveBitrateEnabled(): boolean {
@@ -220,7 +219,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   /**
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.NativeAdapter
+   * @memberof Classes.MediaSource.NativeAdapter
    * @instance
    * @returns {string}
    */
@@ -362,10 +361,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       let currentTime = this._videoElement.currentTime;
       let paused = this._videoElement.paused;
       this._sourceObj = videoTracks[videoTrack.index];
-      this._eventManager.listen(this._videoElement, Html5Events.LOADED_DATA, () => {
-        this._eventManager.unlisten(this._videoElement, Html5Events.LOADED_DATA);
-        this._eventManager.listen(this._videoElement, Html5Events.SEEKED, () => {
-          this._eventManager.unlisten(this._videoElement, Html5Events.SEEKED);
+      this._eventManager.listen(this._videoElement, EventType.Html5.LOADED_DATA, () => {
+        this._eventManager.unlisten(this._videoElement, EventType.Html5.LOADED_DATA);
+        this._eventManager.listen(this._videoElement, EventType.Html5.SEEKED, () => {
+          this._eventManager.unlisten(this._videoElement, EventType.Html5.SEEKED);
           this._onTrackChanged(videoTrack);
         });
         this._videoElement.currentTime = currentTime;

@@ -4,64 +4,64 @@
  * Create an Event work-alike object based on the dictionary.
  * The event should contain all of the same properties from the dict.
  * @namespace FakeEvent
- * @memberof PlayKitJS
- * @class
+ * @memberof Classes
+ * @class FakeEvent
  */
 export default class FakeEvent {
   /**
    * @const {boolean}
    * @public
    * @instance
-   * @memberof PlayKitJS.FakeEvent
+   * @memberof Classes.FakeEvent
    **/
   bubbles: boolean;
   /**
    * @const {boolean}
    * @public
    * @instance
-   * @memberof PlayKitJS.FakeEvent
+   * @memberof Classes.FakeEvent
    **/
   cancelable: boolean;
   /**
    * @const {boolean}
    * @public
    * @instance
-   * @memberof PlayKitJS.FakeEvent
+   * @memberof Classes.FakeEvent
    **/
   defaultPrevented: boolean;
   /**
    * @const {number}
    * @public
    * @instance
-   * @memberof PlayKitJS.FakeEvent
+   * @memberof Classes.FakeEvent
    **/
   timeStamp: number | Date;
   /**
    * @const {string}
    * @public
    * @instance
-   * @memberof PlayKitJS.FakeEvent
+   * @memberof Classes.FakeEvent
    **/
   type: string;
   /**
    * @const {boolean}
    * @public
    * @instance
-   * @memberof PlayKitJS.FakeEvent
+   * @memberof Classes.FakeEvent
    **/
   isTrusted: boolean;
   /**
    * @type {EventTarget}
    * @public
    * @instance
-   * @memberof PlayKitJS.FakeEvent
+   * @memberof Classes.FakeEvent
    **/
   currentTarget: any;
   /**
    * @type {EventTarget}
    * @public
    * @instance
-   * @memberof PlayKitJS.FakeEvent
+   * @memberof Classes.FakeEvent
    **/
   target: any;
   /**
@@ -69,14 +69,14 @@ export default class FakeEvent {
    * @type {boolean}
    * @public
    * @instance
-   * @memberof PlayKitJS.FakeEvent
+   * @memberof Classes.FakeEvent
    **/
   stopped: boolean;
   /**
    * @type {any}
    * @public
    * @instance
-   * @memberof PlayKitJS.FakeEvent
+   * @memberof Classes.FakeEvent
    **/
   payload: any;
 
@@ -99,7 +99,7 @@ export default class FakeEvent {
    * @override
    * @public
    * @instance
-   * @memberof PlayKitJS.FakeEvent
+   * @memberof Classes.FakeEvent
    **/
   preventDefault() {
   }
@@ -110,7 +110,7 @@ export default class FakeEvent {
    * @override
    * @public
    * @instance
-   * @memberof PlayKitJS.FakeEvent
+   * @memberof Classes.FakeEvent
    **/
   stopImmediatePropagation() {
     this.stopped = true;
@@ -122,7 +122,7 @@ export default class FakeEvent {
    * @override
    * @public
    * @instance
-   * @memberof PlayKitJS.FakeEvent
+   * @memberof Classes.FakeEvent
    **/
   stopPropagation() {
   }

@@ -1,24 +1,26 @@
 //@flow
 
 /**
- * A simple multimap template.
- * @constructor
- * @struct
+ * @namespace MultiMap
+ * @memberof Utils
+ * @class MultiMap
  * @template T
  */
-class MultiMap<T> {
+export default class MultiMap<T> {
   _map: Map<string, T[]>;
 
   constructor() {
-    /** @private {!Object.<string, !Array.<T>>} */
     this._map = new Map();
   }
 
   /**
    * Add a key, value pair to the map.
-   * @param {string} key -
-   * @param {T} value  -
+   * @param {string} key
+   * @param {any} value
    * @returns {void}
+   * @public
+   * @instance
+   * @memberof Utils.MultiMap
    */
   push(key: string, value: T): void {
     if (this._map.has(key)) {
@@ -34,9 +36,12 @@ class MultiMap<T> {
 
   /**
    * Set an array of values for the key, overwriting any previous data.
-   * @param {string} key -
-   * @param {!Array.<T>} values -
+   * @param {string} key
+   * @param {Array<any>} values
    * @returns {void}
+   * @public
+   * @instance
+   * @memberof Utils.MultiMap
    */
   set(key: string, values: T[]): void {
     this._map.set(key, values);
@@ -44,8 +49,11 @@ class MultiMap<T> {
 
   /**
    * Check for a key.
-   * @param {string} key -
-   * @return {boolean} true if the key exists.
+   * @param {string} key
+   * @return {boolean}
+   * @public
+   * @instance
+   * @memberof Utils.MultiMap
    */
   has(key: string): boolean {
     return this._map.has(key);
@@ -53,19 +61,23 @@ class MultiMap<T> {
 
   /**
    * Get a list of values by key.
-   * @param {string} key -
-   * @return {Array.<T>} or null if no suZch key exists.
+   * @param {string} key
+   * @return {Array<any>}
+   * @public
+   * @instance
+   * @memberof Utils.MultiMap
    */
   get(key: string): Array<T> {
     let list = this._map.get(key);
-    // slice() clones the list so that it and the map can each be modified
-    // without affecting the other.
     return list ? list.slice() : [];
   }
 
   /**
    * Get a list of all values.
-   * @returns {!Array.<T>} -
+   * @returns {Array<any>}
+   * @public
+   * @instance
+   * @memberof Utils.MultiMap
    */
   getAll(): T[] {
     let list: T[] = [];
@@ -77,9 +89,12 @@ class MultiMap<T> {
 
   /**
    * Remove a specific value, if it exists.
-   * @param {string} key -
-   * @param {T} value -
+   * @param {string} key
+   * @param {any} value
    * @returns {void}
+   * @public
+   * @instance
+   * @memberof Utils.MultiMap
    */
   remove(key: string, value: T): void {
     if (!this._map.has(key)) return;
@@ -96,21 +111,23 @@ class MultiMap<T> {
 
   /**
    * Get all keys from the multimap.
-   * @return {!Array.<string>}
+   * @return {Array<string>}
+   * @public
+   * @instance
+   * @memberof Utils.MultiMap
    */
-  // eslint-disable-next-line no-undef
   keys(): Iterator<string> {
     return this._map.keys();
   }
 
-
   /**
    * Clear all keys and values from the multimap.
    * @returns {void}
+   * @public
+   * @instance
+   * @memberof Utils.MultiMap
    */
   clear(): void {
     this._map.clear();
   }
 }
-
-export default MultiMap;

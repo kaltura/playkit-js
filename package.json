@@ -26,7 +26,7 @@
     "prepush-msg:done": "echo '\nPre push tasks are done.\n' && exit 0",
     "docs:generate": "documentation build src -f html -o docs",
     "docs:serve": "documentation serve src",
-    "docs:watch": "documentation serve --watch src"
+    "docs:watch": "documentation serve --watch flow-typed src"
   },
   "pre-push": [
     "prepush-msg:build",

@@ -3,7 +3,7 @@
 import FakeEvent from '../../../event/fake-event'
 import FakeEventTarget from '../../../event/fake-event-target'
 import PlayerError from '../../../utils/player-error'
-import {CUSTOM_EVENTS} from '../../../event/events'
+import {EventType} from '../../../event/event-type'
 import LoggerFactory from '../../../utils/logger'
 import Track from '../../../track/track'
 import VideoTrack from '../../../track/video-track'
@@ -11,12 +11,14 @@ import AudioTrack from '../../../track/audio-track'
 import TextTrack from '../../../track/text-track'
 
 /**
+ * @virtual BaseMediaSourceAdapter
+ * @typedef {BaseMediaSourceAdapter}
  * @namespace BaseMediaSourceAdapter
- * @memberof PlayKitJS.Engines.Html5.MediaSource
- * @abstract
+ * @memberof Classes.MediaSource
+ * @extends {FakeEventTarget}
  */
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
-  static CustomEvents: { [event: string]: string } = CUSTOM_EVENTS;
+  static EventType: Object = EventType;
   static getLogger: Function = LoggerFactory.getLogger;
   _config: ?Object;
   _sourceObj: ?Source;
@@ -27,8 +29,9 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @function isSupported
    * @returns {boolean}
    * @static
+   * @virtual isSupported
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
+   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
    */
   static isSupported(): boolean {
     return true;
@@ -38,8 +41,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * Must be implemented by derived adapter.
    * @param {string} mimeType
    * @static
+   * @abstract
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
+   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
+   * @returns {boolean}
    */
   static canPlayType(mimeType: string): boolean {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayType').getError();
@@ -48,7 +53,8 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /**
    * Must be implemented by derived adapter.
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
+   * @abstract
+   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
    * @returns {Promise<Object>}
    * @instance
    */
@@ -58,8 +64,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
 
   /**
    * Must be implemented by derived adapter.
+   * @param {VideoTrack} videoTrack
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
+   * @abstract
+   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
    * @returns {void}
    * @instance
    */
@@ -69,8 +77,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
 
   /**
    * Must be implemented by derived adapter.
+   * @param {AudioTrack} audioTrack
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
+   * @abstract
+   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
    * @returns {void}
    * @instance
    */
@@ -80,8 +90,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
 
   /**
    * Must be implemented by derived adapter.
+   * @param {TextTrack} textTrack
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
+   * @abstract
+   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
    * @returns {void}
    * @instance
    */
@@ -92,7 +104,8 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /**
    * Must be implemented by derived adapter.
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
+   * @abstract
+   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
    * @returns {void}
    * @instance
    */
@@ -103,7 +116,8 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /**
    * Must be implemented by derived adapter.
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
+   * @abstract
+   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
    * @returns {void}
    * @instance
    */
@@ -114,7 +128,8 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /**
    * Must be implemented by derived adapter.
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
+   * @abstract
+   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
    * @returns {boolean}
    * @instance
    */
@@ -125,19 +140,14 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /**
    * Must be implemented by derived adapter.
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
+   * @abstract
+   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
    * @instance
    */
   get src(): string {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'get src').getError();
   }
 
-  /**
-   * @constructor
-   * @param {HTMLVideoElement} videoElement
-   * @param {Source} source
-   * @param {Object} config
-   */
   constructor(videoElement: HTMLVideoElement, source: Source, config: Object = {}) {
     super();
     this._videoElement = videoElement;
@@ -150,7 +160,8 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @function destroy
    * @returns {void}
    * @public
-   * @memberof PlayKitJS.Engines.Html5.MediaSource.BaseMediaSourceAdapter
+   * @virtual
+   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
    * @instance
    */
   destroy(): void {
@@ -160,11 +171,11 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
 
   _onTrackChanged(track: Track): void {
     if (track instanceof VideoTrack) {
-      this._trigger(BaseMediaSourceAdapter.CustomEvents.VIDEO_TRACK_CHANGED, {selectedVideoTrack: track});
+      this._trigger(BaseMediaSourceAdapter.EventType.Player.VIDEO_TRACK_CHANGED, {selectedVideoTrack: track});
     } else if (track instanceof AudioTrack) {
-      this._trigger(BaseMediaSourceAdapter.CustomEvents.AUDIO_TRACK_CHANGED, {selectedAudioTrack: track});
+      this._trigger(BaseMediaSourceAdapter.EventType.Player.AUDIO_TRACK_CHANGED, {selectedAudioTrack: track});
     } else if (track instanceof TextTrack) {
-      this._trigger(BaseMediaSourceAdapter.CustomEvents.TEXT_TRACK_CHANGED, {selectedTextTrack: track});
+      this._trigger(BaseMediaSourceAdapter.EventType.Player.TEXT_TRACK_CHANGED, {selectedTextTrack: track});
     }
   }
 

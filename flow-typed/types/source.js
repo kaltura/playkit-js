@@ -1,5 +1,11 @@
 //@flow
-declare type Source = {
+
+/**
+ * @typedef {Source}
+ * @memberof Types
+ * @extends {Object}
+ */
+export type Source = {
   mimetype: string,
   url: string,
   id: ?string,

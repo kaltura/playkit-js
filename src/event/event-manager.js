@@ -8,8 +8,8 @@ type ListenerType = (event: FakeEvent) => any;
  * Creates a new EventManager.
  * An EventManager maintains a collection of "event bindings" between event targets and event listeners.
  * @namespace EventManager
- * @memberof PlayKitJS
- * @class
+ * @memberof Classes
+ * @class EventManager
  **/
 class EventManager {
   _bindingMap: MultiMap<Binding> | null;
@@ -22,7 +22,7 @@ class EventManager {
    * Detaches all event listeners.
    * @public
    * @instance
-   * @memberof PlayKitJS.EventManager
+   * @memberof Classes.EventManager
    * @returns {Promise<*>}
    */
   destroy(): Promise<*> {
@@ -39,7 +39,7 @@ class EventManager {
    * @returns {void}
    * @public
    * @instance
-   * @memberof PlayKitJS.EventManager
+   * @memberof Classes.EventManager
    */
   listen(target: any, type: string, listener: ListenerType): void {
     let binding = new Binding(target, type, listener);
@@ -55,7 +55,7 @@ class EventManager {
    * @returns {void}
    * @public
    * @instance
-   * @memberof PlayKitJS.EventManager
+   * @memberof Classes.EventManager
    */
   unlisten(target: any, type: string): void {
     if (this._bindingMap) {
@@ -79,7 +79,7 @@ class EventManager {
    * @returns {void}
    * @public
    * @instance
-   * @memberof PlayKitJS.EventManager
+   * @memberof Classes.EventManager
    */
   removeAll(): void {
     if (this._bindingMap) {

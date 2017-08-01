@@ -1,12 +1,13 @@
 //@flow
 
 /**
- * Calculates the most suitable source to the container size
- * @function getSuitableSourceForResolution
+ * Calculates the most suitable source in addition to container size.
  * @param {Array<Object>} tracks - The tracks
  * @param {number} width - The width to calculate with
  * @param {number} height - The height to calculate with
  * @returns {Object} - The most suitable source to the container size
+ * @namespace getSuitableSourceForResolution
+ * @memberof Utils
  */
 function getSuitableSourceForResolution(tracks: Array<Object>, width: number, height: number): ?Object {
   let mostSuitableWidth = null;

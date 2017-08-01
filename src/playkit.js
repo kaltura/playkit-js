@@ -1,5 +1,31 @@
 /**
- * @namespace PlayKitJS
+ * @namespace Interfaces
+ */
+
+/**
+ * @namespace Types
+ */
+
+/**
+ * @namespace Enums
+ */
+
+/**
+ * @namespace Utils
+ */
+
+/**
+ * @namespace Classes
+ */
+
+/**
+ * @namespace Engines
+ * @memberof Classes
+ */
+
+/**
+ * @namespace MediaSource
+ * @memberof Classes
  */
 
 //@flow
@@ -27,11 +53,14 @@ LoggerFactory.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size
 LoggerFactory.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
 
 /**
- * @param {string} targetId
- * @param {Object} config
- * @returns {Player}
+ * Factory to create a player instance.
+ * @param {string} targetId - The DOM target id.
+ * @param {Object} config - The player configuration.
+ * @returns {Player} - The player instance.
  * @public
- * @memberof PlayKitJS
+ * @namespace loadPlayer
+ * @function loadPlayer
+ * @memberof loadPlayer
  */
 export function loadPlayer(targetId: string, config: ?Object) {
   return new Player(targetId, config || {});

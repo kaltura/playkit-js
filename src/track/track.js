@@ -1,104 +1,82 @@
 //@flow
 
 /**
- * General track representation of the player.
- * @classdesc
+ * @namespace Track
+ * @abstract Track
+ * @memberof Classes
  */
 export default class Track {
-  /**
-   * The id of the track.
-   * @member
-   * @type {string}
-   * @private
-   */
   _id: ?string;
-  /**
-   * The active mode of the track.
-   * @member
-   * @type {boolean}
-   * @private
-   */
   _active: boolean;
-  /**
-   * The label of the track.
-   * @member
-   * @type {string}
-   * @private
-   */
   _label: string;
-  /**
-   * The language of the track.
-   * @member
-   * @type {string}
-   * @private
-   */
   _language: string;
-  /**
-   * The index of the track.
-   * @member
-   * @type {number}
-   * @private
-   */
   _index: number;
 
   /**
-   * Getter for the track id.
+   * The id of the track.
    * @public
    * @returns {?string} - The track id.
+   * @memberof Classes.Track
+   * @instance
    */
   get id(): ?string {
     return this._id;
   }
 
   /**
-   * Getter for the active mode of the track.
+   * The active mode of the track.
    * @public
    * @returns {boolean} - The active mode of the track.
+   * @memberof Classes.Track
+   * @instance
    */
   get active(): boolean {
     return this._active;
   }
 
   /**
-   * Setter for the active mode of the track.
    * @public
    * @param {boolean} value - Whether the track is active or not.
+   * @memberof Classes.Track
+   * @instance
    */
   set active(value: boolean) {
     this._active = value;
   }
 
   /**
-   * Getter for the label of the track.
+   * The label of the track.
    * @public
    * @returns {string} - The label of the track.
+   * @memberof Classes.Track
+   * @instance
    */
   get label(): string {
     return this._label;
   }
 
   /**
-   * Getter for the language of the track.
+   * The language of the track.
    * @public
    * @returns {string} - The language of the track.
+   * @memberof Classes.Track
+   * @instance
    */
   get language(): string {
     return this._language;
   }
 
   /**
-   * Getter for the index of the track.
+   * The index of the track.
    * @public
    * @returns {number} - The index of the track.
+   * @memberof Classes.Track
+   * @instance
    */
   get index(): number {
     return this._index;
   }
 
-  /**
-   * @constructor
-   * @param {Object} settings - The track settings object.
-   */
   constructor(settings: Object = {}) {
     this._id = settings.id;
     this._active = settings.active;

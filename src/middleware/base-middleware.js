@@ -1,20 +1,27 @@
 // @flow
 
 /**
- * Base middleware.
- * @classdesc
+ * @virtual BaseMiddleware
+ * @namespace BaseMiddleware
+ * @memberof Classes
+ * @typedef {BaseMiddleware}
  */
 export default class BaseMiddleware {
   /**
-   * Id of the middleware instance.
+   * The id of the middleware instance.
    * @public
+   * @abstract id
+   * @public
+   * @memberof Classes.BaseMiddleware
    */
   id: string;
 
   /**
-   * Calls the next handler in the middleware chain.
    * @param {Function} next - The next handler in the middleware chain.
    * @returns {void}
+   * @virtual callNext
+   * @public
+   * @memberof Classes.BaseMiddleware
    */
   callNext(next: Function): void {
     if (next) {

@@ -2,59 +2,49 @@
 import Track from './track'
 
 /**
- * Video track representation of the player.
- * @classdesc
+ * @namespace VideoTrack
+ * @memberof Classes
+ * @extends Track
+ * @class VideoTrack
  */
 export default class VideoTrack extends Track {
-  /**
-   * @member {number} _bandwidth - The bandwidth of the video track
-   * @type {number}
-   * @private
-   */
   _bandwidth: number;
-
-  /**
-   * @member {number} _width - The width of the video track
-   * @type {number}
-   * @private
-   */
   _width: number;
-
-  /**
-   * @member {number} _height - The height of the video track
-   * @type {number}
-   * @private
-   */
   _height: number;
 
   /**
+   * The bandwidth of the video track.
    * @public
-   * @returns {number} - The bandwidth of the video track
+   * @returns {number} - The bandwidth of the video track.
+   * @memberof Classes.VideoTrack
+   * @instance
    */
   get bandwidth(): number {
     return this._bandwidth;
   }
 
   /**
+   * The width of the video track
    * @public
-   * @returns {number} - The width of the video track
+   * @returns {number} - The width of the video track.
+   * @memberof Classes.VideoTrack
+   * @instance
    */
   get width(): number {
     return this._width;
   }
 
   /**
+   * The height of the video track.
    * @public
-   * @returns {number} - The height of the video track
+   * @returns {number} - The height of the video track.
+   * @memberof Classes.VideoTrack
+   * @instance
    */
   get height(): number {
     return this._height;
   }
 
-  /**
-   * @constructor
-   * @param {Object} settings - The track settings object
-   */
   constructor(settings: Object = {}) {
     super(settings);
     this._bandwidth = settings.bandwidth;

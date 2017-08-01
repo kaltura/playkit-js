@@ -1,6 +1,6 @@
 import Player from '../../src/player'
-import PlayerStates from '../../src/state/state-types'
-import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../../src/event/events'
+import {StateType} from '../../src/state/state-type'
+import {EventType} from '../../src/event/event-type'
 import sourcesConfig from './configs/sources.json'
 import VideoTrack from '../../src/track/video-track'
 import AudioTrack from '../../src/track/audio-track'
@@ -66,6 +66,7 @@ describe("ready", function () {
     describe("preload none", () => {
 
       describe("passing config in constructor", () => {
+        this.timeout(10000);
 
         let player;
 
@@ -490,6 +491,7 @@ describe('getTracks dummy', () => {
 });
 
 describe('getTracks real', function () {
+  this.timeout(1000);
 
   let config;
   let player;
@@ -608,7 +610,7 @@ describe('selectTrack - video', function () {
 
   it('should select a new video track', (done) => {
     player.ready().then(() => {
-      player.addEventListener(CustomEvents.VIDEO_TRACK_CHANGED, (event) => {
+      player.addEventListener(EventType.Player.VIDEO_TRACK_CHANGED, (event) => {
         (event.payload.selectedVideoTrack instanceof VideoTrack).should.be.true;
         event.payload.selectedVideoTrack.index.should.equal(1);
         (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.false;
@@ -680,7 +682,7 @@ describe('selectTrack - audio', function () {
   it('should select a new audio track', (done) => {
     player.ready().then(() => {
       if (video.audioTracks) {
-        player.addEventListener(CustomEvents.AUDIO_TRACK_CHANGED, (event) => {
+        player.addEventListener(EventType.Player.AUDIO_TRACK_CHANGED, (event) => {
           (event.payload.selectedAudioTrack instanceof AudioTrack).should.be.true;
           event.payload.selectedAudioTrack.index.should.equal(2);
           video.audioTracks[0].enabled.should.be.false;
@@ -806,7 +808,7 @@ describe('selectTrack - text', function () {
 
   it('should select a new subtitles track', (done) => {
     player.ready().then(() => {
-      player.addEventListener(CustomEvents.TEXT_TRACK_CHANGED, (event) => {
+      player.addEventListener(EventType.Player.TEXT_TRACK_CHANGED, (event) => {
         (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
         event.payload.selectedTextTrack.index.should.equal(1);
         video.textTracks[0].mode.should.be.equal('disabled');
@@ -830,7 +832,7 @@ describe('selectTrack - text', function () {
   it('should select a new captions track', (done) => {
     player.load();
     player.ready().then(() => {
-      player.addEventListener(CustomEvents.TEXT_TRACK_CHANGED, (event) => {
+      player.addEventListener(EventType.Player.TEXT_TRACK_CHANGED, (event) => {
         (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
         event.payload.selectedTextTrack.index.should.equal(1);
         video.textTracks[0].mode.should.be.equal('disabled');
@@ -943,9 +945,9 @@ describe('getActiveTracks', function () {
 
   it('should get the active tracks before and after switching', (done) => {
     player.ready().then(() => {
-      player.addEventListener(CustomEvents.TEXT_TRACK_CHANGED, () => {
-        player.addEventListener(CustomEvents.VIDEO_TRACK_CHANGED, () => {
-          player.addEventListener(CustomEvents.AUDIO_TRACK_CHANGED, () => {
+      player.addEventListener(EventType.Player.TEXT_TRACK_CHANGED, () => {
+        player.addEventListener(EventType.Player.VIDEO_TRACK_CHANGED, () => {
+          player.addEventListener(EventType.Player.AUDIO_TRACK_CHANGED, () => {
             player.getActiveTracks().audio.should.deep.equals(audioTracks[2]);
             done();
           });
@@ -1098,7 +1100,7 @@ describe('events', function () {
        * @returns {void}
        */
       function onTracksChanged(data) {
-        player.removeEventListener(CustomEvents.TRACKS_CHANGED, onTracksChanged);
+        player.removeEventListener(EventType.Player.TRACKS_CHANGED, onTracksChanged);
         let videoTracksLength = 1;
         let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
         let textTracksLength = (video.textTracks ? video.textTracks.length : 0);
@@ -1107,7 +1109,7 @@ describe('events', function () {
         done();
       }
 
-      player.addEventListener(CustomEvents.TRACKS_CHANGED, onTracksChanged);
+      player.addEventListener(EventType.Player.TRACKS_CHANGED, onTracksChanged);
       player.load();
     });
   });
@@ -1141,7 +1143,7 @@ describe('events', function () {
     it('should fire first play only once', (done) => {
       let counter = 0;
       let onPlaying = () => {
-        player.removeEventListener(Html5Events.PLAYING, onPlaying);
+        player.removeEventListener(EventType.Html5.PLAYING, onPlaying);
         player.pause();
         player.play();
         setTimeout(() => {
@@ -1149,10 +1151,10 @@ describe('events', function () {
           done();
         }, 0);
       };
-      player.addEventListener(CustomEvents.FIRST_PLAY, () => {
+      player.addEventListener(EventType.Player.FIRST_PLAY, () => {
         counter++;
       });
-      player.addEventListener(Html5Events.PLAYING, onPlaying);
+      player.addEventListener(EventType.Html5.PLAYING, onPlaying);
       player.play();
     });
   });
@@ -1182,7 +1184,7 @@ describe('events', function () {
     });
 
     it('should fire source selected', (done) => {
-      player.addEventListener(CustomEvents.SOURCE_SELECTED, (event) => {
+      player.addEventListener(EventType.Player.SOURCE_SELECTED, (event) => {
         event.payload.selectedSource[0].id.should.equal('1_rsrdfext_10081,url');
         done();
       });
@@ -1214,7 +1216,7 @@ describe('events', function () {
     it('should fire abr mode changed for progressive playback', (done) => {
       config.sources = sourcesConfig.Mp4;
       player = new Player(targetId, config);
-      player.addEventListener(CustomEvents.ABR_MODE_CHANGED, (event) => {
+      player.addEventListener(EventType.Player.ABR_MODE_CHANGED, (event) => {
         event.payload.mode.should.equal('manual');
         done();
       });
@@ -1224,7 +1226,7 @@ describe('events', function () {
     it('should fire abr mode changed for adaptive playback', (done) => {
       config.sources = sourcesConfig.Hls;
       player = new Player(targetId, config);
-      player.addEventListener(CustomEvents.ABR_MODE_CHANGED, (event) => {
+      player.addEventListener(EventType.Player.ABR_MODE_CHANGED, (event) => {
         event.payload.mode.should.equal('auto');
         done();
       });
@@ -1267,8 +1269,8 @@ describe('states', function () {
      * @returns {void}
      */
     function onLoadStart() {
-      player.removeEventListener(Html5Events.LOAD_START, onLoadStart);
-      player._stateManager.currentState.type.should.equal(PlayerStates.LOADING);
+      player.removeEventListener(EventType.Html5.LOAD_START, onLoadStart);
+      player._stateManager.currentState.type.should.equal(StateType.LOADING);
     }
 
     /**
@@ -1276,11 +1278,11 @@ describe('states', function () {
      * @returns {void}
      */
     function onLoadedMetadata() {
-      player.removeEventListener(Html5Events.LOADED_METADATA, onLoadedMetadata);
+      player.removeEventListener(EventType.Html5.LOADED_METADATA, onLoadedMetadata);
       if (player.config.autoplay) {
-        player._stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+        player._stateManager.currentState.type.should.equal(StateType.PLAYING);
       } else {
-        player._stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
+        player._stateManager.currentState.type.should.equal(StateType.PAUSED);
       }
     }
 
@@ -1289,8 +1291,8 @@ describe('states', function () {
      * @returns {void}
      */
     function onPlaying() {
-      player.removeEventListener(Html5Events.PLAYING, onPlaying);
-      player._stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+      player.removeEventListener(EventType.Html5.PLAYING, onPlaying);
+      player._stateManager.currentState.type.should.equal(StateType.PLAYING);
       setTimeout(() => {
         player.pause();
       }, 100);
@@ -1301,8 +1303,8 @@ describe('states', function () {
      * @returns {void}
      */
     function onPause() {
-      player.removeEventListener(Html5Events.PAUSE, onPause);
-      player._stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
+      player.removeEventListener(EventType.Html5.PAUSE, onPause);
+      player._stateManager.currentState.type.should.equal(StateType.PAUSED);
       player.currentTime = player.duration - 1;
       player.play();
     }
@@ -1312,18 +1314,18 @@ describe('states', function () {
      * @returns {void}
      */
     function onEnded() {
-      player.removeEventListener(Html5Events.ENDED, onEnded);
-      player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
+      player.removeEventListener(EventType.Html5.ENDED, onEnded);
+      player._stateManager.currentState.type.should.equal(StateType.IDLE);
       player.destroy();
       done();
     }
 
-    player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
-    player.addEventListener(Html5Events.LOAD_START, onLoadStart);
-    player.addEventListener(Html5Events.LOADED_METADATA, onLoadedMetadata);
-    player.addEventListener(Html5Events.PLAYING, onPlaying);
-    player.addEventListener(Html5Events.PAUSE, onPause);
-    player.addEventListener(Html5Events.ENDED, onEnded);
+    player._stateManager.currentState.type.should.equal(StateType.IDLE);
+    player.addEventListener(EventType.Html5.LOAD_START, onLoadStart);
+    player.addEventListener(EventType.Html5.LOADED_METADATA, onLoadedMetadata);
+    player.addEventListener(EventType.Html5.PLAYING, onPlaying);
+    player.addEventListener(EventType.Html5.PAUSE, onPause);
+    player.addEventListener(EventType.Html5.ENDED, onEnded);
     player.load();
     player.play();
   });
@@ -1356,11 +1358,11 @@ describe('configure', function () {
     player = new Player(targetId);
     player.should.be.instanceOf(Player);
     player.configure(config);
-    player.addEventListener(Html5Events.PLAYING, function () {
+    player.addEventListener(EventType.Html5.PLAYING, function () {
       player.destroy();
       done();
     });
-    player.addEventListener(Html5Events.ERROR, function () {
+    player.addEventListener(EventType.Html5.ERROR, function () {
       player.destroy();
       should.fail();
     });

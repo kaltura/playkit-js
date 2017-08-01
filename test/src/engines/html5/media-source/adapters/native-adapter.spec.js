@@ -5,7 +5,7 @@ import TextTrack from '../../../../../../src/track/text-track'
 import {removeVideoElementsFromTestPage} from '../../../../utils/test-utils'
 import sourcesConfig from '../../../../configs/sources.json'
 import * as Utils from '../../../../../../src/utils/util'
-import {CUSTOM_EVENTS} from '../../../../../../src/event/events'
+import {EventType} from '../../../../../../src/event/event-type'
 
 
 describe('NativeAdapter: isSupported', () => {
@@ -324,7 +324,7 @@ describe('NativeAdapter: _selectProgressiveVideoTrack', function () {
 
   it('should select a new video track', (done) => {
     nativeInstance.load().then(() => {
-      nativeInstance.addEventListener(CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, (event) => {
+      nativeInstance.addEventListener(EventType.Player.VIDEO_TRACK_CHANGED, (event) => {
         event.payload.selectedVideoTrack.index.should.equal(0);
         nativeInstance._videoElement.currentTime.should.equal(2);
         nativeInstance._videoElement.paused.should.be.true;
@@ -405,7 +405,7 @@ describe('NativeAdapter: selectAudioTrack', function () {
   it('should select a new audio track', (done) => {
     nativeInstance.load().then(() => {
       if (nativeInstance._videoElement.audioTracks) {
-        nativeInstance.addEventListener(CUSTOM_EVENTS.AUDIO_TRACK_CHANGED, (event) => {
+        nativeInstance.addEventListener(EventType.Player.AUDIO_TRACK_CHANGED, (event) => {
           event.payload.selectedAudioTrack.index.should.equal(2);
           done();
         });
@@ -487,7 +487,7 @@ describe('NativeAdapter: selectTextTrack', function () {
   it('should select a new subtitles track', (done) => {
     nativeInstance.load().then(() => {
       if (nativeInstance._videoElement.textTracks) {
-        nativeInstance.addEventListener(CUSTOM_EVENTS.TEXT_TRACK_CHANGED, (event) => {
+        nativeInstance.addEventListener(EventType.Player.TEXT_TRACK_CHANGED, (event) => {
           event.payload.selectedTextTrack.index.should.equal(1);
           done();
         });
@@ -505,7 +505,7 @@ describe('NativeAdapter: selectTextTrack', function () {
   it('should select a new captions track', (done) => {
     nativeInstance.load().then(() => {
       if (nativeInstance._videoElement.textTracks) {
-        nativeInstance.addEventListener(CUSTOM_EVENTS.TEXT_TRACK_CHANGED, (event) => {
+        nativeInstance.addEventListener(EventType.Player.TEXT_TRACK_CHANGED, (event) => {
           event.payload.selectedTextTrack.index.should.equal(1);
           done();
         });

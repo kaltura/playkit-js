@@ -2,18 +2,19 @@
 import FakeEventTarget from '../../event/fake-event-target'
 import FakeEvent from '../../event/fake-event'
 import EventManager from '../../event/event-manager'
-import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../../event/events'
+import {EventType} from '../../event/event-type'
 import MediaSourceProvider from './media-source/media-source-provider'
 import VideoTrack from '../../track/video-track'
 import AudioTrack from '../../track/audio-track'
 import TextTrack from '../../track/text-track'
 import * as Utils from '../../utils/util'
 
-
 /**
  * @namespace Html5
- * @memberof PlayKitJS.Engines
+ * @memberof Classes.Engines
  * @class
+ * @extends {FakeEventTarget}
+ * @implements {IEngine}
  */
 export default class Html5 extends FakeEventTarget implements IEngine {
   static VIDEO_ELEMENT_CLASS_NAME: string = 'playkit-engine-html5';
@@ -24,7 +25,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @type {string}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @static
    */
@@ -34,7 +35,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @param {Source} source
    * @param {Object} config
    * @returns {IEngine}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @static
    */
@@ -45,7 +46,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * @param {string} mimeType
    * @returns {boolean}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @static
    */
@@ -56,7 +57,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * @returns {boolean}
    * @static
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    */
   static isSupported() {
@@ -78,7 +79,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    * @returns {void}
@@ -101,7 +102,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {HTMLVideoElement}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -112,7 +113,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * @param {VideoTrack} videoTrack
    * @returns {void}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -125,7 +126,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * @param {AudioTrack} audioTrack
    * @returns {void}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -138,7 +139,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * @param {TextTrack} textTrack
    * @returns {void}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -150,7 +151,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {void}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -162,7 +163,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {void}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -174,7 +175,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {boolean}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -187,7 +188,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {void}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -197,7 +198,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {void}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -207,7 +208,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @param {number} startTime
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    * @returns {Promise<Object>}
@@ -217,7 +218,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    * @returns {string}
@@ -228,7 +229,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @param {string} source
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    * @returns {void}
@@ -239,7 +240,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {string}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -252,7 +253,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {number}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -263,7 +264,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * @param {number} to
    * @returns {void}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -273,7 +274,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {number}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -283,7 +284,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @param {number} vol
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    * @returns {void}
@@ -294,7 +295,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {number}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -304,7 +305,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {boolean}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -314,7 +315,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {boolean}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -324,7 +325,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {TimeRanges}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -334,7 +335,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {TimeRanges}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -344,7 +345,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {TimeRanges}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -354,7 +355,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @param {boolean} mute
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    * @returns {void}
@@ -365,7 +366,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {boolean}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -375,7 +376,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {boolean}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -386,7 +387,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * @param {string} poster
    * @returns {void}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -396,7 +397,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {poster}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -406,7 +407,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @param {string} preload
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    * @returns {void}
@@ -417,7 +418,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {string}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -426,8 +427,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
-   * @param {boolean}
-   * @memberof PlayKitJS.Engines.Html5
+   * @param {boolean} autoplay
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    * @returns {void}
@@ -438,7 +439,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {boolean}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -448,7 +449,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @param {boolean} loop
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    * @returns {void}
@@ -459,7 +460,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {boolean}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -469,7 +470,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @param {boolean} controls
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    * @returns {void}
@@ -480,7 +481,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {boolean}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -490,7 +491,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @param {number} playbackRate
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    * @returns {void}
@@ -501,7 +502,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {number}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -511,7 +512,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @param {number} defaultPlaybackRate
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    * @returns {void}
@@ -522,7 +523,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {number}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -532,7 +533,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {boolean}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -542,7 +543,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {MediaError | null}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -552,7 +553,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {number}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -567,7 +568,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * 2 = HAVE_CURRENT_DATA - data for the current playback position is available, but not enough data to play next frame/millisecond.
    * 3 = HAVE_FUTURE_DATA - data for the current and at least the next frame is available.
    * 4 = HAVE_ENOUGH_DATA - enough data available to start playing.
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -577,7 +578,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {number}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -587,7 +588,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {number}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -597,7 +598,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @param {boolean} playsinline
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    * @returns {void}
@@ -612,7 +613,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {boolean}
-   * @memberof PlayKitJS.Engines.Html5
+   * @memberof Classes.Engines.Html5
    * @public
    * @instance
    */
@@ -621,27 +622,27 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   _attach(): void {
-    for (let playerEvent in Html5Events) {
-      this._eventManager.listen(this._el, Html5Events[playerEvent], () => {
-        this.dispatchEvent(new FakeEvent(Html5Events[playerEvent]));
+    for (let html5Event in EventType.Html5) {
+      this._eventManager.listen(this._el, EventType.Html5[html5Event], () => {
+        this.dispatchEvent(new FakeEvent(EventType.Html5[html5Event]));
       });
     }
     if (this._mediaSourceAdapter) {
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.AUDIO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.TEXT_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, EventType.Player.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, EventType.Player.AUDIO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, EventType.Player.TEXT_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, EventType.Player.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
     }
   }
 
   _detach(): void {
-    for (let playerEvent in Html5Events) {
-      this._eventManager.unlisten(this._el, Html5Events[playerEvent]);
+    for (let html5Event in EventType.Html5) {
+      this._eventManager.unlisten(this._el, EventType.Html5[html5Event]);
     }
-    if (this._mediaSourceAdapter) { // unlisten to adaptive bitrate changed
-      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGED);
-      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.AUDIO_TRACK_CHANGED);
-      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.TEXT_TRACK_CHANGED);
+    if (this._mediaSourceAdapter) {
+      this._eventManager.unlisten(this._mediaSourceAdapter, EventType.Player.VIDEO_TRACK_CHANGED);
+      this._eventManager.unlisten(this._mediaSourceAdapter, EventType.Player.AUDIO_TRACK_CHANGED);
+      this._eventManager.unlisten(this._mediaSourceAdapter, EventType.Player.TEXT_TRACK_CHANGED);
     }
   }
 

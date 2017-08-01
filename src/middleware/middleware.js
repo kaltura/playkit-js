@@ -4,43 +4,28 @@ import BaseMiddleware from './base-middleware'
 import LoggerFactory from '../utils/logger'
 
 /**
- * Generic middleware implementation.
+ * @namespace Middleware
+ * @class Middleware
+ * @memberof Classes
  */
 export default class Middleware {
-  /**
-   * The registered middlewares.
-   * @private
-   * @member
-   */
   _middlewares: MultiMap<*>;
-  /**
-   * The actions supported by the middleware.
-   * @private
-   * @member
-   */
   _actions: { [action: string]: string };
-  /**
-   * The logger of the middleware.
-   * @private
-   * @member
-   */
   _logger: any;
 
-  /**
-   * @constructor
-   * @param {Object} actions - The actions for the middleware.
-   */
-  constructor(actions: { [action: string]: string }) {
+  constructor(actions: Object) {
     this._actions = actions;
     this._middlewares = new MultiMap();
     this._logger = LoggerFactory.getLogger("Middleware");
   }
 
   /**
-   * Registers a middleware instance to the middleware chain.
-   * @param {BaseMiddleware} middlewareInstance - The middleware instance.
+   * Registers a base middleware instance to the middleware chain.
+   * @param {BaseMiddleware} middlewareInstance - The base middleware instance.
    * @public
    * @returns {void}
+   * @instance
+   * @memberof Classes.Middleware
    */
   use(middlewareInstance: BaseMiddleware): void {
     for (let action in this._actions) {
@@ -59,7 +44,9 @@ export default class Middleware {
    * @param {string} action - The action to run.
    * @param {Function} callback - The callback function.
    * @public
+   * @instance
    * @returns {void}
+   * @memberof Classes.Middleware
    */
   run(action: string, callback: Function): void {
     this._logger.debug("Start middleware chain for action " + action);
@@ -70,13 +57,6 @@ export default class Middleware {
     });
   }
 
-  /**
-   * Executes all the middlewares one by one.
-   * @param {Array<Function>} middlewares - The middlewares for a specific action.
-   * @param {Function} callback - The callback function.
-   * @private
-   * @returns {void}
-   */
   _executeMiddleware(middlewares: Array<Function>, callback: Function): void {
     // eslint-disable-next-line no-unused-vars
     const composition = middlewares.reduceRight((next, fn) => v => {
