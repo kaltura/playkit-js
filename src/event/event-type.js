@@ -5,7 +5,7 @@
  * @memberof Enums
  * @typedef {EventType}
  */
-export const EventType: Object = {
+export const EventType = {
   /**
    * @namespace Html5
    * @memberof Enums.EventType

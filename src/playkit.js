@@ -49,7 +49,7 @@ let VERSION = packageData.version;
 // Playkit name
 let PLAYER_NAME = 'kaltura-playkit-js';
 
-LoggerFactory.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
+LoggerFactory.getLogger().log("%c Playkit " + VERSION, "color: blue; font-size: large");
 LoggerFactory.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
 
 /**
