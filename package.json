@@ -24,8 +24,8 @@
     "prepush-msg:build": "echo '\nRunning build before push...\n' && exit 0",
     "prepush-msg:dist": "echo '\nAdding dist files to a seperate commit...\n' && exit 0",
     "prepush-msg:done": "echo '\nPre push tasks are done.\n' && exit 0",
-    "docs:generate": "documentation build src -f html -o docs",
-    "docs:serve": "documentation serve src",
+    "docs:generate": "documentation build flow-typed src -f html -o docs",
+    "docs:serve": "documentation serve flow-typed src",
     "docs:watch": "documentation serve --watch flow-typed src"
   },
   "pre-push": [
