@@ -12,7 +12,7 @@ import * as Utils from '../../utils/util'
 /**
  * @namespace Html5
  * @memberof Classes.Engines
- * @class
+ * @class Html5
  * @extends {FakeEventTarget}
  * @implements {IEngine}
  */

@@ -8,7 +8,7 @@ import TextTrack from '../../src/track/text-track'
  * @memberof Interfaces
  * @interface IEngine
  */
-export interface IEngine {
+declare interface IEngine {
   static id: string;
 
   static createEngine(source: Source, config: Object): IEngine;
