@@ -3,37 +3,19 @@ import NativeAdapter from './adapters/native-adapter'
 import LoggerFactory from '../../../utils/logger'
 
 /**
- * Media source provider
- * @classdesc
+ * @namespace MediaSourceProvider
+ * @memberof Classes
  */
 export default class MediaSourceProvider {
-  /**
-   * The logger of the media source provider.
-   * @member {any} _logger
-   * @static
-   * @private
-   */
   static _logger: any = LoggerFactory.getLogger('MediaSourceProvider');
-  /**
-   * The media source adapter registry.
-   * @member {Array<IMediaSourceAdapter>} _mediaSourceAdapters
-   * @static
-   * @private
-   */
   static _mediaSourceAdapters: Array<typeof IMediaSourceAdapter> = [NativeAdapter];
-  /**
-   * The selected adapter for playback.
-   * @type {null|IMediaSourceAdapter}
-   * @static
-   * @private
-   */
   static _selectedAdapter: ?(typeof IMediaSourceAdapter) = null;
 
   /**
-   * Add a media source adapter to the registry.
-   * @function register
-   * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to register.
+   * @param {IMediaSourceAdapter} mediaSourceAdapter
    * @static
+   * @public
+   * @memberof Classes.MediaSourceProvider
    * @returns {void}
    */
   static register(mediaSourceAdapter: typeof IMediaSourceAdapter): void {
@@ -48,10 +30,10 @@ export default class MediaSourceProvider {
   }
 
   /**
-   * Remove a media source adapter from the registry.
-   * @function unRegister
-   * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to unRegister.
+   * @param {IMediaSourceAdapter} mediaSourceAdapter
    * @static
+   * @public
+   * @memberof Classes.MediaSourceProvider
    * @returns {void}
    */
   static unRegister(mediaSourceAdapter: typeof IMediaSourceAdapter): void {
@@ -63,11 +45,11 @@ export default class MediaSourceProvider {
   }
 
   /**
-   * Checks if one of the registered media source adapters can play a given mime type.
-   * @function canPlayType
-   * @param {string} mimeType - The mime type to check.
+   * @param {string} mimeType
    * @static
-   * @returns {boolean} - If one of the adapters can play the specific mime type.
+   * @public
+   * @memberof Classes.MediaSourceProvider
+   * @returns {boolean}
    */
   static canPlayType(mimeType: string): boolean {
     let mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
@@ -82,13 +64,13 @@ export default class MediaSourceProvider {
   }
 
   /**
-   * Get the appropriate media source adapter to the video source.
-   * @function getMediaSourceAdapter
-   * @param {HTMLVideoElement} videoElement - The video element which requires adapter for a given mimeType.
-   * @param {Source} source - The selected source object.
-   * @param {Object} config - The player configuration.
-   * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists.
+   * @param {HTMLVideoElement} videoElement
+   * @param {Source} source
+   * @param {Object} config
+   * @returns {IMediaSourceAdapter | null}
    * @static
+   * @public
+   * @memberof Classes.MediaSourceProvider
    */
   static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): ?IMediaSourceAdapter {
     if (videoElement && source && config) {
@@ -101,9 +83,10 @@ export default class MediaSourceProvider {
   }
 
   /**
-   * Destroys the media source adapter provider necessary props.
    * @static
    * @returns {void}
+   * @public
+   * @memberof Classes.MediaSourceProvider
    */
   static destroy(): void {
     MediaSourceProvider._selectedAdapter = null;

@@ -1,62 +1,37 @@
 //@flow
 import EventManager from '../../../../event/event-manager'
-import {HTML5_EVENTS as Html5Events} from '../../../../event/events'
+import {EventType} from '../../../../event/event-type'
 import Track from '../../../../track/track'
 import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'
 import TextTrack from '../../../../track/text-track'
 import BaseMediaSourceAdapter from '../base-media-source-adapter'
-import {getSuitableSourceForResolution} from '../../../../utils/resolution'
 import * as Utils from '../../../../utils/util'
 
 /**
- * An illustration of media source extension for progressive download
- * @classdesc
- * @implements {IMediaSourceAdapter}
+ * @memberof Classes
+ * @class NativeAdapter
+ * @extends BaseMediaSourceAdapter
  */
 export default class NativeAdapter extends BaseMediaSourceAdapter {
+  _eventManager: EventManager;
+  _loadPromise: ?Promise<Object>;
+  _progressiveSources: Array<Source>;
+  static _logger = BaseMediaSourceAdapter.getLogger(NativeAdapter.id);
   /**
-   * The id of the Adapter
-   * @member {string} id
+   * @member {string}
    * @static
    * @public
+   * @memberof Classes.NativeAdapter
    */
   static id: string = 'NativeAdapter';
 
   /**
-   * The adapter logger
-   * @member {any} _logger
-   * @private
+   * @param {string} mimeType
+   * @returns {boolean}
    * @static
-   */
-  static _logger = BaseMediaSourceAdapter.getLogger(NativeAdapter.id);
-  /**
-   * The event manager of the class.
-   * @member {EventManager} - _eventManager
-   * @type {EventManager}
-   * @private
-   */
-  _eventManager: EventManager;
-  /**
-   * The load promise
-   * @member {Promise<Object>} - _loadPromise
-   * @type {Promise<Object>}
-   * @private
-   */
-  _loadPromise: ?Promise<Object>;
-  /**
-   * The original progressive sources
-   * @member {Array<Object>} - _progressiveSources
-   * @private
-   */
-  _progressiveSources: Array<Source>;
-
-  /**
-   * Checks if NativeAdapter can play a given mime type.
-   * @function canPlayType
-   * @param {string} mimeType - The mime type to check
-   * @returns {boolean} - Whether the native adapter can play a specific mime type
-   * @static
+   * @public
+   * @memberof Classes.NativeAdapter
    */
   static canPlayType(mimeType: string): boolean {
     let canPlayType = (typeof mimeType === 'string') ? !!(Utils.Dom.createElement("video").canPlayType(mimeType.toLowerCase())) : false;
@@ -65,24 +40,18 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
-   * Factory method to create media source adapter.
-   * @function createAdapter
-   * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with.
-   * @param {Object} source - The source Object.
-   * @param {Object} config - The player configuration.
-   * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter.
+   * @param {HTMLVideoElement} videoElement
+   * @param {Object} source
+   * @param {Object} config
+   * @returns {IMediaSourceAdapter}
    * @static
+   * @public
+   * @memberof Classes.NativeAdapter
    */
   static createAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): IMediaSourceAdapter {
     return new this(videoElement, source, config);
   }
 
-  /**
-   * @constructor
-   * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
-   * @param {Source} source - The source object
-   * @param {Object} config - The player configuration
-   */
   constructor(videoElement: HTMLVideoElement, source: Source, config: Object) {
     NativeAdapter._logger.debug('Creating adapter');
     super(videoElement, source);
@@ -91,46 +60,24 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
-   * Set the suitable progressive source according the current resolution
-   * @function _setProgressiveSource
-   * @returns {void}
-   * @private
-   */
-  _setProgressiveSource(): void {
-    let suitableTrack = getSuitableSourceForResolution(this._progressiveSources, this._videoElement.offsetWidth, this._videoElement.offsetHeight);
-    if (suitableTrack) {
-      this._sourceObj = suitableTrack;
-    }
-  }
-
-  /**
-   * Checks if the playback source is progressive
-   * @function _isProgressivePlayback
-   * @returns {boolean} - is progressive source
-   * @private
-   */
-  _isProgressivePlayback(): boolean {
-    return this._sourceObj ? this._sourceObj.mimetype === 'video/mp4' : false;
-  }
-
-  /**
-   * Load the video source
-   * @param {number} startTime - Optional time to start the video from.
-   * @function load
-   * @returns {Promise<Object>} - The loaded data
+   * @param {number} startTime
+   * @returns {Promise<Object>}
+   * @public
+   * @memberof Classes.NativeAdapter
+   * @instance
    */
   load(startTime: ?number): Promise<Object> {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
         // We're using 'loadeddata' event for native hls (on 'loadedmetadata' native hls doesn't have tracks yet).
-        this._eventManager.listen(this._videoElement, Html5Events.LOADED_DATA, () => {
-          this._eventManager.unlisten(this._videoElement, Html5Events.LOADED_DATA);
+        this._eventManager.listen(this._videoElement, EventType.Html5.LOADED_DATA, () => {
+          this._eventManager.unlisten(this._videoElement, EventType.Html5.LOADED_DATA);
           let data = {tracks: this._getParsedTracks()};
           NativeAdapter._logger.debug('The source has been loaded successfully');
           resolve(data);
         });
-        this._eventManager.listen(this._videoElement, Html5Events.ERROR, (error) => {
-          this._eventManager.unlisten(this._videoElement, Html5Events.ERROR);
+        this._eventManager.listen(this._videoElement, EventType.Html5.ERROR, (error) => {
+          this._eventManager.unlisten(this._videoElement, EventType.Html5.ERROR);
           NativeAdapter._logger.error(error);
           reject(error);
         });
@@ -139,7 +86,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         }
         if (this._sourceObj && this._sourceObj.url) {
           this._videoElement.src = this._sourceObj.url;
-          this._trigger(BaseMediaSourceAdapter.CustomEvents.ABR_MODE_CHANGED, {mode: this._isProgressivePlayback() ? 'manual' : 'auto'});
+          this._trigger(BaseMediaSourceAdapter.EventType.Player.ABR_MODE_CHANGED, {mode: this._isProgressivePlayback() ? 'manual' : 'auto'});
         }
         if (startTime) {
           this._videoElement.currentTime = startTime;
@@ -150,9 +97,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
-   * Destroys the native adapter.
-   * @function destroy
    * @returns {void}
+   * @public
+   * @memberof Classes.NativeAdapter
+   * @instance
    */
   destroy(): void {
     NativeAdapter._logger.debug('destroy');
@@ -163,11 +111,124 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
-   * Get the parsed tracks
-   * @function _getParsedTracks
-   * @returns {Array<Track>} - The parsed tracks
-   * @private
+   * @param {VideoTrack} videoTrack
+   * @returns {void}
+   * @public
+   * @memberof Classes.NativeAdapter
+   * @instance
    */
+  selectVideoTrack(videoTrack: VideoTrack): void {
+    if (this._isProgressivePlayback()) {
+      this._selectProgressiveVideoTrack(videoTrack);
+    } else {
+      this.selectAdaptiveVideoTrack(videoTrack);
+    }
+  }
+
+  /**
+   * @param {VideoTrack} videoTrack
+   * @returns {void}
+   * @public
+   * @memberof Classes.NativeAdapter
+   * @instance
+   */
+  selectAdaptiveVideoTrack(videoTrack: VideoTrack): void {
+    let videoTracks = this._videoElement.videoTracks;
+    if ((videoTrack instanceof VideoTrack) && videoTracks && videoTracks[videoTrack.index]) {
+      this._disableVideoTracks();
+      videoTracks[videoTrack.index].selected = true;
+      this._onTrackChanged(videoTrack);
+    }
+  }
+
+  /**
+   * @param {AudioTrack} audioTrack
+   * @returns {void}
+   * @public
+   * @memberof Classes.NativeAdapter
+   * @instance
+   */
+  selectAudioTrack(audioTrack: AudioTrack): void {
+    let audioTracks = this._videoElement.audioTracks;
+    if ((audioTrack instanceof AudioTrack) && audioTracks && audioTracks[audioTrack.index]) {
+      this._disableAudioTracks();
+      audioTracks[audioTrack.index].enabled = true;
+      this._onTrackChanged(audioTrack);
+    }
+  }
+
+  /**
+   * @function selectTextTrack
+   * @param {TextTrack} textTrack
+   * @returns {void}
+   * @public
+   * @memberof Classes.NativeAdapter
+   * @instance
+   */
+  selectTextTrack(textTrack: TextTrack): void {
+    let textTracks = this._videoElement.textTracks;
+    if ((textTrack instanceof TextTrack) && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
+      this._disableTextTracks();
+      textTracks[textTrack.index].mode = 'showing';
+      this._onTrackChanged(textTrack);
+    }
+  }
+
+  /**
+   * @function hideTextTrack
+   * @returns {void}
+   * @public
+   * @memberof Classes.NativeAdapter
+   * @instance
+   */
+  hideTextTrack(): void {
+    this._disableTextTracks();
+  }
+
+  /**
+   * Enables adaptive bitrate
+   * @function enableAdaptiveBitrate
+   * @returns {void}
+   * @public
+   * @memberof Classes.NativeAdapter
+   * @instance
+   */
+  enableAdaptiveBitrate(): void {
+    NativeAdapter._logger.warn('Enabling adaptive bitrate is not supported for native playback');
+  }
+
+  /**
+   * @function isAdaptiveBitrateEnabled
+   * @returns {boolean}
+   * @public
+   * @memberof Classes.NativeAdapter
+   * @instance
+   */
+  isAdaptiveBitrateEnabled(): boolean {
+    return !this._isProgressivePlayback();
+  }
+
+  /**
+   * @public
+   * @memberof Classes.NativeAdapter
+   * @instance
+   * @returns {string}
+   */
+  get src(): string {
+    return this._videoElement.src;
+  }
+
+  _setProgressiveSource(): void {
+    let suitableTrack = this._getSuitableSourceForResolution(this._progressiveSources, this._videoElement.offsetWidth, this._videoElement.offsetHeight);
+    if (suitableTrack) {
+      this._sourceObj = suitableTrack;
+    }
+  }
+
+  _isProgressivePlayback(): boolean {
+    return this._sourceObj ? this._sourceObj.mimetype === 'video/mp4' : false;
+  }
+
   _getParsedTracks(): Array<Track> {
     let videoTracks = this._getParsedVideoTracks();
     let audioTracks = this._getParsedAudioTracks();
@@ -175,12 +236,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     return videoTracks.concat(audioTracks).concat(textTracks);
   }
 
-  /**
-   * Get the parsed video tracks
-   * @function _getParsedVideoTracks
-   * @returns {Array<Track>} - The parsed video tracks
-   * @private
-   */
   _getParsedVideoTracks(): Array<Track> {
     if (this._isProgressivePlayback()) {
       return this._getParsedProgressiveVideoTracks();
@@ -189,12 +244,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
-  /**
-   * Get the parsed progressive video tracks
-   * @function _getParsedProgressiveVideoTracks
-   * @returns {Array<Track>} - The parsed progressive video tracks
-   * @private
-   */
   _getParsedProgressiveVideoTracks(): Array<Track> {
     let videoTracks = this._progressiveSources;
     let parsedTracks = [];
@@ -214,12 +263,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     return parsedTracks;
   }
 
-  /**
-   * Get the parsed adaptive video tracks
-   * @function _getParsedAdaptiveVideoTracks
-   * @returns {Array<Track>} - The parsed adaptive video tracks
-   * @private
-   */
   _getParsedAdaptiveVideoTracks(): Array<Track> {
     //TODO check adaptation in safari hls
     let videoTracks = this._videoElement.videoTracks;
@@ -240,12 +283,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     return parsedTracks;
   }
 
-  /**
-   * Get the parsed audio tracks
-   * @function _getParsedAudioTracks
-   * @returns {Array<Track>} - The parsed audio tracks
-   * @private
-   */
   _getParsedAudioTracks(): Array<Track> {
     let audioTracks = this._videoElement.audioTracks;
     let parsedTracks = [];
@@ -264,12 +301,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     return parsedTracks;
   }
 
-  /**
-   * Get the parsed text tracks
-   * @function _getParsedTextTracks
-   * @returns {Array<Track>} - The parsed text tracks
-   * @private
-   */
   _getParsedTextTracks(): Array<Track> {
     let textTracks = this._videoElement.textTracks;
     let parsedTracks = [];
@@ -288,132 +319,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     return parsedTracks;
   }
 
-  /**
-   * Select a video track
-   * @function selectVideoTrack
-   * @param {VideoTrack} videoTrack - the track to select
-   * @returns {void}
-   * @public
-   */
-  selectVideoTrack(videoTrack: VideoTrack): void {
-    if (this._isProgressivePlayback()) {
-      this._selectProgressiveVideoTrack(videoTrack);
-    } else {
-      this.selectAdaptiveVideoTrack(videoTrack);
-    }
-  }
-
-  /**
-   * Select a progressive video track
-   * @function _selectProgressiveVideoTrack
-   * @param {VideoTrack} videoTrack - the track to select
-   * @returns {void}
-   * @public
-   */
-  _selectProgressiveVideoTrack(videoTrack: VideoTrack): void {
-    let videoTracks = this._progressiveSources;
-    if ((videoTrack instanceof VideoTrack) && videoTracks && videoTracks[videoTrack.index]) {
-      let currentTime = this._videoElement.currentTime;
-      let paused = this._videoElement.paused;
-      this._sourceObj = videoTracks[videoTrack.index];
-      this._eventManager.listen(this._videoElement, Html5Events.LOADED_DATA, () => {
-        this._eventManager.unlisten(this._videoElement, Html5Events.LOADED_DATA);
-        this._eventManager.listen(this._videoElement, Html5Events.SEEKED, () => {
-          this._eventManager.unlisten(this._videoElement, Html5Events.SEEKED);
-          this._onTrackChanged(videoTrack);
-        });
-        this._videoElement.currentTime = currentTime;
-      });
-      this._videoElement.src = this._sourceObj ? this._sourceObj.url : "";
-      paused ? this._videoElement.load() : this._videoElement.play();
-    }
-  }
-
-  /**
-   * Select a native video track
-   * @function selectAdaptiveVideoTrack
-   * @param {VideoTrack} videoTrack - the track to select
-   * @returns {void}
-   * @public
-   */
-  selectAdaptiveVideoTrack(videoTrack: VideoTrack): void {
-    let videoTracks = this._videoElement.videoTracks;
-    if ((videoTrack instanceof VideoTrack) && videoTracks && videoTracks[videoTrack.index]) {
-      this._disableVideoTracks();
-      videoTracks[videoTrack.index].selected = true;
-      this._onTrackChanged(videoTrack);
-    }
-  }
-
-  /**
-   * Select an audio track
-   * @function selectAudioTrack
-   * @param {AudioTrack} audioTrack - the  audio track to select
-   * @returns {void}
-   * @public
-   */
-  selectAudioTrack(audioTrack: AudioTrack): void {
-    let audioTracks = this._videoElement.audioTracks;
-    if ((audioTrack instanceof AudioTrack) && audioTracks && audioTracks[audioTrack.index]) {
-      this._disableAudioTracks();
-      audioTracks[audioTrack.index].enabled = true;
-      this._onTrackChanged(audioTrack);
-    }
-  }
-
-  /**
-   * Select a text track
-   * @function selectTextTrack
-   * @param {TextTrack} textTrack - the track to select
-   * @returns {void}
-   * @public
-   */
-  selectTextTrack(textTrack: TextTrack): void {
-    let textTracks = this._videoElement.textTracks;
-    if ((textTrack instanceof TextTrack) && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
-      this._disableTextTracks();
-      textTracks[textTrack.index].mode = 'showing';
-      this._onTrackChanged(textTrack);
-    }
-  }
-
-  /**
-   * Hide the text track
-   * @function hideTextTrack
-   * @returns {void}
-   * @public
-   */
-  hideTextTrack(): void {
-    this._disableTextTracks();
-  }
-
-  /**
-   * Enables adaptive bitrate
-   * @function enableAdaptiveBitrate
-   * @returns {void}
-   * @public
-   */
-  enableAdaptiveBitrate(): void {
-    NativeAdapter._logger.warn('Enabling adaptive bitrate is not supported for native playback');
-  }
-
-  /**
-   * Checking if adaptive bitrate switching is enabled.
-   * For progressive playback will always returns false.
-   * For adaptive playback will always returns true.
-   * @function isAdaptiveBitrateEnabled
-   * @returns {boolean} - Whether adaptive bitrate is enabled.
-   * @public
-   */
-  isAdaptiveBitrateEnabled(): boolean {
-    return !this._isProgressivePlayback();
-  }
-
-  /**
-   * Disables all the existing video tracks.
-   * @private
-   * @returns {void}
-   */
   _disableVideoTracks(): void {
     let videoTracks = this._videoElement.videoTracks;
     if (videoTracks) {
@@ -423,11 +328,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
-  /**
-   * Disables all the existing audio tracks.
-   * @private
-   * @returns {void}
-   */
   _disableAudioTracks(): void {
     let audioTracks = this._videoElement.audioTracks;
     if (audioTracks) {
@@ -437,11 +337,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
-  /**
-   * Disables all the existing text tracks.
-   * @private
-   * @returns {void}
-   */
   _disableTextTracks(): void {
     let textTracks = this._videoElement.textTracks;
     if (textTracks) {
@@ -451,12 +346,61 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
-  /**
-   * Getter for the src that the adapter plays on the video element.
-   * @public
-   * @returns {string} - The src url.
-   */
-  get src(): string {
-    return this._videoElement.src;
+  _selectProgressiveVideoTrack(videoTrack: VideoTrack): void {
+    let videoTracks = this._progressiveSources;
+    if ((videoTrack instanceof VideoTrack) && videoTracks && videoTracks[videoTrack.index]) {
+      let currentTime = this._videoElement.currentTime;
+      let paused = this._videoElement.paused;
+      this._sourceObj = videoTracks[videoTrack.index];
+      this._eventManager.listen(this._videoElement, EventType.Html5.LOADED_DATA, () => {
+        this._eventManager.unlisten(this._videoElement, EventType.Html5.LOADED_DATA);
+        this._eventManager.listen(this._videoElement, EventType.Html5.SEEKED, () => {
+          this._eventManager.unlisten(this._videoElement, EventType.Html5.SEEKED);
+          this._onTrackChanged(videoTrack);
+        });
+        this._videoElement.currentTime = currentTime;
+      });
+      this._videoElement.src = this._sourceObj ? this._sourceObj.url : "";
+      paused ? this._videoElement.load() : this._videoElement.play();
+    }
+  }
+
+  _getSuitableSourceForResolution(tracks: Array<Object>, width: number, height: number): ?Object {
+    let mostSuitableWidth = null;
+    if (height && tracks) {
+      let mostSuitableWidthTracks = [];
+      let minWidthDiff = Infinity;
+      for (let track of tracks) { // first filter the most width suitable
+        let widthDiff = Math.abs(track.width - width);
+        if (widthDiff < minWidthDiff) {
+          minWidthDiff = widthDiff;
+          mostSuitableWidthTracks = [track];
+        } else if (widthDiff === minWidthDiff) {
+          mostSuitableWidthTracks.push(track);
+        }
+      }
+      let videoRatio = width / height;
+      let mostSuitableWidthAndRatioTracks = mostSuitableWidthTracks;
+      let minRatioDiff = Infinity;
+      for (let track of mostSuitableWidthTracks) {  // filter the most ratio suitable from the width filter results
+        if (track.height) {
+          let ratioDiff = Math.abs(track.width / track.height - videoRatio);
+          if (ratioDiff < minRatioDiff) {
+            minRatioDiff = ratioDiff;
+            mostSuitableWidthAndRatioTracks = [track];
+          } else if (ratioDiff === minRatioDiff) {
+            mostSuitableWidthAndRatioTracks.push(track);
+          }
+        }
+      }
+      let maxBandwidth = 0;
+      for (let track of mostSuitableWidthAndRatioTracks) { // select the top bitrate from the ratio filter results
+        if (track.bandwidth > maxBandwidth || !track.bandwidth) {
+          maxBandwidth = track.bandwidth || maxBandwidth;
+          mostSuitableWidth = track;
+        }
+      }
+    }
+    return mostSuitableWidth;
   }
 }

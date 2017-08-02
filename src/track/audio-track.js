@@ -2,7 +2,10 @@
 import Track from './track'
 
 /**
- * Audio track representation of the player.
- * @classdesc
+ * @memberof Classes
+ * @extends Track
+ * @param {Object} settings
+ * @class AudioTrack
  */
-export default class AudioTrack extends Track {}
+export default class AudioTrack extends Track {
+}

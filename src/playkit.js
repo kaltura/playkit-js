@@ -1,3 +1,23 @@
+/**
+ * @namespace Interfaces
+ */
+
+/**
+ * @namespace Types
+ */
+
+/**
+ * @namespace Enums
+ */
+
+/**
+ * @namespace Utils
+ */
+
+/**
+ * @namespace Classes
+ */
+
 //@flow
 import Player from './player'
 import LoggerFactory from './utils/logger'
@@ -19,13 +39,18 @@ let VERSION = packageData.version;
 // Playkit name
 let PLAYER_NAME = 'kaltura-playkit-js';
 
-LoggerFactory.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
+LoggerFactory.getLogger().log("%c Playkit " + VERSION, "color: blue; font-size: large");
 LoggerFactory.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
 
 /**
- * @param {string} targetId - The target div id to append the player.
- * @param {Object} config - The configuration of the player
- * @returns {Player} - The player instance
+ * Factory to create a player instance.
+ * @param {string} targetId - The DOM target id.
+ * @param {Object} config - The player configuration.
+ * @returns {Player} - The player instance.
+ * @public
+ * @namespace loadPlayer
+ * @function loadPlayer
+ * @memberof loadPlayer
  */
 export function loadPlayer(targetId: string, config: ?Object) {
   return new Player(targetId, config || {});

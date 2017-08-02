@@ -2,15 +2,15 @@
 import EventManager from './event/event-manager'
 import FakeEvent from './event/fake-event'
 import FakeEventTarget from './event/fake-event-target'
-import {PLAYER_EVENTS as PlayerEvents, HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from './event/events'
-import PlayerStates from './state/state-types'
+import {EventType} from './event/event-type'
+import {StateType} from './state/state-type'
 import * as Utils from './utils/util'
 import LoggerFactory from './utils/logger'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
 import BasePlugin from './plugin/base-plugin'
 import StateManager from './state/state-manager'
-import TrackTypes from './track/track-types'
+import {TrackType} from './track/track-type'
 import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
@@ -21,103 +21,25 @@ import UAParser from 'ua-parser-js'
 import './assets/style.css'
 
 /**
- * The player container class name.
- * @type {string}
- * @const
- */
-const CONTAINER_CLASS_NAME: string = 'playkit-container';
-
-/**
- * The HTML5 player class.
- * @classdesc
+ * @class Player
+ * @memberof Classes
  */
 export default class Player extends FakeEventTarget {
-  /**
-   * The player class logger.
-   * @type {any}
-   * @static
-   * @private
-   */
+  static CONTAINER_CLASS_NAME: string = 'playkit-container';
   static _logger: any = LoggerFactory.getLogger('Player');
-  /**
-   * The available engines of the player.
-   * @type {Array<typeof IEngine>}
-   * @private
-   * @static
-   */
   static _engines: Array<typeof IEngine> = [Html5];
-  /**
-   * The plugin manager of the player.
-   * @type {PluginManager}
-   * @private
-   */
   _pluginManager: PluginManager;
-  /**
-   * The event manager of the player.
-   * @type {EventManager}
-   * @private
-   */
   _eventManager: EventManager;
-  /**
-   * The runtime configuration of the player.
-   * @type {Object}
-   * @private
-   */
   _config: Object;
-  /**
-   * The playback engine.
-   * @type {IEngine}
-   * @private
-   */
   _engine: IEngine;
-  /**
-   * The state manager of the player.
-   * @type {StateManager}
-   * @private
-   */
   _stateManager: StateManager;
-  /**
-   * The tracks of the player.
-   * @type {Array<Track>}
-   * @private
-   */
   _tracks: Array<Track>;
-  /**
-   * The player ready promise
-   * @type {Promise<*>}
-   * @private
-   */
   _readyPromise: ?Promise<*>;
-  /**
-   * Whether the play is the first or not
-   * @type {boolean}
-   * @private
-   */
   _firstPlay: boolean;
-  /**
-   * The player DOM element container.
-   * @type {HTMLDivElement}
-   * @private
-   */
   _el: HTMLDivElement;
-  /**
-   * The playback middleware of the player.
-   * @type {PlaybackMiddleware}
-   * @private
-   */
   _playbackMiddleware: PlaybackMiddleware;
-  /**
-   * The environment(os,device,browser) object of the player.
-   * @type {Object}
-   * @private
-   */
   _env: Object;
 
-  /**
-   * @param {string} targetId - The target div id to append the player.
-   * @param {Object} config - The configuration for the player instance.
-   * @constructor
-   */
   constructor(targetId: string, config: Object) {
     super();
     this._tracks = [];
@@ -134,9 +56,11 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Configures the player according to a given configuration.
-   * @param {Object} config - The configuration for the player instance.
+   * @param {Object} config
    * @returns {void}
+   * @memberof Classes.Player
+   * @instance
+   * @public
    */
   configure(config: Object): void {
     let engine = this._engine;
@@ -151,64 +75,11 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Resets the player in case of new sources with existing engine.
-   * @param {Object} config - The player configuration.
-   * @private
    * @returns {void}
-   */
-  _maybeResetPlayer(config: Object): void {
-    if (this._engine && config.sources) {
-      Player._logger.debug('New sources on existing engine: reset engine to change media');
-      this._reset();
-    }
-  }
-
-  /**
-   * Loads the plugins in case engine created for the first time.
-   * @param {?IEngine} engine - The engine before the enter to configure method.
-   * @private
-   * @returns {void}
-   */
-  _maybeLoadPlugins(engine: ?IEngine) {
-    if (this._engine && !engine) {
-      Player._logger.debug('Engine created for the first time: load plugins');
-      this._loadPlugins();
-    }
-  }
-
-  /**
-   * Reset the necessary components before change media.
-   * @private
-   * @returns {void}
-   */
-  _reset(): void {
-    if (this._engine) {
-      this._engine.destroy();
-    }
-    this._tracks = [];
-    this._firstPlay = true;
-    this._eventManager.removeAll();
-    this._createReadyPromise();
-  }
-
-  /**
-   * Creates the ready promise.
-   * @private
-   * @returns {void}
-   */
-  _createReadyPromise(): void {
-    this._readyPromise = new Promise((resolve, reject) => {
-      this._eventManager.listen(this, CustomEvents.TRACKS_CHANGED, () => {
-        resolve();
-      });
-      this._eventManager.listen(this, Html5Events.ERROR, reject);
-    });
-  }
-
-  /**
-   * Destroys the player.
-   * @returns {void}
+   * @memberof Classes.Player
    * @public
+   * @instance
+   * @example player.destroy();
    */
   destroy(): void {
     if (this._engine) {
@@ -224,19 +95,749 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * @returns {Object} - The default configuration of the player.
-   * @private
-   * @static
+   * @return {HTMLElement}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example var playerView = player.getView();
    */
-  static get _defaultConfig(): Object {
-    return Utils.Object.copyDeep(DefaultPlayerConfig);
+  getView(): HTMLElement {
+    return this._el;
   }
 
   /**
-   * Loads the configured plugins.
-   * @private
-   * @returns {void}
+   * @param {string | null} type
+   * @returns {Array<Track>}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var tracks = player.getTracks();
+   * var audioTracks = player.getTracks(player.Track.AUDIO);
+   * var textTracks = player.getTracks(player.Track.TEXT);
+   * var videoTracks = player.getTracks(player.Track.VIDEO);
    */
+  getTracks(type: ?string): Array<Track> {
+    return this._getTracksByType(type);
+  }
+
+  /**
+   * @return {Object}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var activeTracks = player.getActiveTracks();
+   * var activeVideoTrack = activeTracks.video;
+   * var activeTextTrack = activeTracks.audio;
+   * var activeAudioTrack = activeTracks.text;
+   */
+  getActiveTracks(): Object {
+    return {
+      video: this._getTracksByType(TrackType.VIDEO).find(track => track.active),
+      audio: this._getTracksByType(TrackType.AUDIO).find(track => track.active),
+      text: this._getTracksByType(TrackType.TEXT).find(track => track.active),
+    };
+  }
+
+  /**
+   * @param {Track} track
+   * @returns {void}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var audioTracks = player.getTracks(player.Track.AUDIO);
+   * var textTracks = player.getTracks(player.Track.TEXT);
+   * var videoTracks = player.getTracks(player.Track.VIDEO);
+   * player.selectTrack(videoTracks[1]);
+   * player.selectTrack(audioTracks[0]);
+   * player.selectTrack(videoTracks[3]);
+   */
+  selectTrack(track: Track): void {
+    if (this._engine) {
+      if (track instanceof VideoTrack) {
+        this._engine.selectVideoTrack(track);
+      } else if (track instanceof AudioTrack) {
+        this._engine.selectAudioTrack(track);
+      } else if (track instanceof TextTrack) {
+        this._engine.selectTextTrack(track);
+      }
+    }
+  }
+
+  /**
+   * @returns {void}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var activeTracks = player.getActiveTracks();
+   * if (activeTracks.text) {
+   *    player.hideTextTrack();
+   * }
+   */
+  hideTextTrack(): void {
+    if (this._engine) {
+      this._engine.hideTextTrack();
+      this._getTracksByType(TrackType.TEXT).map(track => track.active = false);
+    }
+  }
+
+  /**
+   * @returns {void}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * player.enableAdaptiveBitrate();
+   */
+  enableAdaptiveBitrate(): void {
+    if (this._engine) {
+      this._engine.enableAdaptiveBitrate();
+    }
+  }
+
+  /**
+   * @returns {boolean}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * if (!player.isAdaptiveBitrateEnabled()) {
+   *    player.enableAdaptiveBitrate();
+   * }
+   */
+  isAdaptiveBitrateEnabled(): boolean {
+    if (this._engine) {
+      return this._engine.isAdaptiveBitrateEnabled();
+    }
+    return false;
+  }
+
+  /**
+   * @returns {HTMLVideoElement}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var videoElement = player.getVideoElement();
+   */
+  getVideoElement(): ?HTMLVideoElement {
+    if (this._engine) {
+      return this._engine.getVideoElement();
+    }
+  }
+
+  /**
+   * @returns {void}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * player.addEventListener(player.Event.Ads.AD_STARTED, function(event) {
+   *    player.skipAd();
+   * }
+   */
+  skipAd(): void {
+    let adsPlugin: ?BasePlugin = this._pluginManager.get('ima');
+    if (adsPlugin && typeof adsPlugin.skipAd === 'function') {
+      adsPlugin.skipAd();
+    }
+  }
+
+  /**
+   * @param {string} adTagUrl
+   * @returns {void}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * // WIP
+   * var adTagUrl = '...';
+   * player.playAdNow(adTagUrl);
+   */
+  playAdNow(adTagUrl: string): void {
+    let adsPlugin: ?BasePlugin = this._pluginManager.get('ima');
+    if (adsPlugin && typeof adsPlugin.playAdNow === 'function') {
+      adsPlugin.playAdNow(adTagUrl);
+    }
+  }
+
+  /**
+   * @description getter
+   * @readonly
+   * @returns {Object}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var playerEnv = player.env;
+   * console.log(playerEnv.os);
+   * console.log(playerEnv.device);
+   * console.log(playerEnv.browser);
+   */
+  get env(): Object {
+    return this._env;
+  }
+
+  /**
+   * @description getter
+   * @returns {Object}
+   * @readonly
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var playerConfig = player.config;
+   * if (player.config.playback && player.config.playback.autoplay) {
+   *    // Write your logic...
+   * }
+   */
+  get config(): Object {
+    return Utils.Object.mergeDeep({}, this._config);
+  }
+
+  /**
+   * @description setter
+   * @param {string} sessionId
+   * @returns {void}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * player.sessionId = '...';
+   */
+  set sessionId(sessionId: string): void {
+    this._config.session = this._config.session || {};
+    this._config.session.id = sessionId;
+  }
+
+  //  <editor-fold desc="Playback Interface">
+  /**
+   * @returns {Promise<*>}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * player.ready().then(function() {
+   *    var tracks = player.getTracks();
+   * });
+   */
+  ready(): Promise<*> {
+    return this._readyPromise ? this._readyPromise : Promise.resolve();
+  }
+
+  /**
+   * @returns {void}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * if (player.config.playback.preload === 'none') {
+   *    player.load();
+   * }
+   */
+  load(): void {
+    if (this._engine) {
+      let startTime = this._config.playback.startTime;
+      this._engine.load(startTime).then((data) => {
+        this._tracks = data.tracks;
+        this.dispatchEvent(new FakeEvent(EventType.Player.TRACKS_CHANGED, {tracks: this._tracks}));
+      }).catch((error) => {
+        this.dispatchEvent(new FakeEvent(EventType.Html5.ERROR, error));
+      });
+    }
+  }
+
+  /**
+   * @returns {void}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var player = loadPlayer('target-id', {...});
+   * player.play();
+   */
+  play(): void {
+    if (this._engine) {
+      this._playbackMiddleware.play(this._play.bind(this));
+    }
+  }
+
+  /**
+   * @returns {void}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * if (!player.paused) {
+   *    player.pause();
+   * }
+   */
+  pause(): void {
+    if (this._engine) {
+      this._playbackMiddleware.pause(this._pause.bind(this));
+    }
+  }
+
+  /**
+   * @description setter
+   * @param {number} to
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example player.currentTime = 10;
+   */
+  set currentTime(to: number): void {
+    if (this._engine) {
+      if (Utils.Number.isNumber(to)) {
+        let boundedTo = to;
+        if (to < 0) {
+          boundedTo = 0;
+        }
+        if (boundedTo > this._engine.duration) {
+          boundedTo = this._engine.duration;
+        }
+        this._engine.currentTime = boundedTo;
+      }
+    }
+  }
+
+  /**
+   * @description getter
+   * @returns {number | null}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var ct = player.currentTime;
+   */
+  get currentTime(): ?number {
+    if (this._engine) {
+      return this._engine.currentTime;
+    }
+  }
+
+  /**
+   * @description getter
+   * @readonly
+   * @returns {number | null}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var duration = player.duration;
+   */
+  get duration(): ?number {
+    if (this._engine) {
+      return this._engine.duration;
+    }
+  }
+
+  /**
+   * @description setter
+   * @param {number} vol
+   * @returns {void}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * player.volume = 0.5;
+   */
+  set volume(vol: number): void {
+    if (this._engine) {
+      if (Utils.Number.isFloat(vol)) {
+        let boundedVol = vol;
+        if (boundedVol < 0) {
+          boundedVol = 0;
+        }
+        if (boundedVol > 1) {
+          boundedVol = 1;
+        }
+        this._engine.volume = boundedVol;
+      }
+    }
+  }
+
+  /**
+   * @description getter
+   * @returns {number | null}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var vol = player.volume;
+   */
+  get volume(): ?number {
+    if (this._engine) {
+      return this._engine.volume;
+    }
+  }
+
+  /**
+   * @description setter
+   * @param {number} rate
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * player.playbackRate = 2;
+   */
+  set playbackRate(rate: number): void {
+    if (this._engine) {
+      this._engine.playbackRate = rate;
+    }
+  }
+
+  /**
+   * @description getter
+   * @returns {number | null}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var pr = player.playbackRate;
+   */
+  get playbackRate(): ?number {
+    if (this._engine) {
+      return this._engine.playbackRate;
+    }
+  }
+
+  /**
+   * @description getter
+   * @readonly
+   * @returns {TimeRanges | null}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var seekable = player.seekable;
+   */
+  get seekable(): ?TimeRanges {
+    if (this._engine) {
+      return this._engine.seekable;
+    }
+  }
+
+  /**
+   * @description getter
+   * @readonly
+   * @returns {TimeRanges | null}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var buffered = player.buffered;
+   */
+  get buffered(): ?TimeRanges {
+    if (this._engine) {
+      return this._engine.buffered;
+    }
+  }
+
+  /**
+   * @description getter
+   * @readonly
+   * @returns {boolean | null}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var dm = player.defaultMuted;
+   */
+  get defaultMuted(): ?boolean {
+    if (this._engine) {
+      return this._engine.defaultMuted;
+    }
+  }
+
+  /**
+   * @description getter
+   * @readonly
+   * @returns {MediaError | null}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var error = player.error;
+   */
+  get error(): ?MediaError {
+    if (this._engine) {
+      return this._engine.error;
+    }
+  }
+
+  /**
+   * @description getter
+   * @readonly
+   * @returns {number | null}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var videoHeight = player.videoHeight;
+   */
+  get videoHeight(): ?number {
+    if (this._engine) {
+      return this._engine.videoHeight;
+    }
+  }
+
+  /**
+   * @description getter
+   * @readonly
+   * @returns {number | null}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var videoWidth = player.videoWidth;
+   */
+  get videoWidth(): ?number {
+    if (this._engine) {
+      return this._engine.videoWidth;
+    }
+  }
+
+  /**
+   * @description setter
+   * @returns {void}
+   * @param {boolean} playsinline
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * player.playsinline = true;
+   */
+  set playsinline(playsinline: boolean): void {
+    if (this._engine) {
+      this._engine.playsinline = playsinline;
+    }
+  }
+
+  /**
+   * @description getter
+   * @returns {boolean | null}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var playsinline = player.playsinline;
+   */
+  get playsinline(): ?boolean {
+    if (this._engine) {
+      return this._engine.playsinline;
+    }
+  }
+
+  // </editor-fold>
+
+  // <editor-fold desc="State">
+  /**
+   * @description getter
+   * @readonly
+   * @returns {boolean | null}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var paused = player.paused;
+   */
+  get paused(): ?boolean {
+    if (this._engine) {
+      return this._engine.paused;
+    }
+  }
+
+  /**
+   * @description getter
+   * @readonly
+   * @returns {boolean | null}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var ended = player.ended;
+   */
+  get ended(): ?boolean {
+    if (this._engine) {
+      return this._engine.ended;
+    }
+  }
+
+  /**
+   * @description getter
+   * @readonly
+   * @returns {TimeRanges | null}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var played = player.played;
+   */
+  get played(): ?TimeRanges {
+    if (this._engine) {
+      return this._engine.played;
+    }
+  }
+
+  /**
+   * @description getter
+   * @readonly
+   * @returns {boolean | null}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var seeking = player.seeking;
+   */
+  get seeking(): ?boolean {
+    if (this._engine) {
+      return this._engine.seeking;
+    }
+  }
+
+  /**
+   * @description getter
+   * @readonly
+   * @returns {number | null}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var networkState = player.networkState;
+   */
+  get networkState(): ?number {
+    if (this._engine) {
+      return this._engine.networkState;
+    }
+  }
+
+  /**
+   * @description getter
+   * @readonly
+   * @returns {number | null} - The current ready state of the audio/video.
+   * 0 = HAVE_NOTHING - no information whether or not the audio/video is ready.
+   * 1 = HAVE_METADATA - metadata for the audio/video is ready.
+   * 2 = HAVE_CURRENT_DATA - data for the current playback position is available, but not enough data to play next frame/millisecond.
+   * 3 = HAVE_FUTURE_DATA - data for the current and at least the next frame is available.
+   * 4 = HAVE_ENOUGH_DATA - enough data available to start playing.
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var readyState = player.readyState;
+   */
+  get readyState(): ?number {
+    if (this._engine) {
+      return this._engine.readyState;
+    }
+  }
+
+  /**
+   * @description setter
+   * @param {boolean} mute
+   * @returns {void}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * player.muted = true;
+   */
+  set muted(mute: boolean): void {
+    if (this._engine) {
+      this._engine.muted = mute;
+    }
+  }
+
+  /**
+   * @description getter
+   * @returns {boolean | null}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var muted = player.muted;
+   */
+  get muted(): ?boolean {
+    if (this._engine) {
+      return this._engine.muted;
+    }
+  }
+
+// </editor-fold>
+
+  /**
+   * @description getter
+   * @readonly
+   * @returns {string | null}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * var src = player.src;
+   */
+  get src(): ?string {
+    if (this._engine) {
+      return this._engine.src;
+    }
+  }
+
+  /**
+   * @returns {Object}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * player.Event.Html5.PLAYING;
+   * player.Event.Ads.AD_LOADED;
+   * player.Event.Player.ABR_MODE_CHANGED;
+   */
+  get Event(): Object {
+    return Utils.Object.copyDeep(EventType);
+  }
+
+  /**
+   * @returns {Object}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * player.State.PLAYING
+   */
+  get State(): Object {
+    return Utils.Object.copyDeep(StateType);
+  }
+
+  /**
+   * @returns {Object}
+   * @memberof Classes.Player
+   * @public
+   * @instance
+   * @example
+   * player.Track.AUDIO;
+   */
+  get Track(): Object {
+    return Utils.Object.copyDeep(TrackType);
+  }
+
+  _play(): void {
+    if (this._engine.src) {
+      this._engine.play();
+    } else {
+      this.load();
+      this.ready().then(() => {
+        this._engine.play();
+      });
+    }
+  }
+
+  _pause(): void {
+    this._engine.pause();
+  }
+
   _loadPlugins(): void {
     let plugins = this._config.plugins;
     for (let name in plugins) {
@@ -248,11 +849,6 @@ export default class Player extends FakeEventTarget {
     }
   }
 
-  /**
-   * Selects the engine to create based on a given configuration.
-   * @private
-   * @returns {boolean} - Whether a proper engine was found.
-   */
   _selectEngine(): boolean {
     if (this._config.sources && this._config.playback && this._config.playback.streamPriority) {
       return this._selectEngineByPriority();
@@ -260,12 +856,6 @@ export default class Player extends FakeEventTarget {
     return false;
   }
 
-  /**
-   * Selects an engine to play a source according to a given stream priority.
-   * @return {boolean} - Whether a proper engine was found to play the given sources
-   * according to the priority.
-   * @private
-   */
   _selectEngineByPriority(): boolean {
     let streamPriority = this._config.playback.streamPriority;
     let sources = this._config.sources;
@@ -280,7 +870,7 @@ export default class Player extends FakeEventTarget {
           if (engine.canPlayType(source.mimetype)) {
             Player._logger.debug('Source selected: ', formatSources);
             this._loadEngine(engine, source);
-            this.dispatchEvent(new FakeEvent(CustomEvents.SOURCE_SELECTED, {selectedSource: formatSources}));
+            this.dispatchEvent(new FakeEvent(EventType.Player.SOURCE_SELECTED, {selectedSource: formatSources}));
             return true;
           }
         }
@@ -290,43 +880,31 @@ export default class Player extends FakeEventTarget {
     return false;
   }
 
-  /**
-   * Loads the selected engine.
-   * @param {IEngine} engine - The selected engine.
-   * @param {Source} source - The selected source object.
-   * @private
-   * @returns {void}
-   */
   _loadEngine(engine: typeof IEngine, source: Source): void {
     this._engine = engine.createEngine(source, this._config);
   }
 
-  /**
-   * Listen to all HTML5 defined events and trigger them on the player
-   * @private
-   * @returns {void}
-   */
   _attachMedia(): void {
     if (this._engine) {
-      for (let playerEvent in Html5Events) {
-        this._eventManager.listen(this._engine, Html5Events[playerEvent], (event: FakeEvent) => {
+      for (let html5Event in EventType.Html5) {
+        this._eventManager.listen(this._engine, EventType.Html5[html5Event], (event: FakeEvent) => {
           return this.dispatchEvent(event);
         });
       }
-      this._eventManager.listen(this._engine, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
+      this._eventManager.listen(this._engine, EventType.Player.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
         this._markActiveTrack(event.payload.selectedVideoTrack);
         return this.dispatchEvent(event);
       });
-      this._eventManager.listen(this._engine, CustomEvents.AUDIO_TRACK_CHANGED, (event: FakeEvent) => {
+      this._eventManager.listen(this._engine, EventType.Player.AUDIO_TRACK_CHANGED, (event: FakeEvent) => {
         this._markActiveTrack(event.payload.selectedAudioTrack);
         return this.dispatchEvent(event);
       });
-      this._eventManager.listen(this._engine, CustomEvents.TEXT_TRACK_CHANGED, (event: FakeEvent) => {
+      this._eventManager.listen(this._engine, EventType.Player.TEXT_TRACK_CHANGED, (event: FakeEvent) => {
         this._markActiveTrack(event.payload.selectedTextTrack);
         return this.dispatchEvent(event);
       });
-      this._eventManager.listen(this._engine, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this, Html5Events.PLAY, this._onPlay.bind(this));
+      this._eventManager.listen(this._engine, EventType.Player.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this, EventType.Html5.PLAY, this._onPlay.bind(this));
     }
   }
 
@@ -347,11 +925,6 @@ export default class Player extends FakeEventTarget {
     }
   }
 
-  /**
-   * Determine whether we can auto playing or not.
-   * @returns {boolean} - Whether an auto play can be done.
-   * @private
-   */
   _canAutoPlay(): ?boolean {
     if (!this._config.playback.autoplay) {
       return false;
@@ -364,12 +937,6 @@ export default class Player extends FakeEventTarget {
     return true;
   }
 
-  /**
-   * Creates the player container
-   * @param {string} targetId - The target div id to append the player.
-   * @private
-   * @returns {void}
-   */
   _appendPlayerContainer(targetId: string): void {
     if (targetId) {
       if (this._el === undefined) {
@@ -382,63 +949,26 @@ export default class Player extends FakeEventTarget {
     }
   }
 
-  /**
-   * Creates the player container.
-   * @private
-   * @returns {void}
-   */
   _createPlayerContainer(): void {
     this._el = Utils.Dom.createElement("div");
     this._el.id = Utils.Generator.uniqueId(5);
-    this._el.className = CONTAINER_CLASS_NAME;
+    this._el.className = Player.CONTAINER_CLASS_NAME;
     this._el.setAttribute('tabindex', '-1');
   }
 
-  /**
-   * Appends the engine's video element to the player's div container.
-   * @private
-   * @returns {void}
-   */
   _appendEngineEl(): void {
     if ((this._el != null) && (this._engine != null)) {
       Utils.Dom.appendChild(this._el, this._engine.getVideoElement());
     }
   }
 
-  /**
-   * Gets the view of the player (i.e the dom container object).
-   * @return {HTMLElement} - The dom container.
-   * @public
-   */
-  getView(): HTMLElement {
-    return this._el;
-  }
-
-  /**
-   * Returns the tracks according to the filter. if no filter given returns the all tracks.
-   * @function getTracks
-   * @param {string} [type] - a tracks filter, should be 'video', 'audio' or 'text'.
-   * @returns {Array<Track>} - The parsed tracks.
-   * @public
-   */
-  getTracks(type?: string): Array<Track> {
-    return this._getTracksByType(type);
-  }
-
-  /**
-   * Returns the tracks according to the filter. if no filter given returns the all tracks.
-   * @function _getTracksByType
-   * @param {string} [type] - a tracks filter, should be 'video', 'audio' or 'text'.
-   * @returns {Array<Track>} - The parsed tracks.
-   * @private
-   */
-  _getTracksByType(type?: string): Array<Track> {
+  _getTracksByType(type: ?string): Array<Track> {
     return !type ? this._tracks : this._tracks.filter((track: Track) => {
-      if (type === TrackTypes.VIDEO) {
+      if (type === TrackType.VIDEO) {
         return track instanceof VideoTrack;
-      } else if (type === TrackTypes.AUDIO) {
+      } else if (type === TrackType.AUDIO) {
         return track instanceof AudioTrack;
-      } else if (type === TrackTypes.TEXT) {
+      } else if (type === TrackType.TEXT) {
         return track instanceof TextTrack;
       } else {
         return true;
@@ -446,90 +976,14 @@ export default class Player extends FakeEventTarget {
     });
   }
 
-  /**
-   * Get an object includes the active video/audio/text tracks
-   * @return {{video: VideoTrack, audio: AudioTrack, text: TextTrack}} - The active tracks object
-   */
-  getActiveTracks(): Object {
-    return {
-      video: this._getTracksByType(TrackTypes.VIDEO).find(track => track.active),
-      audio: this._getTracksByType(TrackTypes.AUDIO).find(track => track.active),
-      text: this._getTracksByType(TrackTypes.TEXT).find(track => track.active),
-    };
-  }
-
-  /**
-   * Select a track
-   * @function selectTrack
-   * @param {Track} track - the track to select
-   * @returns {void}
-   * @public
-   */
-  selectTrack(track: Track): void {
-    if (this._engine) {
-      if (track instanceof VideoTrack) {
-        this._engine.selectVideoTrack(track);
-      } else if (track instanceof AudioTrack) {
-        this._engine.selectAudioTrack(track);
-      } else if (track instanceof TextTrack) {
-        this._engine.selectTextTrack(track);
-      }
-    }
-  }
-
-  /**
-   * Hide the text track
-   * @function hideTextTrack
-   * @returns {void}
-   * @public
-   */
-  hideTextTrack(): void {
-    if (this._engine) {
-      this._engine.hideTextTrack();
-      this._getTracksByType(TrackTypes.TEXT).map(track => track.active = false);
-    }
-  }
-
-  /**
-   * Enables adaptive bitrate switching.
-   * @function enableAdaptiveBitrate
-   * @returns {void}
-   * @public
-   */
-  enableAdaptiveBitrate(): void {
-    if (this._engine) {
-      this._engine.enableAdaptiveBitrate();
-    }
-  }
-
-  /**
-   * Checking if adaptive bitrate switching is enabled.
-   * @function isAdaptiveBitrateEnabled
-   * @returns {boolean} - Whether adaptive bitrate is enabled.
-   * @public
-   */
-  isAdaptiveBitrateEnabled(): boolean {
-    if (this._engine) {
-      return this._engine.isAdaptiveBitrateEnabled();
-    }
-    return false;
-  }
-
-  /**
-   * Mark the selected track as active
-   * @function _markActiveTrack
-   * @param {Track} track - the track to mark
-   * @returns {void}
-   * @private
-   */
   _markActiveTrack(track: Track) {
     let type;
     if (track instanceof VideoTrack) {
-      type = TrackTypes.VIDEO;
+      type = TrackType.VIDEO;
     } else if (track instanceof AudioTrack) {
-      type = TrackTypes.AUDIO;
+      type = TrackType.AUDIO;
     } else if (track instanceof TextTrack) {
-      type = TrackTypes.TEXT;
+      type = TrackType.TEXT;
     }
     if (type) {
       let tracks = this.getTracks(type);
@@ -539,362 +993,47 @@ export default class Player extends FakeEventTarget {
     }
   }
 
-  /**
-   * @function _onPlay
-   * @return {void}
-   * @private
-   */
   _onPlay(): void {
     if (this._firstPlay) {
       this._firstPlay = false;
-      this.dispatchEvent(new FakeEvent(CustomEvents.FIRST_PLAY));
+      this.dispatchEvent(new FakeEvent(EventType.Player.FIRST_PLAY));
     }
   }
 
-  /**
-   * Getter for the environment of the player instance.
-   * @return {Object} - The current environment object.
-   * @public
-   */
-  get env(): Object {
-    return this._env;
+  _maybeResetPlayer(config: Object): void {
+    if (this._engine && config.sources) {
+      Player._logger.debug('New sources on existing engine: reset engine to change media');
+      this._reset();
+    }
   }
 
-  /**
-   * Get the player config.
-   * @returns {Object} - A copy of the player configuration.
-   * @public
-   */
-  get config(): Object {
-    return Utils.Object.mergeDeep({}, this._config);
+  _maybeLoadPlugins(engine: ?IEngine) {
+    if (this._engine && !engine) {
+      Player._logger.debug('Engine created for the first time: load plugins');
+      this._loadPlugins();
+    }
   }
 
-  /**
-   * Set player session id
-   * @param {string} sessionId - the player session id to set
-   * @returns {void}
-   * @public
-   */
-  set sessionId(sessionId: string): void {
-    this._config.session = this._config.session || {};
-    this._config.session.id = sessionId;
-  }
-
-  //  <editor-fold desc="Playback Interface">
-  /**
-   * The player readiness
-   * @public
-   * @returns {Promise<*>} - The ready promise
-   */
-  ready(): Promise<*> {
-    return this._readyPromise ? this._readyPromise : Promise.resolve();
-  }
-
-  /**
-   * Load media
-   * @public
-   * @returns {void}
-   */
-  load(): void {
+  _reset(): void {
     if (this._engine) {
-      let startTime = this._config.playback.startTime;
-      this._engine.load(startTime).then((data) => {
-        this._tracks = data.tracks;
-        this.dispatchEvent(new FakeEvent(CustomEvents.TRACKS_CHANGED, {tracks: this._tracks}));
-      }).catch((error) => {
-        this.dispatchEvent(new FakeEvent(Html5Events.ERROR, error));
+      this._engine.destroy();
+    }
+    this._tracks = [];
+    this._firstPlay = true;
+    this._eventManager.removeAll();
+    this._createReadyPromise();
+  }
+
+  _createReadyPromise(): void {
+    this._readyPromise = new Promise((resolve, reject) => {
+      this._eventManager.listen(this, EventType.Player.TRACKS_CHANGED, () => {
+        resolve();
       });
-    }
+      this._eventManager.listen(this, EventType.Html5.ERROR, reject);
+    });
   }
 
-  /**
-   * Start/resume playback.
-   * @returns {void}
-   * @public
-   */
-  play(): void {
-    if (this._engine) {
-      this._playbackMiddleware.play(this._play.bind(this));
-    }
+  static get _defaultConfig(): Object {
+    return Utils.Object.copyDeep(DefaultPlayerConfig);
   }
-
-  /**
-   * Start/resume the engine playback.
-   * @private
-   * @returns {void}
-   */
-  _play(): void {
-    if (this._engine.src) {
-      this._engine.play();
-    } else {
-      this.load();
-      this.ready().then(() => {
-        this._engine.play();
-      });
-    }
-  }
-
-  /**
-   * Pause playback.
-   * @returns {void}
-   * @public
-   */
-  pause(): void {
-    if (this._engine) {
-      this._playbackMiddleware.pause(this._pause.bind(this));
-    }
-  }
-
-  /**
-   * Starts the engine pause.
-   * @private
-   * @returns {void}
-   */
-  _pause(): void {
-    this._engine.pause();
-  }
-
-  /**
-   * @returns {HTMLVideoElement} - The video element.
-   * @public
-   */
-  getVideoElement(): ?HTMLVideoElement {
-    if (this._engine) {
-      return this._engine.getVideoElement();
-    }
-  }
-
-  /**
-   * Skip on an ad.
-   * @public
-   * @returns {void}
-   */
-  skipAd(): void {
-    let adsPlugin: ?BasePlugin = this._pluginManager.get('ima');
-    if (adsPlugin && typeof adsPlugin.skipAd === 'function') {
-      adsPlugin.skipAd();
-    }
-  }
-
-  /**
-   * Start to play ad on demand.
-   * @param {string} adTagUrl - The ad tag url to play.
-   * @public
-   * @returns {void}
-   */
-  playAdNow(adTagUrl: string): void {
-    let adsPlugin: ?BasePlugin = this._pluginManager.get('ima');
-    if (adsPlugin && typeof adsPlugin.playAdNow === 'function') {
-      adsPlugin.playAdNow(adTagUrl);
-    }
-  }
-
-  /**
-   * Set the current time in seconds.
-   * @param {Number} to - The number to set in seconds.
-   * @public
-   */
-  set currentTime(to: number): void {
-    if (this._engine) {
-      if (Utils.Number.isNumber(to)) {
-        let boundedTo = to;
-        if (to < 0) {
-          boundedTo = 0;
-        }
-        if (boundedTo > this._engine.duration) {
-          boundedTo = this._engine.duration;
-        }
-        this._engine.currentTime = boundedTo;
-      }
-    }
-  }
-
-  /**
-   * Get the current time in seconds.
-   * @returns {?Number} - The playback current time.
-   * @public
-   */
-  get currentTime(): ?number {
-    if (this._engine) {
-      return this._engine.currentTime;
-    }
-  }
-
-  /**
-   * Get the duration in seconds.
-   * @returns {?Number} - The playback duration.
-   * @public
-   */
-  get duration(): ?number {
-    if (this._engine) {
-      return this._engine.duration;
-    }
-  }
-
-  /**
-   * Set playback volume.
-   * @param {Number} vol - The volume to set.
-   * @returns {void}
-   * @public
-   */
-  set volume(vol: number): void {
-    if (this._engine) {
-      if (Utils.Number.isFloat(vol)) {
-        let boundedVol = vol;
-        if (boundedVol < 0) {
-          boundedVol = 0;
-        }
-        if (boundedVol > 1) {
-          boundedVol = 1;
-        }
-        this._engine.volume = boundedVol;
-      }
-    }
-  }
-
-  /**
-   * Get playback volume.
-   * @returns {?Number} - The playback volume.
-   * @public
-   */
-  get volume(): ?number {
-    if (this._engine) {
-      return this._engine.volume;
-    }
-  }
-
-  /**
-   * Sets the playbackRate property.
-   * @param {number} rate - The playback speed of the video.
-   */
-  set playbackRate(rate: number): void {
-    if (this._engine) {
-      this._engine.playbackRate = rate;
-    }
-  }
-
-  /**
-   * Gets the current playback speed of the video.
-   * @returns {number} - The current playback speed of the video.
-   */
-  get playbackRate(): ?number {
-    if (this._engine) {
-      return this._engine.playbackRate;
-    }
-  }
-
-  // </editor-fold>
-
-  // <editor-fold desc="State">
-  /**
-   * Get paused state.
-   * @returns {?boolean} - Whether the video is paused or not.
-   * @public
-   */
-  get paused(): ?boolean {
-    if (this._engine) {
-      return this._engine.paused;
-    }
-  }
-
-  /**
-   * Get seeking state.
-   * @returns {?boolean} - Whether the video is seeking or not.
-   * @public
-   */
-  get seeking(): ?boolean {
-    if (this._engine) {
-      return this._engine.seeking;
-    }
-  }
-
-  buffered() {
-  }
-
-  /**
-   * Set playsinline attribute.
-   * Relevant for iOS 10 and up:
-   * Elements will now be allowed to play inline, and will not automatically enter fullscreen mode when playback begins.
-   * @param {boolean} playsinline - Whether the video should plays in line.
-   */
-  set playsinline(playsinline: boolean): void {
-    if (this._engine) {
-      this._engine.playsinline = playsinline;
-    }
-  }
-
-  /**
-   * Get playsinline attribute.
-   * Relevant for iOS 10 and up:
-   * Elements will now be allowed to play inline, and will not automatically enter fullscreen mode when playback begins.
-   * @returns {boolean} - Whether the video plays in line.
-   */
-  get playsinline(): ?boolean {
-    if (this._engine) {
-      return this._engine.playsinline;
-    }
-  }
-
-  /**
-   * Set player muted state.
-   * @param {boolean} mute - The mute value.
-   * @returns {void}
-   * @public
-   */
-  set muted(mute: boolean): void {
-    if (this._engine) {
-      this._engine.muted = mute;
-    }
-  }
-
-  /**
-   * Get player muted state.
-   * @returns {?boolean} - Whether the video is muted or not.
-   * @public
-   */
-  get muted(): ?boolean {
-    if (this._engine) {
-      return this._engine.muted;
-    }
-  }
-
-  /**
-   * Get the player source.
-   * @returns {?string} - The current source of the player.
-   * @public
-   */
-  get src(): ?string {
-    if (this._engine) {
-      return this._engine.src;
-    }
-  }
-
-  /**
-   * Get the player events.
-   * @returns {Object} - The events of the player.
-   * @public
-   */
-  get Event(): { [event: string]: string } {
-    return PlayerEvents;
-  }
-
-  /**
-   * Get the player states.
-   * @returns {Object} - The states of the player.
-   * @public
-   */
-  get State(): { [state: string]: string } {
-    return PlayerStates;
-  }
-
-  /**
-   * Get the player tracks types.
-   * @returns {Object} - The tracks types of the player.
-   * @public
-   */
-  get Track(): { [track: string]: string } {
-    return TrackTypes;
-  }
-
-// </editor-fold>
 }

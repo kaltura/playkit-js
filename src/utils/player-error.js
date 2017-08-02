@@ -1,4 +1,9 @@
 //@flow
+
+/**
+ * @class PlayerError
+ * @memberof Utils
+ */
 export default class PlayerError {
   static TYPE: {[name: string]: Object} = {
     NOT_REGISTERED_PLUGIN: {
@@ -29,6 +34,12 @@ export default class PlayerError {
     this.message = error.message(param);
   }
 
+  /**
+   * @memberof Utils.PlayerError
+   * @instance
+   * @public
+   * @returns {Object}
+   */
   getError() {
     return {
       name: this.name,
