@@ -7,35 +7,7 @@ import TextTrack from '../../src/track/text-track'
  * @memberof Interfaces
  * @interface IEngine
  */
-declare interface IEngine {
-  static id: string;
-
-  static createEngine(source: Source, config: Object): IEngine;
-
-  static canPlayType(mimeType: string): boolean;
-
-  destroy(): void;
-
-  play(): void;
-
-  pause(): void;
-
-  load(startTime: ?number): Promise<Object>;
-
-  selectVideoTrack(videoTrack: VideoTrack): void;
-
-  selectAudioTrack(audioTrack: AudioTrack): void;
-
-  selectTextTrack(textTrack: TextTrack): void;
-
-  hideTextTrack(): void;
-
-  enableAdaptiveBitrate(): void;
-
-  isAdaptiveBitrateEnabled(): boolean;
-
-  getVideoElement(): HTMLVideoElement;
-
+export interface IEngine {
   +id: string;
   currentTime: number;
   +duration: number;
@@ -62,4 +34,18 @@ declare interface IEngine {
   +videoWidth: number;
   +videoHeight: number;
   playsinline: boolean;
+  static id: string;
+  static createEngine(source: Source, config: Object): IEngine;
+  static canPlayType(mimeType: string): boolean;
+  destroy(): void;
+  play(): void;
+  pause(): void;
+  load(startTime: ?number): Promise<Object>;
+  selectVideoTrack(videoTrack: VideoTrack): void;
+  selectAudioTrack(audioTrack: AudioTrack): void;
+  selectTextTrack(textTrack: TextTrack): void;
+  hideTextTrack(): void;
+  enableAdaptiveBitrate(): void;
+  isAdaptiveBitrateEnabled(): boolean;
+  getVideoElement(): HTMLVideoElement;
 }

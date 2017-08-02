@@ -1,9 +1,9 @@
 // @flow
 
 /**
- * @typedef {DeferredPromise}
+ * @typedef DeferredPromise
  * @memberof Types
- * @extends {Promise}
+ * @extends Promise
  */
 export type DeferredPromise = Promise<*> & { resolve: Function, reject: Function };
 
