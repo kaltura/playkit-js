@@ -128,7 +128,7 @@ var LoggerFactory = function () {
 
   /**
    * @memberof Utils.LoggerFactory
-   * @param name - The name of the logger.
+   * @param {string} name - The name of the logger.
    * @returns {ILogger} - The logger singleton.
    */
 
@@ -2430,7 +2430,8 @@ var Player = function (_FakeEventTarget) {
      * @memberof Classes.Player
      * @public
      * @instance
-     * @ var ct = player.currentTime;
+     * @example
+     * var ct = player.currentTime;
      */
     ,
     get: function get() {
@@ -2864,7 +2865,6 @@ var Player = function (_FakeEventTarget) {
     }
 
     /**
-     * @enum Event
      * @returns {Object}
      * @memberof Classes.Player
      * @public
@@ -2882,7 +2882,6 @@ var Player = function (_FakeEventTarget) {
     }
 
     /**
-     * @enum State
      * @returns {Object}
      * @memberof Classes.Player
      * @public
@@ -2898,7 +2897,6 @@ var Player = function (_FakeEventTarget) {
     }
 
     /**
-     * @enum Track
      * @returns {Object}
      * @memberof Classes.Player
      * @public
@@ -3374,7 +3372,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /**
  * @namespace BasePlugin
  * @memberof Classes
- * @implements IPlugin
+ * @implements {IPlugin}
  */
 var BasePlugin = function () {
   _createClass(BasePlugin, null, [{
@@ -3878,7 +3876,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * @namespace BaseMediaSourceAdapter
  * @memberof Classes
  * @extends FakeEventTarget
- * @implements IMediaSourceAdapter
+ * @implements {IMediaSourceAdapter}
  */
 var BaseMediaSourceAdapter = function (_FakeEventTarget) {
   _inherits(BaseMediaSourceAdapter, _FakeEventTarget);
@@ -4726,7 +4724,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * @class Html5
  * @memberof Classes
  * @extends FakeEventTarget
- * @implements IEngine
+ * @implements {IEngine}
  */
 var Html5 = function (_FakeEventTarget) {
   _inherits(Html5, _FakeEventTarget);
