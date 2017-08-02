@@ -13,7 +13,7 @@ import * as Utils from '../../utils/util'
  * @class Html5
  * @memberof Classes
  * @extends FakeEventTarget
- * @implements IEngine
+ * @implements {IEngine}
  */
 export default class Html5 extends FakeEventTarget implements IEngine {
   static VIDEO_ELEMENT_CLASS_NAME: string = 'playkit-engine-html5';

@@ -31,7 +31,7 @@ class LoggerFactory {
 
   /**
    * @memberof Utils.LoggerFactory
-   * @param name - The name of the logger.
+   * @param {string} name - The name of the logger.
    * @returns {ILogger} - The logger singleton.
    */
   getLogger(name?: string) {

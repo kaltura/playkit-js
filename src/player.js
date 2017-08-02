@@ -410,7 +410,8 @@ export default class Player extends FakeEventTarget {
    * @memberof Classes.Player
    * @public
    * @instance
-   * @ var ct = player.currentTime;
+   * @example
+   * var ct = player.currentTime;
    */
   get currentTime(): ?number {
     if (this._engine) {
@@ -785,7 +786,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * @enum Event
    * @returns {Object}
    * @memberof Classes.Player
    * @public
@@ -800,7 +800,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * @enum State
    * @returns {Object}
    * @memberof Classes.Player
    * @public
@@ -813,7 +812,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * @enum Track
    * @returns {Object}
    * @memberof Classes.Player
    * @public

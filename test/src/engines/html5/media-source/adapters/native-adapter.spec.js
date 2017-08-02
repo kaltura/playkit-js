@@ -431,7 +431,6 @@ describe('NativeAdapter: _getSuitableSourceForResolution', () => {
   });
 
   it('should not select for no params given', () => {
-    debugger;
     (nativeInstance._getSuitableSourceForResolution() === null).should.be.true;
   });
 

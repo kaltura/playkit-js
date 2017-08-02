@@ -9,7 +9,7 @@ import FakeEvent from '../event/fake-event'
 /**
  * @namespace BasePlugin
  * @memberof Classes
- * @implements IPlugin
+ * @implements {IPlugin}
  */
 export default class BasePlugin implements IPlugin {
   /**

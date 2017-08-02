@@ -14,7 +14,7 @@ import TextTrack from '../../../track/text-track'
  * @namespace BaseMediaSourceAdapter
  * @memberof Classes
  * @extends FakeEventTarget
- * @implements IMediaSourceAdapter
+ * @implements {IMediaSourceAdapter}
  */
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
   static EventType: Object = EventType;
