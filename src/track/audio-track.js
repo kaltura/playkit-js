@@ -2,9 +2,8 @@
 import Track from './track'
 
 /**
- * @namespace AudioTrack
  * @memberof Classes
- * @extends {Track}
+ * @extends Track
  * @param {Object} settings
  * @class AudioTrack
  */

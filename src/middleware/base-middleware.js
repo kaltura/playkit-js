@@ -1,7 +1,6 @@
 // @flow
 
 /**
- * @virtual BaseMiddleware
  * @namespace BaseMiddleware
  * @memberof Classes
  * @typedef {BaseMiddleware}

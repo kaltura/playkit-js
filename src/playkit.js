@@ -18,16 +18,6 @@
  * @namespace Classes
  */
 
-/**
- * @namespace Engines
- * @memberof Classes
- */
-
-/**
- * @namespace MediaSource
- * @memberof Classes
- */
-
 //@flow
 import Player from './player'
 import LoggerFactory from './utils/logger'

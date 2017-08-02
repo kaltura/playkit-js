@@ -21,7 +21,6 @@ import UAParser from 'ua-parser-js'
 import './assets/style.css'
 
 /**
- * @namespace Player
  * @class Player
  * @memberof Classes
  */
@@ -105,7 +104,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * @function getTracks
    * @param {string | null} type
    * @returns {Array<Track>}
    * @memberof Classes.Player
@@ -117,7 +115,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * @function getActiveTracks
    * @return {Object}
    * @memberof Classes.Player
    * @public
@@ -132,7 +129,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * @function selectTrack
    * @param {Track} track
    * @returns {void}
    * @memberof Classes.Player
@@ -152,7 +148,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * @function hideTextTrack
    * @returns {void}
    * @memberof Classes.Player
    * @public
@@ -166,7 +161,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * @function enableAdaptiveBitrate
    * @returns {void}
    * @memberof Classes.Player
    * @public
@@ -179,7 +173,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * @function isAdaptiveBitrateEnabled
    * @returns {boolean}
    * @memberof Classes.Player
    * @public
@@ -193,7 +186,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * @function getVideoElement
    * @returns {HTMLVideoElement}
    * @memberof Classes.Player
    * @public
@@ -206,7 +198,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * @function skipAd
    * @returns {void}
    * @memberof Classes.Player
    * @public
@@ -220,7 +211,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * @function playAdNow
    * @param {string} adTagUrl
    * @returns {void}
    * @memberof Classes.Player
@@ -272,7 +262,6 @@ export default class Player extends FakeEventTarget {
   //  <editor-fold desc="Playback Interface">
   /**
    * @returns {Promise<*>}
-   * @function ready
    * @memberof Classes.Player
    * @public
    * @instance
@@ -282,7 +271,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * @function load
    * @returns {void}
    * @memberof Classes.Player
    * @public
@@ -301,7 +289,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * @function play
    * @returns {void}
    * @memberof Classes.Player
    * @public
@@ -314,7 +301,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * @function pause
    * @returns {void}
    * @memberof Classes.Player
    * @public

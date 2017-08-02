@@ -11,11 +11,10 @@ import AudioTrack from '../../../track/audio-track'
 import TextTrack from '../../../track/text-track'
 
 /**
- * @virtual BaseMediaSourceAdapter
- * @typedef {BaseMediaSourceAdapter}
  * @namespace BaseMediaSourceAdapter
- * @memberof Classes.MediaSource
- * @extends {FakeEventTarget}
+ * @memberof Classes
+ * @extends FakeEventTarget
+ * @implements IMediaSourceAdapter
  */
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
   static EventType: Object = EventType;
@@ -31,7 +30,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @static
    * @virtual isSupported
    * @public
-   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
+   * @memberof Classes.BaseMediaSourceAdapter
    */
   static isSupported(): boolean {
     return true;
@@ -43,7 +42,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @static
    * @abstract
    * @public
-   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
+   * @memberof Classes.BaseMediaSourceAdapter
    * @returns {boolean}
    */
   static canPlayType(mimeType: string): boolean {
@@ -54,7 +53,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * Must be implemented by derived adapter.
    * @public
    * @abstract
-   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
+   * @memberof Classes.BaseMediaSourceAdapter
    * @returns {Promise<Object>}
    * @instance
    */
@@ -67,7 +66,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @param {VideoTrack} videoTrack
    * @public
    * @abstract
-   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
+   * @memberof Classes.BaseMediaSourceAdapter
    * @returns {void}
    * @instance
    */
@@ -80,7 +79,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @param {AudioTrack} audioTrack
    * @public
    * @abstract
-   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
+   * @memberof Classes.BaseMediaSourceAdapter
    * @returns {void}
    * @instance
    */
@@ -93,7 +92,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @param {TextTrack} textTrack
    * @public
    * @abstract
-   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
+   * @memberof Classes.BaseMediaSourceAdapter
    * @returns {void}
    * @instance
    */
@@ -105,7 +104,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * Must be implemented by derived adapter.
    * @public
    * @abstract
-   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
+   * @memberof Classes.BaseMediaSourceAdapter
    * @returns {void}
    * @instance
    */
@@ -117,7 +116,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * Must be implemented by derived adapter.
    * @public
    * @abstract
-   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
+   * @memberof Classes.BaseMediaSourceAdapter
    * @returns {void}
    * @instance
    */
@@ -129,7 +128,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * Must be implemented by derived adapter.
    * @public
    * @abstract
-   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
+   * @memberof Classes.BaseMediaSourceAdapter
    * @returns {boolean}
    * @instance
    */
@@ -141,7 +140,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * Must be implemented by derived adapter.
    * @public
    * @abstract
-   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
+   * @memberof Classes.BaseMediaSourceAdapter
    * @instance
    */
   get src(): string {
@@ -161,7 +160,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @returns {void}
    * @public
    * @virtual
-   * @memberof Classes.MediaSource.BaseMediaSourceAdapter
+   * @memberof Classes.BaseMediaSourceAdapter
    * @instance
    */
   destroy(): void {

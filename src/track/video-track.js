@@ -2,7 +2,6 @@
 import Track from './track'
 
 /**
- * @namespace VideoTrack
  * @memberof Classes
  * @extends Track
  * @class VideoTrack

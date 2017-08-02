@@ -13,7 +13,6 @@ declare function ListenerType(event: FakeEvent): (boolean | void);
  * A work-alike for EventTarget. Only DOM elements may be true EventTargets,
  * but this can be used as a base class to provide event dispatch to non-DOM
  * classes.  Only FakeEvents should be dispatched.
- * @namespace FakeEventTarget
  * @memberof Classes
  * @class FakeEventTarget
  */

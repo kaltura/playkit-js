@@ -14,7 +14,6 @@ type Transition = {
 }
 
 /**
- * @namespace StateManager
  * @class StateManager
  * @memberof Classes
  */

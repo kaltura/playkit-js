@@ -382,6 +382,88 @@ describe('NativeAdapter: selectVideoTrack - progressive', function () {
   });
 });
 
+
+describe('NativeAdapter: _getSuitableSourceForResolution', () => {
+
+  let video;
+  let nativeInstance;
+  let tracks = [
+    {
+      width: 100
+    },
+    {
+      width: 200,
+      height: 100
+    },
+    {
+      width: 400,
+      height: 400,
+      bandwidth: 20000
+    },
+    {
+      width: 800,
+      height: 400
+    },
+    {
+      width: 800,
+      height: 800,
+      bandwidth: 10000
+    },
+    {
+      width: 800,
+      height: 800,
+      bandwidth: 20000
+    }
+  ];
+
+  beforeEach(() => {
+    video = document.createElement("video");
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.MultipleSources.progressive[1], {sources: sourcesConfig.MultipleSources});
+  });
+
+  afterEach(() => {
+    nativeInstance.destroy();
+    nativeInstance = null;
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+  });
+
+  it('should not select for no params given', () => {
+    debugger;
+    (nativeInstance._getSuitableSourceForResolution() === null).should.be.true;
+  });
+
+  it('should not select for no height given', () => {
+    (nativeInstance._getSuitableSourceForResolution(tracks, 100, 0) === null).should.be.true;
+  });
+
+  it('should not select for no tracks given', () => {
+    (nativeInstance._getSuitableSourceForResolution(null, 100, 100) === null).should.be.true;
+  });
+
+  it('should not select for empty tracks given', () => {
+    (nativeInstance._getSuitableSourceForResolution([], 100, 100) === null).should.be.true;
+  });
+
+  it('should select according width', () => {
+    (nativeInstance._getSuitableSourceForResolution(tracks, 210, 210) === tracks[1]).should.be.true;
+    (nativeInstance._getSuitableSourceForResolution(tracks, 190, 190) === tracks[1]).should.be.true;
+    (nativeInstance._getSuitableSourceForResolution(tracks, 100, 100) === tracks[0]).should.be.true;
+  });
+
+  it('should select according ratio', () => {
+    (nativeInstance._getSuitableSourceForResolution(tracks, 800, 500) === tracks[3]).should.be.true;
+    (nativeInstance._getSuitableSourceForResolution(tracks, 800, 300) === tracks[3]).should.be.true;
+  });
+
+  it('should select according bandwidth', () => {
+    (nativeInstance._getSuitableSourceForResolution(tracks, 800, 700) === tracks[5]).should.be.true;
+    (nativeInstance._getSuitableSourceForResolution(tracks, 800, 900) === tracks[5]).should.be.true;
+  });
+});
+
 describe('NativeAdapter: selectAudioTrack', function () {
   this.timeout(10000);
 

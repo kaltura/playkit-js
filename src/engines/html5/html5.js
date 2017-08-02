@@ -10,11 +10,10 @@ import TextTrack from '../../track/text-track'
 import * as Utils from '../../utils/util'
 
 /**
- * @namespace Html5
- * @memberof Classes.Engines
  * @class Html5
- * @extends {FakeEventTarget}
- * @implements {IEngine}
+ * @memberof Classes
+ * @extends FakeEventTarget
+ * @implements IEngine
  */
 export default class Html5 extends FakeEventTarget implements IEngine {
   static VIDEO_ELEMENT_CLASS_NAME: string = 'playkit-engine-html5';
@@ -25,7 +24,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @type {string}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @static
    */
@@ -35,7 +34,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @param {Source} source
    * @param {Object} config
    * @returns {IEngine}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @static
    */
@@ -46,7 +45,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * @param {string} mimeType
    * @returns {boolean}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @static
    */
@@ -57,7 +56,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * @returns {boolean}
    * @static
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    */
   static isSupported() {
@@ -79,7 +78,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    * @returns {void}
@@ -102,7 +101,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {HTMLVideoElement}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -113,7 +112,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * @param {VideoTrack} videoTrack
    * @returns {void}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -126,7 +125,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * @param {AudioTrack} audioTrack
    * @returns {void}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -139,7 +138,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * @param {TextTrack} textTrack
    * @returns {void}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -151,7 +150,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {void}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -163,7 +162,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {void}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -175,7 +174,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {boolean}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -188,7 +187,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {void}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -198,7 +197,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {void}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -208,7 +207,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @param {number} startTime
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    * @returns {Promise<Object>}
@@ -218,7 +217,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    * @returns {string}
@@ -229,7 +228,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @param {string} source
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    * @returns {void}
@@ -240,7 +239,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {string}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -253,7 +252,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {number}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -264,7 +263,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * @param {number} to
    * @returns {void}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -274,7 +273,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {number}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -284,7 +283,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @param {number} vol
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    * @returns {void}
@@ -295,7 +294,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {number}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -305,7 +304,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {boolean}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -315,7 +314,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {boolean}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -325,7 +324,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {TimeRanges}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -335,7 +334,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {TimeRanges}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -345,7 +344,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {TimeRanges}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -355,7 +354,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @param {boolean} mute
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    * @returns {void}
@@ -366,7 +365,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {boolean}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -376,7 +375,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {boolean}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -387,7 +386,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * @param {string} poster
    * @returns {void}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -397,7 +396,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {poster}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -407,7 +406,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @param {string} preload
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    * @returns {void}
@@ -418,7 +417,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {string}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -428,7 +427,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @param {boolean} autoplay
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    * @returns {void}
@@ -439,7 +438,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {boolean}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -449,7 +448,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @param {boolean} loop
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    * @returns {void}
@@ -460,7 +459,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {boolean}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -470,7 +469,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @param {boolean} controls
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    * @returns {void}
@@ -481,7 +480,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {boolean}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -491,7 +490,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @param {number} playbackRate
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    * @returns {void}
@@ -502,7 +501,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {number}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -512,7 +511,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @param {number} defaultPlaybackRate
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    * @returns {void}
@@ -523,7 +522,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {number}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -533,7 +532,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {boolean}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -543,7 +542,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {MediaError | null}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -553,7 +552,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {number}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -568,7 +567,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * 2 = HAVE_CURRENT_DATA - data for the current playback position is available, but not enough data to play next frame/millisecond.
    * 3 = HAVE_FUTURE_DATA - data for the current and at least the next frame is available.
    * 4 = HAVE_ENOUGH_DATA - enough data available to start playing.
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -578,7 +577,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {number}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -588,7 +587,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {number}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */
@@ -598,7 +597,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @param {boolean} playsinline
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    * @returns {void}
@@ -613,7 +612,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @returns {boolean}
-   * @memberof Classes.Engines.Html5
+   * @memberof Classes.Html5
    * @public
    * @instance
    */

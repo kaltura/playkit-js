@@ -7,7 +7,6 @@ type ListenerType = (event: FakeEvent) => any;
 /**
  * Creates a new EventManager.
  * An EventManager maintains a collection of "event bindings" between event targets and event listeners.
- * @namespace EventManager
  * @memberof Classes
  * @class EventManager
  **/

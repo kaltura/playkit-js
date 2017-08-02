@@ -3,7 +3,6 @@ import Middleware from './middleware'
 import BaseMiddleware from './base-middleware'
 
 /**
- * @namespace PlaybackMiddleware
  * @class PlaybackMiddleware
  * @memberof Classes
  */

@@ -4,7 +4,7 @@ import LoggerFactory from '../../../utils/logger'
 
 /**
  * @namespace MediaSourceProvider
- * @memberof Classes.MediaSource
+ * @memberof Classes
  */
 export default class MediaSourceProvider {
   static _logger: any = LoggerFactory.getLogger('MediaSourceProvider');
@@ -12,11 +12,10 @@ export default class MediaSourceProvider {
   static _selectedAdapter: ?(typeof IMediaSourceAdapter) = null;
 
   /**
-   * @function register
    * @param {IMediaSourceAdapter} mediaSourceAdapter
    * @static
    * @public
-   * @memberof Classes.MediaSource.MediaSourceProvider
+   * @memberof Classes.MediaSourceProvider
    * @returns {void}
    */
   static register(mediaSourceAdapter: typeof IMediaSourceAdapter): void {
@@ -31,11 +30,10 @@ export default class MediaSourceProvider {
   }
 
   /**
-   * @function unRegister
    * @param {IMediaSourceAdapter} mediaSourceAdapter
    * @static
    * @public
-   * @memberof Classes.MediaSource.MediaSourceProvider
+   * @memberof Classes.MediaSourceProvider
    * @returns {void}
    */
   static unRegister(mediaSourceAdapter: typeof IMediaSourceAdapter): void {
@@ -47,11 +45,10 @@ export default class MediaSourceProvider {
   }
 
   /**
-   * @function canPlayType
    * @param {string} mimeType
    * @static
    * @public
-   * @memberof Classes.MediaSource.MediaSourceProvider
+   * @memberof Classes.MediaSourceProvider
    * @returns {boolean}
    */
   static canPlayType(mimeType: string): boolean {
@@ -67,14 +64,13 @@ export default class MediaSourceProvider {
   }
 
   /**
-   * @function getMediaSourceAdapter
    * @param {HTMLVideoElement} videoElement
    * @param {Source} source
    * @param {Object} config
    * @returns {IMediaSourceAdapter | null}
    * @static
    * @public
-   * @memberof Classes.MediaSource.MediaSourceProvider
+   * @memberof Classes.MediaSourceProvider
    */
   static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): ?IMediaSourceAdapter {
     if (videoElement && source && config) {
@@ -90,7 +86,7 @@ export default class MediaSourceProvider {
    * @static
    * @returns {void}
    * @public
-   * @memberof Classes.MediaSource.MediaSourceProvider
+   * @memberof Classes.MediaSourceProvider
    */
   static destroy(): void {
     MediaSourceProvider._selectedAdapter = null;

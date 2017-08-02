@@ -4,7 +4,6 @@ import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
 
 /**
- * @namespace IEngine
  * @memberof Interfaces
  * @interface IEngine
  */

@@ -1,7 +1,6 @@
 //@flow
 
 /**
- * @namespace State
  * @class State
  * @memberof Classes
  */

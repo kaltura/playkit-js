@@ -2,7 +2,6 @@
 
 /**
  * @namespace Track
- * @abstract Track
  * @memberof Classes
  */
 export default class Track {

@@ -4,7 +4,6 @@ import BaseMiddleware from './base-middleware'
 import LoggerFactory from '../utils/logger'
 
 /**
- * @namespace Middleware
  * @class Middleware
  * @memberof Classes
  */

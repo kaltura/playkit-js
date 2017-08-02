@@ -2,7 +2,6 @@
 import Track from './track'
 
 /**
- * @namespace TextTrack
  * @memberof Classes
  * @extends Track
  * @class TextTrack

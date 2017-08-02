@@ -3,7 +3,6 @@
 /**
  * Create an Event work-alike object based on the dictionary.
  * The event should contain all of the same properties from the dict.
- * @namespace FakeEvent
  * @memberof Classes
  * @class FakeEvent
  */

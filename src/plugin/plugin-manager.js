@@ -5,7 +5,6 @@ import Player from '../player'
 import LoggerFactory from '../utils/logger'
 
 /**
- * @namespace PluginManager
  * @class PluginManager
  * @memberof Classes
  */

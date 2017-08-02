@@ -1,9 +1,8 @@
 //@flow
 
 /**
- * @namespace IPlugin
  * @memberof Interfaces
- * @interface
+ * @interface IPlugin
  */
 declare interface IPlugin {
   getConfig(attr?: string): any;

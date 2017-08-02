@@ -6,14 +6,12 @@ import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'
 import TextTrack from '../../../../track/text-track'
 import BaseMediaSourceAdapter from '../base-media-source-adapter'
-import {getSuitableSourceForResolution} from '../../../../utils/resolution'
 import * as Utils from '../../../../utils/util'
 
 /**
- * @namespace NativeAdapter
- * @memberof Classes.MediaSource
+ * @memberof Classes
  * @class NativeAdapter
- * @extends {BaseMediaSourceAdapter}
+ * @extends BaseMediaSourceAdapter
  */
 export default class NativeAdapter extends BaseMediaSourceAdapter {
   _eventManager: EventManager;
@@ -24,17 +22,16 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @member {string}
    * @static
    * @public
-   * @memberof Classes.MediaSource.NativeAdapter
+   * @memberof Classes.NativeAdapter
    */
   static id: string = 'NativeAdapter';
 
   /**
-   * @function canPlayType
    * @param {string} mimeType
    * @returns {boolean}
    * @static
    * @public
-   * @memberof Classes.MediaSource.NativeAdapter
+   * @memberof Classes.NativeAdapter
    */
   static canPlayType(mimeType: string): boolean {
     let canPlayType = (typeof mimeType === 'string') ? !!(Utils.Dom.createElement("video").canPlayType(mimeType.toLowerCase())) : false;
@@ -43,14 +40,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
-   * @function createAdapter
    * @param {HTMLVideoElement} videoElement
    * @param {Object} source
    * @param {Object} config
    * @returns {IMediaSourceAdapter}
    * @static
    * @public
-   * @memberof Classes.MediaSource.NativeAdapter
+   * @memberof Classes.NativeAdapter
    */
   static createAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): IMediaSourceAdapter {
     return new this(videoElement, source, config);
@@ -65,10 +61,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   /**
    * @param {number} startTime
-   * @function load
    * @returns {Promise<Object>}
    * @public
-   * @memberof Classes.MediaSource.NativeAdapter
+   * @memberof Classes.NativeAdapter
    * @instance
    */
   load(startTime: ?number): Promise<Object> {
@@ -102,10 +97,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
-   * @function destroy
    * @returns {void}
    * @public
-   * @memberof Classes.MediaSource.NativeAdapter
+   * @memberof Classes.NativeAdapter
    * @instance
    */
   destroy(): void {
@@ -117,11 +111,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
-   * @function selectVideoTrack
    * @param {VideoTrack} videoTrack
    * @returns {void}
    * @public
-   * @memberof Classes.MediaSource.NativeAdapter
+   * @memberof Classes.NativeAdapter
    * @instance
    */
   selectVideoTrack(videoTrack: VideoTrack): void {
@@ -133,11 +126,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
-   * @function selectAdaptiveVideoTrack
    * @param {VideoTrack} videoTrack
    * @returns {void}
    * @public
-   * @memberof Classes.MediaSource.NativeAdapter
+   * @memberof Classes.NativeAdapter
    * @instance
    */
   selectAdaptiveVideoTrack(videoTrack: VideoTrack): void {
@@ -150,11 +142,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
-   * @function selectAudioTrack
    * @param {AudioTrack} audioTrack
    * @returns {void}
    * @public
-   * @memberof Classes.MediaSource.NativeAdapter
+   * @memberof Classes.NativeAdapter
    * @instance
    */
   selectAudioTrack(audioTrack: AudioTrack): void {
@@ -171,7 +162,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @param {TextTrack} textTrack
    * @returns {void}
    * @public
-   * @memberof Classes.MediaSource.NativeAdapter
+   * @memberof Classes.NativeAdapter
    * @instance
    */
   selectTextTrack(textTrack: TextTrack): void {
@@ -187,7 +178,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @function hideTextTrack
    * @returns {void}
    * @public
-   * @memberof Classes.MediaSource.NativeAdapter
+   * @memberof Classes.NativeAdapter
    * @instance
    */
   hideTextTrack(): void {
@@ -199,7 +190,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @function enableAdaptiveBitrate
    * @returns {void}
    * @public
-   * @memberof Classes.MediaSource.NativeAdapter
+   * @memberof Classes.NativeAdapter
    * @instance
    */
   enableAdaptiveBitrate(): void {
@@ -210,7 +201,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @function isAdaptiveBitrateEnabled
    * @returns {boolean}
    * @public
-   * @memberof Classes.MediaSource.NativeAdapter
+   * @memberof Classes.NativeAdapter
    * @instance
    */
   isAdaptiveBitrateEnabled(): boolean {
@@ -219,7 +210,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   /**
    * @public
-   * @memberof Classes.MediaSource.NativeAdapter
+   * @memberof Classes.NativeAdapter
    * @instance
    * @returns {string}
    */
@@ -228,7 +219,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   _setProgressiveSource(): void {
-    let suitableTrack = getSuitableSourceForResolution(this._progressiveSources, this._videoElement.offsetWidth, this._videoElement.offsetHeight);
+    let suitableTrack = this._getSuitableSourceForResolution(this._progressiveSources, this._videoElement.offsetWidth, this._videoElement.offsetHeight);
     if (suitableTrack) {
       this._sourceObj = suitableTrack;
     }
@@ -372,5 +363,44 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._videoElement.src = this._sourceObj ? this._sourceObj.url : "";
       paused ? this._videoElement.load() : this._videoElement.play();
     }
+  }
+
+  _getSuitableSourceForResolution(tracks: Array<Object>, width: number, height: number): ?Object {
+    let mostSuitableWidth = null;
+    if (height && tracks) {
+      let mostSuitableWidthTracks = [];
+      let minWidthDiff = Infinity;
+      for (let track of tracks) { // first filter the most width suitable
+        let widthDiff = Math.abs(track.width - width);
+        if (widthDiff < minWidthDiff) {
+          minWidthDiff = widthDiff;
+          mostSuitableWidthTracks = [track];
+        } else if (widthDiff === minWidthDiff) {
+          mostSuitableWidthTracks.push(track);
+        }
+      }
+      let videoRatio = width / height;
+      let mostSuitableWidthAndRatioTracks = mostSuitableWidthTracks;
+      let minRatioDiff = Infinity;
+      for (let track of mostSuitableWidthTracks) {  // filter the most ratio suitable from the width filter results
+        if (track.height) {
+          let ratioDiff = Math.abs(track.width / track.height - videoRatio);
+          if (ratioDiff < minRatioDiff) {
+            minRatioDiff = ratioDiff;
+            mostSuitableWidthAndRatioTracks = [track];
+          } else if (ratioDiff === minRatioDiff) {
+            mostSuitableWidthAndRatioTracks.push(track);
+          }
+        }
+      }
+      let maxBandwidth = 0;
+      for (let track of mostSuitableWidthAndRatioTracks) { // select the top bitrate from the ratio filter results
+        if (track.bandwidth > maxBandwidth || !track.bandwidth) {
+          maxBandwidth = track.bandwidth || maxBandwidth;
+          mostSuitableWidth = track;
+        }
+      }
+    }
+    return mostSuitableWidth;
   }
 }
