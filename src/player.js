@@ -79,6 +79,7 @@ export default class Player extends FakeEventTarget {
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example player.destroy();
    */
   destroy(): void {
     if (this._engine) {
@@ -98,6 +99,7 @@ export default class Player extends FakeEventTarget {
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example var playerView = player.getView();
    */
   getView(): HTMLElement {
     return this._el;
@@ -109,6 +111,11 @@ export default class Player extends FakeEventTarget {
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var tracks = player.getTracks();
+   * var audioTracks = player.getTracks(player.Track.AUDIO);
+   * var textTracks = player.getTracks(player.Track.TEXT);
+   * var videoTracks = player.getTracks(player.Track.VIDEO);
    */
   getTracks(type: ?string): Array<Track> {
     return this._getTracksByType(type);
@@ -119,6 +126,11 @@ export default class Player extends FakeEventTarget {
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var activeTracks = player.getActiveTracks();
+   * var activeVideoTrack = activeTracks.video;
+   * var activeTextTrack = activeTracks.audio;
+   * var activeAudioTrack = activeTracks.text;
    */
   getActiveTracks(): Object {
     return {
@@ -134,6 +146,13 @@ export default class Player extends FakeEventTarget {
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var audioTracks = player.getTracks(player.Track.AUDIO);
+   * var textTracks = player.getTracks(player.Track.TEXT);
+   * var videoTracks = player.getTracks(player.Track.VIDEO);
+   * player.selectTrack(videoTracks[1]);
+   * player.selectTrack(audioTracks[0]);
+   * player.selectTrack(videoTracks[3]);
    */
   selectTrack(track: Track): void {
     if (this._engine) {
@@ -152,6 +171,11 @@ export default class Player extends FakeEventTarget {
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var activeTracks = player.getActiveTracks();
+   * if (activeTracks.text) {
+   *    player.hideTextTrack();
+   * }
    */
   hideTextTrack(): void {
     if (this._engine) {
@@ -165,6 +189,8 @@ export default class Player extends FakeEventTarget {
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * player.enableAdaptiveBitrate();
    */
   enableAdaptiveBitrate(): void {
     if (this._engine) {
@@ -177,6 +203,10 @@ export default class Player extends FakeEventTarget {
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * if (!player.isAdaptiveBitrateEnabled()) {
+   *    player.enableAdaptiveBitrate();
+   * }
    */
   isAdaptiveBitrateEnabled(): boolean {
     if (this._engine) {
@@ -190,6 +220,8 @@ export default class Player extends FakeEventTarget {
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var videoElement = player.getVideoElement();
    */
   getVideoElement(): ?HTMLVideoElement {
     if (this._engine) {
@@ -202,6 +234,10 @@ export default class Player extends FakeEventTarget {
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * player.addEventListener(player.Event.Ads.AD_STARTED, function(event) {
+   *    player.skipAd();
+   * }
    */
   skipAd(): void {
     let adsPlugin: ?BasePlugin = this._pluginManager.get('ima');
@@ -216,6 +252,10 @@ export default class Player extends FakeEventTarget {
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * // WIP
+   * var adTagUrl = '...';
+   * player.playAdNow(adTagUrl);
    */
   playAdNow(adTagUrl: string): void {
     let adsPlugin: ?BasePlugin = this._pluginManager.get('ima');
@@ -225,34 +265,48 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * @returns {Object}
-   * @public
+   * @description getter
    * @readonly
+   * @returns {Object}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var playerEnv = player.env;
+   * console.log(playerEnv.os);
+   * console.log(playerEnv.device);
+   * console.log(playerEnv.browser);
    */
   get env(): Object {
     return this._env;
   }
 
   /**
+   * @description getter
    * @returns {Object}
    * @readonly
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var playerConfig = player.config;
+   * if (player.config.playback && player.config.playback.autoplay) {
+   *    // Write your logic...
+   * }
    */
   get config(): Object {
     return Utils.Object.mergeDeep({}, this._config);
   }
 
   /**
+   * @description setter
    * @param {string} sessionId
    * @returns {void}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * player.sessionId = '...';
    */
   set sessionId(sessionId: string): void {
     this._config.session = this._config.session || {};
@@ -265,6 +319,10 @@ export default class Player extends FakeEventTarget {
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * player.ready().then(function() {
+   *    var tracks = player.getTracks();
+   * });
    */
   ready(): Promise<*> {
     return this._readyPromise ? this._readyPromise : Promise.resolve();
@@ -275,6 +333,10 @@ export default class Player extends FakeEventTarget {
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * if (player.config.playback.preload === 'none') {
+   *    player.load();
+   * }
    */
   load(): void {
     if (this._engine) {
@@ -293,6 +355,9 @@ export default class Player extends FakeEventTarget {
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var player = loadPlayer('target-id', {...});
+   * player.play();
    */
   play(): void {
     if (this._engine) {
@@ -305,6 +370,10 @@ export default class Player extends FakeEventTarget {
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * if (!player.paused) {
+   *    player.pause();
+   * }
    */
   pause(): void {
     if (this._engine) {
@@ -313,10 +382,12 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @description setter
    * @param {number} to
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example player.currentTime = 10;
    */
   set currentTime(to: number): void {
     if (this._engine) {
@@ -334,10 +405,12 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @description getter
    * @returns {number | null}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @ var ct = player.currentTime;
    */
   get currentTime(): ?number {
     if (this._engine) {
@@ -346,10 +419,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @description getter
+   * @readonly
    * @returns {number | null}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var duration = player.duration;
    */
   get duration(): ?number {
     if (this._engine) {
@@ -358,11 +435,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @description setter
    * @param {number} vol
    * @returns {void}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * player.volume = 0.5;
    */
   set volume(vol: number): void {
     if (this._engine) {
@@ -380,10 +460,13 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @description getter
    * @returns {number | null}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var vol = player.volume;
    */
   get volume(): ?number {
     if (this._engine) {
@@ -392,10 +475,13 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @description setter
    * @param {number} rate
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * player.playbackRate = 2;
    */
   set playbackRate(rate: number): void {
     if (this._engine) {
@@ -404,10 +490,13 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @description getter
    * @returns {number | null}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var pr = player.playbackRate;
    */
   get playbackRate(): ?number {
     if (this._engine) {
@@ -416,10 +505,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @description getter
+   * @readonly
    * @returns {TimeRanges | null}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var seekable = player.seekable;
    */
   get seekable(): ?TimeRanges {
     if (this._engine) {
@@ -428,10 +521,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @description getter
+   * @readonly
    * @returns {TimeRanges | null}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var buffered = player.buffered;
    */
   get buffered(): ?TimeRanges {
     if (this._engine) {
@@ -440,10 +537,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @description getter
+   * @readonly
    * @returns {boolean | null}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var dm = player.defaultMuted;
    */
   get defaultMuted(): ?boolean {
     if (this._engine) {
@@ -452,110 +553,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * @param {string} poster
-   * @returns {void}
-   * @memberof Classes.Player
-   * @public
-   * @instance
-   */
-  set poster(poster: string): void {
-    if (this._engine) {
-      this._engine.poster = poster;
-    }
-  }
-
-  /**
-   * @returns {poster | null}
-   * @memberof Classes.Player
-   * @public
-   * @instance
-   */
-  get poster(): ?string {
-    if (this._engine) {
-      return this._engine.poster;
-    }
-  }
-
-  /**
-   * @param {boolean} loop
-   * @memberof Classes.Player
-   * @public
-   * @instance
-   * @returns {void}
-   */
-  set loop(loop: boolean) {
-    if (this._engine) {
-      this._engine.loop = loop;
-    }
-  }
-
-  /**
-   * @returns {boolean | null}
-   * @memberof Classes.Player
-   * @public
-   * @instance
-   */
-  get loop(): ?boolean {
-    if (this._engine) {
-      return this._engine.loop;
-    }
-  }
-
-  /**
-   * @param {boolean} controls
-   * @memberof Classes.Player
-   * @public
-   * @instance
-   * @returns {void}
-   */
-  set controls(controls: boolean): void {
-    if (this._engine) {
-      this._engine.controls = controls;
-    }
-  }
-
-  /**
-   * @returns {boolean | null}
-   * @memberof Classes.Player
-   * @public
-   * @instance
-   */
-  get controls(): ?boolean {
-    if (this._engine) {
-      return this._engine.controls;
-    }
-  }
-
-  /**
-   * @param {number} defaultPlaybackRate
-   * @memberof Classes.Player
-   * @public
-   * @instance
-   * @returns {void}
-   */
-  set defaultPlaybackRate(defaultPlaybackRate: number) {
-    if (this._engine) {
-      this._engine.defaultPlaybackRate = defaultPlaybackRate;
-    }
-  }
-
-  /**
-   * @returns {number | null}
-   * @memberof Classes.Player
-   * @public
-   * @instance
-   */
-  get defaultPlaybackRate(): ?number {
-    if (this._engine) {
-      return this._engine.defaultPlaybackRate;
-    }
-  }
-
-  /**
+   * @description getter
+   * @readonly
    * @returns {MediaError | null}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var error = player.error;
    */
   get error(): ?MediaError {
     if (this._engine) {
@@ -564,10 +569,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @description getter
+   * @readonly
    * @returns {number | null}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var videoHeight = player.videoHeight;
    */
   get videoHeight(): ?number {
     if (this._engine) {
@@ -576,10 +585,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @description getter
+   * @readonly
    * @returns {number | null}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var videoWidth = player.videoWidth;
    */
   get videoWidth(): ?number {
     if (this._engine) {
@@ -588,11 +601,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @description setter
    * @returns {void}
    * @param {boolean} playsinline
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * player.playsinline = true;
    */
   set playsinline(playsinline: boolean): void {
     if (this._engine) {
@@ -601,10 +617,13 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @description getter
    * @returns {boolean | null}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var playsinline = player.playsinline;
    */
   get playsinline(): ?boolean {
     if (this._engine) {
@@ -616,10 +635,14 @@ export default class Player extends FakeEventTarget {
 
   // <editor-fold desc="State">
   /**
+   * @description getter
+   * @readonly
    * @returns {boolean | null}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var paused = player.paused;
    */
   get paused(): ?boolean {
     if (this._engine) {
@@ -628,10 +651,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @description getter
+   * @readonly
    * @returns {boolean | null}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var ended = player.ended;
    */
   get ended(): ?boolean {
     if (this._engine) {
@@ -640,10 +667,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @description getter
+   * @readonly
    * @returns {TimeRanges | null}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var played = player.played;
    */
   get played(): ?TimeRanges {
     if (this._engine) {
@@ -652,10 +683,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @description getter
+   * @readonly
    * @returns {boolean | null}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var seeking = player.seeking;
    */
   get seeking(): ?boolean {
     if (this._engine) {
@@ -664,10 +699,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @description getter
+   * @readonly
    * @returns {number | null}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var networkState = player.networkState;
    */
   get networkState(): ?number {
     if (this._engine) {
@@ -676,6 +715,8 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @description getter
+   * @readonly
    * @returns {number | null} - The current ready state of the audio/video.
    * 0 = HAVE_NOTHING - no information whether or not the audio/video is ready.
    * 1 = HAVE_METADATA - metadata for the audio/video is ready.
@@ -685,6 +726,8 @@ export default class Player extends FakeEventTarget {
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var readyState = player.readyState;
    */
   get readyState(): ?number {
     if (this._engine) {
@@ -693,11 +736,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @description setter
    * @param {boolean} mute
    * @returns {void}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * player.muted = true;
    */
   set muted(mute: boolean): void {
     if (this._engine) {
@@ -706,10 +752,13 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @description getter
    * @returns {boolean | null}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var muted = player.muted;
    */
   get muted(): ?boolean {
     if (this._engine) {
@@ -720,10 +769,14 @@ export default class Player extends FakeEventTarget {
 // </editor-fold>
 
   /**
+   * @description getter
+   * @readonly
    * @returns {string | null}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * var src = player.src;
    */
   get src(): ?string {
     if (this._engine) {
@@ -732,33 +785,44 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @enum Event
    * @returns {Object}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * player.Event.Html5.PLAYING;
+   * player.Event.Ads.AD_LOADED;
+   * player.Event.Player.ABR_MODE_CHANGED;
    */
   get Event(): Object {
-    return EventType;
+    return Utils.Object.copyDeep(EventType);
   }
 
   /**
+   * @enum State
    * @returns {Object}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * player.State.PLAYING
    */
   get State(): Object {
-    return StateType;
+    return Utils.Object.copyDeep(StateType);
   }
 
   /**
+   * @enum Track
    * @returns {Object}
    * @memberof Classes.Player
    * @public
    * @instance
+   * @example
+   * player.Track.AUDIO;
    */
   get Track(): Object {
-    return TrackType;
+    return Utils.Object.copyDeep(TrackType);
   }
 
   _play(): void {
