@@ -6,7 +6,25 @@ import PlayerStates from './state-types'
 import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../event/events'
 import FakeEvent from '../event/fake-event'
 import LoggerFactory from '../utils/logger'
-import type {StateChanged, Transition} from "../../flow-typed/types/player-state";
+
+/**
+ * Define a transition object.
+ */
+type Transition = {
+  [state: string]: {
+    [event: string]: Function
+  }
+}
+
+type MaybeState = State | null;
+
+/**
+ * Define a StateChanged object.
+ */
+type StateChanged = {
+  oldState: MaybeState,
+  newState: MaybeState
+}
 
 /**
  * This class responsible to manage all the state machine of the player.
