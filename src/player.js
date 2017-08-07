@@ -1,5 +1,6 @@
 //@flow
 import EventManager from './event/event-manager'
+import PosterManager from './poster-manager'
 import FakeEvent from './event/fake-event'
 import FakeEventTarget from './event/fake-event-target'
 import {PLAYER_EVENTS as PlayerEvents, HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from './event/events'
@@ -28,6 +29,13 @@ import './assets/style.css'
 const CONTAINER_CLASS_NAME: string = 'playkit-container';
 
 /**
+/**
+ * The player poster class name.
+ * @type {string}
+ * @const
+ */
+const POSTER_CLASS_NAME: string = 'playkit-poster';
+
  * The HTML5 player class.
  * @classdesc
  */
@@ -58,6 +66,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _eventManager: EventManager;
+  /**
+   * The poster manager of the player.
+   * @type {PosterManager}
+   * @private
+   */
+  _posterManager: PosterManager;
   /**
    * The runtime configuration of the player.
    * @type {Object}
@@ -112,7 +126,6 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _env: Object;
-
   /**
    * @param {string} targetId - The target div id to append the player.
    * @param {Object} config - The configuration for the player instance.
@@ -123,13 +136,15 @@ export default class Player extends FakeEventTarget {
     this._tracks = [];
     this._config = {};
     this._firstPlay = true;
+    this._eventManager = new EventManager();
+    this._posterManager = new PosterManager();
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
-    this._eventManager = new EventManager();
     this._playbackMiddleware = new PlaybackMiddleware();
     this._env = new UAParser().getResult();
     this._createReadyPromise();
     this._appendPlayerContainer(targetId);
+    this._appendPosterEl();
     this.configure(config);
   }
 
@@ -144,6 +159,8 @@ export default class Player extends FakeEventTarget {
     this._config = Utils.Object.mergeDeep(Utils.Object.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
     if (this._selectEngine()) {
       this._appendEngineEl();
+      this._posterManager.setSrc(config.metadata && config.metadata.poster)
+      this._posterManager.show();
       this._attachMedia();
       this._maybeLoadPlugins(engine);
       this._handlePlaybackConfig();
@@ -392,8 +409,18 @@ export default class Player extends FakeEventTarget {
     this._el.id = Utils.Generator.uniqueId(5);
     this._el.className = CONTAINER_CLASS_NAME;
     this._el.setAttribute('tabindex', '-1');
+  /**
+   * Appends the poster element to the player's div container.
+   * @private
+   * @returns {void}
+   */
+  _appendPosterEl(): void {
+    if (this._el != null) {
+      let el: HTMLDivElement = this._posterManager.getElement();
+      Utils.Dom.addClassName(el, POSTER_CLASS_NAME);
+      Utils.Dom.appendChild(this._el, el);
+    }
   }
-
   /**
    * Appends the engine's video element to the player's div container.
    * @private
@@ -548,7 +575,10 @@ export default class Player extends FakeEventTarget {
     if (this._firstPlay) {
       this._firstPlay = false;
       this.dispatchEvent(new FakeEvent(CustomEvents.FIRST_PLAY));
+
+      this._posterManager.hide();
     }
+
   }
 
   /**
