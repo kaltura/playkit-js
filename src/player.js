@@ -455,6 +455,13 @@ export default class Player extends FakeEventTarget {
     return this._el;
   }
 
+  get dimensions(): Object{
+    return {
+      width: this._el.clientWidth,
+      height: this._el.clientHeight
+    }
+  }
+
   /**
    * Returns the tracks according to the filter. if no filter given returns the all tracks.
    * @function getTracks
