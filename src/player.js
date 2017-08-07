@@ -463,6 +463,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Get the poster source URL
+   * @returns {string} - the poster image URL
+   */
+  get poster(): string{
+    return this._posterManager.src;
+  }
+
+  /**
    * Returns the tracks according to the filter. if no filter given returns the all tracks.
    * @function getTracks
    * @param {string} [type] - a tracks filter, should be 'video', 'audio' or 'text'.

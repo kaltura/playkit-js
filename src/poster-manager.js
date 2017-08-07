@@ -21,7 +21,7 @@ class PosterManager{
   }
 
   /**
-   * Set the psoter source URL
+   * Set the poster source URL
    * @param {string} posterUrl - the poster image URL
    * @returns {void}
    */
@@ -30,6 +30,14 @@ class PosterManager{
     if (posterUrl !== undefined) {
       this._el.style.backgroundImage = `url("${posterUrl}")`;
     }
+  }
+
+  /**
+   * Get the poster source URL
+   * @returns {string} - the poster image URL
+   */
+  get src(): string{
+    return this._posterUrl;
   }
 
   /**
