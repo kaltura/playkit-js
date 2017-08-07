@@ -36,6 +36,14 @@ const CONTAINER_CLASS_NAME: string = 'playkit-container';
  */
 const POSTER_CLASS_NAME: string = 'playkit-poster';
 
+/**
+ * The engine class name.
+ * @type {string}
+ * @const
+ */
+const ENGINE_CLASS_NAME: string = 'playkit-engine';
+
+/**
  * The HTML5 player class.
  * @classdesc
  */
@@ -405,10 +413,11 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _createPlayerContainer(): void {
-    this._el = Utils.Dom.createElement("div");
-    this._el.id = Utils.Generator.uniqueId(5);
-    this._el.className = CONTAINER_CLASS_NAME;
-    this._el.setAttribute('tabindex', '-1');
+    const el = this._el = Utils.Dom.createElement("div");
+    Utils.Dom.addClassName(el, CONTAINER_CLASS_NAME);
+    Utils.Dom.setAttribute(el, "id", Utils.Generator.uniqueId(5));
+    Utils.Dom.setAttribute(el, "tabindex", '-1');
+  }
   /**
    * Appends the poster element to the player's div container.
    * @private
@@ -428,7 +437,12 @@ export default class Player extends FakeEventTarget {
    */
   _appendEngineEl(): void {
     if ((this._el != null) && (this._engine != null)) {
-      Utils.Dom.appendChild(this._el, this._engine.getVideoElement());
+      let engineEl = this._engine.getVideoElement();
+      const classname = `${ENGINE_CLASS_NAME}`;
+      Utils.Dom.addClassName(engineEl, classname);
+      const classnameWithId = `${ENGINE_CLASS_NAME}-${this._engine.id}`;
+      Utils.Dom.addClassName(engineEl, classnameWithId);
+      Utils.Dom.prependTo(engineEl, this._el);
     }
   }
 
