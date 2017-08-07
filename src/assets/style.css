@@ -13,8 +13,8 @@
 }
 
 .playkit-engine {
-  width: 100%!important;
-  height: 100%!important;
+  width: 100%;
+  height: 100%;
   position: absolute;
   top: 0;
   left: 0;
@@ -22,19 +22,20 @@
 }
 
 .playkit-engine video::-webkit-media-controls-panel,
+.playkit-engine video::-webkit-media-controls-panel-container,
 .playkit-engine video::-webkit-media-controls-start-playback-button,
-.playkit-engine video::\--webkit-media-controls-play-button {
-  display: none!important;
+.playkit-engine video::-webkit-media-controls-play-button {
+  display: none;
   -webkit-appearance: none
 }
 
 .playkit-poster {
   position: absolute;
   display: block;
-  top: 0px;
-  bottom: 0px;
-  left: 0px;
-  right: 0px;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   background-size: contain;
   background-position: center center;
   background-repeat: no-repeat;
