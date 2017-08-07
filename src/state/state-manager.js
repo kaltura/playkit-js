@@ -6,15 +6,7 @@ import PlayerStates from './state-types'
 import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../event/events'
 import FakeEvent from '../event/fake-event'
 import LoggerFactory from '../utils/logger'
-
-/**
- * Define a transition object.
- */
-type Transition = {
-  [state: string]: {
-    [event: string]: Function
-  }
-}
+import type {StateChanged, Transition} from "../../flow-typed/types/player-state";
 
 /**
  * This class responsible to manage all the state machine of the player.
@@ -203,10 +195,10 @@ export default class StateManager {
    * @returns {void}
    */
   _dispatchEvent(): void {
-    let event = new FakeEvent(CustomEvents.PLAYER_STATE_CHANGED, {
+    let event = new FakeEvent(CustomEvents.PLAYER_STATE_CHANGED, ({
       'oldState': this._prevState,
       'newState': this._curState
-    });
+    }: StateChanged));
     this._player.dispatchEvent(event);
   }
 
