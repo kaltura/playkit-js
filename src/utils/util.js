@@ -237,6 +237,64 @@ const _Generator = {
 
 const _Dom = {
   /**
+   * Adds class name to an element
+   * @param {Element} element - an HTML element
+   * @param {string} className - a class name
+   * @returns {void}
+   */
+  addClassName(element: HTMLElement, className: string): void {
+    if (element.classList){
+      element.classList.add(className);
+    } else {
+      //TODO handle ie9
+    }
+  },
+
+  /**
+   * Removes class name from an element
+   * @param {Element} element - an HTML element
+   * @param {string} className - a class name
+   * @returns {void}
+   */
+  removeClassName(element: HTMLElement, className: string): void {
+    if (element.classList){
+      element.classList.remove(className);
+    } else {
+      //TODO handle ie9
+    }
+  },
+  /**
+   * Add element attribute
+   * @param {Element} element - an HTML element
+   * @param {string} name - attribute name
+   * @param {string} value - attribute value
+   * @returns {void}
+   */
+  setAttribute(element: HTMLElement, name: string, value: string): void {
+    element.setAttribute(name, value);
+  },
+  /**
+   * Remove element attribute
+   * @param {Element} element - an HTML element
+   * @param {string} name - attribute name
+   * @returns {void}
+   */
+  removeAttribute(element: HTMLElement, name: string): void {
+    element.removeAttribute(name);
+  },
+  /**
+   * Set element style
+   * @param {Element} element - an HTML element
+   * @param {string} name - style name
+   * @param {string} value - style value
+   * @returns {void}
+   */
+  setStyle(element: HTMLElement, name: string, value: string): void {
+    if (element.style.getPropertyValue(name) !== undefined){
+      element.style.setProperty(name, value);
+    }
+  },
+  /**
    * Adds a node to the end of the list of children of a specified parent node.
    * @param {Element} parent - The parent node.
    * @param {Element} child - The child node.
@@ -244,6 +302,20 @@ const _Dom = {
    */
   appendChild(parent: ?Element, child: ?Element): void {
     if (parent && child && parent.appendChild) {
+      parent.appendChild(child);
+    }
+  },
+
+  /**
+   * Prepend HTML element
+   * @param {HTMLElement} child - the child to prepend
+   * @param {HTMLElement} parent - the parent to preprend to
+   * @returns {void}
+   */
+  prependTo(child: HTMLElement, parent: HTMLElement): void {
+    if (parent.firstChild) {
+      parent.insertBefore(child, parent.firstChild);
+    } else {
       parent.appendChild(child);
     }
   },
