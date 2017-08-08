@@ -4083,7 +4083,7 @@ exports.default = PLAYER_STATE_TYPES;
 
 module.exports = {
 	"name": "playkit-js",
-	"version": "0.3.0",
+	"version": "0.4.0",
 	"main": "dist/playkit.js",
 	"scripts": {
 		"clean": "rm -rf ./dist",
