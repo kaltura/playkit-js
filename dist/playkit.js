@@ -1801,7 +1801,7 @@ var Player = function (_FakeEventTarget) {
       this._config = Utils.Object.mergeDeep(Utils.Object.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
       if (this._selectEngine()) {
         this._appendEngineEl();
-        this._posterManager.setSrc(config.metadata && config.metadata.poster);
+        this._posterManager.setSrc(config.metadata.poster);
         this._posterManager.show();
         this._attachMedia();
         this._maybeLoadPlugins(engine);
@@ -6024,7 +6024,7 @@ var PosterManager = function () {
    */
 
   /**
-   * The environment(os,device,browser) object of the player.
+   * The poster HTML Div element.
    * @type {HTMLDivElement}
    * @private
    */
@@ -6033,8 +6033,8 @@ var PosterManager = function () {
   _createClass(PosterManager, [{
     key: "setSrc",
     value: function setSrc(posterUrl) {
-      this._posterUrl = posterUrl;
-      if (posterUrl !== undefined) {
+      if (posterUrl) {
+        this._posterUrl = posterUrl;
         this._el.style.backgroundImage = "url(\"" + posterUrl + "\")";
       }
     }
@@ -6153,16 +6153,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /**
  * This class responsible to manage all the state machine of the player.
  * @classdesc
- */
-
-
-/**
- * Define a transition object.
- */
-
-
-/**
- * Define a StateChanged object.
  */
 var StateManager = function () {
 
@@ -8460,6 +8450,9 @@ module.exports = {
 		"preload": "none",
 		"autoplay": false,
 		"muted": false,
+		"metadata": {
+			"poster": ""
+		},
 		"options": {
 			"html5": {
 				"hls": {},
