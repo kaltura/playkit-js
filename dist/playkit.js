@@ -90,7 +90,7 @@ exports.LOG_LEVEL = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jsLogger = __webpack_require__(31);
+var _jsLogger = __webpack_require__(32);
 
 var JsLogger = _interopRequireWildcard(_jsLogger);
 
@@ -284,148 +284,6 @@ exports.default = Track;
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * Create an Event work-alike object based on the dictionary.
- * The event should contain all of the same properties from the dict.
- * @param {string} type -
- * @param {Object=} opt_dict -
- * @constructor
- * @extends {Event}
- */
-var FakeEvent = function () {
-
-  /**
-   * Non-standard property read by FakeEventTarget to stop processing listeners.
-   * @type {boolean}
-   */
-
-
-  /** @type {EventTarget} */
-
-
-  /** @const {string} */
-
-
-  /** @const {boolean} */
-
-  /** @const {boolean} */
-  function FakeEvent(type, payload) {
-    _classCallCheck(this, FakeEvent);
-
-    // These Properties below cannot be set by dict.  They are all provided for
-    // compatibility with native events.
-
-    /** @const {boolean} */
-    this.bubbles = false;
-
-    /** @const {boolean} */
-    this.cancelable = false;
-
-    /** @const {boolean} */
-    this.defaultPrevented = false;
-
-    /**
-     * According to MDN, Chrome uses high-res timers instead of epoch time.
-     * Follow suit so that timeStamps on FakeEvents use the same base as
-     * on native Events.
-     * @const {number}
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp
-     */
-    this.timeStamp = window.performance ? window.performance.now() : Date.now();
-
-    /** @const {string} */
-    this.type = type;
-
-    /** @const {boolean} */
-    this.isTrusted = false;
-
-    /** @type {EventTarget} */
-    this.currentTarget = null;
-
-    /** @type {EventTarget} */
-    this.target = null;
-
-    /**
-     * Non-standard property read by FakeEventTarget to stop processing listeners.
-     * @type {boolean}
-     */
-    this.stopped = false;
-
-    this.payload = payload;
-  }
-
-  /**
-   * Does nothing, since FakeEvents have no default.  Provided for compatibility
-   * with native Events.
-   * @override
-   */
-
-
-  /** @type {EventTarget} */
-
-
-  /** @const {boolean} */
-
-
-  /**
-   * According to MDN, Chrome uses high-res timers instead of epoch time.
-   * Follow suit so that timeStamps on FakeEvents use the same base as
-   * on native Events.
-   * @const {number}
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp
-   */
-
-
-  /** @const {boolean} */
-
-
-  _createClass(FakeEvent, [{
-    key: "preventDefault",
-    value: function preventDefault() {}
-
-    /**
-     * Stops processing event listeners for this event.  Provided for compatibility
-     * with native Events.
-     * @override
-     */
-
-  }, {
-    key: "stopImmediatePropagation",
-    value: function stopImmediatePropagation() {
-      this.stopped = true;
-    }
-
-    /**
-     * Does nothing, since FakeEvents do not bubble.  Provided for compatibility
-     * with native Events.
-     * @override
-     */
-
-  }, {
-    key: "stopPropagation",
-    value: function stopPropagation() {}
-  }]);
-
-  return FakeEvent;
-}();
-
-exports.default = FakeEvent;
-
-/***/ }),
-/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -699,6 +557,83 @@ var _Generator = {
 
 var _Dom = {
   /**
+   * Adds class name to an element
+   * @param {Element} element - an HTML element
+   * @param {string} className - a class name
+   * @returns {void}
+   */
+  addClassName: function addClassName(element, className) {
+    if (element.classList) {
+      element.classList.add(className);
+    } else {
+      if (!_Dom.hasClassName(element, className)) {
+        element.className += className;
+      }
+    }
+  },
+
+
+  /**
+   * Removes class name from an element
+   * @param {Element} element - an HTML element
+   * @param {string} className - a class name
+   * @returns {void}
+   */
+  removeClassName: function removeClassName(element, className) {
+    if (element.classList) {
+      element.classList.remove(className);
+    } else {
+      if (_Dom.hasClassName(element, className)) {
+        element.className = element.className.replace(new RegExp('(\\s|^)' + className + '(\\s|$)'), ' ').replace(/^\s+|\s+$/g, '');
+      }
+    }
+  },
+
+  /**
+   * Checks if an element has a class name
+   * @param {Element} element - an HTML element
+   * @param {string} className - a class name
+   * @returns {boolean} - weather an element contains a class name
+   */
+  hasClassName: function hasClassName(element, className) {
+    return element.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(element.className);
+  },
+
+  /**
+   * Add element attribute
+   * @param {Element} element - an HTML element
+   * @param {string} name - attribute name
+   * @param {string} value - attribute value
+   * @returns {void}
+   */
+  setAttribute: function setAttribute(element, name, value) {
+    element.setAttribute(name, value);
+  },
+
+  /**
+   * Remove element attribute
+   * @param {Element} element - an HTML element
+   * @param {string} name - attribute name
+   * @returns {void}
+   */
+  removeAttribute: function removeAttribute(element, name) {
+    element.removeAttribute(name);
+  },
+
+  /**
+   * Set element style
+   * @param {Element} element - an HTML element
+   * @param {string} name - style name
+   * @param {string} value - style value
+   * @returns {void}
+   */
+  setStyle: function setStyle(element, name, value) {
+    if (element.style.getPropertyValue(name) !== undefined) {
+      element.style.setProperty(name, value);
+    }
+  },
+
+  /**
    * Adds a node to the end of the list of children of a specified parent node.
    * @param {Element} parent - The parent node.
    * @param {Element} child - The child node.
@@ -706,6 +641,21 @@ var _Dom = {
    */
   appendChild: function appendChild(parent, child) {
     if (parent && child && parent.appendChild) {
+      parent.appendChild(child);
+    }
+  },
+
+
+  /**
+   * Prepend HTML element
+   * @param {HTMLElement} child - the child to prepend
+   * @param {HTMLElement} parent - the parent to preprend to
+   * @returns {void}
+   */
+  prependTo: function prependTo(child, parent) {
+    if (parent.firstChild) {
+      parent.insertBefore(child, parent.firstChild);
+    } else {
       parent.appendChild(child);
     }
   },
@@ -795,6 +745,148 @@ exports.Object = _Object;
 exports.Generator = _Generator;
 exports.Dom = _Dom;
 exports.Http = _Http;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Create an Event work-alike object based on the dictionary.
+ * The event should contain all of the same properties from the dict.
+ * @param {string} type -
+ * @param {Object=} opt_dict -
+ * @constructor
+ * @extends {Event}
+ */
+var FakeEvent = function () {
+
+  /**
+   * Non-standard property read by FakeEventTarget to stop processing listeners.
+   * @type {boolean}
+   */
+
+
+  /** @type {EventTarget} */
+
+
+  /** @const {string} */
+
+
+  /** @const {boolean} */
+
+  /** @const {boolean} */
+  function FakeEvent(type, payload) {
+    _classCallCheck(this, FakeEvent);
+
+    // These Properties below cannot be set by dict.  They are all provided for
+    // compatibility with native events.
+
+    /** @const {boolean} */
+    this.bubbles = false;
+
+    /** @const {boolean} */
+    this.cancelable = false;
+
+    /** @const {boolean} */
+    this.defaultPrevented = false;
+
+    /**
+     * According to MDN, Chrome uses high-res timers instead of epoch time.
+     * Follow suit so that timeStamps on FakeEvents use the same base as
+     * on native Events.
+     * @const {number}
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp
+     */
+    this.timeStamp = window.performance ? window.performance.now() : Date.now();
+
+    /** @const {string} */
+    this.type = type;
+
+    /** @const {boolean} */
+    this.isTrusted = false;
+
+    /** @type {EventTarget} */
+    this.currentTarget = null;
+
+    /** @type {EventTarget} */
+    this.target = null;
+
+    /**
+     * Non-standard property read by FakeEventTarget to stop processing listeners.
+     * @type {boolean}
+     */
+    this.stopped = false;
+
+    this.payload = payload;
+  }
+
+  /**
+   * Does nothing, since FakeEvents have no default.  Provided for compatibility
+   * with native Events.
+   * @override
+   */
+
+
+  /** @type {EventTarget} */
+
+
+  /** @const {boolean} */
+
+
+  /**
+   * According to MDN, Chrome uses high-res timers instead of epoch time.
+   * Follow suit so that timeStamps on FakeEvents use the same base as
+   * on native Events.
+   * @const {number}
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp
+   */
+
+
+  /** @const {boolean} */
+
+
+  _createClass(FakeEvent, [{
+    key: "preventDefault",
+    value: function preventDefault() {}
+
+    /**
+     * Stops processing event listeners for this event.  Provided for compatibility
+     * with native Events.
+     * @override
+     */
+
+  }, {
+    key: "stopImmediatePropagation",
+    value: function stopImmediatePropagation() {
+      this.stopped = true;
+    }
+
+    /**
+     * Does nothing, since FakeEvents do not bubble.  Provided for compatibility
+     * with native Events.
+     * @override
+     */
+
+  }, {
+    key: "stopPropagation",
+    value: function stopPropagation() {}
+  }]);
+
+  return FakeEvent;
+}();
+
+exports.default = FakeEvent;
 
 /***/ }),
 /* 4 */
@@ -1041,7 +1133,7 @@ var _multiMap = __webpack_require__(13);
 
 var _multiMap2 = _interopRequireDefault(_multiMap);
 
-var _fakeEvent = __webpack_require__(2);
+var _fakeEvent = __webpack_require__(3);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
@@ -1236,7 +1328,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.CUSTOM_EVENTS = exports.HTML5_EVENTS = exports.PLAYER_EVENTS = undefined;
 
-var _util = __webpack_require__(3);
+var _util = __webpack_require__(2);
 
 var Utils = _interopRequireWildcard(_util);
 
@@ -1466,7 +1558,11 @@ var _eventManager = __webpack_require__(7);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _fakeEvent = __webpack_require__(2);
+var _posterManager = __webpack_require__(25);
+
+var _posterManager2 = _interopRequireDefault(_posterManager);
+
+var _fakeEvent = __webpack_require__(3);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
@@ -1480,7 +1576,7 @@ var _stateTypes = __webpack_require__(18);
 
 var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
-var _util = __webpack_require__(3);
+var _util = __webpack_require__(2);
 
 var Utils = _interopRequireWildcard(_util);
 
@@ -1500,11 +1596,11 @@ var _basePlugin = __webpack_require__(11);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
-var _stateManager = __webpack_require__(25);
+var _stateManager = __webpack_require__(26);
 
 var _stateManager2 = _interopRequireDefault(_stateManager);
 
-var _trackTypes = __webpack_require__(27);
+var _trackTypes = __webpack_require__(28);
 
 var _trackTypes2 = _interopRequireDefault(_trackTypes);
 
@@ -1528,15 +1624,15 @@ var _playbackMiddleware = __webpack_require__(23);
 
 var _playbackMiddleware2 = _interopRequireDefault(_playbackMiddleware);
 
-var _playerConfig = __webpack_require__(37);
+var _playerConfig = __webpack_require__(38);
 
 var _playerConfig2 = _interopRequireDefault(_playerConfig);
 
-var _uaParserJs = __webpack_require__(35);
+var _uaParserJs = __webpack_require__(36);
 
 var _uaParserJs2 = _interopRequireDefault(_uaParserJs);
 
-__webpack_require__(32);
+__webpack_require__(33);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1554,6 +1650,21 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * @const
  */
 var CONTAINER_CLASS_NAME = 'playkit-container';
+
+/**
+/**
+ * The player poster class name.
+ * @type {string}
+ * @const
+ */
+var POSTER_CLASS_NAME = 'playkit-poster';
+
+/**
+ * The engine class name.
+ * @type {string}
+ * @const
+ */
+var ENGINE_CLASS_NAME = 'playkit-engine';
 
 /**
  * The HTML5 player class.
@@ -1578,6 +1689,12 @@ var Player = function (_FakeEventTarget) {
   /**
    * The event manager of the player.
    * @type {EventManager}
+   * @private
+   */
+
+  /**
+   * The poster manager of the player.
+   * @type {PosterManager}
    * @private
    */
 
@@ -1636,12 +1753,6 @@ var Player = function (_FakeEventTarget) {
    */
 
   /**
-   * The environment(os,device,browser) object of the player.
-   * @type {HTMLDivElement}
-   * @private
-   */
-
-  /**
    * The player class logger.
    * @type {any}
    * @static
@@ -1655,13 +1766,15 @@ var Player = function (_FakeEventTarget) {
     _this._tracks = [];
     _this._config = {};
     _this._firstPlay = true;
+    _this._eventManager = new _eventManager2.default();
+    _this._posterManager = new _posterManager2.default();
     _this._stateManager = new _stateManager2.default(_this);
     _this._pluginManager = new _pluginManager2.default();
-    _this._eventManager = new _eventManager2.default();
     _this._playbackMiddleware = new _playbackMiddleware2.default();
     _this._env = new _uaParserJs2.default().getResult();
     _this._createReadyPromise();
-    _this._appendPlayerContainer(targetId, config.metadata.poster);
+    _this._appendPlayerContainer(targetId);
+    _this._appendPosterEl();
     _this.configure(config);
     return _this;
   }
@@ -1688,6 +1801,8 @@ var Player = function (_FakeEventTarget) {
       this._config = Utils.Object.mergeDeep(Utils.Object.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
       if (this._selectEngine()) {
         this._appendEngineEl();
+        this._posterManager.setSrc(config.metadata && config.metadata.poster);
+        this._posterManager.show();
         this._attachMedia();
         this._maybeLoadPlugins(engine);
         this._handlePlaybackConfig();
@@ -1983,25 +2098,18 @@ var Player = function (_FakeEventTarget) {
     /**
      * Creates the player container
      * @param {string} targetId - The target div id to append the player.
-     * @param {string} poster - The target div id to append the player.
      * @private
      * @returns {void}
      */
 
   }, {
     key: '_appendPlayerContainer',
-    value: function _appendPlayerContainer(targetId, poster) {
+    value: function _appendPlayerContainer(targetId) {
       if (targetId) {
         if (this._el === undefined) {
           this._createPlayerContainer();
           var parentNode = Utils.Dom.getElementById(targetId);
           Utils.Dom.appendChild(parentNode, this._el);
-        }
-        if (this._elPoster === undefined) {
-          this._elPoster = Utils.Dom.createElement("div");
-          this._elPoster.id = "playkit-poster-1234";
-          this._elPoster.style.backgroundImage = 'url("' + poster + '")';
-          Utils.Dom.appendChild(this._el, this._elPoster);
         }
       } else {
         throw new Error("targetId is not found, it must be pass on initialization");
@@ -2017,12 +2125,26 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_createPlayerContainer',
     value: function _createPlayerContainer() {
-      this._el = Utils.Dom.createElement("div");
-      this._el.id = Utils.Generator.uniqueId(5);
-      this._el.className = CONTAINER_CLASS_NAME;
-      this._el.setAttribute('tabindex', '-1');
+      var el = this._el = Utils.Dom.createElement("div");
+      Utils.Dom.addClassName(el, CONTAINER_CLASS_NAME);
+      Utils.Dom.setAttribute(el, "id", Utils.Generator.uniqueId(5));
+      Utils.Dom.setAttribute(el, "tabindex", '-1');
     }
+    /**
+     * Appends the poster element to the player's div container.
+     * @private
+     * @returns {void}
+     */
 
+  }, {
+    key: '_appendPosterEl',
+    value: function _appendPosterEl() {
+      if (this._el != null) {
+        var el = this._posterManager.getElement();
+        Utils.Dom.addClassName(el, POSTER_CLASS_NAME);
+        Utils.Dom.appendChild(this._el, el);
+      }
+    }
     /**
      * Appends the engine's video element to the player's div container.
      * @private
@@ -2033,7 +2155,12 @@ var Player = function (_FakeEventTarget) {
     key: '_appendEngineEl',
     value: function _appendEngineEl() {
       if (this._el != null && this._engine != null) {
-        Utils.Dom.appendChild(this._el, this._engine.getVideoElement());
+        var engineEl = this._engine.getVideoElement();
+        var classname = '' + ENGINE_CLASS_NAME;
+        Utils.Dom.addClassName(engineEl, classname);
+        var classnameWithId = ENGINE_CLASS_NAME + '-' + this._engine.id;
+        Utils.Dom.addClassName(engineEl, classnameWithId);
+        Utils.Dom.prependTo(engineEl, this._el);
       }
     }
 
@@ -2048,6 +2175,9 @@ var Player = function (_FakeEventTarget) {
     value: function getView() {
       return this._el;
     }
+  }, {
+    key: 'getTracks',
+
 
     /**
      * Returns the tracks according to the filter. if no filter given returns the all tracks.
@@ -2056,9 +2186,6 @@ var Player = function (_FakeEventTarget) {
      * @returns {Array<Track>} - The parsed tracks.
      * @public
      */
-
-  }, {
-    key: 'getTracks',
     value: function getTracks(type) {
       return this._getTracksByType(type);
     }
@@ -2218,6 +2345,8 @@ var Player = function (_FakeEventTarget) {
       if (this._firstPlay) {
         this._firstPlay = false;
         this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.FIRST_PLAY));
+
+        this._posterManager.hide();
       }
     }
 
@@ -2385,6 +2514,25 @@ var Player = function (_FakeEventTarget) {
      * @param {boolean} playsinline - Whether the video should plays in line.
      */
 
+  }, {
+    key: 'dimensions',
+    get: function get() {
+      return {
+        width: this._el.clientWidth,
+        height: this._el.clientHeight
+      };
+    }
+
+    /**
+     * Get the poster source URL
+     * @returns {string} - the poster image URL
+     */
+
+  }, {
+    key: 'poster',
+    get: function get() {
+      return this._posterManager.src;
+    }
   }, {
     key: 'env',
     get: function get() {
@@ -2734,7 +2882,7 @@ var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _util = __webpack_require__(3);
+var _util = __webpack_require__(2);
 
 var Utils = _interopRequireWildcard(_util);
 
@@ -2746,7 +2894,7 @@ var _playerError = __webpack_require__(14);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
-var _fakeEvent = __webpack_require__(2);
+var _fakeEvent = __webpack_require__(3);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
@@ -2941,7 +3089,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _fakeEvent = __webpack_require__(2);
+var _fakeEvent = __webpack_require__(3);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
@@ -3324,7 +3472,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _fakeEvent = __webpack_require__(2);
+var _fakeEvent = __webpack_require__(3);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
@@ -4039,7 +4187,7 @@ var _fakeEventTarget = __webpack_require__(12);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
-var _fakeEvent = __webpack_require__(2);
+var _fakeEvent = __webpack_require__(3);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
@@ -4065,7 +4213,7 @@ var _textTrack = __webpack_require__(5);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _util = __webpack_require__(3);
+var _util = __webpack_require__(2);
 
 var Utils = _interopRequireWildcard(_util);
 
@@ -4080,17 +4228,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 /**
- * The engine video element class name.
- * @type {string}
- * @const
- */
-var VIDEO_ELEMENT_CLASS_NAME = 'playkit-engine-html5';
-
-/**
  * Html5 engine for playback.
  * @classdesc
  */
-
 var Html5 = function (_FakeEventTarget) {
   _inherits(Html5, _FakeEventTarget);
 
@@ -4277,7 +4417,6 @@ var Html5 = function (_FakeEventTarget) {
     value: function _createVideoElement() {
       this._el = Utils.Dom.createElement("video");
       this._el.id = Utils.Generator.uniqueId(5);
-      this._el.className = VIDEO_ELEMENT_CLASS_NAME;
       this._el.controls = false;
     }
 
@@ -4936,9 +5075,9 @@ var _baseMediaSourceAdapter = __webpack_require__(15);
 
 var _baseMediaSourceAdapter2 = _interopRequireDefault(_baseMediaSourceAdapter);
 
-var _resolution = __webpack_require__(28);
+var _resolution = __webpack_require__(29);
 
-var _util = __webpack_require__(3);
+var _util = __webpack_require__(2);
 
 var Utils = _interopRequireWildcard(_util);
 
@@ -5788,7 +5927,7 @@ var _textTrack = __webpack_require__(5);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _util = __webpack_require__(3);
+var _util = __webpack_require__(2);
 
 var Utils = _interopRequireWildcard(_util);
 
@@ -5858,6 +5997,127 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _util = __webpack_require__(2);
+
+var Utils = _interopRequireWildcard(_util);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var PosterManager = function () {
+  /**
+   * Poster image URL
+   * @type {string}
+   * @private
+   */
+  function PosterManager() {
+    _classCallCheck(this, PosterManager);
+
+    this._createEl();
+  }
+
+  /**
+   * Set the poster source URL
+   * @param {string} posterUrl - the poster image URL
+   * @returns {void}
+   */
+
+  /**
+   * The environment(os,device,browser) object of the player.
+   * @type {HTMLDivElement}
+   * @private
+   */
+
+
+  _createClass(PosterManager, [{
+    key: "setSrc",
+    value: function setSrc(posterUrl) {
+      this._posterUrl = posterUrl;
+      if (posterUrl !== undefined) {
+        this._el.style.backgroundImage = "url(\"" + posterUrl + "\")";
+      }
+    }
+
+    /**
+     * Get the poster source URL
+     * @returns {string} - the poster image URL
+     */
+
+  }, {
+    key: "getElement",
+
+
+    /**
+     * Get the poster HTML Div element
+     * @returns {HTMLDivElement} - Poster HTML Dom element
+     */
+    value: function getElement() {
+      return this._el;
+    }
+
+    /**
+     * Create the HTML Div element of the poster
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: "_createEl",
+    value: function _createEl() {
+      if (this._el === undefined) {
+        var el = this._el = Utils.Dom.createElement("div");
+        Utils.Dom.setAttribute(el, "id", Utils.Generator.uniqueId(5));
+        Utils.Dom.setAttribute(el, "tabindex", '-1');
+      }
+    }
+
+    /**
+     * Show the poster image
+     * @returns {void}
+     */
+
+  }, {
+    key: "show",
+    value: function show() {
+      Utils.Dom.setStyle(this._el, "display", "");
+    }
+
+    /**
+     * Hide the poster image
+     * @returns {void}
+     */
+
+  }, {
+    key: "hide",
+    value: function hide() {
+      Utils.Dom.setStyle(this._el, "display", "none");
+    }
+  }, {
+    key: "src",
+    get: function get() {
+      return this._posterUrl;
+    }
+  }]);
+
+  return PosterManager;
+}();
+
+exports.default = PosterManager;
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _player = __webpack_require__(9);
 
 var _player2 = _interopRequireDefault(_player);
@@ -5866,7 +6126,7 @@ var _eventManager = __webpack_require__(7);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _state = __webpack_require__(26);
+var _state = __webpack_require__(27);
 
 var _state2 = _interopRequireDefault(_state);
 
@@ -5876,7 +6136,7 @@ var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
 var _events = __webpack_require__(8);
 
-var _fakeEvent = __webpack_require__(2);
+var _fakeEvent = __webpack_require__(3);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
@@ -5898,6 +6158,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 /**
  * Define a transition object.
+ */
+
+
+/**
+ * Define a StateChanged object.
  */
 var StateManager = function () {
 
@@ -6146,7 +6411,7 @@ var StateManager = function () {
 exports.default = StateManager;
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6228,7 +6493,7 @@ var State = function () {
 exports.default = State;
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6246,7 +6511,7 @@ var TRACK_TYPES = {
 exports.default = TRACK_TYPES;
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6372,21 +6637,21 @@ function getSuitableSourceForResolution(tracks, width, height) {
 exports.getSuitableSourceForResolution = getSuitableSourceForResolution;
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(30)(undefined);
+exports = module.exports = __webpack_require__(31)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, ".playkit-container {\n  position: relative;\n  width: 100%;\n  height: 100%;\n  color: #fff;\n  outline: none;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n  -webkit-tap-highlight-color: transparent;\n}\n\n*[class^=\"playkit-engine-\"] {\n  width: 100%;\n  height: 100%;\n}\n\n*[class^=\"playkit-poster-\"] {\n  position: absolute;\n  top: 0px;\n  bottom: 0px;\n  left: 0px;\n  right: 0px;\n  display: block;\n  background-size: contain;\n  background-position: center center;\n  background-repeat: no-repeat;\n}\n", ""]);
+exports.push([module.i, ".playkit-container {\n  position: relative;\n  width: 100%;\n  height: 100%;\n  color: #fff;\n  outline: none;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n  -webkit-tap-highlight-color: transparent;\n}\n\n.playkit-engine {\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  object-fit: contain;\n}\n\n.playkit-engine video::-webkit-media-controls-panel,\n.playkit-engine video::-webkit-media-controls-panel-container,\n.playkit-engine video::-webkit-media-controls-start-playback-button,\n.playkit-engine video::-webkit-media-controls-play-button {\n  display: none;\n  -webkit-appearance: none\n}\n\n.playkit-poster {\n  position: absolute;\n  display: block;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  background-size: contain;\n  background-position: center center;\n  background-repeat: no-repeat;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports) {
 
 /*
@@ -6468,7 +6733,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -6735,13 +7000,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(29);
+var content = __webpack_require__(30);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -6749,7 +7014,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(33)(content, options);
+var update = __webpack_require__(34)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -6766,7 +7031,7 @@ if(false) {
 }
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -6812,7 +7077,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(34);
+var	fixUrls = __webpack_require__(35);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -7125,7 +7390,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports) {
 
 
@@ -7220,7 +7485,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -8141,7 +8406,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         exports.UAParser = UAParser;
     } else {
         // requirejs env (optional)
-        if ("function" === FUNC_TYPE && __webpack_require__(36)) {
+        if ("function" === FUNC_TYPE && __webpack_require__(37)) {
             !(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
                 return UAParser;
             }.call(exports, __webpack_require__, exports, module),
@@ -8177,7 +8442,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
@@ -8186,7 +8451,7 @@ module.exports = __webpack_amd_options__;
 /* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports) {
 
 module.exports = {
