@@ -1,8 +1,7 @@
 // @flow
-
 import * as Utils from './utils/util'
 
-class PosterManager{
+class PosterManager {
   /**
    * Poster image URL
    * @type {string}
@@ -16,7 +15,7 @@ class PosterManager{
    */
   _el: HTMLDivElement;
 
-  constructor(){
+  constructor() {
     this._createEl();
   }
 
@@ -25,9 +24,9 @@ class PosterManager{
    * @param {string} posterUrl - the poster image URL
    * @returns {void}
    */
-  setSrc(posterUrl: ?string): void{
+  setSrc(posterUrl: ?string): void {
     if (posterUrl) {
-    this._posterUrl = posterUrl;
+      this._posterUrl = posterUrl;
       this._el.style.backgroundImage = `url("${posterUrl}")`;
     }
   }
@@ -36,7 +35,7 @@ class PosterManager{
    * Get the poster source URL
    * @returns {string} - the poster image URL
    */
-  get src(): string{
+  get src(): string {
     return this._posterUrl;
   }
 
@@ -44,7 +43,7 @@ class PosterManager{
    * Get the poster HTML Div element
    * @returns {HTMLDivElement} - Poster HTML Dom element
    */
-  getElement(): HTMLDivElement{
+  getElement(): HTMLDivElement {
     return this._el;
   }
 
@@ -53,8 +52,8 @@ class PosterManager{
    * @private
    * @returns {void}
    */
-  _createEl(): void{
-    if (this._el === undefined){
+  _createEl(): void {
+    if (this._el === undefined) {
       const el = this._el = Utils.Dom.createElement("div");
       Utils.Dom.setAttribute(el, "id", Utils.Generator.uniqueId(5));
       Utils.Dom.setAttribute(el, "tabindex", '-1');
@@ -66,7 +65,7 @@ class PosterManager{
    * Show the poster image
    * @returns {void}
    */
-  show(): void{
+  show(): void {
     Utils.Dom.setStyle(this._el, "display", "");
   }
 
@@ -74,7 +73,7 @@ class PosterManager{
    * Hide the poster image
    * @returns {void}
    */
-  hide(): void{
+  hide(): void {
     Utils.Dom.setStyle(this._el, "display", "none");
   }
 }

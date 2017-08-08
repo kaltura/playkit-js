@@ -1,5 +1,6 @@
 // @flow
 import State from "../../src/state/state";
+
 /**
  * Define a transition object.
  */

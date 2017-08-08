@@ -29,7 +29,7 @@ import './assets/style.css'
 const CONTAINER_CLASS_NAME: string = 'playkit-container';
 
 /**
-/**
+ /**
  * The player poster class name.
  * @type {string}
  * @const
@@ -134,6 +134,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _env: Object;
+
   /**
    * @param {string} targetId - The target div id to append the player.
    * @param {Object} config - The configuration for the player instance.
@@ -167,7 +168,7 @@ export default class Player extends FakeEventTarget {
     this._config = Utils.Object.mergeDeep(Utils.Object.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
     if (this._selectEngine()) {
       this._appendEngineEl();
-      this._posterManager.setSrc(config.metadata.poster);
+      this._posterManager.setSrc(this._config.metadata.poster);
       this._posterManager.show();
       this._attachMedia();
       this._maybeLoadPlugins(engine);
@@ -418,6 +419,7 @@ export default class Player extends FakeEventTarget {
     Utils.Dom.setAttribute(el, "id", Utils.Generator.uniqueId(5));
     Utils.Dom.setAttribute(el, "tabindex", '-1');
   }
+
   /**
    * Appends the poster element to the player's div container.
    * @private
@@ -430,6 +432,7 @@ export default class Player extends FakeEventTarget {
       Utils.Dom.appendChild(this._el, el);
     }
   }
+
   /**
    * Appends the engine's video element to the player's div container.
    * @private
@@ -455,18 +458,23 @@ export default class Player extends FakeEventTarget {
     return this._el;
   }
 
-  get dimensions(): Object{
+  /**
+   * Get the dimensions of the player.
+   * @returns {{width: number, height: number}} - The dimensions of the player.
+   * @public
+   */
+  get dimensions(): Object {
     return {
       width: this._el.clientWidth,
       height: this._el.clientHeight
-    }
+    };
   }
 
   /**
    * Get the poster source URL
    * @returns {string} - the poster image URL
    */
-  get poster(): string{
+  get poster(): string {
     return this._posterManager.src;
   }
 
