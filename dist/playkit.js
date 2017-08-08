@@ -87,7 +87,7 @@ exports.LOG_LEVEL = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jsLogger = __webpack_require__(20);
+var _jsLogger = __webpack_require__(21);
 
 var JsLogger = _interopRequireWildcard(_jsLogger);
 
@@ -273,156 +273,6 @@ exports.default = FakeEvent;
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * General track representation of the player.
- * @classdesc
- */
-var Track = function () {
-  _createClass(Track, [{
-    key: "id",
-
-
-    /**
-     * Getter for the track id.
-     * @public
-     * @returns {?string} - The track id.
-     */
-
-    /**
-     * The language of the track.
-     * @member
-     * @type {string}
-     * @private
-     */
-
-    /**
-     * The active mode of the track.
-     * @member
-     * @type {boolean}
-     * @private
-     */
-    get: function get() {
-      return this._id;
-    }
-
-    /**
-     * Getter for the active mode of the track.
-     * @public
-     * @returns {boolean} - The active mode of the track.
-     */
-
-    /**
-     * The index of the track.
-     * @member
-     * @type {number}
-     * @private
-     */
-
-    /**
-     * The label of the track.
-     * @member
-     * @type {string}
-     * @private
-     */
-
-    /**
-     * The id of the track.
-     * @member
-     * @type {string}
-     * @private
-     */
-
-  }, {
-    key: "active",
-    get: function get() {
-      return this._active;
-    }
-
-    /**
-     * Setter for the active mode of the track.
-     * @public
-     * @param {boolean} value - Whether the track is active or not.
-     */
-    ,
-    set: function set(value) {
-      this._active = value;
-    }
-
-    /**
-     * Getter for the label of the track.
-     * @public
-     * @returns {string} - The label of the track.
-     */
-
-  }, {
-    key: "label",
-    get: function get() {
-      return this._label;
-    }
-
-    /**
-     * Getter for the language of the track.
-     * @public
-     * @returns {string} - The language of the track.
-     */
-
-  }, {
-    key: "language",
-    get: function get() {
-      return this._language;
-    }
-
-    /**
-     * Getter for the index of the track.
-     * @public
-     * @returns {number} - The index of the track.
-     */
-
-  }, {
-    key: "index",
-    get: function get() {
-      return this._index;
-    }
-
-    /**
-     * @constructor
-     * @param {Object} settings - The track settings object.
-     */
-
-  }]);
-
-  function Track() {
-    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-    _classCallCheck(this, Track);
-
-    this._id = settings.id;
-    this._active = settings.active;
-    this._label = settings.label;
-    this._language = settings.language;
-    this._index = settings.index;
-  }
-
-  return Track;
-}();
-
-exports.default = Track;
-
-/***/ }),
-/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -696,6 +546,83 @@ var _Generator = {
 
 var _Dom = {
   /**
+   * Adds class name to an element
+   * @param {Element} element - an HTML element
+   * @param {string} className - a class name
+   * @returns {void}
+   */
+  addClassName: function addClassName(element, className) {
+    if (element.classList) {
+      element.classList.add(className);
+    } else {
+      if (!_Dom.hasClassName(element, className)) {
+        element.className += className;
+      }
+    }
+  },
+
+
+  /**
+   * Removes class name from an element
+   * @param {Element} element - an HTML element
+   * @param {string} className - a class name
+   * @returns {void}
+   */
+  removeClassName: function removeClassName(element, className) {
+    if (element.classList) {
+      element.classList.remove(className);
+    } else {
+      if (_Dom.hasClassName(element, className)) {
+        element.className = element.className.replace(new RegExp('(\\s|^)' + className + '(\\s|$)'), ' ').replace(/^\s+|\s+$/g, '');
+      }
+    }
+  },
+
+  /**
+   * Checks if an element has a class name
+   * @param {Element} element - an HTML element
+   * @param {string} className - a class name
+   * @returns {boolean} - weather an element contains a class name
+   */
+  hasClassName: function hasClassName(element, className) {
+    return element.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(element.className);
+  },
+
+  /**
+   * Add element attribute
+   * @param {Element} element - an HTML element
+   * @param {string} name - attribute name
+   * @param {string} value - attribute value
+   * @returns {void}
+   */
+  setAttribute: function setAttribute(element, name, value) {
+    element.setAttribute(name, value);
+  },
+
+  /**
+   * Remove element attribute
+   * @param {Element} element - an HTML element
+   * @param {string} name - attribute name
+   * @returns {void}
+   */
+  removeAttribute: function removeAttribute(element, name) {
+    element.removeAttribute(name);
+  },
+
+  /**
+   * Set element style
+   * @param {Element} element - an HTML element
+   * @param {string} name - style name
+   * @param {string} value - style value
+   * @returns {void}
+   */
+  setStyle: function setStyle(element, name, value) {
+    if (element.style.getPropertyValue(name) !== undefined) {
+      element.style.setProperty(name, value);
+    }
+  },
+
+  /**
    * Adds a node to the end of the list of children of a specified parent node.
    * @param {Element} parent - The parent node.
    * @param {Element} child - The child node.
@@ -703,6 +630,21 @@ var _Dom = {
    */
   appendChild: function appendChild(parent, child) {
     if (parent && child && parent.appendChild) {
+      parent.appendChild(child);
+    }
+  },
+
+
+  /**
+   * Prepend HTML element
+   * @param {HTMLElement} child - the child to prepend
+   * @param {HTMLElement} parent - the parent to preprend to
+   * @returns {void}
+   */
+  prependTo: function prependTo(child, parent) {
+    if (parent.firstChild) {
+      parent.insertBefore(child, parent.firstChild);
+    } else {
       parent.appendChild(child);
     }
   },
@@ -792,6 +734,156 @@ exports.Object = _Object;
 exports.Generator = _Generator;
 exports.Dom = _Dom;
 exports.Http = _Http;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * General track representation of the player.
+ * @classdesc
+ */
+var Track = function () {
+  _createClass(Track, [{
+    key: "id",
+
+
+    /**
+     * Getter for the track id.
+     * @public
+     * @returns {?string} - The track id.
+     */
+
+    /**
+     * The language of the track.
+     * @member
+     * @type {string}
+     * @private
+     */
+
+    /**
+     * The active mode of the track.
+     * @member
+     * @type {boolean}
+     * @private
+     */
+    get: function get() {
+      return this._id;
+    }
+
+    /**
+     * Getter for the active mode of the track.
+     * @public
+     * @returns {boolean} - The active mode of the track.
+     */
+
+    /**
+     * The index of the track.
+     * @member
+     * @type {number}
+     * @private
+     */
+
+    /**
+     * The label of the track.
+     * @member
+     * @type {string}
+     * @private
+     */
+
+    /**
+     * The id of the track.
+     * @member
+     * @type {string}
+     * @private
+     */
+
+  }, {
+    key: "active",
+    get: function get() {
+      return this._active;
+    }
+
+    /**
+     * Setter for the active mode of the track.
+     * @public
+     * @param {boolean} value - Whether the track is active or not.
+     */
+    ,
+    set: function set(value) {
+      this._active = value;
+    }
+
+    /**
+     * Getter for the label of the track.
+     * @public
+     * @returns {string} - The label of the track.
+     */
+
+  }, {
+    key: "label",
+    get: function get() {
+      return this._label;
+    }
+
+    /**
+     * Getter for the language of the track.
+     * @public
+     * @returns {string} - The language of the track.
+     */
+
+  }, {
+    key: "language",
+    get: function get() {
+      return this._language;
+    }
+
+    /**
+     * Getter for the index of the track.
+     * @public
+     * @returns {number} - The index of the track.
+     */
+
+  }, {
+    key: "index",
+    get: function get() {
+      return this._index;
+    }
+
+    /**
+     * @constructor
+     * @param {Object} settings - The track settings object.
+     */
+
+  }]);
+
+  function Track() {
+    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _classCallCheck(this, Track);
+
+    this._id = settings.id;
+    this._active = settings.active;
+    this._label = settings.label;
+    this._language = settings.language;
+    this._index = settings.index;
+  }
+
+  return Track;
+}();
+
+exports.default = Track;
 
 /***/ }),
 /* 4 */
@@ -1005,7 +1097,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.CUSTOM_EVENTS = exports.HTML5_EVENTS = exports.PLAYER_EVENTS = undefined;
 
-var _util = __webpack_require__(3);
+var _util = __webpack_require__(2);
 
 var Utils = _interopRequireWildcard(_util);
 
@@ -1229,7 +1321,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _track = __webpack_require__(2);
+var _track = __webpack_require__(3);
 
 var _track2 = _interopRequireDefault(_track);
 
@@ -1338,7 +1430,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _track = __webpack_require__(2);
+var _track = __webpack_require__(3);
 
 var _track2 = _interopRequireDefault(_track);
 
@@ -1381,7 +1473,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _track = __webpack_require__(2);
+var _track = __webpack_require__(3);
 
 var _track2 = _interopRequireDefault(_track);
 
@@ -1463,6 +1555,10 @@ var _eventManager = __webpack_require__(4);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
+var _posterManager = __webpack_require__(20);
+
+var _posterManager2 = _interopRequireDefault(_posterManager);
+
 var _fakeEvent = __webpack_require__(1);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
@@ -1477,7 +1573,7 @@ var _stateTypes = __webpack_require__(15);
 
 var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
-var _util = __webpack_require__(3);
+var _util = __webpack_require__(2);
 
 var Utils = _interopRequireWildcard(_util);
 
@@ -1485,7 +1581,7 @@ var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _html = __webpack_require__(21);
+var _html = __webpack_require__(22);
 
 var _html2 = _interopRequireDefault(_html);
 
@@ -1497,15 +1593,15 @@ var _basePlugin = __webpack_require__(13);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
-var _stateManager = __webpack_require__(24);
+var _stateManager = __webpack_require__(25);
 
 var _stateManager2 = _interopRequireDefault(_stateManager);
 
-var _trackTypes = __webpack_require__(26);
+var _trackTypes = __webpack_require__(27);
 
 var _trackTypes2 = _interopRequireDefault(_trackTypes);
 
-var _track = __webpack_require__(2);
+var _track = __webpack_require__(3);
 
 var _track2 = _interopRequireDefault(_track);
 
@@ -1521,19 +1617,19 @@ var _textTrack = __webpack_require__(8);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _playbackMiddleware = __webpack_require__(27);
+var _playbackMiddleware = __webpack_require__(28);
 
 var _playbackMiddleware2 = _interopRequireDefault(_playbackMiddleware);
 
-var _playerConfig = __webpack_require__(29);
+var _playerConfig = __webpack_require__(30);
 
 var _playerConfig2 = _interopRequireDefault(_playerConfig);
 
-var _uaParserJs = __webpack_require__(30);
+var _uaParserJs = __webpack_require__(31);
 
 var _uaParserJs2 = _interopRequireDefault(_uaParserJs);
 
-__webpack_require__(32);
+__webpack_require__(33);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1551,6 +1647,21 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * @const
  */
 var CONTAINER_CLASS_NAME = 'playkit-container';
+
+/**
+ /**
+ * The player poster class name.
+ * @type {string}
+ * @const
+ */
+var POSTER_CLASS_NAME = 'playkit-poster';
+
+/**
+ * The engine class name.
+ * @type {string}
+ * @const
+ */
+var ENGINE_CLASS_NAME = 'playkit-engine';
 
 /**
  * The HTML5 player class.
@@ -1575,6 +1686,12 @@ var Player = function (_FakeEventTarget) {
   /**
    * The event manager of the player.
    * @type {EventManager}
+   * @private
+   */
+
+  /**
+   * The poster manager of the player.
+   * @type {PosterManager}
    * @private
    */
 
@@ -1646,13 +1763,15 @@ var Player = function (_FakeEventTarget) {
     _this._tracks = [];
     _this._config = {};
     _this._firstPlay = true;
+    _this._eventManager = new _eventManager2.default();
+    _this._posterManager = new _posterManager2.default();
     _this._stateManager = new _stateManager2.default(_this);
     _this._pluginManager = new _pluginManager2.default();
-    _this._eventManager = new _eventManager2.default();
     _this._playbackMiddleware = new _playbackMiddleware2.default();
     _this._env = new _uaParserJs2.default().getResult();
     _this._createReadyPromise();
     _this._appendPlayerContainer(targetId);
+    _this._appendPosterEl();
     _this.configure(config);
     return _this;
   }
@@ -1679,6 +1798,8 @@ var Player = function (_FakeEventTarget) {
       this._config = Utils.Object.mergeDeep(Utils.Object.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
       if (this._selectEngine()) {
         this._appendEngineEl();
+        this._posterManager.setSrc(this._config.metadata.poster);
+        this._posterManager.show();
         this._attachMedia();
         this._maybeLoadPlugins(engine);
         this._handlePlaybackConfig();
@@ -2001,10 +2122,26 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_createPlayerContainer',
     value: function _createPlayerContainer() {
-      this._el = Utils.Dom.createElement("div");
-      this._el.id = Utils.Generator.uniqueId(5);
-      this._el.className = CONTAINER_CLASS_NAME;
-      this._el.setAttribute('tabindex', '-1');
+      var el = this._el = Utils.Dom.createElement("div");
+      Utils.Dom.addClassName(el, CONTAINER_CLASS_NAME);
+      Utils.Dom.setAttribute(el, "id", Utils.Generator.uniqueId(5));
+      Utils.Dom.setAttribute(el, "tabindex", '-1');
+    }
+
+    /**
+     * Appends the poster element to the player's div container.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_appendPosterEl',
+    value: function _appendPosterEl() {
+      if (this._el != null) {
+        var el = this._posterManager.getElement();
+        Utils.Dom.addClassName(el, POSTER_CLASS_NAME);
+        Utils.Dom.appendChild(this._el, el);
+      }
     }
 
     /**
@@ -2017,7 +2154,12 @@ var Player = function (_FakeEventTarget) {
     key: '_appendEngineEl',
     value: function _appendEngineEl() {
       if (this._el != null && this._engine != null) {
-        Utils.Dom.appendChild(this._el, this._engine.getVideoElement());
+        var engineEl = this._engine.getVideoElement();
+        var classname = '' + ENGINE_CLASS_NAME;
+        Utils.Dom.addClassName(engineEl, classname);
+        var classnameWithId = ENGINE_CLASS_NAME + '-' + this._engine.id;
+        Utils.Dom.addClassName(engineEl, classnameWithId);
+        Utils.Dom.prependTo(engineEl, this._el);
       }
     }
 
@@ -2034,15 +2176,22 @@ var Player = function (_FakeEventTarget) {
     }
 
     /**
+     * Get the dimensions of the player.
+     * @returns {{width: number, height: number}} - The dimensions of the player.
+     * @public
+     */
+
+  }, {
+    key: 'getTracks',
+
+
+    /**
      * Returns the tracks according to the filter. if no filter given returns the all tracks.
      * @function getTracks
      * @param {string} [type] - a tracks filter, should be 'video', 'audio' or 'text'.
      * @returns {Array<Track>} - The parsed tracks.
      * @public
      */
-
-  }, {
-    key: 'getTracks',
     value: function getTracks(type) {
       return this._getTracksByType(type);
     }
@@ -2202,6 +2351,8 @@ var Player = function (_FakeEventTarget) {
       if (this._firstPlay) {
         this._firstPlay = false;
         this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.FIRST_PLAY));
+
+        this._posterManager.hide();
       }
     }
 
@@ -2369,6 +2520,25 @@ var Player = function (_FakeEventTarget) {
      * @param {boolean} playsinline - Whether the video should plays in line.
      */
 
+  }, {
+    key: 'dimensions',
+    get: function get() {
+      return {
+        width: this._el.clientWidth,
+        height: this._el.clientHeight
+      };
+    }
+
+    /**
+     * Get the poster source URL
+     * @returns {string} - the poster image URL
+     */
+
+  }, {
+    key: 'poster',
+    get: function get() {
+      return this._posterManager.src;
+    }
   }, {
     key: 'env',
     get: function get() {
@@ -3051,7 +3221,7 @@ var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _util = __webpack_require__(3);
+var _util = __webpack_require__(2);
 
 var Utils = _interopRequireWildcard(_util);
 
@@ -3329,7 +3499,7 @@ exports.registerMediaSourceAdapter = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nativeAdapter = __webpack_require__(22);
+var _nativeAdapter = __webpack_require__(23);
 
 var _nativeAdapter2 = _interopRequireDefault(_nativeAdapter);
 
@@ -3511,7 +3681,7 @@ var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _track = __webpack_require__(2);
+var _track = __webpack_require__(3);
 
 var _track2 = _interopRequireDefault(_track);
 
@@ -3925,7 +4095,7 @@ var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _package = __webpack_require__(37);
+var _package = __webpack_require__(38);
 
 var packageData = _interopRequireWildcard(_package);
 
@@ -3945,7 +4115,7 @@ var _basePlugin = __webpack_require__(13);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
-var _track = __webpack_require__(2);
+var _track = __webpack_require__(3);
 
 var _track2 = _interopRequireDefault(_track);
 
@@ -3961,7 +4131,7 @@ var _textTrack = __webpack_require__(8);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _util = __webpack_require__(3);
+var _util = __webpack_require__(2);
 
 var Utils = _interopRequireWildcard(_util);
 
@@ -4020,6 +4190,127 @@ exports.default = loadPlayer;
 
 /***/ }),
 /* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _util = __webpack_require__(2);
+
+var Utils = _interopRequireWildcard(_util);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var PosterManager = function () {
+  /**
+   * Poster image URL
+   * @type {string}
+   * @private
+   */
+  function PosterManager() {
+    _classCallCheck(this, PosterManager);
+
+    this._createEl();
+  }
+
+  /**
+   * Set the poster source URL
+   * @param {string} posterUrl - the poster image URL
+   * @returns {void}
+   */
+
+  /**
+   * The poster HTML Div element.
+   * @type {HTMLDivElement}
+   * @private
+   */
+
+
+  _createClass(PosterManager, [{
+    key: "setSrc",
+    value: function setSrc(posterUrl) {
+      if (posterUrl) {
+        this._posterUrl = posterUrl;
+        this._el.style.backgroundImage = "url(\"" + posterUrl + "\")";
+      }
+    }
+
+    /**
+     * Get the poster source URL
+     * @returns {string} - the poster image URL
+     */
+
+  }, {
+    key: "getElement",
+
+
+    /**
+     * Get the poster HTML Div element
+     * @returns {HTMLDivElement} - Poster HTML Dom element
+     */
+    value: function getElement() {
+      return this._el;
+    }
+
+    /**
+     * Create the HTML Div element of the poster
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: "_createEl",
+    value: function _createEl() {
+      if (this._el === undefined) {
+        var el = this._el = Utils.Dom.createElement("div");
+        Utils.Dom.setAttribute(el, "id", Utils.Generator.uniqueId(5));
+        Utils.Dom.setAttribute(el, "tabindex", '-1');
+      }
+    }
+
+    /**
+     * Show the poster image
+     * @returns {void}
+     */
+
+  }, {
+    key: "show",
+    value: function show() {
+      Utils.Dom.setStyle(this._el, "display", "");
+    }
+
+    /**
+     * Hide the poster image
+     * @returns {void}
+     */
+
+  }, {
+    key: "hide",
+    value: function hide() {
+      Utils.Dom.setStyle(this._el, "display", "none");
+    }
+  }, {
+    key: "src",
+    get: function get() {
+      return this._posterUrl;
+    }
+  }]);
+
+  return PosterManager;
+}();
+
+exports.default = PosterManager;
+
+/***/ }),
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -4286,7 +4577,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4328,7 +4619,7 @@ var _textTrack = __webpack_require__(8);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _util = __webpack_require__(3);
+var _util = __webpack_require__(2);
 
 var Utils = _interopRequireWildcard(_util);
 
@@ -4343,17 +4634,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 /**
- * The engine video element class name.
- * @type {string}
- * @const
- */
-var VIDEO_ELEMENT_CLASS_NAME = 'playkit-engine-html5';
-
-/**
  * Html5 engine for playback.
  * @classdesc
  */
-
 var Html5 = function (_FakeEventTarget) {
   _inherits(Html5, _FakeEventTarget);
 
@@ -4540,7 +4823,6 @@ var Html5 = function (_FakeEventTarget) {
     value: function _createVideoElement() {
       this._el = Utils.Dom.createElement("video");
       this._el.id = Utils.Generator.uniqueId(5);
-      this._el.className = VIDEO_ELEMENT_CLASS_NAME;
       this._el.controls = false;
     }
 
@@ -5159,7 +5441,7 @@ Html5.id = "html5";
 exports.default = Html5;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5179,7 +5461,7 @@ var _eventManager2 = _interopRequireDefault(_eventManager);
 
 var _events = __webpack_require__(5);
 
-var _track = __webpack_require__(2);
+var _track = __webpack_require__(3);
 
 var _track2 = _interopRequireDefault(_track);
 
@@ -5199,9 +5481,9 @@ var _baseMediaSourceAdapter = __webpack_require__(17);
 
 var _baseMediaSourceAdapter2 = _interopRequireDefault(_baseMediaSourceAdapter);
 
-var _resolution = __webpack_require__(23);
+var _resolution = __webpack_require__(24);
 
-var _util = __webpack_require__(3);
+var _util = __webpack_require__(2);
 
 var Utils = _interopRequireWildcard(_util);
 
@@ -5762,7 +6044,7 @@ NativeAdapter._logger = _baseMediaSourceAdapter2.default.getLogger(NativeAdapter
 exports.default = NativeAdapter;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5888,7 +6170,7 @@ function getSuitableSourceForResolution(tracks, width, height) {
 exports.getSuitableSourceForResolution = getSuitableSourceForResolution;
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5908,7 +6190,7 @@ var _eventManager = __webpack_require__(4);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _state = __webpack_require__(25);
+var _state = __webpack_require__(26);
 
 var _state2 = _interopRequireDefault(_state);
 
@@ -5935,11 +6217,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /**
  * This class responsible to manage all the state machine of the player.
  * @classdesc
- */
-
-
-/**
- * Define a transition object.
  */
 var StateManager = function () {
 
@@ -6188,7 +6465,7 @@ var StateManager = function () {
 exports.default = StateManager;
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6270,7 +6547,7 @@ var State = function () {
 exports.default = State;
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6288,7 +6565,7 @@ var TRACK_TYPES = {
 exports.default = TRACK_TYPES;
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6300,7 +6577,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _middleware = __webpack_require__(28);
+var _middleware = __webpack_require__(29);
 
 var _middleware2 = _interopRequireDefault(_middleware);
 
@@ -6388,7 +6665,7 @@ PlaybackMiddleware.Actions = {
 exports.default = PlaybackMiddleware;
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6521,13 +6798,13 @@ var Middleware = function () {
 exports.default = Middleware;
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports) {
 
-module.exports = {"playback":{"playsinline":false,"preload":"none","autoplay":false,"muted":false,"options":{"html5":{"hls":{},"dash":{}}},"streamPriority":[{"engine":"html5","format":"hls"},{"engine":"html5","format":"dash"},{"engine":"html5","format":"progressive"}]}}
+module.exports = {"metadata":{"poster":""},"playback":{"playsinline":false,"preload":"none","autoplay":false,"muted":false,"options":{"html5":{"hls":{},"dash":{}}},"streamPriority":[{"engine":"html5","format":"hls"},{"engine":"html5","format":"dash"},{"engine":"html5","format":"progressive"}]}}
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -7531,7 +7808,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         exports.UAParser = UAParser;
     } else {
         // requirejs env (optional)
-        if ("function" === FUNC_TYPE && __webpack_require__(31)) {
+        if ("function" === FUNC_TYPE && __webpack_require__(32)) {
             !(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
                 return UAParser;
             }.call(exports, __webpack_require__, exports, module),
@@ -7567,7 +7844,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
@@ -7576,13 +7853,13 @@ module.exports = __webpack_amd_options__;
 /* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(33);
+var content = __webpack_require__(34);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -7590,7 +7867,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(35)(content, options);
+var update = __webpack_require__(36)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -7607,21 +7884,21 @@ if(false) {
 }
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(34)(undefined);
+exports = module.exports = __webpack_require__(35)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, ".playkit-container {\n  position: relative;\n  width: 100%;\n  height: 100%;\n  color: #fff;\n  outline: none;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n  -webkit-tap-highlight-color: transparent;\n}\n\n*[class^=\"playkit-engine-\"] {\n  width: 100%;\n  height: 100%;\n}\n", ""]);
+exports.push([module.i, ".playkit-container {\n  position: relative;\n  width: 100%;\n  height: 100%;\n  color: #fff;\n  outline: none;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n  -webkit-tap-highlight-color: transparent;\n}\n\n.playkit-engine {\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  object-fit: contain;\n}\n\n.playkit-engine video::-webkit-media-controls-panel,\n.playkit-engine video::-webkit-media-controls-panel-container,\n.playkit-engine video::-webkit-media-controls-start-playback-button,\n.playkit-engine video::-webkit-media-controls-play-button {\n  display: none;\n  -webkit-appearance: none\n}\n\n.playkit-poster {\n  position: absolute;\n  display: block;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  background-size: contain;\n  background-position: center center;\n  background-repeat: no-repeat;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports) {
 
 /*
@@ -7703,7 +7980,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -7749,7 +8026,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(36);
+var	fixUrls = __webpack_require__(37);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -8062,7 +8339,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports) {
 
 
@@ -8157,7 +8434,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports) {
 
 module.exports = {"name":"playkit-js","version":"0.3.0","main":"dist/playkit.js","scripts":{"clean":"rm -rf ./dist","prebuild":"npm run clean","build:prod":"NODE_ENV=production webpack","build":"webpack","dev":"webpack --progress --colors --watch","test":"NODE_ENV=test karma start --color","test:chrome":"NODE_ENV=test karma start --color --browsers Chrome","test:chrome:dots":"NODE_ENV=test karma start --color --browsers Chrome --reporters dots","test:firefox":"NODE_ENV=test karma start --color --browsers Firefox","test:safari":"NODE_ENV=test karma start --color --browsers Safari","test:watch":"NODE_ENV=test karma start --color --auto-watch","start":"webpack-dev-server","release":"npm run build:prod && npm run commit:dist && standard-version","publish":"git push --follow-tags --no-verify origin develop","eslint":"eslint . --color","flow":"flow check","eslint:flow:test":"npm run eslint && npm run flow && npm run test","commit:dist":"git add --all dist && (git commit -m 'chore: update dist' || exit 0)","prepush-msg:build":"echo '\nRunning build before push...\n' && exit 0","prepush-msg:dist":"echo '\nAdding dist files to a seperate commit...\n' && exit 0","prepush-msg:done":"echo '\nPre push tasks are done.\n' && exit 0"},"pre-push":["prepush-msg:build","prebuild","build","build:prod","prepush-msg:dist","commit:dist","prepush-msg:done"],"devDependencies":{"babel-cli":"^6.18.0","babel-core":"^6.18.2","babel-eslint":"^7.1.1","babel-loader":"^6.2.7","babel-plugin-istanbul":"^4.0.0","babel-plugin-transform-class-properties":"^6.22.0","babel-plugin-transform-flow-strip-types":"^6.22.0","babel-preset-es2015":"^6.18.0","babel-register":"^6.23.0","chai":"^3.5.0","cross-env":"^3.1.4","css-loader":"^0.28.4","eslint":"^3.10.0","eslint-loader":"^1.6.1","eslint-plugin-flowtype":"^2.30.0","eslint-plugin-import":"^2.2.0","eslint-plugin-mocha-no-only":"^0.0.5","flow-bin":"latest","istanbul":"^0.4.5","karma":"^1.5.0","karma-chai":"^0.1.0","karma-chrome-launcher":"^2.0.0","karma-cli":"^1.0.1","karma-coverage":"^1.1.1","karma-firefox-launcher":"^1.0.1","karma-ie-launcher":"^1.0.0","karma-mocha":"^1.3.0","karma-safari-launcher":"^1.0.0","karma-sourcemap-loader":"^0.3.7","karma-webpack":"^2.0.2","mocha":"^3.2.0","mocha-cli":"^1.0.1","pre-push":"^0.1.1","sinon":"^2.0.0","sinon-chai":"^2.8.0","standard-version":"^4.0.0","style-loader":"^0.18.2","uglifyjs-webpack-plugin":"^0.4.3","webpack":"latest","webpack-dev-server":"latest"},"repository":{"type":"git","url":"https://github.com/kaltura/playkit-js"},"keywords":["kaltura","player","html5 player"],"license":"AGPLV3","bugs":{"url":"https://github.com/kaltura/playkit-js/issues"},"homepage":"https://github.com/kaltura/playkit-js","dependencies":{"js-logger":"^1.3.0","ua-parser-js":"^0.7.13"}}
