@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.4.0"></a>
+# [0.4.0](https://github.com/kaltura/playkit-js/compare/v0.3.0...v0.4.0) (2017-08-08)
+
+
+### Features
+
+* **poster:** add poster manager ([#94](https://github.com/kaltura/playkit-js/issues/94)) ([98952e6](https://github.com/kaltura/playkit-js/commit/98952e6))
+
+
+
 <a name="0.3.0"></a>
 # 0.3.0 (2017-07-30)
 
