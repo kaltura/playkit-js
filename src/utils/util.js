@@ -246,7 +246,9 @@ const _Dom = {
     if (element.classList){
       element.classList.add(className);
     } else {
-      //TODO handle ie9
+      if(!_Dom.hasClassName(element, className)) {
+        element.className += className;
+      }
     }
   },
 
@@ -260,8 +262,19 @@ const _Dom = {
     if (element.classList){
       element.classList.remove(className);
     } else {
-      //TODO handle ie9
+      if (_Dom.hasClassName(element, className)) {
+        element.className = element.className.replace(new RegExp('(\\s|^)'+className+'(\\s|$)'),' ').replace(/^\s+|\s+$/g, '');
+      }
     }
+  },
+  /**
+   * Checks if an element has a class name
+   * @param {Element} element - an HTML element
+   * @param {string} className - a class name
+   * @returns {boolean} - weather an element contains a class name
+   */
+  hasClassName(element: HTMLElement, className: string){
+    return element.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(element.className);
   },
   /**
    * Add element attribute
