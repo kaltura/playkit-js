@@ -10,13 +10,6 @@ import TextTrack from '../../track/text-track'
 import * as Utils from '../../utils/util'
 
 /**
- * The engine video element class name.
- * @type {string}
- * @const
- */
-const VIDEO_ELEMENT_CLASS_NAME: string = 'playkit-engine-html5';
-
-/**
  * Html5 engine for playback.
  * @classdesc
  */
@@ -162,7 +155,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _createVideoElement(): void {
     this._el = Utils.Dom.createElement("video");
     this._el.id = Utils.Generator.uniqueId(5);
-    this._el.className = VIDEO_ELEMENT_CLASS_NAME;
     this._el.controls = false;
   }
 
