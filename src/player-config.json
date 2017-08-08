@@ -4,6 +4,9 @@
     "preload": "none",
     "autoplay": false,
     "muted": false,
+    "metadata":{
+      "poster": ""
+    },
     "options": {
       "html5": {
         "hls": {

@@ -167,7 +167,7 @@ export default class Player extends FakeEventTarget {
     this._config = Utils.Object.mergeDeep(Utils.Object.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
     if (this._selectEngine()) {
       this._appendEngineEl();
-      this._posterManager.setSrc(config.metadata && config.metadata.poster);
+      this._posterManager.setSrc(config.metadata.poster);
       this._posterManager.show();
       this._attachMedia();
       this._maybeLoadPlugins(engine);

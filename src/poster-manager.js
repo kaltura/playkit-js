@@ -26,7 +26,7 @@ class PosterManager{
    * @returns {void}
    */
   setSrc(posterUrl: ?string): void{
-    if (posterUrl !== undefined && posterUrl !== null) {
+    if (posterUrl) {
     this._posterUrl = posterUrl;
       this._el.style.backgroundImage = `url("${posterUrl}")`;
     }
