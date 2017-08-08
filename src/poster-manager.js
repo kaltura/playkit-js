@@ -10,7 +10,7 @@ class PosterManager{
    */
   _posterUrl: string;
   /**
-   * The environment(os,device,browser) object of the player.
+   * The poster HTML Div element.
    * @type {HTMLDivElement}
    * @private
    */
@@ -25,9 +25,9 @@ class PosterManager{
    * @param {string} posterUrl - the poster image URL
    * @returns {void}
    */
-  setSrc(posterUrl: string): void{
+  setSrc(posterUrl: ?string): void{
+    if (posterUrl !== undefined && posterUrl !== null) {
     this._posterUrl = posterUrl;
-    if (posterUrl !== undefined) {
       this._el.style.backgroundImage = `url("${posterUrl}")`;
     }
   }
