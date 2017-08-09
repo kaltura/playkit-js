@@ -1,5 +1,5 @@
 // @flow
-import * as Utils from './utils/util'
+import * as Utils from './util'
 
 class PosterManager {
   /**

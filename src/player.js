@@ -1,6 +1,6 @@
 //@flow
 import EventManager from './event/event-manager'
-import PosterManager from './poster-manager'
+import PosterManager from './utils/poster-manager'
 import FakeEvent from './event/fake-event'
 import FakeEventTarget from './event/fake-event-target'
 import {PLAYER_EVENTS as PlayerEvents, HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from './event/events'
