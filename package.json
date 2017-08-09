@@ -15,25 +15,18 @@
     "test:safari": "NODE_ENV=test karma start --color --browsers Safari",
     "test:watch": "NODE_ENV=test karma start --color --auto-watch",
     "start": "webpack-dev-server",
-    "release": "npm run build:prod && npm run commit:dist && standard-version",
-    "publish": "git push --follow-tags --no-verify origin develop",
+    "release": "standard-version",
+    "publish": "git push --follow-tags --no-verify origin master",
     "eslint": "eslint . --color",
     "flow": "flow check",
     "eslint:flow:test": "npm run eslint && npm run flow && npm run test",
-    "commit:dist": "git add --all dist && (git commit -m 'chore: update dist' || exit 0)",
-    "prepush-msg:build": "echo '\nRunning build before push...\n' && exit 0",
-    "prepush-msg:dist": "echo '\nAdding dist files to a seperate commit...\n' && exit 0",
-    "prepush-msg:done": "echo '\nPre push tasks are done.\n' && exit 0"
+    "commit:dist": "git add --force --all dist && (git commit -m 'chore: update dist' || exit 0)"
   },
-  "pre-push": [
-    "prepush-msg:build",
-    "prebuild",
-    "build",
-    "build:prod",
-    "prepush-msg:dist",
-    "commit:dist",
-    "prepush-msg:done"
-  ],
+  "standard-version": {
+    "scripts": {
+      "postbump": "yarn run build && yarn run build:prod && npm run commit:dist"
+    }
+  },
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-core": "^6.18.2",
