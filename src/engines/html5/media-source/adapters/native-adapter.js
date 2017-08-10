@@ -144,6 +144,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         if (startTime) {
           this._videoElement.currentTime = startTime;
         }
+        this._videoElement.load();
       });
     }
     return this._loadPromise;
