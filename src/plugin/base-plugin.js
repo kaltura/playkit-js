@@ -83,7 +83,7 @@ export default class BasePlugin implements IPlugin {
     this.name = name;
     this.player = player;
     this.eventManager = new EventManager();
-    this.logger = LoggerFactory.getLogger(this.name);
+    this.logger = LoggerFactory.getLogger(Utils.String.capitlize(this.name));
     this.config = {};
     Utils.Object.mergeDeep(this.config, this.constructor.defaultConfig, config);
   }
