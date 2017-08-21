@@ -126,7 +126,7 @@ export default class StateManager {
         this._dispatchEvent();
       },
       [Html5Events.SEEKED]: () => {
-        if (this._prevState.type === PlayerStates.PLAYING) {
+        if (this._prevState && this._prevState.type === PlayerStates.PLAYING) {
           this._updateState(PlayerStates.PLAYING);
           this._dispatchEvent();
         }
