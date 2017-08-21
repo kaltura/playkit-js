@@ -183,7 +183,7 @@ describe("StateManager.Transitions:PAUSED", () => {
   });
 });
 
-describe("StateManager.Transitions:BUFFERING", () => {
+describe.only("StateManager.Transitions:BUFFERING", () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
     sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function () {
@@ -204,6 +204,17 @@ describe("StateManager.Transitions:BUFFERING", () => {
   it('should handle transition from buffering to paused', () => {
     stateManager._doTransition({type: Html5Events.PAUSE});
     stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
+  });
+
+  it('should handle transition from buffering to playing on seeked while playing', () => {
+    stateManager._doTransition({type: Html5Events.PLAYING});
+    stateManager._doTransition({type: Html5Events.SEEKED});
+    stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+  });
+
+  it('shouldn\'t handle transition from buffering on seeked not while playing', () => {
+    stateManager._doTransition({type: Html5Events.SEEKED});
+    stateManager.currentState.type.should.equal(PlayerStates.BUFFERING);
   });
 
   it('shouldn\'t handle transition from buffering because of unregistered event', () => {
