@@ -268,7 +268,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   play(): void {
-    return this._el.play();
+    this._el.play();
   }
 
   /**
