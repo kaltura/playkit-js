@@ -183,7 +183,7 @@ describe("StateManager.Transitions:PAUSED", () => {
   });
 });
 
-describe.only("StateManager.Transitions:BUFFERING", () => {
+describe("StateManager.Transitions:BUFFERING", () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
     sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function () {
