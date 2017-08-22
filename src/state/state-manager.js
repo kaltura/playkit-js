@@ -124,6 +124,12 @@ export default class StateManager {
       [Html5Events.PAUSE]: () => {
         this._updateState(PlayerStates.PAUSED);
         this._dispatchEvent();
+      },
+      [Html5Events.SEEKED]: () => {
+        if (this._prevState && this._prevState.type === PlayerStates.PLAYING) {
+          this._updateState(PlayerStates.PLAYING);
+          this._dispatchEvent();
+        }
       }
     }
   };
@@ -156,6 +162,7 @@ export default class StateManager {
     this._eventManager.listen(this._player, Html5Events.LOADED_METADATA, this._doTransition.bind(this));
     this._eventManager.listen(this._player, Html5Events.PAUSE, this._doTransition.bind(this));
     this._eventManager.listen(this._player, Html5Events.WAITING, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, Html5Events.SEEKED, this._doTransition.bind(this));
   }
 
   /**
@@ -165,7 +172,7 @@ export default class StateManager {
    * @returns {void}
    */
   _doTransition(event: FakeEvent): void {
-    this._logger.debug('Do transition request', event);
+    this._logger.debug('Do transition request', event.type);
     let transition = this._transitions[this._curState.type];
     if (typeof transition[event.type] === 'function') {
       transition[event.type]();

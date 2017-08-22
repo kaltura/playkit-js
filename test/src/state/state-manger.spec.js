@@ -206,6 +206,17 @@ describe("StateManager.Transitions:BUFFERING", () => {
     stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
   });
 
+  it('should handle transition from buffering to playing on seeked while playing', () => {
+    stateManager._doTransition({type: Html5Events.PLAYING});
+    stateManager._doTransition({type: Html5Events.SEEKED});
+    stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+  });
+
+  it('shouldn\'t handle transition from buffering on seeked not while playing', () => {
+    stateManager._doTransition({type: Html5Events.SEEKED});
+    stateManager.currentState.type.should.equal(PlayerStates.BUFFERING);
+  });
+
   it('shouldn\'t handle transition from buffering because of unregistered event', () => {
     stateManager._doTransition({type: Html5Events.ERROR});
     stateManager.currentState.type.should.equal(PlayerStates.BUFFERING);
