@@ -12,16 +12,13 @@ import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
 import * as Utils from './utils/util'
-import UAParser from 'ua-parser-js'
+import Env from './utils/env'
 
 // Playkit version
 const VERSION = packageData.version;
 
 // Playkit name
 const PLAYER_NAME = 'kaltura-playkit-js';
-
-// UAParser instance
-const Env = new UAParser().getResult();
 
 LoggerFactory.getLogger().log("%c Playkit " + VERSION, "color: #3399ff; font-size: large");
 LoggerFactory.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: #3399ff;");

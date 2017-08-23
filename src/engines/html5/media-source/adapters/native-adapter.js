@@ -8,6 +8,7 @@ import TextTrack from '../../../../track/text-track'
 import BaseMediaSourceAdapter from '../base-media-source-adapter'
 import {getSuitableSourceForResolution} from '../../../../utils/resolution'
 import * as Utils from '../../../../utils/util'
+import FairPlayDrm from './fairplay-drm'
 
 /**
  * An illustration of media source extension for progressive download
@@ -65,6 +66,19 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
+   * Checks if NativeAdapter can play a given drm data.
+   * @function canPlayDrm
+   * @param {Array<Object>} drmData - The drm data to check.
+   * @returns {boolean} - Whether the native adapter can play a specific drm data.
+   * @static
+   */
+  static canPlayDrm(drmData: Array<Object>): boolean {
+    let canPlayDrm = FairPlayDrm.canPlayDrm(drmData);
+    NativeAdapter._logger.debug('canPlayDrm result is ' + canPlayDrm.toString());
+    return canPlayDrm;
+  }
+
+  /**
    * Factory method to create media source adapter.
    * @function createAdapter
    * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with.
@@ -87,7 +101,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     NativeAdapter._logger.debug('Creating adapter');
     super(videoElement, source);
     this._eventManager = new EventManager();
+    this._maybeSetDrmPlayback();
     this._progressiveSources = config.sources.progressive;
+  }
+
+  _maybeSetDrmPlayback(): void {
+    if (this._sourceObj && this._sourceObj.drmData) {
+      this._eventManager.listen(this._videoElement, FairPlayDrm.WebkitEvents.NEED_KEY, FairPlayDrm.onWebkitNeedKey.bind(null, this._sourceObj.drmData), false);
+    }
   }
 
   /**
@@ -157,6 +178,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   destroy(): void {
     NativeAdapter._logger.debug('destroy');
+    FairPlayDrm.destroy();
     super.destroy();
     this._eventManager.destroy();
     this._loadPromise = null;
