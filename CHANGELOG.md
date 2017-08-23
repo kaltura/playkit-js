@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.4.1"></a>
+## [0.4.1](https://github.com/kaltura/playkit-js/compare/v0.4.0...v0.4.1) (2017-08-23)
+
+
+### Bug Fixes
+
+* flow error on play ([#99](https://github.com/kaltura/playkit-js/issues/99)) ([0233c5a](https://github.com/kaltura/playkit-js/commit/0233c5a))
+* **FEC-7040, FEC-7016, FEC-6946:** move from buffering to playing on seeked ([#100](https://github.com/kaltura/playkit-js/issues/100)) ([22b7c4d](https://github.com/kaltura/playkit-js/commit/22b7c4d))
+
+
+
 <a name="0.4.0"></a>
 # [0.4.0](https://github.com/kaltura/playkit-js/compare/v0.3.0...v0.4.0) (2017-08-08)
 
