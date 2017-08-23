@@ -63,7 +63,7 @@
     "pre-push": "^0.1.1",
     "sinon": "^2.0.0",
     "sinon-chai": "^2.8.0",
-    "standard-version": "^4.0.0",
+    "standard-version": "^4.2.0",
     "style-loader": "^0.18.2",
     "uglifyjs-webpack-plugin": "^0.4.3",
     "webpack": "latest",
