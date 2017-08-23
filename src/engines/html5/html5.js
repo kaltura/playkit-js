@@ -62,6 +62,17 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Checks if the engine can play a given drm data.
+   * @param drmData {Object} - The drm data to check.
+   * @returns {boolean} - Whether the engine can play the drm data.
+   * @public
+   * @static
+   */
+  static canPlayDrm(drmData: Object): boolean {
+    return MediaSourceProvider.canPlayDrm(drmData);
+  }
+
+  /**
    * @constructor
    * @param {Source} source - The selected source object.
    * @param {Object} config - The player configuration.

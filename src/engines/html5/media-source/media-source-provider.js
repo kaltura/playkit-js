@@ -82,6 +82,19 @@ export default class MediaSourceProvider {
   }
 
   /**
+   * Checks if a media source adapter can play given drm data.
+   * @param drmData {Object} - The drm data.
+   * @static
+   * @returns {boolean} - Whether the media source adapter can play the drm data.
+   */
+  static canPlayDrm(drmData: Object): boolean {
+    if (MediaSourceProvider._selectedAdapter) {
+      return MediaSourceProvider._selectedAdapter.canPlayDrm(drmData);
+    }
+    return false;
+  }
+
+  /**
    * Get the appropriate media source adapter to the video source.
    * @function getMediaSourceAdapter
    * @param {HTMLVideoElement} videoElement - The video element which requires adapter for a given mimeType.

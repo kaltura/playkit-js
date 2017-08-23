@@ -7,6 +7,7 @@ declare interface IEngine {
   static id: string;
   static createEngine(source: Source, config: Object): IEngine;
   static canPlayType(mimeType: string): boolean;
+  static canPlayDrm(drmData: Object): boolean;
   destroy(): void;
   attach(): void;
   detach(): void;

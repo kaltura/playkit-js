@@ -12,15 +12,19 @@ import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
 import * as Utils from './utils/util'
+import UAParser from 'ua-parser-js'
 
 // Playkit version
-let VERSION = packageData.version;
+const VERSION = packageData.version;
 
 // Playkit name
-let PLAYER_NAME = 'kaltura-playkit-js';
+const PLAYER_NAME = 'kaltura-playkit-js';
 
-LoggerFactory.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
-LoggerFactory.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
+// UAParser instance
+const Env = new UAParser().getResult();
+
+LoggerFactory.getLogger().log("%c Playkit " + VERSION, "color: #3399ff; font-size: large");
+LoggerFactory.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: #3399ff;");
 
 /**
  * @param {string} targetId - The target div id to append the player.
@@ -48,5 +52,7 @@ export {VERSION};
 
 // Export player name
 export {PLAYER_NAME};
+
+export {Env};
 
 export default loadPlayer;
