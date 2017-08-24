@@ -6,7 +6,7 @@ import BaseMediaSourceAdapter from './engines/html5/media-source/base-media-sour
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider'
 import {registerPlugin} from './plugin/plugin-manager'
 import {DrmScheme} from './drm/drm-scheme'
-import {DrmSupport} from './drm/drm-support'
+import DrmSupport from './drm/drm-support'
 import BaseMiddleware from './middleware/base-middleware'
 import BasePlugin from './plugin/base-plugin'
 import Track from './track/track'

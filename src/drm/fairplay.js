@@ -1,10 +1,7 @@
 // @flow
-import Env from '../utils/env'
 import LoggerFactory from '../utils/logger'
-import {DrmSupport} from './drm-support'
+import DrmSupport from './drm-support'
 import {DrmScheme} from './drm-scheme'
-
-const BROWSER: string = Env.browser.name;
 
 export default class FairPlay {
   static _logger = LoggerFactory.getLogger('FairPlay');
@@ -26,12 +23,7 @@ export default class FairPlay {
    */
   static canPlayDrm(drmData: Array<Object>): boolean {
     FairPlay._logger.debug("Can play DRM scheme of: " + DrmScheme.FAIRPLAY);
-    if (typeof DrmSupport[BROWSER] === 'function') {
-      let drmScheme = DrmSupport[BROWSER]();
-      FairPlay._logger.debug("Supported DRM scheme for current environment is: " + drmScheme);
-      return (drmScheme === DrmScheme.FAIRPLAY && !!(drmData.find((drmEntry) => drmEntry.scheme === DrmScheme.FAIRPLAY)));
-    }
-    return false;
+    return DrmSupport.isProtocolSupported(DrmScheme.FAIRPLAY, drmData);
   }
 
   /**
