@@ -40,11 +40,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   static _drmProtocols: Array<Function> = [FairPlay];
   /**
    * The DRM protocol for the current playback.
-   * @type {any}
+   * @type {?Function}
    * @private
    * @static
    */
-  static _drmProtocol: any = null;
+  static _drmProtocol: ?Function = null;
   /**
    * The event manager of the class.
    * @member {EventManager} - _eventManager
@@ -207,8 +207,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     this._eventManager.destroy();
     this._loadPromise = null;
     this._progressiveSources = [];
-    NativeAdapter._drmProtocol.destroy();
-    NativeAdapter._drmProtocol = null;
+    if (NativeAdapter._drmProtocol) {
+      NativeAdapter._drmProtocol.destroy();
+      NativeAdapter._drmProtocol = null;
+    }
   }
 
   /**
