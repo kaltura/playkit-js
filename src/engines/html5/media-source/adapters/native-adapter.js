@@ -8,7 +8,7 @@ import TextTrack from '../../../../track/text-track'
 import BaseMediaSourceAdapter from '../base-media-source-adapter'
 import {getSuitableSourceForResolution} from '../../../../utils/resolution'
 import * as Utils from '../../../../utils/util'
-import FairPlayDrm from './fairplay-drm'
+import FairPlay from '../../../../drm/fairplay'
 
 /**
  * An illustration of media source extension for progressive download
@@ -31,6 +31,20 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @static
    */
   static _logger = BaseMediaSourceAdapter.getLogger(NativeAdapter.id);
+  /**
+   * The DRM protocols implementations for native adapter.
+   * @type {Array<Function>}
+   * @private
+   * @static
+   */
+  static _drmProtocols: Array<Function> = [FairPlay];
+  /**
+   * The DRM protocol for the current playback.
+   * @type {any}
+   * @private
+   * @static
+   */
+  static _drmProtocol: any = null;
   /**
    * The event manager of the class.
    * @member {EventManager} - _eventManager
@@ -73,9 +87,15 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @static
    */
   static canPlayDrm(drmData: Array<Object>): boolean {
-    let canPlayDrm = FairPlayDrm.canPlayDrm(drmData);
-    NativeAdapter._logger.debug('canPlayDrm result is ' + canPlayDrm.toString());
-    return canPlayDrm;
+    for (let drmProtocol of NativeAdapter._drmProtocols) {
+      if (drmProtocol.canPlayDrm(drmData)) {
+        NativeAdapter._drmProtocol = drmProtocol;
+        NativeAdapter._logger.debug('canPlayDrm result is true');
+        return true;
+      }
+    }
+    NativeAdapter._logger.warn('canPlayDrm result is false');
+    return false;
   }
 
   /**
@@ -100,14 +120,19 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   constructor(videoElement: HTMLVideoElement, source: Source, config: Object) {
     NativeAdapter._logger.debug('Creating adapter');
     super(videoElement, source);
-    this._eventManager = new EventManager();
     this._maybeSetDrmPlayback();
+    this._eventManager = new EventManager();
     this._progressiveSources = config.sources.progressive;
   }
 
+  /**
+   * Sets the DRM playback in case such needed.
+   * @private
+   * @returns {void}
+   */
   _maybeSetDrmPlayback(): void {
-    if (this._sourceObj && this._sourceObj.drmData) {
-      this._eventManager.listen(this._videoElement, FairPlayDrm.WebkitEvents.NEED_KEY, FairPlayDrm.onWebkitNeedKey.bind(null, this._sourceObj.drmData), false);
+    if (NativeAdapter._drmProtocol && this._sourceObj && this._sourceObj.drmData) {
+      NativeAdapter._drmProtocol.setDrmPlayback(this._videoElement, this._sourceObj.drmData);
     }
   }
 
@@ -178,11 +203,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   destroy(): void {
     NativeAdapter._logger.debug('destroy');
-    FairPlayDrm.destroy();
     super.destroy();
     this._eventManager.destroy();
     this._loadPromise = null;
     this._progressiveSources = [];
+    NativeAdapter._drmProtocol.destroy();
+    NativeAdapter._drmProtocol = null;
   }
 
   /**

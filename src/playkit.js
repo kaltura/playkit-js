@@ -5,14 +5,16 @@ import * as packageData from '../package.json'
 import BaseMediaSourceAdapter from './engines/html5/media-source/base-media-source-adapter'
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider'
 import {registerPlugin} from './plugin/plugin-manager'
+import {DrmScheme} from './drm/drm-scheme'
+import {DrmSupport} from './drm/drm-support'
 import BaseMiddleware from './middleware/base-middleware'
 import BasePlugin from './plugin/base-plugin'
 import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
-import * as Utils from './utils/util'
 import Env from './utils/env'
+import * as Utils from './utils/util'
 
 // Playkit version
 const VERSION = packageData.version;
@@ -50,6 +52,10 @@ export {VERSION};
 // Export player name
 export {PLAYER_NAME};
 
+// Export environment data
 export {Env};
+
+// Export DRM utils
+export {DrmScheme, DrmSupport};
 
 export default loadPlayer;
