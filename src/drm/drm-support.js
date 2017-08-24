@@ -26,7 +26,7 @@ export default class DrmSupport {
     },
     Firefox: () => {
       if (!DEVICE) {
-        return DrmScheme.WIDEVINE
+        return DrmScheme.WIDEVINE;
       }
       return NOT_SUPPORTED;
     },
