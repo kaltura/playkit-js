@@ -239,6 +239,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return false;
   }
 
+  seekToLiveEdge(): void {
+    this._mediaSourceAdapter.seekToLiveEdge();
+  }
+
+  isLive(): boolean {
+    return this._mediaSourceAdapter.isLive();
+  }
+
   /**
    * Set a source.
    * @param {string} source - Source to set.

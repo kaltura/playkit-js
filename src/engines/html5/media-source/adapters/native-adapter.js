@@ -452,6 +452,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
+  seekToLiveEdge(): void {
+    this._videoElement.currentTime = this._videoElement.seekable.end(this._videoElement.seekable.length - 1);
+  }
+
+  isLive(): boolean {
+    return this._videoElement.duration === Infinity;
+  }
+
   /**
    * Getter for the src that the adapter plays on the video element.
    * @public

@@ -138,6 +138,14 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'isAdaptiveBitrateEnabled').getError();
   }
 
+  seekToLiveEdge(): void {
+    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'seekToLiveEdge').getError();
+  }
+
+  isLive(): boolean {
+    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'isLive').getError();
+  }
+
   get src(): string {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'get src').getError();
   }

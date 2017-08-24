@@ -43,6 +43,8 @@ const POSTER_CLASS_NAME: string = 'playkit-poster';
  */
 const ENGINE_CLASS_NAME: string = 'playkit-engine';
 
+const LIVE = 'Live';
+
 /**
  * The HTML5 player class.
  * @classdesc
@@ -647,6 +649,14 @@ export default class Player extends FakeEventTarget {
     this._config.session.id = sessionId;
   }
 
+  isLive(): boolean {
+    return this._config.type === LIVE || this._engine.isLive();
+  }
+
+  isDvr(): boolean {
+    return this.isLive() && this._config.dvrStatus === 1;
+  }
+
   //  <editor-fold desc="Playback Interface">
   /**
    * The player readiness
@@ -692,6 +702,9 @@ export default class Player extends FakeEventTarget {
    */
   _play(): void {
     if (this._engine.src) {
+      if (this.isLive() && !this.isDvr()) {
+        this._engine.seekToLiveEdge();
+      }
       this._engine.play();
     } else {
       this.load();
