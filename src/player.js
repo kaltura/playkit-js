@@ -657,6 +657,12 @@ export default class Player extends FakeEventTarget {
     return this.isLive() && this._config.dvrStatus === 1;
   }
 
+  seekToLiveEdge(): void {
+    if (this._engine) {
+      this._engine.seekToLiveEdge();
+    }
+  }
+
   //  <editor-fold desc="Playback Interface">
   /**
    * The player readiness
@@ -703,7 +709,7 @@ export default class Player extends FakeEventTarget {
   _play(): void {
     if (this._engine.src) {
       if (this.isLive() && !this.isDvr()) {
-        this._engine.seekToLiveEdge();
+        this.seekToLiveEdge();
       }
       this._engine.play();
     } else {
