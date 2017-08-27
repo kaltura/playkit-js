@@ -1,5 +1,5 @@
 //@flow
-import {Env} from './playkit.js'
+import Env from './utils/env'
 import EventManager from './event/event-manager'
 import PosterManager from './utils/poster-manager'
 import FakeEvent from './event/fake-event'
@@ -303,7 +303,7 @@ export default class Player extends FakeEventTarget {
         let formatSources = sources[format];
         if (formatSources && formatSources.length > 0) {
           let source = formatSources[0];
-          if (engine.canPlayType(source.mimetype) && (!source.drmData || (source.drmData && engine.canPlayDrm(source.drmData)))) {
+          if (engine.canPlayType(source.mimetype) && engine.canPlayDrm(source.drmData)) {
             Player._logger.debug('Source selected: ', formatSources);
             this._loadEngine(engine, source);
             this.dispatchEvent(new FakeEvent(CustomEvents.SOURCE_SELECTED, {selectedSource: formatSources}));

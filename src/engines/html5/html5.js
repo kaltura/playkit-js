@@ -69,7 +69,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @static
    */
   static canPlayDrm(drmData: Array<Object>): boolean {
-    return MediaSourceProvider.canPlayDrm(drmData);
+    return (drmData && drmData.length > 0 ? MediaSourceProvider.canPlayDrm(drmData) : true);
   }
 
   /**

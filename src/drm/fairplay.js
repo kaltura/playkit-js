@@ -1,13 +1,12 @@
 // @flow
 import LoggerFactory from '../utils/logger'
-import DrmSupport from './drm-support'
-import {DrmScheme} from './drm-scheme'
+import BaseDrmProtocol from './base-drm-protocol'
 
-export default class FairPlay {
+export default class FairPlay extends BaseDrmProtocol {
   static _logger = LoggerFactory.getLogger('FairPlay');
   static _keySession: any;
-  static KeySystem: string = "com.apple.fps.1_0";
-  static WebkitEvents = {
+  static _KeySystem: string = "com.apple.fps.1_0";
+  static _WebkitEvents = {
     NEED_KEY: 'webkitneedkey',
     KEY_MESSAGE: 'webkitkeymessage',
     KEY_ADDED: 'webkitkeyadded',
@@ -22,8 +21,8 @@ export default class FairPlay {
    * @return {boolean} - Whether FairPlay can be play on the current environment.
    */
   static canPlayDrm(drmData: Array<Object>): boolean {
-    FairPlay._logger.debug("Can play DRM scheme of: " + DrmScheme.FAIRPLAY);
-    return DrmSupport.isProtocolSupported(DrmScheme.FAIRPLAY, drmData);
+    FairPlay._logger.debug("Can play DRM scheme of: " + BaseDrmProtocol.DrmScheme.FAIRPLAY);
+    return BaseDrmProtocol.DrmSupport.isProtocolSupported(BaseDrmProtocol.DrmScheme.FAIRPLAY, drmData);
   }
 
   /**
@@ -32,14 +31,14 @@ export default class FairPlay {
    * @param {Array<Object>} drmData - The drm data.
    * @returns {void}
    */
-  static setDrmPlayback(videoElement: HTMLVideoElement, drmData: Array<Object>): void {
+  static setDrmPlayback(videoElement: HTMLVideoElement, drmData: Array<Object> = []): void {
     FairPlay._logger.debug("Sets DRM playback");
-    videoElement.addEventListener(FairPlay.WebkitEvents.NEED_KEY, FairPlay._onWebkitNeedKey.bind(null, drmData), false);
+    videoElement.addEventListener(FairPlay._WebkitEvents.NEED_KEY, FairPlay._onWebkitNeedKey.bind(null, drmData), false);
   }
 
   static _onWebkitNeedKey(drmData: Array<Object>, event: any): void {
     FairPlay._logger.debug("Webkit need key triggered");
-    let fpDrmData = drmData.find((drmEntry) => drmEntry.scheme === DrmScheme.FAIRPLAY);
+    let fpDrmData = drmData.find((drmEntry) => drmEntry.scheme === BaseDrmProtocol.DrmScheme.FAIRPLAY);
     if (!fpDrmData || FairPlay._keySession) {
       return;
     }
@@ -66,9 +65,13 @@ export default class FairPlay {
       throw new Error("Could not create key session");
     }
     FairPlay._keySession.contentId = contentId;
-    FairPlay._keySession.addEventListener(FairPlay.WebkitEvents.KEY_MESSAGE, FairPlay._onWebkitKeyMessage.bind(null, fpDrmData), false);
-    FairPlay._keySession.addEventListener(FairPlay.WebkitEvents.KEY_ADDED, FairPlay._onWebkitKeyAdded, false);
-    FairPlay._keySession.addEventListener(FairPlay.WebkitEvents.KEY_ERROR, FairPlay._onWebkitKeyError, false);
+    FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_MESSAGE, FairPlay._onWebkitKeyMessage.bind(null, fpDrmData), false);
+    FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_ADDED, FairPlay._onWebkitKeyAdded, false);
+    FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_ERROR, FairPlay._onWebkitKeyError, false);
+  }
+
+  static destroy(): void {
+    FairPlay._keySession = null;
   }
 
   static _onWebkitKeyMessage(drmData: Object, event: any): void {
@@ -93,10 +96,6 @@ export default class FairPlay {
     FairPlay._logger.error("A decryption key error was encountered");
   }
 
-  static destroy(): void {
-    FairPlay._keySession = null;
-  }
-
   static _licenseRequestLoaded(event: any): void {
     FairPlay._logger.debug("License request loaded");
     let request = event.target;
@@ -118,8 +117,8 @@ export default class FairPlay {
 
   static _selectKeySystem(): ?string {
     let keySystem = null;
-    if (window.WebKitMediaKeys.isTypeSupported(FairPlay.KeySystem, "video/mp4")) {
-      keySystem = FairPlay.KeySystem;
+    if (window.WebKitMediaKeys.isTypeSupported(FairPlay._KeySystem, "video/mp4")) {
+      keySystem = FairPlay._KeySystem;
     } else {
       FairPlay._logger.warn("Key System not supported");
     }
