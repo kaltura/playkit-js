@@ -654,7 +654,7 @@ export default class Player extends FakeEventTarget {
   }
 
   isDvr(): boolean {
-    return this.isLive() && this._config.dvrStatus === 1;
+    return this.isLive() && this._config.dvr;
   }
 
   seekToLiveEdge(): void {
