@@ -63,33 +63,20 @@ export default class MediaSourceProvider {
   }
 
   /**
-   * Checks if one of the registered media source adapters can play a given mime type.
-   * @function canPlayType
-   * @param {string} mimeType - The mime type to check.
+   * Checks if the a media source adapter can play a given source.
+   * @param {Source} source - The source object to check.
+   * @returns {boolean} - Whether a media source adapter can play the source.
+   * @public
    * @static
-   * @returns {boolean} - If one of the adapters can play the specific mime type.
    */
-  static canPlayType(mimeType: string): boolean {
+  static canPlaySource(source: Source): boolean {
     let mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
     for (let i = 0; i < mediaSourceAdapters.length; i++) {
-      if (mediaSourceAdapters[i].canPlayType(mimeType)) {
+      if (mediaSourceAdapters[i].canPlayType(source.mimetype) && mediaSourceAdapters[i].canPlayDrm(source.drmData)) {
         MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
         MediaSourceProvider._logger.debug(`Selected adapter is <${MediaSourceProvider._selectedAdapter.id}>`);
         return true;
       }
-    }
-    return false;
-  }
-
-  /**
-   * Checks if a media source adapter can play given drm data.
-   * @param {Array<Object>} drmData - The drm data.
-   * @static
-   * @returns {boolean} - Whether the media source adapter can play the drm data.
-   */
-  static canPlayDrm(drmData: Array<Object>): boolean {
-    if (MediaSourceProvider._selectedAdapter) {
-      return MediaSourceProvider._selectedAdapter.canPlayDrm(drmData);
     }
     return false;
   }
@@ -106,7 +93,7 @@ export default class MediaSourceProvider {
   static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): ?IMediaSourceAdapter {
     if (videoElement && source && config) {
       if (!MediaSourceProvider._selectedAdapter) {
-        MediaSourceProvider.canPlayType(source.mimetype);
+        MediaSourceProvider.canPlaySource(source);
       }
       return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config) : null;
     }
