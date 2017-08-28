@@ -453,7 +453,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   seekToLiveEdge(): void {
-    this._videoElement.currentTime = this._videoElement.seekable.end(this._videoElement.seekable.length - 1);
+    try {
+      this._videoElement.currentTime = this._videoElement.seekable.end(this._videoElement.seekable.length - 1);
+    } catch (e) {
+      return;
+    }
   }
 
   isLive(): boolean {
@@ -468,4 +472,18 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   get src(): string {
     return this._videoElement.src;
   }
+
+  /**
+   * Get the duration in seconds.
+   * @returns {Number} - The playback duration.
+   * @public
+   */
+  get duration(): number {
+    if (this.isLive()) {
+      return this._videoElement.seekable.end(this._videoElement.seekable.length - 1);
+    } else {
+      return super.duration;
+    }
+  }
+
 }

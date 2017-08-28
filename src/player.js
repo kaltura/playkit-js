@@ -658,7 +658,7 @@ export default class Player extends FakeEventTarget {
   }
 
   seekToLiveEdge(): void {
-    if (this._engine) {
+    if (this._engine && this.isLive()) {
       this._engine.seekToLiveEdge();
     }
   }
@@ -808,7 +808,7 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Get the duration in seconds.
-   * @returns {?Number} - The playback duration.
+   * @returns {Number} - The playback duration.
    * @public
    */
   get duration(): ?number {

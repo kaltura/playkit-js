@@ -240,11 +240,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   seekToLiveEdge(): void {
-    this._mediaSourceAdapter.seekToLiveEdge();
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.seekToLiveEdge();
+    }
   }
 
   isLive(): boolean {
-    return this._mediaSourceAdapter.isLive();
+    return this._mediaSourceAdapter ? this._mediaSourceAdapter.isLive() : false;
   }
 
   /**
@@ -304,7 +306,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    */
   get currentTime(): number {
-    return this._el.currentTime;
+    return this._mediaSourceAdapter ? this._mediaSourceAdapter.currentTime : 0;
   }
 
   /**
@@ -314,7 +316,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   set currentTime(to: number): void {
-    this._el.currentTime = to;
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.currentTime = to;
+    }
   }
 
   /**
@@ -323,7 +327,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    */
   get duration(): number {
-    return this._el.duration;
+    return this._mediaSourceAdapter ? this._mediaSourceAdapter.duration : NaN;
   }
 
   /**
