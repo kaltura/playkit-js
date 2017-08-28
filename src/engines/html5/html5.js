@@ -239,12 +239,24 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return false;
   }
 
+  /**
+   * Seeking to live edge.
+   * @function seekToLiveEdge
+   * @returns {void}
+   * @public
+   */
   seekToLiveEdge(): void {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.seekToLiveEdge();
     }
   }
 
+  /**
+   * Checking if the current playback is live.
+   * @function isLive
+   * @returns {boolean} - Whether playback is live.
+   * @public
+   */
   isLive(): boolean {
     return this._mediaSourceAdapter ? this._mediaSourceAdapter.isLive() : false;
   }

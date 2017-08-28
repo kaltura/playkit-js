@@ -452,6 +452,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
+  /**
+   * Seeking to live edge.
+   * @function seekToLiveEdge
+   * @returns {void}
+   * @public
+   */
   seekToLiveEdge(): void {
     try {
       this._videoElement.currentTime = this._videoElement.seekable.end(this._videoElement.seekable.length - 1);
@@ -460,6 +466,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
+  /**
+   * Checking if the current playback is live.
+   * @function isLive
+   * @returns {boolean} - Whether playback is live.
+   * @public
+   */
   isLive(): boolean {
     return this._videoElement.duration === Infinity;
   }
