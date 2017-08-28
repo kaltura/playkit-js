@@ -1,9 +1,8 @@
 // @flow
-import LoggerFactory from '../utils/logger'
 import BaseDrmProtocol from './base-drm-protocol'
 
 export default class FairPlay extends BaseDrmProtocol {
-  static _logger = LoggerFactory.getLogger('FairPlay');
+  static _logger = BaseDrmProtocol.getLogger('FairPlay');
   static _keySession: any;
   static _KeySystem: string = "com.apple.fps.1_0";
   static _WebkitEvents = {
