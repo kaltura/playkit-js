@@ -35,7 +35,7 @@ class adapter2 implements IMediaSourceAdapter {
     return ['mimeType1', 'mimeType2'].includes(mimeType);
   }
 
-  static canPlayDrm(drmData: Array<Object>): boolean {
+  static canPlayDrm(): boolean {
     return false;
   }
 
