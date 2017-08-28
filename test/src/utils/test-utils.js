@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 /**
  * Configuration structure of the player.
  * @returns {Object} - The configuration structure of the player.
