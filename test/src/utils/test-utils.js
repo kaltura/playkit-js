@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 /**
  * Configuration structure of the player.
  * @returns {Object} - The configuration structure of the player.
@@ -33,12 +31,22 @@ function getConfigStructure() {
  * Creates a dom element.
  * @param {string} type - The element type.
  * @param {string} id - The element id.
+ * @param {string} opt_parentId - Optional parent id.
  * @returns {void}
  */
-function createElement(type, id) {
+function createElement(type, id, opt_parentId) {
   let element = document.createElement(type);
   element.id = id;
-  document.body.appendChild(element);
+  if (!opt_parentId) {
+    document.body.appendChild(element);
+  } else {
+    let parent = document.getElementById(opt_parentId);
+    if (parent) {
+      parent.appendChild(element);
+    } else {
+      document.body.appendChild(element);
+    }
+  }
 }
 
 /**

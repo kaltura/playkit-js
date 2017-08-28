@@ -1,4 +1,5 @@
 //@flow
+import Env from './utils/env'
 import EventManager from './event/event-manager'
 import PosterManager from './utils/poster-manager'
 import FakeEvent from './event/fake-event'
@@ -18,7 +19,6 @@ import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
 import PlaybackMiddleware from './middleware/playback-middleware'
 import DefaultPlayerConfig from './player-config.json'
-import UAParser from 'ua-parser-js'
 import './assets/style.css'
 
 /**
@@ -142,6 +142,7 @@ export default class Player extends FakeEventTarget {
    */
   constructor(targetId: string, config: Object) {
     super();
+    this._env = Env;
     this._tracks = [];
     this._config = {};
     this._firstPlay = true;
@@ -150,7 +151,6 @@ export default class Player extends FakeEventTarget {
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
     this._playbackMiddleware = new PlaybackMiddleware();
-    this._env = new UAParser().getResult();
     this._createReadyPromise();
     this._appendPlayerContainer(targetId);
     this._appendPosterEl();
@@ -303,7 +303,7 @@ export default class Player extends FakeEventTarget {
         let formatSources = sources[format];
         if (formatSources && formatSources.length > 0) {
           let source = formatSources[0];
-          if (engine.canPlayType(source.mimetype)) {
+          if (engine.canPlaySource(source)) {
             Player._logger.debug('Source selected: ', formatSources);
             this._loadEngine(engine, source);
             this.dispatchEvent(new FakeEvent(CustomEvents.SOURCE_SELECTED, {selectedSource: formatSources}));
