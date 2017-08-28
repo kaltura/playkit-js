@@ -5,8 +5,7 @@ import * as packageData from '../package.json'
 import BaseMediaSourceAdapter from './engines/html5/media-source/base-media-source-adapter'
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider'
 import {registerPlugin} from './plugin/plugin-manager'
-import {DrmScheme} from './drm/drm-scheme'
-import DrmSupport from './drm/drm-support'
+import BaseDrmProtocol from './drm/base-drm-protocol'
 import BaseMiddleware from './middleware/base-middleware'
 import BasePlugin from './plugin/base-plugin'
 import Track from './track/track'
@@ -55,7 +54,7 @@ export {PLAYER_NAME};
 // Export environment data
 export {Env};
 
-// Export DRM utils
-export {DrmScheme, DrmSupport};
+// Export base DRM protocol
+export {BaseDrmProtocol};
 
 export default loadPlayer;

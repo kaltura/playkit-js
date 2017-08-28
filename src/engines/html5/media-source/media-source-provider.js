@@ -71,11 +71,13 @@ export default class MediaSourceProvider {
    */
   static canPlaySource(source: Source): boolean {
     let mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
-    for (let i = 0; i < mediaSourceAdapters.length; i++) {
-      if (mediaSourceAdapters[i].canPlayType(source.mimetype) && mediaSourceAdapters[i].canPlayDrm(source.drmData)) {
-        MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
-        MediaSourceProvider._logger.debug(`Selected adapter is <${MediaSourceProvider._selectedAdapter.id}>`);
-        return true;
+    if (source && source.mimetype) {
+      for (let i = 0; i < mediaSourceAdapters.length; i++) {
+        if (mediaSourceAdapters[i].canPlayType(source.mimetype) && (!source.drmData || mediaSourceAdapters[i].canPlayDrm(source.drmData))) {
+          MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
+          MediaSourceProvider._logger.debug(`Selected adapter is <${MediaSourceProvider._selectedAdapter.id}>`);
+          return true;
+        }
       }
     }
     return false;
