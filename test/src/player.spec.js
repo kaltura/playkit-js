@@ -10,7 +10,6 @@ import {removeVideoElementsFromTestPage, createElement, removeElement, getConfig
 const targetId = 'player-placeholder_player.spec';
 
 describe("play", function () {
-  this.timeout(10000);
 
   let config, player;
 
@@ -95,7 +94,6 @@ describe("ready", function () {
       });
 
       describe("passing config in configure", function () {
-        this.timeout(10000);
 
         let player;
 
@@ -139,7 +137,6 @@ describe("ready", function () {
     describe("preload auto", () => {
 
       describe("passing config in constructor", function () {
-        this.timeout(10000);
 
         let player;
 
@@ -252,7 +249,6 @@ describe("ready", function () {
     describe("preload none", () => {
 
       describe("passing config in constructor", function () {
-        this.timeout(10000);
 
         let player;
 
@@ -284,7 +280,6 @@ describe("ready", function () {
       });
 
       describe("passing config in configure", function () {
-        this.timeout(10000);
 
         let player;
 
@@ -654,7 +649,6 @@ describe('selectTrack - video', function () {
 });
 
 describe('selectTrack - audio', function () {
-  this.timeout(4000);
 
   let config, player, video;
 
@@ -771,7 +765,6 @@ describe('selectTrack - audio', function () {
 });
 
 describe('selectTrack - text', function () {
-  this.timeout(10000);
 
   let config, player, video, track1, track2;
 
@@ -983,7 +976,6 @@ describe('getActiveTracks', function () {
 });
 
 describe('hideTextTrack', function () {
-  this.timeout(10000);
 
   let config, player, video, track1, track2;
 
@@ -1058,7 +1050,6 @@ describe('Track enum', function () {
 
 describe('events', function () {
   describe('tracks changed', function () {
-    this.timeout(10000);
 
     let config, player, video, track1, track2;
 
@@ -1113,7 +1104,6 @@ describe('events', function () {
   });
 
   describe('first play', function () {
-    this.timeout(10000);
 
     let config;
     let player;
@@ -1238,7 +1228,6 @@ describe('events', function () {
 });
 
 describe('states', function () {
-  this.timeout(10000);
 
   let player, config;
 
@@ -1330,7 +1319,6 @@ describe('states', function () {
 });
 
 describe('configure', function () {
-  this.timeout(10000);
 
   let player, config;
 
