@@ -453,6 +453,21 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
+   * Returns the live edge
+   * @returns {number} - live edge
+   * @private
+   */
+  _getLiveEdge(): number {
+    if (this._videoElement.seekable.length) {
+      return this._videoElement.seekable.end(this._videoElement.seekable.length - 1);
+    } else if (this._videoElement.buffered.length) {
+      return this._videoElement.buffered.end(this._videoElement.buffered.length - 1);
+    } else {
+      return this._videoElement.duration;
+    }
+  }
+
+  /**
    * Seeking to live edge.
    * @function seekToLiveEdge
    * @returns {void}
@@ -460,8 +475,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   seekToLiveEdge(): void {
     try {
-      this._videoElement.currentTime = this._videoElement.seekable.end(this._videoElement.seekable.length - 1);
-    } catch (e) {
+      this._videoElement.currentTime = this._getLiveEdge();
+    } catch
+      (e) {
       return;
     }
   }
@@ -492,7 +508,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   get duration(): number {
     if (this.isLive()) {
-      return this._videoElement.seekable.end(this._videoElement.seekable.length - 1);
+      return this._getLiveEdge();
     } else {
       return super.duration;
     }

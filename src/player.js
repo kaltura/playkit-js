@@ -622,7 +622,6 @@ export default class Player extends FakeEventTarget {
 
       this._posterManager.hide();
     }
-
   }
 
   /**
@@ -653,6 +652,7 @@ export default class Player extends FakeEventTarget {
     this._config.session = this._config.session || {};
     this._config.session.id = sessionId;
   }
+
   /**
    * Checking if the current playback is live.
    * @function isLive
@@ -660,7 +660,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   isLive(): boolean {
-    return this._config.type === LIVE || this._engine.isLive();
+    return !!(this._config.type === LIVE || (this._engine && this._engine.isLive()));
   }
 
   /**

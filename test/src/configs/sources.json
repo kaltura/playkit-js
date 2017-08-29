@@ -55,5 +55,13 @@
         "id": "1_rsrdfext_10081,url"
       }
     ]
+  },
+  "Live": {
+    "hls": [
+      {
+        "mimetype": "application/x-mpegurl",
+        "url": "http://wms.shared.streamshow.it/carinatv/carinatv/playlist.m3u8"
+      }
+    ]
   }
 }
