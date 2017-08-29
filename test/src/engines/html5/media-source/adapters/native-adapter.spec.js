@@ -131,7 +131,6 @@ describe('NativeAdapter: _isProgressivePlayback', function () {
 });
 
 describe('NativeAdapter: load', function () {
-  this.timeout(10000);
 
   let video, nativeInstance;
 
@@ -200,7 +199,6 @@ describe('NativeAdapter: _setProgressiveSource', function () {
 });
 
 describe('NativeAdapter: destroy', function () {
-  this.timeout(10000);
 
   let video, nativeInstance;
 
@@ -231,7 +229,6 @@ describe('NativeAdapter: destroy', function () {
 });
 
 describe('NativeAdapter: _getParsedTracks', function () {
-  this.timeout(10000);
 
   let video;
   let track1;
@@ -303,7 +300,6 @@ describe('NativeAdapter: _getParsedTracks', function () {
 });
 
 describe('NativeAdapter: _selectProgressiveVideoTrack', function () {
-  this.timeout(10000);
 
   let video;
   let nativeInstance;
@@ -383,7 +379,6 @@ describe('NativeAdapter: selectVideoTrack - progressive', function () {
 });
 
 describe('NativeAdapter: selectAudioTrack', function () {
-  this.timeout(10000);
 
   let video;
   let nativeInstance;
@@ -454,7 +449,6 @@ describe('NativeAdapter: selectAudioTrack', function () {
 });
 
 describe('NativeAdapter: selectTextTrack', function () {
-  this.timeout(10000);
 
   let video;
   let track1;
@@ -561,7 +555,6 @@ describe('NativeAdapter: selectTextTrack', function () {
 });
 
 describe('NativeAdapter: hideTextTrack', function () {
-  this.timeout(10000);
 
   let video;
   let track1;
