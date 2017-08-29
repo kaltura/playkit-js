@@ -2652,7 +2652,7 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Get the duration in seconds.
-     * @returns {Number} - The playback duration.
+     * @returns {?Number} - The playback duration.
      * @public
      */
 

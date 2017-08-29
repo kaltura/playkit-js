@@ -830,7 +830,7 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Get the duration in seconds.
-   * @returns {Number} - The playback duration.
+   * @returns {?Number} - The playback duration.
    * @public
    */
   get duration(): ?number {
