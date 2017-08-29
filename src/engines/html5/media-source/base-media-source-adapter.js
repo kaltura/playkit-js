@@ -138,7 +138,43 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'isAdaptiveBitrateEnabled').getError();
   }
 
+  seekToLiveEdge(): void {
+    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'seekToLiveEdge').getError();
+  }
+
+  isLive(): boolean {
+    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'isLive').getError();
+  }
+
   get src(): string {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'get src').getError();
+  }
+
+  /**
+   * Get the current time in seconds.
+   * @returns {Number} - The current playback time.
+   * @public
+   */
+  get currentTime(): number {
+    return this._videoElement.currentTime;
+  }
+
+  /**
+   * Set the current time in seconds.
+   * @param {Number} to - The number to set in seconds.
+   * @public
+   * @returns {void}
+   */
+  set currentTime(to: number): void {
+    this._videoElement.currentTime = to;
+  }
+
+  /**
+   * Get the duration in seconds.
+   * @returns {Number} - The playback duration.
+   * @public
+   */
+  get duration(): number {
+    return this._videoElement.duration;
   }
 }

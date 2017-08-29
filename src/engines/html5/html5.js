@@ -240,6 +240,28 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Seeking to live edge.
+   * @function seekToLiveEdge
+   * @returns {void}
+   * @public
+   */
+  seekToLiveEdge(): void {
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.seekToLiveEdge();
+    }
+  }
+
+  /**
+   * Checking if the current playback is live.
+   * @function isLive
+   * @returns {boolean} - Whether playback is live.
+   * @public
+   */
+  isLive(): boolean {
+    return this._mediaSourceAdapter ? this._mediaSourceAdapter.isLive() : false;
+  }
+
+  /**
    * Set a source.
    * @param {string} source - Source to set.
    * @public
@@ -296,7 +318,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    */
   get currentTime(): number {
-    return this._el.currentTime;
+    return this._mediaSourceAdapter ? this._mediaSourceAdapter.currentTime : 0;
   }
 
   /**
@@ -306,7 +328,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   set currentTime(to: number): void {
-    this._el.currentTime = to;
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.currentTime = to;
+    }
   }
 
   /**
@@ -315,7 +339,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    */
   get duration(): number {
-    return this._el.duration;
+    return this._mediaSourceAdapter ? this._mediaSourceAdapter.duration : NaN;
   }
 
   /**

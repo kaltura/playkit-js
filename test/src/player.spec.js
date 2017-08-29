@@ -1430,13 +1430,234 @@ describe('abr', function () {
     player.isAdaptiveBitrateEnabled().should.be.false;
   });
 
-  it('should return true for adaptive playback abr', function (done) {
+  it('should return true for adaptive playback abr', function () {
     config.sources = sourcesConfig.Hls;
     player = new Player(targetId, config);
     if (player._engine) {
       player.enableAdaptiveBitrate();
       player.isAdaptiveBitrateEnabled().should.be.true;
     }
-    done();
+  });
+});
+
+describe('isLive', function () {
+  let player, config;
+
+  before(() => {
+    createElement('DIV', targetId);
+  });
+
+  beforeEach(() => {
+    config = getConfigStructure();
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElement(targetId);
+  });
+
+  it('should return false for VOD', function (done) {
+    config.sources = sourcesConfig.Mp4;
+    player = new Player(targetId, config);
+    player.ready().then(() => {
+      player.isLive().should.be.false;
+      done();
+    });
+    if (player._engine) {
+      player.load();
+    } else {
+      done();
+    }
+  });
+
+  it('should return true for VOD which configured as live', function (done) {
+    config.sources = sourcesConfig.Mp4;
+    config.type = 'Live';
+    player = new Player(targetId, config);
+    player.ready().then(() => {
+      player.isLive().should.be.true;
+      done();
+    });
+    if (player._engine) {
+      player.load();
+    } else {
+      done();
+    }
+  });
+
+  it('should return false for live before loading', function () {
+    config.sources = sourcesConfig.Live;
+    player = new Player(targetId, config);
+    player.isLive().should.be.false;
+  });
+
+  it('should return true for live', function (done) {
+    config.sources = sourcesConfig.Live;
+    player = new Player(targetId, config);
+    player.ready().then(() => {
+      player.isLive().should.be.true;
+      done();
+    });
+    if (player._engine) {
+      player.load();
+    } else {
+      done();
+    }
+  });
+
+  it('should return true for live even configured as VOD', function (done) {
+    config.sources = sourcesConfig.Live;
+    config.type = 'Vod';
+    player = new Player(targetId, config);
+    player.ready().then(() => {
+      player.isLive().should.be.true;
+      done();
+    });
+    if (player._engine) {
+      player.load();
+    } else {
+      done();
+    }
+  });
+});
+
+describe('isDvr', function () {
+  let player, config;
+
+  before(() => {
+    createElement('DIV', targetId);
+  });
+
+  beforeEach(() => {
+    config = getConfigStructure();
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElement(targetId);
+  });
+
+  it('should return false for VOD', function (done) {
+    config.sources = sourcesConfig.Mp4;
+    player = new Player(targetId, config);
+    player.ready().then(() => {
+      player.isDvr().should.be.false;
+      done();
+    });
+    if (player._engine) {
+      player.load();
+    } else {
+      done();
+    }
+  });
+
+  it('should return false for VOD even configured as dvr', function (done) {
+    config.sources = sourcesConfig.Mp4;
+    config.dvr = true;
+    player = new Player(targetId, config);
+    player.ready().then(() => {
+      player.isDvr().should.be.false;
+      done();
+    });
+    if (player._engine) {
+      player.load();
+    } else {
+      done();
+    }
+  });
+
+  it('should return true for live which configured as dvr', function (done) {
+    config.sources = sourcesConfig.Live;
+    config.dvr = true;
+    player = new Player(targetId, config);
+    player.ready().then(() => {
+      player.isDvr().should.be.true;
+      done();
+    });
+    if (player._engine) {
+      player.load();
+    } else {
+      done();
+    }
+  });
+
+  it('should return true for live which configured as non dvr', function (done) {
+    config.sources = sourcesConfig.Live;
+    config.dvr = false;
+    player = new Player(targetId, config);
+    player.ready().then(() => {
+      player.isDvr().should.be.false;
+      done();
+    });
+    if (player._engine) {
+      player.load();
+    } else {
+      done();
+    }
+  });
+});
+
+describe('seekToLiveEdge', function () {
+  let player, config;
+
+  before(() => {
+    createElement('DIV', targetId);
+  });
+
+  beforeEach(() => {
+    config = getConfigStructure();
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElement(targetId);
+  });
+
+  it('should not seek to live edge in VOD', (done) => {
+    config.sources = sourcesConfig.Mp4;
+    player = new Player(targetId, config);
+    player.ready().then(() => {
+      player.currentTime = 0;
+      player.currentTime.should.not.equal(player.duration);
+      player.seekToLiveEdge();
+      player.currentTime.should.not.equal(player.duration);
+      done();
+    });
+    if (player._engine) {
+      player.load();
+    } else {
+      done();
+    }
+  });
+
+  it('should seek to live edge', (done) => {
+    config.sources = sourcesConfig.Live;
+    player = new Player(targetId, config);
+    player.ready().then(() => {
+      setTimeout(() => {
+        player.currentTime = 0;
+        player.currentTime.should.not.equal(player.duration);
+        player.seekToLiveEdge();
+        player.currentTime.should.equal(player.duration);
+        done();
+      }, 500);
+    });
+    if (player._engine) {
+      player.load();
+    } else {
+      done();
+    }
   });
 });

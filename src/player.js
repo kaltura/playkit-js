@@ -44,6 +44,13 @@ const POSTER_CLASS_NAME: string = 'playkit-poster';
 const ENGINE_CLASS_NAME: string = 'playkit-engine';
 
 /**
+ * The live string.
+ * @type {string}
+ * @const
+ */
+const LIVE = 'Live';
+
+/**
  * The HTML5 player class.
  * @classdesc
  */
@@ -615,7 +622,6 @@ export default class Player extends FakeEventTarget {
 
       this._posterManager.hide();
     }
-
   }
 
   /**
@@ -645,6 +651,38 @@ export default class Player extends FakeEventTarget {
   set sessionId(sessionId: string): void {
     this._config.session = this._config.session || {};
     this._config.session.id = sessionId;
+  }
+
+  /**
+   * Checking if the current playback is live.
+   * @function isLive
+   * @returns {boolean} - Whether playback is live.
+   * @public
+   */
+  isLive(): boolean {
+    return !!(this._config.type === LIVE || (this._engine && this._engine.isLive()));
+  }
+
+  /**
+   * Checking if the current live playback has DVR window.
+   * @function isDvr
+   * @returns {boolean} - Whether live playback has DVR window.
+   * @public
+   */
+  isDvr(): boolean {
+    return this.isLive() && this._config.dvr;
+  }
+
+  /**
+   * Seeking to live edge.
+   * @function seekToLiveEdge
+   * @returns {void}
+   * @public
+   */
+  seekToLiveEdge(): void {
+    if (this._engine && this.isLive()) {
+      this._engine.seekToLiveEdge();
+    }
   }
 
   //  <editor-fold desc="Playback Interface">
@@ -692,6 +730,9 @@ export default class Player extends FakeEventTarget {
    */
   _play(): void {
     if (this._engine.src) {
+      if (this.isLive() && !this.isDvr()) {
+        this.seekToLiveEdge();
+      }
       this._engine.play();
     } else {
       this.load();

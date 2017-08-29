@@ -605,3 +605,117 @@ describe('NativeAdapter: hideTextTrack', function () {
   });
 });
 
+describe('NativeAdapter: isLive', function () {
+  let video, nativeInstance;
+
+  beforeEach(() => {
+    video = document.createElement("video");
+  });
+
+  afterEach(() => {
+    nativeInstance.destroy();
+    nativeInstance = null;
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+  });
+
+  it('should return false for VOD', function (done) {
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {sources: {}});
+    nativeInstance.load().then(() => {
+      nativeInstance.isLive().should.be.false;
+      done();
+    });
+  });
+
+  it('should return false for live before load', () => {
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
+    nativeInstance.isLive().should.be.false;
+  });
+
+  it('should return true for live', (done) => {
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
+    nativeInstance.load().then(() => {
+      nativeInstance.isLive().should.be.true;
+      done();
+    }).catch(() => {
+      done();
+    });
+  });
+});
+
+describe('NativeAdapter: seekToLiveEdge', () => {
+  let video, nativeInstance;
+
+  beforeEach(() => {
+    video = document.createElement("video");
+  });
+
+  afterEach(() => {
+    nativeInstance.destroy();
+    nativeInstance = null;
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+  });
+
+  it('should seek to live edge', (done) => {
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
+    nativeInstance.load().then(() => {
+      video.currentTime = 0;
+      video.currentTime.should.not.equal(nativeInstance.duration);
+      nativeInstance.seekToLiveEdge();
+      video.currentTime.should.equal(nativeInstance.duration);
+      done();
+    }).catch(() => {
+      done();
+    });
+  });
+});
+
+describe('NativeAdapter: get duration', () => {
+  let video, nativeInstance;
+
+  beforeEach(() => {
+    video = document.createElement("video");
+  });
+
+  afterEach(() => {
+    nativeInstance.destroy();
+    nativeInstance = null;
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+  });
+
+  it('should return video tag duration for VOD', (done) => {
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {sources: {}});
+    nativeInstance.load().then(() => {
+      nativeInstance.duration.should.be.equal(video.duration);
+      done();
+    });
+  });
+
+  it('should return live duration for live', (done) => {
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
+    nativeInstance.load().then(() => {
+      let duration;
+      if (nativeInstance._videoElement.seekable.length) {
+        duration = nativeInstance._videoElement.seekable.end(nativeInstance._videoElement.seekable.length - 1);
+      } else if (nativeInstance._videoElement.buffered.length) {
+        duration = nativeInstance._videoElement.buffered.end(nativeInstance._videoElement.buffered.length - 1);
+      } else {
+        duration = nativeInstance._videoElement.duration;
+      }
+      nativeInstance.duration.should.be.equal(duration);
+      done();
+    }).catch(() => {
+      done();
+    });
+  });
+});
+
+

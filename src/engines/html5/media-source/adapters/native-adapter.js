@@ -504,6 +504,46 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
+   * Returns the live edge
+   * @returns {number} - live edge
+   * @private
+   */
+  _getLiveEdge(): number {
+    if (this._videoElement.seekable.length) {
+      return this._videoElement.seekable.end(this._videoElement.seekable.length - 1);
+    } else if (this._videoElement.buffered.length) {
+      return this._videoElement.buffered.end(this._videoElement.buffered.length - 1);
+    } else {
+      return this._videoElement.duration;
+    }
+  }
+
+  /**
+   * Seeking to live edge.
+   * @function seekToLiveEdge
+   * @returns {void}
+   * @public
+   */
+  seekToLiveEdge(): void {
+    try {
+      this._videoElement.currentTime = this._getLiveEdge();
+    } catch
+      (e) {
+      return;
+    }
+  }
+
+  /**
+   * Checking if the current playback is live.
+   * @function isLive
+   * @returns {boolean} - Whether playback is live.
+   * @public
+   */
+  isLive(): boolean {
+    return this._videoElement.duration === Infinity;
+  }
+
+  /**
    * Getter for the src that the adapter plays on the video element.
    * @public
    * @returns {string} - The src url.
@@ -511,4 +551,18 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   get src(): string {
     return this._videoElement.src;
   }
+
+  /**
+   * Get the duration in seconds.
+   * @returns {Number} - The playback duration.
+   * @public
+   */
+  get duration(): number {
+    if (this.isLive()) {
+      return this._getLiveEdge();
+    } else {
+      return super.duration;
+    }
+  }
+
 }
