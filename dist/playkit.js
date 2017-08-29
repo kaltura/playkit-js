@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 24);
+/******/ 	return __webpack_require__(__webpack_require__.s = 29);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -90,7 +90,7 @@ exports.LOG_LEVEL = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jsLogger = __webpack_require__(32);
+var _jsLogger = __webpack_require__(37);
 
 var JsLogger = _interopRequireWildcard(_jsLogger);
 
@@ -1129,7 +1129,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _multiMap = __webpack_require__(13);
+var _multiMap = __webpack_require__(15);
 
 var _multiMap2 = _interopRequireDefault(_multiMap);
 
@@ -1554,11 +1554,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _env = __webpack_require__(13);
+
+var _env2 = _interopRequireDefault(_env);
+
 var _eventManager = __webpack_require__(7);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _posterManager = __webpack_require__(28);
+var _posterManager = __webpack_require__(33);
 
 var _posterManager2 = _interopRequireDefault(_posterManager);
 
@@ -1566,13 +1570,13 @@ var _fakeEvent = __webpack_require__(3);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _fakeEventTarget = __webpack_require__(12);
+var _fakeEventTarget = __webpack_require__(14);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
 var _events = __webpack_require__(8);
 
-var _stateTypes = __webpack_require__(18);
+var _stateTypes = __webpack_require__(21);
 
 var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
@@ -1584,23 +1588,23 @@ var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _html = __webpack_require__(20);
+var _html = __webpack_require__(25);
 
 var _html2 = _interopRequireDefault(_html);
 
-var _pluginManager = __webpack_require__(17);
+var _pluginManager = __webpack_require__(19);
 
 var _pluginManager2 = _interopRequireDefault(_pluginManager);
 
-var _basePlugin = __webpack_require__(11);
+var _basePlugin = __webpack_require__(12);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
-var _stateManager = __webpack_require__(25);
+var _stateManager = __webpack_require__(30);
 
 var _stateManager2 = _interopRequireDefault(_stateManager);
 
-var _trackTypes = __webpack_require__(27);
+var _trackTypes = __webpack_require__(32);
 
 var _trackTypes2 = _interopRequireDefault(_trackTypes);
 
@@ -1620,19 +1624,15 @@ var _textTrack = __webpack_require__(5);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _playbackMiddleware = __webpack_require__(23);
+var _playbackMiddleware = __webpack_require__(28);
 
 var _playbackMiddleware2 = _interopRequireDefault(_playbackMiddleware);
 
-var _playerConfig = __webpack_require__(38);
+var _playerConfig = __webpack_require__(43);
 
 var _playerConfig2 = _interopRequireDefault(_playerConfig);
 
-var _uaParserJs = __webpack_require__(36);
-
-var _uaParserJs2 = _interopRequireDefault(_uaParserJs);
-
-__webpack_require__(33);
+__webpack_require__(38);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1763,6 +1763,7 @@ var Player = function (_FakeEventTarget) {
 
     var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
 
+    _this._env = _env2.default;
     _this._tracks = [];
     _this._config = {};
     _this._firstPlay = true;
@@ -1771,7 +1772,6 @@ var Player = function (_FakeEventTarget) {
     _this._stateManager = new _stateManager2.default(_this);
     _this._pluginManager = new _pluginManager2.default();
     _this._playbackMiddleware = new _playbackMiddleware2.default();
-    _this._env = new _uaParserJs2.default().getResult();
     _this._createReadyPromise();
     _this._appendPlayerContainer(targetId);
     _this._appendPosterEl();
@@ -1971,7 +1971,7 @@ var Player = function (_FakeEventTarget) {
             var formatSources = sources[format];
             if (formatSources && formatSources.length > 0) {
               var source = formatSources[0];
-              if (engine.canPlayType(source.mimetype)) {
+              if (engine.canPlaySource(source)) {
                 Player._logger.debug('Source selected: ', formatSources);
                 _this3._loadEngine(engine, source);
                 _this3.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.SOURCE_SELECTED, { selectedSource: formatSources }));
@@ -2835,6 +2835,64 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var PlayerError = function () {
+  function PlayerError(error, param) {
+    _classCallCheck(this, PlayerError);
+
+    this.name = error.name;
+    this.message = error.message(param);
+  }
+
+  _createClass(PlayerError, [{
+    key: "getError",
+    value: function getError() {
+      return {
+        name: this.name,
+        message: this.message
+      };
+    }
+  }]);
+
+  return PlayerError;
+}();
+
+PlayerError.TYPE = {
+  NOT_REGISTERED_PLUGIN: {
+    name: "PluginNotRegisteredException",
+    message: function message(name) {
+      return "Cannot load " + name + " plugin. Name not found in the registry";
+    }
+  },
+  NOT_VALID_HANDLER: {
+    name: "PluginHandlerIsNotValidException",
+    message: function message() {
+      return "To activate plugin you must provide a class derived from BasePlugin";
+    }
+  },
+  NOT_IMPLEMENTED_METHOD: {
+    name: "NotImplementedException",
+    message: function message(method) {
+      return method + " method not implemented";
+    }
+  }
+};
+exports.default = PlayerError;
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 /**
  * Base middleware.
  * @classdesc
@@ -2871,7 +2929,7 @@ var BaseMiddleware = function () {
 exports.default = BaseMiddleware;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2899,7 +2957,7 @@ var _eventManager = __webpack_require__(7);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _playerError = __webpack_require__(14);
+var _playerError = __webpack_require__(10);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
@@ -3086,7 +3144,27 @@ BasePlugin.defaultConfig = {};
 exports.default = BasePlugin;
 
 /***/ }),
-/* 12 */
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _uaParserJs = __webpack_require__(41);
+
+var _uaParserJs2 = _interopRequireDefault(_uaParserJs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Env = new _uaParserJs2.default().getResult();
+exports.default = Env;
+
+/***/ }),
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3102,7 +3180,7 @@ var _fakeEvent = __webpack_require__(3);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _multiMap = __webpack_require__(13);
+var _multiMap = __webpack_require__(15);
 
 var _multiMap2 = _interopRequireDefault(_multiMap);
 
@@ -3232,7 +3310,7 @@ var FakeEventTarget = function () {
 exports.default = FakeEventTarget;
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3411,7 +3489,7 @@ var MultiMap = function () {
 exports.default = MultiMap;
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3422,54 +3500,57 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+/* eslint-disable no-unused-vars */
+
+
+var _logger = __webpack_require__(0);
+
+var _logger2 = _interopRequireDefault(_logger);
+
+var _playerError = __webpack_require__(10);
+
+var _playerError2 = _interopRequireDefault(_playerError);
+
+var _drmSupport = __webpack_require__(23);
+
+var _drmSupport2 = _interopRequireDefault(_drmSupport);
+
+var _drmScheme = __webpack_require__(20);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var PlayerError = function () {
-  function PlayerError(error, param) {
-    _classCallCheck(this, PlayerError);
-
-    this.name = error.name;
-    this.message = error.message(param);
+var BaseDrmProtocol = function () {
+  function BaseDrmProtocol() {
+    _classCallCheck(this, BaseDrmProtocol);
   }
 
-  _createClass(PlayerError, [{
-    key: "getError",
-    value: function getError() {
-      return {
-        name: this.name,
-        message: this.message
-      };
+  _createClass(BaseDrmProtocol, null, [{
+    key: 'canPlayDrm',
+    value: function canPlayDrm(drmData) {
+      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayDrm').getError();
     }
+  }, {
+    key: 'setDrmPlayback',
+    value: function setDrmPlayback() {
+      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'static setDrmPlayback').getError();
+    }
+  }, {
+    key: 'destroy',
+    value: function destroy() {}
   }]);
 
-  return PlayerError;
+  return BaseDrmProtocol;
 }();
 
-PlayerError.TYPE = {
-  NOT_REGISTERED_PLUGIN: {
-    name: "PluginNotRegisteredException",
-    message: function message(name) {
-      return "Cannot load " + name + " plugin. Name not found in the registry";
-    }
-  },
-  NOT_VALID_HANDLER: {
-    name: "PluginHandlerIsNotValidException",
-    message: function message() {
-      return "To activate plugin you must provide a class derived from BasePlugin";
-    }
-  },
-  NOT_IMPLEMENTED_METHOD: {
-    name: "NotImplementedException",
-    message: function message(method) {
-      return method + " method not implemented";
-    }
-  }
-};
-exports.default = PlayerError;
+BaseDrmProtocol.getLogger = _logger2.default.getLogger;
+BaseDrmProtocol.DrmSupport = _drmSupport2.default;
+BaseDrmProtocol.DrmScheme = _drmScheme.DrmScheme;
+exports.default = BaseDrmProtocol;
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3485,11 +3566,11 @@ var _fakeEvent = __webpack_require__(3);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _fakeEventTarget = __webpack_require__(12);
+var _fakeEventTarget = __webpack_require__(14);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
-var _playerError = __webpack_require__(14);
+var _playerError = __webpack_require__(10);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
@@ -3700,7 +3781,7 @@ BaseMediaSourceAdapter.getLogger = _logger2.default.getLogger;
 exports.default = BaseMediaSourceAdapter;
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3713,7 +3794,7 @@ exports.registerMediaSourceAdapter = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nativeAdapter = __webpack_require__(21);
+var _nativeAdapter = __webpack_require__(26);
 
 var _nativeAdapter2 = _interopRequireDefault(_nativeAdapter);
 
@@ -3796,22 +3877,24 @@ var MediaSourceProvider = function () {
     }
 
     /**
-     * Checks if one of the registered media source adapters can play a given mime type.
-     * @function canPlayType
-     * @param {string} mimeType - The mime type to check.
+     * Checks if the a media source adapter can play a given source.
+     * @param {Source} source - The source object to check.
+     * @returns {boolean} - Whether a media source adapter can play the source.
+     * @public
      * @static
-     * @returns {boolean} - If one of the adapters can play the specific mime type.
      */
 
   }, {
-    key: 'canPlayType',
-    value: function canPlayType(mimeType) {
+    key: 'canPlaySource',
+    value: function canPlaySource(source) {
       var mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
-      for (var i = 0; i < mediaSourceAdapters.length; i++) {
-        if (mediaSourceAdapters[i].canPlayType(mimeType)) {
-          MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
-          MediaSourceProvider._logger.debug('Selected adapter is <' + MediaSourceProvider._selectedAdapter.id + '>');
-          return true;
+      if (source && source.mimetype) {
+        for (var i = 0; i < mediaSourceAdapters.length; i++) {
+          if (mediaSourceAdapters[i].canPlayType(source.mimetype) && (!source.drmData || mediaSourceAdapters[i].canPlayDrm(source.drmData))) {
+            MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
+            MediaSourceProvider._logger.debug('Selected adapter is <' + MediaSourceProvider._selectedAdapter.id + '>');
+            return true;
+          }
         }
       }
       return false;
@@ -3832,7 +3915,7 @@ var MediaSourceProvider = function () {
     value: function getMediaSourceAdapter(videoElement, source, config) {
       if (videoElement && source && config) {
         if (!MediaSourceProvider._selectedAdapter) {
-          MediaSourceProvider.canPlayType(source.mimetype);
+          MediaSourceProvider.canPlaySource(source);
         }
         return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config) : null;
       }
@@ -3865,7 +3948,7 @@ var registerMediaSourceAdapter = MediaSourceProvider.register;
 exports.registerMediaSourceAdapter = registerMediaSourceAdapter;
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3878,11 +3961,11 @@ exports.registerPlugin = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _basePlugin = __webpack_require__(11);
+var _basePlugin = __webpack_require__(12);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
-var _playerError = __webpack_require__(14);
+var _playerError = __webpack_require__(10);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
@@ -4058,7 +4141,23 @@ var registerPlugin = PluginManager.register;
 exports.registerPlugin = registerPlugin;
 
 /***/ }),
-/* 18 */
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var DrmScheme = exports.DrmScheme = {
+  WIDEVINE: 'com.widevine.alpha',
+  PLAYREADY: 'com.microsoft.playready',
+  FAIRPLAY: 'com.apple.fairplay'
+};
+
+/***/ }),
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4078,7 +4177,7 @@ var PLAYER_STATE_TYPES = {
 exports.default = PLAYER_STATE_TYPES;
 
 /***/ }),
-/* 19 */
+/* 22 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -4143,7 +4242,6 @@ module.exports = {
 		"karma-webpack": "^2.0.2",
 		"mocha": "^3.2.0",
 		"mocha-cli": "^1.0.1",
-		"pre-push": "^0.1.1",
 		"sinon": "^2.0.0",
 		"sinon-chai": "^2.8.0",
 		"standard-version": "^4.2.0",
@@ -4173,7 +4271,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 20 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4185,7 +4283,378 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _fakeEventTarget = __webpack_require__(12);
+var _env = __webpack_require__(13);
+
+var _env2 = _interopRequireDefault(_env);
+
+var _logger = __webpack_require__(0);
+
+var _logger2 = _interopRequireDefault(_logger);
+
+var _drmScheme = __webpack_require__(20);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var NOT_SUPPORTED = 'not_supported_drm_playback';
+
+var DrmSupport = function () {
+  function DrmSupport() {
+    _classCallCheck(this, DrmSupport);
+  }
+
+  _createClass(DrmSupport, null, [{
+    key: 'isProtocolSupported',
+
+
+    /**
+     * Checks if a certain DRM scheme is supported in the current environment.
+     * @param {string} scheme - The drm scheme.
+     * @param {Array<Object>} drmData - The drm data to check.
+     * @return {boolean} - Whether scheme can be play on the current environment.
+     */
+    value: function isProtocolSupported(scheme, drmData) {
+      var browser = _env2.default.browser.name;
+      if (typeof DrmSupport._Browsers[browser] === 'function') {
+        var drmScheme = DrmSupport._Browsers[browser]();
+        DrmSupport._logger.debug("Supported DRM scheme for current environment is: " + drmScheme);
+        return drmScheme === scheme && !!drmData.find(function (drmEntry) {
+          return drmEntry.scheme === scheme;
+        });
+      }
+      return false;
+    }
+  }]);
+
+  return DrmSupport;
+}();
+
+DrmSupport._logger = _logger2.default.getLogger('DrmSupport');
+DrmSupport._Browsers = {
+  Safari: function Safari() {
+    var device = _env2.default.device.type;
+    var os = _env2.default.os.name;
+    if (!device && os === 'Mac OS') {
+      return _drmScheme.DrmScheme.FAIRPLAY;
+    }
+    return NOT_SUPPORTED;
+  },
+  Chrome: function Chrome() {
+    var device = _env2.default.device.type;
+    var os = _env2.default.os.name;
+    if (!device || device === 'mobile' && os === 'Android') {
+      return _drmScheme.DrmScheme.WIDEVINE;
+    }
+    return NOT_SUPPORTED;
+  },
+  Firefox: function Firefox() {
+    var device = _env2.default.device.type;
+    if (!device) {
+      return _drmScheme.DrmScheme.WIDEVINE;
+    }
+    return NOT_SUPPORTED;
+  },
+  Edge: function Edge() {
+    var device = _env2.default.device.type;
+    if (!device) {
+      return _drmScheme.DrmScheme.PLAYREADY;
+    }
+    return NOT_SUPPORTED;
+  },
+  IE: function IE() {
+    var device = _env2.default.device.type;
+    var os = _env2.default.os.name;
+    var osVersion = _env2.default.os.version;
+    if (!device && os === 'Windows' && Number.parseFloat(osVersion) >= 8.1) {
+      return _drmScheme.DrmScheme.PLAYREADY;
+    }
+    return NOT_SUPPORTED;
+  }
+};
+exports.default = DrmSupport;
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _baseDrmProtocol = __webpack_require__(16);
+
+var _baseDrmProtocol2 = _interopRequireDefault(_baseDrmProtocol);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var FairPlay = function (_BaseDrmProtocol) {
+  _inherits(FairPlay, _BaseDrmProtocol);
+
+  function FairPlay() {
+    _classCallCheck(this, FairPlay);
+
+    return _possibleConstructorReturn(this, (FairPlay.__proto__ || Object.getPrototypeOf(FairPlay)).apply(this, arguments));
+  }
+
+  _createClass(FairPlay, null, [{
+    key: 'canPlayDrm',
+
+
+    /**
+     * FairPlay playback supports in case 2 conditions are met:
+     * 1. The environment supports FairPlay playback.
+     * 2. The drm data of the source object contains entry with FairPlay scheme.
+     * @param {Array<Object>} drmData - The drm data to check.
+     * @return {boolean} - Whether FairPlay can be play on the current environment.
+     */
+    value: function canPlayDrm(drmData) {
+      FairPlay._logger.debug("Can play DRM scheme of: " + _baseDrmProtocol2.default.DrmScheme.FAIRPLAY);
+      return _baseDrmProtocol2.default.DrmSupport.isProtocolSupported(_baseDrmProtocol2.default.DrmScheme.FAIRPLAY, drmData);
+    }
+
+    /**
+     * Sets the FairPlay playback.
+     * @param {HTMLVideoElement} videoElement - The video element to manipulate.
+     * @param {Array<Object>} drmData - The drm data.
+     * @returns {void}
+     */
+
+  }, {
+    key: 'setDrmPlayback',
+    value: function setDrmPlayback(videoElement) {
+      var drmData = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
+      FairPlay._logger.debug("Sets DRM playback");
+      videoElement.addEventListener(FairPlay._WebkitEvents.NEED_KEY, FairPlay._onWebkitNeedKey.bind(null, drmData), false);
+    }
+  }, {
+    key: '_onWebkitNeedKey',
+    value: function _onWebkitNeedKey(drmData, event) {
+      FairPlay._logger.debug("Webkit need key triggered");
+      var fpDrmData = drmData.find(function (drmEntry) {
+        return drmEntry.scheme === _baseDrmProtocol2.default.DrmScheme.FAIRPLAY;
+      });
+      if (!fpDrmData || FairPlay._keySession) {
+        return;
+      }
+
+      var fpCertificate = fpDrmData.certificate;
+      var videoElement = event.target;
+      var initData = event.initData;
+      var contentId = FairPlay._extractContentId(initData);
+      var aCertificate = FairPlay._base64DecodeUint8Array(fpCertificate);
+
+      initData = FairPlay._concatInitDataIdAndCertificate(initData, contentId, aCertificate);
+
+      if (!videoElement.webkitKeys) {
+        var keySystem = FairPlay._selectKeySystem();
+        FairPlay._logger.debug("Sets media keys");
+        videoElement.webkitSetMediaKeys(new window.WebKitMediaKeys(keySystem));
+      }
+      if (!videoElement.webkitKeys) {
+        throw new Error("Could not create MediaKeys");
+      }
+      FairPlay._logger.debug("Creates session");
+      FairPlay._keySession = videoElement.webkitKeys.createSession('video/mp4', initData);
+      if (!FairPlay._keySession) {
+        throw new Error("Could not create key session");
+      }
+      FairPlay._keySession.contentId = contentId;
+      FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_MESSAGE, FairPlay._onWebkitKeyMessage.bind(null, fpDrmData), false);
+      FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_ADDED, FairPlay._onWebkitKeyAdded, false);
+      FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_ERROR, FairPlay._onWebkitKeyError, false);
+    }
+  }, {
+    key: 'destroy',
+    value: function destroy() {
+      FairPlay._keySession = null;
+    }
+  }, {
+    key: '_onWebkitKeyMessage',
+    value: function _onWebkitKeyMessage(drmData, event) {
+      FairPlay._logger.debug("Webkit key message triggered");
+      var message = event.message;
+      var request = new XMLHttpRequest();
+      request.responseType = "text";
+      request.addEventListener("load", FairPlay._licenseRequestLoaded, false);
+      request.addEventListener("error", FairPlay._licenseRequestFailed, false);
+      var params = FairPlay._base64EncodeUint8Array(message);
+      request.open('POST', drmData.licenseUrl, true);
+      request.setRequestHeader("Content-type", "application/json");
+      FairPlay._logger.debug("Ready for license request");
+      request.send(params);
+    }
+  }, {
+    key: '_onWebkitKeyAdded',
+    value: function _onWebkitKeyAdded() {
+      FairPlay._logger.debug("Decryption key was added to session");
+    }
+  }, {
+    key: '_onWebkitKeyError',
+    value: function _onWebkitKeyError() {
+      FairPlay._logger.error("A decryption key error was encountered");
+    }
+  }, {
+    key: '_licenseRequestLoaded',
+    value: function _licenseRequestLoaded(event) {
+      FairPlay._logger.debug("License request loaded");
+      var request = event.target;
+      var keyText = request.responseText.trim();
+      var responseObj = JSON.parse(keyText);
+      var key = FairPlay._base64DecodeUint8Array(responseObj.ckc);
+      FairPlay._keySession.update(key);
+    }
+  }, {
+    key: '_licenseRequestFailed',
+    value: function _licenseRequestFailed() {
+      throw new Error("License request failed");
+    }
+  }, {
+    key: '_extractContentId',
+    value: function _extractContentId(initData) {
+      var link = document.createElement('a');
+      link.href = FairPlay._arrayToString(initData);
+      return link.hostname;
+    }
+  }, {
+    key: '_selectKeySystem',
+    value: function _selectKeySystem() {
+      var keySystem = null;
+      if (window.WebKitMediaKeys.isTypeSupported(FairPlay._KeySystem, "video/mp4")) {
+        keySystem = FairPlay._KeySystem;
+      } else {
+        FairPlay._logger.warn("Key System not supported");
+      }
+      return keySystem;
+    }
+  }, {
+    key: '_arrayToString',
+    value: function _arrayToString(array) {
+      return String.fromCharCode.apply(null, new Uint16Array(array.buffer));
+    }
+  }, {
+    key: '_base64DecodeUint8Array',
+    value: function _base64DecodeUint8Array(input) {
+      var raw = window.atob(input);
+      var rawLength = raw.length;
+      var array = new Uint8Array(new ArrayBuffer(rawLength));
+      for (var i = 0; i < rawLength; i++) {
+        array[i] = raw.charCodeAt(i);
+      }
+      return array;
+    }
+  }, {
+    key: '_concatInitDataIdAndCertificate',
+    value: function _concatInitDataIdAndCertificate(initData, id, cert) {
+      if (typeof id === "string") {
+        id = FairPlay._stringToArray(id);
+      }
+      var offset = 0;
+      var buffer = new ArrayBuffer(initData.byteLength + 4 + id.byteLength + 4 + cert.byteLength);
+      var dataView = new DataView(buffer);
+
+      var initDataArray = new Uint8Array(buffer, offset, initData.byteLength);
+      initDataArray.set(initData);
+      offset += initData.byteLength;
+
+      dataView.setUint32(offset, id.byteLength, true);
+      offset += 4;
+
+      var idArray = new Uint8Array(buffer, offset, id.byteLength);
+      idArray.set(id);
+      offset += idArray.byteLength;
+
+      dataView.setUint32(offset, cert.byteLength, true);
+      offset += 4;
+
+      var certArray = new Uint8Array(buffer, offset, cert.byteLength);
+      certArray.set(cert);
+
+      return new Uint8Array(buffer, 0, buffer.byteLength);
+    }
+  }, {
+    key: '_stringToArray',
+    value: function _stringToArray(string) {
+      var buffer = new ArrayBuffer(string.length * 2);
+      var array = new Uint16Array(buffer);
+      for (var i = 0, strLen = string.length; i < strLen; i++) {
+        array[i] = string.charCodeAt(i);
+      }
+      return array;
+    }
+  }, {
+    key: '_base64EncodeUint8Array',
+    value: function _base64EncodeUint8Array(input) {
+      var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+      var output = "";
+      var chr1 = void 0,
+          chr2 = void 0,
+          chr3 = void 0,
+          enc1 = void 0,
+          enc2 = void 0,
+          enc3 = void 0,
+          enc4 = void 0;
+      var i = 0;
+      while (i < input.length) {
+        chr1 = input[i++];
+        chr2 = i < input.length ? input[i++] : Number.NaN;
+        chr3 = i < input.length ? input[i++] : Number.NaN;
+
+        enc1 = chr1 >> 2;
+        enc2 = (chr1 & 3) << 4 | chr2 >> 4;
+        enc3 = (chr2 & 15) << 2 | chr3 >> 6;
+        enc4 = chr3 & 63;
+
+        if (isNaN(chr2)) {
+          enc3 = enc4 = 64;
+        } else if (isNaN(chr3)) {
+          enc4 = 64;
+        }
+        output += keyStr.charAt(enc1) + keyStr.charAt(enc2) + keyStr.charAt(enc3) + keyStr.charAt(enc4);
+      }
+      return output;
+    }
+  }]);
+
+  return FairPlay;
+}(_baseDrmProtocol2.default);
+
+FairPlay._logger = _baseDrmProtocol2.default.getLogger('FairPlay');
+FairPlay._KeySystem = "com.apple.fps.1_0";
+FairPlay._WebkitEvents = {
+  NEED_KEY: 'webkitneedkey',
+  KEY_MESSAGE: 'webkitkeymessage',
+  KEY_ADDED: 'webkitkeyadded',
+  KEY_ERROR: 'webkitkeyerror'
+};
+exports.default = FairPlay;
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _fakeEventTarget = __webpack_require__(14);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
@@ -4199,7 +4668,7 @@ var _eventManager2 = _interopRequireDefault(_eventManager);
 
 var _events = __webpack_require__(8);
 
-var _mediaSourceProvider = __webpack_require__(16);
+var _mediaSourceProvider = __webpack_require__(18);
 
 var _mediaSourceProvider2 = _interopRequireDefault(_mediaSourceProvider);
 
@@ -4265,9 +4734,9 @@ var Html5 = function (_FakeEventTarget) {
     }
 
     /**
-     * Checks if the engine can play a given mime type.
-     * @param {string} mimeType - The mime type to check.
-     * @returns {boolean} - Whether the engine can play the mime type.
+     * Checks if the engine can play a given source.
+     * @param {Source} source - The source object to check.
+     * @returns {boolean} - Whether the engine can play the source.
      * @public
      * @static
      */
@@ -4284,9 +4753,9 @@ var Html5 = function (_FakeEventTarget) {
      */
 
   }, {
-    key: 'canPlayType',
-    value: function canPlayType(mimeType) {
-      return _mediaSourceProvider2.default.canPlayType(mimeType);
+    key: 'canPlaySource',
+    value: function canPlaySource(source) {
+      return _mediaSourceProvider2.default.canPlaySource(source);
     }
 
     /**
@@ -5037,7 +5506,7 @@ Html5.id = "html5";
 exports.default = Html5;
 
 /***/ }),
-/* 21 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5073,15 +5542,19 @@ var _textTrack = __webpack_require__(5);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _baseMediaSourceAdapter = __webpack_require__(15);
+var _baseMediaSourceAdapter = __webpack_require__(17);
 
 var _baseMediaSourceAdapter2 = _interopRequireDefault(_baseMediaSourceAdapter);
 
-var _resolution = __webpack_require__(29);
+var _resolution = __webpack_require__(34);
 
 var _util = __webpack_require__(2);
 
 var Utils = _interopRequireWildcard(_util);
+
+var _fairplay = __webpack_require__(24);
+
+var _fairplay2 = _interopRequireDefault(_fairplay);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -5134,6 +5607,13 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      */
 
     /**
+     * The DRM protocols implementations for native adapter.
+     * @type {Array<Function>}
+     * @private
+     * @static
+     */
+
+    /**
      * The id of the Adapter
      * @member {string} id
      * @static
@@ -5146,12 +5626,17 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
     }
 
     /**
-     * Factory method to create media source adapter.
-     * @function createAdapter
-     * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with.
-     * @param {Object} source - The source Object.
-     * @param {Object} config - The player configuration.
-     * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter.
+     * Checks if NativeAdapter can play a given drm data.
+     * @function canPlayDrm
+     * @param {Array<Object>} drmData - The drm data to check.
+     * @returns {boolean} - Whether the native adapter can play a specific drm data.
+     * @static
+     */
+
+    /**
+     * The DRM protocol for the current playback.
+     * @type {?Function}
+     * @private
      * @static
      */
 
@@ -5160,6 +5645,53 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      * The adapter logger
      * @member {any} _logger
      * @private
+     * @static
+     */
+
+  }, {
+    key: 'canPlayDrm',
+    value: function canPlayDrm(drmData) {
+      var canPlayDrm = false;
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = NativeAdapter._drmProtocols[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var drmProtocol = _step.value;
+
+          if (drmProtocol.canPlayDrm(drmData)) {
+            NativeAdapter._drmProtocol = drmProtocol;
+            canPlayDrm = true;
+            break;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      NativeAdapter._logger.debug('canPlayDrm result is ' + canPlayDrm.toString(), drmData);
+      return canPlayDrm;
+    }
+
+    /**
+     * Factory method to create media source adapter.
+     * @function createAdapter
+     * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with.
+     * @param {Object} source - The source Object.
+     * @param {Object} config - The player configuration.
+     * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter.
      * @static
      */
 
@@ -5185,20 +5717,35 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
 
     var _this = _possibleConstructorReturn(this, (NativeAdapter.__proto__ || Object.getPrototypeOf(NativeAdapter)).call(this, videoElement, source));
 
+    _this._maybeSetDrmPlayback();
     _this._eventManager = new _eventManager2.default();
     _this._progressiveSources = config.sources.progressive;
     return _this;
   }
 
   /**
-   * Set the suitable progressive source according the current resolution
-   * @function _setProgressiveSource
-   * @returns {void}
+   * Sets the DRM playback in case such needed.
    * @private
+   * @returns {void}
    */
 
 
   _createClass(NativeAdapter, [{
+    key: '_maybeSetDrmPlayback',
+    value: function _maybeSetDrmPlayback() {
+      if (NativeAdapter._drmProtocol && this._sourceObj && this._sourceObj.drmData) {
+        NativeAdapter._drmProtocol.setDrmPlayback(this._videoElement, this._sourceObj.drmData);
+      }
+    }
+
+    /**
+     * Set the suitable progressive source according the current resolution
+     * @function _setProgressiveSource
+     * @returns {void}
+     * @private
+     */
+
+  }, {
     key: '_setProgressiveSource',
     value: function _setProgressiveSource() {
       var suitableTrack = (0, _resolution.getSuitableSourceForResolution)(this._progressiveSources, this._videoElement.offsetWidth, this._videoElement.offsetHeight);
@@ -5276,6 +5823,10 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
       this._eventManager.destroy();
       this._loadPromise = null;
       this._progressiveSources = [];
+      if (NativeAdapter._drmProtocol) {
+        NativeAdapter._drmProtocol.destroy();
+        NativeAdapter._drmProtocol = null;
+      }
     }
 
     /**
@@ -5638,10 +6189,12 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
 
 NativeAdapter.id = 'NativeAdapter';
 NativeAdapter._logger = _baseMediaSourceAdapter2.default.getLogger(NativeAdapter.id);
+NativeAdapter._drmProtocols = [_fairplay2.default];
+NativeAdapter._drmProtocol = null;
 exports.default = NativeAdapter;
 
 /***/ }),
-/* 22 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5653,11 +6206,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _multiMap = __webpack_require__(13);
+var _multiMap = __webpack_require__(15);
 
 var _multiMap2 = _interopRequireDefault(_multiMap);
 
-var _baseMiddleware = __webpack_require__(10);
+var _baseMiddleware = __webpack_require__(11);
 
 var _baseMiddleware2 = _interopRequireDefault(_baseMiddleware);
 
@@ -5774,7 +6327,7 @@ var Middleware = function () {
 exports.default = Middleware;
 
 /***/ }),
-/* 23 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5786,11 +6339,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _middleware = __webpack_require__(22);
+var _middleware = __webpack_require__(27);
 
 var _middleware2 = _interopRequireDefault(_middleware);
 
-var _baseMiddleware = __webpack_require__(10);
+var _baseMiddleware = __webpack_require__(11);
 
 var _baseMiddleware2 = _interopRequireDefault(_baseMiddleware);
 
@@ -5874,7 +6427,7 @@ PlaybackMiddleware.Actions = {
 exports.default = PlaybackMiddleware;
 
 /***/ }),
-/* 24 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5883,7 +6436,7 @@ exports.default = PlaybackMiddleware;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.PLAYER_NAME = exports.VERSION = exports.Utils = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BaseMiddleware = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerMediaSourceAdapter = undefined;
+exports.BaseDrmProtocol = exports.Env = exports.PLAYER_NAME = exports.VERSION = exports.Utils = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BaseMiddleware = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerMediaSourceAdapter = undefined;
 exports.loadPlayer = loadPlayer;
 
 var _player = __webpack_require__(9);
@@ -5894,23 +6447,27 @@ var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _package = __webpack_require__(19);
+var _package = __webpack_require__(22);
 
 var packageData = _interopRequireWildcard(_package);
 
-var _baseMediaSourceAdapter = __webpack_require__(15);
+var _baseMediaSourceAdapter = __webpack_require__(17);
 
 var _baseMediaSourceAdapter2 = _interopRequireDefault(_baseMediaSourceAdapter);
 
-var _mediaSourceProvider = __webpack_require__(16);
+var _mediaSourceProvider = __webpack_require__(18);
 
-var _pluginManager = __webpack_require__(17);
+var _pluginManager = __webpack_require__(19);
 
-var _baseMiddleware = __webpack_require__(10);
+var _baseDrmProtocol = __webpack_require__(16);
+
+var _baseDrmProtocol2 = _interopRequireDefault(_baseDrmProtocol);
+
+var _baseMiddleware = __webpack_require__(11);
 
 var _baseMiddleware2 = _interopRequireDefault(_baseMiddleware);
 
-var _basePlugin = __webpack_require__(11);
+var _basePlugin = __webpack_require__(12);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
@@ -5930,6 +6487,10 @@ var _textTrack = __webpack_require__(5);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
+var _env = __webpack_require__(13);
+
+var _env2 = _interopRequireDefault(_env);
+
 var _util = __webpack_require__(2);
 
 var Utils = _interopRequireWildcard(_util);
@@ -5945,8 +6506,8 @@ var VERSION = packageData.version;
 
 var PLAYER_NAME = 'kaltura-playkit-js';
 
-_logger2.default.getLogger().log("%c Playkit " + VERSION, "color: yellow; font-size: large");
-_logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: yellow;");
+_logger2.default.getLogger().log("%c Playkit " + VERSION, "color: #3399ff; font-size: large");
+_logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: #3399ff;");
 
 /**
  * @param {string} targetId - The target div id to append the player.
@@ -5985,10 +6546,18 @@ exports.VERSION = VERSION;
 // Export player name
 
 exports.PLAYER_NAME = PLAYER_NAME;
+
+// Export environment data
+
+exports.Env = _env2.default;
+
+// Export base DRM protocol
+
+exports.BaseDrmProtocol = _baseDrmProtocol2.default;
 exports.default = loadPlayer;
 
 /***/ }),
-/* 25 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6008,11 +6577,11 @@ var _eventManager = __webpack_require__(7);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _state = __webpack_require__(26);
+var _state = __webpack_require__(31);
 
 var _state2 = _interopRequireDefault(_state);
 
-var _stateTypes = __webpack_require__(18);
+var _stateTypes = __webpack_require__(21);
 
 var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
@@ -6289,7 +6858,7 @@ var StateManager = function () {
 exports.default = StateManager;
 
 /***/ }),
-/* 26 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6371,7 +6940,7 @@ var State = function () {
 exports.default = State;
 
 /***/ }),
-/* 27 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6389,7 +6958,7 @@ var TRACK_TYPES = {
 exports.default = TRACK_TYPES;
 
 /***/ }),
-/* 28 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6510,7 +7079,7 @@ var PosterManager = function () {
 exports.default = PosterManager;
 
 /***/ }),
-/* 29 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6636,10 +7205,10 @@ function getSuitableSourceForResolution(tracks, width, height) {
 exports.getSuitableSourceForResolution = getSuitableSourceForResolution;
 
 /***/ }),
-/* 30 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(31)(undefined);
+exports = module.exports = __webpack_require__(36)(undefined);
 // imports
 
 
@@ -6650,7 +7219,7 @@ exports.push([module.i, ".playkit-container {\n  position: relative;\n  width: 1
 
 
 /***/ }),
-/* 31 */
+/* 36 */
 /***/ (function(module, exports) {
 
 /*
@@ -6732,7 +7301,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 32 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -6999,13 +7568,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 33 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(30);
+var content = __webpack_require__(35);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -7013,7 +7582,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(34)(content, options);
+var update = __webpack_require__(39)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -7030,7 +7599,7 @@ if(false) {
 }
 
 /***/ }),
-/* 34 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -7076,7 +7645,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(35);
+var	fixUrls = __webpack_require__(40);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -7389,7 +7958,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 35 */
+/* 40 */
 /***/ (function(module, exports) {
 
 
@@ -7484,7 +8053,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 36 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -8405,7 +8974,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         exports.UAParser = UAParser;
     } else {
         // requirejs env (optional)
-        if ("function" === FUNC_TYPE && __webpack_require__(37)) {
+        if ("function" === FUNC_TYPE && __webpack_require__(42)) {
             !(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
                 return UAParser;
             }.call(exports, __webpack_require__, exports, module),
@@ -8441,7 +9010,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
 
 /***/ }),
-/* 37 */
+/* 42 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
@@ -8450,7 +9019,7 @@ module.exports = __webpack_amd_options__;
 /* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ }),
-/* 38 */
+/* 43 */
 /***/ (function(module, exports) {
 
 module.exports = {

@@ -5,5 +5,6 @@ declare type Source = {
   id: ?string,
   bandwidth: ?number,
   width: ?number,
-  height: ?number
+  height: ?number,
+  drmData: ?Array<Object>
 };

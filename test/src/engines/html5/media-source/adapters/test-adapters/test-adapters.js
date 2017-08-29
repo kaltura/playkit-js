@@ -1,11 +1,15 @@
 class adapter1 implements IMediaSourceAdapter {
-  static _name = 'adapter1';
-  static get name() {
-    return adapter1._name;
+  static get id() {
+    return 'adapter1';
   }
 
   static canPlayType(mimeType: string): boolean {
     return ['mimeType0', 'mimeType1'].includes(mimeType);
+  }
+
+  static canPlayDrm(drmData: Array<Object>): boolean {
+    return !!(drmData.length && drmData[0].scheme === 's1');
+
   }
 
   static createAdapter(videoElement: HTMLVideoElement, source: Object, config: Object): IMediaSourceAdapter {
@@ -23,13 +27,16 @@ class adapter1 implements IMediaSourceAdapter {
 }
 
 class adapter2 implements IMediaSourceAdapter {
-  static _name = 'adapter2';
-  static get name() {
-    return adapter2._name;
+  static get id() {
+    return 'adapter2';
   }
 
   static canPlayType(mimeType: string): boolean {
     return ['mimeType1', 'mimeType2'].includes(mimeType);
+  }
+
+  static canPlayDrm(): boolean {
+    return false;
   }
 
   static createAdapter(videoElement: HTMLVideoElement, source: Object, config: Object): IMediaSourceAdapter {
@@ -47,13 +54,16 @@ class adapter2 implements IMediaSourceAdapter {
 }
 
 class adapter3 implements IMediaSourceAdapter {
-  static _name = 'adapter3';
-  static get name() {
-    return adapter3._name;
+  static get id() {
+    return 'adapter3';
   }
 
   static canPlayType(mimeType: string): boolean {
     return !!(document.createElement("video").canPlayType(mimeType));
+  }
+
+  static canPlayDrm(drmData: Array<Object>): boolean {
+    return !!(drmData.length && drmData[0].scheme === 's3');
   }
 
   static createAdapter(videoElement: HTMLVideoElement, source: Object, config: Object): IMediaSourceAdapter {
