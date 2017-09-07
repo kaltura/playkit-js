@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.6.0"></a>
+# [0.6.0](https://github.com/kaltura/playkit-js/compare/v0.4.1...v0.6.0) (2017-09-07)
+
+
+### Features
+
+* allow send initial volume in the player config ([#107](https://github.com/kaltura/playkit-js/issues/107)) ([a8baf1d](https://github.com/kaltura/playkit-js/commit/a8baf1d))
+* allow setting native hls and dash playback ([#106](https://github.com/kaltura/playkit-js/issues/106)) ([b24b7ea](https://github.com/kaltura/playkit-js/commit/b24b7ea))
+* drm ([#101](https://github.com/kaltura/playkit-js/issues/101)) ([1ade0da](https://github.com/kaltura/playkit-js/commit/1ade0da))
+* live playback support ([#102](https://github.com/kaltura/playkit-js/issues/102)) ([ef9d97d](https://github.com/kaltura/playkit-js/commit/ef9d97d))
+
+
+
 <a name="0.5.0"></a>
 # [0.5.0](https://github.com/kaltura/playkit-js/compare/v0.4.1...v0.5.0) (2017-08-31)
 
