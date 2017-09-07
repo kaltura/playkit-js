@@ -7,13 +7,15 @@
     "preload": "none",
     "autoplay": false,
     "muted": false,
-    "options": {
+    "tweaks": {
       "html5": {
-        "hls": {
-        },
-        "dash": {
-        }
+        "hls": {},
+        "dash": {}
       }
+    },
+    "preferNative":{
+      "hls": false,
+      "dash": false
     },
     "streamPriority": [
       {
