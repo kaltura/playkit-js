@@ -96,7 +96,7 @@ export default class MediaSourceProvider {
   static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): ?IMediaSourceAdapter {
     if (videoElement && source && config) {
       if (!MediaSourceProvider._selectedAdapter) {
-        MediaSourceProvider.canPlaySource(source, false);
+        MediaSourceProvider.canPlaySource(source, true);
       }
       return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config) : null;
     }
