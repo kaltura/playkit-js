@@ -77,7 +77,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
    * @param {string} mimeType - The mime type to check
-   * @param {boolean} preferNative - prefer native flag
+   * @param {boolean} [preferNative=true] - prefer native flag
    * @returns {boolean} - Whether the native adapter can play a specific mime type
    * @static
    */

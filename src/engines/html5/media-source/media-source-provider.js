@@ -65,7 +65,7 @@ export default class MediaSourceProvider {
   /**
    * Checks if the a media source adapter can play a given source.
    * @param {Source} source - The source object to check.
-   *  @param {boolean} preferNative - prefer native flag
+   *  @param {boolean} [preferNative=true] - prefer native flag
    * @returns {boolean} - Whether a media source adapter can play the source.
    * @public
    * @static
