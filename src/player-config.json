@@ -7,7 +7,7 @@
     "preload": "none",
     "autoplay": false,
     "muted": false,
-    "tweaks": {
+    "options": {
       "html5": {
         "hls": {},
         "dash": {}
