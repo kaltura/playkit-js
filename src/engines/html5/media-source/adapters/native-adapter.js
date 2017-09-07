@@ -81,10 +81,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {boolean} - Whether the native adapter can play a specific mime type
    * @static
    */
-  static canPlayType(mimeType: string, preferNative: boolean): boolean {
+  static canPlayType(mimeType: string, preferNative: boolean = true): boolean {
     let canPlayType = false;
     if (typeof mimeType === 'string') {
-      canPlayType = !!(NativeAdapter.TEST_VIDEO.canPlayType(mimeType.toLowerCase())) && preferNative;
+      canPlayType = !!(NativeAdapter.TEST_VIDEO.canPlayType(mimeType.toLowerCase())) && !!preferNative;
     }
     NativeAdapter._logger.debug('canPlayType result for mimeType:' + mimeType + ' is ' + canPlayType.toString());
     return canPlayType;

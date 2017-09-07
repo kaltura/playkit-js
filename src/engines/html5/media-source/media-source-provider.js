@@ -70,7 +70,7 @@ export default class MediaSourceProvider {
    * @public
    * @static
    */
-  static canPlaySource(source: Source, preferNative: boolean): boolean {
+  static canPlaySource(source: Source, preferNative: boolean = true): boolean {
     let mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
     if (source && source.mimetype) {
       for (let i = 0; i < mediaSourceAdapters.length; i++) {
