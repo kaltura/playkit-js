@@ -365,6 +365,9 @@ export default class Player extends FakeEventTarget {
 
   _handlePlaybackConfig(): void {
     if (this._config.playback) {
+      if (typeof this._config.playback.volume === 'number') {
+        this.volume = this._config.playback.volume;
+      }
       if (this._config.playback.muted) {
         this.muted = true;
       }
@@ -619,7 +622,6 @@ export default class Player extends FakeEventTarget {
     if (this._firstPlay) {
       this._firstPlay = false;
       this.dispatchEvent(new FakeEvent(CustomEvents.FIRST_PLAY));
-
       this._posterManager.hide();
     }
   }
