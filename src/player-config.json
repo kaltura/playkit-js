@@ -3,6 +3,7 @@
     "poster": ""
   },
   "playback": {
+    "volume": 1,
     "playsinline": false,
     "preload": "none",
     "autoplay": false,
