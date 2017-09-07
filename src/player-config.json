@@ -10,11 +10,13 @@
     "muted": false,
     "options": {
       "html5": {
-        "hls": {
-        },
-        "dash": {
-        }
+        "hls": {},
+        "dash": {}
       }
+    },
+    "preferNative":{
+      "hls": false,
+      "dash": false
     },
     "streamPriority": [
       {

@@ -53,12 +53,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * Checks if the engine can play a given source.
    * @param {Source} source - The source object to check.
+   * @param {boolean} preferNative - prefer native flag
    * @returns {boolean} - Whether the engine can play the source.
    * @public
    * @static
    */
-  static canPlaySource(source: Source): boolean {
-    return MediaSourceProvider.canPlaySource(source);
+  static canPlaySource(source: Source, preferNative: boolean): boolean {
+    return MediaSourceProvider.canPlaySource(source, preferNative);
   }
 
   /**

@@ -300,17 +300,18 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _selectEngineByPriority(): boolean {
-    let streamPriority = this._config.playback.streamPriority;
-    let sources = this._config.sources;
+    const streamPriority = this._config.playback.streamPriority;
+    const preferNative = this._config.playback.preferNative;
+    const sources = this._config.sources;
     for (let priority of streamPriority) {
-      let engineId = (typeof priority.engine === 'string') ? priority.engine.toLowerCase() : '';
-      let format = (typeof priority.format === 'string') ? priority.format.toLowerCase() : '';
-      let engine = Player._engines.find((engine) => engine.id === engineId);
+      const engineId = (typeof priority.engine === 'string') ? priority.engine.toLowerCase() : '';
+      const format = (typeof priority.format === 'string') ? priority.format.toLowerCase() : '';
+      const engine = Player._engines.find((engine) => engine.id === engineId);
       if (engine) {
-        let formatSources = sources[format];
+        const formatSources = sources[format];
         if (formatSources && formatSources.length > 0) {
-          let source = formatSources[0];
-          if (engine.canPlaySource(source)) {
+          const source = formatSources[0];
+          if (engine.canPlaySource(source, preferNative[format])) {
             Player._logger.debug('Source selected: ', formatSources);
             this._loadEngine(engine, source);
             this.dispatchEvent(new FakeEvent(CustomEvents.SOURCE_SELECTED, {selectedSource: formatSources}));

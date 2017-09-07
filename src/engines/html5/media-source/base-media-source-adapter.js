@@ -106,7 +106,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
 
   /** Must implemented methods by the derived media source adapter **/
 
-  static canPlayType(mimeType: string): boolean {
+  static canPlayType(mimeType: string, preferNative: boolean): boolean {
     throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayType').getError();
   }
 
