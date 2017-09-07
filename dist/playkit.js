@@ -1960,6 +1960,7 @@ var Player = function (_FakeEventTarget) {
       var _this3 = this;
 
       var streamPriority = this._config.playback.streamPriority;
+      var preferNative = this._config.playback.preferNative;
       var sources = this._config.sources;
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
@@ -1978,7 +1979,7 @@ var Player = function (_FakeEventTarget) {
             var formatSources = sources[format];
             if (formatSources && formatSources.length > 0) {
               var source = formatSources[0];
-              if (engine.canPlaySource(source)) {
+              if (engine.canPlaySource(source, preferNative[format])) {
                 Player._logger.debug('Source selected: ', formatSources);
                 _this3._loadEngine(engine, source);
                 _this3.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.SOURCE_SELECTED, { selectedSource: formatSources }));
@@ -2067,6 +2068,9 @@ var Player = function (_FakeEventTarget) {
     key: '_handlePlaybackConfig',
     value: function _handlePlaybackConfig() {
       if (this._config.playback) {
+        if (typeof this._config.playback.volume === 'number') {
+          this.volume = this._config.playback.volume;
+        }
         if (this._config.playback.muted) {
           this.muted = true;
         }
@@ -2361,7 +2365,6 @@ var Player = function (_FakeEventTarget) {
       if (this._firstPlay) {
         this._firstPlay = false;
         this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.FIRST_PLAY));
-
         this._posterManager.hide();
       }
     }
@@ -3864,7 +3867,7 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
     }
   }], [{
     key: 'canPlayType',
-    value: function canPlayType(mimeType) {
+    value: function canPlayType(mimeType, preferNative) {
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayType').getError();
     }
   }]);
@@ -3975,6 +3978,7 @@ var MediaSourceProvider = function () {
     /**
      * Checks if the a media source adapter can play a given source.
      * @param {Source} source - The source object to check.
+     *  @param {boolean} [preferNative=true] - prefer native flag
      * @returns {boolean} - Whether a media source adapter can play the source.
      * @public
      * @static
@@ -3983,10 +3987,12 @@ var MediaSourceProvider = function () {
   }, {
     key: 'canPlaySource',
     value: function canPlaySource(source) {
+      var preferNative = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
       var mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
       if (source && source.mimetype) {
         for (var i = 0; i < mediaSourceAdapters.length; i++) {
-          if (mediaSourceAdapters[i].canPlayType(source.mimetype) && (!source.drmData || mediaSourceAdapters[i].canPlayDrm(source.drmData))) {
+          if (mediaSourceAdapters[i].canPlayType(source.mimetype, preferNative) && (!source.drmData || mediaSourceAdapters[i].canPlayDrm(source.drmData))) {
             MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
             MediaSourceProvider._logger.debug('Selected adapter is <' + MediaSourceProvider._selectedAdapter.id + '>');
             return true;
@@ -4011,7 +4017,7 @@ var MediaSourceProvider = function () {
     value: function getMediaSourceAdapter(videoElement, source, config) {
       if (videoElement && source && config) {
         if (!MediaSourceProvider._selectedAdapter) {
-          MediaSourceProvider.canPlaySource(source);
+          MediaSourceProvider.canPlaySource(source, true);
         }
         return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config) : null;
       }
@@ -4278,7 +4284,7 @@ exports.default = PLAYER_STATE_TYPES;
 
 module.exports = {
 	"name": "playkit-js",
-	"version": "0.5.0",
+	"version": "0.6.0",
 	"main": "dist/playkit.js",
 	"scripts": {
 		"clean": "rm -rf ./dist",
@@ -4832,6 +4838,7 @@ var Html5 = function (_FakeEventTarget) {
     /**
      * Checks if the engine can play a given source.
      * @param {Source} source - The source object to check.
+     * @param {boolean} preferNative - prefer native flag
      * @returns {boolean} - Whether the engine can play the source.
      * @public
      * @static
@@ -4850,8 +4857,8 @@ var Html5 = function (_FakeEventTarget) {
 
   }, {
     key: 'canPlaySource',
-    value: function canPlaySource(source) {
-      return _mediaSourceProvider2.default.canPlaySource(source);
+    value: function canPlaySource(source, preferNative) {
+      return _mediaSourceProvider2.default.canPlaySource(source, preferNative);
     }
 
     /**
@@ -5708,6 +5715,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      * Checks if NativeAdapter can play a given mime type.
      * @function canPlayType
      * @param {string} mimeType - The mime type to check
+     * @param {boolean} [preferNative=true] - prefer native flag
      * @returns {boolean} - Whether the native adapter can play a specific mime type
      * @static
      */
@@ -5739,14 +5747,20 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      * @static
      */
 
+
     /**
-     * The id of the Adapter
-     * @member {string} id
+     * The adapter logger
+     * @member {any} _logger
+     * @private
      * @static
-     * @public
      */
     value: function canPlayType(mimeType) {
-      var canPlayType = typeof mimeType === 'string' ? !!Utils.Dom.createElement("video").canPlayType(mimeType.toLowerCase()) : false;
+      var preferNative = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+      var canPlayType = false;
+      if (typeof mimeType === 'string') {
+        canPlayType = !!NativeAdapter.TEST_VIDEO.canPlayType(mimeType.toLowerCase()) && !!preferNative;
+      }
       NativeAdapter._logger.debug('canPlayType result for mimeType:' + mimeType + ' is ' + canPlayType.toString());
       return canPlayType;
     }
@@ -5766,12 +5780,18 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      * @static
      */
 
+    /**
+     * static video element for canPlayType testing
+     * @member {} TEST_VIDEO
+     * @type {HTMLVideoElement}
+     * @static
+     */
 
     /**
-     * The adapter logger
-     * @member {any} _logger
-     * @private
+     * The id of the Adapter
+     * @member {string} id
      * @static
+     * @public
      */
 
   }, {
@@ -6379,6 +6399,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
 
 NativeAdapter.id = 'NativeAdapter';
 NativeAdapter._logger = _baseMediaSourceAdapter2.default.getLogger(NativeAdapter.id);
+NativeAdapter.TEST_VIDEO = Utils.Dom.createElement("video");
 NativeAdapter._drmProtocols = [_fairplay2.default];
 NativeAdapter._drmProtocol = null;
 exports.default = NativeAdapter;
@@ -9217,6 +9238,7 @@ module.exports = {
 		"poster": ""
 	},
 	"playback": {
+		"volume": 1,
 		"playsinline": false,
 		"preload": "none",
 		"autoplay": false,
@@ -9226,6 +9248,10 @@ module.exports = {
 				"hls": {},
 				"dash": {}
 			}
+		},
+		"preferNative": {
+			"hls": false,
+			"dash": false
 		},
 		"streamPriority": [
 			{
