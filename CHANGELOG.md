@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.6.1"></a>
+## [0.6.1](https://github.com/kaltura/playkit-js/compare/v0.6.0...v0.6.1) (2017-09-11)
+
+
+### Bug Fixes
+
+* **FEC-7108:** native load video element for video sibling on mobile ([#109](https://github.com/kaltura/playkit-js/issues/109)) ([aec8bdd](https://github.com/kaltura/playkit-js/commit/aec8bdd))
+
+
+
 <a name="0.6.0"></a>
 # [0.6.0](https://github.com/kaltura/playkit-js/compare/v0.4.1...v0.6.0) (2017-09-07)
 
