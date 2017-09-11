@@ -850,7 +850,7 @@ export default class Player extends FakeEventTarget {
    */
   set volume(vol: number): void {
     if (this._engine) {
-      if (Utils.Number.isFloat(vol)) {
+      if (Utils.Number.isFloat(vol) || (vol === 0) || (vol === 1)) {
         let boundedVol = vol;
         if (boundedVol < 0) {
           boundedVol = 0;
