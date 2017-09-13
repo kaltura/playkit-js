@@ -383,7 +383,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._eventManager.listen(this._videoElement, Html5Events.LOADED_DATA, () => {
         this._eventManager.unlisten(this._videoElement, Html5Events.LOADED_DATA);
         if (Env.browser.name === 'Android Browser') {
-          // Android browser doesn't support seek before play, we have to play wait to 'durationchanged' event and then seek.
+          // In android browser we have to seek only after some playback.
           this._eventManager.listen(this._videoElement, Html5Events.DURATION_CHANGE, () => {
             this._eventManager.unlisten(this._videoElement, Html5Events.DURATION_CHANGE);
             this._videoElement.currentTime = currentTime;
