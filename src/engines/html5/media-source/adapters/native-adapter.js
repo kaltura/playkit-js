@@ -9,6 +9,7 @@ import BaseMediaSourceAdapter from '../base-media-source-adapter'
 import {getSuitableSourceForResolution} from '../../../../utils/resolution'
 import * as Utils from '../../../../utils/util'
 import FairPlay from '../../../../drm/fairplay'
+import Env from '../../../../utils/env'
 
 /**
  * An illustration of media source extension for progressive download
@@ -381,14 +382,32 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._sourceObj = videoTracks[videoTrack.index];
       this._eventManager.listen(this._videoElement, Html5Events.LOADED_DATA, () => {
         this._eventManager.unlisten(this._videoElement, Html5Events.LOADED_DATA);
-        this._eventManager.listen(this._videoElement, Html5Events.SEEKED, () => {
-          this._eventManager.unlisten(this._videoElement, Html5Events.SEEKED);
-          this._onTrackChanged(videoTrack);
-        });
-        this._videoElement.currentTime = currentTime;
+        if (Env.browser.name === 'Android Browser') {
+          // Android browser doesn't support seek before play, we have to play wait to 'durationchanged' event and then seek.
+          this._eventManager.listen(this._videoElement, Html5Events.DURATION_CHANGE, () => {
+            this._eventManager.unlisten(this._videoElement, Html5Events.DURATION_CHANGE);
+            this._videoElement.currentTime = currentTime;
+          });
+          this._eventManager.listen(this._videoElement, Html5Events.SEEKED, () => {
+            this._eventManager.unlisten(this._videoElement, Html5Events.SEEKED);
+            this._onTrackChanged(videoTrack);
+            if (paused) {
+              this._videoElement.pause();
+            }
+          });
+          this._videoElement.play();
+        } else {
+          this._eventManager.listen(this._videoElement, Html5Events.SEEKED, () => {
+            this._eventManager.unlisten(this._videoElement, Html5Events.SEEKED);
+            this._onTrackChanged(videoTrack);
+          });
+          this._videoElement.currentTime = currentTime;
+          if (!paused) {
+            this._videoElement.play();
+          }
+        }
       });
       this._videoElement.src = this._sourceObj ? this._sourceObj.url : "";
-      paused ? this._videoElement.load() : this._videoElement.play();
     }
   }
 
