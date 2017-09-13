@@ -1649,3 +1649,58 @@ describe('seekToLiveEdge', function () {
     }
   });
 });
+
+describe('volume', function () {
+  let player, config;
+
+  before(() => {
+    createElement('DIV', targetId);
+  });
+
+  beforeEach(() => {
+    config = getConfigStructure();
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElement(targetId);
+  });
+
+  it('should return 1 by default', function () {
+    config.sources = sourcesConfig.Mp4;
+    player = new Player(targetId, config);
+    player.volume.should.equal(1);
+
+  });
+
+  it('should enable setting the volume via API', function () {
+    config.sources = sourcesConfig.Mp4;
+    player = new Player(targetId, config);
+    player.volume = 0.9;
+    player.volume.should.equal(0.9);
+    player.volume = 0.3;
+    player.volume.should.equal(0.3);
+    player.volume = 0;
+    player.volume.should.equal(0);
+  });
+
+  it('should enable setting the volume via config', function () {
+    config.sources = sourcesConfig.Mp4;
+    config.playback.volume = 0.9;
+    player = new Player(targetId, config);
+    player.volume.should.equal(0.9);
+  });
+
+  it('should cap volume values between 0 and 1(including)', function () {
+    config.sources = sourcesConfig.Mp4;
+    player = new Player(targetId, config);
+    player.volume = 1.1;
+    player.volume.should.equal(1);
+    player.volume = -0.1;
+    player.volume.should.equal(0);
+  });
+});
