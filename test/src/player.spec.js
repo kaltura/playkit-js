@@ -1350,7 +1350,7 @@ describe('configure', function () {
     });
     player.addEventListener(Html5Events.ERROR, function () {
       player.destroy();
-      should.fail();
+      done(new Error("test fail"));
     });
     player.load();
     player.ready().then(() => {
