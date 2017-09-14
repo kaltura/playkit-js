@@ -51,7 +51,7 @@ describe("unlisten", function () {
 
 describe("one", function () {
 
-  let eventTarget, eventManager, listener1;
+  let eventTarget, eventManager, listener1, listener2;
 
   beforeEach(() => {
     eventTarget = new EventTarget();
@@ -66,13 +66,20 @@ describe("one", function () {
     let counter = 0;
     listener1 = (event) => {
       counter++;
-      event.type.should.equal('event');
+      event.type.should.equal('event1');
     };
-    eventManager.listenOnce(eventTarget, 'event', listener1);
-    eventTarget.dispatchEvent({type: 'event'});
-    eventTarget.dispatchEvent({type: 'event'});
+    listener2 = (event) => {
+      counter++;
+      event.type.should.equal('event2');
+    };
+    eventManager.listenOnce(eventTarget, 'event1', listener1);
+    eventTarget.dispatchEvent({type: 'event1'});
+    eventTarget.dispatchEvent({type: 'event1'});
+    eventManager.listenOnce(eventTarget, 'event2', listener2);
+    eventTarget.dispatchEvent({type: 'event2'});
+    eventTarget.dispatchEvent({type: 'event2'});
     setTimeout(() => {
-      counter.should.equal(1);
+      counter.should.equal(2);
       done();
     }, 0);
   });
