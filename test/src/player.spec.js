@@ -11,16 +11,17 @@ const targetId = 'player-placeholder_player.spec';
 
 describe("play", function () {
 
-  let config, player;
+  let config, player, playerContainer;
 
   before(() => {
-    createElement('DIV', targetId);
+    playerContainer = createElement('DIV', targetId);
     config = getConfigStructure();
     config.sources = sourcesConfig.Mp4;
   });
 
   beforeEach(() => {
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
   });
 
   afterEach(() => {
@@ -52,12 +53,17 @@ describe("play", function () {
 
 describe("ready", function () {
 
+  let playerContainer;
+
+  before(() => {
+    playerContainer = createElement('DIV', targetId);
+  });
+
   describe("success", () => {
 
     let config;
 
     before(() => {
-      createElement('DIV', targetId);
       config = getConfigStructure();
       config.sources = sourcesConfig.Mp4;
     });
@@ -69,7 +75,8 @@ describe("ready", function () {
         let player;
 
         beforeEach(() => {
-          player = new Player(targetId, config);
+          player = new Player(config);
+          playerContainer.appendChild(player.getView());
         });
 
         afterEach(() => {
@@ -98,7 +105,8 @@ describe("ready", function () {
         let player;
 
         beforeEach(() => {
-          player = new Player(targetId);
+          player = new Player();
+          playerContainer.appendChild(player.getView());
         });
 
         afterEach(() => {
@@ -142,7 +150,8 @@ describe("ready", function () {
 
         beforeEach(() => {
           config.playback.preload = 'auto';
-          player = new Player(targetId, config);
+          player = new Player(config);
+          playerContainer.appendChild(player.getView());
         });
 
         afterEach(() => {
@@ -172,7 +181,8 @@ describe("ready", function () {
 
         beforeEach(() => {
           config.playback.preload = 'auto';
-          player = new Player(targetId);
+          player = new Player();
+          playerContainer.appendChild(player.getView());
         });
 
         afterEach(() => {
@@ -247,18 +257,18 @@ describe("ready", function () {
     });
 
     describe("preload none", () => {
+      let player;
+
+      beforeEach(() => {
+        player = new Player(config);
+        playerContainer.appendChild(player.getView());
+      });
+
+      afterEach(() => {
+        player.destroy();
+      });
 
       describe("passing config in constructor", function () {
-
-        let player;
-
-        beforeEach(() => {
-          player = new Player(targetId, config);
-        });
-
-        afterEach(() => {
-          player.destroy();
-        });
 
         it("should fail ready -> load", (done) => {
           player.ready()
@@ -280,16 +290,6 @@ describe("ready", function () {
       });
 
       describe("passing config in configure", function () {
-
-        let player;
-
-        beforeEach(() => {
-          player = new Player(targetId);
-        });
-
-        afterEach(() => {
-          player.destroy();
-        });
 
         it("should fail configure -> ready -> load", (done) => {
           player.configure(config);
@@ -331,7 +331,8 @@ describe("ready", function () {
 
         beforeEach(() => {
           config.playback.preload = 'auto';
-          player = new Player(targetId, config);
+          player = new Player(config);
+          playerContainer.appendChild(player.getView());
         });
 
         afterEach(() => {
@@ -363,7 +364,8 @@ describe("ready", function () {
 
         beforeEach(() => {
           config.playback.preload = 'auto';
-          player = new Player(targetId);
+          player = new Player();
+          playerContainer.appendChild(player.getView());
         });
 
         afterEach(() => {
@@ -491,9 +493,10 @@ describe('getTracks real', function () {
   let video;
   let track1;
   let track2;
+  let playerContainer;
 
   before(() => {
-    createElement('DIV', targetId);
+    playerContainer = createElement('DIV', targetId);
     track1 = document.createElement("track");
     track2 = document.createElement("track");
     track1.kind = 'subtitles';
@@ -506,7 +509,8 @@ describe('getTracks real', function () {
   beforeEach(() => {
     config = getConfigStructure();
     config.sources = sourcesConfig.MultipleSources;
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
     video = player._engine.getVideoElement();
     video.appendChild(track1);
     video.appendChild(track2);
@@ -581,15 +585,17 @@ describe('getTracks real', function () {
 describe('selectTrack - video', function () {
 
   let config, player, video;
+  let playerContainer;
 
   before(() => {
-    createElement('DIV', targetId);
+    playerContainer = createElement('DIV', targetId);
   });
 
   beforeEach(() => {
     config = getConfigStructure();
     config.sources = sourcesConfig.MultipleSources;
-    player = new Player(targetId);
+    player = new Player();
+    playerContainer.appendChild(player.getView());
   });
 
   afterEach(() => {
@@ -767,15 +773,17 @@ describe('selectTrack - audio', function () {
 describe('selectTrack - text', function () {
 
   let config, player, video, track1, track2;
+  let playerContainer;
 
   before(() => {
-    createElement('DIV', targetId);
+    playerContainer = createElement('DIV', targetId);
   });
 
   beforeEach(() => {
     config = getConfigStructure();
     config.sources = sourcesConfig.Mp4;
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
     video = player._engine.getVideoElement();
     track1 = document.createElement("track");
     track2 = document.createElement("track");
@@ -903,16 +911,17 @@ describe('selectTrack - text', function () {
 
 describe('getActiveTracks', function () {
 
-  let config, player, video, track1, track2;
+  let config, player, video, track1, track2, playerContainer;
 
   before(() => {
-    createElement('DIV', targetId);
+    playerContainer = createElement('DIV', targetId);
   });
 
   beforeEach(() => {
     config = getConfigStructure();
     config.sources = sourcesConfig.MultipleSources;
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
     video = player._engine.getVideoElement();
     track1 = document.createElement("track");
     track2 = document.createElement("track");
@@ -977,16 +986,17 @@ describe('getActiveTracks', function () {
 
 describe('hideTextTrack', function () {
 
-  let config, player, video, track1, track2;
+  let config, player, video, track1, track2, playerContainer;
 
   before(() => {
-    createElement('DIV', targetId);
+    playerContainer = createElement('DIV', targetId);
   });
 
   beforeEach(() => {
     config = getConfigStructure();
     config.sources = sourcesConfig.Mp4;
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
     video = player._engine.getVideoElement();
     track1 = document.createElement("track");
     track2 = document.createElement("track");
@@ -1029,8 +1039,9 @@ describe('hideTextTrack', function () {
 });
 
 describe('Track enum', function () {
+  let playerContainer;
   before(() => {
-    createElement('DIV', targetId);
+    playerContainer = createElement('DIV', targetId);
   });
 
   after(() => {
@@ -1041,7 +1052,8 @@ describe('Track enum', function () {
   it('should return the track enum', () => {
     let config = getConfigStructure();
     config.sources = sourcesConfig.Mp4;
-    let player = new Player(targetId, config);
+    let player = new Player(config);
+    playerContainer.appendChild(player.getView());
     player.Track.VIDEO.should.be.equal('video');
     player.Track.AUDIO.should.be.equal('audio');
     player.Track.TEXT.should.be.equal('text');
@@ -1051,16 +1063,17 @@ describe('Track enum', function () {
 describe('events', function () {
   describe('tracks changed', function () {
 
-    let config, player, video, track1, track2;
+    let config, player, video, track1, track2, playerContainer;
 
     before(() => {
-      createElement('DIV', targetId);
+      playerContainer = createElement('DIV', targetId);
     });
 
     beforeEach(() => {
       config = getConfigStructure();
       config.sources = sourcesConfig.Mp4;
-      player = new Player(targetId, config);
+      player = new Player(config);
+      playerContainer.appendChild(player.getView());
       video = player._engine.getVideoElement();
       track1 = document.createElement("track");
       track2 = document.createElement("track");
@@ -1107,16 +1120,17 @@ describe('events', function () {
 
     let config;
     let player;
+    let playerContainer;
 
     before(() => {
-      createElement('DIV', targetId);
+      playerContainer = createElement('DIV', targetId);
     });
 
     beforeEach(() => {
       config = getConfigStructure();
       config.sources = sourcesConfig.Mp4;
-      player = new Player(targetId, config);
-
+      player = new Player(config);
+      playerContainer.appendChild(player.getView());
     });
 
     afterEach(() => {
@@ -1150,15 +1164,17 @@ describe('events', function () {
   describe('source selected', () => {
     let config;
     let player;
+    let playerContainer;
 
     before(() => {
-      createElement('DIV', targetId);
+      playerContainer = createElement('DIV', targetId);
     });
 
     beforeEach(() => {
       config = getConfigStructure();
       config.sources = sourcesConfig.Mp4;
-      player = new Player(targetId);
+      player = new Player();
+      playerContainer.appendChild(player.getView());
 
     });
 
@@ -1183,9 +1199,10 @@ describe('events', function () {
   describe('abr mode changed', () => {
     let config;
     let player;
+    let playerContainer;
 
     before(() => {
-      createElement('DIV', targetId);
+      playerContainer = createElement('DIV', targetId);
     });
 
     beforeEach(() => {
@@ -1203,7 +1220,8 @@ describe('events', function () {
 
     it('should fire abr mode changed for progressive playback', (done) => {
       config.sources = sourcesConfig.Mp4;
-      player = new Player(targetId, config);
+      player = new Player(config);
+      playerContainer.appendChild(player.getView());
       player.addEventListener(CustomEvents.ABR_MODE_CHANGED, (event) => {
         event.payload.mode.should.equal('manual');
         done();
@@ -1213,7 +1231,8 @@ describe('events', function () {
 
     it('should fire abr mode changed for adaptive playback', (done) => {
       config.sources = sourcesConfig.Hls;
-      player = new Player(targetId, config);
+      player = new Player(config);
+      playerContainer.appendChild(player.getView());
       player.addEventListener(CustomEvents.ABR_MODE_CHANGED, (event) => {
         event.payload.mode.should.equal('auto');
         done();
@@ -1229,16 +1248,17 @@ describe('events', function () {
 
 describe('states', function () {
 
-  let player, config;
+  let player, config, playerContainer;
 
   before(() => {
-    createElement('DIV', targetId);
+    playerContainer = createElement('DIV', targetId);
   });
 
   beforeEach(() => {
     config = getConfigStructure();
     config.sources = sourcesConfig.Mp4;
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
   });
 
   afterEach(() => {
@@ -1320,10 +1340,10 @@ describe('states', function () {
 
 describe('configure', function () {
 
-  let player, config;
+  let player, config, playerContainer;
 
   before(() => {
-    createElement('DIV', targetId);
+    playerContainer = createElement('DIV', targetId);
   });
 
   beforeEach(() => {
@@ -1341,7 +1361,8 @@ describe('configure', function () {
 
   it('should create player without sources and set the sources later', (done) => {
     config.sources = sourcesConfig.Mp4;
-    player = new Player(targetId);
+    player = new Player();
+    playerContainer.appendChild(player.getView());
     player.should.be.instanceOf(Player);
     player.configure(config);
     player.addEventListener(Html5Events.PLAYING, function () {
@@ -1360,10 +1381,10 @@ describe('configure', function () {
 });
 
 describe('config', function () {
-  let player, config;
+  let player, config, playerContainer;
 
   before(() => {
-    createElement('DIV', targetId);
+    playerContainer = createElement('DIV', targetId);
   });
 
   beforeEach(() => {
@@ -1380,22 +1401,24 @@ describe('config', function () {
   });
 
   it('should get config', function () {
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
     player.config.playback.streamPriority.should.deep.equal(getConfigStructure().playback.streamPriority);
   });
 
   it('should not change the player config', function () {
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
     player.config.playback.streamPriority = {};
     player.config.playback.streamPriority.should.deep.equal(getConfigStructure().playback.streamPriority);
   });
 });
 
 describe('abr', function () {
-  let player, config;
+  let player, config, playerContainer;
 
   before(() => {
-    createElement('DIV', targetId);
+    playerContainer = createElement('DIV', targetId);
   });
 
   beforeEach(() => {
@@ -1413,14 +1436,16 @@ describe('abr', function () {
 
   it('should return false for progressive playback abr', function () {
     config.sources = sourcesConfig.Mp4;
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
     player.enableAdaptiveBitrate();
     player.isAdaptiveBitrateEnabled().should.be.false;
   });
 
   it('should return true for adaptive playback abr', function () {
     config.sources = sourcesConfig.Hls;
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
     if (player._engine) {
       player.enableAdaptiveBitrate();
       player.isAdaptiveBitrateEnabled().should.be.true;
@@ -1429,10 +1454,10 @@ describe('abr', function () {
 });
 
 describe('isLive', function () {
-  let player, config;
+  let player, config, playerContainer;
 
   before(() => {
-    createElement('DIV', targetId);
+    playerContainer = createElement('DIV', targetId);
   });
 
   beforeEach(() => {
@@ -1450,7 +1475,8 @@ describe('isLive', function () {
 
   it('should return false for VOD', function (done) {
     config.sources = sourcesConfig.Mp4;
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
     player.ready().then(() => {
       player.isLive().should.be.false;
       done();
@@ -1465,7 +1491,8 @@ describe('isLive', function () {
   it('should return true for VOD which configured as live', function (done) {
     config.sources = sourcesConfig.Mp4;
     config.type = 'Live';
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
     player.ready().then(() => {
       player.isLive().should.be.true;
       done();
@@ -1479,13 +1506,15 @@ describe('isLive', function () {
 
   it('should return false for live before loading', function () {
     config.sources = sourcesConfig.Live;
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
     player.isLive().should.be.false;
   });
 
   it('should return true for live', function (done) {
     config.sources = sourcesConfig.Live;
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
     player.ready().then(() => {
       player.isLive().should.be.true;
       done();
@@ -1500,7 +1529,8 @@ describe('isLive', function () {
   it('should return true for live even configured as VOD', function (done) {
     config.sources = sourcesConfig.Live;
     config.type = 'Vod';
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
     player.ready().then(() => {
       player.isLive().should.be.true;
       done();
@@ -1514,10 +1544,10 @@ describe('isLive', function () {
 });
 
 describe('isDvr', function () {
-  let player, config;
+  let player, config, playerContainer;
 
   before(() => {
-    createElement('DIV', targetId);
+    playerContainer = createElement('DIV', targetId);
   });
 
   beforeEach(() => {
@@ -1535,7 +1565,8 @@ describe('isDvr', function () {
 
   it('should return false for VOD', function (done) {
     config.sources = sourcesConfig.Mp4;
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
     player.ready().then(() => {
       player.isDvr().should.be.false;
       done();
@@ -1550,7 +1581,8 @@ describe('isDvr', function () {
   it('should return false for VOD even configured as dvr', function (done) {
     config.sources = sourcesConfig.Mp4;
     config.dvr = true;
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
     player.ready().then(() => {
       player.isDvr().should.be.false;
       done();
@@ -1565,7 +1597,8 @@ describe('isDvr', function () {
   it('should return true for live which configured as dvr', function (done) {
     config.sources = sourcesConfig.Live;
     config.dvr = true;
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
     player.ready().then(() => {
       player.isDvr().should.be.true;
       done();
@@ -1580,7 +1613,8 @@ describe('isDvr', function () {
   it('should return true for live which configured as non dvr', function (done) {
     config.sources = sourcesConfig.Live;
     config.dvr = false;
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
     player.ready().then(() => {
       player.isDvr().should.be.false;
       done();
@@ -1594,10 +1628,10 @@ describe('isDvr', function () {
 });
 
 describe('seekToLiveEdge', function () {
-  let player, config;
+  let player, config, playerContainer;
 
   before(() => {
-    createElement('DIV', targetId);
+    playerContainer = createElement('DIV', targetId);
   });
 
   beforeEach(() => {
@@ -1615,7 +1649,8 @@ describe('seekToLiveEdge', function () {
 
   it('should not seek to live edge in VOD', (done) => {
     config.sources = sourcesConfig.Mp4;
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
     player.ready().then(() => {
       player.currentTime = 0;
       player.currentTime.should.not.equal(player.duration);
@@ -1632,7 +1667,8 @@ describe('seekToLiveEdge', function () {
 
   it('should seek to live edge', (done) => {
     config.sources = sourcesConfig.Live;
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
     player.ready().then(() => {
       setTimeout(() => {
         player.currentTime = 0;
@@ -1651,16 +1687,17 @@ describe('seekToLiveEdge', function () {
 });
 
 describe('volume', function () {
-  let player, config;
+  let player, config, playerContainer;
 
   before(() => {
-    createElement('DIV', targetId);
+    playerContainer = createElement('DIV', targetId);
   });
 
   beforeEach(() => {
     config = getConfigStructure();
     config.sources = sourcesConfig.Mp4;
-    player = new Player(targetId, config);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
   });
 
   afterEach(() => {

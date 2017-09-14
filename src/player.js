@@ -143,11 +143,10 @@ export default class Player extends FakeEventTarget {
   _env: Object;
 
   /**
-   * @param {string} targetId - The target div id to append the player.
    * @param {Object} config - The configuration for the player instance.
    * @constructor
    */
-  constructor(targetId: string, config: Object) {
+  constructor(config: Object) {
     super();
     this._env = Env;
     this._tracks = [];
@@ -159,7 +158,7 @@ export default class Player extends FakeEventTarget {
     this._pluginManager = new PluginManager();
     this._playbackMiddleware = new PlaybackMiddleware();
     this._createReadyPromise();
-    this._appendPlayerContainer(targetId);
+    this._createPlayerContainer();
     this._appendPosterEl();
     this.configure(config);
   }
@@ -399,24 +398,6 @@ export default class Player extends FakeEventTarget {
       return (os === 'iOS') ? this.muted && this.playsinline : this.muted;
     }
     return true;
-  }
-
-  /**
-   * Creates the player container
-   * @param {string} targetId - The target div id to append the player.
-   * @private
-   * @returns {void}
-   */
-  _appendPlayerContainer(targetId: string): void {
-    if (targetId) {
-      if (this._el === undefined) {
-        this._createPlayerContainer();
-        let parentNode = Utils.Dom.getElementById(targetId);
-        Utils.Dom.appendChild(parentNode, this._el);
-      }
-    } else {
-      throw new Error("targetId is not found, it must be pass on initialization");
-    }
   }
 
   /**
