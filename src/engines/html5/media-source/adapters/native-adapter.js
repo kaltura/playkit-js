@@ -182,14 +182,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
         // We're using 'loadeddata' event for native hls (on 'loadedmetadata' native hls doesn't have tracks yet).
-        this._eventManager.listen(this._videoElement, Html5Events.LOADED_DATA, () => {
-          this._eventManager.unlisten(this._videoElement, Html5Events.LOADED_DATA);
+        this._eventManager.listenOnce(this._videoElement, Html5Events.LOADED_DATA, () => {
           let data = {tracks: this._getParsedTracks()};
           NativeAdapter._logger.debug('The source has been loaded successfully');
           resolve(data);
         });
-        this._eventManager.listen(this._videoElement, Html5Events.ERROR, (error) => {
-          this._eventManager.unlisten(this._videoElement, Html5Events.ERROR);
+        this._eventManager.listenOnce(this._videoElement, Html5Events.ERROR, (error) => {
           NativeAdapter._logger.error(error);
           reject(error);
         });
@@ -380,16 +378,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       let currentTime = this._videoElement.currentTime;
       let paused = this._videoElement.paused;
       this._sourceObj = videoTracks[videoTrack.index];
-      this._eventManager.listen(this._videoElement, Html5Events.LOADED_DATA, () => {
-        this._eventManager.unlisten(this._videoElement, Html5Events.LOADED_DATA);
+      this._eventManager.listenOnce(this._videoElement, Html5Events.LOADED_DATA, () => {
         if (Env.browser.name === 'Android Browser') {
           // In android browser we have to seek only after some playback.
-          this._eventManager.listen(this._videoElement, Html5Events.DURATION_CHANGE, () => {
-            this._eventManager.unlisten(this._videoElement, Html5Events.DURATION_CHANGE);
+          this._eventManager.listenOnce(this._videoElement, Html5Events.DURATION_CHANGE, () => {
             this._videoElement.currentTime = currentTime;
           });
-          this._eventManager.listen(this._videoElement, Html5Events.SEEKED, () => {
-            this._eventManager.unlisten(this._videoElement, Html5Events.SEEKED);
+          this._eventManager.listenOnce(this._videoElement, Html5Events.SEEKED, () => {
             this._onTrackChanged(videoTrack);
             if (paused) {
               this._videoElement.pause();
@@ -397,8 +392,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           });
           this._videoElement.play();
         } else {
-          this._eventManager.listen(this._videoElement, Html5Events.SEEKED, () => {
-            this._eventManager.unlisten(this._videoElement, Html5Events.SEEKED);
+          this._eventManager.listenOnce(this._videoElement, Html5Events.SEEKED, () => {
             this._onTrackChanged(videoTrack);
           });
           this._videoElement.currentTime = currentTime;
