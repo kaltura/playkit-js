@@ -33,9 +33,9 @@ class EventManager {
 
   /**
    * Attaches an event listener to an event target for only one time.
-   * @param {EventTarget} target The event target.
-   * @param {string} type The event type.
-   * @param {EventManager.ListenerType} [listener] The event listener.
+   * @param {EventTarget} target - The event target.
+   * @param {string} type - The event type.
+   * @param {EventManager.ListenerType} listener - The event listener.
    * @returns {void}
    */
   listenOnce(target: any, type: string, listener: ListenerType): void {
