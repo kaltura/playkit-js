@@ -257,18 +257,19 @@ describe("ready", function () {
     });
 
     describe("preload none", () => {
-      let player;
-
-      beforeEach(() => {
-        player = new Player(config);
-        playerContainer.appendChild(player.getView());
-      });
-
-      afterEach(() => {
-        player.destroy();
-      });
 
       describe("passing config in constructor", function () {
+
+        let player;
+
+        beforeEach(() => {
+          player = new Player(config);
+          playerContainer.appendChild(player.getView());
+        });
+
+        afterEach(() => {
+          player.destroy();
+        });
 
         it("should fail ready -> load", (done) => {
           player.ready()
@@ -290,6 +291,17 @@ describe("ready", function () {
       });
 
       describe("passing config in configure", function () {
+
+        let player;
+
+        beforeEach(() => {
+          player = new Player();
+          playerContainer.appendChild(player.getView());
+        });
+
+        afterEach(() => {
+          player.destroy();
+        });
 
         it("should fail configure -> ready -> load", (done) => {
           player.configure(config);
