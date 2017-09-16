@@ -26,7 +26,7 @@ module.exports = {
     library: 'Playkit',
     libraryTarget: 'umd',
     umdNamedDefine: true,
-    devtoolModuleFilenameTemplate: "./core/[resource-path]",
+    devtoolModuleFilenameTemplate: "webpack:///core/[resource-path]",
   },
   devtool: 'source-map',
   plugins: plugins,
