@@ -146,7 +146,7 @@ export default class Player extends FakeEventTarget {
    * @param {Object} config - The configuration for the player instance.
    * @constructor
    */
-  constructor(config: Object) {
+  constructor(config: Object = {}) {
     super();
     this._env = Env;
     this._tracks = [];
