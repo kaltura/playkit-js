@@ -1,7 +1,6 @@
 //@flow
 import Player from './player'
 import LoggerFactory from './utils/logger'
-import * as packageData from '../package.json'
 import BaseMediaSourceAdapter from './engines/html5/media-source/base-media-source-adapter'
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider'
 import {registerPlugin} from './plugin/plugin-manager'
@@ -15,14 +14,12 @@ import TextTrack from './track/text-track'
 import Env from './utils/env'
 import * as Utils from './utils/util'
 
-// Playkit version
-const VERSION = packageData.version;
+declare var __VERSION__:string;
+declare var __NAME__:string;
+declare var __PACKAGE_URL__:string;
 
-// Playkit name
-const PLAYER_NAME = 'kaltura-playkit-js';
-
-LoggerFactory.getLogger().log("%c Playkit " + VERSION, "color: #3399ff; font-size: large");
-LoggerFactory.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: #3399ff;");
+LoggerFactory.getLogger().log(`%c ${__NAME__} ${__VERSION__}`, "color: #98ff98;  font-size: large");
+LoggerFactory.getLogger().log(`%c For more details see ${__PACKAGE_URL__}`, "color: #98ff98;");
 
 /**
  * @param {string} targetId - The target div id to append the player.
@@ -46,10 +43,10 @@ export {Track, VideoTrack, AudioTrack, TextTrack};
 export {Utils};
 
 // Export version
-export {VERSION};
+export {__VERSION__ as VERSION};
 
 // Export player name
-export {PLAYER_NAME};
+export {__NAME__ as PLAYER_NAME};
 
 // Export environment data
 export {Env};

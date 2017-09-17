@@ -65,7 +65,7 @@
     "standard-version": "^4.2.0",
     "style-loader": "^0.18.2",
     "uglifyjs-webpack-plugin": "^0.4.3",
-    "webpack": "latest",
+    "webpack": "^3.6.0",
     "webpack-dev-server": "latest"
   },
   "repository": {
