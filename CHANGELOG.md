@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.7.0"></a>
+# [0.7.0](https://github.com/kaltura/playkit-js/compare/v0.6.1...v0.7.0) (2017-09-17)
+
+
+### Bug Fixes
+
+* **FEC-7089:** handle bitrate change in android browser ([#110](https://github.com/kaltura/playkit-js/issues/110)) ([5e5a648](https://github.com/kaltura/playkit-js/commit/5e5a648))
+* **FEC-7138:** enable setting 0 and 1 values ([#112](https://github.com/kaltura/playkit-js/issues/112)) ([5d88258](https://github.com/kaltura/playkit-js/commit/5d88258))
+* load plugins via the constructor ([#116](https://github.com/kaltura/playkit-js/issues/116)) ([a602336](https://github.com/kaltura/playkit-js/commit/a602336))
+
+
+### Features
+
+* **event-manager:** support listen once and unlisten a specific listener ([#111](https://github.com/kaltura/playkit-js/issues/111)) ([c7a2995](https://github.com/kaltura/playkit-js/commit/c7a2995))
+* player doesn't attach itself to parent ([#113](https://github.com/kaltura/playkit-js/issues/113)) ([336f4ab](https://github.com/kaltura/playkit-js/commit/336f4ab))
+
+
+
 <a name="0.6.1"></a>
 ## [0.6.1](https://github.com/kaltura/playkit-js/compare/v0.6.0...v0.6.1) (2017-09-11)
 
