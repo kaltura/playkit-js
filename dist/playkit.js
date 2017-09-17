@@ -944,6 +944,26 @@ var EventManager = function () {
     }
 
     /**
+     * Attaches an event listener to an event target for only one time.
+     * @param {EventTarget} target - The event target.
+     * @param {string} type - The event type.
+     * @param {EventManager.ListenerType} listener - The event listener.
+     * @returns {void}
+     */
+
+  }, {
+    key: 'listenOnce',
+    value: function listenOnce(target, type, listener) {
+      var _this = this;
+
+      var oneListener = function oneListener(event) {
+        _this.unlisten(target, type, oneListener);
+        listener.call(_this, event);
+      };
+      this.listen(target, type, oneListener);
+    }
+
+    /**
      * Attaches an event listener to an event target.
      * @param {EventTarget} target The event target.
      * @param {string} type The event type.
@@ -964,19 +984,20 @@ var EventManager = function () {
      * Detaches an event listener from an event target.
      * @param {EventTarget} target The event target.
      * @param {string} type The event type.
+     * @param {EventManager.ListenerType} [listener] The event listener to detach. If no given, detaches all event listeners of the target and type.
      * @returns {void}
      */
 
   }, {
     key: 'unlisten',
-    value: function unlisten(target, type) {
+    value: function unlisten(target, type, listener) {
       if (this._bindingMap) {
         var list = this._bindingMap.get(type);
 
         for (var i = 0; i < list.length; ++i) {
           var binding = list[i];
 
-          if (binding.target == target) {
+          if (binding.target === target && (binding.listener === listener || !listener)) {
             binding.unlisten();
             if (this._bindingMap) {
               this._bindingMap.remove(type, binding);
@@ -1551,7 +1572,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _env = __webpack_require__(11);
+var _env = __webpack_require__(10);
 
 var _env2 = _interopRequireDefault(_env);
 
@@ -1679,7 +1700,6 @@ var Player = function (_FakeEventTarget) {
   _inherits(Player, _FakeEventTarget);
 
   /**
-   * @param {string} targetId - The target div id to append the player.
    * @param {Object} config - The configuration for the player instance.
    * @constructor
    */
@@ -1762,7 +1782,9 @@ var Player = function (_FakeEventTarget) {
    * @static
    * @private
    */
-  function Player(targetId, config) {
+  function Player() {
+    var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
     _classCallCheck(this, Player);
 
     var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
@@ -1777,8 +1799,9 @@ var Player = function (_FakeEventTarget) {
     _this._pluginManager = new _pluginManager2.default();
     _this._playbackMiddleware = new _playbackMiddleware2.default();
     _this._createReadyPromise();
-    _this._appendPlayerContainer(targetId);
+    _this._createPlayerContainer();
     _this._appendPosterEl();
+    _this._loadPlugins(config);
     _this.configure(config);
     return _this;
   }
@@ -1800,7 +1823,6 @@ var Player = function (_FakeEventTarget) {
   _createClass(Player, [{
     key: 'configure',
     value: function configure(config) {
-      var engine = this._engine;
       this._maybeResetPlayer(config);
       this._config = Utils.Object.mergeDeep(Utils.Object.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
       if (this._selectEngine()) {
@@ -1808,7 +1830,6 @@ var Player = function (_FakeEventTarget) {
         this._posterManager.setSrc(this._config.metadata.poster);
         this._posterManager.show();
         this._attachMedia();
-        this._maybeLoadPlugins(engine);
         this._handlePlaybackConfig();
       }
     }
@@ -1826,22 +1847,6 @@ var Player = function (_FakeEventTarget) {
       if (this._engine && config.sources) {
         Player._logger.debug('New sources on existing engine: reset engine to change media');
         this._reset();
-      }
-    }
-
-    /**
-     * Loads the plugins in case engine created for the first time.
-     * @param {?IEngine} engine - The engine before the enter to configure method.
-     * @private
-     * @returns {void}
-     */
-
-  }, {
-    key: '_maybeLoadPlugins',
-    value: function _maybeLoadPlugins(engine) {
-      if (this._engine && !engine) {
-        Player._logger.debug('Engine created for the first time: load plugins');
-        this._loadPlugins();
       }
     }
 
@@ -1915,11 +1920,13 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Loads the configured plugins.
+     * @param {Object} config - The player configuration.
      * @private
      * @returns {void}
      */
-    value: function _loadPlugins() {
-      var plugins = this._config.plugins;
+    value: function _loadPlugins(config) {
+      Player._logger.debug('Load plugins');
+      var plugins = config.plugins;
       for (var name in plugins) {
         this._pluginManager.load(name, this, plugins[name]);
         var plugin = this._pluginManager.get(name);
@@ -2101,27 +2108,6 @@ var Player = function (_FakeEventTarget) {
         return os === 'iOS' ? this.muted && this.playsinline : this.muted;
       }
       return true;
-    }
-
-    /**
-     * Creates the player container
-     * @param {string} targetId - The target div id to append the player.
-     * @private
-     * @returns {void}
-     */
-
-  }, {
-    key: '_appendPlayerContainer',
-    value: function _appendPlayerContainer(targetId) {
-      if (targetId) {
-        if (this._el === undefined) {
-          this._createPlayerContainer();
-          var parentNode = Utils.Dom.getElementById(targetId);
-          Utils.Dom.appendChild(parentNode, this._el);
-        }
-      } else {
-        throw new Error("targetId is not found, it must be pass on initialization");
-      }
     }
 
     /**
@@ -2678,7 +2664,7 @@ var Player = function (_FakeEventTarget) {
     key: 'volume',
     set: function set(vol) {
       if (this._engine) {
-        if (Utils.Number.isFloat(vol)) {
+        if (Utils.Number.isFloat(vol) || vol === 0 || vol === 1) {
           var boundedVol = vol;
           if (boundedVol < 0) {
             boundedVol = 0;
@@ -2882,6 +2868,26 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _uaParserJs = __webpack_require__(23);
+
+var _uaParserJs2 = _interopRequireDefault(_uaParserJs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Env = new _uaParserJs2.default().getResult();
+exports.default = Env;
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2928,26 +2934,6 @@ PlayerError.TYPE = {
   }
 };
 exports.default = PlayerError;
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _uaParserJs = __webpack_require__(23);
-
-var _uaParserJs2 = _interopRequireDefault(_uaParserJs);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Env = new _uaParserJs2.default().getResult();
-exports.default = Env;
 
 /***/ }),
 /* 12 */
@@ -3303,7 +3289,7 @@ var _eventManager = __webpack_require__(4);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _playerError = __webpack_require__(10);
+var _playerError = __webpack_require__(11);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
@@ -3750,7 +3736,7 @@ var _fakeEventTarget = __webpack_require__(13);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
-var _playerError = __webpack_require__(10);
+var _playerError = __webpack_require__(11);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
@@ -4024,7 +4010,7 @@ var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _playerError = __webpack_require__(10);
+var _playerError = __webpack_require__(11);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
@@ -4100,7 +4086,7 @@ var _basePlugin = __webpack_require__(14);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
-var _playerError = __webpack_require__(10);
+var _playerError = __webpack_require__(11);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
@@ -4296,10 +4282,6 @@ var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _package = __webpack_require__(43);
-
-var packageData = _interopRequireWildcard(_package);
-
 var _baseMediaSourceAdapter = __webpack_require__(18);
 
 var _baseMediaSourceAdapter2 = _interopRequireDefault(_baseMediaSourceAdapter);
@@ -4336,7 +4318,7 @@ var _textTrack = __webpack_require__(8);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _env = __webpack_require__(11);
+var _env = __webpack_require__(10);
 
 var _env2 = _interopRequireDefault(_env);
 
@@ -4348,23 +4330,15 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// Playkit version
-var VERSION = packageData.version;
-
-// Playkit name
-
-var PLAYER_NAME = 'kaltura-playkit-js';
-
-_logger2.default.getLogger().log("%c Playkit " + VERSION, "color: #3399ff; font-size: large");
-_logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: #3399ff;");
+_logger2.default.getLogger().log('%c ' + "playkit-js" + ' ' + "0.7.0", "color: #98ff98;  font-size: large");
+_logger2.default.getLogger().log('%c For more details see ' + "https://github.com/kaltura/playkit-js", "color: #98ff98;");
 
 /**
- * @param {string} targetId - The target div id to append the player.
  * @param {Object} config - The configuration of the player
  * @returns {Player} - The player instance
  */
-function loadPlayer(targetId, config) {
-  return new _player2.default(targetId, config || {});
+function loadPlayer(config) {
+  return new _player2.default(config || {});
 }
 
 // Export the media source adapters necessary utils
@@ -4390,11 +4364,11 @@ exports.Utils = Utils;
 
 // Export version
 
-exports.VERSION = VERSION;
+exports.VERSION = "0.7.0";
 
 // Export player name
 
-exports.PLAYER_NAME = PLAYER_NAME;
+exports.PLAYER_NAME = "playkit-js";
 
 // Export environment data
 
@@ -4410,7 +4384,7 @@ exports.default = loadPlayer;
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/**
- * UAParser.js v0.7.14
+ * UAParser.js v0.7.13
  * Lightweight JavaScript-based User-Agent string parser
  * https://github.com/faisalman/ua-parser-js
  *
@@ -4427,7 +4401,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
     /////////////
 
 
-    var LIBVERSION  = '0.7.14',
+    var LIBVERSION  = '0.7.13',
         EMPTY       = '',
         UNKNOWN     = '?',
         FUNC_TYPE   = 'function',
@@ -4681,7 +4655,10 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             /(puffin)\/([\w\.]+)/i                                              // Puffin
             ], [[NAME, 'Puffin'], VERSION], [
 
-            /((?:[\s\/])uc?\s?browser|(?:juc.+)ucweb)[\/\s]?([\w\.]+)/i
+            /(uc\s?browser)[\/\s]?([\w\.]+)/i,
+            /ucweb.+(ucbrowser)[\/\s]?([\w\.]+)/i,
+            /juc.+(ucweb)[\/\s]?([\w\.]+)/i,
+            /(ucbrowser)\/([\w\.]+)/i
                                                                                 // UCBrowser
             ], [[NAME, 'UCBrowser'], VERSION], [
 
@@ -4690,9 +4667,6 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
             /(micromessenger)\/([\w\.]+)/i                                      // WeChat
             ], [[NAME, 'WeChat'], VERSION], [
-
-            /(QQ)\/([\d\.]+)/i                                                  // QQ, aka ShouQ
-            ], [NAME, VERSION], [
 
             /m?(qqbrowser)[\/\s]?([\w\.]+)/i                                    // QQBrowser
             ], [NAME, VERSION], [
@@ -4709,9 +4683,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             /\swv\).+(chrome)\/([\w\.]+)/i                                      // Chrome WebView
             ], [[NAME, /(.+)/, '$1 WebView'], VERSION], [
 
-            /((?:oculus|samsung)browser)\/([\w\.]+)/i
-            ], [[NAME, /(.+(?:g|us))(.+)/, '$1 $2'], VERSION], [                // Oculus / Samsung Browser
-
+            /android.+samsungbrowser\/([\w\.]+)/i,
             /android.+version\/([\w\.]+)\s+(?:mobile\s?safari|safari)*/i        // Android Browser
             ], [VERSION, [NAME, 'Android Browser']], [
 
@@ -4931,8 +4903,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             ], [MODEL, [VENDOR, 'Apple'], [TYPE, MOBILE]], [
 
             /(blackberry)[\s-]?(\w+)/i,                                         // BlackBerry
-            /(blackberry|benq|palm(?=\-)|sonyericsson|acer|asus|dell|meizu|motorola|polytron)[\s_-]?([\w-]+)*/i,
-                                                                                // BenQ/Palm/Sony-Ericsson/Acer/Asus/Dell/Meizu/Motorola/Polytron
+            /(blackberry|benq|palm(?=\-)|sonyericsson|acer|asus|dell|huawei|meizu|motorola|polytron)[\s_-]?([\w-]+)*/i,
+                                                                                // BenQ/Palm/Sony-Ericsson/Acer/Asus/Dell/Huawei/Meizu/Motorola/Polytron
             /(hp)\s([\w\s]+\w)/i,                                               // HP iPAQ
             /(asus)-?(\w+)/i                                                    // Asus
             ], [VENDOR, MODEL, [TYPE, MOBILE]], [
@@ -4945,8 +4917,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             /(sony)\s(tablet\s[ps])\sbuild\//i,                                  // Sony
             /(sony)?(?:sgp.+)\sbuild\//i
             ], [[VENDOR, 'Sony'], [MODEL, 'Xperia Tablet'], [TYPE, TABLET]], [
-            /android.+\s([c-g]\d{4}|so[-l]\w+)\sbuild\//i
-            ], [MODEL, [VENDOR, 'Sony'], [TYPE, MOBILE]], [
+            /(?:sony)?(?:(?:(?:c|d)\d{4})|(?:so[-l].+))\sbuild\//i
+            ], [[VENDOR, 'Sony'], [MODEL, 'Xperia Phone'], [TYPE, MOBILE]], [
 
             /\s(ouya)\s/i,                                                      // Ouya
             /(nintendo)\s([wids3u]+)/i                                          // Nintendo
@@ -4966,15 +4938,14 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
             /(htc)[;_\s-]+([\w\s]+(?=\))|\w+)*/i,                               // HTC
             /(zte)-(\w+)*/i,                                                    // ZTE
-            /(alcatel|geeksphone|lenovo|nexian|panasonic|(?=;\s)sony)[_\s-]?([\w-]+)*/i
-                                                                                // Alcatel/GeeksPhone/Lenovo/Nexian/Panasonic/Sony
+            /(alcatel|geeksphone|huawei|lenovo|nexian|panasonic|(?=;\s)sony)[_\s-]?([\w-]+)*/i
+                                                                                // Alcatel/GeeksPhone/Huawei/Lenovo/Nexian/Panasonic/Sony
             ], [VENDOR, [MODEL, /_/g, ' '], [TYPE, MOBILE]], [
 
             /(nexus\s9)/i                                                       // HTC Nexus 9
             ], [MODEL, [VENDOR, 'HTC'], [TYPE, TABLET]], [
 
-            /d\/huawei([\w\s-]+)[;\)]/i,
-            /(nexus\s6p)/i                                                      // Huawei
+            /(nexus\s6p)/i                                                      // Huawei Nexus 6P
             ], [MODEL, [VENDOR, 'Huawei'], [TYPE, MOBILE]], [
 
             /(microsoft);\s(lumia[\s\w]+)/i                                     // Microsoft Lumia
@@ -5023,15 +4994,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             /android\s3\.[\s\w;-]{10}(a\d{3})/i                                 // Acer
             ], [MODEL, [VENDOR, 'Acer'], [TYPE, TABLET]], [
 
-            /android.+([vl]k\-?\d{3})\s+build/i                                 // LG Tablet
-            ], [MODEL, [VENDOR, 'LG'], [TYPE, TABLET]], [
             /android\s3\.[\s\w;-]{10}(lg?)-([06cv9]{3,4})/i                     // LG Tablet
             ], [[VENDOR, 'LG'], MODEL, [TYPE, TABLET]], [
             /(lg) netcast\.tv/i                                                 // LG SmartTV
             ], [VENDOR, MODEL, [TYPE, SMARTTV]], [
             /(nexus\s[45])/i,                                                   // LG
-            /lg[e;\s\/-]+(\w+)*/i,
-            /android.+lg(\-?[\d\w]+)\s+build/i
+            /lg[e;\s\/-]+(\w+)*/i
             ], [MODEL, [VENDOR, 'LG'], [TYPE, MOBILE]], [
 
             /android.+(ideatab[a-z0-9\-\s]+)/i                                  // Lenovo
@@ -5063,85 +5031,14 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             /android.+(mi[\s\-_]*(?:one|one[\s_]plus|note lte)?[\s_]*(?:\d\w)?)\s+build/i    // Xiaomi Mi
             ], [[MODEL, /_/g, ' '], [VENDOR, 'Xiaomi'], [TYPE, MOBILE]], [
 
-            /android.+;\s(m[1-5]\snote)\sbuild/i                                // Meizu Tablet
-            ], [MODEL, [VENDOR, 'Meizu'], [TYPE, TABLET]], [
-
             /android.+a000(1)\s+build/i                                         // OnePlus
             ], [MODEL, [VENDOR, 'OnePlus'], [TYPE, MOBILE]], [
 
-            /android.+[;\/]\s*(RCT[\d\w]+)\s+build/i                            // RCA Tablets
-            ], [MODEL, [VENDOR, 'RCA'], [TYPE, TABLET]], [
-
-            /android.+[;\/]\s*(Venue[\d\s]*)\s+build/i                          // Dell Venue Tablets
-            ], [MODEL, [VENDOR, 'Dell'], [TYPE, TABLET]], [
-
-            /android.+[;\/]\s*(Q[T|M][\d\w]+)\s+build/i                         // Verizon Tablet
-            ], [MODEL, [VENDOR, 'Verizon'], [TYPE, TABLET]], [
-
-            /android.+[;\/]\s+(Barnes[&\s]+Noble\s+|BN[RT])(V?.*)\s+build/i     // Barnes & Noble Tablet
-            ], [[VENDOR, 'Barnes & Noble'], MODEL, [TYPE, TABLET]], [
-
-            /android.+[;\/]\s+(TM\d{3}.*\b)\s+build/i                           // Barnes & Noble Tablet
-            ], [MODEL, [VENDOR, 'NuVision'], [TYPE, TABLET]], [
-
-            /android.+[;\/]\s*(zte)?.+(k\d{2})\s+build/i                        // ZTE K Series Tablet
-            ], [[VENDOR, 'ZTE'], MODEL, [TYPE, TABLET]], [
-
-            /android.+[;\/]\s*(gen\d{3})\s+build.*49h/i                         // Swiss GEN Mobile
-            ], [MODEL, [VENDOR, 'Swiss'], [TYPE, MOBILE]], [
-
-            /android.+[;\/]\s*(zur\d{3})\s+build/i                              // Swiss ZUR Tablet
-            ], [MODEL, [VENDOR, 'Swiss'], [TYPE, TABLET]], [
-
-            /android.+[;\/]\s*((Zeki)?TB.*\b)\s+build/i                         // Zeki Tablets
-            ], [MODEL, [VENDOR, 'Zeki'], [TYPE, TABLET]], [
-
-            /(android).+[;\/]\s+([YR]\d{2}x?.*)\s+build/i,
-            /android.+[;\/]\s+(Dragon[\-\s]+Touch\s+|DT)(.+)\s+build/i          // Dragon Touch Tablet
-            ], [[VENDOR, 'Dragon Touch'], MODEL, [TYPE, TABLET]], [
-
-            /android.+[;\/]\s*(NS-?.+)\s+build/i                                // Insignia Tablets
-            ], [MODEL, [VENDOR, 'Insignia'], [TYPE, TABLET]], [
-
-            /android.+[;\/]\s*((NX|Next)-?.+)\s+build/i                         // NextBook Tablets
-            ], [MODEL, [VENDOR, 'NextBook'], [TYPE, TABLET]], [
-
-            /android.+[;\/]\s*(Xtreme\_?)?(V(1[045]|2[015]|30|40|60|7[05]|90))\s+build/i
-            ], [[VENDOR, 'Voice'], MODEL, [TYPE, MOBILE]], [                    // Voice Xtreme Phones
-
-            /android.+[;\/]\s*(LVTEL\-?)?(V1[12])\s+build/i                     // LvTel Phones
-            ], [[VENDOR, 'LvTel'], MODEL, [TYPE, MOBILE]], [
-
-            /android.+[;\/]\s*(V(100MD|700NA|7011|917G).*\b)\s+build/i          // Envizen Tablets
-            ], [MODEL, [VENDOR, 'Envizen'], [TYPE, TABLET]], [
-
-            /android.+[;\/]\s*(Le[\s\-]+Pan)[\s\-]+(.*\b)\s+build/i             // Le Pan Tablets
-            ], [VENDOR, MODEL, [TYPE, TABLET]], [
-
-            /android.+[;\/]\s*(Trio[\s\-]*.*)\s+build/i                         // MachSpeed Tablets
-            ], [MODEL, [VENDOR, 'MachSpeed'], [TYPE, TABLET]], [
-
-            /android.+[;\/]\s*(Trinity)[\-\s]*(T\d{3})\s+build/i                // Trinity Tablets
-            ], [VENDOR, MODEL, [TYPE, TABLET]], [
-
-            /android.+[;\/]\s*TU_(1491)\s+build/i                               // Rotor Tablets
-            ], [MODEL, [VENDOR, 'Rotor'], [TYPE, TABLET]], [
-
-            /android.+(KS(.+))\s+build/i                                        // Amazon Kindle Tablets
-            ], [MODEL, [VENDOR, 'Amazon'], [TYPE, TABLET]], [
-
-            /android.+(Gigaset)[\s\-]+(Q.+)\s+build/i                           // Gigaset Tablets
-            ], [VENDOR, MODEL, [TYPE, TABLET]], [
-
-            /\s(tablet|tab)[;\/]/i,                                             // Unidentifiable Tablet
+            /\s(tablet)[;\/]/i,                                                 // Unidentifiable Tablet
             /\s(mobile)(?:[;\/]|\ssafari)/i                                     // Unidentifiable Mobile
-            ], [[TYPE, util.lowerize], VENDOR, MODEL], [
+            ], [[TYPE, util.lowerize], VENDOR, MODEL]
 
-            /(android.+)[;\/].+build/i                                          // Generic Android Device
-            ], [MODEL, [VENDOR, 'Generic']]
-
-
-        /*//////////////////////////
+            /*//////////////////////////
             // TODO: move to string map
             ////////////////////////////
 
@@ -5263,9 +5160,8 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
             /(haiku)\s(\w+)/i                                                  // Haiku
             ], [NAME, VERSION],[
 
-            /cfnetwork\/.+darwin/i,
-            /ip[honead]+(?:.*os\s([\w]+)*\slike\smac|;\sopera)/i                // iOS
-            ], [[VERSION, /_/g, '.'], [NAME, 'iOS']], [
+            /(ip[honead]+)(?:.*os\s([\w]+)*\slike\smac|;\sopera)/i              // iOS
+            ], [[NAME, 'iOS'], [VERSION, /_/g, '.']], [
 
             /(mac\sos\sx)\s?([\w\s\.]+\w)*/i,
             /(macintosh|mac(?=_powerpc)\s)/i                                    // Mac OS
@@ -5302,11 +5198,6 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
     var OS = Browser;
 
     var UAParser = function (uastring, extensions) {
-
-        if (typeof uastring === 'object') {
-            extensions = uastring;
-            uastring = undefined;
-        }
 
         if (!(this instanceof UAParser)) {
             return new UAParser(uastring, extensions).getResult();
@@ -5415,7 +5306,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
                 return UAParser;
             }.call(exports, __webpack_require__, exports, module),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-        } else if (window) {
+        } else {
             // browser env
             window.UAParser = UAParser;
         }
@@ -5426,7 +5317,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
     //   In AMD env the global scope should be kept clean, but jQuery is an exception.
     //   jQuery always exports to global scope, unless jQuery.noConflict(true) is used,
     //   and we should catch that.
-    var $ = window && (window.jQuery || window.Zepto);
+    var $ = window.jQuery || window.Zepto;
     if (typeof $ !== UNDEF_TYPE) {
         var parser = new UAParser();
         $.ua = parser.getResult();
@@ -5591,7 +5482,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 	var Logger = { };
 
 	// For those that are at home that are keeping score.
-	Logger.VERSION = "1.4.1";
+	Logger.VERSION = "1.3.0";
 
 	// Function which handles all incoming log messages.
 	var logHandler;
@@ -5647,11 +5538,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 			if (newLevel && "value" in newLevel) {
 				this.context.filterLevel = newLevel;
 			}
-		},
-		
-		// Gets the current logging level for the logging instance
-		getLevel: function () {
-			return this.context.filterLevel;
 		},
 
 		// Is the logger configured to output messages at the supplied level?
@@ -5737,11 +5623,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 		}
 	};
 
-	// Gets the global logging filter level
-	Logger.getLevel = function() {
-		return globalLogger.getLevel();
-	};
-
 	// Retrieve a ContextualLogger instance.  Note that named loggers automatically inherit the global logger's level,
 	// default context and log handler.
 	Logger.get = function (name) {
@@ -5813,8 +5694,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 					hdlr = console.error;
 				} else if (context.level === Logger.INFO && console.info) {
 					hdlr = console.info;
-				} else if (context.level === Logger.DEBUG && console.debug) {
-					hdlr = console.debug;
 				}
 
 				options.formatter(messages, context);
@@ -6804,6 +6683,10 @@ var _fairplay = __webpack_require__(30);
 
 var _fairplay2 = _interopRequireDefault(_fairplay);
 
+var _env = __webpack_require__(10);
+
+var _env2 = _interopRequireDefault(_env);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -7043,14 +6926,12 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
       if (!this._loadPromise) {
         this._loadPromise = new Promise(function (resolve, reject) {
           // We're using 'loadeddata' event for native hls (on 'loadedmetadata' native hls doesn't have tracks yet).
-          _this2._eventManager.listen(_this2._videoElement, _events.HTML5_EVENTS.LOADED_DATA, function () {
-            _this2._eventManager.unlisten(_this2._videoElement, _events.HTML5_EVENTS.LOADED_DATA);
+          _this2._eventManager.listenOnce(_this2._videoElement, _events.HTML5_EVENTS.LOADED_DATA, function () {
             var data = { tracks: _this2._getParsedTracks() };
             NativeAdapter._logger.debug('The source has been loaded successfully');
             resolve(data);
           });
-          _this2._eventManager.listen(_this2._videoElement, _events.HTML5_EVENTS.ERROR, function (error) {
-            _this2._eventManager.unlisten(_this2._videoElement, _events.HTML5_EVENTS.ERROR);
+          _this2._eventManager.listenOnce(_this2._videoElement, _events.HTML5_EVENTS.ERROR, function (error) {
             NativeAdapter._logger.error(error);
             reject(error);
           });
@@ -7270,16 +7151,30 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
         var currentTime = this._videoElement.currentTime;
         var paused = this._videoElement.paused;
         this._sourceObj = videoTracks[videoTrack.index];
-        this._eventManager.listen(this._videoElement, _events.HTML5_EVENTS.LOADED_DATA, function () {
-          _this3._eventManager.unlisten(_this3._videoElement, _events.HTML5_EVENTS.LOADED_DATA);
-          _this3._eventManager.listen(_this3._videoElement, _events.HTML5_EVENTS.SEEKED, function () {
-            _this3._eventManager.unlisten(_this3._videoElement, _events.HTML5_EVENTS.SEEKED);
-            _this3._onTrackChanged(videoTrack);
-          });
-          _this3._videoElement.currentTime = currentTime;
+        this._eventManager.listenOnce(this._videoElement, _events.HTML5_EVENTS.LOADED_DATA, function () {
+          if (_env2.default.browser.name === 'Android Browser') {
+            // In android browser we have to seek only after some playback.
+            _this3._eventManager.listenOnce(_this3._videoElement, _events.HTML5_EVENTS.DURATION_CHANGE, function () {
+              _this3._videoElement.currentTime = currentTime;
+            });
+            _this3._eventManager.listenOnce(_this3._videoElement, _events.HTML5_EVENTS.SEEKED, function () {
+              _this3._onTrackChanged(videoTrack);
+              if (paused) {
+                _this3._videoElement.pause();
+              }
+            });
+            _this3._videoElement.play();
+          } else {
+            _this3._eventManager.listenOnce(_this3._videoElement, _events.HTML5_EVENTS.SEEKED, function () {
+              _this3._onTrackChanged(videoTrack);
+            });
+            _this3._videoElement.currentTime = currentTime;
+            if (!paused) {
+              _this3._videoElement.play();
+            }
+          }
         });
         this._videoElement.src = this._sourceObj ? this._sourceObj.url : "";
-        paused ? this._videoElement.load() : this._videoElement.play();
       }
     }
 
@@ -7925,7 +7820,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _env = __webpack_require__(11);
+var _env = __webpack_require__(10);
 
 var _env2 = _interopRequireDefault(_env);
 
@@ -8654,7 +8549,43 @@ exports.default = Middleware;
 /* 37 */
 /***/ (function(module, exports) {
 
-module.exports = {"metadata":{"poster":""},"playback":{"volume":1,"playsinline":false,"preload":"none","autoplay":false,"muted":false,"options":{"html5":{"hls":{},"dash":{}}},"preferNative":{"hls":false,"dash":false},"streamPriority":[{"engine":"html5","format":"hls"},{"engine":"html5","format":"dash"},{"engine":"html5","format":"progressive"}]}}
+module.exports = {
+	"metadata": {
+		"poster": ""
+	},
+	"plugins": {},
+	"playback": {
+		"volume": 1,
+		"playsinline": false,
+		"preload": "none",
+		"autoplay": false,
+		"muted": false,
+		"options": {
+			"html5": {
+				"hls": {},
+				"dash": {}
+			}
+		},
+		"preferNative": {
+			"hls": false,
+			"dash": false
+		},
+		"streamPriority": [
+			{
+				"engine": "html5",
+				"format": "hls"
+			},
+			{
+				"engine": "html5",
+				"format": "dash"
+			},
+			{
+				"engine": "html5",
+				"format": "progressive"
+			}
+		]
+	}
+};
 
 /***/ }),
 /* 38 */
@@ -9236,12 +9167,6 @@ module.exports = function (css) {
 	return fixedCss;
 };
 
-
-/***/ }),
-/* 43 */
-/***/ (function(module, exports) {
-
-module.exports = {"name":"playkit-js","version":"0.6.1","main":"dist/playkit.js","scripts":{"clean":"rm -rf ./dist","prebuild":"npm run clean","build:prod":"NODE_ENV=production webpack","build":"webpack","dev":"webpack --progress --colors --watch","test":"NODE_ENV=test karma start --color","test:chrome":"NODE_ENV=test karma start --color --browsers Chrome","test:chrome:dots":"NODE_ENV=test karma start --color --browsers Chrome --reporters dots","test:firefox":"NODE_ENV=test karma start --color --browsers Firefox","test:safari":"NODE_ENV=test karma start --color --browsers Safari","test:watch":"NODE_ENV=test karma start --color --auto-watch","start":"webpack-dev-server","release":"standard-version","publish":"git push --follow-tags --no-verify origin master","eslint":"eslint . --color","flow":"flow check","eslint:flow:test":"npm run eslint && npm run flow && npm run test","commit:dist":"git add --force --all dist && (git commit -m 'chore: update dist' || exit 0)"},"standard-version":{"scripts":{"postbump":"yarn run build && yarn run build:prod && npm run commit:dist"}},"devDependencies":{"babel-cli":"^6.18.0","babel-core":"^6.18.2","babel-eslint":"^7.1.1","babel-loader":"^6.2.7","babel-plugin-istanbul":"^4.0.0","babel-plugin-transform-class-properties":"^6.22.0","babel-plugin-transform-flow-strip-types":"^6.22.0","babel-preset-es2015":"^6.18.0","babel-register":"^6.23.0","chai":"^3.5.0","cross-env":"^3.1.4","css-loader":"^0.28.4","eslint":"^3.10.0","eslint-loader":"^1.6.1","eslint-plugin-flowtype":"^2.30.0","eslint-plugin-import":"^2.2.0","eslint-plugin-mocha-no-only":"^0.0.5","flow-bin":"latest","istanbul":"^0.4.5","karma":"^1.5.0","karma-chai":"^0.1.0","karma-chrome-launcher":"^2.0.0","karma-cli":"^1.0.1","karma-coverage":"^1.1.1","karma-firefox-launcher":"^1.0.1","karma-ie-launcher":"^1.0.0","karma-mocha":"^1.3.0","karma-safari-launcher":"^1.0.0","karma-sourcemap-loader":"^0.3.7","karma-webpack":"^2.0.2","mocha":"^3.2.0","mocha-cli":"^1.0.1","sinon":"^2.0.0","sinon-chai":"^2.8.0","standard-version":"^4.2.0","style-loader":"^0.18.2","uglifyjs-webpack-plugin":"^0.4.3","webpack":"latest","webpack-dev-server":"latest"},"repository":{"type":"git","url":"https://github.com/kaltura/playkit-js"},"keywords":["kaltura","player","html5 player"],"license":"AGPLV3","bugs":{"url":"https://github.com/kaltura/playkit-js/issues"},"homepage":"https://github.com/kaltura/playkit-js","dependencies":{"js-logger":"^1.3.0","ua-parser-js":"^0.7.13"}}
 
 /***/ })
 /******/ ]);
