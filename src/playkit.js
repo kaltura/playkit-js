@@ -22,12 +22,11 @@ LoggerFactory.getLogger().log(`%c ${__NAME__} ${__VERSION__}`, "color: #98ff98; 
 LoggerFactory.getLogger().log(`%c For more details see ${__PACKAGE_URL__}`, "color: #98ff98;");
 
 /**
- * @param {string} targetId - The target div id to append the player.
  * @param {Object} config - The configuration of the player
  * @returns {Player} - The player instance
  */
-export function loadPlayer(targetId: string, config: ?Object) {
-  return new Player(targetId, config || {});
+export function loadPlayer(config: ?Object) {
+  return new Player(config || {});
 }
 
 // Export the media source adapters necessary utils
