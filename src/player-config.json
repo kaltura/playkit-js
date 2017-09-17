@@ -2,6 +2,7 @@
   "metadata": {
     "poster": ""
   },
+  "plugins": {},
   "playback": {
     "volume": 1,
     "playsinline": false,
@@ -14,7 +15,7 @@
         "dash": {}
       }
     },
-    "preferNative":{
+    "preferNative": {
       "hls": false,
       "dash": false
     },

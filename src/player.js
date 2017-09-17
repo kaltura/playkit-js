@@ -146,7 +146,7 @@ export default class Player extends FakeEventTarget {
    * @param {Object} config - The configuration for the player instance.
    * @constructor
    */
-  constructor(config: Object) {
+  constructor(config: Object = {}) {
     super();
     this._env = Env;
     this._tracks = [];
@@ -160,6 +160,7 @@ export default class Player extends FakeEventTarget {
     this._createReadyPromise();
     this._createPlayerContainer();
     this._appendPosterEl();
+    this._loadPlugins(config);
     this.configure(config);
   }
 
@@ -169,7 +170,6 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   configure(config: Object): void {
-    let engine = this._engine;
     this._maybeResetPlayer(config);
     this._config = Utils.Object.mergeDeep(Utils.Object.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
     if (this._selectEngine()) {
@@ -177,7 +177,6 @@ export default class Player extends FakeEventTarget {
       this._posterManager.setSrc(this._config.metadata.poster);
       this._posterManager.show();
       this._attachMedia();
-      this._maybeLoadPlugins(engine);
       this._handlePlaybackConfig();
     }
   }
@@ -192,19 +191,6 @@ export default class Player extends FakeEventTarget {
     if (this._engine && config.sources) {
       Player._logger.debug('New sources on existing engine: reset engine to change media');
       this._reset();
-    }
-  }
-
-  /**
-   * Loads the plugins in case engine created for the first time.
-   * @param {?IEngine} engine - The engine before the enter to configure method.
-   * @private
-   * @returns {void}
-   */
-  _maybeLoadPlugins(engine: ?IEngine) {
-    if (this._engine && !engine) {
-      Player._logger.debug('Engine created for the first time: load plugins');
-      this._loadPlugins();
     }
   }
 
@@ -266,11 +252,13 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Loads the configured plugins.
+   * @param {Object} config - The player configuration.
    * @private
    * @returns {void}
    */
-  _loadPlugins(): void {
-    let plugins = this._config.plugins;
+  _loadPlugins(config: Object): void {
+    Player._logger.debug('Load plugins');
+    let plugins = config.plugins;
     for (let name in plugins) {
       this._pluginManager.load(name, this, plugins[name]);
       let plugin = this._pluginManager.get(name);
