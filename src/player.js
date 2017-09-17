@@ -259,7 +259,7 @@ export default class Player extends FakeEventTarget {
    */
   _loadPlugins(config: Object): void {
     Player._logger.debug('Load plugins');
-    let plugins = config.plugins || {};
+    let plugins = config.plugins;
     for (let name in plugins) {
       this._pluginManager.load(name, this, plugins[name]);
       let plugin = this._pluginManager.get(name);
