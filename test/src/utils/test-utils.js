@@ -32,7 +32,7 @@ function getConfigStructure() {
  * @param {string} type - The element type.
  * @param {string} id - The element id.
  * @param {string} opt_parentId - Optional parent id.
- * @returns {void}
+ * @returns {HTMLDivElement}
  */
 function createElement(type, id, opt_parentId) {
   let element = document.createElement(type);
@@ -47,6 +47,7 @@ function createElement(type, id, opt_parentId) {
       document.body.appendChild(element);
     }
   }
+  return element;
 }
 
 /**
