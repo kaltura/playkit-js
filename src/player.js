@@ -17,6 +17,8 @@ import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
+import TextStyle from './track/text-style'
+import {processCues} from './track/text-track-display'
 import PlaybackMiddleware from './middleware/playback-middleware'
 import DefaultPlayerConfig from './player-config.json'
 import './assets/style.css'
@@ -42,6 +44,19 @@ const POSTER_CLASS_NAME: string = 'playkit-poster';
  * @const
  */
 const ENGINE_CLASS_NAME: string = 'playkit-engine';
+
+/**
+ * The text style id.
+ * @type {string}
+ * @const
+ */
+const SUBTITLES_STYLE_NAME: string = 'playkit-subtitles-style';
+/**
+ * The subtitles class name.
+ * @type {string}
+ * @const
+ */
+const SUBTITLES_CLASS_NAME: string = 'playkit-subtitles';
 
 /**
  * The live string.
@@ -130,6 +145,30 @@ export default class Player extends FakeEventTarget {
    */
   _el: HTMLDivElement;
   /**
+   * The player text DOM element container.
+   * @type {HTMLDivElement}
+   * @private
+   */
+  _textDisplayEl: HTMLDivElement;
+  /**
+   * The player DOM id.
+   * @type {string}
+   * @private
+   */
+  _playerId: string;
+  /**
+   * The player last updated text cues list
+   * @type {any}
+   * @private
+   */
+  _lastUpdatedTextCues: Array<any> = [];
+  /**
+   * The player text disaply settings
+   * @type {Object}
+   * @private
+   */
+  _textDisplaySettings: Object = {};
+  /**
    * The playback middleware of the player.
    * @type {PlaybackMiddleware}
    * @private
@@ -181,6 +220,86 @@ export default class Player extends FakeEventTarget {
       this._maybeLoadPlugins(engine);
       this._handlePlaybackConfig();
     }
+  }
+
+  /**
+   * Sets style attributes for text tracks.
+   * @param {Object} style - text styling settings
+   * @returns {void}
+   */
+  setTextStyle(style: TextStyle): void {
+    let element = Utils.Dom.getElementById(SUBTITLES_STYLE_NAME);
+    if (!element) {
+      element = Utils.Dom.createElement('style');
+      Utils.Dom.setAttribute(element, 'id', SUBTITLES_STYLE_NAME);
+      Utils.Dom.appendChild(document.head, element);
+    }
+    let sheet = element.sheet;
+
+    while (sheet.cssRules.length) {
+      sheet.deleteRule(0);
+    }
+    // sheet.insertRule(`video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
+    sheet.insertRule(`#${this._playerId} .${SUBTITLES_CLASS_NAME} > div > div > div { ${style.toCSS()} }`, 0);
+  }
+
+  /**
+   * update the text display settings
+   * @param {Object} settings - text cue display settings
+   * @public
+   * @returns {void}
+   */
+  setTextDisplaySettings(settings: Object): void {
+    this._textDisplaySettings = settings;
+    this._updateCueDisplaySettings(this._lastUpdatedTextCues, this._textDisplaySettings);
+    for (let i = 0; i< this._lastUpdatedTextCues.length; i++ ) {
+      this._lastUpdatedTextCues[i].hasBeenReset = true;
+    }
+    this._updateTextDisplay(this._lastUpdatedTextCues);
+  }
+
+  /**
+   * handle text cue change
+   * @param {Event} event - the cue change event payload
+   * @private
+   * @returns {void}
+   */
+  _onCueChange(event: FakeEvent): void{
+    Player._logger.debug('Text cue changed', event.payload.cues);
+    this._lastUpdatedTextCues = event.payload.cues;
+    this._updateCueDisplaySettings(this._lastUpdatedTextCues, this._textDisplaySettings);
+    this._updateTextDisplay(this._lastUpdatedTextCues)
+  }
+
+  /**
+   * update the text cue display settings
+   * @param {Object} cues - cues
+   * @param {Object} settings - text cue display settings
+   * @private
+   * @returns {void}
+   */
+  _updateCueDisplaySettings(cues: Array<any>, settings: Object){
+    for (let i = 0; i< cues.length; i++ ){
+      let cue = cues[i];
+      for (let name in settings){
+        cue[name] = settings[name];
+      }
+    }
+  }
+
+  /**
+   * update the text display
+   * @param {Object} cues - list of cues
+   * @private
+   * @returns {void}
+   */
+  _updateTextDisplay(cues: any): void {
+    if (this._textDisplayEl === undefined) {
+      this._textDisplayEl = Utils.Dom.createElement("div");
+      Utils.Dom.addClassName(this._textDisplayEl, SUBTITLES_CLASS_NAME);
+      Utils.Dom.appendChild(this._el, this._textDisplayEl);
+    }
+    processCues(window, cues, this._textDisplayEl);
   }
 
   /**
@@ -358,6 +477,7 @@ export default class Player extends FakeEventTarget {
         this._markActiveTrack(event.payload.selectedTextTrack);
         return this.dispatchEvent(event);
       });
+      this._eventManager.listen(this._engine, CustomEvents.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this, Html5Events.PLAY, this._onPlay.bind(this));
     }
@@ -423,7 +543,8 @@ export default class Player extends FakeEventTarget {
   _createPlayerContainer(): void {
     const el = this._el = Utils.Dom.createElement("div");
     Utils.Dom.addClassName(el, CONTAINER_CLASS_NAME);
-    Utils.Dom.setAttribute(el, "id", Utils.Generator.uniqueId(5));
+    this._playerId = Utils.Generator.uniqueId(5);
+    Utils.Dom.setAttribute(el, "id", this._playerId);
     Utils.Dom.setAttribute(el, "tabindex", '-1');
   }
 
@@ -557,6 +678,7 @@ export default class Player extends FakeEventTarget {
   hideTextTrack(): void {
     if (this._engine) {
       this._engine.hideTextTrack();
+      this._updateTextDisplay([]);
       this._getTracksByType(TrackTypes.TEXT).map(track => track.active = false);
     }
   }
