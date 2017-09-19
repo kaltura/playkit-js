@@ -12,6 +12,7 @@ import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
+import TextStyle from './track/text-style'
 import Env from './utils/env'
 import * as Utils from './utils/util'
 
@@ -40,7 +41,7 @@ export {registerMediaSourceAdapter, BaseMediaSourceAdapter};
 export {registerPlugin, BasePlugin, BaseMiddleware};
 
 // Export the tracks classes
-export {Track, VideoTrack, AudioTrack, TextTrack};
+export {Track, VideoTrack, AudioTrack, TextTrack, TextStyle};
 
 // Export utils library
 export {Utils};
