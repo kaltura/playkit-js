@@ -65,15 +65,16 @@ export default class MediaSourceProvider {
   /**
    * Checks if the a media source adapter can play a given source.
    * @param {Source} source - The source object to check.
+   *  @param {boolean} [preferNative=true] - prefer native flag
    * @returns {boolean} - Whether a media source adapter can play the source.
    * @public
    * @static
    */
-  static canPlaySource(source: Source): boolean {
+  static canPlaySource(source: Source, preferNative: boolean = true): boolean {
     let mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
     if (source && source.mimetype) {
       for (let i = 0; i < mediaSourceAdapters.length; i++) {
-        if (mediaSourceAdapters[i].canPlayType(source.mimetype) && (!source.drmData || mediaSourceAdapters[i].canPlayDrm(source.drmData))) {
+        if (mediaSourceAdapters[i].canPlayType(source.mimetype, preferNative) && (!source.drmData || mediaSourceAdapters[i].canPlayDrm(source.drmData))) {
           MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
           MediaSourceProvider._logger.debug(`Selected adapter is <${MediaSourceProvider._selectedAdapter.id}>`);
           return true;
@@ -95,7 +96,7 @@ export default class MediaSourceProvider {
   static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): ?IMediaSourceAdapter {
     if (videoElement && source && config) {
       if (!MediaSourceProvider._selectedAdapter) {
-        MediaSourceProvider.canPlaySource(source);
+        MediaSourceProvider.canPlaySource(source, true);
       }
       return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config) : null;
     }

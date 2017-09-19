@@ -37,6 +37,10 @@ describe('NativeAdapter: canPlayType', () => {
     NativeAdapter.canPlayType('application/x-mpegURL').should.equal(!!video.canPlayType('application/x-mpegURL'));
   });
 
+  it('should return application/x-mpegURL not supported if preferNative equals false', () => {
+    NativeAdapter.canPlayType('application/x-mpegURL', false).should.be.false;
+  });
+
   it('should return false for unsupported mime type', () => {
     NativeAdapter.canPlayType('someType').should.be.false;
   });
