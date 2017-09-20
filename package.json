@@ -1,6 +1,6 @@
 {
   "name": "playkit-js",
-  "version": "0.5.0",
+  "version": "0.8.0",
   "main": "dist/playkit.js",
   "scripts": {
     "clean": "rm -rf ./dist",
@@ -65,7 +65,7 @@
     "standard-version": "^4.2.0",
     "style-loader": "^0.18.2",
     "uglifyjs-webpack-plugin": "^0.4.3",
-    "webpack": "latest",
+    "webpack": "^3.6.0",
     "webpack-dev-server": "latest"
   },
   "repository": {

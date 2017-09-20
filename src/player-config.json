@@ -2,18 +2,22 @@
   "metadata": {
     "poster": ""
   },
+  "plugins": {},
   "playback": {
+    "volume": 1,
     "playsinline": false,
     "preload": "none",
     "autoplay": false,
     "muted": false,
     "options": {
       "html5": {
-        "hls": {
-        },
-        "dash": {
-        }
+        "hls": {},
+        "dash": {}
       }
+    },
+    "preferNative": {
+      "hls": false,
+      "dash": false
     },
     "streamPriority": [
       {

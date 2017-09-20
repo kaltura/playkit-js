@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 29);
+/******/ 	return __webpack_require__(__webpack_require__.s = 28);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -90,7 +90,7 @@ exports.LOG_LEVEL = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jsLogger = __webpack_require__(37);
+var _jsLogger = __webpack_require__(36);
 
 var JsLogger = _interopRequireWildcard(_jsLogger);
 
@@ -1175,6 +1175,26 @@ var EventManager = function () {
     }
 
     /**
+     * Attaches an event listener to an event target for only one time.
+     * @param {EventTarget} target - The event target.
+     * @param {string} type - The event type.
+     * @param {EventManager.ListenerType} listener - The event listener.
+     * @returns {void}
+     */
+
+  }, {
+    key: 'listenOnce',
+    value: function listenOnce(target, type, listener) {
+      var _this = this;
+
+      var oneListener = function oneListener(event) {
+        _this.unlisten(target, type, oneListener);
+        listener.call(_this, event);
+      };
+      this.listen(target, type, oneListener);
+    }
+
+    /**
      * Attaches an event listener to an event target.
      * @param {EventTarget} target The event target.
      * @param {string} type The event type.
@@ -1195,19 +1215,20 @@ var EventManager = function () {
      * Detaches an event listener from an event target.
      * @param {EventTarget} target The event target.
      * @param {string} type The event type.
+     * @param {EventManager.ListenerType} [listener] The event listener to detach. If no given, detaches all event listeners of the target and type.
      * @returns {void}
      */
 
   }, {
     key: 'unlisten',
-    value: function unlisten(target, type) {
+    value: function unlisten(target, type, listener) {
       if (this._bindingMap) {
         var list = this._bindingMap.get(type);
 
         for (var i = 0; i < list.length; ++i) {
           var binding = list[i];
 
-          if (binding.target == target) {
+          if (binding.target === target && (binding.listener === listener || !listener)) {
             binding.unlisten();
             if (this._bindingMap) {
               this._bindingMap.remove(type, binding);
@@ -1554,7 +1575,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _env = __webpack_require__(13);
+var _env = __webpack_require__(10);
 
 var _env2 = _interopRequireDefault(_env);
 
@@ -1562,7 +1583,7 @@ var _eventManager = __webpack_require__(7);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _posterManager = __webpack_require__(33);
+var _posterManager = __webpack_require__(32);
 
 var _posterManager2 = _interopRequireDefault(_posterManager);
 
@@ -1588,7 +1609,7 @@ var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _html = __webpack_require__(25);
+var _html = __webpack_require__(24);
 
 var _html2 = _interopRequireDefault(_html);
 
@@ -1596,15 +1617,15 @@ var _pluginManager = __webpack_require__(19);
 
 var _pluginManager2 = _interopRequireDefault(_pluginManager);
 
-var _basePlugin = __webpack_require__(12);
+var _basePlugin = __webpack_require__(13);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
-var _stateManager = __webpack_require__(30);
+var _stateManager = __webpack_require__(29);
 
 var _stateManager2 = _interopRequireDefault(_stateManager);
 
-var _trackTypes = __webpack_require__(32);
+var _trackTypes = __webpack_require__(31);
 
 var _trackTypes2 = _interopRequireDefault(_trackTypes);
 
@@ -1624,15 +1645,15 @@ var _textTrack = __webpack_require__(5);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _playbackMiddleware = __webpack_require__(28);
+var _playbackMiddleware = __webpack_require__(27);
 
 var _playbackMiddleware2 = _interopRequireDefault(_playbackMiddleware);
 
-var _playerConfig = __webpack_require__(43);
+var _playerConfig = __webpack_require__(42);
 
 var _playerConfig2 = _interopRequireDefault(_playerConfig);
 
-__webpack_require__(38);
+__webpack_require__(37);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1682,7 +1703,6 @@ var Player = function (_FakeEventTarget) {
   _inherits(Player, _FakeEventTarget);
 
   /**
-   * @param {string} targetId - The target div id to append the player.
    * @param {Object} config - The configuration for the player instance.
    * @constructor
    */
@@ -1765,7 +1785,9 @@ var Player = function (_FakeEventTarget) {
    * @static
    * @private
    */
-  function Player(targetId, config) {
+  function Player() {
+    var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
     _classCallCheck(this, Player);
 
     var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
@@ -1780,8 +1802,9 @@ var Player = function (_FakeEventTarget) {
     _this._pluginManager = new _pluginManager2.default();
     _this._playbackMiddleware = new _playbackMiddleware2.default();
     _this._createReadyPromise();
-    _this._appendPlayerContainer(targetId);
+    _this._createPlayerContainer();
     _this._appendPosterEl();
+    _this._loadPlugins(config);
     _this.configure(config);
     return _this;
   }
@@ -1803,7 +1826,6 @@ var Player = function (_FakeEventTarget) {
   _createClass(Player, [{
     key: 'configure',
     value: function configure(config) {
-      var engine = this._engine;
       this._maybeResetPlayer(config);
       this._config = Utils.Object.mergeDeep(Utils.Object.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
       if (this._selectEngine()) {
@@ -1811,7 +1833,6 @@ var Player = function (_FakeEventTarget) {
         this._posterManager.setSrc(this._config.metadata.poster);
         this._posterManager.show();
         this._attachMedia();
-        this._maybeLoadPlugins(engine);
         this._handlePlaybackConfig();
       }
     }
@@ -1829,22 +1850,6 @@ var Player = function (_FakeEventTarget) {
       if (this._engine && config.sources) {
         Player._logger.debug('New sources on existing engine: reset engine to change media');
         this._reset();
-      }
-    }
-
-    /**
-     * Loads the plugins in case engine created for the first time.
-     * @param {?IEngine} engine - The engine before the enter to configure method.
-     * @private
-     * @returns {void}
-     */
-
-  }, {
-    key: '_maybeLoadPlugins',
-    value: function _maybeLoadPlugins(engine) {
-      if (this._engine && !engine) {
-        Player._logger.debug('Engine created for the first time: load plugins');
-        this._loadPlugins();
       }
     }
 
@@ -1918,11 +1923,13 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Loads the configured plugins.
+     * @param {Object} config - The player configuration.
      * @private
      * @returns {void}
      */
-    value: function _loadPlugins() {
-      var plugins = this._config.plugins;
+    value: function _loadPlugins(config) {
+      Player._logger.debug('Load plugins');
+      var plugins = config.plugins;
       for (var name in plugins) {
         this._pluginManager.load(name, this, plugins[name]);
         var plugin = this._pluginManager.get(name);
@@ -1960,6 +1967,7 @@ var Player = function (_FakeEventTarget) {
       var _this3 = this;
 
       var streamPriority = this._config.playback.streamPriority;
+      var preferNative = this._config.playback.preferNative;
       var sources = this._config.sources;
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
@@ -1978,7 +1986,7 @@ var Player = function (_FakeEventTarget) {
             var formatSources = sources[format];
             if (formatSources && formatSources.length > 0) {
               var source = formatSources[0];
-              if (engine.canPlaySource(source)) {
+              if (engine.canPlaySource(source, preferNative[format])) {
                 Player._logger.debug('Source selected: ', formatSources);
                 _this3._loadEngine(engine, source);
                 _this3.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.SOURCE_SELECTED, { selectedSource: formatSources }));
@@ -2067,6 +2075,9 @@ var Player = function (_FakeEventTarget) {
     key: '_handlePlaybackConfig',
     value: function _handlePlaybackConfig() {
       if (this._config.playback) {
+        if (typeof this._config.playback.volume === 'number') {
+          this.volume = this._config.playback.volume;
+        }
         if (this._config.playback.muted) {
           this.muted = true;
         }
@@ -2100,27 +2111,6 @@ var Player = function (_FakeEventTarget) {
         return os === 'iOS' ? this.muted && this.playsinline : this.muted;
       }
       return true;
-    }
-
-    /**
-     * Creates the player container
-     * @param {string} targetId - The target div id to append the player.
-     * @private
-     * @returns {void}
-     */
-
-  }, {
-    key: '_appendPlayerContainer',
-    value: function _appendPlayerContainer(targetId) {
-      if (targetId) {
-        if (this._el === undefined) {
-          this._createPlayerContainer();
-          var parentNode = Utils.Dom.getElementById(targetId);
-          Utils.Dom.appendChild(parentNode, this._el);
-        }
-      } else {
-        throw new Error("targetId is not found, it must be pass on initialization");
-      }
     }
 
     /**
@@ -2361,7 +2351,6 @@ var Player = function (_FakeEventTarget) {
       if (this._firstPlay) {
         this._firstPlay = false;
         this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.FIRST_PLAY));
-
         this._posterManager.hide();
       }
     }
@@ -2678,7 +2667,7 @@ var Player = function (_FakeEventTarget) {
     key: 'volume',
     set: function set(vol) {
       if (this._engine) {
-        if (Utils.Number.isFloat(vol)) {
+        if (Utils.Number.isFloat(vol) || vol === 0 || vol === 1) {
           var boundedVol = vol;
           if (boundedVol < 0) {
             boundedVol = 0;
@@ -2882,6 +2871,26 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _uaParserJs = __webpack_require__(40);
+
+var _uaParserJs2 = _interopRequireDefault(_uaParserJs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Env = new _uaParserJs2.default().getResult();
+exports.default = Env;
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2930,7 +2939,7 @@ PlayerError.TYPE = {
 exports.default = PlayerError;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2980,7 +2989,7 @@ var BaseMiddleware = function () {
 exports.default = BaseMiddleware;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3008,7 +3017,7 @@ var _eventManager = __webpack_require__(7);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _playerError = __webpack_require__(10);
+var _playerError = __webpack_require__(11);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
@@ -3193,26 +3202,6 @@ var BasePlugin = function () {
 
 BasePlugin.defaultConfig = {};
 exports.default = BasePlugin;
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _uaParserJs = __webpack_require__(41);
-
-var _uaParserJs2 = _interopRequireDefault(_uaParserJs);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Env = new _uaParserJs2.default().getResult();
-exports.default = Env;
 
 /***/ }),
 /* 14 */
@@ -3558,11 +3547,11 @@ var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _playerError = __webpack_require__(10);
+var _playerError = __webpack_require__(11);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
-var _drmSupport = __webpack_require__(23);
+var _drmSupport = __webpack_require__(22);
 
 var _drmSupport2 = _interopRequireDefault(_drmSupport);
 
@@ -3621,7 +3610,7 @@ var _fakeEventTarget = __webpack_require__(14);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
-var _playerError = __webpack_require__(10);
+var _playerError = __webpack_require__(11);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
@@ -3864,7 +3853,7 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
     }
   }], [{
     key: 'canPlayType',
-    value: function canPlayType(mimeType) {
+    value: function canPlayType(mimeType, preferNative) {
       throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayType').getError();
     }
   }]);
@@ -3890,7 +3879,7 @@ exports.registerMediaSourceAdapter = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nativeAdapter = __webpack_require__(26);
+var _nativeAdapter = __webpack_require__(25);
 
 var _nativeAdapter2 = _interopRequireDefault(_nativeAdapter);
 
@@ -3975,6 +3964,7 @@ var MediaSourceProvider = function () {
     /**
      * Checks if the a media source adapter can play a given source.
      * @param {Source} source - The source object to check.
+     *  @param {boolean} [preferNative=true] - prefer native flag
      * @returns {boolean} - Whether a media source adapter can play the source.
      * @public
      * @static
@@ -3983,10 +3973,12 @@ var MediaSourceProvider = function () {
   }, {
     key: 'canPlaySource',
     value: function canPlaySource(source) {
+      var preferNative = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
       var mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
       if (source && source.mimetype) {
         for (var i = 0; i < mediaSourceAdapters.length; i++) {
-          if (mediaSourceAdapters[i].canPlayType(source.mimetype) && (!source.drmData || mediaSourceAdapters[i].canPlayDrm(source.drmData))) {
+          if (mediaSourceAdapters[i].canPlayType(source.mimetype, preferNative) && (!source.drmData || mediaSourceAdapters[i].canPlayDrm(source.drmData))) {
             MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
             MediaSourceProvider._logger.debug('Selected adapter is <' + MediaSourceProvider._selectedAdapter.id + '>');
             return true;
@@ -4011,7 +4003,7 @@ var MediaSourceProvider = function () {
     value: function getMediaSourceAdapter(videoElement, source, config) {
       if (videoElement && source && config) {
         if (!MediaSourceProvider._selectedAdapter) {
-          MediaSourceProvider.canPlaySource(source);
+          MediaSourceProvider.canPlaySource(source, true);
         }
         return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config) : null;
       }
@@ -4057,11 +4049,11 @@ exports.registerPlugin = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _basePlugin = __webpack_require__(12);
+var _basePlugin = __webpack_require__(13);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
-var _playerError = __webpack_require__(10);
+var _playerError = __webpack_require__(11);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
@@ -4274,100 +4266,6 @@ exports.default = PLAYER_STATE_TYPES;
 
 /***/ }),
 /* 22 */
-/***/ (function(module, exports) {
-
-module.exports = {
-	"name": "playkit-js",
-	"version": "0.5.0",
-	"main": "dist/playkit.js",
-	"scripts": {
-		"clean": "rm -rf ./dist",
-		"prebuild": "npm run clean",
-		"build:prod": "NODE_ENV=production webpack",
-		"build": "webpack",
-		"dev": "webpack --progress --colors --watch",
-		"test": "NODE_ENV=test karma start --color",
-		"test:chrome": "NODE_ENV=test karma start --color --browsers Chrome",
-		"test:chrome:dots": "NODE_ENV=test karma start --color --browsers Chrome --reporters dots",
-		"test:firefox": "NODE_ENV=test karma start --color --browsers Firefox",
-		"test:safari": "NODE_ENV=test karma start --color --browsers Safari",
-		"test:watch": "NODE_ENV=test karma start --color --auto-watch",
-		"start": "webpack-dev-server",
-		"release": "standard-version",
-		"publish": "git push --follow-tags --no-verify origin master",
-		"eslint": "eslint . --color",
-		"flow": "flow check",
-		"eslint:flow:test": "npm run eslint && npm run flow && npm run test",
-		"commit:dist": "git add --force --all dist && (git commit -m 'chore: update dist' || exit 0)"
-	},
-	"standard-version": {
-		"scripts": {
-			"postbump": "yarn run build && yarn run build:prod && npm run commit:dist"
-		}
-	},
-	"devDependencies": {
-		"babel-cli": "^6.18.0",
-		"babel-core": "^6.18.2",
-		"babel-eslint": "^7.1.1",
-		"babel-loader": "^6.2.7",
-		"babel-plugin-istanbul": "^4.0.0",
-		"babel-plugin-transform-class-properties": "^6.22.0",
-		"babel-plugin-transform-flow-strip-types": "^6.22.0",
-		"babel-preset-es2015": "^6.18.0",
-		"babel-register": "^6.23.0",
-		"chai": "^3.5.0",
-		"cross-env": "^3.1.4",
-		"css-loader": "^0.28.4",
-		"eslint": "^3.10.0",
-		"eslint-loader": "^1.6.1",
-		"eslint-plugin-flowtype": "^2.30.0",
-		"eslint-plugin-import": "^2.2.0",
-		"eslint-plugin-mocha-no-only": "^0.0.5",
-		"flow-bin": "latest",
-		"istanbul": "^0.4.5",
-		"karma": "^1.5.0",
-		"karma-chai": "^0.1.0",
-		"karma-chrome-launcher": "^2.0.0",
-		"karma-cli": "^1.0.1",
-		"karma-coverage": "^1.1.1",
-		"karma-firefox-launcher": "^1.0.1",
-		"karma-ie-launcher": "^1.0.0",
-		"karma-mocha": "^1.3.0",
-		"karma-safari-launcher": "^1.0.0",
-		"karma-sourcemap-loader": "^0.3.7",
-		"karma-webpack": "^2.0.2",
-		"mocha": "^3.2.0",
-		"mocha-cli": "^1.0.1",
-		"sinon": "^2.0.0",
-		"sinon-chai": "^2.8.0",
-		"standard-version": "^4.2.0",
-		"style-loader": "^0.18.2",
-		"uglifyjs-webpack-plugin": "^0.4.3",
-		"webpack": "latest",
-		"webpack-dev-server": "latest"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/kaltura/playkit-js"
-	},
-	"keywords": [
-		"kaltura",
-		"player",
-		"html5 player"
-	],
-	"license": "AGPLV3",
-	"bugs": {
-		"url": "https://github.com/kaltura/playkit-js/issues"
-	},
-	"homepage": "https://github.com/kaltura/playkit-js",
-	"dependencies": {
-		"js-logger": "^1.3.0",
-		"ua-parser-js": "^0.7.13"
-	}
-};
-
-/***/ }),
-/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4379,7 +4277,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _env = __webpack_require__(13);
+var _env = __webpack_require__(10);
 
 var _env2 = _interopRequireDefault(_env);
 
@@ -4439,7 +4337,7 @@ DrmSupport._Browsers = {
   Chrome: function Chrome() {
     var device = _env2.default.device.type;
     var os = _env2.default.os.name;
-    if (!device || device === 'mobile' && os === 'Android') {
+    if (!device || os === 'Android') {
       return _drmScheme.DrmScheme.WIDEVINE;
     }
     return NOT_SUPPORTED;
@@ -4471,7 +4369,7 @@ DrmSupport._Browsers = {
 exports.default = DrmSupport;
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4738,7 +4636,7 @@ FairPlay._WebkitEvents = {
 exports.default = FairPlay;
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4832,6 +4730,7 @@ var Html5 = function (_FakeEventTarget) {
     /**
      * Checks if the engine can play a given source.
      * @param {Source} source - The source object to check.
+     * @param {boolean} preferNative - prefer native flag
      * @returns {boolean} - Whether the engine can play the source.
      * @public
      * @static
@@ -4850,8 +4749,8 @@ var Html5 = function (_FakeEventTarget) {
 
   }, {
     key: 'canPlaySource',
-    value: function canPlaySource(source) {
-      return _mediaSourceProvider2.default.canPlaySource(source);
+    value: function canPlaySource(source, preferNative) {
+      return _mediaSourceProvider2.default.canPlaySource(source, preferNative);
     }
 
     /**
@@ -5160,7 +5059,11 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'load',
     value: function load(startTime) {
-      return this._mediaSourceAdapter ? this._mediaSourceAdapter.load(startTime) : Promise.resolve({});
+      this._el.load();
+      if (this._mediaSourceAdapter) {
+        return this._mediaSourceAdapter.load(startTime);
+      }
+      return Promise.resolve({});
     }
 
     /**
@@ -5632,7 +5535,7 @@ Html5.id = "html5";
 exports.default = Html5;
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5672,15 +5575,19 @@ var _baseMediaSourceAdapter = __webpack_require__(17);
 
 var _baseMediaSourceAdapter2 = _interopRequireDefault(_baseMediaSourceAdapter);
 
-var _resolution = __webpack_require__(34);
+var _resolution = __webpack_require__(33);
 
 var _util = __webpack_require__(2);
 
 var Utils = _interopRequireWildcard(_util);
 
-var _fairplay = __webpack_require__(24);
+var _fairplay = __webpack_require__(23);
 
 var _fairplay2 = _interopRequireDefault(_fairplay);
+
+var _env = __webpack_require__(10);
+
+var _env2 = _interopRequireDefault(_env);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -5708,6 +5615,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      * Checks if NativeAdapter can play a given mime type.
      * @function canPlayType
      * @param {string} mimeType - The mime type to check
+     * @param {boolean} [preferNative=true] - prefer native flag
      * @returns {boolean} - Whether the native adapter can play a specific mime type
      * @static
      */
@@ -5739,14 +5647,20 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      * @static
      */
 
+
     /**
-     * The id of the Adapter
-     * @member {string} id
+     * The adapter logger
+     * @member {any} _logger
+     * @private
      * @static
-     * @public
      */
     value: function canPlayType(mimeType) {
-      var canPlayType = typeof mimeType === 'string' ? !!Utils.Dom.createElement("video").canPlayType(mimeType.toLowerCase()) : false;
+      var preferNative = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+      var canPlayType = false;
+      if (typeof mimeType === 'string') {
+        canPlayType = !!NativeAdapter.TEST_VIDEO.canPlayType(mimeType.toLowerCase()) && !!preferNative;
+      }
       NativeAdapter._logger.debug('canPlayType result for mimeType:' + mimeType + ' is ' + canPlayType.toString());
       return canPlayType;
     }
@@ -5766,12 +5680,18 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      * @static
      */
 
+    /**
+     * static video element for canPlayType testing
+     * @member {} TEST_VIDEO
+     * @type {HTMLVideoElement}
+     * @static
+     */
 
     /**
-     * The adapter logger
-     * @member {any} _logger
-     * @private
+     * The id of the Adapter
+     * @member {string} id
      * @static
+     * @public
      */
 
   }, {
@@ -5908,14 +5828,12 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
       if (!this._loadPromise) {
         this._loadPromise = new Promise(function (resolve, reject) {
           // We're using 'loadeddata' event for native hls (on 'loadedmetadata' native hls doesn't have tracks yet).
-          _this2._eventManager.listen(_this2._videoElement, _events.HTML5_EVENTS.LOADED_DATA, function () {
-            _this2._eventManager.unlisten(_this2._videoElement, _events.HTML5_EVENTS.LOADED_DATA);
+          _this2._eventManager.listenOnce(_this2._videoElement, _events.HTML5_EVENTS.LOADED_DATA, function () {
             var data = { tracks: _this2._getParsedTracks() };
             NativeAdapter._logger.debug('The source has been loaded successfully');
             resolve(data);
           });
-          _this2._eventManager.listen(_this2._videoElement, _events.HTML5_EVENTS.ERROR, function (error) {
-            _this2._eventManager.unlisten(_this2._videoElement, _events.HTML5_EVENTS.ERROR);
+          _this2._eventManager.listenOnce(_this2._videoElement, _events.HTML5_EVENTS.ERROR, function (error) {
             NativeAdapter._logger.error(error);
             reject(error);
           });
@@ -6135,16 +6053,30 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
         var currentTime = this._videoElement.currentTime;
         var paused = this._videoElement.paused;
         this._sourceObj = videoTracks[videoTrack.index];
-        this._eventManager.listen(this._videoElement, _events.HTML5_EVENTS.LOADED_DATA, function () {
-          _this3._eventManager.unlisten(_this3._videoElement, _events.HTML5_EVENTS.LOADED_DATA);
-          _this3._eventManager.listen(_this3._videoElement, _events.HTML5_EVENTS.SEEKED, function () {
-            _this3._eventManager.unlisten(_this3._videoElement, _events.HTML5_EVENTS.SEEKED);
-            _this3._onTrackChanged(videoTrack);
-          });
-          _this3._videoElement.currentTime = currentTime;
+        this._eventManager.listenOnce(this._videoElement, _events.HTML5_EVENTS.LOADED_DATA, function () {
+          if (_env2.default.browser.name === 'Android Browser') {
+            // In android browser we have to seek only after some playback.
+            _this3._eventManager.listenOnce(_this3._videoElement, _events.HTML5_EVENTS.DURATION_CHANGE, function () {
+              _this3._videoElement.currentTime = currentTime;
+            });
+            _this3._eventManager.listenOnce(_this3._videoElement, _events.HTML5_EVENTS.SEEKED, function () {
+              _this3._onTrackChanged(videoTrack);
+              if (paused) {
+                _this3._videoElement.pause();
+              }
+            });
+            _this3._videoElement.play();
+          } else {
+            _this3._eventManager.listenOnce(_this3._videoElement, _events.HTML5_EVENTS.SEEKED, function () {
+              _this3._onTrackChanged(videoTrack);
+            });
+            _this3._videoElement.currentTime = currentTime;
+            if (!paused) {
+              _this3._videoElement.play();
+            }
+          }
         });
         this._videoElement.src = this._sourceObj ? this._sourceObj.url : "";
-        paused ? this._videoElement.load() : this._videoElement.play();
       }
     }
 
@@ -6379,12 +6311,13 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
 
 NativeAdapter.id = 'NativeAdapter';
 NativeAdapter._logger = _baseMediaSourceAdapter2.default.getLogger(NativeAdapter.id);
+NativeAdapter.TEST_VIDEO = Utils.Dom.createElement("video");
 NativeAdapter._drmProtocols = [_fairplay2.default];
 NativeAdapter._drmProtocol = null;
 exports.default = NativeAdapter;
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6400,7 +6333,7 @@ var _multiMap = __webpack_require__(15);
 
 var _multiMap2 = _interopRequireDefault(_multiMap);
 
-var _baseMiddleware = __webpack_require__(11);
+var _baseMiddleware = __webpack_require__(12);
 
 var _baseMiddleware2 = _interopRequireDefault(_baseMiddleware);
 
@@ -6517,7 +6450,7 @@ var Middleware = function () {
 exports.default = Middleware;
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6529,11 +6462,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _middleware = __webpack_require__(27);
+var _middleware = __webpack_require__(26);
 
 var _middleware2 = _interopRequireDefault(_middleware);
 
-var _baseMiddleware = __webpack_require__(11);
+var _baseMiddleware = __webpack_require__(12);
 
 var _baseMiddleware2 = _interopRequireDefault(_baseMiddleware);
 
@@ -6617,7 +6550,7 @@ PlaybackMiddleware.Actions = {
 exports.default = PlaybackMiddleware;
 
 /***/ }),
-/* 29 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6637,10 +6570,6 @@ var _logger = __webpack_require__(0);
 
 var _logger2 = _interopRequireDefault(_logger);
 
-var _package = __webpack_require__(22);
-
-var packageData = _interopRequireWildcard(_package);
-
 var _baseMediaSourceAdapter = __webpack_require__(17);
 
 var _baseMediaSourceAdapter2 = _interopRequireDefault(_baseMediaSourceAdapter);
@@ -6653,11 +6582,11 @@ var _baseDrmProtocol = __webpack_require__(16);
 
 var _baseDrmProtocol2 = _interopRequireDefault(_baseDrmProtocol);
 
-var _baseMiddleware = __webpack_require__(11);
+var _baseMiddleware = __webpack_require__(12);
 
 var _baseMiddleware2 = _interopRequireDefault(_baseMiddleware);
 
-var _basePlugin = __webpack_require__(12);
+var _basePlugin = __webpack_require__(13);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
@@ -6677,7 +6606,7 @@ var _textTrack = __webpack_require__(5);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _env = __webpack_require__(13);
+var _env = __webpack_require__(10);
 
 var _env2 = _interopRequireDefault(_env);
 
@@ -6689,23 +6618,15 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// Playkit version
-var VERSION = packageData.version;
-
-// Playkit name
-
-var PLAYER_NAME = 'kaltura-playkit-js';
-
-_logger2.default.getLogger().log("%c Playkit " + VERSION, "color: #3399ff; font-size: large");
-_logger2.default.getLogger().log("%c For more details see https://github.com/kaltura/playkit-js", "color: #3399ff;");
+_logger2.default.getLogger().log('%c ' + "playkit-js" + ' ' + "0.8.0", "color: #98ff98;  font-size: large");
+_logger2.default.getLogger().log('%c For more details see ' + "https://github.com/kaltura/playkit-js", "color: #98ff98;");
 
 /**
- * @param {string} targetId - The target div id to append the player.
  * @param {Object} config - The configuration of the player
  * @returns {Player} - The player instance
  */
-function loadPlayer(targetId, config) {
-  return new _player2.default(targetId, config || {});
+function loadPlayer(config) {
+  return new _player2.default(config || {});
 }
 
 // Export the media source adapters necessary utils
@@ -6731,11 +6652,11 @@ exports.Utils = Utils;
 
 // Export version
 
-exports.VERSION = VERSION;
+exports.VERSION = "0.8.0";
 
 // Export player name
 
-exports.PLAYER_NAME = PLAYER_NAME;
+exports.PLAYER_NAME = "playkit-js";
 
 // Export environment data
 
@@ -6747,7 +6668,7 @@ exports.BaseDrmProtocol = _baseDrmProtocol2.default;
 exports.default = loadPlayer;
 
 /***/ }),
-/* 30 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6767,7 +6688,7 @@ var _eventManager = __webpack_require__(7);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _state = __webpack_require__(31);
+var _state = __webpack_require__(30);
 
 var _state2 = _interopRequireDefault(_state);
 
@@ -7048,7 +6969,7 @@ var StateManager = function () {
 exports.default = StateManager;
 
 /***/ }),
-/* 31 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7130,7 +7051,7 @@ var State = function () {
 exports.default = State;
 
 /***/ }),
-/* 32 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7148,7 +7069,7 @@ var TRACK_TYPES = {
 exports.default = TRACK_TYPES;
 
 /***/ }),
-/* 33 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7269,7 +7190,7 @@ var PosterManager = function () {
 exports.default = PosterManager;
 
 /***/ }),
-/* 34 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7395,10 +7316,10 @@ function getSuitableSourceForResolution(tracks, width, height) {
 exports.getSuitableSourceForResolution = getSuitableSourceForResolution;
 
 /***/ }),
-/* 35 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(36)(undefined);
+exports = module.exports = __webpack_require__(35)(undefined);
 // imports
 
 
@@ -7409,7 +7330,7 @@ exports.push([module.i, ".playkit-container {\n  position: relative;\n  width: 1
 
 
 /***/ }),
-/* 36 */
+/* 35 */
 /***/ (function(module, exports) {
 
 /*
@@ -7491,7 +7412,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 37 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -7758,13 +7679,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 38 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(35);
+var content = __webpack_require__(34);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -7772,7 +7693,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(39)(content, options);
+var update = __webpack_require__(38)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -7789,7 +7710,7 @@ if(false) {
 }
 
 /***/ }),
-/* 39 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -7835,7 +7756,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(40);
+var	fixUrls = __webpack_require__(39);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -8148,7 +8069,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 40 */
+/* 39 */
 /***/ (function(module, exports) {
 
 
@@ -8243,7 +8164,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 41 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -9164,7 +9085,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         exports.UAParser = UAParser;
     } else {
         // requirejs env (optional)
-        if ("function" === FUNC_TYPE && __webpack_require__(42)) {
+        if ("function" === FUNC_TYPE && __webpack_require__(41)) {
             !(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
                 return UAParser;
             }.call(exports, __webpack_require__, exports, module),
@@ -9200,7 +9121,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
 
 /***/ }),
-/* 42 */
+/* 41 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
@@ -9209,14 +9130,16 @@ module.exports = __webpack_amd_options__;
 /* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ }),
-/* 43 */
+/* 42 */
 /***/ (function(module, exports) {
 
 module.exports = {
 	"metadata": {
 		"poster": ""
 	},
+	"plugins": {},
 	"playback": {
+		"volume": 1,
 		"playsinline": false,
 		"preload": "none",
 		"autoplay": false,
@@ -9226,6 +9149,10 @@ module.exports = {
 				"hls": {},
 				"dash": {}
 			}
+		},
+		"preferNative": {
+			"hls": false,
+			"dash": false
 		},
 		"streamPriority": [
 			{

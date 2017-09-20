@@ -31,6 +31,21 @@ class EventManager {
     return Promise.resolve();
   }
 
+  /**
+   * Attaches an event listener to an event target for only one time.
+   * @param {EventTarget} target - The event target.
+   * @param {string} type - The event type.
+   * @param {EventManager.ListenerType} listener - The event listener.
+   * @returns {void}
+   */
+  listenOnce(target: any, type: string, listener: ListenerType): void {
+    let oneListener = (event) => {
+      this.unlisten(target, type, oneListener);
+      listener.call(this, event)
+    };
+    this.listen(target, type, oneListener);
+  }
+
 
   /**
    * Attaches an event listener to an event target.
@@ -51,16 +66,17 @@ class EventManager {
    * Detaches an event listener from an event target.
    * @param {EventTarget} target The event target.
    * @param {string} type The event type.
+   * @param {EventManager.ListenerType} [listener] The event listener to detach. If no given, detaches all event listeners of the target and type.
    * @returns {void}
    */
-  unlisten(target: any, type: string): void {
+  unlisten(target: any, type: string, listener: ?ListenerType): void {
     if (this._bindingMap) {
       let list = this._bindingMap.get(type);
 
       for (let i = 0; i < list.length; ++i) {
         let binding = list[i];
 
-        if (binding.target == target) {
+        if (binding.target === target && (binding.listener === listener || !listener)) {
           binding.unlisten();
           if (this._bindingMap) {
             this._bindingMap.remove(type, binding);

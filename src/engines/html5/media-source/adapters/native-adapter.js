@@ -9,6 +9,7 @@ import BaseMediaSourceAdapter from '../base-media-source-adapter'
 import {getSuitableSourceForResolution} from '../../../../utils/resolution'
 import * as Utils from '../../../../utils/util'
 import FairPlay from '../../../../drm/fairplay'
+import Env from '../../../../utils/env'
 
 /**
  * An illustration of media source extension for progressive download
@@ -31,6 +32,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @static
    */
   static _logger = BaseMediaSourceAdapter.getLogger(NativeAdapter.id);
+  /**
+   * static video element for canPlayType testing
+   * @member {} TEST_VIDEO
+   * @type {HTMLVideoElement}
+   * @static
+   */
+  static TEST_VIDEO: HTMLVideoElement = Utils.Dom.createElement("video");
   /**
    * The DRM protocols implementations for native adapter.
    * @type {Array<Function>}
@@ -70,11 +78,15 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
    * @param {string} mimeType - The mime type to check
+   * @param {boolean} [preferNative=true] - prefer native flag
    * @returns {boolean} - Whether the native adapter can play a specific mime type
    * @static
    */
-  static canPlayType(mimeType: string): boolean {
-    let canPlayType = (typeof mimeType === 'string') ? !!(Utils.Dom.createElement("video").canPlayType(mimeType.toLowerCase())) : false;
+  static canPlayType(mimeType: string, preferNative: boolean = true): boolean {
+    let canPlayType = false;
+    if (typeof mimeType === 'string') {
+      canPlayType = !!(NativeAdapter.TEST_VIDEO.canPlayType(mimeType.toLowerCase())) && !!preferNative;
+    }
     NativeAdapter._logger.debug('canPlayType result for mimeType:' + mimeType + ' is ' + canPlayType.toString());
     return canPlayType;
   }
@@ -170,14 +182,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
         // We're using 'loadeddata' event for native hls (on 'loadedmetadata' native hls doesn't have tracks yet).
-        this._eventManager.listen(this._videoElement, Html5Events.LOADED_DATA, () => {
-          this._eventManager.unlisten(this._videoElement, Html5Events.LOADED_DATA);
+        this._eventManager.listenOnce(this._videoElement, Html5Events.LOADED_DATA, () => {
           let data = {tracks: this._getParsedTracks()};
           NativeAdapter._logger.debug('The source has been loaded successfully');
           resolve(data);
         });
-        this._eventManager.listen(this._videoElement, Html5Events.ERROR, (error) => {
-          this._eventManager.unlisten(this._videoElement, Html5Events.ERROR);
+        this._eventManager.listenOnce(this._videoElement, Html5Events.ERROR, (error) => {
           NativeAdapter._logger.error(error);
           reject(error);
         });
@@ -368,16 +378,30 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       let currentTime = this._videoElement.currentTime;
       let paused = this._videoElement.paused;
       this._sourceObj = videoTracks[videoTrack.index];
-      this._eventManager.listen(this._videoElement, Html5Events.LOADED_DATA, () => {
-        this._eventManager.unlisten(this._videoElement, Html5Events.LOADED_DATA);
-        this._eventManager.listen(this._videoElement, Html5Events.SEEKED, () => {
-          this._eventManager.unlisten(this._videoElement, Html5Events.SEEKED);
-          this._onTrackChanged(videoTrack);
-        });
-        this._videoElement.currentTime = currentTime;
+      this._eventManager.listenOnce(this._videoElement, Html5Events.LOADED_DATA, () => {
+        if (Env.browser.name === 'Android Browser') {
+          // In android browser we have to seek only after some playback.
+          this._eventManager.listenOnce(this._videoElement, Html5Events.DURATION_CHANGE, () => {
+            this._videoElement.currentTime = currentTime;
+          });
+          this._eventManager.listenOnce(this._videoElement, Html5Events.SEEKED, () => {
+            this._onTrackChanged(videoTrack);
+            if (paused) {
+              this._videoElement.pause();
+            }
+          });
+          this._videoElement.play();
+        } else {
+          this._eventManager.listenOnce(this._videoElement, Html5Events.SEEKED, () => {
+            this._onTrackChanged(videoTrack);
+          });
+          this._videoElement.currentTime = currentTime;
+          if (!paused) {
+            this._videoElement.play();
+          }
+        }
       });
       this._videoElement.src = this._sourceObj ? this._sourceObj.url : "";
-      paused ? this._videoElement.load() : this._videoElement.play();
     }
   }
 

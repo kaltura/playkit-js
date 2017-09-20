@@ -48,8 +48,10 @@ Finally, add the bundle as a script tag in your page, and initialize the player
 <script type="text/javascript" src="/PATH/TO/FILE/playkit.js"></script>
 <div id="videoContainer" style="height:360px;width:640px">
 <script type="text/javascript">
+var videoContainer = document.querySelector("#videoContainer");
 var config = {...};
-var player = Playkit.loadPlayer("videoContainer", config);
+var player = Playkit.loadPlayer(config);
+videoContainer.appendChild(player.getView());
 player.play();
 </script>
 ```

@@ -182,11 +182,10 @@ export default class Player extends FakeEventTarget {
   _env: Object;
 
   /**
-   * @param {string} targetId - The target div id to append the player.
    * @param {Object} config - The configuration for the player instance.
    * @constructor
    */
-  constructor(targetId: string, config: Object) {
+  constructor(config: Object = {}) {
     super();
     this._env = Env;
     this._tracks = [];
@@ -198,8 +197,9 @@ export default class Player extends FakeEventTarget {
     this._pluginManager = new PluginManager();
     this._playbackMiddleware = new PlaybackMiddleware();
     this._createReadyPromise();
-    this._appendPlayerContainer(targetId);
+    this._createPlayerContainer();
     this._appendPosterEl();
+    this._loadPlugins(config);
     this.configure(config);
   }
 
@@ -209,7 +209,6 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   configure(config: Object): void {
-    let engine = this._engine;
     this._maybeResetPlayer(config);
     this._config = Utils.Object.mergeDeep(Utils.Object.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
     if (this._selectEngine()) {
@@ -217,7 +216,6 @@ export default class Player extends FakeEventTarget {
       this._posterManager.setSrc(this._config.metadata.poster);
       this._posterManager.show();
       this._attachMedia();
-      this._maybeLoadPlugins(engine);
       this._handlePlaybackConfig();
     }
   }
@@ -316,19 +314,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Loads the plugins in case engine created for the first time.
-   * @param {?IEngine} engine - The engine before the enter to configure method.
-   * @private
-   * @returns {void}
-   */
-  _maybeLoadPlugins(engine: ?IEngine) {
-    if (this._engine && !engine) {
-      Player._logger.debug('Engine created for the first time: load plugins');
-      this._loadPlugins();
-    }
-  }
-
-  /**
    * Reset the necessary components before change media.
    * @private
    * @returns {void}
@@ -386,11 +371,13 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Loads the configured plugins.
+   * @param {Object} config - The player configuration.
    * @private
    * @returns {void}
    */
-  _loadPlugins(): void {
-    let plugins = this._config.plugins;
+  _loadPlugins(config: Object): void {
+    Player._logger.debug('Load plugins');
+    let plugins = config.plugins;
     for (let name in plugins) {
       this._pluginManager.load(name, this, plugins[name]);
       let plugin = this._pluginManager.get(name);
@@ -419,17 +406,18 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _selectEngineByPriority(): boolean {
-    let streamPriority = this._config.playback.streamPriority;
-    let sources = this._config.sources;
+    const streamPriority = this._config.playback.streamPriority;
+    const preferNative = this._config.playback.preferNative;
+    const sources = this._config.sources;
     for (let priority of streamPriority) {
-      let engineId = (typeof priority.engine === 'string') ? priority.engine.toLowerCase() : '';
-      let format = (typeof priority.format === 'string') ? priority.format.toLowerCase() : '';
-      let engine = Player._engines.find((engine) => engine.id === engineId);
+      const engineId = (typeof priority.engine === 'string') ? priority.engine.toLowerCase() : '';
+      const format = (typeof priority.format === 'string') ? priority.format.toLowerCase() : '';
+      const engine = Player._engines.find((engine) => engine.id === engineId);
       if (engine) {
-        let formatSources = sources[format];
+        const formatSources = sources[format];
         if (formatSources && formatSources.length > 0) {
-          let source = formatSources[0];
-          if (engine.canPlaySource(source)) {
+          const source = formatSources[0];
+          if (engine.canPlaySource(source, preferNative[format])) {
             Player._logger.debug('Source selected: ', formatSources);
             this._loadEngine(engine, source);
             this.dispatchEvent(new FakeEvent(CustomEvents.SOURCE_SELECTED, {selectedSource: formatSources}));
@@ -485,6 +473,9 @@ export default class Player extends FakeEventTarget {
 
   _handlePlaybackConfig(): void {
     if (this._config.playback) {
+      if (typeof this._config.playback.volume === 'number') {
+        this.volume = this._config.playback.volume;
+      }
       if (this._config.playback.muted) {
         this.muted = true;
       }
@@ -515,24 +506,6 @@ export default class Player extends FakeEventTarget {
       return (os === 'iOS') ? this.muted && this.playsinline : this.muted;
     }
     return true;
-  }
-
-  /**
-   * Creates the player container
-   * @param {string} targetId - The target div id to append the player.
-   * @private
-   * @returns {void}
-   */
-  _appendPlayerContainer(targetId: string): void {
-    if (targetId) {
-      if (this._el === undefined) {
-        this._createPlayerContainer();
-        let parentNode = Utils.Dom.getElementById(targetId);
-        Utils.Dom.appendChild(parentNode, this._el);
-      }
-    } else {
-      throw new Error("targetId is not found, it must be pass on initialization");
-    }
   }
 
   /**
@@ -741,7 +714,6 @@ export default class Player extends FakeEventTarget {
     if (this._firstPlay) {
       this._firstPlay = false;
       this.dispatchEvent(new FakeEvent(CustomEvents.FIRST_PLAY));
-
       this._posterManager.hide();
     }
   }
@@ -969,7 +941,7 @@ export default class Player extends FakeEventTarget {
    */
   set volume(vol: number): void {
     if (this._engine) {
-      if (Utils.Number.isFloat(vol)) {
+      if (Utils.Number.isFloat(vol) || (vol === 0) || (vol === 1)) {
         let boundedVol = vol;
         if (boundedVol < 0) {
           boundedVol = 0;
