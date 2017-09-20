@@ -19,7 +19,7 @@ export default class DrmSupport {
     Chrome: () => {
       let device = Env.device.type;
       let os = Env.os.name;
-      if (!device || (device === 'mobile' && os === 'Android')) {
+      if (!device || os === 'Android') {
         return DrmScheme.WIDEVINE;
       }
       return NOT_SUPPORTED;
