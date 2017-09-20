@@ -363,7 +363,15 @@ export default class Player extends FakeEventTarget {
         this.playsinline = true;
       }
       if (this._config.playback.preload === "auto") {
-        this.load();
+        /**
+         * If ads plugin enabled it's his responsibility to preload the content player.
+         * So to avoid loading the player twice which can cause errors on MSEs we are not
+         * calling load from the player.
+         * TODO: Change it to check the ads configuration when we will develop the ads manager.
+         */
+        if (!this._config.plugins.ima) {
+          this.load();
+        }
       }
       if (this._canAutoPlay()) {
         this.play();
