@@ -96,7 +96,7 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
   /**
    * Fires when the volume has been muted/unmute
    */
-  VOLUME_MUTE_CHANGE: 'volumemutedchange',
+  MUTE_CHANGE: 'mutechange',
   /**
    * Fires when the active video track has been changed
    */
