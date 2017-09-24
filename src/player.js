@@ -141,7 +141,17 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _env: Object;
+  /**
+   * The currently selected engine type
+   * @type {string}
+   * @private
+   */
   _engineType: string;
+  /**
+   * The currently selected stream type
+   * @type {string}
+   * @private
+   */
   _streamType: string;
 
   /**
@@ -992,7 +1002,7 @@ export default class Player extends FakeEventTarget {
    * get the engine type
    * @returns {string} - html5
    */
-  get engineType(): string {
+  get engineType(): ?string {
     return this._engineType;
   }
 
@@ -1000,7 +1010,7 @@ export default class Player extends FakeEventTarget {
    * get the stream type
    * @returns {string} - hls|dash|progressive
    */
-  get streamType(): string {
+  get streamType(): ?string {
     return this._streamType;
   }
 
