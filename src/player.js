@@ -932,6 +932,7 @@ export default class Player extends FakeEventTarget {
   set muted(mute: boolean): void {
     if (this._engine) {
       this._engine.muted = mute;
+      this.dispatchEvent(new FakeEvent(CustomEvents.VOLUME_MUTE_CHANGE, {mute: mute}));
     }
   }
 
