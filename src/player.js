@@ -160,7 +160,6 @@ export default class Player extends FakeEventTarget {
     this._createReadyPromise();
     this._createPlayerContainer();
     this._appendPosterEl();
-    this._loadPlugins(config);
     this.configure(config);
   }
 
@@ -170,25 +169,72 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   configure(config: Object): void {
-    this._maybeResetPlayer(config);
-    this._config = Utils.Object.mergeDeep(Utils.Object.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
-    if (this._selectEngine()) {
-      this._appendEngineEl();
-      this._posterManager.setSrc(this._config.metadata.poster);
-      this._posterManager.show();
-      this._attachMedia();
-      this._handlePlaybackConfig();
+    this._updatePlayerConfig(config);
+    this._configureOrLoadPlugins(config.plugins);
+    if (config.sources) {
+      this._maybeResetPlayer();
+      if (this._selectEngineByPriority()) {
+        this._appendEngineEl();
+        this._posterManager.setSrc(this._config.metadata.poster);
+        this._posterManager.show();
+        this._attachMedia();
+        this._handlePlaybackConfig();
+      }
     }
   }
 
   /**
-   * Resets the player in case of new sources with existing engine.
-   * @param {Object} config - The player configuration.
+   * Updates the player configuration.
+   * @param {Object} config - The new received configuration.
    * @private
    * @returns {void}
    */
-  _maybeResetPlayer(config: Object): void {
-    if (this._engine && config.sources) {
+  _updatePlayerConfig(config: Object): void {
+    if (Utils.Object.isEmptyObject(this._config)) {
+      Utils.Object.mergeDeep(this._config, Player._defaultConfig, config);
+    } else {
+      Utils.Object.mergeDeep(this._config, config);
+    }
+  }
+
+  /**
+   * Configures or load the plugins defined in the configuration.
+   * @param {Object} plugins - The new received plugins configuration.
+   * @private
+   * @returns {void}
+   */
+  _configureOrLoadPlugins(plugins: Object = {}): void {
+    Object.keys(plugins).forEach((name) => {
+      // If the plugin is already exists in the registry we are updating his config
+      const plugin = this._pluginManager.get(name);
+      if (plugin) {
+        plugin.updateConfig(plugins[name]);
+        this._config.plugins[name] = plugin.getConfig();
+      } else {
+        // We allow to load plugins as long as the player has no engine
+        if (!this._engine) {
+          this._pluginManager.load(name, this, plugins[name]);
+          let plugin = this._pluginManager.get(name);
+          if (plugin) {
+            this._config.plugins[name] = plugin.getConfig();
+            if (typeof plugin.getMiddlewareImpl === "function") {
+              this._playbackMiddleware.use(plugin.getMiddlewareImpl());
+            }
+          }
+        } else {
+          delete this._config.plugins[name];
+        }
+      }
+    });
+  }
+
+  /**
+   * Resets the player in case of new sources with existing engine.
+   * @private
+   * @returns {void}
+   */
+  _maybeResetPlayer(): void {
+    if (this._engine) {
       Player._logger.debug('New sources on existing engine: reset engine to change media');
       this._reset();
     }
@@ -216,9 +262,7 @@ export default class Player extends FakeEventTarget {
    */
   _createReadyPromise(): void {
     this._readyPromise = new Promise((resolve, reject) => {
-      this._eventManager.listen(this, CustomEvents.TRACKS_CHANGED, () => {
-        resolve();
-      });
+      this._eventManager.listen(this, CustomEvents.TRACKS_CHANGED, resolve);
       this._eventManager.listen(this, Html5Events.ERROR, reject);
     });
   }
@@ -248,36 +292,6 @@ export default class Player extends FakeEventTarget {
    */
   static get _defaultConfig(): Object {
     return Utils.Object.copyDeep(DefaultPlayerConfig);
-  }
-
-  /**
-   * Loads the configured plugins.
-   * @param {Object} config - The player configuration.
-   * @private
-   * @returns {void}
-   */
-  _loadPlugins(config: Object): void {
-    Player._logger.debug('Load plugins');
-    let plugins = config.plugins;
-    for (let name in plugins) {
-      this._pluginManager.load(name, this, plugins[name]);
-      let plugin = this._pluginManager.get(name);
-      if (plugin && typeof plugin.getMiddlewareImpl === "function") {
-        this._playbackMiddleware.use(plugin.getMiddlewareImpl());
-      }
-    }
-  }
-
-  /**
-   * Selects the engine to create based on a given configuration.
-   * @private
-   * @returns {boolean} - Whether a proper engine was found.
-   */
-  _selectEngine(): boolean {
-    if (this._config.sources && this._config.playback && this._config.playback.streamPriority) {
-      return this._selectEngineByPriority();
-    }
-    return false;
   }
 
   /**
@@ -356,11 +370,11 @@ export default class Player extends FakeEventTarget {
       if (typeof this._config.playback.volume === 'number') {
         this.volume = this._config.playback.volume;
       }
-      if (this._config.playback.muted) {
-        this.muted = true;
+      if (typeof this._config.playback.muted === 'boolean') {
+        this.muted = this._config.playback.muted;
       }
-      if (this._config.playback.playsinline) {
-        this.playsinline = true;
+      if (typeof this._config.playback.playsinline === 'boolean') {
+        this.playsinline = this._config.playback.playsinline;
       }
       if (this._config.playback.preload === "auto") {
         /**
@@ -390,7 +404,7 @@ export default class Player extends FakeEventTarget {
     }
     let device = this._env.device.type;
     let os = this._env.os.name;
-    if (device === 'mobile' || device === 'tablet') {
+    if (device) {
       return (os === 'iOS') ? this.muted && this.playsinline : this.muted;
     }
     return true;
