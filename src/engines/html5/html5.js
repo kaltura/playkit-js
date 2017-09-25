@@ -225,6 +225,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _addCueChangeListener(textTrack: PKTextTrack): void {
     let textTrackEl = this._getSelectedTextTrack();
     if (textTrackEl) {
+      //there's a quirk in TextTrackAPI that a text track added to video element will not fire cuechange event if it
+      //didn't have it's mode set to showing for at least until a single cue has been change.
+      //After first time it seems there's time tracking which allows the cuechange to fire even though the track mode
+      //is set to hidden
+      //This is not the case with a track DOM element added to a video element where cuechange will be fired even if
+      // track mode is set only to hidden and was never set to showing
       textTrackEl.mode = this._showTextTrackfirstTime[textTrack.index] ? "hidden" : "showing";
       this._showTextTrackfirstTime[textTrack.index] = true;
       textTrackEl.oncuechange = (e) => this._onCueChange(e);

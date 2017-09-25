@@ -527,7 +527,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _appendPosterEl(): void {
-    if (this._el != null) {
+    if (this._el !== null) {
       let el: HTMLDivElement = this._posterManager.getElement();
       Utils.Dom.addClassName(el, POSTER_CLASS_NAME);
       Utils.Dom.appendChild(this._el, el);
@@ -540,7 +540,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _appendEngineEl(): void {
-    if ((this._el != null) && (this._engine != null)) {
+    if ((this._el !== null) && (this._engine !== null)) {
       let engineEl = this._engine.getVideoElement();
       const classname = `${ENGINE_CLASS_NAME}`;
       Utils.Dom.addClassName(engineEl, classname);
