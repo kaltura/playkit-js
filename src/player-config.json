@@ -12,8 +12,6 @@
     "preload": "none",
     "autoplay": false,
     "muted": false,
-    "textLanguage": "",
-    "audioLanguage": "",
     "options": {
       "html5": {
         "hls": {},
