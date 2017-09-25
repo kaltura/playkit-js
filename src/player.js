@@ -806,6 +806,28 @@ export default class Player extends FakeEventTarget {
     }
   }
 
+  setDefaultTracks(){
+    const activeTracks = this.getActiveTracks();
+    const playbackConfig = this._config.playback;
+    if (playbackConfig.textLanguage === "off"){
+      this.hideTextTrack();
+    } else {
+      this._setDefaultTrack(TrackTypes.TEXT, playbackConfig.textLanguage, activeTracks.text);
+    }
+    this._setDefaultTrack(TrackTypes.AUDIO, playbackConfig.audioLanguage, activeTracks.audio);
+  }
+
+  _setDefaultTrack(type: string, language: string, defaultTrack: Track){
+    if (language){
+      const track: ?Track = this._getTracksByType(type).find(track => track.language === language);
+      if (track) {
+        this.selectTrack(track);
+      }
+    } else if (defaultTrack) {
+      this.selectTrack(defaultTrack);
+    }
+  }
+
   /**
    * Start/resume playback.
    * @returns {void}
