@@ -256,7 +256,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     let activeCues: Array<Cue> = [];
     textTrack.mode = 'hidden';
     for (let cue of textTrack.activeCues) {
-      activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text));
+      //Normalize cues to be of type of VTT model
+      if (cue instanceof window.VTTCue) {
+        activeCues.push(cue);
+      } else if (cue instanceof window.TextTrackCue){
+        activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text));
+      }
     }
     this.dispatchEvent(new FakeEvent(CustomEvents.TEXT_CUE_CHANGED, {cues: activeCues}));
   }
