@@ -800,6 +800,7 @@ export default class Player extends FakeEventTarget {
       let startTime = this._config.playback.startTime;
       this._engine.load(startTime).then((data) => {
         this._tracks = data.tracks;
+        this.setDefaultTracks();
         this.dispatchEvent(new FakeEvent(CustomEvents.TRACKS_CHANGED, {tracks: this._tracks}));
       }).catch((error) => {
         this.dispatchEvent(new FakeEvent(Html5Events.ERROR, error));
