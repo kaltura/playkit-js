@@ -141,6 +141,18 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _env: Object;
+  /**
+   * The currently selected engine type
+   * @type {string}
+   * @private
+   */
+  _engineType: string;
+  /**
+   * The currently selected stream type
+   * @type {string}
+   * @private
+   */
+  _streamType: string;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -300,6 +312,8 @@ export default class Player extends FakeEventTarget {
           const source = formatSources[0];
           if (engine.canPlaySource(source, preferNative[format])) {
             Player._logger.debug('Source selected: ', formatSources);
+            this._engineType = engineId;
+            this._streamType = format;
             this._loadEngine(engine, source);
             this.dispatchEvent(new FakeEvent(CustomEvents.SOURCE_SELECTED, {selectedSource: formatSources}));
             return true;
@@ -983,6 +997,22 @@ export default class Player extends FakeEventTarget {
    */
   get Track(): { [track: string]: string } {
     return TrackTypes;
+  }
+
+  /**
+   * get the engine type
+   * @returns {string} - html5
+   */
+  get engineType(): ?string {
+    return this._engineType;
+  }
+
+  /**
+   * get the stream type
+   * @returns {string} - hls|dash|progressive
+   */
+  get streamType(): ?string {
+    return this._streamType;
   }
 
 // </editor-fold>
