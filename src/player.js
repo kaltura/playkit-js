@@ -207,14 +207,14 @@ export default class Player extends FakeEventTarget {
       const plugin = this._pluginManager.get(name);
       if (plugin) {
         plugin.updateConfig(plugins[name]);
-        this._config.plugins[name] = Utils.Object.copyDeep(plugin.getConfig());
+        this._config.plugins[name] = plugin.getConfig();
       } else {
         // We allow to load plugins as long as the player has no engine
         if (!this._engine) {
           this._pluginManager.load(name, this, plugins[name]);
           let plugin = this._pluginManager.get(name);
           if (plugin) {
-            this._config.plugins[name] = Utils.Object.copyDeep(plugin.getConfig());
+            this._config.plugins[name] = plugin.getConfig();
             if (typeof plugin.getMiddlewareImpl === "function") {
               this._playbackMiddleware.use(plugin.getMiddlewareImpl());
             }
