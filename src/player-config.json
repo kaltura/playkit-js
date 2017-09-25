@@ -1,9 +1,12 @@
 {
+  "sources": {},
+  "plugins": {},
   "metadata": {
     "poster": ""
   },
-  "plugins": {},
   "playback": {
+    "audioLanguage": "",
+    "textLanguage": "",
     "volume": 1,
     "playsinline": false,
     "preload": "none",

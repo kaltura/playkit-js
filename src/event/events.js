@@ -94,6 +94,10 @@ const HTML5_EVENTS: { [event: string]: string } = {
 
 const CUSTOM_EVENTS: { [event: string]: string } = {
   /**
+   * Fires when the volume has been muted/unmute
+   */
+  MUTE_CHANGE: 'mutechange',
+  /**
    * Fires when the active video track has been changed
    */
   VIDEO_TRACK_CHANGED: 'videotrackchanged',

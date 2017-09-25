@@ -6,6 +6,9 @@ import VideoTrack from '../../src/track/video-track'
 import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
 import {removeVideoElementsFromTestPage, createElement, removeElement, getConfigStructure} from './utils/test-utils'
+import PluginManager from '../../src/plugin/plugin-manager'
+import ColorsPlugin from './plugin/test-plugins/colors-plugin'
+import NumbersPlugin from './plugin/test-plugins/numbers-plugin'
 
 const targetId = 'player-placeholder_player.spec';
 
@@ -1388,6 +1391,289 @@ describe('configure', function () {
     player.load();
     player.ready().then(() => {
       player.play();
+    });
+  });
+
+  describe('plugins lifecycle', () => {
+
+    beforeEach(() => {
+      PluginManager.register('colors', ColorsPlugin);
+      PluginManager.register('numbers', NumbersPlugin);
+    });
+
+    afterEach(() => {
+      PluginManager.unRegister('colors');
+      PluginManager.unRegister('numbers');
+    });
+
+    it('should load 2 plugins on initial config and configure them on configure', function () {
+      player = new Player({
+        plugins: {
+          colors: {
+            size: 5
+          },
+          numbers: {
+            size: 20
+          }
+        }
+      });
+      player._pluginManager.get('colors').should.exists;
+      player._pluginManager.get('numbers').should.exists;
+      player._pluginManager._plugins.size.should.equals(2);
+      player.config.plugins.colors.should.deep.equals({
+        size: 5,
+        favouriteColor: "green"
+      });
+      player.config.plugins.numbers.should.deep.equals({
+        size: 20,
+        firstCellValue: 4,
+        lastCellValue: 6
+      });
+      player.configure({
+        plugins: {
+          colors: {
+            size: 50
+          },
+          numbers: {
+            size: 200
+          }
+        }
+      });
+      player._pluginManager.get('colors').should.exists;
+      player._pluginManager.get('numbers').should.exists;
+      player._pluginManager._plugins.size.should.equals(2);
+      player.config.plugins.colors.should.deep.equals({
+        size: 50,
+        favouriteColor: "green"
+      });
+      player.config.plugins.numbers.should.deep.equals({
+        size: 200,
+        firstCellValue: 4,
+        lastCellValue: 6
+      });
+    });
+
+    it('should load 1st plugin on initial config, load 2nd plugin and configure the 1st on configure', function () {
+      player = new Player({
+        plugins: {
+          numbers: {
+            size: 20
+          }
+        }
+      });
+      player._pluginManager.get('numbers').should.exists;
+      player._pluginManager._plugins.size.should.equals(1);
+      player.config.plugins.numbers.should.deep.equals({
+        size: 20,
+        firstCellValue: 4,
+        lastCellValue: 6
+      });
+      player.configure({
+        plugins: {
+          colors: {
+            size: 50
+          },
+          numbers: {
+            size: 200
+          }
+        }
+      });
+      player._pluginManager.get('colors').should.exists;
+      player._pluginManager.get('numbers').should.exists;
+      player._pluginManager._plugins.size.should.equals(2);
+      player.config.plugins.colors.should.deep.equals({
+        size: 50,
+        favouriteColor: "green"
+      });
+      player.config.plugins.numbers.should.deep.equals({
+        size: 200,
+        firstCellValue: 4,
+        lastCellValue: 6
+      });
+    });
+
+    it('should create player without plugins, load plugins on configure', function () {
+      player = new Player();
+      player._pluginManager._plugins.size.should.equals(0);
+      player.config.plugins.should.deep.equals({});
+      player.configure({
+        plugins: {
+          colors: {
+            size: 50
+          },
+          numbers: {
+            size: 200
+          }
+        }
+      });
+      player._pluginManager.get('colors').should.exists;
+      player._pluginManager.get('numbers').should.exists;
+      player._pluginManager._plugins.size.should.equals(2);
+      player.config.plugins.colors.should.deep.equals({
+        size: 50,
+        favouriteColor: "green"
+      });
+      player.config.plugins.numbers.should.deep.equals({
+        size: 200,
+        firstCellValue: 4,
+        lastCellValue: 6
+      });
+    });
+
+    it('should create player without plugins, load 1st plugin on configure, configure 1st plugin with/after sources', function () {
+      player = new Player();
+      player._pluginManager._plugins.size.should.equals(0);
+      player.config.plugins.should.deep.equals({});
+      player.configure({
+        plugins: {
+          numbers: {
+            size: 200
+          }
+        }
+      });
+      player._pluginManager.get('numbers').should.exists;
+      player._pluginManager._plugins.size.should.equals(1);
+      player.config.plugins.numbers.should.deep.equals({
+        size: 200,
+        firstCellValue: 4,
+        lastCellValue: 6
+      });
+      player.configure({
+        sources: sourcesConfig.Mp4,
+        plugins: {
+          numbers: {
+            size: 2,
+            firstCellValue: 3
+          }
+        }
+      });
+      player._pluginManager.get('numbers').should.exists;
+      player._pluginManager._plugins.size.should.equals(1);
+      player.config.plugins.numbers.should.deep.equals({
+        size: 2,
+        firstCellValue: 3,
+        lastCellValue: 6
+      });
+      player.configure({
+        plugins: {
+          numbers: {
+            size: 78
+          }
+        }
+      });
+      player.config.plugins.numbers.should.deep.equals({
+        size: 78,
+        firstCellValue: 3,
+        lastCellValue: 6
+      });
+    });
+
+    it('should create player with plugin and fail to configure other plugin after sources', function () {
+      player = new Player({
+        sources: sourcesConfig.Mp4,
+        plugins: {
+          numbers: {
+            size: 2,
+            firstCellValue: 3
+          }
+        }
+      });
+      player._pluginManager.get('numbers').should.exists;
+      player._pluginManager._plugins.size.should.equals(1);
+      player.config.plugins.should.deep.equals({
+        numbers: {
+          size: 2,
+          firstCellValue: 3,
+          lastCellValue: 6
+        }
+      });
+      player.configure({
+        plugins: {
+          colors: {
+            size: 200
+          }
+        }
+      });
+      player._pluginManager._plugins.size.should.equals(1);
+      player.config.plugins.should.deep.equals({
+        numbers: {
+          size: 2,
+          firstCellValue: 3,
+          lastCellValue: 6
+        }
+      });
+    });
+  });
+
+  describe('playback lifecycle', () => {
+    it('should save initial playback config and initiate it when received sources - 1', function () {
+      player = new Player({
+        playback: {
+          volume: 0,
+          muted: true
+        }
+      });
+      player.configure({
+        sources: sourcesConfig.Mp4
+      });
+      player.volume.should.equals(0);
+      player.muted.should.be.true;
+    });
+
+    it('should save initial playback config and initiate it when received sources - 2', function () {
+      player = new Player({
+        playback: {
+          muted: true
+        }
+      });
+      player.configure({
+        playback: {
+          volume: 0
+        }
+      });
+      player.configure({
+        sources: sourcesConfig.Mp4
+      });
+      player.volume.should.equals(0);
+      player.muted.should.be.true;
+    });
+
+    it('should load the initial playback config and initiate the new one on updating sources', function () {
+      player = new Player({
+        sources: sourcesConfig.MultipleSources,
+        playback: {
+          muted: true,
+          volume: 0,
+        }
+      });
+      player.load();
+      player.volume.should.equals(0);
+      player.muted.should.be.true;
+      player.config.playback.muted.should.be.true;
+      player.config.playback.volume.should.equals(0);
+      player.src.should.equals(window.location.origin + sourcesConfig.MultipleSources.progressive[0].url);
+      player.configure({
+        playback: {
+          muted: false,
+          volume: 0.5
+        }
+      });
+      player.volume.should.equals(0);
+      player.muted.should.be.true;
+      player.config.playback.muted.should.be.false;
+      player.config.playback.volume.should.equals(0.5);
+      let newProgressiveConfig = {
+        progressive: [sourcesConfig.MultipleSources.progressive[1]]
+      };
+      player.configure({
+        sources: newProgressiveConfig
+      });
+      player.load();
+      player.volume.should.equals(0.5);
+      player.muted.should.be.false;
+      player.config.playback.muted.should.be.false;
+      player.config.playback.volume.should.equals(0.5);
+      player.src.should.equals(window.location.origin + newProgressiveConfig.progressive[0].url);
     });
   });
 });
