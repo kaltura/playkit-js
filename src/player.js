@@ -653,6 +653,7 @@ export default class Player extends FakeEventTarget {
       this._engine.hideTextTrack();
       this._updateTextDisplay([]);
       this._getTracksByType(TrackTypes.TEXT).map(track => track.active = false);
+      this.dispatchEvent(new FakeEvent(CustomEvents.TEXT_TRACK_CHANGED, {activeTextTrack: null}))
     }
   }
 
