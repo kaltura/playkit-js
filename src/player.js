@@ -150,8 +150,8 @@ export default class Player extends FakeEventTarget {
     super();
     this._env = Env;
     this._tracks = [];
-    this._config = {};
     this._firstPlay = true;
+    this._config = Player._defaultConfig;
     this._eventManager = new EventManager();
     this._posterManager = new PosterManager();
     this._stateManager = new StateManager(this);
@@ -169,7 +169,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   configure(config: Object): void {
-    this._updatePlayerConfig(config);
+    Utils.Object.mergeDeep(this._config, config);
     this._configureOrLoadPlugins(config.plugins);
     if (config.sources) {
       this._maybeResetPlayer();
@@ -180,20 +180,6 @@ export default class Player extends FakeEventTarget {
         this._attachMedia();
         this._handlePlaybackConfig();
       }
-    }
-  }
-
-  /**
-   * Updates the player configuration.
-   * @param {Object} config - The new received configuration.
-   * @private
-   * @returns {void}
-   */
-  _updatePlayerConfig(config: Object): void {
-    if (Utils.Object.isEmptyObject(this._config)) {
-      Utils.Object.mergeDeep(this._config, Player._defaultConfig, config);
-    } else {
-      Utils.Object.mergeDeep(this._config, config);
     }
   }
 
