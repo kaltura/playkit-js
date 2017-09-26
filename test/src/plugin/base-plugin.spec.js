@@ -28,6 +28,13 @@ describe('BasePlugin', () => {
     basePlugin.getConfig().should.deep.equal(config);
   });
 
+  it('should return copy of the plugin config', () => {
+    basePlugin.getConfig().x = 100;
+    basePlugin.getConfig().y = 200;
+    basePlugin.getConfig().x.should.equals(1);
+    basePlugin.getConfig().y.should.equals(2);
+  });
+
   it('should return the config attribute value', () => {
     basePlugin.getConfig('x').should.deep.equal(1);
   });
