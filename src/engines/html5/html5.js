@@ -243,12 +243,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    * @private
    */
-  _removeCueChangeListener() {
+  _removeCueChangeListener(): void {
     let textTrackEl: TextTrack = this._getSelectedTextTrack();
     if (textTrackEl) {
       textTrackEl.oncuechange = null;
     }
-    return textTrackEl;
   }
 
   _onCueChange(e: Event){
