@@ -32,6 +32,7 @@ describe('events', () => {
       VIDEO_TRACK_CHANGED: 'videotrackchanged',
       AUDIO_TRACK_CHANGED: 'audiotrackchanged',
       TEXT_TRACK_CHANGED: 'texttrackchanged',
+      TEXT_CUE_CHANGED: 'textcuechanged',
       TRACKS_CHANGED: 'trackschanged',
       ABR_MODE_CHANGED: 'abrmodechanged',
       PLAYER_STATE_CHANGED: 'playerstatechanged',
