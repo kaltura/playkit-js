@@ -94,6 +94,14 @@ const HTML5_EVENTS: { [event: string]: string } = {
 
 const CUSTOM_EVENTS: { [event: string]: string } = {
   /**
+   * Fires when change source flow started
+   */
+  CHANGE_SOURCE_STARTED: 'changesourcestarted',
+  /**
+   * Fires when change source flow ended
+   */
+  CHANGE_SOURCE_ENDED: 'changesourceended',
+  /**
    * Fires when the volume has been muted/unmute
    */
   MUTE_CHANGE: 'mutechange',
