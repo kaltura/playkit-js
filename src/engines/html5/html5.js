@@ -43,6 +43,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _showTextTrackfirstTime: {[number]: boolean} = {};
 
   /**
+   * player config object.
+   * @type {Object}
+   * @private
+   */
+  _config: Object;
+
+  /**
    * @type {string} - The engine id.
    */
   static id: string = "html5";
@@ -78,6 +85,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   constructor(source: Source, config: Object) {
     super();
+    this._config = config;
     this._eventManager = new EventManager();
     this._createVideoElement();
     this._loadMediaSourceAdapter(source, config);
@@ -231,9 +239,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       //is set to hidden
       //This is not the case with a track DOM element added to a video element where cuechange will be fired even if
       // track mode is set only to hidden and was never set to showing
-      textTrackEl.mode = this._showTextTrackfirstTime[textTrack.index] ? "hidden" : "showing";
-      this._showTextTrackfirstTime[textTrack.index] = true;
-      textTrackEl.oncuechange = (e) => this._onCueChange(e);
+      if (this._config.playback.useNativeTextTrack ){
+        textTrackEl.mode = "showing";
+      } else {
+        textTrackEl.mode = this._showTextTrackfirstTime[textTrack.index] ? "hidden" : "showing";
+        this._showTextTrackfirstTime[textTrack.index] = true;
+        textTrackEl.oncuechange = (e) => this._onCueChange(e);
+      }
     }
   }
 
