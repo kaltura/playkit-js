@@ -659,7 +659,11 @@ export default class Player extends FakeEventTarget {
       } else if (track instanceof AudioTrack) {
         this._engine.selectAudioTrack(track);
       } else if (track instanceof TextTrack) {
-        this._engine.selectTextTrack(track);
+        if (track.language === "off"){
+          this.hideTextTrack();
+        } else {
+          this._engine.selectTextTrack(track);
+        }
       }
     }
   }
@@ -674,8 +678,13 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.hideTextTrack();
       this._updateTextDisplay([]);
-      this._getTracksByType(TrackTypes.TEXT).map(track => track.active = false);
-      this.dispatchEvent(new FakeEvent(CustomEvents.TEXT_TRACK_CHANGED, {activeTextTrack: null}))
+      const textTracks = this._getTracksByType(TrackTypes.TEXT);
+      textTracks.map(track => track.active = false);
+      const textTrack = textTracks.find(track => track.language === "off");
+      if (textTrack) {
+        textTrack.active = true;
+        this.dispatchEvent(new FakeEvent(CustomEvents.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}))
+      }
     }
   }
 
@@ -822,6 +831,7 @@ export default class Player extends FakeEventTarget {
       let startTime = this._config.playback.startTime;
       this._engine.load(startTime).then((data) => {
         this._tracks = data.tracks;
+        this._addTextTrackOffOption();
         this.setDefaultTracks();
         this.dispatchEvent(new FakeEvent(CustomEvents.TRACKS_CHANGED, {tracks: this._tracks}));
       }).catch((error) => {
@@ -830,14 +840,29 @@ export default class Player extends FakeEventTarget {
     }
   }
 
+  /**
+   * add off text track if there are actual text tracks associated with media
+   * setting this track is the same as calling Player's hideTextTrack
+   * @private
+   * @returns {void}
+   */
+  _addTextTrackOffOption(): void {
+    const textTracks = this.getTracks(TrackTypes.TEXT);
+    if (textTracks && textTracks.length) {
+      this._tracks.push(new TextTrack({
+        active: false,
+        index: textTracks.length,
+        kind: "subtitles",
+        label: "Off",
+        language: "off"
+      }));
+    }
+  }
+
   setDefaultTracks(){
     const activeTracks = this.getActiveTracks();
     const playbackConfig = this._config.playback;
-    if (playbackConfig.textLanguage === "off"){
-      this.hideTextTrack();
-    } else {
-      this._setDefaultTrack(TrackTypes.TEXT, playbackConfig.textLanguage, activeTracks.text);
-    }
+    this._setDefaultTrack(TrackTypes.TEXT, playbackConfig.textLanguage, activeTracks.text);
     this._setDefaultTrack(TrackTypes.AUDIO, playbackConfig.audioLanguage, activeTracks.audio);
   }
 
