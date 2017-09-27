@@ -162,7 +162,7 @@ export default class Player extends FakeEventTarget {
    * @type {any}
    * @private
    */
-  _lastUpdatedTextCues: Array<any> = [];
+  _activeTextCues: Array<any> = [];
   /**
    * The player text disaply settings
    * @type {Object}
@@ -299,11 +299,11 @@ export default class Player extends FakeEventTarget {
    */
   setTextDisplaySettings(settings: Object): void {
     this._textDisplaySettings = settings;
-    this._updateCueDisplaySettings(this._lastUpdatedTextCues, this._textDisplaySettings);
-    for (let i = 0; i< this._lastUpdatedTextCues.length; i++ ) {
-      this._lastUpdatedTextCues[i].hasBeenReset = true;
+    this._updateCueDisplaySettings();
+    for (let i = 0; i< this._activeTextCues.length; i++ ) {
+      this._activeTextCues[i].hasBeenReset = true;
     }
-    this._updateTextDisplay(this._lastUpdatedTextCues);
+    this._updateTextDisplay(this._activeTextCues);
   }
 
   /**
@@ -314,21 +314,21 @@ export default class Player extends FakeEventTarget {
    */
   _onCueChange(event: FakeEvent): void{
     Player._logger.debug('Text cue changed', event.payload.cues);
-    this._lastUpdatedTextCues = event.payload.cues;
-    this._updateCueDisplaySettings(this._lastUpdatedTextCues, this._textDisplaySettings);
-    this._updateTextDisplay(this._lastUpdatedTextCues)
+    this._activeTextCues = event.payload.cues;
+    this._updateCueDisplaySettings();
+    this._updateTextDisplay(this._activeTextCues)
   }
 
   /**
    * update the text cue display settings
-   * @param {Object} cues - cues
-   * @param {Object} settings - text cue display settings
    * @private
    * @returns {void}
    */
-  _updateCueDisplaySettings(cues: Array<any>, settings: Object){
-    for (let i = 0; i< cues.length; i++ ){
-      let cue = cues[i];
+  _updateCueDisplaySettings(){
+    const activeCues = this._activeTextCues;
+    const settings = this._textDisplaySettings;
+    for (let i = 0; i < activeCues.length; i++ ){
+      let cue = activeCues[i];
       for (let name in settings){
         cue[name] = settings[name];
       }
