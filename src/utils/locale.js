@@ -4,7 +4,7 @@
  * @class
  *
  */
-export default class Locale{
+export default class Locale {
 
   /**
    * tries to return the locale language in IOS-693-1 format(two-letter codes, one per language for)

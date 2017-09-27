@@ -40,7 +40,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @type {Array<boolean>}
    * @private
    */
-  _showTextTrackfirstTime: {[number]: boolean} = {};
+  _showTextTrackfirstTime: { [number]: boolean } = {};
 
   /**
    * player config object.
@@ -238,7 +238,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       //is set to hidden
       //This is not the case with a track DOM element added to a video element where cuechange will be fired even if
       // track mode is set only to hidden and was never set to showing
-      if (this._config.playback.useNativeTextTrack ){
+      if (this._config.playback.useNativeTextTrack) {
         textTrackEl.mode = "showing";
       } else {
         textTrackEl.mode = this._showTextTrackfirstTime[textTrack.index] ? "hidden" : "showing";
@@ -261,7 +261,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
   }
 
-  _onCueChange(e: Event){
+  _onCueChange(e: Event) {
     let textTrack: TextTrack = e.currentTarget;
     let activeCues: Array<Cue> = [];
     textTrack.mode = 'hidden';
@@ -269,7 +269,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       //Normalize cues to be of type of VTT model
       if (cue instanceof window.VTTCue) {
         activeCues.push(cue);
-      } else if (cue instanceof window.TextTrackCue){
+      } else if (cue instanceof window.TextTrackCue) {
         activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text));
       }
     }
@@ -281,11 +281,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {*} - returns the active text track element if available
    * @private
    */
-  _getSelectedTextTrack(): ?TextTrack{
+  _getSelectedTextTrack(): ?TextTrack {
     const textTracks = this._el.textTracks;
-    for (let track in textTracks){
-      if (textTracks.hasOwnProperty(track)){
-        if (textTracks[parseInt(track)] && textTracks[parseInt(track)].mode !== "disabled"){
+    for (let track in textTracks) {
+      if (textTracks.hasOwnProperty(track)) {
+        if (textTracks[parseInt(track)] && textTracks[parseInt(track)].mode !== "disabled") {
           return textTracks[parseInt(track)];
         }
       }
