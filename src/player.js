@@ -7,6 +7,7 @@ import FakeEventTarget from './event/fake-event-target'
 import {PLAYER_EVENTS as PlayerEvents, HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from './event/events'
 import PlayerStates from './state/state-types'
 import * as Utils from './utils/util'
+import Locale from './utils/locale'
 import LoggerFactory from './utils/logger'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
@@ -832,7 +833,7 @@ export default class Player extends FakeEventTarget {
       this._engine.load(startTime).then((data) => {
         this._tracks = data.tracks;
         this._addTextTrackOffOption();
-        this.setDefaultTracks();
+        this._setDefaultTracks();
         this.dispatchEvent(new FakeEvent(CustomEvents.TRACKS_CHANGED, {tracks: this._tracks}));
       }).catch((error) => {
         this.dispatchEvent(new FakeEvent(Html5Events.ERROR, error));
@@ -859,9 +860,14 @@ export default class Player extends FakeEventTarget {
     }
   }
 
-  setDefaultTracks(){
+  _setDefaultTracks(){
     const activeTracks = this.getActiveTracks();
     const playbackConfig = this._config.playback;
+
+    if (playbackConfig.textLanguage == "auto"){
+      playbackConfig.textLanguage = Locale.language;
+    }
+
     this._setDefaultTrack(TrackTypes.TEXT, playbackConfig.textLanguage, activeTracks.text);
     this._setDefaultTrack(TrackTypes.AUDIO, playbackConfig.audioLanguage, activeTracks.audio);
   }
