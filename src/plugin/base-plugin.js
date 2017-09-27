@@ -96,9 +96,9 @@ export default class BasePlugin implements IPlugin {
    */
   getConfig(attr?: string): any {
     if (attr) {
-      return this.config[attr];
+      return Utils.Object.copyDeep(this.config[attr]);
     }
-    return this.config;
+    return Utils.Object.copyDeep(this.config);
   }
 
   /**
@@ -108,7 +108,7 @@ export default class BasePlugin implements IPlugin {
    * @returns {void}
    */
   updateConfig(update: Object): void {
-    this.config = Utils.Object.mergeDeep(this.config, update);
+    Utils.Object.mergeDeep(this.config, update);
   }
 
   /**

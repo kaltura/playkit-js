@@ -1449,6 +1449,10 @@ var HTML5_EVENTS = {
 
 var CUSTOM_EVENTS = {
   /**
+   * Fires when the volume has been muted/unmute
+   */
+  MUTE_CHANGE: 'mutechange',
+  /**
    * Fires when the active video track has been changed
    */
   VIDEO_TRACK_CHANGED: 'videotrackchanged',
@@ -1780,6 +1784,18 @@ var Player = function (_FakeEventTarget) {
    */
 
   /**
+   * The currently selected engine type
+   * @type {string}
+   * @private
+   */
+
+  /**
+   * The currently selected stream type
+   * @type {string}
+   * @private
+   */
+
+  /**
    * The player class logger.
    * @type {any}
    * @static
@@ -1794,8 +1810,8 @@ var Player = function (_FakeEventTarget) {
 
     _this._env = _env2.default;
     _this._tracks = [];
-    _this._config = {};
     _this._firstPlay = true;
+    _this._config = Player._defaultConfig;
     _this._eventManager = new _eventManager2.default();
     _this._posterManager = new _posterManager2.default();
     _this._stateManager = new _stateManager2.default(_this);
@@ -1804,7 +1820,6 @@ var Player = function (_FakeEventTarget) {
     _this._createReadyPromise();
     _this._createPlayerContainer();
     _this._appendPosterEl();
-    _this._loadPlugins(config);
     _this.configure(config);
     return _this;
   }
@@ -1826,28 +1841,68 @@ var Player = function (_FakeEventTarget) {
   _createClass(Player, [{
     key: 'configure',
     value: function configure(config) {
-      this._maybeResetPlayer(config);
-      this._config = Utils.Object.mergeDeep(Utils.Object.isEmptyObject(this._config) ? Player._defaultConfig : this._config, config);
-      if (this._selectEngine()) {
-        this._appendEngineEl();
-        this._posterManager.setSrc(this._config.metadata.poster);
-        this._posterManager.show();
-        this._attachMedia();
-        this._handlePlaybackConfig();
+      Utils.Object.mergeDeep(this._config, config);
+      this._configureOrLoadPlugins(config.plugins);
+      if (config.sources) {
+        this._maybeResetPlayer();
+        if (this._selectEngineByPriority()) {
+          this._appendEngineEl();
+          this._posterManager.setSrc(this._config.metadata.poster);
+          this._posterManager.show();
+          this._attachMedia();
+          this._handlePlaybackConfig();
+        }
       }
     }
 
     /**
+     * Configures or load the plugins defined in the configuration.
+     * @param {Object} plugins - The new received plugins configuration.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_configureOrLoadPlugins',
+    value: function _configureOrLoadPlugins() {
+      var _this2 = this;
+
+      var plugins = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+      Object.keys(plugins).forEach(function (name) {
+        // If the plugin is already exists in the registry we are updating his config
+        var plugin = _this2._pluginManager.get(name);
+        if (plugin) {
+          plugin.updateConfig(plugins[name]);
+          _this2._config.plugins[name] = plugin.getConfig();
+        } else {
+          // We allow to load plugins as long as the player has no engine
+          if (!_this2._engine) {
+            _this2._pluginManager.load(name, _this2, plugins[name]);
+            var _plugin = _this2._pluginManager.get(name);
+            if (_plugin) {
+              _this2._config.plugins[name] = _plugin.getConfig();
+              if (typeof _plugin.getMiddlewareImpl === "function") {
+                _this2._playbackMiddleware.use(_plugin.getMiddlewareImpl());
+              }
+            }
+          } else {
+            delete _this2._config.plugins[name];
+          }
+        }
+      });
+    }
+
+    /**
      * Resets the player in case of new sources with existing engine.
-     * @param {Object} config - The player configuration.
      * @private
      * @returns {void}
      */
 
   }, {
     key: '_maybeResetPlayer',
-    value: function _maybeResetPlayer(config) {
-      if (this._engine && config.sources) {
+    value: function _maybeResetPlayer() {
+      if (this._engine) {
         Player._logger.debug('New sources on existing engine: reset engine to change media');
         this._reset();
       }
@@ -1880,13 +1935,11 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_createReadyPromise',
     value: function _createReadyPromise() {
-      var _this2 = this;
+      var _this3 = this;
 
       this._readyPromise = new Promise(function (resolve, reject) {
-        _this2._eventManager.listen(_this2, _events.CUSTOM_EVENTS.TRACKS_CHANGED, function () {
-          resolve();
-        });
-        _this2._eventManager.listen(_this2, _events.HTML5_EVENTS.ERROR, reject);
+        _this3._eventManager.listen(_this3, _events.CUSTOM_EVENTS.TRACKS_CHANGED, resolve);
+        _this3._eventManager.listen(_this3, _events.HTML5_EVENTS.ERROR, reject);
       });
     }
 
@@ -1918,41 +1971,8 @@ var Player = function (_FakeEventTarget) {
      */
 
   }, {
-    key: '_loadPlugins',
+    key: '_selectEngineByPriority',
 
-
-    /**
-     * Loads the configured plugins.
-     * @param {Object} config - The player configuration.
-     * @private
-     * @returns {void}
-     */
-    value: function _loadPlugins(config) {
-      Player._logger.debug('Load plugins');
-      var plugins = config.plugins;
-      for (var name in plugins) {
-        this._pluginManager.load(name, this, plugins[name]);
-        var plugin = this._pluginManager.get(name);
-        if (plugin && typeof plugin.getMiddlewareImpl === "function") {
-          this._playbackMiddleware.use(plugin.getMiddlewareImpl());
-        }
-      }
-    }
-
-    /**
-     * Selects the engine to create based on a given configuration.
-     * @private
-     * @returns {boolean} - Whether a proper engine was found.
-     */
-
-  }, {
-    key: '_selectEngine',
-    value: function _selectEngine() {
-      if (this._config.sources && this._config.playback && this._config.playback.streamPriority) {
-        return this._selectEngineByPriority();
-      }
-      return false;
-    }
 
     /**
      * Selects an engine to play a source according to a given stream priority.
@@ -1960,11 +1980,8 @@ var Player = function (_FakeEventTarget) {
      * according to the priority.
      * @private
      */
-
-  }, {
-    key: '_selectEngineByPriority',
     value: function _selectEngineByPriority() {
-      var _this3 = this;
+      var _this4 = this;
 
       var streamPriority = this._config.playback.streamPriority;
       var preferNative = this._config.playback.preferNative;
@@ -1988,8 +2005,10 @@ var Player = function (_FakeEventTarget) {
               var source = formatSources[0];
               if (engine.canPlaySource(source, preferNative[format])) {
                 Player._logger.debug('Source selected: ', formatSources);
-                _this3._loadEngine(engine, source);
-                _this3.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.SOURCE_SELECTED, { selectedSource: formatSources }));
+                _this4._engineType = engineId;
+                _this4._streamType = format;
+                _this4._loadEngine(engine, source);
+                _this4.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.SOURCE_SELECTED, { selectedSource: formatSources }));
                 return {
                   v: true
                 };
@@ -2045,28 +2064,28 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_attachMedia',
     value: function _attachMedia() {
-      var _this4 = this;
+      var _this5 = this;
 
       if (this._engine) {
         for (var playerEvent in _events.HTML5_EVENTS) {
           this._eventManager.listen(this._engine, _events.HTML5_EVENTS[playerEvent], function (event) {
-            return _this4.dispatchEvent(event);
+            return _this5.dispatchEvent(event);
           });
         }
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, function (event) {
-          _this4._markActiveTrack(event.payload.selectedVideoTrack);
-          return _this4.dispatchEvent(event);
+          _this5._markActiveTrack(event.payload.selectedVideoTrack);
+          return _this5.dispatchEvent(event);
         });
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED, function (event) {
-          _this4._markActiveTrack(event.payload.selectedAudioTrack);
-          return _this4.dispatchEvent(event);
+          _this5._markActiveTrack(event.payload.selectedAudioTrack);
+          return _this5.dispatchEvent(event);
         });
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED, function (event) {
-          _this4._markActiveTrack(event.payload.selectedTextTrack);
-          return _this4.dispatchEvent(event);
+          _this5._markActiveTrack(event.payload.selectedTextTrack);
+          return _this5.dispatchEvent(event);
         });
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.ABR_MODE_CHANGED, function (event) {
-          return _this4.dispatchEvent(event);
+          return _this5.dispatchEvent(event);
         });
         this._eventManager.listen(this, _events.HTML5_EVENTS.PLAY, this._onPlay.bind(this));
       }
@@ -2078,14 +2097,22 @@ var Player = function (_FakeEventTarget) {
         if (typeof this._config.playback.volume === 'number') {
           this.volume = this._config.playback.volume;
         }
-        if (this._config.playback.muted) {
-          this.muted = true;
+        if (typeof this._config.playback.muted === 'boolean') {
+          this.muted = this._config.playback.muted;
         }
-        if (this._config.playback.playsinline) {
-          this.playsinline = true;
+        if (typeof this._config.playback.playsinline === 'boolean') {
+          this.playsinline = this._config.playback.playsinline;
         }
         if (this._config.playback.preload === "auto") {
-          this.load();
+          /**
+           * If ads plugin enabled it's his responsibility to preload the content player.
+           * So to avoid loading the player twice which can cause errors on MSEs we are not
+           * calling load from the player.
+           * TODO: Change it to check the ads configuration when we will develop the ads manager.
+           */
+          if (!this._config.plugins.ima) {
+            this.load();
+          }
         }
         if (this._canAutoPlay()) {
           this.play();
@@ -2107,7 +2134,7 @@ var Player = function (_FakeEventTarget) {
       }
       var device = this._env.device.type;
       var os = this._env.os.name;
-      if (device === 'mobile' || device === 'tablet') {
+      if (device) {
         return os === 'iOS' ? this.muted && this.playsinline : this.muted;
       }
       return true;
@@ -2425,15 +2452,15 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'load',
     value: function load() {
-      var _this5 = this;
+      var _this6 = this;
 
       if (this._engine) {
         var startTime = this._config.playback.startTime;
         this._engine.load(startTime).then(function (data) {
-          _this5._tracks = data.tracks;
-          _this5.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.TRACKS_CHANGED, { tracks: _this5._tracks }));
+          _this6._tracks = data.tracks;
+          _this6.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.TRACKS_CHANGED, { tracks: _this6._tracks }));
         }).catch(function (error) {
-          _this5.dispatchEvent(new _fakeEvent2.default(_events.HTML5_EVENTS.ERROR, error));
+          _this6.dispatchEvent(new _fakeEvent2.default(_events.HTML5_EVENTS.ERROR, error));
         });
       }
     }
@@ -2461,7 +2488,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_play',
     value: function _play() {
-      var _this6 = this;
+      var _this7 = this;
 
       if (this._engine.src) {
         if (this.isLive() && !this.isDvr()) {
@@ -2471,7 +2498,7 @@ var Player = function (_FakeEventTarget) {
       } else {
         this.load();
         this.ready().then(function () {
-          _this6._engine.play();
+          _this7._engine.play();
         });
       }
     }
@@ -2779,6 +2806,7 @@ var Player = function (_FakeEventTarget) {
     set: function set(mute) {
       if (this._engine) {
         this._engine.muted = mute;
+        this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.MUTE_CHANGE, { mute: mute }));
       }
     }
 
@@ -2842,6 +2870,28 @@ var Player = function (_FakeEventTarget) {
     key: 'Track',
     get: function get() {
       return _trackTypes2.default;
+    }
+
+    /**
+     * get the engine type
+     * @returns {string} - html5
+     */
+
+  }, {
+    key: 'engineType',
+    get: function get() {
+      return this._engineType;
+    }
+
+    /**
+     * get the stream type
+     * @returns {string} - hls|dash|progressive
+     */
+
+  }, {
+    key: 'streamType',
+    get: function get() {
+      return this._streamType;
     }
 
     // </editor-fold>
@@ -3138,9 +3188,9 @@ var BasePlugin = function () {
     key: 'getConfig',
     value: function getConfig(attr) {
       if (attr) {
-        return this.config[attr];
+        return Utils.Object.copyDeep(this.config[attr]);
       }
-      return this.config;
+      return Utils.Object.copyDeep(this.config);
     }
 
     /**
@@ -3153,7 +3203,7 @@ var BasePlugin = function () {
   }, {
     key: 'updateConfig',
     value: function updateConfig(update) {
-      this.config = Utils.Object.mergeDeep(this.config, update);
+      Utils.Object.mergeDeep(this.config, update);
     }
 
     /**
@@ -6618,7 +6668,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_logger2.default.getLogger().log('%c ' + "playkit-js" + ' ' + "0.8.0", "color: #98ff98;  font-size: large");
+_logger2.default.getLogger().log('%c ' + "playkit-js" + ' ' + "0.9.0", "color: #98ff98;  font-size: large");
 _logger2.default.getLogger().log('%c For more details see ' + "https://github.com/kaltura/playkit-js", "color: #98ff98;");
 
 /**
@@ -6652,7 +6702,7 @@ exports.Utils = Utils;
 
 // Export version
 
-exports.VERSION = "0.8.0";
+exports.VERSION = "0.9.0";
 
 // Export player name
 
@@ -9134,11 +9184,14 @@ module.exports = __webpack_amd_options__;
 /***/ (function(module, exports) {
 
 module.exports = {
+	"sources": {},
+	"plugins": {},
 	"metadata": {
 		"poster": ""
 	},
-	"plugins": {},
 	"playback": {
+		"audioLanguage": "",
+		"textLanguage": "",
 		"volume": 1,
 		"playsinline": false,
 		"preload": "none",
