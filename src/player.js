@@ -868,11 +868,8 @@ export default class Player extends FakeEventTarget {
     const activeTracks = this.getActiveTracks();
     const playbackConfig = this._config.playback;
 
-    if (playbackConfig.textLanguage == "auto"){
-      playbackConfig.textLanguage = Locale.language;
-    }
-
-    this._setDefaultTrack(TrackTypes.TEXT, playbackConfig.textLanguage, activeTracks.text);
+    const textLanguage = (playbackConfig.textLanguage == "auto") ? Locale.language : playbackConfig.textLanguage;
+    this._setDefaultTrack(TrackTypes.TEXT, textLanguage, activeTracks.text);
     this._setDefaultTrack(TrackTypes.AUDIO, playbackConfig.audioLanguage, activeTracks.audio);
   }
 
