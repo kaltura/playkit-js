@@ -88,7 +88,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._config = config;
     this._eventManager = new EventManager();
     this._createVideoElement();
-    this._loadMediaSourceAdapter(source, config);
+    this._loadMediaSourceAdapter(source);
     this.attach();
   }
 
@@ -181,12 +181,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * Loads the appropriate media source extension adapter.
    * @param {Source} source - The selected source object.
-   * @param {Object} config - The media source extension configuration.
    * @private
    * @returns {void}
    */
-  _loadMediaSourceAdapter(source: Source, config: Object): void {
-    this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter(this.getVideoElement(), source, config);
+  _loadMediaSourceAdapter(source: Source): void {
+    this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter(this.getVideoElement(), source, this._config);
   }
 
   /**
