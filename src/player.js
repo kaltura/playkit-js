@@ -300,7 +300,7 @@ export default class Player extends FakeEventTarget {
   setTextDisplaySettings(settings: Object): void {
     this._textDisplaySettings = settings;
     this._updateCueDisplaySettings(this._lastUpdatedTextCues, this._textDisplaySettings);
-    for (let i = 0; i< this._lastUpdatedTextCues.length; i++ ) {
+    for (let i = 0; i < this._lastUpdatedTextCues.length; i++) {
       this._lastUpdatedTextCues[i].hasBeenReset = true;
     }
     this._updateTextDisplay(this._lastUpdatedTextCues);
@@ -312,7 +312,7 @@ export default class Player extends FakeEventTarget {
    * @private
    * @returns {void}
    */
-  _onCueChange(event: FakeEvent): void{
+  _onCueChange(event: FakeEvent): void {
     Player._logger.debug('Text cue changed', event.payload.cues);
     this._lastUpdatedTextCues = event.payload.cues;
     this._updateCueDisplaySettings(this._lastUpdatedTextCues, this._textDisplaySettings);
@@ -326,10 +326,10 @@ export default class Player extends FakeEventTarget {
    * @private
    * @returns {void}
    */
-  _updateCueDisplaySettings(cues: Array<any>, settings: Object){
-    for (let i = 0; i< cues.length; i++ ){
+  _updateCueDisplaySettings(cues: Array<any>, settings: Object) {
+    for (let i = 0; i < cues.length; i++) {
       let cue = cues[i];
-      for (let name in settings){
+      for (let name in settings) {
         cue[name] = settings[name];
       }
     }
@@ -664,7 +664,7 @@ export default class Player extends FakeEventTarget {
       } else if (track instanceof AudioTrack) {
         this._engine.selectAudioTrack(track);
       } else if (track instanceof TextTrack) {
-        if (track.language === "off"){
+        if (track.language === "off") {
           this.hideTextTrack();
         } else {
           this._engine.selectTextTrack(track);
@@ -864,11 +864,11 @@ export default class Player extends FakeEventTarget {
     }
   }
 
-  _setDefaultTracks(){
+  _setDefaultTracks() {
     const activeTracks = this.getActiveTracks();
     const playbackConfig = this._config.playback;
 
-    if (playbackConfig.textLanguage == "auto"){
+    if (playbackConfig.textLanguage === "auto") {
       playbackConfig.textLanguage = Locale.language;
     }
 
@@ -876,8 +876,8 @@ export default class Player extends FakeEventTarget {
     this._setDefaultTrack(TrackTypes.AUDIO, playbackConfig.audioLanguage, activeTracks.audio);
   }
 
-  _setDefaultTrack(type: string, language: string, defaultTrack: Track){
-    if (language){
+  _setDefaultTrack(type: string, language: string, defaultTrack: Track) {
+    if (language) {
       const track: ?Track = this._getTracksByType(type).find(track => track.language === language);
       if (track) {
         this.selectTrack(track);

@@ -53,7 +53,7 @@ class TextStyle {
    * @enum {!Array.<!Array.<number>>}
    * @export
    */
-  static EdgeStyles: {[string]: Array<Array<number>>} = {
+  static EdgeStyles: { [string]: Array<Array<number>> } = {
     'NONE': [],
     'RAISED': [
       [34, 34, 34, 1, 1, 0],
@@ -146,7 +146,7 @@ class TextStyle {
     // A given edge effect may be implemented with multiple shadows.
     // Collect them all into an array, then combine into one attribute.
     let shadows: Array<string> = [];
-    for (let i=0; i< this.fontEdge.length;i++) {
+    for (let i = 0; i < this.fontEdge.length; i++) {
       // shaka.asserts.assert(this.fontEdge[i].length == 6);
       const color: Array<number> = this.fontEdge[i].slice(0, 3);
       let shadow: Array<number> = this.fontEdge[i].slice(3, 6);

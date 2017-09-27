@@ -2,12 +2,12 @@
 import {convertCueToDOMTree} from './text-track-display'
 
 const autoKeyword: string = "auto";
-const directionSetting: {[string]: boolean} = {
+const directionSetting: { [string]: boolean } = {
   "": true,
   "lr": true,
   "rl": true
 };
-const alignSetting: {[string]: boolean} = {
+const alignSetting: { [string]: boolean } = {
   "start": true,
   "middle": true,
   "end": true,
@@ -169,7 +169,7 @@ class VTTCue {
      */
   }
 
-  resetCue(): void{
+  resetCue(): void {
     this.hasBeenReset = true;
   }
 

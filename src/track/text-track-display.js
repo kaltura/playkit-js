@@ -304,7 +304,8 @@ function computeLinePos(cue) {
 
 class StyleBox {
 
-  constructor(){}
+  constructor() {
+  }
 
   // Apply styles to a div. If there is no div passed then it defaults to the
   // div on 'this'.
@@ -550,7 +551,7 @@ class BoxPosition {
 
   // Find the percentage of the area that this box is overlapping with another
   // box.
-  intersectPercentage (b2) {
+  intersectPercentage(b2) {
     let x = Math.max(0, Math.min(this.right, b2.right) - Math.max(this.left, b2.left)),
       y = Math.max(0, Math.min(this.bottom, b2.bottom) - Math.max(this.top, b2.top)),
       intersectArea = x * y;
