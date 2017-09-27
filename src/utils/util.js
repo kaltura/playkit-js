@@ -243,10 +243,10 @@ const _Dom = {
    * @returns {void}
    */
   addClassName(element: HTMLElement, className: string): void {
-    if (element.classList){
+    if (element.classList) {
       element.classList.add(className);
     } else {
-      if(!_Dom.hasClassName(element, className)) {
+      if (!_Dom.hasClassName(element, className)) {
         element.className += className;
       }
     }
@@ -259,11 +259,11 @@ const _Dom = {
    * @returns {void}
    */
   removeClassName(element: HTMLElement, className: string): void {
-    if (element.classList){
+    if (element.classList) {
       element.classList.remove(className);
     } else {
       if (_Dom.hasClassName(element, className)) {
-        element.className = element.className.replace(new RegExp('(\\s|^)'+className+'(\\s|$)'),' ').replace(/^\s+|\s+$/g, '');
+        element.className = element.className.replace(new RegExp('(\\s|^)' + className + '(\\s|$)'), ' ').replace(/^\s+|\s+$/g, '');
       }
     }
   },
@@ -273,7 +273,7 @@ const _Dom = {
    * @param {string} className - a class name
    * @returns {boolean} - weather an element contains a class name
    */
-  hasClassName(element: HTMLElement, className: string){
+  hasClassName(element: HTMLElement, className: string) {
     return element.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(element.className);
   },
   /**
@@ -303,7 +303,7 @@ const _Dom = {
    * @returns {void}
    */
   setStyle(element: HTMLElement, name: string, value: string): void {
-    if (element.style.getPropertyValue(name) !== undefined){
+    if (element.style.getPropertyValue(name) !== undefined) {
       element.style.setProperty(name, value);
     }
   },
@@ -318,7 +318,17 @@ const _Dom = {
       parent.appendChild(child);
     }
   },
-
+  /**
+   * Removes an element from his parent node.
+   * @param {Element} parent - The parent node.
+   * @param {Element} child - The child node.
+   * @returns {void}
+   */
+  removeChild(parent: ?Node, child: ?Element): void {
+    if (parent && child && parent.removeChild) {
+      parent.removeChild(child);
+    }
+  },
   /**
    * Prepend HTML element
    * @param {HTMLElement} child - the child to prepend
@@ -332,7 +342,6 @@ const _Dom = {
       parent.appendChild(child);
     }
   },
-
   /**
    * Returns a reference to the element by its ID.
    * @param {string} id - The desired id.
@@ -341,7 +350,6 @@ const _Dom = {
   getElementById(id: string): any {
     return document.getElementById(id);
   },
-
   /**
    * Creates the HTML element specified by tagName.
    * @param {string} tagName - The tag name.
@@ -350,7 +358,6 @@ const _Dom = {
   createElement(tagName: string): any {
     return document.createElement(tagName);
   },
-
   /**
    * Loads script asynchronously.
    * @param {string} url - The url to load.
