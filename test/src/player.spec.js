@@ -544,7 +544,7 @@ describe('getTracks real', function () {
     player.ready().then(() => {
       let videoTracksLength = 2;
       let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
-      let textTracksLength = (video.textTracks ? video.textTracks.length : 0);
+      let textTracksLength = (video.textTracks ? video.textTracks.length + 1 : 0);
       let totalTracksLength = videoTracksLength + audioTracksLength + textTracksLength;
       player.getTracks().length.should.be.equal(totalTracksLength);
       done();
@@ -572,7 +572,7 @@ describe('getTracks real', function () {
 
   it('should return text tracks', (done) => {
     player.ready().then(() => {
-      let textTracksLength = (video.textTracks ? video.textTracks.length : 0);
+      let textTracksLength = (video.textTracks ? video.textTracks.length + 1 : 0);
       player.getTracks('text').length.should.be.equal(textTracksLength);
       done();
     });
@@ -583,7 +583,7 @@ describe('getTracks real', function () {
     player.ready().then(() => {
       let videoTracksLength = 2;
       let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
-      let textTracksLength = (video.textTracks ? video.textTracks.length : 0);
+      let textTracksLength = (video.textTracks ? video.textTracks.length + 1 : 0);
       let totalTracksLength = videoTracksLength + audioTracksLength + textTracksLength;
       player.getTracks('some').length.should.be.equal(totalTracksLength);
       done();
@@ -1120,7 +1120,7 @@ describe('events', function () {
         player.removeEventListener(CustomEvents.TRACKS_CHANGED, onTracksChanged);
         let videoTracksLength = 1;
         let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
-        let textTracksLength = (video.textTracks ? video.textTracks.length : 0);
+        let textTracksLength = (video.textTracks ? video.textTracks.length + 1 : 0);
         let totalTracksLength = videoTracksLength + audioTracksLength + textTracksLength;
         data.payload.tracks.length.should.be.equal(totalTracksLength);
         done();
