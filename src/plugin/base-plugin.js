@@ -123,6 +123,17 @@ export default class BasePlugin implements IPlugin {
   }
 
   /**
+   * Runs the reset logic of the plugin.
+   * plugin must implement this method.
+   * @public
+   * @abstract
+   * @returns {void}
+   */
+  reset(): void {
+    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'reset()').getError();
+  }
+
+  /**
    * Getter for the plugin's name.
    * @returns {string} - The name of the plugin.
    * @public
