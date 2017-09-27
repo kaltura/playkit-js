@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.9.0"></a>
+# [0.9.0](https://github.com/kaltura/playkit-js/compare/v0.8.0...v0.9.0) (2017-09-26)
+
+
+### Bug Fixes
+
+* **base-plugin:** getConfig api should return copy of his config ([#123](https://github.com/kaltura/playkit-js/issues/123)) ([26a74ea](https://github.com/kaltura/playkit-js/commit/26a74ea))
+
+
+### Features
+
+* **FEC-7101:** expose engine and stream type as API ([#120](https://github.com/kaltura/playkit-js/issues/120)) ([58c2e9e](https://github.com/kaltura/playkit-js/commit/58c2e9e))
+* **FEC-7171:** handle preload when ads plugin enabled ([#119](https://github.com/kaltura/playkit-js/issues/119)) ([75e8139](https://github.com/kaltura/playkit-js/commit/75e8139))
+* **FEC-7182:** add MUTE_CHANGE event ([#121](https://github.com/kaltura/playkit-js/issues/121)) ([1c0c4e0](https://github.com/kaltura/playkit-js/commit/1c0c4e0))
+* configure refactor ([#122](https://github.com/kaltura/playkit-js/issues/122)) ([aafc22e](https://github.com/kaltura/playkit-js/commit/aafc22e))
+
+
+
 <a name="0.8.0"></a>
 # [0.8.0](https://github.com/kaltura/playkit-js/compare/v0.6.1...v0.8.0) (2017-09-18)
 
