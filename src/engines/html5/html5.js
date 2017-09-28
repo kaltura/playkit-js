@@ -91,6 +91,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._init(source, config)
   }
 
+  /**
+   * Initializes the engine in case no media source adapter is attached.
+   * @param {Source} source - The selected source object.
+   * @param {Object} config - The player configuration.
+   * @private
+   * @returns {void}
+   */
   _init(source: Source, config: Object): void {
     if (!this._mediaSourceAdapter) {
       this._config = config;
@@ -102,31 +109,42 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * Destroys the engine.
    * @public
-   * @returns {void}
+   * @returns {Promise<*>} - The destroy promise.
    */
-  destroy(): void {
-    this.detach();
-    if (this._mediaSourceAdapter) {
-      this._mediaSourceAdapter.destroy();
-      this._mediaSourceAdapter = null;
+  destroy(): Promise<*> {
+    return new Promise((resolve) => {
+      this.detach();
+      if (this._el) {
+        this.pause();
+        this._el.removeAttribute('src');
+        Utils.Dom.removeChild(this._el.parentNode, this._el);
+      }
+      this._eventManager.destroy();
       MediaSourceProvider.destroy();
-    }
-    if (this._el) {
-      this.pause();
-      this._el.removeAttribute('src');
-      Utils.Dom.removeChild(this._el.parentNode, this._el);
-    }
-    this._eventManager.destroy();
-    instance = null;
+      (this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve())
+        .then(() => {
+          this._mediaSourceAdapter = null;
+          instance = null;
+          resolve();
+        });
+    });
   }
 
-  reset(): void {
-    this.detach();
-    if (this._mediaSourceAdapter) {
-      this._mediaSourceAdapter.destroy();
-      this._mediaSourceAdapter = null;
-    }
-    this._eventManager.removeAll();
+  /**
+   * Resets the engine.
+   * @public
+   * @returns {Promise<*>} - The reset promise.
+   */
+  reset(): Promise<*> {
+    return new Promise((resolve) => {
+      this.detach();
+      this._eventManager.removeAll();
+      (this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve())
+        .then(() => {
+          this._mediaSourceAdapter = null;
+          resolve();
+        });
+    });
   }
 
   /**
