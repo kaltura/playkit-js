@@ -89,7 +89,7 @@ const HTML5_EVENTS: { [event: string]: string } = {
   /**
    * Fires when the video stops because it needs to buffer the next frame
    */
-  WAITING: 'waiting',
+  WAITING: 'waiting'
 };
 
 const CUSTOM_EVENTS: { [event: string]: string } = {
