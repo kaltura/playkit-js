@@ -184,13 +184,22 @@ export default class Player extends FakeEventTarget {
     Utils.Object.mergeDeep(this._config, config);
     this._configureOrLoadPlugins(config.plugins);
     if (config.sources) {
-      this._maybeResetPlayer();
+      const receivedSourcesWhenHasEngine: boolean = !!this._engine;
+      if (receivedSourcesWhenHasEngine) {
+        Player._logger.debug('Change source started');
+        this.dispatchEvent(new FakeEvent(CustomEvents.CHANGE_SOURCE_STARTED));
+        this.reset();
+      }
       if (this._selectEngineByPriority()) {
         this._appendEngineEl();
         this._posterManager.setSrc(this._config.metadata.poster);
         this._posterManager.show();
         this._attachMedia();
         this._handlePlaybackConfig();
+        if (receivedSourcesWhenHasEngine) {
+          Player._logger.debug('Change source ended');
+          this.dispatchEvent(new FakeEvent(CustomEvents.CHANGE_SOURCE_ENDED));
+        }
       }
     }
   }
@@ -227,28 +236,24 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Resets the player in case of new sources with existing engine.
+   * Resets the necessary components before changing source.
    * @private
    * @returns {void}
    */
-  _maybeResetPlayer(): void {
-    if (this._engine) {
-      Player._logger.debug('New sources on existing engine: reset engine to change media');
-      this._reset();
+  reset(): void {
+    if (!this.paused) {
+      this.pause();
     }
-  }
-
-  /**
-   * Reset the necessary components before change media.
-   * @private
-   * @returns {void}
-   */
-  _reset(): void {
     if (this._engine) {
-      this._engine.destroy();
+      this._engine.reset();
     }
     this._tracks = [];
     this._firstPlay = true;
+    this._engineType = '';
+    this._streamType = '';
+    this._posterManager.reset();
+    this._stateManager.reset();
+    this._pluginManager.reset();
     this._eventManager.removeAll();
     this._createReadyPromise();
   }
@@ -274,13 +279,19 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.destroy();
     }
+    this._posterManager.destroy();
     this._eventManager.destroy();
     this._pluginManager.destroy();
     this._stateManager.destroy();
     this._config = {};
     this._tracks = [];
+    this._engineType = '';
+    this._streamType = '';
     this._readyPromise = null;
     this._firstPlay = true;
+    if (this._el) {
+      Utils.Dom.removeChild(this._el.parentNode, this._el);
+    }
   }
 
   /**
@@ -305,16 +316,16 @@ export default class Player extends FakeEventTarget {
     for (let priority of streamPriority) {
       const engineId = (typeof priority.engine === 'string') ? priority.engine.toLowerCase() : '';
       const format = (typeof priority.format === 'string') ? priority.format.toLowerCase() : '';
-      const engine = Player._engines.find((engine) => engine.id === engineId);
-      if (engine) {
+      const Engine = Player._engines.find((Engine) => Engine.id === engineId);
+      if (Engine) {
         const formatSources = sources[format];
         if (formatSources && formatSources.length > 0) {
           const source = formatSources[0];
-          if (engine.canPlaySource(source, preferNative[format])) {
+          if (Engine.canPlaySource(source, preferNative[format])) {
             Player._logger.debug('Source selected: ', formatSources);
+            this._loadEngine(Engine, source);
             this._engineType = engineId;
             this._streamType = format;
-            this._loadEngine(engine, source);
             this.dispatchEvent(new FakeEvent(CustomEvents.SOURCE_SELECTED, {selectedSource: formatSources}));
             return true;
           }
@@ -327,13 +338,16 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Loads the selected engine.
-   * @param {IEngine} engine - The selected engine.
+   * @param {IEngine} Engine - The selected engine.
    * @param {Source} source - The selected source object.
    * @private
    * @returns {void}
    */
-  _loadEngine(engine: typeof IEngine, source: Source): void {
-    this._engine = engine.createEngine(source, this._config);
+  _loadEngine(Engine: typeof IEngine, source: Source) {
+    if (this._engine && this._engine.id !== Engine.id) {
+      this._engine.destroy();
+    }
+    this._engine = Engine.getEngine(source, this._config);
   }
 
   /**
@@ -343,11 +357,11 @@ export default class Player extends FakeEventTarget {
    */
   _attachMedia(): void {
     if (this._engine) {
-      for (let playerEvent in Html5Events) {
-        this._eventManager.listen(this._engine, Html5Events[playerEvent], (event: FakeEvent) => {
+      Object.keys(Html5Events).forEach((html5Event) => {
+        this._eventManager.listen(this._engine, Html5Events[html5Event], (event: FakeEvent) => {
           return this.dispatchEvent(event);
         });
-      }
+      });
       this._eventManager.listen(this._engine, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
         this._markActiveTrack(event.payload.selectedVideoTrack);
         return this.dispatchEvent(event);
@@ -365,6 +379,11 @@ export default class Player extends FakeEventTarget {
     }
   }
 
+  /**
+   * Handles the playback config.
+   * @private
+   * @returns {void}
+   */
   _handlePlaybackConfig(): void {
     if (this._config.playback) {
       if (typeof this._config.playback.volume === 'number') {
@@ -416,10 +435,10 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _createPlayerContainer(): void {
-    const el = this._el = Utils.Dom.createElement("div");
-    Utils.Dom.addClassName(el, CONTAINER_CLASS_NAME);
-    Utils.Dom.setAttribute(el, "id", Utils.Generator.uniqueId(5));
-    Utils.Dom.setAttribute(el, "tabindex", '-1');
+    this._el = Utils.Dom.createElement("div");
+    Utils.Dom.addClassName(this._el, CONTAINER_CLASS_NAME);
+    Utils.Dom.setAttribute(this._el, "id", Utils.Generator.uniqueId(5));
+    Utils.Dom.setAttribute(this._el, "tabindex", '-1');
   }
 
   /**
@@ -428,7 +447,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _appendPosterEl(): void {
-    if (this._el != null) {
+    if (this._el) {
       let el: HTMLDivElement = this._posterManager.getElement();
       Utils.Dom.addClassName(el, POSTER_CLASS_NAME);
       Utils.Dom.appendChild(this._el, el);
@@ -441,13 +460,13 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _appendEngineEl(): void {
-    if ((this._el != null) && (this._engine != null)) {
+    if (this._el && this._engine) {
       let engineEl = this._engine.getVideoElement();
-      const classname = `${ENGINE_CLASS_NAME}`;
-      Utils.Dom.addClassName(engineEl, classname);
-      const classnameWithId = `${ENGINE_CLASS_NAME}-${this._engine.id}`;
-      Utils.Dom.addClassName(engineEl, classnameWithId);
-      Utils.Dom.prependTo(engineEl, this._el);
+      if (engineEl.parentNode !== this._el) {
+        Utils.Dom.addClassName(engineEl, `${ENGINE_CLASS_NAME}`);
+        Utils.Dom.addClassName(engineEl, `${ENGINE_CLASS_NAME}-${this._engine.id}`);
+        Utils.Dom.prependTo(engineEl, this._el);
+      }
     }
   }
 
