@@ -10,6 +10,12 @@ import TextTrack from '../../track/text-track'
 import * as Utils from '../../utils/util'
 
 /**
+ * The engine instance.
+ * @type {?Html5}
+ */
+let instance: ?Html5 = null;
+
+/**
  * Html5 engine for playback.
  * @classdesc
  */
@@ -32,6 +38,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _mediaSourceAdapter: ?IMediaSourceAdapter;
+  /**
+   * The player config object.
+   * @type {Object}
+   * @private
+   */
+  _config: Object;
 
   /**
    * @type {string} - The engine id.
@@ -39,15 +51,20 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   static id: string = "html5";
 
   /**
-   * Factory method to create an engine.
+   * Factory method to get an engine.
    * @param {Source} source - The selected source object.
    * @param {Object} config - The player configuration.
    * @returns {IEngine} - New instance of the run time engine.
    * @public
    * @static
    */
-  static createEngine(source: Source, config: Object): IEngine {
-    return new this(source, config);
+  static getEngine(source: Source, config: Object): IEngine {
+    if (instance) {
+      instance._init(source, config);
+    } else {
+      instance = new this(source, config);
+    }
+    return instance;
   }
 
   /**
@@ -71,8 +88,15 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     super();
     this._eventManager = new EventManager();
     this._createVideoElement();
-    this._loadMediaSourceAdapter(source, config);
-    this.attach();
+    this._init(source, config)
+  }
+
+  _init(source: Source, config: Object): void {
+    if (!this._mediaSourceAdapter) {
+      this._config = config;
+      this._loadMediaSourceAdapter(source);
+      this.attach();
+    }
   }
 
   /**
@@ -84,16 +108,25 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this.detach();
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.destroy();
+      this._mediaSourceAdapter = null;
       MediaSourceProvider.destroy();
     }
     if (this._el) {
       this.pause();
       this._el.removeAttribute('src');
-      if (this._el.parentNode) {
-        this._el.parentNode.removeChild(this._el);
-      }
+      Utils.Dom.removeChild(this._el.parentNode, this._el);
     }
     this._eventManager.destroy();
+    instance = null;
+  }
+
+  reset(): void {
+    this.detach();
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.destroy();
+      this._mediaSourceAdapter = null;
+    }
+    this._eventManager.removeAll();
   }
 
   /**
@@ -111,11 +144,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   attach(): void {
-    for (let playerEvent in Html5Events) {
-      this._eventManager.listen(this._el, Html5Events[playerEvent], () => {
-        this.dispatchEvent(new FakeEvent(Html5Events[playerEvent]));
+    Object.keys(Html5Events).forEach((html5Event) => {
+      this._eventManager.listen(this._el, Html5Events[html5Event], () => {
+        this.dispatchEvent(new FakeEvent(Html5Events[html5Event]));
       });
-    }
+    });
     if (this._mediaSourceAdapter) {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.AUDIO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
@@ -130,10 +163,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   detach(): void {
-    for (let playerEvent in Html5Events) {
-      this._eventManager.unlisten(this._el, Html5Events[playerEvent]);
-    }
-    if (this._mediaSourceAdapter) { // unlisten to adaptive bitrate changed
+    Object.keys(Html5Events).forEach((html5Event) => {
+      this._eventManager.unlisten(this._el, Html5Events[html5Event]);
+    });
+    if (this._mediaSourceAdapter) {
       this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGED);
       this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.AUDIO_TRACK_CHANGED);
       this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.TEXT_TRACK_CHANGED);
@@ -162,12 +195,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * Loads the appropriate media source extension adapter.
    * @param {Source} source - The selected source object.
-   * @param {Object} config - The media source extension configuration.
    * @private
    * @returns {void}
    */
-  _loadMediaSourceAdapter(source: Source, config: Object): void {
-    this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter(this.getVideoElement(), source, config);
+  _loadMediaSourceAdapter(source: Source): void {
+    this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter(this.getVideoElement(), source, this._config);
   }
 
   /**
