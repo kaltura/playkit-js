@@ -5,8 +5,9 @@ import TextTrack from '../../src/track/text-track'
 
 declare interface IEngine {
   static id: string;
-  static createEngine(source: Source, config: Object): IEngine;
+  static getEngine(source: Source, config: Object): IEngine;
   static canPlaySource(source: Source): boolean;
+  reset():void;
   destroy(): void;
   attach(): void;
   detach(): void;
