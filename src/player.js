@@ -153,6 +153,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _streamType: string;
+  /**
+   * Promise which resolves when an engine can be loaded.
+   * @type {Promise<*>}
+   * @private
+   */
+  _canLoadEnginePromise: Promise<*>;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -164,6 +170,7 @@ export default class Player extends FakeEventTarget {
     this._tracks = [];
     this._firstPlay = true;
     this._config = Player._defaultConfig;
+    this._canLoadEnginePromise = Promise.resolve();
     this._eventManager = new EventManager();
     this._posterManager = new PosterManager();
     this._stateManager = new StateManager(this);
@@ -190,17 +197,19 @@ export default class Player extends FakeEventTarget {
         this.dispatchEvent(new FakeEvent(CustomEvents.CHANGE_SOURCE_STARTED));
         this.reset();
       }
-      if (this._selectEngineByPriority()) {
-        this._appendEngineEl();
-        this._posterManager.setSrc(this._config.metadata.poster);
-        this._posterManager.show();
-        this._attachMedia();
-        this._handlePlaybackConfig();
-        if (receivedSourcesWhenHasEngine) {
-          Player._logger.debug('Change source ended');
-          this.dispatchEvent(new FakeEvent(CustomEvents.CHANGE_SOURCE_ENDED));
+      this._canLoadEnginePromise.then(() => {
+        if (this._selectEngineByPriority()) {
+          this._appendEngineEl();
+          this._posterManager.setSrc(this._config.metadata.poster);
+          this._posterManager.show();
+          this._attachMedia();
+          this._handlePlaybackConfig();
+          if (receivedSourcesWhenHasEngine) {
+            Player._logger.debug('Change source ended');
+            this.dispatchEvent(new FakeEvent(CustomEvents.CHANGE_SOURCE_ENDED));
+          }
         }
-      }
+      });
     }
   }
 
@@ -211,28 +220,30 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _configureOrLoadPlugins(plugins: Object = {}): void {
-    Object.keys(plugins).forEach((name) => {
-      // If the plugin is already exists in the registry we are updating his config
-      const plugin = this._pluginManager.get(name);
-      if (plugin) {
-        plugin.updateConfig(plugins[name]);
-        this._config.plugins[name] = plugin.getConfig();
-      } else {
-        // We allow to load plugins as long as the player has no engine
-        if (!this._engine) {
-          this._pluginManager.load(name, this, plugins[name]);
-          let plugin = this._pluginManager.get(name);
-          if (plugin) {
-            this._config.plugins[name] = plugin.getConfig();
-            if (typeof plugin.getMiddlewareImpl === "function") {
-              this._playbackMiddleware.use(plugin.getMiddlewareImpl());
-            }
-          }
+    if (plugins) {
+      Object.keys(plugins).forEach((name) => {
+        // If the plugin is already exists in the registry we are updating his config
+        const plugin = this._pluginManager.get(name);
+        if (plugin) {
+          plugin.updateConfig(plugins[name]);
+          this._config.plugins[name] = plugin.getConfig();
         } else {
-          delete this._config.plugins[name];
+          // We allow to load plugins as long as the player has no engine
+          if (!this._engine) {
+            this._pluginManager.load(name, this, plugins[name]);
+            let plugin = this._pluginManager.get(name);
+            if (plugin) {
+              this._config.plugins[name] = plugin.getConfig();
+              if (typeof plugin.getMiddlewareImpl === "function") {
+                this._playbackMiddleware.use(plugin.getMiddlewareImpl());
+              }
+            }
+          } else {
+            delete this._config.plugins[name];
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   /**
@@ -244,9 +255,7 @@ export default class Player extends FakeEventTarget {
     if (!this.paused) {
       this.pause();
     }
-    if (this._engine) {
-      this._engine.reset();
-    }
+    this._canLoadEnginePromise = this._engine ? this._engine.reset() : Promise.resolve();
     this._tracks = [];
     this._firstPlay = true;
     this._engineType = '';
@@ -276,9 +285,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   destroy(): void {
-    if (this._engine) {
-      this._engine.destroy();
-    }
+    this._canLoadEnginePromise = this._engine ? this._engine.reset() : Promise.resolve();
     this._posterManager.destroy();
     this._eventManager.destroy();
     this._pluginManager.destroy();
