@@ -77,7 +77,8 @@ class PosterManager {
   /**
    * Show the poster image
    * @public
-   * @private * @returns {void}
+   * @private
+   * @returns {void}
    */
   show(): void {
     Utils.Dom.setStyle(this._el, "display", "");
