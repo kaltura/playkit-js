@@ -19,6 +19,7 @@ import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
 import TextStyle from './track/text-style'
+import {Cue} from './track/vtt-cue'
 import {processCues} from './track/text-track-display'
 import PlaybackMiddleware from './middleware/playback-middleware'
 import DefaultPlayerConfig from './player-config.json'
@@ -51,7 +52,7 @@ const ENGINE_CLASS_NAME: string = 'playkit-engine';
  * @type {string}
  * @const
  */
-const SUBTITLES_STYLE_NAME: string = 'playkit-subtitles-style';
+const SUBTITLES_STYLE_ID_NAME: string = 'playkit-subtitles-style';
 /**
  * The subtitles class name.
  * @type {string}
@@ -159,7 +160,7 @@ export default class Player extends FakeEventTarget {
   _playerId: string;
   /**
    * The player last updated text cues list
-   * @type {any}
+   * @type {Array<any>}
    * @private
    */
   _activeTextCues: Array<any> = [];
@@ -268,14 +269,17 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Sets style attributes for text tracks.
-   * @param {Object} style - text styling settings
+   * @param {TextStyle} style - text styling settings
    * @returns {void}
    */
   setTextStyle(style: TextStyle): void {
-    let element = Utils.Dom.getElementById(SUBTITLES_STYLE_NAME);
+    if (!(style instanceof TextStyle)){
+      throw new Error("Style must be instance of TextStyle");
+    }
+    let element = Utils.Dom.getElementById(SUBTITLES_STYLE_ID_NAME);
     if (!element) {
       element = Utils.Dom.createElement('style');
-      Utils.Dom.setAttribute(element, 'id', SUBTITLES_STYLE_NAME);
+      Utils.Dom.setAttribute(element, 'id', SUBTITLES_STYLE_ID_NAME);
       Utils.Dom.appendChild(document.head, element);
     }
     let sheet = element.sheet;
@@ -308,7 +312,7 @@ export default class Player extends FakeEventTarget {
 
   /**
    * handle text cue change
-   * @param {Event} event - the cue change event payload
+   * @param {FakeEvent} event - the cue change event payload
    * @private
    * @returns {void}
    */
@@ -324,7 +328,7 @@ export default class Player extends FakeEventTarget {
    * @private
    * @returns {void}
    */
-  _updateCueDisplaySettings(){
+  _updateCueDisplaySettings(): void{
     const activeCues = this._activeTextCues;
     const settings= this._textDisplaySettings;
     for (let i = 0; i< activeCues.length; i++ ){
@@ -337,11 +341,11 @@ export default class Player extends FakeEventTarget {
 
   /**
    * update the text display
-   * @param {Object} cues - list of cues
+   * @param {Array<Cue>} cues - list of cues
    * @private
    * @returns {void}
    */
-  _updateTextDisplay(cues: any): void {
+  _updateTextDisplay(cues: Array<Cue>): void {
     if (this._textDisplayEl === undefined) {
       this._textDisplayEl = Utils.Dom.createElement("div");
       Utils.Dom.addClassName(this._textDisplayEl, SUBTITLES_CLASS_NAME);
@@ -372,6 +376,8 @@ export default class Player extends FakeEventTarget {
       this._engine.destroy();
     }
     this._tracks = [];
+    this._textDisplaySettings = {};
+    this._activeTextCues = [];
     this._firstPlay = true;
     this._eventManager.removeAll();
     this._createReadyPromise();
@@ -867,6 +873,8 @@ export default class Player extends FakeEventTarget {
   _setDefaultTracks() {
     const activeTracks = this.getActiveTracks();
     const playbackConfig = this._config.playback;
+
+    this.hideTextTrack();
 
     const textLanguage = (playbackConfig.textLanguage == "auto") ? Locale.language : playbackConfig.textLanguage;
     this._setDefaultTrack(TrackTypes.TEXT, textLanguage, activeTracks.text);

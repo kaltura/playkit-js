@@ -440,7 +440,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   /**
    * Select a text track
    * @function selectTextTrack
-   * @param {PKTextTrack} textTrack - the track to select
+   * @param {PKTextTrack} textTrack - The playkit text track
    * @returns {void}
    * @public
    */
