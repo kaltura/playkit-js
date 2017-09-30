@@ -252,9 +252,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   reset(): void {
-    if (!this.paused) {
-      this.pause();
-    }
+    this.pause();
     this._canLoadEnginePromise = this._engine ? this._engine.reset() : Promise.resolve();
     this._tracks = [];
     this._firstPlay = true;
