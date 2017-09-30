@@ -112,22 +112,22 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {Promise<*>} - The destroy promise.
    */
   destroy(): Promise<*> {
-    return new Promise((resolve) => {
-      this.detach();
-      if (this._el) {
-        this.pause();
-        this._el.removeAttribute('src');
-        Utils.Dom.removeChild(this._el.parentNode, this._el);
-      }
-      this._eventManager.destroy();
-      MediaSourceProvider.destroy();
-      (this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve())
-        .then(() => {
-          this._mediaSourceAdapter = null;
-          instance = null;
-          resolve();
-        });
-    });
+    return Promise.resolve()
+      .then(() => {
+        this.detach();
+        if (this._el) {
+          this.pause();
+          this._el.removeAttribute('src');
+          Utils.Dom.removeChild(this._el.parentNode, this._el);
+        }
+        this._eventManager.destroy();
+        MediaSourceProvider.destroy();
+        return (this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve())
+          .then(() => {
+            this._mediaSourceAdapter = null;
+            instance = null;
+          });
+      });
   }
 
   /**
@@ -136,15 +136,15 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {Promise<*>} - The reset promise.
    */
   reset(): Promise<*> {
-    return new Promise((resolve) => {
-      this.detach();
-      this._eventManager.removeAll();
-      (this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve())
-        .then(() => {
-          this._mediaSourceAdapter = null;
-          resolve();
-        });
-    });
+    return Promise.resolve()
+      .then(() => {
+        this.detach();
+        this._eventManager.removeAll();
+        return (this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve())
+          .then(() => {
+            this._mediaSourceAdapter = null;
+          });
+      });
   }
 
   /**

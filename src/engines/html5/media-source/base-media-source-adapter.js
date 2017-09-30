@@ -74,11 +74,11 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @returns {void}
    */
   destroy(): Promise<*> {
-    return new Promise((resolve) => {
-      this._sourceObj = null;
-      this._config = null;
-      resolve();
-    });
+    return Promise.resolve()
+      .then(() => {
+        this._sourceObj = null;
+        this._config = null;
+      });
   }
 
   /**
