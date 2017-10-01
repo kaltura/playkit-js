@@ -273,7 +273,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   setTextStyle(style: TextStyle): void {
-    if (!(style instanceof TextStyle)){
+    if (!(style instanceof TextStyle)) {
       throw new Error("Style must be instance of TextStyle");
     }
     let element = Utils.Dom.getElementById(SUBTITLES_STYLE_ID_NAME);
@@ -328,12 +328,12 @@ export default class Player extends FakeEventTarget {
    * @private
    * @returns {void}
    */
-  _updateCueDisplaySettings(): void{
+  _updateCueDisplaySettings(): void {
     const activeCues = this._activeTextCues;
-    const settings= this._textDisplaySettings;
-    for (let i = 0; i< activeCues.length; i++ ){
+    const settings = this._textDisplaySettings;
+    for (let i = 0; i < activeCues.length; i++) {
       let cue = activeCues[i];
-      for (let name in settings){
+      for (let name in settings) {
         cue[name] = settings[name];
       }
     }
@@ -407,6 +407,7 @@ export default class Player extends FakeEventTarget {
     this._eventManager.destroy();
     this._pluginManager.destroy();
     this._stateManager.destroy();
+    this._textDisplaySettings = {};
     this._config = {};
     this._tracks = [];
     this._readyPromise = null;

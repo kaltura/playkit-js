@@ -109,6 +109,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         this._el.parentNode.removeChild(this._el);
       }
     }
+    this._showTextTrackFirstTime = {};
     this._eventManager.destroy();
   }
 
@@ -223,20 +224,22 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
-   * Add cuechange listener to active textTrack
-   * @param {PKTextTrack} textTrack - player text track
+   * Add cuechange listener to active textTrack.
+   * @param {PKTextTrack} textTrack - The playkit text track object to set.
    * @returns {void}
    * @private
    */
   _addCueChangeListener(textTrack: PKTextTrack): void {
     let textTrackEl = this._getSelectedTextTrack();
     if (textTrackEl) {
-      //there's a quirk in TextTrackAPI that a text track added to video element will not fire cuechange event if it
-      //didn't have it's mode set to showing for at least until a single cue has been change.
-      //After first time it seems there's time tracking which allows the cuechange to fire even though the track mode
-      //is set to hidden
-      //This is not the case with a track DOM element added to a video element where cuechange will be fired even if
-      // track mode is set only to hidden and was never set to showing
+      /**
+       There's a quirk in TextTrackAPI that a text track added to video element will not fire cuechange event if it
+       didn't have it's mode set to showing for at least until a single cue has been change.
+       After first time it seems there's time tracking which allows the cuechange to fire even though the track mode
+       is set to hidden
+       This is not the case with a track DOM element added to a video element where cuechange will be fired even if
+       track mode is set only to hidden and was never set to showing
+       */
       if (this._config.playback.useNativeTextTrack) {
         textTrackEl.mode = "showing";
       } else {
@@ -302,7 +305,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.hideTextTrack();
     }
-    this. _removeCueChangeListener();
+    this._removeCueChangeListener();
   }
 
   /**
