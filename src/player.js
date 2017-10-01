@@ -288,10 +288,14 @@ export default class Player extends FakeEventTarget {
       sheet.deleteRule(0);
     }
 
-    if (this._config.playback.useNativeTextTrack) {
-      sheet.insertRule(`video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
-    } else {
-      sheet.insertRule(`#${this._playerId} .${SUBTITLES_CLASS_NAME} > div > div > div { ${style.toCSS()} }`, 0);
+    try {
+      if (this._config.playback.useNativeTextTrack) {
+        sheet.insertRule(`video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
+      } else {
+        sheet.insertRule(`#${this._playerId} .${SUBTITLES_CLASS_NAME} > div > div > div { ${style.toCSS()} }`, 0);
+      }
+    } catch (e) {
+      Player._logger.error(e.message);
     }
   }
 
