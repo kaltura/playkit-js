@@ -230,9 +230,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _addCueChangeListener(textTrack: PKTextTrack): void {
-    let textTrackEl = this._getSelectedTextTrack();
+    let textTrackEl = this._getSelectedTextTrackElement();
     if (textTrackEl) {
-      /**
+      /*
        There's a quirk in TextTrackAPI that a text track added to video element will not fire cuechange event if it
        didn't have it's mode set to showing for at least until a single cue has been change.
        After first time it seems there's time tracking which allows the cuechange to fire even though the track mode
@@ -256,13 +256,19 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _removeCueChangeListener(): void {
-    let textTrackEl: TextTrack = this._getSelectedTextTrack();
+    let textTrackEl: TextTrack = this._getSelectedTextTrackElement();
     if (textTrackEl) {
       textTrackEl.oncuechange = null;
     }
   }
 
-  _onCueChange(e: Event) {
+  /**
+   * oncuechange event handler.
+   * @param {FakeEvent} e - The event arg.
+   * @returns {void}
+   * @private
+   */
+  _onCueChange(e: FakeEvent): void {
     let textTrack: TextTrack = e.currentTarget;
     let activeCues: Array<Cue> = [];
     textTrack.mode = 'hidden';
@@ -282,7 +288,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {?TextTrack} - returns the active text track element if available
    * @private
    */
-  _getSelectedTextTrack(): ?TextTrack {
+  _getSelectedTextTrackElement(): ?TextTrack {
     const textTracks = this._el.textTracks;
     for (let track in textTracks) {
       if (textTracks.hasOwnProperty(track)) {
