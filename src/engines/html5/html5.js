@@ -117,7 +117,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         this.detach();
         if (this._el) {
           this.pause();
-          this._el.removeAttribute('src');
+          Utils.Dom.removeAttribute(this._el, 'src');
           Utils.Dom.removeChild(this._el.parentNode, this._el);
         }
         this._eventManager.destroy();
@@ -141,7 +141,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         this.detach();
         this._eventManager.removeAll();
         if (this._el) {
-          this._el.removeAttribute('src');
+          Utils.Dom.removeAttribute(this._el, 'src');
         }
         return (this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve())
           .then(() => {
