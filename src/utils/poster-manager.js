@@ -28,7 +28,7 @@ class PosterManager {
   setSrc(posterUrl: ?string): void {
     if (posterUrl) {
       this._posterUrl = posterUrl;
-      this._el.style.backgroundImage = `url("${this._posterUrl}")`;
+      Utils.Dom.setStyle(this._el, "background-image", `url("${this._posterUrl}")`);
     }
   }
 
@@ -100,7 +100,7 @@ class PosterManager {
    */
   reset(): void {
     this._posterUrl = '';
-    this._el.style.backgroundImage = '';
+    Utils.Dom.setStyle(this._el, "background-image", '');
   }
 
   /**
