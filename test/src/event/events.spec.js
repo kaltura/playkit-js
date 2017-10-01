@@ -28,6 +28,8 @@ describe('events', () => {
       WAITING: 'waiting',
     });
     events.CUSTOM_EVENTS.should.deep.equals({
+      CHANGE_SOURCE_STARTED: 'changesourcestarted',
+      CHANGE_SOURCE_ENDED: 'changesourceended',
       MUTE_CHANGE: 'mutechange',
       VIDEO_TRACK_CHANGED: 'videotrackchanged',
       AUDIO_TRACK_CHANGED: 'audiotrackchanged',
