@@ -1057,13 +1057,15 @@ describe('hideTextTrack', function () {
 describe('Text Track API', () => {
 
   let player;
+  let playerContainer;
 
   before(() => {
-    let playerContainer = createElement('DIV', targetId);
+    playerContainer = createElement('DIV', targetId);
   });
 
   beforeEach(() => {
     player = new Player();
+    playerContainer.appendChild(player.getView());
   });
 
   afterEach(() => {
