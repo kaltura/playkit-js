@@ -110,6 +110,10 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
    */
   TEXT_TRACK_CHANGED: 'texttrackchanged',
   /**
+   * Fires when the active text track cue has changed
+   */
+  TEXT_CUE_CHANGED: 'textcuechanged',
+  /**
    * Fires when the player tracks have been changed
    */
   TRACKS_CHANGED: 'trackschanged',

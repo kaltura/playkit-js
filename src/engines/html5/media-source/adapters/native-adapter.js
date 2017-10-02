@@ -4,7 +4,7 @@ import {HTML5_EVENTS as Html5Events} from '../../../../event/events'
 import Track from '../../../../track/track'
 import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'
-import TextTrack from '../../../../track/text-track'
+import {TextTrack as PKTextTrack} from '../../../../track/text-track'
 import BaseMediaSourceAdapter from '../base-media-source-adapter'
 import {getSuitableSourceForResolution} from '../../../../utils/resolution'
 import * as Utils from '../../../../utils/util'
@@ -344,7 +344,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           language: textTracks[i].language,
           index: i
         };
-        parsedTracks.push(new TextTrack(settings));
+        parsedTracks.push(new PKTextTrack(settings));
       }
     }
     return parsedTracks;
@@ -440,15 +440,16 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   /**
    * Select a text track
    * @function selectTextTrack
-   * @param {TextTrack} textTrack - the track to select
+   * @param {PKTextTrack} textTrack - The playkit text track
    * @returns {void}
    * @public
    */
-  selectTextTrack(textTrack: TextTrack): void {
+  selectTextTrack(textTrack: PKTextTrack): void {
     let textTracks = this._videoElement.textTracks;
-    if ((textTrack instanceof TextTrack) && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
+    if ((textTrack instanceof PKTextTrack) && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
       this._disableTextTracks();
-      textTracks[textTrack.index].mode = 'showing';
+      textTracks[textTrack.index].mode = 'hidden';
+      NativeAdapter._logger.debug('Text track changed', textTrack);
       this._onTrackChanged(textTrack);
     }
   }

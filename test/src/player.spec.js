@@ -1,3 +1,4 @@
+import TextStyle from '../../src/track/text-style'
 import Player from '../../src/player'
 import PlayerStates from '../../src/state/state-types'
 import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../../src/event/events'
@@ -544,7 +545,7 @@ describe('getTracks real', function () {
     player.ready().then(() => {
       let videoTracksLength = 2;
       let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
-      let textTracksLength = (video.textTracks ? video.textTracks.length : 0);
+      let textTracksLength = (video.textTracks ? video.textTracks.length + 1 : 0);
       let totalTracksLength = videoTracksLength + audioTracksLength + textTracksLength;
       player.getTracks().length.should.be.equal(totalTracksLength);
       done();
@@ -572,7 +573,7 @@ describe('getTracks real', function () {
 
   it('should return text tracks', (done) => {
     player.ready().then(() => {
-      let textTracksLength = (video.textTracks ? video.textTracks.length : 0);
+      let textTracksLength = (video.textTracks ? video.textTracks.length + 1 : 0);
       player.getTracks('text').length.should.be.equal(textTracksLength);
       done();
     });
@@ -583,7 +584,7 @@ describe('getTracks real', function () {
     player.ready().then(() => {
       let videoTracksLength = 2;
       let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
-      let textTracksLength = (video.textTracks ? video.textTracks.length : 0);
+      let textTracksLength = (video.textTracks ? video.textTracks.length + 1 : 0);
       let totalTracksLength = videoTracksLength + audioTracksLength + textTracksLength;
       player.getTracks('some').length.should.be.equal(totalTracksLength);
       done();
@@ -826,7 +827,7 @@ describe('selectTrack - text', function () {
         (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
         event.payload.selectedTextTrack.index.should.equal(1);
         video.textTracks[0].mode.should.be.equal('disabled');
-        video.textTracks[1].mode.should.be.equal('showing');
+        video.textTracks[1].mode.should.be.equal('hidden');
         tracks[0].active.should.be.false;
         tracks[1].active.should.be.true;
         done();
@@ -850,7 +851,7 @@ describe('selectTrack - text', function () {
         (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
         event.payload.selectedTextTrack.index.should.equal(1);
         video.textTracks[0].mode.should.be.equal('disabled');
-        video.textTracks[1].mode.should.be.equal('showing');
+        video.textTracks[1].mode.should.be.equal('hidden');
         tracks[0].active.should.be.false;
         tracks[1].active.should.be.true;
         done();
@@ -876,7 +877,7 @@ describe('selectTrack - text', function () {
       tracks[0].active.should.be.true;
       tracks[1].active.should.be.false;
       player.selectTrack(new TextTrack({index: 0, kind: 'subtitles'}));
-      video.textTracks[0].mode.should.be.equal('showing');
+      video.textTracks[0].mode.should.be.equal('hidden');
       video.textTracks[1].mode.should.be.equal('disabled');
       tracks[0].active.should.be.true;
       tracks[1].active.should.be.false;
@@ -1053,6 +1054,62 @@ describe('hideTextTrack', function () {
   });
 });
 
+describe('Text Track API', () => {
+
+  let player;
+  let playerContainer;
+
+  before(() => {
+    playerContainer = createElement('DIV', targetId);
+  });
+
+  beforeEach(() => {
+    player = new Player();
+    playerContainer.appendChild(player.getView());
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElement(targetId);
+  });
+
+  describe('textStyle API', () => {
+    it("should accept only TextStyle setting", () => {
+      try {
+        player.textStyle = {
+          backgroundColor: [255, 0, 0]
+        };
+      } catch (error) {
+        error.message.should.be.equal("Style must be instance of TextStyle");
+      }
+    });
+
+    it("should change style setting", () => {
+      let textStyle = new TextStyle();
+      textStyle.backgroundColor = TextStyle.StandardColors.RED;
+      textStyle.fontColor = TextStyle.StandardColors.CYAN;
+      textStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
+      player.textStyle = textStyle;
+      const currentTextStyle = player.textStyle;
+      currentTextStyle.backgroundColor.should.be.equal(textStyle.backgroundColor);
+      currentTextStyle.fontColor.should.be.equal(textStyle.fontColor);
+      currentTextStyle.fontEdge.should.be.equal(textStyle.fontEdge);
+    })
+  });
+
+  describe('setTextDisplaySettings', () => {
+    it('should change textDisplay settings', () => {
+      const settings = {line: -4};
+      player.setTextDisplaySettings(settings);
+      player._textDisplaySettings.should.be.equal(settings)
+    });
+  });
+});
+
 describe('Track enum', function () {
   let playerContainer;
   before(() => {
@@ -1120,7 +1177,7 @@ describe('events', function () {
         player.removeEventListener(CustomEvents.TRACKS_CHANGED, onTracksChanged);
         let videoTracksLength = 1;
         let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
-        let textTracksLength = (video.textTracks ? video.textTracks.length : 0);
+        let textTracksLength = (video.textTracks ? video.textTracks.length + 1 : 0);
         let totalTracksLength = videoTracksLength + audioTracksLength + textTracksLength;
         data.payload.tracks.length.should.be.equal(totalTracksLength);
         done();

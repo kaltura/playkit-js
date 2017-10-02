@@ -33,3 +33,5 @@ export default class TextTrack extends Track {
     this._kind = settings.kind;
   }
 }
+
+export {TextTrack};

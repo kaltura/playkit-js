@@ -7,6 +7,7 @@ import FakeEventTarget from './event/fake-event-target'
 import {PLAYER_EVENTS as PlayerEvents, HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from './event/events'
 import PlayerStates from './state/state-types'
 import * as Utils from './utils/util'
+import Locale from './utils/locale'
 import LoggerFactory from './utils/logger'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
@@ -17,6 +18,9 @@ import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
+import TextStyle from './track/text-style'
+import {Cue} from './track/vtt-cue'
+import {processCues} from './track/text-track-display'
 import PlaybackMiddleware from './middleware/playback-middleware'
 import DefaultPlayerConfig from './player-config.json'
 import './assets/style.css'
@@ -42,6 +46,19 @@ const POSTER_CLASS_NAME: string = 'playkit-poster';
  * @const
  */
 const ENGINE_CLASS_NAME: string = 'playkit-engine';
+
+/**
+ * The text style id.
+ * @type {string}
+ * @const
+ */
+const SUBTITLES_STYLE_ID_NAME: string = 'playkit-subtitles-style';
+/**
+ * The subtitles class name.
+ * @type {string}
+ * @const
+ */
+const SUBTITLES_CLASS_NAME: string = 'playkit-subtitles';
 
 /**
  * The live string.
@@ -129,6 +146,36 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _el: HTMLDivElement;
+  /**
+   * The player text DOM element container.
+   * @type {HTMLDivElement}
+   * @private
+   */
+  _textDisplayEl: HTMLDivElement;
+  /**
+   * The player DOM id.
+   * @type {string}
+   * @private
+   */
+  _playerId: string;
+  /**
+   * The player last updated text cues list
+   * @type {Array<any>}
+   * @private
+   */
+  _activeTextCues: Array<any> = [];
+  /**
+   * The player text disaply settings
+   * @type {Object}
+   * @private
+   */
+  _textDisplaySettings: Object = {};
+  /**
+   * The player text style settings
+   * @type {TextStyle}
+   * @private
+   */
+  _textStyle: TextStyle;
   /**
    * The playback middleware of the player.
    * @type {PlaybackMiddleware}
@@ -227,6 +274,106 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Sets style attributes for text tracks.
+   * @param {TextStyle} style - text styling settings
+   * @returns {void}
+   */
+  set textStyle(style: TextStyle): void {
+    if (!(style instanceof TextStyle)) {
+      throw new Error("Style must be instance of TextStyle");
+    }
+    let element = Utils.Dom.getElementById(SUBTITLES_STYLE_ID_NAME);
+    if (!element) {
+      element = Utils.Dom.createElement('style');
+      Utils.Dom.setAttribute(element, 'id', SUBTITLES_STYLE_ID_NAME);
+      Utils.Dom.appendChild(document.head, element);
+    }
+    let sheet = element.sheet;
+
+    while (sheet.cssRules.length) {
+      sheet.deleteRule(0);
+    }
+
+    try {
+      if (this._config.playback.useNativeTextTrack) {
+        sheet.insertRule(`video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
+      } else {
+        sheet.insertRule(`#${this._playerId} .${SUBTITLES_CLASS_NAME} > div > div > div { ${style.toCSS()} }`, 0);
+      }
+      this._textStyle = style;
+    } catch (e) {
+      Player._logger.error(e.message);
+    }
+  }
+
+  /**
+   * Gets style attributes for text tracks.
+   * @returns {?TextStyle} - the current style attribute
+   */
+  get textStyle(): ?TextStyle{
+    return this._textStyle.clone();
+  }
+
+  /**
+   * update the text display settings
+   * @param {Object} settings - text cue display settings
+   * @public
+   * @returns {void}
+   */
+  setTextDisplaySettings(settings: Object): void {
+    this._textDisplaySettings = settings;
+    this._updateCueDisplaySettings();
+    for (let i = 0; i < this._activeTextCues.length; i++) {
+      this._activeTextCues[i].hasBeenReset = true;
+    }
+    this._updateTextDisplay(this._activeTextCues);
+  }
+
+  /**
+   * handle text cue change
+   * @param {FakeEvent} event - the cue change event payload
+   * @private
+   * @returns {void}
+   */
+  _onCueChange(event: FakeEvent): void {
+    Player._logger.debug('Text cue changed', event.payload.cues);
+    this._activeTextCues = event.payload.cues;
+    this._updateCueDisplaySettings();
+    this._updateTextDisplay(this._activeTextCues)
+  }
+
+  /**
+   * update the text cue display settings
+   * @private
+   * @returns {void}
+   */
+  _updateCueDisplaySettings(): void {
+    const activeCues = this._activeTextCues;
+    const settings = this._textDisplaySettings;
+    for (let i = 0; i < activeCues.length; i++) {
+      let cue = activeCues[i];
+      for (let name in settings) {
+        cue[name] = settings[name];
+      }
+    }
+  }
+
+  /**
+   * update the text display
+   * @param {Array<Cue>} cues - list of cues
+   * @private
+   * @returns {void}
+   */
+  _updateTextDisplay(cues: Array<Cue>): void {
+    if (this._textDisplayEl === undefined) {
+      this._textDisplayEl = Utils.Dom.createElement("div");
+      Utils.Dom.addClassName(this._textDisplayEl, SUBTITLES_CLASS_NAME);
+      Utils.Dom.appendChild(this._el, this._textDisplayEl);
+    }
+    processCues(window, cues, this._textDisplayEl);
+  }
+
+  /**
    * Resets the player in case of new sources with existing engine.
    * @private
    * @returns {void}
@@ -248,6 +395,8 @@ export default class Player extends FakeEventTarget {
       this._engine.destroy();
     }
     this._tracks = [];
+    this._textDisplaySettings = {};
+    this._activeTextCues = [];
     this._firstPlay = true;
     this._eventManager.removeAll();
     this._createReadyPromise();
@@ -277,6 +426,7 @@ export default class Player extends FakeEventTarget {
     this._eventManager.destroy();
     this._pluginManager.destroy();
     this._stateManager.destroy();
+    this._textDisplaySettings = {};
     this._config = {};
     this._tracks = [];
     this._readyPromise = null;
@@ -360,6 +510,7 @@ export default class Player extends FakeEventTarget {
         this._markActiveTrack(event.payload.selectedTextTrack);
         return this.dispatchEvent(event);
       });
+      this._eventManager.listen(this._engine, CustomEvents.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this, Html5Events.PLAY, this._onPlay.bind(this));
     }
@@ -418,7 +569,8 @@ export default class Player extends FakeEventTarget {
   _createPlayerContainer(): void {
     const el = this._el = Utils.Dom.createElement("div");
     Utils.Dom.addClassName(el, CONTAINER_CLASS_NAME);
-    Utils.Dom.setAttribute(el, "id", Utils.Generator.uniqueId(5));
+    this._playerId = Utils.Generator.uniqueId(5);
+    Utils.Dom.setAttribute(el, "id", this._playerId);
     Utils.Dom.setAttribute(el, "tabindex", '-1');
   }
 
@@ -428,7 +580,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _appendPosterEl(): void {
-    if (this._el != null) {
+    if (this._el) {
       let el: HTMLDivElement = this._posterManager.getElement();
       Utils.Dom.addClassName(el, POSTER_CLASS_NAME);
       Utils.Dom.appendChild(this._el, el);
@@ -441,7 +593,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _appendEngineEl(): void {
-    if ((this._el != null) && (this._engine != null)) {
+    if (this._el && this._engine) {
       let engineEl = this._engine.getVideoElement();
       const classname = `${ENGINE_CLASS_NAME}`;
       Utils.Dom.addClassName(engineEl, classname);
@@ -538,7 +690,11 @@ export default class Player extends FakeEventTarget {
       } else if (track instanceof AudioTrack) {
         this._engine.selectAudioTrack(track);
       } else if (track instanceof TextTrack) {
-        this._engine.selectTextTrack(track);
+        if (track.language === "off") {
+          this.hideTextTrack();
+        } else {
+          this._engine.selectTextTrack(track);
+        }
       }
     }
   }
@@ -552,7 +708,14 @@ export default class Player extends FakeEventTarget {
   hideTextTrack(): void {
     if (this._engine) {
       this._engine.hideTextTrack();
-      this._getTracksByType(TrackTypes.TEXT).map(track => track.active = false);
+      this._updateTextDisplay([]);
+      const textTracks = this._getTracksByType(TrackTypes.TEXT);
+      textTracks.map(track => track.active = false);
+      const textTrack = textTracks.find(track => track.language === "off");
+      if (textTrack) {
+        textTrack.active = true;
+        this.dispatchEvent(new FakeEvent(CustomEvents.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}))
+      }
     }
   }
 
@@ -699,10 +862,53 @@ export default class Player extends FakeEventTarget {
       let startTime = this._config.playback.startTime;
       this._engine.load(startTime).then((data) => {
         this._tracks = data.tracks;
+        this._addTextTrackOffOption();
+        this._setDefaultTracks();
         this.dispatchEvent(new FakeEvent(CustomEvents.TRACKS_CHANGED, {tracks: this._tracks}));
       }).catch((error) => {
         this.dispatchEvent(new FakeEvent(Html5Events.ERROR, error));
       });
+    }
+  }
+
+  /**
+   * add off text track if there are actual text tracks associated with media
+   * setting this track is the same as calling Player's hideTextTrack
+   * @private
+   * @returns {void}
+   */
+  _addTextTrackOffOption(): void {
+    const textTracks = this.getTracks(TrackTypes.TEXT);
+    if (textTracks && textTracks.length) {
+      this._tracks.push(new TextTrack({
+        active: false,
+        index: textTracks.length,
+        kind: "subtitles",
+        label: "Off",
+        language: "off"
+      }));
+    }
+  }
+
+  _setDefaultTracks() {
+    const activeTracks = this.getActiveTracks();
+    const playbackConfig = this._config.playback;
+
+    this.hideTextTrack();
+
+    const textLanguage = (playbackConfig.textLanguage == "auto") ? Locale.language : playbackConfig.textLanguage;
+    this._setDefaultTrack(TrackTypes.TEXT, textLanguage, activeTracks.text);
+    this._setDefaultTrack(TrackTypes.AUDIO, playbackConfig.audioLanguage, activeTracks.audio);
+  }
+
+  _setDefaultTrack(type: string, language: string, defaultTrack: Track) {
+    if (language) {
+      const track: ?Track = this._getTracksByType(type).find(track => track.language === language);
+      if (track) {
+        this.selectTrack(track);
+      }
+    } else if (defaultTrack) {
+      this.selectTrack(defaultTrack);
     }
   }
 
