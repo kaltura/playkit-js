@@ -1,3 +1,4 @@
+import TextStyle from '../../src/track/text-style'
 import Player from '../../src/player'
 import PlayerStates from '../../src/state/state-types'
 import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../../src/event/events'
@@ -1050,6 +1051,60 @@ describe('hideTextTrack', function () {
       done();
     });
     player.load();
+  });
+});
+
+describe('Text Track API', () => {
+
+  let player;
+
+  before(() => {
+    let playerContainer = createElement('DIV', targetId);
+  });
+
+  beforeEach(() => {
+    player = new Player();
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElement(targetId);
+  });
+
+  describe('textStyle API', () => {
+    it("Should accept only TextStyle setting", () => {
+      try {
+        player.textStyle = {
+          backgroundColor: [255, 0, 0]
+        };
+      } catch (error){
+        error.message.should.be.equal("Style must be instance of TextStyle");
+      }
+
+    });
+    it("Should change style setting", () => {
+      let textStyle = new TextStyle();
+      textStyle.backgroundColor = TextStyle.StandardColors.RED;
+      textStyle.fontColor = TextStyle.StandardColors.CYAN;
+      textStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
+      player.textStyle = textStyle;
+      const currentTextStyle = player.textStyle;
+      currentTextStyle.backgroundColor.should.be.equal(textStyle.backgroundColor);
+      currentTextStyle.fontColor.should.be.equal(textStyle.fontColor);
+      currentTextStyle.fontEdge.should.be.equal(textStyle.fontEdge);
+    })
+  });
+
+  describe('setTextDisplaySettings', () => {
+    it('Should change textDisplay settings', () => {
+      const settings = {line: -4};
+      player.setTextDisplaySettings(settings);
+      player._textDisplaySettings.should.be.equal(settings)
+    });
   });
 });
 
