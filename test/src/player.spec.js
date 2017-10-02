@@ -1076,17 +1076,17 @@ describe('Text Track API', () => {
   });
 
   describe('textStyle API', () => {
-    it("Should accept only TextStyle setting", () => {
+    it("should accept only TextStyle setting", () => {
       try {
         player.textStyle = {
           backgroundColor: [255, 0, 0]
         };
-      } catch (error){
+      } catch (error) {
         error.message.should.be.equal("Style must be instance of TextStyle");
       }
-
     });
-    it("Should change style setting", () => {
+
+    it("should change style setting", () => {
       let textStyle = new TextStyle();
       textStyle.backgroundColor = TextStyle.StandardColors.RED;
       textStyle.fontColor = TextStyle.StandardColors.CYAN;
@@ -1100,7 +1100,7 @@ describe('Text Track API', () => {
   });
 
   describe('setTextDisplaySettings', () => {
-    it('Should change textDisplay settings', () => {
+    it('should change textDisplay settings', () => {
       const settings = {line: -4};
       player.setTextDisplaySettings(settings);
       player._textDisplaySettings.should.be.equal(settings)
