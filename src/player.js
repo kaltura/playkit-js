@@ -171,6 +171,12 @@ export default class Player extends FakeEventTarget {
    */
   _textDisplaySettings: Object = {};
   /**
+   * The player text style settings
+   * @type {TextStyle}
+   * @private
+   */
+  _textStyle: TextStyle;
+  /**
    * The playback middleware of the player.
    * @type {PlaybackMiddleware}
    * @private
@@ -272,7 +278,7 @@ export default class Player extends FakeEventTarget {
    * @param {TextStyle} style - text styling settings
    * @returns {void}
    */
-  setTextStyle(style: TextStyle): void {
+  set textStyle(style: TextStyle): void {
     if (!(style instanceof TextStyle)) {
       throw new Error("Style must be instance of TextStyle");
     }
@@ -294,9 +300,18 @@ export default class Player extends FakeEventTarget {
       } else {
         sheet.insertRule(`#${this._playerId} .${SUBTITLES_CLASS_NAME} > div > div > div { ${style.toCSS()} }`, 0);
       }
+      this._textStyle = style;
     } catch (e) {
       Player._logger.error(e.message);
     }
+  }
+
+  /**
+   * Gets style attributes for text tracks.
+   * @returns {?TextStyle} - the current style attribute
+   */
+  get textStyle(): ?TextStyle{
+    return this._textStyle.clone();
   }
 
   /**
