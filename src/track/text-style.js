@@ -157,6 +157,21 @@ class TextStyle {
 
     return attributes.join('!important; ');
   }
+
+  /**
+   * clones the textStyle object
+   * @returns {TextStyle} the cloned textStyle object
+   */
+  clone(): TextStyle{
+    let clonedTextStyle = new TextStyle();
+    clonedTextStyle.fontEdge = this.fontEdge;
+    clonedTextStyle.fontSize = this.fontSize;
+    clonedTextStyle.fontColor = this.fontColor;
+    clonedTextStyle.fontOpacity = this.fontOpacity;
+    clonedTextStyle.backgroundColor = this.backgroundColor;
+    clonedTextStyle.backgroundOpacity = this.backgroundOpacity;
+    return clonedTextStyle;
+  }
 }
 
 export default TextStyle;
