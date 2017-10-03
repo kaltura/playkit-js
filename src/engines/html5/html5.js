@@ -93,10 +93,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   constructor(source: Source, config: Object) {
     super();
-    this._config = config;
     this._eventManager = new EventManager();
     this._createVideoElement();
-    this._init(source)
+    this._init(source, config)
   }
 
   /**
