@@ -11,12 +11,13 @@ import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
+import TextStyle from './track/text-style'
 import Env from './utils/env'
 import * as Utils from './utils/util'
 
-declare var __VERSION__:string;
-declare var __NAME__:string;
-declare var __PACKAGE_URL__:string;
+declare var __VERSION__: string;
+declare var __NAME__: string;
+declare var __PACKAGE_URL__: string;
 
 LoggerFactory.getLogger().log(`%c ${__NAME__} ${__VERSION__}`, "color: #98ff98;  font-size: large");
 LoggerFactory.getLogger().log(`%c For more details see ${__PACKAGE_URL__}`, "color: #98ff98;");
@@ -36,7 +37,7 @@ export {registerMediaSourceAdapter, BaseMediaSourceAdapter};
 export {registerPlugin, BasePlugin, BaseMiddleware};
 
 // Export the tracks classes
-export {Track, VideoTrack, AudioTrack, TextTrack};
+export {Track, VideoTrack, AudioTrack, TextTrack, TextStyle};
 
 // Export utils library
 export {Utils};
