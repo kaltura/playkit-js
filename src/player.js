@@ -176,7 +176,7 @@ export default class Player extends FakeEventTarget {
    * @type {TextStyle}
    * @private
    */
-  _textStyle: TextStyle;
+  _textStyle: TextStyle = new TextStyle();
   /**
    * The playback middleware of the player.
    * @type {PlaybackMiddleware}
