@@ -243,25 +243,18 @@ export default class Player extends FakeEventTarget {
     Utils.Object.mergeDeep(this._config, config);
     this._configureOrLoadPlugins(config.plugins);
     if (config.sources) {
-      const receivedSourcesWhenHasEngine: boolean = !!this._engine;
-      if (receivedSourcesWhenHasEngine) {
-        Player._logger.debug('Change source started');
-        this.dispatchEvent(new FakeEvent(CustomEvents.CHANGE_SOURCE_STARTED));
-        this.reset();
+      this._maybeResetPlayer();
+      Player._logger.debug('Change source started');
+      this.dispatchEvent(new FakeEvent(CustomEvents.CHANGE_SOURCE_STARTED));
+      if (this._selectEngineByPriority()) {
+        this._appendEngineEl();
+        this._posterManager.setSrc(this._config.metadata.poster);
+        this._posterManager.show();
+        this._attachMedia();
+        this._handlePlaybackConfig();
+        Player._logger.debug('Change source ended');
+        this.dispatchEvent(new FakeEvent(CustomEvents.CHANGE_SOURCE_ENDED));
       }
-      this._canLoadEnginePromise.then(() => {
-        if (this._selectEngineByPriority()) {
-          this._appendEngineEl();
-          this._posterManager.setSrc(this._config.metadata.poster);
-          this._posterManager.show();
-          this._attachMedia();
-          this._handlePlaybackConfig();
-          if (receivedSourcesWhenHasEngine) {
-            Player._logger.debug('Change source ended');
-            this.dispatchEvent(new FakeEvent(CustomEvents.CHANGE_SOURCE_ENDED));
-          }
-        }
-      });
     }
   }
 
@@ -341,7 +334,9 @@ export default class Player extends FakeEventTarget {
    */
   reset(): void {
     this.pause();
-    this._canLoadEnginePromise = this._engine ? this._engine.reset() : Promise.resolve();
+    if (this._engine) {
+      this._engine.reset();
+    }
     this._posterManager.reset();
     this._stateManager.reset();
     this._pluginManager.reset();
@@ -360,7 +355,9 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   destroy(): void {
-    this._canLoadEnginePromise = this._engine ? this._engine.reset() : Promise.resolve();
+    if (this._engine) {
+      this._engine.destroy();
+    }
     this._posterManager.destroy();
     this._eventManager.destroy();
     this._pluginManager.destroy();
@@ -1096,6 +1093,18 @@ export default class Player extends FakeEventTarget {
       this._firstPlay = false;
       this.dispatchEvent(new FakeEvent(CustomEvents.FIRST_PLAY));
       this._posterManager.hide();
+    }
+  }
+
+  /**
+   * Resets the player in case we received sources when engine exists.
+   * @private
+   * @returns {void}
+   */
+  _maybeResetPlayer(): void {
+    const receivedSourcesWhenHasEngine: boolean = !!this._engine;
+    if (receivedSourcesWhenHasEngine) {
+      this.reset();
     }
   }
 

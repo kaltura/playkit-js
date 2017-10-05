@@ -7,8 +7,8 @@ declare interface IEngine {
   static id: string;
   static getEngine(source: Source, config: Object): IEngine;
   static canPlaySource(source: Source): boolean;
-  reset(): Promise<*>;
-  destroy(): Promise<*>;
+  reset(): void;
+  destroy(): void;
   attach(): void;
   detach(): void;
   play(): void;

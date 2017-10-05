@@ -52,6 +52,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _showTextTrackFirstTime: { [number]: boolean } = {};
 
+  _canLoadMediaSourceAdapterPromise: Promise<*>;
+
   /**
    * @type {string} - The engine id.
    */
@@ -94,31 +96,30 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   constructor(source: Source, config: Object) {
     super();
     this._eventManager = new EventManager();
+    this._canLoadMediaSourceAdapterPromise = Promise.resolve();
     this._createVideoElement();
     this._init(source, config)
   }
 
   /**
-   * Initializes the engine in case no media source adapter is attached.
+   * Initializes the engine.
    * @param {Source} source - The selected source object.
    * @param {Object} config - The player configuration.
    * @private
    * @returns {void}
    */
   _init(source: Source, config: Object): void {
-    if (!this._mediaSourceAdapter) {
-      this._config = config;
-      this._loadMediaSourceAdapter(source);
-      this.attach();
-    }
+    this._config = config;
+    this._loadMediaSourceAdapter(source);
+    this.attach();
   }
 
   /**
    * Destroys the engine.
    * @public
-   * @returns {Promise<*>} - The destroy promise.
+   * @returns {void}
    */
-  destroy(): Promise<*> {
+  destroy(): void {
     this.detach();
     if (this._el) {
       this.pause();
@@ -128,28 +129,23 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._showTextTrackFirstTime = {};
     this._eventManager.destroy();
     MediaSourceProvider.destroy();
-    return (this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve())
-      .then(() => {
-        this._mediaSourceAdapter = null;
-        instance = null;
-      });
+    this._mediaSourceAdapter = null;
+    instance = null;
   }
 
   /**
    * Resets the engine.
    * @public
-   * @returns {Promise<*>} - The reset promise.
+   * @returns {void}
    */
-  reset(): Promise<*> {
+  reset(): void {
     this.detach();
     this._eventManager.removeAll();
     if (this._el) {
       Utils.Dom.removeAttribute(this._el, 'src');
     }
-    return (this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve())
-      .then(() => {
-        this._mediaSourceAdapter = null;
-      });
+    this._canLoadMediaSourceAdapterPromise = (this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve());
+    this._mediaSourceAdapter = null;
   }
 
   /**
@@ -449,10 +445,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   load(startTime: ?number): Promise<Object> {
     this._el.load();
-    if (this._mediaSourceAdapter) {
-      return this._mediaSourceAdapter.load(startTime);
-    }
-    return Promise.resolve({});
+    return this._canLoadMediaSourceAdapterPromise.then(() => {
+      if (this._mediaSourceAdapter) {
+        return this._mediaSourceAdapter.load(startTime);
+      }
+      return Promise.resolve({});
+    });
   }
 
   /**
