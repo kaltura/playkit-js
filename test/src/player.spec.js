@@ -1695,7 +1695,7 @@ describe('configure', function () {
       player.muted.should.be.true;
     });
 
-    it('should load the initial playback config and initiate the new one on updating sources', function () {
+    it('should load the initial playback config and initiate the new one on updating sources', function (done) {
       player = new Player({
         sources: sourcesConfig.MultipleSources,
         playback: {
@@ -1708,29 +1708,34 @@ describe('configure', function () {
       player.muted.should.be.true;
       player.config.playback.muted.should.be.true;
       player.config.playback.volume.should.equals(0);
-      player.src.should.equals(window.location.origin + sourcesConfig.MultipleSources.progressive[0].url);
-      player.configure({
-        playback: {
-          muted: false,
-          volume: 0.5
-        }
+      player.ready().then(() => {
+        player.src.should.equals(window.location.origin + sourcesConfig.MultipleSources.progressive[0].url);
+        player.configure({
+          playback: {
+            muted: false,
+            volume: 0.5
+          }
+        });
+        player.volume.should.equals(0);
+        player.muted.should.be.true;
+        player.config.playback.muted.should.be.false;
+        player.config.playback.volume.should.equals(0.5);
+        let newProgressiveConfig = {
+          progressive: [sourcesConfig.MultipleSources.progressive[1]]
+        };
+        player.configure({
+          sources: newProgressiveConfig
+        });
+        player.load();
+        player.volume.should.equals(0.5);
+        player.muted.should.be.false;
+        player.config.playback.muted.should.be.false;
+        player.config.playback.volume.should.equals(0.5);
+        player.ready().then(() => {
+          player.src.should.equals(window.location.origin + newProgressiveConfig.progressive[0].url);
+          done();
+        });
       });
-      player.volume.should.equals(0);
-      player.muted.should.be.true;
-      player.config.playback.muted.should.be.false;
-      player.config.playback.volume.should.equals(0.5);
-      let newProgressiveConfig = {
-        progressive: [sourcesConfig.MultipleSources.progressive[1]]
-      };
-      player.configure({
-        sources: newProgressiveConfig
-      });
-      player.load();
-      player.volume.should.equals(0.5);
-      player.muted.should.be.false;
-      player.config.playback.muted.should.be.false;
-      player.config.playback.volume.should.equals(0.5);
-      player.src.should.equals(window.location.origin + newProgressiveConfig.progressive[0].url);
     });
   });
 });
