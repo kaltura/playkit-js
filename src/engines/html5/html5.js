@@ -11,12 +11,6 @@ import {Cue} from '../../track/vtt-cue'
 import * as Utils from '../../utils/util'
 
 /**
- * The engine instance.
- * @type {?Html5}
- */
-let instance: ?Html5 = null;
-
-/**
  * Html5 engine for playback.
  * @classdesc
  */
@@ -47,11 +41,15 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _config: Object;
   /**
    * Flag to indicate first time text track cue change.
-   * @type {Object.<number, boolean>}
+   * @type {Object<number, boolean>}
    * @private
    */
   _showTextTrackFirstTime: { [number]: boolean } = {};
-
+  /**
+   * Flag to indicate when a media source adapter can be loaded.
+   * @type {Promise<*>}
+   * @private
+   */
   _canLoadMediaSourceAdapterPromise: Promise<*>;
 
   /**
@@ -60,20 +58,15 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   static id: string = "html5";
 
   /**
-   * Factory method to get an engine.
+   * Factory method to create an engine.
    * @param {Source} source - The selected source object.
    * @param {Object} config - The player configuration.
    * @returns {IEngine} - New instance of the run time engine.
    * @public
    * @static
    */
-  static getEngine(source: Source, config: Object): IEngine {
-    if (instance) {
-      instance._init(source, config);
-    } else {
-      instance = new this(source, config);
-    }
-    return instance;
+  static createEngine(source: Source, config: Object): IEngine {
+    return new this(source, config);
   }
 
   /**
@@ -102,16 +95,20 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
-   * Initializes the engine.
+   * Restores the engine.
    * @param {Source} source - The selected source object.
    * @param {Object} config - The player configuration.
-   * @private
    * @returns {void}
    */
-  _init(source: Source, config: Object): void {
-    this._config = config;
-    this._loadMediaSourceAdapter(source);
-    this.attach();
+  restore(source: Source, config: Object): void {
+    this.detach();
+    this._eventManager.removeAll();
+    if (this._el) {
+      Utils.Dom.removeAttribute(this._el, 'src');
+    }
+    this._canLoadMediaSourceAdapterPromise = (this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve());
+    this._mediaSourceAdapter = null;
+    this._init(source, config)
   }
 
   /**
@@ -129,22 +126,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._showTextTrackFirstTime = {};
     this._eventManager.destroy();
     MediaSourceProvider.destroy();
-    this._mediaSourceAdapter = null;
-    instance = null;
-  }
-
-  /**
-   * Resets the engine.
-   * @public
-   * @returns {void}
-   */
-  reset(): void {
-    this.detach();
-    this._eventManager.removeAll();
-    if (this._el) {
-      Utils.Dom.removeAttribute(this._el, 'src');
-    }
-    this._canLoadMediaSourceAdapterPromise = (this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve());
     this._mediaSourceAdapter = null;
   }
 
@@ -203,27 +184,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
-   * Creates a video element dom object.
-   * @private
-   * @returns {void}
-   */
-  _createVideoElement(): void {
-    this._el = Utils.Dom.createElement("video");
-    this._el.id = Utils.Generator.uniqueId(5);
-    this._el.controls = false;
-  }
-
-  /**
-   * Loads the appropriate media source extension adapter.
-   * @param {Source} source - The selected source object.
-   * @private
-   * @returns {void}
-   */
-  _loadMediaSourceAdapter(source: Source): void {
-    this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter(this.getVideoElement(), source, this._config);
-  }
-
-  /**
    * Select a new video track.
    * @param {VideoTrack} videoTrack - The video track object to set.
    * @returns {void}
@@ -256,84 +216,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._mediaSourceAdapter.selectTextTrack(textTrack);
     }
     this._addCueChangeListener(textTrack);
-  }
-
-  /**
-   * Add cuechange listener to active textTrack.
-   * @param {PKTextTrack} textTrack - The playkit text track object to set.
-   * @returns {void}
-   * @private
-   */
-  _addCueChangeListener(textTrack: PKTextTrack): void {
-    let textTrackEl = this._getSelectedTextTrackElement();
-    if (textTrackEl) {
-      /*
-       There's a quirk in TextTrackAPI that a text track added to video element will not fire cuechange event if it
-       didn't have it's mode set to showing for at least until a single cue has been change.
-       After first time it seems there's time tracking which allows the cuechange to fire even though the track mode
-       is set to hidden
-       This is not the case with a track DOM element added to a video element where cuechange will be fired even if
-       track mode is set only to hidden and was never set to showing
-       */
-      if (this._config.playback.useNativeTextTrack) {
-        textTrackEl.mode = "showing";
-      } else {
-        textTrackEl.mode = this._showTextTrackFirstTime[textTrack.index] ? "hidden" : "showing";
-        this._showTextTrackFirstTime[textTrack.index] = true;
-        textTrackEl.oncuechange = (e) => this._onCueChange(e);
-      }
-    }
-  }
-
-  /**
-   * Remove cuechange listener to active textTrack
-   * @returns {void}
-   * @private
-   */
-  _removeCueChangeListener(): void {
-    let textTrackEl: TextTrack = this._getSelectedTextTrackElement();
-    if (textTrackEl) {
-      textTrackEl.oncuechange = null;
-    }
-  }
-
-  /**
-   * oncuechange event handler.
-   * @param {FakeEvent} e - The event arg.
-   * @returns {void}
-   * @private
-   */
-  _onCueChange(e: FakeEvent): void {
-    let textTrack: TextTrack = e.currentTarget;
-    let activeCues: Array<Cue> = [];
-    textTrack.mode = 'hidden';
-    for (let cue of textTrack.activeCues) {
-      //Normalize cues to be of type of VTT model
-      if (cue instanceof window.VTTCue) {
-        activeCues.push(cue);
-      } else if (cue instanceof window.TextTrackCue) {
-        activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text));
-      }
-    }
-    this.dispatchEvent(new FakeEvent(CustomEvents.TEXT_CUE_CHANGED, {cues: activeCues}));
-  }
-
-  /**
-   * Get currently selected text track
-   * @returns {?TextTrack} - returns the active text track element if available
-   * @private
-   */
-  _getSelectedTextTrackElement(): ?TextTrack {
-    const textTracks = this._el.textTracks;
-    for (let track in textTracks) {
-      if (textTracks.hasOwnProperty(track)) {
-        const textTrack = textTracks[parseInt(track)];
-        if (textTrack && textTrack.mode !== "disabled") {
-          return textTrack;
-        }
-      }
-    }
-    return null;
   }
 
   /**
@@ -397,29 +279,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
-   * Set a source.
-   * @param {string} source - Source to set.
-   * @public
-   * @returns {void}
-   */
-  set src(source: string): void {
-    this._el.src = source;
-  }
-
-  /**
-   * Get the source url.
-   * @returns {string} - The source url.
-   * @public
-   */
-  get src(): string {
-    if (this._mediaSourceAdapter) {
-      return this._mediaSourceAdapter.src;
-    }
-    return "";
-  }
-
-  //playback interface
-  /**
    * Start/resume playback.
    * @public
    * @returns {void}
@@ -451,6 +310,28 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       }
       return Promise.resolve({});
     });
+  }
+
+  /**
+   * Set a source.
+   * @param {string} source - Source to set.
+   * @public
+   * @returns {void}
+   */
+  set src(source: string): void {
+    this._el.src = source;
+  }
+
+  /**
+   * Get the source url.
+   * @returns {string} - The source url.
+   * @public
+   */
+  get src(): string {
+    if (this._mediaSourceAdapter) {
+      return this._mediaSourceAdapter.src;
+    }
+    return "";
   }
 
   /**
@@ -804,4 +685,117 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
     return !!Html5.TEST_VID.canPlayType;
   }
+
+  /**
+   * Initializes the engine.
+   * @param {Source} source - The selected source object.
+   * @param {Object} config - The player configuration.
+   * @private
+   * @returns {void}
+   */
+  _init(source: Source, config: Object): void {
+    this._config = config;
+    this._loadMediaSourceAdapter(source);
+    this.attach();
+  }
+
+  /**
+   * Creates a video element dom object.
+   * @private
+   * @returns {void}
+   */
+  _createVideoElement(): void {
+    this._el = Utils.Dom.createElement("video");
+    this._el.id = Utils.Generator.uniqueId(5);
+    this._el.controls = false;
+  }
+
+  /**
+   * Loads the appropriate media source extension adapter.
+   * @param {Source} source - The selected source object.
+   * @private
+   * @returns {void}
+   */
+  _loadMediaSourceAdapter(source: Source): void {
+    this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter(this.getVideoElement(), source, this._config);
+  }
+
+  /**
+   * Add cuechange listener to active textTrack.
+   * @param {PKTextTrack} textTrack - The playkit text track object to set.
+   * @returns {void}
+   * @private
+   */
+  _addCueChangeListener(textTrack: PKTextTrack): void {
+    let textTrackEl = this._getSelectedTextTrackElement();
+    if (textTrackEl) {
+      /*
+       There's a quirk in TextTrackAPI that a text track added to video element will not fire cuechange event if it
+       didn't have it's mode set to showing for at least until a single cue has been change.
+       After first time it seems there's time tracking which allows the cuechange to fire even though the track mode
+       is set to hidden
+       This is not the case with a track DOM element added to a video element where cuechange will be fired even if
+       track mode is set only to hidden and was never set to showing
+       */
+      if (this._config.playback.useNativeTextTrack) {
+        textTrackEl.mode = "showing";
+      } else {
+        textTrackEl.mode = this._showTextTrackFirstTime[textTrack.index] ? "hidden" : "showing";
+        this._showTextTrackFirstTime[textTrack.index] = true;
+        textTrackEl.oncuechange = (e) => this._onCueChange(e);
+      }
+    }
+  }
+
+  /**
+   * Remove cuechange listener to active textTrack
+   * @returns {void}
+   * @private
+   */
+  _removeCueChangeListener(): void {
+    let textTrackEl: TextTrack = this._getSelectedTextTrackElement();
+    if (textTrackEl) {
+      textTrackEl.oncuechange = null;
+    }
+  }
+
+  /**
+   * oncuechange event handler.
+   * @param {FakeEvent} e - The event arg.
+   * @returns {void}
+   * @private
+   */
+  _onCueChange(e: FakeEvent): void {
+    let textTrack: TextTrack = e.currentTarget;
+    let activeCues: Array<Cue> = [];
+    textTrack.mode = 'hidden';
+    for (let cue of textTrack.activeCues) {
+      //Normalize cues to be of type of VTT model
+      if (cue instanceof window.VTTCue) {
+        activeCues.push(cue);
+      } else if (cue instanceof window.TextTrackCue) {
+        activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text));
+      }
+    }
+    this.dispatchEvent(new FakeEvent(CustomEvents.TEXT_CUE_CHANGED, {cues: activeCues}));
+  }
+
+  /**
+   * Get currently selected text track
+   * @returns {?TextTrack} - returns the active text track element if available
+   * @private
+   */
+  _getSelectedTextTrackElement(): ?TextTrack {
+    const textTracks = this._el.textTracks;
+    for (let track in textTracks) {
+      if (textTracks.hasOwnProperty(track)) {
+        const textTrack = textTracks[parseInt(track)];
+        if (textTrack && textTrack.mode !== "disabled") {
+          return textTrack;
+        }
+      }
+    }
+    return null;
+  }
 }
+

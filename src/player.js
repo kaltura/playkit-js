@@ -328,28 +328,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Resets the necessary components before change media.
-   * @private
-   * @returns {void}
-   */
-  reset(): void {
-    this.pause();
-    if (this._engine) {
-      this._engine.reset();
-    }
-    this._posterManager.reset();
-    this._stateManager.reset();
-    this._pluginManager.reset();
-    this._eventManager.removeAll();
-    this._activeTextCues = [];
-    this._tracks = [];
-    this._firstPlay = true;
-    this._engineType = '';
-    this._streamType = '';
-    this._createReadyPromise();
-  }
-
-  /**
    * Destroys the player.
    * @returns {void}
    * @public
@@ -969,10 +947,16 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _loadEngine(Engine: typeof IEngine, source: Source) {
-    if (this._engine && this._engine.id !== Engine.id) {
-      this._engine.destroy();
+    if (this._engine) {
+      if (this._engine.id === Engine.id) {
+        this._engine.restore(source, this._config);
+      } else {
+        this._engine.destroy();
+        this._engine = Engine.createEngine(source, this._config);
+      }
+    } else {
+      this._engine = Engine.createEngine(source, this._config);
     }
-    this._engine = Engine.getEngine(source, this._config);
   }
 
   /**
@@ -1104,9 +1088,29 @@ export default class Player extends FakeEventTarget {
   _maybeResetPlayer(): void {
     const receivedSourcesWhenHasEngine: boolean = !!this._engine;
     if (receivedSourcesWhenHasEngine) {
-      this.reset();
+      this._reset();
     }
   }
+
+  /**
+   * Resets the necessary components before change media.
+   * @private
+   * @returns {void}
+   */
+  _reset(): void {
+    this.pause();
+    this._posterManager.reset();
+    this._stateManager.reset();
+    this._pluginManager.reset();
+    this._eventManager.removeAll();
+    this._activeTextCues = [];
+    this._tracks = [];
+    this._firstPlay = true;
+    this._engineType = '';
+    this._streamType = '';
+    this._createReadyPromise();
+  }
+
 
   /**
    * @returns {Object} - The default configuration of the player.
