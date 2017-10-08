@@ -1229,10 +1229,12 @@ export default class Player extends FakeEventTarget {
    */
   _setDefaultTrack(type: string, language: string, defaultTrack: Track): void {
     function langComparer(inputLang: string, trackLang: string): boolean {
-      if (inputLang.length === trackLang.length) {
+      const inputLangLength = inputLang.length;
+      const trackLangLength = trackLang.length;
+      if (inputLangLength === trackLangLength) {
         return inputLang === trackLang;
       } else {
-        return (inputLang > trackLang ? inputLang.startsWith(trackLang) : trackLang.startsWith(inputLang));
+        return (inputLangLength > trackLangLength ? inputLang.startsWith(trackLang) : trackLang.startsWith(inputLang));
       }
     }
 
