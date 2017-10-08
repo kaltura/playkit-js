@@ -1228,24 +1228,8 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _setDefaultTrack(type: string, language: string, defaultTrack: Track): void {
-    /**
-     * Comparing language string according to their length.
-     * @param {string} inputLang - The configured language.
-     * @param {string} trackLang - The default track language.
-     * @returns {boolean} - Whether the strings are equal or starts with the same substring.
-     */
-    function langComparer(inputLang: string, trackLang: string): boolean {
-      const inputLangLength = inputLang.length;
-      const trackLangLength = trackLang.length;
-      if (inputLangLength === trackLangLength) {
-        return inputLang === trackLang;
-      } else {
-        return (inputLangLength > trackLangLength ? inputLang.startsWith(trackLang) : trackLang.startsWith(inputLang));
-      }
-    }
-
     if (language) {
-      const track: ?Track = this._getTracksByType(type).find(track => langComparer(language, track.language));
+      const track: ?Track = this._getTracksByType(type).find(track => TextTrack.langComparer(language, track.language));
       if (track) {
         this.selectTrack(track);
       }
