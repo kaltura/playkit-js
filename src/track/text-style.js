@@ -32,10 +32,10 @@ class TextStyle {
   /**
    * Defined in {@link https://goo.gl/ZcqOOM FCC 12-9}, paragraph 111, footnote
    * 448.  Each value is an array of the three RGB values for that color.
-   * @enum {!Array.<number>}
+   * @enum {Object.<string, Array.<number>>}}
    * @export
    */
-  static StandardColors: Object = {
+  static StandardColors: {[string]: Array<number>} = {
     'WHITE': [255, 255, 255],
     'BLACK': [0, 0, 0],
     'RED': [255, 0, 0],
@@ -48,10 +48,10 @@ class TextStyle {
 
   /**
    * Defined in {@link https://goo.gl/ZcqOOM FCC 12-9}, paragraph 111.
-   * @enum {number}
+   * @enum {Object.<string, number>}}
    * @export
    */
-  static StandardOpacities: Object = {
+  static StandardOpacities: {[string]: number} = {
     'OPAQUE': 1,
     'SEMI_HIGH': 0.75,
     'SEMI_LOW': 0.25,
