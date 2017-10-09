@@ -18,7 +18,7 @@ class FakeDashAdapter implements IMediaSourceAdapter {
 
 class Adapter1 implements IMediaSourceAdapter {
   static get id() {
-    return 'adapter1';
+    return 'Adapter1';
   }
 
   static canPlayType(mimeType: string): boolean {
@@ -46,7 +46,7 @@ class Adapter1 implements IMediaSourceAdapter {
 
 class Adapter2 implements IMediaSourceAdapter {
   static get id() {
-    return 'adapter2';
+    return 'Adapter2';
   }
 
   static canPlayType(mimeType: string): boolean {
@@ -73,7 +73,7 @@ class Adapter2 implements IMediaSourceAdapter {
 
 class Adapter3 implements IMediaSourceAdapter {
   static get id() {
-    return 'adapter3';
+    return 'Adapter3';
   }
 
   static canPlayType(mimeType: string): boolean {

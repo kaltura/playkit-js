@@ -17,28 +17,28 @@ describe('mediaSourceProvider:register', () => {
     MediaSourceProvider._mediaSourceAdapters = oldMediaSourceAdapters;
   });
 
-  it('should register adapter1', () => {
+  it('should register Adapter1', () => {
     MediaSourceProvider._mediaSourceAdapters.length.should.equal(0);
     MediaSourceProvider.register(Adapter1);
     MediaSourceProvider._mediaSourceAdapters.length.should.equal(1);
-    MediaSourceProvider._mediaSourceAdapters[0].name.should.equal("adapter1");
+    MediaSourceProvider._mediaSourceAdapters[0].id.should.equal("Adapter1");
   });
 
-  it('should not register adapter1 twice', () => {
+  it('should not register Adapter1 twice', () => {
     MediaSourceProvider._mediaSourceAdapters.length.should.equal(0);
     MediaSourceProvider.register(Adapter1);
     MediaSourceProvider.register(Adapter1);
     MediaSourceProvider._mediaSourceAdapters.length.should.equal(1);
-    MediaSourceProvider._mediaSourceAdapters[0].name.should.equal("adapter1");
+    MediaSourceProvider._mediaSourceAdapters[0].id.should.equal("Adapter1");
   });
 
-  it('should register adapter1 and adapter2', () => {
+  it('should register Adapter1 and Adapter2', () => {
     MediaSourceProvider._mediaSourceAdapters.length.should.equal(0);
     MediaSourceProvider.register(Adapter1);
     MediaSourceProvider.register(Adapter2);
     MediaSourceProvider._mediaSourceAdapters.length.should.equal(2);
-    MediaSourceProvider._mediaSourceAdapters[0].name.should.equal("adapter1");
-    MediaSourceProvider._mediaSourceAdapters[1].name.should.equal("adapter2");
+    MediaSourceProvider._mediaSourceAdapters[0].id.should.equal("Adapter1");
+    MediaSourceProvider._mediaSourceAdapters[1].id.should.equal("Adapter2");
   });
 
   it('should not register null', () => {
@@ -63,14 +63,14 @@ describe('mediaSourceProvider:unRegister', () => {
     MediaSourceProvider._mediaSourceAdapters = oldMediaSourceAdapters;
   });
 
-  it('should unRegister adapter1', () => {
+  it('should unRegister Adapter1', () => {
     MediaSourceProvider._mediaSourceAdapters.length.should.equal(2);
     MediaSourceProvider.unRegister(Adapter1);
     MediaSourceProvider._mediaSourceAdapters.length.should.equal(1);
-    MediaSourceProvider._mediaSourceAdapters[0].name.should.equal("adapter2");
+    MediaSourceProvider._mediaSourceAdapters[0].id.should.equal("Adapter2");
   });
 
-  it('should unRegister adapter1 and adapter2', () => {
+  it('should unRegister Adapter1 and Adapter2', () => {
     MediaSourceProvider._mediaSourceAdapters.length.should.equal(2);
     MediaSourceProvider.unRegister(Adapter1);
     MediaSourceProvider.unRegister(Adapter2);
@@ -108,27 +108,27 @@ describe('mediaSourceProvider:canPlaySource', () => {
 
   it('should can play source with type mimeType1', () => {
     MediaSourceProvider.canPlaySource({mimetype: 'mimeType1'}).should.be.true;
-    MediaSourceProvider._selectedAdapter.id.should.equal("adapter1");
+    MediaSourceProvider._selectedAdapter.id.should.equal("Adapter1");
   });
 
   it('should can play source with type mimeType1 and drm scheme s1', () => {
     MediaSourceProvider.canPlaySource({mimetype: 'mimeType1', drmData: [{scheme: 's1'}]}).should.be.true;
-    MediaSourceProvider._selectedAdapter.id.should.equal("adapter1");
+    MediaSourceProvider._selectedAdapter.id.should.equal("Adapter1");
   });
 
   it('should can play source with type mimeType2', () => {
     MediaSourceProvider.canPlaySource({mimetype: 'mimeType2'}).should.be.true;
-    MediaSourceProvider._selectedAdapter.id.should.equal("adapter2");
+    MediaSourceProvider._selectedAdapter.id.should.equal("Adapter2");
   });
 
   it('should can play source with type video/mp4', () => {
     MediaSourceProvider.canPlaySource({mimetype: 'video/mp4'}).should.be.true;
-    MediaSourceProvider._selectedAdapter.id.should.equal("adapter3");
+    MediaSourceProvider._selectedAdapter.id.should.equal("Adapter3");
   });
 
   it('should can play source with type video/mp4 and drm scheme s3', () => {
     MediaSourceProvider.canPlaySource({mimetype: 'video/mp4', drmData: [{scheme: 's3'}]}).should.be.true;
-    MediaSourceProvider._selectedAdapter.id.should.equal("adapter3");
+    MediaSourceProvider._selectedAdapter.id.should.equal("Adapter3");
   });
 
   it('should cannot play source with valid mime type and not valid drm scheme', () => {
@@ -161,19 +161,19 @@ describe('mediaSourceProvider:getMediaSourceAdapter', () => {
     MediaSourceProvider._mediaSourceAdapters = oldMediaSourceAdapters;
   });
 
-  it('should provide adapter1', () => {
+  it('should provide Adapter1', () => {
     let adapter = MediaSourceProvider.getMediaSourceAdapter(video, {mimetype: 'mimeType1', url: 'url1'}, {});
-    adapter.constructor.name.should.equal("adapter1");
+    adapter.constructor.id.should.equal("Adapter1");
   });
 
-  it('should provide adapter2', () => {
+  it('should provide Adapter2', () => {
     let adapter = MediaSourceProvider.getMediaSourceAdapter(video, {mimetype: 'mimeType2', url: 'url3'}, {});
-    adapter.constructor.name.should.equal("adapter2");
+    adapter.constructor.id.should.equal("Adapter2");
   });
 
-  it('should provide adapter3', () => {
+  it('should provide Adapter3', () => {
     let adapter = MediaSourceProvider.getMediaSourceAdapter(video, {mimetype: 'video/mp4', url: 'url3'}, {});
-    adapter.constructor.name.should.equal("adapter3");
+    adapter.constructor.id.should.equal("Adapter3");
   });
 
   it('should provide null for unknown mime type', () => {
