@@ -1242,7 +1242,7 @@ export default class Player extends FakeEventTarget {
    */
   _setDefaultTrack(type: string, language: string, defaultTrack: Track): void {
     if (language) {
-      const track: ?Track = this._getTracksByType(type).find(track => track.language === language);
+      const track: ?Track = this._getTracksByType(type).find(track => TextTrack.langComparer(language, track.language));
       if (track) {
         this.selectTrack(track);
       }
