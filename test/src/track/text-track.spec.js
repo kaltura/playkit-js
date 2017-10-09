@@ -10,8 +10,8 @@ describe('TextTrack', () => {
     it('should compare 2 languages with different length', () => {
       TextTrack.langComparer('ita', 'it').should.be.true;
       TextTrack.langComparer('it', 'ita').should.be.true;
-      TextTrack.langComparer('es', 'ita').should.be.true;
-      TextTrack.langComparer('ita', 'es').should.be.true;
+      TextTrack.langComparer('es', 'ita').should.be.false;
+      TextTrack.langComparer('ita', 'es').should.be.false;
     });
   });
 });
