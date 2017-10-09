@@ -1,5 +1,8 @@
 import MediaSourceProvider from '../../../../../src/engines/html5/media-source/media-source-provider'
-import {adapter1, adapter2, adapter3} from './adapters/test-adapters/test-adapters'
+import {
+  Adapter1, Adapter2, Adapter3,
+  FakeDashAdapter, FakeNativeAdapter, FakeHlsAdapter
+} from './adapters/test-adapters/test-adapters'
 
 let video = document.createElement("video");
 let oldMediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
@@ -16,23 +19,23 @@ describe('mediaSourceProvider:register', () => {
 
   it('should register adapter1', () => {
     MediaSourceProvider._mediaSourceAdapters.length.should.equal(0);
-    MediaSourceProvider.register(adapter1);
+    MediaSourceProvider.register(Adapter1);
     MediaSourceProvider._mediaSourceAdapters.length.should.equal(1);
     MediaSourceProvider._mediaSourceAdapters[0].name.should.equal("adapter1");
   });
 
   it('should not register adapter1 twice', () => {
     MediaSourceProvider._mediaSourceAdapters.length.should.equal(0);
-    MediaSourceProvider.register(adapter1);
-    MediaSourceProvider.register(adapter1);
+    MediaSourceProvider.register(Adapter1);
+    MediaSourceProvider.register(Adapter1);
     MediaSourceProvider._mediaSourceAdapters.length.should.equal(1);
     MediaSourceProvider._mediaSourceAdapters[0].name.should.equal("adapter1");
   });
 
   it('should register adapter1 and adapter2', () => {
     MediaSourceProvider._mediaSourceAdapters.length.should.equal(0);
-    MediaSourceProvider.register(adapter1);
-    MediaSourceProvider.register(adapter2);
+    MediaSourceProvider.register(Adapter1);
+    MediaSourceProvider.register(Adapter2);
     MediaSourceProvider._mediaSourceAdapters.length.should.equal(2);
     MediaSourceProvider._mediaSourceAdapters[0].name.should.equal("adapter1");
     MediaSourceProvider._mediaSourceAdapters[1].name.should.equal("adapter2");
@@ -54,7 +57,7 @@ describe('mediaSourceProvider:register', () => {
 describe('mediaSourceProvider:unRegister', () => {
 
   beforeEach(() => {
-    MediaSourceProvider._mediaSourceAdapters = [adapter1, adapter2];
+    MediaSourceProvider._mediaSourceAdapters = [Adapter1, Adapter2];
   });
   after(() => {
     MediaSourceProvider._mediaSourceAdapters = oldMediaSourceAdapters;
@@ -62,21 +65,21 @@ describe('mediaSourceProvider:unRegister', () => {
 
   it('should unRegister adapter1', () => {
     MediaSourceProvider._mediaSourceAdapters.length.should.equal(2);
-    MediaSourceProvider.unRegister(adapter1);
+    MediaSourceProvider.unRegister(Adapter1);
     MediaSourceProvider._mediaSourceAdapters.length.should.equal(1);
     MediaSourceProvider._mediaSourceAdapters[0].name.should.equal("adapter2");
   });
 
   it('should unRegister adapter1 and adapter2', () => {
     MediaSourceProvider._mediaSourceAdapters.length.should.equal(2);
-    MediaSourceProvider.unRegister(adapter1);
-    MediaSourceProvider.unRegister(adapter2);
+    MediaSourceProvider.unRegister(Adapter1);
+    MediaSourceProvider.unRegister(Adapter2);
     MediaSourceProvider._mediaSourceAdapters.length.should.equal(0);
   });
 
   it('should do nothing for adapter 3', () => {
     MediaSourceProvider._mediaSourceAdapters.length.should.equal(2);
-    MediaSourceProvider.unRegister(adapter3);
+    MediaSourceProvider.unRegister(Adapter3);
     MediaSourceProvider._mediaSourceAdapters.length.should.equal(2);
   });
 
@@ -96,7 +99,7 @@ describe('mediaSourceProvider:unRegister', () => {
 describe('mediaSourceProvider:canPlaySource', () => {
 
   before(() => {
-    MediaSourceProvider._mediaSourceAdapters = [adapter1, adapter2, adapter3];
+    MediaSourceProvider._mediaSourceAdapters = [Adapter1, Adapter2, Adapter3];
   });
 
   after(() => {
@@ -147,7 +150,7 @@ describe('mediaSourceProvider:canPlaySource', () => {
 describe('mediaSourceProvider:getMediaSourceAdapter', () => {
 
   before(() => {
-    MediaSourceProvider._mediaSourceAdapters = [adapter1, adapter2, adapter3];
+    MediaSourceProvider._mediaSourceAdapters = [Adapter1, Adapter2, Adapter3];
   });
 
   beforeEach(() => {
@@ -199,3 +202,72 @@ describe('mediaSourceProvider:getMediaSourceAdapter', () => {
   });
 });
 
+describe('mediaSourceProvider:_orderMediaSourceAdapters', () => {
+  it('should place NativeAdapter last with preferNative=false', () => {
+    MediaSourceProvider._mediaSourceAdapters = [FakeNativeAdapter, FakeHlsAdapter, FakeDashAdapter];
+    MediaSourceProvider._orderMediaSourceAdapters(false);
+    MediaSourceProvider._mediaSourceAdapters.length.should.equals(3);
+    MediaSourceProvider._mediaSourceAdapters[0].id.should.equals('HlsAdapter');
+    MediaSourceProvider._mediaSourceAdapters[1].id.should.equals('DashAdapter');
+    MediaSourceProvider._mediaSourceAdapters[2].id.should.equals('NativeAdapter');
+  });
+
+  it('should place NativeAdapter last with preferNative=false', () => {
+    MediaSourceProvider._mediaSourceAdapters = [FakeHlsAdapter, FakeNativeAdapter, FakeDashAdapter];
+    MediaSourceProvider._orderMediaSourceAdapters(false);
+    MediaSourceProvider._mediaSourceAdapters.length.should.equals(3);
+    MediaSourceProvider._mediaSourceAdapters[0].id.should.equals('HlsAdapter');
+    MediaSourceProvider._mediaSourceAdapters[1].id.should.equals('DashAdapter');
+    MediaSourceProvider._mediaSourceAdapters[2].id.should.equals('NativeAdapter');
+  });
+
+  it('should place NativeAdapter last with preferNative=false', () => {
+    MediaSourceProvider._mediaSourceAdapters = [FakeHlsAdapter, FakeDashAdapter, FakeNativeAdapter];
+    MediaSourceProvider._orderMediaSourceAdapters(false);
+    MediaSourceProvider._mediaSourceAdapters.length.should.equals(3);
+    MediaSourceProvider._mediaSourceAdapters[0].id.should.equals('HlsAdapter');
+    MediaSourceProvider._mediaSourceAdapters[1].id.should.equals('DashAdapter');
+    MediaSourceProvider._mediaSourceAdapters[2].id.should.equals('NativeAdapter');
+  });
+
+  it('should place NativeAdapter first with preferNative=true', () => {
+    MediaSourceProvider._mediaSourceAdapters = [FakeNativeAdapter, FakeHlsAdapter, FakeDashAdapter];
+    MediaSourceProvider._orderMediaSourceAdapters(true);
+    MediaSourceProvider._mediaSourceAdapters.length.should.equals(3);
+    MediaSourceProvider._mediaSourceAdapters[0].id.should.equals('NativeAdapter');
+    MediaSourceProvider._mediaSourceAdapters[1].id.should.equals('HlsAdapter');
+    MediaSourceProvider._mediaSourceAdapters[2].id.should.equals('DashAdapter');
+  });
+
+  it('should place NativeAdapter first with preferNative=true', () => {
+    MediaSourceProvider._mediaSourceAdapters = [FakeHlsAdapter, FakeNativeAdapter, FakeDashAdapter];
+    MediaSourceProvider._orderMediaSourceAdapters(true);
+    MediaSourceProvider._mediaSourceAdapters.length.should.equals(3);
+    MediaSourceProvider._mediaSourceAdapters[0].id.should.equals('NativeAdapter');
+    MediaSourceProvider._mediaSourceAdapters[1].id.should.equals('HlsAdapter');
+    MediaSourceProvider._mediaSourceAdapters[2].id.should.equals('DashAdapter');
+  });
+
+  it('should place NativeAdapter first with preferNative=true', () => {
+    MediaSourceProvider._mediaSourceAdapters = [FakeHlsAdapter, FakeDashAdapter, FakeNativeAdapter];
+    MediaSourceProvider._orderMediaSourceAdapters(true);
+    MediaSourceProvider._mediaSourceAdapters.length.should.equals(3);
+    MediaSourceProvider._mediaSourceAdapters[0].id.should.equals('NativeAdapter');
+    MediaSourceProvider._mediaSourceAdapters[1].id.should.equals('HlsAdapter');
+    MediaSourceProvider._mediaSourceAdapters[2].id.should.equals('DashAdapter');
+  });
+
+  it('should place NativeAdapter first with preferNative=true', () => {
+    MediaSourceProvider._mediaSourceAdapters = [FakeNativeAdapter];
+    MediaSourceProvider._orderMediaSourceAdapters(true);
+    MediaSourceProvider._mediaSourceAdapters.length.should.equals(1);
+    MediaSourceProvider._mediaSourceAdapters[0].id.should.equals('NativeAdapter');
+  });
+
+  it('should place NativeAdapter first with preferNative=false', () => {
+    MediaSourceProvider._mediaSourceAdapters = [FakeNativeAdapter];
+    MediaSourceProvider._orderMediaSourceAdapters(false);
+    MediaSourceProvider._mediaSourceAdapters.length.should.equals(1);
+    MediaSourceProvider._mediaSourceAdapters[0].id.should.equals('NativeAdapter');
+  });
+});

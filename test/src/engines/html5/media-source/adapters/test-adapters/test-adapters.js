@@ -1,4 +1,22 @@
-class adapter1 implements IMediaSourceAdapter {
+class FakeNativeAdapter implements IMediaSourceAdapter {
+  static get id() {
+    return 'NativeAdapter';
+  }
+}
+
+class FakeHlsAdapter implements IMediaSourceAdapter {
+  static get id() {
+    return 'HlsAdapter';
+  }
+}
+
+class FakeDashAdapter implements IMediaSourceAdapter {
+  static get id() {
+    return 'DashAdapter';
+  }
+}
+
+class Adapter1 implements IMediaSourceAdapter {
   static get id() {
     return 'adapter1';
   }
@@ -26,7 +44,7 @@ class adapter1 implements IMediaSourceAdapter {
   }
 }
 
-class adapter2 implements IMediaSourceAdapter {
+class Adapter2 implements IMediaSourceAdapter {
   static get id() {
     return 'adapter2';
   }
@@ -53,7 +71,7 @@ class adapter2 implements IMediaSourceAdapter {
   }
 }
 
-class adapter3 implements IMediaSourceAdapter {
+class Adapter3 implements IMediaSourceAdapter {
   static get id() {
     return 'adapter3';
   }
@@ -80,4 +98,7 @@ class adapter3 implements IMediaSourceAdapter {
   }
 }
 
-export {adapter1, adapter2, adapter3};
+export {
+  Adapter1, Adapter2, Adapter3,
+  FakeDashAdapter, FakeHlsAdapter, FakeNativeAdapter
+};
