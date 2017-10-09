@@ -97,9 +97,20 @@ describe('mediaSourceProvider:unRegister', () => {
 });
 
 describe('mediaSourceProvider:canPlaySource', () => {
+  let sandbox;
 
   before(() => {
     MediaSourceProvider._mediaSourceAdapters = [Adapter1, Adapter2, Adapter3];
+  });
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    sandbox.stub(MediaSourceProvider, '_orderMediaSourceAdapters', () => {
+    });
+  });
+
+  afterEach(() => {
+    sandbox.restore();
   });
 
   after(() => {
@@ -148,13 +159,24 @@ describe('mediaSourceProvider:canPlaySource', () => {
 });
 
 describe('mediaSourceProvider:getMediaSourceAdapter', () => {
+  let sandbox;
 
   before(() => {
     MediaSourceProvider._mediaSourceAdapters = [Adapter1, Adapter2, Adapter3];
   });
 
   beforeEach(() => {
+  });
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
     MediaSourceProvider._selectedAdapter = null;
+    sandbox.stub(MediaSourceProvider, '_orderMediaSourceAdapters', () => {
+    });
+  });
+
+  afterEach(() => {
+    sandbox.restore();
   });
 
   after(() => {
