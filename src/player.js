@@ -217,6 +217,7 @@ export default class Player extends FakeEventTarget {
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
     this._playbackMiddleware = new PlaybackMiddleware();
+    this._textStyle = new TextStyle();
     this._createReadyPromise();
     this._createPlayerContainer();
     this._appendPosterEl();
