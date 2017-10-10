@@ -21,11 +21,8 @@ class TextStyle {
    */
   static FontFamily: {[string]: string} = {
     "ARIAL": "Arial",
-    "ROBOTO": "Roboto",
-    "ARIAL_UNICODE_MS": "Arial Unicode Ms",
     "HELVETICA": "Helvetica",
     "VERDANA": "Verdana",
-    "PT_SANS_CAPTION": "PT Sans Caption",
     "SANS_SERIF": "sans-serif"
   };
 
