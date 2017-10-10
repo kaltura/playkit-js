@@ -234,6 +234,7 @@ export default class Player extends FakeEventTarget {
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
     this._playbackMiddleware = new PlaybackMiddleware();
+    this._textStyle = new TextStyle();
     this._createReadyPromise();
     this._createPlayerContainer();
     this._appendPosterEl();
@@ -988,6 +989,7 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEvents.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this, Html5Events.PLAY, this._onPlay.bind(this));
+      this._eventManager.listen(this, Html5Events.ENDED, this._onEnded.bind(this));
     }
   }
 
@@ -1079,6 +1081,17 @@ export default class Player extends FakeEventTarget {
       this._firstPlay = false;
       this.dispatchEvent(new FakeEvent(CustomEvents.FIRST_PLAY));
       this._posterManager.hide();
+    }
+  }
+
+  /**
+   * @function _onEnded
+   * @return {void}
+   * @private
+   */
+  _onEnded(): void {
+    if (!this.paused) {
+      this._pause();
     }
   }
 
@@ -1262,7 +1275,7 @@ export default class Player extends FakeEventTarget {
    */
   _setDefaultTrack(type: string, language: string, defaultTrack: Track): void {
     if (language ) {
-      const track: ?Track = this._getTracksByType(type).find(track => track.language === language);
+      const track: ?Track = this._getTracksByType(type).find(track => TextTrack.langComparer(language, track.language));
       if (track) {
         this.selectTrack(track);
       }

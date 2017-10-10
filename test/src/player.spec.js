@@ -1316,6 +1316,46 @@ describe('events', function () {
       }
     });
   });
+
+  describe('ended', () => {
+    let config;
+    let player;
+    let playerContainer;
+
+    before(() => {
+      playerContainer = createElement('DIV', targetId);
+    });
+
+    beforeEach(() => {
+      config = getConfigStructure();
+    });
+
+    afterEach(() => {
+      player.destroy();
+    });
+
+    after(() => {
+      removeVideoElementsFromTestPage();
+      removeElement(targetId);
+    });
+
+    it('should be paused', (done) => {
+      let onPlaying = () => {
+        player.removeEventListener(player.Event.PLAYING, onPlaying);
+        player.addEventListener(player.Event.ENDED, () => {
+          player.paused.should.be.true;
+          done();
+        });
+        player.currentTime = player.duration - 1;
+      };
+
+      config.sources = sourcesConfig.Mp4;
+      player = new Player(config);
+      playerContainer.appendChild(player.getView());
+      player.addEventListener(player.Event.PLAYING, onPlaying);
+      player.play();
+    });
+  });
 });
 
 describe('states', function () {

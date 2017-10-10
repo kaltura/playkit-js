@@ -71,10 +71,11 @@ export default class MediaSourceProvider {
    * @static
    */
   static canPlaySource(source: Source, preferNative: boolean = true): boolean {
+    MediaSourceProvider._orderMediaSourceAdapters(preferNative);
     let mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
     if (source && source.mimetype) {
       for (let i = 0; i < mediaSourceAdapters.length; i++) {
-        if (mediaSourceAdapters[i].canPlayType(source.mimetype, preferNative) && (!source.drmData || mediaSourceAdapters[i].canPlayDrm(source.drmData))) {
+        if (mediaSourceAdapters[i].canPlayType(source.mimetype) && (!source.drmData || mediaSourceAdapters[i].canPlayDrm(source.drmData))) {
           MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
           MediaSourceProvider._logger.debug(`Selected adapter is <${MediaSourceProvider._selectedAdapter.id}>`);
           return true;
@@ -82,6 +83,22 @@ export default class MediaSourceProvider {
       }
     }
     return false;
+  }
+
+  /**
+   * Orders the media source adapters array according to the preferNative value.
+   * @param {boolean} preferNative - Whether to prefer native playback.
+   * @private
+   * @returns {void}
+   */
+  static _orderMediaSourceAdapters(preferNative: boolean): void {
+    MediaSourceProvider._mediaSourceAdapters =
+      MediaSourceProvider._mediaSourceAdapters.filter(mse => mse.id !== 'NativeAdapter');
+    if (preferNative) {
+      MediaSourceProvider._mediaSourceAdapters.unshift(NativeAdapter);
+    } else {
+      MediaSourceProvider._mediaSourceAdapters.push(NativeAdapter);
+    }
   }
 
   /**
