@@ -1254,7 +1254,8 @@ export default class Player extends FakeEventTarget {
         textLanguage = Locale.language;
       }
     } else if (configTextLang === '') {
-        fallbackTextTrack = this._getTracksByType(TrackTypes.TEXT).find(track => track.language === OFF);
+        fallbackTextTrack = this._getTracksByType(TrackTypes.TEXT).find(track => TextTrack.langComparer(OFF, track.language));
+
     } else {
         textLanguage = configTextLang;
     }
