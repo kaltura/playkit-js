@@ -66,7 +66,24 @@ const SUBTITLES_CLASS_NAME: string = 'playkit-subtitles';
  * @type {string}
  * @const
  */
-const LIVE = 'Live';
+const LIVE: string = 'Live';
+
+
+/**
+ *  The auto string, for captions
+ *  @type {string}
+ *  @const
+ */
+const AUTO: string = 'auto';
+
+
+/**
+ *  The off string, for captions
+ *  @type {string}
+ *  @const
+ */
+const OFF: string = 'off';
+
 
 /**
  * The HTML5 player class.
@@ -1211,11 +1228,27 @@ export default class Player extends FakeEventTarget {
   _setDefaultTracks(): void {
     const activeTracks = this.getActiveTracks();
     const playbackConfig = this._config.playback;
+    const configTextLang = playbackConfig.textLanguage;
+    let textLanguage;
+    let fallbackTextTrack;
 
     this.hideTextTrack();
 
-    const textLanguage = (playbackConfig.textLanguage === "auto") ? Locale.language : playbackConfig.textLanguage;
-    this._setDefaultTrack(TrackTypes.TEXT, textLanguage, activeTracks.text);
+    if (configTextLang === AUTO) {
+      if (activeTracks.text) {
+        textLanguage = activeTracks.text.language;
+      } else {
+        textLanguage = Locale.language;
+      }
+    } else if (configTextLang === '') {
+        fallbackTextTrack = this._getTracksByType(TrackTypes.TEXT).find(track => track.language === OFF);
+    } else {
+        textLanguage = configTextLang;
+    }
+
+
+    //const textLanguage = (playbackConfig.textLanguage === "auto") ? Locale.language : playbackConfig.textLanguage;
+    this._setDefaultTrack(TrackTypes.TEXT, textLanguage, fallbackTextTrack);
     this._setDefaultTrack(TrackTypes.AUDIO, playbackConfig.audioLanguage, activeTracks.audio);
   }
 
@@ -1228,7 +1261,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _setDefaultTrack(type: string, language: string, defaultTrack: Track): void {
-    if (language) {
+    if (language ) {
       const track: ?Track = this._getTracksByType(type).find(track => track.language === language);
       if (track) {
         this.selectTrack(track);
