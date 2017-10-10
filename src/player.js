@@ -1267,6 +1267,15 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Get the player TextStyle.
+   * @returns {TextStyle} - The TextStyle class
+   * @public
+   */
+  get TextStyle(): typeof TextStyle {
+    return TextStyle;
+  }
+
+  /**
    * Get the player states.
    * @returns {Object} - The states of the player.
    * @public
