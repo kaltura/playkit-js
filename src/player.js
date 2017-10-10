@@ -1242,8 +1242,8 @@ export default class Player extends FakeEventTarget {
     const activeTracks = this.getActiveTracks();
     const playbackConfig = this._config.playback;
     const configTextLang = playbackConfig.textLanguage;
-    let textLanguage;
-    let fallbackTextTrack;
+    const fallbackTextTrack: ?Track =  this._getTracksByType(TrackTypes.TEXT).find(track => TextTrack.langComparer(OFF, track.language));
+    let textLanguage = '';
 
     this.hideTextTrack();
 
@@ -1253,10 +1253,7 @@ export default class Player extends FakeEventTarget {
       } else {
         textLanguage = Locale.language;
       }
-    } else if (configTextLang === '') {
-        fallbackTextTrack = this._getTracksByType(TrackTypes.TEXT).find(track => TextTrack.langComparer(OFF, track.language));
-
-    } else {
+    } else if (configTextLang !== '') {
         textLanguage = configTextLang;
     }
 
@@ -1274,7 +1271,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @private
    */
-  _setDefaultTrack(type: string, language: string, defaultTrack: Track): void {
+  _setDefaultTrack(type: string, language: string, defaultTrack: ?Track): void {
     if (language ) {
       const track: ?Track = this._getTracksByType(type).find(track => TextTrack.langComparer(language, track.language));
       if (track) {
