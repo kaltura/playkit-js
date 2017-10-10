@@ -1240,28 +1240,29 @@ export default class Player extends FakeEventTarget {
    */
   _setDefaultTracks(): void {
     const activeTracks = this.getActiveTracks();
-    const playbackConfig = this._config.playback;
-    const configTextLang = playbackConfig.textLanguage;
-    const fallbackTextTrack: ?Track =  this._getTracksByType(TrackTypes.TEXT).find(track => TextTrack.langComparer(OFF, track.language));
-    let textLanguage = '';
+    const playbackConfig = this.config.playback;
+    const offTextTrack: ?Track =  this._getTracksByType(TrackTypes.TEXT).find(track => TextTrack.langComparer(OFF, track.language));
 
     this.hideTextTrack();
 
-    if (configTextLang === AUTO) {
+    this._setDefaultTrack(TrackTypes.TEXT, this._getTextLanguage(activeTracks, playbackConfig.textLanguage), offTextTrack);
+    this._setDefaultTrack(TrackTypes.AUDIO, playbackConfig.audioLanguage, activeTracks.audio);
+  }
+
+
+  _getTextLanguage(activeTracks: Object, textLanguage: string): string {
+
+    if (textLanguage === AUTO) {
       if (activeTracks.text) {
         textLanguage = activeTracks.text.language;
       } else {
         textLanguage = Locale.language;
       }
-    } else if (configTextLang !== '') {
-        textLanguage = configTextLang;
     }
 
-
-    //const textLanguage = (playbackConfig.textLanguage === "auto") ? Locale.language : playbackConfig.textLanguage;
-    this._setDefaultTrack(TrackTypes.TEXT, textLanguage, fallbackTextTrack);
-    this._setDefaultTrack(TrackTypes.AUDIO, playbackConfig.audioLanguage, activeTracks.audio);
+    return textLanguage;
   }
+
 
   /**
    * Sets a specific default track.
