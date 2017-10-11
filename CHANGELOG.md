@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.11.0"></a>
+# [0.11.0](https://github.com/kaltura/playkit-js/compare/v0.10.0...v0.11.0) (2017-10-10)
+
+
+### Bug Fixes
+
+* **FEC-7071:** call pause on ended for browsers which don't do it natively ([#129](https://github.com/kaltura/playkit-js/issues/129)) ([56e51a1](https://github.com/kaltura/playkit-js/commit/56e51a1))
+* initialization of textStyle object ([#127](https://github.com/kaltura/playkit-js/issues/127)) ([83bf106](https://github.com/kaltura/playkit-js/commit/83bf106))
+* **FEC-7226, FEC-7243:** create comparer func to default tracks ([#128](https://github.com/kaltura/playkit-js/issues/128)) ([204cc61](https://github.com/kaltura/playkit-js/commit/204cc61))
+* **FEC-7238:** fix captions on IE11 and Edge ([#131](https://github.com/kaltura/playkit-js/issues/131)) ([c79ddf7](https://github.com/kaltura/playkit-js/commit/c79ddf7))
+* order media source adapters depends on preferNative value ([#132](https://github.com/kaltura/playkit-js/issues/132)) ([bb32e2e](https://github.com/kaltura/playkit-js/commit/bb32e2e))
+
+
+### Features
+
+* add default text font family and expose ENUM ([#130](https://github.com/kaltura/playkit-js/issues/130)) ([5384eb2](https://github.com/kaltura/playkit-js/commit/5384eb2))
+
+
+
 <a name="0.10.0"></a>
 # [0.10.0](https://github.com/kaltura/playkit-js/compare/v0.9.0...v0.10.0) (2017-10-02)
 
