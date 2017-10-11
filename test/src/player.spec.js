@@ -10,6 +10,7 @@ import {removeVideoElementsFromTestPage, createElement, removeElement, getConfig
 import PluginManager from '../../src/plugin/plugin-manager'
 import ColorsPlugin from './plugin/test-plugins/colors-plugin'
 import NumbersPlugin from './plugin/test-plugins/numbers-plugin'
+import Locale from '../../src/Utils/Locale'
 
 const targetId = 'player-placeholder_player.spec';
 
@@ -866,6 +867,8 @@ describe('selectTrack - text', function () {
       player.selectTrack(new TextTrack({index: 1, kind: 'captions'}));
     });
   });
+
+
 
   it('should not change the selected text track', (done) => {
     player.ready().then(() => {
@@ -2130,4 +2133,77 @@ describe('volume', function () {
     player.volume = -0.1;
     player.volume.should.equal(0);
   });
+});
+
+describe('getTextLanguage', function (){
+  let config, player, video, track1, track2, playerContainer;
+
+  before(() => {
+    playerContainer = createElement('DIV', targetId);
+  });
+
+  beforeEach(() => {
+    config = getConfigStructure();
+    config.sources = sourcesConfig.MultipleSources;
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
+    video = player._engine.getVideoElement();
+    track1 = document.createElement("track");
+    track2 = document.createElement("track");
+    track1.kind = 'subtitles';
+    track1.label = 'English';
+    track1.default = true;
+    track2.kind = 'subtitles';
+    track2.srclang = 'fr';
+    video.appendChild(track1);
+    video.appendChild(track2);
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElement(targetId);
+  });
+
+  it('should return notAutoTextLanguage - the language the function got', (done) => {
+    player.ready().then(() => {
+      let testText = 'notAutoTextLanguage';
+
+      player._getTextLanguage(player.getActiveTracks(),testText).should.equals(testText);
+
+      done();
+    });
+    player.load();
+  });
+
+
+  it('should return the same as in getactivetrack().text.language with auto config', (done) => {
+    player.ready().then(() => {
+      let activeTracks = player.getActiveTracks();
+      let testText = 'auto';
+
+      player._getTextLanguage(activeTracks,testText).should.equals(activeTracks.text.language);
+
+      done();
+    });
+    player.load();
+  });
+
+
+  it('should return the broswer Locale language', (done) => {
+    player.ready().then(() => {
+      let activeTracks = {};
+      let testText = 'auto';
+
+      player._getTextLanguage(activeTracks,testText).should.equals(Locale.language);
+
+      done();
+    });
+    player.load();
+  });
+
+
 });
