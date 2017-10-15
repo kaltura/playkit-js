@@ -11,7 +11,6 @@ import PluginManager from '../../src/plugin/plugin-manager'
 import ColorsPlugin from './plugin/test-plugins/colors-plugin'
 import NumbersPlugin from './plugin/test-plugins/numbers-plugin'
 import Locale from '../../src/utils/locale'
-import TRACK_TYPES from "../../src/track/track-types";
 
 const targetId = 'player-placeholder_player.spec';
 
@@ -2136,7 +2135,7 @@ describe('volume', function () {
 });
 
 describe('getLanguage', function () {
-  let config, player, video, track1, track2, pgit pulayerContainer;
+  let config, player, video, track1, track2, playerContainer;
 
   before(() => {
     playerContainer = createElement('DIV', targetId);
@@ -2182,7 +2181,6 @@ describe('getLanguage', function () {
     player.ready().then(() => {
       let activeTrack = player.getActiveTracks().text;
       let testText = 'auto';
-      //player._getLanguage(testText, activeTrack, "text").should.equals(activeTrack.language); Locale.language
       player._getLanguage(testText, activeTrack, "text").should.equals(Locale.language);
       done();
     });
