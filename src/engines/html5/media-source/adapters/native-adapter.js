@@ -209,18 +209,19 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   /**
    * Destroys the native adapter.
    * @function destroy
-   * @returns {void}
+   * @returns {Promise<*>} - The destroy promise.
    */
-  destroy(): void {
+  destroy(): Promise<*> {
     NativeAdapter._logger.debug('destroy');
-    super.destroy();
-    this._eventManager.destroy();
-    this._loadPromise = null;
-    this._progressiveSources = [];
-    if (NativeAdapter._drmProtocol) {
-      NativeAdapter._drmProtocol.destroy();
-      NativeAdapter._drmProtocol = null;
-    }
+    return super.destroy().then(() => {
+      this._eventManager.destroy();
+      this._progressiveSources = [];
+      this._loadPromise = null;
+      if (NativeAdapter._drmProtocol) {
+        NativeAdapter._drmProtocol.destroy();
+        NativeAdapter._drmProtocol = null;
+      }
+    });
   }
 
   /**

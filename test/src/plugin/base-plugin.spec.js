@@ -57,16 +57,12 @@ describe('BasePlugin', () => {
     exceptionOccurred.should.be.true;
   });
 
-  it('should throw destroy() exception', () => {
-    let exceptionOccurred = false;
-    try {
-      basePlugin.destroy();
-    } catch (e) {
-      exceptionOccurred = true;
-      e.name.should.equal('NotImplementedException');
-      e.message.should.equal('destroy() method not implemented');
-    }
-    exceptionOccurred.should.be.true;
+  it('should run super destroy()', () => {
+    basePlugin.destroy();
+  });
+
+  it('should run super reset()', () => {
+    basePlugin.reset();
   });
 });
 

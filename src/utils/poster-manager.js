@@ -22,17 +22,19 @@ class PosterManager {
   /**
    * Set the poster source URL
    * @param {string} posterUrl - the poster image URL
+   * @public
    * @returns {void}
    */
   setSrc(posterUrl: ?string): void {
     if (posterUrl) {
       this._posterUrl = posterUrl;
-      this._el.style.backgroundImage = `url("${posterUrl}")`;
+      Utils.Dom.setStyle(this._el, "background-image", `url("${this._posterUrl}")`);
     }
   }
 
   /**
    * Get the poster source URL
+   * @public
    * @returns {string} - the poster image URL
    */
   get src(): string {
@@ -41,6 +43,7 @@ class PosterManager {
 
   /**
    * Get the poster HTML Div element
+   * @public
    * @returns {HTMLDivElement} - Poster HTML Dom element
    */
   getElement(): HTMLDivElement {
@@ -53,16 +56,28 @@ class PosterManager {
    * @returns {void}
    */
   _createEl(): void {
-    if (this._el === undefined) {
+    if (!this._el) {
       const el = this._el = Utils.Dom.createElement("div");
       Utils.Dom.setAttribute(el, "id", Utils.Generator.uniqueId(5));
       Utils.Dom.setAttribute(el, "tabindex", '-1');
+    }
+  }
 
+  /**
+   * Removes the poster element from the dom
+   * @private
+   * @returns {void}
+   */
+  _removeEl(): void {
+    if (this._el) {
+      Utils.Dom.removeChild(this._el.parentNode, this._el);
     }
   }
 
   /**
    * Show the poster image
+   * @public
+   * @private
    * @returns {void}
    */
   show(): void {
@@ -71,10 +86,31 @@ class PosterManager {
 
   /**
    * Hide the poster image
+   * @public
    * @returns {void}
    */
   hide(): void {
     Utils.Dom.setStyle(this._el, "display", "none");
+  }
+
+  /**
+   * Resets the poster url and the background image
+   * @public
+   * @returns {void}
+   */
+  reset(): void {
+    this._posterUrl = '';
+    Utils.Dom.setStyle(this._el, "background-image", '');
+  }
+
+  /**
+   * Destroys the poster element
+   * @public
+   * @returns {void}
+   */
+  destroy(): void {
+    this.reset();
+    this._removeEl();
   }
 }
 

@@ -236,14 +236,23 @@ export default class Player extends FakeEventTarget {
   configure(config: Object): void {
     Utils.Object.mergeDeep(this._config, config);
     this._configureOrLoadPlugins(config.plugins);
-    if (config.sources) {
-      this._maybeResetPlayer();
+    if (!Utils.Object.isEmptyObject(config.sources)) {
+      const receivedSourcesWhenHasEngine: boolean = !!this._engine;
+      if (receivedSourcesWhenHasEngine) {
+        this._reset();
+        Player._logger.debug('Change source started');
+        this.dispatchEvent(new FakeEvent(CustomEvents.CHANGE_SOURCE_STARTED));
+      }
       if (this._selectEngineByPriority()) {
         this._appendEngineEl();
         this._posterManager.setSrc(this._config.metadata.poster);
         this._posterManager.show();
         this._attachMedia();
         this._handlePlaybackConfig();
+        if (receivedSourcesWhenHasEngine) {
+          Player._logger.debug('Change source ended');
+          this.dispatchEvent(new FakeEvent(CustomEvents.CHANGE_SOURCE_ENDED));
+        }
       }
     }
   }
@@ -326,14 +335,21 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.destroy();
     }
+    this._posterManager.destroy();
     this._eventManager.destroy();
     this._pluginManager.destroy();
     this._stateManager.destroy();
+    this._activeTextCues = [];
     this._textDisplaySettings = {};
     this._config = {};
     this._tracks = [];
+    this._engineType = '';
+    this._streamType = '';
     this._readyPromise = null;
     this._firstPlay = true;
+    if (this._el) {
+      Utils.Dom.removeChild(this._el.parentNode, this._el);
+    }
   }
 
   buffered(): void {
@@ -579,7 +595,6 @@ export default class Player extends FakeEventTarget {
     this._config.session.id = sessionId;
   }
 
-
   // </editor-fold>
 
   // <editor-fold desc="Live API">
@@ -805,18 +820,6 @@ export default class Player extends FakeEventTarget {
   // <editor-fold desc="Playback">
 
   /**
-   * Creates the ready promise.
-   * @private
-   * @returns {void}
-   */
-  _createReadyPromise(): void {
-    this._readyPromise = new Promise((resolve, reject) => {
-      this._eventManager.listen(this, CustomEvents.TRACKS_CHANGED, resolve);
-      this._eventManager.listen(this, Html5Events.ERROR, reject);
-    });
-  }
-
-  /**
    * Creates the player container.
    * @private
    * @returns {void}
@@ -865,40 +868,42 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _configureOrLoadPlugins(plugins: Object = {}): void {
-    Object.keys(plugins).forEach((name) => {
-      // If the plugin is already exists in the registry we are updating his config
-      const plugin = this._pluginManager.get(name);
-      if (plugin) {
-        plugin.updateConfig(plugins[name]);
-        this._config.plugins[name] = plugin.getConfig();
-      } else {
-        // We allow to load plugins as long as the player has no engine
-        if (!this._engine) {
-          this._pluginManager.load(name, this, plugins[name]);
-          let plugin = this._pluginManager.get(name);
-          if (plugin) {
-            this._config.plugins[name] = plugin.getConfig();
-            if (typeof plugin.getMiddlewareImpl === "function") {
-              this._playbackMiddleware.use(plugin.getMiddlewareImpl());
-            }
-          }
+    if (plugins) {
+      Object.keys(plugins).forEach((name) => {
+        // If the plugin is already exists in the registry we are updating his config
+        const plugin = this._pluginManager.get(name);
+        if (plugin) {
+          plugin.updateConfig(plugins[name]);
+          this._config.plugins[name] = plugin.getConfig();
         } else {
-          delete this._config.plugins[name];
+          // We allow to load plugins as long as the player has no engine
+          if (!this._engine) {
+            this._pluginManager.load(name, this, plugins[name]);
+            let plugin = this._pluginManager.get(name);
+            if (plugin) {
+              this._config.plugins[name] = plugin.getConfig();
+              if (typeof plugin.getMiddlewareImpl === "function") {
+                this._playbackMiddleware.use(plugin.getMiddlewareImpl());
+              }
+            }
+          } else {
+            delete this._config.plugins[name];
+          }
         }
-      }
-    });
+      });
+    }
   }
 
   /**
-   * Resets the player in case of new sources with existing engine.
+   * Creates the ready promise.
    * @private
    * @returns {void}
    */
-  _maybeResetPlayer(): void {
-    if (this._engine) {
-      Player._logger.debug('New sources on existing engine: reset engine to change media');
-      this._reset();
-    }
+  _createReadyPromise(): void {
+    this._readyPromise = new Promise((resolve, reject) => {
+      this._eventManager.listen(this, CustomEvents.TRACKS_CHANGED, resolve);
+      this._eventManager.listen(this, Html5Events.ERROR, reject);
+    });
   }
 
   /**
@@ -914,16 +919,16 @@ export default class Player extends FakeEventTarget {
     for (let priority of streamPriority) {
       const engineId = (typeof priority.engine === 'string') ? priority.engine.toLowerCase() : '';
       const format = (typeof priority.format === 'string') ? priority.format.toLowerCase() : '';
-      const engine = Player._engines.find((engine) => engine.id === engineId);
-      if (engine) {
+      const Engine = Player._engines.find((Engine) => Engine.id === engineId);
+      if (Engine) {
         const formatSources = sources[format];
         if (formatSources && formatSources.length > 0) {
           const source = formatSources[0];
-          if (engine.canPlaySource(source, preferNative[format])) {
+          if (Engine.canPlaySource(source, preferNative[format])) {
             Player._logger.debug('Source selected: ', formatSources);
+            this._loadEngine(Engine, source);
             this._engineType = engineId;
             this._streamType = format;
-            this._loadEngine(engine, source);
             this.dispatchEvent(new FakeEvent(CustomEvents.SOURCE_SELECTED, {selectedSource: formatSources}));
             return true;
           }
@@ -936,13 +941,22 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Loads the selected engine.
-   * @param {IEngine} engine - The selected engine.
+   * @param {IEngine} Engine - The selected engine.
    * @param {Source} source - The selected source object.
    * @private
    * @returns {void}
    */
-  _loadEngine(engine: typeof IEngine, source: Source): void {
-    this._engine = engine.createEngine(source, this._config);
+  _loadEngine(Engine: typeof IEngine, source: Source) {
+    if (this._engine) {
+      if (this._engine.id === Engine.id) {
+        this._engine.restore(source, this._config);
+      } else {
+        this._engine.destroy();
+        this._engine = Engine.createEngine(source, this._config);
+      }
+    } else {
+      this._engine = Engine.createEngine(source, this._config);
+    }
   }
 
   /**
@@ -952,11 +966,11 @@ export default class Player extends FakeEventTarget {
    */
   _attachMedia(): void {
     if (this._engine) {
-      for (let playerEvent in Html5Events) {
-        this._eventManager.listen(this._engine, Html5Events[playerEvent], (event: FakeEvent) => {
+      Object.keys(Html5Events).forEach((html5Event) => {
+        this._eventManager.listen(this._engine, Html5Events[html5Event], (event: FakeEvent) => {
           return this.dispatchEvent(event);
         });
-      }
+      });
       this._eventManager.listen(this._engine, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
         this._markActiveTrack(event.payload.selectedVideoTrack);
         return this.dispatchEvent(event);
@@ -1079,19 +1093,21 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Reset the necessary components before change media.
+   * Resets the necessary components before change media.
    * @private
    * @returns {void}
    */
   _reset(): void {
-    if (this._engine) {
-      this._engine.destroy();
-    }
-    this._tracks = [];
-    this._textDisplaySettings = {};
-    this._activeTextCues = [];
-    this._firstPlay = true;
+    this.pause();
+    this._posterManager.reset();
+    this._stateManager.reset();
+    this._pluginManager.reset();
     this._eventManager.removeAll();
+    this._activeTextCues = [];
+    this._tracks = [];
+    this._firstPlay = true;
+    this._engineType = '';
+    this._streamType = '';
     this._createReadyPromise();
   }
 

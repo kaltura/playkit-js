@@ -219,6 +219,15 @@ export default class StateManager {
   }
 
   /**
+   * Resets the state manager.
+   * @public
+   * @returns {void}
+   */
+  reset(): void {
+    this._history = [];
+  }
+
+  /**
    * Getter to the current state of the player.
    * @public
    * @returns {State} - The current state object
