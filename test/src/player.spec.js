@@ -11,9 +11,6 @@ import PluginManager from '../../src/plugin/plugin-manager'
 import ColorsPlugin from './plugin/test-plugins/colors-plugin'
 import NumbersPlugin from './plugin/test-plugins/numbers-plugin'
 import Html5 from '../../src/engines/html5/html5'
-import PosterManager from '../../src/utils/poster-manager'
-import StateManager from '../../src/state/state-manager'
-import EventManager from '../../src/event/event-manager'
 
 const targetId = 'player-placeholder_player.spec';
 
@@ -1362,10 +1359,10 @@ describe('events', function () {
   });
 
   describe('change source', () => {
-    let config, player, playerContainer;
+    let config, player;
 
     before(() => {
-      playerContainer = createElement('DIV', targetId);
+      createElement('DIV', targetId);
     });
 
     beforeEach(() => {
@@ -2182,10 +2179,10 @@ describe('volume', function () {
 });
 
 describe('destroy', function () {
-  let sandbox, player, config, playerContainer;
+  let sandbox, player, config;
 
   before(() => {
-    playerContainer = createElement('DIV', targetId);
+    createElement('DIV', targetId);
   });
 
   beforeEach(() => {
@@ -2230,10 +2227,10 @@ describe('destroy', function () {
 });
 
 describe('_reset', function () {
-  let sandbox, player, config, playerContainer;
+  let sandbox, player, config;
 
   before(() => {
-    playerContainer = createElement('DIV', targetId);
+    createElement('DIV', targetId);
   });
 
   beforeEach(() => {
@@ -2276,10 +2273,10 @@ describe('_reset', function () {
 });
 
 describe('_loadEngine', function () {
-  let sandbox, player, config, playerContainer;
+  let sandbox, player, config;
 
   before(() => {
-    playerContainer = createElement('DIV', targetId);
+    createElement('DIV', targetId);
   });
 
   beforeEach(() => {
