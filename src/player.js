@@ -1254,6 +1254,7 @@ export default class Player extends FakeEventTarget {
    * Gets the text value that should be set in the captions - from the browser / activeTrack if the confiuuration is Auto
    * @param {string} language - the language, in case the configuration is not auto
    * @param {Track} activeTracks - active track data
+   * @param {string} type - the track type (text / audio)
    * @private
    * @returns {string}
    */
