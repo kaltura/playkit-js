@@ -869,7 +869,6 @@ describe('selectTrack - text', function () {
   });
 
 
-
   it('should not change the selected text track', (done) => {
     player.ready().then(() => {
       let tracks = player._tracks.filter((track) => {
@@ -2135,7 +2134,7 @@ describe('volume', function () {
   });
 });
 
-describe('getLanguage', function (){
+describe('getLanguage', function () {
   let config, player, video, track1, track2, playerContainer;
 
   before(() => {
@@ -2171,9 +2170,7 @@ describe('getLanguage', function (){
   it('should return notAutoTextLanguage - the language the function got', (done) => {
     player.ready().then(() => {
       let testText = 'notAutoTextLanguage';
-
       player._getLanguage(testText, player.getActiveTracks().text).should.equals(testText);
-
       done();
     });
     player.load();
@@ -2184,9 +2181,7 @@ describe('getLanguage', function (){
     player.ready().then(() => {
       let activeTrack = player.getActiveTracks().text;
       let testText = 'auto';
-
-      player._getLanguage(testText,activeTrack).should.equals(activeTrack.language);
-
+      player._getLanguage(testText, activeTrack).should.equals(activeTrack.language);
       done();
     });
     player.load();
@@ -2197,13 +2192,9 @@ describe('getLanguage', function (){
     player.ready().then(() => {
       let activeTracks = {};
       let testText = 'auto';
-
-      player._getLanguage(testText,activeTracks.text).should.equals(Locale.language);
-
+      player._getLanguage(testText, activeTracks.text).should.equals(Locale.language);
       done();
     });
     player.load();
   });
-
-
 });
