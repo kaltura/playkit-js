@@ -10,7 +10,7 @@ import {removeVideoElementsFromTestPage, createElement, removeElement, getConfig
 import PluginManager from '../../src/plugin/plugin-manager'
 import ColorsPlugin from './plugin/test-plugins/colors-plugin'
 import NumbersPlugin from './plugin/test-plugins/numbers-plugin'
-import Locale from '../../src/utils/Locale'
+import Locale from '../../src/utils/locale'
 
 const targetId = 'player-placeholder_player.spec';
 
