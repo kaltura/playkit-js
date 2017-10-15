@@ -15,12 +15,24 @@
 class TextStyle {
 
   /**
-   * Defined in {@link https://goo.gl/ZcqOOM FCC 12-9}, paragraph 111, footnote
-   * 448.  Each value is an array of the three RGB values for that color.
-   * @enum {!Array.<number>}
+   * Defined set of font families
+   * @enum {Object.<string, string>}}
    * @export
    */
-  static StandardColors: Object = {
+  static FontFamily: {[string]: string} = {
+    "ARIAL": "Arial",
+    "HELVETICA": "Helvetica",
+    "VERDANA": "Verdana",
+    "SANS_SERIF": "sans-serif"
+  };
+
+  /**
+   * Defined in {@link https://goo.gl/ZcqOOM FCC 12-9}, paragraph 111, footnote
+   * 448.  Each value is an array of the three RGB values for that color.
+   * @enum {Object.<string, Array.<number>>}}
+   * @export
+   */
+  static StandardColors: {[string]: Array<number>} = {
     'WHITE': [255, 255, 255],
     'BLACK': [0, 0, 0],
     'RED': [255, 0, 0],
@@ -33,10 +45,10 @@ class TextStyle {
 
   /**
    * Defined in {@link https://goo.gl/ZcqOOM FCC 12-9}, paragraph 111.
-   * @enum {number}
+   * @enum {Object.<string, number>}}
    * @export
    */
-  static StandardOpacities: Object = {
+  static StandardOpacities: {[string]: number} = {
     'OPAQUE': 1,
     'SEMI_HIGH': 0.75,
     'SEMI_LOW': 0.25,
@@ -103,6 +115,11 @@ class TextStyle {
   fontSize: string = '100%';
 
   /**
+   * @type {TextStyle.FontFamily}
+   */
+  fontFamily: string = TextStyle.FontFamily.SANS_SERIF;
+
+  /**
    * @type {TextStyle.StandardColors}
    */
   fontColor: Array<number> = TextStyle.StandardColors.WHITE;
@@ -138,6 +155,7 @@ class TextStyle {
   toCSS(): string {
     let attributes: Array<string> = [];
 
+    attributes.push('font-family: ' + this.fontFamily);
     attributes.push('font-size: ' + this.fontSize);
     attributes.push('color: ' + TextStyle._toRGBA(this.fontColor, this.fontOpacity));
     attributes.push('background-color: ' +

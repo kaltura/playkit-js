@@ -201,12 +201,6 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _streamType: string;
-  /**
-   * Promise which resolves when an engine can be loaded.
-   * @type {Promise<*>}
-   * @private
-   */
-  _canLoadEnginePromise: Promise<*>;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -218,12 +212,12 @@ export default class Player extends FakeEventTarget {
     this._tracks = [];
     this._firstPlay = true;
     this._config = Player._defaultConfig;
-    this._canLoadEnginePromise = Promise.resolve();
     this._eventManager = new EventManager();
     this._posterManager = new PosterManager();
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
     this._playbackMiddleware = new PlaybackMiddleware();
+    this._textStyle = new TextStyle();
     this._createReadyPromise();
     this._createPlayerContainer();
     this._appendPosterEl();
@@ -341,6 +335,7 @@ export default class Player extends FakeEventTarget {
     this._pluginManager.destroy();
     this._stateManager.destroy();
     this._activeTextCues = [];
+    this._textDisplaySettings = {};
     this._config = {};
     this._tracks = [];
     this._engineType = '';
@@ -986,6 +981,7 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEvents.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this, Html5Events.PLAY, this._onPlay.bind(this));
+      this._eventManager.listen(this, Html5Events.ENDED, this._onEnded.bind(this));
     }
   }
 
@@ -1081,6 +1077,17 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @function _onEnded
+   * @return {void}
+   * @private
+   */
+  _onEnded(): void {
+    if (!this.paused) {
+      this._pause();
+    }
+  }
+
+  /**
    * Resets the player in case we received sources when engine exists.
    * @private
    * @returns {void}
@@ -1110,7 +1117,6 @@ export default class Player extends FakeEventTarget {
     this._streamType = '';
     this._createReadyPromise();
   }
-
 
   /**
    * @returns {Object} - The default configuration of the player.
@@ -1259,7 +1265,7 @@ export default class Player extends FakeEventTarget {
    */
   _setDefaultTrack(type: string, language: string, defaultTrack: Track): void {
     if (language) {
-      const track: ?Track = this._getTracksByType(type).find(track => track.language === language);
+      const track: ?Track = this._getTracksByType(type).find(track => TextTrack.langComparer(language, track.language));
       if (track) {
         this.selectTrack(track);
       }
@@ -1281,6 +1287,15 @@ export default class Player extends FakeEventTarget {
    */
   get Event(): { [event: string]: string } {
     return PlayerEvents;
+  }
+
+  /**
+   * Get the player TextStyle.
+   * @returns {TextStyle} - The TextStyle class
+   * @public
+   */
+  get TextStyle(): typeof TextStyle {
+    return TextStyle;
   }
 
   /**
