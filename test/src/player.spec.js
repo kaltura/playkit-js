@@ -11,6 +11,7 @@ import PluginManager from '../../src/plugin/plugin-manager'
 import ColorsPlugin from './plugin/test-plugins/colors-plugin'
 import NumbersPlugin from './plugin/test-plugins/numbers-plugin'
 import Locale from '../../src/utils/locale'
+import TRACK_TYPES from "../../src/track/track-types";
 
 const targetId = 'player-placeholder_player.spec';
 
@@ -2135,7 +2136,7 @@ describe('volume', function () {
 });
 
 describe('getLanguage', function () {
-  let config, player, video, track1, track2, playerContainer;
+  let config, player, video, track1, track2, pgit pulayerContainer;
 
   before(() => {
     playerContainer = createElement('DIV', targetId);
@@ -2151,6 +2152,7 @@ describe('getLanguage', function () {
     track2 = document.createElement("track");
     track1.kind = 'subtitles';
     track1.label = 'English';
+    track1.srclang = 'en';
     track1.default = true;
     track2.kind = 'subtitles';
     track2.srclang = 'fr';
@@ -2170,31 +2172,59 @@ describe('getLanguage', function () {
   it('should return notAutoTextLanguage - the language the function got', (done) => {
     player.ready().then(() => {
       let testText = 'notAutoTextLanguage';
-      player._getLanguage(testText, player.getActiveTracks().text).should.equals(testText);
+      player._getLanguage(testText, player.getActiveTracks().text, "text").should.equals(testText);
       done();
     });
     player.load();
   });
-
 
   it('should return the same as in getactivetrack().text.language with auto config', (done) => {
     player.ready().then(() => {
       let activeTrack = player.getActiveTracks().text;
       let testText = 'auto';
-      player._getLanguage(testText, activeTrack).should.equals(activeTrack.language);
+      //player._getLanguage(testText, activeTrack, "text").should.equals(activeTrack.language); Locale.language
+      player._getLanguage(testText, activeTrack, "text").should.equals(Locale.language);
       done();
     });
     player.load();
   });
-
 
   it('should return the broswer Locale language', (done) => {
     player.ready().then(() => {
       let activeTracks = {};
       let testText = 'auto';
-      player._getLanguage(testText, activeTracks.text).should.equals(Locale.language);
+      player._getLanguage(testText, activeTracks.text, "text").should.equals(Locale.language);
       done();
     });
     player.load();
   });
+
+  it('should return the active track text', (done) => {
+    let video = player._engine.getVideoElement();
+    let track1 = video.getElementsByTagName("track")[0];
+    track1.srclang = "sp";
+    track1.label = "spanish";
+    player.ready().then(() => {
+      let activeTrack = player.getActiveTracks().text;
+      let testText = 'auto';
+      player._getLanguage(testText, activeTrack, "text").should.equals(activeTrack.language);
+      done();
+    });
+    player.load();
+  });
+
+  it('should return the language of the first track in thee array', (done) => {
+    let video = player._engine.getVideoElement();
+    let track1 = video.getElementsByTagName("track")[0];
+    track1.srclang = "sp";
+    track1.label = "spanish";
+    player.ready().then(() => {
+      let activeTrack = {};
+      let testText = 'auto';
+      player._getLanguage(testText, activeTrack, "text").should.equals("sp");
+      done();
+    });
+    player.load();
+  });
+
 });
