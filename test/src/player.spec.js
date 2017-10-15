@@ -10,6 +10,10 @@ import {removeVideoElementsFromTestPage, createElement, removeElement, getConfig
 import PluginManager from '../../src/plugin/plugin-manager'
 import ColorsPlugin from './plugin/test-plugins/colors-plugin'
 import NumbersPlugin from './plugin/test-plugins/numbers-plugin'
+import Html5 from '../../src/engines/html5/html5'
+import PosterManager from '../../src/utils/poster-manager'
+import StateManager from '../../src/state/state-manager'
+import EventManager from '../../src/event/event-manager'
 
 const targetId = 'player-placeholder_player.spec';
 
@@ -1356,10 +1360,50 @@ describe('events', function () {
       player.play();
     });
   });
+
+  describe('change source', () => {
+    let config, player, playerContainer;
+
+    before(() => {
+      playerContainer = createElement('DIV', targetId);
+    });
+
+    beforeEach(() => {
+      config = getConfigStructure();
+      config.sources = sourcesConfig.Mp4;
+    });
+
+    afterEach(() => {
+      player.destroy();
+    });
+
+    after(() => {
+      removeVideoElementsFromTestPage();
+      removeElement(targetId);
+    });
+
+    it('should fire change source started and change source ended', (done) => {
+      let changeSourceStarted = false;
+      player = new Player(config);
+      player.addEventListener(player.Event.CHANGE_SOURCE_STARTED, () => {
+        changeSourceStarted = true;
+      });
+      player.addEventListener(player.Event.CHANGE_SOURCE_ENDED, () => {
+        if (changeSourceStarted) {
+          done();
+        } else {
+          done(new Error('Change source event should called first'));
+        }
+      });
+      player.addEventListener(player.Event.PLAYING, () => {
+        player.configure({sources: sourcesConfig.Mp4});
+      });
+      player.play();
+    });
+  });
 });
 
 describe('states', function () {
-
   let player, config, playerContainer;
 
   before(() => {
@@ -2134,5 +2178,140 @@ describe('volume', function () {
     player.volume.should.equal(1);
     player.volume = -0.1;
     player.volume.should.equal(0);
+  });
+});
+
+describe('destroy', function () {
+  let sandbox, player, config, playerContainer;
+
+  before(() => {
+    playerContainer = createElement('DIV', targetId);
+  });
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    config = getConfigStructure();
+    config.sources = sourcesConfig.Mp4;
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElement(targetId);
+  });
+
+  it('should destroy the player', function () {
+    player = new Player(config);
+    let engineSpy = sandbox.spy(player._engine, 'destroy');
+    let posterMgrSpy = sandbox.spy(player._posterManager, 'destroy');
+    let eventMgrSpy = sandbox.spy(player._eventManager, 'destroy');
+    let pluginMgrSpy = sandbox.spy(player._pluginManager, 'destroy');
+    let stateMgrSpy = sandbox.spy(player._stateManager, 'destroy');
+    player.destroy();
+    engineSpy.should.have.been.calledOnce;
+    posterMgrSpy.should.have.been.calledOnce;
+    eventMgrSpy.should.have.been.calledOnce;
+    pluginMgrSpy.should.have.been.calledOnce;
+    stateMgrSpy.should.have.been.calledOnce;
+    player._activeTextCues.should.be.empty;
+    player._textDisplaySettings.should.be.empty;
+    player._config.should.be.empty;
+    player._tracks.should.be.empty;
+    player._engineType.should.be.empty;
+    player._streamType.should.be.empty;
+    (player._readyPromise === null).should.be.true;
+    player._firstPlay.should.be.true;
+    player._el.childNodes.should.be.empty;
+  });
+});
+
+describe('_reset', function () {
+  let sandbox, player, config, playerContainer;
+
+  before(() => {
+    playerContainer = createElement('DIV', targetId);
+  });
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    config = getConfigStructure();
+    config.sources = sourcesConfig.Mp4;
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElement(targetId);
+  });
+
+  it('should resets the player', function () {
+    player = new Player(config);
+    let posterMgrSpy = sandbox.spy(player._posterManager, 'reset');
+    let eventMgrSpy = sandbox.spy(player._eventManager, 'removeAll');
+    let pluginMgrSpy = sandbox.spy(player._pluginManager, 'reset');
+    let stateMgrSpy = sandbox.spy(player._stateManager, 'reset');
+    player._reset();
+    player.paused.should.be.true;
+    posterMgrSpy.should.have.been.calledOnce;
+    eventMgrSpy.should.have.been.calledOnce;
+    pluginMgrSpy.should.have.been.calledOnce;
+    stateMgrSpy.should.have.been.calledOnce;
+    player._activeTextCues.should.be.empty;
+    player._config.should.not.be.empty;
+    player._tracks.should.be.empty;
+    player._engineType.should.be.empty;
+    player._streamType.should.be.empty;
+    player._readyPromise.should.exist;
+    player._firstPlay.should.be.true;
+    player._el.childNodes.should.not.be.empty;
+  });
+});
+
+describe('_loadEngine', function () {
+  let sandbox, player, config, playerContainer;
+
+  before(() => {
+    playerContainer = createElement('DIV', targetId);
+  });
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    config = getConfigStructure();
+    config.sources = sourcesConfig.Mp4;
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElement(targetId);
+  });
+
+  it('should load an engine for the first time', function () {
+    let spy = sandbox.spy(Html5, 'createEngine');
+    player = new Player(config);
+    spy.should.have.been.calledOnce;
+  });
+
+  it('should call restore for the same engine', function () {
+    let createSpy = sandbox.spy(Html5, 'createEngine');
+    let restoreSpy = sandbox.spy(Html5.prototype, 'restore');
+    player = new Player(config);
+    createSpy.should.have.been.calledOnce;
+    restoreSpy.should.have.callCount(0);
+    player.configure({sources: sourcesConfig.Mp4});
+    createSpy.should.have.been.calledOnce;
+    restoreSpy.should.have.been.calledOnce;
   });
 });
