@@ -46,7 +46,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _showTextTrackFirstTime: { [number]: boolean } = {};
   /**
-   * Flag to indicate when a media source adapter can be loaded.
+   * Promise to indicate when a media source adapter can be loaded.
    * @type {Promise<*>}
    * @private
    */

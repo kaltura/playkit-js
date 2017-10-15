@@ -236,18 +236,23 @@ export default class Player extends FakeEventTarget {
   configure(config: Object): void {
     Utils.Object.mergeDeep(this._config, config);
     this._configureOrLoadPlugins(config.plugins);
-    if (config.sources) {
-      this._maybeResetPlayer();
-      Player._logger.debug('Change source started');
-      this.dispatchEvent(new FakeEvent(CustomEvents.CHANGE_SOURCE_STARTED));
+    if (!Utils.Object.isEmptyObject(config.sources)) {
+      const receivedSourcesWhenHasEngine: boolean = !!this._engine;
+      if (receivedSourcesWhenHasEngine) {
+        this._reset();
+        Player._logger.debug('Change source started');
+        this.dispatchEvent(new FakeEvent(CustomEvents.CHANGE_SOURCE_STARTED));
+      }
       if (this._selectEngineByPriority()) {
         this._appendEngineEl();
         this._posterManager.setSrc(this._config.metadata.poster);
         this._posterManager.show();
         this._attachMedia();
         this._handlePlaybackConfig();
-        Player._logger.debug('Change source ended');
-        this.dispatchEvent(new FakeEvent(CustomEvents.CHANGE_SOURCE_ENDED));
+        if (receivedSourcesWhenHasEngine) {
+          Player._logger.debug('Change source ended');
+          this.dispatchEvent(new FakeEvent(CustomEvents.CHANGE_SOURCE_ENDED));
+        }
       }
     }
   }
@@ -1084,18 +1089,6 @@ export default class Player extends FakeEventTarget {
   _onEnded(): void {
     if (!this.paused) {
       this._pause();
-    }
-  }
-
-  /**
-   * Resets the player in case we received sources when engine exists.
-   * @private
-   * @returns {void}
-   */
-  _maybeResetPlayer(): void {
-    const receivedSourcesWhenHasEngine: boolean = !!this._engine;
-    if (receivedSourcesWhenHasEngine) {
-      this._reset();
     }
   }
 

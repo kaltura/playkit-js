@@ -115,22 +115,20 @@ export default class BasePlugin implements IPlugin {
    * Runs the destroy logic of the plugin.
    * plugin must implement this method.
    * @public
-   * @abstract
+   * @virtual
    * @returns {void}
    */
   destroy(): void {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'destroy()').getError();
   }
 
   /**
    * Runs the reset logic of the plugin.
    * plugin must implement this method.
    * @public
-   * @abstract
+   * @virtual
    * @returns {void}
    */
   reset(): void {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'reset()').getError();
   }
 
   /**
