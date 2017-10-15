@@ -46,4 +46,9 @@ export default class NumbersPlugin extends BasePlugin {
     this._size = 0;
     this.logger.info("destroy", this._numbers, this._firstCellValue, this._lastCellValue, this._size);
   }
+
+  reset() {
+    this._numbers = [1, 2, 3];
+    this._size = 3;
+  }
 }

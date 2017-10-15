@@ -160,5 +160,20 @@ describe('PluginManager.plugins', () => {
     (pluginManager.get("numbers") === undefined).should.be.true;
     pluginManager._plugins.size.should.equal(0);
   });
+
+  it('should reset() all the plugins', () => {
+    pluginManager.load("colors", {}, {}).should.be.true;
+    pluginManager.load("numbers", {}, {}).should.be.true;
+    let colorsPlugin = pluginManager.get("colors");
+    let numbersPlugin = pluginManager.get("numbers");
+    let resetColorsSpy = sandbox.spy(colorsPlugin, "reset");
+    let resetNumbersSpy = sandbox.spy(numbersPlugin, "reset");
+    pluginManager.reset();
+    resetColorsSpy.should.have.been.calledOnce;
+    resetNumbersSpy.should.have.been.calledOnce;
+    pluginManager.get("colors").should.exist;
+    pluginManager.get("numbers").should.exist;
+    pluginManager._plugins.size.should.equal(2);
+  });
 });
 

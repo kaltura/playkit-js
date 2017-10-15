@@ -224,10 +224,11 @@ describe('NativeAdapter: destroy', function () {
     nativeInstance.load().then(() => {
       nativeInstance._loadPromise.should.be.exist;
       Utils.Object.isEmptyObject(nativeInstance._sourceObj).should.be.false;
-      nativeInstance.destroy();
-      (!nativeInstance._loadPromise).should.be.true;
-      Utils.Object.isEmptyObject(nativeInstance._sourceObj).should.be.true;
-      done();
+      nativeInstance.destroy().then(() => {
+        (!nativeInstance._loadPromise).should.be.true;
+        (!nativeInstance._sourceObj).should.be.true;
+        done();
+      });
     });
   });
 });

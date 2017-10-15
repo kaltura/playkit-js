@@ -38,4 +38,9 @@ export default class ColorsPlugin extends BasePlugin {
     this._size = 0;
     this.logger.info("destroy", this._colors, this._favouriteColor, this._size);
   }
+
+  reset() {
+    this._colors = ["pink"];
+    this._size = 1;
+  }
 }

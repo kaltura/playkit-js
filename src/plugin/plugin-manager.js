@@ -80,7 +80,7 @@ export default class PluginManager {
       throw new PlayerError(PlayerError.TYPE.NOT_REGISTERED_PLUGIN, name).getError();
     }
     let pluginClass = PluginManager._registry.get(name);
-    if (pluginClass != null && pluginClass.isValid()) {
+    if (pluginClass && pluginClass.isValid()) {
       this._plugins.set(name, pluginClass.createPlugin(name, player, config));
       logger.debug(`Plugin <${name}> has been loaded`);
       return true;
@@ -96,6 +96,17 @@ export default class PluginManager {
    */
   destroy(): void {
     this._plugins.forEach(this._destroy.bind(this));
+  }
+
+  /**
+   * Iterates over all the plugins and calls reset() method of the plugin's impl.
+   * @public
+   * @returns {void}
+   */
+  reset(): void {
+    this._plugins.forEach((plugin: BasePlugin) => {
+      plugin.reset();
+    });
   }
 
   /**

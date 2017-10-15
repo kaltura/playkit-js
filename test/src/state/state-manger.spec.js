@@ -82,6 +82,11 @@ describe("StateManager", () => {
     stateManager._updateState(PlayerStates.LOADING);
     stateManager._dispatchEvent();
   });
+
+  it("should reset the state manager", () => {
+    stateManager.reset();
+    stateManager.history.should.be.empty;
+  });
 });
 
 describe("StateManager.Transitions:IDLE", () => {
