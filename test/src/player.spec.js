@@ -3,6 +3,7 @@ import Player from '../../src/player'
 import PlayerStates from '../../src/state/state-types'
 import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../../src/event/events'
 import sourcesConfig from './configs/sources.json'
+import Track from '../../src/track/track'
 import VideoTrack from '../../src/track/video-track'
 import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
@@ -10,12 +11,12 @@ import {removeVideoElementsFromTestPage, createElement, removeElement, getConfig
 import PluginManager from '../../src/plugin/plugin-manager'
 import ColorsPlugin from './plugin/test-plugins/colors-plugin'
 import NumbersPlugin from './plugin/test-plugins/numbers-plugin'
+import Locale from '../../src/utils/locale'
 import Html5 from '../../src/engines/html5/html5'
 
 const targetId = 'player-placeholder_player.spec';
 
 describe("play", function () {
-
   let config, player, playerContainer;
 
   before(() => {
@@ -867,6 +868,7 @@ describe('selectTrack - text', function () {
       player.selectTrack(new TextTrack({index: 1, kind: 'captions'}));
     });
   });
+
 
   it('should not change the selected text track', (done) => {
     player.ready().then(() => {
@@ -2310,5 +2312,100 @@ describe('_loadEngine', function () {
     player.configure({sources: sourcesConfig.Mp4});
     createSpy.should.have.been.calledOnce;
     restoreSpy.should.have.been.calledOnce;
+  });
+});
+
+describe('_getLanguage', function () {
+  let config, player, sandbox;
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    config = getConfigStructure();
+    player = new Player(config);
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+    player.destroy();
+  });
+
+  it('should return the configured language', () => {
+    let configuredLanguage = 'ita';
+    player._getLanguage(configuredLanguage, new TextTrack({}), "text").should.equals(configuredLanguage);
+  });
+
+  it('should return the locale language', () => {
+    let configuredLanguage = 'auto';
+    let engTrackOptions = {
+      active: true,
+      label: "Eng",
+      language: "eng",
+      kind: 'subtitles'
+    };
+    let engTrack = new TextTrack(engTrackOptions);
+
+    sandbox.stub(player, '_getTracksByType', () => {
+      return [engTrack];
+    });
+
+    let resultLang = player._getLanguage(configuredLanguage, engTrack, "text");
+    Track.langComparer(resultLang, Locale.language).should.be.true;
+  });
+
+  it('should return the default text track language', () => {
+    let configuredLanguage = 'auto';
+    let gerTrackOptions = {
+      active: true,
+      label: "Germany",
+      language: "ger",
+      kind: 'subtitles'
+    };
+    let gerTrack = new TextTrack(gerTrackOptions);
+
+    sandbox.stub(player, '_getTracksByType', () => {
+      return [gerTrack];
+    });
+
+    player._getLanguage(configuredLanguage, gerTrack, "text").should.equals(gerTrack.language);
+  });
+
+  it('should return the first track language ', () => {
+    let configuredLanguage = 'auto';
+    let gerTrackOptions = {
+      active: true,
+      label: "Germany",
+      language: "ger",
+      kind: 'subtitles'
+    };
+    let gerTrack = new TextTrack(gerTrackOptions);
+
+    sandbox.stub(player, '_getTracksByType', () => {
+      return [gerTrack];
+    });
+
+    player._getLanguage(configuredLanguage, null, "text").should.equals(gerTrack.language);
+  });
+
+  it('should return the first track language even if off track sent as default ', () => {
+    let configuredLanguage = 'auto';
+    let gerTrackOptions = {
+      active: true,
+      label: "Germany",
+      language: "ger",
+      kind: 'subtitles'
+    };
+    let offTrackOptions = {
+      active: true,
+      label: "Off",
+      language: "off"
+    };
+    let gerTrack = new TextTrack(gerTrackOptions);
+    let offTrack = new TextTrack(offTrackOptions);
+
+    sandbox.stub(player, '_getTracksByType', () => {
+      return [gerTrack, offTrack];
+    });
+
+    player._getLanguage(configuredLanguage, offTrack, "text").should.equals(gerTrack.language);
   });
 });

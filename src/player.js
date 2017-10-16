@@ -66,7 +66,24 @@ const SUBTITLES_CLASS_NAME: string = 'playkit-subtitles';
  * @type {string}
  * @const
  */
-const LIVE = 'Live';
+const LIVE: string = 'Live';
+
+
+/**
+ *  The auto string, for captions
+ *  @type {string}
+ *  @const
+ */
+const AUTO: string = 'auto';
+
+
+/**
+ *  The off string, for captions
+ *  @type {string}
+ *  @const
+ */
+const OFF: string = 'off';
+
 
 /**
  * The HTML5 player class.
@@ -1227,7 +1244,7 @@ export default class Player extends FakeEventTarget {
         index: textTracks.length,
         kind: "subtitles",
         label: "Off",
-        language: "off"
+        language: OFF
       }));
     }
   }
@@ -1239,14 +1256,39 @@ export default class Player extends FakeEventTarget {
    */
   _setDefaultTracks(): void {
     const activeTracks = this.getActiveTracks();
-    const playbackConfig = this._config.playback;
+    const playbackConfig = this.config.playback;
+    const offTextTrack: ?Track = this._getTracksByType(TrackTypes.TEXT).find(track => TextTrack.langComparer(OFF, track.language));
 
     this.hideTextTrack();
 
-    const textLanguage = (playbackConfig.textLanguage === "auto") ? Locale.language : playbackConfig.textLanguage;
-    this._setDefaultTrack(TrackTypes.TEXT, textLanguage, activeTracks.text);
+    this._setDefaultTrack(TrackTypes.TEXT, this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackTypes.TEXT), offTextTrack);
     this._setDefaultTrack(TrackTypes.AUDIO, playbackConfig.audioLanguage, activeTracks.audio);
   }
+
+
+  /**
+   * Gets the track language that should be set by default.
+   * @param {string} configuredLanguage - The configured language (can be also "auto").
+   * @param {Track} defaultTrack - The default track.
+   * @param {string} type - The track type.
+   * @private
+   * @returns {string} - The track language to set by default.
+   */
+  _getLanguage(configuredLanguage: string, defaultTrack: ?Track, type: string): string {
+    if (configuredLanguage === AUTO) {
+      const tracks = this._getTracksByType(type);
+      const localeTrack: ?Track = tracks.find(track => Track.langComparer(Locale.language, track.language));
+      if (localeTrack) {
+        configuredLanguage = localeTrack.language;
+      } else if (defaultTrack && defaultTrack.language !== OFF) {
+        configuredLanguage = defaultTrack.language;
+      } else if (tracks && tracks.length > 0) {
+        configuredLanguage = tracks[0].language;
+      }
+    }
+    return configuredLanguage;
+  }
+
 
   /**
    * Sets a specific default track.
@@ -1256,9 +1298,9 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @private
    */
-  _setDefaultTrack(type: string, language: string, defaultTrack: Track): void {
+  _setDefaultTrack(type: string, language: string, defaultTrack: ?Track): void {
     if (language) {
-      const track: ?Track = this._getTracksByType(type).find(track => TextTrack.langComparer(language, track.language));
+      const track: ?Track = this._getTracksByType(type).find(track => Track.langComparer(language, track.language));
       if (track) {
         this.selectTrack(track);
       }
