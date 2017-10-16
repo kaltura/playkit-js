@@ -17,7 +17,6 @@ import Html5 from '../../src/engines/html5/html5'
 const targetId = 'player-placeholder_player.spec';
 
 describe("play", function () {
-
   let config, player, playerContainer;
 
   before(() => {
