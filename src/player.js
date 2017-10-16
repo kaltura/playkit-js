@@ -1244,7 +1244,7 @@ export default class Player extends FakeEventTarget {
         index: textTracks.length,
         kind: "subtitles",
         label: "Off",
-        language: "off"
+        language: OFF
       }));
     }
   }
@@ -1272,7 +1272,7 @@ export default class Player extends FakeEventTarget {
    * @param {Track} defaultTrack - The default track.
    * @param {string} type - The track type.
    * @private
-   * @returns {string}
+   * @returns {string} - The track language to set by default.
    */
   _getLanguage(configuredLanguage: string, defaultTrack: ?Track, type: string): string {
     if (configuredLanguage === AUTO) {
