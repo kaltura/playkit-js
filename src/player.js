@@ -1265,7 +1265,6 @@ export default class Player extends FakeEventTarget {
     this._setDefaultTrack(TrackTypes.AUDIO, playbackConfig.audioLanguage, activeTracks.audio);
   }
 
-
   /**
    * Gets the track language that should be set by default.
    * @param {string} configuredLanguage - The configured language (can be also "auto").
@@ -1275,26 +1274,26 @@ export default class Player extends FakeEventTarget {
    * @returns {string} - The track language to set by default.
    */
   _getLanguage(configuredLanguage: string, defaultTrack: ?Track, type: string): string {
-    if (configuredLanguage === AUTO) {
+    let language = configuredLanguage;
+    if (language === AUTO) {
       const tracks = this._getTracksByType(type);
       const localeTrack: ?Track = tracks.find(track => Track.langComparer(Locale.language, track.language));
       if (localeTrack) {
-        configuredLanguage = localeTrack.language;
+        language = localeTrack.language;
       } else if (defaultTrack && defaultTrack.language !== OFF) {
-        configuredLanguage = defaultTrack.language;
+        language = defaultTrack.language;
       } else if (tracks && tracks.length > 0) {
-        configuredLanguage = tracks[0].language;
+        language = tracks[0].language;
       }
     }
-    return configuredLanguage;
+    return language;
   }
-
 
   /**
    * Sets a specific default track.
    * @param {string} type - The track type.
    * @param {string} language - The track language.
-   * @param {Track} defaultTrack - The default track to set in case there in case no language configured.
+   * @param {?Track} defaultTrack - The default track to set in case there in case no language configured.
    * @returns {void}
    * @private
    */

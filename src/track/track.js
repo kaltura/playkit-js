@@ -6,18 +6,19 @@
  */
 export default class Track {
   /**
-   * Comparing language strings according to their length.
+   * Comparing language strings.
    * @param {string} inputLang - The configured language.
    * @param {string} trackLang - The default track language.
    * @returns {boolean} - Whether the strings are equal or starts with the same substring.
    */
   static langComparer(inputLang: string, trackLang: string): boolean {
-    const inputLangLength = inputLang.length;
-    const trackLangLength = trackLang.length;
-    if (inputLangLength === trackLangLength) {
-      return inputLang === trackLang;
+    try {
+      inputLang = inputLang.toLowerCase();
+      trackLang = trackLang.toLowerCase();
+      return inputLang.startsWith(trackLang) || trackLang.startsWith(inputLang);
+    } catch (e) {
+      return false;
     }
-    return (inputLangLength > trackLangLength ? inputLang.startsWith(trackLang) : trackLang.startsWith(inputLang));
   }
 
   /**
