@@ -6,6 +6,21 @@
  */
 export default class Track {
   /**
+   * Comparing language strings according to their length.
+   * @param {string} inputLang - The configured language.
+   * @param {string} trackLang - The default track language.
+   * @returns {boolean} - Whether the strings are equal or starts with the same substring.
+   */
+  static langComparer(inputLang: string, trackLang: string): boolean {
+    const inputLangLength = inputLang.length;
+    const trackLangLength = trackLang.length;
+    if (inputLangLength === trackLangLength) {
+      return inputLang === trackLang;
+    }
+    return (inputLangLength > trackLangLength ? inputLang.startsWith(trackLang) : trackLang.startsWith(inputLang));
+  }
+
+  /**
    * The id of the track.
    * @member
    * @type {string}

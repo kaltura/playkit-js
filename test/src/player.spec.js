@@ -3,6 +3,7 @@ import Player from '../../src/player'
 import PlayerStates from '../../src/state/state-types'
 import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../../src/event/events'
 import sourcesConfig from './configs/sources.json'
+import Track from '../../src/track/track'
 import VideoTrack from '../../src/track/video-track'
 import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
@@ -2315,95 +2316,97 @@ describe('_loadEngine', function () {
   });
 });
 
-describe('getLanguage', function () {
-  let config, player, video, track1, track2, playerContainer;
-
-  before(() => {
-    playerContainer = createElement('DIV', targetId);
-  });
+describe('_getLanguage', function () {
+  let config, player, sandbox;
 
   beforeEach(() => {
+    sandbox = sinon.sandbox.create();
     config = getConfigStructure();
-    config.sources = sourcesConfig.MultipleSources;
     player = new Player(config);
-    playerContainer.appendChild(player.getView());
-    video = player._engine.getVideoElement();
-    track1 = document.createElement("track");
-    track2 = document.createElement("track");
-    track1.kind = 'subtitles';
-    track1.label = 'English';
-    track1.srclang = 'en';
-    track1.default = true;
-    track2.kind = 'subtitles';
-    track2.srclang = 'fr';
-    video.appendChild(track1);
-    video.appendChild(track2);
   });
 
   afterEach(() => {
+    sandbox.restore();
     player.destroy();
   });
 
-  after(() => {
-    removeVideoElementsFromTestPage();
-    removeElement(targetId);
+  it('should return the configured language', () => {
+    let configuredLanguage = 'ita';
+    player._getLanguage(configuredLanguage, new TextTrack({}), "text").should.equals(configuredLanguage);
   });
 
-  it('should return notAutoTextLanguage - the language the function got', (done) => {
-    player.ready().then(() => {
-      let testText = 'notAutoTextLanguage';
-      player._getLanguage(testText, player.getActiveTracks().text, "text").should.equals(testText);
-      done();
+  it('should return the locale language', () => {
+    let configuredLanguage = 'auto';
+    let engTrackOptions = {
+      active: true,
+      label: "Eng",
+      language: "eng",
+      kind: 'subtitles'
+    };
+    let engTrack = new TextTrack(engTrackOptions);
+
+    sandbox.stub(player, '_getTracksByType', () => {
+      return [engTrack];
     });
-    player.load();
+
+    let resultLang = player._getLanguage(configuredLanguage, engTrack, "text");
+    Track.langComparer(resultLang, Locale.language).should.be.true;
   });
 
-  it('should return the same as in getactivetrack().text.language with auto config', (done) => {
-    player.ready().then(() => {
-      let activeTrack = player.getActiveTracks().text;
-      let testText = 'auto';
-      player._getLanguage(testText, activeTrack, "text").should.equals(Locale.language);
-      done();
+  it('should return the default text track language', () => {
+    let configuredLanguage = 'auto';
+    let gerTrackOptions = {
+      active: true,
+      label: "Germany",
+      language: "ger",
+      kind: 'subtitles'
+    };
+    let gerTrack = new TextTrack(gerTrackOptions);
+
+    sandbox.stub(player, '_getTracksByType', () => {
+      return [gerTrack];
     });
-    player.load();
+
+    player._getLanguage(configuredLanguage, gerTrack, "text").should.equals(gerTrack.language);
   });
 
-  it('should return the broswer Locale language', (done) => {
-    player.ready().then(() => {
-      let activeTracks = {};
-      let testText = 'auto';
-      player._getLanguage(testText, activeTracks.text, "text").should.equals(Locale.language);
-      done();
+  it('should return the first track language ', () => {
+    let configuredLanguage = 'auto';
+    let gerTrackOptions = {
+      active: true,
+      label: "Germany",
+      language: "ger",
+      kind: 'subtitles'
+    };
+    let gerTrack = new TextTrack(gerTrackOptions);
+
+    sandbox.stub(player, '_getTracksByType', () => {
+      return [gerTrack];
     });
-    player.load();
+
+    player._getLanguage(configuredLanguage, null, "text").should.equals(gerTrack.language);
   });
 
-  it('should return the active track text', (done) => {
-    let video = player._engine.getVideoElement();
-    let track1 = video.getElementsByTagName("track")[0];
-    track1.srclang = "sp";
-    track1.label = "spanish";
-    player.ready().then(() => {
-      let activeTrack = player.getActiveTracks().text;
-      let testText = 'auto';
-      player._getLanguage(testText, activeTrack, "text").should.equals(activeTrack.language);
-      done();
+  it('should return the first track language even if off track sent as default ', () => {
+    let configuredLanguage = 'auto';
+    let gerTrackOptions = {
+      active: true,
+      label: "Germany",
+      language: "ger",
+      kind: 'subtitles'
+    };
+    let offTrackOptions = {
+      active: true,
+      label: "Off",
+      language: "off"
+    };
+    let gerTrack = new TextTrack(gerTrackOptions);
+    let offTrack = new TextTrack(offTrackOptions);
+
+    sandbox.stub(player, '_getTracksByType', () => {
+      return [gerTrack, offTrack];
     });
-    player.load();
-  });
 
-  it('should return the language of the first track in thee array', (done) => {
-    let video = player._engine.getVideoElement();
-    let track1 = video.getElementsByTagName("track")[0];
-    track1.srclang = "sp";
-    track1.label = "spanish";
-    player.ready().then(() => {
-      let activeTrack = {};
-      let testText = 'auto';
-      player._getLanguage(testText, activeTrack, "text").should.equals("sp");
-      done();
-    });
-    player.load();
+    player._getLanguage(configuredLanguage, offTrack, "text").should.equals(gerTrack.language);
   });
-
 });
