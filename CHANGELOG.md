@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.12.0"></a>
+# [0.12.0](https://github.com/kaltura/playkit-js/compare/v0.11.0...v0.12.0) (2017-10-16)
+
+
+### Bug Fixes
+
+* **FEC-7228:** fixing default captions flow ([#133](https://github.com/kaltura/playkit-js/issues/133)) ([56a9931](https://github.com/kaltura/playkit-js/commit/56a9931))
+
+
+### Features
+
+* change media ([#124](https://github.com/kaltura/playkit-js/issues/124)) ([d8e9af4](https://github.com/kaltura/playkit-js/commit/d8e9af4))
+
+
+
 <a name="0.11.0"></a>
 # [0.11.0](https://github.com/kaltura/playkit-js/compare/v0.10.0...v0.11.0) (2017-10-10)
 
