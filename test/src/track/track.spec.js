@@ -5,9 +5,11 @@ describe('Track', () => {
     it('should compare 2 languages with same length', () => {
       Track.langComparer('ita', 'ita').should.be.true;
       Track.langComparer('ita', 'eng').should.be.false;
+      Track.langComparer('ita', 'ItA').should.be.true;
     });
 
     it('should compare 2 languages with different length', () => {
+      Track.langComparer('ita', 'It').should.be.true;
       Track.langComparer('ita', 'it').should.be.true;
       Track.langComparer('it', 'ita').should.be.true;
       Track.langComparer('es', 'ita').should.be.false;
