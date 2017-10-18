@@ -93,6 +93,23 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._init(source, config);
   }
 
+  static canAutoPlayPromise: Promise<boolean>;
+
+  static testVideoCapabilities(): void {
+    const vid = Utils.Dom.createElement('video');
+    vid.src = 'https://www.w3schools.com/html/mov_bbb.mp4';
+    Html5.canAutoPlayPromise = vid.play();
+  }
+
+  canAutoPlay(): Promise<boolean> {
+    if (Html5.canAutoPlayPromise) {
+      return Html5.canAutoPlayPromise
+        .then(_ => true)
+        .catch(_ => false);
+    }
+    return Promise.resolve(true);
+  }
+
   /**
    * Restores the engine.
    * @param {Source} source - The selected source object.

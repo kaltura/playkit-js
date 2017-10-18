@@ -7,6 +7,7 @@ declare interface IEngine {
   static id: string;
   static createEngine(source: Source, config: Object): IEngine;
   static canPlaySource(source: Source): boolean;
+  static testVideoCapabilities(): void;
   restore(source: Source, config: Object): void;
   destroy(): void;
   attach(): void;
@@ -24,6 +25,7 @@ declare interface IEngine {
   seekToLiveEdge(): void;
   isLive(): boolean;
   getVideoElement(): HTMLVideoElement;
+  canAutoPlay(): Promise<boolean>;
   +id: string;
   currentTime: number;
   +duration: number;

@@ -225,6 +225,7 @@ export default class Player extends FakeEventTarget {
    */
   constructor(config: Object = {}) {
     super();
+    Player.testEnginesCapabilities();
     this._env = Env;
     this._tracks = [];
     this._firstPlay = true;
@@ -239,6 +240,10 @@ export default class Player extends FakeEventTarget {
     this._createPlayerContainer();
     this._appendPosterEl();
     this.configure(config);
+  }
+
+  static testEnginesCapabilities(): void {
+    Player._engines.forEach(Engine => Engine.testVideoCapabilities());
   }
 
   // <editor-fold desc="Public API">
@@ -1023,39 +1028,53 @@ export default class Player extends FakeEventTarget {
       if (typeof this._config.playback.playsinline === 'boolean') {
         this.playsinline = this._config.playback.playsinline;
       }
-      if (this._config.playback.preload === "auto") {
-        /**
-         * If ads plugin enabled it's his responsibility to preload the content player.
-         * So to avoid loading the player twice which can cause errors on MSEs we are not
-         * calling load from the player.
-         * TODO: Change it to check the ads configuration when we will develop the ads manager.
-         */
-        if (!this._config.plugins.ima) {
-          this.load();
+      if (this._canPreloadAuto()) {
+        this.load();
+      }
+      this._canAutoPlay().then((canAutoPlay) => {
+        if (canAutoPlay) {
+          this.play();
         }
-      }
-      if (this._canAutoPlay()) {
-        this.play();
-      }
+      });
     }
   }
 
   /**
-   * Determine whether we can auto playing or not.
-   * @returns {boolean} - Whether an auto play can be done.
-   * @private
+   * If ads plugin enabled it's his responsibility to preload the content player.
+   * So to avoid loading the player twice which can cause errors on MSEs we are not
+   * calling load from the player.
+   * TODO: Change it to check the ads configuration when we will develop the ads manager.
    */
-  _canAutoPlay(): ?boolean {
-    if (!this._config.playback.autoplay) {
-      return false;
-    }
-    let device = this._env.device.type;
-    let os = this._env.os.name;
-    if (device) {
-      return (os === 'iOS') ? this.muted && this.playsinline : this.muted;
-    }
-    return true;
+  _canPreloadAuto(): boolean {
+    return (this._config.playback.preload === "auto" && !this._config.plugins.ima);
   }
+
+  _canAutoPlay(): Promise<boolean> {
+    if (this.config.playback.autoplay) {
+      if (this.muted) {
+        return Promise.resolve(true);
+      }
+      return this._engine.canAutoPlay();
+    }
+    return Promise.resolve(false);
+  }
+
+  // /**
+  //  * Determine whether we can auto playing or not.
+  //  * @returns {boolean} - Whether an auto play can be done.
+  //  * @private
+  //  */
+  // _canAutoPlay(): ?boolean {
+  //   if (this.config.playback.autoplay) {
+  //     return false;
+  //   }
+  //   let device = this._env.device.type;
+  //   let os = this._env.os.name;
+  //   if (device) {
+  //     return (os === 'iOS') ? this.muted && this.playsinline : this.muted;
+  //   }
+  //   return true;
+  // }
 
   /**
    * Start/resume the engine playback.
