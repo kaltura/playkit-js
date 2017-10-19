@@ -6,6 +6,9 @@ import {registerPlugin} from './plugin/plugin-manager'
 import BaseDrmProtocol from './drm/base-drm-protocol'
 import BaseMiddleware from './middleware/base-middleware'
 import BasePlugin from './plugin/base-plugin'
+import State from './state/state'
+import Event from './event/fake-event'
+import * as CustomEvent from './event/custom-events/index'
 import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
@@ -34,8 +37,14 @@ export {registerMediaSourceAdapter, BaseMediaSourceAdapter};
 // Export the plugin framework
 export {registerPlugin, BasePlugin, BaseMiddleware};
 
-// Export the tracks classes
+// Export the track classes
 export {Track, VideoTrack, AudioTrack, TextTrack, TextStyle};
+
+// Export state class
+export {State};
+
+// Export event classes
+export {Event, CustomEvent}
 
 // Export utils library
 export {Utils};
