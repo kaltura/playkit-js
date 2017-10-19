@@ -4,7 +4,7 @@ import AudioTrack from '../../../../../../src/track/audio-track'
 import TextTrack from '../../../../../../src/track/text-track'
 import {removeVideoElementsFromTestPage} from '../../../../utils/test-utils'
 import sourcesConfig from '../../../../configs/sources.json'
-import * as Utils from '../../../../../../src/utils/util'
+import {Obj} from '../../../../../../src/utils/index'
 import {CUSTOM_EVENTS} from '../../../../../../src/event/events'
 
 
@@ -223,7 +223,7 @@ describe('NativeAdapter: destroy', function () {
   it('should destroyed', (done) => {
     nativeInstance.load().then(() => {
       nativeInstance._loadPromise.should.be.exist;
-      Utils.Object.isEmptyObject(nativeInstance._sourceObj).should.be.false;
+      Obj.isEmptyObject(nativeInstance._sourceObj).should.be.false;
       nativeInstance.destroy().then(() => {
         (!nativeInstance._loadPromise).should.be.true;
         (!nativeInstance._sourceObj).should.be.true;

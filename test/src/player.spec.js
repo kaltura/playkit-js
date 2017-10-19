@@ -11,8 +11,9 @@ import {removeVideoElementsFromTestPage, createElement, removeElement, getConfig
 import PluginManager from '../../src/plugin/plugin-manager'
 import ColorsPlugin from './plugin/test-plugins/colors-plugin'
 import NumbersPlugin from './plugin/test-plugins/numbers-plugin'
-import Locale from '../../src/utils/locale'
+import {Locale} from '../../src/utils/index'
 import Html5 from '../../src/engines/html5/html5'
+import PlayerDefaultConfig from '../../src/player-config.json'
 
 const targetId = 'player-placeholder_player.spec';
 
@@ -467,7 +468,7 @@ describe('getTracks dummy', () => {
     createElement('DIV', targetId);
     config = getConfigStructure();
     config.sources = sourcesConfig.Mp4;
-    player = new Player(targetId, config);
+    player = new Player(config);
     player._tracks = [
       new VideoTrack(),
       new AudioTrack(),
@@ -683,7 +684,7 @@ describe('selectTrack - audio', function () {
   beforeEach(() => {
     config = getConfigStructure();
     config.sources = sourcesConfig.Mp4;
-    player = new Player(targetId);
+    player = new Player();
   });
 
   afterEach(() => {
@@ -2218,7 +2219,7 @@ describe('destroy', function () {
     stateMgrSpy.should.have.been.calledOnce;
     player._activeTextCues.should.be.empty;
     player._textDisplaySettings.should.be.empty;
-    player._config.should.be.empty;
+    player._config.should.deep.equal(PlayerDefaultConfig);
     player._tracks.should.be.empty;
     player._engineType.should.be.empty;
     player._streamType.should.be.empty;

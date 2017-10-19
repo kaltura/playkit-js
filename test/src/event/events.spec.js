@@ -1,5 +1,5 @@
 import * as events from '../../../src/event/events'
-import {Object as ObjectUtils} from '../../../src/utils/util'
+import {Obj} from '../../../src/utils/index'
 
 describe('events', () => {
   it('should equals player events', () => {
@@ -59,6 +59,6 @@ describe('events', () => {
       AD_MUTED: 'admuted',
       AD_PROGRESS: 'adprogress'
     });
-    events.PLAYER_EVENTS.should.deep.equals(ObjectUtils.merge([events.HTML5_EVENTS, events.CUSTOM_EVENTS]));
+    events.PLAYER_EVENTS.should.deep.equals(Obj.merge([events.HTML5_EVENTS, events.CUSTOM_EVENTS]));
   });
 });

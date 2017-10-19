@@ -1,6 +1,6 @@
 import BaseMiddleware from '../../../src/middleware/base-middleware'
 import Middleware from '../../../src/middleware/middleware'
-import LoggerFactory from '../../../src/utils/logger'
+import {LoggerFactory} from '../../../src/utils/index'
 
 class M1 extends BaseMiddleware {
   id = 'M1';
