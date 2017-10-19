@@ -15,7 +15,6 @@ module.exports = function (config) {
       'Chrome',
       'Firefox'
     ],
-    browserNoActivityTimeout: 60000,
     concurrency: 1,
     singleRun: true,
     colors: true,
@@ -81,7 +80,7 @@ module.exports = function (config) {
     client: {
       mocha: {
         reporter: 'html',
-        timeout: 10000
+        timeout: 20000
       }
     }
   };
