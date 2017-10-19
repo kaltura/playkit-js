@@ -2,7 +2,7 @@
 import Player from '../player'
 import EventManager from '../event/event-manager'
 import State from './state'
-import PlayerStates from './state-types'
+import PlayerStateType from './state-types'
 import {Html5EventType} from '../event/event-types'
 import FakeEvent from '../event/fake-event'
 import {LoggerFactory} from '../utils/index'
@@ -61,74 +61,74 @@ export default class StateManager {
    * @private
    */
   _transitions: Transition = {
-    [PlayerStates.IDLE]: {
+    [PlayerStateType.IDLE]: {
       [Html5EventType.LOAD_START]: () => {
-        this._updateState(PlayerStates.LOADING);
+        this._updateState(PlayerStateType.LOADING);
         this._dispatchEvent();
       },
       [Html5EventType.PLAY]: () => {
-        this._updateState(PlayerStates.BUFFERING);
+        this._updateState(PlayerStateType.BUFFERING);
         this._dispatchEvent();
       }
     },
-    [PlayerStates.LOADING]: {
+    [PlayerStateType.LOADING]: {
       [Html5EventType.LOADED_METADATA]: () => {
         if (this._player.config.playback.autoplay) {
-          this._updateState(PlayerStates.PLAYING);
+          this._updateState(PlayerStateType.PLAYING);
         } else {
-          this._updateState(PlayerStates.PAUSED);
+          this._updateState(PlayerStateType.PAUSED);
         }
         this._dispatchEvent();
       },
       [Html5EventType.ERROR]: () => {
-        this._updateState(PlayerStates.IDLE);
+        this._updateState(PlayerStateType.IDLE);
         this._dispatchEvent();
       }
     },
-    [PlayerStates.PAUSED]: {
+    [PlayerStateType.PAUSED]: {
       [Html5EventType.PLAY]: () => {
-        this._updateState(PlayerStates.PLAYING);
+        this._updateState(PlayerStateType.PLAYING);
         this._dispatchEvent();
       },
       [Html5EventType.PLAYING]: () => {
-        this._updateState(PlayerStates.PLAYING);
+        this._updateState(PlayerStateType.PLAYING);
         this._dispatchEvent();
       },
       [Html5EventType.ENDED]: () => {
-        this._updateState(PlayerStates.IDLE);
+        this._updateState(PlayerStateType.IDLE);
         this._dispatchEvent();
       }
     },
-    [PlayerStates.PLAYING]: {
+    [PlayerStateType.PLAYING]: {
       [Html5EventType.PAUSE]: () => {
-        this._updateState(PlayerStates.PAUSED);
+        this._updateState(PlayerStateType.PAUSED);
         this._dispatchEvent();
       },
       [Html5EventType.WAITING]: () => {
-        this._updateState(PlayerStates.BUFFERING);
+        this._updateState(PlayerStateType.BUFFERING);
         this._dispatchEvent();
       },
       [Html5EventType.ENDED]: () => {
-        this._updateState(PlayerStates.IDLE);
+        this._updateState(PlayerStateType.IDLE);
         this._dispatchEvent();
       },
       [Html5EventType.ERROR]: () => {
-        this._updateState(PlayerStates.IDLE);
+        this._updateState(PlayerStateType.IDLE);
         this._dispatchEvent();
       }
     },
-    [PlayerStates.BUFFERING]: {
+    [PlayerStateType.BUFFERING]: {
       [Html5EventType.PLAYING]: () => {
-        this._updateState(PlayerStates.PLAYING);
+        this._updateState(PlayerStateType.PLAYING);
         this._dispatchEvent();
       },
       [Html5EventType.PAUSE]: () => {
-        this._updateState(PlayerStates.PAUSED);
+        this._updateState(PlayerStateType.PAUSED);
         this._dispatchEvent();
       },
       [Html5EventType.SEEKED]: () => {
-        if (this._prevState && this._prevState.type === PlayerStates.PLAYING) {
-          this._updateState(PlayerStates.PLAYING);
+        if (this._prevState && this._prevState.type === PlayerStateType.PLAYING) {
+          this._updateState(PlayerStateType.PLAYING);
           this._dispatchEvent();
         }
       }
@@ -145,7 +145,7 @@ export default class StateManager {
     this._eventManager = new EventManager();
     this._history = [];
     this._prevState = null;
-    this._curState = new State(PlayerStates.IDLE);
+    this._curState = new State(PlayerStateType.IDLE);
     this._attachListeners();
   }
 

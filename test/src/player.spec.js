@@ -1,6 +1,6 @@
 import TextStyle from '../../src/track/text-style'
 import Player from '../../src/player'
-import PlayerStates from '../../src/state/state-types'
+import PlayerStateType from '../../src/state/state-types'
 import {Html5EventType, CustomEventType} from '../../src/event/event-types'
 import sourcesConfig from './configs/sources.json'
 import Track from '../../src/track/track'
@@ -1433,7 +1433,7 @@ describe('states', function () {
      */
     function onLoadStart() {
       player.removeEventListener(Html5EventType.LOAD_START, onLoadStart);
-      player._stateManager.currentState.type.should.equal(PlayerStates.LOADING);
+      player._stateManager.currentState.type.should.equal(PlayerStateType.LOADING);
     }
 
     /**
@@ -1443,9 +1443,9 @@ describe('states', function () {
     function onLoadedMetadata() {
       player.removeEventListener(Html5EventType.LOADED_METADATA, onLoadedMetadata);
       if (player.config.autoplay) {
-        player._stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+        player._stateManager.currentState.type.should.equal(PlayerStateType.PLAYING);
       } else {
-        player._stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
+        player._stateManager.currentState.type.should.equal(PlayerStateType.PAUSED);
       }
     }
 
@@ -1455,7 +1455,7 @@ describe('states', function () {
      */
     function onPlaying() {
       player.removeEventListener(Html5EventType.PLAYING, onPlaying);
-      player._stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+      player._stateManager.currentState.type.should.equal(PlayerStateType.PLAYING);
       setTimeout(() => {
         player.pause();
       }, 100);
@@ -1467,7 +1467,7 @@ describe('states', function () {
      */
     function onPause() {
       player.removeEventListener(Html5EventType.PAUSE, onPause);
-      player._stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
+      player._stateManager.currentState.type.should.equal(PlayerStateType.PAUSED);
       player.currentTime = player.duration - 1;
       player.play();
     }
@@ -1478,12 +1478,12 @@ describe('states', function () {
      */
     function onEnded() {
       player.removeEventListener(Html5EventType.ENDED, onEnded);
-      player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
+      player._stateManager.currentState.type.should.equal(PlayerStateType.IDLE);
       player.destroy();
       done();
     }
 
-    player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
+    player._stateManager.currentState.type.should.equal(PlayerStateType.IDLE);
     player.addEventListener(Html5EventType.LOAD_START, onLoadStart);
     player.addEventListener(Html5EventType.LOADED_METADATA, onLoadedMetadata);
     player.addEventListener(Html5EventType.PLAYING, onPlaying);

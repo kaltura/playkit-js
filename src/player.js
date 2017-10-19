@@ -8,7 +8,7 @@ import EventManager from './event/event-manager'
 import FakeEvent from './event/fake-event'
 import FakeEventTarget from './event/fake-event-target'
 import {CustomEventType, Html5EventType} from './event/event-types'
-import PlayerStates from './state/state-types'
+import State from './state/state'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
 import BasePlugin from './plugin/base-plugin'
@@ -1328,7 +1328,7 @@ export default class Player extends FakeEventTarget {
    * @returns {FakeEvent} - The event class of the player.
    * @public
    */
-  get Event(): Function {
+  get Event(): typeof FakeEvent {
     return FakeEvent;
   }
 
@@ -1343,11 +1343,11 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Get the player states.
-   * @returns {Object} - The states of the player.
+   * @returns {State} - The state class of the player.
    * @public
    */
-  get State(): { [state: string]: string } {
-    return PlayerStates;
+  get State(): typeof State {
+    return State;
   }
 
   /**
