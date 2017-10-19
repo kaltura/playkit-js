@@ -82,6 +82,14 @@ const OFF: string = 'off';
 
 
 /**
+ *  The duration offset, for seeking to duration safety.
+ *  @type {number}
+ *  @const
+ */
+const DURATION_OFFSET: number = 0.1;
+
+
+/**
  * The HTML5 player class.
  * @classdesc
  */
@@ -380,8 +388,8 @@ export default class Player extends FakeEventTarget {
         if (to < 0) {
           boundedTo = 0;
         }
-        if (boundedTo > this._engine.duration) {
-          boundedTo = this._engine.duration;
+        if (boundedTo > this._engine.duration - DURATION_OFFSET) {
+          boundedTo = this._engine.duration - DURATION_OFFSET;
         }
         this._engine.currentTime = boundedTo;
       }
