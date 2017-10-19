@@ -6,6 +6,17 @@ import Track from './track'
  * @classdesc
  */
 export default class VideoTrack extends Track {
+  static DefaultVideoTrackSettings: VideoTrackSettings = {
+    active: false,
+    index: -1,
+    id: undefined,
+    label: undefined,
+    language: undefined,
+    bandwidth: undefined,
+    height: undefined,
+    width: undefined
+  };
+
   /**
    * Calculates the most suitable source to the container size
    * @static
@@ -34,23 +45,25 @@ export default class VideoTrack extends Track {
       let mostSuitableWidthAndRatioTracks = mostSuitableWidthTracks;
       let minRatioDiff = Infinity;
       for (let track of mostSuitableWidthTracks) {  // filter the most ratio suitable from the width filter results
+        let ratioDiff;
         if (typeof track.width === 'number' && typeof track.height === 'number') {
-          let ratioDiff = Math.abs(track.width / track.height - videoRatio);
-          if (ratioDiff < minRatioDiff) {
-            minRatioDiff = ratioDiff;
-            mostSuitableWidthAndRatioTracks = [track];
-          } else if (ratioDiff === minRatioDiff) {
-            mostSuitableWidthAndRatioTracks.push(track);
-          }
+          ratioDiff = Math.abs(track.width / track.height - videoRatio);
+        } else {
+          ratioDiff = NaN;
         }
+        if (ratioDiff < minRatioDiff) {
+          minRatioDiff = ratioDiff;
+          mostSuitableWidthAndRatioTracks = [track];
+        } else if (ratioDiff === minRatioDiff) {
+          mostSuitableWidthAndRatioTracks.push(track);
+        }
+
       }
       let maxBandwidth = 0;
       for (let track of mostSuitableWidthAndRatioTracks) { // select the top bitrate from the ratio filter results
-        if (typeof track.bandwidth === 'number') {
-          if (track.bandwidth > maxBandwidth || !track.bandwidth) {
-            maxBandwidth = track.bandwidth || maxBandwidth;
-            mostSuitableWidth = track;
-          }
+        if (!track.bandwidth || track.bandwidth > maxBandwidth) {
+          maxBandwidth = track.bandwidth || maxBandwidth;
+          mostSuitableWidth = track;
         }
       }
     }
@@ -104,9 +117,9 @@ export default class VideoTrack extends Track {
 
   /**
    * @constructor
-   * @param {TrackSettings} settings - The track settings object
+   * @param {VideoTrackSettings} settings - The track settings object
    */
-  constructor(settings: TrackSettings) {
+  constructor(settings: VideoTrackSettings = VideoTrack.DefaultVideoTrackSettings) {
     super(settings);
     this._bandwidth = settings.bandwidth;
     this._width = settings.width;

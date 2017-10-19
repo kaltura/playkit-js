@@ -5,6 +5,14 @@
  * @classdesc
  */
 export default class Track {
+  static DefaultTrackSettings: TrackSettings = {
+    active: false,
+    index: -1,
+    id: undefined,
+    label: undefined,
+    language: undefined
+  };
+
   /**
    * Comparing language strings.
    * @param {string} inputLang - The configured language.
@@ -114,7 +122,7 @@ export default class Track {
    * @constructor
    * @param {TrackSettings} settings - The track settings object.
    */
-  constructor(settings: TrackSettings) {
+  constructor(settings: TrackSettings = Track.DefaultTrackSettings) {
     this._id = settings.id;
     this._active = settings.active;
     this._label = settings.label;

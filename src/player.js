@@ -1238,9 +1238,10 @@ export default class Player extends FakeEventTarget {
       this._tracks.push(new TextTrack({
         active: false,
         index: textTracks.length,
-        kind: "subtitles",
+        id: undefined,
         label: "Off",
-        language: OFF
+        language: OFF,
+        kind: "subtitles"
       }));
     }
   }

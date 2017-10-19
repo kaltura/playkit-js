@@ -6,6 +6,15 @@ import Track from './track'
  * @classdesc
  */
 export default class TextTrack extends Track {
+  static DefaultTextTrackSettings: TextTrackSettings = {
+    active: false,
+    index: -1,
+    id: undefined,
+    label: undefined,
+    language: undefined,
+    kind: undefined
+  };
+
   /**
    * The kind of the text track:
    * subtitles/captions/metadata.
@@ -26,9 +35,9 @@ export default class TextTrack extends Track {
 
   /**
    * @constructor
-   * @param {TrackSettings} settings - The track settings object.
+   * @param {TextTrackSettings} settings - The track settings object.
    */
-  constructor(settings: TrackSettings) {
+  constructor(settings: TextTrackSettings = TextTrack.DefaultTextTrackSettings) {
     super(settings);
     this._kind = settings.kind;
   }

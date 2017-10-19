@@ -261,12 +261,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (videoTracks) {
       for (let i = 0; i < videoTracks.length; i++) {
         let settings = {
-          id: videoTracks[i].id,
-          bandwidth: videoTracks[i].bandwidth,
-          width: videoTracks[i].width,
-          height: videoTracks[i].height,
           active: this._sourceObj ? videoTracks[i].id === this._sourceObj.id : false,
-          index: i
+          index: i,
+          id: videoTracks[i].id,
+          label: undefined,
+          language: undefined,
+          bandwidth: videoTracks[i].bandwidth,
+          height: videoTracks[i].height,
+          width: videoTracks[i].width
         };
         parsedTracks.push(new VideoTrack(settings));
       }
@@ -288,11 +290,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       for (let i = 0; i < videoTracks.length; i++) {
         let settings = {
           //TODO calculate width/height/bandwidth
-          id: videoTracks[i].id,
           active: videoTracks[i].selected,
+          index: i,
+          id: videoTracks[i].id,
           label: videoTracks[i].label,
           language: videoTracks[i].language,
-          index: i
+          bandwidth: undefined,
+          height: undefined,
+          width: undefined
         };
         parsedTracks.push(new VideoTrack(settings));
       }
@@ -312,11 +317,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (audioTracks) {
       for (let i = 0; i < audioTracks.length; i++) {
         let settings = {
-          id: audioTracks[i].id,
           active: audioTracks[i].enabled,
+          index: i,
+          id: audioTracks[i].id,
           label: audioTracks[i].label,
           language: audioTracks[i].language,
-          index: i
         };
         parsedTracks.push(new AudioTrack(settings));
       }
@@ -336,11 +341,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
         let settings = {
-          kind: textTracks[i].kind,
           active: textTracks[i].mode === 'showing',
+          index: i,
+          id: undefined,
           label: textTracks[i].label,
           language: textTracks[i].language,
-          index: i
+          kind: textTracks[i].kind
         };
         parsedTracks.push(new PKTextTrack(settings));
       }
