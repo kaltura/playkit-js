@@ -1,9 +1,7 @@
 //@flow
 import Player from '../player'
-import LoggerFactory from '../utils/logger'
-import * as Utils from '../utils/util'
+import {PlayerError, LoggerFactory, Object, String} from '../utils/index'
 import EventManager from '../event/event-manager'
-import PlayerError from '../utils/player-error'
 import FakeEvent from '../event/fake-event'
 
 /** The BasePlugin responsible to implement the plugin interface.
@@ -83,9 +81,9 @@ export default class BasePlugin implements IPlugin {
     this.name = name;
     this.player = player;
     this.eventManager = new EventManager();
-    this.logger = LoggerFactory.getLogger(Utils.String.capitlize(this.name));
+    this.logger = LoggerFactory.getLogger(String.capitlize(this.name));
     this.config = {};
-    Utils.Object.mergeDeep(this.config, this.constructor.defaultConfig, config);
+    Object.mergeDeep(this.config, this.constructor.defaultConfig, config);
   }
 
   /**
@@ -96,9 +94,9 @@ export default class BasePlugin implements IPlugin {
    */
   getConfig(attr?: string): any {
     if (attr) {
-      return Utils.Object.copyDeep(this.config[attr]);
+      return Object.copyDeep(this.config[attr]);
     }
-    return Utils.Object.copyDeep(this.config);
+    return Object.copyDeep(this.config);
   }
 
   /**
@@ -108,7 +106,7 @@ export default class BasePlugin implements IPlugin {
    * @returns {void}
    */
   updateConfig(update: Object): void {
-    Utils.Object.mergeDeep(this.config, update);
+    Object.mergeDeep(this.config, update);
   }
 
   /**

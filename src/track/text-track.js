@@ -26,9 +26,9 @@ export default class TextTrack extends Track {
 
   /**
    * @constructor
-   * @param {Object} settings - The track settings object.
+   * @param {TextTrackSettings} settings - The track settings object.
    */
-  constructor(settings: Object = {}) {
+  constructor(settings: TextTrackSettings) {
     super(settings);
     this._kind = settings.kind;
   }

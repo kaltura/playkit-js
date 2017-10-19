@@ -7,9 +7,11 @@ declare type Transition = {
   }
 }
 
-declare type MaybeState = State | null;
-
 declare type StateChanged = {
   oldState: MaybeState,
-  newState: MaybeState
+  newState: State
 }
+
+declare type MaybeState = State | null;
+
+

@@ -1,8 +1,7 @@
 //@flow
 import BasePlugin from './base-plugin'
-import PlayerError from '../utils/player-error'
+import {PlayerError, LoggerFactory} from '../utils/index'
 import Player from '../player'
-import LoggerFactory from '../utils/logger'
 
 /**
  * The logger of the PluginManager class.

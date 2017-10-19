@@ -6,10 +6,8 @@ import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'
 import {TextTrack as PKTextTrack} from '../../../../track/text-track'
 import BaseMediaSourceAdapter from '../base-media-source-adapter'
-import {getSuitableSourceForResolution} from '../../../../utils/resolution'
-import * as Utils from '../../../../utils/util'
 import FairPlay from '../../../../drm/fairplay'
-import Env from '../../../../utils/env'
+import {Env, Dom} from '../../../../utils/index'
 
 /**
  * An illustration of media source extension for progressive download
@@ -38,7 +36,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @type {HTMLVideoElement}
    * @static
    */
-  static TEST_VIDEO: HTMLVideoElement = Utils.Dom.createElement("video");
+  static TEST_VIDEO: HTMLVideoElement = Dom.createElement("video");
   /**
    * The DRM protocols implementations for native adapter.
    * @type {Array<Function>}
@@ -97,7 +95,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {boolean} - Whether the native adapter can play a specific drm data.
    * @static
    */
-  static canPlayDrm(drmData: Array<Object>): boolean {
+  static canPlayDrm(drmData: Array<DrmData>): boolean {
     let canPlayDrm = false;
     for (let drmProtocol of NativeAdapter._drmProtocols) {
       if (drmProtocol.canPlayDrm(drmData)) {
@@ -115,11 +113,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @function createAdapter
    * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with.
    * @param {Object} source - The source Object.
-   * @param {Object} config - The player configuration.
+   * @param {PlayerConfig} config - The player configuration.
    * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter.
    * @static
    */
-  static createAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): IMediaSourceAdapter {
+  static createAdapter(videoElement: HTMLVideoElement, source: Source, config: PlayerConfig): IMediaSourceAdapter {
     return new this(videoElement, source, config);
   }
 
@@ -127,9 +125,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @constructor
    * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
    * @param {Source} source - The source object
-   * @param {Object} config - The player configuration
+   * @param {PlayerConfig} config - The player configuration
    */
-  constructor(videoElement: HTMLVideoElement, source: Source, config: Object) {
+  constructor(videoElement: HTMLVideoElement, source: Source, config: PlayerConfig) {
     NativeAdapter._logger.debug('Creating adapter');
     super(videoElement, source);
     this._maybeSetDrmPlayback();
@@ -155,7 +153,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _setProgressiveSource(): void {
-    let suitableTrack = getSuitableSourceForResolution(this._progressiveSources, this._videoElement.offsetWidth, this._videoElement.offsetHeight);
+    let suitableTrack = VideoTrack.getSuitableSourceForResolution(this._progressiveSources, this._videoElement.offsetWidth, this._videoElement.offsetHeight);
     if (suitableTrack) {
       this._sourceObj = suitableTrack;
     }
@@ -589,5 +587,4 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       return super.duration;
     }
   }
-
 }

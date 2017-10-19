@@ -1,14 +1,10 @@
 //@flow
-import Env from './utils/env'
+import {Locale, LoggerFactory, PosterManager, Env, Object, Dom, Generator} from './utils/index'
 import EventManager from './event/event-manager'
-import PosterManager from './utils/poster-manager'
 import FakeEvent from './event/fake-event'
 import FakeEventTarget from './event/fake-event-target'
 import {PLAYER_EVENTS as PlayerEvents, HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from './event/events'
 import PlayerStates from './state/state-types'
-import * as Utils from './utils/util'
-import Locale from './utils/locale'
-import LoggerFactory from './utils/logger'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
 import BasePlugin from './plugin/base-plugin'
@@ -124,10 +120,10 @@ export default class Player extends FakeEventTarget {
   _posterManager: PosterManager;
   /**
    * The runtime configuration of the player.
-   * @type {Object}
+   * @type {PlayerConfig}
    * @private
    */
-  _config: Object;
+  _config: PlayerConfig;
   /**
    * The playback engine.
    * @type {IEngine}
@@ -183,7 +179,7 @@ export default class Player extends FakeEventTarget {
    */
   _activeTextCues: Array<any> = [];
   /**
-   * The player text disaply settings
+   * The player text display settings
    * @type {Object}
    * @private
    */
@@ -202,10 +198,10 @@ export default class Player extends FakeEventTarget {
   _playbackMiddleware: PlaybackMiddleware;
   /**
    * The environment(os,device,browser) object of the player.
-   * @type {Object}
+   * @type {EnvData}
    * @private
    */
-  _env: Object;
+  _env: EnvData;
   /**
    * The currently selected engine type
    * @type {string}
@@ -247,13 +243,13 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Configures the player according to a given configuration.
-   * @param {Object} config - The configuration for the player instance.
+   * @param {PlayerConfig} config - The configuration for the player instance.
    * @returns {void}
    */
-  configure(config: Object): void {
-    Utils.Object.mergeDeep(this._config, config);
+  configure(config: PlayerConfig): void {
+    Object.mergeDeep(this._config, config);
     this._configureOrLoadPlugins(config.plugins);
-    if (!Utils.Object.isEmptyObject(config.sources)) {
+    if (!Object.isEmptyObject(config.sources)) {
       const receivedSourcesWhenHasEngine: boolean = !!this._engine;
       if (receivedSourcesWhenHasEngine) {
         this._reset();
@@ -358,14 +354,14 @@ export default class Player extends FakeEventTarget {
     this._stateManager.destroy();
     this._activeTextCues = [];
     this._textDisplaySettings = {};
-    this._config = {};
+    this._config = DefaultPlayerConfig;
     this._tracks = [];
     this._engineType = '';
     this._streamType = '';
     this._readyPromise = null;
     this._firstPlay = true;
     if (this._el) {
-      Utils.Dom.removeChild(this._el.parentNode, this._el);
+      Dom.removeChild(this._el.parentNode, this._el);
     }
   }
 
@@ -379,7 +375,7 @@ export default class Player extends FakeEventTarget {
    */
   set currentTime(to: number): void {
     if (this._engine) {
-      if (Utils.Number.isNumber(to)) {
+      if (Number.isNumber(to)) {
         let boundedTo = to;
         if (to < 0) {
           boundedTo = 0;
@@ -422,7 +418,7 @@ export default class Player extends FakeEventTarget {
    */
   set volume(vol: number): void {
     if (this._engine) {
-      if (Utils.Number.isFloat(vol) || (vol === 0) || (vol === 1)) {
+      if (Number.isFloat(vol) || (vol === 0) || (vol === 1)) {
         let boundedVol = vol;
         if (boundedVol < 0) {
           boundedVol = 0;
@@ -529,10 +525,10 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Get the dimensions of the player.
-   * @returns {{width: number, height: number}} - The dimensions of the player.
+   * @returns {PlayerDimensions} - The dimensions of the player.
    * @public
    */
-  get dimensions(): Object {
+  get dimensions(): PlayerDimensions {
     return {
       width: this._el.clientWidth,
       height: this._el.clientHeight
@@ -585,20 +581,20 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Getter for the environment of the player instance.
-   * @return {Object} - The current environment object.
+   * @return {EnvData} - The current environment object.
    * @public
    */
-  get env(): Object {
+  get env(): EnvData {
     return this._env;
   }
 
   /**
    * Get the player config.
-   * @returns {Object} - A copy of the player configuration.
+   * @returns {PlayerConfig} - A copy of the player configuration.
    * @public
    */
-  get config(): Object {
-    return Utils.Object.mergeDeep({}, this._config);
+  get config(): PlayerConfig {
+    return Object.mergeDeep({}, this._config);
   }
 
   /**
@@ -608,7 +604,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   set sessionId(sessionId: string): void {
-    this._config.session = this._config.session || {};
+    this._config.session = this._config.session || {id: ''};
     this._config.session.id = sessionId;
   }
 
@@ -665,9 +661,9 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Get an object includes the active video/audio/text tracks
-   * @return {{video: VideoTrack, audio: AudioTrack, text: TextTrack}} - The active tracks object
+   * @return {ActiveTracks} - The active tracks object
    */
-  getActiveTracks(): Object {
+  getActiveTracks(): ActiveTracks {
     return {
       video: this._getTracksByType(TrackTypes.VIDEO).find(track => track.active),
       audio: this._getTracksByType(TrackTypes.AUDIO).find(track => track.active),
@@ -767,11 +763,11 @@ export default class Player extends FakeEventTarget {
     if (!(style instanceof TextStyle)) {
       throw new Error("Style must be instance of TextStyle");
     }
-    let element = Utils.Dom.getElementById(SUBTITLES_STYLE_ID_NAME);
+    let element = Dom.getElementById(SUBTITLES_STYLE_ID_NAME);
     if (!element) {
-      element = Utils.Dom.createElement('style');
-      Utils.Dom.setAttribute(element, 'id', SUBTITLES_STYLE_ID_NAME);
-      Utils.Dom.appendChild(document.head, element);
+      element = Dom.createElement('style');
+      Dom.setAttribute(element, 'id', SUBTITLES_STYLE_ID_NAME);
+      Dom.appendChild(document.head, element);
     }
     let sheet = element.sheet;
 
@@ -842,11 +838,11 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _createPlayerContainer(): void {
-    const el = this._el = Utils.Dom.createElement("div");
-    Utils.Dom.addClassName(el, CONTAINER_CLASS_NAME);
-    this._playerId = Utils.Generator.uniqueId(5);
-    Utils.Dom.setAttribute(el, "id", this._playerId);
-    Utils.Dom.setAttribute(el, "tabindex", '-1');
+    const el = this._el = Dom.createElement("div");
+    Dom.addClassName(el, CONTAINER_CLASS_NAME);
+    this._playerId = Generator.uniqueId(5);
+    Dom.setAttribute(el, "id", this._playerId);
+    Dom.setAttribute(el, "tabindex", '-1');
   }
 
   /**
@@ -857,8 +853,8 @@ export default class Player extends FakeEventTarget {
   _appendPosterEl(): void {
     if (this._el) {
       let el: HTMLDivElement = this._posterManager.getElement();
-      Utils.Dom.addClassName(el, POSTER_CLASS_NAME);
-      Utils.Dom.appendChild(this._el, el);
+      Dom.addClassName(el, POSTER_CLASS_NAME);
+      Dom.appendChild(this._el, el);
     }
   }
 
@@ -871,10 +867,10 @@ export default class Player extends FakeEventTarget {
     if (this._el && this._engine) {
       let engineEl = this._engine.getVideoElement();
       const classname = `${ENGINE_CLASS_NAME}`;
-      Utils.Dom.addClassName(engineEl, classname);
+      Dom.addClassName(engineEl, classname);
       const classnameWithId = `${ENGINE_CLASS_NAME}-${this._engine.id}`;
-      Utils.Dom.addClassName(engineEl, classnameWithId);
-      Utils.Dom.prependTo(engineEl, this._el);
+      Dom.addClassName(engineEl, classnameWithId);
+      Dom.prependTo(engineEl, this._el);
     }
   }
 
@@ -1134,7 +1130,7 @@ export default class Player extends FakeEventTarget {
    * @static
    */
   static get _defaultConfig(): Object {
-    return Utils.Object.copyDeep(DefaultPlayerConfig);
+    return Object.copyDeep(DefaultPlayerConfig);
   }
 
   // </editor-fold>
@@ -1223,9 +1219,9 @@ export default class Player extends FakeEventTarget {
    */
   _updateTextDisplay(cues: Array<Cue>): void {
     if (this._textDisplayEl === undefined) {
-      this._textDisplayEl = Utils.Dom.createElement("div");
-      Utils.Dom.addClassName(this._textDisplayEl, SUBTITLES_CLASS_NAME);
-      Utils.Dom.appendChild(this._el, this._textDisplayEl);
+      this._textDisplayEl = Dom.createElement("div");
+      Dom.addClassName(this._textDisplayEl, SUBTITLES_CLASS_NAME);
+      Dom.appendChild(this._el, this._textDisplayEl);
     }
     processCues(window, cues, this._textDisplayEl);
   }

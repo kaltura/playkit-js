@@ -1,6 +1,5 @@
 //@flow
 import Player from './player'
-import LoggerFactory from './utils/logger'
 import BaseMediaSourceAdapter from './engines/html5/media-source/base-media-source-adapter'
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider'
 import {registerPlugin} from './plugin/plugin-manager'
@@ -12,15 +11,14 @@ import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
 import TextTrack from './track/text-track'
 import TextStyle from './track/text-style'
-import Env from './utils/env'
-import * as Utils from './utils/util'
+import * as Utils from './utils/index'
 
 declare var __VERSION__: string;
 declare var __NAME__: string;
 declare var __PACKAGE_URL__: string;
 
-LoggerFactory.getLogger().log(`%c ${__NAME__} ${__VERSION__}`, "color: #98ff98;  font-size: large");
-LoggerFactory.getLogger().log(`%c For more details see ${__PACKAGE_URL__}`, "color: #98ff98;");
+Utils.LoggerFactory.getLogger().log(`%c ${__NAME__} ${__VERSION__}`, "color: #98ff98;  font-size: large");
+Utils.LoggerFactory.getLogger().log(`%c For more details see ${__PACKAGE_URL__}`, "color: #98ff98;");
 
 /**
  * @param {Object} config - The configuration of the player
@@ -47,9 +45,6 @@ export {__VERSION__ as VERSION};
 
 // Export player name
 export {__NAME__ as PLAYER_NAME};
-
-// Export environment data
-export {Env};
 
 // Export base DRM protocol
 export {BaseDrmProtocol};

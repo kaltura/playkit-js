@@ -1,5 +1,5 @@
 //@flow
-const TRACK_TYPES: {[track: string]: string} = {
+const TRACK_TYPES: { [track: string]: string } = {
   VIDEO: "video",
   AUDIO: "audio",
   TEXT: "text"

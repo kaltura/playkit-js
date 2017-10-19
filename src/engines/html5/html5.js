@@ -8,7 +8,7 @@ import VideoTrack from '../../track/video-track'
 import AudioTrack from '../../track/audio-track'
 import {TextTrack as PKTextTrack} from '../../track/text-track'
 import {Cue} from '../../track/vtt-cue'
-import * as Utils from '../../utils/util'
+import {Dom, Generator} from '../../utils/index'
 
 /**
  * Html5 engine for playback.
@@ -35,10 +35,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _mediaSourceAdapter: ?IMediaSourceAdapter;
   /**
    * The player config object.
-   * @type {Object}
+   * @type {PlayerConfig}
    * @private
    */
-  _config: Object;
+  _config: PlayerConfig;
   /**
    * Flag to indicate first time text track cue change.
    * @type {Object<number, boolean>}
@@ -60,12 +60,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * Factory method to create an engine.
    * @param {Source} source - The selected source object.
-   * @param {Object} config - The player configuration.
+   * @param {PlayerConfig} config - The player configuration.
    * @returns {IEngine} - New instance of the run time engine.
    * @public
    * @static
    */
-  static createEngine(source: Source, config: Object): IEngine {
+  static createEngine(source: Source, config: PlayerConfig): IEngine {
     return new this(source, config);
   }
 
@@ -84,9 +84,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * @constructor
    * @param {Source} source - The selected source object.
-   * @param {Object} config - The player configuration.
+   * @param {PlayerConfig} config - The player configuration.
    */
-  constructor(source: Source, config: Object) {
+  constructor(source: Source, config: PlayerConfig) {
     super();
     this._eventManager = new EventManager();
     this._createVideoElement();
@@ -96,14 +96,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * Restores the engine.
    * @param {Source} source - The selected source object.
-   * @param {Object} config - The player configuration.
+   * @param {PlayerConfig} config - The player configuration.
    * @returns {void}
    */
-  restore(source: Source, config: Object): void {
+  restore(source: Source, config: PlayerConfig): void {
     this.detach();
     this._eventManager.removeAll();
     if (this._el) {
-      Utils.Dom.removeAttribute(this._el, 'src');
+      Dom.removeAttribute(this._el, 'src');
     }
     this._init(source, config);
   }
@@ -117,8 +117,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this.detach();
     if (this._el) {
       this.pause();
-      Utils.Dom.removeAttribute(this._el, 'src');
-      Utils.Dom.removeChild(this._el.parentNode, this._el);
+      Dom.removeAttribute(this._el, 'src');
+      Dom.removeChild(this._el.parentNode, this._el);
     }
     this._showTextTrackFirstTime = {};
     this._eventManager.destroy();
@@ -380,7 +380,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return this._el.volume;
   }
 
-  ready() {
+  ready(): void {
   }
 
   /**
@@ -675,7 +675,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   static isSupported() {
     try {
-      Html5.TEST_VID = Utils.Dom.createElement('video');
+      Html5.TEST_VID = Dom.createElement('video');
       Html5.TEST_VID.volume = 0.5;
     } catch (e) {
       return false;
@@ -686,11 +686,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * Initializes the engine.
    * @param {Source} source - The selected source object.
-   * @param {Object} config - The player configuration.
+   * @param {PlayerConfig} config - The player configuration.
    * @private
    * @returns {void}
    */
-  _init(source: Source, config: Object): void {
+  _init(source: Source, config: PlayerConfig): void {
     this._config = config;
     this._canLoadMediaSourceAdapterPromise = (this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve());
     this._mediaSourceAdapter = null;
@@ -704,8 +704,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   _createVideoElement(): void {
-    this._el = Utils.Dom.createElement("video");
-    this._el.id = Utils.Generator.uniqueId(5);
+    this._el = Dom.createElement("video");
+    this._el.id = Generator.uniqueId(5);
     this._el.controls = false;
   }
 

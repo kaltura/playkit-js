@@ -5,7 +5,7 @@ import State from './state'
 import PlayerStates from './state-types'
 import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../event/events'
 import FakeEvent from '../event/fake-event'
-import LoggerFactory from '../utils/logger'
+import {LoggerFactory} from '../utils/index'
 
 /**
  * This class responsible to manage all the state machine of the player.
@@ -43,10 +43,10 @@ export default class StateManager {
   /**
    * Holds the previous state of the player.
    * @member
-   * @type {State | null}
+   * @type {MaybeState}
    * @private
    */
-  _prevState: State | null;
+  _prevState: MaybeState;
   /**
    * Holds the state history of the player.
    * @member
@@ -56,7 +56,7 @@ export default class StateManager {
   _history: Array<State>;
   /**
    * The possible transitions from one state to another.
-   * @type {Array<Transition>}
+   * @type {Transition}
    * @private
    */
   _transitions: Transition = {
@@ -239,9 +239,9 @@ export default class StateManager {
   /**
    * Getter to the previous state of the player.
    * @public
-   * @returns {State|null} - The previous state object, or null if such doesn't exists
+   * @returns {MaybeState} - The previous state object, or null if such doesn't exists
    */
-  get previousState(): State | null {
+  get previousState(): MaybeState {
     return this._prevState;
   }
 

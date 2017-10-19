@@ -1,5 +1,5 @@
 //@flow
-import * as Utils from '../utils/util'
+import {Object} from '../utils/index'
 
 const HTML5_EVENTS: { [event: string]: string } = {
   /**
@@ -215,6 +215,6 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
   AD_PROGRESS: 'adprogress'
 };
 
-const PLAYER_EVENTS: { [event: string]: string } = Utils.Object.merge([HTML5_EVENTS, CUSTOM_EVENTS]);
+const PLAYER_EVENTS: { [event: string]: string } = Object.merge([HTML5_EVENTS, CUSTOM_EVENTS]);
 
 export {PLAYER_EVENTS, HTML5_EVENTS, CUSTOM_EVENTS};

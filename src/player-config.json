@@ -1,10 +1,13 @@
 {
+  "type": "",
+  "dvr": false,
   "sources": {},
   "plugins": {},
   "metadata": {
     "poster": ""
   },
   "playback": {
+    "startTime": 0,
     "audioLanguage": "",
     "textLanguage": "",
     "useNativeTextTrack": false,
