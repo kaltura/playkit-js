@@ -1,6 +1,6 @@
 //@flow
 import Player from '../player'
-import {PlayerError, LoggerFactory, Object, String} from '../utils/index'
+import {PlayerError, LoggerFactory, Obj, Str} from '../utils/index'
 import EventManager from '../event/event-manager'
 import FakeEvent from '../event/fake-event'
 
@@ -81,9 +81,9 @@ export default class BasePlugin implements IPlugin {
     this.name = name;
     this.player = player;
     this.eventManager = new EventManager();
-    this.logger = LoggerFactory.getLogger(String.capitlize(this.name));
+    this.logger = LoggerFactory.getLogger(Str.capitlize(this.name));
     this.config = {};
-    Object.mergeDeep(this.config, this.constructor.defaultConfig, config);
+    Obj.mergeDeep(this.config, this.constructor.defaultConfig, config);
   }
 
   /**
@@ -94,9 +94,9 @@ export default class BasePlugin implements IPlugin {
    */
   getConfig(attr?: string): any {
     if (attr) {
-      return Object.copyDeep(this.config[attr]);
+      return Obj.copyDeep(this.config[attr]);
     }
-    return Object.copyDeep(this.config);
+    return Obj.copyDeep(this.config);
   }
 
   /**
@@ -106,7 +106,7 @@ export default class BasePlugin implements IPlugin {
    * @returns {void}
    */
   updateConfig(update: Object): void {
-    Object.mergeDeep(this.config, update);
+    Obj.mergeDeep(this.config, update);
   }
 
   /**

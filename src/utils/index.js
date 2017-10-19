@@ -1,6 +1,6 @@
-import Object from './object'
-import Number from './number'
-import String from './string'
+import Obj from './object'
+import Num from './number'
+import Str from './string'
 import Generator from './generator'
 import Dom from './dom'
 import Env from './env'
@@ -11,9 +11,9 @@ import PosterManager from './poster-manager'
 import PlayerError from './player-error'
 
 export {
-  Object,
-  Number,
-  String,
+  Obj,
+  Num,
+  Str,
   Generator,
   Dom,
   Env,

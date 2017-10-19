@@ -1,5 +1,5 @@
 // @flow
-export default class String {
+export default class Str {
   /**
    * Uppercase the first letter of a string
    * @param  {String} string - String to be uppercased

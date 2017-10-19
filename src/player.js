@@ -1,5 +1,5 @@
 //@flow
-import {Locale, LoggerFactory, PosterManager, Env, Object, Dom, Generator} from './utils/index'
+import {Locale, LoggerFactory, PosterManager, Env, Obj, Num, Dom, Generator} from './utils/index'
 import EventManager from './event/event-manager'
 import FakeEvent from './event/fake-event'
 import FakeEventTarget from './event/fake-event-target'
@@ -247,9 +247,9 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   configure(config: PlayerConfig): void {
-    Object.mergeDeep(this._config, config);
+    Obj.mergeDeep(this._config, config);
     this._configureOrLoadPlugins(config.plugins);
-    if (!Object.isEmptyObject(config.sources)) {
+    if (!Obj.isEmptyObject(config.sources)) {
       const receivedSourcesWhenHasEngine: boolean = !!this._engine;
       if (receivedSourcesWhenHasEngine) {
         this._reset();
@@ -375,7 +375,7 @@ export default class Player extends FakeEventTarget {
    */
   set currentTime(to: number): void {
     if (this._engine) {
-      if (Number.isNumber(to)) {
+      if (Num.isNumber(to)) {
         let boundedTo = to;
         if (to < 0) {
           boundedTo = 0;
@@ -418,7 +418,7 @@ export default class Player extends FakeEventTarget {
    */
   set volume(vol: number): void {
     if (this._engine) {
-      if (Number.isFloat(vol) || (vol === 0) || (vol === 1)) {
+      if (Num.isFloat(vol) || (vol === 0) || (vol === 1)) {
         let boundedVol = vol;
         if (boundedVol < 0) {
           boundedVol = 0;
@@ -594,7 +594,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   get config(): PlayerConfig {
-    return Object.mergeDeep({}, this._config);
+    return Obj.mergeDeep({}, this._config);
   }
 
   /**
@@ -1130,7 +1130,7 @@ export default class Player extends FakeEventTarget {
    * @static
    */
   static get _defaultConfig(): Object {
-    return Object.copyDeep(DefaultPlayerConfig);
+    return Obj.copyDeep(DefaultPlayerConfig);
   }
 
   // </editor-fold>

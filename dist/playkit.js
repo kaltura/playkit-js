@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 31);
+/******/ 	return __webpack_require__(__webpack_require__.s = 28);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -83,17 +83,16 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 
 
-_object2.default.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.PlayerError = exports.PosterManager = exports.MultiMap = exports.LoggerFactory = exports.Locale = exports.Env = exports.Dom = exports.Generator = exports.Str = exports.Num = exports.Obj = undefined;
 
-exports.PlayerError = exports.PosterManager = exports.MultiMap = exports.LoggerFactory = exports.Locale = exports.Env = exports.Dom = exports.Generator = exports.String = exports.Number = exports.Object = undefined;
-
-var _object = __webpack_require__(39);
+var _object = __webpack_require__(38);
 
 var _object2 = _interopRequireDefault(_object);
 
-var _number = __webpack_require__(38);
+var _number = __webpack_require__(37);
 
 var _number2 = _interopRequireDefault(_number);
 
@@ -101,23 +100,23 @@ var _string = __webpack_require__(41);
 
 var _string2 = _interopRequireDefault(_string);
 
-var _generator = __webpack_require__(36);
+var _generator = __webpack_require__(34);
 
 var _generator2 = _interopRequireDefault(_generator);
 
-var _dom = __webpack_require__(35);
+var _dom = __webpack_require__(32);
 
 var _dom2 = _interopRequireDefault(_dom);
 
-var _env = __webpack_require__(23);
+var _env = __webpack_require__(33);
 
 var _env2 = _interopRequireDefault(_env);
 
-var _locale = __webpack_require__(37);
+var _locale = __webpack_require__(35);
 
 var _locale2 = _interopRequireDefault(_locale);
 
-var _logger = __webpack_require__(13);
+var _logger = __webpack_require__(36);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -129,15 +128,15 @@ var _posterManager = __webpack_require__(40);
 
 var _posterManager2 = _interopRequireDefault(_posterManager);
 
-var _playerError = __webpack_require__(24);
+var _playerError = __webpack_require__(39);
 
 var _playerError2 = _interopRequireDefault(_playerError);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.Object = _object2.default;
-exports.Number = _number2.default;
-exports.String = _string2.default;
+exports.Obj = _object2.default;
+exports.Num = _number2.default;
+exports.Str = _string2.default;
 exports.Generator = _generator2.default;
 exports.Dom = _dom2.default;
 exports.Env = _env2.default;
@@ -1029,10 +1028,9 @@ exports.default = EventManager;
 "use strict";
 
 
-_index.Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
 exports.CUSTOM_EVENTS = exports.HTML5_EVENTS = exports.PLAYER_EVENTS = undefined;
 
 var _index = __webpack_require__(0);
@@ -1252,7 +1250,7 @@ var CUSTOM_EVENTS = {
   AD_PROGRESS: 'adprogress'
 };
 
-var PLAYER_EVENTS = _index.Object.merge([HTML5_EVENTS, CUSTOM_EVENTS]);
+var PLAYER_EVENTS = _index.Obj.merge([HTML5_EVENTS, CUSTOM_EVENTS]);
 
 exports.PLAYER_EVENTS = PLAYER_EVENTS;
 exports.HTML5_EVENTS = HTML5_EVENTS;
@@ -1265,13 +1263,13 @@ exports.CUSTOM_EVENTS = CUSTOM_EVENTS;
 "use strict";
 
 
-_index.Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; _index.Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _index = __webpack_require__(0);
 
@@ -1289,15 +1287,15 @@ var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
 var _events = __webpack_require__(7);
 
-var _stateTypes = __webpack_require__(20);
+var _stateTypes = __webpack_require__(19);
 
 var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
-var _html = __webpack_require__(27);
+var _html = __webpack_require__(24);
 
 var _html2 = _interopRequireDefault(_html);
 
-var _pluginManager = __webpack_require__(17);
+var _pluginManager = __webpack_require__(16);
 
 var _pluginManager2 = _interopRequireDefault(_pluginManager);
 
@@ -1305,11 +1303,11 @@ var _basePlugin = __webpack_require__(11);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
-var _stateManager = __webpack_require__(32);
+var _stateManager = __webpack_require__(29);
 
 var _stateManager2 = _interopRequireDefault(_stateManager);
 
-var _trackTypes = __webpack_require__(34);
+var _trackTypes = __webpack_require__(31);
 
 var _trackTypes2 = _interopRequireDefault(_trackTypes);
 
@@ -1329,15 +1327,15 @@ var _textTrack = __webpack_require__(4);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _textStyle = __webpack_require__(18);
+var _textStyle = __webpack_require__(17);
 
 var _textStyle2 = _interopRequireDefault(_textStyle);
 
-var _vttCue = __webpack_require__(22);
+var _vttCue = __webpack_require__(21);
 
-var _textTrackDisplay = __webpack_require__(21);
+var _textTrackDisplay = __webpack_require__(20);
 
-var _playbackMiddleware = __webpack_require__(30);
+var _playbackMiddleware = __webpack_require__(27);
 
 var _playbackMiddleware2 = _interopRequireDefault(_playbackMiddleware);
 
@@ -1353,7 +1351,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = _index.Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) _index.Object.setPrototypeOf ? _index.Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 /**
  * The player container class name.
@@ -1544,7 +1542,7 @@ var Player = function (_FakeEventTarget) {
 
     _classCallCheck(this, Player);
 
-    var _this = _possibleConstructorReturn(this, (Player.__proto__ || _index.Object.getPrototypeOf(Player)).call(this));
+    var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
 
     _this._activeTextCues = [];
     _this._textDisplaySettings = {};
@@ -1593,9 +1591,9 @@ var Player = function (_FakeEventTarget) {
   _createClass(Player, [{
     key: 'configure',
     value: function configure(config) {
-      _index.Object.mergeDeep(this._config, config);
+      _index.Obj.mergeDeep(this._config, config);
       this._configureOrLoadPlugins(config.plugins);
-      if (!_index.Object.isEmptyObject(config.sources)) {
+      if (!_index.Obj.isEmptyObject(config.sources)) {
         var receivedSourcesWhenHasEngine = !!this._engine;
         if (receivedSourcesWhenHasEngine) {
           this._reset();
@@ -2046,7 +2044,7 @@ var Player = function (_FakeEventTarget) {
       var plugins = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
       if (plugins) {
-        _index.Object.keys(plugins).forEach(function (name) {
+        Object.keys(plugins).forEach(function (name) {
           // If the plugin is already exists in the registry we are updating his config
           var plugin = _this3._pluginManager.get(name);
           if (plugin) {
@@ -2193,7 +2191,7 @@ var Player = function (_FakeEventTarget) {
       var _this6 = this;
 
       if (this._engine) {
-        _index.Object.keys(_events.HTML5_EVENTS).forEach(function (html5Event) {
+        Object.keys(_events.HTML5_EVENTS).forEach(function (html5Event) {
           _this6._eventManager.listen(_this6._engine, _events.HTML5_EVENTS[html5Event], function (event) {
             return _this6.dispatchEvent(event);
           });
@@ -2592,7 +2590,7 @@ var Player = function (_FakeEventTarget) {
     key: 'currentTime',
     set: function set(to) {
       if (this._engine) {
-        if (Number.isNumber(to)) {
+        if (_index.Num.isNumber(to)) {
           var boundedTo = to;
           if (to < 0) {
             boundedTo = 0;
@@ -2642,7 +2640,7 @@ var Player = function (_FakeEventTarget) {
     key: 'volume',
     set: function set(vol) {
       if (this._engine) {
-        if (Number.isFloat(vol) || vol === 0 || vol === 1) {
+        if (_index.Num.isFloat(vol) || vol === 0 || vol === 1) {
           var boundedVol = vol;
           if (boundedVol < 0) {
             boundedVol = 0;
@@ -2858,7 +2856,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'config',
     get: function get() {
-      return _index.Object.mergeDeep({}, this._config);
+      return _index.Obj.mergeDeep({}, this._config);
     }
 
     /**
@@ -2959,7 +2957,7 @@ var Player = function (_FakeEventTarget) {
   }], [{
     key: '_defaultConfig',
     get: function get() {
-      return _index.Object.copyDeep(_playerConfig2.default);
+      return _index.Obj.copyDeep(_playerConfig2.default);
     }
   }]);
 
@@ -3206,11 +3204,11 @@ exports.default = BaseMiddleware;
 "use strict";
 
 
-_index.Object.defineProperty(exports, "__esModule", {
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; _index.Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _player = __webpack_require__(8);
 
@@ -3320,9 +3318,9 @@ var BasePlugin = function () {
     this.name = name;
     this.player = player;
     this.eventManager = new _eventManager2.default();
-    this.logger = _index.LoggerFactory.getLogger(_index.String.capitlize(this.name));
+    this.logger = _index.LoggerFactory.getLogger(_index.Str.capitlize(this.name));
     this.config = {};
-    _index.Object.mergeDeep(this.config, this.constructor.defaultConfig, config);
+    _index.Obj.mergeDeep(this.config, this.constructor.defaultConfig, config);
   }
 
   /**
@@ -3337,9 +3335,9 @@ var BasePlugin = function () {
     key: 'getConfig',
     value: function getConfig(attr) {
       if (attr) {
-        return _index.Object.copyDeep(this.config[attr]);
+        return _index.Obj.copyDeep(this.config[attr]);
       }
-      return _index.Object.copyDeep(this.config);
+      return _index.Obj.copyDeep(this.config);
     }
 
     /**
@@ -3352,7 +3350,7 @@ var BasePlugin = function () {
   }, {
     key: 'updateConfig',
     value: function updateConfig(update) {
-      _index.Object.mergeDeep(this.config, update);
+      _index.Obj.mergeDeep(this.config, update);
     }
 
     /**
@@ -3568,80 +3566,18 @@ exports.default = FakeEventTarget;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.LOG_LEVEL = undefined;
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _jsLogger = __webpack_require__(44);
-
-var JsLogger = _interopRequireWildcard(_jsLogger);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var LOG_LEVEL = {
-  "DEBUG": JsLogger.DEBUG,
-  "INFO": JsLogger.INFO,
-  "TIME": JsLogger.TIME,
-  "WARN": JsLogger.WARN,
-  "ERROR": JsLogger.ERROR,
-  "OFF": JsLogger.OFF
-};
-
-var LoggerFactory = function () {
-  function LoggerFactory(options) {
-    _classCallCheck(this, LoggerFactory);
-
-    JsLogger.useDefaults(options || {});
-  }
-
-  _createClass(LoggerFactory, [{
-    key: "getLogger",
-    value: function getLogger(name) {
-      if (!name) {
-        return JsLogger;
-      }
-      return JsLogger.get(name);
-    }
-  }]);
-
-  return LoggerFactory;
-}();
-
-var lf = new LoggerFactory({ defaultLevel: JsLogger.DEBUG });
-
-exports.default = lf;
-exports.LOG_LEVEL = LOG_LEVEL;
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 /* eslint-disable no-unused-vars */
 
 
-var _logger = __webpack_require__(13);
+var _index = __webpack_require__(0);
 
-var _logger2 = _interopRequireDefault(_logger);
-
-var _playerError = __webpack_require__(24);
-
-var _playerError2 = _interopRequireDefault(_playerError);
-
-var _drmSupport = __webpack_require__(25);
+var _drmSupport = __webpack_require__(22);
 
 var _drmSupport2 = _interopRequireDefault(_drmSupport);
 
-var _drmScheme = __webpack_require__(19);
+var _drmScheme = __webpack_require__(18);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3655,12 +3591,12 @@ var BaseDrmProtocol = function () {
   _createClass(BaseDrmProtocol, null, [{
     key: 'canPlayDrm',
     value: function canPlayDrm(drmData) {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayDrm').getError();
+      throw new _index.PlayerError(_index.PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayDrm').getError();
     }
   }, {
     key: 'setDrmPlayback',
     value: function setDrmPlayback() {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'static setDrmPlayback').getError();
+      throw new _index.PlayerError(_index.PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'static setDrmPlayback').getError();
     }
   }, {
     key: 'destroy',
@@ -3670,13 +3606,13 @@ var BaseDrmProtocol = function () {
   return BaseDrmProtocol;
 }();
 
-BaseDrmProtocol.getLogger = _logger2.default.getLogger;
+BaseDrmProtocol.getLogger = _index.LoggerFactory.getLogger;
 BaseDrmProtocol.DrmSupport = _drmSupport2.default;
 BaseDrmProtocol.DrmScheme = _drmScheme.DrmScheme;
 exports.default = BaseDrmProtocol;
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3947,7 +3883,7 @@ BaseMediaSourceAdapter.getLogger = _index.LoggerFactory.getLogger;
 exports.default = BaseMediaSourceAdapter;
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3960,7 +3896,7 @@ exports.registerMediaSourceAdapter = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nativeAdapter = __webpack_require__(28);
+var _nativeAdapter = __webpack_require__(25);
 
 var _nativeAdapter2 = _interopRequireDefault(_nativeAdapter);
 
@@ -4136,7 +4072,7 @@ var registerMediaSourceAdapter = MediaSourceProvider.register;
 exports.registerMediaSourceAdapter = registerMediaSourceAdapter;
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4337,7 +4273,7 @@ var registerPlugin = PluginManager.register;
 exports.registerPlugin = registerPlugin;
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4550,7 +4486,7 @@ TextStyle.FontSizes = ["50%", "75%", "100%", "200%", "300%", "400%"];
 exports.default = TextStyle;
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4566,7 +4502,7 @@ var DrmScheme = exports.DrmScheme = {
 };
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4586,7 +4522,7 @@ var PLAYER_STATE_TYPES = {
 exports.default = PLAYER_STATE_TYPES;
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5424,7 +5360,7 @@ exports.processCues = processCues;
 exports.convertCueToDOMTree = convertCueToDOMTree;
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5437,7 +5373,7 @@ exports.Cue = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _textTrackDisplay = __webpack_require__(21);
+var _textTrackDisplay = __webpack_require__(20);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -5809,27 +5745,7 @@ if (typeof window !== 'undefined' && window.VTTCue) {
 exports.Cue = Cue;
 
 /***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _uaParserJs = __webpack_require__(48);
-
-var _uaParserJs2 = _interopRequireDefault(_uaParserJs);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Env = new _uaParserJs2.default().getResult();
-exports.default = Env;
-
-/***/ }),
-/* 24 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5841,75 +5757,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _index = __webpack_require__(0);
 
-var PlayerError = function () {
-  function PlayerError(error, param) {
-    _classCallCheck(this, PlayerError);
-
-    this.name = error.name;
-    this.message = error.message(param);
-  }
-
-  _createClass(PlayerError, [{
-    key: "getError",
-    value: function getError() {
-      return {
-        name: this.name,
-        message: this.message
-      };
-    }
-  }]);
-
-  return PlayerError;
-}();
-
-PlayerError.TYPE = {
-  NOT_REGISTERED_PLUGIN: {
-    name: "PluginNotRegisteredException",
-    message: function message(name) {
-      return "Cannot load " + name + " plugin. Name not found in the registry";
-    }
-  },
-  NOT_VALID_HANDLER: {
-    name: "PluginHandlerIsNotValidException",
-    message: function message() {
-      return "To activate plugin you must provide a class derived from BasePlugin";
-    }
-  },
-  NOT_IMPLEMENTED_METHOD: {
-    name: "NotImplementedException",
-    message: function message(method) {
-      return method + " method not implemented";
-    }
-  }
-};
-exports.default = PlayerError;
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _env = __webpack_require__(23);
-
-var _env2 = _interopRequireDefault(_env);
-
-var _logger = __webpack_require__(13);
-
-var _logger2 = _interopRequireDefault(_logger);
-
-var _drmScheme = __webpack_require__(19);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _drmScheme = __webpack_require__(18);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -5931,7 +5781,7 @@ var DrmSupport = function () {
      * @return {boolean} - Whether scheme can be play on the current environment.
      */
     value: function isProtocolSupported(scheme, drmData) {
-      var browser = _env2.default.browser.name;
+      var browser = _index.Env.browser.name;
       if (typeof DrmSupport._Browsers[browser] === 'function') {
         var drmScheme = DrmSupport._Browsers[browser]();
         DrmSupport._logger.debug("Supported DRM scheme for current environment is: " + drmScheme);
@@ -5946,42 +5796,42 @@ var DrmSupport = function () {
   return DrmSupport;
 }();
 
-DrmSupport._logger = _logger2.default.getLogger('DrmSupport');
+DrmSupport._logger = _index.LoggerFactory.getLogger('DrmSupport');
 DrmSupport._Browsers = {
   Safari: function Safari() {
-    var device = _env2.default.device.type;
-    var os = _env2.default.os.name;
+    var device = _index.Env.device.type;
+    var os = _index.Env.os.name;
     if (!device && os === 'Mac OS') {
       return _drmScheme.DrmScheme.FAIRPLAY;
     }
     return NOT_SUPPORTED;
   },
   Chrome: function Chrome() {
-    var device = _env2.default.device.type;
-    var os = _env2.default.os.name;
+    var device = _index.Env.device.type;
+    var os = _index.Env.os.name;
     if (!device || os === 'Android') {
       return _drmScheme.DrmScheme.WIDEVINE;
     }
     return NOT_SUPPORTED;
   },
   Firefox: function Firefox() {
-    var device = _env2.default.device.type;
+    var device = _index.Env.device.type;
     if (!device) {
       return _drmScheme.DrmScheme.WIDEVINE;
     }
     return NOT_SUPPORTED;
   },
   Edge: function Edge() {
-    var device = _env2.default.device.type;
+    var device = _index.Env.device.type;
     if (!device) {
       return _drmScheme.DrmScheme.PLAYREADY;
     }
     return NOT_SUPPORTED;
   },
   IE: function IE() {
-    var device = _env2.default.device.type;
-    var os = _env2.default.os.name;
-    var osVersion = _env2.default.os.version;
+    var device = _index.Env.device.type;
+    var os = _index.Env.os.name;
+    var osVersion = _index.Env.os.version;
     if (!device && os === 'Windows' && Number.parseFloat(osVersion) >= 8.1) {
       return _drmScheme.DrmScheme.PLAYREADY;
     }
@@ -5991,7 +5841,7 @@ DrmSupport._Browsers = {
 exports.default = DrmSupport;
 
 /***/ }),
-/* 26 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6003,7 +5853,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _baseDrmProtocol = __webpack_require__(14);
+var _baseDrmProtocol = __webpack_require__(13);
 
 var _baseDrmProtocol2 = _interopRequireDefault(_baseDrmProtocol);
 
@@ -6258,7 +6108,7 @@ FairPlay._WebkitEvents = {
 exports.default = FairPlay;
 
 /***/ }),
-/* 27 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6284,7 +6134,7 @@ var _eventManager2 = _interopRequireDefault(_eventManager);
 
 var _events = __webpack_require__(7);
 
-var _mediaSourceProvider = __webpack_require__(16);
+var _mediaSourceProvider = __webpack_require__(15);
 
 var _mediaSourceProvider2 = _interopRequireDefault(_mediaSourceProvider);
 
@@ -6298,7 +6148,7 @@ var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
 var _textTrack = __webpack_require__(4);
 
-var _vttCue = __webpack_require__(22);
+var _vttCue = __webpack_require__(21);
 
 var _index = __webpack_require__(0);
 
@@ -7327,7 +7177,7 @@ Html5.id = "html5";
 exports.default = Html5;
 
 /***/ }),
-/* 28 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7361,11 +7211,11 @@ var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
 var _textTrack = __webpack_require__(4);
 
-var _baseMediaSourceAdapter = __webpack_require__(15);
+var _baseMediaSourceAdapter = __webpack_require__(14);
 
 var _baseMediaSourceAdapter2 = _interopRequireDefault(_baseMediaSourceAdapter);
 
-var _fairplay = __webpack_require__(26);
+var _fairplay = __webpack_require__(23);
 
 var _fairplay2 = _interopRequireDefault(_fairplay);
 
@@ -8098,7 +7948,7 @@ NativeAdapter._drmProtocol = null;
 exports.default = NativeAdapter;
 
 /***/ }),
-/* 29 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8229,7 +8079,7 @@ var Middleware = function () {
 exports.default = Middleware;
 
 /***/ }),
-/* 30 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8241,7 +8091,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _middleware = __webpack_require__(29);
+var _middleware = __webpack_require__(26);
 
 var _middleware2 = _interopRequireDefault(_middleware);
 
@@ -8329,7 +8179,7 @@ PlaybackMiddleware.Actions = {
 exports.default = PlaybackMiddleware;
 
 /***/ }),
-/* 31 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8345,15 +8195,15 @@ var _player = __webpack_require__(8);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _baseMediaSourceAdapter = __webpack_require__(15);
+var _baseMediaSourceAdapter = __webpack_require__(14);
 
 var _baseMediaSourceAdapter2 = _interopRequireDefault(_baseMediaSourceAdapter);
 
-var _mediaSourceProvider = __webpack_require__(16);
+var _mediaSourceProvider = __webpack_require__(15);
 
-var _pluginManager = __webpack_require__(17);
+var _pluginManager = __webpack_require__(16);
 
-var _baseDrmProtocol = __webpack_require__(14);
+var _baseDrmProtocol = __webpack_require__(13);
 
 var _baseDrmProtocol2 = _interopRequireDefault(_baseDrmProtocol);
 
@@ -8381,7 +8231,7 @@ var _textTrack = __webpack_require__(4);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _textStyle = __webpack_require__(18);
+var _textStyle = __webpack_require__(17);
 
 var _textStyle2 = _interopRequireDefault(_textStyle);
 
@@ -8441,7 +8291,7 @@ exports.BaseDrmProtocol = _baseDrmProtocol2.default;
 exports.default = loadPlayer;
 
 /***/ }),
-/* 32 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8461,11 +8311,11 @@ var _eventManager = __webpack_require__(6);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _state = __webpack_require__(33);
+var _state = __webpack_require__(30);
 
 var _state2 = _interopRequireDefault(_state);
 
-var _stateTypes = __webpack_require__(20);
+var _stateTypes = __webpack_require__(19);
 
 var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
@@ -8752,7 +8602,7 @@ var StateManager = function () {
 exports.default = StateManager;
 
 /***/ }),
-/* 33 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8834,7 +8684,7 @@ var State = function () {
 exports.default = State;
 
 /***/ }),
-/* 34 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8852,7 +8702,7 @@ var TRACK_TYPES = {
 exports.default = TRACK_TYPES;
 
 /***/ }),
-/* 35 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9075,7 +8925,27 @@ var Dom = function () {
 exports.default = Dom;
 
 /***/ }),
-/* 36 */
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _uaParserJs = __webpack_require__(48);
+
+var _uaParserJs2 = _interopRequireDefault(_uaParserJs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Env = new _uaParserJs2.default().getResult();
+exports.default = Env;
+
+/***/ }),
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9130,7 +9000,7 @@ var Generator = function () {
 exports.default = Generator;
 
 /***/ }),
-/* 37 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9190,7 +9060,63 @@ var Locale = function () {
 exports.default = Locale;
 
 /***/ }),
-/* 38 */
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.LOG_LEVEL = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jsLogger = __webpack_require__(44);
+
+var JsLogger = _interopRequireWildcard(_jsLogger);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var LOG_LEVEL = {
+  "DEBUG": JsLogger.DEBUG,
+  "INFO": JsLogger.INFO,
+  "TIME": JsLogger.TIME,
+  "WARN": JsLogger.WARN,
+  "ERROR": JsLogger.ERROR,
+  "OFF": JsLogger.OFF
+};
+
+var LoggerFactory = function () {
+  function LoggerFactory(options) {
+    _classCallCheck(this, LoggerFactory);
+
+    JsLogger.useDefaults(options || {});
+  }
+
+  _createClass(LoggerFactory, [{
+    key: "getLogger",
+    value: function getLogger(name) {
+      if (!name) {
+        return JsLogger;
+      }
+      return JsLogger.get(name);
+    }
+  }]);
+
+  return LoggerFactory;
+}();
+
+var lf = new LoggerFactory({ defaultLevel: JsLogger.DEBUG });
+
+exports.default = lf;
+exports.LOG_LEVEL = LOG_LEVEL;
+
+/***/ }),
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9204,12 +9130,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Number = function () {
-  function Number() {
-    _classCallCheck(this, Number);
+var Num = function () {
+  function Num() {
+    _classCallCheck(this, Num);
   }
 
-  _createClass(Number, null, [{
+  _createClass(Num, null, [{
     key: "isNumber",
 
     /**
@@ -9228,7 +9154,7 @@ var Number = function () {
   }, {
     key: "isInt",
     value: function isInt(n) {
-      return Number.isNumber(n) && n % 1 === 0;
+      return Num.isNumber(n) && n % 1 === 0;
     }
 
     /**
@@ -9239,17 +9165,17 @@ var Number = function () {
   }, {
     key: "isFloat",
     value: function isFloat(n) {
-      return Number.isNumber(n) && n % 1 !== 0;
+      return Num.isNumber(n) && n % 1 !== 0;
     }
   }]);
 
-  return Number;
+  return Num;
 }();
 
-exports.default = Number;
+exports.default = Num;
 
 /***/ }),
-/* 39 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9269,12 +9195,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Object = function () {
-  function Object() {
-    _classCallCheck(this, Object);
+var Obj = function () {
+  function Obj() {
+    _classCallCheck(this, Obj);
   }
 
-  _createClass(Object, [{
+  _createClass(Obj, [{
     key: "bind",
 
 
@@ -9355,17 +9281,17 @@ var Object = function () {
         return target;
       }
       var source = sources.shift();
-      if (Object.isObject(target) && Object.isObject(source)) {
+      if (Obj.isObject(target) && Obj.isObject(source)) {
         for (var key in source) {
-          if (Object.isObject(source[key])) {
+          if (Obj.isObject(source[key])) {
             if (!target[key]) window.Object.assign(target, _defineProperty({}, key, {}));
-            Object.mergeDeep(target[key], source[key]);
+            Obj.mergeDeep(target[key], source[key]);
           } else {
             window.Object.assign(target, _defineProperty({}, key, source[key]));
           }
         }
       }
-      return Object.mergeDeep.apply(Object, [target].concat(_toConsumableArray(sources)));
+      return Obj.mergeDeep.apply(Obj, [target].concat(_toConsumableArray(sources)));
     }
 
     /**
@@ -9381,14 +9307,14 @@ var Object = function () {
         node = data.length > 0 ? data.slice(0) : [];
         node.forEach(function (e, i) {
           if ((typeof e === "undefined" ? "undefined" : _typeof(e)) === "object" && e !== {} || Array.isArray(e) && e.length > 0) {
-            node[i] = Object.copyDeep(e);
+            node[i] = Obj.copyDeep(e);
           }
         });
       } else if ((typeof data === "undefined" ? "undefined" : _typeof(data)) === "object") {
         node = window.Object.assign({}, data);
         window.Object.keys(node).forEach(function (key) {
           if (_typeof(node[key]) === "object" && node[key] !== {} || Array.isArray(node[key]) && node[key].length > 0) {
-            node[key] = Object.copyDeep(node[key]);
+            node[key] = Obj.copyDeep(node[key]);
           }
         });
       } else {
@@ -9475,10 +9401,68 @@ var Object = function () {
     }
   }]);
 
-  return Object;
+  return Obj;
 }();
 
-exports.default = Object;
+exports.default = Obj;
+
+/***/ }),
+/* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var PlayerError = function () {
+  function PlayerError(error, param) {
+    _classCallCheck(this, PlayerError);
+
+    this.name = error.name;
+    this.message = error.message(param);
+  }
+
+  _createClass(PlayerError, [{
+    key: "getError",
+    value: function getError() {
+      return {
+        name: this.name,
+        message: this.message
+      };
+    }
+  }]);
+
+  return PlayerError;
+}();
+
+PlayerError.TYPE = {
+  NOT_REGISTERED_PLUGIN: {
+    name: "PluginNotRegisteredException",
+    message: function message(name) {
+      return "Cannot load " + name + " plugin. Name not found in the registry";
+    }
+  },
+  NOT_VALID_HANDLER: {
+    name: "PluginHandlerIsNotValidException",
+    message: function message() {
+      return "To activate plugin you must provide a class derived from BasePlugin";
+    }
+  },
+  NOT_IMPLEMENTED_METHOD: {
+    name: "NotImplementedException",
+    message: function message(method) {
+      return method + " method not implemented";
+    }
+  }
+};
+exports.default = PlayerError;
 
 /***/ }),
 /* 40 */
@@ -9658,12 +9642,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var String = function () {
-  function String() {
-    _classCallCheck(this, String);
+var Str = function () {
+  function Str() {
+    _classCallCheck(this, Str);
   }
 
-  _createClass(String, null, [{
+  _createClass(Str, null, [{
     key: 'capitlize',
 
     /**
@@ -9696,10 +9680,10 @@ var String = function () {
     }
   }]);
 
-  return String;
+  return Str;
 }();
 
-exports.default = String;
+exports.default = Str;
 
 /***/ }),
 /* 42 */

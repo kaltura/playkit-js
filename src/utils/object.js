@@ -1,5 +1,5 @@
 // @flow
-export default class Object {
+export default class Obj {
   /**
    * @param {Array<Object>} objects - The objects to merge
    * @returns {Object} - The merged object.
@@ -30,17 +30,17 @@ export default class Object {
       return target;
     }
     const source = sources.shift();
-    if (Object.isObject(target) && Object.isObject(source)) {
+    if (Obj.isObject(target) && Obj.isObject(source)) {
       for (const key in source) {
-        if (Object.isObject(source[key])) {
+        if (Obj.isObject(source[key])) {
           if (!target[key]) window.Object.assign(target, {[key]: {}});
-          Object.mergeDeep(target[key], source[key]);
+          Obj.mergeDeep(target[key], source[key]);
         } else {
           window.Object.assign(target, {[key]: source[key]});
         }
       }
     }
-    return Object.mergeDeep(target, ...sources);
+    return Obj.mergeDeep(target, ...sources);
   }
 
   /**
@@ -54,7 +54,7 @@ export default class Object {
       node.forEach((e, i) => {
         if ((typeof e === "object" && e !== {}) ||
           (Array.isArray(e) && e.length > 0)) {
-          node[i] = Object.copyDeep(e);
+          node[i] = Obj.copyDeep(e);
         }
       });
     } else if (typeof data === "object") {
@@ -62,7 +62,7 @@ export default class Object {
       window.Object.keys(node).forEach((key) => {
         if ((typeof node[key] === "object" && node[key] !== {}) ||
           (Array.isArray(node[key]) && node[key].length > 0)) {
-          node[key] = Object.copyDeep(node[key]);
+          node[key] = Obj.copyDeep(node[key]);
         }
       });
     } else {

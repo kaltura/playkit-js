@@ -1,5 +1,5 @@
 // @flow
-export default class Number {
+export default class Num {
   /**
    * @param {number} n - A certain number
    * @returns {boolean} - If the input is a number
@@ -13,7 +13,7 @@ export default class Number {
    * @returns {boolean} - If the input is an integer
    */
   static isInt(n: number): boolean {
-    return Number.isNumber(n) && n % 1 === 0;
+    return Num.isNumber(n) && n % 1 === 0;
   }
 
   /**
@@ -21,6 +21,6 @@ export default class Number {
    * @returns {boolean} - If the input is a float
    */
   static isFloat(n: number): boolean {
-    return Number.isNumber(n) && n % 1 !== 0;
+    return Num.isNumber(n) && n % 1 !== 0;
   }
 }

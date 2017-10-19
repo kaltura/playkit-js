@@ -1,6 +1,5 @@
 // @flow
-import Env from '../utils/env'
-import LoggerFactory from '../utils/logger'
+import {LoggerFactory, Env} from '../utils/index'
 import {DrmScheme} from './drm-scheme'
 
 const NOT_SUPPORTED: string = 'not_supported_drm_playback';
