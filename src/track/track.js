@@ -1,10 +1,12 @@
 //@flow
+import TrackType from './track-types'
 
 /**
  * General track representation of the player.
  * @classdesc
  */
 export default class Track {
+  static Type: { [track: string]: string } = TrackType;
   static DefaultTrackSettings: TrackSettings = {
     active: false,
     index: -1,

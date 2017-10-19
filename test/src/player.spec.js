@@ -1130,9 +1130,9 @@ describe('Track enum', function () {
     config.sources = sourcesConfig.Mp4;
     let player = new Player(config);
     playerContainer.appendChild(player.getView());
-    player.Track.VIDEO.should.be.equal('video');
-    player.Track.AUDIO.should.be.equal('audio');
-    player.Track.TEXT.should.be.equal('text');
+    player.Track.Type.VIDEO.should.be.equal('video');
+    player.Track.Type.AUDIO.should.be.equal('audio');
+    player.Track.Type.TEXT.should.be.equal('text');
   });
 });
 
