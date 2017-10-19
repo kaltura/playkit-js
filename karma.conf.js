@@ -15,6 +15,7 @@ module.exports = function (config) {
       'Chrome',
       'Firefox'
     ],
+    browserNoActivityTimeout: 30000,
     concurrency: 1,
     singleRun: true,
     colors: true,
