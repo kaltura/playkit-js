@@ -41,32 +41,33 @@ export default class FairPlay extends BaseDrmProtocol {
     if (!fpDrmData || FairPlay._keySession) {
       return;
     }
+    if (fpDrmData.certificate) {
+      let fpCertificate = fpDrmData.certificate;
+      let videoElement = event.target;
+      let initData = event.initData;
+      let contentId = FairPlay._extractContentId(initData);
+      let aCertificate = FairPlay._base64DecodeUint8Array(fpCertificate);
 
-    let fpCertificate = fpDrmData.certificate;
-    let videoElement = event.target;
-    let initData = event.initData;
-    let contentId = FairPlay._extractContentId(initData);
-    let aCertificate = FairPlay._base64DecodeUint8Array(fpCertificate);
+      initData = FairPlay._concatInitDataIdAndCertificate(initData, contentId, aCertificate);
 
-    initData = FairPlay._concatInitDataIdAndCertificate(initData, contentId, aCertificate);
-
-    if (!videoElement.webkitKeys) {
-      let keySystem = FairPlay._selectKeySystem();
-      FairPlay._logger.debug("Sets media keys");
-      videoElement.webkitSetMediaKeys(new window.WebKitMediaKeys(keySystem));
+      if (!videoElement.webkitKeys) {
+        let keySystem = FairPlay._selectKeySystem();
+        FairPlay._logger.debug("Sets media keys");
+        videoElement.webkitSetMediaKeys(new window.WebKitMediaKeys(keySystem));
+      }
+      if (!videoElement.webkitKeys) {
+        throw new Error("Could not create MediaKeys");
+      }
+      FairPlay._logger.debug("Creates session");
+      FairPlay._keySession = videoElement.webkitKeys.createSession('video/mp4', initData);
+      if (!FairPlay._keySession) {
+        throw new Error("Could not create key session");
+      }
+      FairPlay._keySession.contentId = contentId;
+      FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_MESSAGE, FairPlay._onWebkitKeyMessage.bind(null, fpDrmData), false);
+      FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_ADDED, FairPlay._onWebkitKeyAdded, false);
+      FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_ERROR, FairPlay._onWebkitKeyError, false);
     }
-    if (!videoElement.webkitKeys) {
-      throw new Error("Could not create MediaKeys");
-    }
-    FairPlay._logger.debug("Creates session");
-    FairPlay._keySession = videoElement.webkitKeys.createSession('video/mp4', initData);
-    if (!FairPlay._keySession) {
-      throw new Error("Could not create key session");
-    }
-    FairPlay._keySession.contentId = contentId;
-    FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_MESSAGE, FairPlay._onWebkitKeyMessage.bind(null, fpDrmData), false);
-    FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_ADDED, FairPlay._onWebkitKeyAdded, false);
-    FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_ERROR, FairPlay._onWebkitKeyError, false);
   }
 
   static destroy(): void {

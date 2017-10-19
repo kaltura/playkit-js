@@ -544,7 +544,7 @@ var TextTrack = function (_Track) {
 
     /**
      * @constructor
-     * @param {TextTrackSettings} settings - The track settings object.
+     * @param {TrackSettings} settings - The track settings object.
      */
 
     /**
@@ -588,6 +588,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _track3 = __webpack_require__(1);
 
 var _track4 = _interopRequireDefault(_track3);
+
+var _track5 = __webpack_require__(51);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -640,7 +642,7 @@ var VideoTrack = function (_Track) {
 
     /**
      * @constructor
-     * @param {VideoTrackSettings} settings - The track settings object
+     * @param {TrackSettings} settings - The track settings object
      */
 
   }], [{
@@ -11547,6 +11549,27 @@ module.exports = {
 		]
 	}
 };
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _videoTrack = __webpack_require__(5);
+
+var _videoTrack2 = _interopRequireDefault(_videoTrack);
+
+var _audioTrack = __webpack_require__(3);
+
+var _audioTrack2 = _interopRequireDefault(_audioTrack);
+
+var _textTrack = __webpack_require__(4);
+
+var _textTrack2 = _interopRequireDefault(_textTrack);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ })
 /******/ ]);

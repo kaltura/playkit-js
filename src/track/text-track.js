@@ -10,25 +10,25 @@ export default class TextTrack extends Track {
    * The kind of the text track:
    * subtitles/captions/metadata.
    * @member
-   * @type {string}
+   * @type {?string}
    * @private
    */
-  _kind: string;
+  _kind: ?string;
 
   /**
    * Getter for the kind of the text track.
    * @public
-   * @returns {string} - The kind of the text track.
+   * @returns {?string} - The kind of the text track.
    */
-  get kind(): string {
+  get kind(): ?string {
     return this._kind;
   }
 
   /**
    * @constructor
-   * @param {TextTrackSettings} settings - The track settings object.
+   * @param {TrackSettings} settings - The track settings object.
    */
-  constructor(settings: TextTrackSettings) {
+  constructor(settings: TrackSettings) {
     super(settings);
     this._kind = settings.kind;
   }

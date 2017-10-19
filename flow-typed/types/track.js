@@ -4,21 +4,15 @@ import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
 
 declare type TrackSettings = {
-  id: ?string,
   active: boolean,
-  label: ?string,
-  language: ?string,
-  index: number
-};
-
-declare type TextTrackSettings = TrackSettings & {
-  kind: string
-};
-
-declare type VideoTrackSettings = TrackSettings & {
-  bandwidth: number,
-  width: number,
-  height: number
+  index: number,
+  id?: ?string,
+  label?: ?string,
+  language?: ?string,
+  kind?: ?string,
+  bandwidth?: ?number,
+  width?: ?number,
+  height?: ?number
 };
 
 declare type ActiveTracks = {

@@ -930,8 +930,8 @@ export default class Player extends FakeEventTarget {
     const preferNative = this._config.playback.preferNative;
     const sources = this._config.sources;
     for (let priority of streamPriority) {
-      const engineId = (typeof priority.engine === 'string') ? priority.engine.toLowerCase() : '';
-      const format = (typeof priority.format === 'string') ? priority.format.toLowerCase() : '';
+      const engineId: string = (typeof priority.engine === 'string') ? priority.engine.toLowerCase() : "";
+      const format: string = (typeof priority.format === 'string') ? priority.format.toLowerCase() : "";
       const Engine = Player._engines.find((Engine) => Engine.id === engineId);
       if (Engine) {
         const formatSources = sources[format];
@@ -1274,11 +1274,11 @@ export default class Player extends FakeEventTarget {
     if (language === AUTO) {
       const tracks = this._getTracksByType(type);
       const localeTrack: ?Track = tracks.find(track => Track.langComparer(Locale.language, track.language));
-      if (localeTrack) {
+      if (localeTrack && localeTrack.language) {
         language = localeTrack.language;
-      } else if (defaultTrack && defaultTrack.language !== OFF) {
+      } else if (defaultTrack && defaultTrack.language && defaultTrack.language !== OFF) {
         language = defaultTrack.language;
-      } else if (tracks && tracks.length > 0) {
+      } else if (tracks && tracks.length > 0 && tracks[0].language) {
         language = tracks[0].language;
       }
     }
