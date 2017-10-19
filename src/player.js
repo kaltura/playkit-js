@@ -794,6 +794,7 @@ export default class Player extends FakeEventTarget {
         sheet.insertRule(`#${this._playerId} .${SUBTITLES_CLASS_NAME} > div > div > div { ${style.toCSS()} }`, 0);
       }
       this._textStyle = style;
+      this.dispatchEvent(new FakeEvent(CustomEvents.TEXT_STYLE_CHANGED, {textStyle: style}));
     } catch (e) {
       Player._logger.error(e.message);
     }
@@ -1030,6 +1031,9 @@ export default class Player extends FakeEventTarget {
       }
       if (typeof this._config.playback.playsinline === 'boolean') {
         this.playsinline = this._config.playback.playsinline;
+      }
+      if (typeof this._config.playback.textStyle === "object") {
+        this.textStyle = Utils.Object.mergeDeep(new TextStyle(), this._config.playback.textStyle);
       }
       if (this._config.playback.preload === "auto") {
         /**
