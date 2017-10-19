@@ -72,7 +72,6 @@ describe('Obj', function () {
     });
   });
 
-
   describe('getPropertyPath', function () {
     let o;
 
