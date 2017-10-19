@@ -3,9 +3,10 @@ import Player from '../player'
 import EventManager from '../event/event-manager'
 import State from './state'
 import PlayerStates from './state-types'
-import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../event/events'
+import {Html5EventType} from '../event/event-types'
 import FakeEvent from '../event/fake-event'
 import {LoggerFactory} from '../utils/index'
+import PlayerStateChangedEvent from '../event/custom-events/player-state-changed-event'
 
 /**
  * This class responsible to manage all the state machine of the player.
@@ -61,17 +62,17 @@ export default class StateManager {
    */
   _transitions: Transition = {
     [PlayerStates.IDLE]: {
-      [Html5Events.LOAD_START]: () => {
+      [Html5EventType.LOAD_START]: () => {
         this._updateState(PlayerStates.LOADING);
         this._dispatchEvent();
       },
-      [Html5Events.PLAY]: () => {
+      [Html5EventType.PLAY]: () => {
         this._updateState(PlayerStates.BUFFERING);
         this._dispatchEvent();
       }
     },
     [PlayerStates.LOADING]: {
-      [Html5Events.LOADED_METADATA]: () => {
+      [Html5EventType.LOADED_METADATA]: () => {
         if (this._player.config.playback.autoplay) {
           this._updateState(PlayerStates.PLAYING);
         } else {
@@ -79,53 +80,53 @@ export default class StateManager {
         }
         this._dispatchEvent();
       },
-      [Html5Events.ERROR]: () => {
+      [Html5EventType.ERROR]: () => {
         this._updateState(PlayerStates.IDLE);
         this._dispatchEvent();
       }
     },
     [PlayerStates.PAUSED]: {
-      [Html5Events.PLAY]: () => {
+      [Html5EventType.PLAY]: () => {
         this._updateState(PlayerStates.PLAYING);
         this._dispatchEvent();
       },
-      [Html5Events.PLAYING]: () => {
+      [Html5EventType.PLAYING]: () => {
         this._updateState(PlayerStates.PLAYING);
         this._dispatchEvent();
       },
-      [Html5Events.ENDED]: () => {
+      [Html5EventType.ENDED]: () => {
         this._updateState(PlayerStates.IDLE);
         this._dispatchEvent();
       }
     },
     [PlayerStates.PLAYING]: {
-      [Html5Events.PAUSE]: () => {
+      [Html5EventType.PAUSE]: () => {
         this._updateState(PlayerStates.PAUSED);
         this._dispatchEvent();
       },
-      [Html5Events.WAITING]: () => {
+      [Html5EventType.WAITING]: () => {
         this._updateState(PlayerStates.BUFFERING);
         this._dispatchEvent();
       },
-      [Html5Events.ENDED]: () => {
+      [Html5EventType.ENDED]: () => {
         this._updateState(PlayerStates.IDLE);
         this._dispatchEvent();
       },
-      [Html5Events.ERROR]: () => {
+      [Html5EventType.ERROR]: () => {
         this._updateState(PlayerStates.IDLE);
         this._dispatchEvent();
       }
     },
     [PlayerStates.BUFFERING]: {
-      [Html5Events.PLAYING]: () => {
+      [Html5EventType.PLAYING]: () => {
         this._updateState(PlayerStates.PLAYING);
         this._dispatchEvent();
       },
-      [Html5Events.PAUSE]: () => {
+      [Html5EventType.PAUSE]: () => {
         this._updateState(PlayerStates.PAUSED);
         this._dispatchEvent();
       },
-      [Html5Events.SEEKED]: () => {
+      [Html5EventType.SEEKED]: () => {
         if (this._prevState && this._prevState.type === PlayerStates.PLAYING) {
           this._updateState(PlayerStates.PLAYING);
           this._dispatchEvent();
@@ -154,15 +155,15 @@ export default class StateManager {
    * @returns {void}
    */
   _attachListeners(): void {
-    this._eventManager.listen(this._player, Html5Events.ERROR, this._doTransition.bind(this));
-    this._eventManager.listen(this._player, Html5Events.ENDED, this._doTransition.bind(this));
-    this._eventManager.listen(this._player, Html5Events.PLAY, this._doTransition.bind(this));
-    this._eventManager.listen(this._player, Html5Events.LOAD_START, this._doTransition.bind(this));
-    this._eventManager.listen(this._player, Html5Events.PLAYING, this._doTransition.bind(this));
-    this._eventManager.listen(this._player, Html5Events.LOADED_METADATA, this._doTransition.bind(this));
-    this._eventManager.listen(this._player, Html5Events.PAUSE, this._doTransition.bind(this));
-    this._eventManager.listen(this._player, Html5Events.WAITING, this._doTransition.bind(this));
-    this._eventManager.listen(this._player, Html5Events.SEEKED, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, Html5EventType.ERROR, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, Html5EventType.ENDED, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, Html5EventType.PLAY, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, Html5EventType.LOAD_START, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, Html5EventType.PLAYING, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, Html5EventType.LOADED_METADATA, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, Html5EventType.PAUSE, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, Html5EventType.WAITING, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, Html5EventType.SEEKED, this._doTransition.bind(this));
   }
 
   /**
@@ -201,11 +202,7 @@ export default class StateManager {
    * @returns {void}
    */
   _dispatchEvent(): void {
-    let event = new FakeEvent(CustomEvents.PLAYER_STATE_CHANGED, ({
-      'oldState': this._prevState,
-      'newState': this._curState
-    }: StateChanged));
-    this._player.dispatchEvent(event);
+    this._player.dispatchEvent(new PlayerStateChangedEvent(this.previousState, this.currentState));
   }
 
   /**

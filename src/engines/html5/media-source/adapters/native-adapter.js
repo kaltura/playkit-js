@@ -1,13 +1,14 @@
 //@flow
 import EventManager from '../../../../event/event-manager'
-import {HTML5_EVENTS as Html5Events} from '../../../../event/events'
+import {Html5EventType} from '../../../../event/event-types'
 import Track from '../../../../track/track'
 import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'
 import {TextTrack as PKTextTrack} from '../../../../track/text-track'
 import BaseMediaSourceAdapter from '../base-media-source-adapter'
 import FairPlay from '../../../../drm/fairplay'
-import {Env, Dom} from '../../../../utils/index'
+import {Env, Dom, LoggerFactory} from '../../../../utils/index'
+import AbrModeChangedEvent from '../../../../event/custom-events/abr-mode-changed-event'
 
 /**
  * An illustration of media source extension for progressive download
@@ -29,7 +30,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    * @static
    */
-  static _logger = BaseMediaSourceAdapter.getLogger(NativeAdapter.id);
+  static _logger = LoggerFactory.getLogger(NativeAdapter.id);
   /**
    * static video element for canPlayType testing
    * @member {} TEST_VIDEO
@@ -179,12 +180,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
         // We're using 'loadeddata' event for native hls (on 'loadedmetadata' native hls doesn't have tracks yet).
-        this._eventManager.listenOnce(this._videoElement, Html5Events.LOADED_DATA, () => {
+        this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => {
           let data = {tracks: this._getParsedTracks()};
           NativeAdapter._logger.debug('The source has been loaded successfully');
           resolve(data);
         });
-        this._eventManager.listenOnce(this._videoElement, Html5Events.ERROR, (error) => {
+        this._eventManager.listenOnce(this._videoElement, Html5EventType.ERROR, (error) => {
           NativeAdapter._logger.error(error);
           reject(error);
         });
@@ -193,7 +194,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         }
         if (this._sourceObj && this._sourceObj.url) {
           this._videoElement.src = this._sourceObj.url;
-          this._trigger(BaseMediaSourceAdapter.CustomEvents.ABR_MODE_CHANGED, {mode: this._isProgressivePlayback() ? 'manual' : 'auto'});
+          this.dispatchEvent(new AbrModeChangedEvent(this._isProgressivePlayback() ? 'manual' : 'auto'));
         }
         if (startTime) {
           this._videoElement.currentTime = startTime;
@@ -382,13 +383,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       let currentTime = this._videoElement.currentTime;
       let paused = this._videoElement.paused;
       this._sourceObj = videoTracks[videoTrack.index];
-      this._eventManager.listenOnce(this._videoElement, Html5Events.LOADED_DATA, () => {
+      this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => {
         if (Env.browser.name === 'Android Browser') {
           // In android browser we have to seek only after some playback.
-          this._eventManager.listenOnce(this._videoElement, Html5Events.DURATION_CHANGE, () => {
+          this._eventManager.listenOnce(this._videoElement, Html5EventType.DURATION_CHANGE, () => {
             this._videoElement.currentTime = currentTime;
           });
-          this._eventManager.listenOnce(this._videoElement, Html5Events.SEEKED, () => {
+          this._eventManager.listenOnce(this._videoElement, Html5EventType.SEEKED, () => {
             this._onTrackChanged(videoTrack);
             if (paused) {
               this._videoElement.pause();
@@ -396,7 +397,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           });
           this._videoElement.play();
         } else {
-          this._eventManager.listenOnce(this._videoElement, Html5Events.SEEKED, () => {
+          this._eventManager.listenOnce(this._videoElement, Html5EventType.SEEKED, () => {
             this._onTrackChanged(videoTrack);
           });
           this._videoElement.currentTime = currentTime;

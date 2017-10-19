@@ -2,13 +2,14 @@
 import FakeEventTarget from '../../event/fake-event-target'
 import FakeEvent from '../../event/fake-event'
 import EventManager from '../../event/event-manager'
-import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../../event/events'
+import {Html5EventType, CustomEventType} from '../../event/event-types'
 import MediaSourceProvider from './media-source/media-source-provider'
 import VideoTrack from '../../track/video-track'
 import AudioTrack from '../../track/audio-track'
 import {TextTrack as PKTextTrack} from '../../track/text-track'
 import {Cue} from '../../track/vtt-cue'
 import {Dom, Generator} from '../../utils/index'
+import TextCueChangedEvent from '../../event/custom-events/text-cue-changed-event'
 
 /**
  * Html5 engine for playback.
@@ -141,17 +142,17 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   attach(): void {
-    Object.keys(Html5Events).forEach((html5Event) => {
-      this._eventManager.listen(this._el, Html5Events[html5Event], () => {
-        this.dispatchEvent(new FakeEvent(Html5Events[html5Event]));
+    Object.keys(Html5EventType).forEach((html5Event) => {
+      this._eventManager.listen(this._el, Html5EventType[html5Event], () => {
+        this.dispatchEvent(new FakeEvent(Html5EventType[html5Event]));
       });
     });
     if (this._mediaSourceAdapter) {
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.AUDIO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.TEXT_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.TEXT_CUE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.AUDIO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
     }
   }
 
@@ -161,14 +162,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   detach(): void {
-    Object.keys(Html5Events).forEach((html5Event) => {
-      this._eventManager.unlisten(this._el, Html5Events[html5Event]);
+    Object.keys(Html5EventType).forEach((html5Event) => {
+      this._eventManager.unlisten(this._el, Html5EventType[html5Event]);
     });
     if (this._mediaSourceAdapter) {
-      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGED);
-      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.AUDIO_TRACK_CHANGED);
-      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.TEXT_TRACK_CHANGED);
-      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.TEXT_CUE_CHANGED);
+      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEventType.VIDEO_TRACK_CHANGED);
+      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEventType.AUDIO_TRACK_CHANGED);
+      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEventType.TEXT_TRACK_CHANGED);
+      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEventType.TEXT_CUE_CHANGED);
     }
   }
 
@@ -776,7 +777,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text));
       }
     }
-    this.dispatchEvent(new FakeEvent(CustomEvents.TEXT_CUE_CHANGED, {cues: activeCues}));
+    this.dispatchEvent(new TextCueChangedEvent(activeCues));
   }
 
   /**
@@ -797,4 +798,3 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return null;
   }
 }
-

@@ -1,28 +1,16 @@
 //@flow
 /* eslint-disable no-unused-vars */
-import FakeEvent from '../../../event/fake-event'
 import FakeEventTarget from '../../../event/fake-event-target'
-import {CUSTOM_EVENTS} from '../../../event/events'
 import Track from '../../../track/track'
 import VideoTrack from '../../../track/video-track'
 import AudioTrack from '../../../track/audio-track'
 import TextTrack from '../../../track/text-track'
-import {PlayerError, LoggerFactory} from '../../../utils/index'
+import {PlayerError} from '../../../utils/index'
+import VideoTrackChangedEvent from "../../../event/custom-events/video-track-changed-event";
+import AudioTrackChangedEvent from "../../../event/custom-events/audio-track-changed-event";
+import TextTrackChangedEvent from "../../../event/custom-events/text-track-changed-event";
 
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
-  /**
-   * Passing the custom events to the actual media source adapter.
-   * @static
-   */
-  static CustomEvents: { [event: string]: string } = CUSTOM_EVENTS;
-
-  /**
-   * Passing the getLogger function to the actual media source adapter.
-   * @type {Function}
-   * @static
-   */
-  static getLogger: Function = LoggerFactory.getLogger;
-
   /**
    * The adapter config.
    * @member {Object} _config
@@ -86,22 +74,12 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    */
   _onTrackChanged(track: Track): void {
     if (track instanceof VideoTrack) {
-      this._trigger(BaseMediaSourceAdapter.CustomEvents.VIDEO_TRACK_CHANGED, {selectedVideoTrack: track});
+      this.dispatchEvent(new VideoTrackChangedEvent(track));
     } else if (track instanceof AudioTrack) {
-      this._trigger(BaseMediaSourceAdapter.CustomEvents.AUDIO_TRACK_CHANGED, {selectedAudioTrack: track});
+      this.dispatchEvent(new AudioTrackChangedEvent(track));
     } else if (track instanceof TextTrack) {
-      this._trigger(BaseMediaSourceAdapter.CustomEvents.TEXT_TRACK_CHANGED, {selectedTextTrack: track});
+      this.dispatchEvent(new TextTrackChangedEvent(track));
     }
-  }
-
-  /**
-   * Dispatch an adapter event forward.
-   * @param {string} name - The name of the event.
-   * @param {Object} payload - The event payload.
-   * @returns {void}
-   */
-  _trigger(name: string, payload: Object): void {
-    this.dispatchEvent(new FakeEvent(name, payload));
   }
 
   /** Must implemented methods by the derived media source adapter **/
