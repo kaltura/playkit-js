@@ -2180,6 +2180,66 @@ describe('volume', function () {
   });
 });
 
+describe('set currentTime', function () {
+  let player, config, playerContainer;
+
+  before(() => {
+    playerContainer = createElement('DIV', targetId);
+  });
+
+  beforeEach(() => {
+    config = getConfigStructure();
+    config.sources = sourcesConfig.Mp4;
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElement(targetId);
+  });
+
+  it('should set the given currentTime', function (done) {
+    player.ready().then(() => {
+      player.currentTime = 2;
+      player._engine.currentTime.should.equal(2);
+      done()
+    });
+    player.load();
+  });
+
+  it('should do nothing for non number given', function (done) {
+    player.ready().then(() => {
+      player.currentTime = true;
+      player._engine.currentTime.should.equal(0);
+      done()
+    });
+    player.load();
+  });
+
+  it('should set 0 for negative number given', function (done) {
+    player.ready().then(() => {
+      player.currentTime = -1;
+      player._engine.currentTime.should.equal(0);
+      done()
+    });
+    player.load();
+  });
+
+  it('should set duration -1 for duration given', function (done) {
+    player.ready().then(() => {
+      player.currentTime = player.duration;
+      player._engine.currentTime.should.equal(player.duration - 0.1);
+      done()
+    });
+    player.load();
+  });
+});
+
 describe('destroy', function () {
   let sandbox, player, config;
 
