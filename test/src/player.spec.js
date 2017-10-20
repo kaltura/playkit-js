@@ -632,18 +632,17 @@ describe('selectTrack - video', function () {
         event.payload.selectedVideoTrack.index.should.equal(1);
         (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.false;
         (video.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.true;
-        tracks[0].active.should.be.false;
-        tracks[1].active.should.be.true;
+        videoTracks[0].active.should.be.false;
+        videoTracks[1].active.should.be.true;
         done();
       });
-      let tracks = player._tracks.filter((track) => {
-        return track instanceof VideoTrack;
-      });
+      let videoTracks = player.getTracks('video');
       (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.true;
       (video.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.false;
-      tracks[0].active.should.be.true;
-      tracks[1].active.should.be.false;
-      player.selectTrack(new VideoTrack({index: 1}));
+      videoTracks.length.should.equal(2);
+      videoTracks[0].active.should.be.true;
+      videoTracks[1].active.should.be.false;
+      player.selectTrack(videoTracks[1]);
     });
     player.configure(config);
     player.load();
