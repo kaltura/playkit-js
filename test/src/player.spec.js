@@ -601,19 +601,12 @@ describe('getTracks real', function () {
 });
 
 describe('selectTrack - video', function () {
-
   let config, player, video;
-  let playerContainer;
-
-  before(() => {
-    playerContainer = createElement('DIV', targetId);
-  });
 
   beforeEach(() => {
     config = getConfigStructure();
     config.sources = sourcesConfig.MultipleSources;
     player = new Player();
-    playerContainer.appendChild(player.getView());
   });
 
   afterEach(() => {
@@ -622,7 +615,6 @@ describe('selectTrack - video', function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
-    removeElement(targetId);
   });
 
   it('should select a new video track', (done) => {
@@ -672,12 +664,7 @@ describe('selectTrack - video', function () {
 });
 
 describe('selectTrack - audio', function () {
-
   let config, player, video;
-
-  before(() => {
-    createElement('DIV', targetId);
-  });
 
   beforeEach(() => {
     config = getConfigStructure();
@@ -691,7 +678,6 @@ describe('selectTrack - audio', function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
-    removeElement(targetId);
   });
 
   it('should select a new audio track', (done) => {
@@ -788,19 +774,12 @@ describe('selectTrack - audio', function () {
 });
 
 describe('selectTrack - text', function () {
-
   let config, player, video, track1, track2;
-  let playerContainer;
-
-  before(() => {
-    playerContainer = createElement('DIV', targetId);
-  });
 
   beforeEach(() => {
     config = getConfigStructure();
     config.sources = sourcesConfig.Mp4;
     player = new Player(config);
-    playerContainer.appendChild(player.getView());
     video = player._engine.getVideoElement();
     track1 = document.createElement("track");
     track2 = document.createElement("track");
@@ -819,7 +798,6 @@ describe('selectTrack - text', function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
-    removeElement(targetId);
   });
 
   it('should select a new subtitles track', (done) => {
@@ -928,18 +906,12 @@ describe('selectTrack - text', function () {
 });
 
 describe('getActiveTracks', function () {
-
-  let config, player, video, track1, track2, playerContainer;
-
-  before(() => {
-    playerContainer = createElement('DIV', targetId);
-  });
+  let config, player, video, track1, track2;
 
   beforeEach(() => {
     config = getConfigStructure();
     config.sources = sourcesConfig.MultipleSources;
     player = new Player(config);
-    playerContainer.appendChild(player.getView());
     video = player._engine.getVideoElement();
     track1 = document.createElement("track");
     track2 = document.createElement("track");
@@ -958,7 +930,6 @@ describe('getActiveTracks', function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
-    removeElement(targetId);
   });
 
   it('should get the active tracks before and after switching', (done) => {
@@ -1003,18 +974,12 @@ describe('getActiveTracks', function () {
 });
 
 describe('hideTextTrack', function () {
-
-  let config, player, video, track1, track2, playerContainer;
-
-  before(() => {
-    playerContainer = createElement('DIV', targetId);
-  });
+  let config, player, video, track1, track2;
 
   beforeEach(() => {
     config = getConfigStructure();
     config.sources = sourcesConfig.Mp4;
     player = new Player(config);
-    playerContainer.appendChild(player.getView());
     video = player._engine.getVideoElement();
     track1 = document.createElement("track");
     track2 = document.createElement("track");
@@ -1033,7 +998,6 @@ describe('hideTextTrack', function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
-    removeElement(targetId);
   });
 
   it('should disable the active text track', (done) => {
@@ -1057,17 +1021,10 @@ describe('hideTextTrack', function () {
 });
 
 describe('Text Track API', () => {
-
   let player;
-  let playerContainer;
-
-  before(() => {
-    playerContainer = createElement('DIV', targetId);
-  });
 
   beforeEach(() => {
     player = new Player();
-    playerContainer.appendChild(player.getView());
   });
 
   afterEach(() => {
@@ -1076,7 +1033,6 @@ describe('Text Track API', () => {
 
   after(() => {
     removeVideoElementsFromTestPage();
-    removeElement(targetId);
   });
 
   describe('textStyle API', () => {
@@ -1113,21 +1069,14 @@ describe('Text Track API', () => {
 });
 
 describe('Track enum', function () {
-  let playerContainer;
-  before(() => {
-    playerContainer = createElement('DIV', targetId);
-  });
-
   after(() => {
     removeVideoElementsFromTestPage();
-    removeElement(targetId);
   });
 
   it('should return the track enum', () => {
     let config = getConfigStructure();
     config.sources = sourcesConfig.Mp4;
     let player = new Player(config);
-    playerContainer.appendChild(player.getView());
     player.Track.VIDEO.should.be.equal('video');
     player.Track.AUDIO.should.be.equal('audio');
     player.Track.TEXT.should.be.equal('text');
