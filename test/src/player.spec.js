@@ -928,7 +928,7 @@ describe.skip('selectTrack - text', function () {
   });
 });
 
-describe('getActiveTracks', function () {
+describe.skip('getActiveTracks', function () {
 
   let config, player, video, track1, track2, playerContainer;
 
