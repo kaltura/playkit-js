@@ -794,6 +794,7 @@ export default class Player extends FakeEventTarget {
         sheet.insertRule(`#${this._playerId} .${SUBTITLES_CLASS_NAME} > div > div > div { ${style.toCSS()} }`, 0);
       }
       this._textStyle = style;
+      this.dispatchEvent(new FakeEvent(CustomEvents.TEXT_STYLE_CHANGED));
     } catch (e) {
       Player._logger.error(e.message);
     }

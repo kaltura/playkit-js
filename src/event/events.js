@@ -142,6 +142,10 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
    */
   SOURCE_SELECTED: 'sourceselected',
   /**
+   * Fires when the text track style has changed
+   */
+  TEXT_STYLE_CHANGED: 'textstylechanged',
+  /**
    * Fired when ad data is available.
    */
   AD_LOADED: 'adloaded',
