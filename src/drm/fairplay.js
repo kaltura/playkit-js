@@ -99,9 +99,27 @@ export default class FairPlay extends BaseDrmProtocol {
     FairPlay._logger.debug("License request loaded");
     let request = event.target;
     let keyText = request.responseText.trim();
-    let responseObj = JSON.parse(keyText);
-    let key = FairPlay._base64DecodeUint8Array(responseObj.ckc);
-    FairPlay._keySession.update(key);
+    let responseObj = {};
+    try{
+      responseObj = JSON.parse(keyText);
+    }catch(error){
+      throw new Error("License request failed: " + error);
+    }
+    if (this._validateResponse(responseObj)){
+      let key = FairPlay._base64DecodeUint8Array(responseObj.ckc);
+      FairPlay._keySession.update(key);
+    }
+  }
+
+  static _validateResponse(responseObj: Object): boolean {
+    if ((responseObj.message && responseObj.message.indexOf("error") > 0)
+      || responseObj.reflerence === null
+      || responseObj.status_code === 500
+      || responseObj.ckc === "") {
+      this._licenseRequestFailed();
+      return false;
+    }
+    return true;
   }
 
   static _licenseRequestFailed(): void {

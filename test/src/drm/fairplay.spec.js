@@ -48,5 +48,39 @@ describe('FairPlay', function () {
       spy.should.have.been.calledWithMatch(FairPlay._WebkitEvents.NEED_KEY);
     });
   });
+
+
+  describe.only('_validateResponse', function () {
+    it('should return true', () => {
+      let drmResponse = {
+          ckc: "123",
+          expire: "98798798791"
+      };
+      FairPlay._validateResponse(drmResponse).should.equals(true);
+    });
+
+    it('should return false, error', () => {
+      let drmResponse = {
+        "message": "internal, error"
+      };
+      chai.expect(FairPlay._validateResponse.bind(FairPlay,drmResponse)).to.throw("License request failed");
+    });
+
+    it('should return false, ckc is empty', () => {
+      let drmResponse = {
+        "ckc": ""
+      };
+      chai.expect(FairPlay._validateResponse.bind(FairPlay,drmResponse)).to.throw("License request failed");
+    });
+
+    it('should return false, status code is 500 ', () => {
+      let drmResponse = {
+        "status_code": 500
+      };
+      chai.expect(FairPlay._validateResponse.bind(FairPlay,drmResponse)).to.throw("License request failed");
+    });
+  });
+
+
 });
 
