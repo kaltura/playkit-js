@@ -9,6 +9,7 @@ import AudioTrack from '../../track/audio-track'
 import {TextTrack as PKTextTrack} from '../../track/text-track'
 import {Cue} from '../../track/vtt-cue'
 import * as Utils from '../../utils/util'
+import * as EncodingSources from '../../assets/encoding-sources.json'
 
 /**
  * Html5 engine for playback.
@@ -58,6 +59,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   static id: string = "html5";
 
   /**
+   * @type {HTMLVideoElement} - The engine test video element.
+   */
+  static TEST_VID: HTMLVideoElement = Utils.Dom.createElement('video');
+
+  /**
    * Factory method to create an engine.
    * @param {Source} source - The selected source object.
    * @param {Object} config - The player configuration.
@@ -82,6 +88,23 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Checks if the engine can auto playing in the current runtime.
+   * @returns {Promise<boolean>} - Whether auto play can be initiated.
+   * @public
+   * @static
+   */
+  static canAutoPlay(): Promise<boolean> {
+    Html5.TEST_VID.src = EncodingSources.Base64Mp4Source;
+    let playPromise = Html5.TEST_VID.play();
+    if (playPromise) {
+      return playPromise
+        .then(() => true)
+        .catch(() => false);
+    }
+    return Promise.resolve(true);
+  }
+
+  /**
    * @constructor
    * @param {Source} source - The selected source object.
    * @param {Object} config - The player configuration.
@@ -91,45 +114,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._eventManager = new EventManager();
     this._createVideoElement();
     this._init(source, config);
-  }
-
-  static TEST_VID: HTMLVideoElement = Utils.Dom.createElement('video');
-  static Base64Video = 'data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAABPptZGF0AAACrQYF//+p3EXpvebZSLeWLNgg2SPu73gyNjQgLSBjb3JlIDE0OCByMjcyMSA3MmQ1M2FiIC0gSC4yNjQvTVBFRy00IEFWQyBjb2RlYyAtIENvcHlsZWZ0IDIwMDMtMjAxNiAtIGh0dHA6Ly93d3cudmlkZW9sYW4ub3JnL3gyNjQuaHRtbCAtIG9wdGlvbnM6IGNhYmFjPTEgcmVmPTMgZGVibG9jaz0xOjA6MCBhbmFseXNlPTB4MzoweDExMyBtZT1oZXggc3VibWU9NyBwc3k9MSBwc3lfcmQ9MS4wMDowLjAwIG1peGVkX3JlZj0xIG1lX3JhbmdlPTE2IGNocm9tYV9tZT0xIHRyZWxsaXM9MSA4eDhkY3Q9MSBjcW09MCBkZWFkem9uZT0yMSwxMSBmYXN0X3Bza2lwPTEgY2hyb21hX3FwX29mZnNldD00IHRocmVhZHM9MSBsb29rYWhlYWRfdGhyZWFkcz0xIHNsaWNlZF90aHJlYWRzPTAgbnI9MCBkZWNpbWF0ZT0xIGludGVybGFjZWQ9MCBibHVyYXlfY29tcGF0PTAgY29uc3RyYWluZWRfaW50cmE9MCBiZnJhbWVzPTMgYl9weXJhbWlkPTIgYl9hZGFwdD0xIGJfYmlhcz0wIGRpcmVjdD0xIHdlaWdodGI9MSBvcGVuX2dvcD0wIHdlaWdodHA9MiBrZXlpbnQ9MjUwIGtleWludF9taW49MjUgc2NlbmVjdXQ9NDAgaW50cmFfcmVmcmVzaD0wIHJjX2xvb2thaGVhZD00MCByYz1jcmYgbWJ0cmVlPTEgY3JmPTIzLjAgcWNvbXA9MC42MCBxcG1pbj0wIHFwbWF4PTY5IHFwc3RlcD00IGlwX3JhdGlvPTEuNDAgYXE9MToxLjAwAIAAAAAQZYiEADf//vaH+BTZWBP/gd4CAExhdmM1Ny42NC4xMDAAQiAIwRg4AAAACEGaJGxDf/7gAAAACEGeQniFf8SBIRAEYIwcAAAACAGeYXRCf8eAIRAEYIwcAAAACAGeY2pCf8eBIRAEYIwcAAAADkGaaEmoQWiZTAhv//7hAAAACkGehkURLCv/xIEhEARgjBwAAAAIAZ6ldEJ/x4EhEARg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';
-
-  static canAutoPlayPromise: Promise<boolean>;
-  static canAutoPlay: boolean;
-
-  static testVideoCapabilities(): void {
-    debugger;
-    Html5.TEST_VID.src = Html5.Base64Video;
-    let playPromise = Html5.TEST_VID.play();
-    if (playPromise) {
-      playPromise
-        .then(_ => {
-          debugger
-          console.log("DAN: AutoPlay answer::: true")
-          // Html5.canAutoPlay = true
-        })
-        .catch(_ => {
-          debugger;
-          console.log("DAN: AutoPlay answer::: false")
-          // Html5.canAutoPlay = false
-        });
-    } else {
-      debugger;
-      console.log("DAN: AutoPlay answer::: true")
-      // Html5.canAutoPlay = true;
-    }
-  }
-
-
-  canAutoPlay(): boolean {
-    // if (Html5.canAutoPlayPromise) {
-    //   return Html5.canAutoPlayPromise
-    //     .then(_ => true)
-    //     .catch(_ => false);
-    // }
-    // return Promise.resolve(true);
   }
 
   /**
@@ -145,6 +129,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       Utils.Dom.removeAttribute(this._el, 'src');
     }
     this._init(source, config);
+  }
+
+  /**
+   * Gets the result from the canAutoPlay test.
+   * @returns {Promise<boolean>} - The can auto play result.
+   */
+  canAutoPlay(): Promise<boolean> {
+    return Html5.canAutoPlay();
   }
 
   /**
@@ -700,11 +692,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   get playsinline(): boolean {
     return this._el.getAttribute('playsinline') === '';
   }
-
-  /**
-   * Test video element to check if html5 engine is supported.
-   */
-  static TEST_VID: HTMLVideoElement;
 
   /**
    * Checks if the html5 engine is supported.

@@ -114,13 +114,13 @@ export default class Player extends FakeEventTarget {
   static _engines: Array<typeof IEngine> = [Html5];
 
   /**
-   * Runs the engines tests for video capabilities.
+   * Runs the engines tests for autoplay capabilities.
    * @static
    * @public
    * @returns {void}
    */
-  static testEnginesCapabilities(): void {
-    Player._engines.forEach(Engine => Engine.testVideoCapabilities());
+  static testAutoPlayCapabilities(): void {
+    Player._engines.forEach(Engine => Engine.canAutoPlay());
   }
 
   /**
@@ -1060,6 +1060,8 @@ export default class Player extends FakeEventTarget {
    * So to avoid loading the player twice which can cause errors on MSEs we are not
    * calling load from the player.
    * TODO: Change it to check the ads configuration when we will develop the ads manager.
+   * @private
+   * @returns {boolean} - Whether to start preloading the content.
    */
   _canPreloadAuto(): boolean {
     return (this._config.playback.preload === "auto" && !this._config.plugins.ima);
@@ -1074,7 +1076,7 @@ export default class Player extends FakeEventTarget {
     this._engine.canAutoPlay().then((canAutoPlay) => {
       if (canAutoPlay) {
         this.play();
-      } else if (!canAutoPlay && this.config.playback.allowMutedAutoPlay) {
+      } else if (!canAutoPlay && this._config.playback.allowMutedAutoPlay) {
         this.muted = true;
         this.play();
       }
