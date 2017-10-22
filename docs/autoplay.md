@@ -39,7 +39,7 @@ The platforms that are blocks those attempts are mostly targeted to web browsers
  #### The Good News
 These restrictions apply only to automatic playback with sound, but not to automatic playback without sound.
 Our player can manage this logic by himself and to identify if the current environment does not support autoplay with sound. In that case, he will apply autoplay without sound.
-To use this feature, you'll need to set the `allowMutedAutoPlay` accordingly to your desired behavior.
+To use this feature, you'll need to set the `playback.allowMutedAutoPlay` accordingly to your desired behavior.
  >### playback.allowMutedAutoPlay
  >##### type: `boolean`
  >##### default: `true`
@@ -64,7 +64,7 @@ var config = {
   },
   sources: {...}
 };
-// If browser blocks auto play, playback will start muted
+// If browser blocks autoplay, playback will start muted
 var player = Playkit.loadPlayer(config);
 ```
 
@@ -77,6 +77,6 @@ var config = {
   },
   sources: {...}
 };
-// If browser blocks auto play, playback will not start automatically
+// If browser blocks autoplay, playback will not start automatically
 var player = Playkit.loadPlayer(config);
 ```
