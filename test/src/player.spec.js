@@ -954,32 +954,32 @@ describe('getActiveTracks', function () {
     removeElement(targetId);
   });
 
-  it.skip('should get the active tracks before and after switching', (done) => {
-    player.ready().then(() => {
-      player.addEventListener(CustomEvents.TEXT_TRACK_CHANGED, () => {
-        player.addEventListener(CustomEvents.VIDEO_TRACK_CHANGED, () => {
-          player.addEventListener(CustomEvents.AUDIO_TRACK_CHANGED, () => {
-            player.getActiveTracks().audio.should.deep.equals(audioTracks[2]);
-            done();
-          });
-          player.getActiveTracks().video.should.deep.equals(videoTracks[1]);
-          if (audioTracks.length) {
-            player.selectTrack(new AudioTrack({index: 2}));
-          }
-          else {
-            done();
-          }
+  it('should get the active tracks before and after switching', (done) => {
+    let videoTracks, audioTracks, textTracks;
+    player.addEventListener(CustomEvents.TEXT_TRACK_CHANGED, () => {
+      player.addEventListener(CustomEvents.VIDEO_TRACK_CHANGED, () => {
+        player.addEventListener(CustomEvents.AUDIO_TRACK_CHANGED, () => {
+          player.getActiveTracks().audio.should.deep.equals(audioTracks[2]);
+          done();
         });
-        player.getActiveTracks().text.should.deep.equals(textTracks[1]);
-        player.selectTrack(new VideoTrack({index: 1}));
+        player.getActiveTracks().video.should.deep.equals(videoTracks[1]);
+        if (audioTracks.length) {
+          player.selectTrack(new AudioTrack({index: 2}));
+        } else {
+          done();
+        }
       });
-      let videoTracks = player._tracks.filter((track) => {
+      player.getActiveTracks().text.should.deep.equals(textTracks[1]);
+      player.selectTrack(new VideoTrack({index: 1}));
+    });
+    player.ready().then(() => {
+      videoTracks = player._tracks.filter((track) => {
         return track instanceof VideoTrack;
       });
-      let audioTracks = player._tracks.filter((track) => {
+      audioTracks = player._tracks.filter((track) => {
         return track instanceof AudioTrack;
       });
-      let textTracks = player._tracks.filter((track) => {
+      textTracks = player._tracks.filter((track) => {
         return track instanceof TextTrack;
       });
       player.getActiveTracks().video.should.deep.equals(videoTracks[0]);
@@ -987,12 +987,10 @@ describe('getActiveTracks', function () {
       if (audioTracks.length) {
         player.getActiveTracks().audio.should.deep.equals(audioTracks[0]);
       }
-
       player.selectTrack(new TextTrack({index: 1, kind: 'subtitles'}));
     });
     player.load();
   });
-
 });
 
 describe('hideTextTrack', function () {
