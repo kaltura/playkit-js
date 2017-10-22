@@ -954,7 +954,7 @@ describe('getActiveTracks', function () {
     removeElement(targetId);
   });
 
-  it('should get the active tracks before and after switching', (done) => {
+  it.skip('should get the active tracks before and after switching', (done) => {
     let videoTracks, audioTracks, textTracks;
     player.addEventListener(CustomEvents.TEXT_TRACK_CHANGED, () => {
       player.addEventListener(CustomEvents.VIDEO_TRACK_CHANGED, () => {
