@@ -305,7 +305,6 @@ describe('NativeAdapter: _getParsedTracks', function () {
 });
 
 describe('NativeAdapter: _selectProgressiveVideoTrack', function () {
-
   let video;
   let nativeInstance;
 
