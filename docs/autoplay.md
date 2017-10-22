@@ -38,7 +38,7 @@ The platforms that are blocks those attempts are mostly targeted to web browsers
  are also start to align those restrictions in order to create unified behavior between platforms (currently Safari 11 and began of Chrome 64).
  #### The Good News
 These restrictions apply only to automatic playback with sound, but not to automatic playback without sound.
-Our player can manage this logic by himself and to identify if the current environment does not support auto play with sound. In that case, he will apply autoplay without sound.
+Our player can manage this logic by himself and to identify if the current environment does not support autoplay with sound. In that case, he will apply autoplay without sound.
 To use this feature, you'll need to set the `allowMutedAutoPlay` accordingly to your desired behavior.
  ### playback.allowMutedAutoPlay
  ##### type: `boolean`
@@ -48,7 +48,7 @@ To use this feature, you'll need to set the `allowMutedAutoPlay` accordingly to 
  autoplay will start muted, until any user gesture 
  will be executed on the player, which will then unmute it. If sets to `false` and the runtime browser blocks autoplay, playback will not start automatically.
  
- The following matrix summarise the results for configure `allowMutedAutoPlay` when `playback.autoplay=true`:
+ The following matrix summarise the results for configure `playback.allowMutedAutoPlay` when `playback.autoplay=true`:
 
 | Browser Policy          | `allowMutedAutoPlay=true` |` allowMutedAutoPlay=false`
 | ----------------- | ----------------- | ------ |
