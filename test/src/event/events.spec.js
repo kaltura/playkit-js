@@ -40,6 +40,7 @@ describe('events', () => {
       PLAYER_STATE_CHANGED: 'playerstatechanged',
       FIRST_PLAY: 'firstplay',
       SOURCE_SELECTED: 'sourceselected',
+      TEXT_STYLE_CHANGED: 'textstylechanged',
       AD_LOADED: 'adloaded',
       AD_STARTED: 'adstarted',
       AD_RESUMED: 'adresumed',
