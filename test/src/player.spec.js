@@ -601,12 +601,17 @@ describe('getTracks real', function () {
 });
 
 describe('selectTrack - video', function () {
-  let config, player, video;
+  let config, player, video, playerContainer;
+
+  before(() => {
+    playerContainer = createElement('div', targetId);
+  });
 
   beforeEach(() => {
     config = getConfigStructure();
     config.sources = sourcesConfig.MultipleSources;
-    player = new Player();
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
   });
 
   afterEach(() => {
@@ -615,28 +620,31 @@ describe('selectTrack - video', function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
+    removeElement(targetId);
   });
 
   it('should select a new video track', (done) => {
+    let tracks;
+    player.addEventListener(CustomEvents.VIDEO_TRACK_CHANGED, (event) => {
+      (event.payload.selectedVideoTrack instanceof VideoTrack).should.be.true;
+      event.payload.selectedVideoTrack.index.should.equal(1);
+      (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.false;
+      (video.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.true;
+      tracks[0].active.should.be.false;
+      tracks[1].active.should.be.true;
+      done();
+    });
     player.ready().then(() => {
-      player.addEventListener(CustomEvents.VIDEO_TRACK_CHANGED, (event) => {
-        (event.payload.selectedVideoTrack instanceof VideoTrack).should.be.true;
-        event.payload.selectedVideoTrack.index.should.equal(1);
-        (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.false;
-        (video.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.true;
-        videoTracks[0].active.should.be.false;
-        videoTracks[1].active.should.be.true;
-        done();
+      tracks = player._tracks.filter((track) => {
+        return track instanceof VideoTrack;
       });
-      let videoTracks = player.getTracks('video');
       (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.true;
       (video.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.false;
-      videoTracks.length.should.equal(2);
-      videoTracks[0].active.should.be.true;
-      videoTracks[1].active.should.be.false;
-      player.selectTrack(videoTracks[1]);
+      tracks.length.should.equal(2);
+      tracks[0].active.should.be.true;
+      tracks[1].active.should.be.false;
+      player.selectTrack(tracks[1]);
     });
-    player.configure(config);
     player.load();
     video = player._engine.getVideoElement();
   });
@@ -657,19 +665,23 @@ describe('selectTrack - video', function () {
       tracks[1].active.should.be.false;
       done();
     });
-    player.configure(config);
     player.load();
     video = player._engine.getVideoElement();
   });
 });
 
 describe('selectTrack - audio', function () {
-  let config, player, video;
+  let config, player, video, playerContainer;
+
+  before(() => {
+    playerContainer = createElement('div', targetId);
+  });
 
   beforeEach(() => {
     config = getConfigStructure();
     config.sources = sourcesConfig.Mp4;
-    player = new Player(targetId);
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
   });
 
   afterEach(() => {
@@ -678,6 +690,7 @@ describe('selectTrack - audio', function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
+    removeElement(targetId);
   });
 
   it('should select a new audio track', (done) => {
@@ -708,7 +721,6 @@ describe('selectTrack - audio', function () {
         done();
       }
     });
-    player.configure(config);
     player.load();
     video = player._engine.getVideoElement();
   });
@@ -737,8 +749,7 @@ describe('selectTrack - audio', function () {
         done();
       }
     });
-    config.playback.preload = 'auto';
-    player.configure(config);
+    player.configure({playback: {preload: 'auto'}});
     video = player._engine.getVideoElement();
     player.load();
   });
@@ -767,19 +778,23 @@ describe('selectTrack - audio', function () {
         done();
       }
     });
-    player.configure(config);
     player.load();
     video = player._engine.getVideoElement();
   });
 });
 
 describe('selectTrack - text', function () {
-  let config, player, video, track1, track2;
+  let config, player, video, track1, track2, playerContainer;
+
+  before(() => {
+    playerContainer = createElement('div', targetId);
+  });
 
   beforeEach(() => {
     config = getConfigStructure();
     config.sources = sourcesConfig.Mp4;
     player = new Player(config);
+    playerContainer.appendChild(player.getView());
     video = player._engine.getVideoElement();
     track1 = document.createElement("track");
     track2 = document.createElement("track");
@@ -798,6 +813,7 @@ describe('selectTrack - text', function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
+    removeElement(targetId);
   });
 
   it('should select a new subtitles track', (done) => {
@@ -906,12 +922,17 @@ describe('selectTrack - text', function () {
 });
 
 describe('getActiveTracks', function () {
-  let config, player, video, track1, track2;
+  let config, player, video, track1, track2, playerContainer;
+
+  before(() => {
+    playerContainer = createElement('div', targetId);
+  });
 
   beforeEach(() => {
     config = getConfigStructure();
     config.sources = sourcesConfig.MultipleSources;
     player = new Player(config);
+    playerContainer.appendChild(player.getView());
     video = player._engine.getVideoElement();
     track1 = document.createElement("track");
     track2 = document.createElement("track");
@@ -930,6 +951,7 @@ describe('getActiveTracks', function () {
 
   after(() => {
     removeVideoElementsFromTestPage();
+    removeElement(targetId);
   });
 
   it('should get the active tracks before and after switching', (done) => {
