@@ -103,7 +103,7 @@ export default class FairPlay extends BaseDrmProtocol {
     try{
       responseObj = JSON.parse(keyText);
     }catch(error){
-      throw new Error("License request failed: " + error);
+      this._licenseRequestFailed();
     }
     if (this._validateResponse(responseObj)){
       let key = FairPlay._base64DecodeUint8Array(responseObj.ckc);
