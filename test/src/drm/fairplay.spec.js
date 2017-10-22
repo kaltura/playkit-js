@@ -50,7 +50,7 @@ describe('FairPlay', function () {
   });
 
 
-  describe.only('_validateResponse', function () {
+  describe('_validateResponse', function () {
     it('should return true', () => {
       let drmResponse = {
           ckc: "123",
