@@ -14,8 +14,7 @@
     "es6": true,
     "mocha": true,
     "amd": true,
-    "commonjs": true,
-    "chai": true
+    "commonjs": true
   },
   "globals": {
     "should": true,

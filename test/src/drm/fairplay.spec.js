@@ -51,33 +51,37 @@ describe('FairPlay', function () {
 
 
   describe('_validateResponse', function () {
-    it('should return true', () => {
+    it('should return an object with valid=true', () => {
       let drmResponse = {
-          ckc: "123",
-          expire: "98798798791"
+        ckc: "123",
+        expire: "98798798791"
       };
-      FairPlay._validateResponse(drmResponse).should.equals(true);
+      let validationResponse = FairPlay._validateResponse(drmResponse);
+      validationResponse.valid.should.equals(true);
     });
 
-    it('should return false, error', () => {
+    it('should return an object with valid=false, error', () => {
       let drmResponse = {
         "message": "internal, error"
       };
-      chai.expect(FairPlay._validateResponse.bind(FairPlay,drmResponse)).to.throw("License request failed");
+      let validationResponse = FairPlay._validateResponse(drmResponse);
+      validationResponse.valid.should.equals(false);
     });
 
-    it('should return false, ckc is empty', () => {
+    it('should return an object with valid=false, ckc is empty', () => {
       let drmResponse = {
         "ckc": ""
       };
-      chai.expect(FairPlay._validateResponse.bind(FairPlay,drmResponse)).to.throw("License request failed");
+      let validationResponse = FairPlay._validateResponse(drmResponse);
+      validationResponse.valid.should.equals(false);
     });
 
-    it('should return false, status code is 500 ', () => {
+    it('should return an object with valid=false, status code is 500 ', () => {
       let drmResponse = {
         "status_code": 500
       };
-      chai.expect(FairPlay._validateResponse.bind(FairPlay,drmResponse)).to.throw("License request failed");
+      let validationResponse = FairPlay._validateResponse(drmResponse);
+      validationResponse.valid.should.equals(false);
     });
   });
 

@@ -100,26 +100,38 @@ export default class FairPlay extends BaseDrmProtocol {
     let request = event.target;
     let keyText = request.responseText.trim();
     let responseObj = {};
-    try{
+    try {
       responseObj = JSON.parse(keyText);
-    }catch(error){
+    } catch (error) {
       this._licenseRequestFailed();
     }
-    if (this._validateResponse(responseObj)){
+    let isValidResponse = this._validateResponse(responseObj);
+    if (isValidResponse.valid) {
       let key = FairPlay._base64DecodeUint8Array(responseObj.ckc);
       FairPlay._keySession.update(key);
+    } else {
+      this._licenseRequestFailed(isValidResponse);
     }
   }
 
-  static _validateResponse(responseObj: Object): boolean {
+  static _validateResponse(responseObj: Object): Object {
     if ((responseObj.message && responseObj.message.indexOf("error") > 0)
-      || responseObj.reflerence === null
-      || responseObj.status_code === 500
-      || responseObj.ckc === "") {
-      this._licenseRequestFailed();
-      return false;
+      || responseObj.reference === null
+      || responseObj.status_code === 500) {
+      return { //todo: create & edit an error object
+        valid: false,
+        details: "internal server error" // would be ERROR.INTERNAL or something like that
+      };
+    } else if (responseObj.ckc === "") {
+      return {
+        valid: false,
+        details: "ckc is missing" // would be ERROR.MISSING_CKC or something like that
+      };
+    } else {
+      return {
+        valid: true
+      };
     }
-    return true;
   }
 
   static _licenseRequestFailed(): void {
