@@ -225,7 +225,6 @@ export default class Player extends FakeEventTarget {
    */
   constructor(config: Object = {}) {
     super();
-    Player.testEnginesCapabilities();
     this._env = Env;
     this._tracks = [];
     this._firstPlay = true;
@@ -244,6 +243,12 @@ export default class Player extends FakeEventTarget {
 
   static testEnginesCapabilities(): void {
     Player._engines.forEach(Engine => Engine.testVideoCapabilities());
+  }
+
+  canAutoPlay(): ?boolean {
+    if (this._engine) {
+      this._engine.canAutoPlay();
+    }
   }
 
   // <editor-fold desc="Public API">
