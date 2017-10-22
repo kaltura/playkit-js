@@ -5,7 +5,7 @@ If you would like to start automatically playing your content, you can easily ma
 >##### type: `boolean`
 >##### default: `false`
 >##### description: Start playback automatically.
->If `true`, playback will start automatically when sources will be given to the player. If `false`, a user gesture will be >required to start playback.
+>If `true`, playback will start automatically when sources will be given to the player. If `false`, a user gesture will be required to start playback.
 #### Example - Basic usage:
 ```js
 var config = {
