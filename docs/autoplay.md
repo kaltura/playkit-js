@@ -1,11 +1,11 @@
 ## Managing Auto Play
 If you would like to start automatically playing your content, you can easily manipulating the player configuration and set the `autoplay` value accordingly.
 
-### playback.autoplay
-##### type: `boolean`
-##### default: `false`
-##### description: Start playback automatically.
-If `true`, playback will start automatically when sources will be given to the player. If `false`, a user gesture will be required to start playback.
+>### playback.autoplay
+>##### type: `boolean`
+>##### default: `false`
+>##### description: Start playback automatically.
+>If `true`, playback will start automatically when sources will be given to the player. If `false`, a user gesture will be >required to start playback.
 #### Example - Basic usage:
 ```js
 var config = {
@@ -40,14 +40,14 @@ The platforms that are blocks those attempts are mostly targeted to web browsers
 These restrictions apply only to automatic playback with sound, but not to automatic playback without sound.
 Our player can manage this logic by himself and to identify if the current environment does not support autoplay with sound. In that case, he will apply autoplay without sound.
 To use this feature, you'll need to set the `allowMutedAutoPlay` accordingly to your desired behavior.
- ### playback.allowMutedAutoPlay
- ##### type: `boolean`
- ##### default: `true`
- ##### description: Start playback automatically without sound in case autoplay with sound is not allowed.
- If sets to `true` and the runtime browser blocks autoplay, 
- autoplay will start muted, until any user gesture 
- will be executed on the player, which will then unmute it. If sets to `false` and the runtime browser blocks autoplay, playback will not start automatically.
- 
+ >### playback.allowMutedAutoPlay
+ >##### type: `boolean`
+ >##### default: `true`
+ >##### description: Start playback automatically without sound in case autoplay with sound is not allowed.
+ >If sets to `true` and the runtime browser blocks autoplay, 
+ >autoplay will start muted, until any user gesture 
+ >will be executed on the player, which will then unmute it. If sets to `false` and the runtime browser blocks autoplay, playback will not start automatically.
+
  The following matrix summarise the results for configure `playback.allowMutedAutoPlay` when `playback.autoplay=true`:
 
 | Browser Policy          | `allowMutedAutoPlay=true` |` allowMutedAutoPlay=false`
