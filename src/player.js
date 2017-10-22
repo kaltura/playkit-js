@@ -112,6 +112,17 @@ export default class Player extends FakeEventTarget {
    * @static
    */
   static _engines: Array<typeof IEngine> = [Html5];
+
+  /**
+   * Runs the engines tests for video capabilities.
+   * @static
+   * @public
+   * @returns {void}
+   */
+  static testEnginesCapabilities(): void {
+    Player._engines.forEach(Engine => Engine.testVideoCapabilities());
+  }
+
   /**
    * The plugin manager of the player.
    * @type {PluginManager}
@@ -247,16 +258,6 @@ export default class Player extends FakeEventTarget {
     this._createPlayerContainer();
     this._appendPosterEl();
     this.configure(config);
-  }
-
-  static testEnginesCapabilities(): void {
-    Player._engines.forEach(Engine => Engine.testVideoCapabilities());
-  }
-
-  canAutoPlay(): ?boolean {
-    if (this._engine) {
-      this._engine.canAutoPlay();
-    }
   }
 
   // <editor-fold desc="Public API">
@@ -1044,11 +1045,13 @@ export default class Player extends FakeEventTarget {
       if (this._canPreloadAuto()) {
         this.load();
       }
-      this._canAutoPlay().then((canAutoPlay) => {
-        if (canAutoPlay) {
+      if (this._config.playback.autoplay === true) {
+        if (this.muted) {
           this.play();
+        } else {
+          this._manageAutoPlay();
         }
-      });
+      }
     }
   }
 
@@ -1062,32 +1065,21 @@ export default class Player extends FakeEventTarget {
     return (this._config.playback.preload === "auto" && !this._config.plugins.ima);
   }
 
-  _canAutoPlay(): Promise<boolean> {
-    if (this.config.playback.autoplay) {
-      if (this.muted) {
-        return Promise.resolve(true);
+  /**
+   * Manage auto play according to the current runtime.
+   * @private
+   * @returns {void}
+   */
+  _manageAutoPlay(): void {
+    this._engine.canAutoPlay().then((canAutoPlay) => {
+      if (canAutoPlay) {
+        this.play();
+      } else if (!canAutoPlay && this.config.playback.allowMutedAutoPlay) {
+        this.muted = true;
+        this.play();
       }
-      return this._engine.canAutoPlay();
-    }
-    return Promise.resolve(false);
+    });
   }
-
-  // /**
-  //  * Determine whether we can auto playing or not.
-  //  * @returns {boolean} - Whether an auto play can be done.
-  //  * @private
-  //  */
-  // _canAutoPlay(): ?boolean {
-  //   if (this.config.playback.autoplay) {
-  //     return false;
-  //   }
-  //   let device = this._env.device.type;
-  //   let os = this._env.os.name;
-  //   if (device) {
-  //     return (os === 'iOS') ? this.muted && this.playsinline : this.muted;
-  //   }
-  //   return true;
-  // }
 
   /**
    * Start/resume the engine playback.

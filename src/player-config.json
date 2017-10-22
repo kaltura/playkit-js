@@ -12,6 +12,7 @@
     "playsinline": false,
     "preload": "none",
     "autoplay": false,
+    "allowMutedAutoPlay": true,
     "muted": false,
     "options": {
       "html5": {
