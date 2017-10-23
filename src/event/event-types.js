@@ -141,13 +141,13 @@ const CustomEventType: { [event: string]: string } = {
    * Fires when the player has selected the source to play
    */
   SOURCE_SELECTED: 'sourceselected',
-};
-
-const AdEventType: { [event: string]: string } = {
   /**
    * Fires when the text track style has changed
    */
-  TEXT_STYLE_CHANGED: 'textstylechanged',
+  TEXT_STYLE_CHANGED: 'textstylechanged'
+};
+
+const AdEventType: { [event: string]: string } = {
   /**
    * Fired when ad data is available.
    */
