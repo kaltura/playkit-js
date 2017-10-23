@@ -1,10 +1,10 @@
 ## Managing Auto Play
-If you would like to start automatically playing your content, you can easily manipulating the player configuration and set the `autoplay` value accordingly.
+If you would like to start automatically playing your content, you can easily manipulating the player configuration and set the `playback.autoplay` value accordingly.
 
 >### playback.autoplay
->##### type: `boolean`
->##### default: `false`
->##### description: Start playback automatically.
+>##### Type: `boolean`
+>##### Default: `false`
+>##### Description: Start playback automatically.
 >If `true`, playback will start automatically when sources will be given to the player. If `false`, a user gesture will be required to start playback.
 #### Example - Basic usage:
 ```js
@@ -41,9 +41,9 @@ These restrictions apply only to automatic playback with sound, but not to autom
 Our player can manage this logic by himself and to identify if the current environment does not support autoplay with sound. In that case, he will apply autoplay without sound.
 To use this feature, you'll need to set the `playback.allowMutedAutoPlay` accordingly to your desired behavior.
  >### playback.allowMutedAutoPlay
- >##### type: `boolean`
- >##### default: `true`
- >##### description: Start playback automatically without sound in case autoplay with sound is not allowed.
+ >##### Type: `boolean`
+ >##### Default: `true`
+ >##### Description: Start playback automatically without sound in case autoplay with sound is not allowed.
  >If sets to `true` and the runtime browser blocks autoplay, 
  >autoplay will start muted, until any user gesture 
  >will be executed on the player, which will then unmute it. If sets to `false` and the runtime browser blocks autoplay, playback will not start automatically.
