@@ -26,7 +26,6 @@ declare interface IEngine {
   seekToLiveEdge(): void;
   isLive(): boolean;
   getVideoElement(): HTMLVideoElement;
-  canAutoPlay(): Promise<boolean>;
   +id: string;
   currentTime: number;
   +duration: number;

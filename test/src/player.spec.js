@@ -1388,6 +1388,25 @@ describe('events', function () {
       player.play();
     });
   });
+
+  describe('text style changed', () => {
+    let player;
+
+    beforeEach(() => {
+      player = new Player();
+    });
+
+    afterEach(() => {
+      player.destroy();
+    });
+
+    it('should fire text style changed', (done) => {
+      player.addEventListener(player.Event.TEXT_STYLE_CHANGED, () => {
+        done();
+      });
+      player.textStyle = new TextStyle();
+    });
+  });
 });
 
 describe('states', function () {

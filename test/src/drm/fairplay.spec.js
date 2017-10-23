@@ -48,5 +48,43 @@ describe('FairPlay', function () {
       spy.should.have.been.calledWithMatch(FairPlay._WebkitEvents.NEED_KEY);
     });
   });
+
+
+  describe('_validateResponse', function () {
+    it('should return an object with valid=true', () => {
+      let drmResponse = {
+        ckc: "123",
+        expire: "98798798791"
+      };
+      let validationResponse = FairPlay._validateResponse(drmResponse);
+      validationResponse.valid.should.equals(true);
+    });
+
+    it('should return an object with valid=false, error', () => {
+      let drmResponse = {
+        "message": "internal, error"
+      };
+      let validationResponse = FairPlay._validateResponse(drmResponse);
+      validationResponse.valid.should.equals(false);
+    });
+
+    it('should return an object with valid=false, ckc is empty', () => {
+      let drmResponse = {
+        "ckc": ""
+      };
+      let validationResponse = FairPlay._validateResponse(drmResponse);
+      validationResponse.valid.should.equals(false);
+    });
+
+    it('should return an object with valid=false, status code is 500 ', () => {
+      let drmResponse = {
+        "status_code": 500
+      };
+      let validationResponse = FairPlay._validateResponse(drmResponse);
+      validationResponse.valid.should.equals(false);
+    });
+  });
+
+
 });
 
