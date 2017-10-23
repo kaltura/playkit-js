@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.13.0"></a>
+# [0.13.0](https://github.com/kaltura/playkit-js/compare/v0.12.0...v0.13.0) (2017-10-23)
+
+
+### Bug Fixes
+
+* **FEC-7046:** seek to duration safety using offset ([#135](https://github.com/kaltura/playkit-js/issues/135)) ([85ad548](https://github.com/kaltura/playkit-js/commit/85ad548))
+* **FEC-7242:** subtitles transition in safari 9.0  ([#136](https://github.com/kaltura/playkit-js/issues/136)) ([4d14ade](https://github.com/kaltura/playkit-js/commit/4d14ade))
+* **FEC-7317:** check if VTTCue and TextTrackCue are not undefined ([#137](https://github.com/kaltura/playkit-js/issues/137)) ([604f7a6](https://github.com/kaltura/playkit-js/commit/604f7a6))
+* **README:** typos and travis ref ([#141](https://github.com/kaltura/playkit-js/issues/141)) ([e57027e](https://github.com/kaltura/playkit-js/commit/e57027e))
+
+
+### Features
+
+* **cvaa:** add TEXT_STYLE_CHANGED event ([#138](https://github.com/kaltura/playkit-js/issues/138)) ([ee67e3c](https://github.com/kaltura/playkit-js/commit/ee67e3c))
+
+
+
 <a name="0.12.0"></a>
 # [0.12.0](https://github.com/kaltura/playkit-js/compare/v0.11.0...v0.12.0) (2017-10-16)
 
