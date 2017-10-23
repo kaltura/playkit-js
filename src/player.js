@@ -114,13 +114,30 @@ export default class Player extends FakeEventTarget {
   static _engines: Array<typeof IEngine> = [Html5];
 
   /**
-   * Runs the engines tests for autoplay capabilities.
-   * @static
-   * @public
+   * Runs the engines capabilities tests.
    * @returns {void}
+   * @public
+   * @static
    */
-  static testAutoPlayCapabilities(): void {
-    Player._engines.forEach(Engine => Engine.canAutoPlay());
+  static testCapabilities(): void {
+    Player._engines.forEach(Engine => Engine.testCapabilities());
+  }
+
+  /**
+   * Gets the engines capabilities.
+   * @return {Promise<Object>} - The engines capabilities object.
+   * @public
+   * @static
+   */
+  static getCapabilities(): Promise<Object> {
+    let promises = [];
+    Player._engines.forEach(Engine => promises.push(Engine.getCapabilities()));
+    return Promise.all(promises)
+      .then((arrayOfResults) => {
+        const mergedResults = {};
+        arrayOfResults.forEach(res => Object.assign(mergedResults, res));
+        return {engines: mergedResults};
+      });
   }
 
   /**
@@ -1074,12 +1091,12 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _handleAutoPlay(): void {
+    const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
     this._engine.canAutoPlay()
-      .then(() => {
-        this.play();
-      })
-      .catch(() => {
-        if (this._config.playback.allowMutedAutoPlay) {
+      .then((res) => {
+        if (res.autoplay) {
+          this.play();
+        } else if (!res.autoplay && allowMutedAutoPlay) {
           this.muted = true;
           this.play();
         }

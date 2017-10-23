@@ -54,14 +54,21 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _canLoadMediaSourceAdapterPromise: Promise<*>;
 
   /**
-   * @type {string} - The engine id.
+   * The html5 capabilities handlers.
+   * @private
+   * @static
    */
-  static id: string = "html5";
+  static _capabilities = [Html5.canAutoPlay];
 
   /**
    * @type {HTMLVideoElement} - The engine test video element.
    */
   static TEST_VID: HTMLVideoElement = Utils.Dom.createElement('video');
+
+  /**
+   * @type {string} - The engine id.
+   */
+  static id: string = "html5";
 
   /**
    * Factory method to create an engine.
@@ -88,15 +95,51 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
-   * Checks if the engine can auto playing in the current runtime.
-   * @returns {Promise<*>} - The play promise or resolved promise if play promise doesn't exist.
+   * Runs the html5 capabilities tests.
+   * @returns {void}
    * @public
    * @static
    */
-  static canAutoPlay(): Promise<*> {
+  static testCapabilities(): void {
+    Html5._capabilities.forEach(Capability => Capability());
+  }
+
+  /**
+   * Gets the html5 capabilities.
+   * @return {Promise<Object>} - The html5 capabilities object.
+   * @public
+   * @static
+   */
+  static getCapabilities(): Promise<Object> {
+    let promises = [];
+    Html5._capabilities.forEach(Capability => promises.push(Capability()));
+    return Promise.all(promises)
+      .then((arrayOfResults) => {
+        const mergedResults = {};
+        arrayOfResults.forEach(res => Object.assign(mergedResults, res));
+        return {[Html5.id]: mergedResults};
+      });
+  }
+
+  /**
+   * Runs the autoplay capability test.
+   * @return {Object} - The autoplay capability result.
+   * @public
+   * @static
+   */
+  static canAutoPlay(): Promise<Object> {
     Html5.TEST_VID.src = EncodingSources.Base64Mp4Source;
     let playPromise = Html5.TEST_VID.play();
-    return (playPromise || Promise.resolve());
+    if (playPromise) {
+      return playPromise
+        .then(() => {
+          return {autoplay: true};
+        })
+        .catch(() => {
+          return {autoplay: false};
+        });
+    }
+    return Promise.resolve({autoplay: true});
   }
 
   /**

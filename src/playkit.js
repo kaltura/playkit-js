@@ -15,14 +15,14 @@ import TextStyle from './track/text-style'
 import Env from './utils/env'
 import * as Utils from './utils/util'
 
+Player.testCapabilities();
+
 declare var __VERSION__: string;
 declare var __NAME__: string;
 declare var __PACKAGE_URL__: string;
 
 LoggerFactory.getLogger().log(`%c ${__NAME__} ${__VERSION__}`, "color: #98ff98;  font-size: large");
 LoggerFactory.getLogger().log(`%c For more details see ${__PACKAGE_URL__}`, "color: #98ff98;");
-
-Player.testAutoPlayCapabilities();
 
 /**
  * @param {Object} config - The configuration of the player
@@ -55,5 +55,9 @@ export {Env};
 
 // Export base DRM protocol
 export {BaseDrmProtocol};
+
+// Export the player capabilities
+const getCapabilities = Player.getCapabilities;
+export {getCapabilities};
 
 export default loadPlayer;
