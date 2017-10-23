@@ -1402,7 +1402,7 @@ describe('events', function () {
     });
 
     it('should fire text style changed', (done) => {
-      player.addEventListener(player.Event.TEXT_STYLE_CHANGED, () => {
+      player.addEventListener(CustomEventType.TEXT_STYLE_CHANGED, () => {
         done();
       });
       player.textStyle = new TextStyle();
