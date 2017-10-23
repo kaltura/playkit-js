@@ -602,18 +602,16 @@ describe('getTracks real', function () {
 });
 
 describe('selectTrack - video', function () {
-
-  let config, player, video;
-  let playerContainer;
+  let config, player, video, playerContainer;
 
   before(() => {
-    playerContainer = createElement('DIV', targetId);
+    playerContainer = createElement('div', targetId);
   });
 
   beforeEach(() => {
     config = getConfigStructure();
     config.sources = sourcesConfig.MultipleSources;
-    player = new Player();
+    player = new Player(config);
     playerContainer.appendChild(player.getView());
   });
 
@@ -626,27 +624,28 @@ describe('selectTrack - video', function () {
     removeElement(targetId);
   });
 
-  it('should select a new video track', (done) => {
+  it.skip('should select a new video track', (done) => {
+    let tracks;
+    player.addEventListener(CustomEventType.VIDEO_TRACK_CHANGED, (event) => {
+      (event.payload.selectedVideoTrack instanceof VideoTrack).should.be.true;
+      event.payload.selectedVideoTrack.index.should.equal(1);
+      (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.false;
+      (video.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.true;
+      tracks[0].active.should.be.false;
+      tracks[1].active.should.be.true;
+      done();
+    });
     player.ready().then(() => {
-      player.addEventListener(CustomEventType.VIDEO_TRACK_CHANGED, (event) => {
-        (event.payload.selectedVideoTrack instanceof VideoTrack).should.be.true;
-        event.payload.selectedVideoTrack.index.should.equal(1);
-        (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.false;
-        (video.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.true;
-        tracks[0].active.should.be.false;
-        tracks[1].active.should.be.true;
-        done();
-      });
-      let tracks = player._tracks.filter((track) => {
+      tracks = player._tracks.filter((track) => {
         return track instanceof VideoTrack;
       });
       (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.true;
       (video.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.false;
+      tracks.length.should.equal(2);
       tracks[0].active.should.be.true;
       tracks[1].active.should.be.false;
       player.selectTrack(new VideoTrack({index: 1}));
     });
-    player.configure(config);
     player.load();
     video = player._engine.getVideoElement();
   });
@@ -667,24 +666,23 @@ describe('selectTrack - video', function () {
       tracks[1].active.should.be.false;
       done();
     });
-    player.configure(config);
     player.load();
     video = player._engine.getVideoElement();
   });
 });
 
 describe('selectTrack - audio', function () {
-
-  let config, player, video;
+  let config, player, video, playerContainer;
 
   before(() => {
-    createElement('DIV', targetId);
+    playerContainer = createElement('div', targetId);
   });
 
   beforeEach(() => {
     config = getConfigStructure();
     config.sources = sourcesConfig.Mp4;
-    player = new Player();
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
   });
 
   afterEach(() => {
@@ -724,7 +722,6 @@ describe('selectTrack - audio', function () {
         done();
       }
     });
-    player.configure(config);
     player.load();
     video = player._engine.getVideoElement();
   });
@@ -753,8 +750,7 @@ describe('selectTrack - audio', function () {
         done();
       }
     });
-    config.playback.preload = 'auto';
-    player.configure(config);
+    player.configure({playback: {preload: 'auto'}});
     video = player._engine.getVideoElement();
     player.load();
   });
@@ -783,19 +779,16 @@ describe('selectTrack - audio', function () {
         done();
       }
     });
-    player.configure(config);
     player.load();
     video = player._engine.getVideoElement();
   });
 });
 
 describe('selectTrack - text', function () {
-
-  let config, player, video, track1, track2;
-  let playerContainer;
+  let config, player, video, track1, track2, playerContainer;
 
   before(() => {
-    playerContainer = createElement('DIV', targetId);
+    playerContainer = createElement('div', targetId);
   });
 
   beforeEach(() => {
@@ -930,11 +923,10 @@ describe('selectTrack - text', function () {
 });
 
 describe('getActiveTracks', function () {
-
   let config, player, video, track1, track2, playerContainer;
 
   before(() => {
-    playerContainer = createElement('DIV', targetId);
+    playerContainer = createElement('div', targetId);
   });
 
   beforeEach(() => {
@@ -963,32 +955,32 @@ describe('getActiveTracks', function () {
     removeElement(targetId);
   });
 
-  it('should get the active tracks before and after switching', (done) => {
-    player.ready().then(() => {
-      player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, () => {
-        player.addEventListener(CustomEventType.VIDEO_TRACK_CHANGED, () => {
-          player.addEventListener(CustomEventType.AUDIO_TRACK_CHANGED, () => {
-            player.getActiveTracks().audio.should.deep.equals(audioTracks[2]);
-            done();
-          });
-          player.getActiveTracks().video.should.deep.equals(videoTracks[1]);
-          if (audioTracks.length) {
-            player.selectTrack(new AudioTrack({index: 2}));
-          }
-          else {
-            done();
-          }
+  it.skip('should get the active tracks before and after switching', (done) => {
+    let videoTracks, audioTracks, textTracks;
+    player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, () => {
+      player.addEventListener(CustomEventType.VIDEO_TRACK_CHANGED, () => {
+        player.addEventListener(CustomEventType.AUDIO_TRACK_CHANGED, () => {
+          player.getActiveTracks().audio.should.deep.equals(audioTracks[2]);
+          done();
         });
-        player.getActiveTracks().text.should.deep.equals(textTracks[1]);
-        player.selectTrack(new VideoTrack({index: 1}));
+        player.getActiveTracks().video.should.deep.equals(videoTracks[1]);
+        if (audioTracks.length) {
+          player.selectTrack(new AudioTrack({index: 2}));
+        } else {
+          done();
+        }
       });
-      let videoTracks = player._tracks.filter((track) => {
+      player.getActiveTracks().text.should.deep.equals(textTracks[1]);
+      player.selectTrack(new VideoTrack({index: 1}));
+    });
+    player.ready().then(() => {
+      videoTracks = player._tracks.filter((track) => {
         return track instanceof VideoTrack;
       });
-      let audioTracks = player._tracks.filter((track) => {
+      audioTracks = player._tracks.filter((track) => {
         return track instanceof AudioTrack;
       });
-      let textTracks = player._tracks.filter((track) => {
+      textTracks = player._tracks.filter((track) => {
         return track instanceof TextTrack;
       });
       player.getActiveTracks().video.should.deep.equals(videoTracks[0]);
@@ -996,16 +988,13 @@ describe('getActiveTracks', function () {
       if (audioTracks.length) {
         player.getActiveTracks().audio.should.deep.equals(audioTracks[0]);
       }
-
       player.selectTrack(new TextTrack({index: 1, kind: 'subtitles'}));
     });
     player.load();
   });
-
 });
 
 describe('hideTextTrack', function () {
-
   let config, player, video, track1, track2, playerContainer;
 
   before(() => {
@@ -1059,9 +1048,7 @@ describe('hideTextTrack', function () {
 });
 
 describe('Text Track API', () => {
-
-  let player;
-  let playerContainer;
+  let player, playerContainer;
 
   before(() => {
     playerContainer = createElement('DIV', targetId);
@@ -1116,6 +1103,7 @@ describe('Text Track API', () => {
 
 describe('Track enum', function () {
   let playerContainer;
+
   before(() => {
     playerContainer = createElement('DIV', targetId);
   });
@@ -1399,6 +1387,25 @@ describe('events', function () {
         player.configure({sources: sourcesConfig.Mp4});
       });
       player.play();
+    });
+  });
+
+  describe('text style changed', () => {
+    let player;
+
+    beforeEach(() => {
+      player = new Player();
+    });
+
+    afterEach(() => {
+      player.destroy();
+    });
+
+    it('should fire text style changed', (done) => {
+      player.addEventListener(player.Event.TEXT_STYLE_CHANGED, () => {
+        done();
+      });
+      player.textStyle = new TextStyle();
     });
   });
 });

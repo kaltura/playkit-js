@@ -145,6 +145,10 @@ const CustomEventType: { [event: string]: string } = {
 
 const AdEventType: { [event: string]: string } = {
   /**
+   * Fires when the text track style has changed
+   */
+  TEXT_STYLE_CHANGED: 'textstylechanged',
+  /**
    * Fired when ad data is available.
    */
   AD_LOADED: 'adloaded',

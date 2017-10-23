@@ -63,7 +63,8 @@ function CustomEvents() {
     ABR_MODE_CHANGED: 'abrmodechanged',
     PLAYER_STATE_CHANGED: 'playerstatechanged',
     FIRST_PLAY: 'firstplay',
-    SOURCE_SELECTED: 'sourceselected'
+    SOURCE_SELECTED: 'sourceselected',
+    TEXT_STYLE_CHANGED: 'textstylechanged'
   };
 }
 
