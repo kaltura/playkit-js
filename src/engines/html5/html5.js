@@ -101,7 +101,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @static
    */
   static testCapabilities(): void {
-    Html5._capabilities.forEach(Capability => Capability());
+    Html5._capabilities.forEach(capability => capability());
   }
 
   /**
@@ -112,7 +112,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   static getCapabilities(): Promise<Object> {
     let promises = [];
-    Html5._capabilities.forEach(Capability => promises.push(Capability()));
+    Html5._capabilities.forEach(capability => promises.push(capability()));
     return Promise.all(promises)
       .then((arrayOfResults) => {
         const mergedResults = {};
@@ -132,12 +132,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     let playPromise = Html5.TEST_VID.play();
     if (playPromise) {
       return playPromise
-        .then(() => {
-          return {autoplay: true};
-        })
-        .catch(() => {
-          return {autoplay: false};
-        });
+        .then(() => ({autoplay: true}))
+        .catch(() => ({autoplay: false}));
     }
     return Promise.resolve({autoplay: true});
   }
