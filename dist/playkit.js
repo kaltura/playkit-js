@@ -1293,6 +1293,10 @@ var CUSTOM_EVENTS = {
    */
   SOURCE_SELECTED: 'sourceselected',
   /**
+   * Fires when the text track style has changed
+   */
+  TEXT_STYLE_CHANGED: 'textstylechanged',
+  /**
    * Fired when ad data is available.
    */
   AD_LOADED: 'adloaded',
@@ -1775,6 +1779,13 @@ var AUTO = 'auto';
  *  @const
  */
 var OFF = 'off';
+
+/**
+ *  The duration offset, for seeking to duration safety.
+ *  @type {number}
+ *  @const
+ */
+var DURATION_OFFSET = 0.1;
 
 /**
  * The HTML5 player class.
@@ -2961,8 +2972,8 @@ var Player = function (_FakeEventTarget) {
           if (to < 0) {
             boundedTo = 0;
           }
-          if (boundedTo > this._engine.duration) {
-            boundedTo = this._engine.duration;
+          if (boundedTo > this._engine.duration - DURATION_OFFSET) {
+            boundedTo = this._engine.duration - DURATION_OFFSET;
           }
           this._engine.currentTime = boundedTo;
         }
@@ -3263,6 +3274,7 @@ var Player = function (_FakeEventTarget) {
           sheet.insertRule('#' + this._playerId + ' .' + SUBTITLES_CLASS_NAME + ' > div > div > div { ' + style.toCSS() + ' }', 0);
         }
         this._textStyle = style;
+        this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.TEXT_STYLE_CHANGED));
       } catch (e) {
         Player._logger.error(e.message);
       }
@@ -6293,7 +6305,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_logger2.default.getLogger().log('%c ' + "playkit-js" + ' ' + "0.12.0", "color: #98ff98;  font-size: large");
+_logger2.default.getLogger().log('%c ' + "playkit-js" + ' ' + "0.13.0", "color: #98ff98;  font-size: large");
 
 _logger2.default.getLogger().log('%c For more details see ' + "https://github.com/kaltura/playkit-js", "color: #98ff98;");
 
@@ -6329,7 +6341,7 @@ exports.Utils = Utils;
 
 // Export version
 
-exports.VERSION = "0.12.0";
+exports.VERSION = "0.13.0";
 
 // Export player name
 
@@ -8376,9 +8388,9 @@ var Html5 = function (_FakeEventTarget) {
           var cue = _step.value;
 
           //Normalize cues to be of type of VTT model
-          if (cue instanceof window.VTTCue) {
+          if (window.VTTCue && cue instanceof window.VTTCue) {
             activeCues.push(cue);
-          } else if (cue instanceof window.TextTrackCue) {
+          } else if (window.TextTrackCue && cue instanceof window.TextTrackCue) {
             activeCues.push(new _vttCue.Cue(cue.startTime, cue.endTime, cue.text));
           }
         }
@@ -9924,9 +9936,38 @@ var FairPlay = function (_BaseDrmProtocol) {
       FairPlay._logger.debug("License request loaded");
       var request = event.target;
       var keyText = request.responseText.trim();
-      var responseObj = JSON.parse(keyText);
-      var key = FairPlay._base64DecodeUint8Array(responseObj.ckc);
-      FairPlay._keySession.update(key);
+      var responseObj = {};
+      try {
+        responseObj = JSON.parse(keyText);
+      } catch (error) {
+        this._licenseRequestFailed();
+      }
+      var isValidResponse = this._validateResponse(responseObj);
+      if (isValidResponse.valid) {
+        var key = FairPlay._base64DecodeUint8Array(responseObj.ckc);
+        FairPlay._keySession.update(key);
+      } else {
+        this._licenseRequestFailed(isValidResponse);
+      }
+    }
+  }, {
+    key: '_validateResponse',
+    value: function _validateResponse(responseObj) {
+      if (responseObj.message && responseObj.message.indexOf("error") > 0 || responseObj.reference === null || responseObj.status_code === 500) {
+        return { //todo: create & edit an error object
+          valid: false,
+          details: "internal server error" // would be ERROR.INTERNAL or something like that
+        };
+      } else if (responseObj.ckc === "") {
+        return {
+          valid: false,
+          details: "ckc is missing" // would be ERROR.MISSING_CKC or something like that
+        };
+      } else {
+        return {
+          valid: true
+        };
+      }
     }
   }, {
     key: '_licenseRequestFailed',
@@ -10889,7 +10930,7 @@ exports = module.exports = __webpack_require__(44)(undefined);
 
 
 // module
-exports.push([module.i, ".playkit-container {\n  position: relative;\n  width: 100%;\n  height: 100%;\n  color: #fff;\n  outline: none;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n  -webkit-tap-highlight-color: transparent;\n}\n\n.playkit-engine {\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  object-fit: contain;\n}\n\n.playkit-engine video::-webkit-media-controls-panel,\n.playkit-engine video::-webkit-media-controls-panel-container,\n.playkit-engine video::-webkit-media-controls-start-playback-button,\n.playkit-engine video::-webkit-media-controls-play-button {\n  display: none;\n  -webkit-appearance: none\n}\n\n.playkit-poster {\n  position: absolute;\n  display: block;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  background-size: contain;\n  background-position: center center;\n  background-repeat: no-repeat;\n}\n\n.playkit-subtitles {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  left: 0;\n}\n\n.playkit-subtitles > div > div {\n  -webkit-transition: 0.3s ease-in-out;\n  -moz-transition: 0.3s ease-in-out;\n  -o-transition: 0.3s ease-in-out;\n  transition: 0.3s ease-in-out;\n}\n", ""]);
+exports.push([module.i, ".playkit-container {\n  position: relative;\n  width: 100%;\n  height: 100%;\n  color: #fff;\n  outline: none;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n  -webkit-tap-highlight-color: transparent;\n}\n\n.playkit-engine {\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  object-fit: contain;\n}\n\n.playkit-engine video::-webkit-media-controls-panel,\n.playkit-engine video::-webkit-media-controls-panel-container,\n.playkit-engine video::-webkit-media-controls-start-playback-button,\n.playkit-engine video::-webkit-media-controls-play-button {\n  display: none;\n  -webkit-appearance: none\n}\n\n.playkit-poster {\n  position: absolute;\n  display: block;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  background-size: contain;\n  background-position: center center;\n  background-repeat: no-repeat;\n}\n\n.playkit-subtitles {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  left: 0;\n}\n\n", ""]);
 
 // exports
 
