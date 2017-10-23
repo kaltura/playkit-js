@@ -1049,7 +1049,7 @@ export default class Player extends FakeEventTarget {
         if (this.muted) {
           this.play();
         } else {
-          this._manageAutoPlay();
+          this._handleAutoPlay();
         }
       }
     }
@@ -1068,19 +1068,21 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Manage auto play according to the current runtime.
+   * Handles auto play according to the current runtime env.
    * @private
    * @returns {void}
    */
-  _manageAutoPlay(): void {
-    this._engine.canAutoPlay().then((canAutoPlay) => {
-      if (canAutoPlay) {
+  _handleAutoPlay(): void {
+    this._engine.canAutoPlay()
+      .then(() => {
         this.play();
-      } else if (!canAutoPlay && this._config.playback.allowMutedAutoPlay) {
-        this.muted = true;
-        this.play();
-      }
-    });
+      })
+      .catch(() => {
+        if (this._config.playback.allowMutedAutoPlay) {
+          this.muted = true;
+          this.play();
+        }
+      });
   }
 
   /**

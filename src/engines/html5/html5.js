@@ -89,19 +89,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Checks if the engine can auto playing in the current runtime.
-   * @returns {Promise<boolean>} - Whether auto play can be initiated.
+   * @returns {Promise<*>} - The play promise or resolved promise if play promise doesn't exist.
    * @public
    * @static
    */
-  static canAutoPlay(): Promise<boolean> {
+  static canAutoPlay(): Promise<*> {
     Html5.TEST_VID.src = EncodingSources.Base64Mp4Source;
     let playPromise = Html5.TEST_VID.play();
-    if (playPromise) {
-      return playPromise
-        .then(() => true)
-        .catch(() => false);
-    }
-    return Promise.resolve(true);
+    return (playPromise || Promise.resolve());
   }
 
   /**
@@ -133,9 +128,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Gets the result from the canAutoPlay test.
-   * @returns {Promise<boolean>} - The can auto play result.
+   * @returns {Promise<*>} - The canAutoPlay test result.
    */
-  canAutoPlay(): Promise<boolean> {
+  canAutoPlay(): Promise<*> {
     return Html5.canAutoPlay();
   }
 
