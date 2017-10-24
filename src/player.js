@@ -1011,6 +1011,8 @@ export default class Player extends FakeEventTarget {
       });
       this._eventManager.listen(this._engine, CustomEvents.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._engin, CustomEvents.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
+
       this._eventManager.listen(this, Html5Events.PLAY, this._onPlay.bind(this));
       this._eventManager.listen(this, Html5Events.ENDED, this._onEnded.bind(this));
     }
@@ -1358,6 +1360,5 @@ export default class Player extends FakeEventTarget {
   get Track(): { [track: string]: string } {
     return TrackTypes;
   }
-
   // </editor-fold>
 }

@@ -10,6 +10,7 @@ import {getSuitableSourceForResolution} from '../../../../utils/resolution'
 import * as Utils from '../../../../utils/util'
 import FairPlay from '../../../../drm/fairplay'
 import Env from '../../../../utils/env'
+import PlayerError from "../../../../utils/player-error";
 
 /**
  * An illustration of media source extension for progressive download
@@ -132,9 +133,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   constructor(videoElement: HTMLVideoElement, source: Source, config: Object) {
     NativeAdapter._logger.debug('Creating adapter');
     super(videoElement, source);
-    this._maybeSetDrmPlayback();
+    this._playerError = new PlayerError();
     this._eventManager = new EventManager();
+    this._maybeSetDrmPlayback();
     this._progressiveSources = config.sources.progressive;
+
   }
 
   /**
@@ -144,7 +147,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _maybeSetDrmPlayback(): void {
     if (NativeAdapter._drmProtocol && this._sourceObj && this._sourceObj.drmData) {
-      NativeAdapter._drmProtocol.setDrmPlayback(this._videoElement, this._sourceObj.drmData);
+      NativeAdapter._drmProtocol.setDrmPlayback(this._videoElement, this._sourceObj.drmData, this._playerError);
+
+
+
     }
   }
 
@@ -178,6 +184,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {Promise<Object>} - The loaded data
    */
   load(startTime: ?number): Promise<Object> {
+
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
         // We're using 'loadeddata' event for native hls (on 'loadedmetadata' native hls doesn't have tracks yet).
@@ -409,7 +416,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * Select a native video track
    * @function selectAdaptiveVideoTrack
    * @param {VideoTrack} videoTrack - the track to select
-   * @returns {void}
+   * @returns {void}_licenseRequestFailedli
    * @public
    */
   selectAdaptiveVideoTrack(videoTrack: VideoTrack): void {
