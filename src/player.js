@@ -702,11 +702,11 @@ export default class Player extends FakeEventTarget {
   /**
    * Select a track
    * @function selectTrack
-   * @param {Track} track - the track to select
+   * @param {?Track} track - the track to select
    * @returns {void}
    * @public
    */
-  selectTrack(track: Track): void {
+  selectTrack(track: ?Track): void {
     if (this._engine) {
       if (track instanceof VideoTrack) {
         this._engine.selectVideoTrack(track);
