@@ -28,6 +28,8 @@ describe('events', () => {
       WAITING: 'waiting',
     });
     events.CUSTOM_EVENTS.should.deep.equals({
+      AUTOPLAY_FAILED: 'autoplayfailed',
+      FALLBACK_TO_MUTED_AUTOPLAY: 'fallbacktomutedautoplay',
       CHANGE_SOURCE_STARTED: 'changesourcestarted',
       CHANGE_SOURCE_ENDED: 'changesourceended',
       MUTE_CHANGE: 'mutechange',
