@@ -227,11 +227,11 @@ export default class Player extends FakeEventTarget {
    */
   _streamType: string;
   /**
-   * The current playback options state
+   * The current playback attributes state
    * @type {Object}
    * @private
    */
-  _playbackOptionsState: { [option: string]: any } = {
+  _playbackAttributesState: { [attribute: string]: any } = {
     MUTED: undefined,
     VOLUME: undefined,
     RATE: undefined,
@@ -387,7 +387,7 @@ export default class Player extends FakeEventTarget {
     this._streamType = '';
     this._readyPromise = null;
     this._firstPlay = true;
-    this._playbackOptionsState = {};
+    this._playbackAttributesState = {};
     if (this._el) {
       Utils.Dom.removeChild(this._el.parentNode, this._el);
     }
@@ -715,7 +715,7 @@ export default class Player extends FakeEventTarget {
       } else if (track instanceof TextTrack) {
         if (track.language === OFF) {
           this.hideTextTrack();
-          this._playbackOptionsState.TEXT_LANG = OFF;
+          this._playbackAttributesState.TEXT_LANG = OFF;
         } else {
           this._engine.selectTextTrack(track);
         }
@@ -1019,12 +1019,12 @@ export default class Player extends FakeEventTarget {
         return this.dispatchEvent(event);
       });
       this._eventManager.listen(this._engine, CustomEvents.AUDIO_TRACK_CHANGED, (event: FakeEvent) => {
-        this._playbackOptionsState.AUDIO_LANG = event.payload.selectedAudioTrack.language;
+        this._playbackAttributesState.AUDIO_LANG = event.payload.selectedAudioTrack.language;
         this._markActiveTrack(event.payload.selectedAudioTrack);
         return this.dispatchEvent(event);
       });
       this._eventManager.listen(this._engine, CustomEvents.TEXT_TRACK_CHANGED, (event: FakeEvent) => {
-        this._playbackOptionsState.TEXT_LANG = event.payload.selectedTextTrack.language;
+        this._playbackAttributesState.TEXT_LANG = event.payload.selectedTextTrack.language;
         this._markActiveTrack(event.payload.selectedTextTrack);
         return this.dispatchEvent(event);
       });
@@ -1033,11 +1033,11 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this, Html5Events.PLAY, this._onPlay.bind(this));
       this._eventManager.listen(this, Html5Events.ENDED, this._onEnded.bind(this));
       this._eventManager.listen(this, Html5Events.VOLUME_CHANGE, () => {
-        this._playbackOptionsState.MUTED = this.muted;
-        this._playbackOptionsState.VOLUME = this.volume;
+        this._playbackAttributesState.MUTED = this.muted;
+        this._playbackAttributesState.VOLUME = this.volume;
       });
       this._eventManager.listen(this, Html5Events.RATE_CHANGE, () => {
-        this._playbackOptionsState.RATE = this.playbackRate;
+        this._playbackAttributesState.RATE = this.playbackRate;
       });
     }
   }
@@ -1049,13 +1049,13 @@ export default class Player extends FakeEventTarget {
    */
   _handlePlaybackOptions(): void {
     this._config.playback = this._config.playback || {};
-    if (typeof this._playbackOptionsState.MUTED === 'boolean') {
-      this.muted = this._playbackOptionsState.MUTED;
+    if (typeof this._playbackAttributesState.MUTED === 'boolean') {
+      this.muted = this._playbackAttributesState.MUTED;
     } else if (typeof this._config.playback.muted === 'boolean') {
       this.muted = this._config.playback.muted;
     }
-    if (typeof this._playbackOptionsState.VOLUME === 'number') {
-      this.volume = this._playbackOptionsState.VOLUME;
+    if (typeof this._playbackAttributesState.VOLUME === 'number') {
+      this.volume = this._playbackAttributesState.VOLUME;
     } else if (typeof this._config.playback.volume === 'number') {
       this.volume = this._config.playback.volume;
     }
@@ -1139,8 +1139,8 @@ export default class Player extends FakeEventTarget {
       this._firstPlay = false;
       this.dispatchEvent(new FakeEvent(CustomEvents.FIRST_PLAY));
       this._posterManager.hide();
-      if (typeof this._playbackOptionsState.RATE === 'number') {
-        this.playbackRate = this._playbackOptionsState.RATE;
+      if (typeof this._playbackAttributesState.RATE === 'number') {
+        this.playbackRate = this._playbackAttributesState.RATE;
       }
     }
   }
@@ -1308,8 +1308,8 @@ export default class Player extends FakeEventTarget {
 
     this.hideTextTrack();
 
-    this._setDefaultTrack(TrackTypes.TEXT, this._playbackOptionsState.TEXT_LANG, this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackTypes.TEXT), offTextTrack);
-    this._setDefaultTrack(TrackTypes.AUDIO, this._playbackOptionsState.AUDIO_LANG, playbackConfig.audioLanguage, activeTracks.audio);
+    this._setDefaultTrack(TrackTypes.TEXT, this._playbackAttributesState.TEXT_LANG, this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackTypes.TEXT), offTextTrack);
+    this._setDefaultTrack(TrackTypes.AUDIO, this._playbackAttributesState.AUDIO_LANG, playbackConfig.audioLanguage, activeTracks.audio);
   }
 
   /**
