@@ -1096,9 +1096,18 @@ export default class Player extends FakeEventTarget {
       .then((res) => {
         if (res.autoplay) {
           this.play();
-        } else if (!res.autoplay && allowMutedAutoPlay) {
-          this.muted = true;
-          this.play();
+        } else {
+          if (allowMutedAutoPlay) {
+            Player._logger.debug("Fallback to muted autoplay");
+            this.muted = true;
+            this.play();
+            this.dispatchEvent(new FakeEvent(CustomEvents.FALLBACK_TO_MUTED_AUTOPLAY));
+          } else {
+            Player._logger.debug("Autoplay failed, pause player");
+            this.load();
+            this.ready().then(() => this.pause());
+            this.dispatchEvent(new FakeEvent(CustomEvents.AUTOPLAY_FAILED));
+          }
         }
       });
   }
