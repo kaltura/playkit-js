@@ -15,7 +15,7 @@ import TextStyle from './track/text-style'
 import Env from './utils/env'
 import * as Utils from './utils/util'
 
-Player.testCapabilities();
+Player.runCapabilities();
 
 declare var __VERSION__: string;
 declare var __NAME__: string;

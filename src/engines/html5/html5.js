@@ -9,7 +9,8 @@ import AudioTrack from '../../track/audio-track'
 import {TextTrack as PKTextTrack} from '../../track/text-track'
 import {Cue} from '../../track/vtt-cue'
 import * as Utils from '../../utils/util'
-import * as EncodingSources from '../../assets/encoding-sources.json'
+import Html5AutoPlayCapability from "./capabilities/autoplay";
+import Html5IsSupportedCapability from "./capabilities/is-supported";
 
 /**
  * Html5 engine for playback.
@@ -58,15 +59,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    * @static
    */
-  static _capabilities = [Html5.canAutoPlay];
-
-  /**
-   * @type {HTMLVideoElement} - The engine test video element.
-   */
-  static TEST_VID: HTMLVideoElement = Utils.Dom.createElement('video');
+  static _capabilities: Array<typeof ICapability> = [Html5AutoPlayCapability, Html5IsSupportedCapability];
 
   /**
    * @type {string} - The engine id.
+   * @public
+   * @static
    */
   static id: string = "html5";
 
@@ -100,8 +98,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @static
    */
-  static testCapabilities(): void {
-    Html5._capabilities.forEach(capability => capability());
+  static runCapabilities(): void {
+    Html5._capabilities.forEach(capability => capability.runCapability());
   }
 
   /**
@@ -112,30 +110,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   static getCapabilities(): Promise<Object> {
     let promises = [];
-    Html5._capabilities.forEach(capability => promises.push(capability()));
+    Html5._capabilities.forEach(capability => promises.push(capability.getCapability()));
     return Promise.all(promises)
       .then((arrayOfResults) => {
         const mergedResults = {};
         arrayOfResults.forEach(res => Object.assign(mergedResults, res));
         return {[Html5.id]: mergedResults};
       });
-  }
-
-  /**
-   * Runs the autoplay capability test.
-   * @return {Object} - The autoplay capability result.
-   * @public
-   * @static
-   */
-  static canAutoPlay(): Promise<Object> {
-    Html5.TEST_VID.src = EncodingSources.Base64Mp4Source;
-    let playPromise = Html5.TEST_VID.play();
-    if (playPromise) {
-      return playPromise
-        .then(() => ({autoplay: true}))
-        .catch(() => ({autoplay: false}));
-    }
-    return Promise.resolve({autoplay: true});
   }
 
   /**
@@ -163,14 +144,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       Utils.Dom.removeAttribute(this._el, 'src');
     }
     this._init(source, config);
-  }
-
-  /**
-   * Gets the result from the canAutoPlay test.
-   * @returns {Promise<*>} - The canAutoPlay test result.
-   */
-  canAutoPlay(): Promise<*> {
-    return Html5.canAutoPlay();
   }
 
   /**
@@ -725,21 +698,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   get playsinline(): boolean {
     return this._el.getAttribute('playsinline') === '';
-  }
-
-  /**
-   * Checks if the html5 engine is supported.
-   * @returns {boolean} - The isSupported result.
-   * @static
-   * @public
-   */
-  static isSupported() {
-    try {
-      Html5.TEST_VID.volume = 0.5;
-    } catch (e) {
-      return false;
-    }
-    return !!Html5.TEST_VID.canPlayType;
   }
 
   /**

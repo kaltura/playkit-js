@@ -112,6 +112,13 @@ export default class Player extends FakeEventTarget {
    * @static
    */
   static _engines: Array<typeof IEngine> = [Html5];
+  /**
+   * The player capabilities result object.
+   * @type {Object}
+   * @private
+   * @static
+   */
+  static _capabilities: Object;
 
   /**
    * Runs the engines capabilities tests.
@@ -119,24 +126,29 @@ export default class Player extends FakeEventTarget {
    * @public
    * @static
    */
-  static testCapabilities(): void {
-    Player._engines.forEach(Engine => Engine.testCapabilities());
+  static runCapabilities(): void {
+    Player._logger.debug("Running player capabilities");
+    Player._engines.forEach(Engine => Engine.runCapabilities());
   }
 
   /**
    * Gets the engines capabilities.
+   * @param {?string} engineType - The engine type.
    * @return {Promise<Object>} - The engines capabilities object.
    * @public
    * @static
    */
-  static getCapabilities(): Promise<Object> {
+  static getCapabilities(engineType: ?string): Promise<Object> {
+    if (Player._capabilities) {
+      return (engineType ? Promise.resolve(Player._capabilities[engineType]) : Promise.resolve(Player._capabilities));
+    }
     let promises = [];
     Player._engines.forEach(Engine => promises.push(Engine.getCapabilities()));
     return Promise.all(promises)
       .then((arrayOfResults) => {
-        const mergedResults = {};
-        arrayOfResults.forEach(res => Object.assign(mergedResults, res));
-        return {engines: mergedResults};
+        Player._capabilities = {};
+        arrayOfResults.forEach(res => Object.assign(Player._capabilities, res));
+        return (engineType ? Promise.resolve(Player._capabilities[engineType]) : Promise.resolve(Player._capabilities));
       });
   }
 
@@ -1092,9 +1104,10 @@ export default class Player extends FakeEventTarget {
    */
   _handleAutoPlay(): void {
     const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
-    this._engine.canAutoPlay()
-      .then((res) => {
-        if (res.autoplay) {
+    Player.getCapabilities(this.engineType)
+      .then((capabilities) => {
+        if (capabilities.autoplay) {
+          Player._logger.debug("Start autoplay");
           this.play();
         } else {
           if (allowMutedAutoPlay) {
@@ -1103,7 +1116,7 @@ export default class Player extends FakeEventTarget {
             this.play();
             this.dispatchEvent(new FakeEvent(CustomEvents.FALLBACK_TO_MUTED_AUTOPLAY));
           } else {
-            Player._logger.debug("Autoplay failed, pause player");
+            Player._logger.warn("Autoplay failed, pause player");
             this.load();
             this.ready().then(() => this.pause());
             this.dispatchEvent(new FakeEvent(CustomEvents.AUTOPLAY_FAILED));

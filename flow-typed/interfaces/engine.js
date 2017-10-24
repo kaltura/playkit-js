@@ -7,7 +7,7 @@ declare interface IEngine {
   static id: string;
   static createEngine(source: Source, config: Object): IEngine;
   static canPlaySource(source: Source): boolean;
-  static testCapabilities(): void;
+  static runCapabilities(): void;
   static getCapabilities(): Promise<Object>;
   restore(source: Source, config: Object): void;
   destroy(): void;
@@ -16,7 +16,6 @@ declare interface IEngine {
   play(): void;
   pause(): void;
   load(startTime: ?number): Promise<Object>;
-  canAutoPlay(): Promise<*>;
   ready(): void;
   selectVideoTrack(videoTrack: VideoTrack): void;
   selectAudioTrack(audioTrack: AudioTrack): void;
