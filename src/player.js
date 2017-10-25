@@ -113,6 +113,47 @@ export default class Player extends FakeEventTarget {
    */
   static _engines: Array<typeof IEngine> = [Html5];
   /**
+   * The player capabilities result object.
+   * @type {Object}
+   * @private
+   * @static
+   */
+  static _playerCapabilities: Object;
+
+  /**
+   * Runs the engines capabilities tests.
+   * @returns {void}
+   * @public
+   * @static
+   */
+  static runCapabilities(): void {
+    Player._logger.debug("Running player capabilities");
+    Player._engines.forEach(Engine => Engine.runCapabilities());
+  }
+
+  /**
+   * Gets the engines capabilities.
+   * @param {?string} engineType - The engine type.
+   * @return {Promise<Object>} - The engines capabilities object.
+   * @public
+   * @static
+   */
+  static getCapabilities(engineType: ?string): Promise<Object> {
+    Player._logger.debug("Get player capabilities", engineType);
+    if (Player._playerCapabilities) {
+      return (engineType ? Promise.resolve(Player._playerCapabilities[engineType]) : Promise.resolve(Player._playerCapabilities));
+    }
+    let promises = [];
+    Player._engines.forEach(Engine => promises.push(Engine.getCapabilities()));
+    return Promise.all(promises)
+      .then((arrayOfResults) => {
+        Player._playerCapabilities = {};
+        arrayOfResults.forEach(res => Object.assign(Player._playerCapabilities, res));
+        return (engineType ? Promise.resolve(Player._playerCapabilities[engineType]) : Promise.resolve(Player._playerCapabilities));
+      });
+  }
+
+  /**
    * The plugin manager of the player.
    * @type {PluginManager}
    * @private
@@ -227,6 +268,12 @@ export default class Player extends FakeEventTarget {
    */
   _streamType: string;
   /**
+   * Flag to indicate whether is the first play in the current session.
+   * @type {boolean}
+   * @private
+   */
+  _firstPlayInCurrentSession: boolean;
+  /**
    * The current playback attributes state
    * @type {Object}
    * @private
@@ -249,6 +296,7 @@ export default class Player extends FakeEventTarget {
     this._env = Env;
     this._tracks = [];
     this._firstPlay = true;
+    this._firstPlayInCurrentSession = true;
     this._config = Player._defaultConfig;
     this._eventManager = new EventManager();
     this._posterManager = new PosterManager();
@@ -1030,6 +1078,10 @@ export default class Player extends FakeEventTarget {
       });
       this._eventManager.listen(this._engine, CustomEvents.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._engine, CustomEvents.AUTOPLAY_FAILED, (event: FakeEvent) => {
+        this.pause();
+        this.dispatchEvent(event)
+      });
       this._eventManager.listen(this, Html5Events.PLAY, this._onPlay.bind(this));
       this._eventManager.listen(this, Html5Events.ENDED, this._onEnded.bind(this));
       this._eventManager.listen(this, CustomEvents.MUTE_CHANGE, () => {
@@ -1068,20 +1120,16 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Handles preload.
+   * If ads plugin enabled it's his responsibility to preload the content player.
+   * So to avoid loading the player twice which can cause errors on MSEs we are not
+   * calling load from the player.
+   * TODO: Change it to check the ads configuration when we will develop the ads manager.
    * @returns {void}
    * @private
    */
   _handlePreload(): void {
-    if (this._config.playback.preload === "auto") {
-      /**
-       * If ads plugin enabled it's his responsibility to preload the content player.
-       * So to avoid loading the player twice which can cause errors on MSEs we are not
-       * calling load from the player.
-       * TODO: Change it to check the ads configuration when we will develop the ads manager.
-       */
-      if (!this._config.plugins.ima) {
-        this.load();
-      }
+    if (this._config.playback.preload === "auto" && !this._config.plugins.ima) {
+      this.load();
     }
   }
 
@@ -1091,26 +1139,32 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _handleAutoPlay(): void {
-    if (this._canAutoPlay()) {
-      this.play();
+    if (this._config.playback.autoplay === true) {
+      if (this.muted || !this._firstPlayInCurrentSession) {
+        this.play();
+      } else {
+        const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
+        Player.getCapabilities(this.engineType)
+          .then((capabilities) => {
+            if (capabilities.autoplay) {
+              Player._logger.debug("Start autoplay");
+              this.play();
+            } else {
+              if (allowMutedAutoPlay) {
+                Player._logger.debug("Fallback to muted autoplay");
+                this.muted = true;
+                this.play();
+                this.dispatchEvent(new FakeEvent(CustomEvents.FALLBACK_TO_MUTED_AUTOPLAY));
+              } else {
+                Player._logger.warn("Autoplay failed, pause player");
+                this.load();
+                this.ready().then(() => this.pause());
+                this.dispatchEvent(new FakeEvent(CustomEvents.AUTOPLAY_FAILED));
+              }
+            }
+          });
+      }
     }
-  }
-
-  /**
-   * Determine whether we can auto playing or not.
-   * @returns {boolean} - Whether an auto play can be done.
-   * @private
-   */
-  _canAutoPlay(): ?boolean {
-    if (!this._config.playback.autoplay) {
-      return false;
-    }
-    let device = this._env.device.type;
-    let os = this._env.os.name;
-    if (device) {
-      return (os === 'iOS') ? this.muted && this.playsinline : this.muted;
-    }
-    return true;
   }
 
   /**
@@ -1182,6 +1236,7 @@ export default class Player extends FakeEventTarget {
     this._activeTextCues = [];
     this._tracks = [];
     this._firstPlay = true;
+    this._firstPlayInCurrentSession = false;
     this._engineType = '';
     this._streamType = '';
     this._createReadyPromise();
