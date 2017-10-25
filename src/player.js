@@ -1059,8 +1059,8 @@ export default class Player extends FakeEventTarget {
 _removeCueTextPatch(): void {
   const textCue = this._activeTextCues;
   if (textCue.length > 0) {
-    const cueEndTime = textCue[0]._endTime;
-    const cueStartTime = textCue[0]._startTime;
+    const cueEndTime = textCue[0].endTime;
+    const cueStartTime = textCue[0].startTime;
     const currTime = this.currentTime;
     if (currTime > cueEndTime || currTime < cueStartTime) {
       processCues(window, [], this._textDisplayEl);
