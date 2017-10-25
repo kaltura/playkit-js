@@ -1078,6 +1078,10 @@ export default class Player extends FakeEventTarget {
       });
       this._eventManager.listen(this._engine, CustomEvents.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._engine, CustomEvents.AUTOPLAY_FAILED, (event: FakeEvent) => {
+        this.pause();
+        this.dispatchEvent(event)
+      });
       this._eventManager.listen(this, Html5Events.PLAY, this._onPlay.bind(this));
       this._eventManager.listen(this, Html5Events.ENDED, this._onEnded.bind(this));
       this._eventManager.listen(this, CustomEvents.MUTE_CHANGE, () => {
