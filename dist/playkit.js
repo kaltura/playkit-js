@@ -1679,9 +1679,9 @@ var _trackTypes = __webpack_require__(38);
 
 var _trackTypes2 = _interopRequireDefault(_trackTypes);
 
-var _track2 = __webpack_require__(3);
+var _track = __webpack_require__(3);
 
-var _track3 = _interopRequireDefault(_track2);
+var _track2 = _interopRequireDefault(_track);
 
 var _videoTrack = __webpack_require__(6);
 
@@ -1801,6 +1801,68 @@ var Player = function (_FakeEventTarget) {
    */
 
   /**
+   * The player text disaply settings
+   * @type {Object}
+   * @private
+   */
+
+  /**
+   * The available engines of the player.
+   * @type {Array<typeof IEngine>}
+   * @private
+   * @static
+   */
+  function Player() {
+    var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _classCallCheck(this, Player);
+
+    var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
+
+    _this._activeTextCues = [];
+    _this._textDisplaySettings = {};
+    _this._playbackAttributesState = {
+      muted: undefined,
+      volume: undefined,
+      rate: undefined,
+      audioLanguage: "",
+      textLanguage: ""
+    };
+
+    _this._env = _env2.default;
+    _this._tracks = [];
+    _this._firstPlay = true;
+    _this._config = Player._defaultConfig;
+    _this._eventManager = new _eventManager2.default();
+    _this._posterManager = new _posterManager2.default();
+    _this._stateManager = new _stateManager2.default(_this);
+    _this._pluginManager = new _pluginManager2.default();
+    _this._playbackMiddleware = new _playbackMiddleware2.default();
+    _this._textStyle = new _textStyle2.default();
+    _this._createReadyPromise();
+    _this._createPlayerContainer();
+    _this._appendPosterEl();
+    _this.configure(config);
+    return _this;
+  }
+
+  // <editor-fold desc="Public API">
+
+  // <editor-fold desc="Playback API">
+
+  /**
+   * Configures the player according to a given configuration.
+   * @param {Object} config - The configuration for the player instance.
+   * @returns {void}
+   */
+
+  /**
+   * The current playback attributes state
+   * @type {Object}
+   * @private
+   */
+
+  /**
    * The player text style settings
    * @type {TextStyle}
    * @private
@@ -1914,55 +1976,6 @@ var Player = function (_FakeEventTarget) {
    * @static
    * @private
    */
-  function Player() {
-    var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-    _classCallCheck(this, Player);
-
-    var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this));
-
-    _this._activeTextCues = [];
-    _this._textDisplaySettings = {};
-
-    _this._env = _env2.default;
-    _this._tracks = [];
-    _this._firstPlay = true;
-    _this._config = Player._defaultConfig;
-    _this._eventManager = new _eventManager2.default();
-    _this._posterManager = new _posterManager2.default();
-    _this._stateManager = new _stateManager2.default(_this);
-    _this._pluginManager = new _pluginManager2.default();
-    _this._playbackMiddleware = new _playbackMiddleware2.default();
-    _this._textStyle = new _textStyle2.default();
-    _this._createReadyPromise();
-    _this._createPlayerContainer();
-    _this._appendPosterEl();
-    _this.configure(config);
-    return _this;
-  }
-
-  // <editor-fold desc="Public API">
-
-  // <editor-fold desc="Playback API">
-
-  /**
-   * Configures the player according to a given configuration.
-   * @param {Object} config - The configuration for the player instance.
-   * @returns {void}
-   */
-
-  /**
-   * The player text disaply settings
-   * @type {Object}
-   * @private
-   */
-
-  /**
-   * The available engines of the player.
-   * @type {Array<typeof IEngine>}
-   * @private
-   * @static
-   */
 
 
   _createClass(Player, [{
@@ -1982,7 +1995,9 @@ var Player = function (_FakeEventTarget) {
           this._posterManager.setSrc(this._config.metadata.poster);
           this._posterManager.show();
           this._attachMedia();
-          this._handlePlaybackConfig();
+          this._handlePlaybackOptions();
+          this._handlePreload();
+          this._handleAutoPlay();
           if (receivedSourcesWhenHasEngine) {
             Player._logger.debug('Change source ended');
             this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.CHANGE_SOURCE_ENDED));
@@ -2104,6 +2119,7 @@ var Player = function (_FakeEventTarget) {
       this._streamType = '';
       this._readyPromise = null;
       this._firstPlay = true;
+      this._playbackAttributesState = {};
       if (this._el) {
         Utils.Dom.removeChild(this._el.parentNode, this._el);
       }
@@ -2206,7 +2222,7 @@ var Player = function (_FakeEventTarget) {
     /**
      * Select a track
      * @function selectTrack
-     * @param {Track} track - the track to select
+     * @param {?Track} track - the track to select
      * @returns {void}
      * @public
      */
@@ -2220,8 +2236,9 @@ var Player = function (_FakeEventTarget) {
         } else if (track instanceof _audioTrack2.default) {
           this._engine.selectAudioTrack(track);
         } else if (track instanceof _textTrack2.default) {
-          if (track.language === "off") {
+          if (track.language === OFF) {
             this.hideTextTrack();
+            this._playbackAttributesState.textLanguage = OFF;
           } else {
             this._engine.selectTextTrack(track);
           }
@@ -2247,7 +2264,7 @@ var Player = function (_FakeEventTarget) {
           return track.active = false;
         });
         var textTrack = textTracks.find(function (track) {
-          return track.language === "off";
+          return track.language === OFF;
         });
         if (textTrack) {
           textTrack.active = true;
@@ -2578,10 +2595,12 @@ var Player = function (_FakeEventTarget) {
           return _this6.dispatchEvent(event);
         });
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED, function (event) {
+          _this6._playbackAttributesState.audioLanguage = event.payload.selectedAudioTrack.language;
           _this6._markActiveTrack(event.payload.selectedAudioTrack);
           return _this6.dispatchEvent(event);
         });
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED, function (event) {
+          _this6._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language;
           _this6._markActiveTrack(event.payload.selectedTextTrack);
           return _this6.dispatchEvent(event);
         });
@@ -2593,42 +2612,76 @@ var Player = function (_FakeEventTarget) {
         });
         this._eventManager.listen(this, _events.HTML5_EVENTS.PLAY, this._onPlay.bind(this));
         this._eventManager.listen(this, _events.HTML5_EVENTS.ENDED, this._onEnded.bind(this));
+        this._eventManager.listen(this, _events.CUSTOM_EVENTS.MUTE_CHANGE, function () {
+          _this6._playbackAttributesState.muted = _this6.muted;
+        });
+        this._eventManager.listen(this, _events.HTML5_EVENTS.VOLUME_CHANGE, function () {
+          _this6._playbackAttributesState.volume = _this6.volume;
+        });
+        this._eventManager.listen(this, _events.HTML5_EVENTS.RATE_CHANGE, function () {
+          _this6._playbackAttributesState.rate = _this6.playbackRate;
+        });
       }
     }
 
     /**
-     * Handles the playback config.
+     * Handles the playback options, from current state or config.
      * @returns {void}
      * @private
      */
 
   }, {
-    key: '_handlePlaybackConfig',
-    value: function _handlePlaybackConfig() {
-      if (this._config.playback) {
-        if (typeof this._config.playback.volume === 'number') {
-          this.volume = this._config.playback.volume;
+    key: '_handlePlaybackOptions',
+    value: function _handlePlaybackOptions() {
+      this._config.playback = this._config.playback || {};
+      if (typeof this._playbackAttributesState.muted === 'boolean') {
+        this.muted = this._playbackAttributesState.muted;
+      } else if (typeof this._config.playback.muted === 'boolean') {
+        this.muted = this._config.playback.muted;
+      }
+      if (typeof this._playbackAttributesState.volume === 'number') {
+        this.volume = this._playbackAttributesState.volume;
+      } else if (typeof this._config.playback.volume === 'number') {
+        this.volume = this._config.playback.volume;
+      }
+      if (typeof this._config.playback.playsinline === 'boolean') {
+        this.playsinline = this._config.playback.playsinline;
+      }
+    }
+
+    /**
+     * Handles preload.
+     * @returns {void}
+     * @private
+     */
+
+  }, {
+    key: '_handlePreload',
+    value: function _handlePreload() {
+      if (this._config.playback.preload === "auto") {
+        /**
+         * If ads plugin enabled it's his responsibility to preload the content player.
+         * So to avoid loading the player twice which can cause errors on MSEs we are not
+         * calling load from the player.
+         * TODO: Change it to check the ads configuration when we will develop the ads manager.
+         */
+        if (!this._config.plugins.ima) {
+          this.load();
         }
-        if (typeof this._config.playback.muted === 'boolean') {
-          this.muted = this._config.playback.muted;
-        }
-        if (typeof this._config.playback.playsinline === 'boolean') {
-          this.playsinline = this._config.playback.playsinline;
-        }
-        if (this._config.playback.preload === "auto") {
-          /**
-           * If ads plugin enabled it's his responsibility to preload the content player.
-           * So to avoid loading the player twice which can cause errors on MSEs we are not
-           * calling load from the player.
-           * TODO: Change it to check the ads configuration when we will develop the ads manager.
-           */
-          if (!this._config.plugins.ima) {
-            this.load();
-          }
-        }
-        if (this._canAutoPlay()) {
-          this.play();
-        }
+      }
+    }
+
+    /**
+     * Handles auto play.
+     * @returns {void}
+     * @private
+     */
+
+  }, {
+    key: '_handleAutoPlay',
+    value: function _handleAutoPlay() {
+      if (this._canAutoPlay()) {
+        this.play();
       }
     }
 
@@ -2701,6 +2754,9 @@ var Player = function (_FakeEventTarget) {
         this._firstPlay = false;
         this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.FIRST_PLAY));
         this._posterManager.hide();
+        if (typeof this._playbackAttributesState.rate === 'number') {
+          this.playbackRate = this._playbackAttributesState.rate;
+        }
       }
     }
 
@@ -2894,8 +2950,10 @@ var Player = function (_FakeEventTarget) {
 
       this.hideTextTrack();
 
-      this._setDefaultTrack(_trackTypes2.default.TEXT, this._getLanguage(playbackConfig.textLanguage, activeTracks.text, _trackTypes2.default.TEXT), offTextTrack);
-      this._setDefaultTrack(_trackTypes2.default.AUDIO, playbackConfig.audioLanguage, activeTracks.audio);
+      var currentOrConfiguredTextLang = this._playbackAttributesState.textLanguage || this._getLanguage(playbackConfig.textLanguage, activeTracks.text, _trackTypes2.default.TEXT);
+      var currentOrConfiguredAudioLang = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
+      this._setDefaultTrack(_trackTypes2.default.TEXT, currentOrConfiguredTextLang, offTextTrack);
+      this._setDefaultTrack(_trackTypes2.default.AUDIO, currentOrConfiguredAudioLang, activeTracks.audio);
     }
 
     /**
@@ -2914,7 +2972,7 @@ var Player = function (_FakeEventTarget) {
       if (language === AUTO) {
         var tracks = this._getTracksByType(type);
         var localeTrack = tracks.find(function (track) {
-          return _track3.default.langComparer(_locale2.default.language, track.language);
+          return _track2.default.langComparer(_locale2.default.language, track.language);
         });
         if (localeTrack) {
           language = localeTrack.language;
@@ -2931,7 +2989,7 @@ var Player = function (_FakeEventTarget) {
      * Sets a specific default track.
      * @param {string} type - The track type.
      * @param {string} language - The track language.
-     * @param {?Track} defaultTrack - The default track to set in case there in case no language configured.
+     * @param {?Track} defaultTrack - The default track to set in case there is no language configured.
      * @returns {void}
      * @private
      */
@@ -2939,14 +2997,12 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_setDefaultTrack',
     value: function _setDefaultTrack(type, language, defaultTrack) {
-      if (language) {
-        var _track = this._getTracksByType(type).find(function (track) {
-          return _track3.default.langComparer(language, track.language);
-        });
-        if (_track) {
-          this.selectTrack(_track);
-        }
-      } else if (defaultTrack) {
+      var track = this._getTracksByType(type).find(function (track) {
+        return _track2.default.langComparer(language, track.language);
+      });
+      if (track) {
+        this.selectTrack(track);
+      } else {
         this.selectTrack(defaultTrack);
       }
     }
@@ -6305,7 +6361,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_logger2.default.getLogger().log('%c ' + "playkit-js" + ' ' + "0.13.0", "color: #98ff98;  font-size: large");
+_logger2.default.getLogger().log('%c ' + "playkit-js" + ' ' + "0.13.1", "color: #98ff98;  font-size: large");
 
 _logger2.default.getLogger().log('%c For more details see ' + "https://github.com/kaltura/playkit-js", "color: #98ff98;");
 
@@ -6341,7 +6397,7 @@ exports.Utils = Utils;
 
 // Export version
 
-exports.VERSION = "0.13.0";
+exports.VERSION = "0.13.1";
 
 // Export player name
 
@@ -9940,14 +9996,14 @@ var FairPlay = function (_BaseDrmProtocol) {
       try {
         responseObj = JSON.parse(keyText);
       } catch (error) {
-        this._licenseRequestFailed();
+        FairPlay._licenseRequestFailed();
       }
-      var isValidResponse = this._validateResponse(responseObj);
+      var isValidResponse = FairPlay._validateResponse(responseObj);
       if (isValidResponse.valid) {
         var key = FairPlay._base64DecodeUint8Array(responseObj.ckc);
         FairPlay._keySession.update(key);
       } else {
-        this._licenseRequestFailed(isValidResponse);
+        FairPlay._licenseRequestFailed();
       }
     }
   }, {
@@ -10859,7 +10915,7 @@ module.exports = {
 		"textLanguage": "",
 		"useNativeTextTrack": false,
 		"volume": 1,
-		"playsinline": false,
+		"playsinline": true,
 		"preload": "none",
 		"autoplay": false,
 		"muted": false,
