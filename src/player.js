@@ -226,6 +226,19 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _streamType: string;
+  /**
+   * The current playback attributes state
+   * @type {Object}
+   * @private
+   */
+  _playbackAttributesState: { [attribute: string]: any } = {
+    muted: undefined,
+    volume: undefined,
+    rate: undefined,
+    audioLanguage: "",
+    textLanguage: ""
+  };
+
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -273,7 +286,9 @@ export default class Player extends FakeEventTarget {
         this._posterManager.setSrc(this._config.metadata.poster);
         this._posterManager.show();
         this._attachMedia();
-        this._handlePlaybackConfig();
+        this._handlePlaybackOptions();
+        this._handlePreload();
+        this._handleAutoPlay();
         if (receivedSourcesWhenHasEngine) {
           Player._logger.debug('Change source ended');
           this.dispatchEvent(new FakeEvent(CustomEvents.CHANGE_SOURCE_ENDED));
@@ -372,6 +387,7 @@ export default class Player extends FakeEventTarget {
     this._streamType = '';
     this._readyPromise = null;
     this._firstPlay = true;
+    this._playbackAttributesState = {};
     if (this._el) {
       Utils.Dom.removeChild(this._el.parentNode, this._el);
     }
@@ -686,19 +702,20 @@ export default class Player extends FakeEventTarget {
   /**
    * Select a track
    * @function selectTrack
-   * @param {Track} track - the track to select
+   * @param {?Track} track - the track to select
    * @returns {void}
    * @public
    */
-  selectTrack(track: Track): void {
+  selectTrack(track: ?Track): void {
     if (this._engine) {
       if (track instanceof VideoTrack) {
         this._engine.selectVideoTrack(track);
       } else if (track instanceof AudioTrack) {
         this._engine.selectAudioTrack(track);
       } else if (track instanceof TextTrack) {
-        if (track.language === "off") {
+        if (track.language === OFF) {
           this.hideTextTrack();
+          this._playbackAttributesState.textLanguage = OFF;
         } else {
           this._engine.selectTextTrack(track);
         }
@@ -718,7 +735,7 @@ export default class Player extends FakeEventTarget {
       this._updateTextDisplay([]);
       const textTracks = this._getTracksByType(TrackTypes.TEXT);
       textTracks.map(track => track.active = false);
-      const textTrack = textTracks.find(track => track.language === "off");
+      const textTrack = textTracks.find(track => track.language === OFF);
       if (textTrack) {
         textTrack.active = true;
         this.dispatchEvent(new FakeEvent(CustomEvents.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}))
@@ -1002,10 +1019,12 @@ export default class Player extends FakeEventTarget {
         return this.dispatchEvent(event);
       });
       this._eventManager.listen(this._engine, CustomEvents.AUDIO_TRACK_CHANGED, (event: FakeEvent) => {
+        this._playbackAttributesState.audioLanguage = event.payload.selectedAudioTrack.language;
         this._markActiveTrack(event.payload.selectedAudioTrack);
         return this.dispatchEvent(event);
       });
       this._eventManager.listen(this._engine, CustomEvents.TEXT_TRACK_CHANGED, (event: FakeEvent) => {
+        this._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language;
         this._markActiveTrack(event.payload.selectedTextTrack);
         return this.dispatchEvent(event);
       });
@@ -1013,39 +1032,67 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this, Html5Events.PLAY, this._onPlay.bind(this));
       this._eventManager.listen(this, Html5Events.ENDED, this._onEnded.bind(this));
+      this._eventManager.listen(this, CustomEvents.MUTE_CHANGE, () => {
+        this._playbackAttributesState.muted = this.muted;
+      });
+      this._eventManager.listen(this, Html5Events.VOLUME_CHANGE, () => {
+        this._playbackAttributesState.volume = this.volume;
+      });
+      this._eventManager.listen(this, Html5Events.RATE_CHANGE, () => {
+        this._playbackAttributesState.rate = this.playbackRate;
+      });
     }
   }
 
   /**
-   * Handles the playback config.
+   * Handles the playback options, from current state or config.
    * @returns {void}
    * @private
    */
-  _handlePlaybackConfig(): void {
-    if (this._config.playback) {
-      if (typeof this._config.playback.volume === 'number') {
-        this.volume = this._config.playback.volume;
+  _handlePlaybackOptions(): void {
+    this._config.playback = this._config.playback || {};
+    if (typeof this._playbackAttributesState.muted === 'boolean') {
+      this.muted = this._playbackAttributesState.muted;
+    } else if (typeof this._config.playback.muted === 'boolean') {
+      this.muted = this._config.playback.muted;
+    }
+    if (typeof this._playbackAttributesState.volume === 'number') {
+      this.volume = this._playbackAttributesState.volume;
+    } else if (typeof this._config.playback.volume === 'number') {
+      this.volume = this._config.playback.volume;
+    }
+    if (typeof this._config.playback.playsinline === 'boolean') {
+      this.playsinline = this._config.playback.playsinline;
+    }
+  }
+
+  /**
+   * Handles preload.
+   * @returns {void}
+   * @private
+   */
+  _handlePreload(): void {
+    if (this._config.playback.preload === "auto") {
+      /**
+       * If ads plugin enabled it's his responsibility to preload the content player.
+       * So to avoid loading the player twice which can cause errors on MSEs we are not
+       * calling load from the player.
+       * TODO: Change it to check the ads configuration when we will develop the ads manager.
+       */
+      if (!this._config.plugins.ima) {
+        this.load();
       }
-      if (typeof this._config.playback.muted === 'boolean') {
-        this.muted = this._config.playback.muted;
-      }
-      if (typeof this._config.playback.playsinline === 'boolean') {
-        this.playsinline = this._config.playback.playsinline;
-      }
-      if (this._config.playback.preload === "auto") {
-        /**
-         * If ads plugin enabled it's his responsibility to preload the content player.
-         * So to avoid loading the player twice which can cause errors on MSEs we are not
-         * calling load from the player.
-         * TODO: Change it to check the ads configuration when we will develop the ads manager.
-         */
-        if (!this._config.plugins.ima) {
-          this.load();
-        }
-      }
-      if (this._canAutoPlay()) {
-        this.play();
-      }
+    }
+  }
+
+  /**
+   * Handles auto play.
+   * @returns {void}
+   * @private
+   */
+  _handleAutoPlay(): void {
+    if (this._canAutoPlay()) {
+      this.play();
     }
   }
 
@@ -1104,6 +1151,9 @@ export default class Player extends FakeEventTarget {
       this._firstPlay = false;
       this.dispatchEvent(new FakeEvent(CustomEvents.FIRST_PLAY));
       this._posterManager.hide();
+      if (typeof this._playbackAttributesState.rate === 'number') {
+        this.playbackRate = this._playbackAttributesState.rate;
+      }
     }
   }
 
@@ -1270,8 +1320,10 @@ export default class Player extends FakeEventTarget {
 
     this.hideTextTrack();
 
-    this._setDefaultTrack(TrackTypes.TEXT, this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackTypes.TEXT), offTextTrack);
-    this._setDefaultTrack(TrackTypes.AUDIO, playbackConfig.audioLanguage, activeTracks.audio);
+    let currentOrConfiguredTextLang = this._playbackAttributesState.textLanguage || this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackTypes.TEXT);
+    let currentOrConfiguredAudioLang = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
+    this._setDefaultTrack(TrackTypes.TEXT, currentOrConfiguredTextLang, offTextTrack);
+    this._setDefaultTrack(TrackTypes.AUDIO, currentOrConfiguredAudioLang, activeTracks.audio);
   }
 
   /**
@@ -1302,17 +1354,15 @@ export default class Player extends FakeEventTarget {
    * Sets a specific default track.
    * @param {string} type - The track type.
    * @param {string} language - The track language.
-   * @param {?Track} defaultTrack - The default track to set in case there in case no language configured.
+   * @param {?Track} defaultTrack - The default track to set in case there is no language configured.
    * @returns {void}
    * @private
    */
   _setDefaultTrack(type: string, language: string, defaultTrack: ?Track): void {
-    if (language) {
-      const track: ?Track = this._getTracksByType(type).find(track => Track.langComparer(language, track.language));
-      if (track) {
-        this.selectTrack(track);
-      }
-    } else if (defaultTrack) {
+    const track: ?Track = this._getTracksByType(type).find(track => Track.langComparer(language, track.language));
+    if (track) {
+      this.selectTrack(track);
+    } else {
       this.selectTrack(defaultTrack);
     }
   }
