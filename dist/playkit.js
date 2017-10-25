@@ -2682,6 +2682,10 @@ var Player = function (_FakeEventTarget) {
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.ABR_MODE_CHANGED, function (event) {
           return _this6.dispatchEvent(event);
         });
+        this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.AUTOPLAY_FAILED, function (event) {
+          _this6.pause();
+          _this6.dispatchEvent(event);
+        });
         this._eventManager.listen(this, _events.HTML5_EVENTS.PLAY, this._onPlay.bind(this));
         this._eventManager.listen(this, _events.HTML5_EVENTS.ENDED, this._onEnded.bind(this));
         this._eventManager.listen(this, _events.CUSTOM_EVENTS.MUTE_CHANGE, function () {
@@ -7222,7 +7226,14 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'play',
     value: function play() {
-      this._el.play();
+      var _this4 = this;
+
+      var playPromise = this._el.play();
+      if (playPromise) {
+        playPromise.catch(function () {
+          return _this4.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.AUTOPLAY_FAILED));
+        });
+      }
     }
 
     /**
@@ -7247,12 +7258,12 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: 'load',
     value: function load(startTime) {
-      var _this4 = this;
+      var _this5 = this;
 
       this._el.load();
       return this._canLoadMediaSourceAdapterPromise.then(function () {
-        if (_this4._mediaSourceAdapter) {
-          return _this4._mediaSourceAdapter.load(startTime);
+        if (_this5._mediaSourceAdapter) {
+          return _this5._mediaSourceAdapter.load(startTime);
         }
         return Promise.resolve({});
       });
@@ -7331,7 +7342,7 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: '_addCueChangeListener',
     value: function _addCueChangeListener(textTrack) {
-      var _this5 = this;
+      var _this6 = this;
 
       var textTrackEl = this._getSelectedTextTrackElement();
       if (textTrackEl) {
@@ -7349,7 +7360,7 @@ var Html5 = function (_FakeEventTarget) {
           textTrackEl.mode = this._showTextTrackFirstTime[textTrack.index] ? "hidden" : "showing";
           this._showTextTrackFirstTime[textTrack.index] = true;
           textTrackEl.oncuechange = function (e) {
-            return _this5._onCueChange(e);
+            return _this6._onCueChange(e);
           };
         }
       }
