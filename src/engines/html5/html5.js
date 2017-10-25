@@ -9,8 +9,8 @@ import AudioTrack from '../../track/audio-track'
 import {TextTrack as PKTextTrack} from '../../track/text-track'
 import {Cue} from '../../track/vtt-cue'
 import * as Utils from '../../utils/util'
-import Html5AutoPlayCapability from "./capabilities/autoplay";
-import Html5IsSupportedCapability from "./capabilities/is-supported";
+import Html5AutoPlayCapability from './capabilities/html5-autoplay'
+import Html5IsSupportedCapability from './capabilities/html5-is-supported'
 
 /**
  * Html5 engine for playback.
