@@ -1109,14 +1109,15 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _removeTextCuePatch(): void {
-    this._activeTextCues.forEach((textCue) => {
+    let filteredActiveTextCues = this._activeTextCues.filter((textCue) => {
       const cueEndTime = textCue._endTime;
       const cueStartTime = textCue._startTime;
       const currTime = this.currentTime;
-      if (currTime > cueEndTime || currTime < cueStartTime) {
-        processCues(window, [], this._textDisplayEl);
+      if (currTime < cueEndTime && currTime > cueStartTime) {
+        return textCue;
       }
-    })
+    });
+    this._updateTextDisplay(filteredActiveTextCues);
   }
 
   /**
