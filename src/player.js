@@ -118,7 +118,7 @@ export default class Player extends FakeEventTarget {
    * @private
    * @static
    */
-  static _capabilities: Object;
+  static _playerCapabilities: Object;
 
   /**
    * Runs the engines capabilities tests.
@@ -139,16 +139,17 @@ export default class Player extends FakeEventTarget {
    * @static
    */
   static getCapabilities(engineType: ?string): Promise<Object> {
-    if (Player._capabilities) {
-      return (engineType ? Promise.resolve(Player._capabilities[engineType]) : Promise.resolve(Player._capabilities));
+    Player._logger.debug("Get player capabilities", engineType);
+    if (Player._playerCapabilities) {
+      return (engineType ? Promise.resolve(Player._playerCapabilities[engineType]) : Promise.resolve(Player._playerCapabilities));
     }
     let promises = [];
     Player._engines.forEach(Engine => promises.push(Engine.getCapabilities()));
     return Promise.all(promises)
       .then((arrayOfResults) => {
-        Player._capabilities = {};
-        arrayOfResults.forEach(res => Object.assign(Player._capabilities, res));
-        return (engineType ? Promise.resolve(Player._capabilities[engineType]) : Promise.resolve(Player._capabilities));
+        Player._playerCapabilities = {};
+        arrayOfResults.forEach(res => Object.assign(Player._playerCapabilities, res));
+        return (engineType ? Promise.resolve(Player._playerCapabilities[engineType]) : Promise.resolve(Player._playerCapabilities));
       });
   }
 
@@ -266,6 +267,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _streamType: string;
+  /**
+   * Flag to indicate whether is the first play in the current session.
+   * @type {boolean}
+   * @private
+   */
+  _firstPlayInCurrentSession: boolean;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -276,6 +283,7 @@ export default class Player extends FakeEventTarget {
     this._env = Env;
     this._tracks = [];
     this._firstPlay = true;
+    this._firstPlayInCurrentSession = true;
     this._config = Player._defaultConfig;
     this._eventManager = new EventManager();
     this._posterManager = new PosterManager();
@@ -1076,7 +1084,7 @@ export default class Player extends FakeEventTarget {
         this.load();
       }
       if (this._config.playback.autoplay === true) {
-        if (this.muted) {
+        if (this.muted || !this._firstPlayInCurrentSession) {
           this.play();
         } else {
           this._handleAutoPlay();
@@ -1191,6 +1199,7 @@ export default class Player extends FakeEventTarget {
     this._activeTextCues = [];
     this._tracks = [];
     this._firstPlay = true;
+    this._firstPlayInCurrentSession = false;
     this._engineType = '';
     this._streamType = '';
     this._createReadyPromise();
