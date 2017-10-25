@@ -1785,19 +1785,56 @@ describe('configure', function () {
       player.muted.should.be.true;
     });
 
-    it('should load the initial playback config and initiate the new one on updating sources', function (done) {
+    it('should load the previous playback config and initiate the new one on updating sources', function (done) {
       player = new Player({
         sources: sourcesConfig.MultipleSources,
         playback: {
           muted: true,
-          volume: 0,
+          volume: 0.5
         }
       });
       player.load();
-      player.volume.should.equals(0);
+      player.volume.should.equals(0.5);
       player.muted.should.be.true;
+      player.config.playback.volume.should.equals(0.5);
       player.config.playback.muted.should.be.true;
-      player.config.playback.volume.should.equals(0);
+      player.ready().then(() => {
+        player.src.should.equals(window.location.origin + sourcesConfig.MultipleSources.progressive[0].url);
+        player.addEventListener(player.Event.VOLUME_CHANGE, () => {
+          let newProgressiveConfig = {
+            progressive: [sourcesConfig.MultipleSources.progressive[1]]
+          };
+          player.configure({
+            sources: newProgressiveConfig
+          });
+          player.load();
+          player.volume.should.equals(1);
+          player.muted.should.be.false;
+          player.config.playback.volume.should.equals(0.5);
+          player.config.playback.muted.should.be.true;
+          player.ready().then(() => {
+            player.src.should.equals(window.location.origin + newProgressiveConfig.progressive[0].url);
+            done();
+          });
+        });
+        player.muted = false;
+        player.volume = 1;
+      });
+    });
+
+    it('should load the initial config and initiate the new one on updating sources', function (done) {
+      player = new Player({
+        sources: sourcesConfig.MultipleSources,
+        playback: {
+          muted: true,
+          volume: 1,
+        }
+      });
+      player.load();
+      player.volume.should.equals(1);
+      player.muted.should.be.true;
+      player.config.playback.volume.should.equals(1);
+      player.config.playback.muted.should.be.true;
       player.ready().then(() => {
         player.src.should.equals(window.location.origin + sourcesConfig.MultipleSources.progressive[0].url);
         player.configure({
@@ -1806,21 +1843,22 @@ describe('configure', function () {
             volume: 0.5
           }
         });
-        player.volume.should.equals(0);
+        player.volume.should.equals(1);
         player.muted.should.be.true;
-        player.config.playback.muted.should.be.false;
         player.config.playback.volume.should.equals(0.5);
+        player.config.playback.muted.should.be.false;
         let newProgressiveConfig = {
           progressive: [sourcesConfig.MultipleSources.progressive[1]]
         };
+        player._playbackAttributesState = {};
         player.configure({
           sources: newProgressiveConfig
         });
         player.load();
         player.volume.should.equals(0.5);
         player.muted.should.be.false;
-        player.config.playback.muted.should.be.false;
         player.config.playback.volume.should.equals(0.5);
+        player.config.playback.muted.should.be.false;
         player.ready().then(() => {
           player.src.should.equals(window.location.origin + newProgressiveConfig.progressive[0].url);
           done();
