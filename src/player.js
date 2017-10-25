@@ -235,8 +235,8 @@ export default class Player extends FakeEventTarget {
     muted: undefined,
     volume: undefined,
     rate: undefined,
-    audioLang: "",
-    textLang: ""
+    audioLanguage: "",
+    textLanguage: ""
   };
 
 
@@ -715,7 +715,7 @@ export default class Player extends FakeEventTarget {
       } else if (track instanceof TextTrack) {
         if (track.language === OFF) {
           this.hideTextTrack();
-          this._playbackAttributesState.textLang = OFF;
+          this._playbackAttributesState.textLanguage = OFF;
         } else {
           this._engine.selectTextTrack(track);
         }
@@ -1019,12 +1019,12 @@ export default class Player extends FakeEventTarget {
         return this.dispatchEvent(event);
       });
       this._eventManager.listen(this._engine, CustomEvents.AUDIO_TRACK_CHANGED, (event: FakeEvent) => {
-        this._playbackAttributesState.audioLang = event.payload.selectedAudioTrack.language;
+        this._playbackAttributesState.audioLanguage = event.payload.selectedAudioTrack.language;
         this._markActiveTrack(event.payload.selectedAudioTrack);
         return this.dispatchEvent(event);
       });
       this._eventManager.listen(this._engine, CustomEvents.TEXT_TRACK_CHANGED, (event: FakeEvent) => {
-        this._playbackAttributesState.textLang = event.payload.selectedTextTrack.language;
+        this._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language;
         this._markActiveTrack(event.payload.selectedTextTrack);
         return this.dispatchEvent(event);
       });
@@ -1310,8 +1310,8 @@ export default class Player extends FakeEventTarget {
 
     this.hideTextTrack();
 
-    let currentOrConfiguredTextLang = this._playbackAttributesState.textLang || this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackTypes.TEXT);
-    let currentOrConfiguredAudioLang = this._playbackAttributesState.audioLang || playbackConfig.audioLanguage;
+    let currentOrConfiguredTextLang = this._playbackAttributesState.textLanguage || this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackTypes.TEXT);
+    let currentOrConfiguredAudioLang = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
     this._setDefaultTrack(TrackTypes.TEXT, currentOrConfiguredTextLang, offTextTrack);
     this._setDefaultTrack(TrackTypes.AUDIO, currentOrConfiguredAudioLang, activeTracks.audio);
   }
