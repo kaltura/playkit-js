@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.14.0"></a>
+# [0.14.0](https://github.com/kaltura/playkit-js/compare/v0.13.1...v0.14.0) (2017-10-25)
+
+
+### Features
+
+* **autoplay:** manage autoplay promise and allowMutedAutoPlay flag ([#144](https://github.com/kaltura/playkit-js/issues/144)) ([79a2610](https://github.com/kaltura/playkit-js/commit/79a2610))
+
+
+
 <a name="0.13.1"></a>
 ## [0.13.1](https://github.com/kaltura/playkit-js/compare/v0.13.0...v0.13.1) (2017-10-25)
 
