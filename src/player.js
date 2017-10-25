@@ -1016,8 +1016,8 @@ export default class Player extends FakeEventTarget {
       });
       this._eventManager.listen(this._engine, Html5Events.SEEKED, () => {
         const browser = this._env.browser.name;
-        if ( browser === 'Edge' || browser === 'IE'){
-          this._removeCueTextPatch();
+        if (browser === 'Edge' || browser === 'IE') {
+          this._removeTextCuePatch();
         }
       });
       this._eventManager.listen(this._engine, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
@@ -1056,18 +1056,16 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @private
    */
-_removeCueTextPatch(): void {
-  const textCue = this._activeTextCues;
-  if (textCue.length > 0) {
-    const cueEndTime = textCue[0].endTime;
-    const cueStartTime = textCue[0].startTime;
-    const currTime = this.currentTime;
-    if (currTime > cueEndTime || currTime < cueStartTime) {
-      processCues(window, [], this._textDisplayEl);
-    }
+  _removeTextCuePatch(): void {
+    this._activeTextCues.forEach((textCue) => {
+      const cueEndTime = textCue._endTime;
+      const cueStartTime = textCue._startTime;
+      const currTime = this.currentTime;
+      if (currTime > cueEndTime || currTime < cueStartTime) {
+        processCues(window, [], this._textDisplayEl);
+      }
+    })
   }
-
-}
 
   /**
    * Handles the playback options, from current state or config.
