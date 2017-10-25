@@ -14,10 +14,10 @@ export default class Html5IsSupportedCapability implements ICapability {
   static runCapability(): void {
     try {
       Html5IsSupportedCapability._vid.volume = 0.5;
+      Html5IsSupportedCapability._result = !!Html5IsSupportedCapability._vid.canPlayType;
     } catch (e) {
       Html5IsSupportedCapability._result = false;
     }
-    Html5IsSupportedCapability._result = !!Html5IsSupportedCapability._vid.canPlayType;
   }
 
   /**
