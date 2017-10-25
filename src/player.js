@@ -1343,14 +1343,14 @@ export default class Player extends FakeEventTarget {
   /**
    * Sets a specific default track.
    * @param {string} type - The track type.
-   * @param {string} language - The language of config or the current (in case of change media).
+   * @param {string} language - The track language.
    * @param {?Track} defaultTrack - The default track to set in case there is no language configured.
    * @returns {void}
    * @private
    */
   _setDefaultTrack(type: string, language: string, defaultTrack: ?Track): void {
     const track: ?Track = this._getTracksByType(type).find(track => Track.langComparer(language, track.language));
-    if (language) {
+    if (track) {
       this.selectTrack(track);
     } else {
       this.selectTrack(defaultTrack);
