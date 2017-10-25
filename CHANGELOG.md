@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.13.1"></a>
+## [0.13.1](https://github.com/kaltura/playkit-js/compare/v0.13.0...v0.13.1) (2017-10-25)
+
+
+### Bug Fixes
+
+* **FEC-7116:** change playinline to true by default ([aa85d07](https://github.com/kaltura/playkit-js/commit/aa85d07))
+* **fec-7334:** the player state has not saved on change media ([#145](https://github.com/kaltura/playkit-js/issues/145)) ([b3c8cf2](https://github.com/kaltura/playkit-js/commit/b3c8cf2))
+* **FEC-7348:** fix fairplay exception ([#146](https://github.com/kaltura/playkit-js/issues/146)) ([f4e5911](https://github.com/kaltura/playkit-js/commit/f4e5911))
+
+
+
 <a name="0.13.0"></a>
 # [0.13.0](https://github.com/kaltura/playkit-js/compare/v0.12.0...v0.13.0) (2017-10-23)
 
