@@ -232,11 +232,11 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _playbackAttributesState: { [attribute: string]: any } = {
-    MUTED: undefined,
-    VOLUME: undefined,
-    RATE: undefined,
-    AUDIO_LANG: "",
-    TEXT_LANG: ""
+    muted: undefined,
+    volume: undefined,
+    rate: undefined,
+    audioLang: "",
+    textLang: ""
   };
 
 
@@ -715,7 +715,7 @@ export default class Player extends FakeEventTarget {
       } else if (track instanceof TextTrack) {
         if (track.language === OFF) {
           this.hideTextTrack();
-          this._playbackAttributesState.TEXT_LANG = OFF;
+          this._playbackAttributesState.textLang = OFF;
         } else {
           this._engine.selectTextTrack(track);
         }
@@ -1019,12 +1019,12 @@ export default class Player extends FakeEventTarget {
         return this.dispatchEvent(event);
       });
       this._eventManager.listen(this._engine, CustomEvents.AUDIO_TRACK_CHANGED, (event: FakeEvent) => {
-        this._playbackAttributesState.AUDIO_LANG = event.payload.selectedAudioTrack.language;
+        this._playbackAttributesState.audioLang = event.payload.selectedAudioTrack.language;
         this._markActiveTrack(event.payload.selectedAudioTrack);
         return this.dispatchEvent(event);
       });
       this._eventManager.listen(this._engine, CustomEvents.TEXT_TRACK_CHANGED, (event: FakeEvent) => {
-        this._playbackAttributesState.TEXT_LANG = event.payload.selectedTextTrack.language;
+        this._playbackAttributesState.textLang = event.payload.selectedTextTrack.language;
         this._markActiveTrack(event.payload.selectedTextTrack);
         return this.dispatchEvent(event);
       });
@@ -1033,13 +1033,13 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this, Html5Events.PLAY, this._onPlay.bind(this));
       this._eventManager.listen(this, Html5Events.ENDED, this._onEnded.bind(this));
       this._eventManager.listen(this, CustomEvents.MUTE_CHANGE, () => {
-        this._playbackAttributesState.MUTED = this.muted;
+        this._playbackAttributesState.muted = this.muted;
       });
       this._eventManager.listen(this, Html5Events.VOLUME_CHANGE, () => {
-        this._playbackAttributesState.VOLUME = this.volume;
+        this._playbackAttributesState.volume = this.volume;
       });
       this._eventManager.listen(this, Html5Events.RATE_CHANGE, () => {
-        this._playbackAttributesState.RATE = this.playbackRate;
+        this._playbackAttributesState.rate = this.playbackRate;
       });
     }
   }
@@ -1051,13 +1051,13 @@ export default class Player extends FakeEventTarget {
    */
   _handlePlaybackOptions(): void {
     this._config.playback = this._config.playback || {};
-    if (typeof this._playbackAttributesState.MUTED === 'boolean') {
-      this.muted = this._playbackAttributesState.MUTED;
+    if (typeof this._playbackAttributesState.muted === 'boolean') {
+      this.muted = this._playbackAttributesState.muted;
     } else if (typeof this._config.playback.muted === 'boolean') {
       this.muted = this._config.playback.muted;
     }
-    if (typeof this._playbackAttributesState.VOLUME === 'number') {
-      this.volume = this._playbackAttributesState.VOLUME;
+    if (typeof this._playbackAttributesState.volume === 'number') {
+      this.volume = this._playbackAttributesState.volume;
     } else if (typeof this._config.playback.volume === 'number') {
       this.volume = this._config.playback.volume;
     }
@@ -1141,8 +1141,8 @@ export default class Player extends FakeEventTarget {
       this._firstPlay = false;
       this.dispatchEvent(new FakeEvent(CustomEvents.FIRST_PLAY));
       this._posterManager.hide();
-      if (typeof this._playbackAttributesState.RATE === 'number') {
-        this.playbackRate = this._playbackAttributesState.RATE;
+      if (typeof this._playbackAttributesState.rate === 'number') {
+        this.playbackRate = this._playbackAttributesState.rate;
       }
     }
   }
@@ -1310,8 +1310,8 @@ export default class Player extends FakeEventTarget {
 
     this.hideTextTrack();
 
-    this._setDefaultTrack(TrackTypes.TEXT, this._playbackAttributesState.TEXT_LANG, this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackTypes.TEXT), offTextTrack);
-    this._setDefaultTrack(TrackTypes.AUDIO, this._playbackAttributesState.AUDIO_LANG, playbackConfig.audioLanguage, activeTracks.audio);
+    this._setDefaultTrack(TrackTypes.TEXT, this._playbackAttributesState.textLang, this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackTypes.TEXT), offTextTrack);
+    this._setDefaultTrack(TrackTypes.AUDIO, this._playbackAttributesState.audioLang, playbackConfig.audioLanguage, activeTracks.audio);
   }
 
   /**
