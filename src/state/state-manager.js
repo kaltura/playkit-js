@@ -72,11 +72,7 @@ export default class StateManager {
     },
     [PlayerStates.LOADING]: {
       [Html5Events.LOADED_METADATA]: () => {
-        if (this._player.config.playback.autoplay) {
-          this._updateState(PlayerStates.PLAYING);
-        } else {
-          this._updateState(PlayerStates.PAUSED);
-        }
+        this._updateState(PlayerStates.PAUSED);
         this._dispatchEvent();
       },
       [Html5Events.ERROR]: () => {

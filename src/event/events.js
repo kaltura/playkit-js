@@ -94,6 +94,14 @@ const HTML5_EVENTS: { [event: string]: string } = {
 
 const CUSTOM_EVENTS: { [event: string]: string } = {
   /**
+   * Fires when browser fails to autoplay with sound
+   */
+  AUTOPLAY_FAILED: 'autoplayfailed',
+  /**
+   * Fires when browser fails to autoplay with sound but start muted autoplay instead
+   */
+  FALLBACK_TO_MUTED_AUTOPLAY: 'fallbacktomutedautoplay',
+  /**
    * Fires when change source flow started
    */
   CHANGE_SOURCE_STARTED: 'changesourcestarted',
