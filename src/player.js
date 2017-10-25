@@ -1066,6 +1066,11 @@ export default class Player extends FakeEventTarget {
     }
   }
 
+  /**
+   * Handles preload.
+   * @returns {void}
+   * @private
+   */
   _handlePreload(): void {
     if (this._config.playback.preload === "auto") {
       /**
@@ -1080,6 +1085,11 @@ export default class Player extends FakeEventTarget {
     }
   }
 
+  /**
+   * Handles auto play.
+   * @returns {void}
+   * @private
+   */
   _handleAutoPlay(): void {
     if (this._canAutoPlay()) {
       this.play();
