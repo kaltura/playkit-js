@@ -11,7 +11,7 @@ PlayKit JS goal is to make it as easy as possible to stream adaptive bitrate vid
 PlayKit JS is the core library to facilitate the handling of different playback formats and features with one interface.
 The library exposes a mechanism to extend its capabilities via plugins and adapters.
 
-PlayKit JS is written in [ECMAScript6], statically analaysed using [Flow] and transpiled in ECMAScript5 using [Babel].
+PlayKit JS is written in [ECMAScript6], statically analysed using [Flow] and transpiled in ECMAScript5 using [Babel].
 
 [Flow]: https://flow.org/
 [ECMAScript6]: https://github.com/ericdouglas/ES6-Learning#articles--tutorials
