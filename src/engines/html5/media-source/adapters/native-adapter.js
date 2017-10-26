@@ -333,7 +333,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _getParsedTextTracks(): Array<Track> {
-    let textTracks = this._videoElement.textTracks;
+    let textTracks = this._filterVideoElementTextTracks();
     let parsedTracks = [];
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
@@ -344,12 +344,26 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           language: textTracks[i].language,
           index: i
         };
-        if (settings.language || settings.label) {
-          parsedTracks.push(new PKTextTrack(settings));
-        }
+        parsedTracks.push(new PKTextTrack(settings));
       }
     }
     return parsedTracks;
+  }
+
+  /**
+   * Filtered empty text tracks from the video element.
+   * @returns {Array} - The filtered text tracks array.
+   * @private
+   */
+  _filterVideoElementTextTracks() {
+    let textTracks = [];
+    for (let i = 0; i < this._videoElement.textTracks.length; i++) {
+      let vidTextTrack = this._videoElement.textTracks[i];
+      if (vidTextTrack.language || vidTextTrack.label) {
+        textTracks.push(vidTextTrack);
+      }
+    }
+    return textTracks;
   }
 
   /**
