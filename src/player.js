@@ -1062,6 +1062,12 @@ export default class Player extends FakeEventTarget {
           return this.dispatchEvent(event);
         });
       });
+      this._eventManager.listen(this._engine, Html5Events.SEEKED, () => {
+        const browser = this._env.browser.name;
+        if (browser === 'Edge' || browser === 'IE') {
+          this._removeTextCuePatch();
+        }
+      });
       this._eventManager.listen(this._engine, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
         this._markActiveTrack(event.payload.selectedVideoTrack);
         return this.dispatchEvent(event);
@@ -1094,6 +1100,24 @@ export default class Player extends FakeEventTarget {
         this._playbackAttributesState.rate = this.playbackRate;
       });
     }
+  }
+
+  /**
+   * Handles the cue text removal issue, when seeking to a time without captions in IE \ edge the previous captions
+   * are not removed
+   * @returns {void}
+   * @private
+   */
+  _removeTextCuePatch(): void {
+    let filteredActiveTextCues = this._activeTextCues.filter((textCue) => {
+      const cueEndTime = textCue._endTime;
+      const cueStartTime = textCue._startTime;
+      const currTime = this.currentTime;
+      if (currTime < cueEndTime && currTime > cueStartTime) {
+        return textCue;
+      }
+    });
+    this._updateTextDisplay(filteredActiveTextCues);
   }
 
   /**
