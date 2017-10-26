@@ -68,14 +68,12 @@ const SUBTITLES_CLASS_NAME: string = 'playkit-subtitles';
  */
 const LIVE: string = 'Live';
 
-
 /**
  *  The auto string, for captions
  *  @type {string}
  *  @const
  */
 const AUTO: string = 'auto';
-
 
 /**
  *  The off string, for captions
@@ -84,14 +82,12 @@ const AUTO: string = 'auto';
  */
 const OFF: string = 'off';
 
-
 /**
  *  The duration offset, for seeking to duration safety.
  *  @type {number}
  *  @const
  */
 const DURATION_OFFSET: number = 0.1;
-
 
 /**
  * The HTML5 player class.
@@ -285,7 +281,6 @@ export default class Player extends FakeEventTarget {
     audioLanguage: "",
     textLanguage: ""
   };
-
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -1061,6 +1056,12 @@ export default class Player extends FakeEventTarget {
           return this.dispatchEvent(event);
         });
       });
+      this._eventManager.listen(this._engine, Html5Events.SEEKED, () => {
+        const browser = this._env.browser.name;
+        if (browser === 'Edge' || browser === 'IE') {
+          this._removeTextCuePatch();
+        }
+      });
       this._eventManager.listen(this._engine, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
         this._markActiveTrack(event.payload.selectedVideoTrack);
         return this.dispatchEvent(event);
@@ -1093,6 +1094,24 @@ export default class Player extends FakeEventTarget {
         this._playbackAttributesState.rate = this.playbackRate;
       });
     }
+  }
+
+  /**
+   * Handles the cue text removal issue, when seeking to a time without captions in IE \ edge the previous captions
+   * are not removed
+   * @returns {void}
+   * @private
+   */
+  _removeTextCuePatch(): void {
+    let filteredActiveTextCues = this._activeTextCues.filter((textCue) => {
+      const cueEndTime = textCue._endTime;
+      const cueStartTime = textCue._startTime;
+      const currTime = this.currentTime;
+      if (currTime < cueEndTime && currTime > cueStartTime) {
+        return textCue;
+      }
+    });
+    this._updateTextDisplay(filteredActiveTextCues);
   }
 
   /**
@@ -1131,7 +1150,6 @@ export default class Player extends FakeEventTarget {
   _canPreload(): boolean {
     return (!this._config.playback.autoplay && this._config.playback.preload === "auto" && !this._config.plugins.ima);
   }
-
 
   /**
    * Handles auto play.
