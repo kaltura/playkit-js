@@ -344,7 +344,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           language: textTracks[i].language,
           index: i
         };
-        parsedTracks.push(new PKTextTrack(settings));
+        if (settings.language || settings.label) {
+          parsedTracks.push(new PKTextTrack(settings));
+        }
       }
     }
     return parsedTracks;
