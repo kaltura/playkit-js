@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.14.1"></a>
+## [0.14.1](https://github.com/kaltura/playkit-js/compare/v0.14.0...v0.14.1) (2017-10-26)
+
+
+### Bug Fixes
+
+* **FEC-7106:** captions on IE & edge ([#147](https://github.com/kaltura/playkit-js/issues/147)) ([4447c1d](https://github.com/kaltura/playkit-js/commit/4447c1d))
+* **FEC-7345:** only off option appears in text track menu (safari) ([#148](https://github.com/kaltura/playkit-js/issues/148)) ([cff8e4e](https://github.com/kaltura/playkit-js/commit/cff8e4e))
+* **FEC-7356:** player is loading twice for 'preload=auto' and 'autoplay=true' ([#149](https://github.com/kaltura/playkit-js/issues/149)) ([98e7919](https://github.com/kaltura/playkit-js/commit/98e7919))
+* filter empty video element text tracks ([#150](https://github.com/kaltura/playkit-js/issues/150)) ([58ada7c](https://github.com/kaltura/playkit-js/commit/58ada7c))
+
+
+
 <a name="0.14.0"></a>
 # [0.14.0](https://github.com/kaltura/playkit-js/compare/v0.13.1...v0.14.0) (2017-10-25)
 
