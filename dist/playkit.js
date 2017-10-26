@@ -2065,7 +2065,6 @@ var Player = function (_FakeEventTarget) {
           this._posterManager.show();
           this._attachMedia();
           this._handlePlaybackOptions();
-          this._handlePreload();
           this._handleAutoPlay();
           if (receivedSourcesWhenHasEngine) {
             Player._logger.debug('Change source ended');
@@ -2659,6 +2658,12 @@ var Player = function (_FakeEventTarget) {
             return _this6.dispatchEvent(event);
           });
         });
+        this._eventManager.listen(this._engine, _events.HTML5_EVENTS.SEEKED, function () {
+          var browser = _this6._env.browser.name;
+          if (browser === 'Edge' || browser === 'IE') {
+            _this6._removeTextCuePatch();
+          }
+        });
         this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, function (event) {
           _this6._markActiveTrack(event.payload.selectedVideoTrack);
           return _this6.dispatchEvent(event);
@@ -2698,6 +2703,29 @@ var Player = function (_FakeEventTarget) {
     }
 
     /**
+     * Handles the cue text removal issue, when seeking to a time without captions in IE \ edge the previous captions
+     * are not removed
+     * @returns {void}
+     * @private
+     */
+
+  }, {
+    key: '_removeTextCuePatch',
+    value: function _removeTextCuePatch() {
+      var _this7 = this;
+
+      var filteredActiveTextCues = this._activeTextCues.filter(function (textCue) {
+        var cueEndTime = textCue._endTime;
+        var cueStartTime = textCue._startTime;
+        var currTime = _this7.currentTime;
+        if (currTime < cueEndTime && currTime > cueStartTime) {
+          return textCue;
+        }
+      });
+      this._updateTextDisplay(filteredActiveTextCues);
+    }
+
+    /**
      * Handles the playback options, from current state or config.
      * @returns {void}
      * @private
@@ -2720,24 +2748,24 @@ var Player = function (_FakeEventTarget) {
       if (typeof this._config.playback.playsinline === 'boolean') {
         this.playsinline = this._config.playback.playsinline;
       }
+      if (this._canPreload()) {
+        this.load();
+      }
     }
 
     /**
-     * Handles preload.
      * If ads plugin enabled it's his responsibility to preload the content player.
      * So to avoid loading the player twice which can cause errors on MSEs we are not
      * calling load from the player.
      * TODO: Change it to check the ads configuration when we will develop the ads manager.
-     * @returns {void}
+     * @returns {boolean} - Whether the player should perform preload.
      * @private
      */
 
   }, {
-    key: '_handlePreload',
-    value: function _handlePreload() {
-      if (this._config.playback.preload === "auto" && !this._config.plugins.ima) {
-        this.load();
-      }
+    key: '_canPreload',
+    value: function _canPreload() {
+      return !this._config.playback.autoplay && this._config.playback.preload === "auto" && !this._config.plugins.ima;
     }
 
     /**
@@ -2749,7 +2777,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_handleAutoPlay',
     value: function _handleAutoPlay() {
-      var _this7 = this;
+      var _this8 = this;
 
       if (this._config.playback.autoplay === true) {
         if (this.muted || !this._firstPlayInCurrentSession) {
@@ -2759,20 +2787,20 @@ var Player = function (_FakeEventTarget) {
           Player.getCapabilities(this.engineType).then(function (capabilities) {
             if (capabilities.autoplay) {
               Player._logger.debug("Start autoplay");
-              _this7.play();
+              _this8.play();
             } else {
               if (allowMutedAutoPlay) {
                 Player._logger.debug("Fallback to muted autoplay");
-                _this7.muted = true;
-                _this7.play();
-                _this7.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.FALLBACK_TO_MUTED_AUTOPLAY));
+                _this8.muted = true;
+                _this8.play();
+                _this8.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.FALLBACK_TO_MUTED_AUTOPLAY));
               } else {
                 Player._logger.warn("Autoplay failed, pause player");
-                _this7.load();
-                _this7.ready().then(function () {
-                  return _this7.pause();
+                _this8.load();
+                _this8.ready().then(function () {
+                  return _this8.pause();
                 });
-                _this7.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.AUTOPLAY_FAILED));
+                _this8.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.AUTOPLAY_FAILED));
               }
             }
           });
@@ -2789,7 +2817,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_play',
     value: function _play() {
-      var _this8 = this;
+      var _this9 = this;
 
       if (this._engine.src) {
         if (this.isLive() && !this.isDvr()) {
@@ -2799,7 +2827,7 @@ var Player = function (_FakeEventTarget) {
       } else {
         this.load();
         this.ready().then(function () {
-          _this8._engine.play();
+          _this9._engine.play();
         });
       }
     }
@@ -6440,7 +6468,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 _player2.default.runCapabilities();
 
 
-_logger2.default.getLogger().log('%c ' + "playkit-js" + ' ' + "0.14.0", "color: #98ff98;  font-size: large");
+_logger2.default.getLogger().log('%c ' + "playkit-js" + ' ' + "0.14.1", "color: #98ff98;  font-size: large");
 _logger2.default.getLogger().log('%c For more details see ' + "https://github.com/kaltura/playkit-js", "color: #98ff98;");
 
 /**
@@ -6475,7 +6503,7 @@ exports.Utils = Utils;
 
 // Export version
 
-exports.VERSION = "0.14.0";
+exports.VERSION = "0.14.1";
 
 // Export player name
 
@@ -9535,7 +9563,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_getParsedTextTracks',
     value: function _getParsedTextTracks() {
-      var textTracks = this._videoElement.textTracks;
+      var textTracks = this._filterVideoElementTextTracks();
       var parsedTracks = [];
       if (textTracks) {
         for (var i = 0; i < textTracks.length; i++) {
@@ -9550,6 +9578,25 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
         }
       }
       return parsedTracks;
+    }
+
+    /**
+     * Filtered empty text tracks from the video element.
+     * @returns {Array} - The filtered text tracks array.
+     * @private
+     */
+
+  }, {
+    key: '_filterVideoElementTextTracks',
+    value: function _filterVideoElementTextTracks() {
+      var textTracks = [];
+      for (var i = 0; i < this._videoElement.textTracks.length; i++) {
+        var vidTextTrack = this._videoElement.textTracks[i];
+        if (vidTextTrack.language || vidTextTrack.label) {
+          textTracks.push(vidTextTrack);
+        }
+      }
+      return textTracks;
     }
 
     /**
