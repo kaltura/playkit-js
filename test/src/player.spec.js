@@ -2362,6 +2362,7 @@ describe('_reset', function () {
     let eventMgrSpy = sandbox.spy(player._eventManager, 'removeAll');
     let pluginMgrSpy = sandbox.spy(player._pluginManager, 'reset');
     let stateMgrSpy = sandbox.spy(player._stateManager, 'reset');
+    let _updateTextDisplay = sandbox.spy(player, '_updateTextDisplay');
     player._reset();
     player.paused.should.be.true;
     posterMgrSpy.should.have.been.calledOnce;
@@ -2369,6 +2370,8 @@ describe('_reset', function () {
     pluginMgrSpy.should.have.been.calledOnce;
     stateMgrSpy.should.have.been.calledOnce;
     player._activeTextCues.should.be.empty;
+    _updateTextDisplay.should.have.been.calledOnce;
+    _updateTextDisplay.should.have.been.calledWith([]);
     player._config.should.not.be.empty;
     player._tracks.should.be.empty;
     player._engineType.should.be.empty;

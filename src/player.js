@@ -1252,6 +1252,7 @@ export default class Player extends FakeEventTarget {
     this._pluginManager.reset();
     this._eventManager.removeAll();
     this._activeTextCues = [];
+    this._updateTextDisplay([]);
     this._tracks = [];
     this._firstPlay = true;
     this._firstPlayInCurrentSession = false;
