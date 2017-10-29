@@ -10,7 +10,7 @@ import {getSuitableSourceForResolution} from '../../../../utils/resolution'
 import * as Utils from '../../../../utils/util'
 import FairPlay from '../../../../drm/fairplay'
 import Env from '../../../../utils/env'
-
+import FakeEvent from '../../../../event/fake-event'
 /**
  * An illustration of media source extension for progressive download
  * @classdesc
@@ -180,16 +180,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   load(startTime: ?number): Promise<Object> {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
-        // We're using 'loadeddata' event for native hls (on 'loadedmetadata' native hls doesn't have tracks yet).
-        this._eventManager.listenOnce(this._videoElement, Html5Events.LOADED_DATA, () => {
-          let data = {tracks: this._getParsedTracks()};
-          NativeAdapter._logger.debug('The source has been loaded successfully');
-          resolve(data);
-        });
-        this._eventManager.listenOnce(this._videoElement, Html5Events.ERROR, (error) => {
-          NativeAdapter._logger.error(error);
-          reject(error);
-        });
+        this._eventManager.listenOnce(this._videoElement, Html5Events.LOADED_DATA, this._onLoadedData.bind(this, resolve));
+        this._eventManager.listenOnce(this._videoElement, Html5Events.ERROR, this._onError.bind(this, reject));
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
         }
@@ -204,6 +196,37 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       });
     }
     return this._loadPromise;
+  }
+
+  /**
+   * Loaded data event handler.
+   * @param {Function} resolve - The resolve promise function.
+   * @private
+   * @returns {void}
+   */
+  _onLoadedData(resolve: Function): void {
+    const parseTracksAndResolve = () => {
+      let data = {tracks: this._getParsedTracks()};
+      NativeAdapter._logger.debug('The source has been loaded successfully');
+      resolve(data);
+    };
+    if (this._videoElement.textTracks.length > 0) {
+      parseTracksAndResolve();
+    } else {
+      this._eventManager.listenOnce(this._videoElement, Html5Events.CAN_PLAY, parseTracksAndResolve.bind(this));
+    }
+  }
+
+  /**
+   * Error event handler.
+   * @param {Function} reject - The reject promise function.
+   * @param {FakeEvent} error - The error fake event.
+   * @private
+   * @returns {void}
+   */
+  _onError(reject: Function, error: FakeEvent): void {
+    NativeAdapter._logger.error(error);
+    reject(error);
   }
 
   /**
