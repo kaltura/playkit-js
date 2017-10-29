@@ -224,7 +224,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    * @returns {void}
    */
-  _onError(reject: Function, error: Event): void {
+  _onError(reject: Function, error: FakeEvent): void {
     NativeAdapter._logger.error(error);
     reject(error);
   }
