@@ -10,7 +10,7 @@ import {getSuitableSourceForResolution} from '../../../../utils/resolution'
 import * as Utils from '../../../../utils/util'
 import FairPlay from '../../../../drm/fairplay'
 import Env from '../../../../utils/env'
-
+import FakeEvent from '../../../../event/fake-event'
 /**
  * An illustration of media source extension for progressive download
  * @classdesc
