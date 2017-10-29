@@ -2369,6 +2369,8 @@ describe('_reset', function () {
     pluginMgrSpy.should.have.been.calledOnce;
     stateMgrSpy.should.have.been.calledOnce;
     player._activeTextCues.should.be.empty;
+    player._updateTextDisplay.should.have.been.calledOnce;
+    player._updateTextDisplay.should.have.been.calledWith([]);
     player._config.should.not.be.empty;
     player._tracks.should.be.empty;
     player._engineType.should.be.empty;
