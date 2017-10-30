@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.14.2"></a>
+## [0.14.2](https://github.com/kaltura/playkit-js/compare/v0.14.1...v0.14.2) (2017-10-30)
+
+
+### Bug Fixes
+
+* **FEC-7335:** reset subtitle display on player reset ([#152](https://github.com/kaltura/playkit-js/issues/152)) ([f48efa1](https://github.com/kaltura/playkit-js/commit/f48efa1))
+* empty captions menu when playing native hls ([#153](https://github.com/kaltura/playkit-js/issues/153)) ([623d83a](https://github.com/kaltura/playkit-js/commit/623d83a))
+
+
+
 <a name="0.14.1"></a>
 ## [0.14.1](https://github.com/kaltura/playkit-js/compare/v0.14.0...v0.14.1) (2017-10-26)
 
