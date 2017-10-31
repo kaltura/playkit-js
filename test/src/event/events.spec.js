@@ -28,8 +28,10 @@ describe('events', () => {
       WAITING: 'waiting',
     });
     events.CUSTOM_EVENTS.should.deep.equals({
-      ENTER_FULLSCREEN: 'enterfullscreen',
-      EXIT_FULLSCREEN: 'exitfullscreen',
+      ENTER_FULLSCREEN_STARTED: 'enterfullscreenstarted',
+      ENTER_FULLSCREEN_ENDED: 'enterfullscreenended',
+      EXIT_FULLSCREEN_STARTED: 'exitfullscreenstarted',
+      EXIT_FULLSCREEN_ENDED: 'exitfullscreenended',
       REQUESTED_ENTER_FULLSCREEN: 'requestedenterfullscreen',
       REQUESTED_EXIT_FULLSCREEN: 'requestedexitfullscreen',
       AUTOPLAY_FAILED: 'autoplayfailed',

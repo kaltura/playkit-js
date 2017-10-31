@@ -96,11 +96,19 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
   /**
    * Fires when the player enters fullscreen
    */
-  ENTER_FULLSCREEN: 'enterfullscreen',
+  ENTER_FULLSCREEN_STARTED: 'enterfullscreenstarted',
+  /**
+   * Fires when the full screen is fully loaded (it's a hack, we just fire this after 500 miliseconds)
+   */
+  ENTER_FULLSCREEN_ENDED: 'enterfullscreenended',
   /**
    * Fires when the player exits fullscreen
    */
-  EXIT_FULLSCREEN: 'exitfullscreen',
+  EXIT_FULLSCREEN_STARTED: 'exitfullscreenstarted',
+  /**
+   * Fires when the full screen is fully unloaded (it's a hack, we just fire this after 500 miliseconds)
+   */
+  EXIT_FULLSCREEN_ENDED: 'exitfullscreenended',
   /**
    * Fires when the player received a request to enter fullscreen
    */
