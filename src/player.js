@@ -281,6 +281,11 @@ export default class Player extends FakeEventTarget {
     audioLanguage: "",
     textLanguage: ""
   };
+  /**
+   * Fullscreen indicator flag
+   * @private
+   */
+  _fullscreen: boolean;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -291,6 +296,7 @@ export default class Player extends FakeEventTarget {
     this._env = Env;
     this._tracks = [];
     this._firstPlay = true;
+    this._fullscreen = false;
     this._firstPlayInCurrentSession = true;
     this._config = Player._defaultConfig;
     this._eventManager = new EventManager();
@@ -893,6 +899,64 @@ export default class Player extends FakeEventTarget {
     let adsPlugin: ?BasePlugin = this._pluginManager.get('ima');
     if (adsPlugin && typeof adsPlugin.playAdNow === 'function') {
       adsPlugin.playAdNow(adTagUrl);
+    }
+  }
+
+  // </editor-fold>
+
+  // <editor-fold desc="Fullscreen API">
+
+  /**
+   * @returns {boolean} - Whether the player is in fullscreen mode.
+   * @public
+   */
+  isFullscreen(): boolean {
+    return this._fullscreen;
+  }
+
+  /**
+   * Notify the player that the ui application entered to fullscreen.
+   * @public
+   * @returns {void}
+   */
+  notifyEnterFullscreen(): void {
+    if (!this._fullscreen) {
+      this._fullscreen = true;
+      this.dispatchEvent(new FakeEvent(CustomEvents.ENTER_FULLSCREEN));
+    }
+  }
+
+  /**
+   * Notify the player that the ui application exited from fullscreen.
+   * @public
+   * @returns {void}
+   */
+  notifyExitFullscreen(): void {
+    if (this._fullscreen) {
+      this._fullscreen = false;
+      this.dispatchEvent(new FakeEvent(CustomEvents.EXIT_FULLSCREEN));
+    }
+  }
+
+  /**
+   * Request the player to enter fullscreen.
+   * @public
+   * @returns {void}
+   */
+  enterFullscreen(): void {
+    if (!this._fullscreen) {
+      this.dispatchEvent(new FakeEvent(CustomEvents.REQUESTED_ENTER_FULLSCREEN));
+    }
+  }
+
+  /**
+   * Request the player to exit fullscreen.
+   * @public
+   * @returns {void}
+   */
+  exitFullscreen(): void {
+    if (this._fullscreen) {
+      this.dispatchEvent(new FakeEvent(CustomEvents.REQUESTED_EXIT_FULLSCREEN));
     }
   }
 
