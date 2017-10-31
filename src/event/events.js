@@ -98,7 +98,7 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
    */
   ENTER_FULLSCREEN: 'enterfullscreen',
   /**
-   * Fires when the player exists fullscreen
+   * Fires when the player exits fullscreen
    */
   EXIT_FULLSCREEN: 'exitfullscreen',
   /**
