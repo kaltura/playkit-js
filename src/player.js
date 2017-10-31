@@ -921,8 +921,8 @@ export default class Player extends FakeEventTarget {
    */
   notifyEnterFullscreen(): void {
     if (!this._fullscreen) {
-      this.dispatchEvent(new FakeEvent(CustomEvents.ENTER_FULLSCREEN));
       this._fullscreen = true;
+      this.dispatchEvent(new FakeEvent(CustomEvents.ENTER_FULLSCREEN));
     }
   }
 
@@ -933,8 +933,8 @@ export default class Player extends FakeEventTarget {
    */
   notifyExitFullscreen(): void {
     if (this._fullscreen) {
-      this.dispatchEvent(new FakeEvent(CustomEvents.EXIT_FULLSCREEN));
       this._fullscreen = false;
+      this.dispatchEvent(new FakeEvent(CustomEvents.EXIT_FULLSCREEN));
     }
   }
 
