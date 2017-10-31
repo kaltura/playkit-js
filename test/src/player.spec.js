@@ -2666,7 +2666,7 @@ describe('_resetTextCuesAndReposition', function () {
 
   it('should reset the active text cues', () => {
     player._activeTextCues[0]={};
-    player._resetText CuesAndReposition();
+    player._resetTextCuesAndReposition();
     let cue = player._activeTextCues[0];
     cue.hasBeenReset.should.equals(true);
   });
