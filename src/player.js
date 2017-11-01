@@ -921,11 +921,8 @@ export default class Player extends FakeEventTarget {
    */
   notifyEnterFullscreen(): void {
     if (!this._fullscreen) {
-      this.dispatchEvent(new FakeEvent(CustomEvents.ENTER_FULLSCREEN_STARTED));
-      window.setTimeout(() => {
-        this.dispatchEvent(new FakeEvent(CustomEvents.ENTER_FULLSCREEN_ENDED));
-        this._fullscreen = true;
-      }, 500);
+      this._fullscreen = true;
+      this.dispatchEvent(new FakeEvent(CustomEvents.ENTER_FULLSCREEN));
     }
   }
 
@@ -936,11 +933,8 @@ export default class Player extends FakeEventTarget {
    */
   notifyExitFullscreen(): void {
     if (this._fullscreen) {
-      this.dispatchEvent(new FakeEvent(CustomEvents.EXIT_FULLSCREEN_STARTED));
-      window.setTimeout(() => {
-        this.dispatchEvent(new FakeEvent(CustomEvents.EXIT_FULLSCREEN_ENDED));
-        this._fullscreen = false;
-      }, 500);
+      this._fullscreen = false;
+      this.dispatchEvent(new FakeEvent(CustomEvents.EXIT_FULLSCREEN));
     }
   }
 
@@ -1163,31 +1157,31 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this, Html5Events.RATE_CHANGE, () => {
         this._playbackAttributesState.rate = this.playbackRate;
       });
-      this._eventManager.listen(this, CustomEvents.ENTER_FULLSCREEN_STARTED, () => {
-        this._updateTextDisplay([]);
-      });
-      this._eventManager.listen(this, CustomEvents.ENTER_FULLSCREEN_ENDED, () => {
+      this._eventManager.listen(this, CustomEvents.ENTER_FULLSCREEN, () => {
         this._resetTextCuesAndReposition();
       });
-      this._eventManager.listen(this, CustomEvents.EXIT_FULLSCREEN_STARTED, () => {
-        this._updateTextDisplay([]);
-      });
-      this._eventManager.listen(this, CustomEvents.EXIT_FULLSCREEN_ENDED, () => {
+      this._eventManager.listen(this, CustomEvents.EXIT_FULLSCREEN, () => {
         this._resetTextCuesAndReposition();
       });
     }
   }
 
   /**
-   * Reset the active cues hasBeenReset = true and then reposition it
+   * Reset the active cues hasBeenReset = true and then reposition it, timeout here is for the screen to
+   * finish render the fullscreen
    * @returns {void}
    * @private
    */
   _resetTextCuesAndReposition(): void {
+    this._updateTextDisplay([]);
     for (let i = 0; i < this._activeTextCues.length; i++) {
       this._activeTextCues[i].hasBeenReset = true;
     }
-    processCues(window, this._activeTextCues, this._textDisplayEl)
+
+    // waiting the browser to render the screen
+    setTimeout(() => {
+      processCues(window, this._activeTextCues, this._textDisplayEl);
+    }, 1000);
   }
 
   /**
