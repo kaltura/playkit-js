@@ -33,6 +33,13 @@ import './assets/style.css'
 const CONTAINER_CLASS_NAME: string = 'playkit-container';
 
 /**
+ * The toggle fullscreen rendering timeout value
+ * @type {number}
+ * @const
+ */
+const FULLSCREEN_RENDERING_TIMEOUT: number = 1000;
+
+/**
  /**
  * The player poster class name.
  * @type {string}
@@ -286,7 +293,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _fullscreen: boolean;
-
+  /**
+   * holds false or an id for the timeout the reposition the text cues after togelling full screen
+   * @type {any}
+   * @private
+   */
+  _repositionCuesTimeout: any;
   /**
    * @param {Object} config - The configuration for the player instance.
    * @constructor
@@ -1185,7 +1197,7 @@ export default class Player extends FakeEventTarget {
     this._repositionCuesTimeout = setTimeout(() => {
       processCues(window, this._activeTextCues, this._textDisplayEl);
       this._repositionCuesTimeout = false;
-    }, 1000);
+    }, FULLSCREEN_RENDERING_TIMEOUT);
   }
 
   /**
