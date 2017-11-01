@@ -309,6 +309,7 @@ export default class Player extends FakeEventTarget {
     this._createPlayerContainer();
     this._appendPosterEl();
     this.configure(config);
+    this._repositionCuesTimeout = false;
   }
 
   // <editor-fold desc="Public API">
@@ -1177,10 +1178,13 @@ export default class Player extends FakeEventTarget {
     for (let i = 0; i < this._activeTextCues.length; i++) {
       this._activeTextCues[i].hasBeenReset = true;
     }
-
-    // waiting the browser to render the screen
-    setTimeout(() => {
+    // handling only the last reposition
+    if (this._repositionCuesTimeout) {
+      clearTimeout(this._repositionCuesTimeout);
+    }
+    this._repositionCuesTimeout = setTimeout(() => {
       processCues(window, this._activeTextCues, this._textDisplayEl);
+      this._repositionCuesTimeout = false;
     }, 1000);
   }
 
