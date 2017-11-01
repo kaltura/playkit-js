@@ -90,6 +90,13 @@ const OFF: string = 'off';
 const DURATION_OFFSET: number = 0.1;
 
 /**
+ * The toggle fullscreen rendering timeout value
+ * @type {number}
+ * @const
+ */
+const REPOSITION_CUES_TIMEOUT: number = 1000;
+
+/**
  * The HTML5 player class.
  * @classdesc
  */
@@ -286,7 +293,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _fullscreen: boolean;
-
+  /**
+   * holds false or an id for the timeout the reposition the text cues after togelling full screen
+   * @type {any}
+   * @private
+   */
+  _repositionCuesTimeout: any;
   /**
    * @param {Object} config - The configuration for the player instance.
    * @constructor
@@ -309,6 +321,7 @@ export default class Player extends FakeEventTarget {
     this._createPlayerContainer();
     this._appendPosterEl();
     this.configure(config);
+    this._repositionCuesTimeout = false;
   }
 
   // <editor-fold desc="Public API">
@@ -1157,7 +1170,34 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this, Html5Events.RATE_CHANGE, () => {
         this._playbackAttributesState.rate = this.playbackRate;
       });
+      this._eventManager.listen(this, CustomEvents.ENTER_FULLSCREEN, () => {
+        this._resetTextCuesAndReposition();
+      });
+      this._eventManager.listen(this, CustomEvents.EXIT_FULLSCREEN, () => {
+        this._resetTextCuesAndReposition();
+      });
     }
+  }
+
+  /**
+   * Reset the active cues hasBeenReset = true and then reposition it, timeout here is for the screen to
+   * finish render the fullscreen
+   * @returns {void}
+   * @private
+   */
+  _resetTextCuesAndReposition(): void {
+    this._updateTextDisplay([]);
+    for (let i = 0; i < this._activeTextCues.length; i++) {
+      this._activeTextCues[i].hasBeenReset = true;
+    }
+    // handling only the last reposition
+    if (this._repositionCuesTimeout) {
+      clearTimeout(this._repositionCuesTimeout);
+    }
+    this._repositionCuesTimeout = setTimeout(() => {
+      processCues(window, this._activeTextCues, this._textDisplayEl);
+      this._repositionCuesTimeout = false;
+    }, REPOSITION_CUES_TIMEOUT);
   }
 
   /**

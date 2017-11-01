@@ -2648,3 +2648,27 @@ describe('_getLanguage', function () {
     player._getLanguage(configuredLanguage, offTrack, "text").should.equals(gerTrack.language);
   });
 });
+
+
+describe('_resetTextCuesAndReposition', function () {
+  let config, player, sandbox;
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    config = getConfigStructure();
+    player = new Player(config);
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+    player.destroy();
+  });
+
+  it('should reset the active text cues', () => {
+    player._activeTextCues[0]={};
+    player._resetTextCuesAndReposition();
+    let cue = player._activeTextCues[0];
+    cue.hasBeenReset.should.equals(true);
+  });
+});
+
