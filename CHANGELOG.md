@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.15.0"></a>
+# [0.15.0](https://github.com/kaltura/playkit-js/compare/v0.14.2...v0.15.0) (2017-11-01)
+
+
+### Bug Fixes
+
+* **FEC-7266:** reposition & resize captions when changing to/from full screen ([#155](https://github.com/kaltura/playkit-js/issues/155)) ([d2892b8](https://github.com/kaltura/playkit-js/commit/d2892b8))
+
+
+### Features
+
+* handle fullscreen ([#154](https://github.com/kaltura/playkit-js/issues/154)) ([3373c8c](https://github.com/kaltura/playkit-js/commit/3373c8c))
+
+
+
 <a name="0.14.2"></a>
 ## [0.14.2](https://github.com/kaltura/playkit-js/compare/v0.14.1...v0.14.2) (2017-10-30)
 
