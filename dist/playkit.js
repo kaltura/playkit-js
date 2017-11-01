@@ -1478,6 +1478,22 @@ var HTML5_EVENTS = {
 
 var CUSTOM_EVENTS = {
   /**
+   * Fires when the player enters fullscreen
+   */
+  ENTER_FULLSCREEN: 'enterfullscreen',
+  /**
+   * Fires when the player exits fullscreen
+   */
+  EXIT_FULLSCREEN: 'exitfullscreen',
+  /**
+   * Fires when the player received a request to enter fullscreen
+   */
+  REQUESTED_ENTER_FULLSCREEN: 'requestedenterfullscreen',
+  /**
+   * Fires when the player received a request to exit fullscreen
+   */
+  REQUESTED_EXIT_FULLSCREEN: 'requestedexitfullscreen',
+  /**
    * Fires when browser fails to autoplay with sound
    */
   AUTOPLAY_FAILED: 'autoplayfailed',
@@ -1799,6 +1815,13 @@ var OFF = 'off';
 var DURATION_OFFSET = 0.1;
 
 /**
+ * The toggle fullscreen rendering timeout value
+ * @type {number}
+ * @const
+ */
+var REPOSITION_CUES_TIMEOUT = 1000;
+
+/**
  * The HTML5 player class.
  * @classdesc
  */
@@ -2004,6 +2027,17 @@ var Player = function (_FakeEventTarget) {
    * @param {Object} config - The configuration for the player instance.
    * @constructor
    */
+
+  /**
+   * Fullscreen indicator flag
+   * @private
+   */
+
+  /**
+   * holds false or an id for the timeout the reposition the text cues after togelling full screen
+   * @type {any}
+   * @private
+   */
   function Player() {
     var config = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
@@ -2024,6 +2058,7 @@ var Player = function (_FakeEventTarget) {
     _this._env = _env2.default;
     _this._tracks = [];
     _this._firstPlay = true;
+    _this._fullscreen = false;
     _this._firstPlayInCurrentSession = true;
     _this._config = Player._defaultConfig;
     _this._eventManager = new _eventManager2.default();
@@ -2036,6 +2071,7 @@ var Player = function (_FakeEventTarget) {
     _this._createPlayerContainer();
     _this._appendPosterEl();
     _this.configure(config);
+    _this._repositionCuesTimeout = false;
     return _this;
   }
 
@@ -2437,6 +2473,79 @@ var Player = function (_FakeEventTarget) {
 
     // </editor-fold>
 
+    // <editor-fold desc="Fullscreen API">
+
+    /**
+     * @returns {boolean} - Whether the player is in fullscreen mode.
+     * @public
+     */
+
+  }, {
+    key: 'isFullscreen',
+    value: function isFullscreen() {
+      return this._fullscreen;
+    }
+
+    /**
+     * Notify the player that the ui application entered to fullscreen.
+     * @public
+     * @returns {void}
+     */
+
+  }, {
+    key: 'notifyEnterFullscreen',
+    value: function notifyEnterFullscreen() {
+      if (!this._fullscreen) {
+        this._fullscreen = true;
+        this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.ENTER_FULLSCREEN));
+      }
+    }
+
+    /**
+     * Notify the player that the ui application exited from fullscreen.
+     * @public
+     * @returns {void}
+     */
+
+  }, {
+    key: 'notifyExitFullscreen',
+    value: function notifyExitFullscreen() {
+      if (this._fullscreen) {
+        this._fullscreen = false;
+        this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.EXIT_FULLSCREEN));
+      }
+    }
+
+    /**
+     * Request the player to enter fullscreen.
+     * @public
+     * @returns {void}
+     */
+
+  }, {
+    key: 'enterFullscreen',
+    value: function enterFullscreen() {
+      if (!this._fullscreen) {
+        this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.REQUESTED_ENTER_FULLSCREEN));
+      }
+    }
+
+    /**
+     * Request the player to exit fullscreen.
+     * @public
+     * @returns {void}
+     */
+
+  }, {
+    key: 'exitFullscreen',
+    value: function exitFullscreen() {
+      if (this._fullscreen) {
+        this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.REQUESTED_EXIT_FULLSCREEN));
+      }
+    }
+
+    // </editor-fold>
+
     // </editor-fold>
 
     // <editor-fold desc="Private Methods">
@@ -2702,7 +2811,39 @@ var Player = function (_FakeEventTarget) {
         this._eventManager.listen(this, _events.HTML5_EVENTS.RATE_CHANGE, function () {
           _this6._playbackAttributesState.rate = _this6.playbackRate;
         });
+        this._eventManager.listen(this, _events.CUSTOM_EVENTS.ENTER_FULLSCREEN, function () {
+          _this6._resetTextCuesAndReposition();
+        });
+        this._eventManager.listen(this, _events.CUSTOM_EVENTS.EXIT_FULLSCREEN, function () {
+          _this6._resetTextCuesAndReposition();
+        });
       }
+    }
+
+    /**
+     * Reset the active cues hasBeenReset = true and then reposition it, timeout here is for the screen to
+     * finish render the fullscreen
+     * @returns {void}
+     * @private
+     */
+
+  }, {
+    key: '_resetTextCuesAndReposition',
+    value: function _resetTextCuesAndReposition() {
+      var _this7 = this;
+
+      this._updateTextDisplay([]);
+      for (var i = 0; i < this._activeTextCues.length; i++) {
+        this._activeTextCues[i].hasBeenReset = true;
+      }
+      // handling only the last reposition
+      if (this._repositionCuesTimeout) {
+        clearTimeout(this._repositionCuesTimeout);
+      }
+      this._repositionCuesTimeout = setTimeout(function () {
+        (0, _textTrackDisplay.processCues)(window, _this7._activeTextCues, _this7._textDisplayEl);
+        _this7._repositionCuesTimeout = false;
+      }, REPOSITION_CUES_TIMEOUT);
     }
 
     /**
@@ -2715,12 +2856,12 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_removeTextCuePatch',
     value: function _removeTextCuePatch() {
-      var _this7 = this;
+      var _this8 = this;
 
       var filteredActiveTextCues = this._activeTextCues.filter(function (textCue) {
         var cueEndTime = textCue._endTime;
         var cueStartTime = textCue._startTime;
-        var currTime = _this7.currentTime;
+        var currTime = _this8.currentTime;
         if (currTime < cueEndTime && currTime > cueStartTime) {
           return textCue;
         }
@@ -2780,7 +2921,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_handleAutoPlay',
     value: function _handleAutoPlay() {
-      var _this8 = this;
+      var _this9 = this;
 
       if (this._config.playback.autoplay === true) {
         if (this.muted || !this._firstPlayInCurrentSession) {
@@ -2790,20 +2931,20 @@ var Player = function (_FakeEventTarget) {
           Player.getCapabilities(this.engineType).then(function (capabilities) {
             if (capabilities.autoplay) {
               Player._logger.debug("Start autoplay");
-              _this8.play();
+              _this9.play();
             } else {
               if (allowMutedAutoPlay) {
                 Player._logger.debug("Fallback to muted autoplay");
-                _this8.muted = true;
-                _this8.play();
-                _this8.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.FALLBACK_TO_MUTED_AUTOPLAY));
+                _this9.muted = true;
+                _this9.play();
+                _this9.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.FALLBACK_TO_MUTED_AUTOPLAY));
               } else {
                 Player._logger.warn("Autoplay failed, pause player");
-                _this8.load();
-                _this8.ready().then(function () {
-                  return _this8.pause();
+                _this9.load();
+                _this9.ready().then(function () {
+                  return _this9.pause();
                 });
-                _this8.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.AUTOPLAY_FAILED));
+                _this9.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.AUTOPLAY_FAILED));
               }
             }
           });
@@ -2820,7 +2961,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_play',
     value: function _play() {
-      var _this9 = this;
+      var _this10 = this;
 
       if (this._engine.src) {
         if (this.isLive() && !this.isDvr()) {
@@ -2830,7 +2971,7 @@ var Player = function (_FakeEventTarget) {
       } else {
         this.load();
         this.ready().then(function () {
-          _this9._engine.play();
+          _this10._engine.play();
         });
       }
     }
@@ -9175,7 +9316,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 _player2.default.runCapabilities();
 
 
-_logger2.default.getLogger().log('%c ' + "playkit-js" + ' ' + "0.14.2", "color: #98ff98;  font-size: large");
+_logger2.default.getLogger().log('%c ' + "playkit-js" + ' ' + "0.15.0", "color: #98ff98;  font-size: large");
 _logger2.default.getLogger().log('%c For more details see ' + "https://github.com/kaltura/playkit-js", "color: #98ff98;");
 
 /**
@@ -9210,7 +9351,7 @@ exports.Utils = Utils;
 
 // Export version
 
-exports.VERSION = "0.14.2";
+exports.VERSION = "0.15.0";
 
 // Export player name
 
