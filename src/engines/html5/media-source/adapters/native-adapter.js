@@ -211,16 +211,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     return this._loadPromise;
   }
 
-  _addNativeTrackChangeListeners(): void {
-    this._addNativeAudioTrackChangeListener();
-    this._addNativeTextTrackChangeListener();
-  }
-
-  _removeNativeTrackChangeListeners(): void {
-    this._removeNativeAudioTrackChangeListener();
-    this._removeNativeTextTrackChangeListener();
-  }
-
   /**
    * Loaded data event handler.
    * @param {Function} resolve - The resolve promise function.
@@ -230,7 +220,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _onLoadedData(resolve: Function): void {
     const parseTracksAndResolve = () => {
       let data = {tracks: this._getParsedTracks()};
-      this._addNativeTrackChangeListeners();
       NativeAdapter._logger.debug('The source has been loaded successfully');
       resolve(data);
     };
@@ -263,6 +252,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     return super.destroy().then(() => {
       this._eventManager.destroy();
       this._progressiveSources = [];
+      this._removeNativeAudioTrackChangeListener();
+      this._removeNativeTextTrackChangeListener();
       this._loadPromise = null;
       if (NativeAdapter._drmProtocol) {
         NativeAdapter._drmProtocol.destroy();
