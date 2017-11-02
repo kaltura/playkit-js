@@ -219,9 +219,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _onLoadedData(resolve: Function): void {
     const parseTracksAndResolve = () => {
-      let data = {tracks: this._getParsedTracks()};
+      this._addNativeAudioTrackChangeListener();
+      this._addNativeTextTrackChangeListener();
       NativeAdapter._logger.debug('The source has been loaded successfully');
-      resolve(data);
+      resolve({tracks: this._getParsedTracks()});
     };
     if (this._videoElement.textTracks.length > 0) {
       parseTracksAndResolve();
