@@ -506,11 +506,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _onNativeAudioTrackChange(): void {
     const pkAudioTracks = this._playerTracks.filter(track => track instanceof AudioTrack);
-    const getActivePKAudioTracksIndex = () => {
+    const getActivePKAudioTrackIndex = () => {
       const activeAudioTrack = pkAudioTracks.find(track => track.active === true);
       return (activeAudioTrack ? activeAudioTrack.index : -1);
     };
-    const getActiveVidAudioTracksIndex = () => {
+    const getActiveVidAudioTrackIndex = () => {
       for (let i = 0; i < this._videoElement.audioTracks.length; i++) {
         const audioTrack = this._videoElement.audioTracks[i];
         if (audioTrack.enabled) {
@@ -520,8 +520,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       return -1;
     };
     NativeAdapter._logger.debug('Video element audio track change');
-    const vidIndex = getActiveVidAudioTracksIndex();
-    const pkIndex = getActivePKAudioTracksIndex();
+    const vidIndex = getActiveVidAudioTrackIndex();
+    const pkIndex = getActivePKAudioTrackIndex();
     if (vidIndex !== pkIndex) {
       const pkAudioTrack = pkAudioTracks.find(track => track.index === vidIndex);
       if (pkAudioTrack) {
@@ -582,11 +582,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _onNativeTextTrackChange(): void {
     const pkTextTracks = this._playerTracks.filter(track => track instanceof PKTextTrack);
     const pkOffTrack = pkTextTracks.find(track => track.language === 'off');
-    const getActivePKTextTracksIndex = () => {
+    const getActivePKTextTrackIndex = () => {
       const activeTextTrack = pkTextTracks.find(track => track.active === true);
       return (activeTextTrack ? activeTextTrack.index : -1);
     };
-    const getActiveVidTextTracksIndex = () => {
+    const getActiveVidTextTrackIndex = () => {
       for (let i = 0; i < this._videoElement.textTracks.length; i++) {
         const textTrack = this._videoElement.textTracks[i];
         if (textTrack.mode === 'showing') {
@@ -596,8 +596,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       return -1;
     };
     NativeAdapter._logger.debug('Video element text track change');
-    const vidIndex = getActiveVidTextTracksIndex();
-    const pkIndex = getActivePKTextTracksIndex();
+    const vidIndex = getActiveVidTextTrackIndex();
+    const pkIndex = getActivePKTextTrackIndex();
     if (vidIndex !== pkIndex) {
       // In case no text track with 'showing' mode
       // we need to set the off track
@@ -608,7 +608,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         }
       } else {
         // In case the text track on the video element is
-        // differnr then the text track of the player
+        // different then the text track of the player
         // we need to set the correct one
         const pkTextTrack = pkTextTracks.find(track => track.index === vidIndex);
         if (pkTextTrack) {
