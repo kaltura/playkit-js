@@ -248,8 +248,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     return super.destroy().then(() => {
       this._eventManager.destroy();
       this._progressiveSources = [];
-      this._removeNativeAudioTrackChangeListener();
-      this._removeNativeTextTrackChangeListener();
       this._loadPromise = null;
       if (NativeAdapter._drmProtocol) {
         NativeAdapter._drmProtocol.destroy();
