@@ -299,6 +299,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _repositionCuesTimeout: any;
+
   /**
    * @param {Object} config - The configuration for the player instance.
    * @constructor
@@ -1498,7 +1499,7 @@ export default class Player extends FakeEventTarget {
 
     this.hideTextTrack();
 
-    let currentOrConfiguredTextLang = this._playbackAttributesState.textLanguage || this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackTypes.TEXT);
+    let currentOrConfiguredTextLang = this._playbackAttributesState.textLanguage || this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackTypes.TEXT) || OFF;
     let currentOrConfiguredAudioLang = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
     this._setDefaultTrack(TrackTypes.TEXT, currentOrConfiguredTextLang, offTextTrack);
     this._setDefaultTrack(TrackTypes.AUDIO, currentOrConfiguredAudioLang, activeTracks.audio);
