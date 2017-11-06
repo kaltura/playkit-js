@@ -15,5 +15,9 @@ describe('Track', () => {
       Track.langComparer('es', 'ita').should.be.false;
       Track.langComparer('ita', 'es').should.be.false;
     });
+
+    it('should return false if the input lang is empty', () => {
+      Track.langComparer('', 'rus').should.be.false;
+    });
   });
 });

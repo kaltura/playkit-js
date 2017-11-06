@@ -299,6 +299,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _repositionCuesTimeout: any;
+
   /**
    * @param {Object} config - The configuration for the player instance.
    * @constructor
