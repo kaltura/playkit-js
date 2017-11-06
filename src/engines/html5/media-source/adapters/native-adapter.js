@@ -213,7 +213,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _onLoadedData(resolve: Function): void {
     const parseTracksAndResolve = () => {
-      this._playerTracks = this._parseTracks();
+      this._playerTracks = this._getParsedTracks();
       this._addNativeAudioTrackChangeListener();
       this._addNativeTextTrackChangeListener();
       NativeAdapter._logger.debug('The source has been loaded successfully');
@@ -258,11 +258,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   /**
    * Get the parsed tracks
-   * @function _parseTracks
+   * @function _getParsedTracks
    * @returns {Array<Track>} - The parsed tracks
    * @private
    */
-  _parseTracks(): Array<Track> {
+  _getParsedTracks(): Array<Track> {
     const videoTracks = this._getParsedVideoTracks();
     const audioTracks = this._getParsedAudioTracks();
     const textTracks = this._getParsedTextTracks();
