@@ -11,6 +11,7 @@ import * as Utils from '../../../../utils/util'
 import FairPlay from '../../../../drm/fairplay'
 import Env from '../../../../utils/env'
 import FakeEvent from '../../../../event/fake-event'
+
 /**
  * An illustration of media source extension for progressive download
  * @classdesc
@@ -73,6 +74,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _progressiveSources: Array<Source>;
+  /**
+   * The player tracks.
+   * @member {Array<Track>} - _playerTracks
+   * @private
+   */
+  _playerTracks: Array<Track>;
 
   /**
    * Checks if NativeAdapter can play a given mime type.
@@ -206,9 +213,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _onLoadedData(resolve: Function): void {
     const parseTracksAndResolve = () => {
-      let data = {tracks: this._getParsedTracks()};
+      this._playerTracks = this._getParsedTracks();
+      this._addNativeAudioTrackChangeListener();
+      this._addNativeTextTrackChangeListener();
       NativeAdapter._logger.debug('The source has been loaded successfully');
-      resolve(data);
+      resolve({tracks: this._playerTracks});
     };
     if (this._videoElement.textTracks.length > 0) {
       parseTracksAndResolve();
@@ -254,9 +263,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _getParsedTracks(): Array<Track> {
-    let videoTracks = this._getParsedVideoTracks();
-    let audioTracks = this._getParsedAudioTracks();
-    let textTracks = this._getParsedTextTracks();
+    const videoTracks = this._getParsedVideoTracks();
+    const audioTracks = this._getParsedAudioTracks();
+    const textTracks = this._getParsedTextTracks();
     return videoTracks.concat(audioTracks).concat(textTracks);
   }
 
@@ -281,11 +290,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _getParsedProgressiveVideoTracks(): Array<Track> {
-    let videoTracks = this._progressiveSources;
-    let parsedTracks = [];
+    const videoTracks = this._progressiveSources;
+    const parsedTracks = [];
     if (videoTracks) {
       for (let i = 0; i < videoTracks.length; i++) {
-        let settings = {
+        const settings = {
           id: videoTracks[i].id,
           bandwidth: videoTracks[i].bandwidth,
           width: videoTracks[i].width,
@@ -307,11 +316,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _getParsedAdaptiveVideoTracks(): Array<Track> {
     //TODO check adaptation in safari hls
-    let videoTracks = this._videoElement.videoTracks;
-    let parsedTracks = [];
+    const videoTracks = this._videoElement.videoTracks;
+    const parsedTracks = [];
     if (videoTracks) {
       for (let i = 0; i < videoTracks.length; i++) {
-        let settings = {
+        const settings = {
           //TODO calculate width/height/bandwidth
           id: videoTracks[i].id,
           active: videoTracks[i].selected,
@@ -328,15 +337,15 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   /**
    * Get the parsed audio tracks
    * @function _getParsedAudioTracks
-   * @returns {Array<Track>} - The parsed audio tracks
+   * @returns {Array<AudioTrack>} - The parsed audio tracks
    * @private
    */
-  _getParsedAudioTracks(): Array<Track> {
-    let audioTracks = this._videoElement.audioTracks;
-    let parsedTracks = [];
+  _getParsedAudioTracks(): Array<AudioTrack> {
+    const audioTracks = this._videoElement.audioTracks;
+    const parsedTracks = [];
     if (audioTracks) {
       for (let i = 0; i < audioTracks.length; i++) {
-        let settings = {
+        const settings = {
           id: audioTracks[i].id,
           active: audioTracks[i].enabled,
           label: audioTracks[i].label,
@@ -352,15 +361,15 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   /**
    * Get the parsed text tracks
    * @function _getParsedTextTracks
-   * @returns {Array<Track>} - The parsed text tracks
+   * @returns {Array<PKTextTrack>} - The parsed text tracks
    * @private
    */
-  _getParsedTextTracks(): Array<Track> {
-    let textTracks = this._videoElement.textTracks;
-    let parsedTracks = [];
+  _getParsedTextTracks(): Array<PKTextTrack> {
+    const textTracks = this._videoElement.textTracks;
+    const parsedTracks = [];
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
-        let settings = {
+        const settings = {
           kind: textTracks[i].kind,
           active: textTracks[i].mode === 'showing',
           label: textTracks[i].label,
@@ -438,8 +447,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    */
   selectAdaptiveVideoTrack(videoTrack: VideoTrack): void {
-    let videoTracks = this._videoElement.videoTracks;
-    if ((videoTrack instanceof VideoTrack) && videoTracks && videoTracks[videoTrack.index]) {
+    const videoTracks = this._videoElement.videoTracks;
+    if ((videoTrack instanceof VideoTrack)
+      && videoTracks
+      && videoTracks[videoTrack.index]) {
       this._disableVideoTracks();
       videoTracks[videoTrack.index].selected = true;
       this._onTrackChanged(videoTrack);
@@ -454,11 +465,69 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    */
   selectAudioTrack(audioTrack: AudioTrack): void {
-    let audioTracks = this._videoElement.audioTracks;
-    if ((audioTrack instanceof AudioTrack) && audioTracks && audioTracks[audioTrack.index]) {
+    const audioTracks = this._videoElement.audioTracks;
+    if ((audioTrack instanceof AudioTrack)
+      && audioTracks
+      && audioTracks[audioTrack.index]) {
+      this._removeNativeAudioTrackChangeListener();
       this._disableAudioTracks();
       audioTracks[audioTrack.index].enabled = true;
       this._onTrackChanged(audioTrack);
+      this._addNativeAudioTrackChangeListener();
+    }
+  }
+
+  /**
+   * Remove the onchange listenr of the video element AudioTrackList.
+   * @private
+   * @returns {void}
+   */
+  _removeNativeAudioTrackChangeListener(): void {
+    if (this._videoElement.audioTracks) {
+      this._eventManager.unlisten(this._videoElement.audioTracks, 'change');
+    }
+  }
+
+  /**
+   * Add the onchange listenr of the video element AudioTrackList.
+   * @private
+   * @returns {void}
+   */
+  _addNativeAudioTrackChangeListener(): void {
+    if (this._videoElement.audioTracks) {
+      this._eventManager.listen(this._videoElement.audioTracks, 'change', () => this._onNativeAudioTrackChange());
+    }
+  }
+
+  /**
+   * Handler of the video element AudioTrackList onchange event.
+   * @private
+   * @returns {void}
+   */
+  _onNativeAudioTrackChange(): void {
+    const pkAudioTracks = this._playerTracks.filter(track => track instanceof AudioTrack);
+    const getActivePKAudioTrackIndex = () => {
+      const activeAudioTrack = pkAudioTracks.find(track => track.active === true);
+      return (activeAudioTrack ? activeAudioTrack.index : -1);
+    };
+    const getActiveVidAudioTrackIndex = () => {
+      for (let i = 0; i < this._videoElement.audioTracks.length; i++) {
+        const audioTrack = this._videoElement.audioTracks[i];
+        if (audioTrack.enabled) {
+          return i;
+        }
+      }
+      return -1;
+    };
+    NativeAdapter._logger.debug('Video element audio track change');
+    const vidIndex = getActiveVidAudioTrackIndex();
+    const pkIndex = getActivePKAudioTrackIndex();
+    if (vidIndex !== pkIndex) {
+      const pkAudioTrack = pkAudioTracks.find(track => track.index === vidIndex);
+      if (pkAudioTrack) {
+        NativeAdapter._logger.debug('Native selection of track, update the player audio track (' + pkIndex + ' -> ' + vidIndex + ')');
+        this._onTrackChanged(pkAudioTrack);
+      }
     }
   }
 
@@ -470,12 +539,83 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    */
   selectTextTrack(textTrack: PKTextTrack): void {
-    let textTracks = this._videoElement.textTracks;
-    if ((textTrack instanceof PKTextTrack) && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
+    const textTracks = this._videoElement.textTracks;
+    if ((textTrack instanceof PKTextTrack)
+      && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions')
+      && textTracks && textTracks[textTrack.index]) {
+      this._removeNativeTextTrackChangeListener();
       this._disableTextTracks();
       textTracks[textTrack.index].mode = 'hidden';
       NativeAdapter._logger.debug('Text track changed', textTrack);
       this._onTrackChanged(textTrack);
+      this._addNativeTextTrackChangeListener();
+    }
+  }
+
+  /**
+   * Remove the onchange listenr of the video element TextTrackList.
+   * @private
+   * @returns {void}
+   */
+  _removeNativeTextTrackChangeListener(): void {
+    if (this._videoElement.textTracks) {
+      this._eventManager.unlisten(this._videoElement.textTracks, 'change');
+    }
+  }
+
+  /**
+   * Add the onchange listenr of the video element TextTrackList.
+   * @private
+   * @returns {void}
+   */
+  _addNativeTextTrackChangeListener(): void {
+    if (this._videoElement.textTracks) {
+      this._eventManager.listen(this._videoElement.textTracks, 'change', () => this._onNativeTextTrackChange());
+    }
+  }
+
+  /**
+   * Handler of the video element TextTrackList onchange event.
+   * @private
+   * @returns {void}
+   */
+  _onNativeTextTrackChange(): void {
+    const pkTextTracks = this._playerTracks.filter(track => track instanceof PKTextTrack);
+    const pkOffTrack = pkTextTracks.find(track => track.language === 'off');
+    const getActivePKTextTrackIndex = () => {
+      const activeTextTrack = pkTextTracks.find(track => track.active === true);
+      return (activeTextTrack ? activeTextTrack.index : -1);
+    };
+    const getActiveVidTextTrackIndex = () => {
+      for (let i = 0; i < this._videoElement.textTracks.length; i++) {
+        const textTrack = this._videoElement.textTracks[i];
+        if (textTrack.mode === 'showing') {
+          return i;
+        }
+      }
+      return -1;
+    };
+    NativeAdapter._logger.debug('Video element text track change');
+    const vidIndex = getActiveVidTextTrackIndex();
+    const pkIndex = getActivePKTextTrackIndex();
+    if (vidIndex !== pkIndex) {
+      // In case no text track with 'showing' mode
+      // we need to set the off track
+      if (vidIndex == -1) {
+        if (pkOffTrack) {
+          NativeAdapter._logger.debug('Native selection of track, update the player text track (' + pkIndex + ' -> off)');
+          this._onTrackChanged(pkOffTrack);
+        }
+      } else {
+        // In case the text track on the video element is
+        // different then the text track of the player
+        // we need to set the correct one
+        const pkTextTrack = pkTextTracks.find(track => track.index === vidIndex);
+        if (pkTextTrack) {
+          NativeAdapter._logger.debug('Native selection of track, update the player text track (' + pkIndex + ' -> ' + vidIndex + ')');
+          this._onTrackChanged(pkTextTrack);
+        }
+      }
     }
   }
 
