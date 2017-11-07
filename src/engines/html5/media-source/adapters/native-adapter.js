@@ -141,11 +141,17 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     NativeAdapter._logger.debug('Creating adapter');
     super(videoElement, source);
     this._playerError = new PlayerError();
+    this._playerError.setCallbackFunction(this._callbackError.bind(this));
     this._eventManager = new EventManager();
     this._maybeSetDrmPlayback();
     this._progressiveSources = config.sources.progressive;
-
   }
+
+
+  _callbackError(error): void {
+    this.dispatchEvent(new FakeEvent(NativeAdapter.CustomEvents.ERROR, error));
+  }
+
 
   /**
    * Sets the DRM playback in case such needed.
@@ -154,9 +160,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _maybeSetDrmPlayback(): void {
     if (NativeAdapter._drmProtocol && this._sourceObj && this._sourceObj.drmData) {
-      NativeAdapter._drmProtocol.setDrmPlayback(this._videoElement, this._sourceObj.drmData, this._playerError);
-
-
+      NativeAdapter._drmProtocol.setDrmPlayback(this._videoElement, this._sourceObj.drmData, this._callbackError.bind(this));
 
     }
   }

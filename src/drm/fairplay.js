@@ -32,10 +32,10 @@ export default class FairPlay extends BaseDrmProtocol {
    * @param {Array<Object>} drmData - The drm data.
    * @returns {void}
    */
-  static setDrmPlayback(videoElement: HTMLVideoElement, drmData: Array<Object> = [], playerError: Object): void {
+  static setDrmPlayback(videoElement: HTMLVideoElement, drmData: Array<Object> = [], playerErrorCallback: Function): void {
     FairPlay._logger.debug("Sets DRM playback");
     videoElement.addEventListener(FairPlay._WebkitEvents.NEED_KEY, FairPlay._onWebkitNeedKey.bind(null, drmData), false);
-    FairPlay._playerError = playerError;
+    FairPlay._playerErrorCallback = playerErrorCallback;
   }
 
   static _onWebkitNeedKey(drmData: Array<Object>, event: any): void {
@@ -53,18 +53,30 @@ export default class FairPlay extends BaseDrmProtocol {
 
     initData = FairPlay._concatInitDataIdAndCertificate(initData, contentId, aCertificate);
 
+
+    FairPlay._licenseRequestFailed({reason: "errorFromFairPlay"});
+
     if (!videoElement.webkitKeys) {
       let keySystem = FairPlay._selectKeySystem();
       FairPlay._logger.debug("Sets media keys");
       videoElement.webkitSetMediaKeys(new window.WebKitMediaKeys(keySystem));
     }
     if (!videoElement.webkitKeys) {
-      throw new Error("Could not create MediaKeys");
+      this._raiseError(PlayerError.Severity.CRITICAL,
+      PlayerError.Category.DRM,
+      PlayerError.Code.COULD_NOT_CREATE_MEDIA_KEYS,
+        {});
+
+      //throw new Error("Could not create MediaKeys");
     }
     FairPlay._logger.debug("Creates session");
     FairPlay._keySession = videoElement.webkitKeys.createSession('video/mp4', initData);
     if (!FairPlay._keySession) {
-      throw new Error("Could not create key session");
+      this._raiseError(PlayerError.Severity.CRITICAL,
+        PlayerError.Category.DRM,
+        PlayerError.Code.COULD_NOT_CREATE_KEY_SESSION,
+        {});
+      //throw new Error("Could not create key session");
     }
     FairPlay._keySession.contentId = contentId;
     FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_MESSAGE, FairPlay._onWebkitKeyMessage.bind(null, fpDrmData), false);
@@ -106,7 +118,10 @@ export default class FairPlay extends BaseDrmProtocol {
     try {
       responseObj = JSON.parse(keyText);
     } catch (error) {
-      FairPlay._licenseRequestFailed();
+      FairPlay._raiseError(PlayerError.Severity.CRITICAL,
+        PlayerError.Category.DRM,
+        PlayerError.Code.BAD_FAIRPLAY_RESPONSE,
+        {})
     }
     let isValidResponse = FairPlay._validateResponse(responseObj);
     FairPlay._licenseRequestFailed(isValidResponse);
@@ -138,14 +153,14 @@ export default class FairPlay extends BaseDrmProtocol {
     }
   }
 
-  static _licenseRequestFailed(error): void {
-    let ErrObj = {
-      severity: PlayerError.Severity.CRITICAL,
-      category: PlayerError.Category.DRM,
-      code: PlayerError.Code.BAD_FAIRPLAY_RESPONSE,
-      args: {message: error.reason}
+  static _raiseError(severity: string, category: string, code: string, arg: Object ): void {
+    let errObj = {
+      severity: severity,
+      category: category,
+      code: code,
+      args: arg
     }
-    FairPlay._playerError.dispatch(ErrObj);
+    FairPlay._playerErrorCallback(errObj);
   }
 
   static _extractContentId(initData: Uint8Array): string {

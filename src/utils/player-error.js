@@ -1,9 +1,12 @@
 //@flow
-export default class PlayerError {
+
+import FakeEventTarget from '../event/fake-event-target'
+
+export default class PlayerError extends FakeEventTarget{
 
 
   constructor(){
-
+    super();
   }
 
   dispatch(error){
@@ -31,11 +34,17 @@ export default class PlayerError {
 
     let message = severityName + "." + categoryName + "."+ codeName + "." + ' ('+this.data+')';
 
-    PlayerError.dispatchEvent(new CustomEvent('Error', message));
+    this.dispatchEvent(new CustomEvent('Error', {message: message}));
 
   }
 
+  errorHandlerCallback(error): void {
+    this._callback(error);
+  }
 
+  setCallbackFunction(callback: Function): void{
+    this._callback = callback;
+  }
 
   /**
    * @enum {number}
@@ -82,6 +91,14 @@ export default class PlayerError {
      * DRM
      */
     "BAD_FAIRPLAY_RESPONSE" : 6001,
+    /**
+     * DRM
+     */
+    "COULD_NOT_CREATE_MEDIA_KEYS" : 6002,
+    /**
+     * DRM
+     */
+    "COULD_NOT_CREATE_KEY_SESSION" : 6002,
 
 
     /**
