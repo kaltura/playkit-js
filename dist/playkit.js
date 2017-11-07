@@ -855,7 +855,7 @@ var Track = function () {
       try {
         inputLang = inputLang.toLowerCase();
         trackLang = trackLang.toLowerCase();
-        return inputLang.startsWith(trackLang) || trackLang.startsWith(inputLang);
+        return inputLang ? inputLang.startsWith(trackLang) || trackLang.startsWith(inputLang) : false;
       } catch (e) {
         return false;
       }
@@ -8297,6 +8297,12 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      */
 
     /**
+     * The player tracks.
+     * @member {Array<Track>} - _playerTracks
+     * @private
+     */
+
+    /**
      * The DRM protocols implementations for native adapter.
      * @type {Array<Function>}
      * @private
@@ -8512,9 +8518,11 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
       var _this3 = this;
 
       var parseTracksAndResolve = function parseTracksAndResolve() {
-        var data = { tracks: _this3._getParsedTracks() };
+        _this3._playerTracks = _this3._getParsedTracks();
+        _this3._addNativeAudioTrackChangeListener();
+        _this3._addNativeTextTrackChangeListener();
         NativeAdapter._logger.debug('The source has been loaded successfully');
-        resolve(data);
+        resolve({ tracks: _this3._playerTracks });
       };
       if (this._videoElement.textTracks.length > 0) {
         parseTracksAndResolve();
@@ -8654,7 +8662,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
     /**
      * Get the parsed audio tracks
      * @function _getParsedAudioTracks
-     * @returns {Array<Track>} - The parsed audio tracks
+     * @returns {Array<AudioTrack>} - The parsed audio tracks
      * @private
      */
 
@@ -8681,7 +8689,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
     /**
      * Get the parsed text tracks
      * @function _getParsedTextTracks
-     * @returns {Array<Track>} - The parsed text tracks
+     * @returns {Array<PKTextTrack>} - The parsed text tracks
      * @private
      */
 
@@ -8802,9 +8810,86 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
     value: function selectAudioTrack(audioTrack) {
       var audioTracks = this._videoElement.audioTracks;
       if (audioTrack instanceof _audioTrack2.default && audioTracks && audioTracks[audioTrack.index]) {
+        this._removeNativeAudioTrackChangeListener();
         this._disableAudioTracks();
         audioTracks[audioTrack.index].enabled = true;
         this._onTrackChanged(audioTrack);
+        this._addNativeAudioTrackChangeListener();
+      }
+    }
+
+    /**
+     * Remove the onchange listenr of the video element AudioTrackList.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_removeNativeAudioTrackChangeListener',
+    value: function _removeNativeAudioTrackChangeListener() {
+      if (this._videoElement.audioTracks) {
+        this._eventManager.unlisten(this._videoElement.audioTracks, 'change');
+      }
+    }
+
+    /**
+     * Add the onchange listenr of the video element AudioTrackList.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_addNativeAudioTrackChangeListener',
+    value: function _addNativeAudioTrackChangeListener() {
+      var _this6 = this;
+
+      if (this._videoElement.audioTracks) {
+        this._eventManager.listen(this._videoElement.audioTracks, 'change', function () {
+          return _this6._onNativeAudioTrackChange();
+        });
+      }
+    }
+
+    /**
+     * Handler of the video element AudioTrackList onchange event.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_onNativeAudioTrackChange',
+    value: function _onNativeAudioTrackChange() {
+      var _this7 = this;
+
+      var pkAudioTracks = this._playerTracks.filter(function (track) {
+        return track instanceof _audioTrack2.default;
+      });
+      var getActivePKAudioTrackIndex = function getActivePKAudioTrackIndex() {
+        var activeAudioTrack = pkAudioTracks.find(function (track) {
+          return track.active === true;
+        });
+        return activeAudioTrack ? activeAudioTrack.index : -1;
+      };
+      var getActiveVidAudioTrackIndex = function getActiveVidAudioTrackIndex() {
+        for (var i = 0; i < _this7._videoElement.audioTracks.length; i++) {
+          var audioTrack = _this7._videoElement.audioTracks[i];
+          if (audioTrack.enabled) {
+            return i;
+          }
+        }
+        return -1;
+      };
+      NativeAdapter._logger.debug('Video element audio track change');
+      var vidIndex = getActiveVidAudioTrackIndex();
+      var pkIndex = getActivePKAudioTrackIndex();
+      if (vidIndex !== pkIndex) {
+        var pkAudioTrack = pkAudioTracks.find(function (track) {
+          return track.index === vidIndex;
+        });
+        if (pkAudioTrack) {
+          NativeAdapter._logger.debug('Native selection of track, update the player audio track (' + pkIndex + ' -> ' + vidIndex + ')');
+          this._onTrackChanged(pkAudioTrack);
+        }
       }
     }
 
@@ -8821,10 +8906,102 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
     value: function selectTextTrack(textTrack) {
       var textTracks = this._videoElement.textTracks;
       if (textTrack instanceof _textTrack.TextTrack && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks && textTracks[textTrack.index]) {
+        this._removeNativeTextTrackChangeListener();
         this._disableTextTracks();
         textTracks[textTrack.index].mode = 'hidden';
         NativeAdapter._logger.debug('Text track changed', textTrack);
         this._onTrackChanged(textTrack);
+        this._addNativeTextTrackChangeListener();
+      }
+    }
+
+    /**
+     * Remove the onchange listenr of the video element TextTrackList.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_removeNativeTextTrackChangeListener',
+    value: function _removeNativeTextTrackChangeListener() {
+      if (this._videoElement.textTracks) {
+        this._eventManager.unlisten(this._videoElement.textTracks, 'change');
+      }
+    }
+
+    /**
+     * Add the onchange listenr of the video element TextTrackList.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_addNativeTextTrackChangeListener',
+    value: function _addNativeTextTrackChangeListener() {
+      var _this8 = this;
+
+      if (this._videoElement.textTracks) {
+        this._eventManager.listen(this._videoElement.textTracks, 'change', function () {
+          return _this8._onNativeTextTrackChange();
+        });
+      }
+    }
+
+    /**
+     * Handler of the video element TextTrackList onchange event.
+     * @private
+     * @returns {void}
+     */
+
+  }, {
+    key: '_onNativeTextTrackChange',
+    value: function _onNativeTextTrackChange() {
+      var _this9 = this;
+
+      var pkTextTracks = this._playerTracks.filter(function (track) {
+        return track instanceof _textTrack.TextTrack;
+      });
+      var pkOffTrack = pkTextTracks.find(function (track) {
+        return track.language === 'off';
+      });
+      var getActivePKTextTrackIndex = function getActivePKTextTrackIndex() {
+        var activeTextTrack = pkTextTracks.find(function (track) {
+          return track.active === true;
+        });
+        return activeTextTrack ? activeTextTrack.index : -1;
+      };
+      var getActiveVidTextTrackIndex = function getActiveVidTextTrackIndex() {
+        for (var i = 0; i < _this9._videoElement.textTracks.length; i++) {
+          var textTrack = _this9._videoElement.textTracks[i];
+          if (textTrack.mode === 'showing') {
+            return i;
+          }
+        }
+        return -1;
+      };
+      NativeAdapter._logger.debug('Video element text track change');
+      var vidIndex = getActiveVidTextTrackIndex();
+      var pkIndex = getActivePKTextTrackIndex();
+      if (vidIndex !== pkIndex) {
+        // In case no text track with 'showing' mode
+        // we need to set the off track
+        if (vidIndex == -1) {
+          if (pkOffTrack) {
+            NativeAdapter._logger.debug('Native selection of track, update the player text track (' + pkIndex + ' -> off)');
+            this._onTrackChanged(pkOffTrack);
+          }
+        } else {
+          // In case the text track on the video element is
+          // different then the text track of the player
+          // we need to set the correct one
+          var pkTextTrack = pkTextTracks.find(function (track) {
+            return track.index === vidIndex;
+          });
+          if (pkTextTrack) {
+            NativeAdapter._logger.debug('Native selection of track, update the player text track (' + pkIndex + ' -> ' + vidIndex + ')');
+            this._onTrackChanged(pkTextTrack);
+          }
+        }
       }
     }
 
@@ -9316,7 +9493,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 _player2.default.runCapabilities();
 
 
-_logger2.default.getLogger().log('%c ' + "playkit-js" + ' ' + "0.15.0", "color: #98ff98;  font-size: large");
+_logger2.default.getLogger().log('%c ' + "playkit-js" + ' ' + "0.16.0", "color: #98ff98;  font-size: large");
 _logger2.default.getLogger().log('%c For more details see ' + "https://github.com/kaltura/playkit-js", "color: #98ff98;");
 
 /**
@@ -9351,7 +9528,7 @@ exports.Utils = Utils;
 
 // Export version
 
-exports.VERSION = "0.15.0";
+exports.VERSION = "0.16.0";
 
 // Export player name
 
