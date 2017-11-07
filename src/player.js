@@ -320,8 +320,8 @@ export default class Player extends FakeEventTarget {
     this._textStyle = new TextStyle();
     this._createReadyPromise();
     this._createPlayerContainer();
-    this._appendPosterEl();
     this.configure(config);
+    (this.config.playback && !this.config.playback.autoplay) && this._appendPosterEl();
     this._repositionCuesTimeout = false;
   }
 
