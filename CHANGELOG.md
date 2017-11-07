@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.16.0"></a>
+# [0.16.0](https://github.com/kaltura/playkit-js/compare/v0.15.0...v0.16.0) (2017-11-07)
+
+
+### Bug Fixes
+
+* **FEC-7380, FEC-7381:** there are captions displayed when the captions are supposed to be 'off' ([#157](https://github.com/kaltura/playkit-js/issues/157)) ([4b52b80](https://github.com/kaltura/playkit-js/commit/4b52b80))
+
+
+### Features
+
+* handle native selection of tracks ([#156](https://github.com/kaltura/playkit-js/issues/156)) ([6da107c](https://github.com/kaltura/playkit-js/commit/6da107c))
+
+
+
 <a name="0.15.0"></a>
 # [0.15.0](https://github.com/kaltura/playkit-js/compare/v0.14.2...v0.15.0) (2017-11-01)
 
