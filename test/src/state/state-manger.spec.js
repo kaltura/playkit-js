@@ -136,12 +136,6 @@ describe("StateManager.Transitions:LOADING", () => {
     stateManager.currentState.type.should.equal(PlayerStates.IDLE);
   });
 
-  it('should handle transition from loading to playing', () => {
-    fakePlayer.config.playback.autoplay = true;
-    stateManager._doTransition({type: Html5Events.LOADED_METADATA});
-    stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
-  });
-
   it('should handle transition from loading to paused', () => {
     fakePlayer.config.playback.autoplay = false;
     stateManager._doTransition({type: Html5Events.LOADED_METADATA});

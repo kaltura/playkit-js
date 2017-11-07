@@ -1100,6 +1100,137 @@ describe('Text Track API', () => {
   });
 });
 
+describe('Fullscreen API', () => {
+  let player;
+
+  beforeEach(() => {
+    player = new Player();
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+  });
+
+  describe('isFullscreen', () => {
+    it("should start with initial fullscreen state of false", () => {
+      player.isFullscreen().should.be.false;
+    });
+
+    it("should be in fullscreen state after notify", () => {
+      player.notifyEnterFullscreen();
+      player.isFullscreen().should.be.true;
+    });
+
+    it("should not be in fullscreen state after notify", () => {
+      player.notifyEnterFullscreen();
+      player.isFullscreen().should.be.true;
+      player.notifyExitFullscreen();
+      player.isFullscreen().should.be.false;
+    });
+  });
+
+  describe('notifyEnterFullscreen', () => {
+    it("should fire ENTER_FULLSCREEN event", (done) => {
+      player.addEventListener(player.Event.ENTER_FULLSCREEN, () => {
+        player.isFullscreen().should.be.true;
+        done();
+      });
+      player.notifyEnterFullscreen();
+    });
+
+    it("should not fire ENTER_FULLSCREEN event twice", (done) => {
+      let callCount = 0;
+      player.addEventListener(player.Event.ENTER_FULLSCREEN, () => {
+        callCount++;
+        player.isFullscreen().should.be.true;
+        player.notifyEnterFullscreen();
+        setTimeout(() => {
+          if (callCount === 1) {
+            done();
+          } else {
+            done(new Error('fail'));
+          }
+        }, 500);
+      });
+      player.notifyEnterFullscreen();
+    });
+  });
+
+  describe('notifyExitFullscreen', () => {
+    it("should fire EXIT_FULLSCREEN event", (done) => {
+      player.addEventListener(player.Event.EXIT_FULLSCREEN, () => {
+        player.isFullscreen().should.be.false;
+        done();
+      });
+      player.addEventListener(player.Event.ENTER_FULLSCREEN, () => {
+        player.isFullscreen().should.be.true;
+        player.notifyExitFullscreen();
+      });
+      player.notifyEnterFullscreen();
+    });
+
+    it("should not fire EXIT_FULLSCREEN event twice", (done) => {
+      let callCount = 0;
+      player.addEventListener(player.Event.EXIT_FULLSCREEN, () => {
+        callCount++;
+        player.isFullscreen().should.be.false;
+        player.notifyExitFullscreen();
+        setTimeout(() => {
+          if (callCount === 1) {
+            done();
+          } else {
+            done(new Error('fail'));
+          }
+        }, 500);
+      });
+      player.addEventListener(player.Event.ENTER_FULLSCREEN, () => {
+        player.isFullscreen().should.be.true;
+        player.notifyExitFullscreen();
+      });
+      player.notifyEnterFullscreen();
+    });
+
+    it("should not fire EXIT_FULLSCREEN event when player is not in fullscreen state", (done) => {
+      player.addEventListener(player.Event.EXIT_FULLSCREEN, () => done(new Error('fail')));
+      player.notifyExitFullscreen();
+      setTimeout(() => done(), 500);
+    });
+  });
+
+  describe('enterFullscreen', () => {
+    it("should fire REQUESTED_ENTER_FULLSCREEN event", (done) => {
+      player.addEventListener(player.Event.REQUESTED_ENTER_FULLSCREEN, () => done());
+      player.enterFullscreen();
+    });
+
+    it("should not fire REQUESTED_ENTER_FULLSCREEN event when player is already in fullscreen", (done) => {
+      player.addEventListener(player.Event.REQUESTED_ENTER_FULLSCREEN, () => done(new Error('fail')));
+      player.notifyEnterFullscreen();
+      player.enterFullscreen();
+      setTimeout(() => done(), 500);
+    });
+  });
+
+  describe('exitFullscreen', () => {
+    it("should fire REQUESTED_EXIT_FULLSCREEN event", (done) => {
+      player.addEventListener(player.Event.REQUESTED_EXIT_FULLSCREEN, () => done());
+      player.notifyEnterFullscreen();
+      player.exitFullscreen();
+    });
+
+    it("should not fire REQUESTED_EXIT_FULLSCREEN event when player is not in fullscreen", (done) => {
+      player.addEventListener(player.Event.REQUESTED_EXIT_FULLSCREEN, () => done(new Error('fail')));
+      player.notifyExitFullscreen();
+      player.exitFullscreen();
+      setTimeout(() => done(), 500);
+    });
+  });
+});
+
 describe('Track enum', function () {
   let playerContainer;
 
@@ -1785,19 +1916,56 @@ describe('configure', function () {
       player.muted.should.be.true;
     });
 
-    it('should load the initial playback config and initiate the new one on updating sources', function (done) {
+    it('should load the previous playback config and initiate the new one on updating sources', function (done) {
       player = new Player({
         sources: sourcesConfig.MultipleSources,
         playback: {
           muted: true,
-          volume: 0,
+          volume: 0.5
         }
       });
       player.load();
-      player.volume.should.equals(0);
+      player.volume.should.equals(0.5);
       player.muted.should.be.true;
+      player.config.playback.volume.should.equals(0.5);
       player.config.playback.muted.should.be.true;
-      player.config.playback.volume.should.equals(0);
+      player.ready().then(() => {
+        player.src.should.equals(window.location.origin + sourcesConfig.MultipleSources.progressive[0].url);
+        player.addEventListener(player.Event.VOLUME_CHANGE, () => {
+          let newProgressiveConfig = {
+            progressive: [sourcesConfig.MultipleSources.progressive[1]]
+          };
+          player.configure({
+            sources: newProgressiveConfig
+          });
+          player.load();
+          player.volume.should.equals(1);
+          player.muted.should.be.false;
+          player.config.playback.volume.should.equals(0.5);
+          player.config.playback.muted.should.be.true;
+          player.ready().then(() => {
+            player.src.should.equals(window.location.origin + newProgressiveConfig.progressive[0].url);
+            done();
+          });
+        });
+        player.muted = false;
+        player.volume = 1;
+      });
+    });
+
+    it('should load the initial config and initiate the new one on updating sources', function (done) {
+      player = new Player({
+        sources: sourcesConfig.MultipleSources,
+        playback: {
+          muted: true,
+          volume: 1,
+        }
+      });
+      player.load();
+      player.volume.should.equals(1);
+      player.muted.should.be.true;
+      player.config.playback.volume.should.equals(1);
+      player.config.playback.muted.should.be.true;
       player.ready().then(() => {
         player.src.should.equals(window.location.origin + sourcesConfig.MultipleSources.progressive[0].url);
         player.configure({
@@ -1806,21 +1974,22 @@ describe('configure', function () {
             volume: 0.5
           }
         });
-        player.volume.should.equals(0);
+        player.volume.should.equals(1);
         player.muted.should.be.true;
-        player.config.playback.muted.should.be.false;
         player.config.playback.volume.should.equals(0.5);
+        player.config.playback.muted.should.be.false;
         let newProgressiveConfig = {
           progressive: [sourcesConfig.MultipleSources.progressive[1]]
         };
+        player._playbackAttributesState = {};
         player.configure({
           sources: newProgressiveConfig
         });
         player.load();
         player.volume.should.equals(0.5);
         player.muted.should.be.false;
-        player.config.playback.muted.should.be.false;
         player.config.playback.volume.should.equals(0.5);
+        player.config.playback.muted.should.be.false;
         player.ready().then(() => {
           player.src.should.equals(window.location.origin + newProgressiveConfig.progressive[0].url);
           done();
@@ -2324,6 +2493,7 @@ describe('_reset', function () {
     let eventMgrSpy = sandbox.spy(player._eventManager, 'removeAll');
     let pluginMgrSpy = sandbox.spy(player._pluginManager, 'reset');
     let stateMgrSpy = sandbox.spy(player._stateManager, 'reset');
+    let _updateTextDisplay = sandbox.spy(player, '_updateTextDisplay');
     player._reset();
     player.paused.should.be.true;
     posterMgrSpy.should.have.been.calledOnce;
@@ -2331,6 +2501,8 @@ describe('_reset', function () {
     pluginMgrSpy.should.have.been.calledOnce;
     stateMgrSpy.should.have.been.calledOnce;
     player._activeTextCues.should.be.empty;
+    _updateTextDisplay.should.have.been.calledOnce;
+    _updateTextDisplay.should.have.been.calledWith([]);
     player._config.should.not.be.empty;
     player._tracks.should.be.empty;
     player._engineType.should.be.empty;
@@ -2476,3 +2648,27 @@ describe('_getLanguage', function () {
     player._getLanguage(configuredLanguage, offTrack, "text").should.equals(gerTrack.language);
   });
 });
+
+
+describe('_resetTextCuesAndReposition', function () {
+  let config, player, sandbox;
+
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+    config = getConfigStructure();
+    player = new Player(config);
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+    player.destroy();
+  });
+
+  it('should reset the active text cues', () => {
+    player._activeTextCues[0]={};
+    player._resetTextCuesAndReposition();
+    let cue = player._activeTextCues[0];
+    cue.hasBeenReset.should.equals(true);
+  });
+});
+

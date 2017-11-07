@@ -94,6 +94,30 @@ const HTML5_EVENTS: { [event: string]: string } = {
 
 const CUSTOM_EVENTS: { [event: string]: string } = {
   /**
+   * Fires when the player enters fullscreen
+   */
+  ENTER_FULLSCREEN: 'enterfullscreen',
+  /**
+   * Fires when the player exits fullscreen
+   */
+  EXIT_FULLSCREEN: 'exitfullscreen',
+  /**
+   * Fires when the player received a request to enter fullscreen
+   */
+  REQUESTED_ENTER_FULLSCREEN: 'requestedenterfullscreen',
+  /**
+   * Fires when the player received a request to exit fullscreen
+   */
+  REQUESTED_EXIT_FULLSCREEN: 'requestedexitfullscreen',
+  /**
+   * Fires when browser fails to autoplay with sound
+   */
+  AUTOPLAY_FAILED: 'autoplayfailed',
+  /**
+   * Fires when browser fails to autoplay with sound but start muted autoplay instead
+   */
+  FALLBACK_TO_MUTED_AUTOPLAY: 'fallbacktomutedautoplay',
+  /**
    * Fires when change source flow started
    */
   CHANGE_SOURCE_STARTED: 'changesourcestarted',

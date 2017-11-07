@@ -68,14 +68,12 @@ const SUBTITLES_CLASS_NAME: string = 'playkit-subtitles';
  */
 const LIVE: string = 'Live';
 
-
 /**
  *  The auto string, for captions
  *  @type {string}
  *  @const
  */
 const AUTO: string = 'auto';
-
 
 /**
  *  The off string, for captions
@@ -84,7 +82,6 @@ const AUTO: string = 'auto';
  */
 const OFF: string = 'off';
 
-
 /**
  *  The duration offset, for seeking to duration safety.
  *  @type {number}
@@ -92,6 +89,12 @@ const OFF: string = 'off';
  */
 const DURATION_OFFSET: number = 0.1;
 
+/**
+ * The toggle fullscreen rendering timeout value
+ * @type {number}
+ * @const
+ */
+const REPOSITION_CUES_TIMEOUT: number = 1000;
 
 /**
  * The HTML5 player class.
@@ -112,6 +115,47 @@ export default class Player extends FakeEventTarget {
    * @static
    */
   static _engines: Array<typeof IEngine> = [Html5];
+  /**
+   * The player capabilities result object.
+   * @type {Object}
+   * @private
+   * @static
+   */
+  static _playerCapabilities: Object;
+
+  /**
+   * Runs the engines capabilities tests.
+   * @returns {void}
+   * @public
+   * @static
+   */
+  static runCapabilities(): void {
+    Player._logger.debug("Running player capabilities");
+    Player._engines.forEach(Engine => Engine.runCapabilities());
+  }
+
+  /**
+   * Gets the engines capabilities.
+   * @param {?string} engineType - The engine type.
+   * @return {Promise<Object>} - The engines capabilities object.
+   * @public
+   * @static
+   */
+  static getCapabilities(engineType: ?string): Promise<Object> {
+    Player._logger.debug("Get player capabilities", engineType);
+    if (Player._playerCapabilities) {
+      return (engineType ? Promise.resolve(Player._playerCapabilities[engineType]) : Promise.resolve(Player._playerCapabilities));
+    }
+    let promises = [];
+    Player._engines.forEach(Engine => promises.push(Engine.getCapabilities()));
+    return Promise.all(promises)
+      .then((arrayOfResults) => {
+        Player._playerCapabilities = {};
+        arrayOfResults.forEach(res => Object.assign(Player._playerCapabilities, res));
+        return (engineType ? Promise.resolve(Player._playerCapabilities[engineType]) : Promise.resolve(Player._playerCapabilities));
+      });
+  }
+
   /**
    * The plugin manager of the player.
    * @type {PluginManager}
@@ -226,6 +270,35 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _streamType: string;
+  /**
+   * Flag to indicate whether is the first play in the current session.
+   * @type {boolean}
+   * @private
+   */
+  _firstPlayInCurrentSession: boolean;
+  /**
+   * The current playback attributes state
+   * @type {Object}
+   * @private
+   */
+  _playbackAttributesState: { [attribute: string]: any } = {
+    muted: undefined,
+    volume: undefined,
+    rate: undefined,
+    audioLanguage: "",
+    textLanguage: ""
+  };
+  /**
+   * Fullscreen indicator flag
+   * @private
+   */
+  _fullscreen: boolean;
+  /**
+   * holds false or an id for the timeout the reposition the text cues after togelling full screen
+   * @type {any}
+   * @private
+   */
+  _repositionCuesTimeout: any;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -236,6 +309,8 @@ export default class Player extends FakeEventTarget {
     this._env = Env;
     this._tracks = [];
     this._firstPlay = true;
+    this._fullscreen = false;
+    this._firstPlayInCurrentSession = true;
     this._config = Player._defaultConfig;
     this._eventManager = new EventManager();
     this._posterManager = new PosterManager();
@@ -247,6 +322,7 @@ export default class Player extends FakeEventTarget {
     this._createPlayerContainer();
     this._appendPosterEl();
     this.configure(config);
+    this._repositionCuesTimeout = false;
   }
 
   // <editor-fold desc="Public API">
@@ -273,7 +349,8 @@ export default class Player extends FakeEventTarget {
         this._posterManager.setSrc(this._config.metadata.poster);
         this._posterManager.show();
         this._attachMedia();
-        this._handlePlaybackConfig();
+        this._handlePlaybackOptions();
+        this._handleAutoPlay();
         if (receivedSourcesWhenHasEngine) {
           Player._logger.debug('Change source ended');
           this.dispatchEvent(new FakeEvent(CustomEvents.CHANGE_SOURCE_ENDED));
@@ -372,6 +449,7 @@ export default class Player extends FakeEventTarget {
     this._streamType = '';
     this._readyPromise = null;
     this._firstPlay = true;
+    this._playbackAttributesState = {};
     if (this._el) {
       Utils.Dom.removeChild(this._el.parentNode, this._el);
     }
@@ -686,19 +764,20 @@ export default class Player extends FakeEventTarget {
   /**
    * Select a track
    * @function selectTrack
-   * @param {Track} track - the track to select
+   * @param {?Track} track - the track to select
    * @returns {void}
    * @public
    */
-  selectTrack(track: Track): void {
+  selectTrack(track: ?Track): void {
     if (this._engine) {
       if (track instanceof VideoTrack) {
         this._engine.selectVideoTrack(track);
       } else if (track instanceof AudioTrack) {
         this._engine.selectAudioTrack(track);
       } else if (track instanceof TextTrack) {
-        if (track.language === "off") {
+        if (track.language === OFF) {
           this.hideTextTrack();
+          this._playbackAttributesState.textLanguage = OFF;
         } else {
           this._engine.selectTextTrack(track);
         }
@@ -718,7 +797,7 @@ export default class Player extends FakeEventTarget {
       this._updateTextDisplay([]);
       const textTracks = this._getTracksByType(TrackTypes.TEXT);
       textTracks.map(track => track.active = false);
-      const textTrack = textTracks.find(track => track.language === "off");
+      const textTrack = textTracks.find(track => track.language === OFF);
       if (textTrack) {
         textTrack.active = true;
         this.dispatchEvent(new FakeEvent(CustomEvents.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}))
@@ -834,6 +913,64 @@ export default class Player extends FakeEventTarget {
     let adsPlugin: ?BasePlugin = this._pluginManager.get('ima');
     if (adsPlugin && typeof adsPlugin.playAdNow === 'function') {
       adsPlugin.playAdNow(adTagUrl);
+    }
+  }
+
+  // </editor-fold>
+
+  // <editor-fold desc="Fullscreen API">
+
+  /**
+   * @returns {boolean} - Whether the player is in fullscreen mode.
+   * @public
+   */
+  isFullscreen(): boolean {
+    return this._fullscreen;
+  }
+
+  /**
+   * Notify the player that the ui application entered to fullscreen.
+   * @public
+   * @returns {void}
+   */
+  notifyEnterFullscreen(): void {
+    if (!this._fullscreen) {
+      this._fullscreen = true;
+      this.dispatchEvent(new FakeEvent(CustomEvents.ENTER_FULLSCREEN));
+    }
+  }
+
+  /**
+   * Notify the player that the ui application exited from fullscreen.
+   * @public
+   * @returns {void}
+   */
+  notifyExitFullscreen(): void {
+    if (this._fullscreen) {
+      this._fullscreen = false;
+      this.dispatchEvent(new FakeEvent(CustomEvents.EXIT_FULLSCREEN));
+    }
+  }
+
+  /**
+   * Request the player to enter fullscreen.
+   * @public
+   * @returns {void}
+   */
+  enterFullscreen(): void {
+    if (!this._fullscreen) {
+      this.dispatchEvent(new FakeEvent(CustomEvents.REQUESTED_ENTER_FULLSCREEN));
+    }
+  }
+
+  /**
+   * Request the player to exit fullscreen.
+   * @public
+   * @returns {void}
+   */
+  exitFullscreen(): void {
+    if (this._fullscreen) {
+      this.dispatchEvent(new FakeEvent(CustomEvents.REQUESTED_EXIT_FULLSCREEN));
     }
   }
 
@@ -997,75 +1134,161 @@ export default class Player extends FakeEventTarget {
           return this.dispatchEvent(event);
         });
       });
+      this._eventManager.listen(this._engine, Html5Events.SEEKED, () => {
+        const browser = this._env.browser.name;
+        if (browser === 'Edge' || browser === 'IE') {
+          this._removeTextCuePatch();
+        }
+      });
       this._eventManager.listen(this._engine, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
         this._markActiveTrack(event.payload.selectedVideoTrack);
         return this.dispatchEvent(event);
       });
       this._eventManager.listen(this._engine, CustomEvents.AUDIO_TRACK_CHANGED, (event: FakeEvent) => {
+        this._playbackAttributesState.audioLanguage = event.payload.selectedAudioTrack.language;
         this._markActiveTrack(event.payload.selectedAudioTrack);
         return this.dispatchEvent(event);
       });
       this._eventManager.listen(this._engine, CustomEvents.TEXT_TRACK_CHANGED, (event: FakeEvent) => {
+        this._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language;
         this._markActiveTrack(event.payload.selectedTextTrack);
         return this.dispatchEvent(event);
       });
       this._eventManager.listen(this._engine, CustomEvents.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engin, CustomEvents.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
-
+      this._eventManager.listen(this._engine, CustomEvents.AUTOPLAY_FAILED, (event: FakeEvent) => {
+        this.pause();
+        this.dispatchEvent(event)
+      });
       this._eventManager.listen(this, Html5Events.PLAY, this._onPlay.bind(this));
       this._eventManager.listen(this, Html5Events.ENDED, this._onEnded.bind(this));
+      this._eventManager.listen(this, CustomEvents.MUTE_CHANGE, () => {
+        this._playbackAttributesState.muted = this.muted;
+      });
+      this._eventManager.listen(this, Html5Events.VOLUME_CHANGE, () => {
+        this._playbackAttributesState.volume = this.volume;
+      });
+      this._eventManager.listen(this, Html5Events.RATE_CHANGE, () => {
+        this._playbackAttributesState.rate = this.playbackRate;
+      });
+      this._eventManager.listen(this, CustomEvents.ENTER_FULLSCREEN, () => {
+        this._resetTextCuesAndReposition();
+      });
+      this._eventManager.listen(this, CustomEvents.EXIT_FULLSCREEN, () => {
+        this._resetTextCuesAndReposition();
+      });
     }
   }
 
   /**
-   * Handles the playback config.
+   * Reset the active cues hasBeenReset = true and then reposition it, timeout here is for the screen to
+   * finish render the fullscreen
    * @returns {void}
    * @private
    */
-  _handlePlaybackConfig(): void {
-    if (this._config.playback) {
-      if (typeof this._config.playback.volume === 'number') {
-        this.volume = this._config.playback.volume;
+  _resetTextCuesAndReposition(): void {
+    this._updateTextDisplay([]);
+    for (let i = 0; i < this._activeTextCues.length; i++) {
+      this._activeTextCues[i].hasBeenReset = true;
+    }
+    // handling only the last reposition
+    if (this._repositionCuesTimeout) {
+      clearTimeout(this._repositionCuesTimeout);
+    }
+    this._repositionCuesTimeout = setTimeout(() => {
+      processCues(window, this._activeTextCues, this._textDisplayEl);
+      this._repositionCuesTimeout = false;
+    }, REPOSITION_CUES_TIMEOUT);
+  }
+
+  /**
+   * Handles the cue text removal issue, when seeking to a time without captions in IE \ edge the previous captions
+   * are not removed
+   * @returns {void}
+   * @private
+   */
+  _removeTextCuePatch(): void {
+    let filteredActiveTextCues = this._activeTextCues.filter((textCue) => {
+      const cueEndTime = textCue._endTime;
+      const cueStartTime = textCue._startTime;
+      const currTime = this.currentTime;
+      if (currTime < cueEndTime && currTime > cueStartTime) {
+        return textCue;
       }
-      if (typeof this._config.playback.muted === 'boolean') {
-        this.muted = this._config.playback.muted;
-      }
-      if (typeof this._config.playback.playsinline === 'boolean') {
-        this.playsinline = this._config.playback.playsinline;
-      }
-      if (this._config.playback.preload === "auto") {
-        /**
-         * If ads plugin enabled it's his responsibility to preload the content player.
-         * So to avoid loading the player twice which can cause errors on MSEs we are not
-         * calling load from the player.
-         * TODO: Change it to check the ads configuration when we will develop the ads manager.
-         */
-        if (!this._config.plugins.ima) {
-          this.load();
-        }
-      }
-      if (this._canAutoPlay()) {
-        this.play();
-      }
+    });
+    this._updateTextDisplay(filteredActiveTextCues);
+  }
+
+  /**
+   * Handles the playback options, from current state or config.
+   * @returns {void}
+   * @private
+   */
+  _handlePlaybackOptions(): void {
+    this._config.playback = this._config.playback || {};
+    if (typeof this._playbackAttributesState.muted === 'boolean') {
+      this.muted = this._playbackAttributesState.muted;
+    } else if (typeof this._config.playback.muted === 'boolean') {
+      this.muted = this._config.playback.muted;
+    }
+    if (typeof this._playbackAttributesState.volume === 'number') {
+      this.volume = this._playbackAttributesState.volume;
+    } else if (typeof this._config.playback.volume === 'number') {
+      this.volume = this._config.playback.volume;
+    }
+    if (typeof this._config.playback.playsinline === 'boolean') {
+      this.playsinline = this._config.playback.playsinline;
+    }
+    if (this._canPreload()) {
+      this.load();
     }
   }
 
   /**
-   * Determine whether we can auto playing or not.
-   * @returns {boolean} - Whether an auto play can be done.
+   * If ads plugin enabled it's his responsibility to preload the content player.
+   * So to avoid loading the player twice which can cause errors on MSEs we are not
+   * calling load from the player.
+   * TODO: Change it to check the ads configuration when we will develop the ads manager.
+   * @returns {boolean} - Whether the player should perform preload.
    * @private
    */
-  _canAutoPlay(): ?boolean {
-    if (!this._config.playback.autoplay) {
-      return false;
+  _canPreload(): boolean {
+    return (!this._config.playback.autoplay && this._config.playback.preload === "auto" && !this._config.plugins.ima);
+  }
+
+  /**
+   * Handles auto play.
+   * @returns {void}
+   * @private
+   */
+  _handleAutoPlay(): void {
+    if (this._config.playback.autoplay === true) {
+      if (this.muted || !this._firstPlayInCurrentSession) {
+        this.play();
+      } else {
+        const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
+        Player.getCapabilities(this.engineType)
+          .then((capabilities) => {
+            if (capabilities.autoplay) {
+              Player._logger.debug("Start autoplay");
+              this.play();
+            } else {
+              if (allowMutedAutoPlay) {
+                Player._logger.debug("Fallback to muted autoplay");
+                this.muted = true;
+                this.play();
+                this.dispatchEvent(new FakeEvent(CustomEvents.FALLBACK_TO_MUTED_AUTOPLAY));
+              } else {
+                Player._logger.warn("Autoplay failed, pause player");
+                this.load();
+                this.ready().then(() => this.pause());
+                this.dispatchEvent(new FakeEvent(CustomEvents.AUTOPLAY_FAILED));
+              }
+            }
+          });
+      }
     }
-    let device = this._env.device.type;
-    let os = this._env.os.name;
-    if (device) {
-      return (os === 'iOS') ? this.muted && this.playsinline : this.muted;
-    }
-    return true;
   }
 
   /**
@@ -1106,6 +1329,9 @@ export default class Player extends FakeEventTarget {
       this._firstPlay = false;
       this.dispatchEvent(new FakeEvent(CustomEvents.FIRST_PLAY));
       this._posterManager.hide();
+      if (typeof this._playbackAttributesState.rate === 'number') {
+        this.playbackRate = this._playbackAttributesState.rate;
+      }
     }
   }
 
@@ -1132,8 +1358,10 @@ export default class Player extends FakeEventTarget {
     this._pluginManager.reset();
     this._eventManager.removeAll();
     this._activeTextCues = [];
+    this._updateTextDisplay([]);
     this._tracks = [];
     this._firstPlay = true;
+    this._firstPlayInCurrentSession = false;
     this._engineType = '';
     this._streamType = '';
     this._createReadyPromise();
@@ -1272,8 +1500,10 @@ export default class Player extends FakeEventTarget {
 
     this.hideTextTrack();
 
-    this._setDefaultTrack(TrackTypes.TEXT, this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackTypes.TEXT), offTextTrack);
-    this._setDefaultTrack(TrackTypes.AUDIO, playbackConfig.audioLanguage, activeTracks.audio);
+    let currentOrConfiguredTextLang = this._playbackAttributesState.textLanguage || this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackTypes.TEXT);
+    let currentOrConfiguredAudioLang = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
+    this._setDefaultTrack(TrackTypes.TEXT, currentOrConfiguredTextLang, offTextTrack);
+    this._setDefaultTrack(TrackTypes.AUDIO, currentOrConfiguredAudioLang, activeTracks.audio);
   }
 
   /**
@@ -1304,17 +1534,15 @@ export default class Player extends FakeEventTarget {
    * Sets a specific default track.
    * @param {string} type - The track type.
    * @param {string} language - The track language.
-   * @param {?Track} defaultTrack - The default track to set in case there in case no language configured.
+   * @param {?Track} defaultTrack - The default track to set in case there is no language configured.
    * @returns {void}
    * @private
    */
   _setDefaultTrack(type: string, language: string, defaultTrack: ?Track): void {
-    if (language) {
-      const track: ?Track = this._getTracksByType(type).find(track => Track.langComparer(language, track.language));
-      if (track) {
-        this.selectTrack(track);
-      }
-    } else if (defaultTrack) {
+    const track: ?Track = this._getTracksByType(type).find(track => Track.langComparer(language, track.language));
+    if (track) {
+      this.selectTrack(track);
+    } else {
       this.selectTrack(defaultTrack);
     }
   }

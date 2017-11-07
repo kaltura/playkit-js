@@ -15,6 +15,8 @@ import TextStyle from './track/text-style'
 import Env from './utils/env'
 import * as Utils from './utils/util'
 
+Player.runCapabilities();
+
 declare var __VERSION__: string;
 declare var __NAME__: string;
 declare var __PACKAGE_URL__: string;
@@ -53,5 +55,9 @@ export {Env};
 
 // Export base DRM protocol
 export {BaseDrmProtocol};
+
+// Export the player capabilities
+const getCapabilities = Player.getCapabilities;
+export {getCapabilities};
 
 export default loadPlayer;

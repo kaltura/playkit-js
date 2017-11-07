@@ -114,7 +114,7 @@ export default class FairPlay extends BaseDrmProtocol {
       let key = FairPlay._base64DecodeUint8Array(responseObj.ckc);
       FairPlay._keySession.update(key);
     } else {
-      FairPlay._licenseRequestFailed(isValidResponse);
+      FairPlay._licenseRequestFailed();
     }
   }
 

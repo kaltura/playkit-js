@@ -15,7 +15,7 @@ export default class Track {
     try {
       inputLang = inputLang.toLowerCase();
       trackLang = trackLang.toLowerCase();
-      return inputLang.startsWith(trackLang) || trackLang.startsWith(inputLang);
+      return inputLang ? (inputLang.startsWith(trackLang) || trackLang.startsWith(inputLang)) : false;
     } catch (e) {
       return false;
     }

@@ -9,9 +9,10 @@
     "textLanguage": "",
     "useNativeTextTrack": false,
     "volume": 1,
-    "playsinline": false,
+    "playsinline": true,
     "preload": "none",
     "autoplay": false,
+    "allowMutedAutoPlay": true,
     "muted": false,
     "options": {
       "html5": {
