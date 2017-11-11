@@ -322,7 +322,9 @@ export default class Player extends FakeEventTarget {
     this._createPlayerContainer();
     this._appendPosterEl();
     this.configure(config);
-    setLogLevel(config.logLevel && this.LogLevel[config.logLevel]);
+    if (config.logLevel && this.LogLevel[config.logLevel]){
+      setLogLevel(this.LogLevel[config.logLevel]);
+    }
     this._repositionCuesTimeout = false;
   }
 
