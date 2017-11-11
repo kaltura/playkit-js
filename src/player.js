@@ -322,7 +322,7 @@ export default class Player extends FakeEventTarget {
     this._createPlayerContainer();
     this._appendPosterEl();
     this.configure(config);
-    setLogLevel(config.logLevel);
+    setLogLevel(config.logLevel && this.LogLevel[config.logLevel]);
     this._repositionCuesTimeout = false;
   }
 
@@ -1602,19 +1602,19 @@ export default class Player extends FakeEventTarget {
   /**
    * get the log level
    * @param {?string} name - the logger name
-   * @returns {string} - the log level
+   * @returns {Object} - the log level
    */
-  getLogLevel(name?: string): string {
+  getLogLevel(name?: string): Object {
     return getLogLevel(name);
   }
 
   /**
    * sets the logger level
-   * @param {string} level - the log level
+   * @param {Object} level - the log level
    * @param {?string} name - the logger name
    * @returns {void}
    */
-  setLogLevel(level: string, name?: string){
+  setLogLevel(level: Object, name?: string){
     setLogLevel(level, name);
   }
 }
