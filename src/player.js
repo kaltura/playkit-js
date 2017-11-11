@@ -8,7 +8,7 @@ import {PLAYER_EVENTS as PlayerEvents, HTML5_EVENTS as Html5Events, CUSTOM_EVENT
 import PlayerStates from './state/state-types'
 import * as Utils from './utils/util'
 import Locale from './utils/locale'
-import LoggerFactory from './utils/logger'
+import getLogger, {LOG_LEVEL as LogLevel, getLogLevel, setLogLevel} from './utils/logger'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
 import BasePlugin from './plugin/base-plugin'
@@ -107,7 +107,7 @@ export default class Player extends FakeEventTarget {
    * @static
    * @private
    */
-  static _logger: any = LoggerFactory.getLogger('Player');
+  static _logger: any = getLogger('Player');
   /**
    * The available engines of the player.
    * @type {Array<typeof IEngine>}
@@ -322,6 +322,7 @@ export default class Player extends FakeEventTarget {
     this._createPlayerContainer();
     this._appendPosterEl();
     this.configure(config);
+    setLogLevel(config.logLevel);
     this._repositionCuesTimeout = false;
   }
 
@@ -1588,5 +1589,32 @@ export default class Player extends FakeEventTarget {
     return TrackTypes;
   }
 
+  /**
+   * Get the player log level.
+   * @returns {Object} - The log levels of the player.
+   * @public
+   */
+  get LogLevel(): { [level: string]: Object } {
+    return LogLevel;
+  }
+
   // </editor-fold>
+  /**
+   * get the log level
+   * @param {?string} name - the logger name
+   * @returns {string} - the log level
+   */
+  getLogLevel(name?: string): string {
+    return getLogLevel(name);
+  }
+
+  /**
+   * sets the logger level
+   * @param {string} level - the log level
+   * @param {?string} name - the logger name
+   * @returns {void}
+   */
+  setLogLevel(level: string, name?: string){
+    setLogLevel(level, name);
+  }
 }

@@ -10,20 +10,41 @@ const LOG_LEVEL: { [level: string]: Object } = {
   "OFF": JsLogger.OFF
 };
 
-class LoggerFactory {
-  constructor(options?: Object) {
-    JsLogger.useDefaults(options || {});
-  }
-
-  getLogger(name?: string) {
-    if (!name) {
-      return JsLogger;
-    }
-    return JsLogger.get(name);
-  }
+JsLogger.useDefaults({defaultLevel: JsLogger.ERROR});
+if (window.PLAYKIT_LOG_LEVEL && LOG_LEVEL[window.PLAYKIT_LOG_LEVEL]) {
+  JsLogger.useDefaults({defaultLevel: LOG_LEVEL[window.PLAYKIT_LOG_LEVEL]});
 }
 
-const lf = new LoggerFactory({defaultLevel: JsLogger.DEBUG});
+/**
+ * get a logger
+ * @param {?string} name - the logger name
+ * @returns {Object} - the logger class
+ */
+function getLogger(name?: string): Object {
+  if (!name) {
+    return JsLogger;
+  }
+  return JsLogger.get(name);
+}
 
-export default lf;
-export {LOG_LEVEL};
+/**
+ * get the log level
+ * @param {?string} name - the logger name
+ * @returns {string} - the log level
+ */
+function getLogLevel(name?: string): string{
+  return getLogger(name).getLevel().name;
+}
+
+/**
+ * sets the logger level
+ * @param {string} level - the log level
+ * @param {?string} name - the logger name
+ * @returns {void}
+ */
+function setLogLevel(level: string, name?: string): void{
+  getLogger(name).setLevel(level);
+}
+
+export default getLogger;
+export {LOG_LEVEL, getLogLevel, setLogLevel};

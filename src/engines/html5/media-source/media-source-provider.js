@@ -1,6 +1,6 @@
 //@flow
 import NativeAdapter from './adapters/native-adapter'
-import LoggerFactory from '../../../utils/logger'
+import getLogger from '../../../utils/logger'
 
 /**
  * Media source provider
@@ -13,7 +13,7 @@ export default class MediaSourceProvider {
    * @static
    * @private
    */
-  static _logger: any = LoggerFactory.getLogger('MediaSourceProvider');
+  static _logger: any = getLogger('MediaSourceProvider');
   /**
    * The media source adapter registry.
    * @member {Array<IMediaSourceAdapter>} _mediaSourceAdapters
