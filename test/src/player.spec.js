@@ -2675,14 +2675,19 @@ describe('logger', ()=>{
   it('should return the current log level', ()=>{
     const player = new Player();
     const currentLogLevel = player.getLogLevel();
-    currentLogLevel.should.equal(player.LogLevel.ERROR.name);
+    currentLogLevel.should.equal(player.LogLevel.ERROR);
   });
-  it('should enable setting the current log level', ()=>{
+  it('should enable setting the current log level from API', ()=>{
     const player = new Player();
     let currentLogLevel = player.getLogLevel();
-    currentLogLevel.should.equal(player.LogLevel.ERROR.name);
+    currentLogLevel.should.equal(player.LogLevel.ERROR);
     player.setLogLevel(player.LogLevel.WARN);
     currentLogLevel = player.getLogLevel();
-    currentLogLevel.should.equal(player.LogLevel.WARN.name);
+    currentLogLevel.should.equal(player.LogLevel.WARN);
+  });
+  it('should enable setting the current log level from config', ()=>{
+    const player = new Player({logLevel: "DEBUG"});
+    let currentLogLevel = player.getLogLevel();
+    currentLogLevel.should.equal(player.LogLevel.DEBUG);
   });
 });
