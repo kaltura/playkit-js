@@ -11,9 +11,6 @@ const LOG_LEVEL: { [level: string]: Object } = {
 };
 
 JsLogger.useDefaults({defaultLevel: JsLogger.ERROR});
-if (window.PLAYKIT_LOG_LEVEL && LOG_LEVEL[window.PLAYKIT_LOG_LEVEL]) {
-  JsLogger.useDefaults({defaultLevel: LOG_LEVEL[window.PLAYKIT_LOG_LEVEL]});
-}
 
 /**
  * get a logger
