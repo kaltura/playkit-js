@@ -2649,7 +2649,6 @@ describe('_getLanguage', function () {
   });
 });
 
-
 describe('_resetTextCuesAndReposition', function () {
   let config, player, sandbox;
 
@@ -2672,3 +2671,18 @@ describe('_resetTextCuesAndReposition', function () {
   });
 });
 
+describe('logger', ()=>{
+  it('should return the current log level', ()=>{
+    const player = new Player();
+    const currentLogLevel = player.getLogLevel();
+    currentLogLevel.should.equal(player.LogLevel.ERROR.name);
+  });
+  it('should enable setting the current log level', ()=>{
+    const player = new Player();
+    let currentLogLevel = player.getLogLevel();
+    currentLogLevel.should.equal(player.LogLevel.ERROR.name);
+    player.setLogLevel(player.LogLevel.WARN);
+    currentLogLevel = player.getLogLevel();
+    currentLogLevel.should.equal(player.LogLevel.WARN.name);
+  });
+});
