@@ -8,7 +8,7 @@ import {PLAYER_EVENTS as PlayerEvents, HTML5_EVENTS as Html5Events, CUSTOM_EVENT
 import PlayerStates from './state/state-types'
 import * as Utils from './utils/util'
 import Locale from './utils/locale'
-import getLogger, {LOG_LEVEL as LogLevel, getLogLevel, setLogLevel} from './utils/logger'
+import getLogger, {LogLevel, getLogLevel, setLogLevel} from './utils/logger'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
 import BasePlugin from './plugin/base-plugin'
