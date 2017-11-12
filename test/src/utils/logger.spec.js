@@ -19,6 +19,6 @@ describe('LoggerFactory', () => {
   it('should change loggerA\'s log level', () => {
     loggerA.setLevel(LogLevel.WARN);
     (loggerA.context.filterLevel).should.deep.equal(LogLevel.WARN);
-    (loggerB.context.filterLevel).should.deep.equal(LogLevel.ERROR);
+    (loggerB.context.filterLevel).should.deep.equal(LogLevel.DEBUG);
   });
 });
