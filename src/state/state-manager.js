@@ -109,7 +109,7 @@ export default class StateManager {
       },
       [Html5Events.ERROR]: () => {
         this._updateState(PlayerStates.IDLE);
-        this._dispatchEvent();
+        //this._dispatchEvent();
       }
     },
     [PlayerStates.BUFFERING]: {
@@ -150,7 +150,7 @@ export default class StateManager {
    * @returns {void}
    */
   _attachListeners(): void {
-    this._eventManager.listen(this._player, Html5Events.ERROR, this._doTransition.bind(this));
+    //this._eventManager.listen(this._player, Html5Events.ERROR, this._doTransition.bind(this));
     this._eventManager.listen(this._player, Html5Events.ENDED, this._doTransition.bind(this));
     this._eventManager.listen(this._player, Html5Events.PLAY, this._doTransition.bind(this));
     this._eventManager.listen(this._player, Html5Events.LOAD_START, this._doTransition.bind(this));

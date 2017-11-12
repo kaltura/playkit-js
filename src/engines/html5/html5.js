@@ -11,6 +11,7 @@ import {Cue} from '../../track/vtt-cue'
 import * as Utils from '../../utils/util'
 import Html5AutoPlayCapability from './capabilities/html5-autoplay'
 import Html5IsSupportedCapability from './capabilities/html5-is-supported'
+import PlayerError from "../../utils/player-error";
 
 /**
  * Html5 engine for playback.
@@ -129,6 +130,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._eventManager = new EventManager();
     this._createVideoElement();
     this._init(source, config);
+    this._playerError = new PlayerError(this);
   }
 
   /**
@@ -190,7 +192,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.TEXT_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.TEXT_CUE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.ERROR, (event: FakeEvent) => {
+        console.log(event.payload);
+        this.dispatchEvent(event)
+      });
     }
   }
 
@@ -794,7 +799,16 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       if (window.VTTCue && cue instanceof window.VTTCue) {
         activeCues.push(cue);
       } else if (window.TextTrackCue && cue instanceof window.TextTrackCue) {
-        activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text));
+        try{
+          activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text));
+        }catch(e){
+          this._playerError.dispatch({
+              severity: this._playerError.Severity.RECOVERABLE,
+              category: this._playerError.CATEGORY.TEXT,
+              code: this._playerError.Code.VTT_CAPTIONS_ISSUE,
+              args: e
+          });
+        }
       }
     }
     this.dispatchEvent(new FakeEvent(CustomEvents.TEXT_CUE_CHANGED, {cues: activeCues}));

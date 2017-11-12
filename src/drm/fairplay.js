@@ -30,12 +30,13 @@ export default class FairPlay extends BaseDrmProtocol {
    * Sets the FairPlay playback.
    * @param {HTMLVideoElement} videoElement - The video element to manipulate.
    * @param {Array<Object>} drmData - The drm data.
+   * @param {any} playerError - player error object
    * @returns {void}
    */
-  static setDrmPlayback(videoElement: HTMLVideoElement, drmData: Array<Object> = [], playerErrorCallback: Function): void {
+  static setDrmPlayback(videoElement: HTMLVideoElement, drmData: Array<Object> = [], playerError: any): void {
     FairPlay._logger.debug("Sets DRM playback");
     videoElement.addEventListener(FairPlay._WebkitEvents.NEED_KEY, FairPlay._onWebkitNeedKey.bind(null, drmData), false);
-    FairPlay._playerErrorCallback = playerErrorCallback;
+    FairPlay._playerError = playerError;
   }
 
   static _onWebkitNeedKey(drmData: Array<Object>, event: any): void {
@@ -53,29 +54,30 @@ export default class FairPlay extends BaseDrmProtocol {
 
     initData = FairPlay._concatInitDataIdAndCertificate(initData, contentId, aCertificate);
 
-
-    FairPlay._licenseRequestFailed({reason: "errorFromFairPlay"});
-
     if (!videoElement.webkitKeys) {
       let keySystem = FairPlay._selectKeySystem();
       FairPlay._logger.debug("Sets media keys");
       videoElement.webkitSetMediaKeys(new window.WebKitMediaKeys(keySystem));
     }
     if (!videoElement.webkitKeys) {
-      this._raiseError(PlayerError.Severity.CRITICAL,
-      PlayerError.Category.DRM,
-      PlayerError.Code.COULD_NOT_CREATE_MEDIA_KEYS,
-        {});
+      FairPlay._playerError.dispatchFromContext({
+          severity: PlayerError.Severity.CRITICAL,
+          category: PlayerError.Category.DRM,
+          code: PlayerError.Code.COULD_NOT_CREATE_MEDIA_KEYS,
+          args: {}
+    });
 
       //throw new Error("Could not create MediaKeys");
     }
     FairPlay._logger.debug("Creates session");
     FairPlay._keySession = videoElement.webkitKeys.createSession('video/mp4', initData);
     if (!FairPlay._keySession) {
-      this._raiseError(PlayerError.Severity.CRITICAL,
-        PlayerError.Category.DRM,
-        PlayerError.Code.COULD_NOT_CREATE_KEY_SESSION,
-        {});
+      FairPlay._playerError.dispatchFromContext({
+          severity: PlayerError.Severity.CRITICAL,
+        category: PlayerError.Category.DRM,
+        code: PlayerError.Code.COULD_NOT_CREATE_KEY_SESSION,
+        args: {}
+    });
       //throw new Error("Could not create key session");
     }
     FairPlay._keySession.contentId = contentId;
@@ -102,6 +104,8 @@ export default class FairPlay extends BaseDrmProtocol {
     request.send(params);
   }
 
+
+
   static _onWebkitKeyAdded(): void {
     FairPlay._logger.debug("Decryption key was added to session");
   }
@@ -118,18 +122,24 @@ export default class FairPlay extends BaseDrmProtocol {
     try {
       responseObj = JSON.parse(keyText);
     } catch (error) {
-      FairPlay._raiseError(PlayerError.Severity.CRITICAL,
-        PlayerError.Category.DRM,
-        PlayerError.Code.BAD_FAIRPLAY_RESPONSE,
-        {})
+      FairPlay._playerError.dispatchFromContext({
+        severity: PlayerError.Severity.CRITICAL,
+        category: PlayerError.Category.DRM,
+        code: PlayerError.Code.BAD_FAIRPLAY_RESPONSE,
+        args: {}
+      });
     }
     let isValidResponse = FairPlay._validateResponse(responseObj);
-    FairPlay._licenseRequestFailed(isValidResponse);
     if (isValidResponse.valid) {
       let key = FairPlay._base64DecodeUint8Array(responseObj.ckc);
       FairPlay._keySession.update(key);
     } else {
-      FairPlay._licenseRequestFailed();
+      FairPlay._playerError.dispatchFromContext({
+        severity: FairPlay._playerError.Severity.CRITICAL,
+        category: FairPlay._playerError.Category.DRM,
+        code: FairPlay._playerError.Code.BAD_FAIRPLAY_RESPONSE,
+        args: {data: isValidResponse.reason}
+      });
     }
   }
 
@@ -151,16 +161,6 @@ export default class FairPlay extends BaseDrmProtocol {
         valid: true
       };
     }
-  }
-
-  static _raiseError(severity: string, category: string, code: string, arg: Object ): void {
-    let errObj = {
-      severity: severity,
-      category: category,
-      code: code,
-      args: arg
-    }
-    FairPlay._playerErrorCallback(errObj);
   }
 
   static _extractContentId(initData: Uint8Array): string {

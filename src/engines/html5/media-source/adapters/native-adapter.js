@@ -140,18 +140,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   constructor(videoElement: HTMLVideoElement, source: Source, config: Object) {
     NativeAdapter._logger.debug('Creating adapter');
     super(videoElement, source);
-    this._playerError = new PlayerError();
-    this._playerError.setCallbackFunction(this._callbackError.bind(this));
+    this._playerError = new PlayerError(this);
     this._eventManager = new EventManager();
     this._maybeSetDrmPlayback();
     this._progressiveSources = config.sources.progressive;
   }
-
-
-  _callbackError(error): void {
-    this.dispatchEvent(new FakeEvent(NativeAdapter.CustomEvents.ERROR, error));
-  }
-
 
   /**
    * Sets the DRM playback in case such needed.
@@ -160,7 +153,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _maybeSetDrmPlayback(): void {
     if (NativeAdapter._drmProtocol && this._sourceObj && this._sourceObj.drmData) {
-      NativeAdapter._drmProtocol.setDrmPlayback(this._videoElement, this._sourceObj.drmData, this._callbackError.bind(this));
+      NativeAdapter._drmProtocol.setDrmPlayback(this._videoElement, this._sourceObj.drmData, this._playerError);
 
     }
   }
@@ -197,9 +190,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   load(startTime: ?number): Promise<Object> {
 
     if (!this._loadPromise) {
-      this._loadPromise = new Promise((resolve, reject) => {
+      this._loadPromise = new Promise((resolve) => {
         this._eventManager.listenOnce(this._videoElement, Html5Events.LOADED_DATA, this._onLoadedData.bind(this, resolve));
-        this._eventManager.listenOnce(this._videoElement, Html5Events.ERROR, this._onError.bind(this, reject));
+        //this._eventManager.listenOnce(this._videoElement, Html5Events.ERROR, this._onError.bind(this, reject));
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
         }

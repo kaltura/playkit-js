@@ -14,7 +14,7 @@ const logger = LoggerFactory.getLogger("PluginManager");
 /** The PluginManager responsible for register plugins definitions and store plugins instances.
  * @classdesc
  */
-export default class PluginManager {
+export default class PluginManager  {
   /**
    * The registry of the plugins.
    * Maps plugin's name to his class.
