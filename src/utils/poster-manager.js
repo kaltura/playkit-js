@@ -76,6 +76,17 @@ class PosterManager {
   }
 
   /**
+   * set src & Show the poster image
+   * @public
+   * @param {string} posterUrl - the poster image URL
+   * @returns {void}
+   */
+  setAndShow(posterUrl: ?string): void {
+    this.setSrc(posterUrl);
+    this.show;
+  }
+
+  /**
    * Show the poster image
    * @public
    * @private
