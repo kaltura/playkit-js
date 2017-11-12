@@ -320,8 +320,8 @@ export default class Player extends FakeEventTarget {
     this._textStyle = new TextStyle();
     this._createReadyPromise();
     this._createPlayerContainer();
+    this._appendPosterEl();
     this.configure(config);
-    (this.config.playback && !this.config.playback.autoplay) && this._appendPosterEl();
     this._repositionCuesTimeout = false;
   }
 
@@ -1271,11 +1271,13 @@ export default class Player extends FakeEventTarget {
           .then((capabilities) => {
             if (capabilities.autoplay) {
               Player._logger.debug("Start autoplay");
+              this._posterManager.hide();
               this.play();
             } else {
               if (allowMutedAutoPlay) {
                 Player._logger.debug("Fallback to muted autoplay");
                 this.muted = true;
+                this._posterManager.hide();
                 this.play();
                 this.dispatchEvent(new FakeEvent(CustomEvents.FALLBACK_TO_MUTED_AUTOPLAY));
               } else {
