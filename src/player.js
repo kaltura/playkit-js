@@ -306,6 +306,9 @@ export default class Player extends FakeEventTarget {
    */
   constructor(config: Object = {}) {
     super();
+    if (config.logLevel && LogLevel[config.logLevel]){
+      setLogLevel(LogLevel[config.logLevel]);
+    }
     this._env = Env;
     this._tracks = [];
     this._firstPlay = true;
@@ -322,9 +325,6 @@ export default class Player extends FakeEventTarget {
     this._createPlayerContainer();
     this._appendPosterEl();
     this.configure(config);
-    if (config.logLevel && this.LogLevel[config.logLevel]){
-      setLogLevel(this.LogLevel[config.logLevel]);
-    }
     this._repositionCuesTimeout = false;
   }
 
