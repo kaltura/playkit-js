@@ -348,6 +348,7 @@ export default class Player extends FakeEventTarget {
         this._appendEngineEl();
         this._attachMedia();
         this._handlePlaybackOptions();
+        this._posterManager.setSrc(this._config.metadata.poster);
         this._handleAutoPlay();
         if (receivedSourcesWhenHasEngine) {
           Player._logger.debug('Change source ended');
@@ -1278,7 +1279,7 @@ export default class Player extends FakeEventTarget {
                 this.dispatchEvent(new FakeEvent(CustomEvents.FALLBACK_TO_MUTED_AUTOPLAY));
               } else {
                 Player._logger.warn("Autoplay failed, pause player");
-                this._posterManager.setAndShow(this._config.metadata.poster);
+                this._posterManager.show();
                 this.load();
                 this.ready().then(() => this.pause());
                 this.dispatchEvent(new FakeEvent(CustomEvents.AUTOPLAY_FAILED));
@@ -1287,7 +1288,7 @@ export default class Player extends FakeEventTarget {
           });
       }
     } else {
-      this._posterManager.setAndShow(this._config.metadata.poster);
+      this._posterManager.show();
     }
   }
 

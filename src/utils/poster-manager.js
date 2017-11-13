@@ -28,8 +28,8 @@ class PosterManager {
   setSrc(posterUrl: ?string): void {
     if (posterUrl) {
       this._posterUrl = posterUrl;
-      Utils.Dom.setStyle(this._el, "background-color", "black");
       Utils.Dom.setStyle(this._el, "background-image", `url("${this._posterUrl}")`);
+      this.hide();
     }
   }
 
@@ -73,17 +73,6 @@ class PosterManager {
     if (this._el) {
       Utils.Dom.removeChild(this._el.parentNode, this._el);
     }
-  }
-
-  /**
-   * set src & Show the poster image
-   * @public
-   * @param {string} posterUrl - the poster image URL
-   * @returns {void}
-   */
-  setAndShow(posterUrl: ?string): void {
-    this.setSrc(posterUrl);
-    this.show;
   }
 
   /**
