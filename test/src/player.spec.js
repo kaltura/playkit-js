@@ -2671,7 +2671,7 @@ describe('_resetTextCuesAndReposition', function () {
   });
 });
 
-describe('logger', ()=>{
+describe('logger', () => {
   it('should return the current log level', ()=>{
     const player = new Player();
     const currentLogLevel = player.getLogLevel();
