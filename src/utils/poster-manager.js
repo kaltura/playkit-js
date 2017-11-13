@@ -28,8 +28,8 @@ class PosterManager {
   setSrc(posterUrl: ?string): void {
     if (posterUrl) {
       this._posterUrl = posterUrl;
-      Utils.Dom.setStyle(this._el, "background-color", "black");
       Utils.Dom.setStyle(this._el, "background-image", `url("${this._posterUrl}")`);
+      this.hide();
     }
   }
 
