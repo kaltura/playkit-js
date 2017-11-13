@@ -306,9 +306,6 @@ export default class Player extends FakeEventTarget {
    */
   constructor(config: Object = {}) {
     super();
-    if (config.logLevel && LogLevel[config.logLevel]){
-      setLogLevel(LogLevel[config.logLevel]);
-    }
     this._env = Env;
     this._tracks = [];
     this._firstPlay = true;
@@ -338,6 +335,9 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   configure(config: Object): void {
+    if (config.logLevel && LogLevel[config.logLevel]){
+      setLogLevel(LogLevel[config.logLevel]);
+    }
     Utils.Object.mergeDeep(this._config, config);
     this._configureOrLoadPlugins(config.plugins);
     if (!Utils.Object.isEmptyObject(config.sources)) {
