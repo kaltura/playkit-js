@@ -8,8 +8,7 @@ const packageData = require("./package.json");
 let plugins = [
   new webpack.DefinePlugin({
     __VERSION__: JSON.stringify(packageData.version),
-    __NAME__: JSON.stringify(packageData.name),
-    __PACKAGE_URL__: JSON.stringify(packageData.repository.url)
+    __NAME__: JSON.stringify(packageData.name)
   })
 ];
 
