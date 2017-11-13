@@ -8,7 +8,11 @@ export default class PlayerError extends FakeEventTarget{
 
   constructor(context: Object){
     super();
-    this._context = context;
+    if (context){
+      this._context = context;
+    }
+
+
   }
 
   /**
@@ -43,6 +47,7 @@ export default class PlayerError extends FakeEventTarget{
    * contains the static class
    * @param {any} error - error object
    * @returns {void}
+   * @public
    */
   dispatchFromContext(error: any): void{
     const message = this.createError(error);
@@ -53,6 +58,7 @@ export default class PlayerError extends FakeEventTarget{
    * dispatches an error event
    * @param {any} error - error object
    * @returns {void}
+   * @public
    */
   dispatch(error: any): void{
     const message = this.createError(error)
@@ -109,7 +115,7 @@ export default class PlayerError extends FakeEventTarget{
     'PLAYER': 7,
 
     /** Errors related to cast. */
-    'CAST': 8,
+    'ADS': 8,
 
     /** Errors in the database storage (offline). */
     'STORAGE': 9
