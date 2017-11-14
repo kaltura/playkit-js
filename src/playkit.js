@@ -1,6 +1,5 @@
 //@flow
 import Player from './player'
-import getLogger from './utils/logger'
 import BaseMediaSourceAdapter from './engines/html5/media-source/base-media-source-adapter'
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider'
 import {registerPlugin} from './plugin/plugin-manager'
