@@ -1918,7 +1918,6 @@ describe('configure', function () {
     });
 
     it('should load the previous playback config and initiate the new one on updating sources', function (done) {
-      debugger
       player = new Player({
         sources: sourcesConfig.MultipleSources,
         playback: {
