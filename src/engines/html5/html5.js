@@ -10,6 +10,8 @@ import {TextTrack as PKTextTrack} from '../../track/text-track'
 import {Cue} from '../../track/vtt-cue'
 import {Dom, Generator} from '../../utils/index'
 import TextCueChangedEvent from '../../event/custom-events/text-cue-changed-event'
+import Html5AutoPlayCapability from './capabilities/html5-autoplay'
+import Html5IsSupportedCapability from './capabilities/html5-is-supported'
 
 /**
  * Html5 engine for playback.
@@ -54,7 +56,16 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _canLoadMediaSourceAdapterPromise: Promise<*>;
 
   /**
+   * The html5 capabilities handlers.
+   * @private
+   * @static
+   */
+  static _capabilities: Array<typeof ICapability> = [Html5AutoPlayCapability, Html5IsSupportedCapability];
+
+  /**
    * @type {string} - The engine id.
+   * @public
+   * @static
    */
   static id: string = "html5";
 
@@ -80,6 +91,33 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   static canPlaySource(source: Source, preferNative: boolean): boolean {
     return MediaSourceProvider.canPlaySource(source, preferNative);
+  }
+
+  /**
+   * Runs the html5 capabilities tests.
+   * @returns {void}
+   * @public
+   * @static
+   */
+  static runCapabilities(): void {
+    Html5._capabilities.forEach(capability => capability.runCapability());
+  }
+
+  /**
+   * Gets the html5 capabilities.
+   * @return {Promise<Object>} - The html5 capabilities object.
+   * @public
+   * @static
+   */
+  static getCapabilities(): Promise<Object> {
+    let promises = [];
+    Html5._capabilities.forEach(capability => promises.push(capability.getCapability()));
+    return Promise.all(promises)
+      .then((arrayOfResults) => {
+        const mergedResults = {};
+        arrayOfResults.forEach(res => Object.assign(mergedResults, res));
+        return {[Html5.id]: mergedResults};
+      });
   }
 
   /**
@@ -282,7 +320,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   play(): void {
-    this._el.play();
+    let playPromise = this._el.play();
+    if (playPromise) {
+      playPromise.catch(() => this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED)));
+    }
   }
 
   /**
@@ -661,27 +702,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   get playsinline(): boolean {
     return this._el.getAttribute('playsinline') === '';
-  }
-
-  /**
-   * Test video element to check if html5 engine is supported.
-   */
-  static TEST_VID: HTMLVideoElement;
-
-  /**
-   * Checks if the html5 engine is supported.
-   * @returns {boolean} - The isSupported result.
-   * @static
-   * @public
-   */
-  static isSupported() {
-    try {
-      Html5.TEST_VID = Dom.createElement('video');
-      Html5.TEST_VID.volume = 0.5;
-    } catch (e) {
-      return false;
-    }
-    return !!Html5.TEST_VID.canPlayType;
   }
 
   /**

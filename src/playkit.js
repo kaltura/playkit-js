@@ -16,6 +16,8 @@ import TextTrack from './track/text-track'
 import TextStyle from './track/text-style'
 import * as Utils from './utils/index'
 
+Player.runCapabilities();
+
 declare var __VERSION__: string;
 declare var __NAME__: string;
 declare var __PACKAGE_URL__: string;
@@ -57,5 +59,9 @@ export {__NAME__ as PLAYER_NAME};
 
 // Export base DRM protocol
 export {BaseDrmProtocol};
+
+// Export the player capabilities
+const getCapabilities = Player.getCapabilities;
+export {getCapabilities};
 
 export default loadPlayer;

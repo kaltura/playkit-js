@@ -56,6 +56,7 @@ declare type PlayerConfig = {
     playsinline: boolean,
     preload: string,
     autoplay: boolean,
+    allowMutedAutoPlay: boolean,
     muted: boolean,
     options: PlaybackOptions,
     preferNative: PreferNative,

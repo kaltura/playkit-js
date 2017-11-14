@@ -2,6 +2,100 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.16.0"></a>
+# [0.16.0](https://github.com/kaltura/playkit-js/compare/v0.15.0...v0.16.0) (2017-11-07)
+
+
+### Bug Fixes
+
+* **FEC-7380, FEC-7381:** there are captions displayed when the captions are supposed to be 'off' ([#157](https://github.com/kaltura/playkit-js/issues/157)) ([4b52b80](https://github.com/kaltura/playkit-js/commit/4b52b80))
+
+
+### Features
+
+* handle native selection of tracks ([#156](https://github.com/kaltura/playkit-js/issues/156)) ([6da107c](https://github.com/kaltura/playkit-js/commit/6da107c))
+
+
+
+<a name="0.15.0"></a>
+# [0.15.0](https://github.com/kaltura/playkit-js/compare/v0.14.2...v0.15.0) (2017-11-01)
+
+
+### Bug Fixes
+
+* **FEC-7266:** reposition & resize captions when changing to/from full screen ([#155](https://github.com/kaltura/playkit-js/issues/155)) ([d2892b8](https://github.com/kaltura/playkit-js/commit/d2892b8))
+
+
+### Features
+
+* handle fullscreen ([#154](https://github.com/kaltura/playkit-js/issues/154)) ([3373c8c](https://github.com/kaltura/playkit-js/commit/3373c8c))
+
+
+
+<a name="0.14.2"></a>
+## [0.14.2](https://github.com/kaltura/playkit-js/compare/v0.14.1...v0.14.2) (2017-10-30)
+
+
+### Bug Fixes
+
+* **FEC-7335:** reset subtitle display on player reset ([#152](https://github.com/kaltura/playkit-js/issues/152)) ([f48efa1](https://github.com/kaltura/playkit-js/commit/f48efa1))
+* empty captions menu when playing native hls ([#153](https://github.com/kaltura/playkit-js/issues/153)) ([623d83a](https://github.com/kaltura/playkit-js/commit/623d83a))
+
+
+
+<a name="0.14.1"></a>
+## [0.14.1](https://github.com/kaltura/playkit-js/compare/v0.14.0...v0.14.1) (2017-10-26)
+
+
+### Bug Fixes
+
+* **FEC-7106:** captions on IE & edge ([#147](https://github.com/kaltura/playkit-js/issues/147)) ([4447c1d](https://github.com/kaltura/playkit-js/commit/4447c1d))
+* **FEC-7345:** only off option appears in text track menu (safari) ([#148](https://github.com/kaltura/playkit-js/issues/148)) ([cff8e4e](https://github.com/kaltura/playkit-js/commit/cff8e4e))
+* **FEC-7356:** player is loading twice for 'preload=auto' and 'autoplay=true' ([#149](https://github.com/kaltura/playkit-js/issues/149)) ([98e7919](https://github.com/kaltura/playkit-js/commit/98e7919))
+* filter empty video element text tracks ([#150](https://github.com/kaltura/playkit-js/issues/150)) ([58ada7c](https://github.com/kaltura/playkit-js/commit/58ada7c))
+
+
+
+<a name="0.14.0"></a>
+# [0.14.0](https://github.com/kaltura/playkit-js/compare/v0.13.1...v0.14.0) (2017-10-25)
+
+
+### Features
+
+* **autoplay:** manage autoplay promise and allowMutedAutoPlay flag ([#144](https://github.com/kaltura/playkit-js/issues/144)) ([79a2610](https://github.com/kaltura/playkit-js/commit/79a2610))
+
+
+
+<a name="0.13.1"></a>
+## [0.13.1](https://github.com/kaltura/playkit-js/compare/v0.13.0...v0.13.1) (2017-10-25)
+
+
+### Bug Fixes
+
+* **FEC-7116:** change playinline to true by default ([aa85d07](https://github.com/kaltura/playkit-js/commit/aa85d07))
+* **fec-7334:** the player state has not saved on change media ([#145](https://github.com/kaltura/playkit-js/issues/145)) ([b3c8cf2](https://github.com/kaltura/playkit-js/commit/b3c8cf2))
+* **FEC-7348:** fix fairplay exception ([#146](https://github.com/kaltura/playkit-js/issues/146)) ([f4e5911](https://github.com/kaltura/playkit-js/commit/f4e5911))
+
+
+
+<a name="0.13.0"></a>
+# [0.13.0](https://github.com/kaltura/playkit-js/compare/v0.12.0...v0.13.0) (2017-10-23)
+
+
+### Bug Fixes
+
+* **FEC-7046:** seek to duration safety using offset ([#135](https://github.com/kaltura/playkit-js/issues/135)) ([85ad548](https://github.com/kaltura/playkit-js/commit/85ad548))
+* **FEC-7242:** subtitles transition in safari 9.0  ([#136](https://github.com/kaltura/playkit-js/issues/136)) ([4d14ade](https://github.com/kaltura/playkit-js/commit/4d14ade))
+* **FEC-7317:** check if VTTCue and TextTrackCue are not undefined ([#137](https://github.com/kaltura/playkit-js/issues/137)) ([604f7a6](https://github.com/kaltura/playkit-js/commit/604f7a6))
+* **README:** typos and travis ref ([#141](https://github.com/kaltura/playkit-js/issues/141)) ([e57027e](https://github.com/kaltura/playkit-js/commit/e57027e))
+
+
+### Features
+
+* **cvaa:** add TEXT_STYLE_CHANGED event ([#138](https://github.com/kaltura/playkit-js/issues/138)) ([ee67e3c](https://github.com/kaltura/playkit-js/commit/ee67e3c))
+
+
+
 <a name="0.12.0"></a>
 # [0.12.0](https://github.com/kaltura/playkit-js/compare/v0.11.0...v0.12.0) (2017-10-16)
 

@@ -39,6 +39,7 @@
   background-size: contain;
   background-position: center center;
   background-repeat: no-repeat;
+  background-color: #000;
 }
 
 .playkit-subtitles {

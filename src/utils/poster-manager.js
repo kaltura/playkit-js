@@ -29,6 +29,7 @@ class PosterManager {
     if (posterUrl) {
       this._posterUrl = posterUrl;
       Dom.setStyle(this._el, "background-image", `url("${this._posterUrl}")`);
+      this.hide();
     }
   }
 

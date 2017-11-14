@@ -25,7 +25,7 @@ export default class Track {
     if (typeof inputLang === 'string' && typeof trackLang === 'string') {
       inputLang = inputLang.toLowerCase();
       trackLang = trackLang.toLowerCase();
-      return inputLang.startsWith(trackLang) || trackLang.startsWith(inputLang);
+      return inputLang ? (inputLang.startsWith(trackLang) || trackLang.startsWith(inputLang)) : false;
     }
     return false;
   }

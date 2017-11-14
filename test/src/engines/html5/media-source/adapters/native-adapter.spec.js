@@ -238,16 +238,19 @@ describe('NativeAdapter: _getParsedTracks', function () {
   let video;
   let track1;
   let track2;
+  let track3;
   let nativeInstance;
 
   before(() => {
     track1 = document.createElement("track");
     track2 = document.createElement("track");
+    track3 = document.createElement("track");
     track1.kind = 'subtitles';
     track1.label = 'English';
     track1.default = true;
     track2.kind = 'captions';
     track2.srclang = 'fr';
+    track3.kind = 'captions';
   });
 
   beforeEach(() => {
@@ -294,6 +297,17 @@ describe('NativeAdapter: _getParsedTracks', function () {
           track.language.should.equal(video.textTracks[track.index].language);
         }
       });
+      done();
+    });
+  });
+
+  it('should not return parsed of text track without language or label', (done) => {
+    video.appendChild(track1);
+    video.appendChild(track2);
+    video.appendChild(track3);
+    nativeInstance.load().then((data) => {
+      video.textTracks.length.should.equal(3);
+      data.tracks.filter((track) => track instanceof TextTrack).length.should.be.equal(2);
       done();
     });
   });
