@@ -1,11 +1,11 @@
 // @flow
 /* eslint-disable no-unused-vars */
-import {LoggerFactory, PlayerError} from '../utils/index'
+import {getLogger, PlayerError} from '../utils/index'
 import DrmSupport from './drm-support'
 import {DrmScheme} from './drm-scheme'
 
 export default class BaseDrmProtocol implements IDrmProtocol {
-  static getLogger: any = LoggerFactory.getLogger;
+  static getLogger: any = getLogger;
   static DrmSupport: (typeof DrmSupport) = DrmSupport;
   static DrmScheme: { [scheme: string]: string } = DrmScheme;
 

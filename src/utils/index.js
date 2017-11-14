@@ -5,7 +5,7 @@ import Generator from './generator'
 import Dom from './dom'
 import Env from './env'
 import Locale from './locale'
-import LoggerFactory from './logger'
+import getLogger from './logger'
 import MultiMap from './multi-map'
 import PosterManager from './poster-manager'
 import PlayerError from './player-error'
@@ -18,7 +18,7 @@ export {
   Dom,
   Env,
   Locale,
-  LoggerFactory,
+  getLogger,
   MultiMap,
   PosterManager,
   PlayerError

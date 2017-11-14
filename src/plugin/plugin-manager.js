@@ -1,6 +1,6 @@
 //@flow
 import BasePlugin from './base-plugin'
-import {PlayerError, LoggerFactory} from '../utils/index'
+import {PlayerError, getLogger} from '../utils/index'
 import Player from '../player'
 
 /**
@@ -8,7 +8,7 @@ import Player from '../player'
  * @private
  * @const
  */
-const logger = LoggerFactory.getLogger("PluginManager");
+const logger = getLogger("PluginManager");
 
 /** The PluginManager responsible for register plugins definitions and store plugins instances.
  * @classdesc

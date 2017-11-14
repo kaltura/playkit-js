@@ -1,6 +1,6 @@
 //@flow
 import Player from '../player'
-import {PlayerError, LoggerFactory, Obj, Str} from '../utils/index'
+import {PlayerError, getLogger, Obj, Str} from '../utils/index'
 import EventManager from '../event/event-manager'
 import FakeEvent from '../event/fake-event'
 
@@ -81,7 +81,7 @@ export default class BasePlugin implements IPlugin {
     this.name = name;
     this.player = player;
     this.eventManager = new EventManager();
-    this.logger = LoggerFactory.getLogger(Str.capitlize(this.name));
+    this.logger = getLogger(Str.capitlize(this.name));
     this.config = {};
     Obj.mergeDeep(this.config, this.constructor.defaultConfig, config);
   }

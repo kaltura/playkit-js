@@ -20,10 +20,6 @@ Player.runCapabilities();
 
 declare var __VERSION__: string;
 declare var __NAME__: string;
-declare var __PACKAGE_URL__: string;
-
-Utils.LoggerFactory.getLogger().log(`%c ${__NAME__} ${__VERSION__}`, "color: #98ff98;  font-size: large");
-Utils.LoggerFactory.getLogger().log(`%c For more details see ${__PACKAGE_URL__}`, "color: #98ff98;");
 
 /**
  * @param {Object} config - The configuration of the player

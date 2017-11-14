@@ -1,11 +1,11 @@
 // @flow
-import {LoggerFactory, Env} from '../utils/index'
+import {getLogger, Env} from '../utils/index'
 import {DrmScheme} from './drm-scheme'
 
 const NOT_SUPPORTED: string = 'not_supported_drm_playback';
 
 export default class DrmSupport {
-  static _logger: any = LoggerFactory.getLogger('DrmSupport');
+  static _logger: any = getLogger('DrmSupport');
   static _Browsers: BrowserHandlers = {
     Safari: () => {
       const device = Env.device.type;

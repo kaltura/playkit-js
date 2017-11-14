@@ -1,5 +1,6 @@
 //@flow
-import {Locale, LoggerFactory, PosterManager, Env, Obj, Num, Dom, Generator} from './utils/index'
+import {Locale, getLogger, PosterManager, Env, Obj, Num, Dom, Generator} from './utils/index'
+import {LogLevel, getLogLevel, setLogLevel} from './utils/logger'
 import TracksChangedEvent from './event/custom-events/tracks-changed-event'
 import MuteChangeEvent from './event/custom-events/mute-change-event'
 import TextTrackChangedEvent from './event/custom-events/text-track-changed-event'
@@ -107,7 +108,7 @@ export default class Player extends FakeEventTarget {
    * @static
    * @private
    */
-  static _logger: any = LoggerFactory.getLogger('Player');
+  static _logger: any = getLogger('Player');
   /**
    * The available engines of the player.
    * @type {Array<typeof IEngine>}
@@ -335,6 +336,9 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   configure(config: PlayerConfig): void {
+    if (config.logLevel && LogLevel[config.logLevel]) {
+      setLogLevel(LogLevel[config.logLevel]);
+    }
     Obj.mergeDeep(this._config, config);
     this._configureOrLoadPlugins(config.plugins);
     if (!Obj.isEmptyObject(config.sources)) {
@@ -1591,5 +1595,32 @@ export default class Player extends FakeEventTarget {
     return Track;
   }
 
+  /**
+   * Get the player log level.
+   * @returns {Object} - The log levels of the player.
+   * @public
+   */
+  get LogLevel(): { [level: string]: Object } {
+    return LogLevel;
+  }
+
   // </editor-fold>
+  /**
+   * get the log level
+   * @param {?string} name - the logger name
+   * @returns {Object} - the log level
+   */
+  getLogLevel(name?: string): Object {
+    return getLogLevel(name);
+  }
+
+  /**
+   * sets the logger level
+   * @param {Object} level - the log level
+   * @param {?string} name - the logger name
+   * @returns {void}
+   */
+  setLogLevel(level: Object, name?: string) {
+    setLogLevel(level, name);
+  }
 }
