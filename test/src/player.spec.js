@@ -1136,7 +1136,7 @@ describe('Fullscreen API', () => {
 
   describe('notifyEnterFullscreen', () => {
     it("should fire ENTER_FULLSCREEN event", (done) => {
-      player.addEventListener(player.Event.ENTER_FULLSCREEN, () => {
+      player.addEventListener(player.Event.Type.ENTER_FULLSCREEN, () => {
         player.isFullscreen().should.be.true;
         done();
       });
@@ -1145,7 +1145,7 @@ describe('Fullscreen API', () => {
 
     it("should not fire ENTER_FULLSCREEN event twice", (done) => {
       let callCount = 0;
-      player.addEventListener(player.Event.ENTER_FULLSCREEN, () => {
+      player.addEventListener(player.Event.Type.ENTER_FULLSCREEN, () => {
         callCount++;
         player.isFullscreen().should.be.true;
         player.notifyEnterFullscreen();
@@ -1163,11 +1163,11 @@ describe('Fullscreen API', () => {
 
   describe('notifyExitFullscreen', () => {
     it("should fire EXIT_FULLSCREEN event", (done) => {
-      player.addEventListener(player.Event.EXIT_FULLSCREEN, () => {
+      player.addEventListener(player.Event.Type.EXIT_FULLSCREEN, () => {
         player.isFullscreen().should.be.false;
         done();
       });
-      player.addEventListener(player.Event.ENTER_FULLSCREEN, () => {
+      player.addEventListener(player.Event.Type.ENTER_FULLSCREEN, () => {
         player.isFullscreen().should.be.true;
         player.notifyExitFullscreen();
       });
@@ -1176,7 +1176,7 @@ describe('Fullscreen API', () => {
 
     it("should not fire EXIT_FULLSCREEN event twice", (done) => {
       let callCount = 0;
-      player.addEventListener(player.Event.EXIT_FULLSCREEN, () => {
+      player.addEventListener(player.Event.Type.EXIT_FULLSCREEN, () => {
         callCount++;
         player.isFullscreen().should.be.false;
         player.notifyExitFullscreen();
@@ -1188,7 +1188,7 @@ describe('Fullscreen API', () => {
           }
         }, 500);
       });
-      player.addEventListener(player.Event.ENTER_FULLSCREEN, () => {
+      player.addEventListener(player.Event.Type.ENTER_FULLSCREEN, () => {
         player.isFullscreen().should.be.true;
         player.notifyExitFullscreen();
       });
@@ -1196,7 +1196,7 @@ describe('Fullscreen API', () => {
     });
 
     it("should not fire EXIT_FULLSCREEN event when player is not in fullscreen state", (done) => {
-      player.addEventListener(player.Event.EXIT_FULLSCREEN, () => done(new Error('fail')));
+      player.addEventListener(player.Event.Type.EXIT_FULLSCREEN, () => done(new Error('fail')));
       player.notifyExitFullscreen();
       setTimeout(() => done(), 500);
     });
@@ -1204,12 +1204,12 @@ describe('Fullscreen API', () => {
 
   describe('enterFullscreen', () => {
     it("should fire REQUESTED_ENTER_FULLSCREEN event", (done) => {
-      player.addEventListener(player.Event.REQUESTED_ENTER_FULLSCREEN, () => done());
+      player.addEventListener(player.Event.Type.REQUESTED_ENTER_FULLSCREEN, () => done());
       player.enterFullscreen();
     });
 
     it("should not fire REQUESTED_ENTER_FULLSCREEN event when player is already in fullscreen", (done) => {
-      player.addEventListener(player.Event.REQUESTED_ENTER_FULLSCREEN, () => done(new Error('fail')));
+      player.addEventListener(player.Event.Type.REQUESTED_ENTER_FULLSCREEN, () => done(new Error('fail')));
       player.notifyEnterFullscreen();
       player.enterFullscreen();
       setTimeout(() => done(), 500);
@@ -1218,13 +1218,13 @@ describe('Fullscreen API', () => {
 
   describe('exitFullscreen', () => {
     it("should fire REQUESTED_EXIT_FULLSCREEN event", (done) => {
-      player.addEventListener(player.Event.REQUESTED_EXIT_FULLSCREEN, () => done());
+      player.addEventListener(player.Event.Type.REQUESTED_EXIT_FULLSCREEN, () => done());
       player.notifyEnterFullscreen();
       player.exitFullscreen();
     });
 
     it("should not fire REQUESTED_EXIT_FULLSCREEN event when player is not in fullscreen", (done) => {
-      player.addEventListener(player.Event.REQUESTED_EXIT_FULLSCREEN, () => done(new Error('fail')));
+      player.addEventListener(player.Event.Type.REQUESTED_EXIT_FULLSCREEN, () => done(new Error('fail')));
       player.notifyExitFullscreen();
       player.exitFullscreen();
       setTimeout(() => done(), 500);
@@ -1918,6 +1918,7 @@ describe('configure', function () {
     });
 
     it('should load the previous playback config and initiate the new one on updating sources', function (done) {
+      debugger
       player = new Player({
         sources: sourcesConfig.MultipleSources,
         playback: {
@@ -1932,7 +1933,7 @@ describe('configure', function () {
       player.config.playback.muted.should.be.true;
       player.ready().then(() => {
         player.src.should.equals(window.location.origin + sourcesConfig.MultipleSources.progressive[0].url);
-        player.addEventListener(player.Event.VOLUME_CHANGE, () => {
+        player.addEventListener(player.Event.Type.VOLUME_CHANGE, () => {
           let newProgressiveConfig = {
             progressive: [sourcesConfig.MultipleSources.progressive[1]]
           };

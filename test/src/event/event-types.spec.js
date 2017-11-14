@@ -54,6 +54,12 @@ function Html5Events() {
 
 function CustomEvents() {
   return {
+    ENTER_FULLSCREEN: 'enterfullscreen',
+    EXIT_FULLSCREEN: 'exitfullscreen',
+    REQUESTED_ENTER_FULLSCREEN: 'requestedenterfullscreen',
+    REQUESTED_EXIT_FULLSCREEN: 'requestedexitfullscreen',
+    AUTOPLAY_FAILED: 'autoplayfailed',
+    FALLBACK_TO_MUTED_AUTOPLAY: 'fallbacktomutedautoplay',
     CHANGE_SOURCE_STARTED: 'changesourcestarted',
     CHANGE_SOURCE_ENDED: 'changesourceended', MUTE_CHANGE: 'mutechange',
     VIDEO_TRACK_CHANGED: 'videotrackchanged',
