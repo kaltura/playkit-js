@@ -5,7 +5,7 @@ import State from './state'
 import PlayerStates from './state-types'
 import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../event/events'
 import FakeEvent from '../event/fake-event'
-import LoggerFactory from '../utils/logger'
+import getLogger from '../utils/logger'
 
 /**
  * This class responsible to manage all the state machine of the player.
@@ -136,7 +136,7 @@ export default class StateManager {
    */
   constructor(player: Player) {
     this._player = player;
-    this._logger = LoggerFactory.getLogger("StateManager");
+    this._logger = getLogger("StateManager");
     this._eventManager = new EventManager();
     this._history = [];
     this._prevState = null;

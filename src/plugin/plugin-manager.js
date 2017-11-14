@@ -2,14 +2,14 @@
 import BasePlugin from './base-plugin'
 import PlayerError from '../utils/player-error'
 import Player from '../player'
-import LoggerFactory from '../utils/logger'
+import getLogger from '../utils/logger'
 
 /**
  * The logger of the PluginManager class.
  * @private
  * @const
  */
-const logger = LoggerFactory.getLogger("PluginManager");
+const logger = getLogger("PluginManager");
 
 /** The PluginManager responsible for register plugins definitions and store plugins instances.
  * @classdesc

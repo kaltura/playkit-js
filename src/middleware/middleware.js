@@ -1,7 +1,7 @@
 // @flow
 import MultiMap from '../utils/multi-map'
 import BaseMiddleware from './base-middleware'
-import LoggerFactory from '../utils/logger'
+import getLogger from '../utils/logger'
 
 /**
  * Generic middleware implementation.
@@ -33,7 +33,7 @@ export default class Middleware {
   constructor(actions: { [action: string]: string }) {
     this._actions = actions;
     this._middlewares = new MultiMap();
-    this._logger = LoggerFactory.getLogger("Middleware");
+    this._logger = getLogger("Middleware");
   }
 
   /**

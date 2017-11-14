@@ -20,8 +20,7 @@
     "should": true,
     "sinon": true,
     "__VERSION__": true,
-    "__NAME__": true,
-    "__PACKAGE_URL__": true
+    "__NAME__": true
   },
   "rules": {
     "mocha-no-only/mocha-no-only": "off",

@@ -1,10 +1,10 @@
 import BaseMiddleware from '../../../src/middleware/base-middleware'
 import Middleware from '../../../src/middleware/middleware'
-import LoggerFactory from '../../../src/utils/logger'
+import getLogger from '../../../src/utils/logger'
 
 class M1 extends BaseMiddleware {
   id = 'M1';
-  logger = LoggerFactory.getLogger(this.id);
+  logger = getLogger(this.id);
 
   drink(next) {
     this.logger.debug('drink');
@@ -19,7 +19,7 @@ class M1 extends BaseMiddleware {
 
 class M2 extends BaseMiddleware {
   id = 'M2';
-  logger = LoggerFactory.getLogger(this.id);
+  logger = getLogger(this.id);
 
   drink(next) {
     this.logger.debug('drink');
@@ -34,7 +34,7 @@ class M2 extends BaseMiddleware {
 
 class M3 extends BaseMiddleware {
   id = 'M3';
-  logger = LoggerFactory.getLogger(this.id);
+  logger = getLogger(this.id);
 
   drink(next) {
     this.logger.debug('drink');

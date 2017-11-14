@@ -4,7 +4,7 @@ import FakeEvent from '../../../event/fake-event'
 import FakeEventTarget from '../../../event/fake-event-target'
 import PlayerError from '../../../utils/player-error'
 import {CUSTOM_EVENTS} from '../../../event/events'
-import LoggerFactory from '../../../utils/logger'
+import getLogger from '../../../utils/logger'
 import Track from '../../../track/track'
 import VideoTrack from '../../../track/video-track'
 import AudioTrack from '../../../track/audio-track'
@@ -22,7 +22,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @type {Function}
    * @static
    */
-  static getLogger: Function = LoggerFactory.getLogger;
+  static getLogger: Function = getLogger;
 
   /**
    * The adapter config.
