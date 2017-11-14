@@ -47,6 +47,7 @@ declare type PlayerConfig = {
   plugins: Object,
   metadata: Metadata,
   session: Session,
+  logLevel: string,
   playback: {
     startTime: number,
     audioLanguage: string,

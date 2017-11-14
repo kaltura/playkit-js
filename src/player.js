@@ -1,6 +1,6 @@
 //@flow
 import {Locale, getLogger, PosterManager, Env, Obj, Num, Dom, Generator} from './utils/index'
-import {LogLevel, getLogLevel, setLogLevel} from './utils/logger'
+import {LogLevelType, getLogLevel, setLogLevel} from './utils/logger'
 import TracksChangedEvent from './event/custom-events/tracks-changed-event'
 import MuteChangeEvent from './event/custom-events/mute-change-event'
 import TextTrackChangedEvent from './event/custom-events/text-track-changed-event'
@@ -331,35 +331,12 @@ export default class Player extends FakeEventTarget {
   // <editor-fold desc="Playback API">
 
   /**
-   * Configures the player according to a given configuration.
-   * @param {PlayerConfig} config - The configuration for the player instance.
-   * @returns {void}
+   * Get the player log level.
+   * @returns {Object} - The log levels of the player.
+   * @public
    */
-  configure(config: PlayerConfig): void {
-    if (config.logLevel && LogLevel[config.logLevel]) {
-      setLogLevel(LogLevel[config.logLevel]);
-    }
-    Obj.mergeDeep(this._config, config);
-    this._configureOrLoadPlugins(config.plugins);
-    if (!Obj.isEmptyObject(config.sources)) {
-      const receivedSourcesWhenHasEngine: boolean = !!this._engine;
-      if (receivedSourcesWhenHasEngine) {
-        this._reset();
-        Player._logger.debug('Change source started');
-        this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
-      }
-      if (this._selectEngineByPriority()) {
-        this._appendEngineEl();
-        this._attachMedia();
-        this._handlePlaybackOptions();
-        this._posterManager.setSrc(this._config.metadata.poster);
-        this._handleAutoPlay();
-        if (receivedSourcesWhenHasEngine) {
-          Player._logger.debug('Change source ended');
-          this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_ENDED));
-        }
-      }
-    }
+  get LogLevel(): { [level: string]: Object } {
+    return LogLevelType;
   }
 
   /**
@@ -1596,12 +1573,35 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Get the player log level.
-   * @returns {Object} - The log levels of the player.
-   * @public
+   * Configures the player according to a given configuration.
+   * @param {PlayerConfig} config - The configuration for the player instance.
+   * @returns {void}
    */
-  get LogLevel(): { [level: string]: Object } {
-    return LogLevel;
+  configure(config: PlayerConfig): void {
+    if (config.logLevel && LogLevelType[config.logLevel]) {
+      setLogLevel(LogLevelType[config.logLevel]);
+    }
+    Obj.mergeDeep(this._config, config);
+    this._configureOrLoadPlugins(config.plugins);
+    if (!Obj.isEmptyObject(config.sources)) {
+      const receivedSourcesWhenHasEngine: boolean = !!this._engine;
+      if (receivedSourcesWhenHasEngine) {
+        this._reset();
+        Player._logger.debug('Change source started');
+        this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
+      }
+      if (this._selectEngineByPriority()) {
+        this._appendEngineEl();
+        this._attachMedia();
+        this._handlePlaybackOptions();
+        this._posterManager.setSrc(this._config.metadata.poster);
+        this._handleAutoPlay();
+        if (receivedSourcesWhenHasEngine) {
+          Player._logger.debug('Change source ended');
+          this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_ENDED));
+        }
+      }
+    }
   }
 
   // </editor-fold>

@@ -1,7 +1,7 @@
 //@flow
 import * as JsLogger from 'js-logger';
 
-const LogLevel: { [level: string]: Object } = {
+const LogLevelType: LogLevel = {
   "DEBUG": JsLogger.DEBUG,
   "INFO": JsLogger.INFO,
   "TIME": JsLogger.TIME,
@@ -44,4 +44,4 @@ function setLogLevel(level: Object, name?: string): void {
 }
 
 export default getLogger;
-export {LogLevel, getLogLevel, setLogLevel};
+export {LogLevelType, getLogLevel, setLogLevel};
