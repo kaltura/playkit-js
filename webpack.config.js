@@ -12,7 +12,7 @@ let plugins = [
   })
 ];
 
-if (PROD){
+if (PROD) {
   plugins.push(new webpack.optimize.UglifyJsPlugin({sourceMap: true}));
 }
 

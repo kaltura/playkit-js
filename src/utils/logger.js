@@ -29,7 +29,7 @@ function getLogger(name?: string): Object {
  * @param {?string} name - the logger name
  * @returns {Object} - the log level
  */
-function getLogLevel(name?: string): Object{
+function getLogLevel(name?: string): Object {
   return getLogger(name).getLevel();
 }
 
@@ -39,7 +39,7 @@ function getLogLevel(name?: string): Object{
  * @param {?string} name - the logger name
  * @returns {void}
  */
-function setLogLevel(level: Object, name?: string): void{
+function setLogLevel(level: Object, name?: string): void {
   getLogger(name).setLevel(level);
 }
 

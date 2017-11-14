@@ -335,7 +335,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   configure(config: Object): void {
-    if (config.logLevel && LogLevel[config.logLevel]){
+    if (config.logLevel && LogLevel[config.logLevel]) {
       setLogLevel(LogLevel[config.logLevel]);
     }
     Utils.Object.mergeDeep(this._config, config);
@@ -1618,7 +1618,7 @@ export default class Player extends FakeEventTarget {
    * @param {?string} name - the logger name
    * @returns {void}
    */
-  setLogLevel(level: Object, name?: string){
+  setLogLevel(level: Object, name?: string) {
     setLogLevel(level, name);
   }
 }
