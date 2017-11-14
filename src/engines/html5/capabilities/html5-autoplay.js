@@ -1,9 +1,9 @@
 // @flow
-import * as Utils from '../../../utils/util'
+import {Dom} from '../../../utils/index'
 import * as EncodingSources from '../../../assets/encoding-sources.json'
 
 export default class Html5AutoPlayCapability implements ICapability {
-  static _vid: HTMLVideoElement = Utils.Dom.createElement('video');
+  static _vid: HTMLVideoElement = Dom.createElement('video');
   static _promise: Promise<*>;
 
   /***
