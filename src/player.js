@@ -1133,7 +1133,7 @@ export default class Player extends FakeEventTarget {
           return this.dispatchEvent(event);
         });
       });
-      this._eventManager.listen(this._engine, Html5Events.SEEKED, () => {
+      this._eventManager.listen(this._engine, Html5EventType.SEEKED, () => {
         const browser = this._env.browser.name;
         if (browser === 'Edge' || browser === 'IE') {
           this._removeTextCuePatch();
@@ -1155,25 +1155,25 @@ export default class Player extends FakeEventTarget {
       });
       this._eventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._engine, CustomEvents.AUTOPLAY_FAILED, (event: FakeEvent) => {
+      this._eventManager.listen(this._engine, CustomEventType.AUTOPLAY_FAILED, (event: FakeEvent) => {
         this.pause();
         this.dispatchEvent(event)
       });
       this._eventManager.listen(this, Html5EventType.PLAY, this._onPlay.bind(this));
       this._eventManager.listen(this, Html5EventType.ENDED, this._onEnded.bind(this));
-      this._eventManager.listen(this, CustomEvents.MUTE_CHANGE, () => {
+      this._eventManager.listen(this, CustomEventType.MUTE_CHANGE, () => {
         this._playbackAttributesState.muted = this.muted;
       });
-      this._eventManager.listen(this, Html5Events.VOLUME_CHANGE, () => {
+      this._eventManager.listen(this, Html5EventType.VOLUME_CHANGE, () => {
         this._playbackAttributesState.volume = this.volume;
       });
-      this._eventManager.listen(this, Html5Events.RATE_CHANGE, () => {
+      this._eventManager.listen(this, Html5EventType.RATE_CHANGE, () => {
         this._playbackAttributesState.rate = this.playbackRate;
       });
-      this._eventManager.listen(this, CustomEvents.ENTER_FULLSCREEN, () => {
+      this._eventManager.listen(this, CustomEventType.ENTER_FULLSCREEN, () => {
         this._resetTextCuesAndReposition();
       });
-      this._eventManager.listen(this, CustomEvents.EXIT_FULLSCREEN, () => {
+      this._eventManager.listen(this, CustomEventType.EXIT_FULLSCREEN, () => {
         this._resetTextCuesAndReposition();
       });
     }

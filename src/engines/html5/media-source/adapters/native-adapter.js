@@ -221,7 +221,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (this._videoElement.textTracks.length > 0) {
       parseTracksAndResolve();
     } else {
-      this._eventManager.listenOnce(this._videoElement, Html5Events.CAN_PLAY, parseTracksAndResolve.bind(this));
+      this._eventManager.listenOnce(this._videoElement, Html5EventType.CAN_PLAY, parseTracksAndResolve.bind(this));
     }
   }
 
