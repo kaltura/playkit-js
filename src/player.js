@@ -332,10 +332,10 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Get the player log level.
-   * @returns {Object} - The log levels of the player.
+   * @returns {LogLevels} - The log levels of the player.
    * @public
    */
-  get LogLevel(): { [level: string]: LogLevel } {
+  get LogLevel(): LogLevels {
     return LogLevelType;
   }
 
