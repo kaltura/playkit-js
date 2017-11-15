@@ -7,7 +7,7 @@ import AudioTrack from '../../../../track/audio-track'
 import {TextTrack as PKTextTrack} from '../../../../track/text-track'
 import BaseMediaSourceAdapter from '../base-media-source-adapter'
 import FairPlay from '../../../../drm/fairplay'
-import {Env, Dom, LoggerFactory} from '../../../../utils/index'
+import {Env, Dom, getLogger} from '../../../../utils/index'
 import AbrModeChangedEvent from '../../../../event/custom-events/abr-mode-changed-event'
 import FakeEvent from '../../../../event/fake-event'
 
@@ -31,7 +31,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    * @static
    */
-  static _logger = LoggerFactory.getLogger(NativeAdapter.id);
+  static _logger = getLogger(NativeAdapter.id);
   /**
    * static video element for canPlayType testing
    * @member {} TEST_VIDEO

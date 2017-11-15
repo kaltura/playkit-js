@@ -335,7 +335,7 @@ export default class Player extends FakeEventTarget {
    * @returns {Object} - The log levels of the player.
    * @public
    */
-  get LogLevel(): { [level: string]: Object } {
+  get LogLevel(): { [level: string]: LogLevel } {
     return LogLevelType;
   }
 
@@ -952,6 +952,51 @@ export default class Player extends FakeEventTarget {
     if (this._fullscreen) {
       this.dispatchEvent(new FakeEvent(CustomEventType.REQUESTED_EXIT_FULLSCREEN));
     }
+  }
+
+  // </editor-fold>
+
+  // <editor-fold desc="Log API">
+
+  /**
+   * Configures the player according to a given configuration.
+   * @param {PlayerConfig} config - The configuration for the player instance.
+   * @returns {void}
+   */
+  configure(config: PlayerConfig): void {
+    if (config.logLevel && LogLevelType[config.logLevel]) {
+      setLogLevel(LogLevelType[config.logLevel]);
+    }
+    Obj.mergeDeep(this._config, config);
+    this._configureOrLoadPlugins(config.plugins);
+    if (!Obj.isEmptyObject(config.sources)) {
+      const receivedSourcesWhenHasEngine: boolean = !!this._engine;
+      if (receivedSourcesWhenHasEngine) {
+        this._reset();
+        Player._logger.debug('Change source started');
+        this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
+      }
+      if (this._selectEngineByPriority()) {
+        this._appendEngineEl();
+        this._attachMedia();
+        this._handlePlaybackOptions();
+        this._posterManager.setSrc(this._config.metadata.poster);
+        this._handleAutoPlay();
+        if (receivedSourcesWhenHasEngine) {
+          Player._logger.debug('Change source ended');
+          this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_ENDED));
+        }
+      }
+    }
+  }
+
+  /**
+   * get the log level
+   * @param {?string} name - the logger name
+   * @returns {LogLevel} - the log level
+   */
+  getLogLevel(name?: string): LogLevel {
+    return getLogLevel(name);
   }
 
   // </editor-fold>
@@ -1573,54 +1618,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Configures the player according to a given configuration.
-   * @param {PlayerConfig} config - The configuration for the player instance.
+   * sets the logger level
+   * @param {LogLevel} level - the log level
+   * @param {?string} name - the logger name
    * @returns {void}
    */
-  configure(config: PlayerConfig): void {
-    if (config.logLevel && LogLevelType[config.logLevel]) {
-      setLogLevel(LogLevelType[config.logLevel]);
-    }
-    Obj.mergeDeep(this._config, config);
-    this._configureOrLoadPlugins(config.plugins);
-    if (!Obj.isEmptyObject(config.sources)) {
-      const receivedSourcesWhenHasEngine: boolean = !!this._engine;
-      if (receivedSourcesWhenHasEngine) {
-        this._reset();
-        Player._logger.debug('Change source started');
-        this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
-      }
-      if (this._selectEngineByPriority()) {
-        this._appendEngineEl();
-        this._attachMedia();
-        this._handlePlaybackOptions();
-        this._posterManager.setSrc(this._config.metadata.poster);
-        this._handleAutoPlay();
-        if (receivedSourcesWhenHasEngine) {
-          Player._logger.debug('Change source ended');
-          this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_ENDED));
-        }
-      }
-    }
+  setLogLevel(level: LogLevel, name?: string) {
+    setLogLevel(level, name);
   }
 
   // </editor-fold>
-  /**
-   * get the log level
-   * @param {?string} name - the logger name
-   * @returns {Object} - the log level
-   */
-  getLogLevel(name?: string): Object {
-    return getLogLevel(name);
-  }
-
-  /**
-   * sets the logger level
-   * @param {Object} level - the log level
-   * @param {?string} name - the logger name
-   * @returns {void}
-   */
-  setLogLevel(level: Object, name?: string) {
-    setLogLevel(level, name);
-  }
 }
