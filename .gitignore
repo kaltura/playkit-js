@@ -37,6 +37,3 @@ jspm_packages
 .node_repl_history
 
 .idea
-dist/playkit.js
-dist/playkit.js.map
-dist/playkit.js.map
