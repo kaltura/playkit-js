@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 33);
+/******/ 	return __webpack_require__(__webpack_require__.s = 42);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -86,51 +86,117 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.LOG_LEVEL = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _jsLogger = __webpack_require__(42);
+var _eventTypes = __webpack_require__(7);
 
-var JsLogger = _interopRequireWildcard(_jsLogger);
+var _eventTypes2 = _interopRequireDefault(_eventTypes);
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var LOG_LEVEL = {
-  "DEBUG": JsLogger.DEBUG,
-  "INFO": JsLogger.INFO,
-  "TIME": JsLogger.TIME,
-  "WARN": JsLogger.WARN,
-  "ERROR": JsLogger.ERROR,
-  "OFF": JsLogger.OFF
-};
+/**
+ * Create an Event work-alike object based on the dictionary.
+ * The event should contain all of the same properties from the dict.
+ * @classdesc
+ */
+var FakeEvent = function () {
 
-var LoggerFactory = function () {
-  function LoggerFactory(options) {
-    _classCallCheck(this, LoggerFactory);
+  /**
+   * @constructor
+   * @param{string} type - The event type.
+   * @param {any} payload - The event payload.
+   */
 
-    JsLogger.useDefaults(options || {});
+  /** @const {boolean} */
+
+  /** @const {boolean} */
+
+  /** @const {boolean} */
+
+  /**
+   * According to MDN, Chrome uses high-res timers instead of epoch time.
+   * Follow suit so that timeStamps on FakeEvents use the same base as
+   * on native Events.
+   * @const {number}
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp
+   */
+
+  /** @const {string} */
+
+  /** @const {boolean} */
+
+  /** @type {EventTarget} */
+
+  /** @type {EventTarget} */
+
+  /**
+   * Non-standard property read by FakeEventTarget to stop processing listeners.
+   * @type {boolean}
+   */
+
+  /**
+   * The event payload;
+   * @type {any}
+   */
+  function FakeEvent(type, payload) {
+    _classCallCheck(this, FakeEvent);
+
+    this.bubbles = false;
+    this.cancelable = false;
+    this.defaultPrevented = false;
+    this.timeStamp = window.performance ? window.performance.now() : Date.now();
+    this.type = type;
+    this.isTrusted = false;
+    this.currentTarget = null;
+    this.target = null;
+    this.stopped = false;
+    if (payload) {
+      this.payload = payload;
+    }
   }
 
-  _createClass(LoggerFactory, [{
-    key: "getLogger",
-    value: function getLogger(name) {
-      if (!name) {
-        return JsLogger;
-      }
-      return JsLogger.get(name);
+  /**
+   * Does nothing, since FakeEvents have no default.  Provided for compatibility
+   * with native Events.
+   * @override
+   */
+
+
+  _createClass(FakeEvent, [{
+    key: 'preventDefault',
+    value: function preventDefault() {}
+
+    /**
+     * Stops processing event listeners for this event.  Provided for compatibility
+     * with native Events.
+     * @override
+     */
+
+  }, {
+    key: 'stopImmediatePropagation',
+    value: function stopImmediatePropagation() {
+      this.stopped = true;
     }
+
+    /**
+     * Does nothing, since FakeEvents do not bubble.  Provided for compatibility
+     * with native Events.
+     * @override
+     */
+
+  }, {
+    key: 'stopPropagation',
+    value: function stopPropagation() {}
   }]);
 
-  return LoggerFactory;
+  return FakeEvent;
 }();
 
-var lf = new LoggerFactory({ defaultLevel: JsLogger.DEBUG });
-
-exports.default = lf;
-exports.LOG_LEVEL = LOG_LEVEL;
+FakeEvent.Type = _eventTypes2.default;
+exports.default = FakeEvent;
 
 /***/ }),
 /* 1 */
@@ -142,467 +208,65 @@ exports.LOG_LEVEL = LOG_LEVEL;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.PlayerError = exports.PosterManager = exports.MultiMap = exports.LoggerFactory = exports.Locale = exports.Env = exports.Dom = exports.Generator = exports.Str = exports.Num = exports.Obj = undefined;
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _object = __webpack_require__(50);
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+var _object2 = _interopRequireDefault(_object);
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+var _number = __webpack_require__(49);
 
-var _Number = {
-  /**
-   * @param {number} n - A certain number
-   * @returns {boolean} - If the input is a number
-   */
-  isNumber: function isNumber(n) {
-    return Number(n) === n;
-  },
+var _number2 = _interopRequireDefault(_number);
 
-  /**
-   * @param {number} n - A certain number
-   * @returns {boolean} - If the input is an integer
-   */
-  isInt: function isInt(n) {
-    return this.isNumber(n) && n % 1 === 0;
-  },
+var _string = __webpack_require__(53);
 
-  /**
-   * @param {number} n - A certain number
-   * @returns {boolean} - If the input is a float
-   */
-  isFloat: function isFloat(n) {
-    return this.isNumber(n) && n % 1 !== 0;
-  }
-};
+var _string2 = _interopRequireDefault(_string);
 
-var _String = {
-  /**
-   * Uppercase the first letter of a string
-   * @param  {String} string - String to be uppercased
-   * @return {String} - The uppercased string
-   * @public
-   * @method toTitleCase
-   */
-  capitlize: function capitlize(string) {
-    if (typeof string !== 'string') {
-      return string;
-    }
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  },
+var _generator = __webpack_require__(46);
 
-  /**
-   * @param {string} string - Certain string
-   * @param {string} searchString - Certain string
-   * @returns {boolean} - Whether the string: string is ending with string: searchString
-   */
-  endsWith: function endsWith(string, searchString) {
-    if (typeof string !== 'string' || typeof searchString !== 'string') {
-      return false;
-    }
-    return string.indexOf(searchString, string.length - searchString.length) != -1;
-  }
-};
+var _generator2 = _interopRequireDefault(_generator);
 
-var _Object = {
-  /**
-   * @param {Array<Object>} objects - The objects to merge
-   * @returns {Object} - The merged object.
-   */
-  merge: function merge(objects) {
-    var target = {};
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+var _dom = __webpack_require__(44);
 
-    try {
-      for (var _iterator = objects[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var obj = _step.value;
+var _dom2 = _interopRequireDefault(_dom);
 
-        Object.assign(target, obj);
-      }
-    } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
-      }
-    }
+var _env = __webpack_require__(45);
 
-    return target;
-  },
+var _env2 = _interopRequireDefault(_env);
 
-  /**
-   * @param {any} item - The item to check.
-   * @returns {boolean} - Whether the item is an object.
-   */
-  isObject: function isObject(item) {
-    return item && (typeof item === 'undefined' ? 'undefined' : _typeof(item)) === 'object' && !Array.isArray(item);
-  },
+var _locale = __webpack_require__(47);
 
-  /**
-   * @param {any} target - The target object.
-   * @param {any} sources - The objects to merge.
-   * @returns {Object} - The merged object.
-   */
-  mergeDeep: function mergeDeep(target) {
-    for (var _len = arguments.length, sources = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      sources[_key - 1] = arguments[_key];
-    }
+var _locale2 = _interopRequireDefault(_locale);
 
-    if (!sources.length) {
-      return target;
-    }
-    var source = sources.shift();
-    if (this.isObject(target) && this.isObject(source)) {
-      for (var key in source) {
-        if (this.isObject(source[key])) {
-          if (!target[key]) Object.assign(target, _defineProperty({}, key, {}));
-          this.mergeDeep(target[key], source[key]);
-        } else {
-          Object.assign(target, _defineProperty({}, key, source[key]));
-        }
-      }
-    }
-    return this.mergeDeep.apply(this, [target].concat(_toConsumableArray(sources)));
-  },
+var _logger = __webpack_require__(48);
 
-  /**
-   * @param {any} data - The data to copy.
-   * @returns {any} - The copied data.
-   */
-  copyDeep: function copyDeep(data) {
-    var _this = this;
+var _logger2 = _interopRequireDefault(_logger);
 
-    var node = void 0;
-    if (Array.isArray(data)) {
-      node = data.length > 0 ? data.slice(0) : [];
-      node.forEach(function (e, i) {
-        if ((typeof e === 'undefined' ? 'undefined' : _typeof(e)) === "object" && e !== {} || Array.isArray(e) && e.length > 0) {
-          node[i] = _this.copyDeep(e);
-        }
-      });
-    } else if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) === "object") {
-      node = Object.assign({}, data);
-      Object.keys(node).forEach(function (key) {
-        if (_typeof(node[key]) === "object" && node[key] !== {} || Array.isArray(node[key]) && node[key].length > 0) {
-          node[key] = _this.copyDeep(node[key]);
-        }
-      });
-    } else {
-      node = data;
-    }
-    return node;
-  },
+var _multiMap = __webpack_require__(32);
 
-  /**
-   * Checks if an object is an empy object.
-   * @param {Object} obj - The object to check
-   * @returns {boolean} - Whether the object is empty.
-   */
-  isEmptyObject: function isEmptyObject(obj) {
-    for (var key in obj) {
-      if (obj.hasOwnProperty(key)) return false;
-    }
-    return true;
-  },
+var _multiMap2 = _interopRequireDefault(_multiMap);
 
-  /**
-   * Checks for nested object properties.
-   * @param {Object} obj - The object to check.
-   * @param {string} propertyPath - The path to check.
-   * @returns {boolean} - The value in this path.
-   */
-  getPropertyPath: function getPropertyPath(obj, propertyPath) {
-    return propertyPath.split(".").reduce(function (o, x) {
-      return typeof o === "undefined" || o === null ? o : o[x];
-    }, obj);
-  },
+var _posterManager = __webpack_require__(52);
 
-  /**
-   * Checks for nested object properties.
-   * @param {Object} obj - The object to check.
-   * @param {string} propertyPath - The path to check.
-   * @returns {boolean} - Whether the path exists in the object.
-   */
-  hasPropertyPath: function hasPropertyPath(obj, propertyPath) {
-    if (!propertyPath) {
-      return false;
-    }
-    var properties = propertyPath.split('.');
-    for (var i = 0; i < properties.length; i++) {
-      var prop = properties[i];
-      if (!obj || !obj.hasOwnProperty(prop)) {
-        return false;
-      } else {
-        obj = obj[prop];
-      }
-    }
-    return true;
-  },
+var _posterManager2 = _interopRequireDefault(_posterManager);
 
-  /**
-   * Creates deferred promise which can resolved/rejected outside the promise scope.
-   * @returns {DeferredPromise} - The promise with resolve and reject props.
-   */
-  defer: function defer() {
-    var res = void 0,
-        rej = void 0;
-    // $FlowFixMe
-    var promise = new Promise(function (resolve, reject) {
-      res = resolve;
-      rej = reject;
-    });
-    // $FlowFixMe
-    promise.resolve = res;
-    // $FlowFixMe
-    promise.reject = rej;
-    return promise;
-  },
+var _playerError = __webpack_require__(51);
 
-  /**
-   * Binds an handler to a desired context.
-   * @param {any} thisObj - The handler context.
-   * @param {Function} fn - The handler.
-   * @returns {Function} - The new bound function.
-   * @public
-   */
-  bind: function bind(thisObj, fn) {
-    return function () {
-      fn.apply(thisObj, arguments);
-    };
-  }
-};
+var _playerError2 = _interopRequireDefault(_playerError);
 
-var _Generator = {
-  /**
-   * Generates unique id.
-   * @param {number} length - The length of the id.
-   * @returns {string} - The generated id.
-   */
-  uniqueId: function uniqueId(length) {
-    var from = 2;
-    var to = from + (!length || length < 0 ? 0 : length - 2);
-    return '_' + Math.random().toString(36).substr(from, to);
-  },
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-  /**
-   * Generates GUID.
-   * @return {string} - GUID
-   * @private
-   */
-  guid: function guid() {
-    var S4 = function S4() {
-      return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);
-    };
-    return S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4();
-  }
-};
-
-var _Dom = {
-  /**
-   * Adds class name to an element
-   * @param {Element} element - an HTML element
-   * @param {string} className - a class name
-   * @returns {void}
-   */
-  addClassName: function addClassName(element, className) {
-    if (element.classList) {
-      element.classList.add(className);
-    } else {
-      if (!_Dom.hasClassName(element, className)) {
-        element.className += className;
-      }
-    }
-  },
-
-
-  /**
-   * Removes class name from an element
-   * @param {Element} element - an HTML element
-   * @param {string} className - a class name
-   * @returns {void}
-   */
-  removeClassName: function removeClassName(element, className) {
-    if (element.classList) {
-      element.classList.remove(className);
-    } else {
-      if (_Dom.hasClassName(element, className)) {
-        element.className = element.className.replace(new RegExp('(\\s|^)' + className + '(\\s|$)'), ' ').replace(/^\s+|\s+$/g, '');
-      }
-    }
-  },
-
-  /**
-   * Checks if an element has a class name
-   * @param {Element} element - an HTML element
-   * @param {string} className - a class name
-   * @returns {boolean} - weather an element contains a class name
-   */
-  hasClassName: function hasClassName(element, className) {
-    return element.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(element.className);
-  },
-
-  /**
-   * Add element attribute
-   * @param {Element} element - an HTML element
-   * @param {string} name - attribute name
-   * @param {string} value - attribute value
-   * @returns {void}
-   */
-  setAttribute: function setAttribute(element, name, value) {
-    element.setAttribute(name, value);
-  },
-
-  /**
-   * Remove element attribute
-   * @param {Element} element - an HTML element
-   * @param {string} name - attribute name
-   * @returns {void}
-   */
-  removeAttribute: function removeAttribute(element, name) {
-    element.removeAttribute(name);
-  },
-
-  /**
-   * Set element style
-   * @param {Element} element - an HTML element
-   * @param {string} name - style name
-   * @param {string} value - style value
-   * @returns {void}
-   */
-  setStyle: function setStyle(element, name, value) {
-    if (element.style.getPropertyValue(name) !== undefined) {
-      element.style.setProperty(name, value);
-    }
-  },
-
-  /**
-   * Adds a node to the end of the list of children of a specified parent node.
-   * @param {Element} parent - The parent node.
-   * @param {Element} child - The child node.
-   * @returns {void}
-   */
-  appendChild: function appendChild(parent, child) {
-    if (parent && child && parent.appendChild) {
-      parent.appendChild(child);
-    }
-  },
-
-  /**
-   * Removes an element from his parent node.
-   * @param {Element} parent - The parent node.
-   * @param {Element} child - The child node.
-   * @returns {void}
-   */
-  removeChild: function removeChild(parent, child) {
-    if (parent && child && parent.removeChild) {
-      parent.removeChild(child);
-    }
-  },
-
-  /**
-   * Prepend HTML element
-   * @param {HTMLElement} child - the child to prepend
-   * @param {HTMLElement} parent - the parent to preprend to
-   * @returns {void}
-   */
-  prependTo: function prependTo(child, parent) {
-    if (parent.firstChild) {
-      parent.insertBefore(child, parent.firstChild);
-    } else {
-      parent.appendChild(child);
-    }
-  },
-
-  /**
-   * Returns a reference to the element by its ID.
-   * @param {string} id - The desired id.
-   * @returns {Element} - The element with the desired id.
-   */
-  getElementById: function getElementById(id) {
-    return document.getElementById(id);
-  },
-
-  /**
-   * Creates the HTML element specified by tagName.
-   * @param {string} tagName - The tag name.
-   * @returns {Element} - The element just created.
-   */
-  createElement: function createElement(tagName) {
-    return document.createElement(tagName);
-  },
-
-  /**
-   * Loads script asynchronously.
-   * @param {string} url - The url to load.
-   * @return {Promise} - The loading promise.
-   * @public
-   */
-  loadScriptAsync: function loadScriptAsync(url) {
-    var _this2 = this;
-
-    return new Promise(function (resolve, reject) {
-      var r = false,
-          t = document.getElementsByTagName("script")[0],
-          s = _this2.createElement("script");
-      s.type = "text/javascript";
-      s.src = url;
-      s.async = true;
-      s.onload = s.onreadystatechange = function () {
-        if (!r && (!this.readyState || this.readyState === "complete")) {
-          r = true;
-          resolve(this);
-        }
-      };
-      s.onerror = s.onabort = reject;
-      if (t && t.parentNode) {
-        t.parentNode.insertBefore(s, t);
-      }
-    });
-  }
-};
-
-var _Http = {
-  execute: function execute(url, params) {
-    var method = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "POST";
-    var headers = arguments[3];
-
-    var request = new XMLHttpRequest();
-    return new Promise(function (resolve, reject) {
-      request.onreadystatechange = function () {
-        if (request.readyState === 4) {
-          if (request.status === 200) {
-            var jsonResponse = JSON.parse(request.responseText);
-            resolve(jsonResponse);
-          } else {
-            reject(request.responseText);
-          }
-        }
-      };
-      request.open(method, url);
-      if (headers) {
-        headers.forEach(function (value, key) {
-          request.setRequestHeader(key, value);
-        });
-      }
-      request.send(params);
-    });
-  }
-};
-
-exports.Number = _Number;
-exports.String = _String;
-exports.Object = _Object;
-exports.Generator = _Generator;
-exports.Dom = _Dom;
-exports.Http = _Http;
+exports.Obj = _object2.default;
+exports.Num = _number2.default;
+exports.Str = _string2.default;
+exports.Generator = _generator2.default;
+exports.Dom = _dom2.default;
+exports.Env = _env2.default;
+exports.Locale = _locale2.default;
+exports.LoggerFactory = _logger2.default;
+exports.MultiMap = _multiMap2.default;
+exports.PosterManager = _posterManager2.default;
+exports.PlayerError = _playerError2.default;
 
 /***/ }),
 /* 2 */
@@ -617,147 +281,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _trackTypes = __webpack_require__(31);
 
-/**
- * Create an Event work-alike object based on the dictionary.
- * The event should contain all of the same properties from the dict.
- * @param {string} type -
- * @param {Object=} opt_dict -
- * @constructor
- * @extends {Event}
- */
-var FakeEvent = function () {
+var _trackTypes2 = _interopRequireDefault(_trackTypes);
 
-  /**
-   * Non-standard property read by FakeEventTarget to stop processing listeners.
-   * @type {boolean}
-   */
-
-
-  /** @type {EventTarget} */
-
-
-  /** @const {string} */
-
-
-  /** @const {boolean} */
-
-  /** @const {boolean} */
-  function FakeEvent(type, payload) {
-    _classCallCheck(this, FakeEvent);
-
-    // These Properties below cannot be set by dict.  They are all provided for
-    // compatibility with native events.
-
-    /** @const {boolean} */
-    this.bubbles = false;
-
-    /** @const {boolean} */
-    this.cancelable = false;
-
-    /** @const {boolean} */
-    this.defaultPrevented = false;
-
-    /**
-     * According to MDN, Chrome uses high-res timers instead of epoch time.
-     * Follow suit so that timeStamps on FakeEvents use the same base as
-     * on native Events.
-     * @const {number}
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp
-     */
-    this.timeStamp = window.performance ? window.performance.now() : Date.now();
-
-    /** @const {string} */
-    this.type = type;
-
-    /** @const {boolean} */
-    this.isTrusted = false;
-
-    /** @type {EventTarget} */
-    this.currentTarget = null;
-
-    /** @type {EventTarget} */
-    this.target = null;
-
-    /**
-     * Non-standard property read by FakeEventTarget to stop processing listeners.
-     * @type {boolean}
-     */
-    this.stopped = false;
-
-    this.payload = payload;
-  }
-
-  /**
-   * Does nothing, since FakeEvents have no default.  Provided for compatibility
-   * with native Events.
-   * @override
-   */
-
-
-  /** @type {EventTarget} */
-
-
-  /** @const {boolean} */
-
-
-  /**
-   * According to MDN, Chrome uses high-res timers instead of epoch time.
-   * Follow suit so that timeStamps on FakeEvents use the same base as
-   * on native Events.
-   * @const {number}
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp
-   */
-
-
-  /** @const {boolean} */
-
-
-  _createClass(FakeEvent, [{
-    key: "preventDefault",
-    value: function preventDefault() {}
-
-    /**
-     * Stops processing event listeners for this event.  Provided for compatibility
-     * with native Events.
-     * @override
-     */
-
-  }, {
-    key: "stopImmediatePropagation",
-    value: function stopImmediatePropagation() {
-      this.stopped = true;
-    }
-
-    /**
-     * Does nothing, since FakeEvents do not bubble.  Provided for compatibility
-     * with native Events.
-     * @override
-     */
-
-  }, {
-    key: "stopPropagation",
-    value: function stopPropagation() {}
-  }]);
-
-  return FakeEvent;
-}();
-
-exports.default = FakeEvent;
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -767,7 +295,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  */
 var Track = function () {
   _createClass(Track, [{
-    key: "id",
+    key: 'id',
 
 
     /**
@@ -786,7 +314,7 @@ var Track = function () {
      */
 
   }, {
-    key: "active",
+    key: 'active',
     get: function get() {
       return this._active;
     }
@@ -804,11 +332,11 @@ var Track = function () {
     /**
      * Getter for the label of the track.
      * @public
-     * @returns {string} - The label of the track.
+     * @returns {?string} - The label of the track.
      */
 
   }, {
-    key: "label",
+    key: 'label',
     get: function get() {
       return this._label;
     }
@@ -816,11 +344,11 @@ var Track = function () {
     /**
      * Getter for the language of the track.
      * @public
-     * @returns {string} - The language of the track.
+     * @returns {?string} - The language of the track.
      */
 
   }, {
-    key: "language",
+    key: 'language',
     get: function get() {
       return this._language;
     }
@@ -832,39 +360,39 @@ var Track = function () {
      */
 
   }, {
-    key: "index",
+    key: 'index',
     get: function get() {
       return this._index;
     }
 
     /**
      * @constructor
-     * @param {Object} settings - The track settings object.
+     * @param {TrackSettings} settings - The track settings object.
      */
 
   }], [{
-    key: "langComparer",
+    key: 'langComparer',
+
 
     /**
      * Comparing language strings.
      * @param {string} inputLang - The configured language.
-     * @param {string} trackLang - The default track language.
+     * @param {?string} trackLang - The default track language.
      * @returns {boolean} - Whether the strings are equal or starts with the same substring.
      */
     value: function langComparer(inputLang, trackLang) {
-      try {
+      if (typeof inputLang === 'string' && typeof trackLang === 'string') {
         inputLang = inputLang.toLowerCase();
         trackLang = trackLang.toLowerCase();
         return inputLang ? inputLang.startsWith(trackLang) || trackLang.startsWith(inputLang) : false;
-      } catch (e) {
-        return false;
       }
+      return false;
     }
 
     /**
      * The id of the track.
      * @member
-     * @type {string}
+     * @type {?string}
      * @private
      */
 
@@ -878,14 +406,14 @@ var Track = function () {
     /**
      * The label of the track.
      * @member
-     * @type {string}
+     * @type {?string}
      * @private
      */
 
     /**
      * The language of the track.
      * @member
-     * @type {string}
+     * @type {?string}
      * @private
      */
 
@@ -899,7 +427,7 @@ var Track = function () {
   }]);
 
   function Track() {
-    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : Track.DefaultTrackSettings;
 
     _classCallCheck(this, Track);
 
@@ -913,10 +441,18 @@ var Track = function () {
   return Track;
 }();
 
+Track.Type = _trackTypes2.default;
+Track.DefaultTrackSettings = {
+  active: false,
+  index: -1,
+  id: undefined,
+  label: undefined,
+  language: undefined
+};
 exports.default = Track;
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -926,7 +462,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _track = __webpack_require__(3);
+var _track = __webpack_require__(2);
 
 var _track2 = _interopRequireDefault(_track);
 
@@ -957,7 +493,7 @@ var AudioTrack = function (_Track) {
 exports.default = AudioTrack;
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -970,7 +506,7 @@ exports.TextTrack = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _track = __webpack_require__(3);
+var _track = __webpack_require__(2);
 
 var _track2 = _interopRequireDefault(_track);
 
@@ -996,7 +532,16 @@ var TextTrack = function (_Track) {
     /**
      * Getter for the kind of the text track.
      * @public
-     * @returns {string} - The kind of the text track.
+     * @returns {?string} - The kind of the text track.
+     */
+
+
+    /**
+     * The kind of the text track:
+     * subtitles/captions/metadata.
+     * @member
+     * @type {?string}
+     * @private
      */
     get: function get() {
       return this._kind;
@@ -1004,21 +549,13 @@ var TextTrack = function (_Track) {
 
     /**
      * @constructor
-     * @param {Object} settings - The track settings object.
-     */
-
-    /**
-     * The kind of the text track:
-     * subtitles/captions/metadata.
-     * @member
-     * @type {string}
-     * @private
+     * @param {TextTrackSettings} settings - The track settings object.
      */
 
   }]);
 
   function TextTrack() {
-    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : TextTrack.DefaultTextTrackSettings;
 
     _classCallCheck(this, TextTrack);
 
@@ -1031,11 +568,19 @@ var TextTrack = function (_Track) {
   return TextTrack;
 }(_track2.default);
 
+TextTrack.DefaultTextTrackSettings = {
+  active: false,
+  index: -1,
+  id: undefined,
+  label: undefined,
+  language: undefined,
+  kind: undefined
+};
 exports.default = TextTrack;
 exports.TextTrack = TextTrack;
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1047,9 +592,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _track = __webpack_require__(3);
+var _track3 = __webpack_require__(2);
 
-var _track2 = _interopRequireDefault(_track);
+var _track4 = _interopRequireDefault(_track3);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1072,14 +617,7 @@ var VideoTrack = function (_Track) {
 
     /**
      * @public
-     * @returns {number} - The bandwidth of the video track
-     */
-
-
-    /**
-     * @member {number} _width - The width of the video track
-     * @type {number}
-     * @private
+     * @returns {?number} - The bandwidth of the video track
      */
     get: function get() {
       return this._bandwidth;
@@ -1087,20 +625,7 @@ var VideoTrack = function (_Track) {
 
     /**
      * @public
-     * @returns {number} - The width of the video track
-     */
-
-
-    /**
-     * @member {number} _height - The height of the video track
-     * @type {number}
-     * @private
-     */
-
-    /**
-     * @member {number} _bandwidth - The bandwidth of the video track
-     * @type {number}
-     * @private
+     * @returns {?number} - The width of the video track
      */
 
   }, {
@@ -1111,7 +636,7 @@ var VideoTrack = function (_Track) {
 
     /**
      * @public
-     * @returns {number} - The height of the video track
+     * @returns {?number} - The height of the video track
      */
 
   }, {
@@ -1122,13 +647,154 @@ var VideoTrack = function (_Track) {
 
     /**
      * @constructor
-     * @param {Object} settings - The track settings object
+     * @param {VideoTrackSettings} settings - The track settings object
+     */
+
+  }], [{
+    key: 'getSuitableSourceForResolution',
+
+
+    /**
+     * Calculates the most suitable source to the container size
+     * @static
+     * @param {Array<Object>} tracks - The tracks
+     * @param {number} width - The width to calculate with
+     * @param {number} height - The height to calculate with
+     * @returns {Object} - The most suitable source to the container size
+     */
+    value: function getSuitableSourceForResolution(tracks, width, height) {
+      var mostSuitableWidth = null;
+      if (height && tracks) {
+        var mostSuitableWidthTracks = [];
+        var minWidthDiff = Infinity;
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = tracks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var track = _step.value;
+            // first filter the most width suitable
+            if (typeof track.width === 'number') {
+              var widthDiff = Math.abs(track.width - width);
+              if (widthDiff < minWidthDiff) {
+                minWidthDiff = widthDiff;
+                mostSuitableWidthTracks = [track];
+              } else if (widthDiff === minWidthDiff) {
+                mostSuitableWidthTracks.push(track);
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+
+        var videoRatio = width / height;
+        var mostSuitableWidthAndRatioTracks = mostSuitableWidthTracks;
+        var minRatioDiff = Infinity;
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+          for (var _iterator2 = mostSuitableWidthTracks[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var _track = _step2.value;
+            // filter the most ratio suitable from the width filter results
+            var ratioDiff = void 0;
+            if (typeof _track.width === 'number' && typeof _track.height === 'number') {
+              ratioDiff = Math.abs(_track.width / _track.height - videoRatio);
+            } else {
+              ratioDiff = NaN;
+            }
+            if (ratioDiff < minRatioDiff) {
+              minRatioDiff = ratioDiff;
+              mostSuitableWidthAndRatioTracks = [_track];
+            } else if (ratioDiff === minRatioDiff) {
+              mostSuitableWidthAndRatioTracks.push(_track);
+            }
+          }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+              _iterator2.return();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
+            }
+          }
+        }
+
+        var maxBandwidth = 0;
+        var _iteratorNormalCompletion3 = true;
+        var _didIteratorError3 = false;
+        var _iteratorError3 = undefined;
+
+        try {
+          for (var _iterator3 = mostSuitableWidthAndRatioTracks[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var _track2 = _step3.value;
+            // select the top bitrate from the ratio filter results
+            if (!_track2.bandwidth || _track2.bandwidth > maxBandwidth) {
+              maxBandwidth = _track2.bandwidth || maxBandwidth;
+              mostSuitableWidth = _track2;
+            }
+          }
+        } catch (err) {
+          _didIteratorError3 = true;
+          _iteratorError3 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+              _iterator3.return();
+            }
+          } finally {
+            if (_didIteratorError3) {
+              throw _iteratorError3;
+            }
+          }
+        }
+      }
+      return mostSuitableWidth;
+    }
+
+    /**
+     * @member {?number} _bandwidth - The bandwidth of the video track
+     * @type {?number}
+     * @private
+     */
+
+
+    /**
+     * @member {?number} _width - The width of the video track
+     * @type {?number}
+     * @private
+     */
+
+
+    /**
+     * @member {?number} _height - The height of the video track
+     * @type {?number}
+     * @private
      */
 
   }]);
 
   function VideoTrack() {
-    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    var settings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : VideoTrack.DefaultVideoTrackSettings;
 
     _classCallCheck(this, VideoTrack);
 
@@ -1141,12 +807,22 @@ var VideoTrack = function (_Track) {
   }
 
   return VideoTrack;
-}(_track2.default);
+}(_track4.default);
 
+VideoTrack.DefaultVideoTrackSettings = {
+  active: false,
+  index: -1,
+  id: undefined,
+  label: undefined,
+  language: undefined,
+  bandwidth: undefined,
+  height: undefined,
+  width: undefined
+};
 exports.default = VideoTrack;
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1158,11 +834,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _multiMap = __webpack_require__(15);
+var _index = __webpack_require__(1);
 
-var _multiMap2 = _interopRequireDefault(_multiMap);
-
-var _fakeEvent = __webpack_require__(2);
+var _fakeEvent = __webpack_require__(0);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
@@ -1173,25 +847,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /**
  * Creates a new EventManager. An EventManager maintains a collection of "event
  * bindings" between event targets and event listeners.
- *
- * @struct
- * @constructor
- * @implements {IDestroyable}
+ * @classdesc
  */
 var EventManager = function () {
   function EventManager() {
     _classCallCheck(this, EventManager);
 
-    /**
-     * Maps an event type to an array of event bindings.
-     * @private {MultiMap.<!EventManager.Binding_>}
-     */
-    this._bindingMap = new _multiMap2.default();
+    this._bindingMap = new _index.MultiMap();
   }
 
   /**
    * Detaches all event listeners.
    * @override
+   */
+
+  /**
+   * Maps an event type to an array of event bindings.
+   * @private {MultiMap<!EventManager.Binding_>}
    */
 
 
@@ -1234,7 +906,7 @@ var EventManager = function () {
   }, {
     key: 'listen',
     value: function listen(target, type, listener) {
-      var binding = new Binding_(target, type, listener);
+      var binding = new Binding(target, type, listener);
       if (this._bindingMap) {
         this._bindingMap.push(type, binding);
       }
@@ -1326,19 +998,14 @@ var EventManager = function () {
  * @constructor
  * @private
  */
-var Binding_ = function () {
-  function Binding_(target, type, listener) {
-    _classCallCheck(this, Binding_);
+var Binding = function () {
+  /** @type {string} */
+  function Binding(target, type, listener) {
+    _classCallCheck(this, Binding);
 
-    /** @type {EventTarget} */
     this.target = target;
-
-    /** @type {string} */
     this.type = type;
-
-    /** @type {?EventManager.ListenerType} */
     this.listener = listener;
-
     this.target.addEventListener(type, listener, false);
   }
 
@@ -1348,26 +1015,30 @@ var Binding_ = function () {
    * @returns {void}
    */
 
+  /** @type {?EventManager.ListenerType} */
 
-  _createClass(Binding_, [{
+  /** @type {EventTarget} */
+
+
+  _createClass(Binding, [{
     key: 'unlisten',
     value: function unlisten() {
-      if (!this.target) return;
-
+      if (!this.target) {
+        return;
+      }
       this.target.removeEventListener(this.type, this.listener, false);
-
       this.target = null;
       this.listener = null;
     }
   }]);
 
-  return Binding_;
+  return Binding;
 }();
 
 exports.default = EventManager;
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1376,15 +1047,11 @@ exports.default = EventManager;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.CUSTOM_EVENTS = exports.HTML5_EVENTS = exports.PLAYER_EVENTS = undefined;
+exports.AdEventType = exports.CustomEventType = exports.Html5EventType = undefined;
 
-var _util = __webpack_require__(1);
+var _index = __webpack_require__(1);
 
-var Utils = _interopRequireWildcard(_util);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-var HTML5_EVENTS = {
+var Html5EventType = {
   /**
    * Fires when the loading of an audio/video is aborted
    */
@@ -1476,7 +1143,7 @@ var HTML5_EVENTS = {
 };
 
 
-var CUSTOM_EVENTS = {
+var CustomEventType = {
   /**
    * Fires when the player enters fullscreen
    */
@@ -1552,7 +1219,10 @@ var CUSTOM_EVENTS = {
   /**
    * Fires when the text track style has changed
    */
-  TEXT_STYLE_CHANGED: 'textstylechanged',
+  TEXT_STYLE_CHANGED: 'textstylechanged'
+};
+
+var AdEventType = {
   /**
    * Fired when ad data is available.
    */
@@ -1627,14 +1297,15 @@ var CUSTOM_EVENTS = {
   AD_PROGRESS: 'adprogress'
 };
 
-var PLAYER_EVENTS = Utils.Object.merge([HTML5_EVENTS, CUSTOM_EVENTS]);
+var EventType = _index.Obj.mergeDeep({}, Html5EventType, CustomEventType, AdEventType);
 
-exports.PLAYER_EVENTS = PLAYER_EVENTS;
-exports.HTML5_EVENTS = HTML5_EVENTS;
-exports.CUSTOM_EVENTS = CUSTOM_EVENTS;
+exports.default = EventType;
+exports.Html5EventType = Html5EventType;
+exports.CustomEventType = CustomEventType;
+exports.AdEventType = AdEventType;
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1648,99 +1319,95 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _env = __webpack_require__(10);
+var _index = __webpack_require__(1);
 
-var _env2 = _interopRequireDefault(_env);
+var _tracksChangedEvent = __webpack_require__(27);
 
-var _eventManager = __webpack_require__(7);
+var _tracksChangedEvent2 = _interopRequireDefault(_tracksChangedEvent);
+
+var _muteChangeEvent = __webpack_require__(23);
+
+var _muteChangeEvent2 = _interopRequireDefault(_muteChangeEvent);
+
+var _textTrackChangedEvent = __webpack_require__(12);
+
+var _textTrackChangedEvent2 = _interopRequireDefault(_textTrackChangedEvent);
+
+var _sourceSelectedEvent = __webpack_require__(25);
+
+var _sourceSelectedEvent2 = _interopRequireDefault(_sourceSelectedEvent);
+
+var _eventManager = __webpack_require__(6);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _posterManager = __webpack_require__(38);
-
-var _posterManager2 = _interopRequireDefault(_posterManager);
-
-var _fakeEvent = __webpack_require__(2);
+var _fakeEvent = __webpack_require__(0);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _fakeEventTarget = __webpack_require__(14);
+var _fakeEventTarget = __webpack_require__(13);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
-var _events = __webpack_require__(8);
+var _eventTypes = __webpack_require__(7);
 
-var _stateTypes = __webpack_require__(22);
+var _state = __webpack_require__(11);
 
-var _stateTypes2 = _interopRequireDefault(_stateTypes);
+var _state2 = _interopRequireDefault(_state);
 
-var _util = __webpack_require__(1);
-
-var Utils = _interopRequireWildcard(_util);
-
-var _locale = __webpack_require__(37);
-
-var _locale2 = _interopRequireDefault(_locale);
-
-var _logger = __webpack_require__(0);
-
-var _logger2 = _interopRequireDefault(_logger);
-
-var _html = __webpack_require__(29);
+var _html = __webpack_require__(38);
 
 var _html2 = _interopRequireDefault(_html);
 
-var _pluginManager = __webpack_require__(19);
+var _pluginManager = __webpack_require__(18);
 
 var _pluginManager2 = _interopRequireDefault(_pluginManager);
 
-var _basePlugin = __webpack_require__(13);
+var _basePlugin = __webpack_require__(10);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
-var _stateManager = __webpack_require__(34);
+var _stateManager = __webpack_require__(43);
 
 var _stateManager2 = _interopRequireDefault(_stateManager);
 
-var _trackTypes = __webpack_require__(36);
+var _trackTypes = __webpack_require__(31);
 
 var _trackTypes2 = _interopRequireDefault(_trackTypes);
 
-var _track = __webpack_require__(3);
+var _track = __webpack_require__(2);
 
 var _track2 = _interopRequireDefault(_track);
 
-var _videoTrack = __webpack_require__(6);
+var _videoTrack = __webpack_require__(5);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(4);
+var _audioTrack = __webpack_require__(3);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(5);
+var _textTrack = __webpack_require__(4);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _textStyle = __webpack_require__(20);
+var _textStyle = __webpack_require__(19);
 
 var _textStyle2 = _interopRequireDefault(_textStyle);
 
-var _vttCue = __webpack_require__(24);
+var _vttCue = __webpack_require__(14);
 
-var _textTrackDisplay = __webpack_require__(23);
+var _textTrackDisplay = __webpack_require__(30);
 
-var _playbackMiddleware = __webpack_require__(32);
+var _playbackMiddleware = __webpack_require__(41);
 
 var _playbackMiddleware2 = _interopRequireDefault(_playbackMiddleware);
 
-var _playerConfig = __webpack_require__(49);
+var _playerConfig = __webpack_require__(63);
 
 var _playerConfig2 = _interopRequireDefault(_playerConfig);
 
-__webpack_require__(43);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+__webpack_require__(57);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1915,7 +1582,7 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * The runtime configuration of the player.
-     * @type {Object}
+     * @type {PlayerConfig}
      * @private
      */
 
@@ -1974,7 +1641,7 @@ var Player = function (_FakeEventTarget) {
      */
 
     /**
-     * The player text disaply settings
+     * The player text display settings
      * @type {Object}
      * @private
      */
@@ -1999,7 +1666,7 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * The environment(os,device,browser) object of the player.
-     * @type {Object}
+     * @type {EnvData}
      * @private
      */
 
@@ -2055,14 +1722,14 @@ var Player = function (_FakeEventTarget) {
       textLanguage: ""
     };
 
-    _this._env = _env2.default;
+    _this._env = _index.Env;
     _this._tracks = [];
     _this._firstPlay = true;
     _this._fullscreen = false;
     _this._firstPlayInCurrentSession = true;
     _this._config = Player._defaultConfig;
     _this._eventManager = new _eventManager2.default();
-    _this._posterManager = new _posterManager2.default();
+    _this._posterManager = new _index.PosterManager();
     _this._stateManager = new _stateManager2.default(_this);
     _this._pluginManager = new _pluginManager2.default();
     _this._playbackMiddleware = new _playbackMiddleware2.default();
@@ -2081,7 +1748,7 @@ var Player = function (_FakeEventTarget) {
 
   /**
    * Configures the player according to a given configuration.
-   * @param {Object} config - The configuration for the player instance.
+   * @param {PlayerConfig} config - The configuration for the player instance.
    * @returns {void}
    */
 
@@ -2089,25 +1756,24 @@ var Player = function (_FakeEventTarget) {
   _createClass(Player, [{
     key: 'configure',
     value: function configure(config) {
-      Utils.Object.mergeDeep(this._config, config);
+      _index.Obj.mergeDeep(this._config, config);
       this._configureOrLoadPlugins(config.plugins);
-      if (!Utils.Object.isEmptyObject(config.sources)) {
+      if (!_index.Obj.isEmptyObject(config.sources)) {
         var receivedSourcesWhenHasEngine = !!this._engine;
         if (receivedSourcesWhenHasEngine) {
           this._reset();
           Player._logger.debug('Change source started');
-          this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.CHANGE_SOURCE_STARTED));
+          this.dispatchEvent(new _fakeEvent2.default(_eventTypes.CustomEventType.CHANGE_SOURCE_STARTED));
         }
         if (this._selectEngineByPriority()) {
           this._appendEngineEl();
-          this._posterManager.setSrc(this._config.metadata.poster);
-          this._posterManager.show();
           this._attachMedia();
           this._handlePlaybackOptions();
+          this._posterManager.setSrc(this._config.metadata.poster);
           this._handleAutoPlay();
           if (receivedSourcesWhenHasEngine) {
             Player._logger.debug('Change source ended');
-            this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.CHANGE_SOURCE_ENDED));
+            this.dispatchEvent(new _fakeEvent2.default(_eventTypes.CustomEventType.CHANGE_SOURCE_ENDED));
           }
         }
       }
@@ -2142,9 +1808,9 @@ var Player = function (_FakeEventTarget) {
           _this2._tracks = data.tracks;
           _this2._addTextTrackOffOption();
           _this2._setDefaultTracks();
-          _this2.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.TRACKS_CHANGED, { tracks: _this2._tracks }));
+          _this2.dispatchEvent(new _tracksChangedEvent2.default(_this2.getTracks()));
         }).catch(function (error) {
-          _this2.dispatchEvent(new _fakeEvent2.default(_events.HTML5_EVENTS.ERROR, error));
+          _this2.dispatchEvent(new _fakeEvent2.default(_eventTypes.Html5EventType.ERROR, error));
         });
       }
     }
@@ -2220,7 +1886,7 @@ var Player = function (_FakeEventTarget) {
       this._stateManager.destroy();
       this._activeTextCues = [];
       this._textDisplaySettings = {};
-      this._config = {};
+      this._config = _playerConfig2.default;
       this._tracks = [];
       this._engineType = '';
       this._streamType = '';
@@ -2228,7 +1894,7 @@ var Player = function (_FakeEventTarget) {
       this._firstPlay = true;
       this._playbackAttributesState = {};
       if (this._el) {
-        Utils.Dom.removeChild(this._el.parentNode, this._el);
+        _index.Dom.removeChild(this._el.parentNode, this._el);
       }
     }
   }, {
@@ -2307,7 +1973,7 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Get an object includes the active video/audio/text tracks
-     * @return {{video: VideoTrack, audio: AudioTrack, text: TextTrack}} - The active tracks object
+     * @return {ActiveTracks} - The active tracks object
      */
 
   }, {
@@ -2373,9 +2039,9 @@ var Player = function (_FakeEventTarget) {
         var textTrack = textTracks.find(function (track) {
           return track.language === OFF;
         });
-        if (textTrack) {
+        if (textTrack && textTrack instanceof _textTrack2.default) {
           textTrack.active = true;
-          this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED, { selectedTextTrack: textTrack }));
+          this.dispatchEvent(new _textTrackChangedEvent2.default(textTrack));
         }
       }
     }
@@ -2497,7 +2163,7 @@ var Player = function (_FakeEventTarget) {
     value: function notifyEnterFullscreen() {
       if (!this._fullscreen) {
         this._fullscreen = true;
-        this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.ENTER_FULLSCREEN));
+        this.dispatchEvent(new _fakeEvent2.default(CustomEvents.ENTER_FULLSCREEN));
       }
     }
 
@@ -2512,7 +2178,7 @@ var Player = function (_FakeEventTarget) {
     value: function notifyExitFullscreen() {
       if (this._fullscreen) {
         this._fullscreen = false;
-        this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.EXIT_FULLSCREEN));
+        this.dispatchEvent(new _fakeEvent2.default(CustomEvents.EXIT_FULLSCREEN));
       }
     }
 
@@ -2526,7 +2192,7 @@ var Player = function (_FakeEventTarget) {
     key: 'enterFullscreen',
     value: function enterFullscreen() {
       if (!this._fullscreen) {
-        this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.REQUESTED_ENTER_FULLSCREEN));
+        this.dispatchEvent(new _fakeEvent2.default(CustomEvents.REQUESTED_ENTER_FULLSCREEN));
       }
     }
 
@@ -2540,7 +2206,7 @@ var Player = function (_FakeEventTarget) {
     key: 'exitFullscreen',
     value: function exitFullscreen() {
       if (this._fullscreen) {
-        this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.REQUESTED_EXIT_FULLSCREEN));
+        this.dispatchEvent(new _fakeEvent2.default(CustomEvents.REQUESTED_EXIT_FULLSCREEN));
       }
     }
 
@@ -2561,11 +2227,11 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: '_createPlayerContainer',
     value: function _createPlayerContainer() {
-      var el = this._el = Utils.Dom.createElement("div");
-      Utils.Dom.addClassName(el, CONTAINER_CLASS_NAME);
-      this._playerId = Utils.Generator.uniqueId(5);
-      Utils.Dom.setAttribute(el, "id", this._playerId);
-      Utils.Dom.setAttribute(el, "tabindex", '-1');
+      var el = this._el = _index.Dom.createElement("div");
+      _index.Dom.addClassName(el, CONTAINER_CLASS_NAME);
+      this._playerId = _index.Generator.uniqueId(5);
+      _index.Dom.setAttribute(el, "id", this._playerId);
+      _index.Dom.setAttribute(el, "tabindex", '-1');
     }
 
     /**
@@ -2579,8 +2245,8 @@ var Player = function (_FakeEventTarget) {
     value: function _appendPosterEl() {
       if (this._el) {
         var el = this._posterManager.getElement();
-        Utils.Dom.addClassName(el, POSTER_CLASS_NAME);
-        Utils.Dom.appendChild(this._el, el);
+        _index.Dom.addClassName(el, POSTER_CLASS_NAME);
+        _index.Dom.appendChild(this._el, el);
       }
     }
 
@@ -2596,10 +2262,10 @@ var Player = function (_FakeEventTarget) {
       if (this._el && this._engine) {
         var engineEl = this._engine.getVideoElement();
         var classname = '' + ENGINE_CLASS_NAME;
-        Utils.Dom.addClassName(engineEl, classname);
+        _index.Dom.addClassName(engineEl, classname);
         var classnameWithId = ENGINE_CLASS_NAME + '-' + this._engine.id;
-        Utils.Dom.addClassName(engineEl, classnameWithId);
-        Utils.Dom.prependTo(engineEl, this._el);
+        _index.Dom.addClassName(engineEl, classnameWithId);
+        _index.Dom.prependTo(engineEl, this._el);
       }
     }
 
@@ -2655,8 +2321,8 @@ var Player = function (_FakeEventTarget) {
       var _this4 = this;
 
       this._readyPromise = new Promise(function (resolve, reject) {
-        _this4._eventManager.listen(_this4, _events.CUSTOM_EVENTS.TRACKS_CHANGED, resolve);
-        _this4._eventManager.listen(_this4, _events.HTML5_EVENTS.ERROR, reject);
+        _this4._eventManager.listen(_this4, _eventTypes.CustomEventType.TRACKS_CHANGED, resolve);
+        _this4._eventManager.listen(_this4, _eventTypes.Html5EventType.ERROR, reject);
       });
     }
 
@@ -2683,8 +2349,8 @@ var Player = function (_FakeEventTarget) {
         var _loop = function _loop() {
           var priority = _step.value;
 
-          var engineId = typeof priority.engine === 'string' ? priority.engine.toLowerCase() : '';
-          var format = typeof priority.format === 'string' ? priority.format.toLowerCase() : '';
+          var engineId = typeof priority.engine === 'string' ? priority.engine.toLowerCase() : "";
+          var format = typeof priority.format === 'string' ? priority.format.toLowerCase() : "";
           var Engine = Player._engines.find(function (Engine) {
             return Engine.id === engineId;
           });
@@ -2697,7 +2363,7 @@ var Player = function (_FakeEventTarget) {
                 _this5._loadEngine(Engine, source);
                 _this5._engineType = engineId;
                 _this5._streamType = format;
-                _this5.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.SOURCE_SELECTED, { selectedSource: formatSources }));
+                _this5.dispatchEvent(new _sourceSelectedEvent2.default(formatSources));
                 return {
                   v: true
                 };
@@ -2765,56 +2431,56 @@ var Player = function (_FakeEventTarget) {
       var _this6 = this;
 
       if (this._engine) {
-        Object.keys(_events.HTML5_EVENTS).forEach(function (html5Event) {
-          _this6._eventManager.listen(_this6._engine, _events.HTML5_EVENTS[html5Event], function (event) {
+        Object.keys(_eventTypes.Html5EventType).forEach(function (html5Event) {
+          _this6._eventManager.listen(_this6._engine, _eventTypes.Html5EventType[html5Event], function (event) {
             return _this6.dispatchEvent(event);
           });
         });
-        this._eventManager.listen(this._engine, _events.HTML5_EVENTS.SEEKED, function () {
+        this._eventManager.listen(this._engine, Html5Events.SEEKED, function () {
           var browser = _this6._env.browser.name;
           if (browser === 'Edge' || browser === 'IE') {
             _this6._removeTextCuePatch();
           }
         });
-        this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, function (event) {
+        this._eventManager.listen(this._engine, _eventTypes.CustomEventType.VIDEO_TRACK_CHANGED, function (event) {
           _this6._markActiveTrack(event.payload.selectedVideoTrack);
           return _this6.dispatchEvent(event);
         });
-        this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED, function (event) {
+        this._eventManager.listen(this._engine, _eventTypes.CustomEventType.AUDIO_TRACK_CHANGED, function (event) {
           _this6._playbackAttributesState.audioLanguage = event.payload.selectedAudioTrack.language;
           _this6._markActiveTrack(event.payload.selectedAudioTrack);
           return _this6.dispatchEvent(event);
         });
-        this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED, function (event) {
+        this._eventManager.listen(this._engine, _eventTypes.CustomEventType.TEXT_TRACK_CHANGED, function (event) {
           _this6._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language;
           _this6._markActiveTrack(event.payload.selectedTextTrack);
           return _this6.dispatchEvent(event);
         });
-        this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.TEXT_CUE_CHANGED, function (event) {
+        this._eventManager.listen(this._engine, _eventTypes.CustomEventType.TEXT_CUE_CHANGED, function (event) {
           return _this6._onCueChange(event);
         });
-        this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.ABR_MODE_CHANGED, function (event) {
+        this._eventManager.listen(this._engine, _eventTypes.CustomEventType.ABR_MODE_CHANGED, function (event) {
           return _this6.dispatchEvent(event);
         });
-        this._eventManager.listen(this._engine, _events.CUSTOM_EVENTS.AUTOPLAY_FAILED, function (event) {
+        this._eventManager.listen(this._engine, CustomEvents.AUTOPLAY_FAILED, function (event) {
           _this6.pause();
           _this6.dispatchEvent(event);
         });
-        this._eventManager.listen(this, _events.HTML5_EVENTS.PLAY, this._onPlay.bind(this));
-        this._eventManager.listen(this, _events.HTML5_EVENTS.ENDED, this._onEnded.bind(this));
-        this._eventManager.listen(this, _events.CUSTOM_EVENTS.MUTE_CHANGE, function () {
+        this._eventManager.listen(this, _eventTypes.Html5EventType.PLAY, this._onPlay.bind(this));
+        this._eventManager.listen(this, _eventTypes.Html5EventType.ENDED, this._onEnded.bind(this));
+        this._eventManager.listen(this, CustomEvents.MUTE_CHANGE, function () {
           _this6._playbackAttributesState.muted = _this6.muted;
         });
-        this._eventManager.listen(this, _events.HTML5_EVENTS.VOLUME_CHANGE, function () {
+        this._eventManager.listen(this, Html5Events.VOLUME_CHANGE, function () {
           _this6._playbackAttributesState.volume = _this6.volume;
         });
-        this._eventManager.listen(this, _events.HTML5_EVENTS.RATE_CHANGE, function () {
+        this._eventManager.listen(this, Html5Events.RATE_CHANGE, function () {
           _this6._playbackAttributesState.rate = _this6.playbackRate;
         });
-        this._eventManager.listen(this, _events.CUSTOM_EVENTS.ENTER_FULLSCREEN, function () {
+        this._eventManager.listen(this, CustomEvents.ENTER_FULLSCREEN, function () {
           _this6._resetTextCuesAndReposition();
         });
-        this._eventManager.listen(this, _events.CUSTOM_EVENTS.EXIT_FULLSCREEN, function () {
+        this._eventManager.listen(this, CustomEvents.EXIT_FULLSCREEN, function () {
           _this6._resetTextCuesAndReposition();
         });
       }
@@ -2937,18 +2603,21 @@ var Player = function (_FakeEventTarget) {
                 Player._logger.debug("Fallback to muted autoplay");
                 _this9.muted = true;
                 _this9.play();
-                _this9.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.FALLBACK_TO_MUTED_AUTOPLAY));
+                _this9.dispatchEvent(new _fakeEvent2.default(CustomEvents.FALLBACK_TO_MUTED_AUTOPLAY));
               } else {
                 Player._logger.warn("Autoplay failed, pause player");
+                _this9._posterManager.show();
                 _this9.load();
                 _this9.ready().then(function () {
                   return _this9.pause();
                 });
-                _this9.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.AUTOPLAY_FAILED));
+                _this9.dispatchEvent(new _fakeEvent2.default(CustomEvents.AUTOPLAY_FAILED));
               }
             }
           });
         }
+      } else {
+        this._posterManager.show();
       }
     }
 
@@ -2999,7 +2668,7 @@ var Player = function (_FakeEventTarget) {
     value: function _onPlay() {
       if (this._firstPlay) {
         this._firstPlay = false;
-        this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.FIRST_PLAY));
+        this.dispatchEvent(new _fakeEvent2.default(_eventTypes.CustomEventType.FIRST_PLAY));
         this._posterManager.hide();
         if (typeof this._playbackAttributesState.rate === 'number') {
           this.playbackRate = this._playbackAttributesState.rate;
@@ -3153,9 +2822,9 @@ var Player = function (_FakeEventTarget) {
     key: '_updateTextDisplay',
     value: function _updateTextDisplay(cues) {
       if (this._textDisplayEl === undefined) {
-        this._textDisplayEl = Utils.Dom.createElement("div");
-        Utils.Dom.addClassName(this._textDisplayEl, SUBTITLES_CLASS_NAME);
-        Utils.Dom.appendChild(this._el, this._textDisplayEl);
+        this._textDisplayEl = _index.Dom.createElement("div");
+        _index.Dom.addClassName(this._textDisplayEl, SUBTITLES_CLASS_NAME);
+        _index.Dom.appendChild(this._el, this._textDisplayEl);
       }
       (0, _textTrackDisplay.processCues)(window, cues, this._textDisplayEl);
     }
@@ -3175,9 +2844,10 @@ var Player = function (_FakeEventTarget) {
         this._tracks.push(new _textTrack2.default({
           active: false,
           index: textTracks.length,
-          kind: "subtitles",
+          id: undefined,
           label: "Off",
-          language: OFF
+          language: OFF,
+          kind: "subtitles"
         }));
       }
     }
@@ -3221,13 +2891,13 @@ var Player = function (_FakeEventTarget) {
       if (language === AUTO) {
         var tracks = this._getTracksByType(type);
         var localeTrack = tracks.find(function (track) {
-          return _track2.default.langComparer(_locale2.default.language, track.language);
+          return _track2.default.langComparer(_index.Locale.language, track.language);
         });
-        if (localeTrack) {
+        if (localeTrack && localeTrack.language) {
           language = localeTrack.language;
-        } else if (defaultTrack && defaultTrack.language !== OFF) {
+        } else if (defaultTrack && defaultTrack.language && defaultTrack.language !== OFF) {
           language = defaultTrack.language;
-        } else if (tracks && tracks.length > 0) {
+        } else if (tracks && tracks.length > 0 && tracks[0].language) {
           language = tracks[0].language;
         }
       }
@@ -3264,7 +2934,7 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Get the player events.
-     * @returns {Object} - The events of the player.
+     * @returns {FakeEvent} - The event class of the player.
      * @public
      */
 
@@ -3272,7 +2942,7 @@ var Player = function (_FakeEventTarget) {
     key: 'currentTime',
     set: function set(to) {
       if (this._engine) {
-        if (Utils.Number.isNumber(to)) {
+        if (_index.Num.isNumber(to)) {
           var boundedTo = to;
           if (to < 0) {
             boundedTo = 0;
@@ -3322,7 +2992,7 @@ var Player = function (_FakeEventTarget) {
     key: 'volume',
     set: function set(vol) {
       if (this._engine) {
-        if (Utils.Number.isFloat(vol) || vol === 0 || vol === 1) {
+        if (_index.Num.isFloat(vol) || vol === 0 || vol === 1) {
           var boundedVol = vol;
           if (boundedVol < 0) {
             boundedVol = 0;
@@ -3415,7 +3085,7 @@ var Player = function (_FakeEventTarget) {
     set: function set(mute) {
       if (this._engine) {
         this._engine.muted = mute;
-        this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.MUTE_CHANGE, { mute: mute }));
+        this.dispatchEvent(new _muteChangeEvent2.default(mute));
       }
     }
 
@@ -3447,7 +3117,7 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Get the dimensions of the player.
-     * @returns {{width: number, height: number}} - The dimensions of the player.
+     * @returns {PlayerDimensions} - The dimensions of the player.
      * @public
      */
 
@@ -3519,7 +3189,7 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Getter for the environment of the player instance.
-     * @return {Object} - The current environment object.
+     * @return {EnvData} - The current environment object.
      * @public
      */
 
@@ -3531,14 +3201,14 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Get the player config.
-     * @returns {Object} - A copy of the player configuration.
+     * @returns {PlayerConfig} - A copy of the player configuration.
      * @public
      */
 
   }, {
     key: 'config',
     get: function get() {
-      return Utils.Object.mergeDeep({}, this._config);
+      return _index.Obj.mergeDeep({}, this._config);
     }
 
     /**
@@ -3551,7 +3221,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'sessionId',
     set: function set(sessionId) {
-      this._config.session = this._config.session || {};
+      this._config.session = this._config.session || { id: '' };
       this._config.session.id = sessionId;
     }
   }, {
@@ -3560,11 +3230,11 @@ var Player = function (_FakeEventTarget) {
       if (!(style instanceof _textStyle2.default)) {
         throw new Error("Style must be instance of TextStyle");
       }
-      var element = Utils.Dom.getElementById(SUBTITLES_STYLE_ID_NAME);
+      var element = _index.Dom.getElementById(SUBTITLES_STYLE_ID_NAME);
       if (!element) {
-        element = Utils.Dom.createElement('style');
-        Utils.Dom.setAttribute(element, 'id', SUBTITLES_STYLE_ID_NAME);
-        Utils.Dom.appendChild(document.head, element);
+        element = _index.Dom.createElement('style');
+        _index.Dom.setAttribute(element, 'id', SUBTITLES_STYLE_ID_NAME);
+        _index.Dom.appendChild(document.head, element);
       }
       var sheet = element.sheet;
 
@@ -3579,7 +3249,7 @@ var Player = function (_FakeEventTarget) {
           sheet.insertRule('#' + this._playerId + ' .' + SUBTITLES_CLASS_NAME + ' > div > div > div { ' + style.toCSS() + ' }', 0);
         }
         this._textStyle = style;
-        this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.TEXT_STYLE_CHANGED));
+        this.dispatchEvent(new _fakeEvent2.default(_eventTypes.CustomEventType.TEXT_STYLE_CHANGED));
       } catch (e) {
         Player._logger.error(e.message);
       }
@@ -3596,7 +3266,7 @@ var Player = function (_FakeEventTarget) {
   }, {
     key: 'Event',
     get: function get() {
-      return _events.PLAYER_EVENTS;
+      return _fakeEvent2.default;
     }
 
     /**
@@ -3613,26 +3283,26 @@ var Player = function (_FakeEventTarget) {
 
     /**
      * Get the player states.
-     * @returns {Object} - The states of the player.
+     * @returns {State} - The state class of the player.
      * @public
      */
 
   }, {
     key: 'State',
     get: function get() {
-      return _stateTypes2.default;
+      return _state2.default;
     }
 
     /**
      * Get the player tracks types.
-     * @returns {Object} - The tracks types of the player.
+     * @returns {Track} - The track class of the player.
      * @public
      */
 
   }, {
     key: 'Track',
     get: function get() {
-      return _trackTypes2.default;
+      return _track2.default;
     }
 
     // </editor-fold>
@@ -3640,97 +3310,19 @@ var Player = function (_FakeEventTarget) {
   }], [{
     key: '_defaultConfig',
     get: function get() {
-      return Utils.Object.copyDeep(_playerConfig2.default);
+      return _index.Obj.copyDeep(_playerConfig2.default);
     }
   }]);
 
   return Player;
 }(_fakeEventTarget2.default);
 
-Player._logger = _logger2.default.getLogger('Player');
+Player._logger = _index.LoggerFactory.getLogger('Player');
 Player._engines = [_html2.default];
 exports.default = Player;
 
 /***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _uaParserJs = __webpack_require__(46);
-
-var _uaParserJs2 = _interopRequireDefault(_uaParserJs);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var Env = new _uaParserJs2.default().getResult();
-exports.default = Env;
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var PlayerError = function () {
-  function PlayerError(error, param) {
-    _classCallCheck(this, PlayerError);
-
-    this.name = error.name;
-    this.message = error.message(param);
-  }
-
-  _createClass(PlayerError, [{
-    key: "getError",
-    value: function getError() {
-      return {
-        name: this.name,
-        message: this.message
-      };
-    }
-  }]);
-
-  return PlayerError;
-}();
-
-PlayerError.TYPE = {
-  NOT_REGISTERED_PLUGIN: {
-    name: "PluginNotRegisteredException",
-    message: function message(name) {
-      return "Cannot load " + name + " plugin. Name not found in the registry";
-    }
-  },
-  NOT_VALID_HANDLER: {
-    name: "PluginHandlerIsNotValidException",
-    message: function message() {
-      return "To activate plugin you must provide a class derived from BasePlugin";
-    }
-  },
-  NOT_IMPLEMENTED_METHOD: {
-    name: "NotImplementedException",
-    message: function message(method) {
-      return method + " method not implemented";
-    }
-  }
-};
-exports.default = PlayerError;
-
-/***/ }),
-/* 12 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3780,7 +3372,7 @@ var BaseMiddleware = function () {
 exports.default = BaseMiddleware;
 
 /***/ }),
-/* 13 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3792,31 +3384,19 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _player = __webpack_require__(9);
+var _player = __webpack_require__(8);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _logger = __webpack_require__(0);
+var _index = __webpack_require__(1);
 
-var _logger2 = _interopRequireDefault(_logger);
-
-var _util = __webpack_require__(1);
-
-var Utils = _interopRequireWildcard(_util);
-
-var _eventManager = __webpack_require__(7);
+var _eventManager = __webpack_require__(6);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _playerError = __webpack_require__(11);
-
-var _playerError2 = _interopRequireDefault(_playerError);
-
-var _fakeEvent = __webpack_require__(2);
+var _fakeEvent = __webpack_require__(0);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -3892,7 +3472,7 @@ var BasePlugin = function () {
   }, {
     key: 'isValid',
     value: function isValid() {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'isValid()').getError();
+      throw new _index.PlayerError(_index.PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'isValid()').getError();
     }
 
     /**
@@ -3912,9 +3492,9 @@ var BasePlugin = function () {
     this.name = name;
     this.player = player;
     this.eventManager = new _eventManager2.default();
-    this.logger = _logger2.default.getLogger(Utils.String.capitlize(this.name));
+    this.logger = _index.LoggerFactory.getLogger(_index.Str.capitlize(this.name));
     this.config = {};
-    Utils.Object.mergeDeep(this.config, this.constructor.defaultConfig, config);
+    _index.Obj.mergeDeep(this.config, this.constructor.defaultConfig, config);
   }
 
   /**
@@ -3929,9 +3509,9 @@ var BasePlugin = function () {
     key: 'getConfig',
     value: function getConfig(attr) {
       if (attr) {
-        return Utils.Object.copyDeep(this.config[attr]);
+        return _index.Obj.copyDeep(this.config[attr]);
       }
-      return Utils.Object.copyDeep(this.config);
+      return _index.Obj.copyDeep(this.config);
     }
 
     /**
@@ -3944,7 +3524,7 @@ var BasePlugin = function () {
   }, {
     key: 'updateConfig',
     value: function updateConfig(update) {
-      Utils.Object.mergeDeep(this.config, update);
+      _index.Obj.mergeDeep(this.config, update);
     }
 
     /**
@@ -4005,7 +3585,7 @@ BasePlugin.defaultConfig = {};
 exports.default = BasePlugin;
 
 /***/ }),
-/* 14 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4017,13 +3597,146 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _fakeEvent = __webpack_require__(2);
+var _stateTypes = __webpack_require__(29);
+
+var _stateTypes2 = _interopRequireDefault(_stateTypes);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * This class describes a player state.
+ * @classdesc
+ */
+var State = function () {
+
+  /**
+   * @constructor
+   * @param {string} type - The type of the state.
+   */
+
+  /**
+   * The type of the state.
+   * Can be one of those describes in states.js
+   * @member
+   * @type {string}
+   * @public
+   */
+
+  /**
+   * The duration that the player was in this state.
+   * @member
+   * @type {number}
+   * @private
+   */
+
+  /**
+   * The timestamp that this state started.
+   * @member
+   * @type {number}
+   * @private
+   */
+  function State(type) {
+    _classCallCheck(this, State);
+
+    this.type = type;
+    this._duration = 0;
+    this._timestamp = Date.now() / 1000;
+  }
+
+  /**
+   * Getter for the duration of the state.
+   * @returns {number} - The duration of the state
+   */
+
+
+  _createClass(State, [{
+    key: 'duration',
+    get: function get() {
+      return this._duration;
+    }
+
+    /**
+     * Setter for the duration of the state.
+     * @param {number} endTime - The timestamp of the next state.
+     */
+    ,
+    set: function set(endTime) {
+      this._duration = endTime - this._timestamp;
+    }
+  }]);
+
+  return State;
+}();
+
+State.Type = _stateTypes2.default;
+exports.default = State;
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _fakeEvent = __webpack_require__(0);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _multiMap = __webpack_require__(15);
+var _textTrack = __webpack_require__(4);
 
-var _multiMap2 = _interopRequireDefault(_multiMap);
+var _textTrack2 = _interopRequireDefault(_textTrack);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var TextTrackChangedEvent = function (_FakeEvent) {
+  _inherits(TextTrackChangedEvent, _FakeEvent);
+
+  function TextTrackChangedEvent(textTrack) {
+    _classCallCheck(this, TextTrackChangedEvent);
+
+    var _this = _possibleConstructorReturn(this, (TextTrackChangedEvent.__proto__ || Object.getPrototypeOf(TextTrackChangedEvent)).call(this, _fakeEvent2.default.Type.TEXT_TRACK_CHANGED));
+
+    _this.payload = {
+      selectedTextTrack: textTrack
+    };
+    return _this;
+  }
+
+  return TextTrackChangedEvent;
+}(_fakeEvent2.default);
+
+exports.default = TextTrackChangedEvent;
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _fakeEvent = __webpack_require__(0);
+
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
+
+var _index = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4033,25 +3746,22 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * A work-alike for EventTarget.  Only DOM elements may be true EventTargets,
  * but this can be used as a base class to provide event dispatch to non-DOM
  * classes.  Only FakeEvents should be dispatched.
- *
- * @struct
- * @constructor
- * @implements {EventTarget}
- * @export
+ * @classdesc
  */
 var FakeEventTarget = function () {
+
+  /**
+   * @constructor
+   */
+
+  /**
+   * The target of all dispatched events.  Defaults to |this|.
+   * @type {EventTarget}
+   */
   function FakeEventTarget() {
     _classCallCheck(this, FakeEventTarget);
 
-    /**
-     * @private {!MultiMap.<FakeEventTarget.ListenerType>}
-     */
-    this._listeners = new _multiMap2.default();
-
-    /**
-     * The target of all dispatched events.  Defaults to |this|.
-     * @type {EventTarget}
-     */
+    this._listeners = new _index.MultiMap();
     this.dispatchTarget = this;
   }
 
@@ -4064,7 +3774,10 @@ var FakeEventTarget = function () {
    * @param {boolean=} opt_capturing Ignored.  FakeEventTargets do not have
    *   parents, so events neither capture nor bubble.
    * @override
-   * @export
+   */
+
+  /**
+   * @private {!MultiMap.<FakeEventTarget.ListenerType>}
    */
 
 
@@ -4076,14 +3789,12 @@ var FakeEventTarget = function () {
 
     /**
      * Remove an event listener from this object.
-     *
      * @param {string} type The event type for which you wish to remove a listener.
      * @param {FakeEventTarget.ListenerType} listener The callback or
      *   listener object to remove.
      * @param {boolean=} opt_capturing Ignored.  FakeEventTargets do not have
      *   parents, so events neither capture nor bubble.
      * @override
-     * @export
      */
 
   }, {
@@ -4106,16 +3817,11 @@ var FakeEventTarget = function () {
     value: function dispatchEvent(event) {
       // In many browsers, it is complex to overwrite properties of actual Events.
       // Here we expect only to dispatch FakeEvents, which are simpler.
-      //goog.asserts.assert(event instanceof FakeEvent,
-      //    'FakeEventTarget can only dispatch FakeEvents!');
-
       var list = this._listeners.get(event.type) || [];
-
       for (var i = 0; i < list.length; ++i) {
         // Do this every time, since events can be re-dispatched from handlers.
         event.target = this.dispatchTarget;
         event.currentTarget = this.dispatchTarget;
-
         var listener = list[i];
         try {
           if (listener.handleEvent) {
@@ -4129,7 +3835,6 @@ var FakeEventTarget = function () {
           // http://goo.gl/N6Ff27
           // TODO: add log
         }
-
         if (event.stopped) {
           break;
         }
@@ -4142,13 +3847,392 @@ var FakeEventTarget = function () {
   return FakeEventTarget;
 }();
 
+exports.default = FakeEventTarget;
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Cue = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _textTrackDisplay = __webpack_require__(30);
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var autoKeyword = "auto";
+var directionSetting = {
+  "": true,
+  "lr": true,
+  "rl": true
+};
+var alignSetting = {
+  "start": true,
+  "middle": true,
+  "end": true,
+  "left": true,
+  "right": true
+};
+
 /**
- * These are the listener types defined in the closure extern for EventTarget.
- * @typedef {EventListener|function(!Event):(boolean|undefined)}
+ * helper
+ * @param {string} value - the string to find
+ * @returns {string | boolean} - the aligned sting if found
+ */
+function findDirectionSetting(value) {
+  if (typeof value !== "string") {
+    return false;
+  }
+  var dir = directionSetting[value.toLowerCase()];
+  return dir ? value.toLowerCase() : false;
+}
+
+/**
+ * helper
+ * @param {string} value - the string
+ * @returns {string | boolean} - the aligned sting if found
+ */
+function findAlignSetting(value) {
+  if (typeof value !== "string") {
+    return false;
+  }
+  var align = alignSetting[value.toLowerCase()];
+  return align ? value.toLowerCase() : false;
+}
+
+/**
+ * VTTCue model
+ * @class
+ * @classdesc VTT Cue model to represent VTT cues internally
  */
 
+var VTTCue = function () {
+  /**
+   * A number giving the size of the cue box, to be interpreted as a percentage of the video, as defined
+   * by the writing direction.
+   * @type {number}
+   * @private
+   */
 
-exports.default = FakeEventTarget;
+  /**
+   * The position defines the indent of the cue box in the direction defined by the writing direction
+   * @type {number}
+   * @private
+   */
+
+  /**
+   * The line defines positioning of the cue box.
+   * @type {string | number}
+   * @private
+   */
+
+  /**
+   * configures the cue to use vertical text layout rather than horizontal text layout.
+   * Vertical text layout is sometimes used in Japanese, for example. The default is horizontal layout
+   * @type {string}
+   * @private
+   */
+
+  /**
+   * A boolean indicating whether playback of the media resource is to pause when the end of the
+   * range to which the cue applies is reached.
+   * @type {boolean}
+   * @private
+   */
+
+
+  /**
+   * This is used as part of the rendering model, to keep cues in a consistent position.
+   * http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#text-track-cue-display-state
+   * @type {undefined}
+   */
+  function VTTCue(startTime, endTime, text) {
+    _classCallCheck(this, VTTCue);
+
+    this.hasBeenReset = false;
+    this.displayState = undefined;
+    this._id = "";
+    this._pauseOnExit = false;
+    this._region = null;
+    this._vertical = "";
+    this._snapToLines = true;
+    this._line = "auto";
+    this._lineAlign = "start";
+    this._position = 50;
+    this._positionAlign = "middle";
+    this._size = 50;
+    this._align = "middle";
+
+    this._startTime = startTime;
+    this._endTime = endTime;
+    this._text = text;
+    /**
+     * Other <track> spec defined properties
+     */
+  }
+  /**
+   * An alignment for all lines of text within the cue box, in the dimension of the writing direction
+   * @type {string}
+   * @private
+   */
+
+  /**
+   * An alignment for the cue box in the dimension of the writing direction, describing what the position
+   * is anchored to
+   * @type {string}
+   * @private
+   */
+
+  /**
+   * An alignment for the cue box’s line, one of start/center/end alignment
+   * @type {string}
+   * @private
+   */
+
+  /**
+   * A boolean indicating whether the line is an integer number of lines (using the line dimensions of
+   * the first line of the cue), or whether it is a percentage of the dimension of the video.
+   * The flag is set to true when lines are counted, and false otherwise.
+   * @type {boolean}
+   * @private
+   */
+
+  /**
+   * An optional WebVTT region to which a cue belongs.
+   * By default, the region is set to null.
+   * @type {null}
+   * @private
+   */
+
+  /**
+   * The time, in seconds and fractions of a second, that describes the beginning of the range of
+   * the media data to which the cue applies.
+   * @type {number}
+   * @private
+   */
+
+  /**
+   * The time, in seconds and fractions of a second, that describes the end of the range of
+   * the media data to which the cue applies.
+   * @type {number}
+   * @private
+   */
+
+  /**
+   * The raw text of the cue, and rules for its interpretation, allowing the text to be
+   * rendered and converted to a DOM fragment.
+   * @type {string}
+   * @private
+   */
+
+  /**
+   * VTTCue and TextTrackCue properties
+   * http://dev.w3.org/html5/webvtt/#vttcue-interface
+   */
+  /**
+   * An arbitrary string.
+   * @type {string}
+   * @private
+   */
+
+
+  /**
+   * // Lets us know when the VTTCue's data has changed in such a way that we need
+   * to recompute its display state. This lets us compute its display state lazily.
+   * @type {boolean}
+   */
+
+
+  _createClass(VTTCue, [{
+    key: "resetCue",
+    value: function resetCue() {
+      this.hasBeenReset = true;
+    }
+  }, {
+    key: "getCueAsHTML",
+    value: function getCueAsHTML() {
+      return (0, _textTrackDisplay.convertCueToDOMTree)(window, this.text);
+    }
+  }, {
+    key: "id",
+    get: function get() {
+      return this._id;
+    },
+    set: function set(value) {
+      this._id = "" + value;
+    }
+  }, {
+    key: "pauseOnExit",
+    get: function get() {
+      return this._pauseOnExit;
+    },
+    set: function set(value) {
+      this._pauseOnExit = value;
+    }
+  }, {
+    key: "startTime",
+    get: function get() {
+      return this._endTime;
+    },
+    set: function set(value) {
+      if (typeof value !== "number") {
+        throw new TypeError("Start time must be set to a number.");
+      }
+      this._endTime = value;
+      this.resetCue();
+    }
+  }, {
+    key: "endTime",
+    get: function get() {
+      return this._endTime;
+    },
+    set: function set(value) {
+      if (typeof value !== "number") {
+        throw new TypeError("End time must be set to a number.");
+      }
+      this._endTime = value;
+      this.resetCue();
+    }
+  }, {
+    key: "text",
+    get: function get() {
+      return this._text;
+    },
+    set: function set(value) {
+      this._text = "" + value;
+      this.resetCue();
+    }
+  }, {
+    key: "region",
+    get: function get() {
+      return this._region;
+    },
+    set: function set(value) {
+      this._region = value;
+      this.resetCue();
+    }
+  }, {
+    key: "vertical",
+    get: function get() {
+      return this._vertical;
+    },
+    set: function set(value) {
+      var setting = findDirectionSetting(value);
+      // Have to check for false because the setting an be an empty string.
+      if (setting === false) {
+        throw new SyntaxError("An invalid or illegal string was specified.");
+      } else if (typeof setting === "string") {
+        this._vertical = setting;
+        this.resetCue();
+      }
+    }
+  }, {
+    key: "snapToLines",
+    get: function get() {
+      return this._snapToLines;
+    },
+    set: function set(value) {
+      this._snapToLines = value;
+      this.resetCue();
+    }
+  }, {
+    key: "line",
+    get: function get() {
+      return this._line;
+    },
+    set: function set(value) {
+      if (typeof value !== "number" && value !== autoKeyword) {
+        throw new SyntaxError("An invalid number or illegal string was specified.");
+      }
+      this._line = value;
+      this.resetCue();
+    }
+  }, {
+    key: "lineAlign",
+    get: function get() {
+      return this._lineAlign;
+    },
+    set: function set(value) {
+      var setting = findAlignSetting(value);
+      if (!setting) {
+        throw new SyntaxError("An invalid or illegal string was specified.");
+      } else if (typeof setting === "string") {
+        this._lineAlign = setting;
+        this.resetCue();
+      }
+    }
+  }, {
+    key: "position",
+    get: function get() {
+      return this._position;
+    },
+    set: function set(value) {
+      if (value < 0 || value > 100) {
+        throw new Error("Position must be between 0 and 100.");
+      }
+      this._position = value;
+      this.resetCue();
+    }
+  }, {
+    key: "positionAlign",
+    get: function get() {
+      return this._positionAlign;
+    },
+    set: function set(value) {
+      var setting = findAlignSetting(value);
+      if (!setting) {
+        throw new SyntaxError("An invalid or illegal string was specified.");
+      } else if (typeof setting === "string") {
+        this._positionAlign = setting;
+        this.resetCue();
+      }
+    }
+  }, {
+    key: "size",
+    get: function get() {
+      return this._size;
+    },
+    set: function set(value) {
+      if (value < 0 || value > 100) {
+        throw new Error("Size must be between 0 and 100.");
+      }
+      this._size = value;
+      this.resetCue();
+    }
+  }, {
+    key: "align",
+    get: function get() {
+      return this._align;
+    },
+    set: function set(value) {
+      var setting = findAlignSetting(value);
+      if (!setting) {
+        throw new SyntaxError("An invalid or illegal string was specified.");
+      } else if (typeof setting === "string") {
+        this._align = setting;
+        this.resetCue();
+      }
+    }
+  }]);
+
+  return VTTCue;
+}();
+
+var Cue = void 0;
+if (typeof window !== 'undefined' && window.VTTCue) {
+  exports.Cue = Cue = window.VTTCue;
+} else {
+  exports.Cue = Cue = VTTCue;
+}
+
+exports.Cue = Cue;
 
 /***/ }),
 /* 15 */
@@ -4162,201 +4246,16 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * A simple multimap template.
- * @constructor
- * @struct
- * @template T
- */
-var MultiMap = function () {
-  function MultiMap() {
-    _classCallCheck(this, MultiMap);
-
-    /** @private {!Object.<string, !Array.<T>>} */
-    this._map = new Map();
-  }
-
-  /**
-   * Add a key, value pair to the map.
-   * @param {string} key -
-   * @param {T} value  -
-   * @returns {void}
-   */
-
-
-  _createClass(MultiMap, [{
-    key: "push",
-    value: function push(key, value) {
-      if (this._map.has(key)) {
-        var list = this._map.get(key);
-        if (Array.isArray(list)) {
-          list.push(value);
-          this._map.set(key, list);
-        }
-      } else {
-        this._map.set(key, [value]);
-      }
-    }
-
-    /**
-     * Set an array of values for the key, overwriting any previous data.
-     * @param {string} key -
-     * @param {!Array.<T>} values -
-     * @returns {void}
-     */
-
-  }, {
-    key: "set",
-    value: function set(key, values) {
-      this._map.set(key, values);
-    }
-
-    /**
-     * Check for a key.
-     * @param {string} key -
-     * @return {boolean} true if the key exists.
-     */
-
-  }, {
-    key: "has",
-    value: function has(key) {
-      return this._map.has(key);
-    }
-
-    /**
-     * Get a list of values by key.
-     * @param {string} key -
-     * @return {Array.<T>} or null if no suZch key exists.
-     */
-
-  }, {
-    key: "get",
-    value: function get(key) {
-      var list = this._map.get(key);
-      // slice() clones the list so that it and the map can each be modified
-      // without affecting the other.
-      return list ? list.slice() : [];
-    }
-
-    /**
-     * Get a list of all values.
-     * @returns {!Array.<T>} -
-     */
-
-  }, {
-    key: "getAll",
-    value: function getAll() {
-      var list = [];
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = this._map.values()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var value = _step.value;
-
-          list = list.concat(value);
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
-
-      return list;
-    }
-
-    /**
-     * Remove a specific value, if it exists.
-     * @param {string} key -
-     * @param {T} value -
-     * @returns {void}
-     */
-
-  }, {
-    key: "remove",
-    value: function remove(key, value) {
-      if (!this._map.has(key)) return;
-      var list = this._map.get(key);
-      if (Array.isArray(list)) {
-        for (var i = 0; i < list.length; ++i) {
-          if (list[i] == value) {
-            list.splice(i, 1);
-            --i;
-          }
-        }
-      }
-    }
-
-    /**
-     * Get all keys from the multimap.
-     * @return {!Array.<string>}
-     */
-    // eslint-disable-next-line no-undef
-
-  }, {
-    key: "keys",
-    value: function keys() {
-      return this._map.keys();
-    }
-
-    /**
-     * Clear all keys and values from the multimap.
-     * @returns {void}
-     */
-
-  }, {
-    key: "clear",
-    value: function clear() {
-      this._map.clear();
-    }
-  }]);
-
-  return MultiMap;
-}();
-
-exports.default = MultiMap;
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 /* eslint-disable no-unused-vars */
 
 
-var _logger = __webpack_require__(0);
+var _index = __webpack_require__(1);
 
-var _logger2 = _interopRequireDefault(_logger);
-
-var _playerError = __webpack_require__(11);
-
-var _playerError2 = _interopRequireDefault(_playerError);
-
-var _drmSupport = __webpack_require__(25);
+var _drmSupport = __webpack_require__(34);
 
 var _drmSupport2 = _interopRequireDefault(_drmSupport);
 
-var _drmScheme = __webpack_require__(21);
+var _drmScheme = __webpack_require__(20);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4370,12 +4269,12 @@ var BaseDrmProtocol = function () {
   _createClass(BaseDrmProtocol, null, [{
     key: 'canPlayDrm',
     value: function canPlayDrm(drmData) {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayDrm').getError();
+      throw new _index.PlayerError(_index.PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayDrm').getError();
     }
   }, {
     key: 'setDrmPlayback',
     value: function setDrmPlayback() {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'static setDrmPlayback').getError();
+      throw new _index.PlayerError(_index.PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'static setDrmPlayback').getError();
     }
   }, {
     key: 'destroy',
@@ -4385,13 +4284,13 @@ var BaseDrmProtocol = function () {
   return BaseDrmProtocol;
 }();
 
-BaseDrmProtocol.getLogger = _logger2.default.getLogger;
+BaseDrmProtocol.getLogger = _index.LoggerFactory.getLogger;
 BaseDrmProtocol.DrmSupport = _drmSupport2.default;
 BaseDrmProtocol.DrmScheme = _drmScheme.DrmScheme;
 exports.default = BaseDrmProtocol;
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4403,39 +4302,39 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _fakeEvent = __webpack_require__(2);
-
-var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
-
-var _fakeEventTarget = __webpack_require__(14);
+var _fakeEventTarget = __webpack_require__(13);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
-var _playerError = __webpack_require__(11);
-
-var _playerError2 = _interopRequireDefault(_playerError);
-
-var _events = __webpack_require__(8);
-
-var _logger = __webpack_require__(0);
-
-var _logger2 = _interopRequireDefault(_logger);
-
-var _track = __webpack_require__(3);
+var _track = __webpack_require__(2);
 
 var _track2 = _interopRequireDefault(_track);
 
-var _videoTrack = __webpack_require__(6);
+var _videoTrack = __webpack_require__(5);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(4);
+var _audioTrack = __webpack_require__(3);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(5);
+var _textTrack = __webpack_require__(4);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
+
+var _index = __webpack_require__(1);
+
+var _videoTrackChangedEvent = __webpack_require__(28);
+
+var _videoTrackChangedEvent2 = _interopRequireDefault(_videoTrackChangedEvent);
+
+var _audioTrackChangedEvent = __webpack_require__(22);
+
+var _audioTrackChangedEvent2 = _interopRequireDefault(_audioTrackChangedEvent);
+
+var _textTrackChangedEvent = __webpack_require__(12);
+
+var _textTrackChangedEvent2 = _interopRequireDefault(_textTrackChangedEvent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4463,28 +4362,9 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
 
 
     /**
-     * The adapter config.
-     * @member {Object} _config
-     * @private
-     */
-
-
-    /**
      * The source object.
      * @member {Source} _sourceObj
      * @private
-     */
-
-
-    /**
-     * The dom video element.
-     * @member {HTMLVideoElement} _videoElement
-     * @private
-     */
-
-    /**
-     * Passing the custom events to the actual media source adapter.
-     * @static
      */
     value: function isSupported() {
       return true;
@@ -4499,9 +4379,15 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
 
 
     /**
-     * Passing the getLogger function to the actual media source adapter.
-     * @type {Function}
-     * @static
+     * The dom video element.
+     * @member {HTMLVideoElement} _videoElement
+     * @private
+     */
+
+    /**
+     * The adapter config.
+     * @member {Object} _config
+     * @private
      */
 
   }]);
@@ -4545,25 +4431,12 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
     key: '_onTrackChanged',
     value: function _onTrackChanged(track) {
       if (track instanceof _videoTrack2.default) {
-        this._trigger(BaseMediaSourceAdapter.CustomEvents.VIDEO_TRACK_CHANGED, { selectedVideoTrack: track });
+        this.dispatchEvent(new _videoTrackChangedEvent2.default(track));
       } else if (track instanceof _audioTrack2.default) {
-        this._trigger(BaseMediaSourceAdapter.CustomEvents.AUDIO_TRACK_CHANGED, { selectedAudioTrack: track });
+        this.dispatchEvent(new _audioTrackChangedEvent2.default(track));
       } else if (track instanceof _textTrack2.default) {
-        this._trigger(BaseMediaSourceAdapter.CustomEvents.TEXT_TRACK_CHANGED, { selectedTextTrack: track });
+        this.dispatchEvent(new _textTrackChangedEvent2.default(track));
       }
-    }
-
-    /**
-     * Dispatch an adapter event forward.
-     * @param {string} name - The name of the event.
-     * @param {Object} payload - The event payload.
-     * @returns {void}
-     */
-
-  }, {
-    key: '_trigger',
-    value: function _trigger(name, payload) {
-      this.dispatchEvent(new _fakeEvent2.default(name, payload));
     }
 
     /** Must implemented methods by the derived media source adapter **/
@@ -4571,52 +4444,52 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
   }, {
     key: 'load',
     value: function load() {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
+      throw new _index.PlayerError(_index.PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
     }
   }, {
     key: 'selectVideoTrack',
     value: function selectVideoTrack(videoTrack) {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'selectVideoTrack').getError();
+      throw new _index.PlayerError(_index.PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'selectVideoTrack').getError();
     }
   }, {
     key: 'selectAudioTrack',
     value: function selectAudioTrack(audioTrack) {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'selectAudioTrack').getError();
+      throw new _index.PlayerError(_index.PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'selectAudioTrack').getError();
     }
   }, {
     key: 'selectTextTrack',
     value: function selectTextTrack(textTrack) {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'selectTextTrack').getError();
+      throw new _index.PlayerError(_index.PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'selectTextTrack').getError();
     }
   }, {
     key: 'hideTextTrack',
     value: function hideTextTrack() {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'hideTextTrack').getError();
+      throw new _index.PlayerError(_index.PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'hideTextTrack').getError();
     }
   }, {
     key: 'enableAdaptiveBitrate',
     value: function enableAdaptiveBitrate() {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'enableAdaptiveBitrate').getError();
+      throw new _index.PlayerError(_index.PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'enableAdaptiveBitrate').getError();
     }
   }, {
     key: 'isAdaptiveBitrateEnabled',
     value: function isAdaptiveBitrateEnabled() {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'isAdaptiveBitrateEnabled').getError();
+      throw new _index.PlayerError(_index.PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'isAdaptiveBitrateEnabled').getError();
     }
   }, {
     key: 'seekToLiveEdge',
     value: function seekToLiveEdge() {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'seekToLiveEdge').getError();
+      throw new _index.PlayerError(_index.PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'seekToLiveEdge').getError();
     }
   }, {
     key: 'isLive',
     value: function isLive() {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'isLive').getError();
+      throw new _index.PlayerError(_index.PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'isLive').getError();
     }
   }, {
     key: 'src',
     get: function get() {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'get src').getError();
+      throw new _index.PlayerError(_index.PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'get src').getError();
     }
 
     /**
@@ -4656,19 +4529,17 @@ var BaseMediaSourceAdapter = function (_FakeEventTarget) {
   }], [{
     key: 'canPlayType',
     value: function canPlayType(mimeType, preferNative) {
-      throw new _playerError2.default(_playerError2.default.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayType').getError();
+      throw new _index.PlayerError(_index.PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayType').getError();
     }
   }]);
 
   return BaseMediaSourceAdapter;
 }(_fakeEventTarget2.default);
 
-BaseMediaSourceAdapter.CustomEvents = _events.CUSTOM_EVENTS;
-BaseMediaSourceAdapter.getLogger = _logger2.default.getLogger;
 exports.default = BaseMediaSourceAdapter;
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4681,13 +4552,11 @@ exports.registerMediaSourceAdapter = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nativeAdapter = __webpack_require__(30);
+var _nativeAdapter = __webpack_require__(39);
 
 var _nativeAdapter2 = _interopRequireDefault(_nativeAdapter);
 
-var _logger = __webpack_require__(0);
-
-var _logger2 = _interopRequireDefault(_logger);
+var _index = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4766,7 +4635,7 @@ var MediaSourceProvider = function () {
     /**
      * Checks if the a media source adapter can play a given source.
      * @param {Source} source - The source object to check.
-     *  @param {boolean} [preferNative=true] - prefer native flag
+     *  @param {boolean} [preferNative=true] - prefer native flag.
      * @returns {boolean} - Whether a media source adapter can play the source.
      * @public
      * @static
@@ -4816,7 +4685,7 @@ var MediaSourceProvider = function () {
      * @function getMediaSourceAdapter
      * @param {HTMLVideoElement} videoElement - The video element which requires adapter for a given mimeType.
      * @param {Source} source - The selected source object.
-     * @param {Object} config - The player configuration.
+     * @param {PlayerConfig} config - The player configuration.
      * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists.
      * @static
      */
@@ -4849,7 +4718,7 @@ var MediaSourceProvider = function () {
   return MediaSourceProvider;
 }();
 
-MediaSourceProvider._logger = _logger2.default.getLogger('MediaSourceProvider');
+MediaSourceProvider._logger = _index.LoggerFactory.getLogger('MediaSourceProvider');
 MediaSourceProvider._mediaSourceAdapters = [_nativeAdapter2.default];
 MediaSourceProvider._selectedAdapter = null;
 exports.default = MediaSourceProvider;
@@ -4859,7 +4728,7 @@ var registerMediaSourceAdapter = MediaSourceProvider.register;
 exports.registerMediaSourceAdapter = registerMediaSourceAdapter;
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4872,21 +4741,15 @@ exports.registerPlugin = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _basePlugin = __webpack_require__(13);
+var _basePlugin = __webpack_require__(10);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
-var _playerError = __webpack_require__(11);
+var _index = __webpack_require__(1);
 
-var _playerError2 = _interopRequireDefault(_playerError);
-
-var _player = __webpack_require__(9);
+var _player = __webpack_require__(8);
 
 var _player2 = _interopRequireDefault(_player);
-
-var _logger = __webpack_require__(0);
-
-var _logger2 = _interopRequireDefault(_logger);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4897,7 +4760,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * @private
  * @const
  */
-var logger = _logger2.default.getLogger("PluginManager");
+var logger = _index.LoggerFactory.getLogger("PluginManager");
 
 /** The PluginManager responsible for register plugins definitions and store plugins instances.
  * @classdesc
@@ -4941,7 +4804,7 @@ var PluginManager = function () {
       var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
       if (!PluginManager._registry.has(name)) {
-        throw new _playerError2.default(_playerError2.default.TYPE.NOT_REGISTERED_PLUGIN, name).getError();
+        throw new _index.PlayerError(_index.PlayerError.TYPE.NOT_REGISTERED_PLUGIN, name).getError();
       }
       var pluginClass = PluginManager._registry.get(name);
       if (pluginClass && pluginClass.isValid()) {
@@ -5021,7 +4884,7 @@ var PluginManager = function () {
      */
     value: function register(name, handler) {
       if (typeof handler !== 'function' || handler.prototype instanceof _basePlugin2.default === false) {
-        throw new _playerError2.default(_playerError2.default.TYPE.NOT_VALID_HANDLER).getError();
+        throw new _index.PlayerError(_index.PlayerError.TYPE.NOT_VALID_HANDLER).getError();
       }
       if (!PluginManager._registry.has(name)) {
         PluginManager._registry.set(name, handler);
@@ -5066,7 +4929,7 @@ var registerPlugin = PluginManager.register;
 exports.registerPlugin = registerPlugin;
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5279,7 +5142,7 @@ TextStyle.FontSizes = ["50%", "75%", "100%", "200%", "300%", "400%"];
 exports.default = TextStyle;
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5295,6 +5158,48 @@ var DrmScheme = exports.DrmScheme = {
 };
 
 /***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _fakeEvent = __webpack_require__(0);
+
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var AbrModeChangedEvent = function (_FakeEvent) {
+  _inherits(AbrModeChangedEvent, _FakeEvent);
+
+  function AbrModeChangedEvent(mode) {
+    _classCallCheck(this, AbrModeChangedEvent);
+
+    var _this = _possibleConstructorReturn(this, (AbrModeChangedEvent.__proto__ || Object.getPrototypeOf(AbrModeChangedEvent)).call(this, _fakeEvent2.default.Type.ABR_MODE_CHANGED));
+
+    _this.payload = {
+      mode: mode
+    };
+    return _this;
+  }
+
+  return AbrModeChangedEvent;
+}(_fakeEvent2.default);
+
+exports.default = AbrModeChangedEvent;
+
+/***/ }),
 /* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5304,7 +5209,316 @@ var DrmScheme = exports.DrmScheme = {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var PLAYER_STATE_TYPES = {
+
+var _fakeEvent = __webpack_require__(0);
+
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
+
+var _audioTrack = __webpack_require__(3);
+
+var _audioTrack2 = _interopRequireDefault(_audioTrack);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var AudioTrackChangedEvent = function (_FakeEvent) {
+  _inherits(AudioTrackChangedEvent, _FakeEvent);
+
+  function AudioTrackChangedEvent(audioTrack) {
+    _classCallCheck(this, AudioTrackChangedEvent);
+
+    var _this = _possibleConstructorReturn(this, (AudioTrackChangedEvent.__proto__ || Object.getPrototypeOf(AudioTrackChangedEvent)).call(this, _fakeEvent2.default.Type.AUDIO_TRACK_CHANGED));
+
+    _this.payload = {
+      selectedAudioTrack: audioTrack
+    };
+    return _this;
+  }
+
+  return AudioTrackChangedEvent;
+}(_fakeEvent2.default);
+
+exports.default = AudioTrackChangedEvent;
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _fakeEvent = __webpack_require__(0);
+
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var MuteChangeEvent = function (_FakeEvent) {
+  _inherits(MuteChangeEvent, _FakeEvent);
+
+  function MuteChangeEvent(mute) {
+    _classCallCheck(this, MuteChangeEvent);
+
+    var _this = _possibleConstructorReturn(this, (MuteChangeEvent.__proto__ || Object.getPrototypeOf(MuteChangeEvent)).call(this, _fakeEvent2.default.Type.MUTE_CHANGE));
+
+    _this.payload = {
+      mute: mute
+    };
+    return _this;
+  }
+
+  return MuteChangeEvent;
+}(_fakeEvent2.default);
+
+exports.default = MuteChangeEvent;
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _fakeEvent = __webpack_require__(0);
+
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var PlayerStateChangedEvent = function (_FakeEvent) {
+  _inherits(PlayerStateChangedEvent, _FakeEvent);
+
+  function PlayerStateChangedEvent(oldState, newState) {
+    _classCallCheck(this, PlayerStateChangedEvent);
+
+    var _this = _possibleConstructorReturn(this, (PlayerStateChangedEvent.__proto__ || Object.getPrototypeOf(PlayerStateChangedEvent)).call(this, _fakeEvent2.default.Type.PLAYER_STATE_CHANGED));
+
+    _this.payload = {
+      oldState: oldState,
+      newState: newState
+    };
+    return _this;
+  }
+
+  return PlayerStateChangedEvent;
+}(_fakeEvent2.default);
+
+exports.default = PlayerStateChangedEvent;
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _fakeEvent = __webpack_require__(0);
+
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var SourceSelectedEvent = function (_FakeEvent) {
+  _inherits(SourceSelectedEvent, _FakeEvent);
+
+  function SourceSelectedEvent(selectedSource) {
+    _classCallCheck(this, SourceSelectedEvent);
+
+    var _this = _possibleConstructorReturn(this, (SourceSelectedEvent.__proto__ || Object.getPrototypeOf(SourceSelectedEvent)).call(this, _fakeEvent2.default.Type.SOURCE_SELECTED));
+
+    _this.payload = {
+      selectedSource: selectedSource
+    };
+    return _this;
+  }
+
+  return SourceSelectedEvent;
+}(_fakeEvent2.default);
+
+exports.default = SourceSelectedEvent;
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _fakeEvent = __webpack_require__(0);
+
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
+
+var _vttCue = __webpack_require__(14);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var TextCueChangedEvent = function (_FakeEvent) {
+  _inherits(TextCueChangedEvent, _FakeEvent);
+
+  function TextCueChangedEvent(cues) {
+    _classCallCheck(this, TextCueChangedEvent);
+
+    var _this = _possibleConstructorReturn(this, (TextCueChangedEvent.__proto__ || Object.getPrototypeOf(TextCueChangedEvent)).call(this, _fakeEvent2.default.Type.TEXT_CUE_CHANGED));
+
+    _this.payload = {
+      cues: cues
+    };
+    return _this;
+  }
+
+  return TextCueChangedEvent;
+}(_fakeEvent2.default);
+
+exports.default = TextCueChangedEvent;
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _fakeEvent = __webpack_require__(0);
+
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
+
+var _track = __webpack_require__(2);
+
+var _track2 = _interopRequireDefault(_track);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var TracksChangedEvent = function (_FakeEvent) {
+  _inherits(TracksChangedEvent, _FakeEvent);
+
+  function TracksChangedEvent(tracks) {
+    _classCallCheck(this, TracksChangedEvent);
+
+    var _this = _possibleConstructorReturn(this, (TracksChangedEvent.__proto__ || Object.getPrototypeOf(TracksChangedEvent)).call(this, _fakeEvent2.default.Type.TRACKS_CHANGED));
+
+    _this.payload = {
+      tracks: tracks
+    };
+    return _this;
+  }
+
+  return TracksChangedEvent;
+}(_fakeEvent2.default);
+
+exports.default = TracksChangedEvent;
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _fakeEvent = __webpack_require__(0);
+
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
+
+var _videoTrack = __webpack_require__(5);
+
+var _videoTrack2 = _interopRequireDefault(_videoTrack);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var VideoTrackChangedEvent = function (_FakeEvent) {
+  _inherits(VideoTrackChangedEvent, _FakeEvent);
+
+  function VideoTrackChangedEvent(videoTrack) {
+    _classCallCheck(this, VideoTrackChangedEvent);
+
+    var _this = _possibleConstructorReturn(this, (VideoTrackChangedEvent.__proto__ || Object.getPrototypeOf(VideoTrackChangedEvent)).call(this, _fakeEvent2.default.Type.VIDEO_TRACK_CHANGED));
+
+    _this.payload = {
+      selectedVideoTrack: videoTrack
+    };
+    return _this;
+  }
+
+  return VideoTrackChangedEvent;
+}(_fakeEvent2.default);
+
+exports.default = VideoTrackChangedEvent;
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var PlayerStateType = {
   IDLE: "idle",
   LOADING: "loading",
   PLAYING: "playing",
@@ -5312,10 +5526,10 @@ var PLAYER_STATE_TYPES = {
   BUFFERING: "buffering"
 };
 
-exports.default = PLAYER_STATE_TYPES;
+exports.default = PlayerStateType;
 
 /***/ }),
-/* 23 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6153,7 +6367,7 @@ exports.processCues = processCues;
 exports.convertCueToDOMTree = convertCueToDOMTree;
 
 /***/ }),
-/* 24 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6162,383 +6376,255 @@ exports.convertCueToDOMTree = convertCueToDOMTree;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Cue = undefined;
+var TrackType = {
+  VIDEO: "video",
+  AUDIO: "audio",
+  TEXT: "text"
+};
+
+exports.default = TrackType;
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _textTrackDisplay = __webpack_require__(23);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var autoKeyword = "auto";
-var directionSetting = {
-  "": true,
-  "lr": true,
-  "rl": true
-};
-var alignSetting = {
-  "start": true,
-  "middle": true,
-  "end": true,
-  "left": true,
-  "right": true
-};
-
 /**
- * helper
- * @param {string} value - the string to find
- * @returns {string | boolean} - the aligned sting if found
+ * A simple multimap template.
+ * @constructor
+ * @struct
+ * @template T
  */
-function findDirectionSetting(value) {
-  if (typeof value !== "string") {
-    return false;
+var MultiMap = function () {
+  function MultiMap() {
+    _classCallCheck(this, MultiMap);
+
+    /** @private {!Object.<string, !Array.<T>>} */
+    this._map = new Map();
   }
-  var dir = directionSetting[value.toLowerCase()];
-  return dir ? value.toLowerCase() : false;
-}
-
-/**
- * helper
- * @param {string} value - the string
- * @returns {string | boolean} - the aligned sting if found
- */
-function findAlignSetting(value) {
-  if (typeof value !== "string") {
-    return false;
-  }
-  var align = alignSetting[value.toLowerCase()];
-  return align ? value.toLowerCase() : false;
-}
-
-/**
- * VTTCue model
- * @class
- * @classdesc VTT Cue model to represent VTT cues internally
- */
-
-var VTTCue = function () {
-  /**
-   * A number giving the size of the cue box, to be interpreted as a percentage of the video, as defined
-   * by the writing direction.
-   * @type {number}
-   * @private
-   */
 
   /**
-   * The position defines the indent of the cue box in the direction defined by the writing direction
-   * @type {number}
-   * @private
-   */
-
-  /**
-   * The line defines positioning of the cue box.
-   * @type {string | number}
-   * @private
-   */
-
-  /**
-   * configures the cue to use vertical text layout rather than horizontal text layout.
-   * Vertical text layout is sometimes used in Japanese, for example. The default is horizontal layout
-   * @type {string}
-   * @private
-   */
-
-  /**
-   * A boolean indicating whether playback of the media resource is to pause when the end of the
-   * range to which the cue applies is reached.
-   * @type {boolean}
-   * @private
+   * Add a key, value pair to the map.
+   * @param {string} key -
+   * @param {T} value  -
+   * @returns {void}
    */
 
 
-  /**
-   * This is used as part of the rendering model, to keep cues in a consistent position.
-   * http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#text-track-cue-display-state
-   * @type {undefined}
-   */
-  function VTTCue(startTime, endTime, text) {
-    _classCallCheck(this, VTTCue);
+  _createClass(MultiMap, [{
+    key: "push",
+    value: function push(key, value) {
+      if (this._map.has(key)) {
+        var list = this._map.get(key);
+        if (Array.isArray(list)) {
+          list.push(value);
+          this._map.set(key, list);
+        }
+      } else {
+        this._map.set(key, [value]);
+      }
+    }
 
-    this.hasBeenReset = false;
-    this.displayState = undefined;
-    this._id = "";
-    this._pauseOnExit = false;
-    this._region = null;
-    this._vertical = "";
-    this._snapToLines = true;
-    this._line = "auto";
-    this._lineAlign = "start";
-    this._position = 50;
-    this._positionAlign = "middle";
-    this._size = 50;
-    this._align = "middle";
-
-    this._startTime = startTime;
-    this._endTime = endTime;
-    this._text = text;
     /**
-     * Other <track> spec defined properties
+     * Set an array of values for the key, overwriting any previous data.
+     * @param {string} key -
+     * @param {!Array.<T>} values -
+     * @returns {void}
      */
-  }
-  /**
-   * An alignment for all lines of text within the cue box, in the dimension of the writing direction
-   * @type {string}
-   * @private
-   */
 
-  /**
-   * An alignment for the cue box in the dimension of the writing direction, describing what the position
-   * is anchored to
-   * @type {string}
-   * @private
-   */
-
-  /**
-   * An alignment for the cue box’s line, one of start/center/end alignment
-   * @type {string}
-   * @private
-   */
-
-  /**
-   * A boolean indicating whether the line is an integer number of lines (using the line dimensions of
-   * the first line of the cue), or whether it is a percentage of the dimension of the video.
-   * The flag is set to true when lines are counted, and false otherwise.
-   * @type {boolean}
-   * @private
-   */
-
-  /**
-   * An optional WebVTT region to which a cue belongs.
-   * By default, the region is set to null.
-   * @type {null}
-   * @private
-   */
-
-  /**
-   * The time, in seconds and fractions of a second, that describes the beginning of the range of
-   * the media data to which the cue applies.
-   * @type {number}
-   * @private
-   */
-
-  /**
-   * The time, in seconds and fractions of a second, that describes the end of the range of
-   * the media data to which the cue applies.
-   * @type {number}
-   * @private
-   */
-
-  /**
-   * The raw text of the cue, and rules for its interpretation, allowing the text to be
-   * rendered and converted to a DOM fragment.
-   * @type {string}
-   * @private
-   */
-
-  /**
-   * VTTCue and TextTrackCue properties
-   * http://dev.w3.org/html5/webvtt/#vttcue-interface
-   */
-  /**
-   * An arbitrary string.
-   * @type {string}
-   * @private
-   */
-
-
-  /**
-   * // Lets us know when the VTTCue's data has changed in such a way that we need
-   * to recompute its display state. This lets us compute its display state lazily.
-   * @type {boolean}
-   */
-
-
-  _createClass(VTTCue, [{
-    key: "resetCue",
-    value: function resetCue() {
-      this.hasBeenReset = true;
-    }
   }, {
-    key: "getCueAsHTML",
-    value: function getCueAsHTML() {
-      return (0, _textTrackDisplay.convertCueToDOMTree)(window, this.text);
+    key: "set",
+    value: function set(key, values) {
+      this._map.set(key, values);
     }
+
+    /**
+     * Check for a key.
+     * @param {string} key -
+     * @return {boolean} true if the key exists.
+     */
+
   }, {
-    key: "id",
-    get: function get() {
-      return this._id;
-    },
-    set: function set(value) {
-      this._id = "" + value;
+    key: "has",
+    value: function has(key) {
+      return this._map.has(key);
     }
+
+    /**
+     * Get a list of values by key.
+     * @param {string} key -
+     * @return {Array.<T>} or null if no suZch key exists.
+     */
+
   }, {
-    key: "pauseOnExit",
-    get: function get() {
-      return this._pauseOnExit;
-    },
-    set: function set(value) {
-      this._pauseOnExit = value;
+    key: "get",
+    value: function get(key) {
+      var list = this._map.get(key);
+      // slice() clones the list so that it and the map can each be modified
+      // without affecting the other.
+      return list ? list.slice() : [];
     }
+
+    /**
+     * Get a list of all values.
+     * @returns {!Array.<T>} -
+     */
+
   }, {
-    key: "startTime",
-    get: function get() {
-      return this._endTime;
-    },
-    set: function set(value) {
-      if (typeof value !== "number") {
-        throw new TypeError("Start time must be set to a number.");
+    key: "getAll",
+    value: function getAll() {
+      var list = [];
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this._map.values()[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var value = _step.value;
+
+          list = list.concat(value);
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
       }
-      this._endTime = value;
-      this.resetCue();
+
+      return list;
     }
+
+    /**
+     * Remove a specific value, if it exists.
+     * @param {string} key -
+     * @param {T} value -
+     * @returns {void}
+     */
+
   }, {
-    key: "endTime",
-    get: function get() {
-      return this._endTime;
-    },
-    set: function set(value) {
-      if (typeof value !== "number") {
-        throw new TypeError("End time must be set to a number.");
-      }
-      this._endTime = value;
-      this.resetCue();
-    }
-  }, {
-    key: "text",
-    get: function get() {
-      return this._text;
-    },
-    set: function set(value) {
-      this._text = "" + value;
-      this.resetCue();
-    }
-  }, {
-    key: "region",
-    get: function get() {
-      return this._region;
-    },
-    set: function set(value) {
-      this._region = value;
-      this.resetCue();
-    }
-  }, {
-    key: "vertical",
-    get: function get() {
-      return this._vertical;
-    },
-    set: function set(value) {
-      var setting = findDirectionSetting(value);
-      // Have to check for false because the setting an be an empty string.
-      if (setting === false) {
-        throw new SyntaxError("An invalid or illegal string was specified.");
-      } else if (typeof setting === "string") {
-        this._vertical = setting;
-        this.resetCue();
+    key: "remove",
+    value: function remove(key, value) {
+      if (!this._map.has(key)) return;
+      var list = this._map.get(key);
+      if (Array.isArray(list)) {
+        for (var i = 0; i < list.length; ++i) {
+          if (list[i] == value) {
+            list.splice(i, 1);
+            --i;
+          }
+        }
       }
     }
+
+    /**
+     * Get all keys from the multimap.
+     * @return {!Array.<string>}
+     */
+    // eslint-disable-next-line no-undef
+
   }, {
-    key: "snapToLines",
-    get: function get() {
-      return this._snapToLines;
-    },
-    set: function set(value) {
-      this._snapToLines = value;
-      this.resetCue();
+    key: "keys",
+    value: function keys() {
+      return this._map.keys();
     }
+
+    /**
+     * Clear all keys and values from the multimap.
+     * @returns {void}
+     */
+
   }, {
-    key: "line",
-    get: function get() {
-      return this._line;
-    },
-    set: function set(value) {
-      if (typeof value !== "number" && value !== autoKeyword) {
-        throw new SyntaxError("An invalid number or illegal string was specified.");
-      }
-      this._line = value;
-      this.resetCue();
-    }
-  }, {
-    key: "lineAlign",
-    get: function get() {
-      return this._lineAlign;
-    },
-    set: function set(value) {
-      var setting = findAlignSetting(value);
-      if (!setting) {
-        throw new SyntaxError("An invalid or illegal string was specified.");
-      } else if (typeof setting === "string") {
-        this._lineAlign = setting;
-        this.resetCue();
-      }
-    }
-  }, {
-    key: "position",
-    get: function get() {
-      return this._position;
-    },
-    set: function set(value) {
-      if (value < 0 || value > 100) {
-        throw new Error("Position must be between 0 and 100.");
-      }
-      this._position = value;
-      this.resetCue();
-    }
-  }, {
-    key: "positionAlign",
-    get: function get() {
-      return this._positionAlign;
-    },
-    set: function set(value) {
-      var setting = findAlignSetting(value);
-      if (!setting) {
-        throw new SyntaxError("An invalid or illegal string was specified.");
-      } else if (typeof setting === "string") {
-        this._positionAlign = setting;
-        this.resetCue();
-      }
-    }
-  }, {
-    key: "size",
-    get: function get() {
-      return this._size;
-    },
-    set: function set(value) {
-      if (value < 0 || value > 100) {
-        throw new Error("Size must be between 0 and 100.");
-      }
-      this._size = value;
-      this.resetCue();
-    }
-  }, {
-    key: "align",
-    get: function get() {
-      return this._align;
-    },
-    set: function set(value) {
-      var setting = findAlignSetting(value);
-      if (!setting) {
-        throw new SyntaxError("An invalid or illegal string was specified.");
-      } else if (typeof setting === "string") {
-        this._align = setting;
-        this.resetCue();
-      }
+    key: "clear",
+    value: function clear() {
+      this._map.clear();
     }
   }]);
 
-  return VTTCue;
+  return MultiMap;
 }();
 
-var Cue = void 0;
-if (typeof window !== 'undefined' && window.VTTCue) {
-  exports.Cue = Cue = window.VTTCue;
-} else {
-  exports.Cue = Cue = VTTCue;
-}
-
-exports.Cue = Cue;
+exports.default = MultiMap;
 
 /***/ }),
-/* 25 */
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TextCueChangedEvent = exports.VideoTrackChangedEvent = exports.TracksChangedEvent = exports.TextTrackChangedEvent = exports.SourceSelectedEvent = exports.PlayerStateChangedEvent = exports.MuteChangeEvent = exports.AudioTrackChangedEvent = exports.AbrModeChangedEvent = undefined;
+
+var _abrModeChangedEvent = __webpack_require__(21);
+
+var _abrModeChangedEvent2 = _interopRequireDefault(_abrModeChangedEvent);
+
+var _audioTrackChangedEvent = __webpack_require__(22);
+
+var _audioTrackChangedEvent2 = _interopRequireDefault(_audioTrackChangedEvent);
+
+var _muteChangeEvent = __webpack_require__(23);
+
+var _muteChangeEvent2 = _interopRequireDefault(_muteChangeEvent);
+
+var _playerStateChangedEvent = __webpack_require__(24);
+
+var _playerStateChangedEvent2 = _interopRequireDefault(_playerStateChangedEvent);
+
+var _sourceSelectedEvent = __webpack_require__(25);
+
+var _sourceSelectedEvent2 = _interopRequireDefault(_sourceSelectedEvent);
+
+var _textTrackChangedEvent = __webpack_require__(12);
+
+var _textTrackChangedEvent2 = _interopRequireDefault(_textTrackChangedEvent);
+
+var _tracksChangedEvent = __webpack_require__(27);
+
+var _tracksChangedEvent2 = _interopRequireDefault(_tracksChangedEvent);
+
+var _videoTrackChangedEvent = __webpack_require__(28);
+
+var _videoTrackChangedEvent2 = _interopRequireDefault(_videoTrackChangedEvent);
+
+var _textCueChangedEvent = __webpack_require__(26);
+
+var _textCueChangedEvent2 = _interopRequireDefault(_textCueChangedEvent);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.AbrModeChangedEvent = _abrModeChangedEvent2.default;
+exports.AudioTrackChangedEvent = _audioTrackChangedEvent2.default;
+exports.MuteChangeEvent = _muteChangeEvent2.default;
+exports.PlayerStateChangedEvent = _playerStateChangedEvent2.default;
+exports.SourceSelectedEvent = _sourceSelectedEvent2.default;
+exports.TextTrackChangedEvent = _textTrackChangedEvent2.default;
+exports.TracksChangedEvent = _tracksChangedEvent2.default;
+exports.VideoTrackChangedEvent = _videoTrackChangedEvent2.default;
+exports.TextCueChangedEvent = _textCueChangedEvent2.default;
+
+/***/ }),
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6550,17 +6636,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _env = __webpack_require__(10);
+var _index = __webpack_require__(1);
 
-var _env2 = _interopRequireDefault(_env);
-
-var _logger = __webpack_require__(0);
-
-var _logger2 = _interopRequireDefault(_logger);
-
-var _drmScheme = __webpack_require__(21);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _drmScheme = __webpack_require__(20);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -6582,7 +6660,7 @@ var DrmSupport = function () {
      * @return {boolean} - Whether scheme can be play on the current environment.
      */
     value: function isProtocolSupported(scheme, drmData) {
-      var browser = _env2.default.browser.name;
+      var browser = _index.Env.browser.name;
       if (typeof DrmSupport._Browsers[browser] === 'function') {
         var drmScheme = DrmSupport._Browsers[browser]();
         DrmSupport._logger.debug("Supported DRM scheme for current environment is: " + drmScheme);
@@ -6597,42 +6675,42 @@ var DrmSupport = function () {
   return DrmSupport;
 }();
 
-DrmSupport._logger = _logger2.default.getLogger('DrmSupport');
+DrmSupport._logger = _index.LoggerFactory.getLogger('DrmSupport');
 DrmSupport._Browsers = {
   Safari: function Safari() {
-    var device = _env2.default.device.type;
-    var os = _env2.default.os.name;
+    var device = _index.Env.device.type;
+    var os = _index.Env.os.name;
     if (!device && os === 'Mac OS') {
       return _drmScheme.DrmScheme.FAIRPLAY;
     }
     return NOT_SUPPORTED;
   },
   Chrome: function Chrome() {
-    var device = _env2.default.device.type;
-    var os = _env2.default.os.name;
+    var device = _index.Env.device.type;
+    var os = _index.Env.os.name;
     if (!device || os === 'Android') {
       return _drmScheme.DrmScheme.WIDEVINE;
     }
     return NOT_SUPPORTED;
   },
   Firefox: function Firefox() {
-    var device = _env2.default.device.type;
+    var device = _index.Env.device.type;
     if (!device) {
       return _drmScheme.DrmScheme.WIDEVINE;
     }
     return NOT_SUPPORTED;
   },
   Edge: function Edge() {
-    var device = _env2.default.device.type;
+    var device = _index.Env.device.type;
     if (!device) {
       return _drmScheme.DrmScheme.PLAYREADY;
     }
     return NOT_SUPPORTED;
   },
   IE: function IE() {
-    var device = _env2.default.device.type;
-    var os = _env2.default.os.name;
-    var osVersion = _env2.default.os.version;
+    var device = _index.Env.device.type;
+    var os = _index.Env.os.name;
+    var osVersion = _index.Env.os.version;
     if (!device && os === 'Windows' && Number.parseFloat(osVersion) >= 8.1) {
       return _drmScheme.DrmScheme.PLAYREADY;
     }
@@ -6642,7 +6720,7 @@ DrmSupport._Browsers = {
 exports.default = DrmSupport;
 
 /***/ }),
-/* 26 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6654,7 +6732,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _baseDrmProtocol = __webpack_require__(16);
+var _baseDrmProtocol = __webpack_require__(15);
 
 var _baseDrmProtocol2 = _interopRequireDefault(_baseDrmProtocol);
 
@@ -6716,32 +6794,33 @@ var FairPlay = function (_BaseDrmProtocol) {
       if (!fpDrmData || FairPlay._keySession) {
         return;
       }
+      if (fpDrmData.certificate) {
+        var fpCertificate = fpDrmData.certificate;
+        var videoElement = event.target;
+        var initData = event.initData;
+        var contentId = FairPlay._extractContentId(initData);
+        var aCertificate = FairPlay._base64DecodeUint8Array(fpCertificate);
 
-      var fpCertificate = fpDrmData.certificate;
-      var videoElement = event.target;
-      var initData = event.initData;
-      var contentId = FairPlay._extractContentId(initData);
-      var aCertificate = FairPlay._base64DecodeUint8Array(fpCertificate);
+        initData = FairPlay._concatInitDataIdAndCertificate(initData, contentId, aCertificate);
 
-      initData = FairPlay._concatInitDataIdAndCertificate(initData, contentId, aCertificate);
-
-      if (!videoElement.webkitKeys) {
-        var keySystem = FairPlay._selectKeySystem();
-        FairPlay._logger.debug("Sets media keys");
-        videoElement.webkitSetMediaKeys(new window.WebKitMediaKeys(keySystem));
+        if (!videoElement.webkitKeys) {
+          var keySystem = FairPlay._selectKeySystem();
+          FairPlay._logger.debug("Sets media keys");
+          videoElement.webkitSetMediaKeys(new window.WebKitMediaKeys(keySystem));
+        }
+        if (!videoElement.webkitKeys) {
+          throw new Error("Could not create MediaKeys");
+        }
+        FairPlay._logger.debug("Creates session");
+        FairPlay._keySession = videoElement.webkitKeys.createSession('video/mp4', initData);
+        if (!FairPlay._keySession) {
+          throw new Error("Could not create key session");
+        }
+        FairPlay._keySession.contentId = contentId;
+        FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_MESSAGE, FairPlay._onWebkitKeyMessage.bind(null, fpDrmData), false);
+        FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_ADDED, FairPlay._onWebkitKeyAdded, false);
+        FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_ERROR, FairPlay._onWebkitKeyError, false);
       }
-      if (!videoElement.webkitKeys) {
-        throw new Error("Could not create MediaKeys");
-      }
-      FairPlay._logger.debug("Creates session");
-      FairPlay._keySession = videoElement.webkitKeys.createSession('video/mp4', initData);
-      if (!FairPlay._keySession) {
-        throw new Error("Could not create key session");
-      }
-      FairPlay._keySession.contentId = contentId;
-      FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_MESSAGE, FairPlay._onWebkitKeyMessage.bind(null, fpDrmData), false);
-      FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_ADDED, FairPlay._onWebkitKeyAdded, false);
-      FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_ERROR, FairPlay._onWebkitKeyError, false);
     }
   }, {
     key: 'destroy',
@@ -6938,7 +7017,7 @@ FairPlay._WebkitEvents = {
 exports.default = FairPlay;
 
 /***/ }),
-/* 27 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6950,11 +7029,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _util = __webpack_require__(1);
+var _util = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../../../utils/util\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 
 var Utils = _interopRequireWildcard(_util);
 
-var _encodingSources = __webpack_require__(48);
+var _encodingSources = __webpack_require__(62);
 
 var EncodingSources = _interopRequireWildcard(_encodingSources);
 
@@ -7011,7 +7090,7 @@ Html5AutoPlayCapability._vid = Utils.Dom.createElement('video');
 exports.default = Html5AutoPlayCapability;
 
 /***/ }),
-/* 28 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7023,7 +7102,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _util = __webpack_require__(1);
+var _util = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../../../utils/util\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 
 var Utils = _interopRequireWildcard(_util);
 
@@ -7076,7 +7155,7 @@ Html5IsSupportedCapability._vid = Utils.Dom.createElement('video');
 exports.default = Html5IsSupportedCapability;
 
 /***/ }),
-/* 29 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7088,49 +7167,49 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _fakeEventTarget = __webpack_require__(14);
+var _fakeEventTarget = __webpack_require__(13);
 
 var _fakeEventTarget2 = _interopRequireDefault(_fakeEventTarget);
 
-var _fakeEvent = __webpack_require__(2);
+var _fakeEvent = __webpack_require__(0);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _eventManager = __webpack_require__(7);
+var _eventManager = __webpack_require__(6);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _events = __webpack_require__(8);
+var _eventTypes = __webpack_require__(7);
 
-var _mediaSourceProvider = __webpack_require__(18);
+var _mediaSourceProvider = __webpack_require__(17);
 
 var _mediaSourceProvider2 = _interopRequireDefault(_mediaSourceProvider);
 
-var _videoTrack = __webpack_require__(6);
+var _videoTrack = __webpack_require__(5);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(4);
+var _audioTrack = __webpack_require__(3);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(5);
+var _textTrack = __webpack_require__(4);
 
-var _vttCue = __webpack_require__(24);
+var _vttCue = __webpack_require__(14);
 
-var _util = __webpack_require__(1);
+var _index = __webpack_require__(1);
 
-var Utils = _interopRequireWildcard(_util);
+var _textCueChangedEvent = __webpack_require__(26);
 
-var _html5Autoplay = __webpack_require__(27);
+var _textCueChangedEvent2 = _interopRequireDefault(_textCueChangedEvent);
+
+var _html5Autoplay = __webpack_require__(36);
 
 var _html5Autoplay2 = _interopRequireDefault(_html5Autoplay);
 
-var _html5IsSupported = __webpack_require__(28);
+var _html5IsSupported = __webpack_require__(37);
 
 var _html5IsSupported2 = _interopRequireDefault(_html5IsSupported);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7156,7 +7235,7 @@ var Html5 = function (_FakeEventTarget) {
     /**
      * Factory method to create an engine.
      * @param {Source} source - The selected source object.
-     * @param {Object} config - The player configuration.
+     * @param {PlayerConfig} config - The player configuration.
      * @returns {IEngine} - New instance of the run time engine.
      * @public
      * @static
@@ -7177,7 +7256,7 @@ var Html5 = function (_FakeEventTarget) {
 
     /**
      * The player config object.
-     * @type {Object}
+     * @type {PlayerConfig}
      * @private
      */
 
@@ -7271,7 +7350,7 @@ var Html5 = function (_FakeEventTarget) {
     /**
      * @constructor
      * @param {Source} source - The selected source object.
-     * @param {Object} config - The player configuration.
+     * @param {PlayerConfig} config - The player configuration.
      */
 
   }]);
@@ -7292,7 +7371,7 @@ var Html5 = function (_FakeEventTarget) {
   /**
    * Restores the engine.
    * @param {Source} source - The selected source object.
-   * @param {Object} config - The player configuration.
+   * @param {PlayerConfig} config - The player configuration.
    * @returns {void}
    */
 
@@ -7303,7 +7382,7 @@ var Html5 = function (_FakeEventTarget) {
       this.detach();
       this._eventManager.removeAll();
       if (this._el) {
-        Utils.Dom.removeAttribute(this._el, 'src');
+        _index.Dom.removeAttribute(this._el, 'src');
       }
       this._init(source, config);
     }
@@ -7320,8 +7399,8 @@ var Html5 = function (_FakeEventTarget) {
       this.detach();
       if (this._el) {
         this.pause();
-        Utils.Dom.removeAttribute(this._el, 'src');
-        Utils.Dom.removeChild(this._el.parentNode, this._el);
+        _index.Dom.removeAttribute(this._el, 'src');
+        _index.Dom.removeChild(this._el.parentNode, this._el);
       }
       this._showTextTrackFirstTime = {};
       this._eventManager.destroy();
@@ -7347,25 +7426,25 @@ var Html5 = function (_FakeEventTarget) {
     value: function attach() {
       var _this2 = this;
 
-      Object.keys(_events.HTML5_EVENTS).forEach(function (html5Event) {
-        _this2._eventManager.listen(_this2._el, _events.HTML5_EVENTS[html5Event], function () {
-          _this2.dispatchEvent(new _fakeEvent2.default(_events.HTML5_EVENTS[html5Event]));
+      Object.keys(_eventTypes.Html5EventType).forEach(function (html5Event) {
+        _this2._eventManager.listen(_this2._el, _eventTypes.Html5EventType[html5Event], function () {
+          _this2.dispatchEvent(new _fakeEvent2.default(_eventTypes.Html5EventType[html5Event]));
         });
       });
       if (this._mediaSourceAdapter) {
-        this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, function (event) {
+        this._eventManager.listen(this._mediaSourceAdapter, _eventTypes.CustomEventType.VIDEO_TRACK_CHANGED, function (event) {
           return _this2.dispatchEvent(event);
         });
-        this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED, function (event) {
+        this._eventManager.listen(this._mediaSourceAdapter, _eventTypes.CustomEventType.AUDIO_TRACK_CHANGED, function (event) {
           return _this2.dispatchEvent(event);
         });
-        this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED, function (event) {
+        this._eventManager.listen(this._mediaSourceAdapter, _eventTypes.CustomEventType.TEXT_TRACK_CHANGED, function (event) {
           return _this2.dispatchEvent(event);
         });
-        this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.ABR_MODE_CHANGED, function (event) {
+        this._eventManager.listen(this._mediaSourceAdapter, _eventTypes.CustomEventType.ABR_MODE_CHANGED, function (event) {
           return _this2.dispatchEvent(event);
         });
-        this._eventManager.listen(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.TEXT_CUE_CHANGED, function (event) {
+        this._eventManager.listen(this._mediaSourceAdapter, _eventTypes.CustomEventType.TEXT_CUE_CHANGED, function (event) {
           return _this2.dispatchEvent(event);
         });
       }
@@ -7382,14 +7461,14 @@ var Html5 = function (_FakeEventTarget) {
     value: function detach() {
       var _this3 = this;
 
-      Object.keys(_events.HTML5_EVENTS).forEach(function (html5Event) {
-        _this3._eventManager.unlisten(_this3._el, _events.HTML5_EVENTS[html5Event]);
+      Object.keys(_eventTypes.Html5EventType).forEach(function (html5Event) {
+        _this3._eventManager.unlisten(_this3._el, _eventTypes.Html5EventType[html5Event]);
       });
       if (this._mediaSourceAdapter) {
-        this._eventManager.unlisten(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.VIDEO_TRACK_CHANGED);
-        this._eventManager.unlisten(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.AUDIO_TRACK_CHANGED);
-        this._eventManager.unlisten(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.TEXT_TRACK_CHANGED);
-        this._eventManager.unlisten(this._mediaSourceAdapter, _events.CUSTOM_EVENTS.TEXT_CUE_CHANGED);
+        this._eventManager.unlisten(this._mediaSourceAdapter, _eventTypes.CustomEventType.VIDEO_TRACK_CHANGED);
+        this._eventManager.unlisten(this._mediaSourceAdapter, _eventTypes.CustomEventType.AUDIO_TRACK_CHANGED);
+        this._eventManager.unlisten(this._mediaSourceAdapter, _eventTypes.CustomEventType.TEXT_TRACK_CHANGED);
+        this._eventManager.unlisten(this._mediaSourceAdapter, _eventTypes.CustomEventType.TEXT_CUE_CHANGED);
       }
     }
 
@@ -7537,7 +7616,7 @@ var Html5 = function (_FakeEventTarget) {
       var playPromise = this._el.play();
       if (playPromise) {
         playPromise.catch(function () {
-          return _this4.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.AUTOPLAY_FAILED));
+          return _this4.dispatchEvent(new _fakeEvent2.default(_eventTypes.CustomEventType.AUTOPLAY_FAILED));
         });
       }
     }
@@ -7599,7 +7678,7 @@ var Html5 = function (_FakeEventTarget) {
     /**
      * Initializes the engine.
      * @param {Source} source - The selected source object.
-     * @param {Object} config - The player configuration.
+     * @param {PlayerConfig} config - The player configuration.
      * @private
      * @returns {void}
      */
@@ -7620,8 +7699,8 @@ var Html5 = function (_FakeEventTarget) {
   }, {
     key: '_createVideoElement',
     value: function _createVideoElement() {
-      this._el = Utils.Dom.createElement("video");
-      this._el.id = Utils.Generator.uniqueId(5);
+      this._el = _index.Dom.createElement("video");
+      this._el.id = _index.Generator.uniqueId(5);
       this._el.controls = false;
     }
 
@@ -7730,7 +7809,7 @@ var Html5 = function (_FakeEventTarget) {
         }
       }
 
-      this.dispatchEvent(new _fakeEvent2.default(_events.CUSTOM_EVENTS.TEXT_CUE_CHANGED, { cues: activeCues }));
+      this.dispatchEvent(new _textCueChangedEvent2.default(activeCues));
     }
 
     /**
@@ -8190,7 +8269,7 @@ Html5.id = "html5";
 exports.default = Html5;
 
 /***/ }),
-/* 30 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8204,49 +8283,43 @@ var _get = function get(object, property, receiver) { if (object === null) objec
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _eventManager = __webpack_require__(7);
+var _eventManager = __webpack_require__(6);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _events = __webpack_require__(8);
+var _eventTypes = __webpack_require__(7);
 
-var _track = __webpack_require__(3);
+var _track = __webpack_require__(2);
 
 var _track2 = _interopRequireDefault(_track);
 
-var _videoTrack = __webpack_require__(6);
+var _videoTrack = __webpack_require__(5);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(4);
+var _audioTrack = __webpack_require__(3);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(5);
+var _textTrack = __webpack_require__(4);
 
-var _baseMediaSourceAdapter = __webpack_require__(17);
+var _baseMediaSourceAdapter = __webpack_require__(16);
 
 var _baseMediaSourceAdapter2 = _interopRequireDefault(_baseMediaSourceAdapter);
 
-var _resolution = __webpack_require__(39);
-
-var _util = __webpack_require__(1);
-
-var Utils = _interopRequireWildcard(_util);
-
-var _fairplay = __webpack_require__(26);
+var _fairplay = __webpack_require__(35);
 
 var _fairplay2 = _interopRequireDefault(_fairplay);
 
-var _env = __webpack_require__(10);
+var _index = __webpack_require__(1);
 
-var _env2 = _interopRequireDefault(_env);
+var _abrModeChangedEvent = __webpack_require__(21);
 
-var _fakeEvent = __webpack_require__(2);
+var _abrModeChangedEvent2 = _interopRequireDefault(_abrModeChangedEvent);
+
+var _fakeEvent = __webpack_require__(0);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8396,7 +8469,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      * @function createAdapter
      * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with.
      * @param {Object} source - The source Object.
-     * @param {Object} config - The player configuration.
+     * @param {PlayerConfig} config - The player configuration.
      * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter.
      * @static
      */
@@ -8411,7 +8484,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
      * @constructor
      * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
      * @param {Source} source - The source object
-     * @param {Object} config - The player configuration
+     * @param {PlayerConfig} config - The player configuration
      */
 
   }]);
@@ -8454,7 +8527,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
   }, {
     key: '_setProgressiveSource',
     value: function _setProgressiveSource() {
-      var suitableTrack = (0, _resolution.getSuitableSourceForResolution)(this._progressiveSources, this._videoElement.offsetWidth, this._videoElement.offsetHeight);
+      var suitableTrack = _videoTrack2.default.getSuitableSourceForResolution(this._progressiveSources, this._videoElement.offsetWidth, this._videoElement.offsetHeight);
       if (suitableTrack) {
         this._sourceObj = suitableTrack;
       }
@@ -8487,14 +8560,14 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
 
       if (!this._loadPromise) {
         this._loadPromise = new Promise(function (resolve, reject) {
-          _this2._eventManager.listenOnce(_this2._videoElement, _events.HTML5_EVENTS.LOADED_DATA, _this2._onLoadedData.bind(_this2, resolve));
-          _this2._eventManager.listenOnce(_this2._videoElement, _events.HTML5_EVENTS.ERROR, _this2._onError.bind(_this2, reject));
+          _this2._eventManager.listenOnce(_this2._videoElement, _eventTypes.Html5EventType.LOADED_DATA, _this2._onLoadedData.bind(_this2, resolve));
+          _this2._eventManager.listenOnce(_this2._videoElement, _eventTypes.Html5EventType.ERROR, _this2._onError.bind(_this2, reject));
           if (_this2._isProgressivePlayback()) {
             _this2._setProgressiveSource();
           }
           if (_this2._sourceObj && _this2._sourceObj.url) {
             _this2._videoElement.src = _this2._sourceObj.url;
-            _this2._trigger(_baseMediaSourceAdapter2.default.CustomEvents.ABR_MODE_CHANGED, { mode: _this2._isProgressivePlayback() ? 'manual' : 'auto' });
+            _this2.dispatchEvent(new _abrModeChangedEvent2.default(_this2._isProgressivePlayback() ? 'manual' : 'auto'));
           }
           if (startTime) {
             _this2._videoElement.currentTime = startTime;
@@ -8527,7 +8600,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
       if (this._videoElement.textTracks.length > 0) {
         parseTracksAndResolve();
       } else {
-        this._eventManager.listenOnce(this._videoElement, _events.HTML5_EVENTS.CAN_PLAY, parseTracksAndResolve.bind(this));
+        this._eventManager.listenOnce(this._videoElement, Html5Events.CAN_PLAY, parseTracksAndResolve.bind(this));
       }
     }
 
@@ -8617,12 +8690,14 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
       if (videoTracks) {
         for (var i = 0; i < videoTracks.length; i++) {
           var settings = {
-            id: videoTracks[i].id,
-            bandwidth: videoTracks[i].bandwidth,
-            width: videoTracks[i].width,
-            height: videoTracks[i].height,
             active: this._sourceObj ? videoTracks[i].id === this._sourceObj.id : false,
-            index: i
+            index: i,
+            id: videoTracks[i].id,
+            label: undefined,
+            language: undefined,
+            bandwidth: videoTracks[i].bandwidth,
+            height: videoTracks[i].height,
+            width: videoTracks[i].width
           };
           parsedTracks.push(new _videoTrack2.default(settings));
         }
@@ -8647,11 +8722,14 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
         for (var i = 0; i < videoTracks.length; i++) {
           var settings = {
             //TODO calculate width/height/bandwidth
-            id: videoTracks[i].id,
             active: videoTracks[i].selected,
+            index: i,
+            id: videoTracks[i].id,
             label: videoTracks[i].label,
             language: videoTracks[i].language,
-            index: i
+            bandwidth: undefined,
+            height: undefined,
+            width: undefined
           };
           parsedTracks.push(new _videoTrack2.default(settings));
         }
@@ -8674,11 +8752,11 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
       if (audioTracks) {
         for (var i = 0; i < audioTracks.length; i++) {
           var settings = {
-            id: audioTracks[i].id,
             active: audioTracks[i].enabled,
+            index: i,
+            id: audioTracks[i].id,
             label: audioTracks[i].label,
-            language: audioTracks[i].language,
-            index: i
+            language: audioTracks[i].language
           };
           parsedTracks.push(new _audioTrack2.default(settings));
         }
@@ -8701,11 +8779,12 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
       if (textTracks) {
         for (var i = 0; i < textTracks.length; i++) {
           var settings = {
-            kind: textTracks[i].kind,
             active: textTracks[i].mode === 'showing',
+            index: i,
+            id: undefined,
             label: textTracks[i].label,
             language: textTracks[i].language,
-            index: i
+            kind: textTracks[i].kind
           };
           if (settings.language || settings.label) {
             parsedTracks.push(new _textTrack.TextTrack(settings));
@@ -8751,13 +8830,13 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
         var currentTime = this._videoElement.currentTime;
         var paused = this._videoElement.paused;
         this._sourceObj = videoTracks[videoTrack.index];
-        this._eventManager.listenOnce(this._videoElement, _events.HTML5_EVENTS.LOADED_DATA, function () {
-          if (_env2.default.browser.name === 'Android Browser') {
+        this._eventManager.listenOnce(this._videoElement, _eventTypes.Html5EventType.LOADED_DATA, function () {
+          if (_index.Env.browser.name === 'Android Browser') {
             // In android browser we have to seek only after some playback.
-            _this5._eventManager.listenOnce(_this5._videoElement, _events.HTML5_EVENTS.DURATION_CHANGE, function () {
+            _this5._eventManager.listenOnce(_this5._videoElement, _eventTypes.Html5EventType.DURATION_CHANGE, function () {
               _this5._videoElement.currentTime = currentTime;
             });
-            _this5._eventManager.listenOnce(_this5._videoElement, _events.HTML5_EVENTS.SEEKED, function () {
+            _this5._eventManager.listenOnce(_this5._videoElement, _eventTypes.Html5EventType.SEEKED, function () {
               _this5._onTrackChanged(videoTrack);
               if (paused) {
                 _this5._videoElement.pause();
@@ -8765,7 +8844,7 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
             });
             _this5._videoElement.play();
           } else {
-            _this5._eventManager.listenOnce(_this5._videoElement, _events.HTML5_EVENTS.SEEKED, function () {
+            _this5._eventManager.listenOnce(_this5._videoElement, _eventTypes.Html5EventType.SEEKED, function () {
               _this5._onTrackChanged(videoTrack);
             });
             _this5._videoElement.currentTime = currentTime;
@@ -9178,14 +9257,14 @@ var NativeAdapter = function (_BaseMediaSourceAdapt) {
 }(_baseMediaSourceAdapter2.default);
 
 NativeAdapter.id = 'NativeAdapter';
-NativeAdapter._logger = _baseMediaSourceAdapter2.default.getLogger(NativeAdapter.id);
-NativeAdapter.TEST_VIDEO = Utils.Dom.createElement("video");
+NativeAdapter._logger = _index.LoggerFactory.getLogger(NativeAdapter.id);
+NativeAdapter.TEST_VIDEO = _index.Dom.createElement("video");
 NativeAdapter._drmProtocols = [_fairplay2.default];
 NativeAdapter._drmProtocol = null;
 exports.default = NativeAdapter;
 
 /***/ }),
-/* 31 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9197,17 +9276,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _multiMap = __webpack_require__(15);
+var _multiMap = __webpack_require__(32);
 
 var _multiMap2 = _interopRequireDefault(_multiMap);
 
-var _baseMiddleware = __webpack_require__(12);
+var _baseMiddleware = __webpack_require__(9);
 
 var _baseMiddleware2 = _interopRequireDefault(_baseMiddleware);
 
-var _logger = __webpack_require__(0);
-
-var _logger2 = _interopRequireDefault(_logger);
+var _index = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -9233,7 +9310,7 @@ var Middleware = function () {
 
     this._actions = actions;
     this._middlewares = new _multiMap2.default();
-    this._logger = _logger2.default.getLogger("Middleware");
+    this._logger = _index.LoggerFactory.getLogger("Middleware");
   }
 
   /**
@@ -9318,7 +9395,7 @@ var Middleware = function () {
 exports.default = Middleware;
 
 /***/ }),
-/* 32 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9330,11 +9407,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _middleware = __webpack_require__(31);
+var _middleware = __webpack_require__(40);
 
 var _middleware2 = _interopRequireDefault(_middleware);
 
-var _baseMiddleware = __webpack_require__(12);
+var _baseMiddleware = __webpack_require__(9);
 
 var _baseMiddleware2 = _interopRequireDefault(_baseMiddleware);
 
@@ -9418,7 +9495,7 @@ PlaybackMiddleware.Actions = {
 exports.default = PlaybackMiddleware;
 
 /***/ }),
-/* 33 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9427,64 +9504,68 @@ exports.default = PlaybackMiddleware;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getCapabilities = exports.BaseDrmProtocol = exports.Env = exports.PLAYER_NAME = exports.VERSION = exports.Utils = exports.TextStyle = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BaseMiddleware = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerMediaSourceAdapter = undefined;
+exports.getCapabilities = exports.BaseDrmProtocol = exports.PLAYER_NAME = exports.VERSION = exports.Utils = exports.CustomEvent = exports.Event = exports.State = exports.TextStyle = exports.TextTrack = exports.AudioTrack = exports.VideoTrack = exports.Track = exports.BaseMiddleware = exports.BasePlugin = exports.registerPlugin = exports.BaseMediaSourceAdapter = exports.registerMediaSourceAdapter = undefined;
 exports.loadPlayer = loadPlayer;
 
-var _player = __webpack_require__(9);
+var _player = __webpack_require__(8);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _logger = __webpack_require__(0);
-
-var _logger2 = _interopRequireDefault(_logger);
-
-var _baseMediaSourceAdapter = __webpack_require__(17);
+var _baseMediaSourceAdapter = __webpack_require__(16);
 
 var _baseMediaSourceAdapter2 = _interopRequireDefault(_baseMediaSourceAdapter);
 
-var _mediaSourceProvider = __webpack_require__(18);
+var _mediaSourceProvider = __webpack_require__(17);
 
-var _pluginManager = __webpack_require__(19);
+var _pluginManager = __webpack_require__(18);
 
-var _baseDrmProtocol = __webpack_require__(16);
+var _baseDrmProtocol = __webpack_require__(15);
 
 var _baseDrmProtocol2 = _interopRequireDefault(_baseDrmProtocol);
 
-var _baseMiddleware = __webpack_require__(12);
+var _baseMiddleware = __webpack_require__(9);
 
 var _baseMiddleware2 = _interopRequireDefault(_baseMiddleware);
 
-var _basePlugin = __webpack_require__(13);
+var _basePlugin = __webpack_require__(10);
 
 var _basePlugin2 = _interopRequireDefault(_basePlugin);
 
-var _track = __webpack_require__(3);
+var _state = __webpack_require__(11);
+
+var _state2 = _interopRequireDefault(_state);
+
+var _fakeEvent = __webpack_require__(0);
+
+var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
+
+var _index = __webpack_require__(33);
+
+var CustomEvent = _interopRequireWildcard(_index);
+
+var _track = __webpack_require__(2);
 
 var _track2 = _interopRequireDefault(_track);
 
-var _videoTrack = __webpack_require__(6);
+var _videoTrack = __webpack_require__(5);
 
 var _videoTrack2 = _interopRequireDefault(_videoTrack);
 
-var _audioTrack = __webpack_require__(4);
+var _audioTrack = __webpack_require__(3);
 
 var _audioTrack2 = _interopRequireDefault(_audioTrack);
 
-var _textTrack = __webpack_require__(5);
+var _textTrack = __webpack_require__(4);
 
 var _textTrack2 = _interopRequireDefault(_textTrack);
 
-var _textStyle = __webpack_require__(20);
+var _textStyle = __webpack_require__(19);
 
 var _textStyle2 = _interopRequireDefault(_textStyle);
 
-var _env = __webpack_require__(10);
+var _index2 = __webpack_require__(1);
 
-var _env2 = _interopRequireDefault(_env);
-
-var _util = __webpack_require__(1);
-
-var Utils = _interopRequireWildcard(_util);
+var Utils = _interopRequireWildcard(_index2);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -9492,9 +9573,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 _player2.default.runCapabilities();
 
-
-_logger2.default.getLogger().log('%c ' + "playkit-js" + ' ' + "0.16.0", "color: #98ff98;  font-size: large");
-_logger2.default.getLogger().log('%c For more details see ' + "https://github.com/kaltura/playkit-js", "color: #98ff98;");
+Utils.LoggerFactory.getLogger().log('%c ' + "playkit-js" + ' ' + "0.16.0", "color: #98ff98;  font-size: large");
+Utils.LoggerFactory.getLogger().log('%c For more details see ' + "https://github.com/kaltura/playkit-js", "color: #98ff98;");
 
 /**
  * @param {Object} config - The configuration of the player
@@ -9514,13 +9594,22 @@ exports.registerPlugin = _pluginManager.registerPlugin;
 exports.BasePlugin = _basePlugin2.default;
 exports.BaseMiddleware = _baseMiddleware2.default;
 
-// Export the tracks classes
+// Export the track classes
 
 exports.Track = _track2.default;
 exports.VideoTrack = _videoTrack2.default;
 exports.AudioTrack = _audioTrack2.default;
 exports.TextTrack = _textTrack2.default;
 exports.TextStyle = _textStyle2.default;
+
+// Export state class
+
+exports.State = _state2.default;
+
+// Export event classes
+
+exports.Event = _fakeEvent2.default;
+exports.CustomEvent = CustomEvent;
 
 // Export utils library
 
@@ -9534,10 +9623,6 @@ exports.VERSION = "0.16.0";
 
 exports.PLAYER_NAME = "playkit-js";
 
-// Export environment data
-
-exports.Env = _env2.default;
-
 // Export base DRM protocol
 
 exports.BaseDrmProtocol = _baseDrmProtocol2.default;
@@ -9549,7 +9634,7 @@ exports.getCapabilities = getCapabilities;
 exports.default = loadPlayer;
 
 /***/ }),
-/* 34 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9561,31 +9646,33 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _player = __webpack_require__(9);
+var _player = __webpack_require__(8);
 
 var _player2 = _interopRequireDefault(_player);
 
-var _eventManager = __webpack_require__(7);
+var _eventManager = __webpack_require__(6);
 
 var _eventManager2 = _interopRequireDefault(_eventManager);
 
-var _state = __webpack_require__(35);
+var _state = __webpack_require__(11);
 
 var _state2 = _interopRequireDefault(_state);
 
-var _stateTypes = __webpack_require__(22);
+var _stateTypes = __webpack_require__(29);
 
 var _stateTypes2 = _interopRequireDefault(_stateTypes);
 
-var _events = __webpack_require__(8);
+var _eventTypes = __webpack_require__(7);
 
-var _fakeEvent = __webpack_require__(2);
+var _fakeEvent = __webpack_require__(0);
 
 var _fakeEvent2 = _interopRequireDefault(_fakeEvent);
 
-var _logger = __webpack_require__(0);
+var _index = __webpack_require__(1);
 
-var _logger2 = _interopRequireDefault(_logger);
+var _playerStateChangedEvent = __webpack_require__(24);
+
+var _playerStateChangedEvent2 = _interopRequireDefault(_playerStateChangedEvent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -9626,63 +9713,63 @@ var StateManager = function () {
    */
   function StateManager(player) {
     var _this = this,
-        _PlayerStates$IDLE,
-        _PlayerStates$LOADING,
-        _PlayerStates$PAUSED,
-        _PlayerStates$PLAYING,
-        _PlayerStates$BUFFERI,
+        _PlayerStateType$IDLE,
+        _PlayerStateType$LOAD,
+        _PlayerStateType$PAUS,
+        _PlayerStateType$PLAY,
+        _PlayerStateType$BUFF,
         _transitions;
 
     _classCallCheck(this, StateManager);
 
-    this._transitions = (_transitions = {}, _defineProperty(_transitions, _stateTypes2.default.IDLE, (_PlayerStates$IDLE = {}, _defineProperty(_PlayerStates$IDLE, _events.HTML5_EVENTS.LOAD_START, function () {
+    this._transitions = (_transitions = {}, _defineProperty(_transitions, _stateTypes2.default.IDLE, (_PlayerStateType$IDLE = {}, _defineProperty(_PlayerStateType$IDLE, _eventTypes.Html5EventType.LOAD_START, function () {
       _this._updateState(_stateTypes2.default.LOADING);
       _this._dispatchEvent();
-    }), _defineProperty(_PlayerStates$IDLE, _events.HTML5_EVENTS.PLAY, function () {
+    }), _defineProperty(_PlayerStateType$IDLE, _eventTypes.Html5EventType.PLAY, function () {
       _this._updateState(_stateTypes2.default.BUFFERING);
       _this._dispatchEvent();
-    }), _PlayerStates$IDLE)), _defineProperty(_transitions, _stateTypes2.default.LOADING, (_PlayerStates$LOADING = {}, _defineProperty(_PlayerStates$LOADING, _events.HTML5_EVENTS.LOADED_METADATA, function () {
+    }), _PlayerStateType$IDLE)), _defineProperty(_transitions, _stateTypes2.default.LOADING, (_PlayerStateType$LOAD = {}, _defineProperty(_PlayerStateType$LOAD, _eventTypes.Html5EventType.LOADED_METADATA, function () {
       _this._updateState(_stateTypes2.default.PAUSED);
       _this._dispatchEvent();
-    }), _defineProperty(_PlayerStates$LOADING, _events.HTML5_EVENTS.ERROR, function () {
+    }), _defineProperty(_PlayerStateType$LOAD, _eventTypes.Html5EventType.ERROR, function () {
       _this._updateState(_stateTypes2.default.IDLE);
       _this._dispatchEvent();
-    }), _PlayerStates$LOADING)), _defineProperty(_transitions, _stateTypes2.default.PAUSED, (_PlayerStates$PAUSED = {}, _defineProperty(_PlayerStates$PAUSED, _events.HTML5_EVENTS.PLAY, function () {
+    }), _PlayerStateType$LOAD)), _defineProperty(_transitions, _stateTypes2.default.PAUSED, (_PlayerStateType$PAUS = {}, _defineProperty(_PlayerStateType$PAUS, _eventTypes.Html5EventType.PLAY, function () {
       _this._updateState(_stateTypes2.default.PLAYING);
       _this._dispatchEvent();
-    }), _defineProperty(_PlayerStates$PAUSED, _events.HTML5_EVENTS.PLAYING, function () {
+    }), _defineProperty(_PlayerStateType$PAUS, _eventTypes.Html5EventType.PLAYING, function () {
       _this._updateState(_stateTypes2.default.PLAYING);
       _this._dispatchEvent();
-    }), _defineProperty(_PlayerStates$PAUSED, _events.HTML5_EVENTS.ENDED, function () {
+    }), _defineProperty(_PlayerStateType$PAUS, _eventTypes.Html5EventType.ENDED, function () {
       _this._updateState(_stateTypes2.default.IDLE);
       _this._dispatchEvent();
-    }), _PlayerStates$PAUSED)), _defineProperty(_transitions, _stateTypes2.default.PLAYING, (_PlayerStates$PLAYING = {}, _defineProperty(_PlayerStates$PLAYING, _events.HTML5_EVENTS.PAUSE, function () {
+    }), _PlayerStateType$PAUS)), _defineProperty(_transitions, _stateTypes2.default.PLAYING, (_PlayerStateType$PLAY = {}, _defineProperty(_PlayerStateType$PLAY, _eventTypes.Html5EventType.PAUSE, function () {
       _this._updateState(_stateTypes2.default.PAUSED);
       _this._dispatchEvent();
-    }), _defineProperty(_PlayerStates$PLAYING, _events.HTML5_EVENTS.WAITING, function () {
+    }), _defineProperty(_PlayerStateType$PLAY, _eventTypes.Html5EventType.WAITING, function () {
       _this._updateState(_stateTypes2.default.BUFFERING);
       _this._dispatchEvent();
-    }), _defineProperty(_PlayerStates$PLAYING, _events.HTML5_EVENTS.ENDED, function () {
+    }), _defineProperty(_PlayerStateType$PLAY, _eventTypes.Html5EventType.ENDED, function () {
       _this._updateState(_stateTypes2.default.IDLE);
       _this._dispatchEvent();
-    }), _defineProperty(_PlayerStates$PLAYING, _events.HTML5_EVENTS.ERROR, function () {
+    }), _defineProperty(_PlayerStateType$PLAY, _eventTypes.Html5EventType.ERROR, function () {
       _this._updateState(_stateTypes2.default.IDLE);
       _this._dispatchEvent();
-    }), _PlayerStates$PLAYING)), _defineProperty(_transitions, _stateTypes2.default.BUFFERING, (_PlayerStates$BUFFERI = {}, _defineProperty(_PlayerStates$BUFFERI, _events.HTML5_EVENTS.PLAYING, function () {
+    }), _PlayerStateType$PLAY)), _defineProperty(_transitions, _stateTypes2.default.BUFFERING, (_PlayerStateType$BUFF = {}, _defineProperty(_PlayerStateType$BUFF, _eventTypes.Html5EventType.PLAYING, function () {
       _this._updateState(_stateTypes2.default.PLAYING);
       _this._dispatchEvent();
-    }), _defineProperty(_PlayerStates$BUFFERI, _events.HTML5_EVENTS.PAUSE, function () {
+    }), _defineProperty(_PlayerStateType$BUFF, _eventTypes.Html5EventType.PAUSE, function () {
       _this._updateState(_stateTypes2.default.PAUSED);
       _this._dispatchEvent();
-    }), _defineProperty(_PlayerStates$BUFFERI, _events.HTML5_EVENTS.SEEKED, function () {
+    }), _defineProperty(_PlayerStateType$BUFF, _eventTypes.Html5EventType.SEEKED, function () {
       if (_this._prevState && _this._prevState.type === _stateTypes2.default.PLAYING) {
         _this._updateState(_stateTypes2.default.PLAYING);
         _this._dispatchEvent();
       }
-    }), _PlayerStates$BUFFERI)), _transitions);
+    }), _PlayerStateType$BUFF)), _transitions);
 
     this._player = player;
-    this._logger = _logger2.default.getLogger("StateManager");
+    this._logger = _index.LoggerFactory.getLogger("StateManager");
     this._eventManager = new _eventManager2.default();
     this._history = [];
     this._prevState = null;
@@ -9698,14 +9785,14 @@ var StateManager = function () {
 
   /**
    * The possible transitions from one state to another.
-   * @type {Array<Transition>}
+   * @type {Transition}
    * @private
    */
 
   /**
    * Holds the previous state of the player.
    * @member
-   * @type {State | null}
+   * @type {MaybeState}
    * @private
    */
 
@@ -9727,15 +9814,15 @@ var StateManager = function () {
   _createClass(StateManager, [{
     key: '_attachListeners',
     value: function _attachListeners() {
-      this._eventManager.listen(this._player, _events.HTML5_EVENTS.ERROR, this._doTransition.bind(this));
-      this._eventManager.listen(this._player, _events.HTML5_EVENTS.ENDED, this._doTransition.bind(this));
-      this._eventManager.listen(this._player, _events.HTML5_EVENTS.PLAY, this._doTransition.bind(this));
-      this._eventManager.listen(this._player, _events.HTML5_EVENTS.LOAD_START, this._doTransition.bind(this));
-      this._eventManager.listen(this._player, _events.HTML5_EVENTS.PLAYING, this._doTransition.bind(this));
-      this._eventManager.listen(this._player, _events.HTML5_EVENTS.LOADED_METADATA, this._doTransition.bind(this));
-      this._eventManager.listen(this._player, _events.HTML5_EVENTS.PAUSE, this._doTransition.bind(this));
-      this._eventManager.listen(this._player, _events.HTML5_EVENTS.WAITING, this._doTransition.bind(this));
-      this._eventManager.listen(this._player, _events.HTML5_EVENTS.SEEKED, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _eventTypes.Html5EventType.ERROR, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _eventTypes.Html5EventType.ENDED, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _eventTypes.Html5EventType.PLAY, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _eventTypes.Html5EventType.LOAD_START, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _eventTypes.Html5EventType.PLAYING, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _eventTypes.Html5EventType.LOADED_METADATA, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _eventTypes.Html5EventType.PAUSE, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _eventTypes.Html5EventType.WAITING, this._doTransition.bind(this));
+      this._eventManager.listen(this._player, _eventTypes.Html5EventType.SEEKED, this._doTransition.bind(this));
     }
 
     /**
@@ -9783,11 +9870,7 @@ var StateManager = function () {
   }, {
     key: '_dispatchEvent',
     value: function _dispatchEvent() {
-      var event = new _fakeEvent2.default(_events.CUSTOM_EVENTS.PLAYER_STATE_CHANGED, {
-        'oldState': this._prevState,
-        'newState': this._curState
-      });
-      this._player.dispatchEvent(event);
+      this._player.dispatchEvent(new _playerStateChangedEvent2.default(this.previousState, this.currentState));
     }
 
     /**
@@ -9830,7 +9913,7 @@ var StateManager = function () {
     /**
      * Getter to the previous state of the player.
      * @public
-     * @returns {State|null} - The previous state object, or null if such doesn't exists
+     * @returns {MaybeState} - The previous state object, or null if such doesn't exists
      */
 
   }, {
@@ -9858,7 +9941,7 @@ var StateManager = function () {
 exports.default = StateManager;
 
 /***/ }),
-/* 35 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9872,75 +9955,216 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/**
- * This class describes a player state.
- * @classdesc
- */
-var State = function () {
-
-  /**
-   * @constructor
-   * @param {string} type - The type of the state.
-   */
-
-  /**
-   * The duration that the player was in this state.
-   * @member
-   * @type {number}
-   * @private
-   */
-  function State(type) {
-    _classCallCheck(this, State);
-
-    this.type = type;
-    this._duration = 0;
-    this._timestamp = Date.now() / 1000;
+var Dom = function () {
+  function Dom() {
+    _classCallCheck(this, Dom);
   }
 
-  /**
-   * Getter for the duration of the state.
-   * @returns {number} - The duration of the state
-   */
+  _createClass(Dom, null, [{
+    key: 'addClassName',
 
-  /**
-   * The timestamp that this state started.
-   * @member
-   * @type {number}
-   * @private
-   */
-
-  /**
-   * The type of the state.
-   * Can be one of those describes in states.js
-   * @member
-   * @type {string}
-   * @public
-   */
-
-
-  _createClass(State, [{
-    key: "duration",
-    get: function get() {
-      return this._duration;
+    /**
+     * Adds class name to an element
+     * @param {Element} element - an HTML element
+     * @param {string} className - a class name
+     * @returns {void}
+     */
+    value: function addClassName(element, className) {
+      if (element.classList) {
+        element.classList.add(className);
+      } else {
+        if (!Dom.hasClassName(element, className)) {
+          element.className += className;
+        }
+      }
     }
 
     /**
-     * Setter for the duration of the state.
-     * @param {number} endTime - The timestamp of the next state.
+     * Removes class name from an element
+     * @param {Element} element - an HTML element
+     * @param {string} className - a class name
+     * @returns {void}
      */
-    ,
-    set: function set(endTime) {
-      this._duration = endTime - this._timestamp;
+
+  }, {
+    key: 'removeClassName',
+    value: function removeClassName(element, className) {
+      if (element.classList) {
+        element.classList.remove(className);
+      } else {
+        if (Dom.hasClassName(element, className)) {
+          element.className = element.className.replace(new RegExp('(\\s|^)' + className + '(\\s|$)'), ' ').replace(/^\s+|\s+$/g, '');
+        }
+      }
+    }
+
+    /**
+     * Checks if an element has a class name
+     * @param {Element} element - an HTML element
+     * @param {string} className - a class name
+     * @returns {boolean} - weather an element contains a class name
+     */
+
+  }, {
+    key: 'hasClassName',
+    value: function hasClassName(element, className) {
+      return element.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(element.className);
+    }
+
+    /**
+     * Add element attribute
+     * @param {Element} element - an HTML element
+     * @param {string} name - attribute name
+     * @param {string} value - attribute value
+     * @returns {void}
+     */
+
+  }, {
+    key: 'setAttribute',
+    value: function setAttribute(element, name, value) {
+      element.setAttribute(name, value);
+    }
+
+    /**
+     * Remove element attribute
+     * @param {Element} element - an HTML element
+     * @param {string} name - attribute name
+     * @returns {void}
+     */
+
+  }, {
+    key: 'removeAttribute',
+    value: function removeAttribute(element, name) {
+      element.removeAttribute(name);
+    }
+
+    /**
+     * Set element style
+     * @param {Element} element - an HTML element
+     * @param {string} name - style name
+     * @param {string} value - style value
+     * @returns {void}
+     */
+
+  }, {
+    key: 'setStyle',
+    value: function setStyle(element, name, value) {
+      if (element.style.getPropertyValue(name) !== undefined) {
+        element.style.setProperty(name, value);
+      }
+    }
+
+    /**
+     * Adds a node to the end of the list of children of a specified parent node.
+     * @param {Element} parent - The parent node.
+     * @param {Element} child - The child node.
+     * @returns {void}
+     */
+
+  }, {
+    key: 'appendChild',
+    value: function appendChild(parent, child) {
+      if (parent && child && parent.appendChild) {
+        parent.appendChild(child);
+      }
+    }
+
+    /**
+     * Removes an element from his parent node.
+     * @param {Element} parent - The parent node.
+     * @param {Element} child - The child node.
+     * @returns {void}
+     */
+
+  }, {
+    key: 'removeChild',
+    value: function removeChild(parent, child) {
+      if (parent && child && parent.removeChild) {
+        parent.removeChild(child);
+      }
+    }
+
+    /**
+     * Prepend HTML element
+     * @param {HTMLElement} child - the child to prepend
+     * @param {HTMLElement} parent - the parent to preprend to
+     * @returns {void}
+     */
+
+  }, {
+    key: 'prependTo',
+    value: function prependTo(child, parent) {
+      if (parent.firstChild) {
+        parent.insertBefore(child, parent.firstChild);
+      } else {
+        parent.appendChild(child);
+      }
+    }
+
+    /**
+     * Returns a reference to the element by its ID.
+     * @param {string} id - The desired id.
+     * @returns {Element} - The element with the desired id.
+     */
+
+  }, {
+    key: 'getElementById',
+    value: function getElementById(id) {
+      return document.getElementById(id);
+    }
+
+    /**
+     * Creates the HTML element specified by tagName.
+     * @param {string} tagName - The tag name.
+     * @returns {Element} - The element just created.
+     */
+
+  }, {
+    key: 'createElement',
+    value: function createElement(tagName) {
+      return document.createElement(tagName);
+    }
+
+    /**
+     * Loads script asynchronously.
+     * @param {string} url - The url to load.
+     * @return {Promise} - The loading promise.
+     * @public
+     */
+
+  }, {
+    key: 'loadScriptAsync',
+    value: function loadScriptAsync(url) {
+      var _this = this;
+
+      return new Promise(function (resolve, reject) {
+        var r = false,
+            t = document.getElementsByTagName("script")[0],
+            s = _this.createElement("script");
+        s.type = "text/javascript";
+        s.src = url;
+        s.async = true;
+        s.onload = s.onreadystatechange = function () {
+          if (!r && (!this.readyState || this.readyState === "complete")) {
+            r = true;
+            resolve(this);
+          }
+        };
+        s.onerror = s.onabort = reject;
+        if (t && t.parentNode) {
+          t.parentNode.insertBefore(s, t);
+        }
+      });
     }
   }]);
 
-  return State;
+  return Dom;
 }();
 
-exports.default = State;
+exports.default = Dom;
 
 /***/ }),
-/* 36 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9949,16 +10173,73 @@ exports.default = State;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var TRACK_TYPES = {
-  VIDEO: "video",
-  AUDIO: "audio",
-  TEXT: "text"
-};
 
-exports.default = TRACK_TYPES;
+var _uaParserJs = __webpack_require__(60);
+
+var _uaParserJs2 = _interopRequireDefault(_uaParserJs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Env = new _uaParserJs2.default().getResult();
+exports.default = Env;
 
 /***/ }),
-/* 37 */
+/* 46 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Generator = function () {
+  function Generator() {
+    _classCallCheck(this, Generator);
+  }
+
+  _createClass(Generator, null, [{
+    key: "uniqueId",
+
+    /**
+     * Generates unique id.
+     * @param {number} length - The length of the id.
+     * @returns {string} - The generated id.
+     */
+    value: function uniqueId(length) {
+      var from = 2;
+      var to = from + (!length || length < 0 ? 0 : length - 2);
+      return '_' + Math.random().toString(36).substr(from, to);
+    }
+
+    /**
+     * Generates GUID.
+     * @return {string} - GUID
+     * @private
+     */
+
+  }, {
+    key: "guid",
+    value: function guid() {
+      var S4 = function S4() {
+        return ((1 + Math.random()) * 0x10000 | 0).toString(16).substring(1);
+      };
+      return S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4();
+    }
+  }]);
+
+  return Generator;
+}();
+
+exports.default = Generator;
+
+/***/ }),
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9975,7 +10256,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /**
  * Locale class
  * @class
- *
  */
 var Locale = function () {
   function Locale() {
@@ -9984,7 +10264,6 @@ var Locale = function () {
 
   _createClass(Locale, null, [{
     key: "language",
-
 
     /**
      * tries to return the locale language in IOS-693-1 format(two-letter codes, one per language for)
@@ -10020,7 +10299,63 @@ var Locale = function () {
 exports.default = Locale;
 
 /***/ }),
-/* 38 */
+/* 48 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.LOG_LEVEL = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jsLogger = __webpack_require__(56);
+
+var JsLogger = _interopRequireWildcard(_jsLogger);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var LOG_LEVEL = {
+  "DEBUG": JsLogger.DEBUG,
+  "INFO": JsLogger.INFO,
+  "TIME": JsLogger.TIME,
+  "WARN": JsLogger.WARN,
+  "ERROR": JsLogger.ERROR,
+  "OFF": JsLogger.OFF
+};
+
+var LoggerFactory = function () {
+  function LoggerFactory(options) {
+    _classCallCheck(this, LoggerFactory);
+
+    JsLogger.useDefaults(options || {});
+  }
+
+  _createClass(LoggerFactory, [{
+    key: "getLogger",
+    value: function getLogger(name) {
+      if (!name) {
+        return JsLogger;
+      }
+      return JsLogger.get(name);
+    }
+  }]);
+
+  return LoggerFactory;
+}();
+
+var lf = new LoggerFactory({ defaultLevel: JsLogger.DEBUG });
+
+exports.default = lf;
+exports.LOG_LEVEL = LOG_LEVEL;
+
+/***/ }),
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10032,11 +10367,356 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _util = __webpack_require__(1);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Utils = _interopRequireWildcard(_util);
+var Num = function () {
+  function Num() {
+    _classCallCheck(this, Num);
+  }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+  _createClass(Num, null, [{
+    key: "isNumber",
+
+    /**
+     * @param {number} n - A certain number
+     * @returns {boolean} - If the input is a number
+     */
+    value: function isNumber(n) {
+      return window.Number(n) === n;
+    }
+
+    /**
+     * @param {number} n - A certain number
+     * @returns {boolean} - If the input is an integer
+     */
+
+  }, {
+    key: "isInt",
+    value: function isInt(n) {
+      return Num.isNumber(n) && n % 1 === 0;
+    }
+
+    /**
+     * @param {number} n - A certain number
+     * @returns {boolean} - If the input is a float
+     */
+
+  }, {
+    key: "isFloat",
+    value: function isFloat(n) {
+      return Num.isNumber(n) && n % 1 !== 0;
+    }
+  }]);
+
+  return Num;
+}();
+
+exports.default = Num;
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Obj = function () {
+  function Obj() {
+    _classCallCheck(this, Obj);
+  }
+
+  _createClass(Obj, [{
+    key: "bind",
+
+
+    /**
+     * Binds an handler to a desired context.
+     * @param {any} thisObj - The handler context.
+     * @param {Function} fn - The handler.
+     * @returns {Function} - The new bound function.
+     * @public
+     */
+    value: function bind(thisObj, fn) {
+      return function () {
+        fn.apply(thisObj, arguments);
+      };
+    }
+  }], [{
+    key: "merge",
+
+    /**
+     * @param {Array<Object>} objects - The objects to merge
+     * @returns {Object} - The merged object.
+     */
+    value: function merge(objects) {
+      var target = {};
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = objects[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var obj = _step.value;
+
+          window.Object.assign(target, obj);
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return target;
+    }
+
+    /**
+     * @param {any} item - The item to check.
+     * @returns {boolean} - Whether the item is an object.
+     */
+
+  }, {
+    key: "isObject",
+    value: function isObject(item) {
+      return item && (typeof item === "undefined" ? "undefined" : _typeof(item)) === 'object' && !Array.isArray(item);
+    }
+
+    /**
+     * @param {any} target - The target object.
+     * @param {any} sources - The objects to merge.
+     * @returns {Object} - The merged object.
+     */
+
+  }, {
+    key: "mergeDeep",
+    value: function mergeDeep(target) {
+      for (var _len = arguments.length, sources = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        sources[_key - 1] = arguments[_key];
+      }
+
+      if (!sources.length) {
+        return target;
+      }
+      var source = sources.shift();
+      if (Obj.isObject(target) && Obj.isObject(source)) {
+        for (var key in source) {
+          if (Obj.isObject(source[key])) {
+            if (!target[key]) window.Object.assign(target, _defineProperty({}, key, {}));
+            Obj.mergeDeep(target[key], source[key]);
+          } else {
+            window.Object.assign(target, _defineProperty({}, key, source[key]));
+          }
+        }
+      }
+      return Obj.mergeDeep.apply(Obj, [target].concat(_toConsumableArray(sources)));
+    }
+
+    /**
+     * @param {any} data - The data to copy.
+     * @returns {any} - The copied data.
+     */
+
+  }, {
+    key: "copyDeep",
+    value: function copyDeep(data) {
+      var node = void 0;
+      if (Array.isArray(data)) {
+        node = data.length > 0 ? data.slice(0) : [];
+        node.forEach(function (e, i) {
+          if ((typeof e === "undefined" ? "undefined" : _typeof(e)) === "object" && e !== {} || Array.isArray(e) && e.length > 0) {
+            node[i] = Obj.copyDeep(e);
+          }
+        });
+      } else if ((typeof data === "undefined" ? "undefined" : _typeof(data)) === "object") {
+        node = window.Object.assign({}, data);
+        window.Object.keys(node).forEach(function (key) {
+          if (_typeof(node[key]) === "object" && node[key] !== {} || Array.isArray(node[key]) && node[key].length > 0) {
+            node[key] = Obj.copyDeep(node[key]);
+          }
+        });
+      } else {
+        node = data;
+      }
+      return node;
+    }
+
+    /**
+     * Checks if an object is an empty object.
+     * @param {Object} obj - The object to check
+     * @returns {boolean} - Whether the object is empty.
+     */
+
+  }, {
+    key: "isEmptyObject",
+    value: function isEmptyObject(obj) {
+      for (var key in obj) {
+        if (obj.hasOwnProperty(key)) return false;
+      }
+      return true;
+    }
+
+    /**
+     * Checks for nested object properties.
+     * @param {Object} obj - The object to check.
+     * @param {string} propertyPath - The path to check.
+     * @returns {boolean} - The value in this path.
+     */
+
+  }, {
+    key: "getPropertyPath",
+    value: function getPropertyPath(obj, propertyPath) {
+      return propertyPath.split(".").reduce(function (o, x) {
+        return typeof o === "undefined" || o === null ? o : o[x];
+      }, obj);
+    }
+
+    /**
+     * Checks for nested object properties.
+     * @param {Object} obj - The object to check.
+     * @param {string} propertyPath - The path to check.
+     * @returns {boolean} - Whether the path exists in the object.
+     */
+
+  }, {
+    key: "hasPropertyPath",
+    value: function hasPropertyPath(obj, propertyPath) {
+      if (!propertyPath) {
+        return false;
+      }
+      var properties = propertyPath.split('.');
+      for (var i = 0; i < properties.length; i++) {
+        var prop = properties[i];
+        if (!obj || !obj.hasOwnProperty(prop)) {
+          return false;
+        } else {
+          obj = obj[prop];
+        }
+      }
+      return true;
+    }
+
+    /**
+     * Creates deferred promise which can resolved/rejected outside the promise scope.
+     * @returns {DeferredPromise} - The promise with resolve and reject props.
+     */
+
+  }, {
+    key: "defer",
+    value: function defer() {
+      var res = void 0,
+          rej = void 0;
+      // $FlowFixMe
+      var promise = new Promise(function (resolve, reject) {
+        res = resolve;
+        rej = reject;
+      });
+      // $FlowFixMe
+      promise.resolve = res;
+      // $FlowFixMe
+      promise.reject = rej;
+      return promise;
+    }
+  }]);
+
+  return Obj;
+}();
+
+exports.default = Obj;
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var PlayerError = function () {
+  function PlayerError(error, param) {
+    _classCallCheck(this, PlayerError);
+
+    this.name = error.name;
+    this.message = error.message(param);
+  }
+
+  _createClass(PlayerError, [{
+    key: "getError",
+    value: function getError() {
+      return {
+        name: this.name,
+        message: this.message
+      };
+    }
+  }]);
+
+  return PlayerError;
+}();
+
+PlayerError.TYPE = {
+  NOT_REGISTERED_PLUGIN: {
+    name: "PluginNotRegisteredException",
+    message: function message(name) {
+      return "Cannot load " + name + " plugin. Name not found in the registry";
+    }
+  },
+  NOT_VALID_HANDLER: {
+    name: "PluginHandlerIsNotValidException",
+    message: function message() {
+      return "To activate plugin you must provide a class derived from BasePlugin";
+    }
+  },
+  NOT_IMPLEMENTED_METHOD: {
+    name: "NotImplementedException",
+    message: function message(method) {
+      return method + " method not implemented";
+    }
+  }
+};
+exports.default = PlayerError;
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _index = __webpack_require__(1);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -10071,7 +10751,8 @@ var PosterManager = function () {
     value: function setSrc(posterUrl) {
       if (posterUrl) {
         this._posterUrl = posterUrl;
-        Utils.Dom.setStyle(this._el, "background-image", "url(\"" + this._posterUrl + "\")");
+        _index.Dom.setStyle(this._el, "background-image", "url(\"" + this._posterUrl + "\")");
+        this.hide();
       }
     }
 
@@ -10104,9 +10785,9 @@ var PosterManager = function () {
     key: "_createEl",
     value: function _createEl() {
       if (!this._el) {
-        var el = this._el = Utils.Dom.createElement("div");
-        Utils.Dom.setAttribute(el, "id", Utils.Generator.uniqueId(5));
-        Utils.Dom.setAttribute(el, "tabindex", '-1');
+        var el = this._el = _index.Dom.createElement("div");
+        _index.Dom.setAttribute(el, "id", _index.Generator.uniqueId(5));
+        _index.Dom.setAttribute(el, "tabindex", '-1');
       }
     }
 
@@ -10120,7 +10801,7 @@ var PosterManager = function () {
     key: "_removeEl",
     value: function _removeEl() {
       if (this._el) {
-        Utils.Dom.removeChild(this._el.parentNode, this._el);
+        _index.Dom.removeChild(this._el.parentNode, this._el);
       }
     }
 
@@ -10134,7 +10815,7 @@ var PosterManager = function () {
   }, {
     key: "show",
     value: function show() {
-      Utils.Dom.setStyle(this._el, "display", "");
+      _index.Dom.setStyle(this._el, "display", "");
     }
 
     /**
@@ -10146,7 +10827,7 @@ var PosterManager = function () {
   }, {
     key: "hide",
     value: function hide() {
-      Utils.Dom.setStyle(this._el, "display", "none");
+      _index.Dom.setStyle(this._el, "display", "none");
     }
 
     /**
@@ -10159,7 +10840,7 @@ var PosterManager = function () {
     key: "reset",
     value: function reset() {
       this._posterUrl = '';
-      Utils.Dom.setStyle(this._el, "background-image", '');
+      _index.Dom.setStyle(this._el, "background-image", '');
     }
 
     /**
@@ -10187,7 +10868,7 @@ var PosterManager = function () {
 exports.default = PosterManager;
 
 /***/ }),
-/* 39 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10197,137 +10878,69 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-/**
- * Calculates the most suitable source to the container size
- * @function getSuitableSourceForResolution
- * @param {Array<Object>} tracks - The tracks
- * @param {number} width - The width to calculate with
- * @param {number} height - The height to calculate with
- * @returns {Object} - The most suitable source to the container size
- */
-function getSuitableSourceForResolution(tracks, width, height) {
-  var mostSuitableWidth = null;
-  if (height && tracks) {
-    var mostSuitableWidthTracks = [];
-    var minWidthDiff = Infinity;
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-    try {
-      for (var _iterator = tracks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var track = _step.value;
-        // first filter the most width suitable
-        var widthDiff = Math.abs(track.width - width);
-        if (widthDiff < minWidthDiff) {
-          minWidthDiff = widthDiff;
-          mostSuitableWidthTracks = [track];
-        } else if (widthDiff === minWidthDiff) {
-          mostSuitableWidthTracks.push(track);
-        }
-      }
-    } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
-      }
-    }
-
-    var videoRatio = width / height;
-    var mostSuitableWidthAndRatioTracks = mostSuitableWidthTracks;
-    var minRatioDiff = Infinity;
-    var _iteratorNormalCompletion2 = true;
-    var _didIteratorError2 = false;
-    var _iteratorError2 = undefined;
-
-    try {
-      for (var _iterator2 = mostSuitableWidthTracks[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-        var _track = _step2.value;
-        // filter the most ratio suitable from the width filter results
-        if (_track.height) {
-          var ratioDiff = Math.abs(_track.width / _track.height - videoRatio);
-          if (ratioDiff < minRatioDiff) {
-            minRatioDiff = ratioDiff;
-            mostSuitableWidthAndRatioTracks = [_track];
-          } else if (ratioDiff === minRatioDiff) {
-            mostSuitableWidthAndRatioTracks.push(_track);
-          }
-        }
-      }
-    } catch (err) {
-      _didIteratorError2 = true;
-      _iteratorError2 = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion2 && _iterator2.return) {
-          _iterator2.return();
-        }
-      } finally {
-        if (_didIteratorError2) {
-          throw _iteratorError2;
-        }
-      }
-    }
-
-    var maxBandwidth = 0;
-    var _iteratorNormalCompletion3 = true;
-    var _didIteratorError3 = false;
-    var _iteratorError3 = undefined;
-
-    try {
-      for (var _iterator3 = mostSuitableWidthAndRatioTracks[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-        var _track2 = _step3.value;
-        // select the top bitrate from the ratio filter results
-        if (_track2.bandwidth > maxBandwidth || !_track2.bandwidth) {
-          maxBandwidth = _track2.bandwidth || maxBandwidth;
-          mostSuitableWidth = _track2;
-        }
-      }
-    } catch (err) {
-      _didIteratorError3 = true;
-      _iteratorError3 = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion3 && _iterator3.return) {
-          _iterator3.return();
-        }
-      } finally {
-        if (_didIteratorError3) {
-          throw _iteratorError3;
-        }
-      }
-    }
+var Str = function () {
+  function Str() {
+    _classCallCheck(this, Str);
   }
-  return mostSuitableWidth;
-}
 
-exports.getSuitableSourceForResolution = getSuitableSourceForResolution;
+  _createClass(Str, null, [{
+    key: 'capitlize',
+
+    /**
+     * Uppercase the first letter of a string
+     * @param  {String} string - String to be uppercased
+     * @return {String} - The uppercased string
+     * @public
+     * @method toTitleCase
+     */
+    value: function capitlize(string) {
+      if (typeof string !== 'string') {
+        return string;
+      }
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    /**
+     * @param {string} string - Certain string
+     * @param {string} searchString - Certain string
+     * @returns {boolean} - Whether the string: string is ending with string: searchString
+     */
+
+  }, {
+    key: 'endsWith',
+    value: function endsWith(string, searchString) {
+      if (typeof string !== 'string' || typeof searchString !== 'string') {
+        return false;
+      }
+      return string.indexOf(searchString, string.length - searchString.length) !== -1;
+    }
+  }]);
+
+  return Str;
+}();
+
+exports.default = Str;
 
 /***/ }),
-/* 40 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(41)(undefined);
+exports = module.exports = __webpack_require__(55)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, ".playkit-container {\n  position: relative;\n  width: 100%;\n  height: 100%;\n  color: #fff;\n  outline: none;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n  -webkit-tap-highlight-color: transparent;\n}\n\n.playkit-engine {\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  object-fit: contain;\n}\n\n.playkit-engine video::-webkit-media-controls-panel,\n.playkit-engine video::-webkit-media-controls-panel-container,\n.playkit-engine video::-webkit-media-controls-start-playback-button,\n.playkit-engine video::-webkit-media-controls-play-button {\n  display: none;\n  -webkit-appearance: none\n}\n\n.playkit-poster {\n  position: absolute;\n  display: block;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  background-size: contain;\n  background-position: center center;\n  background-repeat: no-repeat;\n}\n\n.playkit-subtitles {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  left: 0;\n}\n\n", ""]);
+exports.push([module.i, ".playkit-container {\n  position: relative;\n  width: 100%;\n  height: 100%;\n  color: #fff;\n  outline: none;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n  -webkit-tap-highlight-color: transparent;\n}\n\n.playkit-engine {\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  object-fit: contain;\n}\n\n.playkit-engine video::-webkit-media-controls-panel,\n.playkit-engine video::-webkit-media-controls-panel-container,\n.playkit-engine video::-webkit-media-controls-start-playback-button,\n.playkit-engine video::-webkit-media-controls-play-button {\n  display: none;\n  -webkit-appearance: none\n}\n\n.playkit-poster {\n  position: absolute;\n  display: block;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  background-size: contain;\n  background-position: center center;\n  background-repeat: no-repeat;\n  background-color: #000;\n}\n\n.playkit-subtitles {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  right: 0;\n  left: 0;\n}\n\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 41 */
+/* 55 */
 /***/ (function(module, exports) {
 
 /*
@@ -10409,7 +11022,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 42 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -10676,13 +11289,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 43 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(40);
+var content = __webpack_require__(54);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -10690,7 +11303,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(44)(content, options);
+var update = __webpack_require__(58)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -10707,7 +11320,7 @@ if(false) {
 }
 
 /***/ }),
-/* 44 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -10753,7 +11366,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(45);
+var	fixUrls = __webpack_require__(59);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -11066,7 +11679,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 45 */
+/* 59 */
 /***/ (function(module, exports) {
 
 
@@ -11161,7 +11774,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 46 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -12082,7 +12695,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
         exports.UAParser = UAParser;
     } else {
         // requirejs env (optional)
-        if ("function" === FUNC_TYPE && __webpack_require__(47)) {
+        if ("function" === FUNC_TYPE && __webpack_require__(61)) {
             !(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
                 return UAParser;
             }.call(exports, __webpack_require__, exports, module),
@@ -12118,7 +12731,7 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
 
 /***/ }),
-/* 47 */
+/* 61 */
 /***/ (function(module, exports) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {/* globals __webpack_amd_options__ */
@@ -12127,7 +12740,7 @@ module.exports = __webpack_amd_options__;
 /* WEBPACK VAR INJECTION */}.call(exports, {}))
 
 /***/ }),
-/* 48 */
+/* 62 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -12135,16 +12748,19 @@ module.exports = {
 };
 
 /***/ }),
-/* 49 */
+/* 63 */
 /***/ (function(module, exports) {
 
 module.exports = {
+	"type": "",
+	"dvr": false,
 	"sources": {},
 	"plugins": {},
 	"metadata": {
 		"poster": ""
 	},
 	"playback": {
+		"startTime": 0,
 		"audioLanguage": "",
 		"textLanguage": "",
 		"useNativeTextTrack": false,

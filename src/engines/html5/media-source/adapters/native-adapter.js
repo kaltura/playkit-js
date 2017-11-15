@@ -1,15 +1,14 @@
 //@flow
 import EventManager from '../../../../event/event-manager'
-import {HTML5_EVENTS as Html5Events} from '../../../../event/events'
+import {Html5EventType} from '../../../../event/event-types'
 import Track from '../../../../track/track'
 import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'
 import {TextTrack as PKTextTrack} from '../../../../track/text-track'
 import BaseMediaSourceAdapter from '../base-media-source-adapter'
-import {getSuitableSourceForResolution} from '../../../../utils/resolution'
-import * as Utils from '../../../../utils/util'
 import FairPlay from '../../../../drm/fairplay'
-import Env from '../../../../utils/env'
+import {Env, Dom, getLogger} from '../../../../utils/index'
+import AbrModeChangedEvent from '../../../../event/custom-events/abr-mode-changed-event'
 import FakeEvent from '../../../../event/fake-event'
 
 /**
@@ -32,14 +31,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    * @static
    */
-  static _logger = BaseMediaSourceAdapter.getLogger(NativeAdapter.id);
+  static _logger = getLogger(NativeAdapter.id);
   /**
    * static video element for canPlayType testing
    * @member {} TEST_VIDEO
    * @type {HTMLVideoElement}
    * @static
    */
-  static TEST_VIDEO: HTMLVideoElement = Utils.Dom.createElement("video");
+  static TEST_VIDEO: HTMLVideoElement = Dom.createElement("video");
   /**
    * The DRM protocols implementations for native adapter.
    * @type {Array<Function>}
@@ -104,7 +103,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {boolean} - Whether the native adapter can play a specific drm data.
    * @static
    */
-  static canPlayDrm(drmData: Array<Object>): boolean {
+  static canPlayDrm(drmData: Array<DrmData>): boolean {
     let canPlayDrm = false;
     for (let drmProtocol of NativeAdapter._drmProtocols) {
       if (drmProtocol.canPlayDrm(drmData)) {
@@ -122,11 +121,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @function createAdapter
    * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with.
    * @param {Object} source - The source Object.
-   * @param {Object} config - The player configuration.
+   * @param {PlayerConfig} config - The player configuration.
    * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter.
    * @static
    */
-  static createAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): IMediaSourceAdapter {
+  static createAdapter(videoElement: HTMLVideoElement, source: Source, config: PlayerConfig): IMediaSourceAdapter {
     return new this(videoElement, source, config);
   }
 
@@ -134,9 +133,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @constructor
    * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
    * @param {Source} source - The source object
-   * @param {Object} config - The player configuration
+   * @param {PlayerConfig} config - The player configuration
    */
-  constructor(videoElement: HTMLVideoElement, source: Source, config: Object) {
+  constructor(videoElement: HTMLVideoElement, source: Source, config: PlayerConfig) {
     NativeAdapter._logger.debug('Creating adapter');
     super(videoElement, source);
     this._maybeSetDrmPlayback();
@@ -162,7 +161,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _setProgressiveSource(): void {
-    let suitableTrack = getSuitableSourceForResolution(this._progressiveSources, this._videoElement.offsetWidth, this._videoElement.offsetHeight);
+    let suitableTrack = VideoTrack.getSuitableSourceForResolution(this._progressiveSources, this._videoElement.offsetWidth, this._videoElement.offsetHeight);
     if (suitableTrack) {
       this._sourceObj = suitableTrack;
     }
@@ -187,14 +186,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   load(startTime: ?number): Promise<Object> {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
-        this._eventManager.listenOnce(this._videoElement, Html5Events.LOADED_DATA, this._onLoadedData.bind(this, resolve));
-        this._eventManager.listenOnce(this._videoElement, Html5Events.ERROR, this._onError.bind(this, reject));
+        this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, this._onLoadedData.bind(this, resolve));
+        this._eventManager.listenOnce(this._videoElement, Html5EventType.ERROR, this._onError.bind(this, reject));
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
         }
         if (this._sourceObj && this._sourceObj.url) {
           this._videoElement.src = this._sourceObj.url;
-          this._trigger(BaseMediaSourceAdapter.CustomEvents.ABR_MODE_CHANGED, {mode: this._isProgressivePlayback() ? 'manual' : 'auto'});
+          this.dispatchEvent(new AbrModeChangedEvent(this._isProgressivePlayback() ? 'manual' : 'auto'));
         }
         if (startTime) {
           this._videoElement.currentTime = startTime;
@@ -222,7 +221,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (this._videoElement.textTracks.length > 0) {
       parseTracksAndResolve();
     } else {
-      this._eventManager.listenOnce(this._videoElement, Html5Events.CAN_PLAY, parseTracksAndResolve.bind(this));
+      this._eventManager.listenOnce(this._videoElement, Html5EventType.CAN_PLAY, parseTracksAndResolve.bind(this));
     }
   }
 
@@ -295,12 +294,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (videoTracks) {
       for (let i = 0; i < videoTracks.length; i++) {
         const settings = {
-          id: videoTracks[i].id,
-          bandwidth: videoTracks[i].bandwidth,
-          width: videoTracks[i].width,
-          height: videoTracks[i].height,
           active: this._sourceObj ? videoTracks[i].id === this._sourceObj.id : false,
-          index: i
+          index: i,
+          id: videoTracks[i].id,
+          label: undefined,
+          language: undefined,
+          bandwidth: videoTracks[i].bandwidth,
+          height: videoTracks[i].height,
+          width: videoTracks[i].width
         };
         parsedTracks.push(new VideoTrack(settings));
       }
@@ -322,11 +323,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       for (let i = 0; i < videoTracks.length; i++) {
         const settings = {
           //TODO calculate width/height/bandwidth
-          id: videoTracks[i].id,
           active: videoTracks[i].selected,
+          index: i,
+          id: videoTracks[i].id,
           label: videoTracks[i].label,
           language: videoTracks[i].language,
-          index: i
+          bandwidth: undefined,
+          height: undefined,
+          width: undefined
         };
         parsedTracks.push(new VideoTrack(settings));
       }
@@ -346,11 +350,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (audioTracks) {
       for (let i = 0; i < audioTracks.length; i++) {
         const settings = {
-          id: audioTracks[i].id,
           active: audioTracks[i].enabled,
+          index: i,
+          id: audioTracks[i].id,
           label: audioTracks[i].label,
           language: audioTracks[i].language,
-          index: i
         };
         parsedTracks.push(new AudioTrack(settings));
       }
@@ -370,11 +374,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
         const settings = {
-          kind: textTracks[i].kind,
           active: textTracks[i].mode === 'showing',
+          index: i,
+          id: undefined,
           label: textTracks[i].label,
           language: textTracks[i].language,
-          index: i
+          kind: textTracks[i].kind
         };
         if (settings.language || settings.label) {
           parsedTracks.push(new PKTextTrack(settings));
@@ -412,13 +417,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       let currentTime = this._videoElement.currentTime;
       let paused = this._videoElement.paused;
       this._sourceObj = videoTracks[videoTrack.index];
-      this._eventManager.listenOnce(this._videoElement, Html5Events.LOADED_DATA, () => {
+      this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => {
         if (Env.browser.name === 'Android Browser') {
           // In android browser we have to seek only after some playback.
-          this._eventManager.listenOnce(this._videoElement, Html5Events.DURATION_CHANGE, () => {
+          this._eventManager.listenOnce(this._videoElement, Html5EventType.DURATION_CHANGE, () => {
             this._videoElement.currentTime = currentTime;
           });
-          this._eventManager.listenOnce(this._videoElement, Html5Events.SEEKED, () => {
+          this._eventManager.listenOnce(this._videoElement, Html5EventType.SEEKED, () => {
             this._onTrackChanged(videoTrack);
             if (paused) {
               this._videoElement.pause();
@@ -426,7 +431,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           });
           this._videoElement.play();
         } else {
-          this._eventManager.listenOnce(this._videoElement, Html5Events.SEEKED, () => {
+          this._eventManager.listenOnce(this._videoElement, Html5EventType.SEEKED, () => {
             this._onTrackChanged(videoTrack);
           });
           this._videoElement.currentTime = currentTime;
@@ -754,5 +759,4 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       return super.duration;
     }
   }
-
 }

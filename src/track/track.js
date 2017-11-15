@@ -1,30 +1,39 @@
 //@flow
+import TrackType from './track-types'
 
 /**
  * General track representation of the player.
  * @classdesc
  */
 export default class Track {
+  static Type: { [track: string]: string } = TrackType;
+  static DefaultTrackSettings: TrackSettings = {
+    active: false,
+    index: -1,
+    id: undefined,
+    label: undefined,
+    language: undefined
+  };
+
   /**
    * Comparing language strings.
    * @param {string} inputLang - The configured language.
-   * @param {string} trackLang - The default track language.
+   * @param {?string} trackLang - The default track language.
    * @returns {boolean} - Whether the strings are equal or starts with the same substring.
    */
-  static langComparer(inputLang: string, trackLang: string): boolean {
-    try {
+  static langComparer(inputLang: string, trackLang: ?string): boolean {
+    if (typeof inputLang === 'string' && typeof trackLang === 'string') {
       inputLang = inputLang.toLowerCase();
       trackLang = trackLang.toLowerCase();
       return inputLang ? (inputLang.startsWith(trackLang) || trackLang.startsWith(inputLang)) : false;
-    } catch (e) {
-      return false;
     }
+    return false;
   }
 
   /**
    * The id of the track.
    * @member
-   * @type {string}
+   * @type {?string}
    * @private
    */
   _id: ?string;
@@ -38,17 +47,17 @@ export default class Track {
   /**
    * The label of the track.
    * @member
-   * @type {string}
+   * @type {?string}
    * @private
    */
-  _label: string;
+  _label: ?string;
   /**
    * The language of the track.
    * @member
-   * @type {string}
+   * @type {?string}
    * @private
    */
-  _language: string;
+  _language: ?string;
   /**
    * The index of the track.
    * @member
@@ -87,18 +96,18 @@ export default class Track {
   /**
    * Getter for the label of the track.
    * @public
-   * @returns {string} - The label of the track.
+   * @returns {?string} - The label of the track.
    */
-  get label(): string {
+  get label(): ?string {
     return this._label;
   }
 
   /**
    * Getter for the language of the track.
    * @public
-   * @returns {string} - The language of the track.
+   * @returns {?string} - The language of the track.
    */
-  get language(): string {
+  get language(): ?string {
     return this._language;
   }
 
@@ -113,9 +122,9 @@ export default class Track {
 
   /**
    * @constructor
-   * @param {Object} settings - The track settings object.
+   * @param {TrackSettings} settings - The track settings object.
    */
-  constructor(settings: Object = {}) {
+  constructor(settings: TrackSettings = Track.DefaultTrackSettings) {
     this._id = settings.id;
     this._active = settings.active;
     this._label = settings.label;

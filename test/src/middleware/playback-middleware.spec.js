@@ -1,6 +1,6 @@
 import BaseMiddleware from '../../../src/middleware/base-middleware'
 import PlaybackMiddleware from '../../../src/middleware/playback-middleware'
-import getLogger from '../../../src/utils/logger'
+import {getLogger} from '../../../src/utils/index'
 
 class PM1 extends BaseMiddleware {
   id = 'PM1';

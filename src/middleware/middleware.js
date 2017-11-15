@@ -1,7 +1,7 @@
 // @flow
 import MultiMap from '../utils/multi-map'
 import BaseMiddleware from './base-middleware'
-import getLogger from '../utils/logger'
+import {getLogger} from '../utils/index'
 
 /**
  * Generic middleware implementation.
@@ -12,7 +12,7 @@ export default class Middleware {
    * @private
    * @member
    */
-  _middlewares: MultiMap<*>;
+  _middlewares: MultiMap<Function>;
   /**
    * The actions supported by the middleware.
    * @private

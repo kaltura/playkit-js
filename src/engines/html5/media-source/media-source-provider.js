@@ -1,6 +1,6 @@
 //@flow
 import NativeAdapter from './adapters/native-adapter'
-import getLogger from '../../../utils/logger'
+import {getLogger} from '../../../utils/index'
 
 /**
  * Media source provider
@@ -65,7 +65,7 @@ export default class MediaSourceProvider {
   /**
    * Checks if the a media source adapter can play a given source.
    * @param {Source} source - The source object to check.
-   *  @param {boolean} [preferNative=true] - prefer native flag
+   *  @param {boolean} [preferNative=true] - prefer native flag.
    * @returns {boolean} - Whether a media source adapter can play the source.
    * @public
    * @static
@@ -106,11 +106,11 @@ export default class MediaSourceProvider {
    * @function getMediaSourceAdapter
    * @param {HTMLVideoElement} videoElement - The video element which requires adapter for a given mimeType.
    * @param {Source} source - The selected source object.
-   * @param {Object} config - The player configuration.
+   * @param {PlayerConfig} config - The player configuration.
    * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists.
    * @static
    */
-  static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): ?IMediaSourceAdapter {
+  static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: Source, config: PlayerConfig): ?IMediaSourceAdapter {
     if (videoElement && source && config) {
       if (!MediaSourceProvider._selectedAdapter) {
         MediaSourceProvider.canPlaySource(source, true);

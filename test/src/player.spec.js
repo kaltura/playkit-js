@@ -1,7 +1,7 @@
 import TextStyle from '../../src/track/text-style'
 import Player from '../../src/player'
-import PlayerStates from '../../src/state/state-types'
-import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../../src/event/events'
+import PlayerStateType from '../../src/state/state-types'
+import {Html5EventType, CustomEventType} from '../../src/event/event-types'
 import sourcesConfig from './configs/sources.json'
 import Track from '../../src/track/track'
 import VideoTrack from '../../src/track/video-track'
@@ -11,8 +11,9 @@ import {removeVideoElementsFromTestPage, createElement, removeElement, getConfig
 import PluginManager from '../../src/plugin/plugin-manager'
 import ColorsPlugin from './plugin/test-plugins/colors-plugin'
 import NumbersPlugin from './plugin/test-plugins/numbers-plugin'
-import Locale from '../../src/utils/locale'
+import {Locale} from '../../src/utils/index'
 import Html5 from '../../src/engines/html5/html5'
+import PlayerDefaultConfig from '../../src/player-config.json'
 
 const targetId = 'player-placeholder_player.spec';
 
@@ -467,7 +468,7 @@ describe('getTracks dummy', () => {
     createElement('DIV', targetId);
     config = getConfigStructure();
     config.sources = sourcesConfig.Mp4;
-    player = new Player(targetId, config);
+    player = new Player(config);
     player._tracks = [
       new VideoTrack(),
       new AudioTrack(),
@@ -625,7 +626,7 @@ describe('selectTrack - video', function () {
 
   it.skip('should select a new video track', (done) => {
     let tracks;
-    player.addEventListener(CustomEvents.VIDEO_TRACK_CHANGED, (event) => {
+    player.addEventListener(CustomEventType.VIDEO_TRACK_CHANGED, (event) => {
       (event.payload.selectedVideoTrack instanceof VideoTrack).should.be.true;
       event.payload.selectedVideoTrack.index.should.equal(1);
       (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.false;
@@ -643,7 +644,7 @@ describe('selectTrack - video', function () {
       tracks.length.should.equal(2);
       tracks[0].active.should.be.true;
       tracks[1].active.should.be.false;
-      player.selectTrack(tracks[1]);
+      player.selectTrack(new VideoTrack({index: 1}));
     });
     player.load();
     video = player._engine.getVideoElement();
@@ -696,7 +697,7 @@ describe('selectTrack - audio', function () {
   it('should select a new audio track', (done) => {
     player.ready().then(() => {
       if (video.audioTracks) {
-        player.addEventListener(CustomEvents.AUDIO_TRACK_CHANGED, (event) => {
+        player.addEventListener(CustomEventType.AUDIO_TRACK_CHANGED, (event) => {
           (event.payload.selectedAudioTrack instanceof AudioTrack).should.be.true;
           event.payload.selectedAudioTrack.index.should.equal(2);
           video.audioTracks[0].enabled.should.be.false;
@@ -818,7 +819,7 @@ describe('selectTrack - text', function () {
 
   it('should select a new subtitles track', (done) => {
     player.ready().then(() => {
-      player.addEventListener(CustomEvents.TEXT_TRACK_CHANGED, (event) => {
+      player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, (event) => {
         (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
         event.payload.selectedTextTrack.index.should.equal(1);
         video.textTracks[0].mode.should.be.equal('disabled');
@@ -842,7 +843,7 @@ describe('selectTrack - text', function () {
   it('should select a new captions track', (done) => {
     player.load();
     player.ready().then(() => {
-      player.addEventListener(CustomEvents.TEXT_TRACK_CHANGED, (event) => {
+      player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, (event) => {
         (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
         event.payload.selectedTextTrack.index.should.equal(1);
         video.textTracks[0].mode.should.be.equal('disabled');
@@ -956,9 +957,9 @@ describe('getActiveTracks', function () {
 
   it.skip('should get the active tracks before and after switching', (done) => {
     let videoTracks, audioTracks, textTracks;
-    player.addEventListener(CustomEvents.TEXT_TRACK_CHANGED, () => {
-      player.addEventListener(CustomEvents.VIDEO_TRACK_CHANGED, () => {
-        player.addEventListener(CustomEvents.AUDIO_TRACK_CHANGED, () => {
+    player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, () => {
+      player.addEventListener(CustomEventType.VIDEO_TRACK_CHANGED, () => {
+        player.addEventListener(CustomEventType.AUDIO_TRACK_CHANGED, () => {
           player.getActiveTracks().audio.should.deep.equals(audioTracks[2]);
           done();
         });
@@ -1135,7 +1136,7 @@ describe('Fullscreen API', () => {
 
   describe('notifyEnterFullscreen', () => {
     it("should fire ENTER_FULLSCREEN event", (done) => {
-      player.addEventListener(player.Event.ENTER_FULLSCREEN, () => {
+      player.addEventListener(player.Event.Type.ENTER_FULLSCREEN, () => {
         player.isFullscreen().should.be.true;
         done();
       });
@@ -1144,7 +1145,7 @@ describe('Fullscreen API', () => {
 
     it("should not fire ENTER_FULLSCREEN event twice", (done) => {
       let callCount = 0;
-      player.addEventListener(player.Event.ENTER_FULLSCREEN, () => {
+      player.addEventListener(player.Event.Type.ENTER_FULLSCREEN, () => {
         callCount++;
         player.isFullscreen().should.be.true;
         player.notifyEnterFullscreen();
@@ -1162,11 +1163,11 @@ describe('Fullscreen API', () => {
 
   describe('notifyExitFullscreen', () => {
     it("should fire EXIT_FULLSCREEN event", (done) => {
-      player.addEventListener(player.Event.EXIT_FULLSCREEN, () => {
+      player.addEventListener(player.Event.Type.EXIT_FULLSCREEN, () => {
         player.isFullscreen().should.be.false;
         done();
       });
-      player.addEventListener(player.Event.ENTER_FULLSCREEN, () => {
+      player.addEventListener(player.Event.Type.ENTER_FULLSCREEN, () => {
         player.isFullscreen().should.be.true;
         player.notifyExitFullscreen();
       });
@@ -1175,7 +1176,7 @@ describe('Fullscreen API', () => {
 
     it("should not fire EXIT_FULLSCREEN event twice", (done) => {
       let callCount = 0;
-      player.addEventListener(player.Event.EXIT_FULLSCREEN, () => {
+      player.addEventListener(player.Event.Type.EXIT_FULLSCREEN, () => {
         callCount++;
         player.isFullscreen().should.be.false;
         player.notifyExitFullscreen();
@@ -1187,7 +1188,7 @@ describe('Fullscreen API', () => {
           }
         }, 500);
       });
-      player.addEventListener(player.Event.ENTER_FULLSCREEN, () => {
+      player.addEventListener(player.Event.Type.ENTER_FULLSCREEN, () => {
         player.isFullscreen().should.be.true;
         player.notifyExitFullscreen();
       });
@@ -1195,7 +1196,7 @@ describe('Fullscreen API', () => {
     });
 
     it("should not fire EXIT_FULLSCREEN event when player is not in fullscreen state", (done) => {
-      player.addEventListener(player.Event.EXIT_FULLSCREEN, () => done(new Error('fail')));
+      player.addEventListener(player.Event.Type.EXIT_FULLSCREEN, () => done(new Error('fail')));
       player.notifyExitFullscreen();
       setTimeout(() => done(), 500);
     });
@@ -1203,12 +1204,12 @@ describe('Fullscreen API', () => {
 
   describe('enterFullscreen', () => {
     it("should fire REQUESTED_ENTER_FULLSCREEN event", (done) => {
-      player.addEventListener(player.Event.REQUESTED_ENTER_FULLSCREEN, () => done());
+      player.addEventListener(player.Event.Type.REQUESTED_ENTER_FULLSCREEN, () => done());
       player.enterFullscreen();
     });
 
     it("should not fire REQUESTED_ENTER_FULLSCREEN event when player is already in fullscreen", (done) => {
-      player.addEventListener(player.Event.REQUESTED_ENTER_FULLSCREEN, () => done(new Error('fail')));
+      player.addEventListener(player.Event.Type.REQUESTED_ENTER_FULLSCREEN, () => done(new Error('fail')));
       player.notifyEnterFullscreen();
       player.enterFullscreen();
       setTimeout(() => done(), 500);
@@ -1217,13 +1218,13 @@ describe('Fullscreen API', () => {
 
   describe('exitFullscreen', () => {
     it("should fire REQUESTED_EXIT_FULLSCREEN event", (done) => {
-      player.addEventListener(player.Event.REQUESTED_EXIT_FULLSCREEN, () => done());
+      player.addEventListener(player.Event.Type.REQUESTED_EXIT_FULLSCREEN, () => done());
       player.notifyEnterFullscreen();
       player.exitFullscreen();
     });
 
     it("should not fire REQUESTED_EXIT_FULLSCREEN event when player is not in fullscreen", (done) => {
-      player.addEventListener(player.Event.REQUESTED_EXIT_FULLSCREEN, () => done(new Error('fail')));
+      player.addEventListener(player.Event.Type.REQUESTED_EXIT_FULLSCREEN, () => done(new Error('fail')));
       player.notifyExitFullscreen();
       player.exitFullscreen();
       setTimeout(() => done(), 500);
@@ -1248,9 +1249,9 @@ describe('Track enum', function () {
     config.sources = sourcesConfig.Mp4;
     let player = new Player(config);
     playerContainer.appendChild(player.getView());
-    player.Track.VIDEO.should.be.equal('video');
-    player.Track.AUDIO.should.be.equal('audio');
-    player.Track.TEXT.should.be.equal('text');
+    player.Track.Type.VIDEO.should.be.equal('video');
+    player.Track.Type.AUDIO.should.be.equal('audio');
+    player.Track.Type.TEXT.should.be.equal('text');
   });
 });
 
@@ -1296,7 +1297,7 @@ describe('events', function () {
        * @returns {void}
        */
       function onTracksChanged(data) {
-        player.removeEventListener(CustomEvents.TRACKS_CHANGED, onTracksChanged);
+        player.removeEventListener(CustomEventType.TRACKS_CHANGED, onTracksChanged);
         let videoTracksLength = 1;
         let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
         let textTracksLength = (video.textTracks ? video.textTracks.length + 1 : 0);
@@ -1305,7 +1306,7 @@ describe('events', function () {
         done();
       }
 
-      player.addEventListener(CustomEvents.TRACKS_CHANGED, onTracksChanged);
+      player.addEventListener(CustomEventType.TRACKS_CHANGED, onTracksChanged);
       player.load();
     });
   });
@@ -1339,7 +1340,7 @@ describe('events', function () {
     it('should fire first play only once', (done) => {
       let counter = 0;
       let onPlaying = () => {
-        player.removeEventListener(Html5Events.PLAYING, onPlaying);
+        player.removeEventListener(Html5EventType.PLAYING, onPlaying);
         player.pause();
         player.play();
         setTimeout(() => {
@@ -1347,10 +1348,10 @@ describe('events', function () {
           done();
         }, 0);
       };
-      player.addEventListener(CustomEvents.FIRST_PLAY, () => {
+      player.addEventListener(CustomEventType.FIRST_PLAY, () => {
         counter++;
       });
-      player.addEventListener(Html5Events.PLAYING, onPlaying);
+      player.addEventListener(Html5EventType.PLAYING, onPlaying);
       player.play();
     });
   });
@@ -1382,7 +1383,7 @@ describe('events', function () {
     });
 
     it('should fire source selected', (done) => {
-      player.addEventListener(CustomEvents.SOURCE_SELECTED, (event) => {
+      player.addEventListener(CustomEventType.SOURCE_SELECTED, (event) => {
         event.payload.selectedSource[0].id.should.equal('1_rsrdfext_10081,url');
         done();
       });
@@ -1416,7 +1417,7 @@ describe('events', function () {
       config.sources = sourcesConfig.Mp4;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
-      player.addEventListener(CustomEvents.ABR_MODE_CHANGED, (event) => {
+      player.addEventListener(CustomEventType.ABR_MODE_CHANGED, (event) => {
         event.payload.mode.should.equal('manual');
         done();
       });
@@ -1427,7 +1428,7 @@ describe('events', function () {
       config.sources = sourcesConfig.Hls;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
-      player.addEventListener(CustomEvents.ABR_MODE_CHANGED, (event) => {
+      player.addEventListener(CustomEventType.ABR_MODE_CHANGED, (event) => {
         event.payload.mode.should.equal('auto');
         done();
       });
@@ -1463,8 +1464,8 @@ describe('events', function () {
 
     it('should be paused', (done) => {
       let onPlaying = () => {
-        player.removeEventListener(player.Event.PLAYING, onPlaying);
-        player.addEventListener(player.Event.ENDED, () => {
+        player.removeEventListener(player.Event.Type.PLAYING, onPlaying);
+        player.addEventListener(player.Event.Type.ENDED, () => {
           player.paused.should.be.true;
           done();
         });
@@ -1474,7 +1475,7 @@ describe('events', function () {
       config.sources = sourcesConfig.Mp4;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
-      player.addEventListener(player.Event.PLAYING, onPlaying);
+      player.addEventListener(player.Event.Type.PLAYING, onPlaying);
       player.play();
     });
   });
@@ -1503,17 +1504,17 @@ describe('events', function () {
     it('should fire change source started and change source ended', (done) => {
       let changeSourceStarted = false;
       player = new Player(config);
-      player.addEventListener(player.Event.CHANGE_SOURCE_STARTED, () => {
+      player.addEventListener(player.Event.Type.CHANGE_SOURCE_STARTED, () => {
         changeSourceStarted = true;
       });
-      player.addEventListener(player.Event.CHANGE_SOURCE_ENDED, () => {
+      player.addEventListener(player.Event.Type.CHANGE_SOURCE_ENDED, () => {
         if (changeSourceStarted) {
           done();
         } else {
           done(new Error('Change source event should called first'));
         }
       });
-      player.addEventListener(player.Event.PLAYING, () => {
+      player.addEventListener(player.Event.Type.PLAYING, () => {
         player.configure({sources: sourcesConfig.Mp4});
       });
       player.play();
@@ -1532,7 +1533,7 @@ describe('events', function () {
     });
 
     it('should fire text style changed', (done) => {
-      player.addEventListener(player.Event.TEXT_STYLE_CHANGED, () => {
+      player.addEventListener(CustomEventType.TEXT_STYLE_CHANGED, () => {
         done();
       });
       player.textStyle = new TextStyle();
@@ -1569,8 +1570,8 @@ describe('states', function () {
      * @returns {void}
      */
     function onLoadStart() {
-      player.removeEventListener(Html5Events.LOAD_START, onLoadStart);
-      player._stateManager.currentState.type.should.equal(PlayerStates.LOADING);
+      player.removeEventListener(Html5EventType.LOAD_START, onLoadStart);
+      player._stateManager.currentState.type.should.equal(PlayerStateType.LOADING);
     }
 
     /**
@@ -1578,11 +1579,11 @@ describe('states', function () {
      * @returns {void}
      */
     function onLoadedMetadata() {
-      player.removeEventListener(Html5Events.LOADED_METADATA, onLoadedMetadata);
+      player.removeEventListener(Html5EventType.LOADED_METADATA, onLoadedMetadata);
       if (player.config.autoplay) {
-        player._stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+        player._stateManager.currentState.type.should.equal(PlayerStateType.PLAYING);
       } else {
-        player._stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
+        player._stateManager.currentState.type.should.equal(PlayerStateType.PAUSED);
       }
     }
 
@@ -1591,8 +1592,8 @@ describe('states', function () {
      * @returns {void}
      */
     function onPlaying() {
-      player.removeEventListener(Html5Events.PLAYING, onPlaying);
-      player._stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+      player.removeEventListener(Html5EventType.PLAYING, onPlaying);
+      player._stateManager.currentState.type.should.equal(PlayerStateType.PLAYING);
       setTimeout(() => {
         player.pause();
       }, 100);
@@ -1603,8 +1604,8 @@ describe('states', function () {
      * @returns {void}
      */
     function onPause() {
-      player.removeEventListener(Html5Events.PAUSE, onPause);
-      player._stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
+      player.removeEventListener(Html5EventType.PAUSE, onPause);
+      player._stateManager.currentState.type.should.equal(PlayerStateType.PAUSED);
       player.currentTime = player.duration - 1;
       player.play();
     }
@@ -1614,18 +1615,18 @@ describe('states', function () {
      * @returns {void}
      */
     function onEnded() {
-      player.removeEventListener(Html5Events.ENDED, onEnded);
-      player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
+      player.removeEventListener(Html5EventType.ENDED, onEnded);
+      player._stateManager.currentState.type.should.equal(PlayerStateType.IDLE);
       player.destroy();
       done();
     }
 
-    player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
-    player.addEventListener(Html5Events.LOAD_START, onLoadStart);
-    player.addEventListener(Html5Events.LOADED_METADATA, onLoadedMetadata);
-    player.addEventListener(Html5Events.PLAYING, onPlaying);
-    player.addEventListener(Html5Events.PAUSE, onPause);
-    player.addEventListener(Html5Events.ENDED, onEnded);
+    player._stateManager.currentState.type.should.equal(PlayerStateType.IDLE);
+    player.addEventListener(Html5EventType.LOAD_START, onLoadStart);
+    player.addEventListener(Html5EventType.LOADED_METADATA, onLoadedMetadata);
+    player.addEventListener(Html5EventType.PLAYING, onPlaying);
+    player.addEventListener(Html5EventType.PAUSE, onPause);
+    player.addEventListener(Html5EventType.ENDED, onEnded);
     player.load();
     player.play();
   });
@@ -1658,11 +1659,11 @@ describe('configure', function () {
     playerContainer.appendChild(player.getView());
     player.should.be.instanceOf(Player);
     player.configure(config);
-    player.addEventListener(Html5Events.PLAYING, function () {
+    player.addEventListener(Html5EventType.PLAYING, function () {
       player.destroy();
       done();
     });
-    player.addEventListener(Html5Events.ERROR, function () {
+    player.addEventListener(Html5EventType.ERROR, function () {
       player.destroy();
       done(new Error("test fail"));
     });
@@ -1931,7 +1932,7 @@ describe('configure', function () {
       player.config.playback.muted.should.be.true;
       player.ready().then(() => {
         player.src.should.equals(window.location.origin + sourcesConfig.MultipleSources.progressive[0].url);
-        player.addEventListener(player.Event.VOLUME_CHANGE, () => {
+        player.addEventListener(player.Event.Type.VOLUME_CHANGE, () => {
           let newProgressiveConfig = {
             progressive: [sourcesConfig.MultipleSources.progressive[1]]
           };
@@ -2454,7 +2455,7 @@ describe('destroy', function () {
     stateMgrSpy.should.have.been.calledOnce;
     player._activeTextCues.should.be.empty;
     player._textDisplaySettings.should.be.empty;
-    player._config.should.be.empty;
+    player._config.should.deep.equal(PlayerDefaultConfig);
     player._tracks.should.be.empty;
     player._engineType.should.be.empty;
     player._streamType.should.be.empty;

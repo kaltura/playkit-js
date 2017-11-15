@@ -1,7 +1,7 @@
 //@flow
-import * as Utils from '../utils/util'
+import {Obj} from '../utils/index'
 
-const HTML5_EVENTS: { [event: string]: string } = {
+const Html5EventType: { [event: string]: string } = {
   /**
    * Fires when the loading of an audio/video is aborted
    */
@@ -92,7 +92,7 @@ const HTML5_EVENTS: { [event: string]: string } = {
   WAITING: 'waiting'
 };
 
-const CUSTOM_EVENTS: { [event: string]: string } = {
+const CustomEventType: { [event: string]: string } = {
   /**
    * Fires when the player enters fullscreen
    */
@@ -168,7 +168,10 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
   /**
    * Fires when the text track style has changed
    */
-  TEXT_STYLE_CHANGED: 'textstylechanged',
+  TEXT_STYLE_CHANGED: 'textstylechanged'
+};
+
+const AdEventType: { [event: string]: string } = {
   /**
    * Fired when ad data is available.
    */
@@ -243,6 +246,7 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
   AD_PROGRESS: 'adprogress'
 };
 
-const PLAYER_EVENTS: { [event: string]: string } = Utils.Object.merge([HTML5_EVENTS, CUSTOM_EVENTS]);
+const EventType: { [event: string]: string } = Obj.mergeDeep({}, Html5EventType, CustomEventType, AdEventType);
 
-export {PLAYER_EVENTS, HTML5_EVENTS, CUSTOM_EVENTS};
+export default EventType;
+export {Html5EventType, CustomEventType, AdEventType}

@@ -1,19 +1,20 @@
 //@flow
-import Env from './utils/env'
+import {Locale, getLogger, PosterManager, Env, Obj, Num, Dom, Generator} from './utils/index'
+import {LogLevelType, getLogLevel, setLogLevel} from './utils/logger'
+import TracksChangedEvent from './event/custom-events/tracks-changed-event'
+import MuteChangeEvent from './event/custom-events/mute-change-event'
+import TextTrackChangedEvent from './event/custom-events/text-track-changed-event'
+import SourceSelectedEvent from './event/custom-events/source-selected-event'
 import EventManager from './event/event-manager'
-import PosterManager from './utils/poster-manager'
 import FakeEvent from './event/fake-event'
 import FakeEventTarget from './event/fake-event-target'
-import {PLAYER_EVENTS as PlayerEvents, HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from './event/events'
-import PlayerStates from './state/state-types'
-import * as Utils from './utils/util'
-import Locale from './utils/locale'
-import getLogger, {LogLevel, getLogLevel, setLogLevel} from './utils/logger'
+import {CustomEventType, Html5EventType} from './event/event-types'
+import State from './state/state'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
 import BasePlugin from './plugin/base-plugin'
 import StateManager from './state/state-manager'
-import TrackTypes from './track/track-types'
+import TrackType from './track/track-types'
 import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
@@ -176,10 +177,10 @@ export default class Player extends FakeEventTarget {
   _posterManager: PosterManager;
   /**
    * The runtime configuration of the player.
-   * @type {Object}
+   * @type {PlayerConfig}
    * @private
    */
-  _config: Object;
+  _config: PlayerConfig;
   /**
    * The playback engine.
    * @type {IEngine}
@@ -235,7 +236,7 @@ export default class Player extends FakeEventTarget {
    */
   _activeTextCues: Array<any> = [];
   /**
-   * The player text disaply settings
+   * The player text display settings
    * @type {Object}
    * @private
    */
@@ -254,10 +255,10 @@ export default class Player extends FakeEventTarget {
   _playbackMiddleware: PlaybackMiddleware;
   /**
    * The environment(os,device,browser) object of the player.
-   * @type {Object}
+   * @type {EnvData}
    * @private
    */
-  _env: Object;
+  _env: EnvData;
   /**
    * The currently selected engine type
    * @type {string}
@@ -330,35 +331,12 @@ export default class Player extends FakeEventTarget {
   // <editor-fold desc="Playback API">
 
   /**
-   * Configures the player according to a given configuration.
-   * @param {Object} config - The configuration for the player instance.
-   * @returns {void}
+   * Get the player log level.
+   * @returns {LogLevels} - The log levels of the player.
+   * @public
    */
-  configure(config: Object): void {
-    if (config.logLevel && LogLevel[config.logLevel]) {
-      setLogLevel(LogLevel[config.logLevel]);
-    }
-    Utils.Object.mergeDeep(this._config, config);
-    this._configureOrLoadPlugins(config.plugins);
-    if (!Utils.Object.isEmptyObject(config.sources)) {
-      const receivedSourcesWhenHasEngine: boolean = !!this._engine;
-      if (receivedSourcesWhenHasEngine) {
-        this._reset();
-        Player._logger.debug('Change source started');
-        this.dispatchEvent(new FakeEvent(CustomEvents.CHANGE_SOURCE_STARTED));
-      }
-      if (this._selectEngineByPriority()) {
-        this._appendEngineEl();
-        this._attachMedia();
-        this._handlePlaybackOptions();
-        this._posterManager.setSrc(this._config.metadata.poster);
-        this._handleAutoPlay();
-        if (receivedSourcesWhenHasEngine) {
-          Player._logger.debug('Change source ended');
-          this.dispatchEvent(new FakeEvent(CustomEvents.CHANGE_SOURCE_ENDED));
-        }
-      }
-    }
+  get LogLevel(): LogLevels {
+    return LogLevelType;
   }
 
   /**
@@ -382,9 +360,9 @@ export default class Player extends FakeEventTarget {
         this._tracks = data.tracks;
         this._addTextTrackOffOption();
         this._setDefaultTracks();
-        this.dispatchEvent(new FakeEvent(CustomEvents.TRACKS_CHANGED, {tracks: this._tracks}));
+        this.dispatchEvent(new TracksChangedEvent(this.getTracks()));
       }).catch((error) => {
-        this.dispatchEvent(new FakeEvent(Html5Events.ERROR, error));
+        this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
       });
     }
   }
@@ -445,7 +423,7 @@ export default class Player extends FakeEventTarget {
     this._stateManager.destroy();
     this._activeTextCues = [];
     this._textDisplaySettings = {};
-    this._config = {};
+    this._config = DefaultPlayerConfig;
     this._tracks = [];
     this._engineType = '';
     this._streamType = '';
@@ -453,7 +431,7 @@ export default class Player extends FakeEventTarget {
     this._firstPlay = true;
     this._playbackAttributesState = {};
     if (this._el) {
-      Utils.Dom.removeChild(this._el.parentNode, this._el);
+      Dom.removeChild(this._el.parentNode, this._el);
     }
   }
 
@@ -467,7 +445,7 @@ export default class Player extends FakeEventTarget {
    */
   set currentTime(to: number): void {
     if (this._engine) {
-      if (Utils.Number.isNumber(to)) {
+      if (Num.isNumber(to)) {
         let boundedTo = to;
         if (to < 0) {
           boundedTo = 0;
@@ -510,7 +488,7 @@ export default class Player extends FakeEventTarget {
    */
   set volume(vol: number): void {
     if (this._engine) {
-      if (Utils.Number.isFloat(vol) || (vol === 0) || (vol === 1)) {
+      if (Num.isFloat(vol) || (vol === 0) || (vol === 1)) {
         let boundedVol = vol;
         if (boundedVol < 0) {
           boundedVol = 0;
@@ -589,7 +567,7 @@ export default class Player extends FakeEventTarget {
   set muted(mute: boolean): void {
     if (this._engine) {
       this._engine.muted = mute;
-      this.dispatchEvent(new FakeEvent(CustomEvents.MUTE_CHANGE, {mute: mute}));
+      this.dispatchEvent(new MuteChangeEvent(mute));
     }
   }
 
@@ -617,10 +595,10 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Get the dimensions of the player.
-   * @returns {{width: number, height: number}} - The dimensions of the player.
+   * @returns {PlayerDimensions} - The dimensions of the player.
    * @public
    */
-  get dimensions(): Object {
+  get dimensions(): PlayerDimensions {
     return {
       width: this._el.clientWidth,
       height: this._el.clientHeight
@@ -673,20 +651,20 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Getter for the environment of the player instance.
-   * @return {Object} - The current environment object.
+   * @return {EnvData} - The current environment object.
    * @public
    */
-  get env(): Object {
+  get env(): EnvData {
     return this._env;
   }
 
   /**
    * Get the player config.
-   * @returns {Object} - A copy of the player configuration.
+   * @returns {PlayerConfig} - A copy of the player configuration.
    * @public
    */
-  get config(): Object {
-    return Utils.Object.mergeDeep({}, this._config);
+  get config(): PlayerConfig {
+    return Obj.mergeDeep({}, this._config);
   }
 
   /**
@@ -696,7 +674,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   set sessionId(sessionId: string): void {
-    this._config.session = this._config.session || {};
+    this._config.session = this._config.session || {id: ''};
     this._config.session.id = sessionId;
   }
 
@@ -753,13 +731,13 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Get an object includes the active video/audio/text tracks
-   * @return {{video: VideoTrack, audio: AudioTrack, text: TextTrack}} - The active tracks object
+   * @return {ActiveTracks} - The active tracks object
    */
-  getActiveTracks(): Object {
+  getActiveTracks(): ActiveTracks {
     return {
-      video: this._getTracksByType(TrackTypes.VIDEO).find(track => track.active),
-      audio: this._getTracksByType(TrackTypes.AUDIO).find(track => track.active),
-      text: this._getTracksByType(TrackTypes.TEXT).find(track => track.active),
+      video: this._getTracksByType(TrackType.VIDEO).find(track => track.active),
+      audio: this._getTracksByType(TrackType.AUDIO).find(track => track.active),
+      text: this._getTracksByType(TrackType.TEXT).find(track => track.active),
     };
   }
 
@@ -797,12 +775,12 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.hideTextTrack();
       this._updateTextDisplay([]);
-      const textTracks = this._getTracksByType(TrackTypes.TEXT);
+      const textTracks = this._getTracksByType(TrackType.TEXT);
       textTracks.map(track => track.active = false);
       const textTrack = textTracks.find(track => track.language === OFF);
-      if (textTrack) {
+      if (textTrack && textTrack instanceof TextTrack) {
         textTrack.active = true;
-        this.dispatchEvent(new FakeEvent(CustomEvents.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}))
+        this.dispatchEvent(new TextTrackChangedEvent(textTrack));
       }
     }
   }
@@ -856,11 +834,11 @@ export default class Player extends FakeEventTarget {
     if (!(style instanceof TextStyle)) {
       throw new Error("Style must be instance of TextStyle");
     }
-    let element = Utils.Dom.getElementById(SUBTITLES_STYLE_ID_NAME);
+    let element = Dom.getElementById(SUBTITLES_STYLE_ID_NAME);
     if (!element) {
-      element = Utils.Dom.createElement('style');
-      Utils.Dom.setAttribute(element, 'id', SUBTITLES_STYLE_ID_NAME);
-      Utils.Dom.appendChild(document.head, element);
+      element = Dom.createElement('style');
+      Dom.setAttribute(element, 'id', SUBTITLES_STYLE_ID_NAME);
+      Dom.appendChild(document.head, element);
     }
     let sheet = element.sheet;
 
@@ -875,7 +853,7 @@ export default class Player extends FakeEventTarget {
         sheet.insertRule(`#${this._playerId} .${SUBTITLES_CLASS_NAME} > div > div > div { ${style.toCSS()} }`, 0);
       }
       this._textStyle = style;
-      this.dispatchEvent(new FakeEvent(CustomEvents.TEXT_STYLE_CHANGED));
+      this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_STYLE_CHANGED));
     } catch (e) {
       Player._logger.error(e.message);
     }
@@ -938,7 +916,7 @@ export default class Player extends FakeEventTarget {
   notifyEnterFullscreen(): void {
     if (!this._fullscreen) {
       this._fullscreen = true;
-      this.dispatchEvent(new FakeEvent(CustomEvents.ENTER_FULLSCREEN));
+      this.dispatchEvent(new FakeEvent(CustomEventType.ENTER_FULLSCREEN));
     }
   }
 
@@ -950,7 +928,7 @@ export default class Player extends FakeEventTarget {
   notifyExitFullscreen(): void {
     if (this._fullscreen) {
       this._fullscreen = false;
-      this.dispatchEvent(new FakeEvent(CustomEvents.EXIT_FULLSCREEN));
+      this.dispatchEvent(new FakeEvent(CustomEventType.EXIT_FULLSCREEN));
     }
   }
 
@@ -961,7 +939,7 @@ export default class Player extends FakeEventTarget {
    */
   enterFullscreen(): void {
     if (!this._fullscreen) {
-      this.dispatchEvent(new FakeEvent(CustomEvents.REQUESTED_ENTER_FULLSCREEN));
+      this.dispatchEvent(new FakeEvent(CustomEventType.REQUESTED_ENTER_FULLSCREEN));
     }
   }
 
@@ -972,8 +950,53 @@ export default class Player extends FakeEventTarget {
    */
   exitFullscreen(): void {
     if (this._fullscreen) {
-      this.dispatchEvent(new FakeEvent(CustomEvents.REQUESTED_EXIT_FULLSCREEN));
+      this.dispatchEvent(new FakeEvent(CustomEventType.REQUESTED_EXIT_FULLSCREEN));
     }
+  }
+
+  // </editor-fold>
+
+  // <editor-fold desc="Log API">
+
+  /**
+   * Configures the player according to a given configuration.
+   * @param {PlayerConfig} config - The configuration for the player instance.
+   * @returns {void}
+   */
+  configure(config: PlayerConfig): void {
+    if (config.logLevel && LogLevelType[config.logLevel]) {
+      setLogLevel(LogLevelType[config.logLevel]);
+    }
+    Obj.mergeDeep(this._config, config);
+    this._configureOrLoadPlugins(config.plugins);
+    if (!Obj.isEmptyObject(config.sources)) {
+      const receivedSourcesWhenHasEngine: boolean = !!this._engine;
+      if (receivedSourcesWhenHasEngine) {
+        this._reset();
+        Player._logger.debug('Change source started');
+        this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
+      }
+      if (this._selectEngineByPriority()) {
+        this._appendEngineEl();
+        this._attachMedia();
+        this._handlePlaybackOptions();
+        this._posterManager.setSrc(this._config.metadata.poster);
+        this._handleAutoPlay();
+        if (receivedSourcesWhenHasEngine) {
+          Player._logger.debug('Change source ended');
+          this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_ENDED));
+        }
+      }
+    }
+  }
+
+  /**
+   * get the log level
+   * @param {?string} name - the logger name
+   * @returns {LogLevel} - the log level
+   */
+  getLogLevel(name?: string): LogLevel {
+    return getLogLevel(name);
   }
 
   // </editor-fold>
@@ -990,11 +1013,11 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _createPlayerContainer(): void {
-    const el = this._el = Utils.Dom.createElement("div");
-    Utils.Dom.addClassName(el, CONTAINER_CLASS_NAME);
-    this._playerId = Utils.Generator.uniqueId(5);
-    Utils.Dom.setAttribute(el, "id", this._playerId);
-    Utils.Dom.setAttribute(el, "tabindex", '-1');
+    const el = this._el = Dom.createElement("div");
+    Dom.addClassName(el, CONTAINER_CLASS_NAME);
+    this._playerId = Generator.uniqueId(5);
+    Dom.setAttribute(el, "id", this._playerId);
+    Dom.setAttribute(el, "tabindex", '-1');
   }
 
   /**
@@ -1005,8 +1028,8 @@ export default class Player extends FakeEventTarget {
   _appendPosterEl(): void {
     if (this._el) {
       let el: HTMLDivElement = this._posterManager.getElement();
-      Utils.Dom.addClassName(el, POSTER_CLASS_NAME);
-      Utils.Dom.appendChild(this._el, el);
+      Dom.addClassName(el, POSTER_CLASS_NAME);
+      Dom.appendChild(this._el, el);
     }
   }
 
@@ -1019,10 +1042,10 @@ export default class Player extends FakeEventTarget {
     if (this._el && this._engine) {
       let engineEl = this._engine.getVideoElement();
       const classname = `${ENGINE_CLASS_NAME}`;
-      Utils.Dom.addClassName(engineEl, classname);
+      Dom.addClassName(engineEl, classname);
       const classnameWithId = `${ENGINE_CLASS_NAME}-${this._engine.id}`;
-      Utils.Dom.addClassName(engineEl, classnameWithId);
-      Utils.Dom.prependTo(engineEl, this._el);
+      Dom.addClassName(engineEl, classnameWithId);
+      Dom.prependTo(engineEl, this._el);
     }
   }
 
@@ -1066,8 +1089,8 @@ export default class Player extends FakeEventTarget {
    */
   _createReadyPromise(): void {
     this._readyPromise = new Promise((resolve, reject) => {
-      this._eventManager.listen(this, CustomEvents.TRACKS_CHANGED, resolve);
-      this._eventManager.listen(this, Html5Events.ERROR, reject);
+      this._eventManager.listen(this, CustomEventType.TRACKS_CHANGED, resolve);
+      this._eventManager.listen(this, Html5EventType.ERROR, reject);
     });
   }
 
@@ -1082,8 +1105,8 @@ export default class Player extends FakeEventTarget {
     const preferNative = this._config.playback.preferNative;
     const sources = this._config.sources;
     for (let priority of streamPriority) {
-      const engineId = (typeof priority.engine === 'string') ? priority.engine.toLowerCase() : '';
-      const format = (typeof priority.format === 'string') ? priority.format.toLowerCase() : '';
+      const engineId: string = (typeof priority.engine === 'string') ? priority.engine.toLowerCase() : "";
+      const format: string = (typeof priority.format === 'string') ? priority.format.toLowerCase() : "";
       const Engine = Player._engines.find((Engine) => Engine.id === engineId);
       if (Engine) {
         const formatSources = sources[format];
@@ -1094,7 +1117,7 @@ export default class Player extends FakeEventTarget {
             this._loadEngine(Engine, source);
             this._engineType = engineId;
             this._streamType = format;
-            this.dispatchEvent(new FakeEvent(CustomEvents.SOURCE_SELECTED, {selectedSource: formatSources}));
+            this.dispatchEvent(new SourceSelectedEvent(formatSources));
             return true;
           }
         }
@@ -1131,52 +1154,52 @@ export default class Player extends FakeEventTarget {
    */
   _attachMedia(): void {
     if (this._engine) {
-      Object.keys(Html5Events).forEach((html5Event) => {
-        this._eventManager.listen(this._engine, Html5Events[html5Event], (event: FakeEvent) => {
+      Object.keys(Html5EventType).forEach((html5Event) => {
+        this._eventManager.listen(this._engine, Html5EventType[html5Event], (event: FakeEvent) => {
           return this.dispatchEvent(event);
         });
       });
-      this._eventManager.listen(this._engine, Html5Events.SEEKED, () => {
+      this._eventManager.listen(this._engine, Html5EventType.SEEKED, () => {
         const browser = this._env.browser.name;
         if (browser === 'Edge' || browser === 'IE') {
           this._removeTextCuePatch();
         }
       });
-      this._eventManager.listen(this._engine, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
+      this._eventManager.listen(this._engine, CustomEventType.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
         this._markActiveTrack(event.payload.selectedVideoTrack);
         return this.dispatchEvent(event);
       });
-      this._eventManager.listen(this._engine, CustomEvents.AUDIO_TRACK_CHANGED, (event: FakeEvent) => {
+      this._eventManager.listen(this._engine, CustomEventType.AUDIO_TRACK_CHANGED, (event: FakeEvent) => {
         this._playbackAttributesState.audioLanguage = event.payload.selectedAudioTrack.language;
         this._markActiveTrack(event.payload.selectedAudioTrack);
         return this.dispatchEvent(event);
       });
-      this._eventManager.listen(this._engine, CustomEvents.TEXT_TRACK_CHANGED, (event: FakeEvent) => {
+      this._eventManager.listen(this._engine, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => {
         this._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language;
         this._markActiveTrack(event.payload.selectedTextTrack);
         return this.dispatchEvent(event);
       });
-      this._eventManager.listen(this._engine, CustomEvents.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
-      this._eventManager.listen(this._engine, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._engine, CustomEvents.AUTOPLAY_FAILED, (event: FakeEvent) => {
+      this._eventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
+      this._eventManager.listen(this._engine, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._engine, CustomEventType.AUTOPLAY_FAILED, (event: FakeEvent) => {
         this.pause();
         this.dispatchEvent(event)
       });
-      this._eventManager.listen(this, Html5Events.PLAY, this._onPlay.bind(this));
-      this._eventManager.listen(this, Html5Events.ENDED, this._onEnded.bind(this));
-      this._eventManager.listen(this, CustomEvents.MUTE_CHANGE, () => {
+      this._eventManager.listen(this, Html5EventType.PLAY, this._onPlay.bind(this));
+      this._eventManager.listen(this, Html5EventType.ENDED, this._onEnded.bind(this));
+      this._eventManager.listen(this, CustomEventType.MUTE_CHANGE, () => {
         this._playbackAttributesState.muted = this.muted;
       });
-      this._eventManager.listen(this, Html5Events.VOLUME_CHANGE, () => {
+      this._eventManager.listen(this, Html5EventType.VOLUME_CHANGE, () => {
         this._playbackAttributesState.volume = this.volume;
       });
-      this._eventManager.listen(this, Html5Events.RATE_CHANGE, () => {
+      this._eventManager.listen(this, Html5EventType.RATE_CHANGE, () => {
         this._playbackAttributesState.rate = this.playbackRate;
       });
-      this._eventManager.listen(this, CustomEvents.ENTER_FULLSCREEN, () => {
+      this._eventManager.listen(this, CustomEventType.ENTER_FULLSCREEN, () => {
         this._resetTextCuesAndReposition();
       });
-      this._eventManager.listen(this, CustomEvents.EXIT_FULLSCREEN, () => {
+      this._eventManager.listen(this, CustomEventType.EXIT_FULLSCREEN, () => {
         this._resetTextCuesAndReposition();
       });
     }
@@ -1279,13 +1302,13 @@ export default class Player extends FakeEventTarget {
                 Player._logger.debug("Fallback to muted autoplay");
                 this.muted = true;
                 this.play();
-                this.dispatchEvent(new FakeEvent(CustomEvents.FALLBACK_TO_MUTED_AUTOPLAY));
+                this.dispatchEvent(new FakeEvent(CustomEventType.FALLBACK_TO_MUTED_AUTOPLAY));
               } else {
                 Player._logger.warn("Autoplay failed, pause player");
                 this._posterManager.show();
                 this.load();
                 this.ready().then(() => this.pause());
-                this.dispatchEvent(new FakeEvent(CustomEvents.AUTOPLAY_FAILED));
+                this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED));
               }
             }
           });
@@ -1331,7 +1354,7 @@ export default class Player extends FakeEventTarget {
   _onPlay(): void {
     if (this._firstPlay) {
       this._firstPlay = false;
-      this.dispatchEvent(new FakeEvent(CustomEvents.FIRST_PLAY));
+      this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAY));
       this._posterManager.hide();
       if (typeof this._playbackAttributesState.rate === 'number') {
         this.playbackRate = this._playbackAttributesState.rate;
@@ -1377,7 +1400,7 @@ export default class Player extends FakeEventTarget {
    * @static
    */
   static get _defaultConfig(): Object {
-    return Utils.Object.copyDeep(DefaultPlayerConfig);
+    return Obj.copyDeep(DefaultPlayerConfig);
   }
 
   // </editor-fold>
@@ -1393,11 +1416,11 @@ export default class Player extends FakeEventTarget {
    */
   _getTracksByType(type?: string): Array<Track> {
     return !type ? this._tracks : this._tracks.filter((track: Track) => {
-      if (type === TrackTypes.VIDEO) {
+      if (type === TrackType.VIDEO) {
         return track instanceof VideoTrack;
-      } else if (type === TrackTypes.AUDIO) {
+      } else if (type === TrackType.AUDIO) {
         return track instanceof AudioTrack;
-      } else if (type === TrackTypes.TEXT) {
+      } else if (type === TrackType.TEXT) {
         return track instanceof TextTrack;
       } else {
         return true;
@@ -1415,11 +1438,11 @@ export default class Player extends FakeEventTarget {
   _markActiveTrack(track: Track): void {
     let type;
     if (track instanceof VideoTrack) {
-      type = TrackTypes.VIDEO;
+      type = TrackType.VIDEO;
     } else if (track instanceof AudioTrack) {
-      type = TrackTypes.AUDIO;
+      type = TrackType.AUDIO;
     } else if (track instanceof TextTrack) {
-      type = TrackTypes.TEXT;
+      type = TrackType.TEXT;
     }
     if (type) {
       let tracks = this.getTracks(type);
@@ -1466,9 +1489,9 @@ export default class Player extends FakeEventTarget {
    */
   _updateTextDisplay(cues: Array<Cue>): void {
     if (this._textDisplayEl === undefined) {
-      this._textDisplayEl = Utils.Dom.createElement("div");
-      Utils.Dom.addClassName(this._textDisplayEl, SUBTITLES_CLASS_NAME);
-      Utils.Dom.appendChild(this._el, this._textDisplayEl);
+      this._textDisplayEl = Dom.createElement("div");
+      Dom.addClassName(this._textDisplayEl, SUBTITLES_CLASS_NAME);
+      Dom.appendChild(this._el, this._textDisplayEl);
     }
     processCues(window, cues, this._textDisplayEl);
   }
@@ -1480,14 +1503,15 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _addTextTrackOffOption(): void {
-    const textTracks = this.getTracks(TrackTypes.TEXT);
+    const textTracks = this.getTracks(TrackType.TEXT);
     if (textTracks && textTracks.length) {
       this._tracks.push(new TextTrack({
         active: false,
         index: textTracks.length,
-        kind: "subtitles",
+        id: undefined,
         label: "Off",
-        language: OFF
+        language: OFF,
+        kind: "subtitles"
       }));
     }
   }
@@ -1500,14 +1524,14 @@ export default class Player extends FakeEventTarget {
   _setDefaultTracks(): void {
     const activeTracks = this.getActiveTracks();
     const playbackConfig = this.config.playback;
-    const offTextTrack: ?Track = this._getTracksByType(TrackTypes.TEXT).find(track => TextTrack.langComparer(OFF, track.language));
+    const offTextTrack: ?Track = this._getTracksByType(TrackType.TEXT).find(track => TextTrack.langComparer(OFF, track.language));
 
     this.hideTextTrack();
 
-    let currentOrConfiguredTextLang = this._playbackAttributesState.textLanguage || this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackTypes.TEXT);
+    let currentOrConfiguredTextLang = this._playbackAttributesState.textLanguage || this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackType.TEXT);
     let currentOrConfiguredAudioLang = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
-    this._setDefaultTrack(TrackTypes.TEXT, currentOrConfiguredTextLang, offTextTrack);
-    this._setDefaultTrack(TrackTypes.AUDIO, currentOrConfiguredAudioLang, activeTracks.audio);
+    this._setDefaultTrack(TrackType.TEXT, currentOrConfiguredTextLang, offTextTrack);
+    this._setDefaultTrack(TrackType.AUDIO, currentOrConfiguredAudioLang, activeTracks.audio);
   }
 
   /**
@@ -1523,11 +1547,11 @@ export default class Player extends FakeEventTarget {
     if (language === AUTO) {
       const tracks = this._getTracksByType(type);
       const localeTrack: ?Track = tracks.find(track => Track.langComparer(Locale.language, track.language));
-      if (localeTrack) {
+      if (localeTrack && localeTrack.language) {
         language = localeTrack.language;
-      } else if (defaultTrack && defaultTrack.language !== OFF) {
+      } else if (defaultTrack && defaultTrack.language && defaultTrack.language !== OFF) {
         language = defaultTrack.language;
-      } else if (tracks && tracks.length > 0) {
+      } else if (tracks && tracks.length > 0 && tracks[0].language) {
         language = tracks[0].language;
       }
     }
@@ -1559,11 +1583,11 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Get the player events.
-   * @returns {Object} - The events of the player.
+   * @returns {FakeEvent} - The event class of the player.
    * @public
    */
-  get Event(): { [event: string]: string } {
-    return PlayerEvents;
+  get Event(): typeof FakeEvent {
+    return FakeEvent;
   }
 
   /**
@@ -1577,48 +1601,31 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Get the player states.
-   * @returns {Object} - The states of the player.
+   * @returns {State} - The state class of the player.
    * @public
    */
-  get State(): { [state: string]: string } {
-    return PlayerStates;
+  get State(): typeof State {
+    return State;
   }
 
   /**
    * Get the player tracks types.
-   * @returns {Object} - The tracks types of the player.
+   * @returns {Track} - The track class of the player.
    * @public
    */
-  get Track(): { [track: string]: string } {
-    return TrackTypes;
-  }
-
-  /**
-   * Get the player log level.
-   * @returns {Object} - The log levels of the player.
-   * @public
-   */
-  get LogLevel(): { [level: string]: Object } {
-    return LogLevel;
-  }
-
-  // </editor-fold>
-  /**
-   * get the log level
-   * @param {?string} name - the logger name
-   * @returns {Object} - the log level
-   */
-  getLogLevel(name?: string): Object {
-    return getLogLevel(name);
+  get Track(): typeof Track {
+    return Track;
   }
 
   /**
    * sets the logger level
-   * @param {Object} level - the log level
+   * @param {LogLevel} level - the log level
    * @param {?string} name - the logger name
    * @returns {void}
    */
-  setLogLevel(level: Object, name?: string) {
+  setLogLevel(level: LogLevel, name?: string) {
     setLogLevel(level, name);
   }
+
+  // </editor-fold>
 }

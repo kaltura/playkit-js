@@ -1,10 +1,12 @@
 //@flow
+import PlayerStateType from './state-types'
 
 /**
  * This class describes a player state.
  * @classdesc
  */
 export default class State {
+  static Type: { [state: string]: string } = PlayerStateType;
   /**
    * The type of the state.
    * Can be one of those describes in states.js

@@ -2,13 +2,14 @@
 import FakeEventTarget from '../../event/fake-event-target'
 import FakeEvent from '../../event/fake-event'
 import EventManager from '../../event/event-manager'
-import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../../event/events'
+import {Html5EventType, CustomEventType} from '../../event/event-types'
 import MediaSourceProvider from './media-source/media-source-provider'
 import VideoTrack from '../../track/video-track'
 import AudioTrack from '../../track/audio-track'
 import {TextTrack as PKTextTrack} from '../../track/text-track'
 import {Cue} from '../../track/vtt-cue'
-import * as Utils from '../../utils/util'
+import {Dom, Generator} from '../../utils/index'
+import TextCueChangedEvent from '../../event/custom-events/text-cue-changed-event'
 import Html5AutoPlayCapability from './capabilities/html5-autoplay'
 import Html5IsSupportedCapability from './capabilities/html5-is-supported'
 
@@ -37,10 +38,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _mediaSourceAdapter: ?IMediaSourceAdapter;
   /**
    * The player config object.
-   * @type {Object}
+   * @type {PlayerConfig}
    * @private
    */
-  _config: Object;
+  _config: PlayerConfig;
   /**
    * Flag to indicate first time text track cue change.
    * @type {Object<number, boolean>}
@@ -71,12 +72,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * Factory method to create an engine.
    * @param {Source} source - The selected source object.
-   * @param {Object} config - The player configuration.
+   * @param {PlayerConfig} config - The player configuration.
    * @returns {IEngine} - New instance of the run time engine.
    * @public
    * @static
    */
-  static createEngine(source: Source, config: Object): IEngine {
+  static createEngine(source: Source, config: PlayerConfig): IEngine {
     return new this(source, config);
   }
 
@@ -122,9 +123,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * @constructor
    * @param {Source} source - The selected source object.
-   * @param {Object} config - The player configuration.
+   * @param {PlayerConfig} config - The player configuration.
    */
-  constructor(source: Source, config: Object) {
+  constructor(source: Source, config: PlayerConfig) {
     super();
     this._eventManager = new EventManager();
     this._createVideoElement();
@@ -134,14 +135,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * Restores the engine.
    * @param {Source} source - The selected source object.
-   * @param {Object} config - The player configuration.
+   * @param {PlayerConfig} config - The player configuration.
    * @returns {void}
    */
-  restore(source: Source, config: Object): void {
+  restore(source: Source, config: PlayerConfig): void {
     this.detach();
     this._eventManager.removeAll();
     if (this._el) {
-      Utils.Dom.removeAttribute(this._el, 'src');
+      Dom.removeAttribute(this._el, 'src');
     }
     this._init(source, config);
   }
@@ -155,8 +156,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this.detach();
     if (this._el) {
       this.pause();
-      Utils.Dom.removeAttribute(this._el, 'src');
-      Utils.Dom.removeChild(this._el.parentNode, this._el);
+      Dom.removeAttribute(this._el, 'src');
+      Dom.removeChild(this._el.parentNode, this._el);
     }
     this._showTextTrackFirstTime = {};
     this._eventManager.destroy();
@@ -179,17 +180,17 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   attach(): void {
-    Object.keys(Html5Events).forEach((html5Event) => {
-      this._eventManager.listen(this._el, Html5Events[html5Event], () => {
-        this.dispatchEvent(new FakeEvent(Html5Events[html5Event]));
+    Object.keys(Html5EventType).forEach((html5Event) => {
+      this._eventManager.listen(this._el, Html5EventType[html5Event], () => {
+        this.dispatchEvent(new FakeEvent(Html5EventType[html5Event]));
       });
     });
     if (this._mediaSourceAdapter) {
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.AUDIO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.TEXT_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.TEXT_CUE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.AUDIO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
     }
   }
 
@@ -199,14 +200,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   detach(): void {
-    Object.keys(Html5Events).forEach((html5Event) => {
-      this._eventManager.unlisten(this._el, Html5Events[html5Event]);
+    Object.keys(Html5EventType).forEach((html5Event) => {
+      this._eventManager.unlisten(this._el, Html5EventType[html5Event]);
     });
     if (this._mediaSourceAdapter) {
-      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGED);
-      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.AUDIO_TRACK_CHANGED);
-      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.TEXT_TRACK_CHANGED);
-      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.TEXT_CUE_CHANGED);
+      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEventType.VIDEO_TRACK_CHANGED);
+      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEventType.AUDIO_TRACK_CHANGED);
+      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEventType.TEXT_TRACK_CHANGED);
+      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEventType.TEXT_CUE_CHANGED);
     }
   }
 
@@ -321,7 +322,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   play(): void {
     let playPromise = this._el.play();
     if (playPromise) {
-      playPromise.catch(() => this.dispatchEvent(new FakeEvent(CustomEvents.AUTOPLAY_FAILED)));
+      playPromise.catch(() => this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED)));
     }
   }
 
@@ -421,7 +422,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return this._el.volume;
   }
 
-  ready() {
+  ready(): void {
   }
 
   /**
@@ -706,11 +707,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * Initializes the engine.
    * @param {Source} source - The selected source object.
-   * @param {Object} config - The player configuration.
+   * @param {PlayerConfig} config - The player configuration.
    * @private
    * @returns {void}
    */
-  _init(source: Source, config: Object): void {
+  _init(source: Source, config: PlayerConfig): void {
     this._config = config;
     this._canLoadMediaSourceAdapterPromise = (this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve());
     this._mediaSourceAdapter = null;
@@ -724,8 +725,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   _createVideoElement(): void {
-    this._el = Utils.Dom.createElement("video");
-    this._el.id = Utils.Generator.uniqueId(5);
+    this._el = Dom.createElement("video");
+    this._el.id = Generator.uniqueId(5);
     this._el.controls = false;
   }
 
@@ -796,7 +797,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text));
       }
     }
-    this.dispatchEvent(new FakeEvent(CustomEvents.TEXT_CUE_CHANGED, {cues: activeCues}));
+    this.dispatchEvent(new TextCueChangedEvent(activeCues));
   }
 
   /**
@@ -817,4 +818,3 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return null;
   }
 }
-

@@ -5,7 +5,7 @@ export default class FairPlay extends BaseDrmProtocol {
   static _logger = BaseDrmProtocol.getLogger('FairPlay');
   static _keySession: any;
   static _KeySystem: string = "com.apple.fps.1_0";
-  static _WebkitEvents = {
+  static _WebkitEvents: { [keyMessage: string]: string } = {
     NEED_KEY: 'webkitneedkey',
     KEY_MESSAGE: 'webkitkeymessage',
     KEY_ADDED: 'webkitkeyadded',
@@ -19,7 +19,7 @@ export default class FairPlay extends BaseDrmProtocol {
    * @param {Array<Object>} drmData - The drm data to check.
    * @return {boolean} - Whether FairPlay can be play on the current environment.
    */
-  static canPlayDrm(drmData: Array<Object>): boolean {
+  static canPlayDrm(drmData: Array<DrmData>): boolean {
     FairPlay._logger.debug("Can play DRM scheme of: " + BaseDrmProtocol.DrmScheme.FAIRPLAY);
     return BaseDrmProtocol.DrmSupport.isProtocolSupported(BaseDrmProtocol.DrmScheme.FAIRPLAY, drmData);
   }
@@ -30,43 +30,44 @@ export default class FairPlay extends BaseDrmProtocol {
    * @param {Array<Object>} drmData - The drm data.
    * @returns {void}
    */
-  static setDrmPlayback(videoElement: HTMLVideoElement, drmData: Array<Object> = []): void {
+  static setDrmPlayback(videoElement: HTMLVideoElement, drmData: Array<DrmData> = []): void {
     FairPlay._logger.debug("Sets DRM playback");
     videoElement.addEventListener(FairPlay._WebkitEvents.NEED_KEY, FairPlay._onWebkitNeedKey.bind(null, drmData), false);
   }
 
-  static _onWebkitNeedKey(drmData: Array<Object>, event: any): void {
+  static _onWebkitNeedKey(drmData: Array<DrmData>, event: any): void {
     FairPlay._logger.debug("Webkit need key triggered");
     let fpDrmData = drmData.find((drmEntry) => drmEntry.scheme === BaseDrmProtocol.DrmScheme.FAIRPLAY);
     if (!fpDrmData || FairPlay._keySession) {
       return;
     }
+    if (fpDrmData.certificate) {
+      let fpCertificate = fpDrmData.certificate;
+      let videoElement = event.target;
+      let initData = event.initData;
+      let contentId = FairPlay._extractContentId(initData);
+      let aCertificate = FairPlay._base64DecodeUint8Array(fpCertificate);
 
-    let fpCertificate = fpDrmData.certificate;
-    let videoElement = event.target;
-    let initData = event.initData;
-    let contentId = FairPlay._extractContentId(initData);
-    let aCertificate = FairPlay._base64DecodeUint8Array(fpCertificate);
+      initData = FairPlay._concatInitDataIdAndCertificate(initData, contentId, aCertificate);
 
-    initData = FairPlay._concatInitDataIdAndCertificate(initData, contentId, aCertificate);
-
-    if (!videoElement.webkitKeys) {
-      let keySystem = FairPlay._selectKeySystem();
-      FairPlay._logger.debug("Sets media keys");
-      videoElement.webkitSetMediaKeys(new window.WebKitMediaKeys(keySystem));
+      if (!videoElement.webkitKeys) {
+        let keySystem = FairPlay._selectKeySystem();
+        FairPlay._logger.debug("Sets media keys");
+        videoElement.webkitSetMediaKeys(new window.WebKitMediaKeys(keySystem));
+      }
+      if (!videoElement.webkitKeys) {
+        throw new Error("Could not create MediaKeys");
+      }
+      FairPlay._logger.debug("Creates session");
+      FairPlay._keySession = videoElement.webkitKeys.createSession('video/mp4', initData);
+      if (!FairPlay._keySession) {
+        throw new Error("Could not create key session");
+      }
+      FairPlay._keySession.contentId = contentId;
+      FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_MESSAGE, FairPlay._onWebkitKeyMessage.bind(null, fpDrmData), false);
+      FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_ADDED, FairPlay._onWebkitKeyAdded, false);
+      FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_ERROR, FairPlay._onWebkitKeyError, false);
     }
-    if (!videoElement.webkitKeys) {
-      throw new Error("Could not create MediaKeys");
-    }
-    FairPlay._logger.debug("Creates session");
-    FairPlay._keySession = videoElement.webkitKeys.createSession('video/mp4', initData);
-    if (!FairPlay._keySession) {
-      throw new Error("Could not create key session");
-    }
-    FairPlay._keySession.contentId = contentId;
-    FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_MESSAGE, FairPlay._onWebkitKeyMessage.bind(null, fpDrmData), false);
-    FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_ADDED, FairPlay._onWebkitKeyAdded, false);
-    FairPlay._keySession.addEventListener(FairPlay._WebkitEvents.KEY_ERROR, FairPlay._onWebkitKeyError, false);
   }
 
   static destroy(): void {

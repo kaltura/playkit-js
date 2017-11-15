@@ -1,6 +1,6 @@
 //@flow
 export default class PlayerError {
-  static TYPE: {[name: string]: Object} = {
+  static TYPE: { [name: string]: Object } = {
     NOT_REGISTERED_PLUGIN: {
       name: "PluginNotRegisteredException",
       message: function (name) {

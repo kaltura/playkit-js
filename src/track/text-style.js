@@ -19,7 +19,7 @@ class TextStyle {
    * @enum {Object.<string, string>}}
    * @export
    */
-  static FontFamily: {[string]: string} = {
+  static FontFamily: { [string]: string } = {
     "ARIAL": "Arial",
     "HELVETICA": "Helvetica",
     "VERDANA": "Verdana",
@@ -32,7 +32,7 @@ class TextStyle {
    * @enum {Object.<string, Array.<number>>}}
    * @export
    */
-  static StandardColors: {[string]: Array<number>} = {
+  static StandardColors: { [string]: Array<number> } = {
     'WHITE': [255, 255, 255],
     'BLACK': [0, 0, 0],
     'RED': [255, 0, 0],
@@ -48,7 +48,7 @@ class TextStyle {
    * @enum {Object.<string, number>}}
    * @export
    */
-  static StandardOpacities: {[string]: number} = {
+  static StandardOpacities: { [string]: number } = {
     'OPAQUE': 1,
     'SEMI_HIGH': 0.75,
     'SEMI_LOW': 0.25,
@@ -180,7 +180,7 @@ class TextStyle {
    * clones the textStyle object
    * @returns {TextStyle} the cloned textStyle object
    */
-  clone(): TextStyle{
+  clone(): TextStyle {
     let clonedTextStyle = new TextStyle();
     clonedTextStyle.fontEdge = this.fontEdge;
     clonedTextStyle.fontSize = this.fontSize;

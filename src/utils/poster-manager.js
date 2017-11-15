@@ -1,5 +1,5 @@
 // @flow
-import * as Utils from './util'
+import {Dom, Generator} from './index'
 
 class PosterManager {
   /**
@@ -28,7 +28,7 @@ class PosterManager {
   setSrc(posterUrl: ?string): void {
     if (posterUrl) {
       this._posterUrl = posterUrl;
-      Utils.Dom.setStyle(this._el, "background-image", `url("${this._posterUrl}")`);
+      Dom.setStyle(this._el, "background-image", `url("${this._posterUrl}")`);
       this.hide();
     }
   }
@@ -58,9 +58,9 @@ class PosterManager {
    */
   _createEl(): void {
     if (!this._el) {
-      const el = this._el = Utils.Dom.createElement("div");
-      Utils.Dom.setAttribute(el, "id", Utils.Generator.uniqueId(5));
-      Utils.Dom.setAttribute(el, "tabindex", '-1');
+      const el = this._el = Dom.createElement("div");
+      Dom.setAttribute(el, "id", Generator.uniqueId(5));
+      Dom.setAttribute(el, "tabindex", '-1');
     }
   }
 
@@ -71,7 +71,7 @@ class PosterManager {
    */
   _removeEl(): void {
     if (this._el) {
-      Utils.Dom.removeChild(this._el.parentNode, this._el);
+      Dom.removeChild(this._el.parentNode, this._el);
     }
   }
 
@@ -82,7 +82,7 @@ class PosterManager {
    * @returns {void}
    */
   show(): void {
-    Utils.Dom.setStyle(this._el, "display", "");
+    Dom.setStyle(this._el, "display", "");
   }
 
   /**
@@ -91,7 +91,7 @@ class PosterManager {
    * @returns {void}
    */
   hide(): void {
-    Utils.Dom.setStyle(this._el, "display", "none");
+    Dom.setStyle(this._el, "display", "none");
   }
 
   /**
@@ -101,7 +101,7 @@ class PosterManager {
    */
   reset(): void {
     this._posterUrl = '';
-    Utils.Dom.setStyle(this._el, "background-image", '');
+    Dom.setStyle(this._el, "background-image", '');
   }
 
   /**

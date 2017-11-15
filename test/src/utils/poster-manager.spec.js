@@ -1,4 +1,4 @@
-import PosterManager from '../../../src/utils/poster-manager'
+import {PosterManager} from '../../../src/utils/index'
 
 describe("PosterManager", () => {
   it("should create poster element", () => {

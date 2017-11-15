@@ -4,8 +4,8 @@ import AudioTrack from '../../../../../../src/track/audio-track'
 import TextTrack from '../../../../../../src/track/text-track'
 import {removeVideoElementsFromTestPage} from '../../../../utils/test-utils'
 import sourcesConfig from '../../../../configs/sources.json'
-import * as Utils from '../../../../../../src/utils/util'
-import {CUSTOM_EVENTS} from '../../../../../../src/event/events'
+import {Obj} from '../../../../../../src/utils/index'
+import {CustomEventType} from '../../../../../../src/event/event-types'
 
 
 describe('NativeAdapter: isSupported', () => {
@@ -223,7 +223,7 @@ describe('NativeAdapter: destroy', function () {
   it('should destroyed', (done) => {
     nativeInstance.load().then(() => {
       nativeInstance._loadPromise.should.be.exist;
-      Utils.Object.isEmptyObject(nativeInstance._sourceObj).should.be.false;
+      Obj.isEmptyObject(nativeInstance._sourceObj).should.be.false;
       nativeInstance.destroy().then(() => {
         (!nativeInstance._loadPromise).should.be.true;
         (!nativeInstance._sourceObj).should.be.true;
@@ -338,7 +338,7 @@ describe('NativeAdapter: _selectProgressiveVideoTrack', function () {
 
   it('should select a new video track', (done) => {
     nativeInstance.load().then(() => {
-      nativeInstance.addEventListener(CUSTOM_EVENTS.VIDEO_TRACK_CHANGED, (event) => {
+      nativeInstance.addEventListener(CustomEventType.VIDEO_TRACK_CHANGED, (event) => {
         event.payload.selectedVideoTrack.index.should.equal(0);
         nativeInstance._videoElement.currentTime.should.equal(2);
         nativeInstance._videoElement.paused.should.be.true;
@@ -418,7 +418,7 @@ describe('NativeAdapter: selectAudioTrack', function () {
   it('should select a new audio track', (done) => {
     nativeInstance.load().then(() => {
       if (nativeInstance._videoElement.audioTracks) {
-        nativeInstance.addEventListener(CUSTOM_EVENTS.AUDIO_TRACK_CHANGED, (event) => {
+        nativeInstance.addEventListener(CustomEventType.AUDIO_TRACK_CHANGED, (event) => {
           event.payload.selectedAudioTrack.index.should.equal(2);
           done();
         });
@@ -499,7 +499,7 @@ describe('NativeAdapter: selectTextTrack', function () {
   it('should select a new subtitles track', (done) => {
     nativeInstance.load().then(() => {
       if (nativeInstance._videoElement.textTracks) {
-        nativeInstance.addEventListener(CUSTOM_EVENTS.TEXT_TRACK_CHANGED, (event) => {
+        nativeInstance.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, (event) => {
           event.payload.selectedTextTrack.index.should.equal(1);
           done();
         });
@@ -517,7 +517,7 @@ describe('NativeAdapter: selectTextTrack', function () {
   it('should select a new captions track', (done) => {
     nativeInstance.load().then(() => {
       if (nativeInstance._videoElement.textTracks) {
-        nativeInstance.addEventListener(CUSTOM_EVENTS.TEXT_TRACK_CHANGED, (event) => {
+        nativeInstance.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, (event) => {
           event.payload.selectedTextTrack.index.should.equal(1);
           done();
         });

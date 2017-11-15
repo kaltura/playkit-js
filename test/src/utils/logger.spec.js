@@ -1,5 +1,5 @@
 import getLogger from '../../../src/utils/logger'
-import {LogLevel} from '../../../src/utils/logger'
+import {LogLevelType} from '../../../src/utils/logger'
 
 describe('LoggerFactory', () => {
 
@@ -17,8 +17,8 @@ describe('LoggerFactory', () => {
   });
 
   it('should change loggerA\'s log level', () => {
-    loggerA.setLevel(LogLevel.WARN);
-    (loggerA.context.filterLevel).should.deep.equal(LogLevel.WARN);
-    (loggerB.context.filterLevel).should.deep.equal(LogLevel.DEBUG);
+    loggerA.setLevel(LogLevelType.WARN);
+    (loggerA.context.filterLevel).should.deep.equal(LogLevelType.WARN);
+    (loggerB.context.filterLevel).should.deep.equal(LogLevelType.DEBUG);
   });
 });
