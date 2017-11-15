@@ -657,6 +657,10 @@ export default class PlayerError{
       * HLSJS levelSwitchError - bitrate switch issue
       */
      'BITRATE_SWITCH_ISSUE': 7001,
+     /**
+      * The call to Player.load() failed. see other data for more details.
+      */
+     'LOAD_FAILED': 7002,
     /**
      * The Cast API is unavailable.  This may be because of one of the following:
      * - The browser may not have Cast support
