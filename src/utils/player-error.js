@@ -4,15 +4,12 @@ import FakeEventTarget from '../event/fake-event-target'
 import FakeEvent from '../event/fake-event'
 import {CUSTOM_EVENTS as CustomEvents} from '../event/events'
 
-export default class PlayerError extends FakeEventTarget{
+export default class PlayerError{
 
   constructor(context: Object){
-    super();
     if (context){
       this._context = context;
     }
-
-
   }
 
   /**
@@ -20,25 +17,25 @@ export default class PlayerError extends FakeEventTarget{
    * @param {any} error - error object
    * @returns {string} - a readable error message
    */
-  createError(error: any): string{
-    this.severity = error.severity;
-    this.category = error.category;
-    this.code = error.code;
-    this.data = JSON.stringify(error.args);
-    let severityName = this.severity === 1 ? 'RECOVERABLE' : 'CRITICAL';
+  static createError(error: any): string{
+    const severity = error.severity;
+    const category = error.category;
+    const code = error.code;
+    const data = JSON.stringify(error.args);
+    let severityName = severity === 1 ? 'RECOVERABLE' : 'CRITICAL';
     let codeName = 'UNKNOWN';
     let categoryName = 'UNKNOWN';
     for (var k in PlayerError.Code){
-      if (this.code === PlayerError.Code[k]){
+      if (code === PlayerError.Code[k]){
         codeName = k;
       }
     }
     for (var i in PlayerError.Category){
-      if (this.category === PlayerError.Category[i]){
+      if (category === PlayerError.Category[i]){
         categoryName = i;
       }
     }
-    return severityName + "." + categoryName + "."+ codeName + "." + ' ('+this.data+')';
+    return severityName + "." + categoryName + "."+ codeName + "." + ' ('+data+')';
   }
 
   /**
@@ -49,27 +46,27 @@ export default class PlayerError extends FakeEventTarget{
    * @returns {void}
    * @public
    */
-  dispatchFromContext(error: any): void{
+  static dispatchFromContext(error: any): void{
     const message = this.createError(error);
     this._context.dispatchEvent(new FakeEvent(CustomEvents.ERROR, {message: message}));
   }
 
-  /**
-   * dispatches an error event
-   * @param {any} error - error object
-   * @returns {void}
-   * @public
-   */
-  dispatch(error: any): void{
-    const message = this.createError(error)
-    this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, {message: message}));
-  }
+  // /**
+  //  * dispatches an error event
+  //  * @param {any} error - error object
+  //  * @returns {void}
+  //  * @public
+  //  */
+  // dispatch(error: any): void{
+  //   const message = this.createError(error)
+  //   this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, {message: message}));
+  // }
 
   /**
    * @enum {number}
    * @export
    */
-   Severity = {
+   static Severity = {
     /**
      * An error occurred, but the Player is attempting to recover from the error.
      *
@@ -92,7 +89,7 @@ export default class PlayerError extends FakeEventTarget{
    * @enum {number}
    * @export
    */
-  Category = {
+  static Category = {
     /** Errors from the network stack. */
     'NETWORK': 1,
 
@@ -121,7 +118,7 @@ export default class PlayerError extends FakeEventTarget{
     'STORAGE': 9
   }
 
-   Code = {
+   static Code = {
     /**
      * A network request was made using an unsupported URI scheme.
      * <br> error.data[0] is the URI.

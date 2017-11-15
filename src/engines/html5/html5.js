@@ -802,16 +802,16 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         try{
           activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text));
         }catch(e){
-          this._playerError.dispatch({
-              severity: this._playerError.Severity.RECOVERABLE,
-              category: this._playerError.CATEGORY.TEXT,
-              code: this._playerError.Code.VTT_CAPTIONS_ISSUE,
-              args: e
+          const message = PlayerError.createError({
+            severity: PlayerError.Severity.RECOVERABLE,
+            category: PlayerError.CATEGORY.TEXT,
+            code: PlayerError.Code.VTT_CAPTIONS_ISSUE,
+            args: e
           });
+          this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, {message: message}));
         }
       }
     }
-    this.dispatchEvent(new FakeEvent(CustomEvents.TEXT_CUE_CHANGED, {cues: activeCues}));
   }
 
   /**

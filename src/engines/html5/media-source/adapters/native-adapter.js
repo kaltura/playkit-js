@@ -146,6 +146,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     this._progressiveSources = config.sources.progressive;
   }
 
+
+  _dispatchErrorCallback(error: string): void {
+    this._trigger(BaseMediaSourceAdapter.CustomEvents.ERROR, {messege: error});
+  }
+
   /**
    * Sets the DRM playback in case such needed.
    * @private
@@ -153,7 +158,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _maybeSetDrmPlayback(): void {
     if (NativeAdapter._drmProtocol && this._sourceObj && this._sourceObj.drmData) {
-      NativeAdapter._drmProtocol.setDrmPlayback(this._videoElement, this._sourceObj.drmData, this._playerError);
+      NativeAdapter._drmProtocol.setDrmPlayback(this._videoElement, this._sourceObj.drmData, this._dispatchErrorCallback.bind(this));
 
     }
   }

@@ -12,7 +12,7 @@ export default class FairPlay extends BaseDrmProtocol {
     KEY_ADDED: 'webkitkeyadded',
     KEY_ERROR: 'webkitkeyerror'
   };
-  static _playerError: any;
+  static _errorCallback: any;
 
   /**
    * FairPlay playback supports in case 2 conditions are met:
@@ -30,13 +30,13 @@ export default class FairPlay extends BaseDrmProtocol {
    * Sets the FairPlay playback.
    * @param {HTMLVideoElement} videoElement - The video element to manipulate.
    * @param {Array<Object>} drmData - The drm data.
-   * @param {any} playerError - player error object
+   * @param {any} errorCallback - player error object
    * @returns {void}
    */
-  static setDrmPlayback(videoElement: HTMLVideoElement, drmData: Array<Object> = [], playerError: any): void {
+  static setDrmPlayback(videoElement: HTMLVideoElement, drmData: Array<Object> = [], errorCallback: any): void {
     FairPlay._logger.debug("Sets DRM playback");
     videoElement.addEventListener(FairPlay._WebkitEvents.NEED_KEY, FairPlay._onWebkitNeedKey.bind(null, drmData), false);
-    FairPlay._playerError = playerError;
+    FairPlay._errorCallback = errorCallback;
   }
 
   static _onWebkitNeedKey(drmData: Array<Object>, event: any): void {
@@ -60,24 +60,23 @@ export default class FairPlay extends BaseDrmProtocol {
       videoElement.webkitSetMediaKeys(new window.WebKitMediaKeys(keySystem));
     }
     if (!videoElement.webkitKeys) {
-      FairPlay._playerError.dispatchFromContext({
-          severity: PlayerError.Severity.CRITICAL,
-          category: PlayerError.Category.DRM,
-          code: PlayerError.Code.COULD_NOT_CREATE_MEDIA_KEYS,
-          args: {}
-    });
-
+      FairPlay._errorCallback(PlayerError.createError({
+        severity: PlayerError.Severity.CRITICAL,
+        category: PlayerError.Category.DRM,
+        code: PlayerError.Code.COULD_NOT_CREATE_MEDIA_KEYS,
+        args: {}
+      }));
       //throw new Error("Could not create MediaKeys");
     }
     FairPlay._logger.debug("Creates session");
     FairPlay._keySession = videoElement.webkitKeys.createSession('video/mp4', initData);
     if (!FairPlay._keySession) {
-      FairPlay._playerError.dispatchFromContext({
-          severity: PlayerError.Severity.CRITICAL,
+      FairPlay._errorCallback(PlayerError.createError({
+        severity: PlayerError.Severity.CRITICAL,
         category: PlayerError.Category.DRM,
         code: PlayerError.Code.COULD_NOT_CREATE_KEY_SESSION,
         args: {}
-    });
+      }));
       //throw new Error("Could not create key session");
     }
     FairPlay._keySession.contentId = contentId;
@@ -122,24 +121,24 @@ export default class FairPlay extends BaseDrmProtocol {
     try {
       responseObj = JSON.parse(keyText);
     } catch (error) {
-      FairPlay._playerError.dispatchFromContext({
+      FairPlay._errorCallback(PlayerError.createError({
         severity: PlayerError.Severity.CRITICAL,
         category: PlayerError.Category.DRM,
         code: PlayerError.Code.BAD_FAIRPLAY_RESPONSE,
         args: {}
-      });
+      }));
     }
     let isValidResponse = FairPlay._validateResponse(responseObj);
     if (isValidResponse.valid) {
       let key = FairPlay._base64DecodeUint8Array(responseObj.ckc);
       FairPlay._keySession.update(key);
     } else {
-      FairPlay._playerError.dispatchFromContext({
-        severity: FairPlay._playerError.Severity.CRITICAL,
-        category: FairPlay._playerError.Category.DRM,
-        code: FairPlay._playerError.Code.BAD_FAIRPLAY_RESPONSE,
-        args: {data: isValidResponse.reason}
-      });
+     FairPlay._errorCallback(PlayerError.createError({
+       severity: PlayerError.Severity.CRITICAL,
+       category: PlayerError.Category.DRM,
+       code: PlayerError.Code.BAD_FAIRPLAY_RESPONSE,
+       args: {data: isValidResponse.reason}
+     }));
     }
   }
 
