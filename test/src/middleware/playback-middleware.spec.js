@@ -1,10 +1,10 @@
 import BaseMiddleware from '../../../src/middleware/base-middleware'
 import PlaybackMiddleware from '../../../src/middleware/playback-middleware'
-import LoggerFactory from '../../../src/utils/logger'
+import getLogger from '../../../src/utils/logger'
 
 class PM1 extends BaseMiddleware {
   id = 'PM1';
-  logger = LoggerFactory.getLogger(this.id);
+  logger = getLogger(this.id);
 
   play(next) {
     this.logger.debug('play');
@@ -19,7 +19,7 @@ class PM1 extends BaseMiddleware {
 
 class PM2 extends BaseMiddleware {
   id = 'PM2';
-  logger = LoggerFactory.getLogger(this.id);
+  logger = getLogger(this.id);
 
   play(next) {
     this.logger.debug('play');
@@ -29,7 +29,7 @@ class PM2 extends BaseMiddleware {
 
 class PM3 extends BaseMiddleware {
   id = 'PM3';
-  logger = LoggerFactory.getLogger(this.id);
+  logger = getLogger(this.id);
 
   pause(next) {
     this.logger.debug('pause');
