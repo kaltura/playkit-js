@@ -196,10 +196,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.TEXT_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.TEXT_CUE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.ERROR, (event: FakeEvent) => {
-        console.log(event.payload);
-        this.dispatchEvent(event)
-      });
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
     }
   }
 
@@ -235,7 +232,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       code: PlayerError.Code.VIDEO_ERROR,
       args: {errorCode: errCode, msData: msData, chromeData: chromeData}
     })
-    this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, {message: errMessage}));
+    this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, errMessage));
   }
 
   /**
@@ -847,7 +844,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
             code: PlayerError.Code.VTT_CAPTIONS_ISSUE,
             args: e
           });
-          this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, {message: message}));
+          this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, message));
         }
       }
     }

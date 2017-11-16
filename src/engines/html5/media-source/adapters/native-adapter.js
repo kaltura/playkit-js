@@ -146,8 +146,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
 
-  _dispatchErrorCallback(error: string): void {
-    this._trigger(BaseMediaSourceAdapter.CustomEvents.ERROR, {messege: error});
+  _dispatchErrorCallback(error: any): void {
+    this._trigger(BaseMediaSourceAdapter.CustomEvents.ERROR, error);
   }
 
   /**
@@ -247,7 +247,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       code: PlayerError.Code.NATIVE_ADAPTER,
       args: error.payload
     })
-    this._trigger(BaseMediaSourceAdapter.CustomEvents.ERROR, {messege: message});
+    this._trigger(BaseMediaSourceAdapter.CustomEvents.ERROR, message);
     reject(error);
   }
 

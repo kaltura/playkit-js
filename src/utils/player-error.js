@@ -34,7 +34,7 @@ export default class PlayerError{
         categoryName = i;
       }
     }
-    return severityName + "." + categoryName + "."+ codeName + "." + ' ('+data+')';
+    return {kv3Err : severityName + "." + categoryName + "."+ codeName + "." +data};
   }
 
   /**
