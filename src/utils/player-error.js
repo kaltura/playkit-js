@@ -1,15 +1,14 @@
 //@flow
 
-import FakeEventTarget from '../event/fake-event-target'
-import FakeEvent from '../event/fake-event'
-import {CUSTOM_EVENTS as CustomEvents} from '../event/events'
-
+/**
+ * @classdesc This is a description of the MyClass class.
+ */
 export default class PlayerError{
 
-  constructor(context: Object){
-    if (context){
-      this._context = context;
-    }
+  /**
+   * @constructor
+   */
+  constructor(){
   }
 
   /**
@@ -39,30 +38,6 @@ export default class PlayerError{
   }
 
   /**
-   * a helper function for static classes, which cannot dispatch event on their own.
-   * this function dispatches from the context which is setted in the constructor.
-   * contains the static class
-   * @param {any} error - error object
-   * @returns {void}
-   * @public
-   */
-  static dispatchFromContext(error: any): void{
-    const message = this.createError(error);
-    this._context.dispatchEvent(new FakeEvent(CustomEvents.ERROR, {message: message}));
-  }
-
-  // /**
-  //  * dispatches an error event
-  //  * @param {any} error - error object
-  //  * @returns {void}
-  //  * @public
-  //  */
-  // dispatch(error: any): void{
-  //   const message = this.createError(error)
-  //   this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, {message: message}));
-  // }
-
-  /**
    * @enum {number}
    * @export
    */
@@ -82,8 +57,6 @@ export default class PlayerError{
      */
     'CRITICAL': 2
   }
-
-
 
   /**
    * @enum {number}
