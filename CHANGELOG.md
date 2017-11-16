@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.17.0"></a>
+# [0.17.0](https://github.com/kaltura/playkit-js/compare/v0.16.0...v0.17.0) (2017-11-16)
+
+
+### Bug Fixes
+
+* **FEC-7355:** don't show poster when autoplaying is on ([#158](https://github.com/kaltura/playkit-js/issues/158)) ([d940225](https://github.com/kaltura/playkit-js/commit/d940225))
+* **FEC-7436:** preload auto: first live frame appears with entry thumbnail ([#160](https://github.com/kaltura/playkit-js/issues/160)) ([8e623d9](https://github.com/kaltura/playkit-js/commit/8e623d9))
+
+
+### Features
+
+* expose logger API ([#161](https://github.com/kaltura/playkit-js/issues/161)) ([f61dce4](https://github.com/kaltura/playkit-js/commit/f61dce4))
+
+
+
 <a name="0.16.0"></a>
 # [0.16.0](https://github.com/kaltura/playkit-js/compare/v0.15.0...v0.16.0) (2017-11-07)
 
