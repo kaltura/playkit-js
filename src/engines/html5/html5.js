@@ -130,7 +130,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._eventManager = new EventManager();
     this._createVideoElement();
     this._init(source, config);
-    this._playerError = new PlayerError(this);
   }
 
   /**
@@ -183,9 +182,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   attach(): void {
     Object.keys(Html5Events).forEach((html5Event) => {
       this._eventManager.listen(this._el, Html5Events[html5Event], () => {
-        this.dispatchEvent(new FakeEvent(Html5Events[html5Event]));
+        if (Html5Events[html5Event] === Html5Events.ERROR) {
+          this._handleHTML5Error();
+        } else {
+          this.dispatchEvent(new FakeEvent(Html5Events[html5Event]));
+        }
       });
     });
+
     if (this._mediaSourceAdapter) {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.AUDIO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
@@ -197,6 +201,41 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         this.dispatchEvent(event)
       });
     }
+  }
+
+  /**
+   * Handles errors from the video element
+   * @returns {void}
+   * @private
+   */
+  _handleHTML5Error(): void {
+    if (!this._el.error) return;
+
+    const errCode = this._el.error.code;
+    if (errCode == 1 /* MEDIA_ERR_ABORTED */) {
+      // Ignore this error code, which should only occur when navigating away or
+      // deliberately stopping playback of HTTP content.
+      return;
+    }
+
+    // Extra error information from MS Edge and IE11:
+    let msData = this.video_.error.msExtendedCode;
+    if (msData) {
+      // Convert to unsigned:
+      if (msData < 0) {
+        msData += Math.pow(2, 32);
+      }
+      // Format as hex:
+      msData = msData.toString(16);
+    }
+    const chromeData = this._el.error.message;
+    const errMessage = PlayerError.createError({
+      severity: PlayerError.Severity.CRITICAL,
+      category: PlayerError.Category.MEDIA,
+      code: PlayerError.Code.VIDEO_ERROR,
+      args: {errorCode: errCode, msData: msData, chromeData: chromeData}
+    })
+    this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, {message: errMessage}));
   }
 
   /**
@@ -799,9 +838,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       if (window.VTTCue && cue instanceof window.VTTCue) {
         activeCues.push(cue);
       } else if (window.TextTrackCue && cue instanceof window.TextTrackCue) {
-        try{
+        try {
           activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text));
-        }catch(e){
+        } catch (e) {
           const message = PlayerError.createError({
             severity: PlayerError.Severity.RECOVERABLE,
             category: PlayerError.CATEGORY.TEXT,

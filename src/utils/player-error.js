@@ -84,13 +84,17 @@ export default class PlayerError{
     /** Miscellaneous errors from the player. */
     'PLAYER': 7,
 
-    /** Errors related to cast. */
+    /** Errors related to Ads. */
     'ADS': 8,
 
     /** Errors in the database storage (offline). */
     'STORAGE': 9
   }
 
+  /**
+   * @enum {number}
+   * @export
+   */
    static Code = {
     /**
      * A network request was made using an unsupported URI scheme.
@@ -321,8 +325,10 @@ export default class PlayerError{
       * HLSJS buffer appending error
       */
      'HLS_BUFFER_APPENDING_ISSUE': 3021,
-
-
+    /**
+     * Native adapter error, more info in the data part
+     */
+    'NATIVE_ADAPTER': 3022,
      /**
      * The Player was unable to guess the manifest type based on file extension
      * or MIME type.  To fix, try one of the following:

@@ -1067,7 +1067,7 @@ export default class Player extends FakeEventTarget {
   _createReadyPromise(): void {
     this._readyPromise = new Promise((resolve, reject) => {
       this._eventManager.listen(this, CustomEvents.TRACKS_CHANGED, resolve);
-      //this._eventManager.listen(this, Html5Events.ERROR, reject);
+      this._eventManager.listen(this, Html5Events.ERROR, reject);
     });
   }
 
