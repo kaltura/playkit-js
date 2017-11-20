@@ -759,9 +759,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       if (this._config.playback.useNativeTextTrack) {
         textTrackEl.mode = "showing";
       } else {
+        textTrackEl.oncuechange = (e) => this._onCueChange(e);
         textTrackEl.mode = this._showTextTrackFirstTime[textTrack.index] ? "hidden" : "showing";
         this._showTextTrackFirstTime[textTrack.index] = true;
-        textTrackEl.oncuechange = (e) => this._onCueChange(e);
       }
     }
   }
