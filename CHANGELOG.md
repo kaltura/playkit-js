@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.18.0"></a>
+# [0.18.0](https://github.com/kaltura/playkit-js/compare/v0.17.1...v0.18.0) (2017-11-26)
+
+
+### Bug Fixes
+
+* update canPlaySource API in engine interface ([#166](https://github.com/kaltura/playkit-js/issues/166)) ([6185bd0](https://github.com/kaltura/playkit-js/commit/6185bd0))
+
+
+### Features
+
+* expose playback rates api ([#165](https://github.com/kaltura/playkit-js/issues/165)) ([c6aa6c1](https://github.com/kaltura/playkit-js/commit/c6aa6c1))
+
+
+
 <a name="0.17.1"></a>
 ## [0.17.1](https://github.com/kaltura/playkit-js/compare/v0.17.0...v0.17.1) (2017-11-22)
 
