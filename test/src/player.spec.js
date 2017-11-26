@@ -2697,7 +2697,7 @@ describe('logger', () => {
 describe('playbackRate', () => {
   it('should return the possible playback rates of the player', () => {
     const player = new Player();
-    player.playbackRates.should.equal([0.5, 1, 2, 4]);
+    player.playbackRates.should.deep.equal([0.5, 1, 2, 4]);
   });
 
   it('should return the default playback rate of the player', () => {
