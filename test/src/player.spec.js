@@ -2693,3 +2693,15 @@ describe('logger', () => {
     currentLogLevel.should.equal(player.LogLevel.DEBUG);
   });
 });
+
+describe('playbackRate', () => {
+  it('should return the possible playback rates of the player', () => {
+    const player = new Player();
+    player.playbackRates.should.deep.equal([0.5, 1, 2, 4]);
+  });
+
+  it('should return the default playback rate of the player', () => {
+    const player = new Player();
+    player.defaultPlaybackRate.should.equal(1);
+  });
+});
