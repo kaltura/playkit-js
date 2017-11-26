@@ -26,6 +26,20 @@ import DefaultPlayerConfig from './player-config.json'
 import './assets/style.css'
 
 /**
+ * The player playback rates.
+ * @type {Array<number>}
+ * @const
+ */
+const PLAYBACK_RATES = [0.5, 1, 2, 4];
+
+/**
+ * The player default playback rate.
+ * @type {number}
+ * @const
+ */
+const DEFAULT_PLAYBACK_RATE = 1;
+
+/**
  * The player container class name.
  * @type {string}
  * @const
@@ -656,6 +670,22 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Gets the possible playback speeds of the video.
+   * @returns {Array<number>} - The possible playback speeds speed of the video.
+   */
+  get playbackRates(): Array<number> {
+    return PLAYBACK_RATES;
+  }
+
+  /**
+   * Gets the default playback speed of the video.
+   * @returns {number} - The default playback speed of the video.
+   */
+  get defaultPlaybackRate(): number {
+    return DEFAULT_PLAYBACK_RATE;
+  }
+
+  /**
    * get the engine type
    * @returns {string} - html5
    */
@@ -974,6 +1004,29 @@ export default class Player extends FakeEventTarget {
     if (this._fullscreen) {
       this.dispatchEvent(new FakeEvent(CustomEvents.REQUESTED_EXIT_FULLSCREEN));
     }
+  }
+
+  // </editor-fold>
+
+  // <editor-fold desc="Logger API">
+
+  /**
+   * get the log level
+   * @param {?string} name - the logger name
+   * @returns {Object} - the log level
+   */
+  getLogLevel(name?: string): Object {
+    return getLogLevel(name);
+  }
+
+  /**
+   * sets the logger level
+   * @param {Object} level - the log level
+   * @param {?string} name - the logger name
+   * @returns {void}
+   */
+  setLogLevel(level: Object, name?: string) {
+    setLogLevel(level, name);
   }
 
   // </editor-fold>
@@ -1603,22 +1656,4 @@ export default class Player extends FakeEventTarget {
   }
 
   // </editor-fold>
-  /**
-   * get the log level
-   * @param {?string} name - the logger name
-   * @returns {Object} - the log level
-   */
-  getLogLevel(name?: string): Object {
-    return getLogLevel(name);
-  }
-
-  /**
-   * sets the logger level
-   * @param {Object} level - the log level
-   * @param {?string} name - the logger name
-   * @returns {void}
-   */
-  setLogLevel(level: Object, name?: string) {
-    setLogLevel(level, name);
-  }
 }
