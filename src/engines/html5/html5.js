@@ -839,7 +839,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
           });
           this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, message));
         }
-        ;
       }
     }
     this.dispatchEvent(new FakeEvent(CustomEvents.TEXT_CUE_CHANGED, {cues: activeCues}));
