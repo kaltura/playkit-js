@@ -1,6 +1,5 @@
 //@flow
 import {convertCueToDOMTree} from './text-track-display'
-import PlayerError from "../utils/player-error";
 
 const autoKeyword: string = "auto";
 const directionSetting: { [string]: boolean } = {
@@ -289,13 +288,7 @@ class VTTCue {
 
   set position(value: number) {
     if (value < 0 || value > 100) {
-      let ErrObj = {
-        severity: PlayerError.Severity.RECOVERABLE,
-        category: PlayerError.Category.TEXT,
-        code: PlayerError.Code.BAD_VALUE,
-        args: {message: "Position must be between 0 and 100."}
-      }
-      new PlayerError(ErrObj);
+      throw new Error("Position must be between 0 and 100.")
     }
     this._position = value;
     this.resetCue();

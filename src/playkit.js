@@ -13,7 +13,7 @@ import TextTrack from './track/text-track'
 import TextStyle from './track/text-style'
 import Env from './utils/env'
 import * as Utils from './utils/util'
-import PlayerError from './utils/player-error'
+import {Error, Category, Code, Severity} from './utils/player-error'
 
 Player.runCapabilities();
 
@@ -40,8 +40,8 @@ export {Track, VideoTrack, AudioTrack, TextTrack, TextStyle};
 // Export utils library
 export {Utils};
 
-// Export PlayerError util
-export {PlayerError};
+// Export Error util
+export {Error, Severity, Category, Code};
 
 // Export version
 export {__VERSION__ as VERSION};

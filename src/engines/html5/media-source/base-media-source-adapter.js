@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import FakeEvent from '../../../event/fake-event'
 import FakeEventTarget from '../../../event/fake-event-target'
-import PlayerError from '../../../utils/player-error'
+import Error from '../../../utils/player-error'
 import {CUSTOM_EVENTS} from '../../../event/events'
 import getLogger from '../../../utils/logger'
 import Track from '../../../track/track'
@@ -108,47 +108,47 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /** Must implemented methods by the derived media source adapter **/
 
   static canPlayType(mimeType: string, preferNative: boolean): boolean {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayType').getError();
+    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayType').getError();
   }
 
   load(): Promise<Object> {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
+    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
   }
 
   selectVideoTrack(videoTrack: VideoTrack): void {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'selectVideoTrack').getError();
+    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'selectVideoTrack').getError();
   }
 
   selectAudioTrack(audioTrack: AudioTrack): void {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'selectAudioTrack').getError();
+    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'selectAudioTrack').getError();
   }
 
   selectTextTrack(textTrack: TextTrack): void {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'selectTextTrack').getError();
+    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'selectTextTrack').getError();
   }
 
   hideTextTrack(): void {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'hideTextTrack').getError();
+    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'hideTextTrack').getError();
   }
 
   enableAdaptiveBitrate(): void {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'enableAdaptiveBitrate').getError();
+    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'enableAdaptiveBitrate').getError();
   }
 
   isAdaptiveBitrateEnabled(): boolean {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'isAdaptiveBitrateEnabled').getError();
+    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'isAdaptiveBitrateEnabled').getError();
   }
 
   seekToLiveEdge(): void {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'seekToLiveEdge').getError();
+    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'seekToLiveEdge').getError();
   }
 
   isLive(): boolean {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'isLive').getError();
+    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'isLive').getError();
   }
 
   get src(): string {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'get src').getError();
+    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'get src').getError();
   }
 
   /**

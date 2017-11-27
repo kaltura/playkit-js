@@ -384,7 +384,7 @@ export default class Player extends FakeEventTarget {
         this._setDefaultTracks();
         this.dispatchEvent(new FakeEvent(CustomEvents.TRACKS_CHANGED, {tracks: this._tracks}));
       }).catch((error) => {
-        this.dispatchEvent(new FakeEvent(Html5Events.ERROR, error));
+        this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, error));
       });
     }
   }
@@ -1311,6 +1311,8 @@ export default class Player extends FakeEventTarget {
       this.load();
       this.ready().then(() => {
         this._engine.play();
+      }).catch((e) => {
+        this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, e));
       });
     }
   }

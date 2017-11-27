@@ -11,7 +11,7 @@ import * as Utils from '../../../../utils/util'
 import FairPlay from '../../../../drm/fairplay'
 import Env from '../../../../utils/env'
 import FakeEvent from '../../../../event/fake-event'
-import PlayerError from "../../../../utils/player-error";
+import {Error, Severity, Category, Code} from "../../../../utils/player-error";
 
 /**
  * An illustration of media source extension for progressive download
@@ -26,6 +26,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    */
   static id: string = 'NativeAdapter';
+
+
+  static DEBUG_LEVEL: boolean = true;
 
   /**
    * The adapter logger
@@ -157,7 +160,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _maybeSetDrmPlayback(): void {
     if (NativeAdapter._drmProtocol && this._sourceObj && this._sourceObj.drmData) {
-      NativeAdapter._drmProtocol.setDrmPlayback(this._videoElement, this._sourceObj.drmData, this._dispatchErrorCallback.bind(this));
+      NativeAdapter._drmProtocol.setDrmPlayback(this._videoElement, this._sourceObj.drmData, (error) => this._dispatchErrorCallback(error));
     }
   }
 
@@ -241,14 +244,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _onError(reject: Function, error: FakeEvent): void {
     NativeAdapter._logger.error(error);
-    const message = PlayerError.createError({
-      severity: PlayerError.Severity.CRITICAL,
-      category: PlayerError.Category.PLAYER,
-      code: PlayerError.Code.NATIVE_ADAPTER,
+    const message = new Error(NativeAdapter.DEBUG_LEVEL).createError({
+      severity: Severity.CRITICAL,
+      category: Category.PLAYER,
+      code: Code.NATIVE_ADAPTER,
       args: error.payload
     })
-    this._trigger(BaseMediaSourceAdapter.CustomEvents.ERROR, message);
-    reject(error);
+    reject(message);
   }
 
   /**

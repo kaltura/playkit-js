@@ -11,7 +11,7 @@ import {Cue} from '../../track/vtt-cue'
 import * as Utils from '../../utils/util'
 import Html5AutoPlayCapability from './capabilities/html5-autoplay'
 import Html5IsSupportedCapability from './capabilities/html5-is-supported'
-import PlayerError from "../../utils/player-error";
+import {Error, Severity, Code, Category} from "../../utils/player-error";
 
 /**
  * Html5 engine for playback.
@@ -183,7 +183,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     Object.keys(Html5Events).forEach((html5Event) => {
       this._eventManager.listen(this._el, Html5Events[html5Event], () => {
         if (Html5Events[html5Event] === Html5Events.ERROR) {
-          this._handleHTML5Error();
+          this._handleVideoError();
         } else {
           this.dispatchEvent(new FakeEvent(Html5Events[html5Event]));
         }
@@ -205,7 +205,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    * @private
    */
-  _handleHTML5Error(): void {
+  _handleVideoError(): void {
     if (!this._el.error) return;
 
     const errCode = this._el.error.code;
@@ -215,22 +215,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       return;
     }
 
-    // Extra error information from MS Edge and IE11:
-    let msData = this.video_.error.msExtendedCode;
-    if (msData) {
-      // Convert to unsigned:
-      if (msData < 0) {
-        msData += Math.pow(2, 32);
-      }
-      // Format as hex:
-      msData = msData.toString(16);
-    }
-    const chromeData = this._el.error.message;
-    const errMessage = PlayerError.createError({
-      severity: PlayerError.Severity.CRITICAL,
-      category: PlayerError.Category.MEDIA,
-      code: PlayerError.Code.VIDEO_ERROR,
-      args: {errorCode: errCode, msData: msData, chromeData: chromeData}
+    const errMessage = new Error().createError({
+      severity: Severity.CRITICAL,
+      category: Category.MEDIA,
+      code: Code.VIDEO_ERROR,
+      args: {errorCode: errCode}
     })
     this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, errMessage));
   }
@@ -386,9 +375,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._el.load();
     return this._canLoadMediaSourceAdapterPromise.then(() => {
       if (this._mediaSourceAdapter) {
-        return this._mediaSourceAdapter.load(startTime);
+        return this._mediaSourceAdapter.load(startTime).catch((e) => {
+          return Promise.reject(e);
+        });
       }
       return Promise.resolve({});
+    }).catch((e) => {
+      return Promise.reject(e);
     });
   }
 
@@ -836,16 +829,17 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         activeCues.push(cue);
       } else if (window.TextTrackCue && cue instanceof window.TextTrackCue) {
         try {
-          activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text));
+          activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text))
         } catch (e) {
-          const message = PlayerError.createError({
-            severity: PlayerError.Severity.RECOVERABLE,
-            category: PlayerError.CATEGORY.TEXT,
-            code: PlayerError.Code.VTT_CAPTIONS_ISSUE,
+          const message = new Error().createError({
+            severity: Severity.RECOVERABLE,
+            category: Category.TEXT,
+            code: Code.UNABLE_TO_CREATE_CUE,
             args: e
           });
           this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, message));
         }
+        ;
       }
     }
     this.dispatchEvent(new FakeEvent(CustomEvents.TEXT_CUE_CHANGED, {cues: activeCues}));
