@@ -14,6 +14,8 @@ import TextStyle from './track/text-style'
 import Env from './utils/env'
 import * as Utils from './utils/util'
 import {Error, Category, Code, Severity} from './utils/player-error'
+import FakeEvent from './event/fake-event'
+import {CUSTOM_EVENTS} from './event/events'
 
 Player.runCapabilities();
 
@@ -42,6 +44,12 @@ export {Utils};
 
 // Export Error util
 export {Error, Severity, Category, Code};
+
+// Export FakeEvent util
+export {FakeEvent}
+
+// Export events strings
+export {CUSTOM_EVENTS}
 
 // Export version
 export {__VERSION__ as VERSION};

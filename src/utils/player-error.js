@@ -1,14 +1,11 @@
 //@flow
 import getLogger, {getLogLevel, LogLevel} from './logger'
 
-declare type severityType = { [level: string]: number };
-declare type categoryType = { [name: string]: number };
-declare type codeType = { [name: string]: number };
 /**
  * @enum {number}
  * @export
  */
-const Severity: severityType = {
+const Severity = {
   /**
    * An error occurred, but the Player is attempting to recover from the error.
    *
@@ -29,7 +26,7 @@ const Severity: severityType = {
  * @enum {number}
  * @export
  */
-const Category: categoryType = {
+const Category = {
   /** Errors from the network stack. */
   'NETWORK': 1,
 
@@ -62,7 +59,7 @@ const Category: categoryType = {
  * @enum {number}
  * @export
  */
-const Code: codeType = {
+const Code = {
   /**
    * A network request was made using an unsupported URI scheme.
    * <br> error.data[0] is the URI.
@@ -733,12 +730,12 @@ const Code: codeType = {
 export default class Error {
   static _logger: any = getLogger('Error');
 
-  severity: severityType;
-  category: categoryType;
-  code: codeType;
+  severity: any;
+  category: any;
+  code: any;
   data: Object;
 
-  constructor(severity: severityType, category: categoryType, code: codeType, data: Object = {}) {
+  constructor(severity: number, category: number, code: number, data: Object = {}) {
     this.severity = severity;
     this.category = category;
     this.code = code;
