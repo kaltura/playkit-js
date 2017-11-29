@@ -13,6 +13,9 @@ import TextTrack from './track/text-track'
 import TextStyle from './track/text-style'
 import Env from './utils/env'
 import * as Utils from './utils/util'
+import FakeEvent from './event/fake-event'
+import FakeEventTarget from './event/fake-event-target'
+import {PLAYER_EVENTS} from './event/events'
 
 Player.runCapabilities();
 
@@ -37,7 +40,7 @@ export {registerPlugin, BasePlugin, BaseMiddleware};
 export {Track, VideoTrack, AudioTrack, TextTrack, TextStyle};
 
 // Export utils library
-export {Utils};
+export {Utils, FakeEvent, FakeEventTarget, PLAYER_EVENTS};
 
 // Export version
 export {__VERSION__ as VERSION};

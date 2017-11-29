@@ -484,6 +484,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   destroy(): void {
+    this.dispatchEvent(new FakeEvent(CustomEvents.PLAYER_DESTROY));
     if (this._engine) {
       this._engine.destroy();
     }
