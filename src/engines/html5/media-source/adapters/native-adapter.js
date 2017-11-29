@@ -243,14 +243,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {void}
    */
   _onError(reject: Function, error: FakeEvent): void {
-    NativeAdapter._logger.error(error);
-    const message = new Error(NativeAdapter.DEBUG_LEVEL).createError({
-      severity: Severity.CRITICAL,
-      category: Category.PLAYER,
-      code: Code.NATIVE_ADAPTER,
-      args: error.payload
-    })
-    reject(message);
+    reject(new Error(Severity.CRITICAL, Category.PLAYER, Code.NATIVE_ADAPTER_LOAD_FAILED, {data: error.payload}));
   }
 
   /**

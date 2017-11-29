@@ -1,6 +1,6 @@
 //@flow
 import BasePlugin from './base-plugin'
-import Error from '../utils/player-error'
+import Error, {Category, Code, Severity} from '../utils/player-error'
 import Player from '../player'
 import getLogger from '../utils/logger'
 
@@ -42,7 +42,7 @@ export default class PluginManager {
    */
   static register(name: string, handler: Function): boolean {
     if (typeof handler !== 'function' || handler.prototype instanceof BasePlugin === false) {
-      throw new Error(true, Error.TYPE.NOT_VALID_HANDLER).getError();
+      throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR);
     }
     if (!PluginManager._registry.has(name)) {
       PluginManager._registry.set(name, handler);
@@ -77,8 +77,8 @@ export default class PluginManager {
    */
   load(name: string, player: Player, config: Object = {}): boolean {
     if (!PluginManager._registry.has(name)) {
-      throw new Error(true, Error.TYPE.NOT_REGISTERED_PLUGIN, name).getError();
-    }
+      throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: name});
+      }
     let pluginClass = PluginManager._registry.get(name);
     if (pluginClass && pluginClass.isValid()) {
       this._plugins.set(name, pluginClass.createPlugin(name, player, config));

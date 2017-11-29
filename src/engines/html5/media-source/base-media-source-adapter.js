@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import FakeEvent from '../../../event/fake-event'
 import FakeEventTarget from '../../../event/fake-event-target'
-import Error from '../../../utils/player-error'
+import {Error, Severity, Category, Code} from '../../../utils/player-error'
 import {CUSTOM_EVENTS} from '../../../event/events'
 import getLogger from '../../../utils/logger'
 import Track from '../../../track/track'
@@ -108,47 +108,47 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /** Must implemented methods by the derived media source adapter **/
 
   static canPlayType(mimeType: string, preferNative: boolean): boolean {
-    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayType').getError();
+    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'static canPlayType'});
   }
 
   load(): Promise<Object> {
-    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
+    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'load'});
   }
 
   selectVideoTrack(videoTrack: VideoTrack): void {
-    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'selectVideoTrack').getError();
+    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'selectVideoTrack'});
   }
 
   selectAudioTrack(audioTrack: AudioTrack): void {
-    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'selectAudioTrack').getError();
+    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'selectAudioTrack'});
   }
 
   selectTextTrack(textTrack: TextTrack): void {
-    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'selectTextTrack').getError();
+    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'selectTextTrack'});
   }
 
   hideTextTrack(): void {
-    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'hideTextTrack').getError();
+    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'hideTextTrack'});
   }
 
   enableAdaptiveBitrate(): void {
-    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'enableAdaptiveBitrate').getError();
+    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'enableAdaptiveBitrate'});
   }
 
   isAdaptiveBitrateEnabled(): boolean {
-    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'isAdaptiveBitrateEnabled').getError();
+    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'isAdaptiveBitrateEnabled'});
   }
 
   seekToLiveEdge(): void {
-    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'seekToLiveEdge').getError();
+    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'seekToLiveEdge'});
   }
 
   isLive(): boolean {
-    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'isLive').getError();
+    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'isLive'});
   }
 
   get src(): string {
-    throw new Error(true, Error.TYPE.NOT_IMPLEMENTED_METHOD, 'get src').getError();
+    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'get src'});
   }
 
   /**

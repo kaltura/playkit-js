@@ -1,11 +1,14 @@
 //@flow
+import getLogger, {getLogLevel, LogLevel} from './logger'
 
-
+declare type severityType = { [level: string]: number };
+declare type categoryType = { [name: string]: number };
+declare type codeType = { [name: string]: number };
 /**
  * @enum {number}
  * @export
  */
-export const Severity = {
+const Severity: severityType = {
   /**
    * An error occurred, but the Player is attempting to recover from the error.
    *
@@ -26,7 +29,7 @@ export const Severity = {
  * @enum {number}
  * @export
  */
-export const Category = {
+const Category: categoryType = {
   /** Errors from the network stack. */
   'NETWORK': 1,
 
@@ -59,7 +62,7 @@ export const Category = {
  * @enum {number}
  * @export
  */
-export const Code = {
+const Code: codeType = {
   /**
    * A network request was made using an unsupported URI scheme.
    * <br> error.data[0] is the URI.
@@ -152,7 +155,7 @@ export const Code = {
   /**
    *  VTT module issue, see the date for more details
    */
-  "UNABLE_TO_CREATE_CUE": 2009,
+  "UNABLE_TO_CREATE_TEXT_CUE": 2009,
   /**
    * Error parsing the dash adapter error (for instance, could not parse an error shaka raised)
    */
@@ -292,7 +295,7 @@ export const Code = {
   /**
    * Native adapter error, more info in the data part
    */
-  'NATIVE_ADAPTER': 3022,
+  'NATIVE_ADAPTER_LOAD_FAILED': 3022,
   /**
    * The Player was unable to guess the manifest type based on file extension
    * or MIME type.  To fix, try one of the following:
@@ -605,6 +608,10 @@ export const Code = {
    */
   'LOAD_FAILED': 7002,
   /**
+   * Build Error. Unimplemnted method, unregistered plugin, not a valid handler
+   */
+  'RUNTIME_ERROR': 7003,
+  /**
    * The Cast API is unavailable.  This may be because of one of the following:
    * - The browser may not have Cast support
    * - The browser may be missing a necessary Cast extension
@@ -720,93 +727,41 @@ export const Code = {
 
 
 /**
- * @classdesc This is a description of the MyClass class.
+ * @classdesc This is a description of the Error class.
  */
 
 export default class Error {
+  static _logger: any = getLogger('Error');
 
-  static TYPE: { [name: string]: Object } = {
-    NOT_REGISTERED_PLUGIN: {
-      name: "PluginNotRegisteredException",
-      message: function (name) {
-        return `Cannot load ${name} plugin. Name not found in the registry`;
-      }
-    },
-    NOT_VALID_HANDLER: {
-      name: "PluginHandlerIsNotValidException",
-      message: function () {
-        return "To activate plugin you must provide a class derived from BasePlugin";
-      }
-    },
-    NOT_IMPLEMENTED_METHOD: {
-      name: "NotImplementedException",
-      message: function (method) {
-        return `${method} method not implemented`;
-      }
-    }
-  };
+  severity: severityType;
+  category: categoryType;
+  code: codeType;
+  data: Object;
 
-  name: string;
-  message: string;
-  debug: boolean;
-  severity: any;
-  category: any;
-  code: any;
+  constructor(severity: severityType, category: categoryType, code: codeType, data: Object = {}) {
+    this.severity = severity;
+    this.category = category;
+    this.code = code;
+    this.data = data;
 
-  constructor(debug: any, error?: Object, param?: any) {
-    this.debug = debug;
-    this.severity = Severity;
-    this.category = Category;
-    this.code = Code;
-    if (error && param) {
-      this.name = error.name;
-      this.message = error.message(param);
+    if (getLogLevel('Error') === LogLevel.DEBUG) {
+      let codeName = 'UNKNOWN';
+      let categoryName = 'UNKNOWN';
+      for (let k in Code) {
+        if (code === Code[k]) {
+          codeName = k;
+        }
+      }
+      for (let i in Category) {
+        if (category === Category[i]) {
+          categoryName = i;
+        }
+      }
+
+      Error._logger.debug('Player Error ' + categoryName + '.' + codeName + ' (' + JSON.stringify(data) + ')');
     }
   }
-
-  getError() {
-    return {
-      name: this.name,
-      message: this.message
-    };
-  }
-
-  /**
-   * builds an error string from the error object
-   * @param {any} error - error object
-   * @returns {any} - error object with the following fields: text, code and category.
-   */
-  createError(error: any): any {
-    if (!this.debug) {
-      return {
-        kv3Err: error.code
-      }
-    }
-    const severity = error.severity;
-    const category = error.category;
-    const code = error.code;
-    const data = JSON.stringify(error.args);
-    let severityName = severity === 1 ? 'RECOVERABLE' : 'CRITICAL';
-    let codeName = 'UNKNOWN';
-    let categoryName = 'UNKNOWN';
-    for (var k in this.code) {
-      if (code === this.code[k]) {
-        codeName = k;
-      }
-    }
-    for (var i in this.category) {
-      if (category === this.category[i]) {
-        categoryName = i;
-      }
-    }
-    return {
-      text: severityName + "." + categoryName + "." + codeName + "." + data,
-      code: error.code,
-      category: error.category
-    };
-  }
-
-
 }
 
-export {Error}
+export {Error, Severity, Category, Code}
+export type {severityType, categoryType, codeType}

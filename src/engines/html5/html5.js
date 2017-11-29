@@ -215,12 +215,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       return;
     }
 
-    const errMessage = new Error().createError({
-      severity: Severity.CRITICAL,
-      category: Category.MEDIA,
-      code: Code.VIDEO_ERROR,
-      args: {errorCode: errCode}
-    })
+    const errMessage = new Error(Severity.CRITICAL, Category.MEDIA, Code.VIDEO_ERROR, {errorCode: errCode});
     this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, errMessage));
   }
 
@@ -831,13 +826,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         try {
           activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text))
         } catch (e) {
-          const message = new Error().createError({
-            severity: Severity.RECOVERABLE,
-            category: Category.TEXT,
-            code: Code.UNABLE_TO_CREATE_CUE,
-            args: e
-          });
-          this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, message));
+          new Error(Severity.RECOVERABLE, Category.TEXT, Code.UNABLE_TO_CREATE_TEXT_CUE, {args: e});
         }
       }
     }
