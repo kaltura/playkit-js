@@ -3,7 +3,7 @@ import Player from '../player'
 import getLogger from '../utils/logger'
 import * as Utils from '../utils/util'
 import EventManager from '../event/event-manager'
-import {Error, Severity, Code, Category} from "../utils/player-error";
+import {Error} from "../utils/player-error";
 
 '../utils/player-error'
 import FakeEvent from '../event/fake-event'
@@ -70,7 +70,7 @@ export default class BasePlugin implements IPlugin {
    * @abstract
    */
   static isValid(): boolean {
-    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {data: 'isValid()'});
+    throw new Error(Error.everity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR, {data: 'isValid()'});
   }
 
   /**

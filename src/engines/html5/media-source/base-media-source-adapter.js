@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import FakeEvent from '../../../event/fake-event'
 import FakeEventTarget from '../../../event/fake-event-target'
-import {Error, Severity, Category, Code} from '../../../utils/player-error'
+import {Error} from '../../../utils/player-error'
 import {CUSTOM_EVENTS} from '../../../event/events'
 import getLogger from '../../../utils/logger'
 import Track from '../../../track/track'
@@ -108,47 +108,47 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /** Must implemented methods by the derived media source adapter **/
 
   static canPlayType(mimeType: string, preferNative: boolean): boolean {
-    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'static canPlayType'});
+    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR, {info: 'static canPlayType'});
   }
 
   load(): Promise<Object> {
-    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'load'});
+    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR, {info: 'load'});
   }
 
   selectVideoTrack(videoTrack: VideoTrack): void {
-    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'selectVideoTrack'});
+    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR, {info: 'selectVideoTrack'});
   }
 
   selectAudioTrack(audioTrack: AudioTrack): void {
-    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'selectAudioTrack'});
+    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR, {info: 'selectAudioTrack'});
   }
 
   selectTextTrack(textTrack: TextTrack): void {
-    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'selectTextTrack'});
+    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR, {info: 'selectTextTrack'});
   }
 
   hideTextTrack(): void {
-    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'hideTextTrack'});
+    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR, {info: 'hideTextTrack'});
   }
 
   enableAdaptiveBitrate(): void {
-    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'enableAdaptiveBitrate'});
+    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR, {info: 'enableAdaptiveBitrate'});
   }
 
   isAdaptiveBitrateEnabled(): boolean {
-    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'isAdaptiveBitrateEnabled'});
+    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR, {info: 'isAdaptiveBitrateEnabled'});
   }
 
   seekToLiveEdge(): void {
-    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'seekToLiveEdge'});
+    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR, {info: 'seekToLiveEdge'});
   }
 
   isLive(): boolean {
-    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'isLive'});
+    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR, {info: 'isLive'});
   }
 
   get src(): string {
-    throw new Error(Severity.CRITICAL, Category.PLAYER, Code.RUNTIME_ERROR, {info: 'get src'});
+    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR, {info: 'get src'});
   }
 
   /**

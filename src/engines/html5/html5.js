@@ -11,7 +11,7 @@ import {Cue} from '../../track/vtt-cue'
 import * as Utils from '../../utils/util'
 import Html5AutoPlayCapability from './capabilities/html5-autoplay'
 import Html5IsSupportedCapability from './capabilities/html5-is-supported'
-import {Error, Severity, Code, Category} from "../../utils/player-error";
+import {Error} from "../../utils/player-error";
 
 /**
  * Html5 engine for playback.
@@ -215,7 +215,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       return;
     }
 
-    const errMessage = new Error(Severity.CRITICAL, Category.MEDIA, Code.VIDEO_ERROR, {errorCode: errCode});
+    const errMessage = new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.VIDEO_ERROR, {errorCode: errCode});
     this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, errMessage));
   }
 
@@ -826,7 +826,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         try {
           activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text))
         } catch (e) {
-          new Error(Severity.RECOVERABLE, Category.TEXT, Code.UNABLE_TO_CREATE_TEXT_CUE, {args: e});
+          new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNABLE_TO_CREATE_TEXT_CUE, {args: e});
         }
       }
     }

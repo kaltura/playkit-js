@@ -11,7 +11,7 @@ import * as Utils from '../../../../utils/util'
 import FairPlay from '../../../../drm/fairplay'
 import Env from '../../../../utils/env'
 import FakeEvent from '../../../../event/fake-event'
-import {Error, Severity, Category, Code} from "../../../../utils/player-error";
+import {Error} from "../../../../utils/player-error";
 
 /**
  * An illustration of media source extension for progressive download
@@ -243,7 +243,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {void}
    */
   _onError(reject: Function, error: FakeEvent): void {
-    reject(new Error(Severity.CRITICAL, Category.PLAYER, Code.NATIVE_ADAPTER_LOAD_FAILED, {data: error.payload}));
+    reject(new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.NATIVE_ADAPTER_LOAD_FAILED, {data: error.payload}));
   }
 
   /**
