@@ -746,13 +746,13 @@ export default class Error {
     if (getLogLevel('Error') === LogLevel.DEBUG) {
       let codeName = 'UNKNOWN';
       let categoryName = 'UNKNOWN';
-      for (let k in Code) {
-        if (code === Code[k]) {
+      for (let k in Error.Code) {
+        if (code === Error.Code[k]) {
           codeName = k;
         }
       }
-      for (let i in Category) {
-        if (category === Category[i]) {
+      for (let i in Error.Category) {
+        if (category === Error.Category[i]) {
           categoryName = i;
         }
       }
