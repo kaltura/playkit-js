@@ -11,7 +11,7 @@ export default class BaseDrmProtocol implements IDrmProtocol {
   static DrmScheme = DrmScheme;
 
   static canPlayDrm(drmData: Array<Object>): boolean {
-    throw new Error(Error.Severity.CRITICAL, Error.ategory.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, 'static canPlayDrm');
+    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, 'static canPlayDrm');
   }
 
   static setDrmPlayback(...args): void {
