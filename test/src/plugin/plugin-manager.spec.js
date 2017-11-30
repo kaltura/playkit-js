@@ -34,8 +34,6 @@ describe('PluginManager.registry', () => {
       PluginManager.register("numbers", {});
     } catch (e) {
       exceptionOccurred = true;
-      e.name.should.equal('PluginHandlerIsNotValidException');
-      e.message.should.equal('To activate plugin you must provide a class derived from BasePlugin');
     }
     exceptionOccurred.should.be.true;
   });
@@ -47,8 +45,6 @@ describe('PluginManager.registry', () => {
       });
     } catch (e) {
       exceptionOccurred = true;
-      e.name.should.equal('PluginHandlerIsNotValidException');
-      e.message.should.equal('To activate plugin you must provide a class derived from BasePlugin');
     }
     exceptionOccurred.should.be.true;
   });
@@ -110,7 +106,6 @@ describe('PluginManager.plugins', () => {
       pluginManager.load("bubbles", {}, {});
     } catch (e) {
       exceptionOccurred = true;
-      e.message.should.equal("Cannot load bubbles plugin. Name not found in the registry");
     }
     exceptionOccurred.should.be.true;
   });

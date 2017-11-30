@@ -51,8 +51,6 @@ describe('BasePlugin', () => {
       BasePlugin.isValid();
     } catch (e) {
       exceptionOccurred = true;
-      e.name.should.equal('NotImplementedException');
-      e.message.should.equal('isValid() method not implemented');
     }
     exceptionOccurred.should.be.true;
   });
