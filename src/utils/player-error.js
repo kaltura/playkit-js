@@ -761,4 +761,3 @@ export default class Error {
 }
 
 export {Error, Severity, Category, Code}
-export type {severityType, categoryType, codeType}
