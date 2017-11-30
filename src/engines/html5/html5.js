@@ -189,7 +189,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         }
       });
     });
-
     if (this._mediaSourceAdapter) {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.AUDIO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
@@ -207,14 +206,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _handleVideoError(): void {
     if (!this._el.error) return;
-
     const errCode = this._el.error.code;
     if (errCode == 1 /* MEDIA_ERR_ABORTED */) {
       // Ignore this error code.js, which should only occur when navigating away or
       // deliberately stopping playback of HTTP content.
       return;
     }
-
     this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.VIDEO_ERROR, {errorCode: errCode})));
   }
 
@@ -670,7 +667,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * The error property returns a MediaError object.
-   * @returns {MediaError} - The MediaError object has a code.js property containing the error state of the audio/video.
+   * @returns {MediaError} - The MediaError object has a code property containing the error state of the audio/video.
    * @public
    */
   get error(): ?MediaError {
