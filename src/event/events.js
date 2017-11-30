@@ -242,7 +242,7 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
    */
   AD_PROGRESS: 'adprogress',
   /**
-   * Fired on Error.
+   * Fired on error.
    */
   ERROR: 'error'
 };

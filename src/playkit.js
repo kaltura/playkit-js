@@ -13,7 +13,7 @@ import TextTrack from './track/text-track'
 import TextStyle from './track/text-style'
 import Env from './utils/env'
 import * as Utils from './utils/util'
-import {Error} from './utils/player-error'
+import Error from './utils/error/player-error'
 import FakeEvent from './event/fake-event'
 import {CUSTOM_EVENTS} from './event/events'
 
@@ -42,7 +42,7 @@ export {Track, VideoTrack, AudioTrack, TextTrack, TextStyle};
 // Export utils library
 export {Utils};
 
-// Export Error util
+// Export Error class
 export {Error};
 
 // Export FakeEvent util

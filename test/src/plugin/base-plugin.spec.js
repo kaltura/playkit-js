@@ -50,6 +50,8 @@ describe('BasePlugin', () => {
     try {
       BasePlugin.isValid();
     } catch (e) {
+      e.code.should.equals(7004);
+      e.data.should.equals("isValid()");;
       exceptionOccurred = true;
     }
     exceptionOccurred.should.be.true;

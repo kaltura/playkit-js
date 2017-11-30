@@ -11,7 +11,7 @@ import {Cue} from '../../track/vtt-cue'
 import * as Utils from '../../utils/util'
 import Html5AutoPlayCapability from './capabilities/html5-autoplay'
 import Html5IsSupportedCapability from './capabilities/html5-is-supported'
-import {Error} from "../../utils/player-error";
+import Error from "../../utils/error/player-error";
 
 /**
  * Html5 engine for playback.
@@ -210,13 +210,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
     const errCode = this._el.error.code;
     if (errCode == 1 /* MEDIA_ERR_ABORTED */) {
-      // Ignore this error code, which should only occur when navigating away or
+      // Ignore this error code.js, which should only occur when navigating away or
       // deliberately stopping playback of HTTP content.
       return;
     }
 
-    const errMessage = new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.VIDEO_ERROR, {errorCode: errCode});
-    this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, errMessage));
+    this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.VIDEO_ERROR, {errorCode: errCode})));
   }
 
   /**
@@ -671,7 +670,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * The error property returns a MediaError object.
-   * @returns {MediaError} - The MediaError object has a code property containing the error state of the audio/video.
+   * @returns {MediaError} - The MediaError object has a code.js property containing the error state of the audio/video.
    * @public
    */
   get error(): ?MediaError {
@@ -825,8 +824,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       } else if (window.TextTrackCue && cue instanceof window.TextTrackCue) {
         try {
           activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text))
-        } catch (e) {
-          new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNABLE_TO_CREATE_TEXT_CUE, {args: e});
+        } catch (error) {
+          new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNABLE_TO_CREATE_TEXT_CUE, error);
         }
       }
     }

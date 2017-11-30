@@ -34,6 +34,8 @@ describe('PluginManager.registry', () => {
       PluginManager.register("numbers", {});
     } catch (e) {
       exceptionOccurred = true;
+      e.code.should.equals(7005);
+      e.data.should.equals("numbers");
     }
     exceptionOccurred.should.be.true;
   });
@@ -45,6 +47,8 @@ describe('PluginManager.registry', () => {
       });
     } catch (e) {
       exceptionOccurred = true;
+      e.code.should.equals(7005);
+      e.data.should.equals("numbers");
     }
     exceptionOccurred.should.be.true;
   });
@@ -106,6 +110,7 @@ describe('PluginManager.plugins', () => {
       pluginManager.load("bubbles", {}, {});
     } catch (e) {
       exceptionOccurred = true;
+      e.code.should.equals(7003);
     }
     exceptionOccurred.should.be.true;
   });

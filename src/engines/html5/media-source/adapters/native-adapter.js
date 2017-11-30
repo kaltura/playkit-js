@@ -11,7 +11,7 @@ import * as Utils from '../../../../utils/util'
 import FairPlay from '../../../../drm/fairplay'
 import Env from '../../../../utils/env'
 import FakeEvent from '../../../../event/fake-event'
-import {Error} from "../../../../utils/player-error";
+import Error from "../../../../utils/error/player-error";
 
 /**
  * An illustration of media source extension for progressive download
@@ -26,9 +26,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    */
   static id: string = 'NativeAdapter';
-
-
-  static DEBUG_LEVEL: boolean = true;
 
   /**
    * The adapter logger
@@ -148,7 +145,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     this._progressiveSources = config.sources.progressive;
   }
 
-
+  /**
+   * dispatches an error (is given to a class the cannot dispatch, like static fair play class)
+   * @private
+   * @param {any} error - the error to dispatch
+   * @returns {void}
+   */
   _dispatchErrorCallback(error: any): void {
     this._trigger(BaseMediaSourceAdapter.CustomEvents.ERROR, error);
   }
@@ -236,7 +238,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
-   * Error event handler.
+   * error event handler.
    * @param {Function} reject - The reject promise function.
    * @param {FakeEvent} error - The error fake event.
    * @private

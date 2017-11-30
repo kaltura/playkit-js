@@ -1,6 +1,6 @@
 // @flow
 import BaseDrmProtocol from './base-drm-protocol'
-import {Error} from '../utils/player-error'
+import Error from '../utils/error/player-error'
 
 export default class FairPlay extends BaseDrmProtocol {
   static _logger = BaseDrmProtocol.getLogger('FairPlay');
@@ -12,7 +12,7 @@ export default class FairPlay extends BaseDrmProtocol {
     KEY_ADDED: 'webkitkeyadded',
     KEY_ERROR: 'webkitkeyerror'
   };
-  static _errorCallback: any;
+  static _errorCallback: Function;
 
   /**
    * FairPlay playback supports in case 2 conditions are met:
@@ -33,7 +33,7 @@ export default class FairPlay extends BaseDrmProtocol {
    * @param {any} errorCallback - player error object
    * @returns {void}
    */
-  static setDrmPlayback(videoElement: HTMLVideoElement, drmData: Array<Object> = [], errorCallback: any): void {
+  static setDrmPlayback(videoElement: HTMLVideoElement, drmData: Array<Object> = [], errorCallback: Function): void {
     FairPlay._logger.debug("Sets DRM playback");
     videoElement.addEventListener(FairPlay._WebkitEvents.NEED_KEY, FairPlay._onWebkitNeedKey.bind(null, drmData), false);
     FairPlay._errorCallback = errorCallback;
@@ -93,8 +93,8 @@ export default class FairPlay extends BaseDrmProtocol {
     request.send(params);
   }
 
-  static _licenseRequestFailed(e: any): void {
-    FairPlay._errorCallback(new Error(Error.Severity.CRITICAL, Error.Category.DRM, Error.Code.LICENSE_REQUEST_FAILED), e);
+  static _licenseRequestFailed(error: any): void {
+    FairPlay._errorCallback(new Error(Error.Severity.CRITICAL, Error.Category.DRM, Error.Code.LICENSE_REQUEST_FAILED), error);
   }
 
 
@@ -121,7 +121,7 @@ export default class FairPlay extends BaseDrmProtocol {
       let key = FairPlay._base64DecodeUint8Array(responseObj.ckc);
       FairPlay._keySession.update(key);
     } else {
-      FairPlay._errorCallback(new Error(Error.Severity.CRITICAL, Error.Category.DRM, Error.Code.BAD_FAIRPLAY_RESPONSE), {data: isValidResponse.reason});
+      FairPlay._errorCallback(new Error(Error.Severity.CRITICAL, Error.Category.DRM, Error.Code.BAD_FAIRPLAY_RESPONSE), isValidResponse);
     }
   }
 
@@ -131,12 +131,12 @@ export default class FairPlay extends BaseDrmProtocol {
       || responseObj.status_code === 500) {
       return { //todo: create & edit an error object
         valid: false,
-        reason: "internal server error" // would be ERROR.INTERNAL or something like that
+        details: "internal server error" // would be ERROR.INTERNAL or something like that
       };
     } else if (responseObj.ckc === "") {
       return {
         valid: false,
-        reason: "ckc is missing" // would be ERROR.MISSING_CKC or something like that
+        details: "ckc is missing" // would be ERROR.MISSING_CKC or something like that
       };
     } else {
       return {
