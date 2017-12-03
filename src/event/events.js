@@ -94,6 +94,10 @@ const HTML5_EVENTS: { [event: string]: string } = {
 
 const CUSTOM_EVENTS: { [event: string]: string } = {
   /**
+   * Fires when the player destory started
+   */
+  PLAYER_DESTROY: 'playerdestroy',
+  /**
    * Fires when the player enters fullscreen
    */
   ENTER_FULLSCREEN: 'enterfullscreen',

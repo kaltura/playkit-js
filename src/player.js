@@ -390,16 +390,22 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   load(): void {
-    if (this._engine) {
-      let startTime = this._config.playback.startTime;
-      this._engine.load(startTime).then((data) => {
-        this._tracks = data.tracks;
-        this._addTextTrackOffOption();
-        this._setDefaultTracks();
-        this.dispatchEvent(new FakeEvent(CustomEvents.TRACKS_CHANGED, {tracks: this._tracks}));
-      }).catch((error) => {
-        this.dispatchEvent(new FakeEvent(Html5Events.ERROR, error));
-      });
+    let loadCommand = function() {
+      if (this._engine) {
+        let startTime = this._config.playback.startTime;
+        this._engine.load(startTime).then((data) => {
+          this._tracks = data.tracks;
+          this._addTextTrackOffOption();
+          this._setDefaultTracks();
+          this.dispatchEvent(new FakeEvent(CustomEvents.TRACKS_CHANGED, {tracks: this._tracks}));
+        }).catch((error) => {
+          this.dispatchEvent(new FakeEvent(Html5Events.ERROR, error));
+        });
+      }
+    }.bind(this);
+
+    if (this._engine){
+      this._playbackMiddleware.load( loadCommand.bind(this) );
     }
   }
 
@@ -409,8 +415,36 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   play(): void {
-    if (this._engine) {
-      this._playbackMiddleware.play(this._play.bind(this));
+    let playCommand = function () {
+      if ( this._engine ) {
+        this._playbackMiddleware.play( this._play.bind( this ) );
+      }
+    }.bind(this);
+
+    if ( this.muted || !this._firstPlayInCurrentSession || !this._firstPlay ) {
+      playCommand();
+    } else {
+      const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
+      Player.getCapabilities( this.engineType )
+        .then( ( capabilities ) => {
+          if ( capabilities.autoplay ) {
+            Player._logger.debug( "Start playing" );
+            playCommand();
+          } else {
+            if ( allowMutedAutoPlay ) {
+              Player._logger.debug( "Fallback to muted playback" );
+              this.muted = true;
+              playCommand();
+              this.dispatchEvent( new FakeEvent( CustomEvents.FALLBACK_TO_MUTED_AUTOPLAY ) );
+            } else {
+              Player._logger.warn( "Play failed, pause player" );
+              this._posterManager.show();
+              this.load();
+              this.ready().then( () => this.pause() );
+              this.dispatchEvent( new FakeEvent( CustomEvents.AUTOPLAY_FAILED ) );
+            }
+          }
+        } );
     }
   }
 
@@ -450,6 +484,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   destroy(): void {
+    this.dispatchEvent(new FakeEvent(CustomEvents.PLAYER_DESTROY));
     if (this._engine) {
       this._engine.destroy();
     }
@@ -1326,31 +1361,7 @@ export default class Player extends FakeEventTarget {
    */
   _handleAutoPlay(): void {
     if (this._config.playback.autoplay === true) {
-      if (this.muted || !this._firstPlayInCurrentSession) {
-        this.play();
-      } else {
-        const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
-        Player.getCapabilities(this.engineType)
-          .then((capabilities) => {
-            if (capabilities.autoplay) {
-              Player._logger.debug("Start autoplay");
-              this.play();
-            } else {
-              if (allowMutedAutoPlay) {
-                Player._logger.debug("Fallback to muted autoplay");
-                this.muted = true;
-                this.play();
-                this.dispatchEvent(new FakeEvent(CustomEvents.FALLBACK_TO_MUTED_AUTOPLAY));
-              } else {
-                Player._logger.warn("Autoplay failed, pause player");
-                this._posterManager.show();
-                this.load();
-                this.ready().then(() => this.pause());
-                this.dispatchEvent(new FakeEvent(CustomEvents.AUTOPLAY_FAILED));
-              }
-            }
-          });
-      }
+      this.play();
     } else {
       this._posterManager.show();
     }

@@ -11,6 +11,7 @@ export default class PlaybackMiddleware {
    * @static
    */
   static Actions: { [action: string]: string } = {
+    LOAD: 'load',
     PLAY: 'play',
     PAUSE: 'pause'
   };
@@ -56,5 +57,15 @@ export default class PlaybackMiddleware {
    */
   pause(callback: Function): void {
     this._middleware.run(PlaybackMiddleware.Actions.PAUSE, callback);
+  }
+
+  /**
+   * Runs a load chain.
+   * @param {Function} callback - The last load handler in the chain.
+   * @public
+   * @returns {void}
+   */
+  load(callback: Function): void {
+    this._middleware.run(PlaybackMiddleware.Actions.LOAD, callback);
   }
 }
