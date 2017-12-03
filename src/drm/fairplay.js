@@ -94,7 +94,7 @@ export default class FairPlay extends BaseDrmProtocol {
   }
 
   static _licenseRequestFailed(error: any): void {
-    FairPlay._errorCallback(new Error(Error.Severity.CRITICAL, Error.Category.DRM, Error.Code.LICENSE_REQUEST_FAILED), error);
+    FairPlay._errorCallback(new Error(Error.Severity.CRITICAL, Error.Category.DRM, Error.Code.LICENSE_REQUEST_FAILED, error));
   }
 
 
@@ -114,14 +114,14 @@ export default class FairPlay extends BaseDrmProtocol {
     try {
       responseObj = JSON.parse(keyText);
     } catch (error) {
-      FairPlay._errorCallback(new Error(Error.Severity.CRITICAL, Error.Category.DRM, Error.Code.BAD_FAIRPLAY_RESPONSE), error);
+      FairPlay._errorCallback(new Error(Error.Severity.CRITICAL, Error.Category.DRM, Error.Code.BAD_FAIRPLAY_RESPONSE, error));
     }
     let isValidResponse = FairPlay._validateResponse(responseObj);
     if (isValidResponse.valid) {
       let key = FairPlay._base64DecodeUint8Array(responseObj.ckc);
       FairPlay._keySession.update(key);
     } else {
-      FairPlay._errorCallback(new Error(Error.Severity.CRITICAL, Error.Category.DRM, Error.Code.BAD_FAIRPLAY_RESPONSE), isValidResponse);
+      FairPlay._errorCallback(new Error(Error.Severity.CRITICAL, Error.Category.DRM, Error.Code.BAD_FAIRPLAY_RESPONSE, isValidResponse));
     }
   }
 
