@@ -59,21 +59,24 @@ export default class Error {
    * @returns {void}
    */
   _createReadableError(category: number, code: number, data: any = {}): void {
-    let codeName = UNKNOWN;
-    let categoryName = UNKNOWN;
-    for (let k in Code) {
-      if (code === Code[k]) {
-        codeName = k;
-        break;
-      }
-    }
-    for (let i in Category) {
-      if (category === Category[i]) {
-        categoryName = i;
-        break;
-      }
-    }
+    let codeName = this._getKey(Error.Code, code);
+    let categoryName = this._getKey(Error.Category, category);
     Error._logger.debug('Player error ' + categoryName + '.' + codeName + ' (' + JSON.stringify(data) + ')');
+  }
+
+  /**
+   * returns the string key of the number sent (from the enum)
+   * @param {Object} obj - reference to the code / category
+   * @param {number} value - category's / code's number.
+   * @returns {string} - the key string
+   */
+  _getKey(obj: Object, value: number ): string {
+    for (let strKey in obj) {
+      if (value === obj[strKey]) {
+        return strKey;
+      }
+    }
+    return UNKNOWN;
   }
 }
 

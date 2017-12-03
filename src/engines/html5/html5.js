@@ -224,7 +224,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _getErrorInfo(): Object{
     if (!this._el.error) return {};
-    let msInfo = this._el.error.msExtendedCode || this._el.error;
+    let msInfo = this._el.error.msExtendedCode ? this._el.error.msExtendedCode : null;
     if (typeof msInfo === 'number') {
       // Convert to unsigned:
       if (msInfo < 0) {
@@ -234,8 +234,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       msInfo = msInfo.toString(16);
     }
     // Extra error information from Chrome:
-    const chromeInfo = this._el.error.message || this._el.error;
-
+    const chromeInfo = this._el.error.message ? this._el.error.message : null;
     return {
       errorCode: this._el.error.code,
       chromeInfo: chromeInfo,
