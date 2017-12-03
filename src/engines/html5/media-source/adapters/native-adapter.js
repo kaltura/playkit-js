@@ -245,7 +245,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {void}
    */
   _onError(reject: Function, error: FakeEvent): void {
-    reject(new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.NATIVE_ADAPTER_LOAD_FAILED, {data: error.payload}));
+    reject(new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.NATIVE_ADAPTER_LOAD_FAILED, error.payload));
   }
 
   /**

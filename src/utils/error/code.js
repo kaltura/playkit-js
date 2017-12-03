@@ -1,7 +1,7 @@
 //@flow
-type code = { [code: string]: number };
+type CodeType = { [code: string]: number };
 
-const Code: code = {
+const Code: CodeType = {
   /**
    * A network request was made using an unsupported URI scheme.
    * <br> error.data[0] is the URI.
@@ -673,4 +673,4 @@ const Code: code = {
 }
 
 export {Code}
-export type {code}
+export type {CodeType}

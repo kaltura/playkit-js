@@ -1365,8 +1365,8 @@ export default class Player extends FakeEventTarget {
       this.load();
       this.ready().then(() => {
         this._engine.play();
-      }).catch((e) => {
-        this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, e));
+      }).catch((error) => {
+        this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, error));
       });
     }
   }

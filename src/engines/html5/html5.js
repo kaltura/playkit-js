@@ -378,13 +378,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._el.load();
     return this._canLoadMediaSourceAdapterPromise.then(() => {
       if (this._mediaSourceAdapter) {
-        return this._mediaSourceAdapter.load(startTime).catch((e) => {
-          return Promise.reject(e);
+        return this._mediaSourceAdapter.load(startTime).catch((error) => {
+          return Promise.reject(error);
         });
       }
       return Promise.resolve({});
-    }).catch((e) => {
-      return Promise.reject(e);
+    }).catch((error) => {
+      return Promise.reject(error);
     });
   }
 
@@ -797,7 +797,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       if (this._config.playback.useNativeTextTrack) {
         textTrackEl.mode = "showing";
       } else {
-        textTrackEl.oncuechange = (e) => this._onCueChange(e);
+        textTrackEl.oncuechange = (error) => this._onCueChange(error);
         textTrackEl.mode = this._showTextTrackFirstTime[textTrack.index] ? "hidden" : "showing";
         this._showTextTrackFirstTime[textTrack.index] = true;
       }

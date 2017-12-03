@@ -1,11 +1,11 @@
 //@flow
 import getLogger, {getLogLevel, LogLevel} from '../logger'
 import {Severity} from './severity'
-import type {severity} from './severity'
+import type {SeverityType} from './severity'
 import {Code} from './code'
-import type {code} from './code'
+import type {CodeType} from './code'
 import {Category} from './category'
-import type {category} from './category'
+import type {CategoryType} from './category'
 
 
 const CLASS_NAME: string = 'Error';
@@ -23,15 +23,15 @@ export default class Error {
   /**
    * @enum {number}
    */
-  static Severity: severity = Severity;
+  static Severity: SeverityType = Severity;
   /**
    * @enum {number}
    */
-  static Category: category = Category;
+  static Category: CategoryType = Category;
   /**
    * @enum {number}
    */
-  static Code: code = Code;
+  static Code: CodeType = Code;
   static _logger: any = getLogger(CLASS_NAME);
 
   constructor(severity: number, category: number, code: number, data: any = {}) {

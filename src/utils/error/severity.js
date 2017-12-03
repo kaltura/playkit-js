@@ -1,8 +1,8 @@
 //@flow
 
-type severity = { [severity: string]: number };
+type SeverityType = { [severity: string]: number };
 
-const Severity: severity = {
+const Severity: SeverityType = {
   /**
    * An error occurred, but the Player is attempting to recover from the error.
    *
@@ -20,4 +20,4 @@ const Severity: severity = {
 }
 
 export {Severity}
-export type {severity}
+export type {SeverityType}

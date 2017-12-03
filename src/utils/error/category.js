@@ -1,8 +1,8 @@
 //@flow
 
-type category = { [category: string]: number };
+type CategoryType = { [category: string]: number };
 
-const Category: category = {
+const Category: CategoryType = {
   /** Errors from the network stack. */
   'NETWORK': 1,
 
@@ -32,4 +32,4 @@ const Category: category = {
 }
 
 export {Category}
-export type {category}
+export type {CategoryType}
