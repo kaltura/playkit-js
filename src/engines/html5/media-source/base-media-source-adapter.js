@@ -108,50 +108,55 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /** Must implemented methods by the derived media source adapter **/
 
   static canPlayType(mimeType: string, preferNative: boolean): boolean {
-    this._throwNotImplementetError('static canPlayType');
+    return BaseMediaSourceAdapter._throwNotImplementetError('static canPlayType');
   }
 
   load(): Promise<Object> {
-    this._throwNotImplementetError('load');
+    return BaseMediaSourceAdapter._throwNotImplementetError('load');
   }
 
   selectVideoTrack(videoTrack: VideoTrack): void {
-    this._throwNotImplementetError('selectVideoTrack');
+    return BaseMediaSourceAdapter._throwNotImplementetError('selectVideoTrack');
   }
 
   selectAudioTrack(audioTrack: AudioTrack): void {
-    this._throwNotImplementetError('selectAudioTrack');
+    BaseMediaSourceAdapter._throwNotImplementetError('selectAudioTrack');
   }
 
   selectTextTrack(textTrack: TextTrack): void {
-    this._throwNotImplementetError('selectTextTrack');
+    BaseMediaSourceAdapter._throwNotImplementetError('selectTextTrack');
   }
 
   hideTextTrack(): void {
-    this._throwNotImplementetError('hideTextTrack');
+    BaseMediaSourceAdapter._throwNotImplementetError('hideTextTrack');
   }
 
   enableAdaptiveBitrate(): void {
-    this._throwNotImplementetError('enableAdaptiveBitrate');
+    BaseMediaSourceAdapter._throwNotImplementetError('enableAdaptiveBitrate');
   }
 
   isAdaptiveBitrateEnabled(): boolean {
-    this._throwNotImplementetError('isAdaptiveBitrateEnabled');
+    return BaseMediaSourceAdapter._throwNotImplementetError('isAdaptiveBitrateEnabled');
   }
 
   seekToLiveEdge(): void {
-    this._throwNotImplementetError('seekToLiveEdge');
+    BaseMediaSourceAdapter._throwNotImplementetError('seekToLiveEdge');
   }
 
   isLive(): boolean {
-    this._throwNotImplementetError('isLive');
+    return BaseMediaSourceAdapter._throwNotImplementetError('isLive');
   }
 
   get src(): string {
-    this._throwNotImplementetError('get src');
+    return BaseMediaSourceAdapter._throwNotImplementetError('get src');
   }
 
-  _throwNotImplementetError(name){
+  /**
+   * throw a run time error
+   * @param {string} name of the unimplemented function
+   * @returns {any} void/string/boolean
+   */
+  static _throwNotImplementetError(name: string): any{
     throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, name);
   }
 
