@@ -23,15 +23,15 @@ export default class Error {
   /**
    * @enum {number}
    */
-  static Severity: SeverityType = Severity;
+  static Severity = Severity;
   /**
    * @enum {number}
    */
-  static Category: CategoryType = Category;
+  static Category = Category;
   /**
    * @enum {number}
    */
-  static Code: CodeType = Code;
+  static Code = Code;
   static _logger: any = getLogger(CLASS_NAME);
 
   constructor(severity: number, category: number, code: number, data: any = {}) {
