@@ -471,7 +471,15 @@ export default class Player extends FakeEventTarget {
     }
   }
 
-  buffered(): void {
+  /**
+   * Get the first buffered range of the engine.
+   * @returns {TimeRanges} - First buffered range of the engine in seconds.
+   * @public
+   */
+  get buffered(): ?TimeRanges {
+    if (this._engine) {
+      return this._engine.buffered;
+    }
   }
 
   /**
