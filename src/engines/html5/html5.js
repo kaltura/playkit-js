@@ -225,22 +225,32 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _getErrorInfo(): Object{
     if (!this._el.error) return {};
     let msInfo = this._el.error.msExtendedCode ? this._el.error.msExtendedCode : null;
+    // Extra error information from Chrome:
+    const chromeInfo = this._el.error.message ? this._el.error.message : null;
+    return {
+      errorCode: this._el.error.code,
+      chromeInfo: chromeInfo,
+      msInfo: this._getMSErrorInfo(msInfo)
+    }
+  }
+
+  /**
+   * more info about the error from IE
+   * @param {any} msInfo - MS IE/EDGE info about the error
+   * @returns {string} - info about the error
+   */
+  _getMSErrorInfo(msInfo: any): string {
     if (typeof msInfo === 'number') {
       // Convert to unsigned:
       if (msInfo < 0) {
         msInfo += Math.pow(2, 32);
       }
       // Format as hex:
-      msInfo = msInfo.toString(16);
+      return msInfo = msInfo.toString(16);
     }
-    // Extra error information from Chrome:
-    const chromeInfo = this._el.error.message ? this._el.error.message : null;
-    return {
-      errorCode: this._el.error.code,
-      chromeInfo: chromeInfo,
-      msInfo: msInfo
-    }
+    return '';
   }
+
 
   /**
    * Remove the listeners of the video element events.
