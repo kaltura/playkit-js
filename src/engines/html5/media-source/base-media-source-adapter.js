@@ -108,47 +108,51 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /** Must implemented methods by the derived media source adapter **/
 
   static canPlayType(mimeType: string, preferNative: boolean): boolean {
-    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, 'static canPlayType');
+    this._throwNotImplementetError('static canPlayType');
   }
 
   load(): Promise<Object> {
-    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, 'load');
+    this._throwNotImplementetError('load');
   }
 
   selectVideoTrack(videoTrack: VideoTrack): void {
-    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, 'selectVideoTrack');
+    this._throwNotImplementetError('selectVideoTrack');
   }
 
   selectAudioTrack(audioTrack: AudioTrack): void {
-    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, 'selectAudioTrack');
+    this._throwNotImplementetError('selectAudioTrack');
   }
 
   selectTextTrack(textTrack: TextTrack): void {
-    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, 'selectTextTrack');
+    this._throwNotImplementetError('selectTextTrack');
   }
 
   hideTextTrack(): void {
-    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, 'hideTextTrack');
+    this._throwNotImplementetError('hideTextTrack');
   }
 
   enableAdaptiveBitrate(): void {
-    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, 'enableAdaptiveBitrate');
+    this._throwNotImplementetError('enableAdaptiveBitrate');
   }
 
   isAdaptiveBitrateEnabled(): boolean {
-    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, 'isAdaptiveBitrateEnabled');
+    this._throwNotImplementetError('isAdaptiveBitrateEnabled');
   }
 
   seekToLiveEdge(): void {
-    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, 'seekToLiveEdge');
+    this._throwNotImplementetError('seekToLiveEdge');
   }
 
   isLive(): boolean {
-    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, 'isLive');
+    this._throwNotImplementetError('isLive');
   }
 
   get src(): string {
-    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, 'get src');
+    this._throwNotImplementetError('get src');
+  }
+
+  _throwNotImplementetError(name){
+    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, name);
   }
 
   /**
