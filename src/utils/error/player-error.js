@@ -23,37 +23,57 @@ export default class Error {
   /**
    * @enum {number}
    */
-  static Severity = Severity;
+  static Severity: SeverityType = Severity;
   /**
    * @enum {number}
    */
-  static Category = Category;
+  static Category: CategoryType = Category;
   /**
    * @enum {number}
    */
-  static Code = Code;
+  static Code: CodeType = Code;
   static _logger: any = getLogger(CLASS_NAME);
 
+  /**
+   * @constructor
+   * @param {number} severity - error's severity
+   * @param {number} category - error's category.
+   * @param {number} code - error's code.
+   * @param {any} data - additional data for the error.
+   */
   constructor(severity: number, category: number, code: number, data: any = {}) {
     this.severity = severity;
     this.category = category;
     this.code = code;
     this.data = data;
     if (getLogLevel(CLASS_NAME) === LogLevel.DEBUG) {
-      let codeName = UNKNOWN;
-      let categoryName = UNKNOWN;
-      for (let k in Error.Code) {
-        if (code === Error.Code[k]) {
-          codeName = k;
-        }
-      }
-      for (let i in Error.Category) {
-        if (category === Error.Category[i]) {
-          categoryName = i;
-        }
-      }
-      Error._logger.debug('Player error ' + categoryName + '.' + codeName + ' (' + JSON.stringify(data) + ')');
+      this._createReadableError(category, code, data);
     }
+  }
+
+  /**
+   * creates a readable form of the error
+   * @param {number} category - error's category.
+   * @param {number} code - error's code.
+   * @param {any} data - additional data for the error.
+   * @returns {void}
+   */
+  _createReadableError(category: number, code: number, data: any = {}): void {
+    let codeName = UNKNOWN;
+    let categoryName = UNKNOWN;
+    for (let k in Code) {
+      if (code === Code[k]) {
+        codeName = k;
+        break;
+      }
+    }
+    for (let i in Category) {
+      if (category === Category[i]) {
+        categoryName = i;
+        break;
+      }
+    }
+    Error._logger.debug('Player error ' + categoryName + '.' + codeName + ' (' + JSON.stringify(data) + ')');
   }
 }
 

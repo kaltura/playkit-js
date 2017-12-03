@@ -212,19 +212,35 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       // deliberately stopping playback of HTTP content.
       return;
     }
-    // Extra error information from MS Edge and IE11:
-    let extended = this._el.error.msExtendedCode || this._el.error;
-    if (typeof extended === 'number') {
+
+    const error = new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.VIDEO_ERROR, this._getErrorInfo());
+    this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, error));
+  }
+
+  /**
+   * more info about the error
+   * @returns {Object} info about the video element error
+   * @private
+   */
+  _getErrorInfo(): Object{
+    if (!this._el.error) return {};
+    let msInfo = this._el.error.msExtendedCode || this._el.error;
+    if (typeof msInfo === 'number') {
       // Convert to unsigned:
-      if (extended < 0) {
-        extended += Math.pow(2, 32);
+      if (msInfo < 0) {
+        msInfo += Math.pow(2, 32);
       }
       // Format as hex:
-      extended = extended.toString(16);
+      msInfo = msInfo.toString(16);
     }
     // Extra error information from Chrome:
-    const message = this._el.error.message || this._el.error;
-    this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.VIDEO_ERROR, {errorCode: errCode, MSdata: extended, chromeData: message})));
+    const chromeInfo = this._el.error.message || this._el.error;
+
+    return {
+      errorCode: this._el.error.code,
+      chromeInfo: chromeInfo,
+      msInfo: msInfo
+    }
   }
 
   /**
@@ -797,7 +813,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       if (this._config.playback.useNativeTextTrack) {
         textTrackEl.mode = "showing";
       } else {
-        textTrackEl.oncuechange = (error) => this._onCueChange(error);
+        textTrackEl.oncuechange = (e) => this._onCueChange(e);
         textTrackEl.mode = this._showTextTrackFirstTime[textTrack.index] ? "hidden" : "showing";
         this._showTextTrackFirstTime[textTrack.index] = true;
       }
