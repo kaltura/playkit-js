@@ -1,6 +1,8 @@
 //@flow
 
-const Category: { [level: string]: number } = {
+type category = { [category: string]: number };
+
+const Category: category = {
   /** Errors from the network stack. */
   'NETWORK': 1,
 
@@ -30,3 +32,4 @@ const Category: { [level: string]: number } = {
 }
 
 export {Category}
+export type {category}

@@ -1,16 +1,21 @@
 //@flow
 import getLogger, {getLogLevel, LogLevel} from '../logger'
 import {Severity} from './severity'
+import type {severity} from './severity'
 import {Code} from './code'
+import type {code} from './code'
 import {Category} from './category'
+import type {category} from './category'
 
 
-const ERROR_LOGGER: string = 'Error';
+const CLASS_NAME: string = 'Error';
+
+const UNKNOWN: string = 'UNKNOWN'
+
 /**
  * @classdesc This is a description of the error class.
  */
 export default class Error {
-  UNKNOWN: string = 'UNKNOWN';
   severity: number;
   category: number;
   code: number;
@@ -18,25 +23,25 @@ export default class Error {
   /**
    * @enum {number}
    */
-  static Severity: { [level: string]: number } = Severity;
+  static Severity: severity = Severity;
   /**
    * @enum {number}
    */
-  static Category: { [level: string]: number } = Category;
+  static Category: category = Category;
   /**
    * @enum {number}
    */
-  static Code: { [level: string]: number } = Code;
-  static _logger: any = getLogger(ERROR_LOGGER);
+  static Code: code = Code;
+  static _logger: any = getLogger(CLASS_NAME);
 
   constructor(severity: number, category: number, code: number, data: any = {}) {
     this.severity = severity;
     this.category = category;
     this.code = code;
     this.data = data;
-    if (getLogLevel(ERROR_LOGGER) === LogLevel.DEBUG) {
-      let codeName = this.UNKNOWN;
-      let categoryName = this.UNKNOWN;
+    if (getLogLevel(CLASS_NAME) === LogLevel.DEBUG) {
+      let codeName = UNKNOWN;
+      let categoryName = UNKNOWN;
       for (let k in Error.Code) {
         if (code === Error.Code[k]) {
           codeName = k;

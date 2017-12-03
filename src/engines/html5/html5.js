@@ -212,7 +212,19 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       // deliberately stopping playback of HTTP content.
       return;
     }
-    this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.VIDEO_ERROR, {errorCode: errCode})));
+    // Extra error information from MS Edge and IE11:
+    let extended = this._el.error.msExtendedCode || this._el.error;
+    if (typeof extended === 'number') {
+      // Convert to unsigned:
+      if (extended < 0) {
+        extended += Math.pow(2, 32);
+      }
+      // Format as hex:
+      extended = extended.toString(16);
+    }
+    // Extra error information from Chrome:
+    const message = this._el.error.message || this._el.error;
+    this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.VIDEO_ERROR, {errorCode: errCode, MSdata: extended, chromeData: message})));
   }
 
   /**

@@ -1,7 +1,8 @@
 //@flow
 
+type severity = { [severity: string]: number };
 
-const Severity: { [level: string]: number } = {
+const Severity: severity = {
   /**
    * An error occurred, but the Player is attempting to recover from the error.
    *
@@ -19,3 +20,4 @@ const Severity: { [level: string]: number } = {
 }
 
 export {Severity}
+export type {severity}
