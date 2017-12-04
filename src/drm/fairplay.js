@@ -1,6 +1,6 @@
 // @flow
 import BaseDrmProtocol from './base-drm-protocol'
-import Error from '../utils/error/player-error'
+import Error from '../error/player-error'
 
 export default class FairPlay extends BaseDrmProtocol {
   static _logger = BaseDrmProtocol.getLogger('FairPlay');

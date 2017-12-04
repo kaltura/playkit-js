@@ -1,4 +1,4 @@
-import Error from '../../../src/utils/error/player-error'
+import Error from '../../../src/error/player-error'
 
 describe('Error class', () => {
 

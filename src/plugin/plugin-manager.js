@@ -1,6 +1,6 @@
 //@flow
 import BasePlugin from './base-plugin'
-import Error from '../utils/error/player-error'
+import Error from '../error/player-error'
 import Player from '../player'
 import getLogger from '../utils/logger'
 

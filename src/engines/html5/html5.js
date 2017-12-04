@@ -11,7 +11,7 @@ import {Cue} from '../../track/vtt-cue'
 import * as Utils from '../../utils/util'
 import Html5AutoPlayCapability from './capabilities/html5-autoplay'
 import Html5IsSupportedCapability from './capabilities/html5-is-supported'
-import Error from "../../utils/error/player-error";
+import Error from "../../error/player-error";
 
 /**
  * Html5 engine for playback.

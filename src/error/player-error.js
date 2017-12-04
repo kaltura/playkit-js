@@ -1,5 +1,5 @@
 //@flow
-import getLogger, {getLogLevel, LogLevel} from '../logger'
+import getLogger, {getLogLevel, LogLevel} from '../utils/logger'
 import {Severity} from './severity'
 import type {SeverityType} from './severity'
 import {Code} from './code'
