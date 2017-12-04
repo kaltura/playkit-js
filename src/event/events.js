@@ -240,7 +240,11 @@ const CUSTOM_EVENTS: { [event: string]: string } = {
   /**
    * Fired on ad time progress.
    */
-  AD_PROGRESS: 'adprogress'
+  AD_PROGRESS: 'adprogress',
+  /**
+   * stream metadata
+   */
+  STREAM_METADATA: 'meta'
 };
 
 const PLAYER_EVENTS: { [event: string]: string } = Utils.Object.merge([HTML5_EVENTS, CUSTOM_EVENTS]);

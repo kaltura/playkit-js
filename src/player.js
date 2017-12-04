@@ -1232,6 +1232,9 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this, CustomEvents.EXIT_FULLSCREEN, () => {
         this._resetTextCuesAndReposition();
       });
+      this._eventManager.listen(this._engine, CustomEvents.STREAM_METADATA, (event: FakeEvent) => {
+        this.dispatchEvent(event)
+      });
     }
   }
 
