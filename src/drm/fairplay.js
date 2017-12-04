@@ -82,7 +82,7 @@ export default class FairPlay extends BaseDrmProtocol {
     let request = new XMLHttpRequest();
     request.responseType = "text";
     request.addEventListener("load", FairPlay._licenseRequestLoaded, false);
-    request.addEventListener("error", ()=>FairPlay._onError.bind(Error.Code.LICENSE_REQUEST_FAILED), false);
+    request.addEventListener("error" , FairPlay._onError.bind(null,Error.Code.LICENSE_REQUEST_FAILED), false);
     let params = FairPlay._base64EncodeUint8Array(message);
     request.open('POST', drmData.licenseUrl, true);
     request.setRequestHeader("Content-type", "application/json");
