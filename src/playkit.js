@@ -45,7 +45,7 @@ export {Utils};
 // Export Error class
 export {Error};
 
-// Export FakeEvent util
+// Export FakeEvent Class
 export {FakeEvent}
 
 // Export events strings

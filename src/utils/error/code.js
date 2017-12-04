@@ -4,64 +4,49 @@ type CodeType = { [code: string]: number };
 const Code: CodeType = {
   /**
    * A network request was made using an unsupported URI scheme.
-   * <br> error.data[0] is the URI.
    */
   'UNSUPPORTED_SCHEME': 1000,
 
   /**
    * An HTTP network request returned an HTTP status that indicated a failure.
-   * <br> error.data[0] is the URI.
-   * <br> error.data[1] is the status code.js.
-   * <br> error.data[2] is the response text, or null if the response could not
-   *   be interpretted as text.
-   * <br> error.data[3] is the map of response headers.
    */
   'BAD_HTTP_STATUS': 1001,
 
   /**
    * An HTTP network request failed with an error, but not from the server.
-   * <br> error.data[0] is the URI.
    */
   'HTTP_ERROR': 1002,
 
   /**
    * A network request timed out.
-   * <br> error.data[0] is the URI.
    */
   'TIMEOUT': 1003,
 
   /**
    * A network request was made with a malformed data URI.
-   * <br> error.data[0] is the URI.
    */
   'MALFORMED_DATA_URI': 1004,
 
   /**
    * A network request was made with a data URI using an unknown encoding.
-   * <br> error.data[0] is the URI.
    */
   'UNKNOWN_DATA_URI_ENCODING': 1005,
 
   /**
    * A request filter threw an error.
-   * <br> error.data[0] is the original error.
    */
   'REQUEST_FILTER_ERROR': 1006,
 
   /**
    * A response filter threw an error.
-   * <br> error.data[0] is the original error.
    */
   'RESPONSE_FILTER_ERROR': 1007,
-
 
   /** The text parser failed to parse a text stream due to an invalid header. */
   'INVALID_TEXT_HEADER': 2000,
 
   /** The text parser failed to parse a text stream due to an invalid cue. */
   'INVALID_TEXT_CUE': 2001,
-
-  // RETIRED: 'INVALID_TEXT_SETTINGS': 2002,
 
   /**
    * Was unable to detect the encoding of the response text.  Suggest adding
@@ -75,11 +60,9 @@ const Code: CodeType = {
   /**
    * The XML parser failed to parse an xml stream, or the XML lacks mandatory
    * elements for TTML.
-   * <br> error.data[0] is the URI associated with the XML.
+   * in the data is the URI associated with the XML.
    */
   'INVALID_XML': 2005,
-
-  // RETIRED: 'INVALID_TTML': 2006,
 
   /**
    * MP4 segment does not contain TTML.
@@ -186,21 +169,20 @@ const Code: CodeType = {
 
   /**
    * A MediaSource operation failed.
-   * <br> error.data[0] is a MediaError code.js from the video element.
+   * a MediaError code from the video element.
    */
   'MEDIA_SOURCE_OPERATION_FAILED': 3014,
 
   /**
    * A MediaSource operation threw an exception.
-   * <br> error.data[0] is the exception that was thrown.
    */
   'MEDIA_SOURCE_OPERATION_THREW': 3015,
 
   /**
    * The video element reported an error.
-   * <br> error.data[0] is a MediaError code.js from the video element.
-   * <br> On Edge & IE, error.data[1] is a Microsoft extended error code.js in hex.
-   * <br> On Chrome, error.data[2] is a string with details on the error.
+   * - error.data[0] is a MediaError code.js from the video element.
+   * - On Edge & IE, error.data[1] is a Microsoft extended error code.js in hex.
+   * - On Chrome, error.data[2] is a string with details on the error.
    */
   'VIDEO_ERROR': 3016,
 
@@ -209,7 +191,6 @@ const Code: CodeType = {
    * content cannot be played correctly because the segments are too large for
    * the browser/platform. This may occur when attempting to play very high
    * quality, very high bitrate content on low-end devices.
-   * <br> error.data[0] is the type of content which caused the error.
    */
   'QUOTA_EXCEEDED_ERROR': 3017,
 
@@ -238,12 +219,9 @@ const Code: CodeType = {
   /**
    * The Player was unable to guess the manifest type based on file extension
    * or MIME type.  To fix, try one of the following:
-   * <br><ul>
-   *   <li>Rename the manifest so that the URI ends in a well-known extension.
-   *   <li>Configure the server to send a recognizable Content-Type header.
-   *   <li>Configure the server to accept a HEAD request for the manifest.
-   * </ul>
-   * <br> error.data[0] is the manifest URI.
+   * Rename the manifest so that the URI ends in a well-known extension.
+   * Configure the server to send a recognizable Content-Type header.
+   * Configure the server to accept a HEAD request for the manifest.
    */
   'UNABLE_TO_GUESS_MANIFEST_TYPE': 4000,
 
@@ -296,16 +274,12 @@ const Code: CodeType = {
    * There exist some streams that could be decoded, but restrictions imposed
    * by the application or the key system prevent us from playing.  This may
    * happen under the following conditions:
-   * <ul>
-   *   <li>The application has given restrictions to the Player that restrict
-   *       at least one content type completely (e.g. no playable audio).
-   *   <li>The key system has imposed output restrictions that cannot be met
-   *       (such as HDCP) and there are no unrestricted alternatives.
-   * </ul>
+   * The application has given restrictions to the Player that restrict
+   * at least one content type completely (e.g. no playable audio),
+   * The key system has imposed output restrictions that cannot be met
+   * (such as HDCP) and there are no unrestricted alternatives.
    */
   'RESTRICTIONS_CANNOT_BE_MET': 4012,
-
-  // RETIRED: 'INTERNAL_ERROR_KEY_STATUS': 4013,
 
   /**
    * No valid periods were found in the manifest.  Please check that your
@@ -335,8 +309,6 @@ const Code: CodeType = {
    */
   'DASH_DUPLICATE_REPRESENTATION_ID': 4018,
 
-  // RETIRED: 'HLS_MEDIA_INIT_SECTION_INFO_MISSING': 4019,
-
   /**
    * HLS manifest has several #EXT-X-MAP tags. We can only
    * support one at the moment.
@@ -345,7 +317,6 @@ const Code: CodeType = {
 
   /**
    * HLS parser was unable to guess mime type of a stream.
-   * <br> error.data[0] is the stream file's extension.
    */
   'HLS_COULD_NOT_GUESS_MIME_TYPE': 4021,
 
@@ -360,20 +331,17 @@ const Code: CodeType = {
   /**
    * One of the required attributes was not provided.
    * HLS manifest is invalid.
-   * <br> error.data[0] is the missing attribute's name.
    */
   'HLS_REQUIRED_ATTRIBUTE_MISSING': 4023,
 
   /**
    * One of the required tags was not provided.
    * HLS manifest is invalid.
-   * <br> error.data[0] is the missing tag's name.
    */
   'HLS_REQUIRED_TAG_MISSING': 4024,
 
   /**
    * HLS parser was unable to guess codecs of a stream.
-   * <br> error.data[0] is the list of all codecs for the variant.
    */
   'HLS_COULD_NOT_GUESS_CODECS': 4025,
 
@@ -405,13 +373,6 @@ const Code: CodeType = {
    */
   'HLSJS_CANNOT_PARSE': 4030,
 
-
-  // RETIRED: 'INCONSISTENT_BUFFER_STATE': 5000,
-  // RETIRED: 'INVALID_SEGMENT_INDEX': 5001,
-  // RETIRED: 'SEGMENT_DOES_NOT_EXIST': 5002,
-  // RETIRED: 'CANNOT_SATISFY_BYTE_LIMIT': 5003,
-  // RETIRED: 'BAD_SEGMENT': 5004,
-
   /**
    * The StreamingEngine called onChooseStreams() but the callback receiver
    * did not return the correct number or type of Streams.
@@ -433,21 +394,18 @@ const Code: CodeType = {
   /**
    * None of the requested key system configurations are available.  This may
    * happen under the following conditions:
-   * <ul>
-   *   <li> The key system is not supported.
-   *   <li> The key system does not support the features requested (e.g.
-   *        persistent state).
-   *   <li> A user prompt was shown and the user denied access.
-   *   <li> The key system is not available from unsecure contexts. (ie.
-   requires HTTPS) See https://goo.gl/EEhZqT.
-   * </ul>
+   *  The key system is not supported,
+   *  The key system does not support the features requested (e.g.
+   *        persistent state),
+   *  A user prompt was shown and the user denied access,
+   *   The key system is not available from unsecure contexts. (ie.
+   * requires HTTPS) See https://goo.gl/EEhZqT.
    */
   'REQUESTED_KEY_SYSTEM_CONFIG_UNAVAILABLE': 6001,
 
   /**
    * The browser found one of the requested key systems, but it failed to
    * create an instance of the CDM for some unknown reason.
-   * <br> error.data[0] is an error message string from the browser.
    */
   'FAILED_TO_CREATE_CDM': 6002,
 
@@ -455,53 +413,43 @@ const Code: CodeType = {
    * The browser found one of the requested key systems and created an instance
    * of the CDM, but it failed to attach the CDM to the video for some unknown
    * reason.
-   * <br> error.data[0] is an error message string from the browser.
    */
   'FAILED_TO_ATTACH_TO_VIDEO': 6003,
 
   /**
    * The CDM rejected the server certificate supplied by the application.
    * The certificate may be malformed or in an unsupported format.
-   * <br> error.data[0] is an error message string from the browser.
    */
   'INVALID_SERVER_CERTIFICATE': 6004,
 
   /**
    * The CDM refused to create a session for some unknown reason.
-   * <br> error.data[0] is an error message string from the browser.
    */
   'FAILED_TO_CREATE_SESSION': 6005,
 
   /**
    * The CDM was unable to generate a license request for the init data it was
    * given.  The init data may be malformed or in an unsupported format.
-   * <br> error.data[0] is an error message string from the browser.
    */
   'FAILED_TO_GENERATE_LICENSE_REQUEST': 6006,
 
   /**
    * The license request failed.  This could be a timeout, a network failure, or
    * a rejection by the server.
-   * <br> error.data[0] is a shaka.util.error from the networking engine.
    */
   'LICENSE_REQUEST_FAILED': 6007,
 
   /**
    * The license response was rejected by the CDM.  The server's response may be
    * invalid or malformed for this CDM.
-   * <br> error.data[0] is an error message string from the browser.
    */
   'LICENSE_RESPONSE_REJECTED': 6008,
-
-  // RETIRED: 'NO_LICENSE_SERVER_SPECIFIED': 6009,
 
   /**
    * The manifest does not specify any DRM info, but the content is encrypted.
    * Either the manifest or the manifest parser are broken.
    */
   'ENCRYPTED_CONTENT_WITHOUT_DRM_INFO': 6010,
-
-  // RETIRED: 'WRONG_KEYS': 6011,
 
   /**
    * No license server was given for the key system signaled by the manifest.
@@ -549,7 +497,7 @@ const Code: CodeType = {
   /**
    * Build error. unregistered plugin
    */
-  'RUNTIME_ERROR_NOT_NOT_REGISTERED_PLUGIN': 7003,
+  'RUNTIME_ERROR_NOT_REGISTERED_PLUGIN': 7003,
   /**
    * Build error. Unimplemnted method
    */
@@ -579,26 +527,22 @@ const Code: CodeType = {
   /**
    * A Cast SDK error that we did not explicitly plan for has occurred.
    * Check data[0] and refer to the Cast SDK documentation for details.
-   * <br> error.data[0] is an error object from the Cast SDK.
    */
   'UNEXPECTED_CAST_ERROR': 8003,
 
   /**
    * The cast operation was canceled by the user.
-   * <br> error.data[0] is an error object from the Cast SDK.
    */
   'CAST_CANCELED_BY_USER': 8004,
 
   /**
    * The cast connection timed out.
-   * <br> error.data[0] is an error object from the Cast SDK.
    */
   'CAST_CONNECTION_TIMED_OUT': 8005,
 
   /**
    * The requested receiver app ID does not exist or is unavailable.
    * Check the requested app ID for typos.
-   * <br> error.data[0] is an error object from the Cast SDK.
    */
   'CAST_RECEIVER_APP_UNAVAILABLE': 8006,
 
@@ -611,11 +555,10 @@ const Code: CodeType = {
 
   /**
    * An unknown error occurred in the IndexedDB.
-   * <br> On Firefox, one common source for UnknownError calls is reverting
+   * On Firefox, one common source for UnknownError calls is reverting
    * Firefox to an old version. This makes the indexedDB storage inaccessible
    * for older versions. The only way to fix this is to delete the storage
    * data in your profile. See https://goo.gl/eKVPPe.
-   * <br> error.data[0] is the error object.
    */
   'INDEXED_DB_ERROR': 9001,
 
@@ -626,20 +569,16 @@ const Code: CodeType = {
 
   /**
    * The specified item was not found in the IndexedDB.
-   * <br> error.data[0] is the offline URI.
    */
   'REQUESTED_ITEM_NOT_FOUND': 9003,
 
   /**
    * A network request was made with a malformed offline URI.
-   * <br> error.data[0] is the URI.
    */
   'MALFORMED_OFFLINE_URI': 9004,
 
   /**
    * The specified content is live or in-progress.
-   * Live and in-progress streams cannot be stored offline.
-   * <br> error.data[0] is the URI.
    */
   'CANNOT_STORE_LIVE_OFFLINE': 9005,
 
@@ -653,7 +592,6 @@ const Code: CodeType = {
    * The specified manifest is encrypted but does not specify any init data.
    * Without init data specified in the manifest, the content will not be
    * playable offline.
-   * <br> error.data[0] is the URI.
    */
   'NO_INIT_DATA_FOR_OFFLINE': 9007,
 

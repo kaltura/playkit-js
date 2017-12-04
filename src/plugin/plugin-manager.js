@@ -77,7 +77,7 @@ export default class PluginManager {
    */
   load(name: string, player: Player, config: Object = {}): boolean {
     if (!PluginManager._registry.has(name)) {
-      throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_NOT_NOT_REGISTERED_PLUGIN, name);
+      throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_NOT_REGISTERED_PLUGIN, name);
     }
     let pluginClass = PluginManager._registry.get(name);
     if (pluginClass && pluginClass.isValid()) {
