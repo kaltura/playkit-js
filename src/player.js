@@ -398,7 +398,7 @@ export default class Player extends FakeEventTarget {
         this._setDefaultTracks();
         this.dispatchEvent(new FakeEvent(CustomEvents.TRACKS_CHANGED, {tracks: this._tracks}));
       }).catch((error) => {
-        this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, error));
+        this.dispatchEvent(new FakeEvent(Html5Events.ERROR, error));
       });
     }
   }
@@ -1219,8 +1219,7 @@ export default class Player extends FakeEventTarget {
       });
       this._eventManager.listen(this._engine, CustomEvents.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._engine, CustomEvents.ERROR, (event: FakeEvent) =>
-        this.dispatchEvent(event));
+      this._eventManager.listen(this._engine, Html5Events.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEvents.AUTOPLAY_FAILED, (event: FakeEvent) => {
         this.pause();
         this.dispatchEvent(event)
@@ -1374,7 +1373,7 @@ export default class Player extends FakeEventTarget {
       this.ready().then(() => {
         this._engine.play();
       }).catch((error) => {
-        this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, error));
+        this.dispatchEvent(new FakeEvent(Html5Events.ERROR, error));
       });
     }
   }

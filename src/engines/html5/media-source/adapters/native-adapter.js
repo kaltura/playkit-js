@@ -152,7 +152,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {void}
    */
   _dispatchErrorCallback(error: any): void {
-    this._trigger(BaseMediaSourceAdapter.CustomEvents.ERROR, error);
+    this._trigger(Html5Events.ERROR, error);
   }
 
   /**
