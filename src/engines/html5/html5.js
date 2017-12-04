@@ -206,51 +206,48 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _handleVideoError(): void {
     if (!this._el.error) return;
-    const errCode = this._el.error.code;
-    if (errCode == 1 /* MEDIA_ERR_ABORTED */) {
+    const code = this._el.error.code;
+    if (code == 1 /* MEDIA_ERR_ABORTED */) {
       // Ignore this error code.js, which should only occur when navigating away or
       // deliberately stopping playback of HTTP content.
       return;
     }
 
-    const error = new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.VIDEO_ERROR, this._getErrorInfo());
-    this.dispatchEvent(new FakeEvent(CustomEvents.ERROR, error));
+    // Extra error information from MS Edge and IE11:
+    let extended = this._getMsExtendedError();
+
+    // Extra error information from Chrome:
+    // $FlowFixMe
+    const message = this._el.error.message;
+
+    const error = new Error(
+      Error.Severity.CRITICAL,
+      Error.Category.MEDIA,
+      Error.Code.VIDEO_ERROR,
+      {
+        code: code, extended: extended, message: message
+      });
+    this.dispatchEvent(new FakeEvent(Html5Events.ERROR, error));
   }
 
   /**
    * more info about the error
-   * @returns {Object} info about the video element error
+   * @returns {string} info about the video element error
    * @private
    */
-  _getErrorInfo(): Object{
-    if (!this._el.error) return {};
-    let msInfo = this._el.error.msExtendedCode ? this._el.error.msExtendedCode : null;
-    // Extra error information from Chrome:
-    const chromeInfo = this._el.error.message ? this._el.error.message : null;
-    return {
-      errorCode: this._el.error.code,
-      chromeInfo: chromeInfo,
-      msInfo: this._getMSErrorInfo(msInfo)
-    }
-  }
-
-  /**
-   * more info about the error from IE
-   * @param {any} msInfo - MS IE/EDGE info about the error
-   * @returns {string} - info about the error
-   */
-  _getMSErrorInfo(msInfo: any): string {
-    if (typeof msInfo === 'number') {
+  _getMsExtendedError(): string{
+    // $FlowFixMe
+    let extended = this._el.error.msExtendedCode;
+    if (extended) {
       // Convert to unsigned:
-      if (msInfo < 0) {
-        msInfo += Math.pow(2, 32);
+      if (extended < 0) {
+        extended += Math.pow(2, 32);
       }
       // Format as hex:
-      return msInfo = msInfo.toString(16);
+      extended = extended.toString(16);
     }
-    return '';
+    return extended;
   }
-
 
   /**
    * Remove the listeners of the video element events.
