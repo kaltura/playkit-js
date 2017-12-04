@@ -108,47 +108,47 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /** Must implemented methods by the derived media source adapter **/
 
   static canPlayType(mimeType: string, preferNative: boolean): boolean {
-    return BaseMediaSourceAdapter._throwNotImplementetError('static canPlayType');
+    return BaseMediaSourceAdapter._throwNotImplementedError('static canPlayType');
   }
 
   load(): Promise<Object> {
-    return BaseMediaSourceAdapter._throwNotImplementetError('load');
+    return BaseMediaSourceAdapter._throwNotImplementedError('load');
   }
 
   selectVideoTrack(videoTrack: VideoTrack): void {
-    return BaseMediaSourceAdapter._throwNotImplementetError('selectVideoTrack');
+    return BaseMediaSourceAdapter._throwNotImplementedError('selectVideoTrack');
   }
 
   selectAudioTrack(audioTrack: AudioTrack): void {
-    BaseMediaSourceAdapter._throwNotImplementetError('selectAudioTrack');
+    BaseMediaSourceAdapter._throwNotImplementedError('selectAudioTrack');
   }
 
   selectTextTrack(textTrack: TextTrack): void {
-    BaseMediaSourceAdapter._throwNotImplementetError('selectTextTrack');
+    BaseMediaSourceAdapter._throwNotImplementedError('selectTextTrack');
   }
 
   hideTextTrack(): void {
-    BaseMediaSourceAdapter._throwNotImplementetError('hideTextTrack');
+    BaseMediaSourceAdapter._throwNotImplementedError('hideTextTrack');
   }
 
   enableAdaptiveBitrate(): void {
-    BaseMediaSourceAdapter._throwNotImplementetError('enableAdaptiveBitrate');
+    BaseMediaSourceAdapter._throwNotImplementedError('enableAdaptiveBitrate');
   }
 
   isAdaptiveBitrateEnabled(): boolean {
-    return BaseMediaSourceAdapter._throwNotImplementetError('isAdaptiveBitrateEnabled');
+    return BaseMediaSourceAdapter._throwNotImplementedError('isAdaptiveBitrateEnabled');
   }
 
   seekToLiveEdge(): void {
-    BaseMediaSourceAdapter._throwNotImplementetError('seekToLiveEdge');
+    BaseMediaSourceAdapter._throwNotImplementedError('seekToLiveEdge');
   }
 
   isLive(): boolean {
-    return BaseMediaSourceAdapter._throwNotImplementetError('isLive');
+    return BaseMediaSourceAdapter._throwNotImplementedError('isLive');
   }
 
   get src(): string {
-    return BaseMediaSourceAdapter._throwNotImplementetError('get src');
+    return BaseMediaSourceAdapter._throwNotImplementedError('get src');
   }
 
   /**
@@ -156,7 +156,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @param {string} name of the unimplemented function
    * @returns {any} void/string/boolean
    */
-  static _throwNotImplementetError(name: string): any{
+  static _throwNotImplementedError(name: string): any{
     throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, name);
   }
 
