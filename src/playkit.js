@@ -48,9 +48,6 @@ export {Error};
 // Export FakeEvent Class
 export {FakeEvent}
 
-// Export events strings
-export {CUSTOM_EVENTS}
-
 // Export version
 export {__VERSION__ as VERSION};
 
