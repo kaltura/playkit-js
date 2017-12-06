@@ -1,11 +1,11 @@
 import Error from '../../../src/error/player-error'
 
-describe('Error class', () => {
+describe('Error', () => {
 
   let error = null;
 
   it('shoud create a new error, for instance', () => {
-    error = new Error(Error.Severity.CRITICAL, Error.Category.MANIFEST, Error.Code.UNABLE_TO_GUESS_MANIFEST_TYPE, );
+    error = new Error(Error.Severity.CRITICAL, Error.Category.MANIFEST, Error.Code.UNABLE_TO_GUESS_MANIFEST_TYPE);
     error.code.should.equal(4000);
     error.category.should.equal(4);
     error.severity.should.equal(2);
@@ -18,5 +18,4 @@ describe('Error class', () => {
     error.severity.should.equal(1);
     error.data.should.equal("kaltura.com");
   });
-
 });
