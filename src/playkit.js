@@ -15,7 +15,6 @@ import Env from './utils/env'
 import * as Utils from './utils/util'
 import Error from './error/player-error'
 import FakeEvent from './event/fake-event'
-import {CUSTOM_EVENTS} from './event/events'
 
 Player.runCapabilities();
 
