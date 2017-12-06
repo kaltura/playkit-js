@@ -1,6 +1,6 @@
 //@flow
 import EventManager from '../../../../event/event-manager'
-import {HTML5_EVENTS as Html5Events} from '../../../../event/events'
+import {CUSTOM_EVENTS as CustomEvents, HTML5_EVENTS as Html5Events} from '../../../../event/events'
 import Track from '../../../../track/track'
 import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'
@@ -571,8 +571,33 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _addNativeTextTrackChangeListener(): void {
     if (this._videoElement.textTracks) {
       this._eventManager.listen(this._videoElement.textTracks, 'change', () => this._onNativeTextTrackChange());
-    }
+      setTimeout(()=>{
+      for (var i = 0; i < this._videoElement.textTracks.length; i++) {
+        let textTrack = this._videoElement.textTracks[i];
+        if (textTrack.kind === 'metadata') {
+          //add id3 tags support
+          textTrack.mode='hidden';
+          this._handleMedaDataTrack(textTrack);
+        }
+      }
+    },2000);
+
   }
+}
+
+  _handleMedaDataTrack(textTrack: any): void {
+      textTrack.addEventListener("cuechange", (evt) => {
+        let activeCues =[];
+        for (let i in evt.currentTarget.activeCues){
+          let currentCue = evt.currentTarget.activeCues[i];
+          if (currentCue.startTime){
+            activeCues.push(currentCue)
+          }
+        }
+        this.dispatchEvent(new FakeEvent(CustomEvents.STREAM_METADATA,{cues:activeCues}));
+      });
+  }
+
 
   /**
    * Handler of the video element TextTrackList onchange event.
