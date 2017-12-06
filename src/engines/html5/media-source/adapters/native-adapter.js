@@ -11,6 +11,7 @@ import * as Utils from '../../../../utils/util'
 import FairPlay from '../../../../drm/fairplay'
 import Env from '../../../../utils/env'
 import FakeEvent from '../../../../event/fake-event'
+import Error from '../../../../error/error'
 
 /**
  * An illustration of media source extension for progressive download
@@ -139,9 +140,19 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   constructor(videoElement: HTMLVideoElement, source: Source, config: Object) {
     NativeAdapter._logger.debug('Creating adapter');
     super(videoElement, source);
-    this._maybeSetDrmPlayback();
     this._eventManager = new EventManager();
+    this._maybeSetDrmPlayback();
     this._progressiveSources = config.sources.progressive;
+  }
+
+  /**
+   * dispatches an error (is given to a class the cannot dispatch, like static fair play class)
+   * @private
+   * @param {any} error - the error to dispatch
+   * @returns {void}
+   */
+  _dispatchErrorCallback(error: any): void {
+    this._trigger(Html5Events.ERROR, error);
   }
 
   /**
@@ -151,7 +162,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _maybeSetDrmPlayback(): void {
     if (NativeAdapter._drmProtocol && this._sourceObj && this._sourceObj.drmData) {
-      NativeAdapter._drmProtocol.setDrmPlayback(this._videoElement, this._sourceObj.drmData);
+      NativeAdapter._drmProtocol.setDrmPlayback(this._videoElement, this._sourceObj.drmData, (error) => this._dispatchErrorCallback(error));
     }
   }
 
@@ -227,15 +238,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
-   * Error event handler.
+   * error event handler.
    * @param {Function} reject - The reject promise function.
    * @param {FakeEvent} error - The error fake event.
    * @private
    * @returns {void}
    */
   _onError(reject: Function, error: FakeEvent): void {
-    NativeAdapter._logger.error(error);
-    reject(error);
+    reject(new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.NATIVE_ADAPTER_LOAD_FAILED, error.payload));
   }
 
   /**

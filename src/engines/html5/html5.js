@@ -11,6 +11,7 @@ import {Cue} from '../../track/vtt-cue'
 import * as Utils from '../../utils/util'
 import Html5AutoPlayCapability from './capabilities/html5-autoplay'
 import Html5IsSupportedCapability from './capabilities/html5-is-supported'
+import Error from "../../error/error";
 
 /**
  * Html5 engine for playback.
@@ -181,7 +182,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   attach(): void {
     Object.keys(Html5Events).forEach((html5Event) => {
       this._eventManager.listen(this._el, Html5Events[html5Event], () => {
-        this.dispatchEvent(new FakeEvent(Html5Events[html5Event]));
+        if (Html5Events[html5Event] === Html5Events.ERROR) {
+          this._handleVideoError();
+        } else {
+          this.dispatchEvent(new FakeEvent(Html5Events[html5Event]));
+        }
       });
     });
     if (this._mediaSourceAdapter) {
@@ -190,7 +195,58 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.TEXT_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.TEXT_CUE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, Html5Events.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
     }
+  }
+
+  /**
+   * Handles errors from the video element
+   * @returns {void}
+   * @private
+   */
+  _handleVideoError(): void {
+    if (!this._el.error) return;
+    const code = this._el.error.code;
+    if (code == 1 /* MEDIA_ERR_ABORTED */) {
+      // Ignore this error code.js, which should only occur when navigating away or
+      // deliberately stopping playback of HTTP content.
+      return;
+    }
+
+    // Extra error information from MS Edge and IE11:
+    let extended = this._getMsExtendedError();
+
+    // Extra error information from Chrome:
+    // $FlowFixMe
+    const message = this._el.error.message;
+
+    const error = new Error(
+      Error.Severity.CRITICAL,
+      Error.Category.MEDIA,
+      Error.Code.VIDEO_ERROR,
+      {
+        code: code, extended: extended, message: message
+      });
+    this.dispatchEvent(new FakeEvent(Html5Events.ERROR, error));
+  }
+
+  /**
+   * more info about the error
+   * @returns {string} info about the video element error
+   * @private
+   */
+  _getMsExtendedError(): string {
+    // $FlowFixMe
+    let extended = this._el.error.msExtendedCode;
+    if (extended) {
+      // Convert to unsigned:
+      if (extended < 0) {
+        extended += Math.pow(2, 32);
+      }
+      // Format as hex:
+      extended = extended.toString(16);
+    }
+    return extended;
   }
 
   /**
@@ -344,9 +400,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._el.load();
     return this._canLoadMediaSourceAdapterPromise.then(() => {
       if (this._mediaSourceAdapter) {
-        return this._mediaSourceAdapter.load(startTime);
+        return this._mediaSourceAdapter.load(startTime).catch((error) => {
+          return Promise.reject(error);
+        });
       }
       return Promise.resolve({});
+    }).catch((error) => {
+      return Promise.reject(error);
     });
   }
 
@@ -793,7 +853,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       if (window.VTTCue && cue instanceof window.VTTCue) {
         activeCues.push(cue);
       } else if (window.TextTrackCue && cue instanceof window.TextTrackCue) {
-        activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text));
+        try {
+          activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text))
+        } catch (error) {
+          new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNABLE_TO_CREATE_TEXT_CUE, error);
+        }
       }
     }
     this.dispatchEvent(new FakeEvent(CustomEvents.TEXT_CUE_CHANGED, {cues: activeCues}));

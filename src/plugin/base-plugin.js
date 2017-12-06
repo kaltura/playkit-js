@@ -3,7 +3,7 @@ import Player from '../player'
 import getLogger from '../utils/logger'
 import * as Utils from '../utils/util'
 import EventManager from '../event/event-manager'
-import PlayerError from '../utils/player-error'
+import Error from '../error/error';
 import FakeEvent from '../event/fake-event'
 
 /** The BasePlugin responsible to implement the plugin interface.
@@ -68,7 +68,7 @@ export default class BasePlugin implements IPlugin {
    * @abstract
    */
   static isValid(): boolean {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'isValid()').getError();
+    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, 'isValid()');
   }
 
   /**

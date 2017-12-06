@@ -13,6 +13,8 @@ import TextTrack from './track/text-track'
 import TextStyle from './track/text-style'
 import Env from './utils/env'
 import * as Utils from './utils/util'
+import Error from './error/error'
+import FakeEvent from './event/fake-event'
 
 Player.runCapabilities();
 
@@ -38,6 +40,12 @@ export {Track, VideoTrack, AudioTrack, TextTrack, TextStyle};
 
 // Export utils library
 export {Utils};
+
+// Export Error class
+export {Error};
+
+// Export FakeEvent Class
+export {FakeEvent}
 
 // Export version
 export {__VERSION__ as VERSION};

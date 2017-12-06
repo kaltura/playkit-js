@@ -2,8 +2,8 @@
 /* eslint-disable no-unused-vars */
 import FakeEvent from '../../../event/fake-event'
 import FakeEventTarget from '../../../event/fake-event-target'
-import PlayerError from '../../../utils/player-error'
-import {CUSTOM_EVENTS} from '../../../event/events'
+import Error from '../../../error/error'
+import {CUSTOM_EVENTS, HTML5_EVENTS} from '../../../event/events'
 import getLogger from '../../../utils/logger'
 import Track from '../../../track/track'
 import VideoTrack from '../../../track/video-track'
@@ -16,6 +16,12 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @static
    */
   static CustomEvents: { [event: string]: string } = CUSTOM_EVENTS;
+
+  /**
+   * Passing the HTML5 events to the actual media source adapter.
+   * @static
+   */
+  static Html5Events: { [event: string]: string} = HTML5_EVENTS;
 
   /**
    * Passing the getLogger function to the actual media source adapter.
@@ -108,47 +114,56 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /** Must implemented methods by the derived media source adapter **/
 
   static canPlayType(mimeType: string, preferNative: boolean): boolean {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'static canPlayType').getError();
+    return BaseMediaSourceAdapter._throwNotImplementedError('static canPlayType');
   }
 
   load(): Promise<Object> {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'load').getError();
+    return BaseMediaSourceAdapter._throwNotImplementedError('load');
   }
 
   selectVideoTrack(videoTrack: VideoTrack): void {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'selectVideoTrack').getError();
+    return BaseMediaSourceAdapter._throwNotImplementedError('selectVideoTrack');
   }
 
   selectAudioTrack(audioTrack: AudioTrack): void {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'selectAudioTrack').getError();
+    BaseMediaSourceAdapter._throwNotImplementedError('selectAudioTrack');
   }
 
   selectTextTrack(textTrack: TextTrack): void {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'selectTextTrack').getError();
+    BaseMediaSourceAdapter._throwNotImplementedError('selectTextTrack');
   }
 
   hideTextTrack(): void {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'hideTextTrack').getError();
+    BaseMediaSourceAdapter._throwNotImplementedError('hideTextTrack');
   }
 
   enableAdaptiveBitrate(): void {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'enableAdaptiveBitrate').getError();
+    BaseMediaSourceAdapter._throwNotImplementedError('enableAdaptiveBitrate');
   }
 
   isAdaptiveBitrateEnabled(): boolean {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'isAdaptiveBitrateEnabled').getError();
+    return BaseMediaSourceAdapter._throwNotImplementedError('isAdaptiveBitrateEnabled');
   }
 
   seekToLiveEdge(): void {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'seekToLiveEdge').getError();
+    BaseMediaSourceAdapter._throwNotImplementedError('seekToLiveEdge');
   }
 
   isLive(): boolean {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'isLive').getError();
+    return BaseMediaSourceAdapter._throwNotImplementedError('isLive');
   }
 
   get src(): string {
-    throw new PlayerError(PlayerError.TYPE.NOT_IMPLEMENTED_METHOD, 'get src').getError();
+    return BaseMediaSourceAdapter._throwNotImplementedError('get src');
+  }
+
+  /**
+   * throw a run time error
+   * @param {string} name of the unimplemented function
+   * @returns {any} void/string/boolean
+   */
+  static _throwNotImplementedError(name: string): any{
+    throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, name);
   }
 
   /**
