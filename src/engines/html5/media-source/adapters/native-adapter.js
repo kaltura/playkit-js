@@ -11,7 +11,7 @@ import * as Utils from '../../../../utils/util'
 import FairPlay from '../../../../drm/fairplay'
 import Env from '../../../../utils/env'
 import FakeEvent from '../../../../event/fake-event'
-import Error from "../../../../error/player-error";
+import Error from "../../../../error/error";
 
 /**
  * An illustration of media source extension for progressive download

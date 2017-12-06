@@ -17,7 +17,7 @@ const Severity: SeverityType = {
    * to reset the library.
    */
   'CRITICAL': 2
-}
+};
 
 export {Severity}
 export type {SeverityType}

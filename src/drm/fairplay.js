@@ -1,6 +1,6 @@
 // @flow
 import BaseDrmProtocol from './base-drm-protocol'
-import Error from '../error/player-error'
+import Error from '../error/error'
 
 export default class FairPlay extends BaseDrmProtocol {
   static _logger = BaseDrmProtocol.getLogger('FairPlay');
@@ -82,7 +82,7 @@ export default class FairPlay extends BaseDrmProtocol {
     let request = new XMLHttpRequest();
     request.responseType = "text";
     request.addEventListener("load", FairPlay._licenseRequestLoaded, false);
-    request.addEventListener("error" , () => FairPlay._onError(Error.Code.LICENSE_REQUEST_FAILED), false);
+    request.addEventListener("error", () => FairPlay._onError(Error.Code.LICENSE_REQUEST_FAILED), false);
     let params = FairPlay._base64EncodeUint8Array(message);
     request.open('POST', drmData.licenseUrl, true);
     request.setRequestHeader("Content-type", "application/json");
@@ -117,7 +117,7 @@ export default class FairPlay extends BaseDrmProtocol {
     }
   }
 
-  static _onError(code: number, data?: Object): void{
+  static _onError(code: number, data?: Object): void {
     FairPlay._errorCallback(new Error(Error.Severity.CRITICAL, Error.Category.DRM, code, data));
   }
 

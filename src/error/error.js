@@ -7,10 +7,8 @@ import type {CodeType} from './code'
 import {Category} from './category'
 import type {CategoryType} from './category'
 
-
 const CLASS_NAME: string = 'Error';
-
-const UNKNOWN: string = 'UNKNOWN'
+const UNKNOWN: string = 'UNKNOWN';
 
 /**
  * @classdesc This is a description of the error class.
@@ -59,9 +57,9 @@ export default class Error {
    * @returns {void}
    */
   _createReadableError(category: number, code: number, data: any = {}): void {
-    let codeName = this._getKey(Error.Code, code);
-    let categoryName = this._getKey(Error.Category, category);
-    Error._logger.debug('Player error ' + categoryName + '.' + codeName + ' (' + JSON.stringify(data) + ')');
+    const codeName = this._getKey(Error.Code, code);
+    const categoryName = this._getKey(Error.Category, category);
+    Error._logger.error(`Player error ${categoryName}.${codeName}`, data);
   }
 
   /**
@@ -70,7 +68,7 @@ export default class Error {
    * @param {number} value - category's / code's number.
    * @returns {string} - the key string
    */
-  _getKey(obj: Object, value: number ): string {
+  _getKey(obj: Object, value: number): string {
     for (let strKey in obj) {
       if (value === obj[strKey]) {
         return strKey;
@@ -79,5 +77,3 @@ export default class Error {
     return UNKNOWN;
   }
 }
-
-export {Error}

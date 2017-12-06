@@ -3,7 +3,7 @@ import Player from '../player'
 import getLogger from '../utils/logger'
 import * as Utils from '../utils/util'
 import EventManager from '../event/event-manager'
-import Error from '../error/player-error';
+import Error from '../error/error';
 import FakeEvent from '../event/fake-event'
 
 /** The BasePlugin responsible to implement the plugin interface.

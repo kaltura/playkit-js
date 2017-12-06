@@ -608,7 +608,7 @@ const Code: CodeType = {
    */
   'CONTENT_UNSUPPORTED_BY_BROWSER': 9009
 
-}
+};
 
 export {Code}
 export type {CodeType}

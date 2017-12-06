@@ -11,7 +11,7 @@ import {Cue} from '../../track/vtt-cue'
 import * as Utils from '../../utils/util'
 import Html5AutoPlayCapability from './capabilities/html5-autoplay'
 import Html5IsSupportedCapability from './capabilities/html5-is-supported'
-import Error from "../../error/player-error";
+import Error from "../../error/error";
 
 /**
  * Html5 engine for playback.
@@ -235,7 +235,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {string} info about the video element error
    * @private
    */
-  _getMsExtendedError(): string{
+  _getMsExtendedError(): string {
     // $FlowFixMe
     let extended = this._el.error.msExtendedCode;
     if (extended) {

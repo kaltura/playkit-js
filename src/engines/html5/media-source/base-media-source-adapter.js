@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import FakeEvent from '../../../event/fake-event'
 import FakeEventTarget from '../../../event/fake-event-target'
-import Error from '../../../error/player-error'
+import Error from '../../../error/error'
 import {CUSTOM_EVENTS, HTML5_EVENTS} from '../../../event/events'
 import getLogger from '../../../utils/logger'
 import Track from '../../../track/track'

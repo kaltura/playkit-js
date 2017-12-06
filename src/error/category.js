@@ -29,7 +29,7 @@ const Category: CategoryType = {
 
   /** Errors in the database storage (offline). */
   'STORAGE': 9
-}
+};
 
 export {Category}
 export type {CategoryType}

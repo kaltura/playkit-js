@@ -1,7 +1,7 @@
 // @flow
 /* eslint-disable no-unused-vars */
 import getLogger from '../utils/logger'
-import Error from '../error/player-error'
+import Error from '../error/error'
 import DrmSupport from './drm-support'
 import {DrmScheme} from './drm-scheme'
 
