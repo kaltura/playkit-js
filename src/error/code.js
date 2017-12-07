@@ -217,6 +217,10 @@ const Code: CodeType = {
    */
   'NATIVE_ADAPTER_LOAD_FAILED': 3022,
   /**
+   * HLSjs buffer stalled issue
+   */
+  'HLS_BUFFER_STALLED_ERROR': 3023,
+  /**
    * The Player was unable to guess the manifest type based on file extension
    * or MIME type.  To fix, try one of the following:
    * Rename the manifest so that the URI ends in a well-known extension.
