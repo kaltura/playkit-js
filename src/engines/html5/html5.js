@@ -11,6 +11,7 @@ import {Cue} from '../../track/vtt-cue'
 import * as Utils from '../../utils/util'
 import Html5AutoPlayCapability from './capabilities/html5-autoplay'
 import Html5IsSupportedCapability from './capabilities/html5-is-supported'
+import {createTextTrackButtons} from "../../../test/src/utils/test-utils";
 
 /**
  * Html5 engine for playback.
@@ -53,6 +54,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _canLoadMediaSourceAdapterPromise: Promise<*>;
+  /**
+   * Promise to indicate when a media source adapter can be loaded.
+   * @type {Promise<*>}
+   * @private
+   */
+  _registeredMetadataEvent: boolean;
 
   /**
    * The html5 capabilities handlers.
@@ -181,6 +188,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   attach(): void {
     Object.keys(Html5Events).forEach((html5Event) => {
       this._eventManager.listen(this._el, Html5Events[html5Event], () => {
+        if (Html5Events[html5Event] == Html5Events.PLAYING &&
+          !this._registeredMetadataEvent &&
+          this._config.playback.registerMetadataTrackEvent){
+          setTimeout(()=>{this._registerMetadata()},1000);
+        }
         this.dispatchEvent(new FakeEvent(Html5Events[html5Event]));
       });
     });
@@ -190,7 +202,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.TEXT_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.TEXT_CUE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.STREAM_METADATA, (event: FakeEvent) => this.dispatchEvent(event));
     }
   }
 
@@ -208,8 +219,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.AUDIO_TRACK_CHANGED);
       this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.TEXT_TRACK_CHANGED);
       this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.TEXT_CUE_CHANGED);
-      this._eventManager.unlisten(this._mediaSourceAdapter, CustomEvents.STREAM_METADATA);
-
     }
   }
 
@@ -717,6 +726,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._config = config;
     this._canLoadMediaSourceAdapterPromise = (this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve());
     this._mediaSourceAdapter = null;
+    this._registeredMetadataEvent = false;
     this._loadMediaSourceAdapter(source);
     this.attach();
   }
@@ -818,6 +828,33 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       }
     }
     return null;
+  }
+
+  /**
+   * Register the metadata track event
+   * @returns {void}
+   * @private
+   */
+  _registerMetadata(): void {
+    const tracks = this._el.textTracks;
+    for (let track in tracks) {
+      if (tracks.hasOwnProperty(track)){
+        if (tracks[track].kind == "metadata") {
+          tracks[track].mode = "showing";
+          this._registeredMetadataEvent = true;
+          tracks[track].addEventListener("cuechange", (evt) => {
+            let activeCues =[];
+            for (let cue in evt.currentTarget.activeCues){
+              if (evt.currentTarget.activeCues.hasOwnProperty(cue)) {
+                let currentCue = evt.currentTarget.activeCues[cue];
+                activeCues.push(currentCue)
+              }
+            }
+            this.dispatchEvent(new FakeEvent(CustomEvents.STREAM_METADATA,{activeCues}));
+          });
+        }
+      }
+    }
   }
 }
 

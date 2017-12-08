@@ -571,33 +571,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _addNativeTextTrackChangeListener(): void {
     if (this._videoElement.textTracks) {
       this._eventManager.listen(this._videoElement.textTracks, 'change', () => this._onNativeTextTrackChange());
-      setTimeout(()=>{
-      for (var i = 0; i < this._videoElement.textTracks.length; i++) {
-        let textTrack = this._videoElement.textTracks[i];
-        if (textTrack.kind === 'metadata') {
-          //add id3 tags support
-          textTrack.mode='hidden';
-          this._handleMedaDataTrack(textTrack);
-        }
-      }
-    },2000);
-
+    }
   }
-}
-
-  _handleMedaDataTrack(textTrack: any): void {
-      textTrack.addEventListener("cuechange", (evt) => {
-        let activeCues =[];
-        for (let i in evt.currentTarget.activeCues){
-          let currentCue = evt.currentTarget.activeCues[i];
-          if (currentCue.startTime){
-            activeCues.push(currentCue)
-          }
-        }
-        this.dispatchEvent(new FakeEvent(CustomEvents.STREAM_METADATA,{cues:activeCues}));
-      });
-  }
-
 
   /**
    * Handler of the video element TextTrackList onchange event.
@@ -711,7 +686,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _disableTextTracks(): void {
     let textTracks = this._videoElement.textTracks;
-    if (textTracks) {
+    if (textTracks && textTracks.kind !="metadata") {
       for (let i = 0; i < textTracks.length; i++) {
         textTracks[i].mode = 'disabled';
       }
