@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.19.0"></a>
+# [0.19.0](https://github.com/kaltura/playkit-js/compare/v0.18.1...v0.19.0) (2017-12-06)
+
+
+### Features
+
+* add buffered api ([#169](https://github.com/kaltura/playkit-js/issues/169)) ([d761b6c](https://github.com/kaltura/playkit-js/commit/d761b6c))
+* **FEC-7476:** error handling  ([#162](https://github.com/kaltura/playkit-js/issues/162)) ([fd0a65f](https://github.com/kaltura/playkit-js/commit/fd0a65f))
+
+
+
 <a name="0.18.1"></a>
 ## [0.18.1](https://github.com/kaltura/playkit-js/compare/v0.18.0...v0.18.1) (2017-11-28)
 

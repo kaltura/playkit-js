@@ -471,7 +471,15 @@ export default class Player extends FakeEventTarget {
     }
   }
 
-  buffered(): void {
+  /**
+   * Get the first buffered range of the engine.
+   * @returns {TimeRanges} - First buffered range of the engine in seconds.
+   * @public
+   */
+  get buffered(): ?TimeRanges {
+    if (this._engine) {
+      return this._engine.buffered;
+    }
   }
 
   /**
@@ -1211,6 +1219,7 @@ export default class Player extends FakeEventTarget {
       });
       this._eventManager.listen(this._engine, CustomEvents.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._engine, Html5Events.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEvents.AUTOPLAY_FAILED, (event: FakeEvent) => {
         this.pause();
         this.dispatchEvent(event)
@@ -1366,6 +1375,8 @@ export default class Player extends FakeEventTarget {
       this.load();
       this.ready().then(() => {
         this._engine.play();
+      }).catch((error) => {
+        this.dispatchEvent(new FakeEvent(Html5Events.ERROR, error));
       });
     }
   }
