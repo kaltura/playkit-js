@@ -278,20 +278,30 @@ describe("ready", function () {
         });
 
         it("should fail ready -> load", (done) => {
-          player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
+          player.addEventListener('error', (error) => {
+            error.type.should.be.equal('error');
+            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
               done();
+            }
+          });
+          player.ready()
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
           player.load();
         });
 
         it("should fail load -> ready", (done) => {
+          player.addEventListener('error', (error) => {
+            error.type.should.be.equal('error');
+            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
+              done();
+            }
+          });
           player.load();
           player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
-              done();
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
         });
       });
@@ -310,30 +320,45 @@ describe("ready", function () {
         });
 
         it("should fail configure -> ready -> load", (done) => {
+          player.addEventListener('error', (error) => {
+            error.type.should.be.equal('error');
+            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
+              done();
+            }
+          });
           player.configure(config);
           player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
-              done();
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
           player.load();
         });
 
         it("should fail configure -> load -> ready", (done) => {
+          player.addEventListener('error', (error) => {
+            error.type.should.be.equal('error');
+            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
+              done();
+            }
+          });
           player.configure(config);
           player.load();
           player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
-              done();
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
         });
 
         it("should fail ready -> configure -> load", (done) => {
-          player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
+          player.addEventListener('error', (error) => {
+            error.type.should.be.equal('error');
+            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
               done();
+            }
+          });
+          player.ready()
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
           player.configure(config);
           player.load();
@@ -358,20 +383,30 @@ describe("ready", function () {
         });
 
         it("should fail ready -> load", (done) => {
-          player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
+          player.addEventListener('error', (error) => {
+            error.type.should.be.equal('error');
+            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
               done();
+            }
+          });
+          player.ready()
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
           player.load();
         });
 
         it("should fail load -> ready", (done) => {
+          player.addEventListener('error', (error) => {
+            error.type.should.be.equal('error');
+            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
+              done();
+            }
+          });
           player.load();
           player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
-              done();
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
         });
       });
@@ -391,61 +426,91 @@ describe("ready", function () {
         });
 
         it("should fail configure -> ready -> load", (done) => {
+          player.addEventListener('error', (error) => {
+            error.type.should.be.equal('error');
+            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
+              done();
+            }
+          });
           player.configure(config);
           player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
-              done();
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
           player.load();
         });
 
         it("should fail configure -> load -> ready", (done) => {
+          player.addEventListener('error', (error) => {
+            error.type.should.be.equal('error');
+            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
+              done();
+            }
+          });
           player.configure(config);
           player.load();
           player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
-              done();
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
         });
 
         it("should fail ready -> load -> configure", (done) => {
-          player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
+          player.addEventListener('error', (error) => {
+            error.type.should.be.equal('error');
+            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
               done();
+            }
+          });
+          player.ready()
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
           player.load();
           player.configure(config);
         });
 
         it("should fail ready -> configure -> load", (done) => {
-          player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
+          player.addEventListener('error', (error) => {
+            error.type.should.be.equal('error');
+            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
               done();
+            }
+          });
+          player.ready()
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
           player.configure(config);
           player.load();
         });
 
         it("should fail load -> configure -> ready", (done) => {
+          player.addEventListener('error', (error) => {
+            error.type.should.be.equal('error');
+            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
+              done();
+            }
+          });
           player.load();
           player.configure(config);
           player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
-              done();
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
         });
 
         it("should fail load -> ready -> configure", (done) => {
+          player.addEventListener('error', (error) => {
+            error.type.should.be.equal('error');
+            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
+              done();
+            }
+          });
           player.load();
           player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
-              done();
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
           player.configure(config);
         });
