@@ -13,6 +13,7 @@ import ColorsPlugin from './plugin/test-plugins/colors-plugin'
 import NumbersPlugin from './plugin/test-plugins/numbers-plugin'
 import Locale from '../../src/utils/locale'
 import Html5 from '../../src/engines/html5/html5'
+import Error from '../../src/error/error'
 
 const targetId = 'player-placeholder_player.spec';
 
@@ -278,9 +279,8 @@ describe("ready", function () {
         });
 
         it("should fail ready -> load", (done) => {
-          player.addEventListener('error', (error) => {
-            error.type.should.be.equal('error');
-            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
           });
@@ -292,9 +292,8 @@ describe("ready", function () {
         });
 
         it("should fail load -> ready", (done) => {
-          player.addEventListener('error', (error) => {
-            error.type.should.be.equal('error');
-            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
           });
@@ -320,9 +319,8 @@ describe("ready", function () {
         });
 
         it("should fail configure -> ready -> load", (done) => {
-          player.addEventListener('error', (error) => {
-            error.type.should.be.equal('error');
-            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
           });
@@ -335,9 +333,8 @@ describe("ready", function () {
         });
 
         it("should fail configure -> load -> ready", (done) => {
-          player.addEventListener('error', (error) => {
-            error.type.should.be.equal('error');
-            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
           });
@@ -350,9 +347,8 @@ describe("ready", function () {
         });
 
         it("should fail ready -> configure -> load", (done) => {
-          player.addEventListener('error', (error) => {
-            error.type.should.be.equal('error');
-            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
           });
@@ -383,9 +379,8 @@ describe("ready", function () {
         });
 
         it("should fail ready -> load", (done) => {
-          player.addEventListener('error', (error) => {
-            error.type.should.be.equal('error');
-            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
           });
@@ -397,9 +392,8 @@ describe("ready", function () {
         });
 
         it("should fail load -> ready", (done) => {
-          player.addEventListener('error', (error) => {
-            error.type.should.be.equal('error');
-            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
           });
@@ -426,9 +420,8 @@ describe("ready", function () {
         });
 
         it("should fail configure -> ready -> load", (done) => {
-          player.addEventListener('error', (error) => {
-            error.type.should.be.equal('error');
-            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
           });
@@ -441,9 +434,8 @@ describe("ready", function () {
         });
 
         it("should fail configure -> load -> ready", (done) => {
-          player.addEventListener('error', (error) => {
-            error.type.should.be.equal('error');
-            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
           });
@@ -456,9 +448,8 @@ describe("ready", function () {
         });
 
         it("should fail ready -> load -> configure", (done) => {
-          player.addEventListener('error', (error) => {
-            error.type.should.be.equal('error');
-            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
           });
@@ -471,9 +462,8 @@ describe("ready", function () {
         });
 
         it("should fail ready -> configure -> load", (done) => {
-          player.addEventListener('error', (error) => {
-            error.type.should.be.equal('error');
-            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
           });
@@ -486,9 +476,8 @@ describe("ready", function () {
         });
 
         it("should fail load -> configure -> ready", (done) => {
-          player.addEventListener('error', (error) => {
-            error.type.should.be.equal('error');
-            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
           });
@@ -501,9 +490,8 @@ describe("ready", function () {
         });
 
         it("should fail load -> ready -> configure", (done) => {
-          player.addEventListener('error', (error) => {
-            error.type.should.be.equal('error');
-            if (error.payload.severity.should.equals(2) && error.payload.code.should.equals(3016)) {
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
           });
