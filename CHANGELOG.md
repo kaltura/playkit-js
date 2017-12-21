@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.19.1"></a>
+## [0.19.1](https://github.com/kaltura/playkit-js/compare/v0.19.0...v0.19.1) (2017-12-12)
+
+
+### Bug Fixes
+
+* add HLS_BUFFER_STALLED_ERROR error code ([#171](https://github.com/kaltura/playkit-js/issues/171)) ([596a295](https://github.com/kaltura/playkit-js/commit/596a295))
+
+
+
 <a name="0.19.0"></a>
 # [0.19.0](https://github.com/kaltura/playkit-js/compare/v0.18.1...v0.19.0) (2017-12-06)
 
