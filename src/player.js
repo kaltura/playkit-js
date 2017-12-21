@@ -1129,6 +1129,8 @@ export default class Player extends FakeEventTarget {
     this._readyPromise = new Promise((resolve, reject) => {
       this._eventManager.listen(this, CustomEvents.TRACKS_CHANGED, resolve);
       this._eventManager.listen(this, Html5Events.ERROR, reject);
+    }).catch(() => {
+      // silence the promise rejection, error is handled by the error event
     });
   }
 
@@ -1219,7 +1221,6 @@ export default class Player extends FakeEventTarget {
       });
       this._eventManager.listen(this._engine, CustomEvents.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._engine, Html5Events.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEvents.AUTOPLAY_FAILED, (event: FakeEvent) => {
         this.pause();
         this.dispatchEvent(event)
