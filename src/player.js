@@ -1318,7 +1318,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _canPreload(): boolean {
-    return (!this._config.playback.autoplay && this._config.playback.preload === "auto" && !this._config.plugins.ima);
+    return (!this._config.playback.autoplay && this._config.playback.preload === "auto" && this._config.plugins && !this._config.plugins.ima);
   }
 
   /**
