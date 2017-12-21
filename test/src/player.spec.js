@@ -13,6 +13,7 @@ import ColorsPlugin from './plugin/test-plugins/colors-plugin'
 import NumbersPlugin from './plugin/test-plugins/numbers-plugin'
 import Locale from '../../src/utils/locale'
 import Html5 from '../../src/engines/html5/html5'
+import Error from '../../src/error/error'
 
 const targetId = 'player-placeholder_player.spec';
 
@@ -278,20 +279,28 @@ describe("ready", function () {
         });
 
         it("should fail ready -> load", (done) => {
-          player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
+            }
+          });
+          player.ready()
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
           player.load();
         });
 
         it("should fail load -> ready", (done) => {
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
+              done();
+            }
+          });
           player.load();
           player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
-              done();
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
         });
       });
@@ -310,30 +319,42 @@ describe("ready", function () {
         });
 
         it("should fail configure -> ready -> load", (done) => {
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
+              done();
+            }
+          });
           player.configure(config);
           player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
-              done();
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
           player.load();
         });
 
         it("should fail configure -> load -> ready", (done) => {
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
+              done();
+            }
+          });
           player.configure(config);
           player.load();
           player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
-              done();
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
         });
 
         it("should fail ready -> configure -> load", (done) => {
-          player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
+            }
+          });
+          player.ready()
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
           player.configure(config);
           player.load();
@@ -358,20 +379,28 @@ describe("ready", function () {
         });
 
         it("should fail ready -> load", (done) => {
-          player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
+            }
+          });
+          player.ready()
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
           player.load();
         });
 
         it("should fail load -> ready", (done) => {
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
+              done();
+            }
+          });
           player.load();
           player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
-              done();
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
         });
       });
@@ -391,61 +420,85 @@ describe("ready", function () {
         });
 
         it("should fail configure -> ready -> load", (done) => {
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
+              done();
+            }
+          });
           player.configure(config);
           player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
-              done();
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
           player.load();
         });
 
         it("should fail configure -> load -> ready", (done) => {
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
+              done();
+            }
+          });
           player.configure(config);
           player.load();
           player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
-              done();
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
         });
 
         it("should fail ready -> load -> configure", (done) => {
-          player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
+            }
+          });
+          player.ready()
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
           player.load();
           player.configure(config);
         });
 
         it("should fail ready -> configure -> load", (done) => {
-          player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
+            }
+          });
+          player.ready()
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
           player.configure(config);
           player.load();
         });
 
         it("should fail load -> configure -> ready", (done) => {
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
+              done();
+            }
+          });
           player.load();
           player.configure(config);
           player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
-              done();
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
         });
 
         it("should fail load -> ready -> configure", (done) => {
+          player.addEventListener(Html5Events.ERROR, (error) => {
+            if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
+              done();
+            }
+          });
           player.load();
           player.ready()
-            .catch((error) => {
-              error.type.should.be.equal('error');
-              done();
+            .catch(() => {
+              // catching the error is handled by the Error Event
             });
           player.configure(config);
         });
