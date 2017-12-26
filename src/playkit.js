@@ -15,6 +15,10 @@ import Env from './utils/env'
 import * as Utils from './utils/util'
 import Error from './error/error'
 import FakeEvent from './event/fake-event'
+import PlayerOptions from './entities/player-options'
+import StreamPriority from './entities/items/stream-priority'
+import MediaSource from './entities/items/media-source'
+import DrmData from './entities/items/drm-data'
 
 Player.runCapabilities();
 
@@ -22,12 +26,15 @@ declare var __VERSION__: string;
 declare var __NAME__: string;
 
 /**
- * @param {Object} config - The configuration of the player
+ * @param {PlayerOptions} options - The player options.
  * @returns {Player} - The player instance
  */
-export function loadPlayer(config: ?Object) {
-  return new Player(config || {});
+export function loadPlayer(options?: PlayerOptions) {
+  options = options || new PlayerOptions();
+  return new Player(options.toJSON());
 }
+
+export {PlayerOptions, MediaSource, StreamPriority, DrmData};
 
 // Export the media source adapters necessary utils
 export {registerMediaSourceAdapter, BaseMediaSourceAdapter};
