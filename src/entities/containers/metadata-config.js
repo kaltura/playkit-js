@@ -5,12 +5,8 @@ export type MetadataConfigObject = {
 };
 
 export default class MetadataConfig {
-  constructor(config?: MetadataConfigObject) {
-    this.poster = (config && config.poster) || '';
-    this.description = (config && config.description) || '';
-  }
-
   _poster: string;
+  _description: string;
 
   get poster(): string {
     return this._poster;
@@ -20,14 +16,17 @@ export default class MetadataConfig {
     this._poster = value;
   }
 
-  _description: string;
-
   get description(): string {
     return this._description;
   }
 
   set description(value: string): void {
     this._description = value;
+  }
+
+  constructor(config?: MetadataConfigObject) {
+    this.poster = (config && config.poster) || '';
+    this.description = (config && config.description) || '';
   }
 
   toJSON(): MetadataConfigObject {

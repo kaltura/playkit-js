@@ -17,21 +17,20 @@ export const FormatName: { [format: string]: string } = {
 };
 
 export default class StreamPriority {
-  constructor(engine: string, format: string) {
-    this._engine = engine;
-    this._format = format;
-  }
-
   _engine: string;
+  _format: string;
 
   get engine(): string {
     return this._engine;
   }
 
-  _format: string;
-
   get format(): string {
     return this._format;
+  }
+
+  constructor(engine: string, format: string) {
+    this._engine = engine;
+    this._format = format;
   }
 
   toJSON(): StreamPriorityObject {

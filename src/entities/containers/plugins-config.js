@@ -2,13 +2,6 @@
 export type PluginsConfigObject = { [plugin: string]: Object };
 
 export default class PluginsConfig {
-  constructor(config?: PluginsConfigObject) {
-    this._map = new Map();
-    if (config) {
-      this.map = config;
-    }
-  }
-
   _map: Map<string, Object>;
 
   get map(): Map<string, Object> {
@@ -21,6 +14,13 @@ export default class PluginsConfig {
     } else if (value instanceof Object) {
       this._map.clear();
       Object.keys(value).forEach(key => this._map.set(key, value[key]));
+    }
+  }
+
+  constructor(config?: PluginsConfigObject) {
+    this._map = new Map();
+    if (config) {
+      this.map = config;
     }
   }
 

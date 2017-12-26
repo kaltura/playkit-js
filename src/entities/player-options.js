@@ -16,14 +16,10 @@ export type PlayerOptionsObject = {
 };
 
 export default class PlayerOptions {
-  constructor(config?: PlayerOptionsObject) {
-    this._playback = new PlaybackConfig(config && config.playback);
-    this._sources = new SourcesConfig(config && config.sources);
-    this._metadata = new MetadataConfig(config && config.metadata);
-    this._plugins = new PluginsConfig(config && config.plugins);
-  }
-
   _playback: PlaybackConfig;
+  _sources: SourcesConfig;
+  _metadata: MetadataConfig;
+  _plugins: PluginsConfig;
 
   get playback(): PlaybackConfig {
     return this._playback;
@@ -41,8 +37,6 @@ export default class PlayerOptions {
     if (config.streamPriority) this.playback.streamPriority = config.streamPriority;
   }
 
-  _sources: SourcesConfig;
-
   get sources(): SourcesConfig {
     return this._sources;
   }
@@ -53,8 +47,6 @@ export default class PlayerOptions {
     if (config.progressive) this.sources.progressive = config.progressive;
   }
 
-  _metadata: MetadataConfig;
-
   get metadata(): MetadataConfig {
     return this._metadata;
   }
@@ -64,14 +56,19 @@ export default class PlayerOptions {
     if (config.description) this.metadata.description = config.description;
   }
 
-  _plugins: PluginsConfig;
-
   get plugins(): Map<string, Object> {
     return this._plugins.map;
   }
 
   set plugins(config: Map<string, Object> | PluginsConfigObject): void {
     this._plugins.map = config;
+  }
+
+  constructor(config?: PlayerOptionsObject) {
+    this._playback = new PlaybackConfig(config && config.playback);
+    this._sources = new SourcesConfig(config && config.sources);
+    this._metadata = new MetadataConfig(config && config.metadata);
+    this._plugins = new PluginsConfig(config && config.plugins);
   }
 
   toJSON(): PlayerOptionsObject {

@@ -13,27 +13,21 @@ export type MediaSourceObject = {
 };
 
 export default class MediaSource {
-  constructor(mimetype: string, url: string, id?: string) {
-    this._url = url;
-    this._mimetype = mimetype;
-    if (id) {
-      this._id = id;
-    }
-  }
-
   _url: string;
+  _mimetype: string;
+  _id: string;
+  _bandwidth: number;
+  _width: number;
+  _height: number;
+  _drmData: Array<DrmData>;
 
   get url(): string {
     return this._url;
   }
 
-  _mimetype: string;
-
   get mimetype(): string {
     return this._mimetype;
   }
-
-  _id: string;
 
   get id(): string {
     return this._id;
@@ -43,8 +37,6 @@ export default class MediaSource {
     this._id = value;
   }
 
-  _bandwidth: number;
-
   get bandwidth(): number {
     return this._bandwidth;
   }
@@ -52,8 +44,6 @@ export default class MediaSource {
   set bandwidth(value: number): void {
     this._bandwidth = value;
   }
-
-  _width: number;
 
   get width(): number {
     return this._width;
@@ -63,8 +53,6 @@ export default class MediaSource {
     this._width = value;
   }
 
-  _height: number;
-
   get height(): number {
     return this._height;
   }
@@ -73,8 +61,6 @@ export default class MediaSource {
     this._height = value;
   }
 
-  _drmData: Array<DrmData>;
-
   get drmData(): Array<DrmData> {
     return this._drmData;
   }
@@ -82,6 +68,14 @@ export default class MediaSource {
   set drmData(value: Array<DrmDataObject>): void {
     this._drmData = [];
     value.forEach(d => this._drmData.push(new DrmData(d.scheme, d.licenseUrl, d.certificate)));
+  }
+
+  constructor(mimetype: string, url: string, id?: string) {
+    this._url = url;
+    this._mimetype = mimetype;
+    if (id) {
+      this._id = id;
+    }
   }
 
   toJSON(): MediaSourceObject {

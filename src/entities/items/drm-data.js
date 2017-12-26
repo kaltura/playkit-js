@@ -6,27 +6,17 @@ export type DrmDataObject = {
 };
 
 export default class DrmData {
-  constructor(scheme: string, licenseUrl: string, certificate?: string) {
-    this._scheme = scheme;
-    this._licenseUrl = licenseUrl;
-    if (certificate) {
-      this._certificate = certificate;
-    }
-  }
-
   _licenseUrl: string;
+  _scheme: string;
+  _certificate: string;
 
   get licenseUrl(): string {
     return this._licenseUrl;
   }
 
-  _scheme: string;
-
   get scheme(): string {
     return this._scheme;
   }
-
-  _certificate: string;
 
   get certificate(): string {
     return this._certificate;
@@ -34,6 +24,14 @@ export default class DrmData {
 
   set certificate(value: string) {
     this._certificate = value;
+  }
+
+  constructor(scheme: string, licenseUrl: string, certificate?: string) {
+    this._scheme = scheme;
+    this._licenseUrl = licenseUrl;
+    if (certificate) {
+      this._certificate = certificate;
+    }
   }
 
   toJSON(): DrmDataObject {

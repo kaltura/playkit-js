@@ -10,6 +10,34 @@ export type SourcesConfigObject = {
 };
 
 export default class SourcesConfig {
+  _hls: MediaSourceList;
+  _dash: MediaSourceList;
+  _progressive: MediaSourceList;
+
+  get hls(): Array<MediaSource> {
+    return this._hls.list;
+  }
+
+  set hls(value: Array<MediaSourceObject>): void {
+    this._hls.list = value;
+  }
+
+  get dash(): Array<MediaSource> {
+    return this._dash.list;
+  }
+
+  set dash(value: Array<MediaSourceObject>): void {
+    this._dash.list = value;
+  }
+
+  get progressive(): Array<MediaSource> {
+    return this._progressive.list;
+  }
+
+  set progressive(value: Array<MediaSourceObject>): void {
+    this._progressive.list = value;
+  }
+
   constructor(config?: SourcesConfigObject) {
     this._hls = new MediaSourceList();
     this._dash = new MediaSourceList();
@@ -23,36 +51,6 @@ export default class SourcesConfig {
     if (config && config.progressive) {
       this.progressive = config.progressive;
     }
-  }
-
-  _hls: MediaSourceList;
-
-  get hls(): Array<MediaSource> {
-    return this._hls.list;
-  }
-
-  set hls(value: Array<MediaSourceObject>): void {
-    this._hls.list = value;
-  }
-
-  _dash: MediaSourceList;
-
-  get dash(): Array<MediaSource> {
-    return this._dash.list;
-  }
-
-  set dash(value: Array<MediaSourceObject>): void {
-    this._dash.list = value;
-  }
-
-  _progressive: MediaSourceList;
-
-  get progressive(): Array<MediaSource> {
-    return this._progressive.list;
-  }
-
-  set progressive(value: Array<MediaSourceObject>): void {
-    this._progressive.list = value;
   }
 
   toJSON(): SourcesConfigObject {

@@ -5,12 +5,8 @@ export type PreferNativeConfigObject = {
 };
 
 export default class PreferNativeConfig {
-  constructor() {
-    this._hls = false;
-    this._dash = false;
-  }
-
   _hls: boolean;
+  _dash: boolean;
 
   get hls(): boolean {
     return this._hls;
@@ -22,8 +18,6 @@ export default class PreferNativeConfig {
     }
   }
 
-  _dash: boolean;
-
   get dash(): boolean {
     return this._dash;
   }
@@ -32,6 +26,11 @@ export default class PreferNativeConfig {
     if (typeof value === 'boolean') {
       this._dash = value;
     }
+  }
+
+  constructor() {
+    this._hls = false;
+    this._dash = false;
   }
 
   toJSON(): PreferNativeConfigObject {
