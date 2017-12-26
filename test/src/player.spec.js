@@ -7,13 +7,14 @@ import Track from '../../src/track/track'
 import VideoTrack from '../../src/track/video-track'
 import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
-import {removeVideoElementsFromTestPage, createElement, removeElement, getConfigStructure} from './utils/test-utils'
+import {removeVideoElementsFromTestPage, createElement, removeElement} from './utils/test-utils'
 import PluginManager from '../../src/plugin/plugin-manager'
 import ColorsPlugin from './plugin/test-plugins/colors-plugin'
 import NumbersPlugin from './plugin/test-plugins/numbers-plugin'
 import Locale from '../../src/utils/locale'
 import Html5 from '../../src/engines/html5/html5'
 import Error from '../../src/error/error'
+import PlayerOptions from '../../src/entities/player-options'
 
 const targetId = 'player-placeholder_player.spec';
 
@@ -22,7 +23,7 @@ describe("play", function () {
 
   before(() => {
     playerContainer = createElement('DIV', targetId);
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
     config.sources = sourcesConfig.Mp4;
   });
 
@@ -71,7 +72,7 @@ describe("ready", function () {
     let config;
 
     before(() => {
-      config = getConfigStructure();
+      config = new PlayerOptions().toJSON();
       config.sources = sourcesConfig.Mp4;
     });
 
@@ -259,7 +260,7 @@ describe("ready", function () {
     let config;
 
     before(() => {
-      config = getConfigStructure();
+      config = new PlayerOptions().toJSON();
       config.sources = sourcesConfig.CorruptedUrl;
     });
 
@@ -518,7 +519,7 @@ describe('getTracks dummy', () => {
 
   before(() => {
     createElement('DIV', targetId);
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
     config.sources = sourcesConfig.Mp4;
     player = new Player(targetId, config);
     player._tracks = [
@@ -578,7 +579,7 @@ describe('getTracks real', function () {
   });
 
   beforeEach(() => {
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
     config.sources = sourcesConfig.MultipleSources;
     player = new Player(config);
     playerContainer.appendChild(player.getView());
@@ -661,7 +662,7 @@ describe('selectTrack - video', function () {
   });
 
   beforeEach(() => {
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
     config.sources = sourcesConfig.MultipleSources;
     player = new Player(config);
     playerContainer.appendChild(player.getView());
@@ -731,7 +732,7 @@ describe('selectTrack - audio', function () {
   });
 
   beforeEach(() => {
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
     config.sources = sourcesConfig.Mp4;
     player = new Player(config);
     playerContainer.appendChild(player.getView());
@@ -844,7 +845,7 @@ describe('selectTrack - text', function () {
   });
 
   beforeEach(() => {
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
     config.sources = sourcesConfig.Mp4;
     player = new Player(config);
     playerContainer.appendChild(player.getView());
@@ -982,7 +983,7 @@ describe('getActiveTracks', function () {
   });
 
   beforeEach(() => {
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
     config.sources = sourcesConfig.MultipleSources;
     player = new Player(config);
     playerContainer.appendChild(player.getView());
@@ -1054,7 +1055,7 @@ describe('hideTextTrack', function () {
   });
 
   beforeEach(() => {
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
     config.sources = sourcesConfig.Mp4;
     player = new Player(config);
     playerContainer.appendChild(player.getView());
@@ -1297,7 +1298,7 @@ describe('Track enum', function () {
   });
 
   it('should return the track enum', () => {
-    let config = getConfigStructure();
+    let config = new PlayerOptions().toJSON();
     config.sources = sourcesConfig.Mp4;
     let player = new Player(config);
     playerContainer.appendChild(player.getView());
@@ -1317,7 +1318,7 @@ describe('events', function () {
     });
 
     beforeEach(() => {
-      config = getConfigStructure();
+      config = new PlayerOptions().toJSON();
       config.sources = sourcesConfig.Mp4;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
@@ -1374,7 +1375,7 @@ describe('events', function () {
     });
 
     beforeEach(() => {
-      config = getConfigStructure();
+      config = new PlayerOptions().toJSON();
       config.sources = sourcesConfig.Mp4;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
@@ -1418,7 +1419,7 @@ describe('events', function () {
     });
 
     beforeEach(() => {
-      config = getConfigStructure();
+      config = new PlayerOptions().toJSON();
       config.sources = sourcesConfig.Mp4;
       player = new Player();
       playerContainer.appendChild(player.getView());
@@ -1453,7 +1454,7 @@ describe('events', function () {
     });
 
     beforeEach(() => {
-      config = getConfigStructure();
+      config = new PlayerOptions().toJSON();
     });
 
     afterEach(() => {
@@ -1502,7 +1503,7 @@ describe('events', function () {
     });
 
     beforeEach(() => {
-      config = getConfigStructure();
+      config = new PlayerOptions().toJSON();
     });
 
     afterEach(() => {
@@ -1540,7 +1541,7 @@ describe('events', function () {
     });
 
     beforeEach(() => {
-      config = getConfigStructure();
+      config = new PlayerOptions().toJSON();
       config.sources = sourcesConfig.Mp4;
     });
 
@@ -1601,7 +1602,7 @@ describe('states', function () {
   });
 
   beforeEach(() => {
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
     config.sources = sourcesConfig.Mp4;
     player = new Player(config);
     playerContainer.appendChild(player.getView());
@@ -1693,7 +1694,7 @@ describe('configure', function () {
   });
 
   beforeEach(() => {
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
   });
 
   afterEach(() => {
@@ -2060,7 +2061,7 @@ describe('config', function () {
   });
 
   beforeEach(() => {
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
   });
 
   afterEach(() => {
@@ -2075,14 +2076,14 @@ describe('config', function () {
   it('should get config', function () {
     player = new Player(config);
     playerContainer.appendChild(player.getView());
-    player.config.playback.streamPriority.should.deep.equal(getConfigStructure().playback.streamPriority);
+    player.config.playback.streamPriority.should.deep.equal(new PlayerOptions().toJSON().playback.streamPriority);
   });
 
   it('should not change the player config', function () {
     player = new Player(config);
     playerContainer.appendChild(player.getView());
     player.config.playback.streamPriority = {};
-    player.config.playback.streamPriority.should.deep.equal(getConfigStructure().playback.streamPriority);
+    player.config.playback.streamPriority.should.deep.equal(new PlayerOptions().toJSON().playback.streamPriority);
   });
 });
 
@@ -2094,7 +2095,7 @@ describe('abr', function () {
   });
 
   beforeEach(() => {
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
   });
 
   afterEach(() => {
@@ -2133,7 +2134,7 @@ describe('isLive', function () {
   });
 
   beforeEach(() => {
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
   });
 
   afterEach(() => {
@@ -2223,7 +2224,7 @@ describe('isDvr', function () {
   });
 
   beforeEach(() => {
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
   });
 
   afterEach(() => {
@@ -2307,7 +2308,7 @@ describe('seekToLiveEdge', function () {
   });
 
   beforeEach(() => {
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
   });
 
   afterEach(() => {
@@ -2366,7 +2367,7 @@ describe('volume', function () {
   });
 
   beforeEach(() => {
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
     config.sources = sourcesConfig.Mp4;
     player = new Player(config);
     playerContainer.appendChild(player.getView());
@@ -2417,7 +2418,7 @@ describe('set currentTime', function () {
   });
 
   beforeEach(() => {
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
     config.sources = sourcesConfig.Mp4;
     player = new Player(config);
     playerContainer.appendChild(player.getView());
@@ -2478,7 +2479,7 @@ describe('destroy', function () {
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
     config.sources = sourcesConfig.Mp4;
   });
 
@@ -2526,7 +2527,7 @@ describe('_reset', function () {
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
     config.sources = sourcesConfig.Mp4;
   });
 
@@ -2575,7 +2576,7 @@ describe('_loadEngine', function () {
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
     config.sources = sourcesConfig.Mp4;
   });
 
@@ -2612,7 +2613,7 @@ describe('_getLanguage', function () {
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
     player = new Player(config);
   });
 
@@ -2707,7 +2708,7 @@ describe('_resetTextCuesAndReposition', function () {
 
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    config = getConfigStructure();
+    config = new PlayerOptions().toJSON();
     player = new Player(config);
   });
 

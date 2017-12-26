@@ -22,7 +22,7 @@ import TextStyle from './track/text-style'
 import {Cue} from './track/vtt-cue'
 import {processCues} from './track/text-track-display'
 import PlaybackMiddleware from './middleware/playback-middleware'
-import DefaultPlayerConfig from './player-config.json'
+import PlayerOptions from './entities/player-options'
 import './assets/style.css'
 
 /**
@@ -324,8 +324,9 @@ export default class Player extends FakeEventTarget {
     this._tracks = [];
     this._firstPlay = true;
     this._fullscreen = false;
+    this._repositionCuesTimeout = false;
     this._firstPlayInCurrentSession = true;
-    this._config = Player._defaultConfig;
+    this._config = this.defaultConfig;
     this._eventManager = new EventManager();
     this._posterManager = new PosterManager();
     this._stateManager = new StateManager(this);
@@ -336,7 +337,6 @@ export default class Player extends FakeEventTarget {
     this._createPlayerContainer();
     this._appendPosterEl();
     this.configure(config);
-    this._repositionCuesTimeout = false;
   }
 
   // <editor-fold desc="Public API">
@@ -1438,11 +1438,10 @@ export default class Player extends FakeEventTarget {
 
   /**
    * @returns {Object} - The default configuration of the player.
-   * @private
-   * @static
+   * @public
    */
-  static get _defaultConfig(): Object {
-    return Utils.Object.copyDeep(DefaultPlayerConfig);
+  get defaultConfig(): Object {
+    return new PlayerOptions().toJSON();
   }
 
   // </editor-fold>
