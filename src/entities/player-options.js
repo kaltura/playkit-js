@@ -24,7 +24,6 @@ export default class PlayerOptions {
   _metadata: MetadataConfig;
   _plugins: PluginsConfig;
 
-
   get logLevel(): string {
     return this._logLevel;
   }
