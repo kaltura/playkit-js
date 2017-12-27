@@ -7,8 +7,10 @@ import MetadataConfig from './containers/metadata-config'
 import type {MetadataConfigObject} from './containers/metadata-config'
 import PluginsConfig from './containers/plugins-config'
 import type {PluginsConfigObject} from './containers/plugins-config'
+import {LogLevel} from '../utils/logger'
 
 export type PlayerOptionsObject = {
+  logLevel: string,
   playback: PlaybackConfigObject,
   sources: SourcesConfigObject,
   metadata: MetadataConfigObject,
@@ -16,10 +18,22 @@ export type PlayerOptionsObject = {
 };
 
 export default class PlayerOptions {
+  _logLevel: string;
   _playback: PlaybackConfig;
   _sources: SourcesConfig;
   _metadata: MetadataConfig;
   _plugins: PluginsConfig;
+
+
+  get logLevel(): string {
+    return this._logLevel;
+  }
+
+  set logLevel(value: string): void {
+    if (LogLevel[value]) {
+      this._logLevel = value;
+    }
+  }
 
   get playback(): PlaybackConfig {
     return this._playback;
@@ -69,10 +83,12 @@ export default class PlayerOptions {
     this._sources = new SourcesConfig(config && config.sources);
     this._metadata = new MetadataConfig(config && config.metadata);
     this._plugins = new PluginsConfig(config && config.plugins);
+    this._logLevel = (config && config.logLevel) || 'ERROR';
   }
 
   toJSON(): PlayerOptionsObject {
     return {
+      logLevel: this._logLevel,
       playback: this._playback.toJSON(),
       sources: this._sources.toJSON(),
       metadata: this._metadata.toJSON(),
