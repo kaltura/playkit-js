@@ -24,6 +24,32 @@ export const Preload: { [value: string]: string } = {
   AUTO: 'auto'
 };
 
+export const defaultPlaybackConfigObject: PlaybackConfigObject = {
+  audioLanguage: '',
+  textLanguage: '',
+  useNativeTextTrack: false,
+  volume: 1,
+  playsinline: true,
+  preload: Preload.NONE,
+  autoplay: false,
+  allowMutedAutoPlay: true,
+  muted: false,
+  streamPriority: [{
+    engine: EngineName.HTML5,
+    format: FormatName.HLS
+  }, {
+    engine: EngineName.HTML5,
+    format: FormatName.DASH
+  }, {
+    engine: EngineName.HTML5,
+    format: FormatName.PROGRESSIVE
+  }],
+  preferNative: {
+    hls: false,
+    dash: false
+  }
+};
+
 export default class PlaybackConfig {
   _audioLanguage: string;
   _textLanguage: string;
@@ -42,9 +68,8 @@ export default class PlaybackConfig {
   }
 
   set audioLanguage(value: string): void {
-    if (typeof value === 'string') {
-      this._audioLanguage = value;
-    }
+    if (typeof value !== 'string') return;
+    this._audioLanguage = value;
   }
 
   get textLanguage(): string {
@@ -52,9 +77,8 @@ export default class PlaybackConfig {
   }
 
   set textLanguage(value: string): void {
-    if (typeof value === 'string') {
-      this._textLanguage = value;
-    }
+    if (typeof value !== 'string') return;
+    this._textLanguage = value;
   }
 
   get useNativeTextTrack(): boolean {
@@ -62,9 +86,8 @@ export default class PlaybackConfig {
   }
 
   set useNativeTextTrack(value: boolean): void {
-    if (typeof value === 'boolean') {
-      this._useNativeTextTrack = value;
-    }
+    if (typeof value !== 'boolean') return;
+    this._useNativeTextTrack = value;
   }
 
   get volume(): number {
@@ -72,9 +95,8 @@ export default class PlaybackConfig {
   }
 
   set volume(value: number): void {
-    if (typeof value === 'number') {
-      this._volume = value;
-    }
+    if (typeof value !== 'number') return;
+    this._volume = value;
   }
 
   get playsinline(): boolean {
@@ -82,9 +104,8 @@ export default class PlaybackConfig {
   }
 
   set playsinline(value: boolean): void {
-    if (typeof value === 'boolean') {
-      this._playsinline = value;
-    }
+    if (typeof value !== 'boolean') return;
+    this._playsinline = value;
   }
 
   get preload(): string {
@@ -102,9 +123,8 @@ export default class PlaybackConfig {
   }
 
   set autoplay(value: boolean): void {
-    if (typeof value === 'boolean') {
-      this._autoplay = value;
-    }
+    if (typeof value !== 'boolean') return;
+    this._autoplay = value;
   }
 
   get allowMutedAutoPlay(): boolean {
@@ -112,9 +132,8 @@ export default class PlaybackConfig {
   }
 
   set allowMutedAutoPlay(value: boolean): void {
-    if (typeof value === 'boolean') {
-      this._allowMutedAutoPlay = value;
-    }
+    if (typeof value !== 'boolean') return;
+    this._allowMutedAutoPlay = value;
   }
 
   get muted(): boolean {
@@ -122,17 +141,20 @@ export default class PlaybackConfig {
   }
 
   set muted(value: boolean): void {
-    if (typeof value === 'boolean') {
-      this._muted = value;
-    }
+    if (typeof value !== 'boolean') return;
+    this._muted = value;
   }
 
   get streamPriority(): Array<StreamPriorityItem> {
     return this._streamPriority.list;
   }
 
-  set streamPriority(value: Array<StreamPriorityObject>): void {
-    this._streamPriority.list = value;
+  set streamPriority(value: Array<StreamPriorityObject> | StreamPriorityList): void {
+    if (value instanceof StreamPriorityList) {
+      this._streamPriority = value;
+    } else if (Array.isArray(value)) {
+      this._streamPriority.list = value;
+    }
   }
 
   get preferNative(): PreferNativeConfig {
@@ -140,36 +162,22 @@ export default class PlaybackConfig {
   }
 
   set preferNative(value: PreferNativeConfigObject) {
-    if (typeof value.dash === 'boolean') {
-      this._preferNative.dash = value.dash;
-    }
-    if (typeof value.hls === 'boolean') {
-      this._preferNative.hls = value.hls;
-    }
+    this._preferNative.dash = value.dash;
+    this._preferNative.hls = value.hls;
   }
 
-  constructor(config?: PlaybackConfigObject) {
-    this._streamPriority = new StreamPriorityList();
-    this._preferNative = new PreferNativeConfig();
-    this.audioLanguage = (config && config.audioLanguage) || '';
-    this.textLanguage = (config && config.textLanguage) || '';
-    this.useNativeTextTrack = (config && config.useNativeTextTrack) || false;
-    this.volume = (config && config.volume) || 1;
-    this.playsinline = (config && config.playsinline) || true;
-    this.preload = (config && config.preload) || Preload.NONE;
-    this.autoplay = (config && config.autoplay) || false;
-    this.allowMutedAutoPlay = (config && config.allowMutedAutoPlay) || true;
-    this.muted = (config && config.muted) || false;
-    if (config && config.preferNative) {
-      this.preferNative = config.preferNative;
-    }
-    if (config && config.streamPriority) {
-      this.streamPriority = config.streamPriority;
-    } else {
-      this._streamPriority.list.push(new StreamPriorityItem(EngineName.HTML5, FormatName.HLS));
-      this._streamPriority.list.push(new StreamPriorityItem(EngineName.HTML5, FormatName.DASH));
-      this._streamPriority.list.push(new StreamPriorityItem(EngineName.HTML5, FormatName.PROGRESSIVE));
-    }
+  constructor(config: PlaybackConfigObject = defaultPlaybackConfigObject) {
+    this.audioLanguage = config.audioLanguage || defaultPlaybackConfigObject.audioLanguage;
+    this.textLanguage = config.textLanguage || defaultPlaybackConfigObject.textLanguage;
+    this.useNativeTextTrack = (config.useNativeTextTrack === undefined) ? defaultPlaybackConfigObject.useNativeTextTrack : config.useNativeTextTrack;
+    this.playsinline = (config.playsinline === undefined) ? defaultPlaybackConfigObject.playsinline : config.playsinline;
+    this.preload = config.preload || defaultPlaybackConfigObject.preload;
+    this.autoplay = (config.autoplay === undefined) ? defaultPlaybackConfigObject.autoplay : config.autoplay;
+    this.allowMutedAutoPlay = (config.allowMutedAutoPlay === undefined) ? defaultPlaybackConfigObject.allowMutedAutoPlay : config.allowMutedAutoPlay;
+    this.muted = (config.muted === undefined) ? defaultPlaybackConfigObject.muted : config.muted;
+    this.volume = (config.volume === undefined) ? defaultPlaybackConfigObject.volume : config.volume;
+    this._streamPriority = new StreamPriorityList(config.streamPriority || defaultPlaybackConfigObject.streamPriority);
+    this._preferNative = new PreferNativeConfig(config.preferNative || defaultPlaybackConfigObject.preferNative);
   }
 
   toJSON(): PlaybackConfigObject {

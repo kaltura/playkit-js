@@ -15,10 +15,10 @@ import Env from './utils/env'
 import * as Utils from './utils/util'
 import Error from './error/error'
 import FakeEvent from './event/fake-event'
-import PlayerOptions from './entities/player-options'
-import StreamPriority from './entities/items/stream-priority'
-import MediaSource from './entities/items/media-source'
-import DrmData from './entities/items/drm-data'
+import PlayerOptions from './player-options/player-options'
+import StreamPriority from './player-options/items/stream-priority'
+import MediaSource from './player-options/items/media-source'
+import DrmData from './player-options/items/drm-data'
 
 Player.runCapabilities();
 

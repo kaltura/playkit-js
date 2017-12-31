@@ -3,7 +3,7 @@ import MediaSource from '../items/media-source'
 import type {MediaSourceObject} from '../items/media-source'
 
 export default class MediaSourceList {
-  _list: Array<MediaSource> = [];
+  _list: Array<MediaSource>;
 
   get list(): Array<MediaSource> {
     return this._list;
@@ -21,9 +21,25 @@ export default class MediaSourceList {
     });
   }
 
+  constructor(list: Array<MediaSourceObject> = []) {
+    validate(list);
+    this.list = list;
+  }
+
   toJSON(): Array<MediaSourceObject> {
     const response = [];
     this._list.forEach(item => response.push(item.toJSON()));
     return response;
   }
+}
+
+/**
+ * Validate user input
+ * @param {Array<any>} list - user input
+ * @returns {void}
+ */
+function validate(list: Array<any>): void {
+  if (!list) return;
+  if (Array.isArray(list)) return;
+  throw new TypeError('Stream priority list should be an array');
 }

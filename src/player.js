@@ -22,7 +22,7 @@ import TextStyle from './track/text-style'
 import {Cue} from './track/vtt-cue'
 import {processCues} from './track/text-track-display'
 import PlaybackMiddleware from './middleware/playback-middleware'
-import PlayerOptions from './entities/player-options'
+import PlayerOptions from './player-options/player-options'
 import './assets/style.css'
 
 /**

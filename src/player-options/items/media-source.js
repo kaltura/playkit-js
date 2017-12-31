@@ -34,6 +34,7 @@ export default class MediaSource {
   }
 
   set id(value: string): void {
+    if (typeof value !== 'string') return;
     this._id = value;
   }
 
@@ -42,6 +43,7 @@ export default class MediaSource {
   }
 
   set bandwidth(value: number): void {
+    if (typeof value !== 'number') return;
     this._bandwidth = value;
   }
 
@@ -50,6 +52,7 @@ export default class MediaSource {
   }
 
   set width(value: number): void {
+    if (typeof value !== 'number') return;
     this._width = value;
   }
 
@@ -58,6 +61,7 @@ export default class MediaSource {
   }
 
   set height(value: number): void {
+    if (typeof value !== 'number') return;
     this._height = value;
   }
 
@@ -70,11 +74,36 @@ export default class MediaSource {
     value.forEach(d => this._drmData.push(new DrmData(d.scheme, d.licenseUrl, d.certificate)));
   }
 
-  constructor(mimetype: string, url: string, id?: string) {
-    this._url = url;
-    this._mimetype = mimetype;
-    if (id) {
-      this._id = id;
+  constructor(mimetype: string | MediaSourceObject, url: string, id?: string) {
+    validate(mimetype, url);
+    if (typeof mimetype === 'string') {
+      this._url = url;
+      this._mimetype = mimetype;
+      if (id) {
+        this.id = id;
+      }
+    } else if (typeof mimetype === 'object') {
+      this.fromJSON(mimetype);
+    }
+  }
+
+  fromJSON(json: MediaSourceObject): void {
+    this._url = json.url;
+    this._mimetype = json.mimetype;
+    if (json.id) {
+      this.id = json.id;
+    }
+    if (json.bandwidth) {
+      this.bandwidth = json.bandwidth;
+    }
+    if (json.height) {
+      this.height = json.height;
+    }
+    if (json.width) {
+      this.width = json.width;
+    }
+    if (json.drmData) {
+      this.drmData = json.drmData;
     }
   }
 
@@ -97,4 +126,15 @@ export default class MediaSource {
     }
     return response;
   }
+}
+
+/**
+ * Validate user input
+ * @param {Array<any>} param - user input
+ * @returns {void}
+ */
+function validate(...params: Array<any>): void {
+  if (typeof params[0] === 'string' && typeof params[1] === 'string') return;
+  if (typeof params[0] === 'object' && typeof params[0].mimetype === 'string' && typeof params[0].url === 'string') return;
+  throw new TypeError('Mimetype and source url must be provide and be type of strings');
 }

@@ -1,8 +1,10 @@
 // @flow
 export type PluginsConfigObject = { [plugin: string]: Object };
 
+export const defaultPluginsConfigObject: PluginsConfigObject = {};
+
 export default class PluginsConfig {
-  _map: Map<string, Object>;
+  _map: Map<string, Object> = new Map();
 
   get map(): Map<string, Object> {
     return this._map;
@@ -17,11 +19,8 @@ export default class PluginsConfig {
     }
   }
 
-  constructor(config?: PluginsConfigObject) {
-    this._map = new Map();
-    if (config) {
-      this.map = config;
-    }
+  constructor(config: PluginsConfigObject = defaultPluginsConfigObject) {
+    this.map = config;
   }
 
   toJSON(): PluginsConfigObject {

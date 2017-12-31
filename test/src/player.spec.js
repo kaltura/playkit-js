@@ -14,7 +14,7 @@ import NumbersPlugin from './plugin/test-plugins/numbers-plugin'
 import Locale from '../../src/utils/locale'
 import Html5 from '../../src/engines/html5/html5'
 import Error from '../../src/error/error'
-import PlayerOptions from '../../src/entities/player-options'
+import PlayerOptions from '../../src/player-options/player-options'
 
 const targetId = 'player-placeholder_player.spec';
 
