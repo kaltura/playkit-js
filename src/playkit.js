@@ -15,7 +15,7 @@ import Env from './utils/env'
 import * as Utils from './utils/util'
 import Error from './error/error'
 import FakeEvent from './event/fake-event'
-import PlayerOptions from './player-options/player-options'
+import PlayerOptions, {defaultPlayerOptions} from './player-options/player-options'
 import StreamPriority from './player-options/items/stream-priority'
 import MediaSource from './player-options/items/media-source'
 import DrmData from './player-options/items/drm-data'
@@ -34,7 +34,7 @@ export function loadPlayer(options?: PlayerOptions) {
   return new Player(options.toJSON());
 }
 
-export {PlayerOptions, MediaSource, StreamPriority, DrmData};
+export {PlayerOptions, defaultPlayerOptions, MediaSource, StreamPriority, DrmData};
 
 // Export the media source adapters necessary utils
 export {registerMediaSourceAdapter, BaseMediaSourceAdapter};
