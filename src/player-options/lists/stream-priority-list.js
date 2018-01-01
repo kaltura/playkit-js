@@ -34,5 +34,5 @@ export default class StreamPriorityList {
 function validate(list: Array<any>): void {
   if (!list) return;
   if (Array.isArray(list)) return;
-  throw new TypeError('Stream priority list should be an array');
+  throw new TypeError('Invalid StreamPriorityList: should be an array');
 }

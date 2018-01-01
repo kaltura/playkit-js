@@ -41,5 +41,5 @@ export default class MediaSourceList {
 function validate(list: Array<any>): void {
   if (!list) return;
   if (Array.isArray(list)) return;
-  throw new TypeError('Stream priority list should be an array');
+  throw new TypeError('Invalid MediaSourceList: should be an array');
 }

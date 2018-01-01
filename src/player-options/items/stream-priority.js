@@ -53,11 +53,11 @@ export default class StreamPriority {
 
 /**
  * Validate user input
- * @param {Array<any>} param - user input
+ * @param {Array<any>} params - user input
  * @returns {void}
  */
 function validate(...params: Array<any>): void {
   if (typeof params[0] === 'string' && typeof params[1] === 'string') return;
   if (typeof params[0] === 'object' && typeof params[0].engine === 'string' && typeof params[0].format === 'string') return;
-  throw new TypeError('Engine and format must be provide and be type of strings');
+  throw new TypeError('Invalid StreamPriority: engine and format must be provided and be strings');
 }

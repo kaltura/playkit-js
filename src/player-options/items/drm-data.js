@@ -66,5 +66,5 @@ export default class DrmData {
 function validate(...params: Array<any>): void {
   if (typeof params[0] === 'string' && typeof params[1] === 'string') return;
   if (typeof params[0] === 'object' && typeof params[0].scheme === 'string' && typeof params[0].licenseUrl === 'string') return;
-  throw new TypeError('Scheme and license url must be provide and be type of strings');
+  throw new TypeError('Invalid DrmData: scheme and licenseUrl must be provided and be strings');
 }
