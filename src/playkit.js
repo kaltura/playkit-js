@@ -16,9 +16,7 @@ import * as Utils from './utils/util'
 import Error from './error/error'
 import FakeEvent from './event/fake-event'
 import PlayerOptions, {defaultPlayerOptions} from './player-options/player-options'
-import StreamPriority from './player-options/items/stream-priority'
-import MediaSource from './player-options/items/media-source'
-import DrmData from './player-options/items/drm-data'
+import type {PlayerOptionsObject} from './player-options/player-options'
 
 Player.runCapabilities();
 
@@ -29,12 +27,20 @@ declare var __NAME__: string;
  * @param {PlayerOptions} options - The player options.
  * @returns {Player} - The player instance
  */
-export function loadPlayer(options?: PlayerOptions) {
-  options = options || new PlayerOptions();
-  return new Player(options.toJSON());
+export function loadPlayer(options?: PlayerOptions | PlayerOptionsObject) {
+  if (options) {
+    if (options instanceof PlayerOptions) {
+      return new Player(options.toJSON())
+    } else {
+      return new Player(new PlayerOptions(options).toJSON());
+    }
+  } else {
+    return new Player();
+  }
 }
 
-export {PlayerOptions, defaultPlayerOptions, MediaSource, StreamPriority, DrmData};
+// Export player options
+export {PlayerOptions};
 
 // Export the media source adapters necessary utils
 export {registerMediaSourceAdapter, BaseMediaSourceAdapter};

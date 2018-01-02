@@ -22,7 +22,7 @@ import TextStyle from './track/text-style'
 import {Cue} from './track/vtt-cue'
 import {processCues} from './track/text-track-display'
 import PlaybackMiddleware from './middleware/playback-middleware'
-import PlayerOptions from './player-options/player-options'
+import {defaultPlayerOptions} from './player-options/player-options'
 import './assets/style.css'
 
 /**
@@ -326,7 +326,7 @@ export default class Player extends FakeEventTarget {
     this._fullscreen = false;
     this._repositionCuesTimeout = false;
     this._firstPlayInCurrentSession = true;
-    this._config = this.defaultConfig;
+    this._config = defaultPlayerOptions;
     this._eventManager = new EventManager();
     this._posterManager = new PosterManager();
     this._stateManager = new StateManager(this);
@@ -1441,7 +1441,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   get defaultConfig(): Object {
-    return new PlayerOptions().toJSON();
+    return defaultPlayerOptions;
   }
 
   // </editor-fold>
