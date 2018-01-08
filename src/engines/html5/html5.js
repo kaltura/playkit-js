@@ -11,6 +11,7 @@ import {Cue} from '../../track/vtt-cue'
 import * as Utils from '../../utils/util'
 import Html5AutoPlayCapability from './capabilities/html5-autoplay'
 import Html5IsSupportedCapability from './capabilities/html5-is-supported'
+import Html5MutedAutoPlayCapability from './capabilities/html5-muted-autoplay'
 import Error from "../../error/error";
 
 /**
@@ -60,7 +61,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    * @static
    */
-  static _capabilities: Array<typeof ICapability> = [Html5AutoPlayCapability, Html5IsSupportedCapability];
+  static _capabilities: Array<typeof ICapability> = [Html5AutoPlayCapability, Html5IsSupportedCapability, Html5MutedAutoPlayCapability];
 
   /**
    * @type {string} - The engine id.
