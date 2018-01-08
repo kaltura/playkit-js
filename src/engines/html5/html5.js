@@ -71,25 +71,25 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Factory method to create an engine.
-   * @param {Source} source - The selected source object.
+   * @param {MediaSourceObject} source - The selected source object.
    * @param {Object} config - The player configuration.
    * @returns {IEngine} - New instance of the run time engine.
    * @public
    * @static
    */
-  static createEngine(source: Source, config: Object): IEngine {
+  static createEngine(source: MediaSourceObject, config: Object): IEngine {
     return new this(source, config);
   }
 
   /**
    * Checks if the engine can play a given source.
-   * @param {Source} source - The source object to check.
+   * @param {MediaSourceObject} source - The source object to check.
    * @param {boolean} preferNative - prefer native flag
    * @returns {boolean} - Whether the engine can play the source.
    * @public
    * @static
    */
-  static canPlaySource(source: Source, preferNative: boolean): boolean {
+  static canPlaySource(source: MediaSourceObject, preferNative: boolean): boolean {
     return MediaSourceProvider.canPlaySource(source, preferNative);
   }
 
@@ -122,10 +122,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * @constructor
-   * @param {Source} source - The selected source object.
+   * @param {MediaSourceObject} source - The selected source object.
    * @param {Object} config - The player configuration.
    */
-  constructor(source: Source, config: Object) {
+  constructor(source: MediaSourceObject, config: Object) {
     super();
     this._eventManager = new EventManager();
     this._createVideoElement();
@@ -134,11 +134,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Restores the engine.
-   * @param {Source} source - The selected source object.
+   * @param {MediaSourceObject} source - The selected source object.
    * @param {Object} config - The player configuration.
    * @returns {void}
    */
-  restore(source: Source, config: Object): void {
+  restore(source: MediaSourceObject, config: Object): void {
     this.detach();
     this._eventManager.removeAll();
     if (this._el) {
@@ -765,12 +765,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Initializes the engine.
-   * @param {Source} source - The selected source object.
+   * @param {MediaSourceObject} source - The selected source object.
    * @param {Object} config - The player configuration.
    * @private
    * @returns {void}
    */
-  _init(source: Source, config: Object): void {
+  _init(source: MediaSourceObject, config: Object): void {
     this._config = config;
     this._canLoadMediaSourceAdapterPromise = (this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve());
     this._mediaSourceAdapter = null;
@@ -791,11 +791,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Loads the appropriate media source extension adapter.
-   * @param {Source} source - The selected source object.
+   * @param {MediaSourceObject} source - The selected source object.
    * @private
    * @returns {void}
    */
-  _loadMediaSourceAdapter(source: Source): void {
+  _loadMediaSourceAdapter(source: MediaSourceObject): void {
     this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter(this.getVideoElement(), source, this._config);
   }
 

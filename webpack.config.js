@@ -18,11 +18,13 @@ if (PROD) {
 
 module.exports = {
   context: __dirname + "/src",
-  entry: {"playkit": "playkit.js"},
+  entry: {
+    "playkit": "playkit.js"
+  },
   output: {
     path: __dirname + "/dist",
     filename: '[name].js',
-    library: 'Playkit',
+    library: ['playkit', 'core'],
     libraryTarget: 'umd',
     umdNamedDefine: true,
     devtoolModuleFilenameTemplate: "./core/[resource-path]",

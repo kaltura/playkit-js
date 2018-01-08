@@ -5,11 +5,11 @@ import TextTrack from '../../src/track/text-track'
 
 declare interface IEngine {
   static id: string;
-  static createEngine(source: Source, config: Object): IEngine;
-  static canPlaySource(source: Source, preferNative: boolean): boolean;
+  static createEngine(source: MediaSourceObject, config: Object): IEngine;
+  static canPlaySource(source: MediaSourceObject, preferNative: boolean): boolean;
   static runCapabilities(): void;
   static getCapabilities(): Promise<Object>;
-  restore(source: Source, config: Object): void;
+  restore(source: MediaSourceObject, config: Object): void;
   destroy(): void;
   attach(): void;
   detach(): void;
