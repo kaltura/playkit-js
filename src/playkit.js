@@ -15,7 +15,7 @@ import Env from './utils/env'
 import * as Utils from './utils/util'
 import Error from './error/error'
 import FakeEvent from './event/fake-event'
-import PlayerOptions, {defaultPlayerOptions} from './player-options/player-options'
+import PlayerOptions from './player-options/player-options'
 import type {PlayerOptionsObject} from './player-options/player-options'
 
 Player.runCapabilities();

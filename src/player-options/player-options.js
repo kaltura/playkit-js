@@ -18,7 +18,7 @@ export type PlayerOptionsObject = {
 };
 
 export const defaultPlayerOptions: PlayerOptionsObject = {
-  logLevel: 'ERROR',
+  logLevel: LogLevel.ERROR.name,
   playback: defaultPlaybackConfigObject,
   sources: defaultSourcesConfigObject,
   metadata: defaultMetadataConfigObject,
