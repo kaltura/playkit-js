@@ -22,7 +22,7 @@ import TextStyle from './track/text-style'
 import {Cue} from './track/vtt-cue'
 import {processCues} from './track/text-track-display'
 import PlaybackMiddleware from './middleware/playback-middleware'
-import DefaultPlayerConfig from './player-config.json'
+import {defaultPlayerOptions} from './player-options/player-options'
 import './assets/style.css'
 
 /**
@@ -324,8 +324,9 @@ export default class Player extends FakeEventTarget {
     this._tracks = [];
     this._firstPlay = true;
     this._fullscreen = false;
+    this._repositionCuesTimeout = false;
     this._firstPlayInCurrentSession = true;
-    this._config = Player._defaultConfig;
+    this._config = defaultPlayerOptions;
     this._eventManager = new EventManager();
     this._posterManager = new PosterManager();
     this._stateManager = new StateManager(this);
@@ -336,7 +337,6 @@ export default class Player extends FakeEventTarget {
     this._createPlayerContainer();
     this._appendPosterEl();
     this.configure(config);
-    this._repositionCuesTimeout = false;
   }
 
   // <editor-fold desc="Public API">
@@ -354,7 +354,7 @@ export default class Player extends FakeEventTarget {
     }
     Utils.Object.mergeDeep(this._config, config);
     this._configureOrLoadPlugins(config.plugins);
-    if (!Utils.Object.isEmptyObject(config.sources)) {
+    if (this._hasSources(config.sources)) {
       const receivedSourcesWhenHasEngine: boolean = !!this._engine;
       if (receivedSourcesWhenHasEngine) {
         this._reset();
@@ -1046,6 +1046,16 @@ export default class Player extends FakeEventTarget {
   // <editor-fold desc="Playback">
 
   /**
+   * Check if sources has been received.
+   * @param {Object} sources - sources config object.
+   * @returns {boolean} - Whether sources has been received to the player.
+   * @private
+   */
+  _hasSources(sources: Object): boolean {
+    return !!(Object.keys(sources).find(format => sources[format].length > 0));
+  }
+
+  /**
    * Creates the player container.
    * @private
    * @returns {void}
@@ -1438,11 +1448,10 @@ export default class Player extends FakeEventTarget {
 
   /**
    * @returns {Object} - The default configuration of the player.
-   * @private
-   * @static
+   * @public
    */
-  static get _defaultConfig(): Object {
-    return Utils.Object.copyDeep(DefaultPlayerConfig);
+  get defaultConfig(): Object {
+    return defaultPlayerOptions;
   }
 
   // </editor-fold>

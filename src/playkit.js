@@ -15,6 +15,8 @@ import Env from './utils/env'
 import * as Utils from './utils/util'
 import Error from './error/error'
 import FakeEvent from './event/fake-event'
+import PlayerOptions from './player-options/player-options'
+import type {PlayerOptionsObject} from './player-options/player-options'
 
 Player.runCapabilities();
 
@@ -22,12 +24,23 @@ declare var __VERSION__: string;
 declare var __NAME__: string;
 
 /**
- * @param {Object} config - The configuration of the player
+ * @param {PlayerOptions} options - The player options.
  * @returns {Player} - The player instance
  */
-export function loadPlayer(config: ?Object) {
-  return new Player(config || {});
+export function loadPlayer(options?: PlayerOptions | PlayerOptionsObject) {
+  if (options) {
+    if (options instanceof PlayerOptions) {
+      return new Player(options.toJSON())
+    } else {
+      return new Player(new PlayerOptions(options).toJSON());
+    }
+  } else {
+    return new Player();
+  }
 }
+
+// Export player options
+export {PlayerOptions};
 
 // Export the media source adapters necessary utils
 export {registerMediaSourceAdapter, BaseMediaSourceAdapter};
