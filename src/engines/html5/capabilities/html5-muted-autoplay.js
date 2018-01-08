@@ -32,7 +32,7 @@ export default class Html5MutedAutoPlayCapability implements ICapability {
   /***
    * Runs the test for muted autoplay capability in older browsers, where play() does not return a promise
    * @static
-   * @returns {void}
+   * @returns {Promise<*>} - return a resolve/reject upon the success of playing
    */
   static _oldBrowsersCapability(): Promise<*> {
     return new Promise((resolve, reject) => {

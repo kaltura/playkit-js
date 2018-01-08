@@ -31,7 +31,7 @@ export default class Html5AutoPlayCapability implements ICapability {
   /***
    * Runs the test for autoplay capability in older browsers, where play() does not return a promise
    * @static
-   * @returns {void}
+   * @returns {Promise<*>} - return a resolve/reject upon the success of playing
    */
   static _oldBrowsersCapability(): Promise<*> {
     return new Promise((resolve, reject) => {
