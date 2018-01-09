@@ -1052,7 +1052,10 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _hasSources(sources: Object): boolean {
-    return !!(Object.keys(sources).find(format => sources[format].length > 0));
+    if (sources) {
+      return !!(Object.keys(sources).find(format => sources[format].length > 0));
+    }
+    return false;
   }
 
   /**
