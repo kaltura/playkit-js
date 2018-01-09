@@ -354,7 +354,7 @@ export default class Player extends FakeEventTarget {
     }
     Utils.Object.mergeDeep(this._config, config);
     this._configureOrLoadPlugins(config.plugins);
-    if (!Utils.Object.isEmptyObject(config.sources)) {
+    if (this._hasSources(config.sources)) {
       const receivedSourcesWhenHasEngine: boolean = !!this._engine;
       if (receivedSourcesWhenHasEngine) {
         this._reset();
@@ -1046,6 +1046,19 @@ export default class Player extends FakeEventTarget {
   // <editor-fold desc="Playback">
 
   /**
+   * Check if sources has been received.
+   * @param {Object} sources - sources config object.
+   * @returns {boolean} - Whether sources has been received to the player.
+   * @private
+   */
+  _hasSources(sources: Object): boolean {
+    if (sources) {
+      return !!(Object.keys(sources).find(format => sources[format].length > 0));
+    }
+    return false;
+  }
+
+  /**
    * Creates the player container.
    * @private
    * @returns {void}
@@ -1170,11 +1183,11 @@ export default class Player extends FakeEventTarget {
   /**
    * Loads the selected engine.
    * @param {IEngine} Engine - The selected engine.
-   * @param {Source} source - The selected source object.
+   * @param {MediaSourceObject} source - The selected source object.
    * @private
    * @returns {void}
    */
-  _loadEngine(Engine: typeof IEngine, source: Source) {
+  _loadEngine(Engine: typeof IEngine, source: MediaSourceObject) {
     if (this._engine) {
       if (this._engine.id === Engine.id) {
         this._engine.restore(source, this._config);
