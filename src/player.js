@@ -1183,11 +1183,11 @@ export default class Player extends FakeEventTarget {
   /**
    * Loads the selected engine.
    * @param {IEngine} Engine - The selected engine.
-   * @param {MediaSourceObject} source - The selected source object.
+   * @param {PKMediaSourceObject} source - The selected source object.
    * @private
    * @returns {void}
    */
-  _loadEngine(Engine: typeof IEngine, source: MediaSourceObject) {
+  _loadEngine(Engine: typeof IEngine, source: PKMediaSourceObject) {
     if (this._engine) {
       if (this._engine.id === Engine.id) {
         this._engine.restore(source, this._config);

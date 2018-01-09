@@ -64,13 +64,13 @@ export default class MediaSourceProvider {
 
   /**
    * Checks if the a media source adapter can play a given source.
-   * @param {MediaSourceObject} source - The source object to check.
+   * @param {PKMediaSourceObject} source - The source object to check.
    *  @param {boolean} [preferNative=true] - prefer native flag
    * @returns {boolean} - Whether a media source adapter can play the source.
    * @public
    * @static
    */
-  static canPlaySource(source: MediaSourceObject, preferNative: boolean = true): boolean {
+  static canPlaySource(source: PKMediaSourceObject, preferNative: boolean = true): boolean {
     MediaSourceProvider._orderMediaSourceAdapters(preferNative);
     let mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
     if (source && source.mimetype) {
@@ -105,12 +105,12 @@ export default class MediaSourceProvider {
    * Get the appropriate media source adapter to the video source.
    * @function getMediaSourceAdapter
    * @param {HTMLVideoElement} videoElement - The video element which requires adapter for a given mimeType.
-   * @param {MediaSourceObject} source - The selected source object.
+   * @param {PKMediaSourceObject} source - The selected source object.
    * @param {Object} config - The player configuration.
    * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists.
    * @static
    */
-  static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: MediaSourceObject, config: Object): ?IMediaSourceAdapter {
+  static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): ?IMediaSourceAdapter {
     if (videoElement && source && config) {
       if (!MediaSourceProvider._selectedAdapter) {
         MediaSourceProvider.canPlaySource(source, true);

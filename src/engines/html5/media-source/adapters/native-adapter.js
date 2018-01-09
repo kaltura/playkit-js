@@ -71,10 +71,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _loadPromise: ?Promise<Object>;
   /**
    * The original progressive sources
-   * @member {Array<MediaSourceObject>} - _progressiveSources
+   * @member {Array<PKMediaSourceObject>} - _progressiveSources
    * @private
    */
-  _progressiveSources: Array<MediaSourceObject>;
+  _progressiveSources: Array<PKMediaSourceObject>;
   /**
    * The player tracks.
    * @member {Array<Track>} - _playerTracks
@@ -122,22 +122,22 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * Factory method to create media source adapter.
    * @function createAdapter
    * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with.
-   * @param {MediaSourceObject} source - The source Object.
+   * @param {PKMediaSourceObject} source - The source Object.
    * @param {Object} config - The player configuration.
    * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter.
    * @static
    */
-  static createAdapter(videoElement: HTMLVideoElement, source: MediaSourceObject, config: Object): IMediaSourceAdapter {
+  static createAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): IMediaSourceAdapter {
     return new this(videoElement, source, config);
   }
 
   /**
    * @constructor
    * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
-   * @param {MediaSourceObject} source - The source object
+   * @param {PKMediaSourceObject} source - The source object
    * @param {Object} config - The player configuration
    */
-  constructor(videoElement: HTMLVideoElement, source: MediaSourceObject, config: Object) {
+  constructor(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object) {
     NativeAdapter._logger.debug('Creating adapter');
     super(videoElement, source);
     this._eventManager = new EventManager();

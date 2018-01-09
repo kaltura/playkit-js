@@ -1,2 +1,2 @@
 // @flow
-declare type PluginsConfigObject = { [plugin: string]: Object };
+declare type PKPluginsConfigObject = { [plugin: string]: Object };

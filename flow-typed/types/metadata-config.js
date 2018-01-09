@@ -1,5 +1,5 @@
 // @flow
-declare type MetadataConfigObject = {
+declare type PKMetadataConfigObject = {
   poster: string,
   description: string
 };

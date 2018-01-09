@@ -1,6 +1,6 @@
 // @flow
-declare type SourcesConfigObject = {
-  hls: Array<MediaSourceObject>,
-  dash: Array<MediaSourceObject>,
-  progressive: Array<MediaSourceObject>
+declare type PKSourcesConfigObject = {
+  hls: Array<PKMediaSourceObject>,
+  dash: Array<PKMediaSourceObject>,
+  progressive: Array<PKMediaSourceObject>
 };

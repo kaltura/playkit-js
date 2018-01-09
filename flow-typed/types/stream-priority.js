@@ -1,5 +1,5 @@
 // @flow
-declare type StreamPriorityObject = {
+declare type PKStreamPriorityObject = {
   engine: string,
   format: string
 };
