@@ -1,8 +1,12 @@
 // @flow
-declare type PlayerOptionsObject = {
-  logLevel: string,
-  playback: PlaybackConfigObject,
-  sources: SourcesConfigObject,
-  metadata: MetadataConfigObject,
-  plugins: PluginsConfigObject
+declare type PKPlayerOptionsObject = {
+  id?: string,
+  type?: string,
+  name?: string,
+  logLevel?: string,
+  playback?: PKPlaybackConfigObject,
+  sources?: PKSourcesConfigObject,
+  metadata?: PKMetadataConfigObject,
+  plugins?: PKPluginsConfigObject,
+  session?: PKSessionConfigObject
 };

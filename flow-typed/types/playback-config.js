@@ -1,5 +1,5 @@
 // @flow
-declare type PlaybackConfigObject = {
+declare type PKPlaybackConfigObject = {
   audioLanguage: string,
   textLanguage: string,
   useNativeTextTrack: boolean,
@@ -9,6 +9,6 @@ declare type PlaybackConfigObject = {
   autoplay: boolean,
   allowMutedAutoPlay: boolean,
   muted: boolean,
-  streamPriority: Array<StreamPriorityObject>,
-  preferNative: PreferNativeConfigObject
+  streamPriority: Array<PKStreamPriorityObject>,
+  preferNative: PKPreferNativeConfigObject
 };

@@ -1,5 +1,5 @@
 // @flow
-declare type PreferNativeConfigObject = {
+declare type PKPreferNativeConfigObject = {
   hls: boolean,
   dash: boolean
 };
