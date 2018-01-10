@@ -276,8 +276,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._progressiveSources = [];
       this._loadPromise = null;
       this._liveEdge = 0;
-      clearInterval(this._liveDurationChangeInterval);
-      this._liveDurationChangeInterval = null;
+      if (this._liveDurationChangeInterval) {
+        clearInterval(this._liveDurationChangeInterval);
+        this._liveDurationChangeInterval = null;
+      }
       if (NativeAdapter._drmProtocol) {
         NativeAdapter._drmProtocol.destroy();
         NativeAdapter._drmProtocol = null;
@@ -773,7 +775,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       const liveEdge = this._getLiveEdge();
       if (this._liveEdge !== liveEdge) {
         this._liveEdge = liveEdge;
-        this._trigger(Html5Events.DURATION_CHANGE);
+        this._trigger(Html5Events.DURATION_CHANGE, {});
       }
     }, 2000);
   }

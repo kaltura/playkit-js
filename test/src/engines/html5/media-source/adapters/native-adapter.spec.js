@@ -224,6 +224,7 @@ describe('NativeAdapter: destroy', function () {
     nativeInstance.load().then(() => {
       nativeInstance._loadPromise.should.be.exist;
       Utils.Object.isEmptyObject(nativeInstance._sourceObj).should.be.false;
+      nativeInstance._liveDurationChangeInterval = 20;
       nativeInstance.destroy().then(() => {
         (!nativeInstance._loadPromise).should.be.true;
         (!nativeInstance._sourceObj).should.be.true;
