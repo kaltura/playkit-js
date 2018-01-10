@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.20.0"></a>
+# [0.20.0](https://github.com/kaltura/playkit-js/compare/v0.19.0...v0.20.0) (2018-01-10)
+
+
+### Bug Fixes
+
+* add HLS_BUFFER_STALLED_ERROR error code ([#171](https://github.com/kaltura/playkit-js/issues/171)) ([596a295](https://github.com/kaltura/playkit-js/commit/596a295))
+* catching failed ready promise ([#172](https://github.com/kaltura/playkit-js/issues/172)) ([213f339](https://github.com/kaltura/playkit-js/commit/213f339))
+* prefix player types ([#177](https://github.com/kaltura/playkit-js/issues/177)) ([b9029c7](https://github.com/kaltura/playkit-js/commit/b9029c7))
+* this._config.plugins.ima check fails if there are no plugins at all ([#173](https://github.com/kaltura/playkit-js/issues/173)) ([c737649](https://github.com/kaltura/playkit-js/commit/c737649))
+
+
+### Features
+
+* add player types & update namespace ([#176](https://github.com/kaltura/playkit-js/issues/176)) ([d24a83e](https://github.com/kaltura/playkit-js/commit/d24a83e))
+
+
+
 <a name="0.19.1"></a>
 ## [0.19.1](https://github.com/kaltura/playkit-js/compare/v0.19.0...v0.19.1) (2017-12-12)
 
