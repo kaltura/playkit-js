@@ -81,6 +81,18 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _playerTracks: Array<Track>;
+  /**
+   * The id of _liveDurationChangeInterval
+   * @member {?number} - _liveDurationChangeInterval
+   * @private
+   */
+  _liveDurationChangeInterval: ?number;
+  /**
+   * The live edge value
+   * @member {number} - _liveEdge
+   * @private
+   */
+  _liveEdge: number;
 
   /**
    * Checks if NativeAdapter can play a given mime type.
@@ -143,6 +155,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     this._eventManager = new EventManager();
     this._maybeSetDrmPlayback();
     this._progressiveSources = config.sources.progressive;
+    this._liveEdge = 0;
   }
 
   /**
@@ -229,6 +242,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._addNativeTextTrackChangeListener();
       NativeAdapter._logger.debug('The source has been loaded successfully');
       resolve({tracks: this._playerTracks});
+      if (this.isLive()) {
+        this._handleLiveDurationChange();
+      }
     };
     if (this._videoElement.textTracks.length > 0) {
       parseTracksAndResolve();
@@ -259,6 +275,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._eventManager.destroy();
       this._progressiveSources = [];
       this._loadPromise = null;
+      this._liveEdge = 0;
+      if (this._liveDurationChangeInterval) {
+        clearInterval(this._liveDurationChangeInterval);
+        this._liveDurationChangeInterval = null;
+      }
       if (NativeAdapter._drmProtocol) {
         NativeAdapter._drmProtocol.destroy();
         NativeAdapter._drmProtocol = null;
@@ -741,6 +762,22 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   isLive(): boolean {
     return this._videoElement.duration === Infinity;
+  }
+
+  /**
+   * Handling live duration change (as safari doesn't trigger durationchange event on live playback)
+   * @function _handleLiveDurationChange
+   * @returns {void}
+   * @private
+   */
+  _handleLiveDurationChange(): void {
+    this._liveDurationChangeInterval = setInterval(() => {
+      const liveEdge = this._getLiveEdge();
+      if (this._liveEdge !== liveEdge) {
+        this._liveEdge = liveEdge;
+        this._trigger(Html5Events.DURATION_CHANGE, {});
+      }
+    }, 2000);
   }
 
   /**
