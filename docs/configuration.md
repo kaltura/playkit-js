@@ -8,7 +8,7 @@ var player = playkit.core.loadPlayer(config);
 ```
 
 #### Configuration Structure
-```json
+```js
 {
   logLevel: string,
   type: string,
@@ -86,7 +86,7 @@ var config = {
 ## 
 >### config.sources
 >##### Type: `PKSourcesConfig`
->```json
+>```js
 >{
 >  dash: Array<PKMediaSourceObject>
 >  hls: Array<PKMediaSourceObject>
@@ -94,7 +94,7 @@ var config = {
 >}
 >```
 >>##### Type `PKMediaSourceObject`
->>```json
+>>```js
 >>{
 >>  mimetype: string,
 >>  url: string,
@@ -106,7 +106,7 @@ var config = {
 >>}
 >>```
 >>##### Type `PKDrmDataObject`
->>```json
+>>```js
 >>{
 >>  licenseUrl: string,
 >>  scheme: string,
@@ -114,7 +114,7 @@ var config = {
 >>}
 >>```
 >##### Default:
->```json
+>```js
 >{
 >  hls: [],
 >  dash: [],
@@ -167,14 +167,14 @@ var config = {
 ## 
 >### config.metadata
 >##### Type: `PKMetadataConfigObject`
->```json
+>```js
 >{
 >    poster: string,
 >    description: string
 >}
 >```
 >##### Default: 
->```json
+>```js
 >{
 >    poster: "",
 >    description: ""
@@ -195,7 +195,7 @@ var config = {
 ## 
 >### config.playback
 >##### Type: `PKPlaybackConfig`
->```json
+>```js
 >{
 >  audioLanguage: string,
 >  textLanguage: string,
@@ -212,7 +212,7 @@ var config = {
 >}
 >```
 >##### Default: 
->```json
+>```js
 >{
 >  audioLanguage: "",
 >  textLanguage: "",
@@ -336,7 +336,7 @@ var config = {
 >##
 >>### config.playback.options
 >>##### Type: `PKPlaybackOptionsObject`
->>```json
+>>```js
 >>{
 >>  html5: {
 >>    hls: Object,
@@ -345,7 +345,7 @@ var config = {
 >>}
 >>```
 >>##### Default: 
->>```json
+>>```js
 >>{
 >>  html5: {
 >>    hls: {},
@@ -359,14 +359,14 @@ var config = {
 >## 
 >>### config.playback.preferNative
 >>##### Type: `PKPreferNativeConfig`
->>```json
+>>```js
 >>{
 >>  hls: boolean,
 >>  dash: boolean
 >>}
 >>```
 >>##### Default: 
->>```json
+>>```js
 >>{
 >>  hls: false,
 >>  dash: false
@@ -378,11 +378,11 @@ var config = {
 >>Lets assume the following configuration:
 >>```js
 >>var config = {
->>	playback: {
->>		preferNative:  {
->>			hls: true
->>		}
->>	}
+>>  playback: {
+>>    preferNative:  {
+>>      hls: true
+>>    }
+>>  }
 >>};
 >>```
 >> In case we're running in _Safari_ browser, the player will play native hls playback managed by the _Safari_ browser. But in case we're running in browser which hls playback is not supported natively, _Chrome_ for instance, the player will play hls using the `hls.js` library.
@@ -390,14 +390,14 @@ var config = {
 >>### config.playback.streamPriority
 >>##### Type: `Array<PKStreamPriorityObject`
 >>>##### Type `PKStreamPriorityObject`
->>>```json
+>>>```js
 >>>{
 >>>   engine: string,
 >>>   format: string
 >>>}
 >>>```
 >>##### Default: 
->>```json
+>>```js
 >>[
 >>   {
 >>     engine: "html5",
