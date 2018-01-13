@@ -15,7 +15,7 @@ var config = {
   sources: {...}
 };
 // No additional code required - playback will begin automatically
-var player = Playkit.loadPlayer(config);
+var player = playkit.core.loadPlayer(config);
 ```
 
 >**_Note_**:
@@ -24,7 +24,7 @@ var player = Playkit.loadPlayer(config);
 >var config = {
 >  sources: {...}
 >};
->var player = Playkit.loadPlayer(config);
+>var player = playkit.core.loadPlayer(config);
 >// Bad practice!
 >player.play(); 
 >```
@@ -60,7 +60,7 @@ var config = {
   sources: {...}
 };
 // If browser blocks autoplay, playback will start muted
-var player = Playkit.loadPlayer(config);
+var player = playkit.core.loadPlayer(config);
 ```
 
 #### Example - Basic usage 2:
@@ -73,5 +73,5 @@ var config = {
   sources: {...}
 };
 // If browser blocks autoplay, playback will not start automatically
-var player = Playkit.loadPlayer(config);
+var player = playkit.core.loadPlayer(config);
 ```
