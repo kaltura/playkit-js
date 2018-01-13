@@ -56,6 +56,9 @@ player.play();
 </script>
 ```
 
+## Documentation: API and Configuration
+PlayKit JS can be configured and controlled easily, click [here](docs/api.md) for details.
+ 
 ## Running the tests
 
 Tests can be run locally via [Karma], which will run on Chrome, Firefox and Safari

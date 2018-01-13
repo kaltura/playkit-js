@@ -1,8 +1,15 @@
 {
-  "sources": {},
+  "logLevel": "ERROR",
+  "type": "Unknown",
+  "sources": {
+    "hls": [],
+    "dash": [],
+    "progressive": []
+  },
   "plugins": {},
   "metadata": {
-    "poster": ""
+    "poster": "",
+    "description": ""
   },
   "playback": {
     "audioLanguage": "",
