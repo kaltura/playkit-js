@@ -1,7 +1,7 @@
 
 Documentation: API and Configuration
 ==================
-###Table of Contents
+## Table of Contents
 - [Configuration](configuration.md)
   - [Configuration Structure](configuration.md#configuration-structure)
   - [Default Configuration Values](configuration.md#default-configuration-values)
