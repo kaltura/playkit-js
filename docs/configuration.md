@@ -417,7 +417,7 @@ var config = {
 >>As soon as the player receives his sources, he will go over this array, and will try to play a source with a matched stream format from a matched engine. 
 >>For example, for the above priority configuration, the player will try to play hls stream using an html5 engine first. If an hls stream isn't received, he will continue to play dash stream using an html5 engine. If a dash stream isn't received, he will continue to play progressive stream using an html5 engine.
 
-### The connection between `sources`, `preferNative` & `streamPriority`
+### Workflow between `sources`, `preferNative` & `streamPriority`
 After we have gained knowledge of the different options available in the player configuration, let's see the results for what format will be played for the following configuration of the player:
 ```js
 var config = {
