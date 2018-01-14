@@ -75,13 +75,13 @@ var config = {
 >### config.logLevel
 >##### Type: `string`
 >##### Default: `"ERROR"`
->##### Description: Defined the player log level.
+>##### Description: Defines the player log level.
 >Possible values: `"DEBUG", "INFO", "TIME", "WARN", "ERROR", "OFF"`
 ## 
 >### config.type
 >##### Type: `string`
 >##### Default: `"Unknown"`
->##### Description: Defined the media type.
+>##### Description: Defines the type of media being used.
 >Possible values: `"Vod", "Live", "Image", "Audio", "Unknown"`
 ## 
 >### config.sources
@@ -121,8 +121,8 @@ var config = {
 >  progressive: []
 >}
 >```
->##### Description: Defined the optional sources for playback.
->Should map media source extension type to its array of sources.
+>##### Description: Defines the optional sources for playback.
+>The optional sources for playback should map the media source extension type to its array of sources.
 >#### Example:
 >```js
 >var config = {
@@ -153,8 +153,8 @@ var config = {
 >##### Type: `PKPluginsObject`
 > `{ [plugin: string]: Object }`
 >##### Default: `{}`
->##### Description: Defined the active plugins.
->Should map plugin name to its config object.
+>##### Description: Defines the active plugins.
+>This should map the plugin to its config object.
 >#### Example:
 >```js
 >var config = {
@@ -180,8 +180,8 @@ var config = {
 >    description: ""
 >}
 >```
->##### Description: Defined the media metadata.
->The poster field referring  to the poster url which the player will display before playback starts.
+>##### Description: Defines the media metadata.
+>The poster field refers to the poster URL, which the player displays before playback begins.
 >#### Example:
 >```js
 >var config = {
@@ -191,7 +191,7 @@ var config = {
 >    }
 >};
 >```
->***Notice**: This object can include more custom fields which you can use depending on your needs*
+>Note: This object can include additional custom fields, which you can implement depending on your player needs.
 ## 
 >### config.playback
 >##### Type: `PKPlaybackConfig`
@@ -249,12 +249,12 @@ var config = {
 >  ]
 >}
 >```
->##### Description: Defined the playback options.
+>##### Description: Defines the playback options.
 >>### config.playback.audioLanguage
 >>##### Type: `string`
 >>##### Default: `""`
->>##### Description: Defined default audio track language.
->>If audio track with the defined language is exists, this audio track will be selected as the initial audio track.
+>>##### Description: Sets the default audio track language. 
+>>If an audio track with the defined language exists, this audio track will be selected as the initial audio track.
 >> #### Example:
 >>```js
 >>var config = {
@@ -267,8 +267,8 @@ var config = {
 >>### config.playback.textLanguage
 >>##### Type: `string || "auto"`
 >>##### Default: `""`
->>##### Description: Defined default captions language.
->>If captions with the defined language is exists, this text track will be selected as the initial text track.
+>>##### Description: Defines the default captions language
+>>If captions for the defined language are available, this text track will be selected as the initial text track.
 >> #### Example:
 >>```js
 >>var config = {
@@ -285,7 +285,7 @@ var config = {
 >>    }
 >>};
 >>```
->> The player will choose default captions language by the following logic:
+>> The player will choose the default captions language using the following logic:
 >> 1. **Locale language** - If there are captions in the user's system language then this language will be selected.
 >> 2. **Manifest default language** - If a default language is specified in the manifest file then this language will be selected.
 >> 3. **First language in manifest** - The first language specified in the manifest file will be selected.
@@ -294,14 +294,14 @@ var config = {
 >>### config.playback.useNativeTextTrack
 >>##### Type: `boolean`
 >>##### Default: `false`
->>##### Description: Whether to use native browser text tracks.
->>If sets to true, native browser captions will be displayed. 
+>>##### Description: Determines whether to use native browser text tracks or not.
+>> If set to True, the native browser captions will be displayed. 
 >## 
 >>### config.playback.volume
 >>##### Type: `number`
 >>##### Default: `1`
->>##### Description: Defined the initial volume value.
->>Value must be in the range of 0-1.
+>>##### Description: Defines the initial volume value. 
+>>The value must be in the range of 0-1.
 >> #### Example:
 >>```js
 >>var config = {
@@ -314,8 +314,8 @@ var config = {
 >>### config.playback.playsinline
 >>##### Type: `boolean`
 >>##### Default: `true`
->>##### Description: A Boolean attribute which indicates that the video is to be played "inline", that is within the element's playback area.
->>Especially relevant for playing on iPhone devices, where if the value is set to false, the video will be played using the AV Player (iOS native video player).
+>>##### Description: Description: A Boolean attribute that indicates whether the video should be played "inline", that is, within the element's playback area.
+>>This is especially relevant when playing videos on iPhone devices, where - if the value is set to false - the video will be played using the AV Player (iOS native video player).
 >## 
 >>### config.playback.preload
 >>##### Type: `string`
@@ -332,7 +332,7 @@ var config = {
 >>##### Type: `boolean`
 >>##### Default: `false`
 >>##### Description: Indicates whether the video should be muted or not.
->>A Boolean attribute which indicates the default setting of the audio contained in the video. If set, the audio will be initially silenced. Its default value is false, meaning that the audio will be played when the video is played.
+>>This is a Boolean attribute that indicates the default setting of the audio contained in the video. If set, the audio will be initially silenced. The attribute's default value is false, which means that the audio will be played automatically when the video is played.
 >##
 >>### config.playback.options
 >>##### Type: `PKPlaybackOptionsObject`
@@ -353,9 +353,9 @@ var config = {
 >>  }
 >>}
 >>```
->>##### Description: Defined the media source adapters configurations.
->>For `hls` configuration, see [hls.js](https://github.com/video-dev/hls.js/blob/master/doc/API.md#fine-tuning) documentation.
->For `dash` configuration, see [shaka-player](https://shaka-player-demo.appspot.com/docs/api/tutorial-config.html) documentation.
+>>##### Description: Defines the media source adapters configurations.
+>>* For `hls` configuration, see the [hls.js](https://github.com/video-dev/hls.js/blob/master/doc/API.md#fine-tuning) documentation.
+>>* For `dash` configuration, see the [shaka-player](https://shaka-player-demo.appspot.com/docs/api/tutorial-config.html) documentation.
 >## 
 >>### config.playback.preferNative
 >>##### Type: `PKPreferNativeConfig`
@@ -372,8 +372,8 @@ var config = {
 >>  dash: false
 >>}
 >>```
->>##### Description: Whether to prefer native browser playback (if supported) with media source extensions.
->>If one of the values sets to true and the player chooses to play the truthly media source extension, the player will try to play it natively if supported by the browser. 
+>>##### Description: Indicates whether to prefer native browser playback (if supported) with media source extensions.
+>>If one of the values is set to True and the player chooses to play the truthly media source extension, the player will try to play it natively if supported by the browser. 
 >> #### Example:
 >>Lets assume the following configuration:
 >>```js
@@ -385,7 +385,7 @@ var config = {
 >>  }
 >>};
 >>```
->> In case we're running in _Safari_ browser, the player will play native hls playback managed by the _Safari_ browser. But in case we're running in browser which hls playback is not supported natively, _Chrome_ for instance, the player will play hls using the `hls.js` library.
+>> If the player is running on a _Safari_ browser, the player will use the native hls playback managed by the _Safari_ browser. However, if running on a browser in which hls playback is not supported natively, for example, _Chrome_, the player will play hls using the `hls.js` library.
 >## 
 >>### config.playback.streamPriority
 >>##### Type: `Array<PKStreamPriorityObject`
@@ -413,12 +413,12 @@ var config = {
 >>    }
 >>]
 >>```
->>##### Description: Specifies the {engine, stream format} tuple priority of the player by ascending order.
->>As soon as the player receives his sources, he will go over this array, and will try to play a source with a matched stream format from a matched engine. 
->>For example, for the above priority configuration, the player will try to play hls stream using an html5 engine first. If an hls stream isn't received, he will continue to play dash stream using an html5 engine. If a dash stream isn't received, he will continue to play progressive stream using an html5 engine.
+>>##### Description: Specifies the list of engine and stream format pairs of the player by ascending order.
+>>As soon as the player receives the sources, it will review the configuration array and try to play the source with the matched stream format according to the matched engine. 
+>>For example, in the priority configuration above, the player will try to play the hls stream using an html5 engine first. If an hls stream isn't received, the player will continue to play the dash stream using an html5 engine. If a dash stream isn't received, the player will then will continue to play the progressive stream using an html5 engine.
 
 ### Workflow between `sources`, `preferNative` & `streamPriority`
-After we have gained knowledge of the different options available in the player configuration, let's see the results for what format will be played for the following configuration of the player:
+Now that we've learned about the different options available in the player configuration, let's see the results for which format will be played for the following configuration of the player:
 ```js
 var config = {
     sources: {
@@ -448,9 +448,9 @@ var config = {
 };
 ```
 
-First, the player looks on the `streamPriority` array and see that *dash* stream is top priority. Second, he will check if he got any *dash* sources within the `sources` config object. Because no *dash* sources found there, the player will move to the next priority from the `streamPriority` array - *hls*. After checking again the sources config object, the player will choose to play *hls*. But is he play native *hls* or not? this depends on the `preferNative` value for *hls*. Because it sets to `true`, the player knows that if the browser supports native *hls* playback, it will be played natively.
+First, the player looks at the `streamPriority` array and see that the *dash* stream is top priority. Next, the player will will check whether it received any *dash* sources within the `sources` config object. Because there are no *dash* sources available, the player will move to the next priority from the `streamPriority` array, i.e., *hls*. After checking the sources config object again, the player will choose to play *hls*. However, will the player use the native *hls* or not? This depends on the `preferNative` value for *hls*. Because this value is set to `true`, the player knows that if the browser supports native *hls* playback, the source will be played natively.
 
-So what will be played in each browser?
+Given the configuration information above, which source will be played in each browser?
 
 | Chrome | Safari | Firefox | Edge|
 |----------------- | ----------------- | ------ |-----

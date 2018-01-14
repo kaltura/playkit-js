@@ -1,4 +1,3 @@
-
 Documentation: API and Configuration
 ==================
 ## Table of Contents
@@ -11,9 +10,3 @@ Documentation: API and Configuration
   - [config.plugins](configuration.md#config.plugins)
   - [config.metadata](configuration.md#config.metadata)
   - [config.playback](configuration.md#config.playback)
-- [Playback]()
-- [Tracks]()
-- [Live]()
-- [Ads]()
-- [Full Screen]()
-- [Logger]()
