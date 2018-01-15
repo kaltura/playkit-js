@@ -1,88 +1,47 @@
 # Player Events
-A player event is a string within the player that represents an event.
+The player event system uses an event target like API to register, unregister and dispatch events.
 
 ## Overview
 
-Player events consist of two event types:
+The player events are consisted of two event types:
 
- 1. HTML5 events - various events sent by the browser when handling media embedded using the `<video>` element.
- 2. Kaltura player custom events - special events that indicate changes in the state of the player, which do not exist in the html5 video event list and are related to the integral behavior of the player, such as ads, fullscreen and subtitles events.
+ 1. HTML5 events - various events sent by the browser when handling media embedded using the `<video>` element. The player runs on top of HTML video element, which may trigger the events. A reference to those events can be found [here](https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events).
+
+ 2. Player custom events - special events indicating changes in the state of the player that does not exist in the html5 video event list and are related to the integral behavior of the player. Such as ads, fullscreen and subtitles events.
 
 Only DOM elements may be true EventTargets. Inside the player, we use fake events targets (fake-event-target.js), and fake events (fake-event) in order to dispatch events not from a DOM element.
 
-## Importing the Events List
+## Registering to player events
 
- ```javascript
- import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from 'path/to/../event/events'
+You can listen to the player events by adding an event listener to the player object.
+
+```javascript
+player.addEventListener(player.Event.PLAYER_STATE_CHANGED, e => {
+    const payload = e.payload;
+	// do something with the payload
+    })
 ```
 
+## Dispatching player events
 
+In order to dispatch events everywhere on the player we created fake-event.js and fake-event-target.js. These classes were created to provide support dispatching from non-DOM classes.
 
-## HTML5 Events List
-| Event Name | Event String | Description |
-|--|--|--|
-| ABORT | abort | Fires when the loading of an audio/video is aborted
-| CAN_PLAY | canplay | Fires when the browser can start playing the audio/video
-|CAN_PLAY_THROUGH | canplaythrough | Fires when the browser can play through the audio/video without stopping for buffering|
-|DURATION_CHANGE | durationchange| Fires when the duration of the audio/video is changed|
-| EMPTIED|emptied | Fires when the current playlist is empty|
-|ENDED | ended| Fires when the current playlist is ended|
-| ERROR| error| Fires when an error occurred during the loading of an audio/video|
-| LOADED_DATA| loadeddata | Fires when the browser has loaded the current frame of the audio/video
-|  LOADED_METADATA| loadedmetadata |Fires when the browser has loaded meta data for the audio/video
-|  LOAD_START| loadstart|Fires when the browser starts looking for the audio/video
-|  PAUSE| pause |Fires when the audio/video has been paused
-|PLAY  | play |Fires when the audio/video has been started or is no longer paused
-|  PLAYING| playing |Fires when the audio/video is playing after having been paused or stopped for buffering
-| PROGRESS | progress|Fires when the browser is downloading the audio/video
-| RATE_CHANGE | ratechange |Fires when the playing speed of the audio/video is changed
-| SEEKED | seeked |Fires when the user has finished moving/skipping to a new position in the audio/video
-|  SEEKING| seeking |Fires when the user starts moving/skipping to a new position in the audio/video
-| STALLED | stalled |Fires when the browser is trying to get media data, but data is not available
-| SUSPEND |  suspend| Fires when the browser is intentionally not getting media data
-| TIME_UPDATE| timeupdate |Fires when the current playback position has changed
-| VOLUME_CHANGE | volumechange |Fires when the volume has been changed
-| WAITING |  waiting| Fires when the video stops because it needs to buffer the next frame
+```javascript
+class YourClass extends FakeEventTarget{
+	someFunction(): void{
+		const data = {};
+		this.dispatchEvent(new FakeEvent(CustomEvents.AUTOPLAY_FAILED, data))
+	}
+}
+```
 
-## Custom Events List
-|  Event Name| Event String | Description |
-|--|--|--|
-| ENTER_FULLSCREEN | enterfullscreen| Fires when the player enters fullscreen |
-| EXIT_FULLSCREEN | exitfullscreen | Fires when the player exits fullscreen |
-| REQUESTED_ENTER_FULLSCREEN | requestedenterfullscreen | Fires when the player received a request to enter fullscreen |
-| REQUESTED_EXIT_FULLSCREEN |  requestedexitfullscreen|Fires when the player received a request to exit fullscreen  |
-| AUTOPLAY_FAILED | autoplayfailed | Fires when browser fails to autoplay with sound |
-| FALLBACK_TO_MUTED_AUTOPLAY | fallbacktomutedautoplay | Fires when browser fails to autoplay with sound but start muted autoplay instead |
-| CHANGE_SOURCE_STARTED | changesourcestarted | Fires when change source flow started (change media flow) |
-| CHANGE_SOURCE_ENDED |  changesourceended| Fires when change source flow ended (change media flow)  |
-| MUTE_CHANGE | mutechange | Fires when the volume has been muted/unmute |
-| VIDEO_TRACK_CHANGED | videotrackchanged | Fires when the active video track has been changed |
-| AUDIO_TRACK_CHANGED | audiotrackchanged | Fires when the active audio track has been changed |
-| TEXT_TRACK_CHANGED | texttrackchanged | Fires when the active text track has been changed |
-| TEXT_CUE_CHANGED | textcuechanged |Fires when the active text track cue has changed  |
-| TRACKS_CHANGED | trackschanged | Fires when the player tracks have been changed |
-| ABR_MODE_CHANGED | abrmodechanged | Fires when the abr mode changes from 'auto' to 'manual' or vice versa|
-| ABR_MODE_CHANGED | abrmodechanged | Fires when the abr mode changes from 'auto' to 'manual' or vice versa |
-| PLAYER_STATE_CHANGED | playerstatechanged | Fires when the player state has been changed |
-|FIRST_PLAY  |  firstplay| Fires when the asset is first played. |
-| SOURCE_SELECTED | sourceselected | Fires when the player has selected the source to play |
-| TEXT_STYLE_CHANGED | textstylechanged | Fires when the text track style has changed |
-| AD_LOADED | adloaded | Fires when ad data is available. |
-| AD_STARTED | adstarted |  Fires when the ad starts playing|
-|  AD_RESUMED| adresumed | Fires when the ad is resumed |
-|  AD_PAUSED| adpaused | Fires when the ad is paused |
-| AD_CLICKED | adclicked |  Fires when the ad is clicked|
-| AD_SKIPPED | adskipped | Fires when the ad is skipped by the user |
-| AD_COMPLETED | adcompleted | Fires when the ad completes playing |
-| AD_ERROR | aderror | Fires when an error occurred while the ad was loading or playing |
-| ALL_ADS_COMPLETED | alladscompleted | Fires when the ads manager is done playing all the ads |
-| AD_BREAK_START | adbreakstart | Fires when content should be paused. This usually occurs right before an ad is about to cover the content |
-| AD_BREAK_END | adbreakend | Fires when content should be resumed. This usually occurs when an ad finishes or collapses |
-| AD_FIRST_QUARTILE | adfirstquartile | Fires when the ad playhead crosses the first quartile |
-| AD_MIDPOINT | admidpoint | Fires when the ad playhead crosses the midpoint |
-| AD_THIRD_QUARTILE | adthirdquartile | Fires when the ad playhead crosses the third quartile |
-| USER_CLOSED_AD | userclosedad | Fires when the ad is closed by the user |
-| AD_VOLUME_CHANGED | advolumechanged | Fires when the ad volume has changed |
-| AD_MUTED | admuted | Fires when the ad volume has been muted |
-| AD_PROGRESS | adprogress | Fires on ad time progress |
+## Player ready
+The player ready promise indicated the player has done loading the media and can start play. The promise is resolved when the 'TRACKS_CHANGED' event is dispatched.
+A basic usage would be:
 
+```javascript
+player.ready().then(() => player.pause());
+```
+
+## Events list
+The full events list can be found here.
