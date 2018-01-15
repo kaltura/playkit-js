@@ -8,6 +8,8 @@ The player events are consisted of two event types:
  1. HTML5 events - various events sent by the browser when handling media embedded using the `<video>` element.
  2. Kaltura player custom events - special events indicating changes in the state of the player that does not exist in the html5 video event list and are related to the integral behavior of the player. Such as ads, fullscreen and subtitles events.
 
+Only DOM elements may be true EventTargets. Inside the player, we use fake events targets (fake-event-target.js), and fake events (fake-event) in order to dispatch events not from a DOM element.
+
 ## Importing the event list
 
  ```javascript
