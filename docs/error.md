@@ -46,7 +46,6 @@ new Error(Error.Severity.CRITICAL,
 ## **Error string**
 
 The player will log an error string to the console if the log level of the player is set to 'DEBUG'.
-This can be done by adding the debug to the player configuration:
 
 The error log would look:
 [Error] Player error NETWORK.HTTP_ERROR 'url':'www.some-bad-url.com'
