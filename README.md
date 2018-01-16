@@ -57,7 +57,7 @@ player.play();
 ```
 
 ## Documentation: API and Configuration
-The PlayKit JS player can be configured and controlled easily using the Player API, click [here](docs/api.md) to learn more.
+The player can be configured and controlled easily using the Player API, click [here](docs/api.md) to learn more.
  
 ## Running the Tests
 
