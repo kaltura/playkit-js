@@ -1,3 +1,4 @@
+
 # Error
 
 An object representing an error that can be triggered / thrown.
@@ -24,29 +25,33 @@ Each category has a number of codes that describe the problem more specifically.
 Creating an error object:
 
 ```javascript
-
 new Error(Error.Severity.CRITICAL,
-		    Error.Category.NETWORK,
-		    Error.Code.HTTP_ERROR,
-		     {'url': 'www.some-bad-url.com'})
+    Error.Category.NETWORK,
+    Error.Code.HTTP_ERROR,
+    {'url': 'www.some-bad-url.com'})
 ```
 
 
 ## Registering to an error event
 ```javascript
- player.addEventListener(player.Event.ERROR, e => {
-	 const error = e.payload;
-	 const severity = error.severity;
-	 const category = error.category;
-	 const code = error.code;
-	 const moreInfo = error.data;
- })
+player.addEventListener(player.Event.ERROR, e => {
+ const error = e.payload;
+ console.error(
+	 error.severity,
+   	 error.category,
+   	 error.code,
+   	 error.data);
+})
 ```
 
-## **Error string**
+## **Using Debug Mode**
 
-The player will log an error string to the console if the log level of the player is set to 'DEBUG'.
+To debug the player and view explicit error messages in the console, you'll need to use debug mode.
 
-The error log would look:
+In order to run the player in debug mode, add '?debugKalturaPlayer' to the URI. More information about debugging and troubleshooting of the player can be found [here](here).
+
+An example to an error message:
 [Error] Player error NETWORK.HTTP_ERROR 'url':'www.some-bad-url.com'
+
+
 
