@@ -22,11 +22,12 @@ declare var __VERSION__: string;
 declare var __NAME__: string;
 
 /**
- * @param {Object} config - The configuration of the player
- * @returns {Player} - The player instance
+ * @description Factory method to create a player instance.
+ * @param {PKPlayerOptionsObject} [config={}] - The configuration of the player
+ * @returns {Player} - The player instance.
  */
-export function loadPlayer(config: ?Object) {
-  return new Player(config || {});
+export function loadPlayer(config?: PKPlayerOptionsObject = {}) {
+  return new Player(config);
 }
 
 // Export the media source adapters necessary utils
