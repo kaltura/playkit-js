@@ -29,6 +29,7 @@ import './assets/style.css'
  * The player playback rates.
  * @type {Array<number>}
  * @const
+ * @private
  */
 const PLAYBACK_RATES = [0.5, 1, 2, 4];
 
@@ -36,6 +37,7 @@ const PLAYBACK_RATES = [0.5, 1, 2, 4];
  * The player default playback rate.
  * @type {number}
  * @const
+ * @private
  */
 const DEFAULT_PLAYBACK_RATE = 1;
 
@@ -43,6 +45,7 @@ const DEFAULT_PLAYBACK_RATE = 1;
  * The player container class name.
  * @type {string}
  * @const
+ * @private
  */
 const CONTAINER_CLASS_NAME: string = 'playkit-container';
 
@@ -51,6 +54,7 @@ const CONTAINER_CLASS_NAME: string = 'playkit-container';
  * The player poster class name.
  * @type {string}
  * @const
+ * @private
  */
 const POSTER_CLASS_NAME: string = 'playkit-poster';
 
@@ -58,6 +62,7 @@ const POSTER_CLASS_NAME: string = 'playkit-poster';
  * The engine class name.
  * @type {string}
  * @const
+ * @private
  */
 const ENGINE_CLASS_NAME: string = 'playkit-engine';
 
@@ -65,6 +70,7 @@ const ENGINE_CLASS_NAME: string = 'playkit-engine';
  * The text style id.
  * @type {string}
  * @const
+ * @private
  */
 const SUBTITLES_STYLE_ID_NAME: string = 'playkit-subtitles-style';
 
@@ -72,6 +78,7 @@ const SUBTITLES_STYLE_ID_NAME: string = 'playkit-subtitles-style';
  * The subtitles class name.
  * @type {string}
  * @const
+ * @private
  */
 const SUBTITLES_CLASS_NAME: string = 'playkit-subtitles';
 
@@ -79,6 +86,7 @@ const SUBTITLES_CLASS_NAME: string = 'playkit-subtitles';
  * The live string.
  * @type {string}
  * @const
+ * @private
  */
 const LIVE: string = 'Live';
 
@@ -86,6 +94,7 @@ const LIVE: string = 'Live';
  *  The auto string, for captions
  *  @type {string}
  *  @const
+ * @private
  */
 const AUTO: string = 'auto';
 
@@ -93,6 +102,7 @@ const AUTO: string = 'auto';
  *  The off string, for captions
  *  @type {string}
  *  @const
+ * @private
  */
 const OFF: string = 'off';
 
@@ -100,6 +110,7 @@ const OFF: string = 'off';
  *  The duration offset, for seeking to duration safety.
  *  @type {number}
  *  @const
+ * @private
  */
 const DURATION_OFFSET: number = 0.1;
 
@@ -107,12 +118,14 @@ const DURATION_OFFSET: number = 0.1;
  * The toggle fullscreen rendering timeout value
  * @type {number}
  * @const
+ * @private
  */
 const REPOSITION_CUES_TIMEOUT: number = 1000;
 
 /**
- * The HTML5 player class.
- * @classdesc
+ * @class Player
+ * @extends {FakeEventTarget}
+ * @param {PKPlayerOptionsObject} [config={}] - The configuration for the player instance.
  */
 export default class Player extends FakeEventTarget {
   /**
@@ -138,10 +151,11 @@ export default class Player extends FakeEventTarget {
   static _playerCapabilities: Object;
 
   /**
-   * Runs the engines capabilities tests.
+   * Runs the player capabilities tests.
    * @returns {void}
    * @public
    * @static
+   * @memberof Player
    */
   static runCapabilities(): void {
     Player._logger.debug("Running player capabilities");
@@ -149,13 +163,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Gets the engines capabilities.
-   * @param {?string} engineType - The engine type.
-   * @return {Promise<Object>} - The engines capabilities object.
+   * Gets the player capabilities.
+   * @param {string} [engineType] - The engine type.
+   * @return {Promise<Object>} - The player capabilities object.
    * @public
    * @static
+   * @memberof Player
    */
-  static getCapabilities(engineType: ?string): Promise<Object> {
+  static getCapabilities(engineType?: string): Promise<Object> {
     Player._logger.debug("Get player capabilities", engineType);
     if (Player._playerCapabilities) {
       return (engineType ? Promise.resolve(Player._playerCapabilities[engineType]) : Promise.resolve(Player._playerCapabilities));
@@ -314,11 +329,7 @@ export default class Player extends FakeEventTarget {
    */
   _repositionCuesTimeout: any;
 
-  /**
-   * @param {Object} config - The configuration for the player instance.
-   * @constructor
-   */
-  constructor(config: Object = {}) {
+  constructor(config?: PKPlayerOptionsObject = {}) {
     super();
     this._env = Env;
     this._tracks = [];
@@ -344,11 +355,20 @@ export default class Player extends FakeEventTarget {
   // <editor-fold desc="Playback API">
 
   /**
-   * Configures the player according to a given configuration.
-   * @param {Object} config - The configuration for the player instance.
+   * @description Configures the player with a new full or partial configuration.
+   * @param {PKPlayerOptionsObject} config - The new full or partial player configuration.
+   * @instance
+   * @public
    * @returns {void}
+   * @memberof Player
+   * @example
+   * player.configure({
+   *  playback: {
+   *      autoplay: true
+   *    };
+   * };
    */
-  configure(config: Object): void {
+  configure(config: PKPlayerOptionsObject): void {
     if (config.logLevel && LogLevel[config.logLevel]) {
       setLogLevel(LogLevel[config.logLevel]);
     }
@@ -376,18 +396,28 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * The player readiness
+   * @description The player readiness.
    * @public
-   * @returns {Promise<*>} - The ready promise
+   * @instance
+   * @returns {Promise} - The ready promise
+   * @memberof Player
+   * @example
+   * player.ready().then(()=> {
+   *  player.pause();
+   * });
    */
   ready(): Promise<*> {
     return this._readyPromise ? this._readyPromise : Promise.resolve();
   }
 
   /**
-   * Load media
+   * @description Loads the media.
    * @public
+   * @instance
    * @returns {void}
+   * @memberof Player
+   * @example
+   * player.load();
    */
   load(): void {
     if (this._engine) {
@@ -404,9 +434,13 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Start/resume playback.
-   * @returns {void}
+   * @description Start/resume playback.
    * @public
+   * @instance
+   * @returns {void}
+   * @memberof Player
+   * @example
+   * player.play();
    */
   play(): void {
     if (this._engine) {
@@ -415,9 +449,13 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Pause playback.
-   * @returns {void}
+   * @description Pause playback.
    * @public
+   * @instance
+   * @returns {void}
+   * @memberof Player
+   * @example
+   * player.pause();
    */
   pause(): void {
     if (this._engine) {
@@ -426,17 +464,27 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Gets the view of the player (i.e the dom container object).
+   * @description Gets the view of the player (i.e the dom container object).
    * @return {HTMLElement} - The dom container.
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * var playerContainer = player.getView();
    */
   getView(): HTMLElement {
     return this._el;
   }
 
   /**
-   * @returns {HTMLVideoElement} - The video element.
+   * @description Gets the video element.
+   * @returns {?HTMLVideoElement} - The video element.
    * @public
+   * @instance
+   * @returns {void}
+   * @memberof Player
+   * @example
+   * var videoElement = player.getVideoElement();
    */
   getVideoElement(): ?HTMLVideoElement {
     if (this._engine) {
@@ -445,9 +493,13 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Destroys the player.
-   * @returns {void}
+   * @description Destroys the player.
    * @public
+   * @instance
+   * @returns {void}
+   * @memberof Player
+   * @example
+   * player.destroy();
    */
   destroy(): void {
     if (this._engine) {
@@ -472,9 +524,13 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Get the first buffered range of the engine.
-   * @returns {TimeRanges} - First buffered range of the engine in seconds.
+   * @description Gets the first buffered range of the engine.
+   * @returns {?TimeRanges} - First buffered range of the engine in seconds.
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * var buffered = player.buffered;
    */
   get buffered(): ?TimeRanges {
     if (this._engine) {
@@ -483,9 +539,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Set the current time in seconds.
-   * @param {Number} to - The number to set in seconds.
+   * @description Sets the current time in seconds.
+   * @param {number} to - The number to set in seconds.
+   * returns {void}
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * player.currentTime = 10;
    */
   set currentTime(to: number): void {
     if (this._engine) {
@@ -503,9 +564,13 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Get the current time in seconds.
-   * @returns {?Number} - The playback current time.
+   * @description Gets the current time in seconds.
+   * @returns {?number} - The playback current time.
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * var ct = player.currentTime;
    */
   get currentTime(): ?number {
     if (this._engine) {
@@ -514,9 +579,13 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Get the duration in seconds.
-   * @returns {?Number} - The playback duration.
+   * @description Gets the duration in seconds.
+   * @returns {?number} - The playback duration.
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * var duration = player.duration;
    */
   get duration(): ?number {
     if (this._engine) {
@@ -525,10 +594,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Set playback volume.
-   * @param {Number} vol - The volume to set.
+   * @description Sets playback volume.
+   * @param {number} vol - The volume to set.
    * @returns {void}
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * player.volume = 0.5;
    */
   set volume(vol: number): void {
     if (this._engine) {
@@ -546,9 +619,13 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Get playback volume.
-   * @returns {?Number} - The playback volume.
+   * @description Gets the playback volume.
+   * @returns {?number} - The playback volume.
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * var volume = player.volume;
    */
   get volume(): ?number {
     if (this._engine) {
@@ -557,9 +634,15 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Get paused state.
+   * @description Gets the paused state.
    * @returns {?boolean} - Whether the video is paused or not.
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * if (player.paused) {
+   *  player.play();
+   * }
    */
   get paused(): ?boolean {
     if (this._engine) {
@@ -568,9 +651,15 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Get seeking state.
+   * @description Gets the seeking state.
    * @returns {?boolean} - Whether the video is seeking or not.
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * if (player.seeking) {
+   *  // Show loading spinner
+   * }
    */
   get seeking(): ?boolean {
     if (this._engine) {
@@ -579,10 +668,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Set playsinline attribute.
-   * Relevant for iOS 10 and up:
-   * Elements will now be allowed to play inline, and will not automatically enter fullscreen mode when playback begins.
-   * @param {boolean} playsinline - Whether the video should plays in line.
+   * @description Sets the playsinline attribute.
+   * <br>Relevant for iOS10 and up: elements will now be allowed to play inline and will not automatically enter fullscreen mode when playback begins.
+   * @param {boolean} playsinline - Whether the video should plays inline.
+   * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * player.playsinline = true;
    */
   set playsinline(playsinline: boolean): void {
     if (this._engine) {
@@ -591,10 +684,16 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Get playsinline attribute.
-   * Relevant for iOS 10 and up:
-   * Elements will now be allowed to play inline, and will not automatically enter fullscreen mode when playback begins.
-   * @returns {boolean} - Whether the video plays in line.
+   * @description Gets the playsinline attribute.
+   * <br>Relevant for iOS 10 and up: elements will now be allowed to play inline and will not automatically enter fullscreen mode when playback begins.
+   * @returns {?boolean} - Whether the video plays inline.
+   * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * if (player.playsinline) {
+   *  player.autoplay = true;
+   * }
    */
   get playsinline(): ?boolean {
     if (this._engine) {
@@ -603,10 +702,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Set player muted state.
+   * @description Sets the player muted state and dispatches the MUTE_CHANGE event.
    * @param {boolean} mute - The mute value.
    * @returns {void}
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * player.muted = true;
    */
   set muted(mute: boolean): void {
     if (this._engine) {
@@ -616,9 +719,15 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Get player muted state.
-   * @returns {?boolean} - Whether the video is muted or not.
+   * @description Gets the player muted state.
+   * @returns {?boolean} - Whether the video is muted.
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * if (player.muted) {
+   *  player.muted = false;
+   * }
    */
   get muted(): ?boolean {
     if (this._engine) {
@@ -627,9 +736,13 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Get the player source.
+   * @description Gets the player source.
    * @returns {?string} - The current source of the player.
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * console.log('Player source is: ' + player.src);
    */
   get src(): ?string {
     if (this._engine) {
@@ -638,11 +751,17 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Get the dimensions of the player.
-   * @returns {{width: number, height: number}} - The dimensions of the player.
+   * @description Gets the dimensions of the player.
+   * @returns {PKDimensionsObject} - The dimensions of the player.
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * var dimensions = player.dimensions;
+   * console.log('Player width: ' + dimensions.width);
+   * console.log('Player height: ' + dimensions.height);
    */
-  get dimensions(): Object {
+  get dimensions(): PKDimensionsObject {
     return {
       width: this._el.clientWidth,
       height: this._el.clientHeight
@@ -650,16 +769,27 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Get the poster source URL
-   * @returns {string} - the poster image URL
+   * @description Gets the poster url.
+   * @returns {string} - the poster image url.
+   * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * console.log('Player poster: ' + player.poster);
    */
   get poster(): string {
     return this._posterManager.src;
   }
 
   /**
-   * Sets the playbackRate property.
-   * @param {number} rate - The playback speed of the video.
+   * @description Sets the playback rate of the player.
+   * @param {number} rate - The playback rate of the video.
+   * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * var rates = player.playbackRates;
+   * player.playbackRate = rates[0];
    */
   set playbackRate(rate: number): void {
     if (this._engine) {
@@ -668,8 +798,13 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Gets the current playback speed of the video.
-   * @returns {number} - The current playback speed of the video.
+   * @description Gets the current playback rate of the player.
+   * @returns {number} - The current playback rate of the player.
+   * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * console.log('Player rate: ' + player.playbackRate);
    */
   get playbackRate(): ?number {
     if (this._engine) {
@@ -678,60 +813,97 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Gets the possible playback speeds of the video.
-   * @returns {Array<number>} - The possible playback speeds speed of the video.
+   * @description Gets the possible playback rates of the player.
+   * @returns {Array<number>} - The possible playback rates of the player.
+   * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * var rates = player.playbackRates;
+   * console.log(rates); // [0.5, 1, 2, 4]
    */
   get playbackRates(): Array<number> {
     return PLAYBACK_RATES;
   }
 
   /**
-   * Gets the default playback speed of the video.
-   * @returns {number} - The default playback speed of the video.
+   * @description Gets the default playback rate of the player.
+   * @returns {number} - The default playback rate of the player.
+   * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * console.log('Player default rate: ' + player.defaultPlaybackRate); // Player default rate: 1
    */
   get defaultPlaybackRate(): number {
     return DEFAULT_PLAYBACK_RATE;
   }
 
   /**
-   * get the engine type
-   * @returns {string} - html5
+   * @description Gets the type of the active player engine.
+   * @returns {string} - The engine type.
+   * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * console.log('Player engine type: ' + player.engineType);
    */
   get engineType(): ?string {
     return this._engineType;
   }
 
   /**
-   * get the stream type
-   * @returns {string} - hls|dash|progressive
+   * @description Gets the type of the active stream format.
+   * @returns {string} - hls|dash|progressive.
+   * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * console.log('Player stream type: ' + player.streamType);
    */
   get streamType(): ?string {
     return this._streamType;
   }
 
   /**
-   * Getter for the environment of the player instance.
-   * @return {Object} - The current environment object.
+   * @description Gets the environment data.
+   * @return {Object} - The environment data.
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * console.log('Browser name: ' + player.env.browser.name);
+   * console.log('Browser version: ' + player.env.browser.version);
+   * console.log('OS name: ' + player.env.os.name);
+   * console.log('OS version: ' + player.env.os.name);
+   * console.log('Device data: ' + player.device);
    */
   get env(): Object {
     return this._env;
   }
 
   /**
-   * Get the player config.
+   * @description Gets copy of the player configuration.
    * @returns {Object} - A copy of the player configuration.
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * console.log(player.config);
    */
   get config(): Object {
     return Utils.Object.mergeDeep({}, this._config);
   }
 
   /**
-   * Set player session id
-   * @param {string} sessionId - the player session id to set
+   * @description Sets the player session id.
+   * @param {string} sessionId - The session id to set.
    * @returns {void}
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * player.sessionId = "YOUR_SESSION_ID";
    */
   set sessionId(sessionId: string): void {
     this._config.session = this._config.session || {};
@@ -743,30 +915,46 @@ export default class Player extends FakeEventTarget {
   // <editor-fold desc="Live API">
 
   /**
-   * Checking if the current playback is live.
-   * @function isLive
+   * @description Checks if the current playback is live.
    * @returns {boolean} - Whether playback is live.
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * if (player.isLive()) {
+   *  // Show live UI
+   * }
    */
   isLive(): boolean {
     return !!(this._config.type === LIVE || (this._engine && this._engine.isLive()));
   }
 
   /**
-   * Checking if the current live playback has DVR window.
-   * @function isDvr
+   * @description Checks if the current live playback has DVR window.
    * @returns {boolean} - Whether live playback has DVR window.
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * if (player.isLive()) {
+   *  // Show live UI
+   *  if (player.isDvr()) {
+   *    // Show seekbar
+   *  }
+   * }
    */
   isDvr(): boolean {
     return this.isLive() && this._config.dvr;
   }
 
   /**
-   * Seeking to live edge.
-   * @function seekToLiveEdge
+   * @description Seeks to the live edge.
    * @returns {void}
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * player.seekToLiveEdge();
    */
   seekToLiveEdge(): void {
     if (this._engine && this.isLive()) {
@@ -779,34 +967,55 @@ export default class Player extends FakeEventTarget {
   // <editor-fold desc="Tracks API">
 
   /**
-   * Returns the tracks according to the filter. if no filter given returns the all tracks.
-   * @function getTracks
-   * @param {string} [type] - a tracks filter, should be 'video', 'audio' or 'text'.
-   * @returns {Array<Track>} - The parsed tracks.
+   * @description Gets the tracks according to the filter.
+   * <br>If no filter given, gets all tracks.
+   * @param {string} [type] - A tracks filter, should be 'video', 'audio' or 'text'.
+   * @returns {Array<Track>} - The player tracks.
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * var tracks = player.getTracks();
+   * var audioTracks = player.getTracks(player.Track.AUDIO);
+   * var videoTracks = player.getTracks(player.Track.VIDEO);
+   * var textTracks = player.getTracks(player.Track.TEXT);
    */
   getTracks(type?: string): Array<Track> {
     return this._getTracksByType(type);
   }
 
   /**
-   * Get an object includes the active video/audio/text tracks
-   * @return {{video: VideoTrack, audio: AudioTrack, text: TextTrack}} - The active tracks object
+   * @description Gets the active video/audio/text tracks.
+   * @return {PKActiveTracksObject} - The active tracks.
+   * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * var activeTracks = player.getActiveTracks();
+   * var activeAudioTrack = activeTracks.audio;
+   * var activeVideoTrack = activeTracks.video;
+   * var activeTextTrack = activeTracks.text;
    */
-  getActiveTracks(): Object {
+  getActiveTracks(): PKActiveTracksObject {
     return {
       video: this._getTracksByType(TrackTypes.VIDEO).find(track => track.active),
       audio: this._getTracksByType(TrackTypes.AUDIO).find(track => track.active),
-      text: this._getTracksByType(TrackTypes.TEXT).find(track => track.active),
+      text: this._getTracksByType(TrackTypes.TEXT).find(track => track.active)
     };
   }
 
   /**
-   * Select a track
-   * @function selectTrack
-   * @param {?Track} track - the track to select
+   * @description Selects a track to activate.
+   * @param {?Track} track - the track to activate.
    * @returns {void}
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * var tracks = player.getTracks();
+   * if (tracks.length > 0) {
+   *  player.selectTrack(tracks[0]);
+   * }
    */
   selectTrack(track: ?Track): void {
     if (this._engine) {
@@ -826,10 +1035,15 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Hide the text track
-   * @function hideTextTrack
+   * @description Hides the active text track.
    * @returns {void}
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * if (player.getActiveTracks().text) {
+   *  player.hideTextTrack();
+   * }
    */
   hideTextTrack(): void {
     if (this._engine) {
@@ -846,10 +1060,13 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Enables adaptive bitrate switching.
-   * @function enableAdaptiveBitrate
+   * @description Enables automatic adaptive bitrate switching.
    * @returns {void}
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * player.enableAdaptiveBitrate();
    */
   enableAdaptiveBitrate(): void {
     if (this._engine) {
@@ -858,10 +1075,15 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Checking if adaptive bitrate switching is enabled.
-   * @function isAdaptiveBitrateEnabled
+   * @description Checks if adaptive bitrate switching is enabled.
    * @returns {boolean} - Whether adaptive bitrate is enabled.
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * if (!player.isAdaptiveBitrateEnabled()) {
+   *  player.enableAdaptiveBitrate();
+   * }
    */
   isAdaptiveBitrateEnabled(): boolean {
     if (this._engine) {
@@ -871,10 +1093,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * update the text display settings
-   * @param {Object} settings - text cue display settings
-   * @public
+   * @description Updates the text display settings.
+   * @param {Object} settings - Text cue display settings.
    * @returns {void}
+   * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * player.setTextDisplaySettings({line: -4});
    */
   setTextDisplaySettings(settings: Object): void {
     this._textDisplaySettings = settings;
@@ -886,9 +1112,18 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Sets style attributes for text tracks.
-   * @param {TextStyle} style - text styling settings
+   * @description Sets style attributes for text tracks.
+   * @param {TextStyle} style - Text styling settings.
    * @returns {void}
+   * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * var textStyle = new TextStyle();
+   * textStyle.backgroundColor = TextStyle.StandardColors.RED;
+   * textStyle.fontColor = TextStyle.StandardColors.CYAN;
+   * textStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
+   * player.textStyle = textStyle;
    */
   set textStyle(style: TextStyle): void {
     if (!(style instanceof TextStyle)) {
@@ -920,8 +1155,13 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Gets style attributes for text tracks.
-   * @returns {?TextStyle} - the current style attribute
+   * @description Gets the style attributes for text tracks.
+   * @returns {?TextStyle} - The current style attribute.
+   * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * const currentTextStyle = player.textStyle;
    */
   get textStyle(): ?TextStyle {
     return this._textStyle.clone();
@@ -932,9 +1172,13 @@ export default class Player extends FakeEventTarget {
   // <editor-fold desc="Ads API">
 
   /**
-   * Skip on an ad.
-   * @public
+   * @description Skips on an ad in case ad is playing and the ad is skippable.
    * @returns {void}
+   * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * player.skipAd();
    */
   skipAd(): void {
     let adsPlugin: ?BasePlugin = this._pluginManager.get('ima');
@@ -944,10 +1188,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Start to play ad on demand.
+   * @description Starts to play an ad on demand.
    * @param {string} adTagUrl - The ad tag url to play.
-   * @public
    * @returns {void}
+   * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * player.playAdNow('AD_TAG_URL');
    */
   playAdNow(adTagUrl: string): void {
     let adsPlugin: ?BasePlugin = this._pluginManager.get('ima');
@@ -961,17 +1209,28 @@ export default class Player extends FakeEventTarget {
   // <editor-fold desc="Fullscreen API">
 
   /**
+   * @description Gets the player fullscreen mode.
    * @returns {boolean} - Whether the player is in fullscreen mode.
    * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * if (player.isFullscreen()) {
+   *  // Change fullscreen button state
+   * }
    */
   isFullscreen(): boolean {
     return this._fullscreen;
   }
 
   /**
-   * Notify the player that the ui application entered to fullscreen.
-   * @public
+   * @description Notifies the player that the ui application entered to fullscreen mode.
    * @returns {void}
+   * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * player.notifyEnterFullscreen();
    */
   notifyEnterFullscreen(): void {
     if (!this._fullscreen) {
@@ -981,9 +1240,13 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Notify the player that the ui application exited from fullscreen.
-   * @public
+   * @description Notifies the player that the ui application exited from fullscreen mode.
    * @returns {void}
+   * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * player.notifyExitFullscreen();
    */
   notifyExitFullscreen(): void {
     if (this._fullscreen) {
@@ -993,9 +1256,13 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Request the player to enter fullscreen.
-   * @public
+   * @description Requests from the player to enter fullscreen mode.
    * @returns {void}
+   * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * player.enterFullscreen();
    */
   enterFullscreen(): void {
     if (!this._fullscreen) {
@@ -1004,9 +1271,13 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Request the player to exit fullscreen.
-   * @public
+   * @description Requests from the player to exit fullscreen mode.
    * @returns {void}
+   * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * player.exitFullscreen();
    */
   exitFullscreen(): void {
     if (this._fullscreen) {
@@ -1019,21 +1290,35 @@ export default class Player extends FakeEventTarget {
   // <editor-fold desc="Logger API">
 
   /**
-   * get the log level
-   * @param {?string} name - the logger name
-   * @returns {Object} - the log level
+   * @description Gets the player log level.
+   * If a name is sent, gets the component name log level.
+   * @param {string} [name] - The logger name.
+   * @returns {PKLogLevelObject} - The player log level object.
+   * @returns {void}
+   * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * var logLevelObj = player.getLogLevel();
    */
-  getLogLevel(name?: string): Object {
+  getLogLevel(name?: string): PKLogLevelObject {
     return getLogLevel(name);
   }
 
   /**
-   * sets the logger level
-   * @param {Object} level - the log level
-   * @param {?string} name - the logger name
+   * @description Sets the player log level.
+   * If a name is sent, sets the component name log level.
+   * @param {PKLogLevelObject} level - The log level object.
+   * @param {string} [name] - The logger name.
    * @returns {void}
+   * @public
+   * @instance
+   * @memberof Player
+   * @example
+   * player.setLogLevel(player.LogLevel.DEBUG);
+   * player.setLogLevel(player.LogLevel.ERROR, 'StateManager');
    */
-  setLogLevel(level: Object, name?: string) {
+  setLogLevel(level: PKLogLevelObject, name?: string) {
     setLogLevel(level, name);
   }
 
@@ -1047,13 +1332,18 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Check if sources has been received.
-   * @param {Object} sources - sources config object.
+   * @param {?PKSourcesConfigObject} sources - sources config object.
    * @returns {boolean} - Whether sources has been received to the player.
    * @private
    */
-  _hasSources(sources: Object): boolean {
+  _hasSources(sources: ?PKSourcesConfigObject): boolean {
     if (sources) {
-      return !!(Object.keys(sources).find(format => sources[format].length > 0));
+      return !!(Object.keys(sources).find(format => {
+        if (sources && sources[format]) {
+          return sources[format].length > 0;
+        }
+        return false;
+      }));
     }
     return false;
   }
@@ -1345,7 +1635,7 @@ export default class Player extends FakeEventTarget {
         this.play();
       } else {
         const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
-        Player.getCapabilities(this.engineType)
+        this.engineType ? Player.getCapabilities(this.engineType) : Player.getCapabilities()
           .then((capabilities) => {
             if (capabilities.autoplay) {
               Player._logger.debug("Start autoplay");
