@@ -24,7 +24,12 @@ player.addEventListener(player.Event.PLAYER_STATE_CHANGED, e => {
 
 ## Dispatching player events
 
-In order to dispatch events everywhere on the player we created fake-event.js and fake-event-target.js. These classes were created to provide support dispatching from non-DOM classes.
+To dispatch a player event, simply type the following code:
+```javascript
+player.dispatchEvent(new player.core.FakeEvent(player.Event.REQUESTED_ENTER_FULLSCREEN, optionalData));
+```
+
+However, if you are developing a player [plugin](plugins.docs), you can create a class that extends FakeEventTarget and fire a Fake-Event by yourself. Fake-event.js and fake-event-target.js classes were created to provide support dispatching from non-DOM classes.
 
 ```javascript
 class YourClass extends FakeEventTarget{
@@ -44,4 +49,4 @@ player.ready().then(() => player.pause());
 ```
 
 ## Events list
-The full events list can be found here.
+The full events list can be found [here](url%20to%20the%20events).
