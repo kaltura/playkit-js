@@ -1,4 +1,4 @@
-# PlayKit JS - State of the art HTML5 player
+# PlayKit JS - State of the Art HTML5 Player
 
 [![Build Status](https://travis-ci.org/kaltura/playkit-js.svg?branch=master)](https://travis-ci.org/kaltura/playkit-js)
 
@@ -40,7 +40,7 @@ Then, build the player
 yarn run build
 ```
 
-### Embed the player in your test page
+### Embed the Player In Your Test Page
 
 Finally, add the bundle as a script tag in your page, and initialize the player
 
@@ -56,9 +56,16 @@ player.play();
 </script>
 ```
 
-## Documentation: API and Configuration
+## Documentation: API, Configuration and Guides
 The player can be configured and controlled easily using the Player API, click [here](docs/api.md) to learn more.
  
+- **Configuration**
+<br>Click [here](docs/configuration.md) to learn more.
+- **API**
+<br> Click [here](docs/api.md) to learn more.
+- **Guides**
+<br> Click [here](docs/guides.md) to learn more.
+
 ## Running the Tests
 
 Tests can be run locally via [Karma], which will run on Chrome, Firefox and Safari.
@@ -75,7 +82,7 @@ yarn run test:firefox
 yarn run test:safari
 ```
 
-### And coding style tests
+### And Coding Style Tests
 
 We use ESLint [recommended set](http://eslint.org/docs/rules/) with some additions for enforcing [Flow] types and other rules.
 
