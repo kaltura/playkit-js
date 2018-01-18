@@ -2,6 +2,13 @@
 # Player States
 The player manage lifecycle states which are HTML5 video events based. I.e, when an HTML5 video event is triggered by the video element, it can change the player state. If there are state changes, the player will fire related event.
 
+## Table of Contents
+  - [State Class](#state-class)
+  - [State Types](#state-types)
+  - [Transitions Between States](#transitions-between-states)
+  - [Registering to State Changed](#registering-to-state-changed)
+
+
 ## State Class
 The `State` class API can be seen [here]().
 
