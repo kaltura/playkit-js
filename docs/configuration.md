@@ -1,5 +1,5 @@
 ## Configuration
-Configuration parameters could be provided to Playkit JS upon instantiation of the player instance.
+Configuration parameters could be provided upon instantiation of the player instance.
 ```js
 var config = {
   // Configuration here
