@@ -29,22 +29,22 @@ The player state machine can be seen in the following figure:
 When the player changes his state, he fires `PlayerStateChanged` event. The event data contains his old state and his new state. Your application can listen to this event and manage dependent logic accordingly (mainly UI).
 <br>For example:
 ```js
-player.addEventListener(player.Event.PLAYER_STATE_CHANGED, (event)=> {
-	const State = player.State;
-	const payload = event.payload;
-	if (payload.oldState.type === State.PLAYING
-		&& payload.newState.type === State.BUFFERING) {
-		// Buffer underflow
-	}
+player.addEventListener(player.Event.PLAYER_STATE_CHANGED, (event) => {
+    const State = player.State;
+    const payload = event.payload;
+    if (payload.oldState.type === State.PLAYING
+        && payload.newState.type === State.BUFFERING) {
+        // Buffer underflow
+    }
 });
 ```
 
 ```js
-player.addEventListener(player.Event.PLAYER_STATE_CHANGED, (event)=> {
-	const State = player.State;
-	const payload = event.payload;
-	if (payload.newState.type === State.BUFFERING) {
-		// Show spinner
-	}
+player.addEventListener(player.Event.PLAYER_STATE_CHANGED, (event) => {
+    const State = player.State;
+    const payload = event.payload;
+    if (payload.newState.type === State.BUFFERING) {
+        // Show spinner
+    }
 });
 ```
