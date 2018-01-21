@@ -42,7 +42,7 @@ new Error(Error.Severity.CRITICAL,
 
 Then, you will need to dispatch an '`error`' event.
 
-> More info about dispatching events can be found [here](./events.md).
+> More information about dispatching events can be found [here](./events.md).
 
 
 
