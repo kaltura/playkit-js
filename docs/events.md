@@ -1,5 +1,6 @@
 # Player Events
 The player event system uses an event target like API to register, unregister and dispatch events.
+// add one sentence about the player events purpose
 
 ## Overview
 
@@ -11,7 +12,7 @@ The player events are consisted of two event types:
 
 Only DOM elements may be true EventTargets. Inside the player, we use fake events targets (fake-event-target.js), and fake events (fake-event) in order to dispatch events not from a DOM element.
 
-## Registering to Player Events
+## Registering to Player Events // put it in the end
 
 You can listen to the player events by adding an event listener to the player object.
 
