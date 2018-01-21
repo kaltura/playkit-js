@@ -13,7 +13,7 @@ You can listen to the player events by adding an event listener to the player ob
 
 ```javascript
 player.addEventListener(player.Event.PLAYER_STATE_CHANGED, e => {
-    const payload = e.payload;
+  const payload = e.payload;
   // do something with the payload
 });
 ```
@@ -30,10 +30,10 @@ To emit an event, you have to make sure your class extends [`fake-event-target`]
 
 ```javascript
 class YourClass extends FakeEventTarget{
-	someFunction(): void{
-		const data = {};
-		this.dispatchEvent(new FakeEvent(CustomEvents.AUTOPLAY_FAILED, data))
-	}
+  someFunction(): void {
+    const data = {};
+    this.dispatchEvent(new FakeEvent(CustomEvents.AUTOPLAY_FAILED, data))
+  }
 }
 ```
 > [Fake-event.js](../src/event/fake-event.js) and [fake-event-target.js](../src/event/fake-event-target.js) classes were created to provide support dispatching from non-DOM classes.
