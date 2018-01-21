@@ -14,7 +14,7 @@ You can listen to the player events by adding an event listener to the player ob
 ```javascript
 player.addEventListener(player.Event.PLAYER_STATE_CHANGED, e => {
     const payload = e.payload;
- // do something with the payload
+  // do something with the payload
 });
 ```
 
@@ -26,7 +26,7 @@ player.dispatchEvent(new player.core.FakeEvent(player.Event.REQUESTED_ENTER_FULL
 ```
 
 Another possible use case is extending / customizing the player.
-To emit an event, you have to make sure your class extends [`fake-event-target`](../src/event/fake-event-target.js) class. Most of the classes inherit it. You can create a class, extend FakeEventTarget and then fire a `[Fake-Event](../src/event/fake-event.js)`.
+To emit an event, you have to make sure your class extends [`fake-event-target`](../src/event/fake-event-target.js) class. Most of the classes inherit it. You can create a class, extend FakeEventTarget and then fire a [`Fake-Event`](../src/event/fake-event.js).
 
 ```javascript
 class YourClass extends FakeEventTarget{
