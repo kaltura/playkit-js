@@ -1,33 +1,47 @@
 
-# Player States
-The player manage lifecycle states which are HTML5 video events based. I.e, when an HTML5 video event is triggered by the video element, it can change the player state. If there are state changes, the player will fire related event.
+# Monitoring Player States  
+
+The Kaltura TV Platform Player supports lifecycle states (or statuses), which are based on HTML5 video events (e.g., buffering, idle, etc.). Whenever a state change occurs, the player will fire a related event in response.
 
 ## Table of Contents
-  - [State Class](#state-class)
-  - [State Types](#state-types)
-  - [Transitions Between States](#transitions-between-states)
-  - [Registering to State Changed](#registering-to-state-changed)
+  - [Registering to State Changes](#registering-to-state-changed)
+  - [Available State Classes](#state-class)
+  - [Available State Types](#state-types)
+  - [Transitioning Between States](#transitions-between-states)
 
+## Registering to State Changes  
 
-## State Class
-The `State` class API can be seen [here]().
+When a player changes its state, it fires a `PlayerStateChanged` event. The event data contains the player's old state as well as the new state. By registering to state changes and listening events, you can manage dependent logic accordingly (this applies mostly to UI changes).
 
-## State Types
-The full list of player states can be seen [here]().
-<br>An example how we can access a player state type:
+The state's you register to listen to include the state class, the state type, and transitions between states. These next section provide additional details.
+
+## Available State Classes  
+
+The Kaltura TV Platform Player supports a number of state classes. You'll find a detailed list of `State` class APIs [here]().
+
+## Available State Types  
+
+The Kaltura TV Platform Player supports a number of player state types. You'll find a detailed list of player types [here]().
+<br>Here's an example how you can access a player state type:
 ```js
 console.log(player.State.PLAYING); // 'playing'
 ```
-## Transitions Between States
-A **transition** is defined when the player is move from one state to another.
-<br>For example, if the player current state is `PLAYING` and the video element triggered `pause` event, the player will change his state to `PAUSED`.
+## Transitioning Between States  
 
-The player state machine can be seen in the following figure:
+When the player moves from one state to another, this is defined as a **transition**. For example, if the player's current state is `PLAYING` and the video element triggers a `pause` event, the player will change its state to `PAUSED`.
+
+
+## Player State Machine  
+
+Here's a figure that illustrates the player state machine:
 ![player-state-machine](./images/player-state-machine.jpg)
 
-## Registering to State Changed
-When the player changes his state, he fires `PlayerStateChanged` event. The event data contains his old state and his new state. Your application can listen to this event and manage dependent logic accordingly (mainly UI).
-<br>For example:
+
+
+## Example of State Changes  
+
+Here's an example of how a state change appears in the player code:
+
 ```js
 player.addEventListener(player.Event.PLAYER_STATE_CHANGED, (event) => {
     const State = player.State;
