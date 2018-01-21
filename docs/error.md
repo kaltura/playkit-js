@@ -21,7 +21,7 @@ You can listen to errors the player emits by listening to an '`error`' event.
 player.addEventListener(player.Event.ERROR, e => {
   const error = e.payload;
   console.error(
-	  error.severity,
+	error.severity,
    	error.category,
    	error.code,
    	error.data);
