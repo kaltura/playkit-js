@@ -14,7 +14,7 @@ You can listen to the player events by adding an event listener to the player ob
 ```javascript
 player.addEventListener(player.Event.PLAYER_STATE_CHANGED, e => {
     const payload = e.payload;
-// do something with the payload
+ // do something with the payload
 });
 ```
 
