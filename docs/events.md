@@ -1,8 +1,5 @@
 # Player Events
-The player event system uses an event target like API to register, unregister and dispatch events.
-// add one sentence about the player events purpose
-
-## Overview
+The player event system uses an event target like API to register, unregister and dispatch events. The events main purpose is to notify player components about state changes, ads and video progress etc.
 
 The player events are consisted of two event types:
 
@@ -10,9 +7,7 @@ The player events are consisted of two event types:
 
  2. Player custom events - special events indicating changes in the state of the player that does not exist in the html5 video event list and are related to the integral behavior of the player. Such as ads, fullscreen and tracks events.
 
-Only DOM elements may be true EventTargets. Inside the player, we use fake events targets (fake-event-target.js), and fake events (fake-event) in order to dispatch events not from a DOM element.
-
-## Registering to Player Events // put it in the end
+## Registering to Player Events
 
 You can listen to the player events by adding an event listener to the player object.
 
@@ -23,14 +18,15 @@ player.addEventListener(player.Event.PLAYER_STATE_CHANGED, e => {
 });
 ```
 
-## Dispatching player events
+## Dispatching Player Events
 
 To dispatch a player event, simply type the following code:
 ```javascript
 player.dispatchEvent(new player.core.FakeEvent(player.Event.REQUESTED_ENTER_FULLSCREEN, optionalData));
 ```
 
-However, if you want to extend the player, you can create a class that extends FakeEventTarget and fire a Fake-Event by yourself. Fake-event.js and fake-event-target.js classes were created to provide support dispatching from non-DOM classes.
+Another possible use case is extending / customizing the player.
+To emit an event, you have to make sure your class extends [`fake-event-target`](../src/event/fake-event-target.js) class. Most of the classes inherit it. You can create a class, extend FakeEventTarget and then fire a `[Fake-Event](../src/event/fake-event.js)`.
 
 ```javascript
 class YourClass extends FakeEventTarget{
@@ -40,14 +36,15 @@ class YourClass extends FakeEventTarget{
 	}
 }
 ```
+> [Fake-event.js](../src/event/fake-event.js) and [fake-event-target.js](../src/event/fake-event-target.js) classes were created to provide support dispatching from non-DOM classes.
 
-## Player readiness
-The player ready promise indicated the player has done loading the media and can start play. The promise is resolved when the 'TRACKS_CHANGED' event is dispatched.
+## Player Readiness
+The player ready promise indicates the player has done loading the media and can start playing. The promise is resolved when the 'TRACKS_CHANGED' event is dispatched.
 A basic usage would be:
 
 ```javascript
 player.ready().then(() => player.pause());
 ```
 
-## Events list
-The full events list can be found [here](url%20to%20the%20events).
+## Events List
+The full events list can be found [here](../src/event/events.js).
