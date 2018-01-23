@@ -63,7 +63,7 @@ export default class Html5AutoPlayCapabilities implements ICapability {
    */
   static _oldBrowsersCapability(element: HTMLVideoElement): Promise<*> {
     return new Promise((resolve, reject) => {
-      let supported = setTimeout(() => {
+      const supported = setTimeout(() => {
         reject();
       }, PLAY_TIMEOUT_BUFFER);
       element.addEventListener(Html5Events.PLAYING, () => {
