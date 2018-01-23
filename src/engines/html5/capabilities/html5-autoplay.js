@@ -4,10 +4,10 @@ import * as EncodingSources from '../../../assets/encoding-sources.json'
 import {HTML5_EVENTS as Html5Events} from '../../../event/events'
 
 /**
- * The time (miliseconds) we wait that the playing event will be fired
+ * The time (miliseconds) we wait that the playing event will be fired before determining autoplay is not supported
  * @const
  */
-const playTimeoutBuffer = 1500;
+const PLAY_TIMEOUT_BUFFER: number = 1500;
 
 export default class Html5AutoPlayCapabilities implements ICapability {
   static _vid: HTMLVideoElement = Utils.Dom.createElement('video');
@@ -38,7 +38,6 @@ export default class Html5AutoPlayCapabilities implements ICapability {
     } catch (e) {
       Html5AutoPlayCapabilities._autoPlayPromise = Promise.reject();
     }
-
   }
 
   /***
@@ -66,7 +65,7 @@ export default class Html5AutoPlayCapabilities implements ICapability {
     return new Promise((resolve, reject) => {
       let supported = setTimeout(() => {
         reject();
-      }, playTimeoutBuffer);
+      }, PLAY_TIMEOUT_BUFFER);
       element.addEventListener(Html5Events.PLAYING, () => {
         clearTimeout(supported);
         resolve();
@@ -86,7 +85,7 @@ export default class Html5AutoPlayCapabilities implements ICapability {
    * @static
    * @public
    */
-  static _reflect(promise: Promise<*>): Promise<*> {
+  static _reflectPromiseResult(promise: Promise<*>): Promise<*> {
     return promise
       .then(data => ({data: data, status: true}))
       .catch(error => ({error: error, status: false}))
@@ -99,13 +98,26 @@ export default class Html5AutoPlayCapabilities implements ICapability {
    * @public
    */
   static getCapability(): Promise<CapabilityResult> {
-    const promiseArr = [Html5AutoPlayCapabilities._autoPlayPromise, Html5AutoPlayCapabilities._mutedAutoPlayPromise];
-    return Promise.all(promiseArr.map(Html5AutoPlayCapabilities._reflect))
-      .then(values => {
+    return Html5AutoPlayCapabilities._reflectPromiseResult(Html5AutoPlayCapabilities._autoPlayPromise).then(value => {
+      if (value.status) {
+        return Promise.resolve ({
+          autoplay: true
+        })
+      } else {
+        return Html5AutoPlayCapabilities._reflectPromiseResult(Html5AutoPlayCapabilities._mutedAutoPlayPromise);
+      }
+    }).then(value => {
+      if (value.autoplay === true){
         return {
-          autoplay: values[0].status,
-          mutedAutoplay: values[1].status
+          autoplay: true,
+          mutedAutoplay: true
         }
-      })
+      } else {
+        return {
+          autoplay: false,
+          mutedAutoplay: value.status
+        }
+      }
+    })
   }
 }
