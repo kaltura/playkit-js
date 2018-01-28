@@ -1153,6 +1153,52 @@ describe('Text Track API', () => {
   });
 });
 
+describe('metadata event',()=>{
+  let config, player, video, track1, playerContainer;
+
+  before(() => {
+    playerContainer = createElement('div', targetId);
+  });
+
+  beforeEach(() => {
+    config = getConfigStructure();
+    config.playback.registerMetadataTrackEvent = true;
+    config.sources = sourcesConfig.Mp4;
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
+    video = player._engine.getVideoElement();
+    track1 = document.createElement("track");
+    track1.kind = 'metadata';
+    track1.mode = 'showing';
+    video.appendChild(track1);
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElement(targetId);
+  });
+
+  it("make sure we get the metadata/id3 tag event", (done) =>{
+    player.addEventListener(CustomEvents.STREAM_METADATA,(event) =>{
+      event.payload.cues[0].text.should.be.equal("2323");
+      done();
+    });
+    player.load();
+    player.ready().then(() => {
+      player.play();
+      let Cue = window.WebKitDataCue || window.VTTCue || window.TextTrackCue;
+      const dataCue = new Cue(1, 2, "2323");
+      dataCue.value = {"data": "google_541114647765637930", "info": "", "key": "TXXX"};
+      player._engine._el.textTracks[0].mode = 'showing';
+      player._engine._el.textTracks[0].addCue(dataCue);
+    });
+  })
+});
+
 describe('Fullscreen API', () => {
   let player;
 
