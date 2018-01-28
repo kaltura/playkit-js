@@ -354,7 +354,7 @@ export default class Player extends FakeEventTarget {
     }
     Utils.Object.mergeDeep(this._config, config);
     this._configureOrLoadPlugins(config.plugins);
-    if (!Utils.Object.isEmptyObject(config.sources)) {
+    if (this._hasSources(config.sources)) {
       const receivedSourcesWhenHasEngine: boolean = !!this._engine;
       if (receivedSourcesWhenHasEngine) {
         this._reset();
@@ -1046,6 +1046,19 @@ export default class Player extends FakeEventTarget {
   // <editor-fold desc="Playback">
 
   /**
+   * Check if sources has been received.
+   * @param {Object} sources - sources config object.
+   * @returns {boolean} - Whether sources has been received to the player.
+   * @private
+   */
+  _hasSources(sources: Object): boolean {
+    if (sources) {
+      return !!(Object.keys(sources).find(format => sources[format].length > 0));
+    }
+    return false;
+  }
+
+  /**
    * Creates the player container.
    * @private
    * @returns {void}
@@ -1129,6 +1142,8 @@ export default class Player extends FakeEventTarget {
     this._readyPromise = new Promise((resolve, reject) => {
       this._eventManager.listen(this, CustomEvents.TRACKS_CHANGED, resolve);
       this._eventManager.listen(this, Html5Events.ERROR, reject);
+    }).catch(() => {
+      // silence the promise rejection, error is handled by the error event
     });
   }
 
@@ -1168,11 +1183,11 @@ export default class Player extends FakeEventTarget {
   /**
    * Loads the selected engine.
    * @param {IEngine} Engine - The selected engine.
-   * @param {Source} source - The selected source object.
+   * @param {PKMediaSourceObject} source - The selected source object.
    * @private
    * @returns {void}
    */
-  _loadEngine(Engine: typeof IEngine, source: Source) {
+  _loadEngine(Engine: typeof IEngine, source: PKMediaSourceObject) {
     if (this._engine) {
       if (this._engine.id === Engine.id) {
         this._engine.restore(source, this._config);
@@ -1219,7 +1234,6 @@ export default class Player extends FakeEventTarget {
       });
       this._eventManager.listen(this._engine, CustomEvents.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEvents.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._engine, Html5Events.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEvents.AUTOPLAY_FAILED, (event: FakeEvent) => {
         this.pause();
         this.dispatchEvent(event)
@@ -1320,7 +1334,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _canPreload(): boolean {
-    return (!this._config.playback.autoplay && this._config.playback.preload === "auto" && !this._config.plugins.ima);
+    return (!this._config.playback.autoplay && this._config.playback.preload === "auto" && (!this._config.plugins || (this._config.plugins && !this._config.plugins.ima)));
   }
 
   /**

@@ -224,9 +224,12 @@ describe('NativeAdapter: destroy', function () {
     nativeInstance.load().then(() => {
       nativeInstance._loadPromise.should.be.exist;
       Utils.Object.isEmptyObject(nativeInstance._sourceObj).should.be.false;
+      nativeInstance._liveDurationChangeInterval = 20;
       nativeInstance.destroy().then(() => {
         (!nativeInstance._loadPromise).should.be.true;
         (!nativeInstance._sourceObj).should.be.true;
+        nativeInstance._liveEdge.should.equal(0);
+        (!nativeInstance._liveDurationChangeInterval).should.be.true;
         done();
       });
     });
@@ -680,6 +683,34 @@ describe('NativeAdapter: seekToLiveEdge', () => {
       nativeInstance.seekToLiveEdge();
       video.currentTime.should.equal(nativeInstance.duration);
       done();
+    }).catch(() => {
+      done();
+    });
+  });
+});
+
+describe('NativeAdapter: _handleLiveDurationChange', () => {
+  let video, nativeInstance;
+
+  beforeEach(() => {
+    video = document.createElement("video");
+  });
+
+  afterEach(() => {
+    nativeInstance.destroy();
+    nativeInstance = null;
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+  });
+
+  it('should trigger durationchange for live', (done) => {
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
+    nativeInstance.load().then(() => {
+      nativeInstance.addEventListener('durationchange', () => {
+        done();
+      });
     }).catch(() => {
       done();
     });

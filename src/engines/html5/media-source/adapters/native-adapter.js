@@ -71,16 +71,28 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _loadPromise: ?Promise<Object>;
   /**
    * The original progressive sources
-   * @member {Array<Object>} - _progressiveSources
+   * @member {Array<PKMediaSourceObject>} - _progressiveSources
    * @private
    */
-  _progressiveSources: Array<Source>;
+  _progressiveSources: Array<PKMediaSourceObject>;
   /**
    * The player tracks.
    * @member {Array<Track>} - _playerTracks
    * @private
    */
   _playerTracks: Array<Track>;
+  /**
+   * The id of _liveDurationChangeInterval
+   * @member {?number} - _liveDurationChangeInterval
+   * @private
+   */
+  _liveDurationChangeInterval: ?number;
+  /**
+   * The live edge value
+   * @member {number} - _liveEdge
+   * @private
+   */
+  _liveEdge: number;
 
   /**
    * Checks if NativeAdapter can play a given mime type.
@@ -122,27 +134,28 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * Factory method to create media source adapter.
    * @function createAdapter
    * @param {HTMLVideoElement} videoElement - The video element that the media source adapter work with.
-   * @param {Object} source - The source Object.
+   * @param {PKMediaSourceObject} source - The source Object.
    * @param {Object} config - The player configuration.
    * @returns {IMediaSourceAdapter} - New instance of the run time media source adapter.
    * @static
    */
-  static createAdapter(videoElement: HTMLVideoElement, source: Source, config: Object): IMediaSourceAdapter {
+  static createAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): IMediaSourceAdapter {
     return new this(videoElement, source, config);
   }
 
   /**
    * @constructor
    * @param {HTMLVideoElement} videoElement - The video element which bind to NativeAdapter
-   * @param {Source} source - The source object
+   * @param {PKMediaSourceObject} source - The source object
    * @param {Object} config - The player configuration
    */
-  constructor(videoElement: HTMLVideoElement, source: Source, config: Object) {
+  constructor(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object) {
     NativeAdapter._logger.debug('Creating adapter');
     super(videoElement, source);
     this._eventManager = new EventManager();
     this._maybeSetDrmPlayback();
     this._progressiveSources = config.sources.progressive;
+    this._liveEdge = 0;
   }
 
   /**
@@ -229,6 +242,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._addNativeTextTrackChangeListener();
       NativeAdapter._logger.debug('The source has been loaded successfully');
       resolve({tracks: this._playerTracks});
+      if (this.isLive()) {
+        this._handleLiveDurationChange();
+      }
     };
     if (this._videoElement.textTracks.length > 0) {
       parseTracksAndResolve();
@@ -245,7 +261,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {void}
    */
   _onError(reject: Function, error: FakeEvent): void {
-    reject(new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.NATIVE_ADAPTER_LOAD_FAILED, error.payload));
+    reject(new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.NATIVE_ADAPTER_LOAD_FAILED, error.payload));
   }
 
   /**
@@ -259,6 +275,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._eventManager.destroy();
       this._progressiveSources = [];
       this._loadPromise = null;
+      this._liveEdge = 0;
+      if (this._liveDurationChangeInterval) {
+        clearInterval(this._liveDurationChangeInterval);
+        this._liveDurationChangeInterval = null;
+      }
       if (NativeAdapter._drmProtocol) {
         NativeAdapter._drmProtocol.destroy();
         NativeAdapter._drmProtocol = null;
@@ -741,6 +762,22 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   isLive(): boolean {
     return this._videoElement.duration === Infinity;
+  }
+
+  /**
+   * Handling live duration change (as safari doesn't trigger durationchange event on live playback)
+   * @function _handleLiveDurationChange
+   * @returns {void}
+   * @private
+   */
+  _handleLiveDurationChange(): void {
+    this._liveDurationChangeInterval = setInterval(() => {
+      const liveEdge = this._getLiveEdge();
+      if (this._liveEdge !== liveEdge) {
+        this._liveEdge = liveEdge;
+        this._trigger(Html5Events.DURATION_CHANGE, {});
+      }
+    }, 2000);
   }
 
   /**
