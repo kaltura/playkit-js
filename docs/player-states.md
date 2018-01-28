@@ -1,7 +1,7 @@
 
 # Monitoring Player States  
 
-The Kaltura TV Platform Player supports lifecycle states (or statuses), which are based on HTML5 video events (e.g., buffering, idle, etc.). Whenever a state change occurs, the player will fire a related event in response.
+The player supports lifecycle states (or statuses), which are based on HTML5 video events (e.g., waiting, playing, etc.). Whenever a state change occurs, the player will fire a related event in response.
 
 ## Table of Contents
   - [Registering to State Changes](#registering-to-state-changed)
@@ -17,11 +17,11 @@ The state's you register to listen to include the state class, the state type, a
 
 ## Available State Classes  
 
-The Kaltura TV Platform Player supports a number of state classes. You'll find a detailed list of `State` class APIs [here]().
+The player supports a number of state classes. You'll find a detailed list of `State` class APIs [here]().
 
 ## Available State Types  
 
-The Kaltura TV Platform Player supports a number of player state types. You'll find a detailed list of player types [here]().
+The player supports a number of player state types. You'll find a detailed list of player types [here]().
 <br>Here's an example how you can access a player state type:
 ```js
 console.log(player.State.PLAYING); // 'playing'
