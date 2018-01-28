@@ -44,7 +44,7 @@ var config = {
         autoplay: false,
         allowMutedAutoPlay: true,
         muted: false,
-        registerMetadataTrackEvent:false,
+        registerMetadataTrackEvent: false,
         options: {
             html5: {
                 hls: {},
@@ -340,7 +340,7 @@ var config = {
 >>##### Type: `boolean`
 >>##### Default: `false`
 >>##### Description: Indicates whether the player should monitor id3 tags events
->>This is a Boolean attribute that indicates the behavior of the player when the stream includes id3 tags. We protect it with a flag since sometimes there are bad id3 tags that stall the stream on some browsers. If you know your stream includes valid id3 tags you may set this flag to true and listen to the "meta" event from the player
+>>This is a Boolean attribute that indicates the behavior of the player when the stream includes id3 tags. We protect it with a flag since sometimes there are bad id3 tags that stall the stream on some browsers. If you know your stream includes valid id3 tags, you may set this flag to true and listen to the "meta" event from the player.
 >##
 >>### config.playback.options
 >>##### Type: `PKPlaybackOptionsObject`
