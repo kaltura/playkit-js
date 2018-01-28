@@ -1,6 +1,6 @@
 //@flow
 import EventManager from '../../../../event/event-manager'
-import {CUSTOM_EVENTS as CustomEvents, HTML5_EVENTS as Html5Events} from '../../../../event/events'
+import {HTML5_EVENTS as Html5Events} from '../../../../event/events'
 import Track from '../../../../track/track'
 import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'

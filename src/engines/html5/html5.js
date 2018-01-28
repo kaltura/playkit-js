@@ -914,7 +914,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
                 activeCues.push(currentCue)
               }
             }
-            this.dispatchEvent(new FakeEvent(CustomEvents.STREAM_METADATA,{activeCues}));
+            this.dispatchEvent(new FakeEvent(CustomEvents.STREAM_METADATA,{cues: activeCues}));
           });
         }
       }
