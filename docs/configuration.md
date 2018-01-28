@@ -44,6 +44,7 @@ var config = {
         autoplay: false,
         allowMutedAutoPlay: true,
         muted: false,
+        registerMetadataTrackEvent:false,
         options: {
             html5: {
                 hls: {},
@@ -223,6 +224,7 @@ var config = {
 >  autoplay: false,
 >  allowMutedAutoPlay: true,
 >  muted: false,
+>  registerMetadataTrackEvent: false,
 >  options: {
 >    html5: {
 >      hls: {},
@@ -333,6 +335,12 @@ var config = {
 >>##### Default: `false`
 >>##### Description: Indicates whether the video should be muted or not.
 >>This is a Boolean attribute that indicates the default setting of the audio contained in the video. If set, the audio will be initially silenced. The attribute's default value is false, which means that the audio will be played automatically when the video is played.
+>## 
+>>### config.playback.registerMetadataTrackEvent
+>>##### Type: `boolean`
+>>##### Default: `false`
+>>##### Description: Indicates whether the player should monitor id3 tags events
+>>This is a Boolean attribute that indicates the behavior of the player when the stream includes id3 tags. We protect it with a flag since sometimes there are bad id3 tags that stall the stream on some browsers. If you know your stream includes valid id3 tags you may set this flag to true and listen to the "meta" event from the player
 >##
 >>### config.playback.options
 >>##### Type: `PKPlaybackOptionsObject`
