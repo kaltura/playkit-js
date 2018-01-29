@@ -12,7 +12,7 @@ import * as Utils from '../../utils/util'
 import Html5AutoPlayCapability from './capabilities/html5-autoplay'
 import Html5IsSupportedCapability from './capabilities/html5-is-supported'
 import Error from "../../error/error";
-
+import TRACK_KIND from "../../track/track-kind"
 /**
  * Html5 engine for playback.
  * @classdesc
@@ -191,7 +191,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         if (Html5Events[html5Event] == Html5Events.PLAYING &&
           !this._registeredMetadataEvent &&
           this._config.playback.registerMetadataTrackEvent){
-          setTimeout(()=>{this._registerMetadata()},1000);
+          setTimeout(()=>{this._addMetaCueChangeListener()},1000);
         }
         if (Html5Events[html5Event] === Html5Events.ERROR) {
           this._handleVideoError();
@@ -899,26 +899,28 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    * @private
    */
-  _registerMetadata(): void {
+  _addMetaCueChangeListener(): void {
     const tracks = this._el.textTracks;
     for (let track in tracks) {
       if (tracks.hasOwnProperty(track)){
-        if (tracks[track].kind == "metadata") {
+        if (tracks[track].kind == TRACK_KIND.METADATA) {
           tracks[track].mode = "showing";
           this._registeredMetadataEvent = true;
-          tracks[track].addEventListener("cuechange", (evt) => {
-            let activeCues =[];
-            for (let cue in evt.currentTarget.activeCues){
-              if (evt.currentTarget.activeCues.hasOwnProperty(cue)) {
-                let currentCue = evt.currentTarget.activeCues[cue];
-                activeCues.push(currentCue)
-              }
-            }
-            this.dispatchEvent(new FakeEvent(CustomEvents.STREAM_METADATA,{cues: activeCues}));
-          });
+          tracks[track].oncuechange = (e) => this._onMetaCueChange(e);
         }
       }
     }
+  }
+
+  _onMetaCueChange(evt: FakeEvent): void {
+    let activeCues =[];
+    for (let cue in evt.currentTarget.activeCues){
+      if (evt.currentTarget.activeCues.hasOwnProperty(cue)) {
+        let currentCue = evt.currentTarget.activeCues[cue];
+        activeCues.push(currentCue)
+      }
+    }
+    this.dispatchEvent(new FakeEvent(CustomEvents.STREAM_METADATA,{cues: activeCues}));
   }
 }
 

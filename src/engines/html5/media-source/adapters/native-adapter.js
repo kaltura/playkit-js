@@ -12,6 +12,7 @@ import FairPlay from '../../../../drm/fairplay'
 import Env from '../../../../utils/env'
 import FakeEvent from '../../../../event/fake-event'
 import Error from '../../../../error/error'
+import TRACK_KIND from '../../../../track/track-kind'
 
 /**
  * An illustration of media source extension for progressive download
@@ -572,7 +573,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   selectTextTrack(textTrack: PKTextTrack): void {
     const textTracks = this._videoElement.textTracks;
     if ((textTrack instanceof PKTextTrack)
-      && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions')
+      && (textTrack.kind === TRACK_KIND.SUBTITLES || textTrack.kind === TRACK_KIND.CAPTIONS)
       && textTracks && textTracks[textTrack.index]) {
       this._removeNativeTextTrackChangeListener();
       this._disableTextTracks();
@@ -717,7 +718,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _disableTextTracks(): void {
     let textTracks = this._videoElement.textTracks;
-    if (textTracks && textTracks.kind !="metadata") {
+    if ([TRACK_KIND.CAPTIONS, TRACK_KIND.SUBTITLES].includes(textTracks.kind)) {
       for (let i = 0; i < textTracks.length; i++) {
         textTracks[i].mode = 'disabled';
       }
