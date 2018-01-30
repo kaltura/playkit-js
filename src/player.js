@@ -411,6 +411,8 @@ export default class Player extends FakeEventTarget {
   play(): void {
     if (this._engine) {
       this._playbackMiddleware.play(this._play.bind(this));
+    } else {
+      this._eventManager.listenOnce(this, this.Event.SOURCE_SELECTED, () => this.play());
     }
   }
 
