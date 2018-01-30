@@ -18,7 +18,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .playkit-engine video::-webkit-media-controls-panel,
@@ -36,7 +36,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background-size: contain;
+  background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
   background-color: #000;
