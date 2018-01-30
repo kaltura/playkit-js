@@ -39,6 +39,7 @@ var config = {
         textLanguage: "",
         useNativeTextTrack: false,
         volume: 1,
+        startTime: 0,
         playsinline: true,
         preload: "none",
         autoplay: false,
@@ -202,6 +203,7 @@ var config = {
 >  textLanguage: string,
 >  useNativeTextTrack: boolean,
 >  volume: number,
+>  startTime: number,
 >  playsinline: boolean,
 >  preload: string,
 >  autoplay: boolean,
@@ -219,6 +221,7 @@ var config = {
 >  textLanguage: "",
 >  useNativeTextTrack: false,
 >  volume: 1,
+>  startTime: 0,
 >  playsinline: true,
 >  preload: "none",
 >  autoplay: false,
@@ -313,6 +316,11 @@ var config = {
 >>};
 >>```
 >## 
+>>### config.playback.startTime
+>>##### Type: `number`
+>>##### Default: `0`
+>>##### Description: Defines the start time of the video in seconds. 
+>## 
 >>### config.playback.playsinline
 >>##### Type: `boolean`
 >>##### Default: `true`
@@ -336,7 +344,7 @@ var config = {
 >>##### Description: Indicates whether the video should be muted or not.
 >>This is a Boolean attribute that indicates the default setting of the audio contained in the video. If set, the audio will be initially silenced. The attribute's default value is false, which means that the audio will be played automatically when the video is played.
 >## 
->>### config.playback.registerMetadataTrackEvent
+>>### config.playback.registerMetadataTrackEvent (Not implemented yet)
 >>##### Type: `boolean`
 >>##### Default: `false`
 >>##### Description: Indicates whether the player should monitor id3 tags events
