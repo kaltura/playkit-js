@@ -15,6 +15,7 @@ import Env from './utils/env'
 import * as Utils from './utils/util'
 import Error from './error/error'
 import FakeEvent from './event/fake-event'
+import Jsonp from './utils/jsonp'
 
 Player.runCapabilities();
 
@@ -55,6 +56,8 @@ export {__NAME__ as PLAYER_NAME};
 
 // Export environment data
 export {Env};
+
+export {Jsonp};
 
 // Export base DRM protocol
 export {BaseDrmProtocol};
