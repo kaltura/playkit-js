@@ -52,7 +52,7 @@ To debug the player and view explicit error messages in the console, you'll need
 
 In order to run the player in debug mode, set config.debugLevel to true.
 
-> More information about debugging and troubleshooting of the player can be found [here](https://github.com/kaltura/kaltura-player-js/blob/master/docs/debug.md).
+> More information about debugging and troubleshooting of the player can be found [here](https://github.com/kaltura/kaltura-player-js/blob/master/docs/debugging.md).
 
 An example to an error message:
 
