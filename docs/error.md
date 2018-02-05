@@ -25,7 +25,7 @@ player.addEventListener(player.Event.ERROR, e => {
    	error.category,
    	error.code,
    	error.data);
-})
+});
 ```
 
 ## **Creating an Error**
@@ -37,7 +37,7 @@ If you wish to change / emit an error event, you need to create an error object 
 new Error(Error.Severity.CRITICAL,
     Error.Category.NETWORK,
     Error.Code.HTTP_ERROR,
-    {'url': 'www.some-bad-url.com'})
+    {'url': 'www.some-bad-url.com'});
 ```
 
 Then, you will need to dispatch an '`error`' event.
@@ -50,9 +50,9 @@ Then, you will need to dispatch an '`error`' event.
 
 To debug the player and view explicit error messages in the console, you'll need to use debug mode.
 
-In order to run the player in debug mode, add '?debugKalturaPlayer' to the URI.
+In order to run the player in debug mode, set config.debugLevel to true.
 
-> More information about debugging and troubleshooting of the player can be found [here](./debug.md).
+> More information about debugging and troubleshooting of the player can be found [here](https://github.com/kaltura/kaltura-player-js/blob/master/docs/debug.md).
 
 An example to an error message:
 
