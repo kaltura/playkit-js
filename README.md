@@ -17,6 +17,20 @@ PlayKit JS is written in [ECMAScript6], statically analysed using [Flow] and tra
 [ECMAScript6]: https://github.com/ericdouglas/ES6-Learning#articles--tutorials
 [Babel]: https://babeljs.io
 
+
+## Table of Contents
+
+  * [Getting Started](#getting-started)
+    + [Installing](#installing)
+    + [Building](#building)
+    + [Embed the Player In Your Test Page](#embed-the-player-in-your-test-page)
+  * [Documentation](#documentation)
+  * [Running the Tests](#running-the-tests)
+  * [Compatibility](#compatibility)
+  * [Contributing](#contributing)
+  * [Versioning](#versioning)
+  * [License](#license)
+
 ## Getting Started
 
 
