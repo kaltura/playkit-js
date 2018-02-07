@@ -56,15 +56,9 @@ player.play();
 </script>
 ```
 
-## Documentation: API, Configuration and Guides
-The player can be configured and controlled easily using the Player API.
- 
-- **Configuration**
-<br>Click [here](docs/configuration.md) to learn more.
+## Documentation
+- **[Configuration](docs/configuration.md)**
 - **API**
-<br> Click [here](docs/api.md) to learn more.
-- **Guides**
-<br> Click [here](docs/guides.md) to learn more.
 
 ## Running the Tests
 
