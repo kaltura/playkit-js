@@ -1,5 +1,5 @@
 ## How does the Source Selection Logic Works
-Let us assume that the following player configuration is given to us and we would like to understand how does the source selection logic works.
+Let us assume that the following player configuration is given and we would like to understand how does the source selection logic works.
 ```js
 var config = {
     sources: {
@@ -36,7 +36,8 @@ var config = {
 However, will the player use the native hls or not? This depends on the `preferNative` value for `hls`. Because this value is set to `true`, the player knows that if the browser supports native `hls` playback, the source will be played natively.
 
 Given the configuration information above, which source will be played in each browser?
+<br>Following summarize the results for this scenario:
 
 | Chrome | Safari | Firefox | Edge|
 |----------------- | ----------------- | ------ |-----
-| _hls_ with `hls.js` | native _hls_ |_hls_ with `hls.js`|native _hls_
+| hls with `hls.js` | native hls |hls with `hls.js`|native hls
