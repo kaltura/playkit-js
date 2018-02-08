@@ -214,7 +214,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.AUDIO_TRACK_CHANGED, () => {
         this._eventManager.listenOnce(this._el, Html5Events.WAITING, () => {
           this.dispatchEvent(new FakeEvent(Html5Events.PLAYING));
-        })
+        });
       });
     }
   }
