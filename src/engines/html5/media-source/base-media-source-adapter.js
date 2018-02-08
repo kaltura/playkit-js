@@ -21,7 +21,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * Passing the HTML5 events to the actual media source adapter.
    * @static
    */
-  static Html5Events: { [event: string]: string} = HTML5_EVENTS;
+  static Html5Events: { [event: string]: string } = HTML5_EVENTS;
 
   /**
    * Passing the getLogger function to the actual media source adapter.
@@ -145,6 +145,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return BaseMediaSourceAdapter._throwNotImplementedError('isAdaptiveBitrateEnabled');
   }
 
+  _getLiveEdge(): number {
+    return BaseMediaSourceAdapter._throwNotImplementedError('_getLiveEdge');
+  }
+
   seekToLiveEdge(): void {
     BaseMediaSourceAdapter._throwNotImplementedError('seekToLiveEdge');
   }
@@ -158,7 +162,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   }
 
   getStartTimeOfDvrWindow(): number {
-    BaseMediaSourceAdapter._throwNotImplementedError('getStartTimeOfDvrWindow');
+    return BaseMediaSourceAdapter._throwNotImplementedError('getStartTimeOfDvrWindow');
   }
 
   /**
@@ -166,7 +170,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @param {string} name of the unimplemented function
    * @returns {any} void/string/boolean
    */
-  static _throwNotImplementedError(name: string): any{
+  static _throwNotImplementedError(name: string): any {
     throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, name);
   }
 
@@ -179,7 +183,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     if (this.isLive()) {
       return this._videoElement.currentTime - this.getStartTimeOfDvrWindow();
     } else {
-      return this._videoElement.duration;
+      return this._videoElement.currentTime;
     }
   }
 
