@@ -760,4 +760,41 @@ describe('NativeAdapter: get duration', () => {
   });
 });
 
+describe('NativeAdapter: getStartTimeOfDvrWindow', () => {
+  let video, nativeInstance;
+
+  beforeEach(() => {
+    video = document.createElement("video");
+  });
+
+  afterEach(() => {
+    nativeInstance.destroy();
+    nativeInstance = null;
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+  });
+
+  it('should return 0 for VOD', (done) => {
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {sources: {}});
+    nativeInstance.load().then(() => {
+      nativeInstance.getStartTimeOfDvrWindow().should.equal(0);
+      done();
+    });
+  });
+
+  it('should return the start of DVR window for live', (done) => {
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
+    nativeInstance.load().then(() => {
+      nativeInstance.getStartTimeOfDvrWindow().should.equal(nativeInstance._videoElement.seekable.start(0));
+      done();
+    }).catch(() => {
+      done();
+    });
+  });
+});
+
+
+
 
