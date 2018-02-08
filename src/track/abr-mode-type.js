@@ -1,8 +1,7 @@
 // @flow
+export type AbrModes = { [mode: string]: string };
 
-declare type AbrModes = { [mode: string]: string };
-
-const AbrMode = {
+const AbrMode: AbrModes = {
   MANUAL: "manual",
   AUTO: "auto"
 };

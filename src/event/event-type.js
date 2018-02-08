@@ -1,7 +1,7 @@
 //@flow
 import * as Utils from '../utils/util'
 
-declare type EventTypes = { [event: string]: string };
+export type EventTypes = { [event: string]: string };
 
 const Html5EventType: EventTypes = {
   /**

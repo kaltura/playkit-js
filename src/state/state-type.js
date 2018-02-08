@@ -1,5 +1,5 @@
 //@flow
-declare type StateTypes = { [state: string]: string };
+export type StateTypes = { [state: string]: string };
 
 const StateType: StateTypes = {
   IDLE: "idle",

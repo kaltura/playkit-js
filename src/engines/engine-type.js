@@ -1,5 +1,5 @@
 // @flow
-declare type EngineTypes = { [engine: string]: string };
+export type EngineTypes = { [engine: string]: string };
 
 const EngineType: EngineTypes = {
   HTML5: "html5",

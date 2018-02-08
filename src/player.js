@@ -29,6 +29,14 @@ import {LogLevelType} from './utils/logger'
 import PlaybackMiddleware from './middleware/playback-middleware'
 import DefaultPlayerConfig from './player-config.json'
 import './assets/style.css'
+import type {EventTypes} from './event/event-type'
+import type {TrackTypes} from './track/track-type'
+import type {LogLevels, LogLevelTypes} from './utils/logger'
+import type {AbrModes} from './track/abr-mode-type'
+import type {MediaTypes} from './media-type'
+import type {StreamTypes} from './engines/stream-type'
+import type {EngineTypes} from './engines/engine-type'
+import type {StateTypes} from './state/state-type'
 
 /**
  * The player playback rates.

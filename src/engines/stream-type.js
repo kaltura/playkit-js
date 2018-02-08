@@ -1,5 +1,5 @@
 // @flow
-declare type StreamTypes = { [stream: string]: string };
+export type StreamTypes = { [stream: string]: string };
 
 const StreamType: StreamTypes = {
   DASH: "dash",

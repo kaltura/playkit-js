@@ -1,5 +1,5 @@
 //@flow
-declare type TrackTypes = { [track: string]: string };
+export type TrackTypes = { [track: string]: string };
 
 const TrackType: TrackTypes = {
   VIDEO: "video",

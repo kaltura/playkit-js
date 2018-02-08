@@ -1,5 +1,5 @@
 // @flow
-declare type MediaTypes = { [media: string]: string };
+export type MediaTypes = { [media: string]: string };
 
 const MediaType: MediaTypes = {
   VOD: "Vod",
