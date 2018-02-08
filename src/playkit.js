@@ -15,6 +15,16 @@ import Env from './utils/env'
 import * as Utils from './utils/util'
 import Error from './error/error'
 import FakeEvent from './event/fake-event'
+import FakeEventTarget from './event/fake-event-target'
+import EventManager from './event/event-manager'
+import {StateType} from './state/state-type'
+import {TrackType} from './track/track-type'
+import {StreamType} from './engines/stream-type'
+import {EngineType} from './engines/engine-type'
+import {MediaType} from './media-type'
+import {EventType} from './event/event-type'
+import {AbrMode} from './track/abr-mode-type'
+import {LogLevelType} from './utils/logger'
 
 Player.runCapabilities();
 
@@ -44,8 +54,8 @@ export {Utils};
 // Export Error class
 export {Error};
 
-// Export FakeEvent Class
-export {FakeEvent}
+// Export Event system
+export {FakeEvent, FakeEventTarget, EventManager}
 
 // Export version
 export {__VERSION__ as VERSION};
@@ -62,5 +72,8 @@ export {BaseDrmProtocol};
 // Export the player capabilities
 const getCapabilities = Player.getCapabilities;
 export {getCapabilities};
+
+// Export enums
+export {EventType, StateType, TrackType, EngineType, MediaType, StreamType, AbrMode, LogLevelType};
 
 export default loadPlayer;
