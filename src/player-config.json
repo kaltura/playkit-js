@@ -1,14 +1,22 @@
 {
-  "sources": {},
+  "logLevel": "ERROR",
+  "type": "Unknown",
+  "sources": {
+    "hls": [],
+    "dash": [],
+    "progressive": []
+  },
   "plugins": {},
   "metadata": {
-    "poster": ""
+    "poster": "",
+    "description": ""
   },
   "playback": {
     "audioLanguage": "",
     "textLanguage": "",
     "useNativeTextTrack": false,
     "volume": 1,
+    "startTime": 0,
     "playsinline": true,
     "preload": "none",
     "autoplay": false,

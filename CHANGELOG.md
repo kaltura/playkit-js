@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.20.1"></a>
+## [0.20.1](https://github.com/kaltura/playkit-js/compare/v0.20.0...v0.20.1) (2018-02-06)
+
+
+### Bug Fixes
+
+* **FEC-7564:** durationchange not triggered while live playback - safari ([#178](https://github.com/kaltura/playkit-js/issues/178)) ([d0490fc](https://github.com/kaltura/playkit-js/commit/d0490fc))
+* canPreload check logic is not accurate ([#179](https://github.com/kaltura/playkit-js/issues/179)) ([3d37524](https://github.com/kaltura/playkit-js/commit/3d37524))
+
+
+
 <a name="0.20.0"></a>
 # [0.20.0](https://github.com/kaltura/playkit-js/compare/v0.19.0...v0.20.0) (2018-01-10)
 
