@@ -9,6 +9,7 @@ import AudioTrack from '../../track/audio-track'
 import {TextTrack as PKTextTrack} from '../../track/text-track'
 import {Cue} from '../../track/vtt-cue'
 import * as Utils from '../../utils/util'
+import Env from '../../utils/env'
 import Html5AutoPlayCapability from './capabilities/html5-autoplay'
 import Html5IsSupportedCapability from './capabilities/html5-is-supported'
 import Error from "../../error/error";
@@ -190,6 +191,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       });
     });
     if (this._mediaSourceAdapter) {
+      this._handleWaitingEventOnAudioTrack();
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.AUDIO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.TEXT_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
@@ -197,6 +199,23 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.TEXT_CUE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5Events.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5Events.DURATION_CHANGE, (event: FakeEvent) => this.dispatchEvent(event));
+    }
+  }
+
+    /**
+     * Trigger a playing event whenever an audio track is changed.
+     * This align Edge and IE behaviour to other browsers. When an audio track changed in IE & Edge, they trigger
+     * waiting event but not playing event.
+     * @returns {void}
+     */
+  _handleWaitingEventOnAudioTrack(): void {
+    const affectedBrowsers = ['IE','Edge'];
+    if (affectedBrowsers.includes(Env.browser.name)) {
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.AUDIO_TRACK_CHANGED, () => {
+        this._eventManager.listenOnce(this._el, Html5Events.WAITING, () => {
+          this.dispatchEvent(new FakeEvent(Html5Events.PLAYING));
+        })
+      });
     }
   }
 
