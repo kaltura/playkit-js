@@ -202,14 +202,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
   }
 
-    /**
-     * Trigger a playing event whenever an audio track is changed.
-     * This align Edge and IE behaviour to other browsers. When an audio track changed in IE & Edge, they trigger
-     * waiting event but not playing event.
-     * @returns {void}
-     */
+  /**
+   * Trigger a playing event whenever an audio track is changed.
+   * This align Edge and IE behaviour to other browsers. When an audio track changed in IE & Edge, they trigger
+   * waiting event but not playing event.
+   * @returns {void}
+   */
   _handleWaitingEventOnAudioTrack(): void {
-    const affectedBrowsers = ['IE','Edge'];
+    const affectedBrowsers = ['IE', 'Edge'];
     if (affectedBrowsers.includes(Env.browser.name)) {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEvents.AUDIO_TRACK_CHANGED, () => {
         this._eventManager.listenOnce(this._el, Html5Events.WAITING, () => {
