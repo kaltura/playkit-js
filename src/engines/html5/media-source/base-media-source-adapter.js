@@ -3,25 +3,26 @@
 import FakeEvent from '../../../event/fake-event'
 import FakeEventTarget from '../../../event/fake-event-target'
 import Error from '../../../error/error'
-import {CUSTOM_EVENTS, HTML5_EVENTS} from '../../../event/events'
+import {CustomEventType, Html5EventType} from '../../../event/event-type'
 import getLogger from '../../../utils/logger'
 import Track from '../../../track/track'
 import VideoTrack from '../../../track/video-track'
 import AudioTrack from '../../../track/audio-track'
 import TextTrack from '../../../track/text-track'
+import type {EventTypes} from '../../../event/event-type'
 
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
   /**
    * Passing the custom events to the actual media source adapter.
    * @static
    */
-  static CustomEvents: { [event: string]: string } = CUSTOM_EVENTS;
+  static CustomEvents: EventTypes = CustomEventType;
 
   /**
    * Passing the HTML5 events to the actual media source adapter.
    * @static
    */
-  static Html5Events: { [event: string]: string} = HTML5_EVENTS;
+  static Html5Events: EventTypes = Html5EventType;
 
   /**
    * Passing the getLogger function to the actual media source adapter.
@@ -162,7 +163,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @param {string} name of the unimplemented function
    * @returns {any} void/string/boolean
    */
-  static _throwNotImplementedError(name: string): any{
+  static _throwNotImplementedError(name: string): any {
     throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, name);
   }
 
