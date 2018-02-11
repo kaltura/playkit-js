@@ -1,9 +1,9 @@
-import * as events from '../../../src/event/events'
+import {EventType, Html5EventType, CustomEventType} from '../../../src/event/event-type'
 import {Object as ObjectUtils} from '../../../src/utils/util'
 
 describe('events', () => {
   it('should equals player events', () => {
-    events.HTML5_EVENTS.should.deep.equals({
+    Html5EventType.should.deep.equals({
       ABORT: 'abort',
       CAN_PLAY: 'canplay',
       CAN_PLAY_THROUGH: 'canplaythrough',
@@ -27,7 +27,7 @@ describe('events', () => {
       VOLUME_CHANGE: 'volumechange',
       WAITING: 'waiting',
     });
-    events.CUSTOM_EVENTS.should.deep.equals({
+    CustomEventType.should.deep.equals({
       ENTER_FULLSCREEN: 'enterfullscreen',
       EXIT_FULLSCREEN: 'exitfullscreen',
       REQUESTED_ENTER_FULLSCREEN: 'requestedenterfullscreen',
@@ -66,6 +66,6 @@ describe('events', () => {
       AD_MUTED: 'admuted',
       AD_PROGRESS: 'adprogress'
     });
-    events.PLAYER_EVENTS.should.deep.equals(ObjectUtils.merge([events.HTML5_EVENTS, events.CUSTOM_EVENTS]));
+    EventType.should.deep.equals(ObjectUtils.merge([Html5EventType, CustomEventType]));
   });
 });
