@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.21.0"></a>
+# [0.21.0](https://github.com/kaltura/playkit-js/compare/v0.20.1...v0.21.0) (2018-02-11)
+
+
+### Bug Fixes
+
+* **FEC-7392 FEC-7882:** Live+DVR - unavailable time shown in the seekbar ([#187](https://github.com/kaltura/playkit-js/issues/187)) ([98a6483](https://github.com/kaltura/playkit-js/commit/98a6483))
+* **FEC-7896:** endless spinner appears right after changing audio track in IE and Edge ([#189](https://github.com/kaltura/playkit-js/issues/189)) ([2da8940](https://github.com/kaltura/playkit-js/commit/2da8940))
+
+
+### Features
+
+* expose player enums ([#190](https://github.com/kaltura/playkit-js/issues/190)) ([675563a](https://github.com/kaltura/playkit-js/commit/675563a))
+
+
+
 <a name="0.20.1"></a>
 ## [0.20.1](https://github.com/kaltura/playkit-js/compare/v0.20.0...v0.20.1) (2018-02-06)
 
