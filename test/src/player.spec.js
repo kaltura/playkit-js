@@ -1,7 +1,7 @@
 import TextStyle from '../../src/track/text-style'
 import Player from '../../src/player'
-import PlayerStates from '../../src/state/state-types'
-import {HTML5_EVENTS as Html5Events, CUSTOM_EVENTS as CustomEvents} from '../../src/event/events'
+import {StateType} from '../../src/state/state-type'
+import {Html5EventType, CustomEventType} from '../../src/event/event-type'
 import sourcesConfig from './configs/sources.json'
 import Track from '../../src/track/track'
 import VideoTrack from '../../src/track/video-track'
@@ -279,7 +279,7 @@ describe("ready", function () {
         });
 
         it("should fail ready -> load", (done) => {
-          player.addEventListener(Html5Events.ERROR, (error) => {
+          player.addEventListener(Html5EventType.ERROR, (error) => {
             if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
@@ -292,7 +292,7 @@ describe("ready", function () {
         });
 
         it("should fail load -> ready", (done) => {
-          player.addEventListener(Html5Events.ERROR, (error) => {
+          player.addEventListener(Html5EventType.ERROR, (error) => {
             if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
@@ -319,7 +319,7 @@ describe("ready", function () {
         });
 
         it("should fail configure -> ready -> load", (done) => {
-          player.addEventListener(Html5Events.ERROR, (error) => {
+          player.addEventListener(Html5EventType.ERROR, (error) => {
             if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
@@ -333,7 +333,7 @@ describe("ready", function () {
         });
 
         it("should fail configure -> load -> ready", (done) => {
-          player.addEventListener(Html5Events.ERROR, (error) => {
+          player.addEventListener(Html5EventType.ERROR, (error) => {
             if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
@@ -347,7 +347,7 @@ describe("ready", function () {
         });
 
         it("should fail ready -> configure -> load", (done) => {
-          player.addEventListener(Html5Events.ERROR, (error) => {
+          player.addEventListener(Html5EventType.ERROR, (error) => {
             if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
@@ -379,7 +379,7 @@ describe("ready", function () {
         });
 
         it("should fail ready -> load", (done) => {
-          player.addEventListener(Html5Events.ERROR, (error) => {
+          player.addEventListener(Html5EventType.ERROR, (error) => {
             if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
@@ -392,7 +392,7 @@ describe("ready", function () {
         });
 
         it("should fail load -> ready", (done) => {
-          player.addEventListener(Html5Events.ERROR, (error) => {
+          player.addEventListener(Html5EventType.ERROR, (error) => {
             if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
@@ -420,7 +420,7 @@ describe("ready", function () {
         });
 
         it("should fail configure -> ready -> load", (done) => {
-          player.addEventListener(Html5Events.ERROR, (error) => {
+          player.addEventListener(Html5EventType.ERROR, (error) => {
             if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
@@ -434,7 +434,7 @@ describe("ready", function () {
         });
 
         it("should fail configure -> load -> ready", (done) => {
-          player.addEventListener(Html5Events.ERROR, (error) => {
+          player.addEventListener(Html5EventType.ERROR, (error) => {
             if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
@@ -448,7 +448,7 @@ describe("ready", function () {
         });
 
         it("should fail ready -> load -> configure", (done) => {
-          player.addEventListener(Html5Events.ERROR, (error) => {
+          player.addEventListener(Html5EventType.ERROR, (error) => {
             if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
@@ -462,7 +462,7 @@ describe("ready", function () {
         });
 
         it("should fail ready -> configure -> load", (done) => {
-          player.addEventListener(Html5Events.ERROR, (error) => {
+          player.addEventListener(Html5EventType.ERROR, (error) => {
             if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
@@ -476,7 +476,7 @@ describe("ready", function () {
         });
 
         it("should fail load -> configure -> ready", (done) => {
-          player.addEventListener(Html5Events.ERROR, (error) => {
+          player.addEventListener(Html5EventType.ERROR, (error) => {
             if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
@@ -490,7 +490,7 @@ describe("ready", function () {
         });
 
         it("should fail load -> ready -> configure", (done) => {
-          player.addEventListener(Html5Events.ERROR, (error) => {
+          player.addEventListener(Html5EventType.ERROR, (error) => {
             if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
               done();
             }
@@ -678,7 +678,7 @@ describe('selectTrack - video', function () {
 
   it.skip('should select a new video track', (done) => {
     let tracks;
-    player.addEventListener(CustomEvents.VIDEO_TRACK_CHANGED, (event) => {
+    player.addEventListener(CustomEventType.VIDEO_TRACK_CHANGED, (event) => {
       (event.payload.selectedVideoTrack instanceof VideoTrack).should.be.true;
       event.payload.selectedVideoTrack.index.should.equal(1);
       (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.false;
@@ -749,7 +749,7 @@ describe('selectTrack - audio', function () {
   it('should select a new audio track', (done) => {
     player.ready().then(() => {
       if (video.audioTracks) {
-        player.addEventListener(CustomEvents.AUDIO_TRACK_CHANGED, (event) => {
+        player.addEventListener(CustomEventType.AUDIO_TRACK_CHANGED, (event) => {
           (event.payload.selectedAudioTrack instanceof AudioTrack).should.be.true;
           event.payload.selectedAudioTrack.index.should.equal(2);
           video.audioTracks[0].enabled.should.be.false;
@@ -871,7 +871,7 @@ describe('selectTrack - text', function () {
 
   it('should select a new subtitles track', (done) => {
     player.ready().then(() => {
-      player.addEventListener(CustomEvents.TEXT_TRACK_CHANGED, (event) => {
+      player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, (event) => {
         (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
         event.payload.selectedTextTrack.index.should.equal(1);
         video.textTracks[0].mode.should.be.equal('disabled');
@@ -895,7 +895,7 @@ describe('selectTrack - text', function () {
   it('should select a new captions track', (done) => {
     player.load();
     player.ready().then(() => {
-      player.addEventListener(CustomEvents.TEXT_TRACK_CHANGED, (event) => {
+      player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, (event) => {
         (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
         event.payload.selectedTextTrack.index.should.equal(1);
         video.textTracks[0].mode.should.be.equal('disabled');
@@ -1009,9 +1009,9 @@ describe('getActiveTracks', function () {
 
   it.skip('should get the active tracks before and after switching', (done) => {
     let videoTracks, audioTracks, textTracks;
-    player.addEventListener(CustomEvents.TEXT_TRACK_CHANGED, () => {
-      player.addEventListener(CustomEvents.VIDEO_TRACK_CHANGED, () => {
-        player.addEventListener(CustomEvents.AUDIO_TRACK_CHANGED, () => {
+    player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, () => {
+      player.addEventListener(CustomEventType.VIDEO_TRACK_CHANGED, () => {
+        player.addEventListener(CustomEventType.AUDIO_TRACK_CHANGED, () => {
           player.getActiveTracks().audio.should.deep.equals(audioTracks[2]);
           done();
         });
@@ -1349,7 +1349,7 @@ describe('events', function () {
        * @returns {void}
        */
       function onTracksChanged(data) {
-        player.removeEventListener(CustomEvents.TRACKS_CHANGED, onTracksChanged);
+        player.removeEventListener(CustomEventType.TRACKS_CHANGED, onTracksChanged);
         let videoTracksLength = 1;
         let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
         let textTracksLength = (video.textTracks ? video.textTracks.length + 1 : 0);
@@ -1358,7 +1358,7 @@ describe('events', function () {
         done();
       }
 
-      player.addEventListener(CustomEvents.TRACKS_CHANGED, onTracksChanged);
+      player.addEventListener(CustomEventType.TRACKS_CHANGED, onTracksChanged);
       player.load();
     });
   });
@@ -1392,7 +1392,7 @@ describe('events', function () {
     it('should fire first play only once', (done) => {
       let counter = 0;
       let onPlaying = () => {
-        player.removeEventListener(Html5Events.PLAYING, onPlaying);
+        player.removeEventListener(Html5EventType.PLAYING, onPlaying);
         player.pause();
         player.play();
         setTimeout(() => {
@@ -1400,10 +1400,10 @@ describe('events', function () {
           done();
         }, 0);
       };
-      player.addEventListener(CustomEvents.FIRST_PLAY, () => {
+      player.addEventListener(CustomEventType.FIRST_PLAY, () => {
         counter++;
       });
-      player.addEventListener(Html5Events.PLAYING, onPlaying);
+      player.addEventListener(Html5EventType.PLAYING, onPlaying);
       player.play();
     });
   });
@@ -1435,7 +1435,7 @@ describe('events', function () {
     });
 
     it('should fire source selected', (done) => {
-      player.addEventListener(CustomEvents.SOURCE_SELECTED, (event) => {
+      player.addEventListener(CustomEventType.SOURCE_SELECTED, (event) => {
         event.payload.selectedSource[0].id.should.equal('1_rsrdfext_10081,url');
         done();
       });
@@ -1469,7 +1469,7 @@ describe('events', function () {
       config.sources = sourcesConfig.Mp4;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
-      player.addEventListener(CustomEvents.ABR_MODE_CHANGED, (event) => {
+      player.addEventListener(CustomEventType.ABR_MODE_CHANGED, (event) => {
         event.payload.mode.should.equal('manual');
         done();
       });
@@ -1480,7 +1480,7 @@ describe('events', function () {
       config.sources = sourcesConfig.Hls;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
-      player.addEventListener(CustomEvents.ABR_MODE_CHANGED, (event) => {
+      player.addEventListener(CustomEventType.ABR_MODE_CHANGED, (event) => {
         event.payload.mode.should.equal('auto');
         done();
       });
@@ -1622,8 +1622,8 @@ describe('states', function () {
      * @returns {void}
      */
     function onLoadStart() {
-      player.removeEventListener(Html5Events.LOAD_START, onLoadStart);
-      player._stateManager.currentState.type.should.equal(PlayerStates.LOADING);
+      player.removeEventListener(Html5EventType.LOAD_START, onLoadStart);
+      player._stateManager.currentState.type.should.equal(StateType.LOADING);
     }
 
     /**
@@ -1631,11 +1631,11 @@ describe('states', function () {
      * @returns {void}
      */
     function onLoadedMetadata() {
-      player.removeEventListener(Html5Events.LOADED_METADATA, onLoadedMetadata);
+      player.removeEventListener(Html5EventType.LOADED_METADATA, onLoadedMetadata);
       if (player.config.autoplay) {
-        player._stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+        player._stateManager.currentState.type.should.equal(StateType.PLAYING);
       } else {
-        player._stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
+        player._stateManager.currentState.type.should.equal(StateType.PAUSED);
       }
     }
 
@@ -1644,8 +1644,8 @@ describe('states', function () {
      * @returns {void}
      */
     function onPlaying() {
-      player.removeEventListener(Html5Events.PLAYING, onPlaying);
-      player._stateManager.currentState.type.should.equal(PlayerStates.PLAYING);
+      player.removeEventListener(Html5EventType.PLAYING, onPlaying);
+      player._stateManager.currentState.type.should.equal(StateType.PLAYING);
       setTimeout(() => {
         player.pause();
       }, 100);
@@ -1656,8 +1656,8 @@ describe('states', function () {
      * @returns {void}
      */
     function onPause() {
-      player.removeEventListener(Html5Events.PAUSE, onPause);
-      player._stateManager.currentState.type.should.equal(PlayerStates.PAUSED);
+      player.removeEventListener(Html5EventType.PAUSE, onPause);
+      player._stateManager.currentState.type.should.equal(StateType.PAUSED);
       player.currentTime = player.duration - 1;
       player.play();
     }
@@ -1667,18 +1667,18 @@ describe('states', function () {
      * @returns {void}
      */
     function onEnded() {
-      player.removeEventListener(Html5Events.ENDED, onEnded);
-      player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
+      player.removeEventListener(Html5EventType.ENDED, onEnded);
+      player._stateManager.currentState.type.should.equal(StateType.IDLE);
       player.destroy();
       done();
     }
 
-    player._stateManager.currentState.type.should.equal(PlayerStates.IDLE);
-    player.addEventListener(Html5Events.LOAD_START, onLoadStart);
-    player.addEventListener(Html5Events.LOADED_METADATA, onLoadedMetadata);
-    player.addEventListener(Html5Events.PLAYING, onPlaying);
-    player.addEventListener(Html5Events.PAUSE, onPause);
-    player.addEventListener(Html5Events.ENDED, onEnded);
+    player._stateManager.currentState.type.should.equal(StateType.IDLE);
+    player.addEventListener(Html5EventType.LOAD_START, onLoadStart);
+    player.addEventListener(Html5EventType.LOADED_METADATA, onLoadedMetadata);
+    player.addEventListener(Html5EventType.PLAYING, onPlaying);
+    player.addEventListener(Html5EventType.PAUSE, onPause);
+    player.addEventListener(Html5EventType.ENDED, onEnded);
     player.load();
     player.play();
   });
@@ -1711,11 +1711,11 @@ describe('configure', function () {
     playerContainer.appendChild(player.getView());
     player.should.be.instanceOf(Player);
     player.configure(config);
-    player.addEventListener(Html5Events.PLAYING, function () {
+    player.addEventListener(Html5EventType.PLAYING, function () {
       player.destroy();
       done();
     });
-    player.addEventListener(Html5Events.ERROR, function () {
+    player.addEventListener(Html5EventType.ERROR, function () {
       player.destroy();
       done(new Error("test fail"));
     });
