@@ -780,6 +780,15 @@ export default class Player extends FakeEventTarget {
     }
   }
 
+  /**
+   * Get the start time of DVR window in live playback in seconds.
+   * @returns {Number} - start time of DVR window.
+   * @public
+   */
+  getStartTimeOfDvrWindow(): number {
+    return this._engine ? this._engine.getStartTimeOfDvrWindow() : 0;
+  }
+
   // </editor-fold>
 
   // <editor-fold desc="Tracks API">

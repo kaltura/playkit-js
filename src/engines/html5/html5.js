@@ -361,6 +361,15 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Get the start time of DVR window in live playback in seconds.
+   * @returns {Number} - start time of DVR window.
+   * @public
+   */
+  getStartTimeOfDvrWindow(): number {
+    return this._mediaSourceAdapter ? this._mediaSourceAdapter.getStartTimeOfDvrWindow() : 0;
+  }
+
+  /**
    * Checking if the current playback is live.
    * @function isLive
    * @returns {boolean} - Whether playback is live.

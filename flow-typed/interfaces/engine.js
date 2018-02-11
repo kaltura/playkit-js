@@ -24,6 +24,7 @@ declare interface IEngine {
   enableAdaptiveBitrate(): void;
   isAdaptiveBitrateEnabled(): boolean;
   seekToLiveEdge(): void;
+  getStartTimeOfDvrWindow(): number;
   isLive(): boolean;
   getVideoElement(): HTMLVideoElement;
   +id: string;

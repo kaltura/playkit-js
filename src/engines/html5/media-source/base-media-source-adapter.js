@@ -146,6 +146,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return BaseMediaSourceAdapter._throwNotImplementedError('isAdaptiveBitrateEnabled');
   }
 
+  _getLiveEdge(): number {
+    return BaseMediaSourceAdapter._throwNotImplementedError('_getLiveEdge');
+  }
+
   seekToLiveEdge(): void {
     BaseMediaSourceAdapter._throwNotImplementedError('seekToLiveEdge');
   }
@@ -156,6 +160,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
 
   get src(): string {
     return BaseMediaSourceAdapter._throwNotImplementedError('get src');
+  }
+
+  getStartTimeOfDvrWindow(): number {
+    return BaseMediaSourceAdapter._throwNotImplementedError('getStartTimeOfDvrWindow');
   }
 
   /**
@@ -173,7 +181,11 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @public
    */
   get currentTime(): number {
-    return this._videoElement.currentTime;
+    if (this.isLive()) {
+      return this._videoElement.currentTime - this.getStartTimeOfDvrWindow();
+    } else {
+      return this._videoElement.currentTime;
+    }
   }
 
   /**
@@ -183,6 +195,9 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @returns {void}
    */
   set currentTime(to: number): void {
+    if (this.isLive()) {
+      to += this.getStartTimeOfDvrWindow();
+    }
     this._videoElement.currentTime = to;
   }
 
@@ -192,6 +207,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @public
    */
   get duration(): number {
-    return this._videoElement.duration;
+    if (this.isLive()) {
+      return this._getLiveEdge() - this.getStartTimeOfDvrWindow();
+    } else {
+      return this._videoElement.duration;
+    }
   }
 }

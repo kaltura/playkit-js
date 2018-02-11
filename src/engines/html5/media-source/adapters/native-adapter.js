@@ -790,16 +790,15 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
-   * Get the duration in seconds.
-   * @returns {Number} - The playback duration.
+   * Get the start time of DVR window in live playback in seconds.
+   * @returns {Number} - start time of DVR window.
    * @public
    */
-  get duration(): number {
+  getStartTimeOfDvrWindow(): number {
     if (this.isLive()) {
-      return this._getLiveEdge();
+      return this._videoElement.seekable.start(0);
     } else {
-      return super.duration;
+      return 0;
     }
   }
-
 }
