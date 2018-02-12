@@ -106,10 +106,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /**
    * Dispatch an adapter event forward.
    * @param {string} name - The name of the event.
-   * @param {Object} payload - The event payload.
+   * @param {?Object} payload - The event payload.
    * @returns {void}
    */
-  _trigger(name: string, payload: Object): void {
+  _trigger(name: string, payload?: Object): void {
     this.dispatchEvent(new FakeEvent(name, payload));
   }
 
