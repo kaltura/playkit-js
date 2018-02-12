@@ -73,6 +73,11 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     this._videoElement = videoElement;
     this._sourceObj = source;
     this._config = config;
+    this._videoElement.addEventListener(Html5EventType.DURATION_CHANGE, () => {
+      if (this.isLive() && this._videoElement.paused) {
+        this._trigger(Html5EventType.TIME_UPDATE, {});
+      }
+    });
   }
 
   /**
