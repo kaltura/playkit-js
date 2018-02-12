@@ -158,6 +158,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   isLive(): boolean {
     return BaseMediaSourceAdapter._throwNotImplementedError('isLive');
   }
+
   /**
    * Handling live time update (as is not triggered when video is paused, but the current time changed)
    * @function _handleLiveTimeUpdate
@@ -167,7 +168,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   _handleLiveTimeUpdate(): void {
     this._videoElement.addEventListener(Html5EventType.DURATION_CHANGE, () => {
       if (this.isLive() && this._videoElement.paused) {
-        this._trigger(Html5EventType.TIME_UPDATE, {});
+        this._trigger(Html5EventType.TIME_UPDATE);
       }
     });
   }
