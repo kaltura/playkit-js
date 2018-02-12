@@ -73,6 +73,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     this._videoElement = videoElement;
     this._sourceObj = source;
     this._config = config;
+    this._handleLiveTimeUpdate();
   }
 
   /**
@@ -105,10 +106,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /**
    * Dispatch an adapter event forward.
    * @param {string} name - The name of the event.
-   * @param {Object} payload - The event payload.
+   * @param {?Object} payload - The event payload.
    * @returns {void}
    */
-  _trigger(name: string, payload: Object): void {
+  _trigger(name: string, payload?: Object): void {
     this.dispatchEvent(new FakeEvent(name, payload));
   }
 
@@ -156,6 +157,20 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
 
   isLive(): boolean {
     return BaseMediaSourceAdapter._throwNotImplementedError('isLive');
+  }
+
+  /**
+   * Handling live time update (as is not triggered when video is paused, but the current time changed)
+   * @function _handleLiveTimeUpdate
+   * @returns {void}
+   * @private
+   */
+  _handleLiveTimeUpdate(): void {
+    this._videoElement.addEventListener(Html5EventType.DURATION_CHANGE, () => {
+      if (this.isLive() && this._videoElement.paused) {
+        this._trigger(Html5EventType.TIME_UPDATE);
+      }
+    });
   }
 
   get src(): string {

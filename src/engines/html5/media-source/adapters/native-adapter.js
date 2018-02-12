@@ -775,7 +775,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       const liveEdge = this._getLiveEdge();
       if (this._liveEdge !== liveEdge) {
         this._liveEdge = liveEdge;
-        this._trigger(Html5EventType.DURATION_CHANGE, {});
+        this._videoElement.dispatchEvent(new window.Event(Html5EventType.DURATION_CHANGE));
       }
     }, 2000);
   }
@@ -795,7 +795,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    */
   getStartTimeOfDvrWindow(): number {
-    if (this.isLive()) {
+    if (this.isLive() && this._videoElement.seekable.length) {
       return this._videoElement.seekable.start(0);
     } else {
       return 0;
