@@ -708,7 +708,35 @@ describe('NativeAdapter: _handleLiveDurationChange', () => {
   it('should trigger durationchange for live', (done) => {
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
     nativeInstance.load().then(() => {
-      nativeInstance.addEventListener('durationchange', () => {
+      nativeInstance._videoElement.addEventListener('durationchange', () => {
+        done();
+      });
+    }).catch(() => {
+      done();
+    });
+  });
+});
+
+describe('NativeAdapter: _handleLiveTimeUpdate', () => {
+  let video, nativeInstance;
+
+  beforeEach(() => {
+    video = document.createElement("video");
+  });
+
+  afterEach(() => {
+    nativeInstance.destroy();
+    nativeInstance = null;
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+  });
+
+  it('should trigger timeupdate for live when paused', (done) => {
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
+    nativeInstance.load().then(() => {
+      nativeInstance.addEventListener('timeupdate', () => {
         done();
       });
     }).catch(() => {
