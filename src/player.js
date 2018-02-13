@@ -1450,10 +1450,8 @@ export default class Player extends FakeEventTarget {
    */
   _reset(): void {
     this.pause();
-    this._posterManager.reset();
-    this._stateManager.reset();
-    this._pluginManager.reset();
     this._eventManager.removeAll();
+    this._createReadyPromise();
     this._activeTextCues = [];
     this._updateTextDisplay([]);
     this._tracks = [];
@@ -1461,7 +1459,9 @@ export default class Player extends FakeEventTarget {
     this._firstPlayInCurrentSession = false;
     this._engineType = '';
     this._streamType = '';
-    this._createReadyPromise();
+    this._posterManager.reset();
+    this._stateManager.reset();
+    this._pluginManager.reset();
   }
 
   /**
