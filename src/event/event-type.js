@@ -168,6 +168,10 @@ const CustomEventType: EventTypes = {
    */
   SOURCE_SELECTED: 'sourceselected',
   /**
+   * Fires when the player is waiting for source selection
+   */
+  WAITING_FOR_SOURCE: 'waitingforsource',
+  /**
    * Fires when the text track style has changed
    */
   TEXT_STYLE_CHANGED: 'textstylechanged',

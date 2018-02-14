@@ -37,6 +37,7 @@ import type {MediaTypes} from './media-type'
 import type {StreamTypes} from './engines/stream-type'
 import type {EngineTypes} from './engines/engine-type'
 import type {StateTypes} from './state/state-type'
+import Error from './error/error'
 
 /**
  * The player playback rates.
@@ -174,6 +175,18 @@ export default class Player extends FakeEventTarget {
         arrayOfResults.forEach(res => Object.assign(Player._playerCapabilities, res));
         return (engineType ? Promise.resolve(Player._playerCapabilities[engineType]) : Promise.resolve(Player._playerCapabilities));
       });
+  }
+
+  /**
+   * For browsers which block auto play, use the user gesture to open the video element and enable playing via API.
+   * @returns {void}
+   * @public
+   * @static
+   */
+  static openVideoElementForPlay(): void {
+    Player._engines.forEach((Engine: typeof IEngine) => {
+      Engine.openVideoElementForPlay();
+    });
   }
 
   /**
@@ -417,6 +430,16 @@ export default class Player extends FakeEventTarget {
   play(): void {
     if (this._engine) {
       this._playbackMiddleware.play(this._play.bind(this));
+    } else if (this._loadMediaRequested) {
+      // load media requested but the response is delayed. wait for media sources.
+      Player.openVideoElementForPlay();
+      this.dispatchEvent(new FakeEvent(CustomEventType.WAITING_FOR_SOURCE));
+      this._eventManager.listen(this, CustomEventType.SOURCE_SELECTED, () => {
+        this._playbackMiddleware.play(this._play.bind(this));
+      });
+    } else {
+      this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.NO_SOURCE_PROVIDED, "No Source Provided")));
+
     }
   }
 
