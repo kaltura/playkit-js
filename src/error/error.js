@@ -8,7 +8,6 @@ import {Category} from './category'
 import type {CategoryType} from './category'
 
 const CLASS_NAME: string = 'Error';
-const UNKNOWN: string = 'UNKNOWN';
 
 /**
  * @classdesc This is a description of the error class.
