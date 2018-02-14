@@ -126,7 +126,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    * @public
    */
-  static openVideoElementForPlay(): void {
+  static prepareVideoElement(): void {
     Utils.Dom.createElement("video").load();
   }
 

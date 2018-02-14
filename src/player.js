@@ -180,10 +180,10 @@ export default class Player extends FakeEventTarget {
   /**
    * For browsers which block auto play, use the user gesture to open the video element and enable playing via API.
    * @returns {void}
-   * @public
+   * @private
    * @static
    */
-  static openVideoElementForPlay(): void {
+  static _prepareVideoElement(): void {
     Player._engines.forEach((Engine: typeof IEngine) => {
       Engine.openVideoElementForPlay();
     });
@@ -432,10 +432,9 @@ export default class Player extends FakeEventTarget {
       this._playbackMiddleware.play(this._play.bind(this));
     } else if (this._loadMediaRequested) {
       // load media requested but the response is delayed. wait for media sources.
-      Player.openVideoElementForPlay();
+      Player._prepareVideoElement();
       this.dispatchEvent(new FakeEvent(CustomEventType.WAITING_FOR_SOURCE));
-      this._eventManager.listen(this, CustomEventType.SOURCE_SELECTED, () => {
-        this._playbackMiddleware.play(this._play.bind(this));
+      this._eventManager.listen(this, CustomEventType.SOURCE_SELECTED, () => this.play());
       });
     } else {
       this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.NO_SOURCE_PROVIDED, "No Source Provided")));
