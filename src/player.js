@@ -334,6 +334,13 @@ export default class Player extends FakeEventTarget {
   _repositionCuesTimeout: any;
 
   /**
+   * Whether load media has requested, the player should wait to media.
+   * @type {boolean}
+   * @private
+   */
+  _loadMediaRequested: boolean;
+
+  /**
    * @param {Object} config - The configuration for the player instance.
    * @constructor
    */
@@ -356,6 +363,7 @@ export default class Player extends FakeEventTarget {
     this._appendPosterEl();
     this.configure(config);
     this._repositionCuesTimeout = false;
+    this._loadMediaRequested = false;
   }
 
   // <editor-fold desc="Public API">
@@ -433,7 +441,7 @@ export default class Player extends FakeEventTarget {
     } else if (this._loadMediaRequested) {
       // load media requested but the response is delayed
       Player._prepareVideoElement();
-      this._eventManager.listen(this, CustomEventType.SOURCE_SELECTED, () => this.play());
+      this._eventManager.listenOnce(this, CustomEventType.SOURCE_SELECTED, () => this.play());
     } else {
       this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, new PKError(PKError.Severity.CRITICAL, PKError.Category.PLAYER, PKError.Code.NO_SOURCE_PROVIDED, "No Source Provided")));
 
@@ -762,6 +770,10 @@ export default class Player extends FakeEventTarget {
   set sessionId(sessionId: string): void {
     this._config.session = this._config.session || {};
     this._config.session.id = sessionId;
+  }
+
+  set loadMediaRequested(requested: boolean): void {
+    this._loadMediaRequested = requested;
   }
 
   // </editor-fold>
@@ -1481,6 +1493,7 @@ export default class Player extends FakeEventTarget {
     this._firstPlayInCurrentSession = false;
     this._engineType = '';
     this._streamType = '';
+    this._loadMediaRequested = false;
     this._createReadyPromise();
   }
 
