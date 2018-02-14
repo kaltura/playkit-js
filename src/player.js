@@ -431,7 +431,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._playbackMiddleware.play(this._play.bind(this));
     } else if (this._loadMediaRequested) {
-      // load media requested but the response is delayed. wait for media sources.
+      // load media requested but the response is delayed
       Player._prepareVideoElement();
       this._eventManager.listen(this, CustomEventType.SOURCE_SELECTED, () => this.play());
     } else {
