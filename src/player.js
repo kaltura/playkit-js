@@ -185,7 +185,7 @@ export default class Player extends FakeEventTarget {
    */
   static _prepareVideoElement(): void {
     Player._engines.forEach((Engine: typeof IEngine) => {
-      Engine.openVideoElementForPlay();
+      Engine.prepareVideoElement();
     });
   }
 
