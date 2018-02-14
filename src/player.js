@@ -433,7 +433,6 @@ export default class Player extends FakeEventTarget {
     } else if (this._loadMediaRequested) {
       // load media requested but the response is delayed. wait for media sources.
       Player._prepareVideoElement();
-      this.dispatchEvent(new FakeEvent(CustomEventType.WAITING_FOR_SOURCE));
       this._eventManager.listen(this, CustomEventType.SOURCE_SELECTED, () => this.play());
     } else {
       this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.NO_SOURCE_PROVIDED, "No Source Provided")));
