@@ -511,6 +511,11 @@ const Code: CodeType = {
    */
   'RUNTIME_ERROR_NOT_VALID_HANDLER': 7005,
   /**
+   * When the play API called without any source
+   */
+  'NO_SOURCE_PROVIDED': 7006,
+
+  /**
    * The Cast API is unavailable.  This may be because of one of the following:
    * - The browser may not have Cast support
    * - The browser may be missing a necessary Cast extension
