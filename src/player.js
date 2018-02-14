@@ -37,7 +37,7 @@ import type {MediaTypes} from './media-type'
 import type {StreamTypes} from './engines/stream-type'
 import type {EngineTypes} from './engines/engine-type'
 import type {StateTypes} from './state/state-type'
-import Error from './error/error'
+import PKError from './error/error'
 
 /**
  * The player playback rates.
@@ -435,7 +435,7 @@ export default class Player extends FakeEventTarget {
       Player._prepareVideoElement();
       this._eventManager.listen(this, CustomEventType.SOURCE_SELECTED, () => this.play());
     } else {
-      this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.NO_SOURCE_PROVIDED, "No Source Provided")));
+      this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, new PKError(PKError.Severity.CRITICAL, PKError.Category.PLAYER, PKError.Code.NO_SOURCE_PROVIDED, "No Source Provided")));
 
     }
   }
