@@ -334,11 +334,11 @@ export default class Player extends FakeEventTarget {
   _repositionCuesTimeout: any;
 
   /**
-   * Whether load media has requested, the player should wait to media.
+   * Whether a load media request has sent, the player should wait to media.
    * @type {boolean}
    * @private
    */
-  _loadMediaRequested: boolean;
+  _loadingMedia: boolean;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -363,7 +363,7 @@ export default class Player extends FakeEventTarget {
     this._appendPosterEl();
     this.configure(config);
     this._repositionCuesTimeout = false;
-    this._loadMediaRequested = false;
+    this._loadingMedia = false;
   }
 
   // <editor-fold desc="Public API">
@@ -438,7 +438,7 @@ export default class Player extends FakeEventTarget {
   play(): void {
     if (this._engine) {
       this._playbackMiddleware.play(this._play.bind(this));
-    } else if (this._loadMediaRequested) {
+    } else if (this._loadingMedia) {
       // load media requested but the response is delayed
       Player._prepareVideoElement();
       this._eventManager.listenOnce(this, CustomEventType.SOURCE_SELECTED, () => this.play());
@@ -772,8 +772,14 @@ export default class Player extends FakeEventTarget {
     this._config.session.id = sessionId;
   }
 
-  set loadMediaRequested(requested: boolean): void {
-    this._loadMediaRequested = requested;
+  /**
+   * Set the _loadingMedia flag to inform the player that a load media request has sent.
+   * @param {boolean} loading - Whether a load media request has sent.
+   * @returns {void}
+   * @public
+   */
+  set loadingMedia(loading: boolean): void {
+    this._loadingMedia = loading;
   }
 
   // </editor-fold>
