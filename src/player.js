@@ -1499,7 +1499,7 @@ export default class Player extends FakeEventTarget {
     this._firstPlayInCurrentSession = false;
     this._engineType = '';
     this._streamType = '';
-    this._loadMediaRequested = false;
+    this._loadingMedia = false;
     this._createReadyPromise();
   }
 
