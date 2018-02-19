@@ -1,6 +1,6 @@
 //@flow
 import EventManager from '../../../../event/event-manager'
-import {Html5EventType} from '../../../../event/event-type'
+import {Html5EventType, CustomEventType} from '../../../../event/event-type'
 import Track from '../../../../track/track'
 import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'
@@ -218,7 +218,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         }
         if (this._sourceObj && this._sourceObj.url) {
           this._videoElement.src = this._sourceObj.url;
-          this._trigger(BaseMediaSourceAdapter.CustomEvents.ABR_MODE_CHANGED, {mode: this._isProgressivePlayback() ? 'manual' : 'auto'});
+          this._trigger(CustomEventType.ABR_MODE_CHANGED, {mode: this._isProgressivePlayback() ? 'manual' : 'auto'});
         }
         if (startTime) {
           this._videoElement.currentTime = startTime;

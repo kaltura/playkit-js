@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.21.1"></a>
+## [0.21.1](https://github.com/kaltura/playkit-js/compare/v0.21.0...v0.21.1) (2018-02-14)
+
+
+### Bug Fixes
+
+* **FEC-7564:** trigger timeupdate in case of live when the playback is paused ([#191](https://github.com/kaltura/playkit-js/issues/191)) ([68ba8bf](https://github.com/kaltura/playkit-js/commit/68ba8bf))
+* error printing ([#194](https://github.com/kaltura/playkit-js/issues/194)) ([b62cb6d](https://github.com/kaltura/playkit-js/commit/b62cb6d))
+
+
+
 <a name="0.21.0"></a>
 # [0.21.0](https://github.com/kaltura/playkit-js/compare/v0.20.1...v0.21.0) (2018-02-11)
 

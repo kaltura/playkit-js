@@ -9,21 +9,8 @@ import Track from '../../../track/track'
 import VideoTrack from '../../../track/video-track'
 import AudioTrack from '../../../track/audio-track'
 import TextTrack from '../../../track/text-track'
-import type {EventTypes} from '../../../event/event-type'
 
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
-  /**
-   * Passing the custom events to the actual media source adapter.
-   * @static
-   */
-  static CustomEvents: EventTypes = CustomEventType;
-
-  /**
-   * Passing the HTML5 events to the actual media source adapter.
-   * @static
-   */
-  static Html5Events: EventTypes = Html5EventType;
-
   /**
    * Passing the getLogger function to the actual media source adapter.
    * @type {Function}
@@ -95,11 +82,11 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    */
   _onTrackChanged(track: Track): void {
     if (track instanceof VideoTrack) {
-      this._trigger(BaseMediaSourceAdapter.CustomEvents.VIDEO_TRACK_CHANGED, {selectedVideoTrack: track});
+      this._trigger(CustomEventType.VIDEO_TRACK_CHANGED, {selectedVideoTrack: track});
     } else if (track instanceof AudioTrack) {
-      this._trigger(BaseMediaSourceAdapter.CustomEvents.AUDIO_TRACK_CHANGED, {selectedAudioTrack: track});
+      this._trigger(CustomEventType.AUDIO_TRACK_CHANGED, {selectedAudioTrack: track});
     } else if (track instanceof TextTrack) {
-      this._trigger(BaseMediaSourceAdapter.CustomEvents.TEXT_TRACK_CHANGED, {selectedTextTrack: track});
+      this._trigger(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: track});
     }
   }
 

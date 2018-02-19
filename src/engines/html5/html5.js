@@ -121,6 +121,16 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * For browsers which block auto play, use the user gesture to open the video element and enable playing via API.
+   * @returns {void}
+   * @private
+   * @public
+   */
+  static prepareVideoElement(): void {
+    Utils.Dom.createElement("video").load();
+  }
+
+  /**
    * @constructor
    * @param {PKMediaSourceObject} source - The selected source object.
    * @param {Object} config - The player configuration.
