@@ -502,12 +502,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       && audioTracks
       && audioTracks[audioTrack.index]) {
       this._removeNativeAudioTrackChangeListener();
-      this._removeNativeTextTrackAddedListener();
       this._disableAudioTracks();
       audioTracks[audioTrack.index].enabled = true;
       this._onTrackChanged(audioTrack);
       this._addNativeAudioTrackChangeListener();
-      this._addNativeTextTrackAddedListener();
     }
   }
 
@@ -577,10 +575,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if ((textTrack instanceof PKTextTrack)
       && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions')
       && textTracks && textTracks[textTrack.index]) {
+      this._removeNativeTextTrackChangeListener();
       this._disableTextTracks();
       textTracks[textTrack.index].mode = 'hidden';
       NativeAdapter._logger.debug('Text track changed', textTrack);
       this._onTrackChanged(textTrack);
+      this._addNativeTextTrackChangeListener();
     }
   }
 
