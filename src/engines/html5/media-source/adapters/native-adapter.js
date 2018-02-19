@@ -240,6 +240,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._playerTracks = this._getParsedTracks();
       this._addNativeAudioTrackChangeListener();
       this._addNativeTextTrackChangeListener();
+      this._addNativeTextTrackAddedListener();
       NativeAdapter._logger.debug('The source has been loaded successfully');
       resolve({tracks: this._playerTracks});
       if (this.isLive()) {
@@ -648,6 +649,27 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         }
       }
     }
+  }
+
+  /**
+   * Add the onaddtrack listenr of the video element TextTrackList.
+   * @private
+   * @returns {void}
+   */
+  _addNativeTextTrackAddedListener(): void {
+    if (this._videoElement.textTracks) {
+      this._eventManager.listen(this._videoElement.textTracks, 'addtrack', () => this._onNativeTextTrackAdded());
+    }
+  }
+
+  /**
+   * Handler of the video element TextTrackList onaddtrack event.
+   * @private
+   * @returns {void}
+   */
+  _onNativeTextTrackAdded(): void {
+    this._playerTracks = this._getParsedTracks();
+    this._trigger(CustomEventType.TRACKS_CHANGED, {tracks: this._playerTracks});
   }
 
   /**
