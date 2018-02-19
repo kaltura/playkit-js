@@ -652,17 +652,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
-   * Remove the onaddtrack listenr of the video element TextTrackList.
-   * @private
-   * @returns {void}
-   */
-  _removeNativeTextTrackAddedListener(): void {
-    if (this._videoElement.textTracks) {
-      this._eventManager.unlisten(this._videoElement.textTracks, 'addtrack');
-    }
-  }
-
-  /**
    * Add the onaddtrack listenr of the video element TextTrackList.
    * @private
    * @returns {void}
