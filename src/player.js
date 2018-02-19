@@ -1477,11 +1477,23 @@ export default class Player extends FakeEventTarget {
 
   // <editor-fold desc="Tracks">
 
+  /**
+   * handle tracks change
+   * @param {FakeEvent} event - the tracks change event payload
+   * @private
+   * @returns {void}
+   */
   _onTracksChanged(event: FakeEvent): void {
     this._updateTracks(event.payload.tracks);
     this.dispatchEvent(event);
   }
 
+  /**
+   * update the player tracks
+   * @param {Array<Track>} tracks - the player tracks
+   * @private
+   * @returns {void}
+   */
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
     this._tracks = tracks;
