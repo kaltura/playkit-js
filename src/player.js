@@ -37,6 +37,7 @@ import type {MediaTypes} from './media-type'
 import type {StreamTypes} from './engines/stream-type'
 import type {EngineTypes} from './engines/engine-type'
 import type {StateTypes} from './state/state-type'
+import PKError from './error/error'
 
 /**
  * The player playback rates.
@@ -174,6 +175,18 @@ export default class Player extends FakeEventTarget {
         arrayOfResults.forEach(res => Object.assign(Player._playerCapabilities, res));
         return (engineType ? Promise.resolve(Player._playerCapabilities[engineType]) : Promise.resolve(Player._playerCapabilities));
       });
+  }
+
+  /**
+   * For browsers which block auto play, use the user gesture to open the video element and enable playing via API.
+   * @returns {void}
+   * @private
+   * @static
+   */
+  static _prepareVideoElement(): void {
+    Player._engines.forEach((Engine: typeof IEngine) => {
+      Engine.prepareVideoElement();
+    });
   }
 
   /**
@@ -321,6 +334,13 @@ export default class Player extends FakeEventTarget {
   _repositionCuesTimeout: any;
 
   /**
+   * Whether a load media request has sent, the player should wait to media.
+   * @type {boolean}
+   * @private
+   */
+  _loadingMedia: boolean;
+
+  /**
    * @param {Object} config - The configuration for the player instance.
    * @constructor
    */
@@ -343,6 +363,7 @@ export default class Player extends FakeEventTarget {
     this._appendPosterEl();
     this.configure(config);
     this._repositionCuesTimeout = false;
+    this._loadingMedia = false;
   }
 
   // <editor-fold desc="Public API">
@@ -417,6 +438,13 @@ export default class Player extends FakeEventTarget {
   play(): void {
     if (this._engine) {
       this._playbackMiddleware.play(this._play.bind(this));
+    } else if (this._loadingMedia) {
+      // load media requested but the response is delayed
+      Player._prepareVideoElement();
+      this._eventManager.listenOnce(this, CustomEventType.SOURCE_SELECTED, () => this.play());
+    } else {
+      this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, new PKError(PKError.Severity.CRITICAL, PKError.Category.PLAYER, PKError.Code.NO_SOURCE_PROVIDED, "No Source Provided")));
+
     }
   }
 
@@ -742,6 +770,16 @@ export default class Player extends FakeEventTarget {
   set sessionId(sessionId: string): void {
     this._config.session = this._config.session || {};
     this._config.session.id = sessionId;
+  }
+
+  /**
+   * Set the _loadingMedia flag to inform the player that a load media request has sent.
+   * @param {boolean} loading - Whether a load media request has sent.
+   * @returns {void}
+   * @public
+   */
+  set loadingMedia(loading: boolean): void {
+    this._loadingMedia = loading;
   }
 
   // </editor-fold>
@@ -1461,6 +1499,7 @@ export default class Player extends FakeEventTarget {
     this._firstPlayInCurrentSession = false;
     this._engineType = '';
     this._streamType = '';
+    this._loadingMedia = false;
     this._createReadyPromise();
   }
 
