@@ -1498,7 +1498,7 @@ export default class Player extends FakeEventTarget {
     Player._logger.debug('Tracks changed', tracks);
     this._tracks = tracks;
     this._addTextTrackOffOption();
-  };
+  }
 
   /**
    * Returns the tracks according to the filter. if no filter given returns the all tracks.
