@@ -577,12 +577,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if ((textTrack instanceof PKTextTrack)
       && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions')
       && textTracks && textTracks[textTrack.index]) {
-      this._removeNativeTextTrackChangeListener();
       this._disableTextTracks();
       textTracks[textTrack.index].mode = 'hidden';
       NativeAdapter._logger.debug('Text track changed', textTrack);
       this._onTrackChanged(textTrack);
-      this._addNativeTextTrackChangeListener();
     }
   }
 
