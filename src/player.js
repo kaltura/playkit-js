@@ -399,8 +399,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       let startTime = this._config.playback.startTime;
       this._engine.load(startTime).then((data) => {
-        this._tracks = data.tracks;
-        this._addTextTrackOffOption();
+        this._updateTracks(data.tracks);
         this._setDefaultTracks();
         this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
       }).catch((error) => {
@@ -1155,7 +1154,7 @@ export default class Player extends FakeEventTarget {
    */
   _createReadyPromise(): void {
     this._readyPromise = new Promise((resolve, reject) => {
-      this._eventManager.listen(this, CustomEventType.TRACKS_CHANGED, resolve);
+      this._eventManager.listenOnce(this, CustomEventType.TRACKS_CHANGED, resolve);
       this._eventManager.listen(this, Html5EventType.ERROR, reject);
     }).catch(() => {
       // silence the promise rejection, error is handled by the error event
@@ -1247,6 +1246,7 @@ export default class Player extends FakeEventTarget {
         this._markActiveTrack(event.payload.selectedTextTrack);
         return this.dispatchEvent(event);
       });
+      this._eventManager.listen(this._engine, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this._onTracksChanged(event));
       this._eventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.AUTOPLAY_FAILED, (event: FakeEvent) => {
@@ -1476,6 +1476,17 @@ export default class Player extends FakeEventTarget {
   // </editor-fold>
 
   // <editor-fold desc="Tracks">
+
+  _onTracksChanged(event: FakeEvent): void {
+    this._updateTracks(event.payload.tracks);
+    this.dispatchEvent(event);
+  }
+
+  _updateTracks(tracks: Array<Track>): void {
+    Player._logger.debug('Tracks changed', tracks);
+    this._tracks = tracks;
+    this._addTextTrackOffOption();
+  };
 
   /**
    * Returns the tracks according to the filter. if no filter given returns the all tracks.
