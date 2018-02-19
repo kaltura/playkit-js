@@ -1484,8 +1484,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _onTracksChanged(event: FakeEvent): void {
-    this.
-    (event.payload.tracks);
+    this._updateTracks(event.payload.tracks);
     this.dispatchEvent(event);
   }
 
