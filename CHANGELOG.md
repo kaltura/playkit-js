@@ -9,7 +9,7 @@ All notable changes to this project will be documented in this file. See [standa
 ### Bug Fixes
 
 * operations order on change media ([#192](https://github.com/kaltura/playkit-js/issues/192)) ([601e0ff](https://github.com/kaltura/playkit-js/commit/601e0ff))
-* **FEC-7813:** the captions are OFF in the menu, despite explicit captions configured and shown on iOS ([#196](https://github.com/kaltura/playkit-js/issues/196)) ([8548a9e](https://github.com/kaltura/playkit-js/commit/8548a9e))
+* **FEC-7813, FEC-7918:** the captions are OFF in the menu, despite explicit captions configured and shown on iOS ([#196](https://github.com/kaltura/playkit-js/issues/196)) ([8548a9e](https://github.com/kaltura/playkit-js/commit/8548a9e))
 * **FEC-7907, FEC-7872:** No play button when preload=auto and ima plugin enabled ([#193](https://github.com/kaltura/playkit-js/issues/193)) ([2975fdc](https://github.com/kaltura/playkit-js/commit/2975fdc))
 
 
