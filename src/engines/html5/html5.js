@@ -84,7 +84,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    * @static
    */
-  static _el:  HTMLVideoElement;
+  static _el: HTMLVideoElement;
 
   /**
    * Factory method to create an engine.
