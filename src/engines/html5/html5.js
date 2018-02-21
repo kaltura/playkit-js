@@ -12,6 +12,7 @@ import * as Utils from '../../utils/util'
 import Html5AutoPlayCapability from './capabilities/html5-autoplay'
 import Html5IsSupportedCapability from './capabilities/html5-is-supported'
 import Error from "../../error/error";
+import getLogger from '../../utils/logger'
 
 /**
  * Html5 engine for playback.
