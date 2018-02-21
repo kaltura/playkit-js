@@ -436,14 +436,17 @@ export default class Player extends FakeEventTarget {
    */
   play(): void {
     if (this._engine) {
-      this._playbackMiddleware.play(this._play.bind(this));
+      this._playbackMiddleware.play(() => this._play());
     } else if (this._loadingMedia) {
       // load media requested but the response is delayed
       Player._prepareVideoElement();
-      this._eventManager.listenOnce(this, CustomEventType.SOURCE_SELECTED, () => this.play());
+      if (this.config.plugins.ima) {
+        this._playbackMiddleware.play(() => this._playAfterAsyncAds());
+      } else {
+        this._eventManager.listenOnce(this, CustomEventType.SOURCE_SELECTED, () => this.play());
+      }
     } else {
       this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, new PKError(PKError.Severity.CRITICAL, PKError.Category.PLAYER, PKError.Code.NO_SOURCE_PROVIDED, "No Source Provided")));
-
     }
   }
 
@@ -1421,6 +1424,19 @@ export default class Player extends FakeEventTarget {
       }
     } else {
       this._posterManager.show();
+    }
+  }
+
+  /**
+   * Play after async ads
+   * @private
+   * @returns {void}
+   */
+  _playAfterAsyncAds(): void {
+    if (this._engine) {
+      this._play();
+    } else {
+      this._eventManager.listenOnce(this, CustomEventType.SOURCE_SELECTED, () => this._play());
     }
   }
 
