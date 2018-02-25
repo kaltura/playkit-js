@@ -1274,12 +1274,12 @@ export default class Player extends FakeEventTarget {
         return this.dispatchEvent(event);
       });
       this._eventManager.listen(this._engine, CustomEventType.AUDIO_TRACK_CHANGED, (event: FakeEvent) => {
-        this._playbackAttributesState.audioLanguage = event.payload.selectedAudioTrack.language;
+        this.ready().then(() => this._playbackAttributesState.audioLanguage = event.payload.selectedAudioTrack.language);
         this._markActiveTrack(event.payload.selectedAudioTrack);
         return this.dispatchEvent(event);
       });
       this._eventManager.listen(this._engine, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => {
-        this._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language;
+        this.ready().then(() => this._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language);
         this._markActiveTrack(event.payload.selectedTextTrack);
         return this.dispatchEvent(event);
       });
