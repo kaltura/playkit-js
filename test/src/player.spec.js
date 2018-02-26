@@ -17,6 +17,72 @@ import Error from '../../src/error/error'
 
 const targetId = 'player-placeholder_player.spec';
 
+describe("load", function () {
+  let config, player, playerContainer;
+
+  before(() => {
+    playerContainer = createElement('DIV', targetId);
+    config = getConfigStructure();
+    config.sources = sourcesConfig.Mp4;
+  });
+
+  beforeEach(() => {
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElement(targetId);
+  });
+
+  it("should load if no source", (done) => {
+    player.ready().then(() => {
+      done();
+    });
+    player.load();
+  });
+
+  it("should't load if no engine", (done) => {
+    player._engine = null;
+    setTimeout(done, 300);
+    player.ready().then(() => {
+      done(new Error('fail'));
+    });
+    player.load();
+  });
+
+  it("should't load if source already exists", (done) => {
+    let loadCounter = 0;
+    setTimeout(() => {
+      loadCounter.should.equal(1);
+      done();
+    }, 1000);
+    player.addEventListener(CustomEventType.TRACKS_CHANGED, () => {
+      loadCounter++;
+      setTimeout(() => player.load(), 200);
+    });
+    player.load();
+  });
+
+  it("should't load if is in loading process", (done) => {
+    let loadCounter = 0;
+    setTimeout(() => {
+      loadCounter.should.equal(1);
+      done();
+    }, 1000);
+    player.addEventListener(CustomEventType.TRACKS_CHANGED, () => {
+      loadCounter++;
+    });
+    player.load();
+    player.load();
+  });
+});
+
 describe("play", function () {
   let config, player, playerContainer;
 

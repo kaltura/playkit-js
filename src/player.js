@@ -332,13 +332,18 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _repositionCuesTimeout: any;
-
   /**
    * Whether a load media request has sent, the player should wait to media.
    * @type {boolean}
    * @private
    */
   _loadingMedia: boolean;
+  /**
+   * Whether the player is loading a source.
+   * @type {boolean}
+   * @private
+   */
+  _loading: boolean;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -364,6 +369,7 @@ export default class Player extends FakeEventTarget {
     this.configure(config);
     this._repositionCuesTimeout = false;
     this._loadingMedia = false;
+    this._loading = false;
   }
 
   // <editor-fold desc="Public API">
@@ -417,7 +423,8 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   load(): void {
-    if (this._engine) {
+    if (this._engine && !this.src && !this._loading) {
+      this._loading = true;
       let startTime = this._config.playback.startTime;
       this._engine.load(startTime).then((data) => {
         this._updateTracks(data.tracks);
@@ -425,6 +432,9 @@ export default class Player extends FakeEventTarget {
         this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
       }).catch((error) => {
         this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
+      // $FlowFixMe
+      }).finally(() => {
+        this._loading = false;
       });
     }
   }
@@ -1505,6 +1515,7 @@ export default class Player extends FakeEventTarget {
     this._activeTextCues = [];
     this._updateTextDisplay([]);
     this._tracks = [];
+    this._loading = false;
     this._firstPlay = true;
     this._firstPlayInCurrentSession = false;
     this._loadingMedia = false;
