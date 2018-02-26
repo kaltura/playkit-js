@@ -12,6 +12,7 @@ import * as Utils from '../../utils/util'
 import Html5AutoPlayCapability from './capabilities/html5-autoplay'
 import Html5IsSupportedCapability from './capabilities/html5-is-supported'
 import Error from "../../error/error";
+import getLogger from '../../utils/logger'
 
 /**
  * Html5 engine for playback.
@@ -56,6 +57,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _canLoadMediaSourceAdapterPromise: Promise<*>;
 
   /**
+   * The html5 class logger.
+   * @type {any}
+   * @static
+   * @private
+   */
+  static _logger: any = getLogger('Html5');
+
+  /**
    * The html5 capabilities handlers.
    * @private
    * @static
@@ -68,6 +77,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @static
    */
   static id: string = "html5";
+
+  /**
+   * A video element for browsers which block auto play.
+   * @type {HTMLVideoElement}
+   * @private
+   * @static
+   */
+  static _el: HTMLVideoElement;
 
   /**
    * Factory method to create an engine.
@@ -127,7 +144,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    */
   static prepareVideoElement(): void {
-    Utils.Dom.createElement("video").load();
+    Html5._logger.debug('Prepare the video element for playing');
+    Html5._el = Utils.Dom.createElement("video");
+    Html5._el.load();
   }
 
   /**
@@ -806,7 +825,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   _createVideoElement(): void {
-    this._el = Utils.Dom.createElement("video");
+    this._el = Html5._el || Utils.Dom.createElement("video");
     this._el.id = Utils.Generator.uniqueId(5);
     this._el.controls = false;
   }
