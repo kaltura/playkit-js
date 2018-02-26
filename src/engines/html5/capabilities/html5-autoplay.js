@@ -7,6 +7,8 @@ const WAIT_TIME: number = 500;
 
 const testVideoElement: HTMLVideoElement = Utils.Dom.createElement('video');
 testVideoElement.src = EncodingSources.Base64Mp4Source;
+// For iOS devices needs to turn the playsinline attribute on
+testVideoElement.setAttribute('playsinline', 'playsinline');
 
 export default class Html5AutoPlayCapability implements ICapability {
   static _playPromiseResult: Promise<*>;
@@ -24,13 +26,15 @@ export default class Html5AutoPlayCapability implements ICapability {
           if (testVideoElement.muted) {
             resolve({autoplay: false, mutedAutoPlay: true});
           } else {
-            resolve({autoplay: true, mutedAutoPlay: true})
+            resolve({autoplay: true, mutedAutoPlay: true});
           }
         }).catch(() => {
         if (testVideoElement.muted) {
           resolve({autoplay: false, mutedAutoPlay: false});
         } else {
           testVideoElement.muted = true;
+          // For some iOS devices needs to use the setAttribute API
+          testVideoElement.setAttribute('muted', 'muted');
           Html5AutoPlayCapability.runCapability();
         }
       });
