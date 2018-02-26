@@ -1413,7 +1413,7 @@ export default class Player extends FakeEventTarget {
               Player._logger.debug("Start autoplay");
               this.play();
             } else {
-              if (allowMutedAutoPlay) {
+              if (allowMutedAutoPlay && capabilities.mutedAutoPlay) {
                 Player._logger.debug("Fallback to muted autoplay");
                 this.muted = true;
                 this.play();
