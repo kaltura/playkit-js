@@ -334,7 +334,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   selectTextTrack(textTrack: PKTextTrack): void {
-    this._removeCueChangeListener();
+    this._removeCueChangeListeners();
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.selectTextTrack(textTrack);
     }
@@ -351,7 +351,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.hideTextTrack();
     }
-    this._removeCueChangeListener();
+    this._removeCueChangeListeners();
   }
 
   /**
@@ -847,35 +847,24 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _addCueChangeListener(textTrack: PKTextTrack): void {
-    let textTrackEl = this._getSelectedTextTrackElement();
+    let textTrackEl = this._el.textTracks[textTrack.index];
     if (textTrackEl) {
-      /*
-       There's a quirk in TextTrackAPI that a text track added to video element will not fire cuechange event if it
-       didn't have it's mode set to showing for at least until a single cue has been change.
-       After first time it seems there's time tracking which allows the cuechange to fire even though the track mode
-       is set to hidden
-       This is not the case with a track DOM element added to a video element where cuechange will be fired even if
-       track mode is set only to hidden and was never set to showing
-       */
       if (this._config.playback.useNativeTextTrack) {
         textTrackEl.mode = "showing";
       } else {
-        textTrackEl.oncuechange = (e) => this._onCueChange(e);
-        textTrackEl.mode = this._showTextTrackFirstTime[textTrack.index] ? "hidden" : "showing";
-        this._showTextTrackFirstTime[textTrack.index] = true;
+        this._eventManager.listen(textTrackEl, "cuechange", (e) => this._onCueChange(e));
       }
     }
   }
 
   /**
-   * Remove cuechange listener to active textTrack
+   * Remove cuechange listeners from textTracks
    * @returns {void}
    * @private
    */
-  _removeCueChangeListener(): void {
-    let textTrackEl: TextTrack = this._getSelectedTextTrackElement();
-    if (textTrackEl) {
-      textTrackEl.oncuechange = null;
+  _removeCueChangeListeners(): void {
+    for (let i = 0; i < this._el.textTracks.length; i++){
+      this._eventManager.unlisten(this._el.textTracks[i], "cuechange");
     }
   }
 
@@ -888,7 +877,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _onCueChange(e: FakeEvent): void {
     let textTrack: TextTrack = e.currentTarget;
     let activeCues: Array<Cue> = [];
-    textTrack.mode = 'hidden';
     for (let cue of textTrack.activeCues) {
       //Normalize cues to be of type of VTT model
       if (window.VTTCue && cue instanceof window.VTTCue) {
@@ -902,24 +890,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       }
     }
     this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: activeCues}));
-  }
-
-  /**
-   * Get currently selected text track
-   * @returns {?TextTrack} - returns the active text track element if available
-   * @private
-   */
-  _getSelectedTextTrackElement(): ?TextTrack {
-    const textTracks = this._el.textTracks;
-    for (let track in textTracks) {
-      if (textTracks.hasOwnProperty(track)) {
-        const textTrack = textTracks[parseInt(track)];
-        if (textTrack && textTrack.mode !== "disabled") {
-          return textTrack;
-        }
-      }
-    }
-    return null;
   }
 }
 
