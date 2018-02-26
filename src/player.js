@@ -427,13 +427,14 @@ export default class Player extends FakeEventTarget {
       this._loading = true;
       let startTime = this._config.playback.startTime;
       this._engine.load(startTime).then((data) => {
-        this._loading = false;
         this._updateTracks(data.tracks);
         this._setDefaultTracks();
         this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
       }).catch((error) => {
-        this._loading = false;
         this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
+      // $FlowFixMe
+      }).finally(() => {
+        this._loading = false;
       });
     }
   }
