@@ -49,7 +49,7 @@ describe("load", function () {
 
   it("should't load if no engine", (done) => {
     player._engine = null;
-    setTimeout(done, 1000);
+    setTimeout(done, 300);
     player.ready().then(() => {
       done(new Error('fail'));
     });
@@ -61,20 +61,20 @@ describe("load", function () {
     setTimeout(() => {
       loadCounter.should.equal(1);
       done();
-    }, 300);
+    }, 1000);
     player.addEventListener(CustomEventType.TRACKS_CHANGED, () => {
       loadCounter++;
-      setTimeout(() => player.load(), 0);
+      setTimeout(() => player.load(), 200);
     });
     player.load();
   });
 
-  it.only("should't load if is in loading process", (done) => {
+  it("should't load if is in loading process", (done) => {
     let loadCounter = 0;
     setTimeout(() => {
       loadCounter.should.equal(1);
       done();
-    }, 300);
+    }, 1000);
     player.addEventListener(CustomEventType.TRACKS_CHANGED, () => {
       loadCounter++;
     });
