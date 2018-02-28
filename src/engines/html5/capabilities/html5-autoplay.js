@@ -13,7 +13,7 @@ testVideoElement.setAttribute('playsinline', '');
 export default class Html5AutoPlayCapability implements ICapability {
   static _playPromiseResult: Promise<*>;
 
-  /***
+  /**
    * Runs the test for autoplay capability.
    * @public
    * @static
@@ -21,23 +21,16 @@ export default class Html5AutoPlayCapability implements ICapability {
    */
   static runCapability(): void {
     Html5AutoPlayCapability._playPromiseResult = new Promise((resolve) => {
-      (testVideoElement.play() || Html5AutoPlayCapability._forcePromiseReturnValue())
-        .then(() => {
-          if (testVideoElement.muted) {
-            resolve({autoplay: false, mutedAutoPlay: true});
-          } else {
-            resolve({autoplay: true, mutedAutoPlay: true});
-          }
-        }).catch(() => {
-        if (testVideoElement.muted) {
-          resolve({autoplay: false, mutedAutoPlay: false});
-        } else {
+      Html5AutoPlayCapability._getPlayPromise()
+        .then(() => resolve({autoplay: true, mutedAutoPlay: true}))
+        .catch(() => {
           testVideoElement.muted = true;
-          // For some iOS devices needs to use the setAttribute API
+          // For iOS devices needs to use the setAttribute API
           testVideoElement.setAttribute('muted', '');
-          Html5AutoPlayCapability.runCapability();
-        }
-      });
+          Html5AutoPlayCapability._getPlayPromise()
+            .then(() => resolve({autoplay: false, mutedAutoPlay: true}))
+            .catch(() => resolve({autoplay: false, mutedAutoPlay: false}));
+        });
     });
   }
 
@@ -52,13 +45,22 @@ export default class Html5AutoPlayCapability implements ICapability {
   }
 
   /**
+   * Gets the play promise.
+   * @return {Promise<*>} - Play promise which resolved or rejected.
+   * @private
+   */
+  static _getPlayPromise(): Promise<*> {
+    return testVideoElement.play() || Html5AutoPlayCapability._forcePromiseReturnValue();
+  }
+
+  /**
    * For browsers which are not supported promise return value from play()
    * request we are simulate the same behaviour.
-   * @return {Promise<any>} - Play promise which resolved or rejected.
+   * @return {Promise<*>} - Play promise which resolved or rejected.
    * @private
    * @static
    */
-  static _forcePromiseReturnValue() {
+  static _forcePromiseReturnValue(): Promise<*> {
     return new Promise((resolve, reject) => {
       const supported = setTimeout(() => {
         reject();
