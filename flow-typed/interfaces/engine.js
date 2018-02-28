@@ -9,6 +9,7 @@ declare interface IEngine {
   static canPlaySource(source: PKMediaSourceObject, preferNative: boolean): boolean;
   static runCapabilities(): void;
   static getCapabilities(): Promise<Object>;
+  static prepareVideoElement(): void;
   restore(source: PKMediaSourceObject, config: Object): void;
   destroy(): void;
   attach(): void;
@@ -24,6 +25,7 @@ declare interface IEngine {
   enableAdaptiveBitrate(): void;
   isAdaptiveBitrateEnabled(): boolean;
   seekToLiveEdge(): void;
+  getStartTimeOfDvrWindow(): number;
   isLive(): boolean;
   getVideoElement(): HTMLVideoElement;
   +id: string;

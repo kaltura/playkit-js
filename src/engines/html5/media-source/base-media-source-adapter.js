@@ -3,7 +3,7 @@
 import FakeEvent from '../../../event/fake-event'
 import FakeEventTarget from '../../../event/fake-event-target'
 import Error from '../../../error/error'
-import {CUSTOM_EVENTS, HTML5_EVENTS} from '../../../event/events'
+import {CustomEventType, Html5EventType} from '../../../event/event-type'
 import getLogger from '../../../utils/logger'
 import Track from '../../../track/track'
 import VideoTrack from '../../../track/video-track'
@@ -11,18 +11,6 @@ import AudioTrack from '../../../track/audio-track'
 import TextTrack from '../../../track/text-track'
 
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
-  /**
-   * Passing the custom events to the actual media source adapter.
-   * @static
-   */
-  static CustomEvents: { [event: string]: string } = CUSTOM_EVENTS;
-
-  /**
-   * Passing the HTML5 events to the actual media source adapter.
-   * @static
-   */
-  static Html5Events: { [event: string]: string} = HTML5_EVENTS;
-
   /**
    * Passing the getLogger function to the actual media source adapter.
    * @type {Function}
@@ -72,6 +60,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     this._videoElement = videoElement;
     this._sourceObj = source;
     this._config = config;
+    this._handleLiveTimeUpdate();
   }
 
   /**
@@ -93,21 +82,21 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    */
   _onTrackChanged(track: Track): void {
     if (track instanceof VideoTrack) {
-      this._trigger(BaseMediaSourceAdapter.CustomEvents.VIDEO_TRACK_CHANGED, {selectedVideoTrack: track});
+      this._trigger(CustomEventType.VIDEO_TRACK_CHANGED, {selectedVideoTrack: track});
     } else if (track instanceof AudioTrack) {
-      this._trigger(BaseMediaSourceAdapter.CustomEvents.AUDIO_TRACK_CHANGED, {selectedAudioTrack: track});
+      this._trigger(CustomEventType.AUDIO_TRACK_CHANGED, {selectedAudioTrack: track});
     } else if (track instanceof TextTrack) {
-      this._trigger(BaseMediaSourceAdapter.CustomEvents.TEXT_TRACK_CHANGED, {selectedTextTrack: track});
+      this._trigger(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: track});
     }
   }
 
   /**
    * Dispatch an adapter event forward.
    * @param {string} name - The name of the event.
-   * @param {Object} payload - The event payload.
+   * @param {?Object} payload - The event payload.
    * @returns {void}
    */
-  _trigger(name: string, payload: Object): void {
+  _trigger(name: string, payload?: Object): void {
     this.dispatchEvent(new FakeEvent(name, payload));
   }
 
@@ -145,6 +134,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return BaseMediaSourceAdapter._throwNotImplementedError('isAdaptiveBitrateEnabled');
   }
 
+  _getLiveEdge(): number {
+    return BaseMediaSourceAdapter._throwNotImplementedError('_getLiveEdge');
+  }
+
   seekToLiveEdge(): void {
     BaseMediaSourceAdapter._throwNotImplementedError('seekToLiveEdge');
   }
@@ -153,8 +146,26 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return BaseMediaSourceAdapter._throwNotImplementedError('isLive');
   }
 
+  /**
+   * Handling live time update (as is not triggered when video is paused, but the current time changed)
+   * @function _handleLiveTimeUpdate
+   * @returns {void}
+   * @private
+   */
+  _handleLiveTimeUpdate(): void {
+    this._videoElement.addEventListener(Html5EventType.DURATION_CHANGE, () => {
+      if (this.isLive() && this._videoElement.paused) {
+        this._trigger(Html5EventType.TIME_UPDATE);
+      }
+    });
+  }
+
   get src(): string {
     return BaseMediaSourceAdapter._throwNotImplementedError('get src');
+  }
+
+  getStartTimeOfDvrWindow(): number {
+    return BaseMediaSourceAdapter._throwNotImplementedError('getStartTimeOfDvrWindow');
   }
 
   /**
@@ -162,7 +173,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @param {string} name of the unimplemented function
    * @returns {any} void/string/boolean
    */
-  static _throwNotImplementedError(name: string): any{
+  static _throwNotImplementedError(name: string): any {
     throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, name);
   }
 
@@ -172,7 +183,11 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @public
    */
   get currentTime(): number {
-    return this._videoElement.currentTime;
+    if (this.isLive()) {
+      return this._videoElement.currentTime - this.getStartTimeOfDvrWindow();
+    } else {
+      return this._videoElement.currentTime;
+    }
   }
 
   /**
@@ -182,6 +197,9 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @returns {void}
    */
   set currentTime(to: number): void {
+    if (this.isLive()) {
+      to += this.getStartTimeOfDvrWindow();
+    }
     this._videoElement.currentTime = to;
   }
 
@@ -191,6 +209,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @public
    */
   get duration(): number {
-    return this._videoElement.duration;
+    if (this.isLive()) {
+      return this._getLiveEdge() - this.getStartTimeOfDvrWindow();
+    } else {
+      return this._videoElement.duration;
+    }
   }
 }

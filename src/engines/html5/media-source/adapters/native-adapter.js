@@ -1,6 +1,6 @@
 //@flow
 import EventManager from '../../../../event/event-manager'
-import {HTML5_EVENTS as Html5Events} from '../../../../event/events'
+import {Html5EventType, CustomEventType} from '../../../../event/event-type'
 import Track from '../../../../track/track'
 import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'
@@ -165,7 +165,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {void}
    */
   _dispatchErrorCallback(error: any): void {
-    this._trigger(Html5Events.ERROR, error);
+    this._trigger(Html5EventType.ERROR, error);
   }
 
   /**
@@ -211,14 +211,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   load(startTime: ?number): Promise<Object> {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
-        this._eventManager.listenOnce(this._videoElement, Html5Events.LOADED_DATA, this._onLoadedData.bind(this, resolve));
-        this._eventManager.listenOnce(this._videoElement, Html5Events.ERROR, this._onError.bind(this, reject));
+        this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, this._onLoadedData.bind(this, resolve));
+        this._eventManager.listenOnce(this._videoElement, Html5EventType.ERROR, this._onError.bind(this, reject));
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
         }
         if (this._sourceObj && this._sourceObj.url) {
           this._videoElement.src = this._sourceObj.url;
-          this._trigger(BaseMediaSourceAdapter.CustomEvents.ABR_MODE_CHANGED, {mode: this._isProgressivePlayback() ? 'manual' : 'auto'});
+          this._trigger(CustomEventType.ABR_MODE_CHANGED, {mode: this._isProgressivePlayback() ? 'manual' : 'auto'});
         }
         if (startTime) {
           this._videoElement.currentTime = startTime;
@@ -240,6 +240,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._playerTracks = this._getParsedTracks();
       this._addNativeAudioTrackChangeListener();
       this._addNativeTextTrackChangeListener();
+      this._addNativeTextTrackAddedListener();
       NativeAdapter._logger.debug('The source has been loaded successfully');
       resolve({tracks: this._playerTracks});
       if (this.isLive()) {
@@ -249,7 +250,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (this._videoElement.textTracks.length > 0) {
       parseTracksAndResolve();
     } else {
-      this._eventManager.listenOnce(this._videoElement, Html5Events.CAN_PLAY, parseTracksAndResolve.bind(this));
+      this._eventManager.listenOnce(this._videoElement, Html5EventType.CAN_PLAY, parseTracksAndResolve.bind(this));
     }
   }
 
@@ -443,13 +444,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       let currentTime = this._videoElement.currentTime;
       let paused = this._videoElement.paused;
       this._sourceObj = videoTracks[videoTrack.index];
-      this._eventManager.listenOnce(this._videoElement, Html5Events.LOADED_DATA, () => {
+      this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => {
         if (Env.browser.name === 'Android Browser') {
           // In android browser we have to seek only after some playback.
-          this._eventManager.listenOnce(this._videoElement, Html5Events.DURATION_CHANGE, () => {
+          this._eventManager.listenOnce(this._videoElement, Html5EventType.DURATION_CHANGE, () => {
             this._videoElement.currentTime = currentTime;
           });
-          this._eventManager.listenOnce(this._videoElement, Html5Events.SEEKED, () => {
+          this._eventManager.listenOnce(this._videoElement, Html5EventType.SEEKED, () => {
             this._onTrackChanged(videoTrack);
             if (paused) {
               this._videoElement.pause();
@@ -457,7 +458,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           });
           this._videoElement.play();
         } else {
-          this._eventManager.listenOnce(this._videoElement, Html5Events.SEEKED, () => {
+          this._eventManager.listenOnce(this._videoElement, Html5EventType.SEEKED, () => {
             this._onTrackChanged(videoTrack);
           });
           this._videoElement.currentTime = currentTime;
@@ -651,6 +652,27 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
+   * Add the onaddtrack listenr of the video element TextTrackList.
+   * @private
+   * @returns {void}
+   */
+  _addNativeTextTrackAddedListener(): void {
+    if (this._videoElement.textTracks) {
+      this._eventManager.listen(this._videoElement.textTracks, 'addtrack', () => this._onNativeTextTrackAdded());
+    }
+  }
+
+  /**
+   * Handler of the video element TextTrackList onaddtrack event.
+   * @private
+   * @returns {void}
+   */
+  _onNativeTextTrackAdded(): void {
+    this._playerTracks = this._getParsedTracks();
+    this._trigger(CustomEventType.TRACKS_CHANGED, {tracks: this._playerTracks});
+  }
+
+  /**
    * Hide the text track
    * @function hideTextTrack
    * @returns {void}
@@ -775,7 +797,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       const liveEdge = this._getLiveEdge();
       if (this._liveEdge !== liveEdge) {
         this._liveEdge = liveEdge;
-        this._trigger(Html5Events.DURATION_CHANGE, {});
+        this._videoElement.dispatchEvent(new window.Event(Html5EventType.DURATION_CHANGE));
       }
     }, 2000);
   }
@@ -790,16 +812,15 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
-   * Get the duration in seconds.
-   * @returns {Number} - The playback duration.
+   * Get the start time of DVR window in live playback in seconds.
+   * @returns {Number} - start time of DVR window.
    * @public
    */
-  get duration(): number {
-    if (this.isLive()) {
-      return this._getLiveEdge();
+  getStartTimeOfDvrWindow(): number {
+    if (this.isLive() && this._videoElement.seekable.length) {
+      return this._videoElement.seekable.start(0);
     } else {
-      return super.duration;
+      return 0;
     }
   }
-
 }

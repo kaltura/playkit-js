@@ -2,6 +2,69 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.21.3"></a>
+## [0.21.3](https://github.com/kaltura/playkit-js/compare/v0.21.2...v0.21.3) (2018-02-26)
+
+
+### Bug Fixes
+
+* **FEC-7371:** video fails to play on old browsers or browsers with data saver mode on ([#200](https://github.com/kaltura/playkit-js/issues/200)) ([14d6f9a](https://github.com/kaltura/playkit-js/commit/14d6f9a))
+* **FEC-7872:** Player stuck in case of multirequest is not fully loaded ([#197](https://github.com/kaltura/playkit-js/issues/197)) ([9537d42](https://github.com/kaltura/playkit-js/commit/9537d42))
+* **FEC-7933:** Default language in IE11 is not the same as configured as explicit ([#198](https://github.com/kaltura/playkit-js/issues/198)) ([eb38566](https://github.com/kaltura/playkit-js/commit/eb38566))
+* **FEC-7939:** 'off' option appears twice after change media ([#199](https://github.com/kaltura/playkit-js/issues/199)) ([506fe8e](https://github.com/kaltura/playkit-js/commit/506fe8e))
+
+
+
+<a name="0.21.2"></a>
+## [0.21.2](https://github.com/kaltura/playkit-js/compare/v0.21.1...v0.21.2) (2018-02-19)
+
+
+### Bug Fixes
+
+* operations order on change media ([#192](https://github.com/kaltura/playkit-js/issues/192)) ([601e0ff](https://github.com/kaltura/playkit-js/commit/601e0ff))
+* **FEC-7813, FEC-7918:** the captions are OFF in the menu, despite explicit captions configured and shown on iOS ([#196](https://github.com/kaltura/playkit-js/issues/196)) ([8548a9e](https://github.com/kaltura/playkit-js/commit/8548a9e))
+* **FEC-7907, FEC-7872:** No play button when preload=auto and ima plugin enabled ([#193](https://github.com/kaltura/playkit-js/issues/193)) ([2975fdc](https://github.com/kaltura/playkit-js/commit/2975fdc))
+
+
+
+<a name="0.21.1"></a>
+## [0.21.1](https://github.com/kaltura/playkit-js/compare/v0.21.0...v0.21.1) (2018-02-14)
+
+
+### Bug Fixes
+
+* **FEC-7564:** trigger timeupdate in case of live when the playback is paused ([#191](https://github.com/kaltura/playkit-js/issues/191)) ([68ba8bf](https://github.com/kaltura/playkit-js/commit/68ba8bf))
+* error printing ([#194](https://github.com/kaltura/playkit-js/issues/194)) ([b62cb6d](https://github.com/kaltura/playkit-js/commit/b62cb6d))
+
+
+
+<a name="0.21.0"></a>
+# [0.21.0](https://github.com/kaltura/playkit-js/compare/v0.20.1...v0.21.0) (2018-02-11)
+
+
+### Bug Fixes
+
+* **FEC-7392 FEC-7882:** Live+DVR - unavailable time shown in the seekbar ([#187](https://github.com/kaltura/playkit-js/issues/187)) ([98a6483](https://github.com/kaltura/playkit-js/commit/98a6483))
+* **FEC-7896:** endless spinner appears right after changing audio track in IE and Edge ([#189](https://github.com/kaltura/playkit-js/issues/189)) ([2da8940](https://github.com/kaltura/playkit-js/commit/2da8940))
+
+
+### Features
+
+* expose player enums ([#190](https://github.com/kaltura/playkit-js/issues/190)) ([675563a](https://github.com/kaltura/playkit-js/commit/675563a))
+
+
+
+<a name="0.20.1"></a>
+## [0.20.1](https://github.com/kaltura/playkit-js/compare/v0.20.0...v0.20.1) (2018-02-06)
+
+
+### Bug Fixes
+
+* **FEC-7564:** durationchange not triggered while live playback - safari ([#178](https://github.com/kaltura/playkit-js/issues/178)) ([d0490fc](https://github.com/kaltura/playkit-js/commit/d0490fc))
+* canPreload check logic is not accurate ([#179](https://github.com/kaltura/playkit-js/issues/179)) ([3d37524](https://github.com/kaltura/playkit-js/commit/3d37524))
+
+
+
 <a name="0.20.0"></a>
 # [0.20.0](https://github.com/kaltura/playkit-js/compare/v0.19.0...v0.20.0) (2018-01-10)
 
