@@ -12,16 +12,15 @@ const JSONP_FORMAT_STRING = 'responseFormat=jsonp&callback=';
  * @param {Object} options - object contains configuration. currently only timeout
  * @returns {Promise<*>} returns a promise with the callback output.
  */
-function Jsonp(url: string, callback: Function, options: Object): Promise<*> {
+function jsonp(url: string, callback: Function, options: Object): Promise<*> {
   options = options || {};
 
   const timeout = options.timeout ? options.timeout : JSONP_TIMEOUT;
-  const noop = function () {
-  }
-  let script = document.createElement("script");
+  const noop = function () {};
+  const script = document.createElement("script");
   let scriptUri = url;
   let timer;
-  let callbackId = CALLBACK_PREFIX + Math.round(Date.now() + Math.random() * 1000001);
+  const callbackId = CALLBACK_PREFIX + Math.round(Date.now() + Math.random() * 1000001);
 
   /**
    * function to clean the DOM from the script tag and from the function
@@ -59,7 +58,7 @@ function Jsonp(url: string, callback: Function, options: Object): Promise<*> {
       let callbackResult = callback(data, url);
       _cleanup();
       resolve(callbackResult);
-    }
+    };
 
     if (scriptUri.match(/\?/)) {
       scriptUri += "&" + JSONP_FORMAT_STRING + callbackId;
@@ -73,4 +72,4 @@ function Jsonp(url: string, callback: Function, options: Object): Promise<*> {
   });
 }
 
-export default Jsonp;
+export default jsonp;
