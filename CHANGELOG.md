@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.21.4"></a>
+## [0.21.4](https://github.com/kaltura/playkit-js/compare/v0.21.3...v0.21.4) (2018-02-28)
+
+
+### Bug Fixes
+
+* **FEC-7371:** video fails to play on old browsers or browsers with data saver mode on (cont.)  ([#201](https://github.com/kaltura/playkit-js/issues/201)) ([4b5c229](https://github.com/kaltura/playkit-js/commit/4b5c229))
+
+
+
 <a name="0.21.3"></a>
 ## [0.21.3](https://github.com/kaltura/playkit-js/compare/v0.21.2...v0.21.3) (2018-02-26)
 
