@@ -49,6 +49,7 @@ export {registerPlugin, BasePlugin, BaseMiddleware};
 // Export the tracks classes
 export {Track, VideoTrack, AudioTrack, TextTrack, TextStyle};
 
+Utils.jsonp = jsonp;
 // Export utils library
 export {Utils};
 
@@ -66,8 +67,6 @@ export {__NAME__ as PLAYER_NAME};
 
 // Export environment data
 export {Env};
-
-export {jsonp};
 
 // Export base DRM protocol
 export {BaseDrmProtocol};
