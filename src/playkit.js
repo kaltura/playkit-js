@@ -49,7 +49,9 @@ export {registerPlugin, BasePlugin, BaseMiddleware};
 // Export the tracks classes
 export {Track, VideoTrack, AudioTrack, TextTrack, TextStyle};
 
-Utils.jsonp = jsonp;
+// Export jsonp
+export {jsonp};
+
 // Export utils library
 export {Utils};
 
