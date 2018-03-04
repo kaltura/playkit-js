@@ -385,8 +385,7 @@ const _Dom = {
         t.parentNode.insertBefore(s, t);
       }
     });
-  },
-  loadScriptUsingJSONP: jsonp
+  }
 };
 
 const _Http = {
@@ -411,7 +410,8 @@ const _Http = {
       }
       request.send(params);
     });
-  }
+  },
+  jsonp: jsonp
 };
 
 export {
