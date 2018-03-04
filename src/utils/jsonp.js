@@ -1,22 +1,23 @@
 // @flow
-import Error from "../error/error";
+import Error from '../error/error'
 
 const JSONP_TIMEOUT: number = 15000;
 const CALLBACK_PREFIX: string = 'jsonpcallback';
-const JSONP_FORMAT_STRING = 'responseFormat=jsonp&callback=';
+const JSONP_FORMAT_STRING: string = 'responseFormat=jsonp&callback=';
 
 /**
- * Adding jsonp utility.the function gets a url string and a callback function and returns a promise
- * @param {string} url - url of the request
- * @param {string} callback - callback function to be called when the request returns
- * @param {Object} options - object contains configuration. currently only timeout
- * @returns {Promise<*>} returns a promise with the callback output.
+ * JSONP utility.
+ * @param {string} url - The url of the request.
+ * @param {string} callback - Callback function to be called when the request returns.
+ * @param {Object} options - Object contains configuration (currently only timeout).
+ * @returns {Promise<*>} - A promise with the callback output.
  */
 function jsonp(url: string, callback: Function, options: Object): Promise<*> {
   options = options || {};
 
   const timeout = options.timeout ? options.timeout : JSONP_TIMEOUT;
-  const noop = function () {};
+  const noop = () => {
+  };
   const script = document.createElement("script");
   let scriptUri = url;
   let timer;
@@ -72,4 +73,4 @@ function jsonp(url: string, callback: Function, options: Object): Promise<*> {
   });
 }
 
-export default jsonp;
+export {jsonp};

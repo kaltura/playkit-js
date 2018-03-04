@@ -1,4 +1,6 @@
 //@flow
+import {jsonp} from './jsonp'
+
 "use strict";
 
 const _Number = {
@@ -383,7 +385,8 @@ const _Dom = {
         t.parentNode.insertBefore(s, t);
       }
     });
-  }
+  },
+  loadScriptUsingJSONP: jsonp
 };
 
 const _Http = {

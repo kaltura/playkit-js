@@ -25,7 +25,6 @@ import {MediaType} from './media-type'
 import {EventType} from './event/event-type'
 import {AbrMode} from './track/abr-mode-type'
 import {LogLevelType} from './utils/logger'
-import jsonp from './utils/jsonp'
 
 Player.runCapabilities();
 
@@ -66,8 +65,6 @@ export {__NAME__ as PLAYER_NAME};
 
 // Export environment data
 export {Env};
-
-export {jsonp};
 
 // Export base DRM protocol
 export {BaseDrmProtocol};
