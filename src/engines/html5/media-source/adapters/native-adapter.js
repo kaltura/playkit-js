@@ -281,10 +281,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         clearInterval(this._liveDurationChangeInterval);
         this._liveDurationChangeInterval = null;
       }
-      if (NativeAdapter._drmProtocol) {
-        NativeAdapter._drmProtocol.destroy();
-        NativeAdapter._drmProtocol = null;
-      }
     });
   }
 
