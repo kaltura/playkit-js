@@ -17,7 +17,4 @@ export default class BaseDrmProtocol implements IDrmProtocol {
   static setDrmPlayback(...args): void {
     throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, 'static setDrmPlayback');
   }
-
-  static destroy(): void {
-  }
 }
