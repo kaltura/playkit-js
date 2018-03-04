@@ -27,7 +27,8 @@ var config = {
     sources: {
         hls: [],
         dash: [],
-        progressive: []
+        progressive: [],
+        options: {}
     },
     plugins: {},
     metadata: {
@@ -91,7 +92,8 @@ var config = {
 >{
 >  dash: Array<PKMediaSourceObject>
 >  hls: Array<PKMediaSourceObject>
->  progressive: Array<PKMediaSourceObject>
+>  progressive: Array<PKMediaSourceObject>,
+>  options: PKMediaSourceOptionsObject
 >}
 >```
 >>##### Type `PKMediaSourceObject`
@@ -114,12 +116,20 @@ var config = {
 >>  certificate: string // optional
 >>}
 >>```
+>>##### Type `PKMediaSourceOptionsObject`
+>>```js
+>>{
+>>  forceRedirectExternalStreams: boolean,
+>>  redirectExternalStreamsCallback: ?Function
+>>}
+>>```
 >##### Default:
 >```js
 >{
 >  hls: [],
 >  dash: [],
->  progressive: []
+>  progressive: [],
+>  options: {}
 >}
 >```
 >##### Description: Defines the optional sources for playback.
@@ -145,7 +155,8 @@ var config = {
 >                mimetype: "video/mp4",
 >                url: "https://www.w3schools.com/html/mov_bbb.mp4"
 >            }
->        ]
+>        ],
+>        options: {}
 >    }
 >};
 >```
