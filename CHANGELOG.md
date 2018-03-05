@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.21.5"></a>
+## [0.21.5](https://github.com/kaltura/playkit-js/compare/v0.21.4...v0.21.5) (2018-03-05)
+
+
+### Bug Fixes
+
+* **FEC-7970:** Change media from DRM to DRM is not working ([#202](https://github.com/kaltura/playkit-js/issues/202)) ([b9974ad](https://github.com/kaltura/playkit-js/commit/b9974ad))
+
+
+
 <a name="0.21.4"></a>
 ## [0.21.4](https://github.com/kaltura/playkit-js/compare/v0.21.3...v0.21.4) (2018-02-28)
 
