@@ -191,11 +191,11 @@ var config = {
 >>### config.sources.options
 >>##### Type: `PKMediaSourceOptionsObject`  
 >>##### Default: `{}`  
->>##### Description: Defines the options for the optional sources.
+>>##### Description: Defines the sources options.
 >>##
 >>>### config.sources.options.forceRedirectExternalStreams
 >>>##### Type: `boolean`  
->>>##### Default: `false`  
+>>>##### Default: `-`  
 >>>##### Description: Whether to force a source redirect for an external streams.
 >>>##
 >>>### config.sources.options.redirectExternalStreamsHandler
