@@ -1,4 +1,6 @@
 //@flow
+import {jsonp} from './jsonp'
+
 "use strict";
 
 const _Number = {
@@ -408,7 +410,8 @@ const _Http = {
       }
       request.send(params);
     });
-  }
+  },
+  jsonp: jsonp
 };
 
 export {

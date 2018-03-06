@@ -27,7 +27,8 @@ var config = {
     sources: {
         hls: [],
         dash: [],
-        progressive: []
+        progressive: [],
+        options: {}
     },
     plugins: {},
     metadata: {
@@ -91,7 +92,8 @@ var config = {
 >{
 >  dash: Array<PKMediaSourceObject>
 >  hls: Array<PKMediaSourceObject>
->  progressive: Array<PKMediaSourceObject>
+>  progressive: Array<PKMediaSourceObject>,
+>  options: PKMediaSourceOptionsObject
 >}
 >```
 >>##### Type `PKMediaSourceObject`
@@ -114,41 +116,92 @@ var config = {
 >>  certificate: string // optional
 >>}
 >>```
+>>##### Type `PKMediaSourceOptionsObject`
+>>```js
+>>{
+>>  forceRedirectExternalStreams: boolean,
+>>  redirectExternalStreamsHandler: ?Function
+>>}
+>>```
 >##### Default:
 >```js
 >{
 >  hls: [],
 >  dash: [],
->  progressive: []
+>  progressive: [],
+>  options: {}
 >}
 >```
->##### Description: Defines the optional sources for playback.
->The optional sources for playback should map the media source extension type to its array of sources.
->#### Example:
->```js
->var config = {
->    sources: {
->        hls: [
->            {
->                mimetype: "application/x-mpegurl",
->                url: "https://wowzaec2demo.streamlock.net/vod-multitrack/_definst_/smil:ElephantsDream/ElephantsDream.smil/playlist.m3u8"
->            }
->        ],
->        dash: [
->            {
->                mimetype: "application/dash+xml",
->                url: "https://storage.googleapis.com/shaka-demo-assets/angel-one/dash.mpd"
->            }
->        ],
->        progressive: [
->            {
->                mimetype: "video/mp4",
->                url: "https://www.w3schools.com/html/mov_bbb.mp4"
->            }
->        ]
->    }
->};
->```
+>##### Description: Defines related sources configurations.
+>##
+>>### config.sources.hls
+>>##### Type: `Array<PKMediaSourceObject>`  
+>>##### Default: `[]`  
+>>##### Description: Defines the optional hls sources for playback.
+>>#### Example:
+>>```js
+>>var config = {
+>>  sources: {
+>>    hls: [
+>>      {
+>>        mimetype: "application/x-mpegurl",
+>>        url: "//PATH/TO/MANIFEST.m3u8"
+>>      }
+>>    ]
+>>  }
+>>};
+>>```
+>>##
+>>### config.sources.dash
+>>##### Type: `Array<PKMediaSourceObject>`  
+>>##### Default: `[]`  
+>>##### Description: Defines the optional dash sources for playback.
+>>#### Example:
+>>```js
+>>var config = {
+>>  sources: {
+>>    dash: [
+>>      {
+>>        mimetype: "application/x-mpegurl",
+>>        url: "//PATH/TO/MANIFEST.mpd"
+>>      }
+>>    ]
+>>  }
+>>};
+>>```
+>>##
+>>### config.sources.progressive
+>>##### Type: `Array<PKMediaSourceObject>`  
+>>##### Default: `[]`  
+>>##### Description: Defines the optional progressive sources for playback.
+>>#### Example:
+>>```js
+>>var config = {
+>>  sources: {
+>>    dash: [
+>>      {
+>>        mimetype: "application/x-mpegurl",
+>>        url: "//PATH/TO/FILE.mp4"
+>>      }
+>>    ]
+>>  }
+>>};
+>>```
+>>##
+>>### config.sources.options
+>>##### Type: `PKMediaSourceOptionsObject`  
+>>##### Default: `{}`  
+>>##### Description: Defines the sources options.
+>>##
+>>>### config.sources.options.forceRedirectExternalStreams
+>>>##### Type: `boolean`  
+>>>##### Default: `-`  
+>>>##### Description: Whether to force a source redirect for an external streams.
+>>>##
+>>>### config.sources.options.redirectExternalStreamsHandler
+>>>##### Type: `Function`  
+>>>##### Default: `-`  
+>>>##### Description: The handler function which redirects the stream.
 ## 
 >### config.plugins
 >##### Type: `PKPluginsObject`
