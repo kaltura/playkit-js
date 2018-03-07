@@ -178,7 +178,7 @@ var config = {
 >>```js
 >>var config = {
 >>  sources: {
->>    dash: [
+>>    progressive: [
 >>      {
 >>        mimetype: "application/x-mpegurl",
 >>        url: "//PATH/TO/FILE.mp4"
