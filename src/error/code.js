@@ -615,7 +615,49 @@ const Code: CodeType = {
    * When the manifest contains no period playable streams, it means the
    * manifest is unsupported by the browser.
    */
-  'CONTENT_UNSUPPORTED_BY_BROWSER': 9009
+  'CONTENT_UNSUPPORTED_BY_BROWSER': 9009,
+
+  /**
+   * When trying to download and an entry
+   */
+  'DOWNLOADED_ALREADY_STARTED': 9010,
+  /**
+   *
+   */
+  'ENTRY_ALREADY_EXISTS': 9011,
+
+  /**
+   *
+   */
+  'DOWNLOAD_ABORTED': 9012,
+
+
+  /**
+   *
+   */
+  'ENTRY_DOES_NOT_EXIST': 9013,
+
+
+  /**
+   *
+   */
+  'PAUSE_ABORTERD': 9014,
+
+  /**
+   * cannot add item to indexedDB
+   */
+  'CANNOT_ADD_ITEM': 9015,
+
+  /**
+   *
+   */
+  'REMOVE_REJECTED': 9016,
+
+  /**
+   * Could not retrieve media info from the providers (manifest url, drm etc)
+   */
+  'COULD_NOT_GET_INFO_FROM_MEDIA_PROVIDER': 9017
+
 
 };
 
