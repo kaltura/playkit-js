@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.21.6"></a>
+## [0.21.6](https://github.com/kaltura/playkit-js/compare/v0.21.5...v0.21.6) (2018-03-08)
+
+
+### Bug Fixes
+
+* **FEC-7815:** added a jsonp utility ([#186](https://github.com/kaltura/playkit-js/issues/186)) ([5c289cc](https://github.com/kaltura/playkit-js/commit/5c289cc))
+
+
+
 <a name="0.21.5"></a>
 ## [0.21.5](https://github.com/kaltura/playkit-js/compare/v0.21.4...v0.21.5) (2018-03-05)
 
