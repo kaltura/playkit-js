@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.21.7"></a>
+## [0.21.7](https://github.com/kaltura/playkit-js/compare/v0.21.6...v0.21.7) (2018-03-12)
+
+
+### Bug Fixes
+
+* remove default metadata object ([#203](https://github.com/kaltura/playkit-js/issues/203)) ([2dedb0c](https://github.com/kaltura/playkit-js/commit/2dedb0c))
+
+
+
 <a name="0.21.6"></a>
 ## [0.21.6](https://github.com/kaltura/playkit-js/compare/v0.21.5...v0.21.6) (2018-03-08)
 
