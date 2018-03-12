@@ -381,7 +381,7 @@ export default class Player extends FakeEventTarget {
    * @param {Object} config - The configuration for the player instance.
    * @returns {void}
    */
-  configure(config: Object): void {
+  configure(config: Object = {}): void {
     if (config.logLevel && LogLevel[config.logLevel]) {
       setLogLevel(LogLevel[config.logLevel]);
     }
