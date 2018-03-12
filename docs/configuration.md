@@ -31,10 +31,7 @@ var config = {
         options: {}
     },
     plugins: {},
-    metadata: {
-        description: "",
-        poster: ""
-    },
+    metadata: {},
     playback: {
         audioLanguage: "",
         textLanguage: "",
@@ -227,12 +224,9 @@ var config = {
 >    description: string
 >}
 >```
->##### Default: 
+>##### Default:
 >```js
->{
->    poster: "",
->    description: ""
->}
+>{}
 >```
 >##### Description: Defines the media metadata.
 >The poster field refers to the poster URL, which the player displays before playback begins.
