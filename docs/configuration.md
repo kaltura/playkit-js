@@ -28,7 +28,9 @@ var config = {
         hls: [],
         dash: [],
         progressive: [],
-        options: {}
+        options: {
+          forceRedirectExternalStreams: false
+        }
     },
     plugins: {},
     metadata: {},
@@ -117,7 +119,8 @@ var config = {
 >>```js
 >>{
 >>  forceRedirectExternalStreams: boolean,
->>  redirectExternalStreamsHandler: ?Function
+>>  redirectExternalStreamsHandler: ?Function,
+>>  redirectExternalStreamsTimeout: ?number
 >>}
 >>```
 >##### Default:
@@ -126,7 +129,9 @@ var config = {
 >  hls: [],
 >  dash: [],
 >  progressive: [],
->  options: {}
+>  options: {
+>    forceRedirectExternalStreams: false
+>  }
 >}
 >```
 >##### Description: Defines related sources configurations.
@@ -192,13 +197,18 @@ var config = {
 >>##
 >>>### config.sources.options.forceRedirectExternalStreams
 >>>##### Type: `boolean`  
->>>##### Default: `-`  
+>>>##### Default: `false`  
 >>>##### Description: Whether to force a source redirect for an external streams.
 >>>##
 >>>### config.sources.options.redirectExternalStreamsHandler
 >>>##### Type: `Function`  
 >>>##### Default: `-`  
 >>>##### Description: The handler function which redirects the stream.
+>>>##
+>>>### config.sources.options.redirectExternalStreamsTimeout
+>>>##### Type: `number`  
+>>>##### Default: `-`  
+>>>##### Description: The timeout for the redirect operation.
 ## 
 >### config.plugins
 >##### Type: `PKPluginsObject`

@@ -1,7 +1,7 @@
 // @flow
 import Error from '../error/error'
 
-const JSONP_TIMEOUT: number = 15000;
+const JSONP_TIMEOUT: number = 5000;
 const CALLBACK_PREFIX: string = 'jsonpcallback';
 const JSONP_FORMAT_STRING: string = 'responseFormat=jsonp&callback=';
 
@@ -14,30 +14,28 @@ const JSONP_FORMAT_STRING: string = 'responseFormat=jsonp&callback=';
  */
 function jsonp(url: string, callback: Function, options: Object): Promise<*> {
   options = options || {};
-
   const timeout = options.timeout ? options.timeout : JSONP_TIMEOUT;
-  const noop = () => {
-  };
   const script = document.createElement("script");
+  const callbackId = CALLBACK_PREFIX + Math.round(Date.now() + Math.random() * 1000001);
   let scriptUri = url;
   let timer;
-  const callbackId = CALLBACK_PREFIX + Math.round(Date.now() + Math.random() * 1000001);
 
   /**
    * function to clean the DOM from the script tag and from the function
    * @returns {void}
    */
-  const _cleanup = function (): void {
+  const _cleanup = () => {
     if (script && script.parentNode) {
       script.parentNode.removeChild(script);
     }
-    window[callbackId] = noop;
+    window[callbackId] = () => {
+    };
     if (timer) {
       clearTimeout(timer);
     }
   };
 
-  return new Promise(function (resolve, reject) {
+  return new Promise((resolve, reject) => {
     if (timeout) {
       timer = setTimeout(function () {
         _cleanup();
@@ -55,8 +53,8 @@ function jsonp(url: string, callback: Function, options: Object): Promise<*> {
      * @param {Object} data - the data we get from the server, in response to the request
      * @returns {void}
      */
-    window[callbackId] = function (data: Object): void {
-      let callbackResult = callback(data, url);
+    window[callbackId] = (data: Object) => {
+      const callbackResult = callback(data, url);
       _cleanup();
       resolve(callbackResult);
     };

@@ -5,7 +5,9 @@
     "hls": [],
     "dash": [],
     "progressive": [],
-    "options": {}
+    "options": {
+      "forceRedirectExternalStreams": false
+    }
   },
   "plugins": {},
   "metadata": {},
