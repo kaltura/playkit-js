@@ -119,7 +119,8 @@ var config = {
 >>```js
 >>{
 >>  forceRedirectExternalStreams: boolean,
->>  redirectExternalStreamsHandler: ?Function
+>>  redirectExternalStreamsHandler: ?Function,
+>>  redirectExternalStreamsTimeout: ?number
 >>}
 >>```
 >##### Default:
@@ -203,6 +204,11 @@ var config = {
 >>>##### Type: `Function`  
 >>>##### Default: `-`  
 >>>##### Description: The handler function which redirects the stream.
+>>>##
+>>>### config.sources.options.redirectExternalStreamsTimeout
+>>>##### Type: `number`  
+>>>##### Default: `-`  
+>>>##### Description: The timeout for the redirect operation.
 ## 
 >### config.plugins
 >##### Type: `PKPluginsObject`

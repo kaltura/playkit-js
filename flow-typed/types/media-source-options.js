@@ -1,5 +1,6 @@
 // @flow
 declare type PKMediaSourceOptionsObject = {
   forceRedirectExternalStreams: boolean,
-  redirectExternalStreamsCallback: ?Function
+  redirectExternalStreamsHandler: ?Function,
+  redirectExternalStreamsTimeout: ?number
 };
