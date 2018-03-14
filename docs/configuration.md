@@ -198,7 +198,7 @@ var config = {
 >>>### config.sources.options.forceRedirectExternalStreams
 >>>##### Type: `boolean`  
 >>>##### Default: `false`  
->>>##### Description: Whether to force a source redirect for an external streams.
+>>>##### Description: Enable workaround for some user-agents that don't allow redirects after a successful CORS-preflight request.
 >>>##
 >>>### config.sources.options.redirectExternalStreamsHandler
 >>>##### Type: `Function`  
