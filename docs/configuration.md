@@ -28,7 +28,9 @@ var config = {
         hls: [],
         dash: [],
         progressive: [],
-        options: {}
+        options: {
+          forceRedirectExternalStreams: false
+        }
     },
     plugins: {},
     metadata: {},
@@ -126,7 +128,9 @@ var config = {
 >  hls: [],
 >  dash: [],
 >  progressive: [],
->  options: {}
+>  options: {
+>    forceRedirectExternalStreams: false
+>  }
 >}
 >```
 >##### Description: Defines related sources configurations.
@@ -192,7 +196,7 @@ var config = {
 >>##
 >>>### config.sources.options.forceRedirectExternalStreams
 >>>##### Type: `boolean`  
->>>##### Default: `-`  
+>>>##### Default: `false`  
 >>>##### Description: Whether to force a source redirect for an external streams.
 >>>##
 >>>### config.sources.options.redirectExternalStreamsHandler
