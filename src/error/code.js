@@ -656,7 +656,13 @@ const Code: CodeType = {
   /**
    * Could not retrieve media info from the providers (manifest url, drm etc)
    */
-  'COULD_NOT_GET_INFO_FROM_MEDIA_PROVIDER': 9017
+  'COULD_NOT_GET_INFO_FROM_MEDIA_PROVIDER': 9017,
+
+
+  /**
+   * Renew license failed
+   */
+  'RENEW_LICENSE_FAILED': 9020
 
 
 };
