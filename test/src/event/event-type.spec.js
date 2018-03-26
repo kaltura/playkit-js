@@ -1,4 +1,4 @@
-import {EventType, Html5EventType, CustomEventType} from '../../../src/event/event-type'
+import {CustomEventType, EventType, Html5EventType} from '../../../src/event/event-type'
 import {Object as ObjectUtils} from '../../../src/utils/util'
 
 describe('events', () => {
@@ -28,6 +28,10 @@ describe('events', () => {
       WAITING: 'waiting',
     });
     CustomEventType.should.deep.equals({
+      RESET_STARTED: 'resetstarted',
+      RESET_ENDED: 'resetended',
+      DESTROY_STARTED: 'destroystarted',
+      DESTROY_ENDED: 'destroyended',
       ENTER_FULLSCREEN: 'enterfullscreen',
       EXIT_FULLSCREEN: 'exitfullscreen',
       REQUESTED_ENTER_FULLSCREEN: 'requestedenterfullscreen',
