@@ -510,7 +510,6 @@ export default class Player extends FakeEventTarget {
   reset(): void {
     if (this._reset) return;
     this.pause();
-    this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET_STARTED));
     this._eventManager.removeAll();
     this._createReadyPromise();
     this._activeTextCues = [];
@@ -524,7 +523,7 @@ export default class Player extends FakeEventTarget {
     this._pluginManager.reset();
     this._engine.reset();
     this._reset = true;
-    this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET_ENDED));
+    this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET));
   }
 
   /**
@@ -534,7 +533,6 @@ export default class Player extends FakeEventTarget {
    */
   destroy(): void {
     if (this._destroyed) return;
-    this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_DESTROY_STARTED));
     if (this._engine) {
       this._engine.destroy();
     }
@@ -555,7 +553,7 @@ export default class Player extends FakeEventTarget {
       Utils.Dom.removeChild(this._el.parentNode, this._el);
     }
     this._destroyed = true;
-    this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_DESTROY_ENDED));
+    this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_DESTROY));
   }
 
   /**

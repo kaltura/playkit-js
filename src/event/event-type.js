@@ -96,21 +96,13 @@ const Html5EventType: EventTypes = {
 
 const CustomEventType: EventTypes = {
   /**
-   * Fires when the player starts reset operation.
-   */
-  PLAYER_RESET_STARTED: 'playerresetstarted',
-  /**
    * Fires when the player ends reset operation.
    */
-  PLAYER_RESET_ENDED: 'playerresetended',
-  /**
-   * Fires when the player starts destroy operation.
-   */
-  PLAYER_DESTROY_STARTED: 'playerdestroystarted',
+  PLAYER_RESET: 'playerreset',
   /**
    * Fires when the player ends destroy operation.
    */
-  PLAYER_DESTROY_ENDED: 'playerdestroyended',
+  PLAYER_DESTROY: 'playerdestroy',
   /**
    * Fires when the player enters fullscreen.
    */

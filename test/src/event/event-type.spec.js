@@ -28,10 +28,8 @@ describe('events', () => {
       WAITING: 'waiting',
     });
     CustomEventType.should.deep.equals({
-      PLAYER_RESET_STARTED: 'resetstarted',
-      PLAYER_RESET_ENDED: 'resetended',
-      PLAYER_DESTROY_STARTED: 'destroystarted',
-      PLAYER_DESTROY_ENDED: 'destroyended',
+      PLAYER_RESET: 'playerreset',
+      PLAYER_DESTROY: 'playerdestroy',
       ENTER_FULLSCREEN: 'enterfullscreen',
       EXIT_FULLSCREEN: 'exitfullscreen',
       REQUESTED_ENTER_FULLSCREEN: 'requestedenterfullscreen',
