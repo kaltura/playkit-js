@@ -160,10 +160,6 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     });
   }
 
-  get src(): string {
-    return BaseMediaSourceAdapter._throwNotImplementedError('get src');
-  }
-
   getStartTimeOfDvrWindow(): number {
     return BaseMediaSourceAdapter._throwNotImplementedError('getStartTimeOfDvrWindow');
   }
@@ -214,5 +210,18 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     } else {
       return this._videoElement.duration;
     }
+  }
+
+  /**
+   * Getter for the src that the adapter plays on the video element.
+   * In case the adapter preformed a load it will return the manifest url.
+   * @public
+   * @returns {string} - The src url.
+   */
+  get src(): string {
+    if (this._loadPromise && this._sourceObj) {
+      return this._sourceObj.url;
+    }
+    return "";
   }
 }

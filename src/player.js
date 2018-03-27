@@ -4,10 +4,12 @@ import EventManager from './event/event-manager'
 import PosterManager from './utils/poster-manager'
 import FakeEvent from './event/fake-event'
 import FakeEventTarget from './event/fake-event-target'
-import {EventType, Html5EventType, CustomEventType} from './event/event-type'
+import type {EventTypes} from './event/event-type'
+import {CustomEventType, EventType, Html5EventType} from './event/event-type'
 import * as Utils from './utils/util'
 import Locale from './utils/locale'
-import getLogger, {LogLevel, getLogLevel, setLogLevel} from './utils/logger'
+import type {LogLevels, LogLevelTypes} from './utils/logger'
+import getLogger, {getLogLevel, LogLevel, LogLevelType, setLogLevel} from './utils/logger'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
 import BasePlugin from './plugin/base-plugin'
@@ -19,24 +21,21 @@ import TextTrack from './track/text-track'
 import TextStyle from './track/text-style'
 import {Cue} from './track/vtt-cue'
 import {processCues} from './track/text-track-display'
+import type {StateTypes} from './state/state-type'
 import {StateType} from './state/state-type'
+import type {TrackTypes} from './track/track-type'
 import {TrackType} from './track/track-type'
+import type {StreamTypes} from './engines/stream-type'
 import {StreamType} from './engines/stream-type'
+import type {EngineTypes} from './engines/engine-type'
 import {EngineType} from './engines/engine-type'
+import type {MediaTypes} from './media-type'
 import {MediaType} from './media-type'
+import type {AbrModes} from './track/abr-mode-type'
 import {AbrMode} from './track/abr-mode-type'
-import {LogLevelType} from './utils/logger'
 import PlaybackMiddleware from './middleware/playback-middleware'
 import DefaultPlayerConfig from './player-config.json'
 import './assets/style.css'
-import type {EventTypes} from './event/event-type'
-import type {TrackTypes} from './track/track-type'
-import type {LogLevels, LogLevelTypes} from './utils/logger'
-import type {AbrModes} from './track/abr-mode-type'
-import type {MediaTypes} from './media-type'
-import type {StreamTypes} from './engines/stream-type'
-import type {EngineTypes} from './engines/engine-type'
-import type {StateTypes} from './state/state-type'
 import PKError from './error/error'
 
 /**
@@ -344,6 +343,18 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _loading: boolean;
+  /**
+   * Reset indicator state.
+   * @type {boolean}
+   * @private
+   */
+  _reset: boolean;
+  /**
+   * Destroyed indicator state.
+   * @type {boolean}
+   * @private
+   */
+  _destroyed: boolean;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -356,6 +367,11 @@ export default class Player extends FakeEventTarget {
     this._firstPlay = true;
     this._fullscreen = false;
     this._firstPlayInCurrentSession = true;
+    this._repositionCuesTimeout = false;
+    this._loadingMedia = false;
+    this._loading = false;
+    this._reset = true;
+    this._destroyed = false;
     this._config = Player._defaultConfig;
     this._eventManager = new EventManager();
     this._posterManager = new PosterManager();
@@ -367,9 +383,6 @@ export default class Player extends FakeEventTarget {
     this._createPlayerContainer();
     this._appendPosterEl();
     this.configure(config);
-    this._repositionCuesTimeout = false;
-    this._loadingMedia = false;
-    this._loading = false;
   }
 
   // <editor-fold desc="Public API">
@@ -390,7 +403,7 @@ export default class Player extends FakeEventTarget {
     if (this._hasSources(config.sources)) {
       const receivedSourcesWhenHasEngine: boolean = !!this._engine;
       if (receivedSourcesWhenHasEngine) {
-        this._reset();
+        this.reset();
         Player._logger.debug('Change source started');
         this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
       }
@@ -423,6 +436,10 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   load(): void {
+    const resetFlags = () => {
+      this._loading = false;
+      this._reset = false;
+    };
     if (this._engine && !this.src && !this._loading) {
       this._loading = true;
       let startTime = this._config.playback.startTime;
@@ -430,11 +447,10 @@ export default class Player extends FakeEventTarget {
         this._updateTracks(data.tracks);
         this._setDefaultTracks();
         this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
-      }).catch((error) => {
+        resetFlags();
+      }).catch(error => {
         this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
-      // $FlowFixMe
-      }).finally(() => {
-        this._loading = false;
+        resetFlags();
       });
     }
   }
@@ -487,11 +503,36 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Resets the necessary components before change media.
+   * @private
+   * @returns {void}
+   */
+  reset(): void {
+    if (this._reset) return;
+    this.pause();
+    this._eventManager.removeAll();
+    this._createReadyPromise();
+    this._activeTextCues = [];
+    this._updateTextDisplay([]);
+    this._tracks = [];
+    this._resetStateFlags();
+    this._engineType = '';
+    this._streamType = '';
+    this._posterManager.reset();
+    this._stateManager.reset();
+    this._pluginManager.reset();
+    this._engine.reset();
+    this._reset = true;
+    this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET));
+  }
+
+  /**
    * Destroys the player.
    * @returns {void}
    * @public
    */
   destroy(): void {
+    if (this._destroyed) return;
     if (this._engine) {
       this._engine.destroy();
     }
@@ -506,11 +547,13 @@ export default class Player extends FakeEventTarget {
     this._engineType = '';
     this._streamType = '';
     this._readyPromise = null;
-    this._firstPlay = true;
+    this._resetStateFlags();
     this._playbackAttributesState = {};
     if (this._el) {
       Utils.Dom.removeChild(this._el.parentNode, this._el);
     }
+    this._destroyed = true;
+    this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_DESTROY));
   }
 
   /**
@@ -1504,26 +1547,15 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Resets the necessary components before change media.
-   * @private
+   * Resets the state flags of the player.
    * @returns {void}
+   * @private
    */
-  _reset(): void {
-    this.pause();
-    this._eventManager.removeAll();
-    this._createReadyPromise();
-    this._activeTextCues = [];
-    this._updateTextDisplay([]);
-    this._tracks = [];
+  _resetStateFlags(): void {
     this._loading = false;
     this._firstPlay = true;
     this._firstPlayInCurrentSession = false;
     this._loadingMedia = false;
-    this._engineType = '';
-    this._streamType = '';
-    this._posterManager.reset();
-    this._stateManager.reset();
-    this._pluginManager.reset();
   }
 
   /**

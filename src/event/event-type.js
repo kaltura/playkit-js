@@ -96,79 +96,87 @@ const Html5EventType: EventTypes = {
 
 const CustomEventType: EventTypes = {
   /**
-   * Fires when the player enters fullscreen
+   * Fires when the player ends reset operation.
+   */
+  PLAYER_RESET: 'playerreset',
+  /**
+   * Fires when the player ends destroy operation.
+   */
+  PLAYER_DESTROY: 'playerdestroy',
+  /**
+   * Fires when the player enters fullscreen.
    */
   ENTER_FULLSCREEN: 'enterfullscreen',
   /**
-   * Fires when the player exits fullscreen
+   * Fires when the player exits fullscreen.
    */
   EXIT_FULLSCREEN: 'exitfullscreen',
   /**
-   * Fires when the player received a request to enter fullscreen
+   * Fires when the player received a request to enter fullscreen.
    */
   REQUESTED_ENTER_FULLSCREEN: 'requestedenterfullscreen',
   /**
-   * Fires when the player received a request to exit fullscreen
+   * Fires when the player received a request to exit fullscreen.
    */
   REQUESTED_EXIT_FULLSCREEN: 'requestedexitfullscreen',
   /**
-   * Fires when browser fails to autoplay with sound
+   * Fires when browser fails to autoplay with sound.
    */
   AUTOPLAY_FAILED: 'autoplayfailed',
   /**
-   * Fires when browser fails to autoplay with sound but start muted autoplay instead
+   * Fires when browser fails to autoplay with sound but start muted autoplay instead.
    */
   FALLBACK_TO_MUTED_AUTOPLAY: 'fallbacktomutedautoplay',
   /**
-   * Fires when change source flow started
+   * Fires when change source flow started.
    */
   CHANGE_SOURCE_STARTED: 'changesourcestarted',
   /**
-   * Fires when change source flow ended
+   * Fires when change source flow ended.
    */
   CHANGE_SOURCE_ENDED: 'changesourceended',
   /**
-   * Fires when the volume has been muted/unmute
+   * Fires when the volume has been muted/unmute.
    */
   MUTE_CHANGE: 'mutechange',
   /**
-   * Fires when the active video track has been changed
+   * Fires when the active video track has been changed.
    */
   VIDEO_TRACK_CHANGED: 'videotrackchanged',
   /**
-   * Fires when the active audio track has been changed
+   * Fires when the active audio track has been changed.
    */
   AUDIO_TRACK_CHANGED: 'audiotrackchanged',
   /**
-   * Fires when the active text track has been changed
+   * Fires when the active text track has been changed.
    */
   TEXT_TRACK_CHANGED: 'texttrackchanged',
   /**
-   * Fires when the active text track cue has changed
+   * Fires when the active text track cue has changed.
    */
   TEXT_CUE_CHANGED: 'textcuechanged',
   /**
-   * Fires when the player tracks have been changed
+   * Fires when the player tracks have been changed.
    */
   TRACKS_CHANGED: 'trackschanged',
   /**
-   * Fires when the abr mode change from 'auto' to 'manual' or vice versa
+   * Fires when the abr mode change from 'auto' to 'manual' or vice versa.
    */
   ABR_MODE_CHANGED: 'abrmodechanged',
   /**
-   * Fires when the player state has been changed
+   * Fires when the player state has been changed.
    */
   PLAYER_STATE_CHANGED: 'playerstatechanged',
   /**
-   * Fires on the first play
+   * Fires on the first play.
    */
   FIRST_PLAY: 'firstplay',
   /**
-   * Fires when the player has selected the source to play
+   * Fires when the player has selected the source to play.
    */
   SOURCE_SELECTED: 'sourceselected',
   /**
-   * Fires when the text track style has changed
+   * Fires when the text track style has changed.
    */
   TEXT_STYLE_CHANGED: 'textstylechanged',
   /**

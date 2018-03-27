@@ -1,13 +1,13 @@
 import TextStyle from '../../src/track/text-style'
 import Player from '../../src/player'
 import {StateType} from '../../src/state/state-type'
-import {Html5EventType, CustomEventType} from '../../src/event/event-type'
+import {CustomEventType, Html5EventType} from '../../src/event/event-type'
 import sourcesConfig from './configs/sources.json'
 import Track from '../../src/track/track'
 import VideoTrack from '../../src/track/video-track'
 import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
-import {removeVideoElementsFromTestPage, createElement, removeElement, getConfigStructure} from './utils/test-utils'
+import {createElement, getConfigStructure, removeElement, removeVideoElementsFromTestPage} from './utils/test-utils'
 import PluginManager from '../../src/plugin/plugin-manager'
 import ColorsPlugin from './plugin/test-plugins/colors-plugin'
 import NumbersPlugin from './plugin/test-plugins/numbers-plugin'
@@ -2049,7 +2049,8 @@ describe('configure', function () {
       player.config.playback.volume.should.equals(0.5);
       player.config.playback.muted.should.be.true;
       player.ready().then(() => {
-        player.src.should.equals(window.location.origin + sourcesConfig.MultipleSources.progressive[0].url);
+        player.src.should.equals(sourcesConfig.MultipleSources.progressive[0].url);
+        done();
         player.addEventListener(player.Event.VOLUME_CHANGE, () => {
           let newProgressiveConfig = {
             progressive: [sourcesConfig.MultipleSources.progressive[1]]
@@ -2063,7 +2064,7 @@ describe('configure', function () {
           player.config.playback.volume.should.equals(0.5);
           player.config.playback.muted.should.be.true;
           player.ready().then(() => {
-            player.src.should.equals(window.location.origin + newProgressiveConfig.progressive[0].url);
+            player.src.should.equals(newProgressiveConfig.progressive[0].url);
             done();
           });
         });
@@ -2086,7 +2087,7 @@ describe('configure', function () {
       player.config.playback.volume.should.equals(1);
       player.config.playback.muted.should.be.true;
       player.ready().then(() => {
-        player.src.should.equals(window.location.origin + sourcesConfig.MultipleSources.progressive[0].url);
+        player.src.should.equals(sourcesConfig.MultipleSources.progressive[0].url);
         player.configure({
           playback: {
             muted: false,
@@ -2110,7 +2111,7 @@ describe('configure', function () {
         player.config.playback.volume.should.equals(0.5);
         player.config.playback.muted.should.be.false;
         player.ready().then(() => {
-          player.src.should.equals(window.location.origin + newProgressiveConfig.progressive[0].url);
+          player.src.should.equals(newProgressiveConfig.progressive[0].url);
           done();
         });
       });
@@ -2583,7 +2584,7 @@ describe('destroy', function () {
   });
 });
 
-describe('_reset', function () {
+describe('reset', function () {
   let sandbox, player, config;
 
   before(() => {
@@ -2608,17 +2609,20 @@ describe('_reset', function () {
 
   it('should resets the player', function () {
     player = new Player(config);
+    player._reset = false;
     let posterMgrSpy = sandbox.spy(player._posterManager, 'reset');
+    let engineSpy = sandbox.spy(player._engine, 'reset');
     let eventMgrSpy = sandbox.spy(player._eventManager, 'removeAll');
     let pluginMgrSpy = sandbox.spy(player._pluginManager, 'reset');
     let stateMgrSpy = sandbox.spy(player._stateManager, 'reset');
     let _updateTextDisplay = sandbox.spy(player, '_updateTextDisplay');
-    player._reset();
+    player.reset();
     player.paused.should.be.true;
     posterMgrSpy.should.have.been.calledOnce;
     eventMgrSpy.should.have.been.calledOnce;
     pluginMgrSpy.should.have.been.calledOnce;
     stateMgrSpy.should.have.been.calledOnce;
+    engineSpy.should.have.been.calledOnce;
     player._activeTextCues.should.be.empty;
     _updateTextDisplay.should.have.been.calledOnce;
     _updateTextDisplay.should.have.been.calledWith([]);
@@ -2629,6 +2633,7 @@ describe('_reset', function () {
     player._readyPromise.should.exist;
     player._firstPlay.should.be.true;
     player._el.childNodes.should.not.be.empty;
+    player._reset.should.be.true;
   });
 });
 
