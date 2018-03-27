@@ -1,6 +1,6 @@
 //@flow
 import EventManager from '../../../../event/event-manager'
-import {Html5EventType, CustomEventType} from '../../../../event/event-type'
+import {CustomEventType, Html5EventType} from '../../../../event/event-type'
 import Track from '../../../../track/track'
 import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'
@@ -796,15 +796,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._videoElement.dispatchEvent(new window.Event(Html5EventType.DURATION_CHANGE));
       }
     }, 2000);
-  }
-
-  /**
-   * Getter for the src that the adapter plays on the video element.
-   * @public
-   * @returns {string} - The src url.
-   */
-  get src(): string {
-    return this._videoElement.src;
   }
 
   /**
