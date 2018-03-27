@@ -2836,6 +2836,7 @@ describe('setCapabilities', () => {
 
   it('should not change the original capabilities by reference', (done) => {
     Player.getCapabilities().then((c1) => {
+      c1.should.deep.equal(initialOrigCapabilities);
       c1.html5.autoplay = 'some value';
       Player.getCapabilities().then((c2) => {
         c2.html5.autoplay.should.equal(initialOrigCapabilities.html5.autoplay);
@@ -2865,6 +2866,7 @@ describe('setCapabilities', () => {
       isSupported: 5
     };
     Player.getCapabilities().then((c1) => {
+      c1.should.deep.equal(initialOrigCapabilities);
       Player.setCapabilities('html5', newCapabilities).then(() => {
         Player.getCapabilities().then((c2) => {
           c2.html5.should.deep.equal(newCapabilities);
