@@ -71,7 +71,8 @@ export {BaseDrmProtocol};
 
 // Export the player capabilities
 const getCapabilities = Player.getCapabilities;
-export {getCapabilities};
+const setCapabilities = Player.setCapabilities;
+export {getCapabilities, setCapabilities};
 
 // Export enums
 export {EventType, StateType, TrackType, EngineType, MediaType, StreamType, AbrMode, LogLevelType};
