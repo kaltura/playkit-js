@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.22.0"></a>
+# [0.22.0](https://github.com/kaltura/playkit-js/compare/v0.21.8...v0.22.0) (2018-03-27)
+
+
+### Features
+
+* **FEC-8079:** add reset API to player and use it for change media ([#205](https://github.com/kaltura/playkit-js/issues/205)) ([24838b1](https://github.com/kaltura/playkit-js/commit/24838b1))
+* **FEC-8083:** add set capability API ([#206](https://github.com/kaltura/playkit-js/issues/206)) ([db3de97](https://github.com/kaltura/playkit-js/commit/db3de97))
+
+
+
 <a name="0.21.8"></a>
 ## [0.21.8](https://github.com/kaltura/playkit-js/compare/v0.21.7...v0.21.8) (2018-03-14)
 
