@@ -181,20 +181,25 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Sets the engines capabilities.
+   * Sets an engine capabilities.
    * @param {string} engineType - The engine type.
-   * @param {Object} capabilities - the engine capabilities.
-   * @return {void}
+   * @param {Object} capabilities - The engine capabilities.
+   * @return {Promise<*>} - Empty promise which resolved when the operation ends.
    * @public
    * @static
    */
-  static setCapabilities(engineType: string, capabilities: { [name: string]: any }): void {
+  static setCapabilities(engineType: string, capabilities: { [name: string]: any }): Promise<*> {
     Player._logger.debug("Set player capabilities", engineType, capabilities);
-    Player.getCapabilities().then(() => {
-      if (!Player._playerCapabilities[engineType]) {
-        Player._playerCapabilities[engineType] = {};
-      }
-      Utils.Object.mergeDeep(Player._playerCapabilities[engineType], capabilities);
+    return new Promise((resolve, reject) => {
+      Player.getCapabilities().then(() => {
+        if (!Player._playerCapabilities[engineType]) {
+          Player._playerCapabilities[engineType] = {};
+        }
+        Utils.Object.mergeDeep(Player._playerCapabilities[engineType], capabilities);
+        resolve();
+      }).catch(e => {
+        reject(e)
+      });
     });
   }
 
