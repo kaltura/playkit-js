@@ -161,19 +161,46 @@ export default class Player extends FakeEventTarget {
    * @public
    * @static
    */
-  static getCapabilities(engineType: ?string): Promise<Object> {
+  static getCapabilities(engineType: ?string): Promise<{ [name: string]: any }> {
+    const resolveCapabilities = (engineType: ?string): Promise<Object> => {
+      const result = (engineType ? Player._playerCapabilities[engineType] : Player._playerCapabilities);
+      return Utils.Object.copyDeep(result);
+    };
     Player._logger.debug("Get player capabilities", engineType);
     if (Player._playerCapabilities) {
-      return (engineType ? Promise.resolve(Player._playerCapabilities[engineType]) : Promise.resolve(Player._playerCapabilities));
+      return Promise.resolve(resolveCapabilities(engineType));
     }
-    let promises = [];
+    const promises = [];
     Player._engines.forEach(Engine => promises.push(Engine.getCapabilities()));
     return Promise.all(promises)
       .then((arrayOfResults) => {
         Player._playerCapabilities = {};
         arrayOfResults.forEach(res => Object.assign(Player._playerCapabilities, res));
-        return (engineType ? Promise.resolve(Player._playerCapabilities[engineType]) : Promise.resolve(Player._playerCapabilities));
+        return Promise.resolve(resolveCapabilities(engineType));
       });
+  }
+
+  /**
+   * Sets an engine capabilities.
+   * @param {string} engineType - The engine type.
+   * @param {Object} capabilities - The engine capabilities.
+   * @return {Promise<*>} - Empty promise which resolved when the operation ends.
+   * @public
+   * @static
+   */
+  static setCapabilities(engineType: string, capabilities: { [name: string]: any }): Promise<*> {
+    Player._logger.debug("Set player capabilities", engineType, capabilities);
+    return new Promise((resolve, reject) => {
+      Player.getCapabilities().then(() => {
+        if (!Player._playerCapabilities[engineType]) {
+          Player._playerCapabilities[engineType] = {};
+        }
+        Utils.Object.mergeDeep(Player._playerCapabilities[engineType], capabilities);
+        resolve();
+      }).catch(e => {
+        reject(e)
+      });
+    });
   }
 
   /**

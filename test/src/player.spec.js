@@ -14,6 +14,7 @@ import NumbersPlugin from './plugin/test-plugins/numbers-plugin'
 import Locale from '../../src/utils/locale'
 import Html5 from '../../src/engines/html5/html5'
 import Error from '../../src/error/error'
+import {Object} from '../../src/utils/util'
 
 const targetId = 'player-placeholder_player.spec';
 
@@ -2818,14 +2819,60 @@ describe('logger', () => {
   });
 });
 
-describe('playbackRate', () => {
-  it('should return the possible playback rates of the player', () => {
-    const player = new Player();
-    player.playbackRates.should.deep.equal([0.5, 1, 2, 4]);
+describe('setCapabilities', () => {
+  let initialOrigCapabilities;
+
+  before((done) => {
+    Player.runCapabilities();
+    Player.getCapabilities().then(capabilities => {
+      initialOrigCapabilities = capabilities;
+      done();
+    })
   });
 
-  it('should return the default playback rate of the player', () => {
-    const player = new Player();
-    player.defaultPlaybackRate.should.equal(1);
+  afterEach(() => {
+    Player._playerCapabilities = Object.copyDeep(initialOrigCapabilities);
+  });
+
+  it('should not change the original capabilities by reference', (done) => {
+    Player.getCapabilities().then((c1) => {
+      c1.should.deep.equal(initialOrigCapabilities);
+      c1.html5.autoplay = 'some value';
+      Player.getCapabilities().then((c2) => {
+        c2.html5.autoplay.should.equal(initialOrigCapabilities.html5.autoplay);
+        done();
+      });
+    });
+  });
+
+  it('should set custom capabilities successfully', (done) => {
+    let newCapabilities = {
+      autoplay: 1,
+      mutedAutoPlay: 2,
+      isSupported: 3
+    };
+    Player.setCapabilities('html5', newCapabilities).then(() => {
+      Player.getCapabilities().then((c2) => {
+        c2.html5.should.deep.equal(newCapabilities);
+        done();
+      });
+    });
+  });
+
+  it('should set custom capabilities successfully after getCapabilities() call', (done) => {
+    let newCapabilities = {
+      autoplay: 3,
+      mutedAutoPlay: 4,
+      isSupported: 5
+    };
+    Player.getCapabilities().then((c1) => {
+      c1.should.deep.equal(initialOrigCapabilities);
+      Player.setCapabilities('html5', newCapabilities).then(() => {
+        Player.getCapabilities().then((c2) => {
+          c2.html5.should.deep.equal(newCapabilities);
+          done();
+        });
+      });
+    });
   });
 });
