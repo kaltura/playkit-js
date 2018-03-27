@@ -98,19 +98,19 @@ const CustomEventType: EventTypes = {
   /**
    * Fires when the player starts reset operation.
    */
-  RESET_STARTED: 'resetstarted',
+  PLAYER_RESET_STARTED: 'playerresetstarted',
   /**
    * Fires when the player ends reset operation.
    */
-  RESET_ENDED: 'resetended',
+  PLAYER_RESET_ENDED: 'playerresetended',
   /**
    * Fires when the player starts destroy operation.
    */
-  DESTROY_STARTED: 'destroystarted',
+  PLAYER_DESTROY_STARTED: 'playerdestroystarted',
   /**
    * Fires when the player ends destroy operation.
    */
-  DESTROY_ENDED: 'destroyended',
+  PLAYER_DESTROY_ENDED: 'playerdestroyended',
   /**
    * Fires when the player enters fullscreen.
    */

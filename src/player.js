@@ -509,17 +509,14 @@ export default class Player extends FakeEventTarget {
    */
   reset(): void {
     if (this._reset) return;
-    this.dispatchEvent(new FakeEvent(CustomEventType.RESET_STARTED));
     this.pause();
+    this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET_STARTED));
     this._eventManager.removeAll();
     this._createReadyPromise();
     this._activeTextCues = [];
     this._updateTextDisplay([]);
     this._tracks = [];
-    this._loading = false;
-    this._firstPlay = true;
-    this._firstPlayInCurrentSession = false;
-    this._loadingMedia = false;
+    this._resetStateFlags();
     this._engineType = '';
     this._streamType = '';
     this._posterManager.reset();
@@ -527,7 +524,7 @@ export default class Player extends FakeEventTarget {
     this._pluginManager.reset();
     this._engine.reset();
     this._reset = true;
-    this.dispatchEvent(new FakeEvent(CustomEventType.RESET_ENDED));
+    this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET_ENDED));
   }
 
   /**
@@ -537,7 +534,7 @@ export default class Player extends FakeEventTarget {
    */
   destroy(): void {
     if (this._destroyed) return;
-    this.dispatchEvent(new FakeEvent(CustomEventType.DESTROY_STARTED));
+    this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_DESTROY_STARTED));
     if (this._engine) {
       this._engine.destroy();
     }
@@ -552,13 +549,13 @@ export default class Player extends FakeEventTarget {
     this._engineType = '';
     this._streamType = '';
     this._readyPromise = null;
-    this._firstPlay = true;
+    this._resetStateFlags();
     this._playbackAttributesState = {};
     if (this._el) {
       Utils.Dom.removeChild(this._el.parentNode, this._el);
     }
     this._destroyed = true;
-    this.dispatchEvent(new FakeEvent(CustomEventType.DESTROY_ENDED));
+    this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_DESTROY_ENDED));
   }
 
   /**
@@ -1549,6 +1546,18 @@ export default class Player extends FakeEventTarget {
     if (!this.paused) {
       this._pause();
     }
+  }
+
+  /**
+   * Resets the state flags of the player.
+   * @returns {void}
+   * @private
+   */
+  _resetStateFlags(): void {
+    this._loading = false;
+    this._firstPlay = true;
+    this._firstPlayInCurrentSession = false;
+    this._loadingMedia = false;
   }
 
   /**
