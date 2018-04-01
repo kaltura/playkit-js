@@ -948,7 +948,6 @@ export default class Player extends FakeEventTarget {
       } else if (track instanceof TextTrack) {
         if (track.language === OFF) {
           this.hideTextTrack();
-          this._activeTextCues = [];
           this._playbackAttributesState.textLanguage = OFF;
         } else {
           this._engine.selectTextTrack(track);
@@ -971,6 +970,7 @@ export default class Player extends FakeEventTarget {
       textTracks.map(track => track.active = false);
       const textTrack = textTracks.find(track => track.language === OFF);
       if (textTrack) {
+        this._activeTextCues = [];
         textTrack.active = true;
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}))
       }
