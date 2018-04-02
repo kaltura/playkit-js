@@ -965,6 +965,7 @@ export default class Player extends FakeEventTarget {
   hideTextTrack(): void {
     if (this._engine) {
       this._engine.hideTextTrack();
+      this._activeTextCues = [];
       this._updateTextDisplay([]);
       const textTracks = this._getTracksByType(TrackType.TEXT);
       textTracks.map(track => track.active = false);
