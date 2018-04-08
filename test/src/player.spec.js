@@ -102,6 +102,34 @@ describe("load", function () {
       })
     });
   });
+
+  it("should load with callback label function, and change the label of audio for 'custom_label'", (done) => {
+    player.configure(getConfigStructureWithLabelCallback());
+    player._tracks = [
+      new AudioTrack()
+    ];
+    player.load();
+    player.addEventListener(CustomEventType.TRACKS_CHANGED, () => {
+      player.getTracks().forEach(t => {
+        t.label.should.equal('custom_label');
+        done();
+      })
+    });
+  });
+
+  it("should load with callback label function, and change the label of text for 'custom_label'", (done) => {
+    player.configure(getConfigStructureWithLabelCallback());
+    player._tracks = [
+      new TextTrack()
+    ];
+    player.load();
+    player.addEventListener(CustomEventType.TRACKS_CHANGED, () => {
+      player.getTracks().forEach(t => {
+        t.label.should.equal('custom_label');
+        done();
+      })
+    });
+  });
 });
 
 describe("play", function () {

@@ -32,15 +32,14 @@ function getConfigStructure() {
  * @returns {Object} - The configuration structure of the player.
  */
 function getConfigStructureWithLabelCallback(): Object {
-  const videoLabelCallback = tracks => {
-    tracks.forEach(track => {
-      track;
-      track.label = "custom_label";
-    })
+  const labelCallback = () => {
+    return "custom_label";
   };
   let config = getConfigStructure();
-  config.playback["labelCallbacks"] = {
-    "video": videoLabelCallback
+  config["customLabels"] = {
+    "qualities": labelCallback,
+    "audio": labelCallback,
+    "captions": labelCallback
   };
   return config;
 }

@@ -490,22 +490,36 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _customizeLabels() {
-    const labelCallbacks = this._config.playback.labelCallbacks;
-    if (labelCallbacks) {
-      for (let callback in labelCallbacks) {
-        switch (callback) {
-          case TrackType.TEXT:
-            labelCallbacks.text(this._getTracksByType(TrackType.TEXT));
+    const labelsCallbacks = this._config.customLabels;
+    if (labelsCallbacks) {
+      for (let callbackType in labelsCallbacks) {
+        switch (callbackType) {
+          case 'captions':
+            this._setTracksCustomLabels(this._getTracksByType(TrackType.TEXT), labelsCallbacks[callbackType]);
             break;
-          case TrackType.AUDIO:
-            labelCallbacks.audio(this._getTracksByType(TrackType.AUDIO));
+          case 'audio':
+            this._setTracksCustomLabels(this._getTracksByType(TrackType.AUDIO), labelsCallbacks[callbackType]);
             break;
-          case TrackType.VIDEO:
-            labelCallbacks.video(this._getTracksByType(TrackType.VIDEO));
+          case 'qualities':
+            this._setTracksCustomLabels(this._getTracksByType(TrackType.VIDEO), labelsCallbacks[callbackType]);
             break;
         }
       }
     }
+  }
+
+  /**
+   *
+   * @param {Array<Track>} tracks - tracks
+   * @param {Function} callback - application label callback, returns a string
+   * @private
+   * @returns {void}
+   */
+  _setTracksCustomLabels(tracks: Array<Track>, callback: Function) {
+    tracks.forEach(track => {
+      const callbackResult = callback(Utils.Object.copyDeep(track));
+      track.label = typeof callbackResult === 'string' ? callbackResult : track.label();
+    })
   }
 
   /**
@@ -1686,7 +1700,7 @@ export default class Player extends FakeEventTarget {
       type = TrackType.TEXT;
     }
     if (type) {
-      let tracks = this.getTracks(type);
+      let tracks = this._getTracksByType(type);
       for (let i = 0; i < tracks.length; i++) {
         tracks[i].active = track.index === i;
       }
@@ -1744,7 +1758,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _addTextTrackOffOption(): void {
-    const textTracks = this.getTracks(TrackType.TEXT);
+    const textTracks = this._getTracksByType(TrackType.TEXT);
     if (textTracks && textTracks.length) {
       this._tracks.push(new TextTrack({
         active: false,
