@@ -112,6 +112,15 @@ export default class Track {
   }
 
   /**
+   * Setter for the label of the track.
+   * @public
+   * @param {string} value - The label of the track.
+   */
+  set label(value: string) {
+    this._label = value;
+  }
+
+  /**
    * @constructor
    * @param {Object} settings - The track settings object.
    */

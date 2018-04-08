@@ -472,6 +472,7 @@ export default class Player extends FakeEventTarget {
       let startTime = this._config.playback.startTime;
       this._engine.load(startTime).then((data) => {
         this._updateTracks(data.tracks);
+        this._customizeLabels();
         this._setDefaultTracks();
         this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
         resetFlags();
@@ -479,6 +480,31 @@ export default class Player extends FakeEventTarget {
         this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
         resetFlags();
       });
+    }
+  }
+
+  /**
+   * Checks for callbacks that should change the tracks, and call them on the
+   * respective track group (audio/text/video)
+   * @private
+   * @returns {void}
+   */
+  _customizeLabels() {
+    const labelCallbacks = this._config.playback.labelCallbacks;
+    if (labelCallbacks) {
+      for (let callback in labelCallbacks) {
+        switch (callback) {
+          case TrackType.TEXT:
+            labelCallbacks.text(this._getTracksByType(TrackType.TEXT));
+            break;
+          case TrackType.AUDIO:
+            labelCallbacks.audio(this._getTracksByType(TrackType.AUDIO));
+            break;
+          case TrackType.VIDEO:
+            labelCallbacks.video(this._getTracksByType(TrackType.VIDEO));
+            break;
+        }
+      }
     }
   }
 
