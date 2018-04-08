@@ -121,6 +121,24 @@ export default class Track {
   }
 
   /**
+   * Setter for the qualityLabel of the track.
+   * @public
+   * @param {string} value - The qualityLabel of the track.
+   */
+  set qualityLabel(value: string) {
+    this._qualityLabel = value;
+  }
+
+  /**
+   * Getter for the qualityLabel of the track.
+   * @public
+   * @returns {string} - The qualityLabel of the track.
+   */
+  get qualityLabel(): string {
+    return this._qualityLabel;
+  }
+
+  /**
    * @constructor
    * @param {Object} settings - The track settings object.
    */
@@ -130,5 +148,6 @@ export default class Track {
     this._label = settings.label;
     this._language = settings.language;
     this._index = settings.index;
+    this._qualityLabel = settings.qualityLabel;
   }
 }

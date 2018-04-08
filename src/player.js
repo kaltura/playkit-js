@@ -25,6 +25,7 @@ import type {StateTypes} from './state/state-type'
 import {StateType} from './state/state-type'
 import type {TrackTypes} from './track/track-type'
 import {TrackType} from './track/track-type'
+import {LabelToTrackMap} from './track/label-to-track-map'
 import type {StreamTypes} from './engines/stream-type'
 import {StreamType} from './engines/stream-type'
 import type {EngineTypes} from './engines/engine-type'
@@ -493,17 +494,7 @@ export default class Player extends FakeEventTarget {
     const labelsCallbacks = this._config.customLabels;
     if (labelsCallbacks) {
       for (let callbackType in labelsCallbacks) {
-        switch (callbackType) {
-          case 'captions':
-            this._setTracksCustomLabels(this._getTracksByType(TrackType.TEXT), labelsCallbacks[callbackType]);
-            break;
-          case 'audio':
-            this._setTracksCustomLabels(this._getTracksByType(TrackType.AUDIO), labelsCallbacks[callbackType]);
-            break;
-          case 'qualities':
-            this._setTracksCustomLabels(this._getTracksByType(TrackType.VIDEO), labelsCallbacks[callbackType]);
-            break;
-        }
+        this._setTracksCustomLabels(this._getTracksByType(LabelToTrackMap[callbackType]), labelsCallbacks[callbackType]);
       }
     }
   }
@@ -518,7 +509,12 @@ export default class Player extends FakeEventTarget {
   _setTracksCustomLabels(tracks: Array<Track>, callback: Function) {
     tracks.forEach(track => {
       const callbackResult = callback(Utils.Object.copyDeep(track));
-      track.label = typeof callbackResult === 'string' ? callbackResult : track.label();
+      if (track instanceof VideoTrack) {
+        track.qualityLabel = typeof callbackResult === 'string' ? callbackResult : track.qualityLabel;
+      } else {
+        track.label = typeof callbackResult === 'string' ? callbackResult : track.label;
+      }
+
     })
   }
 
