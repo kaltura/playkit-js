@@ -41,7 +41,7 @@ export default class Track {
    * @type {string}
    * @private
    */
-  _label: string;
+  _label: ?string;
   /**
    * The language of the track.
    * @member
@@ -89,7 +89,7 @@ export default class Track {
    * @public
    * @returns {string} - The label of the track.
    */
-  get label(): string {
+  get label(): ?string {
     return this._label;
   }
 
