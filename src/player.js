@@ -491,10 +491,10 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _maybeSetTracksLabels() {
-    const labelsCallbacks = this._config.customLabels;
-    if (labelsCallbacks) {
-      for (let callbackType in labelsCallbacks) {
-        this._setTracksCustomLabels(this._getTracksByType(LabelToTrackMap[callbackType]), labelsCallbacks[callbackType]);
+    const customLabels = this._config.customLabels;
+    if (customLabels) {
+      for (let callbackType in customLabels) {
+        this._setTracksCustomLabels(this._getTracksByType(LabelToTrackMap[callbackType]), customLabels[callbackType]);
       }
     }
   }
@@ -508,8 +508,10 @@ export default class Player extends FakeEventTarget {
    */
   _setTracksCustomLabels(tracks: Array<Track>, callback: Function) {
     tracks.forEach(track => {
-      const callbackResult = callback(Utils.Object.copyDeep(track));
-      track.label = typeof callbackResult === 'string' ? callbackResult : track.label;
+      const result = callback(Utils.Object.copyDeep(track));
+      if (result){
+        track.label = result;
+      }
     })
   }
 
