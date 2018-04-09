@@ -440,6 +440,7 @@ export default class Player extends FakeEventTarget {
         this._attachMedia();
         this._handlePlaybackOptions();
         this._posterManager.setSrc(this._config.metadata.poster);
+        this._handlePreload();
         this._handleAutoPlay();
         if (receivedSourcesWhenHasEngine) {
           Player._logger.debug('Change source ended');
@@ -1483,7 +1484,15 @@ export default class Player extends FakeEventTarget {
     if (typeof this._config.playback.playsinline === 'boolean') {
       this.playsinline = this._config.playback.playsinline;
     }
-    if (this._canPreload()) {
+  }
+
+  /**
+   * Handles preload.
+   * @returns {void}
+   * @private
+   */
+  _handlePreload(): void {
+    if (this._config.playback.preload === "auto" && !this._config.playback.autoplay && this._canPreload()) {
       this.load();
     }
   }
@@ -1493,11 +1502,11 @@ export default class Player extends FakeEventTarget {
    * So to avoid loading the player twice which can cause errors on MSEs we are not
    * calling load from the player.
    * TODO: Change it to check the ads configuration when we will develop the ads manager.
-   * @returns {boolean} - Whether the player should perform preload.
+   * @returns {boolean} - Whether the player can perform preload.
    * @private
    */
   _canPreload(): boolean {
-    return (!this._config.playback.autoplay && this._config.playback.preload === "auto" && (!this._config.plugins || (this._config.plugins && !this._config.plugins.ima)));
+    return !this._config.plugins || (this._config.plugins && !this._config.plugins.ima);
   }
 
   /**
@@ -1507,7 +1516,7 @@ export default class Player extends FakeEventTarget {
    */
   _handleAutoPlay(): void {
     if (this._config.playback.autoplay === true) {
-      if (this.muted || !this._firstPlayInCurrentSession) {
+      if (!this._firstPlayInCurrentSession) {
         this.play();
       } else {
         const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
@@ -1525,8 +1534,10 @@ export default class Player extends FakeEventTarget {
               } else {
                 Player._logger.warn("Autoplay failed, pause player");
                 this._posterManager.show();
-                this.load();
-                this.ready().then(() => this.pause());
+                if (this._canPreload()) {
+                  this.load();
+                  this.ready().then(() => this.pause());
+                }
                 this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED));
               }
             }
