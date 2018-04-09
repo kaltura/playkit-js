@@ -509,12 +509,7 @@ export default class Player extends FakeEventTarget {
   _setTracksCustomLabels(tracks: Array<Track>, callback: Function) {
     tracks.forEach(track => {
       const callbackResult = callback(Utils.Object.copyDeep(track));
-      if (track instanceof VideoTrack) {
-        track.qualityLabel = typeof callbackResult === 'string' ? callbackResult : track.qualityLabel;
-      } else {
-        track.label = typeof callbackResult === 'string' ? callbackResult : track.label;
-      }
-
+      track.label = typeof callbackResult === 'string' ? callbackResult : track.label;
     })
   }
 

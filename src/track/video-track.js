@@ -28,13 +28,6 @@ export default class VideoTrack extends Track {
   _height: number;
 
   /**
-   * @member {string} _qualityLabel - The _qualityLabel of the video track
-   * @type {string}
-   * @private
-   */
-  _qualityLabel: string;
-
-  /**
    * @public
    * @returns {number} - The bandwidth of the video track
    */
@@ -59,24 +52,6 @@ export default class VideoTrack extends Track {
   }
 
   /**
-   * Setter for the qualityLabel of the track.
-   * @public
-   * @param {string} value - The qualityLabel of the track.
-   */
-  set qualityLabel(value: string) {
-    this._qualityLabel = value;
-  }
-
-  /**
-   * Getter for the qualityLabel of the track.
-   * @public
-   * @returns {string} - The qualityLabel of the track.
-   */
-  get qualityLabel(): string {
-    return this._qualityLabel;
-  }
-
-  /**
    * @constructor
    * @param {Object} settings - The track settings object
    */
@@ -85,6 +60,6 @@ export default class VideoTrack extends Track {
     this._bandwidth = settings.bandwidth;
     this._width = settings.width;
     this._height = settings.height;
-    this._qualityLabel = settings.qualityLabel;
+    this._label = this._height ? this._height + 'p' : undefined;
   }
 }
