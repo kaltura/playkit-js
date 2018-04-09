@@ -25,6 +25,7 @@ import type {StateTypes} from './state/state-type'
 import {StateType} from './state/state-type'
 import type {TrackTypes} from './track/track-type'
 import {TrackType} from './track/track-type'
+import {LabelToTrackMap} from './track/label-to-track-map'
 import type {StreamTypes} from './engines/stream-type'
 import {StreamType} from './engines/stream-type'
 import type {EngineTypes} from './engines/engine-type'
@@ -473,6 +474,7 @@ export default class Player extends FakeEventTarget {
       let startTime = this._config.playback.startTime;
       this._engine.load(startTime).then((data) => {
         this._updateTracks(data.tracks);
+        this._maybeSetTracksLabels();
         this._setDefaultTracks();
         this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
         resetFlags();
@@ -481,6 +483,37 @@ export default class Player extends FakeEventTarget {
         resetFlags();
       });
     }
+  }
+
+  /**
+   * Checks for callbacks that should change the tracks, and call them on the
+   * respective track group (audio/text/video)
+   * @private
+   * @returns {void}
+   */
+  _maybeSetTracksLabels() {
+    const customLabels = this._config.customLabels;
+    if (customLabels) {
+      for (let callbackType in customLabels) {
+        this._setTracksCustomLabels(this._getTracksByType(LabelToTrackMap[callbackType]), customLabels[callbackType]);
+      }
+    }
+  }
+
+  /**
+   *
+   * @param {Array<Track>} tracks - tracks
+   * @param {Function} callback - application label callback, returns a string
+   * @private
+   * @returns {void}
+   */
+  _setTracksCustomLabels(tracks: Array<Track>, callback: Function) {
+    tracks.forEach(track => {
+      const result = callback(Utils.Object.copyDeep(track));
+      if (result) {
+        track.label = result;
+      }
+    })
   }
 
   /**
@@ -1671,7 +1704,7 @@ export default class Player extends FakeEventTarget {
       type = TrackType.TEXT;
     }
     if (type) {
-      let tracks = this.getTracks(type);
+      const tracks = this._getTracksByType(type);
       for (let i = 0; i < tracks.length; i++) {
         tracks[i].active = track.index === i;
       }
@@ -1729,7 +1762,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _addTextTrackOffOption(): void {
-    const textTracks = this.getTracks(TrackType.TEXT);
+    const textTracks = this._getTracksByType(TrackType.TEXT);
     if (textTracks && textTracks.length) {
       this._tracks.push(new TextTrack({
         active: false,

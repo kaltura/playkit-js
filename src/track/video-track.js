@@ -60,5 +60,6 @@ export default class VideoTrack extends Track {
     this._bandwidth = settings.bandwidth;
     this._width = settings.width;
     this._height = settings.height;
+    this._label = this._height ? this._height + 'p' : undefined;
   }
 }

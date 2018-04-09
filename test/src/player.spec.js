@@ -7,7 +7,13 @@ import Track from '../../src/track/track'
 import VideoTrack from '../../src/track/video-track'
 import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
-import {createElement, getConfigStructure, removeElement, removeVideoElementsFromTestPage} from './utils/test-utils'
+import {
+  createElement,
+  getConfigStructure,
+  removeElement,
+  removeVideoElementsFromTestPage,
+  getConfigStructureWithLabelCallback
+} from './utils/test-utils'
 import PluginManager from '../../src/plugin/plugin-manager'
 import ColorsPlugin from './plugin/test-plugins/colors-plugin'
 import NumbersPlugin from './plugin/test-plugins/numbers-plugin'
@@ -81,6 +87,48 @@ describe("load", function () {
     });
     player.load();
     player.load();
+  });
+
+  it("should load with callback label function, and change the label of video for 'custom_label'", (done) => {
+    player.configure(getConfigStructureWithLabelCallback());
+    player._tracks = [
+      new VideoTrack()
+    ];
+    player.load();
+    player.addEventListener(CustomEventType.TRACKS_CHANGED, () => {
+      player.getTracks().forEach(t => {
+        t.label.should.equal('custom_label');
+        done();
+      })
+    });
+  });
+
+  it("should load with callback label function, and change the label of audio for 'custom_label'", (done) => {
+    player.configure(getConfigStructureWithLabelCallback());
+    player._tracks = [
+      new AudioTrack()
+    ];
+    player.load();
+    player.addEventListener(CustomEventType.TRACKS_CHANGED, () => {
+      player.getTracks().forEach(t => {
+        t.label.should.equal('custom_label');
+        done();
+      })
+    });
+  });
+
+  it("should load with callback label function, and change the label of text for 'custom_label'", (done) => {
+    player.configure(getConfigStructureWithLabelCallback());
+    player._tracks = [
+      new TextTrack()
+    ];
+    player.load();
+    player.addEventListener(CustomEventType.TRACKS_CHANGED, () => {
+      player.getTracks().forEach(t => {
+        t.label.should.equal('custom_label');
+        done();
+      })
+    });
   });
 });
 

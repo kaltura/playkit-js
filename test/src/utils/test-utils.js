@@ -28,6 +28,23 @@ function getConfigStructure() {
 }
 
 /**
+ * Configuration structure of the player with label Callback for video.
+ * @returns {Object} - The configuration structure of the player.
+ */
+function getConfigStructureWithLabelCallback(): Object {
+  const labelCallback = () => {
+    return "custom_label";
+  };
+  let config = getConfigStructure();
+  config["customLabels"] = {
+    "qualities": labelCallback,
+    "audio": labelCallback,
+    "captions": labelCallback
+  };
+  return config;
+}
+
+/**
  * Creates a dom element.
  * @param {string} type - The element type.
  * @param {string} id - The element id.
@@ -155,5 +172,6 @@ export {
   createVideoTrackButtons,
   createElement,
   removeElement,
-  getConfigStructure
+  getConfigStructure,
+  getConfigStructureWithLabelCallback
 };
