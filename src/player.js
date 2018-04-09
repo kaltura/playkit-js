@@ -1693,7 +1693,7 @@ export default class Player extends FakeEventTarget {
       type = TrackType.TEXT;
     }
     if (type) {
-      let tracks = this._getTracksByType(type);
+      const tracks = this._getTracksByType(type);
       for (let i = 0; i < tracks.length; i++) {
         tracks[i].active = track.index === i;
       }
