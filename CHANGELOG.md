@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.23.0"></a>
+# [0.23.0](https://github.com/kaltura/playkit-js/compare/v0.22.0...v0.23.0) (2018-04-09)
+
+
+### Bug Fixes
+
+* **FEC-8090:** after disabling captions and toggling full screen the last caption frame is displayed ([#207](https://github.com/kaltura/playkit-js/issues/207)) ([fe7079f](https://github.com/kaltura/playkit-js/commit/fe7079f))
+* **FEC-8108:** no playback after preroll - android browser ([#209](https://github.com/kaltura/playkit-js/issues/209)) ([e292180](https://github.com/kaltura/playkit-js/commit/e292180))
+
+
+### Features
+
+* **FEC-7330:** enable setting custom track labels by app ([#208](https://github.com/kaltura/playkit-js/issues/208)) ([bad2b06](https://github.com/kaltura/playkit-js/commit/bad2b06))
+
+
+
 <a name="0.22.0"></a>
 # [0.22.0](https://github.com/kaltura/playkit-js/compare/v0.21.8...v0.22.0) (2018-03-27)
 
