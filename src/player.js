@@ -473,7 +473,7 @@ export default class Player extends FakeEventTarget {
       let startTime = this._config.playback.startTime;
       this._engine.load(startTime).then((data) => {
         this._updateTracks(data.tracks);
-        this._customizeLabels();
+        this._maybeSetTracksLabels();
         this._setDefaultTracks();
         this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
         resetFlags();
@@ -490,7 +490,7 @@ export default class Player extends FakeEventTarget {
    * @private
    * @returns {void}
    */
-  _customizeLabels() {
+  _maybeSetTracksLabels() {
     const labelsCallbacks = this._config.customLabels;
     if (labelsCallbacks) {
       for (let callbackType in labelsCallbacks) {
