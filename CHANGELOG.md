@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.24.0"></a>
+# [0.24.0](https://github.com/kaltura/playkit-js/compare/v0.23.0...v0.24.0) (2018-04-10)
+
+
+### Bug Fixes
+
+* **FEC-7330:** removed flow annotation which failed hls build ([#210](https://github.com/kaltura/playkit-js/issues/210)) ([66f25b2](https://github.com/kaltura/playkit-js/commit/66f25b2))
+
+
+### Features
+
+* clear metadata and sources on reset ([#212](https://github.com/kaltura/playkit-js/issues/212)) ([59fc888](https://github.com/kaltura/playkit-js/commit/59fc888))
+
+
+
 <a name="0.23.0"></a>
 # [0.23.0](https://github.com/kaltura/playkit-js/compare/v0.22.0...v0.23.0) (2018-04-09)
 
