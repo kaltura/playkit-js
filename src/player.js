@@ -426,15 +426,16 @@ export default class Player extends FakeEventTarget {
     if (config.logLevel && LogLevel[config.logLevel]) {
       setLogLevel(LogLevel[config.logLevel]);
     }
-    Utils.Object.mergeDeep(this._config, config);
-    this._configureOrLoadPlugins(config.plugins);
     if (this._hasSources(config.sources)) {
+      this._configureOrLoadPlugins(config.plugins);
       const receivedSourcesWhenHasEngine: boolean = !!this._engine;
       if (receivedSourcesWhenHasEngine) {
         this.reset();
         Player._logger.debug('Change source started');
         this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
       }
+      Utils.Object.mergeDeep(this._config, config);
+      this._reset = false;
       if (this._selectEngineByPriority()) {
         this._appendEngineEl();
         this._attachMedia();
@@ -447,6 +448,9 @@ export default class Player extends FakeEventTarget {
           this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_ENDED));
         }
       }
+    } else {
+      Utils.Object.mergeDeep(this._config, config);
+      this._configureOrLoadPlugins(config.plugins);
     }
   }
 
@@ -571,6 +575,7 @@ export default class Player extends FakeEventTarget {
   reset(): void {
     if (this._reset) return;
     this.pause();
+    this._resetSourceData();
     this._eventManager.removeAll();
     this._createReadyPromise();
     this._activeTextCues = [];
@@ -585,6 +590,18 @@ export default class Player extends FakeEventTarget {
     this._engine.reset();
     this._reset = true;
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET));
+  }
+
+  /**
+   * Resets the source config
+   * @private
+   * @returns {void}
+   */
+  _resetSourceData(): void {
+    this._config.metadata = {};
+    this._config.sources.dash = {};
+    this._config.sources.hls = {};
+    this._config.sources.progressive = {};
   }
 
   /**
