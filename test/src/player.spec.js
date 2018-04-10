@@ -23,6 +23,99 @@ import {Object} from '../../src/utils/util'
 
 const targetId = 'player-placeholder_player.spec';
 
+describe("_maybeSetTracksLabels", function () {
+  let config, player, playerContainer;
+
+  before(() => {
+    playerContainer = createElement('DIV', targetId);
+    config = getConfigStructure();
+    config.sources = sourcesConfig.MultipleSources;
+  });
+
+  beforeEach(() => {
+    player = new Player(config);
+    playerContainer.appendChild(player.getView());
+  });
+
+  afterEach(() => {
+    player.destroy();
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+    removeElement(targetId);
+  });
+
+  const getConfigStructureWithLabelCallback = () => {
+    const audioLabelCallback = () => {
+      return "audio_label";
+    };
+    const captionsLabelCallback = () => {
+      return "captions_label";
+    };
+    const qualitiesLabelCallback = () => {
+      return "qualities_label";
+    };
+    const config = getConfigStructure();
+    config["customLabels"] = {
+      "qualities": qualitiesLabelCallback,
+      "audio": audioLabelCallback,
+      "captions": captionsLabelCallback
+    };
+    return config;
+  };
+
+  it("should load with callback label function, and change the label of video track to 'qualities_label'", () => {
+    player.configure(getConfigStructureWithLabelCallback());
+    player._tracks = [
+      new VideoTrack()
+    ];
+    player._maybeSetTracksLabels();
+    player._tracks[0].label.should.equal('qualities_label');
+  });
+
+  it("should load with callback label function, and change the label of audio track to 'audio_label'", () => {
+    player.configure(getConfigStructureWithLabelCallback());
+    player._tracks = [
+      new AudioTrack()
+    ];
+    player._maybeSetTracksLabels();
+    player._tracks[0].label.should.equal('audio_label');
+  });
+
+  it("should load with callback label function, and change the label of text track to 'captions_label'", () => {
+    player.configure(getConfigStructureWithLabelCallback());
+    player._tracks = [
+      new TextTrack()
+    ];
+    player._maybeSetTracksLabels();
+    player._tracks[0].label.should.equal('captions_label');
+  });
+
+  it("should load with all callback label function, and change the label respectively to the track type'", () => {
+    player.configure(getConfigStructureWithLabelCallback());
+    player._tracks = [
+      new TextTrack(),
+      new VideoTrack(),
+      new AudioTrack()
+    ];
+    player._maybeSetTracksLabels();
+    player._tracks.forEach(t => {
+        switch (t) {
+          case t instanceof AudioTrack:
+            t.label.should.equal('audio_label');
+            break;
+          case t instanceof TextTrack:
+            t.label.should.equal('captions_label');
+            break;
+          case t instanceof VideoTrack:
+            t.label.should.equal('qualities_label');
+            break;
+        }
+      })
+  });
+})
+
 describe("load", function () {
   let config, player, playerContainer;
 
@@ -45,19 +138,6 @@ describe("load", function () {
     removeVideoElementsFromTestPage();
     removeElement(targetId);
   });
-
-  const getConfigStructureWithLabelCallback = () => {
-    const labelCallback = () => {
-      return "custom_label";
-    };
-    const config = getConfigStructure();
-    config["customLabels"] = {
-      "qualities": labelCallback,
-      "audio": labelCallback,
-      "captions": labelCallback
-    };
-    return config;
-  }
 
   it("should load if no source", (done) => {
     player.ready().then(() => {
@@ -101,47 +181,6 @@ describe("load", function () {
     player.load();
   });
 
-  it("should load with callback label function, and change the label of video for 'custom_label'", (done) => {
-    player.configure(getConfigStructureWithLabelCallback());
-    player._tracks = [
-      new VideoTrack()
-    ];
-    player.load();
-    player.addEventListener(CustomEventType.TRACKS_CHANGED, () => {
-      player.getTracks().forEach(t => {
-        t.label.should.equal('custom_label');
-        done();
-      })
-    });
-  });
-
-  it("should load with callback label function, and change the label of audio for 'custom_label'", (done) => {
-    player.configure(getConfigStructureWithLabelCallback());
-    player._tracks = [
-      new AudioTrack()
-    ];
-    player.load();
-    player.addEventListener(CustomEventType.TRACKS_CHANGED, () => {
-      player.getTracks().forEach(t => {
-        t.label.should.equal('custom_label');
-        done();
-      })
-    });
-  });
-
-  it("should load with callback label function, and change the label of text for 'custom_label'", (done) => {
-    player.configure(getConfigStructureWithLabelCallback());
-    player._tracks = [
-      new TextTrack()
-    ];
-    player.load();
-    player.addEventListener(CustomEventType.TRACKS_CHANGED, () => {
-      player.getTracks().forEach(t => {
-        t.label.should.equal('custom_label');
-        done();
-      })
-    });
-  });
 });
 
 describe("play", function () {
