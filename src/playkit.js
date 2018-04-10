@@ -17,12 +17,12 @@ import Error from './error/error'
 import FakeEvent from './event/fake-event'
 import FakeEventTarget from './event/fake-event-target'
 import EventManager from './event/event-manager'
+import {EventType, registerEvents} from './event/event-type'
 import {StateType} from './state/state-type'
 import {TrackType} from './track/track-type'
 import {StreamType} from './engines/stream-type'
 import {EngineType} from './engines/engine-type'
 import {MediaType} from './media-type'
-import {EventType} from './event/event-type'
 import {AbrMode} from './track/abr-mode-type'
 import {LogLevelType} from './utils/logger'
 
@@ -55,7 +55,7 @@ export {Utils};
 export {Error};
 
 // Export Event system
-export {FakeEvent, FakeEventTarget, EventManager}
+export {FakeEvent, FakeEventTarget, EventManager, registerEvents}
 
 // Export version
 export {__VERSION__ as VERSION};

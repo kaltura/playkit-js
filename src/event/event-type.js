@@ -255,4 +255,13 @@ const CustomEventType: EventTypes = {
 
 const EventType: EventTypes = Utils.Object.merge([Html5EventType, CustomEventType]);
 
-export {EventType, Html5EventType, CustomEventType};
+/**
+ * Registers external events to the core events.
+ * @param {Object} events - The external events enums.
+ * @returns {void}
+ */
+function registerEvents(events: Object): void {
+  Object.assign(EventType, events);
+}
+
+export {EventType, Html5EventType, CustomEventType, registerEvents};
