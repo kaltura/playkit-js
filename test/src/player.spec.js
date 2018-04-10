@@ -46,11 +46,11 @@ describe("load", function () {
     removeElement(targetId);
   });
 
-  let getConfigStructureWithLabelCallback = () => {
+  const getConfigStructureWithLabelCallback = () => {
     const labelCallback = () => {
       return "custom_label";
     };
-    let config = getConfigStructure();
+    const config = getConfigStructure();
     config["customLabels"] = {
       "qualities": labelCallback,
       "audio": labelCallback,
