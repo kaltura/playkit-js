@@ -20,6 +20,7 @@ import Locale from '../../src/utils/locale'
 import Html5 from '../../src/engines/html5/html5'
 import Error from '../../src/error/error'
 import {Object} from '../../src/utils/util'
+import {LabelOptions} from '../../src/track/label-options'
 
 const targetId = 'player-placeholder_player.spec';
 
@@ -58,9 +59,9 @@ describe("_maybeSetTracksLabels", function () {
     };
     const config = getConfigStructure();
     config["customLabels"] = {
-      "qualities": qualitiesLabelCallback,
-      "audio": audioLabelCallback,
-      "captions": captionsLabelCallback
+      [LabelOptions.QUALITIES]: qualitiesLabelCallback,
+      [LabelOptions.AUDIO]: audioLabelCallback,
+      [LabelOptions.CAPTIONS]: captionsLabelCallback
     };
     return config;
   };
