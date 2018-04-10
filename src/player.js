@@ -572,8 +572,7 @@ export default class Player extends FakeEventTarget {
   reset(): void {
     if (this._reset) return;
     this.pause();
-    this._config.metadata = {};
-    this._resetSource();
+    this._resetSourceData();
     this._eventManager.removeAll();
     this._createReadyPromise();
     this._activeTextCues = [];
@@ -595,7 +594,8 @@ export default class Player extends FakeEventTarget {
    * @private
    * @returns {void}
    */
-  _resetSource(): void {
+  _resetSourceData(): void {
+    this._config.metadata = {};
     this._config.sources.dash = {};
     this._config.sources.hls = {};
     this._config.sources.progressive = {};
