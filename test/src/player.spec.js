@@ -11,8 +11,7 @@ import {
   createElement,
   getConfigStructure,
   removeElement,
-  removeVideoElementsFromTestPage,
-  getConfigStructureWithLabelCallback
+  removeVideoElementsFromTestPage
 } from './utils/test-utils'
 import PluginManager from '../../src/plugin/plugin-manager'
 import ColorsPlugin from './plugin/test-plugins/colors-plugin'
@@ -46,6 +45,19 @@ describe("load", function () {
     removeVideoElementsFromTestPage();
     removeElement(targetId);
   });
+
+  let getConfigStructureWithLabelCallback = () => {
+    const labelCallback = () => {
+      return "custom_label";
+    };
+    let config = getConfigStructure();
+    config["customLabels"] = {
+      "qualities": labelCallback,
+      "audio": labelCallback,
+      "captions": labelCallback
+    };
+    return config;
+  }
 
   it("should load if no source", (done) => {
     player.ready().then(() => {
