@@ -435,6 +435,7 @@ export default class Player extends FakeEventTarget {
         Player._logger.debug('Change source started');
         this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
       }
+      this._reset = false;
       if (this._selectEngineByPriority()) {
         this._appendEngineEl();
         this._attachMedia();
@@ -571,6 +572,8 @@ export default class Player extends FakeEventTarget {
   reset(): void {
     if (this._reset) return;
     this.pause();
+    this._config.metadata = {};
+    this._resetSource();
     this._eventManager.removeAll();
     this._createReadyPromise();
     this._activeTextCues = [];
@@ -585,6 +588,17 @@ export default class Player extends FakeEventTarget {
     this._engine.reset();
     this._reset = true;
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET));
+  }
+
+  /**
+   * Resets the source config
+   * @private
+   * @returns {void}
+   */
+  _resetSource(): void {
+    this._config.sources.dash = {};
+    this._config.sources.hls = {};
+    this._config.sources.progressive = {};
   }
 
   /**
