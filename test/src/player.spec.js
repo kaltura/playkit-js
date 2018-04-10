@@ -102,20 +102,20 @@ describe("_maybeSetTracksLabels", function () {
     ];
     player._maybeSetTracksLabels();
     player._tracks.forEach(t => {
-        switch (t) {
-          case t instanceof AudioTrack:
-            t.label.should.equal('audio_label');
-            break;
-          case t instanceof TextTrack:
-            t.label.should.equal('captions_label');
-            break;
-          case t instanceof VideoTrack:
-            t.label.should.equal('qualities_label');
-            break;
-        }
-      })
+      switch (t) {
+        case t instanceof AudioTrack:
+          t.label.should.equal('audio_label');
+          break;
+        case t instanceof TextTrack:
+          t.label.should.equal('captions_label');
+          break;
+        case t instanceof VideoTrack:
+          t.label.should.equal('qualities_label');
+          break;
+      }
+    });
   });
-})
+});
 
 describe("load", function () {
   let config, player, playerContainer;
