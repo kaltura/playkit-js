@@ -54,8 +54,10 @@ export default class Html5AutoPlayCapability implements ICapability {
    * @private
    */
   static _isDataSaverMode(): boolean {
-    testVideoElement.preload = 'auto';
-    return (testVideoElement.preload === 'none');
+    if ("connection" in navigator) {
+      return (navigator.connection.saveData === true);
+    }
+    return false;
   }
 
   /**
