@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.25.0"></a>
+# [0.25.0](https://github.com/kaltura/playkit-js/compare/v0.24.0...v0.25.0) (2018-04-16)
+
+
+### Features
+
+* data saver mode optimisation check ([#214](https://github.com/kaltura/playkit-js/issues/214)) ([5a8da5c](https://github.com/kaltura/playkit-js/commit/5a8da5c))
+
+
+
 <a name="0.24.0"></a>
 # [0.24.0](https://github.com/kaltura/playkit-js/compare/v0.23.0...v0.24.0) (2018-04-10)
 
