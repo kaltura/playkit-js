@@ -54,8 +54,7 @@ export default class Html5AutoPlayCapability implements ICapability {
    * @private
    */
   static _isDataSaverMode(): boolean {
-    // $FlowFixMe
-    if ("connection" in navigator) {
+    if ("connection" in navigator) { // $FlowFixMe
       return (navigator.connection.saveData === true);
     }
     return false;
