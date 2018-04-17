@@ -277,10 +277,10 @@ export default class Player extends FakeEventTarget {
   _firstPlay: boolean;
   /**
    * The player DOM element container.
-   * @type {HTMLDivElement}
+   * @type {?HTMLDivElement}
    * @private
    */
-  _el: HTMLDivElement;
+  _el: ?HTMLDivElement;
   /**
    * The player text DOM element container.
    * @type {HTMLDivElement}
