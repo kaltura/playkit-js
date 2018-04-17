@@ -1291,14 +1291,15 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _appendDomElements(): void {
+    // Append playkit-subtitles
     this._textDisplayEl = Utils.Dom.createElement("div");
     Utils.Dom.addClassName(this._textDisplayEl, SUBTITLES_CLASS_NAME);
     Utils.Dom.appendChild(this._el, this._textDisplayEl);
-
+    // Append playkit-black-cover
     this._blackCoverEl = Utils.Dom.createElement("div");
     Utils.Dom.addClassName(this._blackCoverEl, BLACK_COVER_CLASS_NAME);
     Utils.Dom.appendChild(this._el, this._blackCoverEl);
-
+    // Append playkit-poster
     const el = this._posterManager.getElement();
     Utils.Dom.addClassName(el, POSTER_CLASS_NAME);
     Utils.Dom.appendChild(this._el, el);
