@@ -640,10 +640,8 @@ export default class Player extends FakeEventTarget {
     this._resetStateFlags();
     this._playbackAttributesState = {};
     if (this._el) {
-      while (this._el.firstChild) {
-        Utils.Dom.removeChild(this._el, this._el.firstChild);
-      }
       Utils.Dom.removeChild(this._el.parentNode, this._el);
+      this._el = null;
     }
     this._destroyed = true;
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_DESTROY));
