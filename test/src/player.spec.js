@@ -7,12 +7,7 @@ import Track from '../../src/track/track'
 import VideoTrack from '../../src/track/video-track'
 import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
-import {
-  createElement,
-  getConfigStructure,
-  removeElement,
-  removeVideoElementsFromTestPage
-} from './utils/test-utils'
+import {createElement, getConfigStructure, removeElement, removeVideoElementsFromTestPage} from './utils/test-utils'
 import PluginManager from '../../src/plugin/plugin-manager'
 import ColorsPlugin from './plugin/test-plugins/colors-plugin'
 import NumbersPlugin from './plugin/test-plugins/numbers-plugin'
@@ -2681,7 +2676,6 @@ describe('destroy', function () {
     player._streamType.should.be.empty;
     (player._readyPromise === null).should.be.true;
     player._firstPlay.should.be.true;
-    player._el.childNodes.should.be.empty;
   });
 });
 
