@@ -277,10 +277,10 @@ export default class Player extends FakeEventTarget {
   _firstPlay: boolean;
   /**
    * The player DOM element container.
-   * @type {?HTMLDivElement}
+   * @type {HTMLDivElement}
    * @private
    */
-  _el: ?HTMLDivElement;
+  _el: HTMLDivElement;
   /**
    * The player text DOM element container.
    * @type {HTMLDivElement}
@@ -641,7 +641,6 @@ export default class Player extends FakeEventTarget {
     this._playbackAttributesState = {};
     if (this._el) {
       Utils.Dom.removeChild(this._el.parentNode, this._el);
-      this._el = null;
     }
     this._destroyed = true;
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_DESTROY));

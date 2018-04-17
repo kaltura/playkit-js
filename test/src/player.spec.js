@@ -2676,7 +2676,6 @@ describe('destroy', function () {
     player._streamType.should.be.empty;
     (player._readyPromise === null).should.be.true;
     player._firstPlay.should.be.true;
-    (player._el === null).should.be.true;
   });
 });
 
