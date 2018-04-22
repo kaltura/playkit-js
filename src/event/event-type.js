@@ -172,6 +172,10 @@ const CustomEventType: EventTypes = {
    */
   FIRST_PLAY: 'firstplay',
   /**
+   * Fires on the first time that playback has been started.
+   */
+  PLAYBACK_STARTED: 'playbackstarted',
+  /**
    * Fires when the player has selected the source to play.
    */
   SOURCE_SELECTED: 'sourceselected',

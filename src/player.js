@@ -276,6 +276,12 @@ export default class Player extends FakeEventTarget {
    */
   _firstPlay: boolean;
   /**
+   * Whether the playback started for the first time
+   * @type {boolean}
+   * @private
+   */
+  _playbackStarted: boolean;
+  /**
    * The player DOM element container.
    * @type {HTMLDivElement}
    * @private
@@ -1445,6 +1451,7 @@ export default class Player extends FakeEventTarget {
         this.dispatchEvent(event)
       });
       this._eventManager.listen(this, Html5EventType.PLAY, this._onPlay.bind(this));
+      this._eventManager.listen(this, Html5EventType.PLAYING, this._onPlaying.bind(this));
       this._eventManager.listen(this, Html5EventType.ENDED, this._onEnded.bind(this));
       this._eventManager.listen(this, CustomEventType.MUTE_CHANGE, () => {
         this._playbackAttributesState.muted = this.muted;
@@ -1644,6 +1651,18 @@ export default class Player extends FakeEventTarget {
       if (typeof this._playbackAttributesState.rate === 'number') {
         this.playbackRate = this._playbackAttributesState.rate;
       }
+    }
+  }
+
+  /**
+   * @function _onPlaying
+   * @return {void}
+   * @private
+   */
+  _onPlaying(): void {
+    if (!this._playbackStarted) {
+      this._playbackStarted = true;
+      this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_STARTED));
     }
   }
 
