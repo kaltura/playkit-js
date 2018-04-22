@@ -21,6 +21,10 @@ export default class Track {
     }
   }
 
+  static clone<T>(track: any): T {
+    return (Object.assign( Object.create( Object.getPrototypeOf(track)), track): T);
+  }
+
   /**
    * The id of the track.
    * @member
@@ -130,5 +134,6 @@ export default class Track {
     this._label = settings.label;
     this._language = settings.language;
     this._index = settings.index;
+    this.clone = Track.clone.bind(null, this);
   }
 }
