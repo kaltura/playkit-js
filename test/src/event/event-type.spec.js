@@ -29,6 +29,7 @@ describe('events', () => {
     });
     CustomEventType.should.deep.equals({
       MEDIA_READY: 'mediaready',
+      PLAYBACK_STARTED: 'playbackstarted',
       PLAYER_RESET: 'playerreset',
       PLAYER_DESTROY: 'playerdestroy',
       ENTER_FULLSCREEN: 'enterfullscreen',

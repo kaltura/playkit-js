@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.25.1"></a>
+## [0.25.1](https://github.com/kaltura/playkit-js/compare/v0.25.0...v0.25.1) (2018-04-23)
+
+
+### Bug Fixes
+
+* **FEC-7937:** video first frame is displayed before pre-roll ad starts ([#215](https://github.com/kaltura/playkit-js/issues/215)) ([dd08d9c](https://github.com/kaltura/playkit-js/commit/dd08d9c))
+
+
+
 <a name="0.25.0"></a>
 # [0.25.0](https://github.com/kaltura/playkit-js/compare/v0.24.0...v0.25.0) (2018-04-16)
 
