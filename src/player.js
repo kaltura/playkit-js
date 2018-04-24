@@ -276,6 +276,12 @@ export default class Player extends FakeEventTarget {
    */
   _firstPlay: boolean;
   /**
+   * Whether the playback started for the first time
+   * @type {boolean}
+   * @private
+   */
+  _playbackStarted: boolean;
+  /**
    * The player DOM element container.
    * @type {HTMLDivElement}
    * @private
@@ -409,6 +415,7 @@ export default class Player extends FakeEventTarget {
     this._repositionCuesTimeout = false;
     this._loadingMedia = false;
     this._loading = false;
+    this._playbackStarted = false;
     this._reset = true;
     this._destroyed = false;
     this._config = Player._defaultConfig;
@@ -1445,6 +1452,7 @@ export default class Player extends FakeEventTarget {
         this.dispatchEvent(event)
       });
       this._eventManager.listen(this, Html5EventType.PLAY, this._onPlay.bind(this));
+      this._eventManager.listen(this, Html5EventType.PLAYING, this._onPlaying.bind(this));
       this._eventManager.listen(this, Html5EventType.ENDED, this._onEnded.bind(this));
       this._eventManager.listen(this, CustomEventType.MUTE_CHANGE, () => {
         this._playbackAttributesState.muted = this.muted;
@@ -1648,6 +1656,18 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * @function _onPlaying
+   * @return {void}
+   * @private
+   */
+  _onPlaying(): void {
+    if (!this._playbackStarted) {
+      this._playbackStarted = true;
+      this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_STARTED));
+    }
+  }
+
+  /**
    * Hides the black cover div.
    * @private
    * @returns {void}
@@ -1690,6 +1710,7 @@ export default class Player extends FakeEventTarget {
     this._firstPlay = true;
     this._firstPlayInCurrentSession = false;
     this._loadingMedia = false;
+    this._playbackStarted = false;
   }
 
   /**
