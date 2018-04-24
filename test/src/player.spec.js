@@ -1605,7 +1605,7 @@ describe('events', function () {
     });
   });
 
-  describe('media ready', () => {
+  describe('media loaded', () => {
     let config;
     let player;
     let playerContainer;
@@ -1631,8 +1631,8 @@ describe('events', function () {
       removeElement(targetId);
     });
 
-    it('should fire media ready', (done) => {
-      player.addEventListener(CustomEventType.MEDIA_READY, () => {
+    it('should fire media loaded', (done) => {
+      player.addEventListener(CustomEventType.MEDIA_LOADED, () => {
         done();
       });
       player.load();
