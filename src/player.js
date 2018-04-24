@@ -1709,6 +1709,7 @@ export default class Player extends FakeEventTarget {
     this._firstPlay = true;
     this._firstPlayInCurrentSession = false;
     this._loadingMedia = false;
+    this._playbackStarted = false;
   }
 
   /**
