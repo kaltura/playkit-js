@@ -1352,7 +1352,10 @@ export default class Player extends FakeEventTarget {
    */
   _createReadyPromise(): void {
     this._readyPromise = new Promise((resolve, reject) => {
-      this._eventManager.listenOnce(this, CustomEventType.TRACKS_CHANGED, resolve);
+      this._eventManager.listenOnce(this, CustomEventType.TRACKS_CHANGED, () => {
+        this.dispatchEvent(new FakeEvent(CustomEventType.MEDIA_LOADED));
+        resolve();
+      });
       this._eventManager.listen(this, Html5EventType.ERROR, reject);
     }).catch(() => {
       // silence the promise rejection, error is handled by the error event
