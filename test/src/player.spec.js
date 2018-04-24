@@ -1605,6 +1605,40 @@ describe('events', function () {
     });
   });
 
+  describe('media ready', () => {
+    let config;
+    let player;
+    let playerContainer;
+
+    before(() => {
+      playerContainer = createElement('DIV', targetId);
+    });
+
+    beforeEach(() => {
+      config = getConfigStructure();
+      config.sources = sourcesConfig.Mp4;
+      player = new Player();
+      playerContainer.appendChild(player.getView());
+      player.configure(config);
+    });
+
+    afterEach(() => {
+      player.destroy();
+    });
+
+    after(() => {
+      removeVideoElementsFromTestPage();
+      removeElement(targetId);
+    });
+
+    it('should fire media ready', (done) => {
+      player.addEventListener(CustomEventType.MEDIA_READY, () => {
+        done();
+      });
+      player.load();
+    });
+  });
+
   describe('abr mode changed', () => {
     let config;
     let player;

@@ -96,6 +96,10 @@ const Html5EventType: EventTypes = {
 
 const CustomEventType: EventTypes = {
   /**
+   * Fires when the media is ready.
+   */
+  MEDIA_READY: 'mediaready',
+  /**
    * Fires when the player ends reset operation.
    */
   PLAYER_RESET: 'playerreset',
