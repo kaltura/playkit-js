@@ -415,6 +415,7 @@ export default class Player extends FakeEventTarget {
     this._repositionCuesTimeout = false;
     this._loadingMedia = false;
     this._loading = false;
+    this._playbackStarted = false;
     this._reset = true;
     this._destroyed = false;
     this._config = Player._defaultConfig;
