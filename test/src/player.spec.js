@@ -1648,7 +1648,7 @@ describe('events', function () {
           if (count === 1) {
             done();
           } else {
-            done(new Error('PLAYBACK_STARTED triggered more then one time'));
+            done(new Error('PLAYBACK_STARTED triggered more then once'));
           }
         });
 
