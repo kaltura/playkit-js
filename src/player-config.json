@@ -46,5 +46,14 @@
         "format": "progressive"
       }
     ]
+  },
+  "abr": {
+    "enabled": true,
+    "capLevelToPlayerSize": false,
+    "defaultBandwidthEstimate": 500e3,
+    "restrictions": {
+      "minBitrate": null,
+      "maxBitrate": null
+    }
   }
 }
