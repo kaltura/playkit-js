@@ -47,7 +47,7 @@ export default class DrmSupport {
       }
       return NOT_SUPPORTED;
     },
-    Mobile_Safari: () => {
+    'Mobile Safari': () => {
       const majorVersion = Env.browser.major;
       if (majorVersion >= 11) {
         return DrmScheme.FAIRPLAY;
@@ -63,7 +63,7 @@ export default class DrmSupport {
    * @return {boolean} - Whether scheme can be play on the current environment.
    */
   static isProtocolSupported(scheme: string, drmData: Array<Object>): boolean {
-    const browser = Env.browser.name.replace(/ /g, "_");
+    const browser = Env.browser.name;
     if (typeof DrmSupport._Browsers[browser] === 'function') {
       let drmScheme = DrmSupport._Browsers[browser]();
       DrmSupport._logger.debug("Supported DRM scheme for current environment is: " + drmScheme);
