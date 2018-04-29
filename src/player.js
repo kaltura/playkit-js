@@ -593,7 +593,7 @@ export default class Player extends FakeEventTarget {
   reset(): void {
     if (this._reset) return;
     this.pause();
-    this._resetSourceData();
+    this._resetConfigData();
     this._eventManager.removeAll();
     this._createReadyPromise();
     this._activeTextCues = [];
@@ -612,11 +612,12 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Resets the source config
+   * Resets the config data.
    * @private
    * @returns {void}
    */
-  _resetSourceData(): void {
+  _resetConfigData(): void {
+    delete this._config.dvr;
     this._config.metadata = {};
     this._config.sources.dash = {};
     this._config.sources.hls = {};
