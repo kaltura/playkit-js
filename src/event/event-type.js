@@ -96,6 +96,10 @@ const Html5EventType: EventTypes = {
 
 const CustomEventType: EventTypes = {
   /**
+   * Fires when the media is loaded.
+   */
+  MEDIA_LOADED: 'medialoaded',
+  /**
    * Fires when the player ends reset operation.
    */
   PLAYER_RESET: 'playerreset',
@@ -171,6 +175,10 @@ const CustomEventType: EventTypes = {
    * Fires on the first play.
    */
   FIRST_PLAY: 'firstplay',
+  /**
+   * Fires on the first time that playback has been started.
+   */
+  PLAYBACK_STARTED: 'playbackstarted',
   /**
    * Fires when the player has selected the source to play.
    */

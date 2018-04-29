@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.26.0"></a>
+# [0.26.0](https://github.com/kaltura/playkit-js/compare/v0.25.1...v0.26.0) (2018-04-25)
+
+
+### Features
+
+* media loaded event ([#220](https://github.com/kaltura/playkit-js/issues/220)) ([5a9ae90](https://github.com/kaltura/playkit-js/commit/5a9ae90))
+* playback started event ([#216](https://github.com/kaltura/playkit-js/issues/216)) ([cfe5f04](https://github.com/kaltura/playkit-js/commit/cfe5f04))
+
+
+
 <a name="0.25.1"></a>
 ## [0.25.1](https://github.com/kaltura/playkit-js/compare/v0.25.0...v0.25.1) (2018-04-23)
 
