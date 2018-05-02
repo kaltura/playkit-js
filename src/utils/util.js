@@ -188,17 +188,17 @@ const _Object = {
    * @returns {Object} - The result object.
    */
   createPropertyPath: function (obj: Object, path: string, value: any = null): Object {
-    path = typeof path === 'string' ? path.split('.') : path;
+    let pathArray = path.split('.');
     let current = obj;
-    while (path.length > 1) {
-      const [head, ...tail] = path;
-      path = tail;
+    while (pathArray.length > 1) {
+      const [head, ...tail] = pathArray;
+      pathArray = tail;
       if (current[head] === undefined) {
         current[head] = {};
       }
       current = current[head];
     }
-    current[path[0]] = value;
+    current[pathArray[0]] = value;
     return obj;
   },
 
