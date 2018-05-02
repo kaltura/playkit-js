@@ -212,16 +212,14 @@ const _Object = {
     if (!obj || !path) {
       return;
     }
-    if (typeof path === 'string') {
-      path = path.split('.');
-    }
-    for (let i = 0; i < path.length - 1; i++) {
-      obj = obj[path[i]];
+    let pathArray = path.split('.');
+    for (let i = 0; i < pathArray.length - 1; i++) {
+      obj = obj[pathArray[i]];
       if (typeof obj === 'undefined') {
         return;
       }
     }
-    delete obj[path.pop()];
+    delete obj[pathArray.pop()];
   },
 
   /**
