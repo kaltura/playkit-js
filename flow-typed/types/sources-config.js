@@ -4,10 +4,10 @@ declare type PKSourcesConfigObject = {
   dash: Array<PKMediaSourceObject>,
   progressive: Array<PKMediaSourceObject>,
   options: PKMediaSourceOptionsObject,
-  poster: string,
-  metadata?: PKMetadataConfigObject,
+  type: string,
+  dvr: boolean,
+  metadata: PKMetadataConfigObject,
   id?: string,
-  type?: string,
-  dvr?: boolean,
+  poster?: string,
   duration?: number
 };
