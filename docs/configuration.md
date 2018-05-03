@@ -536,10 +536,5 @@ var config = {
 >>##### Type: `number`
 >>##### Default: `-`
 >>##### Description: The ui configuration id.
-  
-  
-  
-  
-  
-
+##
 Now that we've learned about the different options available in the player configuration, let's see [how does the source selection logic works](./source-selection-logic.md).
