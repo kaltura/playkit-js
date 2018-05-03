@@ -13,6 +13,7 @@ var player = playkit.core.loadPlayer(config);
   logLevel: string,
   playback: PKPlaybackConfigObject,
   sources: PKSourcesConfigObject,
+  session: PKSessionConfigObject,
   plugins: PKPluginsConfigObject
 }
 ```
@@ -502,6 +503,43 @@ var config = {
 >>##### Description: Specifies the list of engine and stream format pairs of the player by ascending order.
 >>As soon as the player receives the sources, it will review the configuration array and try to play the source with the matched stream format according to the matched engine. 
 >>For example, in the priority configuration above, the player will try to play the hls stream using an html5 engine first. If an hls stream isn't received, the player will continue to play the dash stream using an html5 engine. If a dash stream isn't received, the player will then will continue to play the progressive stream using an html5 engine.
-
+## 
+>### config.session
+>##### Type: `PKSessionConfigObject`
+>```js
+>{
+>  id: string,
+>  ks: string,
+>  partnerId: number,
+>  uiConfId: number
+>}
+>```
+>##### Default: `-`
+>##### Description: Defines the session data (optional).
+>>##
+>>### config.session.id
+>>##### Type: `string`
+>>##### Default: `-`
+>>##### Description: The session id.
+>>##
+>>### config.session.ks
+>>##### Type: `string`
+>>##### Default: `-`
+>>##### Description: The session secret.
+>>##
+>>### config.session.partnerId
+>>##### Type: `number`
+>>##### Default: `-`
+>>##### Description: The partner id.
+>>##
+>>### config.session.uiConfId
+>>##### Type: `number`
+>>##### Default: `-`
+>>##### Description: The ui configuration id.
+  
+  
+  
+  
+  
 
 Now that we've learned about the different options available in the player configuration, let's see [how does the source selection logic works](./source-selection-logic.md).
