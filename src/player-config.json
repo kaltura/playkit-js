@@ -1,14 +1,9 @@
 {
   "logLevel": "ERROR",
   "sources": {
-    "hls": [],
-    "dash": [],
-    "progressive": [],
     "options": {
       "forceRedirectExternalStreams": false
     },
-    "type": "Unknown",
-    "dvr": false,
     "metadata": {}
   },
   "plugins": {},
