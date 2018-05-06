@@ -97,5 +97,19 @@ describe('DrmSupport', () => {
     Env.browser.name = 'IE';
     DrmSupport.isProtocolSupported(DrmScheme.WIDEVINE, [{scheme: DrmScheme.WIDEVINE}]).should.be.false;
   });
+
+  it('should return true for fairplay on mobile/safari mobile 11 with fairplay data', () => {
+    Env.device.type = 'mobile';
+    Env.browser.name = 'Mobile Safari';
+    Env.browser.major = '11';
+    DrmSupport.isProtocolSupported(DrmScheme.FAIRPLAY, [{scheme: DrmScheme.FAIRPLAY}]).should.be.true;
+  });
+
+  it('should return false for fairplay on mobile/safari mobile 9 with fairplay data', () => {
+    Env.device.type = 'mobile';
+    Env.browser.name = 'Mobile Safari';
+    Env.browser.major = '9';
+    DrmSupport.isProtocolSupported(DrmScheme.FAIRPLAY, [{scheme: DrmScheme.FAIRPLAY}]).should.be.false;
+  });
 });
 
