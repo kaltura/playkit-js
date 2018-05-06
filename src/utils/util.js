@@ -185,6 +185,48 @@ const _Object = {
   },
 
   /**
+   * Create an object with a given property path.
+   * @param {Object} obj - The object to create on.
+   * @param {string} path - The path to create in the object.
+   * @param {any} value - The value to set in the path.
+   * @returns {Object} - The result object.
+   */
+  createPropertyPath: function (obj: Object, path: string, value: any = null): Object {
+    let pathArray = path.split('.');
+    let current = obj;
+    while (pathArray.length > 1) {
+      const [head, ...tail] = pathArray;
+      pathArray = tail;
+      if (current[head] === undefined) {
+        current[head] = {};
+      }
+      current = current[head];
+    }
+    current[pathArray[0]] = value;
+    return obj;
+  },
+
+  /**
+   * Deleted a property path from an object.
+   * @param {Object} obj - The object to delete the property path from.
+   * @param {string} path - The path to delete in the object.
+   * @returns {void}
+   */
+  deletePropertyPath: function (obj: Object, path: string): void {
+    if (!obj || !path) {
+      return;
+    }
+    let pathArray = path.split('.');
+    for (let i = 0; i < pathArray.length - 1; i++) {
+      obj = obj[pathArray[i]];
+      if (typeof obj === 'undefined') {
+        return;
+      }
+    }
+    delete obj[pathArray.pop()];
+  },
+
+  /**
    * Creates deferred promise which can resolved/rejected outside the promise scope.
    * @returns {DeferredPromise} - The promise with resolve and reject props.
    */

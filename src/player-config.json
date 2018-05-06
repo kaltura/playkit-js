@@ -1,16 +1,12 @@
 {
   "logLevel": "ERROR",
-  "type": "Unknown",
   "sources": {
-    "hls": [],
-    "dash": [],
-    "progressive": [],
     "options": {
       "forceRedirectExternalStreams": false
-    }
+    },
+    "metadata": {}
   },
   "plugins": {},
-  "metadata": {},
   "playback": {
     "audioLanguage": "",
     "textLanguage": "",

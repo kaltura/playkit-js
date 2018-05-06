@@ -458,7 +458,7 @@ export default class Player extends FakeEventTarget {
         this._appendEngineEl();
         this._attachMedia();
         this._handlePlaybackOptions();
-        this._posterManager.setSrc(this._config.metadata.poster);
+        this._posterManager.setSrc(this._config.sources.poster);
         this._handlePreload();
         this._handleAutoPlay();
         if (receivedSourcesWhenHasEngine) {
@@ -593,7 +593,7 @@ export default class Player extends FakeEventTarget {
   reset(): void {
     if (this._reset) return;
     this.pause();
-    this._resetSourceData();
+    this._config.sources = {};
     this._eventManager.removeAll();
     this._createReadyPromise();
     this._activeTextCues = [];
@@ -609,18 +609,6 @@ export default class Player extends FakeEventTarget {
     this._showBlackCover();
     this._reset = true;
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET));
-  }
-
-  /**
-   * Resets the source config
-   * @private
-   * @returns {void}
-   */
-  _resetSourceData(): void {
-    this._config.metadata = {};
-    this._config.sources.dash = {};
-    this._config.sources.hls = {};
-    this._config.sources.progressive = {};
   }
 
   /**
@@ -941,7 +929,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   isLive(): boolean {
-    return !!(this._config.type === MediaType.LIVE || (this._engine && this._engine.isLive()));
+    return !!(this._config.sources.type === MediaType.LIVE || (this._engine && this._engine.isLive()));
   }
 
   /**
@@ -951,7 +939,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   isDvr(): boolean {
-    return this.isLive() && this._config.dvr;
+    return this.isLive() && this._config.sources.dvr;
   }
 
   /**
@@ -1255,7 +1243,7 @@ export default class Player extends FakeEventTarget {
    */
   _hasSources(sources: Object): boolean {
     if (sources) {
-      return !!(Object.keys(sources).find(format => sources[format].length > 0));
+      return !!(Object.values(StreamType).find(type => (sources[type] && sources[type].length > 0)));
     }
     return false;
   }
