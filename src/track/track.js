@@ -22,7 +22,7 @@ export default class Track {
   }
 
   static clone<T>(track: any): T {
-    return (Object.assign( Object.create( Object.getPrototypeOf(track)), track): T);
+    return (Object.assign(Object.create(Object.getPrototypeOf(track)), track): T);
   }
 
   /**
