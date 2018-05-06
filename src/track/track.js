@@ -22,7 +22,7 @@ export default class Track {
   }
 
   static clone<T>(track: any): T {
-    return (Object.assign( Object.create( Object.getPrototypeOf(track)), track): T);
+    return (Object.assign(Object.create(Object.getPrototypeOf(track)), track): T);
   }
 
   /**
@@ -60,6 +60,13 @@ export default class Track {
    * @private
    */
   _index: number;
+  /**
+   * The clone function reference.
+   * @member
+   * @type {Function}
+   * @public
+   */
+  clone: Function;
 
   /**
    * Getter for the track id.
