@@ -484,7 +484,7 @@ var config = {
 >>For example, in the priority configuration above, the player will try to play the hls stream using an html5 engine first. If an hls stream isn't received, the player will continue to play the dash stream using an html5 engine. If a dash stream isn't received, the player will then will continue to play the progressive stream using an html5 engine.
 >##
 >### config.customLabels
->##### Type: `PKPLabelConfigObject`
+>##### Type: `PKCustomLabelsConfigObject`
 >```js
 >{
 >  audio: Function,

@@ -9,4 +9,5 @@ declare type PKPlayerOptionsObject = {
   metadata?: PKMetadataConfigObject,
   plugins?: PKPluginsConfigObject,
   session?: PKSessionConfigObject
+  customLabels?: PKCustomLabelsConfigObject
 };
