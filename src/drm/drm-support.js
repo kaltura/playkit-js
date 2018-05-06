@@ -9,41 +9,48 @@ export default class DrmSupport {
   static _logger = getLogger('DrmSupport');
   static _Browsers: Object = {
     Safari: () => {
-      let device = Env.device.type;
-      let os = Env.os.name;
+      const device = Env.device.type;
+      const os = Env.os.name;
       if (!device && os === 'Mac OS') {
         return DrmScheme.FAIRPLAY;
       }
       return NOT_SUPPORTED;
     },
     Chrome: () => {
-      let device = Env.device.type;
-      let os = Env.os.name;
+      const device = Env.device.type;
+      const os = Env.os.name;
       if (!device || os === 'Android') {
         return DrmScheme.WIDEVINE;
       }
       return NOT_SUPPORTED;
     },
     Firefox: () => {
-      let device = Env.device.type;
+      const device = Env.device.type;
       if (!device) {
         return DrmScheme.WIDEVINE;
       }
       return NOT_SUPPORTED;
     },
     Edge: () => {
-      let device = Env.device.type;
+      const device = Env.device.type;
       if (!device) {
         return DrmScheme.PLAYREADY;
       }
       return NOT_SUPPORTED;
     },
     IE: () => {
-      let device = Env.device.type;
-      let os = Env.os.name;
-      let osVersion = Env.os.version;
+      const device = Env.device.type;
+      const os = Env.os.name;
+      const osVersion = Env.os.version;
       if (!device && os === 'Windows' && Number.parseFloat(osVersion) >= 8.1) {
         return DrmScheme.PLAYREADY;
+      }
+      return NOT_SUPPORTED;
+    },
+    'Mobile Safari': () => {
+      const majorVersion = Env.browser.major;
+      if (majorVersion >= 11) {
+        return DrmScheme.FAIRPLAY;
       }
       return NOT_SUPPORTED;
     }
@@ -56,7 +63,7 @@ export default class DrmSupport {
    * @return {boolean} - Whether scheme can be play on the current environment.
    */
   static isProtocolSupported(scheme: string, drmData: Array<Object>): boolean {
-    let browser = Env.browser.name;
+    const browser = Env.browser.name;
     if (typeof DrmSupport._Browsers[browser] === 'function') {
       let drmScheme = DrmSupport._Browsers[browser]();
       DrmSupport._logger.debug("Supported DRM scheme for current environment is: " + drmScheme);

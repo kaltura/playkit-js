@@ -4,5 +4,6 @@ declare type PKPlayerOptionsObject = {
   playback?: PKPlaybackConfigObject,
   sources?: PKSourcesConfigObject,
   plugins?: PKPluginsConfigObject,
-  session?: PKSessionConfigObject
+  session?: PKSessionConfigObject,
+  customLabels?: PKCustomLabelsConfigObject
 };

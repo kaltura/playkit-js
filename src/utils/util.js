@@ -117,16 +117,20 @@ const _Object = {
           node[i] = this.copyDeep(e);
         }
       });
-    } else if (typeof data === "object") {
-      node = Object.assign({}, data);
-      Object.keys(node).forEach((key) => {
-        if (
-          (typeof node[key] === "object" && node[key] !== {}) ||
-          (Array.isArray(node[key]) && node[key].length > 0)
-        ) {
-          node[key] = this.copyDeep(node[key]);
-        }
-      });
+    } else if (data !== null && typeof data === "object") {
+      if (data.clone && typeof data.clone === "function"){
+        node = data.clone();
+      } else {
+        node = Object.assign({ __proto__: data.__proto__ }, data);
+        Object.keys(node).forEach((key) => {
+          if (
+            (typeof node[key] === "object" && node[key] !== {}) ||
+            (Array.isArray(node[key]) && node[key].length > 0)
+          ) {
+            node[key] = this.copyDeep(node[key]);
+          }
+        });
+      }
     } else {
       node = data;
     }
