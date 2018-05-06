@@ -16,7 +16,7 @@ var player = playkit.core.loadPlayer(config);
   sources: PKSourcesConfigObject,
   metadata: PKMetadataConfigObject,
   plugins: PKPluginsConfigObject,
-  customLabels: PKLabelsConfigObject
+  customLabels: PKCustomLabelsConfigObject
 }
 ```
 
