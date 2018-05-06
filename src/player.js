@@ -975,7 +975,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   getTracks(type?: string): Array<Track> {
-    return this._getTracksByType(type);
+    return Utils.Object.copyDeep(this._getTracksByType(type));
   }
 
   /**
@@ -983,11 +983,11 @@ export default class Player extends FakeEventTarget {
    * @return {{video: VideoTrack, audio: AudioTrack, text: TextTrack}} - The active tracks object
    */
   getActiveTracks(): Object {
-    return {
+    return Utils.Object.copyDeep({
       video: this._getTracksByType(TrackType.VIDEO).find(track => track.active),
       audio: this._getTracksByType(TrackType.AUDIO).find(track => track.active),
       text: this._getTracksByType(TrackType.TEXT).find(track => track.active),
-    };
+    });
   }
 
   /**
