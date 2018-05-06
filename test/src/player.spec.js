@@ -7,12 +7,7 @@ import Track from '../../src/track/track'
 import VideoTrack from '../../src/track/video-track'
 import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
-import {
-  createElement,
-  getConfigStructure,
-  removeElement,
-  removeVideoElementsFromTestPage
-} from './utils/test-utils'
+import {createElement, getConfigStructure, removeElement, removeVideoElementsFromTestPage} from './utils/test-utils'
 import PluginManager from '../../src/plugin/plugin-manager'
 import ColorsPlugin from './plugin/test-plugins/colors-plugin'
 import NumbersPlugin from './plugin/test-plugins/numbers-plugin'
@@ -1610,6 +1605,94 @@ describe('events', function () {
     });
   });
 
+  describe('media loaded', () => {
+    let config;
+    let player;
+    let playerContainer;
+
+    before(() => {
+      playerContainer = createElement('DIV', targetId);
+    });
+
+    beforeEach(() => {
+      config = getConfigStructure();
+      config.sources = sourcesConfig.Mp4;
+      player = new Player();
+      playerContainer.appendChild(player.getView());
+      player.configure(config);
+    });
+
+    afterEach(() => {
+      player.destroy();
+    });
+
+    after(() => {
+      removeVideoElementsFromTestPage();
+      removeElement(targetId);
+    });
+
+    it('should fire media loaded', (done) => {
+      player.addEventListener(CustomEventType.MEDIA_LOADED, () => {
+        done();
+      });
+      player.load();
+    });
+  });
+
+  describe('playback started', () => {
+    let config;
+    let player;
+    let playerContainer;
+
+    before(() => {
+      playerContainer = createElement('DIV', targetId);
+    });
+
+    beforeEach(() => {
+      config = getConfigStructure();
+      config.sources = sourcesConfig.Mp4;
+      player = new Player();
+      playerContainer.appendChild(player.getView());
+      player.configure(config);
+    });
+
+    afterEach(() => {
+      player.destroy();
+    });
+
+    after(() => {
+      removeVideoElementsFromTestPage();
+      removeElement(targetId);
+    });
+
+    it('should fire playback started when start to playing', (done) => {
+      player.addEventListener(CustomEventType.PLAYBACK_STARTED, () => {
+        done();
+      });
+      player.play();
+    });
+
+    it('should fire playback started only once', (done) => {
+      let count = 0;
+
+      player.addEventListener(CustomEventType.PLAYBACK_STARTED, () => {
+        count++;
+
+        player.addEventListener(Html5EventType.PLAYING, () => {
+          if (count === 1) {
+            done();
+          } else {
+            done(new Error('PLAYBACK_STARTED triggered more then once'));
+          }
+        });
+
+        player.pause();
+        player.play();
+      });
+      player.play();
+    });
+  });
+
   describe('abr mode changed', () => {
     let config;
     let player;
@@ -2681,7 +2764,6 @@ describe('destroy', function () {
     player._streamType.should.be.empty;
     (player._readyPromise === null).should.be.true;
     player._firstPlay.should.be.true;
-    player._el.childNodes.should.be.empty;
   });
 });
 

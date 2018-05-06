@@ -52,7 +52,12 @@ const PLAYBACK_RATES = [0.5, 1, 2, 4];
  * @const
  */
 const DEFAULT_PLAYBACK_RATE = 1;
-
+/**
+ * The black cover class name.
+ * @type {string}
+ * @const
+ */
+const BLACK_COVER_CLASS_NAME: string = 'playkit-black-cover';
 /**
  * The player container class name.
  * @type {string}
@@ -271,6 +276,12 @@ export default class Player extends FakeEventTarget {
    */
   _firstPlay: boolean;
   /**
+   * Whether the playback started for the first time
+   * @type {boolean}
+   * @private
+   */
+  _playbackStarted: boolean;
+  /**
    * The player DOM element container.
    * @type {HTMLDivElement}
    * @private
@@ -282,6 +293,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _textDisplayEl: HTMLDivElement;
+  /**
+   * The player black cover div.
+   * @type {HTMLDivElement}
+   * @private
+   */
+  _blackCoverEl: HTMLDivElement;
   /**
    * The player DOM id.
    * @type {string}
@@ -398,6 +415,7 @@ export default class Player extends FakeEventTarget {
     this._repositionCuesTimeout = false;
     this._loadingMedia = false;
     this._loading = false;
+    this._playbackStarted = false;
     this._reset = true;
     this._destroyed = false;
     this._config = Player._defaultConfig;
@@ -409,7 +427,7 @@ export default class Player extends FakeEventTarget {
     this._textStyle = new TextStyle();
     this._createReadyPromise();
     this._createPlayerContainer();
-    this._appendPosterEl();
+    this._appendDomElements();
     this.configure(config);
   }
 
@@ -588,6 +606,7 @@ export default class Player extends FakeEventTarget {
     this._stateManager.reset();
     this._pluginManager.reset();
     this._engine.reset();
+    this._showBlackCover();
     this._reset = true;
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET));
   }
@@ -1255,19 +1274,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Appends the poster element to the player's div container.
-   * @private
-   * @returns {void}
-   */
-  _appendPosterEl(): void {
-    if (this._el) {
-      let el: HTMLDivElement = this._posterManager.getElement();
-      Utils.Dom.addClassName(el, POSTER_CLASS_NAME);
-      Utils.Dom.appendChild(this._el, el);
-    }
-  }
-
-  /**
    * Appends the engine's video element to the player's div container.
    * @private
    * @returns {void}
@@ -1281,6 +1287,29 @@ export default class Player extends FakeEventTarget {
       Utils.Dom.addClassName(engineEl, classnameWithId);
       Utils.Dom.prependTo(engineEl, this._el);
     }
+  }
+
+  /**
+   * Appends DOM elements by the following priority:
+   * 1. poster (strongest)
+   * 2. black screen
+   * 3. subtitles (weakest)
+   * @private
+   * @returns {void}
+   */
+  _appendDomElements(): void {
+    // Append playkit-subtitles
+    this._textDisplayEl = Utils.Dom.createElement("div");
+    Utils.Dom.addClassName(this._textDisplayEl, SUBTITLES_CLASS_NAME);
+    Utils.Dom.appendChild(this._el, this._textDisplayEl);
+    // Append playkit-black-cover
+    this._blackCoverEl = Utils.Dom.createElement("div");
+    Utils.Dom.addClassName(this._blackCoverEl, BLACK_COVER_CLASS_NAME);
+    Utils.Dom.appendChild(this._el, this._blackCoverEl);
+    // Append playkit-poster
+    const el = this._posterManager.getElement();
+    Utils.Dom.addClassName(el, POSTER_CLASS_NAME);
+    Utils.Dom.appendChild(this._el, el);
   }
 
   /**
@@ -1323,7 +1352,10 @@ export default class Player extends FakeEventTarget {
    */
   _createReadyPromise(): void {
     this._readyPromise = new Promise((resolve, reject) => {
-      this._eventManager.listenOnce(this, CustomEventType.TRACKS_CHANGED, resolve);
+      this._eventManager.listenOnce(this, CustomEventType.TRACKS_CHANGED, () => {
+        this.dispatchEvent(new FakeEvent(CustomEventType.MEDIA_LOADED));
+        resolve();
+      });
       this._eventManager.listen(this, Html5EventType.ERROR, reject);
     }).catch(() => {
       // silence the promise rejection, error is handled by the error event
@@ -1423,6 +1455,7 @@ export default class Player extends FakeEventTarget {
         this.dispatchEvent(event)
       });
       this._eventManager.listen(this, Html5EventType.PLAY, this._onPlay.bind(this));
+      this._eventManager.listen(this, Html5EventType.PLAYING, this._onPlaying.bind(this));
       this._eventManager.listen(this, Html5EventType.ENDED, this._onEnded.bind(this));
       this._eventManager.listen(this, CustomEventType.MUTE_CHANGE, () => {
         this._playbackAttributesState.muted = this.muted;
@@ -1618,9 +1651,44 @@ export default class Player extends FakeEventTarget {
       this._firstPlay = false;
       this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAY));
       this._posterManager.hide();
+      this._hideBlackCover();
       if (typeof this._playbackAttributesState.rate === 'number') {
         this.playbackRate = this._playbackAttributesState.rate;
       }
+    }
+  }
+
+  /**
+   * @function _onPlaying
+   * @return {void}
+   * @private
+   */
+  _onPlaying(): void {
+    if (!this._playbackStarted) {
+      this._playbackStarted = true;
+      this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_STARTED));
+    }
+  }
+
+  /**
+   * Hides the black cover div.
+   * @private
+   * @returns {void}
+   */
+  _hideBlackCover(): void {
+    if (this._blackCoverEl) {
+      this._blackCoverEl.style.visibility = 'hidden';
+    }
+  }
+
+  /**
+   * Shows the black cover div.
+   * @private
+   * @returns {void}
+   */
+  _showBlackCover(): void {
+    if (this._blackCoverEl) {
+      this._blackCoverEl.style.visibility = 'visible';
     }
   }
 
@@ -1645,6 +1713,7 @@ export default class Player extends FakeEventTarget {
     this._firstPlay = true;
     this._firstPlayInCurrentSession = false;
     this._loadingMedia = false;
+    this._playbackStarted = false;
   }
 
   /**
@@ -1764,11 +1833,6 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _updateTextDisplay(cues: Array<Cue>): void {
-    if (this._textDisplayEl === undefined) {
-      this._textDisplayEl = Utils.Dom.createElement("div");
-      Utils.Dom.addClassName(this._textDisplayEl, SUBTITLES_CLASS_NAME);
-      Utils.Dom.appendChild(this._el, this._textDisplayEl);
-    }
     processCues(window, cues, this._textDisplayEl);
   }
 
