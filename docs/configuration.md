@@ -11,10 +11,9 @@ var player = playkit.core.loadPlayer(config);
 ```js
 {
   logLevel: string,
-  type: string,
   playback: PKPlaybackConfigObject,
   sources: PKSourcesConfigObject,
-  metadata: PKMetadataConfigObject,
+  session: PKSessionConfigObject,
   plugins: PKPluginsConfigObject,
   customLabels: PKCustomLabelsConfigObject
 }
@@ -24,17 +23,13 @@ var player = playkit.core.loadPlayer(config);
 ```js
 var config = {
     logLevel: "ERROR",
-    type: "Unknown",
     sources: {
-        hls: [],
-        dash: [],
-        progressive: [],
         options: {
           forceRedirectExternalStreams: false
-        }
+        },
+        metadata: {}
     },
     plugins: {},
-    metadata: {},
     playback: {
         audioLanguage: "",
         textLanguage: "",
@@ -80,12 +75,6 @@ var config = {
 >##### Description: Defines the player log level.
 >Possible values: `"DEBUG", "INFO", "TIME", "WARN", "ERROR", "OFF"`
 ##
->### config.type
->##### Type: `string`
->##### Default: `"Unknown"`
->##### Description: Defines the type of media being used.
->Possible values: `"Vod", "Live", "Image", "Audio", "Unknown"`
-##
 >### config.sources
 >##### Type: `PKSourcesConfig`
 >```js
@@ -93,7 +82,13 @@ var config = {
 >  dash: Array<PKMediaSourceObject>
 >  hls: Array<PKMediaSourceObject>
 >  progressive: Array<PKMediaSourceObject>,
->  options: PKMediaSourceOptionsObject
+>  options: PKMediaSourceOptionsObject,
+>  type: string,
+>  dvr: boolean,
+>  metadata: PKMetadataConfigObject,
+>  id?: string,
+>  poster?: string,
+>  duration?: number
 >}
 >```
 >>##### Type `PKMediaSourceObject`
@@ -124,15 +119,20 @@ var config = {
 >>  redirectExternalStreamsTimeout: ?number
 >>}
 >>```
+>>##### Type `PKMetadataConfigObject`
+>>```js
+>>{
+>>  name?: string,
+>>  description?: string
+>>}
+>>```
 >##### Default:
 >```js
 >{
->  hls: [],
->  dash: [],
->  progressive: [],
 >  options: {
 >    forceRedirectExternalStreams: false
->  }
+>  }.
+>  metadata: {}
 >}
 >```
 >##### Description: Defines related sources configurations.
@@ -193,7 +193,12 @@ var config = {
 >>##
 >>### config.sources.options
 >>##### Type: `PKMediaSourceOptionsObject`
->>##### Default: `{}`
+>>##### Default:
+>>```js
+>>{
+>>  forceRedirectExternalStreams: false
+>>}
+>>```
 >>##### Description: Defines the sources options.
 >>##
 >>>### config.sources.options.forceRedirectExternalStreams
@@ -210,6 +215,48 @@ var config = {
 >>>##### Type: `number`
 >>>##### Default: `-`
 >>>##### Description: The timeout for the redirect operation.
+>>##
+>>### config.sources.type
+>>##### Type: `string`
+>>##### Default: `-`
+>>##### Description: Defines the type of media being used.
+>>Possible values: `"Vod", "Live", "Image", "Audio", "Unknown"`.
+>>##
+>>### config.sources.dvr
+>>##### Type: `boolean`
+>>##### Default: `-`
+>>##### Description: Defines the dvr value.
+>>Relevant only if the media type=`"Live"`.
+>>##
+>>### config.sources.metadata
+>>##### Type: `PKMetadataConfigObject`
+>>##### Default: `{}`
+>>##### Description: Defines the metadata of the media.
+>>##
+>>>### config.sources.metadata.name
+>>>##### Type: `string`
+>>>##### Default: `-`
+>>>##### Description: The name of the media.
+>>>##
+>>>### config.sources.metadata.description
+>>>##### Type: `string`
+>>>##### Default: `-`
+>>>##### Description: The description of the media.
+>>##
+>>### config.sources.id
+>>##### Type: `string`
+>>##### Default: `-`
+>>##### Description: The id of the media.
+>>##
+>>### config.sources.poster
+>>##### Type: `string`
+>>##### Default: `-`
+>>##### Description: The poster url of the media.
+>>##
+>>### config.sources.duration
+>>##### Type: `number`
+>>##### Default: `-`
+>>##### Description: The duration of the media.
 ##
 >### config.plugins
 >##### Type: `PKPluginsObject`
@@ -226,31 +273,6 @@ var config = {
 >    }
 >};
 >```
-##
->### config.metadata
->##### Type: `PKMetadataConfigObject`
->```js
->{
->    poster: string,
->    description: string
->}
->```
->##### Default:
->```js
->{}
->```
->##### Description: Defines the media metadata.
->The poster field refers to the poster URL, which the player displays before playback begins.
->#### Example:
->```js
->var config = {
->    metadata: {
->       description: "MPEG Dash with MultiAudio New Transcoding",
->       poster: "http://cdntesting.qa.mkaltura.com/p/1091/sp/109100/thumbnail/entry_id/0_wifqaipd/version/100042"
->    }
->};
->```
->Note: This object can include additional custom fields, which you can implement depending on your player needs.
 ##
 >### config.playback
 >##### Type: `PKPlaybackConfig`
@@ -482,6 +504,39 @@ var config = {
 >>##### Description: Specifies the list of engine and stream format pairs of the player by ascending order.
 >>As soon as the player receives the sources, it will review the configuration array and try to play the source with the matched stream format according to the matched engine.
 >>For example, in the priority configuration above, the player will try to play the hls stream using an html5 engine first. If an hls stream isn't received, the player will continue to play the dash stream using an html5 engine. If a dash stream isn't received, the player will then will continue to play the progressive stream using an html5 engine.
+##
+>### config.session
+>##### Type: `PKSessionConfigObject`
+>```js
+>{
+>  id: string,
+>  ks: string,
+>  partnerId: number,
+>  uiConfId: number
+>}
+>```
+>##### Default: `-`
+>##### Description: Defines the session data (optional).
+>>##
+>>### config.session.id
+>>##### Type: `string`
+>>##### Default: `-`
+>>##### Description: The session id.
+>>##
+>>### config.session.ks
+>>##### Type: `string`
+>>##### Default: `-`
+>>##### Description: The session secret.
+>>##
+>>### config.session.partnerId
+>>##### Type: `number`
+>>##### Default: `-`
+>>##### Description: The partner id.
+>>##
+>>### config.session.uiConfId
+>>##### Type: `number`
+>>##### Default: `-`
+>>##### Description: The ui configuration id.
 >##
 >### config.customLabels
 >##### Type: `PKCustomLabelsConfigObject`
@@ -515,6 +570,4 @@ var config = {
 >};
 >```
 ##
-
-
 Now that we've learned about the different options available in the player configuration, let's see [how does the source selection logic works](./source-selection-logic.md).
