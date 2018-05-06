@@ -485,29 +485,33 @@ var config = {
 >##
 >### config.customLabels
 >##### Type: `PKPLabelConfigObject`
->##### Default: not present.
+>```js
+>{
+>  audio: Function,
+>  qualities: Function,
+>  captions: Function
+>}
+>```
+>##### Default: `-`
 >##### Description: Specifies callback functions that modify the default label of a track. If this section or one of the keys is not present, the player will use a default label.
 >This part of the configuration has three possible keys:
-> - audio (for audio tracks)
-> - qualities (for video tracks)
-> - captions (for text tracks)
+> - audio (for Audio tracks).
+> - qualities (for Video tracks).
+> - captions (for Text tracks).
 >
 > The value of the keys is a reference to a function.
 > The function gets a track object as an input and returns a string with the custom label.
-> Here is an example how to use this configuration:
+> Here is an example to a possible use of this configuration:
 > ```js
-> var config = {
->  customLabels: {
->    qualities: qualitiesLabelCallback
->  }
->};
-> ...
->function qualitiesLabelCallback(track) {
->  if (track.height > 500) {
->    return "High";
->  } else {
->    return "Low"
->  }
+>var config = {
+>     customLabels: {
+>       qualities: function (videoTrack) {
+>           if (videoTrack.height > 500) {
+>               return 'High';
+>           }
+>           return 'Low';
+>        }
+>    }
 >};
 >```
 ##
