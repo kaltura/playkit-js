@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.27.0"></a>
+# [0.27.0](https://github.com/kaltura/playkit-js/compare/v0.26.0...v0.27.0) (2018-05-06)
+
+
+### Bug Fixes
+
+* **FEC-8176:** restructure player config ([#223](https://github.com/kaltura/playkit-js/issues/223)) ([22c20c2](https://github.com/kaltura/playkit-js/commit/22c20c2))
+
+
+### Features
+
+* **FEC-7916:** support Fairplay DRM on Mobile safari 11 on iOS ([#219](https://github.com/kaltura/playkit-js/issues/219)) ([c7b7498](https://github.com/kaltura/playkit-js/commit/c7b7498))
+* **FEC-8123:** add clone support for custom types ([#217](https://github.com/kaltura/playkit-js/issues/217)) ([482bd29](https://github.com/kaltura/playkit-js/commit/482bd29))
+* **FEC-8140:** expose tracks as immutable on API ([#218](https://github.com/kaltura/playkit-js/issues/218)) ([a53587d](https://github.com/kaltura/playkit-js/commit/a53587d))
+
+
+
 <a name="0.26.0"></a>
 # [0.26.0](https://github.com/kaltura/playkit-js/compare/v0.25.1...v0.26.0) (2018-04-25)
 
