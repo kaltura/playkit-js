@@ -898,17 +898,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Set player session id
-   * @param {string} sessionId - the player session id to set
-   * @returns {void}
-   * @public
-   */
-  set sessionId(sessionId: string): void {
-    this._config.session = this._config.session || {};
-    this._config.session.id = sessionId;
-  }
-
-  /**
    * Set the _loadingMedia flag to inform the player that a load media request has sent.
    * @param {boolean} loading - Whether a load media request has sent.
    * @returns {void}
