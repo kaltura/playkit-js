@@ -35,7 +35,7 @@ var config = {
         textLanguage: "",
         useNativeTextTrack: false,
         volume: 1,
-        startTime: 0,
+        startTime: -1,
         playsinline: true,
         preload: "none",
         autoplay: false,
@@ -300,7 +300,7 @@ var config = {
 >  textLanguage: "",
 >  useNativeTextTrack: false,
 >  volume: 1,
->  startTime: 0,
+>  startTime: -1,
 >  playsinline: true,
 >  preload: "none",
 >  autoplay: false,
@@ -396,8 +396,9 @@ var config = {
 >##
 >>### config.playback.startTime
 >>##### Type: `number`
->>##### Default: `0`
->>##### Description: Defines the start time of the video in seconds.
+>>##### Default: `-1`
+>>##### Description: Optional start time, in seconds, to begin playback.
+>> Default -1 refer to automatic start time - 0 to VOD and live edge to live.
 >##
 >>### config.playback.playsinline
 >>##### Type: `boolean`
