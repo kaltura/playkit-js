@@ -220,7 +220,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           this._videoElement.src = this._sourceObj.url;
           this._trigger(CustomEventType.ABR_MODE_CHANGED, {mode: this._isProgressivePlayback() ? 'manual' : 'auto'});
         }
-        if (startTime) {
+        if (startTime && startTime > -1) {
           this._videoElement.currentTime = startTime;
         }
         this._videoElement.load();

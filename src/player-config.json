@@ -12,7 +12,7 @@
     "textLanguage": "",
     "useNativeTextTrack": false,
     "volume": 1,
-    "startTime": 0,
+    "startTime": -1,
     "playsinline": true,
     "preload": "none",
     "autoplay": false,
