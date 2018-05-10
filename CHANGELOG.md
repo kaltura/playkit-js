@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.27.1"></a>
+## [0.27.1](https://github.com/kaltura/playkit-js/compare/v0.27.0...v0.27.1) (2018-05-10)
+
+
+### Bug Fixes
+
+* **FEC-8202:** Session ID isn't sent when reporting analytics ([#224](https://github.com/kaltura/playkit-js/issues/224)) ([9133edb](https://github.com/kaltura/playkit-js/commit/9133edb))
+* **FEC-8203:** Live with DVR is not playing live edge in first play ([#225](https://github.com/kaltura/playkit-js/issues/225)) ([042baec](https://github.com/kaltura/playkit-js/commit/042baec))
+
+
+
 <a name="0.27.0"></a>
 # [0.27.0](https://github.com/kaltura/playkit-js/compare/v0.26.0...v0.27.0) (2018-05-06)
 
