@@ -55,6 +55,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _canLoadMediaSourceAdapterPromise: Promise<*>;
+  /**
+   * Flag that indicates the status of the engine (playing or paused)
+   * @type {boolean}
+   * @private
+   */
+  _isPlaying: boolean = false;
 
   /**
    * The html5 class logger.
@@ -232,6 +238,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         }
       });
     });
+    this._eventManager.listen(this._el, Html5EventType.PLAY, () => this._onPlay());
+    this._eventManager.listen(this._el, Html5EventType.PAUSE, () => this._onPause());
     if (this._mediaSourceAdapter) {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.AUDIO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
@@ -242,6 +250,36 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.TIME_UPDATE, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.PLAYING, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.MEDIA_RECOVERED, () => this._handleRecovered());
+    }
+  }
+
+  /**
+   * setting the state of the onPlaying property upon play.
+   * @returns {void}
+   * @private
+   */
+  _onPlay(): void {
+    this._isPlaying = true;
+  }
+
+  /**
+   * setting the state of the onPlaying property upon pause
+   * @returns {void}
+   * @private
+   */
+  _onPause(): void {
+    this._isPlaying = false;
+  }
+
+  /**
+   * if the media was recovered (after a media failure) then initiate play again (if that was the state before)
+   * @returns {void}
+   * @private
+   */
+  _handleRecovered(): void {
+    if (this._isPlaying) {
+      this.play();
     }
   }
 

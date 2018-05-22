@@ -258,7 +258,11 @@ const CustomEventType: EventTypes = {
   /**
    * Fired on ad time progress.
    */
-  AD_PROGRESS: 'adprogress'
+  AD_PROGRESS: 'adprogress',
+  /**
+   * Fired when the adapter recovered from a media error
+   */
+  MEDIA_RECOVERED: 'mediarecovered'
 };
 
 const EventType: EventTypes = Utils.Object.merge([Html5EventType, CustomEventType]);
