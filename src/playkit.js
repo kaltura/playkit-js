@@ -57,11 +57,11 @@ export {Error};
 // Export Event system
 export {FakeEvent, FakeEventTarget, EventManager}
 
-// Export version
-export {__VERSION__ as VERSION};
-
-// Export player name
-export {__NAME__ as PLAYER_NAME};
+const VERSION = __VERSION__;
+const NAME = __NAME__;
+const PLAYER_NAME = __NAME__;
+// Export version and name
+export {VERSION, PLAYER_NAME, NAME};
 
 // Export environment data
 export {Env};

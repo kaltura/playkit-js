@@ -2,7 +2,7 @@
 
 const webpack = require("webpack");
 const path = require("path");
-const PROD = (process.env.NODE_ENV === 'production');
+// const PROD = (process.env.NODE_ENV === 'production');
 const packageData = require("./package.json");
 
 let plugins = [
@@ -11,10 +11,6 @@ let plugins = [
     __NAME__: JSON.stringify(packageData.name)
   })
 ];
-
-if (PROD) {
-  plugins.push(new webpack.optimize.UglifyJsPlugin({sourceMap: true}));
-}
 
 module.exports = {
   context: __dirname + "/src",
@@ -27,33 +23,19 @@ module.exports = {
     library: ['playkit', 'core'],
     libraryTarget: 'umd',
     umdNamedDefine: true,
-    devtoolModuleFilenameTemplate: "./core/[resource-path]",
+    devtoolModuleFilenameTemplate: "./playkit/core/[resource-path]",
   },
   devtool: 'source-map',
   plugins: plugins,
   module: {
-    rules: [{
-      test: /\.js$/,
-      use: [{
-        loader: "babel-loader"
-      }],
-      exclude: [
-        /node_modules/
-      ]
-    }, {
-      test: /\.js$/,
-      exclude: [
-        /node_modules/
-      ],
-      enforce: 'pre',
-      use: [{
-        loader: 'eslint-loader',
-        options: {
-          rules: {
-            semi: 0
-          }
-        }
-      }],
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: [
+          "babel-loader",
+          "eslint-loader",
+        ]
     }, {
       test: /\.css$/,
       use: [{

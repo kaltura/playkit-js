@@ -85,7 +85,7 @@ export default class PluginManager {
       logger.debug(`Plugin <${name}> has been loaded`);
       return true;
     }
-    logger.debug(`Plugin <${name}> isn\'t loaded, isValid()=false`);
+    logger.debug(`Plugin <${name}> isn't loaded, isValid()=false`);
     return false;
   }
 
