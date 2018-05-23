@@ -11,7 +11,7 @@ import {Cue} from '../../track/vtt-cue'
 import * as Utils from '../../utils/util'
 import Html5AutoPlayCapability from './capabilities/html5-autoplay'
 import Html5IsSupportedCapability from './capabilities/html5-is-supported'
-import Error from "../../error/error";
+import Error from '../../error/error'
 import getLogger from '../../utils/logger'
 
 /**
@@ -55,12 +55,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _canLoadMediaSourceAdapterPromise: Promise<*>;
-  /**
-   * Flag that indicates the status of the engine (playing or paused)
-   * @type {boolean}
-   * @private
-   */
-  _isPlaying: boolean = false;
 
   /**
    * The html5 class logger.
@@ -248,18 +242,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.TIME_UPDATE, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.PLAYING, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.MEDIA_RECOVERED, () => this._handleRecovered());
-    }
-  }
-
-  /**
-   * if the media was recovered (after a media failure) then initiate play again (if that was the state before)
-   * @returns {void}
-   * @private
-   */
-  _handleRecovered(): void {
-    if (this._isPlaying) {
-      this.play();
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.MEDIA_RECOVERED, (event: FakeEvent) => this.dispatchEvent(event));
     }
   }
 
@@ -453,7 +436,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     if (playPromise) {
       playPromise.catch(() => this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED)));
     }
-    this._isPlaying = true;
   }
 
   /**
@@ -462,7 +444,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   pause(): void {
-    this._isPlaying = false;
     return this._el.pause();
   }
 
