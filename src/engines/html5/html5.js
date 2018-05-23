@@ -238,8 +238,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         }
       });
     });
-    this._eventManager.listen(this._el, Html5EventType.PLAY, () => this._onPlay());
-    this._eventManager.listen(this._el, Html5EventType.PAUSE, () => this._onPause());
     if (this._mediaSourceAdapter) {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.AUDIO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
@@ -252,24 +250,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.PLAYING, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.MEDIA_RECOVERED, () => this._handleRecovered());
     }
-  }
-
-  /**
-   * setting the state of the onPlaying property upon play.
-   * @returns {void}
-   * @private
-   */
-  _onPlay(): void {
-    this._isPlaying = true;
-  }
-
-  /**
-   * setting the state of the onPlaying property upon pause
-   * @returns {void}
-   * @private
-   */
-  _onPause(): void {
-    this._isPlaying = false;
   }
 
   /**
@@ -473,6 +453,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     if (playPromise) {
       playPromise.catch(() => this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED)));
     }
+    this._isPlaying = true;
   }
 
   /**
@@ -481,6 +462,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   pause(): void {
+    this._isPlaying = false;
     return this._el.pause();
   }
 
