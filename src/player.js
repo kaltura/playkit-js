@@ -1306,7 +1306,12 @@ export default class Player extends FakeEventTarget {
         } else {
           // We allow to load plugins as long as the player has no engine
           if (!this._engine) {
-            this._pluginManager.load(name, this, plugins[name]);
+            try {
+              this._pluginManager.load(name, this, plugins[name]);
+            } catch (e) {
+              //bounce the plugin load error up
+              this.dispatchEvent(e);
+            }
             let plugin = this._pluginManager.get(name);
             if (plugin) {
               this._config.plugins[name] = plugin.getConfig();
