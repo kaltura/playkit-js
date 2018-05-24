@@ -1308,7 +1308,7 @@ export default class Player extends FakeEventTarget {
           if (!this._engine) {
             try {
               this._pluginManager.load(name, this, plugins[name]);
-            } catch(e){
+            } catch (e) {
               //bounce the plugin load error up
               this.dispatchEvent(e);
             }
