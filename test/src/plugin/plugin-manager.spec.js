@@ -29,28 +29,16 @@ describe('PluginManager.registry', () => {
   });
 
   it('shouldn\'t register the plugin because handler is not a function', () => {
-    let exceptionOccurred = false;
-    try {
-      PluginManager.register("numbers", {});
-    } catch (e) {
-      exceptionOccurred = true;
-      e.code.should.equals(7005);
-      e.data.should.equals("numbers");
-    }
-    exceptionOccurred.should.be.true;
+    unRegisterAll();
+    PluginManager.register("numbers", {}).should.be.false;
+    (PluginManager._registry.get("numbers") === undefined).should.be.true;
   });
 
   it('shouldn\'t register the plugin because handler isn\'t derived from BasePlugin', () => {
-    let exceptionOccurred = false;
-    try {
-      PluginManager.register("numbers", function () {
-      });
-    } catch (e) {
-      exceptionOccurred = true;
-      e.code.should.equals(7005);
-      e.data.should.equals("numbers");
-    }
-    exceptionOccurred.should.be.true;
+    unRegisterAll();
+    PluginManager.register("numbers", function () {
+    }).should.be.false;
+    (PluginManager._registry.get("numbers") === undefined).should.be.true;
   });
 
   it('should register new plugins', () => {
