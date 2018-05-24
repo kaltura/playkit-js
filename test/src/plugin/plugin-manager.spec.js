@@ -29,18 +29,14 @@ describe('PluginManager.registry', () => {
   });
 
   it('shouldn\'t register the plugin because handler is not a function', () => {
-    const registered = PluginManager.register("numbers", {});
-    const plugin = PluginManager.get("numbers");
-    plugin.should.be.undefined;
-    registered.should.be.false;
+    PluginManager.register("numbers", {}).should.be.false;
+    PluginManager._registry.get("numbers").should.be.undefined;
   });
 
   it('shouldn\'t register the plugin because handler isn\'t derived from BasePlugin', () => {
-    const registered = PluginManager.register("numbers", function () {
-    });
-    const plugin = PluginManager.get("numbers");
-    plugin.should.be.undefined;
-    registered.should.be.false;
+    PluginManager.register("numbers", function () {
+    }).should.be.false;
+    PluginManager._registry.get("numbers").should.be.undefined;
   });
 
   it('should register new plugins', () => {
