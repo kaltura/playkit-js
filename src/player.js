@@ -168,21 +168,17 @@ export default class Player extends FakeEventTarget {
    * @static
    */
   static getCapabilities(engineType: ?string): Promise<{ [name: string]: any }> {
-    const resolveCapabilities = (engineType: ?string): Promise<Object> => {
-      const result = (engineType ? Player._playerCapabilities[engineType] : Player._playerCapabilities);
-      return Utils.Object.copyDeep(result);
-    };
     Player._logger.debug("Get player capabilities", engineType);
-    if (Player._playerCapabilities) {
-      return Promise.resolve(resolveCapabilities(engineType));
-    }
     const promises = [];
     Player._engines.forEach(Engine => promises.push(Engine.getCapabilities()));
     return Promise.all(promises)
       .then((arrayOfResults) => {
-        Player._playerCapabilities = {};
-        arrayOfResults.forEach(res => Object.assign(Player._playerCapabilities, res));
-        return Promise.resolve(resolveCapabilities(engineType));
+        const playerCapabilities = {};
+        arrayOfResults.forEach(res => Object.assign(playerCapabilities, res));
+        if (Player._playerCapabilities) {
+          Utils.Object.mergeDeep(playerCapabilities, Player._playerCapabilities);
+        }
+        return (engineType ? playerCapabilities[engineType] : playerCapabilities);
       });
   }
 
@@ -190,23 +186,16 @@ export default class Player extends FakeEventTarget {
    * Sets an engine capabilities.
    * @param {string} engineType - The engine type.
    * @param {Object} capabilities - The engine capabilities.
-   * @return {Promise<*>} - Empty promise which resolved when the operation ends.
+   * @returns {void}
    * @public
    * @static
    */
-  static setCapabilities(engineType: string, capabilities: { [name: string]: any }): Promise<*> {
+  static setCapabilities(engineType: string, capabilities: { [name: string]: any }): void {
     Player._logger.debug("Set player capabilities", engineType, capabilities);
-    return new Promise((resolve, reject) => {
-      Player.getCapabilities().then(() => {
-        if (!Player._playerCapabilities[engineType]) {
-          Player._playerCapabilities[engineType] = {};
-        }
-        Utils.Object.mergeDeep(Player._playerCapabilities[engineType], capabilities);
-        resolve();
-      }).catch(e => {
-        reject(e)
-      });
-    });
+    if (!Player._playerCapabilities) {
+      Player._playerCapabilities = {};
+    }
+    Player._playerCapabilities[engineType] = Utils.Object.mergeDeep({}, Player._playerCapabilities[engineType], capabilities);
   }
 
   /**
@@ -348,12 +337,6 @@ export default class Player extends FakeEventTarget {
    */
   _streamType: string;
   /**
-   * Flag to indicate whether is the first play in the current session.
-   * @type {boolean}
-   * @private
-   */
-  _firstPlayInCurrentSession: boolean;
-  /**
    * The current playback attributes state
    * @type {Object}
    * @private
@@ -417,7 +400,6 @@ export default class Player extends FakeEventTarget {
     this._tracks = [];
     this._firstPlay = true;
     this._fullscreen = false;
-    this._firstPlayInCurrentSession = true;
     this._repositionCuesTimeout = false;
     this._loadingMedia = false;
     this._loading = false;
@@ -1558,42 +1540,41 @@ export default class Player extends FakeEventTarget {
    */
   _handleAutoPlay(): void {
     if (this._config.playback.autoplay === true) {
-      if (!this._firstPlayInCurrentSession) {
-        if (this._fallbackToMutedAutoPlay) {
-          this.dispatchEvent(new FakeEvent(CustomEventType.FALLBACK_TO_MUTED_AUTOPLAY));
-        }
-        this.play();
-      } else {
-        const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
-        Player.getCapabilities(this.engineType)
-          .then((capabilities) => {
-            if (capabilities.autoplay) {
-              Player._logger.debug("Start autoplay");
-              this.play();
-            } else {
-              if (capabilities.mutedAutoPlay) {
-                if (this.muted) {
-                  Player._logger.debug("Start muted autoplay");
-                  this.play();
-                } else if (allowMutedAutoPlay) {
-                  Player._logger.debug("Fallback to muted autoplay");
-                  this._fallbackToMutedAutoPlay = true;
-                  this.muted = true;
-                  this.dispatchEvent(new FakeEvent(CustomEventType.FALLBACK_TO_MUTED_AUTOPLAY));
-                  this.play();
-                }
-              } else {
-                Player._logger.warn("Autoplay failed, pause player");
-                this._posterManager.show();
-                if (this._canPreload()) {
-                  this.load();
-                  this.ready().then(() => this.pause());
-                }
-                this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED));
-              }
+      const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
+      Player.getCapabilities(this.engineType)
+        .then((capabilities) => {
+          if (capabilities.autoplay) {
+            Player._logger.debug("Start autoplay");
+            // If the previous state was fallback to muted autoplay:
+            // unmute the player and clear the fallback state
+            if (this._fallbackToMutedAutoPlay) {
+              this._fallbackToMutedAutoPlay = false;
+              this.muted = false;
             }
-          });
-      }
+            this.play();
+          } else {
+            if (capabilities.mutedAutoPlay) {
+              if (this.muted && !this._fallbackToMutedAutoPlay) {
+                Player._logger.debug("Start muted autoplay");
+                this.play();
+              } else if (allowMutedAutoPlay) {
+                Player._logger.debug("Fallback to muted autoplay");
+                this._fallbackToMutedAutoPlay = true;
+                this.muted = true;
+                this.dispatchEvent(new FakeEvent(CustomEventType.FALLBACK_TO_MUTED_AUTOPLAY));
+                this.play();
+              }
+            } else {
+              Player._logger.warn("Autoplay failed, pause player");
+              this._posterManager.show();
+              if (this._canPreload()) {
+                this.load();
+                this.ready().then(() => this.pause());
+              }
+              this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED));
+            }
+          }
+        });
     } else {
       this._posterManager.show();
     }
@@ -1712,7 +1693,6 @@ export default class Player extends FakeEventTarget {
   _resetStateFlags(): void {
     this._loading = false;
     this._firstPlay = true;
-    this._firstPlayInCurrentSession = false;
     this._loadingMedia = false;
     this._playbackStarted = false;
   }
