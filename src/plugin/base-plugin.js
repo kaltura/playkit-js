@@ -38,11 +38,6 @@ export default class BasePlugin implements IPlugin {
    */
   eventManager: EventManager;
   /**
-   * Weather it is disabled or not
-   * @member
-   */
-  static _disabled: boolean = false;
-  /**
    * The default configuration of the plugin.
    * Inherited plugins should override this property.
    * @type {Object}
@@ -104,26 +99,6 @@ export default class BasePlugin implements IPlugin {
       return Utils.Object.copyDeep(this.config[attr]);
     }
     return Utils.Object.copyDeep(this.config);
-  }
-
-  /**
-   * getter for _disabled property
-   * @returns {boolean} the disabled property
-   * @static
-   * @public
-   */
-  static get disabled(): boolean {
-    return this._disabled;
-  }
-
-  /**
-   * @param {boolean} disable - should we disable the plugin or not
-   * @returns {void}
-   * @static
-   * @public
-   */
-  static set disabled(disable: boolean): void{
-    this._disabled = disable;
   }
 
   /**

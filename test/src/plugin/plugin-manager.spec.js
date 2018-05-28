@@ -111,8 +111,7 @@ describe('PluginManager.plugins', () => {
   });
 
   it('shouldn\'t load() the plugin, plugin is disabled in the config', () => {
-    pluginManager._maybeDisablePlugin(ColorsPlugin, true);
-    pluginManager.load("colors", {}, {}).should.be.false;
+    pluginManager.load("colors", {}, {disable: true}).should.be.false;
   });
 
   it('should load() the plugins', () => {

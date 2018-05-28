@@ -82,27 +82,13 @@ export default class PluginManager {
       throw new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_NOT_REGISTERED_PLUGIN, name);
     }
     let pluginClass = PluginManager._registry.get(name);
-    this._maybeDisablePlugin(pluginClass, config.disable);
-    if (pluginClass && pluginClass.isValid() && !pluginClass.disabled) {
+    if (pluginClass && pluginClass.isValid() && !config.disable) {
       this._plugins.set(name, pluginClass.createPlugin(name, player, config));
       logger.debug(`Plugin <${name}> has been loaded`);
       return true;
     }
-    logger.debug(`Plugin <${name}> isn\'t loaded, isValid()=${(!!pluginClass && pluginClass.isValid()).toString()}, disabled=${(!!pluginClass && pluginClass.disabled).toString()}`);
+    logger.debug(`Plugin <${name}> isn\'t loaded, isValid()=false or it's disabled`);
     return false;
-  }
-
-  /**
-   * sets the disabled property.
-   * @param {Function} pluginClass - the current plugin
-   * @param {boolean} disable - config
-   * @returns {void}
-   * @private
-   */
-  _maybeDisablePlugin(pluginClass: ?Function, disable: boolean): void {
-    if (typeof disable !== 'undefined' && pluginClass) {
-      pluginClass.disabled = disable;
-    }
   }
 
   /**
