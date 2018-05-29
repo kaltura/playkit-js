@@ -273,6 +273,21 @@ var config = {
 >    }
 >};
 >```
+>  ##
+>>### config.plugins.myAwesomePlugin.disable
+>>##### Type: `boolean`
+>>##### Default: `true`
+>>##### Description: disable a specific plugin.
+>>#### Expample:
+>>```js
+>>var config = {
+>>    plugins: {
+>>        myAwesomePlugin: {
+>>             disable: true
+>>        }
+>>    }
+>>};
+>>```
 ##
 >### config.playback
 >##### Type: `PKPlaybackConfig`
