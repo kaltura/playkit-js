@@ -108,7 +108,7 @@ export default class StateManager {
       },
       [Html5EventType.WAITING]: () => {
         this._updateState(StateType.BUFFERING);
-        this._prevSeekTime = this._player.currentTime;
+        this._lastWaitingTime = this._player.currentTime;
         this._dispatchEvent();
       },
       [Html5EventType.ENDED]: () => {
