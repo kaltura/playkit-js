@@ -48,6 +48,13 @@ export default class StateManager {
    */
   _prevState: State | null;
   /**
+   * Holds the time of the last seek
+   * @member
+   * @type {number | null}
+   * @private
+   */
+  _prevSeekTime: number;
+  /**
    * Holds the state history of the player.
    * @member
    * @type {Array<State>}
@@ -101,6 +108,7 @@ export default class StateManager {
       },
       [Html5EventType.WAITING]: () => {
         this._updateState(StateType.BUFFERING);
+        this._prevSeekTime = this._player.currentTime;
         this._dispatchEvent();
       },
       [Html5EventType.ENDED]: () => {
@@ -123,6 +131,12 @@ export default class StateManager {
       },
       [Html5EventType.SEEKED]: () => {
         if (this._prevState && this._prevState.type === StateType.PLAYING) {
+          this._updateState(StateType.PLAYING);
+          this._dispatchEvent();
+        }
+      },
+      [Html5EventType.TIME_UPDATE]: () => {
+        if (this._player && this._player.currentTime !== this._prevSeekTime) {
           this._updateState(StateType.PLAYING);
           this._dispatchEvent();
         }
@@ -159,6 +173,7 @@ export default class StateManager {
     this._eventManager.listen(this._player, Html5EventType.PAUSE, this._doTransition.bind(this));
     this._eventManager.listen(this._player, Html5EventType.WAITING, this._doTransition.bind(this));
     this._eventManager.listen(this._player, Html5EventType.SEEKED, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, this._doTransition.bind(this));
   }
 
   /**
