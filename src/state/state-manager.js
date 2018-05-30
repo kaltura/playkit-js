@@ -48,7 +48,7 @@ export default class StateManager {
    */
   _prevState: State | null;
   /**
-   * Holds the time of the last seek
+   * Holds the time of the beginning of the last buffering (waiting event)
    * @member
    * @type {number | null}
    * @private
