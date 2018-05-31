@@ -258,7 +258,19 @@ const CustomEventType: EventTypes = {
   /**
    * Fired on ad time progress.
    */
-  AD_PROGRESS: 'adprogress'
+  AD_PROGRESS: 'adprogress',
+  /**
+   * Fired on fragment started to load.
+   */
+  FRAG_LOADING: 'fragloading',
+  /**
+   * Fired on fragment loaded.
+   */
+  FRAG_LOADED: 'fragloaded',
+  /**
+   * Fired on fragment abort.
+   */
+  FRAG_ABORTED: 'fragaborted'
 };
 
 const EventType: EventTypes = Utils.Object.merge([Html5EventType, CustomEventType]);

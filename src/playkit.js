@@ -25,6 +25,7 @@ import {MediaType} from './media-type'
 import {EventType} from './event/event-type'
 import {AbrMode} from './track/abr-mode-type'
 import {LogLevelType} from './utils/logger'
+import {FragmentData, RequestTypes} from "./engines/fragment-data";
 
 Player.runCapabilities();
 
@@ -56,6 +57,8 @@ export {Error};
 
 // Export Event system
 export {FakeEvent, FakeEventTarget, EventManager}
+
+export {FragmentData, RequestTypes}
 
 // Export version
 export {__VERSION__ as VERSION};

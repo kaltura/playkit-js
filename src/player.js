@@ -1429,6 +1429,7 @@ export default class Player extends FakeEventTarget {
         this._markActiveTrack(event.payload.selectedVideoTrack);
         return this.dispatchEvent(event);
       });
+
       this._eventManager.listen(this._engine, CustomEventType.AUDIO_TRACK_CHANGED, (event: FakeEvent) => {
         this.ready().then(() => this._playbackAttributesState.audioLanguage = event.payload.selectedAudioTrack.language);
         this._markActiveTrack(event.payload.selectedAudioTrack);
@@ -1464,6 +1465,11 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this, CustomEventType.EXIT_FULLSCREEN, () => {
         this._resetTextCuesAndReposition();
       });
+
+      this._eventManager.listen(this._engine, CustomEventType.FRAG_LOADING, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._engine, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._engine, CustomEventType.FRAG_ABORTED, (event: FakeEvent) => this.dispatchEvent(event));
+
     }
   }
 
