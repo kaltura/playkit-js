@@ -53,7 +53,7 @@ export default class StateManager {
    * @type {number | null}
    * @private
    */
-  _lastWaitingTime: number;
+  _lastWaitingTime: ?number | null;
   /**
    * Holds the state history of the player.
    * @member
@@ -136,7 +136,7 @@ export default class StateManager {
         }
       },
       [Html5EventType.TIME_UPDATE]: () => {
-        if (this._player && this._player.currentTime !== this._lastWaitingTime
+        if (this._player.currentTime !== this._lastWaitingTime
           && this._prevState && this._prevState.type === StateType.PLAYING) {
           this._lastWaitingTime = null;
           this._updateState(StateType.PLAYING);
