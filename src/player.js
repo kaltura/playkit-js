@@ -1702,6 +1702,9 @@ export default class Player extends FakeEventTarget {
     if (!this.paused) {
       this._pause();
     }
+    this._eventManager.listenOnce(this, Html5EventType.PLAY, () => {
+      this.dispatchEvent(new FakeEvent(CustomEventType.REPLAY));
+    });
   }
 
   /**
