@@ -176,7 +176,7 @@ const CustomEventType: EventTypes = {
    */
   FIRST_PLAY: 'firstplay',
   /**
-   * Fires on the replay.
+   * Fires on replay.
    */
   REPLAY: 'replay',
   /**
