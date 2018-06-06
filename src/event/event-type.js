@@ -176,6 +176,10 @@ const CustomEventType: EventTypes = {
    */
   FIRST_PLAY: 'firstplay',
   /**
+   * Fires on replay.
+   */
+  REPLAY: 'replay',
+  /**
    * Fires on the first time that playback has been started.
    */
   PLAYBACK_STARTED: 'playbackstarted',

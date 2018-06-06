@@ -1696,6 +1696,70 @@ describe('Player', function () {
       });
     });
 
+    describe('replay', () => {
+      let config;
+      let player;
+      let playerContainer;
+
+      before(() => {
+        playerContainer = createElement('DIV', targetId);
+      });
+
+      beforeEach(() => {
+        config = getConfigStructure();
+      });
+
+      afterEach(() => {
+        player.destroy();
+      });
+
+      after(() => {
+        removeVideoElementsFromTestPage();
+        removeElement(targetId);
+      });
+
+      it('should fire replay', (done) => {
+        config.sources = sourcesConfig.Mp4;
+        player = new Player(config);
+        let replayCounter = 0;
+        playerContainer.appendChild(player.getView());
+        player.addEventListener(player.Event.REPLAY, () => {
+          replayCounter++;
+          player.pause();
+          player.play();
+          setTimeout(() => {
+            replayCounter.should.equal(1);
+            done();
+          }, 100);
+        });
+        player.addEventListener(player.Event.ENDED, () => {
+          player.play();
+        });
+        player.addEventListener(player.Event.LOADED_DATA, () => {
+          player.currentTime = player.duration - 1;
+        });
+        player.play();
+      });
+
+      it('should not fire replay when media has changed', (done) => {
+        config.sources = sourcesConfig.Mp4;
+        player = new Player(config);
+        playerContainer.appendChild(player.getView());
+        player.addEventListener(player.Event.REPLAY, () => {
+          done(new Error('replay event should not fired when media has changed'));
+        });
+        player.addEventListener(player.Event.ENDED, () => {
+          player.configure({sources: sourcesConfig.Mp4});
+          player.play();
+          setTimeout(done, 1000);
+        });
+        player.addEventListener(player.Event.LOADED_DATA, () => {
+          player.currentTime = player.duration - 1;
+        });
+        player.play();
+      });
+    });
+
     describe('change source', () => {
       let config, player;
 
