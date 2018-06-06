@@ -49,6 +49,7 @@ describe('events', () => {
       ABR_MODE_CHANGED: 'abrmodechanged',
       PLAYER_STATE_CHANGED: 'playerstatechanged',
       FIRST_PLAY: 'firstplay',
+      REPLAY: 'replay',
       SOURCE_SELECTED: 'sourceselected',
       TEXT_STYLE_CHANGED: 'textstylechanged',
       AD_LOADED: 'adloaded',

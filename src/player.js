@@ -282,6 +282,12 @@ export default class Player extends FakeEventTarget {
    */
   _playbackStarted: boolean;
   /**
+   * Whether the playback ended and next play is a replay
+   * @type {boolean}
+   * @private
+   */
+  _ended: boolean;
+  /**
    * The player DOM element container.
    * @type {HTMLDivElement}
    * @private
@@ -422,6 +428,7 @@ export default class Player extends FakeEventTarget {
     this._loadingMedia = false;
     this._loading = false;
     this._playbackStarted = false;
+    this._ended = false;
     this._reset = true;
     this._destroyed = false;
     this._fallbackToMutedAutoPlay = false;
@@ -1657,6 +1664,10 @@ export default class Player extends FakeEventTarget {
         this.playbackRate = this._playbackAttributesState.rate;
       }
     }
+    if (this._ended) {
+      this._ended = false;
+      this.dispatchEvent(new FakeEvent(CustomEventType.REPLAY));
+    }
   }
 
   /**
@@ -1702,9 +1713,7 @@ export default class Player extends FakeEventTarget {
     if (!this.paused) {
       this._pause();
     }
-    this._eventManager.listenOnce(this, Html5EventType.PLAY, () => {
-      this.dispatchEvent(new FakeEvent(CustomEventType.REPLAY));
-    });
+    this._ended = true;
   }
 
   /**
@@ -1718,6 +1727,7 @@ export default class Player extends FakeEventTarget {
     this._firstPlayInCurrentSession = false;
     this._loadingMedia = false;
     this._playbackStarted = false;
+    this._ended = false;
   }
 
   /**
