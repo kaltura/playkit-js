@@ -441,8 +441,13 @@ const _Http = {
       request.onreadystatechange = function () {
         if (request.readyState === 4) {
           if (request.status === 200) {
-            let jsonResponse = JSON.parse(request.responseText);
-            resolve(jsonResponse);
+            try{
+              let jsonResponse = JSON.parse(request.responseText);
+              resolve(jsonResponse);
+            }catch (e) {
+              resolve(request.responseText);
+            }
+
           } else {
             reject(request.responseText);
           }

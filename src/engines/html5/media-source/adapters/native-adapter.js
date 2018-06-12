@@ -93,6 +93,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _liveEdge: number;
+  /**
+   * indicates if we should use external captions.
+   * @member {boolean} - _useExternalCaptions
+   * @private
+   */
+  _useExternalCaptions: boolean;
 
   /**
    * Checks if NativeAdapter can play a given mime type.
@@ -155,6 +161,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     this._eventManager = new EventManager();
     this._maybeSetDrmPlayback();
     this._progressiveSources = config.sources.progressive;
+    this._useExternalCaptions = config.sources.captions;
     this._liveEdge = 0;
   }
 
@@ -240,7 +247,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._playerTracks = this._getParsedTracks();
       this._addNativeAudioTrackChangeListener();
       this._addNativeTextTrackChangeListener();
-      this._addNativeTextTrackAddedListener();
+      if (!this._useExternalCaptions){
+        this._addNativeTextTrackAddedListener();
+      }
       NativeAdapter._logger.debug('The source has been loaded successfully');
       resolve({tracks: this._playerTracks});
       if (this.isLive()) {

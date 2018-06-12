@@ -15,6 +15,10 @@ export default class TextTrack extends Track {
    */
   _kind: string;
 
+  _external: boolean;
+
+  _cues: Array<any>;
+
   /**
    * Getter for the kind of the text track.
    * @public
@@ -24,6 +28,14 @@ export default class TextTrack extends Track {
     return this._kind;
   }
 
+  get external(): boolean {
+    return this._external;
+  }
+
+  get cues() {
+    return this._cues;
+  }
+
   /**
    * @constructor
    * @param {Object} settings - The track settings object.
@@ -31,6 +43,8 @@ export default class TextTrack extends Track {
   constructor(settings: Object = {}) {
     super(settings);
     this._kind = settings.kind;
+    this._external = settings.external;
+    this._cues = settings.cues;
   }
 }
 

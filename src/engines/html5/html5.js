@@ -350,10 +350,39 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   selectTextTrack(textTrack: PKTextTrack): void {
     this._removeCueChangeListener();
-    if (this._mediaSourceAdapter) {
+    if (textTrack.external) {
+      this._selectExternalTextTrack(textTrack);
+    } else
+      if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.selectTextTrack(textTrack);
     }
     this._addCueChangeListener(textTrack);
+  }
+
+  _selectExternalTextTrack(track: PKTextTrack): void {
+    if (!track.active && this._el.textTracks) {
+      this.disableAllTextTracks();
+      track.active = true;
+      let selectedTrack;
+      const trackList = this._el.textTracks;
+      for (let i = 0; i < trackList.length; i++) {
+        if (trackList[i].label === track.label) {
+          selectedTrack = trackList[i];
+        }
+      }
+      if (selectedTrack) {
+        selectedTrack.mode = 'showing';
+      }
+      Html5._logger.debug('External text track changed', track);
+      this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: track}));
+    }
+  }
+
+  disableAllTextTracks(): void {
+    const textTracks = this._el.textTracks;
+    for (let i = 0; i < textTracks.length; i++) {
+      textTracks[i].mode = 'disabled';
+    }
   }
 
   /**
