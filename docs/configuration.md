@@ -273,11 +273,11 @@ var config = {
 >    }
 >};
 >```
->  ##
->>### config.plugins.myAwesomePlugin.disable
+>##
+>>### config.plugins.PLUGIN_NAME.disable
 >>##### Type: `boolean`
->>##### Default: `true`
->>##### Description: disable a specific plugin.
+>>##### Default: `false`
+>>##### Description: Allow to disable a specific plugin.
 >>#### Expample:
 >>```js
 >>var config = {
