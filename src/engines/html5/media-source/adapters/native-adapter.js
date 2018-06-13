@@ -221,6 +221,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           this._trigger(CustomEventType.ABR_MODE_CHANGED, {mode: this._isProgressivePlayback() ? 'manual' : 'auto'});
         }
       });
+      this._videoElement.load();
     }
     return this._loadPromise;
   }
