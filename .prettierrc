@@ -1,5 +1,5 @@
 {
-  "printWidth": 100,
+  "printWidth": 150,
   "tabWidth": 2,
   "useTabs": false,
   "semi": true,
@@ -8,13 +8,5 @@
   "bracketSpacing": false,
   "jsxBracketSameLine": true,
   "arrowParens": "avoid",
-  "proseWrap": "preserve",
-  "overrides": [
-    {
-      "files": "*.json",
-      "options": {
-        "printWidth": 200
-      }
-    }
-  ]
+  "proseWrap": "preserve"
 }
