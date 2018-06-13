@@ -400,6 +400,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _destroyed: boolean;
+  /**
+   * Fallback to muted auto play mode indicator.
+   * @type {boolean}
+   * @private
+   */
+  _fallbackToMutedAutoPlay: boolean;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -418,6 +424,7 @@ export default class Player extends FakeEventTarget {
     this._playbackStarted = false;
     this._reset = true;
     this._destroyed = false;
+    this._fallbackToMutedAutoPlay = false;
     this._config = Player._defaultConfig;
     this._eventManager = new EventManager();
     this._posterManager = new PosterManager();
@@ -782,6 +789,9 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.muted = mute;
       this.dispatchEvent(new FakeEvent(CustomEventType.MUTE_CHANGE, {mute: mute}));
+      if (mute === false) {
+        this._fallbackToMutedAutoPlay = mute;
+      }
     }
   }
 
@@ -1306,7 +1316,12 @@ export default class Player extends FakeEventTarget {
         } else {
           // We allow to load plugins as long as the player has no engine
           if (!this._engine) {
-            this._pluginManager.load(name, this, plugins[name]);
+            try {
+              this._pluginManager.load(name, this, plugins[name]);
+            } catch (e) {
+              //bounce the plugin load error up
+              this.dispatchEvent(e);
+            }
             let plugin = this._pluginManager.get(name);
             if (plugin) {
               this._config.plugins[name] = plugin.getConfig();
@@ -1547,7 +1562,8 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _canPreload(): boolean {
-    return !this._config.plugins || (this._config.plugins && !this._config.plugins.ima);
+    return !this._config.plugins || (this._config.plugins && !this._config.plugins.ima ||
+      (this._config.plugins.ima && this._config.plugins.ima.disable));
   }
 
   /**
@@ -1558,6 +1574,9 @@ export default class Player extends FakeEventTarget {
   _handleAutoPlay(): void {
     if (this._config.playback.autoplay === true) {
       if (!this._firstPlayInCurrentSession) {
+        if (this._fallbackToMutedAutoPlay) {
+          this.dispatchEvent(new FakeEvent(CustomEventType.FALLBACK_TO_MUTED_AUTOPLAY));
+        }
         this.play();
       } else {
         const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
@@ -1567,11 +1586,17 @@ export default class Player extends FakeEventTarget {
               Player._logger.debug("Start autoplay");
               this.play();
             } else {
-              if (allowMutedAutoPlay && capabilities.mutedAutoPlay) {
-                Player._logger.debug("Fallback to muted autoplay");
-                this.muted = true;
-                this.play();
-                this.dispatchEvent(new FakeEvent(CustomEventType.FALLBACK_TO_MUTED_AUTOPLAY));
+              if (capabilities.mutedAutoPlay) {
+                if (this.muted) {
+                  Player._logger.debug("Start muted autoplay");
+                  this.play();
+                } else if (allowMutedAutoPlay) {
+                  Player._logger.debug("Fallback to muted autoplay");
+                  this._fallbackToMutedAutoPlay = true;
+                  this.muted = true;
+                  this.dispatchEvent(new FakeEvent(CustomEventType.FALLBACK_TO_MUTED_AUTOPLAY));
+                  this.play();
+                }
               } else {
                 Player._logger.warn("Autoplay failed, pause player");
                 this._posterManager.show();

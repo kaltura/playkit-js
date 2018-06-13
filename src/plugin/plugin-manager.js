@@ -42,7 +42,8 @@ export default class PluginManager {
    */
   static register(name: string, handler: Function): boolean {
     if (typeof handler !== 'function' || handler.prototype instanceof BasePlugin === false) {
-      throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_NOT_VALID_HANDLER, name);
+      logger.error(`Plugin <${name}> registration failed, either plugin is not an instance of BasePlugin or plugin handler is not a function`);
+      return false;
     }
     if (!PluginManager._registry.has(name)) {
       PluginManager._registry.set(name, handler);
@@ -77,15 +78,16 @@ export default class PluginManager {
    */
   load(name: string, player: Player, config: Object = {}): boolean {
     if (!PluginManager._registry.has(name)) {
-      throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_NOT_REGISTERED_PLUGIN, name);
+      logger.warn(`Plugin <${name}> loading failed, plugin is not registered`);
+      throw new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_NOT_REGISTERED_PLUGIN, name);
     }
     let pluginClass = PluginManager._registry.get(name);
-    if (pluginClass && pluginClass.isValid()) {
+    if (pluginClass && pluginClass.isValid() && !config.disable) {
       this._plugins.set(name, pluginClass.createPlugin(name, player, config));
       logger.debug(`Plugin <${name}> has been loaded`);
       return true;
     }
-    logger.debug(`Plugin <${name}> isn\'t loaded, isValid()=false`);
+    logger.debug(`Plugin <${name}> isn\'t loaded, isValid()=false, disabled=${config.disable}`);
     return false;
   }
 

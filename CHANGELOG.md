@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.28.0"></a>
+# [0.28.0](https://github.com/kaltura/playkit-js/compare/v0.27.1...v0.28.0) (2018-05-26)
+
+
+### Bug Fixes
+* **FEC-8180:** when video starts fallback muted and user select to change media the unmute icon is not displayed although video still muted ([#227](https://github.com/kaltura/playkit-js/issues/228)) ([bf69fd5](https://github.com/kaltura/playkit-js/commit/bf69fd5))
+
+
+### Features
+
+* **FEC-8244:** do not throw plugin load errors on main thread ([#227](https://github.com/kaltura/playkit-js/issues/227)) ([61c3cda](https://github.com/kaltura/playkit-js/commit/61c3cda))
+
+
+
 <a name="0.27.1"></a>
 ## [0.27.1](https://github.com/kaltura/playkit-js/compare/v0.27.0...v0.27.1) (2018-05-10)
 
