@@ -118,10 +118,10 @@ const _Object = {
         }
       });
     } else if (data !== null && typeof data === "object") {
-      if (data.clone && typeof data.clone === "function"){
+      if (data.clone && typeof data.clone === "function") {
         node = data.clone();
       } else {
-        node = Object.assign({ __proto__: data.__proto__ }, data);
+        node = Object.assign({__proto__: data.__proto__}, data);
         Object.keys(node).forEach((key) => {
           if (
             (typeof node[key] === "object" && node[key] !== {}) ||
@@ -441,13 +441,16 @@ const _Http = {
       request.onreadystatechange = function () {
         if (request.readyState === 4) {
           if (request.status === 200) {
-            try{
-              let jsonResponse = JSON.parse(request.responseText);
-              resolve(jsonResponse);
-            }catch (e) {
+            if (request.getResponseHeader('content-type') === 'application/json') {
+              try {
+                let jsonResponse = JSON.parse(request.responseText);
+                resolve(jsonResponse);
+              } catch (e) {
+                resolve(request.responseText);
+              }
+            } else {
               resolve(request.responseText);
             }
-
           } else {
             reject(request.responseText);
           }
