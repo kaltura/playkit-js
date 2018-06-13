@@ -17,26 +17,38 @@ class ExternalCaptionsHandler {
   _getCaptionsArray(url: string): Promise<*> {
     return new Promise((resolve, reject) => {
       Utils.Http.execute(url, {}, 'GET').then(response => {
-        let parser = new Parser(window, StringDecoder());
-        let cues = [];
         switch (this._getFileType(url)) {
           case ExternalCaptionsHandler.VTT_POSTFIX:
-            parser.oncue = cue => {
-              cues.push(cue);
-            };
-            parser.onflush = () => {
-              resolve(cues);
-            };
-            parser.parse(response);
-            parser.flush();
+            this._parseCues(response, resolve);
             break;
           case ExternalCaptionsHandler.SRT_POSTFIX:
-            // this._srtToCues(response);
+            response = this._convertSrtToVtt(response);
+            this._parseCues(response, resolve);
             break;
         }
       }).catch(error => {
         reject(new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.HTTP_ERROR, error.payload));
       })
+    });
+  }
+
+  _parseCues(vttStr: string, resolve: Function): void {
+    const parser = new Parser(window, StringDecoder());
+    let cues = [];
+    parser.oncue = cue => {
+      cues.push(cue);
+    };
+    parser.onflush = () => {
+      resolve(cues);
+    };
+    parser.parse(vttStr);
+    parser.flush();
+  }
+
+
+  _convertSrtToVtt(str: string): string {
+    return str.replace(/(\d\d:\d\d:\d\d).(\d\d\d) --> (\d\d:\d\d:\d\d).(\d\d\d)/g, (match, $1, $2, $3, $4) => {
+      return $1 + ',' + $2 + ' --> ' + $3 + ',' + $4;
     });
   }
 
@@ -88,7 +100,7 @@ class ExternalCaptionsHandler {
         track = this._videoElement.textTracks[sameLanguageTrackIndex];
         track.mode = 'hidden';
         if (track.cues) {
-          track.cues.forEach(cue => {
+          Object.values(track.cues).forEach(cue => {
             track.removeCue(cue);
           });
         }

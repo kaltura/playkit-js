@@ -425,6 +425,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _useNativeTextTracks: boolean = false;
+
   /**
    * @param {Object} config - The configuration for the player instance.
    * @constructor
@@ -644,7 +645,7 @@ export default class Player extends FakeEventTarget {
    */
   destroy(): void {
     if (this._destroyed) return;
-    if (this._handleExternalCaptionsCallback){
+    if (this._handleExternalCaptionsCallback) {
       this._engine.removeEventListener(Html5EventType.TIME_UPDATE, this._handleExternalCaptionsCallback);
       this._handleExternalCaptionsCallback = null;
     }
@@ -1061,7 +1062,7 @@ export default class Player extends FakeEventTarget {
     }
   }
 
-  selectOffTrack(): void{
+  selectOffTrack(): void {
     const textTracks = this._getTracksByType(TrackType.TEXT);
     const textTrack = textTracks.find(track => track.language === OFF);
     if (textTrack) {
@@ -1904,15 +1905,20 @@ export default class Player extends FakeEventTarget {
       });
     } else {
       let _activeCues = [];
-      let _localIndex = this._externalCueIndex;
-      while (this.currentTime > track.cues[_localIndex].startTime) {
-        _activeCues.push(track.cues[_localIndex]);
-        if (this.currentTime > track.cues[_localIndex].endTime) {
-          this._externalCueIndex++;
+      let _activeCuesChanged = false;
+      for (let _activeTextCuesIndex = 0; _activeTextCuesIndex < this._activeTextCues.length; _activeTextCuesIndex++) {
+        let _cue = this._activeTextCues[_activeTextCuesIndex];
+        if (this.currentTime < _cue.startTime || _cue.endTime < this.currentTime) {
+          this._activeTextCues.splice(_activeTextCuesIndex, 1);
+          _activeCuesChanged = true;
         }
-        _localIndex++;
       }
-      if (!this._isActiveCuesEqual(_activeCues, this._activeTextCues)) {
+      while (this.currentTime > track.cues[this._externalCueIndex].startTime) {
+        this._activeTextCues.push(track.cues[this._externalCueIndex]);
+        this._externalCueIndex++;
+        _activeCuesChanged = true;
+      }
+      if (_activeCuesChanged) {
         this._activeTextCues = _activeCues;
         this._onCueChange({
           payload: {
@@ -1921,17 +1927,6 @@ export default class Player extends FakeEventTarget {
         });
       }
     }
-  }
-
-  _isActiveCuesEqual(newCues: Array<any>, oldCues: Array<any>): boolean {
-    const newIds = newCues.map(function (cue) {
-      return cue.id;
-    });
-    const oldIds = oldCues.map(function (cue) {
-      return cue.id;
-    });
-    const bothIds = [...new Set(newIds.concat(oldIds))];
-    return bothIds.length === newIds.length && bothIds.length === oldIds.length;
   }
 
   _maybeSetExternalCueIndex(): void {
@@ -1951,14 +1946,15 @@ export default class Player extends FakeEventTarget {
   }
 
   _addExternalTracks(): Promise<*> {
-    return new Promise((resolve)=>{
+    return new Promise((resolve) => {
       const captionsConfig = this._config.sources.captions;
       if (!captionsConfig) {
         resolve();
       }
       let handler = new ExternalCaptionsHandler(this._engine.getVideoElement());
       handler.createCaptions(captionsConfig).then((captions) => {
-        let textTracksLength = this._getTracksByType(TrackType.TEXT).length || 0;
+        let textTracks = this._getTracksByType(TrackType.TEXT);
+        let textTracksLength = textTracks.length || 0;
         captions.forEach(caption => {
           let track = new TextTrack({
             active: false,
@@ -1969,26 +1965,24 @@ export default class Player extends FakeEventTarget {
             external: true,
             cues: caption.cues
           });
-          this._tracks.push(track);
+          let sameLangTrack = textTracks.filter(textTrack => caption.language === textTrack.language);
+          if (sameLangTrack.length) {
+            track.index = sameLangTrack[0].index;
+            sameLangTrack[0] = track;
+          } else {
+            this._tracks.push(track);
+          }
         });
-        if (this._useNativeTextTracks){
-          //this._maybeRemoveInbendTextTracks();
+        if (this._useNativeTextTracks) {
           handler.createNativeTextTrack(captions);
         }
         resolve();
       })
     })
-
-  }
-
-  _maybeRemoveInbendTextTracks(): void {
-    this._tracks = this._tracks.filter(track => {
-      return !(track instanceof TextTrack) || (track instanceof TextTrack && track.external);
-    })
   }
 
   _selectExternalTextTrack(textTrack: TextTrack) {
-    const track = this._getTracksByType(TrackType.TEXT).filter(track=>track.index === textTrack.index)[0];
+    const track = this._getTracksByType(TrackType.TEXT).filter(track => track.index === textTrack.index)[0];
     if (!track.active) {
       this._engine.disableAllTextTracks();
       Player._logger.debug('External text track changed', track);
