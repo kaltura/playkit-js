@@ -183,7 +183,7 @@ var config = {
 >>  sources: {
 >>    progressive: [
 >>      {
->>        mimetype: "application/x-mpegurl",
+>>        mimetype: "video/mp4",
 >>        url: "//PATH/TO/FILE.mp4"
 >>      }
 >>    ]
