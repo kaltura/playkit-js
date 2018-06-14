@@ -1205,6 +1205,12 @@ export default class Player extends FakeEventTarget {
 
   // </editor-fold>
 
+  // <editor-fold desc="VR API">
+  isVr(): boolean {
+    return !!(this._config.sources.vr);
+  }
+  // </editor-fold>
+
   // <editor-fold desc="Logger API">
 
   /**
