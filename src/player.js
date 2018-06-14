@@ -38,7 +38,7 @@ import PlaybackMiddleware from './middleware/playback-middleware'
 import DefaultPlayerConfig from './player-config.json'
 import './assets/style.css'
 import PKError from './error/error'
-import ExternalCaptionsHandler from "./utils/external-captions-handler";
+import ExternalCaptionsHandler from "./track/external-captions-handler";
 
 /**
  * The player playback rates.
@@ -408,23 +408,17 @@ export default class Player extends FakeEventTarget {
    */
   _fallbackToMutedAutoPlay: boolean;
   /**
-   * Index that specifies the last cue that is playing / played in the text track cue array.
-   * @type {number}
-   * @private
-   */
-  _externalCueIndex: number = 0;
-  /**
-   * a callback of the timeupdate, for external captions handler.
-   * @type {Function}
-   * @private
-   */
-  _handleExternalCaptionsCallback: Function = null;
-  /**
    * flag that indicates the use of native text tracks
    * @type {boolean}
    * @private
    */
   _useNativeTextTracks: boolean = false;
+  /**
+   * holds the external tracks handler controller
+   * @type {any}
+   * @private
+   */
+  _externalCaptionsHandler: any = null;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -493,11 +487,23 @@ export default class Player extends FakeEventTarget {
           this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_ENDED));
         }
       }
-      this._useNativeTextTracks = this._config.sources.captions.useNativeTextTracks;
+      this._useNativeTextTracks = this._shouldUseNativeTextTracks();
     } else {
       Utils.Object.mergeDeep(this._config, config);
       this._configureOrLoadPlugins(config.plugins);
     }
+  }
+
+  /**
+   * check if only native text tracks should be used
+   * @returns {boolean} - if only native text tracks should be used
+   * @private
+   */
+  _shouldUseNativeTextTracks(): boolean {
+    if (this.env.os.name === 'iOS' && !this.playsinline()) {
+      return true;
+    }
+    return this._config.sources.captions && this._config.sources.captions.useNativeTextTracks;
   }
 
   /**
@@ -1032,7 +1038,7 @@ export default class Player extends FakeEventTarget {
         if (track.language === OFF) {
           this._playbackAttributesState.textLanguage = OFF;
         } else if (track.external && !this._useNativeTextTracks) {
-          this._selectExternalTextTrack(track);
+          this._externalCaptionsHandler.selectExternalTextTrack(track);
         } else {
           this._engine.selectTextTrack(track);
         }
@@ -1055,7 +1061,7 @@ export default class Player extends FakeEventTarget {
       textTracks.map(track => {
         track.active = false;
         if (track.external) {
-          this._engine.removeEventListener(Html5EventType.TIME_UPDATE, this._handleExternalCaptionsCallback);
+          this._engine.removeEventListener(Html5EventType.TIME_UPDATE, this._externalCaptionsHandler.handleExternalCaptionsCallback);
         }
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {}))
       });
@@ -1457,7 +1463,9 @@ export default class Player extends FakeEventTarget {
         if (browser === 'Edge' || browser === 'IE') {
           this._removeTextCuePatch();
         }
-        this._maybeSetExternalCueIndex();
+        if (this._externalCaptionsHandler) {
+          this._externalCaptionsHandler.maybeSetExternalCueIndex();
+        }
       });
       this._eventManager.listen(this._engine, CustomEventType.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
         this._markActiveTrack(event.payload.selectedVideoTrack);
@@ -1784,7 +1792,16 @@ export default class Player extends FakeEventTarget {
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
     this._tracks = tracks;
-    this._addExternalTracks().then(() => this._addTextTrackOffOption());
+    this._maybeAddExternalTracks().then(() => this._addTextTrackOffOption());
+  }
+
+  _maybeAddExternalTracks(): Promise<*> {
+    if (!this._config.sources.captions) {
+      Promise.resolve();
+    } else {
+      this._externalCaptionsHandler = new ExternalCaptionsHandler(this._engine.getVideoElement(), this);
+      return this._externalCaptionsHandler.addExternalTracks();
+    }
   }
 
   /**
@@ -1889,110 +1906,6 @@ export default class Player extends FakeEventTarget {
       }));
     }
     this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
-  }
-
-  _handleCaptionOnTimeUpdate(track): void {
-    if (this._activeTextCues.length > 0 && this.currentTime < this._activeTextCues[this._activeTextCues.length - 1].startTime) {
-      this._activeTextCues = [];
-      this._onCueChange({
-        payload: {
-          cues: []
-        }
-      });
-    } else {
-      let _activeCuesChanged = false;
-      for (let _activeTextCuesIndex = 0; _activeTextCuesIndex < this._activeTextCues.length; _activeTextCuesIndex++) {
-        let _cue = this._activeTextCues[_activeTextCuesIndex];
-        if (this.currentTime < _cue.startTime || _cue.endTime < this.currentTime) {
-          this._activeTextCues.splice(_activeTextCuesIndex, 1);
-          _activeCuesChanged = true;
-        }
-      }
-      while (this.currentTime > track.cues[this._externalCueIndex].startTime) {
-        this._activeTextCues.push(track.cues[this._externalCueIndex]);
-        this._externalCueIndex++;
-        _activeCuesChanged = true;
-      }
-      if (_activeCuesChanged) {
-        this._onCueChange({
-          payload: {
-            cues: this._activeTextCues
-          }
-        });
-      }
-    }
-  }
-
-  _maybeSetExternalCueIndex(): void {
-    const textTrack = this._getTracksByType(TrackType.TEXT).filter(track => {
-      track.active() && track.external;
-    });
-    if (textTrack) {
-      let cues = textTrack.cues;
-      for (let i = 0; i < cues.length; i++) {
-        if (this.currentTime < cues[i].startTime) {
-          this._externalCueIndex = i;
-        } else {
-          break;
-        }
-      }
-    }
-  }
-
-  _addExternalTracks(): Promise<*> {
-    return new Promise((resolve) => {
-      const captions = this._config.sources.captions;
-      if (!captions) {
-        resolve();
-      }
-      let handler = new ExternalCaptionsHandler(this._engine.getVideoElement());
-      handler.createCaptions(captions.tracks).then((parsedCaptions) => {
-        let textTracks = this._getTracksByType(TrackType.TEXT);
-        let textTracksLength = textTracks.length || 0;
-        parsedCaptions.forEach(caption => {
-          let track = new TextTrack({
-            active: false,
-            index: textTracksLength++,
-            kind: "subtitles",
-            label: caption.label,
-            language: caption.language,
-            external: true,
-            cues: caption.cues
-          });
-          let sameLangTrack = textTracks.filter(textTrack => caption.language === textTrack.language);
-          if (sameLangTrack.length) {
-            track.index = sameLangTrack[0].index;
-            sameLangTrack[0] = track;
-          } else {
-            this._tracks.push(track);
-          }
-        });
-        if (this._useNativeTextTracks) {
-          handler.createNativeTextTrack(captions);
-        }
-        resolve();
-      })
-    })
-  }
-
-  _selectExternalTextTrack(textTrack: TextTrack) {
-    const track = this._getTracksByType(TrackType.TEXT).filter(track => {
-      if (track.index !== textTrack.index) {
-        track.active = false;
-      } else {
-        return true;
-      }
-    })[0];
-    if (!track.active) {
-      this._engine.disableAllTextTracks();
-      Player._logger.debug('External text track changed', track);
-      track.active = true;
-      this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: track}));
-      this._handleExternalCaptionsCallback = () => {
-        this._handleCaptionOnTimeUpdate(track);
-      };
-      this._engine.addEventListener(Html5EventType.TIME_UPDATE, this._handleExternalCaptionsCallback);
-    }
   }
 
   /**
