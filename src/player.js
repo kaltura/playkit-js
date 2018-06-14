@@ -1006,7 +1006,7 @@ export default class Player extends FakeEventTarget {
       const textTrack = textTracks.find(track => track.language === OFF);
       if (textTrack) {
         textTrack.active = true;
-        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}))
+        this._maybeDispatchTracksChanged(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
       }
     }
   }
@@ -1409,12 +1409,12 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.AUDIO_TRACK_CHANGED, (event: FakeEvent) => {
         this.ready().then(() => this._playbackAttributesState.audioLanguage = event.payload.selectedAudioTrack.language);
         this._markActiveTrack(event.payload.selectedAudioTrack);
-        return this.dispatchEvent(event);
+        this._maybeDispatchTracksChanged(event);
       });
       this._eventManager.listen(this._engine, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => {
         this.ready().then(() => this._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language);
         this._markActiveTrack(event.payload.selectedTextTrack);
-        return this.dispatchEvent(event);
+        this._maybeDispatchTracksChanged(event);
       });
       this._eventManager.listen(this._engine, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this._onTracksChanged(event));
       this._eventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
@@ -1444,6 +1444,18 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => {
         this._handleRecovered();
       });
+    }
+  }
+
+  /**
+   * Dispatches track changed event only if we already started playing.
+   * @param {FakeEvent} e - The track changed event.
+   * @private
+   * @returns {void}
+   */
+  _maybeDispatchTracksChanged(e: FakeEvent): void {
+    if (this._playbackStarted) {
+      this.dispatchEvent(e);
     }
   }
 
@@ -1873,9 +1885,7 @@ export default class Player extends FakeEventTarget {
     const activeTracks = this.getActiveTracks();
     const playbackConfig = this.config.playback;
     const offTextTrack: ?Track = this._getTracksByType(TrackType.TEXT).find(track => TextTrack.langComparer(OFF, track.language));
-
     this.hideTextTrack();
-
     let currentOrConfiguredTextLang = this._playbackAttributesState.textLanguage || this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackType.TEXT);
     let currentOrConfiguredAudioLang = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
     this._setDefaultTrack(TrackType.TEXT, currentOrConfiguredTextLang, offTextTrack);
