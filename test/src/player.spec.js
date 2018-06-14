@@ -946,7 +946,7 @@ describe('Player', function () {
     });
 
     it('should select a new subtitles track', (done) => {
-      player.ready().then(() => {
+      player.addEventListener(Html5EventType.PLAYING, () => {
         player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, (event) => {
           (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
           event.payload.selectedTextTrack.index.should.equal(1);
@@ -965,12 +965,11 @@ describe('Player', function () {
         tracks[1].active.should.be.false;
         player.selectTrack(new TextTrack({index: 1, kind: 'subtitles'}));
       });
-      player.load();
+      player.play();
     });
 
     it('should select a new captions track', (done) => {
-      player.load();
-      player.ready().then(() => {
+      player.addEventListener(Html5EventType.PLAYING, () => {
         player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, (event) => {
           (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
           event.payload.selectedTextTrack.index.should.equal(1);
@@ -989,8 +988,8 @@ describe('Player', function () {
         tracks[1].active.should.be.false;
         player.selectTrack(new TextTrack({index: 1, kind: 'captions'}));
       });
+      player.play();
     });
-
 
     it('should not change the selected text track', (done) => {
       player.ready().then(() => {
@@ -3063,4 +3062,5 @@ describe('Player', function () {
       });
     });
   });
-});
+})
+;
