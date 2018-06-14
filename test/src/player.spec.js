@@ -2947,11 +2947,10 @@ describe('Player', function () {
         mutedAutoPlay: 2,
         isSupported: 3
       };
-      Player.setCapabilities('html5', newCapabilities).then(() => {
-        Player.getCapabilities().then((c2) => {
-          c2.html5.should.deep.equal(newCapabilities);
-          done();
-        });
+      Player.setCapabilities('html5', newCapabilities);
+      Player.getCapabilities().then((c2) => {
+        c2.html5.should.deep.equal(newCapabilities);
+        done();
       });
     });
 
@@ -2963,11 +2962,10 @@ describe('Player', function () {
       };
       Player.getCapabilities().then((c1) => {
         c1.should.deep.equal(initialOrigCapabilities);
-        Player.setCapabilities('html5', newCapabilities).then(() => {
-          Player.getCapabilities().then((c2) => {
-            c2.html5.should.deep.equal(newCapabilities);
-            done();
-          });
+        Player.setCapabilities('html5', newCapabilities);
+        Player.getCapabilities().then((c2) => {
+          c2.html5.should.deep.equal(newCapabilities);
+          done();
         });
       });
     });
