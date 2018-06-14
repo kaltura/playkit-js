@@ -47,8 +47,8 @@ class ExternalCaptionsHandler {
 
 
   _convertSrtToVtt(str: string): string {
-    return str.replace(/(\d\d:\d\d:\d\d).(\d\d\d) --> (\d\d:\d\d:\d\d).(\d\d\d)/g, (match, $1, $2, $3, $4) => {
-      return $1 + ',' + $2 + ' --> ' + $3 + ',' + $4;
+    return str.replace(/(\d\d:\d\d:\d\d).(\d\d\d) --> (\d\d:\d\d:\d\d).(\d\d\d)/g, (match, part1, part2, part3, part4) => {
+      return `${part1},${part2} --> ${part3},${part4}`;
     });
   }
 
