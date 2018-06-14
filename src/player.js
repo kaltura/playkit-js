@@ -1918,7 +1918,7 @@ export default class Player extends FakeEventTarget {
     const track: ?Track = this._getTracksByType(type).find(track => Track.langComparer(language, track.language));
     if (track) {
       this.selectTrack(track);
-    } else {
+    } else if (defaultTrack && !defaultTrack.active) {
       this.selectTrack(defaultTrack);
     }
   }
