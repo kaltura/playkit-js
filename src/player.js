@@ -1218,9 +1218,9 @@ export default class Player extends FakeEventTarget {
   /**
    * get a plugin instance
    * @param {string} name - the plugin name
-   * @returns {Object} - the plugin instance
+   * @returns {?BasePlugin} - the plugin instance
    */
-  getPlugin(name: string): Object {
+  getPlugin(name: string): ?BasePlugin {
     return this._pluginManager.get(name);
   }
 
