@@ -1446,6 +1446,20 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this, CustomEventType.EXIT_FULLSCREEN, () => {
         this._resetTextCuesAndReposition();
       });
+      this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => {
+        this._handleRecovered();
+      });
+    }
+  }
+
+  /**
+   * if the media was recovered (after a media failure) then initiate play again (if that was the state before)
+   * @returns {void}
+   * @private
+   */
+  _handleRecovered(): void {
+    if (this._stateManager.currentState.type === StateType.PLAYING) {
+      this.play();
     }
   }
 
@@ -1530,7 +1544,8 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _canPreload(): boolean {
-    return !this._config.plugins || (this._config.plugins && !this._config.plugins.ima);
+    return !this._config.plugins || (this._config.plugins && !this._config.plugins.ima ||
+      (this._config.plugins.ima && this._config.plugins.ima.disable));
   }
 
   /**

@@ -82,12 +82,12 @@ export default class PluginManager {
       throw new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_NOT_REGISTERED_PLUGIN, name);
     }
     let pluginClass = PluginManager._registry.get(name);
-    if (pluginClass && pluginClass.isValid()) {
+    if (pluginClass && pluginClass.isValid() && !config.disable) {
       this._plugins.set(name, pluginClass.createPlugin(name, player, config));
       logger.debug(`Plugin <${name}> has been loaded`);
       return true;
     }
-    logger.debug(`Plugin <${name}> isn\'t loaded, isValid()=false`);
+    logger.debug(`Plugin <${name}> isn\'t loaded, isValid()=false, disabled=${config.disable}`);
     return false;
   }
 

@@ -273,6 +273,21 @@ var config = {
 >    }
 >};
 >```
+>##
+>>### config.plugins.PLUGIN_NAME.disable
+>>##### Type: `boolean`
+>>##### Default: `false`
+>>##### Description: Allow to disable a specific plugin.
+>>#### Expample:
+>>```js
+>>var config = {
+>>    plugins: {
+>>        myAwesomePlugin: {
+>>             disable: true
+>>        }
+>>    }
+>>};
+>>```
 ##
 >### config.playback
 >##### Type: `PKPlaybackConfig`
