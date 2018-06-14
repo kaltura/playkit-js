@@ -147,7 +147,7 @@ export default class Player extends FakeEventTarget {
    * @private
    * @static
    */
-  static _playerCapabilities: Object;
+  static _playerCapabilities: Object = {};
 
   /**
    * Runs the engines capabilities tests.
@@ -175,9 +175,7 @@ export default class Player extends FakeEventTarget {
       .then((arrayOfResults) => {
         const playerCapabilities = {};
         arrayOfResults.forEach(res => Object.assign(playerCapabilities, res));
-        if (Player._playerCapabilities) {
-          Utils.Object.mergeDeep(playerCapabilities, Player._playerCapabilities);
-        }
+        Utils.Object.mergeDeep(playerCapabilities, Player._playerCapabilities);
         return (engineType ? playerCapabilities[engineType] : playerCapabilities);
       });
   }
@@ -192,9 +190,6 @@ export default class Player extends FakeEventTarget {
    */
   static setCapabilities(engineType: string, capabilities: { [name: string]: any }): void {
     Player._logger.debug("Set player capabilities", engineType, capabilities);
-    if (!Player._playerCapabilities) {
-      Player._playerCapabilities = {};
-    }
     Player._playerCapabilities[engineType] = Utils.Object.mergeDeep({}, Player._playerCapabilities[engineType], capabilities);
   }
 
@@ -1559,40 +1554,58 @@ export default class Player extends FakeEventTarget {
       Player.getCapabilities(this.engineType)
         .then((capabilities) => {
           if (capabilities.autoplay) {
-            Player._logger.debug("Start autoplay");
-            // If the previous state was fallback to muted autoplay:
-            // unmute the player and clear the fallback state
-            if (this._fallbackToMutedAutoPlay) {
-              this._fallbackToMutedAutoPlay = false;
-              this.muted = false;
-            }
-            this.play();
+            onAutoPlay();
           } else {
             if (capabilities.mutedAutoPlay) {
               if (this.muted && !this._fallbackToMutedAutoPlay) {
-                Player._logger.debug("Start muted autoplay");
-                this.play();
+                onMutedAutoPlay();
               } else if (allowMutedAutoPlay) {
-                Player._logger.debug("Fallback to muted autoplay");
-                this._fallbackToMutedAutoPlay = true;
-                this.muted = true;
-                this.dispatchEvent(new FakeEvent(CustomEventType.FALLBACK_TO_MUTED_AUTOPLAY));
-                this.play();
+                onFallbackToMutedAutoPlay();
+              } else {
+                onAutoPlayFailed();
               }
             } else {
-              Player._logger.warn("Autoplay failed, pause player");
-              this._posterManager.show();
-              if (this._canPreload()) {
-                this.load();
-                this.ready().then(() => this.pause());
-              }
-              this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED));
+              onAutoPlayFailed();
             }
           }
         });
     } else {
       this._posterManager.show();
     }
+
+    const onAutoPlay = () => {
+      Player._logger.debug("Start autoplay");
+      // If the previous state was fallback to muted autoplay:
+      // unmute the player and clear the fallback state
+      if (this._fallbackToMutedAutoPlay) {
+        this._fallbackToMutedAutoPlay = false;
+        this.muted = false;
+      }
+      this.play();
+    };
+
+    const onMutedAutoPlay = () => {
+      Player._logger.debug("Start muted autoplay");
+      this.play();
+    };
+
+    const onFallbackToMutedAutoPlay = () => {
+      Player._logger.debug("Fallback to muted autoplay");
+      this._fallbackToMutedAutoPlay = true;
+      this.muted = true;
+      this.dispatchEvent(new FakeEvent(CustomEventType.FALLBACK_TO_MUTED_AUTOPLAY));
+      this.play();
+    };
+
+    const onAutoPlayFailed = () => {
+      Player._logger.warn("Autoplay failed, pause player");
+      this._posterManager.show();
+      if (this._canPreload()) {
+        this.load();
+      }
+      this.ready().then(() => this.pause());
+      this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED));
+    };
   }
 
   /**
