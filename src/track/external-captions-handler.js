@@ -32,12 +32,6 @@ class ExternalCaptionsHandler {
    */
   _handleExternalCaptionsCallback: Function = null;
   /**
-   * flag that indicates the use of native text tracks
-   * @type {boolean}
-   * @private
-   */
-  _useNativeTextTracks: boolean = false;
-  /**
    * the video element, used for native tracks.
    * @type {HTMLVideoElement}
    * @private
@@ -52,12 +46,11 @@ class ExternalCaptionsHandler {
 
   /**
    * constructor
-   * @param {HTMLVideoElement} videoElement - video element.
    * @param {Object} player - the player object.
    */
-  constructor(videoElement: HTMLVideoElement, player: Object) {
+  constructor(player: Object) {
     this._player = player;
-    this._videoElement = videoElement;
+    this._videoElement = player.getVideoElement()
   }
 
   /**
@@ -118,42 +111,18 @@ class ExternalCaptionsHandler {
   }
 
   /**
-   * create caption object for each of the captions.
-   * @param {Array<Object>} captions - the captions config from the player config.
-   * @returns {Promise<any>} resolves when all the captions are parsed.
-   * @private
-   */
-  _createCaptions(captions: Array<Object>): Promise<*> {
-    return new Promise((resolve) => {
-      let promiseArr = [];
-
-      captions.forEach((caption) => {
-        promiseArr.push(this._createCaption(caption));
-      });
-
-      return Promise.all(promiseArr).then(tracks => {
-        resolve(tracks);
-      });
-    });
-  }
-
-  /**
    * resolves with a caption object that contains all the caption data
    * start the parsing, creation and addition of the external captions.
    * @param {object} caption - the caption configuration from the player config.
    * @returns {Promise<any>} - the caption object with the parsed cues
    * @private
    */
-  _createCaption(caption: Object): Promise<*> {
+  _createCaption(track: TextTrack): Promise<*> {
     return new Promise((resolve) => {
-      this._getCuesArray(caption.url)
+      this._getCuesArray(track.url)
         .then(cues => {
-          resolve({
-            label: caption.label,
-            language: caption.language,
-            isDefault: caption.default,
-            cues: cues
-          })
+          track.cues = cues;
+          resolve();
         });
     });
   }
@@ -161,15 +130,15 @@ class ExternalCaptionsHandler {
   /**
    * this function runs on the players text tracks and checks if there is already a text track with the same language
    * as the new one.
-   * @param {Object} caption - the caption to check
+   * @param {TextTrack} textTrack - the text track to check
    * @returns {number} - the index of the text track with the same language (if there is any). and -1 if there isn't
    * @private
    */
-  _indexOfSameLanguageTrack(caption: object): number {
+  _indexOfSameLanguageTrack(textTrack: TextTrack): number {
     const trackList = this._videoElement.textTracks;
     let index = -1;
     for (let i = 0; i < trackList.length; i++) {
-      if (trackList[i].language === caption.language) {
+      if (trackList[i].language === textTrack.language) {
         index = i;
         break;
       }
@@ -184,24 +153,22 @@ class ExternalCaptionsHandler {
    * @returns {void}
    * @private
    */
-  _createNativeTextTrack(captions: Array<any>): void {
-    captions.forEach(caption => {
-      let track;
-      const sameLanguageTrackIndex = this._indexOfSameLanguageTrack(caption);
-      if (sameLanguageTrackIndex > -1) {
-        track = this._videoElement.textTracks[sameLanguageTrackIndex];
-        track.mode = 'hidden';
-        if (track.cues) {
-          Object.values(track.cues).forEach(cue => {
-            track.removeCue(cue);
-          });
-        }
-      } else {
-        track = this._videoElement.addTextTrack("captions", caption.label, caption.language);
+  _createNativeTextTrack(textTrack: TextTrack): void {
+    let domTrack;
+    const sameLanguageTrackIndex = this._indexOfSameLanguageTrack(textTrack);
+    if (sameLanguageTrackIndex > -1) {
+      domTrack = this._videoElement.textTracks[sameLanguageTrackIndex];
+      domTrack.mode = 'hidden';
+      if (domTrack.cues) {
+        Object.values(domTrack.cues).forEach(cue => {
+          domTrack.removeCue(cue);
+        });
       }
-      caption.cues.forEach(cue => {
-        track.addCue(cue);
-      });
+    } else {
+      domTrack = this._videoElement.addTextTrack("captions", textTrack.label, textTrack.language);
+    }
+    textTrack.cues.forEach(cue => {
+      domTrack.addCue(cue);
     });
   }
 
@@ -214,7 +181,6 @@ class ExternalCaptionsHandler {
   _getFileType(url: string): string {
     return url.split(/\#|\?/)[0].split('.').pop().trim();
   }
-
 
   /**
    * callback for the 'timeupdate' event. on each time update this runs and checks if the active text cues array
@@ -281,39 +247,32 @@ class ExternalCaptionsHandler {
    * @returns {Promise<any>} returns a promise when all the tracks were parsed and added.
    * @public
    */
-  addExternalTracks(): Promise<*> {
-    return new Promise((resolve) => {
-      const captions = this._player._config.sources.captions;
-      if (!captions) {
-        resolve();
+  addExternalTracks(): void {
+    const captions = this._player._config.sources.captions;
+    if (!captions) {
+      return;
+    }
+    let textTracks = this._player._getTracksByType(TrackType.TEXT);
+    let textTracksLength = textTracks.length || 0;
+    captions.forEach(caption => {
+      let track = new TextTrack({
+        active: false,
+        index: textTracksLength++,
+        kind: "subtitles",
+        label: caption.label,
+        language: caption.language,
+        external: true,
+        url: caption.url,
+        cues: []
+      });
+      let sameLangTrack = textTracks.filter(textTrack => caption.language === textTrack.language);
+      if (sameLangTrack.length) {
+        track.index = sameLangTrack[0].index;
+        sameLangTrack[0] = track;
+      } else {
+        this._player._tracks.push(track);
       }
-      this._createCaptions(captions.tracks).then((parsedCaptions) => {
-        let textTracks = this._player._getTracksByType(TrackType.TEXT);
-        let textTracksLength = textTracks.length || 0;
-        parsedCaptions.forEach(caption => {
-          let track = new TextTrack({
-            active: false,
-            index: textTracksLength++,
-            kind: "subtitles",
-            label: caption.label,
-            language: caption.language,
-            external: true,
-            cues: caption.cues
-          });
-          let sameLangTrack = textTracks.filter(textTrack => caption.language === textTrack.language);
-          if (sameLangTrack.length) {
-            track.index = sameLangTrack[0].index;
-            sameLangTrack[0] = track;
-          } else {
-            this._player._tracks.push(track);
-          }
-        });
-        if (this._useNativeTextTracks) {
-          this._createNativeTextTrack(captions);
-        }
-        resolve();
-      })
-    })
+    });
   }
 
   /**
@@ -322,7 +281,24 @@ class ExternalCaptionsHandler {
    * @returns {void}
    * @public
    */
-  selectExternalTextTrack(textTrack: TextTrack): void {
+  selectExternalTextTrack(textTrack: TextTrack): Promise<*> {
+    return new Promise((resolve, reject) => {
+      if (textTrack.cues.length > 0) {
+        this._setExternalTextTrack(textTrack);
+        resolve();
+      } else {
+        this._createCaption(textTrack).then(()=>{
+          if (this._player._config.playback.useNativeTextTrack){
+            this._createNativeTextTrack(textTrack);
+          }
+          this._setExternalTextTrack(textTrack);
+          resolve();
+        })
+      }
+    });
+  }
+
+  _setExternalTextTrack(textTrack: textTrack) {
     const track = this._player._getTracksByType(TrackType.TEXT).filter(track => {
       if (track.index !== textTrack.index) {
         track.active = false;

@@ -408,12 +408,6 @@ export default class Player extends FakeEventTarget {
    */
   _fallbackToMutedAutoPlay: boolean;
   /**
-   * flag that indicates the use of native text tracks
-   * @type {boolean}
-   * @private
-   */
-  _useNativeTextTracks: boolean = false;
-  /**
    * holds the external tracks handler controller
    * @type {any}
    * @private
@@ -487,23 +481,13 @@ export default class Player extends FakeEventTarget {
           this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_ENDED));
         }
       }
-      this._useNativeTextTracks = this._shouldUseNativeTextTracks();
+      if (this._config.sources.captions){
+        this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
+      }
     } else {
       Utils.Object.mergeDeep(this._config, config);
       this._configureOrLoadPlugins(config.plugins);
     }
-  }
-
-  /**
-   * check if only native text tracks should be used
-   * @returns {boolean} - if only native text tracks should be used
-   * @private
-   */
-  _shouldUseNativeTextTracks(): boolean {
-    if (this.env.os.name === 'iOS' && !this.playsinline()) {
-      return true;
-    }
-    return this._config.sources.captions && this._config.sources.captions.useNativeTextTracks;
   }
 
   /**
@@ -1037,7 +1021,7 @@ export default class Player extends FakeEventTarget {
         this.hideTextTrack();
         if (track.language === OFF) {
           this._playbackAttributesState.textLanguage = OFF;
-        } else if (track.external && !this._useNativeTextTracks) {
+        } else if (track.external && !this._config.playback.useNativeTextTrack) {
           this._externalCaptionsHandler.selectExternalTextTrack(track);
         } else {
           this._engine.selectTextTrack(track);
@@ -1792,15 +1776,15 @@ export default class Player extends FakeEventTarget {
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
     this._tracks = tracks;
-    this._maybeAddExternalTracks().then(() => this._addTextTrackOffOption());
+    this._maybeAddExternalTracks();
+    this._addTextTrackOffOption();
   }
 
-  _maybeAddExternalTracks(): Promise<*> {
+  _maybeAddExternalTracks(): void {
     if (!this._config.sources.captions) {
-      Promise.resolve();
+      return;
     } else {
-      this._externalCaptionsHandler = new ExternalCaptionsHandler(this._engine.getVideoElement(), this);
-      return this._externalCaptionsHandler.addExternalTracks();
+      this._externalCaptionsHandler.addExternalTracks();
     }
   }
 
