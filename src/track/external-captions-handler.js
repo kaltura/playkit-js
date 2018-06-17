@@ -56,8 +56,8 @@ class ExternalCaptionsHandler {
 
 
   _addListeners(): void {
-    this._player._eventManager.listen(this._player._engine, this._player.Event.SEEKED, this._maybeSetExternalCueIndex);
-    this._player._eventManager.listen(this._player._engine, this._player.Event.TEXT_TRACK_CHANGED, this._handleTextTrackChanged);
+    this._player._eventManager.listen(this._player._engine, this._player.Event.SEEKED, (e)=>{this._maybeSetExternalCueIndex(e)});
+    this._player._eventManager.listen(this._player._engine, this._player.Event.TEXT_TRACK_CHANGED, (e)=>{this._handleTextTrackChanged(e)});
   }
 
   /**
@@ -273,7 +273,6 @@ class ExternalCaptionsHandler {
         this._createCaption(textTrack).then(() => {
           if (this._player._config.playback.useNativeTextTrack) {
             this._createNativeTextTrack(textTrack);
-            this._setExternalTextTrack(textTrack);
           }
           this._setExternalTextTrack(textTrack);
           resolve();
@@ -302,14 +301,14 @@ class ExternalCaptionsHandler {
     const sameLanguageTrackIndex = this._indexOfSameLanguageTrack(textTrack);
     if (sameLanguageTrackIndex > -1) {
       domTrack = this._videoElement.textTracks[sameLanguageTrackIndex];
-      domTrack.mode = 'showing';
+      // domTrack.mode = 'showing';
       if (domTrack.cues) {
         Object.values(domTrack.cues).forEach(cue => {
           domTrack.removeCue(cue);
         });
       }
     } else {
-      domTrack = this._videoElement.addTextTrack("captions", textTrack.label, textTrack.language);
+      domTrack = this._videoElement.addTextTrack("subtitles", textTrack.label, textTrack.language);
     }
     textTrack.cues.forEach(cue => {
       domTrack.addCue(cue);
@@ -318,9 +317,9 @@ class ExternalCaptionsHandler {
 
   _setExternalTextTrack(textTrack: textTrack): void {
     if (this._player.config.playback.useNativeTextTrack){
-      const sameLanguageTrackIndex = this._indexOfSameLanguageTrack(textTrack);
-      const domTrack = this._videoElement.textTracks[sameLanguageTrackIndex];
-      domTrack.mode = 'showing';
+      // const sameLanguageTrackIndex = this._indexOfSameLanguageTrack(textTrack);
+      // const domTrack = this._videoElement.textTracks[sameLanguageTrackIndex];
+      // domTrack.mode = 'showing';
     }else{
       const track = this._player._getTracksByType(TrackType.TEXT).filter(track => {
         if (track.index !== textTrack.index) {
