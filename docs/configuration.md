@@ -301,6 +301,7 @@ var config = {
 >  playsinline: boolean,
 >  preload: string,
 >  autoplay: boolean,
+>  loop: boolean,
 >  allowMutedAutoPlay: boolean,
 >  muted: boolean,
 >  options: PKPlaybackOptionsObject,
@@ -319,6 +320,7 @@ var config = {
 >  playsinline: true,
 >  preload: "none",
 >  autoplay: false,
+>  loop: false,
 >  allowMutedAutoPlay: true,
 >  muted: false,
 >  options: {
@@ -428,6 +430,13 @@ var config = {
 >>Possible values:
 >> - `"none"`: indicates that the video should not be preloaded.
 >> - `"auto"`: indicates that the whole video file could be downloaded, even if the user is not expected to use it.
+##
+>>### config.playback.loop
+>>##### Type: `boolean`
+>>##### Default: `"false"`
+>>##### Description: Indicates whether the video should play in loop.
+>>This is a Boolean attribute that indicates the default setting of the loop playback option. If set, the player will restart playback upon completion. The attribute's default value is false, which means that the video will pause when the video is finished playing.
+
 >##
 >>### config.playback.autoplay/allowMutedAutoPlay
 >>for `autoplay` & `allowMutedAutoPlay` options read [here](autoplay.md).

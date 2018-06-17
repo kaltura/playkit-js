@@ -1720,7 +1720,10 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _onEnded(): void {
-    if (!this.paused) {
+    if (this.config.playback.loop) {
+      this.currentTime = 0;
+      this.play();
+    } else if (!this.paused) {
       this._pause();
     }
   }
