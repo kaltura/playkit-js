@@ -38,6 +38,7 @@ import PlaybackMiddleware from './middleware/playback-middleware'
 import DefaultPlayerConfig from './player-config.json'
 import './assets/style.css'
 import PKError from './error/error'
+import {EngineProvider} from 'engines/engine-provider'
 
 /**
  * The player playback rates.
@@ -157,6 +158,7 @@ export default class Player extends FakeEventTarget {
    */
   static runCapabilities(): void {
     Player._logger.debug("Running player capabilities");
+    Player._engines = EngineProvider.getEngines();
     Player._engines.forEach(Engine => Engine.runCapabilities());
   }
 

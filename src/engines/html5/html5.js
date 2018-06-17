@@ -13,6 +13,7 @@ import Html5AutoPlayCapability from './capabilities/html5-autoplay'
 import Html5IsSupportedCapability from './capabilities/html5-is-supported'
 import Error from "../../error/error";
 import getLogger from '../../utils/logger'
+import {registerEngine} from "../engine-provider";
 
 /**
  * Html5 engine for playback.
@@ -935,3 +936,5 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return null;
   }
 }
+
+registerEngine(Html5);
