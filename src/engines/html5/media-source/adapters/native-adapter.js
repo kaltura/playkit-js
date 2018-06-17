@@ -247,7 +247,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._playerTracks = this._getParsedTracks();
       this._addNativeAudioTrackChangeListener();
       this._addNativeTextTrackChangeListener();
-      if (!this._useExternalCaptions){
+      if (!this._useExternalCaptions) {
         this._addNativeTextTrackAddedListener();
       }
       NativeAdapter._logger.debug('The source has been loaded successfully');
@@ -579,13 +579,22 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const textTracks = this._videoElement.textTracks;
     if ((textTrack instanceof PKTextTrack)
       && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions')
-      && textTracks && textTracks[textTrack.index]) {
+      && textTracks) {
       this._removeNativeTextTrackChangeListener();
-      this._disableTextTracks();
-      textTracks[textTrack.index].mode = 'hidden';
-      NativeAdapter._logger.debug('Text track changed', textTrack);
-      this._onTrackChanged(textTrack);
-      this._addNativeTextTrackChangeListener();
+      this._disableAllTextTracks();
+      let selectedTrack;
+      if (textTrack.external) {
+        selectedTrack = textTrack;
+      } else if (textTracks[textTrack.index]) {
+        selectedTrack = textTracks[textTrack.index];
+        selectedTrack.mode = 'hidden';
+      }
+      if (selectedTrack){
+        NativeAdapter._logger.debug('Text track changed', selectedTrack);
+        this._onTrackChanged(selectedTrack);
+        this._addNativeTextTrackChangeListener();
+      }
+
     }
   }
 
@@ -684,7 +693,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    */
   hideTextTrack(): void {
-    this._disableTextTracks();
+    this._disableAllTextTracks();
   }
 
   /**
@@ -742,7 +751,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    * @returns {void}
    */
-  _disableTextTracks(): void {
+  _disableAllTextTracks(): void {
     let textTracks = this._videoElement.textTracks;
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {

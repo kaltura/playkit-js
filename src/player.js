@@ -461,7 +461,6 @@ export default class Player extends FakeEventTarget {
     if (this._hasSources(config.sources)) {
       this._configureOrLoadPlugins(config.plugins);
       const receivedSourcesWhenHasEngine: boolean = !!this._engine;
-      this.hideTextTrack()
       if (receivedSourcesWhenHasEngine) {
         this.reset();
         Player._logger.debug('Change source started');
@@ -481,7 +480,7 @@ export default class Player extends FakeEventTarget {
           this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_ENDED));
         }
       }
-      if (this._config.sources.captions){
+      if (this._config.sources.captions) {
         this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
       }
     } else {
@@ -1018,8 +1017,8 @@ export default class Player extends FakeEventTarget {
       } else if (track instanceof AudioTrack) {
         this._engine.selectAudioTrack(track);
       } else if (track instanceof TextTrack) {
-        this.hideTextTrack();
         if (track.language === OFF) {
+          this.hideTextTrack();
           this._playbackAttributesState.textLanguage = OFF;
         } else if (track.external && !this._config.playback.useNativeTextTrack) {
           this._externalCaptionsHandler.selectExternalTextTrack(track);
@@ -1047,7 +1046,6 @@ export default class Player extends FakeEventTarget {
         if (track.external) {
           this._engine.removeEventListener(Html5EventType.TIME_UPDATE, this._externalCaptionsHandler.handleExternalCaptionsCallback);
         }
-        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {}))
       });
       const textTrack = textTracks.find(track => track.language === OFF);
       if (textTrack) {
@@ -1055,6 +1053,10 @@ export default class Player extends FakeEventTarget {
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}))
       }
     }
+  }
+
+  disableAllTextTracks(): void {
+    this._engine.disableAllTextTracks();
   }
 
   /**
@@ -1446,9 +1448,6 @@ export default class Player extends FakeEventTarget {
         const browser = this._env.browser.name;
         if (browser === 'Edge' || browser === 'IE') {
           this._removeTextCuePatch();
-        }
-        if (this._externalCaptionsHandler) {
-          this._externalCaptionsHandler.maybeSetExternalCueIndex();
         }
       });
       this._eventManager.listen(this._engine, CustomEventType.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
@@ -1889,7 +1888,6 @@ export default class Player extends FakeEventTarget {
         language: OFF
       }));
     }
-    this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
   }
 
   /**
@@ -1903,7 +1901,6 @@ export default class Player extends FakeEventTarget {
     const offTextTrack: ?Track = this._getTracksByType(TrackType.TEXT).find(track => TextTrack.langComparer(OFF, track.language));
 
     this.hideTextTrack();
-    //this.selectOffTrack();
 
     let currentOrConfiguredTextLang = this._playbackAttributesState.textLanguage || this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackType.TEXT);
     let currentOrConfiguredAudioLang = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;

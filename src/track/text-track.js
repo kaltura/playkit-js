@@ -21,6 +21,8 @@ export default class TextTrack extends Track {
 
   _url: string;
 
+  _type: string;
+
   /**
    * Getter for the kind of the text track.
    * @public
@@ -28,6 +30,10 @@ export default class TextTrack extends Track {
    */
   get kind(): string {
     return this._kind;
+  }
+
+  get type(): string{
+    return this._type;
   }
 
   get external(): boolean {
@@ -56,6 +62,7 @@ export default class TextTrack extends Track {
     this._external = settings.external;
     this._cues = settings.cues;
     this._url = settings.url;
+    this._type = settings.type;
   }
 }
 
