@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.29.0"></a>
+# [0.29.0](https://github.com/kaltura/playkit-js/compare/v0.28.0...v0.29.0) (2018-06-17)
+
+
+### Bug Fixes
+
+* **FEC-8233:** handle media & error recovering ([#226](https://github.com/kaltura/playkit-js/issues/226)) ([48c29fe](https://github.com/kaltura/playkit-js/commit/48c29fe))
+* **FEC-8255:** video starts from beginning instead 12th sec ([#230](https://github.com/kaltura/playkit-js/issues/230)) ([0136c88](https://github.com/kaltura/playkit-js/commit/0136c88))
+* **FEC-8257:** research autoplay detection handling ([#232](https://github.com/kaltura/playkit-js/issues/232)) ([605eea1](https://github.com/kaltura/playkit-js/commit/605eea1))
+* **FEC-8272:** sometimes when seeking spinner display constantly in IE11 ([#234](https://github.com/kaltura/playkit-js/issues/234)) ([7a28049](https://github.com/kaltura/playkit-js/commit/7a28049))
+* **FEC-8315:** two caption events triggered after first play ([#238](https://github.com/kaltura/playkit-js/issues/238)) ([a46f9bb](https://github.com/kaltura/playkit-js/commit/a46f9bb))
+* **FEC-8319:** When starting to play an mp4 video, a TEXT_TRACK_CHANGED event is sent twice ([#240](https://github.com/kaltura/playkit-js/issues/240)) ([c673454](https://github.com/kaltura/playkit-js/commit/c673454))
+
+
+### Features
+
+* **FEC-8243:** allow to disable specific plugins ([#229](https://github.com/kaltura/playkit-js/issues/229)) ([e16a903](https://github.com/kaltura/playkit-js/commit/e16a903))
+
+
+
 <a name="0.28.0"></a>
 # [0.28.0](https://github.com/kaltura/playkit-js/compare/v0.27.1...v0.28.0) (2018-05-26)
 
