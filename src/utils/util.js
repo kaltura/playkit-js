@@ -441,14 +441,10 @@ const _Http = {
       request.onreadystatechange = function () {
         if (request.readyState === 4) {
           if (request.status === 200) {
-            if (request.getResponseHeader('content-type') === 'application/json') {
-              try {
-                let jsonResponse = JSON.parse(request.responseText);
-                resolve(jsonResponse);
-              } catch (e) {
-                resolve(request.responseText);
-              }
-            } else {
+            try {
+              let jsonResponse = JSON.parse(request.responseText);
+              resolve(jsonResponse);
+            } catch (e) {
               resolve(request.responseText);
             }
           } else {

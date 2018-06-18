@@ -161,7 +161,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     this._eventManager = new EventManager();
     this._maybeSetDrmPlayback();
     this._progressiveSources = config.sources.progressive;
-    this._useExternalCaptions = config.sources.captions;
+    this._useExternalCaptions = config.playback.useNativeTextTrack;
     this._liveEdge = 0;
   }
 
