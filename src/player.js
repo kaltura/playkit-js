@@ -409,10 +409,10 @@ export default class Player extends FakeEventTarget {
   _fallbackToMutedAutoPlay: boolean;
   /**
    * holds the external tracks handler controller
-   * @type {any}
+   * @type {ExternalCaptionsHandler}
    * @private
    */
-  _externalCaptionsHandler: any = null;
+  _externalCaptionsHandler: ExternalCaptionsHandler = null;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -635,10 +635,6 @@ export default class Player extends FakeEventTarget {
    */
   destroy(): void {
     if (this._destroyed) return;
-    if (this._handleExternalCaptionsCallback) {
-      this._engine.removeEventListener(Html5EventType.TIME_UPDATE, this._handleExternalCaptionsCallback);
-      this._handleExternalCaptionsCallback = null;
-    }
     if (this._engine) {
       this._engine.destroy();
     }
@@ -931,6 +927,25 @@ export default class Player extends FakeEventTarget {
     this._loadingMedia = loading;
   }
 
+  /**
+   * getter for _activeTextCues
+   * @returns {Array<any>} returns the active text cues array
+   * @public
+   */
+  get activeTextCues(): Array<any> {
+    return this._activeTextCues;
+  }
+
+  /**
+   * setter for _activeTextCues
+   * @param {Array<*>} value - cues
+   * @returns {void}
+   * @public
+   */
+  set activeTextCues(value: Array<any>): void {
+    this._activeTextCues = value;
+  }
+
   // </editor-fold>
 
   // <editor-fold desc="Live API">
@@ -1021,7 +1036,7 @@ export default class Player extends FakeEventTarget {
           this.hideTextTrack();
           this._playbackAttributesState.textLanguage = OFF;
         } else if (track.external && !this._config.playback.useNativeTextTrack) {
-          this._externalCaptionsHandler.selectExternalTextTrack(track);
+          this._externalCaptionsHandler.selectTextTrack(track);
         } else {
           this._engine.selectTextTrack(track);
         }
@@ -1041,12 +1056,6 @@ export default class Player extends FakeEventTarget {
       this._activeTextCues = [];
       this._updateTextDisplay([]);
       const textTracks = this._getTracksByType(TrackType.TEXT);
-      textTracks.map(track => {
-        track.active = false;
-        if (track.external) {
-          this._engine.removeEventListener(Html5EventType.TIME_UPDATE, this._externalCaptionsHandler.handleExternalCaptionsCallback);
-        }
-      });
       const textTrack = textTracks.find(track => track.language === OFF);
       if (textTrack) {
         textTrack.active = true;
@@ -1055,8 +1064,25 @@ export default class Player extends FakeEventTarget {
     }
   }
 
+  /**
+   * calling the adapters disableAllTextTracks, setting all the text tracks to 'disabled'
+   * @public
+   * @returns {void}
+   */
   disableAllTextTracks(): void {
     this._engine.disableAllTextTracks();
+  }
+
+  /**
+   * setting the a player textTrack cues , selecting it wi
+   * @public
+   * @param {TextTrack} textTrack - the external text track to take the cues from (and the language from)
+   * @returns {void}
+   */
+  setTextTrackCues(textTrack: TextTrack): void {
+    this._getTracksByType(TrackType.TEXT)
+      .find(track => textTrack.language === track.language)
+      .cues = textTrack.cues;
   }
 
   /**
@@ -1465,7 +1491,7 @@ export default class Player extends FakeEventTarget {
         return this.dispatchEvent(event);
       });
       this._eventManager.listen(this._engine, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this._onTracksChanged(event));
-      this._eventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
+      this._eventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this.onCueChange(event));
       this._eventManager.listen(this._engine, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.AUTOPLAY_FAILED, (event: FakeEvent) => {
         this.pause();
@@ -1779,11 +1805,14 @@ export default class Player extends FakeEventTarget {
     this._addTextTrackOffOption();
   }
 
+  /**
+   * checking if there is external caption to add. if so -  adding it.
+   * @returns {void}
+   * @private
+   */
   _maybeAddExternalTracks(): void {
-    if (!this._config.sources.captions) {
-      return;
-    } else {
-      this._externalCaptionsHandler.addExternalTracks();
+    if (this._config.sources.captions) {
+      this._externalCaptionsHandler.addTracks();
     }
   }
 
@@ -1835,10 +1864,10 @@ export default class Player extends FakeEventTarget {
   /**
    * handle text cue change
    * @param {FakeEvent} event - the cue change event payload
-   * @private
+   * @public
    * @returns {void}
    */
-  _onCueChange(event: FakeEvent): void {
+  onCueChange(event: FakeEvent): void {
     Player._logger.debug('Text cue changed', event.payload.cues);
     this._activeTextCues = event.payload.cues;
     this._updateCueDisplaySettings();
@@ -1888,6 +1917,15 @@ export default class Player extends FakeEventTarget {
         language: OFF
       }));
     }
+  }
+
+  /**
+   * add a track to the track array
+   * @param {Track} track - the track to be added to the track array
+   * @public
+   */
+  addTrack(track: Track): void {
+    this._tracks.push(track);
   }
 
   /**

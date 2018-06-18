@@ -6,10 +6,9 @@ import TextTrack from "./text-track";
 import {CustomEventType, Html5EventType} from "../event/event-type";
 import FakeEvent from "../event/fake-event";
 import getLogger from "../utils/logger";
+import EventManager from "../event/event-manager";
 
 class ExternalCaptionsHandler {
-
-  static VTT_POSTFIX: string = 'vtt';
 
   static SRT_POSTFIX: string = 'srt';
   /**
@@ -18,7 +17,7 @@ class ExternalCaptionsHandler {
    * @static
    * @private
    */
-  static _logger: any = getLogger('External captions handler');
+  static _logger: any = getLogger('ExternalCaptionsHandler');
   /**
    * Index that specifies the last cue that is playing / played in the text track cue array.
    * @type {number}
@@ -32,20 +31,22 @@ class ExternalCaptionsHandler {
    */
   _handleExternalCaptionsCallback: Function = null;
   /**
-   * the video element, used for native tracks.
-   * @type {HTMLVideoElement}
-   * @private
-   */
-  _videoElement: HTMLVideoElement = null;
-  /**
    * the player object.
    * @type {Object}
    * @private
    */
   _player: null;
+  /**
+   * event manager for the external caption handler
+   * @type {EventManager}
+   * @private
+   */
+  _eventManager: EventManager = null;
 
   /**
-   *
+   * a map that holds the current cues that are in process. process may be in download or that the cues are being parsed.
+   * @type {Object} language: promise<*>
+   * @private
    */
   _cuesInProcessMap: Object = {};
 
@@ -55,23 +56,27 @@ class ExternalCaptionsHandler {
    */
   constructor(player: Object) {
     this._player = player;
-    this._videoElement = player.getVideoElement();
+    this._eventManager = new EventManager();
     this._addListeners();
   }
 
-
+  /**
+   * adds listeners to the player, so the module will handle them on its own.
+   * @returns {void}
+   * @private
+   */
   _addListeners(): void {
-    this._player._eventManager.listen(this._player._engine, this._player.Event.SEEKED, (e) => {
+    this._eventManager.listen(this._player, this._player.Event.SEEKED, (e) => {
       this._maybeSetExternalCueIndex(e)
     });
-    this._player._eventManager.listen(this._player._engine, this._player.Event.TEXT_TRACK_CHANGED, (e) => {
+    this._eventManager.listen(this._player, this._player.Event.TEXT_TRACK_CHANGED, (e) => {
       this._handleTextTrackChanged(e)
     });
   }
 
   /**
    * Make a request to download a caption and parse it's content to cues.
-   * @param {string} url - url for the captions file.
+   * @param {TextTrack} textTrack - download and parse the cues of the text track
    * @returns {Promise<any>} - resolves when the request returns and the caption string is parsed to cues.
    * @private
    */
@@ -126,7 +131,8 @@ class ExternalCaptionsHandler {
   /**
    * resolves with a caption object that contains all the caption data
    * start the parsing, creation and addition of the external captions.
-   * @param {object} caption - the caption configuration from the player config.
+   * @param {TextTrack} textTrack - create a single caption. when the process ends, the caption is removed from the
+   * _cuesInProcessMap.
    * @returns {Promise<any>} - the caption object with the parsed cues
    * @private
    */
@@ -135,6 +141,7 @@ class ExternalCaptionsHandler {
       this._getCuesArray(textTrack)
         .then(cues => {
           textTrack.cues = cues;
+          this._player.setTextTrackCues(textTrack);
           delete this._cuesInProcessMap[textTrack.language];
           resolve();
         });
@@ -149,7 +156,7 @@ class ExternalCaptionsHandler {
    * @private
    */
   _indexOfSameLanguageTrack(textTrack: TextTrack): number {
-    const trackList = this._videoElement.textTracks;
+    const trackList = this._player.getVideoElement().textTracks;
     let index = -1;
     for (let i = 0; i < trackList.length; i++) {
       if (trackList[i].language === textTrack.language) {
@@ -159,7 +166,6 @@ class ExternalCaptionsHandler {
     }
     return index;
   }
-
 
   /**
    * getting the file extension
@@ -179,31 +185,31 @@ class ExternalCaptionsHandler {
    * @private
    */
   _handleCaptionOnTimeUpdate(track: TextTrack): void {
-    if (this._player._activeTextCues.length > 0 && this._player.currentTime < this._player._activeTextCues[this._player._activeTextCues.length - 1].startTime) {
-      this._player._activeTextCues = [];
-      this._player._onCueChange({
+    if (this._player.activeTextCues.length > 0 && this._player.currentTime < this._player.activeTextCues[this._player.activeTextCues.length - 1].startTime) {
+      this._player.activeTextCues = [];
+      this._player.onCueChange({
         payload: {
           cues: []
         }
       });
     } else {
       let _activeCuesChanged = false;
-      for (let _activeTextCuesIndex = 0; _activeTextCuesIndex < this._player._activeTextCues.length; _activeTextCuesIndex++) {
-        let _cue = this._player._activeTextCues[_activeTextCuesIndex];
+      for (let _activeTextCuesIndex = 0; _activeTextCuesIndex < this._player.activeTextCues.length; _activeTextCuesIndex++) {
+        let _cue = this._player.activeTextCues[_activeTextCuesIndex];
         if (this._player.currentTime < _cue.startTime || _cue.endTime < this._player.currentTime) {
-          this._player._activeTextCues.splice(_activeTextCuesIndex, 1);
+          this._player.activeTextCues.splice(_activeTextCuesIndex, 1);
           _activeCuesChanged = true;
         }
       }
       while (this._player.currentTime > track.cues[this._externalCueIndex].startTime) {
-        this._player._activeTextCues.push(track.cues[this._externalCueIndex]);
+        this._player.activeTextCues.push(track.cues[this._externalCueIndex]);
         this._externalCueIndex++;
         _activeCuesChanged = true;
       }
       if (_activeCuesChanged) {
-        this._player._onCueChange({
+        this._player.onCueChange({
           payload: {
-            cues: this._player._activeTextCues
+            cues: this._player.activeTextCues
           }
         });
       }
@@ -216,18 +222,14 @@ class ExternalCaptionsHandler {
    * @private
    */
   _maybeSetExternalCueIndex(): void {
-    const textTrack = this._player._getTracksByType(TrackType.TEXT).filter(track => {
-      track.active() && track.external;
-    });
+    const textTrack = this._player.getTracks(TrackType.TEXT).filter(track => track.active && track.external)[0];
     if (textTrack && textTrack.external) {
       let cues = textTrack.cues;
-      for (let i = 0; i < cues.length; i++) {
-        if (this._player.currentTime < cues[i].startTime) {
-          this._externalCueIndex = i;
-        } else {
-          break;
-        }
+      let i = 0;
+      while (this._player.currentTime > cues[i].startTime && i < cues.length) {
+        i++;
       }
+      this._externalCueIndex = i;
     }
   }
 
@@ -236,12 +238,12 @@ class ExternalCaptionsHandler {
    * @returns {Promise<any>} returns a promise when all the tracks were parsed and added.
    * @public
    */
-  addExternalTracks(): void {
-    const captions = this._player._config.sources.captions;
+  addTracks(): void {
+    const captions = this._player.config.sources.captions;
     if (!captions) {
       return;
     }
-    let textTracks = this._player._getTracksByType(TrackType.TEXT);
+    let textTracks = this._player.getTracks(TrackType.TEXT);
     let textTracksLength = textTracks.length || 0;
     captions.forEach(caption => {
       let track = new TextTrack({
@@ -255,21 +257,16 @@ class ExternalCaptionsHandler {
         type: caption.type,
         cues: []
       });
-      let sameLangTrack = textTracks.filter(textTrack => caption.language === textTrack.language);
-      if (sameLangTrack.length) {
-        track.index = sameLangTrack[0].index;
-        sameLangTrack[0] = track;
+      let sameLangTrack = textTracks.find(textTrack => caption.language === textTrack.language);
+      // replace the track with a new one, update only the cues to []
+      if (sameLangTrack) {
+        this._player.setTextTrackCues(track);
       } else {
-        this._player._tracks.push(track);
+        this._player.addTrack(track);
       }
       if (this._player.config.playback.useNativeTextTrack)
         this._setNativeTextTrack(track);
     });
-  }
-
-  destroy(): void {
-    this._player._eventManager.unlisten(this._player._engine, this._player.Event.SEEKED, this._maybeSetExternalCueIndex);
-    this._player._eventManager.unlisten(this._player._engine, this._player.Event.TEXT_TRACK_CHANGED, this._handleTextTrackChanged);
   }
 
   /**
@@ -278,14 +275,14 @@ class ExternalCaptionsHandler {
    * @returns {void}
    * @public
    */
-  selectExternalTextTrack(textTrack: TextTrack): Promise<*> {
-    return new Promise((resolve, reject) => {
+  selectTextTrack(textTrack: TextTrack): Promise<*> {
+    return new Promise((resolve) => {
       if (textTrack.cues.length > 0 && !this._player.config.playback.useNativeTextTrack) {
         this._setTextTrack(textTrack);
         resolve();
       } else if (!this._cuesInProcessMap[textTrack.language]) {
         this._createCaption(textTrack).then(() => {
-          if (this._player._config.playback.useNativeTextTrack) {
+          if (this._player.config.playback.useNativeTextTrack) {
             this._addCuesToNativeTrack(textTrack);
           } else {
             this._setTextTrack(textTrack);
@@ -296,46 +293,76 @@ class ExternalCaptionsHandler {
     });
   }
 
+  /**
+   * when a text track is changed we might need to
+   * for native tracks - selecting the text track (adding the cues if its the first time the user selected the track)
+   * or - remove an event listener to a current external text track
+   * @param {FakeEvent} event
+   * @private
+   */
   _handleTextTrackChanged(event: FakeEvent): void {
-    if (this._player.config.playback.useNativeTextTrack && event.payload && event.payload.selectedTextTrack &&
-      event.payload.selectedTextTrack.external) {
-      this.selectExternalTextTrack(event.payload.selectedTextTrack);
+    if (event.payload && event.payload.selectedTextTrack) {
+      if (this._player.config.playback.useNativeTextTrack && event.payload.selectedTextTrack.external) {
+        this.selectTextTrack(event.payload.selectedTextTrack);
+      } else if (!this._player.config.playback.useNativeTextTrack && !event.payload.selectedTextTrack.external) {
+        this._eventManager.unlisten(this._player, Html5EventType.TIME_UPDATE);
+        this._player.onCueChange({
+          payload: {
+            cues: []
+          }
+        });
+      }
     }
   }
 
+  /**
+   * setting and adding a text track to the video element
+   * @param {TextTrack } textTrack - the player module TextTrack that will be set
+   * @returns {TextTrack} - the DOM text track that was set
+   * @private
+   */
   _setNativeTextTrack(textTrack: TextTrack): TextTrack {
-    let domTrack;
-    const sameLanguageTrackIndex = this._indexOfSameLanguageTrack(textTrack);
-    if (sameLanguageTrackIndex > -1) {
-      domTrack = this._videoElement.textTracks[sameLanguageTrackIndex];
-      domTrack.mode = 'showing';
-      if (domTrack.cues) {
-        Object.values(domTrack.cues).forEach(cue => {
-          domTrack.removeCue(cue);
+    let _domTrack;
+    const _videoElement = this._player.getVideoElement();
+    const _sameLanguageTrackIndex = this._indexOfSameLanguageTrack(textTrack);
+    if (_sameLanguageTrackIndex > -1) {
+      _domTrack = _videoElement.textTracks[_sameLanguageTrackIndex];
+      _domTrack.mode = 'showing';
+      if (_domTrack.cues) {
+        Object.values(_domTrack.cues).forEach(cue => {
+          _domTrack.removeCue(cue);
         });
       }
     } else {
-      domTrack = this._videoElement.addTextTrack("subtitles", textTrack.label, textTrack.language);
+      _domTrack = _videoElement.addTextTrack("subtitles", textTrack.label, textTrack.language);
       this._player._getTracksByType(TrackType.TEXT).map(track => {
         track.index = track.index + 1;
       });
-        textTrack.index = parseInt(Object.keys(this._videoElement.textTracks).find(key => this._videoElement.textTracks[key] === domTrack));
+      textTrack.index = parseInt(Object.keys(_videoElement.textTracks).find(key => _videoElement.textTracks[key] === _domTrack));
     }
-    return domTrack;
+    return _domTrack;
   }
 
+  /**
+   * adding cues to a native text track
+   * @param {TextTrack} textTrack - the text track containing the cues to add
+   * @returns {void}
+   * @private
+   */
   _addCuesToNativeTrack(textTrack: TextTrack): void {
-    const track = Object.values(this._videoElement.textTracks).filter(track=> track.language === textTrack.language)[0];
+    const track = Object.values(this._player.getVideoElement().textTracks).filter(track => track.language === textTrack.language)[0];
     textTrack.cues.forEach(cue => {
       track.addCue(cue);
     });
   }
 
-
+  /**
+   * setting an external track as active, de-actvating all the rest and start listening to time updates.
+   * @param {TextTrack} textTrack - text track to be set
+   * @private
+   */
   _setTextTrack(textTrack: textTrack): void {
-    if (this._player.config.playback.useNativeTextTrack) {
-      // do nothing
-    } else {
+    if (!this._player.config.playback.useNativeTextTrack) {
       const track = this._player._getTracksByType(TrackType.TEXT).filter(track => {
         if (track.index !== textTrack.index) {
           track.active = false;
@@ -344,16 +371,26 @@ class ExternalCaptionsHandler {
         }
       })[0];
       if (!track.active) {
-        this._player._engine.disableAllTextTracks();
+        this._player.disableAllTextTracks();
         ExternalCaptionsHandler._logger.debug('External text track changed', track);
         track.active = true;
         this._player.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: track}));
         this._handleExternalCaptionsCallback = () => {
           this._handleCaptionOnTimeUpdate(track);
         };
-        this._player._engine.addEventListener(Html5EventType.TIME_UPDATE, this._handleExternalCaptionsCallback);
+        this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, this._handleExternalCaptionsCallback)
       }
     }
+  }
+
+  /**
+   * destroy function
+   * @public
+   * @returns {void}
+   */
+  destroy(): void {
+    this._eventManager.unlisten(this._player, this._player.Event.SEEKED);
+    this._eventManager.unlisten(this._player, this._player.Event.TEXT_TRACK_CHANGED);
   }
 }
 
