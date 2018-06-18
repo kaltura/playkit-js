@@ -1826,8 +1826,8 @@ export default class Player extends FakeEventTarget {
     }
     if (type) {
       const tracks = this._getTracksByType(type);
-      for (let i = 0; i < tracks.length; i++) {
-        tracks[i].active = track.index === tracks[i].index;
+      for (let aTrack of tracks) {
+        aTrack.active = track.index === aTrack.index;
       }
     }
   }

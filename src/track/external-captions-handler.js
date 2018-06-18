@@ -45,6 +45,11 @@ class ExternalCaptionsHandler {
   _player: null;
 
   /**
+   *
+   */
+  _cuesInProcessMap: Object = {};
+
+  /**
    * constructor
    * @param {Object} player - the player object.
    */
@@ -56,8 +61,12 @@ class ExternalCaptionsHandler {
 
 
   _addListeners(): void {
-    this._player._eventManager.listen(this._player._engine, this._player.Event.SEEKED, (e)=>{this._maybeSetExternalCueIndex(e)});
-    this._player._eventManager.listen(this._player._engine, this._player.Event.TEXT_TRACK_CHANGED, (e)=>{this._handleTextTrackChanged(e)});
+    this._player._eventManager.listen(this._player._engine, this._player.Event.SEEKED, (e) => {
+      this._maybeSetExternalCueIndex(e)
+    });
+    this._player._eventManager.listen(this._player._engine, this._player.Event.TEXT_TRACK_CHANGED, (e) => {
+      this._handleTextTrackChanged(e)
+    });
   }
 
   /**
@@ -66,10 +75,10 @@ class ExternalCaptionsHandler {
    * @returns {Promise<any>} - resolves when the request returns and the caption string is parsed to cues.
    * @private
    */
-  _getCuesArray(captionsType: string, url: string): Promise<*> {
-    return new Promise((resolve, reject) => {
-      Utils.Http.execute(url, {}, 'GET').then(response => {
-        if ((typeof captionsType != 'undefined' && captionsType === ExternalCaptionsHandler.SRT_POSTFIX) || this._getFileType(url) === ExternalCaptionsHandler.SRT_POSTFIX) {
+  _getCuesArray(textTrack: TextTrack): Promise<*> {
+    let cuesPromise = new Promise((resolve, reject) => {
+      Utils.Http.execute(textTrack.url, {}, 'GET').then(response => {
+        if ((typeof textTrack.captionsType != 'undefined' && textTrack.captionsType === ExternalCaptionsHandler.SRT_POSTFIX) || this._getFileType(textTrack.url) === ExternalCaptionsHandler.SRT_POSTFIX) {
           response = this._convertSrtToVtt(response);
         }
         this._parseCues(response, resolve);
@@ -77,6 +86,8 @@ class ExternalCaptionsHandler {
         reject(new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.HTTP_ERROR, error.payload));
       })
     });
+    this._cuesInProcessMap[textTrack.language] = cuesPromise;
+    return cuesPromise;
   }
 
   /**
@@ -119,11 +130,12 @@ class ExternalCaptionsHandler {
    * @returns {Promise<any>} - the caption object with the parsed cues
    * @private
    */
-  _createCaption(track: TextTrack): Promise<*> {
+  _createCaption(textTrack: TextTrack): Promise<*> {
     return new Promise((resolve) => {
-      this._getCuesArray(track.type, track.url)
+      this._getCuesArray(textTrack)
         .then(cues => {
-          track.cues = cues;
+          textTrack.cues = cues;
+          delete this._cuesInProcessMap[textTrack.language];
           resolve();
         });
     });
@@ -250,6 +262,8 @@ class ExternalCaptionsHandler {
       } else {
         this._player._tracks.push(track);
       }
+      if (this._player.config.playback.useNativeTextTrack)
+        this._setNativeTextTrack(track);
     });
   }
 
@@ -266,15 +280,16 @@ class ExternalCaptionsHandler {
    */
   selectExternalTextTrack(textTrack: TextTrack): Promise<*> {
     return new Promise((resolve, reject) => {
-      if (textTrack.cues.length > 0) {
-        this._setExternalTextTrack(textTrack);
+      if (textTrack.cues.length > 0 && !this._player.config.playback.useNativeTextTrack) {
+        this._setTextTrack(textTrack);
         resolve();
-      } else {
+      } else if (!this._cuesInProcessMap[textTrack.language]) {
         this._createCaption(textTrack).then(() => {
           if (this._player._config.playback.useNativeTextTrack) {
-            this._createNativeTextTrack(textTrack);
+            this._addCuesToNativeTrack(textTrack);
+          } else {
+            this._setTextTrack(textTrack);
           }
-          this._setExternalTextTrack(textTrack);
           resolve();
         })
       }
@@ -288,20 +303,12 @@ class ExternalCaptionsHandler {
     }
   }
 
-
-  /**
-   * this function creates and adds a text track to the video element, incase there is a need in using
-   * native text tracks instead of using the player external text module.
-   * @param {Array<any>} captions - array of captions to add.
-   * @returns {void}
-   * @private
-   */
-  _createNativeTextTrack(textTrack: TextTrack): void {
+  _setNativeTextTrack(textTrack: TextTrack): TextTrack {
     let domTrack;
     const sameLanguageTrackIndex = this._indexOfSameLanguageTrack(textTrack);
     if (sameLanguageTrackIndex > -1) {
       domTrack = this._videoElement.textTracks[sameLanguageTrackIndex];
-      // domTrack.mode = 'showing';
+      domTrack.mode = 'showing';
       if (domTrack.cues) {
         Object.values(domTrack.cues).forEach(cue => {
           domTrack.removeCue(cue);
@@ -309,18 +316,26 @@ class ExternalCaptionsHandler {
       }
     } else {
       domTrack = this._videoElement.addTextTrack("subtitles", textTrack.label, textTrack.language);
+      this._player._getTracksByType(TrackType.TEXT).map(track => {
+        track.index = track.index + 1;
+      });
+        textTrack.index = parseInt(Object.keys(this._videoElement.textTracks).find(key => this._videoElement.textTracks[key] === domTrack));
     }
+    return domTrack;
+  }
+
+  _addCuesToNativeTrack(textTrack: TextTrack): void {
+    const track = Object.values(this._videoElement.textTracks).filter(track=> track.language === textTrack.language)[0];
     textTrack.cues.forEach(cue => {
-      domTrack.addCue(cue);
+      track.addCue(cue);
     });
   }
 
-  _setExternalTextTrack(textTrack: textTrack): void {
-    if (this._player.config.playback.useNativeTextTrack){
-      // const sameLanguageTrackIndex = this._indexOfSameLanguageTrack(textTrack);
-      // const domTrack = this._videoElement.textTracks[sameLanguageTrackIndex];
-      // domTrack.mode = 'showing';
-    }else{
+
+  _setTextTrack(textTrack: textTrack): void {
+    if (this._player.config.playback.useNativeTextTrack) {
+      // do nothing
+    } else {
       const track = this._player._getTracksByType(TrackType.TEXT).filter(track => {
         if (track.index !== textTrack.index) {
           track.active = false;

@@ -581,18 +581,16 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions')
       && textTracks) {
       this._removeNativeTextTrackChangeListener();
-      this._disableAllTextTracks();
       let selectedTrack;
-      if (textTrack.external) {
-        selectedTrack = textTrack;
-      } else if (textTracks[textTrack.index]) {
-        selectedTrack = textTracks[textTrack.index];
-        selectedTrack.mode = 'hidden';
-      }
+      this._disableAllTextTracks();
+      [selectedTrack] = Object.values(textTracks).filter(track=> track.language === textTrack.language);
       if (selectedTrack){
+        selectedTrack.mode = 'hidden';
         NativeAdapter._logger.debug('Text track changed', selectedTrack);
-        this._onTrackChanged(selectedTrack);
+        this._onTrackChanged(textTrack);
         this._addNativeTextTrackChangeListener();
+      } else {
+
       }
 
     }
@@ -644,7 +642,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     NativeAdapter._logger.debug('Video element text track change');
     const vidIndex = getActiveVidTextTrackIndex();
     const pkIndex = getActivePKTextTrackIndex();
-    if (vidIndex !== pkIndex) {
+
+    if (vidIndex !== getActivePKTextTrackIndex()) {
       // In case no text track with 'showing' mode
       // we need to set the off track
       if (vidIndex == -1) {
@@ -656,7 +655,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         // In case the text track on the video element is
         // different then the text track of the player
         // we need to set the correct one
-        const pkTextTrack = pkTextTracks.find(track => track.index === vidIndex);
+        const pkTextTrack = pkTextTracks.find(track => track.index === getActiveVidTextTrackIndex());
         if (pkTextTrack) {
           NativeAdapter._logger.debug('Native selection of track, update the player text track (' + pkIndex + ' -> ' + vidIndex + ')');
           this._onTrackChanged(pkTextTrack);
