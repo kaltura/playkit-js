@@ -20,8 +20,7 @@ const SRT_POSTFIX: string = 'srt';
 
 const VTT_POSTFIX: string = 'vtt';
 
-class ExternalCaptionsHandler extends FakeEventTarget {
-
+export default class ExternalCaptionsHandler extends FakeEventTarget {
   /**
    * The player class logger.
    * @type {any}
@@ -291,14 +290,11 @@ class ExternalCaptionsHandler extends FakeEventTarget {
         url: caption.url,
         type: caption.type
       };
-      // replace the track with a new one, update only the cues to []
-      if (sameLangTrack) {
-        this._player.setTextTrackCues(track);
-      } else {
+      if (!sameLangTrack) {
         this._player.addTextTrack(track);
       }
       if (this._player.config.playback.useNativeTextTrack)
-        this._setNativeTextTrack(track);
+        this._player.addOrSetNativeTextTrack(track);
     });
   }
 
@@ -317,7 +313,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
         this._downloadAndParseCues(textTrack).then(() => {
           this._textTrackModel[textTrack.language].cuesStatus = cuesStatus.DOWNLOADED;
           if (this._player.config.playback.useNativeTextTrack) {
-            this._addCuesToNativeTrack(textTrack, this._textTrackModel[textTrack.language].cues);
+            this._player.addCuesToNativeTextTrack(textTrack, this._textTrackModel[textTrack.language].cues);
           } else {
             this._setTextTrack(textTrack);
           }
@@ -354,48 +350,6 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     if (event.payload && event.payload.selectedTextTrack && this._player.config.playback.useNativeTextTrack && event.payload.selectedTextTrack.external) {
       this.selectTextTrack(event.payload.selectedTextTrack);
     }
-  }
-
-  /**
-   * setting and adding a text track to the video element
-   * @param {TextTrack } textTrack - the player module TextTrack that will be set
-   * @returns {TextTrack} - the DOM text track that was set
-   * @private
-   */
-  _setNativeTextTrack(textTrack: TextTrack): TextTrack {
-    let _domTrack;
-    const _videoElement = this._player.getVideoElement();
-    const _sameLanguageTrackIndex = this._indexOfSameLanguageTrack(textTrack);
-    if (_sameLanguageTrackIndex > -1) {
-      _domTrack = _videoElement.textTracks[_sameLanguageTrackIndex];
-      _domTrack.mode = 'hidden';
-      if (_domTrack.cues) {
-        Object.values(_domTrack.cues).forEach(cue => {
-          _domTrack.removeCue(cue);
-        });
-      }
-    } else {
-      _domTrack = _videoElement.addTextTrack("subtitles", textTrack.label, textTrack.language);
-      this._player._getTracksByType(TrackType.TEXT).map(track => {
-        track.index = track.index + 1;
-      });
-      textTrack.index = parseInt(Object.keys(_videoElement.textTracks).find(key => _videoElement.textTracks[key] === _domTrack));
-    }
-    return _domTrack;
-  }
-
-  /**
-   * adding cues to a native text track
-   * @param {Array<any>} cues - array of cues to add
-   * @param {TextTrack} textTrack - the text track containing the cues to add
-   * @returns {void}
-   * @private
-   */
-  _addCuesToNativeTrack(textTrack: TextTrack, cues: Array<any>): void {
-    const track = Object.values(this._player.getVideoElement().textTracks).filter(track => track.language === textTrack.language)[0];
-    cues.forEach(cue => {
-      track.addCue(cue);
-    });
   }
 
   /**
@@ -437,5 +391,3 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     this._activeTextCues = null;
   }
 }
-
-export default ExternalCaptionsHandler;

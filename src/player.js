@@ -1794,6 +1794,35 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * adds a new text track element to the video element or set an existing one
+   * (when adding a text track with existing language to the video element it will remove all its cues)
+   * @param {PKTextTrack} textTrack - the playkit text track object to be added
+   * @returns {void}
+   * @public
+   */
+  addOrSetNativeTextTrack(textTrack: textTrack): void {
+    const _engineTextTrack = this._engine.addOrSetTextTrack(textTrack);
+    // safari always push the text track at the beginning, so we have to update the index of the indexes in the player
+    // text track module.
+    if (_engineTextTrack && this._engine.indexOfSameLanguageTrack === -1) {
+      this._getTracksByType(TrackType.TEXT).map(track => {
+        track.index = track.index + 1;
+      });
+      textTrack.index = parseInt(Object.keys(this._el.textTracks).find(key => this._el.textTracks[key] === _engineTextTrack));
+    }
+  }
+
+  /**
+   * adding cues to an existing text element in a video tag
+   * @param {TextTrack} textTrack - adding cues to an exiting text track element
+   * @param {Array<any>} cues - the cues to be added
+   * @return {void}
+   */
+  addCuesToNativeTextTrack(textTrack: TextTrack, cues: Array<any>): void {
+    this._engine.addCuesToTextTrack(textTrack, cues);
+  }
+
+  /**
    * Returns the tracks according to the filter. if no filter given returns the all tracks.
    * @function _getTracksByType
    * @param {string} [type] - a tracks filter, should be 'video', 'audio' or 'text'.

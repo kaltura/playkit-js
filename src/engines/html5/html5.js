@@ -246,6 +246,62 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * this function runs on the players text tracks and checks if there is already a text track with the same language
+   * as the new one.
+   * @param {PKTextTrack} textTrack - the text track to check
+   * @returns {number} - the index of the text track with the same language (if there is any). and -1 if there isn't
+   * @public
+   */
+  indexOfSameLanguageTrack(textTrack: PKTextTrack): number {
+    const trackList = this._el.textTracks;
+    let index = -1;
+    for (let i = 0; i < trackList.length; i++) {
+      if (trackList[i].language === textTrack.language) {
+        index = i;
+        break;
+      }
+    }
+    return index;
+  }
+
+  /**
+   * adds a new text track element to the video element or set an existing one
+   * (when adding a text track with existing language to the video element it will remove all its cues)
+   * @param {PKTextTrack} textTrack - the playkit text track object to be added
+   * @returns {void}
+   * @public
+   */
+  addOrSetTextTrack(textTrack: PKTextTrack): void {
+    let _domTrack;
+    const _sameLanguageTrackIndex = this.indexOfSameLanguageTrack(textTrack);
+    if (_sameLanguageTrackIndex > -1) {
+      _domTrack = this._el.textTracks[_sameLanguageTrackIndex];
+      _domTrack.mode = 'hidden';
+      if (_domTrack.cues) {
+        Object.values(_domTrack.cues).forEach(cue => {
+          _domTrack.removeCue(cue);
+        });
+      }
+    } else {
+      _domTrack = this._el.addTextTrack("subtitles", textTrack.label, textTrack.language);
+    }
+    return _domTrack;
+  }
+
+  /**
+   * adding cues to an existing text element in a video tag
+   * @param {PKTextTrack} textTrack - adding cues to an exiting text track element
+   * @param {Array<any>} cues - the cues to be added
+   * @return {void}
+   */
+  addCuesToTextTrack(textTrack: PKTextTrack, cues: Array<any>): void {
+    const track = Object.values(this._el.textTracks).filter(track => track.language === textTrack.language)[0];
+    cues.forEach(cue => {
+      track.addCue(cue);
+    });
+  }
+
+  /**
    * Handles errors from the video element
    * @returns {void}
    * @private
