@@ -442,6 +442,7 @@ export default class Player extends FakeEventTarget {
     this._createReadyPromise();
     this._createPlayerContainer();
     this._appendDomElements();
+    this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
     this.configure(config);
   }
 
@@ -470,9 +471,6 @@ export default class Player extends FakeEventTarget {
       this._reset = false;
       if (this._selectEngineByPriority()) {
         this._appendEngineEl();
-        if (this._config.sources.captions) {
-          this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
-        }
         this._attachMedia();
         this._handlePlaybackOptions();
         this._posterManager.setSrc(this._config.sources.poster);
@@ -622,6 +620,7 @@ export default class Player extends FakeEventTarget {
     this._posterManager.reset();
     this._stateManager.reset();
     this._pluginManager.reset();
+    this._externalCaptionsHandler.reset();
     this._engine.reset();
     this._showBlackCover();
     this._reset = true;
@@ -928,25 +927,6 @@ export default class Player extends FakeEventTarget {
     this._loadingMedia = loading;
   }
 
-  /**
-   * getter for _activeTextCues
-   * @returns {Array<any>} returns the active text cues array
-   * @public
-   */
-  get activeTextCues(): Array<any> {
-    return this._activeTextCues;
-  }
-
-  /**
-   * setter for _activeTextCues
-   * @param {Array<*>} value - cues
-   * @returns {void}
-   * @public
-   */
-  set activeTextCues(value: Array<any>): void {
-    this._activeTextCues = value;
-  }
-
   // </editor-fold>
 
   // <editor-fold desc="Live API">
@@ -1068,15 +1048,6 @@ export default class Player extends FakeEventTarget {
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}))
       }
     }
-  }
-
-  /**
-   * calling the adapters disableAllTextTracks, setting all the text tracks to 'disabled'
-   * @public
-   * @returns {void}
-   */
-  disableAllTextTracks(): void {
-    this._engine.disableAllTextTracks();
   }
 
   /**
