@@ -412,7 +412,7 @@ export default class Player extends FakeEventTarget {
    * @type {ExternalCaptionsHandler}
    * @private
    */
-  _externalCaptionsHandler: ExternalCaptionsHandler = null;
+  _externalCaptionsHandler: ?ExternalCaptionsHandler = null;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -470,6 +470,9 @@ export default class Player extends FakeEventTarget {
       this._reset = false;
       if (this._selectEngineByPriority()) {
         this._appendEngineEl();
+        if (this._config.sources.captions) {
+          this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
+        }
         this._attachMedia();
         this._handlePlaybackOptions();
         this._posterManager.setSrc(this._config.sources.poster);
@@ -479,9 +482,6 @@ export default class Player extends FakeEventTarget {
           Player._logger.debug('Change source ended');
           this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_ENDED));
         }
-      }
-      if (this._config.sources.captions) {
-        this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
       }
     } else {
       Utils.Object.mergeDeep(this._config, config);
@@ -638,6 +638,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.destroy();
     }
+    this._externalCaptionsHandler.destroy();
     this._posterManager.destroy();
     this._eventManager.destroy();
     this._pluginManager.destroy();
@@ -1036,8 +1037,12 @@ export default class Player extends FakeEventTarget {
           this.hideTextTrack();
           this._playbackAttributesState.textLanguage = OFF;
         } else if (track.external && !this._config.playback.useNativeTextTrack) {
+          this._engine.hideTextTrack();
           this._externalCaptionsHandler.selectTextTrack(track);
         } else {
+          if (this._externalCaptionsHandler) {
+            this._externalCaptionsHandler.hideTextTrack();
+          }
           this._engine.selectTextTrack(track);
         }
       }
@@ -1056,6 +1061,7 @@ export default class Player extends FakeEventTarget {
       this._activeTextCues = [];
       this._updateTextDisplay([]);
       const textTracks = this._getTracksByType(TrackType.TEXT);
+      textTracks.map(track => track.active = false);
       const textTrack = textTracks.find(track => track.language === OFF);
       if (textTrack) {
         textTrack.active = true;
@@ -1491,7 +1497,7 @@ export default class Player extends FakeEventTarget {
         return this.dispatchEvent(event);
       });
       this._eventManager.listen(this._engine, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this._onTracksChanged(event));
-      this._eventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this.onCueChange(event));
+      this._eventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.AUTOPLAY_FAILED, (event: FakeEvent) => {
         this.pause();
@@ -1515,6 +1521,9 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this, CustomEventType.EXIT_FULLSCREEN, () => {
         this._resetTextCuesAndReposition();
       });
+      if (this._externalCaptionsHandler) {
+        this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
+      }
     }
   }
 
@@ -1864,10 +1873,10 @@ export default class Player extends FakeEventTarget {
   /**
    * handle text cue change
    * @param {FakeEvent} event - the cue change event payload
-   * @public
+   * @private
    * @returns {void}
    */
-  onCueChange(event: FakeEvent): void {
+  _onCueChange(event: FakeEvent): void {
     Player._logger.debug('Text cue changed', event.payload.cues);
     this._activeTextCues = event.payload.cues;
     this._updateCueDisplaySettings();
@@ -1920,12 +1929,17 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * add a track to the track array
-   * @param {Track} track - the track to be added to the track array
+   *
+   * add a text track to the track array
+   * @param {TextTrack} track - the track to be added to the track array
+   * @returns {void}
    * @public
    */
-  addTrack(track: Track): void {
-    this._tracks.push(track);
+  addTextTrack(track: TextTrack): void {
+    // allow addition of textTracks only.
+    if (track instanceof TextTrack) {
+      this._tracks.push(track);
+    }
   }
 
   /**

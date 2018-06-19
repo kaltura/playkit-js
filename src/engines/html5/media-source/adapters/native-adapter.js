@@ -582,17 +582,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       && textTracks) {
       this._removeNativeTextTrackChangeListener();
       let selectedTrack;
-      this._disableAllTextTracks();
+      this._disableTextTracks();
       [selectedTrack] = Object.values(textTracks).filter(track=> track.language === textTrack.language);
       if (selectedTrack){
         selectedTrack.mode = 'hidden';
         NativeAdapter._logger.debug('Text track changed', selectedTrack);
         this._onTrackChanged(textTrack);
         this._addNativeTextTrackChangeListener();
-      } else {
-
       }
-
     }
   }
 
@@ -643,7 +640,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const vidIndex = getActiveVidTextTrackIndex();
     const pkIndex = getActivePKTextTrackIndex();
 
-    if (vidIndex !== getActivePKTextTrackIndex()) {
+    if (vidIndex !== pkIndex) {
       // In case no text track with 'showing' mode
       // we need to set the off track
       if (vidIndex == -1) {
@@ -655,7 +652,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         // In case the text track on the video element is
         // different then the text track of the player
         // we need to set the correct one
-        const pkTextTrack = pkTextTracks.find(track => track.index === getActiveVidTextTrackIndex());
+        const pkTextTrack = pkTextTracks.find(track => track.index === pkIndex);
         if (pkTextTrack) {
           NativeAdapter._logger.debug('Native selection of track, update the player text track (' + pkIndex + ' -> ' + vidIndex + ')');
           this._onTrackChanged(pkTextTrack);
@@ -692,7 +689,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    */
   hideTextTrack(): void {
-    this._disableAllTextTracks();
+    this._disableTextTracks();
   }
 
   /**
@@ -750,7 +747,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    * @returns {void}
    */
-  _disableAllTextTracks(): void {
+  _disableTextTracks(): void {
     let textTracks = this._videoElement.textTracks;
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {

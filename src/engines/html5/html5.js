@@ -369,12 +369,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._removeCueChangeListener();
   }
 
-  disableAllTextTracks(): void{
-    if (this._mediaSourceAdapter) {
-      this._mediaSourceAdapter._disableAllTextTracks();
-    }
-  }
-
   /**
    * Enables adaptive bitrate switching according to the media source extension logic.
    * @function enableAdaptiveBitrate
