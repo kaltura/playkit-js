@@ -1020,9 +1020,7 @@ export default class Player extends FakeEventTarget {
           this._engine.hideTextTrack();
           this._externalCaptionsHandler.selectTextTrack(track);
         } else {
-          if (this._externalCaptionsHandler) {
-            this._externalCaptionsHandler.hideTextTrack();
-          }
+          this._externalCaptionsHandler.hideTextTrack();
           this._engine.selectTextTrack(track);
         }
       }
