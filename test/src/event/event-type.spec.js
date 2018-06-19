@@ -68,7 +68,8 @@ describe('events', () => {
       USER_CLOSED_AD: 'userclosedad',
       AD_VOLUME_CHANGED: 'advolumechanged',
       AD_MUTED: 'admuted',
-      AD_PROGRESS: 'adprogress'
+      AD_PROGRESS: 'adprogress',
+      MEDIA_RECOVERED: 'mediarecovered'
     });
     EventType.should.deep.equals(ObjectUtils.merge([Html5EventType, CustomEventType]));
   });

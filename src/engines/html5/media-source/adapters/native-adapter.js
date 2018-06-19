@@ -218,7 +218,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   load(startTime: ?number): Promise<Object> {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
-        this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, this._onLoadedData.bind(this, resolve));
+        this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, this._onLoadedData.bind(this, resolve, startTime));
         this._eventManager.listenOnce(this._videoElement, Html5EventType.ERROR, this._onError.bind(this, reject));
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
@@ -226,9 +226,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         if (this._sourceObj && this._sourceObj.url) {
           this._videoElement.src = this._sourceObj.url;
           this._trigger(CustomEventType.ABR_MODE_CHANGED, {mode: this._isProgressivePlayback() ? 'manual' : 'auto'});
-        }
-        if (startTime && startTime > -1) {
-          this._videoElement.currentTime = startTime;
         }
         this._videoElement.load();
       });
@@ -239,10 +236,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   /**
    * Loaded data event handler.
    * @param {Function} resolve - The resolve promise function.
+   * @param {number} startTime - Optional time to start the video from.
    * @private
    * @returns {void}
    */
-  _onLoadedData(resolve: Function): void {
+  _onLoadedData(resolve: Function, startTime: ?number): void {
     const parseTracksAndResolve = () => {
       this._playerTracks = this._getParsedTracks();
       this._addNativeAudioTrackChangeListener();
@@ -256,6 +254,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._handleLiveDurationChange();
       }
     };
+    if (startTime && startTime > -1) {
+      this._videoElement.currentTime = startTime;
+    }
     if (this._videoElement.textTracks.length > 0) {
       parseTracksAndResolve();
     } else {
