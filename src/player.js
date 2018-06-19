@@ -594,7 +594,7 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Resets the necessary components before change media.
-   * @private
+   * @public
    * @returns {void}
    */
   reset(): void {
