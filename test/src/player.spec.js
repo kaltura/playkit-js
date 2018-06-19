@@ -946,7 +946,7 @@ describe('Player', function () {
     });
 
     it('should select a new subtitles track', (done) => {
-      player.ready().then(() => {
+      player.addEventListener(Html5EventType.PLAYING, () => {
         player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, (event) => {
           (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
           event.payload.selectedTextTrack.index.should.equal(1);
@@ -965,12 +965,11 @@ describe('Player', function () {
         tracks[1].active.should.be.false;
         player.selectTrack(new TextTrack({index: 1, kind: 'subtitles'}));
       });
-      player.load();
+      player.play();
     });
 
     it('should select a new captions track', (done) => {
-      player.load();
-      player.ready().then(() => {
+      player.addEventListener(Html5EventType.PLAYING, () => {
         player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, (event) => {
           (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
           event.payload.selectedTextTrack.index.should.equal(1);
@@ -989,8 +988,8 @@ describe('Player', function () {
         tracks[1].active.should.be.false;
         player.selectTrack(new TextTrack({index: 1, kind: 'captions'}));
       });
+      player.play();
     });
-
 
     it('should not change the selected text track', (done) => {
       player.ready().then(() => {
@@ -2947,11 +2946,10 @@ describe('Player', function () {
         mutedAutoPlay: 2,
         isSupported: 3
       };
-      Player.setCapabilities('html5', newCapabilities).then(() => {
-        Player.getCapabilities().then((c2) => {
-          c2.html5.should.deep.equal(newCapabilities);
-          done();
-        });
+      Player.setCapabilities('html5', newCapabilities);
+      Player.getCapabilities().then((c2) => {
+        c2.html5.should.deep.equal(newCapabilities);
+        done();
       });
     });
 
@@ -2963,11 +2961,10 @@ describe('Player', function () {
       };
       Player.getCapabilities().then((c1) => {
         c1.should.deep.equal(initialOrigCapabilities);
-        Player.setCapabilities('html5', newCapabilities).then(() => {
-          Player.getCapabilities().then((c2) => {
-            c2.html5.should.deep.equal(newCapabilities);
-            done();
-          });
+        Player.setCapabilities('html5', newCapabilities);
+        Player.getCapabilities().then((c2) => {
+          c2.html5.should.deep.equal(newCapabilities);
+          done();
         });
       });
     });
@@ -3065,4 +3062,5 @@ describe('Player', function () {
       });
     });
   });
-});
+})
+;
