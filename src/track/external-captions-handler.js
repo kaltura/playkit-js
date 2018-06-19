@@ -372,25 +372,17 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   }
 
   /**
-   * setting an external track as active, de-actvating all the rest and start listening to time updates.
+   * triggerting the text track changed event and start listening to the time update on the player (for the the external text track).
    * @param {TextTrack} textTrack - text track to be set
    * @returns {void}
    * @private
    */
   _setTextTrack(textTrack: textTrack): void {
     if (!this._player.config.playback.useNativeTextTrack) {
-      const track = this._player._getTracksByType(TrackType.TEXT).filter(track => {
-        if (track.index !== textTrack.index) {
-          track.active = false;
-        } else {
-          return true;
-        }
-      })[0];
-      if (!track.active) {
-        ExternalCaptionsHandler._logger.debug('External text track changed', track);
-        track.active = true;
-        this._player.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: track}));
-        this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, () => this._handleCaptionOnTimeUpdate(track))
+      if (!textTrack.active) {
+        ExternalCaptionsHandler._logger.debug('External text track changed', textTrack);
+        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
+        this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, () => this._handleCaptionOnTimeUpdate(textTrack))
       }
     }
   }

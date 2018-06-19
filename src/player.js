@@ -1491,11 +1491,7 @@ export default class Player extends FakeEventTarget {
         this._markActiveTrack(event.payload.selectedAudioTrack);
         return this.dispatchEvent(event);
       });
-      this._eventManager.listen(this._engine, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => {
-        this.ready().then(() => this._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language);
-        this._markActiveTrack(event.payload.selectedTextTrack);
-        return this.dispatchEvent(event);
-      });
+      this._eventManager.listen(this._engine, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this._onTextTrackChanged(event));
       this._eventManager.listen(this._engine, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this._onTracksChanged(event));
       this._eventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
@@ -1523,8 +1519,21 @@ export default class Player extends FakeEventTarget {
       });
       if (this._externalCaptionsHandler) {
         this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
+        this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this._onTextTrackChanged(event));
       }
     }
+  }
+
+  /**
+   * on text track changed handler
+   * @param {FakeEvent} event - payload with text track
+   * @returns {boolean} - dispatch event response (if it was prevented or not)
+   * @private
+   */
+  _onTextTrackChanged(event: FakeEvent): boolean {
+    this.ready().then(() => this._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language);
+    this._markActiveTrack(event.payload.selectedTextTrack);
+    return this.dispatchEvent(event);
   }
 
   /**
