@@ -178,7 +178,6 @@ class ExternalCaptionsHandler extends FakeEventTarget {
           return this._parseCues(vttString);
         }).then(cuesArray => {
         this._textTrackModel[textTrack.language].cues = cuesArray;
-        this._player.setTextTrackCues(textTrack);
         resolve();
       });
     });
@@ -268,11 +267,11 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @public
    */
   addTracks(): void {
-    this._addListenersIfNeeded();
     const captions = this._player.config.sources.captions;
     if (!captions) {
       return;
     }
+    this._addListenersIfNeeded();
     let textTracks = this._player.getTracks(TrackType.TEXT);
     let textTracksLength = textTracks.length || 0;
     captions.forEach(caption => {
@@ -392,7 +391,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {void}
    * @private
    */
-  _addCuesToNativeTrack(textTrack: TextTrackm, cues: Array<any>): void {
+  _addCuesToNativeTrack(textTrack: TextTrack, cues: Array<any>): void {
     const track = Object.values(this._player.getVideoElement().textTracks).filter(track => track.language === textTrack.language)[0];
     cues.forEach(cue => {
       track.addCue(cue);

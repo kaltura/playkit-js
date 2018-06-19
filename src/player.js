@@ -1051,18 +1051,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * setting the a player textTrack cues , selecting it wi
-   * @public
-   * @param {TextTrack} textTrack - the external text track to take the cues from (and the language from)
-   * @returns {void}
-   */
-  setTextTrackCues(textTrack: TextTrack): void {
-    this._getTracksByType(TrackType.TEXT)
-      .find(track => textTrack.language === track.language)
-      .cues = textTrack.cues;
-  }
-
-  /**
    * Enables adaptive bitrate switching.
    * @function enableAdaptiveBitrate
    * @returns {void}
