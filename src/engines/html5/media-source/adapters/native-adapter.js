@@ -585,8 +585,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       let selectedTrack;
       this._disableTextTracks();
       //$FlowFixMe - Object.values returns mixed content and flow doesn't allow it (casting to Object is redundant in my POV)
-      [selectedTrack] = Object.values(textTracks).filter(track=> track.language === textTrack.language);
-      if (selectedTrack){
+      [selectedTrack] = Object.values(textTracks).filter(track => track.language === textTrack.language);
+      if (selectedTrack) {
         //$FlowFixMe - Object.values returns mixed content and flow doesn't allow it (casting to Object is redundant in my POV)
         selectedTrack.mode = 'hidden';
         NativeAdapter._logger.debug('Text track changed', selectedTrack);
@@ -651,6 +651,15 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           NativeAdapter._logger.debug('Native selection of track, update the player text track (' + pkIndex + ' -> off)');
           this._onTrackChanged(pkOffTrack);
         }
+      } else {
+        // In case the text track on the video element is
+        // different then the text track of the player
+        // we need to set the correct one
+        const pkTextTrack = pkTextTracks.find(track => track.index === pkIndex);
+        if (pkTextTrack) {
+          NativeAdapter._logger.debug('Native selection of track, update the player text track (' + pkIndex + ' -> ' + vidIndex + ')');
+          this._onTrackChanged(pkTextTrack);
+        }
       }
     }
   }
@@ -661,7 +670,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {void}
    */
   _addNativeTextTrackAddedListener(): void {
-    if (this._videoElement.textTracks) {
+    if (this._videoElement.textTracks
+    ) {
       this._eventManager.listen(this._videoElement.textTracks, 'addtrack', () => this._onNativeTextTrackAdded());
     }
   }
