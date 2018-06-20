@@ -1197,8 +1197,8 @@ export default class Player extends FakeEventTarget {
 
   isInVrStereoMode(): boolean {
     const vrPlugin: ?BasePlugin = this._pluginManager.get('vr');
-    if (vrPlugin && typeof vrPlugin.isInVrStereoMode === 'function') {
-      return vrPlugin.isInVrStereoMode();
+    if (vrPlugin && typeof vrPlugin.isInStereoMode === 'function') {
+      return vrPlugin.isInStereoMode();
     }
     return false;
   }
