@@ -39,7 +39,7 @@ class EventManager {
    * @param {?Object} options - The event options.
    * @returns {void}
    */
-  listenOnce(target: any, type: string, listener: ListenerType, options: Object): void {
+  listenOnce(target: any, type: string, listener: ListenerType, options: ?Object): void {
     let oneListener = (event) => {
       this.unlisten(target, type, oneListener);
       listener.call(this, event)
@@ -56,7 +56,7 @@ class EventManager {
    * @param {?Object} options The event options.
    * @returns {void}
    */
-  listen(target: any, type: string, listener: ListenerType, options: Object): void {
+  listen(target: any, type: string, listener: ListenerType, options: ?Object): void {
     let binding = new Binding_(target, type, listener, options);
     if (this._bindingMap) {
       this._bindingMap.push(type, binding);

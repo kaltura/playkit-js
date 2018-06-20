@@ -1184,10 +1184,20 @@ export default class Player extends FakeEventTarget {
 
   // <editor-fold desc="VR API">
 
+  /**
+   * Checking if the selected source is VR.
+   * @returns {boolean} - Whether is VR.
+   * @public
+   */
   isVr(): boolean {
     return !!(this._config.sources.vr);
   }
 
+  /**
+   * Toggling the VR mode
+   * @returns {void}
+   * @public
+   */
   toggleVrStereoMode(): void {
     const vrPlugin: ?BasePlugin = this._pluginManager.get('vr');
     if (vrPlugin && typeof vrPlugin.toggleVrStereoMode === 'function') {
@@ -1195,6 +1205,11 @@ export default class Player extends FakeEventTarget {
     }
   }
 
+  /**
+   * Checking if the VR stereo mode is active.
+   * @returns {boolean} - Whether is active.
+   * @public
+   */
   isInVrStereoMode(): boolean {
     const vrPlugin: ?BasePlugin = this._pluginManager.get('vr');
     if (vrPlugin && typeof vrPlugin.isInStereoMode === 'function') {
