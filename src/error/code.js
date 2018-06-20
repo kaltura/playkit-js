@@ -618,9 +618,9 @@ const Code: CodeType = {
   'CONTENT_UNSUPPORTED_BY_BROWSER': 9009,
 
   /**
-   * A fatal error from a plugin.
+   * VR plugin is not supported.
    */
-  'PLUGIN_FATAL_ERROR': 11000
+  'VR_NOT_SUPPORTED': 11000
 
 };
 

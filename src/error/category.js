@@ -30,8 +30,8 @@ const Category: CategoryType = {
   /** Errors in the database storage (offline). */
   'STORAGE': 9,
 
-  /** Errors from a plugin. */
-  'PLUGIN': 11
+  /** Errors from VR plugin. */
+  'VR': 11
 };
 
 export {Category}
