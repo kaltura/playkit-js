@@ -123,6 +123,16 @@ export default class Track {
   }
 
   /**
+   * Setter for the index of the track.
+   * @public
+   * @param {number} value - The index of the track.
+   * @returns {void}
+   */
+  set index(value: number): void {
+    this._index = value;
+  }
+
+  /**
    * Setter for the label of the track.
    * @public
    * @param {string} value - The label of the track.

@@ -253,7 +253,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {number} - the index of the text track with the same language (if there is any). and -1 if there isn't
    * @public
    */
-  indexOfSameLanguageTrack(textTrack: PKTextTrack): number {
+  getLanguageTrackIndex(textTrack: PKTextTrack): number {
     const trackList = this._el.textTracks;
     let index = -1;
     for (let i = 0; i < trackList.length; i++) {
@@ -272,21 +272,31 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    * @public
    */
-  addOrSetTextTrack(textTrack: PKTextTrack): void {
-    let _domTrack;
-    const _sameLanguageTrackIndex = this.indexOfSameLanguageTrack(textTrack);
-    if (_sameLanguageTrackIndex > -1) {
-      _domTrack = this._el.textTracks[_sameLanguageTrackIndex];
-      _domTrack.mode = 'hidden';
-      if (_domTrack.cues) {
-        Object.values(_domTrack.cues).forEach(cue => {
-          _domTrack.removeCue(cue);
-        });
-      }
+  addTextTrack(textTrack: PKTextTrack): TextTrack {
+    let domTrack;
+    const sameLanguageTrackIndex = this.getLanguageTrackIndex(textTrack);
+    if (sameLanguageTrackIndex > -1) {
+      domTrack = this._el.textTracks[sameLanguageTrackIndex];
+      domTrack.mode = 'hidden';
+      this._removeCues(domTrack);
     } else {
-      _domTrack = this._el.addTextTrack("subtitles", textTrack.label, textTrack.language);
+      domTrack = this._el.addTextTrack("subtitles", textTrack.label || textTrack.language, textTrack.language);
     }
-    return _domTrack;
+    return domTrack;
+  }
+
+  /**
+   * remove cues from an HTML text track
+   * @param {TextTrack} textTrack - an HTML text track
+   * @returns {void}
+   * @private
+   */
+  _removeCues(textTrack: TextTrack): void {
+    if (textTrack.cues) {
+      Object.values(textTrack.cues).forEach(cue => {
+        textTrack.removeCue(cue);
+      });
+    }
   }
 
   /**
@@ -295,9 +305,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @param {Array<any>} cues - the cues to be added
    * @return {void}
    */
-  addCuesToTextTrack(textTrack: PKTextTrack, cues: Array<any>): void {
-    const track = Object.values(this._el.textTracks).filter(track => track.language === textTrack.language)[0];
+  addCues(textTrack: PKTextTrack, cues: Array<any>): void {
+    const track = Object.values(this._el.textTracks).filter(track => {
+      //$FlowFixMe - Object.values returns mixed content and flow doesn't allow it (casting to Object is redundant in my POV)
+      return track.language === textTrack.language
+    })[0];
     cues.forEach(cue => {
+      //$FlowFixMe - Object.values returns mixed content and flow doesn't allow it (casting to Object is redundant in my POV)
       track.addCue(cue);
     });
   }

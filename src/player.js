@@ -390,7 +390,7 @@ export default class Player extends FakeEventTarget {
    * @type {ExternalCaptionsHandler}
    * @private
    */
-  _externalCaptionsHandler: ?ExternalCaptionsHandler = null;
+  _externalCaptionsHandler: ExternalCaptionsHandler;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -992,6 +992,7 @@ export default class Player extends FakeEventTarget {
       } else if (track instanceof TextTrack) {
         if (track.language === OFF) {
           this.hideTextTrack();
+          this._externalCaptionsHandler.hideTextTrack();
           this._playbackAttributesState.textLanguage = OFF;
         } else if (track.external && !this._config.playback.useNativeTextTrack) {
           this._engine.hideTextTrack();
@@ -1454,10 +1455,8 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => {
         this._handleRecovered();
       });
-      if (this._externalCaptionsHandler) {
-        this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
-        this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this._onTextTrackChanged(event));
-      }
+      this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
+      this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this._onTextTrackChanged(event));
     }
   }
 
@@ -1796,19 +1795,8 @@ export default class Player extends FakeEventTarget {
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
     this._tracks = tracks;
-    this._maybeAddExternalTracks();
+    this._tracks = this._tracks.concat(this._externalCaptionsHandler.getExternalTracks());
     this._addTextTrackOffOption();
-  }
-
-  /**
-   * checking if there is external caption to add. if so -  adding it.
-   * @returns {void}
-   * @private
-   */
-  _maybeAddExternalTracks(): void {
-    if (this._config.sources.captions) {
-      this._externalCaptionsHandler.addTracks();
-    }
   }
 
   /**
@@ -1818,15 +1806,16 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @public
    */
-  addOrSetNativeTextTrack(textTrack: textTrack): void {
-    const _engineTextTrack = this._engine.addOrSetTextTrack(textTrack);
+  addNativeTextTrack(textTrack: TextTrack): void {
+    const _engineTextTrack = this._engine.addTextTrack(textTrack);
     // safari always push the text track at the beginning, so we have to update the index of the indexes in the player
     // text track module.
-    if (_engineTextTrack && this._engine.indexOfSameLanguageTrack === -1) {
+    let sameLanguageTrackIndex = this._engine.getLanguageTrackIndex(textTrack);
+    if (_engineTextTrack && sameLanguageTrackIndex === -1) {
       this._getTracksByType(TrackType.TEXT).map(track => {
         track.index = track.index + 1;
       });
-      textTrack.index = parseInt(Object.keys(this._el.textTracks).find(key => this._el.textTracks[key] === _engineTextTrack));
+      textTrack.index = sameLanguageTrackIndex;
     }
   }
 
@@ -1837,7 +1826,7 @@ export default class Player extends FakeEventTarget {
    * @return {void}
    */
   addCuesToNativeTextTrack(textTrack: TextTrack, cues: Array<any>): void {
-    this._engine.addCuesToTextTrack(textTrack, cues);
+    this._engine.addCues(textTrack, cues);
   }
 
   /**
@@ -1879,8 +1868,8 @@ export default class Player extends FakeEventTarget {
     }
     if (type) {
       const tracks = this._getTracksByType(type);
-      for (let aTrack of tracks) {
-        aTrack.active = track.index === aTrack.index;
+      for (let i = 0; i < tracks.length; i++) {
+        tracks[i].active = track.index === tracks[i].index;
       }
     }
   }
@@ -1940,20 +1929,6 @@ export default class Player extends FakeEventTarget {
         label: "Off",
         language: OFF
       }));
-    }
-  }
-
-  /**
-   *
-   * add a text track to the track array
-   * @param {TextTrack} track - the track to be added to the track array
-   * @returns {void}
-   * @public
-   */
-  addTextTrack(track: TextTrack): void {
-    // allow addition of textTracks only.
-    if (track instanceof TextTrack) {
-      this._tracks.push(track);
     }
   }
 

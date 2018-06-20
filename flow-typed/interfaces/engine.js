@@ -29,6 +29,9 @@ declare interface IEngine {
   getStartTimeOfDvrWindow(): number;
   isLive(): boolean;
   getVideoElement(): HTMLVideoElement;
+  addCues(textTrack: TextTrack, cues: Array<any>): void;
+  addTextTrack(textTrack: TextTrack): TextTrack;
+  getLanguageTrackIndex(textTrack: TextTrack): number;
   +id: string;
   currentTime: number;
   +duration: number;
