@@ -329,6 +329,7 @@ export default class ExternalCaptionsHandler extends FakeEventTarget {
       this._eventManager.unlisten(this._player, Html5EventType.TIME_UPDATE);
       this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: []}));
       this._activeTextCues = [];
+      this._textTrackActive = false;
     }
   }
 
@@ -357,6 +358,7 @@ export default class ExternalCaptionsHandler extends FakeEventTarget {
       this._textTrackActive = true;
       if (!textTrack.active) {
         ExternalCaptionsHandler._logger.debug('External text track changed', textTrack);
+        textTrack.active = true;
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
         this._activeTextCues = [];
         this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, () => this._handleCaptionOnTimeUpdate(textTrack))

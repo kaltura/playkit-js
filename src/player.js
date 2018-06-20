@@ -1795,7 +1795,7 @@ export default class Player extends FakeEventTarget {
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
     this._tracks = tracks;
-    this._tracks = this._tracks.concat(this._externalCaptionsHandler.getExternalTracks());
+    this._tracks = [...this._tracks, ...this._externalCaptionsHandler.getExternalTracks()];
     this._addTextTrackOffOption();
   }
 
