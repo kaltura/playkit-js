@@ -26,6 +26,7 @@ import {MediaType} from './media-type'
 import {EventType} from './event/event-type'
 import {AbrMode} from './track/abr-mode-type'
 import {LogLevelType} from './utils/logger'
+import {Html5} from './engines/html5/html5'
 
 Player.runCapabilities();
 
@@ -70,11 +71,14 @@ export {Env};
 // Export base DRM protocol
 export {BaseDrmProtocol};
 
+//Export default html5 engine
+export {Html5}
+
 // Export the player capabilities
 const getCapabilities = Player.getCapabilities;
 const setCapabilities = Player.setCapabilities;
 
-export {getCapabilities, setCapabilities,registerEngine};
+export {getCapabilities, setCapabilities, registerEngine};
 
 // Export enums
 export {EventType, StateType, TrackType, EngineType, MediaType, StreamType, AbrMode, LogLevelType};

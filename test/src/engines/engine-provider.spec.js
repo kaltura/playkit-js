@@ -13,14 +13,14 @@ describe('EngineProvider:register', () => {
     EngineProvider._engineProviders  = oldEngineProviders;
   });
 
-  it('should register Adapter1', () => {
+  it('should register Engine', () => {
     EngineProvider._engineProviders.length.should.equal(0);
     EngineProvider.register(FakeFLASHEngine);
     EngineProvider._engineProviders.length.should.equal(1);
     EngineProvider._engineProviders[0].id.should.equal("Flash");
   });
 
-  it('should not register Adapter1 twice', () => {
+  it('should not register Engine twice', () => {
     EngineProvider._engineProviders.length.should.equal(0);
     EngineProvider.register(FakeHTML5Engine);
     EngineProvider.register(FakeHTML5Engine);
@@ -28,7 +28,7 @@ describe('EngineProvider:register', () => {
     EngineProvider._engineProviders[0].id.should.equal("Html5");
   });
 
-  it('should register Adapter1 and Adapter2', () => {
+  it('should register Engine and Engine2', () => {
     EngineProvider._engineProviders.length.should.equal(0);
     EngineProvider.register(FakeHTML5Engine);
     EngineProvider.register(FakeFLASHEngine);
@@ -59,21 +59,21 @@ describe('EngineProvider:unRegister', () => {
     EngineProvider._engineProviders = oldEngineProviders;
   });
 
-  it('should unRegister Adapter1', () => {
+  it('should unRegister Engine', () => {
     EngineProvider._engineProviders.length.should.equal(2);
     EngineProvider.unRegister(FakeHTML5Engine);
     EngineProvider._engineProviders.length.should.equal(1);
     EngineProvider._engineProviders[0].id.should.equal("Flash");
   });
 
-  it('should unRegister Adapter1 and Adapter2', () => {
+  it('should unRegister Engine and Engine2', () => {
     EngineProvider._engineProviders.length.should.equal(2);
     EngineProvider.unRegister(FakeHTML5Engine);
     EngineProvider.unRegister(FakeFLASHEngine);
     EngineProvider._engineProviders.length.should.equal(0);
   });
 
-  it('should do nothing for adapter 3', () => {
+  it('should do nothing for Engine3', () => {
     EngineProvider._engineProviders.length.should.equal(2);
     EngineProvider.unRegister(FakeSLEngine);
     EngineProvider._engineProviders.length.should.equal(2);
