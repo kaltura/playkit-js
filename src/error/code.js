@@ -615,7 +615,12 @@ const Code: CodeType = {
    * When the manifest contains no period playable streams, it means the
    * manifest is unsupported by the browser.
    */
-  'CONTENT_UNSUPPORTED_BY_BROWSER': 9009
+  'CONTENT_UNSUPPORTED_BY_BROWSER': 9009,
+
+  /**
+   * VR plugin is not supported.
+   */
+  'VR_NOT_SUPPORTED': 11000
 
 };
 
