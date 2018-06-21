@@ -38,7 +38,7 @@ import PlaybackMiddleware from './middleware/playback-middleware'
 import DefaultPlayerConfig from './player-config.json'
 import './assets/style.css'
 import PKError from './error/error'
-import ExternalCaptionsHandler from "./track/external-captions-handler";
+import {ExternalCaptionsHandler} from './track/external-captions-handler';
 
 /**
  * The player playback rates.
@@ -1500,12 +1500,14 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Dispatches track changed event only if we already started playing.
+   * also dispatch text track changed if it's an external text track. this is done on cases this is the default text
+   * track, and it is loaded and changed when the player is loaded.
    * @param {FakeEvent} e - The track changed event.
    * @private
    * @returns {void}
    */
   _maybeDispatchTracksChanged(e: FakeEvent): void {
-    if (this._playbackStarted) {
+    if (this._playbackStarted || (e.payload && e.payload.selectedTextTrack && e.payload.selectedTextTrack.external)) {
       this.dispatchEvent(e);
     }
   }
@@ -1845,12 +1847,12 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   addNativeTextTrack(textTrack: TextTrack): void {
-    const _engineTextTrack = this._engine.addTextTrack(textTrack);
+    const engineTextTrack = this._engine.addTextTrack(textTrack);
     // safari always push the text track at the beginning, so we have to update the index of the indexes in the player
     // text track module.
     let sameLanguageTrackIndex = this._getNativeLanguageTrackIndex(textTrack);
-    if (_engineTextTrack && sameLanguageTrackIndex === -1) {
-      this._getTracksByType(TrackType.TEXT).map(track => {
+    if (engineTextTrack && sameLanguageTrackIndex === -1) {
+      this._getTracksByType(TrackType.TEXT).forEach(track => {
         track.index = track.index + 1;
       });
       textTrack.index = sameLanguageTrackIndex;
@@ -1868,12 +1870,7 @@ export default class Player extends FakeEventTarget {
     const trackList = this._engine.getVideoElement().textTracks;
     let index = -1;
     if (trackList) {
-      for (let i = 0; i < trackList.length; i++) {
-        if (trackList[i].language === textTrack.language) {
-          index = i;
-          break;
-        }
-      }
+      index = Array.from(trackList).findIndex(track=> track ? track.language === textTrack.language : false)
     }
     return index;
   }

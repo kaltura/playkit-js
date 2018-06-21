@@ -1,26 +1,26 @@
 import Error from '../error/error'
 import * as Utils from '../utils/util'
 import {Parser, StringDecoder} from './text-track-display'
-import {TrackType} from "./track-type";
-import TextTrack from "./text-track";
-import {CustomEventType, Html5EventType} from "../event/event-type";
-import FakeEvent from "../event/fake-event";
-import getLogger from "../utils/logger";
-import EventManager from "../event/event-manager";
-import FakeEventTarget from "../event/fake-event-target";
+import {TrackType} from './track-type';
+import TextTrack from './text-track';
+import {CustomEventType, Html5EventType} from '../event/event-type';
+import FakeEvent from '../event/fake-event';
+import getLogger from '../utils/logger';
+import EventManager from '../event/event-manager';
+import FakeEventTarget from '../event/fake-event-target';
 
 
 const cuesStatus = {
-  "NOT_DOWNLOADED": 1,
-  "DOWNLOADING": 2,
-  "DOWNLOADED": 3
+  'NOT_DOWNLOADED': 1,
+  'DOWNLOADING': 2,
+  'DOWNLOADED': 3
 };
 
 const SRT_POSTFIX: string = 'srt';
 
 const VTT_POSTFIX: string = 'vtt';
 
-export default class ExternalCaptionsHandler extends FakeEventTarget {
+class ExternalCaptionsHandler extends FakeEventTarget {
   /**
    * The player class logger.
    * @type {any}
@@ -34,12 +34,6 @@ export default class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _externalCueIndex: number = 0;
-  /**
-   * a callback of the timeupdate, for external captions handler.
-   * @type {Function}
-   * @private
-   */
-  _handleExternalCaptionsCallback: Function = null;
   /**
    * the player object.
    * @type {Object}
@@ -142,7 +136,7 @@ export default class ExternalCaptionsHandler extends FakeEventTarget {
   _parseCues(vttStr: string): Promise<*> {
     return new Promise(resolve => {
       const parser = new Parser(window, StringDecoder());
-      let cues = [];
+      const cues = [];
       parser.oncue = cue => {
         cues.push(cue);
       };
@@ -214,20 +208,20 @@ export default class ExternalCaptionsHandler extends FakeEventTarget {
         this._maybeSetExternalCueIndex();
       }
       const cues = this._textTrackModel[track.language].cues;
-      let _activeCuesChanged = false;
-      for (let _activeTextCuesIndex = 0; _activeTextCuesIndex < this._activeTextCues.length; _activeTextCuesIndex++) {
-        let _cue = this._activeTextCues[_activeTextCuesIndex];
-        if (this._player.currentTime < _cue.startTime || _cue.endTime < this._player.currentTime) {
-          this._activeTextCues.splice(_activeTextCuesIndex, 1);
-          _activeCuesChanged = true;
+      let activeCuesChanged = false;
+      for (let activeTextCuesIndex = 0; activeTextCuesIndex < this._activeTextCues.length; activeTextCuesIndex++) {
+        const cue = this._activeTextCues[activeTextCuesIndex];
+        if (this._player.currentTime < cue.startTime || cue.endTime < this._player.currentTime) {
+          this._activeTextCues.splice(activeTextCuesIndex, 1);
+          activeCuesChanged = true;
         }
       }
       while (this._player.currentTime > cues[this._externalCueIndex].startTime) {
         this._activeTextCues.push(cues[this._externalCueIndex]);
         this._externalCueIndex++;
-        _activeCuesChanged = true;
+        activeCuesChanged = true;
       }
-      if (_activeCuesChanged) {
+      if (activeCuesChanged) {
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: this._activeTextCues}));
       }
     }
@@ -243,7 +237,7 @@ export default class ExternalCaptionsHandler extends FakeEventTarget {
   _maybeSetExternalCueIndex(): void {
     const textTrack = this._player.getTracks(TrackType.TEXT).filter(track => track.active && track.external)[0];
     if (textTrack && textTrack.external) {
-      let cues = this._textTrackModel[textTrack.language].cues;
+      const cues = this._textTrackModel[textTrack.language].cues;
       let i = 0;
       while (this._player.currentTime > cues[i].startTime && i < cues.length) {
         i++;
@@ -263,11 +257,11 @@ export default class ExternalCaptionsHandler extends FakeEventTarget {
       return [];
     }
     this._addListenersIfNeeded();
-    let textTracks = this._player.getTracks(TrackType.TEXT);
+    const textTracks = this._player.getTracks(TrackType.TEXT);
     let textTracksLength = textTracks.length || 0;
-    let newTextTracks = [];
+    const newTextTracks = [];
     captions.forEach(caption => {
-      let track = new TextTrack({
+      const track = new TextTrack({
         active: false,
         index: textTracksLength++,
         kind: "subtitles",
@@ -275,7 +269,7 @@ export default class ExternalCaptionsHandler extends FakeEventTarget {
         language: caption.language,
         external: true,
       });
-      let sameLangTrack = textTracks.find(textTrack => caption.language === textTrack.language);
+      const sameLangTrack = textTracks.find(textTrack => caption.language === textTrack.language);
       this._textTrackModel[caption.language] = {
         cuesStatus: cuesStatus.NOT_DOWNLOADED,
         cues: [],
@@ -329,7 +323,6 @@ export default class ExternalCaptionsHandler extends FakeEventTarget {
       this._eventManager.unlisten(this._player, Html5EventType.TIME_UPDATE);
       this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: []}));
       this._activeTextCues = [];
-      this._textTrackActive = false;
     }
   }
 
@@ -387,3 +380,5 @@ export default class ExternalCaptionsHandler extends FakeEventTarget {
     this._activeTextCues = null;
   }
 }
+
+export {ExternalCaptionsHandler};

@@ -302,18 +302,16 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * adding cues to an existing text element in a video tag
    * @param {PKTextTrack} textTrack - adding cues to an exiting text track element
-   * @param {Array<any>} cues - the cues to be added
+   * @param {Array<VTTCue>} cues - the cues to be added
    * @return {void}
    */
-  addCues(textTrack: PKTextTrack, cues: Array<any>): void {
-    const track = Object.values(this._el.textTracks).filter(track => {
-      //$FlowFixMe - Object.values returns mixed content and flow doesn't allow it (casting to Object is redundant in my POV)
-      return track.language === textTrack.language
-    })[0];
-    cues.forEach(cue => {
-      //$FlowFixMe - Object.values returns mixed content and flow doesn't allow it (casting to Object is redundant in my POV)
-      track.addCue(cue);
-    });
+  addCues(textTrack: PKTextTrack, cues: Array<Cue>): void {
+    const track = Array.from(this._el.textTracks).find(track => track ? track.language === textTrack.language : false);
+    if (track) {
+      cues.forEach(cue => {
+        track.addCue(cue);
+      });
+    }
   }
 
   /**
