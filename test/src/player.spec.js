@@ -923,20 +923,12 @@ describe('Player', function () {
     beforeEach(() => {
       config = getConfigStructure();
       config.sources = sourcesConfig.Mp4;
-      config.playback.textLanguage = "auto";
+      config.playback.textLanguage = 'auto';
       player = new Player(config);
       playerContainer.appendChild(player.getView());
       video = player._engine.getVideoElement();
-      track1 = document.createElement("track");
-      track2 = document.createElement("track");
-      track1.kind = 'subtitles';
-      track1.label = 'English';
-      track1.default = true;
-      track1.srclang = 'en';
-      track2.kind = 'subtitles';
-      track2.srclang = 'fr';
-      video.appendChild(track1);
-      video.appendChild(track2);
+      video.addTextTrack('subtitles', "English", "en");
+      video.addTextTrack('subtitles', "French", "fr");
     });
 
     afterEach(() => {
