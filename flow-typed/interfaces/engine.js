@@ -31,7 +31,6 @@ declare interface IEngine {
   getVideoElement(): HTMLVideoElement;
   addCues(textTrack: TextTrack, cues: Array<any>): void;
   addTextTrack(textTrack: TextTrack): TextTrack;
-  getLanguageTrackIndex(textTrack: TextTrack): number;
   +id: string;
   currentTime: number;
   +duration: number;

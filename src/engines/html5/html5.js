@@ -251,9 +251,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * as the new one.
    * @param {PKTextTrack} textTrack - the text track to check
    * @returns {number} - the index of the text track with the same language (if there is any). and -1 if there isn't
-   * @public
+   * @private
    */
-  getLanguageTrackIndex(textTrack: PKTextTrack): number {
+  _getLanguageTrackIndex(textTrack: PKTextTrack): number {
     const trackList = this._el.textTracks;
     let index = -1;
     for (let i = 0; i < trackList.length; i++) {
@@ -274,7 +274,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   addTextTrack(textTrack: PKTextTrack): TextTrack {
     let domTrack;
-    const sameLanguageTrackIndex = this.getLanguageTrackIndex(textTrack);
+    const sameLanguageTrackIndex = this._getLanguageTrackIndex(textTrack);
     if (sameLanguageTrackIndex > -1) {
       domTrack = this._el.textTracks[sameLanguageTrackIndex];
       domTrack.mode = 'hidden';

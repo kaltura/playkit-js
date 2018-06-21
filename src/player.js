@@ -1810,7 +1810,7 @@ export default class Player extends FakeEventTarget {
     const _engineTextTrack = this._engine.addTextTrack(textTrack);
     // safari always push the text track at the beginning, so we have to update the index of the indexes in the player
     // text track module.
-    let sameLanguageTrackIndex = this._engine.getLanguageTrackIndex(textTrack);
+    let sameLanguageTrackIndex = this._getNativeLanguageTrackIndex(textTrack);
     if (_engineTextTrack && sameLanguageTrackIndex === -1) {
       this._getTracksByType(TrackType.TEXT).map(track => {
         track.index = track.index + 1;
@@ -1818,6 +1818,28 @@ export default class Player extends FakeEventTarget {
       textTrack.index = sameLanguageTrackIndex;
     }
   }
+
+  /**
+   * this function runs on the players text tracks and checks if there is already a text track with the same language
+   * as the new one. TODO: when we add another engine, consider refactoring for an engine API.
+   * @param {TextTrack} textTrack - the text track to check
+   * @returns {number} - the index of the text track with the same language (if there is any). and -1 if there isn't
+   * @private
+   */
+  _getNativeLanguageTrackIndex(textTrack: TextTrack): number {
+    const trackList = this._engine.getVideoElement().textTracks;
+    let index = -1;
+    if (trackList) {
+      for (let i = 0; i < trackList.length; i++) {
+        if (trackList[i].language === textTrack.language) {
+          index = i;
+          break;
+        }
+      }
+    }
+    return index;
+  }
+
 
   /**
    * adding cues to an existing text element in a video tag

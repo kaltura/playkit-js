@@ -586,8 +586,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       //$FlowFixMe - Object.values returns mixed content and flow doesn't allow it (casting to Object is redundant in my POV)
       [selectedTrack] = Object.values(textTracks).filter(track => track.language === textTrack.language);
       if (selectedTrack) {
-        //$FlowFixMe - Object.values returns mixed content and flow doesn't allow it (casting to Object is redundant in my POV)
         this._disableTextTracks();
+        //$FlowFixMe - Object.values returns mixed content and flow doesn't allow it (casting to Object is redundant in my POV)
         selectedTrack.mode = 'hidden';
         NativeAdapter._logger.debug('Text track changed', selectedTrack);
         this._onTrackChanged(textTrack);

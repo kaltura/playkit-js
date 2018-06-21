@@ -20,7 +20,11 @@
     "up": true
   };
 
-
+/**
+ * find scroll setting
+ * @param {string} value - a string
+ * @returns {*} the settings
+ */
   function findScrollSetting(value) {
     if (typeof value !== "string") {
       return false;
@@ -29,7 +33,12 @@
     return scroll ? value.toLowerCase() : false;
   }
 
-  function isValidPercentValue(value) {
+/**
+ * check percentage validation
+ * @param {number} value - percentage
+ * @returns {boolean} - boolean
+ */
+function isValidPercentValue(value) {
     return typeof value === "number" && (value >= 0 && value <= 100);
   }
 
