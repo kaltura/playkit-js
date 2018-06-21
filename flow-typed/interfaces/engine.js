@@ -2,6 +2,7 @@
 import VideoTrack from '../../src/track/video-track'
 import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
+import Cue from '../../src/track/vtt-cue'
 
 declare interface IEngine {
   static id: string;
