@@ -185,7 +185,9 @@ export default class StateManager {
    * @returns {void}
    */
   _doTransition(event: FakeEvent): void {
-    this._logger.debug('Do transition request', event.type);
+    if (event.type !== Html5EventType.TIME_UPDATE || (this._curState === StateType.BUFFERING && event.type === Html5EventType.TIME_UPDATE )){
+      this._logger.debug('Do transition request', event.type); // don't show most of 'timeupdate' events
+    }
     let transition = this._transitions[this._curState.type];
     if (typeof transition[event.type] === 'function') {
       transition[event.type]();

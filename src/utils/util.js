@@ -431,6 +431,32 @@ const _Dom = {
         t.parentNode.insertBefore(s, t);
       }
     });
+  },
+  /**
+   * Returns the first element that matches a specified CSS selector(s) in the document.
+   * @param {string} selector - One or more CSS selectors to match the element.
+   * @returns {Element} - The first element that matches a specified CSS selector(s) in the document.
+   */
+  getElementBySelector(selector: string): any {
+    try {
+      return document.querySelector(selector)
+    } catch (e) {
+      return;
+    }
+  },
+  /**
+   * Inserts a node as a child, right before an existing child.
+   * @param {HTMLElement} parent -  The parent node object.
+   * @param {HTMLElement} newChild -  The node object to insert.
+   * @param {?HTMLElement} existingChild - The child node to insert the new node before. If set to null, the insertBefore method will insert the newChild at the end.
+   * @returns {Element} - The first element that matches a specified CSS selector(s) in the document.
+   */
+  insertBefore(parent: HTMLElement, newChild: HTMLElement, existingChild: ?HTMLElement): ?HTMLElement {
+    try {
+      return parent.insertBefore(newChild, existingChild);
+    } catch (e) {
+      return null;
+    }
   }
 };
 
