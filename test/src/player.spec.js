@@ -914,7 +914,7 @@ describe('Player', function () {
   });
 
   describe('selectTrack - text', function () {
-    let config, player, video, track1, track2, playerContainer;
+    let config, player, video, playerContainer;
 
     before(() => {
       playerContainer = createElement('div', targetId);
