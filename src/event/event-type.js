@@ -262,7 +262,11 @@ const CustomEventType: EventTypes = {
   /**
    * Fired when the adapter recovered from a media error
    */
-  MEDIA_RECOVERED: 'mediarecovered'
+  MEDIA_RECOVERED: 'mediarecovered',
+  /**
+   * Fired when the vr stereo mode changed
+   */
+  VR_STEREO_MODE_CHANGED: 'vrstereomodechanged'
 };
 
 const EventType: EventTypes = Utils.Object.merge([Html5EventType, CustomEventType]);

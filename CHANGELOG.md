@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.30.0"></a>
+# [0.30.0](https://github.com/kaltura/playkit-js/compare/v0.29.0...v0.30.0) (2018-06-20)
+
+
+### Features
+
+* **FEC-8046:** 360 support ([#239](https://github.com/kaltura/playkit-js/issues/239)) ([5557b0b](https://github.com/kaltura/playkit-js/commit/5557b0b))
+
+
+
 <a name="0.29.0"></a>
 # [0.29.0](https://github.com/kaltura/playkit-js/compare/v0.28.0...v0.29.0) (2018-06-17)
 
