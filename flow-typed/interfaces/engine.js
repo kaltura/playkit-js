@@ -29,7 +29,7 @@ declare interface IEngine {
   getStartTimeOfDvrWindow(): number;
   isLive(): boolean;
   getVideoElement(): HTMLVideoElement;
-  addCues(textTrack: TextTrack, cues: Array<any>): void;
+  addCues(textTrack: TextTrack, cues: Array<Cue>): void;
   addTextTrack(textTrack: TextTrack): TextTrack;
   +id: string;
   currentTime: number;

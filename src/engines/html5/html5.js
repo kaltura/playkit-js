@@ -302,7 +302,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * adding cues to an existing text element in a video tag
    * @param {PKTextTrack} textTrack - adding cues to an exiting text track element
-   * @param {Array<VTTCue>} cues - the cues to be added
+   * @param {Array<Cue>} cues - the cues to be added
    * @return {void}
    */
   addCues(textTrack: PKTextTrack, cues: Array<Cue>): void {
