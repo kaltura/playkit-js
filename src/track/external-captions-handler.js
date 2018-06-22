@@ -134,7 +134,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _parseCues(vttStr: string): Promise<*> {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const parser = new Parser(window, StringDecoder());
       const cues = [];
       parser.oncue = cue => {
@@ -146,6 +146,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       };
       parser.parse(vttStr);
       parser.flush();
+      parser.onparsingerror(e => reject(e))
     })
   }
 
@@ -216,7 +217,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
           activeCuesChanged = true;
         }
       }
-      while (this._player.currentTime > cues[this._externalCueIndex].startTime) {
+      while (this._externalCueIndex < cues.length && this._player.currentTime > cues[this._externalCueIndex].startTime) {
         this._activeTextCues.push(cues[this._externalCueIndex]);
         this._externalCueIndex++;
         activeCuesChanged = true;
