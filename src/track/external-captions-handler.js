@@ -296,6 +296,8 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   selectTextTrack(textTrack: TextTrack): Promise<*> {
     return new Promise((resolve) => {
       if (this._textTrackModel[textTrack.language].cuesStatus === cuesStatus.DOWNLOADED && !this._player.config.playback.useNativeTextTrack) {
+        textTrack.active = true;
+        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
         this._setTextTrack(textTrack);
         resolve();
       } else if (this._textTrackModel[textTrack.language].cuesStatus === cuesStatus.NOT_DOWNLOADED) {

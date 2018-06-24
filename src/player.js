@@ -1865,7 +1865,7 @@ export default class Player extends FakeEventTarget {
    * @returns {number} - the index of the text track with the same language (if there is any). and -1 if there isn't
    * @private
    */
-  _getNativeLanguageTrackIndex(textTrack: TextTrack): number {
+  _getNativeLanguageTrackIndex(textTrack: Track): number {
     const trackList = this._engine.getVideoElement().textTracks;
     let index = -1;
     if (trackList) {
