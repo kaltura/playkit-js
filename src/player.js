@@ -1850,12 +1850,11 @@ export default class Player extends FakeEventTarget {
     const engineTextTrack = this._engine.addTextTrack(textTrack);
     // safari always push the text track at the beginning, so we have to update the index of the indexes in the player
     // text track module.
-    let sameLanguageTrackIndex = this._getNativeLanguageTrackIndex(textTrack);
-    if (engineTextTrack && sameLanguageTrackIndex === -1) {
+    if (engineTextTrack) {
       this._getTracksByType(TrackType.TEXT).forEach(track => {
-        track.index = track.index + 1;
+        track.index = this._getNativeLanguageTrackIndex(track);
       });
-      textTrack.index = sameLanguageTrackIndex;
+      textTrack.index = this._getNativeLanguageTrackIndex(textTrack);
     }
   }
 

@@ -300,8 +300,8 @@ class ExternalCaptionsHandler extends FakeEventTarget {
         resolve();
       } else if (this._textTrackModel[textTrack.language].cuesStatus === cuesStatus.NOT_DOWNLOADED) {
         if (!textTrack.active) {
-          this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
           textTrack.active = true;
+          this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
           this._downloadAndParseCues(textTrack).then(() => {
             this._textTrackModel[textTrack.language].cuesStatus = cuesStatus.DOWNLOADED;
             if (this._player.config.playback.useNativeTextTrack) {

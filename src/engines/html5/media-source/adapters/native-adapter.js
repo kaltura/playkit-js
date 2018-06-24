@@ -653,7 +653,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         // In case the text track on the video element is
         // different then the text track of the player
         // we need to set the correct one
-        const pkTextTrack = pkTextTracks.find(track => track.index === pkIndex);
+        const pkTextTrack = pkTextTracks.find(track => track.index === vidIndex);
         if (pkTextTrack) {
           NativeAdapter._logger.debug('Native selection of track, update the player text track (' + pkIndex + ' -> ' + vidIndex + ')');
           this._onTrackChanged(pkTextTrack);
