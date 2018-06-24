@@ -247,34 +247,15 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
-   * this function runs on the players text tracks and checks if there is already a text track with the same language
-   * as the new one.
-   * @param {PKTextTrack} textTrack - the text track to check
-   * @returns {number} - the index of the text track with the same language (if there is any). and -1 if there isn't
-   * @private
-   */
-  _getLanguageTrackIndex(textTrack: PKTextTrack): number {
-    const trackList = this._el.textTracks;
-    let index = -1;
-    for (let i = 0; i < trackList.length; i++) {
-      if (trackList[i].language === textTrack.language) {
-        index = i;
-        break;
-      }
-    }
-    return index;
-  }
-
-  /**
    * adds a new text track element to the video element or set an existing one
    * (when adding a text track with existing language to the video element it will remove all its cues)
    * @param {PKTextTrack} textTrack - the playkit text track object to be added
-   * @returns {void}
+   * @returns {TextTrack} a DOM text track
    * @public
    */
   addTextTrack(textTrack: PKTextTrack): TextTrack {
     let domTrack;
-    const sameLanguageTrackIndex = this._getLanguageTrackIndex(textTrack);
+    const sameLanguageTrackIndex = Array.from(this._el.textTracks).findIndex(track => track ? track.language === textTrack.language : false)
     if (sameLanguageTrackIndex > -1) {
       domTrack = this._el.textTracks[sameLanguageTrackIndex];
       domTrack.mode = 'hidden';
@@ -293,9 +274,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _removeCues(textTrack: TextTrack): void {
     if (textTrack.cues) {
-      Object.values(textTrack.cues).forEach(cue => {
-        textTrack.removeCue(cue);
-      });
+      Object.values(textTrack.cues).forEach(cue => textTrack.removeCue(cue));
     }
   }
 
@@ -308,9 +287,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   addCues(textTrack: PKTextTrack, cues: Array<Cue>): void {
     const track = Array.from(this._el.textTracks).find(track => track ? track.language === textTrack.language : false);
     if (track) {
-      cues.forEach(cue => {
-        track.addCue(cue);
-      });
+      cues.forEach(cue => track.addCue(cue));
     }
   }
 

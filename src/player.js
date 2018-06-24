@@ -1835,7 +1835,7 @@ export default class Player extends FakeEventTarget {
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
     this._tracks = tracks;
-    this._tracks = [...this._tracks, ...this._externalCaptionsHandler.getExternalTracks()];
+    this._tracks = [...tracks, ...this._externalCaptionsHandler.createExternalTracks()];
     this._addTextTrackOffOption();
   }
 
@@ -1844,9 +1844,8 @@ export default class Player extends FakeEventTarget {
    * (when adding a text track with existing language to the video element it will remove all its cues)
    * @param {PKTextTrack} textTrack - the playkit text track object to be added
    * @returns {void}
-   * @public
    */
-  addNativeTextTrack(textTrack: TextTrack): void {
+  _addNativeTextTrack(textTrack: TextTrack): void {
     const engineTextTrack = this._engine.addTextTrack(textTrack);
     // safari always push the text track at the beginning, so we have to update the index of the indexes in the player
     // text track module.
@@ -1869,7 +1868,7 @@ export default class Player extends FakeEventTarget {
     const trackList = this._engine.getVideoElement().textTracks;
     let index = -1;
     if (trackList) {
-      index = Array.from(trackList).findIndex(track=> track ? track.language === textTrack.language : false)
+      index = Array.from(trackList).findIndex(track => track ? track.language === textTrack.language : false)
     }
     return index;
   }
@@ -1881,7 +1880,7 @@ export default class Player extends FakeEventTarget {
    * @param {Array<any>} cues - the cues to be added
    * @return {void}
    */
-  addCuesToNativeTextTrack(textTrack: TextTrack, cues: Array<any>): void {
+  _addCuesToNativeTextTrack(textTrack: TextTrack, cues: Array<any>): void {
     this._engine.addCues(textTrack, cues);
   }
 

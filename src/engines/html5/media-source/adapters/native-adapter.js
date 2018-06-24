@@ -161,7 +161,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     this._eventManager = new EventManager();
     this._maybeSetDrmPlayback();
     this._progressiveSources = config.sources.progressive;
-    this._useExternalCaptions = config.playback && config.playback.useNativeTextTrack;
     this._liveEdge = 0;
   }
 
@@ -245,7 +244,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._playerTracks = this._getParsedTracks();
       this._addNativeAudioTrackChangeListener();
       this._addNativeTextTrackChangeListener();
-      if (!this._useExternalCaptions) {
+      if (!(this._config && this._config.playback && this._config.playback.useNativeTextTrack)) {
         this._addNativeTextTrackAddedListener();
       }
       NativeAdapter._logger.debug('The source has been loaded successfully');
@@ -582,8 +581,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions')
       && textTracks) {
       this._removeNativeTextTrackChangeListener();
-      let selectedTrack;
-      selectedTrack = Array.from(textTracks).find(track => track ? track.language === textTrack.language : false);
+      const selectedTrack = Array.from(textTracks).find(track => track ? track.language === textTrack.language : false);
       if (selectedTrack) {
         this._disableTextTracks();
         selectedTrack.mode = 'hidden';
