@@ -1677,19 +1677,17 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _play(): void {
-    if (this._engine.src) {
+    if (!this._engine.src) {
+      this.load();
+    }
+    this.ready().then(() => {
       if (this.isLive() && !this.isDvr()) {
         this.seekToLiveEdge();
       }
       this._engine.play();
-    } else {
-      this.load();
-      this.ready().then(() => {
-        this._engine.play();
-      }).catch((error) => {
-        this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
-      });
-    }
+    }).catch((error) => {
+      this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
+    });
   }
 
   /**
