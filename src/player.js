@@ -1507,7 +1507,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _maybeDispatchTracksChanged(e: FakeEvent): void {
-    if (this._playbackStarted || (e.payload && e.payload.selectedTextTrack && e.payload.selectedTextTrack.external)) {
+    if (this._playbackStarted) {
       this.dispatchEvent(e);
     }
   }

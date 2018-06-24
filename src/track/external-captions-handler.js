@@ -299,15 +299,19 @@ class ExternalCaptionsHandler extends FakeEventTarget {
         this._setTextTrack(textTrack);
         resolve();
       } else if (this._textTrackModel[textTrack.language].cuesStatus === cuesStatus.NOT_DOWNLOADED) {
-        this._downloadAndParseCues(textTrack).then(() => {
-          this._textTrackModel[textTrack.language].cuesStatus = cuesStatus.DOWNLOADED;
-          if (this._player.config.playback.useNativeTextTrack) {
-            this._player.addCuesToNativeTextTrack(textTrack, this._textTrackModel[textTrack.language].cues);
-          } else {
-            this._setTextTrack(textTrack);
-          }
-          resolve();
-        })
+        if (!textTrack.active) {
+          this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
+          textTrack.active = true;
+          this._downloadAndParseCues(textTrack).then(() => {
+            this._textTrackModel[textTrack.language].cuesStatus = cuesStatus.DOWNLOADED;
+            if (this._player.config.playback.useNativeTextTrack) {
+              this._player.addCuesToNativeTextTrack(textTrack, this._textTrackModel[textTrack.language].cues);
+            } else {
+              this._setTextTrack(textTrack);
+            }
+            resolve();
+          })
+        }
       }
     });
   }
@@ -350,14 +354,11 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _setTextTrack(textTrack: textTrack): void {
     if (!this._player.config.playback.useNativeTextTrack) {
       this._textTrackActive = true;
-      if (!textTrack.active) {
         ExternalCaptionsHandler._logger.debug('External text track changed', textTrack);
-        textTrack.active = true;
-        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
         this._activeTextCues = [];
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: this._activeTextCues}));
         this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, () => this._handleCaptionOnTimeUpdate(textTrack))
-      }
+
     }
   }
 
