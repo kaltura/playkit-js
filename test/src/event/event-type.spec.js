@@ -69,7 +69,8 @@ describe('events', () => {
       AD_VOLUME_CHANGED: 'advolumechanged',
       AD_MUTED: 'admuted',
       AD_PROGRESS: 'adprogress',
-      MEDIA_RECOVERED: 'mediarecovered'
+      MEDIA_RECOVERED: 'mediarecovered',
+      VR_STEREO_MODE_CHANGED: 'vrstereomodechanged'
     });
     EventType.should.deep.equals(ObjectUtils.merge([Html5EventType, CustomEventType]));
   });
