@@ -258,7 +258,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     const sameLanguageTrackIndex = Array.from(this._el.textTracks).findIndex(track => track ? track.language === textTrack.language : false)
     if (sameLanguageTrackIndex > -1) {
       domTrack = this._el.textTracks[sameLanguageTrackIndex];
-      domTrack.mode = 'hidden';
       this._removeCues(domTrack);
     } else {
       domTrack = this._el.addTextTrack("subtitles", textTrack.label || textTrack.language, textTrack.language);

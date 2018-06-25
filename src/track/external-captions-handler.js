@@ -103,6 +103,18 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   }
 
   /**
+   * when a text track is changed we might need to select the text track (adding the cues if its the first time the user selected the track)
+   * @param {TextTrack} textTrack - selected track
+   * @returns {void}
+   * @private
+   */
+  maybeSelectExternalTrack(textTrack: textTrack): void {
+    if (this._player.config.playback.useNativeTextTrack && this._textTrackModel[textTrack.language]) {
+      this.selectTextTrack(textTrack);
+    }
+  }
+
+  /**
    * Make a request to download a caption and parse it's content to cues.
    * @param {TextTrack} textTrack - download and parse the cues of the text track
    * @returns {Promise<any>} - resolves when the request returns and the caption string is parsed to cues.
@@ -294,19 +306,19 @@ class ExternalCaptionsHandler extends FakeEventTarget {
         this._setTextTrack(textTrack);
         resolve();
       } else if (this._textTrackModel[textTrack.language].cuesStatus === cuesStatus.NOT_DOWNLOADED) {
-        if (!textTrack.active) {
-          textTrack.active = true;
+        textTrack.active = true;
+        if (!this._player.config.playback.useNativeTextTrack) {
           this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
-          this._downloadAndParseCues(textTrack).then(() => {
-            this._textTrackModel[textTrack.language].cuesStatus = cuesStatus.DOWNLOADED;
-            if (this._player.config.playback.useNativeTextTrack) {
-              this._player._addCuesToNativeTextTrack(textTrack, this._textTrackModel[textTrack.language].cues);
-            } else {
-              this._setTextTrack(textTrack);
-            }
-            resolve();
-          })
         }
+        this._downloadAndParseCues(textTrack).then(() => {
+          this._textTrackModel[textTrack.language].cuesStatus = cuesStatus.DOWNLOADED;
+          if (this._player.config.playback.useNativeTextTrack) {
+            this._player._addCuesToNativeTextTrack(textTrack, this._textTrackModel[textTrack.language].cues);
+          } else {
+            this._setTextTrack(textTrack);
+          }
+          resolve();
+        })
       }
     });
   }
@@ -323,20 +335,6 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       this._eventManager.unlisten(this._player, Html5EventType.TIME_UPDATE);
       this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: []}));
       this._activeTextCues = [];
-    }
-  }
-
-  /**
-   * when a text track is changed we might need to
-   * for native tracks - selecting the text track (adding the cues if its the first time the user selected the track)
-   * or - remove an event listener to a current external text track
-   * @param {FakeEvent} event - event with the selected track payload
-   * @returns {void}
-   * @private
-   */
-  _handleTextTrackChanged(event: FakeEvent): void {
-    if (event.payload && event.payload.selectedTextTrack && this._player.config.playback.useNativeTextTrack && this._textTrackModel[event.payload.selectedTextTrack.language]) {
-      this.selectTextTrack(event.payload.selectedTextTrack);
     }
   }
 

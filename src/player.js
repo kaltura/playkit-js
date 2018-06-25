@@ -1507,6 +1507,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _maybeDispatchTracksChanged(e: FakeEvent): void {
+    this._externalCaptionsHandler.maybeSelectExternalTrack(e.payload.selectedTextTrack);
     if (this._playbackStarted) {
       this.dispatchEvent(e);
     }

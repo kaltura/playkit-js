@@ -584,7 +584,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       const selectedTrack = Array.from(textTracks).find(track => track ? track.language === textTrack.language : false);
       if (selectedTrack) {
         this._disableTextTracks();
-        selectedTrack.mode = 'hidden';
+        selectedTrack.mode = 'showing';
         NativeAdapter._logger.debug('Text track changed', selectedTrack);
         this._onTrackChanged(textTrack);
         this._addNativeTextTrackChangeListener();
