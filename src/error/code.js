@@ -77,11 +77,11 @@ const Code: CodeType = {
   /**
    *  VTT module issue, see the date for more details
    */
-  "UNABLE_TO_CREATE_TEXT_CUE": 2009,
+  'UNABLE_TO_CREATE_TEXT_CUE': 2009,
   /**
    * error parsing the dash adapter error (for instance, could not parse an error shaka raised)
    */
-  "DASH_ADAPTER_ERROR_PARSE_ISSUE": 2010,
+  'DASH_ADAPTER_ERROR_PARSE_ISSUE': 2010,
 
 
   /**
@@ -357,7 +357,7 @@ const Code: CodeType = {
 
   /**
    * The manifest parser only supports xlink links with
-   * xlink:actuate="onLoad".
+   * xlink:actuate='onLoad'.
    */
   'DASH_UNSUPPORTED_XLINK_ACTUATE': 4027,
 
@@ -475,15 +475,15 @@ const Code: CodeType = {
   /**
    * DRM
    */
-  "BAD_FAIRPLAY_RESPONSE": 6015,
+  'BAD_FAIRPLAY_RESPONSE': 6015,
   /**
    * DRM
    */
-  "COULD_NOT_CREATE_MEDIA_KEYS": 6016,
+  'COULD_NOT_CREATE_MEDIA_KEYS': 6016,
   /**
    * DRM
    */
-  "COULD_NOT_CREATE_KEY_SESSION": 6017,
+  'COULD_NOT_CREATE_KEY_SESSION': 6017,
 
   /**
    * The call to Player.load() was interrupted by a call to Player.unload()
@@ -616,6 +616,47 @@ const Code: CodeType = {
    * manifest is unsupported by the browser.
    */
   'CONTENT_UNSUPPORTED_BY_BROWSER': 9009,
+
+  /**
+   * The operation was canceled by the user.
+   */
+  'CAST_CANCEL': 10001,
+  /**
+   * The operation timed out.
+   */
+  'CAST_TIMEOUT': 10002,
+  /**
+   * The API is not initialized.
+   */
+  'CAST_API_NOT_INITIALIZED': 10003,
+  /**
+   * The parameters to the operation were not valid.
+   */
+  'CAST_INVALID_PARAMETER': 10004,
+  /**
+   * The API script is not compatible with the installed Cast extension.
+   */
+  'CAST_EXTENSION_NOT_COMPATIBLE': 10005,
+  /**
+   * The Cast extension is not available.
+   */
+  'CAST_EXTENSION_MISSING': 10006,
+  /**
+   * No receiver was compatible with the session request.
+   */
+  'CAST_RECEIVER_UNAVAILABLE': 10007,
+  /**
+   * A session could not be created, or a session was invalid.
+   */
+  'CAST_SESSION_ERROR': 10008,
+  /**
+   * A channel to the receiver is not available.
+   */
+  'CAST_CHANNEL_ERROR': 10009,
+  /**
+   * Load media failed.
+   */
+  'CAST_LOAD_MEDIA_FAILED': 100010,
 
   /**
    * VR plugin is not supported.

@@ -6,6 +6,7 @@ import {registerPlugin} from './plugin/plugin-manager'
 import BaseDrmProtocol from './drm/base-drm-protocol'
 import BaseMiddleware from './middleware/base-middleware'
 import BasePlugin from './plugin/base-plugin'
+import State from './state/state'
 import Track from './track/track'
 import VideoTrack from './track/video-track'
 import AudioTrack from './track/audio-track'
@@ -24,7 +25,7 @@ import {EngineType} from './engines/engine-type'
 import {MediaType} from './media-type'
 import {EventType} from './event/event-type'
 import {AbrMode} from './track/abr-mode-type'
-import {LogLevelType} from './utils/logger'
+import getLogger, {getLogLevel, LogLevel, LogLevelType, setLogLevel} from './utils/logger'
 
 Player.runCapabilities();
 
@@ -66,6 +67,9 @@ export {__NAME__ as PLAYER_NAME};
 // Export environment data
 export {Env};
 
+// Export State class
+export {State};
+
 // Export base DRM protocol
 export {BaseDrmProtocol};
 
@@ -76,5 +80,8 @@ export {getCapabilities, setCapabilities};
 
 // Export enums
 export {EventType, StateType, TrackType, EngineType, MediaType, StreamType, AbrMode, LogLevelType};
+
+// Export logger utils
+export {getLogger, LogLevel, getLogLevel, setLogLevel};
 
 export default loadPlayer;

@@ -1,5 +1,4 @@
 //@flow
-
 type CategoryType = { [category: string]: number };
 
 const Category: CategoryType = {
@@ -24,15 +23,18 @@ const Category: CategoryType = {
   /** Miscellaneous errors from the player. */
   'PLAYER': 7,
 
-  /** Errors related to Ads. */
+  /** Errors related to ads. */
   'ADS': 8,
 
   /** Errors in the database storage (offline). */
   'STORAGE': 9,
 
+  /** Errors related to cast. */
+  'CAST': 10,
+
   /** Errors from VR plugin. */
   'VR': 11
 };
 
-export {Category}
-export type {CategoryType}
+export {Category};
+export type {CategoryType};
