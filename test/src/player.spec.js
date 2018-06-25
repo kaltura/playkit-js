@@ -1481,6 +1481,16 @@ describe('Player', function () {
         player.addEventListener(Html5EventType.PLAYING, onPlaying);
         player.play();
       });
+
+      it('should fire first play only after media loaded', (done) => {
+        player.addEventListener(CustomEventType.MEDIA_LOADED, () => {
+          player.addEventListener(CustomEventType.FIRST_PLAY, () => {
+            done();
+          });
+        });
+        player.load();
+        player.play();
+      });
     });
 
     describe('source selected', () => {
