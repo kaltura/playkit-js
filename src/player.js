@@ -38,6 +38,7 @@ import PlaybackMiddleware from './middleware/playback-middleware'
 import DefaultPlayerConfig from './player-config.json'
 import './assets/style.css'
 import PKError from './error/error'
+import {ExternalCaptionsEventType, ExternalCaptionsHandler} from './track/external-captions-handler'
 
 /**
  * The player playback rates.
@@ -384,6 +385,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _fallbackToMutedAutoPlay: boolean;
+  /**
+   * holds the external tracks handler controller
+   * @type {ExternalCaptionsHandler}
+   * @private
+   */
+  _externalCaptionsHandler: ExternalCaptionsHandler;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -412,6 +419,7 @@ export default class Player extends FakeEventTarget {
     this._createReadyPromise();
     this._createPlayerContainer();
     this._appendDomElements();
+    this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
     this.configure(config);
   }
 
@@ -589,6 +597,7 @@ export default class Player extends FakeEventTarget {
     this._posterManager.reset();
     this._stateManager.reset();
     this._pluginManager.reset();
+    this._externalCaptionsHandler.reset();
     this._engine.reset();
     this._showBlackCover();
     this._reset = true;
@@ -605,6 +614,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.destroy();
     }
+    this._externalCaptionsHandler.destroy();
     this._posterManager.destroy();
     this._eventManager.destroy();
     this._pluginManager.destroy();
@@ -982,8 +992,13 @@ export default class Player extends FakeEventTarget {
       } else if (track instanceof TextTrack) {
         if (track.language === OFF) {
           this.hideTextTrack();
+          this._externalCaptionsHandler.hideTextTrack();
           this._playbackAttributesState.textLanguage = OFF;
+        } else if (track.external && !this._config.playback.useNativeTextTrack) {
+          this._engine.hideTextTrack();
+          this._externalCaptionsHandler.selectTextTrack(track);
         } else {
+          this._externalCaptionsHandler.hideTextTrack();
           this._engine.selectTextTrack(track);
         }
       }
@@ -1449,11 +1464,7 @@ export default class Player extends FakeEventTarget {
         this._markActiveTrack(event.payload.selectedAudioTrack);
         this._maybeDispatchTracksChanged(event);
       });
-      this._eventManager.listen(this._engine, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => {
-        this.ready().then(() => this._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language);
-        this._markActiveTrack(event.payload.selectedTextTrack);
-        this._maybeDispatchTracksChanged(event);
-      });
+      this._eventManager.listen(this._engine, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this._onTextTrackChanged(event));
       this._eventManager.listen(this._engine, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this._onTracksChanged(event));
       this._eventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
@@ -1482,16 +1493,30 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => {
         this._handleRecovered();
       });
+      this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
+      this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this._onTextTrackChanged(event));
+      this._eventManager.listen(this._externalCaptionsHandler, ExternalCaptionsEventType.NATIVE_TEXT_TRACK_ADDED, () => {
+        const getNativeLanguageTrackIndex = (textTrack: Track): number => {
+          const videoElement = this.getVideoElement();
+          return videoElement ? Array.from(videoElement.textTracks).findIndex(track => track ? track.language === textTrack.language : false) : -1;
+        };
+        this._getTracksByType(TrackType.TEXT).forEach(track => track.index = getNativeLanguageTrackIndex(track));
+      });
     }
   }
 
   /**
    * Dispatches track changed event only if we already started playing.
+   * also dispatch text track changed if it's an external text track. this is done on cases this is the default text
+   * track, and it is loaded and changed when the player is loaded.
    * @param {FakeEvent} e - The track changed event.
    * @private
    * @returns {void}
    */
   _maybeDispatchTracksChanged(e: FakeEvent): void {
+    if (this._config.playback.useNativeTextTrack) {
+      this._externalCaptionsHandler.selectTextTrack(e.payload.selectedTextTrack);
+    }
     if (this._playbackStarted) {
       this.dispatchEvent(e);
     }
@@ -1506,6 +1531,18 @@ export default class Player extends FakeEventTarget {
     if (this._stateManager.currentState.type === StateType.PLAYING) {
       this.play();
     }
+  }
+
+  /**
+   * The text track changed event object
+   * @param {FakeEvent} event - payload with text track
+   * @returns {void}
+   * @private
+   */
+  _onTextTrackChanged(event: FakeEvent): void {
+    this.ready().then(() => this._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language);
+    this._markActiveTrack(event.payload.selectedTextTrack);
+    this._maybeDispatchTracksChanged(event);
   }
 
   /**
@@ -1805,7 +1842,7 @@ export default class Player extends FakeEventTarget {
    */
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
-    this._tracks = tracks;
+    this._tracks = [...tracks, ...this._externalCaptionsHandler.getExternalTracks(tracks)];
     this._addTextTrackOffOption();
   }
 
@@ -1849,7 +1886,7 @@ export default class Player extends FakeEventTarget {
     if (type) {
       const tracks = this._getTracksByType(type);
       for (let i = 0; i < tracks.length; i++) {
-        tracks[i].active = track.index === i;
+        tracks[i].active = track.index === tracks[i].index;
       }
     }
   }
