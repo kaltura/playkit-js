@@ -247,6 +247,50 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * adds a new text track element to the video element or set an existing one
+   * (when adding a text track with existing language to the video element it will remove all its cues)
+   * @param {PKTextTrack} textTrack - the playkit text track object to be added
+   * @returns {TextTrack} a DOM text track
+   * @public
+   */
+  addTextTrack(textTrack: PKTextTrack): TextTrack {
+    let domTrack;
+    const sameLanguageTrackIndex = Array.from(this._el.textTracks).findIndex(track => track ? track.language === textTrack.language : false)
+    if (sameLanguageTrackIndex > -1) {
+      domTrack = this._el.textTracks[sameLanguageTrackIndex];
+      this._removeCues(domTrack);
+    } else {
+      domTrack = this._el.addTextTrack("subtitles", textTrack.label || textTrack.language, textTrack.language);
+    }
+    return domTrack;
+  }
+
+  /**
+   * remove cues from an HTML text track
+   * @param {TextTrack} textTrack - an HTML text track
+   * @returns {void}
+   * @private
+   */
+  _removeCues(textTrack: TextTrack): void {
+    if (textTrack.cues) {
+      Object.values(textTrack.cues).forEach(cue => textTrack.removeCue(cue));
+    }
+  }
+
+  /**
+   * adding cues to an existing text element in a video tag
+   * @param {PKTextTrack} textTrack - adding cues to an exiting text track element
+   * @param {Array<Cue>} cues - the cues to be added
+   * @return {void}
+   */
+  addCues(textTrack: PKTextTrack, cues: Array<Cue>): void {
+    const track = Array.from(this._el.textTracks).find(track => track ? track.language === textTrack.language : false);
+    if (track) {
+      cues.forEach(cue => track.addCue(cue));
+    }
+  }
+
+  /**
    * Handles errors from the video element
    * @returns {void}
    * @private

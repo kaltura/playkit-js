@@ -38,6 +38,7 @@ import PlaybackMiddleware from './middleware/playback-middleware'
 import DefaultPlayerConfig from './player-config.json'
 import './assets/style.css'
 import PKError from './error/error'
+import {ExternalCaptionsHandler} from './track/external-captions-handler';
 
 /**
  * The player playback rates.
@@ -384,6 +385,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _fallbackToMutedAutoPlay: boolean;
+  /**
+   * holds the external tracks handler controller
+   * @type {ExternalCaptionsHandler}
+   * @private
+   */
+  _externalCaptionsHandler: ExternalCaptionsHandler;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -412,6 +419,7 @@ export default class Player extends FakeEventTarget {
     this._createReadyPromise();
     this._createPlayerContainer();
     this._appendDomElements();
+    this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
     this.configure(config);
   }
 
@@ -589,6 +597,7 @@ export default class Player extends FakeEventTarget {
     this._posterManager.reset();
     this._stateManager.reset();
     this._pluginManager.reset();
+    this._externalCaptionsHandler.reset();
     this._engine.reset();
     this._showBlackCover();
     this._reset = true;
@@ -605,6 +614,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.destroy();
     }
+    this._externalCaptionsHandler.destroy();
     this._posterManager.destroy();
     this._eventManager.destroy();
     this._pluginManager.destroy();
@@ -982,8 +992,13 @@ export default class Player extends FakeEventTarget {
       } else if (track instanceof TextTrack) {
         if (track.language === OFF) {
           this.hideTextTrack();
+          this._externalCaptionsHandler.hideTextTrack();
           this._playbackAttributesState.textLanguage = OFF;
+        } else if (track.external && !this._config.playback.useNativeTextTrack) {
+          this._engine.hideTextTrack();
+          this._externalCaptionsHandler.selectTextTrack(track);
         } else {
+          this._externalCaptionsHandler.hideTextTrack();
           this._engine.selectTextTrack(track);
         }
       }
@@ -1449,11 +1464,7 @@ export default class Player extends FakeEventTarget {
         this._markActiveTrack(event.payload.selectedAudioTrack);
         this._maybeDispatchTracksChanged(event);
       });
-      this._eventManager.listen(this._engine, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => {
-        this.ready().then(() => this._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language);
-        this._markActiveTrack(event.payload.selectedTextTrack);
-        this._maybeDispatchTracksChanged(event);
-      });
+      this._eventManager.listen(this._engine, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this._onTextTrackChanged(event));
       this._eventManager.listen(this._engine, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this._onTracksChanged(event));
       this._eventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
@@ -1482,16 +1493,21 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => {
         this._handleRecovered();
       });
+      this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
+      this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this._onTextTrackChanged(event));
     }
   }
 
   /**
    * Dispatches track changed event only if we already started playing.
+   * also dispatch text track changed if it's an external text track. this is done on cases this is the default text
+   * track, and it is loaded and changed when the player is loaded.
    * @param {FakeEvent} e - The track changed event.
    * @private
    * @returns {void}
    */
   _maybeDispatchTracksChanged(e: FakeEvent): void {
+    this._externalCaptionsHandler.maybeSelectExternalTrack(e.payload.selectedTextTrack);
     if (this._playbackStarted) {
       this.dispatchEvent(e);
     }
@@ -1506,6 +1522,18 @@ export default class Player extends FakeEventTarget {
     if (this._stateManager.currentState.type === StateType.PLAYING) {
       this.play();
     }
+  }
+
+  /**
+   * The text track changed event object
+   * @param {FakeEvent} event - payload with text track
+   * @returns {void}
+   * @private
+   */
+  _onTextTrackChanged(event: FakeEvent): void {
+    this.ready().then(() => this._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language);
+    this._markActiveTrack(event.payload.selectedTextTrack);
+    this._maybeDispatchTracksChanged(event);
   }
 
   /**
@@ -1805,8 +1833,53 @@ export default class Player extends FakeEventTarget {
    */
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
-    this._tracks = tracks;
+    this._tracks = [...tracks, ...this._externalCaptionsHandler.createExternalTracks(tracks)];
     this._addTextTrackOffOption();
+  }
+
+  /**
+   * adds a new text track element to the video element or set an existing one
+   * (when adding a text track with existing language to the video element it will remove all its cues)
+   * @param {PKTextTrack} textTrack - the playkit text track object to be added
+   * @returns {void}
+   */
+  _addNativeTextTrack(textTrack: TextTrack): void {
+    const engineTextTrack = this._engine.addTextTrack(textTrack);
+    // safari always push the text track at the beginning, so we have to update the index of the indexes in the player
+    // text track module.
+    if (engineTextTrack) {
+      this._getTracksByType(TrackType.TEXT).forEach(track => {
+        track.index = this._getNativeLanguageTrackIndex(track);
+      });
+      textTrack.index = this._getNativeLanguageTrackIndex(textTrack);
+    }
+  }
+
+  /**
+   * this function runs on the players text tracks and checks if there is already a text track with the same language
+   * as the new one. TODO: when we add another engine, consider refactoring for an engine API.
+   * @param {TextTrack} textTrack - the text track to check
+   * @returns {number} - the index of the text track with the same language (if there is any). and -1 if there isn't
+   * @private
+   */
+  _getNativeLanguageTrackIndex(textTrack: Track): number {
+    const trackList = this._engine.getVideoElement().textTracks;
+    let index = -1;
+    if (trackList) {
+      index = Array.from(trackList).findIndex(track => track ? track.language === textTrack.language : false)
+    }
+    return index;
+  }
+
+
+  /**
+   * adding cues to an existing text element in a video tag
+   * @param {TextTrack} textTrack - adding cues to an exiting text track element
+   * @param {Array<any>} cues - the cues to be added
+   * @return {void}
+   */
+  _addCuesToNativeTextTrack(textTrack: TextTrack, cues: Array<any>): void {
+    this._engine.addCues(textTrack, cues);
   }
 
   /**
@@ -1849,7 +1922,7 @@ export default class Player extends FakeEventTarget {
     if (type) {
       const tracks = this._getTracksByType(type);
       for (let i = 0; i < tracks.length; i++) {
-        tracks[i].active = track.index === i;
+        tracks[i].active = track.index === tracks[i].index;
       }
     }
   }

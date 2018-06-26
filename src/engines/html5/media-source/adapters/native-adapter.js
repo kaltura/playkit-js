@@ -93,7 +93,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _liveEdge: number;
-
   /**
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
@@ -238,7 +237,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._playerTracks = this._getParsedTracks();
       this._addNativeAudioTrackChangeListener();
       this._addNativeTextTrackChangeListener();
-      this._addNativeTextTrackAddedListener();
       NativeAdapter._logger.debug('The source has been loaded successfully');
       resolve({tracks: this._playerTracks});
       if (this.isLive()) {
@@ -571,13 +569,16 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const textTracks = this._videoElement.textTracks;
     if ((textTrack instanceof PKTextTrack)
       && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions')
-      && textTracks && textTracks[textTrack.index]) {
+      && textTracks) {
       this._removeNativeTextTrackChangeListener();
-      this._disableTextTracks();
-      textTracks[textTrack.index].mode = 'hidden';
-      NativeAdapter._logger.debug('Text track changed', textTrack);
-      this._onTrackChanged(textTrack);
-      this._addNativeTextTrackChangeListener();
+      const selectedTrack = Array.from(textTracks).find(track => track ? track.language === textTrack.language : false);
+      if (selectedTrack) {
+        this._disableTextTracks();
+        selectedTrack.mode = 'showing';
+        NativeAdapter._logger.debug('Text track changed', selectedTrack);
+        this._onTrackChanged(textTrack);
+        this._addNativeTextTrackChangeListener();
+      }
     }
   }
 
@@ -600,6 +601,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _addNativeTextTrackChangeListener(): void {
     if (this._videoElement.textTracks) {
       this._eventManager.listen(this._videoElement.textTracks, 'change', () => this._onNativeTextTrackChange());
+    }
+    if (!(this._config && this._config.playback && this._config.playback.useNativeTextTrack)) {
+      this._addNativeTextTrackAddedListener();
     }
   }
 
@@ -627,6 +631,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     NativeAdapter._logger.debug('Video element text track change');
     const vidIndex = getActiveVidTextTrackIndex();
     const pkIndex = getActivePKTextTrackIndex();
+
     if (vidIndex !== pkIndex) {
       // In case no text track with 'showing' mode
       // we need to set the off track
