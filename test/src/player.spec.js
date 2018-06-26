@@ -946,7 +946,7 @@ describe('Player', function () {
           (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
           event.payload.selectedTextTrack.language.should.equal('fr');
           video.textTracks[0].mode.should.be.equal('disabled');
-          video.textTracks[1].mode.should.be.equal('hidden');
+          video.textTracks[1].mode.should.be.equal('showing');
           tracks[0].active.should.be.false;
           tracks[1].active.should.be.true;
           done();
@@ -969,7 +969,7 @@ describe('Player', function () {
           (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
           event.payload.selectedTextTrack.index.should.equal(1);
           video.textTracks[0].mode.should.be.equal('disabled');
-          video.textTracks[1].mode.should.be.equal('hidden');
+          video.textTracks[1].mode.should.be.equal('showing');
           tracks[0].active.should.be.false;
           tracks[1].active.should.be.true;
           done();
