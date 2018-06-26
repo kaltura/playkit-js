@@ -84,7 +84,7 @@ function Settings() {
 
 Settings.prototype = {
   // Only accept the first assignment to any key.
-  set: function(k, v) {
+  set: function (k, v) {
     if (!this.get(k) && v !== "") {
       this.values[k] = v;
     }
@@ -94,18 +94,18 @@ Settings.prototype = {
   // a number of possible default values as properties where 'defaultKey' is
   // the key of the property that will be chosen; otherwise it's assumed to be
   // a single value.
-  get: function(k, dflt, defaultKey) {
+  get: function (k, dflt, defaultKey) {
     if (defaultKey) {
       return this.has(k) ? this.values[k] : dflt[defaultKey];
     }
     return this.has(k) ? this.values[k] : dflt;
   },
   // Check whether we have a value for a key.
-  has: function(k) {
+  has: function (k) {
     return k in this.values;
   },
   // Accept a setting if its one of the given alternatives.
-  alt: function(k, v, a) {
+  alt: function (k, v, a) {
     for (var n = 0; n < a.length; ++n) {
       if (v === a[n]) {
         this.set(k, v);
@@ -114,13 +114,13 @@ Settings.prototype = {
     }
   },
   // Accept a setting if its a valid (signed) integer.
-  integer: function(k, v) {
+  integer: function (k, v) {
     if (/^-?\d+$/.test(v)) { // integer
       this.set(k, parseInt(v, 10));
     }
   },
   // Accept a setting if its a valid percentage.
-  percent: function(k, v) {
+  percent: function (k, v) {
     var m;
     if ((m = v.match(/^([\d]{1,3})(\.[\d]*)?%$/))) {
       v = parseFloat(v);
@@ -155,6 +155,7 @@ function parseOptions(input, callback, keyValueDelim, groupDelim) {
 function parseCue(input, cue, regionList) {
   // Remember the original input if we need to throw an error.
   var oInput = input;
+
   // 4.1 WebVTT timestamp
   function consumeTimeStamp() {
     var ts = parseTimeStamp(input);
@@ -250,7 +251,6 @@ function parseCue(input, cue, regionList) {
   skipWhitespace();
   consumeCueSettings(input, cue);
 }
-
 
 
 // Parse content into a document fragment.
@@ -981,13 +981,6 @@ function processCues(window, cues, overlay) {
       boxPositions.push(BoxPosition.getSimpleBoxPosition(styleBox));
     }
   })();
-
-
-
-
-
-
-
 };
 
 let Parser = function (window, decoder) {
@@ -998,9 +991,9 @@ let Parser = function (window, decoder) {
   this.regionList = [];
 };
 
-let StringDecoder = function() {
+let StringDecoder = function () {
   return {
-    decode: function(data) {
+    decode: function (data) {
       if (!data) {
         return "";
       }
@@ -1012,9 +1005,11 @@ let StringDecoder = function() {
   };
 };
 
-var _objCreate = Object.create || (function() {
-  function F() {}
-  return function(o) {
+var _objCreate = Object.create || (function () {
+  function F() {
+  }
+
+  return function (o) {
     if (arguments.length !== 1) {
       throw new Error('Object.create shim only accepts one parameter.');
     }
@@ -1032,6 +1027,7 @@ function ParsingError(errorData, message) {
   this.code = errorData.code;
   this.message = message || errorData.message;
 }
+
 ParsingError.prototype = _objCreate(Error.prototype);
 ParsingError.prototype.constructor = ParsingError;
 
@@ -1050,7 +1046,7 @@ ParsingError.Errors = {
 Parser.prototype = {
   // If the error is a ParsingError then report it to the consumer if
   // possible. If it's not a ParsingError then throw it like normal.
-  reportOrThrowError: function(e) {
+  reportOrThrowError: function (e) {
     if (e instanceof ParsingError) {
       this.onparsingerror && this.onparsingerror(e);
     } else {
@@ -1294,7 +1290,7 @@ Parser.prototype = {
       if (self.state === "INITIAL") {
         throw new ParsingError(ParsingError.Errors.BadSignature);
       }
-    } catch(e) {
+    } catch (e) {
       self.reportOrThrowError(e);
     }
     self.onflush && self.onflush();

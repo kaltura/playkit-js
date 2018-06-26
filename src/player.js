@@ -38,7 +38,7 @@ import PlaybackMiddleware from './middleware/playback-middleware'
 import DefaultPlayerConfig from './player-config.json'
 import './assets/style.css'
 import PKError from './error/error'
-import {ExternalCaptionsHandler} from './track/external-captions-handler';
+import {ExternalCaptionsEventType, ExternalCaptionsHandler} from './track/external-captions-handler'
 
 /**
  * The player playback rates.
@@ -1495,6 +1495,13 @@ export default class Player extends FakeEventTarget {
       });
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this._onTextTrackChanged(event));
+      this._eventManager.listen(this._externalCaptionsHandler, ExternalCaptionsEventType.NATIVE_TEXT_TRACK_ADDED, () => {
+        const getNativeLanguageTrackIndex = (textTrack: TextTrack): number => {
+          const videoElement = this._player.getVideoElement();
+          return Array.from(videoElement.textTracks).findIndex(track => track ? track.language === textTrack.language : false)
+        };
+        this._getTracksByType(TrackType.TEXT).forEach(track => track.index = getNativeLanguageTrackIndex(track));
+      });
     }
   }
 
@@ -1507,7 +1514,9 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _maybeDispatchTracksChanged(e: FakeEvent): void {
-    this._externalCaptionsHandler.maybeSelectExternalTrack(e.payload.selectedTextTrack);
+    if (this._config.playback.useNativeTextTrack) {
+      this._externalCaptionsHandler.selectTextTrack(e.payload.selectedTextTrack);
+    }
     if (this._playbackStarted) {
       this.dispatchEvent(e);
     }
@@ -1835,53 +1844,8 @@ export default class Player extends FakeEventTarget {
    */
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
-    this._tracks = [...tracks, ...this._externalCaptionsHandler.createExternalTracks(tracks)];
+    this._tracks = [...tracks, ...this._externalCaptionsHandler.getExternalTracks(tracks)];
     this._addTextTrackOffOption();
-  }
-
-  /**
-   * adds a new text track element to the video element or set an existing one
-   * (when adding a text track with existing language to the video element it will remove all its cues)
-   * @param {PKTextTrack} textTrack - the playkit text track object to be added
-   * @returns {void}
-   */
-  _addNativeTextTrack(textTrack: TextTrack): void {
-    const engineTextTrack = this._engine.addTextTrack(textTrack);
-    // safari always push the text track at the beginning, so we have to update the index of the indexes in the player
-    // text track module.
-    if (engineTextTrack) {
-      this._getTracksByType(TrackType.TEXT).forEach(track => {
-        track.index = this._getNativeLanguageTrackIndex(track);
-      });
-      textTrack.index = this._getNativeLanguageTrackIndex(textTrack);
-    }
-  }
-
-  /**
-   * this function runs on the players text tracks and checks if there is already a text track with the same language
-   * as the new one. TODO: when we add another engine, consider refactoring for an engine API.
-   * @param {TextTrack} textTrack - the text track to check
-   * @returns {number} - the index of the text track with the same language (if there is any). and -1 if there isn't
-   * @private
-   */
-  _getNativeLanguageTrackIndex(textTrack: Track): number {
-    const trackList = this._engine.getVideoElement().textTracks;
-    let index = -1;
-    if (trackList) {
-      index = Array.from(trackList).findIndex(track => track ? track.language === textTrack.language : false)
-    }
-    return index;
-  }
-
-
-  /**
-   * adding cues to an existing text element in a video tag
-   * @param {TextTrack} textTrack - adding cues to an exiting text track element
-   * @param {Array<any>} cues - the cues to be added
-   * @return {void}
-   */
-  _addCuesToNativeTextTrack(textTrack: TextTrack, cues: Array<any>): void {
-    this._engine.addCues(textTrack, cues);
   }
 
   /**

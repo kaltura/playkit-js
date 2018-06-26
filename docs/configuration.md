@@ -132,8 +132,8 @@ var config = {
 >>{
 >>  url: string,
 >>  label: string,
->>  url: string,
->>  description?: string
+>>  language: string,
+>>  type?: string
 >>}
 >>```
 >##### Default:

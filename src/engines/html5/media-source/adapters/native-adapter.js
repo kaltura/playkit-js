@@ -93,6 +93,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _liveEdge: number;
+
   /**
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
@@ -237,6 +238,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._playerTracks = this._getParsedTracks();
       this._addNativeAudioTrackChangeListener();
       this._addNativeTextTrackChangeListener();
+      this._addNativeTextTrackAddedListener();
       NativeAdapter._logger.debug('The source has been loaded successfully');
       resolve({tracks: this._playerTracks});
       if (this.isLive()) {
@@ -602,9 +604,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (this._videoElement.textTracks) {
       this._eventManager.listen(this._videoElement.textTracks, 'change', () => this._onNativeTextTrackChange());
     }
-    if (!(this._config && this._config.playback && this._config.playback.useNativeTextTrack)) {
-      this._addNativeTextTrackAddedListener();
-    }
   }
 
   /**
@@ -659,7 +658,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {void}
    */
   _addNativeTextTrackAddedListener(): void {
-    if (this._videoElement.textTracks) {
+    if (!(this._config && this._config.playback && this._config.playback.useNativeTextTrack) && this._videoElement.textTracks) {
       this._eventManager.listen(this._videoElement.textTracks, 'addtrack', () => this._onNativeTextTrackAdded());
     }
   }

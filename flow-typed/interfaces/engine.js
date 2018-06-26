@@ -2,7 +2,6 @@
 import VideoTrack from '../../src/track/video-track'
 import AudioTrack from '../../src/track/audio-track'
 import TextTrack from '../../src/track/text-track'
-import Cue from '../../src/track/vtt-cue'
 
 declare interface IEngine {
   static id: string;
@@ -30,8 +29,6 @@ declare interface IEngine {
   getStartTimeOfDvrWindow(): number;
   isLive(): boolean;
   getVideoElement(): HTMLVideoElement;
-  addCues(textTrack: TextTrack, cues: Array<Cue>): void;
-  addTextTrack(textTrack: TextTrack): TextTrack;
   +id: string;
   currentTime: number;
   +duration: number;
