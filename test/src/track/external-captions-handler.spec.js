@@ -401,12 +401,12 @@ describe('ExternalCaptionsHandler', () => {
     });
 
     it("should return an array with 2 textTracks elements", () => {
-      externalCaptionsHandler.createExternalTracks().length.should.equal(2);
+      externalCaptionsHandler.createExternalTracks([]).length.should.equal(2);
     });
 
     it("should return an array with 1 textTracks elements (one same language)", () => {
       player._tracks.push(new TextTrack({language: 'en', label: 'english'}));
-      externalCaptionsHandler.createExternalTracks().length.should.equal(1);
+      externalCaptionsHandler.createExternalTracks([new TextTrack({language: 'en', label: 'english'})]).length.should.equal(1);
     });
 
     it("should return an empty array (no captions)", () => {
@@ -415,7 +415,7 @@ describe('ExternalCaptionsHandler', () => {
       config.sources.captions = null;
       player.configure(config);
       externalCaptionsHandler = new ExternalCaptionsHandler(player);
-      externalCaptionsHandler.createExternalTracks().length.should.equal(0);
+      externalCaptionsHandler.createExternalTracks([]).length.should.equal(0);
     });
   });
 
@@ -524,7 +524,7 @@ describe('ExternalCaptionsHandler', () => {
 
     it("should remove cues from the active cues property", () => {
       externalCaptionsHandler._activeTextCues = ["1","2"];
-      externalCaptionsHandler._textTrackActive = true;
+      externalCaptionsHandler._isTextTrackActive = true;
       externalCaptionsHandler.hideTextTrack();
       externalCaptionsHandler._activeTextCues.length.should.equal(0);
     });
