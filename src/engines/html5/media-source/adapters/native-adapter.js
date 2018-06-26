@@ -94,13 +94,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _liveEdge: number;
   /**
-   * indicates if we should use external captions.
-   * @member {boolean} - _useExternalCaptions
-   * @private
-   */
-  _useExternalCaptions: boolean;
-
-  /**
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
    * @param {string} mimeType - The mime type to check
