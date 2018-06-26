@@ -1,8 +1,10 @@
+//@flow
 import Error from '../error/error'
 import * as Utils from '../utils/util'
 import {Parser, StringDecoder} from './text-track-display'
 import {TrackType} from './track-type';
 import TextTrack from './text-track';
+import Track from './track';
 import {CustomEventType, Html5EventType} from '../event/event-type';
 import FakeEvent from '../event/fake-event';
 import getLogger from '../utils/logger';
@@ -110,15 +112,16 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   /**
    * get external tracks (native and/or player module tracks)
    * @returns {Array<TextTrack>} returns an array with the new external tracks
-   * @param {Array<TextTrack>} textTracks array with the player text tracks.
+   * @param {Array<Track>} tracks array with the player text tracks.
    * @public
    */
-  getExternalTracks(textTracks: Array<TextTrack>): Array<TextTrack> {
+  getExternalTracks(tracks: Array<Track>): Array<TextTrack> {
     const captions = this._player.config.sources.captions;
     if (!captions) {
       return [];
     }
     this._eventManager.listen(this._player, this._player.Event.SEEKED, (e) => this._maybeSetExternalCueIndex(e));
+    const textTracks = tracks.filter(track => track instanceof TextTrack)
     let textTracksLength = textTracks.length || 0;
     const newTextTracks = [];
     captions.forEach(caption => {
@@ -196,7 +199,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   destroy(): void {
     this._textTrackModel = {};
     this._eventManager.destroy();
-    this._activeTextCues = null;
+    this._activeTextCues = [];
   }
 
   /**
@@ -291,33 +294,36 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _handleCaptionOnTimeUpdate(track: TextTrack): void {
-    if (this._activeTextCues.length > 0 && this._player.currentTime < this._activeTextCues[this._activeTextCues.length - 1].startTime) {
-      this._activeTextCues = [];
-      this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: []}));
-    } else {
-      if (Math.abs(this._player.currentTime - this._lastTimeUpdate) > 1) {
-        this._maybeSetExternalCueIndex();
-      }
-      const cues = this._textTrackModel[track.language].cues;
-      let activeCuesChanged = false;
-      for (let activeTextCuesIndex = 0; activeTextCuesIndex < this._activeTextCues.length; activeTextCuesIndex++) {
-        const cue = this._activeTextCues[activeTextCuesIndex];
-        if (this._player.currentTime < cue.startTime || cue.endTime < this._player.currentTime) {
-          this._activeTextCues.splice(activeTextCuesIndex, 1);
+    const currentTime = this._player.currentTime;
+    if (currentTime){
+      if (this._activeTextCues.length > 0 && currentTime < this._activeTextCues[this._activeTextCues.length - 1].startTime) {
+        this._activeTextCues = [];
+        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: []}));
+      } else {
+        if (Math.abs(currentTime - this._lastTimeUpdate) > 1) {
+          this._maybeSetExternalCueIndex();
+        }
+        const cues = this._textTrackModel[track.language].cues;
+        let activeCuesChanged = false;
+        for (let activeTextCuesIndex = 0; activeTextCuesIndex < this._activeTextCues.length; activeTextCuesIndex++) {
+          const cue = this._activeTextCues[activeTextCuesIndex];
+          if (currentTime < cue.startTime || cue.endTime < currentTime) {
+            this._activeTextCues.splice(activeTextCuesIndex, 1);
+            activeCuesChanged = true;
+          }
+        }
+        while (this._externalCueIndex < cues.length && currentTime > cues[this._externalCueIndex].startTime) {
+          this._activeTextCues.push(cues[this._externalCueIndex]);
+          this._externalCueIndex++;
           activeCuesChanged = true;
         }
+        if (activeCuesChanged) {
+          this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: this._activeTextCues}));
+        }
       }
-      while (this._externalCueIndex < cues.length && this._player.currentTime > cues[this._externalCueIndex].startTime) {
-        this._activeTextCues.push(cues[this._externalCueIndex]);
-        this._externalCueIndex++;
-        activeCuesChanged = true;
-      }
-      if (activeCuesChanged) {
-        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: this._activeTextCues}));
-      }
+      // sometimes the timeupdate event is fired before the seeked event - so we need to know the user seeked.
+      this._lastTimeUpdate = currentTime;
     }
-    // sometimes the timeupdate event is fired before the seeked event - so we need to know the user seeked.
-    this._lastTimeUpdate = this._player.currentTime;
   }
 
   /**
@@ -326,7 +332,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _maybeSetExternalCueIndex(): void {
-    const textTrack = this._player.getTracks(TrackType.TEXT).filter(track => track.active && track.external)[0];
+    const textTrack = this._player.getTracks(TrackType.TEXT).find(track => track instanceof TextTrack && track.active && track.external);
     if (textTrack && textTrack.external) {
       const cues = this._textTrackModel[textTrack.language].cues;
       let i = 0;
@@ -345,9 +351,11 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    */
   _addCuesToNativeTextTrack(textTrack: TextTrack, cues: Array<Cue>): void {
     const videoElement = this._player.getVideoElement();
-    const track = Array.from(videoElement.textTracks).find(track => track ? track.language === textTrack.language : false);
-    if (track) {
-      cues.forEach(cue => track.addCue(cue));
+    if (videoElement) {
+      const track = Array.from(videoElement.textTracks).find(track => track ? track.language === textTrack.language : false);
+      if (track) {
+        cues.forEach(cue => track.addCue(cue));
+      }
     }
   }
 
@@ -359,14 +367,18 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    */
   _addNativeTextTrack(textTrack: TextTrack): void {
     const videoElement = this._player.getVideoElement();
-    const sameLanguageTrackIndex = Array.from(videoElement.textTracks).findIndex(track => track ? track.language === textTrack.language : false);
-    if (sameLanguageTrackIndex > -1) {
-      const domTrack = videoElement.textTracks[sameLanguageTrackIndex];
-      this._removeCues(domTrack);
-    } else {
-      videoElement.addTextTrack("subtitles", textTrack.label || textTrack.language, textTrack.language);
+    if (videoElement) {
+      const sameLanguageTrackIndex = Array.from(videoElement.textTracks).findIndex(track => track ? track.language === textTrack.language : false);
+      if (sameLanguageTrackIndex > -1) {
+        const domTrack = videoElement.textTracks[sameLanguageTrackIndex];
+        if (domTrack.cues) {
+          Object.values(domTrack.cues).forEach(cue => domTrack.removeCue(cue));
+        }
+      } else {
+        videoElement.addTextTrack("subtitles", textTrack.label || textTrack.language, textTrack.language);
+      }
+      this.dispatchEvent(new FakeEvent(ExternalCaptionsEventType.NATIVE_TEXT_TRACK_ADDED));
     }
-    this.dispatchEvent(new FakeEvent(ExternalCaptionsEventType.NATIVE_TEXT_TRACK_ADDED));
   }
 
   /**

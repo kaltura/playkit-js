@@ -1496,9 +1496,9 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this._onTextTrackChanged(event));
       this._eventManager.listen(this._externalCaptionsHandler, ExternalCaptionsEventType.NATIVE_TEXT_TRACK_ADDED, () => {
-        const getNativeLanguageTrackIndex = (textTrack: TextTrack): number => {
-          const videoElement = this._player.getVideoElement();
-          return Array.from(videoElement.textTracks).findIndex(track => track ? track.language === textTrack.language : false)
+        const getNativeLanguageTrackIndex = (textTrack: Track): number => {
+          const videoElement = this.getVideoElement();
+          return videoElement ? Array.from(videoElement.textTracks).findIndex(track => track ? track.language === textTrack.language : false) : -1;
         };
         this._getTracksByType(TrackType.TEXT).forEach(track => track.index = getNativeLanguageTrackIndex(track));
       });
