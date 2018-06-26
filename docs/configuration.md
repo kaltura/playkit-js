@@ -88,7 +88,8 @@ var config = {
 >  metadata: PKMetadataConfigObject,
 >  id?: string,
 >  poster?: string,
->  duration?: number
+>  duration?: number,
+>  captions?: Array<PKExternalCaptionObject>
 >}
 >```
 >>##### Type `PKMediaSourceObject`
@@ -123,6 +124,15 @@ var config = {
 >>```js
 >>{
 >>  name?: string,
+>>  description?: string
+>>}
+>>```
+>>##### Type `PKExternalCaptionObject`
+>>```js
+>>{
+>>  url: string,
+>>  label: string,
+>>  url: string,
 >>  description?: string
 >>}
 >>```
@@ -259,22 +269,23 @@ var config = {
 >>##### Description: The duration of the media.
 >>##
 >>### config.sources.captions
->>##### Type: `Array<Objects>`
+>>##### Type: `Array<PKExternalCaptionObject>`
 >>##### Default: `-`
->>##### Description: A array of captions to be added to the media.
+>>##### Description: An array of captions to be added to the media.
 >>The following fields are mandatory: `url`, `language` and `label`.
 >>#### Example:
 >>```js
 >>var config = {
->>   sources: {
->>        captions: [{
->> 					url: "www.path.to/your/captions/file",
->> 					type: "vtt",
->> 					language: "en",
->> 					label: "English"
->> 				  }
->>        			 ]
->>    }
+>>  sources: {
+>>    captions: [
+>>      {
+>>        url: "www.path.to/your/captions/file",
+>>        type: "vtt",
+>>        language: "en",
+>>        label: "English"
+>>      }
+>>    ]
+>>  }
 >>};
 >>```
 ##

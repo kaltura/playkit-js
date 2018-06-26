@@ -244,9 +244,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._playerTracks = this._getParsedTracks();
       this._addNativeAudioTrackChangeListener();
       this._addNativeTextTrackChangeListener();
-      if (!(this._config && this._config.playback && this._config.playback.useNativeTextTrack)) {
-        this._addNativeTextTrackAddedListener();
-      }
       NativeAdapter._logger.debug('The source has been loaded successfully');
       resolve({tracks: this._playerTracks});
       if (this.isLive()) {
@@ -611,6 +608,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _addNativeTextTrackChangeListener(): void {
     if (this._videoElement.textTracks) {
       this._eventManager.listen(this._videoElement.textTracks, 'change', () => this._onNativeTextTrackChange());
+    }
+    if (!(this._config && this._config.playback && this._config.playback.useNativeTextTrack)) {
+      this._addNativeTextTrackAddedListener();
     }
   }
 

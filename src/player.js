@@ -1525,7 +1525,7 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * on text track changed handler
+   * The text track changed event object
    * @param {FakeEvent} event - payload with text track
    * @returns {void}
    * @private
@@ -1835,8 +1835,7 @@ export default class Player extends FakeEventTarget {
    */
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
-    this._tracks = tracks;
-    this._tracks = [...tracks, ...this._externalCaptionsHandler.createExternalTracks()];
+    this._tracks = [...tracks, ...this._externalCaptionsHandler.createExternalTracks(tracks)];
     this._addTextTrackOffOption();
   }
 
