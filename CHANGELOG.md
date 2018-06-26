@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.30.3"></a>
+## [0.30.3](https://github.com/kaltura/playkit-js/compare/v0.30.2...v0.30.3) (2018-06-25)
+
+
+### Bug Fixes
+
+* **FEC-8347:** video is not playing 360 when adTagUrl empty ([#244](https://github.com/kaltura/playkit-js/issues/244)) ([4741764](https://github.com/kaltura/playkit-js/commit/4741764))
+
+
+
 <a name="0.30.2"></a>
 ## [0.30.2](https://github.com/kaltura/playkit-js/compare/v0.30.1...v0.30.2) (2018-06-21)
 
