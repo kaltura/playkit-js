@@ -14,6 +14,7 @@
     "volume": 1,
     "startTime": -1,
     "playsinline": true,
+    "crossOrigin": "anonymous",
     "preload": "none",
     "autoplay": false,
     "allowMutedAutoPlay": true,

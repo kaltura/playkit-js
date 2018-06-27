@@ -904,6 +904,28 @@ export default class Player extends FakeEventTarget {
     this._loadingMedia = loading;
   }
 
+  /**
+   * Set crossOrigin attribute.
+   * @param {string} crossOrigin - 'anonymous' or 'use-credentials'
+   * anonymous: CORS requests for this element will not have the credentials flag set.
+   * use-credentials: CORS requests for this element will have the credentials flag set; this means the request will provide credentials.
+   */
+  set crossOrigin(crossOrigin: string): void {
+    if (this._engine) {
+      this._engine.crossOrigin = crossOrigin;
+    }
+  }
+
+  /**
+   * Get crossOrigin attribute.
+   * @returns {string} - 'anonymous' or 'use-credentials'
+   */
+  get crossOrigin(): string {
+    if (this._engine) {
+      return this._engine.crossOrigin;
+    }
+  }
+
   // </editor-fold>
 
   // <editor-fold desc="Live API">
@@ -1603,6 +1625,9 @@ export default class Player extends FakeEventTarget {
     }
     if (typeof this._config.playback.playsinline === 'boolean') {
       this.playsinline = this._config.playback.playsinline;
+    }
+    if (typeof this._config.playback.crossOrigin === 'string') {
+      this.crossOrigin = this._config.playback.crossOrigin;
     }
   }
 
