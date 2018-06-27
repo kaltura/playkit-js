@@ -34,6 +34,8 @@ import type {MediaTypes} from './media-type'
 import {MediaType} from './media-type'
 import type {AbrModes} from './track/abr-mode-type'
 import {AbrMode} from './track/abr-mode-type'
+import type {CorsTypes} from './engines/html5/cors-types'
+import {CorsType} from './engines/html5/cors-types'
 import PlaybackMiddleware from './middleware/playback-middleware'
 import DefaultPlayerConfig from './player-config.json'
 import './assets/style.css'
@@ -2122,6 +2124,15 @@ export default class Player extends FakeEventTarget {
    */
   get EngineType(): EngineTypes {
     return EngineType;
+  }
+
+  /**
+   * Gets the Cors types.
+   * @returns {CorsTypes} - CorsType.
+   * @public
+   */
+  get CorsType(): CorsTypes {
+    return CorsType;
   }
 
   // </editor-fold>
