@@ -1628,6 +1628,9 @@ export default class Player extends FakeEventTarget {
     if (typeof this._config.playback.playsinline === 'boolean') {
       this.playsinline = this._config.playback.playsinline;
     }
+    if (typeof this._config.playback.crossOrigin === 'string') {
+      this.crossOrigin = this._config.playback.crossOrigin;
+    }
   }
 
   /**
