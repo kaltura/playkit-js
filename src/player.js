@@ -908,11 +908,11 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Set crossOrigin attribute.
-   * @param {string} crossOrigin - 'anonymous' or 'use-credentials'
+   * @param {?string} crossOrigin - 'anonymous' or 'use-credentials'
    * anonymous: CORS requests for this element will not have the credentials flag set.
    * use-credentials: CORS requests for this element will have the credentials flag set; this means the request will provide credentials.
    */
-  set crossOrigin(crossOrigin: string): void {
+  set crossOrigin(crossOrigin: ?string): void {
     if (this._engine) {
       this._engine.crossOrigin = crossOrigin;
     }
@@ -920,9 +920,9 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Get crossOrigin attribute.
-   * @returns {string} - 'anonymous' or 'use-credentials'
+   * @returns {?string} - 'anonymous' or 'use-credentials'
    */
-  get crossOrigin(): string {
+  get crossOrigin(): ?string {
     if (this._engine) {
       return this._engine.crossOrigin;
     }
