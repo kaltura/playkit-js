@@ -37,7 +37,6 @@ var config = {
         volume: 1,
         startTime: -1,
         playsinline: true,
-        crossOrigin: string,
         preload: "none",
         autoplay: false,
         allowMutedAutoPlay: true,
@@ -350,7 +349,6 @@ var config = {
 >  volume: 1,
 >  startTime: -1,
 >  playsinline: true,
->  crossOrigin: string,
 >  preload: "none",
 >  autoplay: false,
 >  allowMutedAutoPlay: true,
@@ -457,7 +455,7 @@ var config = {
 >##
 >>### config.playback.crossOrigin
 >>##### Type: `string`
->>##### Default: `anonymous`
+>>##### Default: -
 >>##### Description: This enumerated attribute indicates whether to use CORS to fetch the related image. [CORS-enabled resources](https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image) can be reused in the <canvas> element without being tainted.
 >>Possible values:
 >> - `"anonymous"`: Sends a cross-origin request without a credential. In other words, it sends the Origin: HTTP header without a cookie, X.509 certificate, or performing HTTP Basic authentication. If the server does not give credentials to the origin site (by not setting the Access-Control-Allow-Origin: HTTP header), the image will be tainted, and its usage restricted.
