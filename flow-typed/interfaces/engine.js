@@ -55,5 +55,5 @@ declare interface IEngine {
   +videoWidth: number;
   +videoHeight: number;
   playsinline: boolean;
-  crossOrigin: string
+  crossOrigin: string;
 }
