@@ -825,7 +825,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @param {?string} crossOrigin - 'anonymous' or 'use-credentials'
    */
   set crossOrigin(crossOrigin: ?string): void {
-    if (crossOrigin) {
+    if (typeof crossOrigin === 'string') {
       this._el.setAttribute('crossorigin', crossOrigin);
     } else {
       this._el.removeAttribute('crossorigin');
