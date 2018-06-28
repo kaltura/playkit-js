@@ -821,6 +821,26 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Set crossOrigin attribute.
+   * @param {?string} crossOrigin - 'anonymous' or 'use-credentials'
+   */
+  set crossOrigin(crossOrigin: ?string): void {
+    if (typeof crossOrigin === 'string') {
+      this._el.setAttribute('crossorigin', crossOrigin);
+    } else {
+      this._el.removeAttribute('crossorigin');
+    }
+  }
+
+  /**
+   * Get crossOrigin attribute.
+   * @returns {?string} - 'anonymous' or 'use-credentials'
+   */
+  get crossOrigin(): ?string {
+    return this._el.getAttribute('crossorigin');
+  }
+
+  /**
    * Initializes the engine.
    * @param {PKMediaSourceObject} source - The selected source object.
    * @param {Object} config - The player configuration.
