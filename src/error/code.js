@@ -82,6 +82,10 @@ const Code: CodeType = {
    * error parsing the dash adapter error (for instance, could not parse an error shaka raised)
    */
   "DASH_ADAPTER_ERROR_PARSE_ISSUE": 2010,
+  /**
+   * the file that the external captions handler is trying to download could not be determined / unsupported.
+   */
+  "UNKNOWN_FILE_TYPE": 2011,
 
 
   /**
