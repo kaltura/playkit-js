@@ -941,7 +941,7 @@ describe('Player', function () {
     });
 
     it('should select a new subtitles track', (done) => {
-      player.addEventListener(Html5EventType.PLAYING, () => {
+      player.ready().then(() => {
         player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, (event) => {
           (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
           event.payload.selectedTextTrack.language.should.equal('fr');
@@ -960,11 +960,12 @@ describe('Player', function () {
         tracks[1].active.should.be.false;
         player.selectTrack(new TextTrack({language: 'fr', kind: 'subtitles', index: 1}));
       });
-      player.play();
+      player.load();
     });
 
     it('should select a new captions track', (done) => {
-      player.addEventListener(Html5EventType.PLAYING, () => {
+      player.load();
+      player.ready().then(() => {
         player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, (event) => {
           (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
           event.payload.selectedTextTrack.index.should.equal(1);
@@ -983,7 +984,6 @@ describe('Player', function () {
         tracks[1].active.should.be.false;
         player.selectTrack(new TextTrack({index: 1, kind: 'captions', language: 'fr'}));
       });
-      player.play();
     });
 
     it('should not change the selected text track', (done) => {
