@@ -1045,7 +1045,7 @@ export default class Player extends FakeEventTarget {
       const textTrack = textTracks.find(track => track.language === OFF);
       if (textTrack) {
         textTrack.active = true;
-        this._maybeDispatchTracksChanged(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
+        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}))
       }
     }
   }
@@ -1486,7 +1486,7 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.AUDIO_TRACK_CHANGED, (event: FakeEvent) => {
         this.ready().then(() => this._playbackAttributesState.audioLanguage = event.payload.selectedAudioTrack.language);
         this._markActiveTrack(event.payload.selectedAudioTrack);
-        this._maybeDispatchTracksChanged(event);
+        this.dispatchEvent(event);
       });
       this._eventManager.listen(this._engine, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this._onTextTrackChanged(event));
       this._eventManager.listen(this._engine, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this._onTracksChanged(event));
@@ -1530,23 +1530,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Dispatches track changed event only if we already started playing.
-   * also dispatch text track changed if it's an external text track. this is done on cases this is the default text
-   * track, and it is loaded and changed when the player is loaded.
-   * @param {FakeEvent} e - The track changed event.
-   * @private
-   * @returns {void}
-   */
-  _maybeDispatchTracksChanged(e: FakeEvent): void {
-    if (this._config.playback.useNativeTextTrack) {
-      this._externalCaptionsHandler.selectTextTrack(e.payload.selectedTextTrack);
-    }
-    if (this._playbackStarted) {
-      this.dispatchEvent(e);
-    }
-  }
-
-  /**
    * if the media was recovered (after a media failure) then initiate play again (if that was the state before)
    * @returns {void}
    * @private
@@ -1566,7 +1549,10 @@ export default class Player extends FakeEventTarget {
   _onTextTrackChanged(event: FakeEvent): void {
     this.ready().then(() => this._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language);
     this._markActiveTrack(event.payload.selectedTextTrack);
-    this._maybeDispatchTracksChanged(event);
+    if (this._config.playback.useNativeTextTrack) {
+      this._externalCaptionsHandler.selectTextTrack(event.payload.selectedTextTrack);
+    }
+    this.dispatchEvent(event);
   }
 
   /**
