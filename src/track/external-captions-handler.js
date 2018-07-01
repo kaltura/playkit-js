@@ -126,7 +126,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     const newTextTracks = [];
     captions.forEach(caption => {
       const track = new TextTrack({
-        active: false,
+        active: caption.default ? true : false,
         index: textTracksLength++,
         kind: "subtitles",
         label: caption.label,
