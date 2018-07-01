@@ -133,7 +133,6 @@ var config = {
 >>  url: string,
 >>  label: string,
 >>  language: string,
->>  default?: boolean, 
 >>  type?: string
 >>}
 >>```
@@ -283,7 +282,6 @@ var config = {
 >>        url: "www.path.to/your/captions/file",
 >>        type: "vtt",
 >>        language: "en",
->>        default: true,
 >>        label: "English"
 >>      }
 >>    ]
