@@ -251,9 +251,10 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _convertSrtToVtt(str: string): string {
-    return str.replace(/(\d\d:\d\d:\d\d).(\d\d\d) --> (\d\d:\d\d:\d\d).(\d\d\d)/g, (match, part1, part2, part3, part4) => {
-      return `${part1},${part2} --> ${part3},${part4}`;
+    const vttStr = str.replace(/(\d\d:\d\d:\d\d),(\d\d\d) --> (\d\d:\d\d:\d\d),(\d\d\d)/g, (match, part1, part2, part3, part4) => {
+      return `${part1}.${part2} --> ${part3}.${part4}`;
     });
+    return `WEBVTT\n\n${vttStr}`;
   }
 
   /**
