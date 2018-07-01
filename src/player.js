@@ -1526,6 +1526,7 @@ export default class Player extends FakeEventTarget {
         };
         this._getTracksByType(TrackType.TEXT).forEach(track => track.index = getNativeLanguageTrackIndex(track));
       });
+      this._eventManager.listen(this._externalCaptionsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
     }
   }
 
