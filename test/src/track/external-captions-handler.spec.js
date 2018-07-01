@@ -150,19 +150,22 @@ describe('ExternalCaptionsHandler', () => {
 
     it("should convert an srt string to vtt string", () => {
       const srtString = `1
-                    00:00:19.000 --> 00:00:21.989
-                    I'm Annita McVeigh and welcome to Election Today where we'll bring you`;
-      const vttString =  `1
                     00:00:19,000 --> 00:00:21,989
+                    I'm Annita McVeigh and welcome to Election Today where we'll bring you`;
+      const vttString =  `WEBVTT\n\n1
+                    00:00:19.000 --> 00:00:21.989
                     I'm Annita McVeigh and welcome to Election Today where we'll bring you`;
       externalCaptionsHandler._convertSrtToVtt(srtString).should.be.equals(vttString)
     });
 
     it("should return the original string", () => {
       const srtString = `1
-                    00:00:19,000 --> 00:00:21,989
+                    00:00:19.000 --> 00:00:21.989
                     I'm Annita McVeigh and welcome to Election Today where we'll bring you`;
-      externalCaptionsHandler._convertSrtToVtt(srtString).should.be.equals(srtString)
+      const convertedString = `WEBVTT\n\n1
+                    00:00:19.000 --> 00:00:21.989
+                    I'm Annita McVeigh and welcome to Election Today where we'll bring you`;
+      externalCaptionsHandler._convertSrtToVtt(srtString).should.be.equals(convertedString)
     });
   });
 
