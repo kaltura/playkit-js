@@ -25,6 +25,7 @@ import {MediaType} from './media-type'
 import {EventType} from './event/event-type'
 import {AbrMode} from './track/abr-mode-type'
 import {LogLevelType} from './utils/logger'
+import {CorsType} from './engines/html5/cors-types'
 
 Player.runCapabilities();
 
@@ -75,6 +76,6 @@ const setCapabilities = Player.setCapabilities;
 export {getCapabilities, setCapabilities};
 
 // Export enums
-export {EventType, StateType, TrackType, EngineType, MediaType, StreamType, AbrMode, LogLevelType};
+export {EventType, StateType, TrackType, EngineType, MediaType, StreamType, AbrMode, LogLevelType, CorsType};
 
 export default loadPlayer;

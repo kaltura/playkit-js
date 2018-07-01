@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.31.1"></a>
+## [0.31.1](https://github.com/kaltura/playkit-js/compare/v0.31.0...v0.31.1) (2018-06-28)
+
+
+### Bug Fixes
+
+* **FEC-8357,FEC-8348:** VR is not working on Safari and Samsung Native Browser ([#246](https://github.com/kaltura/playkit-js/issues/246)) ([58d094e](https://github.com/kaltura/playkit-js/commit/58d094e))
+
+
+
 <a name="0.31.0"></a>
 # [0.31.0](https://github.com/kaltura/playkit-js/compare/v0.30.3...v0.31.0) (2018-06-26)
 
