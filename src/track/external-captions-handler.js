@@ -126,7 +126,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     const newTextTracks = [];
     captions.forEach(caption => {
       const track = new TextTrack({
-        active: caption.default ? true : false,
+        active: !!caption.default,
         index: textTracksLength++,
         kind: "subtitles",
         label: caption.label,
@@ -295,7 +295,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    */
   _handleCaptionOnTimeUpdate(track: TextTrack): void {
     const currentTime = this._player.currentTime;
-    if (currentTime){
+    if (currentTime) {
       if (this._activeTextCues.length > 0 && currentTime < this._activeTextCues[this._activeTextCues.length - 1].startTime) {
         this._activeTextCues = [];
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: []}));
