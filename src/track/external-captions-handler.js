@@ -10,8 +10,8 @@ import FakeEvent from '../event/fake-event';
 import getLogger from '../utils/logger';
 import EventManager from '../event/event-manager';
 import FakeEventTarget from '../event/fake-event-target';
-import {Cue} from "./vtt-cue";
-import Player from "../player";
+import {Cue} from './vtt-cue';
+import Player from '../player';
 
 type CueStatusType = { [status: string]: number };
 
@@ -176,7 +176,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
           } else {
             this._setTextTrack(textTrack);
           }
-        });
+        }).catch(error => this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error)));
       }
     }
   }
@@ -213,11 +213,13 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       const track = this._textTrackModel[textTrack.language];
       const captionType = track.type || this._getFileType(track.url);
       if (![SRT_POSTFIX, VTT_POSTFIX].includes(captionType)) {
-        reject(new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNKOWN_FILE_TYPE, {captionType: captionType}))
+        this._textTrackModel[textTrack.language].cuesStatus = CuesStatus.NOT_DOWNLOADED;
+        reject(new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNKNOWN_FILE_TYPE, {captionType: captionType}))
       }
       Utils.Http.execute(track.url, {}, 'GET').then(response => {
         resolve(captionType === SRT_POSTFIX ? this._convertSrtToVtt(response) : response);
       }).catch(error => {
+        this._textTrackModel[textTrack.language].cuesStatus = CuesStatus.NOT_DOWNLOADED;
         reject(new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.HTTP_ERROR, error.payload));
       })
     });
@@ -267,13 +269,13 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    */
   _downloadAndParseCues(textTrack: TextTrack): Promise<*> {
     this._textTrackModel[textTrack.language].cuesStatus = CuesStatus.DOWNLOADING;
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       this._getCuesString(textTrack)
         .then(vttString => this._parseCues(vttString))
         .then(cuesArray => {
           this._textTrackModel[textTrack.language].cues = cuesArray;
           resolve();
-        });
+        }).catch(error => reject(error));
     });
   }
 
@@ -296,7 +298,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    */
   _handleCaptionOnTimeUpdate(track: TextTrack): void {
     const currentTime = this._player.currentTime;
-    if (currentTime){
+    if (currentTime) {
       if (this._activeTextCues.length > 0 && currentTime < this._activeTextCues[this._activeTextCues.length - 1].startTime) {
         this._activeTextCues = [];
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: []}));
