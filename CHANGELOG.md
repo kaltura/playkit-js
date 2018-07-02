@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.31.2"></a>
+## [0.31.2](https://github.com/kaltura/playkit-js/compare/v0.31.1...v0.31.2) (2018-07-02)
+
+
+### Bug Fixes
+
+* **FEC-8354:**  When selecting Audio language and refresh the page, the display language returns to default (but actual audio proper) ([#247](https://github.com/kaltura/playkit-js/issues/247)) ([a47f60c](https://github.com/kaltura/playkit-js/commit/a47f60c))
+* adding external captions default ability ([#249](https://github.com/kaltura/playkit-js/issues/249)) ([eaef9d8](https://github.com/kaltura/playkit-js/commit/eaef9d8))
+* improve error handling in external captions handler [#248](https://github.com/kaltura/playkit-js/issues/248) ([d6dca09](https://github.com/kaltura/playkit-js/commit/d6dca09))
+* **FEC-8366:** seek to an already started caption does not work ([#251](https://github.com/kaltura/playkit-js/issues/251)) ([6d2815f](https://github.com/kaltura/playkit-js/commit/6d2815f))
+* **FEC-8369:** toggling between external text tracks does not work ([#252](https://github.com/kaltura/playkit-js/issues/252)) ([fd09050](https://github.com/kaltura/playkit-js/commit/fd09050))
+
+
+
 <a name="0.31.1"></a>
 ## [0.31.1](https://github.com/kaltura/playkit-js/compare/v0.31.0...v0.31.1) (2018-06-28)
 
