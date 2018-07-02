@@ -163,6 +163,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       if (this._textTrackModel[textTrack.language].cuesStatus === CuesStatus.DOWNLOADED && !this._player.config.playback.useNativeTextTrack) {
         textTrack.active = true;
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
+        this.hideTextTrack();
         this._setTextTrack(textTrack);
       } else if (this._textTrackModel[textTrack.language].cuesStatus === CuesStatus.NOT_DOWNLOADED) {
         textTrack.active = true;
@@ -211,7 +212,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _resetCurrentTrack(): void{
     this._activeTextCues = [];
     this._isTextTrackActive = false;
-    this._externalCueIndex = 0;
+    this._maybeSetExternalCueIndex();
   }
 
   /**
@@ -351,8 +352,14 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     if (textTrack && textTrack.external) {
       const cues = this._textTrackModel[textTrack.language].cues;
       let i = 0;
-      while (this._player.currentTime > cues[i].startTime && i < cues.length) {
-        i++;
+      for (; i < cues.length; i++) {
+        // if there is a cue that should be displayed right now, cue start time < current time < cue end time
+        if (cues[i].startTime < this._player.currentTime && this._player.currentTime < cues[i].endTime) {
+          break;
+          // this is for the first cue that is after the current time
+        } else if (cues[i].endTime > this._player.currentTime && cues[i].startTime > this._player.currentTime) {
+          break;
+        }
       }
       this._externalCueIndex = i;
     }
