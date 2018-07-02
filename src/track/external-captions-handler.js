@@ -305,7 +305,6 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       } else {
         if (Math.abs(currentTime - this._lastTimeUpdate) > 1) {
           this._maybeSetExternalCueIndex();
-          this._activeTextCues = [];
         }
         const cues = this._textTrackModel[track.language].cues;
         let activeCuesChanged = false;
@@ -340,13 +339,14 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     if (textTrack && textTrack.external) {
       const cues = this._textTrackModel[textTrack.language].cues;
       let i = 0;
-      // finding the right position
-      while (i < cues.length && cues[i].startTime < this._player.currentTime) {
-        i++;
-      }
-      // going back in the cues to see we didn't miss a cue that already started
-      while (i > 0 && cues[i - 1].endTime > this._player.currentTime && cues[i - 1].startTime < this._player.currentTime) {
-        i--;
+      for (; i < cues.length; i++) {
+        // if there is a cue that should be displayed right now, cue start time < current time < cue end time
+        if (cues[i].startTime < this._player.currentTime && this._player.currentTime < cues[i].endTime) {
+          break;
+          // this is for the first cue that is after the current time
+        } else if (cues[i].endTime > this._player.currentTime && cues[i].startTime > this._player.currentTime) {
+          break;
+        }
       }
       this._externalCueIndex = i;
     }
