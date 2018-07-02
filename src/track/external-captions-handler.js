@@ -106,6 +106,8 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       this._eventManager.unlisten(this._player, Html5EventType.TIME_UPDATE);
       this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: []}));
       this._activeTextCues = [];
+      this._isTextTrackActive = false;
+      this._externalCueIndex = 0;
     }
   }
 
@@ -174,6 +176,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
           if (this._player.config.playback.useNativeTextTrack) {
             this._addCuesToNativeTextTrack(textTrack, this._textTrackModel[textTrack.language].cues);
           } else {
+            this.hideTextTrack();
             this._setTextTrack(textTrack);
           }
         }).catch(error => this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error)));
@@ -188,6 +191,8 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   reset(): void {
     this._textTrackModel = {};
     this._activeTextCues = [];
+    this._isTextTrackActive = false;
+    this._externalCueIndex = 0;
     this._eventManager.removeAll();
   }
 
