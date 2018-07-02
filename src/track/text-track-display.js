@@ -1,3 +1,6 @@
+import {Cue} from './vtt-cue'
+import {Region} from './vtt-region'
+
 /* eslint-disable */
 /**
  * Copyright 2013 vtt.js Contributors
@@ -1123,7 +1126,7 @@ Parser.prototype = {
       // Create the region, using default values for any values that were not
       // specified.
       if (settings.has("id")) {
-        var region = new self.window.VTTRegion();
+        var region = new Region();
         region.width = settings.get("width", 100);
         region.lines = settings.get("lines", 3);
         region.regionAnchorX = settings.get("regionanchorX", 0);
@@ -1212,7 +1215,7 @@ Parser.prototype = {
             if (!line) {
               continue;
             }
-            self.cue = new self.window.VTTCue(0, 0, "");
+            self.cue = new Cue(0, 0, "");
             self.state = "CUE";
             // 30-39 - Check if self line contains an optional identifier or timing data.
             if (line.indexOf("-->") === -1) {

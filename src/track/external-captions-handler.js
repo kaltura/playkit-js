@@ -120,7 +120,6 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     if (!captions) {
       return [];
     }
-    this._eventManager.listen(this._player, this._player.Event.SEEKED, (e) => this._maybeSetExternalCueIndex(e));
     const textTracks = tracks.filter(track => track instanceof TextTrack)
     let textTracksLength = textTracks.length || 0;
     const newTextTracks = [];
