@@ -163,6 +163,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       if (this._textTrackModel[textTrack.language].cuesStatus === CuesStatus.DOWNLOADED && !this._player.config.playback.useNativeTextTrack) {
         textTrack.active = true;
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
+        this.hideTextTrack();
         this._setTextTrack(textTrack);
       } else if (this._textTrackModel[textTrack.language].cuesStatus === CuesStatus.NOT_DOWNLOADED) {
         textTrack.active = true;
@@ -211,7 +212,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _resetCurrentTrack(): void{
     this._activeTextCues = [];
     this._isTextTrackActive = false;
-    this._externalCueIndex = 0;
+    this._maybeSetExternalCueIndex();
   }
 
   /**
