@@ -105,7 +105,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     if (this._isTextTrackActive) {
       this._eventManager.unlisten(this._player, Html5EventType.TIME_UPDATE);
       this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: []}));
-      this._activeTextCues = [];
+      this._resetCurrentTrack();
     }
   }
 
@@ -174,6 +174,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
           if (this._player.config.playback.useNativeTextTrack) {
             this._addCuesToNativeTextTrack(textTrack, this._textTrackModel[textTrack.language].cues);
           } else {
+            this.hideTextTrack();
             this._setTextTrack(textTrack);
           }
         }).catch(error => this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error)));
@@ -187,7 +188,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    */
   reset(): void {
     this._textTrackModel = {};
-    this._activeTextCues = [];
+    this._resetCurrentTrack();
     this._eventManager.removeAll();
   }
 
@@ -200,6 +201,17 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     this._textTrackModel = {};
     this._eventManager.destroy();
     this._activeTextCues = [];
+  }
+
+  /**
+   * resets all the params of the current external text track that is playing
+   * @returns {void}
+   * @private
+   */
+  _resetCurrentTrack(): void{
+    this._activeTextCues = [];
+    this._isTextTrackActive = false;
+    this._externalCueIndex = 0;
   }
 
   /**
