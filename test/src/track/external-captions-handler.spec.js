@@ -362,6 +362,7 @@ describe('ExternalCaptionsHandler', () => {
       });
       externalCaptionsHandler._activeTextCues = [{startTime: 1, endTime: 2}];
       externalCaptionsHandler._externalCueIndex = 6;
+      externalCaptionsHandler._lastTimeUpdate = 9.9;
       player.currentTime = 10;
       externalCaptionsHandler._handleCaptionOnTimeUpdate(textTrack);
     });
