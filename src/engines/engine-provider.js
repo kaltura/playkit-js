@@ -72,7 +72,7 @@ class EngineProvider {
    * @returns {void}
    */
   static destroy(): void {
-    EngineProvider._engineProviders = [];
+    EngineProvider._engineProviders = [Html5];
   }
 }
 
