@@ -520,6 +520,13 @@ const _VERSION = {
       return (lexicographical ? /^\d+[A-Za-zαß]*$/ : /^\d+[A-Za-zαß]?$/).test(x);
     };
 
+    const mapParts = (parts: Array<string>) => {
+      return parts.map((x) => {
+        const match = (/[A-Za-zαß]/).exec(x);
+        return Number(match ? x.replace(match[0], "." + x.charCodeAt(match.index)) : x);
+      });
+    };
+
     if (!v1parts.every(isValidPart) || !v2parts.every(isValidPart)) {
       return NaN;
     }
@@ -530,14 +537,8 @@ const _VERSION = {
     }
 
     if (!lexicographical) {
-      v1parts = v1parts.map(function (x) {
-        const match = (/[A-Za-zαß]/).exec(x);
-        return Number(match ? x.replace(match[0], "." + x.charCodeAt(match.index)) : x);
-      });
-      v2parts = v2parts.map(function (x) {
-        const match = (/[A-Za-zαß]/).exec(x);
-        return Number(match ? x.replace(match[0], "." + x.charCodeAt(match.index)) : x);
-      });
+      v1parts = mapParts(v1parts);
+      v2parts = mapParts(v2parts);
     }
 
     for (let i = 0; i < v1parts.length; ++i) {
