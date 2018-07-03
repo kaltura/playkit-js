@@ -26,7 +26,6 @@ import {MediaType} from './media-type'
 import {EventType} from './event/event-type'
 import {AbrMode} from './track/abr-mode-type'
 import {LogLevelType} from './utils/logger'
-import {Html5} from './engines/html5/html5'
 import {CorsType} from './engines/html5/cors-types'
 
 Player.runCapabilities();

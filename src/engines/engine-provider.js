@@ -1,5 +1,6 @@
 //@flow
 import getLogger from '../utils/logger'
+import Html5 from "./html5/html5";
 
 /**
  * Engine Provider
@@ -20,7 +21,7 @@ class EngineProvider {
    * @static
    * @private
    */
-  static _engineProviders: Array<typeof IEngine> = [];
+  static _engineProviders: Array<typeof IEngine> = [Html5];
 
   /**
    * Add an engine to the registry.
@@ -58,10 +59,10 @@ class EngineProvider {
   /**
    * Get the appropriate Engines.
    * @function getEngines
-   * @returns {Array<IEngine>|null} - The Array of engines, or null if such doesn't exists.
+   * @returns {Array<IEngine>} - The Array of engines, or null if such doesn't exists.
    * @static
    */
-  static getEngines(): ?Array<typeof IEngine> {
+  static getEngines(): Array<typeof IEngine> {
     return EngineProvider._engineProviders;
   }
 
