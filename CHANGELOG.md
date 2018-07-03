@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.32.0"></a>
+# [0.32.0](https://github.com/kaltura/playkit-js/compare/v0.31.2...v0.32.0) (2018-07-03)
+
+
+### Bug Fixes
+
+* refactor 'timeupdate' logic ([#255](https://github.com/kaltura/playkit-js/issues/255)) ([0bf2ae3](https://github.com/kaltura/playkit-js/commit/0bf2ae3))
+* **FEC-8367:** When changing font family the font is not saved [#256](https://github.com/kaltura/playkit-js/issues/256) ([e65098f](https://github.com/kaltura/playkit-js/commit/e65098f))
+* **FEC-8370:** external captions does not show on edge/IE ([#254](https://github.com/kaltura/playkit-js/issues/254)) ([9d0f0c4](https://github.com/kaltura/playkit-js/commit/9d0f0c4))
+
+
+### Features
+
+* external engine support  ([#241](https://github.com/kaltura/playkit-js/issues/241)) ([6a27805](https://github.com/kaltura/playkit-js/commit/6a27805))
+* version compare util ([#257](https://github.com/kaltura/playkit-js/issues/257)) ([2771d4a](https://github.com/kaltura/playkit-js/commit/2771d4a))
+
+
+
 <a name="0.31.2"></a>
 ## [0.31.2](https://github.com/kaltura/playkit-js/compare/v0.31.1...v0.31.2) (2018-07-02)
 
