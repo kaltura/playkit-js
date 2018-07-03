@@ -10,7 +10,6 @@ import * as Utils from './utils/util'
 import Locale from './utils/locale'
 import type {LogLevels, LogLevelTypes} from './utils/logger'
 import getLogger, {getLogLevel, LogLevel, LogLevelType, setLogLevel} from './utils/logger'
-import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
 import BasePlugin from './plugin/base-plugin'
 import StateManager from './state/state-manager'
@@ -40,6 +39,7 @@ import PlaybackMiddleware from './middleware/playback-middleware'
 import DefaultPlayerConfig from './player-config.json'
 import './assets/style.css'
 import PKError from './error/error'
+import {EngineProvider} from './engines/engine-provider'
 import {ExternalCaptionsEventType, ExternalCaptionsHandler} from './track/external-captions-handler'
 
 /**
@@ -138,13 +138,6 @@ export default class Player extends FakeEventTarget {
    */
   static _logger: any = getLogger('Player');
   /**
-   * The available engines of the player.
-   * @type {Array<typeof IEngine>}
-   * @private
-   * @static
-   */
-  static _engines: Array<typeof IEngine> = [Html5];
-  /**
    * The player capabilities result object.
    * @type {Object}
    * @private
@@ -160,7 +153,7 @@ export default class Player extends FakeEventTarget {
    */
   static runCapabilities(): void {
     Player._logger.debug("Running player capabilities");
-    Player._engines.forEach(Engine => Engine.runCapabilities());
+    EngineProvider.getEngines().forEach(Engine => Engine.runCapabilities());
   }
 
   /**
@@ -173,7 +166,7 @@ export default class Player extends FakeEventTarget {
   static getCapabilities(engineType: ?string): Promise<{ [name: string]: any }> {
     Player._logger.debug("Get player capabilities", engineType);
     const promises = [];
-    Player._engines.forEach(Engine => promises.push(Engine.getCapabilities()));
+    EngineProvider.getEngines().forEach(Engine => promises.push(Engine.getCapabilities()));
     return Promise.all(promises)
       .then((arrayOfResults) => {
         const playerCapabilities = {};
@@ -203,7 +196,7 @@ export default class Player extends FakeEventTarget {
    * @static
    */
   static _prepareVideoElement(): void {
-    Player._engines.forEach((Engine: typeof IEngine) => {
+    EngineProvider.getEngines().forEach((Engine: typeof IEngine) => {
       Engine.prepareVideoElement();
     });
   }
@@ -1421,7 +1414,7 @@ export default class Player extends FakeEventTarget {
     for (let priority of streamPriority) {
       const engineId = (typeof priority.engine === 'string') ? priority.engine.toLowerCase() : '';
       const format = (typeof priority.format === 'string') ? priority.format.toLowerCase() : '';
-      const Engine = Player._engines.find((Engine) => Engine.id === engineId);
+      const Engine = EngineProvider.getEngines().find((Engine) => Engine.id === engineId);
       if (Engine) {
         const formatSources = sources[format];
         if (formatSources && formatSources.length > 0) {
