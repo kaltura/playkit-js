@@ -72,9 +72,6 @@ export {Env};
 // Export base DRM protocol
 export {BaseDrmProtocol};
 
-//Export default html5 engine
-export {Html5}
-
 // Export the player capabilities
 const getCapabilities = Player.getCapabilities;
 const setCapabilities = Player.setCapabilities;
