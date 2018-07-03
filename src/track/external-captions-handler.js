@@ -208,7 +208,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {void}
    * @private
    */
-  _resetCurrentTrack(): void{
+  _resetCurrentTrack(): void {
     this._activeTextCues = [];
     this._isTextTrackActive = false;
     this._maybeSetExternalCueIndex();
@@ -311,30 +311,12 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _handleCaptionOnTimeUpdate(track: TextTrack): void {
     const currentTime = this._player.currentTime;
     if (currentTime) {
-      if (this._activeTextCues.length > 0 && currentTime < this._activeTextCues[this._activeTextCues.length - 1].startTime) {
-        this._activeTextCues = [];
-        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: []}));
-      } else {
-        if (Math.abs(currentTime - this._lastTimeUpdate) > 1) {
-          this._maybeSetExternalCueIndex();
-        }
-        const cues = this._textTrackModel[track.language].cues;
-        let activeCuesChanged = false;
-        for (let activeTextCuesIndex = 0; activeTextCuesIndex < this._activeTextCues.length; activeTextCuesIndex++) {
-          const cue = this._activeTextCues[activeTextCuesIndex];
-          if (currentTime < cue.startTime || cue.endTime < currentTime) {
-            this._activeTextCues.splice(activeTextCuesIndex, 1);
-            activeCuesChanged = true;
-          }
-        }
-        while (this._externalCueIndex < cues.length && currentTime > cues[this._externalCueIndex].startTime) {
-          this._activeTextCues.push(cues[this._externalCueIndex]);
-          this._externalCueIndex++;
-          activeCuesChanged = true;
-        }
-        if (activeCuesChanged) {
-          this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: this._activeTextCues}));
-        }
+      const isSeeked = this._isSeeked() && this._maybeSetExternalCueIndex();
+      const activeCuesRemoved = this._maybeRemoveActiveCues();
+      const activeCuesAdded = this._maybeAddToActiveCues(track);
+
+      if (isSeeked || activeCuesAdded || activeCuesRemoved) {
+        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: this._activeTextCues}));
       }
       // sometimes the timeupdate event is fired before the seeked event - so we need to know the user seeked.
       this._lastTimeUpdate = currentTime;
@@ -342,13 +324,63 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   }
 
   /**
-   * updating the index of the text cues to the right location after a user seeked.
-   * @returns {void}
+   * check if there was a seek. we do that because 'timeupdate' is fired before 'seeked' event.
+   * @returns {boolean} if there was a seek before
    * @private
    */
-  _maybeSetExternalCueIndex(): void {
+  _isSeeked(): boolean {
+    return !!this._player.currentTime && Math.abs(this._player.currentTime - this._lastTimeUpdate) > 1;
+  }
+
+  /**
+   * @returns {boolean} if a cue/cues were removed from the active text cues array
+   * @private
+   */
+  _maybeRemoveActiveCues(): boolean {
+    const currentTime = this._player.currentTime;
+    if (!currentTime){
+      return false;
+    }
+    let isRemoved = false;
+    for (let activeTextCuesIndex = 0; activeTextCuesIndex < this._activeTextCues.length; activeTextCuesIndex++) {
+      const cue = this._activeTextCues[activeTextCuesIndex];
+      if (currentTime < cue.startTime || cue.endTime < currentTime) {
+        this._activeTextCues.splice(activeTextCuesIndex, 1);
+        isRemoved = true;
+      }
+    }
+    return isRemoved;
+  }
+
+  /**
+   * @param {TextTrack} track - the selected text track
+   * @returns {boolean} - if cues were added to the active text track
+   * @private
+   */
+  _maybeAddToActiveCues(track: TextTrack): boolean {
+    const currentTime = this._player.currentTime;
+    if (!currentTime){
+      return false;
+    }
+    let isAdded = false;
+    const cues = this._textTrackModel[track.language].cues;
+    while (this._externalCueIndex < cues.length && currentTime > cues[this._externalCueIndex].startTime) {
+      this._activeTextCues.push(cues[this._externalCueIndex]);
+      this._externalCueIndex++;
+      isAdded = true;
+    }
+    return isAdded;
+  }
+
+  /**
+   * updating the index of the text cues to the right location after a user seeked.
+   * @returns {boolean} if the index was changed
+   * @private
+   */
+  _maybeSetExternalCueIndex(): boolean {
     const textTrack = this._player.getTracks(TrackType.TEXT).find(track => track instanceof TextTrack && track.active && track.external);
     if (textTrack && textTrack.external) {
+      this._activeTextCues = [];
       const cues = this._textTrackModel[textTrack.language].cues;
       let i = 0;
       for (; i < cues.length; i++) {
@@ -361,7 +393,9 @@ class ExternalCaptionsHandler extends FakeEventTarget {
         }
       }
       this._externalCueIndex = i;
+      return true;
     }
+    return false;
   }
 
   /**
