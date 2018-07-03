@@ -15,7 +15,7 @@ class EngineProvider {
   static _logger: any = getLogger('EngineProvider');
 
   /**
-   * The Engine adapter registry.
+   * The Engine registry.
    * @member {Array<IEngine>} _engineProviders
    * @static
    * @private
@@ -62,10 +62,7 @@ class EngineProvider {
    * @static
    */
   static getEngines(): ?Array<typeof IEngine> {
-    if (EngineProvider._engineProviders.length > 0) {
-      return EngineProvider._engineProviders;
-    }
-    return [];
+    return EngineProvider._engineProviders;
   }
 
   /**
