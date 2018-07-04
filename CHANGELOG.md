@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.32.1"></a>
+## [0.32.1](https://github.com/kaltura/playkit-js/compare/v0.32.0...v0.32.1) (2018-07-04)
+
+
+### Bug Fixes
+
+* **FEC-8376:** when 'Off' should be displayed by default, the external language is displayed [#258](https://github.com/kaltura/playkit-js/issues/258) ([793315e](https://github.com/kaltura/playkit-js/commit/793315e))
+
+
+
 <a name="0.32.0"></a>
 # [0.32.0](https://github.com/kaltura/playkit-js/compare/v0.31.2...v0.32.0) (2018-07-03)
 
