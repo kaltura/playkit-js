@@ -151,7 +151,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   constructor(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object) {
     NativeAdapter._logger.debug('Creating adapter');
-    super(videoElement, source);
+    super(videoElement, source, config);
     this._eventManager = new EventManager();
     this._maybeSetDrmPlayback();
     this._progressiveSources = config.sources.progressive;
