@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.32.2"></a>
+## [0.32.2](https://github.com/kaltura/playkit-js/compare/v0.32.1...v0.32.2) (2018-07-04)
+
+
+### Bug Fixes
+
+* **FEC-8376:** reverting the fix [#260](https://github.com/kaltura/playkit-js/issues/260) ([afbb900](https://github.com/kaltura/playkit-js/commit/afbb900))
+
+
+
 <a name="0.32.1"></a>
 ## [0.32.1](https://github.com/kaltura/playkit-js/compare/v0.32.0...v0.32.1) (2018-07-04)
 
