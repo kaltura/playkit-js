@@ -1517,7 +1517,10 @@ export default class Player extends FakeEventTarget {
           const videoElement = this.getVideoElement();
           return videoElement ? Array.from(videoElement.textTracks).findIndex(track => track ? track.language === textTrack.language : false) : -1;
         };
-        this._getTracksByType(TrackType.TEXT).forEach(track => track.index = getNativeLanguageTrackIndex(track));
+        this.ready().then(() => {
+          this._getTracksByType(TrackType.TEXT).forEach(track => track.index = getNativeLanguageTrackIndex(track));
+          this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, this._getTracksByType(TrackType.TEXT)));
+        });
       });
       this._eventManager.listen(this._externalCaptionsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
     }
