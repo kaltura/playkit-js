@@ -30,6 +30,12 @@ export default class PluginManager {
    * @private
    */
   _plugins: Map<string, BasePlugin> = new Map();
+  /**
+   * Is disabled plugin map.
+   * @type {Map}
+   * @private
+   */
+  _isDisabledPluginMap: Map<string, boolean> = new Map();
 
   /**
    * Writes the plugin in the registry.
@@ -82,12 +88,16 @@ export default class PluginManager {
       throw new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_NOT_REGISTERED_PLUGIN, name);
     }
     let pluginClass = PluginManager._registry.get(name);
-    if (pluginClass && pluginClass.isValid() && !config.disable) {
+    if (typeof config.disable === "boolean") {
+      this._isDisabledPluginMap.set(name, config.disable);
+    }
+    const isDisablePlugin = this._isDisabledPluginMap.get(name);
+    if (pluginClass && pluginClass.isValid() && !isDisablePlugin) {
       this._plugins.set(name, pluginClass.createPlugin(name, player, config));
       logger.debug(`Plugin <${name}> has been loaded`);
       return true;
     }
-    logger.debug(`Plugin <${name}> isn\'t loaded, isValid()=false, disabled=${config.disable}`);
+    logger.debug(`Plugin <${name}> isn\'t loaded, isValid()=${pluginClass.isValid()}, disabled=${isDisablePlugin}`);
     return false;
   }
 
