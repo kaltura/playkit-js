@@ -70,7 +70,7 @@ describe('PluginManager.registry', () => {
   });
 });
 
-describe('PluginManager.plugins', () => {
+describe.only('PluginManager.plugins', () => {
 
   let pluginManager;
   let sandbox;
@@ -112,6 +112,17 @@ describe('PluginManager.plugins', () => {
 
   it('shouldn\'t load() the plugin, plugin is disabled in the config', () => {
     pluginManager.load("colors", {}, {disable: true}).should.be.false;
+  });
+
+  it('shouldn\'t load() the plugin, plugin is disabled in the previous config', () => {
+    pluginManager.load("colors", {}, {disable: true}).should.be.false;
+    pluginManager.load("colors", {}).should.be.false;
+  });
+
+  it('should load() the plugin, plugin is enable after is disabled in the config', () => {
+    pluginManager.load("colors", {}, {disable: true}).should.be.false;
+    pluginManager.load("colors", {}, {disable: false}).should.be.true;
+    pluginManager._plugins.size.should.equal(1);
   });
 
   it('should load() the plugins', () => {
