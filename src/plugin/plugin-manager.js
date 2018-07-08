@@ -91,7 +91,7 @@ export default class PluginManager {
     if (typeof config.disable === "boolean") {
       this._isDisabledPluginMap.set(name, config.disable);
     }
-    const isDisablePlugin = this._isDisabledPluginMap.get(name);
+    const isDisablePlugin = !!this._isDisabledPluginMap.get(name);
     if (pluginClass && pluginClass.isValid() && !isDisablePlugin) {
       this._plugins.set(name, pluginClass.createPlugin(name, player, config));
       logger.debug(`Plugin <${name}> has been loaded`);
