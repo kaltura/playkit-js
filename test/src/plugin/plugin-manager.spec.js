@@ -70,7 +70,7 @@ describe('PluginManager.registry', () => {
   });
 });
 
-describe.only('PluginManager.plugins', () => {
+describe('PluginManager.plugins', () => {
 
   let pluginManager;
   let sandbox;
