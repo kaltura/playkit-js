@@ -82,6 +82,10 @@ const Code: CodeType = {
    * error parsing the dash adapter error (for instance, could not parse an error shaka raised)
    */
   "DASH_ADAPTER_ERROR_PARSE_ISSUE": 2010,
+  /**
+   * the file that the external captions handler is trying to download could not be determined / unsupported.
+   */
+  "UNKNOWN_FILE_TYPE": 2011,
 
 
   /**
@@ -615,7 +619,12 @@ const Code: CodeType = {
    * When the manifest contains no period playable streams, it means the
    * manifest is unsupported by the browser.
    */
-  'CONTENT_UNSUPPORTED_BY_BROWSER': 9009
+  'CONTENT_UNSUPPORTED_BY_BROWSER': 9009,
+
+  /**
+   * VR plugin is not supported.
+   */
+  'VR_NOT_SUPPORTED': 11000
 
 };
 

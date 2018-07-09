@@ -88,7 +88,8 @@ var config = {
 >  metadata: PKMetadataConfigObject,
 >  id?: string,
 >  poster?: string,
->  duration?: number
+>  duration?: number,
+>  captions?: Array<PKExternalCaptionObject>
 >}
 >```
 >>##### Type `PKMediaSourceObject`
@@ -124,6 +125,16 @@ var config = {
 >>{
 >>  name?: string,
 >>  description?: string
+>>}
+>>```
+>>##### Type `PKExternalCaptionObject`
+>>```js
+>>{
+>>  url: string,
+>>  label: string,
+>>  language: string,
+>>  default?: string,
+>>  type?: string
 >>}
 >>```
 >##### Default:
@@ -257,6 +268,28 @@ var config = {
 >>##### Type: `number`
 >>##### Default: `-`
 >>##### Description: The duration of the media.
+>>##
+>>### config.sources.captions
+>>##### Type: `Array<PKExternalCaptionObject>`
+>>##### Default: `-`
+>>##### Description: An array of captions to be added to the media.
+>>The following fields are mandatory: `url`, `language` and `label`.
+>>#### Example:
+>>```js
+>>var config = {
+>>  sources: {
+>>    captions: [
+>>      {
+>>        url: "www.path.to/your/captions/file",
+>>        type: "vtt",
+>>        default: true,        
+>>        language: "en",
+>>        label: "English"
+>>      }
+>>    ]
+>>  }
+>>};
+>>```
 ##
 >### config.plugins
 >##### Type: `PKPluginsObject`
@@ -273,6 +306,21 @@ var config = {
 >    }
 >};
 >```
+>##
+>>### config.plugins.PLUGIN_NAME.disable
+>>##### Type: `boolean`
+>>##### Default: `false`
+>>##### Description: Allow to disable a specific plugin.
+>>#### Expample:
+>>```js
+>>var config = {
+>>    plugins: {
+>>        myAwesomePlugin: {
+>>             disable: true
+>>        }
+>>    }
+>>};
+>>```
 ##
 >### config.playback
 >##### Type: `PKPlaybackConfig`
@@ -284,6 +332,7 @@ var config = {
 >  volume: number,
 >  startTime: number,
 >  playsinline: boolean,
+>  crossOrigin: string,
 >  preload: string,
 >  autoplay: boolean,
 >  allowMutedAutoPlay: boolean,
@@ -403,8 +452,18 @@ var config = {
 >>### config.playback.playsinline
 >>##### Type: `boolean`
 >>##### Default: `true`
->>##### Description: Description: A Boolean attribute that indicates whether the video should be played "inline", that is, within the element's playback area.
+>>##### Description: A Boolean attribute that indicates whether the video should be played "inline", that is, within the element's playback area.
 >>This is especially relevant when playing videos on iPhone devices, where - if the value is set to false - the video will be played using the AV Player (iOS native video player).
+>##
+>>### config.playback.crossOrigin
+>>##### Type: `string`
+>>##### Default: -
+>>##### Description: This enumerated attribute indicates whether to use CORS to fetch the related image. [CORS-enabled resources](https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image) can be reused in the <canvas> element without being tainted.
+>>Possible values:
+>> - `"anonymous"`: Sends a cross-origin request without a credential. In other words, it sends the Origin: HTTP header without a cookie, X.509 certificate, or performing HTTP Basic authentication. If the server does not give credentials to the origin site (by not setting the Access-Control-Allow-Origin: HTTP header), the image will be tainted, and its usage restricted.
+>> - `"use-credentials"`: Sends a cross-origin request with a credential. In other words, it sends the Origin: HTTP header with a cookie, a certificate, or performing HTTP Basic authentication. If the server does not give credentials to the origin site (through Access-Control-Allow-Credentials: HTTP header), the image will be tainted and its usage restricted.
+>>
+>>When not present, the resource is fetched without a CORS request (i.e. without sending the Origin: HTTP header), preventing its non-tainted used in <canvas> elements. If invalid, it is handled as if the enumerated keyword anonymous was used. See [CORS settings attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_settings_attributes) for additional information.
 >##
 >>### config.playback.preload
 >>##### Type: `string`

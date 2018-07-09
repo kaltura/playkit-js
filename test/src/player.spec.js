@@ -648,6 +648,7 @@ describe('Player', function () {
       track2 = document.createElement("track");
       track1.kind = 'subtitles';
       track1.label = 'English';
+      track1.srclang = 'en';
       track1.default = true;
       track2.kind = 'captions';
       track2.srclang = 'fr';
@@ -913,7 +914,7 @@ describe('Player', function () {
   });
 
   describe('selectTrack - text', function () {
-    let config, player, video, track1, track2, playerContainer;
+    let config, player, video, playerContainer;
 
     before(() => {
       playerContainer = createElement('div', targetId);
@@ -922,18 +923,12 @@ describe('Player', function () {
     beforeEach(() => {
       config = getConfigStructure();
       config.sources = sourcesConfig.Mp4;
+      config.playback.textLanguage = 'auto';
       player = new Player(config);
       playerContainer.appendChild(player.getView());
       video = player._engine.getVideoElement();
-      track1 = document.createElement("track");
-      track2 = document.createElement("track");
-      track1.kind = 'subtitles';
-      track1.label = 'English';
-      track1.default = true;
-      track2.kind = 'subtitles';
-      track2.srclang = 'fr';
-      video.appendChild(track1);
-      video.appendChild(track2);
+      video.addTextTrack('subtitles', "English", "en");
+      video.addTextTrack('subtitles', "French", "fr");
     });
 
     afterEach(() => {
@@ -949,9 +944,9 @@ describe('Player', function () {
       player.ready().then(() => {
         player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, (event) => {
           (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
-          event.payload.selectedTextTrack.index.should.equal(1);
+          event.payload.selectedTextTrack.language.should.equal('fr');
           video.textTracks[0].mode.should.be.equal('disabled');
-          video.textTracks[1].mode.should.be.equal('hidden');
+          video.textTracks[1].mode.should.be.equal('showing');
           tracks[0].active.should.be.false;
           tracks[1].active.should.be.true;
           done();
@@ -963,7 +958,7 @@ describe('Player', function () {
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.true;
         tracks[1].active.should.be.false;
-        player.selectTrack(new TextTrack({index: 1, kind: 'subtitles'}));
+        player.selectTrack(new TextTrack({language: 'fr', kind: 'subtitles', index: 1}));
       });
       player.load();
     });
@@ -975,7 +970,7 @@ describe('Player', function () {
           (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
           event.payload.selectedTextTrack.index.should.equal(1);
           video.textTracks[0].mode.should.be.equal('disabled');
-          video.textTracks[1].mode.should.be.equal('hidden');
+          video.textTracks[1].mode.should.be.equal('showing');
           tracks[0].active.should.be.false;
           tracks[1].active.should.be.true;
           done();
@@ -987,10 +982,9 @@ describe('Player', function () {
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.true;
         tracks[1].active.should.be.false;
-        player.selectTrack(new TextTrack({index: 1, kind: 'captions'}));
+        player.selectTrack(new TextTrack({index: 1, kind: 'captions', language: 'fr'}));
       });
     });
-
 
     it('should not change the selected text track', (done) => {
       player.ready().then(() => {
@@ -1068,6 +1062,7 @@ describe('Player', function () {
       track1.kind = 'subtitles';
       track1.label = 'English';
       track1.default = true;
+      track1.srclang = 'en';
       track2.kind = 'subtitles';
       track2.srclang = 'fr';
       video.appendChild(track1);
@@ -1132,6 +1127,7 @@ describe('Player', function () {
     beforeEach(() => {
       config = getConfigStructure();
       config.sources = sourcesConfig.Mp4;
+      config.playback.textLanguage = "auto";
       player = new Player(config);
       playerContainer.appendChild(player.getView());
       video = player._engine.getVideoElement();
@@ -1140,6 +1136,7 @@ describe('Player', function () {
       track1.kind = 'subtitles';
       track1.label = 'English';
       track1.default = true;
+      track1.srclang = 'en';
       track2.kind = 'subtitles';
       track2.srclang = 'fr';
       video.appendChild(track1);
@@ -1403,6 +1400,7 @@ describe('Player', function () {
         track1.kind = 'subtitles';
         track1.label = 'English';
         track1.default = true;
+        track1.srclang = 'en';
         track2.kind = 'subtitles';
         track2.srclang = 'fr';
         video.appendChild(track1);
@@ -1480,6 +1478,16 @@ describe('Player', function () {
           counter++;
         });
         player.addEventListener(Html5EventType.PLAYING, onPlaying);
+        player.play();
+      });
+
+      it('should fire first play only after media loaded', (done) => {
+        player.addEventListener(CustomEventType.MEDIA_LOADED, () => {
+          player.addEventListener(CustomEventType.FIRST_PLAY, () => {
+            done();
+          });
+        });
+        player.load();
         player.play();
       });
     });
@@ -2947,11 +2955,10 @@ describe('Player', function () {
         mutedAutoPlay: 2,
         isSupported: 3
       };
-      Player.setCapabilities('html5', newCapabilities).then(() => {
-        Player.getCapabilities().then((c2) => {
-          c2.html5.should.deep.equal(newCapabilities);
-          done();
-        });
+      Player.setCapabilities('html5', newCapabilities);
+      Player.getCapabilities().then((c2) => {
+        c2.html5.should.deep.equal(newCapabilities);
+        done();
       });
     });
 
@@ -2963,11 +2970,10 @@ describe('Player', function () {
       };
       Player.getCapabilities().then((c1) => {
         c1.should.deep.equal(initialOrigCapabilities);
-        Player.setCapabilities('html5', newCapabilities).then(() => {
-          Player.getCapabilities().then((c2) => {
-            c2.html5.should.deep.equal(newCapabilities);
-            done();
-          });
+        Player.setCapabilities('html5', newCapabilities);
+        Player.getCapabilities().then((c2) => {
+          c2.html5.should.deep.equal(newCapabilities);
+          done();
         });
       });
     });
@@ -3065,4 +3071,5 @@ describe('Player', function () {
       });
     });
   });
-});
+})
+;

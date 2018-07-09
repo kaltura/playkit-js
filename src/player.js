@@ -10,7 +10,6 @@ import * as Utils from './utils/util'
 import Locale from './utils/locale'
 import type {LogLevels, LogLevelTypes} from './utils/logger'
 import getLogger, {getLogLevel, LogLevel, LogLevelType, setLogLevel} from './utils/logger'
-import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
 import BasePlugin from './plugin/base-plugin'
 import StateManager from './state/state-manager'
@@ -34,10 +33,14 @@ import type {MediaTypes} from './media-type'
 import {MediaType} from './media-type'
 import type {AbrModes} from './track/abr-mode-type'
 import {AbrMode} from './track/abr-mode-type'
+import type {CorsTypes} from './engines/html5/cors-types'
+import {CorsType} from './engines/html5/cors-types'
 import PlaybackMiddleware from './middleware/playback-middleware'
 import DefaultPlayerConfig from './player-config.json'
 import './assets/style.css'
 import PKError from './error/error'
+import {EngineProvider} from './engines/engine-provider'
+import {ExternalCaptionsEventType, ExternalCaptionsHandler} from './track/external-captions-handler'
 
 /**
  * The player playback rates.
@@ -135,19 +138,12 @@ export default class Player extends FakeEventTarget {
    */
   static _logger: any = getLogger('Player');
   /**
-   * The available engines of the player.
-   * @type {Array<typeof IEngine>}
-   * @private
-   * @static
-   */
-  static _engines: Array<typeof IEngine> = [Html5];
-  /**
    * The player capabilities result object.
    * @type {Object}
    * @private
    * @static
    */
-  static _playerCapabilities: Object;
+  static _playerCapabilities: Object = {};
 
   /**
    * Runs the engines capabilities tests.
@@ -157,7 +153,7 @@ export default class Player extends FakeEventTarget {
    */
   static runCapabilities(): void {
     Player._logger.debug("Running player capabilities");
-    Player._engines.forEach(Engine => Engine.runCapabilities());
+    EngineProvider.getEngines().forEach(Engine => Engine.runCapabilities());
   }
 
   /**
@@ -168,21 +164,15 @@ export default class Player extends FakeEventTarget {
    * @static
    */
   static getCapabilities(engineType: ?string): Promise<{ [name: string]: any }> {
-    const resolveCapabilities = (engineType: ?string): Promise<Object> => {
-      const result = (engineType ? Player._playerCapabilities[engineType] : Player._playerCapabilities);
-      return Utils.Object.copyDeep(result);
-    };
     Player._logger.debug("Get player capabilities", engineType);
-    if (Player._playerCapabilities) {
-      return Promise.resolve(resolveCapabilities(engineType));
-    }
     const promises = [];
-    Player._engines.forEach(Engine => promises.push(Engine.getCapabilities()));
+    EngineProvider.getEngines().forEach(Engine => promises.push(Engine.getCapabilities()));
     return Promise.all(promises)
       .then((arrayOfResults) => {
-        Player._playerCapabilities = {};
-        arrayOfResults.forEach(res => Object.assign(Player._playerCapabilities, res));
-        return Promise.resolve(resolveCapabilities(engineType));
+        const playerCapabilities = {};
+        arrayOfResults.forEach(res => Object.assign(playerCapabilities, res));
+        Utils.Object.mergeDeep(playerCapabilities, Player._playerCapabilities);
+        return (engineType ? playerCapabilities[engineType] : playerCapabilities);
       });
   }
 
@@ -190,23 +180,13 @@ export default class Player extends FakeEventTarget {
    * Sets an engine capabilities.
    * @param {string} engineType - The engine type.
    * @param {Object} capabilities - The engine capabilities.
-   * @return {Promise<*>} - Empty promise which resolved when the operation ends.
+   * @returns {void}
    * @public
    * @static
    */
-  static setCapabilities(engineType: string, capabilities: { [name: string]: any }): Promise<*> {
+  static setCapabilities(engineType: string, capabilities: { [name: string]: any }): void {
     Player._logger.debug("Set player capabilities", engineType, capabilities);
-    return new Promise((resolve, reject) => {
-      Player.getCapabilities().then(() => {
-        if (!Player._playerCapabilities[engineType]) {
-          Player._playerCapabilities[engineType] = {};
-        }
-        Utils.Object.mergeDeep(Player._playerCapabilities[engineType], capabilities);
-        resolve();
-      }).catch(e => {
-        reject(e)
-      });
-    });
+    Player._playerCapabilities[engineType] = Utils.Object.mergeDeep({}, Player._playerCapabilities[engineType], capabilities);
   }
 
   /**
@@ -216,7 +196,7 @@ export default class Player extends FakeEventTarget {
    * @static
    */
   static _prepareVideoElement(): void {
-    Player._engines.forEach((Engine: typeof IEngine) => {
+    EngineProvider.getEngines().forEach((Engine: typeof IEngine) => {
       Engine.prepareVideoElement();
     });
   }
@@ -348,12 +328,6 @@ export default class Player extends FakeEventTarget {
    */
   _streamType: string;
   /**
-   * Flag to indicate whether is the first play in the current session.
-   * @type {boolean}
-   * @private
-   */
-  _firstPlayInCurrentSession: boolean;
-  /**
    * The current playback attributes state
    * @type {Object}
    * @private
@@ -406,6 +380,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _fallbackToMutedAutoPlay: boolean;
+  /**
+   * holds the external tracks handler controller
+   * @type {ExternalCaptionsHandler}
+   * @private
+   */
+  _externalCaptionsHandler: ExternalCaptionsHandler;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -417,7 +397,6 @@ export default class Player extends FakeEventTarget {
     this._tracks = [];
     this._firstPlay = true;
     this._fullscreen = false;
-    this._firstPlayInCurrentSession = true;
     this._repositionCuesTimeout = false;
     this._loadingMedia = false;
     this._loading = false;
@@ -435,6 +414,7 @@ export default class Player extends FakeEventTarget {
     this._createReadyPromise();
     this._createPlayerContainer();
     this._appendDomElements();
+    this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
     this.configure(config);
   }
 
@@ -594,7 +574,7 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Resets the necessary components before change media.
-   * @private
+   * @public
    * @returns {void}
    */
   reset(): void {
@@ -612,6 +592,7 @@ export default class Player extends FakeEventTarget {
     this._posterManager.reset();
     this._stateManager.reset();
     this._pluginManager.reset();
+    this._externalCaptionsHandler.reset();
     this._engine.reset();
     this._showBlackCover();
     this._reset = true;
@@ -628,6 +609,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.destroy();
     }
+    this._externalCaptionsHandler.destroy();
     this._posterManager.destroy();
     this._eventManager.destroy();
     this._pluginManager.destroy();
@@ -917,6 +899,28 @@ export default class Player extends FakeEventTarget {
     this._loadingMedia = loading;
   }
 
+  /**
+   * Set crossOrigin attribute.
+   * @param {?string} crossOrigin - 'anonymous' or 'use-credentials'
+   * anonymous: CORS requests for this element will not have the credentials flag set.
+   * use-credentials: CORS requests for this element will have the credentials flag set; this means the request will provide credentials.
+   */
+  set crossOrigin(crossOrigin: ?string): void {
+    if (this._engine) {
+      this._engine.crossOrigin = crossOrigin;
+    }
+  }
+
+  /**
+   * Get crossOrigin attribute.
+   * @returns {?string} - 'anonymous' or 'use-credentials'
+   */
+  get crossOrigin(): ?string {
+    if (this._engine) {
+      return this._engine.crossOrigin;
+    }
+  }
+
   // </editor-fold>
 
   // <editor-fold desc="Live API">
@@ -1005,8 +1009,13 @@ export default class Player extends FakeEventTarget {
       } else if (track instanceof TextTrack) {
         if (track.language === OFF) {
           this.hideTextTrack();
+          this._externalCaptionsHandler.hideTextTrack();
           this._playbackAttributesState.textLanguage = OFF;
+        } else if (track.external && !this._config.playback.useNativeTextTrack) {
+          this._engine.hideTextTrack();
+          this._externalCaptionsHandler.selectTextTrack(track);
         } else {
+          this._externalCaptionsHandler.hideTextTrack();
           this._engine.selectTextTrack(track);
         }
       }
@@ -1205,6 +1214,44 @@ export default class Player extends FakeEventTarget {
 
   // </editor-fold>
 
+  // <editor-fold desc="VR API">
+
+  /**
+   * Checking if the selected source is VR.
+   * @returns {boolean} - Whether is VR.
+   * @public
+   */
+  isVr(): boolean {
+    return !!(this._config.sources.vr);
+  }
+
+  /**
+   * Toggling the VR mode
+   * @returns {void}
+   * @public
+   */
+  toggleVrStereoMode(): void {
+    const vrPlugin: ?BasePlugin = this._pluginManager.get('vr');
+    if (vrPlugin && typeof vrPlugin.toggleVrStereoMode === 'function') {
+      vrPlugin.toggleVrStereoMode();
+    }
+  }
+
+  /**
+   * Checking if the VR stereo mode is active.
+   * @returns {boolean} - Whether is active.
+   * @public
+   */
+  isInVrStereoMode(): boolean {
+    const vrPlugin: ?BasePlugin = this._pluginManager.get('vr');
+    if (vrPlugin && typeof vrPlugin.isInStereoMode === 'function') {
+      return vrPlugin.isInStereoMode();
+    }
+    return false;
+  }
+
+  // </editor-fold>
+
   // <editor-fold desc="Logger API">
 
   /**
@@ -1367,7 +1414,7 @@ export default class Player extends FakeEventTarget {
     for (let priority of streamPriority) {
       const engineId = (typeof priority.engine === 'string') ? priority.engine.toLowerCase() : '';
       const format = (typeof priority.format === 'string') ? priority.format.toLowerCase() : '';
-      const Engine = Player._engines.find((Engine) => Engine.id === engineId);
+      const Engine = EngineProvider.getEngines().find((Engine) => Engine.id === engineId);
       if (Engine) {
         const formatSources = sources[format];
         if (formatSources && formatSources.length > 0) {
@@ -1432,13 +1479,9 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.AUDIO_TRACK_CHANGED, (event: FakeEvent) => {
         this.ready().then(() => this._playbackAttributesState.audioLanguage = event.payload.selectedAudioTrack.language);
         this._markActiveTrack(event.payload.selectedAudioTrack);
-        return this.dispatchEvent(event);
+        this.dispatchEvent(event);
       });
-      this._eventManager.listen(this._engine, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => {
-        this.ready().then(() => this._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language);
-        this._markActiveTrack(event.payload.selectedTextTrack);
-        return this.dispatchEvent(event);
-      });
+      this._eventManager.listen(this._engine, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this._onTextTrackChanged(event));
       this._eventManager.listen(this._engine, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this._onTracksChanged(event));
       this._eventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
@@ -1464,7 +1507,46 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this, CustomEventType.EXIT_FULLSCREEN, () => {
         this._resetTextCuesAndReposition();
       });
+      this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => {
+        this._handleRecovered();
+      });
+      this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
+      this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this._onTextTrackChanged(event));
+      this._eventManager.listen(this._externalCaptionsHandler, ExternalCaptionsEventType.NATIVE_TEXT_TRACK_ADDED, () => {
+        const getNativeLanguageTrackIndex = (textTrack: Track): number => {
+          const videoElement = this.getVideoElement();
+          return videoElement ? Array.from(videoElement.textTracks).findIndex(track => track ? track.language === textTrack.language : false) : -1;
+        };
+        this._getTracksByType(TrackType.TEXT).forEach(track => track.index = getNativeLanguageTrackIndex(track));
+      });
+      this._eventManager.listen(this._externalCaptionsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
     }
+  }
+
+  /**
+   * if the media was recovered (after a media failure) then initiate play again (if that was the state before)
+   * @returns {void}
+   * @private
+   */
+  _handleRecovered(): void {
+    if (this._stateManager.currentState.type === StateType.PLAYING) {
+      this.play();
+    }
+  }
+
+  /**
+   * The text track changed event object
+   * @param {FakeEvent} event - payload with text track
+   * @returns {void}
+   * @private
+   */
+  _onTextTrackChanged(event: FakeEvent): void {
+    this.ready().then(() => this._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language);
+    this._markActiveTrack(event.payload.selectedTextTrack);
+    if (this._config.playback.useNativeTextTrack) {
+      this._externalCaptionsHandler.selectTextTrack(event.payload.selectedTextTrack);
+    }
+    this.dispatchEvent(event);
   }
 
   /**
@@ -1526,6 +1608,9 @@ export default class Player extends FakeEventTarget {
     if (typeof this._config.playback.playsinline === 'boolean') {
       this.playsinline = this._config.playback.playsinline;
     }
+    if (typeof this._config.playback.crossOrigin === 'string') {
+      this.crossOrigin = this._config.playback.crossOrigin;
+    }
   }
 
   /**
@@ -1548,7 +1633,8 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _canPreload(): boolean {
-    return !this._config.plugins || (this._config.plugins && !this._config.plugins.ima);
+    return !this._config.plugins || (this._config.plugins && !this._config.plugins.ima ||
+      (this._config.plugins.ima && this._config.plugins.ima.disable));
   }
 
   /**
@@ -1558,45 +1644,62 @@ export default class Player extends FakeEventTarget {
    */
   _handleAutoPlay(): void {
     if (this._config.playback.autoplay === true) {
-      if (!this._firstPlayInCurrentSession) {
-        if (this._fallbackToMutedAutoPlay) {
-          this.dispatchEvent(new FakeEvent(CustomEventType.FALLBACK_TO_MUTED_AUTOPLAY));
-        }
-        this.play();
-      } else {
-        const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
-        Player.getCapabilities(this.engineType)
-          .then((capabilities) => {
-            if (capabilities.autoplay) {
-              Player._logger.debug("Start autoplay");
-              this.play();
-            } else {
-              if (capabilities.mutedAutoPlay) {
-                if (this.muted) {
-                  Player._logger.debug("Start muted autoplay");
-                  this.play();
-                } else if (allowMutedAutoPlay) {
-                  Player._logger.debug("Fallback to muted autoplay");
-                  this._fallbackToMutedAutoPlay = true;
-                  this.muted = true;
-                  this.dispatchEvent(new FakeEvent(CustomEventType.FALLBACK_TO_MUTED_AUTOPLAY));
-                  this.play();
-                }
+      const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
+      Player.getCapabilities(this.engineType)
+        .then((capabilities) => {
+          if (capabilities.autoplay) {
+            onAutoPlay();
+          } else {
+            if (capabilities.mutedAutoPlay) {
+              if (this.muted && !this._fallbackToMutedAutoPlay) {
+                onMutedAutoPlay();
+              } else if (allowMutedAutoPlay) {
+                onFallbackToMutedAutoPlay();
               } else {
-                Player._logger.warn("Autoplay failed, pause player");
-                this._posterManager.show();
-                if (this._canPreload()) {
-                  this.load();
-                  this.ready().then(() => this.pause());
-                }
-                this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED));
+                onAutoPlayFailed();
               }
+            } else {
+              onAutoPlayFailed();
             }
-          });
-      }
+          }
+        });
     } else {
       this._posterManager.show();
     }
+
+    const onAutoPlay = () => {
+      Player._logger.debug("Start autoplay");
+      // If the previous state was fallback to muted autoplay:
+      // unmute the player and clear the fallback state
+      if (this._fallbackToMutedAutoPlay) {
+        this._fallbackToMutedAutoPlay = false;
+        this.muted = false;
+      }
+      this.play();
+    };
+
+    const onMutedAutoPlay = () => {
+      Player._logger.debug("Start muted autoplay");
+      this.play();
+    };
+
+    const onFallbackToMutedAutoPlay = () => {
+      Player._logger.debug("Fallback to muted autoplay");
+      this._fallbackToMutedAutoPlay = true;
+      this.muted = true;
+      this.dispatchEvent(new FakeEvent(CustomEventType.FALLBACK_TO_MUTED_AUTOPLAY));
+      this.play();
+    };
+
+    const onAutoPlayFailed = () => {
+      Player._logger.warn("Autoplay failed, pause player");
+      this._posterManager.show();
+      if (this._canPreload()) {
+        this.load();
+      }
+      this.ready().then(() => this.pause());
+      this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED));
+    };
   }
 
   /**
@@ -1618,19 +1721,17 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _play(): void {
-    if (this._engine.src) {
+    if (!this._engine.src) {
+      this.load();
+    }
+    this.ready().then(() => {
       if (this.isLive() && !this.isDvr()) {
         this.seekToLiveEdge();
       }
       this._engine.play();
-    } else {
-      this.load();
-      this.ready().then(() => {
-        this._engine.play();
-      }).catch((error) => {
-        this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
-      });
-    }
+    }).catch((error) => {
+      this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
+    });
   }
 
   /**
@@ -1712,7 +1813,6 @@ export default class Player extends FakeEventTarget {
   _resetStateFlags(): void {
     this._loading = false;
     this._firstPlay = true;
-    this._firstPlayInCurrentSession = false;
     this._loadingMedia = false;
     this._playbackStarted = false;
   }
@@ -1749,7 +1849,7 @@ export default class Player extends FakeEventTarget {
    */
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
-    this._tracks = tracks;
+    this._tracks = [...tracks, ...this._externalCaptionsHandler.getExternalTracks(tracks)];
     this._addTextTrackOffOption();
   }
 
@@ -1793,7 +1893,7 @@ export default class Player extends FakeEventTarget {
     if (type) {
       const tracks = this._getTracksByType(type);
       for (let i = 0; i < tracks.length; i++) {
-        tracks[i].active = track.index === i;
+        tracks[i].active = track.index === tracks[i].index;
       }
     }
   }
@@ -1865,9 +1965,7 @@ export default class Player extends FakeEventTarget {
     const activeTracks = this.getActiveTracks();
     const playbackConfig = this.config.playback;
     const offTextTrack: ?Track = this._getTracksByType(TrackType.TEXT).find(track => TextTrack.langComparer(OFF, track.language));
-
     this.hideTextTrack();
-
     let currentOrConfiguredTextLang = this._playbackAttributesState.textLanguage || this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackType.TEXT);
     let currentOrConfiguredAudioLang = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
     this._setDefaultTrack(TrackType.TEXT, currentOrConfiguredTextLang, offTextTrack);
@@ -1910,7 +2008,7 @@ export default class Player extends FakeEventTarget {
     const track: ?Track = this._getTracksByType(type).find(track => Track.langComparer(language, track.language));
     if (track) {
       this.selectTrack(track);
-    } else {
+    } else if (defaultTrack && !defaultTrack.active) {
       this.selectTrack(defaultTrack);
     }
   }
@@ -2009,6 +2107,15 @@ export default class Player extends FakeEventTarget {
    */
   get EngineType(): EngineTypes {
     return EngineType;
+  }
+
+  /**
+   * Gets the Cors types.
+   * @returns {CorsTypes} - CorsType.
+   * @public
+   */
+  get CorsType(): CorsTypes {
+    return CorsType;
   }
 
   // </editor-fold>

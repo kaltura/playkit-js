@@ -2,6 +2,7 @@
 import Player from './player'
 import BaseMediaSourceAdapter from './engines/html5/media-source/base-media-source-adapter'
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider'
+import {registerEngine} from './engines/engine-provider'
 import {registerPlugin} from './plugin/plugin-manager'
 import BaseDrmProtocol from './drm/base-drm-protocol'
 import BaseMiddleware from './middleware/base-middleware'
@@ -25,6 +26,7 @@ import {MediaType} from './media-type'
 import {EventType} from './event/event-type'
 import {AbrMode} from './track/abr-mode-type'
 import {LogLevelType} from './utils/logger'
+import {CorsType} from './engines/html5/cors-types'
 
 Player.runCapabilities();
 
@@ -72,9 +74,10 @@ export {BaseDrmProtocol};
 // Export the player capabilities
 const getCapabilities = Player.getCapabilities;
 const setCapabilities = Player.setCapabilities;
-export {getCapabilities, setCapabilities};
+
+export {getCapabilities, setCapabilities, registerEngine};
 
 // Export enums
-export {EventType, StateType, TrackType, EngineType, MediaType, StreamType, AbrMode, LogLevelType};
+export {EventType, StateType, TrackType, EngineType, MediaType, StreamType, AbrMode, LogLevelType, CorsType};
 
 export default loadPlayer;

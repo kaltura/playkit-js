@@ -11,7 +11,7 @@ import {Cue} from '../../track/vtt-cue'
 import * as Utils from '../../utils/util'
 import Html5AutoPlayCapability from './capabilities/html5-autoplay'
 import Html5IsSupportedCapability from './capabilities/html5-is-supported'
-import Error from "../../error/error";
+import Error from '../../error/error'
 import getLogger from '../../utils/logger'
 
 /**
@@ -242,6 +242,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.TIME_UPDATE, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.PLAYING, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.MEDIA_RECOVERED, (event: FakeEvent) => this.dispatchEvent(event));
     }
   }
 
@@ -817,6 +818,26 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   get playsinline(): boolean {
     return this._el.getAttribute('playsinline') === '';
+  }
+
+  /**
+   * Set crossOrigin attribute.
+   * @param {?string} crossOrigin - 'anonymous' or 'use-credentials'
+   */
+  set crossOrigin(crossOrigin: ?string): void {
+    if (typeof crossOrigin === 'string') {
+      this._el.setAttribute('crossorigin', crossOrigin);
+    } else {
+      this._el.removeAttribute('crossorigin');
+    }
+  }
+
+  /**
+   * Get crossOrigin attribute.
+   * @returns {?string} - 'anonymous' or 'use-credentials'
+   */
+  get crossOrigin(): ?string {
+    return this._el.getAttribute('crossorigin');
   }
 
   /**

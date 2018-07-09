@@ -21,15 +21,14 @@ export default class Html5AutoPlayCapability implements ICapability {
    */
   static runCapability(): void {
     Html5AutoPlayCapability._playPromiseResult = new Promise((resolve) => {
+      Html5AutoPlayCapability._setMuted(false);
       if (Html5AutoPlayCapability._isDataSaverMode()) {
         resolve({autoplay: false, mutedAutoPlay: false});
       } else {
         Html5AutoPlayCapability._getPlayPromise()
           .then(() => resolve({autoplay: true, mutedAutoPlay: true}))
           .catch(() => {
-            testVideoElement.muted = true;
-            // For iOS devices needs to use the setAttribute API
-            testVideoElement.setAttribute('muted', '');
+            Html5AutoPlayCapability._setMuted(true);
             Html5AutoPlayCapability._getPlayPromise()
               .then(() => resolve({autoplay: false, mutedAutoPlay: true}))
               .catch(() => resolve({autoplay: false, mutedAutoPlay: false}));
@@ -45,7 +44,15 @@ export default class Html5AutoPlayCapability implements ICapability {
    * @public
    */
   static getCapability(): Promise<CapabilityResult> {
-    return Html5AutoPlayCapability._playPromiseResult;
+    return Html5AutoPlayCapability._playPromiseResult
+      .then(res => {
+        // If autoplay is not allowed - try again and return the updated result
+        if (!res.autoplay) {
+          Html5AutoPlayCapability.runCapability();
+          return Html5AutoPlayCapability._playPromiseResult;
+        }
+        return res;
+      });
   }
 
   /**
@@ -67,6 +74,23 @@ export default class Html5AutoPlayCapability implements ICapability {
    */
   static _getPlayPromise(): Promise<*> {
     return testVideoElement.play() || Html5AutoPlayCapability._forcePromiseReturnValue();
+  }
+
+  /**
+   * Sets the test video element muted value.
+   * @param {boolean} muted - The muted value.
+   * @private
+   * @returns {void}
+   * @static
+   */
+  static _setMuted(muted: boolean): void {
+    if (muted) {
+      testVideoElement.muted = true;
+      testVideoElement.setAttribute('muted', '');
+    } else {
+      testVideoElement.muted = false;
+      testVideoElement.removeAttribute('muted');
+    }
   }
 
   /**
