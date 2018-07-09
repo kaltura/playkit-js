@@ -622,6 +622,51 @@ const Code: CodeType = {
   'CONTENT_UNSUPPORTED_BY_BROWSER': 9009,
 
   /**
+   * IndexDB QuotaExceededError - meaning there is no more storage space left in the indexDB
+   */
+  'STORAGE_QUOTA_EXCEEDED': 9010,
+
+  /**
+   * Download operation aborted.
+   */
+  'DOWNLOAD_ABORTED': 9011,
+
+  /**
+   * Fetching the entry provider information failed.
+   */
+  'COULD_NOT_GET_INFO_FROM_MEDIA_PROVIDER': 9012,
+
+  /**
+   * Could not find the entry id in the DB.
+   */
+  'ENTRY_DOES_NOT_EXIST': 9013,
+
+  /**
+   * Pause operation failed
+   */
+  'PAUSE_ABORTERD': 9014,
+
+  /**
+   * Resume operation failed
+   */
+  'RESUME_ABORTED': 9015,
+
+  /**
+   * Renewing the license of the entry failed
+   */
+  'RENEW_LICENSE_FAILED': 9016,
+
+  /**
+   * Could not download the entry as it already exists in the data base.
+   */
+  'ENTRY_ALREADY_EXISTS': 9017,
+
+  /**
+   * Could not remove the requested entry
+   */
+  'REMOVE_FAILED': 9018,
+
+  /**
    * VR plugin is not supported.
    */
   'VR_NOT_SUPPORTED': 11000
