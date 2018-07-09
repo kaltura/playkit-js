@@ -32,6 +32,8 @@ export default class PluginManager {
   _plugins: Map<string, BasePlugin> = new Map();
   /**
    * Is disabled plugin map.
+   * Maps plugin's name to a boolean.
+   * false means the plugin is disable. true or plugin name doesn't exist in the map means the plugin is not disable.
    * @type {Map}
    * @private
    */
@@ -95,6 +97,7 @@ export default class PluginManager {
     const isValidPlugin = pluginClass ? pluginClass.isValid() : false;
     if (pluginClass && isValidPlugin && !isDisablePlugin) {
       this._plugins.set(name, pluginClass.createPlugin(name, player, config));
+      this._isDisabledPluginMap.set(name, false);
       logger.debug(`Plugin <${name}> has been loaded`);
       return true;
     }
