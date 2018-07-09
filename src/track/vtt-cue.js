@@ -190,14 +190,14 @@ class VTTCue {
   }
 
   get startTime(): number {
-    return this._endTime;
+    return this._startTime;
   }
 
   set startTime(value: number) {
     if (typeof value !== "number") {
       throw new TypeError("Start time must be set to a number.");
     }
-    this._endTime = value;
+    this._startTime = value;
     this.resetCue();
 
   }

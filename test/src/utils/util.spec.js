@@ -179,4 +179,41 @@ describe('util', () => {
       });
     });
   });
+
+  describe('Version', function () {
+    describe('Compare', function () {
+      it('The first should be smaller than the second', function () {
+        (Utils.VERSION.compare('1.7.1', '1.7.10') < 0).should.be.true;
+        (Utils.VERSION.compare('1.7.2', '1.7.10') < 0).should.be.true;
+        (Utils.VERSION.compare('1.6.1', '1.7.10') < 0).should.be.true;
+        (Utils.VERSION.compare('1.6.20', '1.7.10') < 0).should.be.true;
+        (Utils.VERSION.compare('1.7.1', '1.7.10') < 0).should.be.true;
+        (Utils.VERSION.compare('1.7', '1.7.0', {zeroExtend: false}) < 0).should.be.true;
+        (Utils.VERSION.compare('1.7', '1.8.0') < 0).should.be.true;
+        (Utils.VERSION.compare('1.7.2', '1.7.10b') < 0).should.be.true;
+      });
+
+      it('The first should be greater than the second', function () {
+        (Utils.VERSION.compare('1.7.2', '1.7.10b', {lexicographical: true}) > 0).should.be.true;
+        (Utils.VERSION.compare('1.7.10', '1.7.1') > 0).should.be.true;
+        (Utils.VERSION.compare('1.7.10', '1.6.1') > 0).should.be.true;
+        (Utils.VERSION.compare('1.7.10', '1.6.20') > 0).should.be.true;
+        (Utils.VERSION.compare('1.7.0', '1.7', {zeroExtend: false}) > 0).should.be.true;
+        (Utils.VERSION.compare('1.8.0', '1.7') > 0).should.be.true;
+      });
+
+      it('The first should be equal the second', function () {
+        (Utils.VERSION.compare('1.7.10', '1.7.10') === 0).should.be.true;
+        (Utils.VERSION.compare('1.7', '1.7') === 0).should.be.true;
+        (Utils.VERSION.compare('1.7', '1.7.0') === 0).should.be.true;
+      });
+
+      it('Should return NaN for a bad version', function () {
+        isNaN(Utils.VERSION.compare('1.7', '1..7')).should.be.true;
+        isNaN(Utils.VERSION.compare('1.7', 'bad')).should.be.true;
+        isNaN(Utils.VERSION.compare('1..7', '1.7')).should.be.true;
+        isNaN(Utils.VERSION.compare('bas', '1.7')).should.be.true;
+      });
+    })
+  })
 });

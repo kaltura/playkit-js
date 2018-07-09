@@ -571,13 +571,16 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const textTracks = this._videoElement.textTracks;
     if ((textTrack instanceof PKTextTrack)
       && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions')
-      && textTracks && textTracks[textTrack.index]) {
+      && textTracks) {
       this._removeNativeTextTrackChangeListener();
-      this._disableTextTracks();
-      textTracks[textTrack.index].mode = 'hidden';
-      NativeAdapter._logger.debug('Text track changed', textTrack);
-      this._onTrackChanged(textTrack);
-      this._addNativeTextTrackChangeListener();
+      const selectedTrack = Array.from(textTracks).find(track => track ? track.language === textTrack.language : false);
+      if (selectedTrack) {
+        this._disableTextTracks();
+        selectedTrack.mode = 'showing';
+        NativeAdapter._logger.debug('Text track changed', selectedTrack);
+        this._onTrackChanged(textTrack);
+        this._addNativeTextTrackChangeListener();
+      }
     }
   }
 
@@ -627,6 +630,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     NativeAdapter._logger.debug('Video element text track change');
     const vidIndex = getActiveVidTextTrackIndex();
     const pkIndex = getActivePKTextTrackIndex();
+
     if (vidIndex !== pkIndex) {
       // In case no text track with 'showing' mode
       // we need to set the off track
@@ -654,7 +658,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {void}
    */
   _addNativeTextTrackAddedListener(): void {
-    if (this._videoElement.textTracks) {
+    if (!(this._config && this._config.playback && this._config.playback.useNativeTextTrack) && this._videoElement.textTracks) {
       this._eventManager.listen(this._videoElement.textTracks, 'addtrack', () => this._onNativeTextTrackAdded());
     }
   }
