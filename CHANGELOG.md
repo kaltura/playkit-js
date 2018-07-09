@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.32.3"></a>
+## [0.32.3](https://github.com/kaltura/playkit-js/compare/v0.32.2...v0.32.3) (2018-07-09)
+
+
+### Bug Fixes
+
+* **FEC-8386:** Kava analytics retrieved by default on OTT ([#261](https://github.com/kaltura/playkit-js/issues/261)) ([6345999](https://github.com/kaltura/playkit-js/commit/6345999))
+
+
+
 <a name="0.32.2"></a>
 ## [0.32.2](https://github.com/kaltura/playkit-js/compare/v0.32.1...v0.32.2) (2018-07-04)
 
