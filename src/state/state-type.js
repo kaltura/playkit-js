@@ -1,7 +1,6 @@
 //@flow
-export type StateTypes = { [state: string]: string };
 
-const StateType: StateTypes = {
+const StateType: PKStateTypes = {
   IDLE: "idle",
   LOADING: "loading",
   PLAYING: "playing",

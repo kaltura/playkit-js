@@ -1,7 +1,5 @@
 //@flow
-export type TrackTypes = { [track: string]: string };
-
-const TrackType: TrackTypes = {
+const TrackType: PKTrackTypes = {
   VIDEO: "video",
   AUDIO: "audio",
   TEXT: "text"

@@ -4,11 +4,9 @@ import EventManager from './event/event-manager'
 import PosterManager from './utils/poster-manager'
 import FakeEvent from './event/fake-event'
 import FakeEventTarget from './event/fake-event-target'
-import type {EventTypes} from './event/event-type'
 import {CustomEventType, EventType, Html5EventType} from './event/event-type'
 import * as Utils from './utils/util'
 import Locale from './utils/locale'
-import type {LogLevels, LogLevelTypes} from './utils/logger'
 import getLogger, {getLogLevel, LogLevel, LogLevelType, setLogLevel} from './utils/logger'
 import Html5 from './engines/html5/html5'
 import PluginManager from './plugin/plugin-manager'
@@ -21,18 +19,12 @@ import TextTrack from './track/text-track'
 import TextStyle from './track/text-style'
 import {Cue} from './track/vtt-cue'
 import {processCues} from './track/text-track-display'
-import type {StateTypes} from './state/state-type'
 import {StateType} from './state/state-type'
-import type {TrackTypes} from './track/track-type'
 import {TrackType} from './track/track-type'
 import {LabelToTrackMap} from './track/label-to-track-map'
-import type {StreamTypes} from './engines/stream-type'
 import {StreamType} from './engines/stream-type'
-import type {EngineTypes} from './engines/engine-type'
 import {EngineType} from './engines/engine-type'
-import type {MediaTypes} from './media-type'
 import {MediaType} from './media-type'
-import type {AbrModes} from './track/abr-mode-type'
 import {AbrMode} from './track/abr-mode-type'
 import PlaybackMiddleware from './middleware/playback-middleware'
 import DefaultPlayerConfig from './player-config.json'
@@ -1979,10 +1971,10 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Gets the player event types.
-   * @returns {EventTypes} - The event types of the player.
+   * @returns {PKEventTypes} - The event types of the player.
    * @public
    */
-  get Event(): EventTypes {
+  get Event(): PKEventTypes {
     return EventType;
   }
 
@@ -1997,73 +1989,73 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Gets the player state types.
-   * @returns {StateTypes} - The state types of the player.
+   * @returns {PKStateTypes} - The state types of the player.
    * @public
    */
-  get State(): StateTypes {
+  get State(): PKStateTypes {
     return StateType;
   }
 
   /**
    * Gets the player tracks types.
-   * @returns {TrackTypes} - The tracks types of the player.
+   * @returns {PKTrackTypes} - The tracks types of the player.
    * @public
    */
-  get Track(): TrackTypes {
+  get Track(): PKTrackTypes {
     return TrackType;
   }
 
   /**
    * Gets the player log level types.
-   * @returns {LogLevelTypes} - The log level types of the player.
+   * @returns {PKLogLevelTypes} - The log level types of the player.
    * @public
    */
-  get LogLevelType(): LogLevelTypes {
+  get LogLevelType(): PKLogLevelTypes {
     return LogLevelType;
   }
 
   /**
    * Gets the player log level objects.
-   * @returns {LogLevels} - The log levels objects of the player.
+   * @returns {PKLogLevels} - The log levels objects of the player.
    * @public
    */
-  get LogLevel(): LogLevels {
+  get LogLevel(): PKLogLevels {
     return LogLevel;
   }
 
   /**
    * Gets the player abr modes.
-   * @returns {AbrModes} - The abr modes of the player.
+   * @returns {PKAbrModes} - The abr modes of the player.
    * @public
    */
-  get AbrMode(): AbrModes {
+  get AbrMode(): PKAbrModes {
     return AbrMode;
   }
 
   /**
    * Gets the player media types.
-   * @returns {MediaTypes} - The media types of the player.
+   * @returns {PKMediaTypes} - The media types of the player.
    * @public
    */
-  get MediaType(): MediaTypes {
+  get MediaType(): PKMediaTypes {
     return MediaType;
   }
 
   /**
    * Gets the player stream types.
-   * @returns {StreamTypes} - The stream types of the player.
+   * @returns {PKStreamTypes} - The stream types of the player.
    * @public
    */
-  get StreamType(): StreamTypes {
+  get StreamType(): PKStreamTypes {
     return StreamType;
   }
 
   /**
    * Gets the player engine types.
-   * @returns {EngineTypes} - The engine types of the player.
+   * @returns {PKEngineTypes} - The engine types of the player.
    * @public
    */
-  get EngineType(): EngineTypes {
+  get EngineType(): PKEngineTypes {
     return EngineType;
   }
 

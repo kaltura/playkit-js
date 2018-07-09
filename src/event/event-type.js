@@ -1,9 +1,7 @@
 //@flow
 import * as Utils from '../utils/util'
 
-export type EventTypes = { [event: string]: string };
-
-const Html5EventType: EventTypes = {
+const Html5EventType: PKEventTypes = {
   /**
    * Fires when the loading of an audio/video is aborted
    */
@@ -94,7 +92,7 @@ const Html5EventType: EventTypes = {
   WAITING: 'waiting'
 };
 
-const CustomEventType: EventTypes = {
+const CustomEventType: PKEventTypes = {
   /**
    * Fires when the media is loaded.
    */
@@ -269,6 +267,6 @@ const CustomEventType: EventTypes = {
   VR_STEREO_MODE_CHANGED: 'vrstereomodechanged'
 };
 
-const EventType: EventTypes = Utils.Object.merge([Html5EventType, CustomEventType]);
+const EventType: PKEventTypes = Utils.Object.merge([Html5EventType, CustomEventType]);
 
 export {EventType, Html5EventType, CustomEventType};
