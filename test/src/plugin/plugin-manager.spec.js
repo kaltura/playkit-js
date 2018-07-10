@@ -29,28 +29,16 @@ describe('PluginManager.registry', () => {
   });
 
   it('shouldn\'t register the plugin because handler is not a function', () => {
-    let exceptionOccurred = false;
-    try {
-      PluginManager.register("numbers", {});
-    } catch (e) {
-      exceptionOccurred = true;
-      e.code.should.equals(7005);
-      e.data.should.equals("numbers");
-    }
-    exceptionOccurred.should.be.true;
+    unRegisterAll();
+    PluginManager.register("numbers", {}).should.be.false;
+    (PluginManager._registry.get("numbers") === undefined).should.be.true;
   });
 
   it('shouldn\'t register the plugin because handler isn\'t derived from BasePlugin', () => {
-    let exceptionOccurred = false;
-    try {
-      PluginManager.register("numbers", function () {
-      });
-    } catch (e) {
-      exceptionOccurred = true;
-      e.code.should.equals(7005);
-      e.data.should.equals("numbers");
-    }
-    exceptionOccurred.should.be.true;
+    unRegisterAll();
+    PluginManager.register("numbers", function () {
+    }).should.be.false;
+    (PluginManager._registry.get("numbers") === undefined).should.be.true;
   });
 
   it('should register new plugins', () => {
@@ -120,6 +108,21 @@ describe('PluginManager.plugins', () => {
       return false;
     });
     pluginManager.load("colors", {}, {}).should.be.false;
+  });
+
+  it('shouldn\'t load() the plugin, plugin is disabled in the config', () => {
+    pluginManager.load("colors", {}, {disable: true}).should.be.false;
+  });
+
+  it('shouldn\'t load() the plugin, plugin is disabled in the previous config', () => {
+    pluginManager.load("colors", {}, {disable: true}).should.be.false;
+    pluginManager.load("colors", {}).should.be.false;
+  });
+
+  it('should load() the plugin, plugin is enable after is disabled in the config', () => {
+    pluginManager.load("colors", {}, {disable: true}).should.be.false;
+    pluginManager.load("colors", {}, {disable: false}).should.be.true;
+    pluginManager._plugins.size.should.equal(1);
   });
 
   it('should load() the plugins', () => {

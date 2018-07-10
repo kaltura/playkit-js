@@ -18,6 +18,7 @@ declare interface IEngine {
   pause(): void;
   load(startTime: ?number): Promise<Object>;
   ready(): void;
+  reset(): void;
   selectVideoTrack(videoTrack: VideoTrack): void;
   selectAudioTrack(audioTrack: AudioTrack): void;
   selectTextTrack(textTrack: TextTrack): void;
@@ -54,4 +55,5 @@ declare interface IEngine {
   +videoWidth: number;
   +videoHeight: number;
   playsinline: boolean;
+  crossOrigin: ?string;
 }

@@ -1,5 +1,5 @@
 // @flow
 declare type PKMetadataConfigObject = {
-  poster: string,
-  description: string
+  name?: string,
+  description?: string
 };

@@ -1,6 +1,6 @@
 //@flow
 import EventManager from '../../../../event/event-manager'
-import {Html5EventType, CustomEventType} from '../../../../event/event-type'
+import {CustomEventType, Html5EventType} from '../../../../event/event-type'
 import Track from '../../../../track/track'
 import VideoTrack from '../../../../track/video-track'
 import AudioTrack from '../../../../track/audio-track'
@@ -211,7 +211,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   load(startTime: ?number): Promise<Object> {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
-        this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, this._onLoadedData.bind(this, resolve));
+        this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, this._onLoadedData.bind(this, resolve, startTime));
         this._eventManager.listenOnce(this._videoElement, Html5EventType.ERROR, this._onError.bind(this, reject));
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
@@ -219,9 +219,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         if (this._sourceObj && this._sourceObj.url) {
           this._videoElement.src = this._sourceObj.url;
           this._trigger(CustomEventType.ABR_MODE_CHANGED, {mode: this._isProgressivePlayback() ? 'manual' : 'auto'});
-        }
-        if (startTime) {
-          this._videoElement.currentTime = startTime;
         }
         this._videoElement.load();
       });
@@ -232,10 +229,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   /**
    * Loaded data event handler.
    * @param {Function} resolve - The resolve promise function.
+   * @param {number} startTime - Optional time to start the video from.
    * @private
    * @returns {void}
    */
-  _onLoadedData(resolve: Function): void {
+  _onLoadedData(resolve: Function, startTime: ?number): void {
     const parseTracksAndResolve = () => {
       this._playerTracks = this._getParsedTracks();
       this._addNativeAudioTrackChangeListener();
@@ -247,6 +245,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._handleLiveDurationChange();
       }
     };
+    if (startTime && startTime > -1) {
+      this._videoElement.currentTime = startTime;
+    }
     if (this._videoElement.textTracks.length > 0) {
       parseTracksAndResolve();
     } else {
@@ -280,10 +281,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       if (this._liveDurationChangeInterval) {
         clearInterval(this._liveDurationChangeInterval);
         this._liveDurationChangeInterval = null;
-      }
-      if (NativeAdapter._drmProtocol) {
-        NativeAdapter._drmProtocol.destroy();
-        NativeAdapter._drmProtocol = null;
       }
     });
   }
@@ -574,13 +571,16 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const textTracks = this._videoElement.textTracks;
     if ((textTrack instanceof PKTextTrack)
       && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions')
-      && textTracks && textTracks[textTrack.index]) {
+      && textTracks) {
       this._removeNativeTextTrackChangeListener();
-      this._disableTextTracks();
-      textTracks[textTrack.index].mode = 'hidden';
-      NativeAdapter._logger.debug('Text track changed', textTrack);
-      this._onTrackChanged(textTrack);
-      this._addNativeTextTrackChangeListener();
+      const selectedTrack = Array.from(textTracks).find(track => track ? track.language === textTrack.language : false);
+      if (selectedTrack) {
+        this._disableTextTracks();
+        selectedTrack.mode = 'showing';
+        NativeAdapter._logger.debug('Text track changed', selectedTrack);
+        this._onTrackChanged(textTrack);
+        this._addNativeTextTrackChangeListener();
+      }
     }
   }
 
@@ -630,6 +630,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     NativeAdapter._logger.debug('Video element text track change');
     const vidIndex = getActiveVidTextTrackIndex();
     const pkIndex = getActivePKTextTrackIndex();
+
     if (vidIndex !== pkIndex) {
       // In case no text track with 'showing' mode
       // we need to set the off track
@@ -657,7 +658,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {void}
    */
   _addNativeTextTrackAddedListener(): void {
-    if (this._videoElement.textTracks) {
+    if (!(this._config && this._config.playback && this._config.playback.useNativeTextTrack) && this._videoElement.textTracks) {
       this._eventManager.listen(this._videoElement.textTracks, 'addtrack', () => this._onNativeTextTrackAdded());
     }
   }
@@ -800,15 +801,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._videoElement.dispatchEvent(new window.Event(Html5EventType.DURATION_CHANGE));
       }
     }, 2000);
-  }
-
-  /**
-   * Getter for the src that the adapter plays on the video element.
-   * @public
-   * @returns {string} - The src url.
-   */
-  get src(): string {
-    return this._videoElement.src;
   }
 
   /**

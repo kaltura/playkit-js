@@ -30,6 +30,14 @@ export default class PluginManager {
    * @private
    */
   _plugins: Map<string, BasePlugin> = new Map();
+  /**
+   * Is disabled plugin map.
+   * Maps plugin's name to a boolean.
+   * false means the plugin is disable. true or plugin name doesn't exist in the map means the plugin is not disable.
+   * @type {Map}
+   * @private
+   */
+  _isDisabledPluginMap: Map<string, boolean> = new Map();
 
   /**
    * Writes the plugin in the registry.
@@ -42,7 +50,8 @@ export default class PluginManager {
    */
   static register(name: string, handler: Function): boolean {
     if (typeof handler !== 'function' || handler.prototype instanceof BasePlugin === false) {
-      throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_NOT_VALID_HANDLER, name);
+      logger.error(`Plugin <${name}> registration failed, either plugin is not an instance of BasePlugin or plugin handler is not a function`);
+      return false;
     }
     if (!PluginManager._registry.has(name)) {
       PluginManager._registry.set(name, handler);
@@ -77,15 +86,22 @@ export default class PluginManager {
    */
   load(name: string, player: Player, config: Object = {}): boolean {
     if (!PluginManager._registry.has(name)) {
-      throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_NOT_REGISTERED_PLUGIN, name);
+      logger.warn(`Plugin <${name}> loading failed, plugin is not registered`);
+      throw new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_NOT_REGISTERED_PLUGIN, name);
     }
     let pluginClass = PluginManager._registry.get(name);
-    if (pluginClass && pluginClass.isValid()) {
+    if (typeof config.disable === "boolean") {
+      this._isDisabledPluginMap.set(name, config.disable);
+    }
+    const isDisablePlugin = !!this._isDisabledPluginMap.get(name);
+    const isValidPlugin = pluginClass ? pluginClass.isValid() : false;
+    if (pluginClass && isValidPlugin && !isDisablePlugin) {
       this._plugins.set(name, pluginClass.createPlugin(name, player, config));
+      this._isDisabledPluginMap.set(name, false);
       logger.debug(`Plugin <${name}> has been loaded`);
       return true;
     }
-    logger.debug(`Plugin <${name}> isn\'t loaded, isValid()=false`);
+    logger.debug(`Plugin <${name}> isn\'t loaded, isValid()=${isValidPlugin.toString()}, disabled=${isDisablePlugin.toString()}`);
     return false;
   }
 

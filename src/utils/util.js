@@ -1,4 +1,6 @@
 //@flow
+import {jsonp} from './jsonp'
+
 "use strict";
 
 const _Number = {
@@ -115,16 +117,20 @@ const _Object = {
           node[i] = this.copyDeep(e);
         }
       });
-    } else if (typeof data === "object") {
-      node = Object.assign({}, data);
-      Object.keys(node).forEach((key) => {
-        if (
-          (typeof node[key] === "object" && node[key] !== {}) ||
-          (Array.isArray(node[key]) && node[key].length > 0)
-        ) {
-          node[key] = this.copyDeep(node[key]);
-        }
-      });
+    } else if (data !== null && typeof data === "object") {
+      if (data.clone && typeof data.clone === "function") {
+        node = data.clone();
+      } else {
+        node = Object.assign({__proto__: data.__proto__}, data);
+        Object.keys(node).forEach((key) => {
+          if (
+            (typeof node[key] === "object" && node[key] !== {}) ||
+            (Array.isArray(node[key]) && node[key].length > 0)
+          ) {
+            node[key] = this.copyDeep(node[key]);
+          }
+        });
+      }
     } else {
       node = data;
     }
@@ -176,6 +182,48 @@ const _Object = {
       }
     }
     return true;
+  },
+
+  /**
+   * Create an object with a given property path.
+   * @param {Object} obj - The object to create on.
+   * @param {string} path - The path to create in the object.
+   * @param {any} value - The value to set in the path.
+   * @returns {Object} - The result object.
+   */
+  createPropertyPath: function (obj: Object, path: string, value: any = null): Object {
+    let pathArray = path.split('.');
+    let current = obj;
+    while (pathArray.length > 1) {
+      const [head, ...tail] = pathArray;
+      pathArray = tail;
+      if (current[head] === undefined) {
+        current[head] = {};
+      }
+      current = current[head];
+    }
+    current[pathArray[0]] = value;
+    return obj;
+  },
+
+  /**
+   * Deleted a property path from an object.
+   * @param {Object} obj - The object to delete the property path from.
+   * @param {string} path - The path to delete in the object.
+   * @returns {void}
+   */
+  deletePropertyPath: function (obj: Object, path: string): void {
+    if (!obj || !path) {
+      return;
+    }
+    let pathArray = path.split('.');
+    for (let i = 0; i < pathArray.length - 1; i++) {
+      obj = obj[pathArray[i]];
+      if (typeof obj === 'undefined') {
+        return;
+      }
+    }
+    delete obj[pathArray.pop()];
   },
 
   /**
@@ -383,6 +431,32 @@ const _Dom = {
         t.parentNode.insertBefore(s, t);
       }
     });
+  },
+  /**
+   * Returns the first element that matches a specified CSS selector(s) in the document.
+   * @param {string} selector - One or more CSS selectors to match the element.
+   * @returns {Element} - The first element that matches a specified CSS selector(s) in the document.
+   */
+  getElementBySelector(selector: string): any {
+    try {
+      return document.querySelector(selector)
+    } catch (e) {
+      return;
+    }
+  },
+  /**
+   * Inserts a node as a child, right before an existing child.
+   * @param {HTMLElement} parent -  The parent node object.
+   * @param {HTMLElement} newChild -  The node object to insert.
+   * @param {?HTMLElement} existingChild - The child node to insert the new node before. If set to null, the insertBefore method will insert the newChild at the end.
+   * @returns {Element} - The first element that matches a specified CSS selector(s) in the document.
+   */
+  insertBefore(parent: HTMLElement, newChild: HTMLElement, existingChild: ?HTMLElement): ?HTMLElement {
+    try {
+      return parent.insertBefore(newChild, existingChild);
+    } catch (e) {
+      return null;
+    }
   }
 };
 
@@ -393,8 +467,12 @@ const _Http = {
       request.onreadystatechange = function () {
         if (request.readyState === 4) {
           if (request.status === 200) {
-            let jsonResponse = JSON.parse(request.responseText);
-            resolve(jsonResponse);
+            try {
+              let jsonResponse = JSON.parse(request.responseText);
+              resolve(jsonResponse);
+            } catch (e) {
+              resolve(request.responseText);
+            }
           } else {
             reject(request.responseText);
           }
@@ -408,7 +486,85 @@ const _Http = {
       }
       request.send(params);
     });
+  },
+  jsonp: jsonp
+};
+
+const _VERSION = {
+  /**
+   * Compares two software version numbers (e.g. "1.7.1" or "1.2b").
+   *
+   * @param {string} v1 The first version to be compared.
+   * @param {string} v2 The second version to be compared.
+   * @param {object} [options] Optional flags that affect comparison behavior:
+   * lexicographical: (true/[false]) compares each part of the version strings lexicographically instead of naturally;
+   *                  this allows suffixes such as "b" or "dev" but will cause "1.10" to be considered smaller than "1.2".
+   * zeroExtend: ([true]/false) changes the result if one version string has less parts than the other. In
+   *             this case the shorter string will be padded with "zero" parts instead of being considered smaller.
+   *
+   * @returns {number|NaN}
+   * - 0 if the versions are equal
+   * - a negative integer iff v1 < v2
+   * - a positive integer iff v1 > v2
+   * - NaN if either version string is in the wrong format
+   */
+
+  compare: function (v1: string, v2: string, options: Object = {}) {
+    options = _Object.merge([{lexicographical: false, zeroExtend: true}, options]);
+    const lexicographical = options.lexicographical;
+    const zeroExtend = options.zeroExtend;
+    let v1parts = (v1 || "0").split('.');
+    let v2parts = (v2 || "0").split('.');
+
+    const isValidPart = (x) => {
+      return (lexicographical ? /^\d+[A-Za-zαß]*$/ : /^\d+[A-Za-zαß]?$/).test(x);
+    };
+
+    const mapParts = (parts: Array<string>) => {
+      return parts.map((x) => {
+        const match = (/[A-Za-zαß]/).exec(x);
+        return Number(match ? x.replace(match[0], "." + x.charCodeAt(match.index)) : x);
+      });
+    };
+
+    if (!v1parts.every(isValidPart) || !v2parts.every(isValidPart)) {
+      return NaN;
+    }
+
+    if (zeroExtend) {
+      while (v1parts.length < v2parts.length) v1parts.push("0");
+      while (v2parts.length < v1parts.length) v2parts.push("0");
+    }
+
+    if (!lexicographical) {
+      v1parts = mapParts(v1parts);
+      v2parts = mapParts(v2parts);
+    }
+
+    for (let i = 0; i < v1parts.length; ++i) {
+      if (v2parts.length === i) {
+        return 1;
+      }
+
+      if (v1parts[i] === v2parts[i]) {
+        continue;
+      }
+      // $FlowFixMe
+      else if (v1parts[i] > v2parts[i]) {
+        return 1;
+      }
+      else {
+        return -1;
+      }
+    }
+
+    if (v1parts.length !== v2parts.length) {
+      return -1;
+    }
+
+    return 0;
   }
+
 };
 
 export {
@@ -417,5 +573,6 @@ export {
   _Object as Object,
   _Generator as Generator,
   _Dom as Dom,
-  _Http as Http
+  _Http as Http,
+  _VERSION as VERSION
 };

@@ -21,6 +21,10 @@ export default class Track {
     }
   }
 
+  static clone<T>(track: any): T {
+    return (Object.assign(Object.create(Object.getPrototypeOf(track)), track): T);
+  }
+
   /**
    * The id of the track.
    * @member
@@ -41,7 +45,7 @@ export default class Track {
    * @type {string}
    * @private
    */
-  _label: string;
+  _label: ?string;
   /**
    * The language of the track.
    * @member
@@ -56,6 +60,13 @@ export default class Track {
    * @private
    */
   _index: number;
+  /**
+   * The clone function reference.
+   * @member
+   * @type {Function}
+   * @public
+   */
+  clone: Function;
 
   /**
    * Getter for the track id.
@@ -89,7 +100,7 @@ export default class Track {
    * @public
    * @returns {string} - The label of the track.
    */
-  get label(): string {
+  get label(): ?string {
     return this._label;
   }
 
@@ -112,6 +123,25 @@ export default class Track {
   }
 
   /**
+   * Setter for the index of the track.
+   * @public
+   * @param {number} value - The index of the track.
+   * @returns {void}
+   */
+  set index(value: number): void {
+    this._index = value;
+  }
+
+  /**
+   * Setter for the label of the track.
+   * @public
+   * @param {string} value - The label of the track.
+   */
+  set label(value: string) {
+    this._label = value;
+  }
+
+  /**
    * @constructor
    * @param {Object} settings - The track settings object.
    */
@@ -121,5 +151,6 @@ export default class Track {
     this._label = settings.label;
     this._language = settings.language;
     this._index = settings.index;
+    this.clone = Track.clone.bind(null, this);
   }
 }

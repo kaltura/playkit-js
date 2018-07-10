@@ -2,7 +2,7 @@
 import FakeEventTarget from '../../event/fake-event-target'
 import FakeEvent from '../../event/fake-event'
 import EventManager from '../../event/event-manager'
-import {Html5EventType, CustomEventType} from '../../event/event-type'
+import {CustomEventType, Html5EventType} from '../../event/event-type'
 import MediaSourceProvider from './media-source/media-source-provider'
 import VideoTrack from '../../track/video-track'
 import AudioTrack from '../../track/audio-track'
@@ -11,7 +11,7 @@ import {Cue} from '../../track/vtt-cue'
 import * as Utils from '../../utils/util'
 import Html5AutoPlayCapability from './capabilities/html5-autoplay'
 import Html5IsSupportedCapability from './capabilities/html5-is-supported'
-import Error from "../../error/error";
+import Error from '../../error/error'
 import getLogger from '../../utils/logger'
 
 /**
@@ -157,6 +157,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   constructor(source: PKMediaSourceObject, config: Object) {
     super();
     this._eventManager = new EventManager();
+    this._canLoadMediaSourceAdapterPromise = Promise.resolve();
     this._createVideoElement();
     this._init(source, config);
   }
@@ -168,12 +169,25 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   restore(source: PKMediaSourceObject, config: Object): void {
+    this.reset();
+    this._init(source, config);
+  }
+
+  /**
+   * Resets the engine.
+   * @returns {void}
+   */
+  reset(): void {
     this.detach();
     this._eventManager.removeAll();
-    if (this._el) {
+    if (this._mediaSourceAdapter) {
+      this._canLoadMediaSourceAdapterPromise = this._mediaSourceAdapter.destroy();
+      this._mediaSourceAdapter = null;
+    }
+    if (this._el && this._el.src) {
+      Utils.Dom.setAttribute(this._el, 'src', '');
       Utils.Dom.removeAttribute(this._el, 'src');
     }
-    this._init(source, config);
   }
 
   /**
@@ -228,6 +242,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.TIME_UPDATE, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.PLAYING, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.MEDIA_RECOVERED, (event: FakeEvent) => this.dispatchEvent(event));
     }
   }
 
@@ -255,9 +270,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     const error = new Error(
       Error.Severity.CRITICAL,
       Error.Category.MEDIA,
-      Error.Code.VIDEO_ERROR,
-      {
-        code: code, extended: extended, message: message
+      Error.Code.VIDEO_ERROR, {
+        code: code,
+        extended: extended,
+        message: message
       });
     this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
   }
@@ -805,6 +821,26 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Set crossOrigin attribute.
+   * @param {?string} crossOrigin - 'anonymous' or 'use-credentials'
+   */
+  set crossOrigin(crossOrigin: ?string): void {
+    if (typeof crossOrigin === 'string') {
+      this._el.setAttribute('crossorigin', crossOrigin);
+    } else {
+      this._el.removeAttribute('crossorigin');
+    }
+  }
+
+  /**
+   * Get crossOrigin attribute.
+   * @returns {?string} - 'anonymous' or 'use-credentials'
+   */
+  get crossOrigin(): ?string {
+    return this._el.getAttribute('crossorigin');
+  }
+
+  /**
    * Initializes the engine.
    * @param {PKMediaSourceObject} source - The selected source object.
    * @param {Object} config - The player configuration.
@@ -813,8 +849,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _init(source: PKMediaSourceObject, config: Object): void {
     this._config = config;
-    this._canLoadMediaSourceAdapterPromise = (this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve());
-    this._mediaSourceAdapter = null;
     this._loadMediaSourceAdapter(source);
     this.attach();
   }
@@ -892,4 +926,3 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: activeCues}));
   }
 }
-
