@@ -152,14 +152,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * The player playback rates.
    * @type {Array<number>}
-   * @const
    */
    PLAYBACK_RATES = [0.5, 1, 2, 4];
 
    /**
    * The player playback rates.
    * @type {Array<number>}
-   * @const
    */
    LIVE_PLAYBACK_RATES = [1];
 
