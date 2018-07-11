@@ -1908,7 +1908,7 @@ export default class Player extends FakeEventTarget {
     Player._logger.debug('Text cue changed', event.payload.cues);
     this._activeTextCues = event.payload.cues;
     this._updateCueDisplaySettings();
-    this._updateTextDisplay(this._activeTextCues)
+    this._updateTextDisplay(this._activeTextCues);
   }
 
   /**
@@ -1934,7 +1934,9 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _updateTextDisplay(cues: Array<Cue>): void {
-    processCues(window, cues, this._textDisplayEl);
+    if (!this._config.playback.useNativeTextTrack) {
+      processCues(window, cues, this._textDisplayEl);
+    }
   }
 
   /**
