@@ -140,7 +140,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @static
    */
   static createAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): IMediaSourceAdapter {
-    const adapterConfig = {};
+    const adapterConfig = {
+      textTrackDisplayMode: false,
+      progressiveSources: []
+    };
     if (Utils.Object.hasPropertyPath(config, 'playback.useNativeTextTrack')) {
       adapterConfig.textTrackDisplayMode = Utils.Object.getPropertyPath(config, 'playback.useNativeTextTrack');
     }
