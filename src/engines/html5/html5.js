@@ -354,7 +354,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.selectTextTrack(textTrack);
     }
-    this._addCueChangeListener(textTrack);
+    this._addCueChangeListener();
   }
 
   /**
@@ -876,18 +876,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Add cuechange listener to active textTrack.
-   * @param {PKTextTrack} textTrack - The playkit text track object to set.
    * @returns {void}
    * @private
    */
-  _addCueChangeListener(textTrack: PKTextTrack): void {
-    let textTrackEl = this._el.textTracks[textTrack.index];
+  _addCueChangeListener(): void {
+    let textTrackEl = Array.from(this._el.textTracks).find(track => track && track.mode !== "disabled")
     if (textTrackEl) {
-      if (this._config.playback.useNativeTextTrack) {
-        textTrackEl.mode = "showing";
-      } else {
-        this._eventManager.listen(textTrackEl, "cuechange", (e) => this._onCueChange(e));
-      }
+      this._eventManager.listen(textTrackEl, "cuechange", (e) => this._onCueChange(e));
     }
   }
 
