@@ -150,6 +150,22 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * The player playback rates.
+   * @type {Array<number>}
+   * @const
+   */
+   PLAYBACK_RATES = [0.5, 1, 2, 4];
+
+   /**
+   * The player playback rates.
+   * @type {Array<number>}
+   * @const
+   */
+   LIVE_PLAYBACK_RATES = [1];
+
+
+
+  /**
    * @constructor
    * @param {PKMediaSourceObject} source - The selected source object.
    * @param {Object} config - The player configuration.
@@ -838,6 +854,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   get crossOrigin(): ?string {
     return this._el.getAttribute('crossorigin');
+  }
+
+  /**
+   * get the playback rates
+   * @return {number[]} - plyback rates
+   */
+  get playbackRates(): Array<number> {
+    return this.isLive()? this.LIVE_PLAYBACK_RATES : this.PLAYBACK_RATES;
   }
 
   /**
