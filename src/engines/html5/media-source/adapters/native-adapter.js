@@ -141,11 +141,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   static createAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): IMediaSourceAdapter {
     const adapterConfig = {
-      textTrackDisplayMode: false,
+      displayTextTrack: false,
       progressiveSources: []
     };
     if (Utils.Object.hasPropertyPath(config, 'playback.useNativeTextTrack')) {
-      adapterConfig.textTrackDisplayMode = Utils.Object.getPropertyPath(config, 'playback.useNativeTextTrack');
+      adapterConfig.displayTextTrack = Utils.Object.getPropertyPath(config, 'playback.useNativeTextTrack');
     }
     if (Utils.Object.hasPropertyPath(config, 'sources.progressive')) {
       adapterConfig.progressiveSources = Utils.Object.getPropertyPath(config, 'sources.progressive');
@@ -586,7 +586,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       const selectedTrack = Array.from(textTracks).find(track => track ? track.language === textTrack.language : false);
       if (selectedTrack) {
         this._disableTextTracks();
-        selectedTrack.mode = this._config.textTrackDisplayMode ? 'showing' : 'hidden';
+        selectedTrack.mode = this._config.displayTextTrack ? 'showing' : 'hidden';
         NativeAdapter._logger.debug('Text track changed', selectedTrack);
         this._onTrackChanged(textTrack);
         this._addNativeTextTrackChangeListener();
@@ -668,7 +668,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {void}
    */
   _addNativeTextTrackAddedListener(): void {
-    if (!this._config.textTrackDisplayMode && this._videoElement.textTracks) {
+    if (!this._config.displayTextTrack && this._videoElement.textTracks) {
       this._eventManager.listen(this._videoElement.textTracks, 'addtrack', () => this._onNativeTextTrackAdded());
     }
   }
