@@ -415,7 +415,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           language: textTracks[i].language,
           index: i
         };
-        if (settings.language || settings.label) {
+        if (settings.kind === 'subtitles' || settings.kind === 'captions') {
           parsedTracks.push(new PKTextTrack(settings));
         }
       }
