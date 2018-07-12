@@ -1908,7 +1908,7 @@ export default class Player extends FakeEventTarget {
     Player._logger.debug('Text cue changed', event.payload.cues);
     this._activeTextCues = event.payload.cues;
     this._updateCueDisplaySettings();
-    this._updateTextDisplay(this._activeTextCues)
+    this._updateTextDisplay(this._activeTextCues);
   }
 
   /**
@@ -1934,7 +1934,9 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _updateTextDisplay(cues: Array<Cue>): void {
-    processCues(window, cues, this._textDisplayEl);
+    if (!this._config.playback.useNativeTextTrack) {
+      processCues(window, cues, this._textDisplayEl);
+    }
   }
 
   /**
@@ -1965,7 +1967,6 @@ export default class Player extends FakeEventTarget {
     const activeTracks = this.getActiveTracks();
     const playbackConfig = this.config.playback;
     const offTextTrack: ?Track = this._getTracksByType(TrackType.TEXT).find(track => TextTrack.langComparer(OFF, track.language));
-    this.hideTextTrack();
     let currentOrConfiguredTextLang = this._playbackAttributesState.textLanguage || this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackType.TEXT);
     let currentOrConfiguredAudioLang = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
     this._setDefaultTrack(TrackType.TEXT, currentOrConfiguredTextLang, offTextTrack);
