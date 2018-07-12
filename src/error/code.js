@@ -629,7 +629,7 @@ const Code: CodeType = {
   /**
    * Download operation aborted.
    */
-  'DOWNLOAD_ABORTED': 9011,
+  'DOWNLOAD_FAILED': 9011,
 
   /**
    * Fetching the entry provider information failed.
@@ -644,12 +644,12 @@ const Code: CodeType = {
   /**
    * Pause operation failed
    */
-  'PAUSE_ABORTERD': 9014,
+  'PAUSE_FAILED': 9014,
 
   /**
    * Resume operation failed
    */
-  'RESUME_ABORTED': 9015,
+  'RESUME_FAILED': 9015,
 
   /**
    * Renewing the license of the entry failed
