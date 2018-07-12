@@ -153,15 +153,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * The player playback rates.
    * @type {Array<number>}
    */
-   PLAYBACK_RATES = [0.5, 1, 2, 4];
-
-   /**
-   * The player playback rates.
-   * @type {Array<number>}
-   */
-   LIVE_PLAYBACK_RATES = [1];
-
-
+   static PLAYBACK_RATES:Array<number> = [0.5, 1, 2, 4];
 
   /**
    * @constructor
@@ -859,7 +851,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @return {number[]} - plyback rates
    */
   get playbackRates(): Array<number> {
-    return this.isLive()? this.LIVE_PLAYBACK_RATES : this.PLAYBACK_RATES;
+    return Html5.PLAYBACK_RATES;
   }
 
   /**
