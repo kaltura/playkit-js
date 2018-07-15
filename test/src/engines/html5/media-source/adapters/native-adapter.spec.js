@@ -542,10 +542,12 @@ describe('NativeAdapter: selectTextTrack', function () {
         nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
         nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
         nativeInstance.selectTextTrack(new TextTrack({language: 'en', kind: 'subtitles'}));
-        nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
+        nativeInstance._videoElement.textTracks[0].mode.should.be.equal('hidden');
         nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
       }
       done();
+    }).catch(e => {
+      done(e);
     });
   });
 
@@ -559,6 +561,8 @@ describe('NativeAdapter: selectTextTrack', function () {
         nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
       }
       done();
+    }).catch(e => {
+      done(e);
     });
   });
 
