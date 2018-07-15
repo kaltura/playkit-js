@@ -42,19 +42,7 @@ import PKError from './error/error'
 import {EngineProvider} from './engines/engine-provider'
 import {ExternalCaptionsEventType, ExternalCaptionsHandler} from './track/external-captions-handler'
 
-/**
- * The player playback rates.
- * @type {Array<number>}
- * @const
- */
-const PLAYBACK_RATES = [0.5, 1, 2, 4];
 
-/**
- * The player default playback rate.
- * @type {number}
- * @const
- */
-const DEFAULT_PLAYBACK_RATE = 1;
 /**
  * The black cover class name.
  * @type {string}
@@ -842,7 +830,10 @@ export default class Player extends FakeEventTarget {
    * @returns {Array<number>} - The possible playback speeds speed of the video.
    */
   get playbackRates(): Array<number> {
-    return PLAYBACK_RATES;
+    if (this._engine) {
+      return this._engine.playbackRates;
+    }
+    return [];
   }
 
   /**
@@ -850,7 +841,10 @@ export default class Player extends FakeEventTarget {
    * @returns {number} - The default playback speed of the video.
    */
   get defaultPlaybackRate(): number {
-    return DEFAULT_PLAYBACK_RATE;
+    if (this._engine) {
+      return this._engine.defaultPlaybackRate;
+    }
+    return 1;
   }
 
   /**
