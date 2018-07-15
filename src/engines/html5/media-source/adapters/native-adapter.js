@@ -140,7 +140,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @static
    */
   static createAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): IMediaSourceAdapter {
-    const adapterConfig = {
+    const adapterConfig: Object = {
       displayTextTrack: false,
       progressiveSources: []
     };
@@ -150,11 +150,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (Utils.Object.hasPropertyPath(config, 'sources.progressive')) {
       adapterConfig.progressiveSources = Utils.Object.getPropertyPath(config, 'sources.progressive');
     }
-    adapterConfig.enableCEA708Captions = config.playback.enableCEA708Captions;
-    adapterConfig.captionsTextTrack1Label = config.playback.captionsTextTrack1Label;
-    adapterConfig.captionsTextTrack1LanguageCode = config.playback.captionsTextTrack1LanguageCode;
-    adapterConfig.captionsTextTrack2Label = config.playback.captionsTextTrack2Label;
-    adapterConfig.captionsTextTrack2LanguageCode = config.playback.captionsTextTrack2LanguageCode;
+    if (config.playback) {
+      adapterConfig.enableCEA708Captions = config.playback.enableCEA708Captions;
+      adapterConfig.captionsTextTrack1Label = config.playback.captionsTextTrack1Label;
+      adapterConfig.captionsTextTrack1LanguageCode = config.playback.captionsTextTrack1LanguageCode;
+      adapterConfig.captionsTextTrack2Label = config.playback.captionsTextTrack2Label;
+      adapterConfig.captionsTextTrack2LanguageCode = config.playback.captionsTextTrack2LanguageCode;
+    }
     return new this(videoElement, source, adapterConfig);
   }
 
