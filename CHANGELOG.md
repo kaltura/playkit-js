@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.32.4"></a>
+## [0.32.4](https://github.com/kaltura/playkit-js/compare/v0.32.3...v0.32.4) (2018-07-12)
+
+
+### Bug Fixes
+
+* **FEC-7935:** fix text selection logic with hlsjs ([#263](https://github.com/kaltura/playkit-js/issues/263)) ([4ab6443](https://github.com/kaltura/playkit-js/commit/4ab6443)), closes [video-dev/hls.js#1582](https://github.com/video-dev/hls.js/issues/1582) [kaltura/playkit-js-hls#65](https://github.com/kaltura/playkit-js-hls/issues/65)
+
+
+
+<a name="0.32.3"></a>
+## [0.32.3](https://github.com/kaltura/playkit-js/compare/v0.32.2...v0.32.3) (2018-07-09)
+
+
+### Bug Fixes
+
+* **FEC-8386:** Kava analytics retrieved by default on OTT ([#261](https://github.com/kaltura/playkit-js/issues/261)) ([6345999](https://github.com/kaltura/playkit-js/commit/6345999))
+
+
+
 <a name="0.32.2"></a>
 ## [0.32.2](https://github.com/kaltura/playkit-js/compare/v0.32.1...v0.32.2) (2018-07-04)
 

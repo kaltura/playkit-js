@@ -946,7 +946,7 @@ describe('Player', function () {
           (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
           event.payload.selectedTextTrack.language.should.equal('fr');
           video.textTracks[0].mode.should.be.equal('disabled');
-          video.textTracks[1].mode.should.be.equal('showing');
+          video.textTracks[1].mode.should.be.equal('hidden');
           tracks[0].active.should.be.false;
           tracks[1].active.should.be.true;
           done();
@@ -954,11 +954,13 @@ describe('Player', function () {
         let tracks = player._tracks.filter((track) => {
           return track instanceof TextTrack;
         });
-        video.textTracks[0].mode.should.be.equal('showing');
+        video.textTracks[0].mode.should.be.equal('hidden');
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.true;
         tracks[1].active.should.be.false;
         player.selectTrack(new TextTrack({language: 'fr', kind: 'subtitles', index: 1}));
+      }).catch(e => {
+        done(e);
       });
       player.load();
     });
@@ -970,7 +972,7 @@ describe('Player', function () {
           (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
           event.payload.selectedTextTrack.index.should.equal(1);
           video.textTracks[0].mode.should.be.equal('disabled');
-          video.textTracks[1].mode.should.be.equal('showing');
+          video.textTracks[1].mode.should.be.equal('hidden');
           tracks[0].active.should.be.false;
           tracks[1].active.should.be.true;
           done();
@@ -978,7 +980,7 @@ describe('Player', function () {
         let tracks = player._tracks.filter((track) => {
           return track instanceof TextTrack;
         });
-        video.textTracks[0].mode.should.be.equal('showing');
+        video.textTracks[0].mode.should.be.equal('hidden');
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.true;
         tracks[1].active.should.be.false;
@@ -991,7 +993,7 @@ describe('Player', function () {
         let tracks = player._tracks.filter((track) => {
           return track instanceof TextTrack;
         });
-        video.textTracks[0].mode.should.be.equal('showing');
+        video.textTracks[0].mode.should.be.equal('hidden');
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.true;
         tracks[1].active.should.be.false;
@@ -1011,12 +1013,12 @@ describe('Player', function () {
         let tracks = player._tracks.filter((track) => {
           return track instanceof TextTrack;
         });
-        video.textTracks[0].mode.should.be.equal('showing');
+        video.textTracks[0].mode.should.be.equal('hidden');
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.true;
         tracks[1].active.should.be.false;
         player.selectTrack(new TextTrack({index: 3, kind: 'subtitles'}));
-        video.textTracks[0].mode.should.be.equal('showing');
+        video.textTracks[0].mode.should.be.equal('hidden');
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.true;
         tracks[1].active.should.be.false;
@@ -1029,12 +1031,12 @@ describe('Player', function () {
         let tracks = player._tracks.filter((track) => {
           return track instanceof TextTrack;
         });
-        video.textTracks[0].mode.should.be.equal('showing');
+        video.textTracks[0].mode.should.be.equal('hidden');
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.true;
         tracks[1].active.should.be.false;
         player.selectTrack(new TextTrack({index: 1, kind: 'metadata'}));
-        video.textTracks[0].mode.should.be.equal('showing');
+        video.textTracks[0].mode.should.be.equal('hidden');
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.true;
         tracks[1].active.should.be.false;
@@ -1157,7 +1159,7 @@ describe('Player', function () {
         let tracks = player._tracks.filter((track) => {
           return track instanceof TextTrack;
         });
-        video.textTracks[0].mode.should.be.equal('showing');
+        video.textTracks[0].mode.should.be.equal('hidden');
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.true;
         tracks[1].active.should.be.false;
@@ -1167,6 +1169,8 @@ describe('Player', function () {
         tracks[0].active.should.be.false;
         tracks[1].active.should.be.false;
         done();
+      }).catch(e => {
+        done(e);
       });
       player.load();
     });
