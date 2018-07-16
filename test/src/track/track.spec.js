@@ -1,4 +1,4 @@
-import Track from '../../../src/track/text-track'
+import Track from '../../../src/track/text-track';
 
 describe('Track', () => {
   describe('langComparer', () => {

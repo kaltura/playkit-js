@@ -1,5 +1,5 @@
 // @flow
-import * as Utils from '../../../utils/util'
+import * as Utils from '../../../utils/util';
 
 export default class Html5IsSupportedCapability implements ICapability {
   static _vid: HTMLVideoElement = Utils.Dom.createElement('video');

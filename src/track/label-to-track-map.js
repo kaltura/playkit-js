@@ -1,6 +1,6 @@
 // @flow
-import {TrackType} from './track-type'
-import {LabelOptions} from './label-options'
+import {TrackType} from './track-type';
+import {LabelOptions} from './label-options';
 
 const LabelToTrackMap = {
   [LabelOptions.AUDIO]: TrackType.AUDIO,

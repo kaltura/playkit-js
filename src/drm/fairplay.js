@@ -1,11 +1,11 @@
 // @flow
-import BaseDrmProtocol from './base-drm-protocol'
-import Error from '../error/error'
+import BaseDrmProtocol from './base-drm-protocol';
+import Error from '../error/error';
 
 export default class FairPlay extends BaseDrmProtocol {
   static _logger = BaseDrmProtocol.getLogger('FairPlay');
   static _keySession: any;
-  static _KeySystem: string = "com.apple.fps.1_0";
+  static _KeySystem: string = 'com.apple.fps.1_0';
   static _WebkitEvents = {
     NEED_KEY: 'webkitneedkey',
     KEY_MESSAGE: 'webkitkeymessage',
@@ -22,7 +22,7 @@ export default class FairPlay extends BaseDrmProtocol {
    * @return {boolean} - Whether FairPlay can be play on the current environment.
    */
   static canPlayDrm(drmData: Array<Object>): boolean {
-    FairPlay._logger.debug("Can play DRM scheme of: " + BaseDrmProtocol.DrmScheme.FAIRPLAY);
+    FairPlay._logger.debug('Can play DRM scheme of: ' + BaseDrmProtocol.DrmScheme.FAIRPLAY);
     return BaseDrmProtocol.DrmSupport.isProtocolSupported(BaseDrmProtocol.DrmScheme.FAIRPLAY, drmData);
   }
 
@@ -34,14 +34,14 @@ export default class FairPlay extends BaseDrmProtocol {
    * @returns {void}
    */
   static setDrmPlayback(videoElement: HTMLVideoElement, drmData: Array<Object> = [], errorCallback: Function): void {
-    FairPlay._logger.debug("Sets DRM playback");
+    FairPlay._logger.debug('Sets DRM playback');
     videoElement.addEventListener(FairPlay._WebkitEvents.NEED_KEY, FairPlay._onWebkitNeedKey.bind(null, drmData), false);
     FairPlay._errorCallback = errorCallback;
   }
 
   static _onWebkitNeedKey(drmData: Array<Object>, event: any): void {
-    FairPlay._logger.debug("Webkit need key triggered");
-    let fpDrmData = drmData.find((drmEntry) => drmEntry.scheme === BaseDrmProtocol.DrmScheme.FAIRPLAY);
+    FairPlay._logger.debug('Webkit need key triggered');
+    let fpDrmData = drmData.find(drmEntry => drmEntry.scheme === BaseDrmProtocol.DrmScheme.FAIRPLAY);
     if (!fpDrmData || FairPlay._keySession) {
       return;
     }
@@ -55,13 +55,13 @@ export default class FairPlay extends BaseDrmProtocol {
 
     if (!videoElement.webkitKeys) {
       let keySystem = FairPlay._selectKeySystem();
-      FairPlay._logger.debug("Sets media keys");
+      FairPlay._logger.debug('Sets media keys');
       videoElement.webkitSetMediaKeys(new window.WebKitMediaKeys(keySystem));
     }
     if (!videoElement.webkitKeys) {
       FairPlay._onError(Error.Code.COULD_NOT_CREATE_MEDIA_KEYS);
     }
-    FairPlay._logger.debug("Creates session");
+    FairPlay._logger.debug('Creates session');
     FairPlay._keySession = videoElement.webkitKeys.createSession('video/mp4', initData);
     if (!FairPlay._keySession) {
       FairPlay._onError(Error.Code.COULD_NOT_CREATE_KEY_SESSION);
@@ -77,29 +77,29 @@ export default class FairPlay extends BaseDrmProtocol {
   }
 
   static _onWebkitKeyMessage(drmData: Object, event: any): void {
-    FairPlay._logger.debug("Webkit key message triggered");
+    FairPlay._logger.debug('Webkit key message triggered');
     let message = event.message;
     let request = new XMLHttpRequest();
-    request.responseType = "text";
-    request.addEventListener("load", FairPlay._licenseRequestLoaded, false);
-    request.addEventListener("error", () => FairPlay._onError(Error.Code.LICENSE_REQUEST_FAILED), false);
+    request.responseType = 'text';
+    request.addEventListener('load', FairPlay._licenseRequestLoaded, false);
+    request.addEventListener('error', () => FairPlay._onError(Error.Code.LICENSE_REQUEST_FAILED), false);
     let params = FairPlay._base64EncodeUint8Array(message);
     request.open('POST', drmData.licenseUrl, true);
-    request.setRequestHeader("Content-type", "application/json");
-    FairPlay._logger.debug("Ready for license request");
+    request.setRequestHeader('Content-type', 'application/json');
+    FairPlay._logger.debug('Ready for license request');
     request.send(params);
   }
 
   static _onWebkitKeyAdded(): void {
-    FairPlay._logger.debug("Decryption key was added to session");
+    FairPlay._logger.debug('Decryption key was added to session');
   }
 
   static _onWebkitKeyError(): void {
-    FairPlay._logger.error("A decryption key error was encountered");
+    FairPlay._logger.error('A decryption key error was encountered');
   }
 
   static _licenseRequestLoaded(event: any): void {
-    FairPlay._logger.debug("License request loaded");
+    FairPlay._logger.debug('License request loaded');
     let request = event.target;
     let keyText = request.responseText.trim();
     let responseObj = {};
@@ -122,17 +122,16 @@ export default class FairPlay extends BaseDrmProtocol {
   }
 
   static _validateResponse(responseObj: Object): Object {
-    if ((responseObj.message && responseObj.message.indexOf("error") > 0)
-      || responseObj.reference === null
-      || responseObj.status_code === 500) {
-      return { //todo: create & edit an error object
+    if ((responseObj.message && responseObj.message.indexOf('error') > 0) || responseObj.reference === null || responseObj.status_code === 500) {
+      return {
+        //todo: create & edit an error object
         valid: false,
-        details: "internal server error" // would be ERROR.INTERNAL or something like that
+        details: 'internal server error' // would be ERROR.INTERNAL or something like that
       };
-    } else if (responseObj.ckc === "") {
+    } else if (responseObj.ckc === '') {
       return {
         valid: false,
-        details: "ckc is missing" // would be ERROR.MISSING_CKC or something like that
+        details: 'ckc is missing' // would be ERROR.MISSING_CKC or something like that
       };
     } else {
       return {
@@ -149,10 +148,10 @@ export default class FairPlay extends BaseDrmProtocol {
 
   static _selectKeySystem(): ?string {
     let keySystem = null;
-    if (window.WebKitMediaKeys.isTypeSupported(FairPlay._KeySystem, "video/mp4")) {
+    if (window.WebKitMediaKeys.isTypeSupported(FairPlay._KeySystem, 'video/mp4')) {
       keySystem = FairPlay._KeySystem;
     } else {
-      FairPlay._logger.warn("Key System not supported");
+      FairPlay._logger.warn('Key System not supported');
     }
     return keySystem;
   }
@@ -172,7 +171,7 @@ export default class FairPlay extends BaseDrmProtocol {
   }
 
   static _concatInitDataIdAndCertificate(initData: Uint8Array, id: string | Uint16Array, cert: Uint8Array): Uint8Array {
-    if (typeof id === "string") {
+    if (typeof id === 'string') {
       id = FairPlay._stringToArray(id);
     }
     let offset = 0;
@@ -209,8 +208,8 @@ export default class FairPlay extends BaseDrmProtocol {
   }
 
   static _base64EncodeUint8Array(input: Uint8Array): string {
-    let keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-    let output = "";
+    let keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+    let output = '';
     let chr1, chr2, chr3, enc1, enc2, enc3, enc4;
     let i = 0;
     while (i < input.length) {
@@ -228,8 +227,7 @@ export default class FairPlay extends BaseDrmProtocol {
       } else if (isNaN(chr3)) {
         enc4 = 64;
       }
-      output += keyStr.charAt(enc1) + keyStr.charAt(enc2) +
-        keyStr.charAt(enc3) + keyStr.charAt(enc4);
+      output += keyStr.charAt(enc1) + keyStr.charAt(enc2) + keyStr.charAt(enc3) + keyStr.charAt(enc4);
     }
     return output;
   }
