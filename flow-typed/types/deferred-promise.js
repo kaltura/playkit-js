@@ -1,2 +1,2 @@
 // @flow
-declare type DeferredPromise = Promise<*> & { resolve: Function, reject: Function };
+declare type DeferredPromise = Promise<*> & {resolve: Function, reject: Function};

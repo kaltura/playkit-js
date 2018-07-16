@@ -1,7 +1,7 @@
 //@flow
-import VideoTrack from '../../src/track/video-track'
-import AudioTrack from '../../src/track/audio-track'
-import TextTrack from '../../src/track/text-track'
+import VideoTrack from '../../src/track/video-track';
+import AudioTrack from '../../src/track/audio-track';
+import TextTrack from '../../src/track/text-track';
 
 declare interface IMediaSourceAdapter {
   +src: string;

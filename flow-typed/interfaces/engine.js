@@ -1,7 +1,7 @@
 //@flow
-import VideoTrack from '../../src/track/video-track'
-import AudioTrack from '../../src/track/audio-track'
-import TextTrack from '../../src/track/text-track'
+import VideoTrack from '../../src/track/video-track';
+import AudioTrack from '../../src/track/audio-track';
+import TextTrack from '../../src/track/text-track';
 
 declare interface IEngine {
   static id: string;
@@ -49,6 +49,7 @@ declare interface IEngine {
   +seekable: TimeRanges;
   +ended: boolean;
   playbackRate: number;
+  +playbackRates: Array<number>;
   defaultPlaybackRate: number;
   +networkState: number;
   +readyState: number;

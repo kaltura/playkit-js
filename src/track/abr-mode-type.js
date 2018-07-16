@@ -1,7 +1,7 @@
 // @flow
 const AbrMode: PKAbrModes = {
-  MANUAL: "manual",
-  AUTO: "auto"
+  MANUAL: 'manual',
+  AUTO: 'auto'
 };
 
 export {AbrMode};

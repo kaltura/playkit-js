@@ -1,6 +1,6 @@
 //@flow
-import MultiMap from '../utils/multi-map'
-import FakeEvent from './fake-event'
+import MultiMap from '../utils/multi-map';
+import FakeEvent from './fake-event';
 
 /**
  * Creates a new EventManager. An EventManager maintains a collection of "event
@@ -40,13 +40,12 @@ class EventManager {
    * @returns {void}
    */
   listenOnce(target: any, type: string, listener: ListenerType, options: ?Object): void {
-    let oneListener = (event) => {
+    let oneListener = event => {
       this.unlisten(target, type, oneListener);
-      listener.call(this, event)
+      listener.call(this, event);
     };
     this.listen(target, type, oneListener, options);
   }
-
 
   /**
    * Attaches an event listener to an event target.
@@ -62,7 +61,6 @@ class EventManager {
       this._bindingMap.push(type, binding);
     }
   }
-
 
   /**
    * Detaches an event listener from an event target.
@@ -141,15 +139,13 @@ class Binding_ {
     this.target.addEventListener(type, listener, options);
   }
 
-
   /**
    * Detaches the event listener from the event target. This does nothing if the
    * event listener is already detached.
    * @returns {void}
    */
   unlisten(): void {
-    if (!this.target)
-      return;
+    if (!this.target) return;
 
     this.target.removeEventListener(this.type, this.listener, this.options);
 

@@ -1,6 +1,6 @@
-import DrmSupport from '../../../src/drm/drm-support'
-import {DrmScheme} from '../../../src/drm/drm-scheme'
-import Env from '../../../src/utils/env'
+import DrmSupport from '../../../src/drm/drm-support';
+import {DrmScheme} from '../../../src/drm/drm-scheme';
+import Env from '../../../src/utils/env';
 
 describe('DrmSupport', () => {
   let sandbox;
@@ -31,7 +31,6 @@ describe('DrmSupport', () => {
     Env.browser.name = 'Chrome';
     DrmSupport.isProtocolSupported(DrmScheme.FAIRPLAY, [{scheme: DrmScheme.FAIRPLAY}]).should.be.false;
   });
-
 
   it('should return true for widevine on mobile/android/chrome with widevine data', () => {
     Env.device.type = 'mobile';
@@ -112,4 +111,3 @@ describe('DrmSupport', () => {
     DrmSupport.isProtocolSupported(DrmScheme.FAIRPLAY, [{scheme: DrmScheme.FAIRPLAY}]).should.be.false;
   });
 });
-
