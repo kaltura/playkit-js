@@ -622,9 +622,9 @@ const Code: CodeType = {
   'CONTENT_UNSUPPORTED_BY_BROWSER': 9009,
 
   /**
-   * IndexDB QuotaExceededError - meaning there is no more storage space left in the indexDB
+   * Cannot add Item to the indexed db
    */
-  'STORAGE_QUOTA_EXCEEDED': 9010,
+  'CANNOT_ADD_ITEM': 9010,
 
   /**
    * Download operation aborted.
