@@ -1,5 +1,5 @@
-import {Cue} from './vtt-cue'
-import {Region} from './vtt-region'
+import {Cue} from './vtt-cue';
+import {Region} from './vtt-region';
 
 /* eslint-disable */
 /**
@@ -26,7 +26,6 @@ const fontScale = 1;
 
 // Try to parse input as a time stamp.
 function parseTimeStamp(input) {
-
   function computeSeconds(h, m, s, f) {
     return (h | 0) * 3600 + (m | 0) * 60 + (s | 0) + (f | 0) / 1000;
   }
@@ -38,7 +37,7 @@ function parseTimeStamp(input) {
 
   if (m[3]) {
     // Timestamp takes the form of [hours]:[minutes]:[seconds].[milliseconds]
-    return computeSeconds(m[1], m[2], m[3].replace(":", ""), m[4]);
+    return computeSeconds(m[1], m[2], m[3].replace(':', ''), m[4]);
   } else if (m[1] > 59) {
     // Timestamp takes the form of [hours]:[minutes].[milliseconds]
     // First position is hours as it's over 59.
@@ -50,34 +49,33 @@ function parseTimeStamp(input) {
 }
 
 const ESCAPE = {
-  "&amp;": "&",
-  "&lt;": "<",
-  "&gt;": ">",
-  "&lrm;": "\u200e",
-  "&rlm;": "\u200f",
-  "&nbsp;": "\u00a0"
+  '&amp;': '&',
+  '&lt;': '<',
+  '&gt;': '>',
+  '&lrm;': '\u200e',
+  '&rlm;': '\u200f',
+  '&nbsp;': '\u00a0'
 };
 
 const TAG_NAME = {
-  c: "span",
-  i: "i",
-  b: "b",
-  u: "u",
-  ruby: "ruby",
-  rt: "rt",
-  v: "span",
-  lang: "span"
+  c: 'span',
+  i: 'i',
+  b: 'b',
+  u: 'u',
+  ruby: 'ruby',
+  rt: 'rt',
+  v: 'span',
+  lang: 'span'
 };
 
 const TAG_ANNOTATION = {
-  v: "title",
-  lang: "lang"
+  v: 'title',
+  lang: 'lang'
 };
 
 const NEEDS_PARENT = {
-  rt: "ruby"
+  rt: 'ruby'
 };
-
 
 // A settings object holds key/value pairs and will ignore anything but the first
 // assignment to a specific key.
@@ -87,8 +85,8 @@ function Settings() {
 
 Settings.prototype = {
   // Only accept the first assignment to any key.
-  set: function (k, v) {
-    if (!this.get(k) && v !== "") {
+  set: function(k, v) {
+    if (!this.get(k) && v !== '') {
       this.values[k] = v;
     }
   },
@@ -97,18 +95,18 @@ Settings.prototype = {
   // a number of possible default values as properties where 'defaultKey' is
   // the key of the property that will be chosen; otherwise it's assumed to be
   // a single value.
-  get: function (k, dflt, defaultKey) {
+  get: function(k, dflt, defaultKey) {
     if (defaultKey) {
       return this.has(k) ? this.values[k] : dflt[defaultKey];
     }
     return this.has(k) ? this.values[k] : dflt;
   },
   // Check whether we have a value for a key.
-  has: function (k) {
+  has: function(k) {
     return k in this.values;
   },
   // Accept a setting if its one of the given alternatives.
-  alt: function (k, v, a) {
+  alt: function(k, v, a) {
     for (var n = 0; n < a.length; ++n) {
       if (v === a[n]) {
         this.set(k, v);
@@ -117,13 +115,14 @@ Settings.prototype = {
     }
   },
   // Accept a setting if its a valid (signed) integer.
-  integer: function (k, v) {
-    if (/^-?\d+$/.test(v)) { // integer
+  integer: function(k, v) {
+    if (/^-?\d+$/.test(v)) {
+      // integer
       this.set(k, parseInt(v, 10));
     }
   },
   // Accept a setting if its a valid percentage.
-  percent: function (k, v) {
+  percent: function(k, v) {
     var m;
     if ((m = v.match(/^([\d]{1,3})(\.[\d]*)?%$/))) {
       v = parseFloat(v);
@@ -141,7 +140,7 @@ Settings.prototype = {
 function parseOptions(input, callback, keyValueDelim, groupDelim) {
   var groups = groupDelim ? input.split(groupDelim) : [input];
   for (var i in groups) {
-    if (typeof groups[i] !== "string") {
+    if (typeof groups[i] !== 'string') {
       continue;
     }
     var kv = groups[i].split(keyValueDelim);
@@ -154,7 +153,6 @@ function parseOptions(input, callback, keyValueDelim, groupDelim) {
   }
 }
 
-
 function parseCue(input, cue, regionList) {
   // Remember the original input if we need to throw an error.
   var oInput = input;
@@ -163,11 +161,10 @@ function parseCue(input, cue, regionList) {
   function consumeTimeStamp() {
     var ts = parseTimeStamp(input);
     if (ts === null) {
-      throw new ParsingError(ParsingError.Errors.BadTimeStamp,
-        "Malformed timestamp: " + oInput);
+      throw new ParsingError(ParsingError.Errors.BadTimeStamp, 'Malformed timestamp: ' + oInput);
     }
     // Remove time stamp from input.
-    input = input.replace(/^[^\sa-zA-Z-]+/, "");
+    input = input.replace(/^[^\sa-zA-Z-]+/, '');
     return ts;
   }
 
@@ -175,86 +172,93 @@ function parseCue(input, cue, regionList) {
   function consumeCueSettings(input, cue) {
     var settings = new Settings();
 
-    parseOptions(input, function (k, v) {
-      switch (k) {
-        case "region":
-          // Find the last region we parsed with the same region id.
-          for (var i = regionList.length - 1; i >= 0; i--) {
-            if (regionList[i].id === v) {
-              settings.set(k, regionList[i].region);
-              break;
+    parseOptions(
+      input,
+      function(k, v) {
+        switch (k) {
+          case 'region':
+            // Find the last region we parsed with the same region id.
+            for (var i = regionList.length - 1; i >= 0; i--) {
+              if (regionList[i].id === v) {
+                settings.set(k, regionList[i].region);
+                break;
+              }
             }
-          }
-          break;
-        case "vertical":
-          settings.alt(k, v, ["rl", "lr"]);
-          break;
-        case "line":
-          var vals = v.split(","),
-            vals0 = vals[0];
-          settings.integer(k, vals0);
-          settings.percent(k, vals0) ? settings.set("snapToLines", false) : null;
-          settings.alt(k, vals0, ["auto"]);
-          if (vals.length === 2) {
-            settings.alt("lineAlign", vals[1], ["start", "middle", "end"]);
-          }
-          break;
-        case "position":
-          vals = v.split(",");
-          settings.percent(k, vals[0]);
-          if (vals.length === 2) {
-            settings.alt("positionAlign", vals[1], ["start", "middle", "end"]);
-          }
-          break;
-        case "size":
-          settings.percent(k, v);
-          break;
-        case "align":
-          settings.alt(k, v, ["start", "middle", "end", "left", "right"]);
-          break;
-      }
-    }, /:/, /\s/);
+            break;
+          case 'vertical':
+            settings.alt(k, v, ['rl', 'lr']);
+            break;
+          case 'line':
+            var vals = v.split(','),
+              vals0 = vals[0];
+            settings.integer(k, vals0);
+            settings.percent(k, vals0) ? settings.set('snapToLines', false) : null;
+            settings.alt(k, vals0, ['auto']);
+            if (vals.length === 2) {
+              settings.alt('lineAlign', vals[1], ['start', 'middle', 'end']);
+            }
+            break;
+          case 'position':
+            vals = v.split(',');
+            settings.percent(k, vals[0]);
+            if (vals.length === 2) {
+              settings.alt('positionAlign', vals[1], ['start', 'middle', 'end']);
+            }
+            break;
+          case 'size':
+            settings.percent(k, v);
+            break;
+          case 'align':
+            settings.alt(k, v, ['start', 'middle', 'end', 'left', 'right']);
+            break;
+        }
+      },
+      /:/,
+      /\s/
+    );
 
     // Apply default values for any missing fields.
-    cue.region = settings.get("region", null);
-    cue.vertical = settings.get("vertical", "");
-    cue.line = settings.get("line", cue.line || "auto");
-    cue.lineAlign = settings.get("lineAlign", "start");
-    cue.snapToLines = settings.get("snapToLines", true);
-    cue.size = settings.get("size", 100);
-    cue.align = settings.get("align", "middle");
-    cue.position = settings.get("position", cue.position || "auto");
-    cue.positionAlign = settings.get("positionAlign", {
-      start: "start",
-      left: "start",
-      middle: "middle",
-      end: "end",
-      right: "end"
-    }, cue.align);
+    cue.region = settings.get('region', null);
+    cue.vertical = settings.get('vertical', '');
+    cue.line = settings.get('line', cue.line || 'auto');
+    cue.lineAlign = settings.get('lineAlign', 'start');
+    cue.snapToLines = settings.get('snapToLines', true);
+    cue.size = settings.get('size', 100);
+    cue.align = settings.get('align', 'middle');
+    cue.position = settings.get('position', cue.position || 'auto');
+    cue.positionAlign = settings.get(
+      'positionAlign',
+      {
+        start: 'start',
+        left: 'start',
+        middle: 'middle',
+        end: 'end',
+        right: 'end'
+      },
+      cue.align
+    );
   }
 
   function skipWhitespace() {
-    input = input.replace(/^\s+/, "");
+    input = input.replace(/^\s+/, '');
   }
 
   // 4.1 WebVTT cue timings.
   skipWhitespace();
-  cue.startTime = consumeTimeStamp();   // (1) collect cue start time
+  cue.startTime = consumeTimeStamp(); // (1) collect cue start time
   skipWhitespace();
-  if (input.substr(0, 3) !== "-->") {     // (3) next characters must match "-->"
-    throw new ParsingError(ParsingError.Errors.BadTimeStamp,
-      "Malformed time stamp (time stamps must be separated by '-->'): " +
-      oInput);
+  if (input.substr(0, 3) !== '-->') {
+    // (3) next characters must match "-->"
+    throw new ParsingError(ParsingError.Errors.BadTimeStamp, "Malformed time stamp (time stamps must be separated by '-->'): " + oInput);
   }
   input = input.substr(3);
   skipWhitespace();
-  cue.endTime = consumeTimeStamp();     // (5) collect cue end time
+  cue.endTime = consumeTimeStamp(); // (5) collect cue end time
 
   // 4.1 WebVTT cue settings list.
   skipWhitespace();
   consumeCueSettings(input, cue);
 }
-
 
 // Parse content into a document fragment.
 function parseContent(window, input) {
@@ -290,8 +294,7 @@ function parseContent(window, input) {
   }
 
   function shouldAdd(current, element) {
-    return !NEEDS_PARENT[element.localName] ||
-      NEEDS_PARENT[element.localName] === current.localName;
+    return !NEEDS_PARENT[element.localName] || NEEDS_PARENT[element.localName] === current.localName;
   }
 
   // Create an element for this tag.
@@ -309,17 +312,16 @@ function parseContent(window, input) {
     return element;
   }
 
-  let rootDiv = window.document.createElement("div"),
+  let rootDiv = window.document.createElement('div'),
     current = rootDiv,
     t,
     tagStack = [];
 
   while ((t = nextToken()) !== null) {
     if (t[0] === '<') {
-      if (t[1] === "/") {
+      if (t[1] === '/') {
         // If the closing tag matches, move back up to the parent node.
-        if (tagStack.length &&
-          tagStack[tagStack.length - 1] === t.substr(2).replace(">", "")) {
+        if (tagStack.length && tagStack[tagStack.length - 1] === t.substr(2).replace('>', '')) {
           tagStack.pop();
           current = current.parentNode;
         }
@@ -330,7 +332,7 @@ function parseContent(window, input) {
       let node;
       if (ts) {
         // Timestamps are lead nodes as well.
-        node = window.document.createProcessingInstruction("timestamp", ts);
+        node = window.document.createProcessingInstruction('timestamp', ts);
         current.appendChild(node);
         continue;
       }
@@ -373,31 +375,113 @@ function parseContent(window, input) {
 // written right-to-left for sure. It was generated by pulling all the strong
 // right-to-left characters out of the Unicode data table. That table can
 // found at: http://www.unicode.org/Public/UNIDATA/UnicodeData.txt
-const strongRTLRanges = [[0x5be, 0x5be], [0x5c0, 0x5c0], [0x5c3, 0x5c3], [0x5c6, 0x5c6],
-  [0x5d0, 0x5ea], [0x5f0, 0x5f4], [0x608, 0x608], [0x60b, 0x60b], [0x60d, 0x60d],
-  [0x61b, 0x61b], [0x61e, 0x64a], [0x66d, 0x66f], [0x671, 0x6d5], [0x6e5, 0x6e6],
-  [0x6ee, 0x6ef], [0x6fa, 0x70d], [0x70f, 0x710], [0x712, 0x72f], [0x74d, 0x7a5],
-  [0x7b1, 0x7b1], [0x7c0, 0x7ea], [0x7f4, 0x7f5], [0x7fa, 0x7fa], [0x800, 0x815],
-  [0x81a, 0x81a], [0x824, 0x824], [0x828, 0x828], [0x830, 0x83e], [0x840, 0x858],
-  [0x85e, 0x85e], [0x8a0, 0x8a0], [0x8a2, 0x8ac], [0x200f, 0x200f],
-  [0xfb1d, 0xfb1d], [0xfb1f, 0xfb28], [0xfb2a, 0xfb36], [0xfb38, 0xfb3c],
-  [0xfb3e, 0xfb3e], [0xfb40, 0xfb41], [0xfb43, 0xfb44], [0xfb46, 0xfbc1],
-  [0xfbd3, 0xfd3d], [0xfd50, 0xfd8f], [0xfd92, 0xfdc7], [0xfdf0, 0xfdfc],
-  [0xfe70, 0xfe74], [0xfe76, 0xfefc], [0x10800, 0x10805], [0x10808, 0x10808],
-  [0x1080a, 0x10835], [0x10837, 0x10838], [0x1083c, 0x1083c], [0x1083f, 0x10855],
-  [0x10857, 0x1085f], [0x10900, 0x1091b], [0x10920, 0x10939], [0x1093f, 0x1093f],
-  [0x10980, 0x109b7], [0x109be, 0x109bf], [0x10a00, 0x10a00], [0x10a10, 0x10a13],
-  [0x10a15, 0x10a17], [0x10a19, 0x10a33], [0x10a40, 0x10a47], [0x10a50, 0x10a58],
-  [0x10a60, 0x10a7f], [0x10b00, 0x10b35], [0x10b40, 0x10b55], [0x10b58, 0x10b72],
-  [0x10b78, 0x10b7f], [0x10c00, 0x10c48], [0x1ee00, 0x1ee03], [0x1ee05, 0x1ee1f],
-  [0x1ee21, 0x1ee22], [0x1ee24, 0x1ee24], [0x1ee27, 0x1ee27], [0x1ee29, 0x1ee32],
-  [0x1ee34, 0x1ee37], [0x1ee39, 0x1ee39], [0x1ee3b, 0x1ee3b], [0x1ee42, 0x1ee42],
-  [0x1ee47, 0x1ee47], [0x1ee49, 0x1ee49], [0x1ee4b, 0x1ee4b], [0x1ee4d, 0x1ee4f],
-  [0x1ee51, 0x1ee52], [0x1ee54, 0x1ee54], [0x1ee57, 0x1ee57], [0x1ee59, 0x1ee59],
-  [0x1ee5b, 0x1ee5b], [0x1ee5d, 0x1ee5d], [0x1ee5f, 0x1ee5f], [0x1ee61, 0x1ee62],
-  [0x1ee64, 0x1ee64], [0x1ee67, 0x1ee6a], [0x1ee6c, 0x1ee72], [0x1ee74, 0x1ee77],
-  [0x1ee79, 0x1ee7c], [0x1ee7e, 0x1ee7e], [0x1ee80, 0x1ee89], [0x1ee8b, 0x1ee9b],
-  [0x1eea1, 0x1eea3], [0x1eea5, 0x1eea9], [0x1eeab, 0x1eebb], [0x10fffd, 0x10fffd]];
+const strongRTLRanges = [
+  [0x5be, 0x5be],
+  [0x5c0, 0x5c0],
+  [0x5c3, 0x5c3],
+  [0x5c6, 0x5c6],
+  [0x5d0, 0x5ea],
+  [0x5f0, 0x5f4],
+  [0x608, 0x608],
+  [0x60b, 0x60b],
+  [0x60d, 0x60d],
+  [0x61b, 0x61b],
+  [0x61e, 0x64a],
+  [0x66d, 0x66f],
+  [0x671, 0x6d5],
+  [0x6e5, 0x6e6],
+  [0x6ee, 0x6ef],
+  [0x6fa, 0x70d],
+  [0x70f, 0x710],
+  [0x712, 0x72f],
+  [0x74d, 0x7a5],
+  [0x7b1, 0x7b1],
+  [0x7c0, 0x7ea],
+  [0x7f4, 0x7f5],
+  [0x7fa, 0x7fa],
+  [0x800, 0x815],
+  [0x81a, 0x81a],
+  [0x824, 0x824],
+  [0x828, 0x828],
+  [0x830, 0x83e],
+  [0x840, 0x858],
+  [0x85e, 0x85e],
+  [0x8a0, 0x8a0],
+  [0x8a2, 0x8ac],
+  [0x200f, 0x200f],
+  [0xfb1d, 0xfb1d],
+  [0xfb1f, 0xfb28],
+  [0xfb2a, 0xfb36],
+  [0xfb38, 0xfb3c],
+  [0xfb3e, 0xfb3e],
+  [0xfb40, 0xfb41],
+  [0xfb43, 0xfb44],
+  [0xfb46, 0xfbc1],
+  [0xfbd3, 0xfd3d],
+  [0xfd50, 0xfd8f],
+  [0xfd92, 0xfdc7],
+  [0xfdf0, 0xfdfc],
+  [0xfe70, 0xfe74],
+  [0xfe76, 0xfefc],
+  [0x10800, 0x10805],
+  [0x10808, 0x10808],
+  [0x1080a, 0x10835],
+  [0x10837, 0x10838],
+  [0x1083c, 0x1083c],
+  [0x1083f, 0x10855],
+  [0x10857, 0x1085f],
+  [0x10900, 0x1091b],
+  [0x10920, 0x10939],
+  [0x1093f, 0x1093f],
+  [0x10980, 0x109b7],
+  [0x109be, 0x109bf],
+  [0x10a00, 0x10a00],
+  [0x10a10, 0x10a13],
+  [0x10a15, 0x10a17],
+  [0x10a19, 0x10a33],
+  [0x10a40, 0x10a47],
+  [0x10a50, 0x10a58],
+  [0x10a60, 0x10a7f],
+  [0x10b00, 0x10b35],
+  [0x10b40, 0x10b55],
+  [0x10b58, 0x10b72],
+  [0x10b78, 0x10b7f],
+  [0x10c00, 0x10c48],
+  [0x1ee00, 0x1ee03],
+  [0x1ee05, 0x1ee1f],
+  [0x1ee21, 0x1ee22],
+  [0x1ee24, 0x1ee24],
+  [0x1ee27, 0x1ee27],
+  [0x1ee29, 0x1ee32],
+  [0x1ee34, 0x1ee37],
+  [0x1ee39, 0x1ee39],
+  [0x1ee3b, 0x1ee3b],
+  [0x1ee42, 0x1ee42],
+  [0x1ee47, 0x1ee47],
+  [0x1ee49, 0x1ee49],
+  [0x1ee4b, 0x1ee4b],
+  [0x1ee4d, 0x1ee4f],
+  [0x1ee51, 0x1ee52],
+  [0x1ee54, 0x1ee54],
+  [0x1ee57, 0x1ee57],
+  [0x1ee59, 0x1ee59],
+  [0x1ee5b, 0x1ee5b],
+  [0x1ee5d, 0x1ee5d],
+  [0x1ee5f, 0x1ee5f],
+  [0x1ee61, 0x1ee62],
+  [0x1ee64, 0x1ee64],
+  [0x1ee67, 0x1ee6a],
+  [0x1ee6c, 0x1ee72],
+  [0x1ee74, 0x1ee77],
+  [0x1ee79, 0x1ee7c],
+  [0x1ee7e, 0x1ee7e],
+  [0x1ee80, 0x1ee89],
+  [0x1ee8b, 0x1ee9b],
+  [0x1eea1, 0x1eea3],
+  [0x1eea5, 0x1eea9],
+  [0x1eeab, 0x1eebb],
+  [0x10fffd, 0x10fffd]
+];
 
 function isStrongRTLChar(charCode) {
   for (let i = 0; i < strongRTLRanges.length; i++) {
@@ -412,11 +496,11 @@ function isStrongRTLChar(charCode) {
 
 function determineBidi(cueDiv) {
   let nodeStack = [],
-    text = "",
+    text = '',
     charCode;
 
   if (!cueDiv || !cueDiv.childNodes) {
-    return "ltr";
+    return 'ltr';
   }
 
   function pushNodes(nodeStack, node) {
@@ -442,7 +526,7 @@ function determineBidi(cueDiv) {
       }
       return text;
     }
-    if (node.tagName === "ruby") {
+    if (node.tagName === 'ruby') {
       return nextTextNode(nodeStack);
     }
     if (node.childNodes) {
@@ -456,27 +540,25 @@ function determineBidi(cueDiv) {
     for (let i = 0; i < text.length; i++) {
       charCode = text.charCodeAt(i);
       if (isStrongRTLChar(charCode)) {
-        return "rtl";
+        return 'rtl';
       }
     }
   }
-  return "ltr";
+  return 'ltr';
 }
 
 function computeLinePos(cue) {
-  if (typeof cue.line === "number" &&
-    (cue.snapToLines || (cue.line >= 0 && cue.line <= 100))) {
+  if (typeof cue.line === 'number' && (cue.snapToLines || (cue.line >= 0 && cue.line <= 100))) {
     return cue.line;
   }
-  if (!cue.track || !cue.track.textTrackList ||
-    !cue.track.textTrackList.mediaElement) {
+  if (!cue.track || !cue.track.textTrackList || !cue.track.textTrackList.mediaElement) {
     return -1;
   }
   const track = cue.track;
   const trackList = track.textTrackList;
   let count = 0;
   for (let i = 0; i < trackList.length && trackList[i] !== track; i++) {
-    if (trackList[i].mode === "showing") {
+    if (trackList[i].mode === 'showing') {
       count++;
     }
   }
@@ -484,9 +566,7 @@ function computeLinePos(cue) {
 }
 
 class StyleBox {
-
-  constructor() {
-  }
+  constructor() {}
 
   // Apply styles to a div. If there is no div passed then it defaults to the
   // div on 'this'.
@@ -509,21 +589,20 @@ class StyleBox {
 class CueStyleBox extends StyleBox {
   constructor(window, cue, styleOptions) {
     super();
-    const isIE8 = (typeof navigator !== "undefined") &&
-      (/MSIE\s8\.0/).test(navigator.userAgent);
-    let color = "rgba(255, 255, 255, 1)";
-    let backgroundColor = "rgba(0, 0, 0, 0.8)";
-    let textShadow = "";
+    const isIE8 = typeof navigator !== 'undefined' && /MSIE\s8\.0/.test(navigator.userAgent);
+    let color = 'rgba(255, 255, 255, 1)';
+    let backgroundColor = 'rgba(0, 0, 0, 0.8)';
+    let textShadow = '';
 
-    if (typeof WebVTTSet !== "undefined") {
+    if (typeof WebVTTSet !== 'undefined') {
       color = WebVTTSet.fontSet;
       backgroundColor = WebVTTSet.backgroundSet;
       textShadow = WebVTTSet.edgeSet;
     }
 
     if (isIE8) {
-      color = "rgb(255, 255, 255)";
-      backgroundColor = "rgb(0, 0, 0)";
+      color = 'rgb(255, 255, 255)';
+      backgroundColor = 'rgb(0, 0, 0)';
     }
 
     this.cue = cue;
@@ -535,38 +614,35 @@ class CueStyleBox extends StyleBox {
       color: color,
       backgroundColor: backgroundColor,
       textShadow: textShadow,
-      position: "relative",
+      position: 'relative',
       left: 0,
       right: 0,
       top: 0,
       bottom: 0,
-      display: "inline"
+      display: 'inline'
     };
 
     if (!isIE8) {
-      styles.writingMode = cue.vertical === "" ? "horizontal-tb"
-        : cue.vertical === "lr" ? "vertical-lr"
-          : "vertical-rl";
-      styles.unicodeBidi = "plaintext";
+      styles.writingMode = cue.vertical === '' ? 'horizontal-tb' : cue.vertical === 'lr' ? 'vertical-lr' : 'vertical-rl';
+      styles.unicodeBidi = 'plaintext';
     }
     this.applyStyles(styles, this.cueDiv);
 
     // Create an absolutely positioned div that will be used to position the cue
     // div. Note, all WebVTT cue-setting alignments are equivalent to the CSS
     // mirrors of them except "middle" which is "center" in CSS.
-    this.div = window.document.createElement("div");
+    this.div = window.document.createElement('div');
     styles = {
-      textAlign: cue.align === "middle" ? "center" : cue.align,
+      textAlign: cue.align === 'middle' ? 'center' : cue.align,
       font: styleOptions.font,
-      whiteSpace: "pre-line",
-      position: "absolute"
+      whiteSpace: 'pre-line',
+      position: 'absolute'
     };
 
     if (!isIE8) {
       styles.direction = determineBidi(this.cueDiv);
-      styles.writingMode = cue.vertical === "" ? "horizontal-tb"
-        : cue.vertical === "lr" ? "vertical-lr"
-          : "vertical-rl".stylesunicodeBidi = "plaintext";
+      styles.writingMode =
+        cue.vertical === '' ? 'horizontal-tb' : cue.vertical === 'lr' ? 'vertical-lr' : ('vertical-rl'.stylesunicodeBidi = 'plaintext');
     }
 
     this.applyStyles(styles);
@@ -578,13 +654,13 @@ class CueStyleBox extends StyleBox {
     // the box orientation styles are applied.
     let textPos = 0;
     switch (cue.positionAlign) {
-      case "start":
+      case 'start':
         textPos = cue.position;
         break;
-      case "middle":
-        textPos = cue.position - (cue.size / 2);
+      case 'middle':
+        textPos = cue.position - cue.size / 2;
         break;
-      case "end":
+      case 'end':
         textPos = cue.position - cue.size;
         break;
     }
@@ -592,29 +668,29 @@ class CueStyleBox extends StyleBox {
     // Horizontal box orientation; textPos is the distance from the left edge of the
     // area to the left edge of the box and cue.size is the distance extending to
     // the right from there.
-    if (cue.vertical === "") {
+    if (cue.vertical === '') {
       this.applyStyles({
-        left: this.formatStyle(textPos, "%"),
-        width: this.formatStyle(cue.size, "%")
+        left: this.formatStyle(textPos, '%'),
+        width: this.formatStyle(cue.size, '%')
       });
       // Vertical box orientation; textPos is the distance from the top edge of the
       // area to the top edge of the box and cue.size is the height extending
       // downwards from there.
     } else {
       this.applyStyles({
-        top: this.formatStyle(textPos, "%"),
-        height: this.formatStyle(cue.size, "%")
+        top: this.formatStyle(textPos, '%'),
+        height: this.formatStyle(cue.size, '%')
       });
     }
 
-    this.move = function (box) {
+    this.move = function(box) {
       this.applyStyles({
-        top: this.formatStyle(box.top, "px"),
-        bottom: this.formatStyle(box.bottom, "px"),
-        left: this.formatStyle(box.left, "px"),
-        right: this.formatStyle(box.right, "px"),
-        height: this.formatStyle(box.height, "px"),
-        width: this.formatStyle(box.width, "px")
+        top: this.formatStyle(box.top, 'px'),
+        bottom: this.formatStyle(box.bottom, 'px'),
+        left: this.formatStyle(box.left, 'px'),
+        right: this.formatStyle(box.right, 'px'),
+        height: this.formatStyle(box.height, 'px'),
+        width: this.formatStyle(box.width, 'px')
       });
     };
   }
@@ -625,8 +701,7 @@ class CueStyleBox extends StyleBox {
 // Can initialize it with either a StyleBox or another BoxPosition.
 class BoxPosition {
   constructor(obj) {
-    let isIE8 = (typeof navigator !== "undefined") &&
-      (/MSIE\s8\.0/).test(navigator.userAgent);
+    let isIE8 = typeof navigator !== 'undefined' && /MSIE\s8\.0/.test(navigator.userAgent);
 
     // Either a BoxPosition was passed in and we need to copy it, or a StyleBox
     // was passed in and we need to copy the results of 'getBoundingClientRect'
@@ -638,22 +713,19 @@ class BoxPosition {
       width = obj.div.offsetWidth;
       top = obj.div.offsetTop;
 
-      let rects = (rects = obj.div.childNodes) && (rects = rects[0]) &&
-        rects.getClientRects && rects.getClientRects();
+      let rects = (rects = obj.div.childNodes) && (rects = rects[0]) && rects.getClientRects && rects.getClientRects();
       obj = obj.div.getBoundingClientRect();
       // In certain cases the outter div will be slightly larger then the sum of
       // the inner div's lines. This could be due to bold text, etc, on some platforms.
       // In this case we should get the average line height and use that. This will
       // result in the desired behaviour.
-      lh = rects ? Math.max((rects[0] && rects[0].height) || 0, obj.height / rects.length)
-        : 0;
-
+      lh = rects ? Math.max((rects[0] && rects[0].height) || 0, obj.height / rects.length) : 0;
     }
     this.left = obj.left;
     this.right = obj.right;
     this.top = obj.top || top;
     this.height = obj.height || height;
-    this.bottom = obj.bottom || (top + (obj.height || height));
+    this.bottom = obj.bottom || top + (obj.height || height);
     this.width = obj.width || width;
     this.lineHeight = lh !== undefined ? lh : obj.lineHeight;
 
@@ -668,19 +740,19 @@ class BoxPosition {
   move(axis, toMove) {
     toMove = toMove !== undefined ? toMove : this.lineHeight;
     switch (axis) {
-      case "+x":
+      case '+x':
         this.left += toMove;
         this.right += toMove;
         break;
-      case "-x":
+      case '-x':
         this.left -= toMove;
         this.right -= toMove;
         break;
-      case "+y":
+      case '+y':
         this.top += toMove;
         this.bottom += toMove;
         break;
-      case "-y":
+      case '-y':
         this.top -= toMove;
         this.bottom -= toMove;
         break;
@@ -688,12 +760,9 @@ class BoxPosition {
   }
 
   // Check if this box overlaps another box, b2.
-  overlaps = function (b2) {
-    return this.left < b2.right &&
-      this.right > b2.left &&
-      this.top < b2.bottom &&
-      this.bottom > b2.top;
-  }
+  overlaps = function(b2) {
+    return this.left < b2.right && this.right > b2.left && this.top < b2.bottom && this.bottom > b2.top;
+  };
 
   // Check if this box overlaps any other boxes in boxes.
   overlapsAny(boxes) {
@@ -707,10 +776,7 @@ class BoxPosition {
 
   // Check if this box is within another box.
   within(container) {
-    return this.top >= container.top &&
-      this.bottom <= container.bottom &&
-      this.left >= container.left &&
-      this.right <= container.right;
+    return this.top >= container.top && this.bottom <= container.bottom && this.left >= container.left && this.right <= container.right;
   }
 
   // Check if this box is entirely within the container or it is overlapping
@@ -719,13 +785,13 @@ class BoxPosition {
   // return true.
   overlapsOppositeAxis(container, axis) {
     switch (axis) {
-      case "+x":
+      case '+x':
         return this.left < container.left;
-      case "-x":
+      case '-x':
         return this.right > container.right;
-      case "+y":
+      case '+y':
         return this.top < container.top;
-      case "-y":
+      case '-y':
         return this.bottom > container.bottom;
     }
   }
@@ -761,24 +827,22 @@ class BoxPosition {
     let width = obj.div ? obj.div.offsetWidth : obj.tagName ? obj.offsetWidth : 0;
     let top = obj.div ? obj.div.offsetTop : obj.tagName ? obj.offsetTop : 0;
 
-    obj = obj.div ? obj.div.getBoundingClientRect() :
-      obj.tagName ? obj.getBoundingClientRect() : obj;
+    obj = obj.div ? obj.div.getBoundingClientRect() : obj.tagName ? obj.getBoundingClientRect() : obj;
     return {
       left: obj.left,
       right: obj.right,
       top: obj.top || top,
       height: obj.height || height,
-      bottom: obj.bottom || (top + (obj.height || height)),
+      bottom: obj.bottom || top + (obj.height || height),
       width: obj.width || width
     };
-  };
+  }
 }
 
 // Move a StyleBox to its specified, or next best, position. The containerBox
 // is the box that contains the StyleBox, such as a div. boxPositions are
 // a list of other boxes that the styleBox can't overlap with.
 function moveBoxToLinePosition(styleBox, containerBox, boxPositions) {
-
   // Find the best position for a cue box, b, on the video. The axis parameter
   // is a list of axis, the order of which, it will move the box along. For example:
   // Passing ["+x", "-x"] will move the box first along the x axis in the positive
@@ -790,8 +854,7 @@ function moveBoxToLinePosition(styleBox, containerBox, boxPositions) {
       percentage = 1; // Highest possible so the first thing we get is better.
 
     for (let i = 0; i < axis.length; i++) {
-      while (b.overlapsOppositeAxis(containerBox, axis[i]) ||
-      (b.within(containerBox) && b.overlapsAny(boxPositions))) {
+      while (b.overlapsOppositeAxis(containerBox, axis[i]) || (b.within(containerBox) && b.overlapsAny(boxPositions))) {
         b.move(axis[i]);
       }
       // We found a spot where we aren't overlapping anything. This is our
@@ -821,17 +884,17 @@ function moveBoxToLinePosition(styleBox, containerBox, boxPositions) {
   if (cue.snapToLines) {
     let size;
     switch (cue.vertical) {
-      case "":
-        axis = ["+y", "-y"];
-        size = "height";
+      case '':
+        axis = ['+y', '-y'];
+        size = 'height';
         break;
-      case "rl":
-        axis = ["+x", "-x"];
-        size = "width";
+      case 'rl':
+        axis = ['+x', '-x'];
+        size = 'width';
         break;
-      case "lr":
-        axis = ["-x", "+x"];
-        size = "width";
+      case 'lr':
+        axis = ['-x', '+x'];
+        size = 'width';
         break;
     }
 
@@ -853,47 +916,46 @@ function moveBoxToLinePosition(styleBox, containerBox, boxPositions) {
     // need to increase our initial position by the length or width of the
     // video, depending on the writing direction, and reverse our axis directions.
     if (linePos < 0) {
-      position += cue.vertical === "" ? containerBox.height : containerBox.width;
+      position += cue.vertical === '' ? containerBox.height : containerBox.width;
       axis = axis.reverse();
     }
 
     // Move the box to the specified position. This may not be its best
     // position.
     boxPosition.move(initialAxis, position);
-
   } else {
     // If we have a percentage line value for the cue.
-    let calculatedPercentage = (boxPosition.lineHeight / containerBox.height) * 100;
+    let calculatedPercentage = boxPosition.lineHeight / containerBox.height * 100;
 
     switch (cue.lineAlign) {
-      case "middle":
-        linePos -= (calculatedPercentage / 2);
+      case 'middle':
+        linePos -= calculatedPercentage / 2;
         break;
-      case "end":
+      case 'end':
         linePos -= calculatedPercentage;
         break;
     }
 
     // Apply initial line position to the cue box.
     switch (cue.vertical) {
-      case "":
+      case '':
         styleBox.applyStyles({
-          top: styleBox.formatStyle(linePos, "%")
+          top: styleBox.formatStyle(linePos, '%')
         });
         break;
-      case "rl":
+      case 'rl':
         styleBox.applyStyles({
-          left: styleBox.formatStyle(linePos, "%")
+          left: styleBox.formatStyle(linePos, '%')
         });
         break;
-      case "lr":
+      case 'lr':
         styleBox.applyStyles({
-          right: styleBox.formatStyle(linePos, "%")
+          right: styleBox.formatStyle(linePos, '%')
         });
         break;
     }
 
-    axis = ["+y", "-x", "+x", "-y"];
+    axis = ['+y', '-x', '+x', '-y'];
 
     // Get the box position again after we've applied the specified positioning
     // to it.
@@ -912,8 +974,8 @@ function convertCueToDOMTree(window, cuetext) {
 }
 
 const FONT_SIZE_PERCENT = 0.05;
-const FONT_STYLE = "sans-serif";
-const CUE_BACKGROUND_PADDING = "1.5%";
+const FONT_STYLE = 'sans-serif';
+const CUE_BACKGROUND_PADDING = '1.5%';
 
 // Runs the processing model over the cues and regions passed to it.
 // @param overlay A block level element (usually a div) that the computed cues
@@ -928,12 +990,12 @@ function processCues(window, cues, overlay) {
     overlay.removeChild(overlay.firstChild);
   }
 
-  let paddedOverlay = window.document.createElement("div");
-  paddedOverlay.style.position = "absolute";
-  paddedOverlay.style.left = "0";
-  paddedOverlay.style.right = "0";
-  paddedOverlay.style.top = "0";
-  paddedOverlay.style.bottom = "0";
+  let paddedOverlay = window.document.createElement('div');
+  paddedOverlay.style.position = 'absolute';
+  paddedOverlay.style.left = '0';
+  paddedOverlay.style.right = '0';
+  paddedOverlay.style.top = '0';
+  paddedOverlay.style.bottom = '0';
   paddedOverlay.style.margin = CUE_BACKGROUND_PADDING;
   overlay.appendChild(paddedOverlay);
 
@@ -961,10 +1023,10 @@ function processCues(window, cues, overlay) {
     containerBox = BoxPosition.getSimpleBoxPosition(paddedOverlay),
     fontSize = Math.round(containerBox.height * FONT_SIZE_PERCENT * 100) / 100;
   let styleOptions = {
-    font: (fontSize * fontScale) + "px " + FONT_STYLE
+    font: fontSize * fontScale + 'px ' + FONT_STYLE
   };
 
-  (function () {
+  (function() {
     let styleBox, cue;
 
     for (let i = 0; i < cues.length; i++) {
@@ -984,49 +1046,50 @@ function processCues(window, cues, overlay) {
       boxPositions.push(BoxPosition.getSimpleBoxPosition(styleBox));
     }
   })();
-};
+}
 
-let Parser = function (window, decoder) {
+let Parser = function(window, decoder) {
   this.window = window;
-  this.state = "INITIAL";
-  this.buffer = "";
-  this.decoder = decoder || new TextDecoder("utf8");
+  this.state = 'INITIAL';
+  this.buffer = '';
+  this.decoder = decoder || new TextDecoder('utf8');
   this.regionList = [];
 };
 
-let StringDecoder = function () {
+let StringDecoder = function() {
   return {
-    decode: function (data) {
+    decode: function(data) {
       if (!data) {
-        return "";
+        return '';
       }
-      if (typeof data !== "string") {
-        throw new Error("Error - expected string data.");
+      if (typeof data !== 'string') {
+        throw new Error('Error - expected string data.');
       }
       return decodeURIComponent(encodeURIComponent(data));
     }
   };
 };
 
-var _objCreate = Object.create || (function () {
-  function F() {
-  }
+var _objCreate =
+  Object.create ||
+  (function() {
+    function F() {}
 
-  return function (o) {
-    if (arguments.length !== 1) {
-      throw new Error('Object.create shim only accepts one parameter.');
-    }
-    F.prototype = o;
-    return new F();
-  };
-})();
+    return function(o) {
+      if (arguments.length !== 1) {
+        throw new Error('Object.create shim only accepts one parameter.');
+      }
+      F.prototype = o;
+      return new F();
+    };
+  })();
 
 // Creates a new ParserError object from an errorData object. The errorData
 // object should have default code and message properties. The default message
 // property can be overriden by passing in a message parameter.
 // See ParsingError.Errors below for acceptable errors.
 function ParsingError(errorData, message) {
-  this.name = "ParsingError";
+  this.name = 'ParsingError';
   this.code = errorData.code;
   this.message = message || errorData.message;
 }
@@ -1038,25 +1101,25 @@ ParsingError.prototype.constructor = ParsingError;
 ParsingError.Errors = {
   BadSignature: {
     code: 0,
-    message: "Malformed WebVTT signature."
+    message: 'Malformed WebVTT signature.'
   },
   BadTimeStamp: {
     code: 1,
-    message: "Malformed time stamp."
+    message: 'Malformed time stamp.'
   }
 };
 
 Parser.prototype = {
   // If the error is a ParsingError then report it to the consumer if
   // possible. If it's not a ParsingError then throw it like normal.
-  reportOrThrowError: function (e) {
+  reportOrThrowError: function(e) {
     if (e instanceof ParsingError) {
       this.onparsingerror && this.onparsingerror(e);
     } else {
       throw e;
     }
   },
-  parse: function (data) {
+  parse: function(data) {
     var self = this;
 
     // If there is no data then we won't decode it, but will just try to parse
@@ -1089,57 +1152,62 @@ Parser.prototype = {
     function parseRegion(input) {
       var settings = new Settings();
 
-      parseOptions(input, function (k, v) {
-        switch (k) {
-          case "id":
-            settings.set(k, v);
-            break;
-          case "width":
-            settings.percent(k, v);
-            break;
-          case "lines":
-            settings.integer(k, v);
-            break;
-          case "regionanchor":
-          case "viewportanchor":
-            var xy = v.split(',');
-            if (xy.length !== 2) {
+      parseOptions(
+        input,
+        function(k, v) {
+          switch (k) {
+            case 'id':
+              settings.set(k, v);
               break;
-            }
-            // We have to make sure both x and y parse, so use a temporary
-            // settings object here.
-            var anchor = new Settings();
-            anchor.percent("x", xy[0]);
-            anchor.percent("y", xy[1]);
-            if (!anchor.has("x") || !anchor.has("y")) {
+            case 'width':
+              settings.percent(k, v);
               break;
-            }
-            settings.set(k + "X", anchor.get("x"));
-            settings.set(k + "Y", anchor.get("y"));
-            break;
-          case "scroll":
-            settings.alt(k, v, ["up"]);
-            break;
-        }
-      }, /=/, /\s/);
+            case 'lines':
+              settings.integer(k, v);
+              break;
+            case 'regionanchor':
+            case 'viewportanchor':
+              var xy = v.split(',');
+              if (xy.length !== 2) {
+                break;
+              }
+              // We have to make sure both x and y parse, so use a temporary
+              // settings object here.
+              var anchor = new Settings();
+              anchor.percent('x', xy[0]);
+              anchor.percent('y', xy[1]);
+              if (!anchor.has('x') || !anchor.has('y')) {
+                break;
+              }
+              settings.set(k + 'X', anchor.get('x'));
+              settings.set(k + 'Y', anchor.get('y'));
+              break;
+            case 'scroll':
+              settings.alt(k, v, ['up']);
+              break;
+          }
+        },
+        /=/,
+        /\s/
+      );
 
       // Create the region, using default values for any values that were not
       // specified.
-      if (settings.has("id")) {
+      if (settings.has('id')) {
         var region = new Region();
-        region.width = settings.get("width", 100);
-        region.lines = settings.get("lines", 3);
-        region.regionAnchorX = settings.get("regionanchorX", 0);
-        region.regionAnchorY = settings.get("regionanchorY", 100);
-        region.viewportAnchorX = settings.get("viewportanchorX", 0);
-        region.viewportAnchorY = settings.get("viewportanchorY", 100);
-        region.scroll = settings.get("scroll", "");
+        region.width = settings.get('width', 100);
+        region.lines = settings.get('lines', 3);
+        region.regionAnchorX = settings.get('regionanchorX', 0);
+        region.regionAnchorY = settings.get('regionanchorY', 100);
+        region.viewportAnchorX = settings.get('viewportanchorX', 0);
+        region.viewportAnchorY = settings.get('viewportanchorY', 100);
+        region.scroll = settings.get('scroll', '');
         // Register the region.
         self.onregion && self.onregion(region);
         // Remember the VTTRegion for later in case we parse any VTTCues that
         // reference it.
         self.regionList.push({
-          id: settings.get("id"),
+          id: settings.get('id'),
           region: region
         });
       }
@@ -1147,20 +1215,24 @@ Parser.prototype = {
 
     // 3.2 WebVTT metadata header syntax
     function parseHeader(input) {
-      parseOptions(input, function (k, v) {
-        switch (k) {
-          case "Region":
-            // 3.3 WebVTT region metadata header syntax
-            parseRegion(v);
-            break;
-        }
-      }, /:/);
+      parseOptions(
+        input,
+        function(k, v) {
+          switch (k) {
+            case 'Region':
+              // 3.3 WebVTT region metadata header syntax
+              parseRegion(v);
+              break;
+          }
+        },
+        /:/
+      );
     }
 
     // 5.1 WebVTT file parsing.
     try {
       var line;
-      if (self.state === "INITIAL") {
+      if (self.state === 'INITIAL') {
         // We can't start parsing until we have the first line.
         if (!/\r\n|\n/.test(self.buffer)) {
           return this;
@@ -1173,7 +1245,7 @@ Parser.prototype = {
           throw new ParsingError(ParsingError.Errors.BadSignature);
         }
 
-        self.state = "HEADER";
+        self.state = 'HEADER';
       }
 
       var alreadyCollectedLine = false;
@@ -1190,41 +1262,41 @@ Parser.prototype = {
         }
 
         switch (self.state) {
-          case "HEADER":
+          case 'HEADER':
             // 13-18 - Allow a header (metadata) under the WEBVTT line.
             if (/:/.test(line)) {
               parseHeader(line);
             } else if (!line) {
               // An empty line terminates the header and starts the body (cues).
-              self.state = "ID";
+              self.state = 'ID';
             }
             continue;
-          case "NOTE":
+          case 'NOTE':
             // Ignore NOTE blocks.
             if (!line) {
-              self.state = "ID";
+              self.state = 'ID';
             }
             continue;
-          case "ID":
+          case 'ID':
             // Check for the start of NOTE blocks.
             if (/^NOTE($|[ \t])/.test(line)) {
-              self.state = "NOTE";
+              self.state = 'NOTE';
               break;
             }
             // 19-29 - Allow any number of line terminators, then initialize new cue values.
             if (!line) {
               continue;
             }
-            self.cue = new Cue(0, 0, "");
-            self.state = "CUE";
+            self.cue = new Cue(0, 0, '');
+            self.state = 'CUE';
             // 30-39 - Check if self line contains an optional identifier or timing data.
-            if (line.indexOf("-->") === -1) {
+            if (line.indexOf('-->') === -1) {
               self.cue.id = line;
               continue;
             }
           // Process line as start of a cue.
           /*falls through*/
-          case "CUE":
+          case 'CUE':
             // 40 - Collect cue timings and settings.
             try {
               parseCue(line, self.cue, self.regionList);
@@ -1232,33 +1304,33 @@ Parser.prototype = {
               self.reportOrThrowError(e);
               // In case of an error ignore rest of the cue.
               self.cue = null;
-              self.state = "BADCUE";
+              self.state = 'BADCUE';
               continue;
             }
-            self.state = "CUETEXT";
+            self.state = 'CUETEXT';
             continue;
-          case "CUETEXT":
-            var hasSubstring = line.indexOf("-->") !== -1;
+          case 'CUETEXT':
+            var hasSubstring = line.indexOf('-->') !== -1;
             // 34 - If we have an empty line then report the cue.
             // 35 - If we have the special substring '-->' then report the cue,
             // but do not collect the line as we need to process the current
             // one as a new cue.
-            if (!line || hasSubstring && (alreadyCollectedLine = true)) {
+            if (!line || (hasSubstring && (alreadyCollectedLine = true))) {
               // We are done parsing self cue.
               self.oncue && self.oncue(self.cue);
               self.cue = null;
-              self.state = "ID";
+              self.state = 'ID';
               continue;
             }
             if (self.cue.text) {
-              self.cue.text += "\n";
+              self.cue.text += '\n';
             }
             self.cue.text += line;
             continue;
-          case "BADCUE": // BADCUE
+          case 'BADCUE': // BADCUE
             // 54-62 - Collect and discard the remaining cue.
             if (!line) {
-              self.state = "ID";
+              self.state = 'ID';
             }
             continue;
         }
@@ -1267,30 +1339,30 @@ Parser.prototype = {
       self.reportOrThrowError(e);
 
       // If we are currently parsing a cue, report what we have.
-      if (self.state === "CUETEXT" && self.cue && self.oncue) {
+      if (self.state === 'CUETEXT' && self.cue && self.oncue) {
         self.oncue(self.cue);
       }
       self.cue = null;
       // Enter BADWEBVTT state if header was not parsed correctly otherwise
       // another exception occurred so enter BADCUE state.
-      self.state = self.state === "INITIAL" ? "BADWEBVTT" : "BADCUE";
+      self.state = self.state === 'INITIAL' ? 'BADWEBVTT' : 'BADCUE';
     }
     return this;
   },
-  flush: function () {
+  flush: function() {
     var self = this;
     try {
       // Finish decoding the stream.
       self.buffer += self.decoder.decode();
       // Synthesize the end of the current cue or region.
-      if (self.cue || self.state === "HEADER") {
-        self.buffer += "\n\n";
+      if (self.cue || self.state === 'HEADER') {
+        self.buffer += '\n\n';
         self.parse();
       }
       // If we've flushed, parsed, and we're still on the INITIAL state then
       // that means we don't have enough of the stream to parse the first
       // line.
-      if (self.state === "INITIAL") {
+      if (self.state === 'INITIAL') {
         throw new ParsingError(ParsingError.Errors.BadSignature);
       }
     } catch (e) {
@@ -1300,6 +1372,5 @@ Parser.prototype = {
     return this;
   }
 };
-
 
 export {processCues, convertCueToDOMTree, Parser, StringDecoder};

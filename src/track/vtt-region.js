@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 var scrollSetting = {
-  "": true,
-  "up": true
+  '': true,
+  up: true
 };
 
 /**
@@ -24,7 +24,7 @@ var scrollSetting = {
  * @returns {*} the settings
  */
 function findScrollSetting(value) {
-  if (typeof value !== "string") {
+  if (typeof value !== 'string') {
     return false;
   }
   var scroll = scrollSetting[value.toLowerCase()];
@@ -37,7 +37,7 @@ function findScrollSetting(value) {
  * @returns {boolean} - boolean
  */
 function isValidPercentValue(value) {
-  return typeof value === "number" && (value >= 0 && value <= 100);
+  return typeof value === 'number' && (value >= 0 && value <= 100);
 }
 
 // VTTRegion shim http://dev.w3.org/html5/webvtt/#vttregion-interface
@@ -48,11 +48,9 @@ class VTTRegion {
   _regionAnchorY: number = 100;
   _viewportAnchorX: number = 0;
   _viewportAnchorY: number = 100;
-  _scroll: number = "";
+  _scroll: number = '';
 
-  constructor() {
-
-  }
+  constructor() {}
 
   get width(): number {
     return this._width;
@@ -60,7 +58,7 @@ class VTTRegion {
 
   set width(value: number) {
     if (!isValidPercentValue(value)) {
-      throw new Error("Width must be between 0 and 100.");
+      throw new Error('Width must be between 0 and 100.');
     }
     this._width = value;
   }
@@ -73,7 +71,7 @@ class VTTRegion {
     var setting = findScrollSetting(value);
     // Have to check for false as an empty string is a legal value.
     if (setting === false) {
-      throw new SyntaxError("An invalid or illegal string was specified.");
+      throw new SyntaxError('An invalid or illegal string was specified.');
     }
     this._scroll = setting;
   }
@@ -84,7 +82,7 @@ class VTTRegion {
 
   set viewportAnchorY(value: number) {
     if (!isValidPercentValue(value)) {
-      throw new Error("ViewportAnchorY must be between 0 and 100.");
+      throw new Error('ViewportAnchorY must be between 0 and 100.');
     }
     this._viewportAnchorY = value;
   }
@@ -95,7 +93,7 @@ class VTTRegion {
 
   set viewportAnchorX(value: number) {
     if (!isValidPercentValue(value)) {
-      throw new Error("ViewportAnchorX must be between 0 and 100.");
+      throw new Error('ViewportAnchorX must be between 0 and 100.');
     }
     this._viewportAnchorX = value;
   }
@@ -106,7 +104,7 @@ class VTTRegion {
 
   set regionAnchorX(value: number) {
     if (!isValidPercentValue(value)) {
-      throw new Error("RegionAnchorY must be between 0 and 100.");
+      throw new Error('RegionAnchorY must be between 0 and 100.');
     }
     this._regionAnchorX = value;
   }
@@ -116,8 +114,8 @@ class VTTRegion {
   }
 
   set lines(value: number) {
-    if (typeof value !== "number") {
-      throw new TypeError("Lines must be set to a number.");
+    if (typeof value !== 'number') {
+      throw new TypeError('Lines must be set to a number.');
     }
     this._lines = value;
   }
@@ -128,7 +126,7 @@ class VTTRegion {
 
   set regionAnchorY(value: number) {
     if (!isValidPercentValue(value)) {
-      throw new Error("RegionAnchorX must be between 0 and 100.");
+      throw new Error('RegionAnchorX must be between 0 and 100.');
     }
     this._regionAnchorY = value;
   }
@@ -141,4 +139,4 @@ if (typeof window !== 'undefined' && window.VTTRegion) {
   Region = VTTRegion;
 }
 
-export {Region}
+export {Region};

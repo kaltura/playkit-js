@@ -1,14 +1,14 @@
 //@flow
 /* eslint-disable no-unused-vars */
-import FakeEvent from '../../../event/fake-event'
-import FakeEventTarget from '../../../event/fake-event-target'
-import Error from '../../../error/error'
-import {CustomEventType, Html5EventType} from '../../../event/event-type'
-import getLogger from '../../../utils/logger'
-import Track from '../../../track/track'
-import VideoTrack from '../../../track/video-track'
-import AudioTrack from '../../../track/audio-track'
-import TextTrack from '../../../track/text-track'
+import FakeEvent from '../../../event/fake-event';
+import FakeEventTarget from '../../../event/fake-event-target';
+import Error from '../../../error/error';
+import {CustomEventType, Html5EventType} from '../../../event/event-type';
+import getLogger from '../../../utils/logger';
+import Track from '../../../track/track';
+import VideoTrack from '../../../track/video-track';
+import AudioTrack from '../../../track/audio-track';
+import TextTrack from '../../../track/text-track';
 
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
   /**
@@ -222,6 +222,6 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     if (this._loadPromise && this._sourceObj) {
       return this._sourceObj.url;
     }
-    return "";
+    return '';
   }
 }

@@ -1,7 +1,7 @@
 // @flow
-import Env from '../utils/env'
-import getLogger from '../utils/logger'
-import {DrmScheme} from './drm-scheme'
+import Env from '../utils/env';
+import getLogger from '../utils/logger';
+import {DrmScheme} from './drm-scheme';
 
 const NOT_SUPPORTED: string = 'not_supported_drm_playback';
 
@@ -66,8 +66,8 @@ export default class DrmSupport {
     const browser = Env.browser.name;
     if (typeof DrmSupport._Browsers[browser] === 'function') {
       let drmScheme = DrmSupport._Browsers[browser]();
-      DrmSupport._logger.debug("Supported DRM scheme for current environment is: " + drmScheme);
-      return (drmScheme === scheme && !!(drmData.find((drmEntry) => drmEntry.scheme === scheme)));
+      DrmSupport._logger.debug('Supported DRM scheme for current environment is: ' + drmScheme);
+      return drmScheme === scheme && !!drmData.find(drmEntry => drmEntry.scheme === scheme);
     }
     return false;
   }

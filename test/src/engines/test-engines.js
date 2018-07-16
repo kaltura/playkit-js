@@ -1,4 +1,4 @@
-import type {IEngine} from "../../../flow-typed/interfaces/engine";
+import type {IEngine} from '../../../flow-typed/interfaces/engine';
 
 class FakeHTML5Engine implements IEngine {
   static get id() {
@@ -18,7 +18,4 @@ class FakeSLEngine implements IEngine {
   }
 }
 
-
-export {
-  FakeHTML5Engine, FakeFLASHEngine,FakeSLEngine
-};
+export {FakeHTML5Engine, FakeFLASHEngine, FakeSLEngine};
