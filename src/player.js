@@ -42,19 +42,7 @@ import PKError from './error/error'
 import {EngineProvider} from './engines/engine-provider'
 import {ExternalCaptionsEventType, ExternalCaptionsHandler} from './track/external-captions-handler'
 
-/**
- * The player playback rates.
- * @type {Array<number>}
- * @const
- */
-const PLAYBACK_RATES = [0.5, 1, 2, 4];
 
-/**
- * The player default playback rate.
- * @type {number}
- * @const
- */
-const DEFAULT_PLAYBACK_RATE = 1;
 /**
  * The black cover class name.
  * @type {string}
@@ -844,7 +832,10 @@ export default class Player extends FakeEventTarget {
    * @returns {Array<number>} - The possible playback speeds speed of the video.
    */
   get playbackRates(): Array<number> {
-    return PLAYBACK_RATES;
+    if (this._engine) {
+      return this._engine.playbackRates;
+    }
+    return [];
   }
 
   /**
@@ -852,7 +843,10 @@ export default class Player extends FakeEventTarget {
    * @returns {number} - The default playback speed of the video.
    */
   get defaultPlaybackRate(): number {
-    return DEFAULT_PLAYBACK_RATE;
+    if (this._engine) {
+      return this._engine.defaultPlaybackRate;
+    }
+    return 1;
   }
 
   /**
@@ -1911,7 +1905,7 @@ export default class Player extends FakeEventTarget {
     Player._logger.debug('Text cue changed', event.payload.cues);
     this._activeTextCues = event.payload.cues;
     this._updateCueDisplaySettings();
-    this._updateTextDisplay(this._activeTextCues)
+    this._updateTextDisplay(this._activeTextCues);
   }
 
   /**
@@ -1937,7 +1931,9 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _updateTextDisplay(cues: Array<Cue>): void {
-    processCues(window, cues, this._textDisplayEl);
+    if (!this._config.playback.useNativeTextTrack) {
+      processCues(window, cues, this._textDisplayEl);
+    }
   }
 
   /**
@@ -1968,7 +1964,6 @@ export default class Player extends FakeEventTarget {
     const activeTracks = this.getActiveTracks();
     const playbackConfig = this.config.playback;
     const offTextTrack: ?Track = this._getTracksByType(TrackType.TEXT).find(track => TextTrack.langComparer(OFF, track.language));
-    this.hideTextTrack();
     let currentOrConfiguredTextLang = this._playbackAttributesState.textLanguage || this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackType.TEXT);
     let currentOrConfiguredAudioLang = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
     this._setDefaultTrack(TrackType.TEXT, currentOrConfiguredTextLang, offTextTrack);
