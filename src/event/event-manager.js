@@ -36,14 +36,15 @@ class EventManager {
    * @param {EventTarget} target - The event target.
    * @param {string} type - The event type.
    * @param {EventManager.ListenerType} listener - The event listener.
+   * @param {?Object} options - The event options.
    * @returns {void}
    */
-  listenOnce(target: any, type: string, listener: ListenerType): void {
+  listenOnce(target: any, type: string, listener: ListenerType, options: ?Object): void {
     let oneListener = (event) => {
       this.unlisten(target, type, oneListener);
       listener.call(this, event)
     };
-    this.listen(target, type, oneListener);
+    this.listen(target, type, oneListener, options);
   }
 
 
@@ -52,10 +53,11 @@ class EventManager {
    * @param {EventTarget} target The event target.
    * @param {string} type The event type.
    * @param {EventManager.ListenerType} listener The event listener.
+   * @param {?Object} options The event options.
    * @returns {void}
    */
-  listen(target: any, type: string, listener: ListenerType): void {
-    let binding = new Binding_(target, type, listener);
+  listen(target: any, type: string, listener: ListenerType, options: ?Object): void {
+    let binding = new Binding_(target, type, listener, options);
     if (this._bindingMap) {
       this._bindingMap.push(type, binding);
     }
@@ -121,8 +123,9 @@ class Binding_ {
   target: any;
   type: string;
   listener: ?ListenerType;
+  options: ?Object;
 
-  constructor(target, type, listener) {
+  constructor(target, type, listener, options) {
     /** @type {EventTarget} */
     this.target = target;
 
@@ -132,7 +135,10 @@ class Binding_ {
     /** @type {?EventManager.ListenerType} */
     this.listener = listener;
 
-    this.target.addEventListener(type, listener, false);
+    /** @type {?Object} */
+    this.options = options;
+
+    this.target.addEventListener(type, listener, options);
   }
 
 
@@ -145,10 +151,11 @@ class Binding_ {
     if (!this.target)
       return;
 
-    this.target.removeEventListener(this.type, this.listener, false);
+    this.target.removeEventListener(this.type, this.listener, this.options);
 
     this.target = null;
     this.listener = null;
+    this.options = null;
   }
 }
 

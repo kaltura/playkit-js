@@ -188,6 +188,7 @@ class TextStyle {
     clonedTextStyle.fontOpacity = this.fontOpacity;
     clonedTextStyle.backgroundColor = this.backgroundColor;
     clonedTextStyle.backgroundOpacity = this.backgroundOpacity;
+    clonedTextStyle.fontFamily = this.fontFamily;
     return clonedTextStyle;
   }
 }

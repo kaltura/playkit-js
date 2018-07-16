@@ -11,7 +11,7 @@ import {Cue} from '../../track/vtt-cue'
 import * as Utils from '../../utils/util'
 import Html5AutoPlayCapability from './capabilities/html5-autoplay'
 import Html5IsSupportedCapability from './capabilities/html5-is-supported'
-import Error from "../../error/error";
+import Error from '../../error/error'
 import getLogger from '../../utils/logger'
 
 /**
@@ -150,6 +150,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * The player playback rates.
+   * @type {Array<number>}
+   */
+   static PLAYBACK_RATES: Array<number> = [0.5, 1, 2, 4];
+
+  /**
    * @constructor
    * @param {PKMediaSourceObject} source - The selected source object.
    * @param {Object} config - The player configuration.
@@ -245,6 +251,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.FRAG_LOADING, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.FRAG_ABORTED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.MEDIA_RECOVERED, (event: FakeEvent) => this.dispatchEvent(event));
     }
   }
 
@@ -352,11 +359,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   selectTextTrack(textTrack: PKTextTrack): void {
-    this._removeCueChangeListener();
+    this._removeCueChangeListeners();
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.selectTextTrack(textTrack);
     }
-    this._addCueChangeListener(textTrack);
+    this._addCueChangeListener();
   }
 
   /**
@@ -369,7 +376,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.hideTextTrack();
     }
-    this._removeCueChangeListener();
+    this._removeCueChangeListeners();
   }
 
   /**
@@ -823,6 +830,34 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Set crossOrigin attribute.
+   * @param {?string} crossOrigin - 'anonymous' or 'use-credentials'
+   */
+  set crossOrigin(crossOrigin: ?string): void {
+    if (typeof crossOrigin === 'string') {
+      this._el.setAttribute('crossorigin', crossOrigin);
+    } else {
+      this._el.removeAttribute('crossorigin');
+    }
+  }
+
+  /**
+   * Get crossOrigin attribute.
+   * @returns {?string} - 'anonymous' or 'use-credentials'
+   */
+  get crossOrigin(): ?string {
+    return this._el.getAttribute('crossorigin');
+  }
+
+  /**
+   * get the playback rates
+   * @return {number[]} - playback rates
+   */
+  get playbackRates(): Array<number> {
+    return Html5.PLAYBACK_RATES;
+  }
+
+  /**
    * Initializes the engine.
    * @param {PKMediaSourceObject} source - The selected source object.
    * @param {Object} config - The player configuration.
@@ -858,40 +893,24 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Add cuechange listener to active textTrack.
-   * @param {PKTextTrack} textTrack - The playkit text track object to set.
    * @returns {void}
    * @private
    */
-  _addCueChangeListener(textTrack: PKTextTrack): void {
-    let textTrackEl = this._getSelectedTextTrackElement();
+  _addCueChangeListener(): void {
+    let textTrackEl = Array.from(this._el.textTracks).find(track => track && track.mode !== "disabled")
     if (textTrackEl) {
-      /*
-       There's a quirk in TextTrackAPI that a text track added to video element will not fire cuechange event if it
-       didn't have it's mode set to showing for at least until a single cue has been change.
-       After first time it seems there's time tracking which allows the cuechange to fire even though the track mode
-       is set to hidden
-       This is not the case with a track DOM element added to a video element where cuechange will be fired even if
-       track mode is set only to hidden and was never set to showing
-       */
-      if (this._config.playback.useNativeTextTrack) {
-        textTrackEl.mode = "showing";
-      } else {
-        textTrackEl.oncuechange = (e) => this._onCueChange(e);
-        textTrackEl.mode = this._showTextTrackFirstTime[textTrack.index] ? "hidden" : "showing";
-        this._showTextTrackFirstTime[textTrack.index] = true;
-      }
+      this._eventManager.listen(textTrackEl, "cuechange", (e) => this._onCueChange(e));
     }
   }
 
   /**
-   * Remove cuechange listener to active textTrack
+   * Remove cuechange listeners from textTracks
    * @returns {void}
    * @private
    */
-  _removeCueChangeListener(): void {
-    let textTrackEl: TextTrack = this._getSelectedTextTrackElement();
-    if (textTrackEl) {
-      textTrackEl.oncuechange = null;
+  _removeCueChangeListeners(): void {
+    for (let i = 0; i < this._el.textTracks.length; i++){
+      this._eventManager.unlisten(this._el.textTracks[i], "cuechange");
     }
   }
 
@@ -904,7 +923,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _onCueChange(e: FakeEvent): void {
     let textTrack: TextTrack = e.currentTarget;
     let activeCues: Array<Cue> = [];
-    textTrack.mode = 'hidden';
     for (let cue of textTrack.activeCues) {
       //Normalize cues to be of type of VTT model
       if (window.VTTCue && cue instanceof window.VTTCue) {
@@ -918,23 +936,5 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       }
     }
     this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: activeCues}));
-  }
-
-  /**
-   * Get currently selected text track
-   * @returns {?TextTrack} - returns the active text track element if available
-   * @private
-   */
-  _getSelectedTextTrackElement(): ?TextTrack {
-    const textTracks = this._el.textTracks;
-    for (let track in textTracks) {
-      if (textTracks.hasOwnProperty(track)) {
-        const textTrack = textTracks[parseInt(track)];
-        if (textTrack && textTrack.mode !== "disabled") {
-          return textTrack;
-        }
-      }
-    }
-    return null;
   }
 }

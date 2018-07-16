@@ -23,7 +23,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @member {Object} _config
    * @private
    */
-  _config: ?Object;
+  _config: Object;
 
   /**
    * The source object.
@@ -70,7 +70,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    */
   destroy(): Promise<*> {
     this._sourceObj = null;
-    this._config = null;
+    this._config = {};
     return Promise.resolve();
   }
 

@@ -260,6 +260,7 @@ const CustomEventType: EventTypes = {
    */
   AD_PROGRESS: 'adprogress',
   /**
+<<<<<<< HEAD
    * Fired on fragment started to load.
    */
   FRAG_LOADING: 'fragloading',
@@ -270,7 +271,15 @@ const CustomEventType: EventTypes = {
   /**
    * Fired on fragment abort.
    */
-  FRAG_ABORTED: 'fragaborted'
+  FRAG_ABORTED: 'fragaborted',
+  /**
+   * Fired when the adapter recovered from a media error
+   */
+  MEDIA_RECOVERED: 'mediarecovered',
+  /**
+   * Fired when the vr stereo mode changed
+   */
+  VR_STEREO_MODE_CHANGED: 'vrstereomodechanged'
 };
 
 const EventType: EventTypes = Utils.Object.merge([Html5EventType, CustomEventType]);

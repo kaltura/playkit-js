@@ -49,10 +49,12 @@ declare interface IEngine {
   +seekable: TimeRanges;
   +ended: boolean;
   playbackRate: number;
+  +playbackRates: Array<number>;
   defaultPlaybackRate: number;
   +networkState: number;
   +readyState: number;
   +videoWidth: number;
   +videoHeight: number;
   playsinline: boolean;
+  crossOrigin: ?string;
 }
