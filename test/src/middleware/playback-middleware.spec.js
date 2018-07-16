@@ -1,6 +1,6 @@
-import BaseMiddleware from '../../../src/middleware/base-middleware'
-import PlaybackMiddleware from '../../../src/middleware/playback-middleware'
-import getLogger from '../../../src/utils/logger'
+import BaseMiddleware from '../../../src/middleware/base-middleware';
+import PlaybackMiddleware from '../../../src/middleware/playback-middleware';
+import getLogger from '../../../src/utils/logger';
 
 class PM1 extends BaseMiddleware {
   id = 'PM1';
@@ -37,22 +37,22 @@ class PM3 extends BaseMiddleware {
   }
 }
 
-describe('PlaybackMiddleware', function () {
+describe('PlaybackMiddleware', function() {
   let pm1, pm2, pm3;
   let spyPm1, spyPm2, spyPm3;
   let playbackMiddleware;
   let sandbox;
 
-  beforeEach(function () {
+  beforeEach(function() {
     playbackMiddleware = new PlaybackMiddleware();
     sandbox = sinon.sandbox.create();
   });
 
-  afterEach(function () {
+  afterEach(function() {
     sandbox.restore();
   });
 
-  it('should register the playback middlewares', function () {
+  it('should register the playback middlewares', function() {
     pm1 = new PM1();
     pm2 = new PM2();
     pm3 = new PM3();
@@ -63,7 +63,7 @@ describe('PlaybackMiddleware', function () {
     playbackMiddleware._middleware._middlewares.get('play').should.have.lengthOf(2);
   });
 
-  it('should run playback middleware for action pause', function (done) {
+  it('should run playback middleware for action pause', function(done) {
     spyPm1 = sandbox.spy(PM1.prototype, 'pause');
     spyPm3 = sandbox.spy(PM3.prototype, 'pause');
     pm1 = new PM1();
@@ -78,7 +78,7 @@ describe('PlaybackMiddleware', function () {
     });
   });
 
-  it('should run playback middleware for action play', function (done) {
+  it('should run playback middleware for action play', function(done) {
     spyPm1 = sandbox.spy(PM1.prototype, 'play');
     spyPm2 = sandbox.spy(PM2.prototype, 'play');
     pm1 = new PM1();

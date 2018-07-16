@@ -13,17 +13,16 @@
  * @export
  */
 class TextStyle {
-
   /**
    * Defined set of font families
    * @enum {Object.<string, string>}}
    * @export
    */
   static FontFamily: {[string]: string} = {
-    "ARIAL": "Arial",
-    "HELVETICA": "Helvetica",
-    "VERDANA": "Verdana",
-    "SANS_SERIF": "sans-serif"
+    ARIAL: 'Arial',
+    HELVETICA: 'Helvetica',
+    VERDANA: 'Verdana',
+    SANS_SERIF: 'sans-serif'
   };
 
   /**
@@ -33,14 +32,14 @@ class TextStyle {
    * @export
    */
   static StandardColors: {[string]: Array<number>} = {
-    'WHITE': [255, 255, 255],
-    'BLACK': [0, 0, 0],
-    'RED': [255, 0, 0],
-    'GREEN': [0, 255, 0],
-    'BLUE': [0, 0, 255],
-    'YELLOW': [255, 255, 0],
-    'MAGENTA': [255, 0, 255],
-    'CYAN': [0, 255, 255]
+    WHITE: [255, 255, 255],
+    BLACK: [0, 0, 0],
+    RED: [255, 0, 0],
+    GREEN: [0, 255, 0],
+    BLUE: [0, 0, 255],
+    YELLOW: [255, 255, 0],
+    MAGENTA: [255, 0, 255],
+    CYAN: [0, 255, 255]
   };
 
   /**
@@ -49,10 +48,10 @@ class TextStyle {
    * @export
    */
   static StandardOpacities: {[string]: number} = {
-    'OPAQUE': 1,
-    'SEMI_HIGH': 0.75,
-    'SEMI_LOW': 0.25,
-    'TRANSPARENT': 0
+    OPAQUE: 1,
+    SEMI_HIGH: 0.75,
+    SEMI_LOW: 0.25,
+    TRANSPARENT: 0
   };
 
   /**
@@ -65,36 +64,15 @@ class TextStyle {
    * @enum {!Array.<!Array.<number>>}
    * @export
    */
-  static EdgeStyles: { [string]: Array<Array<number>> } = {
-    'NONE': [],
-    'RAISED': [
-      [34, 34, 34, 1, 1, 0],
-      [34, 34, 34, 2, 2, 0],
-      [34, 34, 34, 3, 3, 0]],
-    'DEPRESSED': [
-      [204, 204, 204, 1, 1, 0],
-      [204, 204, 204, 0, 1, 0],
-      [34, 34, 34, -1, -1, 0],
-      [34, 34, 34, 0, -1, 0]],
-    'UNIFORM': [
-      [34, 34, 34, 0, 0, 4],
-      [34, 34, 34, 0, 0, 4],
-      [34, 34, 34, 0, 0, 4],
-      [34, 34, 34, 0, 0, 4]],
-    'DROP': [
-      [34, 34, 34, 2, 2, 3],
-      [34, 34, 34, 2, 2, 4],
-      [34, 34, 34, 2, 2, 5]]
+  static EdgeStyles: {[string]: Array<Array<number>>} = {
+    NONE: [],
+    RAISED: [[34, 34, 34, 1, 1, 0], [34, 34, 34, 2, 2, 0], [34, 34, 34, 3, 3, 0]],
+    DEPRESSED: [[204, 204, 204, 1, 1, 0], [204, 204, 204, 0, 1, 0], [34, 34, 34, -1, -1, 0], [34, 34, 34, 0, -1, 0]],
+    UNIFORM: [[34, 34, 34, 0, 0, 4], [34, 34, 34, 0, 0, 4], [34, 34, 34, 0, 0, 4], [34, 34, 34, 0, 0, 4]],
+    DROP: [[34, 34, 34, 2, 2, 3], [34, 34, 34, 2, 2, 4], [34, 34, 34, 2, 2, 5]]
   };
 
-  static FontSizes: Array<string> = [
-    "50%",
-    "75%",
-    "100%",
-    "200%",
-    "300%",
-    "400%"
-  ];
+  static FontSizes: Array<string> = ['50%', '75%', '100%', '200%', '300%', '400%'];
 
   /**
    * Creates a CSS RGBA sctring for a given color and opacity values
@@ -158,8 +136,7 @@ class TextStyle {
     attributes.push('font-family: ' + this.fontFamily);
     attributes.push('font-size: ' + this.fontSize);
     attributes.push('color: ' + TextStyle._toRGBA(this.fontColor, this.fontOpacity));
-    attributes.push('background-color: ' +
-      TextStyle._toRGBA(this.backgroundColor, this.backgroundOpacity));
+    attributes.push('background-color: ' + TextStyle._toRGBA(this.backgroundColor, this.backgroundOpacity));
 
     // A given edge effect may be implemented with multiple shadows.
     // Collect them all into an array, then combine into one attribute.
@@ -168,8 +145,7 @@ class TextStyle {
       // shaka.asserts.assert(this.fontEdge[i].length == 6);
       const color: Array<number> = this.fontEdge[i].slice(0, 3);
       let shadow: Array<number> = this.fontEdge[i].slice(3, 6);
-      shadows.push(TextStyle._toRGBA(color, this.fontOpacity) + ' ' +
-        shadow.join('px ') + 'px');
+      shadows.push(TextStyle._toRGBA(color, this.fontOpacity) + ' ' + shadow.join('px ') + 'px');
     }
     attributes.push('text-shadow: ' + shadows.join(','));
 
@@ -180,7 +156,7 @@ class TextStyle {
    * clones the textStyle object
    * @returns {TextStyle} the cloned textStyle object
    */
-  clone(): TextStyle{
+  clone(): TextStyle {
     let clonedTextStyle = new TextStyle();
     clonedTextStyle.fontEdge = this.fontEdge;
     clonedTextStyle.fontSize = this.fontSize;

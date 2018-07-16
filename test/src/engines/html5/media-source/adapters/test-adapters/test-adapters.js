@@ -27,21 +27,17 @@ class Adapter1 implements IMediaSourceAdapter {
 
   static canPlayDrm(drmData: Array<Object>): boolean {
     return !!(drmData.length && drmData[0].scheme === 's1');
-
   }
 
   static createAdapter(videoElement: HTMLVideoElement, source: Object, config: Object): IMediaSourceAdapter {
     return new this(videoElement, source, config);
   }
 
-  constructor() {
-  }
+  constructor() {}
 
-  load(): void {
-  }
+  load(): void {}
 
-  destroy(): void {
-  }
+  destroy(): void {}
 }
 
 class Adapter2 implements IMediaSourceAdapter {
@@ -61,14 +57,11 @@ class Adapter2 implements IMediaSourceAdapter {
     return new this(videoElement, source, config);
   }
 
-  constructor() {
-  }
+  constructor() {}
 
-  load(): void {
-  }
+  load(): void {}
 
-  destroy(): void {
-  }
+  destroy(): void {}
 }
 
 class Adapter3 implements IMediaSourceAdapter {
@@ -77,7 +70,7 @@ class Adapter3 implements IMediaSourceAdapter {
   }
 
   static canPlayType(mimeType: string): boolean {
-    return !!(document.createElement("video").canPlayType(mimeType));
+    return !!document.createElement('video').canPlayType(mimeType);
   }
 
   static canPlayDrm(drmData: Array<Object>): boolean {
@@ -88,17 +81,11 @@ class Adapter3 implements IMediaSourceAdapter {
     return new this(videoElement, source, config);
   }
 
-  constructor() {
-  }
+  constructor() {}
 
-  load(): void {
-  }
+  load(): void {}
 
-  destroy(): void {
-  }
+  destroy(): void {}
 }
 
-export {
-  Adapter1, Adapter2, Adapter3,
-  FakeDashAdapter, FakeHlsAdapter, FakeNativeAdapter
-};
+export {Adapter1, Adapter2, Adapter3, FakeDashAdapter, FakeHlsAdapter, FakeNativeAdapter};

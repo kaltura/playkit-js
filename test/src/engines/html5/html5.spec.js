@@ -1,6 +1,6 @@
-import Html5 from '../../../../src/engines/html5/html5'
-import BaseMediaSourceAdapter from '../../../../src/engines/html5/media-source/base-media-source-adapter'
-import sourcesConfig from '../../configs/sources.json'
+import Html5 from '../../../../src/engines/html5/html5';
+import BaseMediaSourceAdapter from '../../../../src/engines/html5/media-source/base-media-source-adapter';
+import sourcesConfig from '../../configs/sources.json';
 
 describe('Html5', () => {
   let sandbox;
@@ -33,8 +33,7 @@ describe('Html5', () => {
     engine._config.should.deep.equal(sources);
     engine._mediaSourceAdapter.should.be.instanceof(BaseMediaSourceAdapter);
     engine._el.should.be.a('HTMLVideoElement');
-    sandbox.stub(engine, '_init', () => {
-    });
+    sandbox.stub(engine, '_init', () => {});
     engine.restore({}, {});
     detachSpy.should.have.been.calledOnce;
     eventMgrSpy.should.have.been.calledOnce;

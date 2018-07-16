@@ -1,6 +1,6 @@
 //@flow
-import FakeEvent from './fake-event'
-import MultiMap from '../utils/multi-map'
+import FakeEvent from './fake-event';
+import MultiMap from '../utils/multi-map';
 
 /**
  * A work-alike for EventTarget.  Only DOM elements may be true EventTargets,
@@ -107,6 +107,6 @@ class FakeEventTarget {
  * These are the listener types defined in the closure extern for EventTarget.
  * @typedef {EventListener|function(!Event):(boolean|undefined)}
  */
-declare function ListenerType(event: FakeEvent): (boolean | void);
+declare function ListenerType(event: FakeEvent): boolean | void;
 
 export default FakeEventTarget;

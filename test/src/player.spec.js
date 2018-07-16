@@ -1,32 +1,31 @@
-import TextStyle from '../../src/track/text-style'
-import Player from '../../src/player'
-import {StateType} from '../../src/state/state-type'
-import {CustomEventType, Html5EventType} from '../../src/event/event-type'
-import SourcesConfig from './configs/sources.json'
-import Track from '../../src/track/track'
-import VideoTrack from '../../src/track/video-track'
-import AudioTrack from '../../src/track/audio-track'
-import TextTrack from '../../src/track/text-track'
-import {createElement, getConfigStructure, removeElement, removeVideoElementsFromTestPage} from './utils/test-utils'
-import PluginManager from '../../src/plugin/plugin-manager'
-import ColorsPlugin from './plugin/test-plugins/colors-plugin'
-import NumbersPlugin from './plugin/test-plugins/numbers-plugin'
-import Locale from '../../src/utils/locale'
-import Html5 from '../../src/engines/html5/html5'
-import Error from '../../src/error/error'
-import {Object} from '../../src/utils/util'
-import {LabelOptions} from '../../src/track/label-options'
+import TextStyle from '../../src/track/text-style';
+import Player from '../../src/player';
+import {StateType} from '../../src/state/state-type';
+import {CustomEventType, Html5EventType} from '../../src/event/event-type';
+import SourcesConfig from './configs/sources.json';
+import Track from '../../src/track/track';
+import VideoTrack from '../../src/track/video-track';
+import AudioTrack from '../../src/track/audio-track';
+import TextTrack from '../../src/track/text-track';
+import {createElement, getConfigStructure, removeElement, removeVideoElementsFromTestPage} from './utils/test-utils';
+import PluginManager from '../../src/plugin/plugin-manager';
+import ColorsPlugin from './plugin/test-plugins/colors-plugin';
+import NumbersPlugin from './plugin/test-plugins/numbers-plugin';
+import Locale from '../../src/utils/locale';
+import Html5 from '../../src/engines/html5/html5';
+import Error from '../../src/error/error';
+import {Object} from '../../src/utils/util';
+import {LabelOptions} from '../../src/track/label-options';
 
 const targetId = 'player-placeholder_player.spec';
 let sourcesConfig = Object.copyDeep(SourcesConfig);
 
-describe('Player', function () {
-
+describe('Player', function() {
   beforeEach(() => {
     sourcesConfig = Object.copyDeep(SourcesConfig);
   });
 
-  describe("load", function () {
+  describe('load', function() {
     let config, player, playerContainer;
 
     before(() => {
@@ -49,14 +48,14 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it("should load if no source", (done) => {
+    it('should load if no source', done => {
       player.ready().then(() => {
         done();
       });
       player.load();
     });
 
-    it("should't load if no engine", (done) => {
+    it("should't load if no engine", done => {
       player._engine = null;
       setTimeout(done, 300);
       player.ready().then(() => {
@@ -65,7 +64,7 @@ describe('Player', function () {
       player.load();
     });
 
-    it("should't load if source already exists", (done) => {
+    it("should't load if source already exists", done => {
       let loadCounter = 0;
       setTimeout(() => {
         loadCounter.should.equal(1);
@@ -78,7 +77,7 @@ describe('Player', function () {
       player.load();
     });
 
-    it("should't load if is in loading process", (done) => {
+    it("should't load if is in loading process", done => {
       let loadCounter = 0;
       setTimeout(() => {
         loadCounter.should.equal(1);
@@ -90,10 +89,9 @@ describe('Player', function () {
       player.load();
       player.load();
     });
-
   });
 
-  describe("play", function () {
+  describe('play', function() {
     let config, player, playerContainer;
 
     before(() => {
@@ -116,14 +114,14 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it("should success before load", (done) => {
+    it('should success before load', done => {
       player.addEventListener('playing', () => {
         done();
       });
       player.play();
     });
 
-    it("should success after load", (done) => {
+    it('should success after load', done => {
       player.addEventListener('playing', () => {
         done();
       });
@@ -134,16 +132,14 @@ describe('Player', function () {
     });
   });
 
-  describe("ready", function () {
-
+  describe('ready', function() {
     let playerContainer;
 
     before(() => {
       playerContainer = createElement('DIV', targetId);
     });
 
-    describe("success", () => {
-
+    describe('success', () => {
       let config;
 
       before(() => {
@@ -151,10 +147,8 @@ describe('Player', function () {
         config.sources = sourcesConfig.Mp4;
       });
 
-      describe("preload none", () => {
-
-        describe("passing config in constructor", () => {
-
+      describe('preload none', () => {
+        describe('passing config in constructor', () => {
           let player;
 
           beforeEach(() => {
@@ -166,25 +160,22 @@ describe('Player', function () {
             player.destroy();
           });
 
-          it("should success ready -> load", (done) => {
-            player.ready()
-              .then(() => {
-                done();
-              });
+          it('should success ready -> load', done => {
+            player.ready().then(() => {
+              done();
+            });
             player.load();
           });
 
-          it("should success load -> ready", (done) => {
+          it('should success load -> ready', done => {
             player.load();
-            player.ready()
-              .then(() => {
-                done();
-              });
+            player.ready().then(() => {
+              done();
+            });
           });
         });
 
-        describe("passing config in configure", function () {
-
+        describe('passing config in configure', function() {
           let player;
 
           beforeEach(() => {
@@ -196,39 +187,34 @@ describe('Player', function () {
             player.destroy();
           });
 
-          it("should success configure -> ready -> load", (done) => {
+          it('should success configure -> ready -> load', done => {
             player.configure(config);
-            player.ready()
-              .then(() => {
-                done();
-              });
+            player.ready().then(() => {
+              done();
+            });
             player.load();
           });
 
-          it("should success configure -> load -> ready", (done) => {
+          it('should success configure -> load -> ready', done => {
             player.configure(config);
             player.load();
-            player.ready()
-              .then(() => {
-                done();
-              });
+            player.ready().then(() => {
+              done();
+            });
           });
 
-          it("should success ready -> configure -> load", (done) => {
-            player.ready()
-              .then(() => {
-                done();
-              });
+          it('should success ready -> configure -> load', done => {
+            player.ready().then(() => {
+              done();
+            });
             player.configure(config);
             player.load();
           });
         });
       });
 
-      describe("preload auto", () => {
-
-        describe("passing config in constructor", function () {
-
+      describe('preload auto', () => {
+        describe('passing config in constructor', function() {
           let player;
 
           beforeEach(() => {
@@ -241,25 +227,22 @@ describe('Player', function () {
             player.destroy();
           });
 
-          it("should success ready -> load", (done) => {
-            player.ready()
-              .then(() => {
-                done();
-              });
+          it('should success ready -> load', done => {
+            player.ready().then(() => {
+              done();
+            });
             player.load();
           });
 
-          it("should success load -> ready", (done) => {
+          it('should success load -> ready', done => {
             player.load();
-            player.ready()
-              .then(() => {
-                done();
-              });
+            player.ready().then(() => {
+              done();
+            });
           });
         });
 
-        describe("passing config in configure", () => {
-
+        describe('passing config in configure', () => {
           let player;
 
           beforeEach(() => {
@@ -272,66 +255,58 @@ describe('Player', function () {
             player.destroy();
           });
 
-          it("should success configure -> ready -> load", (done) => {
+          it('should success configure -> ready -> load', done => {
             player.configure(config);
-            player.ready()
-              .then(() => {
-                done();
-              });
+            player.ready().then(() => {
+              done();
+            });
             player.load();
           });
 
-          it("should success configure -> load -> ready", (done) => {
+          it('should success configure -> load -> ready', done => {
             player.configure(config);
             player.load();
-            player.ready()
-              .then(() => {
-                done();
-              });
+            player.ready().then(() => {
+              done();
+            });
           });
 
-          it("should success ready -> load -> configure", (done) => {
-            player.ready()
-              .then(() => {
-                done();
-              });
+          it('should success ready -> load -> configure', done => {
+            player.ready().then(() => {
+              done();
+            });
             player.load();
             player.configure(config);
           });
 
-          it("should success ready -> configure -> load", (done) => {
-            player.ready()
-              .then(() => {
-                done();
-              });
+          it('should success ready -> configure -> load', done => {
+            player.ready().then(() => {
+              done();
+            });
             player.configure(config);
             player.load();
           });
 
-          it("should success load -> configure -> ready", (done) => {
+          it('should success load -> configure -> ready', done => {
             player.load();
             player.configure(config);
-            player.ready()
-              .then(() => {
-                done();
-              });
+            player.ready().then(() => {
+              done();
+            });
           });
 
-          it("should success load -> ready -> configure", (done) => {
+          it('should success load -> ready -> configure', done => {
             player.load();
-            player.ready()
-              .then(() => {
-                done();
-              });
+            player.ready().then(() => {
+              done();
+            });
             player.configure(config);
           });
         });
       });
-
     });
 
-    describe("failure", () => {
-
+    describe('failure', () => {
       let config;
 
       before(() => {
@@ -339,10 +314,8 @@ describe('Player', function () {
         config.sources = sourcesConfig.CorruptedUrl;
       });
 
-      describe("preload none", () => {
-
-        describe("passing config in constructor", function () {
-
+      describe('preload none', () => {
+        describe('passing config in constructor', function() {
           let player;
 
           beforeEach(() => {
@@ -354,35 +327,32 @@ describe('Player', function () {
             player.destroy();
           });
 
-          it("should fail ready -> load", (done) => {
-            player.addEventListener(Html5EventType.ERROR, (error) => {
+          it('should fail ready -> load', done => {
+            player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
                 done();
               }
             });
-            player.ready()
-              .catch(() => {
-                // catching the error is handled by the Error Event
-              });
+            player.ready().catch(() => {
+              // catching the error is handled by the Error Event
+            });
             player.load();
           });
 
-          it("should fail load -> ready", (done) => {
-            player.addEventListener(Html5EventType.ERROR, (error) => {
+          it('should fail load -> ready', done => {
+            player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
                 done();
               }
             });
             player.load();
-            player.ready()
-              .catch(() => {
-                // catching the error is handled by the Error Event
-              });
+            player.ready().catch(() => {
+              // catching the error is handled by the Error Event
+            });
           });
         });
 
-        describe("passing config in configure", function () {
-
+        describe('passing config in configure', function() {
           let player;
 
           beforeEach(() => {
@@ -394,54 +364,49 @@ describe('Player', function () {
             player.destroy();
           });
 
-          it("should fail configure -> ready -> load", (done) => {
-            player.addEventListener(Html5EventType.ERROR, (error) => {
+          it('should fail configure -> ready -> load', done => {
+            player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
                 done();
               }
             });
             player.configure(config);
-            player.ready()
-              .catch(() => {
-                // catching the error is handled by the Error Event
-              });
+            player.ready().catch(() => {
+              // catching the error is handled by the Error Event
+            });
             player.load();
           });
 
-          it("should fail configure -> load -> ready", (done) => {
-            player.addEventListener(Html5EventType.ERROR, (error) => {
+          it('should fail configure -> load -> ready', done => {
+            player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
                 done();
               }
             });
             player.configure(config);
             player.load();
-            player.ready()
-              .catch(() => {
-                // catching the error is handled by the Error Event
-              });
+            player.ready().catch(() => {
+              // catching the error is handled by the Error Event
+            });
           });
 
-          it("should fail ready -> configure -> load", (done) => {
-            player.addEventListener(Html5EventType.ERROR, (error) => {
+          it('should fail ready -> configure -> load', done => {
+            player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
                 done();
               }
             });
-            player.ready()
-              .catch(() => {
-                // catching the error is handled by the Error Event
-              });
+            player.ready().catch(() => {
+              // catching the error is handled by the Error Event
+            });
             player.configure(config);
             player.load();
           });
         });
       });
 
-      describe("preload auto", () => {
-
-        describe("passing config in constructor", () => {
-
+      describe('preload auto', () => {
+        describe('passing config in constructor', () => {
           let player;
 
           beforeEach(() => {
@@ -454,35 +419,32 @@ describe('Player', function () {
             player.destroy();
           });
 
-          it("should fail ready -> load", (done) => {
-            player.addEventListener(Html5EventType.ERROR, (error) => {
+          it('should fail ready -> load', done => {
+            player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
                 done();
               }
             });
-            player.ready()
-              .catch(() => {
-                // catching the error is handled by the Error Event
-              });
+            player.ready().catch(() => {
+              // catching the error is handled by the Error Event
+            });
             player.load();
           });
 
-          it("should fail load -> ready", (done) => {
-            player.addEventListener(Html5EventType.ERROR, (error) => {
+          it('should fail load -> ready', done => {
+            player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
                 done();
               }
             });
             player.load();
-            player.ready()
-              .catch(() => {
-                // catching the error is handled by the Error Event
-              });
+            player.ready().catch(() => {
+              // catching the error is handled by the Error Event
+            });
           });
         });
 
-        describe("passing config in configure", () => {
-
+        describe('passing config in configure', () => {
           let player;
 
           beforeEach(() => {
@@ -495,92 +457,85 @@ describe('Player', function () {
             player.destroy();
           });
 
-          it("should fail configure -> ready -> load", (done) => {
-            player.addEventListener(Html5EventType.ERROR, (error) => {
+          it('should fail configure -> ready -> load', done => {
+            player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
                 done();
               }
             });
             player.configure(config);
-            player.ready()
-              .catch(() => {
-                // catching the error is handled by the Error Event
-              });
+            player.ready().catch(() => {
+              // catching the error is handled by the Error Event
+            });
             player.load();
           });
 
-          it("should fail configure -> load -> ready", (done) => {
-            player.addEventListener(Html5EventType.ERROR, (error) => {
+          it('should fail configure -> load -> ready', done => {
+            player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
                 done();
               }
             });
             player.configure(config);
             player.load();
-            player.ready()
-              .catch(() => {
-                // catching the error is handled by the Error Event
-              });
+            player.ready().catch(() => {
+              // catching the error is handled by the Error Event
+            });
           });
 
-          it("should fail ready -> load -> configure", (done) => {
-            player.addEventListener(Html5EventType.ERROR, (error) => {
+          it('should fail ready -> load -> configure', done => {
+            player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
                 done();
               }
             });
-            player.ready()
-              .catch(() => {
-                // catching the error is handled by the Error Event
-              });
+            player.ready().catch(() => {
+              // catching the error is handled by the Error Event
+            });
             player.load();
             player.configure(config);
           });
 
-          it("should fail ready -> configure -> load", (done) => {
-            player.addEventListener(Html5EventType.ERROR, (error) => {
+          it('should fail ready -> configure -> load', done => {
+            player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
                 done();
               }
             });
-            player.ready()
-              .catch(() => {
-                // catching the error is handled by the Error Event
-              });
+            player.ready().catch(() => {
+              // catching the error is handled by the Error Event
+            });
             player.configure(config);
             player.load();
           });
 
-          it("should fail load -> configure -> ready", (done) => {
-            player.addEventListener(Html5EventType.ERROR, (error) => {
+          it('should fail load -> configure -> ready', done => {
+            player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
                 done();
               }
             });
             player.load();
             player.configure(config);
-            player.ready()
-              .catch(() => {
-                // catching the error is handled by the Error Event
-              });
+            player.ready().catch(() => {
+              // catching the error is handled by the Error Event
+            });
           });
 
-          it("should fail load -> ready -> configure", (done) => {
-            player.addEventListener(Html5EventType.ERROR, (error) => {
+          it('should fail load -> ready -> configure', done => {
+            player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
                 done();
               }
             });
             player.load();
-            player.ready()
-              .catch(() => {
-                // catching the error is handled by the Error Event
-              });
+            player.ready().catch(() => {
+              // catching the error is handled by the Error Event
+            });
             player.configure(config);
           });
         });
       });
-
     });
 
     after(() => {
@@ -597,14 +552,7 @@ describe('Player', function () {
       config = getConfigStructure();
       config.sources = sourcesConfig.Mp4;
       player = new Player(targetId, config);
-      player._tracks = [
-        new VideoTrack(),
-        new AudioTrack(),
-        new AudioTrack(),
-        new TextTrack(),
-        new TextTrack(),
-        new TextTrack()
-      ];
+      player._tracks = [new VideoTrack(), new AudioTrack(), new AudioTrack(), new TextTrack(), new TextTrack(), new TextTrack()];
     });
 
     after(() => {
@@ -633,8 +581,7 @@ describe('Player', function () {
     });
   });
 
-  describe('getTracks real', function () {
-
+  describe('getTracks real', function() {
     let config;
     let player;
     let video;
@@ -644,8 +591,8 @@ describe('Player', function () {
 
     before(() => {
       playerContainer = createElement('DIV', targetId);
-      track1 = document.createElement("track");
-      track2 = document.createElement("track");
+      track1 = document.createElement('track');
+      track2 = document.createElement('track');
       track1.kind = 'subtitles';
       track1.label = 'English';
       track1.srclang = 'en';
@@ -673,11 +620,11 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should return all tracks using ready', (done) => {
+    it('should return all tracks using ready', done => {
       player.ready().then(() => {
         let videoTracksLength = 2;
-        let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
-        let textTracksLength = (video.textTracks ? video.textTracks.length + 1 : 0);
+        let audioTracksLength = video.audioTracks ? video.audioTracks.length : 0;
+        let textTracksLength = video.textTracks ? video.textTracks.length + 1 : 0;
         let totalTracksLength = videoTracksLength + audioTracksLength + textTracksLength;
         player.getTracks().length.should.be.equal(totalTracksLength);
         done();
@@ -685,7 +632,7 @@ describe('Player', function () {
       player.load();
     });
 
-    it('should return video tracks', (done) => {
+    it('should return video tracks', done => {
       player.ready().then(() => {
         let videoTracksLength = 2;
         player.getTracks('video').length.should.be.equal(videoTracksLength);
@@ -694,29 +641,29 @@ describe('Player', function () {
       player.load();
     });
 
-    it('should return audio tracks', (done) => {
+    it('should return audio tracks', done => {
       player.load();
       player.ready().then(() => {
-        let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
+        let audioTracksLength = video.audioTracks ? video.audioTracks.length : 0;
         player.getTracks('audio').length.should.be.equal(audioTracksLength);
         done();
       });
     });
 
-    it('should return text tracks', (done) => {
+    it('should return text tracks', done => {
       player.ready().then(() => {
-        let textTracksLength = (video.textTracks ? video.textTracks.length + 1 : 0);
+        let textTracksLength = video.textTracks ? video.textTracks.length + 1 : 0;
         player.getTracks('text').length.should.be.equal(textTracksLength);
         done();
       });
       player.load();
     });
 
-    it('should return all tracks for unknown type', (done) => {
+    it('should return all tracks for unknown type', done => {
       player.ready().then(() => {
         let videoTracksLength = 2;
-        let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
-        let textTracksLength = (video.textTracks ? video.textTracks.length + 1 : 0);
+        let audioTracksLength = video.audioTracks ? video.audioTracks.length : 0;
+        let textTracksLength = video.textTracks ? video.textTracks.length + 1 : 0;
         let totalTracksLength = videoTracksLength + audioTracksLength + textTracksLength;
         player.getTracks('some').length.should.be.equal(totalTracksLength);
         done();
@@ -730,7 +677,7 @@ describe('Player', function () {
     });
   });
 
-  describe('selectTrack - video', function () {
+  describe('selectTrack - video', function() {
     let config, player, video, playerContainer;
 
     before(() => {
@@ -753,9 +700,9 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it.skip('should select a new video track', (done) => {
+    it.skip('should select a new video track', done => {
       let tracks;
-      player.addEventListener(CustomEventType.VIDEO_TRACK_CHANGED, (event) => {
+      player.addEventListener(CustomEventType.VIDEO_TRACK_CHANGED, event => {
         (event.payload.selectedVideoTrack instanceof VideoTrack).should.be.true;
         event.payload.selectedVideoTrack.index.should.equal(1);
         (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.false;
@@ -765,7 +712,7 @@ describe('Player', function () {
         done();
       });
       player.ready().then(() => {
-        tracks = player._tracks.filter((track) => {
+        tracks = player._tracks.filter(track => {
           return track instanceof VideoTrack;
         });
         (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.true;
@@ -779,9 +726,9 @@ describe('Player', function () {
       video = player._engine.getVideoElement();
     });
 
-    it('should not change the selected for non exist video track', (done) => {
+    it('should not change the selected for non exist video track', done => {
       player.ready().then(() => {
-        let tracks = player._tracks.filter((track) => {
+        let tracks = player._tracks.filter(track => {
           return track instanceof VideoTrack;
         });
         (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.true;
@@ -800,7 +747,7 @@ describe('Player', function () {
     });
   });
 
-  describe('selectTrack - audio', function () {
+  describe('selectTrack - audio', function() {
     let config, player, video, playerContainer;
 
     before(() => {
@@ -823,10 +770,10 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should select a new audio track', (done) => {
+    it('should select a new audio track', done => {
       player.ready().then(() => {
         if (video.audioTracks) {
-          player.addEventListener(CustomEventType.AUDIO_TRACK_CHANGED, (event) => {
+          player.addEventListener(CustomEventType.AUDIO_TRACK_CHANGED, event => {
             (event.payload.selectedAudioTrack instanceof AudioTrack).should.be.true;
             event.payload.selectedAudioTrack.index.should.equal(2);
             video.audioTracks[0].enabled.should.be.false;
@@ -837,7 +784,7 @@ describe('Player', function () {
             tracks[2].active.should.be.true;
             done();
           });
-          let tracks = player._tracks.filter((track) => {
+          let tracks = player._tracks.filter(track => {
             return track instanceof AudioTrack;
           });
           video.audioTracks[0].enabled.should.be.true;
@@ -855,10 +802,10 @@ describe('Player', function () {
       video = player._engine.getVideoElement();
     });
 
-    it('should not change the selected audio track', (done) => {
+    it('should not change the selected audio track', done => {
       player.ready().then(() => {
         if (video.audioTracks) {
-          let tracks = player._tracks.filter((track) => {
+          let tracks = player._tracks.filter(track => {
             return track instanceof AudioTrack;
           });
           video.audioTracks[0].enabled.should.be.true;
@@ -884,10 +831,10 @@ describe('Player', function () {
       player.load();
     });
 
-    it('should not change the selected for non exist audio track', (done) => {
+    it('should not change the selected for non exist audio track', done => {
       player.ready().then(() => {
         if (video.audioTracks) {
-          let tracks = player._tracks.filter((track) => {
+          let tracks = player._tracks.filter(track => {
             return track instanceof AudioTrack;
           });
           video.audioTracks[0].enabled.should.be.true;
@@ -913,7 +860,7 @@ describe('Player', function () {
     });
   });
 
-  describe('selectTrack - text', function () {
+  describe('selectTrack - text', function() {
     let config, player, video, playerContainer;
 
     before(() => {
@@ -927,8 +874,8 @@ describe('Player', function () {
       player = new Player(config);
       playerContainer.appendChild(player.getView());
       video = player._engine.getVideoElement();
-      video.addTextTrack('subtitles', "English", "en");
-      video.addTextTrack('subtitles', "French", "fr");
+      video.addTextTrack('subtitles', 'English', 'en');
+      video.addTextTrack('subtitles', 'French', 'fr');
     });
 
     afterEach(() => {
@@ -940,35 +887,38 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should select a new subtitles track', (done) => {
-      player.ready().then(() => {
-        player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, (event) => {
-          (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
-          event.payload.selectedTextTrack.language.should.equal('fr');
-          video.textTracks[0].mode.should.be.equal('disabled');
-          video.textTracks[1].mode.should.be.equal('hidden');
-          tracks[0].active.should.be.false;
-          tracks[1].active.should.be.true;
-          done();
+    it('should select a new subtitles track', done => {
+      player
+        .ready()
+        .then(() => {
+          player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, event => {
+            (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
+            event.payload.selectedTextTrack.language.should.equal('fr');
+            video.textTracks[0].mode.should.be.equal('disabled');
+            video.textTracks[1].mode.should.be.equal('hidden');
+            tracks[0].active.should.be.false;
+            tracks[1].active.should.be.true;
+            done();
+          });
+          let tracks = player._tracks.filter(track => {
+            return track instanceof TextTrack;
+          });
+          video.textTracks[0].mode.should.be.equal('hidden');
+          video.textTracks[1].mode.should.be.equal('disabled');
+          tracks[0].active.should.be.true;
+          tracks[1].active.should.be.false;
+          player.selectTrack(new TextTrack({language: 'fr', kind: 'subtitles', index: 1}));
+        })
+        .catch(e => {
+          done(e);
         });
-        let tracks = player._tracks.filter((track) => {
-          return track instanceof TextTrack;
-        });
-        video.textTracks[0].mode.should.be.equal('hidden');
-        video.textTracks[1].mode.should.be.equal('disabled');
-        tracks[0].active.should.be.true;
-        tracks[1].active.should.be.false;
-        player.selectTrack(new TextTrack({language: 'fr', kind: 'subtitles', index: 1}));
-      }).catch(e => {
-        done(e);
-      });
       player.load();
     });
 
-    it('should select a new captions track', (done) => {
+    it('should select a new captions track', done => {
       player.load();
       player.ready().then(() => {
-        player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, (event) => {
+        player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, event => {
           (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
           event.payload.selectedTextTrack.index.should.equal(1);
           video.textTracks[0].mode.should.be.equal('disabled');
@@ -977,7 +927,7 @@ describe('Player', function () {
           tracks[1].active.should.be.true;
           done();
         });
-        let tracks = player._tracks.filter((track) => {
+        let tracks = player._tracks.filter(track => {
           return track instanceof TextTrack;
         });
         video.textTracks[0].mode.should.be.equal('hidden');
@@ -988,9 +938,9 @@ describe('Player', function () {
       });
     });
 
-    it('should not change the selected text track', (done) => {
+    it('should not change the selected text track', done => {
       player.ready().then(() => {
-        let tracks = player._tracks.filter((track) => {
+        let tracks = player._tracks.filter(track => {
           return track instanceof TextTrack;
         });
         video.textTracks[0].mode.should.be.equal('hidden');
@@ -1007,10 +957,10 @@ describe('Player', function () {
       player.load();
     });
 
-    it('should not change the selected for non exist text track', (done) => {
+    it('should not change the selected for non exist text track', done => {
       player.load();
       player.ready().then(() => {
-        let tracks = player._tracks.filter((track) => {
+        let tracks = player._tracks.filter(track => {
           return track instanceof TextTrack;
         });
         video.textTracks[0].mode.should.be.equal('hidden');
@@ -1026,9 +976,9 @@ describe('Player', function () {
       });
     });
 
-    it('should not change the selected for metadata text track', (done) => {
+    it('should not change the selected for metadata text track', done => {
       player.ready().then(() => {
-        let tracks = player._tracks.filter((track) => {
+        let tracks = player._tracks.filter(track => {
           return track instanceof TextTrack;
         });
         video.textTracks[0].mode.should.be.equal('hidden');
@@ -1046,7 +996,7 @@ describe('Player', function () {
     });
   });
 
-  describe('getActiveTracks', function () {
+  describe('getActiveTracks', function() {
     let config, player, video, track1, track2, playerContainer;
 
     before(() => {
@@ -1059,8 +1009,8 @@ describe('Player', function () {
       player = new Player(config);
       playerContainer.appendChild(player.getView());
       video = player._engine.getVideoElement();
-      track1 = document.createElement("track");
-      track2 = document.createElement("track");
+      track1 = document.createElement('track');
+      track2 = document.createElement('track');
       track1.kind = 'subtitles';
       track1.label = 'English';
       track1.default = true;
@@ -1080,7 +1030,7 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it.skip('should get the active tracks before and after switching', (done) => {
+    it.skip('should get the active tracks before and after switching', done => {
       let videoTracks, audioTracks, textTracks;
       player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, () => {
         player.addEventListener(CustomEventType.VIDEO_TRACK_CHANGED, () => {
@@ -1099,13 +1049,13 @@ describe('Player', function () {
         player.selectTrack(new VideoTrack({index: 1}));
       });
       player.ready().then(() => {
-        videoTracks = player._tracks.filter((track) => {
+        videoTracks = player._tracks.filter(track => {
           return track instanceof VideoTrack;
         });
-        audioTracks = player._tracks.filter((track) => {
+        audioTracks = player._tracks.filter(track => {
           return track instanceof AudioTrack;
         });
-        textTracks = player._tracks.filter((track) => {
+        textTracks = player._tracks.filter(track => {
           return track instanceof TextTrack;
         });
         player.getActiveTracks().video.should.deep.equals(videoTracks[0]);
@@ -1119,7 +1069,7 @@ describe('Player', function () {
     });
   });
 
-  describe('hideTextTrack', function () {
+  describe('hideTextTrack', function() {
     let config, player, video, track1, track2, playerContainer;
 
     before(() => {
@@ -1129,12 +1079,12 @@ describe('Player', function () {
     beforeEach(() => {
       config = getConfigStructure();
       config.sources = sourcesConfig.Mp4;
-      config.playback.textLanguage = "auto";
+      config.playback.textLanguage = 'auto';
       player = new Player(config);
       playerContainer.appendChild(player.getView());
       video = player._engine.getVideoElement();
-      track1 = document.createElement("track");
-      track2 = document.createElement("track");
+      track1 = document.createElement('track');
+      track2 = document.createElement('track');
       track1.kind = 'subtitles';
       track1.label = 'English';
       track1.default = true;
@@ -1154,24 +1104,27 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should disable the active text track', (done) => {
-      player.ready().then(() => {
-        let tracks = player._tracks.filter((track) => {
-          return track instanceof TextTrack;
+    it('should disable the active text track', done => {
+      player
+        .ready()
+        .then(() => {
+          let tracks = player._tracks.filter(track => {
+            return track instanceof TextTrack;
+          });
+          video.textTracks[0].mode.should.be.equal('hidden');
+          video.textTracks[1].mode.should.be.equal('disabled');
+          tracks[0].active.should.be.true;
+          tracks[1].active.should.be.false;
+          player.hideTextTrack();
+          video.textTracks[0].mode.should.be.equal('disabled');
+          video.textTracks[1].mode.should.be.equal('disabled');
+          tracks[0].active.should.be.false;
+          tracks[1].active.should.be.false;
+          done();
+        })
+        .catch(e => {
+          done(e);
         });
-        video.textTracks[0].mode.should.be.equal('hidden');
-        video.textTracks[1].mode.should.be.equal('disabled');
-        tracks[0].active.should.be.true;
-        tracks[1].active.should.be.false;
-        player.hideTextTrack();
-        video.textTracks[0].mode.should.be.equal('disabled');
-        video.textTracks[1].mode.should.be.equal('disabled');
-        tracks[0].active.should.be.false;
-        tracks[1].active.should.be.false;
-        done();
-      }).catch(e => {
-        done(e);
-      });
       player.load();
     });
   });
@@ -1198,17 +1151,17 @@ describe('Player', function () {
     });
 
     describe('textStyle API', () => {
-      it("should accept only TextStyle setting", () => {
+      it('should accept only TextStyle setting', () => {
         try {
           player.textStyle = {
             backgroundColor: [255, 0, 0]
           };
         } catch (error) {
-          error.message.should.be.equal("Style must be instance of TextStyle");
+          error.message.should.be.equal('Style must be instance of TextStyle');
         }
       });
 
-      it("should change style setting", () => {
+      it('should change style setting', () => {
         let textStyle = new TextStyle();
         textStyle.backgroundColor = TextStyle.StandardColors.RED;
         textStyle.fontColor = TextStyle.StandardColors.CYAN;
@@ -1218,14 +1171,14 @@ describe('Player', function () {
         currentTextStyle.backgroundColor.should.be.equal(textStyle.backgroundColor);
         currentTextStyle.fontColor.should.be.equal(textStyle.fontColor);
         currentTextStyle.fontEdge.should.be.equal(textStyle.fontEdge);
-      })
+      });
     });
 
     describe('setTextDisplaySettings', () => {
       it('should change textDisplay settings', () => {
         const settings = {line: -4};
         player.setTextDisplaySettings(settings);
-        player._textDisplaySettings.should.be.equal(settings)
+        player._textDisplaySettings.should.be.equal(settings);
       });
     });
   });
@@ -1246,16 +1199,16 @@ describe('Player', function () {
     });
 
     describe('isFullscreen', () => {
-      it("should start with initial fullscreen state of false", () => {
+      it('should start with initial fullscreen state of false', () => {
         player.isFullscreen().should.be.false;
       });
 
-      it("should be in fullscreen state after notify", () => {
+      it('should be in fullscreen state after notify', () => {
         player.notifyEnterFullscreen();
         player.isFullscreen().should.be.true;
       });
 
-      it("should not be in fullscreen state after notify", () => {
+      it('should not be in fullscreen state after notify', () => {
         player.notifyEnterFullscreen();
         player.isFullscreen().should.be.true;
         player.notifyExitFullscreen();
@@ -1264,7 +1217,7 @@ describe('Player', function () {
     });
 
     describe('notifyEnterFullscreen', () => {
-      it("should fire ENTER_FULLSCREEN event", (done) => {
+      it('should fire ENTER_FULLSCREEN event', done => {
         player.addEventListener(player.Event.ENTER_FULLSCREEN, () => {
           player.isFullscreen().should.be.true;
           done();
@@ -1272,7 +1225,7 @@ describe('Player', function () {
         player.notifyEnterFullscreen();
       });
 
-      it("should not fire ENTER_FULLSCREEN event twice", (done) => {
+      it('should not fire ENTER_FULLSCREEN event twice', done => {
         let callCount = 0;
         player.addEventListener(player.Event.ENTER_FULLSCREEN, () => {
           callCount++;
@@ -1291,7 +1244,7 @@ describe('Player', function () {
     });
 
     describe('notifyExitFullscreen', () => {
-      it("should fire EXIT_FULLSCREEN event", (done) => {
+      it('should fire EXIT_FULLSCREEN event', done => {
         player.addEventListener(player.Event.EXIT_FULLSCREEN, () => {
           player.isFullscreen().should.be.false;
           done();
@@ -1303,7 +1256,7 @@ describe('Player', function () {
         player.notifyEnterFullscreen();
       });
 
-      it("should not fire EXIT_FULLSCREEN event twice", (done) => {
+      it('should not fire EXIT_FULLSCREEN event twice', done => {
         let callCount = 0;
         player.addEventListener(player.Event.EXIT_FULLSCREEN, () => {
           callCount++;
@@ -1324,7 +1277,7 @@ describe('Player', function () {
         player.notifyEnterFullscreen();
       });
 
-      it("should not fire EXIT_FULLSCREEN event when player is not in fullscreen state", (done) => {
+      it('should not fire EXIT_FULLSCREEN event when player is not in fullscreen state', done => {
         player.addEventListener(player.Event.EXIT_FULLSCREEN, () => done(new Error('fail')));
         player.notifyExitFullscreen();
         setTimeout(() => done(), 500);
@@ -1332,12 +1285,12 @@ describe('Player', function () {
     });
 
     describe('enterFullscreen', () => {
-      it("should fire REQUESTED_ENTER_FULLSCREEN event", (done) => {
+      it('should fire REQUESTED_ENTER_FULLSCREEN event', done => {
         player.addEventListener(player.Event.REQUESTED_ENTER_FULLSCREEN, () => done());
         player.enterFullscreen();
       });
 
-      it("should not fire REQUESTED_ENTER_FULLSCREEN event when player is already in fullscreen", (done) => {
+      it('should not fire REQUESTED_ENTER_FULLSCREEN event when player is already in fullscreen', done => {
         player.addEventListener(player.Event.REQUESTED_ENTER_FULLSCREEN, () => done(new Error('fail')));
         player.notifyEnterFullscreen();
         player.enterFullscreen();
@@ -1346,13 +1299,13 @@ describe('Player', function () {
     });
 
     describe('exitFullscreen', () => {
-      it("should fire REQUESTED_EXIT_FULLSCREEN event", (done) => {
+      it('should fire REQUESTED_EXIT_FULLSCREEN event', done => {
         player.addEventListener(player.Event.REQUESTED_EXIT_FULLSCREEN, () => done());
         player.notifyEnterFullscreen();
         player.exitFullscreen();
       });
 
-      it("should not fire REQUESTED_EXIT_FULLSCREEN event when player is not in fullscreen", (done) => {
+      it('should not fire REQUESTED_EXIT_FULLSCREEN event when player is not in fullscreen', done => {
         player.addEventListener(player.Event.REQUESTED_EXIT_FULLSCREEN, () => done(new Error('fail')));
         player.notifyExitFullscreen();
         player.exitFullscreen();
@@ -1361,7 +1314,7 @@ describe('Player', function () {
     });
   });
 
-  describe('Track enum', function () {
+  describe('Track enum', function() {
     let playerContainer;
 
     before(() => {
@@ -1384,9 +1337,8 @@ describe('Player', function () {
     });
   });
 
-  describe('events', function () {
-    describe('tracks changed', function () {
-
+  describe('events', function() {
+    describe('tracks changed', function() {
       let config, player, video, track1, track2, playerContainer;
 
       before(() => {
@@ -1399,8 +1351,8 @@ describe('Player', function () {
         player = new Player(config);
         playerContainer.appendChild(player.getView());
         video = player._engine.getVideoElement();
-        track1 = document.createElement("track");
-        track2 = document.createElement("track");
+        track1 = document.createElement('track');
+        track2 = document.createElement('track');
         track1.kind = 'subtitles';
         track1.label = 'English';
         track1.default = true;
@@ -1420,7 +1372,7 @@ describe('Player', function () {
         removeElement(targetId);
       });
 
-      it('should fire tracks changed', function (done) {
+      it('should fire tracks changed', function(done) {
         /**
          * Handles assertions after tracks changed event.
          * @param {Object} data - The event data.
@@ -1429,8 +1381,8 @@ describe('Player', function () {
         function onTracksChanged(data) {
           player.removeEventListener(CustomEventType.TRACKS_CHANGED, onTracksChanged);
           let videoTracksLength = 1;
-          let audioTracksLength = (video.audioTracks ? video.audioTracks.length : 0);
-          let textTracksLength = (video.textTracks ? video.textTracks.length + 1 : 0);
+          let audioTracksLength = video.audioTracks ? video.audioTracks.length : 0;
+          let textTracksLength = video.textTracks ? video.textTracks.length + 1 : 0;
           let totalTracksLength = videoTracksLength + audioTracksLength + textTracksLength;
           data.payload.tracks.length.should.be.equal(totalTracksLength);
           done();
@@ -1441,8 +1393,7 @@ describe('Player', function () {
       });
     });
 
-    describe('first play', function () {
-
+    describe('first play', function() {
       let config;
       let player;
       let playerContainer;
@@ -1467,7 +1418,7 @@ describe('Player', function () {
         removeElement(targetId);
       });
 
-      it('should fire first play only once', (done) => {
+      it('should fire first play only once', done => {
         let counter = 0;
         let onPlaying = () => {
           player.removeEventListener(Html5EventType.PLAYING, onPlaying);
@@ -1485,7 +1436,7 @@ describe('Player', function () {
         player.play();
       });
 
-      it('should fire first play only after media loaded', (done) => {
+      it('should fire first play only after media loaded', done => {
         player.addEventListener(CustomEventType.MEDIA_LOADED, () => {
           player.addEventListener(CustomEventType.FIRST_PLAY, () => {
             done();
@@ -1510,7 +1461,6 @@ describe('Player', function () {
         config.sources = sourcesConfig.Mp4;
         player = new Player();
         playerContainer.appendChild(player.getView());
-
       });
 
       afterEach(() => {
@@ -1522,8 +1472,8 @@ describe('Player', function () {
         removeElement(targetId);
       });
 
-      it('should fire source selected', (done) => {
-        player.addEventListener(CustomEventType.SOURCE_SELECTED, (event) => {
+      it('should fire source selected', done => {
+        player.addEventListener(CustomEventType.SOURCE_SELECTED, event => {
           event.payload.selectedSource[0].id.should.equal('1_rsrdfext_10081,url');
           done();
         });
@@ -1557,7 +1507,7 @@ describe('Player', function () {
         removeElement(targetId);
       });
 
-      it('should fire media loaded', (done) => {
+      it('should fire media loaded', done => {
         player.addEventListener(CustomEventType.MEDIA_LOADED, () => {
           done();
         });
@@ -1591,14 +1541,14 @@ describe('Player', function () {
         removeElement(targetId);
       });
 
-      it('should fire playback started when start to playing', (done) => {
+      it('should fire playback started when start to playing', done => {
         player.addEventListener(CustomEventType.PLAYBACK_STARTED, () => {
           done();
         });
         player.play();
       });
 
-      it('should fire playback started only once', (done) => {
+      it('should fire playback started only once', done => {
         let count = 0;
 
         player.addEventListener(CustomEventType.PLAYBACK_STARTED, () => {
@@ -1641,22 +1591,22 @@ describe('Player', function () {
         removeElement(targetId);
       });
 
-      it('should fire abr mode changed for progressive playback', (done) => {
+      it('should fire abr mode changed for progressive playback', done => {
         config.sources = sourcesConfig.Mp4;
         player = new Player(config);
         playerContainer.appendChild(player.getView());
-        player.addEventListener(CustomEventType.ABR_MODE_CHANGED, (event) => {
+        player.addEventListener(CustomEventType.ABR_MODE_CHANGED, event => {
           event.payload.mode.should.equal('manual');
           done();
         });
         player.load();
       });
 
-      it('should fire abr mode changed for adaptive playback', (done) => {
+      it('should fire abr mode changed for adaptive playback', done => {
         config.sources = sourcesConfig.Hls;
         player = new Player(config);
         playerContainer.appendChild(player.getView());
-        player.addEventListener(CustomEventType.ABR_MODE_CHANGED, (event) => {
+        player.addEventListener(CustomEventType.ABR_MODE_CHANGED, event => {
           event.payload.mode.should.equal('auto');
           done();
         });
@@ -1690,7 +1640,7 @@ describe('Player', function () {
         removeElement(targetId);
       });
 
-      it('should be paused', (done) => {
+      it('should be paused', done => {
         let onPlaying = () => {
           player.removeEventListener(player.Event.PLAYING, onPlaying);
           player.addEventListener(player.Event.ENDED, () => {
@@ -1729,7 +1679,7 @@ describe('Player', function () {
         removeElement(targetId);
       });
 
-      it('should fire change source started and change source ended', (done) => {
+      it('should fire change source started and change source ended', done => {
         let changeSourceStarted = false;
         player = new Player(config);
         player.addEventListener(player.Event.CHANGE_SOURCE_STARTED, () => {
@@ -1760,7 +1710,7 @@ describe('Player', function () {
         player.destroy();
       });
 
-      it('should fire text style changed', (done) => {
+      it('should fire text style changed', done => {
         player.addEventListener(player.Event.TEXT_STYLE_CHANGED, () => {
           done();
         });
@@ -1769,7 +1719,7 @@ describe('Player', function () {
     });
   });
 
-  describe('states', function () {
+  describe('states', function() {
     let player, config, playerContainer;
 
     before(() => {
@@ -1792,7 +1742,7 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should switch player states during playback', (done) => {
+    it('should switch player states during playback', done => {
       /**
        * onLoadStart handler
        * @returns {void}
@@ -1860,8 +1810,7 @@ describe('Player', function () {
     });
   });
 
-  describe('configure', function () {
-
+  describe('configure', function() {
     let player, config, playerContainer;
 
     before(() => {
@@ -1881,19 +1830,19 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should create player without sources and set the sources later', (done) => {
+    it('should create player without sources and set the sources later', done => {
       config.sources = sourcesConfig.Mp4;
       player = new Player();
       playerContainer.appendChild(player.getView());
       player.should.be.instanceOf(Player);
       player.configure(config);
-      player.addEventListener(Html5EventType.PLAYING, function () {
+      player.addEventListener(Html5EventType.PLAYING, function() {
         player.destroy();
         done();
       });
-      player.addEventListener(Html5EventType.ERROR, function () {
+      player.addEventListener(Html5EventType.ERROR, function() {
         player.destroy();
-        done(new Error("test fail"));
+        done(new Error('test fail'));
       });
       player.load();
       player.ready().then(() => {
@@ -1902,7 +1851,6 @@ describe('Player', function () {
     });
 
     describe('plugins lifecycle', () => {
-
       beforeEach(() => {
         PluginManager.register('colors', ColorsPlugin);
         PluginManager.register('numbers', NumbersPlugin);
@@ -1913,7 +1861,7 @@ describe('Player', function () {
         PluginManager.unRegister('numbers');
       });
 
-      it('should load 2 plugins on initial config and configure them on configure', function () {
+      it('should load 2 plugins on initial config and configure them on configure', function() {
         player = new Player({
           plugins: {
             colors: {
@@ -1929,7 +1877,7 @@ describe('Player', function () {
         player._pluginManager._plugins.size.should.equals(2);
         player.config.plugins.colors.should.deep.equals({
           size: 5,
-          favouriteColor: "green"
+          favouriteColor: 'green'
         });
         player.config.plugins.numbers.should.deep.equals({
           size: 20,
@@ -1951,7 +1899,7 @@ describe('Player', function () {
         player._pluginManager._plugins.size.should.equals(2);
         player.config.plugins.colors.should.deep.equals({
           size: 50,
-          favouriteColor: "green"
+          favouriteColor: 'green'
         });
         player.config.plugins.numbers.should.deep.equals({
           size: 200,
@@ -1960,7 +1908,7 @@ describe('Player', function () {
         });
       });
 
-      it('should load 1st plugin on initial config, load 2nd plugin and configure the 1st on configure', function () {
+      it('should load 1st plugin on initial config, load 2nd plugin and configure the 1st on configure', function() {
         player = new Player({
           plugins: {
             numbers: {
@@ -1990,7 +1938,7 @@ describe('Player', function () {
         player._pluginManager._plugins.size.should.equals(2);
         player.config.plugins.colors.should.deep.equals({
           size: 50,
-          favouriteColor: "green"
+          favouriteColor: 'green'
         });
         player.config.plugins.numbers.should.deep.equals({
           size: 200,
@@ -1999,7 +1947,7 @@ describe('Player', function () {
         });
       });
 
-      it('should create player without plugins, load plugins on configure', function () {
+      it('should create player without plugins, load plugins on configure', function() {
         player = new Player();
         player._pluginManager._plugins.size.should.equals(0);
         player.config.plugins.should.deep.equals({});
@@ -2018,7 +1966,7 @@ describe('Player', function () {
         player._pluginManager._plugins.size.should.equals(2);
         player.config.plugins.colors.should.deep.equals({
           size: 50,
-          favouriteColor: "green"
+          favouriteColor: 'green'
         });
         player.config.plugins.numbers.should.deep.equals({
           size: 200,
@@ -2027,7 +1975,7 @@ describe('Player', function () {
         });
       });
 
-      it('should create player without plugins, load 1st plugin on configure, configure 1st plugin with/after sources', function () {
+      it('should create player without plugins, load 1st plugin on configure, configure 1st plugin with/after sources', function() {
         player = new Player();
         player._pluginManager._plugins.size.should.equals(0);
         player.config.plugins.should.deep.equals({});
@@ -2075,7 +2023,7 @@ describe('Player', function () {
         });
       });
 
-      it('should create player with plugin and fail to configure other plugin after sources', function () {
+      it('should create player with plugin and fail to configure other plugin after sources', function() {
         player = new Player({
           sources: sourcesConfig.Mp4,
           plugins: {
@@ -2113,7 +2061,7 @@ describe('Player', function () {
     });
 
     describe('playback lifecycle', () => {
-      it('should save initial playback config and initiate it when received sources - 1', function () {
+      it('should save initial playback config and initiate it when received sources - 1', function() {
         player = new Player({
           playback: {
             volume: 0,
@@ -2127,7 +2075,7 @@ describe('Player', function () {
         player.muted.should.be.true;
       });
 
-      it('should save initial playback config and initiate it when received sources - 2', function () {
+      it('should save initial playback config and initiate it when received sources - 2', function() {
         player = new Player({
           playback: {
             muted: true
@@ -2145,7 +2093,7 @@ describe('Player', function () {
         player.muted.should.be.true;
       });
 
-      it('should load the previous playback config and initiate the new one on updating sources', function (done) {
+      it('should load the previous playback config and initiate the new one on updating sources', function(done) {
         player = new Player({
           sources: sourcesConfig.MultipleSources,
           playback: {
@@ -2183,12 +2131,12 @@ describe('Player', function () {
         });
       });
 
-      it('should load the initial config and initiate the new one on updating sources', function (done) {
+      it('should load the initial config and initiate the new one on updating sources', function(done) {
         player = new Player({
           sources: sourcesConfig.MultipleSources,
           playback: {
             muted: true,
-            volume: 1,
+            volume: 1
           }
         });
         player.load();
@@ -2229,7 +2177,7 @@ describe('Player', function () {
     });
   });
 
-  describe('config', function () {
+  describe('config', function() {
     let player, config, playerContainer;
 
     before(() => {
@@ -2249,13 +2197,13 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should get config', function () {
+    it('should get config', function() {
       player = new Player(config);
       playerContainer.appendChild(player.getView());
       player.config.playback.streamPriority.should.deep.equal(getConfigStructure().playback.streamPriority);
     });
 
-    it('should not change the player config', function () {
+    it('should not change the player config', function() {
       player = new Player(config);
       playerContainer.appendChild(player.getView());
       player.config.playback.streamPriority = {};
@@ -2263,7 +2211,7 @@ describe('Player', function () {
     });
   });
 
-  describe('abr', function () {
+  describe('abr', function() {
     let player, config, playerContainer;
 
     before(() => {
@@ -2283,7 +2231,7 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should return false for progressive playback abr', function () {
+    it('should return false for progressive playback abr', function() {
       config.sources = sourcesConfig.Mp4;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
@@ -2291,7 +2239,7 @@ describe('Player', function () {
       player.isAdaptiveBitrateEnabled().should.be.false;
     });
 
-    it('should return true for adaptive playback abr', function () {
+    it('should return true for adaptive playback abr', function() {
       config.sources = sourcesConfig.Hls;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
@@ -2302,7 +2250,7 @@ describe('Player', function () {
     });
   });
 
-  describe('isLive', function () {
+  describe('isLive', function() {
     let player, config, playerContainer;
 
     before(() => {
@@ -2322,7 +2270,7 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should return false for VOD', function (done) {
+    it('should return false for VOD', function(done) {
       config.sources = sourcesConfig.Mp4;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
@@ -2337,7 +2285,7 @@ describe('Player', function () {
       }
     });
 
-    it('should return true for VOD which configured as live', function (done) {
+    it('should return true for VOD which configured as live', function(done) {
       config.sources = sourcesConfig.Mp4;
       config.sources.type = 'Live';
       player = new Player(config);
@@ -2353,14 +2301,14 @@ describe('Player', function () {
       }
     });
 
-    it('should return false for live before loading', function () {
+    it('should return false for live before loading', function() {
       config.sources = sourcesConfig.Live;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
       player.isLive().should.be.false;
     });
 
-    it('should return true for live', function (done) {
+    it('should return true for live', function(done) {
       config.sources = sourcesConfig.Live;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
@@ -2375,7 +2323,7 @@ describe('Player', function () {
       }
     });
 
-    it('should return true for live even configured as VOD', function (done) {
+    it('should return true for live even configured as VOD', function(done) {
       config.sources = sourcesConfig.Live;
       config.sources.type = 'Vod';
       player = new Player(config);
@@ -2392,7 +2340,7 @@ describe('Player', function () {
     });
   });
 
-  describe('isDvr', function () {
+  describe('isDvr', function() {
     let player, config, playerContainer;
 
     before(() => {
@@ -2412,7 +2360,7 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should return false for VOD', function (done) {
+    it('should return false for VOD', function(done) {
       config.sources = sourcesConfig.Mp4;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
@@ -2427,7 +2375,7 @@ describe('Player', function () {
       }
     });
 
-    it('should return false for VOD even configured as dvr', function (done) {
+    it('should return false for VOD even configured as dvr', function(done) {
       config.sources = sourcesConfig.Mp4;
       config.sources.dvr = true;
       player = new Player(config);
@@ -2443,7 +2391,7 @@ describe('Player', function () {
       }
     });
 
-    it('should return true for live which configured as dvr', function (done) {
+    it('should return true for live which configured as dvr', function(done) {
       config.sources = sourcesConfig.Live;
       config.sources.dvr = true;
       player = new Player(config);
@@ -2459,7 +2407,7 @@ describe('Player', function () {
       }
     });
 
-    it('should return true for live which configured as non dvr', function (done) {
+    it('should return true for live which configured as non dvr', function(done) {
       config.sources = sourcesConfig.Live;
       config.sources.dvr = false;
       player = new Player(config);
@@ -2476,7 +2424,7 @@ describe('Player', function () {
     });
   });
 
-  describe('seekToLiveEdge', function () {
+  describe('seekToLiveEdge', function() {
     let player, config, playerContainer;
 
     before(() => {
@@ -2496,7 +2444,7 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should not seek to live edge in VOD', (done) => {
+    it('should not seek to live edge in VOD', done => {
       config.sources = sourcesConfig.Mp4;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
@@ -2514,7 +2462,7 @@ describe('Player', function () {
       }
     });
 
-    it('should seek to live edge', (done) => {
+    it('should seek to live edge', done => {
       config.sources = sourcesConfig.Live;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
@@ -2535,7 +2483,7 @@ describe('Player', function () {
     });
   });
 
-  describe('volume', function () {
+  describe('volume', function() {
     let player, config, playerContainer;
 
     before(() => {
@@ -2558,12 +2506,11 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should return 1 by default', function () {
+    it('should return 1 by default', function() {
       player.volume.should.equal(1);
-
     });
 
-    it('should enable setting the volume via API', function () {
+    it('should enable setting the volume via API', function() {
       player.volume = 0.9;
       player.volume.should.equal(0.9);
       player.volume = 0.3;
@@ -2572,13 +2519,13 @@ describe('Player', function () {
       player.volume.should.equal(0);
     });
 
-    it('should enable setting the volume via config', function () {
+    it('should enable setting the volume via config', function() {
       config.playback.volume = 0.9;
       player.configure(config);
       player.volume.should.equal(0.9);
     });
 
-    it('should cap volume values between 0 and 1(including)', function () {
+    it('should cap volume values between 0 and 1(including)', function() {
       player.volume = 1.1;
       player.volume.should.equal(1);
       player.volume = -0.1;
@@ -2586,7 +2533,7 @@ describe('Player', function () {
     });
   });
 
-  describe('set currentTime', function () {
+  describe('set currentTime', function() {
     let player, config, playerContainer;
 
     before(() => {
@@ -2609,44 +2556,44 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should set the given currentTime', function (done) {
+    it('should set the given currentTime', function(done) {
       player.ready().then(() => {
         player.currentTime = 2;
         player._engine.currentTime.should.equal(2);
-        done()
+        done();
       });
       player.load();
     });
 
-    it('should do nothing for non number given', function (done) {
+    it('should do nothing for non number given', function(done) {
       player.ready().then(() => {
         player.currentTime = true;
         player._engine.currentTime.should.equal(0);
-        done()
+        done();
       });
       player.load();
     });
 
-    it('should set 0 for negative number given', function (done) {
+    it('should set 0 for negative number given', function(done) {
       player.ready().then(() => {
         player.currentTime = -1;
         player._engine.currentTime.should.equal(0);
-        done()
+        done();
       });
       player.load();
     });
 
-    it('should set duration -1 for duration given', function (done) {
+    it('should set duration -1 for duration given', function(done) {
       player.ready().then(() => {
         player.currentTime = player.duration;
         player._engine.currentTime.should.equal(player.duration - 0.1);
-        done()
+        done();
       });
       player.load();
     });
   });
 
-  describe('destroy', function () {
+  describe('destroy', function() {
     let sandbox, player, config;
 
     before(() => {
@@ -2669,7 +2616,7 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should destroy the player', function () {
+    it('should destroy the player', function() {
       player = new Player(config);
       let engineSpy = sandbox.spy(player._engine, 'destroy');
       let posterMgrSpy = sandbox.spy(player._posterManager, 'destroy');
@@ -2693,7 +2640,7 @@ describe('Player', function () {
     });
   });
 
-  describe('reset', function () {
+  describe('reset', function() {
     let sandbox, player, config;
 
     before(() => {
@@ -2716,7 +2663,7 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should resets the player', function () {
+    it('should resets the player', function() {
       player = new Player(config);
       player._reset = false;
       let posterMgrSpy = sandbox.spy(player._posterManager, 'reset');
@@ -2746,7 +2693,7 @@ describe('Player', function () {
     });
   });
 
-  describe('_loadEngine', function () {
+  describe('_loadEngine', function() {
     let sandbox, player, config;
 
     before(() => {
@@ -2769,13 +2716,13 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should load an engine for the first time', function () {
+    it('should load an engine for the first time', function() {
       let spy = sandbox.spy(Html5, 'createEngine');
       player = new Player(config);
       spy.should.have.been.calledOnce;
     });
 
-    it('should call restore for the same engine', function () {
+    it('should call restore for the same engine', function() {
       let createSpy = sandbox.spy(Html5, 'createEngine');
       let restoreSpy = sandbox.spy(Html5.prototype, 'restore');
       player = new Player(config);
@@ -2787,7 +2734,7 @@ describe('Player', function () {
     });
   });
 
-  describe('_getLanguage', function () {
+  describe('_getLanguage', function() {
     let config, player, sandbox;
 
     beforeEach(() => {
@@ -2803,15 +2750,15 @@ describe('Player', function () {
 
     it('should return the configured language', () => {
       let configuredLanguage = 'ita';
-      player._getLanguage(configuredLanguage, new TextTrack({}), "text").should.equals(configuredLanguage);
+      player._getLanguage(configuredLanguage, new TextTrack({}), 'text').should.equals(configuredLanguage);
     });
 
     it('should return the locale language', () => {
       let configuredLanguage = 'auto';
       let engTrackOptions = {
         active: true,
-        label: "Eng",
-        language: "eng",
+        label: 'Eng',
+        language: 'eng',
         kind: 'subtitles'
       };
       let engTrack = new TextTrack(engTrackOptions);
@@ -2820,7 +2767,7 @@ describe('Player', function () {
         return [engTrack];
       });
 
-      let resultLang = player._getLanguage(configuredLanguage, engTrack, "text");
+      let resultLang = player._getLanguage(configuredLanguage, engTrack, 'text');
       Track.langComparer(resultLang, Locale.language).should.be.true;
     });
 
@@ -2828,8 +2775,8 @@ describe('Player', function () {
       let configuredLanguage = 'auto';
       let gerTrackOptions = {
         active: true,
-        label: "Germany",
-        language: "ger",
+        label: 'Germany',
+        language: 'ger',
         kind: 'subtitles'
       };
       let gerTrack = new TextTrack(gerTrackOptions);
@@ -2838,15 +2785,15 @@ describe('Player', function () {
         return [gerTrack];
       });
 
-      player._getLanguage(configuredLanguage, gerTrack, "text").should.equals(gerTrack.language);
+      player._getLanguage(configuredLanguage, gerTrack, 'text').should.equals(gerTrack.language);
     });
 
     it('should return the first track language ', () => {
       let configuredLanguage = 'auto';
       let gerTrackOptions = {
         active: true,
-        label: "Germany",
-        language: "ger",
+        label: 'Germany',
+        language: 'ger',
         kind: 'subtitles'
       };
       let gerTrack = new TextTrack(gerTrackOptions);
@@ -2855,21 +2802,21 @@ describe('Player', function () {
         return [gerTrack];
       });
 
-      player._getLanguage(configuredLanguage, null, "text").should.equals(gerTrack.language);
+      player._getLanguage(configuredLanguage, null, 'text').should.equals(gerTrack.language);
     });
 
     it('should return the first track language even if off track sent as default ', () => {
       let configuredLanguage = 'auto';
       let gerTrackOptions = {
         active: true,
-        label: "Germany",
-        language: "ger",
+        label: 'Germany',
+        language: 'ger',
         kind: 'subtitles'
       };
       let offTrackOptions = {
         active: true,
-        label: "Off",
-        language: "off"
+        label: 'Off',
+        language: 'off'
       };
       let gerTrack = new TextTrack(gerTrackOptions);
       let offTrack = new TextTrack(offTrackOptions);
@@ -2878,11 +2825,11 @@ describe('Player', function () {
         return [gerTrack, offTrack];
       });
 
-      player._getLanguage(configuredLanguage, offTrack, "text").should.equals(gerTrack.language);
+      player._getLanguage(configuredLanguage, offTrack, 'text').should.equals(gerTrack.language);
     });
   });
 
-  describe('_resetTextCuesAndReposition', function () {
+  describe('_resetTextCuesAndReposition', function() {
     let config, player, sandbox;
 
     beforeEach(() => {
@@ -2921,7 +2868,7 @@ describe('Player', function () {
     });
 
     it('should enable setting the current log level from config', () => {
-      const player = new Player({logLevel: "DEBUG"});
+      const player = new Player({logLevel: 'DEBUG'});
       let currentLogLevel = player.getLogLevel();
       currentLogLevel.should.equal(player.LogLevel.DEBUG);
     });
@@ -2930,52 +2877,52 @@ describe('Player', function () {
   describe('setCapabilities', () => {
     let initialOrigCapabilities;
 
-    before((done) => {
+    before(done => {
       Player.runCapabilities();
       Player.getCapabilities().then(capabilities => {
         initialOrigCapabilities = capabilities;
         done();
-      })
+      });
     });
 
     afterEach(() => {
       Player._playerCapabilities = Object.copyDeep(initialOrigCapabilities);
     });
 
-    it('should not change the original capabilities by reference', (done) => {
-      Player.getCapabilities().then((c1) => {
+    it('should not change the original capabilities by reference', done => {
+      Player.getCapabilities().then(c1 => {
         c1.should.deep.equal(initialOrigCapabilities);
         c1.html5.autoplay = 'some value';
-        Player.getCapabilities().then((c2) => {
+        Player.getCapabilities().then(c2 => {
           c2.html5.autoplay.should.equal(initialOrigCapabilities.html5.autoplay);
           done();
         });
       });
     });
 
-    it('should set custom capabilities successfully', (done) => {
+    it('should set custom capabilities successfully', done => {
       let newCapabilities = {
         autoplay: 1,
         mutedAutoPlay: 2,
         isSupported: 3
       };
       Player.setCapabilities('html5', newCapabilities);
-      Player.getCapabilities().then((c2) => {
+      Player.getCapabilities().then(c2 => {
         c2.html5.should.deep.equal(newCapabilities);
         done();
       });
     });
 
-    it('should set custom capabilities successfully after getCapabilities() call', (done) => {
+    it('should set custom capabilities successfully after getCapabilities() call', done => {
       let newCapabilities = {
         autoplay: 3,
         mutedAutoPlay: 4,
         isSupported: 5
       };
-      Player.getCapabilities().then((c1) => {
+      Player.getCapabilities().then(c1 => {
         c1.should.deep.equal(initialOrigCapabilities);
         Player.setCapabilities('html5', newCapabilities);
-        Player.getCapabilities().then((c2) => {
+        Player.getCapabilities().then(c2 => {
           c2.html5.should.deep.equal(newCapabilities);
           done();
         });
@@ -2983,7 +2930,7 @@ describe('Player', function () {
     });
   });
 
-  describe("_maybeSetTracksLabels", function () {
+  describe('_maybeSetTracksLabels', function() {
     let config, player, playerContainer;
 
     before(() => {
@@ -3008,16 +2955,16 @@ describe('Player', function () {
 
     const getConfigStructureWithLabelCallback = () => {
       const audioLabelCallback = () => {
-        return "audio_label";
+        return 'audio_label';
       };
       const captionsLabelCallback = () => {
-        return "captions_label";
+        return 'captions_label';
       };
       const qualitiesLabelCallback = () => {
-        return "qualities_label";
+        return 'qualities_label';
       };
       const config = getConfigStructure();
-      config["customLabels"] = {
+      config['customLabels'] = {
         [LabelOptions.QUALITIES]: qualitiesLabelCallback,
         [LabelOptions.AUDIO]: audioLabelCallback,
         [LabelOptions.CAPTIONS]: captionsLabelCallback
@@ -3027,38 +2974,28 @@ describe('Player', function () {
 
     it("should load with callback label function, and change the label of video track to 'qualities_label'", () => {
       player.configure(getConfigStructureWithLabelCallback());
-      player._tracks = [
-        new VideoTrack()
-      ];
+      player._tracks = [new VideoTrack()];
       player._maybeSetTracksLabels();
       player._tracks[0].label.should.equal('qualities_label');
     });
 
     it("should load with callback label function, and change the label of audio track to 'audio_label'", () => {
       player.configure(getConfigStructureWithLabelCallback());
-      player._tracks = [
-        new AudioTrack()
-      ];
+      player._tracks = [new AudioTrack()];
       player._maybeSetTracksLabels();
       player._tracks[0].label.should.equal('audio_label');
     });
 
     it("should load with callback label function, and change the label of text track to 'captions_label'", () => {
       player.configure(getConfigStructureWithLabelCallback());
-      player._tracks = [
-        new TextTrack()
-      ];
+      player._tracks = [new TextTrack()];
       player._maybeSetTracksLabels();
       player._tracks[0].label.should.equal('captions_label');
     });
 
     it("should load with all callback label function, and change the label respectively to the track type'", () => {
       player.configure(getConfigStructureWithLabelCallback());
-      player._tracks = [
-        new TextTrack(),
-        new VideoTrack(),
-        new AudioTrack()
-      ];
+      player._tracks = [new TextTrack(), new VideoTrack(), new AudioTrack()];
       player._maybeSetTracksLabels();
       player._tracks.forEach(t => {
         switch (t) {
@@ -3075,5 +3012,4 @@ describe('Player', function () {
       });
     });
   });
-})
-;
+});
