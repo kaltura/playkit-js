@@ -236,23 +236,32 @@ describe('NativeAdapter: _getParsedTracks', function() {
   let track1;
   let track2;
   let track3;
+  let track4;
+  let track5;
   let nativeInstance;
 
   before(() => {
     track1 = document.createElement('track');
     track2 = document.createElement('track');
     track3 = document.createElement('track');
+    track4 = document.createElement('track');
+    track5 = document.createElement('track');
     track1.kind = 'subtitles';
     track1.label = 'English';
     track1.default = true;
     track2.kind = 'captions';
     track2.srclang = 'fr';
-    track3.kind = 'captions';
+    track3.kind = 'metadata';
+    track4.kind = 'captions';
+    track5.kind = 'captions';
   });
 
   beforeEach(() => {
     video = document.createElement('video');
-    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.MultipleSources.progressive[0], {sources: sourcesConfig.MultipleSources});
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.MultipleSources.progressive[0], {
+      sources: sourcesConfig.MultipleSources,
+      playback: {enableCEA708Captions: true, captionsTextTrack1Label: ''}
+    });
   });
 
   afterEach(() => {
@@ -298,13 +307,41 @@ describe('NativeAdapter: _getParsedTracks', function() {
     });
   });
 
-  it('should not return parsed of text track without language or label', done => {
+  it('should not return parsed metadata track', done => {
     video.appendChild(track1);
     video.appendChild(track2);
     video.appendChild(track3);
     nativeInstance.load().then(data => {
       video.textTracks.length.should.equal(3);
       data.tracks.filter(track => track instanceof TextTrack).length.should.be.equal(2);
+      done();
+    });
+  });
+
+  it('should not parsed captions track', done => {
+    video.appendChild(track1);
+    video.appendChild(track2);
+    nativeInstance._config.enableCEA708Captions = false;
+    nativeInstance.load().then(data => {
+      video.textTracks.length.should.equal(2);
+      data.tracks.filter(track => track instanceof TextTrack).length.should.be.equal(1);
+      done();
+    });
+  });
+
+  it('should use the configured labels and language for captions track', done => {
+    video.appendChild(track4);
+    video.appendChild(track5);
+    nativeInstance._config.captionsTextTrack1Label = 'l1';
+    nativeInstance._config.captionsTextTrack1LanguageCode = 'c1';
+    nativeInstance._config.captionsTextTrack2Label = 'l2';
+    nativeInstance._config.captionsTextTrack2LanguageCode = 'c2';
+    nativeInstance.load().then(data => {
+      let textTracks = data.tracks.filter(track => track instanceof TextTrack);
+      textTracks[0].label.should.equal('l1');
+      textTracks[0].language.should.equal('c1');
+      textTracks[1].label.should.equal('l2');
+      textTracks[1].language.should.equal('c2');
       done();
     });
   });
@@ -465,20 +502,24 @@ describe('NativeAdapter: selectTextTrack', function() {
   let video;
   let track1;
   let track2;
+  let track3;
   let nativeInstance;
 
   beforeEach(() => {
     video = document.createElement('video');
     track1 = document.createElement('track');
     track2 = document.createElement('track');
+    track3 = document.createElement('track');
     track1.kind = 'subtitles';
     track1.label = 'English';
     track1.default = true;
     track1.srclang = 'en';
-    track2.kind = 'subtitles';
-    track2.srclang = 'fr';
+    track2.kind = 'metadata';
+    track3.kind = 'subtitles';
+    track3.srclang = 'fr';
     video.appendChild(track1);
     video.appendChild(track2);
+    video.appendChild(track3);
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {sources: {}});
   });
 
@@ -500,9 +541,11 @@ describe('NativeAdapter: selectTextTrack', function() {
         });
         nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
         nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
-        nativeInstance.selectTextTrack(new TextTrack({language: 'fr', kind: 'subtitles'}));
+        nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
+        nativeInstance.selectTextTrack(new TextTrack({index: 2, language: 'fr', kind: 'subtitles'}));
         nativeInstance._videoElement.textTracks[0].mode.should.be.equal('disabled');
-        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('hidden');
+        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
+        nativeInstance._videoElement.textTracks[2].mode.should.be.equal('hidden');
       } else {
         done();
       }
@@ -518,9 +561,11 @@ describe('NativeAdapter: selectTextTrack', function() {
         });
         nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
         nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
-        nativeInstance.selectTextTrack(new TextTrack({language: 'fr', kind: 'captions'}));
+        nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
+        nativeInstance.selectTextTrack(new TextTrack({index: 2, language: 'fr', kind: 'captions'}));
         nativeInstance._videoElement.textTracks[0].mode.should.be.equal('disabled');
-        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('hidden');
+        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
+        nativeInstance._videoElement.textTracks[2].mode.should.be.equal('hidden');
       } else {
         done();
       }
@@ -534,9 +579,11 @@ describe('NativeAdapter: selectTextTrack', function() {
         if (nativeInstance._videoElement.textTracks) {
           nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
           nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
-          nativeInstance.selectTextTrack(new TextTrack({language: 'en', kind: 'subtitles'}));
+          nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
+          nativeInstance.selectTextTrack(new TextTrack({index: 0, language: 'en', kind: 'subtitles'}));
           nativeInstance._videoElement.textTracks[0].mode.should.be.equal('hidden');
           nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
+          nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
         }
         done();
       })
@@ -552,9 +599,11 @@ describe('NativeAdapter: selectTextTrack', function() {
         if (nativeInstance._videoElement.textTracks) {
           nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
           nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
-          nativeInstance.selectTextTrack(new TextTrack({language: 'de', kind: 'subtitles'}));
+          nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
+          nativeInstance.selectTextTrack(new TextTrack({index: 3, kind: 'subtitles'}));
           nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
           nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
+          nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
         }
         done();
       })
@@ -568,9 +617,11 @@ describe('NativeAdapter: selectTextTrack', function() {
       if (nativeInstance._videoElement.textTracks) {
         nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
         nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
-        nativeInstance.selectTextTrack(new TextTrack({language: '', kind: 'metadata'}));
+        nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
+        nativeInstance.selectTextTrack(new TextTrack({index: 1, kind: 'subtitles'}));
         nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
         nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
+        nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
       }
       done();
     });

@@ -471,8 +471,6 @@ export default class Player extends FakeEventTarget {
         .load(startTime)
         .then(data => {
           this._updateTracks(data.tracks);
-          this._maybeSetTracksLabels();
-          this._setDefaultTracks();
           this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
           resetFlags();
         })
@@ -1853,8 +1851,10 @@ export default class Player extends FakeEventTarget {
    */
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
-    this._tracks = [...tracks, ...this._externalCaptionsHandler.getExternalTracks(tracks)];
+    this._tracks = tracks.concat(this._externalCaptionsHandler.getExternalTracks(tracks));
     this._addTextTrackOffOption();
+    this._maybeSetTracksLabels();
+    this._setDefaultTracks();
   }
 
   /**

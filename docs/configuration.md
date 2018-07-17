@@ -38,6 +38,11 @@ var config = {
     audioLanguage: '',
     textLanguage: '',
     useNativeTextTrack: false,
+    enableCEA708Captions: true,
+    captionsTextTrack1Label: 'English',
+    captionsTextTrack1LanguageCode: 'en',
+    captionsTextTrack2Label: 'Spanish',
+    captionsTextTrack2LanguageCode: 'es',
     volume: 1,
     startTime: -1,
     playsinline: true,
@@ -468,6 +473,11 @@ var config = {
 >  audioLanguage: string,
 >  textLanguage: string,
 >  useNativeTextTrack: boolean,
+>  enableCEA708Captions: boolean,
+>  captionsTextTrack1Label: string,
+>  captionsTextTrack1LanguageCode: string,
+>  captionsTextTrack2Label: string,
+>  captionsTextTrack2LanguageCode: string,
 >  volume: number,
 >  startTime: number,
 >  playsinline: boolean,
@@ -489,6 +499,11 @@ var config = {
 >  audioLanguage: "",
 >  textLanguage: "",
 >  useNativeTextTrack: false,
+>  enableCEA708Captions: true,
+>  captionsTextTrack1Label: "English",
+>  captionsTextTrack1LanguageCode: "en",
+>  captionsTextTrack2Label: "Spanish",
+>  captionsTextTrack2LanguageCode: "es",
 >  volume: 1,
 >  startTime: -1,
 >  playsinline: true,
@@ -595,6 +610,56 @@ var config = {
 > > ##### Description: Determines whether to use native browser text tracks or not.
 > >
 > > If set to True, the native browser captions will be displayed.
+>
+> ##
+>
+> > ### config.playback.enableCEA708Captions
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `true`
+> >
+> > ##### Description: Whether or not to enable CEA-708 captions.
+>
+> ##
+>
+> > ### config.playback.captionsTextTrack1Label
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `English`
+> >
+> > ##### Description: Label for the CEA-708 captions track 1.
+>
+> ##
+>
+> > ### config.playback.captionsTextTrack1LanguageCode
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `en`
+> >
+> > ##### Description: RFC 3066 language code for the CEA-708 captions track 1.
+>
+> ##
+>
+> > ### config.playback.captionsTextTrack2Label
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `Spanish`
+> >
+> > ##### Description: Label for the CEA-708 captions track 2.
+>
+> ##
+>
+> > ### config.playback.captionsTextTrack2LanguageCode
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `es`
+> >
+> > ##### Description: RFC 3066 language code for the CEA-708 captions track 2.
 >
 > ##
 >
