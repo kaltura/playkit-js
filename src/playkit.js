@@ -2,7 +2,7 @@
 import Player from './player';
 import BaseMediaSourceAdapter from './engines/html5/media-source/base-media-source-adapter';
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider';
-import {registerEngine} from './engines/engine-provider';
+import {registerEngine, unRegisterEngine} from './engines/engine-provider';
 import {registerPlugin} from './plugin/plugin-manager';
 import BaseDrmProtocol from './drm/base-drm-protocol';
 import BaseMiddleware from './middleware/base-middleware';
@@ -28,8 +28,6 @@ import {EventType} from './event/event-type';
 import {AbrMode} from './track/abr-mode-type';
 import getLogger, {getLogLevel, LogLevel, LogLevelType, setLogLevel} from './utils/logger';
 import {CorsType} from './engines/html5/cors-types';
-
-Player.runCapabilities();
 
 declare var __VERSION__: string;
 declare var __NAME__: string;
@@ -79,7 +77,11 @@ export {BaseDrmProtocol};
 const getCapabilities = Player.getCapabilities;
 const setCapabilities = Player.setCapabilities;
 
-export {getCapabilities, setCapabilities, registerEngine};
+// Export capabilities utils
+export {getCapabilities, setCapabilities};
+
+// Export engine framework
+export {registerEngine, unRegisterEngine};
 
 // Export enums
 export {EventType, StateType, TrackType, EngineType, MediaType, StreamType, AbrMode, LogLevelType, CorsType};

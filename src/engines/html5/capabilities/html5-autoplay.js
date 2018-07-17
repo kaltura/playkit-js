@@ -5,12 +5,8 @@ import {Html5EventType} from '../../../event/event-type';
 
 const WAIT_TIME: number = 500;
 
-const testVideoElement: HTMLVideoElement = Utils.Dom.createElement('video');
-testVideoElement.src = EncodingSources.Base64Mp4Source;
-// For iOS devices needs to turn the playsinline attribute on
-testVideoElement.setAttribute('playsinline', '');
-
 export default class Html5AutoPlayCapability implements ICapability {
+  static _vid: HTMLVideoElement;
   static _playPromiseResult: Promise<*>;
 
   /**
@@ -20,6 +16,12 @@ export default class Html5AutoPlayCapability implements ICapability {
    * @returns {void}
    */
   static runCapability(): void {
+    if (!Html5AutoPlayCapability._vid) {
+      Html5AutoPlayCapability._vid = Utils.Dom.createElement('video');
+      Html5AutoPlayCapability._vid.src = EncodingSources.Base64Mp4Source;
+      // For iOS devices needs to turn the playsinline attribute on
+      Html5AutoPlayCapability._vid.setAttribute('playsinline', '');
+    }
     Html5AutoPlayCapability._playPromiseResult = new Promise(resolve => {
       Html5AutoPlayCapability._setMuted(false);
       if (Html5AutoPlayCapability._isDataSaverMode()) {
@@ -73,7 +75,7 @@ export default class Html5AutoPlayCapability implements ICapability {
    * @private
    */
   static _getPlayPromise(): Promise<*> {
-    return testVideoElement.play() || Html5AutoPlayCapability._forcePromiseReturnValue();
+    return Html5AutoPlayCapability._vid.play() || Html5AutoPlayCapability._forcePromiseReturnValue();
   }
 
   /**
@@ -85,11 +87,11 @@ export default class Html5AutoPlayCapability implements ICapability {
    */
   static _setMuted(muted: boolean): void {
     if (muted) {
-      testVideoElement.muted = true;
-      testVideoElement.setAttribute('muted', '');
+      Html5AutoPlayCapability._vid.muted = true;
+      Html5AutoPlayCapability._vid.setAttribute('muted', '');
     } else {
-      testVideoElement.muted = false;
-      testVideoElement.removeAttribute('muted');
+      Html5AutoPlayCapability._vid.muted = false;
+      Html5AutoPlayCapability._vid.removeAttribute('muted');
     }
   }
 
@@ -105,11 +107,11 @@ export default class Html5AutoPlayCapability implements ICapability {
       const supported = setTimeout(() => {
         reject();
       }, WAIT_TIME);
-      testVideoElement.addEventListener(Html5EventType.PLAYING, () => {
+      Html5AutoPlayCapability._vid.addEventListener(Html5EventType.PLAYING, () => {
         clearTimeout(supported);
         resolve();
       });
-      testVideoElement.addEventListener(Html5EventType.ERROR, () => {
+      Html5AutoPlayCapability._vid.addEventListener(Html5EventType.ERROR, () => {
         clearTimeout(supported);
         reject();
       });

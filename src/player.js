@@ -370,6 +370,7 @@ export default class Player extends FakeEventTarget {
    */
   constructor(config: Object = {}) {
     super();
+    Player.runCapabilities();
     this._env = Env;
     this._tracks = [];
     this._firstPlay = true;

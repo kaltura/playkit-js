@@ -10,7 +10,6 @@ import {TextTrack as PKTextTrack} from '../../track/text-track';
 import {Cue} from '../../track/vtt-cue';
 import * as Utils from '../../utils/util';
 import Html5AutoPlayCapability from './capabilities/html5-autoplay';
-import Html5IsSupportedCapability from './capabilities/html5-is-supported';
 import Error from '../../error/error';
 import getLogger from '../../utils/logger';
 
@@ -69,7 +68,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    * @static
    */
-  static _capabilities: Array<typeof ICapability> = [Html5AutoPlayCapability, Html5IsSupportedCapability];
+  static _capabilities: Array<typeof ICapability> = [Html5AutoPlayCapability];
 
   /**
    * @type {string} - The engine id.
@@ -85,6 +84,20 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @static
    */
   static _el: HTMLVideoElement;
+
+  /**
+   * Checks if html5 is supported.
+   * @returns {boolean} - Whether the html5 is supported.
+   */
+  static isSupported(): boolean {
+    try {
+      const el = Utils.Dom.createElement('video');
+      el.volume = 0.5;
+      return !!el.canPlayType;
+    } catch (e) {
+      return false;
+    }
+  }
 
   /**
    * Factory method to create an engine.
