@@ -426,8 +426,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         };
         if (settings.kind === 'subtitles') {
           parsedTracks.push(new PKTextTrack(settings));
-        }
-        if (settings.kind === 'captions' && this._config.enableCEA708Captions) {
+        } else if (settings.kind === 'captions' && this._config.enableCEA708Captions) {
           settings.label = settings.label || captionsTextTrackLabels.shift();
           settings.language = settings.language || captionsTextTrackLanguageCodes.shift();
           parsedTracks.push(new PKTextTrack(settings));
@@ -591,7 +590,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const textTracks = this._videoElement.textTracks;
     if (textTrack instanceof PKTextTrack && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks) {
       this._removeNativeTextTrackChangeListener();
-      const selectedTrack = Array.from(textTracks).find(track => (track ? track.language === textTrack.language : false));
+      const selectedTrack = Array.from(textTracks).find(
+        (track, index) => textTrack.index === index && (track.kind === 'subtitles' || track.kind === 'captions')
+      );
       if (selectedTrack) {
         this._disableTextTracks();
         selectedTrack.mode = this._config.displayTextTrack ? 'showing' : 'hidden';

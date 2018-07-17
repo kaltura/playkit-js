@@ -502,20 +502,24 @@ describe('NativeAdapter: selectTextTrack', function() {
   let video;
   let track1;
   let track2;
+  let track3;
   let nativeInstance;
 
   beforeEach(() => {
     video = document.createElement('video');
     track1 = document.createElement('track');
     track2 = document.createElement('track');
+    track3 = document.createElement('track');
     track1.kind = 'subtitles';
     track1.label = 'English';
     track1.default = true;
     track1.srclang = 'en';
-    track2.kind = 'subtitles';
-    track2.srclang = 'fr';
+    track2.kind = 'metadata';
+    track3.kind = 'subtitles';
+    track3.srclang = 'fr';
     video.appendChild(track1);
     video.appendChild(track2);
+    video.appendChild(track3);
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {sources: {}});
   });
 
@@ -537,9 +541,11 @@ describe('NativeAdapter: selectTextTrack', function() {
         });
         nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
         nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
-        nativeInstance.selectTextTrack(new TextTrack({language: 'fr', kind: 'subtitles'}));
+        nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
+        nativeInstance.selectTextTrack(new TextTrack({index: 2, language: 'fr', kind: 'subtitles'}));
         nativeInstance._videoElement.textTracks[0].mode.should.be.equal('disabled');
-        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('hidden');
+        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
+        nativeInstance._videoElement.textTracks[2].mode.should.be.equal('hidden');
       } else {
         done();
       }
@@ -555,9 +561,11 @@ describe('NativeAdapter: selectTextTrack', function() {
         });
         nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
         nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
-        nativeInstance.selectTextTrack(new TextTrack({language: 'fr', kind: 'captions'}));
+        nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
+        nativeInstance.selectTextTrack(new TextTrack({index: 2, language: 'fr', kind: 'captions'}));
         nativeInstance._videoElement.textTracks[0].mode.should.be.equal('disabled');
-        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('hidden');
+        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
+        nativeInstance._videoElement.textTracks[2].mode.should.be.equal('hidden');
       } else {
         done();
       }
@@ -571,9 +579,11 @@ describe('NativeAdapter: selectTextTrack', function() {
         if (nativeInstance._videoElement.textTracks) {
           nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
           nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
-          nativeInstance.selectTextTrack(new TextTrack({language: 'en', kind: 'subtitles'}));
+          nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
+          nativeInstance.selectTextTrack(new TextTrack({index: 0, language: 'en', kind: 'subtitles'}));
           nativeInstance._videoElement.textTracks[0].mode.should.be.equal('hidden');
           nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
+          nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
         }
         done();
       })
@@ -589,9 +599,11 @@ describe('NativeAdapter: selectTextTrack', function() {
         if (nativeInstance._videoElement.textTracks) {
           nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
           nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
-          nativeInstance.selectTextTrack(new TextTrack({language: 'de', kind: 'subtitles'}));
+          nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
+          nativeInstance.selectTextTrack(new TextTrack({index: 3, kind: 'subtitles'}));
           nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
           nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
+          nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
         }
         done();
       })
@@ -605,9 +617,11 @@ describe('NativeAdapter: selectTextTrack', function() {
       if (nativeInstance._videoElement.textTracks) {
         nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
         nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
-        nativeInstance.selectTextTrack(new TextTrack({language: '', kind: 'metadata'}));
+        nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
+        nativeInstance.selectTextTrack(new TextTrack({index: 1, kind: 'subtitles'}));
         nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
         nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
+        nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
       }
       done();
     });
