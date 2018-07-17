@@ -818,4 +818,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       return 0;
     }
   }
+
+  /**
+   * Gets the selected media source object.
+   * @returns {?PKMediaSourceObject} - The media source object.
+   */
+  getSelectedSource(): ?PKMediaSourceObject {
+    return this._sourceObj;
+  }
 }

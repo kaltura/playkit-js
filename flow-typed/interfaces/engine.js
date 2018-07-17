@@ -30,6 +30,7 @@ declare interface IEngine {
   getStartTimeOfDvrWindow(): number;
   isLive(): boolean;
   getVideoElement(): HTMLVideoElement;
+  getSelectedSource(): PKMediaSourceObject;
   +id: string;
   currentTime: number;
   +duration: number;

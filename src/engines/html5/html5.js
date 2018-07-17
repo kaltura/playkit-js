@@ -265,54 +265,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
-   * Handles errors from the video element
-   * @returns {void}
-   * @private
-   */
-  _handleVideoError(): void {
-    if (!this._el.error) return;
-    const code = this._el.error.code;
-    if (code == 1 /* MEDIA_ERR_ABORTED */) {
-      // Ignore this error code.js, which should only occur when navigating away or
-      // deliberately stopping playback of HTTP content.
-      return;
-    }
-
-    // Extra error information from MS Edge and IE11:
-    let extended = this._getMsExtendedError();
-
-    // Extra error information from Chrome:
-    // $FlowFixMe
-    const message = this._el.error.message;
-
-    const error = new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.VIDEO_ERROR, {
-      code: code,
-      extended: extended,
-      message: message
-    });
-    this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
-  }
-
-  /**
-   * more info about the error
-   * @returns {string} info about the video element error
-   * @private
-   */
-  _getMsExtendedError(): string {
-    // $FlowFixMe
-    let extended = this._el.error.msExtendedCode;
-    if (extended) {
-      // Convert to unsigned:
-      if (extended < 0) {
-        extended += Math.pow(2, 32);
-      }
-      // Format as hex:
-      extended = extended.toString(16);
-    }
-    return extended;
-  }
-
-  /**
    * Remove the listeners of the video element events.
    * @public
    * @returns {void}
@@ -345,6 +297,16 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   selectVideoTrack(videoTrack: VideoTrack): void {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.selectVideoTrack(videoTrack);
+    }
+  }
+
+  /**
+   * Gets the selected media source object.
+   * @returns {?PKMediaSourceObject} - The media source object.
+   */
+  getSelectedSource(): ?PKMediaSourceObject {
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.getSelectedSource();
     }
   }
 
@@ -943,5 +905,53 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       }
     }
     this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: activeCues}));
+  }
+
+  /**
+   * Handles errors from the video element
+   * @returns {void}
+   * @private
+   */
+  _handleVideoError(): void {
+    if (!this._el.error) return;
+    const code = this._el.error.code;
+    if (code == 1 /* MEDIA_ERR_ABORTED */) {
+      // Ignore this error code.js, which should only occur when navigating away or
+      // deliberately stopping playback of HTTP content.
+      return;
+    }
+
+    // Extra error information from MS Edge and IE11:
+    let extended = this._getMsExtendedError();
+
+    // Extra error information from Chrome:
+    // $FlowFixMe
+    const message = this._el.error.message;
+
+    const error = new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.VIDEO_ERROR, {
+      code: code,
+      extended: extended,
+      message: message
+    });
+    this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
+  }
+
+  /**
+   * more info about the error
+   * @returns {string} info about the video element error
+   * @private
+   */
+  _getMsExtendedError(): string {
+    // $FlowFixMe
+    let extended = this._el.error.msExtendedCode;
+    if (extended) {
+      // Convert to unsigned:
+      if (extended < 0) {
+        extended += Math.pow(2, 32);
+      }
+      // Format as hex:
+      extended = extended.toString(16);
+    }
+    return extended;
   }
 }

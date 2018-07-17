@@ -476,37 +476,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Checks for callbacks that should change the tracks, and call them on the
-   * respective track group (audio/text/video)
-   * @private
-   * @returns {void}
-   */
-  _maybeSetTracksLabels() {
-    const customLabels = this._config.customLabels;
-    if (customLabels) {
-      for (let callbackType in customLabels) {
-        this._setTracksCustomLabels(this._getTracksByType(LabelToTrackMap[callbackType]), customLabels[callbackType]);
-      }
-    }
-  }
-
-  /**
-   *
-   * @param {Array<Track>} tracks - tracks
-   * @param {Function} callback - application label callback, returns a string
-   * @private
-   * @returns {void}
-   */
-  _setTracksCustomLabels(tracks: Array<Track>, callback: Function) {
-    tracks.forEach(track => {
-      const result = callback(Utils.Object.copyDeep(track));
-      if (result) {
-        track.label = result;
-      }
-    });
-  }
-
-  /**
    * Start/resume playback.
    * @returns {void}
    * @public
@@ -555,6 +524,16 @@ export default class Player extends FakeEventTarget {
   getVideoElement(): ?HTMLVideoElement {
     if (this._engine) {
       return this._engine.getVideoElement();
+    }
+  }
+
+  /**
+   * Gets the selected media source object.
+   * @returns {?PKMediaSourceObject} - The media source object.
+   */
+  getSelectedSource(): ?PKMediaSourceObject {
+    if (this._engine) {
+      return this._engine.getSelectedSource();
     }
   }
 
@@ -2013,6 +1992,37 @@ export default class Player extends FakeEventTarget {
     } else if (defaultTrack && !defaultTrack.active) {
       this.selectTrack(defaultTrack);
     }
+  }
+
+  /**
+   * Checks for callbacks that should change the tracks, and call them on the
+   * respective track group (audio/text/video)
+   * @private
+   * @returns {void}
+   */
+  _maybeSetTracksLabels() {
+    const customLabels = this._config.customLabels;
+    if (customLabels) {
+      for (let callbackType in customLabels) {
+        this._setTracksCustomLabels(this._getTracksByType(LabelToTrackMap[callbackType]), customLabels[callbackType]);
+      }
+    }
+  }
+
+  /**
+   *
+   * @param {Array<Track>} tracks - tracks
+   * @param {Function} callback - application label callback, returns a string
+   * @private
+   * @returns {void}
+   */
+  _setTracksCustomLabels(tracks: Array<Track>, callback: Function) {
+    tracks.forEach(track => {
+      const result = callback(Utils.Object.copyDeep(track));
+      if (result) {
+        track.label = result;
+      }
+    });
   }
 
   // </editor-fold>
