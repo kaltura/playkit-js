@@ -591,7 +591,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (textTrack instanceof PKTextTrack && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks) {
       this._removeNativeTextTrackChangeListener();
       const selectedTrack = Array.from(textTracks).find(
-        (track, index) => textTrack.index === index && (track.kind === 'subtitles' || track.kind === 'captions')
+        (track, index) => textTrack.index === index && (track && (track.kind === 'subtitles' || track.kind === 'captions'))
       );
       if (selectedTrack) {
         this._disableTextTracks();
