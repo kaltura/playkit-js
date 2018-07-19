@@ -1,8 +1,7 @@
-import getLogger from '../../../src/utils/logger'
-import {LogLevel} from '../../../src/utils/logger'
+import getLogger from '../../../src/utils/logger';
+import {LogLevel} from '../../../src/utils/logger';
 
 describe('LoggerFactory', () => {
-
   let loggerA = null;
   let loggerB = null;
 
@@ -12,13 +11,13 @@ describe('LoggerFactory', () => {
   });
 
   it('should create two separate loggers', () => {
-    (loggerA.context.name).should.equal('loggerA');
-    (loggerB.context.name).should.equal('loggerB');
+    loggerA.context.name.should.equal('loggerA');
+    loggerB.context.name.should.equal('loggerB');
   });
 
-  it('should change loggerA\'s log level', () => {
+  it("should change loggerA's log level", () => {
     loggerA.setLevel(LogLevel.WARN);
-    (loggerA.context.filterLevel).should.deep.equal(LogLevel.WARN);
-    (loggerB.context.filterLevel).should.deep.equal(LogLevel.DEBUG);
+    loggerA.context.filterLevel.should.deep.equal(LogLevel.WARN);
+    loggerB.context.filterLevel.should.deep.equal(LogLevel.DEBUG);
   });
 });

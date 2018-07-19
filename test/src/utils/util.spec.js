@@ -1,9 +1,8 @@
-import * as Utils from '../../../src/utils/util'
+import * as Utils from '../../../src/utils/util';
 
 describe('util', () => {
-
-  describe('Number', function () {
-    describe('isNumber', function () {
+  describe('Number', function() {
+    describe('isNumber', function() {
       it('should return if a certain input is a number', () => {
         Utils.Number.isNumber(-3).should.be.true;
         Utils.Number.isNumber(2).should.be.true;
@@ -13,7 +12,7 @@ describe('util', () => {
       });
     });
 
-    describe('isInt', function () {
+    describe('isInt', function() {
       it('should return if a certain input is a number of type integer', () => {
         Utils.Number.isInt(3).should.be.true;
         Utils.Number.isInt(3.1).should.be.false;
@@ -22,7 +21,7 @@ describe('util', () => {
       });
     });
 
-    describe('isFloat', function () {
+    describe('isFloat', function() {
       it('should return if a certain input is a number of type float', () => {
         Utils.Number.isFloat(3.1).should.be.true;
         Utils.Number.isFloat(6.455).should.be.true;
@@ -33,15 +32,18 @@ describe('util', () => {
     });
   });
 
-  describe('Object', function () {
-    describe('merge', function () {
+  describe('Object', function() {
+    describe('merge', function() {
       it('should merge 2 objects', () => {
-        let obj1 = {x: 1}, obj2 = {y: 2};
+        let obj1 = {x: 1},
+          obj2 = {y: 2};
         Utils.Object.merge([obj1, obj2]).should.deep.equals({x: 1, y: 2});
       });
 
       it('should merge 3 objects', () => {
-        let obj1 = {x: 1}, obj2 = {y: 2}, obj3 = {z: 3};
+        let obj1 = {x: 1},
+          obj2 = {y: 2},
+          obj3 = {z: 3};
         Utils.Object.merge([obj1, obj2, obj3]).should.deep.equals({x: 1, y: 2, z: 3});
         obj1 = null;
         obj2 = null;
@@ -49,26 +51,30 @@ describe('util', () => {
       });
 
       it('should override y property', () => {
-        let obj1 = {x: 1, y: 1}, obj2 = {y: 2};
+        let obj1 = {x: 1, y: 1},
+          obj2 = {y: 2};
         Utils.Object.merge([obj1, obj2]).should.deep.equals({x: 1, y: 2});
       });
 
       it('should return obj1 as the result', () => {
-        let obj1 = {x: 1}, obj2 = null;
+        let obj1 = {x: 1},
+          obj2 = null;
         Utils.Object.merge([obj1, obj2]).should.deep.equals({x: 1});
         obj2 = {};
         Utils.Object.merge([obj1, obj2]).should.deep.equals({x: 1});
       });
 
       it('should return obj2 as the result', () => {
-        let obj1 = null, obj2 = {y: 2};
+        let obj1 = null,
+          obj2 = {y: 2};
         Utils.Object.merge([obj1, obj2]).should.deep.equals({y: 2});
         obj1 = {};
         Utils.Object.merge([obj1, obj2]).should.deep.equals({y: 2});
       });
 
       it('should return empty object', () => {
-        let obj1 = null, obj2 = null;
+        let obj1 = null,
+          obj2 = null;
         Utils.Object.merge([obj1, obj2]).should.deep.equals({});
         obj1 = {};
         obj2 = {};
@@ -76,16 +82,16 @@ describe('util', () => {
       });
     });
 
-    describe('mergeDeep', function () {
-      it('should deep merge object', function () {
+    describe('mergeDeep', function() {
+      it('should deep merge object', function() {
         Utils.Object.mergeDeep({x: 1}, {x: 2, y: {z: 1}}).should.deep.equals({x: 2, y: {z: 1}});
         Utils.Object.mergeDeep({y: 1}, {x: 2}).should.deep.equals({y: 1, x: 2});
         Utils.Object.mergeDeep({}, {x: 2}).should.deep.equals({x: 2});
       });
     });
 
-    describe('copyDeep', function () {
-      it('should deep copy object', function () {
+    describe('copyDeep', function() {
+      it('should deep copy object', function() {
         let myObj = {x: 1, y: 2};
         let resObject = Utils.Object.copyDeep(myObj);
         resObject.should.deep.equals(myObj);
@@ -96,8 +102,8 @@ describe('util', () => {
       });
     });
 
-    describe('isEmptyObject', function () {
-      it('should return if an object is an empty object', function () {
+    describe('isEmptyObject', function() {
+      it('should return if an object is an empty object', function() {
         Utils.Object.isEmptyObject(null).should.be.true;
         Utils.Object.isEmptyObject(undefined).should.be.true;
         Utils.Object.isEmptyObject({}).should.be.true;
@@ -105,15 +111,14 @@ describe('util', () => {
       });
     });
 
-
-    describe('getPropertyPath', function () {
+    describe('getPropertyPath', function() {
       let o;
 
-      before(function () {
+      before(function() {
         o = {a: {b: {c: {d: {e: 1}}}}};
       });
 
-      it('should return the value at an object property path', function () {
+      it('should return the value at an object property path', function() {
         Utils.Object.getPropertyPath(o, 'a.b').should.deep.equals({c: {d: {e: 1}}});
         Utils.Object.getPropertyPath(o, 'a.b.c').should.deep.equals({d: {e: 1}});
         Utils.Object.getPropertyPath(o, 'a.b.c.d').should.deep.equals({e: 1});
@@ -122,14 +127,14 @@ describe('util', () => {
       });
     });
 
-    describe('hasPropertyPath', function () {
+    describe('hasPropertyPath', function() {
       let o;
 
-      before(function () {
+      before(function() {
         o = {a: {b: {c: {d: {e: 1}}}}};
       });
 
-      it('should return if an object has the property path', function () {
+      it('should return if an object has the property path', function() {
         Utils.Object.hasPropertyPath(o, 'a.b').should.be.true;
         Utils.Object.hasPropertyPath(o, 'a.b.c').should.be.true;
         Utils.Object.hasPropertyPath(o, 'a.b.c.d').should.be.true;
@@ -140,38 +145,40 @@ describe('util', () => {
     });
   });
 
-  describe('String', function () {
+  describe('String', function() {
     describe('capitlize', () => {
       it('should capitlize first letter in string', () => {
-        Utils.String.capitlize("first").charAt(0).should.equal('F');
+        Utils.String.capitlize('first')
+          .charAt(0)
+          .should.equal('F');
       });
 
-      it('should return the argument the same if it\'s not a string', () => {
-        let testArg = {"notString": true};
+      it("should return the argument the same if it's not a string", () => {
+        let testArg = {notString: true};
         Utils.String.capitlize(testArg).should.equal(testArg);
       });
     });
 
-    describe('endsWith', function () {
+    describe('endsWith', function() {
       it('should check if string is ends with given string', () => {
-        Utils.String.endsWith("first", "st").should.equal(true);
+        Utils.String.endsWith('first', 'st').should.equal(true);
       });
 
       it('should return false if argument not string', () => {
-        let testArg = {"notString": true};
-        Utils.String.endsWith(testArg, "t").should.equal(false);
+        let testArg = {notString: true};
+        Utils.String.endsWith(testArg, 't').should.equal(false);
       });
 
       it('should return false if search argument not string', () => {
-        let testArg = {"notString": true};
-        Utils.String.endsWith("first", testArg).should.equal(false);
+        let testArg = {notString: true};
+        Utils.String.endsWith('first', testArg).should.equal(false);
       });
     });
   });
 
-  describe('Generator', function () {
-    describe('uniqueId', function () {
-      it('should create unique id', function () {
+  describe('Generator', function() {
+    describe('uniqueId', function() {
+      it('should create unique id', function() {
         Utils.Generator.uniqueId().length.should.equals(3);
         Utils.Generator.uniqueId(-2).length.should.equals(3);
         Utils.Generator.uniqueId(3).length.should.equals(4);
@@ -180,9 +187,9 @@ describe('util', () => {
     });
   });
 
-  describe('Version', function () {
-    describe('Compare', function () {
-      it('The first should be smaller than the second', function () {
+  describe('Version', function() {
+    describe('Compare', function() {
+      it('The first should be smaller than the second', function() {
         (Utils.VERSION.compare('1.7.1', '1.7.10') < 0).should.be.true;
         (Utils.VERSION.compare('1.7.2', '1.7.10') < 0).should.be.true;
         (Utils.VERSION.compare('1.6.1', '1.7.10') < 0).should.be.true;
@@ -193,7 +200,7 @@ describe('util', () => {
         (Utils.VERSION.compare('1.7.2', '1.7.10b') < 0).should.be.true;
       });
 
-      it('The first should be greater than the second', function () {
+      it('The first should be greater than the second', function() {
         (Utils.VERSION.compare('1.7.2', '1.7.10b', {lexicographical: true}) > 0).should.be.true;
         (Utils.VERSION.compare('1.7.10', '1.7.1') > 0).should.be.true;
         (Utils.VERSION.compare('1.7.10', '1.6.1') > 0).should.be.true;
@@ -202,18 +209,18 @@ describe('util', () => {
         (Utils.VERSION.compare('1.8.0', '1.7') > 0).should.be.true;
       });
 
-      it('The first should be equal the second', function () {
+      it('The first should be equal the second', function() {
         (Utils.VERSION.compare('1.7.10', '1.7.10') === 0).should.be.true;
         (Utils.VERSION.compare('1.7', '1.7') === 0).should.be.true;
         (Utils.VERSION.compare('1.7', '1.7.0') === 0).should.be.true;
       });
 
-      it('Should return NaN for a bad version', function () {
+      it('Should return NaN for a bad version', function() {
         isNaN(Utils.VERSION.compare('1.7', '1..7')).should.be.true;
         isNaN(Utils.VERSION.compare('1.7', 'bad')).should.be.true;
         isNaN(Utils.VERSION.compare('1..7', '1.7')).should.be.true;
         isNaN(Utils.VERSION.compare('bas', '1.7')).should.be.true;
       });
-    })
-  })
+    });
+  });
 });

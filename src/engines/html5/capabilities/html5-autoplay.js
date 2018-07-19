@@ -1,7 +1,7 @@
 // @flow
-import * as Utils from '../../../utils/util'
-import * as EncodingSources from '../../../assets/encoding-sources.json'
-import {Html5EventType} from '../../../event/event-type'
+import * as Utils from '../../../utils/util';
+import * as EncodingSources from '../../../assets/encoding-sources.json';
+import {Html5EventType} from '../../../event/event-type';
 
 const WAIT_TIME: number = 500;
 
@@ -20,7 +20,7 @@ export default class Html5AutoPlayCapability implements ICapability {
    * @returns {void}
    */
   static runCapability(): void {
-    Html5AutoPlayCapability._playPromiseResult = new Promise((resolve) => {
+    Html5AutoPlayCapability._playPromiseResult = new Promise(resolve => {
       Html5AutoPlayCapability._setMuted(false);
       if (Html5AutoPlayCapability._isDataSaverMode()) {
         resolve({autoplay: false, mutedAutoPlay: false});
@@ -44,15 +44,14 @@ export default class Html5AutoPlayCapability implements ICapability {
    * @public
    */
   static getCapability(): Promise<CapabilityResult> {
-    return Html5AutoPlayCapability._playPromiseResult
-      .then(res => {
-        // If autoplay is not allowed - try again and return the updated result
-        if (!res.autoplay) {
-          Html5AutoPlayCapability.runCapability();
-          return Html5AutoPlayCapability._playPromiseResult;
-        }
-        return res;
-      });
+    return Html5AutoPlayCapability._playPromiseResult.then(res => {
+      // If autoplay is not allowed - try again and return the updated result
+      if (!res.autoplay) {
+        Html5AutoPlayCapability.runCapability();
+        return Html5AutoPlayCapability._playPromiseResult;
+      }
+      return res;
+    });
   }
 
   /**
@@ -61,8 +60,9 @@ export default class Html5AutoPlayCapability implements ICapability {
    * @private
    */
   static _isDataSaverMode(): boolean {
-    if ("connection" in navigator) { // $FlowFixMe
-      return (navigator.connection.saveData === true);
+    if ('connection' in navigator) {
+      // $FlowFixMe
+      return navigator.connection.saveData === true;
     }
     return false;
   }

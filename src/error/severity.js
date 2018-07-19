@@ -1,6 +1,6 @@
 //@flow
 
-type SeverityType = { [severity: string]: number };
+type SeverityType = {[severity: string]: number};
 
 const Severity: SeverityType = {
   /**
@@ -10,14 +10,14 @@ const Severity: SeverityType = {
    * error.  For example, retrying for a media segment will never result in
    * a CRITICAL error (the Player will just retry forever).
    */
-  'RECOVERABLE': 1,
+  RECOVERABLE: 1,
   /**
    * A critical error that the library cannot recover from.  These usually cause
    * the Player to stop loading or updating.  A new manifest must be loaded
    * to reset the library.
    */
-  'CRITICAL': 2
+  CRITICAL: 2
 };
 
-export {Severity}
-export type {SeverityType}
+export {Severity};
+export type {SeverityType};

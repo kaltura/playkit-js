@@ -1,15 +1,15 @@
 //@flow
-import BasePlugin from './base-plugin'
-import Error from '../error/error'
-import Player from '../player'
-import getLogger from '../utils/logger'
+import BasePlugin from './base-plugin';
+import Error from '../error/error';
+import Player from '../player';
+import getLogger from '../utils/logger';
 
 /**
  * The logger of the PluginManager class.
  * @private
  * @const
  */
-const logger = getLogger("PluginManager");
+const logger = getLogger('PluginManager');
 
 /** The PluginManager responsible for register plugins definitions and store plugins instances.
  * @classdesc
@@ -90,7 +90,7 @@ export default class PluginManager {
       throw new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_NOT_REGISTERED_PLUGIN, name);
     }
     let pluginClass = PluginManager._registry.get(name);
-    if (typeof config.disable === "boolean") {
+    if (typeof config.disable === 'boolean') {
       this._isDisabledPluginMap.set(name, config.disable);
     }
     const isDisablePlugin = !!this._isDisabledPluginMap.get(name);

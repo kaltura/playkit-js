@@ -1,6 +1,6 @@
 //@flow
-import getLogger from '../utils/logger'
-import Html5 from "./html5/html5";
+import getLogger from '../utils/logger';
+import Html5 from './html5/html5';
 
 /**
  * Engine Provider
@@ -78,4 +78,3 @@ class EngineProvider {
 
 const registerEngine = EngineProvider.register;
 export {registerEngine, EngineProvider};
-

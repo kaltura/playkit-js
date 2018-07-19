@@ -5,4 +5,4 @@ declare type PKExternalCaptionObject = {
   language: string,
   default: ?boolean,
   type: ?string
-}
+};
