@@ -661,7 +661,7 @@ const Code: CodeType = {
   /**
    * Could not remove the requested entry
    */
-  'EMOVE_FAILED: 9018,
+  REMOVE_FAILED: 9018,
 
   /**
    * VR plugin is not supported.
