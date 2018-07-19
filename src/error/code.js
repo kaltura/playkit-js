@@ -619,6 +619,51 @@ const Code: CodeType = {
   CONTENT_UNSUPPORTED_BY_BROWSER: 9009,
 
   /**
+   * Cannot add Item to the indexed db
+   */
+  CANNOT_ADD_ITEM: 9010,
+
+  /**
+   * Download operation aborted.
+   */
+  DOWNLOAD_FAILED: 9011,
+
+  /**
+   * Fetching the entry provider information failed.
+   */
+  COULD_NOT_GET_INFO_FROM_MEDIA_PROVIDER: 9012,
+
+  /**
+   * Could not find the entry id in the DB.
+   */
+  ENTRY_DOES_NOT_EXIST: 9013,
+
+  /**
+   * Pause operation failed
+   */
+  PAUSE_FAILED: 9014,
+
+  /**
+   * Resume operation failed
+   */
+  RESUME_FAILED: 9015,
+
+  /**
+   * Renewing the license of the entry failed
+   */
+  RENEW_LICENSE_FAILED: 9016,
+
+  /**
+   * Could not download the entry as it already exists in the data base.
+   */
+  ENTRY_ALREADY_EXISTS: 9017,
+
+  /**
+   * Could not remove the requested entry
+   */
+  REMOVE_FAILED: 9018,
+
+  /**
    * VR plugin is not supported.
    */
   VR_NOT_SUPPORTED: 11000
