@@ -30,10 +30,6 @@ const SRT_POSTFIX: string = 'srt';
 
 const VTT_POSTFIX: string = 'vtt';
 
-export const ExternalCaptionsEventType: {[event: string]: string} = {
-  NATIVE_TEXT_TRACK_ADDED: 'nativetexttrackadded'
-};
-
 class ExternalCaptionsHandler extends FakeEventTarget {
   /**
    * The external captions handler class logger.
@@ -444,7 +440,6 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       } else {
         videoElement.addTextTrack('subtitles', textTrack.label || textTrack.language, textTrack.language);
       }
-      this.dispatchEvent(new FakeEvent(ExternalCaptionsEventType.NATIVE_TEXT_TRACK_ADDED));
     }
   }
 
