@@ -276,6 +276,7 @@ describe('ExternalCaptionsHandler', () => {
     beforeEach(() => {
       config = getConfigStructure();
       config.sources = sourcesConfig.MultipleSources;
+      config.playback = {};
       player = new Player(config);
       externalCaptionsHandler = new ExternalCaptionsHandler(player);
       playerContainer.appendChild(player.getView());
