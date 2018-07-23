@@ -40,7 +40,7 @@ import DefaultPlayerConfig from './player-config.json';
 import './assets/style.css';
 import PKError from './error/error';
 import {EngineProvider} from './engines/engine-provider';
-import {ExternalCaptionsEventType, ExternalCaptionsHandler} from './track/external-captions-handler';
+import {ExternalCaptionsHandler} from './track/external-captions-handler';
 
 /**
  * The black cover class name.
@@ -1391,12 +1391,30 @@ export default class Player extends FakeEventTarget {
     this._readyPromise = new Promise((resolve, reject) => {
       this._eventManager.listenOnce(this, CustomEventType.TRACKS_CHANGED, () => {
         this.dispatchEvent(new FakeEvent(CustomEventType.MEDIA_LOADED));
+        this._maybeAdjustTextTracksIndexes();
         resolve();
       });
+
       this._eventManager.listen(this, Html5EventType.ERROR, reject);
     }).catch(() => {
       // silence the promise rejection, error is handled by the error event
     });
+  }
+
+  /**
+   * If we added external tracks to the video element, we might need to adjust the text tracks indexes between the video
+   * element and the players tracks list
+   * @returns {void}
+   * @private
+   */
+  _maybeAdjustTextTracksIndexes(): void {
+    if (this._config.playback.useNativeTextTrack) {
+      const getNativeLanguageTrackIndex = (textTrack: Track): number => {
+        const videoElement = this.getVideoElement();
+        return videoElement ? Array.from(videoElement.textTracks).findIndex(track => (track ? track.language === textTrack.language : false)) : -1;
+      };
+      this._getTracksByType(TrackType.TEXT).forEach(track => (track.index = getNativeLanguageTrackIndex(track)));
+    }
   }
 
   /**
@@ -1512,13 +1530,6 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) =>
         this._onTextTrackChanged(event)
       );
-      this._eventManager.listen(this._externalCaptionsHandler, ExternalCaptionsEventType.NATIVE_TEXT_TRACK_ADDED, () => {
-        const getNativeLanguageTrackIndex = (textTrack: Track): number => {
-          const videoElement = this.getVideoElement();
-          return videoElement ? Array.from(videoElement.textTracks).findIndex(track => (track ? track.language === textTrack.language : false)) : -1;
-        };
-        this._getTracksByType(TrackType.TEXT).forEach(track => (track.index = getNativeLanguageTrackIndex(track)));
-      });
       this._eventManager.listen(this._externalCaptionsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
     }
   }
