@@ -1,5 +1,5 @@
 //@flow
-import Track from './track'
+import Track from './track';
 
 /**
  * Text track representation of the player.

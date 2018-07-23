@@ -103,7 +103,6 @@ class MultiMap<T> {
     return this._map.keys();
   }
 
-
   /**
    * Clear all keys and values from the multimap.
    * @returns {void}

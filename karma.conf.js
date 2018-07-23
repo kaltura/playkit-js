@@ -14,21 +14,16 @@ const customLaunchers = {
   }
 };
 
-module.exports = function (config) {
+module.exports = function(config) {
   let karmaConf = {
     logLevel: config.LOG_INFO,
     browserDisconnectTimeout: 30000,
     browserNoActivityTimeout: 60000,
-    browsers: [
-      'Chrome',
-      'Firefox'
-    ],
+    browsers: ['Chrome', 'Firefox'],
     concurrency: 1,
     singleRun: true,
     colors: true,
-    frameworks: [
-      'mocha'
-    ],
+    frameworks: ['mocha'],
     files: [
       'test/setup/karma.js',
       {
@@ -49,19 +44,10 @@ module.exports = function (config) {
       }
     ],
     preprocessors: {
-      'src/**/*.js': [
-        'webpack',
-        'sourcemap'
-      ],
-      'test/setup/karma.js': [
-        'webpack',
-        'sourcemap'
-      ]
+      'src/**/*.js': ['webpack', 'sourcemap'],
+      'test/setup/karma.js': ['webpack', 'sourcemap']
     },
-    reporters: [
-      'progress',
-      'coverage'
-    ],
+    reporters: ['progress', 'coverage'],
     webpack: webpackConfig,
     webpackServer: {
       noInfo: true
@@ -76,9 +62,7 @@ module.exports = function (config) {
 
   if (process.env.TRAVIS) {
     karmaConf.customLaunchers = customLaunchers;
-    karmaConf.browsers = [
-      'Chrome_travis_ci'
-    ];
+    karmaConf.browsers = ['Chrome_travis_ci'];
   } else {
     if (isWindows) {
       karmaConf.browsers.push('IE');

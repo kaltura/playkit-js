@@ -1,7 +1,7 @@
 //@flow
-import Error from '../error/error'
-import * as Utils from '../utils/util'
-import {Parser, StringDecoder} from './text-track-display'
+import Error from '../error/error';
+import * as Utils from '../utils/util';
+import {Parser, StringDecoder} from './text-track-display';
 import {TrackType} from './track-type';
 import TextTrack from './text-track';
 import Track from './track';
@@ -13,7 +13,7 @@ import FakeEventTarget from '../event/fake-event-target';
 import {Cue} from './vtt-cue';
 import Player from '../player';
 
-type CueStatusType = { [status: string]: number };
+type CueStatusType = {[status: string]: number};
 
 /**
  * enum for cues statuses
@@ -21,16 +21,16 @@ type CueStatusType = { [status: string]: number };
  * @type {Object}
  */
 const CuesStatus: CueStatusType = {
-  'NOT_DOWNLOADED': 1,
-  'DOWNLOADING': 2,
-  'DOWNLOADED': 3
+  NOT_DOWNLOADED: 1,
+  DOWNLOADING: 2,
+  DOWNLOADED: 3
 };
 
 const SRT_POSTFIX: string = 'srt';
 
 const VTT_POSTFIX: string = 'vtt';
 
-export const ExternalCaptionsEventType: { [event: string]: string } = {
+export const ExternalCaptionsEventType: {[event: string]: string} = {
   NATIVE_TEXT_TRACK_ADDED: 'nativetexttrackadded'
 };
 
@@ -120,17 +120,17 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     if (!captions) {
       return [];
     }
-    const textTracks = tracks.filter(track => track instanceof TextTrack)
+    const textTracks = tracks.filter(track => track instanceof TextTrack);
     let textTracksLength = textTracks.length || 0;
     const newTextTracks = [];
     captions.forEach(caption => {
       const track = new TextTrack({
         active: !!caption.default,
         index: textTracksLength++,
-        kind: "subtitles",
+        kind: 'subtitles',
         label: caption.label,
         language: caption.language,
-        external: true,
+        external: true
       });
       const sameLangTrack = textTracks.find(textTrack => caption.language === textTrack.language);
       this._textTrackModel[caption.language] = {
@@ -169,15 +169,17 @@ class ExternalCaptionsHandler extends FakeEventTarget {
         if (!this._player.config.playback.useNativeTextTrack) {
           this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
         }
-        this._downloadAndParseCues(textTrack).then(() => {
-          this._textTrackModel[textTrack.language].cuesStatus = CuesStatus.DOWNLOADED;
-          if (this._player.config.playback.useNativeTextTrack) {
-            this._addCuesToNativeTextTrack(textTrack, this._textTrackModel[textTrack.language].cues);
-          } else {
-            this.hideTextTrack();
-            this._setTextTrack(textTrack);
-          }
-        }).catch(error => this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error)));
+        this._downloadAndParseCues(textTrack)
+          .then(() => {
+            this._textTrackModel[textTrack.language].cuesStatus = CuesStatus.DOWNLOADED;
+            if (this._player.config.playback.useNativeTextTrack) {
+              this._addCuesToNativeTextTrack(textTrack, this._textTrackModel[textTrack.language].cues);
+            } else {
+              this.hideTextTrack();
+              this._setTextTrack(textTrack);
+            }
+          })
+          .catch(error => this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error)));
       }
     }
   }
@@ -226,14 +228,16 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       const captionType = track.type || this._getFileType(track.url);
       if (![SRT_POSTFIX, VTT_POSTFIX].includes(captionType)) {
         this._textTrackModel[textTrack.language].cuesStatus = CuesStatus.NOT_DOWNLOADED;
-        reject(new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNKNOWN_FILE_TYPE, {captionType: captionType}))
+        reject(new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNKNOWN_FILE_TYPE, {captionType: captionType}));
       }
-      Utils.Http.execute(track.url, {}, 'GET').then(response => {
-        resolve(captionType === SRT_POSTFIX ? this._convertSrtToVtt(response) : response);
-      }).catch(error => {
-        this._textTrackModel[textTrack.language].cuesStatus = CuesStatus.NOT_DOWNLOADED;
-        reject(new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.HTTP_ERROR, error.payload));
-      })
+      Utils.Http.execute(track.url, {}, 'GET')
+        .then(response => {
+          resolve(captionType === SRT_POSTFIX ? this._convertSrtToVtt(response) : response);
+        })
+        .catch(error => {
+          this._textTrackModel[textTrack.language].cuesStatus = CuesStatus.NOT_DOWNLOADED;
+          reject(new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.HTTP_ERROR, error.payload));
+        });
     });
   }
 
@@ -254,8 +258,8 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       };
       parser.parse(vttStr);
       parser.flush();
-      parser.onparsingerror(e => reject(e))
-    })
+      parser.onparsingerror(e => reject(e));
+    });
   }
 
   /**
@@ -287,7 +291,8 @@ class ExternalCaptionsHandler extends FakeEventTarget {
         .then(cuesArray => {
           this._textTrackModel[textTrack.language].cues = cuesArray;
           resolve();
-        }).catch(error => reject(error));
+        })
+        .catch(error => reject(error));
     });
   }
 
@@ -298,7 +303,11 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _getFileType(url: string): string {
-    return url.split(/[#?]/)[0].split('.').pop().trim();
+    return url
+      .split(/[#?]/)[0]
+      .split('.')
+      .pop()
+      .trim();
   }
 
   /**
@@ -342,7 +351,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    */
   _maybeRemoveActiveCues(): boolean {
     const currentTime = this._player.currentTime;
-    if (!currentTime){
+    if (!currentTime) {
       return false;
     }
     let hadRemoved = false;
@@ -363,7 +372,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    */
   _maybeAddToActiveCues(track: TextTrack): boolean {
     const currentTime = this._player.currentTime;
-    if (!currentTime){
+    if (!currentTime) {
       return false;
     }
     let hadAdded = false;
@@ -410,7 +419,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _addCuesToNativeTextTrack(textTrack: TextTrack, cues: Array<Cue>): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement) {
-      const track = Array.from(videoElement.textTracks).find(track => track ? track.language === textTrack.language : false);
+      const track = Array.from(videoElement.textTracks).find(track => (track ? track.language === textTrack.language : false));
       if (track) {
         cues.forEach(cue => track.addCue(cue));
       }
@@ -426,14 +435,14 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _addNativeTextTrack(textTrack: TextTrack): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement) {
-      const sameLanguageTrackIndex = Array.from(videoElement.textTracks).findIndex(track => track ? track.language === textTrack.language : false);
+      const sameLanguageTrackIndex = Array.from(videoElement.textTracks).findIndex(track => (track ? track.language === textTrack.language : false));
       if (sameLanguageTrackIndex > -1) {
         const domTrack = videoElement.textTracks[sameLanguageTrackIndex];
         if (domTrack.cues) {
           Object.values(domTrack.cues).forEach(cue => domTrack.removeCue(cue));
         }
       } else {
-        videoElement.addTextTrack("subtitles", textTrack.label || textTrack.language, textTrack.language);
+        videoElement.addTextTrack('subtitles', textTrack.label || textTrack.language, textTrack.language);
       }
       this.dispatchEvent(new FakeEvent(ExternalCaptionsEventType.NATIVE_TEXT_TRACK_ADDED));
     }

@@ -1,4 +1,4 @@
-import {DrmScheme} from '../../../src/drm/drm-scheme'
+import {DrmScheme} from '../../../src/drm/drm-scheme';
 
 describe('DrmScheme', () => {
   it('should equal all possible drm schemes', () => {

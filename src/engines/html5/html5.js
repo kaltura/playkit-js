@@ -1,18 +1,18 @@
 //@flow
-import FakeEventTarget from '../../event/fake-event-target'
-import FakeEvent from '../../event/fake-event'
-import EventManager from '../../event/event-manager'
-import {CustomEventType, Html5EventType} from '../../event/event-type'
-import MediaSourceProvider from './media-source/media-source-provider'
-import VideoTrack from '../../track/video-track'
-import AudioTrack from '../../track/audio-track'
-import {TextTrack as PKTextTrack} from '../../track/text-track'
-import {Cue} from '../../track/vtt-cue'
-import * as Utils from '../../utils/util'
-import Html5AutoPlayCapability from './capabilities/html5-autoplay'
-import Html5IsSupportedCapability from './capabilities/html5-is-supported'
-import Error from '../../error/error'
-import getLogger from '../../utils/logger'
+import FakeEventTarget from '../../event/fake-event-target';
+import FakeEvent from '../../event/fake-event';
+import EventManager from '../../event/event-manager';
+import {CustomEventType, Html5EventType} from '../../event/event-type';
+import MediaSourceProvider from './media-source/media-source-provider';
+import VideoTrack from '../../track/video-track';
+import AudioTrack from '../../track/audio-track';
+import {TextTrack as PKTextTrack} from '../../track/text-track';
+import {Cue} from '../../track/vtt-cue';
+import * as Utils from '../../utils/util';
+import Html5AutoPlayCapability from './capabilities/html5-autoplay';
+import Html5IsSupportedCapability from './capabilities/html5-is-supported';
+import Error from '../../error/error';
+import getLogger from '../../utils/logger';
 
 /**
  * Html5 engine for playback.
@@ -48,7 +48,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @type {Object<number, boolean>}
    * @private
    */
-  _showTextTrackFirstTime: { [number]: boolean } = {};
+  _showTextTrackFirstTime: {[number]: boolean} = {};
   /**
    * Promise to indicate when a media source adapter can be loaded.
    * @type {Promise<*>}
@@ -76,7 +76,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @static
    */
-  static id: string = "html5";
+  static id: string = 'html5';
 
   /**
    * A video element for browsers which block auto play.
@@ -129,12 +129,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   static getCapabilities(): Promise<Object> {
     let promises = [];
     Html5._capabilities.forEach(capability => promises.push(capability.getCapability()));
-    return Promise.all(promises)
-      .then((arrayOfResults) => {
-        const mergedResults = {};
-        arrayOfResults.forEach(res => Object.assign(mergedResults, res));
-        return {[Html5.id]: mergedResults};
-      });
+    return Promise.all(promises).then(arrayOfResults => {
+      const mergedResults = {};
+      arrayOfResults.forEach(res => Object.assign(mergedResults, res));
+      return {[Html5.id]: mergedResults};
+    });
   }
 
   /**
@@ -145,9 +144,15 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   static prepareVideoElement(): void {
     Html5._logger.debug('Prepare the video element for playing');
-    Html5._el = Utils.Dom.createElement("video");
+    Html5._el = Utils.Dom.createElement('video');
     Html5._el.load();
   }
+
+  /**
+   * The player playback rates.
+   * @type {Array<number>}
+   */
+  static PLAYBACK_RATES: Array<number> = [0.5, 1, 2, 4];
 
   /**
    * @constructor
@@ -223,7 +228,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   attach(): void {
-    Object.keys(Html5EventType).forEach((html5Event) => {
+    Object.keys(Html5EventType).forEach(html5Event => {
       this._eventManager.listen(this._el, Html5EventType[html5Event], () => {
         if (Html5EventType[html5Event] === Html5EventType.ERROR) {
           this._handleVideoError();
@@ -267,14 +272,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     // $FlowFixMe
     const message = this._el.error.message;
 
-    const error = new Error(
-      Error.Severity.CRITICAL,
-      Error.Category.MEDIA,
-      Error.Code.VIDEO_ERROR, {
-        code: code,
-        extended: extended,
-        message: message
-      });
+    const error = new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.VIDEO_ERROR, {
+      code: code,
+      extended: extended,
+      message: message
+    });
     this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
   }
 
@@ -303,7 +305,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   detach(): void {
-    Object.keys(Html5EventType).forEach((html5Event) => {
+    Object.keys(Html5EventType).forEach(html5Event => {
       this._eventManager.unlisten(this._el, Html5EventType[html5Event]);
     });
     if (this._mediaSourceAdapter) {
@@ -350,11 +352,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   selectTextTrack(textTrack: PKTextTrack): void {
-    this._removeCueChangeListener();
+    this._removeCueChangeListeners();
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.selectTextTrack(textTrack);
     }
-    this._addCueChangeListener(textTrack);
+    this._addCueChangeListener();
   }
 
   /**
@@ -367,7 +369,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.hideTextTrack();
     }
-    this._removeCueChangeListener();
+    this._removeCueChangeListeners();
   }
 
   /**
@@ -455,16 +457,18 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   load(startTime: ?number): Promise<Object> {
     this._el.load();
-    return this._canLoadMediaSourceAdapterPromise.then(() => {
-      if (this._mediaSourceAdapter) {
-        return this._mediaSourceAdapter.load(startTime).catch((error) => {
-          return Promise.reject(error);
-        });
-      }
-      return Promise.resolve({});
-    }).catch((error) => {
-      return Promise.reject(error);
-    });
+    return this._canLoadMediaSourceAdapterPromise
+      .then(() => {
+        if (this._mediaSourceAdapter) {
+          return this._mediaSourceAdapter.load(startTime).catch(error => {
+            return Promise.reject(error);
+          });
+        }
+        return Promise.resolve({});
+      })
+      .catch(error => {
+        return Promise.reject(error);
+      });
   }
 
   /**
@@ -486,7 +490,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     if (this._mediaSourceAdapter) {
       return this._mediaSourceAdapter.src;
     }
-    return "";
+    return '';
   }
 
   /**
@@ -538,8 +542,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return this._el.volume;
   }
 
-  ready() {
-  }
+  ready() {}
 
   /**
    * Get paused state.
@@ -841,6 +844,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * get the playback rates
+   * @return {number[]} - playback rates
+   */
+  get playbackRates(): Array<number> {
+    return Html5.PLAYBACK_RATES;
+  }
+
+  /**
    * Initializes the engine.
    * @param {PKMediaSourceObject} source - The selected source object.
    * @param {Object} config - The player configuration.
@@ -859,7 +870,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   _createVideoElement(): void {
-    this._el = Html5._el || Utils.Dom.createElement("video");
+    this._el = Html5._el || Utils.Dom.createElement('video');
     this._el.id = Utils.Generator.uniqueId(5);
     this._el.controls = false;
   }
@@ -876,40 +887,24 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Add cuechange listener to active textTrack.
-   * @param {PKTextTrack} textTrack - The playkit text track object to set.
    * @returns {void}
    * @private
    */
-  _addCueChangeListener(textTrack: PKTextTrack): void {
-    let textTrackEl = this._getSelectedTextTrackElement();
+  _addCueChangeListener(): void {
+    let textTrackEl = Array.from(this._el.textTracks).find(track => track && track.mode !== 'disabled');
     if (textTrackEl) {
-      /*
-       There's a quirk in TextTrackAPI that a text track added to video element will not fire cuechange event if it
-       didn't have it's mode set to showing for at least until a single cue has been change.
-       After first time it seems there's time tracking which allows the cuechange to fire even though the track mode
-       is set to hidden
-       This is not the case with a track DOM element added to a video element where cuechange will be fired even if
-       track mode is set only to hidden and was never set to showing
-       */
-      if (this._config.playback.useNativeTextTrack) {
-        textTrackEl.mode = "showing";
-      } else {
-        textTrackEl.oncuechange = (e) => this._onCueChange(e);
-        textTrackEl.mode = this._showTextTrackFirstTime[textTrack.index] ? "hidden" : "showing";
-        this._showTextTrackFirstTime[textTrack.index] = true;
-      }
+      this._eventManager.listen(textTrackEl, 'cuechange', e => this._onCueChange(e));
     }
   }
 
   /**
-   * Remove cuechange listener to active textTrack
+   * Remove cuechange listeners from textTracks
    * @returns {void}
    * @private
    */
-  _removeCueChangeListener(): void {
-    let textTrackEl: TextTrack = this._getSelectedTextTrackElement();
-    if (textTrackEl) {
-      textTrackEl.oncuechange = null;
+  _removeCueChangeListeners(): void {
+    for (let i = 0; i < this._el.textTracks.length; i++) {
+      this._eventManager.unlisten(this._el.textTracks[i], 'cuechange');
     }
   }
 
@@ -922,37 +917,18 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _onCueChange(e: FakeEvent): void {
     let textTrack: TextTrack = e.currentTarget;
     let activeCues: Array<Cue> = [];
-    textTrack.mode = 'hidden';
     for (let cue of textTrack.activeCues) {
       //Normalize cues to be of type of VTT model
       if (window.VTTCue && cue instanceof window.VTTCue) {
         activeCues.push(cue);
       } else if (window.TextTrackCue && cue instanceof window.TextTrackCue) {
         try {
-          activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text))
+          activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text));
         } catch (error) {
           new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNABLE_TO_CREATE_TEXT_CUE, error);
         }
       }
     }
     this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: activeCues}));
-  }
-
-  /**
-   * Get currently selected text track
-   * @returns {?TextTrack} - returns the active text track element if available
-   * @private
-   */
-  _getSelectedTextTrackElement(): ?TextTrack {
-    const textTracks = this._el.textTracks;
-    for (let track in textTracks) {
-      if (textTracks.hasOwnProperty(track)) {
-        const textTrack = textTracks[parseInt(track)];
-        if (textTrack && textTrack.mode !== "disabled") {
-          return textTrack;
-        }
-      }
-    }
-    return null;
   }
 }
