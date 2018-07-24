@@ -1847,8 +1847,8 @@ export default class Player extends FakeEventTarget {
     this._tracks = tracks.concat(this._externalCaptionsHandler.getExternalTracks(tracks));
     this._addTextTrackOffOption();
     this._maybeSetTracksLabels();
-    this._setDefaultTracks();
     this._maybeAdjustTextTracksIndexes();
+    this._setDefaultTracks();
   }
 
   /**
