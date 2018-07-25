@@ -86,7 +86,11 @@ const Code: CodeType = {
    * the file that the external captions handler is trying to download could not be determined / unsupported.
    */
   UNKNOWN_FILE_TYPE: 2011,
-
+  /**
+   * The language key in the caption object is empty / does not exist. Language is a mandatory field.
+   * https://github.com/kaltura/playkit-js/blob/master/docs/configuration.md#configsourcescaptions
+   */
+  UNKNOWN_LANGUAGE: 2012,
   /**
    * Some component tried to read past the end of a buffer.  The segment index,
    * init segment, or PSSH may be malformed.
