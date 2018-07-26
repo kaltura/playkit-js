@@ -149,7 +149,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       newTextTracks.push(track);
       this._updateTextTracksModel(caption);
     } else {
-      ExternalCaptionsHandler._logger.warn('duplicated language, taking the inbend option. Language: ', sameLangTrack.language);
+      ExternalCaptionsHandler._logger.warn('duplicated language, taking the inband option. Language: ', sameLangTrack.language);
     }
   }
 
