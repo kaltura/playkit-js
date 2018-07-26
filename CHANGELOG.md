@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.34.0"></a>
+# [0.34.0](https://github.com/kaltura/playkit-js/compare/v0.33.0...v0.34.0) (2018-07-26)
+
+
+### Bug Fixes
+
+* subtitles font size is too small on mobile [#270](https://github.com/kaltura/playkit-js/issues/270) ([f6489ed](https://github.com/kaltura/playkit-js/commit/f6489ed)), closes [kaltura/playkit-js-ui#257](https://github.com/kaltura/playkit-js-ui/issues/257)
+* **FEC-8411:** add protection to validate external text tracks which are added without language ([#271](https://github.com/kaltura/playkit-js/issues/271)) ([7a6c7e5](https://github.com/kaltura/playkit-js/commit/7a6c7e5))
+
+
+### Features
+
+* expose logger util ([#272](https://github.com/kaltura/playkit-js/issues/272)) ([9c970cb](https://github.com/kaltura/playkit-js/commit/9c970cb))
+
+
+
 <a name="0.33.0"></a>
 # [0.33.0](https://github.com/kaltura/playkit-js/compare/v0.32.4...v0.33.0) (2018-07-23)
 
