@@ -116,35 +116,74 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     if (!captions) {
       return [];
     }
-    const textTracks = tracks.filter(track => track instanceof TextTrack);
-    let textTracksLength = textTracks.length || 0;
+    const playerTextTracks = tracks.filter(track => track instanceof TextTrack);
+    let textTracksLength = playerTextTracks.length || 0;
     const newTextTracks = [];
     captions.forEach(caption => {
-      const track = new TextTrack({
-        active: !!caption.default,
-        index: textTracksLength++,
-        kind: 'subtitles',
-        label: caption.label,
-        language: caption.language,
-        external: true
-      });
-      const sameLangTrack = textTracks.find(textTrack => caption.language === textTrack.language);
-      this._textTrackModel[caption.language] = {
-        cuesStatus: CuesStatus.NOT_DOWNLOADED,
-        cues: [],
-        url: caption.url,
-        type: caption.type
-      };
-      if (!sameLangTrack) {
-        if (this._player.config.playback.useNativeTextTrack) {
-          this._addNativeTextTrack(track);
-        }
-        newTextTracks.push(track);
+      if (!caption.language) {
+        const error = new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNKNOWN_LANGUAGE, {caption: caption});
+        this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
       } else {
-        ExternalCaptionsHandler._logger.warn('duplicated language, taking the inbend option. Language: ', sameLangTrack.language);
+        const track = this._createTextTrack(caption, textTracksLength++);
+        this._maybeAddTrack(track, caption, playerTextTracks, newTextTracks);
       }
     });
     return newTextTracks;
+  }
+
+  /**
+   * checking if there is already a track with the same language
+   * @param {TextTrack} track - textTrack to be added text tracks array that will be returned to the player
+   * @param {PKExternalCaptionObject} caption - caption to be added to the model
+   * @param {Array<Text>} playerTextTracks - player text tracks array
+   * @param {Array<TextTrack>} newTextTracks - text track array that will be returned to the player
+   * @returns {void}
+   * @private
+   */
+  _maybeAddTrack(track: TextTrack, caption: PKExternalCaptionObject, playerTextTracks: Array<Track>, newTextTracks: Array<TextTrack>): void {
+    const sameLangTrack = playerTextTracks.find(textTrack => caption.language === textTrack.language);
+    if (!sameLangTrack) {
+      if (this._player.config.playback.useNativeTextTrack) {
+        this._addNativeTextTrack(track);
+      }
+      newTextTracks.push(track);
+      this._updateTextTracksModel(caption);
+    } else {
+      ExternalCaptionsHandler._logger.warn('duplicated language, taking the inband option. Language: ', sameLangTrack.language);
+    }
+  }
+
+  /**
+   * creates a new text track
+   * @param {PKExternalCaptionObject} caption - caption to create the text track with
+   * @param {number} index - index of the text track
+   * @returns {TextTrack} - new text track
+   * @private
+   */
+  _createTextTrack(caption: PKExternalCaptionObject, index: number): TextTrack {
+    return new TextTrack({
+      active: !!caption.default,
+      index: index,
+      kind: 'subtitles',
+      label: caption.label,
+      language: caption.language,
+      external: true
+    });
+  }
+
+  /**
+   * adding the caption to the class texttracks model
+   * @param {PKExternalCaptionObject} caption - the caption to be added
+   * @returns {void}
+   * @private
+   */
+  _updateTextTracksModel(caption: PKExternalCaptionObject): void {
+    this._textTrackModel[caption.language] = {
+      cuesStatus: CuesStatus.NOT_DOWNLOADED,
+      cues: [],
+      url: caption.url,
+      type: caption.type
+    };
   }
 
   /**
