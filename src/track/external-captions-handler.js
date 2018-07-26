@@ -121,7 +121,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     const newTextTracks = [];
     captions.forEach(caption => {
       if (!caption.language) {
-        const error = new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNKNOWN_LANGUAGE, caption);
+        const error = new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNKNOWN_LANGUAGE, {objectWithMissingLanguage: caption});
         this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
       } else {
         const track = this._createTextTrack(caption, textTracksLength++);
@@ -135,7 +135,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * checking if there is already a track with the same language
    * @param {TextTrack} track - textTrack to be added text tracks array that will be returned to the player
    * @param {PKExternalCaptionObject} caption - caption to be added to the model
-   * @param {Array<TextTrack>} playerTextTracks - player text tracks array
+   * @param {Array<Text>} playerTextTracks - player text tracks array
    * @param {Array<TextTrack>} newTextTracks - text track array that will be returned to the player
    * @returns {void}
    * @private
