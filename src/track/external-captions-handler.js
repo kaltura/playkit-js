@@ -121,7 +121,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     const newTextTracks = [];
     captions.forEach(caption => {
       if (!caption.language) {
-        const error = new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNKNOWN_LANGUAGE, {objectWithMissingLanguage: caption});
+        const error = new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNKNOWN_LANGUAGE, {caption: caption});
         this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
       } else {
         const track = this._createTextTrack(caption, textTracksLength++);
