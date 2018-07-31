@@ -22,18 +22,14 @@ export default class Html5AutoPlayCapability implements ICapability {
   static runCapability(): void {
     Html5AutoPlayCapability._playPromiseResult = new Promise(resolve => {
       Html5AutoPlayCapability._setMuted(false);
-      if (Html5AutoPlayCapability._isDataSaverMode()) {
-        resolve({autoplay: false, mutedAutoPlay: false});
-      } else {
-        Html5AutoPlayCapability._getPlayPromise()
-          .then(() => resolve({autoplay: true, mutedAutoPlay: true}))
-          .catch(() => {
-            Html5AutoPlayCapability._setMuted(true);
-            Html5AutoPlayCapability._getPlayPromise()
-              .then(() => resolve({autoplay: false, mutedAutoPlay: true}))
-              .catch(() => resolve({autoplay: false, mutedAutoPlay: false}));
-          });
-      }
+      Html5AutoPlayCapability._getPlayPromise()
+        .then(() => resolve({autoplay: true, mutedAutoPlay: true}))
+        .catch(() => {
+          Html5AutoPlayCapability._setMuted(true);
+          Html5AutoPlayCapability._getPlayPromise()
+            .then(() => resolve({autoplay: false, mutedAutoPlay: true}))
+            .catch(() => resolve({autoplay: false, mutedAutoPlay: false}));
+        });
     });
   }
 
@@ -52,19 +48,6 @@ export default class Html5AutoPlayCapability implements ICapability {
       }
       return res;
     });
-  }
-
-  /**
-   * Checks if the device is in data saver mode.
-   * @returns {boolean} - If the device is in data saver mode.
-   * @private
-   */
-  static _isDataSaverMode(): boolean {
-    if ('connection' in navigator) {
-      // $FlowFixMe
-      return navigator.connection.saveData === true;
-    }
-    return false;
   }
 
   /**
