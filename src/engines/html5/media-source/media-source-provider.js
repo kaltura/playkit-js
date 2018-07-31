@@ -1,6 +1,6 @@
 //@flow
-import NativeAdapter from './adapters/native-adapter'
-import getLogger from '../../../utils/logger'
+import NativeAdapter from './adapters/native-adapter';
+import getLogger from '../../../utils/logger';
 
 /**
  * Media source provider
@@ -27,7 +27,7 @@ export default class MediaSourceProvider {
    * @static
    * @private
    */
-  static _selectedAdapter: ?(typeof IMediaSourceAdapter) = null;
+  static _selectedAdapter: ?typeof IMediaSourceAdapter = null;
 
   /**
    * Add a media source adapter to the registry.
@@ -92,8 +92,7 @@ export default class MediaSourceProvider {
    * @returns {void}
    */
   static _orderMediaSourceAdapters(preferNative: boolean): void {
-    MediaSourceProvider._mediaSourceAdapters =
-      MediaSourceProvider._mediaSourceAdapters.filter(mse => mse.id !== 'NativeAdapter');
+    MediaSourceProvider._mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters.filter(mse => mse.id !== 'NativeAdapter');
     if (preferNative) {
       MediaSourceProvider._mediaSourceAdapters.unshift(NativeAdapter);
     } else {
@@ -132,4 +131,3 @@ export default class MediaSourceProvider {
 
 const registerMediaSourceAdapter = MediaSourceProvider.register;
 export {registerMediaSourceAdapter};
-

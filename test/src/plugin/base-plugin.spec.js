@@ -1,11 +1,11 @@
-import BasePlugin from '../../../src/plugin/base-plugin'
+import BasePlugin from '../../../src/plugin/base-plugin';
 
 describe('BasePlugin', () => {
   let basePlugin;
-  let config = {'x': 1, 'y': 2};
+  let config = {x: 1, y: 2};
 
   beforeEach(() => {
-    basePlugin = BasePlugin.createPlugin("basePlugin", {}, config);
+    basePlugin = BasePlugin.createPlugin('basePlugin', {}, config);
   });
 
   afterEach(() => {
@@ -21,7 +21,7 @@ describe('BasePlugin', () => {
   });
 
   it('should return the plugin name', () => {
-    basePlugin.getName().should.equal("basePlugin");
+    basePlugin.getName().should.equal('basePlugin');
   });
 
   it('should return the plugin config', () => {
@@ -40,9 +40,9 @@ describe('BasePlugin', () => {
   });
 
   it('should update the plugin config', () => {
-    let update = {'y': 'hello'};
+    let update = {y: 'hello'};
     basePlugin.updateConfig(update);
-    basePlugin.getConfig().should.deep.equal({'x': 1, 'y': 'hello'});
+    basePlugin.getConfig().should.deep.equal({x: 1, y: 'hello'});
   });
 
   it('should throw isValid() exception', () => {
@@ -51,7 +51,7 @@ describe('BasePlugin', () => {
       BasePlugin.isValid();
     } catch (e) {
       e.code.should.equals(7004);
-      e.data.should.equals("isValid()");
+      e.data.should.equals('isValid()');
       exceptionOccurred = true;
     }
     exceptionOccurred.should.be.true;
@@ -65,4 +65,3 @@ describe('BasePlugin', () => {
     basePlugin.reset();
   });
 });
-

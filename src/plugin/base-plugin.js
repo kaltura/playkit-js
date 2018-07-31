@@ -1,10 +1,10 @@
 //@flow
-import Player from '../player'
-import getLogger from '../utils/logger'
-import * as Utils from '../utils/util'
-import EventManager from '../event/event-manager'
+import Player from '../player';
+import getLogger from '../utils/logger';
+import * as Utils from '../utils/util';
+import EventManager from '../event/event-manager';
 import Error from '../error/error';
-import FakeEvent from '../event/fake-event'
+import FakeEvent from '../event/fake-event';
 
 /** The BasePlugin responsible to implement the plugin interface.
  * Contains several default implementations.
@@ -118,8 +118,7 @@ export default class BasePlugin implements IPlugin {
    * @virtual
    * @returns {void}
    */
-  destroy(): void {
-  }
+  destroy(): void {}
 
   /**
    * Runs the reset logic of the plugin.
@@ -128,8 +127,7 @@ export default class BasePlugin implements IPlugin {
    * @virtual
    * @returns {void}
    */
-  reset(): void {
-  }
+  reset(): void {}
 
   /**
    * Getter for the plugin's name.
@@ -147,7 +145,7 @@ export default class BasePlugin implements IPlugin {
    * @returns {void}
    */
   dispatchEvent(name: string, payload: any): void {
-    this.logger.debug("Fire event: " + name, payload);
+    this.logger.debug('Fire event: ' + name, payload);
     this.player.dispatchEvent(new FakeEvent(name, payload));
   }
 }

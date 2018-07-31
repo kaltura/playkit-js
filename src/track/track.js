@@ -15,7 +15,7 @@ export default class Track {
     try {
       inputLang = inputLang.toLowerCase();
       trackLang = trackLang.toLowerCase();
-      return inputLang ? (inputLang.startsWith(trackLang) || trackLang.startsWith(inputLang)) : false;
+      return inputLang ? inputLang.startsWith(trackLang) || trackLang.startsWith(inputLang) : false;
     } catch (e) {
       return false;
     }
@@ -120,6 +120,16 @@ export default class Track {
    */
   get index(): number {
     return this._index;
+  }
+
+  /**
+   * Setter for the index of the track.
+   * @public
+   * @param {number} value - The index of the track.
+   * @returns {void}
+   */
+  set index(value: number): void {
+    this._index = value;
   }
 
   /**

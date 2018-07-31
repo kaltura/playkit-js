@@ -1,5 +1,5 @@
-import {CustomEventType, EventType, Html5EventType} from '../../../src/event/event-type'
-import {Object as ObjectUtils} from '../../../src/utils/util'
+import {CustomEventType, EventType, Html5EventType} from '../../../src/event/event-type';
+import {Object as ObjectUtils} from '../../../src/utils/util';
 
 describe('events', () => {
   it('should equals player events', () => {
@@ -25,7 +25,7 @@ describe('events', () => {
       SUSPEND: 'suspend',
       TIME_UPDATE: 'timeupdate',
       VOLUME_CHANGE: 'volumechange',
-      WAITING: 'waiting',
+      WAITING: 'waiting'
     });
     CustomEventType.should.deep.equals({
       MEDIA_LOADED: 'medialoaded',
@@ -69,7 +69,8 @@ describe('events', () => {
       AD_VOLUME_CHANGED: 'advolumechanged',
       AD_MUTED: 'admuted',
       AD_PROGRESS: 'adprogress',
-      MEDIA_RECOVERED: 'mediarecovered'
+      MEDIA_RECOVERED: 'mediarecovered',
+      VR_STEREO_MODE_CHANGED: 'vrstereomodechanged'
     });
     EventType.should.deep.equals(ObjectUtils.merge([Html5EventType, CustomEventType]));
   });
