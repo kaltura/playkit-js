@@ -21,6 +21,7 @@
     "playsinline": true,
     "preload": "none",
     "autoplay": false,
+    "loop": false,
     "allowMutedAutoPlay": true,
     "muted": false,
     "options": {
