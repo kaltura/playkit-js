@@ -1432,8 +1432,14 @@ export default class Player extends FakeEventTarget {
     this.dispatchEvent(
       new FakeEvent(
         Html5EventType.ERROR,
-        new PKError(PKError.Severity.CRITICAL, PKError.Category.PLAYER, PKError.Code.NO_ENGINE_FOUND_TO_PLAY_THE_SOURCE, 'No Engine Found To Play The Source')
-      ));
+        new PKError(
+          PKError.Severity.CRITICAL,
+          PKError.Category.PLAYER,
+          PKError.Code.NO_ENGINE_FOUND_TO_PLAY_THE_SOURCE,
+          'No Engine Found To Play The Source'
+        )
+      )
+    );
     return false;
   }
 
