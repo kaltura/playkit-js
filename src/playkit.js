@@ -28,6 +28,8 @@ import {EventType} from './event/event-type';
 import {AbrMode} from './track/abr-mode-type';
 import getLogger, {getLogLevel, LogLevel, LogLevelType, setLogLevel} from './utils/logger';
 import {CorsType} from './engines/html5/cors-types';
+import {DrmScheme} from './drm/drm-scheme';
+import {MimeType} from './mime-type';
 
 declare var __VERSION__: string;
 declare var __NAME__: string;
@@ -84,7 +86,7 @@ export {getCapabilities, setCapabilities};
 export {registerEngine, unRegisterEngine};
 
 // Export enums
-export {EventType, StateType, TrackType, EngineType, MediaType, StreamType, AbrMode, LogLevelType, CorsType};
+export {EventType, StateType, TrackType, EngineType, MediaType, StreamType, AbrMode, LogLevelType, CorsType, DrmScheme, MimeType};
 
 // Export logger utils
 export {getLogger, LogLevel, getLogLevel, setLogLevel};
