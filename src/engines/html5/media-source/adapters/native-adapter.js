@@ -140,7 +140,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @static
    */
   static createAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): IMediaSourceAdapter {
-    const adapterConfig = {
+    const adapterConfig: Object = {
       displayTextTrack: false,
       progressiveSources: []
     };
@@ -149,6 +149,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
     if (Utils.Object.hasPropertyPath(config, 'sources.progressive')) {
       adapterConfig.progressiveSources = Utils.Object.getPropertyPath(config, 'sources.progressive');
+    }
+    if (config.playback) {
+      adapterConfig.enableCEA708Captions = config.playback.enableCEA708Captions;
+      adapterConfig.captionsTextTrack1Label = config.playback.captionsTextTrack1Label;
+      adapterConfig.captionsTextTrack1LanguageCode = config.playback.captionsTextTrack1LanguageCode;
+      adapterConfig.captionsTextTrack2Label = config.playback.captionsTextTrack2Label;
+      adapterConfig.captionsTextTrack2LanguageCode = config.playback.captionsTextTrack2LanguageCode;
     }
     return new this(videoElement, source, adapterConfig);
   }
@@ -404,6 +411,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _getParsedTextTracks(): Array<PKTextTrack> {
+    const captionsTextTrackLabels = [this._config.captionsTextTrack1Label, this._config.captionsTextTrack2Label];
+    const captionsTextTrackLanguageCodes = [this._config.captionsTextTrack1LanguageCode, this._config.captionsTextTrack2LanguageCode];
     const textTracks = this._videoElement.textTracks;
     const parsedTracks = [];
     if (textTracks) {
@@ -415,7 +424,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           language: textTracks[i].language,
           index: i
         };
-        if (settings.language || settings.label) {
+        if (settings.kind === 'subtitles') {
+          parsedTracks.push(new PKTextTrack(settings));
+        } else if (settings.kind === 'captions' && this._config.enableCEA708Captions) {
+          settings.label = settings.label || captionsTextTrackLabels.shift();
+          settings.language = settings.language || captionsTextTrackLanguageCodes.shift();
           parsedTracks.push(new PKTextTrack(settings));
         }
       }
@@ -577,7 +590,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const textTracks = this._videoElement.textTracks;
     if (textTrack instanceof PKTextTrack && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks) {
       this._removeNativeTextTrackChangeListener();
-      const selectedTrack = Array.from(textTracks).find(track => (track ? track.language === textTrack.language : false));
+      const selectedTrack = Array.from(textTracks).find(
+        (track, index) => textTrack.index === index && (track && (track.kind === 'subtitles' || track.kind === 'captions'))
+      );
       if (selectedTrack) {
         this._disableTextTracks();
         selectedTrack.mode = this._config.displayTextTrack ? 'showing' : 'hidden';

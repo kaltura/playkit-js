@@ -31,7 +31,7 @@ import DefaultPlayerConfig from './player-config.json';
 import './assets/style.css';
 import PKError from './error/error';
 import {EngineProvider} from './engines/engine-provider';
-import {ExternalCaptionsEventType, ExternalCaptionsHandler} from './track/external-captions-handler';
+import {ExternalCaptionsHandler} from './track/external-captions-handler';
 
 /**
  * The black cover class name.
@@ -463,8 +463,6 @@ export default class Player extends FakeEventTarget {
         .load(startTime)
         .then(data => {
           this._updateTracks(data.tracks);
-          this._maybeSetTracksLabels();
-          this._setDefaultTracks();
           this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
           resetFlags();
         })
@@ -1485,13 +1483,6 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) =>
         this._onTextTrackChanged(event)
       );
-      this._eventManager.listen(this._externalCaptionsHandler, ExternalCaptionsEventType.NATIVE_TEXT_TRACK_ADDED, () => {
-        const getNativeLanguageTrackIndex = (textTrack: Track): number => {
-          const videoElement = this.getVideoElement();
-          return videoElement ? Array.from(videoElement.textTracks).findIndex(track => (track ? track.language === textTrack.language : false)) : -1;
-        };
-        this._getTracksByType(TrackType.TEXT).forEach(track => (track.index = getNativeLanguageTrackIndex(track)));
-      });
       this._eventManager.listen(this._externalCaptionsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
     }
   }
@@ -1538,7 +1529,7 @@ export default class Player extends FakeEventTarget {
       clearTimeout(this._repositionCuesTimeout);
     }
     this._repositionCuesTimeout = setTimeout(() => {
-      processCues(window, this._activeTextCues, this._textDisplayEl);
+      this._updateTextDisplay(this._activeTextCues);
       this._repositionCuesTimeout = false;
     }, REPOSITION_CUES_TIMEOUT);
   }
@@ -1775,7 +1766,10 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _onEnded(): void {
-    if (!this.paused) {
+    if (this.config.playback.loop) {
+      this.currentTime = 0;
+      this.play();
+    } else if (!this.paused) {
       this._pause();
     }
   }
@@ -1824,8 +1818,27 @@ export default class Player extends FakeEventTarget {
    */
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
-    this._tracks = [...tracks, ...this._externalCaptionsHandler.getExternalTracks(tracks)];
+    this._tracks = tracks.concat(this._externalCaptionsHandler.getExternalTracks(tracks));
     this._addTextTrackOffOption();
+    this._maybeSetTracksLabels();
+    this._maybeAdjustTextTracksIndexes();
+    this._setDefaultTracks();
+  }
+
+  /**
+   * If we added external tracks to the video element, we might need to adjust the text tracks indexes between the video
+   * element and the players tracks list
+   * @returns {void}
+   * @private
+   */
+  _maybeAdjustTextTracksIndexes(): void {
+    if (this._config.playback.useNativeTextTrack) {
+      const getNativeLanguageTrackIndex = (textTrack: Track): number => {
+        const videoElement = this.getVideoElement();
+        return videoElement ? Array.from(videoElement.textTracks).findIndex(track => (track ? track.language === textTrack.language : false)) : -1;
+      };
+      this._getTracksByType(TrackType.TEXT).forEach(track => (track.index = getNativeLanguageTrackIndex(track)));
+    }
   }
 
   /**

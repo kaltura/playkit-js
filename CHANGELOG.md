@@ -2,6 +2,55 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.35.0"></a>
+# [0.35.0](https://github.com/kaltura/playkit-js/compare/v0.34.0...v0.35.0) (2018-08-05)
+
+
+### Bug Fixes
+
+* **FEC-8413:** on change media with data saver on the player is stuck on the poster [#273](https://github.com/kaltura/playkit-js/issues/273) ([28a0bd8](https://github.com/kaltura/playkit-js/commit/28a0bd8))
+
+
+### Features
+
+* **FEC-8269:** add playback loop support ([#274](https://github.com/kaltura/playkit-js/issues/274)) ([a97512f](https://github.com/kaltura/playkit-js/commit/a97512f))
+
+
+
+<a name="0.34.0"></a>
+# [0.34.0](https://github.com/kaltura/playkit-js/compare/v0.33.0...v0.34.0) (2018-07-26)
+
+
+### Bug Fixes
+
+* subtitles font size is too small on mobile [#270](https://github.com/kaltura/playkit-js/issues/270) ([f6489ed](https://github.com/kaltura/playkit-js/commit/f6489ed)), closes [kaltura/playkit-js-ui#257](https://github.com/kaltura/playkit-js-ui/issues/257)
+* **FEC-8411:** add protection to validate external text tracks which are added without language ([#271](https://github.com/kaltura/playkit-js/issues/271)) ([7a6c7e5](https://github.com/kaltura/playkit-js/commit/7a6c7e5))
+
+
+### Features
+
+* expose logger util ([#272](https://github.com/kaltura/playkit-js/issues/272)) ([9c970cb](https://github.com/kaltura/playkit-js/commit/9c970cb))
+
+
+
+<a name="0.33.0"></a>
+# [0.33.0](https://github.com/kaltura/playkit-js/compare/v0.32.4...v0.33.0) (2018-07-23)
+
+
+### Bug Fixes
+
+* **FEC-8376:** the menu ui doesn't show the right caption after selection ([#268](https://github.com/kaltura/playkit-js/issues/268)) ([d395754](https://github.com/kaltura/playkit-js/commit/d395754))
+* **FEC-8392:** adding missing download manager error codes ([#262](https://github.com/kaltura/playkit-js/issues/262)) ([b9714ad](https://github.com/kaltura/playkit-js/commit/b9714ad))
+* **FEC-8419:** double captions on ios when toggling fullscreen ([#267](https://github.com/kaltura/playkit-js/issues/267)) ([5d856c6](https://github.com/kaltura/playkit-js/commit/5d856c6))
+
+
+### Features
+
+* **FEC-8390, FEC-8246:** support 608/708 captions ([#265](https://github.com/kaltura/playkit-js/issues/265)) ([1a616c7](https://github.com/kaltura/playkit-js/commit/1a616c7))
+* **FEC-8394:** move rates to engine ([#264](https://github.com/kaltura/playkit-js/issues/264)) ([6d14be5](https://github.com/kaltura/playkit-js/commit/6d14be5))
+
+
+
 <a name="0.32.4"></a>
 ## [0.32.4](https://github.com/kaltura/playkit-js/compare/v0.32.3...v0.32.4) (2018-07-12)
 

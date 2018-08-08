@@ -86,7 +86,11 @@ const Code: CodeType = {
    * the file that the external captions handler is trying to download could not be determined / unsupported.
    */
   UNKNOWN_FILE_TYPE: 2011,
-
+  /**
+   * The language key in the caption object is empty / does not exist. Language is a mandatory field.
+   * https://github.com/kaltura/playkit-js/blob/master/docs/configuration.md#configsourcescaptions
+   */
+  UNKNOWN_LANGUAGE: 2012,
   /**
    * Some component tried to read past the end of a buffer.  The segment index,
    * init segment, or PSSH may be malformed.
@@ -619,41 +623,95 @@ const Code: CodeType = {
   CONTENT_UNSUPPORTED_BY_BROWSER: 9009,
 
   /**
+   * Cannot add Item to the indexed db
+   */
+  CANNOT_ADD_ITEM: 9010,
+
+  /**
+   * Download operation aborted.
+   */
+  DOWNLOAD_FAILED: 9011,
+
+  /**
+   * Fetching the entry provider information failed.
+   */
+  COULD_NOT_GET_INFO_FROM_MEDIA_PROVIDER: 9012,
+
+  /**
+   * Could not find the entry id in the DB.
+   */
+  ENTRY_DOES_NOT_EXIST: 9013,
+
+  /**
+   * Pause operation failed
+   */
+  PAUSE_FAILED: 9014,
+
+  /**
+   * Resume operation failed
+   */
+  RESUME_FAILED: 9015,
+
+  /**
+   * Renewing the license of the entry failed
+   */
+  RENEW_LICENSE_FAILED: 9016,
+
+  /**
+   * Could not download the entry as it already exists in the data base.
+   */
+  ENTRY_ALREADY_EXISTS: 9017,
+
+  /**
+   * Could not remove the requested entry
+   */
+  REMOVE_FAILED: 9018,
+
+  /**
    * The operation was canceled by the user.
    */
   CAST_CANCEL: 10001,
+
   /**
    * The operation timed out.
    */
   CAST_TIMEOUT: 10002,
+
   /**
    * The API is not initialized.
    */
   CAST_API_NOT_INITIALIZED: 10003,
+
   /**
    * The parameters to the operation were not valid.
    */
   CAST_INVALID_PARAMETER: 10004,
+
   /**
    * The API script is not compatible with the installed Cast extension.
    */
   CAST_EXTENSION_NOT_COMPATIBLE: 10005,
+
   /**
    * The Cast extension is not available.
    */
   CAST_EXTENSION_MISSING: 10006,
+
   /**
    * No receiver was compatible with the session request.
    */
   CAST_RECEIVER_UNAVAILABLE: 10007,
+
   /**
    * A session could not be created, or a session was invalid.
    */
   CAST_SESSION_ERROR: 10008,
+
   /**
    * A channel to the receiver is not available.
    */
   CAST_CHANNEL_ERROR: 10009,
+
   /**
    * Load media failed.
    */

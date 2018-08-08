@@ -38,12 +38,18 @@ var config = {
     audioLanguage: '',
     textLanguage: '',
     useNativeTextTrack: false,
+    enableCEA708Captions: true,
+    captionsTextTrack1Label: 'English',
+    captionsTextTrack1LanguageCode: 'en',
+    captionsTextTrack2Label: 'Spanish',
+    captionsTextTrack2LanguageCode: 'es',
     volume: 1,
     startTime: -1,
     playsinline: true,
     preload: 'none',
     autoplay: false,
     allowMutedAutoPlay: true,
+    loop: false,
     muted: false,
     options: {
       html5: {
@@ -468,6 +474,11 @@ var config = {
 >  audioLanguage: string,
 >  textLanguage: string,
 >  useNativeTextTrack: boolean,
+>  enableCEA708Captions: boolean,
+>  captionsTextTrack1Label: string,
+>  captionsTextTrack1LanguageCode: string,
+>  captionsTextTrack2Label: string,
+>  captionsTextTrack2LanguageCode: string,
 >  volume: number,
 >  startTime: number,
 >  playsinline: boolean,
@@ -475,6 +486,7 @@ var config = {
 >  preload: string,
 >  autoplay: boolean,
 >  allowMutedAutoPlay: boolean,
+> loop: boolean,
 >  muted: boolean,
 >  options: PKPlaybackOptionsObject,
 >  streamPriority: Array<PKStreamPriorityObject>,
@@ -489,12 +501,18 @@ var config = {
 >  audioLanguage: "",
 >  textLanguage: "",
 >  useNativeTextTrack: false,
+>  enableCEA708Captions: true,
+>  captionsTextTrack1Label: "English",
+>  captionsTextTrack1LanguageCode: "en",
+>  captionsTextTrack2Label: "Spanish",
+>  captionsTextTrack2LanguageCode: "es",
 >  volume: 1,
 >  startTime: -1,
 >  playsinline: true,
 >  preload: "none",
 >  autoplay: false,
 >  allowMutedAutoPlay: true,
+> loop: false,
 >  muted: false,
 >  options: {
 >    html5: {
@@ -598,6 +616,56 @@ var config = {
 >
 > ##
 >
+> > ### config.playback.enableCEA708Captions
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `true`
+> >
+> > ##### Description: Whether or not to enable CEA-708 captions.
+>
+> ##
+>
+> > ### config.playback.captionsTextTrack1Label
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `English`
+> >
+> > ##### Description: Label for the CEA-708 captions track 1.
+>
+> ##
+>
+> > ### config.playback.captionsTextTrack1LanguageCode
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `en`
+> >
+> > ##### Description: RFC 3066 language code for the CEA-708 captions track 1.
+>
+> ##
+>
+> > ### config.playback.captionsTextTrack2Label
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `Spanish`
+> >
+> > ##### Description: Label for the CEA-708 captions track 2.
+>
+> ##
+>
+> > ### config.playback.captionsTextTrack2LanguageCode
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `es`
+> >
+> > ##### Description: RFC 3066 language code for the CEA-708 captions track 2.
+>
+> ##
+>
 > > ### config.playback.volume
 > >
 > > ##### Type: `number`
@@ -679,6 +747,18 @@ var config = {
 > > ### config.playback.autoplay/allowMutedAutoPlay
 > >
 > > for `autoplay` & `allowMutedAutoPlay` options read [here](autoplay.md).
+>
+> ##
+>
+> > ### config.playback.loop
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ##### Description: Indicates whether the video should play in loop.
+> >
+> > This is a Boolean attribute that indicates the default setting of the loop playback option. If set, the player will restart playback upon completion. The attribute's default value is false, which means that the video will pause when the video is finished playing.
 >
 > ##
 >
