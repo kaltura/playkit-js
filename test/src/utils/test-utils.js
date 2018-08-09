@@ -6,6 +6,7 @@ function getConfigStructure() {
   return {
     sources: {},
     playback: {
+      enableCEA708Captions: true,
       preload: 'none',
       autoplay: false,
       muted: false,
