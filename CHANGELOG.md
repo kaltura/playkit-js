@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.35.1"></a>
+## [0.35.1](https://github.com/kaltura/playkit-js/compare/v0.35.0...v0.35.1) (2018-08-09)
+
+
+### Bug Fixes
+
+* **FEC-8461:** Do not show 708 caption by default ([#277](https://github.com/kaltura/playkit-js/issues/277)) ([e2df487](https://github.com/kaltura/playkit-js/commit/e2df487))
+
+
+
 <a name="0.35.0"></a>
 # [0.35.0](https://github.com/kaltura/playkit-js/compare/v0.34.0...v0.35.0) (2018-08-05)
 
