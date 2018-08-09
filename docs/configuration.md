@@ -38,7 +38,7 @@ var config = {
     audioLanguage: '',
     textLanguage: '',
     useNativeTextTrack: false,
-    enableCEA708Captions: true,
+    enableCEA708Captions: false,
     captionsTextTrack1Label: 'English',
     captionsTextTrack1LanguageCode: 'en',
     captionsTextTrack2Label: 'Spanish',
@@ -501,7 +501,7 @@ var config = {
 >  audioLanguage: "",
 >  textLanguage: "",
 >  useNativeTextTrack: false,
->  enableCEA708Captions: true,
+>  enableCEA708Captions: false,
 >  captionsTextTrack1Label: "English",
 >  captionsTextTrack1LanguageCode: "en",
 >  captionsTextTrack2Label: "Spanish",
@@ -620,7 +620,7 @@ var config = {
 > >
 > > ##### Type: `boolean`
 > >
-> > ##### Default: `true`
+> > ##### Default: `false`
 > >
 > > ##### Description: Whether or not to enable CEA-708 captions.
 >
