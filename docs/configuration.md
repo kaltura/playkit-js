@@ -875,6 +875,10 @@ var config = {
 > >   {
 > >     engine: 'html5',
 > >     format: 'progressive'
+> >   },
+> >   {
+> >     engine: 'flash',
+> >     format: 'hls'
 > >   }
 > > ];
 > > ```
