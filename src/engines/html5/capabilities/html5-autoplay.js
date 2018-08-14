@@ -40,6 +40,7 @@ export default class Html5AutoPlayCapability implements ICapability {
    * @public
    */
   static getCapability(): Promise<CapabilityResult> {
+    testVideoElement.load();
     return Html5AutoPlayCapability._playPromiseResult.then(res => {
       // If autoplay is not allowed - try again and return the updated result
       if (!res.autoplay) {
