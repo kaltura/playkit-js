@@ -10,7 +10,7 @@
     "watch": "webpack --progress --colors --watch",
     "test": "NODE_ENV=test karma start --color",
     "release": "standard-version",
-    "pushTaggedRelease1": "git push --follow-tags --no-verify origin master",
+    "pushTaggedRelease": "git push --follow-tags --no-verify origin master",
     "eslint": "eslint . --color",
     "flow": "flow check",
     "commit:dist": "git add --force --all dist && (git commit -m 'chore: update dist' || exit 0)",
