@@ -640,7 +640,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const getActiveVidTextTrackIndex = () => {
       for (let i = 0; i < this._videoElement.textTracks.length; i++) {
         const textTrack = this._videoElement.textTracks[i];
-        if (textTrack.mode === 'showing') {
+        if (['showing', 'hidden'].includes(textTrack.mode)) {
           return i;
         }
       }
