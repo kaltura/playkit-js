@@ -13,6 +13,8 @@ import Env from '../../../../utils/env';
 import FakeEvent from '../../../../event/fake-event';
 import Error from '../../../../error/error';
 
+const WAIT_TIME: number = 5000;
+
 /**
  * An illustration of media source extension for progressive download
  * @classdesc
@@ -230,6 +232,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._loadPromise = new Promise((resolve, reject) => {
         this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, this._onLoadedData.bind(this, resolve, startTime));
         this._eventManager.listenOnce(this._videoElement, Html5EventType.ERROR, this._onError.bind(this, reject));
+        this._eventManager.listen(this._videoElement, Html5EventType.WAITING, this._setTimeUpdateError.bind(this));
+        this._eventManager.listen(this._videoElement, Html5EventType.PLAYING, this._clearBufferTimeout.bind(this));
+        this._eventManager.listen(this._videoElement, Html5EventType.PLAY, this._clearBufferTimeout.bind(this));
+        this._eventManager.listen(this._videoElement, Html5EventType.PAUSE, this._clearBufferTimeout.bind(this));
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
         }
@@ -281,6 +287,33 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _onError(reject: Function, error: FakeEvent): void {
     reject(new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.NATIVE_ADAPTER_LOAD_FAILED, error.payload));
+  }
+
+  _setTimeUpdateError(): void {
+    this._clearBufferTimeout();
+    const onTimeOut = () => {
+      if (!navigator.onLine) {
+        clearTimeout(this._bufferTimeoutId);
+        this._trigger(
+          Html5EventType.ERROR,
+          new Error(
+            Error.Severity.CRITICAL,
+            Error.Category.NETWORK,
+            Error.Code.TIMEOUT,
+            `player exceeded ${WAIT_TIME} timeout and connection seems to be offline`
+          )
+        );
+      } else {
+        this._bufferTimeoutId = setTimeout(onTimeOut, WAIT_TIME);
+      }
+    };
+    this._bufferTimeoutId = setTimeout(onTimeOut, WAIT_TIME);
+  }
+
+  _clearBufferTimeout(): void {
+    if (this._bufferTimeoutId) {
+      clearTimeout(this._bufferTimeoutId);
+    }
   }
 
   /**
