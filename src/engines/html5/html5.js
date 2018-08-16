@@ -44,12 +44,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _config: Object;
   /**
-   * Flag to indicate first time text track cue change.
-   * @type {Object<number, boolean>}
-   * @private
-   */
-  _showTextTrackFirstTime: {[number]: boolean} = {};
-  /**
    * Promise to indicate when a media source adapter can be loaded.
    * @type {Promise<*>}
    * @private
@@ -207,10 +201,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       Utils.Dom.removeAttribute(this._el, 'src');
       Utils.Dom.removeChild(this._el.parentNode, this._el);
     }
-    this._showTextTrackFirstTime = {};
     this._eventManager.destroy();
     MediaSourceProvider.destroy();
-    this._mediaSourceAdapter = null;
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.destroy();
+      this._mediaSourceAdapter = null;
+    }
   }
 
   /**
