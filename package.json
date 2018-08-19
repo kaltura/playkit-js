@@ -93,5 +93,8 @@
   "bugs": {
     "url": "https://github.com/kaltura/playkit-js/issues"
   },
-  "homepage": "https://github.com/kaltura/playkit-js"
+  "homepage": "https://github.com/kaltura/playkit-js",
+  "kcc": {
+    "name": "playkit"
+  }
 }
