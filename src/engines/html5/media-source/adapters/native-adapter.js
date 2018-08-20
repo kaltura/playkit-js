@@ -232,10 +232,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._loadPromise = new Promise((resolve, reject) => {
         this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, this._onLoadedData.bind(this, resolve, startTime));
         this._eventManager.listenOnce(this._videoElement, Html5EventType.ERROR, this._onError.bind(this, reject));
-        this._eventManager.listen(this._videoElement, Html5EventType.WAITING, this._setTimeUpdateError.bind(this));
-        this._eventManager.listen(this._videoElement, Html5EventType.PLAYING, this._clearBufferTimeout.bind(this));
-        this._eventManager.listen(this._videoElement, Html5EventType.PLAY, this._clearBufferTimeout.bind(this));
-        this._eventManager.listen(this._videoElement, Html5EventType.PAUSE, this._clearBufferTimeout.bind(this));
+        this._eventManager.listen(this._videoElement, Html5EventType.WAITING, this._setWaitingInterval.bind(this));
+        this._eventManager.listen(this._videoElement, Html5EventType.STALLED, this._setWaitingInterval.bind(this));
+        this._eventManager.listen(this._videoElement, Html5EventType.PLAYING, this._clearWaitingInterval.bind(this));
+        this._eventManager.listen(this._videoElement, Html5EventType.PLAY, this._clearWaitingInterval.bind(this));
+        this._eventManager.listen(this._videoElement, Html5EventType.PAUSE, this._clearWaitingInterval.bind(this));
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
         }
@@ -289,11 +290,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     reject(new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.NATIVE_ADAPTER_LOAD_FAILED, error.payload));
   }
 
-  _setTimeUpdateError(): void {
-    this._clearBufferTimeout();
-    const onTimeOut = () => {
+  _setWaitingInterval(): void {
+    this._clearWaitingInterval();
+    const onInterval = () => {
       if (!navigator.onLine) {
-        clearTimeout(this._bufferTimeoutId);
+        this._clearWaitingInterval();
         this._trigger(
           Html5EventType.ERROR,
           new Error(
@@ -303,16 +304,15 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
             `player exceeded ${WAIT_TIME} timeout and connection seems to be offline`
           )
         );
-      } else {
-        this._bufferTimeoutId = setTimeout(onTimeOut, WAIT_TIME);
       }
     };
-    this._bufferTimeoutId = setTimeout(onTimeOut, WAIT_TIME);
+    this._waitingIntervalId = setInterval(onInterval, WAIT_TIME);
   }
 
-  _clearBufferTimeout(): void {
-    if (this._bufferTimeoutId) {
-      clearTimeout(this._bufferTimeoutId);
+  _clearWaitingInterval(): void {
+    if (this._waitingIntervalId) {
+      clearInterval(this._waitingIntervalId);
+      this._waitingIntervalId = null;
     }
   }
 
