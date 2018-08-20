@@ -95,6 +95,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _liveEdge: number;
+  /**
+   * Id for interval that starts upon waiting/stalling event and check if we are offline
+   * @member {number} - _waitingIntervalId
+   * @private
+   */
+  _waitingIntervalId: ?number;
 
   /**
    * Checks if NativeAdapter can play a given mime type.
