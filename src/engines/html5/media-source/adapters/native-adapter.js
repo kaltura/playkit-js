@@ -595,7 +595,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       );
       if (selectedTrack) {
         this._disableTextTracks();
-        selectedTrack.mode = this._config.displayTextTrack ? 'showing' : 'hidden';
+        selectedTrack.mode = this._getDisplayTextTrackModeString();
         NativeAdapter._logger.debug('Text track changed', selectedTrack);
         this._onTrackChanged(textTrack);
         this._addNativeTextTrackChangeListener();
@@ -640,7 +640,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const getActiveVidTextTrackIndex = () => {
       for (let i = 0; i < this._videoElement.textTracks.length; i++) {
         const textTrack = this._videoElement.textTracks[i];
-        if (['showing', 'hidden'].includes(textTrack.mode)) {
+        if (this._getDisplayTextTrackModeString() === textTrack.mode) {
           return i;
         }
       }
@@ -669,6 +669,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         }
       }
     }
+  }
+
+  _getDisplayTextTrackModeString(): string {
+    return this._config.displayTextTrack ? 'showing' : 'hidden';
   }
 
   /**
