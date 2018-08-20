@@ -1,8 +1,12 @@
+conditions: v1
 sudo: required
 dist: trusty
 language: node_js
 node_js:
   - "node"
+
+addons:
+  chrome: stable
 
 cache:
   yarn: true
@@ -10,15 +14,66 @@ cache:
     - node_modules
 
 before_install:
- - export CHROME_BIN=/usr/bin/google-chrome
  - export DISPLAY=:99.0
  - sh -e /etc/init.d/xvfb start
- - sudo apt-get update
- - sudo apt-get install -y libappindicator1 fonts-liberation
- - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
- - sudo dpkg -i google-chrome*.deb
+ - chmod +x ./scripts/travis.sh
 
-script:
-- npm run eslint
-- npm run flow
-- npm run test
+script: ./scripts/travis.sh
+
+stages:
+  - Tests
+  - Release canary
+  - Release
+
+jobs:
+  fast_finish: true
+  include:
+    # https://docs.travis-ci.com/user/build-stages/deploy-github-releases/
+    - stage: Release
+      name: "Releasing a new version"
+      if: tag IS present
+      env: TRAVIS_MODE=release
+      deploy:
+        - provider: releases
+          api_key:
+            secure: $GH_TOKEN
+          file_glob: true
+          file: dist/*
+          prerelease: true
+          skip_cleanup: true
+          on:
+            branch: master
+            tags: true
+        - provider: npm
+          api_key: $NPM_TOKEN
+          email: $NPM_EMAIL
+          skip_cleanup: true
+          on:
+            tags: true
+            branch: master
+    # publish canary package if on master
+    - stage: Release canary
+      if: (branch = master) AND (type != pull_request) AND commit_message !~ /^chore\(release\)/
+      env: TRAVIS_MODE=releaseCanary
+      deploy:
+        provider: npm
+        api_key: $NPM_TOKEN
+        email: $NPM_EMAIL
+        skip_cleanup: true
+        tag: canary
+        on:
+          tags: false
+          branch: master
+    # Required tests
+    - stage: Tests
+      if: (branch = master) OR (tag IS present) OR (type = pull_request)
+      name: "Running lint"
+      env:   TRAVIS_MODE=lint
+    - stage: Tests
+      if: (branch = master) OR (tag IS present) OR (type = pull_request)
+      name: "Running Flow type check"
+      env:   TRAVIS_MODE=flow
+    - stage: Tests
+      if: (branch = master) OR (tag IS present) OR (type = pull_request)
+      name: "Running unit tests"
+      env:   TRAVIS_MODE=unitTests
