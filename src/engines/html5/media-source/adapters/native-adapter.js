@@ -671,6 +671,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
+  /**
+   * Returns the mode (hidden / showing) of the native text track should have according to the displayTextTrack config.
+   * Both 'showing' and 'hidden' indicates the the text track is active and trigger cue events but 'hidden' hides it
+   * from the UI.
+   * @returns {string} the mode string
+   * @private
+   */
   _getDisplayTextTrackModeString(): string {
     return this._config.displayTextTrack ? 'showing' : 'hidden';
   }
