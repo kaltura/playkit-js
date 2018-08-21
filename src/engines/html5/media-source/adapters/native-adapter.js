@@ -236,13 +236,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   load(startTime: ?number): Promise<Object> {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
-        this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, this._onLoadedData.bind(this, resolve, startTime));
-        this._eventManager.listenOnce(this._videoElement, Html5EventType.ERROR, this._onError.bind(this, reject));
-        this._eventManager.listen(this._videoElement, Html5EventType.WAITING, this._setWaitingInterval.bind(this));
-        this._eventManager.listen(this._videoElement, Html5EventType.STALLED, this._setWaitingInterval.bind(this));
-        this._eventManager.listen(this._videoElement, Html5EventType.PLAYING, this._clearWaitingInterval.bind(this));
-        this._eventManager.listen(this._videoElement, Html5EventType.PLAY, this._clearWaitingInterval.bind(this));
-        this._eventManager.listen(this._videoElement, Html5EventType.PAUSE, this._clearWaitingInterval.bind(this));
+        this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => this._onLoadedData(resolve, startTime));
+        this._eventManager.listenOnce(this._videoElement, Html5EventType.ERROR, () => this._onError(reject));
+        this._eventManager.listen(this._videoElement, Html5EventType.PLAYING, () => this._resetHeartBeatTimeout());
+        this._eventManager.listen(this._videoElement, Html5EventType.PLAY, () => this._resetHeartBeatTimeout());
+        this._eventManager.listen(this._videoElement, Html5EventType.TIME_UPDATE, () => this._resetHeartBeatTimeout());
+        this._eventManager.listen(this._videoElement, Html5EventType.PAUSE, () => this._clearHeartBeatTimeout());
+        this._eventManager.listen(this._videoElement, Html5EventType.ENDED, () => this._clearHeartBeatTimeout());
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
         }
@@ -296,29 +296,22 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     reject(new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.NATIVE_ADAPTER_LOAD_FAILED, error.payload));
   }
 
-  _setWaitingInterval(): void {
-    this._clearWaitingInterval();
-    const onInterval = () => {
-      if (!navigator.onLine) {
-        this._clearWaitingInterval();
-        this._trigger(
-          Html5EventType.ERROR,
-          new Error(
-            Error.Severity.CRITICAL,
-            Error.Category.NETWORK,
-            Error.Code.TIMEOUT,
-            `player exceeded ${WAIT_TIME} timeout and connection seems to be offline`
-          )
-        );
-      }
+  _resetHeartBeatTimeout(): void {
+    this._clearHeartBeatTimeout();
+    const onTimeout = () => {
+      this._clearHeartBeatTimeout();
+      this._trigger(
+        Html5EventType.ERROR,
+        new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.TIMEOUT, `player exceeded ${WAIT_TIME} timeout`)
+      );
     };
-    this._waitingIntervalId = setInterval(onInterval, WAIT_TIME);
+    this._heartBeatTimeoutId = setTimeout(onTimeout, WAIT_TIME);
   }
 
-  _clearWaitingInterval(): void {
-    if (this._waitingIntervalId) {
-      clearInterval(this._waitingIntervalId);
-      this._waitingIntervalId = null;
+  _clearHeartBeatTimeout(): void {
+    if (this._heartBeatTimeoutId) {
+      clearTimeout(this._heartBeatTimeoutId);
+      this._heartBeatTimeoutId = null;
     }
   }
 
