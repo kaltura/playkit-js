@@ -595,7 +595,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       );
       if (selectedTrack) {
         this._disableTextTracks();
-        selectedTrack.mode = this._config.displayTextTrack ? 'showing' : 'hidden';
+        selectedTrack.mode = this._getDisplayTextTrackModeString();
         NativeAdapter._logger.debug('Text track changed', selectedTrack);
         this._onTrackChanged(textTrack);
         this._addNativeTextTrackChangeListener();
@@ -640,7 +640,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const getActiveVidTextTrackIndex = () => {
       for (let i = 0; i < this._videoElement.textTracks.length; i++) {
         const textTrack = this._videoElement.textTracks[i];
-        if (textTrack.mode === 'showing') {
+        if (this._getDisplayTextTrackModeString() === textTrack.mode) {
           return i;
         }
       }
@@ -669,6 +669,17 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         }
       }
     }
+  }
+
+  /**
+   * Returns the mode (hidden / showing) of the native text track should have according to the displayTextTrack config.
+   * Both 'showing' and 'hidden' indicates the the text track is active and trigger cue events but 'hidden' hides it
+   * from the UI.
+   * @returns {string} the mode string
+   * @private
+   */
+  _getDisplayTextTrackModeString(): string {
+    return this._config.displayTextTrack ? 'showing' : 'hidden';
   }
 
   /**
