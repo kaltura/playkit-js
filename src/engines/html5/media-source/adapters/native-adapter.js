@@ -12,8 +12,7 @@ import FairPlay from '../../../../drm/fairplay';
 import Env from '../../../../utils/env';
 import FakeEvent from '../../../../event/fake-event';
 import Error from '../../../../error/error';
-
-const WAIT_TIME: number = 5000;
+import defaultConfig from './native-adapter-default-config';
 
 /**
  * An illustration of media source extension for progressive download
@@ -179,6 +178,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     super(videoElement, source, config);
     this._eventManager = new EventManager();
     this._maybeSetDrmPlayback();
+    this._config = Utils.Object.mergeDeep({}, defaultConfig, this._config);
     this._progressiveSources = config.progressiveSources;
     this._liveEdge = 0;
   }
@@ -302,10 +302,15 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._clearHeartBeatTimeout();
       this._trigger(
         Html5EventType.ERROR,
-        new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.TIMEOUT, `player exceeded ${WAIT_TIME} timeout`)
+        new Error(
+          Error.Severity.CRITICAL,
+          Error.Category.NETWORK,
+          Error.Code.TIMEOUT,
+          `The player exceeded max buffer time of ${this._config.heartBeatTimeout} ms. No progress has been done during this time.`
+        )
       );
     };
-    this._heartBeatTimeoutId = setTimeout(onTimeout, WAIT_TIME);
+    this._heartBeatTimeoutId = setTimeout(onTimeout, this._config.heartBeatTimeout);
   }
 
   _clearHeartBeatTimeout(): void {
