@@ -99,7 +99,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @member {number} - _waitingIntervalId
    * @private
    */
-  _waitingIntervalId: ?number;
+  _heartBeatTimeoutId: ?number;
 
   /**
    * Checks if NativeAdapter can play a given mime type.
@@ -237,7 +237,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
         this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => this._onLoadedData(resolve, startTime));
-        this._eventManager.listenOnce(this._videoElement, Html5EventType.ERROR, () => this._onError(reject));
+        this._eventManager.listenOnce(this._videoElement, Html5EventType.ERROR, error => this._onError(reject, error));
         this._eventManager.listen(this._videoElement, Html5EventType.PLAYING, () => this._resetHeartBeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.PLAY, () => this._resetHeartBeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.TIME_UPDATE, () => this._resetHeartBeatTimeout());
