@@ -10,7 +10,6 @@ import {getSuitableSourceForResolution} from '../../../../utils/resolution';
 import * as Utils from '../../../../utils/util';
 import FairPlay from '../../../../drm/fairplay';
 import Env from '../../../../utils/env';
-import FakeEvent from '../../../../event/fake-event';
 import Error from '../../../../error/error';
 import defaultConfig from './native-adapter-default-config';
 
@@ -99,7 +98,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @member {number} - _waitingIntervalId
    * @private
    */
-  _heartBeatTimeoutId: ?number;
+  _heartbeatTimeoutId: ?number;
 
   /**
    * Checks if NativeAdapter can play a given mime type.
@@ -235,11 +234,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   load(startTime: ?number): Promise<Object> {
     if (!this._loadPromise) {
-      this._loadPromise = new Promise((resolve, reject) => {
+      this._loadPromise = new Promise(resolve => {
         this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => this._onLoadedData(resolve, startTime));
-        this._eventManager.listenOnce(this._videoElement, Html5EventType.ERROR, error => this._onError(reject, error));
-        this._eventManager.listen(this._videoElement, Html5EventType.PLAYING, () => this._resetHeartBeatTimeout());
-        this._eventManager.listen(this._videoElement, Html5EventType.PLAY, () => this._resetHeartBeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.TIME_UPDATE, () => this._resetHeartBeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.PAUSE, () => this._clearHeartBeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.ENDED, () => this._clearHeartBeatTimeout());
@@ -285,17 +281,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
-  /**
-   * error event handler.
-   * @param {Function} reject - The reject promise function.
-   * @param {FakeEvent} error - The error fake event.
-   * @private
-   * @returns {void}
-   */
-  _onError(reject: Function, error: FakeEvent): void {
-    reject(new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.NATIVE_ADAPTER_LOAD_FAILED, error.payload));
-  }
-
   _resetHeartBeatTimeout(): void {
     this._clearHeartBeatTimeout();
     const onTimeout = () => {
@@ -310,13 +295,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         )
       );
     };
-    this._heartBeatTimeoutId = setTimeout(onTimeout, this._config.heartBeatTimeout);
+    this._heartbeatTimeoutId = setTimeout(onTimeout, this._config.heartBeatTimeout);
   }
 
   _clearHeartBeatTimeout(): void {
-    if (this._heartBeatTimeoutId) {
-      clearTimeout(this._heartBeatTimeoutId);
-      this._heartBeatTimeoutId = null;
+    if (this._heartbeatTimeoutId) {
+      clearTimeout(this._heartbeatTimeoutId);
+      this._heartbeatTimeoutId = null;
     }
   }
 

@@ -273,7 +273,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       extended: extended,
       message: message
     });
-    this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
+    if (!this._mediaSourceAdapter.canRecover()) {
+      this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
+    }
   }
 
   /**
