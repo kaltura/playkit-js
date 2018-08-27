@@ -39,4 +39,24 @@ describe('Html5', () => {
     eventMgrSpy.should.have.been.calledOnce;
     engine._el.src.should.be.empty;
   });
+
+  it('should destroy html5 engine', () => {
+    const progressiveSource = sourcesConfig.Mp4.progressive[0];
+    const sources = {sources: sourcesConfig.Mp4};
+    const engine = Html5.createEngine(progressiveSource, sources);
+    const detachSpy = sandbox.spy(engine, 'detach');
+    const pauseSpy = sandbox.spy(engine, 'pause');
+    const eventMgrSpy = sandbox.spy(engine._eventManager, 'destroy');
+    const mediaSourceAdapterSpy = sandbox.spy(engine._mediaSourceAdapter, 'destroy');
+    engine._eventManager.should.exist;
+    engine._config.should.deep.equal(sources);
+    engine._mediaSourceAdapter.should.be.instanceof(BaseMediaSourceAdapter);
+    engine._el.should.be.a('HTMLVideoElement');
+    engine.destroy();
+    detachSpy.should.have.been.calledOnce;
+    pauseSpy.should.have.been.calledOnce;
+    eventMgrSpy.should.have.been.calledOnce;
+    mediaSourceAdapterSpy.should.have.been.calledOnce;
+    engine._el.src.should.be.empty;
+  });
 });
