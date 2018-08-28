@@ -100,6 +100,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _heartbeatTimeoutId: ?number;
 
+  _loadPromiseReject: ?Function;
+
   /**
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
@@ -234,7 +236,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   load(startTime: ?number): Promise<Object> {
     if (!this._loadPromise) {
-      this._loadPromise = new Promise(resolve => {
+      this._loadPromise = new Promise((resolve, reject) => {
+        this._loadPromiseReject = reject;
         this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => this._onLoadedData(resolve, startTime));
         this._eventManager.listen(this._videoElement, Html5EventType.TIME_UPDATE, () => this._resetHeartBeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.PAUSE, () => this._clearHeartBeatTimeout());
@@ -252,6 +255,15 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     return this._loadPromise;
   }
 
+  handleMediaError(error: Event): boolean {
+    if (this._loadPromiseReject) {
+      this._loadPromiseReject(new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.NATIVE_ADAPTER_LOAD_FAILED, error));
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   /**
    * Loaded data event handler.
    * @param {Function} resolve - The resolve promise function.
@@ -266,6 +278,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._addNativeTextTrackChangeListener();
       this._addNativeTextTrackAddedListener();
       NativeAdapter._logger.debug('The source has been loaded successfully');
+      this._loadPromiseReject = null;
       resolve({tracks: this._playerTracks});
       if (this.isLive()) {
         this._handleLiveDurationChange();
@@ -316,6 +329,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._eventManager.destroy();
       this._progressiveSources = [];
       this._loadPromise = null;
+      this._rejectLoadPromise = null;
       this._liveEdge = 0;
       if (this._liveDurationChangeInterval) {
         clearInterval(this._liveDurationChangeInterval);
