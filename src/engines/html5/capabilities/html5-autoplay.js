@@ -64,9 +64,6 @@ export default class Html5AutoPlayCapability implements ICapability {
    * @private
    */
   static _getPlayPromise(): Promise<*> {
-    testVideoElement.addEventListener(Html5EventType.ERROR, () => {
-      return Promise.reject();
-    });
     return testVideoElement.play() || Html5AutoPlayCapability._forcePromiseReturnValue();
   }
 
@@ -96,6 +93,9 @@ export default class Html5AutoPlayCapability implements ICapability {
    */
   static _forcePromiseReturnValue(): Promise<*> {
     return new Promise((resolve, reject) => {
+      testVideoElement.addEventListener(Html5EventType.ERROR, () => {
+        reject();
+      });
       const supported = setTimeout(() => {
         Html5AutoPlayCapability._logger.debug(`Timeout ${WAIT_TIME} ms has been reached`);
         reject();
