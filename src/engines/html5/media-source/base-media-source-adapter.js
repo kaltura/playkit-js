@@ -166,7 +166,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @returns {boolean} - if it can recover or not
    * @public
    */
-  handleMediaError(event: Event): boolean {
+  handleMediaError(event: ?MediaError): boolean {
     return false;
   }
 

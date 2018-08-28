@@ -239,9 +239,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._loadPromise = new Promise((resolve, reject) => {
         this._loadPromiseReject = reject;
         this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => this._onLoadedData(resolve, startTime));
-        this._eventManager.listen(this._videoElement, Html5EventType.TIME_UPDATE, () => this._resetHeartBeatTimeout());
-        this._eventManager.listen(this._videoElement, Html5EventType.PAUSE, () => this._clearHeartBeatTimeout());
-        this._eventManager.listen(this._videoElement, Html5EventType.ENDED, () => this._clearHeartBeatTimeout());
+        this._eventManager.listen(this._videoElement, Html5EventType.TIME_UPDATE, () => this._resetHeartbeatTimeout());
+        this._eventManager.listen(this._videoElement, Html5EventType.PLAY, () => this._resetHeartbeatTimeout());
+        this._eventManager.listen(this._videoElement, Html5EventType.PAUSE, () => this._clearHeartbeatTimeout());
+        this._eventManager.listen(this._videoElement, Html5EventType.ENDED, () => this._clearHeartbeatTimeout());
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
         }
@@ -255,7 +256,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     return this._loadPromise;
   }
 
-  handleMediaError(error: Event): boolean {
+  handleMediaError(error: ?MediaError): boolean {
     if (this._loadPromiseReject) {
       this._loadPromiseReject(new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.NATIVE_ADAPTER_LOAD_FAILED, error));
       return true;
@@ -294,24 +295,24 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
-  _resetHeartBeatTimeout(): void {
-    this._clearHeartBeatTimeout();
+  _resetHeartbeatTimeout(): void {
+    this._clearHeartbeatTimeout();
     const onTimeout = () => {
-      this._clearHeartBeatTimeout();
+      this._clearHeartbeatTimeout();
       this._trigger(
         Html5EventType.ERROR,
         new Error(
           Error.Severity.CRITICAL,
           Error.Category.NETWORK,
           Error.Code.TIMEOUT,
-          `The player exceeded max buffer time of ${this._config.heartBeatTimeout} ms. No progress has been done during this time.`
+          `The player exceeded max buffer time of ${this._config.heartbeatTimeout} ms. No progress has been done during this time.`
         )
       );
     };
-    this._heartbeatTimeoutId = setTimeout(onTimeout, this._config.heartBeatTimeout);
+    this._heartbeatTimeoutId = setTimeout(onTimeout, this._config.heartbeatTimeout);
   }
 
-  _clearHeartBeatTimeout(): void {
+  _clearHeartbeatTimeout(): void {
     if (this._heartbeatTimeoutId) {
       clearTimeout(this._heartbeatTimeoutId);
       this._heartbeatTimeoutId = null;
@@ -329,7 +330,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._eventManager.destroy();
       this._progressiveSources = [];
       this._loadPromise = null;
-      this._rejectLoadPromise = null;
+      this._loadPromiseReject = null;
       this._liveEdge = 0;
       if (this._liveDurationChangeInterval) {
         clearInterval(this._liveDurationChangeInterval);
