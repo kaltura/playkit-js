@@ -17,12 +17,6 @@ testVideoElement.src = URL.createObjectURL(VIDEO);
 testVideoElement.setAttribute('playsinline', '');
 
 export default class Html5AutoPlayCapability implements ICapability {
-  /**
-   * The html5 class logger.
-   * @type {any}
-   * @static
-   * @private
-   */
   static _logger: any = getLogger('Html5AutoPlayCapability');
 
   static _playPromiseResult: Promise<*>;
@@ -35,19 +29,15 @@ export default class Html5AutoPlayCapability implements ICapability {
    */
   static runCapability(): void {
     Html5AutoPlayCapability._playPromiseResult = new Promise(resolve => {
-      Html5AutoPlayCapability._getPlayPromise(false).then(result => {
-        if (result) {
-          return resolve({autoplay: true, mutedAutoPlay: true});
-        } else {
-          Html5AutoPlayCapability._getPlayPromise(true).then(mutedResult => {
-            if (mutedResult) {
-              return resolve({autoplay: false, mutedAutoPlay: true});
-            } else {
-              return resolve({autoplay: false, mutedAutoPlay: false});
-            }
-          });
-        }
-      });
+      Html5AutoPlayCapability._setMuted(false);
+      Html5AutoPlayCapability._getPlayPromise()
+        .then(() => resolve({autoplay: true, mutedAutoPlay: true}))
+        .catch(() => {
+          Html5AutoPlayCapability._setMuted(true);
+          Html5AutoPlayCapability._getPlayPromise()
+            .then(() => resolve({autoplay: false, mutedAutoPlay: true}))
+            .catch(() => resolve({autoplay: false, mutedAutoPlay: false}));
+        });
     });
   }
 
@@ -70,37 +60,14 @@ export default class Html5AutoPlayCapability implements ICapability {
 
   /**
    * Gets the play promise.
-   * @param {boolean} muted - if the element should be muted or not.
    * @return {Promise<*>} - Play promise which resolved or rejected.
    * @private
    */
-  static _getPlayPromise(muted: boolean): Promise<*> {
-    return new Promise(resolve => {
-      const sendOutput = result => {
-        clearTimeout(timeoutId);
-        resolve(result);
-      };
-      Html5AutoPlayCapability._setMuted(muted);
-      testVideoElement.addEventListener(Html5EventType.error, error => {
-        Html5AutoPlayCapability._logger.debug(`Play promise caused an error when trying to play the blob`, error);
-        return resolve(false);
-      });
-      const playResult = testVideoElement.play();
-      const timeoutId = setTimeout(() => {
-        Html5AutoPlayCapability._logger.debug(`Timeout ${WAIT_TIME} ms has been reached`);
-        sendOutput(false);
-      }, WAIT_TIME);
-      if (playResult) {
-        playResult.then(() => sendOutput(true)).catch(() => sendOutput(false));
-      } else {
-        Html5AutoPlayCapability._logger.debug(`Play Promise returned undefined`);
-        if (testVideoElement.paused === true) {
-          sendOutput(false);
-        } else {
-          sendOutput(true);
-        }
-      }
+  static _getPlayPromise(): Promise<*> {
+    testVideoElement.addEventListener(Html5EventType.ERROR, () => {
+      return Promise.reject();
     });
+    return testVideoElement.play() || Html5AutoPlayCapability._forcePromiseReturnValue();
   }
 
   /**
@@ -118,5 +85,28 @@ export default class Html5AutoPlayCapability implements ICapability {
       testVideoElement.muted = false;
       testVideoElement.removeAttribute('muted');
     }
+  }
+
+  /**
+   * For browsers which are not supported promise return value from play()
+   * request we are simulate the same behaviour.
+   * @return {Promise<*>} - Play promise which resolved or rejected.
+   * @private
+   * @static
+   */
+  static _forcePromiseReturnValue(): Promise<*> {
+    return new Promise((resolve, reject) => {
+      const supported = setTimeout(() => {
+        Html5AutoPlayCapability._logger.debug(`Timeout ${WAIT_TIME} ms has been reached`);
+        reject();
+      }, WAIT_TIME);
+      if (testVideoElement.paused === true) {
+        clearTimeout(supported);
+        reject();
+      } else {
+        clearTimeout(supported);
+        resolve();
+      }
+    });
   }
 }
