@@ -5,7 +5,7 @@ import TextTrack from '../../../../../../src/track/text-track';
 import {removeVideoElementsFromTestPage} from '../../../../utils/test-utils';
 import sourcesConfig from '../../../../configs/sources.json';
 import * as Utils from '../../../../../../src/utils/util';
-import {CustomEventType} from '../../../../../../src/event/event-type';
+import {CustomEventType, Html5EventType} from '../../../../../../src/event/event-type';
 
 describe('NativeAdapter: isSupported', () => {
   it('should be supported', () => {
@@ -157,6 +157,9 @@ describe('NativeAdapter: load', function() {
 
   it('should failed', done => {
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.CorruptedUrl.progressive[0], {sources: {}});
+    video.addEventListener(Html5EventType.ERROR, e => {
+      nativeInstance.handleMediaError(e);
+    });
     nativeInstance.load().catch(error => {
       error.should.be.exist;
       done();
@@ -703,14 +706,17 @@ describe('NativeAdapter: isLive', function() {
 
   it('should return true for live', done => {
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
+    video.addEventListener(Html5EventType.ERROR, e => {
+      nativeInstance.handleMediaError(e);
+    });
     nativeInstance
       .load()
       .then(() => {
         nativeInstance.isLive().should.be.true;
         done();
       })
-      .catch(() => {
-        done();
+      .catch(e => {
+        done(e);
       });
   });
 });
@@ -733,6 +739,9 @@ describe('NativeAdapter: seekToLiveEdge', () => {
 
   it('should seek to live edge', done => {
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
+    video.addEventListener(Html5EventType.ERROR, e => {
+      nativeInstance.handleMediaError(e);
+    });
     nativeInstance
       .load()
       .then(() => {
@@ -742,8 +751,8 @@ describe('NativeAdapter: seekToLiveEdge', () => {
         video.currentTime.should.equal(nativeInstance.duration);
         done();
       })
-      .catch(() => {
-        done();
+      .catch(e => {
+        done(e);
       });
   });
 });
@@ -766,6 +775,9 @@ describe('NativeAdapter: _handleLiveDurationChange', () => {
 
   it('should trigger durationchange for live', done => {
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
+    video.addEventListener(Html5EventType.ERROR, e => {
+      nativeInstance.handleMediaError(e);
+    });
     nativeInstance
       .load()
       .then(() => {
@@ -773,8 +785,8 @@ describe('NativeAdapter: _handleLiveDurationChange', () => {
           done();
         });
       })
-      .catch(() => {
-        done();
+      .catch(e => {
+        done(e);
       });
   });
 });
@@ -797,6 +809,9 @@ describe('NativeAdapter: _handleLiveTimeUpdate', () => {
 
   it('should trigger timeupdate for live when paused', done => {
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
+    video.addEventListener(Html5EventType.ERROR, e => {
+      nativeInstance.handleMediaError(e);
+    });
     nativeInstance
       .load()
       .then(() => {
@@ -804,8 +819,8 @@ describe('NativeAdapter: _handleLiveTimeUpdate', () => {
           done();
         });
       })
-      .catch(() => {
-        done();
+      .catch(e => {
+        done(e);
       });
   });
 });
@@ -836,6 +851,9 @@ describe('NativeAdapter: get duration', () => {
 
   it('should return live duration for live', done => {
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
+    video.addEventListener(Html5EventType.ERROR, e => {
+      nativeInstance.handleMediaError(e);
+    });
     nativeInstance
       .load()
       .then(() => {
@@ -850,8 +868,8 @@ describe('NativeAdapter: get duration', () => {
         nativeInstance.duration.should.be.equal(duration);
         done();
       })
-      .catch(() => {
-        done();
+      .catch(e => {
+        done(e);
       });
   });
 });
@@ -882,14 +900,17 @@ describe('NativeAdapter: getStartTimeOfDvrWindow', () => {
 
   it('should return the start of DVR window for live', done => {
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
+    video.addEventListener(Html5EventType.ERROR, e => {
+      nativeInstance.handleMediaError(e);
+    });
     nativeInstance
       .load()
       .then(() => {
         nativeInstance.getStartTimeOfDvrWindow().should.equal(nativeInstance._videoElement.seekable.start(0));
         done();
       })
-      .catch(() => {
-        done();
+      .catch(e => {
+        done(e);
       });
   });
 });
