@@ -12,8 +12,17 @@ class Ad {
   _skipOffset: ?number = -1;
   _linear: ?boolean;
 
-  constructor(id: string) {
+  constructor(id: string, options: PKAdOptions) {
     this._id = id;
+    this._url = options.url;
+    this._contentType = options.contentType;
+    this._title = options.title;
+    this._position = options.position;
+    this._duration = options.duration;
+    this._clickThroughUrl = options.clickThroughUrl;
+    this._posterUrl = options.posterUrl;
+    this._skipOffset = options.skipOffset;
+    this._linear = options.linear;
   }
 
   get id(): string {
@@ -24,72 +33,36 @@ class Ad {
     return this._contentType;
   }
 
-  set contentType(value: string): void {
-    this._contentType = value;
-  }
-
   get url(): string {
     return this._url;
-  }
-
-  set url(value: string): void {
-    this._url = value;
   }
 
   get title(): string {
     return this._title;
   }
 
-  set title(value: string): void {
-    this._title = value;
-  }
-
   get position(): number {
     return this._position;
-  }
-
-  set position(value: number): void {
-    this._position = value;
   }
 
   get duration(): number {
     return this._duration;
   }
 
-  set duration(value: number): void {
-    this._duration = value;
-  }
-
   get clickThroughUrl(): string {
     return this._clickThroughUrl;
-  }
-
-  set clickThroughUrl(value: string): void {
-    this._clickThroughUrl = value;
   }
 
   get posterUrl(): string {
     return this._posterUrl;
   }
 
-  set posterUrl(value: string): void {
-    this._posterUrl = value;
-  }
-
   get skipOffset(): number {
     return this._skipOffset;
   }
 
-  set skipOffset(value: number): void {
-    this._skipOffset = value;
-  }
-
   get linear(): boolean {
     return this._linear;
-  }
-
-  set linear(value: boolean): void {
-    this._linear = value;
   }
 
   get skippable(): boolean {
