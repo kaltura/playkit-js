@@ -329,7 +329,7 @@ describe('Player', function() {
 
           it('should fail ready -> load', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
-              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
+              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
             });
@@ -341,7 +341,7 @@ describe('Player', function() {
 
           it('should fail load -> ready', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
-              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
+              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
             });
@@ -366,7 +366,7 @@ describe('Player', function() {
 
           it('should fail configure -> ready -> load', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
-              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
+              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
             });
@@ -379,7 +379,7 @@ describe('Player', function() {
 
           it('should fail configure -> load -> ready', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
-              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
+              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
             });
@@ -392,7 +392,7 @@ describe('Player', function() {
 
           it('should fail ready -> configure -> load', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
-              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
+              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
             });
@@ -421,7 +421,7 @@ describe('Player', function() {
 
           it('should fail ready -> load', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
-              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
+              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
             });
@@ -433,7 +433,7 @@ describe('Player', function() {
 
           it('should fail load -> ready', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
-              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
+              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
             });
@@ -459,7 +459,7 @@ describe('Player', function() {
 
           it('should fail configure -> ready -> load', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
-              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
+              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
             });
@@ -472,7 +472,7 @@ describe('Player', function() {
 
           it('should fail configure -> load -> ready', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
-              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
+              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
             });
@@ -485,7 +485,7 @@ describe('Player', function() {
 
           it('should fail ready -> load -> configure', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
-              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
+              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
             });
@@ -498,7 +498,7 @@ describe('Player', function() {
 
           it('should fail ready -> configure -> load', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
-              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
+              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
             });
@@ -511,7 +511,7 @@ describe('Player', function() {
 
           it('should fail load -> configure -> ready', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
-              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
+              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
             });
@@ -524,7 +524,7 @@ describe('Player', function() {
 
           it('should fail load -> ready -> configure', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
-              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.code.should.equals(Error.Code.VIDEO_ERROR)) {
+              if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
             });
