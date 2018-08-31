@@ -1,16 +1,24 @@
 // @flow
 import * as Utils from '../../../utils/util';
-import * as EncodingSources from '../../../assets/encoding-sources.json';
 import {Html5EventType} from '../../../event/event-type';
+import getLogger from '../../../utils/logger';
+import * as blobSource from '../../../assets/blob-source.json';
 
 const WAIT_TIME: number = 500;
 
+/**
+ * @type {Blob}
+ */
+const VIDEO = new Blob([new Uint8Array(blobSource.uInt8Array)], {type: 'video/mp4'});
+
 const testVideoElement: HTMLVideoElement = Utils.Dom.createElement('video');
-testVideoElement.src = EncodingSources.Base64Mp4Source;
+testVideoElement.src = URL.createObjectURL(VIDEO);
 // For iOS devices needs to turn the playsinline attribute on
 testVideoElement.setAttribute('playsinline', '');
 
 export default class Html5AutoPlayCapability implements ICapability {
+  static _logger: any = getLogger('Html5AutoPlayCapability');
+
   static _playPromiseResult: Promise<*>;
 
   /**
@@ -85,17 +93,20 @@ export default class Html5AutoPlayCapability implements ICapability {
    */
   static _forcePromiseReturnValue(): Promise<*> {
     return new Promise((resolve, reject) => {
+      testVideoElement.addEventListener(Html5EventType.ERROR, () => {
+        reject();
+      });
       const supported = setTimeout(() => {
+        Html5AutoPlayCapability._logger.debug(`Timeout ${WAIT_TIME} ms has been reached`);
         reject();
       }, WAIT_TIME);
-      testVideoElement.addEventListener(Html5EventType.PLAYING, () => {
-        clearTimeout(supported);
-        resolve();
-      });
-      testVideoElement.addEventListener(Html5EventType.ERROR, () => {
+      if (testVideoElement.paused === true) {
         clearTimeout(supported);
         reject();
-      });
+      } else {
+        clearTimeout(supported);
+        resolve();
+      }
     });
   }
 }

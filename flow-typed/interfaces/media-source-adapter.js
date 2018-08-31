@@ -8,6 +8,7 @@ declare interface IMediaSourceAdapter {
   currentTime: number;
   +duration: number;
   load(startTime: ?number): Promise<Object>;
+  handleMediaError(error: ?MediaError): boolean;
   destroy(): Promise<*>;
   selectVideoTrack(videoTrack: VideoTrack): void;
   selectAudioTrack(audioTrack: AudioTrack): void;
