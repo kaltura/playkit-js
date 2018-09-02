@@ -31,6 +31,7 @@ import {Ad} from './ads/ad';
 import {AdBreak} from './ads/ad-break';
 import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
+import {AdError} from './ads/ad-error';
 
 Player.runCapabilities();
 
@@ -82,7 +83,7 @@ const setCapabilities = Player.setCapabilities;
 export {getCapabilities, setCapabilities, registerEngine};
 
 // Export ads framework
-export {Ad, AdBreak, AdBreakType, AdTagType};
+export {Ad, AdError, AdBreak, AdBreakType, AdTagType};
 
 // Export enums
 export {EventType, StateType, TrackType, EngineType, MediaType, StreamType, AbrMode, LogLevelType, CorsType};
