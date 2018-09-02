@@ -10,6 +10,7 @@ import {CustomEventType} from '../event/event-type';
 class AdsController extends FakeEventTarget implements IAdsAPI {
   _adsPlugin: AdsPlugin;
   _allAdsCompleted: boolean;
+  _eventManager: EventManager;
 
   /**
    * The ads controller.
