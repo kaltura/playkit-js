@@ -43,6 +43,8 @@ import {EngineProvider} from './engines/engine-provider';
 import {ExternalCaptionsHandler} from './track/external-captions-handler';
 import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
+import {AdsController} from './ads/ads-controller';
+import {AdEventType} from './ads/ad-event-type';
 
 /**
  * The black cover class name.
@@ -374,6 +376,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _externalCaptionsHandler: ExternalCaptionsHandler;
+  /**
+   * holds the ads controller
+   * @type {?AdsController}
+   * @private
+   */
+  _adsController: ?AdsController;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -444,6 +452,7 @@ export default class Player extends FakeEventTarget {
       Utils.Object.mergeDeep(this._config, config);
       this._configureOrLoadPlugins(config.plugins);
     }
+    this._maybeCreateAdsController();
   }
 
   /**
@@ -1698,6 +1707,15 @@ export default class Player extends FakeEventTarget {
     };
   }
 
+  _maybeCreateAdsController(): void {
+    if (!this._adsController) {
+      const adsPlugin = this._pluginManager.getAdsPlugin();
+      if (adsPlugin) {
+        this._adsController = new AdsController(this, adsPlugin);
+      }
+    }
+  }
+
   /**
    * Play after async ads
    * @private
@@ -1798,6 +1816,13 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _onEnded(): void {
+    if (this._adsController && !this._adsController.allAdsCompleted) {
+      this._eventManager.listenOnce(this._adsController, AdEventType.ALL_ADS_COMPLETED, () => {
+        this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_ENDED));
+      });
+    } else {
+      this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_ENDED));
+    }
     if (this.config.playback.loop) {
       this.currentTime = 0;
       this.play();

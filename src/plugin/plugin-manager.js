@@ -3,6 +3,7 @@ import BasePlugin from './base-plugin';
 import Error from '../error/error';
 import Player from '../player';
 import getLogger from '../utils/logger';
+import {AdsPlugin} from '../ads/ads-plugin';
 
 /**
  * The logger of the PluginManager class.
@@ -145,6 +146,15 @@ export default class PluginManager {
    */
   get(name: string): ?BasePlugin {
     return this._plugins.get(name);
+  }
+
+  /**
+   * Returns the ads plugin's instance.
+   * @returns {?AdsPlugin} - The ads plugin instance
+   * @public
+   */
+  getAdsPlugin(): ?AdsPlugin {
+    return Array.from(this._plugins.values()).find(plugin => plugin instanceof AdsPlugin);
   }
 }
 

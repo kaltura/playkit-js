@@ -181,6 +181,10 @@ const CustomEventType: EventTypes = {
    */
   PLAYBACK_STARTED: 'playbackstarted',
   /**
+   * Fires when the playback (includes postrolls) is ended.
+   */
+  PLAYBACK_ENDED: 'playbackended',
+  /**
    * Fires when the player has selected the source to play.
    */
   SOURCE_SELECTED: 'sourceselected',

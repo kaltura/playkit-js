@@ -32,6 +32,7 @@ import {AdBreak} from './ads/ad-break';
 import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
 import {AdError} from './ads/ad-error';
+import {AdsPlugin} from './ads/ads-plugin';
 
 Player.runCapabilities();
 
@@ -51,6 +52,9 @@ export {registerMediaSourceAdapter, BaseMediaSourceAdapter};
 
 // Export the plugin framework
 export {registerPlugin, BasePlugin, BaseMiddleware};
+
+// Export the ads framework
+export {AdsPlugin};
 
 // Export the tracks classes
 export {Track, VideoTrack, AudioTrack, TextTrack, TextStyle};
