@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.35.2"></a>
+## [0.35.2](https://github.com/kaltura/playkit-js/compare/v0.35.1...v0.35.2) (2018-08-22)
+
+
+### Bug Fixes
+
+* **FEC-8143:** The video starts with 'Eng' captions although configuration set to 'Rus' on Native ([#280](https://github.com/kaltura/playkit-js/issues/280)) ([47b468d](https://github.com/kaltura/playkit-js/commit/47b468d))
+* **html5:** destroy _mediaSourceAdapter on engine destroy ([#284](https://github.com/kaltura/playkit-js/issues/284)) ([2d3db1e](https://github.com/kaltura/playkit-js/commit/2d3db1e))
+
+
+
+<a name="0.35.1"></a>
+## [0.35.1](https://github.com/kaltura/playkit-js/compare/v0.35.0...v0.35.1) (2018-08-09)
+
+
+### Bug Fixes
+
+* **FEC-8461:** Do not show 708 caption by default ([#277](https://github.com/kaltura/playkit-js/issues/277)) ([e2df487](https://github.com/kaltura/playkit-js/commit/e2df487))
+
+
+
+<a name="0.35.0"></a>
+# [0.35.0](https://github.com/kaltura/playkit-js/compare/v0.34.0...v0.35.0) (2018-08-05)
+
+
+### Bug Fixes
+
+* **FEC-8413:** on change media with data saver on the player is stuck on the poster [#273](https://github.com/kaltura/playkit-js/issues/273) ([28a0bd8](https://github.com/kaltura/playkit-js/commit/28a0bd8))
+
+
+### Features
+
+* **FEC-8269:** add playback loop support ([#274](https://github.com/kaltura/playkit-js/issues/274)) ([a97512f](https://github.com/kaltura/playkit-js/commit/a97512f))
+
+
+
 <a name="0.34.0"></a>
 # [0.34.0](https://github.com/kaltura/playkit-js/compare/v0.33.0...v0.34.0) (2018-07-26)
 
