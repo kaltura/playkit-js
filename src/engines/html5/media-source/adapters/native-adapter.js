@@ -243,6 +243,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._eventManager.listen(this._videoElement, Html5EventType.PLAY, () => this._resetHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.PAUSE, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.ENDED, () => this._clearHeartbeatTimeout());
+        this._eventManager.listen(this._videoElement, Html5EventType.ABORT, () => this._clearHeartbeatTimeout());
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
         }
@@ -332,6 +333,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._loadPromise = null;
       this._loadPromiseReject = null;
       this._liveEdge = 0;
+      this._clearHeartbeatTimeout();
       if (this._liveDurationChangeInterval) {
         clearInterval(this._liveDurationChangeInterval);
         this._liveDurationChangeInterval = null;
