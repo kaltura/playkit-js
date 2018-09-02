@@ -419,12 +419,9 @@ export default class Player extends FakeEventTarget {
     }
     if (this._hasSources(config.sources)) {
       this._configureOrLoadPlugins(config.plugins);
-      const receivedSourcesWhenHasEngine: boolean = !!this._engine;
-      if (receivedSourcesWhenHasEngine) {
-        this.reset();
-        Player._logger.debug('Change source started');
-        this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
-      }
+      this.reset();
+      Player._logger.debug('Change source started');
+      this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
       Utils.Object.mergeDeep(this._config, config);
       this._reset = false;
       if (this._selectEngineByPriority()) {
@@ -433,10 +430,8 @@ export default class Player extends FakeEventTarget {
         this._posterManager.setSrc(this._config.sources.poster);
         this._handlePreload();
         this._handleAutoPlay();
-        if (receivedSourcesWhenHasEngine) {
-          Player._logger.debug('Change source ended');
-          this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_ENDED));
-        }
+        Player._logger.debug('Change source ended');
+        this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_ENDED));
       }
     } else {
       Utils.Object.mergeDeep(this._config, config);
