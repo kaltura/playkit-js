@@ -9,7 +9,7 @@ class Ad {
   _duration: ?number;
   _clickThroughUrl: ?string;
   _posterUrl: ?string;
-  _skipOffset: ?number = -1;
+  _skipOffset: ?number;
   _linear: ?boolean;
 
   constructor(id: string, options: PKAdOptions) {
@@ -29,39 +29,39 @@ class Ad {
     return this._id;
   }
 
-  get contentType(): string {
+  get contentType(): ?string {
     return this._contentType;
   }
 
-  get url(): string {
+  get url(): ?string {
     return this._url;
   }
 
-  get title(): string {
+  get title(): ?string {
     return this._title;
   }
 
-  get position(): number {
+  get position(): ?number {
     return this._position;
   }
 
-  get duration(): number {
+  get duration(): ?number {
     return this._duration;
   }
 
-  get clickThroughUrl(): string {
+  get clickThroughUrl(): ?string {
     return this._clickThroughUrl;
   }
 
-  get posterUrl(): string {
+  get posterUrl(): ?string {
     return this._posterUrl;
   }
 
-  get skipOffset(): number {
+  get skipOffset(): ?number {
     return this._skipOffset;
   }
 
-  get linear(): boolean {
+  get linear(): ?boolean {
     return this._linear;
   }
 

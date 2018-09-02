@@ -10,15 +10,15 @@ class AdBreak {
     this._numAds = options.numAds;
   }
 
-  get type(): string {
+  get type(): ?string {
     return this._type;
   }
 
-  get position(): number {
+  get position(): ?number {
     return this._position;
   }
 
-  get numAds(): number {
+  get numAds(): ?number {
     return this._numAds;
   }
 
