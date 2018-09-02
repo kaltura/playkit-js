@@ -5,7 +5,8 @@ import TextTrack from '../../../../../../src/track/text-track';
 import {removeVideoElementsFromTestPage} from '../../../../utils/test-utils';
 import sourcesConfig from '../../../../configs/sources.json';
 import * as Utils from '../../../../../../src/utils/util';
-import {CustomEventType} from '../../../../../../src/event/event-type';
+import Env from '../../../../../../src/utils/env';
+import {CustomEventType, Html5EventType} from '../../../../../../src/event/event-type';
 
 describe('NativeAdapter: isSupported', () => {
   it('should be supported', () => {
@@ -157,6 +158,9 @@ describe('NativeAdapter: load', function() {
 
   it('should failed', done => {
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.CorruptedUrl.progressive[0], {sources: {}});
+    video.addEventListener(Html5EventType.ERROR, e => {
+      nativeInstance.handleMediaError(e);
+    });
     nativeInstance.load().catch(error => {
       error.should.be.exist;
       done();
@@ -696,23 +700,28 @@ describe('NativeAdapter: isLive', function() {
     });
   });
 
-  it('should return false for live before load', () => {
-    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
-    nativeInstance.isLive().should.be.false;
-  });
+  if (Env.browser.name === 'Safari') {
+    it('should return false for live before load', () => {
+      nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
+      nativeInstance.isLive().should.be.false;
+    });
 
-  it('should return true for live', done => {
-    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
-    nativeInstance
-      .load()
-      .then(() => {
-        nativeInstance.isLive().should.be.true;
-        done();
-      })
-      .catch(() => {
-        done();
+    it('should return true for live', done => {
+      nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
+      video.addEventListener(Html5EventType.ERROR, e => {
+        nativeInstance.handleMediaError(e);
       });
-  });
+      nativeInstance
+        .load()
+        .then(() => {
+          nativeInstance.isLive().should.be.true;
+          done();
+        })
+        .catch(e => {
+          done(e);
+        });
+    });
+  }
 });
 
 describe('NativeAdapter: seekToLiveEdge', () => {
@@ -731,21 +740,26 @@ describe('NativeAdapter: seekToLiveEdge', () => {
     removeVideoElementsFromTestPage();
   });
 
-  it('should seek to live edge', done => {
-    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
-    nativeInstance
-      .load()
-      .then(() => {
-        video.currentTime = 0;
-        video.currentTime.should.not.equal(nativeInstance.duration);
-        nativeInstance.seekToLiveEdge();
-        video.currentTime.should.equal(nativeInstance.duration);
-        done();
-      })
-      .catch(() => {
-        done();
+  if (Env.browser.name === 'Safari') {
+    it('should seek to live edge', done => {
+      nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
+      video.addEventListener(Html5EventType.ERROR, e => {
+        nativeInstance.handleMediaError(e);
       });
-  });
+      nativeInstance
+        .load()
+        .then(() => {
+          video.currentTime = 0;
+          video.currentTime.should.not.equal(nativeInstance.duration);
+          nativeInstance.seekToLiveEdge();
+          video.currentTime.should.equal(nativeInstance.duration);
+          done();
+        })
+        .catch(e => {
+          done(e);
+        });
+    });
+  }
 });
 
 describe('NativeAdapter: _handleLiveDurationChange', () => {
@@ -764,19 +778,24 @@ describe('NativeAdapter: _handleLiveDurationChange', () => {
     removeVideoElementsFromTestPage();
   });
 
-  it('should trigger durationchange for live', done => {
-    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
-    nativeInstance
-      .load()
-      .then(() => {
-        nativeInstance._videoElement.addEventListener('durationchange', () => {
-          done();
-        });
-      })
-      .catch(() => {
-        done();
+  if (Env.browser.name === 'Safari') {
+    it('should trigger durationchange for live', done => {
+      nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
+      video.addEventListener(Html5EventType.ERROR, e => {
+        nativeInstance.handleMediaError(e);
       });
-  });
+      nativeInstance
+        .load()
+        .then(() => {
+          nativeInstance._videoElement.addEventListener('durationchange', () => {
+            done();
+          });
+        })
+        .catch(e => {
+          done(e);
+        });
+    });
+  }
 });
 
 describe('NativeAdapter: _handleLiveTimeUpdate', () => {
@@ -795,19 +814,24 @@ describe('NativeAdapter: _handleLiveTimeUpdate', () => {
     removeVideoElementsFromTestPage();
   });
 
-  it('should trigger timeupdate for live when paused', done => {
-    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
-    nativeInstance
-      .load()
-      .then(() => {
-        nativeInstance.addEventListener('timeupdate', () => {
-          done();
-        });
-      })
-      .catch(() => {
-        done();
+  if (Env.browser.name === 'Safari') {
+    it('should trigger timeupdate for live when paused', done => {
+      nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
+      video.addEventListener(Html5EventType.ERROR, e => {
+        nativeInstance.handleMediaError(e);
       });
-  });
+      nativeInstance
+        .load()
+        .then(() => {
+          nativeInstance.addEventListener('timeupdate', () => {
+            done();
+          });
+        })
+        .catch(e => {
+          done(e);
+        });
+    });
+  }
 });
 
 describe('NativeAdapter: get duration', () => {
@@ -834,26 +858,31 @@ describe('NativeAdapter: get duration', () => {
     });
   });
 
-  it('should return live duration for live', done => {
-    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
-    nativeInstance
-      .load()
-      .then(() => {
-        let duration;
-        if (nativeInstance._videoElement.seekable.length) {
-          duration = nativeInstance._videoElement.seekable.end(nativeInstance._videoElement.seekable.length - 1);
-        } else if (nativeInstance._videoElement.buffered.length) {
-          duration = nativeInstance._videoElement.buffered.end(nativeInstance._videoElement.buffered.length - 1);
-        } else {
-          duration = nativeInstance._videoElement.duration;
-        }
-        nativeInstance.duration.should.be.equal(duration);
-        done();
-      })
-      .catch(() => {
-        done();
+  if (Env.browser.name === 'Safari') {
+    it('should return live duration for live', done => {
+      nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
+      video.addEventListener(Html5EventType.ERROR, e => {
+        nativeInstance.handleMediaError(e);
       });
-  });
+      nativeInstance
+        .load()
+        .then(() => {
+          let duration;
+          if (nativeInstance._videoElement.seekable.length) {
+            duration = nativeInstance._videoElement.seekable.end(nativeInstance._videoElement.seekable.length - 1);
+          } else if (nativeInstance._videoElement.buffered.length) {
+            duration = nativeInstance._videoElement.buffered.end(nativeInstance._videoElement.buffered.length - 1);
+          } else {
+            duration = nativeInstance._videoElement.duration;
+          }
+          nativeInstance.duration.should.be.equal(duration);
+          done();
+        })
+        .catch(e => {
+          done(e);
+        });
+    });
+  }
 });
 
 describe('NativeAdapter: getStartTimeOfDvrWindow', () => {
@@ -880,16 +909,21 @@ describe('NativeAdapter: getStartTimeOfDvrWindow', () => {
     });
   });
 
-  it('should return the start of DVR window for live', done => {
-    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
-    nativeInstance
-      .load()
-      .then(() => {
-        nativeInstance.getStartTimeOfDvrWindow().should.equal(nativeInstance._videoElement.seekable.start(0));
-        done();
-      })
-      .catch(() => {
-        done();
+  if (Env.browser.name === 'Safari') {
+    it('should return the start of DVR window for live', done => {
+      nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
+      video.addEventListener(Html5EventType.ERROR, e => {
+        nativeInstance.handleMediaError(e);
       });
-  });
+      nativeInstance
+        .load()
+        .then(() => {
+          nativeInstance.getStartTimeOfDvrWindow().should.equal(nativeInstance._videoElement.seekable.start(0));
+          done();
+        })
+        .catch(e => {
+          done(e);
+        });
+    });
+  }
 });
