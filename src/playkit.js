@@ -31,8 +31,6 @@ import {Ad} from './ads/ad';
 import {AdBreak} from './ads/ad-break';
 import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
-import {AdError} from './ads/ad-error';
-import {AdsPlugin} from './ads/ads-plugin';
 
 Player.runCapabilities();
 
@@ -52,9 +50,6 @@ export {registerMediaSourceAdapter, BaseMediaSourceAdapter};
 
 // Export the plugin framework
 export {registerPlugin, BasePlugin, BaseMiddleware};
-
-// Export the ads framework
-export {AdsPlugin};
 
 // Export the tracks classes
 export {Track, VideoTrack, AudioTrack, TextTrack, TextStyle};
@@ -87,7 +82,7 @@ const setCapabilities = Player.setCapabilities;
 export {getCapabilities, setCapabilities, registerEngine};
 
 // Export ads framework
-export {Ad, AdError, AdBreak, AdBreakType, AdTagType};
+export {Ad, AdBreak, AdBreakType, AdTagType};
 
 // Export enums
 export {EventType, StateType, TrackType, EngineType, MediaType, StreamType, AbrMode, LogLevelType, CorsType};
