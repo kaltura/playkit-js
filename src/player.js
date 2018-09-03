@@ -41,6 +41,8 @@ import './assets/style.css';
 import PKError from './error/error';
 import {EngineProvider} from './engines/engine-provider';
 import {ExternalCaptionsHandler} from './track/external-captions-handler';
+import {AdBreakType} from './ads/ad-break-type';
+import {AdTagType} from './ads/ad-tag-type';
 
 /**
  * The black cover class name.
@@ -2135,6 +2137,24 @@ export default class Player extends FakeEventTarget {
    */
   get CorsType(): CorsTypes {
     return CorsType;
+  }
+
+  /**
+   * Gets the ad break types.
+   * @returns {PKAdBreakTypes} - The ad break types of the player.
+   * @public
+   */
+  get AdBreakType(): PKAdBreakTypes {
+    return AdBreakType;
+  }
+
+  /**
+   * Gets the ad break tag types.
+   * @returns {PKAdTagTypes} - The ad tag types of the player.
+   * @public
+   */
+  get AdTagType(): PKAdTagTypes {
+    return AdTagType;
   }
 
   // </editor-fold>

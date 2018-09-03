@@ -1,4 +1,6 @@
 //@flow
+import {AdErrorCode} from '../ads/ad-error-code';
+
 type CodeType = {[code: string]: number};
 
 const Code: CodeType = {
@@ -672,6 +674,8 @@ const Code: CodeType = {
    */
   VR_NOT_SUPPORTED: 11000
 };
+
+Object.assign(Code, AdErrorCode);
 
 export {Code};
 export type {CodeType};
