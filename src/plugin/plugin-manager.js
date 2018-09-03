@@ -3,7 +3,6 @@ import BasePlugin from './base-plugin';
 import Error from '../error/error';
 import Player from '../player';
 import getLogger from '../utils/logger';
-import {AdsPlugin} from '../ads/ads-plugin';
 
 /**
  * The logger of the PluginManager class.
@@ -150,11 +149,12 @@ export default class PluginManager {
 
   /**
    * Returns the ads plugin's instance.
-   * @returns {?AdsPlugin} - The ads plugin instance
+   * @returns {?IAdsControllerProvider} - The ads plugin instance
    * @public
    */
-  getAdsPlugin(): ?AdsPlugin {
-    return Array.from(this._plugins.values()).find(plugin => plugin instanceof AdsPlugin);
+  getAdsPlugin(): ?IAdsControllerProvider {
+    // $FlowFixMe
+    return Array.from(this._plugins.values()).find(plugin => typeof plugin.getAdsController === 'function');
   }
 }
 

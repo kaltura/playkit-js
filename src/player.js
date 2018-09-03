@@ -1718,7 +1718,7 @@ export default class Player extends FakeEventTarget {
     if (!this._adsController) {
       const adsPlugin = this._pluginManager.getAdsPlugin();
       if (adsPlugin) {
-        this._adsController = new AdsController(this, adsPlugin);
+        this._adsController = new AdsController(this, adsPlugin.getAdsController());
       }
     }
   }

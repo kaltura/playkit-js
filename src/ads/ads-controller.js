@@ -1,26 +1,27 @@
 //@flow
-
-import {AdsPlugin} from './ads-plugin';
+import Player from '../player';
 import {AdEventType} from './ad-event-type';
 import EventManager from '../event/event-manager';
 import FakeEventTarget from '../event/fake-event-target';
 import FakeEvent from '../event/fake-event';
 import {CustomEventType} from '../event/event-type';
+import Error from '../error/error';
 
-class AdsController extends FakeEventTarget implements IAdsAPI {
-  _adsPlugin: AdsPlugin;
+class AdsController extends FakeEventTarget implements IAdsController {
+  _player: Player;
+  _adsPluginController: IAdsController;
   _allAdsCompleted: boolean;
   _eventManager: EventManager;
 
   /**
    * The ads controller.
    * @param {Player} player - The player.
-   * @param {AdsPlugin} adsPlugin - the current ad plugin instance.
+   * @param {IAdsController} adsPluginController - the controller of the current plugin instance.
    */
-  constructor(player: Player, adsPlugin: AdsPlugin) {
+  constructor(player: Player, adsPluginController: IAdsController) {
     super();
     this._player = player;
-    this._adsPlugin = adsPlugin;
+    this._adsPluginController = adsPluginController;
     this._initMembers();
     this._addBindings();
   }
@@ -54,8 +55,8 @@ class AdsController extends FakeEventTarget implements IAdsAPI {
     this.dispatchEvent(event);
   }
 
-  _onAdError(event): void {
-    if (event.payload.fatal) {
+  _onAdError(event: FakeEvent): void {
+    if (event.payload.severity === Error.Severity.CRITICAL) {
       this._allAdsCompleted = true;
     }
   }
