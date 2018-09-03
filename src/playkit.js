@@ -30,6 +30,10 @@ import getLogger, {getLogLevel, LogLevel, LogLevelType, setLogLevel} from './uti
 import {CorsType} from './engines/html5/cors-types';
 import {DrmScheme} from './drm/drm-scheme';
 import {MimeType} from './mime-type';
+import {Ad} from './ads/ad';
+import {AdBreak} from './ads/ad-break';
+import {AdBreakType} from './ads/ad-break-type';
+import {AdTagType} from './ads/ad-tag-type';
 
 declare var __VERSION__: string;
 declare var __NAME__: string;
@@ -84,6 +88,9 @@ export {getCapabilities, setCapabilities};
 
 // Export engine framework
 export {registerEngine, unRegisterEngine};
+
+// Export ads framework
+export {Ad, AdBreak, AdBreakType, AdTagType};
 
 // Export enums
 export {EventType, StateType, TrackType, EngineType, MediaType, StreamType, AbrMode, LogLevelType, CorsType, DrmScheme, MimeType};

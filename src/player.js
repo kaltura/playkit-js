@@ -32,6 +32,8 @@ import './assets/style.css';
 import PKError from './error/error';
 import {EngineProvider} from './engines/engine-provider';
 import {ExternalCaptionsHandler} from './track/external-captions-handler';
+import {AdBreakType} from './ads/ad-break-type';
+import {AdTagType} from './ads/ad-tag-type';
 
 /**
  * The black cover class name.
@@ -420,7 +422,6 @@ export default class Player extends FakeEventTarget {
       Utils.Object.mergeDeep(this._config, config);
       this._reset = false;
       if (this._selectEngineByPriority()) {
-        this._appendEngineEl();
         this._attachMedia();
         this._handlePlaybackOptions();
         this._posterManager.setSrc(this._config.sources.poster);
@@ -1282,12 +1283,12 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _appendEngineEl(): void {
-    if (this._el && this._engine) {
-      let engineEl = this._engine.getVideoElement();
-      const classname = `${ENGINE_CLASS_NAME}`;
-      Utils.Dom.addClassName(engineEl, classname);
-      const classnameWithId = `${ENGINE_CLASS_NAME}-${this._engine.id}`;
-      Utils.Dom.addClassName(engineEl, classnameWithId);
+    if (this._el) {
+      const engineEl = this._engine.getVideoElement();
+      const className = `${ENGINE_CLASS_NAME}`;
+      Utils.Dom.addClassName(engineEl, className);
+      const classNameWithId = `${ENGINE_CLASS_NAME}-${this._engine.id}`;
+      Utils.Dom.addClassName(engineEl, classNameWithId);
       Utils.Dom.prependTo(engineEl, this._el);
     }
   }
@@ -1411,15 +1412,17 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _loadEngine(Engine: typeof IEngine, source: PKMediaSourceObject) {
-    if (this._engine) {
+    if (!this._engine) {
+      this._engine = Engine.createEngine(source, this._config);
+      this._appendEngineEl();
+    } else {
       if (this._engine.id === Engine.id) {
         this._engine.restore(source, this._config);
       } else {
         this._engine.destroy();
         this._engine = Engine.createEngine(source, this._config);
+        this._appendEngineEl();
       }
-    } else {
-      this._engine = Engine.createEngine(source, this._config);
     }
   }
 
@@ -2141,6 +2144,24 @@ export default class Player extends FakeEventTarget {
    */
   get CorsType(): CorsTypes {
     return CorsType;
+  }
+
+  /**
+   * Gets the ad break types.
+   * @returns {PKAdBreakTypes} - The ad break types of the player.
+   * @public
+   */
+  get AdBreakType(): PKAdBreakTypes {
+    return AdBreakType;
+  }
+
+  /**
+   * Gets the ad break tag types.
+   * @returns {PKAdTagTypes} - The ad tag types of the player.
+   * @public
+   */
+  get AdTagType(): PKAdTagTypes {
+    return AdTagType;
   }
 
   // </editor-fold>

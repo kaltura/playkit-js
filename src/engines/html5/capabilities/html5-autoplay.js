@@ -1,13 +1,16 @@
 // @flow
 import * as Utils from '../../../utils/util';
-import * as EncodingSources from '../../../assets/encoding-sources.json';
 import {Html5EventType} from '../../../event/event-type';
+import getLogger from '../../../utils/logger';
+import * as blobSource from '../../../assets/blob-source.json';
 
 const WAIT_TIME: number = 500;
+const VIDEO = new Blob([new Uint8Array(blobSource.uInt8Array)], {type: 'video/mp4'});
 
 export default class Html5AutoPlayCapability implements ICapability {
   static _vid: HTMLVideoElement;
   static _playPromiseResult: Promise<*>;
+  static _logger: any = getLogger('Html5AutoPlayCapability');
 
   /**
    * Runs the test for autoplay capability.
@@ -18,7 +21,7 @@ export default class Html5AutoPlayCapability implements ICapability {
   static runCapability(): void {
     if (!Html5AutoPlayCapability._vid) {
       Html5AutoPlayCapability._vid = Utils.Dom.createElement('video');
-      Html5AutoPlayCapability._vid.src = EncodingSources.Base64Mp4Source;
+      Html5AutoPlayCapability._vid.src = URL.createObjectURL(VIDEO);
       // For iOS devices needs to turn the playsinline attribute on
       Html5AutoPlayCapability._vid.setAttribute('playsinline', '');
     }
@@ -87,17 +90,20 @@ export default class Html5AutoPlayCapability implements ICapability {
    */
   static _forcePromiseReturnValue(): Promise<*> {
     return new Promise((resolve, reject) => {
+      Html5AutoPlayCapability._vid.addEventListener(Html5EventType.ERROR, () => {
+        reject();
+      });
       const supported = setTimeout(() => {
+        Html5AutoPlayCapability._logger.debug(`Timeout ${WAIT_TIME} ms has been reached`);
         reject();
       }, WAIT_TIME);
-      Html5AutoPlayCapability._vid.addEventListener(Html5EventType.PLAYING, () => {
-        clearTimeout(supported);
-        resolve();
-      });
-      Html5AutoPlayCapability._vid.addEventListener(Html5EventType.ERROR, () => {
+      if (Html5AutoPlayCapability._vid.paused === true) {
         clearTimeout(supported);
         reject();
-      });
+      } else {
+        clearTimeout(supported);
+        resolve();
+      }
     });
   }
 }

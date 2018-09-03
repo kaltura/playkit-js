@@ -10,8 +10,8 @@ import {getSuitableSourceForResolution} from '../../../../utils/resolution';
 import * as Utils from '../../../../utils/util';
 import FairPlay from '../../../../drm/fairplay';
 import Env from '../../../../utils/env';
-import FakeEvent from '../../../../event/fake-event';
 import Error from '../../../../error/error';
+import defaultConfig from './native-adapter-default-config';
 
 /**
  * An illustration of media source extension for progressive download
@@ -93,6 +93,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _liveEdge: number;
+  /**
+   * Id for interval that starts upon waiting/stalling event and check if we are offline
+   * @member {number} - _waitingIntervalId
+   * @private
+   */
+  _heartbeatTimeoutId: ?number;
+
+  _loadPromiseReject: ?Function;
 
   /**
    * Checks if NativeAdapter can play a given mime type.
@@ -171,6 +179,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     super(videoElement, source, config);
     this._eventManager = new EventManager();
     this._maybeSetDrmPlayback();
+    this._config = Utils.Object.mergeDeep({}, defaultConfig, this._config);
     this._progressiveSources = config.progressiveSources;
     this._liveEdge = 0;
   }
@@ -228,8 +237,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   load(startTime: ?number): Promise<Object> {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
-        this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, this._onLoadedData.bind(this, resolve, startTime));
-        this._eventManager.listenOnce(this._videoElement, Html5EventType.ERROR, this._onError.bind(this, reject));
+        this._loadPromiseReject = reject;
+        this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => this._onLoadedData(resolve, startTime));
+        this._eventManager.listen(this._videoElement, Html5EventType.TIME_UPDATE, () => this._resetHeartbeatTimeout());
+        this._eventManager.listen(this._videoElement, Html5EventType.PLAY, () => this._resetHeartbeatTimeout());
+        this._eventManager.listen(this._videoElement, Html5EventType.PAUSE, () => this._clearHeartbeatTimeout());
+        this._eventManager.listen(this._videoElement, Html5EventType.ENDED, () => this._clearHeartbeatTimeout());
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
         }
@@ -241,6 +254,15 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       });
     }
     return this._loadPromise;
+  }
+
+  handleMediaError(error: ?MediaError): boolean {
+    if (this._loadPromiseReject) {
+      this._loadPromiseReject(new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.NATIVE_ADAPTER_LOAD_FAILED, error));
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /**
@@ -257,6 +279,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._addNativeTextTrackChangeListener();
       this._addNativeTextTrackAddedListener();
       NativeAdapter._logger.debug('The source has been loaded successfully');
+      this._loadPromiseReject = null;
       resolve({tracks: this._playerTracks});
       if (this.isLive()) {
         this._handleLiveDurationChange();
@@ -272,15 +295,28 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
-  /**
-   * error event handler.
-   * @param {Function} reject - The reject promise function.
-   * @param {FakeEvent} error - The error fake event.
-   * @private
-   * @returns {void}
-   */
-  _onError(reject: Function, error: FakeEvent): void {
-    reject(new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.NATIVE_ADAPTER_LOAD_FAILED, error.payload));
+  _resetHeartbeatTimeout(): void {
+    this._clearHeartbeatTimeout();
+    const onTimeout = () => {
+      this._clearHeartbeatTimeout();
+      this._trigger(
+        Html5EventType.ERROR,
+        new Error(
+          Error.Severity.CRITICAL,
+          Error.Category.NETWORK,
+          Error.Code.TIMEOUT,
+          `The player exceeded max buffer time of ${this._config.heartbeatTimeout} ms. No progress has been done during this time.`
+        )
+      );
+    };
+    this._heartbeatTimeoutId = setTimeout(onTimeout, this._config.heartbeatTimeout);
+  }
+
+  _clearHeartbeatTimeout(): void {
+    if (this._heartbeatTimeoutId) {
+      clearTimeout(this._heartbeatTimeoutId);
+      this._heartbeatTimeoutId = null;
+    }
   }
 
   /**
@@ -294,6 +330,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._eventManager.destroy();
       this._progressiveSources = [];
       this._loadPromise = null;
+      this._loadPromiseReject = null;
       this._liveEdge = 0;
       if (this._liveDurationChangeInterval) {
         clearInterval(this._liveDurationChangeInterval);
