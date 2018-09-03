@@ -522,6 +522,10 @@ const Code: CodeType = {
    * When the play API called without any source
    */
   NO_SOURCE_PROVIDED: 7006,
+  /**
+   * When the load API called without compatible engine to play the source
+   */
+  NO_ENGINE_FOUND_TO_PLAY_THE_SOURCE: 7007,
 
   /**
    * The Cast API is unavailable.  This may be because of one of the following:

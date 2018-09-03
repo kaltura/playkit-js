@@ -427,6 +427,7 @@ export default class Player extends FakeEventTarget {
       Utils.Object.mergeDeep(this._config, config);
       this._reset = false;
       if (this._selectEngineByPriority()) {
+        this.dispatchEvent(new FakeEvent(CustomEventType.SOURCE_SELECTED, {selectedSource: this._config.sources[this._streamType]}));
         this._attachMedia();
         this._handlePlaybackOptions();
         this._posterManager.setSrc(this._config.sources.poster);
@@ -434,6 +435,19 @@ export default class Player extends FakeEventTarget {
         this._handleAutoPlay();
         Player._logger.debug('Change source ended');
         this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_ENDED));
+      } else {
+        Player._logger.warn('No playable engines was found to play the given sources');
+        this.dispatchEvent(
+          new FakeEvent(
+            Html5EventType.ERROR,
+            new PKError(
+              PKError.Severity.CRITICAL,
+              PKError.Category.PLAYER,
+              PKError.Code.NO_ENGINE_FOUND_TO_PLAY_THE_SOURCE,
+              'No Engine Found To Play The Source'
+            )
+          )
+        );
       }
     } else {
       Utils.Object.mergeDeep(this._config, config);
@@ -1418,13 +1432,11 @@ export default class Player extends FakeEventTarget {
             this._loadEngine(Engine, source);
             this._engineType = engineId;
             this._streamType = format;
-            this.dispatchEvent(new FakeEvent(CustomEventType.SOURCE_SELECTED, {selectedSource: formatSources}));
             return true;
           }
         }
       }
     }
-    Player._logger.warn('No playable engines was found to play the given sources');
     return false;
   }
 
