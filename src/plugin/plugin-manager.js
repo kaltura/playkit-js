@@ -148,13 +148,12 @@ export default class PluginManager {
   }
 
   /**
-   * Returns the ads plugin's instance.
-   * @returns {?IAdsControllerProvider} - The ads plugin instance
+   * Returns all plugins.
+   * @returns {Array<BasePlugin>} - The plugins
    * @public
    */
-  getAdsPlugin(): ?IAdsControllerProvider {
-    // $FlowFixMe
-    return Array.from(this._plugins.values()).find(plugin => typeof plugin.getAdsController === 'function');
+  getAll(): Array<BasePlugin> {
+    return Array.from(this._plugins.values());
   }
 }
 

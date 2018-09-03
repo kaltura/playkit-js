@@ -45,6 +45,7 @@ import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
 import {AdsController} from './ads/ads-controller';
 import {AdEventType} from './ads/ad-event-type';
+import {ControllerProvider} from './controller/controller-provider';
 
 /**
  * The black cover class name.
@@ -197,6 +198,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _pluginManager: PluginManager;
+  /**
+   * The controller provider of the player.
+   * @type {ControllerProvider}
+   * @private
+   */
+  _controllerProvider: ControllerProvider;
   /**
    * The event manager of the player.
    * @type {EventManager}
@@ -405,6 +412,7 @@ export default class Player extends FakeEventTarget {
     this._posterManager = new PosterManager();
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
+    this._controllerProvider = new ControllerProvider(this._pluginManager);
     this._playbackMiddleware = new PlaybackMiddleware();
     this._textStyle = new TextStyle();
     this._createReadyPromise();
@@ -1716,9 +1724,9 @@ export default class Player extends FakeEventTarget {
 
   _maybeCreateAdsController(): void {
     if (!this._adsController) {
-      const adsPlugin = this._pluginManager.getAdsPlugin();
-      if (adsPlugin) {
-        this._adsController = new AdsController(this, adsPlugin.getAdsController());
+      const adsPluginController = this._controllerProvider.getAdsController();
+      if (adsPluginController) {
+        this._adsController = new AdsController(this, adsPluginController);
       }
     }
   }
