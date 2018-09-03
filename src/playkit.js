@@ -27,6 +27,10 @@ import {EventType} from './event/event-type';
 import {AbrMode} from './track/abr-mode-type';
 import getLogger, {getLogLevel, LogLevel, LogLevelType, setLogLevel} from './utils/logger';
 import {CorsType} from './engines/html5/cors-types';
+import {Ad} from './ads/ad';
+import {AdBreak} from './ads/ad-break';
+import {AdBreakType} from './ads/ad-break-type';
+import {AdTagType} from './ads/ad-tag-type';
 
 Player.runCapabilities();
 
@@ -76,6 +80,9 @@ const getCapabilities = Player.getCapabilities;
 const setCapabilities = Player.setCapabilities;
 
 export {getCapabilities, setCapabilities, registerEngine};
+
+// Export ads framework
+export {Ad, AdBreak, AdBreakType, AdTagType};
 
 // Export enums
 export {EventType, StateType, TrackType, EngineType, MediaType, StreamType, AbrMode, LogLevelType, CorsType};
