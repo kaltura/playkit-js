@@ -2448,14 +2448,14 @@ describe('Player', function() {
       config.sources = sourcesConfig.Mp4;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
-      player.ready().then(() => {
-        player.currentTime = 0;
-        player.currentTime.should.not.equal(player.duration);
-        player.seekToLiveEdge();
-        player.currentTime.should.not.equal(player.duration);
-        done();
-      });
       if (player._engine) {
+        player.ready().then(() => {
+          player.currentTime = 0;
+          player.currentTime.should.not.equal(player.duration);
+          player.seekToLiveEdge();
+          player.currentTime.should.not.equal(player.duration);
+          done();
+        });
         player.load();
       } else {
         done();
@@ -2466,16 +2466,16 @@ describe('Player', function() {
       config.sources = sourcesConfig.Live;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
-      player.ready().then(() => {
-        setTimeout(() => {
-          player.currentTime = 0;
-          player.currentTime.should.not.equal(player.duration);
-          player.seekToLiveEdge();
-          player.currentTime.should.equal(player.duration);
-          done();
-        }, 500);
-      });
       if (player._engine) {
+        player.ready().then(() => {
+          setTimeout(() => {
+            player.currentTime = 0;
+            player.currentTime.should.not.equal(player.duration);
+            player.seekToLiveEdge();
+            player.currentTime.should.equal(player.duration);
+            done();
+          }, 500);
+        });
         player.load();
       } else {
         done();
