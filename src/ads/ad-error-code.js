@@ -166,7 +166,7 @@ const AdErrorCode: {[code: string]: number} = {
   /**
    * This error is usually fired when the error does not match the criteria of any of the other errors.
    */
-  UNDEFINED_ERROR: 8900,
+  AD_UNDEFINED_ERROR: 8900,
   /**
    * General VPAID error.
    */
