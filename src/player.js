@@ -929,6 +929,16 @@ export default class Player extends FakeEventTarget {
     }
   }
 
+  /**
+   * Get ended attribute state.
+   * @returns {?boolean} - Whether the media has been ended.
+   */
+  get ended(): ?boolean {
+    if (this._engine) {
+      return this._engine.ended;
+    }
+  }
+
   // </editor-fold>
 
   // <editor-fold desc="Live API">
