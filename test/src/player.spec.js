@@ -1515,7 +1515,7 @@ describe('Player', function() {
       });
     });
 
-    describe('playback started', () => {
+    describe('first playing', () => {
       let config;
       let player;
       let playerContainer;
@@ -1541,24 +1541,24 @@ describe('Player', function() {
         removeElement(targetId);
       });
 
-      it('should fire playback started when start to playing', done => {
-        player.addEventListener(CustomEventType.PLAYBACK_STARTED, () => {
+      it('should fire first playing when start to playing', done => {
+        player.addEventListener(CustomEventType.FIRST_PLAYING, () => {
           done();
         });
         player.play();
       });
 
-      it('should fire playback started only once', done => {
+      it('should fire first playing only once', done => {
         let count = 0;
 
-        player.addEventListener(CustomEventType.PLAYBACK_STARTED, () => {
+        player.addEventListener(CustomEventType.FIRST_PLAYING, () => {
           count++;
 
           player.addEventListener(Html5EventType.PLAYING, () => {
             if (count === 1) {
               done();
             } else {
-              done(new Error('PLAYBACK_STARTED triggered more then once'));
+              done(new Error('FIRST_PLAYING triggered more then once'));
             }
           });
 

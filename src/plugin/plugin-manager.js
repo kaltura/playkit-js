@@ -146,6 +146,15 @@ export default class PluginManager {
   get(name: string): ?BasePlugin {
     return this._plugins.get(name);
   }
+
+  /**
+   * Returns all plugins.
+   * @returns {Map<string, BasePlugin>} - The plugins
+   * @public
+   */
+  getAll(): Map<string, BasePlugin> {
+    return this._plugins;
+  }
 }
 
 /**
