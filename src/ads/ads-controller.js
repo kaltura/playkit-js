@@ -34,6 +34,25 @@ class AdsController extends FakeEventTarget implements IAdsController {
     return this._allAdsCompleted;
   }
 
+  /**
+   * Skip on an ad.
+   * @public
+   * @returns {void}
+   */
+  skipAd(): void {
+    this._adsPluginController.skipAd();
+  }
+
+  /**
+   * Play an ad on demand.
+   * @param {string} adTagUrl - The ad tag url to play.
+   * @public
+   * @returns {void}
+   */
+  playAdNow(adTagUrl: string): void {
+    this._adsPluginController.playAdNow(adTagUrl);
+  }
+
   _initMembers(): void {
     this._allAdsCompleted = true;
   }
@@ -60,6 +79,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
       this._allAdsCompleted = true;
     }
   }
+
   _reset(): void {
     this._initMembers();
   }

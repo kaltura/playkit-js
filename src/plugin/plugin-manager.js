@@ -149,11 +149,11 @@ export default class PluginManager {
 
   /**
    * Returns all plugins.
-   * @returns {Array<BasePlugin>} - The plugins
+   * @returns {Map<string, BasePlugin>} - The plugins
    * @public
    */
-  getAll(): Array<BasePlugin> {
-    return Array.from(this._plugins.values());
+  getAll(): Map<string, BasePlugin> {
+    return this._plugins;
   }
 }
 

@@ -1,3 +1,6 @@
 //@flow
 
-declare interface IAdsController {}
+declare interface IAdsController {
+  skipAd(): void;
+  playAdNow(adTagUrl: string): void;
+}
