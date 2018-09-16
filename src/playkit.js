@@ -34,6 +34,7 @@ import {Ad} from './ads/ad';
 import {AdBreak} from './ads/ad-break';
 import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
+import {AdsController} from './ads/ads-controller';
 
 declare var __VERSION__: string;
 declare var __NAME__: string;
@@ -90,7 +91,7 @@ export {getCapabilities, setCapabilities};
 export {registerEngine, unRegisterEngine};
 
 // Export ads framework
-export {Ad, AdBreak, AdBreakType, AdTagType};
+export {Ad, AdBreak, AdBreakType, AdTagType, AdsController};
 
 // Export enums
 export {EventType, StateType, TrackType, EngineType, MediaType, StreamType, AbrMode, LogLevelType, CorsType, DrmScheme, MimeType};

@@ -2192,11 +2192,11 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Gets the Cors types.
-   * @returns {CorsTypes} - CorsType.
+   * Gets the player cors types.
+   * @returns {PKCorsTypes} - The player cors types.
    * @public
    */
-  get CorsType(): CorsTypes {
+  get CorsType(): PKCorsTypes {
     return CorsType;
   }
 
