@@ -171,13 +171,21 @@ const CustomEventType: PKEventTypes = {
    */
   PLAYER_STATE_CHANGED: 'playerstatechanged',
   /**
-   * Fires on the first play.
+   * Fires when playback start requested.
+   */
+  PLAYBACK_START: 'playbackstart',
+  /**
+   * Fires on the first 'play' event.
    */
   FIRST_PLAY: 'firstplay',
   /**
-   * Fires on the first time that playback has been started.
+   * Fires on the first 'playing' event.
    */
-  PLAYBACK_STARTED: 'playbackstarted',
+  FIRST_PLAYING: 'firstplaying',
+  /**
+   * Fires when the playback (includes postrolls) is ended.
+   */
+  PLAYBACK_ENDED: 'playbackended',
   /**
    * Fires when the player has selected the source to play.
    */

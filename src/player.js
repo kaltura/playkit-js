@@ -34,6 +34,9 @@ import {EngineProvider} from './engines/engine-provider';
 import {ExternalCaptionsHandler} from './track/external-captions-handler';
 import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
+import {AdsController} from './ads/ads-controller';
+import {AdEventType} from './ads/ad-event-type';
+import {ControllerProvider} from './controller/controller-provider';
 
 /**
  * The black cover class name.
@@ -187,6 +190,12 @@ export default class Player extends FakeEventTarget {
    */
   _pluginManager: PluginManager;
   /**
+   * The controller provider of the player.
+   * @type {ControllerProvider}
+   * @private
+   */
+  _controllerProvider: ControllerProvider;
+  /**
    * The event manager of the player.
    * @type {EventManager}
    * @private
@@ -235,11 +244,17 @@ export default class Player extends FakeEventTarget {
    */
   _firstPlay: boolean;
   /**
-   * Whether the playback started for the first time
+   * Whether the playing is the first or not
    * @type {boolean}
    * @private
    */
-  _playbackStarted: boolean;
+  _firstPlaying: boolean;
+  /**
+   * Whether the playback already start
+   * @type {boolean}
+   * @private
+   */
+  _playbackStart: boolean;
   /**
    * The player DOM element container.
    * @type {HTMLDivElement}
@@ -365,6 +380,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _externalCaptionsHandler: ExternalCaptionsHandler;
+  /**
+   * holds the ads controller
+   * @type {?AdsController}
+   * @private
+   */
+  _adsController: ?AdsController;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -380,7 +401,8 @@ export default class Player extends FakeEventTarget {
     this._repositionCuesTimeout = false;
     this._loadingMedia = false;
     this._loading = false;
-    this._playbackStarted = false;
+    this._playbackStart = false;
+    this._firstPlaying = false;
     this._reset = true;
     this._destroyed = false;
     this._fallbackToMutedAutoPlay = false;
@@ -389,6 +411,7 @@ export default class Player extends FakeEventTarget {
     this._posterManager = new PosterManager();
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
+    this._controllerProvider = new ControllerProvider(this._pluginManager);
     this._playbackMiddleware = new PlaybackMiddleware();
     this._textStyle = new TextStyle();
     this._createReadyPromise();
@@ -445,6 +468,7 @@ export default class Player extends FakeEventTarget {
       Utils.Object.mergeDeep(this._config, config);
       this._configureOrLoadPlugins(config.plugins);
     }
+    this._maybeCreateAdsController();
   }
 
   /**
@@ -489,6 +513,10 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   play(): void {
+    if (!this._playbackStart) {
+      this._playbackStart = true;
+      this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_START));
+    }
     if (this._engine) {
       this._playbackMiddleware.play(() => this._play());
     } else if (this._loadingMedia) {
@@ -1119,30 +1147,12 @@ export default class Player extends FakeEventTarget {
   // <editor-fold desc="Ads API">
 
   /**
-   * Skip on an ad.
-   * @public
-   * @returns {void}
+   * Gets the ads controller.
+   * @returns {?AdsController} - the ads controller
    */
-  skipAd(): void {
-    let adsPlugin: ?BasePlugin = this._pluginManager.get('ima');
-    if (adsPlugin && typeof adsPlugin.skipAd === 'function') {
-      adsPlugin.skipAd();
-    }
+  get ads(): ?AdsController {
+    return this._adsController;
   }
-
-  /**
-   * Start to play ad on demand.
-   * @param {string} adTagUrl - The ad tag url to play.
-   * @public
-   * @returns {void}
-   */
-  playAdNow(adTagUrl: string): void {
-    let adsPlugin: ?BasePlugin = this._pluginManager.get('ima');
-    if (adsPlugin && typeof adsPlugin.playAdNow === 'function') {
-      adsPlugin.playAdNow(adTagUrl);
-    }
-  }
-
   // </editor-fold>
 
   // <editor-fold desc="Fullscreen API">
@@ -1481,6 +1491,7 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this, Html5EventType.PLAY, this._onPlay.bind(this));
       this._eventManager.listen(this, Html5EventType.PLAYING, this._onPlaying.bind(this));
       this._eventManager.listen(this, Html5EventType.ENDED, this._onEnded.bind(this));
+      this._eventManager.listen(this, CustomEventType.PLAYBACK_ENDED, this._onPlaybackEnded.bind(this));
       this._eventManager.listen(this, CustomEventType.MUTE_CHANGE, () => {
         this._playbackAttributesState.muted = this.muted;
       });
@@ -1686,6 +1697,15 @@ export default class Player extends FakeEventTarget {
     };
   }
 
+  _maybeCreateAdsController(): void {
+    if (!this._adsController) {
+      const adsPluginController = this._controllerProvider.getAdsController();
+      if (adsPluginController) {
+        this._adsController = new AdsController(this, adsPluginController);
+      }
+    }
+  }
+
   /**
    * Play after async ads
    * @private
@@ -1752,9 +1772,9 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _onPlaying(): void {
-    if (!this._playbackStarted) {
-      this._playbackStarted = true;
-      this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_STARTED));
+    if (!this._firstPlaying) {
+      this._firstPlaying = true;
+      this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAYING));
     }
   }
 
@@ -1786,11 +1806,27 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _onEnded(): void {
+    if (this._adsController && !this._adsController.allAdsCompleted) {
+      this._eventManager.listenOnce(this._adsController, AdEventType.ALL_ADS_COMPLETED, () => {
+        this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_ENDED));
+      });
+    } else {
+      this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_ENDED));
+    }
+    if (!this.paused) {
+      this._pause();
+    }
+  }
+
+  /**
+   * @function _onPlaybackEnded
+   * @return {void}
+   * @private
+   */
+  _onPlaybackEnded(): void {
     if (this.config.playback.loop) {
       this.currentTime = 0;
       this.play();
-    } else if (!this.paused) {
-      this._pause();
     }
   }
 
@@ -1803,7 +1839,8 @@ export default class Player extends FakeEventTarget {
     this._loading = false;
     this._firstPlay = true;
     this._loadingMedia = false;
-    this._playbackStarted = false;
+    this._playbackStart = false;
+    this._firstPlaying = false;
   }
 
   /**
