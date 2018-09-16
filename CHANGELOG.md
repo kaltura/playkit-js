@@ -3,24 +3,12 @@
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
 <a name="0.37.0"></a>
-# [0.37.0](https://github.com/kaltura/playkit-js/compare/v0.35.2...v0.37.0) (2018-09-16)
-
-
-### Bug Fixes
-
-* append engine el once per engine ([#276](https://github.com/kaltura/playkit-js/issues/276)) ([a44796d](https://github.com/kaltura/playkit-js/commit/a44796d))
-* **ads:** update UNDEFINED_ERROR code name ([#289](https://github.com/kaltura/playkit-js/issues/289)) ([62f7fea](https://github.com/kaltura/playkit-js/commit/62f7fea))
-* **FEC-7594:** native adapter keeps buffering when connection is lost ([#283](https://github.com/kaltura/playkit-js/issues/283)) ([aba970a](https://github.com/kaltura/playkit-js/commit/aba970a))
-* **FEC-8440:** add critical error when no engine to play source ([#275](https://github.com/kaltura/playkit-js/issues/275)) ([acc4b54](https://github.com/kaltura/playkit-js/commit/acc4b54))
-* **FEC-8457:** autoplay check fails due to browser CPU/load issue ([#279](https://github.com/kaltura/playkit-js/issues/279)) ([ca56930](https://github.com/kaltura/playkit-js/commit/ca56930))
-* **FEC-8529:** waiting timeout is not cleared on native adapter destroy [#286](https://github.com/kaltura/playkit-js/issues/286) ([ac9bdc1](https://github.com/kaltura/playkit-js/commit/ac9bdc1))
+# [0.37.0](https://github.com/kaltura/playkit-js/compare/v0.36.0...v0.37.0) (2018-09-16)
 
 
 ### Features
 
-* ads controller ([#288](https://github.com/kaltura/playkit-js/issues/288)) ([a299014](https://github.com/kaltura/playkit-js/commit/a299014))
-* ads framework ([#285](https://github.com/kaltura/playkit-js/issues/285)) ([fc25d94](https://github.com/kaltura/playkit-js/commit/fc25d94))
-* emit CHANGE_SOURCE_ENDED on first media load as well ([#287](https://github.com/kaltura/playkit-js/issues/287)) ([60cf482](https://github.com/kaltura/playkit-js/commit/60cf482))
+* **FEC-8103:** ads controller ([#288](https://github.com/kaltura/playkit-js/issues/288)) ([a299014](https://github.com/kaltura/playkit-js/commit/a299014))
 
 
 
