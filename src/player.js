@@ -2174,7 +2174,7 @@ export default class Player extends FakeEventTarget {
    * @returns {PKError} - The player error object.
    * @public
    */
-  get Error(): PKAdTagTypes {
+  get Error(): PKError {
     return PKError;
   }
   // </editor-fold>
