@@ -2216,5 +2216,13 @@ export default class Player extends FakeEventTarget {
     return AdTagType;
   }
 
+  /**
+   * Gets the player static error class.
+   * @returns {PKError} - The player static error class.
+   * @public
+   */
+  get Error(): typeof PKError {
+    return PKError;
+  }
   // </editor-fold>
 }
