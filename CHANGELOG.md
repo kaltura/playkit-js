@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.37.0"></a>
+# [0.37.0](https://github.com/kaltura/playkit-js/compare/v0.36.0...v0.37.0) (2018-09-16)
+
+
+### Features
+
+* **FEC-8103:** ads controller ([#288](https://github.com/kaltura/playkit-js/issues/288)) ([a299014](https://github.com/kaltura/playkit-js/commit/a299014))
+
+
+
 <a name="0.36.0"></a>
 # [0.36.0](https://github.com/kaltura/playkit-js/compare/v0.35.2...v0.36.0) (2018-09-05)
 
