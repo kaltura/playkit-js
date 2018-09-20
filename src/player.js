@@ -2217,11 +2217,11 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Gets the player error object.
-   * @returns {PKError} - The player error object.
+   * Gets the player static error class.
+   * @returns {PKError} - The player static error class.
    * @public
    */
-  get Error(): Error {
+  get Error(): typeof PKError {
     return PKError;
   }
   // </editor-fold>
