@@ -53,6 +53,16 @@ class AdsController extends FakeEventTarget implements IAdsController {
     this._adsPluginController.playAdNow(adTagUrl);
   }
 
+  /**
+   * Prepare an ad for playing.
+   * @param {Object} config - ad config
+   * @public
+   * @returns {void}
+   */
+  prepareAd(config: Object): void {
+    this._adsPluginController.prepareAd(config);
+  }
+
   _initMembers(): void {
     this._allAdsCompleted = true;
   }

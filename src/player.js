@@ -441,7 +441,29 @@ export default class Player extends FakeEventTarget {
       this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
       Utils.Object.mergeDeep(this._config, config);
       this._reset = false;
-      if (this._selectEngineByPriority()) {
+      if (this._nextEngineLoadPromise && this.config.sources.id === this._nextEntry) {
+        this.dispatchEvent(new FakeEvent(CustomEventType.SOURCE_SELECTED, {selectedSource: this._nextFormatSources}));
+        Utils.Dom.removeChild(this._el, this.getVideoElement());
+        const temp = this._engine;
+        this._engine = this._nextEngine;
+        this._nextEngine = temp;
+        this._engineType = this._nextEngineType;
+        this._streamType = this._nextStreamType;
+        this._appendEngineEl();
+        this._attachMedia();
+        this._handlePlaybackOptions();
+        this._posterManager.setSrc(this._config.sources.poster);
+        this._nextEvents.forEach((event: FakeEvent) => {
+          this._engine.dispatchEvent(event);
+        });
+        Player._logger.debug('Change source ended');
+        this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_ENDED));
+        this._nextEngineLoadPromise.then(() => {
+          this._updateTracks(this._nextTracks);
+          this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
+          this._handleAutoPlay();
+        });
+      } else if (this._selectEngineByPriority()) {
         this.dispatchEvent(new FakeEvent(CustomEventType.SOURCE_SELECTED, {selectedSource: this._config.sources[this._streamType]}));
         this._attachMedia();
         this._handlePlaybackOptions();
@@ -469,6 +491,57 @@ export default class Player extends FakeEventTarget {
       this._configureOrLoadPlugins(config.plugins);
     }
     this._maybeCreateAdsController();
+  }
+
+  prepareEntry(config): void {
+    if (this._adsController) {
+      this._adsController.prepareAd(config);
+    } else {
+      this._nextEntry = config.sources.id;
+      this._nextEngine = this._getEngineByPriority(config);
+      this._nextEvents = [];
+      Object.keys(Html5EventType).forEach(html5Event => {
+        this._eventManager.listen(this._nextEngine, Html5EventType[html5Event], (event: FakeEvent) => {
+          this._nextEvents.push(event);
+        });
+      });
+      this._nextEngineLoadPromise = this._nextEngine.load();
+      this._nextEngineLoadPromise.then(data => {
+        this._nextTracks = data.tracks;
+      });
+    }
+  }
+
+  /**
+   * Selects an engine to play a source according to a given stream priority.
+   * @param {any} config - s
+   * @return {boolean} - Whether a proper engine was found to play the given sources
+   * according to the priority.
+   * @private
+   */
+  _getEngineByPriority(config): boolean {
+    const streamPriority = config.streamPriority || this._config.playback.streamPriority;
+    const preferNative = config.preferNative || this._config.playback.preferNative;
+    const sources = config.sources;
+    for (let priority of streamPriority) {
+      const engineId = typeof priority.engine === 'string' ? priority.engine.toLowerCase() : '';
+      const format = typeof priority.format === 'string' ? priority.format.toLowerCase() : '';
+      const Engine = EngineProvider.getEngines().find(Engine => Engine.id === engineId);
+      if (Engine) {
+        const formatSources = sources[format];
+        if (formatSources && formatSources.length > 0) {
+          const source = formatSources[0];
+          if (Engine.canPlaySource(source, preferNative[format])) {
+            this._nextEngineType = engineId;
+            this._nextStreamType = format;
+            this._nextFormatSources = formatSources;
+            this._nextEngine.restore(source, this._config);
+            return this._nextEngine;
+          }
+        }
+      }
+    }
+    Player._logger.warn('No playable engines was found to play the given sources');
   }
 
   /**
@@ -1442,6 +1515,7 @@ export default class Player extends FakeEventTarget {
     if (!this._engine) {
       this._engine = Engine.createEngine(source, this._config);
       this._appendEngineEl();
+      this._nextEngine = Engine.createEngine();
     } else {
       if (this._engine.id === Engine.id) {
         this._engine.restore(source, this._config);
@@ -1811,7 +1885,7 @@ export default class Player extends FakeEventTarget {
         this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_ENDED));
       });
     } else {
-      this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_ENDED));
+      setTimeout(() => this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_ENDED)), 0);
     }
     if (!this.paused) {
       this._pause();
