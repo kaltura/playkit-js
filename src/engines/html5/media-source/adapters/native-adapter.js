@@ -102,6 +102,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   _loadPromiseReject: ?Function;
 
+  _lastTimeUpdate: ?number;
+
   /**
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
@@ -237,13 +239,15 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   load(startTime: ?number): Promise<Object> {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
+        this._lastTimeUpdate = startTime || 0;
         this._loadPromiseReject = reject;
         this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => this._onLoadedData(resolve, startTime));
-        this._eventManager.listen(this._videoElement, Html5EventType.TIME_UPDATE, () => this._resetHeartbeatTimeout());
+        this._eventManager.listen(this._videoElement, Html5EventType.TIME_UPDATE, () => this._onTimeUpdate());
         this._eventManager.listen(this._videoElement, Html5EventType.PLAY, () => this._resetHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.PAUSE, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.ENDED, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.ABORT, () => this._clearHeartbeatTimeout());
+        this._eventManager.listen(this._videoElement, Html5EventType.SEEKED, () => this._onSeeked());
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
         }
@@ -296,7 +300,18 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
+  _onTimeUpdate(): void {
+    if (this._videoElement.currentTime > this._lastTimeUpdate) {
+      this._resetHeartbeatTimeout();
+    }
+  }
+
+  _onSeeked(): void {
+    this._lastTimeUpdate = this._videoElement.currentTime;
+  }
+
   _resetHeartbeatTimeout(): void {
+    this._lastTimeUpdate = this._videoElement.currentTime;
     this._clearHeartbeatTimeout();
     const onTimeout = () => {
       this._clearHeartbeatTimeout();
