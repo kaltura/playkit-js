@@ -104,6 +104,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   _lastTimeUpdate: ?number;
 
+  _waitingEventTriggered: ?boolean = false;
+
   /**
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
@@ -302,7 +304,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   _onTimeUpdate(): void {
     if (this._videoElement.currentTime > this._lastTimeUpdate) {
+      if (this._waitingEventTriggered) {
+        this._waitingEventTriggered = false;
+        this._trigger(Html5EventType.PLAYING);
+      }
       this._resetHeartbeatTimeout();
+    } else if (!this._videoElement.paused) {
+      this._waitingEventTriggered = true;
+      this._trigger(Html5EventType.WAITING);
     }
   }
 
@@ -344,10 +353,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     NativeAdapter._logger.debug('destroy');
     return super.destroy().then(() => {
       this._eventManager.destroy();
+      this._waitingEventTriggered = false;
       this._progressiveSources = [];
       this._loadPromise = null;
       this._loadPromiseReject = null;
       this._liveEdge = 0;
+      this._lastTimeUpdate = 0;
       this._clearHeartbeatTimeout();
       if (this._liveDurationChangeInterval) {
         clearInterval(this._liveDurationChangeInterval);
