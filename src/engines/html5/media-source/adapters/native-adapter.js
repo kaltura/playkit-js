@@ -102,7 +102,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   _loadPromiseReject: ?Function;
 
-  _lastTimeUpdate: ?number;
+  _lastTimeUpdate: number = 0;
 
   _waitingEventTriggered: ?boolean = false;
 
