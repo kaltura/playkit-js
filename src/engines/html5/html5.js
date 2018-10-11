@@ -298,16 +298,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
-   * Gets the selected media source object.
-   * @returns {?PKMediaSourceObject} - The media source object.
-   */
-  getSelectedSource(): ?PKMediaSourceObject {
-    if (this._mediaSourceAdapter) {
-      this._mediaSourceAdapter.getSelectedSource();
-    }
-  }
-
-  /**
    * Select a new audio track.
    * @param {AudioTrack} audioTrack - The video track object to set.
    * @returns {void}

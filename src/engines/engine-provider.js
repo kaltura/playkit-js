@@ -61,7 +61,7 @@ class EngineProvider {
    * @static
    */
   static getEngines(): Array<typeof IEngine> {
-    return Object.values(EngineProvider._engineProviders);
+    return Object.keys(EngineProvider._engineProviders).map(key => EngineProvider._engineProviders[key]);
   }
 
   /**

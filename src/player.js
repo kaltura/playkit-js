@@ -564,16 +564,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Gets the selected media source object.
-   * @returns {?PKMediaSourceObject} - The media source object.
-   */
-  getSelectedSource(): ?PKMediaSourceObject {
-    if (this._engine) {
-      return this._engine.getSelectedSource();
-    }
-  }
-
-  /**
    * Resets the necessary components before change media.
    * @public
    * @returns {void}
