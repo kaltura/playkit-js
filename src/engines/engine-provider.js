@@ -17,42 +17,40 @@ class EngineProvider {
 
   /**
    * The Engine registry.
-   * @member {Array<IEngine>} _engineProviders
+   * @member {Object} _engineProviders
    * @static
    * @private
    */
-  static _engineProviders: Array<typeof IEngine> = [Html5];
+  static _engineProviders: {[id: string]: typeof IEngine} = {};
 
   /**
    * Add an engine to the registry.
    * @function register
+   * @param {string} id - The engine id.
    * @param {IEngine} engine -  The engine to register.
    * @static
    * @returns {void}
    */
-  static register(engine: typeof IEngine): void {
-    if (engine) {
-      if (!EngineProvider._engineProviders.includes(engine)) {
-        EngineProvider._logger.debug(`Engine <${engine.id}> has been registered successfully`);
-        EngineProvider._engineProviders.push(engine);
-      } else {
-        EngineProvider._logger.debug(`Engine <${engine.id}> is already registered, do not register again`);
-      }
+  static register(id: string, engine: typeof IEngine): void {
+    if (id && !EngineProvider._engineProviders[id]) {
+      EngineProvider._logger.debug(`Engine <${id}> has been registered successfully`);
+      EngineProvider._engineProviders[id] = engine;
+    } else {
+      EngineProvider._logger.debug(`Engine <${id}> is already registered, do not register again`);
     }
   }
 
   /**
    * Remove an engine from the registry.
    * @function unRegister
-   * @param {IEngine} engine - The engine to unRegister.
+   * @param {string} id - The engine id.
    * @static
    * @returns {void}
    */
-  static unRegister(engine: typeof IEngine): void {
-    let index = EngineProvider._engineProviders.indexOf(engine);
-    if (index > -1) {
-      EngineProvider._logger.debug(`Unregistered <${engine.id}> Engine`);
-      EngineProvider._engineProviders.splice(index, 1);
+  static unRegister(id: string): void {
+    if (EngineProvider._engineProviders[id]) {
+      EngineProvider._logger.debug(`Unregistered <${id}> Engine`);
+      delete EngineProvider._engineProviders[id];
     }
   }
 
@@ -63,7 +61,7 @@ class EngineProvider {
    * @static
    */
   static getEngines(): Array<typeof IEngine> {
-    return EngineProvider._engineProviders;
+    return Object.keys(EngineProvider._engineProviders).map(key => EngineProvider._engineProviders[key]);
   }
 
   /**
@@ -72,9 +70,14 @@ class EngineProvider {
    * @returns {void}
    */
   static destroy(): void {
-    EngineProvider._engineProviders = [Html5];
+    EngineProvider._engineProviders = {};
   }
 }
 
+if (Html5.isSupported()) {
+  EngineProvider.register(Html5.id, Html5);
+}
+
 const registerEngine = EngineProvider.register;
-export {registerEngine, EngineProvider};
+const unRegisterEngine = EngineProvider.unRegister;
+export {registerEngine, unRegisterEngine, EngineProvider};

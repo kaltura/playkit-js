@@ -2,11 +2,12 @@
 import Player from './player';
 import BaseMediaSourceAdapter from './engines/html5/media-source/base-media-source-adapter';
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider';
-import {registerEngine} from './engines/engine-provider';
+import {registerEngine, unRegisterEngine} from './engines/engine-provider';
 import {registerPlugin} from './plugin/plugin-manager';
 import BaseDrmProtocol from './drm/base-drm-protocol';
 import BaseMiddleware from './middleware/base-middleware';
 import BasePlugin from './plugin/base-plugin';
+import State from './state/state';
 import Track from './track/track';
 import VideoTrack from './track/video-track';
 import AudioTrack from './track/audio-track';
@@ -27,12 +28,13 @@ import {EventType} from './event/event-type';
 import {AbrMode} from './track/abr-mode-type';
 import getLogger, {getLogLevel, LogLevel, LogLevelType, setLogLevel} from './utils/logger';
 import {CorsType} from './engines/html5/cors-types';
+import {DrmScheme} from './drm/drm-scheme';
+import {MimeType} from './mime-type';
 import {Ad} from './ads/ad';
 import {AdBreak} from './ads/ad-break';
 import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
-
-Player.runCapabilities();
+import {AdsController} from './ads/ads-controller';
 
 declare var __VERSION__: string;
 declare var __NAME__: string;
@@ -72,6 +74,9 @@ export {__NAME__ as PLAYER_NAME};
 // Export environment data
 export {Env};
 
+// Export State class
+export {State};
+
 // Export base DRM protocol
 export {BaseDrmProtocol};
 
@@ -79,13 +84,17 @@ export {BaseDrmProtocol};
 const getCapabilities = Player.getCapabilities;
 const setCapabilities = Player.setCapabilities;
 
-export {getCapabilities, setCapabilities, registerEngine};
+// Export capabilities utils
+export {getCapabilities, setCapabilities};
+
+// Export engine framework
+export {registerEngine, unRegisterEngine};
 
 // Export ads framework
-export {Ad, AdBreak, AdBreakType, AdTagType};
+export {Ad, AdBreak, AdBreakType, AdTagType, AdsController};
 
 // Export enums
-export {EventType, StateType, TrackType, EngineType, MediaType, StreamType, AbrMode, LogLevelType, CorsType};
+export {EventType, StateType, TrackType, EngineType, MediaType, StreamType, AbrMode, LogLevelType, CorsType, DrmScheme, MimeType};
 
 // Export logger utils
 export {getLogger, LogLevel, getLogLevel, setLogLevel};

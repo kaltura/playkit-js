@@ -1,7 +1,5 @@
 // @flow
-export type AbrModes = {[mode: string]: string};
-
-const AbrMode: AbrModes = {
+const AbrMode: PKAbrModes = {
   MANUAL: 'manual',
   AUTO: 'auto'
 };

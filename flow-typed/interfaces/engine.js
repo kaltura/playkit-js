@@ -10,6 +10,7 @@ declare interface IEngine {
   static runCapabilities(): void;
   static getCapabilities(): Promise<Object>;
   static prepareVideoElement(): void;
+  static isSupported(): boolean;
   restore(source: PKMediaSourceObject, config: Object): void;
   destroy(): void;
   attach(): void;

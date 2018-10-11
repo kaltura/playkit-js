@@ -1,11 +1,7 @@
 //@flow
 import * as JsLogger from 'js-logger';
 
-export type LogLevelObject = {value: number, name: string};
-export type LogLevels = {[level: string]: LogLevelObject};
-export type LogLevelTypes = {[level: string]: string};
-
-const LogLevel: LogLevels = {
+const LogLevel: PKLogLevels = {
   DEBUG: JsLogger.DEBUG,
   INFO: JsLogger.INFO,
   TIME: JsLogger.TIME,
@@ -14,7 +10,7 @@ const LogLevel: LogLevels = {
   OFF: JsLogger.OFF
 };
 
-const LogLevelType: LogLevelTypes = {};
+const LogLevelType: PKLogLevelTypes = {};
 
 // Build the log level types enums according to the LogLevel object
 Object.keys(LogLevel).forEach(key => {
@@ -38,19 +34,19 @@ function getLogger(name?: string): Object {
 /**
  * get the log level
  * @param {?string} name - the logger name
- * @returns {LogLevelObject} - the log level
+ * @returns {PKLogLevelObject} - the log level
  */
-function getLogLevel(name?: string): LogLevelObject {
+function getLogLevel(name?: string): PKLogLevelObject {
   return getLogger(name).getLevel();
 }
 
 /**
  * sets the logger level
- * @param {LogLevelObject} level - the log level
+ * @param {PKLogLevelObject} level - the log level
  * @param {?string} name - the logger name
  * @returns {void}
  */
-function setLogLevel(level: LogLevelObject, name?: string): void {
+function setLogLevel(level: PKLogLevelObject, name?: string): void {
   getLogger(name).setLevel(level);
 }
 

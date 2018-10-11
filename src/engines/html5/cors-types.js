@@ -1,7 +1,5 @@
 // @flow
-export type CorsTypes = {[stream: string]: string};
-
-const CorsType: CorsTypes = {
+const CorsType: PKCorsTypes = {
   ANONYMOUS: 'anonymous',
   USE_CREDENTIALS: 'use-credentials'
 };

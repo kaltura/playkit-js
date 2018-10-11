@@ -366,7 +366,7 @@ const Code: CodeType = {
 
   /**
    * The manifest parser only supports xlink links with
-   * xlink:actuate="onLoad".
+   * xlink:actuate='onLoad'.
    */
   DASH_UNSUPPORTED_XLINK_ACTUATE: 4027,
 
@@ -672,6 +672,21 @@ const Code: CodeType = {
    * Could not remove the requested entry
    */
   REMOVE_FAILED: 9018,
+
+  /**
+   * Load media failed.
+   */
+  CAST_LOAD_MEDIA_FAILED: 10001,
+
+  /**
+   * Custom message parsing error.
+   */
+  CAST_CUSTOM_MESSAGE_PARSING_ERROR: 100002,
+
+  /**
+   * Edit tracks info error.
+   */
+  CAST_EDIT_TRACKS_INFO_ERROR: 10003,
 
   /**
    * VR plugin is not supported.

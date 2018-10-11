@@ -1,10 +1,9 @@
 // @flow
-export type EngineTypes = {[engine: string]: string};
-
-const EngineType: EngineTypes = {
+const EngineType: PKEngineTypes = {
   HTML5: 'html5',
   FLASH: 'flash',
-  SILVERLIGHT: 'silverlight'
+  SILVERLIGHT: 'silverlight',
+  CAST: 'cast'
 };
 
 export {EngineType};

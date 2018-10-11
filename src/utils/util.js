@@ -397,6 +397,14 @@ const _Dom = {
     return document.getElementById(id);
   },
   /**
+   * Returns a live HTMLCollection of elements with the given tag name.
+   * @param {string} tagName - The desired tag name.
+   * @returns {Element} - The elements with the desired tag name.
+   */
+  getElementsByTagName(tagName: string): any {
+    return document.getElementsByTagName(tagName);
+  },
+  /**
    * Creates the HTML element specified by tagName.
    * @param {string} tagName - The tag name.
    * @returns {Element} - The element just created.
