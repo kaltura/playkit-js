@@ -537,12 +537,14 @@ describe('NativeAdapter: selectTextTrack', function() {
   });
 
   it('should select a new subtitles track', done => {
+    const onTextTrackChanged = event => {
+      nativeInstance.removeEventListener(CustomEventType.TEXT_TRACK_CHANGED, onTextTrackChanged);
+      event.payload.selectedTextTrack.language.should.equal('fr');
+      done();
+    };
     nativeInstance.load().then(() => {
       if (nativeInstance._videoElement.textTracks) {
-        nativeInstance.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, event => {
-          event.payload.selectedTextTrack.language.should.equal('fr');
-          done();
-        });
+        nativeInstance.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, onTextTrackChanged);
         nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
         nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
         nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
@@ -557,12 +559,14 @@ describe('NativeAdapter: selectTextTrack', function() {
   });
 
   it('should select a new captions track', done => {
+    const onTextTrackChanged = event => {
+      nativeInstance.removeEventListener(CustomEventType.TEXT_TRACK_CHANGED, onTextTrackChanged);
+      event.payload.selectedTextTrack.language.should.equal('fr');
+      done();
+    };
     nativeInstance.load().then(() => {
       if (nativeInstance._videoElement.textTracks) {
-        nativeInstance.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, event => {
-          event.payload.selectedTextTrack.language.should.equal('fr');
-          done();
-        });
+        nativeInstance.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, onTextTrackChanged);
         nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
         nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
         nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
@@ -592,7 +596,7 @@ describe('NativeAdapter: selectTextTrack', function() {
         done();
       })
       .catch(e => {
-        done(e);
+        done(new Error(e));
       });
   });
 

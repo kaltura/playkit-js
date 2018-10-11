@@ -32,7 +32,7 @@ class EngineProvider {
    * @returns {void}
    */
   static register(id: string, engine: typeof IEngine): void {
-    if (!EngineProvider._engineProviders[id]) {
+    if (id && !EngineProvider._engineProviders[id]) {
       EngineProvider._logger.debug(`Engine <${id}> has been registered successfully`);
       EngineProvider._engineProviders[id] = engine;
     } else {
