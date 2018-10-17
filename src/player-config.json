@@ -2,7 +2,9 @@
   "logLevel": "ERROR",
   "sources": {
     "options": {
-      "forceRedirectExternalStreams": false
+      "forceRedirectExternalStreams": false,
+      "fpsDroppedFramesInterval": 5000,
+      "fpsDroppedMonitoringThreshold": 0.2
     },
     "metadata": {}
   },

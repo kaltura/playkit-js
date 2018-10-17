@@ -13,6 +13,7 @@ import Html5AutoPlayCapability from './capabilities/html5-autoplay';
 import Html5IsSupportedCapability from './capabilities/html5-is-supported';
 import Error from '../../error/error';
 import getLogger from '../../utils/logger';
+import droppedFramesWatcher from '../dropped-frames-watcher';
 
 /**
  * Html5 engine for playback.
@@ -79,6 +80,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @static
    */
   static _el: HTMLVideoElement;
+  _droppedFramesWatcher: ?droppedFramesWatcher = null;
 
   /**
    * Factory method to create an engine.
@@ -196,6 +198,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   destroy(): void {
     this.detach();
+    this._droppedFramesWatcher.destroy();
     if (this._el) {
       this.pause();
       Utils.Dom.removeAttribute(this._el, 'src');
@@ -245,6 +248,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.PLAYING, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.WAITING, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.MEDIA_RECOVERED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._droppedFramesWatcher, CustomEventType.EXCEEDED_MAX_FRAME_DROP, (event: FakeEvent) => this.dispatchEvent(event));
     }
   }
 
@@ -458,6 +462,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return this._canLoadMediaSourceAdapterPromise
       .then(() => {
         if (this._mediaSourceAdapter) {
+          this._droppedFramesWatcher.init();
           return this._mediaSourceAdapter.load(startTime).catch(error => {
             return Promise.reject(error);
           });
@@ -859,6 +864,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _init(source: PKMediaSourceObject, config: Object): void {
     this._config = config;
     this._loadMediaSourceAdapter(source);
+    this._droppedFramesWatcher = new droppedFramesWatcher(this._mediaSourceAdapter, config.sources.options, this._el);
     this.attach();
   }
 

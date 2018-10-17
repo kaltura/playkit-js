@@ -1530,20 +1530,23 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this, Html5EventType.RATE_CHANGE, () => {
         this._playbackAttributesState.rate = this.playbackRate;
       });
-      this._eventManager.listen(this, CustomEventType.ENTER_FULLSCREEN, () => {
-        this._resetTextCuesAndReposition();
-      });
-      this._eventManager.listen(this, CustomEventType.EXIT_FULLSCREEN, () => {
-        this._resetTextCuesAndReposition();
-      });
-      this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => {
-        this._handleRecovered();
-      });
+      this._eventManager.listen(this, CustomEventType.ENTER_FULLSCREEN, () => this._resetTextCuesAndReposition());
+      this._eventManager.listen(this, CustomEventType.EXIT_FULLSCREEN, () => this._resetTextCuesAndReposition());
+      this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => this._handleRecovered());
+      this._eventManager.listen(this._engine, CustomEventType.EXCEEDED_MAX_FRAME_DROP, event => this._handleFrameDrop(event));
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) =>
         this._onTextTrackChanged(event)
       );
       this._eventManager.listen(this._externalCaptionsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
+    }
+  }
+
+  _handleFrameDrop(event: FakeEvent): void {
+    const sortedVideoTracks = this._getTracksByType(TrackType.VIDEO).sort((trackA, trackB) => trackA.bandwidth > trackB.bandwidth);
+    const currentBandwidthTrackIndex = sortedVideoTracks.findIndex(track => track.bandwidth === event.payload.bandwidth);
+    if (currentBandwidthTrackIndex - 1 >= 0) {
+      this.selectTrack(sortedVideoTracks[currentBandwidthTrackIndex - 1]);
     }
   }
 
