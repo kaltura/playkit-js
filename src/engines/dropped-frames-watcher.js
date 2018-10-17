@@ -9,9 +9,10 @@ export default class droppedFramesWatcher extends FakeEventTarget {
   _droppedFramesInterval: ?number = null;
   _lastDroppedFrames: number = 0;
   _lastDecodedFrames: number = 0;
+  _lastTime: number = 0;
   _mediaSourceAdapter: ?Object = null;
   _config: Object = {};
-  _videoElement: ?HTMLVideoElement = null;
+  _videoElement: HTMLVideoElement;
   static _logger: any = getLogger('droppedFramesWatcher');
 
   constructor(mediaSourceAdapter: MediaSourceProvider, config: Object, videoElement: HTMLVideoElement) {
@@ -36,7 +37,7 @@ export default class droppedFramesWatcher extends FakeEventTarget {
     this._checkFPS(droppedFrames, totalFrames);
   }
 
-  _checkFPS(droppedFrames, decodedFrames): void {
+  _checkFPS(droppedFrames: number, decodedFrames: number): void {
     try {
       const currentTime = performance.now();
       if (decodedFrames) {
@@ -46,10 +47,10 @@ export default class droppedFramesWatcher extends FakeEventTarget {
             currentDecoded = decodedFrames - this._lastDecodedFrames,
             droppedFPS = (1000 * currentDropped) / currentPeriod;
           if (droppedFPS > 0) {
-            this._logger.debug('checkFPS : droppedFPS/decodedFPS:' + droppedFPS / ((1000 * currentDecoded) / currentPeriod));
+            droppedFramesWatcher._logger.debug('checkFPS : droppedFPS/decodedFPS:' + droppedFPS / ((1000 * currentDecoded) / currentPeriod));
             if (currentDropped > this._config.fpsDroppedMonitoringThreshold * currentDecoded) {
               const currentBandwidth = this._mediaSourceAdapter.getCurrentQuality();
-              this._logger.debug('drop FPS ratio greater than max allowed value for current birate: ' + currentBandwidth);
+              droppedFramesWatcher._logger.debug('drop FPS ratio greater than max allowed value for current birate: ' + currentBandwidth);
               if (currentBandwidth > 0) {
                 this.dispatchEvent(new FakeEvent(CustomEventType.EXCEEDED_MAX_FRAME_DROP, {bandwidth: currentBandwidth}));
               }
@@ -61,7 +62,7 @@ export default class droppedFramesWatcher extends FakeEventTarget {
         this._lastDecodedFrames = decodedFrames;
       }
     } catch (error) {
-      this._logger.error('Error occur while trying to check dropFrames: ', error);
+      droppedFramesWatcher._logger.error('Error occur while trying to check dropFrames: ', error);
     }
   }
 
