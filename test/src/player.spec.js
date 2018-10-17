@@ -16,12 +16,17 @@ import Html5 from '../../src/engines/html5/html5';
 import Error from '../../src/error/error';
 import {Object} from '../../src/utils/util';
 import {LabelOptions} from '../../src/track/label-options';
+import {EngineProvider} from '../../src/engines/engine-provider';
 
 const targetId = 'player-placeholder_player.spec';
 let sourcesConfig = Object.copyDeep(SourcesConfig);
 
 describe('Player', function() {
+  before(() => {});
+
   beforeEach(() => {
+    EngineProvider.destroy();
+    EngineProvider.register(Html5.id, Html5);
     sourcesConfig = Object.copyDeep(SourcesConfig);
   });
 

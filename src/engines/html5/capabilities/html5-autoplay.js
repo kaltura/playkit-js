@@ -5,21 +5,12 @@ import getLogger from '../../../utils/logger';
 import * as blobSource from '../../../assets/blob-source.json';
 
 const WAIT_TIME: number = 500;
-
-/**
- * @type {Blob}
- */
 const VIDEO = new Blob([new Uint8Array(blobSource.uInt8Array)], {type: 'video/mp4'});
 
-const testVideoElement: HTMLVideoElement = Utils.Dom.createElement('video');
-testVideoElement.src = URL.createObjectURL(VIDEO);
-// For iOS devices needs to turn the playsinline attribute on
-testVideoElement.setAttribute('playsinline', '');
-
 export default class Html5AutoPlayCapability implements ICapability {
-  static _logger: any = getLogger('Html5AutoPlayCapability');
-
+  static _vid: HTMLVideoElement;
   static _playPromiseResult: Promise<*>;
+  static _logger: any = getLogger('Html5AutoPlayCapability');
 
   /**
    * Runs the test for autoplay capability.
@@ -28,6 +19,12 @@ export default class Html5AutoPlayCapability implements ICapability {
    * @returns {void}
    */
   static runCapability(): void {
+    if (!Html5AutoPlayCapability._vid) {
+      Html5AutoPlayCapability._vid = Utils.Dom.createElement('video');
+      Html5AutoPlayCapability._vid.src = URL.createObjectURL(VIDEO);
+      // For iOS devices needs to turn the playsinline attribute on
+      Html5AutoPlayCapability._vid.setAttribute('playsinline', '');
+    }
     Html5AutoPlayCapability._playPromiseResult = new Promise(resolve => {
       Html5AutoPlayCapability._setMuted(false);
       Html5AutoPlayCapability._getPlayPromise()
@@ -64,7 +61,7 @@ export default class Html5AutoPlayCapability implements ICapability {
    * @private
    */
   static _getPlayPromise(): Promise<*> {
-    return testVideoElement.play() || Html5AutoPlayCapability._forcePromiseReturnValue();
+    return Html5AutoPlayCapability._vid.play() || Html5AutoPlayCapability._forcePromiseReturnValue();
   }
 
   /**
@@ -76,11 +73,11 @@ export default class Html5AutoPlayCapability implements ICapability {
    */
   static _setMuted(muted: boolean): void {
     if (muted) {
-      testVideoElement.muted = true;
-      testVideoElement.setAttribute('muted', '');
+      Html5AutoPlayCapability._vid.muted = true;
+      Html5AutoPlayCapability._vid.setAttribute('muted', '');
     } else {
-      testVideoElement.muted = false;
-      testVideoElement.removeAttribute('muted');
+      Html5AutoPlayCapability._vid.muted = false;
+      Html5AutoPlayCapability._vid.removeAttribute('muted');
     }
   }
 
@@ -93,14 +90,14 @@ export default class Html5AutoPlayCapability implements ICapability {
    */
   static _forcePromiseReturnValue(): Promise<*> {
     return new Promise((resolve, reject) => {
-      testVideoElement.addEventListener(Html5EventType.ERROR, () => {
+      Html5AutoPlayCapability._vid.addEventListener(Html5EventType.ERROR, () => {
         reject();
       });
       const supported = setTimeout(() => {
         Html5AutoPlayCapability._logger.debug(`Timeout ${WAIT_TIME} ms has been reached`);
         reject();
       }, WAIT_TIME);
-      if (testVideoElement.paused === true) {
+      if (Html5AutoPlayCapability._vid.paused === true) {
         clearTimeout(supported);
         reject();
       } else {

@@ -1,7 +1,5 @@
 // @flow
-export type MediaTypes = {[media: string]: string};
-
-const MediaType: MediaTypes = {
+const MediaType: PKMediaTypes = {
   VOD: 'Vod',
   LIVE: 'Live',
   AUDIO: 'Audio',

@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.38.0"></a>
+# [0.38.0](https://github.com/kaltura/playkit-js/compare/v0.37.0...v0.38.0) (2018-10-11)
+
+
+### Bug Fixes
+
+* **FEC-7594:** native adapter does not raise an error in case network disconnects. ([#293](https://github.com/kaltura/playkit-js/issues/293)) ([fd3fb93](https://github.com/kaltura/playkit-js/commit/fd3fb93))
+
+
+### Features
+
+* **error:** expose error class via player instance ([#291](https://github.com/kaltura/playkit-js/issues/291)) ([811ea7d](https://github.com/kaltura/playkit-js/commit/811ea7d))
+* **FEC-8038:** chromecast sender ([#294](https://github.com/kaltura/playkit-js/issues/294)) ([b9ba03b](https://github.com/kaltura/playkit-js/commit/b9ba03b))
+
+
+
 <a name="0.37.0"></a>
 # [0.37.0](https://github.com/kaltura/playkit-js/compare/v0.36.0...v0.37.0) (2018-09-16)
 

@@ -3,6 +3,7 @@ import FakeEventTarget from '../event/fake-event-target';
 import FakeEvent from '../event/fake-event';
 import {CustomEventType} from '../event/event-type';
 import getLogger from '../utils/logger';
+import MediaSourceProvider from './html5/media-source/media-source-provider';
 
 export default class droppedFramesWatcher extends FakeEventTarget {
   _droppedFramesInterval: ?number = null;
@@ -13,7 +14,7 @@ export default class droppedFramesWatcher extends FakeEventTarget {
   _videoElement: ?HTMLVideoElement = null;
   static _logger: any = getLogger('droppedFramesWatcher');
 
-  constructor(mediaSourceAdapter, config, videoElement) {
+  constructor(mediaSourceAdapter: MediaSourceProvider, config: Object, videoElement: HTMLVideoElement) {
     super();
     this._mediaSourceAdapter = mediaSourceAdapter;
     this._config = config;

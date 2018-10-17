@@ -167,6 +167,22 @@ class TextStyle {
     clonedTextStyle.fontFamily = this.fontFamily;
     return clonedTextStyle;
   }
+
+  /**
+   * comparing between 2 textStyle objects.
+   * @param {TextStyle} textStyle - The textStyle to compare with.
+   * @returns {boolean} - Whether the text styles are equal.
+   */
+  isEqual(textStyle: TextStyle): boolean {
+    return (
+      textStyle.fontEdge === this.fontEdge &&
+      textStyle.fontSize === this.fontSize &&
+      textStyle.fontColor === this.fontColor &&
+      textStyle.fontOpacity === this.fontOpacity &&
+      textStyle.backgroundColor === this.backgroundColor &&
+      textStyle.backgroundOpacity === this.backgroundOpacity
+    );
+  }
 }
 
 export default TextStyle;

@@ -1,7 +1,5 @@
 // @flow
-export type StreamTypes = {[stream: string]: string};
-
-const StreamType: StreamTypes = {
+const StreamType: PKStreamTypes = {
   DASH: 'dash',
   HLS: 'hls',
   PROGRESSIVE: 'progressive'
