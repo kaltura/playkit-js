@@ -3,38 +3,35 @@ import FakeEventTarget from '../event/fake-event-target';
 import FakeEvent from '../event/fake-event';
 import {CustomEventType} from '../event/event-type';
 import getLogger from '../utils/logger';
-import MediaSourceProvider from './html5/media-source/media-source-provider';
 
-export default class droppedFramesWatcher extends FakeEventTarget {
+const EXCEEDED_MAX_FRAME_DROP: string = 'exceededmaxframerop';
+
+class DroppedFramesWatcher extends FakeEventTarget {
   _droppedFramesInterval: ?number = null;
   _lastDroppedFrames: number = 0;
   _lastDecodedFrames: number = 0;
   _lastTime: number = 0;
-  _mediaSourceAdapter: ?Object = null;
+  _mediaSourceAdapter: IMediaSourceAdapter;
   _config: Object = {};
   _videoElement: HTMLVideoElement;
   static _logger: any = getLogger('droppedFramesWatcher');
 
-  constructor(mediaSourceAdapter: MediaSourceProvider, config: Object, videoElement: HTMLVideoElement) {
+  constructor(mediaSourceAdapter: IMediaSourceAdapter, config: Object, videoElement: HTMLVideoElement) {
     super();
     this._mediaSourceAdapter = mediaSourceAdapter;
     this._config = config;
     this._videoElement = videoElement;
-  }
-
-  init(): void {
     this._droppedFramesInterval = setInterval(() => this._maybeAdjustBitrateQuality(), this._config.fpsDroppedFramesInterval);
   }
 
   _maybeAdjustBitrateQuality(): void {
-    const isGetVideoPbQualityExist = typeof this._videoElement.getVideoPlaybackQuality === 'function';
-    const droppedFrames = isGetVideoPbQualityExist
-      ? this._videoElement.getVideoPlaybackQuality().droppedVideoFrames
-      : this._videoElement.webkitDroppedFrameCount;
-    const totalFrames = isGetVideoPbQualityExist
-      ? this._videoElement.getVideoPlaybackQuality().totalVideoFrames
-      : this._videoElement.webkitDecodedFrameCount;
-    this._checkFPS(droppedFrames, totalFrames);
+    if (typeof this._videoElement.getVideoPlaybackQuality === 'function') {
+      const videoPlaybackQuality = this._videoElement.getVideoPlaybackQuality();
+      this._checkFPS(videoPlaybackQuality.droppedVideoFrames, videoPlaybackQuality.totalVideoFrames);
+    } else {
+      // $FlowFixMe
+      this._checkFPS(this._videoElement.webkitDroppedFrameCount, this._videoElement.webkitDecodedFrameCount);
+    }
   }
 
   _checkFPS(droppedFrames: number, decodedFrames: number): void {
@@ -47,10 +44,10 @@ export default class droppedFramesWatcher extends FakeEventTarget {
             currentDecoded = decodedFrames - this._lastDecodedFrames,
             droppedFPS = (1000 * currentDropped) / currentPeriod;
           if (droppedFPS > 0) {
-            droppedFramesWatcher._logger.debug('checkFPS : droppedFPS/decodedFPS:' + droppedFPS / ((1000 * currentDecoded) / currentPeriod));
+            DroppedFramesWatcher._logger.debug('checkFPS : droppedFPS/decodedFPS:' + droppedFPS / ((1000 * currentDecoded) / currentPeriod));
             if (currentDropped > this._config.fpsDroppedMonitoringThreshold * currentDecoded) {
               const currentBandwidth = this._mediaSourceAdapter.getCurrentQuality();
-              droppedFramesWatcher._logger.debug('drop FPS ratio greater than max allowed value for current birate: ' + currentBandwidth);
+              DroppedFramesWatcher._logger.debug('drop FPS ratio greater than max allowed value for current birate: ' + currentBandwidth);
               if (currentBandwidth > 0) {
                 this.dispatchEvent(new FakeEvent(CustomEventType.EXCEEDED_MAX_FRAME_DROP, {bandwidth: currentBandwidth}));
               }
@@ -62,7 +59,7 @@ export default class droppedFramesWatcher extends FakeEventTarget {
         this._lastDecodedFrames = decodedFrames;
       }
     } catch (error) {
-      droppedFramesWatcher._logger.error('Error occur while trying to check dropFrames: ', error);
+      DroppedFramesWatcher._logger.error('Error occur while trying to check dropFrames: ', error);
     }
   }
 
@@ -73,3 +70,5 @@ export default class droppedFramesWatcher extends FakeEventTarget {
     this._droppedFramesInterval = null;
   }
 }
+
+export {DroppedFramesWatcher, EXCEEDED_MAX_FRAME_DROP};

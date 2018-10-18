@@ -146,6 +146,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return BaseMediaSourceAdapter._throwNotImplementedError('isLive');
   }
 
+  getCurrentQuality(): number {
+    return BaseMediaSourceAdapter._throwNotImplementedError('getCurrentQuality');
+  }
+
   /**
    * Handling live time update (as is not triggered when video is paused, but the current time changed)
    * @function _handleLiveTimeUpdate

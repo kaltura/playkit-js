@@ -19,6 +19,7 @@ declare interface IMediaSourceAdapter {
   seekToLiveEdge(): void;
   isLive(): boolean;
   getStartTimeOfDvrWindow(): number;
+  getCurrentQuality(): number;
   static +id: string;
   static isSupported(): boolean;
   static canPlayType(mimeType: string): boolean;
