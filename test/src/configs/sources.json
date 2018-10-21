@@ -1,9 +1,5 @@
 {
   "Hls": {
-    "options": {
-      "fpsDroppedFramesInterval": 5000,
-      "fpsDroppedMonitoringThreshold": 0.2
-    },
     "hls": [
       {
         "mimetype": "application/x-mpegurl",
@@ -13,10 +9,6 @@
     ]
   },
   "Mp4": {
-    "options": {
-      "fpsDroppedFramesInterval": 5000,
-      "fpsDroppedMonitoringThreshold": 0.2
-    },
     "progressive": [
       {
         "mimetype": "video/mp4",
@@ -26,10 +18,6 @@
     ]
   },
   "MultipleSources": {
-    "options": {
-      "fpsDroppedFramesInterval": 5000,
-      "fpsDroppedMonitoringThreshold": 0.2
-    },
     "progressive": [
       {
         "mimetype": "video/mp4",
@@ -52,10 +40,6 @@
     ]
   },
   "UnknownMimetype": {
-    "options": {
-      "fpsDroppedFramesInterval": 5000,
-      "fpsDroppedMonitoringThreshold": 0.2
-    },
     "progressive": [
       {
         "mimetype": "someMimeType",
@@ -65,10 +49,6 @@
     ]
   },
   "CorruptedUrl": {
-    "options": {
-      "fpsDroppedFramesInterval": 5000,
-      "fpsDroppedMonitoringThreshold": 0.2
-    },
     "progressive": [
       {
         "mimetype": "video/mp4",
@@ -78,10 +58,6 @@
     ]
   },
   "Live": {
-    "options": {
-      "fpsDroppedFramesInterval": 5000,
-      "fpsDroppedMonitoringThreshold": 0.2
-    },
     "hls": [
       {
         "mimetype": "application/x-mpegurl",

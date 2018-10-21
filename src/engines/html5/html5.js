@@ -828,7 +828,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._config = config;
     this._loadMediaSourceAdapter(source);
     if (this._mediaSourceAdapter) {
-      this._droppedFramesWatcher = new DroppedFramesWatcher(this._mediaSourceAdapter, this._config.sources.options, this._el);
+      this._droppedFramesWatcher = new DroppedFramesWatcher(this._mediaSourceAdapter, this._config.playback, this._el);
     }
     this.attach();
   }

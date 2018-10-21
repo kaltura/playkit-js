@@ -2,9 +2,7 @@
   "logLevel": "ERROR",
   "sources": {
     "options": {
-      "forceRedirectExternalStreams": false,
-      "fpsDroppedFramesInterval": 5000,
-      "fpsDroppedMonitoringThreshold": 0.2
+      "forceRedirectExternalStreams": false
     },
     "metadata": {}
   },
@@ -18,6 +16,8 @@
     "captionsTextTrack1LanguageCode": "en",
     "captionsTextTrack2Label": "Spanish",
     "captionsTextTrack2LanguageCode": "es",
+    "fpsDroppedFramesInterval": 5000,
+    "fpsDroppedMonitoringThreshold": 0.2,
     "volume": 1,
     "startTime": -1,
     "playsinline": true,
