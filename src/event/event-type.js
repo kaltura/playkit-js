@@ -201,11 +201,7 @@ const CustomEventType: PKEventTypes = {
   /**
    * Fired when the vr stereo mode changed
    */
-  VR_STEREO_MODE_CHANGED: 'vrstereomodechanged',
-  /**
-   * Fired when too many frames are dropped
-   */
-  EXCEEDED_MAX_FRAME_DROP: 'exceededmaxframedrop'
+  VR_STEREO_MODE_CHANGED: 'vrstereomodechanged'
 };
 
 const EventType: PKEventTypes = Utils.Object.merge([Html5EventType, CustomEventType, AdEventType]);
