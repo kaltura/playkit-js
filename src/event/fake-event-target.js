@@ -70,16 +70,18 @@ class FakeEventTarget {
   dispatchEvent(event: FakeEvent) {
     // In many browsers, it is complex to overwrite properties of actual Events.
     // Here we expect only to dispatch FakeEvents, which are simpler.
-    // goog.asserts.assert(event instanceof FakeEvent,
+    //goog.asserts.assert(event instanceof FakeEvent,
     //    'FakeEventTarget can only dispatch FakeEvents!');
 
-    if (this._listeners.has(event.type)) {
-      for (let i = 0; i < this._listeners.get(event.type).length; ++i) {
-        // Do this every time, since events can be re-dispatched from handlers.
-        event.target = this.dispatchTarget;
-        event.currentTarget = this.dispatchTarget;
+    let list = this._listeners.get(event.type) || [];
 
-        let listener = this._listeners.get(event.type)[i];
+    for (let i = 0; i < list.length; ++i) {
+      // Do this every time, since events can be re-dispatched from handlers.
+      event.target = this.dispatchTarget;
+      event.currentTarget = this.dispatchTarget;
+
+      let listener = list[i];
+      if (this._listeners.get(event.type).indexOf(listener) > -1) {
         try {
           if (listener.handleEvent) {
             listener.handleEvent(event);
@@ -92,10 +94,10 @@ class FakeEventTarget {
           // http://goo.gl/N6Ff27
           // TODO: add log
         }
+      }
 
-        if (event.stopped) {
-          break;
-        }
+      if (event.stopped) {
+        break;
       }
     }
 
