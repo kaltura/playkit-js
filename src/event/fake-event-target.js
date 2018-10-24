@@ -81,7 +81,8 @@ class FakeEventTarget {
       event.currentTarget = this.dispatchTarget;
 
       let listener = list[i];
-      if (this._listeners.get(event.type).indexOf(listener) > -1) {
+      if (this._listeners.get(event.type).includes(listener)) {
+        // maybe the listener is no longer exist in the original listeners list (consider a previous listener that remove the all listeners)
         try {
           if (listener.handleEvent) {
             listener.handleEvent(event);
