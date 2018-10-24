@@ -70,32 +70,32 @@ class FakeEventTarget {
   dispatchEvent(event: FakeEvent) {
     // In many browsers, it is complex to overwrite properties of actual Events.
     // Here we expect only to dispatch FakeEvents, which are simpler.
-    //goog.asserts.assert(event instanceof FakeEvent,
+    // goog.asserts.assert(event instanceof FakeEvent,
     //    'FakeEventTarget can only dispatch FakeEvents!');
 
-    let list = this._listeners.get(event.type) || [];
+    if (this._listeners.has(event.type)) {
+      for (let i = 0; i < this._listeners.get(event.type).length; ++i) {
+        // Do this every time, since events can be re-dispatched from handlers.
+        event.target = this.dispatchTarget;
+        event.currentTarget = this.dispatchTarget;
 
-    for (let i = 0; i < list.length; ++i) {
-      // Do this every time, since events can be re-dispatched from handlers.
-      event.target = this.dispatchTarget;
-      event.currentTarget = this.dispatchTarget;
-
-      let listener = list[i];
-      try {
-        if (listener.handleEvent) {
-          listener.handleEvent(event);
-        } else {
-          listener.call(this, event);
+        let listener = this._listeners.get(event.type)[i];
+        try {
+          if (listener.handleEvent) {
+            listener.handleEvent(event);
+          } else {
+            listener.call(this, event);
+          }
+        } catch (exception) {
+          // Exceptions during event handlers should not affect the caller,
+          // but should appear on the console as uncaught, according to MDN:
+          // http://goo.gl/N6Ff27
+          // TODO: add log
         }
-      } catch (exception) {
-        // Exceptions during event handlers should not affect the caller,
-        // but should appear on the console as uncaught, according to MDN:
-        // http://goo.gl/N6Ff27
-        // TODO: add log
-      }
 
-      if (event.stopped) {
-        break;
+        if (event.stopped) {
+          break;
+        }
       }
     }
 
