@@ -81,20 +81,17 @@ class FakeEventTarget {
       event.currentTarget = this.dispatchTarget;
 
       let listener = list[i];
-      if (this._listeners.get(event.type).includes(listener)) {
-        // maybe the listener is no longer exist in the original listeners list (consider a previous listener that remove the all listeners)
-        try {
-          if (listener.handleEvent) {
-            listener.handleEvent(event);
-          } else {
-            listener.call(this, event);
-          }
-        } catch (exception) {
-          // Exceptions during event handlers should not affect the caller,
-          // but should appear on the console as uncaught, according to MDN:
-          // http://goo.gl/N6Ff27
-          // TODO: add log
+      try {
+        if (listener.handleEvent) {
+          listener.handleEvent(event);
+        } else {
+          listener.call(this, event);
         }
+      } catch (exception) {
+        // Exceptions during event handlers should not affect the caller,
+        // but should appear on the console as uncaught, according to MDN:
+        // http://goo.gl/N6Ff27
+        // TODO: add log
       }
 
       if (event.stopped) {

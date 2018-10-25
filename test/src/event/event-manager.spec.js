@@ -45,19 +45,6 @@ describe('unlisten', function() {
     eventManager._bindingMap.get('event')[0].listener.should.equal(listener2);
     eventTarget.dispatchEvent({type: 'event'});
   });
-
-  it('should not call to a removed listener', done => {
-    let listener1 = () => {
-      eventManager.unlisten(eventTarget, 'event', listener2);
-      done();
-    };
-    let listener2 = () => {
-      done(new Error('test fail'));
-    };
-    eventManager.listen(eventTarget, 'event', listener1);
-    eventManager.listen(eventTarget, 'event', listener2);
-    eventTarget.dispatchEvent({type: 'event'});
-  });
 });
 
 describe('one', function() {
