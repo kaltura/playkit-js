@@ -941,4 +941,50 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
     return extended;
   }
+
+  enterPip(): void {
+    try {
+      // Currently it's supported in chrome and in safari. So if we consider checking support before,
+      // we can use this flag to distinguish between two. In the future we might need a different method.
+      if (document.pictureInPictureEnabled) {
+        this._el
+          .requestPictureInPicture()
+          .catch(error =>
+            this.dispatchEvent(new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.CANNOT_ENTER_PICTURE_IN_PICTURE, error))
+          );
+      } else {
+        this._el.webkitSetPresentationMode('picture-in-picture');
+      }
+      this.dispatchEvent(new FakeEvent(CustomEventType.ENTER_PICTURE_IN_PICTURE));
+    } catch (error) {
+      this.dispatchEvent(new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.CANNOT_ENTER_PICTURE_IN_PICTURE, error));
+    }
+  }
+
+  exitPip(): void {
+    try {
+      // Currently it's supported in chrome and in safari. So if we consider checking support before,
+      // we can use this flag to distinguish between two. In the future we might need a different method.
+      if (document.pictureInPictureEnabled) {
+        document
+          .exitPictureInPicture()
+          .catch(error =>
+            this.dispatchEvent(new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.CANNOT_EXIT_PICTURE_IN_PICTURE, error))
+          );
+      } else {
+        this._el.webkitSetPresentationMode('inline');
+      }
+      this.dispatchEvent(new FakeEvent(CustomEventType.EXIT_PICTURE_IN_PICTURE));
+    } catch (error) {
+      this.dispatchEvent(new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.CANNOT_ENTER_PICTURE_IN_PICTURE, error));
+    }
+  }
+
+  isPipSupported(): boolean {
+    if (document.pictureInPictureEnabled || (this._el.webkitSupportsPresentationMode && typeof this._el.webkitSetPresentationMode === 'function')) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

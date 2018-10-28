@@ -201,7 +201,15 @@ const CustomEventType: PKEventTypes = {
   /**
    * Fired when the vr stereo mode changed
    */
-  VR_STEREO_MODE_CHANGED: 'vrstereomodechanged'
+  VR_STEREO_MODE_CHANGED: 'vrstereomodechanged',
+  /**
+   * Fired when the engine entered picture in picture
+   */
+  ENTER_PICTURE_IN_PICTURE: 'enterpictureinpicture',
+  /**
+   * Fired when the engine exited picture in picture
+   */
+  EXIT_PICTURE_IN_PICTURE: 'exitpictureinpicture'
 };
 
 const EventType: PKEventTypes = Utils.Object.merge([Html5EventType, CustomEventType, AdEventType]);

@@ -526,6 +526,16 @@ const Code: CodeType = {
    * When the load API called without compatible engine to play the source
    */
   NO_ENGINE_FOUND_TO_PLAY_THE_SOURCE: 7007,
+  /**
+   * Cannot enter picture in picture mode. Check browser compatibility. More information can be found in the data
+   * object
+   */
+  CANNOT_ENTER_PICTURE_IN_PICTURE: 7008,
+  /**
+   * Cannot exit picture in picture mode. Check browser compatibility. More information can be found in the data
+   * object
+   */
+  CANNOT_EXIT_PICTURE_IN_PICTURE: 7009,
 
   /**
    * The Cast API is unavailable.  This may be because of one of the following:

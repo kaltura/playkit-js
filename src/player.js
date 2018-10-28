@@ -393,6 +393,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _adsController: ?AdsController;
+  /**
+   * holds the picture in picture mode
+   * @type {boolean}
+   * @private
+   */
+  _isInPip: boolean = false;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -1210,6 +1216,55 @@ export default class Player extends FakeEventTarget {
 
   // </editor-fold>
 
+  // <editor-fold desc="PIP API">
+
+  /**
+   * Request the player to enter picture in picture mode
+   * @public
+   * @returns {void}
+   */
+  enterPictureInPicture(): void {
+    if (!this._isInPip) {
+      this._engine.enterPip();
+    }
+  }
+
+  /**
+   * Request the player to exit picture in picture mode
+   * @public
+   * @returns {void}
+   */
+  exitPictureInPicture(): void {
+    if (this._isInPip) {
+      this._engine.exitPip();
+    }
+  }
+
+  /**
+   * Check if the player is in picture in picture mode
+   * @public
+   * @return {boolean} if the player is in picture in picture mode or not
+   */
+  isInPictureInPicture(): boolean {
+    return this._isInPip;
+  }
+
+  /**
+   * Check if picture in picture supported in this environment
+   * @public
+   * @return {boolean} if the picture in picture feature is supported in this environment
+   */
+  isPictureInPictureSupported(): boolean {
+    return this._engine.isPipSupported();
+  }
+
+  _handlePipEvent(event: FakeEvent): void {
+    this._isInPip = !this._isInPip;
+    this.dispatcEvent(event);
+  }
+
+  // </editor-fold>
+
   // <editor-fold desc="VR API">
 
   /**
@@ -1507,6 +1562,8 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(window, RESIZE, () => {
         this._resetTextCuesAndReposition();
       });
+      this._eventManager.listen(this._engine, CustomEventType.ENTER_PICTURE_IN_PICTURE, event => this._handlePipEvent(event));
+      this._eventManager.listen(this._engine, CustomEventType.EXIT_PICTURE_IN_PICTURE, event => this._handlePipEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => {
         this._handleRecovered();
       });
