@@ -37,7 +37,6 @@ import {AdTagType} from './ads/ad-tag-type';
 import {AdsController} from './ads/ads-controller';
 import {AdEventType} from './ads/ad-event-type';
 import {ControllerProvider} from './controller/controller-provider';
-import {EXCEEDED_MAX_FRAME_DROP} from './engines/dropped-frames-watcher';
 
 /**
  * The black cover class name.
@@ -1495,22 +1494,11 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this, CustomEventType.ENTER_FULLSCREEN, () => this._resetTextCuesAndReposition());
       this._eventManager.listen(this, CustomEventType.EXIT_FULLSCREEN, () => this._resetTextCuesAndReposition());
       this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => this._handleRecovered());
-      this._eventManager.listen(this._engine, EXCEEDED_MAX_FRAME_DROP, event => this._handleFrameDrop(event));
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) =>
         this._onTextTrackChanged(event)
       );
       this._eventManager.listen(this._externalCaptionsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
-    }
-  }
-
-  _handleFrameDrop(event: FakeEvent): void {
-    const videoTracks = ((this._getTracksByType(TrackType.VIDEO): any): Array<VideoTrack>);
-    const sortedVideoTracks = videoTracks.sort((trackA, trackB) => trackA.bandwidth - trackB.bandwidth);
-    const currentBandwidthTrackIndex = sortedVideoTracks.findIndex(track => track.bandwidth && track.bandwidth === event.payload.bandwidth);
-    // not out of the array boundaries
-    if (currentBandwidthTrackIndex - 1 >= 0) {
-      this.selectTrack(sortedVideoTracks[currentBandwidthTrackIndex - 1]);
     }
   }
 

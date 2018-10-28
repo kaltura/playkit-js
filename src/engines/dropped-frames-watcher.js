@@ -1,10 +1,6 @@
 // @flow
 import FakeEventTarget from '../event/fake-event-target';
-import FakeEvent from '../event/fake-event';
-import {CustomEventType} from '../event/event-type';
 import getLogger from '../utils/logger';
-
-const EXCEEDED_MAX_FRAME_DROP: string = 'exceededmaxframerop';
 
 class DroppedFramesWatcher extends FakeEventTarget {
   _droppedFramesInterval: ?number = null;
@@ -19,6 +15,9 @@ class DroppedFramesWatcher extends FakeEventTarget {
   constructor(mediaSourceAdapter: IMediaSourceAdapter, config: Object, videoElement: HTMLVideoElement) {
     super();
     this._mediaSourceAdapter = mediaSourceAdapter;
+    if (this._mediaSourceAdapter.hasFPSDropMechanism) {
+      return;
+    }
     this._config = config;
     this._videoElement = videoElement;
     this._droppedFramesInterval = setInterval(() => this._maybeAdjustBitrateQuality(), this._config.fpsDroppedFramesInterval);
@@ -46,11 +45,7 @@ class DroppedFramesWatcher extends FakeEventTarget {
           if (droppedFPS > 0) {
             DroppedFramesWatcher._logger.debug('checkFPS : droppedFPS/decodedFPS:' + droppedFPS / ((1000 * currentDecoded) / currentPeriod));
             if (currentDropped > this._config.fpsDroppedMonitoringThreshold * currentDecoded) {
-              const currentBandwidth = this._mediaSourceAdapter.getCurrentQuality();
-              DroppedFramesWatcher._logger.debug('drop FPS ratio greater than max allowed value for current birate: ' + currentBandwidth);
-              if (currentBandwidth > 0) {
-                this.dispatchEvent(new FakeEvent(CustomEventType.EXCEEDED_MAX_FRAME_DROP, {bandwidth: currentBandwidth}));
-              }
+              this._mediaSourceAdapter.restrictBandwidth();
             }
           }
         }
@@ -71,4 +66,4 @@ class DroppedFramesWatcher extends FakeEventTarget {
   }
 }
 
-export {DroppedFramesWatcher, EXCEEDED_MAX_FRAME_DROP};
+export {DroppedFramesWatcher};
