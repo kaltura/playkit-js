@@ -1807,7 +1807,8 @@ export default class Player extends FakeEventTarget {
         this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_ENDED));
       });
     } else {
-      this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_ENDED));
+      // Make sure the all ENDED listeners have been invoked
+      setTimeout(() => this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_ENDED)), 0);
     }
     if (!this.paused) {
       this._pause();
