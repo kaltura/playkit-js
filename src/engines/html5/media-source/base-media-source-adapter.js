@@ -40,6 +40,12 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   _videoElement: HTMLVideoElement;
 
   /**
+   * The adapter capabilites
+   * @private
+   */
+  _capabilites: Object = {fpsControl: false};
+
+  /**
    * Checks if the media source adapter is supported.
    * @function isSupported
    * @returns {boolean} - Whether the media source adapter is supported.
@@ -146,8 +152,8 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return BaseMediaSourceAdapter._throwNotImplementedError('isLive');
   }
 
-  getCurrentQuality(): number {
-    return BaseMediaSourceAdapter._throwNotImplementedError('getCurrentQuality');
+  setMaxBitrate(bitrate: number): void {
+    return;
   }
 
   /**
@@ -237,5 +243,9 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
       return this._sourceObj.url;
     }
     return '';
+  }
+
+  get capabilites(): Object {
+    return this._capabilites;
   }
 }
