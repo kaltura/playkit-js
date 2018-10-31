@@ -5,6 +5,8 @@ import {CustomEventType} from '../event/event-type';
 import EventManager from '../event/event-manager';
 import FakeEvent from '../event/fake-event';
 
+const NOT_SUPPORTED: number = -1;
+
 class DroppedFramesWatcher extends FakeEventTarget {
   _droppedFramesInterval: ?number = null;
   _lastDroppedFrames: number = 0;
@@ -27,7 +29,11 @@ class DroppedFramesWatcher extends FakeEventTarget {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.FPS_DROP, event => this._triggerFPSDrop(event.payload.data));
       return;
     }
-    this._init();
+    if (this._getDroppedAndDecodedFrames()[0] === NOT_SUPPORTED) {
+      DroppedFramesWatcher._logger.debug('Dropped frame watcher is not supported on this environment');
+    } else {
+      this._init();
+    }
   }
 
   _init(): void {
@@ -36,24 +42,26 @@ class DroppedFramesWatcher extends FakeEventTarget {
       CustomEventType.VIDEO_TRACK_CHANGED,
       event => (this._currentBitrate = event.payload.selectedVideoTrack.bandwidth)
     );
-    this._droppedFramesInterval = setInterval(() => this._checkBitrateQuality(), this._config.fpsDroppedFramesInterval);
+    this._droppedFramesInterval = setInterval(() => this._checkFPS(), this._config.fpsDroppedFramesInterval);
   }
 
   _triggerFPSDrop(data: Object): void {
     this.dispatchEvent(new FakeEvent(CustomEventType.FPS_DROP, data));
   }
 
-  _checkBitrateQuality(): void {
+  _getDroppedAndDecodedFrames(): [number, number] {
     if (typeof this._videoElement.getVideoPlaybackQuality === 'function') {
       const videoPlaybackQuality = this._videoElement.getVideoPlaybackQuality();
-      this._checkFPS(videoPlaybackQuality.droppedVideoFrames, videoPlaybackQuality.totalVideoFrames);
+      return [videoPlaybackQuality.droppedVideoFrames, videoPlaybackQuality.totalVideoFrames];
+    } else if (typeof this._videoElement.webkitDroppedFrameCount == 'number' && typeof this._videoElement.webkitDecodedFrameCount == 'number') {
+      return [this._videoElement.webkitDroppedFrameCount, this._videoElement.webkitDecodedFrameCount];
     } else {
-      // $FlowFixMe
-      this._checkFPS(this._videoElement.webkitDroppedFrameCount, this._videoElement.webkitDecodedFrameCount);
+      return [NOT_SUPPORTED, NOT_SUPPORTED];
     }
   }
 
-  _checkFPS(droppedFrames: number, decodedFrames: number): void {
+  _checkFPS(): void {
+    const [droppedFrames, decodedFrames] = this._getDroppedAndDecodedFrames();
     try {
       const currentTime = performance.now();
       if (decodedFrames) {
@@ -88,6 +96,7 @@ class DroppedFramesWatcher extends FakeEventTarget {
       clearInterval(this._droppedFramesInterval);
     }
     this._droppedFramesInterval = null;
+    this._eventManager.destroy();
   }
 }
 
