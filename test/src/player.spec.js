@@ -2857,6 +2857,32 @@ describe('Player', function() {
     });
   });
 
+  describe('on resize event', function() {
+    let config, player, sandbox;
+
+    beforeEach(() => {
+      sandbox = sinon.sandbox.create();
+      config = getConfigStructure();
+      config.sources = sourcesConfig.Mp4;
+      player = new Player(config);
+    });
+
+    afterEach(() => {
+      sandbox.restore();
+      player.destroy();
+    });
+
+    it('should call _resetTextCuesAndReposition function', done => {
+      let spy = sandbox.spy(player, '_resetTextCuesAndReposition');
+      const event = new Event('resize');
+      window.dispatchEvent(event);
+      setTimeout(() => {
+        spy.should.have.been.calledOnce;
+        done();
+      }, 500);
+    });
+  });
+
   describe('logger', () => {
     it('should return the current log level', () => {
       const player = new Player();
