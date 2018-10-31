@@ -53,7 +53,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @type {boolean}
    * @private
    */
-  _isInPip: boolean = false;
+  _isInPictureInPicture: boolean = false;
 
   /**
    * The html5 class logger.
@@ -948,7 +948,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return extended;
   }
 
-  enterPip(): void {
+  enterPictureInPicture(): void {
     try {
       // Currently it's supported in chrome and in safari. So if we consider checking support before,
       // we can use this flag to distinguish between two. In the future we might need a different method.
@@ -961,13 +961,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       } else {
         this._el.webkitSetPresentationMode('picture-in-picture');
       }
-      this._isInPip = true;
+      this._isInPictureInPicture = true;
     } catch (error) {
       this.dispatchEvent(new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.CANNOT_ENTER_PICTURE_IN_PICTURE, error));
     }
   }
 
-  exitPip(): void {
+  exitPictureInPicture(): void {
     try {
       // Currently it's supported in chrome and in safari. So if we consider checking support before,
       // we can use this flag to distinguish between two. In the future we might need a different method.
@@ -980,21 +980,24 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       } else {
         this._el.webkitSetPresentationMode('inline');
       }
-      this._isInPip = false;
+      this._isInPictureInPicture = false;
     } catch (error) {
       this.dispatchEvent(new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.CANNOT_ENTER_PICTURE_IN_PICTURE, error));
     }
   }
 
-  isPipSupported(): boolean {
-    if (document.pictureInPictureEnabled || (this._el.webkitSupportsPresentationMode && typeof this._el.webkitSetPresentationMode === 'function')) {
+  isPictureInPictureSupported(): boolean {
+    if (
+      document.pictureInPictureEnabled ||
+      (this._el.webkitSupportsPresentationMode && this._el.webkitSupportsPresentationMode('picture-in-picture'))
+    ) {
       return true;
     } else {
       return false;
     }
   }
 
-  get isInPip(): boolean {
-    return this._isInPip;
+  get isInPictureInPicture(): boolean {
+    return this._isInPictureInPicture;
   }
 }

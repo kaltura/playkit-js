@@ -1210,7 +1210,7 @@ export default class Player extends FakeEventTarget {
 
   // </editor-fold>
 
-  // <editor-fold desc="PIP API">
+  // <editor-fold desc="Picture In Picture API">
 
   /**
    * Request the player to enter picture in picture mode
@@ -1218,8 +1218,8 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   enterPictureInPicture(): void {
-    if (!this._engine.isInPip) {
-      this._engine.enterPip();
+    if (!this._engine.isInPictureInPicture) {
+      this._engine.enterPictureInPicture();
     }
   }
 
@@ -1229,8 +1229,8 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   exitPictureInPicture(): void {
-    if (this._engine.isInPip) {
-      this._engine.exitPip();
+    if (this._engine.isInPictureInPicture) {
+      this._engine.exitPictureInPicture();
     }
   }
 
@@ -1240,7 +1240,7 @@ export default class Player extends FakeEventTarget {
    * @return {boolean} if the player is in picture in picture mode or not
    */
   isInPictureInPicture(): boolean {
-    return this._engine.isInPip;
+    return this._engine.isInPictureInPicture;
   }
 
   /**
@@ -1249,7 +1249,7 @@ export default class Player extends FakeEventTarget {
    * @return {boolean} if the picture in picture feature is supported in this environment
    */
   isPictureInPictureSupported(): boolean {
-    return this._engine.isPipSupported();
+    return this._engine.isPictureInPictureSupported();
   }
 
   // </editor-fold>
