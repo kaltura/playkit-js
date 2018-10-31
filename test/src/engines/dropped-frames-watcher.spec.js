@@ -17,7 +17,7 @@ describe('constructor', function() {
 
   it('should create droppedFramesWatcher and listen to the adapter FPS_DROP', () => {
     const hlsAdapter = new FakeHlsAdapter();
-    hlsAdapter.capabilites = {
+    hlsAdapter.capabilities = {
       fpsControl: true
     };
     hlsAdapter.addEventListener = () => {};
@@ -29,7 +29,7 @@ describe('constructor', function() {
 
   it('should create droppedFramesWatcher and listen to the adapter VIDEO_TRACK_CHANGED', () => {
     const dashAdapter = new FakeDashAdapter();
-    dashAdapter.capabilites = {
+    dashAdapter.capabilities = {
       fpsControl: false
     };
     dashAdapter.addEventListener = () => {};
@@ -41,7 +41,7 @@ describe('constructor', function() {
 
   it('should update currentBitrate with the the one from the event', done => {
     const dashAdapter = new FakeDashAdapter();
-    dashAdapter.capabilites = {
+    dashAdapter.capabilities = {
       fpsControl: false
     };
     const dfw = new DroppedFramesWatcher(dashAdapter, {}, videoElement);
@@ -54,86 +54,95 @@ describe('constructor', function() {
 
   it('should set the interval', () => {
     const dashAdapter = new FakeDashAdapter();
-    dashAdapter.capabilites = {
+    dashAdapter.capabilities = {
       fpsControl: false
     };
     const dfw = new DroppedFramesWatcher(dashAdapter, {}, videoElement);
     dfw._droppedFramesInterval.should.not.equal(null);
   });
+});
 
-  describe('_checkBitrateQuality function ', function() {
-    let videoElement, sandbox;
-    videoElement = document.createElement('video');
+describe('_getDroppedAndDecodedFrames function ', function() {
+  let videoElement, sandbox;
+  videoElement = document.createElement('video');
 
-    beforeEach(() => {
-      sandbox = sinon.sandbox.create();
-    });
-
-    afterEach(() => {
-      sandbox = sandbox.restore();
-    });
-
-    it('should call _checkFPS once', () => {
-      const dashAdapter = new FakeDashAdapter();
-      dashAdapter.capabilites = {
-        fpsControl: false
-      };
-      const dfw = new DroppedFramesWatcher(dashAdapter, {}, videoElement);
-      let spy = sandbox.spy(dfw, '_checkFPS');
-      dfw._checkBitrateQuality();
-      spy.should.have.been.calledOnce;
-    });
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
   });
 
-  describe('_checkFPS function ', function() {
-    let videoElement, sandbox;
-    videoElement = document.createElement('video');
+  afterEach(() => {
+    sandbox = sandbox.restore();
+  });
 
-    beforeEach(() => {
-      sandbox = sinon.sandbox.create();
-    });
+  it('should return [0,0] for the decoded and dropped frames', () => {
+    const dashAdapter = new FakeDashAdapter();
+    dashAdapter.capabilities = {
+      fpsControl: false
+    };
+    const dfw = new DroppedFramesWatcher(dashAdapter, {}, videoElement);
+    const [first, second] = dfw._getDroppedAndDecodedFrames();
+    first.should.equal(0);
+    second.should.equal(0);
+  });
+});
 
-    afterEach(() => {
-      sandbox = sandbox.restore();
-    });
+describe('_checkFPS function ', function() {
+  let videoElement, sandbox;
+  videoElement = document.createElement('video');
 
-    it('should set currentTime from 0 to the the currentTime', () => {
-      const dashAdapter = new FakeDashAdapter();
-      dashAdapter.capabilites = {
-        fpsControl: false
-      };
-      const dfw = new DroppedFramesWatcher(dashAdapter, {}, videoElement);
-      dfw._lastTime.should.equal(0);
-      dfw._checkFPS(5, 10);
-      dfw._lastTime.should.not.equal(0);
-    });
-    it('should not call setMaxBitrate', () => {
-      const dashAdapter = new FakeDashAdapter();
-      dashAdapter.capabilites = {
-        fpsControl: false
-      };
-      dashAdapter.setMaxBitrate = () => {};
-      let spy = sandbox.spy(dashAdapter, 'setMaxBitrate');
-      const dfw = new DroppedFramesWatcher(dashAdapter, {fpsDroppedMonitoringThreshold: 1}, videoElement);
-      dfw._lastTime = performance.now() - 5000;
-      dfw._lastDroppedFrames = 2;
-      dfw._lastDecodedFrames = 3;
-      dfw._checkFPS(5, 10);
-      spy.should.have.been.not.calledOnce;
-    });
-    it('should call setMaxBitrate', () => {
-      const dashAdapter = new FakeDashAdapter();
-      dashAdapter.capabilites = {
-        fpsControl: false
-      };
-      dashAdapter.setMaxBitrate = () => {};
-      let spy = sandbox.spy(dashAdapter, 'setMaxBitrate');
-      const dfw = new DroppedFramesWatcher(dashAdapter, {fpsDroppedMonitoringThreshold: 1}, videoElement);
-      dfw._lastTime = performance.now() - 5000;
-      dfw._lastDroppedFrames = 2;
-      dfw._lastDecodedFrames = 3;
-      dfw._checkFPS(10, 5);
-      spy.should.have.been.calledOnce;
-    });
+  beforeEach(() => {
+    sandbox = sinon.sandbox.create();
+  });
+
+  afterEach(() => {
+    sandbox = sandbox.restore();
+  });
+
+  it('should set currentTime from 0 to the the currentTime', () => {
+    const dashAdapter = new FakeDashAdapter();
+    dashAdapter.capabilities = {
+      fpsControl: false
+    };
+    const dfw = new DroppedFramesWatcher(dashAdapter, {}, videoElement);
+    dfw._lastTime.should.equal(0);
+    dfw._getDroppedAndDecodedFrames = function() {
+      return [5, 10];
+    };
+    dfw._checkFPS(5, 10);
+    dfw._lastTime.should.not.equal(0);
+  });
+  it('should not call setMaxBitrate', () => {
+    const dashAdapter = new FakeDashAdapter();
+    dashAdapter.capabilities = {
+      fpsControl: false
+    };
+    dashAdapter.setMaxBitrate = () => {};
+    let spy = sandbox.spy(dashAdapter, 'setMaxBitrate');
+    const dfw = new DroppedFramesWatcher(dashAdapter, {fpsDroppedMonitoringThreshold: 1}, videoElement);
+    dfw._lastTime = performance.now() - 5000;
+    dfw._lastDroppedFrames = 2;
+    dfw._lastDecodedFrames = 3;
+    dfw._getDroppedAndDecodedFrames = function() {
+      return [5, 10];
+    };
+    dfw._checkFPS();
+    spy.should.have.been.not.calledOnce;
+  });
+  it('should call setMaxBitrate', () => {
+    const dashAdapter = new FakeDashAdapter();
+    dashAdapter.capabilities = {
+      fpsControl: false
+    };
+    dashAdapter.setMaxBitrate = () => {};
+    let spy = sandbox.spy(dashAdapter, 'setMaxBitrate');
+    const dfw = new DroppedFramesWatcher(dashAdapter, {fpsDroppedMonitoringThreshold: 1}, videoElement);
+    dfw._lastTime = performance.now() - 5000;
+    dfw._lastDroppedFrames = 2;
+    dfw._lastDecodedFrames = 3;
+    dfw._getDroppedAndDecodedFrames = function() {
+      return [10, 5];
+    };
+    dfw._checkFPS();
+    spy.should.have.been.calledOnce;
   });
 });
