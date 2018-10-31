@@ -23,7 +23,7 @@ class DroppedFramesWatcher extends FakeEventTarget {
     this._mediaSourceAdapter = mediaSourceAdapter;
     this._config = config;
     this._videoElement = videoElement;
-    if (this._mediaSourceAdapter.capabilites.fpsControl) {
+    if (this._mediaSourceAdapter.capabilities.fpsControl) {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.FPS_DROP, event => this._triggerFPSDrop(event.payload.data));
       return;
     }

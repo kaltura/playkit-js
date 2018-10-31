@@ -40,10 +40,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   _videoElement: HTMLVideoElement;
 
   /**
-   * The adapter capabilites
+   * The adapter capabilities
    * @private
    */
-  _capabilites: Object = {fpsControl: false};
+  _capabilities: PKMediaSourceCapabilities = {fpsControl: false};
 
   /**
    * Checks if the media source adapter is supported.
@@ -245,7 +245,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return '';
   }
 
-  get capabilites(): Object {
-    return this._capabilites;
+  get capabilities(): PKMediaSourceCapabilities {
+    return this._capabilities;
   }
 }

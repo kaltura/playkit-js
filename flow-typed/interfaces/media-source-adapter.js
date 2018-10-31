@@ -7,7 +7,7 @@ declare interface IMediaSourceAdapter {
   +src: string;
   currentTime: number;
   +duration: number;
-  +capabilites: Object;
+  +capabilities: PKMediaSourceCapabilities;
   load(startTime: ?number): Promise<Object>;
   handleMediaError(error: ?MediaError): boolean;
   destroy(): Promise<*>;
