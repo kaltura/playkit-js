@@ -48,6 +48,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _canLoadMediaSourceAdapterPromise: Promise<*>;
+  /**
+   * State of the picture in picture
+   * @type {boolean}
+   * @private
+   */
+  _isInPip: boolean = false;
 
   /**
    * The html5 class logger.
@@ -955,7 +961,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       } else {
         this._el.webkitSetPresentationMode('picture-in-picture');
       }
-      this.dispatchEvent(new FakeEvent(CustomEventType.ENTER_PICTURE_IN_PICTURE));
+      this._isInPip = true;
     } catch (error) {
       this.dispatchEvent(new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.CANNOT_ENTER_PICTURE_IN_PICTURE, error));
     }
@@ -974,7 +980,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       } else {
         this._el.webkitSetPresentationMode('inline');
       }
-      this.dispatchEvent(new FakeEvent(CustomEventType.EXIT_PICTURE_IN_PICTURE));
+      this._isInPip = false;
     } catch (error) {
       this.dispatchEvent(new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.CANNOT_ENTER_PICTURE_IN_PICTURE, error));
     }
@@ -986,5 +992,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     } else {
       return false;
     }
+  }
+
+  get isInPip(): boolean {
+    return this._isInPip;
   }
 }

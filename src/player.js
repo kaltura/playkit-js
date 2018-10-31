@@ -393,12 +393,6 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _adsController: ?AdsController;
-  /**
-   * holds the picture in picture mode
-   * @type {boolean}
-   * @private
-   */
-  _isInPip: boolean = false;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -1224,7 +1218,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   enterPictureInPicture(): void {
-    if (!this._isInPip) {
+    if (!this._engine.isInPip) {
       this._engine.enterPip();
     }
   }
@@ -1235,7 +1229,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   exitPictureInPicture(): void {
-    if (this._isInPip) {
+    if (this._engine.isInPip) {
       this._engine.exitPip();
     }
   }
@@ -1246,7 +1240,7 @@ export default class Player extends FakeEventTarget {
    * @return {boolean} if the player is in picture in picture mode or not
    */
   isInPictureInPicture(): boolean {
-    return this._isInPip;
+    return this._engine.isInPip;
   }
 
   /**
@@ -1256,11 +1250,6 @@ export default class Player extends FakeEventTarget {
    */
   isPictureInPictureSupported(): boolean {
     return this._engine.isPipSupported();
-  }
-
-  _handlePipEvent(event: FakeEvent): void {
-    this._isInPip = !this._isInPip;
-    this.dispatcEvent(event);
   }
 
   // </editor-fold>
@@ -1562,8 +1551,6 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(window, RESIZE, () => {
         this._resetTextCuesAndReposition();
       });
-      this._eventManager.listen(this._engine, CustomEventType.ENTER_PICTURE_IN_PICTURE, event => this._handlePipEvent(event));
-      this._eventManager.listen(this._engine, CustomEventType.EXIT_PICTURE_IN_PICTURE, event => this._handlePipEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => {
         this._handleRecovered();
       });
