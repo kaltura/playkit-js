@@ -12,6 +12,7 @@ import * as Utils from '../../utils/util';
 import Html5AutoPlayCapability from './capabilities/html5-autoplay';
 import Error from '../../error/error';
 import getLogger from '../../utils/logger';
+import {DroppedFramesWatcher} from '../dropped-frames-watcher';
 
 /**
  * Html5 engine for playback.
@@ -48,6 +49,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _canLoadMediaSourceAdapterPromise: Promise<*>;
+  _droppedFramesWatcher: DroppedFramesWatcher;
 
   /**
    * The html5 class logger.
@@ -209,6 +211,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   destroy(): void {
     this.detach();
+    this._droppedFramesWatcher.destroy();
     if (this._el) {
       this.pause();
       Utils.Dom.removeAttribute(this._el, 'src');
@@ -258,6 +261,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.PLAYING, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.WAITING, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.MEDIA_RECOVERED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._droppedFramesWatcher, CustomEventType.FPS_DROP, (event: FakeEvent) => this.dispatchEvent(event));
     }
   }
 
@@ -845,6 +849,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _loadMediaSourceAdapter(source: PKMediaSourceObject): void {
     this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter(this.getVideoElement(), source, this._config);
+    if (this._mediaSourceAdapter) {
+      this._droppedFramesWatcher = new DroppedFramesWatcher(this._mediaSourceAdapter, this._config.playback, this._el);
+    }
   }
 
   /**
