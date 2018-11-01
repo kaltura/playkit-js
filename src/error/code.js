@@ -527,15 +527,9 @@ const Code: CodeType = {
    */
   NO_ENGINE_FOUND_TO_PLAY_THE_SOURCE: 7007,
   /**
-   * Cannot enter picture in picture mode. Check browser compatibility. More information can be found in the data
-   * object
+   * An error occured while trying to enter / exit picture in picture mode, more info in the data
    */
-  CANNOT_ENTER_PICTURE_IN_PICTURE: 7008,
-  /**
-   * Cannot exit picture in picture mode. Check browser compatibility. More information can be found in the data
-   * object
-   */
-  CANNOT_EXIT_PICTURE_IN_PICTURE: 7009,
+  PICTURE_IN_PICTURE_FAILURE: 7008,
 
   /**
    * The Cast API is unavailable.  This may be because of one of the following:
