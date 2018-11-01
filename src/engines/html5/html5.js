@@ -850,7 +850,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _loadMediaSourceAdapter(source: PKMediaSourceObject): void {
     this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter(this.getVideoElement(), source, this._config);
     if (this._mediaSourceAdapter) {
-      this._droppedFramesWatcher = new DroppedFramesWatcher(this._mediaSourceAdapter, this._config.playback, this._el);
+      this._droppedFramesWatcher = new DroppedFramesWatcher(this._mediaSourceAdapter, this._config.abr, this._el);
     }
   }
 

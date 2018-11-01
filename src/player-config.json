@@ -16,8 +16,6 @@
     "captionsTextTrack1LanguageCode": "en",
     "captionsTextTrack2Label": "Spanish",
     "captionsTextTrack2LanguageCode": "es",
-    "fpsDroppedFramesInterval": 5000,
-    "fpsDroppedMonitoringThreshold": 0.2,
     "volume": 1,
     "startTime": -1,
     "playsinline": true,
@@ -54,5 +52,10 @@
         "format": "hls"
       }
     ]
+  },
+  "abr": {
+    "fpsDroppedFramesInterval": 5000,
+    "fpsDroppedMonitoringThreshold": 0.2,
+    "capLevelOnFPSDrop": true
   }
 }
