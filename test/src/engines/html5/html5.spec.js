@@ -17,9 +17,10 @@ describe('Html5', () => {
     const progressiveSource = sourcesConfig.Mp4.progressive[0];
     const config = {
       sources: sourcesConfig.Mp4,
-      playback: {
+      abr: {
         fpsDroppedFramesInterval: 5000,
-        fpsDroppedMonitoringThreshold: 0.2
+        fpsDroppedMonitoringThreshold: 0.2,
+        capLevelOnFPSDrop: true
       }
     };
     const engine = Html5.createEngine(progressiveSource, config);
@@ -33,9 +34,10 @@ describe('Html5', () => {
     const progressiveSource = sourcesConfig.Mp4.progressive[0];
     const config = {
       sources: sourcesConfig.Mp4,
-      playback: {
+      abr: {
         fpsDroppedFramesInterval: 5000,
-        fpsDroppedMonitoringThreshold: 0.2
+        fpsDroppedMonitoringThreshold: 0.2,
+        capLevelOnFPSDrop: true
       }
     };
     const engine = Html5.createEngine(progressiveSource, config);
@@ -56,9 +58,10 @@ describe('Html5', () => {
     const progressiveSource = sourcesConfig.Mp4.progressive[0];
     const config = {
       sources: sourcesConfig.Mp4,
-      playback: {
+      abr: {
         fpsDroppedFramesInterval: 5000,
-        fpsDroppedMonitoringThreshold: 0.2
+        fpsDroppedMonitoringThreshold: 0.2,
+        capLevelOnFPSDrop: true
       }
     };
     const engine = Html5.createEngine(progressiveSource, config);
