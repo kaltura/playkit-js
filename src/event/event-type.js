@@ -98,7 +98,11 @@ const Html5EventType: PKEventTypes = {
   /**
    * Fires when the engine exits picture in picture
    */
-  LEAVE_PICTURE_IN_PICTURE: 'leavepictureinpicture'
+  LEAVE_PICTURE_IN_PICTURE: 'leavepictureinpicture',
+  /**
+   * Fires when the engine changes presentation mode on safari webkitpresentationmodechanged
+   */
+  WEBKIT_PRESENTATION_MODE_CHANGED: 'webkitpresentationmodechanged'
 };
 
 const CustomEventType: PKEventTypes = {
