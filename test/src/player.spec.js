@@ -14,12 +14,12 @@ import NumbersPlugin from './plugin/test-plugins/numbers-plugin';
 import Locale from '../../src/utils/locale';
 import Html5 from '../../src/engines/html5/html5';
 import Error from '../../src/error/error';
-import {Object} from '../../src/utils/util';
+import {Object as PKObject} from '../../src/utils/util';
 import {LabelOptions} from '../../src/track/label-options';
 import {EngineProvider} from '../../src/engines/engine-provider';
 
 const targetId = 'player-placeholder_player.spec';
-let sourcesConfig = Object.copyDeep(SourcesConfig);
+let sourcesConfig = PKObject.copyDeep(SourcesConfig);
 
 describe('Player', function() {
   before(() => {});
@@ -27,7 +27,7 @@ describe('Player', function() {
   beforeEach(() => {
     EngineProvider.destroy();
     EngineProvider.register(Html5.id, Html5);
-    sourcesConfig = Object.copyDeep(SourcesConfig);
+    sourcesConfig = PKObject.copyDeep(SourcesConfig);
   });
 
   describe('load', function() {
@@ -2918,7 +2918,7 @@ describe('Player', function() {
     });
 
     afterEach(() => {
-      Player._playerCapabilities = Object.copyDeep(initialOrigCapabilities);
+      Player._playerCapabilities = PKObject.copyDeep(initialOrigCapabilities);
     });
 
     it('should not change the original capabilities by reference', done => {
