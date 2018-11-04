@@ -1002,7 +1002,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   isPictureInPictureSupported(): boolean {
     return (
-      document.pictureInPictureEnabled ||
+      !!document.pictureInPictureEnabled ||
       (typeof this._el.webkitSupportsPresentationMode === 'function' && this._el.webkitSupportsPresentationMode('picture-in-picture'))
     );
   }
@@ -1010,8 +1010,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   get isInPictureInPicture(): boolean {
     // Check if the engine's video element is the one in the PIP
     return (
-      (document.pictureInPictureElement && document.pictureInPictureElement != null && this._el === document.pictureInPictureElement) ||
-      this._el.webkitPresentationMode === 'picture-in-picture'
+      (!!document.pictureInPictureElement && document.pictureInPictureElement != null && this._el === document.pictureInPictureElement) ||
+      (!!this._el.webkitPresentationMode && this._el.webkitPresentationMode === 'picture-in-picture')
     );
   }
 }
