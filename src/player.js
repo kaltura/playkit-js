@@ -1150,6 +1150,7 @@ export default class Player extends FakeEventTarget {
   get ads(): ?AdsController {
     return this._adsController;
   }
+
   // </editor-fold>
 
   // <editor-fold desc="Fullscreen API">
@@ -1267,6 +1268,18 @@ export default class Player extends FakeEventTarget {
    */
   setLogLevel(level: Object, name?: string) {
     setLogLevel(level, name);
+  }
+
+  // </editor-fold>
+
+  // <editor-fold desc="Plugins API">
+
+  /**
+   * Gets the plugins instances.
+   * @returns {Object} - Plugin name to plugin instance object map.
+   */
+  get plugins(): {[name: string]: BasePlugin} {
+    return this._pluginManager.getAll();
   }
 
   // </editor-fold>
@@ -2222,5 +2235,6 @@ export default class Player extends FakeEventTarget {
   get Error(): typeof PKError {
     return PKError;
   }
+
   // </editor-fold>
 }
