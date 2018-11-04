@@ -952,10 +952,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
           this.dispatchEvent(
             new FakeEvent(
               Html5EventType.ERROR,
-              new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.PICTURE_IN_PICTURE_FAILURE, {
-                action: 'Enter picture in picture',
-                error: error
-              })
+              new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.ENTER_PICTURE_IN_PICTURE_FAILED, error)
             )
           );
         });
@@ -968,10 +965,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this.dispatchEvent(
         new FakeEvent(
           Html5EventType.ERROR,
-          new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.PICTURE_IN_PICTURE_FAILURE, {
-            action: 'Enter picture in picture',
-            error: error
-          })
+          new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.ENTER_PICTURE_IN_PICTURE_FAILED, error)
         )
       );
     }
@@ -987,10 +981,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
           this.dispatchEvent(
             new FakeEvent(
               Html5EventType.ERROR,
-              new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.PICTURE_IN_PICTURE_FAILURE, {
-                action: 'Exit picture in picture',
-                error: error
-              })
+              new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.EXIT_PICTURE_IN_PICTURE_FAILED, error)
             )
           );
         });
@@ -1003,10 +994,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this.dispatchEvent(
         new FakeEvent(
           Html5EventType.ERROR,
-          new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.PICTURE_IN_PICTURE_FAILURE, {
-            action: 'Exit picture in picture',
-            error: error
-          })
+          new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.EXIT_PICTURE_IN_PICTURE_FAILED, error)
         )
       );
     }
