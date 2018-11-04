@@ -85,8 +85,8 @@ describe('PluginManager.plugins', () => {
   });
 
   it('should create all PluginManager properties', () => {
-    pluginManager._plugins.size.should.equal(0);
-    pluginManager._plugins.should.be.instanceof(Map);
+    Object.keys(pluginManager._plugins).length.should.equal(0);
+    pluginManager._plugins.should.be.instanceof(Object);
   });
 
   it("should throw error when try to load() plugin who isn't registered", () => {
@@ -119,14 +119,14 @@ describe('PluginManager.plugins', () => {
   it('should load() the plugin, plugin is enable after is disabled in the config', () => {
     pluginManager.load('colors', {}, {disable: true}).should.be.false;
     pluginManager.load('colors', {}, {disable: false}).should.be.true;
-    pluginManager._plugins.size.should.equal(1);
+    Object.keys(pluginManager._plugins).length.should.equal(1);
   });
 
   it('should load() the plugins', () => {
     pluginManager.load('colors', {}, {}).should.be.true;
-    pluginManager._plugins.size.should.equal(1);
+    Object.keys(pluginManager._plugins).length.should.equal(1);
     pluginManager.load('numbers', {}, {}).should.be.true;
-    pluginManager._plugins.size.should.equal(2);
+    Object.keys(pluginManager._plugins).length.should.equal(2);
   });
 
   it('should get() the correct plugin', () => {
@@ -134,16 +134,6 @@ describe('PluginManager.plugins', () => {
     pluginManager.load('numbers', {}, {}).should.be.true;
     pluginManager.get('colors').should.be.instanceof(ColorsPlugin);
     pluginManager.get('numbers').should.be.instanceof(NumbersPlugin);
-  });
-
-  it('should _destroy() the specific plugin', () => {
-    pluginManager.load('colors', {}, {}).should.be.true;
-    let colorsPlugin = pluginManager.get('colors');
-    let destroySpy = sandbox.spy(colorsPlugin, 'destroy');
-    pluginManager._destroy(colorsPlugin, 'colors');
-    destroySpy.should.have.been.calledOnce;
-    (pluginManager.get('colors') === undefined).should.be.true;
-    pluginManager._plugins.size.should.equal(0);
   });
 
   it('should destroy() all the plugins', () => {
@@ -158,7 +148,7 @@ describe('PluginManager.plugins', () => {
     destroyNumbersSpy.should.have.been.calledOnce;
     (pluginManager.get('colors') === undefined).should.be.true;
     (pluginManager.get('numbers') === undefined).should.be.true;
-    pluginManager._plugins.size.should.equal(0);
+    Object.keys(pluginManager._plugins).length.should.equal(0);
   });
 
   it('should reset() all the plugins', () => {
@@ -173,6 +163,6 @@ describe('PluginManager.plugins', () => {
     resetNumbersSpy.should.have.been.calledOnce;
     pluginManager.get('colors').should.exist;
     pluginManager.get('numbers').should.exist;
-    pluginManager._plugins.size.should.equal(2);
+    Object.keys(pluginManager._plugins).length.should.equal(2);
   });
 });

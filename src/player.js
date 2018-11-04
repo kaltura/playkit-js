@@ -1143,6 +1143,7 @@ export default class Player extends FakeEventTarget {
   get ads(): ?AdsController {
     return this._adsController;
   }
+
   // </editor-fold>
 
   // <editor-fold desc="Fullscreen API">
@@ -1271,9 +1272,7 @@ export default class Player extends FakeEventTarget {
    * @returns {Object} - Plugin name to plugin instance object map.
    */
   get plugins(): {[name: string]: BasePlugin} {
-    const plugins = {};
-    Array.from(this._pluginManager.getAll()).forEach(p => (plugins[p[0]] = p[1]));
-    return plugins;
+    return this._pluginManager.getAll();
   }
 
   // </editor-fold>
