@@ -1804,6 +1804,12 @@ export default class Player extends FakeEventTarget {
       this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAY));
       this._posterManager.hide();
       this._hideBlackCover();
+      // After changing media, we need to reset the PIP window, if the media was on one.
+      if (this._engine.isInPictureInPicture) {
+        this._eventManager.listenOnce(this._engine, Html5EventType.LOADED_METADATA, () => {
+          this._engine.exitPictureInPicture();
+        });
+      }
       if (typeof this._playbackAttributesState.rate === 'number') {
         this.playbackRate = this._playbackAttributesState.rate;
       }

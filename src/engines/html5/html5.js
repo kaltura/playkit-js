@@ -48,12 +48,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _canLoadMediaSourceAdapterPromise: Promise<*>;
-  /**
-   * State of the picture in picture
-   * @type {boolean}
-   * @private
-   */
-  _isInPictureInPicture: boolean = false;
 
   /**
    * The html5 class logger.
@@ -252,8 +246,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         }
       });
     });
-    this._eventManager.listen(this._el, Html5EventType.ENTER_PICTURE_IN_PICTURE, () => (this._isInPictureInPicture = true));
-    this._eventManager.listen(this._el, Html5EventType.LEAVE_PICTURE_IN_PICTURE, () => (this._isInPictureInPicture = false));
     if (this._mediaSourceAdapter) {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.AUDIO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
@@ -954,32 +946,32 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     try {
       // Currently it's supported in chrome and in safari. So if we consider checking support before,
       // we can use this flag to distinguish between the two. In the future we might need a different method.
-      if (document.pictureInPictureEnabled) {
-        this._el
-          .requestPictureInPicture()
-          .then(() => (this._isInPictureInPicture = true))
-          .catch(error => {
-            this._isInPictureInPicture = false;
-            this.dispatchEvent(
+      if (document.pictureInPictureEnabled && typeof this._el.requestPictureInPicture === 'function') {
+        this._el.requestPictureInPicture().catch(error => {
+          this.dispatchEvent(
+            new FakeEvent(
+              Html5EventType.ERROR,
               new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.PICTURE_IN_PICTURE_FAILURE, {
                 action: 'Enter picture in picture',
                 error: error
               })
-            );
-          });
-      } else {
+            )
+          );
+        });
+      } else if (typeof this._el.webkitSetPresentationMode === 'function') {
         this._el.webkitSetPresentationMode('picture-in-picture');
-        this._isInPictureInPicture = true;
         // Safari does not fire this event but Chrome does, normalizing the behaviour
         setTimeout(() => this.dispatchEvent(new FakeEvent(Html5EventType.ENTER_PICTURE_IN_PICTURE)), 0);
       }
     } catch (error) {
-      this._isInPictureInPicture = false;
       this.dispatchEvent(
-        new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.PICTURE_IN_PICTURE_FAILURE, {
-          action: 'Enter picture in picture',
-          error: error
-        })
+        new FakeEvent(
+          Html5EventType.ERROR,
+          new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.PICTURE_IN_PICTURE_FAILURE, {
+            action: 'Enter picture in picture',
+            error: error
+          })
+        )
       );
     }
   }
@@ -988,32 +980,32 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     try {
       // Currently it's supported in chrome and in safari. So if we consider checking support before,
       // we can use this flag to distinguish between the two. In the future we might need a different method.
-      if (document.pictureInPictureEnabled) {
-        document
-          .exitPictureInPicture()
-          .then(() => (this._isInPictureInPicture = false))
-          .catch(error => {
-            this._isInPictureInPicture = true;
-            this.dispatchEvent(
+      if (document.pictureInPictureEnabled && typeof document.exitPictureInPicture === 'function') {
+        document.exitPictureInPicture().catch(error => {
+          this.dispatchEvent(
+            new FakeEvent(
+              Html5EventType.ERROR,
               new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.PICTURE_IN_PICTURE_FAILURE, {
                 action: 'Exit picture in picture',
                 error: error
               })
-            );
-          });
-      } else {
+            )
+          );
+        });
+      } else if (typeof this._el.webkitSetPresentationMode === 'function') {
         this._el.webkitSetPresentationMode('inline');
-        this._isInPictureInPicture = false;
         // Safari does not fire this event but Chrome does, normalizing the behaviour
         setTimeout(() => this.dispatchEvent(new FakeEvent(Html5EventType.LEAVE_PICTURE_IN_PICTURE)), 0);
       }
     } catch (error) {
-      this._isInPictureInPicture = true;
       this.dispatchEvent(
-        new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.PICTURE_IN_PICTURE_FAILURE, {
-          action: 'Exit picture in picture',
-          error: error
-        })
+        new FakeEvent(
+          Html5EventType.ERROR,
+          new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.PICTURE_IN_PICTURE_FAILURE, {
+            action: 'Exit picture in picture',
+            error: error
+          })
+        )
       );
     }
   }
@@ -1021,7 +1013,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   isPictureInPictureSupported(): boolean {
     if (
       document.pictureInPictureEnabled ||
-      (this._el.webkitSupportsPresentationMode && this._el.webkitSupportsPresentationMode('picture-in-picture'))
+      (typeof this._el.webkitSupportsPresentationMode === 'function' && this._el.webkitSupportsPresentationMode('picture-in-picture'))
     ) {
       return true;
     } else {
@@ -1030,6 +1022,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   get isInPictureInPicture(): boolean {
-    return this._isInPictureInPicture;
+    // Check if the engine's video element is the one in the PIP
+    return (document.pictureInPictureElement && this._el === document.pictureInPictureElement) ||
+      this._el.webkitPresentationMode === 'picture-in-picture'
+      ? true
+      : false;
   }
 }
