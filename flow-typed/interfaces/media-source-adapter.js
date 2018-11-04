@@ -7,6 +7,7 @@ declare interface IMediaSourceAdapter {
   +src: string;
   currentTime: number;
   +duration: number;
+  +capabilities: PKMediaSourceCapabilities;
   load(startTime: ?number): Promise<Object>;
   handleMediaError(error: ?MediaError): boolean;
   destroy(): Promise<*>;
@@ -19,6 +20,7 @@ declare interface IMediaSourceAdapter {
   seekToLiveEdge(): void;
   isLive(): boolean;
   getStartTimeOfDvrWindow(): number;
+  setMaxBitrate(bitrate: number): void;
   static +id: string;
   static isSupported(): boolean;
   static canPlayType(mimeType: string): boolean;

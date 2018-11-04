@@ -14,12 +14,12 @@ import NumbersPlugin from './plugin/test-plugins/numbers-plugin';
 import Locale from '../../src/utils/locale';
 import Html5 from '../../src/engines/html5/html5';
 import Error from '../../src/error/error';
-import {Object} from '../../src/utils/util';
+import {Object as PKObject} from '../../src/utils/util';
 import {LabelOptions} from '../../src/track/label-options';
 import {EngineProvider} from '../../src/engines/engine-provider';
 
 const targetId = 'player-placeholder_player.spec';
-let sourcesConfig = Object.copyDeep(SourcesConfig);
+let sourcesConfig = PKObject.copyDeep(SourcesConfig);
 
 describe('Player', function() {
   before(() => {});
@@ -27,7 +27,7 @@ describe('Player', function() {
   beforeEach(() => {
     EngineProvider.destroy();
     EngineProvider.register(Html5.id, Html5);
-    sourcesConfig = Object.copyDeep(SourcesConfig);
+    sourcesConfig = PKObject.copyDeep(SourcesConfig);
   });
 
   describe('load', function() {
@@ -1879,7 +1879,7 @@ describe('Player', function() {
         });
         player._pluginManager.get('colors').should.exists;
         player._pluginManager.get('numbers').should.exists;
-        player._pluginManager._plugins.size.should.equals(2);
+        Object.keys(player._pluginManager._plugins).length.should.equals(2);
         player.config.plugins.colors.should.deep.equals({
           size: 5,
           favouriteColor: 'green'
@@ -1901,7 +1901,7 @@ describe('Player', function() {
         });
         player._pluginManager.get('colors').should.exists;
         player._pluginManager.get('numbers').should.exists;
-        player._pluginManager._plugins.size.should.equals(2);
+        Object.keys(player._pluginManager._plugins).length.should.equals(2);
         player.config.plugins.colors.should.deep.equals({
           size: 50,
           favouriteColor: 'green'
@@ -1922,7 +1922,7 @@ describe('Player', function() {
           }
         });
         player._pluginManager.get('numbers').should.exists;
-        player._pluginManager._plugins.size.should.equals(1);
+        Object.keys(player._pluginManager._plugins).length.should.equals(1);
         player.config.plugins.numbers.should.deep.equals({
           size: 20,
           firstCellValue: 4,
@@ -1940,7 +1940,7 @@ describe('Player', function() {
         });
         player._pluginManager.get('colors').should.exists;
         player._pluginManager.get('numbers').should.exists;
-        player._pluginManager._plugins.size.should.equals(2);
+        Object.keys(player._pluginManager._plugins).length.should.equals(2);
         player.config.plugins.colors.should.deep.equals({
           size: 50,
           favouriteColor: 'green'
@@ -1954,7 +1954,7 @@ describe('Player', function() {
 
       it('should create player without plugins, load plugins on configure', function() {
         player = new Player();
-        player._pluginManager._plugins.size.should.equals(0);
+        Object.keys(player._pluginManager._plugins).length.should.equals(0);
         player.config.plugins.should.deep.equals({});
         player.configure({
           plugins: {
@@ -1968,7 +1968,7 @@ describe('Player', function() {
         });
         player._pluginManager.get('colors').should.exists;
         player._pluginManager.get('numbers').should.exists;
-        player._pluginManager._plugins.size.should.equals(2);
+        Object.keys(player._pluginManager._plugins).length.should.equals(2);
         player.config.plugins.colors.should.deep.equals({
           size: 50,
           favouriteColor: 'green'
@@ -1982,7 +1982,7 @@ describe('Player', function() {
 
       it('should create player without plugins, load 1st plugin on configure, configure 1st plugin with/after sources', function() {
         player = new Player();
-        player._pluginManager._plugins.size.should.equals(0);
+        Object.keys(player._pluginManager._plugins).length.should.equals(0);
         player.config.plugins.should.deep.equals({});
         player.configure({
           plugins: {
@@ -1992,7 +1992,7 @@ describe('Player', function() {
           }
         });
         player._pluginManager.get('numbers').should.exists;
-        player._pluginManager._plugins.size.should.equals(1);
+        Object.keys(player._pluginManager._plugins).length.should.equals(1);
         player.config.plugins.numbers.should.deep.equals({
           size: 200,
           firstCellValue: 4,
@@ -2008,7 +2008,7 @@ describe('Player', function() {
           }
         });
         player._pluginManager.get('numbers').should.exists;
-        player._pluginManager._plugins.size.should.equals(1);
+        Object.keys(player._pluginManager._plugins).length.should.equals(1);
         player.config.plugins.numbers.should.deep.equals({
           size: 2,
           firstCellValue: 3,
@@ -2039,7 +2039,7 @@ describe('Player', function() {
           }
         });
         player._pluginManager.get('numbers').should.exists;
-        player._pluginManager._plugins.size.should.equals(1);
+        Object.keys(player._pluginManager._plugins).length.should.equals(1);
         player.config.plugins.should.deep.equals({
           numbers: {
             size: 2,
@@ -2054,7 +2054,7 @@ describe('Player', function() {
             }
           }
         });
-        player._pluginManager._plugins.size.should.equals(1);
+        Object.keys(player._pluginManager._plugins).length.should.equals(1);
         player.config.plugins.should.deep.equals({
           numbers: {
             size: 2,
@@ -2918,7 +2918,7 @@ describe('Player', function() {
     });
 
     afterEach(() => {
-      Player._playerCapabilities = Object.copyDeep(initialOrigCapabilities);
+      Player._playerCapabilities = PKObject.copyDeep(initialOrigCapabilities);
     });
 
     it('should not change the original capabilities by reference', done => {
