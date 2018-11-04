@@ -946,6 +946,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     try {
       // Currently it's supported in chrome and in safari. So if we consider checking support before,
       // we can use this flag to distinguish between the two. In the future we might need a different method.
+      // Second condition is because flow does not support this API yet
       if (document.pictureInPictureEnabled && typeof this._el.requestPictureInPicture === 'function') {
         this._el.requestPictureInPicture().catch(error => {
           this.dispatchEvent(
@@ -980,6 +981,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     try {
       // Currently it's supported in chrome and in safari. So if we consider checking support before,
       // we can use this flag to distinguish between the two. In the future we might need a different method.
+      // Second condition is because flow does not support this API yet
       if (document.pictureInPictureEnabled && typeof document.exitPictureInPicture === 'function') {
         document.exitPictureInPicture().catch(error => {
           this.dispatchEvent(
@@ -1011,21 +1013,17 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   isPictureInPictureSupported(): boolean {
-    if (
+    return (
       document.pictureInPictureEnabled ||
       (typeof this._el.webkitSupportsPresentationMode === 'function' && this._el.webkitSupportsPresentationMode('picture-in-picture'))
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+    );
   }
 
   get isInPictureInPicture(): boolean {
     // Check if the engine's video element is the one in the PIP
-    return (document.pictureInPictureElement && this._el === document.pictureInPictureElement) ||
+    return (
+      (document.pictureInPictureElement && document.pictureInPictureElement != null && this._el === document.pictureInPictureElement) ||
       this._el.webkitPresentationMode === 'picture-in-picture'
-      ? true
-      : false;
+    );
   }
 }
