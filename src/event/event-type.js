@@ -90,7 +90,19 @@ const Html5EventType: PKEventTypes = {
   /**
    * Fires when the video stops because it needs to buffer the next frame
    */
-  WAITING: 'waiting'
+  WAITING: 'waiting',
+  /**
+   * Fires when the engine enters picture in picture
+   */
+  ENTER_PICTURE_IN_PICTURE: 'enterpictureinpicture',
+  /**
+   * Fires when the engine exits picture in picture
+   */
+  LEAVE_PICTURE_IN_PICTURE: 'leavepictureinpicture',
+  /**
+   * Fires when the engine changes presentation mode on safari webkitpresentationmodechanged
+   */
+  PRESENTATION_MODE_CHANGED: 'webkitpresentationmodechanged'
 };
 
 const CustomEventType: PKEventTypes = {

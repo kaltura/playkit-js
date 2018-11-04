@@ -23,6 +23,9 @@ declare interface IEngine {
   selectVideoTrack(videoTrack: VideoTrack): void;
   selectAudioTrack(audioTrack: AudioTrack): void;
   selectTextTrack(textTrack: TextTrack): void;
+  isPictureInPictureSupported(): boolean;
+  enterPictureInPicture(): void;
+  exitPictureInPicture(): void;
   hideTextTrack(): void;
   enableAdaptiveBitrate(): void;
   isAdaptiveBitrateEnabled(): boolean;
@@ -52,6 +55,7 @@ declare interface IEngine {
   playbackRate: number;
   +playbackRates: Array<number>;
   defaultPlaybackRate: number;
+  +isInPictureInPicture: boolean;
   +networkState: number;
   +readyState: number;
   +videoWidth: number;

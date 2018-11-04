@@ -1211,6 +1211,50 @@ export default class Player extends FakeEventTarget {
 
   // </editor-fold>
 
+  // <editor-fold desc="Picture In Picture API">
+
+  /**
+   * Request the player to enter picture in picture mode
+   * @public
+   * @returns {void}
+   */
+  enterPictureInPicture(): void {
+    if (!this._engine.isInPictureInPicture) {
+      this._engine.enterPictureInPicture();
+    }
+  }
+
+  /**
+   * Request the player to exit picture in picture mode
+   * @public
+   * @returns {void}
+   */
+  exitPictureInPicture(): void {
+    if (this._engine.isInPictureInPicture) {
+      this._engine.exitPictureInPicture();
+    }
+  }
+
+  /**
+   * Check if the player is in picture in picture mode
+   * @public
+   * @return {boolean} if the player is in picture in picture mode or not
+   */
+  isInPictureInPicture(): boolean {
+    return this._engine.isInPictureInPicture;
+  }
+
+  /**
+   * Check if picture in picture supported in this environment
+   * @public
+   * @return {boolean} if the picture in picture feature is supported in this environment
+   */
+  isPictureInPictureSupported(): boolean {
+    return this._engine.isPictureInPictureSupported();
+  }
+
+  // </editor-fold>
+
   // <editor-fold desc="VR API">
 
   /**

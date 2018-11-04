@@ -948,4 +948,77 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
     return extended;
   }
+
+  enterPictureInPicture(): void {
+    try {
+      // Currently it's supported in chrome and in safari. So if we consider checking support before,
+      // we can use this flag to distinguish between the two. In the future we might need a different method.
+      // Second condition is because flow does not support this API yet
+      if (document.pictureInPictureEnabled && typeof this._el.requestPictureInPicture === 'function') {
+        this._el.requestPictureInPicture().catch(error => {
+          this.dispatchEvent(
+            new FakeEvent(
+              Html5EventType.ERROR,
+              new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.ENTER_PICTURE_IN_PICTURE_FAILED, error)
+            )
+          );
+        });
+      } else if (typeof this._el.webkitSetPresentationMode === 'function') {
+        this._el.webkitSetPresentationMode('picture-in-picture');
+        // Safari does not fire this event but Chrome does, normalizing the behaviour
+        setTimeout(() => this.dispatchEvent(new FakeEvent(Html5EventType.ENTER_PICTURE_IN_PICTURE)), 0);
+      }
+    } catch (error) {
+      this.dispatchEvent(
+        new FakeEvent(
+          Html5EventType.ERROR,
+          new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.ENTER_PICTURE_IN_PICTURE_FAILED, error)
+        )
+      );
+    }
+  }
+
+  exitPictureInPicture(): void {
+    try {
+      // Currently it's supported in chrome and in safari. So if we consider checking support before,
+      // we can use this flag to distinguish between the two. In the future we might need a different method.
+      // Second condition is because flow does not support this API yet
+      if (document.pictureInPictureEnabled && typeof document.exitPictureInPicture === 'function') {
+        document.exitPictureInPicture().catch(error => {
+          this.dispatchEvent(
+            new FakeEvent(
+              Html5EventType.ERROR,
+              new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.EXIT_PICTURE_IN_PICTURE_FAILED, error)
+            )
+          );
+        });
+      } else if (typeof this._el.webkitSetPresentationMode === 'function') {
+        this._el.webkitSetPresentationMode('inline');
+        // Safari does not fire this event but Chrome does, normalizing the behaviour
+        setTimeout(() => this.dispatchEvent(new FakeEvent(Html5EventType.LEAVE_PICTURE_IN_PICTURE)), 0);
+      }
+    } catch (error) {
+      this.dispatchEvent(
+        new FakeEvent(
+          Html5EventType.ERROR,
+          new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.EXIT_PICTURE_IN_PICTURE_FAILED, error)
+        )
+      );
+    }
+  }
+
+  isPictureInPictureSupported(): boolean {
+    return (
+      !!document.pictureInPictureEnabled ||
+      (typeof this._el.webkitSupportsPresentationMode === 'function' && this._el.webkitSupportsPresentationMode('picture-in-picture'))
+    );
+  }
+
+  get isInPictureInPicture(): boolean {
+    // Check if the engine's video element is the one in the PIP
+    return (
+      (!!document.pictureInPictureElement && document.pictureInPictureElement != null && this._el === document.pictureInPictureElement) ||
+      (!!this._el.webkitPresentationMode && this._el.webkitPresentationMode === 'picture-in-picture')
+    );
+  }
 }
