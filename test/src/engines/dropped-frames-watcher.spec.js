@@ -4,9 +4,9 @@ import {CustomEventType} from '../../../src/event/event-type';
 import FakeEvent from '../../../src/event/fake-event';
 
 describe('constructor', function() {
-  let videoElement, sandbox;
+  let videoElement, sandbox, config;
   videoElement = document.createElement('video');
-
+  config = {capLevelOnFPSDrop: true};
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
   });
@@ -22,7 +22,7 @@ describe('constructor', function() {
     };
     hlsAdapter.addEventListener = () => {};
     let spy = sandbox.spy(hlsAdapter, 'addEventListener');
-    new DroppedFramesWatcher(hlsAdapter, {}, videoElement);
+    new DroppedFramesWatcher(hlsAdapter, config, videoElement);
     spy.should.have.been.calledOnce;
     spy.should.have.been.calledWithMatch(CustomEventType.FPS_DROP);
   });
@@ -34,7 +34,7 @@ describe('constructor', function() {
     };
     dashAdapter.addEventListener = () => {};
     let spy = sandbox.spy(dashAdapter, 'addEventListener');
-    new DroppedFramesWatcher(dashAdapter, {}, videoElement);
+    new DroppedFramesWatcher(dashAdapter, config, videoElement);
     spy.should.have.been.calledOnce;
     spy.should.have.been.calledWithMatch(CustomEventType.VIDEO_TRACK_CHANGED);
   });
@@ -44,7 +44,7 @@ describe('constructor', function() {
     dashAdapter.capabilities = {
       fpsControl: false
     };
-    const dfw = new DroppedFramesWatcher(dashAdapter, {}, videoElement);
+    const dfw = new DroppedFramesWatcher(dashAdapter, config, videoElement);
     dashAdapter.dispatchEvent(new FakeEvent(CustomEventType.VIDEO_TRACK_CHANGED, {selectedVideoTrack: {bandwidth: 100}}));
     setTimeout(() => {
       dfw._currentBitrate.should.equal(100);
@@ -57,7 +57,7 @@ describe('constructor', function() {
     dashAdapter.capabilities = {
       fpsControl: false
     };
-    const dfw = new DroppedFramesWatcher(dashAdapter, {}, videoElement);
+    const dfw = new DroppedFramesWatcher(dashAdapter, config, videoElement);
     dfw._droppedFramesInterval.should.not.equal(null);
   });
 });

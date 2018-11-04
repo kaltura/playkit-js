@@ -13,13 +13,13 @@ class DroppedFramesWatcher extends FakeEventTarget {
   _lastDecodedFrames: number = 0;
   _lastTime: number = 0;
   _mediaSourceAdapter: IMediaSourceAdapter;
-  _config: Object = {};
+  _config: PKAbrConfigObject;
   _videoElement: HTMLVideoElement;
   _currentBitrate: number = 0;
   _eventManager: EventManager;
   static _logger: any = getLogger('droppedFramesWatcher');
 
-  constructor(mediaSourceAdapter: IMediaSourceAdapter, config: Object, videoElement: HTMLVideoElement) {
+  constructor(mediaSourceAdapter: IMediaSourceAdapter, config: PKAbrConfigObject, videoElement: HTMLVideoElement) {
     super();
     this._eventManager = new EventManager();
     this._mediaSourceAdapter = mediaSourceAdapter;
@@ -30,8 +30,8 @@ class DroppedFramesWatcher extends FakeEventTarget {
       return;
     }
     if (this._getDroppedAndDecodedFrames()[0] === NOT_SUPPORTED) {
-      DroppedFramesWatcher._logger.debug('Dropped frame watcher is not supported on this environment');
-    } else {
+      DroppedFramesWatcher._logger.debug('Dropped frame watcher is not supported');
+    } else if (this._config.capLevelOnFPSDrop) {
       this._init();
     }
   }

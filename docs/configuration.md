@@ -18,7 +18,8 @@ var player = playkit.core.loadPlayer(config);
   sources: PKSourcesConfigObject,
   session: PKSessionConfigObject,
   plugins: PKPluginsConfigObject,
-  customLabels: PKCustomLabelsConfigObject
+  customLabels: PKCustomLabelsConfigObject,
+  abr: PKAbrConfigObject
 }
 ```
 
@@ -43,8 +44,6 @@ var config = {
     captionsTextTrack1LanguageCode: 'en',
     captionsTextTrack2Label: 'Spanish',
     captionsTextTrack2LanguageCode: 'es',
-    fpsDroppedFramesInterval: 5000,
-    fpsDroppedMonitoringThreshold: 0.2,
     volume: 1,
     startTime: -1,
     playsinline: true,
@@ -77,6 +76,11 @@ var config = {
         format: 'progressive'
       }
     ]
+  },
+  abr: {
+    fpsDroppedFramesInterval: 5000,
+    fpsDroppedMonitoringThreshold: 0.2,
+    capLevelOnFPSDrop: true
   }
 };
 ```
@@ -690,26 +694,6 @@ var config = {
 >
 > ##
 >
-> > ### config.playback.fpsDroppedFramesInterval
-> >
-> > ##### Type: `number`
-> >
-> > ##### Default: `5000`
-> >
-> > ##### Description: Interval time in milliseconds to check if too many frames are dropped
->
-> ##
->
-> > ### config.playback.fpsDroppedMonitoringThreshold
-> >
-> > ##### Type: `number`
-> >
-> > ##### Default: `0.2`
-> >
-> > ##### Description: The allowed frames dropped threshold.
->
-> ##
->
 > > ### config.playback.startTime
 > >
 > > ##### Type: `number`
@@ -1009,6 +993,62 @@ var config = {
 >   }
 > };
 > ```
+
+##
+
+> ### config.abr
+>
+> ##### Type: `PKAbrConfigObject`
+>
+> ```js
+> {
+>  fpsDroppedMonitoringThreshold: number,
+>  fpsDroppedFramesInterval: number,
+>  capLevelOnFPSDrop: boolean
+> }
+> ```
+>
+> ##### Default:
+>
+> ```js
+> {
+>  fpsDroppedMonitoringThreshold: 0.2,
+>  fpsDroppedFramesInterval: 5000,
+>  capLevelOnFPSDrop: true
+> }
+> ```
+>
+> ##### Description: Specifies flags to control / restrict the abr mechanism.
+>
+> > ### config.abr.fpsDroppedFramesInterval
+> >
+> > ##### Type: `number`
+> >
+> > ##### Default: `5000`
+> >
+> > ##### Description: Interval time in milliseconds to check if too many frames are dropped
+>
+> ##
+>
+> > ### config.abr.fpsDroppedMonitoringThreshold
+> >
+> > ##### Type: `number`
+> >
+> > ##### Default: `0.2`
+> >
+> > ##### Description: The allowed frames dropped threshold.
+>
+> ##
+>
+> > ### config.abr.capLevelOnFPSDrop
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: true
+> >
+> > ##### Description: If the player should cap the level when the fps exceeds the threshold.
+>
+> ##
 
 ##
 
