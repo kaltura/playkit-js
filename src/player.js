@@ -1264,6 +1264,20 @@ export default class Player extends FakeEventTarget {
 
   // </editor-fold>
 
+  // <editor-fold desc="Plugins API">
+
+  /**
+   * Gets the plugins instances.
+   * @returns {Object} - Plugin name to plugin instance object map.
+   */
+  get plugins(): {[name: string]: BasePlugin} {
+    const plugins = {};
+    Array.from(this._pluginManager.getAll()).forEach(p => (plugins[p[0]] = p[1]));
+    return plugins;
+  }
+
+  // </editor-fold>
+
   // </editor-fold>
 
   // <editor-fold desc="Private Methods">
@@ -2216,5 +2230,6 @@ export default class Player extends FakeEventTarget {
   get Error(): typeof PKError {
     return PKError;
   }
+
   // </editor-fold>
 }
