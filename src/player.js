@@ -1150,6 +1150,7 @@ export default class Player extends FakeEventTarget {
   get ads(): ?AdsController {
     return this._adsController;
   }
+
   // </editor-fold>
 
   // <editor-fold desc="Fullscreen API">
@@ -1311,6 +1312,18 @@ export default class Player extends FakeEventTarget {
    */
   setLogLevel(level: Object, name?: string) {
     setLogLevel(level, name);
+  }
+
+  // </editor-fold>
+
+  // <editor-fold desc="Plugins API">
+
+  /**
+   * Gets the plugins instances.
+   * @returns {Object} - Plugin name to plugin instance object map.
+   */
+  get plugins(): {[name: string]: BasePlugin} {
+    return this._pluginManager.getAll();
   }
 
   // </editor-fold>
@@ -1529,6 +1542,7 @@ export default class Player extends FakeEventTarget {
         this.pause();
         this.dispatchEvent(event);
       });
+      this._eventManager.listen(this._engine, CustomEventType.FPS_DROP, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this, Html5EventType.PLAY, this._onPlay.bind(this));
       this._eventManager.listen(this, Html5EventType.PLAYING, this._onPlaying.bind(this));
       this._eventManager.listen(this, Html5EventType.ENDED, this._onEnded.bind(this));
@@ -1542,18 +1556,12 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this, Html5EventType.RATE_CHANGE, () => {
         this._playbackAttributesState.rate = this.playbackRate;
       });
-      this._eventManager.listen(this, CustomEventType.ENTER_FULLSCREEN, () => {
-        this._resetTextCuesAndReposition();
-      });
-      this._eventManager.listen(this, CustomEventType.EXIT_FULLSCREEN, () => {
-        this._resetTextCuesAndReposition();
-      });
+      this._eventManager.listen(this, CustomEventType.ENTER_FULLSCREEN, () => this._resetTextCuesAndReposition());
+      this._eventManager.listen(this, CustomEventType.EXIT_FULLSCREEN, () => this._resetTextCuesAndReposition());
       this._eventManager.listen(window, RESIZE, () => {
         this._resetTextCuesAndReposition();
       });
-      this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => {
-        this._handleRecovered();
-      });
+      this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => this._handleRecovered());
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) =>
         this._onTextTrackChanged(event)
@@ -2271,5 +2279,6 @@ export default class Player extends FakeEventTarget {
   get Error(): typeof PKError {
     return PKError;
   }
+
   // </editor-fold>
 }
