@@ -95,6 +95,13 @@ const AUTO: string = 'auto';
 const OFF: string = 'off';
 
 /**
+ * The resize event string
+ *  *  @type {string}
+ *  @const
+ */
+const RESIZE: string = 'resize';
+
+/**
  *  The duration offset, for seeking to duration safety.
  *  @type {number}
  *  @const
@@ -1492,6 +1499,7 @@ export default class Player extends FakeEventTarget {
         this.pause();
         this.dispatchEvent(event);
       });
+      this._eventManager.listen(this._engine, CustomEventType.FPS_DROP, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this, Html5EventType.PLAY, this._onPlay.bind(this));
       this._eventManager.listen(this, Html5EventType.PLAYING, this._onPlaying.bind(this));
       this._eventManager.listen(this, Html5EventType.ENDED, this._onEnded.bind(this));
@@ -1505,15 +1513,12 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this, Html5EventType.RATE_CHANGE, () => {
         this._playbackAttributesState.rate = this.playbackRate;
       });
-      this._eventManager.listen(this, CustomEventType.ENTER_FULLSCREEN, () => {
+      this._eventManager.listen(this, CustomEventType.ENTER_FULLSCREEN, () => this._resetTextCuesAndReposition());
+      this._eventManager.listen(this, CustomEventType.EXIT_FULLSCREEN, () => this._resetTextCuesAndReposition());
+      this._eventManager.listen(window, RESIZE, () => {
         this._resetTextCuesAndReposition();
       });
-      this._eventManager.listen(this, CustomEventType.EXIT_FULLSCREEN, () => {
-        this._resetTextCuesAndReposition();
-      });
-      this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => {
-        this._handleRecovered();
-      });
+      this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => this._handleRecovered());
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) =>
         this._onTextTrackChanged(event)
@@ -1815,7 +1820,8 @@ export default class Player extends FakeEventTarget {
         this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_ENDED));
       });
     } else {
-      this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_ENDED));
+      // Make sure the all ENDED listeners have been invoked
+      setTimeout(() => this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_ENDED)), 0);
     }
     if (!this.paused) {
       this._pause();

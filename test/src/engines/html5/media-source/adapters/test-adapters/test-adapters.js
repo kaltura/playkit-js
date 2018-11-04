@@ -1,3 +1,5 @@
+import FakeEventTarget from '../../../../../../../src/event/fake-event-target';
+
 class FakeNativeAdapter implements IMediaSourceAdapter {
   static get id() {
     return 'NativeAdapter';
@@ -10,7 +12,7 @@ class FakeHlsAdapter implements IMediaSourceAdapter {
   }
 }
 
-class FakeDashAdapter implements IMediaSourceAdapter {
+class FakeDashAdapter extends FakeEventTarget implements IMediaSourceAdapter {
   static get id() {
     return 'DashAdapter';
   }

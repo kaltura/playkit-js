@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.38.1"></a>
+## [0.38.1](https://github.com/kaltura/playkit-js/compare/v0.38.0...v0.38.1) (2018-10-28)
+
+
+### Bug Fixes
+
+* **FEC-8585:** next video doesn't play after preroll ([#296](https://github.com/kaltura/playkit-js/issues/296)) ([75ed6db](https://github.com/kaltura/playkit-js/commit/75ed6db))
+
+
+
 <a name="0.38.0"></a>
 # [0.38.0](https://github.com/kaltura/playkit-js/compare/v0.37.0...v0.38.0) (2018-10-11)
 
