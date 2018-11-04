@@ -79,7 +79,8 @@ var config = {
   },
   abr: {
     fpsDroppedFramesInterval: 5000,
-    fpsDroppedMonitoringThreshold: 0.2
+    fpsDroppedMonitoringThreshold: 0.2,
+    capLevelOnFPSDrop: true
   }
 };
 ```

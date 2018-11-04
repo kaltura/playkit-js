@@ -29,9 +29,9 @@ class DroppedFramesWatcher extends FakeEventTarget {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.FPS_DROP, event => this._triggerFPSDrop(event.payload.data));
       return;
     }
-    if (this._getDroppedAndDecodedFrames()[0] === NOT_SUPPORTED || !this._config.capLevelOnFPSDrop) {
-      DroppedFramesWatcher._logger.debug('Dropped frame watcher is disabled');
-    } else {
+    if (this._getDroppedAndDecodedFrames()[0] === NOT_SUPPORTED) {
+      DroppedFramesWatcher._logger.debug('Dropped frame watcher is not supported');
+    } else if (this._config.capLevelOnFPSDrop) {
       this._init();
     }
   }
