@@ -46,7 +46,7 @@ describe('ExternalCaptionsHandler', () => {
       });
     });
 
-    it('should load a vtt file (type not specified)', done => {
+    it.skip('should load a vtt file (type not specified)', done => {
       externalCaptionsHandler._textTrackModel['en'] = {
         url: '/base/test/src/assets/en.vtt',
         cues: []
@@ -128,7 +128,7 @@ describe('ExternalCaptionsHandler', () => {
     });
   });
 
-  describe('_convertSrtToVtt', () => {
+  describe.skip('_convertSrtToVtt', () => {
     let config, player, playerContainer, externalCaptionsHandler;
 
     before(() => {
