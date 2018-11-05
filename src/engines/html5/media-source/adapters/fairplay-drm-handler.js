@@ -6,7 +6,8 @@ import type {SeverityType} from '../../../../error/severity';
 import type {CategoryType} from '../../../../error/category';
 
 const KeySystem: string = 'com.apple.fps.1_0';
-const WebkitEvents = {
+type WebkitEventsType = {[name: string]: string};
+const WebkitEvents: WebkitEventsType = {
   NEED_KEY: 'webkitneedkey',
   KEY_MESSAGE: 'webkitkeymessage',
   KEY_ADDED: 'webkitkeyadded',
@@ -16,6 +17,7 @@ const WebkitEvents = {
 type FairplayDrmConfigType = {licenseUrl: string, certificate: string};
 
 class FairplayDrmHandler {
+  static WebkitEvents: WebkitEventsType = WebkitEvents;
   _logger = getLogger('FairPlayDrmHandler');
   _keySession: any;
   _config: FairplayDrmConfigType;
@@ -233,6 +235,8 @@ class FairplayDrmHandler {
     return output;
   }
 }
+
+FairplayDrmHandler.WebkitEvents = WebkitEvents;
 
 export {FairplayDrmHandler};
 export type {FairplayDrmConfigType};
