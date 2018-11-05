@@ -2643,6 +2643,14 @@ describe('Player', function() {
       (player._readyPromise === null).should.be.true;
       player._firstPlay.should.be.true;
     });
+
+    it('should dispatch a player destroyed event', function(done) {
+      player = new Player(config);
+      player.addEventListener(player.Event.PLAYER_DESTROY, () => {
+        done();
+      });
+      player.destroy();
+    });
   });
 
   describe('reset', function() {
