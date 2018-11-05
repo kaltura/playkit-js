@@ -609,7 +609,6 @@ export default class Player extends FakeEventTarget {
     }
     this._externalCaptionsHandler.destroy();
     this._posterManager.destroy();
-    this._eventManager.destroy();
     this._pluginManager.destroy();
     this._stateManager.destroy();
     this._activeTextCues = [];
@@ -626,6 +625,7 @@ export default class Player extends FakeEventTarget {
     }
     this._destroyed = true;
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_DESTROY));
+    this._eventManager.destroy();
   }
 
   /**
