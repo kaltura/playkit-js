@@ -12,6 +12,8 @@ import FairPlay from '../../../../drm/fairplay';
 import Env from '../../../../utils/env';
 import Error from '../../../../error/error';
 import defaultConfig from './native-adapter-default-config';
+import {FairplayDrmHandler} from './fairplay-drm-handler';
+import type {FairplayDrmConfigType} from './fairplay-drm-handler';
 
 /**
  * An illustration of media source extension for progressive download
@@ -55,6 +57,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @static
    */
   static _drmProtocol: ?Function = null;
+  /**
+   * The DRM handler playback.
+   * @type {?FairplayDrmHandler}
+   * @private
+   */
+  _drmHandler: ?FairplayDrmHandler;
   /**
    * The event manager of the class.
    * @member {EventManager} - _eventManager
@@ -182,7 +190,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     NativeAdapter._logger.debug('Creating adapter');
     super(videoElement, source, config);
     this._eventManager = new EventManager();
-    this._maybeSetDrmPlayback();
     this._config = Utils.Object.mergeDeep({}, defaultConfig, this._config);
     this._progressiveSources = config.progressiveSources;
     this._liveEdge = 0;
@@ -191,10 +198,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   /**
    * dispatches an error (is given to a class the cannot dispatch, like static fair play class)
    * @private
-   * @param {any} error - the error to dispatch
+   * @param {Error} error - the error to dispatch
    * @returns {void}
    */
-  _dispatchErrorCallback(error: any): void {
+  _dispatchErrorCallback(error: Error): void {
     this._trigger(Html5EventType.ERROR, error);
   }
 
@@ -205,7 +212,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _maybeSetDrmPlayback(): void {
     if (NativeAdapter._drmProtocol && this._sourceObj && this._sourceObj.drmData) {
-      NativeAdapter._drmProtocol.setDrmPlayback(this._videoElement, this._sourceObj.drmData, error => this._dispatchErrorCallback(error));
+      const drmConfig: FairplayDrmConfigType = {licenseUrl: '', certificate: ''};
+      NativeAdapter._drmProtocol.setDrmPlayback(drmConfig, this._sourceObj.drmData);
+      this._drmHandler = new FairplayDrmHandler(this._videoElement, drmConfig, error => this._dispatchErrorCallback(error));
     }
   }
 
@@ -239,6 +248,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {Promise<Object>} - The loaded data
    */
   load(startTime: ?number): Promise<Object> {
+    this._maybeSetDrmPlayback();
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
         this._lastTimeUpdate = startTime || 0;
@@ -353,6 +363,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     NativeAdapter._logger.debug('destroy');
     return super.destroy().then(() => {
       this._eventManager.destroy();
+      this._drmHandler && this._drmHandler.destroy();
       this._waitingEventTriggered = false;
       this._progressiveSources = [];
       this._loadPromise = null;
