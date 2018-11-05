@@ -1,6 +1,6 @@
 // @flow
 import BaseDrmProtocol from './base-drm-protocol';
-import type {fairplayDrmConfigType} from '../engines/html5/media-source/adapters/fairplay-drm-handler';
+import type {FairplayDrmConfigType} from '../engines/html5/media-source/adapters/fairplay-drm-handler';
 
 export default class FairPlay extends BaseDrmProtocol {
   static _logger = BaseDrmProtocol.getLogger('FairPlay');
@@ -29,11 +29,11 @@ export default class FairPlay extends BaseDrmProtocol {
 
   /**
    * Sets the FairPlay playback.
-   * @param {fairplayDrmConfigType} config - The config to manipulate.
+   * @param {FairplayDrmConfigType} config - The config to manipulate.
    * @param {Array<Object>} drmData - The drm data.
    * @returns {void}
    */
-  static setDrmPlayback(config: fairplayDrmConfigType, drmData: Array<Object>): void {
+  static setDrmPlayback(config: FairplayDrmConfigType, drmData: Array<Object>): void {
     FairPlay._logger.debug('Sets drm playback');
     let drmEntry = drmData.find(drmEntry => drmEntry.scheme === BaseDrmProtocol.DrmScheme.FAIRPLAY);
     if (drmEntry) {

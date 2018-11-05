@@ -13,12 +13,12 @@ const WebkitEvents = {
   KEY_ERROR: 'webkitkeyerror'
 };
 
-type fairplayDrmConfigType = {licenseUrl: string, certificate: string};
+type FairplayDrmConfigType = {licenseUrl: string, certificate: string};
 
 class FairplayDrmHandler {
   _logger = getLogger('FairPlayDrmHandler');
   _keySession: any;
-  _config: fairplayDrmConfigType;
+  _config: FairplayDrmConfigType;
   _onWebkitNeedKeyHandler: Function;
   _errorCallback: Function;
   _videoElement: HTMLVideoElement;
@@ -27,10 +27,10 @@ class FairplayDrmHandler {
   /**
    * Fairplay DRM handler
    * @param {HTMLVideoElement} videoElement - the video element
-   * @param {fairplayDrmConfigType} config - config object
+   * @param {FairplayDrmConfigType} config - config object
    * @param {Function} errorCallback - error callback function
    */
-  constructor(videoElement: HTMLVideoElement, config: fairplayDrmConfigType, errorCallback: Function): void {
+  constructor(videoElement: HTMLVideoElement, config: FairplayDrmConfigType, errorCallback: Function): void {
     this._config = config;
     this._errorCallback = errorCallback;
     this._videoElement = videoElement;
@@ -235,4 +235,4 @@ class FairplayDrmHandler {
 }
 
 export {FairplayDrmHandler};
-export type {fairplayDrmConfigType};
+export type {FairplayDrmConfigType};

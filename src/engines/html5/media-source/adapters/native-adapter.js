@@ -13,7 +13,7 @@ import Env from '../../../../utils/env';
 import Error from '../../../../error/error';
 import defaultConfig from './native-adapter-default-config';
 import {FairplayDrmHandler} from './fairplay-drm-handler';
-import type {fairplayDrmConfigType} from './fairplay-drm-handler';
+import type {FairplayDrmConfigType} from './fairplay-drm-handler';
 
 /**
  * An illustration of media source extension for progressive download
@@ -212,7 +212,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _maybeSetDrmPlayback(): void {
     if (NativeAdapter._drmProtocol && this._sourceObj && this._sourceObj.drmData) {
-      const drmConfig: fairplayDrmConfigType = {licenseUrl: '', certificate: ''};
+      const drmConfig: FairplayDrmConfigType = {licenseUrl: '', certificate: ''};
       NativeAdapter._drmProtocol.setDrmPlayback(drmConfig, this._sourceObj.drmData);
       this._drmHandler = new FairplayDrmHandler(this._videoElement, drmConfig, error => this._dispatchErrorCallback(error));
     }
