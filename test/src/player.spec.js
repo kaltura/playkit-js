@@ -1193,6 +1193,7 @@ describe('Player', function() {
 
     beforeEach(() => {
       player = new Player();
+      player._engine = {destroy: function() {}};
     });
 
     afterEach(() => {
