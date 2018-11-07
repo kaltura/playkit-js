@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.39.2"></a>
+## [0.39.2](https://github.com/kaltura/playkit-js/compare/v0.39.1...v0.39.2) (2018-11-07)
+
+
+### Bug Fixes
+
+* **FEC-8650:** the video continues in picture-in-picture window when full screen opened ([#304](https://github.com/kaltura/playkit-js/issues/304)) ([f670ccc](https://github.com/kaltura/playkit-js/commit/f670ccc))
+
+
+
 <a name="0.39.1"></a>
 ## [0.39.1](https://github.com/kaltura/playkit-js/compare/v0.39.0...v0.39.1) (2018-11-05)
 
