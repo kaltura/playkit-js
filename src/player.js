@@ -1194,6 +1194,9 @@ export default class Player extends FakeEventTarget {
    */
   enterFullscreen(): void {
     if (!this._fullscreen) {
+      if (this.isInPictureInPicture()) {
+        this.exitPictureInPicture();
+      }
       this.dispatchEvent(new FakeEvent(CustomEventType.REQUESTED_ENTER_FULLSCREEN));
     }
   }
@@ -1219,6 +1222,9 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   enterPictureInPicture(): void {
+    if (this.isFullscreen()) {
+      this.exitFullscreen();
+    }
     if (!this._engine.isInPictureInPicture) {
       this._engine.enterPictureInPicture();
     }
