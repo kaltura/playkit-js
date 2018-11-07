@@ -10,7 +10,7 @@ import FakeEvent from '../../../src/event/fake-event';
 const targetId = 'player-placeholder_player.spec';
 let sourcesConfig = Object.copyDeep(SourcesConfig);
 
-describe('ExternalCaptionsHandler', () => {
+describe.skip('ExternalCaptionsHandler', () => {
   describe('_getCuesString', () => {
     let config, player, playerContainer, externalCaptionsHandler;
 
