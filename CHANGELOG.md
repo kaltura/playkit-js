@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.40.0"></a>
+# [0.40.0](https://github.com/kaltura/playkit-js/compare/v0.38.0...v0.40.0) (2018-11-07)
+
+
+### Bug Fixes
+
+* **FEC-8554:** update captions on resize event ([#297](https://github.com/kaltura/playkit-js/issues/297)) ([fb9724b](https://github.com/kaltura/playkit-js/commit/fb9724b))
+* **FEC-8585:** next video doesn't play after preroll ([#296](https://github.com/kaltura/playkit-js/issues/296)) ([75ed6db](https://github.com/kaltura/playkit-js/commit/75ed6db))
+* **FEC-8621:** player detory event is not disaptched ([#302](https://github.com/kaltura/playkit-js/issues/302)) ([b2919e7](https://github.com/kaltura/playkit-js/commit/b2919e7))
+* **FEC-8633:** HLS fairplay fails with multiple players or consecutive playbacks ([#301](https://github.com/kaltura/playkit-js/issues/301)) ([4cf064b](https://github.com/kaltura/playkit-js/commit/4cf064b))
+* **FEC-8650:** the video continues in picture-in-picture window when full screen opened ([#304](https://github.com/kaltura/playkit-js/issues/304)) ([f670ccc](https://github.com/kaltura/playkit-js/commit/f670ccc))
+* add handle media error ([#305](https://github.com/kaltura/playkit-js/issues/305)) ([27e739a](https://github.com/kaltura/playkit-js/commit/27e739a))
+
+
+### Features
+
+* **FEC-7808:** added the option to disable cap level on fps drop ([#299](https://github.com/kaltura/playkit-js/issues/299)) ([a1fbb7a](https://github.com/kaltura/playkit-js/commit/a1fbb7a))
+* **FEC-7808:** quality watcher for the player ([#295](https://github.com/kaltura/playkit-js/issues/295)) ([c0e294f](https://github.com/kaltura/playkit-js/commit/c0e294f))
+* expose plugins instances ([#300](https://github.com/kaltura/playkit-js/issues/300)) ([ea4921f](https://github.com/kaltura/playkit-js/commit/ea4921f))
+* **FEC-8277:** Picture in Picture support ([#298](https://github.com/kaltura/playkit-js/issues/298)) ([ca32247](https://github.com/kaltura/playkit-js/commit/ca32247))
+
+
+
 <a name="0.39.2"></a>
 ## [0.39.2](https://github.com/kaltura/playkit-js/compare/v0.39.1...v0.39.2) (2018-11-07)
 
