@@ -10,6 +10,7 @@ declare type PKPlaybackConfigObject = {
   autoplay: boolean,
   allowMutedAutoPlay: boolean,
   muted: boolean,
+  pictureInPicture: boolean,
   streamPriority: Array<PKStreamPriorityObject>,
   preferNative: PKPreferNativeConfigObject
 };

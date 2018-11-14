@@ -1256,7 +1256,7 @@ export default class Player extends FakeEventTarget {
    * @return {boolean} if the picture in picture feature is supported in this environment
    */
   isPictureInPictureSupported(): boolean {
-    return this._engine.isPictureInPictureSupported();
+    return !!this._config.playback.pictureInPicture && this._engine.isPictureInPictureSupported();
   }
 
   // </editor-fold>
