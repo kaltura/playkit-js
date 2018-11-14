@@ -52,6 +52,7 @@ var config = {
     allowMutedAutoPlay: true,
     loop: false,
     muted: false,
+    pictureInPicture: true,
     options: {
       html5: {
         hls: {},
@@ -492,8 +493,9 @@ var config = {
 >  preload: string,
 >  autoplay: boolean,
 >  allowMutedAutoPlay: boolean,
-> loop: boolean,
+>  loop: boolean,
 >  muted: boolean,
+>  pictureInPicture: boolean,
 >  options: PKPlaybackOptionsObject,
 >  streamPriority: Array<PKStreamPriorityObject>,
 >  preferNative: PKPreferNativeConfigObject
@@ -518,8 +520,9 @@ var config = {
 >  preload: "none",
 >  autoplay: false,
 >  allowMutedAutoPlay: true,
-> loop: false,
+>  loop: false,
 >  muted: false,
+>  pictureInPicture: true,
 >  options: {
 >    html5: {
 >      hls: {},
@@ -777,6 +780,18 @@ var config = {
 > > ##### Description: Indicates whether the video should be muted or not.
 > >
 > > This is a Boolean attribute that indicates the default setting of the audio contained in the video. If set, the audio will be initially silenced. The attribute's default value is false, which means that the audio will be played automatically when the video is played.
+>
+> ##
+>
+> > ### config.playback.pictureInPicture
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `true`
+> >
+> > ##### Description: Indiciates if the picture in picture feature is enabled.
+> >
+> > This is a boolean attribute that allows to disable (enabled by default) the picture in picture feature (it will be enabled only in browsers supporting this ability)
 >
 > ##
 >
