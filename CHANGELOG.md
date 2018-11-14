@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.41.0"></a>
+# [0.41.0](https://github.com/kaltura/playkit-js/compare/v0.39.1...v0.41.0) (2018-11-14)
+
+
+### Bug Fixes
+
+* **FEC-8650:** the video continues in picture-in-picture window when full screen opened ([#304](https://github.com/kaltura/playkit-js/issues/304)) ([f670ccc](https://github.com/kaltura/playkit-js/commit/f670ccc))
+* add handle media error ([#305](https://github.com/kaltura/playkit-js/issues/305)) ([27e739a](https://github.com/kaltura/playkit-js/commit/27e739a))
+
+
+### Features
+
+* **FEC-8641:** add ability to disable picture in picture ([#307](https://github.com/kaltura/playkit-js/issues/307)) ([7c60020](https://github.com/kaltura/playkit-js/commit/7c60020))
+
+
+
 <a name="0.40.0"></a>
 # [0.40.0](https://github.com/kaltura/playkit-js/compare/v0.38.0...v0.40.0) (2018-11-07)
 
