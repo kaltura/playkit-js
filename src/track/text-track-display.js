@@ -304,7 +304,6 @@ function parseContent(window, input) {
       return null;
     }
     let element = window.document.createElement(tagName);
-    element.localName = tagName;
     const name = TAG_ANNOTATION[type];
     if (name && annotation) {
       element[name] = annotation.trim();
