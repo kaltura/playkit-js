@@ -584,7 +584,6 @@ export default class Player extends FakeEventTarget {
     this._pluginManager.reset();
     this._stateManager.reset();
     this._config.sources = {};
-    this._createReadyPromise();
     this._activeTextCues = [];
     this._updateTextDisplay([]);
     this._tracks = [];
@@ -596,6 +595,7 @@ export default class Player extends FakeEventTarget {
     this._reset = true;
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET));
     this._eventManager.removeAll();
+    this._createReadyPromise();
   }
 
   /**
