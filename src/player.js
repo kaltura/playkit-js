@@ -578,23 +578,24 @@ export default class Player extends FakeEventTarget {
   reset(): void {
     if (this._reset) return;
     this.pause();
+    //make sure all services are reset before engine and engine attributes are reset
+    this._externalCaptionsHandler.reset();
+    this._posterManager.reset();
+    this._pluginManager.reset();
+    this._stateManager.reset();
     this._config.sources = {};
-    this._eventManager.removeAll();
-    this._createReadyPromise();
     this._activeTextCues = [];
     this._updateTextDisplay([]);
     this._tracks = [];
     this._resetStateFlags();
     this._engineType = '';
     this._streamType = '';
-    this._posterManager.reset();
-    this._stateManager.reset();
-    this._pluginManager.reset();
-    this._externalCaptionsHandler.reset();
     this._engine.reset();
     this._showBlackCover();
     this._reset = true;
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET));
+    this._eventManager.removeAll();
+    this._createReadyPromise();
   }
 
   /**
@@ -604,9 +605,7 @@ export default class Player extends FakeEventTarget {
    */
   destroy(): void {
     if (this._destroyed) return;
-    if (this._engine) {
-      this._engine.destroy();
-    }
+    //make sure all services are destroyed before engine and engine attributes are destroyed
     this._externalCaptionsHandler.destroy();
     this._posterManager.destroy();
     this._pluginManager.destroy();
@@ -620,6 +619,9 @@ export default class Player extends FakeEventTarget {
     this._readyPromise = null;
     this._resetStateFlags();
     this._playbackAttributesState = {};
+    if (this._engine) {
+      this._engine.destroy();
+    }
     if (this._el) {
       Utils.Dom.removeChild(this._el.parentNode, this._el);
     }
