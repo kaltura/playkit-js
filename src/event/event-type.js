@@ -217,7 +217,17 @@ const CustomEventType: PKEventTypes = {
   /**
    * Fired when the frames drop are exceeds the allowed (configured) threshold
    */
-  FPS_DROP: 'fpsdrop'
+  FPS_DROP: 'fpsdrop',
+  /**
+   * Fired when the a bookmark service returns an error
+   * This event will be removed once plugins will have a way to expose their event enums
+   */
+  BOOKMARK_ERROR: 'bookmarkerror',
+  /**
+   * Fired when the a bookmark service returns a concurrency limit error
+   * This event will be removed once plugins will have a way to expose their event enums
+   */
+  CONCURRENCY_LIMIT: 'concurrencylimit'
 };
 
 const EventType: PKEventTypes = Utils.Object.merge([Html5EventType, CustomEventType, AdEventType]);
