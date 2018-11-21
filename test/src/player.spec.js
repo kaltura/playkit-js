@@ -2589,13 +2589,22 @@ describe('Player', function() {
       player.load();
     });
 
-    it('should set duration -1 for duration given', function(done) {
+    it('should set duration for duration given on paused', function(done) {
       player.ready().then(() => {
+        player.currentTime = player.duration;
+        player._engine.currentTime.should.equal(player.duration);
+        done();
+      });
+      player.load();
+    });
+
+    it('should set duration - 1 for duration given on playing', function(done) {
+      player.addEventListener(player.Event.PLAY, () => {
         player.currentTime = player.duration;
         player._engine.currentTime.should.equal(player.duration - 0.1);
         done();
       });
-      player.load();
+      player.play();
     });
   });
 
