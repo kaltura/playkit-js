@@ -653,7 +653,7 @@ export default class Player extends FakeEventTarget {
         if (to < 0) {
           boundedTo = 0;
         }
-        if (boundedTo > this._engine.duration - DURATION_OFFSET) {
+        if (boundedTo > this._engine.duration - DURATION_OFFSET && !this.paused) {
           boundedTo = this._engine.duration - DURATION_OFFSET;
         }
         this._engine.currentTime = boundedTo;
