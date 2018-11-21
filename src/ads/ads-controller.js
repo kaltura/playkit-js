@@ -2,15 +2,14 @@
 import Player from '../player';
 import {AdEventType} from './ad-event-type';
 import EventManager from '../event/event-manager';
-import FakeEventTarget from '../event/fake-event-target';
 import FakeEvent from '../event/fake-event';
 import {CustomEventType} from '../event/event-type';
 import Error from '../error/error';
 
-class AdsController extends FakeEventTarget implements IAdsController {
+class AdsController implements IAdsController {
   _player: Player;
   _adsPluginController: IAdsController;
-  _allAdsCompleted: boolean;
+  _hasPostRoll: boolean;
   _eventManager: EventManager;
 
   /**
@@ -19,7 +18,6 @@ class AdsController extends FakeEventTarget implements IAdsController {
    * @param {IAdsController} adsPluginController - the controller of the current plugin instance.
    */
   constructor(player: Player, adsPluginController: IAdsController) {
-    super();
     this._player = player;
     this._adsPluginController = adsPluginController;
     this._initMembers();
@@ -27,11 +25,11 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   /**
-   * Getter to the no more ads to play indication.
-   * @returns {boolean} - Whether all ads completed.
+   * Getter whether there is a post roll
+   * @returns {boolean} - there is a post roll.
    */
-  get allAdsCompleted(): boolean {
-    return this._allAdsCompleted;
+  get hasPostRoll(): boolean {
+    return this._hasPostRoll;
   }
 
   /**
@@ -54,29 +52,23 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _initMembers(): void {
-    this._allAdsCompleted = true;
+    this._hasPostRoll = false;
   }
 
   _addBindings(): void {
     this._eventManager = new EventManager();
-    this._eventManager.listen(this._player, AdEventType.AD_MANIFEST_LOADED, () => this._onAdManifestLoaded());
-    this._eventManager.listen(this._player, AdEventType.ALL_ADS_COMPLETED, event => this._onAllAdsCompleted(event));
+    this._eventManager.listen(this._player, AdEventType.AD_MANIFEST_LOADED, event => this._onAdManifestLoaded(event));
     this._eventManager.listen(this._player, AdEventType.AD_ERROR, event => this._onAdError(event));
     this._eventManager.listen(this._player, CustomEventType.PLAYER_RESET, () => this._reset());
   }
 
-  _onAdManifestLoaded(): void {
-    this._allAdsCompleted = false;
-  }
-
-  _onAllAdsCompleted(event: FakeEvent): void {
-    this._allAdsCompleted = true;
-    this.dispatchEvent(event);
+  _onAdManifestLoaded(event: FakeEvent): void {
+    this._hasPostRoll = event.payload.adBreaksPosition.includes(-1);
   }
 
   _onAdError(event: FakeEvent): void {
     if (event.payload.severity === Error.Severity.CRITICAL) {
-      this._allAdsCompleted = true;
+      this._hasPostRoll = false;
     }
   }
 

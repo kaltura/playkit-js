@@ -1866,8 +1866,8 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _onEnded(): void {
-    if (this._adsController && !this._adsController.allAdsCompleted) {
-      this._eventManager.listenOnce(this._adsController, AdEventType.ALL_ADS_COMPLETED, () => {
+    if (this._adsController && this._adsController.hasPostRoll) {
+      this._eventManager.listenOnce(this, AdEventType.ALL_ADS_COMPLETED, () => {
         this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_ENDED));
       });
     } else {
