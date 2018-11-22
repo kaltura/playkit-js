@@ -443,6 +443,7 @@ export default class Player extends FakeEventTarget {
     }
     if (this._hasSources(config.sources)) {
       this._configureOrLoadPlugins(config.plugins);
+      this._maybeCreateAdsController();
       this.reset();
       Player._logger.debug('Change source started');
       this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
@@ -474,8 +475,8 @@ export default class Player extends FakeEventTarget {
     } else {
       Utils.Object.mergeDeep(this._config, config);
       this._configureOrLoadPlugins(config.plugins);
+      this._maybeCreateAdsController();
     }
-    this._maybeCreateAdsController();
   }
 
   /**

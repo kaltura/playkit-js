@@ -4,7 +4,7 @@ import {AdEventType} from './ad-event-type';
 import EventManager from '../event/event-manager';
 import FakeEventTarget from '../event/fake-event-target';
 import FakeEvent from '../event/fake-event';
-import {CustomEventType} from '../event/event-type';
+import {CustomEventType, Html5EventType} from '../event/event-type';
 import Error from '../error/error';
 import {AdBreak} from './ad-break';
 import {Ad} from './ad';
@@ -106,6 +106,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
     this._eventManager.listen(this._player, AdEventType.ALL_ADS_COMPLETED, event => this._onAllAdsCompleted(event));
     this._eventManager.listen(this._player, AdEventType.AD_ERROR, event => this._onAdError(event));
     this._eventManager.listen(this._player, CustomEventType.PLAYER_RESET, () => this._reset());
+    this._eventManager.listen(this._player, Html5EventType.ENDED, () => this._onEnded());
   }
 
   _onAdManifestLoaded(event: FakeEvent): void {
@@ -133,6 +134,12 @@ class AdsController extends FakeEventTarget implements IAdsController {
 
   _onAdError(event: FakeEvent): void {
     if (event.payload.severity === Error.Severity.CRITICAL) {
+      this._allAdsCompleted = true;
+    }
+  }
+
+  _onEnded(): void {
+    if (!this._allAdsCompleted && !this._adBreaksLayout.includes(-1)) {
       this._allAdsCompleted = true;
     }
   }
