@@ -6,12 +6,17 @@ import FakeEventTarget from '../event/fake-event-target';
 import FakeEvent from '../event/fake-event';
 import {CustomEventType} from '../event/event-type';
 import Error from '../error/error';
+import {AdBreak} from './ad-break';
+import {Ad} from './ad';
 
 class AdsController extends FakeEventTarget implements IAdsController {
   _player: Player;
   _adsPluginController: IAdsController;
   _allAdsCompleted: boolean;
   _eventManager: EventManager;
+  _adBreaksLayout: Array<number>;
+  _adBreak: ?AdBreak;
+  _ad: ?Ad;
 
   /**
    * The ads controller.
@@ -35,6 +40,38 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   /**
+   * @public
+   * @returns {boolean} - Whether we're in an ad break.
+   */
+  isAdBreak(): boolean {
+    return !!this._adBreak;
+  }
+
+  /**
+   * @public
+   * @returns {boolean} - The ad breaks layout (cue points).
+   */
+  getAdBreaksLayout(): Array<number> {
+    return this._adBreaksLayout;
+  }
+
+  /**
+   * @public
+   * @returns {?AdBreak} - Gets the current ad break info.
+   */
+  getAdBreak(): ?AdBreak {
+    return this._adBreak;
+  }
+
+  /**
+   * @public
+   * @returns {?AdBreak} - Gets the current ad info.
+   */
+  getAd(): ?Ad {
+    return this._ad;
+  }
+
+  /**
    * Skip on an ad.
    * @public
    * @returns {void}
@@ -55,18 +92,38 @@ class AdsController extends FakeEventTarget implements IAdsController {
 
   _initMembers(): void {
     this._allAdsCompleted = true;
+    this._adBreaksLayout = [];
+    this._adBreak = null;
+    this._ad = null;
   }
 
   _addBindings(): void {
     this._eventManager = new EventManager();
-    this._eventManager.listen(this._player, AdEventType.AD_MANIFEST_LOADED, () => this._onAdManifestLoaded());
+    this._eventManager.listen(this._player, AdEventType.AD_MANIFEST_LOADED, event => this._onAdManifestLoaded(event));
+    this._eventManager.listen(this._player, AdEventType.AD_BREAK_START, event => this._onAdBreakStart(event));
+    this._eventManager.listen(this._player, AdEventType.AD_LOADED, event => this._onAdLoaded(event));
+    this._eventManager.listen(this._player, AdEventType.AD_BREAK_END, () => this._onAdBreakEnd());
     this._eventManager.listen(this._player, AdEventType.ALL_ADS_COMPLETED, event => this._onAllAdsCompleted(event));
     this._eventManager.listen(this._player, AdEventType.AD_ERROR, event => this._onAdError(event));
     this._eventManager.listen(this._player, CustomEventType.PLAYER_RESET, () => this._reset());
   }
 
-  _onAdManifestLoaded(): void {
+  _onAdManifestLoaded(event: FakeEvent): void {
+    this._adBreaksLayout = event.payload.adBreaksPosition;
     this._allAdsCompleted = false;
+  }
+
+  _onAdBreakStart(event: FakeEvent): void {
+    this._adBreak = event.payload.adBreak;
+  }
+
+  _onAdLoaded(event: FakeEvent): void {
+    this._ad = event.payload.ad;
+  }
+
+  _onAdBreakEnd(): void {
+    this._adBreak = null;
+    this._ad = null;
   }
 
   _onAllAdsCompleted(event: FakeEvent): void {
