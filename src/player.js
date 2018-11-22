@@ -475,7 +475,6 @@ export default class Player extends FakeEventTarget {
       Utils.Object.mergeDeep(this._config, config);
       this._configureOrLoadPlugins(config.plugins);
     }
-    this._maybeCreateAdsController();
   }
 
   /**
@@ -1414,6 +1413,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _configureOrLoadPlugins(plugins: Object = {}): void {
+    this._maybeCreateAdsController();
     if (plugins) {
       Object.keys(plugins).forEach(name => {
         // If the plugin is already exists in the registry we are updating his config
