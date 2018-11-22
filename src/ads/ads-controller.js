@@ -14,7 +14,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _adsPluginController: IAdsController;
   _allAdsCompleted: boolean;
   _eventManager: EventManager;
-  _adBreaksPosition: Array<number>;
+  _adBreaksLayout: Array<number>;
   _adBreak: ?AdBreak;
   _ad: ?Ad;
 
@@ -43,16 +43,16 @@ class AdsController extends FakeEventTarget implements IAdsController {
    * @public
    * @returns {boolean} - Whether we're in an ad break.
    */
-  adBreak(): boolean {
+  isAdBreak(): boolean {
     return !!this._adBreak;
   }
 
   /**
    * @public
-   * @returns {boolean} - The ad breaks position (cue points).
+   * @returns {boolean} - The ad breaks layout (cue points).
    */
-  getAdBreaksPosition(): Array<number> {
-    return this._adBreaksPosition;
+  getAdBreaksLayout(): Array<number> {
+    return this._adBreaksLayout;
   }
 
   /**
@@ -92,7 +92,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
 
   _initMembers(): void {
     this._allAdsCompleted = true;
-    this._adBreaksPosition = [];
+    this._adBreaksLayout = [];
     this._adBreak = null;
     this._ad = null;
   }
@@ -109,7 +109,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _onAdManifestLoaded(event: FakeEvent): void {
-    this._adBreaksPosition = event.payload.adBreaksPosition;
+    this._adBreaksLayout = event.payload.adBreaksPosition;
     this._allAdsCompleted = false;
   }
 
