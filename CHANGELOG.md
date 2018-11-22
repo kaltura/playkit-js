@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.42.0"></a>
+# [0.42.0](https://github.com/kaltura/playkit-js/compare/v0.41.2...v0.42.0) (2018-11-22)
+
+
+### Bug Fixes
+
+* **FEC-8712:** replay button does not display when using a non liner ad  ([#313](https://github.com/kaltura/playkit-js/issues/313)) ([9546140](https://github.com/kaltura/playkit-js/commit/9546140))
+
+
+### Features
+
+* **ads-controller:** add more ads APIs ([#312](https://github.com/kaltura/playkit-js/issues/312)) ([1f6fdf6](https://github.com/kaltura/playkit-js/commit/1f6fdf6))
+
+
+
 <a name="0.41.2"></a>
 ## [0.41.2](https://github.com/kaltura/playkit-js/compare/v0.41.1...v0.41.2) (2018-11-20)
 
