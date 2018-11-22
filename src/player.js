@@ -443,6 +443,7 @@ export default class Player extends FakeEventTarget {
     }
     if (this._hasSources(config.sources)) {
       this._configureOrLoadPlugins(config.plugins);
+      this._maybeCreateAdsController();
       this.reset();
       Player._logger.debug('Change source started');
       this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
@@ -474,6 +475,7 @@ export default class Player extends FakeEventTarget {
     } else {
       Utils.Object.mergeDeep(this._config, config);
       this._configureOrLoadPlugins(config.plugins);
+      this._maybeCreateAdsController();
     }
   }
 
@@ -1413,7 +1415,6 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _configureOrLoadPlugins(plugins: Object = {}): void {
-    this._maybeCreateAdsController();
     if (plugins) {
       Object.keys(plugins).forEach(name => {
         // If the plugin is already exists in the registry we are updating his config
