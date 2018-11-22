@@ -139,7 +139,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _onEnded(): void {
-    if (!this._allAdsCompleted && !this._adBreaksPosition.includes(-1)) {
+    if (!this._allAdsCompleted && !this._adBreaksLayout.includes(-1)) {
       this._allAdsCompleted = true;
     }
   }
