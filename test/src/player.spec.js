@@ -1870,6 +1870,7 @@ describe('Player', function() {
       afterEach(() => {
         PluginManager.unRegister('colors');
         PluginManager.unRegister('numbers');
+        player.destroy();
       });
 
       it('should load 2 plugins on initial config and configure them on configure', function() {
@@ -2072,6 +2073,10 @@ describe('Player', function() {
     });
 
     describe('playback lifecycle', () => {
+      afterEach(() => {
+        player.destroy();
+      });
+
       it('should save initial playback config and initiate it when received sources - 1', function() {
         player = new Player({
           playback: {
