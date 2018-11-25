@@ -161,8 +161,11 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _createTextTrack(caption: PKExternalCaptionObject, index: number): TextTrack {
+    const active =
+      !!caption.default &&
+      (this._player.config.playback.textLanguage === 'auto' || Track.langComparer(this._player.config.playback.textLanguage, caption.language));
     return new TextTrack({
-      active: !!caption.default,
+      active,
       index: index,
       kind: 'subtitles',
       label: caption.label,
