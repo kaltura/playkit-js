@@ -1,38 +1,20 @@
 import {ExternalCaptionsHandler} from '../../../src/track/external-captions-handler';
-import Player from '../../../src/player';
 import TextTrack from '../../../src/track/text-track';
-import {createElement, getConfigStructure, removeElement, removeVideoElementsFromTestPage} from '../utils/test-utils';
+import {getConfigStructure} from '../utils/test-utils';
 import {Object} from '../../../src/utils/util';
 import SourcesConfig from '../configs/sources.json';
 import {CustomEventType, Html5EventType} from '../../../src/event/event-type';
 import FakeEvent from '../../../src/event/fake-event';
+import FakeEventTarget from '../../../src/event/fake-event-target';
 
-const targetId = 'player-placeholder_player.spec';
 let sourcesConfig = Object.copyDeep(SourcesConfig);
 
-describe.skip('ExternalCaptionsHandler', () => {
+describe('ExternalCaptionsHandler', () => {
   describe('_getCuesString', () => {
-    let config, player, playerContainer, externalCaptionsHandler;
-
-    before(() => {
-      playerContainer = createElement('div', targetId);
-    });
+    let externalCaptionsHandler;
 
     beforeEach(() => {
-      config = getConfigStructure();
-      config.sources = sourcesConfig.MultipleSources;
-      player = new Player(config);
-      externalCaptionsHandler = new ExternalCaptionsHandler(player);
-      playerContainer.appendChild(player.getView());
-    });
-
-    afterEach(() => {
-      player.destroy();
-    });
-
-    after(() => {
-      removeVideoElementsFromTestPage();
-      removeElement(targetId);
+      externalCaptionsHandler = new ExternalCaptionsHandler({});
     });
 
     it('should load a vtt file (type specified)', done => {
@@ -46,7 +28,7 @@ describe.skip('ExternalCaptionsHandler', () => {
       });
     });
 
-    it.skip('should load a vtt file (type not specified)', done => {
+    it('should load a vtt file (type not specified)', done => {
       externalCaptionsHandler._textTrackModel['en'] = {
         url: '/base/test/src/assets/en.vtt',
         cues: []
@@ -90,27 +72,14 @@ describe.skip('ExternalCaptionsHandler', () => {
   });
 
   describe('_parseCues', () => {
-    let config, player, playerContainer, externalCaptionsHandler;
-
-    before(() => {
-      playerContainer = createElement('div', targetId);
-    });
+    let externalCaptionsHandler;
 
     beforeEach(() => {
-      config = getConfigStructure();
-      config.sources = sourcesConfig.MultipleSources;
-      player = new Player(config);
-      externalCaptionsHandler = new ExternalCaptionsHandler(player);
-      playerContainer.appendChild(player.getView());
+      externalCaptionsHandler = new ExternalCaptionsHandler({});
     });
 
     afterEach(() => {
-      player.destroy();
-    });
-
-    after(() => {
-      removeVideoElementsFromTestPage();
-      removeElement(targetId);
+      // player.destroy();
     });
 
     it('should load and parse a vtt cue string', done => {
@@ -128,28 +97,11 @@ describe.skip('ExternalCaptionsHandler', () => {
     });
   });
 
-  describe.skip('_convertSrtToVtt', () => {
-    let config, player, playerContainer, externalCaptionsHandler;
-
-    before(() => {
-      playerContainer = createElement('div', targetId);
-    });
+  describe('_convertSrtToVtt', () => {
+    let externalCaptionsHandler;
 
     beforeEach(() => {
-      config = getConfigStructure();
-      config.sources = sourcesConfig.MultipleSources;
-      player = new Player(config);
-      externalCaptionsHandler = new ExternalCaptionsHandler(player);
-      playerContainer.appendChild(player.getView());
-    });
-
-    afterEach(() => {
-      player.destroy();
-    });
-
-    after(() => {
-      removeVideoElementsFromTestPage();
-      removeElement(targetId);
+      externalCaptionsHandler = new ExternalCaptionsHandler({});
     });
 
     it('should convert an srt string to vtt string', () => {
@@ -174,32 +126,15 @@ describe.skip('ExternalCaptionsHandler', () => {
   });
 
   describe('_downloadAndParseCues', () => {
-    let config, player, playerContainer, externalCaptionsHandler;
-
-    before(() => {
-      playerContainer = createElement('div', targetId);
-    });
+    let externalCaptionsHandler;
 
     beforeEach(() => {
-      config = getConfigStructure();
-      config.sources = sourcesConfig.MultipleSources;
-      player = new Player(config);
-      externalCaptionsHandler = new ExternalCaptionsHandler(player);
-      playerContainer.appendChild(player.getView());
+      externalCaptionsHandler = new ExternalCaptionsHandler({});
       externalCaptionsHandler._textTrackModel['en'] = {
         url: '/base/test/src/assets/en.vtt',
         type: 'vtt',
         cues: []
       };
-    });
-
-    afterEach(() => {
-      player.destroy();
-    });
-
-    after(() => {
-      removeVideoElementsFromTestPage();
-      removeElement(targetId);
     });
 
     it('should download and parse the vtt file', done => {
@@ -222,27 +157,10 @@ describe.skip('ExternalCaptionsHandler', () => {
   });
 
   describe('_getFileType', () => {
-    let config, player, playerContainer, externalCaptionsHandler;
-
-    before(() => {
-      playerContainer = createElement('div', targetId);
-    });
+    let externalCaptionsHandler;
 
     beforeEach(() => {
-      config = getConfigStructure();
-      config.sources = sourcesConfig.MultipleSources;
-      player = new Player(config);
-      externalCaptionsHandler = new ExternalCaptionsHandler(player);
-      playerContainer.appendChild(player.getView());
-    });
-
-    afterEach(() => {
-      player.destroy();
-    });
-
-    after(() => {
-      removeVideoElementsFromTestPage();
-      removeElement(targetId);
+      externalCaptionsHandler = new ExternalCaptionsHandler({});
     });
 
     it('should return srt', () => {
@@ -267,19 +185,13 @@ describe.skip('ExternalCaptionsHandler', () => {
   });
 
   describe('_handleCaptionOnTimeUpdate', () => {
-    let config, player, playerContainer, externalCaptionsHandler, textTrack;
-
-    before(() => {
-      playerContainer = createElement('div', targetId);
-    });
+    let player, externalCaptionsHandler, textTrack;
 
     beforeEach(() => {
-      config = getConfigStructure();
-      config.sources = sourcesConfig.MultipleSources;
-      config.playback = {};
-      player = new Player(config);
+      player = {
+        getTracks: () => []
+      };
       externalCaptionsHandler = new ExternalCaptionsHandler(player);
-      playerContainer.appendChild(player.getView());
       externalCaptionsHandler._textTrackModel['en'] = {
         cues: [
           {startTime: 1, endTime: 2},
@@ -290,15 +202,6 @@ describe.skip('ExternalCaptionsHandler', () => {
         ]
       };
       textTrack = new TextTrack({language: 'en'});
-    });
-
-    afterEach(() => {
-      player.destroy();
-    });
-
-    after(() => {
-      removeVideoElementsFromTestPage();
-      removeElement(targetId);
     });
 
     it('should not update the active cues and not raise an event', done => {
@@ -377,11 +280,7 @@ describe.skip('ExternalCaptionsHandler', () => {
   });
 
   describe('createExternalTracks', () => {
-    let config, player, playerContainer, externalCaptionsHandler;
-
-    before(() => {
-      playerContainer = createElement('div', targetId);
-    });
+    let config, player, externalCaptionsHandler;
 
     beforeEach(() => {
       config = getConfigStructure();
@@ -398,18 +297,11 @@ describe.skip('ExternalCaptionsHandler', () => {
           url: 'someurl'
         }
       ];
-      player = new Player(config);
+      player = {
+        config,
+        _tracks: []
+      };
       externalCaptionsHandler = new ExternalCaptionsHandler(player);
-      playerContainer.appendChild(player.getView());
-    });
-
-    afterEach(() => {
-      player.destroy();
-    });
-
-    after(() => {
-      removeVideoElementsFromTestPage();
-      removeElement(targetId);
     });
 
     it('should return an array with 2 textTracks elements', () => {
@@ -425,25 +317,19 @@ describe.skip('ExternalCaptionsHandler', () => {
       config = getConfigStructure();
       config.sources = sourcesConfig.MultipleSources;
       config.sources.captions = null;
-      player.configure(config);
-      externalCaptionsHandler = new ExternalCaptionsHandler(player);
       externalCaptionsHandler.getExternalTracks([]).length.should.equal(0);
     });
   });
 
   describe('selectTextTrack', () => {
-    let config, player, playerContainer, externalCaptionsHandler;
-
-    before(() => {
-      playerContainer = createElement('div', targetId);
-    });
+    let config, externalCaptionsHandler;
 
     beforeEach(() => {
       config = getConfigStructure();
       config.sources = sourcesConfig.MultipleSources;
-      player = new Player(config);
-      externalCaptionsHandler = new ExternalCaptionsHandler(player);
-      playerContainer.appendChild(player.getView());
+      externalCaptionsHandler = new ExternalCaptionsHandler({
+        config
+      });
       externalCaptionsHandler._textTrackModel['en'] = {
         cues: [
           {startTime: 1, endTime: 2},
@@ -455,15 +341,6 @@ describe.skip('ExternalCaptionsHandler', () => {
         url: '/base/test/src/assets/en.vtt',
         type: 'vtt'
       };
-    });
-
-    afterEach(() => {
-      player.destroy();
-    });
-
-    after(() => {
-      removeVideoElementsFromTestPage();
-      removeElement(targetId);
     });
 
     it('should select existing english text track and dispatch a text track changed event', done => {
@@ -497,18 +374,18 @@ describe.skip('ExternalCaptionsHandler', () => {
   });
 
   describe('hideTextTrack', () => {
-    let config, player, playerContainer, externalCaptionsHandler;
-
-    before(() => {
-      playerContainer = createElement('div', targetId);
-    });
+    let config, externalCaptionsHandler, player;
+    function Player() {}
+    Player.prototype = new FakeEventTarget(); // so it can dispatch an event
+    Player.prototype.getTracks = () => [];
 
     beforeEach(() => {
       config = getConfigStructure();
       config.sources = sourcesConfig.MultipleSources;
-      player = new Player(config);
+      player = new Player();
+      player.config = config;
+
       externalCaptionsHandler = new ExternalCaptionsHandler(player);
-      playerContainer.appendChild(player.getView());
       externalCaptionsHandler._textTrackModel['en'] = {
         cues: [
           {startTime: 1, endTime: 2},
@@ -523,15 +400,10 @@ describe.skip('ExternalCaptionsHandler', () => {
     });
 
     afterEach(() => {
-      player.destroy();
+      player = null;
     });
 
-    after(() => {
-      removeVideoElementsFromTestPage();
-      removeElement(targetId);
-    });
-
-    it('should stop listen to timeupdate', done => {
+    it('should stop listen to timeupdate after calling hidetexttrack', done => {
       externalCaptionsHandler._textTrackModel['en'].cuesStatus = 3;
       externalCaptionsHandler.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, () => {
         externalCaptionsHandler.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, () => {
