@@ -561,6 +561,7 @@ describe('Player', function() {
     });
 
     after(() => {
+      player.destroy();
       removeVideoElementsFromTestPage();
       removeElement(targetId);
     });
@@ -1340,6 +1341,7 @@ describe('Player', function() {
       player.Track.VIDEO.should.be.equal('video');
       player.Track.AUDIO.should.be.equal('audio');
       player.Track.TEXT.should.be.equal('text');
+      player.destroy();
     });
   });
 
@@ -1603,6 +1605,7 @@ describe('Player', function() {
         playerContainer.appendChild(player.getView());
         player.addEventListener(CustomEventType.ABR_MODE_CHANGED, event => {
           event.payload.mode.should.equal('manual');
+          player.destroy();
           done();
         });
         player.load();
@@ -1614,11 +1617,13 @@ describe('Player', function() {
         playerContainer.appendChild(player.getView());
         player.addEventListener(CustomEventType.ABR_MODE_CHANGED, event => {
           event.payload.mode.should.equal('auto');
+          player.destroy();
           done();
         });
         if (player._engine) {
           player.load();
         } else {
+          player.destroy();
           done();
         }
       });
