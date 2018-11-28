@@ -75,6 +75,10 @@ export default class StateManager {
       [Html5EventType.PLAY]: () => {
         this._updateState(StateType.BUFFERING);
         this._dispatchEvent();
+      },
+      [Html5EventType.SEEKED]: () => {
+        this._updateState(StateType.PAUSED);
+        this._dispatchEvent();
       }
     },
     [StateType.LOADING]: {
