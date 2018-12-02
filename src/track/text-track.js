@@ -46,7 +46,7 @@ export default class TextTrack extends Track {
    */
   constructor(settings: Object = {}) {
     super(settings);
-    // some of the OTT dash manifests do not return a label, we will take the language instead.
+    // use language tag if no display label is available
     this._label = this.label || this.language;
     this._kind = settings.kind;
     this._external = settings.external;
