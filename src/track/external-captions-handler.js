@@ -99,8 +99,6 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   hideTextTrack(): void {
     // only if external text track was active we need to hide it.
     if (this._isTextTrackActive) {
-      const offTrack = this._player.getTracks(TrackType.TEXT).find(track => track instanceof TextTrack && track.language === 'off');
-      this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: offTrack}));
       this._eventManager.unlisten(this._player, Html5EventType.TIME_UPDATE);
       this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: []}));
       this._resetCurrentTrack();
@@ -163,9 +161,6 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _createTextTrack(caption: PKExternalCaptionObject, index: number): TextTrack {
-    // const active =
-    //   !!caption.default &&
-    //   (this._player.config.playback.textLanguage === 'auto' || Track.langComparer(this._player.config.playback.textLanguage, caption.language));
     if (caption.default) {
       this._isTextTrackActive = true;
     }
