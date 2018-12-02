@@ -165,7 +165,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       this._isTextTrackActive = true;
     }
     return new TextTrack({
-      active: caption.default,
+      active: !!caption.default,
       index: index,
       kind: 'subtitles',
       label: caption.label,
@@ -199,8 +199,8 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     if (this._textTrackModel[textTrack.language]) {
       if (this._textTrackModel[textTrack.language].cuesStatus === CuesStatus.DOWNLOADED && !this._player.config.playback.useNativeTextTrack) {
         textTrack.active = true;
-        this.hideTextTrack();
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
+        this.hideTextTrack();
         this._setTextTrack(textTrack);
       } else if (this._textTrackModel[textTrack.language].cuesStatus === CuesStatus.NOT_DOWNLOADED) {
         textTrack.active = true;
