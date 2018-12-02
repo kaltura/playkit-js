@@ -99,6 +99,8 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   hideTextTrack(): void {
     // only if external text track was active we need to hide it.
     if (this._isTextTrackActive) {
+      const offTrack = this._player.getTracks(TrackType.TEXT).find(track => track instanceof TextTrack && track.language === 'off');
+      this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: offTrack}));
       this._eventManager.unlisten(this._player, Html5EventType.TIME_UPDATE);
       this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: []}));
       this._resetCurrentTrack();
@@ -161,11 +163,14 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _createTextTrack(caption: PKExternalCaptionObject, index: number): TextTrack {
-    const active =
-      !!caption.default &&
-      (this._player.config.playback.textLanguage === 'auto' || Track.langComparer(this._player.config.playback.textLanguage, caption.language));
+    // const active =
+    //   !!caption.default &&
+    //   (this._player.config.playback.textLanguage === 'auto' || Track.langComparer(this._player.config.playback.textLanguage, caption.language));
+    if (caption.default) {
+      this._isTextTrackActive = true;
+    }
     return new TextTrack({
-      active,
+      active: caption.default,
       index: index,
       kind: 'subtitles',
       label: caption.label,
@@ -199,8 +204,8 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     if (this._textTrackModel[textTrack.language]) {
       if (this._textTrackModel[textTrack.language].cuesStatus === CuesStatus.DOWNLOADED && !this._player.config.playback.useNativeTextTrack) {
         textTrack.active = true;
-        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
         this.hideTextTrack();
+        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
         this._setTextTrack(textTrack);
       } else if (this._textTrackModel[textTrack.language].cuesStatus === CuesStatus.NOT_DOWNLOADED) {
         textTrack.active = true;
