@@ -81,11 +81,16 @@ class FairplayDrmHandler {
     let request = new XMLHttpRequest();
     request.responseType = 'text';
     request.addEventListener('load', (e: Event) => this._licenseRequestLoaded(e), false);
-    request.addEventListener('error', () => this._onError((Error.Code: CodeType).LICENSE_REQUEST_FAILED), false);
     let params = FairplayDrmHandler._base64EncodeUint8Array(message);
     request.open('POST', this._config.licenseUrl, true);
     request.setRequestHeader('Content-type', 'application/json');
     this._logger.debug('Ready for license request');
+    request.onerror = () => {
+      this._onError((Error.Code: CodeType).LICENSE_REQUEST_FAILED, {
+        status: request.status,
+        responseText: request.responseText
+      });
+    };
     request.send(params);
   }
 
@@ -104,12 +109,22 @@ class FairplayDrmHandler {
   _licenseRequestLoaded(event: any): void {
     this._logger.debug('License request loaded');
     let request = event.target;
-    let keyText = request.responseText.trim();
+    if (request.status > 299) {
+      this._onError((Error.Code: CodeType).LICENSE_REQUEST_FAILED, {
+        status: request.status,
+        error: request.responseText
+      });
+      return;
+    }
     let responseObj = {};
     try {
+      let keyText = request.responseText.trim();
       responseObj = JSON.parse(keyText);
     } catch (error) {
-      this._onError((Error.Code: CodeType).BAD_FAIRPLAY_RESPONSE, error);
+      this._onError((Error.Code: CodeType).BAD_FAIRPLAY_RESPONSE, {
+        error,
+        responseText: request.responseText
+      });
     }
     let isValidResponse = FairplayDrmHandler._validateResponse(responseObj);
     if (isValidResponse.valid) {
