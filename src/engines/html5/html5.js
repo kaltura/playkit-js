@@ -74,14 +74,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   static id: string = 'html5';
 
   /**
-   * A video element for browsers which block auto play.
-   * @type {HTMLVideoElement}
-   * @private
-   * @static
-   */
-  static _el: HTMLVideoElement;
-
-  /**
    * Checks if html5 is supported.
    * @returns {boolean} - Whether the html5 is supported.
    */
@@ -153,8 +145,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   static prepareVideoElement(): void {
     Html5._logger.debug('Prepare the video element for playing');
-    Html5._el = Utils.Dom.createElement('video');
-    Html5._el.load();
+    this._el = Utils.Dom.createElement('video');
+    this._el.load();
   }
 
   /**
@@ -836,7 +828,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   _createVideoElement(): void {
-    this._el = Html5._el || Utils.Dom.createElement('video');
+    this._el = this._el || Utils.Dom.createElement('video');
     this._el.id = Utils.Generator.uniqueId(5);
     this._el.controls = false;
   }
