@@ -181,12 +181,13 @@ export default class Player extends FakeEventTarget {
   /**
    * For browsers which block auto play, use the user gesture to open the video element and enable playing via API.
    * @returns {void}
+   * @param {string} targetId - the target id of the player
    * @private
    * @static
    */
-  static _prepareVideoElement(): void {
+  static _prepareVideoElement(targetId: string): void {
     EngineProvider.getEngines().forEach((Engine: typeof IEngine) => {
-      Engine.prepareVideoElement();
+      Engine.prepareVideoElement(targetId);
     });
   }
 
@@ -400,7 +401,7 @@ export default class Player extends FakeEventTarget {
    */
   constructor(config: Object = {}) {
     super();
-    Player._prepareVideoElement();
+    Player._prepareVideoElement(config.targetId);
     Player.runCapabilities();
     this._env = Env;
     this._tracks = [];
@@ -530,7 +531,7 @@ export default class Player extends FakeEventTarget {
       this._playbackMiddleware.play(() => this._play());
     } else if (this._loadingMedia) {
       // load media requested but the response is delayed
-      Player._prepareVideoElement();
+      Player._prepareVideoElement(this.config.targetId);
       this._playbackMiddleware.play(() => this._playAfterAsyncMiddleware());
     } else {
       this.dispatchEvent(

@@ -74,6 +74,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   static id: string = 'html5';
 
   /**
+   * @type {string: HTMLVideoElement} - mapping between targetId to the video element.
+   */
+  static videoElementStore: PKVideoElementStore = {};
+
+  /**
    * Checks if html5 is supported.
    * @returns {boolean} - Whether the html5 is supported.
    */
@@ -140,13 +145,15 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * For browsers which block auto play, use the user gesture to open the video element and enable playing via API.
    * @returns {void}
+   * @param {string} targetId - the id to be set as the key of the video element
    * @private
    * @public
    */
-  static prepareVideoElement(): void {
+  static prepareVideoElement(targetId: string): void {
     Html5._logger.debug('Prepare the video element for playing');
-    this._el = Utils.Dom.createElement('video');
-    this._el.load();
+    const videoElement = Utils.Dom.createElement('video');
+    Html5.videoElementStore[targetId] = videoElement;
+    videoElement.load();
   }
 
   /**
@@ -164,7 +171,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     super();
     this._eventManager = new EventManager();
     this._canLoadMediaSourceAdapterPromise = Promise.resolve();
-    this._createVideoElement();
+    this._createVideoElement(config.tagetId);
     this._init(source, config);
   }
 
@@ -824,11 +831,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Creates a video element dom object.
+   * @param {string} targetId - the id to be set as the key of the video element
    * @private
    * @returns {void}
    */
-  _createVideoElement(): void {
-    this._el = this._el || Utils.Dom.createElement('video');
+  _createVideoElement(targetId: string): void {
+    this._el = Html5.videoElementStore[targetId] || Utils.Dom.createElement('video');
     this._el.id = Utils.Generator.uniqueId(5);
     this._el.controls = false;
   }
