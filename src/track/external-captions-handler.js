@@ -161,9 +161,6 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _createTextTrack(caption: PKExternalCaptionObject, index: number): TextTrack {
-    if (caption.default) {
-      this._isTextTrackActive = true;
-    }
     return new TextTrack({
       active: !!caption.default,
       index: index,
