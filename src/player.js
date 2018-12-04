@@ -181,13 +181,13 @@ export default class Player extends FakeEventTarget {
   /**
    * For browsers which block auto play, use the user gesture to open the video element and enable playing via API.
    * @returns {void}
-   * @param {string} targetId - the target id of the player
+   * @param {string} playerId - the target id of the player
    * @private
    * @static
    */
-  static _prepareVideoElement(targetId: string): void {
+  static _prepareVideoElement(playerId: string): void {
     EngineProvider.getEngines().forEach((Engine: typeof IEngine) => {
-      Engine.prepareVideoElement(targetId);
+      Engine.prepareVideoElement(playerId);
     });
   }
 
@@ -401,7 +401,8 @@ export default class Player extends FakeEventTarget {
    */
   constructor(config: Object = {}) {
     super();
-    Player._prepareVideoElement(config.targetId);
+    this._playerId = Utils.Generator.uniqueId(5);
+    Player._prepareVideoElement(this._playerId);
     Player.runCapabilities();
     this._env = Env;
     this._tracks = [];
@@ -531,7 +532,7 @@ export default class Player extends FakeEventTarget {
       this._playbackMiddleware.play(() => this._play());
     } else if (this._loadingMedia) {
       // load media requested but the response is delayed
-      Player._prepareVideoElement(this.config.targetId);
+      Player._prepareVideoElement(this._playerId);
       this._playbackMiddleware.play(() => this._playAfterAsyncMiddleware());
     } else {
       this.dispatchEvent(
@@ -1367,7 +1368,6 @@ export default class Player extends FakeEventTarget {
   _createPlayerContainer(): void {
     const el = (this._el = Utils.Dom.createElement('div'));
     Utils.Dom.addClassName(el, CONTAINER_CLASS_NAME);
-    this._playerId = Utils.Generator.uniqueId(5);
     Utils.Dom.setAttribute(el, 'id', this._playerId);
     Utils.Dom.setAttribute(el, 'tabindex', '-1');
   }

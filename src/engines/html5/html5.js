@@ -74,7 +74,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   static id: string = 'html5';
 
   /**
-   * @type {PKVideoElementStore} - mapping between targetId to the video element.
+   * @type {PKVideoElementStore} - mapping between playerId to the video element.
    */
   static videoElementStore: PKVideoElementStore = {};
 
@@ -145,14 +145,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * For browsers which block auto play, use the user gesture to open the video element and enable playing via API.
    * @returns {void}
-   * @param {string} targetId - the id to be set as the key of the video element
+   * @param {string} playerId - the id to be set as the key of the video element
    * @private
    * @public
    */
-  static prepareVideoElement(targetId: string): void {
+  static prepareVideoElement(playerId: string): void {
     Html5._logger.debug('Prepare the video element for playing');
     const videoElement = Utils.Dom.createElement('video');
-    Html5.videoElementStore[targetId] = videoElement;
+    Html5.videoElementStore[playerId] = videoElement;
     videoElement.load();
   }
 
@@ -831,12 +831,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Creates a video element dom object.
-   * @param {string} targetId - the id to be set as the key of the video element
+   * @param {string} playerId - the id to be set as the key of the video element
    * @private
    * @returns {void}
    */
-  _createVideoElement(targetId: string): void {
-    this._el = Html5.videoElementStore[targetId] || Utils.Dom.createElement('video');
+  _createVideoElement(playerId: string): void {
+    this._el = Html5.videoElementStore[playerId] || Utils.Dom.createElement('video');
     this._el.id = Utils.Generator.uniqueId(5);
     this._el.controls = false;
   }
