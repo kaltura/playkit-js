@@ -400,6 +400,7 @@ export default class Player extends FakeEventTarget {
    */
   constructor(config: Object = {}) {
     super();
+    Player._prepareVideoElement();
     Player.runCapabilities();
     this._env = Env;
     this._tracks = [];
@@ -608,6 +609,7 @@ export default class Player extends FakeEventTarget {
     if (this._destroyed) return;
     //make sure all services are destroyed before engine and engine attributes are destroyed
     this._externalCaptionsHandler.destroy();
+    Player._playerCapabilities = {};
     this._posterManager.destroy();
     this._pluginManager.destroy();
     this._stateManager.destroy();
@@ -2121,6 +2123,7 @@ export default class Player extends FakeEventTarget {
     const track: ?Track = this._getTracksByType(type).find(track => Track.langComparer(language, track.language));
     if (track) {
       this.selectTrack(track);
+      this._markActiveTrack(track);
     } else if (defaultTrack && !defaultTrack.active) {
       this.selectTrack(defaultTrack);
     }
