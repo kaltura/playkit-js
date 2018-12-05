@@ -303,7 +303,11 @@ describe('NativeAdapter: _getParsedTracks', function() {
         if (track instanceof TextTrack) {
           track.kind.should.equal(video.textTracks[track.index].kind);
           track.active.should.equal(video.textTracks[track.index].mode === 'showing');
-          track.label.should.equal(video.textTracks[track.index].label);
+          if (video.textTracks[track.index].label) {
+            track.label.should.equal(video.textTracks[track.index].label);
+          } else {
+            track.label.should.equal(video.textTracks[track.index].language);
+          }
           track.language.should.equal(video.textTracks[track.index].language);
         }
       });

@@ -1008,6 +1008,10 @@ var config = {
 >   }
 > };
 > ```
+>
+> **Important**:
+> A Text track has language and label properties. The label is set by the label property in the manifest.
+> However, in case the manifest does not have a label property - the language property will be set as the tracks label.
 
 ##
 

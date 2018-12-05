@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.42.1"></a>
+## [0.42.1](https://github.com/kaltura/playkit-js/compare/v0.42.0...v0.42.1) (2018-12-04)
+
+
+### Bug Fixes
+
+* **FEC-8715:** if label does not exist in manifest use the language property ([#320](https://github.com/kaltura/playkit-js/issues/320)) ([774ac77](https://github.com/kaltura/playkit-js/commit/774ac77))
+
+
+
 <a name="0.42.0"></a>
 # [0.42.0](https://github.com/kaltura/playkit-js/compare/v0.41.2...v0.42.0) (2018-11-22)
 
