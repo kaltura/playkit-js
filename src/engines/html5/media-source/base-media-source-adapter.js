@@ -1,14 +1,14 @@
 //@flow
 /* eslint-disable no-unused-vars */
-import FakeEvent from '../../../event/fake-event'
-import FakeEventTarget from '../../../event/fake-event-target'
-import Error from '../../../error/error'
-import {CustomEventType, Html5EventType} from '../../../event/event-type'
-import getLogger from '../../../utils/logger'
-import Track from '../../../track/track'
-import VideoTrack from '../../../track/video-track'
-import AudioTrack from '../../../track/audio-track'
-import TextTrack from '../../../track/text-track'
+import FakeEvent from '../../../event/fake-event';
+import FakeEventTarget from '../../../event/fake-event-target';
+import Error from '../../../error/error';
+import {CustomEventType, Html5EventType} from '../../../event/event-type';
+import getLogger from '../../../utils/logger';
+import Track from '../../../track/track';
+import VideoTrack from '../../../track/video-track';
+import AudioTrack from '../../../track/audio-track';
+import TextTrack from '../../../track/text-track';
 
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
   /**
@@ -23,7 +23,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @member {Object} _config
    * @private
    */
-  _config: ?Object;
+  _config: Object;
 
   /**
    * The source object.
@@ -38,6 +38,12 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @private
    */
   _videoElement: HTMLVideoElement;
+
+  /**
+   * The adapter capabilities
+   * @private
+   */
+  _capabilities: PKMediaSourceCapabilities = {fpsControl: false};
 
   /**
    * Checks if the media source adapter is supported.
@@ -70,7 +76,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    */
   destroy(): Promise<*> {
     this._sourceObj = null;
-    this._config = null;
+    this._config = {};
     return Promise.resolve();
   }
 
@@ -146,6 +152,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return BaseMediaSourceAdapter._throwNotImplementedError('isLive');
   }
 
+  setMaxBitrate(bitrate: number): void {
+    return;
+  }
+
   /**
    * Handling live time update (as is not triggered when video is paused, but the current time changed)
    * @function _handleLiveTimeUpdate
@@ -158,6 +168,16 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
         this._trigger(Html5EventType.TIME_UPDATE);
       }
     });
+  }
+
+  /**
+   * Checks if the adapter can recover from an error triggered by the video element error
+   * @param {Event} event - the html5 video element error
+   * @returns {boolean} - if it can recover or not
+   * @public
+   */
+  handleMediaError(event: ?MediaError): boolean {
+    return false;
   }
 
   getStartTimeOfDvrWindow(): number {
@@ -222,6 +242,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     if (this._loadPromise && this._sourceObj) {
       return this._sourceObj.url;
     }
-    return "";
+    return '';
+  }
+
+  get capabilities(): PKMediaSourceCapabilities {
+    return this._capabilities;
   }
 }

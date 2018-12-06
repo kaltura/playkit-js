@@ -1,5 +1,5 @@
 //@flow
-import Track from './track'
+import Track from './track';
 
 /**
  * Video track representation of the player.
@@ -60,6 +60,6 @@ export default class VideoTrack extends Track {
     this._bandwidth = settings.bandwidth;
     this._width = settings.width;
     this._height = settings.height;
-    this._label = this._height ? this._height + 'p' : undefined;
+    this._label = settings.label ? settings.label : this._height ? this._height + 'p' : undefined;
   }
 }

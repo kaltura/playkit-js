@@ -1,6 +1,6 @@
-import DrmSupport from '../../../src/drm/drm-support'
-import {DrmScheme} from '../../../src/drm/drm-scheme'
-import Env from '../../../src/utils/env'
+import DrmSupport from '../../../src/drm/drm-support';
+import {DrmScheme} from '../../../src/drm/drm-scheme';
+import Env from '../../../src/utils/env';
 
 describe('DrmSupport', () => {
   let sandbox;
@@ -31,7 +31,6 @@ describe('DrmSupport', () => {
     Env.browser.name = 'Chrome';
     DrmSupport.isProtocolSupported(DrmScheme.FAIRPLAY, [{scheme: DrmScheme.FAIRPLAY}]).should.be.false;
   });
-
 
   it('should return true for widevine on mobile/android/chrome with widevine data', () => {
     Env.device.type = 'mobile';
@@ -97,5 +96,18 @@ describe('DrmSupport', () => {
     Env.browser.name = 'IE';
     DrmSupport.isProtocolSupported(DrmScheme.WIDEVINE, [{scheme: DrmScheme.WIDEVINE}]).should.be.false;
   });
-});
 
+  it('should return true for fairplay on mobile/safari mobile 11 with fairplay data', () => {
+    Env.device.type = 'mobile';
+    Env.browser.name = 'Mobile Safari';
+    Env.browser.major = '11';
+    DrmSupport.isProtocolSupported(DrmScheme.FAIRPLAY, [{scheme: DrmScheme.FAIRPLAY}]).should.be.true;
+  });
+
+  it('should return false for fairplay on mobile/safari mobile 9 with fairplay data', () => {
+    Env.device.type = 'mobile';
+    Env.browser.name = 'Mobile Safari';
+    Env.browser.major = '9';
+    DrmSupport.isProtocolSupported(DrmScheme.FAIRPLAY, [{scheme: DrmScheme.FAIRPLAY}]).should.be.false;
+  });
+});

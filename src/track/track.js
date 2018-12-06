@@ -15,10 +15,14 @@ export default class Track {
     try {
       inputLang = inputLang.toLowerCase();
       trackLang = trackLang.toLowerCase();
-      return inputLang ? (inputLang.startsWith(trackLang) || trackLang.startsWith(inputLang)) : false;
+      return inputLang ? inputLang.startsWith(trackLang) || trackLang.startsWith(inputLang) : false;
     } catch (e) {
       return false;
     }
+  }
+
+  static clone<T>(track: any): T {
+    return (Object.assign(Object.create(Object.getPrototypeOf(track)), track): T);
   }
 
   /**
@@ -56,6 +60,13 @@ export default class Track {
    * @private
    */
   _index: number;
+  /**
+   * The clone function reference.
+   * @member
+   * @type {Function}
+   * @public
+   */
+  clone: Function;
 
   /**
    * Getter for the track id.
@@ -112,6 +123,16 @@ export default class Track {
   }
 
   /**
+   * Setter for the index of the track.
+   * @public
+   * @param {number} value - The index of the track.
+   * @returns {void}
+   */
+  set index(value: number): void {
+    this._index = value;
+  }
+
+  /**
    * Setter for the label of the track.
    * @public
    * @param {string} value - The label of the track.
@@ -130,5 +151,6 @@ export default class Track {
     this._label = settings.label;
     this._language = settings.language;
     this._index = settings.index;
+    this.clone = Track.clone.bind(null, this);
   }
 }

@@ -1,6 +1,6 @@
 // @flow
-import Middleware from './middleware'
-import BaseMiddleware from './base-middleware'
+import Middleware from './middleware';
+import BaseMiddleware from './base-middleware';
 
 /**
  * The playback middleware.
@@ -10,7 +10,7 @@ export default class PlaybackMiddleware {
    * The actions of the playback middleware.
    * @static
    */
-  static Actions: { [action: string]: string } = {
+  static Actions: {[action: string]: string} = {
     PLAY: 'play',
     PAUSE: 'pause'
   };

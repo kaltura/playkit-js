@@ -1,3 +1,6 @@
+# MacOS
+.DS_Store
+
 # Logs
 logs
 *.log
@@ -32,8 +35,11 @@ jspm_packages
 
 # Optional npm cache directory
 .npm
+.npmrc
 
 # Optional REPL history
 .node_repl_history
 
 .idea
+
+dist/

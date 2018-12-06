@@ -1,9 +1,8 @@
 //@flow
-import * as Utils from '../utils/util'
+import * as Utils from '../utils/util';
+import {AdEventType} from '../ads/ad-event-type';
 
-export type EventTypes = { [event: string]: string };
-
-const Html5EventType: EventTypes = {
+const Html5EventType: PKEventTypes = {
   /**
    * Fires when the loading of an audio/video is aborted
    */
@@ -91,10 +90,26 @@ const Html5EventType: EventTypes = {
   /**
    * Fires when the video stops because it needs to buffer the next frame
    */
-  WAITING: 'waiting'
+  WAITING: 'waiting',
+  /**
+   * Fires when the engine enters picture in picture
+   */
+  ENTER_PICTURE_IN_PICTURE: 'enterpictureinpicture',
+  /**
+   * Fires when the engine exits picture in picture
+   */
+  LEAVE_PICTURE_IN_PICTURE: 'leavepictureinpicture',
+  /**
+   * Fires when the engine changes presentation mode on safari webkitpresentationmodechanged
+   */
+  PRESENTATION_MODE_CHANGED: 'webkitpresentationmodechanged'
 };
 
-const CustomEventType: EventTypes = {
+const CustomEventType: PKEventTypes = {
+  /**
+   * Fires when the media is loaded.
+   */
+  MEDIA_LOADED: 'medialoaded',
   /**
    * Fires when the player ends reset operation.
    */
@@ -168,9 +183,21 @@ const CustomEventType: EventTypes = {
    */
   PLAYER_STATE_CHANGED: 'playerstatechanged',
   /**
-   * Fires on the first play.
+   * Fires when playback start requested.
+   */
+  PLAYBACK_START: 'playbackstart',
+  /**
+   * Fires on the first 'play' event.
    */
   FIRST_PLAY: 'firstplay',
+  /**
+   * Fires on the first 'playing' event.
+   */
+  FIRST_PLAYING: 'firstplaying',
+  /**
+   * Fires when the playback (includes postrolls) is ended.
+   */
+  PLAYBACK_ENDED: 'playbackended',
   /**
    * Fires when the player has selected the source to play.
    */
@@ -180,79 +207,29 @@ const CustomEventType: EventTypes = {
    */
   TEXT_STYLE_CHANGED: 'textstylechanged',
   /**
-   * Fired when ad data is available.
+   * Fired when the adapter recovered from a media error
    */
-  AD_LOADED: 'adloaded',
+  MEDIA_RECOVERED: 'mediarecovered',
   /**
-   * Fired when the ad starts playing.
+   * Fired when the vr stereo mode changed
    */
-  AD_STARTED: 'adstarted',
+  VR_STEREO_MODE_CHANGED: 'vrstereomodechanged',
   /**
-   * Fired when the ad is resumed.
+   * Fired when the frames drop are exceeds the allowed (configured) threshold
    */
-  AD_RESUMED: 'adresumed',
+  FPS_DROP: 'fpsdrop',
   /**
-   * Fired when the ad is paused.
+   * Fired when the a bookmark service returns an error
+   * This event will be removed once plugins will have a way to expose their event enums
    */
-  AD_PAUSED: 'adpaused',
+  BOOKMARK_ERROR: 'bookmarkerror',
   /**
-   * Fired when the ad is clicked.
+   * Fired when the a bookmark service returns a concurrency limit error
+   * This event will be removed once plugins will have a way to expose their event enums
    */
-  AD_CLICKED: 'adclicked',
-  /**
-   * Fired when the ad is skipped by the user.
-   */
-  AD_SKIPPED: 'adskipped',
-  /**
-   * Fired when the ad completes playing.
-   */
-  AD_COMPLETED: 'adcompleted',
-  /**
-   * Fired when an error occurred while the ad was loading or playing.
-   */
-  AD_ERROR: 'aderror',
-  /**
-   * Fired when the ads manager is done playing all the ads.
-   */
-  ALL_ADS_COMPLETED: 'alladscompleted',
-  /**
-   * Fired when content should be paused. This usually happens right before an ad is about to cover the content.
-   */
-  AD_BREAK_START: 'adbreakstart',
-  /**
-   * Fired when content should be resumed. This usually happens when an ad finishes or collapses.
-   */
-  AD_BREAK_END: 'adbreakend',
-  /**
-   * Fired when the ad playhead crosses first quartile.
-   */
-  AD_FIRST_QUARTILE: 'adfirstquartile',
-  /**
-   * Fired when the ad playhead crosses midpoint.
-   */
-  AD_MIDPOINT: 'admidpoint',
-  /**
-   * Fired when the ad playhead crosses third quartile.
-   */
-  AD_THIRD_QUARTILE: 'adthirdquartile',
-  /**
-   * Fired when the ad is closed by the user.
-   */
-  USER_CLOSED_AD: 'userclosedad',
-  /**
-   * Fired when the ad volume has changed.
-   */
-  AD_VOLUME_CHANGED: 'advolumechanged',
-  /**
-   * Fired when the ad volume has been muted.
-   */
-  AD_MUTED: 'admuted',
-  /**
-   * Fired on ad time progress.
-   */
-  AD_PROGRESS: 'adprogress'
+  CONCURRENCY_LIMIT: 'concurrencylimit'
 };
 
-const EventType: EventTypes = Utils.Object.merge([Html5EventType, CustomEventType]);
+const EventType: PKEventTypes = Utils.Object.merge([Html5EventType, CustomEventType, AdEventType]);
 
 export {EventType, Html5EventType, CustomEventType};

@@ -1,23 +1,21 @@
-import State from '../../../src/state/state'
-import {StateType} from '../../../src/state/state-type'
-import StateManager from '../../../src/state/state-manager'
-import {Html5EventType, CustomEventType} from '../../../src/event/event-type'
+import State from '../../../src/state/state';
+import {StateType} from '../../../src/state/state-type';
+import StateManager from '../../../src/state/state-manager';
+import {Html5EventType, CustomEventType} from '../../../src/event/event-type';
 
 let sandbox;
 let stateManager;
 let fakePlayer = {
-  dispatchEvent: function () {
-  },
+  dispatchEvent: function() {},
   config: {
     playback: {}
   }
 };
 
-describe("StateManager", () => {
+describe('StateManager', () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function () {
-    });
+    sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function() {});
     stateManager = new StateManager(fakePlayer);
   });
 
@@ -25,14 +23,14 @@ describe("StateManager", () => {
     sandbox.restore();
   });
 
-  it("should create all state manager properties", () => {
+  it('should create all state manager properties', () => {
     stateManager.currentState.should.be.an.instanceof(State);
     stateManager.currentState.type.should.equal(StateType.IDLE);
     (stateManager.previousState === null).should.be.true;
     stateManager.history.should.deep.equal([]);
   });
 
-  it("should update a state", () => {
+  it('should update a state', () => {
     stateManager._updateState(StateType.LOADING);
     stateManager.currentState.should.be.an.instanceof(State);
     stateManager.currentState.type.should.equal(StateType.LOADING);
@@ -51,7 +49,7 @@ describe("StateManager", () => {
     stateManager.history[1].type.should.equal(StateType.LOADING);
   });
 
-  it("should not update a state", () => {
+  it('should not update a state', () => {
     stateManager._updateState(StateType.IDLE);
     stateManager.currentState.should.be.an.instanceof(State);
     stateManager.currentState.type.should.equal(StateType.IDLE);
@@ -59,8 +57,8 @@ describe("StateManager", () => {
     stateManager.history.should.have.lengthOf(0);
   });
 
-  it("should dispatch initial state event", (done) => {
-    sandbox.stub(stateManager._player, 'dispatchEvent').callsFake(function (event) {
+  it('should dispatch initial state event', done => {
+    sandbox.stub(stateManager._player, 'dispatchEvent').callsFake(function(event) {
       event.type.should.equal(CustomEventType.PLAYER_STATE_CHANGED);
       (event.payload.oldState === null).should.be.true;
       event.payload.newState.should.be.an.instanceof(State);
@@ -70,8 +68,8 @@ describe("StateManager", () => {
     stateManager._dispatchEvent();
   });
 
-  it("should dispatch new state event", (done) => {
-    sandbox.stub(stateManager._player, 'dispatchEvent').callsFake(function (event) {
+  it('should dispatch new state event', done => {
+    sandbox.stub(stateManager._player, 'dispatchEvent').callsFake(function(event) {
       event.type.should.equal(CustomEventType.PLAYER_STATE_CHANGED);
       event.payload.oldState.should.be.an.instanceof(State);
       event.payload.oldState.type.should.equal(StateType.IDLE);
@@ -83,17 +81,16 @@ describe("StateManager", () => {
     stateManager._dispatchEvent();
   });
 
-  it("should reset the state manager", () => {
+  it('should reset the state manager', () => {
     stateManager.reset();
     stateManager.history.should.be.empty;
   });
 });
 
-describe("StateManager.Transitions:IDLE", () => {
+describe('StateManager.Transitions:IDLE', () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function () {
-    });
+    sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function() {});
     stateManager = new StateManager(fakePlayer);
     stateManager._updateState(StateType.IDLE);
   });
@@ -112,17 +109,16 @@ describe("StateManager.Transitions:IDLE", () => {
     stateManager.currentState.type.should.equal(StateType.BUFFERING);
   });
 
-  it('shouldn\'t handle transition from idle because of unregistered event', () => {
+  it("shouldn't handle transition from idle because of unregistered event", () => {
     stateManager._doTransition({type: Html5EventType.ERROR});
     stateManager.currentState.type.should.equal(StateType.IDLE);
   });
 });
 
-describe("StateManager.Transitions:LOADING", () => {
+describe('StateManager.Transitions:LOADING', () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function () {
-    });
+    sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function() {});
     stateManager = new StateManager(fakePlayer);
     stateManager._updateState(StateType.LOADING);
   });
@@ -142,17 +138,16 @@ describe("StateManager.Transitions:LOADING", () => {
     stateManager.currentState.type.should.equal(StateType.PAUSED);
   });
 
-  it('shouldn\'t handle transition from loading because of unregistered event', () => {
+  it("shouldn't handle transition from loading because of unregistered event", () => {
     stateManager._doTransition({type: Html5EventType.WAITING});
     stateManager.currentState.type.should.equal(StateType.LOADING);
   });
 });
 
-describe("StateManager.Transitions:PAUSED", () => {
+describe('StateManager.Transitions:PAUSED', () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function () {
-    });
+    sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function() {});
     stateManager = new StateManager(fakePlayer);
     stateManager._updateState(StateType.PAUSED);
   });
@@ -176,17 +171,16 @@ describe("StateManager.Transitions:PAUSED", () => {
     stateManager.currentState.type.should.equal(StateType.IDLE);
   });
 
-  it('shouldn\'t handle transition from paused because of unregistered event', () => {
+  it("shouldn't handle transition from paused because of unregistered event", () => {
     stateManager._doTransition({type: Html5EventType.ERROR});
     stateManager.currentState.type.should.equal(StateType.PAUSED);
   });
 });
 
-describe("StateManager.Transitions:BUFFERING", () => {
+describe('StateManager.Transitions:BUFFERING', () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function () {
-    });
+    sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function() {});
     stateManager = new StateManager(fakePlayer);
     stateManager._updateState(StateType.BUFFERING);
   });
@@ -211,22 +205,21 @@ describe("StateManager.Transitions:BUFFERING", () => {
     stateManager.currentState.type.should.equal(StateType.PLAYING);
   });
 
-  it('shouldn\'t handle transition from buffering on seeked not while playing', () => {
+  it("shouldn't handle transition from buffering on seeked not while playing", () => {
     stateManager._doTransition({type: Html5EventType.SEEKED});
     stateManager.currentState.type.should.equal(StateType.BUFFERING);
   });
 
-  it('shouldn\'t handle transition from buffering because of unregistered event', () => {
+  it("shouldn't handle transition from buffering because of unregistered event", () => {
     stateManager._doTransition({type: Html5EventType.ERROR});
     stateManager.currentState.type.should.equal(StateType.BUFFERING);
   });
 });
 
-describe("StateManager.Transitions:PLAYING", () => {
+describe('StateManager.Transitions:PLAYING', () => {
   beforeEach(() => {
     sandbox = sinon.sandbox.create();
-    sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function () {
-    });
+    sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function() {});
     stateManager = new StateManager(fakePlayer);
     stateManager._updateState(StateType.PLAYING);
   });
@@ -255,7 +248,7 @@ describe("StateManager.Transitions:PLAYING", () => {
     stateManager.currentState.type.should.equal(StateType.PAUSED);
   });
 
-  it('shouldn\'t handle transition from playing because of unregistered event', () => {
+  it("shouldn't handle transition from playing because of unregistered event", () => {
     stateManager._doTransition({type: Html5EventType.LOADED_METADATA});
     stateManager.currentState.type.should.equal(StateType.PLAYING);
   });
