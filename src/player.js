@@ -1,4 +1,3 @@
-/* eslint-disable no-debugger */
 //@flow
 import Env from './utils/env';
 import EventManager from './event/event-manager';
