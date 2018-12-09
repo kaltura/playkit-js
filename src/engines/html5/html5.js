@@ -96,12 +96,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * Factory method to create an engine.
    * @param {PKMediaSourceObject} source - The selected source object.
    * @param {Object} config - The player configuration.
+   * @param {string} playerId - The player id.
    * @returns {IEngine} - New instance of the run time engine.
    * @public
    * @static
    */
-  static createEngine(source: PKMediaSourceObject, config: Object): IEngine {
-    return new this(source, config);
+  static createEngine(source: PKMediaSourceObject, config: Object, playerId: string): IEngine {
+    return new this(source, config, playerId);
   }
 
   /**
@@ -150,10 +151,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    */
   static prepareVideoElement(playerId: string): void {
-    Html5._logger.debug('Prepare the video element for playing');
-    const videoElement = Utils.Dom.createElement('video');
-    Html5.videoElementStore[playerId] = videoElement;
-    videoElement.load();
+    if (!Html5.videoElementStore[playerId]) {
+      Html5._logger.debug(`Create the video element for playing ${playerId}`);
+      const videoElement = Utils.Dom.createElement('video');
+      Html5.videoElementStore[playerId] = videoElement;
+    }
+    Html5._logger.debug(`Prepare the video element for playing ${playerId}`);
+    Html5.videoElementStore[playerId].load();
   }
 
   /**
@@ -166,12 +170,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @constructor
    * @param {PKMediaSourceObject} source - The selected source object.
    * @param {Object} config - The player configuration.
+   * @param {string} playerId - The player id.
    */
-  constructor(source: PKMediaSourceObject, config: Object) {
+  constructor(source: PKMediaSourceObject, config: Object, playerId: string) {
     super();
     this._eventManager = new EventManager();
     this._canLoadMediaSourceAdapterPromise = Promise.resolve();
-    this._createVideoElement(config.tagetId);
+    this._createVideoElement(playerId);
     this._init(source, config);
   }
 

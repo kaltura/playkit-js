@@ -1,3 +1,4 @@
+/* eslint-disable no-debugger */
 //@flow
 import Env from './utils/env';
 import EventManager from './event/event-manager';
@@ -183,11 +184,10 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @param {string} playerId - the target id of the player
    * @private
-   * @static
    */
-  static _prepareVideoElement(playerId: string): void {
+  _prepareVideoElement(): void {
     EngineProvider.getEngines().forEach((Engine: typeof IEngine) => {
-      Engine.prepareVideoElement(playerId);
+      Engine.prepareVideoElement(this._playerId);
     });
   }
 
@@ -401,8 +401,9 @@ export default class Player extends FakeEventTarget {
    */
   constructor(config: Object = {}) {
     super();
+    this._setConfigLogLevel(config);
     this._playerId = Utils.Generator.uniqueId(5);
-    Player._prepareVideoElement(this._playerId);
+    this._prepareVideoElement();
     Player.runCapabilities();
     this._env = Env;
     this._tracks = [];
@@ -441,9 +442,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   configure(config: Object = {}): void {
-    if (config.logLevel && LogLevel[config.logLevel]) {
-      setLogLevel(LogLevel[config.logLevel]);
-    }
+    this._setConfigLogLevel(config);
     if (this._hasSources(config.sources)) {
       this._configureOrLoadPlugins(config.plugins);
       this._maybeCreateAdsController();
@@ -479,6 +478,12 @@ export default class Player extends FakeEventTarget {
       Utils.Object.mergeDeep(this._config, config);
       this._configureOrLoadPlugins(config.plugins);
       this._maybeCreateAdsController();
+    }
+  }
+
+  _setConfigLogLevel(config: Object) {
+    if (config.logLevel && LogLevel[config.logLevel]) {
+      setLogLevel(LogLevel[config.logLevel]);
     }
   }
 
@@ -532,7 +537,7 @@ export default class Player extends FakeEventTarget {
       this._playbackMiddleware.play(() => this._play());
     } else if (this._loadingMedia) {
       // load media requested but the response is delayed
-      Player._prepareVideoElement(this._playerId);
+      this._prepareVideoElement();
       this._playbackMiddleware.play(() => this._playAfterAsyncMiddleware());
     } else {
       this.dispatchEvent(
@@ -775,6 +780,7 @@ export default class Player extends FakeEventTarget {
   set muted(mute: boolean): void {
     if (this._engine) {
       this._engine.muted = mute;
+      Player.runCapabilities();
       this.dispatchEvent(new FakeEvent(CustomEventType.MUTE_CHANGE, {mute: mute}));
       if (mute === false) {
         this._fallbackToMutedAutoPlay = mute;
@@ -1506,14 +1512,14 @@ export default class Player extends FakeEventTarget {
    */
   _loadEngine(Engine: typeof IEngine, source: PKMediaSourceObject) {
     if (!this._engine) {
-      this._engine = Engine.createEngine(source, this._config);
+      this._engine = Engine.createEngine(source, this._config, this._playerId);
       this._appendEngineEl();
     } else {
       if (this._engine.id === Engine.id) {
         this._engine.restore(source, this._config);
       } else {
         this._engine.destroy();
-        this._engine = Engine.createEngine(source, this._config);
+        this._engine = Engine.createEngine(source, this._config, this._playerId);
         this._appendEngineEl();
       }
     }
