@@ -27,7 +27,7 @@ import {MediaType} from './media-type';
 import {AbrMode} from './track/abr-mode-type';
 import {CorsType} from './engines/html5/cors-types';
 import PlaybackMiddleware from './middleware/playback-middleware';
-import {defaultConfig} from './player-config.js';
+import {DefaultConfig} from './player-config.js';
 import './assets/style.css';
 import PKError from './error/error';
 import {EngineProvider} from './engines/engine-provider';
@@ -449,7 +449,6 @@ export default class Player extends FakeEventTarget {
       Player._logger.debug('Change source started');
       this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
       Utils.Object.mergeDeep(this._config, config);
-      this._validateConfig();
       this._reset = false;
       if (this._selectEngineByPriority()) {
         this.dispatchEvent(new FakeEvent(CustomEventType.SOURCE_SELECTED, {selectedSource: this._config.sources[this._streamType]}));
@@ -476,17 +475,11 @@ export default class Player extends FakeEventTarget {
       }
     } else {
       Utils.Object.mergeDeep(this._config, config);
-      this._validateConfig();
       this._configureOrLoadPlugins(config.plugins);
       this._maybeCreateAdsController();
     }
   }
 
-  _validateConfig(): void {
-    if (this._config.abr.restrictions.maxBitrate <= this._config.abr.restrictions.minBitrate) {
-      this._config.abr.restrictions.maxBitrate = this._config.abr.restrictions.minBitrate;
-    }
-  }
   /**
    * The player readiness
    * @public
@@ -1920,7 +1913,7 @@ export default class Player extends FakeEventTarget {
    * @static
    */
   static get _defaultConfig(): Object {
-    return Utils.Object.copyDeep(defaultConfig);
+    return Utils.Object.copyDeep(DefaultConfig);
   }
 
   // </editor-fold>

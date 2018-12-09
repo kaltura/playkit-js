@@ -1,4 +1,4 @@
-const defaultConfig = {
+const DefaultConfig = {
   logLevel: 'ERROR',
   sources: {
     options: {
@@ -68,4 +68,4 @@ const defaultConfig = {
   }
 };
 
-export {defaultConfig};
+export {DefaultConfig};
