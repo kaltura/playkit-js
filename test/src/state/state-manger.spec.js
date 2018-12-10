@@ -109,6 +109,11 @@ describe('StateManager.Transitions:IDLE', () => {
     stateManager.currentState.type.should.equal(StateType.BUFFERING);
   });
 
+  it('should handle transition from idle to paused', () => {
+    stateManager._doTransition({type: Html5EventType.SEEKED});
+    stateManager.currentState.type.should.equal(StateType.PAUSED);
+  });
+
   it("shouldn't handle transition from idle because of unregistered event", () => {
     stateManager._doTransition({type: Html5EventType.ERROR});
     stateManager.currentState.type.should.equal(StateType.IDLE);
