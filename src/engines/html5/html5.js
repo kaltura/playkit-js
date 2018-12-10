@@ -444,7 +444,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   set src(source: string): void {
-    this._el.src = source;
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.src = source;
+    }
   }
 
   /**

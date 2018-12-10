@@ -37,6 +37,7 @@ import {AdTagType} from './ads/ad-tag-type';
 import {AdsController} from './ads/ads-controller';
 import {AdEventType} from './ads/ad-event-type';
 import {ControllerProvider} from './controller/controller-provider';
+import {BaseEngineDecorator} from './base-engine-decorator';
 
 /**
  * The black cover class name.
@@ -1503,16 +1504,34 @@ export default class Player extends FakeEventTarget {
    */
   _loadEngine(Engine: typeof IEngine, source: PKMediaSourceObject) {
     if (!this._engine) {
-      this._engine = Engine.createEngine(source, this._config);
+      this._createEngine(Engine, source);
       this._appendEngineEl();
     } else {
       if (this._engine.id === Engine.id) {
         this._engine.restore(source, this._config);
       } else {
         this._engine.destroy();
-        this._engine = Engine.createEngine(source, this._config);
+        this._createEngine(Engine, source);
         this._appendEngineEl();
       }
+    }
+  }
+
+  /**
+   * Creates an engine or an engine decorator.
+   * @param {IEngine} Engine - The selected engine.
+   * @param {PKMediaSourceObject} source - The selected source object.
+   * @returns {IEngine | BaseEngineDecorator} - Engine or engine decorator.
+   * @private
+   */
+  _createEngine(Engine: typeof IEngine, source: PKMediaSourceObject): typeof IEngine | BaseEngineDecorator {
+    const engine = Engine.createEngine(source, this._config);
+    const plugins = (Object.values(this._pluginManager.getAll()): any);
+    const plugin = plugins.find(plugin => typeof plugin.getEngineDecorator === 'function');
+    if (plugin) {
+      this._engine = plugin.getEngineDecorator(engine);
+    } else {
+      this._engine = engine;
     }
   }
 
@@ -1576,6 +1595,14 @@ export default class Player extends FakeEventTarget {
         this._onTextTrackChanged(event)
       );
       this._eventManager.listen(this._externalCaptionsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
+      if (this._adsController) {
+        this._eventManager.listen(this._adsController, AdEventType.AD_BREAK_START, () => {
+          if (this._firstPlay) {
+            this._posterManager.hide();
+            this._hideBlackCover();
+          }
+        });
+      }
     }
   }
 

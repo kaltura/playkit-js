@@ -4,7 +4,7 @@ import AudioTrack from '../../src/track/audio-track';
 import TextTrack from '../../src/track/text-track';
 
 declare interface IMediaSourceAdapter {
-  +src: string;
+  src: string;
   currentTime: number;
   +duration: number;
   +capabilities: PKMediaSourceCapabilities;
