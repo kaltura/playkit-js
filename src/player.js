@@ -37,6 +37,7 @@ import {AdTagType} from './ads/ad-tag-type';
 import {AdsController} from './ads/ads-controller';
 import {AdEventType} from './ads/ad-event-type';
 import {ControllerProvider} from './controller/controller-provider';
+import {ResizeWatcher} from './utils/resize-watcher';
 
 /**
  * The black cover class name.
@@ -93,13 +94,6 @@ const AUTO: string = 'auto';
  *  @const
  */
 const OFF: string = 'off';
-
-/**
- * The resize event string
- *  *  @type {string}
- *  @const
- */
-const RESIZE: string = 'resize';
 
 /**
  *  The duration offset, for seeking to duration safety.
@@ -420,6 +414,7 @@ export default class Player extends FakeEventTarget {
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
     this._controllerProvider = new ControllerProvider(this._pluginManager);
+    this._resizeWatcher = new ResizeWatcher();
     this._playbackMiddleware = new PlaybackMiddleware();
     this._textStyle = new TextStyle();
     this._createReadyPromise();
@@ -446,6 +441,7 @@ export default class Player extends FakeEventTarget {
       this._configureOrLoadPlugins(config.plugins);
       this._maybeCreateAdsController();
       this.reset();
+      this._resizeWatcher.init(this._playerId);
       Player._logger.debug('Change source started');
       this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
       Utils.Object.mergeDeep(this._config, config);
@@ -597,6 +593,7 @@ export default class Player extends FakeEventTarget {
     this._reset = true;
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET));
     this._eventManager.removeAll();
+    this._resizeWatcher.init(this._playerId);
     this._createReadyPromise();
   }
 
@@ -625,6 +622,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.destroy();
     }
+    this._resizeWatcher.destroy();
     if (this._el) {
       Utils.Dom.removeChild(this._el.parentNode, this._el);
     }
@@ -1569,9 +1567,8 @@ export default class Player extends FakeEventTarget {
       });
       this._eventManager.listen(this, CustomEventType.ENTER_FULLSCREEN, () => this._resetTextCuesAndReposition());
       this._eventManager.listen(this, CustomEventType.EXIT_FULLSCREEN, () => this._resetTextCuesAndReposition());
-      this._eventManager.listen(window, RESIZE, () => {
-        this._resetTextCuesAndReposition();
-      });
+      this._eventManager.listen(window, CustomEventType.RESIZE, () => this._resetTextCuesAndReposition());
+      this._eventManager.listen(this._resizeWatcher, CustomEventType.RESIZE, () => this._resetTextCuesAndReposition());
       this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => this._handleRecovered());
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) =>
