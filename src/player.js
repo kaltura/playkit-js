@@ -1345,7 +1345,13 @@ export default class Player extends FakeEventTarget {
     });
   }
 
-  _setConfigLogLevel(config: Object) {
+  /**
+   * Set the config level of the player
+   * @returns {void}
+   * @param {Object} config - object containing the log level.
+   * @private
+   */
+  _setConfigLogLevel(config: Object): void {
     if (config.logLevel && LogLevel[config.logLevel]) {
       setLogLevel(LogLevel[config.logLevel]);
     }
