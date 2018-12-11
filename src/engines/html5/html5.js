@@ -74,12 +74,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   static id: string = 'html5';
 
   /**
-   * A video element for browsers which block auto play.
-   * @type {HTMLVideoElement}
-   * @private
-   * @static
+   * @type {PKVideoElementStore} - Store object which maps between playerId to its video element.
    */
-  static _el: HTMLVideoElement;
+  static videoElementStore: PKVideoElementStore = {};
 
   /**
    * Checks if html5 is supported.
@@ -99,12 +96,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * Factory method to create an engine.
    * @param {PKMediaSourceObject} source - The selected source object.
    * @param {Object} config - The player configuration.
+   * @param {string} playerId - The player id.
    * @returns {IEngine} - New instance of the run time engine.
    * @public
    * @static
    */
-  static createEngine(source: PKMediaSourceObject, config: Object): IEngine {
-    return new this(source, config);
+  static createEngine(source: PKMediaSourceObject, config: Object, playerId: string): IEngine {
+    return new this(source, config, playerId);
   }
 
   /**
@@ -148,13 +146,18 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * For browsers which block auto play, use the user gesture to open the video element and enable playing via API.
    * @returns {void}
+   * @param {string} playerId - the id to be set as the key of the video element
    * @private
    * @public
    */
-  static prepareVideoElement(): void {
-    Html5._logger.debug('Prepare the video element for playing');
-    Html5._el = Utils.Dom.createElement('video');
-    Html5._el.load();
+  static prepareVideoElement(playerId: string): void {
+    if (!Html5.videoElementStore[playerId]) {
+      Html5._logger.debug(`Create the video element for playing ${playerId}`);
+      const videoElement = Utils.Dom.createElement('video');
+      Html5.videoElementStore[playerId] = videoElement;
+    }
+    Html5._logger.debug(`Prepare the video element for playing ${playerId}`);
+    Html5.videoElementStore[playerId].load();
   }
 
   /**
@@ -167,12 +170,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @constructor
    * @param {PKMediaSourceObject} source - The selected source object.
    * @param {Object} config - The player configuration.
+   * @param {string} playerId - The player id.
    */
-  constructor(source: PKMediaSourceObject, config: Object) {
+  constructor(source: PKMediaSourceObject, config: Object, playerId: string) {
     super();
     this._eventManager = new EventManager();
     this._canLoadMediaSourceAdapterPromise = Promise.resolve();
-    this._createVideoElement();
+    this._createVideoElement(playerId);
     this._init(source, config);
   }
 
@@ -832,11 +836,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Creates a video element dom object.
+   * @param {string} playerId - the id to be set as the key of the video element
    * @private
    * @returns {void}
    */
-  _createVideoElement(): void {
-    this._el = Html5._el || Utils.Dom.createElement('video');
+  _createVideoElement(playerId: string): void {
+    this._el = Html5.videoElementStore[playerId] || Utils.Dom.createElement('video');
     this._el.id = Utils.Generator.uniqueId(5);
     this._el.controls = false;
   }
