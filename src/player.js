@@ -761,7 +761,6 @@ export default class Player extends FakeEventTarget {
   set muted(mute: boolean): void {
     if (this._engine) {
       this._engine.muted = mute;
-      Player.runCapabilities();
       this.dispatchEvent(new FakeEvent(CustomEventType.MUTE_CHANGE, {mute: mute}));
       if (mute === false) {
         this._fallbackToMutedAutoPlay = mute;
