@@ -74,7 +74,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   static id: string = 'html5';
 
   /**
-   * @type {PKVideoElementStore} - mapping between playerId to the video element.
+   * @type {PKVideoElementStore} - Store object which mapping between playerId to its video element.
    */
   static videoElementStore: PKVideoElementStore = {};
 

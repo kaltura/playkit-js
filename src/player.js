@@ -179,18 +179,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * For browsers which block auto play, use the user gesture to open the video element and enable playing via API.
-   * @returns {void}
-   * @param {string} playerId - the target id of the player
-   * @private
-   */
-  _prepareVideoElement(): void {
-    EngineProvider.getEngines().forEach((Engine: typeof IEngine) => {
-      Engine.prepareVideoElement(this._playerId);
-    });
-  }
-
-  /**
    * The plugin manager of the player.
    * @type {PluginManager}
    * @private
@@ -477,12 +465,6 @@ export default class Player extends FakeEventTarget {
       Utils.Object.mergeDeep(this._config, config);
       this._configureOrLoadPlugins(config.plugins);
       this._maybeCreateAdsController();
-    }
-  }
-
-  _setConfigLogLevel(config: Object) {
-    if (config.logLevel && LogLevel[config.logLevel]) {
-      setLogLevel(LogLevel[config.logLevel]);
     }
   }
 
@@ -1351,6 +1333,24 @@ export default class Player extends FakeEventTarget {
   // <editor-fold desc="Private Methods">
 
   // <editor-fold desc="Playback">
+
+  /**
+   * For browsers which block auto play, use the user gesture to open the video element and enable playing via API.
+   * @returns {void}
+   * @param {string} playerId - the id of the player
+   * @private
+   */
+  _prepareVideoElement(): void {
+    EngineProvider.getEngines().forEach((Engine: typeof IEngine) => {
+      Engine.prepareVideoElement(this._playerId);
+    });
+  }
+
+  _setConfigLogLevel(config: Object) {
+    if (config.logLevel && LogLevel[config.logLevel]) {
+      setLogLevel(LogLevel[config.logLevel]);
+    }
+  }
 
   /**
    * Check if sources has been received.
