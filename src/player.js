@@ -27,7 +27,7 @@ import {MediaType} from './media-type';
 import {AbrMode} from './track/abr-mode-type';
 import {CorsType} from './engines/html5/cors-types';
 import PlaybackMiddleware from './middleware/playback-middleware';
-import DefaultPlayerConfig from './player-config.json';
+import {DefaultConfig} from './player-config.js';
 import './assets/style.css';
 import PKError from './error/error';
 import {EngineProvider} from './engines/engine-provider';
@@ -1913,7 +1913,7 @@ export default class Player extends FakeEventTarget {
    * @static
    */
   static get _defaultConfig(): Object {
-    return Utils.Object.copyDeep(DefaultPlayerConfig);
+    return Utils.Object.copyDeep(DefaultConfig);
   }
 
   // </editor-fold>
