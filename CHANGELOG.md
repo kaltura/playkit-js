@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.43.0"></a>
+# [0.43.0](https://github.com/kaltura/playkit-js/compare/v0.42.0...v0.43.0) (2018-12-12)
+
+
+### Bug Fixes
+
+* **FEC-8714:** change media doesn't work after player.destroy() on iOS ([#317](https://github.com/kaltura/playkit-js/issues/317)) ([46b4928](https://github.com/kaltura/playkit-js/commit/46b4928))
+* **FEC-8714:** removing static video element from the engine ([#321](https://github.com/kaltura/playkit-js/issues/321)) ([86fd4f5](https://github.com/kaltura/playkit-js/commit/86fd4f5))
+* **FEC-8715:** if label does not exist in manifest use the language property ([#320](https://github.com/kaltura/playkit-js/issues/320)) ([1af6dea](https://github.com/kaltura/playkit-js/commit/1af6dea))
+* **FEC-8722:** more than one caption is checked at the caption menu ([#316](https://github.com/kaltura/playkit-js/issues/316)) ([7a1ef49](https://github.com/kaltura/playkit-js/commit/7a1ef49))
+
+
+### Features
+
+* **FEC-8147:** set default settings for ABR settings ([#323](https://github.com/kaltura/playkit-js/issues/323)) ([b094b39](https://github.com/kaltura/playkit-js/commit/b094b39))
+* **FEC-8639:** fairplay uDRM error handling refining ([#319](https://github.com/kaltura/playkit-js/issues/319)) ([e3d4a49](https://github.com/kaltura/playkit-js/commit/e3d4a49))
+* **FEC-8682:** end screen ([#318](https://github.com/kaltura/playkit-js/issues/318)) ([435e812](https://github.com/kaltura/playkit-js/commit/435e812))
+
+
+
 <a name="0.42.1"></a>
 ## [0.42.1](https://github.com/kaltura/playkit-js/compare/v0.42.0...v0.42.1) (2018-12-04)
 
