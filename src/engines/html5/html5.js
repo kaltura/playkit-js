@@ -865,10 +865,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _addCueChangeListener(): void {
-    let textTrackEl = Array.from(this._el.textTracks).find(track => track && track.mode !== 'disabled');
-    if (textTrackEl) {
-      this._eventManager.listen(textTrackEl, 'cuechange', e => this._onCueChange(e));
-    }
+    Array.from(this._el.textTracks).forEach(track => this._eventManager.listen(track, 'cuechange', e => this._onCueChange(e)));
   }
 
   /**
