@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.43.1"></a>
+## [0.43.1](https://github.com/kaltura/playkit-js/compare/v0.43.0...v0.43.1) (2018-12-16)
+
+
+### Bug Fixes
+
+* **FEC-7444:** when selecting fullscreen in android captions size is too large ([#327](https://github.com/kaltura/playkit-js/issues/327)) ([23009e3](https://github.com/kaltura/playkit-js/commit/23009e3))
+
+
+
 <a name="0.43.0"></a>
 # [0.43.0](https://github.com/kaltura/playkit-js/compare/v0.42.0...v0.43.0) (2018-12-12)
 
