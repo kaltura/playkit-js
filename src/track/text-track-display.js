@@ -613,7 +613,7 @@ class CueStyleBox extends StyleBox {
     let styles = {
       color: styleOptions.color,
       backgroundColor: styleOptions.backgroundColor,
-      textShadow: textShadow,
+      textShadow: styleOptions.textShadow,
       position: 'relative',
       left: 0,
       right: 0,
@@ -1004,7 +1004,7 @@ function processCues(window, cues, overlay, style) {
   // if it has not been computed yet.
   function shouldCompute(cues) {
     for (let i = 0; i < cues.length; i++) {
-      if (cues[i].hasBeenReset || !cues[i].displayState || cues[i].implicitScale != implicitScale) {
+      if (cues[i].hasBeenReset || !cues[i].displayState) {
         return true;
       }
     }
@@ -1026,7 +1026,8 @@ function processCues(window, cues, overlay, style) {
   let styleOptions = {
     font: fontSize * fontScale * style.implicitFontScale + 'px ' + style.fontFamily,
     color: TextStyle.toRGBA(style.fontColor, style.fontOpacity),
-    backgroundColor: TextStyle.toRGBA(style.backgroundColor, style.backgroundOpacity)
+    backgroundColor: TextStyle.toRGBA(style.backgroundColor, style.backgroundOpacity),
+    textShadow: style.getTextShadow()
   };
 
   (function() {
@@ -1045,7 +1046,6 @@ function processCues(window, cues, overlay, style) {
       // Remember the computed div so that we don't have to recompute it later
       // if we don't have too.
       cue.displayState = styleBox.div;
-      cue.implicitScale = implicitScale;
 
       boxPositions.push(BoxPosition.getSimpleBoxPosition(styleBox));
     }

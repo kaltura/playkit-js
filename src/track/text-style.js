@@ -160,19 +160,7 @@ class TextStyle {
    */
   fontEdge: Array<Array<number>> = TextStyle.EdgeStyles.NONE;
 
-  /**
-   * Compute the CSS text necessary to represent this TextStyle.
-   * Output does not contain any selectors.
-   *
-   * @return {string} - ::CUE CSS string
-   */
-  toCSS(): string {
-    let attributes: Array<string> = [];
-
-    attributes.push('font-family: ' + this.fontFamily);
-    attributes.push('color: ' + TextStyle.toRGBA(this.fontColor, this.fontOpacity));
-    attributes.push('background-color: ' + TextStyle.toRGBA(this.backgroundColor, this.backgroundOpacity));
-
+  getTextShadow(): string {
     // A given edge effect may be implemented with multiple shadows.
     // Collect them all into an array, then combine into one attribute.
     let shadows: Array<string> = [];
@@ -182,8 +170,21 @@ class TextStyle {
       let shadow: Array<number> = this.fontEdge[i].slice(3, 6);
       shadows.push(TextStyle.toRGBA(color, this.fontOpacity) + ' ' + shadow.join('px ') + 'px');
     }
-    attributes.push('text-shadow: ' + shadows.join(','));
+    return shadows.join(',');
+  }
 
+  /**
+   * Compute the CSS text necessary to represent this TextStyle.
+   * Output does not contain any selectors.
+   *
+   * @return {string} - ::CUE CSS string
+   */
+  toCSS(): string {
+    let attributes: Array<string> = [];
+    attributes.push('font-family: ' + this.fontFamily);
+    attributes.push('color: ' + TextStyle.toRGBA(this.fontColor, this.fontOpacity));
+    attributes.push('background-color: ' + TextStyle.toRGBA(this.backgroundColor, this.backgroundOpacity));
+    attributes.push('text-shadow: ' + this.getTextShadow());
     return attributes.join('!important; ');
   }
 
