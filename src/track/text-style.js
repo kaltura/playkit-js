@@ -1,4 +1,13 @@
 // @flow
+/**
+ * We use this number to calculate the scale of the text. so it will be : 1 + 0.25 * FontSizes.value
+ * So, if the user selects 400% the scale would be: 1 + 0.25 * 4 = 2. so the font size should be multiplied by 2.
+ * The calculation of the size of the font is done in text-track-display and not in this module, because
+ * the calculation in text-track-display also set the location of the container of the subtitiles according to the
+ * font size.
+ * @type {number}
+ */
+const IMPLICIT_SCALE_PERCENTAGE: number = 0.25;
 
 /**
  * Creates a TextStyle object.
@@ -106,7 +115,7 @@ class TextStyle {
    * @return {string} - CSS rgba string
    * @private
    */
-  static _toRGBA(color: Array<number>, opacity: number): string {
+  static toRGBA(color: Array<number>, opacity: number): string {
     // shaka.asserts.assert(color.length == 3);
     return 'rgba(' + color.concat(opacity).join(',') + ')';
   }
@@ -115,7 +124,9 @@ class TextStyle {
    * Font size, such as 1, 2, 3...
    * @type {number}
    */
-  fontSize: number = 0;
+  fontSize: string = '100%';
+
+  fontScale: number = 1;
 
   /**
    * @type {TextStyle.FontFamily}
@@ -150,16 +161,6 @@ class TextStyle {
   fontEdge: Array<Array<number>> = TextStyle.EdgeStyles.NONE;
 
   /**
-   * We use this number to calculate the scale of the text. so it will be : 1 + 0.25 * FontSizes.value
-   * So, if the user selects 400% the scale would be: 1 + 0.25 * 4 = 2. so the font size should be multiplied by 2.
-   * The calculation of the size of the font is done in text-track-display and not in this module, because
-   * the calculation in text-track-display also set the location of the container of the subtitiles according to the
-   * font size.
-   * @type {number}
-   */
-  _implicitScalePercentage: number = 0.25;
-
-  /**
    * Compute the CSS text necessary to represent this TextStyle.
    * Output does not contain any selectors.
    *
@@ -169,8 +170,8 @@ class TextStyle {
     let attributes: Array<string> = [];
 
     attributes.push('font-family: ' + this.fontFamily);
-    attributes.push('color: ' + TextStyle._toRGBA(this.fontColor, this.fontOpacity));
-    attributes.push('background-color: ' + TextStyle._toRGBA(this.backgroundColor, this.backgroundOpacity));
+    attributes.push('color: ' + TextStyle.toRGBA(this.fontColor, this.fontOpacity));
+    attributes.push('background-color: ' + TextStyle.toRGBA(this.backgroundColor, this.backgroundOpacity));
 
     // A given edge effect may be implemented with multiple shadows.
     // Collect them all into an array, then combine into one attribute.
@@ -179,7 +180,7 @@ class TextStyle {
       // shaka.asserts.assert(this.fontEdge[i].length == 6);
       const color: Array<number> = this.fontEdge[i].slice(0, 3);
       let shadow: Array<number> = this.fontEdge[i].slice(3, 6);
-      shadows.push(TextStyle._toRGBA(color, this.fontOpacity) + ' ' + shadow.join('px ') + 'px');
+      shadows.push(TextStyle.toRGBA(color, this.fontOpacity) + ' ' + shadow.join('px ') + 'px');
     }
     attributes.push('text-shadow: ' + shadows.join(','));
 
@@ -194,6 +195,7 @@ class TextStyle {
     let clonedTextStyle = new TextStyle();
     clonedTextStyle.fontEdge = this.fontEdge;
     clonedTextStyle.fontSize = this.fontSize;
+    clonedTextStyle.fontScale = this.fontScale;
     clonedTextStyle.fontColor = this.fontColor;
     clonedTextStyle.fontOpacity = this.fontOpacity;
     clonedTextStyle.backgroundColor = this.backgroundColor;
@@ -218,8 +220,8 @@ class TextStyle {
     );
   }
 
-  get implicitScalePercentage(): number {
-    return this._implicitScalePercentage;
+  get implicitFontScale(): number {
+    return IMPLICIT_SCALE_PERCENTAGE * this.fontScale + 1;
   }
 }
 
