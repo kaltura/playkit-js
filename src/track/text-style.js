@@ -72,7 +72,32 @@ class TextStyle {
     DROP: [[34, 34, 34, 2, 2, 3], [34, 34, 34, 2, 2, 4], [34, 34, 34, 2, 2, 5]]
   };
 
-  static FontSizes: Array<string> = ['50%', '75%', '100%', '200%', '300%', '400%'];
+  static FontSizes: Array<Object> = [
+    {
+      value: -2,
+      label: '50%'
+    },
+    {
+      value: -1,
+      label: '75%'
+    },
+    {
+      value: 0,
+      label: '100%'
+    },
+    {
+      value: 2,
+      label: '200%'
+    },
+    {
+      value: 3,
+      label: '300%'
+    },
+    {
+      value: 4,
+      label: '400%'
+    }
+  ];
 
   /**
    * Creates a CSS RGBA sctring for a given color and opacity values
@@ -87,10 +112,10 @@ class TextStyle {
   }
 
   /**
-   * Font size, such as 50%, 75%, 100%, 200%, or 300%.
-   * @type {string}
+   * Font size, such as 1, 2, 3...
+   * @type {number}
    */
-  fontSize: string = '100%';
+  fontSize: number = 0;
 
   /**
    * @type {TextStyle.FontFamily}
@@ -125,6 +150,16 @@ class TextStyle {
   fontEdge: Array<Array<number>> = TextStyle.EdgeStyles.NONE;
 
   /**
+   * We use this number to calculate the scale of the text. so it will be : 1 + 0.25 * FontSizes.value
+   * So, if the user selects 400% the scale would be: 1 + 0.25 * 4 = 2. so the font size should be multiplied by 2.
+   * The calculation of the size of the font is done in text-track-display and not in this module, because
+   * the calculation in text-track-display also set the location of the container of the subtitiles according to the
+   * font size.
+   * @type {number}
+   */
+  _implicitScalePercentage: number = 0.25;
+
+  /**
    * Compute the CSS text necessary to represent this TextStyle.
    * Output does not contain any selectors.
    *
@@ -134,7 +169,6 @@ class TextStyle {
     let attributes: Array<string> = [];
 
     attributes.push('font-family: ' + this.fontFamily);
-    attributes.push('font-size: ' + this.fontSize);
     attributes.push('color: ' + TextStyle._toRGBA(this.fontColor, this.fontOpacity));
     attributes.push('background-color: ' + TextStyle._toRGBA(this.backgroundColor, this.backgroundOpacity));
 
@@ -182,6 +216,10 @@ class TextStyle {
       textStyle.backgroundColor === this.backgroundColor &&
       textStyle.backgroundOpacity === this.backgroundOpacity
     );
+  }
+
+  get implicitScalePercentage(): number {
+    return this._implicitScalePercentage;
   }
 }
 

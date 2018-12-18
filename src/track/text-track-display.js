@@ -979,7 +979,7 @@ const CUE_BACKGROUND_PADDING = '1.5%';
 // Runs the processing model over the cues and regions passed to it.
 // @param overlay A block level element (usually a div) that the computed cues
 //                and regions will be placed into.
-function processCues(window, cues, overlay) {
+function processCues(window, cues, overlay, implicitScale) {
   if (!window || !cues || !overlay) {
     return null;
   }
@@ -1003,7 +1003,7 @@ function processCues(window, cues, overlay) {
   // if it has not been computed yet.
   function shouldCompute(cues) {
     for (let i = 0; i < cues.length; i++) {
-      if (cues[i].hasBeenReset || !cues[i].displayState) {
+      if (cues[i].hasBeenReset || !cues[i].displayState || cues[i].implicitScale != implicitScale) {
         return true;
       }
     }
@@ -1023,7 +1023,7 @@ function processCues(window, cues, overlay) {
     dimensionSize = containerBox.height < containerBox.width ? containerBox.height : containerBox.width,
     fontSize = Math.round(dimensionSize * FONT_SIZE_PERCENT * 100) / 100;
   let styleOptions = {
-    font: fontSize * fontScale + 'px ' + FONT_STYLE
+    font: fontSize * fontScale * implicitScale + 'px ' + FONT_STYLE
   };
 
   (function() {
@@ -1042,6 +1042,7 @@ function processCues(window, cues, overlay) {
       // Remember the computed div so that we don't have to recompute it later
       // if we don't have too.
       cue.displayState = styleBox.div;
+      cue.implicitScale = implicitScale;
 
       boxPositions.push(BoxPosition.getSimpleBoxPosition(styleBox));
     }

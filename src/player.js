@@ -2057,7 +2057,8 @@ export default class Player extends FakeEventTarget {
    */
   _updateTextDisplay(cues: Array<Cue>): void {
     if (!this._config.playback.useNativeTextTrack) {
-      processCues(window, cues, this._textDisplayEl);
+      const scale = this._textStyle.fontSize * this._textStyle.implicitScalePercentage + 1;
+      processCues(window, cues, this._textDisplayEl, scale);
     }
   }
 
