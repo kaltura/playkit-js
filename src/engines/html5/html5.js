@@ -326,6 +326,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.selectTextTrack(textTrack);
     }
+    this.resetAllCues();
     this._addCueChangeListener();
   }
 
