@@ -1116,9 +1116,16 @@ export default class Player extends FakeEventTarget {
         sheet.insertRule(`video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
       }
       this._textStyle = style;
-      for (let i = 0; i < this._activeTextCues.length; i++) {
-        this._activeTextCues[i].hasBeenReset = true;
+      let videoEl = this.getVideoElement();
+      if (videoEl) {
+        let activeTextTrack = Array.from(videoEl.textTracks).find(track => track && track.mode !== 'disabled');
+        if (activeTextTrack) {
+          for (let i = 0; i < activeTextTrack.cues.length; i++) {
+            activeTextTrack.cues[i].hasBeenReset = true;
+          }
+        }
       }
+
       this._updateTextDisplay(this._activeTextCues);
       this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_STYLE_CHANGED));
     } catch (e) {
