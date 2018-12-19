@@ -220,6 +220,18 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   }
 
   /**
+   * set hasBeenReset to true for all the cues.
+   * @returns {void}
+   */
+  resetAllCues(): void {
+    for (let textTrack in this._textTrackModel) {
+      this._textTrackModel[textTrack].cues.forEach(cue => {
+        cue.hasBeenReset = true;
+      });
+    }
+  }
+
+  /**
    * resets the handler
    * @returns {void}
    */
