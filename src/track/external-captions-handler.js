@@ -224,8 +224,8 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {void}
    */
   reset(): void {
-    this._textTrackModel = {};
     this._resetCurrentTrack();
+    this._textTrackModel = {};
     this._eventManager.removeAll();
   }
 
@@ -246,9 +246,9 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _resetCurrentTrack(): void {
-    this._maybeSetExternalCueIndex();
     this._activeTextCues = [];
     this._isTextTrackActive = false;
+    this._maybeSetExternalCueIndex();
   }
 
   /**
