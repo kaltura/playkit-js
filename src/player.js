@@ -1113,7 +1113,7 @@ export default class Player extends FakeEventTarget {
 
     try {
       if (this._config.playback.useNativeTextTrack) {
-        sheet.insertRule(`video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
+        sheet.insertRule(`#${this._playerId} video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
       } else {
         sheet.insertRule(`#${this._playerId} .${SUBTITLES_CLASS_NAME} > div > div > div { ${style.toCSS()} }`, 0);
       }
