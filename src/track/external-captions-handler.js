@@ -246,9 +246,9 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _resetCurrentTrack(): void {
+    this._maybeSetExternalCueIndex();
     this._activeTextCues = [];
     this._isTextTrackActive = false;
-    this._maybeSetExternalCueIndex();
   }
 
   /**
@@ -428,7 +428,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _maybeSetExternalCueIndex(): boolean {
     const textTrack = this._player.getTracks(TrackType.TEXT).find(track => track instanceof TextTrack && track.active && track.external);
     if (textTrack && textTrack.external) {
-      const cues = this._textTrackModel[textTrack.language].cues;
+      const cues = this._textTrackModel[textTrack.language] ? this._textTrackModel[textTrack.language].cues : [];
       let i = 0;
       for (; i < cues.length; i++) {
         // if there is a cue that should be displayed right now, cue start time < current time < cue end time
