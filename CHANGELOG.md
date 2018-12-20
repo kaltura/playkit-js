@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.44.0"></a>
+# [0.44.0](https://github.com/kaltura/playkit-js/compare/v0.43.1...v0.44.0) (2018-12-20)
+
+
+### Bug Fixes
+
+* **FEC-8779:** change media does not work if external caption is shown ([#331](https://github.com/kaltura/playkit-js/issues/331)) ([2b48772](https://github.com/kaltura/playkit-js/commit/2b48772))
+
+
+### Features
+
+* **FEC-8700:** add config option to specify DRM system ([#330](https://github.com/kaltura/playkit-js/issues/330)) ([d7640f4](https://github.com/kaltura/playkit-js/commit/d7640f4))
+
+
+
 <a name="0.43.1"></a>
 ## [0.43.1](https://github.com/kaltura/playkit-js/compare/v0.43.0...v0.43.1) (2018-12-16)
 
