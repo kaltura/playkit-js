@@ -108,13 +108,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * Checks if the engine can play a given source.
    * @param {PKMediaSourceObject} source - The source object to check.
-   * @param {boolean} preferNative - prefer native flag
+   * @param {boolean} preferNative - prefer native flag.
+   * @param {PKDrmConfigObject} drmConfig - The drm config.
    * @returns {boolean} - Whether the engine can play the source.
    * @public
    * @static
    */
-  static canPlaySource(source: PKMediaSourceObject, preferNative: boolean): boolean {
-    return MediaSourceProvider.canPlaySource(source, preferNative);
+  static canPlaySource(source: PKMediaSourceObject, preferNative: boolean, drmConfig: PKDrmConfigObject): boolean {
+    return MediaSourceProvider.canPlaySource(source, preferNative, drmConfig);
   }
 
   /**

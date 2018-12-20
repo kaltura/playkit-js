@@ -1494,7 +1494,7 @@ export default class Player extends FakeEventTarget {
         const formatSources = sources[format];
         if (formatSources && formatSources.length > 0) {
           const source = formatSources[0];
-          if (Engine.canPlaySource(source, preferNative[format])) {
+          if (Engine.canPlaySource(source, preferNative[format], this._config.drm)) {
             Player._logger.debug('Source selected: ', formatSources);
             this._loadEngine(Engine, source);
             this._engineType = engineId;
