@@ -65,17 +65,21 @@ export default class MediaSourceProvider {
   /**
    * Checks if the a media source adapter can play a given source.
    * @param {PKMediaSourceObject} source - The source object to check.
-   *  @param {boolean} [preferNative=true] - prefer native flag
+   * @param {boolean} [preferNative=true] - prefer native flag.
+   * @param {PKDrmConfigObject} drmConfig - The drm config.
    * @returns {boolean} - Whether a media source adapter can play the source.
    * @public
    * @static
    */
-  static canPlaySource(source: PKMediaSourceObject, preferNative: boolean = true): boolean {
+  static canPlaySource(source: PKMediaSourceObject, preferNative: boolean = true, drmConfig: PKDrmConfigObject): boolean {
     MediaSourceProvider._orderMediaSourceAdapters(preferNative);
     let mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
     if (source && source.mimetype) {
       for (let i = 0; i < mediaSourceAdapters.length; i++) {
-        if (mediaSourceAdapters[i].canPlayType(source.mimetype) && (!source.drmData || mediaSourceAdapters[i].canPlayDrm(source.drmData))) {
+        if (
+          mediaSourceAdapters[i].canPlayType(source.mimetype) &&
+          (!source.drmData || mediaSourceAdapters[i].canPlayDrm(source.drmData, drmConfig))
+        ) {
           MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
           MediaSourceProvider._logger.debug(`Selected adapter is <${MediaSourceProvider._selectedAdapter.id}>`);
           return true;
@@ -112,7 +116,7 @@ export default class MediaSourceProvider {
   static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): ?IMediaSourceAdapter {
     if (videoElement && source && config) {
       if (!MediaSourceProvider._selectedAdapter) {
-        MediaSourceProvider.canPlaySource(source, true);
+        MediaSourceProvider.canPlaySource(source, true, config.drm);
       }
       return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config) : null;
     }
