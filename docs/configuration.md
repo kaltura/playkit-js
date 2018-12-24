@@ -19,7 +19,8 @@ var player = playkit.core.loadPlayer(config);
   session: PKSessionConfigObject,
   plugins: PKPluginsConfigObject,
   customLabels: PKCustomLabelsConfigObject,
-  abr: PKAbrConfigObject
+  abr: PKAbrConfigObject,
+  drm: PKDrmConfigObject
 }
 ```
 
@@ -82,6 +83,9 @@ var config = {
     fpsDroppedFramesInterval: 5000,
     fpsDroppedMonitoringThreshold: 0.2,
     capLevelOnFPSDrop: true
+  },
+  drm: {
+    keySystem: ''
   }
 };
 ```
@@ -1066,6 +1070,38 @@ var config = {
 > > ##### Default: true
 > >
 > > ##### Description: If the player should cap the level when the fps exceeds the threshold.
+>
+> ##
+
+##
+
+> ### config.drm
+>
+> ##### Type: `PKDrmConfigObject`
+>
+> ```js
+> {
+>   keySystem: string;
+> }
+> ```
+>
+> ##### Default:
+>
+> ```js
+> {
+>   keySystem: '';
+> }
+> ```
+>
+> ##### Description: DRM system configuration
+>
+> > ### config.drm.keySystem
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: ``
+> >
+> > ##### Description: A specific DRM key system to use
 >
 > ##
 
