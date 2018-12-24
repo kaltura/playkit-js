@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.44.1"></a>
+## [0.44.1](https://github.com/kaltura/playkit-js/compare/v0.44.0...v0.44.1) (2018-12-24)
+
+
+### Bug Fixes
+
+* **FEC-8770:** iOS -  captions style it applies for both players in the same page ([#329](https://github.com/kaltura/playkit-js/issues/329)) ([d7877c3](https://github.com/kaltura/playkit-js/commit/d7877c3))
+
+
+
 <a name="0.44.0"></a>
 # [0.44.0](https://github.com/kaltura/playkit-js/compare/v0.43.1...v0.44.0) (2018-12-20)
 
