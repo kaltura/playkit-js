@@ -16,6 +16,16 @@ export default class FairPlay extends BaseDrmProtocol {
   static _errorCallback: Function;
 
   /**
+   * FairPlay is the configure key system.
+   * @param {Array<Object>} drmData - The drm data.
+   * @param {PKDrmConfigObject} drmConfig - The drm config.
+   * @return {boolean} - Whether FairPlay is the configure key system.
+   */
+  static isConfigured(drmData: Array<Object>, drmConfig: PKDrmConfigObject): boolean {
+    return BaseDrmProtocol.DrmScheme.FAIRPLAY === drmConfig.keySystem && !!drmData.find(drmEntry => drmEntry.scheme === drmConfig.keySystem);
+  }
+
+  /**
    * FairPlay playback supports in case 2 conditions are met:
    * 1. The environment supports FairPlay playback.
    * 2. The drm data of the source object contains entry with FairPlay scheme.

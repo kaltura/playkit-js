@@ -27,7 +27,7 @@ import {MediaType} from './media-type';
 import {AbrMode} from './track/abr-mode-type';
 import {CorsType} from './engines/html5/cors-types';
 import PlaybackMiddleware from './middleware/playback-middleware';
-import DefaultPlayerConfig from './player-config.json';
+import {DefaultConfig} from './player-config.js';
 import './assets/style.css';
 import PKError from './error/error';
 import {EngineProvider} from './engines/engine-provider';
@@ -68,11 +68,11 @@ const POSTER_CLASS_NAME: string = 'playkit-poster';
 const ENGINE_CLASS_NAME: string = 'playkit-engine';
 
 /**
- * The text style id.
+ * The text style class name.
  * @type {string}
  * @const
  */
-const SUBTITLES_STYLE_ID_NAME: string = 'playkit-subtitles-style';
+const SUBTITLES_STYLE_CLASS_NAME: string = 'playkit-subtitles-style';
 
 /**
  * The subtitles class name.
@@ -170,18 +170,6 @@ export default class Player extends FakeEventTarget {
   static setCapabilities(engineType: string, capabilities: {[name: string]: any}): void {
     Player._logger.debug('Set player capabilities', engineType, capabilities);
     Player._playerCapabilities[engineType] = Utils.Object.mergeDeep({}, Player._playerCapabilities[engineType], capabilities);
-  }
-
-  /**
-   * For browsers which block auto play, use the user gesture to open the video element and enable playing via API.
-   * @returns {void}
-   * @private
-   * @static
-   */
-  static _prepareVideoElement(): void {
-    EngineProvider.getEngines().forEach((Engine: typeof IEngine) => {
-      Engine.prepareVideoElement();
-    });
   }
 
   /**
@@ -394,7 +382,9 @@ export default class Player extends FakeEventTarget {
    */
   constructor(config: Object = {}) {
     super();
-    Player._prepareVideoElement();
+    this._setConfigLogLevel(config);
+    this._playerId = Utils.Generator.uniqueId(5);
+    this._prepareVideoElement();
     Player.runCapabilities();
     this._env = Env;
     this._tracks = [];
@@ -434,9 +424,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   configure(config: Object = {}): void {
-    if (config.logLevel && LogLevel[config.logLevel]) {
-      setLogLevel(LogLevel[config.logLevel]);
-    }
+    this._setConfigLogLevel(config);
     if (this._hasSources(config.sources)) {
       this._configureOrLoadPlugins(config.plugins);
       this._maybeCreateAdsController();
@@ -526,7 +514,7 @@ export default class Player extends FakeEventTarget {
       this._playbackMiddleware.play(() => this._play());
     } else if (this._loadingMedia) {
       // load media requested but the response is delayed
-      Player._prepareVideoElement();
+      this._prepareVideoElement();
       this._playbackMiddleware.play(() => this._playAfterAsyncMiddleware());
     } else {
       this.dispatchEvent(
@@ -1109,10 +1097,11 @@ export default class Player extends FakeEventTarget {
     if (!(style instanceof TextStyle)) {
       throw new Error('Style must be instance of TextStyle');
     }
-    let element = Utils.Dom.getElementById(SUBTITLES_STYLE_ID_NAME);
+    let element = Utils.Dom.getElementBySelector(`.${this._playerId}.${SUBTITLES_STYLE_CLASS_NAME}`);
     if (!element) {
       element = Utils.Dom.createElement('style');
-      Utils.Dom.setAttribute(element, 'id', SUBTITLES_STYLE_ID_NAME);
+      Utils.Dom.addClassName(element, this._playerId);
+      Utils.Dom.addClassName(element, SUBTITLES_STYLE_CLASS_NAME);
       Utils.Dom.appendChild(document.head, element);
     }
     let sheet = element.sheet;
@@ -1123,7 +1112,7 @@ export default class Player extends FakeEventTarget {
 
     try {
       if (this._config.playback.useNativeTextTrack) {
-        sheet.insertRule(`video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
+        sheet.insertRule(`#${this._playerId}  video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
       } else {
         sheet.insertRule(`#${this._playerId} .${SUBTITLES_CLASS_NAME} > div > div > div { ${style.toCSS()} }`, 0);
       }
@@ -1344,6 +1333,30 @@ export default class Player extends FakeEventTarget {
   // <editor-fold desc="Playback">
 
   /**
+   * For browsers which block auto play, use the user gesture to open the video element and enable playing via API.
+   * @returns {void}
+   * @param {string} playerId - the id of the player
+   * @private
+   */
+  _prepareVideoElement(): void {
+    EngineProvider.getEngines().forEach((Engine: typeof IEngine) => {
+      Engine.prepareVideoElement(this._playerId);
+    });
+  }
+
+  /**
+   * Set the config level of the player
+   * @returns {void}
+   * @param {Object} config - object containing the log level.
+   * @private
+   */
+  _setConfigLogLevel(config: Object): void {
+    if (config.logLevel && LogLevel[config.logLevel]) {
+      setLogLevel(LogLevel[config.logLevel]);
+    }
+  }
+
+  /**
    * Check if sources has been received.
    * @param {Object} sources - sources config object.
    * @returns {boolean} - Whether sources has been received to the player.
@@ -1364,7 +1377,6 @@ export default class Player extends FakeEventTarget {
   _createPlayerContainer(): void {
     const el = (this._el = Utils.Dom.createElement('div'));
     Utils.Dom.addClassName(el, CONTAINER_CLASS_NAME);
-    this._playerId = Utils.Generator.uniqueId(5);
     Utils.Dom.setAttribute(el, 'id', this._playerId);
     Utils.Dom.setAttribute(el, 'tabindex', '-1');
   }
@@ -1481,7 +1493,7 @@ export default class Player extends FakeEventTarget {
         const formatSources = sources[format];
         if (formatSources && formatSources.length > 0) {
           const source = formatSources[0];
-          if (Engine.canPlaySource(source, preferNative[format])) {
+          if (Engine.canPlaySource(source, preferNative[format], this._config.drm)) {
             Player._logger.debug('Source selected: ', formatSources);
             this._loadEngine(Engine, source);
             this._engineType = engineId;
@@ -1503,14 +1515,14 @@ export default class Player extends FakeEventTarget {
    */
   _loadEngine(Engine: typeof IEngine, source: PKMediaSourceObject) {
     if (!this._engine) {
-      this._engine = Engine.createEngine(source, this._config);
+      this._engine = Engine.createEngine(source, this._config, this._playerId);
       this._appendEngineEl();
     } else {
       if (this._engine.id === Engine.id) {
         this._engine.restore(source, this._config);
       } else {
         this._engine.destroy();
-        this._engine = Engine.createEngine(source, this._config);
+        this._engine = Engine.createEngine(source, this._config, this._playerId);
         this._appendEngineEl();
       }
     }
@@ -1910,7 +1922,7 @@ export default class Player extends FakeEventTarget {
    * @static
    */
   static get _defaultConfig(): Object {
-    return Utils.Object.copyDeep(DefaultPlayerConfig);
+    return Utils.Object.copyDeep(DefaultConfig);
   }
 
   // </editor-fold>

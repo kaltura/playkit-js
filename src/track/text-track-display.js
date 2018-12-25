@@ -1020,7 +1020,8 @@ function processCues(window, cues, overlay) {
 
   let boxPositions = [],
     containerBox = BoxPosition.getSimpleBoxPosition(paddedOverlay),
-    fontSize = Math.round(containerBox.height * FONT_SIZE_PERCENT * 100) / 100;
+    dimensionSize = containerBox.height < containerBox.width ? containerBox.height : containerBox.width,
+    fontSize = Math.round(dimensionSize * FONT_SIZE_PERCENT * 100) / 100;
   let styleOptions = {
     font: fontSize * fontScale + 'px ' + FONT_STYLE
   };
