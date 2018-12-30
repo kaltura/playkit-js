@@ -19,7 +19,10 @@ class ResizeWatcher extends FakeEventTarget {
    * @returns {void}
    */
   destroy(): void {
-    this._observer.disconnect();
+    if (this._observer) {
+      this._observer.disconnect();
+    }
+    this._observer = null;
     this._playerId = '';
   }
 
@@ -32,7 +35,9 @@ class ResizeWatcher extends FakeEventTarget {
     this._playerId = playerId;
     window.ResizeObserver ? this._createNativeObserver() : this._createIframeObserver();
     const el = document.getElementById(this._playerId);
-    this._observer.observe(el);
+    if (el instanceof HTMLElement) {
+      this._observer.observe(el);
+    }
   }
 
   _createNativeObserver() {

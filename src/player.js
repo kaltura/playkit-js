@@ -1632,6 +1632,9 @@ export default class Player extends FakeEventTarget {
       clearTimeout(this._repositionCuesTimeout);
     }
     this._repositionCuesTimeout = setTimeout(() => {
+      if (this._destroyed) {
+        return;
+      }
       this._updateTextDisplay(this._activeTextCues);
       this._repositionCuesTimeout = false;
     }, REPOSITION_CUES_TIMEOUT);
