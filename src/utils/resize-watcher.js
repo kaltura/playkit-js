@@ -91,6 +91,7 @@ class IFrameObserver {
       const iframe = this._observersStore[target];
       iframe.onresize = null;
       el.removeChild(iframe);
+      delete this._observersStore[el.getAttribute('id')];
     }
   }
 
