@@ -7,7 +7,7 @@ import {CustomEventType} from '../event/event-type';
  * A Factory class to create a resize observer for the player.
  */
 class ResizeWatcher extends FakeEventTarget {
-  _observer: Object;
+  _observer: ?Object;
   _playerId: string;
 
   constructor() {
@@ -35,7 +35,7 @@ class ResizeWatcher extends FakeEventTarget {
     this._playerId = playerId;
     window.ResizeObserver ? this._createNativeObserver() : this._createIframeObserver();
     const el = document.getElementById(this._playerId);
-    if (el instanceof HTMLElement) {
+    if (el instanceof HTMLElement && this._observer) {
       this._observer.observe(el);
     }
   }
@@ -95,12 +95,14 @@ class IFrameObserver {
       const el = document.getElementById(target);
       const iframe = this._observersStore[target];
       iframe.onresize = null;
-      el.removeChild(iframe);
-      delete this._observersStore[el.getAttribute('id')];
+      if (el) {
+        el.removeChild(iframe);
+        delete this._observersStore[el.getAttribute('id')];
+      }
     }
   }
 
-  _createIframe(): HTMLElement {
+  _createIframe(): HTMLIFrameElement {
     let iframe = document.createElement('iframe');
     iframe.className = IFRAME_CLASS_NAME;
     return iframe;

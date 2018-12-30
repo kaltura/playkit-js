@@ -375,6 +375,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _adsController: ?AdsController;
+  /**
+   * holds the resize observer. Incharge of notifying on resize changes.
+   * @type {?AdsController}
+   * @private
+   */
+  _resizeWatcher: ResizeWatcher;
 
   /**
    * @param {Object} config - The configuration for the player instance.
