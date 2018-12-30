@@ -604,6 +604,7 @@ export default class Player extends FakeEventTarget {
     this._posterManager.destroy();
     this._pluginManager.destroy();
     this._stateManager.destroy();
+    this._clearRepositionTimeout();
     this._activeTextCues = [];
     this._textDisplaySettings = {};
     this._config = {};
@@ -1634,16 +1635,17 @@ export default class Player extends FakeEventTarget {
       this._activeTextCues[i].hasBeenReset = true;
     }
     // handling only the last reposition
-    if (this._repositionCuesTimeout) {
-      clearTimeout(this._repositionCuesTimeout);
-    }
+    this._clearRepositionTimeout();
     this._repositionCuesTimeout = setTimeout(() => {
-      if (this._destroyed) {
-        return;
-      }
       this._updateTextDisplay(this._activeTextCues);
       this._repositionCuesTimeout = false;
     }, REPOSITION_CUES_TIMEOUT);
+  }
+
+  _clearRepositionTimeout() {
+    if (this._repositionCuesTimeout) {
+      clearTimeout(this._repositionCuesTimeout);
+    }
   }
 
   /**
