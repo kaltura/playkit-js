@@ -7,6 +7,7 @@ import sourcesConfig from '../../../../configs/sources.json';
 import * as Utils from '../../../../../../src/utils/util';
 import Env from '../../../../../../src/utils/env';
 import {CustomEventType, Html5EventType} from '../../../../../../src/event/event-type';
+import FairPlay from '../../../../../../src/drm/fairplay';
 
 describe('NativeAdapter: isSupported', () => {
   it('should be supported', () => {
@@ -47,6 +48,30 @@ describe('NativeAdapter: canPlayType', () => {
 
   it('should return false for no mime type', () => {
     NativeAdapter.canPlayType().should.be.false;
+  });
+});
+
+describe('NativeAdapter: canPlayDrm', () => {
+  const fpDrmData = [{licenseUrl: 'LICENSE_URL', scheme: FairPlay.DrmScheme.FAIRPLAY}];
+  const wwDrmData = [{licenseUrl: 'LICENSE_URL', scheme: FairPlay.DrmScheme.WIDEVINE}];
+
+  beforeEach(() => {
+    NativeAdapter._drmProtocol = null;
+  });
+
+  it('should return true for fairplay data if configured', function() {
+    NativeAdapter.canPlayDrm(fpDrmData, {keySystem: FairPlay.DrmScheme.FAIRPLAY}).should.be.true;
+    NativeAdapter._drmProtocol._KeySystem.should.equal(FairPlay._KeySystem);
+  });
+
+  it('should return false for fairplay data if not configured', function() {
+    NativeAdapter.canPlayDrm(fpDrmData, {keySystem: FairPlay.DrmScheme.WIDEVINE}).should.be.false;
+    (NativeAdapter._drmProtocol === null).should.be.true;
+  });
+
+  it('should return false for non-fairplay data even configured', function() {
+    NativeAdapter.canPlayDrm(wwDrmData, {keySystem: FairPlay.DrmScheme.FAIRPLAY}).should.be.false;
+    (NativeAdapter._drmProtocol === null).should.be.true;
   });
 });
 

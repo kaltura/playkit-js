@@ -67,11 +67,11 @@ const POSTER_CLASS_NAME: string = 'playkit-poster';
 const ENGINE_CLASS_NAME: string = 'playkit-engine';
 
 /**
- * The text style id.
+ * The text style class name.
  * @type {string}
  * @const
  */
-const SUBTITLES_STYLE_ID_NAME: string = 'playkit-subtitles-style';
+const SUBTITLES_STYLE_CLASS_NAME: string = 'playkit-subtitles-style';
 
 /**
  * The subtitles class name.
@@ -1099,10 +1099,11 @@ export default class Player extends FakeEventTarget {
     if (!(style instanceof TextStyle)) {
       throw new Error('Style must be instance of TextStyle');
     }
-    let element = Utils.Dom.getElementById(SUBTITLES_STYLE_ID_NAME);
+    let element = Utils.Dom.getElementBySelector(`.${this._playerId}.${SUBTITLES_STYLE_CLASS_NAME}`);
     if (!element) {
       element = Utils.Dom.createElement('style');
-      Utils.Dom.setAttribute(element, 'id', SUBTITLES_STYLE_ID_NAME);
+      Utils.Dom.addClassName(element, this._playerId);
+      Utils.Dom.addClassName(element, SUBTITLES_STYLE_CLASS_NAME);
       Utils.Dom.appendChild(document.head, element);
     }
     let sheet = element.sheet;
@@ -1113,7 +1114,7 @@ export default class Player extends FakeEventTarget {
 
     try {
       if (this._config.playback.useNativeTextTrack) {
-        sheet.insertRule(`#${this._playerId} video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
+        sheet.insertRule(`#${this._playerId}video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
       }
       this._textStyle = style;
       if (this._engine) {
@@ -1497,7 +1498,7 @@ export default class Player extends FakeEventTarget {
         const formatSources = sources[format];
         if (formatSources && formatSources.length > 0) {
           const source = formatSources[0];
-          if (Engine.canPlaySource(source, preferNative[format])) {
+          if (Engine.canPlaySource(source, preferNative[format], this._config.drm)) {
             Player._logger.debug('Source selected: ', formatSources);
             this._loadEngine(Engine, source);
             this._engineType = engineId;

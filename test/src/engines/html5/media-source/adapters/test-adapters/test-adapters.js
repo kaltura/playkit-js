@@ -27,8 +27,8 @@ class Adapter1 implements IMediaSourceAdapter {
     return ['mimeType0', 'mimeType1'].includes(mimeType);
   }
 
-  static canPlayDrm(drmData: Array<Object>): boolean {
-    return !!(drmData.length && drmData[0].scheme === 's1');
+  static canPlayDrm(drmData: Array<Object>, drmConfig: PKDrmConfigObject): boolean {
+    return !!((drmData.length && drmData[0].scheme === 's1') || drmConfig.keySystem === 's1');
   }
 
   static createAdapter(videoElement: HTMLVideoElement, source: Object, config: Object): IMediaSourceAdapter {
@@ -75,8 +75,8 @@ class Adapter3 implements IMediaSourceAdapter {
     return !!document.createElement('video').canPlayType(mimeType);
   }
 
-  static canPlayDrm(drmData: Array<Object>): boolean {
-    return !!(drmData.length && drmData[0].scheme === 's3');
+  static canPlayDrm(drmData: Array<Object>, drmConfig: PKDrmConfigObject): boolean {
+    return !!((drmData.length && drmData[0].scheme === 's3') || drmConfig.keySystem === 's3');
   }
 
   static createAdapter(videoElement: HTMLVideoElement, source: Object, config: Object): IMediaSourceAdapter {

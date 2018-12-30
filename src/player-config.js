@@ -65,6 +65,9 @@ const DefaultConfig = {
       minBitrate: 0,
       maxBitrate: Infinity
     }
+  },
+  drm: {
+    keySystem: ''
   }
 };
 
