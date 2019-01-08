@@ -1586,7 +1586,6 @@ export default class Player extends FakeEventTarget {
       });
       this._eventManager.listen(this, CustomEventType.ENTER_FULLSCREEN, () => this._resetTextCuesAndReposition());
       this._eventManager.listen(this, CustomEventType.EXIT_FULLSCREEN, () => this._resetTextCuesAndReposition());
-      this._eventManager.listen(window, CustomEventType.RESIZE, () => this._resetTextCuesAndReposition());
       this._eventManager.listen(this._resizeWatcher, CustomEventType.RESIZE, event => {
         this._resetTextCuesAndReposition();
         this.dispatchEvent(event);
