@@ -8,7 +8,7 @@ import {CustomEventType} from '../event/event-type';
  */
 class ResizeWatcher extends FakeEventTarget {
   _observer: ?Object;
-  _playerId: string;
+  _el: string;
 
   constructor() {
     super();
@@ -23,20 +23,19 @@ class ResizeWatcher extends FakeEventTarget {
       this._observer.disconnect();
     }
     this._observer = null;
-    this._playerId = '';
+    this._el = null;
   }
 
   /**
    * Start listening to a resize of the element.
-   * @param {string} playerId - the target to listen to.
+   * @param {HTMLElement} el - the element to listen to.
    * @returns {void}
    */
-  init(playerId: string): void {
-    this._playerId = playerId;
+  init(el: HTMLElement): void {
+    this._el = el;
     window.ResizeObserver ? this._createNativeObserver() : this._createIframeObserver();
-    const el = document.getElementById(this._playerId);
-    if (el instanceof HTMLElement && this._observer) {
-      this._observer.observe(el);
+    if (this._el instanceof HTMLElement && this._observer) {
+      this._observer.observe(this._el);
     }
   }
 

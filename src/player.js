@@ -435,7 +435,7 @@ export default class Player extends FakeEventTarget {
       this._configureOrLoadPlugins(config.plugins);
       this._maybeCreateAdsController();
       this.reset();
-      this._resizeWatcher.init(this._playerId);
+      this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
       Player._logger.debug('Change source started');
       this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
       Utils.Object.mergeDeep(this._config, config);
@@ -587,7 +587,7 @@ export default class Player extends FakeEventTarget {
     this._reset = true;
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET));
     this._eventManager.removeAll();
-    this._resizeWatcher.init(this._playerId);
+    this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
     this._createReadyPromise();
   }
 
