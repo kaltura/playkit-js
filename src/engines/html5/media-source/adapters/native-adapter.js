@@ -270,6 +270,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._eventManager.listen(this._videoElement, Html5EventType.ENDED, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.ABORT, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.SEEKED, () => this._onSeeked());
+        this._eventManager.listen(this._videoElement, Html5EventType.CAN_PLAY, () => this._clearHeartbeatTimeout());
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
         }
