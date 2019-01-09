@@ -83,7 +83,7 @@ describe('ResizeWatcher', () => {
     let el = document.createElement('div');
     el.setAttribute('id', 'coolObserver123');
     document.body.appendChild(el);
-    rw.init('coolObserver123');
+    rw.init(el);
     rw.addEventListener('resize', () => {
       document.body.removeChild(el);
       done();
