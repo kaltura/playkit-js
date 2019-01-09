@@ -8,7 +8,7 @@ import {CustomEventType} from '../event/event-type';
  */
 class ResizeWatcher extends FakeEventTarget {
   _observer: ?Object;
-  _el: string;
+  _el: ?HTMLElement;
 
   constructor() {
     super();
