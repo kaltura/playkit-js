@@ -26,9 +26,9 @@ class Ad {
     this._posterUrl = options.posterUrl;
     this._skipOffset = options.skipOffset;
     this._linear = options.linear;
-    this._width = options.width;
-    this._height = options.height;
-    this._bitrate = options.bitrate;
+    this._width = options.width || 0;
+    this._height = options.height || 0;
+    this._bitrate = options.bitrate || 0;
   }
 
   get id(): string {
