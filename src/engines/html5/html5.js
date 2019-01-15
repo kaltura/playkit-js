@@ -341,7 +341,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._mediaSourceAdapter.hideTextTrack();
     }
     this._removeCueChangeListeners();
-    this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: []}));
   }
 
   /**

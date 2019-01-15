@@ -1014,6 +1014,7 @@ export default class Player extends FakeEventTarget {
       } else if (track instanceof AudioTrack) {
         this._engine.selectAudioTrack(track);
       } else if (track instanceof TextTrack) {
+        this._resetTextDisplay();
         if (track.language === OFF) {
           this.hideTextTrack();
           this._externalCaptionsHandler.hideTextTrack();
@@ -1038,8 +1039,7 @@ export default class Player extends FakeEventTarget {
   hideTextTrack(): void {
     if (this._engine) {
       this._engine.hideTextTrack();
-      this._activeTextCues = [];
-      this._updateTextDisplay([]);
+      this._resetTextDisplay();
       const textTracks = this._getTracksByType(TrackType.TEXT);
       textTracks.map(track => (track.active = false));
       const textTrack = textTracks.find(track => track.language === OFF);
@@ -1333,6 +1333,16 @@ export default class Player extends FakeEventTarget {
   // <editor-fold desc="Private Methods">
 
   // <editor-fold desc="Playback">
+
+  /**
+   * Remove the current text track from the player view.
+   * @returns {void}
+   * @private
+   */
+  _resetTextDisplay(): void {
+    this._activeTextCues = [];
+    this._updateTextDisplay([]);
+  }
 
   /**
    * For browsers which block auto play, use the user gesture to open the video element and enable playing via API.
