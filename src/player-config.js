@@ -28,7 +28,8 @@ const DefaultConfig = {
     options: {
       html5: {
         hls: {},
-        dash: {}
+        dash: {},
+        native: {}
       }
     },
     preferNative: {
