@@ -11,6 +11,9 @@ class Ad {
   _posterUrl: ?string;
   _skipOffset: ?number;
   _linear: ?boolean;
+  _width: number;
+  _height: number;
+  _bitrate: number;
 
   constructor(id: string, options: PKAdOptions) {
     this._id = id;
@@ -23,6 +26,9 @@ class Ad {
     this._posterUrl = options.posterUrl;
     this._skipOffset = options.skipOffset;
     this._linear = options.linear;
+    this._width = options.width || 0;
+    this._height = options.height || 0;
+    this._bitrate = options.bitrate || 0;
   }
 
   get id(): string {
@@ -65,6 +71,18 @@ class Ad {
     return this._linear;
   }
 
+  get width(): number {
+    return this._width;
+  }
+
+  get height(): number {
+    return this._height;
+  }
+
+  get bitrate(): number {
+    return this._bitrate;
+  }
+
   get skippable(): boolean {
     return !!(this.skipOffset && this.skipOffset > 0);
   }
@@ -81,7 +99,10 @@ class Ad {
       posterUrl: this.posterUrl,
       skipOffset: this.skipOffset,
       linear: this.linear,
-      skippable: this.skippable
+      skippable: this.skippable,
+      width: this.width,
+      height: this.height,
+      bitrate: this.bitrate
     };
   }
 }
