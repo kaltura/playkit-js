@@ -1,5 +1,6 @@
 import {Cue} from './vtt-cue';
 import {Region} from './vtt-region';
+import TextStyle from './text-style';
 
 /* eslint-disable */
 /**
@@ -610,9 +611,9 @@ class CueStyleBox extends StyleBox {
     // have inline positioning and will function as the cue background box.
     this.cueDiv = parseContent(window, cue.text);
     let styles = {
-      color: color,
-      backgroundColor: backgroundColor,
-      textShadow: textShadow,
+      color: styleOptions.color,
+      backgroundColor: styleOptions.backgroundColor,
+      textShadow: styleOptions.textShadow,
       position: 'relative',
       left: 0,
       right: 0,
@@ -979,7 +980,7 @@ const CUE_BACKGROUND_PADDING = '1.5%';
 // Runs the processing model over the cues and regions passed to it.
 // @param overlay A block level element (usually a div) that the computed cues
 //                and regions will be placed into.
-function processCues(window, cues, overlay) {
+function processCues(window, cues, overlay, style) {
   if (!window || !cues || !overlay) {
     return null;
   }
@@ -1023,7 +1024,10 @@ function processCues(window, cues, overlay) {
     dimensionSize = containerBox.height < containerBox.width ? containerBox.height : containerBox.width,
     fontSize = Math.round(dimensionSize * FONT_SIZE_PERCENT * 100) / 100;
   let styleOptions = {
-    font: fontSize * fontScale + 'px ' + FONT_STYLE
+    font: fontSize * fontScale * style.implicitFontScale + 'px ' + style.fontFamily,
+    color: TextStyle.toRGBA(style.fontColor, style.fontOpacity),
+    backgroundColor: TextStyle.toRGBA(style.backgroundColor, style.backgroundOpacity),
+    textShadow: style.getTextShadow()
   };
 
   (function() {

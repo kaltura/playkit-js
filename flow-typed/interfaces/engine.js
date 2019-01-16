@@ -33,6 +33,7 @@ declare interface IEngine {
   getStartTimeOfDvrWindow(): number;
   isLive(): boolean;
   getVideoElement(): HTMLVideoElement;
+  resetAllCues(): void;
   +id: string;
   currentTime: number;
   +duration: number;
