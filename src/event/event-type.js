@@ -227,7 +227,11 @@ const CustomEventType: PKEventTypes = {
    * Fired when the a bookmark service returns a concurrency limit error
    * This event will be removed once plugins will have a way to expose their event enums
    */
-  CONCURRENCY_LIMIT: 'concurrencylimit'
+  CONCURRENCY_LIMIT: 'concurrencylimit',
+  /**
+   * Fired when the player container changes it's dimensions
+   */
+  RESIZE: 'resize'
 };
 
 const EventType: PKEventTypes = Utils.Object.merge([Html5EventType, CustomEventType, AdEventType]);

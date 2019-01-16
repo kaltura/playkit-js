@@ -2883,8 +2883,7 @@ describe('Player', function() {
 
     it('should call _resetTextCuesAndReposition function', done => {
       let spy = sandbox.spy(player, '_resetTextCuesAndReposition');
-      const event = new Event('resize');
-      window.dispatchEvent(event);
+      player._resizeWatcher._triggerResize();
       setTimeout(() => {
         spy.should.have.been.calledOnce;
         done();
