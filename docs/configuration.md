@@ -57,7 +57,8 @@ var config = {
     options: {
       html5: {
         hls: {},
-        dash: {}
+        dash: {},
+        native: {}
       }
     },
     preferNative: {
