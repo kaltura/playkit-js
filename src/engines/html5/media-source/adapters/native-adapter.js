@@ -186,6 +186,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       adapterConfig.captionsTextTrack1LanguageCode = config.playback.captionsTextTrack1LanguageCode;
       adapterConfig.captionsTextTrack2Label = config.playback.captionsTextTrack2Label;
       adapterConfig.captionsTextTrack2LanguageCode = config.playback.captionsTextTrack2LanguageCode;
+      if (Utils.Object.hasPropertyPath(config.playback, 'options.html5.native')) {
+        Utils.Object.mergeDeep(adapterConfig, config.playback.options.html5.native);
+      }
     }
     return new this(videoElement, source, adapterConfig);
   }
@@ -323,7 +326,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   _onTimeUpdate(): void {
-    if (this._videoElement.currentTime > this._lastTimeUpdate) {
+    if (!this._videoElement.paused && this._videoElement.currentTime > this._lastTimeUpdate) {
       if (this._waitingEventTriggered) {
         this._waitingEventTriggered = false;
         this._trigger(Html5EventType.PLAYING);
