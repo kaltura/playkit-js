@@ -37,6 +37,7 @@ import {AdTagType} from './ads/ad-tag-type';
 import {AdsController} from './ads/ads-controller';
 import {AdEventType} from './ads/ad-event-type';
 import {ControllerProvider} from './controller/controller-provider';
+import {ResizeWatcher} from './utils/resize-watcher';
 
 /**
  * The black cover class name.
@@ -93,13 +94,6 @@ const AUTO: string = 'auto';
  *  @const
  */
 const OFF: string = 'off';
-
-/**
- * The resize event string
- *  *  @type {string}
- *  @const
- */
-const RESIZE: string = 'resize';
 
 /**
  *  The duration offset, for seeking to duration safety.
@@ -381,6 +375,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _adsController: ?AdsController;
+  /**
+   * holds the resize observer. Incharge of notifying on resize changes.
+   * @type {?AdsController}
+   * @private
+   */
+  _resizeWatcher: ResizeWatcher;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -410,6 +410,7 @@ export default class Player extends FakeEventTarget {
     this._stateManager = new StateManager(this);
     this._pluginManager = new PluginManager();
     this._controllerProvider = new ControllerProvider(this._pluginManager);
+    this._resizeWatcher = new ResizeWatcher();
     this._playbackMiddleware = new PlaybackMiddleware();
     this._textStyle = new TextStyle();
     this._createReadyPromise();
@@ -434,6 +435,7 @@ export default class Player extends FakeEventTarget {
       this._configureOrLoadPlugins(config.plugins);
       this._maybeCreateAdsController();
       this.reset();
+      this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
       Player._logger.debug('Change source started');
       this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
       Utils.Object.mergeDeep(this._config, config);
@@ -585,6 +587,7 @@ export default class Player extends FakeEventTarget {
     this._reset = true;
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET));
     this._eventManager.removeAll();
+    this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
     this._createReadyPromise();
   }
 
@@ -601,6 +604,7 @@ export default class Player extends FakeEventTarget {
     this._posterManager.destroy();
     this._pluginManager.destroy();
     this._stateManager.destroy();
+    this._clearRepositionTimeout();
     this._activeTextCues = [];
     this._textDisplaySettings = {};
     this._config = {};
@@ -613,6 +617,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.destroy();
     }
+    this._resizeWatcher.destroy();
     if (this._el) {
       Utils.Dom.removeChild(this._el.parentNode, this._el);
     }
@@ -1014,6 +1019,7 @@ export default class Player extends FakeEventTarget {
       } else if (track instanceof AudioTrack) {
         this._engine.selectAudioTrack(track);
       } else if (track instanceof TextTrack) {
+        this._resetTextDisplay();
         if (track.language === OFF) {
           this.hideTextTrack();
           this._externalCaptionsHandler.hideTextTrack();
@@ -1038,8 +1044,7 @@ export default class Player extends FakeEventTarget {
   hideTextTrack(): void {
     if (this._engine) {
       this._engine.hideTextTrack();
-      this._activeTextCues = [];
-      this._updateTextDisplay([]);
+      this._resetTextDisplay();
       const textTracks = this._getTracksByType(TrackType.TEXT);
       textTracks.map(track => (track.active = false));
       const textTrack = textTracks.find(track => track.language === OFF);
@@ -1113,12 +1118,14 @@ export default class Player extends FakeEventTarget {
     }
 
     try {
-      if (this._config.playback.useNativeTextTrack) {
-        sheet.insertRule(`#${this._playerId}  video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
-      } else {
-        sheet.insertRule(`#${this._playerId} .${SUBTITLES_CLASS_NAME} > div > div > div { ${style.toCSS()} }`, 0);
-      }
       this._textStyle = style;
+      if (this._config.playback.useNativeTextTrack) {
+        sheet.insertRule(`#${this._playerId}video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
+      } else if (this._engine) {
+        this._engine.resetAllCues();
+        this._externalCaptionsHandler.resetAllCues();
+        this._updateTextDisplay(this._activeTextCues);
+      }
       this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_STYLE_CHANGED));
     } catch (e) {
       Player._logger.error(e.message);
@@ -1333,6 +1340,16 @@ export default class Player extends FakeEventTarget {
   // <editor-fold desc="Private Methods">
 
   // <editor-fold desc="Playback">
+
+  /**
+   * Remove the current text track from the player view.
+   * @returns {void}
+   * @private
+   */
+  _resetTextDisplay(): void {
+    this._activeTextCues = [];
+    this._updateTextDisplay([]);
+  }
 
   /**
    * For browsers which block auto play, use the user gesture to open the video element and enable playing via API.
@@ -1581,8 +1598,9 @@ export default class Player extends FakeEventTarget {
       });
       this._eventManager.listen(this, CustomEventType.ENTER_FULLSCREEN, () => this._resetTextCuesAndReposition());
       this._eventManager.listen(this, CustomEventType.EXIT_FULLSCREEN, () => this._resetTextCuesAndReposition());
-      this._eventManager.listen(window, RESIZE, () => {
+      this._eventManager.listen(this._resizeWatcher, CustomEventType.RESIZE, event => {
         this._resetTextCuesAndReposition();
+        this.dispatchEvent(event);
       });
       this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => this._handleRecovered());
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
@@ -1631,13 +1649,17 @@ export default class Player extends FakeEventTarget {
       this._activeTextCues[i].hasBeenReset = true;
     }
     // handling only the last reposition
-    if (this._repositionCuesTimeout) {
-      clearTimeout(this._repositionCuesTimeout);
-    }
+    this._clearRepositionTimeout();
     this._repositionCuesTimeout = setTimeout(() => {
       this._updateTextDisplay(this._activeTextCues);
       this._repositionCuesTimeout = false;
     }, REPOSITION_CUES_TIMEOUT);
+  }
+
+  _clearRepositionTimeout() {
+    if (this._repositionCuesTimeout) {
+      clearTimeout(this._repositionCuesTimeout);
+    }
   }
 
   /**
@@ -2058,7 +2080,7 @@ export default class Player extends FakeEventTarget {
    */
   _updateTextDisplay(cues: Array<Cue>): void {
     if (!this._config.playback.useNativeTextTrack) {
-      processCues(window, cues, this._textDisplayEl);
+      processCues(window, cues, this._textDisplayEl, this._textStyle);
     }
   }
 

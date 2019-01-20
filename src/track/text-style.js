@@ -1,4 +1,13 @@
 // @flow
+/**
+ * We use this number to calculate the scale of the text. so it will be : 1 + 0.25 * FontSizes.value
+ * So, if the user selects 400% the scale would be: 1 + 0.25 * 4 = 2. so the font size should be multiplied by 2.
+ * The calculation of the size of the font is done in text-track-display and not in this module, because
+ * the calculation in text-track-display also set the location of the container of the subtitiles according to the
+ * font size.
+ * @type {number}
+ */
+const IMPLICIT_SCALE_PERCENTAGE: number = 0.25;
 
 /**
  * Creates a TextStyle object.
@@ -72,7 +81,32 @@ class TextStyle {
     DROP: [[34, 34, 34, 2, 2, 3], [34, 34, 34, 2, 2, 4], [34, 34, 34, 2, 2, 5]]
   };
 
-  static FontSizes: Array<string> = ['50%', '75%', '100%', '200%', '300%', '400%'];
+  static FontSizes: Array<Object> = [
+    {
+      value: -2,
+      label: '50%'
+    },
+    {
+      value: -1,
+      label: '75%'
+    },
+    {
+      value: 0,
+      label: '100%'
+    },
+    {
+      value: 2,
+      label: '200%'
+    },
+    {
+      value: 3,
+      label: '300%'
+    },
+    {
+      value: 4,
+      label: '400%'
+    }
+  ];
 
   /**
    * Creates a CSS RGBA sctring for a given color and opacity values
@@ -81,16 +115,18 @@ class TextStyle {
    * @return {string} - CSS rgba string
    * @private
    */
-  static _toRGBA(color: Array<number>, opacity: number): string {
+  static toRGBA(color: Array<number>, opacity: number): string {
     // shaka.asserts.assert(color.length == 3);
     return 'rgba(' + color.concat(opacity).join(',') + ')';
   }
 
   /**
-   * Font size, such as 50%, 75%, 100%, 200%, or 300%.
-   * @type {string}
+   * Font size, such as 1, 2, 3...
+   * @type {number}
    */
   fontSize: string = '100%';
+
+  fontScale: number = 1;
 
   /**
    * @type {TextStyle.FontFamily}
@@ -124,6 +160,19 @@ class TextStyle {
    */
   fontEdge: Array<Array<number>> = TextStyle.EdgeStyles.NONE;
 
+  getTextShadow(): string {
+    // A given edge effect may be implemented with multiple shadows.
+    // Collect them all into an array, then combine into one attribute.
+    let shadows: Array<string> = [];
+    for (let i = 0; i < this.fontEdge.length; i++) {
+      // shaka.asserts.assert(this.fontEdge[i].length == 6);
+      const color: Array<number> = this.fontEdge[i].slice(0, 3);
+      let shadow: Array<number> = this.fontEdge[i].slice(3, 6);
+      shadows.push(TextStyle.toRGBA(color, this.fontOpacity) + ' ' + shadow.join('px ') + 'px');
+    }
+    return shadows.join(',');
+  }
+
   /**
    * Compute the CSS text necessary to represent this TextStyle.
    * Output does not contain any selectors.
@@ -132,23 +181,10 @@ class TextStyle {
    */
   toCSS(): string {
     let attributes: Array<string> = [];
-
     attributes.push('font-family: ' + this.fontFamily);
-    attributes.push('font-size: ' + this.fontSize);
-    attributes.push('color: ' + TextStyle._toRGBA(this.fontColor, this.fontOpacity));
-    attributes.push('background-color: ' + TextStyle._toRGBA(this.backgroundColor, this.backgroundOpacity));
-
-    // A given edge effect may be implemented with multiple shadows.
-    // Collect them all into an array, then combine into one attribute.
-    let shadows: Array<string> = [];
-    for (let i = 0; i < this.fontEdge.length; i++) {
-      // shaka.asserts.assert(this.fontEdge[i].length == 6);
-      const color: Array<number> = this.fontEdge[i].slice(0, 3);
-      let shadow: Array<number> = this.fontEdge[i].slice(3, 6);
-      shadows.push(TextStyle._toRGBA(color, this.fontOpacity) + ' ' + shadow.join('px ') + 'px');
-    }
-    attributes.push('text-shadow: ' + shadows.join(','));
-
+    attributes.push('color: ' + TextStyle.toRGBA(this.fontColor, this.fontOpacity));
+    attributes.push('background-color: ' + TextStyle.toRGBA(this.backgroundColor, this.backgroundOpacity));
+    attributes.push('text-shadow: ' + this.getTextShadow());
     return attributes.join('!important; ');
   }
 
@@ -160,6 +196,7 @@ class TextStyle {
     let clonedTextStyle = new TextStyle();
     clonedTextStyle.fontEdge = this.fontEdge;
     clonedTextStyle.fontSize = this.fontSize;
+    clonedTextStyle.fontScale = this.fontScale;
     clonedTextStyle.fontColor = this.fontColor;
     clonedTextStyle.fontOpacity = this.fontOpacity;
     clonedTextStyle.backgroundColor = this.backgroundColor;
@@ -182,6 +219,10 @@ class TextStyle {
       textStyle.backgroundColor === this.backgroundColor &&
       textStyle.backgroundOpacity === this.backgroundOpacity
     );
+  }
+
+  get implicitFontScale(): number {
+    return IMPLICIT_SCALE_PERCENTAGE * this.fontScale + 1;
   }
 }
 
