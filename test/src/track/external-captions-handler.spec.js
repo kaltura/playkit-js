@@ -10,7 +10,7 @@ import FakeEvent from '../../../src/event/fake-event';
 const targetId = 'player-placeholder_player.spec';
 let sourcesConfig = Object.copyDeep(SourcesConfig);
 
-describe.skip('ExternalCaptionsHandler', () => {
+describe('ExternalCaptionsHandler', () => {
   describe('_getCuesString', () => {
     let config, player, playerContainer, externalCaptionsHandler;
 
@@ -46,7 +46,7 @@ describe.skip('ExternalCaptionsHandler', () => {
       });
     });
 
-    it.skip('should load a vtt file (type not specified)', done => {
+    it('should load a vtt file (type not specified)', done => {
       externalCaptionsHandler._textTrackModel['en'] = {
         url: '/base/test/src/assets/en.vtt',
         cues: []
@@ -128,7 +128,7 @@ describe.skip('ExternalCaptionsHandler', () => {
     });
   });
 
-  describe.skip('_convertSrtToVtt', () => {
+  describe('_convertSrtToVtt', () => {
     let config, player, playerContainer, externalCaptionsHandler;
 
     before(() => {
