@@ -112,6 +112,15 @@ export default class BasePlugin implements IPlugin {
   }
 
   /**
+   * Runs the loadMedia logic of the plugin.
+   * plugin must implement this method.
+   * @public
+   * @virtual
+   * @returns {void}
+   */
+  loadMedia(): void {}
+
+  /**
    * Runs the destroy logic of the plugin.
    * plugin must implement this method.
    * @public
