@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.45.0"></a>
+# [0.45.0](https://github.com/kaltura/playkit-js/compare/v0.44.0...v0.45.0) (2019-01-20)
+
+
+### Bug Fixes
+
+* **FEC-8556:** inbound captions frame is stuck in case switching captions using wrong external url ([#335](https://github.com/kaltura/playkit-js/issues/335)) ([7124090](https://github.com/kaltura/playkit-js/commit/7124090))
+* **FEC-8572:** change the way the player compute text tracks font size ([#328](https://github.com/kaltura/playkit-js/issues/328)) ([13bf1ae](https://github.com/kaltura/playkit-js/commit/13bf1ae))
+* **FEC-8763:** add loadMedia life cycle hook for plugins ([#337](https://github.com/kaltura/playkit-js/issues/337)) ([dbc200a](https://github.com/kaltura/playkit-js/commit/dbc200a))
+* **FEC-8770:** iOS -  captions style it applies for both players in the same page ([#329](https://github.com/kaltura/playkit-js/issues/329)) ([d7877c3](https://github.com/kaltura/playkit-js/commit/d7877c3))
+* **FEC-8829, FEC-8807:** native adapter throws an error after 30 seconds pause ([#339](https://github.com/kaltura/playkit-js/issues/339)) ([9596dd9](https://github.com/kaltura/playkit-js/commit/9596dd9))
+
+
+### Features
+
+* **FEC-8620:** resize watcher ([#325](https://github.com/kaltura/playkit-js/issues/325)) ([86687f8](https://github.com/kaltura/playkit-js/commit/86687f8))
+* **FEC-8749:** expose IMA ad data ([#334](https://github.com/kaltura/playkit-js/issues/334)) ([67d8db1](https://github.com/kaltura/playkit-js/commit/67d8db1))
+
+
+
 <a name="0.44.1"></a>
 ## [0.44.1](https://github.com/kaltura/playkit-js/compare/v0.44.0...v0.44.1) (2018-12-24)
 

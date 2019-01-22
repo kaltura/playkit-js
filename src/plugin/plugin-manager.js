@@ -106,6 +106,15 @@ export default class PluginManager {
   }
 
   /**
+   * Iterates over all the plugins and calls loadMedia().
+   * @public
+   * @returns {void}
+   */
+  loadMedia(): void {
+    Object.keys(this._plugins).forEach(k => this._plugins[k].loadMedia());
+  }
+
+  /**
    * Iterates over all the plugins and calls destroy().
    * @public
    * @returns {void}

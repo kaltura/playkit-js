@@ -9,4 +9,7 @@ declare type PKAdOptions = {
   posterUrl?: string;
   skipOffset?: number;
   linear?: boolean;
+  width: number;
+  height: number;
+  bitrate: number;
 };

@@ -79,7 +79,11 @@ const AdEventType: PKEventTypes = {
   /**
    * Fired on ad time progress.
    */
-  AD_PROGRESS: 'adprogress'
+  AD_PROGRESS: 'adprogress',
+  /**
+   * Fired when the ad has stalled playback to buffer.
+   */
+  AD_BUFFERING: 'adbuffering'
 };
 
 export {AdEventType};
