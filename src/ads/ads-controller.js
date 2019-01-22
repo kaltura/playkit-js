@@ -9,6 +9,11 @@ import Error from '../error/error';
 import {AdBreak} from './ad-break';
 import {Ad} from './ad';
 
+/**
+ * @class AdsController
+ * @param {Player} player - The player.
+ * @param {IAdsController} adsPluginController - The controller of the current ads plugin instance.
+ */
 class AdsController extends FakeEventTarget implements IAdsController {
   _player: Player;
   _adsPluginController: IAdsController;
@@ -18,11 +23,6 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _adBreak: ?AdBreak;
   _ad: ?Ad;
 
-  /**
-   * The ads controller.
-   * @param {Player} player - The player.
-   * @param {IAdsController} adsPluginController - the controller of the current plugin instance.
-   */
   constructor(player: Player, adsPluginController: IAdsController) {
     super();
     this._player = player;
@@ -32,7 +32,8 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   /**
-   * Getter to the no more ads to play indication.
+   * @instance
+   * @memberof AdsController
    * @returns {boolean} - Whether all ads completed.
    */
   get allAdsCompleted(): boolean {
@@ -40,7 +41,8 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   /**
-   * @public
+   * @instance
+   * @memberof AdsController
    * @returns {boolean} - Whether we're in an ad break.
    */
   isAdBreak(): boolean {
@@ -48,24 +50,27 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   /**
-   * @public
-   * @returns {boolean} - The ad breaks layout (cue points).
+   * @instance
+   * @memberof AdsController
+   * @returns {Array<number>} - The ad breaks layout (cue points).
    */
   getAdBreaksLayout(): Array<number> {
     return this._adBreaksLayout;
   }
 
   /**
-   * @public
-   * @returns {?AdBreak} - Gets the current ad break info.
+   * @instance
+   * @memberof AdsController
+   * @returns {?AdBreak} - Gets the current ad break data.
    */
   getAdBreak(): ?AdBreak {
     return this._adBreak;
   }
 
   /**
-   * @public
-   * @returns {?AdBreak} - Gets the current ad info.
+   * @instance
+   * @memberof AdsController
+   * @returns {?Ad} - Gets the current ad data.
    */
   getAd(): ?Ad {
     return this._ad;
@@ -73,7 +78,8 @@ class AdsController extends FakeEventTarget implements IAdsController {
 
   /**
    * Skip on an ad.
-   * @public
+   * @instance
+   * @memberof AdsController
    * @returns {void}
    */
   skipAd(): void {
@@ -83,7 +89,8 @@ class AdsController extends FakeEventTarget implements IAdsController {
   /**
    * Play an ad on demand.
    * @param {string} adTagUrl - The ad tag url to play.
-   * @public
+   * @instance
+   * @memberof AdsController
    * @returns {void}
    */
   playAdNow(adTagUrl: string): void {
