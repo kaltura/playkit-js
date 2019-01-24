@@ -49,6 +49,7 @@
     "chai": "^3.5.0",
     "cross-env": "^3.1.4",
     "css-loader": "^0.28.4",
+    "documentation": "^8.1.2",
     "eslint": "^3.10.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-loader": "^1.6.1",
