@@ -1121,7 +1121,7 @@ export default class Player extends FakeEventTarget {
     try {
       this._textStyle = style;
       if (this._config.playback.useNativeTextTrack) {
-        sheet.insertRule(`#${this._playerId}video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
+        sheet.insertRule(`#${this._playerId} video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
       } else if (this._engine) {
         this._engine.resetAllCues();
         this._externalCaptionsHandler.resetAllCues();
