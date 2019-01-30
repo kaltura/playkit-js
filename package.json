@@ -14,7 +14,9 @@
     "eslint": "eslint . --color",
     "flow": "flow check",
     "commit:dist": "git add --force --all dist && (git commit -m 'chore: update dist' || exit 0)",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "docs:generate": "documentation build flow-typed/** src/** -f md -o docs/api.md",
+    "docs:serve": "documentation serve flow-typed/** src/** --watch"
   },
   "lint-staged": {
     "*.{js,jsx}": [
@@ -47,6 +49,7 @@
     "chai": "^3.5.0",
     "cross-env": "^3.1.4",
     "css-loader": "^0.28.4",
+    "documentation": "^8.1.2",
     "eslint": "^3.10.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-loader": "^1.6.1",
