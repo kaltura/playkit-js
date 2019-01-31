@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.45.2"></a>
+## [0.45.2](https://github.com/kaltura/playkit-js/compare/v0.45.1...v0.45.2) (2019-01-31)
+
+
+### Bug Fixes
+
+* **FEC-8858:** the captions languages in list displayed twice ([#341](https://github.com/kaltura/playkit-js/issues/341)) ([6b0761d](https://github.com/kaltura/playkit-js/commit/6b0761d))
+* **FEC-8865:** the captions style change is not applied on iOS  ([#342](https://github.com/kaltura/playkit-js/issues/342)) ([3671dbd](https://github.com/kaltura/playkit-js/commit/3671dbd))
+
+
+
 <a name="0.45.1"></a>
 ## [0.45.1](https://github.com/kaltura/playkit-js/compare/v0.45.0...v0.45.1) (2019-01-24)
 
