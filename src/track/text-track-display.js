@@ -792,7 +792,11 @@ class BoxPosition {
       case '+y':
         return this.top < container.top;
       case '-y':
-        return this.bottom > container.bottom;
+        try{
+          return Number.parseFloat(this.bottom).toFixed(2) > Number.parseFloat(container.bottom).toFixed(2);
+        } catch(e) {
+          return this.bottom > container.bottom;
+        }
     }
   }
 
@@ -973,7 +977,7 @@ function convertCueToDOMTree(window, cuetext) {
   return parseContent(window, cuetext);
 }
 
-const FONT_SIZE_PERCENT = 0.065;
+const FONT_SIZE_PERCENT = 0.058;
 const FONT_STYLE = 'sans-serif';
 const CUE_BACKGROUND_PADDING = '1.5%';
 
