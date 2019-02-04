@@ -792,12 +792,7 @@ class BoxPosition {
       case '+y':
         return this.top < container.top;
       case '-y':
-        // IE has too many digits after the decimal point which results in wrong calculation.
-        try{
-          return Number.parseFloat(this.bottom).toFixed(2) > Number.parseFloat(container.bottom).toFixed(2);
-        } catch(e) {
-          return this.bottom > container.bottom;
-        }
+        return this.bottom > container.bottom;
     }
   }
 
