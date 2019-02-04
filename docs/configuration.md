@@ -1090,14 +1090,6 @@ var config = {
 > }
 > ```
 >
-> ##### Default:
->
-> ```js
-> {
->   keySystem: '';
-> }
-> ```
->
 > ##### Description: DRM system configuration
 >
 > > ### config.drm.keySystem
@@ -1106,7 +1098,7 @@ var config = {
 > >
 > > ##### Default: ``
 > >
-> > ##### Description: A specific DRM key system to use
+> > ##### Description: A specific DRM key system to use.
 >
 > ##
 
