@@ -2860,6 +2860,10 @@ describe('Player', function() {
     it('should reset the active text cues', () => {
       player._activeTextCues[0] = {};
       player._updateTextDisplay = () => {};
+      player._engine = {
+        resetAllCues: function() {},
+        destroy: function() {}
+      };
       player._resetTextCuesAndReposition();
       let cue = player._activeTextCues[0];
       cue.hasBeenReset.should.equals(true);

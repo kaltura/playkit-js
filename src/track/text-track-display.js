@@ -973,7 +973,7 @@ function convertCueToDOMTree(window, cuetext) {
   return parseContent(window, cuetext);
 }
 
-const FONT_SIZE_PERCENT = 0.065;
+const FONT_SIZE_PERCENT = 0.058;
 const FONT_STYLE = 'sans-serif';
 const CUE_BACKGROUND_PADDING = '1.5%';
 
