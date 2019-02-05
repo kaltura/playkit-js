@@ -1,7 +1,7 @@
 ## DRM System Selection
 
-Once the player gets an encrypted source to play it has to select the DRM system to run with.
-<br>The following article explains the default selection, and how an application may force select one by configuration.
+Once the player gets an encrypted source to play it has to select the DRM system to run with.  
+The following article explains the default selection, and how an application may force select one by configuration.
 
 ### Default Selection
 
@@ -13,8 +13,8 @@ By default the player selects the DRM system according the source type and the b
 
 ### Configuration
 
-Sometimes the user may want to force the player to select a specific DRM system. Usually to support DRM on browser not in the table above, or to prioritize between one of the supported DRM systems.
-<br>Setting the desired DRM system is done by setting the DRM configuration. For example:
+Sometimes the user may want to force the player to select a specific DRM system. Usually to support DRM on browser not in the table above, or to prioritize between one of the supported DRM systems.  
+Setting the desired DRM system is done by setting the DRM configuration. For example:
 
 ```ecmascript 6
 var config = {
@@ -27,8 +27,8 @@ var player = playkit.core.loadPlayer(config);
 ```
 
 **Important**:
-The player selects the DRM system **after** the [source type selection](./source-selection-logic.md).
-<br>Therefore, the DRM settings may **not be applied** when the source type cannot be played with the configured DRM system. For example:
+The player selects the DRM system **after** the [source type selection](./source-selection-logic.md).  
+Therefore, the DRM settings may **not be applied** when the source type cannot be played with the configured DRM system. For example:
 
 | Browser | Source Type | Default DRM System | Configured DRM System | Selected (reason)                   |
 | ------- | ----------- | ------------------ | --------------------- | ----------------------------------- |
