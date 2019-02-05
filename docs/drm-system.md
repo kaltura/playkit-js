@@ -13,7 +13,7 @@ By default the player selects the DRM system according the source type and the b
 
 ### Configuration
 
-Sometimes the user may want to force the player to select a specific DRM system. Usually to support DRM on browser not in the table above, or to prioritize between some of supported DRM systems.
+Sometimes the user may want to force the player to select a specific DRM system. Usually to support DRM on browser not in the table above, or to prioritize between one of the supported DRM systems.
 <br>To get it need to use the DRM configuration. For example:
 
 ```ecmascript 6
