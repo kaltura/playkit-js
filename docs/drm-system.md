@@ -3,7 +3,7 @@
 Once the player gets an encrypted source to play it has to select the DRM system to run with.
 <br>The following article explains the default selection, and how the user can select one by configuration.
 
-###Default Selection
+### Default Selection
 
 By default the player selects the DRM system according the source type and the browser capabilities, as follows:
 
@@ -11,7 +11,7 @@ By default the player selects the DRM system according the source type and the b
 | -------------- | --------------- | ------------ | ---------- | ------------- |
 | WIDEVINE       | WIDEVINE        | PLAYREADY    | PLAYREADY  | FAIRPLAY      |
 
-###Configuration
+### Configuration
 
 Sometimes the user may want to force the player to select a specific DRM system. Usually to support DRM on browser not in the table above, or to prioritize between some of supported DRM systems.
 <br>To get it need to use the DRM configuration. For example:
