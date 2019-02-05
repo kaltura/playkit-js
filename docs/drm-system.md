@@ -1,7 +1,7 @@
 ## DRM System Selection
 
 Once the player gets an encrypted source to play it has to select the DRM system to run with.
-<br>The following article explains the default selection, and how the user can select one by configuration.
+<br>The following article explains the default selection, and how an application may force select one by configuration.
 
 ### Default Selection
 
