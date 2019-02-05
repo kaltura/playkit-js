@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/kaltura/playkit-js.svg?branch=master)](https://travis-ci.org/kaltura/playkit-js)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![](https://img.shields.io/npm/v/@playkit-js/playkit-js/latest.svg)](https://www.npmjs.com/package/@playkit-js/playkit-js)
+[![](https://img.shields.io/npm/v/@playkit-js/playkit-js/canary.svg)](https://www.npmjs.com/package/@playkit-js/playkit-js/v/canary)
 
 PlayKit JS is an opinionated JavaScript library to enable seamless video playback across browsers and platforms with support for advanced streaming formats.
 
