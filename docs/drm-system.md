@@ -28,9 +28,9 @@ var player = playkit.core.loadPlayer(config);
 
 **Important**:
 The player selects the DRM system **after** the [source type selection](./source-selection-logic.md).
-<br>therefore, the DRM settings **may not be applied** when the source type cannot be played with the configured DRM system. for example:
+<br>Therefore, the DRM settings may **not be applied** when the source type cannot be played with the configured DRM system. for example:
 
-| Browser | Source Type | Default DRM System | Configured DRM System | Selected (Why?)                     |
+| Browser | Source Type | Default DRM System | Configured DRM System | Selected (reason)                   |
 | ------- | ----------- | ------------------ | --------------------- | ----------------------------------- |
 | Chrome  | dash        | WIDEVINE           | PLAYREADY             | PLAYREADY (dash+PLAYREADY is valid) |
 | Chrome  | dash        | WIDEVINE           | FAIRPLAY              | WIDEVINE (dash+FAIRPLAY is invalid) |
