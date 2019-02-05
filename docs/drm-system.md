@@ -26,7 +26,7 @@ var config = {
 var player = playkit.core.loadPlayer(config);
 ```
 
-**Important**:
+**Important**:  
 The player selects the DRM system **after** the [source type selection](./source-selection-logic.md).  
 Therefore, the DRM settings may **not be applied** when the source type cannot be played with the configured DRM system. For example:
 
