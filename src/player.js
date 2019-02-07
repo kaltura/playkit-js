@@ -1713,7 +1713,10 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _handlePreload(): void {
-    if (this._config.playback.preload === 'auto' && !this._config.playback.autoplay && this._canPreload()) {
+    if (this._config.playback.preload !== 'none' && !this._config.playback.autoplay && this._canPreload()) {
+      if (this._config.playback.preload === 'metadata') {
+        this._engine.preload = 'metadata';
+      }
       this.load();
     }
   }
