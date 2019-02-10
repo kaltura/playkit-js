@@ -1,11 +1,11 @@
 ## DRM System Selection
 
-Once the player gets an encrypted source to play it has to select the DRM system to run with.  
-The following article explains the default selection, and how an application may force select one by configuration.
+Once the player gets an encrypted source to play, it will need to select a DRM system with which to run the source.  
+The following article explains the default selection, and how an application may force the selection using a configuration.
 
 ### Default Selection
 
-By default the player selects the DRM system according the source type and the browser capabilities, as follows:
+By default, the player selects the DRM system according the source type and the browser capabilities, as follows:
 
 | dash on Chrome | dash on Firefox | dash on Edge | dash on IE | hls on Safari |
 | -------------- | --------------- | ------------ | ---------- | ------------- |
@@ -13,7 +13,8 @@ By default the player selects the DRM system according the source type and the b
 
 ### Configuration
 
-Sometimes an application may want to force the player to select a specific DRM system. Usually to support DRM on browser not in the table above, or to prioritize between one of the supported DRM systems.  
+Sometimes, an application may want to force the player to select a specific DRM system, usually to support DRM on browser that's not in the table above, or to prioritize between one of the supported DRM systems.
+
 Setting the desired DRM system is done by setting the DRM configuration. For example:
 
 ```ecmascript 6
