@@ -513,6 +513,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   play(): void {
+    this.dispatchEvent(new FakeEvent(CustomEventType.PLAY_REQUESTED));
     if (!this._playbackStart) {
       this._playbackStart = true;
       this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_START));

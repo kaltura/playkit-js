@@ -231,7 +231,11 @@ const CustomEventType: PKEventTypes = {
   /**
    * Fired when the player container changes it's dimensions
    */
-  RESIZE: 'resize'
+  RESIZE: 'resize',
+  /**
+   * When the player starts the play sequence (due to user gesture or programmatically)
+   */
+  PLAY_REQUESTED: 'playrequested'
 };
 
 const EventType: PKEventTypes = Utils.Object.merge([Html5EventType, CustomEventType, AdEventType]);
