@@ -281,9 +281,13 @@ class ExternalCaptionsHandler extends FakeEventTarget {
         .then(response => {
           resolve(captionType === SRT_POSTFIX ? this._convertSrtToVtt(response) : response);
         })
-        .catch(error => {
+        .catch(() => {
           this._textTrackModel[textTrack.language].cuesStatus = CuesStatus.NOT_DOWNLOADED;
-          reject(new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.HTTP_ERROR, error.payload));
+          reject(
+            new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.HTTP_ERROR, {
+              url: track.url
+            })
+          );
         });
     });
   }
