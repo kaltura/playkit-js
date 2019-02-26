@@ -2,10 +2,9 @@
 import * as Utils from '../../../utils/util';
 import {Html5EventType} from '../../../event/event-type';
 import getLogger from '../../../utils/logger';
-import * as blobSource from '../../../assets/blob-source.json';
+import * as EncodingSources from '../../../assets/encoding-sources.json';
 
 const WAIT_TIME: number = 500;
-const VIDEO = new Blob([new Uint8Array(blobSource.uInt8Array)], {type: 'video/mp4'});
 
 export default class Html5AutoPlayCapability implements ICapability {
   static _vid: HTMLVideoElement;
@@ -21,7 +20,7 @@ export default class Html5AutoPlayCapability implements ICapability {
   static runCapability(): void {
     if (!Html5AutoPlayCapability._vid) {
       Html5AutoPlayCapability._vid = Utils.Dom.createElement('video');
-      Html5AutoPlayCapability._vid.src = URL.createObjectURL(VIDEO);
+      Html5AutoPlayCapability._vid.src = EncodingSources.Base64Mp4Source;
       // For iOS devices needs to turn the playsinline attribute on
       Html5AutoPlayCapability._vid.setAttribute('playsinline', '');
     }
