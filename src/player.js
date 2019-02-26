@@ -1581,7 +1581,9 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.AUTOPLAY_FAILED, (event: FakeEvent) => {
         this.pause();
-        this.dispatchEvent(event);
+        if (this._firstPlay && this._config.playback.autoplay) {
+          this.dispatchEvent(event);
+        }
       });
       this._eventManager.listen(this._engine, CustomEventType.FPS_DROP, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this, Html5EventType.PLAY, this._onPlay.bind(this));
