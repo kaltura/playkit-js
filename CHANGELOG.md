@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.45.4"></a>
+## [0.45.4](https://github.com/kaltura/playkit-js/compare/v0.45.3...v0.45.4) (2019-02-27)
+
+
+### Bug Fixes
+
+* **FEC-8381:** when external caption http request fails, the error message is not clear ([#347](https://github.com/kaltura/playkit-js/issues/347)) ([6c97e16](https://github.com/kaltura/playkit-js/commit/6c97e16))
+* **FEC-8565:** AUTOPLAY_FAILED event is dispatched after play-pause on slow network  ([#349](https://github.com/kaltura/playkit-js/issues/349)) ([eeb3d15](https://github.com/kaltura/playkit-js/commit/eeb3d15))
+* **FEC-8911:** autoplay is not working on Samsung Native (built-in) browser ([#348](https://github.com/kaltura/playkit-js/issues/348)) ([2000dab](https://github.com/kaltura/playkit-js/commit/2000dab))
+
+
+
 <a name="0.45.3"></a>
 ## [0.45.3](https://github.com/kaltura/playkit-js/compare/v0.45.1...v0.45.3) (2019-02-04)
 
