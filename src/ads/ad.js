@@ -19,6 +19,7 @@ class Ad {
   _width: number;
   _height: number;
   _bitrate: number;
+  _bumper: boolean;
 
   constructor(id: string, options: PKAdOptions) {
     this._id = id;
@@ -34,6 +35,7 @@ class Ad {
     this._width = options.width || 0;
     this._height = options.height || 0;
     this._bitrate = options.bitrate || 0;
+    this._bumper = options.bumper;
   }
 
   /**
@@ -120,9 +122,9 @@ class Ad {
   /**
    * @instance
    * @memberof Ad
-   * @return {string} - Whether the ad is linear.
+   * @return {boolean} - Whether the ad is linear.
    */
-  get linear(): ?boolean {
+  get linear(): boolean {
     return this._linear;
   }
 
@@ -156,6 +158,15 @@ class Ad {
   /**
    * @instance
    * @memberof Ad
+   * @return {boolean} - Whether the ad is bumper.
+   */
+  get bumper(): boolean {
+    return this._bumper;
+  }
+
+  /**
+   * @instance
+   * @memberof Ad
    * @return {string} - Whether the ad is skippable or not.
    */
   get skippable(): boolean {
@@ -177,7 +188,8 @@ class Ad {
       skippable: this.skippable,
       width: this.width,
       height: this.height,
-      bitrate: this.bitrate
+      bitrate: this.bitrate,
+      bumper: this.bumper
     };
   }
 }

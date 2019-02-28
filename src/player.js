@@ -1800,9 +1800,12 @@ export default class Player extends FakeEventTarget {
 
   _maybeCreateAdsController(): void {
     if (!this._adsController) {
-      const adsPluginController = this._controllerProvider.getAdsController();
-      if (adsPluginController) {
-        this._adsController = new AdsController(this, adsPluginController);
+      const adsPluginControllers = this._controllerProvider.getAdsControllers();
+      if (adsPluginControllers.length) {
+        this._adsController = new AdsController(this, adsPluginControllers);
+        this._eventManager.listen(this._adsController, AdEventType.ALL_ADS_COMPLETED, event => {
+          this.dispatchEvent(event);
+        });
       }
     }
   }

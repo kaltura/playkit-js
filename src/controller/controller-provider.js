@@ -18,16 +18,16 @@ class ControllerProvider {
   }
 
   /**
-   * Get the ads controller of the current ads plugin.
-   * @returns {?IAdsController} - the ads controller.
+   * Get the ads controller of the all ads plugins.
+   * @returns {Array<IAdsPluginController>} - the ads controllers.
    */
-  getAdsController(): ?IAdsController {
+  getAdsControllers(): Array<IAdsPluginController> {
     //$FlowFixMe
-    const adPlugin: ?IAdsControllerProvider = Object.values(this._pluginManager.getAll()).find(
+    const adPlugins: Array<IAdsControllerProvider> = Object.values(this._pluginManager.getAll()).filter(
       //$FlowFixMe
       plugin => typeof plugin.getAdsController === 'function'
     );
-    return adPlugin && adPlugin.getAdsController();
+    return adPlugins.map(plugin => plugin.getAdsController());
   }
 }
 
