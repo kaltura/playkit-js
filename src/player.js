@@ -1724,14 +1724,11 @@ export default class Player extends FakeEventTarget {
    * If ads plugin enabled it's his responsibility to preload the content player.
    * So to avoid loading the player twice which can cause errors on MSEs we are not
    * calling load from the player.
-   * TODO: Change it to check the ads configuration when we will develop the ads manager.
    * @returns {boolean} - Whether the player can perform preload.
    * @private
    */
   _canPreload(): boolean {
-    return (
-      !this._config.plugins || ((this._config.plugins && !this._config.plugins.ima) || (this._config.plugins.ima && this._config.plugins.ima.disable))
-    );
+    return !this._adsController;
   }
 
   /**
