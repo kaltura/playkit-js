@@ -15,7 +15,7 @@ class Ad {
   _clickThroughUrl: ?string;
   _posterUrl: ?string;
   _skipOffset: ?number;
-  _linear: ?boolean;
+  _linear: boolean;
   _width: number;
   _height: number;
   _bitrate: number;
