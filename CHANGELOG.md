@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.45.5"></a>
+## [0.45.5](https://github.com/kaltura/playkit-js/compare/v0.45.4...v0.45.5) (2019-03-06)
+
+
+### Bug Fixes
+
+* **FEC-8957:** cannot pause/resume the ad after change media on iOS ([#352](https://github.com/kaltura/playkit-js/issues/352)) ([c0efdfa](https://github.com/kaltura/playkit-js/commit/c0efdfa))
+
+
+
 <a name="0.45.4"></a>
 ## [0.45.4](https://github.com/kaltura/playkit-js/compare/v0.45.3...v0.45.4) (2019-02-27)
 
