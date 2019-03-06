@@ -32,6 +32,9 @@ class ResizeWatcher extends FakeEventTarget {
    * @returns {void}
    */
   init(el: HTMLElement): void {
+    if (this._observer) {
+      return;
+    }
     this._el = el;
     window.ResizeObserver ? this._createNativeObserver() : this._createIframeObserver();
     if (this._el instanceof HTMLElement && this._observer) {
