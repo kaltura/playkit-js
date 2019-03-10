@@ -102,12 +102,12 @@ class BaseEngineDecorator extends FakeEventTarget {
     this._engine.exitPictureInPicture();
   }
 
-  isInPictureInPicture(): boolean {
-    return this._engine.isInPictureInPicture();
-  }
-
   isPictureInPictureSupported(): boolean {
     return this._engine.isPictureInPictureSupported();
+  }
+
+  get isInPictureInPicture(): boolean {
+    return this._engine.isInPictureInPicture;
   }
 
   get id(): string {

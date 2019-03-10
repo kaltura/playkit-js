@@ -273,6 +273,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._eventManager.listen(this._videoElement, Html5EventType.ENDED, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.ABORT, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.SEEKED, () => this._onSeeked());
+        this._handleMetadataTrackEvents();
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
         }
@@ -364,6 +365,25 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (this._heartbeatTimeoutId) {
       clearTimeout(this._heartbeatTimeoutId);
       this._heartbeatTimeoutId = null;
+    }
+  }
+
+  _handleMetadataTrackEvents(): void {
+    const handleCueChange = track => {
+      track.mode = 'hidden';
+      track.addEventListener('cuechange', () => {
+        this._trigger(CustomEventType.TIMED_METADATA, {cues: Array.from(track.activeCues)});
+      });
+    };
+    const metadataTrack = Array.from(this._videoElement.textTracks).find(track => track.kind === 'metadata');
+    if (metadataTrack) {
+      handleCueChange(metadataTrack);
+    } else {
+      this._eventManager.listen(this._videoElement.textTracks, 'addtrack', event => {
+        if (event.track.kind === 'metadata') {
+          handleCueChange(event.track);
+        }
+      });
     }
   }
 
