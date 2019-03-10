@@ -1122,7 +1122,7 @@ export default class Player extends FakeEventTarget {
     try {
       this._textStyle = style;
       if (this._config.playback.useNativeTextTrack) {
-        sheet.insertRule(`#${this._playerId}video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
+        sheet.insertRule(`#${this._playerId} video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
       } else if (this._engine) {
         this._engine.resetAllCues();
         this._externalCaptionsHandler.resetAllCues();
@@ -1600,7 +1600,9 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.AUTOPLAY_FAILED, (event: FakeEvent) => {
         this.pause();
-        this.dispatchEvent(event);
+        if (this._firstPlay && this._config.playback.autoplay) {
+          this.dispatchEvent(event);
+        }
       });
       this._eventManager.listen(this._engine, CustomEventType.FPS_DROP, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this, Html5EventType.PLAY, this._onPlay.bind(this));
@@ -1672,6 +1674,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _resetTextCuesAndReposition(): void {
+    this._engine.resetAllCues();
     this._updateTextDisplay([]);
     for (let i = 0; i < this._activeTextCues.length; i++) {
       this._activeTextCues[i].hasBeenReset = true;

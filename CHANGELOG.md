@@ -2,6 +2,56 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.45.5"></a>
+## [0.45.5](https://github.com/kaltura/playkit-js/compare/v0.45.4...v0.45.5) (2019-03-06)
+
+
+### Bug Fixes
+
+* **FEC-8957:** cannot pause/resume the ad after change media on iOS ([#352](https://github.com/kaltura/playkit-js/issues/352)) ([c0efdfa](https://github.com/kaltura/playkit-js/commit/c0efdfa))
+
+
+
+<a name="0.45.4"></a>
+## [0.45.4](https://github.com/kaltura/playkit-js/compare/v0.45.3...v0.45.4) (2019-02-27)
+
+
+### Bug Fixes
+
+* **FEC-8381:** when external caption http request fails, the error message is not clear ([#347](https://github.com/kaltura/playkit-js/issues/347)) ([6c97e16](https://github.com/kaltura/playkit-js/commit/6c97e16))
+* **FEC-8565:** AUTOPLAY_FAILED event is dispatched after play-pause on slow network  ([#349](https://github.com/kaltura/playkit-js/issues/349)) ([eeb3d15](https://github.com/kaltura/playkit-js/commit/eeb3d15))
+* **FEC-8911:** autoplay is not working on Samsung Native (built-in) browser ([#348](https://github.com/kaltura/playkit-js/issues/348)) ([2000dab](https://github.com/kaltura/playkit-js/commit/2000dab))
+
+
+
+<a name="0.45.3"></a>
+## [0.45.3](https://github.com/kaltura/playkit-js/compare/v0.45.1...v0.45.3) (2019-02-04)
+
+
+### Bug Fixes
+
+* **FEC-8858:** the captions languages in list displayed twice ([#341](https://github.com/kaltura/playkit-js/issues/341)) ([6b0761d](https://github.com/kaltura/playkit-js/commit/6b0761d))
+* **FEC-8865:** the captions style change is not applied on iOS  ([#342](https://github.com/kaltura/playkit-js/issues/342)) ([3671dbd](https://github.com/kaltura/playkit-js/commit/3671dbd))
+* **FEC-8874:** captions look and feel issues ([#343](https://github.com/kaltura/playkit-js/issues/343)) ([d59dc43](https://github.com/kaltura/playkit-js/commit/d59dc43))
+
+
+
+<a name="0.45.2"></a>
+## [0.45.2](https://github.com/kaltura/playkit-js/compare/v0.45.1...v0.45.2) (2019-01-31)
+
+
+### Bug Fixes
+
+* **FEC-8858:** the captions languages in list displayed twice ([#341](https://github.com/kaltura/playkit-js/issues/341)) ([6b0761d](https://github.com/kaltura/playkit-js/commit/6b0761d))
+* **FEC-8865:** the captions style change is not applied on iOS  ([#342](https://github.com/kaltura/playkit-js/issues/342)) ([3671dbd](https://github.com/kaltura/playkit-js/commit/3671dbd))
+
+
+
+<a name="0.45.1"></a>
+## [0.45.1](https://github.com/kaltura/playkit-js/compare/v0.45.0...v0.45.1) (2019-01-24)
+
+
+
 <a name="0.45.0"></a>
 # [0.45.0](https://github.com/kaltura/playkit-js/compare/v0.44.0...v0.45.0) (2019-01-20)
 

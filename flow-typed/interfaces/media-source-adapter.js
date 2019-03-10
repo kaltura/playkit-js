@@ -24,6 +24,6 @@ declare interface IMediaSourceAdapter {
   static +id: string;
   static isSupported(): boolean;
   static canPlayType(mimeType: string): boolean;
-  static canPlayDrm(drmData: Array<Object>): boolean;
+  static canPlayDrm(drmData: Array<Object>, drmConfig: PKDrmConfigObject): boolean;
   static createAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): IMediaSourceAdapter;
 }

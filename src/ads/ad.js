@@ -1,5 +1,10 @@
 // @flow
 
+/**
+ * @class Ad
+ * @param {string} id - Ad ID.
+ * @param {PKAdOptions} options - Ad data options.
+ */
 class Ad {
   _id: string;
   _url: ?string;
@@ -31,58 +36,128 @@ class Ad {
     this._bitrate = options.bitrate || 0;
   }
 
+  /**
+   * @instance
+   * @memberof Ad
+   * @return {string} - Ad ID.
+   */
   get id(): string {
     return this._id;
   }
 
+  /**
+   * @instance
+   * @memberof Ad
+   * @return {string} - Ad ID.
+   */
   get contentType(): ?string {
     return this._contentType;
   }
 
+  /**
+   * @instance
+   * @memberof Ad
+   * @return {string} - Ad URL.
+   */
   get url(): ?string {
     return this._url;
   }
 
+  /**
+   * @instance
+   * @memberof Ad
+   * @return {string} - Ad title.
+   */
   get title(): ?string {
     return this._title;
   }
 
+  /**
+   * @instance
+   * @memberof Ad
+   * @return {string} - Ad position inside the ad break.
+   */
   get position(): ?number {
     return this._position;
   }
 
+  /**
+   * @instance
+   * @memberof Ad
+   * @return {string} - Ad duration.
+   */
   get duration(): ?number {
     return this._duration;
   }
 
+  /**
+   * @instance
+   * @memberof Ad
+   * @return {string} - Ad click through URL.
+   */
   get clickThroughUrl(): ?string {
     return this._clickThroughUrl;
   }
 
+  /**
+   * @instance
+   * @memberof Ad
+   * @return {string} - Ad poster URL.
+   */
   get posterUrl(): ?string {
     return this._posterUrl;
   }
 
+  /**
+   * @instance
+   * @memberof Ad
+   * @return {string} - Ad skip offset.
+   */
   get skipOffset(): ?number {
     return this._skipOffset;
   }
 
+  /**
+   * @instance
+   * @memberof Ad
+   * @return {string} - Whether the ad is linear.
+   */
   get linear(): ?boolean {
     return this._linear;
   }
 
+  /**
+   * @instance
+   * @memberof Ad
+   * @return {string} - Ad width.
+   */
   get width(): number {
     return this._width;
   }
 
+  /**
+   * @instance
+   * @memberof Ad
+   * @return {string} - Ad height.
+   */
   get height(): number {
     return this._height;
   }
 
+  /**
+   * @instance
+   * @memberof Ad
+   * @return {string} - Ad bitrate.
+   */
   get bitrate(): number {
     return this._bitrate;
   }
 
+  /**
+   * @instance
+   * @memberof Ad
+   * @return {string} - Whether the ad is skippable or not.
+   */
   get skippable(): boolean {
     return !!(this.skipOffset && this.skipOffset > 0);
   }
