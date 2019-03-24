@@ -323,11 +323,7 @@ export default class Player extends FakeEventTarget {
     audioLanguage: '',
     textLanguage: ''
   };
-  /**
-   * Fullscreen indicator flag
-   * @private
-   */
-  _fullscreen: boolean;
+
   /**
    * holds false or an id for the timeout the reposition the text cues after togelling full screen
    * @type {any}
@@ -396,7 +392,6 @@ export default class Player extends FakeEventTarget {
     this._env = Env;
     this._tracks = [];
     this._firstPlay = true;
-    // this._fullscreen = false;
     this._repositionCuesTimeout = false;
     this._loadingMedia = false;
     this._loading = false;
@@ -419,7 +414,7 @@ export default class Player extends FakeEventTarget {
     this._appendDomElements();
     this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
     this.configure(config);
-    this._controllerFullscreen = new FullScreenController(this);
+    this._controllerFullscreen = new FullScreenController(this, this._getInBrowserFullscreenForIOS());
   }
 
   // <editor-fold desc="Public API">
@@ -1158,6 +1153,14 @@ export default class Player extends FakeEventTarget {
   // </editor-fold>
 
   // <editor-fold desc="Fullscreen API">
+  /**
+   * @param {HTMLElement} config - config object for getting inBrowserFullscreenForIOS property
+   * @returns {boolean} - Whether inBrowserFullscreenForIOS is set from one of his config
+   * @public
+   */
+  _getInBrowserFullscreenForIOS(): boolean {
+    return Utils.Object.getPropertyPath(this._config, 'playback.inBrowserFullscreenForIOS');
+  }
 
   /**
    * @returns {boolean} - Whether the player is in fullscreen mode.
@@ -1173,10 +1176,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   notifyEnterFullscreen(): void {
-    if (!this.isFullscreen()) {
-      // this._fullscreen = true;
-      this.dispatchEvent(new FakeEvent(CustomEventType.ENTER_FULLSCREEN));
-    }
+    this.dispatchEvent(new FakeEvent(CustomEventType.ENTER_FULLSCREEN));
   }
 
   /**
@@ -1185,20 +1185,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   notifyExitFullscreen(): void {
-    if (this.isFullscreen()) {
-      // this._fullscreen = false;
-      this.dispatchEvent(new FakeEvent(CustomEventType.EXIT_FULLSCREEN));
-    }
-  }
-
-  /**
-   * register the player to events of full screen
-   * @public
-   * @param {Function} EventHandler - callback function to handle event response
-   * @returns {void}
-   */
-  registerFullScreenEvents(EventHandler: Function): void {
-    this._controllerFullscreen.registerFullScreenEvents(EventHandler);
+    this.dispatchEvent(new FakeEvent(CustomEventType.EXIT_FULLSCREEN));
   }
 
   /**
@@ -1207,13 +1194,10 @@ export default class Player extends FakeEventTarget {
    * @param {HTMLElement} fullScreenElement - set html element to full screen
    * @returns {void}
    */
-  enterFullscreen(fullScreenElement: HTMLElement): void {
-    if (!this.isFullscreen()) {
-      // if (this.isInPictureInPicture()) {
-      //   this.exitPictureInPicture();
-      // }
+  enterFullscreen(fullScreenElement: ?HTMLElement): void {
+    //check for fullscreen or IOS device with flag of kaltura full screen - full screen by style not native
+    if (!this.isFullscreen() || (this._getInBrowserFullscreenForIOS() && this._env.os.name === 'iOS')) {
       this._controllerFullscreen.enterFullscreen(fullScreenElement);
-      this.dispatchEvent(new FakeEvent(CustomEventType.REQUESTED_ENTER_FULLSCREEN));
     }
   }
 
@@ -1224,9 +1208,9 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   exitFullscreen(fullScreenElement: HTMLElement): void {
-    if (this.isFullscreen()) {
+    //check for fullscreen or IOS device with flag of kaltura full screen - full screen by style not native
+    if (this.isFullscreen() || (this._getInBrowserFullscreenForIOS() && this._env.os.name === 'iOS')) {
       this._controllerFullscreen.exitFullscreen(fullScreenElement);
-      this.dispatchEvent(new FakeEvent(CustomEventType.REQUESTED_EXIT_FULLSCREEN));
     }
   }
 

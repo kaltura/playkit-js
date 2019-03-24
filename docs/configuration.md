@@ -503,7 +503,8 @@ var config = {
 >  pictureInPicture: boolean,
 >  options: PKPlaybackOptionsObject,
 >  streamPriority: Array<PKStreamPriorityObject>,
->  preferNative: PKPreferNativeConfigObject
+>  preferNative: PKPreferNativeConfigObject,
+>  inBrowserFullscreenForIOS: boolean
 > }
 > ```
 >

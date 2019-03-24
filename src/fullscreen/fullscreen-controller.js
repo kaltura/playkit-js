@@ -1,6 +1,14 @@
 //@flow
 import EventManager from '../event/event-manager';
 import Player from '../player';
+import * as Utils from '../utils/util';
+
+/**
+ * The IOS fullscreen class name.
+ * @type {string}
+ * @const
+ */
+const IN_BROWSER_FULLSCREEN_FOR_IOS: string = 'in-browser-fullscreen-mode';
 
 /**
  * @class FullScreenController
@@ -8,15 +16,19 @@ import Player from '../player';
  */
 class FullScreenController {
   _player: Player;
+  _inBrowserFullscreenForIOS: Boolean;
 
   /**
    * after component mounted, set up event listeners to window fullscreen state change
    * @param {Player} player - element to enter fullscreen
+   * @param {Boolean} inBrowserFullscreenForIOS - configuration for kaltura player ios fullscreen instead native
    * @memberof FullScreenController
    * @returns {void}
    */
-  constructor(player: Player): void {
+  constructor(player: Player, inBrowserFullscreenForIOS: ?Boolean): void {
     this._player = player;
+    this._inBrowserFullscreenForIOS = inBrowserFullscreenForIOS;
+    this.registerFullScreenEvents();
   }
 
   /**
@@ -38,11 +50,13 @@ class FullScreenController {
    * @memberof FullScreenController
    * @returns {void}
    */
-  enterFullscreen(element: HTMLElement): void {
-    let fullScreenElement = typeof element !== 'undefined' ? element : this._player.getView();
+  enterFullscreen(element: ?HTMLElement): void {
+    const fullScreenElement = element ? element : this._player.getView();
     if (this._player.env.os.name === 'iOS') {
-      if (FullScreenController.isFullscreen()) {
-        this._enterInBrowserFullscreen();
+      if (this._inBrowserFullscreenForIOS) {
+        fullScreenElement.classList.add(IN_BROWSER_FULLSCREEN_FOR_IOS);
+        this._player.notifyEnterFullscreen();
+        window.dispatchEvent(new Event('resize'));
       } else {
         this._player.getVideoElement().webkitEnterFullScreen();
       }
@@ -59,8 +73,12 @@ class FullScreenController {
    */
   exitFullscreen(): void {
     if (this._player.env.os.name === 'iOS') {
-      if (FullScreenController.isFullscreen()) {
-        this._exitInBrowserFullscreen();
+      //player will be in full screen with this flag or otherwise will be natively full screen
+      if (this._inBrowserFullscreenForIOS) {
+        const fullScreenElement = Utils.Dom.getElementBySelector('.' + IN_BROWSER_FULLSCREEN_FOR_IOS);
+        fullScreenElement.classList.remove(IN_BROWSER_FULLSCREEN_FOR_IOS);
+        this._player.notifyExitFullscreen();
+        window.dispatchEvent(new Event('resize'));
       } else {
         this._player.getVideoElement().webkitExitFullScreen();
       }
@@ -78,12 +96,11 @@ class FullScreenController {
   /**
    * request fullscreen function to all browsers
    *
-   * @param {HTMLElement} element - element to enter fullscreen
+   * @param {HTMLElement} fullScreenElement - element to enter fullscreen
    * @memberof FullScreenController
    * @returns {boolean} - boolean success indicator to enter fullscreen or not
    */
-  _requestFullscreen(element: Object): boolean {
-    let fullScreenElement = typeof element !== 'undefined' ? element : this._player.getView();
+  _requestFullscreen(fullScreenElement: HTMLElement): boolean {
     if (this._player.isInPictureInPicture()) {
       this._player.exitPictureInPicture();
     }
@@ -105,100 +122,70 @@ class FullScreenController {
   }
 
   /**
-   * after component mounted, set up event listeners to window fullscreen state change
-   * @param {function} EventHandler - callback function to handle event response
+   * set up event listeners to window fullscreen state change
    * @memberof FullScreenController
    * @returns {void}
    */
-  registerFullScreenEvents(EventHandler: Function): void {
+  registerFullScreenEvents(): void {
     const eventManager = new EventManager();
-    eventManager.listen(document, 'webkitfullscreenchange', () => this._fullscreenChangeHandler(EventHandler));
-    eventManager.listen(document, 'mozfullscreenchange', () => this._fullscreenChangeHandler(EventHandler));
-    eventManager.listen(document, 'fullscreenchange', () => this._fullscreenChangeHandler(EventHandler));
-    eventManager.listen(document, 'MSFullscreenChange', () => this._fullscreenChangeHandler(EventHandler));
-    eventManager.listen(this._player, this._player.Event.REQUESTED_ENTER_FULLSCREEN, () => this.enterFullscreen(EventHandler));
-    eventManager.listen(this._player, this._player.Event.REQUESTED_EXIT_FULLSCREEN, () => this.exitFullscreen(EventHandler));
-    this._handleIosFullscreen(EventHandler, eventManager);
+    eventManager.listen(document, 'webkitfullscreenchange', () => this._fullscreenChangeHandler());
+    eventManager.listen(document, 'mozfullscreenchange', () => this._fullscreenChangeHandler());
+    eventManager.listen(document, 'fullscreenchange', () => this._fullscreenChangeHandler());
+    eventManager.listen(document, 'MSFullscreenChange', () => this._fullscreenChangeHandler());
+    eventManager.listen(this._player, this._player.Event.REQUESTED_ENTER_FULLSCREEN, () => this.enterFullscreen());
+    eventManager.listen(this._player, this._player.Event.REQUESTED_EXIT_FULLSCREEN, () => this.exitFullscreen());
+    this._handleIosFullscreen(eventManager);
   }
 
   /**
    * Handle iOS full screen changes
-   * @param {function} EventHandler - callback function to handle event response
    * @param {EventManager} eventManager - event manager
    * @memberof FullScreenController
    * @returns {void}
    */
-  _handleIosFullscreen(EventHandler: Function, eventManager: EventManager): void {
+  _handleIosFullscreen(eventManager: EventManager): void {
     if (this._player.env.os.name === 'iOS') {
       /**
        * Attach listeners to ios full screen change.
-       * @param {function} EventHandler - callback function to handle event response
        * @returns {void}
        */
-      const attachIosFullscreenListeners = (EventHandler: Function) => {
-        eventManager.listen(this._player.getVideoElement(), 'webkitbeginfullscreen', () => this._fullscreenEnterHandler(EventHandler));
-        eventManager.listen(this._player.getVideoElement(), 'webkitendfullscreen', () => this._fullscreenExitHandler(EventHandler));
+      const attachIosFullscreenListeners = () => {
+        eventManager.listen(this._player.getVideoElement(), 'webkitbeginfullscreen', () => this._fullscreenEnterHandler());
+        eventManager.listen(this._player.getVideoElement(), 'webkitendfullscreen', () => this._fullscreenExitHandler());
       };
       if (this._player.getVideoElement()) {
-        attachIosFullscreenListeners(EventHandler);
+        attachIosFullscreenListeners();
       } else {
-        eventManager.listenOnce(this._player, this._player.Event.SOURCE_SELECTED, () => attachIosFullscreenListeners(EventHandler));
+        eventManager.listenOnce(this._player, this._player.Event.SOURCE_SELECTED, () => attachIosFullscreenListeners());
       }
     }
   }
 
   /**
    * fullscreen change handler function.
-   * @param {function} EventHandler - callback function to handle event response
    * @memberof FullScreenController
    * @returns {void}
    */
-  _fullscreenChangeHandler(EventHandler: Function): void {
-    FullScreenController.isFullscreen() ? this._fullscreenEnterHandler(EventHandler) : this._fullscreenExitHandler(EventHandler);
+  _fullscreenChangeHandler(): void {
+    FullScreenController.isFullscreen() ? this._fullscreenEnterHandler() : this._fullscreenExitHandler();
   }
 
   /**
    * fullscreen enter handler function.
-   * @param {function} EventHandler - callback function to handle event response
    * @memberof FullScreenController
    * @returns {void}
    */
-  _fullscreenEnterHandler(EventHandler: Function): void {
+  _fullscreenEnterHandler(): void {
     this._player.notifyEnterFullscreen();
-    EventHandler();
   }
 
   /**
    * fullscreen exit handler function.
-   * @param {function} EventHandler - callback function to handle event response
    * @memberof FullScreenController
    * @returns {void}
    */
-  _fullscreenExitHandler(EventHandler: Function): void {
+  _fullscreenExitHandler(): void {
     this._player.notifyExitFullscreen();
-    EventHandler();
-  }
-
-  /**
-   * enter in browser fullscreen mode
-   *
-   * @memberof FullScreenController
-   * @returns {void}
-   */
-  _enterInBrowserFullscreen(): void {
-    this._player.notifyEnterFullscreen();
-    window.dispatchEvent(new Event('resize'));
-  }
-
-  /**
-   * exit in browser fullscreen mode
-   *
-   * @memberof FullScreenController
-   * @returns {void}
-   */
-  _exitInBrowserFullscreen(): void {
-    this._player.notifyExitFullscreen();
-    window.dispatchEvent(new Event('resize'));
   }
 }
 
