@@ -414,7 +414,7 @@ export default class Player extends FakeEventTarget {
     this._appendDomElements();
     this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
     this.configure(config);
-    this._controllerFullscreen = new FullScreenController(this, this._getInBrowserFullscreenForIOS());
+    this._controllerFullscreen = new FullScreenController(this);
   }
 
   // <editor-fold desc="Public API">
@@ -1154,20 +1154,11 @@ export default class Player extends FakeEventTarget {
 
   // <editor-fold desc="Fullscreen API">
   /**
-   * @param {HTMLElement} config - config object for getting inBrowserFullscreenForIOS property
-   * @returns {boolean} - Whether inBrowserFullscreenForIOS is set from one of his config
-   * @public
-   */
-  _getInBrowserFullscreenForIOS(): boolean {
-    return Utils.Object.getPropertyPath(this._config, 'playback.inBrowserFullscreenForIOS');
-  }
-
-  /**
    * @returns {boolean} - Whether the player is in fullscreen mode.
    * @public
    */
   isFullscreen(): boolean {
-    return FullScreenController.isFullscreen();
+    return this._controllerFullscreen.isFullscreen();
   }
 
   /**
@@ -1195,8 +1186,8 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   enterFullscreen(fullScreenElement: ?HTMLElement): void {
-    //check for fullscreen or IOS device with flag of kaltura full screen - full screen by style not native
-    if (!this.isFullscreen() || (this._getInBrowserFullscreenForIOS() && this._env.os.name === 'iOS')) {
+    if (!this.isFullscreen()) {
+      this.dispatchEvent(new FakeEvent(CustomEventType.REQUESTED_ENTER_FULLSCREEN));
       this._controllerFullscreen.enterFullscreen(fullScreenElement);
     }
   }
@@ -1208,8 +1199,8 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   exitFullscreen(fullScreenElement: HTMLElement): void {
-    //check for fullscreen or IOS device with flag of kaltura full screen - full screen by style not native
-    if (this.isFullscreen() || (this._getInBrowserFullscreenForIOS() && this._env.os.name === 'iOS')) {
+    if (this.isFullscreen()) {
+      this.dispatchEvent(new FakeEvent(CustomEventType.REQUESTED_EXIT_FULLSCREEN));
       this._controllerFullscreen.exitFullscreen(fullScreenElement);
     }
   }

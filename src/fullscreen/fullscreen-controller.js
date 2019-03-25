@@ -1,6 +1,7 @@
 //@flow
 import EventManager from '../event/event-manager';
 import Player from '../player';
+import FakeEvent from '../event/fake-event';
 import * as Utils from '../utils/util';
 
 /**
@@ -16,37 +17,43 @@ const IN_BROWSER_FULLSCREEN_FOR_IOS: string = 'in-browser-fullscreen-mode';
  */
 class FullScreenController {
   _player: Player;
-  _inBrowserFullscreenForIOS: Boolean;
+  _inBrowserFullscreenForIOS: boolean;
+  _fullscreen: boolean;
 
   /**
    * after component mounted, set up event listeners to window fullscreen state change
    * @param {Player} player - element to enter fullscreen
-   * @param {Boolean} inBrowserFullscreenForIOS - configuration for kaltura player ios fullscreen instead native
    * @memberof FullScreenController
    * @returns {void}
    */
-  constructor(player: Player, inBrowserFullscreenForIOS: ?Boolean): void {
+  constructor(player: Player): void {
     this._player = player;
-    this._inBrowserFullscreenForIOS = inBrowserFullscreenForIOS;
+    this._inBrowserFullscreenForIOS = this._player.config.playback.inBrowserFullscreenForIOS;
+    //flag to cover the option that inBrowserFullscreenForIOS selected and we should know if it's full screen
+    this._isFullscreenManually = false;
     this.registerFullScreenEvents();
   }
 
   /**
+   * if fullscreen mode
+   * @memberof FullScreenController
    * @returns {boolean} - the current fullscreen state of the document
    */
-  static isFullscreen(): boolean {
+  isFullscreen(): boolean {
     return (
       (typeof document.fullscreenElement !== 'undefined' && Boolean(document.fullscreenElement)) ||
       (typeof document.webkitFullscreenElement !== 'undefined' && Boolean(document.webkitFullscreenElement)) ||
       (typeof document.mozFullScreenElement !== 'undefined' && Boolean(document.mozFullScreenElement)) ||
-      (typeof document.msFullscreenElement !== 'undefined' && Boolean(document.msFullscreenElement))
+      (typeof document.msFullscreenElement !== 'undefined' && Boolean(document.msFullscreenElement)) ||
+      //indicator for manually full screen in ios - with css flag
+      this._isFullscreenManually
     );
   }
 
   /**
    * if mobile detected, get the video element and request fullscreen.
    * otherwise, request fullscreen to the parent player view than includes the GUI as well
-   * @param {HTMLElement} element - element to enter fullscreen
+   * @param {?HTMLElement} element - element to enter fullscreen
    * @memberof FullScreenController
    * @returns {void}
    */
@@ -54,9 +61,7 @@ class FullScreenController {
     const fullScreenElement = element ? element : this._player.getView();
     if (this._player.env.os.name === 'iOS') {
       if (this._inBrowserFullscreenForIOS) {
-        fullScreenElement.classList.add(IN_BROWSER_FULLSCREEN_FOR_IOS);
-        this._player.notifyEnterFullscreen();
-        window.dispatchEvent(new Event('resize'));
+        this._enterInBrowserFullscreenForIOS(fullScreenElement);
       } else {
         this._player.getVideoElement().webkitEnterFullScreen();
       }
@@ -73,12 +78,9 @@ class FullScreenController {
    */
   exitFullscreen(): void {
     if (this._player.env.os.name === 'iOS') {
-      //player will be in full screen with this flag or otherwise will be natively full screen
+      // player will be in full screen with this flag or otherwise will be natively full screen
       if (this._inBrowserFullscreenForIOS) {
-        const fullScreenElement = Utils.Dom.getElementBySelector('.' + IN_BROWSER_FULLSCREEN_FOR_IOS);
-        fullScreenElement.classList.remove(IN_BROWSER_FULLSCREEN_FOR_IOS);
-        this._player.notifyExitFullscreen();
-        window.dispatchEvent(new Event('resize'));
+        this._exitInBrowserFullscreenForIOS();
       } else {
         this._player.getVideoElement().webkitExitFullScreen();
       }
@@ -122,6 +124,36 @@ class FullScreenController {
   }
 
   /**
+   * enter from ios manually method enter to fullscreen with css
+   * @memberof FullScreenController
+   * @param {HTMLElement} fullScreenElement - element to enter fullscreen
+   * @returns {void}
+   */
+  _enterInBrowserFullscreenForIOS(fullScreenElement: HTMLElement): void {
+    // add class for fullscreen
+    fullScreenElement.classList.add(IN_BROWSER_FULLSCREEN_FOR_IOS);
+    this._isFullscreenManually = true;
+    this._player.notifyEnterFullscreen();
+    this._player.dispatchEvent(new FakeEvent(this._player.Event.RESIZE));
+  }
+
+  /**
+   * exit from ios manually method enter to fullscreen with css
+   * @memberof FullScreenController
+   * @returns {void}
+   */
+  _exitInBrowserFullscreenForIOS(): void {
+    //get the element with relevant css, otherwise keep the flow of exit manually
+    const fullScreenElement = Utils.Dom.getElementBySelector('.' + IN_BROWSER_FULLSCREEN_FOR_IOS);
+    if (fullScreenElement) {
+      fullScreenElement.classList.remove(IN_BROWSER_FULLSCREEN_FOR_IOS);
+    }
+    this._isFullscreenManually = false;
+    this._player.notifyExitFullscreen();
+    this._player.dispatchEvent(new FakeEvent(this._player.Event.RESIZE));
+  }
+
+  /**
    * set up event listeners to window fullscreen state change
    * @memberof FullScreenController
    * @returns {void}
@@ -132,8 +164,6 @@ class FullScreenController {
     eventManager.listen(document, 'mozfullscreenchange', () => this._fullscreenChangeHandler());
     eventManager.listen(document, 'fullscreenchange', () => this._fullscreenChangeHandler());
     eventManager.listen(document, 'MSFullscreenChange', () => this._fullscreenChangeHandler());
-    eventManager.listen(this._player, this._player.Event.REQUESTED_ENTER_FULLSCREEN, () => this.enterFullscreen());
-    eventManager.listen(this._player, this._player.Event.REQUESTED_EXIT_FULLSCREEN, () => this.exitFullscreen());
     this._handleIosFullscreen(eventManager);
   }
 
@@ -167,7 +197,8 @@ class FullScreenController {
    * @returns {void}
    */
   _fullscreenChangeHandler(): void {
-    FullScreenController.isFullscreen() ? this._fullscreenEnterHandler() : this._fullscreenExitHandler();
+    //fire player event for current state, if player is in fullscreen fire player fullscreen event otherwise exit
+    this.isFullscreen() ? this._fullscreenEnterHandler() : this._fullscreenExitHandler();
   }
 
   /**
