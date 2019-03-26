@@ -63,10 +63,9 @@ class FullScreenController {
       if (this._inBrowserFullscreenForIOS) {
         this._enterInBrowserFullscreenForIOS(fullScreenElement);
       } else {
-        if (this._player.getVideoElement()) {
-          if (typeof this._player.getVideoElement().webkitEnterFullScreen === 'function') {
-            this._player.getVideoElement().webkitEnterFullScreen();
-          }
+        const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
+        if (videoElement && typeof videoElement.webkitEnterFullScreen === 'function') {
+          videoElement.webkitEnterFullScreen();
         }
       }
     } else {
@@ -86,10 +85,9 @@ class FullScreenController {
       if (this._inBrowserFullscreenForIOS) {
         this._exitInBrowserFullscreenForIOS();
       } else {
-        if (this._player.getVideoElement()) {
-          if (typeof this._player.getVideoElement().webkitExitFullscreen === 'function') {
-            this._player.getVideoElement().webkitExitFullScreen();
-          }
+        const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
+        if (videoElement && typeof videoElement.webkitExitFullscreen === 'function') {
+          videoElement.webkitExitFullScreen();
         }
       }
     } else if (typeof document.exitFullscreen === 'function') {
