@@ -367,6 +367,12 @@ export default class Player extends FakeEventTarget {
    */
   _externalCaptionsHandler: ExternalCaptionsHandler;
   /**
+   * holds the full screen controller
+   * @type {FullScreenController}
+   * @private
+   */
+  _controllerFullscreen: FullScreenController;
+  /**
    * holds the ads controller
    * @type {?AdsController}
    * @private
@@ -1167,7 +1173,9 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   notifyEnterFullscreen(): void {
-    this.dispatchEvent(new FakeEvent(CustomEventType.ENTER_FULLSCREEN));
+    if (this.isFullscreen()) {
+      this.dispatchEvent(new FakeEvent(CustomEventType.ENTER_FULLSCREEN));
+    }
   }
 
   /**
@@ -1176,7 +1184,9 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   notifyExitFullscreen(): void {
-    this.dispatchEvent(new FakeEvent(CustomEventType.EXIT_FULLSCREEN));
+    if (!this.isFullscreen()) {
+      this.dispatchEvent(new FakeEvent(CustomEventType.EXIT_FULLSCREEN));
+    }
   }
 
   /**
@@ -1195,13 +1205,12 @@ export default class Player extends FakeEventTarget {
   /**
    * Request the player to exit fullscreen.
    * @public
-   * @param {HTMLElement} fullScreenElement - set html element to full screen
    * @returns {void}
    */
-  exitFullscreen(fullScreenElement: HTMLElement): void {
+  exitFullscreen(): void {
     if (this.isFullscreen()) {
       this.dispatchEvent(new FakeEvent(CustomEventType.REQUESTED_EXIT_FULLSCREEN));
-      this._controllerFullscreen.exitFullscreen(fullScreenElement);
+      this._controllerFullscreen.exitFullscreen();
     }
   }
 

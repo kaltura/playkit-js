@@ -18,7 +18,7 @@ const IN_BROWSER_FULLSCREEN_FOR_IOS: string = 'in-browser-fullscreen-mode';
 class FullScreenController {
   _player: Player;
   _inBrowserFullscreenForIOS: boolean;
-  _fullscreen: boolean;
+  _isFullscreenManually: boolean;
 
   /**
    * after component mounted, set up event listeners to window fullscreen state change
@@ -63,7 +63,9 @@ class FullScreenController {
       if (this._inBrowserFullscreenForIOS) {
         this._enterInBrowserFullscreenForIOS(fullScreenElement);
       } else {
-        this._player.getVideoElement().webkitEnterFullScreen();
+        if (!!this._player.getVideoElement() && typeof this._player.getVideoElement().webkitEnterFullScreen === 'function') {
+          this._player.getVideoElement().webkitEnterFullScreen();
+        }
       }
     } else {
       this._requestFullscreen(fullScreenElement);
@@ -82,7 +84,9 @@ class FullScreenController {
       if (this._inBrowserFullscreenForIOS) {
         this._exitInBrowserFullscreenForIOS();
       } else {
-        this._player.getVideoElement().webkitExitFullScreen();
+        if (!!this._player.getVideoElement() && typeof this._player.getVideoElement().webkitExitFullscreen === 'function') {
+          this._player.getVideoElement().webkitExitFullScreen();
+        }
       }
     } else if (typeof document.exitFullscreen === 'function') {
       document.exitFullscreen();
