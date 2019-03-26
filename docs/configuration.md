@@ -878,6 +878,20 @@ var config = {
 >
 > ##
 >
+> > ### config.playback.inBrowserFullscreenForIOS
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `true`
+> >
+> > ```js
+> > inBrowserFullscreenForIOS: boolean;
+> > ```
+> >
+> > > ##### Description: Gives the ability to choose an in-browser fullscreen experience on iOS devices which will replace the native fullscreen of the AV player.
+>
+> ##
+>
 > > ### config.playback.streamPriority
 > >
 > > ##### Type: `Array<PKStreamPriorityObject`
