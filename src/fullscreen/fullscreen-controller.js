@@ -141,7 +141,7 @@ class FullScreenController {
     // add class for fullscreen
     fullScreenElement.classList.add(IN_BROWSER_FULLSCREEN_FOR_IOS);
     this._isFullscreenManually = true;
-    this._player.notifyEnterFullscreen();
+    this._fullscreenEnterHandler();
     this._player.dispatchEvent(new FakeEvent(this._player.Event.RESIZE));
   }
 
@@ -157,7 +157,7 @@ class FullScreenController {
       fullScreenElement.classList.remove(IN_BROWSER_FULLSCREEN_FOR_IOS);
     }
     this._isFullscreenManually = false;
-    this._player.notifyExitFullscreen();
+    this._fullscreenExitHandler();
     this._player.dispatchEvent(new FakeEvent(this._player.Event.RESIZE));
   }
 
@@ -215,7 +215,9 @@ class FullScreenController {
    * @returns {void}
    */
   _fullscreenEnterHandler(): void {
-    this._player.notifyEnterFullscreen();
+    if (this.isFullscreen()) {
+      this._player.dispatchEvent(new FakeEvent(this._player.Event.ENTER_FULLSCREEN));
+    }
   }
 
   /**
@@ -224,7 +226,9 @@ class FullScreenController {
    * @returns {void}
    */
   _fullscreenExitHandler(): void {
-    this._player.notifyExitFullscreen();
+    if (!this.isFullscreen()) {
+      this._player.dispatchEvent(new FakeEvent(this._player.Event.EXIT_FULLSCREEN));
+    }
   }
 }
 
