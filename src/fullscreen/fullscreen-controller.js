@@ -87,7 +87,7 @@ class FullScreenController {
       } else {
         const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
         if (videoElement && typeof videoElement.webkitExitFullscreen === 'function') {
-          videoElement.webkitExitFullScreen();
+          videoElement.webkitExitFullscreen();
         }
       }
     } else if (typeof document.exitFullscreen === 'function') {
