@@ -40,7 +40,7 @@ class FullscreenController {
    * @returns {boolean} - the current fullscreen state of the document
    */
   isNativeFullscreen(): boolean {
-    const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
+    const videoElement: ?HTMLVideoElement = typeof this._player.getVideoElement === 'function' ? this._player.getVideoElement() : false;
     return (
       (typeof document.fullscreenElement !== 'undefined' && Boolean(document.fullscreenElement)) ||
       (typeof document.webkitFullscreenElement !== 'undefined' && Boolean(document.webkitFullscreenElement)) ||

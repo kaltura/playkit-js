@@ -561,7 +561,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   getVideoElement(): ?HTMLVideoElement {
-    if (this._engine) {
+    if (this._engine && typeof this._engine.getVideoElement === 'function') {
       return this._engine.getVideoElement();
     }
   }
