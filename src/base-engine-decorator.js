@@ -6,7 +6,7 @@ import FakeEventTarget from './event/fake-event-target';
 import {EventType} from './event/event-type';
 import EventManager from './event/event-manager';
 
-class BaseEngineDecorator extends FakeEventTarget {
+class BaseEngineDecorator extends FakeEventTarget implements IEngine {
   _engine: Object;
   _eventManager: EventManager;
 
@@ -42,7 +42,7 @@ class BaseEngineDecorator extends FakeEventTarget {
     this._engine.pause();
   }
 
-  getVideoElement(): ?HTMLVideoElement {
+  getVideoElement(): HTMLVideoElement {
     return this._engine.getVideoElement();
   }
 
@@ -86,6 +86,10 @@ class BaseEngineDecorator extends FakeEventTarget {
     this._engine.hideTextTrack();
   }
 
+  resetAllCues(): void {
+    this._engine.resetAllCues();
+  }
+
   enableAdaptiveBitrate(): void {
     this._engine.enableAdaptiveBitrate();
   }
@@ -114,7 +118,7 @@ class BaseEngineDecorator extends FakeEventTarget {
     return this._engine.id;
   }
 
-  get buffered(): ?TimeRanges {
+  get buffered(): TimeRanges {
     return this._engine.buffered;
   }
 
@@ -122,11 +126,11 @@ class BaseEngineDecorator extends FakeEventTarget {
     this._engine.currentTime = to;
   }
 
-  get currentTime(): ?number {
+  get currentTime(): number {
     return this._engine.currentTime;
   }
 
-  get duration(): ?number {
+  get duration(): number {
     return this._engine.duration;
   }
 
@@ -134,15 +138,15 @@ class BaseEngineDecorator extends FakeEventTarget {
     this._engine.volume = vol;
   }
 
-  get volume(): ?number {
+  get volume(): number {
     return this._engine.volume;
   }
 
-  get paused(): ?boolean {
+  get paused(): boolean {
     return this._engine.paused;
   }
 
-  get seeking(): ?boolean {
+  get seeking(): boolean {
     return this._engine.seeking;
   }
 
@@ -150,7 +154,7 @@ class BaseEngineDecorator extends FakeEventTarget {
     this._engine.playsinline = playsinline;
   }
 
-  get playsinline(): ?boolean {
+  get playsinline(): boolean {
     return this._engine.playsinline;
   }
 
@@ -158,24 +162,104 @@ class BaseEngineDecorator extends FakeEventTarget {
     this._engine.muted = mute;
   }
 
-  get muted(): ?boolean {
+  get muted(): boolean {
     return this._engine.muted;
   }
 
-  get src(): ?string {
+  set src(source: string): void {
+    this._engine.src = source;
+  }
+
+  get src(): string {
     return this._engine.src;
+  }
+
+  set autoplay(autoplay: boolean): void {
+    this._engine.autoplay = autoplay;
+  }
+
+  get autoplay(): boolean {
+    return this._engine.autoplay;
+  }
+
+  set controls(controls: boolean): void {
+    this._engine.controls = controls;
+  }
+
+  get controls(): boolean {
+    return this._engine.controls;
+  }
+
+  get defaultMuted(): boolean {
+    return this._engine.defaultMuted;
+  }
+
+  get error(): ?MediaError {
+    return this._engine.error;
+  }
+
+  set loop(loop: boolean) {
+    this._engine.loop = loop;
+  }
+
+  get loop(): boolean {
+    return this._engine.loop;
+  }
+
+  get networkState(): number {
+    return this._engine.networkState;
+  }
+
+  get played(): TimeRanges {
+    return this._engine.played;
+  }
+
+  set poster(poster: string): void {
+    this._engine.poster = poster;
+  }
+
+  get poster(): string {
+    return this._engine.poster;
+  }
+
+  set preload(preload: string): void {
+    this._engine.preload = preload;
+  }
+
+  get preload(): string {
+    return this._engine.preload;
+  }
+
+  get readyState(): number {
+    return this._engine.readyState;
+  }
+
+  get seekable(): TimeRanges {
+    return this._engine.seekable;
+  }
+
+  get videoHeight(): number {
+    return this._engine.videoHeight;
+  }
+
+  get videoWidth(): number {
+    return this._engine.videoWidth;
   }
 
   set playbackRate(rate: number): void {
     this._engine.playbackRate = rate;
   }
 
-  get playbackRate(): ?number {
+  get playbackRate(): number {
     return this._engine.playbackRate;
   }
 
   get playbackRates(): Array<number> {
     return this._engine.playbackRates;
+  }
+
+  set defaultPlaybackRate(defaultPlaybackRate: number) {
+    this._engine.defaultPlaybackRate = defaultPlaybackRate;
   }
 
   get defaultPlaybackRate(): number {

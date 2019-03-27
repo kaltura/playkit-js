@@ -38,7 +38,6 @@ import {AdsController} from './ads/ads-controller';
 import {AdEventType} from './ads/ad-event-type';
 import {ControllerProvider} from './controller/controller-provider';
 import {ResizeWatcher} from './utils/resize-watcher';
-import {BaseEngineDecorator} from './base-engine-decorator';
 
 /**
  * The black cover class name.
@@ -1553,10 +1552,10 @@ export default class Player extends FakeEventTarget {
    * Creates an engine or an engine decorator.
    * @param {IEngine} Engine - The selected engine.
    * @param {PKMediaSourceObject} source - The selected source object.
-   * @returns {IEngine | BaseEngineDecorator} - Engine or engine decorator.
+   * @returns {void}
    * @private
    */
-  _createEngine(Engine: typeof IEngine, source: PKMediaSourceObject): typeof IEngine | BaseEngineDecorator {
+  _createEngine(Engine: typeof IEngine, source: PKMediaSourceObject): void {
     const engine = Engine.createEngine(source, this._config);
     const plugins = (Object.values(this._pluginManager.getAll()): any);
     const plugin = plugins.find(plugin => typeof plugin.getEngineDecorator === 'function');

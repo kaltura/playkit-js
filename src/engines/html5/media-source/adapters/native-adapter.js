@@ -273,6 +273,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._eventManager.listen(this._videoElement, Html5EventType.ENDED, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.ABORT, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.SEEKED, () => this._onSeeked());
+        // Sometimes when playing live in safari and switching between tabs the currentTime goes back with no seek events
+        this._eventManager.listen(window, 'focus', () => setTimeout(() => this._onSeeked(), 1000));
         this._handleMetadataTrackEvents();
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
@@ -327,15 +329,17 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   _onTimeUpdate(): void {
-    if (!this._videoElement.paused && this._videoElement.currentTime > this._lastTimeUpdate) {
-      if (this._waitingEventTriggered) {
-        this._waitingEventTriggered = false;
-        this._trigger(Html5EventType.PLAYING);
+    if (!this._videoElement.paused) {
+      if (this._videoElement.currentTime > this._lastTimeUpdate) {
+        if (this._waitingEventTriggered) {
+          this._waitingEventTriggered = false;
+          this._trigger(Html5EventType.PLAYING);
+        }
+        this._resetHeartbeatTimeout();
+      } else {
+        this._waitingEventTriggered = true;
+        this._trigger(Html5EventType.WAITING);
       }
-      this._resetHeartbeatTimeout();
-    } else if (!this._videoElement.paused) {
-      this._waitingEventTriggered = true;
-      this._trigger(Html5EventType.WAITING);
     }
   }
 
@@ -369,19 +373,25 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   _handleMetadataTrackEvents(): void {
-    const handleCueChange = track => {
+    const listenToCueChange = track => {
       track.mode = 'hidden';
       track.addEventListener('cuechange', () => {
         this._trigger(CustomEventType.TIMED_METADATA, {cues: Array.from(track.activeCues)});
       });
     };
-    const metadataTrack = Array.from(this._videoElement.textTracks).find(track => track.kind === 'metadata');
+    const metadataTrack = Array.from(this._videoElement.textTracks).find((track: TextTrack) => track.kind === 'metadata');
     if (metadataTrack) {
-      handleCueChange(metadataTrack);
+      listenToCueChange(metadataTrack);
     } else {
-      this._eventManager.listen(this._videoElement.textTracks, 'addtrack', event => {
+      this._eventManager.listen(this._videoElement.textTracks, 'addtrack', (event: any) => {
         if (event.track.kind === 'metadata') {
-          handleCueChange(event.track);
+          listenToCueChange(event.track);
+        } else {
+          Array.from(this._videoElement.textTracks).forEach((track: TextTrack) => {
+            if (track.kind === 'metadata') {
+              setTimeout(() => (track.mode = 'hidden'), 100);
+            }
+          });
         }
       });
     }
@@ -881,7 +891,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     let textTracks = this._videoElement.textTracks;
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
-        textTracks[i].mode = 'disabled';
+        (textTracks[i].kind === 'subtitles' || textTracks[i].kind === 'captions') && (textTracks[i].mode = 'disabled');
       }
     }
   }

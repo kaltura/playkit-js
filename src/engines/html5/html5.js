@@ -517,8 +517,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return this._el.volume;
   }
 
-  ready() {}
-
   /**
    * Get paused state.
    * @returns {boolean} - The paused value of the video element.

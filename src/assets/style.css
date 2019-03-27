@@ -62,4 +62,5 @@
   height: 100%;
   position: absolute;
   visibility: hidden;
+  z-index: -1;
 }
