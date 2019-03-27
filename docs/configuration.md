@@ -504,7 +504,7 @@ var config = {
 >  options: PKPlaybackOptionsObject,
 >  streamPriority: Array<PKStreamPriorityObject>,
 >  preferNative: PKPreferNativeConfigObject,
->  inBrowserFullscreenForIOS: boolean
+>  inBrowserFullscreen: boolean
 > }
 > ```
 >
@@ -878,14 +878,14 @@ var config = {
 >
 > ##
 >
-> > ### config.playback.inBrowserFullscreenForIOS
+> > ### config.playback.inBrowserFullscreen
 > >
 > > ##### Type: `boolean`
 > >
-> > ##### Default: `true`
+> > ##### Default: `false`
 > >
 > > ```js
-> > inBrowserFullscreenForIOS: boolean;
+> > inBrowserFullscreen: boolean;
 > > ```
 > >
 > > > ##### Description: Gives the ability to choose an in-browser fullscreen experience on iOS devices which will replace the native fullscreen of the AV player.

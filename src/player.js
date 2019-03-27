@@ -38,7 +38,7 @@ import {AdsController} from './ads/ads-controller';
 import {AdEventType} from './ads/ad-event-type';
 import {ControllerProvider} from './controller/controller-provider';
 import {ResizeWatcher} from './utils/resize-watcher';
-import {FullScreenController} from './fullscreen/fullscreen-controller';
+import {FullscreenController} from './fullscreen/fullscreen-controller';
 
 /**
  * The black cover class name.
@@ -368,10 +368,10 @@ export default class Player extends FakeEventTarget {
   _externalCaptionsHandler: ExternalCaptionsHandler;
   /**
    * holds the full screen controller
-   * @type {FullScreenController}
+   * @type {FullscreenController}
    * @private
    */
-  _controllerFullscreen: FullScreenController;
+  _fullscreenController: FullscreenController;
   /**
    * holds the ads controller
    * @type {?AdsController}
@@ -420,7 +420,7 @@ export default class Player extends FakeEventTarget {
     this._appendDomElements();
     this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
     this.configure(config);
-    this._controllerFullscreen = new FullScreenController(this);
+    this._fullscreenController = new FullscreenController(this);
   }
 
   // <editor-fold desc="Public API">
@@ -1160,11 +1160,12 @@ export default class Player extends FakeEventTarget {
 
   // <editor-fold desc="Fullscreen API">
   /**
+   * @param {boolean} isNativeOnly - check for native only
    * @returns {boolean} - Whether the player is in fullscreen mode.
    * @public
    */
-  isFullscreen(): boolean {
-    return this._controllerFullscreen.isFullscreen();
+  isFullscreen(isNativeOnly: boolean = false): boolean {
+    return isNativeOnly ? this._fullscreenController.isNativeFullscreen() : this._fullscreenController.isFullscreen();
   }
 
   /**
@@ -1198,7 +1199,7 @@ export default class Player extends FakeEventTarget {
   enterFullscreen(fullScreenElement: ?HTMLElement): void {
     if (!this.isFullscreen()) {
       this.dispatchEvent(new FakeEvent(CustomEventType.REQUESTED_ENTER_FULLSCREEN));
-      this._controllerFullscreen.enterFullscreen(fullScreenElement);
+      this._fullscreenController.enterFullscreen(fullScreenElement);
     }
   }
 
@@ -1210,7 +1211,7 @@ export default class Player extends FakeEventTarget {
   exitFullscreen(): void {
     if (this.isFullscreen()) {
       this.dispatchEvent(new FakeEvent(CustomEventType.REQUESTED_EXIT_FULLSCREEN));
-      this._controllerFullscreen.exitFullscreen();
+      this._fullscreenController.exitFullscreen();
     }
   }
 
@@ -2197,7 +2198,6 @@ export default class Player extends FakeEventTarget {
       }
     });
   }
-
   // </editor-fold>
 
   // </editor-fold>

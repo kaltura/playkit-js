@@ -12,12 +12,12 @@ import * as Utils from '../utils/util';
 const IN_BROWSER_FULLSCREEN_FOR_IOS: string = 'in-browser-fullscreen-mode';
 
 /**
- * @class FullScreenController
+ * @class FullscreenController
  * @param {Player} player - The player.
  */
-class FullScreenController {
+class FullscreenController {
   _player: Player;
-  _inBrowserFullscreenForIOS: boolean;
+  _inBrowserFullscreen: boolean;
   _isFullscreenManually: boolean;
 
   /**
@@ -28,10 +28,26 @@ class FullScreenController {
    */
   constructor(player: Player): void {
     this._player = player;
-    this._inBrowserFullscreenForIOS = this._player.config.playback.inBrowserFullscreenForIOS;
-    //flag to cover the option that inBrowserFullscreenForIOS selected and we should know if it's full screen
+    this._inBrowserFullscreen = this._player.config.playback.inBrowserFullscreen;
+    //flag to cover the option that inBrowserFullscreen selected and we should know if it's full screen
     this._isFullscreenManually = false;
     this.registerFullScreenEvents();
+  }
+
+  /**
+   * if native fullscreen mode
+   * @memberof FullScreenController
+   * @returns {boolean} - the current fullscreen state of the document
+   */
+  isNativeFullscreen(): boolean {
+    const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
+    return (
+      (typeof document.fullscreenElement !== 'undefined' && Boolean(document.fullscreenElement)) ||
+      (typeof document.webkitFullscreenElement !== 'undefined' && Boolean(document.webkitFullscreenElement)) ||
+      (typeof document.mozFullScreenElement !== 'undefined' && Boolean(document.mozFullScreenElement)) ||
+      (typeof document.msFullscreenElement !== 'undefined' && Boolean(document.msFullscreenElement)) ||
+      (!!videoElement && typeof videoElement.webkitDisplayingFullscreen !== 'undefined' && Boolean(videoElement.webkitDisplayingFullscreen))
+    );
   }
 
   /**
@@ -41,10 +57,7 @@ class FullScreenController {
    */
   isFullscreen(): boolean {
     return (
-      (typeof document.fullscreenElement !== 'undefined' && Boolean(document.fullscreenElement)) ||
-      (typeof document.webkitFullscreenElement !== 'undefined' && Boolean(document.webkitFullscreenElement)) ||
-      (typeof document.mozFullScreenElement !== 'undefined' && Boolean(document.mozFullScreenElement)) ||
-      (typeof document.msFullscreenElement !== 'undefined' && Boolean(document.msFullscreenElement)) ||
+      this.isNativeFullscreen() ||
       //indicator for manually full screen in ios - with css flag
       this._isFullscreenManually
     );
@@ -60,8 +73,8 @@ class FullScreenController {
   enterFullscreen(element: ?HTMLElement): void {
     const fullScreenElement = element ? element : this._player.getView();
     if (this._player.env.os.name === 'iOS') {
-      if (this._inBrowserFullscreenForIOS) {
-        this._enterInBrowserFullscreenForIOS(fullScreenElement);
+      if (this._inBrowserFullscreen) {
+        this._enterInBrowserFullscreen(fullScreenElement);
       } else {
         const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
         if (videoElement && typeof videoElement.webkitEnterFullScreen === 'function') {
@@ -82,8 +95,8 @@ class FullScreenController {
   exitFullscreen(): void {
     if (this._player.env.os.name === 'iOS') {
       // player will be in full screen with this flag or otherwise will be natively full screen
-      if (this._inBrowserFullscreenForIOS) {
-        this._exitInBrowserFullscreenForIOS();
+      if (this._inBrowserFullscreen) {
+        this._exitInBrowserFullscreen();
       } else {
         const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
         if (videoElement && typeof videoElement.webkitExitFullscreen === 'function') {
@@ -135,7 +148,7 @@ class FullScreenController {
    * @param {HTMLElement} fullScreenElement - element to enter fullscreen
    * @returns {void}
    */
-  _enterInBrowserFullscreenForIOS(fullScreenElement: HTMLElement): void {
+  _enterInBrowserFullscreen(fullScreenElement: HTMLElement): void {
     // add class for fullscreen
     fullScreenElement.classList.add(IN_BROWSER_FULLSCREEN_FOR_IOS);
     this._isFullscreenManually = true;
@@ -148,7 +161,7 @@ class FullScreenController {
    * @memberof FullScreenController
    * @returns {void}
    */
-  _exitInBrowserFullscreenForIOS(): void {
+  _exitInBrowserFullscreen(): void {
     //get the element with relevant css, otherwise keep the flow of exit manually
     const fullScreenElement = Utils.Dom.getElementBySelector('.' + IN_BROWSER_FULLSCREEN_FOR_IOS);
     if (fullScreenElement) {
@@ -230,4 +243,4 @@ class FullScreenController {
   }
 }
 
-export {FullScreenController};
+export {FullscreenController};
