@@ -9,7 +9,7 @@ import * as Utils from '../utils/util';
  * @type {string}
  * @const
  */
-const IN_BROWSER_FULLSCREEN_FOR_IOS: string = 'in-browser-fullscreen-mode';
+const IN_BROWSER_FULLSCREEN_FOR_IOS: string = 'playkit-in-browser-fullscreen-mode';
 
 /**
  * @class FullscreenController
@@ -17,7 +17,7 @@ const IN_BROWSER_FULLSCREEN_FOR_IOS: string = 'in-browser-fullscreen-mode';
  */
 class FullscreenController {
   _player: Player;
-  _inBrowserFullscreen: boolean;
+  _isInBrowserFullscreen: boolean;
   _isFullscreenManually: boolean;
 
   /**
@@ -28,7 +28,7 @@ class FullscreenController {
    */
   constructor(player: Player): void {
     this._player = player;
-    this._inBrowserFullscreen = this._player.config.playback.inBrowserFullscreen;
+    this._isInBrowserFullscreen = this._player.config.playback.inBrowserFullscreen;
     //flag to cover the option that inBrowserFullscreen selected and we should know if it's full screen
     this._isFullscreenManually = false;
     this.registerFullScreenEvents();
@@ -39,8 +39,8 @@ class FullscreenController {
    * @memberof FullScreenController
    * @returns {boolean} - the current fullscreen state of the document
    */
-  isNativeFullscreen(): boolean {
-    const videoElement: ?HTMLVideoElement = typeof this._player.getVideoElement === 'function' ? this._player.getVideoElement() : false;
+  _isNativeFullscreen(): boolean {
+    const videoElement: ?HTMLVideoElement = typeof this._player.getVideoElement === 'function' ? this._player.getVideoElement() : null;
     return (
       (typeof document.fullscreenElement !== 'undefined' && Boolean(document.fullscreenElement)) ||
       (typeof document.webkitFullscreenElement !== 'undefined' && Boolean(document.webkitFullscreenElement)) ||
@@ -57,7 +57,7 @@ class FullscreenController {
    */
   isFullscreen(): boolean {
     return (
-      this.isNativeFullscreen() ||
+      this._isNativeFullscreen() ||
       //indicator for manually full screen in ios - with css flag
       this._isFullscreenManually
     );
@@ -71,18 +71,20 @@ class FullscreenController {
    * @returns {void}
    */
   enterFullscreen(element: ?HTMLElement): void {
-    const fullScreenElement = element ? element : this._player.getView();
-    if (this._player.env.os.name === 'iOS') {
-      if (this._inBrowserFullscreen) {
-        this._enterInBrowserFullscreen(fullScreenElement);
-      } else {
-        const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
-        if (videoElement && typeof videoElement.webkitEnterFullScreen === 'function') {
-          videoElement.webkitEnterFullScreen();
+    if (!this.isFullscreen()) {
+      const fullScreenElement = element ? element : this._player.getView();
+      if (this._player.env.os.name === 'iOS') {
+        if (this._isInBrowserFullscreen) {
+          this._enterInBrowserFullscreen(fullScreenElement);
+        } else {
+          const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
+          if (videoElement && typeof videoElement.webkitEnterFullScreen === 'function') {
+            videoElement.webkitEnterFullScreen();
+          }
         }
+      } else {
+        this._requestFullscreen(fullScreenElement);
       }
-    } else {
-      this._requestFullscreen(fullScreenElement);
     }
   }
 
@@ -93,17 +95,53 @@ class FullscreenController {
    * @returns {void}
    */
   exitFullscreen(): void {
-    if (this._player.env.os.name === 'iOS') {
-      // player will be in full screen with this flag or otherwise will be natively full screen
-      if (this._inBrowserFullscreen) {
-        this._exitInBrowserFullscreen();
-      } else {
-        const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
-        if (videoElement && typeof videoElement.webkitExitFullscreen === 'function') {
-          videoElement.webkitExitFullscreen();
+    if (this.isFullscreen()) {
+      if (this._player.env.os.name === 'iOS') {
+        // player will be in full screen with this flag or otherwise will be natively full screen
+        if (this._isInBrowserFullscreen) {
+          this._exitInBrowserFullscreen();
+        } else {
+          const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
+          if (videoElement && typeof videoElement.webkitExitFullscreen === 'function') {
+            videoElement.webkitExitFullscreen();
+          }
         }
+      } else {
+        this._requestExitFullscreen();
       }
-    } else if (typeof document.exitFullscreen === 'function') {
+    }
+  }
+
+  /**
+   * request fullscreen function to all browsers
+   *
+   * @param {HTMLElement} fullScreenElement - element to enter fullscreen
+   * @memberof FullScreenController
+   * @returns {void}
+   */
+  _requestFullscreen(fullScreenElement: HTMLElement) {
+    if (this._player.isInPictureInPicture()) {
+      this._player.exitPictureInPicture();
+    }
+    if (typeof fullScreenElement.requestFullscreen === 'function') {
+      fullScreenElement.requestFullscreen();
+    } else if (typeof fullScreenElement.mozRequestFullScreen === 'function') {
+      fullScreenElement.mozRequestFullScreen();
+    } else if (typeof fullScreenElement.webkitRequestFullScreen === 'function') {
+      fullScreenElement.webkitRequestFullScreen();
+    } else if (typeof fullScreenElement.msRequestFullscreen === 'function') {
+      fullScreenElement.msRequestFullscreen();
+    }
+  }
+
+  /**
+   * request exit from fullscreen function for all browsers
+   *
+   * @memberof FullScreenController
+   * @returns {void}
+   */
+  _requestExitFullscreen(): void {
+    if (typeof document.exitFullscreen === 'function') {
       document.exitFullscreen();
     } else if (typeof document.webkitExitFullscreen === 'function') {
       document.webkitExitFullscreen();
@@ -113,35 +151,6 @@ class FullscreenController {
       document.msExitFullscreen();
     }
   }
-
-  /**
-   * request fullscreen function to all browsers
-   *
-   * @param {HTMLElement} fullScreenElement - element to enter fullscreen
-   * @memberof FullScreenController
-   * @returns {boolean} - boolean success indicator to enter fullscreen or not
-   */
-  _requestFullscreen(fullScreenElement: HTMLElement): boolean {
-    if (this._player.isInPictureInPicture()) {
-      this._player.exitPictureInPicture();
-    }
-    if (typeof fullScreenElement.requestFullscreen === 'function') {
-      fullScreenElement.requestFullscreen();
-      return true;
-    } else if (typeof fullScreenElement.mozRequestFullScreen === 'function') {
-      fullScreenElement.mozRequestFullScreen();
-      return true;
-    } else if (typeof fullScreenElement.webkitRequestFullScreen === 'function') {
-      fullScreenElement.webkitRequestFullScreen();
-      return true;
-    } else if (typeof fullScreenElement.msRequestFullscreen === 'function') {
-      fullScreenElement.msRequestFullscreen();
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   /**
    * enter from ios manually method enter to fullscreen with css
    * @memberof FullScreenController

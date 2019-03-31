@@ -888,7 +888,7 @@ var config = {
 > > inBrowserFullscreen: boolean;
 > > ```
 > >
-> > > ##### Description: Gives the ability to choose an in-browser fullscreen experience on iOS devices which will replace the native fullscreen of the AV player.
+> > > ##### Description: Gives the ability to choose an in-browser fullscreen experience. Useful on iOS devices which will replace the native fullscreen of the AV player.
 >
 > ##
 >

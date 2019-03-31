@@ -1160,12 +1160,11 @@ export default class Player extends FakeEventTarget {
 
   // <editor-fold desc="Fullscreen API">
   /**
-   * @param {boolean} isNativeOnly - check for native only
    * @returns {boolean} - Whether the player is in fullscreen mode.
    * @public
    */
-  isFullscreen(isNativeOnly: boolean = false): boolean {
-    return isNativeOnly ? this._fullscreenController.isNativeFullscreen() : this._fullscreenController.isFullscreen();
+  isFullscreen(): boolean {
+    return this._fullscreenController.isFullscreen();
   }
 
   /**
@@ -1197,10 +1196,8 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   enterFullscreen(fullScreenElement: ?HTMLElement): void {
-    if (!this.isFullscreen()) {
-      this.dispatchEvent(new FakeEvent(CustomEventType.REQUESTED_ENTER_FULLSCREEN));
-      this._fullscreenController.enterFullscreen(fullScreenElement);
-    }
+    this.dispatchEvent(new FakeEvent(CustomEventType.REQUESTED_ENTER_FULLSCREEN));
+    this._fullscreenController.enterFullscreen(fullScreenElement);
   }
 
   /**
@@ -1209,10 +1206,8 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   exitFullscreen(): void {
-    if (this.isFullscreen()) {
-      this.dispatchEvent(new FakeEvent(CustomEventType.REQUESTED_EXIT_FULLSCREEN));
-      this._fullscreenController.exitFullscreen();
-    }
+    this.dispatchEvent(new FakeEvent(CustomEventType.REQUESTED_EXIT_FULLSCREEN));
+    this._fullscreenController.exitFullscreen();
   }
 
   // </editor-fold>

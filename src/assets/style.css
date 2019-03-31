@@ -64,7 +64,7 @@
   visibility: hidden;
 }
 
-.in-browser-fullscreen-mode {
+.playkit-in-browser-fullscreen-mode {
   width: 100% !important;
   height: 100% !important;
   position: fixed !important;
