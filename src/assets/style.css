@@ -63,3 +63,13 @@
   position: absolute;
   visibility: hidden;
 }
+
+.playkit-in-browser-fullscreen-mode {
+  width: 100% !important;
+  height: 100% !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  /*added for blocking element with fixed position which could be on the top of the player */
+  z-index: 999999 !important;
+}

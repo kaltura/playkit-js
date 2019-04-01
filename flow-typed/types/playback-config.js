@@ -12,5 +12,6 @@ declare type PKPlaybackConfigObject = {
   muted: boolean,
   pictureInPicture: boolean,
   streamPriority: Array<PKStreamPriorityObject>,
-  preferNative: PKPreferNativeConfigObject
+  preferNative: PKPreferNativeConfigObject,
+  inBrowserFullscreen: boolean
 };

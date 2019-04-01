@@ -38,6 +38,7 @@ import {AdsController} from './ads/ads-controller';
 import {AdEventType} from './ads/ad-event-type';
 import {ControllerProvider} from './controller/controller-provider';
 import {ResizeWatcher} from './utils/resize-watcher';
+import {FullscreenController} from './fullscreen/fullscreen-controller';
 
 /**
  * The black cover class name.
@@ -322,11 +323,7 @@ export default class Player extends FakeEventTarget {
     audioLanguage: '',
     textLanguage: ''
   };
-  /**
-   * Fullscreen indicator flag
-   * @private
-   */
-  _fullscreen: boolean;
+
   /**
    * holds false or an id for the timeout the reposition the text cues after togelling full screen
    * @type {any}
@@ -370,6 +367,12 @@ export default class Player extends FakeEventTarget {
    */
   _externalCaptionsHandler: ExternalCaptionsHandler;
   /**
+   * holds the full screen controller
+   * @type {FullscreenController}
+   * @private
+   */
+  _fullscreenController: FullscreenController;
+  /**
    * holds the ads controller
    * @type {?AdsController}
    * @private
@@ -395,7 +398,6 @@ export default class Player extends FakeEventTarget {
     this._env = Env;
     this._tracks = [];
     this._firstPlay = true;
-    this._fullscreen = false;
     this._repositionCuesTimeout = false;
     this._loadingMedia = false;
     this._loading = false;
@@ -418,6 +420,7 @@ export default class Player extends FakeEventTarget {
     this._appendDomElements();
     this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
     this.configure(config);
+    this._fullscreenController = new FullscreenController(this);
   }
 
   // <editor-fold desc="Public API">
@@ -1156,13 +1159,12 @@ export default class Player extends FakeEventTarget {
   // </editor-fold>
 
   // <editor-fold desc="Fullscreen API">
-
   /**
    * @returns {boolean} - Whether the player is in fullscreen mode.
    * @public
    */
   isFullscreen(): boolean {
-    return this._fullscreen;
+    return this._fullscreenController.isFullscreen();
   }
 
   /**
@@ -1171,8 +1173,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   notifyEnterFullscreen(): void {
-    if (!this._fullscreen) {
-      this._fullscreen = true;
+    if (this.isFullscreen()) {
       this.dispatchEvent(new FakeEvent(CustomEventType.ENTER_FULLSCREEN));
     }
   }
@@ -1183,8 +1184,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   notifyExitFullscreen(): void {
-    if (this._fullscreen) {
-      this._fullscreen = false;
+    if (!this.isFullscreen()) {
       this.dispatchEvent(new FakeEvent(CustomEventType.EXIT_FULLSCREEN));
     }
   }
@@ -1192,15 +1192,11 @@ export default class Player extends FakeEventTarget {
   /**
    * Request the player to enter fullscreen.
    * @public
+   * @param {HTMLElement} fullScreenElement - set html element to full screen
    * @returns {void}
    */
-  enterFullscreen(): void {
-    if (!this._fullscreen) {
-      if (this.isInPictureInPicture()) {
-        this.exitPictureInPicture();
-      }
-      this.dispatchEvent(new FakeEvent(CustomEventType.REQUESTED_ENTER_FULLSCREEN));
-    }
+  enterFullscreen(fullScreenElement: ?HTMLElement): void {
+    this._fullscreenController.enterFullscreen(fullScreenElement);
   }
 
   /**
@@ -1209,9 +1205,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   exitFullscreen(): void {
-    if (this._fullscreen) {
-      this.dispatchEvent(new FakeEvent(CustomEventType.REQUESTED_EXIT_FULLSCREEN));
-    }
+    this._fullscreenController.exitFullscreen();
   }
 
   // </editor-fold>
@@ -2197,7 +2191,6 @@ export default class Player extends FakeEventTarget {
       }
     });
   }
-
   // </editor-fold>
 
   // </editor-fold>
