@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.45.6"></a>
+## [0.45.6](https://github.com/kaltura/playkit-js/compare/v0.45.5...v0.45.6) (2019-04-01)
+
+
+### Bug Fixes
+
+* **FEC-8826:** fullscreen implementation moved to core ([#353](https://github.com/kaltura/playkit-js/issues/353)) ([2bab7bd](https://github.com/kaltura/playkit-js/commit/2bab7bd))
+
+
+
 <a name="0.45.5"></a>
 ## [0.45.5](https://github.com/kaltura/playkit-js/compare/v0.45.4...v0.45.5) (2019-03-06)
 
