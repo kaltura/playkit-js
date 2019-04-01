@@ -1196,7 +1196,6 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   enterFullscreen(fullScreenElement: ?HTMLElement): void {
-    this.dispatchEvent(new FakeEvent(CustomEventType.REQUESTED_ENTER_FULLSCREEN));
     this._fullscreenController.enterFullscreen(fullScreenElement);
   }
 
@@ -1206,7 +1205,6 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   exitFullscreen(): void {
-    this.dispatchEvent(new FakeEvent(CustomEventType.REQUESTED_EXIT_FULLSCREEN));
     this._fullscreenController.exitFullscreen();
   }
 
