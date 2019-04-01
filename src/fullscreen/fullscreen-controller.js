@@ -40,12 +40,8 @@ class FullscreenController {
    * @returns {boolean} - the current fullscreen state of the document
    */
   _isNativeFullscreen(): boolean {
-    return (
-      (typeof document.fullscreenElement !== 'undefined' && Boolean(document.fullscreenElement)) ||
-      (typeof document.webkitFullscreenElement !== 'undefined' && Boolean(document.webkitFullscreenElement)) ||
-      (typeof document.mozFullScreenElement !== 'undefined' && Boolean(document.mozFullScreenElement)) ||
-      (typeof document.msFullscreenElement !== 'undefined' && Boolean(document.msFullscreenElement))
-    );
+    // $FlowFixMe
+    return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
   }
 
   /**
