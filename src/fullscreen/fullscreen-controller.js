@@ -18,6 +18,7 @@ const IN_BROWSER_FULLSCREEN_FOR_IOS: string = 'playkit-in-browser-fullscreen-mod
 class FullscreenController {
   _player: Player;
   _inBrowserFullscreenConfig: boolean;
+  _playsinlineConfig: boolean;
   _isInBrowserFullscreen: boolean;
 
   /**
@@ -29,6 +30,7 @@ class FullscreenController {
   constructor(player: Player): void {
     this._player = player;
     this._inBrowserFullscreenConfig = this._player.config.playback.inBrowserFullscreen;
+    this._playsinlineConfig = this._player.config.playback.playsinline;
     //flag to cover the option that inBrowserFullscreen selected and we should know if it's full screen
     this._isInBrowserFullscreen = false;
     this.registerFullScreenEvents();
@@ -68,7 +70,7 @@ class FullscreenController {
     if (!this.isFullscreen()) {
       const fullScreenElement = element ? element : this._player.getView();
       if (this._player.env.os.name === 'iOS') {
-        if (this._inBrowserFullscreenConfig) {
+        if (this._inBrowserFullscreenConfig && this._playsinlineConfig) {
           this._enterInBrowserFullscreen(fullScreenElement);
         } else {
           const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
@@ -92,7 +94,7 @@ class FullscreenController {
     if (this.isFullscreen()) {
       if (this._player.env.os.name === 'iOS') {
         // player will be in full screen with this flag or otherwise will be natively full screen
-        if (this._inBrowserFullscreenConfig) {
+        if (this._inBrowserFullscreenConfig && this._playsinlineConfig) {
           this._exitInBrowserFullscreen();
         } else {
           const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
