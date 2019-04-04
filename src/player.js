@@ -1192,11 +1192,11 @@ export default class Player extends FakeEventTarget {
   /**
    * Request the player to enter fullscreen.
    * @public
-   * @param {HTMLElement} fullScreenElement - set html element to full screen
+   * @param {string} elementId - element id to full screen
    * @returns {void}
    */
-  enterFullscreen(fullScreenElement: ?HTMLElement): void {
-    this._fullscreenController.enterFullscreen(fullScreenElement);
+  enterFullscreen(elementId: ?string): void {
+    this._fullscreenController.enterFullscreen(elementId);
   }
 
   /**
