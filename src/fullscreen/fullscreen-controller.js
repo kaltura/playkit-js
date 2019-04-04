@@ -40,8 +40,16 @@ class FullscreenController {
    * @returns {boolean} - the current fullscreen state of the document
    */
   _isNativeFullscreen(): boolean {
-    // $FlowFixMe
-    return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+    //for ios mobile checking video element
+    const videoElement: ?HTMLVideoElement = typeof this._player.getVideoElement === 'function' ? this._player.getVideoElement() : null;
+    return !!(
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement ||
+      // $FlowFixMe for ios mobile
+      (!!videoElement && !!videoElement.webkitDisplayingFullscreen)
+    );
   }
 
   /**
@@ -60,13 +68,16 @@ class FullscreenController {
   /**
    * if mobile detected, get the video element and request fullscreen.
    * otherwise, request fullscreen to the parent player view than includes the GUI as well
-   * @param {?HTMLElement} element - element to enter fullscreen
+   * @param {?string} elementId - element to enter fullscreen
    * @memberof FullScreenController
    * @returns {void}
    */
-  enterFullscreen(element: ?HTMLElement): void {
+  enterFullscreen(elementId: ?string): void {
     if (!this.isFullscreen()) {
-      const fullScreenElement = element ? element : this._player.getView();
+      let fullScreenElement = elementId && Utils.Dom.getElementById(elementId);
+      if (!fullScreenElement) {
+        fullScreenElement = this._player.getView();
+      }
       if (this._player.env.os.name === 'iOS') {
         if (this._inBrowserFullscreenConfig) {
           this._enterInBrowserFullscreen(fullScreenElement);
