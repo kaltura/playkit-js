@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.45.7"></a>
+## [0.45.7](https://github.com/kaltura/playkit-js/compare/v0.45.6...v0.45.7) (2019-04-07)
+
+
+### Bug Fixes
+
+* **FEC-8826:** pass html element from api and there isn't check for ios in isfullscreen method ([#354](https://github.com/kaltura/playkit-js/issues/354)) ([0844cd2](https://github.com/kaltura/playkit-js/commit/0844cd2))
+* **FEC-9021:** [iOS] - different behaviour after closing fullscreen and enter fullscreen again ([#355](https://github.com/kaltura/playkit-js/issues/355)) ([4a01b41](https://github.com/kaltura/playkit-js/commit/4a01b41))
+
+
+
 <a name="0.45.6"></a>
 ## [0.45.6](https://github.com/kaltura/playkit-js/compare/v0.45.5...v0.45.6) (2019-04-01)
 
