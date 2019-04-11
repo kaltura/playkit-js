@@ -275,7 +275,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._eventManager.listen(this._videoElement, Html5EventType.SEEKED, () => this._onSeeked());
         // Sometimes when playing live in safari and switching between tabs the currentTime goes back with no seek events
         this._eventManager.listen(window, 'focus', () => setTimeout(() => this._onSeeked(), 1000));
-        this._handleMetadataTrackEvents();
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
         }
@@ -369,31 +368,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (this._heartbeatTimeoutId) {
       clearTimeout(this._heartbeatTimeoutId);
       this._heartbeatTimeoutId = null;
-    }
-  }
-
-  _handleMetadataTrackEvents(): void {
-    const listenToCueChange = track => {
-      track.mode = 'hidden';
-      track.addEventListener('cuechange', () => {
-        this._trigger(CustomEventType.TIMED_METADATA, {cues: Array.from(track.activeCues)});
-      });
-    };
-    const metadataTrack = Array.from(this._videoElement.textTracks).find((track: TextTrack) => track.kind === 'metadata');
-    if (metadataTrack) {
-      listenToCueChange(metadataTrack);
-    } else {
-      this._eventManager.listen(this._videoElement.textTracks, 'addtrack', (event: any) => {
-        if (event.track.kind === 'metadata') {
-          listenToCueChange(event.track);
-        } else {
-          Array.from(this._videoElement.textTracks).forEach((track: TextTrack) => {
-            if (track.kind === 'metadata') {
-              setTimeout(() => (track.mode = 'hidden'), 100);
-            }
-          });
-        }
-      });
     }
   }
 
