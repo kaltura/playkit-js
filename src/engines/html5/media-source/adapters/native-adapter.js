@@ -15,6 +15,8 @@ import defaultConfig from './native-adapter-default-config';
 import {FairplayDrmHandler} from './fairplay-drm-handler';
 import type {FairplayDrmConfigType} from './fairplay-drm-handler';
 
+const BACK_TO_FOCUS_TIMEOUT: number = 1000;
+
 /**
  * An illustration of media source extension for progressive download
  * @classdesc
@@ -272,9 +274,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._eventManager.listen(this._videoElement, Html5EventType.PAUSE, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.ENDED, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.ABORT, () => this._clearHeartbeatTimeout());
-        this._eventManager.listen(this._videoElement, Html5EventType.SEEKED, () => this._onSeeked());
+        this._eventManager.listen(this._videoElement, Html5EventType.SEEKED, () => this._syncCurrentTime());
         // Sometimes when playing live in safari and switching between tabs the currentTime goes back with no seek events
-        this._eventManager.listen(window, 'focus', () => setTimeout(() => this._onSeeked(), 1000));
+        this._eventManager.listen(window, 'focus', () => setTimeout(() => this._syncCurrentTime(), BACK_TO_FOCUS_TIMEOUT));
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
         }
@@ -342,7 +344,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
-  _onSeeked(): void {
+  _syncCurrentTime(): void {
     this._lastTimeUpdate = this._videoElement.currentTime;
   }
 
