@@ -127,14 +127,6 @@ const CustomEventType: PKEventTypes = {
    */
   EXIT_FULLSCREEN: 'exitfullscreen',
   /**
-   * Fires when the player received a request to enter fullscreen.
-   */
-  REQUESTED_ENTER_FULLSCREEN: 'requestedenterfullscreen',
-  /**
-   * Fires when the player received a request to exit fullscreen.
-   */
-  REQUESTED_EXIT_FULLSCREEN: 'requestedexitfullscreen',
-  /**
    * Fires when browser fails to autoplay with sound.
    */
   AUTOPLAY_FAILED: 'autoplayfailed',

@@ -503,7 +503,8 @@ var config = {
 >  pictureInPicture: boolean,
 >  options: PKPlaybackOptionsObject,
 >  streamPriority: Array<PKStreamPriorityObject>,
->  preferNative: PKPreferNativeConfigObject
+>  preferNative: PKPreferNativeConfigObject,
+>  inBrowserFullscreen: boolean
 > }
 > ```
 >
@@ -874,6 +875,20 @@ var config = {
 > > ```
 > >
 > > If the player is running on a _Safari_ browser, the player will use the native hls playback managed by the _Safari_ browser. However, if running on a browser in which hls playback is not supported natively, for example, _Chrome_, the player will play hls using the `hls.js` library.
+>
+> ##
+>
+> > ### config.playback.inBrowserFullscreen
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ```js
+> > inBrowserFullscreen: boolean;
+> > ```
+> >
+> > > ##### Description: Gives the ability to choose an in-browser fullscreen experience. Useful on iOS devices which will replace the native fullscreen of the AV player.
 >
 > ##
 >
