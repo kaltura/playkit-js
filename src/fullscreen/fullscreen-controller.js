@@ -20,6 +20,7 @@ class FullscreenController {
   _inBrowserFullscreenConfig: boolean;
   _playsinlineConfig: boolean;
   _isInBrowserFullscreen: boolean;
+  _isEnterFullscreenEventFired: boolean;
 
   /**
    * after component mounted, set up event listeners to window fullscreen state change
@@ -33,6 +34,8 @@ class FullscreenController {
     this._playsinlineConfig = this._player.config.playback.playsinline;
     //flag to cover the option that inBrowserFullscreen selected and we should know if it's full screen
     this._isInBrowserFullscreen = false;
+    //added to avoid duplicate dispatch event
+    this._isEnterFullscreenEventFired = false;
     this.registerFullScreenEvents();
   }
 
@@ -242,8 +245,9 @@ class FullscreenController {
    * @returns {void}
    */
   _fullscreenEnterHandler(): void {
-    if (this.isFullscreen()) {
+    if (this.isFullscreen() && !this._isEnterFullscreenEventFired) {
       this._player.dispatchEvent(new FakeEvent(this._player.Event.ENTER_FULLSCREEN));
+      this._isEnterFullscreenEventFired = true;
     }
   }
 
@@ -253,8 +257,9 @@ class FullscreenController {
    * @returns {void}
    */
   _fullscreenExitHandler(): void {
-    if (!this.isFullscreen()) {
+    if (!this.isFullscreen() && this._isEnterFullscreenEventFired) {
       this._player.dispatchEvent(new FakeEvent(this._player.Event.EXIT_FULLSCREEN));
+      this._isEnterFullscreenEventFired = false;
     }
   }
 }
