@@ -123,6 +123,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
 
   _onAdBreakStart(event: FakeEvent): void {
     this._adBreak = event.payload.adBreak;
+    this.dispatchEvent(event);
   }
 
   _onAdLoaded(event: FakeEvent): void {

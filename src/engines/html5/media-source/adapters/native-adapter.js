@@ -15,6 +15,8 @@ import defaultConfig from './native-adapter-default-config';
 import {FairplayDrmHandler} from './fairplay-drm-handler';
 import type {FairplayDrmConfigType} from './fairplay-drm-handler';
 
+const BACK_TO_FOCUS_TIMEOUT: number = 1000;
+
 /**
  * An illustration of media source extension for progressive download
  * @classdesc
@@ -272,7 +274,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._eventManager.listen(this._videoElement, Html5EventType.PAUSE, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.ENDED, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.ABORT, () => this._clearHeartbeatTimeout());
-        this._eventManager.listen(this._videoElement, Html5EventType.SEEKED, () => this._onSeeked());
+        this._eventManager.listen(this._videoElement, Html5EventType.SEEKED, () => this._syncCurrentTime());
+        // Sometimes when playing live in safari and switching between tabs the currentTime goes back with no seek events
+        this._eventManager.listen(window, 'focus', () => setTimeout(() => this._syncCurrentTime(), BACK_TO_FOCUS_TIMEOUT));
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
         }
@@ -326,19 +330,21 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   _onTimeUpdate(): void {
-    if (!this._videoElement.paused && this._videoElement.currentTime > this._lastTimeUpdate) {
-      if (this._waitingEventTriggered) {
-        this._waitingEventTriggered = false;
-        this._trigger(Html5EventType.PLAYING);
+    if (!this._videoElement.paused) {
+      if (this._videoElement.currentTime > this._lastTimeUpdate) {
+        if (this._waitingEventTriggered) {
+          this._waitingEventTriggered = false;
+          this._trigger(Html5EventType.PLAYING);
+        }
+        this._resetHeartbeatTimeout();
+      } else {
+        this._waitingEventTriggered = true;
+        this._trigger(Html5EventType.WAITING);
       }
-      this._resetHeartbeatTimeout();
-    } else if (!this._videoElement.paused) {
-      this._waitingEventTriggered = true;
-      this._trigger(Html5EventType.WAITING);
     }
   }
 
-  _onSeeked(): void {
+  _syncCurrentTime(): void {
     this._lastTimeUpdate = this._videoElement.currentTime;
   }
 
@@ -861,7 +867,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     let textTracks = this._videoElement.textTracks;
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
-        textTracks[i].mode = 'disabled';
+        (textTracks[i].kind === 'subtitles' || textTracks[i].kind === 'captions') && (textTracks[i].mode = 'disabled');
       }
     }
   }

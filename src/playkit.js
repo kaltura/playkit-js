@@ -24,7 +24,7 @@ import {TrackType} from './track/track-type';
 import {StreamType} from './engines/stream-type';
 import {EngineType} from './engines/engine-type';
 import {MediaType} from './media-type';
-import {EventType} from './event/event-type';
+import {CustomEventType, EventType, Html5EventType} from './event/event-type';
 import {AbrMode} from './track/abr-mode-type';
 import getLogger, {getLogLevel, LogLevel, LogLevelType, setLogLevel} from './utils/logger';
 import {CorsType} from './engines/html5/cors-types';
@@ -35,6 +35,8 @@ import {AdBreak} from './ads/ad-break';
 import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
 import {AdsController} from './ads/ads-controller';
+import {AdEventType} from './ads/ad-event-type';
+import {BaseEngineDecorator} from './engines/base-engine-decorator';
 
 declare var __VERSION__: string;
 declare var __NAME__: string;
@@ -91,12 +93,29 @@ export {getCapabilities, setCapabilities};
 export {registerEngine, unRegisterEngine};
 
 // Export ads framework
-export {Ad, AdBreak, AdBreakType, AdTagType, AdsController};
+export {Ad, AdBreak, AdBreakType, AdTagType, AdsController, AdEventType};
 
 // Export enums
-export {EventType, StateType, TrackType, EngineType, MediaType, StreamType, AbrMode, LogLevelType, CorsType, DrmScheme, MimeType};
+export {
+  Html5EventType,
+  CustomEventType,
+  EventType,
+  StateType,
+  TrackType,
+  EngineType,
+  MediaType,
+  StreamType,
+  AbrMode,
+  LogLevelType,
+  CorsType,
+  DrmScheme,
+  MimeType
+};
 
 // Export logger utils
 export {getLogger, LogLevel, getLogLevel, setLogLevel};
+
+// Export engine decorator
+export {BaseEngineDecorator};
 
 export default loadPlayer;

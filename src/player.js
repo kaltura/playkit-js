@@ -1529,16 +1529,34 @@ export default class Player extends FakeEventTarget {
    */
   _loadEngine(Engine: typeof IEngine, source: PKMediaSourceObject) {
     if (!this._engine) {
-      this._engine = Engine.createEngine(source, this._config, this._playerId);
+      this._createEngine(Engine, source);
       this._appendEngineEl();
     } else {
       if (this._engine.id === Engine.id) {
         this._engine.restore(source, this._config);
       } else {
         this._engine.destroy();
-        this._engine = Engine.createEngine(source, this._config, this._playerId);
+        this._createEngine(Engine, source);
         this._appendEngineEl();
       }
+    }
+  }
+
+  /**
+   * Creates an engine or an engine decorator.
+   * @param {IEngine} Engine - The selected engine.
+   * @param {PKMediaSourceObject} source - The selected source object.
+   * @returns {void}
+   * @private
+   */
+  _createEngine(Engine: typeof IEngine, source: PKMediaSourceObject): void {
+    const engine = Engine.createEngine(source, this._config);
+    const plugins = (Object.values(this._pluginManager.getAll()): any);
+    const plugin: ?IEngineDecoratorProvider = plugins.find(plugin => typeof plugin.getEngineDecorator === 'function');
+    if (plugin) {
+      this._engine = plugin.getEngineDecorator(engine);
+    } else {
+      this._engine = engine;
     }
   }
 
@@ -1573,6 +1591,7 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this._onTracksChanged(event));
       this._eventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._engine, CustomEventType.TIMED_METADATA, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.AUTOPLAY_FAILED, (event: FakeEvent) => {
         this.pause();
         if (this._firstPlay && this._config.playback.autoplay) {
@@ -1605,6 +1624,14 @@ export default class Player extends FakeEventTarget {
         this._onTextTrackChanged(event)
       );
       this._eventManager.listen(this._externalCaptionsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
+      if (this._adsController) {
+        this._eventManager.listen(this._adsController, AdEventType.AD_BREAK_START, () => {
+          if (this._firstPlay) {
+            this._posterManager.hide();
+            this._hideBlackCover();
+          }
+        });
+      }
     }
   }
 
