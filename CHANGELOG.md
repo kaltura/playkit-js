@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.45.8"></a>
+## [0.45.8](https://github.com/kaltura/playkit-js/compare/v0.45.7...v0.45.8) (2019-04-14)
+
+
+### Bug Fixes
+
+* **FEC-9037:** When entering/exiting fullscreen, the events are sent twice in several devices ([#356](https://github.com/kaltura/playkit-js/issues/356)) ([00f9636](https://github.com/kaltura/playkit-js/commit/00f9636))
+
+
+
 <a name="0.45.7"></a>
 ## [0.45.7](https://github.com/kaltura/playkit-js/compare/v0.45.6...v0.45.7) (2019-04-07)
 
