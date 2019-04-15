@@ -948,7 +948,10 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   isLive(): boolean {
-    return !!(this._config.sources.type === MediaType.LIVE || (this._engine && this._engine.isLive()));
+    return !!(
+      this._config.sources.type !== MediaType.VOD &&
+      (this._config.sources.type === MediaType.LIVE || (this._engine && this._engine.isLive()))
+    );
   }
 
   /**
