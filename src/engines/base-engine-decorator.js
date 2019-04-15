@@ -1,10 +1,10 @@
 // @flow
-import VideoTrack from './track/video-track';
-import AudioTrack from './track/audio-track';
-import TextTrack from './track/text-track';
-import FakeEventTarget from './event/fake-event-target';
-import {EventType} from './event/event-type';
-import EventManager from './event/event-manager';
+import VideoTrack from '../track/video-track';
+import AudioTrack from '../track/audio-track';
+import TextTrack from '../track/text-track';
+import FakeEventTarget from '../event/fake-event-target';
+import {EventType} from '../event/event-type';
+import EventManager from '../event/event-manager';
 
 class BaseEngineDecorator extends FakeEventTarget implements IEngine {
   _engine: Object;

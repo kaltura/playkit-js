@@ -36,7 +36,7 @@ import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
 import {AdsController} from './ads/ads-controller';
 import {AdEventType} from './ads/ad-event-type';
-import {BaseEngineDecorator} from './base-engine-decorator';
+import {BaseEngineDecorator} from './engines/base-engine-decorator';
 
 declare var __VERSION__: string;
 declare var __NAME__: string;
