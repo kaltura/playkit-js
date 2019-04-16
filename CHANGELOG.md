@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.46.0"></a>
+# [0.46.0](https://github.com/kaltura/playkit-js/compare/v0.45.8...v0.46.0) (2019-04-15)
+
+
+### Features
+
+* engine decorator ([#324](https://github.com/kaltura/playkit-js/issues/324)) ([aa67b09](https://github.com/kaltura/playkit-js/commit/aa67b09))
+
+
+
 <a name="0.45.8"></a>
 ## [0.45.8](https://github.com/kaltura/playkit-js/compare/v0.45.7...v0.45.8) (2019-04-14)
 

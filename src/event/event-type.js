@@ -223,7 +223,11 @@ const CustomEventType: PKEventTypes = {
   /**
    * Fired when the player container changes it's dimensions
    */
-  RESIZE: 'resize'
+  RESIZE: 'resize',
+  /**
+   * Fired when the timed metadata triggered
+   */
+  TIMED_METADATA: 'timedmetadata'
 };
 
 const EventType: PKEventTypes = Utils.Object.merge([Html5EventType, CustomEventType, AdEventType]);
