@@ -1023,6 +1023,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _handleVideoError(): void {
+    Html5._logger.debug('_handleVideoError');
     if (!this._el.error) return;
     const code = this._el.error.code;
     if (code === 1 /* MEDIA_ERR_ABORTED */) {

@@ -290,9 +290,28 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     return this._loadPromise;
   }
 
+  /**
+   * handle decode error - reload the video and seek to last currentTime
+   * @returns {void}
+   */
+  handleDecodeError(): void {
+    NativeAdapter._logger.debug(`handleDecodeError currentTime <${this._videoElement.currentTime}>`);
+    let currentTime = this._videoElement.currentTime;
+    this._videoElement.load();
+    this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => {
+      this._videoElement.currentTime = currentTime;
+      this._videoElement.pause();
+    });
+  }
+
   handleMediaError(error: ?MediaError): boolean {
     if (this._loadPromiseReject) {
+      NativeAdapter._logger.debug('handleMediaError _loadPromiseReject');
       this._loadPromiseReject(new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.NATIVE_ADAPTER_LOAD_FAILED, error));
+      return true;
+      // It seems that the only known scenario to reach this code with a decode error (3) is as described in FEC-8873
+    } else if (error && error.code === 3) {
+      this.handleDecodeError();
       return true;
     } else {
       return false;
