@@ -301,6 +301,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => {
       this._videoElement.currentTime = currentTime;
       this._videoElement.pause();
+      this._onNativeAudioTrackChange();
+      this._onNativeTextTrackChange();
     });
   }
 
