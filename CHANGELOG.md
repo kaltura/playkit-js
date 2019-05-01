@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.46.1"></a>
+## [0.46.1](https://github.com/kaltura/playkit-js/compare/v0.46.0...v0.46.1) (2019-05-01)
+
+
+### Bug Fixes
+
+* **FEC-9012:** add mediaType VOD configuration check for isLive verification ([#357](https://github.com/kaltura/playkit-js/issues/357)) ([b76033f](https://github.com/kaltura/playkit-js/commit/b76033f))
+
+
+
 <a name="0.46.0"></a>
 # [0.46.0](https://github.com/kaltura/playkit-js/compare/v0.45.8...v0.46.0) (2019-04-15)
 
