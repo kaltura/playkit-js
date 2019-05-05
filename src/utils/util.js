@@ -371,8 +371,11 @@ const _Dom = {
    * @returns {void}
    */
   removeChild(parent: ?Node, child: ?Element): void {
-    if (parent && child && parent.removeChild) {
+    try {
+      // $FlowFixMe
       parent.removeChild(child);
+    } catch (e) {
+      return;
     }
   },
   /**
