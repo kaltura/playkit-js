@@ -445,7 +445,12 @@ export default class Player extends FakeEventTarget {
       Utils.Object.mergeDeep(this._config, config);
       this._reset = false;
       if (this._selectEngineByPriority()) {
-        this.dispatchEvent(new FakeEvent(CustomEventType.SOURCE_SELECTED, {selectedSource: this._config.sources[this._streamType]}));
+        this.dispatchEvent(
+          new FakeEvent(CustomEventType.SOURCE_SELECTED, {
+            selectedSource: this._config.sources[this._streamType],
+            duration: this._config.sources.duration
+          })
+        );
         this._attachMedia();
         this._handlePlaybackOptions();
         this._posterManager.setSrc(this._config.sources.poster);
