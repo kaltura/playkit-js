@@ -273,4 +273,14 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   handleFragementLoaded(miliSeconds: number): void {
     this._trigger(CustomEventType.FRAG_LOADED, {miliSeconds: miliSeconds});
   }
+
+  /**
+   * @public
+   * @param {number} miliSeconds - download duration time of the manifest in miliseconds
+   * @returns {void}
+   */
+  handleManifestLoaded(miliSeconds: number): void {
+    this._trigger(CustomEventType.MANIFEST_LOADED, {miliSeconds: miliSeconds});
+    ``;
+  }
 }
