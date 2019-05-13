@@ -268,10 +268,11 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /**
    * @public
    * @param {number} miliSeconds - download duration time of the segment / fragment in miliseconds
+   * @param {number} bytes - total size of the segment / fragment in bytes
    * @returns {void}
    */
-  handleFragementLoaded(miliSeconds: number): void {
-    this._trigger(CustomEventType.FRAG_LOADED, {miliSeconds: miliSeconds});
+  handleFragementLoaded(miliSeconds: number, bytes: number): void {
+    this._trigger(CustomEventType.FRAG_LOADED, {miliSeconds: miliSeconds, bytes: bytes});
   }
 
   /**
