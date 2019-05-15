@@ -282,6 +282,5 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    */
   handleManifestLoaded(miliSeconds: number): void {
     this._trigger(CustomEventType.MANIFEST_LOADED, {miliSeconds: miliSeconds});
-    ``;
   }
 }
