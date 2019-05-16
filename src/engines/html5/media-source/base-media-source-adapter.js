@@ -264,23 +264,4 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   get capabilities(): PKMediaSourceCapabilities {
     return this._capabilities;
   }
-
-  /**
-   * @public
-   * @param {number} miliSeconds - download duration time of the segment / fragment in miliseconds
-   * @param {number} bytes - total size of the segment / fragment in bytes
-   * @returns {void}
-   */
-  handleFragementLoaded(miliSeconds: number, bytes: number): void {
-    this._trigger(CustomEventType.FRAG_LOADED, {miliSeconds: miliSeconds, bytes: bytes});
-  }
-
-  /**
-   * @public
-   * @param {number} miliSeconds - download duration time of the manifest in miliseconds
-   * @returns {void}
-   */
-  handleManifestLoaded(miliSeconds: number): void {
-    this._trigger(CustomEventType.MANIFEST_LOADED, {miliSeconds: miliSeconds});
-  }
 }
