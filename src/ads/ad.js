@@ -7,7 +7,7 @@
  */
 class Ad {
   _id: string;
-  _system: string;
+  _system: ?string;
   _url: ?string;
   _contentType: ?string;
   _title: ?string;
@@ -50,9 +50,9 @@ class Ad {
   /**
    * @instance
    * @memberof Ad
-   * @return {string} - Ad system.
+   * @return {?string} - Ad system.
    */
-  get system(): string {
+  get system(): ?string {
     return this._system;
   }
 
