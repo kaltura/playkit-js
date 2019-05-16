@@ -1,5 +1,6 @@
 // @flow
 declare type PKAdOptions = {
+  system?: string;
   url?: string;
   contentType?: string;
   title?: string;
