@@ -59,7 +59,7 @@ class Ad {
   /**
    * @instance
    * @memberof Ad
-   * @return {string} - Ad content ype.
+   * @return {string} - Ad content type.
    */
   get contentType(): ?string {
     return this._contentType;
