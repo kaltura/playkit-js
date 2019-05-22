@@ -302,6 +302,24 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * @returns {number} - the number of video frames dropped since the creation of the associated HTMLVideoElement
+   */
+  getDroppedVideoFrames(): ?number {
+    if (this._droppedFramesWatcher) {
+      return this._droppedFramesWatcher._getDroppedAndDecodedFrames()[0];
+    }
+  }
+
+  /**
+   * @returns {number} - the number of video frames created and dropped since the creation of the associated HTMLVideoElement
+   */
+  getTotalVideoFrames(): ?number {
+    if (this._droppedFramesWatcher) {
+      return this._droppedFramesWatcher._getDroppedAndDecodedFrames()[1];
+    }
+  }
+
+  /**
    * Select a new video track.
    * @param {VideoTrack} videoTrack - The video track object to set.
    * @returns {void}

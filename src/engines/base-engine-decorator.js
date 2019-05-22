@@ -46,6 +46,14 @@ class BaseEngineDecorator extends FakeEventTarget implements IEngine {
     return this._engine.getVideoElement();
   }
 
+  getDroppedVideoFrames(): ?number {
+    return this._engine.getDroppedVideoFrames();
+  }
+
+  getTotalVideoFrames(): ?number {
+    return this._engine.getTotalVideoFrames();
+  }
+
   reset(): void {
     this._engine.reset();
   }
