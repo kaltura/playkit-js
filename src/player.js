@@ -642,24 +642,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * @returns {number} - the number of video frames dropped since the creation of the associated HTMLVideoElement
-   */
-  get droppedVideoFrames(): ?number {
-    if (this._engine) {
-      return this._engine.getDroppedVideoFrames();
-    }
-  }
-
-  /**
-   * @returns {number} - the number of video frames created and dropped since the creation of the associated HTMLVideoElement
-   */
-  get totalVideoFrames(): ?number {
-    if (this._engine) {
-      return this._engine.getTotalVideoFrames();
-    }
-  }
-
-  /**
    * Set the current time in seconds.
    * @param {Number} to - The number to set in seconds.
    * @public
