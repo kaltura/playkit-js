@@ -306,7 +306,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   getDroppedVideoFrames(): ?number {
     if (this._droppedFramesWatcher) {
-      return this._droppedFramesWatcher._getDroppedAndDecodedFrames()[0];
+      return this._droppedFramesWatcher.getDroppedAndDecodedFrames()[0];
     }
   }
 
@@ -315,7 +315,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   getTotalVideoFrames(): ?number {
     if (this._droppedFramesWatcher) {
-      return this._droppedFramesWatcher._getDroppedAndDecodedFrames()[1];
+      return this._droppedFramesWatcher.getDroppedAndDecodedFrames()[1];
     }
   }
 
