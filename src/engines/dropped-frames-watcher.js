@@ -29,7 +29,7 @@ class DroppedFramesWatcher extends FakeEventTarget {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.FPS_DROP, event => this._triggerFPSDrop(event.payload.data));
       return;
     }
-    if (this.getDroppedAndDecodedFrames()[0] === NOT_SUPPORTED) {
+    if (this._getDroppedAndDecodedFrames()[0] === NOT_SUPPORTED) {
       DroppedFramesWatcher._logger.debug('Dropped frame watcher is not supported');
     } else if (this._config.capLevelOnFPSDrop) {
       this._init();
@@ -49,7 +49,7 @@ class DroppedFramesWatcher extends FakeEventTarget {
     this.dispatchEvent(new FakeEvent(CustomEventType.FPS_DROP, data));
   }
 
-  getDroppedAndDecodedFrames(): [number, number] {
+  _getDroppedAndDecodedFrames(): [number, number] {
     if (typeof this._videoElement.getVideoPlaybackQuality === 'function') {
       const videoPlaybackQuality = this._videoElement.getVideoPlaybackQuality();
       return [videoPlaybackQuality.droppedVideoFrames, videoPlaybackQuality.totalVideoFrames];
@@ -61,7 +61,7 @@ class DroppedFramesWatcher extends FakeEventTarget {
   }
 
   _checkFPS(): void {
-    const [droppedFrames, decodedFrames] = this.getDroppedAndDecodedFrames();
+    const [droppedFrames, decodedFrames] = this._getDroppedAndDecodedFrames();
     try {
       const currentTime = performance.now();
       if (decodedFrames) {

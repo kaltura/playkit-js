@@ -62,7 +62,7 @@ describe('constructor', function() {
   });
 });
 
-describe('getDroppedAndDecodedFrames function ', function() {
+describe('_getDroppedAndDecodedFrames function ', function() {
   let videoElement, sandbox;
   videoElement = document.createElement('video');
 
@@ -80,7 +80,7 @@ describe('getDroppedAndDecodedFrames function ', function() {
       fpsControl: false
     };
     const dfw = new DroppedFramesWatcher(dashAdapter, {}, videoElement);
-    const [first, second] = dfw.getDroppedAndDecodedFrames();
+    const [first, second] = dfw._getDroppedAndDecodedFrames();
     first.should.equal(0);
     second.should.equal(0);
   });
@@ -105,7 +105,7 @@ describe('_checkFPS function ', function() {
     };
     const dfw = new DroppedFramesWatcher(dashAdapter, {}, videoElement);
     dfw._lastTime.should.equal(0);
-    dfw.getDroppedAndDecodedFrames = function() {
+    dfw._getDroppedAndDecodedFrames = function() {
       return [5, 10];
     };
     dfw._checkFPS(5, 10);
@@ -122,7 +122,7 @@ describe('_checkFPS function ', function() {
     dfw._lastTime = performance.now() - 5000;
     dfw._lastDroppedFrames = 2;
     dfw._lastDecodedFrames = 3;
-    dfw.getDroppedAndDecodedFrames = function() {
+    dfw._getDroppedAndDecodedFrames = function() {
       return [5, 10];
     };
     dfw._checkFPS();
@@ -139,7 +139,7 @@ describe('_checkFPS function ', function() {
     dfw._lastTime = performance.now() - 5000;
     dfw._lastDroppedFrames = 2;
     dfw._lastDecodedFrames = 3;
-    dfw.getDroppedAndDecodedFrames = function() {
+    dfw._getDroppedAndDecodedFrames = function() {
       return [10, 5];
     };
     dfw._checkFPS();
