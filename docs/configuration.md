@@ -53,6 +53,7 @@ var config = {
     allowMutedAutoPlay: true,
     loop: false,
     muted: false,
+    playbackRate: [0.5, 1, 2, 4],
     pictureInPicture: true,
     options: {
       html5: {
@@ -790,6 +791,18 @@ var config = {
 > > ##### Description: Indicates whether the video should be muted or not.
 > >
 > > This is a Boolean attribute that indicates the default setting of the audio contained in the video. If set, the audio will be initially silenced. The attribute's default value is false, which means that the audio will be played automatically when the video is played.
+>
+> ##
+>
+> > ### config.playback.playbackRate
+> >
+> > ##### Type: `Array<Number>`
+> >
+> > ##### Default: `[0.5, 1, 2, 4]`
+> >
+> > ##### Description: Sets the rate at which the media is being played back.
+> >
+> > This is an Array attribute that is used to implement user controls for fast forward, slow motion, and so forth. The normal playback rate is multiplied by this value to obtain the current rate, so a value of 1.0 indicates normal speed.
 >
 > ##
 >
