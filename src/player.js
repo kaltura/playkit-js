@@ -820,22 +820,22 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Sets the playbackRate property.
+   * @param {number} rate - The playback speed of the video.
+   */
+  set playbackRate(rate: number): void {
+    if (this._engine) {
+      this._engine.playbackRate = rate;
+    }
+  }
+
+  /**
    * Gets the current playback speed of the video.
    * @returns {number} - The current playback speed of the video.
    */
   get playbackRate(): ?number {
     if (this._engine) {
       return this._engine.playbackRate;
-    }
-  }
-
-  /**
-   * Sets the current playback speed of the video.
-   * @param {number} rate - The current playback speed of the video.
-   */
-  set playbackRate(rate: number): void {
-    if (this._engine) {
-      this._engine.playbackRate = rate;
     }
   }
 
@@ -850,16 +850,6 @@ export default class Player extends FakeEventTarget {
       return this._engine.playbackRates;
     }
     return [];
-  }
-
-  /**
-   * Sets the playbackRates property.
-   * @param {number} playbackRates - Set the possible playback speeds speed of the video.
-   */
-  set playbackRates(playbackRates: number): void {
-    if (this._engine) {
-      this._engine.playbackRates = playbackRates;
-    }
   }
 
   /**
@@ -1748,7 +1738,6 @@ export default class Player extends FakeEventTarget {
       if (validPlaybackRates) {
         this._playbackRates = validPlaybackRates;
       }
-      this._playbackRates = this._engine.PlaybackRates;
     }
   }
 

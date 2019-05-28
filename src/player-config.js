@@ -24,6 +24,7 @@ const DefaultConfig = {
     loop: false,
     allowMutedAutoPlay: true,
     muted: false,
+    playbackRate: [0.5, 1, 2, 4],
     pictureInPicture: true,
     options: {
       html5: {
