@@ -844,7 +844,9 @@ export default class Player extends FakeEventTarget {
    * @returns {Array<number>} - The possible playback speeds speed of the video.
    */
   get playbackRates(): Array<number> {
-    if (this._engine) {
+    if (this._playbackRates) {
+      return this._playbackRates;
+    } else if (this._engine) {
       return this._engine.playbackRates;
     }
     return [];
@@ -1742,10 +1744,11 @@ export default class Player extends FakeEventTarget {
       this.crossOrigin = this._config.playback.crossOrigin;
     }
     if (Array.isArray(this._config.playback.playbackRate)) {
-      const validPlaybackRateValue = this._config.playback.playbackRate.filter(number => number > 0 && number <= 16);
-      if (validPlaybackRateValue) {
-        this.playbackRates = validPlaybackRateValue;
+      const validPlaybackRates = this._config.playback.playbackRate.filter(number => number > 0 && number <= 16);
+      if (validPlaybackRates) {
+        this._playbackRates = validPlaybackRates;
       }
+      this._playbackRates = this._engine.PlaybackRates;
     }
   }
 

@@ -53,7 +53,6 @@ var config = {
     allowMutedAutoPlay: true,
     loop: false,
     muted: false,
-    playbackRate: [0.5, 1, 2, 4],
     pictureInPicture: true,
     options: {
       html5: {

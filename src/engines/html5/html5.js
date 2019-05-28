@@ -904,15 +904,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @return {number[]} - playback rates
    */
   get playbackRates(): Array<number> {
-    return this._config.playbackRates;
-  }
-
-  /**
-   * set the playback rates
-   * @param {number[]} playbackRates - playback rates
-   */
-  set playbackRates(playbackRates: Array<number>): void {
-    this._config.playbackRates = playbackRates;
+    return Html5.PLAYBACK_RATES;
   }
 
   /**
