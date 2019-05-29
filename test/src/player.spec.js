@@ -2105,6 +2105,13 @@ describe('Player', function() {
       player.config.playback.streamPriority = {};
       player.config.playback.streamPriority.should.deep.equal(getConfigStructure().playback.streamPriority);
     });
+
+    it('should set playbackRate', function() {
+      config.playback.playbackRate.concat([-1, 2, 4, 3, 20, 3, 2]);
+      player = new Player(config);
+      playerContainer.appendChild(player.getView());
+      player.config.playback.playbackRate.should.deep.equal(getConfigStructure().playback.playbackRate);
+    });
   });
 
   describe('abr', function() {
