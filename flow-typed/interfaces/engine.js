@@ -18,7 +18,6 @@ declare interface IEngine {
   play(): void;
   pause(): void;
   load(startTime: ?number): Promise<Object>;
-  ready(): void;
   reset(): void;
   selectVideoTrack(videoTrack: VideoTrack): void;
   selectAudioTrack(audioTrack: AudioTrack): void;

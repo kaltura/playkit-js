@@ -36,6 +36,7 @@ const DefaultConfig = {
       hls: false,
       dash: false
     },
+    inBrowserFullscreen: false,
     streamPriority: [
       {
         engine: 'html5',

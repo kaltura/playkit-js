@@ -14,6 +14,8 @@ import Error from '../../error/error';
 import getLogger from '../../utils/logger';
 import {DroppedFramesWatcher} from '../dropped-frames-watcher';
 
+const HIDE_METADATA_TRACK_TIMEOUT: number = 100;
+
 /**
  * Html5 engine for playback.
  * @classdesc
@@ -254,6 +256,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         }
       });
     });
+    this._handleMetadataTrackEvents();
     if (this._mediaSourceAdapter) {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.AUDIO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
@@ -266,6 +269,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.PLAYING, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.WAITING, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.MEDIA_RECOVERED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, 'hlsFragParsingMetadata', (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._droppedFramesWatcher, CustomEventType.FPS_DROP, (event: FakeEvent) => this.dispatchEvent(event));
     }
   }
@@ -444,13 +448,95 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Request the engine to enter picture in picture mode
+   * @public
+   * @returns {void}
+   */
+  enterPictureInPicture(): void {
+    try {
+      // Currently it's supported in chrome and in safari. So if we consider checking support before,
+      // we can use this flag to distinguish between the two. In the future we might need a different method.
+      // Second condition is because flow does not support this API yet
+      if (document.pictureInPictureEnabled && typeof this._el.requestPictureInPicture === 'function') {
+        this._el.requestPictureInPicture().catch(error => {
+          this.dispatchEvent(
+            new FakeEvent(
+              Html5EventType.ERROR,
+              new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.ENTER_PICTURE_IN_PICTURE_FAILED, error)
+            )
+          );
+        });
+      } else if (typeof this._el.webkitSetPresentationMode === 'function') {
+        this._el.webkitSetPresentationMode('picture-in-picture');
+        // Safari does not fire this event but Chrome does, normalizing the behaviour
+        setTimeout(() => this.dispatchEvent(new FakeEvent(Html5EventType.ENTER_PICTURE_IN_PICTURE)), 0);
+      }
+    } catch (error) {
+      this.dispatchEvent(
+        new FakeEvent(
+          Html5EventType.ERROR,
+          new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.ENTER_PICTURE_IN_PICTURE_FAILED, error)
+        )
+      );
+    }
+  }
+
+  /**
+   * Request the engine to exit picture in picture mode
+   * @public
+   * @returns {void}
+   */
+  exitPictureInPicture(): void {
+    try {
+      // Currently it's supported in chrome and in safari. So if we consider checking support before,
+      // we can use this flag to distinguish between the two. In the future we might need a different method.
+      // Second condition is because flow does not support this API yet
+      if (document.pictureInPictureEnabled && typeof document.exitPictureInPicture === 'function') {
+        document.exitPictureInPicture().catch(error => {
+          this.dispatchEvent(
+            new FakeEvent(
+              Html5EventType.ERROR,
+              new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.EXIT_PICTURE_IN_PICTURE_FAILED, error)
+            )
+          );
+        });
+      } else if (typeof this._el.webkitSetPresentationMode === 'function') {
+        this._el.webkitSetPresentationMode('inline');
+        // Safari does not fire this event but Chrome does, normalizing the behaviour
+        setTimeout(() => this.dispatchEvent(new FakeEvent(Html5EventType.LEAVE_PICTURE_IN_PICTURE)), 0);
+      }
+    } catch (error) {
+      this.dispatchEvent(
+        new FakeEvent(
+          Html5EventType.ERROR,
+          new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.EXIT_PICTURE_IN_PICTURE_FAILED, error)
+        )
+      );
+    }
+  }
+
+  /**
+   * Check if the engine is in picture in picture mode
+   * @public
+   * @return {boolean} if the engine is in picture in picture mode or not
+   */
+  isPictureInPictureSupported(): boolean {
+    return (
+      !!document.pictureInPictureEnabled ||
+      (typeof this._el.webkitSupportsPresentationMode === 'function' && this._el.webkitSupportsPresentationMode('picture-in-picture'))
+    );
+  }
+
+  /**
    * Set a source.
    * @param {string} source - Source to set.
    * @public
    * @returns {void}
    */
   set src(source: string): void {
-    this._el.src = source;
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.src = source;
+    }
   }
 
   /**
@@ -513,8 +599,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   get volume(): number {
     return this._el.volume;
   }
-
-  ready() {}
 
   /**
    * Get paused state.
@@ -824,6 +908,18 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * get if the engine's video element is the one in the PIP
+   * @return {boolean} boolean - is in PIP
+   */
+  get isInPictureInPicture(): boolean {
+    // Check if the engine's video element is the one in the PIP
+    return (
+      (!!document.pictureInPictureElement && document.pictureInPictureElement != null && this._el === document.pictureInPictureElement) ||
+      (!!this._el.webkitPresentationMode && this._el.webkitPresentationMode === 'picture-in-picture')
+    );
+  }
+
+  /**
    * Initializes the engine.
    * @param {PKMediaSourceObject} source - The selected source object.
    * @param {Object} config - The player configuration.
@@ -970,76 +1066,29 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return extended;
   }
 
-  enterPictureInPicture(): void {
-    try {
-      // Currently it's supported in chrome and in safari. So if we consider checking support before,
-      // we can use this flag to distinguish between the two. In the future we might need a different method.
-      // Second condition is because flow does not support this API yet
-      if (document.pictureInPictureEnabled && typeof this._el.requestPictureInPicture === 'function') {
-        this._el.requestPictureInPicture().catch(error => {
-          this.dispatchEvent(
-            new FakeEvent(
-              Html5EventType.ERROR,
-              new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.ENTER_PICTURE_IN_PICTURE_FAILED, error)
-            )
-          );
-        });
-      } else if (typeof this._el.webkitSetPresentationMode === 'function') {
-        this._el.webkitSetPresentationMode('picture-in-picture');
-        // Safari does not fire this event but Chrome does, normalizing the behaviour
-        setTimeout(() => this.dispatchEvent(new FakeEvent(Html5EventType.ENTER_PICTURE_IN_PICTURE)), 0);
-      }
-    } catch (error) {
-      this.dispatchEvent(
-        new FakeEvent(
-          Html5EventType.ERROR,
-          new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.ENTER_PICTURE_IN_PICTURE_FAILED, error)
-        )
-      );
+  _handleMetadataTrackEvents(): void {
+    const listenToCueChange = track => {
+      track.mode = 'hidden';
+      track.addEventListener('cuechange', () => {
+        this.dispatchEvent(new FakeEvent(CustomEventType.TIMED_METADATA, {cues: Array.from(track.activeCues)}));
+      });
+    };
+    const metadataTrack = Array.from(this._el.textTracks).find((track: TextTrack) => track.kind === 'metadata');
+    if (metadataTrack) {
+      listenToCueChange(metadataTrack);
+    } else {
+      this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
+        if (event.track.kind === 'metadata') {
+          listenToCueChange(event.track);
+        } else {
+          // When a non metadata track has added it could change the metadata track mode to disabled. Need to return it to hidden.
+          Array.from(this._el.textTracks).forEach((track: TextTrack) => {
+            if (track.kind === 'metadata') {
+              setTimeout(() => (track.mode = 'hidden'), HIDE_METADATA_TRACK_TIMEOUT);
+            }
+          });
+        }
+      });
     }
-  }
-
-  exitPictureInPicture(): void {
-    try {
-      // Currently it's supported in chrome and in safari. So if we consider checking support before,
-      // we can use this flag to distinguish between the two. In the future we might need a different method.
-      // Second condition is because flow does not support this API yet
-      if (document.pictureInPictureEnabled && typeof document.exitPictureInPicture === 'function') {
-        document.exitPictureInPicture().catch(error => {
-          this.dispatchEvent(
-            new FakeEvent(
-              Html5EventType.ERROR,
-              new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.EXIT_PICTURE_IN_PICTURE_FAILED, error)
-            )
-          );
-        });
-      } else if (typeof this._el.webkitSetPresentationMode === 'function') {
-        this._el.webkitSetPresentationMode('inline');
-        // Safari does not fire this event but Chrome does, normalizing the behaviour
-        setTimeout(() => this.dispatchEvent(new FakeEvent(Html5EventType.LEAVE_PICTURE_IN_PICTURE)), 0);
-      }
-    } catch (error) {
-      this.dispatchEvent(
-        new FakeEvent(
-          Html5EventType.ERROR,
-          new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.EXIT_PICTURE_IN_PICTURE_FAILED, error)
-        )
-      );
-    }
-  }
-
-  isPictureInPictureSupported(): boolean {
-    return (
-      !!document.pictureInPictureEnabled ||
-      (typeof this._el.webkitSupportsPresentationMode === 'function' && this._el.webkitSupportsPresentationMode('picture-in-picture'))
-    );
-  }
-
-  get isInPictureInPicture(): boolean {
-    // Check if the engine's video element is the one in the PIP
-    return (
-      (!!document.pictureInPictureElement && document.pictureInPictureElement != null && this._el === document.pictureInPictureElement) ||
-      (!!this._el.webkitPresentationMode && this._el.webkitPresentationMode === 'picture-in-picture')
-    );
   }
 }

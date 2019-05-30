@@ -127,14 +127,6 @@ const CustomEventType: PKEventTypes = {
    */
   EXIT_FULLSCREEN: 'exitfullscreen',
   /**
-   * Fires when the player received a request to enter fullscreen.
-   */
-  REQUESTED_ENTER_FULLSCREEN: 'requestedenterfullscreen',
-  /**
-   * Fires when the player received a request to exit fullscreen.
-   */
-  REQUESTED_EXIT_FULLSCREEN: 'requestedexitfullscreen',
-  /**
    * Fires when browser fails to autoplay with sound.
    */
   AUTOPLAY_FAILED: 'autoplayfailed',
@@ -231,7 +223,11 @@ const CustomEventType: PKEventTypes = {
   /**
    * Fired when the player container changes it's dimensions
    */
-  RESIZE: 'resize'
+  RESIZE: 'resize',
+  /**
+   * Fired when the timed metadata triggered
+   */
+  TIMED_METADATA: 'timedmetadata'
 };
 
 const EventType: PKEventTypes = Utils.Object.merge([Html5EventType, CustomEventType, AdEventType]);

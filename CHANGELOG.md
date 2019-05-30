@@ -2,13 +2,75 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.46.2"></a>
+## [0.46.2](https://github.com/kaltura/playkit-js/compare/v0.46.1...v0.46.2) (2019-05-16)
+
+
+### Bug Fixes
+
+* ad system is missing in the ad options ([#362](https://github.com/kaltura/playkit-js/issues/362)) ([df1b710](https://github.com/kaltura/playkit-js/commit/df1b710))
+* **FEC-9041:** 'HTMLVideoElement.webkitDisplayingFullscreen' deprecation warning ([01a7f1f](https://github.com/kaltura/playkit-js/commit/01a7f1f))
+
+
+
+<a name="0.46.1"></a>
+## [0.46.1](https://github.com/kaltura/playkit-js/compare/v0.46.0...v0.46.1) (2019-05-01)
+
+
+### Bug Fixes
+
+* **FEC-9012:** add mediaType VOD configuration check for isLive verification ([#357](https://github.com/kaltura/playkit-js/issues/357)) ([b76033f](https://github.com/kaltura/playkit-js/commit/b76033f))
+
+
+
 <a name="0.46.0"></a>
-# [0.46.0](https://github.com/kaltura/playkit-js/compare/v0.45.4...v0.46.0) (2019-02-28)
+# [0.46.0](https://github.com/kaltura/playkit-js/compare/v0.45.8...v0.46.0) (2019-04-15)
 
 
 ### Features
 
-* **FEC-8631:** bumper plugin ([5338c27](https://github.com/kaltura/playkit-js/commit/5338c27))
+* engine decorator ([#324](https://github.com/kaltura/playkit-js/issues/324)) ([aa67b09](https://github.com/kaltura/playkit-js/commit/aa67b09))
+
+
+
+<a name="0.45.8"></a>
+## [0.45.8](https://github.com/kaltura/playkit-js/compare/v0.45.7...v0.45.8) (2019-04-14)
+
+
+### Bug Fixes
+
+* **FEC-9037:** When entering/exiting fullscreen, the events are sent twice in several devices ([#356](https://github.com/kaltura/playkit-js/issues/356)) ([00f9636](https://github.com/kaltura/playkit-js/commit/00f9636))
+
+
+
+<a name="0.45.7"></a>
+## [0.45.7](https://github.com/kaltura/playkit-js/compare/v0.45.6...v0.45.7) (2019-04-07)
+
+
+### Bug Fixes
+
+* **FEC-8826:** pass html element from api and there isn't check for ios in isfullscreen method ([#354](https://github.com/kaltura/playkit-js/issues/354)) ([0844cd2](https://github.com/kaltura/playkit-js/commit/0844cd2))
+* **FEC-9021:** [iOS] - different behaviour after closing fullscreen and enter fullscreen again ([#355](https://github.com/kaltura/playkit-js/issues/355)) ([4a01b41](https://github.com/kaltura/playkit-js/commit/4a01b41))
+
+
+
+<a name="0.45.6"></a>
+## [0.45.6](https://github.com/kaltura/playkit-js/compare/v0.45.5...v0.45.6) (2019-04-01)
+
+
+### Bug Fixes
+
+* **FEC-8826:** fullscreen implementation moved to core ([#353](https://github.com/kaltura/playkit-js/issues/353)) ([2bab7bd](https://github.com/kaltura/playkit-js/commit/2bab7bd))
+
+
+
+<a name="0.45.5"></a>
+## [0.45.5](https://github.com/kaltura/playkit-js/compare/v0.45.4...v0.45.5) (2019-03-06)
+
+
+### Bug Fixes
+
+* **FEC-8957:** cannot pause/resume the ad after change media on iOS ([#352](https://github.com/kaltura/playkit-js/issues/352)) ([c0efdfa](https://github.com/kaltura/playkit-js/commit/c0efdfa))
 
 
 

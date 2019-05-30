@@ -245,6 +245,22 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return '';
   }
 
+  /**
+   * Setter for the src that the adapter plays on the video element.
+   * @param {string} source - The src url.
+   * @public
+   * @returns {void}
+   */
+  set src(source: string): void {
+    if (!this._loadPromise && this._sourceObj) {
+      this._sourceObj.url = source;
+    }
+  }
+
+  /**
+   * @public
+   * @return {PKMediaSourceCapabilities} - The adapter capabilities.
+   */
   get capabilities(): PKMediaSourceCapabilities {
     return this._capabilities;
   }

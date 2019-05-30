@@ -38,6 +38,7 @@ import {AdsController} from './ads/ads-controller';
 import {AdEventType} from './ads/ad-event-type';
 import {ControllerProvider} from './controller/controller-provider';
 import {ResizeWatcher} from './utils/resize-watcher';
+import {FullscreenController} from './fullscreen/fullscreen-controller';
 
 /**
  * The black cover class name.
@@ -322,11 +323,7 @@ export default class Player extends FakeEventTarget {
     audioLanguage: '',
     textLanguage: ''
   };
-  /**
-   * Fullscreen indicator flag
-   * @private
-   */
-  _fullscreen: boolean;
+
   /**
    * holds false or an id for the timeout the reposition the text cues after togelling full screen
    * @type {any}
@@ -370,6 +367,12 @@ export default class Player extends FakeEventTarget {
    */
   _externalCaptionsHandler: ExternalCaptionsHandler;
   /**
+   * holds the full screen controller
+   * @type {FullscreenController}
+   * @private
+   */
+  _fullscreenController: FullscreenController;
+  /**
    * holds the ads controller
    * @type {?AdsController}
    * @private
@@ -395,7 +398,6 @@ export default class Player extends FakeEventTarget {
     this._env = Env;
     this._tracks = [];
     this._firstPlay = true;
-    this._fullscreen = false;
     this._repositionCuesTimeout = false;
     this._loadingMedia = false;
     this._loading = false;
@@ -418,6 +420,7 @@ export default class Player extends FakeEventTarget {
     this._appendDomElements();
     this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
     this.configure(config);
+    this._fullscreenController = new FullscreenController(this);
   }
 
   // <editor-fold desc="Public API">
@@ -945,7 +948,10 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   isLive(): boolean {
-    return !!(this._config.sources.type === MediaType.LIVE || (this._engine && this._engine.isLive()));
+    return !!(
+      this._config.sources.type !== MediaType.VOD &&
+      (this._config.sources.type === MediaType.LIVE || (this._engine && this._engine.isLive()))
+    );
   }
 
   /**
@@ -1156,13 +1162,12 @@ export default class Player extends FakeEventTarget {
   // </editor-fold>
 
   // <editor-fold desc="Fullscreen API">
-
   /**
    * @returns {boolean} - Whether the player is in fullscreen mode.
    * @public
    */
   isFullscreen(): boolean {
-    return this._fullscreen;
+    return this._fullscreenController.isFullscreen();
   }
 
   /**
@@ -1171,8 +1176,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   notifyEnterFullscreen(): void {
-    if (!this._fullscreen) {
-      this._fullscreen = true;
+    if (this.isFullscreen()) {
       this.dispatchEvent(new FakeEvent(CustomEventType.ENTER_FULLSCREEN));
     }
   }
@@ -1183,8 +1187,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   notifyExitFullscreen(): void {
-    if (this._fullscreen) {
-      this._fullscreen = false;
+    if (!this.isFullscreen()) {
       this.dispatchEvent(new FakeEvent(CustomEventType.EXIT_FULLSCREEN));
     }
   }
@@ -1192,15 +1195,11 @@ export default class Player extends FakeEventTarget {
   /**
    * Request the player to enter fullscreen.
    * @public
+   * @param {string} elementId - element id to full screen
    * @returns {void}
    */
-  enterFullscreen(): void {
-    if (!this._fullscreen) {
-      if (this.isInPictureInPicture()) {
-        this.exitPictureInPicture();
-      }
-      this.dispatchEvent(new FakeEvent(CustomEventType.REQUESTED_ENTER_FULLSCREEN));
-    }
+  enterFullscreen(elementId: ?string): void {
+    this._fullscreenController.enterFullscreen(elementId);
   }
 
   /**
@@ -1209,9 +1208,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   exitFullscreen(): void {
-    if (this._fullscreen) {
-      this.dispatchEvent(new FakeEvent(CustomEventType.REQUESTED_EXIT_FULLSCREEN));
-    }
+    this._fullscreenController.exitFullscreen();
   }
 
   // </editor-fold>
@@ -1535,16 +1532,34 @@ export default class Player extends FakeEventTarget {
    */
   _loadEngine(Engine: typeof IEngine, source: PKMediaSourceObject) {
     if (!this._engine) {
-      this._engine = Engine.createEngine(source, this._config, this._playerId);
+      this._createEngine(Engine, source);
       this._appendEngineEl();
     } else {
       if (this._engine.id === Engine.id) {
         this._engine.restore(source, this._config);
       } else {
         this._engine.destroy();
-        this._engine = Engine.createEngine(source, this._config, this._playerId);
+        this._createEngine(Engine, source);
         this._appendEngineEl();
       }
+    }
+  }
+
+  /**
+   * Creates an engine or an engine decorator.
+   * @param {IEngine} Engine - The selected engine.
+   * @param {PKMediaSourceObject} source - The selected source object.
+   * @returns {void}
+   * @private
+   */
+  _createEngine(Engine: typeof IEngine, source: PKMediaSourceObject): void {
+    const engine = Engine.createEngine(source, this._config);
+    const plugins = (Object.values(this._pluginManager.getAll()): any);
+    const plugin: ?IEngineDecoratorProvider = plugins.find(plugin => typeof plugin.getEngineDecorator === 'function');
+    if (plugin) {
+      this._engine = plugin.getEngineDecorator(engine);
+    } else {
+      this._engine = engine;
     }
   }
 
@@ -1579,6 +1594,7 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this._onTracksChanged(event));
       this._eventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._engine, CustomEventType.TIMED_METADATA, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.AUTOPLAY_FAILED, (event: FakeEvent) => {
         this.pause();
         if (this._firstPlay && this._config.playback.autoplay) {
@@ -1611,6 +1627,14 @@ export default class Player extends FakeEventTarget {
         this._onTextTrackChanged(event)
       );
       this._eventManager.listen(this._externalCaptionsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
+      if (this._adsController) {
+        this._eventManager.listen(this._adsController, AdEventType.AD_BREAK_START, () => {
+          if (this._firstPlay) {
+            this._posterManager.hide();
+            this._hideBlackCover();
+          }
+        });
+      }
     }
   }
 
@@ -2197,7 +2221,6 @@ export default class Player extends FakeEventTarget {
       }
     });
   }
-
   // </editor-fold>
 
   // </editor-fold>

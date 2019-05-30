@@ -7,6 +7,7 @@
  */
 class Ad {
   _id: string;
+  _system: ?string;
   _url: ?string;
   _contentType: ?string;
   _title: ?string;
@@ -23,6 +24,7 @@ class Ad {
 
   constructor(id: string, options: PKAdOptions) {
     this._id = id;
+    this._system = options.system;
     this._url = options.url;
     this._contentType = options.contentType;
     this._title = options.title;
@@ -50,7 +52,16 @@ class Ad {
   /**
    * @instance
    * @memberof Ad
-   * @return {string} - Ad ID.
+   * @return {?string} - Ad system.
+   */
+  get system(): ?string {
+    return this._system;
+  }
+
+  /**
+   * @instance
+   * @memberof Ad
+   * @return {string} - Ad content type.
    */
   get contentType(): ?string {
     return this._contentType;
@@ -176,6 +187,7 @@ class Ad {
   toJSON(): Object {
     return {
       id: this.id,
+      system: this.system,
       url: this.url,
       contentType: this.contentType,
       title: this.title,
