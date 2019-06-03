@@ -2107,10 +2107,10 @@ describe('Player', function() {
     });
 
     it('should set playbackRate', function() {
-      config.playback.playbackRate.concat([-1, 2, 4, 3, 20, 3, 2]);
+      config.sources = sourcesConfig.MultipleSources;
+      config.playback.playbackRate = [18, 2, 3, 4, 20, 30, -19];
       player = new Player(config);
-      playerContainer.appendChild(player.getView());
-      player.config.playback.playbackRate.should.deep.equal(getConfigStructure().playback.playbackRate);
+      player._playbackRates.should.deep.equal(getConfigStructure().playback.playbackRate);
     });
   });
 
