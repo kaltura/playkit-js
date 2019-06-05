@@ -7,6 +7,7 @@ const LGOSParser = [[LGTVRegex], [UAParser.OS.NAME]];
 
 let Env = new UAParser(undefined, {device: LGDeviceParser, os: LGOSParser}).getResult();
 
+Env.isConsole = Env.device.type === UAParser.DEVICE.CONSOLE;
 Env.isSmartTV = Env.device.type === UAParser.DEVICE.SMARTTV;
 Env.isMobile = Env.device.type === UAParser.DEVICE.MOBILE;
 Env.isTablet = Env.device.type === UAParser.DEVICE.TABLET;
