@@ -795,7 +795,7 @@ var config = {
 >
 > > ### config.playback.playbackRate
 > >
-> > ##### Type: `Array<Number>`
+> > ##### Type: `Array<number>`
 > >
 > > ##### Description: Sets the rate at which the media is being played back.
 > >
