@@ -644,7 +644,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    */
   get buffered(): TimeRanges {
-    return this._el.buffered;
+    return this._mediaSourceAdapter ? this._mediaSourceAdapter.buffered : 0;
   }
 
   /**
@@ -1092,5 +1092,25 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         }
       });
     }
+  }
+
+  get targetBuffer(): number {
+    if (this._mediaSourceAdapter) {
+      return this._mediaSourceAdapter.targetBuffer;
+    }
+    return NaN;
+  }
+
+  get availableBuffer(): number {
+    let retVal = 0;
+    if (this.buffered) {
+      for (let i = 0; i < this.buffered.length; i++) {
+        // find the relevant buffer time range containing the current time
+        if (this.buffered.start(i) <= this._el.currentTime && this._el.currentTime <= this.buffered.end(i)) {
+          retVal = this.buffered.end(i) - this._el.currentTime;
+        }
+      }
+    }
+    return retVal;
   }
 }

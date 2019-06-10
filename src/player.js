@@ -641,6 +641,17 @@ export default class Player extends FakeEventTarget {
     }
   }
 
+  get stats(): PKStatsObject {
+    let retval: PKStatsObject = {};
+    retval.targetBuffer = NaN;
+    retval.availableBuffer = NaN;
+    if (this._engine) {
+      retval.targetBuffer = this._engine.targetBuffer;
+      retval.availableBuffer = this._engine.availableBuffer;
+    }
+    return retval;
+  }
+
   /**
    * Set the current time in seconds.
    * @param {Number} to - The number to set in seconds.
