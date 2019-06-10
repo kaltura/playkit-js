@@ -246,6 +246,12 @@ export default class Player extends FakeEventTarget {
    */
   _playbackStart: boolean;
   /**
+   * The available playback rates for the player.
+   * @type {Array<number>}
+   * @private
+   */
+  _playbackRates: Array<number>;
+  /**
    * The player DOM element container.
    * @type {HTMLDivElement}
    * @private
@@ -844,7 +850,9 @@ export default class Player extends FakeEventTarget {
    * @returns {Array<number>} - The possible playback speeds speed of the video.
    */
   get playbackRates(): Array<number> {
-    if (this._engine) {
+    if (this._playbackRates) {
+      return this._playbackRates;
+    } else if (this._engine) {
       return this._engine.playbackRates;
     }
     return [];
@@ -1730,6 +1738,14 @@ export default class Player extends FakeEventTarget {
     }
     if (typeof this._config.playback.crossOrigin === 'string') {
       this.crossOrigin = this._config.playback.crossOrigin;
+    }
+    if (Array.isArray(this._config.playback.playbackRate)) {
+      const validPlaybackRates = this._config.playback.playbackRate
+        .filter((number, index, self) => number > 0 && number <= 16 && self.indexOf(number) === index)
+        .sort((a, b) => a - b);
+      if (validPlaybackRates) {
+        this._playbackRates = validPlaybackRates;
+      }
     }
   }
 
