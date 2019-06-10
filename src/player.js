@@ -247,10 +247,10 @@ export default class Player extends FakeEventTarget {
   _playbackStart: boolean;
   /**
    * The available playback rates for the player.
-   * @type {Array<numbers>}
+   * @type {Array<number>}
    * @private
    */
-  _playbackRates: Array<numbers>;
+  _playbackRates: Array<number>;
   /**
    * The player DOM element container.
    * @type {HTMLDivElement}
