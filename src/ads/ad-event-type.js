@@ -41,6 +41,10 @@ const AdEventType: PKEventTypes = {
    */
   AD_ERROR: 'aderror',
   /**
+   * Fired when the ads plugin is done playing all own ads.
+   */
+  ADS_COMPLETED: 'adscompleted',
+  /**
    * Fired when the ads manager is done playing all the ads.
    */
   ALL_ADS_COMPLETED: 'alladscompleted',
