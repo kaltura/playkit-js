@@ -421,6 +421,10 @@ export default class Player extends FakeEventTarget {
     this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
     this.configure(config);
     this._fullscreenController = new FullscreenController(this);
+
+    setInterval(() => {
+      Player._logger.debug(this.stats.targetBuffer, this.stats.availableBuffer);
+    }, 1000);
   }
 
   // <editor-fold desc="Public API">
@@ -642,14 +646,20 @@ export default class Player extends FakeEventTarget {
   }
 
   get stats(): PKStatsObject {
-    let retval: PKStatsObject = {};
-    retval.targetBuffer = NaN;
-    retval.availableBuffer = NaN;
+    const videoElement = this.getVideoElement();
+    let statsObject: PKStatsObject = {};
+    statsObject.targetBuffer = NaN;
+    statsObject.availableBuffer = NaN;
     if (this._engine) {
-      retval.targetBuffer = this._engine.targetBuffer;
-      retval.availableBuffer = this._engine.availableBuffer;
+      statsObject.targetBuffer = this._engine.targetBuffer;
+      statsObject.availableBuffer = this._engine.availableBuffer;
+      // consideration of the end of the playback in the target buffer calc
+      if (!this.isLive()) {
+        statsObject.targetBuffer = Math.min(statsObject.targetBuffer, videoElement.duration - videoElement.currentTime);
+      }
     }
-    return retval;
+
+    return statsObject;
   }
 
   /**
