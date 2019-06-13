@@ -268,8 +268,4 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   get targetBuffer(): number {
     return NaN;
   }
-
-  get buffered(): TimeRanges {
-    return this._videoElement.buffered;
-  }
 }

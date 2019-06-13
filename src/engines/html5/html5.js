@@ -644,7 +644,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    */
   get buffered(): TimeRanges {
-    return this._mediaSourceAdapter ? this._mediaSourceAdapter.buffered : 0;
+    return this._el.buffered;
   }
 
   /**
