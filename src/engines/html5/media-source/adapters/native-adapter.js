@@ -337,6 +337,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           this._trigger(Html5EventType.PLAYING);
         }
         this._resetHeartbeatTimeout();
+      } else if (this._videoElement.currentTime < this._lastTimeUpdate) {
+        this._syncCurrentTime();
       } else {
         this._waitingEventTriggered = true;
         this._trigger(Html5EventType.WAITING);

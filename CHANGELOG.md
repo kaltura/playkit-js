@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.46.2"></a>
+## [0.46.2](https://github.com/kaltura/playkit-js/compare/v0.46.1...v0.46.2) (2019-05-16)
+
+
+### Bug Fixes
+
+* ad system is missing in the ad options ([#362](https://github.com/kaltura/playkit-js/issues/362)) ([df1b710](https://github.com/kaltura/playkit-js/commit/df1b710))
+* **FEC-9041:** 'HTMLVideoElement.webkitDisplayingFullscreen' deprecation warning ([01a7f1f](https://github.com/kaltura/playkit-js/commit/01a7f1f))
+
+
+
 <a name="0.46.1"></a>
 ## [0.46.1](https://github.com/kaltura/playkit-js/compare/v0.46.0...v0.46.1) (2019-05-01)
 

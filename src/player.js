@@ -246,6 +246,12 @@ export default class Player extends FakeEventTarget {
    */
   _playbackStart: boolean;
   /**
+   * The available playback rates for the player.
+   * @type {Array<number>}
+   * @private
+   */
+  _playbackRates: Array<number>;
+  /**
    * The player DOM element container.
    * @type {HTMLDivElement}
    * @private
@@ -863,7 +869,9 @@ export default class Player extends FakeEventTarget {
    * @returns {Array<number>} - The possible playback speeds speed of the video.
    */
   get playbackRates(): Array<number> {
-    if (this._engine) {
+    if (this._playbackRates) {
+      return this._playbackRates;
+    } else if (this._engine) {
       return this._engine.playbackRates;
     }
     return [];
@@ -1464,6 +1472,7 @@ export default class Player extends FakeEventTarget {
    */
   _configureOrLoadPlugins(plugins: Object = {}): void {
     if (plugins) {
+      const middlewares = [];
       Object.keys(plugins).forEach(name => {
         // If the plugin is already exists in the registry we are updating his config
         const plugin = this._pluginManager.get(name);
@@ -1483,7 +1492,7 @@ export default class Player extends FakeEventTarget {
             if (plugin) {
               this._config.plugins[name] = plugin.getConfig();
               if (typeof plugin.getMiddlewareImpl === 'function') {
-                this._playbackMiddleware.use(plugin.getMiddlewareImpl());
+                plugin.name === 'bumper' ? middlewares.push(plugin.getMiddlewareImpl()) : middlewares.unshift(plugin.getMiddlewareImpl());
               }
             }
           } else {
@@ -1491,6 +1500,7 @@ export default class Player extends FakeEventTarget {
           }
         }
       });
+      middlewares.forEach(middleware => this._playbackMiddleware.use(middleware));
     }
   }
 
@@ -1752,6 +1762,14 @@ export default class Player extends FakeEventTarget {
     if (typeof this._config.playback.crossOrigin === 'string') {
       this.crossOrigin = this._config.playback.crossOrigin;
     }
+    if (Array.isArray(this._config.playback.playbackRate)) {
+      const validPlaybackRates = this._config.playback.playbackRate
+        .filter((number, index, self) => number > 0 && number <= 16 && self.indexOf(number) === index)
+        .sort((a, b) => a - b);
+      if (validPlaybackRates) {
+        this._playbackRates = validPlaybackRates;
+      }
+    }
   }
 
   /**
@@ -1769,14 +1787,11 @@ export default class Player extends FakeEventTarget {
    * If ads plugin enabled it's his responsibility to preload the content player.
    * So to avoid loading the player twice which can cause errors on MSEs we are not
    * calling load from the player.
-   * TODO: Change it to check the ads configuration when we will develop the ads manager.
    * @returns {boolean} - Whether the player can perform preload.
    * @private
    */
   _canPreload(): boolean {
-    return (
-      !this._config.plugins || ((this._config.plugins && !this._config.plugins.ima) || (this._config.plugins.ima && this._config.plugins.ima.disable))
-    );
+    return !this._adsController;
   }
 
   /**
@@ -1845,9 +1860,12 @@ export default class Player extends FakeEventTarget {
 
   _maybeCreateAdsController(): void {
     if (!this._adsController) {
-      const adsPluginController = this._controllerProvider.getAdsController();
-      if (adsPluginController) {
-        this._adsController = new AdsController(this, adsPluginController);
+      const adsPluginControllers = this._controllerProvider.getAdsControllers();
+      if (adsPluginControllers.length) {
+        this._adsController = new AdsController(this, adsPluginControllers);
+        this._eventManager.listen(this._adsController, AdEventType.ALL_ADS_COMPLETED, event => {
+          this.dispatchEvent(event);
+        });
       }
     }
   }

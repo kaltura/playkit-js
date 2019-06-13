@@ -1,5 +1,6 @@
 // @flow
 declare type PKAdOptions = {
+  system?: string;
   url?: string;
   contentType?: string;
   title?: string;
@@ -8,8 +9,9 @@ declare type PKAdOptions = {
   clickThroughUrl?: string;
   posterUrl?: string;
   skipOffset?: number;
-  linear?: boolean;
+  linear: boolean;
   width: number;
   height: number;
   bitrate: number;
+  bumper: boolean;
 };

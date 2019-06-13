@@ -53,7 +53,7 @@ class FullscreenController {
       document.mozFullScreenElement ||
       document.msFullscreenElement ||
       // $FlowFixMe for ios mobile
-      (!!videoElement && !!videoElement.webkitDisplayingFullscreen)
+      (this._player.env.os.name === 'iOS' && !!videoElement && !!videoElement.webkitDisplayingFullscreen)
     );
   }
 
