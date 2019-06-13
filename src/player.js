@@ -1445,6 +1445,7 @@ export default class Player extends FakeEventTarget {
    */
   _configureOrLoadPlugins(plugins: Object = {}): void {
     if (plugins) {
+      const middlewares = [];
       Object.keys(plugins).forEach(name => {
         // If the plugin is already exists in the registry we are updating his config
         const plugin = this._pluginManager.get(name);
@@ -1464,7 +1465,7 @@ export default class Player extends FakeEventTarget {
             if (plugin) {
               this._config.plugins[name] = plugin.getConfig();
               if (typeof plugin.getMiddlewareImpl === 'function') {
-                this._playbackMiddleware.use(plugin.getMiddlewareImpl());
+                plugin.constructor.name === 'Bumper' ? middlewares.push(plugin.getMiddlewareImpl()) : middlewares.unshift(plugin.getMiddlewareImpl());
               }
             }
           } else {
@@ -1472,6 +1473,7 @@ export default class Player extends FakeEventTarget {
           }
         }
       });
+      middlewares.forEach(middleware => this._playbackMiddleware.use(middleware));
     }
   }
 
