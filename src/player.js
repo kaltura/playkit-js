@@ -1473,7 +1473,7 @@ export default class Player extends FakeEventTarget {
             if (plugin) {
               this._config.plugins[name] = plugin.getConfig();
               if (typeof plugin.getMiddlewareImpl === 'function') {
-                plugin.constructor.name === 'Bumper' ? middlewares.push(plugin.getMiddlewareImpl()) : middlewares.unshift(plugin.getMiddlewareImpl());
+                plugin.name === 'bumper' ? middlewares.push(plugin.getMiddlewareImpl()) : middlewares.unshift(plugin.getMiddlewareImpl());
               }
             }
           } else {
