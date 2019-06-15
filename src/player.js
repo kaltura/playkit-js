@@ -648,7 +648,6 @@ export default class Player extends FakeEventTarget {
   }
 
   get stats(): PKStatsObject {
-    const videoElement = this.getVideoElement();
     let statsObject: PKStatsObject = {
       targetBuffer: NaN,
       availableBuffer: NaN
@@ -657,10 +656,9 @@ export default class Player extends FakeEventTarget {
       statsObject.targetBuffer = this._engine.targetBuffer;
       statsObject.availableBuffer = this._engine.availableBuffer;
       // consideration of the end of the playback in the target buffer calc
-      if (!this.isLive()) {
-        statsObject.targetBuffer = videoElement
-          ? Math.min(statsObject.targetBuffer, videoElement.duration - videoElement.currentTime)
-          : statsObject.targetBuffer;
+      if (!this.isLive() && this.getVideoElement()) {
+        const videoElement = this.getVideoElement();
+        statsObject.targetBuffer = Math.min(statsObject.targetBuffer, videoElement.duration - videoElement.currentTime);
       }
     }
 
