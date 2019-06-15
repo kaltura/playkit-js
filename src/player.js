@@ -426,6 +426,7 @@ export default class Player extends FakeEventTarget {
     this._appendDomElements();
     this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
     this.configure(config);
+    this._fullscreenController = new FullscreenController(this);
   }
 
   // <editor-fold desc="Public API">
