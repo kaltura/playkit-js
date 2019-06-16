@@ -277,6 +277,14 @@ class BaseEngineDecorator extends FakeEventTarget implements IEngine {
   get crossOrigin(): ?string {
     return this._engine.crossOrigin;
   }
+
+  get targetBuffer(): number {
+    return this._engine.targetBuffer;
+  }
+
+  get availableBuffer(): number {
+    return this._engine.availableBuffer;
+  }
 }
 
 export {BaseEngineDecorator};

@@ -227,7 +227,15 @@ const CustomEventType: PKEventTypes = {
   /**
    * Fired when the timed metadata triggered
    */
-  TIMED_METADATA: 'timedmetadata'
+  TIMED_METADATA: 'timedmetadata',
+  /**
+   * Fired when a fragment or segment is done loading successfully
+   */
+  FRAG_LOADED: 'fragloaded',
+  /**
+   * Fired when a manifest is done loading successfully
+   */
+  MANIFEST_LOADED: 'manifestloaded'
 };
 
 const EventType: PKEventTypes = Utils.Object.merge([Html5EventType, CustomEventType, AdEventType]);

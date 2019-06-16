@@ -264,4 +264,8 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   get capabilities(): PKMediaSourceCapabilities {
     return this._capabilities;
   }
+
+  get targetBuffer(): number {
+    return NaN;
+  }
 }
