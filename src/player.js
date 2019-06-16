@@ -427,9 +427,6 @@ export default class Player extends FakeEventTarget {
     this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
     this.configure(config);
     this._fullscreenController = new FullscreenController(this);
-    setInterval(() => {
-      Player._logger.debug('availableBuffer:' + this.stats.availableBuffer);
-    }, 1000);
   }
 
   // <editor-fold desc="Public API">
