@@ -264,6 +264,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.MANIFEST_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.TIME_UPDATE, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.PLAYING, (event: FakeEvent) => this.dispatchEvent(event));
@@ -1090,5 +1092,25 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         }
       });
     }
+  }
+
+  get targetBuffer(): number {
+    if (this._mediaSourceAdapter) {
+      return this._mediaSourceAdapter.targetBuffer;
+    }
+    return NaN;
+  }
+
+  get availableBuffer(): number {
+    let retVal = 0;
+    if (this.buffered) {
+      for (let i = 0; i < this.buffered.length; i++) {
+        // find the relevant buffer time range containing the current time
+        if (this.buffered.start(i) <= this._el.currentTime && this._el.currentTime <= this.buffered.end(i)) {
+          retVal = this.buffered.end(i) - this._el.currentTime;
+        }
+      }
+    }
+    return retVal;
   }
 }

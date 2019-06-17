@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.47.0"></a>
+# [0.47.0](https://github.com/kaltura/playkit-js/compare/v0.46.2...v0.47.0) (2019-06-16)
+
+
+### Bug Fixes
+
+* **FEC-9177:** Smart TV showed as mobile device ([#365](https://github.com/kaltura/playkit-js/issues/365)) ([3eb342b](https://github.com/kaltura/playkit-js/commit/3eb342b))
+* **FEC-9187:** LG TV different behavior for LIVE ([#366](https://github.com/kaltura/playkit-js/issues/366)) ([1a4f1fd](https://github.com/kaltura/playkit-js/commit/1a4f1fd))
+
+
+### Features
+
+* **FEC-8631:** bumper plugin ([#350](https://github.com/kaltura/playkit-js/issues/350)) ([173edfb](https://github.com/kaltura/playkit-js/commit/173edfb))
+* **FEC-8975:** adding QoS Data to enhance KAVA ([#361](https://github.com/kaltura/playkit-js/issues/361)) ([4f6c468](https://github.com/kaltura/playkit-js/commit/4f6c468))
+* **FEC-9055:** Add custom Playback rate support ([#364](https://github.com/kaltura/playkit-js/issues/364)) ([aabe020](https://github.com/kaltura/playkit-js/commit/aabe020))
+
+
+
 <a name="0.46.2"></a>
 ## [0.46.2](https://github.com/kaltura/playkit-js/compare/v0.46.1...v0.46.2) (2019-05-16)
 
