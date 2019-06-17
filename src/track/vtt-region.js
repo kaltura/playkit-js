@@ -1,3 +1,5 @@
+// @flow
+
 /**
  * Copyright 2013 vtt.js Contributors
  *

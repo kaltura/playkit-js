@@ -390,6 +390,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _resizeWatcher: ResizeWatcher;
+  /**
+   * Holds preset component factories
+   * @type {?PresetComponent}
+   * @private
+   */
+  _presetComponents: PresetComponent[];
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -403,6 +409,7 @@ export default class Player extends FakeEventTarget {
     Player.runCapabilities();
     this._env = Env;
     this._tracks = [];
+    this._presetComponents = [];
     this._firstPlay = true;
     this._repositionCuesTimeout = false;
     this._loadingMedia = false;
@@ -901,6 +908,10 @@ export default class Player extends FakeEventTarget {
    */
   get config(): Object {
     return Utils.Object.mergeDeep({}, this._config);
+  }
+
+  get presetComponents(): PresetComponent[] {
+    return [...this._presetComponents];
   }
 
   /**
@@ -1454,6 +1465,7 @@ export default class Player extends FakeEventTarget {
   _configureOrLoadPlugins(plugins: Object = {}): void {
     if (plugins) {
       const middlewares = [];
+      const presetComponents = [];
       Object.keys(plugins).forEach(name => {
         // If the plugin is already exists in the registry we are updating his config
         const plugin = this._pluginManager.get(name);
@@ -1475,12 +1487,19 @@ export default class Player extends FakeEventTarget {
               if (typeof plugin.getMiddlewareImpl === 'function') {
                 plugin.name === 'bumper' ? middlewares.push(plugin.getMiddlewareImpl()) : middlewares.unshift(plugin.getMiddlewareImpl());
               }
+
+              // TODO sakal where do you use (IPresetComponentsProvider) IMiddlewareProvider
+              if (typeof plugin.getPresetComponents === 'function') {
+                presetComponents.push(plugin.getPresetComponents());
+              }
             }
           } else {
             delete this._config.plugins[name];
           }
         }
       });
+      // TODO sakal can a user disable plugin after it was added?
+      this._presetComponents = presetComponents;
       middlewares.forEach(middleware => this._playbackMiddleware.use(middleware));
     }
   }
