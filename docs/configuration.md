@@ -13,7 +13,7 @@ var player = playkit.core.loadPlayer(config);
 
 ```js
 {
-  logLevel: string,
+  log: PKLogConfigObject,
   playback: PKPlaybackConfigObject,
   sources: PKSourcesConfigObject,
   session: PKSessionConfigObject,
@@ -28,7 +28,9 @@ var player = playkit.core.loadPlayer(config);
 
 ```js
 var config = {
-  logLevel: 'ERROR',
+  log: {
+    level: 'ERROR'
+  },
   sources: {
     options: {
       forceRedirectExternalStreams: false

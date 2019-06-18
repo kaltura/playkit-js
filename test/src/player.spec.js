@@ -2809,7 +2809,7 @@ describe('Player', function() {
     });
 
     it('should enable setting the current log level from config', () => {
-      const player = new Player({logLevel: 'DEBUG'});
+      const player = new Player({log: {level: 'DEBUG'}});
       let currentLogLevel = player.getLogLevel();
       currentLogLevel.should.equal(player.LogLevel.DEBUG);
     });
