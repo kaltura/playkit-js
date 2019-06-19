@@ -165,7 +165,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
     if (!this._adBreaksLayout.includes(-1)) {
       this._allAdsCompleted = true;
     } else {
-      const isBumper = controller => controller.constructor.name === 'BumperAdsController';
+      const isBumper = controller => controller.name === 'bumper';
       const bumperCtrl = this._adsPluginControllers.find(controller => isBumper(controller));
       const adCtrl = this._adsPluginControllers.find(controller => !isBumper(controller));
       const bumperCompletePromise = bumperCtrl ? bumperCtrl.onPlaybackEnded() : Promise.resolve();

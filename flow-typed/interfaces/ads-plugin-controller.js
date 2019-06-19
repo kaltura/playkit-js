@@ -6,4 +6,5 @@ declare interface IAdsPluginController {
   onPlaybackEnded(): Promise<void>;
   +active: boolean;
   +done: boolean;
+  +name: string;
 }
