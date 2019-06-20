@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.48.0"></a>
+# [0.48.0](https://github.com/kaltura/playkit-js/compare/v0.47.0...v0.48.0) (2019-06-20)
+
+
+### Bug Fixes
+
+* **FEC-9192:** post bumper doesn't play ([#368](https://github.com/kaltura/playkit-js/issues/368)) ([f6eaefc](https://github.com/kaltura/playkit-js/commit/f6eaefc))
+
+
+### Features
+
+* **FEC-9023:** More logger options ([#367](https://github.com/kaltura/playkit-js/issues/367)) ([885e67e](https://github.com/kaltura/playkit-js/commit/885e67e))
+
+
+
 <a name="0.47.0"></a>
 # [0.47.0](https://github.com/kaltura/playkit-js/compare/v0.46.2...v0.47.0) (2019-06-16)
 
