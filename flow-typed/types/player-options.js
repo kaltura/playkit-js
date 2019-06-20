@@ -1,6 +1,6 @@
 // @flow
 declare type PKPlayerOptionsObject = {
-  logLevel?: string,
+  log?: PKLogConfigObject,
   playback?: PKPlaybackConfigObject,
   sources?: PKSourcesConfigObject,
   plugins?: PKPluginsConfigObject,

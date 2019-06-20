@@ -7,7 +7,7 @@ import FakeEventTarget from './event/fake-event-target';
 import {CustomEventType, EventType, Html5EventType} from './event/event-type';
 import * as Utils from './utils/util';
 import Locale from './utils/locale';
-import getLogger, {getLogLevel, LogLevel, LogLevelType, setLogLevel} from './utils/logger';
+import getLogger, {getLogLevel, LogLevel, LogLevelType, setLogLevel, setLogHandler} from './utils/logger';
 import PluginManager from './plugin/plugin-manager';
 import BasePlugin from './plugin/base-plugin';
 import StateManager from './state/state-manager';
@@ -1389,8 +1389,11 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _setConfigLogLevel(config: Object): void {
-    if (config.logLevel && LogLevel[config.logLevel]) {
-      setLogLevel(LogLevel[config.logLevel]);
+    if (config.log && config.log.level && LogLevel[config.log.level]) {
+      setLogLevel(LogLevel[config.log.level]);
+    }
+    if (config.log && typeof config.log.handler === 'function') {
+      setLogHandler(config.log.handler);
     }
   }
 

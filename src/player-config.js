@@ -1,5 +1,7 @@
 const DefaultConfig = {
-  logLevel: 'ERROR',
+  log: {
+    level: 'ERROR'
+  },
   sources: {
     options: {
       forceRedirectExternalStreams: false
