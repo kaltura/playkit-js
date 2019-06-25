@@ -1,7 +1,7 @@
 // @flow
-import MultiMap from '../utils/multi-map'
-import BaseMiddleware from './base-middleware'
-import getLogger from '../utils/logger'
+import MultiMap from '../utils/multi-map';
+import BaseMiddleware from './base-middleware';
+import getLogger from '../utils/logger';
 
 /**
  * Generic middleware implementation.
@@ -18,7 +18,7 @@ export default class Middleware {
    * @private
    * @member
    */
-  _actions: { [action: string]: string };
+  _actions: {[action: string]: string};
   /**
    * The logger of the middleware.
    * @private
@@ -30,10 +30,10 @@ export default class Middleware {
    * @constructor
    * @param {Object} actions - The actions for the middleware.
    */
-  constructor(actions: { [action: string]: string }) {
+  constructor(actions: {[action: string]: string}) {
     this._actions = actions;
     this._middlewares = new MultiMap();
-    this._logger = getLogger("Middleware");
+    this._logger = getLogger('Middleware');
   }
 
   /**
@@ -62,10 +62,10 @@ export default class Middleware {
    * @returns {void}
    */
   run(action: string, callback: Function): void {
-    this._logger.debug("Start middleware chain for action " + action);
+    this._logger.debug('Start middleware chain for action ' + action);
     let middlewares = this._middlewares.get(action);
     this._executeMiddleware(middlewares, () => {
-      this._logger.debug("Finish middleware chain for action " + action);
+      this._logger.debug('Finish middleware chain for action ' + action);
       callback();
     });
   }
@@ -78,10 +78,13 @@ export default class Middleware {
    * @returns {void}
    */
   _executeMiddleware(middlewares: Array<Function>, callback: Function): void {
-    // eslint-disable-next-line no-unused-vars
-    const composition = middlewares.reduceRight((next, fn) => v => {
-      fn(next);
-    }, callback);
+    const composition = middlewares.reduceRight(
+      // eslint-disable-next-line no-unused-vars
+      (next, fn) => v => {
+        fn(next);
+      },
+      callback
+    );
     composition();
   }
 }

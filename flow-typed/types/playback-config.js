@@ -5,10 +5,13 @@ declare type PKPlaybackConfigObject = {
   useNativeTextTrack: boolean,
   volume: number,
   playsinline: boolean,
+  crossOrigin: string,
   preload: string,
   autoplay: boolean,
   allowMutedAutoPlay: boolean,
   muted: boolean,
+  pictureInPicture: boolean,
   streamPriority: Array<PKStreamPriorityObject>,
-  preferNative: PKPreferNativeConfigObject
+  preferNative: PKPreferNativeConfigObject,
+  inBrowserFullscreen: boolean
 };

@@ -1,11 +1,11 @@
 //@flow
-import Player from '../player'
-import EventManager from '../event/event-manager'
-import State from './state'
-import {StateType} from './state-type'
-import {Html5EventType, CustomEventType} from '../event/event-type'
-import FakeEvent from '../event/fake-event'
-import getLogger from '../utils/logger'
+import Player from '../player';
+import EventManager from '../event/event-manager';
+import State from './state';
+import {StateType} from './state-type';
+import {Html5EventType, CustomEventType} from '../event/event-type';
+import FakeEvent from '../event/fake-event';
+import getLogger from '../utils/logger';
 
 /**
  * This class responsible to manage all the state machine of the player.
@@ -48,6 +48,13 @@ export default class StateManager {
    */
   _prevState: State | null;
   /**
+   * Holds the time of the beginning of the last buffering (waiting event)
+   * @member
+   * @type {number | null}
+   * @private
+   */
+  _lastWaitingTime: ?number | null;
+  /**
    * Holds the state history of the player.
    * @member
    * @type {Array<State>}
@@ -67,6 +74,10 @@ export default class StateManager {
       },
       [Html5EventType.PLAY]: () => {
         this._updateState(StateType.BUFFERING);
+        this._dispatchEvent();
+      },
+      [Html5EventType.SEEKED]: () => {
+        this._updateState(StateType.PAUSED);
         this._dispatchEvent();
       }
     },
@@ -101,6 +112,7 @@ export default class StateManager {
       },
       [Html5EventType.WAITING]: () => {
         this._updateState(StateType.BUFFERING);
+        this._lastWaitingTime = this._player.currentTime;
         this._dispatchEvent();
       },
       [Html5EventType.ENDED]: () => {
@@ -126,6 +138,13 @@ export default class StateManager {
           this._updateState(StateType.PLAYING);
           this._dispatchEvent();
         }
+      },
+      [Html5EventType.TIME_UPDATE]: () => {
+        if (this._player.currentTime !== this._lastWaitingTime && this._prevState && this._prevState.type === StateType.PLAYING) {
+          this._lastWaitingTime = null;
+          this._updateState(StateType.PLAYING);
+          this._dispatchEvent();
+        }
       }
     }
   };
@@ -136,7 +155,7 @@ export default class StateManager {
    */
   constructor(player: Player) {
     this._player = player;
-    this._logger = getLogger("StateManager");
+    this._logger = getLogger('StateManager');
     this._eventManager = new EventManager();
     this._history = [];
     this._prevState = null;
@@ -159,6 +178,7 @@ export default class StateManager {
     this._eventManager.listen(this._player, Html5EventType.PAUSE, this._doTransition.bind(this));
     this._eventManager.listen(this._player, Html5EventType.WAITING, this._doTransition.bind(this));
     this._eventManager.listen(this._player, Html5EventType.SEEKED, this._doTransition.bind(this));
+    this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, this._doTransition.bind(this));
   }
 
   /**
@@ -168,7 +188,9 @@ export default class StateManager {
    * @returns {void}
    */
   _doTransition(event: FakeEvent): void {
-    this._logger.debug('Do transition request', event.type);
+    if (event.type !== Html5EventType.TIME_UPDATE || (this._curState === StateType.BUFFERING && event.type === Html5EventType.TIME_UPDATE)) {
+      this._logger.debug('Do transition request', event.type); // don't show most of 'timeupdate' events
+    }
     let transition = this._transitions[this._curState.type];
     if (typeof transition[event.type] === 'function') {
       transition[event.type]();
@@ -187,7 +209,7 @@ export default class StateManager {
       this._history.push(this._curState);
       this._prevState = this._curState;
       this._curState = new State(type);
-      this._logger.debug(`Switch player state: from ${this._prevState.type} to ${this._curState.type}`)
+      this._logger.debug(`Switch player state: from ${this._prevState.type} to ${this._curState.type}`);
     }
   }
 
@@ -197,10 +219,13 @@ export default class StateManager {
    * @returns {void}
    */
   _dispatchEvent(): void {
-    let event = new FakeEvent(CustomEventType.PLAYER_STATE_CHANGED, ({
-      'oldState': this._prevState,
-      'newState': this._curState
-    }: StateChanged));
+    let event = new FakeEvent(
+      CustomEventType.PLAYER_STATE_CHANGED,
+      ({
+        oldState: this._prevState,
+        newState: this._curState
+      }: StateChanged)
+    );
     this._player.dispatchEvent(event);
   }
 

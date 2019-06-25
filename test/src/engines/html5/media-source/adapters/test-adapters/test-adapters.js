@@ -1,3 +1,5 @@
+import FakeEventTarget from '../../../../../../../src/event/fake-event-target';
+
 class FakeNativeAdapter implements IMediaSourceAdapter {
   static get id() {
     return 'NativeAdapter';
@@ -10,7 +12,7 @@ class FakeHlsAdapter implements IMediaSourceAdapter {
   }
 }
 
-class FakeDashAdapter implements IMediaSourceAdapter {
+class FakeDashAdapter extends FakeEventTarget implements IMediaSourceAdapter {
   static get id() {
     return 'DashAdapter';
   }
@@ -25,23 +27,19 @@ class Adapter1 implements IMediaSourceAdapter {
     return ['mimeType0', 'mimeType1'].includes(mimeType);
   }
 
-  static canPlayDrm(drmData: Array<Object>): boolean {
-    return !!(drmData.length && drmData[0].scheme === 's1');
-
+  static canPlayDrm(drmData: Array<Object>, drmConfig: PKDrmConfigObject): boolean {
+    return !!((drmData.length && drmData[0].scheme === 's1') || drmConfig.keySystem === 's1');
   }
 
   static createAdapter(videoElement: HTMLVideoElement, source: Object, config: Object): IMediaSourceAdapter {
     return new this(videoElement, source, config);
   }
 
-  constructor() {
-  }
+  constructor() {}
 
-  load(): void {
-  }
+  load(): void {}
 
-  destroy(): void {
-  }
+  destroy(): void {}
 }
 
 class Adapter2 implements IMediaSourceAdapter {
@@ -61,14 +59,11 @@ class Adapter2 implements IMediaSourceAdapter {
     return new this(videoElement, source, config);
   }
 
-  constructor() {
-  }
+  constructor() {}
 
-  load(): void {
-  }
+  load(): void {}
 
-  destroy(): void {
-  }
+  destroy(): void {}
 }
 
 class Adapter3 implements IMediaSourceAdapter {
@@ -77,28 +72,22 @@ class Adapter3 implements IMediaSourceAdapter {
   }
 
   static canPlayType(mimeType: string): boolean {
-    return !!(document.createElement("video").canPlayType(mimeType));
+    return !!document.createElement('video').canPlayType(mimeType);
   }
 
-  static canPlayDrm(drmData: Array<Object>): boolean {
-    return !!(drmData.length && drmData[0].scheme === 's3');
+  static canPlayDrm(drmData: Array<Object>, drmConfig: PKDrmConfigObject): boolean {
+    return !!((drmData.length && drmData[0].scheme === 's3') || drmConfig.keySystem === 's3');
   }
 
   static createAdapter(videoElement: HTMLVideoElement, source: Object, config: Object): IMediaSourceAdapter {
     return new this(videoElement, source, config);
   }
 
-  constructor() {
-  }
+  constructor() {}
 
-  load(): void {
-  }
+  load(): void {}
 
-  destroy(): void {
-  }
+  destroy(): void {}
 }
 
-export {
-  Adapter1, Adapter2, Adapter3,
-  FakeDashAdapter, FakeHlsAdapter, FakeNativeAdapter
-};
+export {Adapter1, Adapter2, Adapter3, FakeDashAdapter, FakeHlsAdapter, FakeNativeAdapter};

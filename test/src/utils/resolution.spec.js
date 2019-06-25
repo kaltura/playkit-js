@@ -1,4 +1,4 @@
-import {getSuitableSourceForResolution} from '../../../src/utils/resolution'
+import {getSuitableSourceForResolution} from '../../../src/utils/resolution';
 
 describe('getSuitableSourceForResolution', () => {
   let tracks = [

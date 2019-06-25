@@ -1,15 +1,16 @@
 //@flow
-import VideoTrack from '../../src/track/video-track'
-import AudioTrack from '../../src/track/audio-track'
-import TextTrack from '../../src/track/text-track'
+import VideoTrack from '../../src/track/video-track';
+import AudioTrack from '../../src/track/audio-track';
+import TextTrack from '../../src/track/text-track';
 
 declare interface IEngine {
   static id: string;
   static createEngine(source: PKMediaSourceObject, config: Object): IEngine;
-  static canPlaySource(source: PKMediaSourceObject, preferNative: boolean): boolean;
+  static canPlaySource(source: PKMediaSourceObject, preferNative: boolean, drmConfig: PKDrmConfigObject): boolean;
   static runCapabilities(): void;
   static getCapabilities(): Promise<Object>;
   static prepareVideoElement(): void;
+  static isSupported(): boolean;
   restore(source: PKMediaSourceObject, config: Object): void;
   destroy(): void;
   attach(): void;
@@ -17,11 +18,13 @@ declare interface IEngine {
   play(): void;
   pause(): void;
   load(startTime: ?number): Promise<Object>;
-  ready(): void;
   reset(): void;
   selectVideoTrack(videoTrack: VideoTrack): void;
   selectAudioTrack(audioTrack: AudioTrack): void;
   selectTextTrack(textTrack: TextTrack): void;
+  isPictureInPictureSupported(): boolean;
+  enterPictureInPicture(): void;
+  exitPictureInPicture(): void;
   hideTextTrack(): void;
   enableAdaptiveBitrate(): void;
   isAdaptiveBitrateEnabled(): boolean;
@@ -29,6 +32,7 @@ declare interface IEngine {
   getStartTimeOfDvrWindow(): number;
   isLive(): boolean;
   getVideoElement(): HTMLVideoElement;
+  resetAllCues(): void;
   +id: string;
   currentTime: number;
   +duration: number;
@@ -49,10 +53,15 @@ declare interface IEngine {
   +seekable: TimeRanges;
   +ended: boolean;
   playbackRate: number;
+  +playbackRates: Array<number>;
   defaultPlaybackRate: number;
+  +isInPictureInPicture: boolean;
   +networkState: number;
   +readyState: number;
   +videoWidth: number;
   +videoHeight: number;
   playsinline: boolean;
+  crossOrigin: ?string;
+  +targetBuffer: number;
+  +availableBuffer: number;
 }

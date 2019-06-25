@@ -80,7 +80,6 @@ class FakeEvent {
     /** @type {EventTarget} */
     this.target = null;
 
-
     /**
      * Non-standard property read by FakeEventTarget to stop processing listeners.
      * @type {boolean}
@@ -95,8 +94,7 @@ class FakeEvent {
    * with native Events.
    * @override
    */
-  preventDefault() {
-  }
+  preventDefault() {}
 
   /**
    * Stops processing event listeners for this event.  Provided for compatibility
@@ -112,8 +110,7 @@ class FakeEvent {
    * with native Events.
    * @override
    */
-  stopPropagation() {
-  }
+  stopPropagation() {}
 }
 
 export default FakeEvent;

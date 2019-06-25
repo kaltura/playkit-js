@@ -14,21 +14,26 @@ const customLaunchers = {
   }
 };
 
+const launchers = {
+  Chrome_browser: {
+    base: 'Chrome',
+    flags: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required']
+  }
+};
+
 module.exports = function (config) {
   let karmaConf = {
-    logLevel: config.LOG_INFO,
+    log:{
+      level: config.LOG_INFO
+    },
     browserDisconnectTimeout: 30000,
     browserNoActivityTimeout: 60000,
-    browsers: [
-      'Chrome',
-      'Firefox'
-    ],
+    customLaunchers: launchers,
+    browsers: ['Chrome_browser', 'Firefox'],
     concurrency: 1,
     singleRun: true,
     colors: true,
-    frameworks: [
-      'mocha'
-    ],
+    frameworks: ['mocha'],
     files: [
       'test/setup/karma.js',
       {
@@ -49,19 +54,10 @@ module.exports = function (config) {
       }
     ],
     preprocessors: {
-      'src/**/*.js': [
-        'webpack',
-        'sourcemap'
-      ],
-      'test/setup/karma.js': [
-        'webpack',
-        'sourcemap'
-      ]
+      'src/**/*.js': ['webpack', 'sourcemap'],
+      'test/setup/karma.js': ['webpack', 'sourcemap']
     },
-    reporters: [
-      'progress',
-      'coverage'
-    ],
+    reporters: ['mocha', 'coverage'],
     webpack: webpackConfig,
     webpackServer: {
       noInfo: true
@@ -69,16 +65,14 @@ module.exports = function (config) {
     client: {
       mocha: {
         reporter: 'html',
-        timeout: 20000
+        timeout: 50000
       }
     }
   };
 
   if (process.env.TRAVIS) {
     karmaConf.customLaunchers = customLaunchers;
-    karmaConf.browsers = [
-      'Chrome_travis_ci'
-    ];
+    karmaConf.browsers = ['Chrome_travis_ci'];
   } else {
     if (isWindows) {
       karmaConf.browsers.push('IE');

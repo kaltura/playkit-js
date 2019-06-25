@@ -2,6 +2,614 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.48.0"></a>
+# [0.48.0](https://github.com/kaltura/playkit-js/compare/v0.47.0...v0.48.0) (2019-06-20)
+
+
+### Bug Fixes
+
+* **FEC-9192:** post bumper doesn't play ([#368](https://github.com/kaltura/playkit-js/issues/368)) ([f6eaefc](https://github.com/kaltura/playkit-js/commit/f6eaefc))
+
+
+### Features
+
+* **FEC-9023:** More logger options ([#367](https://github.com/kaltura/playkit-js/issues/367)) ([885e67e](https://github.com/kaltura/playkit-js/commit/885e67e))
+
+
+
+<a name="0.47.0"></a>
+# [0.47.0](https://github.com/kaltura/playkit-js/compare/v0.46.2...v0.47.0) (2019-06-16)
+
+
+### Bug Fixes
+
+* **FEC-9177:** Smart TV showed as mobile device ([#365](https://github.com/kaltura/playkit-js/issues/365)) ([3eb342b](https://github.com/kaltura/playkit-js/commit/3eb342b))
+* **FEC-9187:** LG TV different behavior for LIVE ([#366](https://github.com/kaltura/playkit-js/issues/366)) ([1a4f1fd](https://github.com/kaltura/playkit-js/commit/1a4f1fd))
+
+
+### Features
+
+* **FEC-8631:** bumper plugin ([#350](https://github.com/kaltura/playkit-js/issues/350)) ([173edfb](https://github.com/kaltura/playkit-js/commit/173edfb))
+* **FEC-8975:** adding QoS Data to enhance KAVA ([#361](https://github.com/kaltura/playkit-js/issues/361)) ([4f6c468](https://github.com/kaltura/playkit-js/commit/4f6c468))
+* **FEC-9055:** Add custom Playback rate support ([#364](https://github.com/kaltura/playkit-js/issues/364)) ([aabe020](https://github.com/kaltura/playkit-js/commit/aabe020))
+
+
+
+<a name="0.46.2"></a>
+## [0.46.2](https://github.com/kaltura/playkit-js/compare/v0.46.1...v0.46.2) (2019-05-16)
+
+
+### Bug Fixes
+
+* ad system is missing in the ad options ([#362](https://github.com/kaltura/playkit-js/issues/362)) ([df1b710](https://github.com/kaltura/playkit-js/commit/df1b710))
+* **FEC-9041:** 'HTMLVideoElement.webkitDisplayingFullscreen' deprecation warning ([01a7f1f](https://github.com/kaltura/playkit-js/commit/01a7f1f))
+
+
+
+<a name="0.46.1"></a>
+## [0.46.1](https://github.com/kaltura/playkit-js/compare/v0.46.0...v0.46.1) (2019-05-01)
+
+
+### Bug Fixes
+
+* **FEC-9012:** add mediaType VOD configuration check for isLive verification ([#357](https://github.com/kaltura/playkit-js/issues/357)) ([b76033f](https://github.com/kaltura/playkit-js/commit/b76033f))
+
+
+
+<a name="0.46.0"></a>
+# [0.46.0](https://github.com/kaltura/playkit-js/compare/v0.45.8...v0.46.0) (2019-04-15)
+
+
+### Features
+
+* engine decorator ([#324](https://github.com/kaltura/playkit-js/issues/324)) ([aa67b09](https://github.com/kaltura/playkit-js/commit/aa67b09))
+
+
+
+<a name="0.45.8"></a>
+## [0.45.8](https://github.com/kaltura/playkit-js/compare/v0.45.7...v0.45.8) (2019-04-14)
+
+
+### Bug Fixes
+
+* **FEC-9037:** When entering/exiting fullscreen, the events are sent twice in several devices ([#356](https://github.com/kaltura/playkit-js/issues/356)) ([00f9636](https://github.com/kaltura/playkit-js/commit/00f9636))
+
+
+
+<a name="0.45.7"></a>
+## [0.45.7](https://github.com/kaltura/playkit-js/compare/v0.45.6...v0.45.7) (2019-04-07)
+
+
+### Bug Fixes
+
+* **FEC-8826:** pass html element from api and there isn't check for ios in isfullscreen method ([#354](https://github.com/kaltura/playkit-js/issues/354)) ([0844cd2](https://github.com/kaltura/playkit-js/commit/0844cd2))
+* **FEC-9021:** [iOS] - different behaviour after closing fullscreen and enter fullscreen again ([#355](https://github.com/kaltura/playkit-js/issues/355)) ([4a01b41](https://github.com/kaltura/playkit-js/commit/4a01b41))
+
+
+
+<a name="0.45.6"></a>
+## [0.45.6](https://github.com/kaltura/playkit-js/compare/v0.45.5...v0.45.6) (2019-04-01)
+
+
+### Bug Fixes
+
+* **FEC-8826:** fullscreen implementation moved to core ([#353](https://github.com/kaltura/playkit-js/issues/353)) ([2bab7bd](https://github.com/kaltura/playkit-js/commit/2bab7bd))
+
+
+
+<a name="0.45.5"></a>
+## [0.45.5](https://github.com/kaltura/playkit-js/compare/v0.45.4...v0.45.5) (2019-03-06)
+
+
+### Bug Fixes
+
+* **FEC-8957:** cannot pause/resume the ad after change media on iOS ([#352](https://github.com/kaltura/playkit-js/issues/352)) ([c0efdfa](https://github.com/kaltura/playkit-js/commit/c0efdfa))
+
+
+
+<a name="0.45.4"></a>
+## [0.45.4](https://github.com/kaltura/playkit-js/compare/v0.45.3...v0.45.4) (2019-02-27)
+
+
+### Bug Fixes
+
+* **FEC-8381:** when external caption http request fails, the error message is not clear ([#347](https://github.com/kaltura/playkit-js/issues/347)) ([6c97e16](https://github.com/kaltura/playkit-js/commit/6c97e16))
+* **FEC-8565:** AUTOPLAY_FAILED event is dispatched after play-pause on slow network  ([#349](https://github.com/kaltura/playkit-js/issues/349)) ([eeb3d15](https://github.com/kaltura/playkit-js/commit/eeb3d15))
+* **FEC-8911:** autoplay is not working on Samsung Native (built-in) browser ([#348](https://github.com/kaltura/playkit-js/issues/348)) ([2000dab](https://github.com/kaltura/playkit-js/commit/2000dab))
+
+
+
+<a name="0.45.3"></a>
+## [0.45.3](https://github.com/kaltura/playkit-js/compare/v0.45.1...v0.45.3) (2019-02-04)
+
+
+### Bug Fixes
+
+* **FEC-8858:** the captions languages in list displayed twice ([#341](https://github.com/kaltura/playkit-js/issues/341)) ([6b0761d](https://github.com/kaltura/playkit-js/commit/6b0761d))
+* **FEC-8865:** the captions style change is not applied on iOS  ([#342](https://github.com/kaltura/playkit-js/issues/342)) ([3671dbd](https://github.com/kaltura/playkit-js/commit/3671dbd))
+* **FEC-8874:** captions look and feel issues ([#343](https://github.com/kaltura/playkit-js/issues/343)) ([d59dc43](https://github.com/kaltura/playkit-js/commit/d59dc43))
+
+
+
+<a name="0.45.2"></a>
+## [0.45.2](https://github.com/kaltura/playkit-js/compare/v0.45.1...v0.45.2) (2019-01-31)
+
+
+### Bug Fixes
+
+* **FEC-8858:** the captions languages in list displayed twice ([#341](https://github.com/kaltura/playkit-js/issues/341)) ([6b0761d](https://github.com/kaltura/playkit-js/commit/6b0761d))
+* **FEC-8865:** the captions style change is not applied on iOS  ([#342](https://github.com/kaltura/playkit-js/issues/342)) ([3671dbd](https://github.com/kaltura/playkit-js/commit/3671dbd))
+
+
+
+<a name="0.45.1"></a>
+## [0.45.1](https://github.com/kaltura/playkit-js/compare/v0.45.0...v0.45.1) (2019-01-24)
+
+
+
+<a name="0.45.0"></a>
+# [0.45.0](https://github.com/kaltura/playkit-js/compare/v0.44.0...v0.45.0) (2019-01-20)
+
+
+### Bug Fixes
+
+* **FEC-8556:** inbound captions frame is stuck in case switching captions using wrong external url ([#335](https://github.com/kaltura/playkit-js/issues/335)) ([7124090](https://github.com/kaltura/playkit-js/commit/7124090))
+* **FEC-8572:** change the way the player compute text tracks font size ([#328](https://github.com/kaltura/playkit-js/issues/328)) ([13bf1ae](https://github.com/kaltura/playkit-js/commit/13bf1ae))
+* **FEC-8763:** add loadMedia life cycle hook for plugins ([#337](https://github.com/kaltura/playkit-js/issues/337)) ([dbc200a](https://github.com/kaltura/playkit-js/commit/dbc200a))
+* **FEC-8770:** iOS -  captions style it applies for both players in the same page ([#329](https://github.com/kaltura/playkit-js/issues/329)) ([d7877c3](https://github.com/kaltura/playkit-js/commit/d7877c3))
+* **FEC-8829, FEC-8807:** native adapter throws an error after 30 seconds pause ([#339](https://github.com/kaltura/playkit-js/issues/339)) ([9596dd9](https://github.com/kaltura/playkit-js/commit/9596dd9))
+
+
+### Features
+
+* **FEC-8620:** resize watcher ([#325](https://github.com/kaltura/playkit-js/issues/325)) ([86687f8](https://github.com/kaltura/playkit-js/commit/86687f8))
+* **FEC-8749:** expose IMA ad data ([#334](https://github.com/kaltura/playkit-js/issues/334)) ([67d8db1](https://github.com/kaltura/playkit-js/commit/67d8db1))
+
+
+
+<a name="0.44.1"></a>
+## [0.44.1](https://github.com/kaltura/playkit-js/compare/v0.44.0...v0.44.1) (2018-12-24)
+
+
+### Bug Fixes
+
+* **FEC-8770:** iOS -  captions style it applies for both players in the same page ([#329](https://github.com/kaltura/playkit-js/issues/329)) ([d7877c3](https://github.com/kaltura/playkit-js/commit/d7877c3))
+
+
+
+<a name="0.44.0"></a>
+# [0.44.0](https://github.com/kaltura/playkit-js/compare/v0.43.1...v0.44.0) (2018-12-20)
+
+
+### Bug Fixes
+
+* **FEC-8779:** change media does not work if external caption is shown ([#331](https://github.com/kaltura/playkit-js/issues/331)) ([2b48772](https://github.com/kaltura/playkit-js/commit/2b48772))
+
+
+### Features
+
+* **FEC-8700:** add config option to specify DRM system ([#330](https://github.com/kaltura/playkit-js/issues/330)) ([d7640f4](https://github.com/kaltura/playkit-js/commit/d7640f4))
+
+
+
+<a name="0.43.1"></a>
+## [0.43.1](https://github.com/kaltura/playkit-js/compare/v0.43.0...v0.43.1) (2018-12-16)
+
+
+### Bug Fixes
+
+* **FEC-7444:** when selecting fullscreen in android captions size is too large ([#327](https://github.com/kaltura/playkit-js/issues/327)) ([23009e3](https://github.com/kaltura/playkit-js/commit/23009e3))
+
+
+
+<a name="0.43.0"></a>
+# [0.43.0](https://github.com/kaltura/playkit-js/compare/v0.42.0...v0.43.0) (2018-12-12)
+
+
+### Bug Fixes
+
+* **FEC-8714:** change media doesn't work after player.destroy() on iOS ([#317](https://github.com/kaltura/playkit-js/issues/317)) ([46b4928](https://github.com/kaltura/playkit-js/commit/46b4928))
+* **FEC-8714:** removing static video element from the engine ([#321](https://github.com/kaltura/playkit-js/issues/321)) ([86fd4f5](https://github.com/kaltura/playkit-js/commit/86fd4f5))
+* **FEC-8715:** if label does not exist in manifest use the language property ([#320](https://github.com/kaltura/playkit-js/issues/320)) ([1af6dea](https://github.com/kaltura/playkit-js/commit/1af6dea))
+* **FEC-8722:** more than one caption is checked at the caption menu ([#316](https://github.com/kaltura/playkit-js/issues/316)) ([7a1ef49](https://github.com/kaltura/playkit-js/commit/7a1ef49))
+
+
+### Features
+
+* **FEC-8147:** set default settings for ABR settings ([#323](https://github.com/kaltura/playkit-js/issues/323)) ([b094b39](https://github.com/kaltura/playkit-js/commit/b094b39))
+* **FEC-8639:** fairplay uDRM error handling refining ([#319](https://github.com/kaltura/playkit-js/issues/319)) ([e3d4a49](https://github.com/kaltura/playkit-js/commit/e3d4a49))
+* **FEC-8682:** end screen ([#318](https://github.com/kaltura/playkit-js/issues/318)) ([435e812](https://github.com/kaltura/playkit-js/commit/435e812))
+
+
+
+<a name="0.42.1"></a>
+## [0.42.1](https://github.com/kaltura/playkit-js/compare/v0.42.0...v0.42.1) (2018-12-04)
+
+
+### Bug Fixes
+
+* **FEC-8715:** if label does not exist in manifest use the language property ([#320](https://github.com/kaltura/playkit-js/issues/320)) ([774ac77](https://github.com/kaltura/playkit-js/commit/774ac77))
+
+
+
+<a name="0.42.0"></a>
+# [0.42.0](https://github.com/kaltura/playkit-js/compare/v0.41.2...v0.42.0) (2018-11-22)
+
+
+### Bug Fixes
+
+* **FEC-8712:** replay button does not display when using a non liner ad  ([#313](https://github.com/kaltura/playkit-js/issues/313)) ([9546140](https://github.com/kaltura/playkit-js/commit/9546140))
+
+
+### Features
+
+* **ads-controller:** add more ads APIs ([#312](https://github.com/kaltura/playkit-js/issues/312)) ([1f6fdf6](https://github.com/kaltura/playkit-js/commit/1f6fdf6))
+
+
+
+<a name="0.41.2"></a>
+## [0.41.2](https://github.com/kaltura/playkit-js/compare/v0.41.1...v0.41.2) (2018-11-20)
+
+
+### Bug Fixes
+
+* **FEC-8687:** add bookmark events ([2d31da9](https://github.com/kaltura/playkit-js/commit/2d31da9))
+* **FEC-8695:** reset/destroy engine only after all services are destroyed ([#309](https://github.com/kaltura/playkit-js/issues/309)) ([95b5c5c](https://github.com/kaltura/playkit-js/commit/95b5c5c))
+
+
+
+<a name="0.41.1"></a>
+## [0.41.1](https://github.com/kaltura/playkit-js/compare/v0.41.0...v0.41.1) (2018-11-15)
+
+
+### Bug Fixes
+
+* **FEC-8668:** inline styled vtt parser crash ([#308](https://github.com/kaltura/playkit-js/issues/308)) ([dec6443](https://github.com/kaltura/playkit-js/commit/dec6443))
+
+
+
+<a name="0.41.0"></a>
+# [0.41.0](https://github.com/kaltura/playkit-js/compare/v0.39.1...v0.41.0) (2018-11-14)
+
+
+### Bug Fixes
+
+* **FEC-8650:** the video continues in picture-in-picture window when full screen opened ([#304](https://github.com/kaltura/playkit-js/issues/304)) ([f670ccc](https://github.com/kaltura/playkit-js/commit/f670ccc))
+* add handle media error ([#305](https://github.com/kaltura/playkit-js/issues/305)) ([27e739a](https://github.com/kaltura/playkit-js/commit/27e739a))
+
+
+### Features
+
+* **FEC-8641:** add ability to disable picture in picture ([#307](https://github.com/kaltura/playkit-js/issues/307)) ([7c60020](https://github.com/kaltura/playkit-js/commit/7c60020))
+
+
+
+<a name="0.40.0"></a>
+# [0.40.0](https://github.com/kaltura/playkit-js/compare/v0.38.0...v0.40.0) (2018-11-07)
+
+
+### Bug Fixes
+
+* add handle media error ([#305](https://github.com/kaltura/playkit-js/issues/305)) ([27e739a](https://github.com/kaltura/playkit-js/commit/27e739a))
+
+<a name="0.39.2"></a>
+## [0.39.2](https://github.com/kaltura/playkit-js/compare/v0.39.1...v0.39.2) (2018-11-07)
+
+
+### Bug Fixes
+
+* **FEC-8650:** the video continues in picture-in-picture window when full screen opened ([#304](https://github.com/kaltura/playkit-js/issues/304)) ([f670ccc](https://github.com/kaltura/playkit-js/commit/f670ccc))
+
+
+
+<a name="0.39.1"></a>
+## [0.39.1](https://github.com/kaltura/playkit-js/compare/v0.39.0...v0.39.1) (2018-11-05)
+
+
+
+<a name="0.39.0"></a>
+# [0.39.0](https://github.com/kaltura/playkit-js/compare/v0.38.1...v0.39.0) (2018-11-05)
+
+
+### Bug Fixes
+
+* **FEC-8554:** update captions on resize event ([#297](https://github.com/kaltura/playkit-js/issues/297)) ([fb9724b](https://github.com/kaltura/playkit-js/commit/fb9724b))
+* **FEC-8621:** player detory event is not disaptched ([#302](https://github.com/kaltura/playkit-js/issues/302)) ([b2919e7](https://github.com/kaltura/playkit-js/commit/b2919e7))
+* **FEC-8633:** HLS fairplay fails with multiple players or consecutive playbacks ([#301](https://github.com/kaltura/playkit-js/issues/301)) ([4cf064b](https://github.com/kaltura/playkit-js/commit/4cf064b))
+
+
+### Features
+
+* **FEC-7808:** added the option to disable cap level on fps drop ([#299](https://github.com/kaltura/playkit-js/issues/299)) ([a1fbb7a](https://github.com/kaltura/playkit-js/commit/a1fbb7a))
+* **FEC-7808:** quality watcher for the player ([#295](https://github.com/kaltura/playkit-js/issues/295)) ([c0e294f](https://github.com/kaltura/playkit-js/commit/c0e294f))
+* expose plugins instances ([#300](https://github.com/kaltura/playkit-js/issues/300)) ([ea4921f](https://github.com/kaltura/playkit-js/commit/ea4921f))
+* **FEC-8277:** Picture in Picture support ([#298](https://github.com/kaltura/playkit-js/issues/298)) ([ca32247](https://github.com/kaltura/playkit-js/commit/ca32247))
+
+
+
+<a name="0.38.1"></a>
+## [0.38.1](https://github.com/kaltura/playkit-js/compare/v0.38.0...v0.38.1) (2018-10-28)
+
+
+### Bug Fixes
+
+* **FEC-8585:** next video doesn't play after preroll ([#296](https://github.com/kaltura/playkit-js/issues/296)) ([75ed6db](https://github.com/kaltura/playkit-js/commit/75ed6db))
+
+
+
+<a name="0.38.0"></a>
+# [0.38.0](https://github.com/kaltura/playkit-js/compare/v0.37.0...v0.38.0) (2018-10-11)
+
+
+### Bug Fixes
+
+* **FEC-7594:** native adapter does not raise an error in case network disconnects. ([#293](https://github.com/kaltura/playkit-js/issues/293)) ([fd3fb93](https://github.com/kaltura/playkit-js/commit/fd3fb93))
+
+
+### Features
+
+* **error:** expose error class via player instance ([#291](https://github.com/kaltura/playkit-js/issues/291)) ([811ea7d](https://github.com/kaltura/playkit-js/commit/811ea7d))
+* **FEC-8038:** chromecast sender ([#294](https://github.com/kaltura/playkit-js/issues/294)) ([b9ba03b](https://github.com/kaltura/playkit-js/commit/b9ba03b))
+
+
+
+<a name="0.37.0"></a>
+# [0.37.0](https://github.com/kaltura/playkit-js/compare/v0.36.0...v0.37.0) (2018-09-16)
+
+
+### Features
+
+* **FEC-8103:** ads controller ([#288](https://github.com/kaltura/playkit-js/issues/288)) ([a299014](https://github.com/kaltura/playkit-js/commit/a299014))
+
+
+
+<a name="0.36.0"></a>
+# [0.36.0](https://github.com/kaltura/playkit-js/compare/v0.35.2...v0.36.0) (2018-09-05)
+
+
+### Bug Fixes
+
+* append engine el once per engine ([#276](https://github.com/kaltura/playkit-js/issues/276)) ([a44796d](https://github.com/kaltura/playkit-js/commit/a44796d))
+* **ads:** update UNDEFINED_ERROR code name ([#289](https://github.com/kaltura/playkit-js/issues/289)) ([62f7fea](https://github.com/kaltura/playkit-js/commit/62f7fea))
+* **FEC-7594:** native adapter keeps buffering when connection is lost ([#283](https://github.com/kaltura/playkit-js/issues/283)) ([aba970a](https://github.com/kaltura/playkit-js/commit/aba970a))
+* **FEC-8440:** add critical error when no engine to play source ([#275](https://github.com/kaltura/playkit-js/issues/275)) ([acc4b54](https://github.com/kaltura/playkit-js/commit/acc4b54))
+* **FEC-8457:** autoplay check fails due to browser CPU/load issue ([#279](https://github.com/kaltura/playkit-js/issues/279)) ([ca56930](https://github.com/kaltura/playkit-js/commit/ca56930))
+* **FEC-8529:** waiting timeout is not cleared on native adapter destroy [#286](https://github.com/kaltura/playkit-js/issues/286) ([ac9bdc1](https://github.com/kaltura/playkit-js/commit/ac9bdc1))
+
+
+### Features
+
+* ads framework ([#285](https://github.com/kaltura/playkit-js/issues/285)) ([fc25d94](https://github.com/kaltura/playkit-js/commit/fc25d94))
+* emit CHANGE_SOURCE_ENDED on first media load as well ([#287](https://github.com/kaltura/playkit-js/issues/287)) ([60cf482](https://github.com/kaltura/playkit-js/commit/60cf482))
+
+
+
+<a name="0.35.2"></a>
+## [0.35.2](https://github.com/kaltura/playkit-js/compare/v0.35.1...v0.35.2) (2018-08-22)
+
+
+### Bug Fixes
+
+* **FEC-8143:** The video starts with 'Eng' captions although configuration set to 'Rus' on Native ([#280](https://github.com/kaltura/playkit-js/issues/280)) ([47b468d](https://github.com/kaltura/playkit-js/commit/47b468d))
+* **html5:** destroy _mediaSourceAdapter on engine destroy ([#284](https://github.com/kaltura/playkit-js/issues/284)) ([2d3db1e](https://github.com/kaltura/playkit-js/commit/2d3db1e))
+
+
+
+<a name="0.35.1"></a>
+## [0.35.1](https://github.com/kaltura/playkit-js/compare/v0.35.0...v0.35.1) (2018-08-09)
+
+
+### Bug Fixes
+
+* **FEC-8461:** Do not show 708 caption by default ([#277](https://github.com/kaltura/playkit-js/issues/277)) ([e2df487](https://github.com/kaltura/playkit-js/commit/e2df487))
+
+
+
+<a name="0.35.0"></a>
+# [0.35.0](https://github.com/kaltura/playkit-js/compare/v0.34.0...v0.35.0) (2018-08-05)
+
+
+### Bug Fixes
+
+* **FEC-8413:** on change media with data saver on the player is stuck on the poster [#273](https://github.com/kaltura/playkit-js/issues/273) ([28a0bd8](https://github.com/kaltura/playkit-js/commit/28a0bd8))
+
+
+### Features
+
+* **FEC-8269:** add playback loop support ([#274](https://github.com/kaltura/playkit-js/issues/274)) ([a97512f](https://github.com/kaltura/playkit-js/commit/a97512f))
+
+
+
+<a name="0.34.0"></a>
+# [0.34.0](https://github.com/kaltura/playkit-js/compare/v0.33.0...v0.34.0) (2018-07-26)
+
+
+### Bug Fixes
+
+* subtitles font size is too small on mobile [#270](https://github.com/kaltura/playkit-js/issues/270) ([f6489ed](https://github.com/kaltura/playkit-js/commit/f6489ed)), closes [kaltura/playkit-js-ui#257](https://github.com/kaltura/playkit-js-ui/issues/257)
+* **FEC-8411:** add protection to validate external text tracks which are added without language ([#271](https://github.com/kaltura/playkit-js/issues/271)) ([7a6c7e5](https://github.com/kaltura/playkit-js/commit/7a6c7e5))
+
+
+### Features
+
+* expose logger util ([#272](https://github.com/kaltura/playkit-js/issues/272)) ([9c970cb](https://github.com/kaltura/playkit-js/commit/9c970cb))
+
+
+
+<a name="0.33.0"></a>
+# [0.33.0](https://github.com/kaltura/playkit-js/compare/v0.32.4...v0.33.0) (2018-07-23)
+
+
+### Bug Fixes
+
+* **FEC-8376:** the menu ui doesn't show the right caption after selection ([#268](https://github.com/kaltura/playkit-js/issues/268)) ([d395754](https://github.com/kaltura/playkit-js/commit/d395754))
+* **FEC-8392:** adding missing download manager error codes ([#262](https://github.com/kaltura/playkit-js/issues/262)) ([b9714ad](https://github.com/kaltura/playkit-js/commit/b9714ad))
+* **FEC-8419:** double captions on ios when toggling fullscreen ([#267](https://github.com/kaltura/playkit-js/issues/267)) ([5d856c6](https://github.com/kaltura/playkit-js/commit/5d856c6))
+
+
+### Features
+
+* **FEC-8390, FEC-8246:** support 608/708 captions ([#265](https://github.com/kaltura/playkit-js/issues/265)) ([1a616c7](https://github.com/kaltura/playkit-js/commit/1a616c7))
+* **FEC-8394:** move rates to engine ([#264](https://github.com/kaltura/playkit-js/issues/264)) ([6d14be5](https://github.com/kaltura/playkit-js/commit/6d14be5))
+
+
+
+<a name="0.32.4"></a>
+## [0.32.4](https://github.com/kaltura/playkit-js/compare/v0.32.3...v0.32.4) (2018-07-12)
+
+
+### Bug Fixes
+
+* **FEC-7935:** fix text selection logic with hlsjs ([#263](https://github.com/kaltura/playkit-js/issues/263)) ([4ab6443](https://github.com/kaltura/playkit-js/commit/4ab6443)), closes [video-dev/hls.js#1582](https://github.com/video-dev/hls.js/issues/1582) [kaltura/playkit-js-hls#65](https://github.com/kaltura/playkit-js-hls/issues/65)
+
+
+
+<a name="0.32.3"></a>
+## [0.32.3](https://github.com/kaltura/playkit-js/compare/v0.32.2...v0.32.3) (2018-07-09)
+
+
+### Bug Fixes
+
+* **FEC-8386:** Kava analytics retrieved by default on OTT ([#261](https://github.com/kaltura/playkit-js/issues/261)) ([6345999](https://github.com/kaltura/playkit-js/commit/6345999))
+
+
+
+<a name="0.32.2"></a>
+## [0.32.2](https://github.com/kaltura/playkit-js/compare/v0.32.1...v0.32.2) (2018-07-04)
+
+
+### Bug Fixes
+
+* **FEC-8376:** reverting the fix [#260](https://github.com/kaltura/playkit-js/issues/260) ([afbb900](https://github.com/kaltura/playkit-js/commit/afbb900))
+
+
+
+<a name="0.32.1"></a>
+## [0.32.1](https://github.com/kaltura/playkit-js/compare/v0.32.0...v0.32.1) (2018-07-04)
+
+
+### Bug Fixes
+
+* **FEC-8376:** when 'Off' should be displayed by default, the external language is displayed [#258](https://github.com/kaltura/playkit-js/issues/258) ([793315e](https://github.com/kaltura/playkit-js/commit/793315e))
+
+
+
+<a name="0.32.0"></a>
+# [0.32.0](https://github.com/kaltura/playkit-js/compare/v0.31.2...v0.32.0) (2018-07-03)
+
+
+### Bug Fixes
+
+* refactor 'timeupdate' logic ([#255](https://github.com/kaltura/playkit-js/issues/255)) ([0bf2ae3](https://github.com/kaltura/playkit-js/commit/0bf2ae3))
+* **FEC-8367:** When changing font family the font is not saved [#256](https://github.com/kaltura/playkit-js/issues/256) ([e65098f](https://github.com/kaltura/playkit-js/commit/e65098f))
+* **FEC-8370:** external captions does not show on edge/IE ([#254](https://github.com/kaltura/playkit-js/issues/254)) ([9d0f0c4](https://github.com/kaltura/playkit-js/commit/9d0f0c4))
+
+
+### Features
+
+* external engine support  ([#241](https://github.com/kaltura/playkit-js/issues/241)) ([6a27805](https://github.com/kaltura/playkit-js/commit/6a27805))
+* version compare util ([#257](https://github.com/kaltura/playkit-js/issues/257)) ([2771d4a](https://github.com/kaltura/playkit-js/commit/2771d4a))
+
+
+
+<a name="0.31.2"></a>
+## [0.31.2](https://github.com/kaltura/playkit-js/compare/v0.31.1...v0.31.2) (2018-07-02)
+
+
+### Bug Fixes
+
+* **FEC-8354:**  When selecting Audio language and refresh the page, the display language returns to default (but actual audio proper) ([#247](https://github.com/kaltura/playkit-js/issues/247)) ([a47f60c](https://github.com/kaltura/playkit-js/commit/a47f60c))
+* adding external captions default ability ([#249](https://github.com/kaltura/playkit-js/issues/249)) ([eaef9d8](https://github.com/kaltura/playkit-js/commit/eaef9d8))
+* improve error handling in external captions handler [#248](https://github.com/kaltura/playkit-js/issues/248) ([d6dca09](https://github.com/kaltura/playkit-js/commit/d6dca09))
+* **FEC-8366:** seek to an already started caption does not work ([#251](https://github.com/kaltura/playkit-js/issues/251)) ([6d2815f](https://github.com/kaltura/playkit-js/commit/6d2815f))
+* **FEC-8369:** toggling between external text tracks does not work ([#252](https://github.com/kaltura/playkit-js/issues/252)) ([fd09050](https://github.com/kaltura/playkit-js/commit/fd09050))
+
+
+
+<a name="0.31.1"></a>
+## [0.31.1](https://github.com/kaltura/playkit-js/compare/v0.31.0...v0.31.1) (2018-06-28)
+
+
+### Bug Fixes
+
+* **FEC-8357,FEC-8348:** VR is not working on Safari and Samsung Native Browser ([#246](https://github.com/kaltura/playkit-js/issues/246)) ([58d094e](https://github.com/kaltura/playkit-js/commit/58d094e))
+
+
+
+<a name="0.31.0"></a>
+# [0.31.0](https://github.com/kaltura/playkit-js/compare/v0.30.3...v0.31.0) (2018-06-26)
+
+
+### Features
+
+* **FEC-8232:** external captions feature ([#245](https://github.com/kaltura/playkit-js/issues/245)) ([6ab8597](https://github.com/kaltura/playkit-js/commit/6ab8597))
+
+
+
+<a name="0.30.3"></a>
+## [0.30.3](https://github.com/kaltura/playkit-js/compare/v0.30.2...v0.30.3) (2018-06-25)
+
+
+### Bug Fixes
+
+* **FEC-8347:** video is not playing 360 when adTagUrl empty ([#244](https://github.com/kaltura/playkit-js/issues/244)) ([4741764](https://github.com/kaltura/playkit-js/commit/4741764))
+
+
+
+<a name="0.30.2"></a>
+## [0.30.2](https://github.com/kaltura/playkit-js/compare/v0.30.1...v0.30.2) (2018-06-21)
+
+
+
+<a name="0.30.1"></a>
+## [0.30.1](https://github.com/kaltura/playkit-js/compare/v0.30.0...v0.30.1) (2018-06-21)
+
+
+
+<a name="0.30.0"></a>
+# [0.30.0](https://github.com/kaltura/playkit-js/compare/v0.29.0...v0.30.0) (2018-06-20)
+
+
+### Features
+
+* **FEC-8046:** 360 support ([#239](https://github.com/kaltura/playkit-js/issues/239)) ([5557b0b](https://github.com/kaltura/playkit-js/commit/5557b0b))
+
+
+
+<a name="0.29.0"></a>
+# [0.29.0](https://github.com/kaltura/playkit-js/compare/v0.28.0...v0.29.0) (2018-06-17)
+
+
+### Bug Fixes
+
+* **FEC-8233:** handle media & error recovering ([#226](https://github.com/kaltura/playkit-js/issues/226)) ([48c29fe](https://github.com/kaltura/playkit-js/commit/48c29fe))
+* **FEC-8255:** video starts from beginning instead 12th sec ([#230](https://github.com/kaltura/playkit-js/issues/230)) ([0136c88](https://github.com/kaltura/playkit-js/commit/0136c88))
+* **FEC-8257:** research autoplay detection handling ([#232](https://github.com/kaltura/playkit-js/issues/232)) ([605eea1](https://github.com/kaltura/playkit-js/commit/605eea1))
+* **FEC-8272:** sometimes when seeking spinner display constantly in IE11 ([#234](https://github.com/kaltura/playkit-js/issues/234)) ([7a28049](https://github.com/kaltura/playkit-js/commit/7a28049))
+* **FEC-8315:** two caption events triggered after first play ([#238](https://github.com/kaltura/playkit-js/issues/238)) ([a46f9bb](https://github.com/kaltura/playkit-js/commit/a46f9bb))
+* **FEC-8319:** When starting to play an mp4 video, a TEXT_TRACK_CHANGED event is sent twice ([#240](https://github.com/kaltura/playkit-js/issues/240)) ([c673454](https://github.com/kaltura/playkit-js/commit/c673454))
+
+
+### Features
+
+* **FEC-8243:** allow to disable specific plugins ([#229](https://github.com/kaltura/playkit-js/issues/229)) ([e16a903](https://github.com/kaltura/playkit-js/commit/e16a903))
+
+
+
+<a name="0.28.0"></a>
+# [0.28.0](https://github.com/kaltura/playkit-js/compare/v0.27.1...v0.28.0) (2018-05-26)
+
+
+### Bug Fixes
+* **FEC-8180:** when video starts fallback muted and user select to change media the unmute icon is not displayed although video still muted ([#227](https://github.com/kaltura/playkit-js/issues/228)) ([bf69fd5](https://github.com/kaltura/playkit-js/commit/bf69fd5))
+
+
+### Features
+
+* **FEC-8244:** do not throw plugin load errors on main thread ([#227](https://github.com/kaltura/playkit-js/issues/227)) ([61c3cda](https://github.com/kaltura/playkit-js/commit/61c3cda))
+
+
+
 <a name="0.27.1"></a>
 ## [0.27.1](https://github.com/kaltura/playkit-js/compare/v0.27.0...v0.27.1) (2018-05-10)
 
