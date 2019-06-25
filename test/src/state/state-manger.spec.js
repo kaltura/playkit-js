@@ -14,7 +14,7 @@ let fakePlayer = {
 
 describe('StateManager', () => {
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function() {});
     stateManager = new StateManager(fakePlayer);
   });
@@ -89,7 +89,7 @@ describe('StateManager', () => {
 
 describe('StateManager.Transitions:IDLE', () => {
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function() {});
     stateManager = new StateManager(fakePlayer);
     stateManager._updateState(StateType.IDLE);
@@ -122,7 +122,7 @@ describe('StateManager.Transitions:IDLE', () => {
 
 describe('StateManager.Transitions:LOADING', () => {
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function() {});
     stateManager = new StateManager(fakePlayer);
     stateManager._updateState(StateType.LOADING);
@@ -151,7 +151,7 @@ describe('StateManager.Transitions:LOADING', () => {
 
 describe('StateManager.Transitions:PAUSED', () => {
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function() {});
     stateManager = new StateManager(fakePlayer);
     stateManager._updateState(StateType.PAUSED);
@@ -184,7 +184,7 @@ describe('StateManager.Transitions:PAUSED', () => {
 
 describe('StateManager.Transitions:BUFFERING', () => {
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function() {});
     stateManager = new StateManager(fakePlayer);
     stateManager._updateState(StateType.BUFFERING);
@@ -223,7 +223,7 @@ describe('StateManager.Transitions:BUFFERING', () => {
 
 describe('StateManager.Transitions:PLAYING', () => {
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     sandbox.stub(StateManager.prototype, '_attachListeners').callsFake(function() {});
     stateManager = new StateManager(fakePlayer);
     stateManager._updateState(StateType.PLAYING);

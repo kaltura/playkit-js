@@ -1,3 +1,4 @@
+//@flow
 /**
  * Copyright 2013 vtt.js Contributors
  *
@@ -48,7 +49,7 @@ class VTTRegion {
   _regionAnchorY: number = 100;
   _viewportAnchorX: number = 0;
   _viewportAnchorY: number = 100;
-  _scroll: number = '';
+  _scroll: number = 0;
 
   constructor() {}
 

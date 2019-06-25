@@ -99,8 +99,8 @@ describe('mediaSourceProvider:canPlaySource', () => {
   });
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-    sandbox.stub(MediaSourceProvider, '_orderMediaSourceAdapters', () => {});
+    sandbox = sinon.createSandbox();
+    sandbox.stub(MediaSourceProvider, '_orderMediaSourceAdapters').callsFake(() => {});
   });
 
   afterEach(() => {
@@ -172,9 +172,9 @@ describe('mediaSourceProvider:getMediaSourceAdapter', () => {
   beforeEach(() => {});
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     MediaSourceProvider._selectedAdapter = null;
-    sandbox.stub(MediaSourceProvider, '_orderMediaSourceAdapters', () => {});
+    sandbox.stub(MediaSourceProvider, '_orderMediaSourceAdapters').callsFake(() => {});
   });
 
   afterEach(() => {

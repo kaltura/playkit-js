@@ -6,7 +6,7 @@ describe('Html5', () => {
   let sandbox;
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
   });
 
   afterEach(() => {
@@ -47,7 +47,7 @@ describe('Html5', () => {
     engine._config.should.deep.equal(config);
     engine._mediaSourceAdapter.should.be.instanceof(BaseMediaSourceAdapter);
     engine._el.should.be.a('HTMLVideoElement');
-    sandbox.stub(engine, '_init', () => {});
+    sandbox.stub(engine, '_init').callsFake(() => {});
     engine.restore({}, {});
     detachSpy.should.have.been.calledOnce;
     eventMgrSpy.should.have.been.calledOnce;

@@ -45,7 +45,7 @@ describe('PlaybackMiddleware', function() {
 
   beforeEach(function() {
     playbackMiddleware = new PlaybackMiddleware();
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
   });
 
   afterEach(function() {

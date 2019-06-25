@@ -645,6 +645,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.buffered;
     }
+    return null;
   }
 
   get stats(): PKStatsObject {
@@ -689,6 +690,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.currentTime;
     }
+    return NaN;
   }
 
   /**
@@ -696,10 +698,11 @@ export default class Player extends FakeEventTarget {
    * @returns {?Number} - The playback duration.
    * @public
    */
-  get duration(): ?number {
+  get duration(): number {
     if (this._engine) {
       return this._engine.duration;
     }
+    return NaN;
   }
 
   /**
@@ -732,6 +735,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.volume;
     }
+    return NaN;
   }
 
   /**
@@ -743,6 +747,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.paused;
     }
+    return true;
   }
 
   /**
@@ -754,6 +759,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.seeking;
     }
+    return false;
   }
 
   /**
@@ -778,6 +784,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.playsinline;
     }
+    return null;
   }
 
   /**
@@ -805,6 +812,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.muted;
     }
+    return false;
   }
 
   /**
@@ -816,6 +824,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.src;
     }
+    return '';
   }
 
   /**
@@ -856,6 +865,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.playbackRate;
     }
+    return 1;
   }
 
   /**
@@ -946,6 +956,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.crossOrigin;
     }
+    return null;
   }
 
   /**
@@ -956,6 +967,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.ended;
     }
+    return false;
   }
 
   // </editor-fold>

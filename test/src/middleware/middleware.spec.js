@@ -77,7 +77,7 @@ describe('Middleware', function() {
     let spyM1, spyM2, spyM3;
 
     beforeEach(function() {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
     });
 
     afterEach(function() {

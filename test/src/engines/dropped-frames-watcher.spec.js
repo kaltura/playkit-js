@@ -8,7 +8,7 @@ describe('constructor', function() {
   videoElement = document.createElement('video');
   config = {capLevelOnFPSDrop: true};
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
   });
 
   afterEach(() => {
@@ -67,7 +67,7 @@ describe('_getDroppedAndDecodedFrames function ', function() {
   videoElement = document.createElement('video');
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
   });
 
   afterEach(() => {
@@ -91,7 +91,7 @@ describe('_checkFPS function ', function() {
   videoElement = document.createElement('video');
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
   });
 
   afterEach(() => {

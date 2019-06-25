@@ -10,7 +10,7 @@ describe('Fairplay Drm Handler', function() {
     let sandbox;
 
     beforeEach(function() {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       createElement('video', videoId);
       videoElement = document.getElementById(videoId);
     });

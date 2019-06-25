@@ -1768,8 +1768,8 @@ describe('Player', function() {
             }
           }
         });
-        player._pluginManager.get('colors').should.exists;
-        player._pluginManager.get('numbers').should.exists;
+        player._pluginManager.get('colors').should.exist;
+        player._pluginManager.get('numbers').should.exist;
         Object.keys(player._pluginManager._plugins).length.should.equals(2);
         player.config.plugins.colors.should.deep.equals({
           size: 5,
@@ -1790,8 +1790,8 @@ describe('Player', function() {
             }
           }
         });
-        player._pluginManager.get('colors').should.exists;
-        player._pluginManager.get('numbers').should.exists;
+        player._pluginManager.get('colors').should.exist;
+        player._pluginManager.get('numbers').should.exist;
         Object.keys(player._pluginManager._plugins).length.should.equals(2);
         player.config.plugins.colors.should.deep.equals({
           size: 50,
@@ -1812,7 +1812,7 @@ describe('Player', function() {
             }
           }
         });
-        player._pluginManager.get('numbers').should.exists;
+        player._pluginManager.get('numbers').should.exist;
         Object.keys(player._pluginManager._plugins).length.should.equals(1);
         player.config.plugins.numbers.should.deep.equals({
           size: 20,
@@ -1829,8 +1829,8 @@ describe('Player', function() {
             }
           }
         });
-        player._pluginManager.get('colors').should.exists;
-        player._pluginManager.get('numbers').should.exists;
+        player._pluginManager.get('colors').should.exist;
+        player._pluginManager.get('numbers').should.exist;
         Object.keys(player._pluginManager._plugins).length.should.equals(2);
         player.config.plugins.colors.should.deep.equals({
           size: 50,
@@ -1857,8 +1857,8 @@ describe('Player', function() {
             }
           }
         });
-        player._pluginManager.get('colors').should.exists;
-        player._pluginManager.get('numbers').should.exists;
+        player._pluginManager.get('colors').should.exist;
+        player._pluginManager.get('numbers').should.exist;
         Object.keys(player._pluginManager._plugins).length.should.equals(2);
         player.config.plugins.colors.should.deep.equals({
           size: 50,
@@ -1882,7 +1882,7 @@ describe('Player', function() {
             }
           }
         });
-        player._pluginManager.get('numbers').should.exists;
+        player._pluginManager.get('numbers').should.exist;
         Object.keys(player._pluginManager._plugins).length.should.equals(1);
         player.config.plugins.numbers.should.deep.equals({
           size: 200,
@@ -1898,7 +1898,7 @@ describe('Player', function() {
             }
           }
         });
-        player._pluginManager.get('numbers').should.exists;
+        player._pluginManager.get('numbers').should.exist;
         Object.keys(player._pluginManager._plugins).length.should.equals(1);
         player.config.plugins.numbers.should.deep.equals({
           size: 2,
@@ -1929,7 +1929,7 @@ describe('Player', function() {
             }
           }
         });
-        player._pluginManager.get('numbers').should.exists;
+        player._pluginManager.get('numbers').should.exist;
         Object.keys(player._pluginManager._plugins).length.should.equals(1);
         player.config.plugins.should.deep.equals({
           numbers: {
@@ -2193,11 +2193,11 @@ describe('Player', function() {
       config.sources.type = 'Live';
       player = new Player(config);
       playerContainer.appendChild(player.getView());
-      player.ready().then(() => {
-        player.isLive().should.be.true;
-        done();
-      });
       if (player._engine) {
+        player.ready().then(() => {
+          player.isLive().should.be.true;
+          done();
+        });
         player.load();
       } else {
         done();
@@ -2215,11 +2215,11 @@ describe('Player', function() {
       config.sources = sourcesConfig.Live;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
-      player.ready().then(() => {
-        player.isLive().should.be.true;
-        done();
-      });
       if (player._engine) {
+        player.ready().then(() => {
+          player.isLive().should.be.true;
+          done();
+        });
         player.load();
       } else {
         done();
@@ -2231,11 +2231,11 @@ describe('Player', function() {
       config.sources.type = 'Vod';
       player = new Player(config);
       playerContainer.appendChild(player.getView());
-      player.ready().then(() => {
-        player.isLive().should.be.true;
-        done();
-      });
       if (player._engine) {
+        player.ready().then(() => {
+          player.isLive().should.be.true;
+          done();
+        });
         player.load();
       } else {
         done();
@@ -2267,11 +2267,11 @@ describe('Player', function() {
       config.sources = sourcesConfig.Mp4;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
-      player.ready().then(() => {
-        player.isDvr().should.be.false;
-        done();
-      });
       if (player._engine) {
+        player.ready().then(() => {
+          player.isDvr().should.be.false;
+          done();
+        });
         player.load();
       } else {
         done();
@@ -2283,11 +2283,11 @@ describe('Player', function() {
       config.sources.dvr = true;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
-      player.ready().then(() => {
-        player.isDvr().should.be.false;
-        done();
-      });
       if (player._engine) {
+        player.ready().then(() => {
+          player.isDvr().should.be.false;
+          done();
+        });
         player.load();
       } else {
         done();
@@ -2299,11 +2299,11 @@ describe('Player', function() {
       config.sources.dvr = true;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
-      player.ready().then(() => {
-        player.isDvr().should.be.true;
-        done();
-      });
       if (player._engine) {
+        player.ready().then(() => {
+          player.isDvr().should.be.true;
+          done();
+        });
         player.load();
       } else {
         done();
@@ -2315,11 +2315,11 @@ describe('Player', function() {
       config.sources.dvr = false;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
-      player.ready().then(() => {
-        player.isDvr().should.be.false;
-        done();
-      });
       if (player._engine) {
+        player.ready().then(() => {
+          player.isDvr().should.be.false;
+          done();
+        });
         player.load();
       } else {
         done();
@@ -2504,7 +2504,7 @@ describe('Player', function() {
     });
 
     beforeEach(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       config = getConfigStructure();
       config.sources = sourcesConfig.Mp4;
     });
@@ -2559,7 +2559,7 @@ describe('Player', function() {
     });
 
     beforeEach(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       config = getConfigStructure();
       config.sources = sourcesConfig.Mp4;
     });
@@ -2612,7 +2612,7 @@ describe('Player', function() {
     });
 
     beforeEach(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       config = getConfigStructure();
       config.sources = sourcesConfig.Mp4;
     });
@@ -2649,7 +2649,7 @@ describe('Player', function() {
     let config, player, sandbox;
 
     beforeEach(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       config = getConfigStructure();
       player = new Player(config);
     });
@@ -2674,7 +2674,7 @@ describe('Player', function() {
       };
       let engTrack = new TextTrack(engTrackOptions);
 
-      sandbox.stub(player, '_getTracksByType', () => {
+      sandbox.stub(player, '_getTracksByType').callsFake(() => {
         return [engTrack];
       });
 
@@ -2692,7 +2692,7 @@ describe('Player', function() {
       };
       let gerTrack = new TextTrack(gerTrackOptions);
 
-      sandbox.stub(player, '_getTracksByType', () => {
+      sandbox.stub(player, '_getTracksByType').callsFake(() => {
         return [gerTrack];
       });
 
@@ -2709,7 +2709,7 @@ describe('Player', function() {
       };
       let gerTrack = new TextTrack(gerTrackOptions);
 
-      sandbox.stub(player, '_getTracksByType', () => {
+      sandbox.stub(player, '_getTracksByType').callsFake(() => {
         return [gerTrack];
       });
 
@@ -2732,7 +2732,7 @@ describe('Player', function() {
       let gerTrack = new TextTrack(gerTrackOptions);
       let offTrack = new TextTrack(offTrackOptions);
 
-      sandbox.stub(player, '_getTracksByType', () => {
+      sandbox.stub(player, '_getTracksByType').callsFake(() => {
         return [gerTrack, offTrack];
       });
 
@@ -2744,7 +2744,7 @@ describe('Player', function() {
     let config, player, sandbox;
 
     beforeEach(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       config = getConfigStructure();
       player = new Player(config);
     });
@@ -2771,7 +2771,7 @@ describe('Player', function() {
     let config, player, sandbox;
 
     beforeEach(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       config = getConfigStructure();
       config.sources = sourcesConfig.Mp4;
       player = new Player(config);
