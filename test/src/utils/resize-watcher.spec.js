@@ -64,6 +64,7 @@ describe('ResizeWatcher', () => {
       done('failed');
     });
     setTimeout(() => {
+      rw.destroy();
       document.body.removeChild(container);
       done();
     }, 500);
@@ -82,12 +83,15 @@ describe('ResizeWatcher', () => {
   it('create an obeserver', done => {
     let el = document.createElement('div');
     el.setAttribute('id', 'coolObserver123');
+    el.style.width = '200px';
+    el.style.height = '200px';
     document.body.appendChild(el);
     rw.init(el);
     rw.addEventListener('resize', () => {
+      rw.destroy();
       document.body.removeChild(el);
       done();
     });
-    el.style.width = '200px';
+    el.style.width = '300px';
   });
 });
