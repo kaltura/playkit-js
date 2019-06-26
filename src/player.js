@@ -425,8 +425,8 @@ export default class Player extends FakeEventTarget {
     this._createPlayerContainer();
     this._appendDomElements();
     this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
-    this.configure(config);
     this._fullscreenController = new FullscreenController(this);
+    this.configure(config);
   }
 
   // <editor-fold desc="Public API">
@@ -1373,7 +1373,6 @@ export default class Player extends FakeEventTarget {
   /**
    * For browsers which block auto play, use the user gesture to open the video element and enable playing via API.
    * @returns {void}
-   * @param {string} playerId - the id of the player
    * @private
    */
   _prepareVideoElement(): void {
@@ -1489,6 +1488,7 @@ export default class Player extends FakeEventTarget {
             if (plugin) {
               this._config.plugins[name] = plugin.getConfig();
               if (typeof plugin.getMiddlewareImpl === 'function') {
+                // push the bumper middleware to the end, to play the bumper right before the content
                 plugin.name === 'bumper' ? middlewares.push(plugin.getMiddlewareImpl()) : middlewares.unshift(plugin.getMiddlewareImpl());
               }
             }
