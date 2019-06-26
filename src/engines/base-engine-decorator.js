@@ -3,7 +3,6 @@ import VideoTrack from '../track/video-track';
 import AudioTrack from '../track/audio-track';
 import TextTrack from '../track/text-track';
 import FakeEventTarget from '../event/fake-event-target';
-import {EventType} from '../event/event-type';
 import EventManager from '../event/event-manager';
 
 class BaseEngineDecorator extends FakeEventTarget implements IEngine {
@@ -14,8 +13,6 @@ class BaseEngineDecorator extends FakeEventTarget implements IEngine {
     super();
     this._engine = engine;
     this._eventManager = new EventManager();
-    const events: Array<string> = (Object.values(EventType): any);
-    events.forEach(event => this._eventManager.listen(this._engine, event, e => this.dispatchEvent(e)));
   }
 
   restore(source: PKMediaSourceObject, config: Object): void {
@@ -51,6 +48,7 @@ class BaseEngineDecorator extends FakeEventTarget implements IEngine {
   }
 
   destroy(): void {
+    this._engine.destroy();
     this._eventManager.destroy();
   }
 
