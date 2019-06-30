@@ -2,5 +2,5 @@
 import type {IEngine} from './engine';
 
 declare interface IEngineDecoratorProvider {
-  getEngineDecorator(engine: IEngine): IEngine;
+  getEngineDecorator(engine: IEngine, dispatchEventHandler: Function): IEngine;
 }
