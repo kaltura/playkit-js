@@ -2106,11 +2106,11 @@ describe('Player', function() {
       player.config.playback.streamPriority.should.deep.equal(getConfigStructure().playback.streamPriority);
     });
 
-    it('should set playbackRate', function() {
+    it('should set playbackRates', function() {
       config.sources = sourcesConfig.MultipleSources;
-      config.playback.playbackRate = [18, 2, 3, 4, 20, 30, -19];
+      config.playback.playbackRates = [18, 2, 3, 4, 20, 30, -19];
       player = new Player(config);
-      player._playbackRates.should.deep.equal(getConfigStructure().playback.playbackRate);
+      player._playbackRates.should.deep.equal(getConfigStructure().playback.playbackRates);
     });
   });
 
