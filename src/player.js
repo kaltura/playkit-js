@@ -1759,8 +1759,8 @@ export default class Player extends FakeEventTarget {
     if (typeof this._config.playback.crossOrigin === 'string') {
       this.crossOrigin = this._config.playback.crossOrigin;
     }
-    if (Array.isArray(this._config.playback.playbackRate)) {
-      const validPlaybackRates = this._config.playback.playbackRate
+    if (Array.isArray(this._config.playback.playbackRates)) {
+      const validPlaybackRates = this._config.playback.playbackRates
         .filter((number, index, self) => number > 0 && number <= 16 && self.indexOf(number) === index)
         .sort((a, b) => a - b);
       if (validPlaybackRates) {

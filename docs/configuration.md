@@ -795,7 +795,7 @@ var config = {
 >
 > ##
 >
-> > ### config.playback.playbackRate
+> > ### config.playback.playbackRates
 > >
 > > ##### Type: `Array<number>`
 > >
