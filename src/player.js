@@ -1503,7 +1503,7 @@ export default class Player extends FakeEventTarget {
 
               // TODO sakal where do you use (IPresetComponentsProvider) IMiddlewareProvider
               if (typeof plugin.getPresetComponents === 'function') {
-                presetComponents.push(plugin.getPresetComponents());
+                presetComponents.push(...(plugin.getPresetComponents() || []));
               }
             }
           } else {
@@ -1511,7 +1511,6 @@ export default class Player extends FakeEventTarget {
           }
         }
       });
-      // TODO sakal can a user disable plugin after it was added?
       this._presetComponents = presetComponents;
       middlewares.forEach(middleware => this._playbackMiddleware.use(middleware));
     }
