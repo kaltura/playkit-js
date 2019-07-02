@@ -1,8 +1,10 @@
 
 type PresetComponent = {
+  label: string,
   presets?: Array<string>,
   container: string,
-  render: (props: any) => any,
+  create: (options: {context?: any, parent: HTMLElement}) => void,
+  onDestroy: (options: {context?: any, parent: HTMLElement}) => void,
   beforeComponent?: string,
   afterComponent?: string,
   replaceComponent?: string,
