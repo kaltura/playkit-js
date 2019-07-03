@@ -6,11 +6,11 @@ import FakeEventTarget from '../event/fake-event-target';
 
 /**
  * Engine decorator for ad plugin.
- * @class AdEngineDecorator
+ * @class EngineDecorator
  * @param {IEngineDecorator} engine - The engine to decorate.
  * @implements {IEngineDecorator}
  */
-class AdEngineDecorator extends FakeEventTarget implements IEngineDecorator {
+class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
   _pluginDecorators: Array<IEngineDecorator>;
   _eventManager: EventManager;
 
@@ -53,4 +53,4 @@ class AdEngineDecorator extends FakeEventTarget implements IEngineDecorator {
   }
 }
 
-export {AdEngineDecorator};
+export {EngineDecorator};

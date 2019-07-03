@@ -39,7 +39,7 @@ import {AdEventType} from './ads/ad-event-type';
 import {ControllerProvider} from './controller/controller-provider';
 import {ResizeWatcher} from './utils/resize-watcher';
 import {FullscreenController} from './fullscreen/fullscreen-controller';
-import {AdEngineDecorator} from './engines/ad-engine-decorator';
+import {EngineDecorator} from './engines/engine-decorator';
 
 /**
  * The black cover class name.
@@ -1582,7 +1582,7 @@ export default class Player extends FakeEventTarget {
   _createEngine(Engine: typeof IEngine, source: PKMediaSourceObject): void {
     const engine = Engine.createEngine(source, this._config);
     const plugins = (Object.values(this._pluginManager.getAll()): any);
-    this._engine = AdEngineDecorator.getDecorator(engine, plugins) || engine;
+    this._engine = EngineDecorator.getDecorator(engine, plugins) || engine;
   }
 
   /**
