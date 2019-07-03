@@ -109,7 +109,12 @@ class BaseEngineDecorator extends FakeEventTarget implements IEngine {
   isPictureInPictureSupported(): boolean {
     return this._engine.isPictureInPictureSupported();
   }
-
+  attachMediaSource(): void {
+    this._engine.attachMediaSource();
+  }
+  detachMediaSource(): void {
+    this._engine.detachMediaSource();
+  }
   get isInPictureInPicture(): boolean {
     return this._engine.isInPictureInPicture;
   }

@@ -444,6 +444,7 @@ export default class Player extends FakeEventTarget {
       this._configureOrLoadPlugins(config.plugins);
       this._maybeCreateAdsController();
       this.reset();
+      this.handleAdsWithMSE();
       this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
       Player._logger.debug('Change source started');
       this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
@@ -635,7 +636,36 @@ export default class Player extends FakeEventTarget {
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_DESTROY));
     this._eventManager.destroy();
   }
+  /**
+   * Listen to the video element events and triggers them from the engine.
+   * @public
+   * @returns {void}
+   */
+  attachMediaSource(): void {
+    if (this._engine) {
+      this._engine.attachMediaSource();
+    }
+  }
 
+  /**
+   * Listen to the video element events and triggers them from the engine.
+   * @public
+   * @returns {void}
+   */
+  detachMediaSource(): void {
+    if (this._engine) {
+      this._engine.detachMediaSource();
+    }
+  }
+  handleAdsWithMSE(): void {
+    if (this.config.playback.playAdsWithMSE) {
+      this._eventManager.listen(this, AdEventType.AD_BREAK_START, this.detachMediaSource);
+      this._eventManager.listen(this, AdEventType.AD_BREAK_END, this.attachMediaSource);
+      this._eventManager.listen(this, AdEventType.AD_ERROR, this.attachMediaSource);
+      this._eventManager.listen(this, AdEventType.AD_SKIPPED, this.attachMediaSource);
+      this._eventManager.listen(this, AdEventType.USER_CLOSED_AD, this.attachMediaSource);
+    }
+  }
   /**
    * Get the first buffered range of the engine.
    * @returns {TimeRanges} - First buffered range of the engine in seconds.
