@@ -11,7 +11,7 @@ import FakeEventTarget from '../event/fake-event-target';
  * @implements {IEngineDecorator}
  */
 class AdEngineDecorator extends FakeEventTarget implements IEngineDecorator {
-  _pluginDecorators: Array<any>;
+  _pluginDecorators: Array<IEngineDecorator>;
   _eventManager: EventManager;
 
   static getDecorator(engine: IEngine, plugins: Array<any>): ?IEngine {
