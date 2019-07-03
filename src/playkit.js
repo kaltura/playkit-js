@@ -36,7 +36,6 @@ import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
 import {AdsController} from './ads/ads-controller';
 import {AdEventType} from './ads/ad-event-type';
-import {BaseEngineDecorator} from './engines/base-engine-decorator';
 
 declare var __VERSION__: string;
 declare var __NAME__: string;
@@ -114,8 +113,5 @@ export {
 
 // Export logger utils
 export {getLogger, LogLevel, getLogLevel, setLogLevel};
-
-// Export engine decorator
-export {BaseEngineDecorator};
 
 export default loadPlayer;
