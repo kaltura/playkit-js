@@ -7,10 +7,10 @@ import FakeEventTarget from '../event/fake-event-target';
 /**
  * Engine decorator for ad plugin.
  * @class AdEngineDecorator
- * @param {IEngine} engine - The engine to decorate.
+ * @param {IEngineDecorator} engine - The engine to decorate.
+ * @implements {IEngineDecorator}
  */
-// $FlowFixMe
-class AdEngineDecorator extends FakeEventTarget implements IEngine {
+class AdEngineDecorator extends FakeEventTarget implements IEngineDecorator {
   _pluginDecorators: Array<any>;
   _eventManager: EventManager;
 
@@ -46,6 +46,10 @@ class AdEngineDecorator extends FakeEventTarget implements IEngine {
   dispatchEvent(event: FakeEvent): boolean {
     const activeDecorator = this._pluginDecorators.find(decorator => decorator.active);
     return activeDecorator ? activeDecorator.dispatchEvent && activeDecorator.dispatchEvent(event) : super.dispatchEvent(event);
+  }
+
+  get active(): boolean {
+    return true;
   }
 }
 
