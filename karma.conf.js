@@ -23,9 +23,7 @@ const launchers = {
 
 module.exports = function (config) {
   let karmaConf = {
-    log:{
-      level: config.LOG_INFO
-    },
+    logLevel: config.LOG_INFO,
     browserDisconnectTimeout: 30000,
     browserNoActivityTimeout: 60000,
     customLaunchers: launchers,

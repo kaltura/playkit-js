@@ -39,6 +39,7 @@ import {AdEventType} from './ads/ad-event-type';
 import {ControllerProvider} from './controller/controller-provider';
 import {ResizeWatcher} from './utils/resize-watcher';
 import {FullscreenController} from './fullscreen/fullscreen-controller';
+import {EngineDecorator} from './engines/engine-decorator';
 
 /**
  * The black cover class name.
@@ -425,8 +426,8 @@ export default class Player extends FakeEventTarget {
     this._createPlayerContainer();
     this._appendDomElements();
     this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
-    this.configure(config);
     this._fullscreenController = new FullscreenController(this);
+    this.configure(config);
   }
 
   // <editor-fold desc="Public API">
@@ -1385,7 +1386,6 @@ export default class Player extends FakeEventTarget {
   /**
    * For browsers which block auto play, use the user gesture to open the video element and enable playing via API.
    * @returns {void}
-   * @param {string} playerId - the id of the player
    * @private
    */
   _prepareVideoElement(): void {
@@ -1501,6 +1501,7 @@ export default class Player extends FakeEventTarget {
             if (plugin) {
               this._config.plugins[name] = plugin.getConfig();
               if (typeof plugin.getMiddlewareImpl === 'function') {
+                // push the bumper middleware to the end, to play the bumper right before the content
                 plugin.name === 'bumper' ? middlewares.push(plugin.getMiddlewareImpl()) : middlewares.unshift(plugin.getMiddlewareImpl());
               }
             }
@@ -1593,12 +1594,7 @@ export default class Player extends FakeEventTarget {
   _createEngine(Engine: typeof IEngine, source: PKMediaSourceObject): void {
     const engine = Engine.createEngine(source, this._config);
     const plugins = (Object.values(this._pluginManager.getAll()): any);
-    const plugin: ?IEngineDecoratorProvider = plugins.find(plugin => typeof plugin.getEngineDecorator === 'function');
-    if (plugin) {
-      this._engine = plugin.getEngineDecorator(engine);
-    } else {
-      this._engine = engine;
-    }
+    this._engine = EngineDecorator.getDecorator(engine, plugins) || engine;
   }
 
   /**
@@ -1771,8 +1767,8 @@ export default class Player extends FakeEventTarget {
     if (typeof this._config.playback.crossOrigin === 'string') {
       this.crossOrigin = this._config.playback.crossOrigin;
     }
-    if (Array.isArray(this._config.playback.playbackRate)) {
-      const validPlaybackRates = this._config.playback.playbackRate
+    if (Array.isArray(this._config.playback.playbackRates)) {
+      const validPlaybackRates = this._config.playback.playbackRates
         .filter((number, index, self) => number > 0 && number <= 16 && self.indexOf(number) === index)
         .sort((a, b) => a - b);
       if (validPlaybackRates) {
