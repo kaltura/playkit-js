@@ -1351,6 +1351,15 @@ export default class Player extends FakeEventTarget {
     setLogLevel(level, name);
   }
 
+  /**
+   * get new logger
+   * @param {*} name name
+   * @returns {void}
+   */
+  getLogger(name: string): void {
+    return getLogger(name);
+  }
+
   // </editor-fold>
 
   // <editor-fold desc="Plugins API">
@@ -1501,7 +1510,6 @@ export default class Player extends FakeEventTarget {
                 plugin.name === 'bumper' ? middlewares.push(plugin.getMiddlewareImpl()) : middlewares.unshift(plugin.getMiddlewareImpl());
               }
 
-              // TODO sakal where do you use (IPresetComponentsProvider) IMiddlewareProvider
               if (typeof plugin.getPresetComponents === 'function') {
                 presetComponents.push(...(plugin.getPresetComponents() || []));
               }
