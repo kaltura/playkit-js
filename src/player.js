@@ -241,6 +241,12 @@ export default class Player extends FakeEventTarget {
    */
   _firstPlaying: boolean;
   /**
+   * Whether media loaded
+   * @type {boolean}
+   * @private
+   */
+  _isMediaLoaded: boolean;
+  /**
    * Whether the playback already start
    * @type {boolean}
    * @private
@@ -408,6 +414,7 @@ export default class Player extends FakeEventTarget {
     this._repositionCuesTimeout = false;
     this._loadingMedia = false;
     this._loading = false;
+    this._isMediaLoaded = false;
     this._playbackStart = false;
     this._firstPlaying = false;
     this._reset = true;
@@ -427,7 +434,6 @@ export default class Player extends FakeEventTarget {
     this._appendDomElements();
     this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
     this._fullscreenController = new FullscreenController(this);
-    this._handleAdsWithMSE();
     this.configure(config);
   }
 
@@ -502,6 +508,7 @@ export default class Player extends FakeEventTarget {
       this._reset = false;
     };
     if (this._engine && !this.src && !this._loading) {
+      this._isMediaLoaded = true;
       this._loading = true;
       let startTime = this._config.playback.startTime;
       this._engine
@@ -643,7 +650,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _attachMediaSource(): void {
-    if (this._engine) {
+    if (this._engine && this._isMediaLoaded) {
       this._engine.attachMediaSource();
     }
   }
@@ -654,20 +661,8 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _detachMediaSource(): void {
-    if (this._engine) {
+    if (this._engine && this._isMediaLoaded) {
       this._engine.detachMediaSource();
-    }
-  }
-  /**
-   * handle ads with MSE.
-   * @private
-   * @returns {void}
-   */
-  _handleAdsWithMSE(): void {
-    if (this.config.playback.playAdsWithMSE) {
-      this._eventManager.listen(this, AdEventType.AD_LOADED, this._detachMediaSource);
-      this._eventManager.listen(this, AdEventType.AD_BREAK_END, this._attachMediaSource);
-      this._eventManager.listen(this, AdEventType.AD_ERROR, this._attachMediaSource);
     }
   }
   /**
@@ -1692,6 +1687,11 @@ export default class Player extends FakeEventTarget {
           }
         });
       }
+      if (this.config.playback.playAdsWithMSE) {
+        this._eventManager.listen(this, AdEventType.AD_LOADED, this._detachMediaSource);
+        this._eventManager.listen(this, AdEventType.AD_BREAK_END, this._attachMediaSource);
+        this._eventManager.listen(this, AdEventType.AD_ERROR, this._attachMediaSource);
+      }
     }
   }
 
@@ -2032,6 +2032,7 @@ export default class Player extends FakeEventTarget {
     this._loadingMedia = false;
     this._playbackStart = false;
     this._firstPlaying = false;
+    this._isMediaLoaded = false;
   }
 
   /**
