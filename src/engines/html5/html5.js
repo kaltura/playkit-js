@@ -50,7 +50,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @type {?PKMediaSourceObject}
    * @private
    */
-  _source: ?PKMediaSourceObject;
+  _source: PKMediaSourceObject;
   /**
    * The player config object.
    * @type {Object}
