@@ -427,6 +427,7 @@ export default class Player extends FakeEventTarget {
     this._appendDomElements();
     this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
     this._fullscreenController = new FullscreenController(this);
+    this._handleAdsWithMSE();
     this.configure(config);
   }
 
@@ -636,7 +637,39 @@ export default class Player extends FakeEventTarget {
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_DESTROY));
     this._eventManager.destroy();
   }
+  /**
+   * Listen to the video element events and triggers them from the engine.
+   * @private
+   * @returns {void}
+   */
+  _attachMediaSource(): void {
+    if (this._engine) {
+      this._engine.attachMediaSource();
+    }
+  }
 
+  /**
+   * Listen to the video element events and triggers them from the engine.
+   * @private
+   * @returns {void}
+   */
+  _detachMediaSource(): void {
+    if (this._engine) {
+      this._engine.detachMediaSource();
+    }
+  }
+  /**
+   * handle ads with MSE.
+   * @private
+   * @returns {void}
+   */
+  _handleAdsWithMSE(): void {
+    if (this.config.playback.playAdsWithMSE) {
+      this._eventManager.listen(this, AdEventType.AD_LOADED, this._detachMediaSource);
+      this._eventManager.listen(this, AdEventType.AD_BREAK_END, this._attachMediaSource);
+      this._eventManager.listen(this, AdEventType.AD_ERROR, this._attachMediaSource);
+    }
+  }
   /**
    * Get the first buffered range of the engine.
    * @returns {TimeRanges} - First buffered range of the engine in seconds.

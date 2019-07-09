@@ -29,6 +29,8 @@ declare interface IEngineDecorator {
   +exitPictureInPicture?: () => void;
   +isPictureInPictureSupported?: () => boolean;
   +resetAllCues?: () => void;
+  +attachMediaSource?: () => void;
+  +detachMediaSource?: () => void;
   +id?: string;
   src?: string;
   currentTime?: number;

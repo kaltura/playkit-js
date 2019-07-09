@@ -40,6 +40,18 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _mediaSourceAdapter: ?IMediaSourceAdapter;
   /**
+   * The selected media source adapter of the engine.
+   * @type {?PKMediaSourceObject}
+   * @private
+   */
+  _lastTimeDetach: ?number = 0;
+  /**
+   * The selected media source adapter of the engine.
+   * @type {?PKMediaSourceObject}
+   * @private
+   */
+  _source: ?PKMediaSourceObject;
+  /**
    * The player config object.
    * @type {Object}
    * @private
@@ -240,7 +252,32 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   get id(): string {
     return Html5.id;
   }
+  /**
+   * Listen to the video element events and triggers them from the engine.
+   * @public
+   * @returns {void}
+   */
+  attachMediaSource(): void {
+    if (!this._mediaSourceAdapter) {
+      this._init(this._source, this._config);
+      if (this._lastTimeDetach) {
+        this.currentTime = this._lastTimeDetach;
+        this._lastTimeDetach = null;
+      }
+    }
+  }
 
+  /**
+   * Listen to the video element events and triggers them from the engine.
+   * @public
+   * @returns {void}
+   */
+  detachMediaSource(): void {
+    if (this._mediaSourceAdapter) {
+      this._lastTimeDetach = this.currentTime;
+      this.reset();
+    }
+  }
   /**
    * Listen to the video element events and triggers them from the engine.
    * @public
@@ -930,6 +967,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _init(source: PKMediaSourceObject, config: Object): void {
     this._config = config;
+    this._source = source;
     this._loadMediaSourceAdapter(source);
     this.attach();
   }
