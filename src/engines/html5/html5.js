@@ -40,11 +40,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _mediaSourceAdapter: ?IMediaSourceAdapter;
   /**
-   * The selected media source adapter of the engine.
-   * @type {?PKMediaSourceObject}
+   * The last time detach occurred
+   * @type {number}
    * @private
    */
-  _lastTimeDetach: ?number = 0;
+  _lastTimeDetach: number = 0;
   /**
    * The selected media source adapter of the engine.
    * @type {?PKMediaSourceObject}
@@ -259,6 +259,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   attachMediaSource(): void {
     if (!this._mediaSourceAdapter) {
+      //reset video tag src after ima set empty src
+      if (this._el && this._el.src) {
+        Utils.Dom.setAttribute(this._el, 'src', '');
+        Utils.Dom.removeAttribute(this._el, 'src');
+      }
       this._init(this._source, this._config);
       if (this._lastTimeDetach) {
         this.currentTime = this._lastTimeDetach;
