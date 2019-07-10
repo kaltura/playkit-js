@@ -265,15 +265,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         Utils.Dom.removeAttribute(this._el, 'src');
       }
       this._init(this._source, this._config);
-      this._eventManager.listenOnce(this, Html5EventType.LOADED_METADATA, () => {
-        if (this._lastTimeDetach) {
-          this.currentTime = this._lastTimeDetach;
-          this._lastTimeDetach = null;
-        }
-      });
     }
   }
-
   /**
    * Listen to the video element events and triggers them from the engine.
    * @public
@@ -281,7 +274,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   detachMediaSource(): void {
     if (this._mediaSourceAdapter) {
-      this._lastTimeDetach = this.currentTime;
+      this._config.playback.startTime = this.currentTime;
       this.reset();
     }
   }
