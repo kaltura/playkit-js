@@ -265,6 +265,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         Utils.Dom.removeAttribute(this._el, 'src');
       }
       this._init(this._source, this._config);
+      this._config.playback.startTime = -1;
     }
   }
   /**
