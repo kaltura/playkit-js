@@ -44,7 +44,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @type {number}
    * @private
    */
-  _lastTimeDetach: number = 0;
+  _lastTimeDetach: ?number = 0;
   /**
    * The selected media source adapter of the engine.
    * @type {?PKMediaSourceObject}
