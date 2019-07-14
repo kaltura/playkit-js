@@ -265,7 +265,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         Utils.Dom.removeAttribute(this._el, 'src');
       }
       this._init(this._source, this._config);
-      this._eventManager.listenOnce(this, Html5EventType.LOADED_METADATA, () => {
+      this._eventManager.listenOnce(this, Html5EventType.CAN_PLAY, () => {
         if (this._lastTimeDetach) {
           this.currentTime = this._lastTimeDetach;
           this._lastTimeDetach = null;
