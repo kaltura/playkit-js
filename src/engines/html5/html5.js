@@ -259,14 +259,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   attachMediaSource(): void {
     if (!this._mediaSourceAdapter) {
-      //reset video tag src after ima set empty src
-      if (this._el && this._el.src) {
-        Utils.Dom.setAttribute(this._el, 'src', '');
-        Utils.Dom.removeAttribute(this._el, 'src');
-      }
       this._init(this._source, this._config);
       this._eventManager.listenOnce(this, Html5EventType.CAN_PLAY, () => {
-        if (this._lastTimeDetach) {
+        if (parseInt(this._lastTimeDetach) !== parseInt(this.duration)) {
           this.currentTime = this._lastTimeDetach;
           this._lastTimeDetach = null;
         }

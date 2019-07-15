@@ -414,7 +414,6 @@ export default class Player extends FakeEventTarget {
     this._repositionCuesTimeout = false;
     this._loadingMedia = false;
     this._loading = false;
-    this._isMediaLoaded = false;
     this._playbackStart = false;
     this._firstPlaying = false;
     this._reset = true;
@@ -508,7 +507,6 @@ export default class Player extends FakeEventTarget {
       this._reset = false;
     };
     if (this._engine && !this.src && !this._loading) {
-      this._isMediaLoaded = true;
       this._loading = true;
       let startTime = this._config.playback.startTime;
       this._engine
@@ -650,7 +648,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _attachMediaSource(): void {
-    if (this._engine && this._isMediaLoaded) {
+    if (this._engine) {
       this._engine.attachMediaSource();
     }
   }
@@ -661,7 +659,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _detachMediaSource(): void {
-    if (this._engine && this._isMediaLoaded) {
+    if (this._engine) {
       this._engine.detachMediaSource();
     }
   }
@@ -2032,7 +2030,6 @@ export default class Player extends FakeEventTarget {
     this._loadingMedia = false;
     this._playbackStart = false;
     this._firstPlaying = false;
-    this._isMediaLoaded = false;
   }
 
   /**
