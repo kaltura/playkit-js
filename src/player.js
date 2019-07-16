@@ -639,11 +639,13 @@ export default class Player extends FakeEventTarget {
   /**
    * Listen to the video element events and triggers them from the engine.
    * @private
+   * @param {FakeEvent} event data
+   * @param {?boolean} AdsCompleted when it called from ads completed and not ad break end
    * @returns {void}
    */
-  _attachMediaSource(): void {
+  _attachMediaSource(event: FakeEvent, AdsCompleted: ?boolean): void {
     if (this._engine) {
-      this._engine.attachMediaSource();
+      this._engine.attachMediaSource(AdsCompleted);
     }
   }
 
@@ -654,6 +656,10 @@ export default class Player extends FakeEventTarget {
    */
   _detachMediaSource(): void {
     if (this._engine) {
+      if (this._engine.ended) {
+        this._eventManager.unlisten(this, AdEventType.AD_BREAK_END, this._attachMediaSource);
+        this._eventManager.listen(this, AdEventType.ADS_COMPLETED, e => this._attachMediaSource(e, true));
+      }
       this._engine.detachMediaSource();
     }
   }

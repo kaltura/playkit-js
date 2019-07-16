@@ -44,7 +44,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @type {number}
    * @private
    */
-  _lastTimeDetach: ?number = 0;
+  _lastTimeDetach: number = 0;
   /**
    * The last time detach occurred
    * @type {number}
@@ -261,18 +261,19 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * Listen to the video element events and triggers them from the engine.
    * @public
+   * @param {boolean} AdsCompleted when ads finish don't seek
    * @returns {void}
    */
-  attachMediaSource(): void {
+  attachMediaSource(AdsCompleted: ?boolean): void {
     if (!this._mediaSourceAdapter) {
       this.reset();
       this._init(this._source, this._config);
-      this._eventManager.listenOnce(this, Html5EventType.CAN_PLAY, () => {
-        if (!isNaN(this._lastTimeDetach)) {
+      if (!isNaN(this._lastTimeDetach) && !AdsCompleted) {
+        this._eventManager.listenOnce(this, Html5EventType.CAN_PLAY, () => {
           this.currentTime = this._lastTimeDetach;
           this._lastTimeDetach = NaN;
-        }
-      });
+        });
+      }
     }
   }
   /**
@@ -282,7 +283,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   detachMediaSource(): void {
     if (this._mediaSourceAdapter) {
-      this._lastTimeDetach = !this.ended ? this.currentTime : NaN;
+      this._lastTimeDetach = this.currentTime;
       this.reset();
     }
   }
