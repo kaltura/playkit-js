@@ -46,12 +46,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _lastTimeDetach: number = 0;
   /**
-   * The last time detach occurred
-   * @type {number}
-   * @private
-   */
-  _reload: ?number = 0;
-  /**
    * The selected media source adapter of the engine.
    * @type {?PKMediaSourceObject}
    * @private
@@ -261,14 +255,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * Listen to the video element events and triggers them from the engine.
    * @public
-   * @param {boolean} AdsCompleted when ads finish don't seek
+   * @param {boolean} stopSeeking don't seek to the last detach point
    * @returns {void}
    */
-  attachMediaSource(AdsCompleted: ?boolean): void {
+  attachMediaSource(stopSeeking: ?boolean): void {
     if (!this._mediaSourceAdapter) {
       this.reset();
       this._init(this._source, this._config);
-      if (!isNaN(this._lastTimeDetach) && !AdsCompleted) {
+      if (!isNaN(this._lastTimeDetach) && !stopSeeking) {
         this._eventManager.listenOnce(this, Html5EventType.CAN_PLAY, () => {
           this.currentTime = this._lastTimeDetach;
           this._lastTimeDetach = NaN;

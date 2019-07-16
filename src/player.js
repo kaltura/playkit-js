@@ -640,12 +640,12 @@ export default class Player extends FakeEventTarget {
    * Listen to the video element events and triggers them from the engine.
    * @private
    * @param {FakeEvent} event data
-   * @param {?boolean} AdsCompleted when it called from ads completed and not ad break end
+   * @param {?boolean} stopSeeking don't seek to the last detach point
    * @returns {void}
    */
-  _attachMediaSource(event: FakeEvent, AdsCompleted: ?boolean): void {
+  _attachMediaSource(event: FakeEvent, stopSeeking: ?boolean): void {
     if (this._engine) {
-      this._engine.attachMediaSource(AdsCompleted);
+      this._engine.attachMediaSource(stopSeeking);
     }
   }
 
