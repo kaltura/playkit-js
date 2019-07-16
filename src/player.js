@@ -658,7 +658,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       if (this._engine.ended) {
         this._eventManager.unlisten(this, AdEventType.AD_BREAK_END, this._attachMediaSource);
-        this._eventManager.listen(this, AdEventType.ADS_COMPLETED, e => this._attachMediaSource(e, true));
+        this._eventManager.listen(this, AdEventType.ALL_ADS_COMPLETED, e => this._attachMediaSource(e, true));
       }
       this._engine.detachMediaSource();
     }
