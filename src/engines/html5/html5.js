@@ -260,13 +260,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   attachMediaSource(): void {
     if (!this._mediaSourceAdapter) {
       this.reset();
-      this._init(this._source, this._config);
-      this._eventManager.listenOnce(this, Html5EventType.CAN_PLAY, () => {
-        if (this._lastTimeDetach) {
+      if (!isNaN(this._lastTimeDetach)) {
+        this._init(this._source, this._config);
+        this._eventManager.listenOnce(this, Html5EventType.CAN_PLAY, () => {
           this.currentTime = this._lastTimeDetach;
-          this._lastTimeDetach = null;
-        }
-      });
+          this._lastTimeDetach = undefined;
+        });
+      }
     }
   }
   /**
@@ -276,17 +276,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   detachMediaSource(): void {
     if (this._mediaSourceAdapter) {
-      this._lastTimeDetach = this.currentTime;
+      this._lastTimeDetach = !this.ended ? this.currentTime : undefined;
       this.reset();
     }
-  }
-  /**
-   * Listen to the video element events and triggers them from the engine.
-   * @public
-   * @returns {void}
-   */
-  clearDetachTime(): void {
-    this._lastTimeDetach = null;
   }
   /**
    * Listen to the video element events and triggers them from the engine.

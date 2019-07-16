@@ -241,12 +241,6 @@ export default class Player extends FakeEventTarget {
    */
   _firstPlaying: boolean;
   /**
-   * Whether media loaded
-   * @type {boolean}
-   * @private
-   */
-  _isMediaLoaded: boolean;
-  /**
    * Whether the playback already start
    * @type {boolean}
    * @private
@@ -664,16 +658,6 @@ export default class Player extends FakeEventTarget {
     }
   }
 
-  /**
-   * clear detach time for end of media
-   * @private
-   * @returns {void}
-   */
-  _clearDetachTime(): void {
-    if (this._engine) {
-      this._engine.clearDetachTime();
-    }
-  }
   /**
    * Get the first buffered range of the engine.
    * @returns {TimeRanges} - First buffered range of the engine in seconds.
@@ -1700,7 +1684,6 @@ export default class Player extends FakeEventTarget {
         this._eventManager.listen(this, AdEventType.AD_LOADED, this._detachMediaSource);
         this._eventManager.listen(this, AdEventType.AD_BREAK_END, this._attachMediaSource);
         this._eventManager.listen(this, AdEventType.AD_ERROR, this._attachMediaSource);
-        this._eventManager.listen(this, AdEventType.ADS_COMPLETED, this._clearDetachTime);
       }
     }
   }
