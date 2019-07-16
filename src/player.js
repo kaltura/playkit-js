@@ -637,7 +637,7 @@ export default class Player extends FakeEventTarget {
     this._eventManager.destroy();
   }
   /**
-   * Listen to the video element events and triggers them from the engine.
+   * attach media - return the media source to handle the video tag.
    * @private
    * @param {FakeEvent} event data
    * @param {?boolean} stopSeeking don't seek to the last detach point
@@ -650,12 +650,13 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Listen to the video element events and triggers them from the engine.
+   * detach media - will remove the media source from handling the video
    * @private
    * @returns {void}
    */
   _detachMediaSource(): void {
     if (this._engine) {
+      // ads which come after media ended, after every ad it should seek to complete existing ads that didn't played
       if (this._engine.ended) {
         this._eventManager.unlisten(this, AdEventType.AD_BREAK_END, this._attachMediaSource);
         this._eventManager.listen(this, AdEventType.ALL_ADS_COMPLETED, e => this._attachMediaSource(e, true));

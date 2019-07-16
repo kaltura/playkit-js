@@ -46,7 +46,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _lastTimeDetach: number = 0;
   /**
-   * The selected media source adapter of the engine.
+   * The source object for reattaching media.
    * @type {?PKMediaSourceObject}
    * @private
    */
@@ -253,7 +253,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return Html5.id;
   }
   /**
-   * Listen to the video element events and triggers them from the engine.
+   * attach media - return the media source to handle the video tag
    * @public
    * @param {boolean} stopSeeking don't seek to the last detach point
    * @returns {void}
@@ -271,7 +271,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
   }
   /**
-   * Listen to the video element events and triggers them from the engine.
+   * detach media - will remove the media source from handling the video
    * @public
    * @returns {void}
    */
