@@ -46,6 +46,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _lastTimeDetach: ?number = 0;
   /**
+   * The last time detach occurred
+   * @type {number}
+   * @private
+   */
+  _reload: ?number = 0;
+  /**
    * The selected media source adapter of the engine.
    * @type {?PKMediaSourceObject}
    * @private
@@ -260,13 +266,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   attachMediaSource(): void {
     if (!this._mediaSourceAdapter) {
       this.reset();
-      if (!isNaN(this._lastTimeDetach)) {
-        this._init(this._source, this._config);
-        this._eventManager.listenOnce(this, Html5EventType.CAN_PLAY, () => {
+      this._init(this._source, this._config);
+      this._eventManager.listenOnce(this, Html5EventType.CAN_PLAY, () => {
+        if (!isNaN(this._lastTimeDetach)) {
           this.currentTime = this._lastTimeDetach;
-          this._lastTimeDetach = undefined;
-        });
-      }
+          this._lastTimeDetach = NaN;
+        }
+      });
     }
   }
   /**
@@ -276,7 +282,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   detachMediaSource(): void {
     if (this._mediaSourceAdapter) {
-      this._lastTimeDetach = !this.ended ? this.currentTime : undefined;
+      this._lastTimeDetach = !this.ended ? this.currentTime : NaN;
       this.reset();
     }
   }
