@@ -40,12 +40,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _mediaSourceAdapter: ?IMediaSourceAdapter;
   /**
-   * The source object for reattaching media.
-   * @type {?PKMediaSourceObject}
-   * @private
-   */
-  _source: PKMediaSourceObject;
-  /**
    * The player config object.
    * @type {Object}
    * @private
@@ -967,7 +961,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _init(source: PKMediaSourceObject, config: Object): void {
     this._config = config;
-    this._source = source;
     this._loadMediaSourceAdapter(source);
     this.attach();
   }
