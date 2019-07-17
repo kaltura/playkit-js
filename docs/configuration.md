@@ -916,7 +916,7 @@ var config = {
 > > playAdsWithMSE: boolean;
 > > ```
 > >
-> > > ##### Description: Gives the ability to play ads with media source
+> > > ##### Description: Gives the ability to share same video tag to play ads and source with media source
 >
 > ##
 >
