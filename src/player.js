@@ -648,7 +648,7 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * detach media - will remove the media source from handling the video
+   * detach the engine's media source
    * @private
    * @returns {void}
    */
