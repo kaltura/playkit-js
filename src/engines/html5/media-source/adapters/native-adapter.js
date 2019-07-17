@@ -300,6 +300,21 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
+   * attach media - return the media source to handle the video tag
+   * @public
+   * @param {boolean} playbackEnded don't seek to the last detach point
+   * @returns {void}
+   */
+  // eslint-disable-next-line no-unused-vars
+  attachMediaSource(playbackEnded: ?boolean): void {}
+  /**
+   * detach media - will remove the media source from handling the video
+   * @public
+   * @returns {void}
+   */
+  detachMediaSource(): void {}
+
+  /**
    * Loaded data event handler.
    * @param {Function} resolve - The resolve promise function.
    * @param {number} startTime - Optional time to start the video from.

@@ -40,12 +40,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _mediaSourceAdapter: ?IMediaSourceAdapter;
   /**
-   * The last time detach occurred
-   * @type {number}
-   * @private
-   */
-  _lastTimeDetach: number = 0;
-  /**
    * The source object for reattaching media.
    * @type {?PKMediaSourceObject}
    * @private
@@ -255,17 +249,16 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * attach media - return the media source to handle the video tag
    * @public
-   * @param {boolean} stopSeeking don't seek to the last detach point
+   * @param {boolean} playbackEnded don't seek to the last detach point
    * @returns {void}
    */
-  attachMediaSource(stopSeeking: ?boolean): void {
-    if (!this._mediaSourceAdapter) {
-      this.reset();
-      this._init(this._source, this._config);
-      if (!isNaN(this._lastTimeDetach) && !stopSeeking) {
-        this._eventManager.listenOnce(this, Html5EventType.CAN_PLAY, () => {
-          this.currentTime = this._lastTimeDetach;
-          this._lastTimeDetach = NaN;
+  attachMediaSource(playbackEnded: ?boolean): void {
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.attachMediaSource(playbackEnded);
+      //added to mask problematic behavior in shaka - init fire loadstart event, only for last init to avoid spinner
+      if (playbackEnded) {
+        this._eventManager.listen(this._el, Html5EventType.LOAD_START, () => {
+          this.dispatchEvent(new FakeEvent(Html5EventType.LOAD_START));
         });
       }
     }
@@ -273,12 +266,16 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * detach media - will remove the media source from handling the video
    * @public
+   * @param {boolean} playbackEnded don't seek to the last detach point
    * @returns {void}
    */
-  detachMediaSource(): void {
+  detachMediaSource(playbackEnded: ?boolean): void {
     if (this._mediaSourceAdapter) {
-      this._lastTimeDetach = this.currentTime;
-      this.reset();
+      //added to mask problematic behavior in shaka - init fire loadstart event, only for last init to avoid spinner
+      if (playbackEnded) {
+        this._eventManager.unlisten(this._el, Html5EventType.LOAD_START);
+      }
+      this._mediaSourceAdapter.detachMediaSource();
     }
   }
   /**
