@@ -15,6 +15,7 @@ class Ad {
   _duration: ?number;
   _clickThroughUrl: ?string;
   _posterUrl: ?string;
+  _advertiserName: ?string;
   _skipOffset: ?number;
   _linear: boolean;
   _width: number;
@@ -32,6 +33,7 @@ class Ad {
     this._duration = options.duration;
     this._clickThroughUrl = options.clickThroughUrl;
     this._posterUrl = options.posterUrl;
+    this._advertiserName = options.advertiserName;
     this._skipOffset = options.skipOffset;
     this._linear = options.linear;
     this._width = options.width || 0;
