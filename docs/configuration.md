@@ -51,6 +51,7 @@ var config = {
     startTime: -1,
     playsinline: true,
     preload: 'none',
+    disableMediaPreloadWhileAd: false,
     autoplay: false,
     allowMutedAutoPlay: true,
     loop: false,
@@ -498,6 +499,7 @@ var config = {
 >  playsinline: boolean,
 >  crossOrigin: string,
 >  preload: string,
+>  disableMediaPreloadWhileAd: boolean,
 >  autoplay: boolean,
 >  allowMutedAutoPlay: boolean,
 >  loop: boolean,
@@ -526,6 +528,7 @@ var config = {
 >  startTime: -1,
 >  playsinline: true,
 >  preload: "none",
+>  disableMediaPreloadWhileAd: false,
 >  autoplay: false,
 >  allowMutedAutoPlay: true,
 >  loop: false,
@@ -762,6 +765,18 @@ var config = {
 > >
 > > - `"none"`: indicates that the video should not be preloaded.
 > > - `"auto"`: indicates that the whole video file could be downloaded, even if the user is not expected to use it.
+>
+> ##
+>
+> > ### config.playback.disableMediaPreloadWhileAd
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ##### Description: Indicates whether to disable preloading the media while an ad (pre-roll).
+> >
+> > This is a Boolean attribute that indicates the default setting of the disableMediaPreloadWhileAd option. If set, the player will not preload the media while the pre-roll. The attribute's default value is false, which means that the media will be ready to play upon the pre-roll completion.
 >
 > ##
 >

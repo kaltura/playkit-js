@@ -22,6 +22,7 @@ const DefaultConfig = {
     startTime: -1,
     playsinline: true,
     preload: 'none',
+    disableMediaPreloadWhileAd: false,
     autoplay: false,
     loop: false,
     allowMutedAutoPlay: true,
