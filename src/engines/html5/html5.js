@@ -199,7 +199,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   reset(): void {
-    this.detach();
     this._eventManager.removeAll();
     if (this._mediaSourceAdapter) {
       this._canLoadMediaSourceAdapterPromise = this._mediaSourceAdapter.destroy();
@@ -243,24 +242,24 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * attach media - return the media source to handle the video tag
    * @public
-   * @param {boolean} playbackEnded don't seek to the last detach point
+   * @param {boolean} playbackEnded playback ended after ads and media
    * @returns {void}
    */
   attachMediaSource(playbackEnded: ?boolean): void {
     if (this._mediaSourceAdapter) {
-      this._mediaSourceAdapter.attachMediaSource(playbackEnded);
       //added to mask problematic behavior in shaka - init fire loadstart event, only for last init to avoid spinner
       if (playbackEnded) {
         this._eventManager.listen(this._el, Html5EventType.LOAD_START, () => {
           this.dispatchEvent(new FakeEvent(Html5EventType.LOAD_START));
         });
       }
+      this._mediaSourceAdapter.attachMediaSource(playbackEnded);
     }
   }
   /**
    * detach media - will remove the media source from handling the video
    * @public
-   * @param {boolean} playbackEnded don't seek to the last detach point
+   * @param {boolean} playbackEnded playback ended after ads and media
    * @returns {void}
    */
   detachMediaSource(playbackEnded: ?boolean): void {
