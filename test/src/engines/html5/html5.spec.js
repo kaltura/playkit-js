@@ -41,7 +41,6 @@ describe('Html5', () => {
       }
     };
     const engine = Html5.createEngine(progressiveSource, config);
-    const detachSpy = sandbox.spy(engine, 'detach');
     const eventMgrSpy = sandbox.spy(engine._eventManager, 'removeAll');
     engine._eventManager.should.exist;
     engine._config.should.deep.equal(config);
@@ -49,7 +48,6 @@ describe('Html5', () => {
     engine._el.should.be.a('HTMLVideoElement');
     sandbox.stub(engine, '_init', () => {});
     engine.restore({}, {});
-    detachSpy.should.have.been.calledOnce;
     eventMgrSpy.should.have.been.calledOnce;
     engine._el.src.should.be.empty;
   });
