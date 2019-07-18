@@ -115,6 +115,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _addBindings(): void {
     this._eventManager = new EventManager();
     this._eventManager.listen(this._player, AdEventType.AD_MANIFEST_LOADED, event => this._onAdManifestLoaded(event));
+    this._eventManager.listen(this._player, CustomEventType.SOURCE_SELECTED, event => this._onAdSourceSelected(event));
     this._eventManager.listen(this._player, AdEventType.AD_BREAK_START, event => this._onAdBreakStart(event));
     this._eventManager.listen(this._player, AdEventType.AD_LOADED, event => this._onAdLoaded(event));
     this._eventManager.listen(this._player, AdEventType.AD_STARTED, event => this._onAdStarted(event));
@@ -128,6 +129,9 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _onAdManifestLoaded(event: FakeEvent): void {
     this._adBreaksLayout = Array.from(new Set(this._adBreaksLayout.concat(event.payload.adBreaksPosition))).sort();
     this._allAdsCompleted = false;
+  }
+
+  _onAdSourceSelected(): void {
     if (this._adsPluginControllers.length === 1) {
       const controller = this._adsPluginControllers[0];
       if (controller.preload) {
