@@ -56,19 +56,51 @@ export default class DrmSupport {
     }
   };
 
+  static BrowserSupportEME(): boolean {
+    return (
+      !!window.MediaKeys &&
+      !!window.navigator &&
+      !!window.navigator.requestMediaKeySystemAccess &&
+      !!window.MediaKeySystemAccess &&
+      !!window.MediaKeySystemAccess.prototype.getConfiguration
+    );
+  }
+
   /**
    * Checks if a certain DRM scheme is supported in the current environment.
    * @param {string} scheme - The drm scheme.
    * @param {Array<Object>} drmData - The drm data to check.
    * @return {boolean} - Whether scheme can be play on the current environment.
    */
-  static isProtocolSupported(scheme: string, drmData: Array<Object>): boolean {
-    const browser = Env.browser.name;
-    if (typeof DrmSupport._Browsers[browser] === 'function') {
-      let drmScheme = DrmSupport._Browsers[browser]();
-      DrmSupport._logger.debug('Supported DRM scheme for current environment is: ' + drmScheme);
-      return drmScheme === scheme && !!drmData.find(drmEntry => drmEntry.scheme === scheme);
-    }
-    return false;
+  static isProtocolSupported(scheme: string, drmData: Array<Object>): Promise<*> {
+    return new Promise((resolve, reject) => {
+      let basicVideoCapabilities = [{contentType: 'video/mp4; codecs="avc1.42E01E"'}, {contentType: 'video/webm; codecs="vp8"'}];
+
+      let basicConfig = {
+        videoCapabilities: basicVideoCapabilities
+      };
+      let offlineConfig = {
+        videoCapabilities: basicVideoCapabilities,
+        persistentState: 'required',
+        sessionTypes: ['persistent-license']
+      };
+      // Try the offline config first, then fall back to the basic config.
+      let configs = [offlineConfig, basicConfig];
+      if (DrmSupport.BrowserSupportEME() && !!window.Promise) {
+        navigator
+          .requestMediaKeySystemAccess(scheme, configs)
+          .then(() => {
+            if (drmData.find(drmEntry => drmEntry.scheme === scheme)) {
+              resolve();
+            } else {
+              reject();
+            }
+          })
+          // A catch function is required, but we do nothing here, because we're only testing for support.
+          .catch(function fail() {
+            reject();
+          });
+      }
+    });
   }
 }

@@ -116,7 +116,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @static
    */
-  static canPlaySource(source: PKMediaSourceObject, preferNative: boolean, drmConfig: PKDrmConfigObject): boolean {
+  static canPlaySource(source: PKMediaSourceObject, preferNative: boolean, drmConfig: PKDrmConfigObject): Promise<*> {
     return MediaSourceProvider.canPlaySource(source, preferNative, drmConfig);
   }
 
@@ -953,10 +953,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   _loadMediaSourceAdapter(source: PKMediaSourceObject): void {
-    this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter(this.getVideoElement(), source, this._config);
-    if (this._mediaSourceAdapter) {
-      this._droppedFramesWatcher = new DroppedFramesWatcher(this._mediaSourceAdapter, this._config.abr, this._el);
-    }
+    MediaSourceProvider.getMediaSourceAdapter(this.getVideoElement(), source, this._config).then(mediaSourceAdapter => {
+      this._mediaSourceAdapter = mediaSourceAdapter;
+      if (this._mediaSourceAdapter) {
+        this._droppedFramesWatcher = new DroppedFramesWatcher(this._mediaSourceAdapter, this._config.abr, this._el);
+      }
+    });
   }
 
   /**

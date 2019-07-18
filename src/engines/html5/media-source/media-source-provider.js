@@ -71,22 +71,33 @@ export default class MediaSourceProvider {
    * @public
    * @static
    */
-  static canPlaySource(source: PKMediaSourceObject, preferNative: boolean = true, drmConfig: PKDrmConfigObject): boolean {
+  static canPlaySource(source: PKMediaSourceObject, preferNative: boolean = true, drmConfig: PKDrmConfigObject): Promise<*> {
+    let mediaSourceCanPlaySourcePromises = [];
     MediaSourceProvider._orderMediaSourceAdapters(preferNative);
     let mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
-    if (source && source.mimetype) {
+    if (source && source.mimetype && mediaSourceAdapters.length > 0) {
       for (let i = 0; i < mediaSourceAdapters.length; i++) {
-        if (
-          mediaSourceAdapters[i].canPlayType(source.mimetype) &&
-          (!source.drmData || mediaSourceAdapters[i].canPlayDrm(source.drmData, drmConfig))
-        ) {
-          MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
-          MediaSourceProvider._logger.debug(`Selected adapter is <${MediaSourceProvider._selectedAdapter.id}>`);
-          return true;
+        if (mediaSourceAdapters[i].canPlayType(source.mimetype)) {
+          if (!source.drmData) {
+            mediaSourceCanPlaySourcePromises.push(Promise.resolve());
+          } else {
+            mediaSourceCanPlaySourcePromises.push(mediaSourceAdapters[i].canPlayDrm(source.drmData, drmConfig));
+          }
         }
       }
     }
-    return false;
+    let numRejected;
+    return new Promise((resolve, reject) => {
+      mediaSourceCanPlaySourcePromises.forEach(promise =>
+        promise
+          .then(() => {
+            resolve();
+          })
+          .catch(() => {
+            if (++numRejected === mediaSourceCanPlaySourcePromises.length) reject();
+          })
+      );
+    });
   }
 
   /**
@@ -113,14 +124,20 @@ export default class MediaSourceProvider {
    * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists.
    * @static
    */
-  static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): ?IMediaSourceAdapter {
-    if (videoElement && source && config) {
-      if (!MediaSourceProvider._selectedAdapter) {
-        MediaSourceProvider.canPlaySource(source, true, config.drm);
+  static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): Promise<*> {
+    return new Promise((resolve, reject) => {
+      if (videoElement && source && config) {
+        if (!MediaSourceProvider._selectedAdapter) {
+          MediaSourceProvider.canPlaySource(source, true, config.drm).then(() => {
+            resolve(MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config) : null);
+          });
+        } else {
+          resolve(MediaSourceProvider._selectedAdapter);
+        }
+      } else {
+        reject(null);
       }
-      return MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config) : null;
-    }
-    return null;
+    });
   }
 
   /**

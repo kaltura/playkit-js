@@ -140,26 +140,37 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {boolean} - Whether the native adapter can play a specific drm data.
    * @static
    */
-  static canPlayDrm(drmData: Array<Object>, drmConfig: PKDrmConfigObject): boolean {
-    let canPlayDrm = false;
-    for (let drmProtocol of NativeAdapter._drmProtocols) {
-      if (drmProtocol.isConfigured(drmData, drmConfig)) {
-        NativeAdapter._drmProtocol = drmProtocol;
-        canPlayDrm = true;
-        break;
-      }
-    }
-    if (!canPlayDrm) {
+  static canPlayDrm(drmData: Array<Object>, drmConfig: PKDrmConfigObject): Promise<*> {
+    return new Promise((resolve, reject) => {
+      let canPlayDrm = false;
+      let numRejected = 0;
       for (let drmProtocol of NativeAdapter._drmProtocols) {
-        if (drmProtocol.canPlayDrm(drmData)) {
+        if (drmProtocol.isConfigured(drmData, drmConfig)) {
           NativeAdapter._drmProtocol = drmProtocol;
           canPlayDrm = true;
-          break;
+          resolve();
         }
       }
-    }
-    NativeAdapter._logger.debug('canPlayDrm result is ' + canPlayDrm.toString(), drmData);
-    return canPlayDrm;
+      if (!canPlayDrm && NativeAdapter._drmProtocols.length > 0) {
+        for (let drmProtocol of NativeAdapter._drmProtocols) {
+          drmProtocol
+            .canPlayDrm(drmData)
+            .then(() => {
+              NativeAdapter._drmProtocol = drmProtocol;
+              NativeAdapter._logger.debug('canPlayDrm result is ' + true, drmData);
+              resolve();
+            })
+            .catch(() => {
+              if (++numRejected === NativeAdapter._drmProtocols.length) {
+                NativeAdapter._logger.debug('canPlayDrm result is ' + false, drmData);
+                reject();
+              }
+            });
+        }
+      } else {
+        reject();
+      }
+    });
   }
 
   /**
