@@ -643,7 +643,8 @@ export default class Player extends FakeEventTarget {
    */
   _attachMediaSource(): void {
     if (this._engine) {
-      this._engine.attachMediaSource(false);
+      //added for case when decorator exist
+      this._engine.attachMediaSource(this._engine.ended);
       this._eventManager.listenOnce(this, Html5EventType.CAN_PLAY, () => {
         if (typeof this._playbackAttributesState.rate === 'number') {
           this.playbackRate = this._playbackAttributesState.rate;
@@ -659,14 +660,8 @@ export default class Player extends FakeEventTarget {
    */
   _detachMediaSource(): void {
     if (this._engine) {
-      // ads which come after media ended, after every ad it should seek to complete existing ads that didn't played
-      if (this._engine.ended) {
-        this._eventManager.unlisten(this, AdEventType.AD_BREAK_END, this._attachMediaSource);
-        this._eventManager.listen(this, AdEventType.ALL_ADS_COMPLETED, () => this._engine.attachMediaSource(true));
-        this._engine.detachMediaSource(true);
-      } else {
-        this._engine.detachMediaSource(false);
-      }
+      //added for case when decorator exist
+      this._engine.detachMediaSource(this._engine.ended);
     }
   }
 
