@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.51.0"></a>
+# [0.51.0](https://github.com/kaltura/playkit-js/compare/v0.50.0...v0.51.0) (2019-07-19)
+
+
+### Features
+
+* **FEC-9227:** support reInit of MSE ([#375](https://github.com/kaltura/playkit-js/issues/375)) ([6142fce](https://github.com/kaltura/playkit-js/commit/6142fce))
+
+
+
 <a name="0.50.0"></a>
 # [0.50.0](https://github.com/kaltura/playkit-js/compare/v0.49.0...v0.50.0) (2019-07-19)
 
