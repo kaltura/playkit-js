@@ -7,9 +7,7 @@ import FakeEvent from '../event/fake-event';
 import {CustomEventType, Html5EventType} from '../event/event-type';
 import Error from '../error/error';
 import {AdBreak} from './ad-break';
-import {AdBreakType} from './ad-break-type';
 import {Ad} from './ad';
-import getLogger from '../utils/logger';
 
 /**
  * @class AdsController
@@ -25,8 +23,6 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _adBreak: ?AdBreak;
   _ad: ?Ad;
   _adPlayed: boolean;
-
-  static _logger: any = getLogger('AdsController');
 
   constructor(player: Player, adsPluginControllers: Array<IAdsPluginController>) {
     super();
@@ -128,38 +124,11 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _onAdManifestLoaded(event: FakeEvent): void {
     this._adBreaksLayout = Array.from(new Set(this._adBreaksLayout.concat(event.payload.adBreaksPosition))).sort();
     this._allAdsCompleted = false;
-    if (this._adsPluginControllers.length === 1) {
-      const controller = this._adsPluginControllers[0];
-      if (controller.preload) {
-        controller.prepare();
-      }
-    }
   }
 
   _onAdBreakStart(event: FakeEvent): void {
     this._adBreak = event.payload.adBreak;
     this.dispatchEvent(event);
-    if (this._adBreak.type === AdBreakType.PRE) {
-      this._handlePreloading();
-    }
-  }
-
-  _handlePreloading(): void {
-    const bumperCtrl = this._adsPluginControllers.find(controller => this._isBumper(controller));
-    if (bumperCtrl && !bumperCtrl.active) {
-      bumperCtrl.preload();
-    } else if (!this._player.config.playback.disableMediaPreloadWhileAd) {
-      const loadPlayer = () => {
-        AdsController._logger.debug('Media preloading');
-        this._player.load();
-      };
-      if (this._player.engineType) {
-        // player has source to play
-        loadPlayer();
-      } else {
-        this._eventManager.listenOnce(this._player, CustomEventType.SOURCE_SELECTED, () => loadPlayer());
-      }
-    }
   }
 
   _onAdLoaded(event: FakeEvent): void {
@@ -196,18 +165,15 @@ class AdsController extends FakeEventTarget implements IAdsController {
     if (!this._adBreaksLayout.includes(-1)) {
       this._allAdsCompleted = true;
     } else {
-      const bumperCtrl = this._adsPluginControllers.find(controller => this._isBumper(controller));
-      const adCtrl = this._adsPluginControllers.find(controller => !this._isBumper(controller));
+      const isBumper = controller => controller.name === 'bumper';
+      const bumperCtrl = this._adsPluginControllers.find(controller => isBumper(controller));
+      const adCtrl = this._adsPluginControllers.find(controller => !isBumper(controller));
       const bumperCompletePromise = bumperCtrl ? bumperCtrl.onPlaybackEnded() : Promise.resolve();
       // $FlowFixMe
       bumperCompletePromise.finally(() => {
         adCtrl && adCtrl.onPlaybackEnded();
       });
     }
-  }
-
-  _isBumper(controller: IAdsPluginController): boolean {
-    return controller.name === 'bumper';
   }
 
   _reset(): void {
