@@ -9,6 +9,7 @@ import Track from '../../../track/track';
 import VideoTrack from '../../../track/video-track';
 import AudioTrack from '../../../track/audio-track';
 import TextTrack from '../../../track/text-track';
+import EventManager from '../../../event/event-manager';
 
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
   /**
@@ -46,6 +47,13 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   _capabilities: PKMediaSourceCapabilities = {fpsControl: false};
 
   /**
+   * The event manager of the adapter.
+   * @type {EventManager}
+   * @private
+   */
+  _eventManager: EventManager;
+
+  /**
    * Checks if the media source adapter is supported.
    * @function isSupported
    * @returns {boolean} - Whether the media source adapter is supported.
@@ -66,6 +74,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     this._videoElement = videoElement;
     this._sourceObj = source;
     this._config = config;
+    this._eventManager = new EventManager();
     this._handleLiveTimeUpdate();
   }
 
@@ -77,6 +86,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   destroy(): Promise<*> {
     this._sourceObj = null;
     this._config = {};
+    this._eventManager.destroy();
     return Promise.resolve();
   }
 
@@ -156,6 +166,8 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return;
   }
 
+  attachMediaSource(playbackEnded: ?boolean): void {}
+  detachMediaSource(playbackEnded: ?boolean): void {}
   /**
    * Handling live time update (as is not triggered when video is paused, but the current time changed)
    * @function _handleLiveTimeUpdate

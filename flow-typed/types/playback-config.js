@@ -13,5 +13,6 @@ declare type PKPlaybackConfigObject = {
   pictureInPicture: boolean,
   streamPriority: Array<PKStreamPriorityObject>,
   preferNative: PKPreferNativeConfigObject,
-  inBrowserFullscreen: boolean
+  inBrowserFullscreen: boolean,
+  playAdsWithMSE: boolean
 };
