@@ -5,7 +5,7 @@ import EventManager from '../event/event-manager';
 import FakeEventTarget from '../event/fake-event-target';
 
 /**
- * Engine decorator for ad plugin.
+ * Engine decorator for plugin.
  * @class EngineDecorator
  * @param {IEngineDecorator} engine - The engine to decorate.
  * @implements {IEngineDecorator}
