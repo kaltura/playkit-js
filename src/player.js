@@ -496,25 +496,14 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   load(): void {
-    const resetFlags = () => {
-      this._loading = false;
-      this._reset = false;
+    const loadPlayer = () => {
+      if (this._engine) {
+        this._load();
+      } else {
+        this._eventManager.listenOnce(this, CustomEventType.SOURCE_SELECTED, () => this._load());
+      }
     };
-    if (this._engine && !this.src && !this._loading) {
-      this._loading = true;
-      let startTime = this._config.playback.startTime;
-      this._engine
-        .load(startTime)
-        .then(data => {
-          this._updateTracks(data.tracks);
-          this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
-          resetFlags();
-        })
-        .catch(error => {
-          this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
-          resetFlags();
-        });
-    }
+    this._playbackMiddleware.load(() => loadPlayer());
   }
 
   /**
@@ -526,6 +515,7 @@ export default class Player extends FakeEventTarget {
     if (!this._playbackStart) {
       this._playbackStart = true;
       this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_START));
+      this.load();
     }
     if (this._engine) {
       this._playbackMiddleware.play(() => this._play());
@@ -1771,20 +1761,9 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _handlePreload(): void {
-    if (this._config.playback.preload === 'auto' && !this._config.playback.autoplay && this._canPreload()) {
+    if (this._config.playback.preload === 'auto' && !this._config.playback.autoplay) {
       this.load();
     }
-  }
-
-  /**
-   * If ads plugin enabled it's his responsibility to preload the content player.
-   * So to avoid loading the player twice which can cause errors on MSEs we are not
-   * calling load from the player.
-   * @returns {boolean} - Whether the player can perform preload.
-   * @private
-   */
-  _canPreload(): boolean {
-    return !this._adsController;
   }
 
   /**
@@ -1843,9 +1822,7 @@ export default class Player extends FakeEventTarget {
     const onAutoPlayFailed = () => {
       Player._logger.warn('Autoplay failed, pause player');
       this._posterManager.show();
-      if (this._canPreload()) {
-        this.load();
-      }
+      this.load();
       this.ready().then(() => this.pause());
       this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED));
     };
@@ -1876,6 +1853,28 @@ export default class Player extends FakeEventTarget {
     }
   }
 
+  _load(): void {
+    const resetFlags = () => {
+      this._loading = false;
+      this._reset = false;
+    };
+    if (this._engine && !this.src && !this._loading) {
+      this._loading = true;
+      let startTime = this._config.playback.startTime;
+      this._engine
+        .load(startTime)
+        .then(data => {
+          this._updateTracks(data.tracks);
+          this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
+          resetFlags();
+        })
+        .catch(error => {
+          this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
+          resetFlags();
+        });
+    }
+  }
+
   /**
    * Start/resume the engine playback.
    * @private
@@ -1883,7 +1882,7 @@ export default class Player extends FakeEventTarget {
    */
   _play(): void {
     if (!this._engine.src) {
-      this.load();
+      this._load();
     }
     this.ready()
       .then(() => {
