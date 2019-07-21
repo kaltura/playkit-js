@@ -467,6 +467,7 @@ const _Dom = {
 };
 
 const _Http = {
+  protocol: /^(https?:)/i.test(document.location.protocol) ? document.location.protocol : 'https:',
   execute: function(url: string, params: any, method: string = 'POST', headers?: Map<string, string>): Promise<any> {
     let request = new XMLHttpRequest();
     return new Promise((resolve, reject) => {
