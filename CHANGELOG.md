@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.51.1"></a>
+## [0.51.1](https://github.com/kaltura/playkit-js/compare/v0.51.0...v0.51.1) (2019-07-21)
+
+
+### Bug Fixes
+
+* **FEC-9237:** add app protocol to playkit utils ([#378](https://github.com/kaltura/playkit-js/issues/378)) ([ced2a11](https://github.com/kaltura/playkit-js/commit/ced2a11))
+
+
+
 <a name="0.51.0"></a>
 # [0.51.0](https://github.com/kaltura/playkit-js/compare/v0.50.0...v0.51.0) (2019-07-19)
 
