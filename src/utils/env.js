@@ -14,4 +14,7 @@ Env.isTablet = Env.device.type === UAParser.DEVICE.TABLET;
 Env.isWearable = Env.device.type === UAParser.DEVICE.WEARABLE;
 Env.isEmbedded = Env.device.type === UAParser.DEVICE.EMBEDDED;
 
+//protocol for plugins
+Env.appProtocol = /^(https?:)/i.test(document.location.protocol) ? document.location.protocol : 'https:';
+
 export default Env;
