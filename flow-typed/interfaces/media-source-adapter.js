@@ -21,6 +21,9 @@ declare interface IMediaSourceAdapter {
   isLive(): boolean;
   getStartTimeOfDvrWindow(): number;
   setMaxBitrate(bitrate: number): void;
+  attachMediaSource(playbackEnded: ?boolean): void;
+  detachMediaSource(playbackEnded: ?boolean): void;
+  +targetBuffer: number;
   static +id: string;
   static isSupported(): boolean;
   static canPlayType(mimeType: string): boolean;

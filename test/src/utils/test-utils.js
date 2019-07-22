@@ -10,6 +10,7 @@ function getConfigStructure() {
       preload: 'none',
       autoplay: false,
       muted: false,
+      playbackRates: [2, 3, 4],
       streamPriority: [
         {
           engine: 'html5',

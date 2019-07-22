@@ -199,7 +199,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   reset(): void {
-    this.detach();
     this._eventManager.removeAll();
     if (this._mediaSourceAdapter) {
       this._canLoadMediaSourceAdapterPromise = this._mediaSourceAdapter.destroy();
@@ -240,7 +239,38 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   get id(): string {
     return Html5.id;
   }
-
+  /**
+   * attach media - return the media source to handle the video tag
+   * @public
+   * @param {boolean} playbackEnded playback ended after ads and media
+   * @returns {void}
+   */
+  attachMediaSource(playbackEnded: ?boolean): void {
+    if (this._mediaSourceAdapter) {
+      //added to mask problematic behavior in shaka - init fire loadstart event, only for last init to avoid spinner
+      if (playbackEnded) {
+        this._eventManager.listen(this._el, Html5EventType.LOAD_START, () => {
+          this.dispatchEvent(new FakeEvent(Html5EventType.LOAD_START));
+        });
+      }
+      this._mediaSourceAdapter.attachMediaSource(playbackEnded);
+    }
+  }
+  /**
+   * detach media - will remove the media source from handling the video
+   * @public
+   * @param {boolean} playbackEnded playback ended after ads and media
+   * @returns {void}
+   */
+  detachMediaSource(playbackEnded: ?boolean): void {
+    if (this._mediaSourceAdapter) {
+      //added to mask problematic behavior in shaka - init fire loadstart event, only for last init to avoid spinner
+      if (playbackEnded) {
+        this._eventManager.unlisten(this._el, Html5EventType.LOAD_START);
+      }
+      this._mediaSourceAdapter.detachMediaSource();
+    }
+  }
   /**
    * Listen to the video element events and triggers them from the engine.
    * @public
@@ -264,6 +294,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.MANIFEST_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.TIME_UPDATE, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.PLAYING, (event: FakeEvent) => this.dispatchEvent(event));
@@ -1091,5 +1123,25 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         }
       });
     }
+  }
+
+  get targetBuffer(): number {
+    if (this._mediaSourceAdapter) {
+      return this._mediaSourceAdapter.targetBuffer;
+    }
+    return NaN;
+  }
+
+  get availableBuffer(): number {
+    let retVal = 0;
+    if (this.buffered) {
+      for (let i = 0; i < this.buffered.length; i++) {
+        // find the relevant buffer time range containing the current time
+        if (this.buffered.start(i) <= this._el.currentTime && this._el.currentTime <= this.buffered.end(i)) {
+          retVal = this.buffered.end(i) - this._el.currentTime;
+        }
+      }
+    }
+    return retVal;
   }
 }

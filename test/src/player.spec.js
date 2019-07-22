@@ -2105,6 +2105,13 @@ describe('Player', function() {
       player.config.playback.streamPriority = {};
       player.config.playback.streamPriority.should.deep.equal(getConfigStructure().playback.streamPriority);
     });
+
+    it('should set playbackRates', function() {
+      config.sources = sourcesConfig.MultipleSources;
+      config.playback.playbackRates = [18, 2, 3, 4, 20, 30, -19];
+      player = new Player(config);
+      player._playbackRates.should.deep.equal(getConfigStructure().playback.playbackRates);
+    });
   });
 
   describe('abr', function() {
@@ -2802,7 +2809,7 @@ describe('Player', function() {
     });
 
     it('should enable setting the current log level from config', () => {
-      const player = new Player({logLevel: 'DEBUG'});
+      const player = new Player({log: {level: 'DEBUG'}});
       let currentLogLevel = player.getLogLevel();
       currentLogLevel.should.equal(player.LogLevel.DEBUG);
     });

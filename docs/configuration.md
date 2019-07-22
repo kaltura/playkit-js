@@ -13,7 +13,7 @@ var player = playkit.core.loadPlayer(config);
 
 ```js
 {
-  logLevel: string,
+  log: PKLogConfigObject,
   playback: PKPlaybackConfigObject,
   sources: PKSourcesConfigObject,
   session: PKSessionConfigObject,
@@ -28,7 +28,9 @@ var player = playkit.core.loadPlayer(config);
 
 ```js
 var config = {
-  logLevel: 'ERROR',
+  log: {
+    level: 'ERROR'
+  },
   sources: {
     options: {
       forceRedirectExternalStreams: false
@@ -504,7 +506,8 @@ var config = {
 >  options: PKPlaybackOptionsObject,
 >  streamPriority: Array<PKStreamPriorityObject>,
 >  preferNative: PKPreferNativeConfigObject,
->  inBrowserFullscreen: boolean
+>  inBrowserFullscreen: boolean,
+>  playAdsWithMSE: boolean
 > }
 > ```
 >
@@ -529,6 +532,7 @@ var config = {
 >  loop: false,
 >  muted: false,
 >  pictureInPicture: true,
+>  playAdsWithMSE: false,
 >  options: {
 >    html5: {
 >      hls: {},
@@ -793,6 +797,16 @@ var config = {
 >
 > ##
 >
+> > ### config.playback.playbackRates
+> >
+> > ##### Type: `Array<number>`
+> >
+> > ##### Description: Sets the available rates at which the media can be played back.
+> >
+> > This is an Array attribute that is used to implement user controls for fast forward, slow motion, and so forth. The normal playback rate is multiplied by this value to obtain the current rate, so a value of 1.0 indicates normal speed.
+>
+> ##
+>
 > > ### config.playback.pictureInPicture
 > >
 > > ##### Type: `boolean`
@@ -888,7 +902,21 @@ var config = {
 > > inBrowserFullscreen: boolean;
 > > ```
 > >
-> > > ##### Description: Gives the ability to choose an in-browser fullscreen experience. Useful on iOS devices which will replace the native fullscreen of the AV player.
+> > ##### Description: Gives the ability to choose an in-browser fullscreen experience. Useful on iOS devices which will replace the native fullscreen of the AV player.
+>
+> ##
+>
+> > ### config.playback.playAdsWithMSE
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ```js
+> > playAdsWithMSE: boolean;
+> > ```
+> >
+> > > ##### Description: Gives the ability to share same video tag to play ads and source with media source
 >
 > ##
 >

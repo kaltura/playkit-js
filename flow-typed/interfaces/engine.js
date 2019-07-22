@@ -9,7 +9,7 @@ declare interface IEngine {
   static canPlaySource(source: PKMediaSourceObject, preferNative: boolean, drmConfig: PKDrmConfigObject): boolean;
   static runCapabilities(): void;
   static getCapabilities(): Promise<Object>;
-  static prepareVideoElement(): void;
+  static prepareVideoElement(playerId: string): void;
   static isSupported(): boolean;
   restore(source: PKMediaSourceObject, config: Object): void;
   destroy(): void;
@@ -33,6 +33,8 @@ declare interface IEngine {
   isLive(): boolean;
   getVideoElement(): HTMLVideoElement;
   resetAllCues(): void;
+  attachMediaSource(playbackEnded: ?boolean): void;
+  detachMediaSource(playbackEnded: ?boolean): void;
   +id: string;
   currentTime: number;
   +duration: number;
@@ -62,4 +64,6 @@ declare interface IEngine {
   +videoHeight: number;
   playsinline: boolean;
   crossOrigin: ?string;
+  +targetBuffer: number;
+  +availableBuffer: number;
 }
