@@ -1,5 +1,5 @@
 // @flow
 
-declare interface IPresetComponentsProvider {
-  getPresetComponents(): PresetComponent[];
+declare interface IUIComponentsProvider {
+  getUIComponents(): Array<PKUIComponent>;
 }

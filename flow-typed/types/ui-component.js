@@ -1,5 +1,5 @@
 
-type PresetComponent = {
+type PKUIComponent = {
   label: string,
   presets?: Array<string>,
   container: string,

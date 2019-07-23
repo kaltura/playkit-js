@@ -392,10 +392,10 @@ export default class Player extends FakeEventTarget {
   _resizeWatcher: ResizeWatcher;
   /**
    * Holds preset component factories
-   * @type {?PresetComponent}
+   * @type {?PKUIComponent}
    * @private
    */
-  _presetComponents: PresetComponent[];
+  _uiComponents: Array<PKUIComponent>;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -409,7 +409,7 @@ export default class Player extends FakeEventTarget {
     Player.runCapabilities();
     this._env = Env;
     this._tracks = [];
-    this._presetComponents = [];
+    this._uiComponents = [];
     this._firstPlay = true;
     this._repositionCuesTimeout = false;
     this._loadingMedia = false;
@@ -923,8 +923,8 @@ export default class Player extends FakeEventTarget {
     return Utils.Object.mergeDeep({}, this._config);
   }
 
-  get presetComponents(): PresetComponent[] {
-    return [...this._presetComponents];
+  get uiComponents(): PKUIComponent[] {
+    return [...this._uiComponents];
   }
 
   /**
@@ -1487,7 +1487,7 @@ export default class Player extends FakeEventTarget {
   _configureOrLoadPlugins(plugins: Object = {}): void {
     if (plugins) {
       const middlewares = [];
-      const presetComponents = [];
+      const uiComponents = [];
       Object.keys(plugins).forEach(name => {
         // If the plugin is already exists in the registry we are updating his config
         const plugin = this._pluginManager.get(name);
@@ -1510,8 +1510,8 @@ export default class Player extends FakeEventTarget {
                 plugin.name === 'bumper' ? middlewares.push(plugin.getMiddlewareImpl()) : middlewares.unshift(plugin.getMiddlewareImpl());
               }
 
-              if (typeof plugin.getPresetComponents === 'function') {
-                presetComponents.push(...(plugin.getPresetComponents() || []));
+              if (typeof plugin.getUIComponents === 'function') {
+                uiComponents.push(...(plugin.getUIComponents() || []));
               }
             }
           } else {
@@ -1519,7 +1519,7 @@ export default class Player extends FakeEventTarget {
           }
         }
       });
-      this._presetComponents = presetComponents;
+      this._uiComponents = uiComponents;
       middlewares.forEach(middleware => this._playbackMiddleware.use(middleware));
     }
   }
