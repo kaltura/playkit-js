@@ -646,10 +646,11 @@ export default class Player extends FakeEventTarget {
   /**
    * detach the engine's media source
    * @private
+   * @param {FakeEvent} event - loaded event
    * @returns {void}
    */
-  _detachMediaSource(): void {
-    if (this._engine) {
+  _detachMediaSource(event: FakeEvent): void {
+    if (this._engine && event.payload.ad.linear) {
       //added for case when decorator exist
       this._engine.detachMediaSource(this._engine.ended);
     }
