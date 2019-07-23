@@ -1351,15 +1351,6 @@ export default class Player extends FakeEventTarget {
     setLogLevel(level, name);
   }
 
-  /**
-   * get new logger
-   * @param {*} name name
-   * @returns {void}
-   */
-  getLogger(name: string): void {
-    return getLogger(name);
-  }
-
   // </editor-fold>
 
   // <editor-fold desc="Plugins API">
