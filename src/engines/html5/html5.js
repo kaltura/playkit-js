@@ -46,6 +46,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _config: Object;
   /**
+   * The player ended
+   * @type {boolean}
+   * @private
+   */
+  _playbackEndedOnDetach: boolean = false;
+  /**
    * Promise to indicate when a media source adapter can be loaded.
    * @type {Promise<*>}
    * @private
@@ -242,18 +248,17 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * attach media - return the media source to handle the video tag
    * @public
-   * @param {boolean} playbackEnded playback ended after ads and media
    * @returns {void}
    */
-  attachMediaSource(playbackEnded: ?boolean): void {
+  attachMediaSource(): void {
     if (this._mediaSourceAdapter) {
       //added to mask problematic behavior in shaka - init fire loadstart event, only for last init to avoid spinner
-      if (playbackEnded) {
+      this._mediaSourceAdapter.attachMediaSource(this._playbackEndedOnDetach);
+      if (this._playbackEndedOnDetach) {
         this._eventManager.listen(this._el, Html5EventType.LOAD_START, () => {
           this.dispatchEvent(new FakeEvent(Html5EventType.LOAD_START));
         });
       }
-      this._mediaSourceAdapter.attachMediaSource(playbackEnded);
     }
   }
   /**
@@ -262,10 +267,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @param {boolean} playbackEnded playback ended after ads and media
    * @returns {void}
    */
-  detachMediaSource(playbackEnded: ?boolean): void {
+  detachMediaSource(playbackEnded: boolean): void {
     if (this._mediaSourceAdapter) {
+      this._playbackEndedOnDetach = playbackEnded;
       //added to mask problematic behavior in shaka - init fire loadstart event, only for last init to avoid spinner
-      if (playbackEnded) {
+      if (this._playbackEndedOnDetach) {
         this._eventManager.unlisten(this._el, Html5EventType.LOAD_START);
       }
       this._mediaSourceAdapter.detachMediaSource();
