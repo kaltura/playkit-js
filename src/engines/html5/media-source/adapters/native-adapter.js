@@ -287,13 +287,37 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   handleDecodeError(): void {
     NativeAdapter._logger.debug(`handleDecodeError currentTime <${this._videoElement.currentTime}>`);
-    let currentTime = this._videoElement.currentTime;
-    this._videoElement.load();
-    this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => {
-      this._videoElement.currentTime = currentTime;
-      this._videoElement.pause();
-      this._onNativeAudioTrackChange();
-      this._onNativeTextTrackChange();
+    const prevCurrTime = this._videoElement.currentTime;
+    const prevActiveAudioTrack = this._getActivePKAudioTrack();
+    const prevActiveTextTrack = this._getActivePKTextTrack();
+    NativeAdapter._logger.debug('prevActiveTrack Audio', prevActiveAudioTrack);
+    NativeAdapter._logger.debug('prevActiveTrack Text', prevActiveTextTrack);
+
+    this._eventManager.removeAll();
+    this._loadPromise = null;
+
+    if (this._videoElement && this._videoElement.src) {
+      Utils.Dom.setAttribute(this._videoElement, 'src', '');
+      Utils.Dom.removeAttribute(this._videoElement, 'src');
+    }
+
+    this.load(prevCurrTime).then(() => {
+      this._eventManager.listenOnce(this._videoElement, Html5EventType.PLAYING, () => {
+        if (prevActiveAudioTrack) {
+          this.selectAudioTrack(prevActiveAudioTrack);
+        }
+        if (prevActiveTextTrack) {
+          if (prevActiveTextTrack.language == 'off') {
+            this._disableTextTracks();
+          } else {
+            this.selectTextTrack(prevActiveTextTrack);
+          }
+        } else {
+          this._disableTextTracks();
+        }
+      });
+
+      this._videoElement.play();
     });
   }
 
@@ -337,7 +361,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._addNativeAudioTrackChangeListener();
       this._addNativeTextTrackChangeListener();
       this._addNativeTextTrackAddedListener();
-      NativeAdapter._logger.debug('The source has been loaded successfully');
+      NativeAdapter._logger.debug('The source has been loaded successfully', this._playerTracks, this._videoElement.audioTracks);
       this._loadPromiseReject = null;
       resolve({tracks: this._playerTracks});
       if (this.isLive()) {
@@ -636,11 +660,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    */
   selectAudioTrack(audioTrack: AudioTrack): void {
+    NativeAdapter._logger.debug('selectAudioTrack', audioTrack);
     const audioTracks = this._videoElement.audioTracks;
     if (audioTrack instanceof AudioTrack && audioTracks && audioTracks[audioTrack.index]) {
       this._removeNativeAudioTrackChangeListener();
       this._disableAudioTracks();
       audioTracks[audioTrack.index].enabled = true;
+      NativeAdapter._logger.debug('selectAudioTrack2 ', audioTracks[audioTrack.index]);
       this._onTrackChanged(audioTrack);
       this._addNativeAudioTrackChangeListener();
     }
@@ -667,18 +693,20 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._eventManager.listen(this._videoElement.audioTracks, 'change', () => this._onNativeAudioTrackChange());
     }
   }
+  _getPKAudioTracks(): AudioTrack[] {
+    return this._playerTracks.filter(track => track instanceof AudioTrack);
+  }
 
+  _getActivePKAudioTrack(): AudioTrack {
+    const pkAudioTracks = this._getPKAudioTracks();
+    return pkAudioTracks.find(track => track.active === true);
+  }
   /**
    * Handler of the video element AudioTrackList onchange event.
    * @private
    * @returns {void}
    */
   _onNativeAudioTrackChange(): void {
-    const pkAudioTracks = this._playerTracks.filter(track => track instanceof AudioTrack);
-    const getActivePKAudioTrackIndex = () => {
-      const activeAudioTrack = pkAudioTracks.find(track => track.active === true);
-      return activeAudioTrack ? activeAudioTrack.index : -1;
-    };
     const getActiveVidAudioTrackIndex = () => {
       for (let i = 0; i < this._videoElement.audioTracks.length; i++) {
         const audioTrack = this._videoElement.audioTracks[i];
@@ -690,12 +718,18 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     };
     NativeAdapter._logger.debug('Video element audio track change');
     const vidIndex = getActiveVidAudioTrackIndex();
-    const pkIndex = getActivePKAudioTrackIndex();
+    const activeAudioTrack = this._getActivePKAudioTrack();
+    const pkIndex = activeAudioTrack ? activeAudioTrack.index : -1;
     if (vidIndex !== pkIndex) {
-      const pkAudioTrack = pkAudioTracks.find(track => track.index === vidIndex);
+      const audioTracks = this._getPKAudioTracks();
+      const pkAudioTrack = audioTracks.find(track => track.index === vidIndex);
       if (pkAudioTrack) {
         NativeAdapter._logger.debug('Native selection of track, update the player audio track (' + pkIndex + ' -> ' + vidIndex + ')');
         this._onTrackChanged(pkAudioTrack);
+        for (let i = 0; i < audioTracks.length; i++) {
+          audioTracks[i].active = pkAudioTrack.index === audioTracks[i].index;
+        }
+        NativeAdapter._logger.debug('after this._onTrackChanged(pkAudioTrack);', pkAudioTrack, this._playerTracks);
       }
     }
   }
@@ -746,18 +780,24 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
+  _getPKTextTracks(): AudioTrack[] {
+    return this._playerTracks.filter(track => track instanceof PKTextTrack);
+  }
+
+  _getActivePKTextTrack(): AudioTrack {
+    const pkTextTracks = this._getPKTextTracks();
+    return pkTextTracks.find(track => track.active === true);
+  }
+
   /**
    * Handler of the video element TextTrackList onchange event.
    * @private
    * @returns {void}
    */
   _onNativeTextTrackChange(): void {
-    const pkTextTracks = this._playerTracks.filter(track => track instanceof PKTextTrack);
+    const pkTextTracks = this._getPKTextTracks();
     const pkOffTrack = pkTextTracks.find(track => track.language === 'off');
-    const getActivePKTextTrackIndex = () => {
-      const activeTextTrack = pkTextTracks.find(track => track.active === true);
-      return activeTextTrack ? activeTextTrack.index : -1;
-    };
+
     const getActiveVidTextTrackIndex = () => {
       for (let i = 0; i < this._videoElement.textTracks.length; i++) {
         const textTrack = this._videoElement.textTracks[i];
@@ -769,7 +809,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     };
     NativeAdapter._logger.debug('Video element text track change');
     const vidIndex = getActiveVidTextTrackIndex();
-    const pkIndex = getActivePKTextTrackIndex();
+    const activePKtextTrack = this._getActivePKTextTrack();
+    const pkIndex = activePKtextTrack ? activePKtextTrack.index : -1;
 
     if (vidIndex !== pkIndex) {
       // In case no text track with 'showing' mode
@@ -777,6 +818,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       if (vidIndex == -1) {
         if (pkOffTrack) {
           NativeAdapter._logger.debug('Native selection of track, update the player text track (' + pkIndex + ' -> off)');
+          for (let i = 0; i < pkTextTracks.length; i++) {
+            pkTextTracks[i].active = false;
+          }
           this._onTrackChanged(pkOffTrack);
         }
       } else {
@@ -787,6 +831,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         if (pkTextTrack) {
           NativeAdapter._logger.debug('Native selection of track, update the player text track (' + pkIndex + ' -> ' + vidIndex + ')');
           this._onTrackChanged(pkTextTrack);
+          for (let i = 0; i < pkTextTracks.length; i++) {
+            pkTextTracks[i].active = pkTextTrack.index === pkTextTracks[i].index;
+          }
         }
       }
     }
@@ -876,6 +923,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {void}
    */
   _disableAudioTracks(): void {
+    NativeAdapter._logger.debug('_disableAudioTracks');
     let audioTracks = this._videoElement.audioTracks;
     if (audioTracks) {
       for (let i = 0; i < audioTracks.length; i++) {
