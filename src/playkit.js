@@ -61,6 +61,8 @@ export {Track, VideoTrack, AudioTrack, TextTrack, TextStyle};
 // Export utils library
 export {Utils};
 
+export {Utils as utils};
+
 // Export Error class
 export {Error};
 
