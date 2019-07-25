@@ -256,8 +256,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       //added to mask problematic behavior in shaka - init fire loadstart event, only for last init to avoid spinner
       this._mediaSourceAdapter.attachMediaSource(this._playbackEndedOnDetach);
       if (this._playbackEndedOnDetach) {
-        this._eventManager.listen(this._el, Html5EventType.LOAD_START, () => {
-          this.dispatchEvent(new FakeEvent(Html5EventType.LOAD_START));
+        this._eventManager.unlisten(this._el, Html5EventType.LOAD_START);
+        this._eventManager.listenOnce(this._el, Html5EventType.LOAD_START, () => {
+          this._eventManager.listen(this._el, Html5EventType.LOAD_START, () => {
+            Html5._logger.debug('Html5EventType.LOAD_START');
+            this.dispatchEvent(new FakeEvent(Html5EventType.LOAD_START));
+          });
         });
       }
     }
@@ -271,10 +275,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   detachMediaSource(playbackEnded: boolean): void {
     if (this._mediaSourceAdapter) {
       this._playbackEndedOnDetach = playbackEnded;
-      //added to mask problematic behavior in shaka - init fire loadstart event, only for last init to avoid spinner
-      if (this._playbackEndedOnDetach) {
-        this._eventManager.unlisten(this._el, Html5EventType.LOAD_START);
-      }
       this._mediaSourceAdapter.detachMediaSource();
     }
   }
