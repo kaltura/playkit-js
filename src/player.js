@@ -1547,47 +1547,38 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _selectEngineByPriority(): Promise<*> {
-    let canPlaySourcePromises = [];
-    const streamPriority = this._config.playback.streamPriority;
-    const preferNative = this._config.playback.preferNative;
-    const sources = this._config.sources;
-    for (let priority of streamPriority) {
-      const engineId = typeof priority.engine === 'string' ? priority.engine.toLowerCase() : '';
-      const format = typeof priority.format === 'string' ? priority.format.toLowerCase() : '';
-      const Engine = EngineProvider.getEngines().find(Engine => Engine.id === engineId);
-      if (Engine) {
-        const formatSources = sources[format];
-        if (formatSources && formatSources.length > 0) {
-          const source = formatSources[0];
-          canPlaySourcePromises.push(Engine.canPlaySource(source, preferNative[format], this._config.drm));
-          // .then(() => {
-          //   Player._logger.debug('Source selected: ', formatSources);
-          //   this._loadEngine(Engine, source);
-          //   this._engineType = engineId;
-          //   this._streamType = format;
-          //   resolve();
-          // })
-          // .catch(() => {
-          //   reject();
-          // });
+    return new Promise((resolve, reject) => {
+      let numOfPromises = 0;
+      let resolved = false;
+      const streamPriority = this._config.playback.streamPriority;
+      const preferNative = this._config.playback.preferNative;
+      const sources = this._config.sources;
+      for (let priority of streamPriority) {
+        const engineId = typeof priority.engine === 'string' ? priority.engine.toLowerCase() : '';
+        const format = typeof priority.format === 'string' ? priority.format.toLowerCase() : '';
+        const Engine = EngineProvider.getEngines().find(Engine => Engine.id === engineId);
+        if (Engine) {
+          const formatSources = sources[format];
+          if (formatSources && formatSources.length > 0) {
+            const source = formatSources[0];
+            numOfPromises++;
+            Engine.canPlaySource(source, preferNative[format], this._config.drm)
+              .then(() => {
+                if (!resolved) {
+                  Player._logger.debug('Source selected: ', formatSources);
+                  this._loadEngine(Engine, source);
+                  this._engineType = engineId;
+                  this._streamType = format;
+                  resolved = true;
+                  resolve();
+                }
+              })
+              .catch(() => {
+                if (!resolved && --numOfPromises === 0) reject();
+              });
+          }
         }
       }
-    }
-    let numRejected = 0;
-    return new Promise((resolve, reject) => {
-      canPlaySourcePromises.forEach(promise =>
-        promise
-          .then(() => {
-            Player._logger.debug('engine selected');
-            resolve();
-          })
-          .catch(() => {
-            if (++numRejected === canPlaySourcePromises.length) {
-              Player._logger.debug('no engine selected');
-              reject();
-            }
-          })
-      );
     });
   }
 

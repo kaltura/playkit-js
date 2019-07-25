@@ -72,31 +72,35 @@ export default class MediaSourceProvider {
    * @static
    */
   static canPlaySource(source: PKMediaSourceObject, preferNative: boolean = true, drmConfig: PKDrmConfigObject): Promise<*> {
-    let mediaSourceCanPlaySourcePromises = [];
-    MediaSourceProvider._orderMediaSourceAdapters(preferNative);
-    let mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
-    if (source && source.mimetype && mediaSourceAdapters.length > 0) {
-      for (let i = 0; i < mediaSourceAdapters.length; i++) {
-        if (mediaSourceAdapters[i].canPlayType(source.mimetype)) {
-          if (!source.drmData) {
-            mediaSourceCanPlaySourcePromises.push(Promise.resolve());
-          } else {
-            mediaSourceCanPlaySourcePromises.push(mediaSourceAdapters[i].canPlayDrm(source.drmData, drmConfig));
+    return new Promise((resolve, reject) => {
+      let canPlaySource = false;
+      let numOfPromises = 0;
+      MediaSourceProvider._orderMediaSourceAdapters(preferNative);
+      let mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
+      if (source && source.mimetype && mediaSourceAdapters.length > 0) {
+        for (let i = 0; i < mediaSourceAdapters.length; i++) {
+          if (mediaSourceAdapters[i].canPlayType(source.mimetype)) {
+            if (!source.drmData) {
+              canPlaySource = true;
+              resolve();
+            } else {
+              numOfPromises++;
+              mediaSourceAdapters[i].canPlayDrm(source.drmData, drmConfig)
+                .then(() => {
+                  if (!canPlaySource) {
+                    MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
+                    MediaSourceProvider._logger.debug(`Selected adapter is <${MediaSourceProvider._selectedAdapter.id}>`);
+                    canPlaySource = true;
+                    resolve();
+                  }
+                })
+                .catch(() => {
+                  if (!canPlaySource && --numOfPromises === 0) reject();
+                });
+            }
           }
         }
       }
-    }
-    let numRejected;
-    return new Promise((resolve, reject) => {
-      mediaSourceCanPlaySourcePromises.forEach(promise =>
-        promise
-          .then(() => {
-            resolve();
-          })
-          .catch(() => {
-            if (++numRejected === mediaSourceCanPlaySourcePromises.length) reject();
-          })
-      );
     });
   }
 
