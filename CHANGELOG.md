@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.51.1"></a>
+## [0.51.1](https://github.com/kaltura/playkit-js/compare/v0.51.0...v0.51.1) (2019-07-21)
+
+
+### Bug Fixes
+
+* **FEC-9237:** add app protocol to playkit utils ([#378](https://github.com/kaltura/playkit-js/issues/378)) ([ced2a11](https://github.com/kaltura/playkit-js/commit/ced2a11))
+
+
+
+<a name="0.51.0"></a>
+# [0.51.0](https://github.com/kaltura/playkit-js/compare/v0.50.0...v0.51.0) (2019-07-19)
+
+
+### Features
+
+* **FEC-9227:** support reInit of MSE ([#375](https://github.com/kaltura/playkit-js/issues/375)) ([6142fce](https://github.com/kaltura/playkit-js/commit/6142fce))
+
+
+
+<a name="0.50.0"></a>
+# [0.50.0](https://github.com/kaltura/playkit-js/compare/v0.49.0...v0.50.0) (2019-07-19)
+
+
+### Features
+
+* **FEC-9158:** preload chain ([#377](https://github.com/kaltura/playkit-js/issues/377)) ([add5823](https://github.com/kaltura/playkit-js/commit/add5823))
+
+
+
 <a name="0.49.0"></a>
 # [0.49.0](https://github.com/kaltura/playkit-js/compare/v0.46.1...v0.49.0) (2019-07-07)
 

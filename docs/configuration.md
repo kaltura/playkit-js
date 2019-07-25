@@ -506,7 +506,8 @@ var config = {
 >  options: PKPlaybackOptionsObject,
 >  streamPriority: Array<PKStreamPriorityObject>,
 >  preferNative: PKPreferNativeConfigObject,
->  inBrowserFullscreen: boolean
+>  inBrowserFullscreen: boolean,
+>  playAdsWithMSE: boolean
 > }
 > ```
 >
@@ -531,6 +532,7 @@ var config = {
 >  loop: false,
 >  muted: false,
 >  pictureInPicture: true,
+>  playAdsWithMSE: false,
 >  options: {
 >    html5: {
 >      hls: {},
@@ -900,7 +902,21 @@ var config = {
 > > inBrowserFullscreen: boolean;
 > > ```
 > >
-> > > ##### Description: Gives the ability to choose an in-browser fullscreen experience. Useful on iOS devices which will replace the native fullscreen of the AV player.
+> > ##### Description: Gives the ability to choose an in-browser fullscreen experience. Useful on iOS devices which will replace the native fullscreen of the AV player.
+>
+> ##
+>
+> > ### config.playback.playAdsWithMSE
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ```js
+> > playAdsWithMSE: boolean;
+> > ```
+> >
+> > > ##### Description: Gives the ability to share same video tag to play ads and source with media source
 >
 > ##
 >
