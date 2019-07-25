@@ -1678,7 +1678,11 @@ export default class Player extends FakeEventTarget {
         });
       }
       if (this.config.playback.playAdsWithMSE) {
-        this._eventManager.listen(this, AdEventType.AD_LOADED, this._detachMediaSource);
+        this._eventManager.listen(this, AdEventType.AD_LOADED, event => {
+          if (event.payload.ad.linear) {
+            this._detachMediaSource();
+          }
+        });
         this._eventManager.listen(this, AdEventType.AD_BREAK_END, this._attachMediaSource);
         this._eventManager.listen(this, AdEventType.AD_ERROR, this._attachMediaSource);
       }
