@@ -46,12 +46,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _config: Object;
   /**
-   * The player ended
-   * @type {boolean}
-   * @private
-   */
-  _playbackEndedOnDetach: boolean = false;
-  /**
    * Promise to indicate when a media source adapter can be loaded.
    * @type {Promise<*>}
    * @private
@@ -205,7 +199,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   reset(): void {
-    this._playbackEndedOnDetach = false;
     this._eventManager.removeAll();
     if (this._mediaSourceAdapter) {
       this._canLoadMediaSourceAdapterPromise = this._mediaSourceAdapter.destroy();
@@ -253,18 +246,16 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   attachMediaSource(): void {
     if (this._mediaSourceAdapter) {
-      this._mediaSourceAdapter.attachMediaSource(this._playbackEndedOnDetach);
+      this._mediaSourceAdapter.attachMediaSource();
     }
   }
   /**
    * detach media - will remove the media source from handling the video
    * @public
-   * @param {boolean} playbackEnded playback ended after ads and media
    * @returns {void}
    */
-  detachMediaSource(playbackEnded: boolean): void {
+  detachMediaSource(): void {
     if (this._mediaSourceAdapter) {
-      this._playbackEndedOnDetach = playbackEnded;
       this._mediaSourceAdapter.detachMediaSource();
     }
   }

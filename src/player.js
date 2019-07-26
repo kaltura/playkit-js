@@ -649,8 +649,7 @@ export default class Player extends FakeEventTarget {
    */
   _detachMediaSource(): void {
     if (this._engine) {
-      //added for case when decorator exist
-      this._engine.detachMediaSource(this._engine.ended);
+      this._engine.detachMediaSource();
     }
   }
 

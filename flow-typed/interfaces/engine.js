@@ -34,7 +34,7 @@ declare interface IEngine {
   getVideoElement(): HTMLVideoElement;
   resetAllCues(): void;
   attachMediaSource(): void;
-  detachMediaSource(playbackEnded: boolean): void;
+  detachMediaSource(): void;
   +id: string;
   currentTime: number;
   +duration: number;
