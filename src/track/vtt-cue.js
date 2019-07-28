@@ -9,7 +9,7 @@ const directionSetting: {[string]: boolean} = {
 };
 const alignSetting: {[string]: boolean} = {
   start: true,
-  middle: true,
+  center: true,
   end: true,
   left: true,
   right: true
@@ -144,7 +144,7 @@ class VTTCue {
    * @type {string}
    * @private
    */
-  _positionAlign: string = 'middle';
+  _positionAlign: string = 'center';
   /**
    * A number giving the size of the cue box, to be interpreted as a percentage of the video, as defined
    * by the writing direction.
@@ -157,7 +157,7 @@ class VTTCue {
    * @type {string}
    * @private
    */
-  _align: string = 'middle';
+  _align: string = 'center';
 
   constructor(startTime: number, endTime: number, text: string) {
     this._startTime = startTime;
