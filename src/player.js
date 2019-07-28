@@ -633,8 +633,7 @@ export default class Player extends FakeEventTarget {
    */
   _attachMediaSource(): void {
     if (this._engine) {
-      //added for case when decorator exist
-      this._engine.attachMediaSource(this._engine.ended);
+      this._engine.attachMediaSource();
       this._eventManager.listenOnce(this, Html5EventType.CAN_PLAY, () => {
         if (typeof this._playbackAttributesState.rate === 'number') {
           this.playbackRate = this._playbackAttributesState.rate;
@@ -650,8 +649,7 @@ export default class Player extends FakeEventTarget {
    */
   _detachMediaSource(): void {
     if (this._engine) {
-      //added for case when decorator exist
-      this._engine.detachMediaSource(this._engine.ended);
+      this._engine.detachMediaSource();
     }
   }
 

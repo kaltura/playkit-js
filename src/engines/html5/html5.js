@@ -242,32 +242,20 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * attach media - return the media source to handle the video tag
    * @public
-   * @param {boolean} playbackEnded playback ended after ads and media
    * @returns {void}
    */
-  attachMediaSource(playbackEnded: ?boolean): void {
+  attachMediaSource(): void {
     if (this._mediaSourceAdapter) {
-      //added to mask problematic behavior in shaka - init fire loadstart event, only for last init to avoid spinner
-      if (playbackEnded) {
-        this._eventManager.listen(this._el, Html5EventType.LOAD_START, () => {
-          this.dispatchEvent(new FakeEvent(Html5EventType.LOAD_START));
-        });
-      }
-      this._mediaSourceAdapter.attachMediaSource(playbackEnded);
+      this._mediaSourceAdapter.attachMediaSource();
     }
   }
   /**
    * detach media - will remove the media source from handling the video
    * @public
-   * @param {boolean} playbackEnded playback ended after ads and media
    * @returns {void}
    */
-  detachMediaSource(playbackEnded: ?boolean): void {
+  detachMediaSource(): void {
     if (this._mediaSourceAdapter) {
-      //added to mask problematic behavior in shaka - init fire loadstart event, only for last init to avoid spinner
-      if (playbackEnded) {
-        this._eventManager.unlisten(this._el, Html5EventType.LOAD_START);
-      }
       this._mediaSourceAdapter.detachMediaSource();
     }
   }

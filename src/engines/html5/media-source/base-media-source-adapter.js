@@ -166,8 +166,8 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return;
   }
 
-  attachMediaSource(playbackEnded: ?boolean): void {}
-  detachMediaSource(playbackEnded: ?boolean): void {}
+  attachMediaSource(): void {}
+  detachMediaSource(): void {}
   /**
    * Handling live time update (as is not triggered when video is paused, but the current time changed)
    * @function _handleLiveTimeUpdate
