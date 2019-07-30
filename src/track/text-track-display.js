@@ -196,21 +196,21 @@ function parseCue(input, cue, regionList) {
             settings.percent(k, vals0) ? settings.set('snapToLines', false) : null;
             settings.alt(k, vals0, ['auto']);
             if (vals.length === 2) {
-              settings.alt('lineAlign', vals[1], ['start', 'middle', 'end']);
+              settings.alt('lineAlign', vals[1], ['start', 'center', 'end']);
             }
             break;
           case 'position':
             vals = v.split(',');
             settings.percent(k, vals[0]);
             if (vals.length === 2) {
-              settings.alt('positionAlign', vals[1], ['start', 'middle', 'end']);
+              settings.alt('positionAlign', vals[1], ['start', 'center', 'end']);
             }
             break;
           case 'size':
             settings.percent(k, v);
             break;
           case 'align':
-            settings.alt(k, v, ['start', 'middle', 'end', 'left', 'right']);
+            settings.alt(k, v, ['start', 'center', 'end', 'left', 'right']);
             break;
         }
       },
@@ -225,14 +225,14 @@ function parseCue(input, cue, regionList) {
     cue.lineAlign = settings.get('lineAlign', 'start');
     cue.snapToLines = settings.get('snapToLines', true);
     cue.size = settings.get('size', 100);
-    cue.align = settings.get('align', 'middle');
+    cue.align = settings.get('align', 'center');
     cue.position = settings.get('position', cue.position || 'auto');
     cue.positionAlign = settings.get(
       'positionAlign',
       {
         start: 'start',
         left: 'start',
-        middle: 'middle',
+        center: 'center',
         end: 'end',
         right: 'end'
       },
@@ -633,7 +633,7 @@ class CueStyleBox extends StyleBox {
     // mirrors of them except "middle" which is "center" in CSS.
     this.div = window.document.createElement('div');
     styles = {
-      textAlign: cue.align === 'middle' ? 'center' : cue.align,
+      textAlign: cue.align,
       font: styleOptions.font,
       whiteSpace: 'pre-line',
       position: 'absolute'
@@ -657,7 +657,7 @@ class CueStyleBox extends StyleBox {
       case 'start':
         textPos = cue.position;
         break;
-      case 'middle':
+      case 'center':
         textPos = cue.position - cue.size / 2;
         break;
       case 'end':
@@ -928,7 +928,7 @@ function moveBoxToLinePosition(styleBox, containerBox, boxPositions) {
     let calculatedPercentage = boxPosition.lineHeight / containerBox.height * 100;
 
     switch (cue.lineAlign) {
-      case 'middle':
+      case 'center':
         linePos -= calculatedPercentage / 2;
         break;
       case 'end':

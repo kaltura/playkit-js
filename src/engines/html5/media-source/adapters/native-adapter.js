@@ -1,5 +1,4 @@
 //@flow
-import EventManager from '../../../../event/event-manager';
 import {CustomEventType, Html5EventType} from '../../../../event/event-type';
 import Track from '../../../../track/track';
 import VideoTrack from '../../../../track/video-track';
@@ -65,13 +64,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _drmHandler: ?FairplayDrmHandler;
-  /**
-   * The event manager of the class.
-   * @member {EventManager} - _eventManager
-   * @type {EventManager}
-   * @private
-   */
-  _eventManager: EventManager;
   /**
    * The load promise
    * @member {Promise<Object>} - _loadPromise
@@ -204,7 +196,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   constructor(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object) {
     NativeAdapter._logger.debug('Creating adapter');
     super(videoElement, source, config);
-    this._eventManager = new EventManager();
     this._config = Utils.Object.mergeDeep({}, defaultConfig, this._config);
     this._progressiveSources = config.progressiveSources;
     this._liveEdge = 0;
@@ -300,6 +291,19 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
+   * attach media - return the media source to handle the video tag
+   * @public
+   * @returns {void}
+   */
+  attachMediaSource(): void {}
+  /**
+   * detach media - will remove the media source from handling the video
+   * @public
+   * @returns {void}
+   */
+  detachMediaSource(): void {}
+
+  /**
    * Loaded data event handler.
    * @param {Function} resolve - The resolve promise function.
    * @param {number} startTime - Optional time to start the video from.
@@ -383,7 +387,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   destroy(): Promise<*> {
     NativeAdapter._logger.debug('destroy');
     return super.destroy().then(() => {
-      this._eventManager.destroy();
       this._drmHandler && this._drmHandler.destroy();
       this._waitingEventTriggered = false;
       this._progressiveSources = [];

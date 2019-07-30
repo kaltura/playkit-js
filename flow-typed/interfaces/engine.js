@@ -33,6 +33,8 @@ declare interface IEngine {
   isLive(): boolean;
   getVideoElement(): HTMLVideoElement;
   resetAllCues(): void;
+  attachMediaSource(): void;
+  detachMediaSource(): void;
   +id: string;
   currentTime: number;
   +duration: number;
