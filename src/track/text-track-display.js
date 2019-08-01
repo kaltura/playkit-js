@@ -225,7 +225,12 @@ function parseCue(input, cue, regionList) {
     cue.lineAlign = settings.get('lineAlign', 'start');
     cue.snapToLines = settings.get('snapToLines', true);
     cue.size = settings.get('size', 100);
-    cue.align = settings.get('align', 'center');
+    // Safari still uses the old middle value and won't accept center
+    try {
+      cue.align = settings.get("align", "center");
+    } catch (e) {
+      cue.align = settings.get("align", "middle");
+    }
     cue.position = settings.get('position', cue.position || 'auto');
     cue.positionAlign = settings.get(
       'positionAlign',
@@ -233,6 +238,7 @@ function parseCue(input, cue, regionList) {
         start: 'start',
         left: 'start',
         center: 'center',
+        middle: 'center',
         end: 'end',
         right: 'end'
       },
@@ -633,7 +639,7 @@ class CueStyleBox extends StyleBox {
     // mirrors of them except "middle" which is "center" in CSS.
     this.div = window.document.createElement('div');
     styles = {
-      textAlign: cue.align,
+      textAlign: cue.align === 'middle' ? 'center' : cue.align,
       font: styleOptions.font,
       whiteSpace: 'pre-line',
       position: 'absolute'
