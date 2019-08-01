@@ -109,6 +109,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _waitingEventTriggered: ?boolean = false;
 
   /**
+   * The last time detach occurred
+   * @type {number}
+   * @private
+   */
+  _lastTimeDetach: number = 0;
+
+  /**
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
    * @param {string} mimeType - The mime type to check
@@ -295,13 +302,36 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    * @returns {void}
    */
-  attachMediaSource(): void {}
+  attachMediaSource(): void {
+    const canPlayHandler = () => {
+      this.currentTime = this._lastTimeDetach;
+      this._lastTimeDetach = NaN;
+    };
+    this._eventManager.listenOnce(this._videoElement, Html5EventType.CAN_PLAY, canPlayHandler);
+  }
   /**
    * detach media - will remove the media source from handling the video
    * @public
    * @returns {void}
    */
-  detachMediaSource(): void {}
+  detachMediaSource(): void {
+    this._lastTimeDetach = this.currentTime;
+    this._reset();
+  }
+
+  _reset() {
+    this._eventManager.removeAll();
+    this._loadPromise = null;
+    this._loadPromiseReject = null;
+    this._waitingEventTriggered = false;
+    this._liveEdge = 0;
+    this._lastTimeUpdate = 0;
+    this._clearHeartbeatTimeout();
+    if (this._liveDurationChangeInterval) {
+      clearInterval(this._liveDurationChangeInterval);
+      this._liveDurationChangeInterval = null;
+    }
+  }
 
   /**
    * Loaded data event handler.

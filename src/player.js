@@ -1899,8 +1899,10 @@ export default class Player extends FakeEventTarget {
       this._engine
         .load(startTime)
         .then(data => {
-          this._updateTracks(data.tracks);
-          this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
+          this._eventManager.listenOnce(this.getVideoElement(), Html5EventType.CAN_PLAY, () => {
+            this._updateTracks(data.tracks);
+            this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
+          });
           resetFlags();
         })
         .catch(error => {
@@ -2287,6 +2289,13 @@ export default class Player extends FakeEventTarget {
       }
     });
   }
+
+  _restore(): void {
+    this._detachMediaSource();
+    this._attachMediaSource();
+    this._play();
+  }
+
   // </editor-fold>
 
   // </editor-fold>
