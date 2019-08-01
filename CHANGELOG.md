@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.51.3"></a>
+## [0.51.3](https://github.com/kaltura/playkit-js/compare/v0.51.2...v0.51.3) (2019-08-01)
+
+
+### Bug Fixes
+
+* **FEC-9274:** captions are displayed on buttom left of player area and are not aligned ([#383](https://github.com/kaltura/playkit-js/issues/383)) ([63a8141](https://github.com/kaltura/playkit-js/commit/63a8141))
+
+
+
 <a name="0.51.2"></a>
 ## [0.51.2](https://github.com/kaltura/playkit-js/compare/v0.51.1...v0.51.2) (2019-07-28)
 
