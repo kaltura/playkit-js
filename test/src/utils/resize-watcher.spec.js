@@ -5,12 +5,14 @@ describe('ResizeWatcher', () => {
   beforeEach(() => {
     rw = new ResizeWatcher();
   });
+  afterEach(() => {
+    rw.destroy();
+  });
 
   it('create a native obeserver', () => {
     if (window.ResizeObserver) {
       rw._createNativeObserver();
       rw._observer.should.be.instanceof(window.ResizeObserver);
-      rw.destroy();
     }
   });
 
@@ -18,7 +20,6 @@ describe('ResizeWatcher', () => {
     rw._createIframeObserver();
     rw._observer.should.not.be.instanceof(window.ResizeObserver);
     rw._observer.should.be.an('Object');
-    rw.destroy();
   });
 
   it('iframe obeserver _createIframe', () => {
@@ -26,7 +27,6 @@ describe('ResizeWatcher', () => {
     let iframe = rw._observer._createIframe();
     iframe.should.be.instanceOf(HTMLElement);
     iframe.className.should.be.equal('playkit-size-iframe');
-    rw.destroy();
   });
 
   it('iframe obeserver observe', done => {
@@ -40,7 +40,6 @@ describe('ResizeWatcher', () => {
     rw._observer.observe(container);
     rw._observer._observersStore['testId123456789'].should.be.instanceof(HTMLIFrameElement);
     rw.addEventListener('resize', () => {
-      rw.destroy();
       document.body.removeChild(container);
       done();
     });

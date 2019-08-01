@@ -1994,6 +1994,7 @@ describe('Player', function() {
             player.muted.should.be.true;
           });
         });
+        player.destroy();
       });
 
       it('should save initial playback config and initiate it when received sources - 2', function() {
@@ -2018,6 +2019,7 @@ describe('Player', function() {
             });
           });
         });
+        player.destroy();
       });
 
       it('should load the previous playback config and initiate the new one on updating sources', function(done) {
@@ -2028,36 +2030,51 @@ describe('Player', function() {
             volume: 0.5
           }
         });
-        player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
-          player.load();
-          player.volume.should.equals(0.5);
-          player.muted.should.be.true;
-          player.config.playback.volume.should.equals(0.5);
-          player.config.playback.muted.should.be.true;
-          player.ready().then(() => {
-            player.src.should.equals(sourcesConfig.MultipleSources.progressive[0].url);
-            done();
-            player.addEventListener(player.Event.VOLUME_CHANGE, () => {
-              let newProgressiveConfig = {
-                progressive: [sourcesConfig.MultipleSources.progressive[1]]
-              };
-              player.configure({
-                sources: newProgressiveConfig
-              });
-              player.load();
-              player.volume.should.equals(1);
-              player.muted.should.be.false;
-              player.config.playback.volume.should.equals(0.5);
-              player.config.playback.muted.should.be.true;
-              player.ready().then(() => {
-                player.src.should.equals(newProgressiveConfig.progressive[0].url);
+        player.addEventListener(CustomEventType.CHANGE_SOURCE_ENDED, () => {
+          try {
+            player.load();
+            player.volume.should.equals(0.5);
+            player.muted.should.be.true;
+            player.config.playback.volume.should.equals(0.5);
+            player.config.playback.muted.should.be.true;
+            player.ready().then(
+              () => {
+                player.src.should.equals(sourcesConfig.MultipleSources.progressive[0].url);
                 done();
-              });
-            });
-            player.muted = false;
-            player.volume = 1;
-          });
+                player.addEventListener(player.Event.VOLUME_CHANGE, () => {
+                  try {
+                    let newProgressiveConfig = {
+                      progressive: [sourcesConfig.MultipleSources.progressive[1]]
+                    };
+                    player.configure({
+                      sources: newProgressiveConfig
+                    });
+                    player.load();
+                    player.volume.should.equals(1);
+                    player.muted.should.be.false;
+                    player.config.playback.volume.should.equals(0.5);
+                    player.config.playback.muted.should.be.true;
+                    player.ready().then(
+                      () => {
+                        player.src.should.equals(newProgressiveConfig.progressive[0].url);
+                        done();
+                      },
+                      err => done(err)
+                    );
+                  } catch (err) {
+                    done(err);
+                  }
+                });
+                player.muted = false;
+                player.volume = 1;
+              },
+              err => done(err)
+            );
+          } catch (err) {
+            done(err);
+          }
         });
+        player.destroy();
       });
 
       it('should load the initial config and initiate the new one on updating sources', function(done) {
@@ -2068,44 +2085,59 @@ describe('Player', function() {
             volume: 1
           }
         });
-        player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
-          player.load();
-          player.volume.should.equals(1);
-          player.muted.should.be.true;
-          player.config.playback.volume.should.equals(1);
-          player.config.playback.muted.should.be.true;
-          player.ready().then(() => {
-            player.src.should.equals(sourcesConfig.MultipleSources.progressive[0].url);
-            player.configure({
-              playback: {
-                muted: false,
-                volume: 0.5
-              }
-            });
-            player.volume.should.equals(1);
-            player.muted.should.be.true;
-            player.config.playback.volume.should.equals(0.5);
-            player.config.playback.muted.should.be.false;
-            let newProgressiveConfig = {
-              progressive: [sourcesConfig.MultipleSources.progressive[1]]
-            };
-            player._playbackAttributesState = {};
-            player.configure({
-              sources: newProgressiveConfig
-            });
-            player.load();
-            player.volume.should.equals(0.5);
-            player.muted.should.be.false;
-            player.config.playback.volume.should.equals(0.5);
-            player.config.playback.muted.should.be.false;
-            player.ready().then(() => {
-              player.src.should.equals(newProgressiveConfig.progressive[0].url);
-              done();
-            });
-          });
-        });
+        player.load();
+        player.ready().then(
+          () => {
+            try {
+              player.volume.should.equals(1);
+              player.muted.should.be.true;
+              player.config.playback.volume.should.equals(1);
+              player.config.playback.muted.should.be.true;
+              player.src.should.equals(sourcesConfig.MultipleSources.progressive[0].url);
+              player.configure({
+                playback: {
+                  muted: false,
+                  volume: 0.5
+                }
+              });
+              player.volume.should.equals(1);
+              player.muted.should.be.true;
+              player.config.playback.volume.should.equals(0.5);
+              player.config.playback.muted.should.be.false;
+              let newProgressiveConfig = {
+                progressive: [sourcesConfig.MultipleSources.progressive[1]]
+              };
+              player._playbackAttributesState = {};
+              player.configure({
+                sources: newProgressiveConfig
+              });
+              player.addEventListener(CustomEventType.CHANGE_SOURCE_ENDED, () => {
+                try {
+                  player.load();
+                  player.volume.should.equals(0.5);
+                  player.muted.should.be.false;
+                  player.config.playback.volume.should.equals(0.5);
+                  player.config.playback.muted.should.be.false;
+                  player.ready().then(
+                    () => {
+                      player.src.should.equals(newProgressiveConfig.progressive[0].url);
+                      done();
+                    },
+                    err => done(err)
+                  );
+                } catch (err) {
+                  done(err);
+                }
+              });
+            } catch (err) {
+              done(err);
+            }
+          },
+          err => done(err)
+        );
       });
     });
+    player.destroy();
   });
 
   describe('config', function() {
@@ -2838,17 +2870,17 @@ describe('Player', function() {
     });
 
     it('should call _resetTextCuesAndReposition function', done => {
-      player.ready().then(() => {
+      player.addEventListener(CustomEventType.CHANGE_SOURCE_ENDED, () => {
         let spy = sandbox.spy(player, '_resetTextCuesAndReposition');
-        player._resizeWatcher._triggerResize();
-        setTimeout(() => {
+        player.addEventListener(CustomEventType.RESIZE, () => {
           try {
             spy.should.have.been.calledOnce;
             done();
           } catch (err) {
             done(err);
           }
-        }, 500);
+        });
+        player._resizeWatcher._triggerResize();
       });
     });
   });
