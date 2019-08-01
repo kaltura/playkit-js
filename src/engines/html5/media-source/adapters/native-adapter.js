@@ -127,42 +127,55 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   /**
    * Checks if NativeAdapter can play a given drm data.
    * @function canPlayDrm
-   * @param {Array<Object>} drmData - The drm data to check.
+   * @param {Array<PKDrmDataObject>} drmData - The drm data to check.
    * @param {PKDrmConfigObject} drmConfig - The drm config.
    * @returns {boolean} - Whether the native adapter can play a specific drm data.
    * @static
    */
-  static canPlayDrm(drmData: Array<Object>, drmConfig: PKDrmConfigObject): Promise<*> {
-    return new Promise((resolve, reject) => {
-      let canPlayDrm = false;
-      let numRejected = 0;
+  static canPlayDrm(drmData: Array<PKDrmDataObject>, drmConfig: PKDrmConfigObject): Promise<*> {
+    let canPlayDrm = false;
+    let promises = [];
+    for (let drmProtocol of NativeAdapter._drmProtocols) {
+      if (drmProtocol.isConfigured(drmData, drmConfig)) {
+        promises.push(Promise.resolve(drmProtocol));
+        canPlayDrm = true;
+        break;
+      }
+    }
+    if (!canPlayDrm) {
       for (let drmProtocol of NativeAdapter._drmProtocols) {
-        if (drmProtocol.isConfigured(drmData, drmConfig)) {
-          NativeAdapter._drmProtocol = drmProtocol;
-          canPlayDrm = true;
-          resolve();
-        }
-      }
-      if (!canPlayDrm && NativeAdapter._drmProtocols.length > 0) {
-        for (let drmProtocol of NativeAdapter._drmProtocols) {
-          drmProtocol
-            .canPlayDrm(drmData)
-            .then(() => {
-              NativeAdapter._drmProtocol = drmProtocol;
-              NativeAdapter._logger.debug('canPlayDrm result is ' + true, drmData);
-              resolve();
-            })
-            .catch(() => {
-              if (++numRejected === NativeAdapter._drmProtocols.length) {
-                NativeAdapter._logger.debug('canPlayDrm result is ' + false, drmData);
+        promises.push(
+          new Promise((resolve, reject) => {
+            drmProtocol
+              .canPlayDrm(drmData)
+              .then(() => {
+                resolve(drmProtocol);
+              })
+              .catch(() => {
                 reject();
-              }
-            });
-        }
-      } else {
-        reject();
+              });
+          })
+        );
       }
-    });
+    }
+    return Promise.all(
+      promises.map(p => {
+        // If a request fails, count that as a resolution so it will keep
+        // waiting for other possible successes. If a request succeeds,
+        // treat it as a rejection so Promise.all immediately bails out.
+        return p.then(drmProtocol => Promise.reject(drmProtocol), () => Promise.resolve());
+      })
+    ).then(
+      // If '.all' resolved, we've just got an array of errors.
+      () => Promise.reject(),
+      // If '.all' rejected, we've got the result we wanted.
+      drmProtocol => {
+        if (!NativeAdapter._drmProtocol) {
+          NativeAdapter._drmProtocol = drmProtocol;
+          Promise.resolve();
+        }
+      }
+    );
   }
 
   /**

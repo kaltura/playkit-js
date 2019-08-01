@@ -72,36 +72,51 @@ export default class MediaSourceProvider {
    * @static
    */
   static canPlaySource(source: PKMediaSourceObject, preferNative: boolean = true, drmConfig: PKDrmConfigObject): Promise<*> {
-    return new Promise((resolve, reject) => {
-      let canPlaySource = false;
-      let numOfPromises = 0;
-      MediaSourceProvider._orderMediaSourceAdapters(preferNative);
-      let mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
-      if (source && source.mimetype && mediaSourceAdapters.length > 0) {
-        for (let i = 0; i < mediaSourceAdapters.length; i++) {
-          if (mediaSourceAdapters[i].canPlayType(source.mimetype)) {
-            if (!source.drmData) {
-              canPlaySource = true;
-              resolve();
-            } else {
-              numOfPromises++;
-              mediaSourceAdapters[i].canPlayDrm(source.drmData, drmConfig)
-                .then(() => {
-                  if (!canPlaySource) {
-                    MediaSourceProvider._selectedAdapter = mediaSourceAdapters[i];
-                    MediaSourceProvider._logger.debug(`Selected adapter is <${MediaSourceProvider._selectedAdapter.id}>`);
-                    canPlaySource = true;
-                    resolve();
-                  }
-                })
-                .catch(() => {
-                  if (!canPlaySource && --numOfPromises === 0) reject();
-                });
-            }
+    let promises = [];
+    MediaSourceProvider._selectedAdapter = null;
+    MediaSourceProvider._orderMediaSourceAdapters(preferNative);
+    let mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
+    if (source && source.mimetype && mediaSourceAdapters.length > 0) {
+      for (let i = 0; i < mediaSourceAdapters.length; i++) {
+        if (mediaSourceAdapters[i].canPlayType(source.mimetype)) {
+          if (!source.drmData) {
+            promises.push(Promise.resolve(mediaSourceAdapters[i]));
+          } else {
+            promises.push(
+              new Promise((resolve, reject) => {
+                // $FlowFixMe flow doesn't recognize the check above
+                mediaSourceAdapters[i].canPlayDrm(source.drmData, drmConfig)
+                  .then(() => {
+                    resolve(mediaSourceAdapters[i]);
+                  })
+                  .catch(() => {
+                    reject();
+                  });
+              })
+            );
           }
         }
       }
-    });
+    }
+    return Promise.all(
+      promises.map(p => {
+        // If a request fails, count that as a resolution so it will keep
+        // waiting for other possible successes. If a request succeeds,
+        // treat it as a rejection so Promise.all immediately bails out.
+        return p.then(selectedAdapter => Promise.reject(selectedAdapter), () => Promise.resolve());
+      })
+    ).then(
+      // If '.all' resolved, we've just got an array of errors.
+      () => Promise.reject(),
+      // If '.all' rejected, we've got the result we wanted.
+      selectedAdapter => {
+        if (!MediaSourceProvider._selectedAdapter) {
+          MediaSourceProvider._selectedAdapter = selectedAdapter;
+          MediaSourceProvider._logger.debug(`Selected adapter is <${MediaSourceProvider._selectedAdapter.id}>`);
+          Promise.resolve();
+        }
+      }
+    );
   }
 
   /**
@@ -136,7 +151,7 @@ export default class MediaSourceProvider {
             resolve(MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config) : null);
           });
         } else {
-          resolve(MediaSourceProvider._selectedAdapter);
+          resolve(MediaSourceProvider._selectedAdapter ? MediaSourceProvider._selectedAdapter.createAdapter(videoElement, source, config) : null);
         }
       } else {
         reject(null);

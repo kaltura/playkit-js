@@ -27,8 +27,8 @@ class Adapter1 implements IMediaSourceAdapter {
     return ['mimeType0', 'mimeType1'].includes(mimeType);
   }
 
-  static canPlayDrm(drmData: Array<Object>, drmConfig: PKDrmConfigObject): boolean {
-    return !!((drmData.length && drmData[0].scheme === 's1') || drmConfig.keySystem === 's1');
+  static canPlayDrm(drmData: Array<PKDrmDataObject>, drmConfig: PKDrmConfigObject): Promise<*> {
+    return (drmData.length && drmData[0].scheme === 's1') || drmConfig.keySystem === 's1' ? Promise.resolve() : Promise.reject();
   }
 
   static createAdapter(videoElement: HTMLVideoElement, source: Object, config: Object): IMediaSourceAdapter {
@@ -51,8 +51,8 @@ class Adapter2 implements IMediaSourceAdapter {
     return ['mimeType1', 'mimeType2'].includes(mimeType);
   }
 
-  static canPlayDrm(): boolean {
-    return false;
+  static canPlayDrm(): Promise<*> {
+    return Promise.reject();
   }
 
   static createAdapter(videoElement: HTMLVideoElement, source: Object, config: Object): IMediaSourceAdapter {
@@ -75,8 +75,8 @@ class Adapter3 implements IMediaSourceAdapter {
     return !!document.createElement('video').canPlayType(mimeType);
   }
 
-  static canPlayDrm(drmData: Array<Object>, drmConfig: PKDrmConfigObject): boolean {
-    return !!((drmData.length && drmData[0].scheme === 's3') || drmConfig.keySystem === 's3');
+  static canPlayDrm(drmData: Array<PKDrmDataObject>, drmConfig: PKDrmConfigObject): Promise<*> {
+    return (drmData.length && drmData[0].scheme === 's3') || drmConfig.keySystem === 's3' ? Promise.resolve() : Promise.reject();
   }
 
   static createAdapter(videoElement: HTMLVideoElement, source: Object, config: Object): IMediaSourceAdapter {

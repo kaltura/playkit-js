@@ -278,18 +278,20 @@ describe('ExternalCaptionsHandler', () => {
       config.sources = sourcesConfig.MultipleSources;
       config.playback = {};
       player = new Player(config);
-      externalCaptionsHandler = new ExternalCaptionsHandler(player);
-      playerContainer.appendChild(player.getView());
-      externalCaptionsHandler._textTrackModel['en'] = {
-        cues: [
-          {startTime: 1, endTime: 2},
-          {startTime: 2, endTime: 5},
-          {startTime: 2.5, endTime: 6},
-          {startTime: 6, endTime: 7},
-          {startTime: 8, endTime: 9}
-        ]
-      };
-      textTrack = new TextTrack({language: 'en'});
+      player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+        externalCaptionsHandler = new ExternalCaptionsHandler(player);
+        playerContainer.appendChild(player.getView());
+        externalCaptionsHandler._textTrackModel['en'] = {
+          cues: [
+            {startTime: 1, endTime: 2},
+            {startTime: 2, endTime: 5},
+            {startTime: 2.5, endTime: 6},
+            {startTime: 6, endTime: 7},
+            {startTime: 8, endTime: 9}
+          ]
+        };
+        textTrack = new TextTrack({language: 'en'});
+      });
     });
 
     afterEach(() => {
@@ -302,77 +304,89 @@ describe('ExternalCaptionsHandler', () => {
     });
 
     it('should not update the active cues and not raise an event', done => {
-      externalCaptionsHandler._activeTextCues = [];
-      player.currentTime = 0;
-      externalCaptionsHandler._handleCaptionOnTimeUpdate(textTrack);
-      externalCaptionsHandler._activeTextCues.length.should.equal(0);
-      externalCaptionsHandler.addEventListener(CustomEventType.TEXT_CUE_CHANGED, () => {
-        should.fail('should not get here');
+      player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+        externalCaptionsHandler._activeTextCues = [];
+        player.currentTime = 0;
+        externalCaptionsHandler._handleCaptionOnTimeUpdate(textTrack);
+        externalCaptionsHandler._activeTextCues.length.should.equal(0);
+        externalCaptionsHandler.addEventListener(CustomEventType.TEXT_CUE_CHANGED, () => {
+          should.fail('should not get here');
+        });
+        setTimeout(() => {
+          done();
+        }, 500);
       });
-      setTimeout(() => {
-        done();
-      }, 500);
     });
 
     it('should send one active cue', done => {
-      externalCaptionsHandler._activeTextCues = [];
-      player.currentTime = 1.5;
-      externalCaptionsHandler.addEventListener(CustomEventType.TEXT_CUE_CHANGED, event => {
-        event.payload.cues.length.should.equal(1);
-        externalCaptionsHandler._activeTextCues.length.should.equal(1);
-        done();
+      player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+        externalCaptionsHandler._activeTextCues = [];
+        player.currentTime = 1.5;
+        externalCaptionsHandler.addEventListener(CustomEventType.TEXT_CUE_CHANGED, event => {
+          event.payload.cues.length.should.equal(1);
+          externalCaptionsHandler._activeTextCues.length.should.equal(1);
+          done();
+        });
+        externalCaptionsHandler._handleCaptionOnTimeUpdate(textTrack);
       });
-      externalCaptionsHandler._handleCaptionOnTimeUpdate(textTrack);
     });
 
     it('should send 2 active cues with current active cues array', done => {
-      externalCaptionsHandler.addEventListener(CustomEventType.TEXT_CUE_CHANGED, event => {
-        event.payload.cues.length.should.equal(2);
-        externalCaptionsHandler._activeTextCues.length.should.equal(2);
-        done();
+      player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+        externalCaptionsHandler.addEventListener(CustomEventType.TEXT_CUE_CHANGED, event => {
+          event.payload.cues.length.should.equal(2);
+          externalCaptionsHandler._activeTextCues.length.should.equal(2);
+          done();
+        });
+        externalCaptionsHandler._activeTextCues = [{startTime: 1, endTime: 2}];
+        externalCaptionsHandler._externalCueIndex = 1;
+        player.currentTime = 3;
+        externalCaptionsHandler._handleCaptionOnTimeUpdate(textTrack);
       });
-      externalCaptionsHandler._activeTextCues = [{startTime: 1, endTime: 2}];
-      externalCaptionsHandler._externalCueIndex = 1;
-      player.currentTime = 3;
-      externalCaptionsHandler._handleCaptionOnTimeUpdate(textTrack);
     });
 
     it('should send 2 active cues without active cues array', done => {
-      externalCaptionsHandler.addEventListener(CustomEventType.TEXT_CUE_CHANGED, event => {
-        event.payload.cues.length.should.equal(2);
-        externalCaptionsHandler._activeTextCues.length.should.equal(2);
-        done();
+      player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+        externalCaptionsHandler.addEventListener(CustomEventType.TEXT_CUE_CHANGED, event => {
+          event.payload.cues.length.should.equal(2);
+          externalCaptionsHandler._activeTextCues.length.should.equal(2);
+          done();
+        });
+        externalCaptionsHandler._activeTextCues = [{startTime: 1, endTime: 2}];
+        externalCaptionsHandler._externalCueIndex = 1;
+        player.currentTime = 3;
+        externalCaptionsHandler._handleCaptionOnTimeUpdate(textTrack);
       });
-      externalCaptionsHandler._activeTextCues = [{startTime: 1, endTime: 2}];
-      externalCaptionsHandler._externalCueIndex = 1;
-      player.currentTime = 3;
-      externalCaptionsHandler._handleCaptionOnTimeUpdate(textTrack);
     });
 
     it('should send empty active cues without active cues array', done => {
-      externalCaptionsHandler.addEventListener(CustomEventType.TEXT_CUE_CHANGED, () => {
-        should.fail('should not get here');
+      player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+        externalCaptionsHandler.addEventListener(CustomEventType.TEXT_CUE_CHANGED, () => {
+          should.fail('should not get here');
+        });
+        externalCaptionsHandler._activeTextCues = [];
+        externalCaptionsHandler._externalCueIndex = 6;
+        player.currentTime = 10;
+        externalCaptionsHandler._handleCaptionOnTimeUpdate(textTrack);
+        setTimeout(() => {
+          done();
+        }, 500);
       });
-      externalCaptionsHandler._activeTextCues = [];
-      externalCaptionsHandler._externalCueIndex = 6;
-      player.currentTime = 10;
-      externalCaptionsHandler._handleCaptionOnTimeUpdate(textTrack);
-      setTimeout(() => {
-        done();
-      }, 500);
     });
 
     it('should send empty active cues with active cues array', done => {
-      externalCaptionsHandler.addEventListener(CustomEventType.TEXT_CUE_CHANGED, event => {
-        event.payload.cues.length.should.equal(0);
-        externalCaptionsHandler._activeTextCues.length.should.equal(0);
-        done();
+      player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+        externalCaptionsHandler.addEventListener(CustomEventType.TEXT_CUE_CHANGED, event => {
+          event.payload.cues.length.should.equal(0);
+          externalCaptionsHandler._activeTextCues.length.should.equal(0);
+          done();
+        });
+        externalCaptionsHandler._activeTextCues = [{startTime: 1, endTime: 2}];
+        externalCaptionsHandler._externalCueIndex = 6;
+        externalCaptionsHandler._lastTimeUpdate = 9.9;
+        player.currentTime = 10;
+        externalCaptionsHandler._handleCaptionOnTimeUpdate(textTrack);
       });
-      externalCaptionsHandler._activeTextCues = [{startTime: 1, endTime: 2}];
-      externalCaptionsHandler._externalCueIndex = 6;
-      externalCaptionsHandler._lastTimeUpdate = 9.9;
-      player.currentTime = 10;
-      externalCaptionsHandler._handleCaptionOnTimeUpdate(textTrack);
     });
   });
 
@@ -418,19 +432,27 @@ describe('ExternalCaptionsHandler', () => {
 
     it('should return an array with 1 textTracks elements (one same language)', () => {
       player._tracks.push(new TextTrack({language: 'en', label: 'english'}));
-      externalCaptionsHandler.getExternalTracks([new TextTrack({language: 'en', label: 'english'})]).length.should.equal(1);
+      externalCaptionsHandler
+        .getExternalTracks([
+          new TextTrack({
+            language: 'en',
+            label: 'english'
+          })
+        ])
+        .length.should.equal(1);
     });
 
     it('should return an empty array (no captions)', () => {
-      config = getConfigStructure();
-      config.sources = sourcesConfig.MultipleSources;
-      config.sources.captions = null;
-      player.configure(config);
-      externalCaptionsHandler = new ExternalCaptionsHandler(player);
-      externalCaptionsHandler.getExternalTracks([]).length.should.equal(0);
+      player.ready().then(() => {
+        config = getConfigStructure();
+        config.sources = sourcesConfig.MultipleSources;
+        config.sources.captions = null;
+        player.configure(config);
+        externalCaptionsHandler = new ExternalCaptionsHandler(player);
+        externalCaptionsHandler.getExternalTracks([]).length.should.equal(0);
+      });
     });
   });
-
   describe('selectTextTrack', () => {
     let config, player, playerContainer, externalCaptionsHandler;
 

@@ -178,7 +178,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   constructor(source: PKMediaSourceObject, config: Object, playerId: string) {
     super();
     this._eventManager = new EventManager();
-    this._canLoadMediaSourceAdapterPromise = Promise.resolve();
     this._createVideoElement(playerId);
     this._init(source, config);
   }
@@ -960,8 +959,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _init(source: PKMediaSourceObject, config: Object): void {
     this._config = config;
-    this._loadMediaSourceAdapter(source);
-    this.attach();
+    this._canLoadMediaSourceAdapterPromise = this._loadMediaSourceAdapter(source).then(() => {
+      this.attach();
+    });
   }
 
   /**
@@ -980,10 +980,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * Loads the appropriate media source extension adapter.
    * @param {PKMediaSourceObject} source - The selected source object.
    * @private
-   * @returns {void}
+   * @returns {Promise<*>} indicate when media source adapter create
    */
-  _loadMediaSourceAdapter(source: PKMediaSourceObject): void {
-    MediaSourceProvider.getMediaSourceAdapter(this.getVideoElement(), source, this._config).then(mediaSourceAdapter => {
+  _loadMediaSourceAdapter(source: PKMediaSourceObject): Promise<*> {
+    return MediaSourceProvider.getMediaSourceAdapter(this.getVideoElement(), source, this._config).then(mediaSourceAdapter => {
       this._mediaSourceAdapter = mediaSourceAdapter;
       if (this._mediaSourceAdapter) {
         this._droppedFramesWatcher = new DroppedFramesWatcher(this._mediaSourceAdapter, this._config.abr, this._el);

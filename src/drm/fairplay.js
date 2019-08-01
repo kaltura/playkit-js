@@ -32,9 +32,20 @@ export default class FairPlay extends BaseDrmProtocol {
    * @param {Array<Object>} drmData - The drm data to check.
    * @return {boolean} - Whether FairPlay can be play on the current environment.
    */
-  static canPlayDrm(drmData: Array<Object>): Promise<*> {
-    FairPlay._logger.debug('Can play DRM scheme of: ' + BaseDrmProtocol.DrmScheme.FAIRPLAY);
-    return BaseDrmProtocol.DrmSupport.isProtocolSupported(BaseDrmProtocol.DrmScheme.FAIRPLAY, drmData);
+  static canPlayDrm(drmData: Array<PKDrmDataObject>): Promise<*> {
+    return new Promise((resolve, reject) => {
+      BaseDrmProtocol.DrmSupport.isProtocolSupported(BaseDrmProtocol.DrmScheme.FAIRPLAY, drmData, this._KeySystem)
+        .then(() => {
+          FairPlay._logger.debug('Can play DRM scheme of: ' + BaseDrmProtocol.DrmScheme.FAIRPLAY);
+          FairPlay._logger.debug('canPlayDrm result is true', drmData);
+          resolve();
+        })
+        .catch(() => {
+          FairPlay._logger.debug('Can play DRM scheme of: ' + BaseDrmProtocol.DrmScheme.FAIRPLAY);
+          FairPlay._logger.debug('canPlayDrm result is false', drmData);
+          reject();
+        });
+    });
   }
 
   /**

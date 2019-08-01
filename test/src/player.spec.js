@@ -61,12 +61,14 @@ describe('Player', function() {
     });
 
     it("should't load if no engine", done => {
-      player._engine = null;
-      setTimeout(done, 300);
-      player.ready().then(() => {
-        done(new Error('fail'));
+      player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+        player._engine = null;
+        setTimeout(done, 300);
+        player.ready().then(() => {
+          done(new Error('fail'));
+        });
+        player.load();
       });
-      player.load();
     });
 
     it("should't load if source already exists", done => {
@@ -120,14 +122,14 @@ describe('Player', function() {
     });
 
     it('should success before load', done => {
-      player.addEventListener('playing', () => {
+      player.addEventListener(Html5EventType.PLAYING, () => {
         done();
       });
       player.play();
     });
 
     it('should success after load', done => {
-      player.addEventListener('playing', () => {
+      player.addEventListener(Html5EventType.PLAYING, () => {
         done();
       });
       player.load();
@@ -611,9 +613,11 @@ describe('Player', function() {
       config.sources = sourcesConfig.MultipleSources;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
-      video = player._engine.getVideoElement();
-      video.appendChild(track1);
-      video.appendChild(track2);
+      player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+        video = player._engine.getVideoElement();
+        video.appendChild(track1);
+        video.appendChild(track2);
+      });
     });
 
     afterEach(() => {
@@ -708,6 +712,7 @@ describe('Player', function() {
     it.skip('should select a new video track', done => {
       let tracks;
       player.addEventListener(CustomEventType.VIDEO_TRACK_CHANGED, event => {
+        video = player._engine.getVideoElement();
         (event.payload.selectedVideoTrack instanceof VideoTrack).should.be.true;
         event.payload.selectedVideoTrack.index.should.equal(1);
         (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.false;
@@ -717,6 +722,7 @@ describe('Player', function() {
         done();
       });
       player.ready().then(() => {
+        video = player._engine.getVideoElement();
         tracks = player._tracks.filter(track => {
           return track instanceof VideoTrack;
         });
@@ -728,11 +734,11 @@ describe('Player', function() {
         player.selectTrack(tracks[1]);
       });
       player.load();
-      video = player._engine.getVideoElement();
     });
 
     it('should not change the selected for non exist video track', done => {
       player.ready().then(() => {
+        video = player._engine.getVideoElement();
         let tracks = player._tracks.filter(track => {
           return track instanceof VideoTrack;
         });
@@ -748,7 +754,6 @@ describe('Player', function() {
         done();
       });
       player.load();
-      video = player._engine.getVideoElement();
     });
   });
 
@@ -777,6 +782,7 @@ describe('Player', function() {
 
     it('should select a new audio track', done => {
       player.ready().then(() => {
+        video = player._engine.getVideoElement();
         if (video.audioTracks) {
           player.addEventListener(CustomEventType.AUDIO_TRACK_CHANGED, event => {
             (event.payload.selectedAudioTrack instanceof AudioTrack).should.be.true;
@@ -804,11 +810,11 @@ describe('Player', function() {
         }
       });
       player.load();
-      video = player._engine.getVideoElement();
     });
 
     it('should not change the selected audio track', done => {
       player.ready().then(() => {
+        video = player._engine.getVideoElement();
         if (video.audioTracks) {
           let tracks = player._tracks.filter(track => {
             return track instanceof AudioTrack;
@@ -832,12 +838,12 @@ describe('Player', function() {
         }
       });
       player.configure({playback: {preload: 'auto'}});
-      video = player._engine.getVideoElement();
       player.load();
     });
 
     it('should not change the selected for non exist audio track', done => {
       player.ready().then(() => {
+        video = player._engine.getVideoElement();
         if (video.audioTracks) {
           let tracks = player._tracks.filter(track => {
             return track instanceof AudioTrack;
@@ -861,7 +867,6 @@ describe('Player', function() {
         }
       });
       player.load();
-      video = player._engine.getVideoElement();
     });
   });
 
@@ -878,9 +883,11 @@ describe('Player', function() {
       config.playback.textLanguage = 'auto';
       player = new Player(config);
       playerContainer.appendChild(player.getView());
-      video = player._engine.getVideoElement();
-      video.addTextTrack('subtitles', 'English', 'en');
-      video.addTextTrack('subtitles', 'French', 'fr');
+      player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+        video = player._engine.getVideoElement();
+        video.addTextTrack('subtitles', 'English', 'en');
+        video.addTextTrack('subtitles', 'French', 'fr');
+      });
     });
 
     afterEach(() => {
@@ -1013,17 +1020,19 @@ describe('Player', function() {
       config.sources = sourcesConfig.MultipleSources;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
-      video = player._engine.getVideoElement();
-      track1 = document.createElement('track');
-      track2 = document.createElement('track');
-      track1.kind = 'subtitles';
-      track1.label = 'English';
-      track1.default = true;
-      track1.srclang = 'en';
-      track2.kind = 'subtitles';
-      track2.srclang = 'fr';
-      video.appendChild(track1);
-      video.appendChild(track2);
+      player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+        video = player._engine.getVideoElement();
+        track1 = document.createElement('track');
+        track2 = document.createElement('track');
+        track1.kind = 'subtitles';
+        track1.label = 'English';
+        track1.default = true;
+        track1.srclang = 'en';
+        track2.kind = 'subtitles';
+        track2.srclang = 'fr';
+        video.appendChild(track1);
+        video.appendChild(track2);
+      });
     });
 
     afterEach(() => {
@@ -1087,17 +1096,19 @@ describe('Player', function() {
       config.playback.textLanguage = 'auto';
       player = new Player(config);
       playerContainer.appendChild(player.getView());
-      video = player._engine.getVideoElement();
-      track1 = document.createElement('track');
-      track2 = document.createElement('track');
-      track1.kind = 'subtitles';
-      track1.label = 'English';
-      track1.default = true;
-      track1.srclang = 'en';
-      track2.kind = 'subtitles';
-      track2.srclang = 'fr';
-      video.appendChild(track1);
-      video.appendChild(track2);
+      player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+        video = player._engine.getVideoElement();
+        track1 = document.createElement('track');
+        track2 = document.createElement('track');
+        track1.kind = 'subtitles';
+        track1.label = 'English';
+        track1.default = true;
+        track1.srclang = 'en';
+        track2.kind = 'subtitles';
+        track2.srclang = 'fr';
+        video.appendChild(track1);
+        video.appendChild(track2);
+      });
     });
 
     afterEach(() => {
@@ -1227,9 +1238,11 @@ describe('Player', function() {
       config.sources = sourcesConfig.Mp4;
       let player = new Player(config);
       playerContainer.appendChild(player.getView());
-      player.Track.VIDEO.should.be.equal('video');
-      player.Track.AUDIO.should.be.equal('audio');
-      player.Track.TEXT.should.be.equal('text');
+      player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+        player.Track.VIDEO.should.be.equal('video');
+        player.Track.AUDIO.should.be.equal('audio');
+        player.Track.TEXT.should.be.equal('text');
+      });
     });
   });
 
@@ -1246,17 +1259,19 @@ describe('Player', function() {
         config.sources = sourcesConfig.Mp4;
         player = new Player(config);
         playerContainer.appendChild(player.getView());
-        video = player._engine.getVideoElement();
-        track1 = document.createElement('track');
-        track2 = document.createElement('track');
-        track1.kind = 'subtitles';
-        track1.label = 'English';
-        track1.default = true;
-        track1.srclang = 'en';
-        track2.kind = 'subtitles';
-        track2.srclang = 'fr';
-        video.appendChild(track1);
-        video.appendChild(track2);
+        player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+          video = player._engine.getVideoElement();
+          track1 = document.createElement('track');
+          track2 = document.createElement('track');
+          track1.kind = 'subtitles';
+          track1.label = 'English';
+          track1.default = true;
+          track1.srclang = 'en';
+          track2.kind = 'subtitles';
+          track2.srclang = 'fr';
+          video.appendChild(track1);
+          video.appendChild(track2);
+        });
       });
 
       afterEach(() => {
@@ -1578,17 +1593,19 @@ describe('Player', function() {
       it('should fire change source started and change source ended', done => {
         let changeSourceStarted = false;
         player = new Player(config);
-        player.addEventListener(player.Event.CHANGE_SOURCE_STARTED, () => {
-          changeSourceStarted = true;
+        player.ready().then(() => {
+          player.addEventListener(CustomEventType.CHANGE_SOURCE_STARTED, () => {
+            changeSourceStarted = true;
+          });
+          player.addEventListener(CustomEventType.CHANGE_SOURCE_ENDED, () => {
+            if (changeSourceStarted) {
+              done();
+            } else {
+              done(new Error('Change source event should called first'));
+            }
+          });
         });
-        player.addEventListener(player.Event.CHANGE_SOURCE_ENDED, () => {
-          if (changeSourceStarted) {
-            done();
-          } else {
-            done(new Error('Change source event should called first'));
-          }
-        });
-        player.addEventListener(player.Event.PLAYING, () => {
+        player.addEventListener(Html5EventType.PLAYING, () => {
           player.configure({sources: sourcesConfig.Mp4});
         });
         player.play();
@@ -1929,29 +1946,33 @@ describe('Player', function() {
             }
           }
         });
-        player._pluginManager.get('numbers').should.exists;
-        Object.keys(player._pluginManager._plugins).length.should.equals(1);
-        player.config.plugins.should.deep.equals({
-          numbers: {
-            size: 2,
-            firstCellValue: 3,
-            lastCellValue: 6
-          }
-        });
-        player.configure({
-          plugins: {
-            colors: {
-              size: 200
+        player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+          player._pluginManager.get('numbers').should.exists;
+          Object.keys(player._pluginManager._plugins).length.should.equals(1);
+          player.config.plugins.should.deep.equals({
+            numbers: {
+              size: 2,
+              firstCellValue: 3,
+              lastCellValue: 6
             }
-          }
+          });
         });
-        Object.keys(player._pluginManager._plugins).length.should.equals(1);
-        player.config.plugins.should.deep.equals({
-          numbers: {
-            size: 2,
-            firstCellValue: 3,
-            lastCellValue: 6
-          }
+        player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+          player.configure({
+            plugins: {
+              colors: {
+                size: 200
+              }
+            }
+          });
+          Object.keys(player._pluginManager._plugins).length.should.equals(1);
+          player.config.plugins.should.deep.equals({
+            numbers: {
+              size: 2,
+              firstCellValue: 3,
+              lastCellValue: 6
+            }
+          });
         });
       });
     });
@@ -1964,11 +1985,15 @@ describe('Player', function() {
             muted: true
           }
         });
-        player.configure({
-          sources: sourcesConfig.Mp4
+        player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+          player.configure({
+            sources: sourcesConfig.Mp4
+          });
+          player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+            player.volume.should.equals(0);
+            player.muted.should.be.true;
+          });
         });
-        player.volume.should.equals(0);
-        player.muted.should.be.true;
       });
 
       it('should save initial playback config and initiate it when received sources - 2', function() {
@@ -1977,16 +2002,22 @@ describe('Player', function() {
             muted: true
           }
         });
-        player.configure({
-          playback: {
-            volume: 0
-          }
+        player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+          player.configure({
+            playback: {
+              volume: 0
+            }
+          });
+          player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+            player.configure({
+              sources: sourcesConfig.Mp4
+            });
+            player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+              player.volume.should.equals(0);
+              player.muted.should.be.true;
+            });
+          });
         });
-        player.configure({
-          sources: sourcesConfig.Mp4
-        });
-        player.volume.should.equals(0);
-        player.muted.should.be.true;
       });
 
       it('should load the previous playback config and initiate the new one on updating sources', function(done) {
@@ -1997,33 +2028,35 @@ describe('Player', function() {
             volume: 0.5
           }
         });
-        player.load();
-        player.volume.should.equals(0.5);
-        player.muted.should.be.true;
-        player.config.playback.volume.should.equals(0.5);
-        player.config.playback.muted.should.be.true;
-        player.ready().then(() => {
-          player.src.should.equals(sourcesConfig.MultipleSources.progressive[0].url);
-          done();
-          player.addEventListener(player.Event.VOLUME_CHANGE, () => {
-            let newProgressiveConfig = {
-              progressive: [sourcesConfig.MultipleSources.progressive[1]]
-            };
-            player.configure({
-              sources: newProgressiveConfig
+        player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+          player.load();
+          player.volume.should.equals(0.5);
+          player.muted.should.be.true;
+          player.config.playback.volume.should.equals(0.5);
+          player.config.playback.muted.should.be.true;
+          player.ready().then(() => {
+            player.src.should.equals(sourcesConfig.MultipleSources.progressive[0].url);
+            done();
+            player.addEventListener(player.Event.VOLUME_CHANGE, () => {
+              let newProgressiveConfig = {
+                progressive: [sourcesConfig.MultipleSources.progressive[1]]
+              };
+              player.configure({
+                sources: newProgressiveConfig
+              });
+              player.load();
+              player.volume.should.equals(1);
+              player.muted.should.be.false;
+              player.config.playback.volume.should.equals(0.5);
+              player.config.playback.muted.should.be.true;
+              player.ready().then(() => {
+                player.src.should.equals(newProgressiveConfig.progressive[0].url);
+                done();
+              });
             });
-            player.load();
-            player.volume.should.equals(1);
-            player.muted.should.be.false;
-            player.config.playback.volume.should.equals(0.5);
-            player.config.playback.muted.should.be.true;
-            player.ready().then(() => {
-              player.src.should.equals(newProgressiveConfig.progressive[0].url);
-              done();
-            });
+            player.muted = false;
+            player.volume = 1;
           });
-          player.muted = false;
-          player.volume = 1;
         });
       });
 
@@ -2035,38 +2068,40 @@ describe('Player', function() {
             volume: 1
           }
         });
-        player.load();
-        player.volume.should.equals(1);
-        player.muted.should.be.true;
-        player.config.playback.volume.should.equals(1);
-        player.config.playback.muted.should.be.true;
-        player.ready().then(() => {
-          player.src.should.equals(sourcesConfig.MultipleSources.progressive[0].url);
-          player.configure({
-            playback: {
-              muted: false,
-              volume: 0.5
-            }
-          });
+        player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+          player.load();
           player.volume.should.equals(1);
           player.muted.should.be.true;
-          player.config.playback.volume.should.equals(0.5);
-          player.config.playback.muted.should.be.false;
-          let newProgressiveConfig = {
-            progressive: [sourcesConfig.MultipleSources.progressive[1]]
-          };
-          player._playbackAttributesState = {};
-          player.configure({
-            sources: newProgressiveConfig
-          });
-          player.load();
-          player.volume.should.equals(0.5);
-          player.muted.should.be.false;
-          player.config.playback.volume.should.equals(0.5);
-          player.config.playback.muted.should.be.false;
+          player.config.playback.volume.should.equals(1);
+          player.config.playback.muted.should.be.true;
           player.ready().then(() => {
-            player.src.should.equals(newProgressiveConfig.progressive[0].url);
-            done();
+            player.src.should.equals(sourcesConfig.MultipleSources.progressive[0].url);
+            player.configure({
+              playback: {
+                muted: false,
+                volume: 0.5
+              }
+            });
+            player.volume.should.equals(1);
+            player.muted.should.be.true;
+            player.config.playback.volume.should.equals(0.5);
+            player.config.playback.muted.should.be.false;
+            let newProgressiveConfig = {
+              progressive: [sourcesConfig.MultipleSources.progressive[1]]
+            };
+            player._playbackAttributesState = {};
+            player.configure({
+              sources: newProgressiveConfig
+            });
+            player.load();
+            player.volume.should.equals(0.5);
+            player.muted.should.be.false;
+            player.config.playback.volume.should.equals(0.5);
+            player.config.playback.muted.should.be.false;
+            player.ready().then(() => {
+              player.src.should.equals(newProgressiveConfig.progressive[0].url);
+              done();
+            });
           });
         });
       });
@@ -2110,7 +2145,9 @@ describe('Player', function() {
       config.sources = sourcesConfig.MultipleSources;
       config.playback.playbackRates = [18, 2, 3, 4, 20, 30, -19];
       player = new Player(config);
-      player._playbackRates.should.deep.equal(getConfigStructure().playback.playbackRates);
+      player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+        player._playbackRates.should.deep.equal(getConfigStructure().playback.playbackRates);
+      });
     });
   });
 
@@ -2410,29 +2447,37 @@ describe('Player', function() {
     });
 
     it('should return 1 by default', function() {
-      player.volume.should.equal(1);
+      player.ready().then(() => {
+        player.volume.should.equal(1);
+      });
     });
 
     it('should enable setting the volume via API', function() {
-      player.volume = 0.9;
-      player.volume.should.equal(0.9);
-      player.volume = 0.3;
-      player.volume.should.equal(0.3);
-      player.volume = 0;
-      player.volume.should.equal(0);
+      player.ready().then(() => {
+        player.volume = 0.9;
+        player.volume.should.equal(0.9);
+        player.volume = 0.3;
+        player.volume.should.equal(0.3);
+        player.volume = 0;
+        player.volume.should.equal(0);
+      });
     });
 
     it('should enable setting the volume via config', function() {
-      config.playback.volume = 0.9;
-      player.configure(config);
-      player.volume.should.equal(0.9);
+      player.ready().then(() => {
+        config.playback.volume = 0.9;
+        player.configure(config);
+        player.volume.should.equal(0.9);
+      });
     });
 
     it('should cap volume values between 0 and 1(including)', function() {
-      player.volume = 1.1;
-      player.volume.should.equal(1);
-      player.volume = -0.1;
-      player.volume.should.equal(0);
+      player.ready().then(() => {
+        player.volume = 1.1;
+        player.volume.should.equal(1);
+        player.volume = -0.1;
+        player.volume.should.equal(0);
+      });
     });
   });
 
@@ -2521,25 +2566,27 @@ describe('Player', function() {
 
     it('should destroy the player', function() {
       player = new Player(config);
-      let engineSpy = sandbox.spy(player._engine, 'destroy');
-      let posterMgrSpy = sandbox.spy(player._posterManager, 'destroy');
-      let eventMgrSpy = sandbox.spy(player._eventManager, 'destroy');
-      let pluginMgrSpy = sandbox.spy(player._pluginManager, 'destroy');
-      let stateMgrSpy = sandbox.spy(player._stateManager, 'destroy');
-      player.destroy();
-      engineSpy.should.have.been.calledOnce;
-      posterMgrSpy.should.have.been.calledOnce;
-      eventMgrSpy.should.have.been.calledOnce;
-      pluginMgrSpy.should.have.been.calledOnce;
-      stateMgrSpy.should.have.been.calledOnce;
-      player._activeTextCues.should.be.empty;
-      player._textDisplaySettings.should.be.empty;
-      player._config.should.be.empty;
-      player._tracks.should.be.empty;
-      player._engineType.should.be.empty;
-      player._streamType.should.be.empty;
-      (player._readyPromise === null).should.be.true;
-      player._firstPlay.should.be.true;
+      player.ready().then(() => {
+        let engineSpy = sandbox.spy(player._engine, 'destroy');
+        let posterMgrSpy = sandbox.spy(player._posterManager, 'destroy');
+        let eventMgrSpy = sandbox.spy(player._eventManager, 'destroy');
+        let pluginMgrSpy = sandbox.spy(player._pluginManager, 'destroy');
+        let stateMgrSpy = sandbox.spy(player._stateManager, 'destroy');
+        player.destroy();
+        engineSpy.should.have.been.calledOnce;
+        posterMgrSpy.should.have.been.calledOnce;
+        eventMgrSpy.should.have.been.calledOnce;
+        pluginMgrSpy.should.have.been.calledOnce;
+        stateMgrSpy.should.have.been.calledOnce;
+        player._activeTextCues.should.be.empty;
+        player._textDisplaySettings.should.be.empty;
+        player._config.should.be.empty;
+        player._tracks.should.be.empty;
+        player._engineType.should.be.empty;
+        player._streamType.should.be.empty;
+        (player._readyPromise === null).should.be.true;
+        player._firstPlay.should.be.true;
+      });
     });
 
     it('should dispatch a player destroyed event', function(done) {
@@ -2576,31 +2623,33 @@ describe('Player', function() {
 
     it('should resets the player', function() {
       player = new Player(config);
-      player._reset = false;
-      let posterMgrSpy = sandbox.spy(player._posterManager, 'reset');
-      let engineSpy = sandbox.spy(player._engine, 'reset');
-      let eventMgrSpy = sandbox.spy(player._eventManager, 'removeAll');
-      let pluginMgrSpy = sandbox.spy(player._pluginManager, 'reset');
-      let stateMgrSpy = sandbox.spy(player._stateManager, 'reset');
-      let _updateTextDisplay = sandbox.spy(player, '_updateTextDisplay');
-      player.reset();
-      player.paused.should.be.true;
-      posterMgrSpy.should.have.been.calledOnce;
-      eventMgrSpy.should.have.been.calledOnce;
-      pluginMgrSpy.should.have.been.calledOnce;
-      stateMgrSpy.should.have.been.calledOnce;
-      engineSpy.should.have.been.calledOnce;
-      player._activeTextCues.should.be.empty;
-      _updateTextDisplay.should.have.been.calledOnce;
-      _updateTextDisplay.should.have.been.calledWith([]);
-      player._config.should.not.be.empty;
-      player._tracks.should.be.empty;
-      player._engineType.should.be.empty;
-      player._streamType.should.be.empty;
-      player._readyPromise.should.exist;
-      player._firstPlay.should.be.true;
-      player._el.childNodes.should.not.be.empty;
-      player._reset.should.be.true;
+      player.ready().then(() => {
+        player._reset = false;
+        let posterMgrSpy = sandbox.spy(player._posterManager, 'reset');
+        let engineSpy = sandbox.spy(player._engine, 'reset');
+        let eventMgrSpy = sandbox.spy(player._eventManager, 'removeAll');
+        let pluginMgrSpy = sandbox.spy(player._pluginManager, 'reset');
+        let stateMgrSpy = sandbox.spy(player._stateManager, 'reset');
+        let _updateTextDisplay = sandbox.spy(player, '_updateTextDisplay');
+        player.reset();
+        player.paused.should.be.true;
+        posterMgrSpy.should.have.been.calledOnce;
+        eventMgrSpy.should.have.been.calledOnce;
+        pluginMgrSpy.should.have.been.calledOnce;
+        stateMgrSpy.should.have.been.calledOnce;
+        engineSpy.should.have.been.calledOnce;
+        player._activeTextCues.should.be.empty;
+        _updateTextDisplay.should.have.been.calledOnce;
+        _updateTextDisplay.should.have.been.calledWith([]);
+        player._config.should.not.be.empty;
+        player._tracks.should.be.empty;
+        player._engineType.should.be.empty;
+        player._streamType.should.be.empty;
+        player._readyPromise.should.exist;
+        player._firstPlay.should.be.true;
+        player._el.childNodes.should.not.be.empty;
+        player._reset.should.be.true;
+      });
     });
   });
 
@@ -2630,18 +2679,22 @@ describe('Player', function() {
     it('should load an engine for the first time', function() {
       let spy = sandbox.spy(Html5, 'createEngine');
       player = new Player(config);
-      spy.should.have.been.calledOnce;
+      player.ready().then(() => {
+        spy.should.have.been.calledOnce;
+      });
     });
 
     it('should call restore for the same engine', function() {
       let createSpy = sandbox.spy(Html5, 'createEngine');
       let restoreSpy = sandbox.spy(Html5.prototype, 'restore');
       player = new Player(config);
-      createSpy.should.have.been.calledOnce;
-      restoreSpy.should.have.callCount(0);
-      player.configure({sources: sourcesConfig.Mp4});
-      createSpy.should.have.been.calledOnce;
-      restoreSpy.should.have.been.calledOnce;
+      player.ready().then(() => {
+        createSpy.should.have.been.calledOnce;
+        restoreSpy.should.have.callCount(0);
+        player.configure({sources: sourcesConfig.Mp4});
+        createSpy.should.have.been.calledOnce;
+        restoreSpy.should.have.been.calledOnce;
+      });
     });
   });
 
@@ -2755,15 +2808,17 @@ describe('Player', function() {
     });
 
     it('should reset the active text cues', () => {
-      player._activeTextCues[0] = {};
-      player._updateTextDisplay = () => {};
-      player._engine = {
-        resetAllCues: function() {},
-        destroy: function() {}
-      };
-      player._resetTextCuesAndReposition();
-      let cue = player._activeTextCues[0];
-      cue.hasBeenReset.should.equals(true);
+      player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+        player._activeTextCues[0] = {};
+        player._updateTextDisplay = () => {};
+        player._engine = {
+          resetAllCues: function() {},
+          destroy: function() {}
+        };
+        player._resetTextCuesAndReposition();
+        let cue = player._activeTextCues[0];
+        cue.hasBeenReset.should.equals(true);
+      });
     });
   });
 
@@ -2783,12 +2838,18 @@ describe('Player', function() {
     });
 
     it('should call _resetTextCuesAndReposition function', done => {
-      let spy = sandbox.spy(player, '_resetTextCuesAndReposition');
-      player._resizeWatcher._triggerResize();
-      setTimeout(() => {
-        spy.should.have.been.calledOnce;
-        done();
-      }, 500);
+      player.ready().then(() => {
+        let spy = sandbox.spy(player, '_resetTextCuesAndReposition');
+        player._resizeWatcher._triggerResize();
+        setTimeout(() => {
+          try {
+            spy.should.have.been.calledOnce;
+            done();
+          } catch (err) {
+            done(err);
+          }
+        }, 500);
+      });
     });
   });
 

@@ -344,6 +344,12 @@ export default class Player extends FakeEventTarget {
    */
   _loadingMedia: boolean;
   /**
+   * Whether a select engine request has sent, the player should wait to engine to be selected.
+   * @type {boolean}
+   * @private
+   */
+  _engineLoading: boolean;
+  /**
    * Whether the player is loading a source.
    * @type {boolean}
    * @private
@@ -451,9 +457,9 @@ export default class Player extends FakeEventTarget {
       this._pluginManager.loadMedia();
       Utils.Object.mergeDeep(this._config, config);
       this._reset = false;
-      // if (this._selectEngineByPriority()) {
       this._selectEngineByPriority()
         .then(() => {
+          this._engineLoading = false;
           this.dispatchEvent(new FakeEvent(CustomEventType.SOURCE_SELECTED, {selectedSource: this._config.sources[this._streamType]}));
           this._attachMedia();
           this._handlePlaybackOptions();
@@ -464,6 +470,7 @@ export default class Player extends FakeEventTarget {
           this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_ENDED));
         })
         .catch(() => {
+          this._engineLoading = false;
           Player._logger.warn('No playable engines was found to play the given sources');
           this.dispatchEvent(
             new FakeEvent(
@@ -522,7 +529,7 @@ export default class Player extends FakeEventTarget {
     }
     if (this._engine) {
       this._playbackMiddleware.play(() => this._play());
-    } else if (this._loadingMedia) {
+    } else if (this._loadingMedia || this._engineLoading) {
       // load media requested but the response is delayed
       this._prepareVideoElement();
       this._playbackMiddleware.play(() => this._playAfterAsyncMiddleware());
@@ -589,6 +596,7 @@ export default class Player extends FakeEventTarget {
     this._engine.reset();
     this._showBlackCover();
     this._reset = true;
+    this._engineLoading = false;
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET));
     this._eventManager.removeAll();
     this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
@@ -1547,39 +1555,55 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _selectEngineByPriority(): Promise<*> {
-    return new Promise((resolve, reject) => {
-      let numOfPromises = 0;
-      let resolved = false;
-      const streamPriority = this._config.playback.streamPriority;
-      const preferNative = this._config.playback.preferNative;
-      const sources = this._config.sources;
-      for (let priority of streamPriority) {
-        const engineId = typeof priority.engine === 'string' ? priority.engine.toLowerCase() : '';
-        const format = typeof priority.format === 'string' ? priority.format.toLowerCase() : '';
-        const Engine = EngineProvider.getEngines().find(Engine => Engine.id === engineId);
-        if (Engine) {
-          const formatSources = sources[format];
-          if (formatSources && formatSources.length > 0) {
-            const source = formatSources[0];
-            numOfPromises++;
-            Engine.canPlaySource(source, preferNative[format], this._config.drm)
-              .then(() => {
-                if (!resolved) {
-                  Player._logger.debug('Source selected: ', formatSources);
-                  this._loadEngine(Engine, source);
-                  this._engineType = engineId;
-                  this._streamType = format;
-                  resolved = true;
-                  resolve();
-                }
-              })
-              .catch(() => {
-                if (!resolved && --numOfPromises === 0) reject();
-              });
-          }
+    let promises = [];
+    this._engineLoading = true;
+    const streamPriority = this._config.playback.streamPriority;
+    const preferNative = this._config.playback.preferNative;
+    const sources = this._config.sources;
+    for (let priority of streamPriority) {
+      const engineId = typeof priority.engine === 'string' ? priority.engine.toLowerCase() : '';
+      const format = typeof priority.format === 'string' ? priority.format.toLowerCase() : '';
+      const Engine = EngineProvider.getEngines().find(Engine => Engine.id === engineId);
+      if (Engine) {
+        const formatSources = sources[format];
+        if (formatSources && formatSources.length > 0) {
+          const source = formatSources[0];
+          promises.push(
+            new Promise((resolve, reject) => {
+              Engine.canPlaySource(source, preferNative[format], this._config.drm)
+                .then(() => {
+                  resolve({Engine, source, engineId, format, formatSources});
+                })
+                .catch(() => {
+                  reject();
+                });
+            })
+          );
         }
       }
-    });
+    }
+    return Promise.all(
+      promises.map(p => {
+        // If a request fails, count that as a resolution so it will keep
+        // waiting for other possible successes. If a request succeeds,
+        // treat it as a rejection so Promise.all immediately bails out.
+        return p.then(engineData => Promise.reject(engineData), () => Promise.resolve());
+      })
+    ).then(
+      // If '.all' resolved, we've just got an array of errors.
+      () => Promise.reject(),
+      // If '.all' rejected, we've got the result we wanted.
+      engineData => {
+        if (!this._engineType) {
+          const {Engine, source, engineId, format, formatSources} = engineData;
+          Player._logger.debug('Source selected: ', formatSources);
+          this._loadEngine(Engine, source);
+          this._engineType = engineId;
+          this._streamType = format;
+          Promise.resolve();
+        }
+      }
+    );
   }
 
   /**
