@@ -66,7 +66,7 @@ describe('check inBrowserFullscreen config', function() {
     player.isFullscreen().should.be.true;
   });
 
-  it('should fullscreen change mode correctly', () => {
+  it('should change fullscreen mode correctly', () => {
     player.configure({
       playback: {
         inBrowserFullscreen: false,
