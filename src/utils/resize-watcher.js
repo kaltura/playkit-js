@@ -19,6 +19,7 @@ class ResizeWatcher extends FakeEventTarget {
    * @returns {void}
    */
   destroy(): void {
+    // todo sakal Oren I think it should also remove all listeners, you might have memory leaks
     if (this._observer) {
       this._observer.disconnect();
     }
