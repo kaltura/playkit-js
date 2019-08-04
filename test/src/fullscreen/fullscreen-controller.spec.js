@@ -39,7 +39,7 @@ describe('check inBrowserFullscreen config', function() {
     removeElement(targetId);
   });
 
-  it('should ios fullscreen switch correctly between native and inBrowserFullscreen config', () => {
+  it('should switch correctly to fullscreen in iOS between native and inBrowserFullscreen config', () => {
     sandbox.stub(player._fullscreenController, '_isNativeFullscreen', () => {
       return false;
     });
