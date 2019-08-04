@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.51.4"></a>
+## [0.51.4](https://github.com/kaltura/playkit-js/compare/v0.51.3...v0.51.4) (2019-08-04)
+
+
+### Bug Fixes
+
+* **FEC-9277:** inBrowserFullscreen doesn't work on ios ([#384](https://github.com/kaltura/playkit-js/issues/384)) ([290bb55](https://github.com/kaltura/playkit-js/commit/290bb55))
+
+
+
 <a name="0.51.3"></a>
 ## [0.51.3](https://github.com/kaltura/playkit-js/compare/v0.51.2...v0.51.3) (2019-08-01)
 
