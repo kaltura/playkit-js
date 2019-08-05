@@ -17,6 +17,7 @@ import Error from '../../src/error/error';
 import {Object as PKObject} from '../../src/utils/util';
 import {LabelOptions} from '../../src/track/label-options';
 import {EngineProvider} from '../../src/engines/engine-provider';
+import EventManager from '../../src/event/event-manager';
 
 const targetId = 'player-placeholder_player.spec';
 let sourcesConfig = PKObject.copyDeep(SourcesConfig);
@@ -1563,9 +1564,11 @@ describe('Player', function() {
 
         config.sources = sourcesConfig.Mp4;
         player = new Player(config);
-        playerContainer.appendChild(player.getView());
-        player.addEventListener(player.Event.PLAYING, onPlaying);
-        player.play();
+        player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+          playerContainer.appendChild(player.getView());
+          player.addEventListener(player.Event.PLAYING, onPlaying);
+          player.play();
+        });
       });
     });
 
@@ -1718,8 +1721,10 @@ describe('Player', function() {
       player.addEventListener(Html5EventType.PLAYING, onPlaying);
       player.addEventListener(Html5EventType.PAUSE, onPause);
       player.addEventListener(Html5EventType.ENDED, onEnded);
-      player.load();
-      player.play();
+      player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+        player.load();
+        player.play();
+      });
     });
   });
 
@@ -1978,6 +1983,15 @@ describe('Player', function() {
     });
 
     describe('playback lifecycle', () => {
+      let eventManager;
+      beforeEach(() => {
+        eventManager = new EventManager();
+      });
+      afterEach(() => {
+        eventManager.destroy();
+        player.destroy();
+      });
+
       it('should save initial playback config and initiate it when received sources - 1', function() {
         player = new Player({
           playback: {
@@ -1985,16 +1999,15 @@ describe('Player', function() {
             muted: true
           }
         });
-        player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+        eventManager.listenOnce(player, CustomEventType.SOURCE_SELECTED, () => {
           player.configure({
             sources: sourcesConfig.Mp4
           });
-          player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+          eventManager.listenOnce(player, CustomEventType.SOURCE_SELECTED, () => {
             player.volume.should.equals(0);
             player.muted.should.be.true;
           });
         });
-        player.destroy();
       });
 
       it('should save initial playback config and initiate it when received sources - 2', function() {
@@ -2003,23 +2016,22 @@ describe('Player', function() {
             muted: true
           }
         });
-        player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+        eventManager.listenOnce(player, CustomEventType.SOURCE_SELECTED, () => {
           player.configure({
             playback: {
               volume: 0
             }
           });
-          player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+          eventManager.listenOnce(player, CustomEventType.SOURCE_SELECTED, () => {
             player.configure({
               sources: sourcesConfig.Mp4
             });
-            player.addEventListener(CustomEventType.SOURCE_SELECTED, () => {
+            eventManager.listenOnce(player, CustomEventType.SOURCE_SELECTED, () => {
               player.volume.should.equals(0);
               player.muted.should.be.true;
             });
           });
         });
-        player.destroy();
       });
 
       it('should load the previous playback config and initiate the new one on updating sources', function(done) {
@@ -2030,7 +2042,7 @@ describe('Player', function() {
             volume: 0.5
           }
         });
-        player.addEventListener(CustomEventType.CHANGE_SOURCE_ENDED, () => {
+        eventManager.listenOnce(player, CustomEventType.CHANGE_SOURCE_ENDED, () => {
           try {
             player.load();
             player.volume.should.equals(0.5);
@@ -2041,7 +2053,7 @@ describe('Player', function() {
               () => {
                 player.src.should.equals(sourcesConfig.MultipleSources.progressive[0].url);
                 done();
-                player.addEventListener(player.Event.VOLUME_CHANGE, () => {
+                eventManager.listenOnce(player, player.Event.VOLUME_CHANGE, () => {
                   try {
                     let newProgressiveConfig = {
                       progressive: [sourcesConfig.MultipleSources.progressive[1]]
@@ -2049,18 +2061,26 @@ describe('Player', function() {
                     player.configure({
                       sources: newProgressiveConfig
                     });
-                    player.load();
-                    player.volume.should.equals(1);
-                    player.muted.should.be.false;
-                    player.config.playback.volume.should.equals(0.5);
-                    player.config.playback.muted.should.be.true;
-                    player.ready().then(
-                      () => {
-                        player.src.should.equals(newProgressiveConfig.progressive[0].url);
-                        done();
-                      },
-                      err => done(err)
-                    );
+                    eventManager.listenOnce(player, CustomEventType.CHANGE_SOURCE_ENDED, () => {
+                      try {
+                        player.load();
+                        player.volume.should.equals(1);
+                        player.muted.should.be.false;
+                        player.config.playback.volume.should.equals(0.5);
+                        player.config.playback.muted.should.be.true;
+                        player
+                          .ready()
+                          .then(() => {
+                            player.src.should.equals(newProgressiveConfig.progressive[0].url);
+                            done();
+                          })
+                          .catch(err => {
+                            done(err);
+                          });
+                      } catch (err) {
+                        done(err);
+                      }
+                    });
                   } catch (err) {
                     done(err);
                   }
@@ -2074,7 +2094,6 @@ describe('Player', function() {
             done(err);
           }
         });
-        player.destroy();
       });
 
       it('should load the initial config and initiate the new one on updating sources', function(done) {
@@ -2111,7 +2130,7 @@ describe('Player', function() {
               player.configure({
                 sources: newProgressiveConfig
               });
-              player.addEventListener(CustomEventType.CHANGE_SOURCE_ENDED, () => {
+              eventManager.listenOnce(player, CustomEventType.CHANGE_SOURCE_ENDED, () => {
                 try {
                   player.load();
                   player.volume.should.equals(0.5);
@@ -2137,7 +2156,6 @@ describe('Player', function() {
         );
       });
     });
-    player.destroy();
   });
 
   describe('config', function() {
