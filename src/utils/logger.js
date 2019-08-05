@@ -20,6 +20,16 @@ Object.keys(LogLevel).forEach(key => {
 JsLogger.useDefaults({defaultLevel: JsLogger.ERROR});
 
 /**
+ * sets the logger handler
+ * @private
+ * @param {LogHandlerType} handler - the log level
+ * @returns {void}
+ */
+function setLogHandler(handler: LogHandlerType): void {
+  JsLogger.setHandler((messages, context) => handler(messages, context));
+}
+
+/**
  * get a logger
  * @param {?string} name - the logger name
  * @returns {Object} - the logger class
@@ -51,4 +61,4 @@ function setLogLevel(level: PKLogLevelObject, name?: string): void {
 }
 
 export default getLogger;
-export {LogLevel, LogLevelType, getLogLevel, setLogLevel};
+export {LogLevel, LogLevelType, getLogLevel, setLogLevel, setLogHandler};

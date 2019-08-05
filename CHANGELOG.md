@@ -2,6 +2,107 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.51.4"></a>
+## [0.51.4](https://github.com/kaltura/playkit-js/compare/v0.51.3...v0.51.4) (2019-08-04)
+
+
+### Bug Fixes
+
+* **FEC-9277:** inBrowserFullscreen doesn't work on ios ([#384](https://github.com/kaltura/playkit-js/issues/384)) ([290bb55](https://github.com/kaltura/playkit-js/commit/290bb55))
+
+
+
+<a name="0.51.3"></a>
+## [0.51.3](https://github.com/kaltura/playkit-js/compare/v0.51.2...v0.51.3) (2019-08-01)
+
+
+### Bug Fixes
+
+* **FEC-9274:** captions are displayed on buttom left of player area and are not aligned ([#383](https://github.com/kaltura/playkit-js/issues/383)) ([63a8141](https://github.com/kaltura/playkit-js/commit/63a8141))
+
+
+
+<a name="0.51.2"></a>
+## [0.51.2](https://github.com/kaltura/playkit-js/compare/v0.51.1...v0.51.2) (2019-07-28)
+
+
+### Bug Fixes
+
+* **FEC-9243:** external subtitles fail on safari ([#379](https://github.com/kaltura/playkit-js/issues/379)) ([ababb03](https://github.com/kaltura/playkit-js/commit/ababb03))
+* **FEC-9261:** playback doesn't play with non-linear ads ([#380](https://github.com/kaltura/playkit-js/issues/380)) ([fa2b141](https://github.com/kaltura/playkit-js/commit/fa2b141))
+* **FEC-9262:** playback doesn't return to start after playback with ads in LG TV ([#381](https://github.com/kaltura/playkit-js/issues/381)) ([74cfb40](https://github.com/kaltura/playkit-js/commit/74cfb40))
+
+
+
+<a name="0.51.1"></a>
+## [0.51.1](https://github.com/kaltura/playkit-js/compare/v0.51.0...v0.51.1) (2019-07-21)
+
+
+### Bug Fixes
+
+* **FEC-9237:** add app protocol to playkit utils ([#378](https://github.com/kaltura/playkit-js/issues/378)) ([ced2a11](https://github.com/kaltura/playkit-js/commit/ced2a11))
+
+
+
+<a name="0.51.0"></a>
+# [0.51.0](https://github.com/kaltura/playkit-js/compare/v0.50.0...v0.51.0) (2019-07-19)
+
+
+### Features
+
+* **FEC-9227:** support reInit of MSE ([#375](https://github.com/kaltura/playkit-js/issues/375)) ([6142fce](https://github.com/kaltura/playkit-js/commit/6142fce))
+
+
+
+<a name="0.50.0"></a>
+# [0.50.0](https://github.com/kaltura/playkit-js/compare/v0.49.0...v0.50.0) (2019-07-19)
+
+
+### Features
+
+* **FEC-9158:** preload chain ([#377](https://github.com/kaltura/playkit-js/issues/377)) ([add5823](https://github.com/kaltura/playkit-js/commit/add5823))
+
+
+
+<a name="0.49.0"></a>
+# [0.49.0](https://github.com/kaltura/playkit-js/compare/v0.46.1...v0.49.0) (2019-07-07)
+
+
+### Bug Fixes
+
+* ad system is missing in the ad options ([#362](https://github.com/kaltura/playkit-js/issues/362)) ([df1b710](https://github.com/kaltura/playkit-js/commit/df1b710))
+* **FEC-9041:** 'HTMLVideoElement.webkitDisplayingFullscreen' deprecation warning ([01a7f1f](https://github.com/kaltura/playkit-js/commit/01a7f1f))
+* **FEC-9177:** Smart TV showed as mobile device ([#365](https://github.com/kaltura/playkit-js/issues/365)) ([3eb342b](https://github.com/kaltura/playkit-js/commit/3eb342b))
+* **FEC-9187:** LG TV different behavior for LIVE ([#366](https://github.com/kaltura/playkit-js/issues/366)) ([1a4f1fd](https://github.com/kaltura/playkit-js/commit/1a4f1fd))
+* **FEC-9192:** post bumper doesn't play ([#368](https://github.com/kaltura/playkit-js/issues/368)) ([f6eaefc](https://github.com/kaltura/playkit-js/commit/f6eaefc))
+* typo in playbackRates config ([#371](https://github.com/kaltura/playkit-js/issues/371)) ([62eb474](https://github.com/kaltura/playkit-js/commit/62eb474))
+
+
+### Features
+
+* **FEC-8631:** bumper plugin ([#350](https://github.com/kaltura/playkit-js/issues/350)) ([173edfb](https://github.com/kaltura/playkit-js/commit/173edfb))
+* **FEC-8975:** adding QoS Data to enhance KAVA ([#361](https://github.com/kaltura/playkit-js/issues/361)) ([4f6c468](https://github.com/kaltura/playkit-js/commit/4f6c468))
+* **FEC-9023:** More logger options ([#367](https://github.com/kaltura/playkit-js/issues/367)) ([885e67e](https://github.com/kaltura/playkit-js/commit/885e67e))
+* **FEC-9055:** Add custom Playback rate support ([#364](https://github.com/kaltura/playkit-js/issues/364)) ([aabe020](https://github.com/kaltura/playkit-js/commit/aabe020))
+* **FEC-9145:** support non sibling video tags ([#369](https://github.com/kaltura/playkit-js/issues/369)) ([20b084c](https://github.com/kaltura/playkit-js/commit/20b084c))
+
+
+
+<a name="0.48.0"></a>
+# [0.48.0](https://github.com/kaltura/playkit-js/compare/v0.47.0...v0.48.0) (2019-06-20)
+
+
+### Bug Fixes
+
+* **FEC-9192:** post bumper doesn't play ([#368](https://github.com/kaltura/playkit-js/issues/368)) ([f6eaefc](https://github.com/kaltura/playkit-js/commit/f6eaefc))
+
+
+### Features
+
+* **FEC-9023:** More logger options ([#367](https://github.com/kaltura/playkit-js/issues/367)) ([885e67e](https://github.com/kaltura/playkit-js/commit/885e67e))
+
+
+
 <a name="0.47.0"></a>
 # [0.47.0](https://github.com/kaltura/playkit-js/compare/v0.46.2...v0.47.0) (2019-06-16)
 
