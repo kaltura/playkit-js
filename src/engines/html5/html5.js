@@ -1057,13 +1057,16 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     // Extra error information from Chrome:
     // $FlowFixMe
     const message = this._el.error.message;
-    if (this._mediaSourceAdapter && !this._mediaSourceAdapter.handleMediaError(this._el.error)) {
-      const error = new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.VIDEO_ERROR, {
-        code: code,
-        extended: extended,
-        message: message
-      });
-      this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
+    if (this._mediaSourceAdapter) {
+      const errorSeverity = this._mediaSourceAdapter.handleMediaError(this._el.error);
+      if (errorSeverity !== Error.Severity.NO_ERROR) {
+        const error = new Error(errorSeverity, Error.Category.MEDIA, Error.Code.VIDEO_ERROR, {
+          code: code,
+          extended: extended,
+          message: message
+        });
+        this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
+      }
     }
   }
 

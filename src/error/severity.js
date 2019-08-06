@@ -4,6 +4,10 @@ type SeverityType = {[severity: string]: number};
 
 const Severity: SeverityType = {
   /**
+   * No Error occurred
+   */
+  NO_ERROR: 0,
+  /**
    * An error occurred, but the Player is attempting to recover from the error.
    *
    * If the Player cannot ultimately recover, it still may not throw a CRITICAL

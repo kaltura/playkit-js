@@ -15,6 +15,7 @@ import {FairplayDrmHandler} from './fairplay-drm-handler';
 import type {FairplayDrmConfigType} from './fairplay-drm-handler';
 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
+const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
 
 /**
  * An illustration of media source extension for progressive download
@@ -114,6 +115,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _lastTimeDetach: number = 0;
+
+  /**
+   * A counter to track the number of attempts to recover from media error
+   * @type {number}
+   * @private
+   */
+  _mediaErrorRecoveryAttempts: number = 0;
 
   /**
    * Checks if NativeAdapter can play a given mime type.
@@ -273,6 +281,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._eventManager.listen(this._videoElement, Html5EventType.ENDED, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.ABORT, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.SEEKED, () => this._syncCurrentTime());
+        this._eventManager.listen(this._videoElement, Html5EventType.PLAYING, () => this._onPlaying());
         // Sometimes when playing live in safari and switching between tabs the currentTime goes back with no seek events
         this._eventManager.listen(window, 'focus', () => setTimeout(() => this._syncCurrentTime(), BACK_TO_FOCUS_TIMEOUT));
         if (this._isProgressivePlayback()) {
@@ -288,12 +297,19 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     return this._loadPromise;
   }
 
-  handleMediaError(error: ?MediaError): boolean {
+  handleMediaError(error: ?MediaError): number {
     if (this._loadPromiseReject) {
       this._loadPromiseReject(new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.NATIVE_ADAPTER_LOAD_FAILED, error));
-      return true;
+      return Error.Severity.CRITICAL;
+    } else if (error && error.code === window.MediaError.MEDIA_ERR_DECODE) {
+      this._mediaErrorRecoveryAttempts++;
+      if (this._mediaErrorRecoveryAttempts <= MAX_MEDIA_RECOVERY_ATTEMPTS) {
+        return Error.Severity.RECOVERABLE;
+      } else {
+        return Error.Severity.CRITICAL;
+      }
     } else {
-      return false;
+      return Error.Severity.NO_ERROR;
     }
   }
 
@@ -402,6 +418,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     this._heartbeatTimeoutId = setTimeout(onTimeout, this._config.heartbeatTimeout);
   }
 
+  _onPlaying(): void {
+    this._mediaErrorRecoveryAttempts = 0;
+  }
   _clearHeartbeatTimeout(): void {
     if (this._heartbeatTimeoutId) {
       clearTimeout(this._heartbeatTimeoutId);

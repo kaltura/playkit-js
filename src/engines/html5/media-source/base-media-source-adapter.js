@@ -185,11 +185,11 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   /**
    * Checks if the adapter can recover from an error triggered by the video element error
    * @param {Event} event - the html5 video element error
-   * @returns {boolean} - if it can recover or not
+   * @returns {SeverityType} - returns the severity type of the error or NaN if there no error
    * @public
    */
-  handleMediaError(event: ?MediaError): boolean {
-    return false;
+  handleMediaError(event: ?MediaError): number {
+    return Error.Severity.NO_ERROR;
   }
 
   getStartTimeOfDvrWindow(): number {

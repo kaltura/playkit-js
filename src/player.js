@@ -40,6 +40,7 @@ import {ControllerProvider} from './controller/controller-provider';
 import {ResizeWatcher} from './utils/resize-watcher';
 import {FullscreenController} from './fullscreen/fullscreen-controller';
 import {EngineDecorator} from './engines/engine-decorator';
+import Error from './error/error';
 
 /**
  * The black cover class name.
@@ -1610,6 +1611,10 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       Object.keys(Html5EventType).forEach(html5Event => {
         this._eventManager.listen(this._engine, Html5EventType[html5Event], (event: FakeEvent) => {
+          if (Html5EventType[html5Event] === Html5EventType.ERROR && event.payload && event.payload.severity === Error.Severity.RECOVERABLE) {
+            this._restore();
+          }
+
           return this.dispatchEvent(event);
         });
       });
@@ -2213,8 +2218,8 @@ export default class Player extends FakeEventTarget {
     let currentOrConfiguredTextLang =
       this._playbackAttributesState.textLanguage || this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackType.TEXT);
     let currentOrConfiguredAudioLang = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
-    this._setDefaultTrack(TrackType.TEXT, currentOrConfiguredTextLang, offTextTrack);
     this._setDefaultTrack(TrackType.AUDIO, currentOrConfiguredAudioLang, activeTracks.audio);
+    this._setDefaultTrack(TrackType.TEXT, currentOrConfiguredTextLang, offTextTrack);
   }
 
   /**
@@ -2290,10 +2295,19 @@ export default class Player extends FakeEventTarget {
     });
   }
 
+  /***
+   * Restores the playback in case of a recoverable error
+   * @private
+   * @returns {void}
+   */
   _restore(): void {
+    Player._logger.error('RESTORE!');
     this._detachMediaSource();
     this._attachMediaSource();
     this._play();
+    this._eventManager.listenOnce(this.getVideoElement(), Html5EventType.CAN_PLAY, () => {
+      this._pause();
+    });
   }
 
   // </editor-fold>

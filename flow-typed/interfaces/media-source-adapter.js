@@ -2,6 +2,7 @@
 import VideoTrack from '../../src/track/video-track';
 import AudioTrack from '../../src/track/audio-track';
 import TextTrack from '../../src/track/text-track';
+import type {SeverityType} from '../../src/error/severity';
 
 declare interface IMediaSourceAdapter {
   src: string;
@@ -9,7 +10,7 @@ declare interface IMediaSourceAdapter {
   +duration: number;
   +capabilities: PKMediaSourceCapabilities;
   load(startTime: ?number): Promise<Object>;
-  handleMediaError(error: ?MediaError): boolean;
+  handleMediaError(error: ?MediaError): number;
   destroy(): Promise<*>;
   selectVideoTrack(videoTrack: VideoTrack): void;
   selectAudioTrack(audioTrack: AudioTrack): void;
