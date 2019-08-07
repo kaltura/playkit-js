@@ -1045,26 +1045,26 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _handleVideoError(): void {
     if (!this._el.error) return;
     const code = this._el.error.code;
-    if (code === 1 /* MEDIA_ERR_ABORTED */) {
+    if (code === window.MediaError.MEDIA_ERR_ABORTED) {
       // Ignore this error code.js, which should only occur when navigating away or
       // deliberately stopping playback of HTTP content.
       return;
     }
 
-    // Extra error information from MS Edge and IE11:
-    let extended = this._getMsExtendedError();
-
-    // Extra error information from Chrome:
-    // $FlowFixMe
-    const message = this._el.error.message;
     if (this._mediaSourceAdapter) {
-      const errorSeverity = this._mediaSourceAdapter.handleMediaError(this._el.error);
-      if (errorSeverity !== Error.Severity.NO_ERROR) {
-        const error = new Error(errorSeverity, Error.Category.MEDIA, Error.Code.VIDEO_ERROR, {
+      const error = this._mediaSourceAdapter.handleMediaError(this._el.error);
+      if (error) {
+        // Extra error information from Chrome:
+        // $FlowFixMe
+        const message = this._el.error.message;
+
+        // Extra error information from MS Edge and IE11:
+        let extended = this._getMsExtendedError();
+        error.data = {
           code: code,
           extended: extended,
           message: message
-        });
+        };
         this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
       }
     }

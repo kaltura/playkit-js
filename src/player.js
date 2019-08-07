@@ -1611,10 +1611,9 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       Object.keys(Html5EventType).forEach(html5Event => {
         this._eventManager.listen(this._engine, Html5EventType[html5Event], (event: FakeEvent) => {
-          if (Html5EventType[html5Event] === Html5EventType.ERROR && event.payload && event.payload.severity === Error.Severity.RECOVERABLE) {
+          if (Html5EventType[html5Event] === Html5EventType.ERROR && event.payload && event.payload.severity === Error.Severity.RESTORABLE) {
             this._restore();
           }
-
           return this.dispatchEvent(event);
         });
       });
@@ -2296,7 +2295,7 @@ export default class Player extends FakeEventTarget {
   }
 
   /***
-   * Restores the playback in case of a recoverable error
+   * Restores the playback in case of a restorable error
    * @private
    * @returns {void}
    */

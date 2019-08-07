@@ -4,9 +4,9 @@ type SeverityType = {[severity: string]: number};
 
 const Severity: SeverityType = {
   /**
-   * No Error occurred
+   * An error occurred which the player cannot recover from, but we can restore the player as a work around
    */
-  NO_ERROR: 0,
+  RESTORABLE: 0,
   /**
    * An error occurred, but the Player is attempting to recover from the error.
    *

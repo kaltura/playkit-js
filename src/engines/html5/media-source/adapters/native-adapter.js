@@ -297,20 +297,18 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     return this._loadPromise;
   }
 
-  handleMediaError(error: ?MediaError): number {
+  handleMediaError(error: ?MediaError): ?Error {
     if (this._loadPromiseReject) {
       this._loadPromiseReject(new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.NATIVE_ADAPTER_LOAD_FAILED, error));
-      return Error.Severity.CRITICAL;
+      return null;
     } else if (error && error.code === window.MediaError.MEDIA_ERR_DECODE) {
       this._mediaErrorRecoveryAttempts++;
       if (this._mediaErrorRecoveryAttempts <= MAX_MEDIA_RECOVERY_ATTEMPTS) {
-        return Error.Severity.RECOVERABLE;
-      } else {
-        return Error.Severity.CRITICAL;
+        NativeAdapter._logger.error('handleMediaError');
+        return new Error(Error.Severity.RESTORABLE, Error.Category.MEDIA, Error.Code.VIDEO_ERROR);
       }
-    } else {
-      return Error.Severity.NO_ERROR;
     }
+    return new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.VIDEO_ERROR);
   }
 
   /**
