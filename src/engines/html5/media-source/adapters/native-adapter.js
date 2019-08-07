@@ -15,7 +15,7 @@ import {FairplayDrmHandler} from './fairplay-drm-handler';
 import type {FairplayDrmConfigType} from './fairplay-drm-handler';
 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
-const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
+const MAX_MEDIA_DECODE_ERROR_RECOVERY_ATTEMPTS: number = 3;
 
 /**
  * An illustration of media source extension for progressive download
@@ -303,7 +303,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       return null;
     } else if (error && error.code === window.MediaError.MEDIA_ERR_DECODE) {
       this._mediaErrorRecoveryAttempts++;
-      if (this._mediaErrorRecoveryAttempts <= MAX_MEDIA_RECOVERY_ATTEMPTS) {
+      if (this._mediaErrorRecoveryAttempts <= MAX_MEDIA_DECODE_ERROR_RECOVERY_ATTEMPTS) {
         NativeAdapter._logger.error('handleMediaError');
         return new Error(Error.Severity.RESTORABLE, Error.Category.MEDIA, Error.Code.VIDEO_ERROR);
       }
