@@ -1902,10 +1902,8 @@ export default class Player extends FakeEventTarget {
       this._engine
         .load(startTime)
         .then(data => {
-          this._eventManager.listenOnce(this.getVideoElement(), Html5EventType.CAN_PLAY, () => {
-            this._updateTracks(data.tracks);
-            this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
-          });
+          this._updateTracks(data.tracks);
+          this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
           resetFlags();
         })
         .catch(error => {
