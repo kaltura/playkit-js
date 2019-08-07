@@ -40,7 +40,6 @@ import {ControllerProvider} from './controller/controller-provider';
 import {ResizeWatcher} from './utils/resize-watcher';
 import {FullscreenController} from './fullscreen/fullscreen-controller';
 import {EngineDecorator} from './engines/engine-decorator';
-import Error from './error/error';
 
 /**
  * The black cover class name.
