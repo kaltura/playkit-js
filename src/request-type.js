@@ -1,0 +1,13 @@
+// @flow
+const RequestType: PKRequestType = {
+  MANIFEST_NATIVE: 0,
+  MANIFEST_HLS: 1,
+  MANIFEST_DASH: 2,
+  SEGMENT_HLS: 3,
+  SEGMENT_DASH: 4,
+  LICENSE_FAIRPLAY: 5,
+  LICENSE_WIDEVINE: 6,
+  LICENSE_PLAYREADY: 7
+};
+
+export {RequestType};
