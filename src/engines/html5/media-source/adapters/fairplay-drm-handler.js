@@ -1,6 +1,8 @@
 // @flow
 import Error from '../../../../error/error';
 import getLogger from '../../../../utils/logger';
+import * as Utils from '../../../../utils/util';
+import {RequestType} from '../../../../request-type';
 import type {CodeType} from '../../../../error/code';
 import type {SeverityType} from '../../../../error/severity';
 import type {CategoryType} from '../../../../error/category';
@@ -14,7 +16,7 @@ const WebkitEvents: WebkitEventsType = {
   KEY_ERROR: 'webkitkeyerror'
 };
 
-type FairplayDrmConfigType = {licenseUrl: string, certificate: string};
+type FairplayDrmConfigType = {licenseUrl: string, certificate: string, network: ?Object};
 
 class FairplayDrmHandler {
   static WebkitEvents: WebkitEventsType = WebkitEvents;
@@ -81,9 +83,30 @@ class FairplayDrmHandler {
     let request = new XMLHttpRequest();
     request.responseType = 'text';
     request.addEventListener('load', (e: Event) => this._licenseRequestLoaded(e), false);
-    let params = FairplayDrmHandler._base64EncodeUint8Array(message);
-    request.open('POST', this._config.licenseUrl, true);
-    request.setRequestHeader('Content-type', 'application/json');
+    const pkRequest: PKRequestObject = {
+      url: this._config.licenseUrl,
+      body: FairplayDrmHandler._base64EncodeUint8Array(message),
+      headers: {'Content-type': 'application/json'}
+    };
+    if (typeof Utils.Object.getPropertyPath(this._config, 'network.requestFilter') === 'function') {
+      try {
+        this._logger.debug('Apply request filter');
+        this._config.network.requestFilter(RequestType.LICENSE_FAIRPLAY, pkRequest);
+      } catch (error) {
+        this._errorCallback(
+          new Error(
+            (Error.Severity: SeverityType).RECOVERABLE,
+            (Error.Category: CategoryType).NETWORK,
+            (Error.Code: CodeType).REQUEST_FILTER_ERROR,
+            error
+          )
+        );
+      }
+    }
+    request.open('POST', pkRequest.url, true);
+    Object.entries(pkRequest.headers).forEach(entry => {
+      request.setRequestHeader(...entry);
+    });
     this._logger.debug('Ready for license request');
     request.onerror = () => {
       this._onError((Error.Code: CodeType).LICENSE_REQUEST_FAILED, {
@@ -91,7 +114,7 @@ class FairplayDrmHandler {
         responseText: request.responseText
       });
     };
-    request.send(params);
+    request.send(pkRequest.body);
   }
 
   _onWebkitKeyAdded(): void {
@@ -116,22 +139,40 @@ class FairplayDrmHandler {
       });
       return;
     }
-    let responseObj = {};
-    try {
-      let keyText = request.responseText.trim();
-      responseObj = JSON.parse(keyText);
-    } catch (error) {
-      this._onError((Error.Code: CodeType).BAD_FAIRPLAY_RESPONSE, {
-        error,
-        responseText: request.responseText
-      });
-    }
-    let isValidResponse = FairplayDrmHandler._validateResponse(responseObj);
-    if (isValidResponse.valid) {
-      let key = FairplayDrmHandler._base64DecodeUint8Array(responseObj.ckc);
-      this._keySession.update(key);
+    if (typeof Utils.Object.getPropertyPath(this._config, 'network.responseFilter') === 'function') {
+      const response = {data: request.response};
+      try {
+        this._logger.debug('Apply response filter');
+        this._config.network.responseFilter(RequestType.LICENSE_FAIRPLAY, response);
+        this._keySession.update(response.data);
+      } catch (error) {
+        this._errorCallback(
+          new Error(
+            (Error.Severity: SeverityType).RECOVERABLE,
+            (Error.Category: CategoryType).NETWORK,
+            (Error.Code: CodeType).RESPONSE_FILTER_ERROR,
+            error
+          )
+        );
+      }
     } else {
-      this._onError((Error.Code: CodeType).BAD_FAIRPLAY_RESPONSE, isValidResponse);
+      let responseObj = {};
+      try {
+        let keyText = request.responseText.trim();
+        responseObj = JSON.parse(keyText);
+      } catch (error) {
+        this._onError((Error.Code: CodeType).BAD_FAIRPLAY_RESPONSE, {
+          error,
+          responseText: request.responseText
+        });
+      }
+      let isValidResponse = FairplayDrmHandler._validateResponse(responseObj);
+      if (isValidResponse.valid) {
+        let key = FairplayDrmHandler._base64DecodeUint8Array(responseObj.ckc);
+        this._keySession.update(key);
+      } else {
+        this._onError((Error.Code: CodeType).BAD_FAIRPLAY_RESPONSE, isValidResponse);
+      }
     }
   }
 
