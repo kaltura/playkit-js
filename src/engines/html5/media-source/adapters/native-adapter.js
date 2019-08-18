@@ -291,10 +291,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   /**
    * handle decode error - reload the video and seek to last currentTime
+   * @param {?MediaError}error - the error object to be printed to log
+   * @private
    * @returns {void}
    */
-  handleDecodeError(): void {
-    NativeAdapter._logger.error('handleDecodeError');
+  _handleDecodeError(error: MediaError): void {
+    NativeAdapter._logger.debug('handleDecodeError', error);
     const prevCurrTime = this._videoElement.currentTime;
     const prevActiveAudioTrack = this._getActivePKAudioTrack();
     const prevActiveTextTrack = this._getActivePKTextTrack();
@@ -325,7 +327,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     } else if (error && error.code === window.MediaError.MEDIA_ERR_DECODE) {
       this._mediaErrorRecoveryAttempts++;
       if (this._mediaErrorRecoveryAttempts <= MAX_MEDIA_RECOVERY_ATTEMPTS) {
-        this.handleDecodeError();
+        this._handleDecodeError(error);
         return true;
       }
     }
