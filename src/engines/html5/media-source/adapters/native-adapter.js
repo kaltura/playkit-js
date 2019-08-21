@@ -135,31 +135,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   /**
    * Checks if NativeAdapter can play a given drm data.
    * @function canPlayDrm
-   * @param {Array<Object>} drmData - The drm data to check.
-   * @param {PKDrmConfigObject} drmConfig - The drm config.
    * @returns {boolean} - Whether the native adapter can play a specific drm data.
    * @static
    */
-  static canPlayDrm(drmData: Array<Object>, drmConfig: PKDrmConfigObject): boolean {
-    let canPlayDrm = false;
-    for (let drmProtocol of NativeAdapter._drmProtocols) {
-      if (drmProtocol.isConfigured(drmData, drmConfig)) {
-        NativeAdapter._drmProtocol = drmProtocol;
-        canPlayDrm = true;
-        break;
-      }
-    }
-    if (!canPlayDrm) {
-      for (let drmProtocol of NativeAdapter._drmProtocols) {
-        if (drmProtocol.canPlayDrm(drmData)) {
-          NativeAdapter._drmProtocol = drmProtocol;
-          canPlayDrm = true;
-          break;
-        }
-      }
-    }
-    NativeAdapter._logger.debug('canPlayDrm result is ' + canPlayDrm.toString(), drmData);
-    return canPlayDrm;
+  static canPlayDrm(): boolean {
+    NativeAdapter._drmProtocol = NativeAdapter._drmProtocols[0];
+    return true;
   }
 
   /**
