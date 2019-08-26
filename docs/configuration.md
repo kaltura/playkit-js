@@ -17,6 +17,7 @@ var player = playkit.core.loadPlayer(config);
   playback: PKPlaybackConfigObject,
   sources: PKSourcesConfigObject,
   session: PKSessionConfigObject,
+  network: PKNetworkConfigObject,
   plugins: PKPluginsConfigObject,
   customLabels: PKCustomLabelsConfigObject,
   abr: PKAbrConfigObject,
@@ -1019,6 +1020,71 @@ var config = {
 > > ##### Default: `-`
 > >
 > > ##### Description: The ui configuration id.
+
+##
+
+> ### config.network
+>
+> ##### Type: `PKNetworkConfigObject`
+>
+> ```js
+> {
+>  requestFilter?: Function,
+>  responseFilter?: Function
+> }
+> ```
+>
+> ##### Default: `-`
+>
+> ##### Description: Defines the network data (optional).
+>
+> > ##
+> >
+> > ### config.network.requestFilter
+> >
+> > ##### Type: `function`
+> >
+> > ##### Default: `-`
+> >
+> > ##### Description: The filter for player requests
+> >
+> > #### Example:
+> >
+> > ```js
+> > var config = {
+> >   network: {
+> >     requestFilter: function(type, request) {
+> >       if (type === KalturaPlayer.core.RequestType.LICENSE) {
+> >         request.headers['customData'] = CUSTOM_DATA;
+> >       }
+> >     }
+> >   }
+> > };
+> > ```
+> >
+> > ##
+> >
+> > ### config.network.responseFilter
+> >
+> > ##### Type: `function`
+> >
+> > ##### Default: `-`
+> >
+> > ##### Description: The filter for player responses
+> >
+> > #### Example:
+> >
+> > ```js
+> > var config = {
+> >   network: {
+> >     responseFilter: function(type, response) {
+> >       if (type === KalturaPlayer.core.RequestType.LICENSE) {
+> >         response.data = MANIPULATED_DATA;
+> >       }
+> >     }
+> >   }
+> > };
+> > ```
 >
 > ##
 >

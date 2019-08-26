@@ -4,6 +4,7 @@ import Track from '../../../../track/track';
 import VideoTrack from '../../../../track/video-track';
 import AudioTrack from '../../../../track/audio-track';
 import {TextTrack as PKTextTrack} from '../../../../track/text-track';
+import {RequestType} from '../../../../request-type';
 import BaseMediaSourceAdapter from '../base-media-source-adapter';
 import {getSuitableSourceForResolution} from '../../../../utils/resolution';
 import * as Utils from '../../../../utils/util';
@@ -187,6 +188,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         Utils.Object.mergeDeep(adapterConfig, config.playback.options.html5.native);
       }
     }
+    adapterConfig.network = config.network;
     return new this(videoElement, source, adapterConfig);
   }
 
@@ -221,7 +223,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _maybeSetDrmPlayback(): void {
     if (NativeAdapter._drmProtocol && this._sourceObj && this._sourceObj.drmData) {
-      const drmConfig: FairplayDrmConfigType = {licenseUrl: '', certificate: ''};
+      const drmConfig: FairplayDrmConfigType = {
+        licenseUrl: '',
+        certificate: '',
+        network: this._config.network
+      };
       NativeAdapter._drmProtocol.setDrmPlayback(drmConfig, this._sourceObj.drmData);
       this._drmHandler = new FairplayDrmHandler(this._videoElement, drmConfig, error => this._dispatchErrorCallback(error));
     }
@@ -275,7 +281,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           this._setProgressiveSource();
         }
         if (this._sourceObj && this._sourceObj.url) {
-          this._videoElement.src = this._sourceObj.url;
+          this._setSrc();
           this._trigger(CustomEventType.ABR_MODE_CHANGED, {mode: this._isProgressivePlayback() ? 'manual' : 'auto'});
         }
         this._videoElement.load();
@@ -341,6 +347,20 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {void}
    */
   detachMediaSource(): void {}
+
+  _setSrc(): void {
+    const pkRequest: PKRequestObject = {url: this._sourceObj ? this._sourceObj.url : '', body: null, headers: {}};
+    if (typeof Utils.Object.getPropertyPath(this._config, 'network.requestFilter') === 'function') {
+      try {
+        NativeAdapter._logger.debug('Apply request filter');
+        this._config.network.requestFilter(RequestType.MANIFEST, pkRequest);
+      } catch (error) {
+        this._trigger(Html5EventType.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.REQUEST_FILTER_ERROR, error));
+        return;
+      }
+    }
+    this._videoElement.src = pkRequest.url;
+  }
 
   /**
    * Loaded data event handler.
@@ -626,7 +646,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           }
         }
       });
-      this._videoElement.src = this._sourceObj ? this._sourceObj.url : '';
+      this._setSrc();
     }
   }
 
