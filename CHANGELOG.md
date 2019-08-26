@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.51.5"></a>
+## [0.51.5](https://github.com/kaltura/playkit-js/compare/v0.51.4...v0.51.5) (2019-08-19)
+
+
+### Bug Fixes
+
+* **FEC-8873:** fatal error occurs when coming back from idle in Native HLS IOS ([#390](https://github.com/kaltura/playkit-js/issues/390)) ([3569cc3](https://github.com/kaltura/playkit-js/commit/3569cc3))
+* **FEC-9283:** trigger RESIZE events in Firefox ([#386](https://github.com/kaltura/playkit-js/issues/386)) ([e61ee46](https://github.com/kaltura/playkit-js/commit/e61ee46))
+
+
+
 <a name="0.51.4"></a>
 ## [0.51.4](https://github.com/kaltura/playkit-js/compare/v0.51.3...v0.51.4) (2019-08-04)
 
