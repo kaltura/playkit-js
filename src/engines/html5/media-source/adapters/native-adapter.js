@@ -314,9 +314,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (typeof Utils.Object.getPropertyPath(this._config, 'network.requestFilter') === 'function') {
       try {
         NativeAdapter._logger.debug('Apply request filter');
-        this._config.network.requestFilter(RequestType.MANIFEST_NATIVE, pkRequest);
+        this._config.network.requestFilter(RequestType.MANIFEST, pkRequest);
       } catch (error) {
-        this._trigger(Html5EventType.ERROR, new Error(Error.Severity.RECOVERABLE, Error.Category.NETWORK, Error.Code.REQUEST_FILTER_ERROR, error));
+        this._trigger(Html5EventType.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.REQUEST_FILTER_ERROR, error));
+        return;
       }
     }
     this._videoElement.src = pkRequest.url;

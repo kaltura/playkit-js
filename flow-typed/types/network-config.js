@@ -1,5 +1,5 @@
 // @flow
 declare type PKNetworkConfigObject = {
-  requestFilter: ?Function,
-  responseFilter: ?Function
+  requestFilter?: Function,
+  responseFilter?: Function
 };

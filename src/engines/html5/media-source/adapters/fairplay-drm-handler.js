@@ -16,7 +16,7 @@ const WebkitEvents: WebkitEventsType = {
   KEY_ERROR: 'webkitkeyerror'
 };
 
-type FairplayDrmConfigType = {licenseUrl: string, certificate: string, network: Object};
+type FairplayDrmConfigType = {licenseUrl: string, certificate: string, network: {requestFilter: Function, responseFilter: Function}};
 
 class FairplayDrmHandler {
   static WebkitEvents: WebkitEventsType = WebkitEvents;
@@ -27,6 +27,35 @@ class FairplayDrmHandler {
   _errorCallback: Function;
   _videoElement: HTMLVideoElement;
   _retryLicenseRequest: number = 4;
+  _defaultConfig: FairplayDrmConfigType = {
+    licenseUrl: '',
+    certificate: '',
+    network: {
+      requestFilter: (type, request) => {
+        request.body = FairplayDrmHandler._base64EncodeUint8Array(request.body);
+        request.headers = {'Content-type': 'application/json'};
+      },
+      responseFilter: (type, response) => {
+        let responseObj = {};
+        try {
+          let keyText = response.data.trim();
+          responseObj = JSON.parse(keyText);
+        } catch (error) {
+          this._onError((Error.Code: CodeType).BAD_FAIRPLAY_RESPONSE, {
+            error,
+            responseText: response.data
+          });
+          return;
+        }
+        let isValidResponse = FairplayDrmHandler._validateResponse(responseObj);
+        if (isValidResponse.valid) {
+          response.data = FairplayDrmHandler._base64DecodeUint8Array(responseObj.ckc);
+        } else {
+          this._onError((Error.Code: CodeType).BAD_FAIRPLAY_RESPONSE, isValidResponse);
+        }
+      }
+    }
+  };
 
   /**
    * Fairplay DRM handler
@@ -35,7 +64,7 @@ class FairplayDrmHandler {
    * @param {Function} errorCallback - error callback function
    */
   constructor(videoElement: HTMLVideoElement, config: FairplayDrmConfigType, errorCallback: Function): void {
-    this._config = config;
+    this._config = Utils.Object.mergeDeep({}, this._defaultConfig, config);
     this._errorCallback = errorCallback;
     this._videoElement = videoElement;
     this._onWebkitNeedKeyHandler = e => this._onWebkitNeedKey(e);
@@ -85,28 +114,24 @@ class FairplayDrmHandler {
     request.addEventListener('load', (e: Event) => this._licenseRequestLoaded(e), false);
     const pkRequest: PKRequestObject = {
       url: this._config.licenseUrl,
-      body: FairplayDrmHandler._base64EncodeUint8Array(message),
-      headers: {'Content-type': 'application/json'}
+      body: message,
+      headers: {}
     };
-    if (typeof this._config.network.requestFilter === 'function') {
-      try {
-        this._logger.debug('Apply request filter');
-        this._config.network.requestFilter(RequestType.LICENSE_FAIRPLAY, pkRequest);
-      } catch (error) {
-        this._errorCallback(
-          new Error(
-            (Error.Severity: SeverityType).RECOVERABLE,
-            (Error.Category: CategoryType).NETWORK,
-            (Error.Code: CodeType).REQUEST_FILTER_ERROR,
-            error
-          )
-        );
-      }
+    this._logger.debug('Apply request filter');
+    try {
+      this._config.network.requestFilter(RequestType.LICENSE, pkRequest);
+    } catch (error) {
+      this._errorCallback(
+        new Error((Error.Severity: SeverityType).CRITICAL, (Error.Category: CategoryType).NETWORK, (Error.Code: CodeType).REQUEST_FILTER_ERROR, error)
+      );
+      this.destroy();
+      return;
     }
     request.open('POST', pkRequest.url, true);
-    Object.entries(pkRequest.headers).forEach(([header, value]) => {
-      typeof value === 'string' && request.setRequestHeader(header, value);
-    });
+    pkRequest.headers &&
+      Object.entries(pkRequest.headers).forEach(([header, value]) => {
+        typeof value === 'string' && request.setRequestHeader(header, value);
+      });
     this._logger.debug('Ready for license request');
     request.onerror = () => {
       this._onError((Error.Code: CodeType).LICENSE_REQUEST_FAILED, {
@@ -139,40 +164,21 @@ class FairplayDrmHandler {
       });
       return;
     }
-    if (typeof Utils.Object.getPropertyPath(this._config, 'network.responseFilter') === 'function') {
-      const response = {data: request.response};
-      try {
-        this._logger.debug('Apply response filter');
-        this._config.network.responseFilter(RequestType.LICENSE_FAIRPLAY, response);
-        this._keySession.update(response.data);
-      } catch (error) {
-        this._errorCallback(
-          new Error(
-            (Error.Severity: SeverityType).RECOVERABLE,
-            (Error.Category: CategoryType).NETWORK,
-            (Error.Code: CodeType).RESPONSE_FILTER_ERROR,
-            error
-          )
-        );
-      }
-    } else {
-      let responseObj = {};
-      try {
-        let keyText = request.responseText.trim();
-        responseObj = JSON.parse(keyText);
-      } catch (error) {
-        this._onError((Error.Code: CodeType).BAD_FAIRPLAY_RESPONSE, {
-          error,
-          responseText: request.responseText
-        });
-      }
-      let isValidResponse = FairplayDrmHandler._validateResponse(responseObj);
-      if (isValidResponse.valid) {
-        let key = FairplayDrmHandler._base64DecodeUint8Array(responseObj.ckc);
-        this._keySession.update(key);
-      } else {
-        this._onError((Error.Code: CodeType).BAD_FAIRPLAY_RESPONSE, isValidResponse);
-      }
+    const response = {data: request.response};
+    this._logger.debug('Apply response filter');
+    try {
+      this._config.network.responseFilter(RequestType.LICENSE, response);
+      this._keySession.update(response.data);
+    } catch (error) {
+      this._errorCallback(
+        new Error(
+          (Error.Severity: SeverityType).CRITICAL,
+          (Error.Category: CategoryType).NETWORK,
+          (Error.Code: CodeType).RESPONSE_FILTER_ERROR,
+          error
+        )
+      );
+      this.destroy();
     }
   }
 

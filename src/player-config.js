@@ -74,10 +74,7 @@ const DefaultConfig = {
   drm: {
     keySystem: ''
   },
-  network: {
-    requestFilter: null,
-    responseFilter: null
-  }
+  network: {}
 };
 
 export {DefaultConfig};

@@ -1054,7 +1054,7 @@ var config = {
 > > var config = {
 > >   network: {
 > >     requestFilter: function(type, request) {
-> >       if (type === KalturaPlayer.core.RequestType.LICENSE_FAIRPLAY) {
+> >       if (type === KalturaPlayer.core.RequestType.LICENSE) {
 > >         request.headers['customData'] = CUSTOM_DATA;
 > >       }
 > >     }
@@ -1078,7 +1078,7 @@ var config = {
 > > var config = {
 > >   network: {
 > >     responseFilter: function(type, response) {
-> >       if (type === KalturaPlayer.core.RequestType.LICENSE_FAIRPLAY) {
+> >       if (type === KalturaPlayer.core.RequestType.LICENSE) {
 > >         response.data = MANIPULATED_DATA;
 > >       }
 > >     }
