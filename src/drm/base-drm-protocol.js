@@ -2,12 +2,10 @@
 /* eslint-disable no-unused-vars */
 import getLogger from '../utils/logger';
 import Error from '../error/error';
-import DrmSupport from './drm-support';
 import {DrmScheme} from './drm-scheme';
 
 export default class BaseDrmProtocol implements IDrmProtocol {
   static getLogger = getLogger;
-  static DrmSupport = DrmSupport;
   static DrmScheme = DrmScheme;
 
   static isConfigured(drmData: Array<Object>, drmConfig: PKDrmConfigObject): boolean {

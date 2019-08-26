@@ -1,6 +1,7 @@
 // @flow
 import BaseDrmProtocol from './base-drm-protocol';
 import type {FairplayDrmConfigType} from '../engines/html5/media-source/adapters/fairplay-drm-handler';
+import Env from '../../src/utils/env';
 
 export default class FairPlay extends BaseDrmProtocol {
   static _logger = BaseDrmProtocol.getLogger('FairPlay');
@@ -34,9 +35,9 @@ export default class FairPlay extends BaseDrmProtocol {
    */
   static canPlayDrm(drmData: Array<Object>): boolean {
     FairPlay._logger.debug('Can play DRM scheme of: ' + BaseDrmProtocol.DrmScheme.FAIRPLAY);
-    return BaseDrmProtocol.DrmSupport.isProtocolSupported(BaseDrmProtocol.DrmScheme.FAIRPLAY, drmData);
+    const isSafari = Env.browser.name && Env.browser.name.includes('Safari');
+    return !!drmData.find(drmEntry => drmEntry.scheme === BaseDrmProtocol.DrmScheme.FAIRPLAY) && isSafari;
   }
-
   /**
    * Sets the FairPlay playback.
    * @param {FairplayDrmConfigType} config - The config to manipulate.

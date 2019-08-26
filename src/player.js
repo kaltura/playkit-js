@@ -583,7 +583,9 @@ export default class Player extends FakeEventTarget {
     this._resetStateFlags();
     this._engineType = '';
     this._streamType = '';
-    this._engine.reset();
+    if (this._engine) {
+      this._engine.reset();
+    }
     this._showBlackCover();
     this._reset = true;
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET));

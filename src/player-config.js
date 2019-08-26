@@ -73,7 +73,8 @@ const DefaultConfig = {
   },
   drm: {
     keySystem: ''
-  }
+  },
+  network: {}
 };
 
 export {DefaultConfig};

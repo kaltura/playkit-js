@@ -30,6 +30,7 @@ import getLogger, {getLogLevel, LogLevel, LogLevelType, setLogLevel} from './uti
 import {CorsType} from './engines/html5/cors-types';
 import {DrmScheme} from './drm/drm-scheme';
 import {MimeType} from './mime-type';
+import {RequestType} from './request-type';
 import {Ad} from './ads/ad';
 import {AdBreak} from './ads/ad-break';
 import {AdBreakType} from './ads/ad-break-type';
@@ -108,7 +109,8 @@ export {
   LogLevelType,
   CorsType,
   DrmScheme,
-  MimeType
+  MimeType,
+  RequestType
 };
 
 // Export logger utils

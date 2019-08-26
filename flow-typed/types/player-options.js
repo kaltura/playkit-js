@@ -5,5 +5,6 @@ declare type PKPlayerOptionsObject = {
   sources?: PKSourcesConfigObject,
   plugins?: PKPluginsConfigObject,
   session?: PKSessionConfigObject,
+  network?: PKNetworkConfigObject,
   customLabels?: PKCustomLabelsConfigObject
 };
