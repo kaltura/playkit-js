@@ -113,10 +113,11 @@ class FairplayDrmHandler {
       body: FairplayDrmHandler._base64EncodeUint8Array(message),
       headers: {}
     };
-    if (this._config.network.requestFilter) {
+    const requestFilter = this._config.network.requestFilter;
+    if (requestFilter) {
       this._logger.debug('Apply request filter');
       try {
-        this._config.network.requestFilter(RequestType.LICENSE, pkRequest);
+        requestFilter(RequestType.LICENSE, pkRequest);
       } catch (error) {
         this._errorCallback(
           new Error(
