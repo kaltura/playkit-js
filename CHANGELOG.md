@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.52.0"></a>
+# [0.52.0](https://github.com/kaltura/playkit-js/compare/v0.51.4...v0.52.0) (2019-08-26)
+
+
+### Bug Fixes
+
+* **FEC-8873:** fatal error occurs when coming back from idle in Native HLS IOS ([#390](https://github.com/kaltura/playkit-js/issues/390)) ([3569cc3](https://github.com/kaltura/playkit-js/commit/3569cc3))
+* **FEC-9283:** trigger RESIZE events in Firefox ([#386](https://github.com/kaltura/playkit-js/issues/386)) ([e61ee46](https://github.com/kaltura/playkit-js/commit/e61ee46))
+* **FEC-9291:** Player without engine get crash after load media ([#393](https://github.com/kaltura/playkit-js/issues/393)) ([d0d966f](https://github.com/kaltura/playkit-js/commit/d0d966f))
+
+
+### Features
+
+* **FEC-9137:** DRM protocol selection ([#392](https://github.com/kaltura/playkit-js/issues/392)) ([7765082](https://github.com/kaltura/playkit-js/commit/7765082))
+* **FEC-9271:** expose interface and methods to enable customizing DRM request/response ([#391](https://github.com/kaltura/playkit-js/issues/391)) ([0d09083](https://github.com/kaltura/playkit-js/commit/0d09083))
+
+
+
 <a name="0.51.5"></a>
 ## [0.51.5](https://github.com/kaltura/playkit-js/compare/v0.51.4...v0.51.5) (2019-08-19)
 
