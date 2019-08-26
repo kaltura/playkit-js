@@ -16,7 +16,7 @@ const WebkitEvents: WebkitEventsType = {
   KEY_ERROR: 'webkitkeyerror'
 };
 
-type FairplayDrmConfigType = {licenseUrl: string, certificate: string, network: {requestFilter: Function, responseFilter: Function}};
+type FairplayDrmConfigType = {licenseUrl: string, certificate: string, network: {requestFilter?: Function, responseFilter: Function}};
 
 class FairplayDrmHandler {
   static WebkitEvents: WebkitEventsType = WebkitEvents;
@@ -31,10 +31,6 @@ class FairplayDrmHandler {
     licenseUrl: '',
     certificate: '',
     network: {
-      requestFilter: (type, request) => {
-        request.body = FairplayDrmHandler._base64EncodeUint8Array(request.body);
-        request.headers = {'Content-type': 'application/json'};
-      },
       responseFilter: (type, response) => {
         let responseObj = {};
         try {
@@ -114,24 +110,35 @@ class FairplayDrmHandler {
     request.addEventListener('load', (e: Event) => this._licenseRequestLoaded(e), false);
     const pkRequest: PKRequestObject = {
       url: this._config.licenseUrl,
-      body: message,
+      body: FairplayDrmHandler._base64EncodeUint8Array(message),
       headers: {}
     };
-    this._logger.debug('Apply request filter');
-    try {
-      this._config.network.requestFilter(RequestType.LICENSE, pkRequest);
-    } catch (error) {
-      this._errorCallback(
-        new Error((Error.Severity: SeverityType).CRITICAL, (Error.Category: CategoryType).NETWORK, (Error.Code: CodeType).REQUEST_FILTER_ERROR, error)
-      );
-      this.destroy();
-      return;
+    if (this._config.network.requestFilter) {
+      this._logger.debug('Apply request filter');
+      try {
+        this._config.network.requestFilter(RequestType.LICENSE, pkRequest);
+      } catch (error) {
+        this._errorCallback(
+          new Error(
+            (Error.Severity: SeverityType).CRITICAL,
+            (Error.Category: CategoryType).NETWORK,
+            (Error.Code: CodeType).REQUEST_FILTER_ERROR,
+            error
+          )
+        );
+        this.destroy();
+        return;
+      }
     }
     request.open('POST', pkRequest.url, true);
-    pkRequest.headers &&
+    let setContentType = true;
+    if (pkRequest.headers) {
       Object.entries(pkRequest.headers).forEach(([header, value]) => {
         typeof value === 'string' && request.setRequestHeader(header, value);
+        setContentType && (setContentType = header.toLowerCase() !== 'content-type');
       });
+    }
+    setContentType && request.setRequestHeader('Content-type', 'application/json');
     this._logger.debug('Ready for license request');
     request.onerror = () => {
       this._onError((Error.Code: CodeType).LICENSE_REQUEST_FAILED, {
