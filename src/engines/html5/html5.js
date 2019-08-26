@@ -1045,7 +1045,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _handleVideoError(): void {
     if (!this._el.error) return;
     const code = this._el.error.code;
-    if (code === 1 /* MEDIA_ERR_ABORTED */) {
+    if (code === window.MediaError.MEDIA_ERR_ABORTED) {
       // Ignore this error code.js, which should only occur when navigating away or
       // deliberately stopping playback of HTTP content.
       return;

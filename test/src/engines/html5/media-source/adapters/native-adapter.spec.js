@@ -53,7 +53,6 @@ describe('NativeAdapter: canPlayType', () => {
 
 describe('NativeAdapter: canPlayDrm', () => {
   const fpDrmData = [{licenseUrl: 'LICENSE_URL', scheme: FairPlay.DrmScheme.FAIRPLAY}];
-  const wwDrmData = [{licenseUrl: 'LICENSE_URL', scheme: FairPlay.DrmScheme.WIDEVINE}];
 
   beforeEach(() => {
     NativeAdapter._drmProtocol = null;
@@ -62,16 +61,6 @@ describe('NativeAdapter: canPlayDrm', () => {
   it('should return true for fairplay data if configured', function() {
     NativeAdapter.canPlayDrm(fpDrmData, {keySystem: FairPlay.DrmScheme.FAIRPLAY}).should.be.true;
     NativeAdapter._drmProtocol._KeySystem.should.equal(FairPlay._KeySystem);
-  });
-
-  it('should return false for fairplay data if not configured', function() {
-    NativeAdapter.canPlayDrm(fpDrmData, {keySystem: FairPlay.DrmScheme.WIDEVINE}).should.be.false;
-    (NativeAdapter._drmProtocol === null).should.be.true;
-  });
-
-  it('should return false for non-fairplay data even configured', function() {
-    NativeAdapter.canPlayDrm(wwDrmData, {keySystem: FairPlay.DrmScheme.FAIRPLAY}).should.be.false;
-    (NativeAdapter._drmProtocol === null).should.be.true;
   });
 });
 

@@ -15,6 +15,7 @@ import {FairplayDrmHandler} from './fairplay-drm-handler';
 import type {FairplayDrmConfigType} from './fairplay-drm-handler';
 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
+const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
 
 /**
  * An illustration of media source extension for progressive download
@@ -109,6 +110,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _waitingEventTriggered: ?boolean = false;
 
   /**
+   * A counter to track the number of attempts to recover from media error
+   * @type {number}
+   * @private
+   */
+  _mediaErrorRecoveryAttempts: number = 0;
+
+  /**
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
    * @param {string} mimeType - The mime type to check
@@ -133,25 +141,20 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @static
    */
   static canPlayDrm(drmData: Array<Object>, drmConfig: PKDrmConfigObject): boolean {
-    let canPlayDrm = false;
     for (let drmProtocol of NativeAdapter._drmProtocols) {
       if (drmProtocol.isConfigured(drmData, drmConfig)) {
         NativeAdapter._drmProtocol = drmProtocol;
-        canPlayDrm = true;
         break;
       }
     }
-    if (!canPlayDrm) {
+    if (!NativeAdapter._drmProtocol) {
       for (let drmProtocol of NativeAdapter._drmProtocols) {
         if (drmProtocol.canPlayDrm(drmData)) {
           NativeAdapter._drmProtocol = drmProtocol;
-          canPlayDrm = true;
-          break;
         }
       }
     }
-    NativeAdapter._logger.debug('canPlayDrm result is ' + canPlayDrm.toString(), drmData);
-    return canPlayDrm;
+    return !!NativeAdapter._drmProtocol;
   }
 
   /**
@@ -281,13 +284,49 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     return this._loadPromise;
   }
 
+  /**
+   * handle decode error - reload the video and seek to last currentTime
+   * @param {?MediaError}error - the error object to be printed to log
+   * @private
+   * @returns {void}
+   */
+  _handleDecodeError(error: MediaError): void {
+    NativeAdapter._logger.debug('handleDecodeError', error);
+    const prevCurrTime = this._videoElement.currentTime;
+    const prevActiveAudioTrack = this._getActivePKAudioTrack();
+    const prevActiveTextTrack = this._getActivePKTextTrack();
+    this._videoElement.load();
+    this._eventManager.listenOnce(this._videoElement, Html5EventType.PLAYING, () => {
+      this._mediaErrorRecoveryAttempts = 0;
+    });
+
+    this._eventManager.listenOnce(this._videoElement, Html5EventType.CAN_PLAY, () => {
+      this._videoElement.currentTime = prevCurrTime;
+      this._videoElement.play();
+      this._videoElement.pause();
+      if (prevActiveAudioTrack) {
+        this.selectAudioTrack(prevActiveAudioTrack);
+      }
+      if (prevActiveTextTrack) {
+        this.selectTextTrack(prevActiveTextTrack);
+      } else {
+        this._disableTextTracks();
+      }
+    });
+  }
+
   handleMediaError(error: ?MediaError): boolean {
     if (this._loadPromiseReject) {
       this._loadPromiseReject(new Error(Error.Severity.CRITICAL, Error.Category.MEDIA, Error.Code.NATIVE_ADAPTER_LOAD_FAILED, error));
       return true;
-    } else {
-      return false;
+    } else if (error && error.code === window.MediaError.MEDIA_ERR_DECODE) {
+      this._mediaErrorRecoveryAttempts++;
+      if (this._mediaErrorRecoveryAttempts <= MAX_MEDIA_RECOVERY_ATTEMPTS) {
+        this._handleDecodeError(error);
+        return true;
+      }
     }
+    return false;
   }
 
   /**
@@ -647,17 +686,22 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
+  _getPKAudioTracks(): Array<AudioTrack> {
+    const audioTracks = this._playerTracks.filter(track => track instanceof AudioTrack);
+    return ((audioTracks: Array<any>): Array<AudioTrack>);
+  }
+
+  _getActivePKAudioTrack(): ?AudioTrack {
+    const pkAudioTracks = this._getPKAudioTracks();
+    return pkAudioTracks.find(track => track.active === true);
+  }
+
   /**
    * Handler of the video element AudioTrackList onchange event.
    * @private
    * @returns {void}
    */
   _onNativeAudioTrackChange(): void {
-    const pkAudioTracks = this._playerTracks.filter(track => track instanceof AudioTrack);
-    const getActivePKAudioTrackIndex = () => {
-      const activeAudioTrack = pkAudioTracks.find(track => track.active === true);
-      return activeAudioTrack ? activeAudioTrack.index : -1;
-    };
     const getActiveVidAudioTrackIndex = () => {
       for (let i = 0; i < this._videoElement.audioTracks.length; i++) {
         const audioTrack = this._videoElement.audioTracks[i];
@@ -669,9 +713,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     };
     NativeAdapter._logger.debug('Video element audio track change');
     const vidIndex = getActiveVidAudioTrackIndex();
-    const pkIndex = getActivePKAudioTrackIndex();
+    const activeAudioTrack = this._getActivePKAudioTrack();
+    const pkIndex = activeAudioTrack ? activeAudioTrack.index : -1;
     if (vidIndex !== pkIndex) {
-      const pkAudioTrack = pkAudioTracks.find(track => track.index === vidIndex);
+      const audioTracks = this._getPKAudioTracks();
+      const pkAudioTrack = audioTracks.find(track => track.index === vidIndex);
       if (pkAudioTrack) {
         NativeAdapter._logger.debug('Native selection of track, update the player audio track (' + pkIndex + ' -> ' + vidIndex + ')');
         this._onTrackChanged(pkAudioTrack);
@@ -725,18 +771,23 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
+  _getPKTextTracks(): Array<TextTrack> {
+    return this._playerTracks.filter(track => track instanceof PKTextTrack);
+  }
+
+  _getActivePKTextTrack(): ?TextTrack {
+    const pkTextTracks = this._getPKTextTracks();
+    return pkTextTracks.find(track => track.active === true);
+  }
+
   /**
    * Handler of the video element TextTrackList onchange event.
    * @private
    * @returns {void}
    */
   _onNativeTextTrackChange(): void {
-    const pkTextTracks = this._playerTracks.filter(track => track instanceof PKTextTrack);
+    const pkTextTracks = this._getPKTextTracks();
     const pkOffTrack = pkTextTracks.find(track => track.language === 'off');
-    const getActivePKTextTrackIndex = () => {
-      const activeTextTrack = pkTextTracks.find(track => track.active === true);
-      return activeTextTrack ? activeTextTrack.index : -1;
-    };
     const getActiveVidTextTrackIndex = () => {
       for (let i = 0; i < this._videoElement.textTracks.length; i++) {
         const textTrack = this._videoElement.textTracks[i];
@@ -748,7 +799,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     };
     NativeAdapter._logger.debug('Video element text track change');
     const vidIndex = getActiveVidTextTrackIndex();
-    const pkIndex = getActivePKTextTrackIndex();
+    const activePKtextTrack = this._getActivePKTextTrack();
+    const pkIndex = activePKtextTrack ? activePKtextTrack.index : -1;
 
     if (vidIndex !== pkIndex) {
       // In case no text track with 'showing' mode
