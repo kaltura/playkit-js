@@ -145,7 +145,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         NativeAdapter._drmProtocol = drmProtocol;
       }
     }
-    return true;
+    return !!NativeAdapter._drmProtocol;
   }
 
   /**
