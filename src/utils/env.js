@@ -5,7 +5,13 @@ const LGTVRegex = /^.*(web0s).*(smarttv).*$/i;
 const LGDeviceParser = [[LGTVRegex], [[UAParser.DEVICE.VENDOR, 'LG'], [UAParser.DEVICE.TYPE, UAParser.DEVICE.SMARTTV]]];
 const LGOSParser = [[LGTVRegex], [UAParser.OS.NAME]];
 
-let Env = new UAParser(undefined, {device: LGDeviceParser, os: LGOSParser}).getResult();
+const SAMSUNGTVRegex = /^.*(smart-tv).*(tizen).*$/i;
+const SAMSUNGBrowserParser = [
+  [SAMSUNGTVRegex],
+  [[UAParser.BROWSER.NAME, 'SAMSUNG_TV_BROWSER'], [UAParser.BROWSER.MAJOR, ''], [UAParser.BROWSER.VERSION, '']]
+];
+
+let Env = new UAParser(undefined, {browser: SAMSUNGBrowserParser, device: LGDeviceParser, os: LGOSParser}).getResult();
 
 Env.isConsole = Env.device.type === UAParser.DEVICE.CONSOLE;
 Env.isSmartTV = Env.device.type === UAParser.DEVICE.SMARTTV;
