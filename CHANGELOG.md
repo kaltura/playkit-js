@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.52.1"></a>
+## [0.52.1](https://github.com/kaltura/playkit-js/compare/v0.52.0...v0.52.1) (2019-08-28)
+
+
+### Bug Fixes
+
+* browser detection for samsung ([#394](https://github.com/kaltura/playkit-js/issues/394)) ([8363d6a](https://github.com/kaltura/playkit-js/commit/8363d6a))
+
+
+
 <a name="0.52.0"></a>
 # [0.52.0](https://github.com/kaltura/playkit-js/compare/v0.51.4...v0.52.0) (2019-08-26)
 
