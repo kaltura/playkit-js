@@ -61,10 +61,12 @@ describe('ResizeWatcher', () => {
     rw._observer.disconnect();
     rw.addEventListener('resize', () => {
       document.body.removeChild(container);
+      rw.destroy();
       done('failed');
     });
     setTimeout(() => {
       document.body.removeChild(container);
+      rw.destroy();
       done();
     }, 500);
     setTimeout(() => {
@@ -73,7 +75,9 @@ describe('ResizeWatcher', () => {
   });
 
   it('trigger a resize event', done => {
+    rw._createIframeObserver();
     rw.addEventListener('resize', () => {
+      rw.destroy();
       done();
     });
     rw._triggerResize();
@@ -86,6 +90,7 @@ describe('ResizeWatcher', () => {
     rw.init(el);
     rw.addEventListener('resize', () => {
       document.body.removeChild(el);
+      rw.destroy();
       done();
     });
     el.style.width = '200px';
