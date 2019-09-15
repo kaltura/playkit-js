@@ -8,6 +8,7 @@ import {CustomEventType, Html5EventType} from '../event/event-type';
 import Error from '../error/error';
 import {AdBreak} from './ad-break';
 import {Ad} from './ad';
+import {AdBreakType} from './ad-break-type';
 
 /**
  * @class AdsController
@@ -96,7 +97,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
    * @returns {void}
    */
   playAdNow(adTagUrl: string): void {
-    const activeController = this._adsPluginControllers.find(controller => controller.active);
+    const activeController = this._adsPluginControllers[0];
     activeController && activeController.playAdNow(adTagUrl);
   }
 
@@ -106,6 +107,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
     this._adBreak = null;
     this._ad = null;
     this._adPlayed = false;
+    this._configAdBreaks = this._player.config.advertising.adBreaks;
   }
 
   _addBindings(): void {
@@ -119,6 +121,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
     this._eventManager.listen(this._player, AdEventType.AD_ERROR, event => this._onAdError(event));
     this._eventManager.listen(this._player, CustomEventType.PLAYER_RESET, () => this._reset());
     this._eventManager.listen(this._player, Html5EventType.ENDED, () => this._onEnded());
+    this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, () => this._onTimeUpdate());
   }
 
   _onAdManifestLoaded(event: FakeEvent): void {
@@ -173,6 +176,37 @@ class AdsController extends FakeEventTarget implements IAdsController {
       bumperCompletePromise.finally(() => {
         adCtrl && adCtrl.onPlaybackEnded();
       });
+    }
+  }
+
+  _onTimeUpdate(): void {
+    const playAd = adBreak => {
+      let ad = adBreak.ads.shift();
+      if (ad) {
+        this.playAdNow(ad.url[0]); //todo support water falling
+        this._eventManager.listenOnce(this._player, AdEventType.AD_COMPLETED, playAd.bind(null, adBreak));
+      } else {
+        setTimeout(() => {
+          this._player.dispatchEvent(new FakeEvent(AdEventType.AD_BREAK_END));
+        });
+        this._player.play();
+      }
+    };
+    const adBreak = this._configAdBreaks.find(adBreak => adBreak.position < this._player.currentTime);
+    if (adBreak) {
+      this._configAdBreaks.shift();
+      if (adBreak.ads && adBreak.ads.length) {
+        this._player.pause();
+        this._eventManager.listenOnce(this._player, AdEventType.AD_LOADED, () => {
+          setTimeout(() => {
+            this._player.dispatchEvent(
+              new FakeEvent(AdEventType.AD_BREAK_START, {adBreaks: new AdBreak({type: AdBreakType.PRE, position: 0, numAds: 2})})
+            );
+          });
+        });
+        playAd(adBreak);
+        this._player.play();
+      }
     }
   }
 
