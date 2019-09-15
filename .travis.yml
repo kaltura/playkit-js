@@ -6,8 +6,11 @@ node_js:
   - "node"
 
 addons:
-  chrome: stable
-
+  apt:
+    sources:
+      - google-chrome
+    packages:
+      - google-chrome-stable
 cache:
   yarn: true
   directories:
