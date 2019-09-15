@@ -1,6 +1,6 @@
 conditions: v1
 sudo: required
-dist: trusty
+dist: xenial
 language: node_js
 node_js:
   - "node"
