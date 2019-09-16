@@ -9,6 +9,7 @@ import Error from '../error/error';
 import {AdBreak} from './ad-break';
 import {Ad} from './ad';
 import {AdBreakType} from './ad-break-type';
+import getLogger from '../utils/logger';
 
 /**
  * @class AdsController
@@ -16,6 +17,8 @@ import {AdBreakType} from './ad-break-type';
  * @param {IAdsController} adsPluginController - The controller of the current ads plugin instance.
  */
 class AdsController extends FakeEventTarget implements IAdsController {
+  static _logger: any = getLogger('AdsController');
+
   _player: Player;
   _adsPluginControllers: Array<IAdsPluginController>;
   _allAdsCompleted: boolean;
@@ -28,9 +31,11 @@ class AdsController extends FakeEventTarget implements IAdsController {
   constructor(player: Player, adsPluginControllers: Array<IAdsPluginController>) {
     super();
     this._player = player;
+    this._eventManager = new EventManager();
     this._adsPluginControllers = adsPluginControllers;
     this._initMembers();
     this._addBindings();
+    this._handleConfiguredAdBreaks();
   }
 
   /**
@@ -107,11 +112,9 @@ class AdsController extends FakeEventTarget implements IAdsController {
     this._adBreak = null;
     this._ad = null;
     this._adPlayed = false;
-    this._configAdBreaks = this._player.config.advertising.adBreaks;
   }
 
   _addBindings(): void {
-    this._eventManager = new EventManager();
     this._eventManager.listen(this._player, AdEventType.AD_MANIFEST_LOADED, event => this._onAdManifestLoaded(event));
     this._eventManager.listen(this._player, AdEventType.AD_BREAK_START, event => this._onAdBreakStart(event));
     this._eventManager.listen(this._player, AdEventType.AD_LOADED, event => this._onAdLoaded(event));
@@ -121,7 +124,88 @@ class AdsController extends FakeEventTarget implements IAdsController {
     this._eventManager.listen(this._player, AdEventType.AD_ERROR, event => this._onAdError(event));
     this._eventManager.listen(this._player, CustomEventType.PLAYER_RESET, () => this._reset());
     this._eventManager.listen(this._player, Html5EventType.ENDED, () => this._onEnded());
-    this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, () => this._onTimeUpdate());
+  }
+
+  _handleConfiguredAdBreaks(): void {
+    this._configAdBreaks = this._player.config.advertising.adBreaks
+      .filter(adBreak => typeof adBreak.position === 'number' && adBreak.ads.length)
+      .map(adBreak => ({...adBreak, played: false}));
+    if (this._configAdBreaks.length) {
+      const adBreaksPosition = this._configAdBreaks.map(adBreak => adBreak.position).sort();
+      AdsController._logger.debug(AdEventType.AD_MANIFEST_LOADED, adBreaksPosition);
+      this._player.dispatchEvent(new FakeEvent(AdEventType.AD_MANIFEST_LOADED, {adBreaksPosition}));
+      if (adBreaksPosition.includes(0)) {
+        this._handleConfiguredPreroll();
+      }
+      if (adBreaksPosition.some(position => position > 0)) {
+        this._handleConfiguredMidrolls();
+      }
+    }
+  }
+
+  _handleConfiguredPreroll(): void {
+    const adBreak = this._configAdBreaks.find(adBreak => adBreak.position === 0);
+    if (adBreak) {
+      this._playAdBreak(adBreak);
+    }
+  }
+
+  _handleConfiguredMidrolls(): void {
+    this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, () => {
+      const adBreak = this._configAdBreaks.find(adBreak => !adBreak.played && 0 < adBreak.position && adBreak.position <= this._player.currentTime);
+      if (adBreak) {
+        this._player.pause();
+        this._playAdBreak(adBreak);
+        this._player.play();
+      }
+    });
+  }
+
+  _playAdBreak(adBreak): void {
+    const playAd = adBreak => {
+      const ad = adBreak.ads.shift();
+      if (ad) {
+        this._eventManager.listenOnce(this._player, AdEventType.AD_COMPLETED, () => setTimeout(() => playAd(adBreak)));
+        //TODO support water falling
+        this.playAdNow(ad.url[0]);
+      } else {
+        AdsController._logger.debug(AdEventType.AD_BREAK_END);
+        this._player.dispatchEvent(new FakeEvent(AdEventType.AD_BREAK_END));
+        if (this._configAdBreaks.every(adBreak => adBreak.played)) {
+          AdsController._logger.debug(AdEventType.ADS_COMPLETED);
+          this._player.dispatchEvent(new FakeEvent(AdEventType.ADS_COMPLETED));
+        }
+      }
+    };
+
+    const getAdBreakType = adBreak => {
+      switch (adBreak.position) {
+        case 0:
+          return AdBreakType.PRE;
+        case -1:
+          return AdBreakType.POST;
+        default:
+          return AdBreakType.MID;
+      }
+    };
+
+    adBreak.played = true;
+    const adBreakData = {
+      type: getAdBreakType(adBreak),
+      position: this._player.ended ? -1 : this._player.currentTime || 0,
+      numAds: adBreak.ads.length
+    };
+    this._eventManager.listenOnce(this._player, AdEventType.AD_LOADED, () => {
+      setTimeout(() => {
+        AdsController._logger.debug(AdEventType.AD_BREAK_START, adBreakData);
+        this._player.dispatchEvent(
+          new FakeEvent(AdEventType.AD_BREAK_START, {
+            adBreaks: new AdBreak(adBreakData)
+          })
+        );
+      });
+    });
+    playAd(adBreak);
   }
 
   _onAdManifestLoaded(event: FakeEvent): void {
@@ -151,6 +235,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _onAdsCompleted(): void {
     if (this._adsPluginControllers.every(controller => controller.done)) {
       this._allAdsCompleted = true;
+      AdsController._logger.debug(AdEventType.ALL_ADS_COMPLETED);
       this.dispatchEvent(new FakeEvent(AdEventType.ALL_ADS_COMPLETED));
     }
   }
@@ -159,6 +244,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
     if (event.payload.severity === Error.Severity.CRITICAL && this._adsPluginControllers.every(controller => controller.done)) {
       this._allAdsCompleted = true;
       if (this._adPlayed) {
+        AdsController._logger.debug(AdEventType.ALL_ADS_COMPLETED);
         this.dispatchEvent(new FakeEvent(AdEventType.ALL_ADS_COMPLETED));
       }
     }
@@ -174,44 +260,26 @@ class AdsController extends FakeEventTarget implements IAdsController {
       const bumperCompletePromise = bumperCtrl ? bumperCtrl.onPlaybackEnded() : Promise.resolve();
       // $FlowFixMe
       bumperCompletePromise.finally(() => {
-        adCtrl && adCtrl.onPlaybackEnded();
+        adCtrl &&
+          adCtrl.onPlaybackEnded().finally(() => {
+            this._handleConfiguredPostroll();
+          });
       });
     }
   }
 
-  _onTimeUpdate(): void {
-    const playAd = adBreak => {
-      let ad = adBreak.ads.shift();
-      if (ad) {
-        this.playAdNow(ad.url[0]); //todo support water falling
-        this._eventManager.listenOnce(this._player, AdEventType.AD_COMPLETED, playAd.bind(null, adBreak));
-      } else {
-        setTimeout(() => {
-          this._player.dispatchEvent(new FakeEvent(AdEventType.AD_BREAK_END));
-        });
-        this._player.play();
-      }
-    };
-    const adBreak = this._configAdBreaks.find(adBreak => adBreak.position < this._player.currentTime);
+  _handleConfiguredPostroll(): void {
+    const adBreak = this._configAdBreaks.find(adBreak => !adBreak.played && adBreak.position === -1);
     if (adBreak) {
-      this._configAdBreaks.shift();
-      if (adBreak.ads && adBreak.ads.length) {
-        this._player.pause();
-        this._eventManager.listenOnce(this._player, AdEventType.AD_LOADED, () => {
-          setTimeout(() => {
-            this._player.dispatchEvent(
-              new FakeEvent(AdEventType.AD_BREAK_START, {adBreaks: new AdBreak({type: AdBreakType.PRE, position: 0, numAds: 2})})
-            );
-          });
-        });
-        playAd(adBreak);
-        this._player.play();
-      }
+      this._playAdBreak(adBreak);
+      this._player.play();
     }
   }
 
   _reset(): void {
+    this._eventManager.removeAll();
     this._initMembers();
+    this._handleConfiguredAdBreaks();
   }
 }
 
