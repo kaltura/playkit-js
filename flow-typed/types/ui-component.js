@@ -3,7 +3,7 @@ type PKUIComponent = {
   label: string,
   presets: Array<string>,
   container: string,
-  render: Function,
+  get: Function,
   props: {},
   beforeComponent?: string,
   afterComponent?: string,
