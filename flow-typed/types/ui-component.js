@@ -1,4 +1,4 @@
-
+// @flow
 declare type PKUIComponent = {
   label: string,
   presets: Array<string>,
