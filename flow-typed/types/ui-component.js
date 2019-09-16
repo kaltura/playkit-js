@@ -1,11 +1,11 @@
 
 type PKUIComponent = {
   label: string,
-  presets?: Array<string>,
+  presets: Array<string>,
   container: string,
-  render: (options: { context?: any}) => any,
+  render: Function,
+  props: {},
   beforeComponent?: string,
   afterComponent?: string,
-  replaceComponent?: string,
-  context?: any
+  replaceComponent?: string
 };
