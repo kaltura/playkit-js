@@ -658,6 +658,7 @@ export default class Player extends FakeEventTarget {
    */
   _detachMediaSource(): void {
     if (this._engine) {
+      this._createReadyPromise();
       this._engine.detachMediaSource();
     }
   }
