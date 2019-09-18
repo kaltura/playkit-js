@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.54.0"></a>
+# [0.54.0](https://github.com/kaltura/playkit-js/compare/v0.53.0...v0.54.0) (2019-09-18)
+
+
+### Bug Fixes
+
+* **FEC-9342:** Disable shaka on iOS ([#399](https://github.com/kaltura/playkit-js/issues/399)) ([b2667a0](https://github.com/kaltura/playkit-js/commit/b2667a0))
+
+
+### Features
+
+* **FEC-8696:** allow adding/changing discrete components in UI ([6b4596f](https://github.com/kaltura/playkit-js/commit/6b4596f))
+
+
+
 <a name="0.53.0"></a>
 # [0.53.0](https://github.com/kaltura/playkit-js/compare/v0.52.1...v0.53.0) (2019-09-12)
 
