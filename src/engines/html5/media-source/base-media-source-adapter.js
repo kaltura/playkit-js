@@ -68,7 +68,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @static
    * @returns {boolean} - Whether the media source is supported.
    */
-  static isSupportedMSE(): boolean {
+  static isMSESupported(): boolean {
     const mediaSource = window.MediaSource || window.WebKitMediaSource;
     // isTypeSupported isn't exist or not a function for old MSE implementation
     return !!mediaSource && typeof mediaSource.isTypeSupported === 'function';
