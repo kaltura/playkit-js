@@ -21,6 +21,10 @@
   object-fit: contain;
 }
 
+.playkit-in-browser-fullscreen-mode .playkit-engine-youtube {
+  object-fit: fill;
+}
+
 .playkit-engine video::-webkit-media-controls-panel,
 .playkit-engine video::-webkit-media-controls-panel-container,
 .playkit-engine video::-webkit-media-controls-start-playback-button,
