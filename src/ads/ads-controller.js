@@ -106,13 +106,12 @@ class AdsController extends FakeEventTarget implements IAdsController {
    * @returns {void}
    */
   playAdNow(adTagUrl: string): void {
-    this._playAdBreak({
-      ads: [
-        {
-          url: [adTagUrl]
-        }
-      ]
-    });
+    if (!this._adBreakStartDispatched) {
+      this._playAdBreak({
+        ads: [{url: [adTagUrl]}],
+        played: false
+      });
+    }
   }
 
   _initMembers(): void {
@@ -207,7 +206,6 @@ class AdsController extends FakeEventTarget implements IAdsController {
           adBreaks: new AdBreak(adBreakData)
         })
       );
-      this._adBreakStartDispatched = true;
     });
   }
 
@@ -239,7 +237,6 @@ class AdsController extends FakeEventTarget implements IAdsController {
         AdsController._logger.debug(AdEventType.ADS_COMPLETED);
         this._player.dispatchEvent(new FakeEvent(AdEventType.ADS_COMPLETED));
       }
-      this._adBreakStartDispatched = false;
       if (!this._player.ended) {
         this._player.play();
       }
@@ -252,6 +249,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _onAdBreakStart(event: FakeEvent): void {
+    this._adBreakStartDispatched = true;
     this._adBreak = event.payload.adBreak;
     this.dispatchEvent(event);
   }
@@ -268,6 +266,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _onAdBreakEnd(): void {
     this._adBreak = null;
     this._ad = null;
+    this._adBreakStartDispatched = false;
   }
 
   _onAdsCompleted(): void {
