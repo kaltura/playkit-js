@@ -106,54 +106,12 @@ class AdsController extends FakeEventTarget implements IAdsController {
    * @returns {void}
    */
   playAdNow(adTagUrl: string): void {
-    this._playAdBreak({ads: [{url: [adTagUrl]}]});
-  }
-
-  _getAdBreakTypeAndPosition = () => {
-    if (this._player.ended) {
-      return {
-        type: AdBreakType.POST,
-        position: -1
-      };
-    }
-    if (this._player.currentTime > 0) {
-      return {
-        type: AdBreakType.MID,
-        position: this._player.currentTime
-      };
-    }
-    return {
-      type: AdBreakType.PRE,
-      position: 0
-    };
-  };
-
-  _dispatchAdBreakStartEvent(adBreakData): void {
-    setTimeout(() => {
-      AdsController._logger.debug(AdEventType.AD_BREAK_START, adBreakData);
-      this._player.dispatchEvent(
-        new FakeEvent(AdEventType.AD_BREAK_START, {
-          adBreaks: new AdBreak(adBreakData)
-        })
-      );
-      this._adBreakStartDispatched = true;
-    });
-  }
-
-  _dispatchAdBreakEndEvent(): void {
-    setTimeout(() => {
-      if (this._adBreakStartDispatched) {
-        AdsController._logger.debug(AdEventType.AD_BREAK_END);
-        this._player.dispatchEvent(new FakeEvent(AdEventType.AD_BREAK_END));
-      }
-      if (this._configAdBreaks.every(adBreak => adBreak.played)) {
-        AdsController._logger.debug(AdEventType.ADS_COMPLETED);
-        this._player.dispatchEvent(new FakeEvent(AdEventType.ADS_COMPLETED));
-      }
-      this._adBreakStartDispatched = false;
-      if (!this._player.ended) {
-        this._player.play();
-      }
+    this._playAdBreak({
+      ads: [
+        {
+          url: [adTagUrl]
+        }
+      ]
     });
   }
 
@@ -211,6 +169,48 @@ class AdsController extends FakeEventTarget implements IAdsController {
     });
   }
 
+  _playAdBreak(adBreak): void {
+    adBreak.played = true;
+    const adBreakData = {
+      ...this._getAdBreakTypeAndPosition(),
+      numAds: adBreak.ads.length
+    };
+    this._adBreaksEventManager.listenOnce(this._player, AdEventType.AD_LOADED, () => this._dispatchAdBreakStartEvent(adBreakData));
+    this._player.pause();
+    this._playAd(adBreak);
+  }
+
+  _getAdBreakTypeAndPosition = () => {
+    if (this._player.ended) {
+      return {
+        type: AdBreakType.POST,
+        position: -1
+      };
+    }
+    if (this._player.currentTime > 0) {
+      return {
+        type: AdBreakType.MID,
+        position: this._player.currentTime
+      };
+    }
+    return {
+      type: AdBreakType.PRE,
+      position: 0
+    };
+  };
+
+  _dispatchAdBreakStartEvent(adBreakData): void {
+    setTimeout(() => {
+      AdsController._logger.debug(AdEventType.AD_BREAK_START, adBreakData);
+      this._player.dispatchEvent(
+        new FakeEvent(AdEventType.AD_BREAK_START, {
+          adBreaks: new AdBreak(adBreakData)
+        })
+      );
+      this._adBreakStartDispatched = true;
+    });
+  }
+
   _playAd(adBreak): void {
     const ad = adBreak.ads.shift();
     const playNext = () => {
@@ -229,15 +229,21 @@ class AdsController extends FakeEventTarget implements IAdsController {
     }
   }
 
-  _playAdBreak(adBreak): void {
-    adBreak.played = true;
-    const adBreakData = {
-      ...this._getAdBreakTypeAndPosition(),
-      numAds: adBreak.ads.length
-    };
-    this._adBreaksEventManager.listenOnce(this._player, AdEventType.AD_LOADED, () => this._dispatchAdBreakStartEvent(adBreakData));
-    this._player.pause();
-    this._playAd(adBreak);
+  _dispatchAdBreakEndEvent(): void {
+    setTimeout(() => {
+      if (this._adBreakStartDispatched) {
+        AdsController._logger.debug(AdEventType.AD_BREAK_END);
+        this._player.dispatchEvent(new FakeEvent(AdEventType.AD_BREAK_END));
+      }
+      if (this._configAdBreaks.every(adBreak => adBreak.played)) {
+        AdsController._logger.debug(AdEventType.ADS_COMPLETED);
+        this._player.dispatchEvent(new FakeEvent(AdEventType.ADS_COMPLETED));
+      }
+      this._adBreakStartDispatched = false;
+      if (!this._player.ended) {
+        this._player.play();
+      }
+    });
   }
 
   _onAdManifestLoaded(event: FakeEvent): void {
