@@ -27,6 +27,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _adBreak: ?AdBreak;
   _ad: ?Ad;
   _adPlayed: boolean;
+  _playAdFunction: Function;
 
   constructor(player: Player, adsPluginControllers: Array<IAdsPluginController>) {
     super();
@@ -102,6 +103,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
    * @returns {void}
    */
   playAdNow(adTagUrl: string): void {
+    // TODO select the right controller
     const activeController = this._adsPluginControllers[0];
     activeController && activeController.playAdNow(adTagUrl);
   }
@@ -161,38 +163,52 @@ class AdsController extends FakeEventTarget implements IAdsController {
     });
   }
 
-  _playAdBreak(adBreak): void {
-    const playAd = adBreak => {
-      const ad = adBreak.ads.shift();
-      if (ad) {
-        this._eventManager.listenOnce(this._player, AdEventType.AD_COMPLETED, () => setTimeout(() => playAd(adBreak)));
-        //TODO support water falling
-        this.playAdNow(ad.url[0]);
-      } else {
+  _playAd(adBreak): void {
+    this._eventManager.unlisten(this._player, AdEventType.AD_COMPLETED, this._playAdFunction);
+    this._eventManager.unlisten(this._player, AdEventType.AD_ERROR, this._playAdFunction);
+    const ad = adBreak.ads.shift();
+    if (ad) {
+      this._eventManager.listen(this._player, AdEventType.AD_COMPLETED, this._playAdFunction);
+      this._eventManager.listen(this._player, AdEventType.AD_ERROR, this._playAdFunction);
+      //TODO support water falling
+      this.playAdNow(ad.url[0]);
+    } else {
+      setTimeout(() => {
         AdsController._logger.debug(AdEventType.AD_BREAK_END);
         this._player.dispatchEvent(new FakeEvent(AdEventType.AD_BREAK_END));
         if (this._configAdBreaks.every(adBreak => adBreak.played)) {
           AdsController._logger.debug(AdEventType.ADS_COMPLETED);
           this._player.dispatchEvent(new FakeEvent(AdEventType.ADS_COMPLETED));
         }
-      }
-    };
+      });
+    }
+  }
 
-    const getAdBreakType = adBreak => {
+  _playAdBreak(adBreak): void {
+    const adBreakTypeAndPosition = adBreak => {
       switch (adBreak.position) {
         case 0:
-          return AdBreakType.PRE;
+          return {
+            type: AdBreakType.PRE,
+            position: 0
+          };
         case -1:
-          return AdBreakType.POST;
+          return {
+            type: AdBreakType.POST,
+            position: -1
+          };
         default:
-          return AdBreakType.MID;
+          return {
+            type: AdBreakType.MID,
+            position: this._player.currentTime
+          };
       }
     };
 
+    this._playAdFunction = this._playAd.bind(this, adBreak);
     adBreak.played = true;
     const adBreakData = {
-      type: getAdBreakType(adBreak),
-      position: this._player.ended ? -1 : this._player.currentTime || 0,
+      ...adBreakTypeAndPosition(adBreak),
       numAds: adBreak.ads.length
     };
     this._eventManager.listenOnce(this._player, AdEventType.AD_LOADED, () => {
@@ -205,7 +221,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
         );
       });
     });
-    playAd(adBreak);
+    this._playAd(adBreak);
   }
 
   _onAdManifestLoaded(event: FakeEvent): void {
