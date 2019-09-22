@@ -266,7 +266,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _onAdsCompleted(): void {
-    if (this._adsPluginControllers.every(controller => controller.done)) {
+    if (this._adsPluginControllers.every(controller => controller.done) && this._configAdBreaks.every(adBreak => adBreak.played)) {
       this._allAdsCompleted = true;
       AdsController._logger.debug(AdEventType.ALL_ADS_COMPLETED);
       this.dispatchEvent(new FakeEvent(AdEventType.ALL_ADS_COMPLETED));
@@ -274,7 +274,11 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _onAdError(event: FakeEvent): void {
-    if (event.payload.severity === Error.Severity.CRITICAL && this._adsPluginControllers.every(controller => controller.done)) {
+    if (
+      event.payload.severity === Error.Severity.CRITICAL &&
+      this._adsPluginControllers.every(controller => controller.done) &&
+      this._configAdBreaks.every(adBreak => adBreak.played)
+    ) {
       this._allAdsCompleted = true;
       if (this._adPlayed) {
         AdsController._logger.debug(AdEventType.ALL_ADS_COMPLETED);
