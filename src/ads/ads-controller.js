@@ -29,7 +29,6 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _ad: ?Ad;
   _adPlayed: boolean;
   _configAdBreaks: Array<AdBreak & boolean>;
-  _adBreakStartDispatched: boolean;
 
   constructor(player: Player, adsPluginControllers: Array<IAdsPluginController>) {
     super();
@@ -106,7 +105,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
    * @returns {void}
    */
   playAdNow(adTagUrl: string): void {
-    if (!this._adBreakStartDispatched) {
+    if (!this.isAdBreak()) {
       this._playAdBreak({
         ads: [{url: [adTagUrl]}],
         played: false
@@ -120,7 +119,6 @@ class AdsController extends FakeEventTarget implements IAdsController {
     this._adBreak = null;
     this._ad = null;
     this._adPlayed = false;
-    this._adBreakStartDispatched = false;
   }
 
   _addBindings(): void {
@@ -203,7 +201,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
       AdsController._logger.debug(AdEventType.AD_BREAK_START, adBreakData);
       this._player.dispatchEvent(
         new FakeEvent(AdEventType.AD_BREAK_START, {
-          adBreaks: new AdBreak(adBreakData)
+          adBreak: new AdBreak(adBreakData)
         })
       );
     });
@@ -229,7 +227,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
 
   _dispatchAdBreakEndEvent(): void {
     setTimeout(() => {
-      if (this._adBreakStartDispatched) {
+      if (this.isAdBreak()) {
         AdsController._logger.debug(AdEventType.AD_BREAK_END);
         this._player.dispatchEvent(new FakeEvent(AdEventType.AD_BREAK_END));
       }
@@ -249,7 +247,6 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _onAdBreakStart(event: FakeEvent): void {
-    this._adBreakStartDispatched = true;
     this._adBreak = event.payload.adBreak;
     this.dispatchEvent(event);
   }
@@ -266,7 +263,6 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _onAdBreakEnd(): void {
     this._adBreak = null;
     this._ad = null;
-    this._adBreakStartDispatched = false;
   }
 
   _onAdsCompleted(): void {
