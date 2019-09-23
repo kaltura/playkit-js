@@ -161,84 +161,17 @@ class AdsController extends FakeEventTarget implements IAdsController {
     this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, () => {
       const adBreak = this._configAdBreaks.find(adBreak => !adBreak.played && 0 < adBreak.position && adBreak.position <= this._player.currentTime);
       if (adBreak) {
+        this._player.pause();
         this._playAdBreak(adBreak);
+        this._player.play();
       }
     });
   }
 
   _playAdBreak(adBreak): void {
     adBreak.played = true;
-    const adBreakData = {
-      ...this._getAdBreakTypeAndPosition(),
-      numAds: adBreak.ads.length
-    };
-    this._adBreaksEventManager.listenOnce(this._player, AdEventType.AD_LOADED, () => this._dispatchAdBreakStartEvent(adBreakData));
-    this._player.pause();
-    this._playAd(adBreak);
-  }
-
-  _getAdBreakTypeAndPosition = () => {
-    if (this._player.ended) {
-      return {
-        type: AdBreakType.POST,
-        position: -1
-      };
-    }
-    if (this._player.currentTime > 0) {
-      return {
-        type: AdBreakType.MID,
-        position: this._player.currentTime
-      };
-    }
-    return {
-      type: AdBreakType.PRE,
-      position: 0
-    };
-  };
-
-  _dispatchAdBreakStartEvent(adBreakData): void {
-    setTimeout(() => {
-      AdsController._logger.debug(AdEventType.AD_BREAK_START, adBreakData);
-      this._player.dispatchEvent(
-        new FakeEvent(AdEventType.AD_BREAK_START, {
-          adBreak: new AdBreak(adBreakData)
-        })
-      );
-    });
-  }
-
-  _playAd(adBreak): void {
-    const ad = adBreak.ads.shift();
-    const playNext = () => {
-      this._adBreaksEventManager.removeAll();
-      this._playAd(adBreak);
-    };
-    if (ad) {
-      this._adBreaksEventManager.listen(this._player, AdEventType.AD_COMPLETED, playNext);
-      this._adBreaksEventManager.listen(this._player, AdEventType.AD_ERROR, playNext);
-      // TODO select the right controller
-      const activeController = this._adsPluginControllers[0];
-      //TODO support water falling
-      activeController && activeController.playAdNow(ad.url[0]);
-    } else {
-      this._dispatchAdBreakEndEvent();
-    }
-  }
-
-  _dispatchAdBreakEndEvent(): void {
-    setTimeout(() => {
-      if (this.isAdBreak()) {
-        AdsController._logger.debug(AdEventType.AD_BREAK_END);
-        this._player.dispatchEvent(new FakeEvent(AdEventType.AD_BREAK_END));
-      }
-      if (this._configAdBreaks.every(adBreak => adBreak.played)) {
-        AdsController._logger.debug(AdEventType.ADS_COMPLETED);
-        this._player.dispatchEvent(new FakeEvent(AdEventType.ADS_COMPLETED));
-      }
-      if (!this._player.ended) {
-        this._player.play();
-      }
-    });
+    const adController = this._adsPluginControllers.find(controller => !this._isBumper(controller));
+    adController && adController.playAdNow(adBreak.ads);
   }
 
   _onAdManifestLoaded(event: FakeEvent): void {
@@ -287,13 +220,16 @@ class AdsController extends FakeEventTarget implements IAdsController {
     }
   }
 
+  _isBumper(controller: IAdsPluginController): boolean {
+    return controller.name === 'bumper';
+  }
+
   _onEnded(): void {
     if (!this._adBreaksLayout.includes(-1)) {
       this._allAdsCompleted = true;
     } else {
-      const isBumper = controller => controller.name === 'bumper';
-      const bumperCtrl = this._adsPluginControllers.find(controller => isBumper(controller));
-      const adCtrl = this._adsPluginControllers.find(controller => !isBumper(controller));
+      const bumperCtrl = this._adsPluginControllers.find(controller => this._isBumper(controller));
+      const adCtrl = this._adsPluginControllers.find(controller => !this._isBumper(controller));
       const bumperCompletePromise = bumperCtrl ? bumperCtrl.onPlaybackEnded() : Promise.resolve();
       // $FlowFixMe
       bumperCompletePromise.finally(() => {
