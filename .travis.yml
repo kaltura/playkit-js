@@ -1,6 +1,6 @@
 conditions: v1
 sudo: required
-dist: trusty
+dist: xenial
 language: node_js
 node_js:
   - "node"
@@ -8,6 +8,8 @@ node_js:
 addons:
   chrome: stable
 
+services:
+  - xvfb
 cache:
   yarn: true
   directories:
@@ -15,7 +17,6 @@ cache:
 
 before_install:
  - export DISPLAY=:99.0
- - sh -e /etc/init.d/xvfb start
  - chmod +x ./scripts/travis.sh
 
 script: ./scripts/travis.sh

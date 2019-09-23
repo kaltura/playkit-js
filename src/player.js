@@ -391,6 +391,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _resizeWatcher: ResizeWatcher;
+  /**
+   * Holds preset component factories
+   * @type {?PKUIComponent}
+   * @private
+   */
+  _uiComponents: Array<PKUIComponent>;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -404,6 +410,7 @@ export default class Player extends FakeEventTarget {
     Player.runCapabilities();
     this._env = Env;
     this._tracks = [];
+    this._uiComponents = [];
     this._firstPlay = true;
     this._repositionCuesTimeout = false;
     this._loadingMedia = false;
@@ -934,6 +941,10 @@ export default class Player extends FakeEventTarget {
    */
   get config(): Object {
     return Utils.Object.mergeDeep({}, this._config);
+  }
+
+  get uiComponents(): PKUIComponent[] {
+    return [...this._uiComponents];
   }
 
   /**
@@ -1489,6 +1500,7 @@ export default class Player extends FakeEventTarget {
   _configureOrLoadPlugins(plugins: Object = {}): void {
     if (plugins) {
       const middlewares = [];
+      const uiComponents = [];
       Object.keys(plugins).forEach(name => {
         // If the plugin is already exists in the registry we are updating his config
         const plugin = this._pluginManager.get(name);
@@ -1511,12 +1523,17 @@ export default class Player extends FakeEventTarget {
                 // push the bumper middleware to the end, to play the bumper right before the content
                 plugin.name === 'bumper' ? middlewares.push(plugin.getMiddlewareImpl()) : middlewares.unshift(plugin.getMiddlewareImpl());
               }
+
+              if (typeof plugin.getUIComponents === 'function') {
+                uiComponents.push(...(plugin.getUIComponents() || []));
+              }
             }
           } else {
             delete this._config.plugins[name];
           }
         }
       });
+      this._uiComponents = uiComponents;
       middlewares.forEach(middleware => this._playbackMiddleware.use(middleware));
     }
   }
