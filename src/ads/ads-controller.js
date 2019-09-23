@@ -26,7 +26,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _adBreak: ?AdBreak;
   _ad: ?Ad;
   _adPlayed: boolean;
-  _configAdBreaks: Array<AdBreak & boolean>;
+  _configAdBreaks: Array<PKAdBreakObject>;
 
   constructor(player: Player, adsPluginControllers: Array<IAdsPluginController>) {
     super();
@@ -156,7 +156,10 @@ class AdsController extends FakeEventTarget implements IAdsController {
 
   _handleConfiguredMidrolls(): void {
     this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, () => {
-      const adBreak = this._configAdBreaks.find(adBreak => !adBreak.played && 0 < adBreak.position && adBreak.position <= this._player.currentTime);
+      const adBreak = this._configAdBreaks.find(
+        adBreak =>
+          !adBreak.played && adBreak.position && this._player.currentTime && 0 < adBreak.position && adBreak.position <= this._player.currentTime
+      );
       if (adBreak) {
         this._player.pause();
         this._playAdBreak(adBreak);
@@ -165,7 +168,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
     });
   }
 
-  _playAdBreak(adBreak): void {
+  _playAdBreak(adBreak: PKAdBreakObject): void {
     adBreak.played = true;
     const adController = this._adsPluginControllers.find(controller => !this._isBumper(controller));
     adController && adController.playAdNow(adBreak.ads);
@@ -231,6 +234,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
       // $FlowFixMe
       bumperCompletePromise.finally(() => {
         adCtrl &&
+          // $FlowFixMe
           adCtrl.onPlaybackEnded().finally(() => {
             this._handleConfiguredPostroll();
           });
