@@ -8,7 +8,6 @@ import {CustomEventType, Html5EventType} from '../event/event-type';
 import Error from '../error/error';
 import {AdBreak} from './ad-break';
 import {Ad} from './ad';
-import {AdBreakType} from './ad-break-type';
 import getLogger from '../utils/logger';
 
 /**
@@ -23,7 +22,6 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _adsPluginControllers: Array<IAdsPluginController>;
   _allAdsCompleted: boolean;
   _eventManager: EventManager;
-  _adBreaksEventManager: EventManager;
   _adBreaksLayout: Array<number>;
   _adBreak: ?AdBreak;
   _ad: ?Ad;
@@ -34,7 +32,6 @@ class AdsController extends FakeEventTarget implements IAdsController {
     super();
     this._player = player;
     this._eventManager = new EventManager();
-    this._adBreaksEventManager = new EventManager();
     this._adsPluginControllers = adsPluginControllers;
     this._initMembers();
     this._addBindings();
@@ -250,7 +247,6 @@ class AdsController extends FakeEventTarget implements IAdsController {
 
   _reset(): void {
     this._eventManager.removeAll();
-    this._adBreaksEventManager.removeAll();
     this._initMembers();
     this._handleConfiguredAdBreaks();
   }
