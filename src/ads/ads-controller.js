@@ -102,7 +102,9 @@ class AdsController extends FakeEventTarget implements IAdsController {
    * @returns {void}
    */
   playAdNow(adTagUrl: string): void {
-    if (!this.isAdBreak()) {
+    if (this.isAdBreak()) {
+      AdsController._logger.warn('Tried to call playAdNow during an adBreak');
+    } else {
       this._playAdBreak({
         ads: [{url: [adTagUrl]}],
         played: false
