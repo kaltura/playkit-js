@@ -248,6 +248,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
     const adBreak = this._configAdBreaks.find(adBreak => !adBreak.played && adBreak.position === -1);
     if (adBreak) {
       this._playAdBreak(adBreak);
+      this._player.play();
     }
   }
 
