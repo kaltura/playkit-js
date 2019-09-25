@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.55.0"></a>
+# [0.55.0](https://github.com/kaltura/playkit-js/compare/v0.54.0...v0.55.0) (2019-09-25)
+
+
+### Bug Fixes
+
+* **FEC-9362:** IPad OS wasn't recognised on UAParser ([#401](https://github.com/kaltura/playkit-js/issues/401)) ([4eaa694](https://github.com/kaltura/playkit-js/commit/4eaa694))
+
+
+### Features
+
+* **FEC-9323:** advertising configuration ([#398](https://github.com/kaltura/playkit-js/issues/398)) ([fe67037](https://github.com/kaltura/playkit-js/commit/fe67037))
+
+
+
 <a name="0.54.0"></a>
 # [0.54.0](https://github.com/kaltura/playkit-js/compare/v0.53.0...v0.54.0) (2019-09-18)
 
