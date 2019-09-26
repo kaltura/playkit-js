@@ -99,7 +99,7 @@ export default class PluginManager {
       try {
         this._plugins[name] = pluginClass.createPlugin(name, player, config);
       } catch (e) {
-        throw new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.NOT_INITIALIZED_PLUGIN, e);
+        throw new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.PLUGIN_LOAD_FAILED, e);
       }
       this._isDisabledPluginMap.set(name, false);
       logger.debug(`Plugin <${name}> has been loaded`);

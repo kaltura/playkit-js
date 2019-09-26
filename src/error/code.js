@@ -537,7 +537,7 @@ const Code: CodeType = {
   /**
    * An error occurred while trying to init a plugin. The plugin not initialized.
    */
-  NOT_INITIALIZED_PLUGIN: 7010,
+  PLUGIN_LOAD_FAILED: 7010,
 
   /**
    * The Cast API is unavailable.  This may be because of one of the following:
