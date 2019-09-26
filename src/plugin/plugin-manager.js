@@ -1,5 +1,6 @@
 //@flow
 import BasePlugin from './base-plugin';
+import Error from '../error/error';
 import Player from '../player';
 import getLogger from '../utils/logger';
 
@@ -85,7 +86,8 @@ export default class PluginManager {
    */
   load(name: string, player: Player, config: Object = {}): boolean {
     if (!PluginManager._registry.has(name)) {
-      throw `Plugin <${name}> loading failed, plugin is not registered`;
+      logger.warn(`Plugin <${name}> loading failed, plugin is not registered`);
+      throw new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_NOT_REGISTERED_PLUGIN, name);
     }
     let pluginClass = PluginManager._registry.get(name);
     if (typeof config.disable === 'boolean') {
@@ -94,7 +96,11 @@ export default class PluginManager {
     const isDisablePlugin = !!this._isDisabledPluginMap.get(name);
     const isValidPlugin = pluginClass ? pluginClass.isValid() : false;
     if (pluginClass && isValidPlugin && !isDisablePlugin) {
-      this._plugins[name] = pluginClass.createPlugin(name, player, config);
+      try {
+        this._plugins[name] = pluginClass.createPlugin(name, player, config);
+      } catch (e) {
+        throw new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.NOT_INITIALIZED_PLUGIN, e);
+      }
       this._isDisabledPluginMap.set(name, false);
       logger.debug(`Plugin <${name}> has been loaded`);
       return true;
