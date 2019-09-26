@@ -86,8 +86,7 @@ export default class PluginManager {
    */
   load(name: string, player: Player, config: Object = {}): boolean {
     if (!PluginManager._registry.has(name)) {
-      logger.warn(`Plugin <${name}> loading failed, plugin is not registered`);
-      throw new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_NOT_REGISTERED_PLUGIN, name);
+      throw `Plugin <${name}> loading failed, plugin is not registered`;
     }
     let pluginClass = PluginManager._registry.get(name);
     if (typeof config.disable === 'boolean') {

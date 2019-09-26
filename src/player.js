@@ -1514,7 +1514,12 @@ export default class Player extends FakeEventTarget {
               this._pluginManager.load(name, this, plugins[name]);
             } catch (e) {
               //bounce the plugin load error up
-              this.dispatchEvent(e);
+              this.dispatchEvent(
+                new FakeEvent(
+                  Html5EventType.ERROR,
+                  new PKError(PKError.Severity.RECOVERABLE, PKError.Category.PLAYER, PKError.Code.RUNTIME_ERROR_NOT_REGISTERED_PLUGIN, e)
+                )
+              );
             }
             let plugin = this._pluginManager.get(name);
             if (plugin) {
