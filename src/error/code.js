@@ -534,6 +534,10 @@ const Code: CodeType = {
    * An error occurred while trying to exit picture in picture mode, more info in the data
    */
   EXIT_PICTURE_IN_PICTURE_FAILED: 7009,
+  /**
+   * An error occurred while trying to init a plugin. The plugin not initialized.
+   */
+  PLUGIN_LOAD_FAILED: 7010,
 
   /**
    * The Cast API is unavailable.  This may be because of one of the following:

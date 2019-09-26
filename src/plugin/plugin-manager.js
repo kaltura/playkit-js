@@ -96,7 +96,11 @@ export default class PluginManager {
     const isDisablePlugin = !!this._isDisabledPluginMap.get(name);
     const isValidPlugin = pluginClass ? pluginClass.isValid() : false;
     if (pluginClass && isValidPlugin && !isDisablePlugin) {
-      this._plugins[name] = pluginClass.createPlugin(name, player, config);
+      try {
+        this._plugins[name] = pluginClass.createPlugin(name, player, config);
+      } catch (e) {
+        throw new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.PLUGIN_LOAD_FAILED, e);
+      }
       this._isDisabledPluginMap.set(name, false);
       logger.debug(`Plugin <${name}> has been loaded`);
       return true;

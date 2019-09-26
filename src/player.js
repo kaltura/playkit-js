@@ -1512,9 +1512,9 @@ export default class Player extends FakeEventTarget {
           if (!this._engine) {
             try {
               this._pluginManager.load(name, this, plugins[name]);
-            } catch (e) {
+            } catch (error) {
               //bounce the plugin load error up
-              this.dispatchEvent(e);
+              this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
             }
             let plugin = this._pluginManager.get(name);
             if (plugin) {
