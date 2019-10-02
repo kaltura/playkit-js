@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.55.2"></a>
+## [0.55.2](https://github.com/kaltura/playkit-js/compare/v0.55.1...v0.55.2) (2019-10-02)
+
+
+### Bug Fixes
+
+* **FEC-9313:** weird behaviour IOS when configuration autoplay native  ([#403](https://github.com/kaltura/playkit-js/issues/403)) ([1b4a3ca](https://github.com/kaltura/playkit-js/commit/1b4a3ca))
+
+
+
 <a name="0.55.1"></a>
 ## [0.55.1](https://github.com/kaltura/playkit-js/compare/v0.55.0...v0.55.1) (2019-09-26)
 
