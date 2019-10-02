@@ -409,7 +409,8 @@ export default class Player extends FakeEventTarget {
     this._setConfigLogLevel(config);
     this._playerId = Utils.Generator.uniqueId(5);
     this._prepareVideoElement();
-    Player.runCapabilities(config.playback.playsinline);
+    const playsInline = Utils.Object.getPropertyPath(config, 'playback.playsinline');
+    Player.runCapabilities(playsInline);
     this._env = Env;
     this._tracks = [];
     this._uiComponents = [];
@@ -1831,8 +1832,7 @@ export default class Player extends FakeEventTarget {
   _handleAutoPlay(): void {
     if (this._config.playback.autoplay === true) {
       const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
-      const playsinline = this._config.playback.playsinline;
-      Player.getCapabilities(this.engineType, playsinline).then(capabilities => {
+      Player.getCapabilities(this.engineType, this.playsinline).then(capabilities => {
         if (capabilities.autoplay) {
           onAutoPlay();
         } else {
