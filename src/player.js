@@ -133,12 +133,12 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Runs the engines capabilities tests.
-   * @param {boolean} playsinline - content playsinline
+   * @param {?boolean} playsinline - content playsinline
    * @returns {void}
    * @public
    * @static
    */
-  static runCapabilities(playsinline: boolean): void {
+  static runCapabilities(playsinline: ?boolean): void {
     Player._logger.debug('Running player capabilities');
     EngineProvider.getEngines().forEach(Engine => Engine.runCapabilities(playsinline));
   }
@@ -146,12 +146,12 @@ export default class Player extends FakeEventTarget {
   /**
    * Gets the engines capabilities.
    * @param {?string} engineType - The engine type.
-   * @param {boolean} playsinline - content playsinline
+   * @param {?boolean} playsinline - content playsinline
    * @return {Promise<Object>} - The engines capabilities object.
    * @public
    * @static
    */
-  static getCapabilities(engineType: ?string, playsinline: boolean): Promise<{[name: string]: any}> {
+  static getCapabilities(engineType: ?string, playsinline: ?boolean): Promise<{[name: string]: any}> {
     Player._logger.debug('Get player capabilities', engineType);
     const promises = [];
     EngineProvider.getEngines().forEach(Engine => promises.push(Engine.getCapabilities(playsinline)));

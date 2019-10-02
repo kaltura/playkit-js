@@ -133,12 +133,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Gets the html5 capabilities.
-   * @param {boolean} playsinline - content playsinline
+   * @param {?boolean} playsinline - content playsinline
    * @return {Promise<Object>} - The html5 capabilities object.
    * @public
    * @static
    */
-  static getCapabilities(playsinline: boolean): Promise<Object> {
+  static getCapabilities(playsinline: ?boolean): Promise<Object> {
     let promises = [];
     Html5._capabilities.forEach(capability => promises.push(capability.getCapability(playsinline)));
     return Promise.all(promises).then(arrayOfResults => {

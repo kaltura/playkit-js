@@ -14,11 +14,11 @@ export default class Html5AutoPlayCapability implements ICapability {
   /**
    * Runs the test for autoplay capability.
    * @public
-   * @param {boolean} playsinline - content playsinline
+   * @param {?boolean} playsinline - content playsinline
    * @static
    * @returns {void}
    */
-  static runCapability(playsinline: boolean): void {
+  static runCapability(playsinline: ?boolean): void {
     if (!Html5AutoPlayCapability._vid) {
       Html5AutoPlayCapability._vid = Utils.Dom.createElement('video');
       Html5AutoPlayCapability._vid.src = EncodingSources.Base64Mp4Source;
@@ -40,11 +40,11 @@ export default class Html5AutoPlayCapability implements ICapability {
   /**
    * Gets the test result for autoplay capability.
    * @returns {Promise<CapabilityResult>} - The result object for autoplay capability.
-   * @param {boolean} playsinline - content playsinline
+   * @param {?boolean} playsinline - content playsinline
    * @static
    * @public
    */
-  static getCapability(playsinline: boolean): Promise<CapabilityResult> {
+  static getCapability(playsinline: ?boolean): Promise<CapabilityResult> {
     return Html5AutoPlayCapability._playPromiseResult.then(res => {
       // If autoplay is not allowed - try again and return the updated result
       if (!res.autoplay) {
@@ -83,12 +83,12 @@ export default class Html5AutoPlayCapability implements ICapability {
 
   /**
    * Sets the test video element playsinline value.
-   * @param {boolean} playsinline - The playsinline value.
+   * @param {?boolean} playsinline - The playsinline value.
    * @private
    * @returns {void}
    * @static
    */
-  static _setPlaysinline(playsinline: boolean): void {
+  static _setPlaysinline(playsinline: ?boolean): void {
     if (playsinline) {
       Html5AutoPlayCapability._vid.setAttribute('playsinline', '');
     } else {
