@@ -33,9 +33,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
     this._player = player;
     this._eventManager = new EventManager();
     this._adsPluginControllers = adsPluginControllers;
-    this._initMembers();
-    this._addBindings();
-    this._handleConfiguredAdBreaks();
+    this._init();
   }
 
   /**
@@ -112,6 +110,12 @@ class AdsController extends FakeEventTarget implements IAdsController {
     }
   }
 
+  _init(): void {
+    this._initMembers();
+    this._addBindings();
+    this._handleConfiguredAdBreaks();
+  }
+
   _initMembers(): void {
     this._allAdsCompleted = true;
     this._adBreaksLayout = [];
@@ -135,7 +139,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _handleConfiguredAdBreaks(): void {
     this._configAdBreaks = this._player.config.advertising.adBreaks
       .filter(adBreak => typeof adBreak.position === 'number' && adBreak.ads.length)
-      .map(adBreak => ({...adBreak, played: false}));
+      .map(adBreak => ({...adBreak, ads: adBreak.ads.slice(), played: false}));
     if (this._configAdBreaks.length) {
       const adBreaksPosition = this._configAdBreaks.map(adBreak => adBreak.position).sort();
       AdsController._logger.debug(AdEventType.AD_MANIFEST_LOADED, adBreaksPosition);
@@ -254,8 +258,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
 
   _reset(): void {
     this._eventManager.removeAll();
-    this._initMembers();
-    this._handleConfiguredAdBreaks();
+    this._init();
   }
 }
 
