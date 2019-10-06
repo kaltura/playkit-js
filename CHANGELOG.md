@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.55.3"></a>
+## [0.55.3](https://github.com/kaltura/playkit-js/compare/v0.55.2...v0.55.3) (2019-10-06)
+
+
+### Bug Fixes
+
+* **FEC-9385:** new ad layout, in playlist the ads playing for one entry only ([#404](https://github.com/kaltura/playkit-js/issues/404)) ([befe751](https://github.com/kaltura/playkit-js/commit/befe751))
+
+
+
 <a name="0.55.2"></a>
 ## [0.55.2](https://github.com/kaltura/playkit-js/compare/v0.55.1...v0.55.2) (2019-10-02)
 
