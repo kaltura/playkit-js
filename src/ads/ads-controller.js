@@ -33,9 +33,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
     this._player = player;
     this._eventManager = new EventManager();
     this._adsPluginControllers = adsPluginControllers;
-    this._initMembers();
-    this._addBindings();
-    this._handleConfiguredAdBreaks();
+    this._init();
   }
 
   /**
@@ -96,20 +94,30 @@ class AdsController extends FakeEventTarget implements IAdsController {
 
   /**
    * Play an ad on demand.
-   * @param {string} adTagUrl - The ad tag url to play.
+   * @param {PKAdPod} adPod - The ad pod play.
    * @instance
    * @memberof AdsController
    * @returns {void}
    */
-  playAdNow(adTagUrl: string): void {
+  playAdNow(adPod: PKAdPod): void {
     if (this.isAdBreak()) {
       AdsController._logger.warn('Tried to call playAdNow during an adBreak');
     } else {
+      this._player.pause();
       this._playAdBreak({
-        ads: [{url: [adTagUrl]}],
+        ads: adPod,
         played: false
       });
+      if (this._player.currentTime) {
+        this._player.play();
+      }
     }
+  }
+
+  _init(): void {
+    this._initMembers();
+    this._addBindings();
+    this._handleConfiguredAdBreaks();
   }
 
   _initMembers(): void {
@@ -135,7 +143,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _handleConfiguredAdBreaks(): void {
     this._configAdBreaks = this._player.config.advertising.adBreaks
       .filter(adBreak => typeof adBreak.position === 'number' && adBreak.ads.length)
-      .map(adBreak => ({...adBreak, played: false}));
+      .map(adBreak => ({...adBreak, ads: adBreak.ads.slice(), played: false}));
     if (this._configAdBreaks.length) {
       const adBreaksPosition = this._configAdBreaks.map(adBreak => adBreak.position).sort();
       AdsController._logger.debug(AdEventType.AD_MANIFEST_LOADED, adBreaksPosition);
@@ -173,7 +181,11 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _playAdBreak(adBreak: PKAdBreakObject): void {
     adBreak.played = true;
     const adController = this._adsPluginControllers.find(controller => !this._isBumper(controller));
-    adController && adController.playAdNow(adBreak.ads);
+    if (adController) {
+      adController.playAdNow(adBreak.ads);
+    } else {
+      AdsController._logger.warn('No ads plugin registered');
+    }
   }
 
   _onAdManifestLoaded(event: FakeEvent): void {
@@ -254,8 +266,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
 
   _reset(): void {
     this._eventManager.removeAll();
-    this._initMembers();
-    this._handleConfiguredAdBreaks();
+    this._init();
   }
 }
 
