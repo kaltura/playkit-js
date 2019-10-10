@@ -14,7 +14,7 @@ import AudioTrack from './track/audio-track';
 import TextTrack from './track/text-track';
 import TextStyle from './track/text-style';
 import Env from './utils/env';
-import * as Utils from './utils/util';
+import * as Utils from './utils';
 import Error from './error/error';
 import FakeEvent from './event/fake-event';
 import FakeEventTarget from './event/fake-event-target';
