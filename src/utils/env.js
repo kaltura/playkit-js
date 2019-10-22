@@ -20,7 +20,11 @@ const DeviceParser = [
   [[UAParser.DEVICE.TYPE, UAParser.DEVICE.SMARTTV]]
 ];
 
-let Env = new UAParser(undefined, {browser: SAMSUNGBrowserParser, device: DeviceParser, os: LGOSParser}).getResult();
+const EdgeChromium = [[/(edg)\/((\d+)?[\w.]+)/i], [[UAParser.BROWSER.NAME, 'Edge'], UAParser.BROWSER.VERSION, UAParser.BROWSER.MAJOR]];
+
+const browserDetect = EdgeChromium.concat(SAMSUNGBrowserParser);
+
+let Env = new UAParser(undefined, {browser: browserDetect, device: DeviceParser, os: LGOSParser}).getResult();
 
 Env.isConsole = Env.device.type === UAParser.DEVICE.CONSOLE;
 Env.isSmartTV = Env.device.type === UAParser.DEVICE.SMARTTV;
