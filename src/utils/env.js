@@ -22,7 +22,7 @@ const DeviceParser = [
 
 const EdgeChromium = [[/(edg)\/((\d+)?[\w.]+)/i], [[UAParser.BROWSER.NAME, 'Edge'], UAParser.BROWSER.VERSION, UAParser.BROWSER.MAJOR]];
 
-const browserDetect = EdgeChromium.concat(SAMSUNGBrowserParser);
+const browserDetect = [...EdgeChromium, ...SAMSUNGBrowserParser];
 
 let Env = new UAParser(undefined, {browser: browserDetect, device: DeviceParser, os: LGOSParser}).getResult();
 
