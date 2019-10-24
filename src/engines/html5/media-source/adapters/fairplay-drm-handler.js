@@ -34,7 +34,7 @@ class FairplayDrmHandler {
       responseFilter: (type, response) => {
         let responseObj = {};
         try {
-          const dataView = new DataView(response.data);
+          const dataView = new DataView(response.data.trim());
           const decoder = new TextDecoder();
           const keyText = decoder.decode(dataView);
           responseObj = JSON.parse(keyText);
