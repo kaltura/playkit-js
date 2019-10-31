@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.56.0"></a>
+# [0.56.0](https://github.com/kaltura/playkit-js/compare/v0.55.4...v0.56.0) (2019-10-31)
+
+
+### Bug Fixes
+
+* **FEC-9379:** add detection for chromium Edge ([#409](https://github.com/kaltura/playkit-js/issues/409)) ([13c9883](https://github.com/kaltura/playkit-js/commit/13c9883))
+* **FEC-9427:** use response type in xhr arraybuffer for Fairplay request ([#410](https://github.com/kaltura/playkit-js/issues/410)) ([f01345e](https://github.com/kaltura/playkit-js/commit/f01345e))
+
+
+### Features
+
+* **FEC-9282:** export resize-watcher ([#406](https://github.com/kaltura/playkit-js/issues/406)) ([376dc3b](https://github.com/kaltura/playkit-js/commit/376dc3b))
+* **FEC-9293:** ad waterfalling ([#407](https://github.com/kaltura/playkit-js/issues/407)) ([64233a0](https://github.com/kaltura/playkit-js/commit/64233a0))
+
+
+
 <a name="0.55.4"></a>
 ## [0.55.4](https://github.com/kaltura/playkit-js/compare/v0.55.2...v0.55.4) (2019-10-10)
 
