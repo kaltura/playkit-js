@@ -87,7 +87,15 @@ const AdEventType: PKEventTypes = {
   /**
    * Fired when the ad has stalled playback to buffer.
    */
-  AD_BUFFERING: 'adbuffering'
+  AD_BUFFERING: 'adbuffering',
+  /**
+   * Fired when an ad waterfalling occurred
+   */
+  AD_WATERFALLING: 'adwaterfalling',
+  /**
+   * Fired when an ad waterfalling failed
+   */
+  AD_WATERFALLING_FAILED: 'adwaterfallingfailed'
 };
 
 export {AdEventType};

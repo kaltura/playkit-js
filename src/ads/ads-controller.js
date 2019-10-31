@@ -94,17 +94,17 @@ class AdsController extends FakeEventTarget implements IAdsController {
 
   /**
    * Play an ad on demand.
-   * @param {string} adTagUrl - The ad tag url to play.
+   * @param {PKAdPod} adPod - The ad pod play.
    * @instance
    * @memberof AdsController
    * @returns {void}
    */
-  playAdNow(adTagUrl: string): void {
+  playAdNow(adPod: PKAdPod): void {
     if (this.isAdBreak()) {
       AdsController._logger.warn('Tried to call playAdNow during an adBreak');
     } else {
       this._playAdBreak({
-        ads: [{url: [adTagUrl]}],
+        ads: adPod,
         played: false
       });
     }
@@ -162,14 +162,14 @@ class AdsController extends FakeEventTarget implements IAdsController {
 
   _handleConfiguredMidrolls(): void {
     this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, () => {
-      const adBreak = this._configAdBreaks.find(
-        adBreak =>
-          !adBreak.played && adBreak.position && this._player.currentTime && 0 < adBreak.position && adBreak.position <= this._player.currentTime
-      );
-      if (adBreak) {
-        this._player.pause();
-        this._playAdBreak(adBreak);
-        this._player.play();
+      if (!this._player.paused) {
+        const adBreak = this._configAdBreaks.find(
+          adBreak =>
+            !adBreak.played && adBreak.position && this._player.currentTime && 0 < adBreak.position && adBreak.position <= this._player.currentTime
+        );
+        if (adBreak) {
+          this._playAdBreak(adBreak);
+        }
       }
     });
   }
@@ -177,7 +177,11 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _playAdBreak(adBreak: PKAdBreakObject): void {
     adBreak.played = true;
     const adController = this._adsPluginControllers.find(controller => !this._isBumper(controller));
-    adController && adController.playAdNow(adBreak.ads);
+    if (adController) {
+      adController.playAdNow(adBreak.ads);
+    } else {
+      AdsController._logger.warn('No ads plugin registered');
+    }
   }
 
   _onAdManifestLoaded(event: FakeEvent): void {
@@ -252,7 +256,6 @@ class AdsController extends FakeEventTarget implements IAdsController {
     const adBreak = this._configAdBreaks.find(adBreak => !adBreak.played && adBreak.position === -1);
     if (adBreak) {
       this._playAdBreak(adBreak);
-      this._player.play();
     }
   }
 
