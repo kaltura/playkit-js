@@ -103,14 +103,10 @@ class AdsController extends FakeEventTarget implements IAdsController {
     if (this.isAdBreak()) {
       AdsController._logger.warn('Tried to call playAdNow during an adBreak');
     } else {
-      this._player.pause();
       this._playAdBreak({
         ads: adPod,
         played: false
       });
-      if (this._player.currentTime) {
-        this._player.play();
-      }
     }
   }
 
@@ -171,9 +167,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
           !adBreak.played && adBreak.position && this._player.currentTime && 0 < adBreak.position && adBreak.position <= this._player.currentTime
       );
       if (adBreak) {
-        this._player.pause();
         this._playAdBreak(adBreak);
-        this._player.play();
       }
     });
   }
@@ -260,7 +254,6 @@ class AdsController extends FakeEventTarget implements IAdsController {
     const adBreak = this._configAdBreaks.find(adBreak => !adBreak.played && adBreak.position === -1);
     if (adBreak) {
       this._playAdBreak(adBreak);
-      this._player.play();
     }
   }
 
