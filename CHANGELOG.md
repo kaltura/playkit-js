@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.55.4"></a>
+## [0.55.4](https://github.com/kaltura/playkit-js/compare/v0.55.2...v0.55.4) (2019-10-10)
+
+
+### Bug Fixes
+
+* **FEC-9333:** when playing a playlist and closing the countdown window, the next entry starts automatically ([#405](https://github.com/kaltura/playkit-js/issues/405)) ([2f68bd0](https://github.com/kaltura/playkit-js/commit/2f68bd0))
+* **FEC-9385:** new ad layout, in playlist the ads playing for one entry only ([#404](https://github.com/kaltura/playkit-js/issues/404)) ([befe751](https://github.com/kaltura/playkit-js/commit/befe751))
+
+
+
 <a name="0.55.3"></a>
 ## [0.55.3](https://github.com/kaltura/playkit-js/compare/v0.55.2...v0.55.3) (2019-10-06)
 

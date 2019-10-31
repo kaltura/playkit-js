@@ -34,7 +34,9 @@ class FairplayDrmHandler {
       responseFilter: (type, response) => {
         let responseObj = {};
         try {
-          let keyText = response.data.trim();
+          const dataView = new DataView(response.data);
+          const decoder = new TextDecoder();
+          const keyText = decoder.decode(dataView).trim();
           responseObj = JSON.parse(keyText);
         } catch (error) {
           this._onError((Error.Code: CodeType).BAD_FAIRPLAY_RESPONSE, {
@@ -106,7 +108,7 @@ class FairplayDrmHandler {
     this._logger.debug('Webkit key message triggered');
     let message = event.message;
     let request = new XMLHttpRequest();
-    request.responseType = 'text';
+    request.responseType = 'arraybuffer';
     request.addEventListener('load', (e: Event) => this._licenseRequestLoaded(e), false);
     const pkRequest: PKRequestObject = {
       url: this._config.licenseUrl,

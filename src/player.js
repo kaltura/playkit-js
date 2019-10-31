@@ -1602,7 +1602,8 @@ export default class Player extends FakeEventTarget {
       this._appendEngineEl();
     } else {
       if (this._engine.id === Engine.id) {
-        this._engine.restore(source, this._config);
+        // The restoring must be done by the engine itself not by the proxy (engine decorator is exists) to make sure the engine events fired by the engine itself.
+        this._engine.restore.call(this._engine._engine || this._engine, source, this._config);
       } else {
         this._engine.destroy();
         this._createEngine(Engine, source);
