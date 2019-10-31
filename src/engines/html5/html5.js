@@ -122,23 +122,25 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Runs the html5 capabilities tests.
+   * @param {boolean} playsinline - content playsinline
    * @returns {void}
    * @public
    * @static
    */
-  static runCapabilities(): void {
-    Html5._capabilities.forEach(capability => capability.runCapability());
+  static runCapabilities(playsinline: boolean): void {
+    Html5._capabilities.forEach(capability => capability.runCapability(playsinline));
   }
 
   /**
    * Gets the html5 capabilities.
+   * @param {?boolean} playsinline - content playsinline
    * @return {Promise<Object>} - The html5 capabilities object.
    * @public
    * @static
    */
-  static getCapabilities(): Promise<Object> {
+  static getCapabilities(playsinline: ?boolean): Promise<Object> {
     let promises = [];
-    Html5._capabilities.forEach(capability => promises.push(capability.getCapability()));
+    Html5._capabilities.forEach(capability => promises.push(capability.getCapability(playsinline)));
     return Promise.all(promises).then(arrayOfResults => {
       const mergedResults = {};
       arrayOfResults.forEach(res => Object.assign(mergedResults, res));

@@ -64,6 +64,17 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   }
 
   /**
+   * check for media source supported on browser
+   * @static
+   * @returns {boolean} - Whether the media source is supported.
+   */
+  static isMSESupported(): boolean {
+    const mediaSource = window.MediaSource || window.WebKitMediaSource;
+    // isTypeSupported isn't exist or not a function for old MSE implementation
+    return !!mediaSource && typeof mediaSource.isTypeSupported === 'function';
+  }
+
+  /**
    * @constructor
    * @param {HTMLVideoElement} videoElement - The video element which bind to media source adapter.
    * @param {PKMediaSourceObject} source - The source object.

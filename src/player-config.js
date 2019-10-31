@@ -74,7 +74,10 @@ const DefaultConfig = {
   drm: {
     keySystem: ''
   },
-  network: {}
+  network: {},
+  advertising: {
+    adBreaks: []
+  }
 };
 
 export {DefaultConfig};

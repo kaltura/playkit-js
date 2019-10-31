@@ -18,7 +18,6 @@ const IN_BROWSER_FULLSCREEN: string = 'playkit-in-browser-fullscreen-mode';
 class FullscreenController {
   _player: Player;
   _isInBrowserFullscreen: boolean;
-  _isEnterFullscreenEventFired: boolean;
 
   /**
    * after component mounted, set up event listeners to window fullscreen state change
@@ -31,7 +30,6 @@ class FullscreenController {
     //flag to cover the option that inBrowserFullscreen selected and we should know if it's full screen
     this._isInBrowserFullscreen = false;
     //added to avoid duplicate dispatch event
-    this._isEnterFullscreenEventFired = false;
     this.registerFullScreenEvents();
   }
 
@@ -242,9 +240,8 @@ class FullscreenController {
    * @returns {void}
    */
   _fullscreenEnterHandler(): void {
-    if (this.isFullscreen() && !this._isEnterFullscreenEventFired) {
+    if (this.isFullscreen()) {
       this._player.dispatchEvent(new FakeEvent(this._player.Event.ENTER_FULLSCREEN));
-      this._isEnterFullscreenEventFired = true;
     }
   }
 
@@ -254,9 +251,8 @@ class FullscreenController {
    * @returns {void}
    */
   _fullscreenExitHandler(): void {
-    if (!this.isFullscreen() && this._isEnterFullscreenEventFired) {
+    if (!this.isFullscreen()) {
       this._player.dispatchEvent(new FakeEvent(this._player.Event.EXIT_FULLSCREEN));
-      this._isEnterFullscreenEventFired = false;
     }
   }
 }

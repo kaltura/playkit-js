@@ -2,6 +2,97 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.55.4"></a>
+## [0.55.4](https://github.com/kaltura/playkit-js/compare/v0.55.2...v0.55.4) (2019-10-10)
+
+
+### Bug Fixes
+
+* **FEC-9333:** when playing a playlist and closing the countdown window, the next entry starts automatically ([#405](https://github.com/kaltura/playkit-js/issues/405)) ([2f68bd0](https://github.com/kaltura/playkit-js/commit/2f68bd0))
+* **FEC-9385:** new ad layout, in playlist the ads playing for one entry only ([#404](https://github.com/kaltura/playkit-js/issues/404)) ([befe751](https://github.com/kaltura/playkit-js/commit/befe751))
+
+
+
+<a name="0.55.3"></a>
+## [0.55.3](https://github.com/kaltura/playkit-js/compare/v0.55.2...v0.55.3) (2019-10-06)
+
+
+### Bug Fixes
+
+* **FEC-9385:** new ad layout, in playlist the ads playing for one entry only ([#404](https://github.com/kaltura/playkit-js/issues/404)) ([befe751](https://github.com/kaltura/playkit-js/commit/befe751))
+
+
+
+<a name="0.55.2"></a>
+## [0.55.2](https://github.com/kaltura/playkit-js/compare/v0.55.1...v0.55.2) (2019-10-02)
+
+
+### Bug Fixes
+
+* **FEC-9313:** weird behaviour IOS when configuration autoplay native  ([#403](https://github.com/kaltura/playkit-js/issues/403)) ([1b4a3ca](https://github.com/kaltura/playkit-js/commit/1b4a3ca))
+
+
+
+<a name="0.55.1"></a>
+## [0.55.1](https://github.com/kaltura/playkit-js/compare/v0.55.0...v0.55.1) (2019-09-26)
+
+
+### Bug Fixes
+
+* plugin exception handling ([#402](https://github.com/kaltura/playkit-js/issues/402)) ([1a1beec](https://github.com/kaltura/playkit-js/commit/1a1beec))
+
+
+
+<a name="0.55.0"></a>
+# [0.55.0](https://github.com/kaltura/playkit-js/compare/v0.54.0...v0.55.0) (2019-09-25)
+
+
+### Bug Fixes
+
+* **FEC-9362:** IPad OS wasn't recognised on UAParser ([#401](https://github.com/kaltura/playkit-js/issues/401)) ([4eaa694](https://github.com/kaltura/playkit-js/commit/4eaa694))
+
+
+### Features
+
+* **FEC-9323:** advertising configuration ([#398](https://github.com/kaltura/playkit-js/issues/398)) ([fe67037](https://github.com/kaltura/playkit-js/commit/fe67037))
+
+
+
+<a name="0.54.0"></a>
+# [0.54.0](https://github.com/kaltura/playkit-js/compare/v0.53.0...v0.54.0) (2019-09-18)
+
+
+### Bug Fixes
+
+* **FEC-9342:** Disable shaka on iOS ([#399](https://github.com/kaltura/playkit-js/issues/399)) ([b2667a0](https://github.com/kaltura/playkit-js/commit/b2667a0))
+
+
+### Features
+
+* **FEC-8696:** allow adding/changing discrete components in UI ([6b4596f](https://github.com/kaltura/playkit-js/commit/6b4596f))
+
+
+
+<a name="0.53.0"></a>
+# [0.53.0](https://github.com/kaltura/playkit-js/compare/v0.52.1...v0.53.0) (2019-09-12)
+
+
+### Features
+
+* **FEC-9314:** update Shaka version ([#395](https://github.com/kaltura/playkit-js/issues/395)) ([fd2cc7a](https://github.com/kaltura/playkit-js/commit/fd2cc7a))
+
+
+
+<a name="0.52.1"></a>
+## [0.52.1](https://github.com/kaltura/playkit-js/compare/v0.52.0...v0.52.1) (2019-08-28)
+
+
+### Bug Fixes
+
+* browser detection for samsung ([#394](https://github.com/kaltura/playkit-js/issues/394)) ([8363d6a](https://github.com/kaltura/playkit-js/commit/8363d6a))
+
+
+
 <a name="0.52.0"></a>
 # [0.52.0](https://github.com/kaltura/playkit-js/compare/v0.51.4...v0.52.0) (2019-08-26)
 

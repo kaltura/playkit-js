@@ -133,26 +133,28 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Runs the engines capabilities tests.
+   * @param {?boolean} playsinline - content playsinline
    * @returns {void}
    * @public
    * @static
    */
-  static runCapabilities(): void {
+  static runCapabilities(playsinline: ?boolean): void {
     Player._logger.debug('Running player capabilities');
-    EngineProvider.getEngines().forEach(Engine => Engine.runCapabilities());
+    EngineProvider.getEngines().forEach(Engine => Engine.runCapabilities(playsinline));
   }
 
   /**
    * Gets the engines capabilities.
    * @param {?string} engineType - The engine type.
+   * @param {?boolean} playsinline - content playsinline
    * @return {Promise<Object>} - The engines capabilities object.
    * @public
    * @static
    */
-  static getCapabilities(engineType: ?string): Promise<{[name: string]: any}> {
+  static getCapabilities(engineType: ?string, playsinline: ?boolean): Promise<{[name: string]: any}> {
     Player._logger.debug('Get player capabilities', engineType);
     const promises = [];
-    EngineProvider.getEngines().forEach(Engine => promises.push(Engine.getCapabilities()));
+    EngineProvider.getEngines().forEach(Engine => promises.push(Engine.getCapabilities(playsinline)));
     return Promise.all(promises).then(arrayOfResults => {
       const playerCapabilities = {};
       arrayOfResults.forEach(res => Object.assign(playerCapabilities, res));
@@ -391,6 +393,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _resizeWatcher: ResizeWatcher;
+  /**
+   * Holds preset component factories
+   * @type {?PKUIComponent}
+   * @private
+   */
+  _uiComponents: Array<PKUIComponent>;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -401,9 +409,11 @@ export default class Player extends FakeEventTarget {
     this._setConfigLogLevel(config);
     this._playerId = Utils.Generator.uniqueId(5);
     this._prepareVideoElement();
-    Player.runCapabilities();
+    const playsInline = Utils.Object.getPropertyPath(config, 'playback.playsinline');
+    Player.runCapabilities(playsInline);
     this._env = Env;
     this._tracks = [];
+    this._uiComponents = [];
     this._firstPlay = true;
     this._repositionCuesTimeout = false;
     this._loadingMedia = false;
@@ -651,6 +661,7 @@ export default class Player extends FakeEventTarget {
    */
   _detachMediaSource(): void {
     if (this._engine) {
+      this._createReadyPromise();
       this._engine.detachMediaSource();
     }
   }
@@ -943,6 +954,10 @@ export default class Player extends FakeEventTarget {
    */
   get config(): Object {
     return Utils.Object.mergeDeep({}, this._config);
+  }
+
+  get uiComponents(): PKUIComponent[] {
+    return [...this._uiComponents];
   }
 
   /**
@@ -1500,6 +1515,7 @@ export default class Player extends FakeEventTarget {
   _configureOrLoadPlugins(plugins: Object = {}): void {
     if (plugins) {
       const middlewares = [];
+      const uiComponents = [];
       Object.keys(plugins).forEach(name => {
         // If the plugin is already exists in the registry we are updating his config
         const plugin = this._pluginManager.get(name);
@@ -1511,9 +1527,9 @@ export default class Player extends FakeEventTarget {
           if (!this._engine) {
             try {
               this._pluginManager.load(name, this, plugins[name]);
-            } catch (e) {
+            } catch (error) {
               //bounce the plugin load error up
-              this.dispatchEvent(e);
+              this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
             }
             let plugin = this._pluginManager.get(name);
             if (plugin) {
@@ -1522,12 +1538,17 @@ export default class Player extends FakeEventTarget {
                 // push the bumper middleware to the end, to play the bumper right before the content
                 plugin.name === 'bumper' ? middlewares.push(plugin.getMiddlewareImpl()) : middlewares.unshift(plugin.getMiddlewareImpl());
               }
+
+              if (typeof plugin.getUIComponents === 'function') {
+                uiComponents.push(...(plugin.getUIComponents() || []));
+              }
             }
           } else {
             delete this._config.plugins[name];
           }
         }
       });
+      this._uiComponents = uiComponents;
       middlewares.forEach(middleware => this._playbackMiddleware.use(middleware));
     }
   }
@@ -1593,7 +1614,8 @@ export default class Player extends FakeEventTarget {
       this._appendEngineEl();
     } else {
       if (this._engine.id === Engine.id) {
-        this._engine.restore(source, this._config);
+        // The restoring must be done by the engine itself not by the proxy (engine decorator is exists) to make sure the engine events fired by the engine itself.
+        this._engine.restore.call(this._engine._engine || this._engine, source, this._config);
       } else {
         this._engine.destroy();
         this._createEngine(Engine, source);
@@ -1823,7 +1845,7 @@ export default class Player extends FakeEventTarget {
   _handleAutoPlay(): void {
     if (this._config.playback.autoplay === true) {
       const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
-      Player.getCapabilities(this.engineType).then(capabilities => {
+      Player.getCapabilities(this.engineType, this.playsinline).then(capabilities => {
         if (capabilities.autoplay) {
           onAutoPlay();
         } else {
