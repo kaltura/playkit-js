@@ -162,12 +162,14 @@ class AdsController extends FakeEventTarget implements IAdsController {
 
   _handleConfiguredMidrolls(): void {
     this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, () => {
-      const adBreak = this._configAdBreaks.find(
-        adBreak =>
-          !adBreak.played && adBreak.position && this._player.currentTime && 0 < adBreak.position && adBreak.position <= this._player.currentTime
-      );
-      if (adBreak) {
-        this._playAdBreak(adBreak);
+      if (!this._player.paused) {
+        const adBreak = this._configAdBreaks.find(
+          adBreak =>
+            !adBreak.played && adBreak.position && this._player.currentTime && 0 < adBreak.position && adBreak.position <= this._player.currentTime
+        );
+        if (adBreak) {
+          this._playAdBreak(adBreak);
+        }
       }
     });
   }
