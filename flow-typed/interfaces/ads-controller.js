@@ -2,5 +2,5 @@
 
 declare interface IAdsController {
   skipAd(): void;
-  playAdNow(adTagUrl: string): void;
+  playAdNow(adPod: PKAdPod): void;
 }
