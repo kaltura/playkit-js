@@ -127,6 +127,10 @@ const CustomEventType: PKEventTypes = {
    */
   EXIT_FULLSCREEN: 'exitfullscreen',
   /**
+   * Fires when browser fails to play.
+   */
+  PLAY_FAILED: 'playfailed',
+  /**
    * Fires when browser fails to autoplay with sound.
    */
   AUTOPLAY_FAILED: 'autoplayfailed',
