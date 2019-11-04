@@ -434,7 +434,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   play(): void {
     let playPromise = this._el.play();
     if (playPromise) {
-      playPromise.catch(err => this.dispatchEvent(new FakeEvent(CustomEventType.PLAY_FAILED), err));
+      playPromise.catch(err => this.dispatchEvent(new FakeEvent(CustomEventType.PLAY_FAILED, err)));
     }
   }
 
