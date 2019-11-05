@@ -1692,7 +1692,7 @@ export default class Player extends FakeEventTarget {
       );
       this._eventManager.listen(this._externalCaptionsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
       if (this._adsController) {
-        this._eventManager.listen(this._adsController, AdEventType.AD_BREAK_START, () => {
+        this._eventManager.listen(this, AdEventType.AD_STARTED, () => {
           if (this._firstPlay) {
             this._posterManager.hide();
             this._hideBlackCover();
