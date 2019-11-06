@@ -1691,14 +1691,12 @@ export default class Player extends FakeEventTarget {
         this._onTextTrackChanged(event)
       );
       this._eventManager.listen(this._externalCaptionsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
-      if (this._adsController) {
-        this._eventManager.listen(this._adsController, AdEventType.AD_BREAK_START, () => {
-          if (this._firstPlay) {
-            this._posterManager.hide();
-            this._hideBlackCover();
-          }
-        });
-      }
+      this._eventManager.listen(this, AdEventType.AD_STARTED, () => {
+        if (this._firstPlay) {
+          this._posterManager.hide();
+          this._hideBlackCover();
+        }
+      });
       if (this.config.playback.playAdsWithMSE) {
         this._eventManager.listen(this, AdEventType.AD_LOADED, event => {
           if (event.payload.ad.linear) {
