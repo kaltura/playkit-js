@@ -543,10 +543,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @return {boolean} if the engine is in picture in picture mode or not
    */
   isPictureInPictureSupported(): boolean {
-    return (
-      !!document.pictureInPictureEnabled ||
-      (typeof this._el.webkitSupportsPresentationMode === 'function' && this._el.webkitSupportsPresentationMode('picture-in-picture'))
-    );
+    // due to a bug in shaka pip_webkit which sets pictureInPictureEnabled to true in unsupported devices like iphones we will
+    // first rely on the response of webkitSupportsPresentationMode (if exists) and only if not on the pictureInPictureEnabled property
+    if (typeof this._el.webkitSupportsPresentationMode === 'function') {
+      return this._el.webkitSupportsPresentationMode('picture-in-picture');
+    } else {
+      // $FlowFixMe
+      return !!document.pictureInPictureEnabled;
+    }
   }
 
   /**
