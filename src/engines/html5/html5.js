@@ -548,7 +548,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     if (typeof this._el.webkitSupportsPresentationMode === 'function') {
       return this._el.webkitSupportsPresentationMode('picture-in-picture');
     } else {
-      return document.pictureInPictureEnabled ? !!document.pictureInPictureEnabled : false;
+      // $FlowFixMe
+      return !!document.pictureInPictureEnabled;
     }
   }
 
