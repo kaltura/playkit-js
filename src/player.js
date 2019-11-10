@@ -1722,10 +1722,12 @@ export default class Player extends FakeEventTarget {
         this._eventManager.listen(this, AdEventType.AD_ERROR, this._attachMediaSource);
       }
       const rootElement = Utils.Dom.getElementBySelector(`#${this.config.targetId}`);
-      this._eventManager.listen(rootElement, 'click', () => {
-        this._hasUserInteracted = true;
-        this.dispatchEvent(new FakeEvent(CustomEventType.USER_GESTURE));
-      });
+      if (rootElement) {
+        this._eventManager.listen(rootElement, 'click', () => {
+          this._hasUserInteracted = true;
+          this.dispatchEvent(new FakeEvent(CustomEventType.USER_GESTURE));
+        });
+      }
     }
   }
 
