@@ -1723,10 +1723,15 @@ export default class Player extends FakeEventTarget {
       }
       const rootElement = Utils.Dom.getElementBySelector(`#${this.config.targetId}`);
       if (rootElement) {
-        this._eventManager.listen(rootElement, 'click', () => {
-          this._hasUserInteracted = true;
-          this.dispatchEvent(new FakeEvent(CustomEventType.USER_GESTURE));
-        });
+        this._eventManager.listen(
+          rootElement,
+          'click',
+          () => {
+            this._hasUserInteracted = true;
+            this.dispatchEvent(new FakeEvent(CustomEventType.USER_GESTURE));
+          },
+          {capture: true}
+        );
       }
     }
   }
