@@ -404,7 +404,7 @@ export default class Player extends FakeEventTarget {
    * @type {boolean}
    * @private
    */
-  _hasUserInteraction: boolean = false;
+  _hasUserInteracted: boolean = false;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -961,8 +961,8 @@ export default class Player extends FakeEventTarget {
    * @returns {boolean} - Whether the user interacted with the player
    * @public
    */
-  get hasUserInteraction(): boolean {
-    return this._hasUserInteraction;
+  get hasUserInteracted(): boolean {
+    return this._hasUserInteracted;
   }
 
   /**
@@ -1723,7 +1723,7 @@ export default class Player extends FakeEventTarget {
       }
       const rootElement = Utils.Dom.getElementBySelector(`#${this.config.targetId}`);
       this._eventManager.listen(rootElement, 'click', () => {
-        this._hasUserInteraction = true;
+        this._hasUserInteracted = true;
         this.dispatchEvent(new FakeEvent(CustomEventType.USER_GESTURE));
       });
     }
