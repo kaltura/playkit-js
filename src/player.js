@@ -399,6 +399,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _uiComponents: Array<PKUIComponent>;
+  /**
+   * Whether the user interacted with the player
+   * @type {boolean}
+   * @private
+   */
+  _hasUserInteracted: boolean = false;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -948,6 +954,15 @@ export default class Player extends FakeEventTarget {
 
   get uiComponents(): PKUIComponent[] {
     return [...this._uiComponents];
+  }
+
+  /**
+   * Get whether the user already interacted with the player
+   * @returns {boolean} - Whether the user interacted with the player
+   * @public
+   */
+  get hasUserInteracted(): boolean {
+    return this._hasUserInteracted;
   }
 
   /**
@@ -1705,6 +1720,18 @@ export default class Player extends FakeEventTarget {
         });
         this._eventManager.listen(this, AdEventType.AD_BREAK_END, this._attachMediaSource);
         this._eventManager.listen(this, AdEventType.AD_ERROR, this._attachMediaSource);
+      }
+      const rootElement = Utils.Dom.getElementBySelector(`#${this.config.targetId}`);
+      if (rootElement) {
+        this._eventManager.listen(
+          rootElement,
+          'click',
+          () => {
+            this._hasUserInteracted = true;
+            this.dispatchEvent(new FakeEvent(CustomEventType.USER_GESTURE));
+          },
+          {capture: true}
+        );
       }
     }
   }
