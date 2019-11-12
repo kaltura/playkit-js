@@ -175,9 +175,10 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _playAdBreak(adBreak: PKAdBreakObject): void {
-    adBreak.played = true;
     const adController = this._adsPluginControllers.find(controller => !this._isBumper(controller));
     if (adController) {
+      adBreak.played = true;
+      this._adBreak = adBreak;
       adController.playAdNow(adBreak.ads);
     } else {
       AdsController._logger.warn('No ads plugin registered');
@@ -208,6 +209,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _onAdsCompleted(): void {
+    this._adBreak = null;
     if (this._adsPluginControllers.every(controller => controller.done) && this._configAdBreaks.every(adBreak => adBreak.played)) {
       this._allAdsCompleted = true;
       AdsController._logger.debug(AdEventType.ALL_ADS_COMPLETED);
@@ -234,6 +236,9 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _onEnded(): void {
+    if (this.isAdBreak()) {
+      return;
+    }
     if (!this._adBreaksLayout.includes(-1)) {
       this._allAdsCompleted = true;
     } else {
