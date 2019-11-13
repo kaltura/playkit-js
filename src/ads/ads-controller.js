@@ -27,6 +27,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _ad: ?Ad;
   _adPlayed: boolean;
   _configAdBreaks: Array<PKAdBreakObject>;
+  _adIsLoading: boolean;
 
   constructor(player: Player, adsPluginControllers: Array<IAdsPluginController>) {
     super();
@@ -122,6 +123,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
     this._adBreak = null;
     this._ad = null;
     this._adPlayed = false;
+    this._adIsLoading = false;
   }
 
   _addBindings(): void {
@@ -178,7 +180,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
     const adController = this._adsPluginControllers.find(controller => !this._isBumper(controller));
     if (adController) {
       adBreak.played = true;
-      this._adBreak = adBreak;
+      this._adIsLoading = true;
       adController.playAdNow(adBreak.ads);
     } else {
       AdsController._logger.warn('No ads plugin registered');
@@ -195,6 +197,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _onAdLoaded(event: FakeEvent): void {
+    this._adIsLoading = false;
     this._ad = event.payload.ad;
   }
 
@@ -209,7 +212,6 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _onAdsCompleted(): void {
-    this._adBreak = null;
     if (this._adsPluginControllers.every(controller => controller.done) && this._configAdBreaks.every(adBreak => adBreak.played)) {
       this._allAdsCompleted = true;
       AdsController._logger.debug(AdEventType.ALL_ADS_COMPLETED);
@@ -218,6 +220,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _onAdError(event: FakeEvent): void {
+    this._adIsLoading = false;
     if (
       event.payload.severity === Error.Severity.CRITICAL &&
       this._adsPluginControllers.every(controller => controller.done) &&
@@ -236,7 +239,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _onEnded(): void {
-    if (this.isAdBreak()) {
+    if (this._adIsLoading) {
       return;
     }
     if (!this._adBreaksLayout.includes(-1)) {
