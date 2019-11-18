@@ -141,7 +141,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _handleConfiguredAdBreaks(): void {
     this._configAdBreaks = this._player.config.advertising.adBreaks
       .filter(adBreak => typeof adBreak.position === 'number' && adBreak.ads.length)
-      .map(adBreak => ({...adBreak, ads: adBreak.ads.slice(), played: false, snapback: false}))
+      .map(adBreak => ({...adBreak, ads: adBreak.ads.slice(), played: false}))
       .sort((a, b) => a.position - b.position);
     if (this._configAdBreaks.length) {
       const adBreaksPosition = this._configAdBreaks.map(adBreak => adBreak.position);
