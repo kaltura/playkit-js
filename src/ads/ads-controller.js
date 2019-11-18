@@ -168,12 +168,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
     this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, () => {
       if (!this._player.paused) {
         const adBreaks = this._configAdBreaks.filter(
-          adBreak =>
-            !adBreak.played &&
-            adBreak.position &&
-            this._player.currentTime &&
-            adBreak.position <= this._player.currentTime &&
-            adBreak.position > this._snapback
+          adBreak => !adBreak.played && this._player.currentTime && adBreak.position <= this._player.currentTime && adBreak.position > this._snapback
         );
         if (adBreaks.length) {
           const lastAdBreak = adBreaks[adBreaks.length - 1];
