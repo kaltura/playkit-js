@@ -140,9 +140,14 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _handleConfiguredAdBreaks(): void {
+    const playAdsAfterTime = this._player.config.advertising.playAdsAfterTime || this._player.config.playback.startTime;
     this._configAdBreaks = this._player.config.advertising.adBreaks
       .filter(adBreak => typeof adBreak.position === 'number' && adBreak.ads.length)
-      .map(adBreak => ({...adBreak, ads: adBreak.ads.slice(), played: false}))
+      .map(adBreak => ({
+        ...adBreak,
+        ads: adBreak.ads.slice(),
+        played: -1 < adBreak.position && adBreak.position <= playAdsAfterTime
+      }))
       .sort((a, b) => a.position - b.position);
     if (this._configAdBreaks.length) {
       const adBreaksPosition = this._configAdBreaks.map(adBreak => adBreak.position);
@@ -158,7 +163,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _handleConfiguredPreroll(): void {
-    const adBreak = this._configAdBreaks.find(adBreak => adBreak.position === 0);
+    const adBreak = this._configAdBreaks.find(adBreak => adBreak.position === 0 && !adBreak.played);
     if (adBreak) {
       this._playAdBreak(adBreak);
     }
