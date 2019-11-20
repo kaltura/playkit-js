@@ -10,6 +10,10 @@ import {AdBreak} from './ad-break';
 import {Ad} from './ad';
 import getLogger from '../utils/logger';
 
+declare type RunTimeAdBreakObject = PKAdBreakObject & {
+  played: boolean
+};
+
 /**
  * @class AdsController
  * @param {Player} player - The player.
@@ -27,7 +31,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _ad: ?Ad;
   _adPlayed: boolean;
   _snapback: number;
-  _configAdBreaks: Array<PKAdBreakObject>;
+  _configAdBreaks: Array<RunTimeAdBreakObject>;
 
   constructor(player: Player, adsPluginControllers: Array<IAdsPluginController>) {
     super();
@@ -194,7 +198,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
     });
   }
 
-  _playAdBreak(adBreak: PKAdBreakObject): void {
+  _playAdBreak(adBreak: RunTimeAdBreakObject): void {
     adBreak.played = true;
     const adController = this._adsPluginControllers.find(controller => !this._isBumper(controller));
     if (adController) {
