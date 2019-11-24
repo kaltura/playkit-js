@@ -1497,6 +1497,7 @@ export default class Player extends FakeEventTarget {
   _appendDomElements(): void {
     // Append playkit-subtitles
     this._textDisplayEl = Utils.Dom.createElement('div');
+    Utils.Dom.setAttribute(this._textDisplayEl, 'aria-live', 'polite');
     Utils.Dom.addClassName(this._textDisplayEl, SUBTITLES_CLASS_NAME);
     Utils.Dom.appendChild(this._el, this._textDisplayEl);
     // Append playkit-black-cover
