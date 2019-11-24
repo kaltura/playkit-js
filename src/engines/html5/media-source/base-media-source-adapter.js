@@ -249,7 +249,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    */
   get duration(): number {
     if (this.isLive()) {
-      return this._getLiveEdge() - this.getStartTimeOfDvrWindow();
+      return Math.max(this.currentTime, this._getLiveEdge() - this.getStartTimeOfDvrWindow());
     } else {
       return this._videoElement.duration;
     }
