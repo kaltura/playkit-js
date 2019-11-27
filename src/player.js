@@ -399,6 +399,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _uiComponents: Array<PKUIComponent>;
+  /**
+   * Whether the user interacted with the player
+   * @type {boolean}
+   * @private
+   */
+  _hasUserInteracted: boolean = false;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -951,6 +957,15 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Get whether the user already interacted with the player
+   * @returns {boolean} - Whether the user interacted with the player
+   * @public
+   */
+  get hasUserInteracted(): boolean {
+    return this._hasUserInteracted;
+  }
+
+  /**
    * Set the _loadingMedia flag to inform the player that a load media request has sent.
    * @param {boolean} loading - Whether a load media request has sent.
    * @returns {void}
@@ -1482,6 +1497,7 @@ export default class Player extends FakeEventTarget {
   _appendDomElements(): void {
     // Append playkit-subtitles
     this._textDisplayEl = Utils.Dom.createElement('div');
+    Utils.Dom.setAttribute(this._textDisplayEl, 'aria-live', 'polite');
     Utils.Dom.addClassName(this._textDisplayEl, SUBTITLES_CLASS_NAME);
     Utils.Dom.appendChild(this._el, this._textDisplayEl);
     // Append playkit-black-cover
@@ -1692,14 +1708,12 @@ export default class Player extends FakeEventTarget {
         this._onTextTrackChanged(event)
       );
       this._eventManager.listen(this._externalCaptionsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
-      if (this._adsController) {
-        this._eventManager.listen(this._adsController, AdEventType.AD_BREAK_START, () => {
-          if (this._firstPlay) {
-            this._posterManager.hide();
-            this._hideBlackCover();
-          }
-        });
-      }
+      this._eventManager.listen(this, AdEventType.AD_STARTED, () => {
+        if (this._firstPlay) {
+          this._posterManager.hide();
+          this._hideBlackCover();
+        }
+      });
       if (this.config.playback.playAdsWithMSE) {
         this._eventManager.listen(this, AdEventType.AD_LOADED, event => {
           if (event.payload.ad.linear) {
@@ -1708,6 +1722,18 @@ export default class Player extends FakeEventTarget {
         });
         this._eventManager.listen(this, AdEventType.AD_BREAK_END, this._attachMediaSource);
         this._eventManager.listen(this, AdEventType.AD_ERROR, this._attachMediaSource);
+      }
+      const rootElement = Utils.Dom.getElementBySelector(`#${this.config.targetId}`);
+      if (rootElement) {
+        this._eventManager.listen(
+          rootElement,
+          'click',
+          () => {
+            this._hasUserInteracted = true;
+            this.dispatchEvent(new FakeEvent(CustomEventType.USER_GESTURE));
+          },
+          {capture: true}
+        );
       }
     }
   }

@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.57.0"></a>
+# [0.57.0](https://github.com/kaltura/playkit-js/compare/v0.56.0...v0.57.0) (2019-11-12)
+
+
+### Bug Fixes
+
+* **FEC-9420:** PIP button is showed but not working ([#414](https://github.com/kaltura/playkit-js/issues/414)) ([d8be9b4](https://github.com/kaltura/playkit-js/commit/d8be9b4))
+* **FEC-9434:** the first frame of content flashes for a second before the ad playback. ([#413](https://github.com/kaltura/playkit-js/issues/413)) ([14dc625](https://github.com/kaltura/playkit-js/commit/14dc625))
+
+
+### Features
+
+* new USER_GESTURE event and api ([#415](https://github.com/kaltura/playkit-js/issues/415)) ([0893c02](https://github.com/kaltura/playkit-js/commit/0893c02))
+
+
+
 <a name="0.56.0"></a>
 # [0.56.0](https://github.com/kaltura/playkit-js/compare/v0.55.4...v0.56.0) (2019-10-31)
 
