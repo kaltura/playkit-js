@@ -32,6 +32,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _adPlayed: boolean;
   _snapback: number;
   _configAdBreaks: Array<RunTimeAdBreakObject>;
+  _adIsLoading: boolean;
 
   constructor(player: Player, adsPluginControllers: Array<IAdsPluginController>) {
     super();
@@ -129,6 +130,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
     this._ad = null;
     this._adPlayed = false;
     this._snapback = 0;
+    this._adIsLoading = false;
   }
 
   _addBindings(): void {
@@ -199,9 +201,10 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _playAdBreak(adBreak: RunTimeAdBreakObject): void {
-    adBreak.played = true;
     const adController = this._adsPluginControllers.find(controller => !this._isBumper(controller));
     if (adController) {
+      adBreak.played = true;
+      this._adIsLoading = true;
       AdsController._logger.debug(`Playing ad break positioned in ${adBreak.position}`);
       adController.playAdNow(adBreak.ads);
     } else {
@@ -219,6 +222,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _onAdLoaded(event: FakeEvent): void {
+    this._adIsLoading = false;
     this._ad = event.payload.ad;
   }
 
@@ -241,6 +245,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _onAdError(event: FakeEvent): void {
+    this._adIsLoading = false;
     if (
       event.payload.severity === Error.Severity.CRITICAL &&
       this._adsPluginControllers.every(controller => controller.done) &&
@@ -259,6 +264,9 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _onEnded(): void {
+    if (this._adIsLoading) {
+      return;
+    }
     if (!this._adBreaksLayout.includes(-1)) {
       this._allAdsCompleted = true;
     } else {
