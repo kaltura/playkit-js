@@ -1142,7 +1142,8 @@ var config = {
 > >         position: 0,
 > >         ads: [
 > >           {
-> >             url: [VAST_URL]
+> >             url: [VAST_URL],
+> >             bumper: true
 > >           }
 > >         ]
 > >       },
