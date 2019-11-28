@@ -5,7 +5,7 @@ import TextTrack from '../../src/track/text-track';
 
 declare interface IEngine {
   static id: string;
-  static createEngine(source: PKMediaSourceObject, config: Object): IEngine;
+  static createEngine(source: PKMediaSourceObject, config: Object, playerId: string): IEngine;
   static canPlaySource(source: PKMediaSourceObject, preferNative: boolean, drmConfig: PKDrmConfigObject): boolean;
   static runCapabilities(): void;
   static getCapabilities(): Promise<Object>;
