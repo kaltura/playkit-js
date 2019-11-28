@@ -1109,6 +1109,24 @@ var config = {
 > >
 > > ##### Type: `Array<PKAdBreakObject>`
 > >
+> > > ##### Type `PKAdBreakObject`
+> > >
+> > > ```js
+> > > {
+> > >   position: number,
+> > >   ads: Array<PKAdObject>
+> > > }
+> > > ```
+> > >
+> > > > ##### Type `PKAdObject`
+> > > >
+> > > > ```js
+> > > > {
+> > > >   url?: Array<string>,
+> > > >   response?: Array<string>
+> > > > }
+> > > > ```
+> >
 > > ##### Default: `[]`
 > >
 > > ##### Description: The ad breaks scheme
@@ -1142,7 +1160,7 @@ var config = {
 > >         position: -1,
 > >         ads: [
 > >           {
-> >             url: [VAST_URL]
+> >             response: [VAST_XML]
 > >           }
 > >         ]
 > >       }
