@@ -1123,7 +1123,8 @@ var config = {
 > > > > ```js
 > > > > {
 > > > >   url?: Array<string>,
-> > > >   response?: Array<string>
+> > > >   response?: Array<string>,
+> > > >   bumper?: boolean
 > > > > }
 > > > > ```
 > >
