@@ -405,6 +405,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _hasUserInteracted: boolean = false;
+  /**
+   * Whether the video is seeked to live edge
+   * @type {boolean}
+   * @private
+   */
+  _isOnLiveEdge: boolean = false;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -712,6 +718,9 @@ export default class Player extends FakeEventTarget {
           boundedTo = this._engine.duration - DURATION_OFFSET;
         }
         this._engine.currentTime = boundedTo;
+      }
+      if (this.isLive()) {
+        this._isOnLiveEdge = this.duration ? to >= this.duration && !this.paused : false;
       }
     }
   }
@@ -1025,6 +1034,15 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Get whether the video is seeked to live edge in dvr
+   * @returns {boolean} - Whether the video is seeked to live edge in dvr
+   * @public
+   */
+  isOnLiveEdge(): boolean {
+    return this._isOnLiveEdge;
+  }
+
+  /**
    * Checking if the current live playback has DVR window.
    * @function isDvr
    * @returns {boolean} - Whether live playback has DVR window.
@@ -1043,6 +1061,7 @@ export default class Player extends FakeEventTarget {
   seekToLiveEdge(): void {
     if (this._engine && this.isLive()) {
       this._engine.seekToLiveEdge();
+      this._isOnLiveEdge = true;
     }
   }
 
@@ -1682,6 +1701,7 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.MANIFEST_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this, Html5EventType.PLAY, this._onPlay.bind(this));
+      this._eventManager.listen(this, Html5EventType.PAUSE, this._onPause.bind(this));
       this._eventManager.listen(this, Html5EventType.PLAYING, this._onPlaying.bind(this));
       this._eventManager.listen(this, Html5EventType.ENDED, this._onEnded.bind(this));
       this._eventManager.listen(this, CustomEventType.PLAYBACK_ENDED, this._onPlaybackEnded.bind(this));
@@ -1948,6 +1968,9 @@ export default class Player extends FakeEventTarget {
       this._engine
         .load(startTime)
         .then(data => {
+          if (this.isLive()) {
+            this._isOnLiveEdge = true;
+          }
           this._updateTracks(data.tracks);
           this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
           resetFlags();
@@ -1987,6 +2010,15 @@ export default class Player extends FakeEventTarget {
    */
   _pause(): void {
     this._engine.pause();
+  }
+
+  /**
+   * @function _onPause
+   * @return {void}
+   * @private
+   */
+  _onPause(): void {
+    this._isOnLiveEdge = false;
   }
 
   /**
