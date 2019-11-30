@@ -1085,9 +1085,104 @@ var config = {
 > >   }
 > > };
 > > ```
+
+##
+
+> ### config.advertising
 >
-> ##
+> ##### Type: `PKAdvertisingConfigObject`
 >
+> ```js
+> {
+>   adBreaks: Array<PKAdBreakObject>,
+>   playAdsAfterTime?: number
+> }
+> ```
+>
+> ##### Default: `-`
+>
+> ##### Description: Defines an advertising scheme (optional).
+>
+> > ##
+> >
+> > ### config.advertising.adBreaks
+> >
+> > ##### Type: `Array<PKAdBreakObject>`
+> >
+> > > ##### Type `PKAdBreakObject`
+> > >
+> > > ```js
+> > > {
+> > >   position: number,
+> > >   ads: Array<PKAdObject>
+> > > }
+> > > ```
+> > >
+> > > > ##### Type `PKAdObject`
+> > > >
+> > > > ```js
+> > > > {
+> > > >   url?: Array<string>,
+> > > >   response?: Array<string>,
+> > > >   bumper?: boolean
+> > > > }
+> > > > ```
+> >
+> > ##### Default: `[]`
+> >
+> > ##### Description: The ad breaks scheme
+> >
+> > #### Example:
+> >
+> > ```js
+> > var config = {
+> >   advertising: {
+> >     adBreaks: [
+> >       {
+> >         position: 0,
+> >         ads: [
+> >           {
+> >             url: [VAST_URL],
+> >             bumper: true
+> >           }
+> >         ]
+> >       },
+> >       {
+> >         position: 15,
+> >         ads: [
+> >           {
+> >             url: [VAST_URL, VAST_URL] //waterfalling
+> >           },
+> >           {
+> >             url: [VAST_URL]
+> >           }
+> >         ]
+> >       },
+> >       {
+> >         position: -1,
+> >         ads: [
+> >           {
+> >             response: [VAST_XML]
+> >           }
+> >         ]
+> >       }
+> >     ]
+> >   }
+> > };
+> > ```
+> >
+> > ##
+> >
+> > ### config.advertising.playAdsAfterTime
+> >
+> > ##### Type: `number`
+> >
+> > ##### Default: `config.playback.startTime`
+> >
+> > ##### Description: Only play ad breaks scheduled after this time (in seconds). This setting is strictly after - e.g. setting playAdsAfterTime to 15 will cause the player to ignore an ad break scheduled to play at 15s.
+
+##
+
 > ### config.customLabels
 >
 > ##### Type: `PKCustomLabelsConfigObject`
