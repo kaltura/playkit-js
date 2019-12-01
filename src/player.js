@@ -1673,11 +1673,12 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.TIMED_METADATA, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._engine, CustomEventType.AUTOPLAY_FAILED, (event: FakeEvent) => {
+      this._eventManager.listen(this._engine, CustomEventType.PLAY_FAILED, (event: FakeEvent) => {
         this.pause();
         if (this._firstPlay && this._config.playback.autoplay) {
-          this.dispatchEvent(event);
+          this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED, event.payload));
         }
+        this.dispatchEvent(event);
       });
       this._eventManager.listen(this._engine, CustomEventType.FPS_DROP, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
