@@ -1636,7 +1636,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _createEngine(Engine: typeof IEngine, source: PKMediaSourceObject): void {
-    const engine = Engine.createEngine(source, this._config);
+    const engine = Engine.createEngine(source, this._config, this._playerId);
     const plugins = (Object.values(this._pluginManager.getAll()): any);
     this._engine = EngineDecorator.getDecorator(engine, plugins) || engine;
   }
