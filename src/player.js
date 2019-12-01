@@ -1676,7 +1676,7 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.PLAY_FAILED, (event: FakeEvent) => {
         this.pause();
         if (this._firstPlay && this._config.playback.autoplay) {
-          this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED));
+          this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED, event.payload));
         }
         this.dispatchEvent(event);
       });
