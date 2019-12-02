@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.58.0"></a>
+# [0.58.0](https://github.com/kaltura/playkit-js/compare/v0.57.0...v0.58.0) (2019-12-01)
+
+
+### Bug Fixes
+
+* **FEC-9480:** there isn't event for play promise failed just autoplay failed ([#412](https://github.com/kaltura/playkit-js/issues/412)) ([75423d9](https://github.com/kaltura/playkit-js/commit/75423d9))
+* **FEC-9493:** new ad layout - dragging to the end causes the midroll to play with replay button ([#416](https://github.com/kaltura/playkit-js/issues/416)) ([a81f0ae](https://github.com/kaltura/playkit-js/commit/a81f0ae))
+* **FEC-9510:** auto play failed in ios ([#421](https://github.com/kaltura/playkit-js/issues/421)) ([094daea](https://github.com/kaltura/playkit-js/commit/094daea))
+
+
+### Features
+
+* **FEC-9462:** enable caption reading by screen reader ([#419](https://github.com/kaltura/playkit-js/issues/419)) ([327a07a](https://github.com/kaltura/playkit-js/commit/327a07a))
+* **FEC-9469:** ad layout - ads xml response ([#418](https://github.com/kaltura/playkit-js/issues/418)) ([b322bcb](https://github.com/kaltura/playkit-js/commit/b322bcb))
+* **FEC-9470:** ad layout - bumper support ([#420](https://github.com/kaltura/playkit-js/issues/420)) ([fbd1cb8](https://github.com/kaltura/playkit-js/commit/fbd1cb8))
+* **FEC-9473:** ad layout - snap back and start time ([#417](https://github.com/kaltura/playkit-js/issues/417)) ([7b17de0](https://github.com/kaltura/playkit-js/commit/7b17de0))
+
+
+
 <a name="0.57.0"></a>
 # [0.57.0](https://github.com/kaltura/playkit-js/compare/v0.56.0...v0.57.0) (2019-11-12)
 
