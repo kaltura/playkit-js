@@ -719,9 +719,6 @@ export default class Player extends FakeEventTarget {
         }
         this._engine.currentTime = boundedTo;
       }
-      if (this.isLive()) {
-        this._isOnLiveEdge = this.duration ? to >= this.duration && !this.paused : false;
-      }
     }
   }
 
@@ -1672,6 +1669,11 @@ export default class Player extends FakeEventTarget {
           return this.dispatchEvent(event);
         });
       });
+      this._eventManager.listen(this._engine, Html5EventType.SEEKING, () => {
+        if (this.isLive()) {
+          this._isOnLiveEdge = this.duration && this.currentTime ? this.currentTime >= this.duration - 1 && !this.paused : false;
+        }
+      });
       this._eventManager.listen(this._engine, Html5EventType.SEEKED, () => {
         const browser = this._env.browser.name;
         if (browser === 'Edge' || browser === 'IE') {
@@ -1969,7 +1971,7 @@ export default class Player extends FakeEventTarget {
       this._engine
         .load(startTime)
         .then(data => {
-          if (this.isLive()) {
+          if (this.isLive() && startTime === -1) {
             this._isOnLiveEdge = true;
           }
           this._updateTracks(data.tracks);
