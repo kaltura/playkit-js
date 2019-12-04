@@ -1343,6 +1343,53 @@ describe('Player', function() {
       });
     });
 
+    describe('auto play failed', function() {
+      let config;
+      let player;
+      let playerContainer;
+
+      before(() => {
+        playerContainer = createElement('DIV', targetId);
+      });
+
+      beforeEach(() => {
+        config = getConfigStructure();
+        player = new Player(config);
+        playerContainer.appendChild(player.getView());
+      });
+
+      afterEach(() => {
+        player.destroy();
+      });
+
+      after(() => {
+        removeVideoElementsFromTestPage();
+        removeElement(targetId);
+      });
+
+      it('should fire auto play failed and show the poster', done => {
+        player.addEventListener(CustomEventType.AUTOPLAY_FAILED, () => {
+          player._posterManager._el.style.display.should.equal('');
+          done();
+        });
+        player.configure({
+          playback: {
+            autoplay: true
+          },
+          sources: {
+            poster: '//cdntesting.qa.mkaltura.com/p/1091/sp/109100/thumbnail/entry_id/0_wifqaipd/version/100042/height/360/width/640',
+            progressive: [
+              {
+                mimetype: 'video/mp4',
+                url: 'bad/url',
+                id: '1_rsrdfext_10081,url'
+              }
+            ]
+          }
+        });
+      });
+    });
+
     describe('source selected', () => {
       let config;
       let player;
