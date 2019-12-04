@@ -1367,7 +1367,7 @@ describe('Player', function() {
         removeElement(targetId);
       });
 
-      it('should fire first play only once', done => {
+      it('should fire auto play failed and show the poster', done => {
         player.addEventListener(CustomEventType.AUTOPLAY_FAILED, () => {
           player._posterManager._el.style.display.should.equal('');
           done();
