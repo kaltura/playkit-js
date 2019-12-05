@@ -112,6 +112,13 @@ const DURATION_OFFSET: number = 0.1;
 const REPOSITION_CUES_TIMEOUT: number = 1000;
 
 /**
+ * The threshold in seconds from duration that we still consider it as live edge
+ * @type {number}
+ * @const
+ */
+const LIVE_EDGE_THRESHOLD: number = 1;
+
+/**
  * The HTML5 player class.
  * @classdesc
  */
@@ -1671,8 +1678,7 @@ export default class Player extends FakeEventTarget {
       });
       this._eventManager.listen(this._engine, Html5EventType.SEEKING, () => {
         if (this.isLive()) {
-          this._isOnLiveEdge =
-            this.duration && this.currentTime ? Math.floor(this.currentTime) >= Math.floor(this.duration || 0) && !this.paused : false;
+          this._isOnLiveEdge = this.duration && this.currentTime ? this.currentTime >= this.duration - LIVE_EDGE_THRESHOLD && !this.paused : false;
         }
       });
       this._eventManager.listen(this._engine, Html5EventType.SEEKED, () => {
