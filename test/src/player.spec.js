@@ -1357,14 +1357,14 @@ describe('Player', function() {
 
       beforeEach(() => {
         sandbox = sinon.sandbox.create();
-        config = getConfigStructure();
-        config.sources = sourcesConfig.Mp4;
-        player = new Player(config);
-        player.configure({
+        config = PKObject.mergeDeep(getConfigStructure(), {
+          sources: sourcesConfig.Mp4,
           playback: {
             autoplay: true
           }
         });
+        config.sources = sourcesConfig.Mp4;
+        player = new Player(config);
         playerContainer.appendChild(player.getView());
       });
 
@@ -1391,7 +1391,6 @@ describe('Player', function() {
         sandbox.stub(player._engine._el, 'play').callsFake(function() {
           return Promise.reject('mock failure');
         });
-        player.play();
       });
 
       it('should fire auto play failed and show the poster once get AD_PLAY_FAILED', done => {
