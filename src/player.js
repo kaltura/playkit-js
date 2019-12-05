@@ -723,7 +723,10 @@ export default class Player extends FakeEventTarget {
           boundedTo = 0;
         }
         const safeDuration = this.isLive() ? this._engine.duration : this._engine.duration - DURATION_OFFSET;
-        boundedTo = Math.min(boundedTo, safeDuration);
+
+        if (boundedTo > safeDuration) {
+          boundedTo = safeDuration;
+        }
         this._engine.currentTime = boundedTo;
       }
     }
