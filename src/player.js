@@ -112,6 +112,13 @@ const DURATION_OFFSET: number = 0.1;
 const REPOSITION_CUES_TIMEOUT: number = 1000;
 
 /**
+ * The threshold in seconds from duration that we still consider it as live edge
+ * @type {number}
+ * @const
+ */
+const LIVE_EDGE_THRESHOLD: number = 1;
+
+/**
  * The HTML5 player class.
  * @classdesc
  */
@@ -405,6 +412,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _hasUserInteracted: boolean = false;
+  /**
+   * Whether the video is seeked to live edge
+   * @type {boolean}
+   * @private
+   */
+  _isOnLiveEdge: boolean = false;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -608,6 +621,7 @@ export default class Player extends FakeEventTarget {
     this._eventManager.removeAll();
     this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
     this._createReadyPromise();
+    this._isOnLiveEdge = false;
   }
 
   /**
@@ -708,8 +722,10 @@ export default class Player extends FakeEventTarget {
         if (to < 0) {
           boundedTo = 0;
         }
-        if (boundedTo > this._engine.duration - DURATION_OFFSET) {
-          boundedTo = this._engine.duration - DURATION_OFFSET;
+        const safeDuration = this.isLive() ? this._engine.duration : this._engine.duration - DURATION_OFFSET;
+
+        if (boundedTo > safeDuration) {
+          boundedTo = safeDuration;
         }
         this._engine.currentTime = boundedTo;
       }
@@ -1025,6 +1041,15 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Get whether the video is seeked to live edge in dvr
+   * @returns {boolean} - Whether the video is seeked to live edge in dvr
+   * @public
+   */
+  isOnLiveEdge(): boolean {
+    return this._isOnLiveEdge;
+  }
+
+  /**
    * Checking if the current live playback has DVR window.
    * @function isDvr
    * @returns {boolean} - Whether live playback has DVR window.
@@ -1043,6 +1068,7 @@ export default class Player extends FakeEventTarget {
   seekToLiveEdge(): void {
     if (this._engine && this.isLive()) {
       this._engine.seekToLiveEdge();
+      this._isOnLiveEdge = true;
     }
   }
 
@@ -1653,6 +1679,11 @@ export default class Player extends FakeEventTarget {
           return this.dispatchEvent(event);
         });
       });
+      this._eventManager.listen(this._engine, Html5EventType.SEEKING, () => {
+        if (this.isLive()) {
+          this._isOnLiveEdge = this.duration && this.currentTime ? this.currentTime >= this.duration - LIVE_EDGE_THRESHOLD && !this.paused : false;
+        }
+      });
       this._eventManager.listen(this._engine, Html5EventType.SEEKED, () => {
         const browser = this._env.browser.name;
         if (browser === 'Edge' || browser === 'IE') {
@@ -1685,6 +1716,7 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.MANIFEST_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this, Html5EventType.PLAY, this._onPlay.bind(this));
+      this._eventManager.listen(this, Html5EventType.PAUSE, this._onPause.bind(this));
       this._eventManager.listen(this, Html5EventType.PLAYING, this._onPlaying.bind(this));
       this._eventManager.listen(this, Html5EventType.ENDED, this._onEnded.bind(this));
       this._eventManager.listen(this, CustomEventType.PLAYBACK_ENDED, this._onPlaybackEnded.bind(this));
@@ -1951,6 +1983,9 @@ export default class Player extends FakeEventTarget {
       this._engine
         .load(startTime)
         .then(data => {
+          if (this.isLive() && (startTime === -1 || startTime >= this.duration)) {
+            this._isOnLiveEdge = true;
+          }
           this._updateTracks(data.tracks);
           this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
           resetFlags();
@@ -1990,6 +2025,15 @@ export default class Player extends FakeEventTarget {
    */
   _pause(): void {
     this._engine.pause();
+  }
+
+  /**
+   * @function _onPause
+   * @return {void}
+   * @private
+   */
+  _onPause(): void {
+    this._isOnLiveEdge = false;
   }
 
   /**
