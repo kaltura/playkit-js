@@ -118,6 +118,20 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _mediaErrorRecoveryAttempts: number = 0;
 
   /**
+   * The last time detach occurred
+   * @type {number}
+   * @private
+   */
+  _lastTimeDetach: number = 0;
+
+  /**
+   * The start time after attach
+   * @type {number}
+   * @private
+   */
+  _startTimeAttach: number = 0;
+
+  /**
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
    * @param {string} mimeType - The mime type to check
@@ -267,8 +281,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
         this._lastTimeUpdate = startTime || 0;
+        const playbackStartTime = this._startTimeAttach || startTime || 0;
         this._loadPromiseReject = reject;
-        this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => this._onLoadedData(resolve, startTime));
+        this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => this._onLoadedData(resolve, playbackStartTime));
         this._eventManager.listen(this._videoElement, Html5EventType.TIME_UPDATE, () => this._onTimeUpdate());
         this._eventManager.listen(this._videoElement, Html5EventType.PLAY, () => this._resetHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.PAUSE, () => this._clearHeartbeatTimeout());
@@ -340,13 +355,23 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    * @returns {void}
    */
-  attachMediaSource(): void {}
+  attachMediaSource(): void {
+    this._startTimeAttach = this._lastTimeDetach;
+    this._lastTimeDetach = null;
+  }
   /**
    * detach media - will remove the media source from handling the video
    * @public
    * @returns {void}
    */
-  detachMediaSource(): void {}
+  detachMediaSource(): void {
+    this._lastTimeDetach = this.currentTime;
+    if (this._videoElement && this._videoElement.src) {
+      Utils.Dom.setAttribute(this._videoElement, 'src', '');
+      Utils.Dom.removeAttribute(this._videoElement, 'src');
+    }
+    this._loadPromise = null;
+  }
 
   _setSrc(): void {
     const pkRequest: PKRequestObject = {url: this._sourceObj ? this._sourceObj.url : '', body: null, headers: {}};
@@ -390,6 +415,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     } else {
       this._eventManager.listenOnce(this._videoElement, Html5EventType.CAN_PLAY, parseTracksAndResolve.bind(this));
     }
+    this._startTimeAttach = null;
   }
 
   _onTimeUpdate(): void {
