@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.58.1"></a>
+## [0.58.1](https://github.com/kaltura/playkit-js/compare/v0.58.0...v0.58.1) (2019-12-05)
+
+
+### Bug Fixes
+
+* **FEC-9471:** slider progress bar exceeds 100% ([#422](https://github.com/kaltura/playkit-js/issues/422)) ([0bb9644](https://github.com/kaltura/playkit-js/commit/0bb9644))
+* **FEC-9527:** The poster is hidden when auto play is failed ([#423](https://github.com/kaltura/playkit-js/issues/423)) ([a28b3a0](https://github.com/kaltura/playkit-js/commit/a28b3a0))
+
+
+
 <a name="0.58.0"></a>
 # [0.58.0](https://github.com/kaltura/playkit-js/compare/v0.57.0...v0.58.0) (2019-12-01)
 
