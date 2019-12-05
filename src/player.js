@@ -614,6 +614,7 @@ export default class Player extends FakeEventTarget {
     this._eventManager.removeAll();
     this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
     this._createReadyPromise();
+    this._isOnLiveEdge = false;
   }
 
   /**
@@ -714,9 +715,8 @@ export default class Player extends FakeEventTarget {
         if (to < 0) {
           boundedTo = 0;
         }
-        if (boundedTo > this._engine.duration - DURATION_OFFSET) {
-          boundedTo = this._engine.duration - DURATION_OFFSET;
-        }
+        const safeDuration = this.isLive() ? this._engine.duration : this._engine.duration - DURATION_OFFSET;
+        boundedTo = Math.min(boundedTo, safeDuration);
         this._engine.currentTime = boundedTo;
       }
     }
@@ -1671,7 +1671,8 @@ export default class Player extends FakeEventTarget {
       });
       this._eventManager.listen(this._engine, Html5EventType.SEEKING, () => {
         if (this.isLive()) {
-          this._isOnLiveEdge = this.duration && this.currentTime ? this.currentTime >= this.duration - 1 && !this.paused : false;
+          this._isOnLiveEdge =
+            this.duration && this.currentTime ? Math.floor(this.currentTime) >= Math.floor(this.duration || 0) && !this.paused : false;
         }
       });
       this._eventManager.listen(this._engine, Html5EventType.SEEKED, () => {
@@ -1972,7 +1973,7 @@ export default class Player extends FakeEventTarget {
       this._engine
         .load(startTime)
         .then(data => {
-          if (this.isLive() && startTime === -1) {
+          if (this.isLive() && (startTime === -1 || startTime >= this.duration)) {
             this._isOnLiveEdge = true;
           }
           this._updateTracks(data.tracks);
