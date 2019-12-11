@@ -184,13 +184,13 @@ describe('AdsController', () => {
       });
       player.configure({sources: SourcesConfig.Mp4});
       player.addEventListener(CustomEventType.FIRST_PLAY, () => {
-        player.currentTime = 4;
+        player.currentTime = 3;
         setTimeout(() => {
           player.currentTime = 2.5;
           setTimeout(() => {
             player.currentTime = 0;
           }, 1000);
-        }, 1000);
+        }, 1500);
       });
       player.play();
     });
