@@ -157,6 +157,12 @@ describe('AdsController', () => {
             player._adsController && (player._adsController._adIsLoading = false);
             ads.should.deep.equal(adBreaks[adBreakIndex]);
             adBreakIndex++;
+            if (adBreakIndex === 2) {
+              player.currentTime = 2.5;
+            }
+            if (adBreakIndex === 3) {
+              player.currentTime = 0;
+            }
             if (adBreakIndex === adBreaks.length) {
               done();
             }
@@ -185,12 +191,6 @@ describe('AdsController', () => {
       player.configure({sources: SourcesConfig.Mp4});
       player.addEventListener(CustomEventType.FIRST_PLAY, () => {
         player.currentTime = 3;
-        setTimeout(() => {
-          player.currentTime = 2.5;
-          setTimeout(() => {
-            player.currentTime = 0;
-          }, 1000);
-        }, 1500);
       });
       player.play();
     });
