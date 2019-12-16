@@ -169,7 +169,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
       this._handleConfiguredPreroll();
       this._eventManager.listenOnce(this._player, Html5EventType.DURATION_CHANGE, () => {
         this._configAdBreaks.forEach(adBreak => {
-          if (adBreak.percentage && !adBreak.position) {
+          if (this._player.duration && adBreak.percentage && !adBreak.position) {
             adBreak.position = Math.floor((this._player.duration * adBreak.percentage) / 100);
           }
         });
@@ -187,7 +187,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
       prerolls.forEach(adBreak => (adBreak.played = true));
       this._playAdBreak({
         position: 0,
-        ads: prerolls.reduce((result, preroll) => preroll.ads.concat(result), []),
+        ads: prerolls.reduce((result, preroll) => result.concat(preroll.ads), []),
         played: false
       });
     }
@@ -285,7 +285,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
     if (this._adIsLoading) {
       return;
     }
-    if (!this._adBreaksLayout.includes(-1)) {
+    if (!(this._adBreaksLayout.includes(-1) || this._adBreaksLayout.includes('100%'))) {
       this._allAdsCompleted = true;
     } else {
       const bumperCtrl = this._adsPluginControllers.find(controller => this._isBumper(controller));
@@ -308,7 +308,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
       this._configAdBreaks.forEach(adBreak => (adBreak.played = true));
       this._playAdBreak({
         position: -1,
-        ads: postrolls.reduce((result, postroll) => postroll.ads.concat(result), []),
+        ads: postrolls.reduce((result, postroll) => result.concat(postroll.ads), []),
         played: false
       });
     }
