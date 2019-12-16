@@ -148,30 +148,48 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _handleConfiguredAdBreaks(): void {
     const playAdsAfterTime = this._player.config.advertising.playAdsAfterTime || this._player.config.playback.startTime;
     this._configAdBreaks = this._player.config.advertising.adBreaks
-      .filter(adBreak => typeof adBreak.position === 'number' && adBreak.ads.length)
-      .map(adBreak => ({
-        ...adBreak,
-        ads: adBreak.ads.slice(),
-        played: -1 < adBreak.position && adBreak.position <= playAdsAfterTime
-      }))
-      .sort((a, b) => a.position - b.position);
+      .filter(adBreak => (typeof adBreak.position === 'number' || typeof adBreak.percentage === 'number') && adBreak.ads.length)
+      .map(adBreak => {
+        let position = adBreak.position;
+        adBreak.percentage === 0 && (position = 0);
+        adBreak.percentage === 100 && (position = -1);
+        return {
+          position,
+          percentage: adBreak.percentage,
+          ads: adBreak.ads.slice(),
+          played: -1 < position && position <= playAdsAfterTime
+        };
+      });
     if (this._configAdBreaks.length) {
-      const adBreaksPosition = this._configAdBreaks.map(adBreak => adBreak.position);
+      const adBreaksPosition = this._configAdBreaks.map(
+        adBreak => (typeof adBreak.percentage === 'number' ? adBreak.percentage + '%' : adBreak.position)
+      );
       AdsController._logger.debug(AdEventType.AD_MANIFEST_LOADED, adBreaksPosition);
       this._player.dispatchEvent(new FakeEvent(AdEventType.AD_MANIFEST_LOADED, {adBreaksPosition}));
-      if (adBreaksPosition.includes(0)) {
-        this._handleConfiguredPreroll();
-      }
-      if (adBreaksPosition.some(position => position > 0)) {
-        this._handleConfiguredMidrolls();
-      }
+      this._handleConfiguredPreroll();
+      this._eventManager.listenOnce(this._player, Html5EventType.DURATION_CHANGE, () => {
+        this._configAdBreaks.forEach(adBreak => {
+          if (adBreak.percentage && !adBreak.position) {
+            adBreak.position = Math.floor((this._player.duration * adBreak.percentage) / 100);
+          }
+        });
+        this._configAdBreaks.sort((a, b) => a.position - b.position);
+        if (this._configAdBreaks.some(adBreak => adBreak.position > 0)) {
+          this._handleConfiguredMidrolls();
+        }
+      });
     }
   }
 
   _handleConfiguredPreroll(): void {
-    const adBreak = this._configAdBreaks.find(adBreak => adBreak.position === 0 && !adBreak.played);
-    if (adBreak) {
-      this._playAdBreak(adBreak);
+    const prerolls = this._configAdBreaks.filter(adBreak => adBreak.position === 0 && !adBreak.played);
+    if (prerolls.length) {
+      prerolls.forEach(adBreak => (adBreak.played = true));
+      this._playAdBreak({
+        position: 0,
+        ads: prerolls.reduce((result, preroll) => preroll.ads.concat(result), []),
+        played: false
+      });
     }
   }
 
@@ -285,10 +303,14 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _handleConfiguredPostroll(): void {
-    const adBreak = this._configAdBreaks.find(adBreak => !adBreak.played && adBreak.position === -1);
-    if (adBreak) {
+    const postrolls = this._configAdBreaks.filter(adBreak => !adBreak.played && adBreak.position === -1);
+    if (postrolls.length) {
       this._configAdBreaks.forEach(adBreak => (adBreak.played = true));
-      this._playAdBreak(adBreak);
+      this._playAdBreak({
+        position: -1,
+        ads: postrolls.reduce((result, postroll) => postroll.ads.concat(result), []),
+        played: false
+      });
     }
   }
 
