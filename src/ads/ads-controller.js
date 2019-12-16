@@ -26,7 +26,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _adsPluginControllers: Array<IAdsPluginController>;
   _allAdsCompleted: boolean;
   _eventManager: EventManager;
-  _adBreaksLayout: Array<number>;
+  _adBreaksLayout: Array<number | string>;
   _adBreak: ?AdBreak;
   _ad: ?Ad;
   _adPlayed: boolean;
@@ -63,9 +63,9 @@ class AdsController extends FakeEventTarget implements IAdsController {
   /**
    * @instance
    * @memberof AdsController
-   * @returns {Array<number>} - The ad breaks layout (cue points).
+   * @returns {Array<number|string>} - The ad breaks layout (cue points).
    */
-  getAdBreaksLayout(): Array<number> {
+  getAdBreaksLayout(): Array<number | string> {
     return this._adBreaksLayout;
   }
 
