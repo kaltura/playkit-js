@@ -183,14 +183,8 @@ class AdsController extends FakeEventTarget implements IAdsController {
 
   _handleConfiguredPreroll(): void {
     const prerolls = this._configAdBreaks.filter(adBreak => adBreak.position === 0 && !adBreak.played);
-    if (prerolls.length) {
-      prerolls.forEach(adBreak => (adBreak.played = true));
-      this._playAdBreak({
-        position: 0,
-        ads: prerolls.reduce((result, preroll) => result.concat(preroll.ads), []),
-        played: false
-      });
-    }
+    const mergedPreroll = this._mergeAdBreaks(prerolls);
+    mergedPreroll && this._playAdBreak(mergedPreroll);
   }
 
   _handleConfiguredMidrolls(): void {
@@ -204,12 +198,8 @@ class AdsController extends FakeEventTarget implements IAdsController {
           const lastAdBreaks = adBreaks.filter(adBreak => adBreak.position === maxPosition);
           this._snapback = maxPosition;
           AdsController._logger.debug(`Set snapback value ${this._snapback}`);
-          lastAdBreaks.forEach(adBreak => (adBreak.played = true));
-          this._playAdBreak({
-            position: maxPosition,
-            ads: lastAdBreaks.reduce((result, adBreak) => result.concat(adBreak.ads), []),
-            played: false
-          });
+          const mergedAdBreak = this._mergeAdBreaks(lastAdBreaks);
+          mergedAdBreak && this._playAdBreak(mergedAdBreak);
         }
       }
     });
@@ -312,17 +302,25 @@ class AdsController extends FakeEventTarget implements IAdsController {
     const postrolls = this._configAdBreaks.filter(adBreak => !adBreak.played && adBreak.position === -1);
     if (postrolls.length) {
       this._configAdBreaks.forEach(adBreak => (adBreak.played = true));
-      this._playAdBreak({
-        position: -1,
-        ads: postrolls.reduce((result, postroll) => result.concat(postroll.ads), []),
-        played: false
-      });
+      const mergedPostroll = this._mergeAdBreaks(postrolls);
+      mergedPostroll && this._playAdBreak(mergedPostroll);
     }
   }
 
   _reset(): void {
     this._eventManager.removeAll();
     this._init();
+  }
+
+  _mergeAdBreaks(adBreaks: Array<RunTimeAdBreakObject>): ?RunTimeAdBreakObject {
+    if (adBreaks.length) {
+      adBreaks.forEach(adBreak => (adBreak.played = true));
+      return {
+        position: adBreaks[0].position,
+        ads: adBreaks.reduce((result, adBreak) => result.concat(adBreak.ads), []),
+        played: false
+      };
+    }
   }
 }
 
