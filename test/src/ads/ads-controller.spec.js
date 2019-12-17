@@ -111,7 +111,7 @@ describe('AdsController', () => {
       player.play();
     });
 
-    it('Should skip the first midroll (snap-back)', done => {
+    it('Should skip the first mid-roll (snap-back)', done => {
       const adBreaks = [[{url: ['PRE_ROLL']}], [{url: ['MID_ROLL_1']}], [{url: ['POST_ROLL']}]];
       let adBreakIndex = 0;
       const fakeCtrl = {
@@ -317,7 +317,7 @@ describe('AdsController', () => {
       player.play();
     });
 
-    it('Should unify 2 prerolls', done => {
+    it('Should unify 2 pre-rolls', done => {
       const adBreaks = [[{url: ['PRE_ROLL_1']}, {url: ['PRE_ROLL_2']}]];
       const fakeCtrl = {
         playAdNow: ads => {
@@ -345,7 +345,35 @@ describe('AdsController', () => {
       player.play();
     });
 
-    it('Should unify 2 postrolls', done => {
+    it('Should unify 2 mid-rolls', done => {
+      const adBreaks = [[{url: ['MID_ROLL_1']}, {url: ['MID_ROLL_2']}]];
+      const fakeCtrl = {
+        playAdNow: ads => {
+          try {
+            player._adsController && (player._adsController._adIsLoading = false);
+            ads.should.deep.equal(adBreaks[0]);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        },
+        onPlaybackEnded: () => {
+          return Promise.resolve();
+        }
+      };
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+        return [fakeCtrl];
+      });
+      player.configure({
+        advertising: {
+          adBreaks: [{position: 2, ads: [adBreaks[0][0]]}, {position: 2, ads: [adBreaks[0][1]]}]
+        }
+      });
+      player.configure({sources: SourcesConfig.Mp4});
+      player.play();
+    });
+
+    it('Should unify 2 post-rolls', done => {
       const adBreaks = [[{url: ['POST_ROLL_1']}, {url: ['POST_ROLL_2']}]];
       const fakeCtrl = {
         playAdNow: ads => {

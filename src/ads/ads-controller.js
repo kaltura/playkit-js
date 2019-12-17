@@ -200,10 +200,16 @@ class AdsController extends FakeEventTarget implements IAdsController {
           adBreak => !adBreak.played && this._player.currentTime && adBreak.position <= this._player.currentTime && adBreak.position > this._snapback
         );
         if (adBreaks.length) {
-          const lastAdBreak = adBreaks[adBreaks.length - 1];
-          this._snapback = lastAdBreak.position;
+          const maxPosition = adBreaks[adBreaks.length - 1].position;
+          const lastAdBreaks = adBreaks.filter(adBreak => adBreak.position === maxPosition);
+          this._snapback = maxPosition;
           AdsController._logger.debug(`Set snapback value ${this._snapback}`);
-          this._playAdBreak(lastAdBreak);
+          lastAdBreaks.forEach(adBreak => (adBreak.played = true));
+          this._playAdBreak({
+            position: maxPosition,
+            ads: lastAdBreaks.reduce((result, adBreak) => result.concat(adBreak.ads), []),
+            played: false
+          });
         }
       }
     });
