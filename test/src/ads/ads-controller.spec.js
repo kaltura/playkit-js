@@ -74,7 +74,7 @@ describe('AdsController', () => {
       setTimeout(done);
     });
 
-    it('Should play pre-roll, 2 mid-rolls and post-roll', done => {
+    it('Should play pre-roll, 2 mid-rolls and post-roll by position', done => {
       const adBreaks = [[{url: ['PRE_ROLL']}], [{url: ['MID_ROLL_1']}], [{url: ['MID_ROLL_2']}], [{url: ['POST_ROLL']}]];
       let adBreakIndex = 0;
       const fakeCtrl = {
@@ -104,6 +104,126 @@ describe('AdsController', () => {
             {position: 1, ads: adBreaks[1]},
             {position: 2, ads: adBreaks[2]},
             {position: -1, ads: adBreaks[3]}
+          ]
+        }
+      });
+      player.configure({sources: SourcesConfig.Mp4});
+      player.play();
+    });
+
+    it('Should play pre-roll, 2 mid-rolls and post-roll by percentage', done => {
+      const adBreaks = [[{url: ['PRE_ROLL']}], [{url: ['MID_ROLL_1']}], [{url: ['MID_ROLL_2']}], [{url: ['POST_ROLL']}]];
+      let adBreakIndex = 0;
+      const fakeCtrl = {
+        playAdNow: ads => {
+          try {
+            player._adsController && (player._adsController._adIsLoading = false);
+            ads.should.deep.equal(adBreaks[adBreakIndex]);
+            adBreakIndex++;
+            if (adBreakIndex === adBreaks.length) {
+              done();
+            }
+          } catch (e) {
+            done(e);
+          }
+        },
+        onPlaybackEnded: () => {
+          return Promise.resolve();
+        }
+      };
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+        return [fakeCtrl];
+      });
+      player.configure({
+        advertising: {
+          adBreaks: [
+            {percentage: 0, ads: adBreaks[0]},
+            {percentage: 25, ads: adBreaks[1]},
+            {percentage: 50, ads: adBreaks[2]},
+            {percentage: 100, ads: adBreaks[3]}
+          ]
+        }
+      });
+      player.configure({sources: SourcesConfig.Mp4});
+      player.play();
+    });
+
+    it('Should play 5 mid-rolls by every', done => {
+      let adBreakIndex = 0;
+      const fakeCtrl = {
+        playAdNow: ads => {
+          try {
+            adBreakIndex++;
+            player._adsController && (player._adsController._adIsLoading = false);
+            ads.should.deep.equal([{url: ['MID_ROLL']}]);
+          } catch (e) {
+            done(e);
+          }
+        },
+        onPlaybackEnded: () => {
+          return Promise.resolve();
+        }
+      };
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+        return [fakeCtrl];
+      });
+      player.configure({
+        advertising: {
+          adBreaks: [{every: 1, ads: [{url: ['MID_ROLL']}]}]
+        }
+      });
+      player.addEventListener(CustomEventType.PLAYBACK_ENDED, () => {
+        try {
+          adBreakIndex.should.equal(5);
+          player._adsController._configAdBreaks.length.should.equal(5);
+          done();
+        } catch (e) {
+          done(e);
+        }
+      });
+      player.configure({sources: SourcesConfig.Mp4});
+      player.play();
+    });
+
+    it('Should play pre-roll, mid-rolls and post-roll by mix position, percentage and every', done => {
+      const adBreaks = [
+        [{url: ['PRE_ROLL_1']}, {url: ['PRE_ROLL_1']}],
+        [{url: ['MID_ROLL_1']}],
+        [{url: ['MID_ROLL_2']}],
+        [{url: ['MID_ROLL_3']}],
+        [{url: ['MID_ROLL_3']}],
+        [{url: ['POST_ROLL']}]
+      ];
+      let adBreakIndex = 0;
+      const fakeCtrl = {
+        playAdNow: ads => {
+          try {
+            player._adsController && (player._adsController._adIsLoading = false);
+            ads.should.deep.equal(adBreaks[adBreakIndex]);
+            adBreakIndex++;
+            if (adBreakIndex === adBreaks.length) {
+              done();
+            }
+          } catch (e) {
+            done(e);
+          }
+        },
+        onPlaybackEnded: () => {
+          return Promise.resolve();
+        }
+      };
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+        return [fakeCtrl];
+      });
+      player.configure({
+        advertising: {
+          adBreaks: [
+            {position: 0, ads: [adBreaks[0][0]]},
+            {percentage: 0, ads: [adBreaks[0][1]]},
+            {percentage: 25, ads: adBreaks[1]},
+            {position: 2, ads: adBreaks[2]},
+            {every: 2.5, ads: adBreaks[3]},
+            {percentage: 100, ads: adBreaks[5]}
           ]
         }
       });
@@ -147,6 +267,45 @@ describe('AdsController', () => {
       player.configure({sources: SourcesConfig.Mp4});
       player.addEventListener(CustomEventType.FIRST_PLAY, () => {
         player.currentTime = 2;
+      });
+      player.play();
+    });
+
+    it('Should not play skipped mid-roll (snap-back) on replay', done => {
+      const adBreaks = [[{url: ['MID_ROLL_1']}], [{url: ['MID_ROLL_2']}]];
+      const fakeCtrl = {
+        playAdNow: ads => {
+          try {
+            player._adsController && (player._adsController._adIsLoading = false);
+            ads.should.deep.equal(adBreaks[1]);
+          } catch (e) {
+            done(new Error('Should not play skipped mid-roll'));
+          }
+        },
+        onPlaybackEnded: () => {
+          return Promise.resolve();
+        }
+      };
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+        return [fakeCtrl];
+      });
+      player.configure({
+        advertising: {
+          adBreaks: [{position: 2, ads: adBreaks[0]}, {position: 3, ads: adBreaks[1]}]
+        }
+      });
+      let firstPlay = true;
+      player.configure({sources: SourcesConfig.Mp4});
+      player.addEventListener(CustomEventType.PLAYBACK_ENDED, () => {
+        if (firstPlay) {
+          player.play();
+          firstPlay = false;
+        } else {
+          done();
+        }
+      });
+      player.addEventListener(CustomEventType.FIRST_PLAY, () => {
+        player.currentTime = 4;
       });
       player.play();
     });
@@ -409,24 +568,10 @@ describe('AdsController', () => {
       player.play();
     });
 
-    it('Should play pre-roll, 2 mid-rolls and post-roll by percentage', done => {
-      const adBreaks = [[{url: ['PRE_ROLL']}], [{url: ['MID_ROLL_1']}], [{url: ['MID_ROLL_2']}], [{url: ['POST_ROLL']}]];
-      let adBreakIndex = 0;
+    it('Should ignore ad break positioned out of the duration', done => {
       const fakeCtrl = {
-        playAdNow: ads => {
-          try {
-            player._adsController && (player._adsController._adIsLoading = false);
-            ads.should.deep.equal(adBreaks[adBreakIndex]);
-            adBreakIndex++;
-            if (adBreakIndex === adBreaks.length) {
-              done();
-            }
-          } catch (e) {
-            done(e);
-          }
-        },
-        onPlaybackEnded: () => {
-          return Promise.resolve();
+        playAdNow: () => {
+          done(new Error('Should not play an out of range ad break'));
         }
       };
       sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
@@ -434,50 +579,15 @@ describe('AdsController', () => {
       });
       player.configure({
         advertising: {
-          adBreaks: [
-            {percentage: 0, ads: adBreaks[0]},
-            {percentage: 25, ads: adBreaks[1]},
-            {percentage: 50, ads: adBreaks[2]},
-            {percentage: 100, ads: adBreaks[3]}
-          ]
+          adBreaks: [{position: 10, ads: [{url: ['MID_ROLL_1']}]}]
         }
       });
-      player.configure({sources: SourcesConfig.Mp4});
-      player.play();
-    });
-
-    it('Should play pre-roll, 2 mid-rolls and post-roll by mix position and percentage', done => {
-      const adBreaks = [[{url: ['PRE_ROLL_1']}, {url: ['PRE_ROLL_1']}], [{url: ['MID_ROLL_1']}], [{url: ['MID_ROLL_2']}], [{url: ['POST_ROLL']}]];
-      let adBreakIndex = 0;
-      const fakeCtrl = {
-        playAdNow: ads => {
-          try {
-            player._adsController && (player._adsController._adIsLoading = false);
-            ads.should.deep.equal(adBreaks[adBreakIndex]);
-            adBreakIndex++;
-            if (adBreakIndex === adBreaks.length) {
-              done();
-            }
-          } catch (e) {
-            done(e);
-          }
-        },
-        onPlaybackEnded: () => {
-          return Promise.resolve();
-        }
-      };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
-        return [fakeCtrl];
-      });
-      player.configure({
-        advertising: {
-          adBreaks: [
-            {position: 0, ads: [adBreaks[0][0]]},
-            {percentage: 0, ads: [adBreaks[0][1]]},
-            {percentage: 25, ads: adBreaks[1]},
-            {position: 2, ads: adBreaks[2]},
-            {percentage: 100, ads: adBreaks[3]}
-          ]
+      player.addEventListener(CustomEventType.PLAYBACK_ENDED, () => {
+        try {
+          player._adsController._configAdBreaks.every(adBreak => adBreak.played).should.be.true;
+          done();
+        } catch (e) {
+          done(e);
         }
       });
       player.configure({sources: SourcesConfig.Mp4});
