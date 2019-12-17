@@ -152,7 +152,14 @@ describe('AdsController', () => {
     });
 
     it('Should play the in reverse (snap-back)', done => {
-      const adBreaks = [[{url: ['PRE_ROLL']}], [{url: ['MID_ROLL_3']}], [{url: ['MID_ROLL_2']}], [{url: ['MID_ROLL_1']}], [{url: ['POST_ROLL']}]];
+      const adBreaks = [
+        [{url: ['PRE_ROLL']}],
+        [{url: ['MID_ROLL_3']}],
+        [{url: ['MID_ROLL_2']}],
+        [{url: ['MID_ROLL_1']}],
+        [{url: ['MID_ROLL_4']}],
+        [{url: ['POST_ROLL']}]
+      ];
       let adBreakIndex = 0;
       const fakeCtrl = {
         playAdNow: ads => {
@@ -187,7 +194,8 @@ describe('AdsController', () => {
             {position: 1, ads: adBreaks[3]},
             {position: 2, ads: adBreaks[2]},
             {position: 3, ads: adBreaks[1]},
-            {position: -1, ads: adBreaks[4]}
+            {position: 4, ads: adBreaks[4]},
+            {position: -1, ads: adBreaks[5]}
           ]
         }
       });
