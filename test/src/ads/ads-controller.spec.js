@@ -23,7 +23,7 @@ describe('AdsController', () => {
   });
 
   describe('advertising config', () => {
-    it('Should fire AD_MANIFEST_LOADED with the valid breaks only', done => {
+    it('Should fire AD_MANIFEST_LOADED with the uniq and valid breaks only', done => {
       const fakeCtrl = {
         playAdNow: () => {}
       };
@@ -32,7 +32,7 @@ describe('AdsController', () => {
       });
       player.addEventListener(AdEventType.AD_MANIFEST_LOADED, event => {
         try {
-          event.payload.adBreaksPosition.should.deep.equal(['0%', 0, 2, 2, '50%', 1, -1, '100%']);
+          event.payload.adBreaksPosition.should.deep.equal(['0%', 0, 2, '50%', 1, -1, '100%']);
           done(0);
         } catch (e) {
           done(e);

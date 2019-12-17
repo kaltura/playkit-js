@@ -161,8 +161,8 @@ class AdsController extends FakeEventTarget implements IAdsController {
         };
       });
     if (this._configAdBreaks.length) {
-      const adBreaksPosition = this._configAdBreaks.map(
-        adBreak => (typeof adBreak.percentage === 'number' ? adBreak.percentage + '%' : adBreak.position)
+      const adBreaksPosition = Array.from(
+        new Set(this._configAdBreaks.map(adBreak => (typeof adBreak.percentage === 'number' ? adBreak.percentage + '%' : adBreak.position)))
       );
       AdsController._logger.debug(AdEventType.AD_MANIFEST_LOADED, adBreaksPosition);
       this._player.dispatchEvent(new FakeEvent(AdEventType.AD_MANIFEST_LOADED, {adBreaksPosition}));
