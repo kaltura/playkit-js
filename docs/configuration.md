@@ -1114,19 +1114,65 @@ var config = {
 > > > ```js
 > > > {
 > > >   position: number,
+> > >   percentage?: number, // optional
+> > >   every?: number, // optional
 > > >   ads: Array<PKAdObject>
 > > > }
 > > > ```
 > > >
-> > > > ##### Type `PKAdObject`
+> > > > ##### `PKAdBreakObject.position`
 > > > >
-> > > > ```js
-> > > > {
-> > > >   url?: Array<string>,
-> > > >   response?: Array<string>,
-> > > >   bumper?: boolean
-> > > > }
-> > > > ```
+> > > > > ##### Type: `number`
+> > > > >
+> > > > > ##### Description: The ad break position in seconds.
+> > > >
+> > > > ##### `PKAdBreakObject.percentage`
+> > > >
+> > > > > ##### Type: `number`
+> > > > >
+> > > > > ##### Description: The ad break position in percentage of the media length instead of by seconds (optional).
+> > > >
+> > > > ##### `PKAdBreakObject.every`
+> > > >
+> > > > > ##### Type: `number`
+> > > > >
+> > > > > ##### Description: Play ad break every X seconds (optional).
+> > > >
+> > > > ##### `PKAdBreakObject.ads`
+> > > >
+> > > > > ##### Type: `Array<PKAdObject>`
+> > > > >
+> > > > > > ##### Type `PKAdObject`
+> > > > > >
+> > > > > > > ```js
+> > > > > > > {
+> > > > > > >   url?: Array<string>,
+> > > > > > >   response?: Array<string>,
+> > > > > > >   bumper?: boolean
+> > > > > > > }
+> > > > > > > ```
+> > > > > > >
+> > > > > > > ##### `PKAdObject.url`
+> > > > > > >
+> > > > > > > > ##### Type: `Array<string>`
+> > > > > > > >
+> > > > > > > > ##### Description: List of urls, each one specifies the ad tag url that is requested from the ad server.
+> > > > > > >
+> > > > > > > ##### `PKAdObject.response`
+> > > > > > >
+> > > > > > > > ##### Type: `Array<string>`
+> > > > > > > >
+> > > > > > > > ##### Description: List of XMLs, each one specifies a VAST 2.0 document to be used as the ads response instead of making a request via an ad tag url.
+> > > > > > >
+> > > > > > > ##### `PKAdObject.bumper`
+> > > > > > >
+> > > > > > > > ##### Type: `boolean`
+> > > > > > > >
+> > > > > > > > ##### Default: `false`
+> > > > > > > >
+> > > > > > > > ##### Description: Specifies whether this is a bumper.
+> > > > >
+> > > > > ##### Description: An array of ads to play (Ad pod).
 > >
 > > ##### Default: `[]`
 > >
@@ -1148,7 +1194,7 @@ var config = {
 > >         ]
 > >       },
 > >       {
-> >         position: 15,
+> >         percentage: 50,
 > >         ads: [
 > >           {
 > >             url: [VAST_URL, VAST_URL] //waterfalling
