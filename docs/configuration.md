@@ -1109,6 +1109,10 @@ var config = {
 > >
 > > ##### Type: `Array<PKAdBreakObject>`
 > >
+> > ##### Default: `[]`
+> >
+> > ##### Description: The ad breaks scheme
+> >
 > > > ##### Type `PKAdBreakObject`
 > > >
 > > > ```js
@@ -1142,6 +1146,8 @@ var config = {
 > > > >
 > > > > > ##### Type: `Array<PKAdObject>`
 > > > > >
+> > > > > ##### Description: An array of ads to play (Ad pod).
+> > > > >
 > > > > > > ##### Type `PKAdObject`
 > > > > > >
 > > > > > > > ```js
@@ -1171,12 +1177,6 @@ var config = {
 > > > > > > > > ##### Default: `false`
 > > > > > > > >
 > > > > > > > > ##### Description: Specifies whether this is a bumper.
-> > > > >
-> > > > > ##### Description: An array of ads to play (Ad pod).
-> >
-> > ##### Default: `[]`
-> >
-> > ##### Description: The ad breaks scheme
 > >
 > > #### Example:
 > >
