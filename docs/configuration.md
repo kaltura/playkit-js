@@ -1121,6 +1121,8 @@ var config = {
 > >
 > > ##### Description: Only play ad breaks scheduled after this time (in seconds). This setting is strictly after - e.g. setting playAdsAfterTime to 15 will cause the player to ignore an ad break scheduled to play at 15s.
 > >
+> > ##
+> >
 > > > ##### Type `PKAdBreakObject`
 > > >
 > > > ```js
@@ -1131,6 +1133,8 @@ var config = {
 > > >   ads: Array<PKAdObject>
 > > > }
 > > > ```
+> > >
+> > > ##
 > > >
 > > > > ##### `PKAdBreakObject.position`
 > > > >
@@ -1173,6 +1177,8 @@ var config = {
 > > > > >   bumper?: boolean
 > > > > > }
 > > > > > ```
+> > > > >
+> > > > > ##
 > > > > >
 > > > > > > ##### `PKAdObject.url`
 > > > > > >
