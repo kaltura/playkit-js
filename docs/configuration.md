@@ -1103,15 +1103,15 @@ var config = {
 >
 > ##### Description: Defines an advertising scheme (optional).
 >
-> > ##
-> >
+> ##
+>
 > > ### config.advertising.adBreaks
 > >
 > > ##### Type: `Array<PKAdBreakObject>`
 > >
-> > ##### Default: `[]`
-> >
 > > ##### Description: The ad breaks scheme
+> >
+> > ##
 > >
 > > > ##### Type `PKAdBreakObject`
 > > >
@@ -1126,57 +1126,71 @@ var config = {
 > > >
 > > > > ##### `PKAdBreakObject.position`
 > > > >
-> > > > > ##### Type: `number`
-> > > > >
-> > > > > ##### Description: The ad break position in seconds.
+> > > > ##### Type: `number`
+> > > >
+> > > > ##### Description: The ad break position in seconds.
+> > > >
+> > > > ##
 > > > >
 > > > > ##### `PKAdBreakObject.percentage`
 > > > >
-> > > > > ##### Type: `number`
-> > > > >
-> > > > > ##### Description: The ad break position in percentage of the media length instead of by seconds (optional).
+> > > > ##### Type: `number`
+> > > >
+> > > > ##### Description: The ad break position in percentage of the media length instead of by seconds (optional).
+> > > >
+> > > > ##
 > > > >
 > > > > ##### `PKAdBreakObject.every`
 > > > >
-> > > > > ##### Type: `number`
-> > > > >
-> > > > > ##### Description: Play ad break every X seconds (optional).
+> > > > ##### Type: `number`
+> > > >
+> > > > ##### Description: Play ad break every X seconds (optional).
+> > > >
+> > > > ##
 > > > >
 > > > > ##### `PKAdBreakObject.ads`
 > > > >
-> > > > > ##### Type: `Array<PKAdObject>`
+> > > > ##### Type: `Array<PKAdObject>`
+> > > >
+> > > > ##### Description: An array of ads to play (Ad pod).
+> > > >
+> > > > ##
+> > > >
+> > > > > ##### Type `PKAdObject`
 > > > > >
-> > > > > ##### Description: An array of ads to play (Ad pod).
+> > > > > ```js
+> > > > > {
+> > > > >   url?: Array<string>,
+> > > > >   response?: Array<string>,
+> > > > >   bumper?: boolean
+> > > > > }
+> > > > > ```
 > > > > >
-> > > > > > ##### Type `PKAdObject`
+> > > > > > ##### `PKAdObject.url`
 > > > > > >
-> > > > > > > ```js
-> > > > > > > {
-> > > > > > >   url?: Array<string>,
-> > > > > > >   response?: Array<string>,
-> > > > > > >   bumper?: boolean
-> > > > > > > }
-> > > > > > > ```
-> > > > > > >
-> > > > > > > ##### `PKAdObject.url`
-> > > > > > >
-> > > > > > > > ##### Type: `Array<string>`
-> > > > > > > >
-> > > > > > > > ##### Description: List of urls, each one specifies the ad tag url that is requested from the ad server.
-> > > > > > >
-> > > > > > > ##### `PKAdObject.response`
-> > > > > > >
-> > > > > > > > ##### Type: `Array<string>`
-> > > > > > > >
-> > > > > > > > ##### Description: List of XMLs, each one specifies a VAST 2.0 document to be used as the ads response instead of making a request via an ad tag url.
-> > > > > > >
-> > > > > > > ##### `PKAdObject.bumper`
-> > > > > > >
-> > > > > > > > ##### Type: `boolean`
-> > > > > > > >
-> > > > > > > > ##### Default: `false`
-> > > > > > > >
-> > > > > > > > ##### Description: Specifies whether this is a bumper.
+> > > > > > ##### Type: `Array<string>`
+> > > > > >
+> > > > > > ##### Description: List of urls, each one specifies the ad tag url that is requested from the ad server. The player will request the first url, if failed, it request the second and so on (aka waterfalling).
+> > > > > >
+> > > > > > ##
+> > > > > >
+> > > > > > ##### `PKAdObject.response`
+> > > > > >
+> > > > > > ##### Type: `Array<string>`
+> > > > > >
+> > > > > > ##### Description: List of XMLs, each one specifies a VAST 2.0 document to be used as the ads response instead of making a request via an ad tag url. The player will use the first XML, if failed, it will use the second and so on (aka waterfalling).
+> > > > > >
+> > > > > > ##
+> > > > > >
+> > > > > > ##### `PKAdObject.bumper`
+> > > > > >
+> > > > > > ##### Type: `boolean`
+> > > > > >
+> > > > > > ##### Default: `false`
+> > > > > >
+> > > > > > ##### Description: Specifies whether this is a bumper.
+> >
+> > ##
 > >
 > > #### Example:
 > >
