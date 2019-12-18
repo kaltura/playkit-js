@@ -441,12 +441,18 @@ describe('NativeAdapter: selectVideoTrack - progressive', function() {
 
   it('should select a new video track', done => {
     nativeInstance.load().then(() => {
-      (nativeInstance._videoElement.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.true;
-      (nativeInstance._videoElement.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.false;
-      nativeInstance.selectVideoTrack(new VideoTrack({index: 0}));
-      (nativeInstance._videoElement.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.false;
-      (nativeInstance._videoElement.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.true;
-      done();
+      try {
+        (nativeInstance._videoElement.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.true;
+        (nativeInstance._videoElement.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.false;
+        nativeInstance.selectVideoTrack(new VideoTrack({index: 0}));
+        setTimeout(() => {
+          (nativeInstance._videoElement.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.false;
+          (nativeInstance._videoElement.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.true;
+          done();
+        });
+      } catch (error) {
+        done(error);
+      }
     });
   });
 });
