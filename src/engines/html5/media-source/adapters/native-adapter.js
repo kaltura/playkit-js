@@ -350,15 +350,16 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   _setSrc(): void {
     const pkRequest: PKRequestObject = {url: this._sourceObj ? this._sourceObj.url : '', body: null, headers: {}};
-    let requestFilterPromise = Promise.resolve(pkRequest);
+    let requestFilterPromise;
     if (typeof Utils.Object.getPropertyPath(this._config, 'network.requestFilter') === 'function') {
       try {
         NativeAdapter._logger.debug('Apply request filter');
-        requestFilterPromise = this._config.network.requestFilter(RequestType.MANIFEST, pkRequest) || Promise.resolve(pkRequest);
+        requestFilterPromise = this._config.network.requestFilter(RequestType.MANIFEST, pkRequest);
       } catch (error) {
         requestFilterPromise = Promise.reject(error);
       }
     }
+    requestFilterPromise = requestFilterPromise || Promise.resolve(pkRequest);
     requestFilterPromise
       .then(updatedRequest => {
         this._videoElement.src = updatedRequest.url;

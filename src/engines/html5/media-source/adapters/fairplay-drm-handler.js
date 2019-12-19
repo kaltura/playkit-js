@@ -115,16 +115,17 @@ class FairplayDrmHandler {
       body: FairplayDrmHandler._base64EncodeUint8Array(message),
       headers: {}
     };
-    let requestFilterPromise = Promise.resolve(pkRequest);
+    let requestFilterPromise;
     const requestFilter = this._config.network.requestFilter;
     if (requestFilter) {
       this._logger.debug('Apply request filter');
       try {
-        requestFilterPromise = requestFilter(RequestType.LICENSE, pkRequest) || Promise.resolve(pkRequest);
+        requestFilterPromise = requestFilter(RequestType.LICENSE, pkRequest);
       } catch (error) {
         requestFilterPromise = Promise.reject(error);
       }
     }
+    requestFilterPromise = requestFilterPromise || Promise.resolve(pkRequest);
     requestFilterPromise
       .then(updatedRequest => {
         request.open('POST', updatedRequest.url, true);
@@ -184,10 +185,11 @@ class FairplayDrmHandler {
     this._logger.debug('Apply response filter');
     let responseFilterPromise;
     try {
-      responseFilterPromise = this._config.network.responseFilter(RequestType.LICENSE, response) || Promise.resolve(response);
+      responseFilterPromise = this._config.network.responseFilter(RequestType.LICENSE, response);
     } catch (error) {
       responseFilterPromise = Promise.reject(error);
     }
+    responseFilterPromise = responseFilterPromise || Promise.resolve(response);
     responseFilterPromise
       .then(updatedResponse => {
         this._keySession.update(updatedResponse.data);
