@@ -1048,7 +1048,7 @@ var config = {
 > >
 > > ##### Description: Defines a filter for requests. This filter takes the request and modifies it before it is sent. A request filter can run asynchronously by returning a promise; in this case, the request will not be sent until the promise is resolved.
 > >
-> > #### Example:
+> > #### Examples:
 > >
 > > ```js
 > > var config = {
@@ -1086,7 +1086,7 @@ var config = {
 > >
 > > ##### Description: Defines a filter for responses. This filter takes the response and modifies it before it is returned. A response filter can run asynchronously by returning a promise.
 > >
-> > #### Example:
+> > #### Examples:
 > >
 > > ```js
 > > var config = {
