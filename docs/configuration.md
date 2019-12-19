@@ -1094,8 +1094,8 @@ var config = {
 >
 > ```js
 > {
->   adBreaks: Array<PKAdBreakObject>,
->   playAdsAfterTime?: number
+>   playAdsAfterTime?: number,
+>   adBreaks: Array<PKAdBreakObject>
 > }
 > ```
 >
@@ -1105,14 +1105,6 @@ var config = {
 >
 > ##
 >
-> > ### config.advertising.adBreaks
-> >
-> > ##### Type: `Array<PKAdBreakObject>`
-> >
-> > ##### Description: The ad breaks scheme
-> >
-> > ##
-> >
 > > ### config.advertising.playAdsAfterTime
 > >
 > > ##### Type: `number`
@@ -1120,6 +1112,14 @@ var config = {
 > > ##### Default: `config.playback.startTime`
 > >
 > > ##### Description: Only play ad breaks scheduled after this time (in seconds). This setting is strictly after - e.g. setting playAdsAfterTime to 15 will cause the player to ignore an ad break scheduled to play at 15s.
+> >
+> > ##
+> >
+> > ### config.advertising.adBreaks
+> >
+> > ##### Type: `Array<PKAdBreakObject>`
+> >
+> > ##### Description: The ad breaks scheme
 > >
 > > ##
 > >
