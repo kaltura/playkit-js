@@ -1393,7 +1393,7 @@ describe('Player', function() {
         });
       });
 
-      it('should fire auto play failed and show the poster once get AD_AUTO_PLAY_FAILED', done => {
+      it('should fire auto play failed and show the poster once get AD_AUTOPLAY_FAILED', done => {
         player.addEventListener(CustomEventType.AUTOPLAY_FAILED, error => {
           try {
             player._posterManager._el.style.display.should.equal('');
@@ -1403,7 +1403,7 @@ describe('Player', function() {
             done(e);
           }
         });
-        player.dispatchEvent(new FakeEvent(AdEventType.AD_AUTO_PLAY_FAILED, {error: 'mock failure'}));
+        player.dispatchEvent(new FakeEvent(AdEventType.AD_AUTOPLAY_FAILED, {error: 'mock failure'}));
       });
     });
 
