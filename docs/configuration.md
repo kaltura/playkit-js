@@ -1184,7 +1184,7 @@ var config = {
 > > > > > >
 > > > > > > ##### Type: `Array<string>`
 > > > > > >
-> > > > > > ##### Description: List of urls, each one specifies the ad tag url that is requested from the ad server. The player will request the first url, if failed, it request the second and so on (aka waterfalling).
+> > > > > > ##### Description: List of urls, each one specifies the ad tag url that is requested from the ad server. The player will request the first url, if failed, it will request the second url and so on (aka waterfalling).
 > > > > > >
 > > > > > > ##
 > > > > > >
