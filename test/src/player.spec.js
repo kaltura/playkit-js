@@ -1379,10 +1379,10 @@ describe('Player', function() {
       });
 
       it('should fire auto play failed and show the poster once get PLAY_FAILED', done => {
-        player.addEventListener(CustomEventType.AUTOPLAY_FAILED, error => {
+        player.addEventListener(CustomEventType.AUTOPLAY_FAILED, event => {
           try {
             player._posterManager._el.style.display.should.equal('');
-            error.payload.error.should.equal('mock failure');
+            event.payload.error.should.equal('mock failure');
             done();
           } catch (e) {
             done(e);
@@ -1394,10 +1394,10 @@ describe('Player', function() {
       });
 
       it('should fire auto play failed and show the poster once get AD_AUTOPLAY_FAILED', done => {
-        player.addEventListener(CustomEventType.AUTOPLAY_FAILED, error => {
+        player.addEventListener(CustomEventType.AUTOPLAY_FAILED, event => {
           try {
             player._posterManager._el.style.display.should.equal('');
-            error.payload.error.should.equal('mock failure');
+            event.payload.error.should.equal('mock failure');
             done();
           } catch (e) {
             done(e);
