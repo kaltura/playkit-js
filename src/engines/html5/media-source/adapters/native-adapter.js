@@ -122,14 +122,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @type {number}
    * @private
    */
-  _lastTimeDetach: number = 0;
+  _lastTimeDetach: ?number = null;
 
   /**
    * The start time after attach
    * @type {number}
    * @private
    */
-  _startTimeAttach: number = 0;
+  _startTimeAttach: ?number = null;
 
   /**
    * Checks if NativeAdapter can play a given mime type.
