@@ -122,14 +122,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @type {number}
    * @private
    */
-  _lastTimeDetach: ?number = null;
+  _lastTimeDetach: number = NaN;
 
   /**
    * The start time after attach
    * @type {number}
    * @private
    */
-  _startTimeAttach: ?number = null;
+  _startTimeAttach: number = NaN;
 
   /**
    * Checks if NativeAdapter can play a given mime type.
@@ -357,7 +357,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   attachMediaSource(): void {
     this._startTimeAttach = this._lastTimeDetach;
-    this._lastTimeDetach = null;
+    this._lastTimeDetach = NaN;
   }
   /**
    * detach media - will remove the media source from handling the video
