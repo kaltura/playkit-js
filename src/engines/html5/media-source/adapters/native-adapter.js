@@ -415,7 +415,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     } else {
       this._eventManager.listenOnce(this._videoElement, Html5EventType.CAN_PLAY, parseTracksAndResolve.bind(this));
     }
-    this._startTimeAttach = null;
+    this._startTimeAttach = NaN;
   }
 
   _onTimeUpdate(): void {
@@ -479,6 +479,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._loadPromiseReject = null;
       this._liveEdge = 0;
       this._lastTimeUpdate = 0;
+      this._lastTimeDetach = NaN;
+      this._startTimeAttach = NaN;
       this._clearHeartbeatTimeout();
       if (this._liveDurationChangeInterval) {
         clearInterval(this._liveDurationChangeInterval);
