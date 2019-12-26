@@ -17,6 +17,8 @@ import Error from '../../src/error/error';
 import {Object as PKObject} from '../../src/utils/util';
 import {LabelOptions} from '../../src/track/label-options';
 import {EngineProvider} from '../../src/engines/engine-provider';
+import {AdEventType} from '../../src/ads/ad-event-type';
+import FakeEvent from '../../src/event/fake-event';
 
 const targetId = 'player-placeholder_player.spec';
 let sourcesConfig = PKObject.copyDeep(SourcesConfig);
@@ -1347,19 +1349,28 @@ describe('Player', function() {
       let config;
       let player;
       let playerContainer;
+      let sandbox;
 
       before(() => {
         playerContainer = createElement('DIV', targetId);
       });
 
       beforeEach(() => {
-        config = getConfigStructure();
+        sandbox = sinon.sandbox.create();
+        config = PKObject.mergeDeep(getConfigStructure(), {
+          sources: sourcesConfig.Mp4,
+          playback: {
+            autoplay: true
+          }
+        });
+        config.sources = sourcesConfig.Mp4;
         player = new Player(config);
         playerContainer.appendChild(player.getView());
       });
 
       afterEach(() => {
         player.destroy();
+        sandbox.restore();
       });
 
       after(() => {
@@ -1367,26 +1378,32 @@ describe('Player', function() {
         removeElement(targetId);
       });
 
-      it('should fire auto play failed and show the poster', done => {
-        player.addEventListener(CustomEventType.AUTOPLAY_FAILED, () => {
-          player._posterManager._el.style.display.should.equal('');
-          done();
-        });
-        player.configure({
-          playback: {
-            autoplay: true
-          },
-          sources: {
-            poster: '//cdntesting.qa.mkaltura.com/p/1091/sp/109100/thumbnail/entry_id/0_wifqaipd/version/100042/height/360/width/640',
-            progressive: [
-              {
-                mimetype: 'video/mp4',
-                url: 'bad/url',
-                id: '1_rsrdfext_10081,url'
-              }
-            ]
+      it('should fire auto play failed and show the poster once get PLAY_FAILED', done => {
+        player.addEventListener(CustomEventType.AUTOPLAY_FAILED, event => {
+          try {
+            player._posterManager._el.style.display.should.equal('');
+            event.payload.error.should.equal('mock failure');
+            done();
+          } catch (e) {
+            done(e);
           }
         });
+        sandbox.stub(player._engine._el, 'play').callsFake(function() {
+          return Promise.reject('mock failure');
+        });
+      });
+
+      it('should fire auto play failed and show the poster once get AD_AUTOPLAY_FAILED', done => {
+        player.addEventListener(CustomEventType.AUTOPLAY_FAILED, event => {
+          try {
+            player._posterManager._el.style.display.should.equal('');
+            event.payload.error.should.equal('mock failure');
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+        player.dispatchEvent(new FakeEvent(AdEventType.AD_AUTOPLAY_FAILED, {error: 'mock failure'}));
       });
     });
 

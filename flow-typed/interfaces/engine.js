@@ -15,7 +15,7 @@ declare interface IEngine {
   destroy(): void;
   attach(): void;
   detach(): void;
-  play(): void;
+  play(): ?Promise<*>;
   pause(): void;
   load(startTime: ?number): Promise<Object>;
   reset(): void;
