@@ -17,6 +17,8 @@ import Error from '../../src/error/error';
 import {Object as PKObject} from '../../src/utils/util';
 import {LabelOptions} from '../../src/track/label-options';
 import {EngineProvider} from '../../src/engines/engine-provider';
+import {AdEventType} from '../../src/ads/ad-event-type';
+import FakeEvent from '../../src/event/fake-event';
 
 const targetId = 'player-placeholder_player.spec';
 let sourcesConfig = PKObject.copyDeep(SourcesConfig);
@@ -1340,6 +1342,68 @@ describe('Player', function() {
         });
         player.load();
         player.play();
+      });
+    });
+
+    describe('auto play failed', function() {
+      let config;
+      let player;
+      let playerContainer;
+      let sandbox;
+
+      before(() => {
+        playerContainer = createElement('DIV', targetId);
+      });
+
+      beforeEach(() => {
+        sandbox = sinon.sandbox.create();
+        config = PKObject.mergeDeep(getConfigStructure(), {
+          sources: sourcesConfig.Mp4,
+          playback: {
+            autoplay: true
+          }
+        });
+        config.sources = sourcesConfig.Mp4;
+        player = new Player(config);
+        playerContainer.appendChild(player.getView());
+      });
+
+      afterEach(() => {
+        player.destroy();
+        sandbox.restore();
+      });
+
+      after(() => {
+        removeVideoElementsFromTestPage();
+        removeElement(targetId);
+      });
+
+      it('should fire auto play failed and show the poster once get PLAY_FAILED', done => {
+        player.addEventListener(CustomEventType.AUTOPLAY_FAILED, event => {
+          try {
+            player._posterManager._el.style.display.should.equal('');
+            event.payload.error.should.equal('mock failure');
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+        sandbox.stub(player._engine._el, 'play').callsFake(function() {
+          return Promise.reject('mock failure');
+        });
+      });
+
+      it('should fire auto play failed and show the poster once get AD_AUTOPLAY_FAILED', done => {
+        player.addEventListener(CustomEventType.AUTOPLAY_FAILED, event => {
+          try {
+            player._posterManager._el.style.display.should.equal('');
+            event.payload.error.should.equal('mock failure');
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+        player.dispatchEvent(new FakeEvent(AdEventType.AD_AUTOPLAY_FAILED, {error: 'mock failure'}));
       });
     });
 

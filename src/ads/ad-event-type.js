@@ -95,7 +95,11 @@ const AdEventType: PKEventTypes = {
   /**
    * Fired when an ad waterfalling failed
    */
-  AD_WATERFALLING_FAILED: 'adwaterfallingfailed'
+  AD_WATERFALLING_FAILED: 'adwaterfallingfailed',
+  /**
+   * Fires when browser fails to autoplay an ad.
+   */
+  AD_AUTOPLAY_FAILED: 'adautoplayfailed'
 };
 
 export {AdEventType};
