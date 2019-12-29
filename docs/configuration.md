@@ -1188,9 +1188,10 @@ var config = {
 > > > >
 > > > > ##
 > > > > 
-> > > > Note. `position`, `percentage` and `every` are several options to configure the ad break position.  
+> > > > **Important**. `position`, `percentage` and `every` are several options to configure the ad break position.
 > > > > Only one should be provided. If none will be provided, the ad break will be ignored.
-> > > > If more than one will be provided, only one configuration will be considered, by the following priority: 1. `position` 2. `percentage` 3. `every`.
+> > > > If more than one will be provided, only one configuration will be considered, by the following priority:  
+> > > > 1. `position` 2. `percentage` 3. `every`.
 > > > >
 > > > > ##
 > > > >
