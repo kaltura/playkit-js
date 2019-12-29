@@ -33,7 +33,7 @@ describe('AdsController', () => {
       player.addEventListener(AdEventType.AD_MANIFEST_LOADED, event => {
         try {
           event.payload.adBreaksPosition.should.deep.equal(['0%', 0, 2, '50%', 1, -1, '100%']);
-          done(0);
+          done();
         } catch (e) {
           done(e);
         }
@@ -588,6 +588,71 @@ describe('AdsController', () => {
           done();
         } catch (e) {
           done(e);
+        }
+      });
+      player.configure({sources: SourcesConfig.Mp4});
+      player.play();
+    });
+
+    it('Should validate only one tine configured', done => {
+      const fakeCtrl = {
+        playAdNow: () => {}
+      };
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+        return [fakeCtrl];
+      });
+      player.addEventListener(AdEventType.AD_MANIFEST_LOADED, event => {
+        try {
+          event.payload.adBreaksPosition.should.deep.equal([10, '60%', '5s', 0.5, 1, '80%', 2]);
+        } catch (e) {
+          done(e);
+        }
+      });
+      player.addEventListener(CustomEventType.FIRST_PLAY, () => {
+        try {
+          (!!player._adsController._configAdBreaks[0].position).should.be.true;
+          (!!player._adsController._configAdBreaks[0].percentage).should.be.false;
+          (!!player._adsController._configAdBreaks[0].every).should.be.false;
+
+          (!!player._adsController._configAdBreaks[1].position).should.be.true;
+          (!!player._adsController._configAdBreaks[1].percentage).should.be.false;
+          (!!player._adsController._configAdBreaks[1].every).should.be.false;
+
+          (!!player._adsController._configAdBreaks[2].position).should.be.true;
+          (!!player._adsController._configAdBreaks[2].percentage).should.be.false;
+          (!!player._adsController._configAdBreaks[2].every).should.be.false;
+
+          (!!player._adsController._configAdBreaks[3].position).should.be.true;
+          (!!player._adsController._configAdBreaks[3].percentage).should.be.true;
+          (!!player._adsController._configAdBreaks[3].every).should.be.false;
+
+          (!!player._adsController._configAdBreaks[4].position).should.be.true;
+          (!!player._adsController._configAdBreaks[4].percentage).should.be.true;
+          (!!player._adsController._configAdBreaks[4].every).should.be.false;
+
+          (!!player._adsController._configAdBreaks[5].position).should.be.true;
+          (!!player._adsController._configAdBreaks[5].percentage).should.be.false;
+          (!!player._adsController._configAdBreaks[5].every).should.be.true;
+
+          (!!player._adsController._configAdBreaks[6].position).should.be.true;
+          (!!player._adsController._configAdBreaks[6].percentage).should.be.false;
+          (!!player._adsController._configAdBreaks[6].every).should.be.false;
+          done();
+        } catch (e) {
+          done(e);
+        }
+      });
+      player.configure({
+        advertising: {
+          adBreaks: [
+            {position: 10, ads: [{url: ['']}]},
+            {percentage: 60, ads: [{url: ['']}]},
+            {every: 5, ads: [{url: ['']}]},
+            {position: 0.5, percentage: 50, ads: [{url: ['']}]},
+            {position: 1, every: 15, ads: [{url: ['']}]},
+            {percentage: 80, every: 10, ads: [{url: ['']}]},
+            {position: 2, percentage: 60, every: 20, ads: [{url: ['']}]}
+          ]
         }
       });
       player.configure({sources: SourcesConfig.Mp4});

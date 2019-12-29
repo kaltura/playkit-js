@@ -154,6 +154,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
           (typeof adBreak.every === 'number' || typeof adBreak.position === 'number' || typeof adBreak.percentage === 'number') && adBreak.ads.length
       )
       .map(adBreak => {
+        this._validateOneTimeConfig(adBreak);
         let position = adBreak.position;
         adBreak.percentage === 0 && (position = 0);
         adBreak.percentage === 100 && (position = -1);
@@ -176,6 +177,23 @@ class AdsController extends FakeEventTarget implements IAdsController {
           this._handleConfiguredMidrolls();
         }
       });
+    }
+  }
+
+  _validateOneTimeConfig(adBreak: PKAdBreakObject): void {
+    if (typeof adBreak.position === 'number') {
+      if (typeof adBreak.percentage === 'number') {
+        AdsController._logger.warn(`Validate ad break - ignore percentage ${adBreak.percentage} as position ${adBreak.position} configured`);
+        delete adBreak.percentage;
+      }
+      if (typeof adBreak.every === 'number') {
+        AdsController._logger.warn(`Validate ad break - ignore every ${adBreak.every} as position ${adBreak.position} configured`);
+        delete adBreak.every;
+      }
+    }
+    if (typeof adBreak.percentage === 'number' && typeof adBreak.every === 'number') {
+      AdsController._logger.warn(`Validate ad break - ignore every ${adBreak.every} as percentage ${adBreak.percentage} configured`);
+      delete adBreak.every;
     }
   }
 

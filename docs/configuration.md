@@ -1140,7 +1140,7 @@ var config = {
 > > > >
 > > > > ##### Type: `number`
 > > > >
-> > > > ##### Description: The ad break position in seconds.
+> > > > ##### Description: The position, in seconds, to show the ad break. 
 > > > >
 > > > > ##
 > > > >
@@ -1148,7 +1148,7 @@ var config = {
 > > > >
 > > > > ##### Type: `number`
 > > > >
-> > > > ##### Description: The ad break position in percentage of the media length instead of by seconds (optional).
+> > > > ##### Description: Alternative parameter to `position`. The position, in percentage of the media length, to show the ad break (optional).
 > > > >
 > > > > ##
 > > > >
@@ -1156,7 +1156,13 @@ var config = {
 > > > >
 > > > > ##### Type: `number`
 > > > >
-> > > > ##### Description: Play ad break every X seconds (optional).
+> > > > ##### Description: Alternative parameter to `position`. Play ad break every X seconds (optional).
+> > > >
+> > > > ##
+> > > > 
+> > > > Note. `position`, `percentage` and `every` are several options to configure the ad break position.  
+> > > > Only one should be provided. If none will be provided, the ad break will be ignored.
+> > > > If more than one will be provided, only one configuration will be considered, by the following priority: 1. `position` 2. `percentage` 3. `every`.
 > > > >
 > > > > ##
 > > > >
