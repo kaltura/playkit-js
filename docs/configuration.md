@@ -1122,8 +1122,8 @@ var config = {
 >
 > ```js
 > {
->   adBreaks: Array<PKAdBreakObject>,
->   playAdsAfterTime?: number
+>   playAdsAfterTime?: number,
+>   adBreaks: Array<PKAdBreakObject>
 > }
 > ```
 >
@@ -1131,34 +1131,115 @@ var config = {
 >
 > ##### Description: Defines an advertising scheme (optional).
 >
+> ##
+>
+> > ### config.advertising.playAdsAfterTime
+> >
+> > ##### Type: `number`
+> >
+> > ##### Default: `config.playback.startTime`
+> >
+> > ##### Description: Only play ad breaks scheduled after this time (in seconds). This setting is strictly after - e.g. setting playAdsAfterTime to 15 will cause the player to ignore an ad break scheduled to play at 15s.
+> >
 > > ##
 > >
 > > ### config.advertising.adBreaks
 > >
 > > ##### Type: `Array<PKAdBreakObject>`
 > >
+> > ##### Description: The ad breaks scheme
+> >
+> > ##
+> >
 > > > ##### Type `PKAdBreakObject`
 > > >
 > > > ```js
 > > > {
 > > >   position: number,
+> > >   percentage?: number, // optional
+> > >   every?: number, // optional
 > > >   ads: Array<PKAdObject>
 > > > }
 > > > ```
 > > >
-> > > > ##### Type `PKAdObject`
+> > > ##
+> > >
+> > > > ##### `PKAdBreakObject.position`
 > > > >
-> > > > ```js
-> > > > {
-> > > >   url?: Array<string>,
-> > > >   response?: Array<string>,
-> > > >   bumper?: boolean
-> > > > }
-> > > > ```
+> > > > ##### Type: `number`
+> > > >
+> > > > ##### Description: The position, in seconds, to show the ad break. 
+> > > >
+> > > > ##
+> > > >
+> > > > ##### `PKAdBreakObject.percentage`
+> > > >
+> > > > ##### Type: `number`
+> > > >
+> > > > ##### Description: Alternative parameter to `position`. The position, in percentage of the media length, to show the ad break (optional).
+> > > >
+> > > > ##
+> > > >
+> > > > ##### `PKAdBreakObject.every`
+> > > >
+> > > > ##### Type: `number`
+> > > >
+> > > > ##### Description: Alternative parameter to `position`. Play ad break every X seconds (optional).
+> > > >
+> > > > ##
+> > > > 
+> > > > **Important**. `position`, `percentage` and `every` are several options to configure the ad break position.
+> > > > Only one should be provided. If none will be provided, the ad break will be ignored.
+> > > > If more than one will be provided, only one configuration will be considered, by the following priority:  
+> > > > 1. `position` 2. `percentage` 3. `every`.
+> > > >
+> > > > ##
+> > > >
+> > > > ##### `PKAdBreakObject.ads`
+> > > >
+> > > > ##### Type: `Array<PKAdObject>`
+> > > >
+> > > > ##### Description: An array of ads to play (Ad pod).
+> > > >
+> > > > ##
+> > > >
+> > > > > ##### Type `PKAdObject`
+> > > > >
+> > > > > ```js
+> > > > > {
+> > > > >   url?: Array<string>,
+> > > > >   response?: Array<string>,
+> > > > >   bumper?: boolean
+> > > > > }
+> > > > > ```
+> > > > >
+> > > > > ##
+> > > > >
+> > > > > > ##### `PKAdObject.url`
+> > > > > >
+> > > > > > ##### Type: `Array<string>`
+> > > > > >
+> > > > > > ##### Description: List of urls, each one specifies the ad tag url that is requested from the ad server. The player will request the first url, if failed, it will request the second url and so on (aka waterfalling).
+> > > > > >
+> > > > > > ##
+> > > > > >
+> > > > > > ##### `PKAdObject.response`
+> > > > > >
+> > > > > > ##### Type: `Array<string>`
+> > > > > >
+> > > > > > ##### Description: List of XMLs, each one specifies a VAST 2.0 document to be used as the ads response instead of making a request via an ad tag url. The player will use the first XML, if failed, it will use the second and so on (aka waterfalling).
+> > > > > >
+> > > > > > ##
+> > > > > >
+> > > > > > ##### `PKAdObject.bumper`
+> > > > > >
+> > > > > > ##### Type: `boolean`
+> > > > > >
+> > > > > > ##### Default: `false`
+> > > > > >
+> > > > > > ##### Description: Specifies whether this is a bumper.
 > >
-> > ##### Default: `[]`
-> >
-> > ##### Description: The ad breaks scheme
+> > ##
 > >
 > > #### Example:
 > >
@@ -1176,7 +1257,7 @@ var config = {
 > >         ]
 > >       },
 > >       {
-> >         position: 15,
+> >         percentage: 50,
 > >         ads: [
 > >           {
 > >             url: [VAST_URL, VAST_URL] //waterfalling
@@ -1198,16 +1279,6 @@ var config = {
 > >   }
 > > };
 > > ```
-> >
-> > ##
-> >
-> > ### config.advertising.playAdsAfterTime
-> >
-> > ##### Type: `number`
-> >
-> > ##### Default: `config.playback.startTime`
-> >
-> > ##### Description: Only play ad breaks scheduled after this time (in seconds). This setting is strictly after - e.g. setting playAdsAfterTime to 15 will cause the player to ignore an ad break scheduled to play at 15s.
 
 ##
 

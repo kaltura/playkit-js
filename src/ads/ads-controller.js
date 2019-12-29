@@ -26,7 +26,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _adsPluginControllers: Array<IAdsPluginController>;
   _allAdsCompleted: boolean;
   _eventManager: EventManager;
-  _adBreaksLayout: Array<number>;
+  _adBreaksLayout: Array<number | string>;
   _adBreak: ?AdBreak;
   _ad: ?Ad;
   _adPlayed: boolean;
@@ -63,9 +63,9 @@ class AdsController extends FakeEventTarget implements IAdsController {
   /**
    * @instance
    * @memberof AdsController
-   * @returns {Array<number>} - The ad breaks layout (cue points).
+   * @returns {Array<number|string>} - The ad breaks layout (cue points).
    */
-  getAdBreaksLayout(): Array<number> {
+  getAdBreaksLayout(): Array<number | string> {
     return this._adBreaksLayout;
   }
 
@@ -143,36 +143,95 @@ class AdsController extends FakeEventTarget implements IAdsController {
     this._eventManager.listen(this._player, AdEventType.AD_ERROR, event => this._onAdError(event));
     this._eventManager.listen(this._player, CustomEventType.PLAYER_RESET, () => this._reset());
     this._eventManager.listenOnce(this._player, Html5EventType.ENDED, () => this._onEnded());
+    this._eventManager.listenOnce(this._player, CustomEventType.PLAYBACK_ENDED, () => this._onPlaybackEnded());
   }
 
   _handleConfiguredAdBreaks(): void {
     const playAdsAfterTime = this._player.config.advertising.playAdsAfterTime || this._player.config.playback.startTime;
     this._configAdBreaks = this._player.config.advertising.adBreaks
-      .filter(adBreak => typeof adBreak.position === 'number' && adBreak.ads.length)
-      .map(adBreak => ({
-        ...adBreak,
-        ads: adBreak.ads.slice(),
-        played: -1 < adBreak.position && adBreak.position <= playAdsAfterTime
-      }))
-      .sort((a, b) => a.position - b.position);
+      .filter(
+        adBreak =>
+          (typeof adBreak.every === 'number' || typeof adBreak.position === 'number' || typeof adBreak.percentage === 'number') && adBreak.ads.length
+      )
+      .map(adBreak => {
+        this._validateOneTimeConfig(adBreak);
+        let position = adBreak.position;
+        adBreak.percentage === 0 && (position = 0);
+        adBreak.percentage === 100 && (position = -1);
+        adBreak.every && (position = adBreak.every);
+        return {
+          position,
+          percentage: adBreak.percentage,
+          every: adBreak.every,
+          ads: adBreak.ads.slice(),
+          played: -1 < position && position <= playAdsAfterTime
+        };
+      });
     if (this._configAdBreaks.length) {
-      const adBreaksPosition = this._configAdBreaks.map(adBreak => adBreak.position);
-      AdsController._logger.debug(AdEventType.AD_MANIFEST_LOADED, adBreaksPosition);
-      this._player.dispatchEvent(new FakeEvent(AdEventType.AD_MANIFEST_LOADED, {adBreaksPosition}));
-      if (adBreaksPosition.includes(0)) {
-        this._handleConfiguredPreroll();
-      }
-      if (adBreaksPosition.some(position => position > 0)) {
-        this._handleConfiguredMidrolls();
-      }
+      this._dispatchAdManifestLoaded();
+      this._handleConfiguredPreroll();
+      this._eventManager.listenOnce(this._player, Html5EventType.DURATION_CHANGE, () => {
+        this._handleEveryAndPercentage();
+        this._configAdBreaks.sort((a, b) => a.position - b.position);
+        if (this._configAdBreaks.some(adBreak => adBreak.position > 0)) {
+          this._handleConfiguredMidrolls();
+        }
+      });
     }
   }
 
-  _handleConfiguredPreroll(): void {
-    const adBreak = this._configAdBreaks.find(adBreak => adBreak.position === 0 && !adBreak.played);
-    if (adBreak) {
-      this._playAdBreak(adBreak);
+  _validateOneTimeConfig(adBreak: PKAdBreakObject): void {
+    if (typeof adBreak.position === 'number') {
+      if (typeof adBreak.percentage === 'number') {
+        AdsController._logger.warn(`Validate ad break - ignore percentage ${adBreak.percentage} as position ${adBreak.position} configured`);
+        delete adBreak.percentage;
+      }
+      if (typeof adBreak.every === 'number') {
+        AdsController._logger.warn(`Validate ad break - ignore every ${adBreak.every} as position ${adBreak.position} configured`);
+        delete adBreak.every;
+      }
     }
+    if (typeof adBreak.percentage === 'number' && typeof adBreak.every === 'number') {
+      AdsController._logger.warn(`Validate ad break - ignore every ${adBreak.every} as percentage ${adBreak.percentage} configured`);
+      delete adBreak.every;
+    }
+  }
+
+  _dispatchAdManifestLoaded(): void {
+    const adBreaksPosition = Array.from(
+      new Set(
+        this._configAdBreaks.map(
+          adBreak =>
+            (adBreak.every && adBreak.every + 's') || (typeof adBreak.percentage === 'number' && adBreak.percentage + '%') || adBreak.position
+        )
+      )
+    );
+    AdsController._logger.debug(AdEventType.AD_MANIFEST_LOADED, adBreaksPosition);
+    this._player.dispatchEvent(new FakeEvent(AdEventType.AD_MANIFEST_LOADED, {adBreaksPosition}));
+  }
+
+  _handleConfiguredPreroll(): void {
+    const prerolls = this._configAdBreaks.filter(adBreak => adBreak.position === 0 && !adBreak.played);
+    const mergedPreroll = this._mergeAdBreaks(prerolls);
+    mergedPreroll && this._playAdBreak(mergedPreroll);
+  }
+
+  _handleEveryAndPercentage(): void {
+    this._configAdBreaks.forEach(adBreak => {
+      if (this._player.duration && adBreak.every) {
+        let currentPosition = 2 * adBreak.every;
+        while (currentPosition <= this._player.duration) {
+          this._configAdBreaks.push({
+            position: currentPosition,
+            ads: adBreak.ads,
+            played: false
+          });
+          currentPosition += adBreak.every;
+        }
+      } else if (this._player.duration && adBreak.percentage && !adBreak.position) {
+        adBreak.position = Math.floor((this._player.duration * adBreak.percentage) / 100);
+      }
+    });
   }
 
   _handleConfiguredMidrolls(): void {
@@ -182,10 +241,12 @@ class AdsController extends FakeEventTarget implements IAdsController {
           adBreak => !adBreak.played && this._player.currentTime && adBreak.position <= this._player.currentTime && adBreak.position > this._snapback
         );
         if (adBreaks.length) {
-          const lastAdBreak = adBreaks[adBreaks.length - 1];
-          this._snapback = lastAdBreak.position;
+          const maxPosition = adBreaks[adBreaks.length - 1].position;
+          const lastAdBreaks = adBreaks.filter(adBreak => adBreak.position === maxPosition);
+          this._snapback = maxPosition;
           AdsController._logger.debug(`Set snapback value ${this._snapback}`);
-          this._playAdBreak(lastAdBreak);
+          const mergedAdBreak = this._mergeAdBreaks(lastAdBreaks);
+          mergedAdBreak && this._playAdBreak(mergedAdBreak);
         }
       }
     });
@@ -267,7 +328,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
     if (this._adIsLoading) {
       return;
     }
-    if (!this._adBreaksLayout.includes(-1)) {
+    if (!(this._adBreaksLayout.includes(-1) || this._adBreaksLayout.includes('100%'))) {
       this._allAdsCompleted = true;
     } else {
       const bumperCtrl = this._adsPluginControllers.find(controller => this._isBumper(controller));
@@ -284,17 +345,32 @@ class AdsController extends FakeEventTarget implements IAdsController {
     }
   }
 
+  _onPlaybackEnded(): void {
+    this._configAdBreaks.forEach(adBreak => (adBreak.played = true));
+  }
+
   _handleConfiguredPostroll(): void {
-    const adBreak = this._configAdBreaks.find(adBreak => !adBreak.played && adBreak.position === -1);
-    if (adBreak) {
-      this._configAdBreaks.forEach(adBreak => (adBreak.played = true));
-      this._playAdBreak(adBreak);
+    const postrolls = this._configAdBreaks.filter(adBreak => !adBreak.played && adBreak.position === -1);
+    if (postrolls.length) {
+      const mergedPostroll = this._mergeAdBreaks(postrolls);
+      mergedPostroll && this._playAdBreak(mergedPostroll);
     }
   }
 
   _reset(): void {
     this._eventManager.removeAll();
     this._init();
+  }
+
+  _mergeAdBreaks(adBreaks: Array<RunTimeAdBreakObject>): ?RunTimeAdBreakObject {
+    if (adBreaks.length) {
+      adBreaks.forEach(adBreak => (adBreak.played = true));
+      return {
+        position: adBreaks[0].position,
+        ads: adBreaks.reduce((result, adBreak) => result.concat(adBreak.ads), []),
+        played: false
+      };
+    }
   }
 }
 
