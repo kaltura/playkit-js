@@ -2,12 +2,14 @@ import NativeAdapter from '../../../../../../src/engines/html5/media-source/adap
 import VideoTrack from '../../../../../../src/track/video-track';
 import AudioTrack from '../../../../../../src/track/audio-track';
 import TextTrack from '../../../../../../src/track/text-track';
+import {RequestType} from '../../../../../../src/request-type';
 import {removeVideoElementsFromTestPage} from '../../../../utils/test-utils';
 import sourcesConfig from '../../../../configs/sources.json';
 import * as Utils from '../../../../../../src/utils/util';
 import Env from '../../../../../../src/utils/env';
 import {CustomEventType, Html5EventType} from '../../../../../../src/event/event-type';
 import FairPlay from '../../../../../../src/drm/fairplay';
+import Error from '../../../../../../src/error/error';
 
 describe('NativeAdapter: isSupported', () => {
   it('should be supported', () => {
@@ -441,12 +443,18 @@ describe('NativeAdapter: selectVideoTrack - progressive', function() {
 
   it('should select a new video track', done => {
     nativeInstance.load().then(() => {
-      (nativeInstance._videoElement.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.true;
-      (nativeInstance._videoElement.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.false;
-      nativeInstance.selectVideoTrack(new VideoTrack({index: 0}));
-      (nativeInstance._videoElement.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.false;
-      (nativeInstance._videoElement.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.true;
-      done();
+      try {
+        (nativeInstance._videoElement.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.true;
+        (nativeInstance._videoElement.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.false;
+        nativeInstance.selectVideoTrack(new VideoTrack({index: 0}));
+        setTimeout(() => {
+          (nativeInstance._videoElement.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.false;
+          (nativeInstance._videoElement.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.true;
+          done();
+        });
+      } catch (error) {
+        done(error);
+      }
     });
   });
 });
@@ -948,4 +956,134 @@ describe('NativeAdapter: getStartTimeOfDvrWindow', () => {
         });
     });
   }
+});
+
+describe('NativeAdapter: request filter', () => {
+  let video, nativeInstance;
+
+  beforeEach(() => {
+    video = document.createElement('video');
+  });
+
+  afterEach(() => {
+    nativeInstance.destroy();
+    nativeInstance = null;
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+  });
+
+  const validateFilterError = e => {
+    e.payload.severity.should.equal(Error.Severity.CRITICAL);
+    e.payload.category.should.equal(Error.Category.NETWORK);
+    e.payload.code.should.equal(Error.Code.REQUEST_FILTER_ERROR);
+    e.payload.data.should.equal('error');
+  };
+
+  it('should apply void filter for manifest', done => {
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {
+      network: {
+        requestFilter: function(type, request) {
+          if (type === RequestType.MANIFEST) {
+            request.url += '&test';
+          }
+        }
+      }
+    });
+    sinon.stub(video, 'src').set(value => {
+      try {
+        value.indexOf('&test').should.be.gt(-1);
+        done();
+      } catch (e) {
+        done(e);
+      }
+    });
+    nativeInstance.load();
+  });
+
+  it('should apply promise filter for manifest', done => {
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {
+      network: {
+        requestFilter: function(type, request) {
+          if (type === RequestType.MANIFEST) {
+            return new Promise(resolve => {
+              request.url += '&test';
+              resolve(request);
+            });
+          }
+        }
+      }
+    });
+    sinon.stub(video, 'src').set(value => {
+      try {
+        value.indexOf('&test').should.be.gt(-1);
+        done();
+      } catch (e) {
+        done(e);
+      }
+    });
+    nativeInstance.load();
+  });
+
+  it('should handle error thrown from void filter', done => {
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {
+      network: {
+        requestFilter: function() {
+          throw 'error';
+        }
+      }
+    });
+    nativeInstance.addEventListener(Html5EventType.ERROR, e => {
+      try {
+        validateFilterError(e);
+        done();
+      } catch (e) {
+        done(e);
+      }
+    });
+    nativeInstance.load();
+  });
+
+  it('should handle error thrown from promise filter', done => {
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {
+      network: {
+        requestFilter: function() {
+          return new Promise(() => {
+            throw 'error';
+          });
+        }
+      }
+    });
+    nativeInstance.addEventListener(Html5EventType.ERROR, e => {
+      try {
+        validateFilterError(e);
+        done();
+      } catch (e) {
+        done(e);
+      }
+    });
+    nativeInstance.load();
+  });
+
+  it('should handle error rejected from promise filter', done => {
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {
+      network: {
+        requestFilter: function() {
+          return new Promise((resolve, reject) => {
+            reject('error');
+          });
+        }
+      }
+    });
+    nativeInstance.addEventListener(Html5EventType.ERROR, e => {
+      try {
+        validateFilterError(e);
+        done();
+      } catch (e) {
+        done(e);
+      }
+    });
+    nativeInstance.load();
+  });
 });

@@ -1706,12 +1706,10 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.TIMED_METADATA, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.PLAY_FAILED, (event: FakeEvent) => {
         this.pause();
-        if (this._firstPlay && this._config.playback.autoplay) {
-          this._posterManager.show();
-          this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED, event.payload));
-        }
+        this._onPlayFailed(event);
         this.dispatchEvent(event);
       });
+      this._eventManager.listen(this, AdEventType.AD_AUTOPLAY_FAILED, (event: FakeEvent) => this._onPlayFailed(event));
       this._eventManager.listen(this._engine, CustomEventType.FPS_DROP, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.MANIFEST_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
@@ -2062,6 +2060,19 @@ export default class Player extends FakeEventTarget {
     if (!this._firstPlaying) {
       this._firstPlaying = true;
       this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAYING));
+    }
+  }
+
+  /**
+   * @function _onPlayFailed
+   * @param {FakeEvent} event - the play failed event
+   * @return {void}
+   * @private
+   */
+  _onPlayFailed(event: FakeEvent): void {
+    if (this._firstPlay && this._config.playback.autoplay) {
+      this._posterManager.show();
+      this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED, event.payload));
     }
   }
 

@@ -350,16 +350,23 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   _setSrc(): void {
     const pkRequest: PKRequestObject = {url: this._sourceObj ? this._sourceObj.url : '', body: null, headers: {}};
+    let requestFilterPromise;
     if (typeof Utils.Object.getPropertyPath(this._config, 'network.requestFilter') === 'function') {
       try {
         NativeAdapter._logger.debug('Apply request filter');
-        this._config.network.requestFilter(RequestType.MANIFEST, pkRequest);
+        requestFilterPromise = this._config.network.requestFilter(RequestType.MANIFEST, pkRequest);
       } catch (error) {
-        this._trigger(Html5EventType.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.REQUEST_FILTER_ERROR, error));
-        return;
+        requestFilterPromise = Promise.reject(error);
       }
     }
-    this._videoElement.src = pkRequest.url;
+    requestFilterPromise = requestFilterPromise || Promise.resolve(pkRequest);
+    requestFilterPromise
+      .then(updatedRequest => {
+        this._videoElement.src = updatedRequest.url;
+      })
+      .catch(error => {
+        this._trigger(Html5EventType.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.REQUEST_FILTER_ERROR, error));
+      });
   }
 
   /**
