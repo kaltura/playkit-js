@@ -122,6 +122,76 @@ describe('NativeAdapter: constructor', () => {
   });
 });
 
+describe('NativeAdapter: attach detach', function() {
+  let video, nativeInstance;
+
+  beforeEach(() => {
+    video = document.createElement('video');
+  });
+
+  afterEach(() => {
+    nativeInstance.destroy();
+    nativeInstance = null;
+  });
+
+  after(() => {
+    removeVideoElementsFromTestPage();
+  });
+
+  it('should save the current time to detach state', () => {
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {sources: {}});
+    video.play().then(() => {
+      video.currentTime = 2;
+
+      nativeInstance.detachMediaSource();
+      (nativeInstance._lastTimeDetach === 2).should.be.true;
+      isNaN(nativeInstance._startTimeAttach).should.be.true;
+    });
+  });
+
+  it('should save the current time to attach state', () => {
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {sources: {}});
+    video.play().then(() => {
+      video.currentTime = 2;
+
+      nativeInstance.detachMediaSource();
+      (nativeInstance._lastTimeDetach === 2).should.be.true;
+      isNaN(nativeInstance._startTimeAttach).should.be.true;
+
+      nativeInstance.attachMediaSource();
+      isNaN(nativeInstance._lastTimeDetach).should.be.true;
+      (nativeInstance._startTimeAttach === 2).should.be.true;
+    });
+  });
+
+  it('should clear the internal values of detach after destory', () => {
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.UnknownMimetype.progressive[0], {sources: {}});
+    video.play().then(() => {
+      video.currentTime = 2;
+
+      nativeInstance.detachMediaSource();
+      nativeInstance.destroy().then(() => {
+        isNaN(nativeInstance._lastTimeDetach).should.be.true;
+        isNaN(nativeInstance._startTimeAttach).should.be.true;
+      });
+    });
+  });
+
+  it('should clear the internal values of attach after destory', () => {
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.UnknownMimetype.progressive[0], {sources: {}});
+    video.play().then(() => {
+      video.currentTime = 2;
+
+      nativeInstance.detachMediaSource();
+      nativeInstance.attachMediaSource();
+      nativeInstance.destroy().then(() => {
+        isNaN(nativeInstance._lastTimeDetach).should.be.true;
+        isNaN(nativeInstance._startTimeAttach).should.be.true;
+      });
+    });
+  });
+});
+
 describe('NativeAdapter: _isProgressivePlayback', function() {
   let video, nativeInstance;
 
