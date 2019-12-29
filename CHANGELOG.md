@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.59.0"></a>
+# [0.59.0](https://github.com/kaltura/playkit-js/compare/v0.58.1...v0.59.0) (2019-12-29)
+
+
+### Bug Fixes
+
+* **FEC-9513:** bumper - endless spinner when auto play is failed ([#424](https://github.com/kaltura/playkit-js/issues/424)) ([c1555f6](https://github.com/kaltura/playkit-js/commit/c1555f6))
+* **FEC-9523:** add attach detach implemention ([#425](https://github.com/kaltura/playkit-js/issues/425)) ([f1f977c](https://github.com/kaltura/playkit-js/commit/f1f977c))
+
+
+### Features
+
+* **FEC-9452:** async request/response filter handlers ([#428](https://github.com/kaltura/playkit-js/issues/428)) ([e4035fc](https://github.com/kaltura/playkit-js/commit/e4035fc))
+* **FEC-9474:** ad layout - time definitions ([#427](https://github.com/kaltura/playkit-js/issues/427)) ([678d37d](https://github.com/kaltura/playkit-js/commit/678d37d))
+
+
+
 <a name="0.58.1"></a>
 ## [0.58.1](https://github.com/kaltura/playkit-js/compare/v0.58.0...v0.58.1) (2019-12-05)
 
