@@ -296,10 +296,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           this._setProgressiveSource();
         }
         if (this._sourceObj && this._sourceObj.url) {
-          this._setSrc();
-          this._trigger(CustomEventType.ABR_MODE_CHANGED, {mode: this._isProgressivePlayback() ? 'manual' : 'auto'});
+          this._setSrc().then(() => {
+            this._trigger(CustomEventType.ABR_MODE_CHANGED, {mode: this._isProgressivePlayback() ? 'manual' : 'auto'});
+            this._videoElement.load();
+          });
+        } else {
+          this._videoElement.load();
         }
-        this._videoElement.load();
       });
     }
     return this._loadPromise;
@@ -373,7 +376,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     this._loadPromise = null;
   }
 
-  _setSrc(): void {
+  _setSrc(): Promise<*> {
     const pkRequest: PKRequestObject = {url: this._sourceObj ? this._sourceObj.url : '', body: null, headers: {}};
     let requestFilterPromise;
     if (typeof Utils.Object.getPropertyPath(this._config, 'network.requestFilter') === 'function') {
@@ -392,6 +395,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       .catch(error => {
         this._trigger(Html5EventType.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.REQUEST_FILTER_ERROR, error));
       });
+    return requestFilterPromise;
   }
 
   /**
