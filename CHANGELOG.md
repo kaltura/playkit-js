@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.59.1"></a>
+## [0.59.1](https://github.com/kaltura/playkit-js/compare/v0.59.0...v0.59.1) (2019-12-31)
+
+
+### Bug Fixes
+
+* **FEC-9583:** race condition on load ios playback ([#430](https://github.com/kaltura/playkit-js/issues/430)) ([4f77aff](https://github.com/kaltura/playkit-js/commit/4f77aff))
+
+
+
 <a name="0.59.0"></a>
 # [0.59.0](https://github.com/kaltura/playkit-js/compare/v0.58.1...v0.59.0) (2019-12-29)
 
