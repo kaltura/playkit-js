@@ -544,13 +544,13 @@ export default class Player extends FakeEventTarget {
     if (!this._playbackStart) {
       this._playbackStart = true;
       this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_START));
+      this._prepareVideoElement();
       this.load();
     }
     if (this._engine) {
       this._playbackMiddleware.play(() => this._play());
     } else if (this._loadingMedia) {
       // load media requested but the response is delayed
-      this._prepareVideoElement();
       this._playbackMiddleware.play(() => this._playAfterAsyncMiddleware());
     } else {
       this.dispatchEvent(
