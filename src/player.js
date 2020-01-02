@@ -2001,9 +2001,6 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _play(): void {
-    if (!this._engine.src) {
-      this._load();
-    }
     this.ready()
       .then(() => {
         if (this.isLive() && !this.isDvr()) {
