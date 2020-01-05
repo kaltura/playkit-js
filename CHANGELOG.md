@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.59.2"></a>
+## [0.59.2](https://github.com/kaltura/playkit-js/compare/v0.59.1...v0.59.2) (2020-01-05)
+
+
+### Bug Fixes
+
+* **FEC-9459:** load implementation in middleware is not working as expected ([#431](https://github.com/kaltura/playkit-js/issues/431)) ([a7ec5f3](https://github.com/kaltura/playkit-js/commit/a7ec5f3))
+* **FEC-9585:** when pre-roll+bumper exist need re-click to play the content - iOS ([#432](https://github.com/kaltura/playkit-js/issues/432)) ([13cbc50](https://github.com/kaltura/playkit-js/commit/13cbc50))
+
+
+
 <a name="0.59.1"></a>
 ## [0.59.1](https://github.com/kaltura/playkit-js/compare/v0.59.0...v0.59.1) (2019-12-31)
 
