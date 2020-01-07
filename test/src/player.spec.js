@@ -137,6 +137,21 @@ describe('Player', function() {
         player.play();
       });
     });
+    describe('attach detach', function() {
+      it('should success play after detach attach', done => {
+        const playing = () => {
+          player.removeEventListener('playing', playing);
+          player.addEventListener('playing', () => {
+            done();
+          });
+          player._detachMediaSource();
+          player._attachMediaSource();
+          player.play();
+        };
+        player.addEventListener('playing', playing);
+        player.play();
+      });
+    });
   });
 
   describe('ready', function() {
