@@ -140,15 +140,28 @@ describe('Player', function() {
     describe('attach detach', function() {
       it('should success play after detach attach', done => {
         const playing = () => {
-          player.removeEventListener('playing', playing);
-          player.addEventListener('playing', () => {
+          player.removeEventListener(Html5EventType.PLAYING, playing);
+          player.addEventListener(Html5EventType.PLAYING, () => {
             done();
           });
           player._detachMediaSource();
           player._attachMediaSource();
           player.play();
         };
-        player.addEventListener('playing', playing);
+        player.addEventListener(Html5EventType.PLAYING, playing);
+        player.play();
+      });
+
+      it('should attach return to time before detach', () => {
+        let currentTime = NaN;
+        const playing = () => {
+          player.removeEventListener(Html5EventType.PLAYING, playing);
+          currentTime = Math.floor(player.currentTime);
+          player._detachMediaSource();
+          player._attachMediaSource();
+          Math.floor(player.currentTime).should.equal(currentTime);
+        };
+        player.addEventListener(Html5EventType.PLAYING, playing);
         player.play();
       });
     });
