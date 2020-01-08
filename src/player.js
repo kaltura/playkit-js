@@ -547,6 +547,7 @@ export default class Player extends FakeEventTarget {
       if (!this.src) {
         this._prepareVideoElement();
       }
+      this.load();
     }
     if (this._engine) {
       this._playbackMiddleware.play(() => this._play());
@@ -672,6 +673,7 @@ export default class Player extends FakeEventTarget {
           this.playbackRate = this._playbackAttributesState.rate;
         }
       });
+      this._load();
     }
   }
 
@@ -682,6 +684,8 @@ export default class Player extends FakeEventTarget {
    */
   _detachMediaSource(): void {
     if (this._engine) {
+      this.pause();
+      this.hideTextTrack();
       this._createReadyPromise();
       this._engine.detachMediaSource();
     }
@@ -2002,9 +2006,6 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _play(): void {
-    if (!this._engine.src) {
-      this.load();
-    }
     this.ready()
       .then(() => {
         if (this.isLive() && !this.isDvr()) {
