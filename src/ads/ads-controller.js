@@ -355,6 +355,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
       const mergedPostroll = this._mergeAdBreaks(postrolls);
       mergedPostroll && this._playAdBreak(mergedPostroll);
     }
+    this._configAdBreaks.forEach(adBreak => (adBreak.played = true));
   }
 
   _reset(): void {

@@ -4,6 +4,7 @@ import Player from '../../../src/player';
 import {CustomEventType} from '../../../src/event/event-type';
 import {AdEventType} from '../../../src/ads/ad-event-type';
 import Error from '../../../src/error/error';
+import FakeEvent from '../../../src/event/fake-event';
 
 describe('AdsController', () => {
   let config, player, sandbox;
@@ -265,6 +266,81 @@ describe('AdsController', () => {
         }
       });
       player.configure({sources: SourcesConfig.Mp4});
+      player.addEventListener(CustomEventType.FIRST_PLAY, () => {
+        player.currentTime = 2;
+      });
+      player.play();
+    });
+
+    it('Should fire PLAYBACK_ENDED when snap-back after post-roll finished', done => {
+      const adBreaks = [[{url: ['MID_ROLL_1']}], [{url: ['MID_ROLL_2']}], [{url: ['POST_ROLL']}]];
+      let adBreakIndex = 1;
+      const fakeCtrl = {
+        done: true,
+        playAdNow: ads => {
+          try {
+            player._adsController && (player._adsController._adIsLoading = false);
+            ads.should.deep.equal(adBreaks[adBreakIndex]);
+            adBreakIndex++;
+            setTimeout(() => player.dispatchEvent(new FakeEvent(AdEventType.ADS_COMPLETED)));
+          } catch (e) {
+            done(e);
+          }
+        },
+        onPlaybackEnded: () => {
+          return Promise.resolve();
+        }
+      };
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+        return [fakeCtrl];
+      });
+      player.configure({
+        advertising: {
+          adBreaks: [{position: 1, ads: adBreaks[0]}, {position: 2, ads: adBreaks[1]}, {position: -1, ads: adBreaks[2]}]
+        }
+      });
+      player.configure({sources: SourcesConfig.Mp4});
+      player.addEventListener(CustomEventType.PLAYBACK_ENDED, () => {
+        done();
+      });
+      player.addEventListener(CustomEventType.FIRST_PLAY, () => {
+        player.currentTime = 2;
+      });
+      player.play();
+    });
+
+    it('Should fire PLAYBACK_ENDED when snap-back after post-roll failed', done => {
+      const adBreaks = [[{url: ['MID_ROLL_1']}], [{url: ['MID_ROLL_2']}], [{url: ['POST_ROLL']}]];
+      let adBreakIndex = 1;
+      const fakeCtrl = {
+        done: true,
+        playAdNow: ads => {
+          try {
+            player._adsController && (player._adsController._adIsLoading = false);
+            player._adsController._adPlayed = true;
+            ads.should.deep.equal(adBreaks[adBreakIndex]);
+            adBreakIndex++;
+            setTimeout(() => player.dispatchEvent(new FakeEvent(AdEventType.AD_ERROR, {severity: 2})));
+          } catch (e) {
+            done(e);
+          }
+        },
+        onPlaybackEnded: () => {
+          return Promise.resolve();
+        }
+      };
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+        return [fakeCtrl];
+      });
+      player.configure({
+        advertising: {
+          adBreaks: [{position: 1, ads: adBreaks[0]}, {position: 2, ads: adBreaks[1]}, {position: -1, ads: adBreaks[2]}]
+        }
+      });
+      player.configure({sources: SourcesConfig.Mp4});
+      player.addEventListener(CustomEventType.PLAYBACK_ENDED, () => {
+        done();
+      });
       player.addEventListener(CustomEventType.FIRST_PLAY, () => {
         player.currentTime = 2;
       });
