@@ -673,6 +673,7 @@ export default class Player extends FakeEventTarget {
           this.playbackRate = this._playbackAttributesState.rate;
         }
       });
+      this._load();
     }
   }
 
@@ -683,6 +684,8 @@ export default class Player extends FakeEventTarget {
    */
   _detachMediaSource(): void {
     if (this._engine) {
+      this.pause();
+      this.hideTextTrack();
       this._createReadyPromise();
       this._engine.detachMediaSource();
     }
