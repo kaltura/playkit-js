@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.59.3"></a>
+## [0.59.3](https://github.com/kaltura/playkit-js/compare/v0.59.2...v0.59.3) (2020-01-08)
+
+
+### Bug Fixes
+
+* **FEC-9600:** new ad layout - pre-mid-post rolls - no replay button appears after post-roll ad finished ([#434](https://github.com/kaltura/playkit-js/issues/434)) ([de9a5b4](https://github.com/kaltura/playkit-js/commit/de9a5b4))
+* **FEC-9603:** load doesn't call on play after attach detach ([#433](https://github.com/kaltura/playkit-js/issues/433)) ([fd8197e](https://github.com/kaltura/playkit-js/commit/fd8197e))
+
+
+
 <a name="0.59.2"></a>
 ## [0.59.2](https://github.com/kaltura/playkit-js/compare/v0.59.1...v0.59.2) (2020-01-05)
 
