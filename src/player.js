@@ -40,7 +40,6 @@ import {ControllerProvider} from './controller/controller-provider';
 import {ResizeWatcher} from './utils/resize-watcher';
 import {FullscreenController} from './fullscreen/fullscreen-controller';
 import {EngineDecorator} from './engines/engine-decorator';
-import {AttachMiddleware} from './middleware/attach-middleware';
 
 /**
  * The black cover class name.
@@ -1766,7 +1765,6 @@ export default class Player extends FakeEventTarget {
         });
         this._eventManager.listen(this, AdEventType.AD_BREAK_END, this._attachMediaSource);
         this._eventManager.listen(this, AdEventType.AD_ERROR, this._attachMediaSource);
-        this._playbackMiddleware.use(new AttachMiddleware(this));
       }
       const rootElement = Utils.Dom.getElementBySelector(`#${this.config.targetId}`);
       if (rootElement) {
@@ -2015,6 +2013,10 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _play(): void {
+    if (!this.src && this._shouldLoadAfterAttach) {
+      this._load();
+      this._shouldLoadAfterAttach = false;
+    }
     this.ready()
       .then(() => {
         if (this.isLive() && !this.isDvr()) {
