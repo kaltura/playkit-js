@@ -138,6 +138,12 @@ describe('Player', function() {
       });
     });
     describe('attach detach', function() {
+      beforeEach(() => {
+        let attachDetachConfig = config;
+        attachDetachConfig.playback.playAdsWithMSE = true;
+        player = new Player(attachDetachConfig);
+      });
+
       it('should success play after detach attach', done => {
         const playing = () => {
           player.removeEventListener(Html5EventType.PLAYING, playing);
