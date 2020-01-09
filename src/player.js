@@ -418,7 +418,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _isOnLiveEdge: boolean = false;
-
+  /**
+   * Whether should load after attach media used
+   * @type {boolean}
+   * @private
+   */
+  _shouldLoadAfterAttach: boolean = false;
   /**
    * @param {Object} config - The configuration for the player instance.
    * @constructor
@@ -624,6 +629,7 @@ export default class Player extends FakeEventTarget {
     this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
     this._createReadyPromise();
     this._isOnLiveEdge = false;
+    this._shouldLoadAfterAttach = false;
   }
 
   /**
@@ -667,13 +673,13 @@ export default class Player extends FakeEventTarget {
    */
   _attachMediaSource(): void {
     if (this._engine) {
+      this._shouldLoadAfterAttach = true;
       this._engine.attachMediaSource();
       this._eventManager.listenOnce(this, Html5EventType.CAN_PLAY, () => {
         if (typeof this._playbackAttributesState.rate === 'number') {
           this.playbackRate = this._playbackAttributesState.rate;
         }
       });
-      this._load();
     }
   }
 
@@ -686,6 +692,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this.pause();
       this.hideTextTrack();
+      this._shouldLoadAfterAttach = false;
       this._createReadyPromise();
       this._engine.detachMediaSource();
     }
@@ -2006,6 +2013,10 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _play(): void {
+    if (this._shouldLoadAfterAttach) {
+      this._load();
+      this._shouldLoadAfterAttach = false;
+    }
     this.ready()
       .then(() => {
         if (this.isLive() && !this.isDvr()) {
