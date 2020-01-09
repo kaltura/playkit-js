@@ -24,7 +24,7 @@ class AttachMiddleware extends BaseMiddleware {
    * @returns {void}
    */
   play(next: Function): void {
-    if (!this._context.src) {
+    if (!this._context.src && this._context._shouldLoadAfterAttach) {
       this._context._load();
     }
     this.callNext(next);
