@@ -2013,7 +2013,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _play(): void {
-    if (!this.src && this._shouldLoadAfterAttach) {
+    if (this._shouldLoadAfterAttach) {
       this._load();
       this._shouldLoadAfterAttach = false;
     }
