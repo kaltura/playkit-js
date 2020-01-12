@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.59.4"></a>
+## [0.59.4](https://github.com/kaltura/playkit-js/compare/v0.59.3...v0.59.4) (2020-01-09)
+
+
+### Bug Fixes
+
+* **FEC-9609:** after postroll there isn't replay button using attach detach api ([#435](https://github.com/kaltura/playkit-js/issues/435)) ([7dde1ef](https://github.com/kaltura/playkit-js/commit/7dde1ef))
+
+
+
 <a name="0.59.3"></a>
 ## [0.59.3](https://github.com/kaltura/playkit-js/compare/v0.59.2...v0.59.3) (2020-01-08)
 
