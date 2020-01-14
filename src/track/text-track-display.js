@@ -848,7 +848,7 @@ class BoxPosition {
 // Move a StyleBox to its specified, or next best, position. The containerBox
 // is the box that contains the StyleBox, such as a div. boxPositions are
 // a list of other boxes that the styleBox can't overlap with.
-function moveBoxToLinePosition(styleBox, containerBox, boxPositions) {
+function moveBoxToLinePosition(window, styleBox, containerBox, boxPositions) {
   // Find the best position for a cue box, b, on the video. The axis parameter
   // is a list of axis, the order of which, it will move the box along. For example:
   // Passing ["+x", "-x"] will move the box first along the x axis in the positive
@@ -1047,7 +1047,7 @@ function processCues(window, cues, overlay, style) {
       paddedOverlay.appendChild(styleBox.div);
 
       // Move the cue div to it's correct line position.
-      moveBoxToLinePosition(styleBox, containerBox, boxPositions);
+      moveBoxToLinePosition(window, styleBox, containerBox, boxPositions);
 
       // Remember the computed div so that we don't have to recompute it later
       // if we don't have too.
