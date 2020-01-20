@@ -96,15 +96,36 @@ var config = {
 
 ##
 
-> ### config.logLevel
+> ### config.log
 >
-> ##### Type: `string`
+> ##### Type: `PKLogConfigObject`
 >
-> ##### Default: `"ERROR"`
+> ```js
+> {
+>   level:string,
+>   handler:?LogHandlerType
+> }
+> ```
 >
-> ##### Description: Defines the player log level.
->
-> Possible values: `"DEBUG", "INFO", "TIME", "WARN", "ERROR", "OFF"`
+> > ### config.log.level
+> >
+> > ##### Default: `"ERROR"`
+> >
+> > ##### Description: Defines the player log level.
+> >
+> > Possible values: `"DEBUG", "INFO", "TIME", "WARN", "ERROR", "OFF"`
+> >
+> > ### config.log.handler
+> >
+> > ##### Type `PKMediaSourceObject`
+> >
+> > ##### Description: Defines the player log handler.
+> >
+> > ```js
+> > function(messages: any[], context: Object)
+> > ```
+> >
+> > (messages: any[], context: Object)
 
 ##
 
@@ -1061,14 +1082,15 @@ var config = {
 > >   }
 > > };
 > > ```
+> >
 > > ```js
 > > var config = {
 > >   network: {
 > >     requestFilter: function(type, request) {
 > >       if (type === KalturaPlayer.core.RequestType.LICENSE) {
-> >         return new Promise(function (resolve) {
+> >         return new Promise(function(resolve) {
 > >           request.headers['customData'] = CUSTOM_DATA;
-> >           resolve(request); 
+> >           resolve(request);
 > >         });
 > >       }
 > >     }
@@ -1099,14 +1121,15 @@ var config = {
 > >   }
 > > };
 > > ```
+> >
 > > ```js
 > > var config = {
 > >   network: {
 > >     responseFilter: function(type, response) {
 > >       if (type === KalturaPlayer.core.RequestType.LICENSE) {
-> >         return new Promise(function (resolve) {
+> >         return new Promise(function(resolve) {
 > >           response.data = MANIPULATED_DATA;
-> >           resolve(response); 
+> >           resolve(response);
 > >         });
 > >       }
 > >     }
@@ -1168,7 +1191,7 @@ var config = {
 > > > >
 > > > > ##### Type: `number`
 > > > >
-> > > > ##### Description: The position, in seconds, to show the ad break. 
+> > > > ##### Description: The position, in seconds, to show the ad break.
 > > > >
 > > > > ##
 > > > >
@@ -1187,11 +1210,12 @@ var config = {
 > > > > ##### Description: Alternative parameter to `position`. Play ad break every X seconds (optional).
 > > > >
 > > > > ##
-> > > > 
+> > > >
 > > > > **Important**. `position`, `percentage` and `every` are several options to configure the ad break position.
 > > > > Only one should be provided. If none will be provided, the ad break will be ignored.
-> > > > If more than one will be provided, only one configuration will be considered, by the following priority:  
-> > > > 1. `position` 2. `percentage` 3. `every`.
+> > > > If more than one will be provided, only one configuration will be considered, by the following priority:
+> > > >
+> > > > 1.  `position` 2. `percentage` 3. `every`.
 > > > >
 > > > > ##
 > > > >
