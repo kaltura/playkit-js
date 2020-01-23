@@ -147,7 +147,11 @@ export default class Player extends FakeEventTarget {
    */
   static runCapabilities(playsinline: ?boolean): void {
     Player._logger.debug('Running player capabilities');
-    EngineProvider.getEngines().forEach(Engine => Engine.runCapabilities(playsinline));
+    EngineProvider.getEngines().forEach(Engine => {
+      if (!Player._playerCapabilities[Engine]) {
+        Engine.runCapabilities(playsinline);
+      }
+    });
   }
 
   /**
