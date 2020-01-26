@@ -2944,8 +2944,30 @@ describe('Player', function() {
       const existingCapabilities = (({autoplay, mutedAutoPlay}) => ({autoplay, mutedAutoPlay}))(newCapabilities);
       Player.setCapabilities('html5', newCapabilities);
       Player.getCapabilities().then(c2 => {
-        c2.html5.should.deep.equal(existingCapabilities);
-        done();
+        try {
+          c2.html5.should.deep.equal(existingCapabilities);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+    });
+
+    it('should support only correct type', done => {
+      let newCapabilities = {
+        autoplay: 1,
+        mutedAutoPlay: 2,
+        isSupported: false,
+        fakeAttribute: true
+      };
+      Player.setCapabilities('html5', newCapabilities);
+      Player.getCapabilities().then(c2 => {
+        try {
+          c2.should.deep.equal(initialOrigCapabilities);
+          done();
+        } catch (err) {
+          done(err);
+        }
       });
     });
 
@@ -2979,11 +3001,19 @@ describe('Player', function() {
       };
       Player.runCapabilities();
       Player.getCapabilities().then(c1 => {
-        c1.html5.should.deep.not.equal(newCapabilities);
+        try {
+          c1.html5.should.deep.not.equal(newCapabilities);
+        } catch (err) {
+          done(err);
+        }
         Player.setCapabilities('html5', newCapabilities);
         Player.getCapabilities().then(c2 => {
-          c2.html5.should.deep.equal(newCapabilities);
-          done();
+          try {
+            c2.html5.should.deep.equal(newCapabilities);
+            done();
+          } catch (err) {
+            done(err);
+          }
         });
       });
     });
@@ -2994,9 +3024,13 @@ describe('Player', function() {
       };
       Player.setCapabilities('html5', newCapabilities);
       Player.getCapabilities().then(c2 => {
-        c2.html5.autoplay.should.equal(newCapabilities.autoplay);
-        c2.html5.mutedAutoPlay.should.not.equal(newCapabilities.mutedAutoPlay);
-        done();
+        try {
+          c2.html5.autoplay.should.equal(newCapabilities.autoplay);
+          c2.html5.mutedAutoPlay.should.not.equal(newCapabilities.mutedAutoPlay);
+          done();
+        } catch (err) {
+          done(err);
+        }
       });
     });
 
@@ -3006,9 +3040,13 @@ describe('Player', function() {
       };
       Player.setCapabilities('html5', newCapabilities);
       Player.getCapabilities().then(c2 => {
-        c2.html5.autoplay.should.not.equal(newCapabilities.autoplay);
-        c2.html5.mutedAutoPlay.should.equal(newCapabilities.mutedAutoPlay);
-        done();
+        try {
+          c2.html5.autoplay.should.not.equal(newCapabilities.autoplay);
+          c2.html5.mutedAutoPlay.should.equal(newCapabilities.mutedAutoPlay);
+          done();
+        } catch (err) {
+          done(err);
+        }
       });
     });
   });
