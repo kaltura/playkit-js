@@ -82,7 +82,8 @@ export default class Html5AutoPlayCapability implements ICapability {
       return res;
     })(capabilities);
     if (Html5AutoPlayCapability._playPromiseResult) {
-      Html5AutoPlayCapability.runCapability(Html5AutoPlayCapability._vid.getAttribute('playsinline'));
+      const playsinline = !!Html5AutoPlayCapability._vid.getAttribute('playsinline');
+      Html5AutoPlayCapability.runCapability(playsinline);
     }
   }
 
