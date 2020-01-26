@@ -10,6 +10,7 @@ export default class Html5AutoPlayCapability implements ICapability {
   static _vid: HTMLVideoElement;
   static _playPromiseResult: Promise<*>;
   static _logger: any = getLogger('Html5AutoPlayCapability');
+  static _capabilities: Object = {};
 
   /**
    * Runs the test for autoplay capability.
@@ -19,6 +20,10 @@ export default class Html5AutoPlayCapability implements ICapability {
    * @returns {void}
    */
   static runCapability(playsinline: ?boolean): void {
+    if (this._capabilities.autoplay || (typeof this._capabilities.autoplay === 'boolean' && typeof this._capabilities.mutedAutoPlay === 'boolean')) {
+      Html5AutoPlayCapability._playPromiseResult = new Promise(resolve => resolve(this._capabilities));
+      return;
+    }
     if (!Html5AutoPlayCapability._vid) {
       Html5AutoPlayCapability._vid = Utils.Dom.createElement('video');
       Html5AutoPlayCapability._vid.src = EncodingSources.Base64Mp4Source;
@@ -27,12 +32,14 @@ export default class Html5AutoPlayCapability implements ICapability {
     Html5AutoPlayCapability._playPromiseResult = new Promise(resolve => {
       Html5AutoPlayCapability._setMuted(false);
       Html5AutoPlayCapability._getPlayPromise()
-        .then(() => resolve({autoplay: true, mutedAutoPlay: true}))
+        .then(() => {
+          resolve(Utils.Object.mergeDeep({autoplay: true, mutedAutoPlay: true}, this._capabilities));
+        })
         .catch(() => {
           Html5AutoPlayCapability._setMuted(true);
           Html5AutoPlayCapability._getPlayPromise()
-            .then(() => resolve({autoplay: false, mutedAutoPlay: true}))
-            .catch(() => resolve({autoplay: false, mutedAutoPlay: false}));
+            .then(() => resolve(Utils.Object.mergeDeep({autoplay: false, mutedAutoPlay: true}, this._capabilities)))
+            .catch(() => resolve(Utils.Object.mergeDeep({autoplay: false, mutedAutoPlay: false}, this._capabilities)));
         });
     });
   }
@@ -53,6 +60,30 @@ export default class Html5AutoPlayCapability implements ICapability {
       }
       return res;
     });
+  }
+
+  /**
+   * Sets an engine capabilities.
+   * @param {Object} capabilities - The engine capabilities.
+   * @returns {void}
+   * @public
+   * @static
+   */
+  static setCapabilities(capabilities: {[name: string]: any}): void {
+    Html5AutoPlayCapability._logger.debug('Set player capabilities', capabilities);
+    this._capabilities = (({autoplay, mutedAutoPlay}) => {
+      let res = {};
+      if (typeof autoplay === 'boolean') {
+        res = {...res, ...{autoplay}};
+      }
+      if (typeof mutedAutoPlay === 'boolean') {
+        res = {...res, ...{mutedAutoPlay}};
+      }
+      return res;
+    })(capabilities);
+    if (Html5AutoPlayCapability._playPromiseResult) {
+      Html5AutoPlayCapability.runCapability(Html5AutoPlayCapability._vid.getAttribute('playsinline'));
+    }
   }
 
   /**
