@@ -20,8 +20,12 @@ export default class Html5AutoPlayCapability implements ICapability {
    * @returns {void}
    */
   static runCapability(playsinline: ?boolean): void {
-    if (this._capabilities.autoplay || (typeof this._capabilities.autoplay === 'boolean' && typeof this._capabilities.mutedAutoPlay === 'boolean')) {
-      Html5AutoPlayCapability._playPromiseResult = new Promise(resolve => resolve(this._capabilities));
+    if (
+      Html5AutoPlayCapability._capabilities.autoplay ||
+      (typeof Html5AutoPlayCapability._capabilities.autoplay === 'boolean' &&
+        typeof Html5AutoPlayCapability._capabilities.mutedAutoPlay === 'boolean')
+    ) {
+      Html5AutoPlayCapability._playPromiseResult = new Promise(resolve => resolve(Html5AutoPlayCapability._capabilities));
       return;
     }
     if (!Html5AutoPlayCapability._vid) {
@@ -33,13 +37,13 @@ export default class Html5AutoPlayCapability implements ICapability {
       Html5AutoPlayCapability._setMuted(false);
       Html5AutoPlayCapability._getPlayPromise()
         .then(() => {
-          resolve(Utils.Object.mergeDeep({autoplay: true, mutedAutoPlay: true}, this._capabilities));
+          resolve(Utils.Object.mergeDeep({autoplay: true, mutedAutoPlay: true}, Html5AutoPlayCapability._capabilities));
         })
         .catch(() => {
           Html5AutoPlayCapability._setMuted(true);
           Html5AutoPlayCapability._getPlayPromise()
-            .then(() => resolve(Utils.Object.mergeDeep({autoplay: false, mutedAutoPlay: true}, this._capabilities)))
-            .catch(() => resolve(Utils.Object.mergeDeep({autoplay: false, mutedAutoPlay: false}, this._capabilities)));
+            .then(() => resolve(Utils.Object.mergeDeep({autoplay: false, mutedAutoPlay: true}, Html5AutoPlayCapability._capabilities)))
+            .catch(() => resolve(Utils.Object.mergeDeep({autoplay: false, mutedAutoPlay: false}, Html5AutoPlayCapability._capabilities)));
         });
     });
   }
@@ -71,7 +75,7 @@ export default class Html5AutoPlayCapability implements ICapability {
    */
   static setCapabilities(capabilities: {[name: string]: any}): void {
     Html5AutoPlayCapability._logger.debug('Set player capabilities', capabilities);
-    this._capabilities = (({autoplay, mutedAutoPlay}) => {
+    Html5AutoPlayCapability._capabilities = (({autoplay, mutedAutoPlay}) => {
       let res = {};
       if (typeof autoplay === 'boolean') {
         res = {...res, ...{autoplay}};
