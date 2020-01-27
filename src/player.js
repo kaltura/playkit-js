@@ -433,7 +433,8 @@ export default class Player extends FakeEventTarget {
     this._setConfigLogLevel(config);
     this._playerId = Utils.Generator.uniqueId(5);
     this._prepareVideoElement();
-    const playsInline = Utils.Object.getPropertyPath(config, 'playback.playsinline');
+    const defaultPlaysInline = Utils.Object.getPropertyPath(Player._defaultConfig, 'playback.playsinline');
+    const playsInline = Utils.Object.getPropertyPath(config, 'playback.playsinline') || defaultPlaysInline;
     Player.runCapabilities(playsInline);
     this._env = Env;
     this._tracks = [];
