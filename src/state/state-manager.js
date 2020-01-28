@@ -77,8 +77,10 @@ export default class StateManager {
         this._dispatchEvent();
       },
       [Html5EventType.SEEKED]: () => {
-        this._updateState(StateType.PAUSED);
-        this._dispatchEvent();
+        if (this._player.currentTime < Math.floor(this._player.duration)) {
+          this._updateState(StateType.PAUSED);
+          this._dispatchEvent();
+        }
       }
     },
     [StateType.LOADING]: {
