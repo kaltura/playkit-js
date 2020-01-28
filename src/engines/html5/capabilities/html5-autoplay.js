@@ -58,9 +58,9 @@ export default class Html5AutoPlayCapability implements ICapability {
   static getCapability(playsinline: ?boolean): Promise<CapabilityResult> {
     return Html5AutoPlayCapability._playPromiseResult.then(playCapability => {
       let fallbackPlayCapabilityTest;
-      // If autoplay is not allowed - try again and return the updated result
       if (playCapability.autoplay) {
         fallbackPlayCapabilityTest = Promise.resolve(playCapability);
+        // If autoplay is not allowed - try again and return the updated result
       } else {
         Html5AutoPlayCapability.runCapability(playsinline);
         fallbackPlayCapabilityTest = Html5AutoPlayCapability._playPromiseResult;
