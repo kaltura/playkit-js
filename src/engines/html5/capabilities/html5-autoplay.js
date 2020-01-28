@@ -25,7 +25,7 @@ export default class Html5AutoPlayCapability implements ICapability {
       (typeof Html5AutoPlayCapability._capabilities.autoplay === 'boolean' &&
         typeof Html5AutoPlayCapability._capabilities.mutedAutoPlay === 'boolean')
     ) {
-      Html5AutoPlayCapability._playPromiseResult = new Promise(resolve => resolve(Html5AutoPlayCapability._capabilities));
+      Html5AutoPlayCapability._playPromiseResult = Promise.resolve(Html5AutoPlayCapability._capabilities);
       return;
     }
     if (!Html5AutoPlayCapability._vid) {
@@ -37,13 +37,13 @@ export default class Html5AutoPlayCapability implements ICapability {
       Html5AutoPlayCapability._setMuted(false);
       Html5AutoPlayCapability._getPlayPromise()
         .then(() => {
-          resolve(Utils.Object.mergeDeep({autoplay: true, mutedAutoPlay: true}, Html5AutoPlayCapability._capabilities));
+          resolve({autoplay: true, mutedAutoPlay: true});
         })
         .catch(() => {
           Html5AutoPlayCapability._setMuted(true);
           Html5AutoPlayCapability._getPlayPromise()
-            .then(() => resolve(Utils.Object.mergeDeep({autoplay: false, mutedAutoPlay: true}, Html5AutoPlayCapability._capabilities)))
-            .catch(() => resolve(Utils.Object.mergeDeep({autoplay: false, mutedAutoPlay: false}, Html5AutoPlayCapability._capabilities)));
+            .then(() => resolve({autoplay: false, mutedAutoPlay: true}))
+            .catch(() => resolve({autoplay: false, mutedAutoPlay: false}));
         });
     });
   }
@@ -56,13 +56,14 @@ export default class Html5AutoPlayCapability implements ICapability {
    * @public
    */
   static getCapability(playsinline: ?boolean): Promise<CapabilityResult> {
-    return Html5AutoPlayCapability._playPromiseResult.then(res => {
+    return Html5AutoPlayCapability._playPromiseResult.then(playCapability => {
       // If autoplay is not allowed - try again and return the updated result
-      if (!res.autoplay) {
-        Html5AutoPlayCapability.runCapability(playsinline);
-        return Html5AutoPlayCapability._playPromiseResult;
-      }
-      return res;
+      const fallbackPlayCapabilityTest = playCapability.autoplay
+        ? Promise.resolve(playCapability)
+        : Html5AutoPlayCapability.runCapability(playsinline);
+      return fallbackPlayCapabilityTest.then(fallbackPlayCapability =>
+        Utils.Object.mergeDeep(fallbackPlayCapability, Html5AutoPlayCapability._capabilities)
+      );
     });
   }
 
@@ -75,19 +76,12 @@ export default class Html5AutoPlayCapability implements ICapability {
    */
   static setCapabilities(capabilities: {[name: string]: any}): void {
     Html5AutoPlayCapability._logger.debug('Set player capabilities', capabilities);
-    Html5AutoPlayCapability._capabilities = (({autoplay, mutedAutoPlay}) => {
-      let res = {};
-      if (typeof autoplay === 'boolean') {
-        res = {...res, ...{autoplay}};
-      }
-      if (typeof mutedAutoPlay === 'boolean') {
-        res = {...res, ...{mutedAutoPlay}};
-      }
-      return res;
-    })(capabilities);
-    if (Html5AutoPlayCapability._playPromiseResult) {
-      const playsinline = !!Html5AutoPlayCapability._vid.getAttribute('playsinline');
-      Html5AutoPlayCapability.runCapability(playsinline);
+    const {autoplay, mutedAutoPlay} = capabilities;
+    if (typeof autoplay === 'boolean') {
+      Html5AutoPlayCapability._capabilities.autoplay = autoplay;
+    }
+    if (typeof mutedAutoPlay === 'boolean') {
+      Html5AutoPlayCapability._capabilities.mutedAutoPlay = mutedAutoPlay;
     }
   }
 

@@ -173,8 +173,8 @@ export default class Player extends FakeEventTarget {
   static setCapabilities(engineType: string, capabilities: {[name: string]: any}): void {
     Player._logger.debug('Set player capabilities', engineType, capabilities);
     EngineProvider.getEngines()
-      .filter(Engine => Engine.id === engineType)
-      .forEach(engine => engine.setCapabilities(capabilities));
+      .find(Engine => Engine.id === engineType)
+      .setCapabilities(capabilities);
   }
 
   /**
