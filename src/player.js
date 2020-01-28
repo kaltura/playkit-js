@@ -130,13 +130,6 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   static _logger: any = getLogger('Player');
-  /**
-   * The player capabilities result object.
-   * @type {Object}
-   * @private
-   * @static
-   */
-  static _playerCapabilities: Object = {};
 
   /**
    * Runs the engines capabilities tests.
