@@ -251,6 +251,20 @@ export default class Player extends FakeEventTarget {
    */
   _playbackStart: boolean;
   /**
+   * Whether the playback ended
+   * @type {boolean}
+   * @private
+   */
+
+  _playbackEnded: boolean;
+  /**
+   * If quality has changed after playback ended - pend the change
+   * @type {boolean}
+   * @private
+   */
+
+  _pendingSelectedVideoTrack: ?VideoTrack;
+  /**
    * The available playback rates for the player.
    * @type {Array<number>}
    * @private
@@ -438,6 +452,7 @@ export default class Player extends FakeEventTarget {
     this._loadingMedia = false;
     this._loading = false;
     this._playbackStart = false;
+    this._playbackEnded = false;
     this._firstPlaying = false;
     this._reset = true;
     this._destroyed = false;
@@ -614,6 +629,7 @@ export default class Player extends FakeEventTarget {
     this._resetStateFlags();
     this._engineType = '';
     this._streamType = '';
+    this._pendingSelectedVideoTrack = null;
     if (this._engine) {
       this._engine.reset();
     }
@@ -647,6 +663,7 @@ export default class Player extends FakeEventTarget {
     this._engineType = '';
     this._streamType = '';
     this._readyPromise = null;
+    this._pendingSelectedVideoTrack = null;
     this._resetStateFlags();
     this._playbackAttributesState = {};
     if (this._engine) {
@@ -1124,7 +1141,11 @@ export default class Player extends FakeEventTarget {
   selectTrack(track: ?Track): void {
     if (this._engine) {
       if (track instanceof VideoTrack) {
-        this._engine.selectVideoTrack(track);
+        if (this._playbackEnded) {
+          this._pendingSelectedVideoTrack = track;
+        } else {
+          this._engine.selectVideoTrack(track);
+        }
       } else if (track instanceof AudioTrack) {
         this._engine.selectAudioTrack(track);
       } else if (track instanceof TextTrack) {
@@ -2068,6 +2089,10 @@ export default class Player extends FakeEventTarget {
       this._firstPlaying = true;
       this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAYING));
     }
+    if (this._engine && this._pendingSelectedVideoTrack) {
+      this._engine.selectVideoTrack(this._pendingSelectedVideoTrack);
+      this._pendingSelectedVideoTrack = null;
+    }
   }
 
   /**
@@ -2133,6 +2158,8 @@ export default class Player extends FakeEventTarget {
     if (this.config.playback.loop) {
       this.currentTime = 0;
       this.play();
+    } else {
+      this._playbackEnded = true;
     }
   }
 
@@ -2146,6 +2173,7 @@ export default class Player extends FakeEventTarget {
     this._firstPlay = true;
     this._loadingMedia = false;
     this._playbackStart = false;
+    this._playbackEnded = false;
     this._firstPlaying = false;
   }
 
