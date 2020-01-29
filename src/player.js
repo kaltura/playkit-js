@@ -634,6 +634,7 @@ export default class Player extends FakeEventTarget {
     this._resetStateFlags();
     this._engineType = '';
     this._streamType = '';
+    this._pendingSelectedVideoTrack = null;
     if (this._engine) {
       this._engine.reset();
     }
@@ -668,6 +669,7 @@ export default class Player extends FakeEventTarget {
     this._engineType = '';
     this._streamType = '';
     this._readyPromise = null;
+    this._pendingSelectedVideoTrack = null;
     this._resetStateFlags();
     this._playbackAttributesState = {};
     if (this._engine) {
@@ -1720,10 +1722,6 @@ export default class Player extends FakeEventTarget {
         if (browser === 'Edge' || browser === 'IE') {
           this._removeTextCuePatch();
         }
-        if (this._engine && this._pendingSelectedVideoTrack) {
-          this._engine.selectVideoTrack(this._pendingSelectedVideoTrack);
-          this._pendingSelectedVideoTrack = null;
-        }
       });
       this._eventManager.listen(this._engine, CustomEventType.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
         this._markActiveTrack(event.payload.selectedVideoTrack);
@@ -2096,6 +2094,10 @@ export default class Player extends FakeEventTarget {
     if (!this._firstPlaying) {
       this._firstPlaying = true;
       this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAYING));
+    }
+    if (this._engine && this._pendingSelectedVideoTrack) {
+      this._engine.selectVideoTrack(this._pendingSelectedVideoTrack);
+      this._pendingSelectedVideoTrack = null;
     }
   }
 
