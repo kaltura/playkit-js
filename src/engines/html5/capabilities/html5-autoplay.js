@@ -36,9 +36,7 @@ export default class Html5AutoPlayCapability implements ICapability {
     Html5AutoPlayCapability._playPromiseResult = new Promise(resolve => {
       Html5AutoPlayCapability._setMuted(false);
       Html5AutoPlayCapability._getPlayPromise()
-        .then(() => {
-          resolve({autoplay: true, mutedAutoPlay: true});
-        })
+        .then(() => resolve({autoplay: true, mutedAutoPlay: true}))
         .catch(() => {
           Html5AutoPlayCapability._setMuted(true);
           Html5AutoPlayCapability._getPlayPromise()
@@ -60,8 +58,8 @@ export default class Html5AutoPlayCapability implements ICapability {
       let fallbackPlayCapabilityTest;
       if (playCapability.autoplay) {
         fallbackPlayCapabilityTest = Promise.resolve(playCapability);
-        // If autoplay is not allowed - try again and return the updated result
       } else {
+        // If autoplay is not allowed - try again and return the updated result
         Html5AutoPlayCapability.runCapability(playsinline);
         fallbackPlayCapabilityTest = Html5AutoPlayCapability._playPromiseResult;
       }
