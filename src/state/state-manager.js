@@ -77,11 +77,7 @@ export default class StateManager {
         this._dispatchEvent();
       },
       [Html5EventType.SEEKED]: () => {
-        if (
-          typeof this._player.currentTime === 'number' &&
-          typeof this._player.duration === 'number' &&
-          this._player.currentTime < Math.floor(this._player.duration)
-        ) {
+        if (this._player.currentTime < Math.floor(this._player.duration)) {
           this._updateState(StateType.PAUSED);
           this._dispatchEvent();
         }
