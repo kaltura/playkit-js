@@ -1,22 +1,32 @@
 // @flow
 import UAParser from 'ua-parser-js';
 
+const SmartTvRegex = /^.*(smart-tv|smarttv).*$/i;
+
 const LGTVRegex = /^.*(web0s).*(smarttv).*$/i;
-//doesn't recognize lg at all
-const LGOSParser = [[LGTVRegex], [UAParser.OS.NAME]];
 
 const SAMSUNGTVRegex = /^.*(smart-tv).*(tizen).*$/i;
+
+const HISENSETVRegex = /^.*(vidaa).*(smarttv).*$/i;
+
 //recognize as safari
 const SAMSUNGBrowserParser = [
   [SAMSUNGTVRegex],
   [[UAParser.BROWSER.NAME, 'SAMSUNG_TV_BROWSER'], [UAParser.BROWSER.MAJOR, ''], [UAParser.BROWSER.VERSION, '']]
 ];
 
+//recognize os of smartTV devices
+const OSParser = [[LGTVRegex], [UAParser.OS.NAME], [HISENSETVRegex], [UAParser.OS.NAME]];
+
 //add smart tv as smart tv devices
 const DeviceParser = [
   [LGTVRegex],
   [[UAParser.DEVICE.VENDOR, 'LG'], [UAParser.DEVICE.TYPE, UAParser.DEVICE.SMARTTV]],
   [SAMSUNGTVRegex],
+  [[UAParser.DEVICE.VENDOR, 'SAMSUNG'], [UAParser.DEVICE.TYPE, UAParser.DEVICE.SMARTTV]],
+  [HISENSETVRegex],
+  [[UAParser.DEVICE.VENDOR, 'HISENSE'], [UAParser.DEVICE.TYPE, UAParser.DEVICE.SMARTTV]],
+  [SmartTvRegex],
   [[UAParser.DEVICE.TYPE, UAParser.DEVICE.SMARTTV]]
 ];
 
@@ -24,7 +34,7 @@ const EdgeChromiumParser = [[/(edg)\/((\d+)?[\w.]+)/i], [[UAParser.BROWSER.NAME,
 
 const BrowserParser = [...EdgeChromiumParser, ...SAMSUNGBrowserParser];
 
-let Env = new UAParser(undefined, {browser: BrowserParser, device: DeviceParser, os: LGOSParser}).getResult();
+let Env = new UAParser(undefined, {browser: BrowserParser, device: DeviceParser, os: OSParser}).getResult();
 
 Env.isConsole = Env.device.type === UAParser.DEVICE.CONSOLE;
 Env.isSmartTV = Env.device.type === UAParser.DEVICE.SMARTTV;

@@ -19,6 +19,7 @@ import {LabelOptions} from '../../src/track/label-options';
 import {EngineProvider} from '../../src/engines/engine-provider';
 import {AdEventType} from '../../src/ads/ad-event-type';
 import FakeEvent from '../../src/event/fake-event';
+import Html5AutoPlayCapability from '../../src/engines/html5/capabilities/html5-autoplay';
 
 const targetId = 'player-placeholder_player.spec';
 let sourcesConfig = PKObject.copyDeep(SourcesConfig);
@@ -2910,7 +2911,7 @@ describe('Player', function() {
   describe('setCapabilities', () => {
     let initialOrigCapabilities;
 
-    before(done => {
+    beforeEach(done => {
       Player.runCapabilities();
       Player.getCapabilities().then(capabilities => {
         initialOrigCapabilities = capabilities;
@@ -2919,7 +2920,7 @@ describe('Player', function() {
     });
 
     afterEach(() => {
-      Player._playerCapabilities = PKObject.copyDeep(initialOrigCapabilities);
+      Html5AutoPlayCapability._capabilities = {};
     });
 
     it('should not change the original capabilities by reference', done => {
@@ -2935,30 +2936,117 @@ describe('Player', function() {
 
     it('should set custom capabilities successfully', done => {
       let newCapabilities = {
+        autoplay: true,
+        mutedAutoPlay: false,
+        isSupported: false,
+        fakeAttribute: true
+      };
+      const existingCapabilities = (({autoplay, mutedAutoPlay}) => ({autoplay, mutedAutoPlay}))(newCapabilities);
+      Player.setCapabilities('html5', newCapabilities);
+      Player.getCapabilities().then(c2 => {
+        try {
+          c2.html5.should.deep.equal(existingCapabilities);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+    });
+
+    it('should support only correct type', done => {
+      let newCapabilities = {
         autoplay: 1,
         mutedAutoPlay: 2,
-        isSupported: 3
+        isSupported: false,
+        fakeAttribute: true
       };
       Player.setCapabilities('html5', newCapabilities);
       Player.getCapabilities().then(c2 => {
-        c2.html5.should.deep.equal(newCapabilities);
-        done();
+        try {
+          c2.should.deep.equal(initialOrigCapabilities);
+          done();
+        } catch (err) {
+          done(err);
+        }
       });
     });
 
     it('should set custom capabilities successfully after getCapabilities() call', done => {
       let newCapabilities = {
-        autoplay: 3,
-        mutedAutoPlay: 4,
+        autoplay: false,
+        mutedAutoPlay: false,
         isSupported: 5
       };
+      const existingCapabilities = (({autoplay, mutedAutoPlay}) => ({autoplay, mutedAutoPlay}))(newCapabilities);
       Player.getCapabilities().then(c1 => {
         c1.should.deep.equal(initialOrigCapabilities);
         Player.setCapabilities('html5', newCapabilities);
+        Player.getCapabilities()
+          .then(c2 => {
+            try {
+              c2.html5.should.deep.equal(existingCapabilities);
+              done();
+            } catch (err) {
+              done(err);
+            }
+          })
+          .catch(err => done(err));
+      });
+    });
+
+    it('should set custom capabilities after runCapabilities() successfully', done => {
+      let newCapabilities = {
+        autoplay: false,
+        mutedAutoPlay: false
+      };
+      Player.runCapabilities();
+      Player.getCapabilities().then(c1 => {
+        try {
+          c1.html5.should.deep.not.equal(newCapabilities);
+        } catch (err) {
+          done(err);
+        }
+        Player.setCapabilities('html5', newCapabilities);
         Player.getCapabilities().then(c2 => {
-          c2.html5.should.deep.equal(newCapabilities);
-          done();
+          try {
+            c2.html5.should.deep.equal(newCapabilities);
+            done();
+          } catch (err) {
+            done(err);
+          }
         });
+      });
+    });
+
+    it('should check for mutedAutoPlay possibility if autoplay set to false', done => {
+      let newCapabilities = {
+        autoplay: false
+      };
+      Player.setCapabilities('html5', newCapabilities);
+      Player.getCapabilities().then(c2 => {
+        try {
+          c2.html5.autoplay.should.equal(newCapabilities.autoplay);
+          c2.html5.mutedAutoPlay.should.not.equal(newCapabilities.mutedAutoPlay);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+    });
+
+    it('should check for autoPlay possibility if mutedAutoPlay set', done => {
+      let newCapabilities = {
+        mutedAutoPlay: true
+      };
+      Player.setCapabilities('html5', newCapabilities);
+      Player.getCapabilities().then(c2 => {
+        try {
+          c2.html5.autoplay.should.not.equal(newCapabilities.autoplay);
+          c2.html5.mutedAutoPlay.should.equal(newCapabilities.mutedAutoPlay);
+          done();
+        } catch (err) {
+          done(err);
+        }
       });
     });
   });
