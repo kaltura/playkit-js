@@ -268,7 +268,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
 
-  _pendingSelectedVideoTrack: VideoTrack;
+  _pendingSelectedVideoTrack: ?VideoTrack;
   /**
    * The available playback rates for the player.
    * @type {Array<number>}
