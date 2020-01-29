@@ -149,6 +149,17 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Sets an engine capabilities.
+   * @param {Object} capabilities - The engine capabilities.
+   * @returns {void}
+   * @public
+   * @static
+   */
+  static setCapabilities(capabilities: {[name: string]: any}): void {
+    Html5._capabilities.forEach(capability => capability.setCapabilities(capabilities));
+  }
+
+  /**
    * For browsers which block auto play, use the user gesture to open the video element and enable playing via API.
    * @returns {void}
    * @param {string} playerId - the id to be set as the key of the video element

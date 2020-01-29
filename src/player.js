@@ -130,13 +130,6 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   static _logger: any = getLogger('Player');
-  /**
-   * The player capabilities result object.
-   * @type {Object}
-   * @private
-   * @static
-   */
-  static _playerCapabilities: Object = {};
 
   /**
    * Runs the engines capabilities tests.
@@ -165,7 +158,6 @@ export default class Player extends FakeEventTarget {
     return Promise.all(promises).then(arrayOfResults => {
       const playerCapabilities = {};
       arrayOfResults.forEach(res => Object.assign(playerCapabilities, res));
-      Utils.Object.mergeDeep(playerCapabilities, Player._playerCapabilities);
       return engineType ? playerCapabilities[engineType] : playerCapabilities;
     });
   }
@@ -180,7 +172,10 @@ export default class Player extends FakeEventTarget {
    */
   static setCapabilities(engineType: string, capabilities: {[name: string]: any}): void {
     Player._logger.debug('Set player capabilities', engineType, capabilities);
-    Player._playerCapabilities[engineType] = Utils.Object.mergeDeep({}, Player._playerCapabilities[engineType], capabilities);
+    const selectedEngine = EngineProvider.getEngines().find(Engine => Engine.id === engineType);
+    if (selectedEngine) {
+      selectedEngine.setCapabilities(capabilities);
+    }
   }
 
   /**
@@ -641,7 +636,6 @@ export default class Player extends FakeEventTarget {
     if (this._destroyed) return;
     //make sure all services are destroyed before engine and engine attributes are destroyed
     this._externalCaptionsHandler.destroy();
-    Player._playerCapabilities = {};
     this._posterManager.destroy();
     this._pluginManager.destroy();
     this._stateManager.destroy();
