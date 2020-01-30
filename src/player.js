@@ -133,28 +133,26 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Runs the engines capabilities tests.
-   * @param {?boolean} playsinline - content playsinline
    * @returns {void}
    * @public
    * @static
    */
-  static runCapabilities(playsinline: ?boolean): void {
+  static runCapabilities(): void {
     Player._logger.debug('Running player capabilities');
-    EngineProvider.getEngines().forEach(Engine => Engine.runCapabilities(playsinline));
+    EngineProvider.getEngines().forEach(Engine => Engine.runCapabilities());
   }
 
   /**
    * Gets the engines capabilities.
    * @param {?string} engineType - The engine type.
-   * @param {?boolean} playsinline - content playsinline
    * @return {Promise<Object>} - The engines capabilities object.
    * @public
    * @static
    */
-  static getCapabilities(engineType: ?string, playsinline: ?boolean): Promise<{[name: string]: any}> {
+  static getCapabilities(engineType: ?string): Promise<{[name: string]: any}> {
     Player._logger.debug('Get player capabilities', engineType);
     const promises = [];
-    EngineProvider.getEngines().forEach(Engine => promises.push(Engine.getCapabilities(playsinline)));
+    EngineProvider.getEngines().forEach(Engine => promises.push(Engine.getCapabilities()));
     return Promise.all(promises).then(arrayOfResults => {
       const playerCapabilities = {};
       arrayOfResults.forEach(res => Object.assign(playerCapabilities, res));
@@ -442,8 +440,7 @@ export default class Player extends FakeEventTarget {
     this._setConfigLogLevel(config);
     this._playerId = Utils.Generator.uniqueId(5);
     this._prepareVideoElement();
-    const playsInline = Utils.Object.getPropertyPath(config, 'playback.playsinline');
-    Player.runCapabilities(playsInline);
+    Player.runCapabilities();
     this._env = Env;
     this._tracks = [];
     this._uiComponents = [];
@@ -1918,7 +1915,7 @@ export default class Player extends FakeEventTarget {
   _handleAutoPlay(): void {
     if (this._config.playback.autoplay === true) {
       const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
-      Player.getCapabilities(this.engineType, this.playsinline).then(capabilities => {
+      Player.getCapabilities(this.engineType).then(capabilities => {
         if (capabilities.autoplay) {
           onAutoPlay();
         } else {
