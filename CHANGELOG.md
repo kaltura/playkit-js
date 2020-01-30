@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.59.5"></a>
+## [0.59.5](https://github.com/kaltura/playkit-js/compare/v0.59.4...v0.59.5) (2020-01-29)
+
+
+### Bug Fixes
+
+* **FEC-9534:** changing the bitrate post completion of any content changes replay to play icon ([#440](https://github.com/kaltura/playkit-js/issues/440)) ([e329820](https://github.com/kaltura/playkit-js/commit/e329820))
+* **FEC-9577:** Hisense playback doesn't work ([#438](https://github.com/kaltura/playkit-js/issues/438)) ([281421b](https://github.com/kaltura/playkit-js/commit/281421b))
+* **FEC-9614:** Player is stuck when having empty lines on VTT on E11 ([#436](https://github.com/kaltura/playkit-js/issues/436)) ([e472628](https://github.com/kaltura/playkit-js/commit/e472628))
+
+
+
 <a name="0.59.4"></a>
 ## [0.59.4](https://github.com/kaltura/playkit-js/compare/v0.59.3...v0.59.4) (2020-01-09)
 

@@ -130,13 +130,6 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   static _logger: any = getLogger('Player');
-  /**
-   * The player capabilities result object.
-   * @type {Object}
-   * @private
-   * @static
-   */
-  static _playerCapabilities: Object = {};
 
   /**
    * Runs the engines capabilities tests.
@@ -163,7 +156,6 @@ export default class Player extends FakeEventTarget {
     return Promise.all(promises).then(arrayOfResults => {
       const playerCapabilities = {};
       arrayOfResults.forEach(res => Object.assign(playerCapabilities, res));
-      Utils.Object.mergeDeep(playerCapabilities, Player._playerCapabilities);
       return engineType ? playerCapabilities[engineType] : playerCapabilities;
     });
   }
@@ -178,7 +170,10 @@ export default class Player extends FakeEventTarget {
    */
   static setCapabilities(engineType: string, capabilities: {[name: string]: any}): void {
     Player._logger.debug('Set player capabilities', engineType, capabilities);
-    Player._playerCapabilities[engineType] = Utils.Object.mergeDeep({}, Player._playerCapabilities[engineType], capabilities);
+    const selectedEngine = EngineProvider.getEngines().find(Engine => Engine.id === engineType);
+    if (selectedEngine) {
+      selectedEngine.setCapabilities(capabilities);
+    }
   }
 
   /**
@@ -253,6 +248,20 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _playbackStart: boolean;
+  /**
+   * Whether the playback ended
+   * @type {boolean}
+   * @private
+   */
+
+  _playbackEnded: boolean;
+  /**
+   * If quality has changed after playback ended - pend the change
+   * @type {boolean}
+   * @private
+   */
+
+  _pendingSelectedVideoTrack: ?VideoTrack;
   /**
    * The available playback rates for the player.
    * @type {Array<number>}
@@ -440,6 +449,7 @@ export default class Player extends FakeEventTarget {
     this._loadingMedia = false;
     this._loading = false;
     this._playbackStart = false;
+    this._playbackEnded = false;
     this._firstPlaying = false;
     this._reset = true;
     this._destroyed = false;
@@ -616,6 +626,7 @@ export default class Player extends FakeEventTarget {
     this._resetStateFlags();
     this._engineType = '';
     this._streamType = '';
+    this._pendingSelectedVideoTrack = null;
     if (this._engine) {
       this._engine.reset();
     }
@@ -638,7 +649,6 @@ export default class Player extends FakeEventTarget {
     if (this._destroyed) return;
     //make sure all services are destroyed before engine and engine attributes are destroyed
     this._externalCaptionsHandler.destroy();
-    Player._playerCapabilities = {};
     this._posterManager.destroy();
     this._pluginManager.destroy();
     this._stateManager.destroy();
@@ -650,6 +660,7 @@ export default class Player extends FakeEventTarget {
     this._engineType = '';
     this._streamType = '';
     this._readyPromise = null;
+    this._pendingSelectedVideoTrack = null;
     this._resetStateFlags();
     this._playbackAttributesState = {};
     if (this._engine) {
@@ -1127,7 +1138,11 @@ export default class Player extends FakeEventTarget {
   selectTrack(track: ?Track): void {
     if (this._engine) {
       if (track instanceof VideoTrack) {
-        this._engine.selectVideoTrack(track);
+        if (this._playbackEnded) {
+          this._pendingSelectedVideoTrack = track;
+        } else {
+          this._engine.selectVideoTrack(track);
+        }
       } else if (track instanceof AudioTrack) {
         this._engine.selectAudioTrack(track);
       } else if (track instanceof TextTrack) {
@@ -2071,6 +2086,10 @@ export default class Player extends FakeEventTarget {
       this._firstPlaying = true;
       this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAYING));
     }
+    if (this._engine && this._pendingSelectedVideoTrack) {
+      this._engine.selectVideoTrack(this._pendingSelectedVideoTrack);
+      this._pendingSelectedVideoTrack = null;
+    }
   }
 
   /**
@@ -2136,6 +2155,8 @@ export default class Player extends FakeEventTarget {
     if (this.config.playback.loop) {
       this.currentTime = 0;
       this.play();
+    } else {
+      this._playbackEnded = true;
     }
   }
 
@@ -2149,6 +2170,7 @@ export default class Player extends FakeEventTarget {
     this._firstPlay = true;
     this._loadingMedia = false;
     this._playbackStart = false;
+    this._playbackEnded = false;
     this._firstPlaying = false;
   }
 

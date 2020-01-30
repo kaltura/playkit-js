@@ -9,6 +9,7 @@ declare interface IEngine {
   static canPlaySource(source: PKMediaSourceObject, preferNative: boolean, drmConfig: PKDrmConfigObject): boolean;
   static runCapabilities(): void;
   static getCapabilities(): Promise<Object>;
+  static setCapabilities(capabilities: {[name: string]: any}): void;
   static prepareVideoElement(playerId: string): void;
   static isSupported(): boolean;
   restore(source: PKMediaSourceObject, config: Object): void;
