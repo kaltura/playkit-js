@@ -58,6 +58,7 @@ jobs:
       env: TRAVIS_MODE=releaseCanary
       deploy:
         provider: npm
+        edge: true
         api_key: $NPM_TOKEN
         email: $NPM_EMAIL
         skip_cleanup: true
