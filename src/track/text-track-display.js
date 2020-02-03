@@ -227,9 +227,9 @@ function parseCue(input, cue, regionList) {
     cue.size = settings.get('size', 100);
     // Safari still uses the old middle value and won't accept center
     try {
-      cue.align = settings.get("align", "center");
+      cue.align = settings.get('align', 'center');
     } catch (e) {
-      cue.align = settings.get("align", "middle");
+      cue.align = settings.get('align', 'middle');
     }
     cue.position = settings.get('position', cue.position || 'auto');
     cue.positionAlign = settings.get(
@@ -707,8 +707,6 @@ class CueStyleBox extends StyleBox {
 // Can initialize it with either a StyleBox or another BoxPosition.
 class BoxPosition {
   constructor(obj) {
-    let isIE8 = typeof navigator !== 'undefined' && /MSIE\s8\.0/.test(navigator.userAgent);
-
     // Either a BoxPosition was passed in and we need to copy it, or a StyleBox
     // was passed in and we need to copy the results of 'getBoundingClientRect'
     // as the object returned is readonly. All co-ordinate values are in reference
@@ -733,11 +731,7 @@ class BoxPosition {
     this.height = obj.height || height;
     this.bottom = obj.bottom || top + (obj.height || height);
     this.width = obj.width || width;
-    this.lineHeight = lh !== undefined ? lh : obj.lineHeight;
-
-    if (isIE8 && !this.lineHeight) {
-      this.lineHeight = 13;
-    }
+    this.lineHeight = lh !== undefined ? lh : obj.lineHeight || 13;
   }
 
   // Move the box along a particular axis. Optionally pass in an amount to move
@@ -931,7 +925,7 @@ function moveBoxToLinePosition(window, styleBox, containerBox, boxPositions) {
     boxPosition.move(initialAxis, position);
   } else {
     // If we have a percentage line value for the cue.
-    let calculatedPercentage = boxPosition.lineHeight / containerBox.height * 100;
+    let calculatedPercentage = (boxPosition.lineHeight / containerBox.height) * 100;
 
     switch (cue.lineAlign) {
       case 'center':
