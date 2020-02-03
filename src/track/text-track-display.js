@@ -731,7 +731,7 @@ class BoxPosition {
     this.height = obj.height || height;
     this.bottom = obj.bottom || top + (obj.height || height);
     this.width = obj.width || width;
-    this.lineHeight = lh !== undefined ? lh : obj.lineHeight || 13;
+    this.lineHeight = lh || obj.lineHeight || 13;
   }
 
   // Move the box along a particular axis. Optionally pass in an amount to move
