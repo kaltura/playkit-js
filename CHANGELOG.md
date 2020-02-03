@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.59.9"></a>
+## [0.59.9](https://github.com/kaltura/playkit-js/compare/v0.59.8...v0.59.9) (2020-02-03)
+
+
+### Bug Fixes
+
+* **FEC-9614:** player gets stuck when there are empty captions in ie11 ([#441](https://github.com/kaltura/playkit-js/issues/441)) ([c5ca990](https://github.com/kaltura/playkit-js/commit/c5ca990))
+* **FEC-9614:** players get stuck when there are empty captions in ie11 - additional fix ([#443](https://github.com/kaltura/playkit-js/issues/443)) ([8c49b12](https://github.com/kaltura/playkit-js/commit/8c49b12))
+
+
+
 <a name="0.59.8"></a>
 ## [0.59.8](https://github.com/kaltura/playkit-js/compare/v0.59.7...v0.59.8) (2020-01-30)
 
