@@ -2,6 +2,175 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.59.9"></a>
+## [0.59.9](https://github.com/kaltura/playkit-js/compare/v0.59.8...v0.59.9) (2020-02-03)
+
+
+### Bug Fixes
+
+* **FEC-9614:** player gets stuck when there are empty captions in ie11 ([#441](https://github.com/kaltura/playkit-js/issues/441)) ([c5ca990](https://github.com/kaltura/playkit-js/commit/c5ca990))
+* **FEC-9614:** players get stuck when there are empty captions in ie11 - additional fix ([#443](https://github.com/kaltura/playkit-js/issues/443)) ([8c49b12](https://github.com/kaltura/playkit-js/commit/8c49b12))
+
+
+
+<a name="0.59.8"></a>
+## [0.59.8](https://github.com/kaltura/playkit-js/compare/v0.59.7...v0.59.8) (2020-01-30)
+
+
+
+<a name="0.59.7"></a>
+## [0.59.7](https://github.com/kaltura/playkit-js/compare/v0.59.6...v0.59.7) (2020-01-30)
+
+
+
+<a name="0.59.6"></a>
+## [0.59.6](https://github.com/kaltura/playkit-js/compare/v0.59.4...v0.59.6) (2020-01-30)
+
+
+### Bug Fixes
+
+* **FEC-9534:** changing the bitrate post completion of any content changes replay to play icon ([#440](https://github.com/kaltura/playkit-js/issues/440)) ([e329820](https://github.com/kaltura/playkit-js/commit/e329820))
+* **FEC-9577:** Hisense playback doesn't work ([#438](https://github.com/kaltura/playkit-js/issues/438)) ([281421b](https://github.com/kaltura/playkit-js/commit/281421b))
+* **FEC-9614:** Player is stuck when having empty lines on VTT on E11 ([#436](https://github.com/kaltura/playkit-js/issues/436)) ([e472628](https://github.com/kaltura/playkit-js/commit/e472628))
+* **FEC-9629:** Player is not inline when rendered after the DOM loads ([#439](https://github.com/kaltura/playkit-js/issues/439)) ([13f36b5](https://github.com/kaltura/playkit-js/commit/13f36b5))
+
+
+
+<a name="0.59.5"></a>
+## [0.59.5](https://github.com/kaltura/playkit-js/compare/v0.59.4...v0.59.5) (2020-01-29)
+
+
+### Bug Fixes
+
+* **FEC-9534:** changing the bitrate post completion of any content changes replay to play icon ([#440](https://github.com/kaltura/playkit-js/issues/440)) ([e329820](https://github.com/kaltura/playkit-js/commit/e329820))
+* **FEC-9577:** Hisense playback doesn't work ([#438](https://github.com/kaltura/playkit-js/issues/438)) ([281421b](https://github.com/kaltura/playkit-js/commit/281421b))
+* **FEC-9614:** Player is stuck when having empty lines on VTT on E11 ([#436](https://github.com/kaltura/playkit-js/issues/436)) ([e472628](https://github.com/kaltura/playkit-js/commit/e472628))
+
+
+
+<a name="0.59.4"></a>
+## [0.59.4](https://github.com/kaltura/playkit-js/compare/v0.59.3...v0.59.4) (2020-01-09)
+
+
+### Bug Fixes
+
+* **FEC-9609:** after postroll there isn't replay button using attach detach api ([#435](https://github.com/kaltura/playkit-js/issues/435)) ([7dde1ef](https://github.com/kaltura/playkit-js/commit/7dde1ef))
+
+
+
+<a name="0.59.3"></a>
+## [0.59.3](https://github.com/kaltura/playkit-js/compare/v0.59.2...v0.59.3) (2020-01-08)
+
+
+### Bug Fixes
+
+* **FEC-9600:** new ad layout - pre-mid-post rolls - no replay button appears after post-roll ad finished ([#434](https://github.com/kaltura/playkit-js/issues/434)) ([de9a5b4](https://github.com/kaltura/playkit-js/commit/de9a5b4))
+* **FEC-9603:** load doesn't call on play after attach detach ([#433](https://github.com/kaltura/playkit-js/issues/433)) ([fd8197e](https://github.com/kaltura/playkit-js/commit/fd8197e))
+
+
+
+<a name="0.59.2"></a>
+## [0.59.2](https://github.com/kaltura/playkit-js/compare/v0.59.1...v0.59.2) (2020-01-05)
+
+
+### Bug Fixes
+
+* **FEC-9459:** load implementation in middleware is not working as expected ([#431](https://github.com/kaltura/playkit-js/issues/431)) ([a7ec5f3](https://github.com/kaltura/playkit-js/commit/a7ec5f3))
+* **FEC-9585:** when pre-roll+bumper exist need re-click to play the content - iOS ([#432](https://github.com/kaltura/playkit-js/issues/432)) ([13cbc50](https://github.com/kaltura/playkit-js/commit/13cbc50))
+
+
+
+<a name="0.59.1"></a>
+## [0.59.1](https://github.com/kaltura/playkit-js/compare/v0.59.0...v0.59.1) (2019-12-31)
+
+
+### Bug Fixes
+
+* **FEC-9583:** race condition on load ios playback ([#430](https://github.com/kaltura/playkit-js/issues/430)) ([4f77aff](https://github.com/kaltura/playkit-js/commit/4f77aff))
+
+
+
+<a name="0.59.0"></a>
+# [0.59.0](https://github.com/kaltura/playkit-js/compare/v0.58.1...v0.59.0) (2019-12-29)
+
+
+### Bug Fixes
+
+* **FEC-9513:** bumper - endless spinner when auto play is failed ([#424](https://github.com/kaltura/playkit-js/issues/424)) ([c1555f6](https://github.com/kaltura/playkit-js/commit/c1555f6))
+* **FEC-9523:** add attach detach implemention ([#425](https://github.com/kaltura/playkit-js/issues/425)) ([f1f977c](https://github.com/kaltura/playkit-js/commit/f1f977c))
+
+
+### Features
+
+* **FEC-9452:** async request/response filter handlers ([#428](https://github.com/kaltura/playkit-js/issues/428)) ([e4035fc](https://github.com/kaltura/playkit-js/commit/e4035fc))
+* **FEC-9474:** ad layout - time definitions ([#427](https://github.com/kaltura/playkit-js/issues/427)) ([678d37d](https://github.com/kaltura/playkit-js/commit/678d37d))
+
+
+
+<a name="0.58.1"></a>
+## [0.58.1](https://github.com/kaltura/playkit-js/compare/v0.58.0...v0.58.1) (2019-12-05)
+
+
+### Bug Fixes
+
+* **FEC-9471:** slider progress bar exceeds 100% ([#422](https://github.com/kaltura/playkit-js/issues/422)) ([0bb9644](https://github.com/kaltura/playkit-js/commit/0bb9644))
+* **FEC-9527:** The poster is hidden when auto play is failed ([#423](https://github.com/kaltura/playkit-js/issues/423)) ([a28b3a0](https://github.com/kaltura/playkit-js/commit/a28b3a0))
+
+
+
+<a name="0.58.0"></a>
+# [0.58.0](https://github.com/kaltura/playkit-js/compare/v0.57.0...v0.58.0) (2019-12-01)
+
+
+### Bug Fixes
+
+* **FEC-9480:** there isn't event for play promise failed just autoplay failed ([#412](https://github.com/kaltura/playkit-js/issues/412)) ([75423d9](https://github.com/kaltura/playkit-js/commit/75423d9))
+* **FEC-9493:** new ad layout - dragging to the end causes the midroll to play with replay button ([#416](https://github.com/kaltura/playkit-js/issues/416)) ([a81f0ae](https://github.com/kaltura/playkit-js/commit/a81f0ae))
+* **FEC-9510:** auto play failed in ios ([#421](https://github.com/kaltura/playkit-js/issues/421)) ([094daea](https://github.com/kaltura/playkit-js/commit/094daea))
+
+
+### Features
+
+* **FEC-9462:** enable caption reading by screen reader ([#419](https://github.com/kaltura/playkit-js/issues/419)) ([327a07a](https://github.com/kaltura/playkit-js/commit/327a07a))
+* **FEC-9469:** ad layout - ads xml response ([#418](https://github.com/kaltura/playkit-js/issues/418)) ([b322bcb](https://github.com/kaltura/playkit-js/commit/b322bcb))
+* **FEC-9470:** ad layout - bumper support ([#420](https://github.com/kaltura/playkit-js/issues/420)) ([fbd1cb8](https://github.com/kaltura/playkit-js/commit/fbd1cb8))
+* **FEC-9473:** ad layout - snap back and start time ([#417](https://github.com/kaltura/playkit-js/issues/417)) ([7b17de0](https://github.com/kaltura/playkit-js/commit/7b17de0))
+
+
+
+<a name="0.57.0"></a>
+# [0.57.0](https://github.com/kaltura/playkit-js/compare/v0.56.0...v0.57.0) (2019-11-12)
+
+
+### Bug Fixes
+
+* **FEC-9420:** PIP button is showed but not working ([#414](https://github.com/kaltura/playkit-js/issues/414)) ([d8be9b4](https://github.com/kaltura/playkit-js/commit/d8be9b4))
+* **FEC-9434:** the first frame of content flashes for a second before the ad playback. ([#413](https://github.com/kaltura/playkit-js/issues/413)) ([14dc625](https://github.com/kaltura/playkit-js/commit/14dc625))
+
+
+### Features
+
+* new USER_GESTURE event and api ([#415](https://github.com/kaltura/playkit-js/issues/415)) ([0893c02](https://github.com/kaltura/playkit-js/commit/0893c02))
+
+
+
+<a name="0.56.0"></a>
+# [0.56.0](https://github.com/kaltura/playkit-js/compare/v0.55.4...v0.56.0) (2019-10-31)
+
+
+### Bug Fixes
+
+* **FEC-9379:** add detection for chromium Edge ([#409](https://github.com/kaltura/playkit-js/issues/409)) ([13c9883](https://github.com/kaltura/playkit-js/commit/13c9883))
+* **FEC-9427:** use response type in xhr arraybuffer for Fairplay request ([#410](https://github.com/kaltura/playkit-js/issues/410)) ([f01345e](https://github.com/kaltura/playkit-js/commit/f01345e))
+
+
+### Features
+
+* **FEC-9282:** export resize-watcher ([#406](https://github.com/kaltura/playkit-js/issues/406)) ([376dc3b](https://github.com/kaltura/playkit-js/commit/376dc3b))
+* **FEC-9293:** ad waterfalling ([#407](https://github.com/kaltura/playkit-js/issues/407)) ([64233a0](https://github.com/kaltura/playkit-js/commit/64233a0))
+
+
+
 <a name="0.55.4"></a>
 ## [0.55.4](https://github.com/kaltura/playkit-js/compare/v0.55.2...v0.55.4) (2019-10-10)
 

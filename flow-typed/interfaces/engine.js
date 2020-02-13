@@ -5,17 +5,18 @@ import TextTrack from '../../src/track/text-track';
 
 declare interface IEngine {
   static id: string;
-  static createEngine(source: PKMediaSourceObject, config: Object): IEngine;
+  static createEngine(source: PKMediaSourceObject, config: Object, playerId: string): IEngine;
   static canPlaySource(source: PKMediaSourceObject, preferNative: boolean, drmConfig: PKDrmConfigObject): boolean;
   static runCapabilities(): void;
   static getCapabilities(): Promise<Object>;
+  static setCapabilities(capabilities: {[name: string]: any}): void;
   static prepareVideoElement(playerId: string): void;
   static isSupported(): boolean;
   restore(source: PKMediaSourceObject, config: Object): void;
   destroy(): void;
   attach(): void;
   detach(): void;
-  play(): void;
+  play(): ?Promise<*>;
   pause(): void;
   load(startTime: ?number): Promise<Object>;
   reset(): void;

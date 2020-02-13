@@ -1,6 +1,7 @@
 // @flow
 declare type PKAdBreakObject = {
-  position?: number,
-  ads: PKAdPod,
-  played: boolean
+  position: number,
+  percentage?: number,
+  every?: number,
+  ads: PKAdPod
 };

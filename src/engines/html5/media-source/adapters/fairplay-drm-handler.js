@@ -115,12 +115,38 @@ class FairplayDrmHandler {
       body: FairplayDrmHandler._base64EncodeUint8Array(message),
       headers: {}
     };
+    let requestFilterPromise;
     const requestFilter = this._config.network.requestFilter;
     if (requestFilter) {
       this._logger.debug('Apply request filter');
       try {
-        requestFilter(RequestType.LICENSE, pkRequest);
+        requestFilterPromise = requestFilter(RequestType.LICENSE, pkRequest);
       } catch (error) {
+        requestFilterPromise = Promise.reject(error);
+      }
+    }
+    requestFilterPromise = requestFilterPromise || Promise.resolve(pkRequest);
+    requestFilterPromise
+      .then(updatedRequest => {
+        request.open('POST', updatedRequest.url, true);
+        let setContentType = true;
+        if (updatedRequest.headers) {
+          Object.entries(updatedRequest.headers).forEach(([header, value]) => {
+            typeof value === 'string' && request.setRequestHeader(header, value);
+            setContentType && (setContentType = header.toLowerCase() !== 'content-type');
+          });
+        }
+        setContentType && request.setRequestHeader('Content-type', 'application/json');
+        this._logger.debug('Ready for license request');
+        request.onerror = () => {
+          this._onError((Error.Code: CodeType).LICENSE_REQUEST_FAILED, {
+            status: request.status,
+            responseText: request.responseText
+          });
+        };
+        request.send(updatedRequest.body);
+      })
+      .catch(error => {
         this._errorCallback(
           new Error(
             (Error.Severity: SeverityType).CRITICAL,
@@ -130,26 +156,7 @@ class FairplayDrmHandler {
           )
         );
         this.destroy();
-        return;
-      }
-    }
-    request.open('POST', pkRequest.url, true);
-    let setContentType = true;
-    if (pkRequest.headers) {
-      Object.entries(pkRequest.headers).forEach(([header, value]) => {
-        typeof value === 'string' && request.setRequestHeader(header, value);
-        setContentType && (setContentType = header.toLowerCase() !== 'content-type');
       });
-    }
-    setContentType && request.setRequestHeader('Content-type', 'application/json');
-    this._logger.debug('Ready for license request');
-    request.onerror = () => {
-      this._onError((Error.Code: CodeType).LICENSE_REQUEST_FAILED, {
-        status: request.status,
-        responseText: request.responseText
-      });
-    };
-    request.send(pkRequest.body);
   }
 
   _onWebkitKeyAdded(): void {
@@ -176,20 +183,28 @@ class FairplayDrmHandler {
     }
     const response = {data: request.response};
     this._logger.debug('Apply response filter');
+    let responseFilterPromise;
     try {
-      this._config.network.responseFilter(RequestType.LICENSE, response);
-      this._keySession.update(response.data);
+      responseFilterPromise = this._config.network.responseFilter(RequestType.LICENSE, response);
     } catch (error) {
-      this._errorCallback(
-        new Error(
-          (Error.Severity: SeverityType).CRITICAL,
-          (Error.Category: CategoryType).NETWORK,
-          (Error.Code: CodeType).RESPONSE_FILTER_ERROR,
-          error
-        )
-      );
-      this.destroy();
+      responseFilterPromise = Promise.reject(error);
     }
+    responseFilterPromise = responseFilterPromise || Promise.resolve(response);
+    responseFilterPromise
+      .then(updatedResponse => {
+        this._keySession.update(updatedResponse.data);
+      })
+      .catch(error => {
+        this._errorCallback(
+          new Error(
+            (Error.Severity: SeverityType).CRITICAL,
+            (Error.Category: CategoryType).NETWORK,
+            (Error.Code: CodeType).RESPONSE_FILTER_ERROR,
+            error
+          )
+        );
+        this.destroy();
+      });
   }
 
   _onError(code: number, data?: Object): void {

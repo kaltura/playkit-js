@@ -127,6 +127,10 @@ const CustomEventType: PKEventTypes = {
    */
   EXIT_FULLSCREEN: 'exitfullscreen',
   /**
+   * Fires when browser fails to play.
+   */
+  PLAY_FAILED: 'playfailed',
+  /**
    * Fires when browser fails to autoplay with sound.
    */
   AUTOPLAY_FAILED: 'autoplayfailed',
@@ -235,7 +239,11 @@ const CustomEventType: PKEventTypes = {
   /**
    * Fired when a manifest is done loading successfully
    */
-  MANIFEST_LOADED: 'manifestloaded'
+  MANIFEST_LOADED: 'manifestloaded',
+  /**
+   * Fired when the user interact with the player ui
+   */
+  USER_GESTURE: 'usergesture'
 };
 
 const EventType: PKEventTypes = Utils.Object.merge([Html5EventType, CustomEventType, AdEventType]);

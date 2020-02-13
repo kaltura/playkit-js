@@ -122,30 +122,39 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Runs the html5 capabilities tests.
-   * @param {boolean} playsinline - content playsinline
    * @returns {void}
    * @public
    * @static
    */
-  static runCapabilities(playsinline: boolean): void {
-    Html5._capabilities.forEach(capability => capability.runCapability(playsinline));
+  static runCapabilities(): void {
+    Html5._capabilities.forEach(capability => capability.runCapability());
   }
 
   /**
    * Gets the html5 capabilities.
-   * @param {?boolean} playsinline - content playsinline
    * @return {Promise<Object>} - The html5 capabilities object.
    * @public
    * @static
    */
-  static getCapabilities(playsinline: ?boolean): Promise<Object> {
+  static getCapabilities(): Promise<Object> {
     let promises = [];
-    Html5._capabilities.forEach(capability => promises.push(capability.getCapability(playsinline)));
+    Html5._capabilities.forEach(capability => promises.push(capability.getCapability()));
     return Promise.all(promises).then(arrayOfResults => {
       const mergedResults = {};
       arrayOfResults.forEach(res => Object.assign(mergedResults, res));
       return {[Html5.id]: mergedResults};
     });
+  }
+
+  /**
+   * Sets an engine capabilities.
+   * @param {Object} capabilities - The engine capabilities.
+   * @returns {void}
+   * @public
+   * @static
+   */
+  static setCapabilities(capabilities: {[name: string]: any}): void {
+    Html5._capabilities.forEach(capability => capability.setCapabilities(capabilities));
   }
 
   /**
@@ -429,13 +438,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * Start/resume playback.
    * @public
-   * @returns {void}
+   * @returns {?Promise<*>} - play promise
    */
-  play(): void {
+  play(): ?Promise<*> {
     let playPromise = this._el.play();
     if (playPromise) {
-      playPromise.catch(() => this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED)));
+      playPromise.catch(err => this.dispatchEvent(new FakeEvent(CustomEventType.PLAY_FAILED, {error: err})));
     }
+    return playPromise;
   }
 
   /**
@@ -543,10 +553,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @return {boolean} if the engine is in picture in picture mode or not
    */
   isPictureInPictureSupported(): boolean {
-    return (
-      !!document.pictureInPictureEnabled ||
-      (typeof this._el.webkitSupportsPresentationMode === 'function' && this._el.webkitSupportsPresentationMode('picture-in-picture'))
-    );
+    // due to a bug in shaka pip_webkit which sets pictureInPictureEnabled to true in unsupported devices like iphones we will
+    // first rely on the response of webkitSupportsPresentationMode (if exists) and only if not on the pictureInPictureEnabled property
+    if (typeof this._el.webkitSupportsPresentationMode === 'function') {
+      return this._el.webkitSupportsPresentationMode('picture-in-picture');
+    } else {
+      // $FlowFixMe
+      return !!document.pictureInPictureEnabled;
+    }
   }
 
   /**

@@ -17,6 +17,9 @@ import Error from '../../src/error/error';
 import {Object as PKObject} from '../../src/utils/util';
 import {LabelOptions} from '../../src/track/label-options';
 import {EngineProvider} from '../../src/engines/engine-provider';
+import {AdEventType} from '../../src/ads/ad-event-type';
+import FakeEvent from '../../src/event/fake-event';
+import Html5AutoPlayCapability from '../../src/engines/html5/capabilities/html5-autoplay';
 
 const targetId = 'player-placeholder_player.spec';
 let sourcesConfig = PKObject.copyDeep(SourcesConfig);
@@ -132,6 +135,34 @@ describe('Player', function() {
       });
       player.load();
       player.ready().then(() => {
+        player.play();
+      });
+    });
+    describe('attach detach', function() {
+      it('should success play after detach attach', done => {
+        const playing = () => {
+          player.removeEventListener(Html5EventType.PLAYING, playing);
+          player.addEventListener(Html5EventType.PLAYING, () => {
+            done();
+          });
+          player._detachMediaSource();
+          player._attachMediaSource();
+          player.play();
+        };
+        player.addEventListener(Html5EventType.PLAYING, playing);
+        player.play();
+      });
+
+      it('should attach return to time before detach', () => {
+        let currentTime = NaN;
+        const playing = () => {
+          player.removeEventListener(Html5EventType.PLAYING, playing);
+          currentTime = Math.floor(player.currentTime);
+          player._detachMediaSource();
+          player._attachMediaSource();
+          Math.floor(player.currentTime).should.equal(currentTime);
+        };
+        player.addEventListener(Html5EventType.PLAYING, playing);
         player.play();
       });
     });
@@ -1340,6 +1371,68 @@ describe('Player', function() {
         });
         player.load();
         player.play();
+      });
+    });
+
+    describe('auto play failed', function() {
+      let config;
+      let player;
+      let playerContainer;
+      let sandbox;
+
+      before(() => {
+        playerContainer = createElement('DIV', targetId);
+      });
+
+      beforeEach(() => {
+        sandbox = sinon.sandbox.create();
+        config = PKObject.mergeDeep(getConfigStructure(), {
+          sources: sourcesConfig.Mp4,
+          playback: {
+            autoplay: true
+          }
+        });
+        config.sources = sourcesConfig.Mp4;
+        player = new Player(config);
+        playerContainer.appendChild(player.getView());
+      });
+
+      afterEach(() => {
+        player.destroy();
+        sandbox.restore();
+      });
+
+      after(() => {
+        removeVideoElementsFromTestPage();
+        removeElement(targetId);
+      });
+
+      it('should fire auto play failed and show the poster once get PLAY_FAILED', done => {
+        player.addEventListener(CustomEventType.AUTOPLAY_FAILED, event => {
+          try {
+            player._posterManager._el.style.display.should.equal('');
+            event.payload.error.should.equal('mock failure');
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+        sandbox.stub(player._engine._el, 'play').callsFake(function() {
+          return Promise.reject('mock failure');
+        });
+      });
+
+      it('should fire auto play failed and show the poster once get AD_AUTOPLAY_FAILED', done => {
+        player.addEventListener(CustomEventType.AUTOPLAY_FAILED, event => {
+          try {
+            player._posterManager._el.style.display.should.equal('');
+            event.payload.error.should.equal('mock failure');
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+        player.dispatchEvent(new FakeEvent(AdEventType.AD_AUTOPLAY_FAILED, {error: 'mock failure'}));
       });
     });
 
@@ -2818,7 +2911,7 @@ describe('Player', function() {
   describe('setCapabilities', () => {
     let initialOrigCapabilities;
 
-    before(done => {
+    beforeEach(done => {
       Player.runCapabilities();
       Player.getCapabilities().then(capabilities => {
         initialOrigCapabilities = capabilities;
@@ -2827,7 +2920,7 @@ describe('Player', function() {
     });
 
     afterEach(() => {
-      Player._playerCapabilities = PKObject.copyDeep(initialOrigCapabilities);
+      Html5AutoPlayCapability._capabilities = {};
     });
 
     it('should not change the original capabilities by reference', done => {
@@ -2843,30 +2936,117 @@ describe('Player', function() {
 
     it('should set custom capabilities successfully', done => {
       let newCapabilities = {
+        autoplay: true,
+        mutedAutoPlay: false,
+        isSupported: false,
+        fakeAttribute: true
+      };
+      const existingCapabilities = (({autoplay, mutedAutoPlay}) => ({autoplay, mutedAutoPlay}))(newCapabilities);
+      Player.setCapabilities('html5', newCapabilities);
+      Player.getCapabilities().then(c2 => {
+        try {
+          c2.html5.should.deep.equal(existingCapabilities);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+    });
+
+    it('should support only correct type', done => {
+      let newCapabilities = {
         autoplay: 1,
         mutedAutoPlay: 2,
-        isSupported: 3
+        isSupported: false,
+        fakeAttribute: true
       };
       Player.setCapabilities('html5', newCapabilities);
       Player.getCapabilities().then(c2 => {
-        c2.html5.should.deep.equal(newCapabilities);
-        done();
+        try {
+          c2.should.deep.equal(initialOrigCapabilities);
+          done();
+        } catch (err) {
+          done(err);
+        }
       });
     });
 
     it('should set custom capabilities successfully after getCapabilities() call', done => {
       let newCapabilities = {
-        autoplay: 3,
-        mutedAutoPlay: 4,
+        autoplay: false,
+        mutedAutoPlay: false,
         isSupported: 5
       };
+      const existingCapabilities = (({autoplay, mutedAutoPlay}) => ({autoplay, mutedAutoPlay}))(newCapabilities);
       Player.getCapabilities().then(c1 => {
         c1.should.deep.equal(initialOrigCapabilities);
         Player.setCapabilities('html5', newCapabilities);
+        Player.getCapabilities()
+          .then(c2 => {
+            try {
+              c2.html5.should.deep.equal(existingCapabilities);
+              done();
+            } catch (err) {
+              done(err);
+            }
+          })
+          .catch(err => done(err));
+      });
+    });
+
+    it('should set custom capabilities after runCapabilities() successfully', done => {
+      let newCapabilities = {
+        autoplay: false,
+        mutedAutoPlay: false
+      };
+      Player.runCapabilities();
+      Player.getCapabilities().then(c1 => {
+        try {
+          c1.html5.should.deep.not.equal(newCapabilities);
+        } catch (err) {
+          done(err);
+        }
+        Player.setCapabilities('html5', newCapabilities);
         Player.getCapabilities().then(c2 => {
-          c2.html5.should.deep.equal(newCapabilities);
-          done();
+          try {
+            c2.html5.should.deep.equal(newCapabilities);
+            done();
+          } catch (err) {
+            done(err);
+          }
         });
+      });
+    });
+
+    it('should check for mutedAutoPlay possibility if autoplay set to false', done => {
+      let newCapabilities = {
+        autoplay: false
+      };
+      Player.setCapabilities('html5', newCapabilities);
+      Player.getCapabilities().then(c2 => {
+        try {
+          c2.html5.autoplay.should.equal(newCapabilities.autoplay);
+          c2.html5.mutedAutoPlay.should.not.equal(newCapabilities.mutedAutoPlay);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+    });
+
+    it('should check for autoPlay possibility if mutedAutoPlay set', done => {
+      let newCapabilities = {
+        mutedAutoPlay: true
+      };
+      Player.setCapabilities('html5', newCapabilities);
+      Player.getCapabilities().then(c2 => {
+        try {
+          c2.html5.autoplay.should.not.equal(newCapabilities.autoplay);
+          c2.html5.mutedAutoPlay.should.equal(newCapabilities.mutedAutoPlay);
+          done();
+        } catch (err) {
+          done(err);
+        }
       });
     });
   });

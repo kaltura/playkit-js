@@ -15,6 +15,11 @@ class PM1 extends BaseMiddleware {
     this.logger.debug('pause');
     this.callNext(next);
   }
+
+  load(next) {
+    this.logger.debug('load');
+    this.callNext(next);
+  }
 }
 
 class PM2 extends BaseMiddleware {
@@ -37,9 +42,19 @@ class PM3 extends BaseMiddleware {
   }
 }
 
+class PM4 extends BaseMiddleware {
+  id = 'PM4';
+  logger = getLogger(this.id);
+
+  load(next) {
+    this.logger.debug('load');
+    this.callNext(next);
+  }
+}
+
 describe('PlaybackMiddleware', function() {
-  let pm1, pm2, pm3;
-  let spyPm1, spyPm2, spyPm3;
+  let pm1, pm2, pm3, pm4;
+  let spyPm1, spyPm2, spyPm3, spyPm4;
   let playbackMiddleware;
   let sandbox;
 
@@ -56,11 +71,14 @@ describe('PlaybackMiddleware', function() {
     pm1 = new PM1();
     pm2 = new PM2();
     pm3 = new PM3();
+    pm4 = new PM4();
     playbackMiddleware.use(pm1);
     playbackMiddleware.use(pm2);
     playbackMiddleware.use(pm3);
+    playbackMiddleware.use(pm4);
     playbackMiddleware._middleware._middlewares.get('pause').should.have.lengthOf(2);
     playbackMiddleware._middleware._middlewares.get('play').should.have.lengthOf(2);
+    playbackMiddleware._middleware._middlewares.get('load').should.have.lengthOf(2);
   });
 
   it('should run playback middleware for action pause', function(done) {
@@ -89,6 +107,21 @@ describe('PlaybackMiddleware', function() {
       spyPm1.should.have.been.calledOnce;
       spyPm2.should.have.been.calledOnce;
       spyPm2.should.have.been.calledAfter(spyPm1);
+      done();
+    });
+  });
+
+  it('should run playback middleware for action load', function(done) {
+    spyPm1 = sandbox.spy(PM1.prototype, 'load');
+    spyPm4 = sandbox.spy(PM4.prototype, 'load');
+    pm1 = new PM1();
+    pm4 = new PM4();
+    playbackMiddleware.use(pm1);
+    playbackMiddleware.use(pm4);
+    playbackMiddleware.load(() => {
+      spyPm1.should.have.been.calledOnce;
+      spyPm4.should.have.been.calledOnce;
+      spyPm4.should.have.been.calledAfter(spyPm1);
       done();
     });
   });

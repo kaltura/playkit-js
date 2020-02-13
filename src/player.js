@@ -112,6 +112,13 @@ const DURATION_OFFSET: number = 0.1;
 const REPOSITION_CUES_TIMEOUT: number = 1000;
 
 /**
+ * The threshold in seconds from duration that we still consider it as live edge
+ * @type {number}
+ * @const
+ */
+const LIVE_EDGE_THRESHOLD: number = 1;
+
+/**
  * The HTML5 player class.
  * @classdesc
  */
@@ -123,42 +130,32 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   static _logger: any = getLogger('Player');
-  /**
-   * The player capabilities result object.
-   * @type {Object}
-   * @private
-   * @static
-   */
-  static _playerCapabilities: Object = {};
 
   /**
    * Runs the engines capabilities tests.
-   * @param {?boolean} playsinline - content playsinline
    * @returns {void}
    * @public
    * @static
    */
-  static runCapabilities(playsinline: ?boolean): void {
+  static runCapabilities(): void {
     Player._logger.debug('Running player capabilities');
-    EngineProvider.getEngines().forEach(Engine => Engine.runCapabilities(playsinline));
+    EngineProvider.getEngines().forEach(Engine => Engine.runCapabilities());
   }
 
   /**
    * Gets the engines capabilities.
    * @param {?string} engineType - The engine type.
-   * @param {?boolean} playsinline - content playsinline
    * @return {Promise<Object>} - The engines capabilities object.
    * @public
    * @static
    */
-  static getCapabilities(engineType: ?string, playsinline: ?boolean): Promise<{[name: string]: any}> {
+  static getCapabilities(engineType: ?string): Promise<{[name: string]: any}> {
     Player._logger.debug('Get player capabilities', engineType);
     const promises = [];
-    EngineProvider.getEngines().forEach(Engine => promises.push(Engine.getCapabilities(playsinline)));
+    EngineProvider.getEngines().forEach(Engine => promises.push(Engine.getCapabilities()));
     return Promise.all(promises).then(arrayOfResults => {
       const playerCapabilities = {};
       arrayOfResults.forEach(res => Object.assign(playerCapabilities, res));
-      Utils.Object.mergeDeep(playerCapabilities, Player._playerCapabilities);
       return engineType ? playerCapabilities[engineType] : playerCapabilities;
     });
   }
@@ -173,7 +170,10 @@ export default class Player extends FakeEventTarget {
    */
   static setCapabilities(engineType: string, capabilities: {[name: string]: any}): void {
     Player._logger.debug('Set player capabilities', engineType, capabilities);
-    Player._playerCapabilities[engineType] = Utils.Object.mergeDeep({}, Player._playerCapabilities[engineType], capabilities);
+    const selectedEngine = EngineProvider.getEngines().find(Engine => Engine.id === engineType);
+    if (selectedEngine) {
+      selectedEngine.setCapabilities(capabilities);
+    }
   }
 
   /**
@@ -248,6 +248,20 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _playbackStart: boolean;
+  /**
+   * Whether the playback ended
+   * @type {boolean}
+   * @private
+   */
+
+  _playbackEnded: boolean;
+  /**
+   * If quality has changed after playback ended - pend the change
+   * @type {boolean}
+   * @private
+   */
+
+  _pendingSelectedVideoTrack: ?VideoTrack;
   /**
    * The available playback rates for the player.
    * @type {Array<number>}
@@ -399,7 +413,24 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _uiComponents: Array<PKUIComponent>;
-
+  /**
+   * Whether the user interacted with the player
+   * @type {boolean}
+   * @private
+   */
+  _hasUserInteracted: boolean = false;
+  /**
+   * Whether the video is seeked to live edge
+   * @type {boolean}
+   * @private
+   */
+  _isOnLiveEdge: boolean = false;
+  /**
+   * Whether should load after attach media used
+   * @type {boolean}
+   * @private
+   */
+  _shouldLoadAfterAttach: boolean = false;
   /**
    * @param {Object} config - The configuration for the player instance.
    * @constructor
@@ -409,8 +440,7 @@ export default class Player extends FakeEventTarget {
     this._setConfigLogLevel(config);
     this._playerId = Utils.Generator.uniqueId(5);
     this._prepareVideoElement();
-    const playsInline = Utils.Object.getPropertyPath(config, 'playback.playsinline');
-    Player.runCapabilities(playsInline);
+    Player.runCapabilities();
     this._env = Env;
     this._tracks = [];
     this._uiComponents = [];
@@ -419,6 +449,7 @@ export default class Player extends FakeEventTarget {
     this._loadingMedia = false;
     this._loading = false;
     this._playbackStart = false;
+    this._playbackEnded = false;
     this._firstPlaying = false;
     this._reset = true;
     this._destroyed = false;
@@ -525,13 +556,15 @@ export default class Player extends FakeEventTarget {
     if (!this._playbackStart) {
       this._playbackStart = true;
       this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_START));
+      if (!this.src) {
+        this._prepareVideoElement();
+      }
       this.load();
     }
     if (this._engine) {
       this._playbackMiddleware.play(() => this._play());
     } else if (this._loadingMedia) {
       // load media requested but the response is delayed
-      this._prepareVideoElement();
       this._playbackMiddleware.play(() => this._playAfterAsyncMiddleware());
     } else {
       this.dispatchEvent(
@@ -593,6 +626,7 @@ export default class Player extends FakeEventTarget {
     this._resetStateFlags();
     this._engineType = '';
     this._streamType = '';
+    this._pendingSelectedVideoTrack = null;
     if (this._engine) {
       this._engine.reset();
     }
@@ -602,6 +636,8 @@ export default class Player extends FakeEventTarget {
     this._eventManager.removeAll();
     this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
     this._createReadyPromise();
+    this._isOnLiveEdge = false;
+    this._shouldLoadAfterAttach = false;
   }
 
   /**
@@ -613,7 +649,6 @@ export default class Player extends FakeEventTarget {
     if (this._destroyed) return;
     //make sure all services are destroyed before engine and engine attributes are destroyed
     this._externalCaptionsHandler.destroy();
-    Player._playerCapabilities = {};
     this._posterManager.destroy();
     this._pluginManager.destroy();
     this._stateManager.destroy();
@@ -625,6 +660,7 @@ export default class Player extends FakeEventTarget {
     this._engineType = '';
     this._streamType = '';
     this._readyPromise = null;
+    this._pendingSelectedVideoTrack = null;
     this._resetStateFlags();
     this._playbackAttributesState = {};
     if (this._engine) {
@@ -645,6 +681,7 @@ export default class Player extends FakeEventTarget {
    */
   _attachMediaSource(): void {
     if (this._engine) {
+      this._shouldLoadAfterAttach = true;
       this._engine.attachMediaSource();
       this._eventManager.listenOnce(this, Html5EventType.CAN_PLAY, () => {
         if (typeof this._playbackAttributesState.rate === 'number') {
@@ -661,6 +698,9 @@ export default class Player extends FakeEventTarget {
    */
   _detachMediaSource(): void {
     if (this._engine) {
+      this.pause();
+      this.hideTextTrack();
+      this._shouldLoadAfterAttach = false;
       this._createReadyPromise();
       this._engine.detachMediaSource();
     }
@@ -703,8 +743,10 @@ export default class Player extends FakeEventTarget {
         if (to < 0) {
           boundedTo = 0;
         }
-        if (boundedTo > this._engine.duration - DURATION_OFFSET) {
-          boundedTo = this._engine.duration - DURATION_OFFSET;
+        const safeDuration = this.isLive() ? this._engine.duration : this._engine.duration - DURATION_OFFSET;
+
+        if (boundedTo > safeDuration) {
+          boundedTo = safeDuration;
         }
         this._engine.currentTime = boundedTo;
       }
@@ -961,6 +1003,15 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Get whether the user already interacted with the player
+   * @returns {boolean} - Whether the user interacted with the player
+   * @public
+   */
+  get hasUserInteracted(): boolean {
+    return this._hasUserInteracted;
+  }
+
+  /**
    * Set the _loadingMedia flag to inform the player that a load media request has sent.
    * @param {boolean} loading - Whether a load media request has sent.
    * @returns {void}
@@ -1022,6 +1073,15 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Get whether the video is seeked to live edge in dvr
+   * @returns {boolean} - Whether the video is seeked to live edge in dvr
+   * @public
+   */
+  isOnLiveEdge(): boolean {
+    return this._isOnLiveEdge;
+  }
+
+  /**
    * Checking if the current live playback has DVR window.
    * @function isDvr
    * @returns {boolean} - Whether live playback has DVR window.
@@ -1040,6 +1100,7 @@ export default class Player extends FakeEventTarget {
   seekToLiveEdge(): void {
     if (this._engine && this.isLive()) {
       this._engine.seekToLiveEdge();
+      this._isOnLiveEdge = true;
     }
   }
 
@@ -1089,7 +1150,11 @@ export default class Player extends FakeEventTarget {
   selectTrack(track: ?Track): void {
     if (this._engine) {
       if (track instanceof VideoTrack) {
-        this._engine.selectVideoTrack(track);
+        if (this._playbackEnded) {
+          this._pendingSelectedVideoTrack = track;
+        } else {
+          this._engine.selectVideoTrack(track);
+        }
       } else if (track instanceof AudioTrack) {
         this._engine.selectAudioTrack(track);
       } else if (track instanceof TextTrack) {
@@ -1494,6 +1559,7 @@ export default class Player extends FakeEventTarget {
   _appendDomElements(): void {
     // Append playkit-subtitles
     this._textDisplayEl = Utils.Dom.createElement('div');
+    Utils.Dom.setAttribute(this._textDisplayEl, 'aria-live', 'polite');
     Utils.Dom.addClassName(this._textDisplayEl, SUBTITLES_CLASS_NAME);
     Utils.Dom.appendChild(this._el, this._textDisplayEl);
     // Append playkit-black-cover
@@ -1632,7 +1698,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _createEngine(Engine: typeof IEngine, source: PKMediaSourceObject): void {
-    const engine = Engine.createEngine(source, this._config);
+    const engine = Engine.createEngine(source, this._config, this._playerId);
     const plugins = (Object.values(this._pluginManager.getAll()): any);
     this._engine = EngineDecorator.getDecorator(engine, plugins) || engine;
   }
@@ -1648,6 +1714,11 @@ export default class Player extends FakeEventTarget {
         this._eventManager.listen(this._engine, Html5EventType[html5Event], (event: FakeEvent) => {
           return this.dispatchEvent(event);
         });
+      });
+      this._eventManager.listen(this._engine, Html5EventType.SEEKING, () => {
+        if (this.isLive()) {
+          this._isOnLiveEdge = this.duration && this.currentTime ? this.currentTime >= this.duration - LIVE_EDGE_THRESHOLD && !this.paused : false;
+        }
       });
       this._eventManager.listen(this._engine, Html5EventType.SEEKED, () => {
         const browser = this._env.browser.name;
@@ -1669,16 +1740,17 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.TIMED_METADATA, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._engine, CustomEventType.AUTOPLAY_FAILED, (event: FakeEvent) => {
+      this._eventManager.listen(this._engine, CustomEventType.PLAY_FAILED, (event: FakeEvent) => {
         this.pause();
-        if (this._firstPlay && this._config.playback.autoplay) {
-          this.dispatchEvent(event);
-        }
+        this._onPlayFailed(event);
+        this.dispatchEvent(event);
       });
+      this._eventManager.listen(this, AdEventType.AD_AUTOPLAY_FAILED, (event: FakeEvent) => this._onPlayFailed(event));
       this._eventManager.listen(this._engine, CustomEventType.FPS_DROP, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.MANIFEST_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this, Html5EventType.PLAY, this._onPlay.bind(this));
+      this._eventManager.listen(this, Html5EventType.PAUSE, this._onPause.bind(this));
       this._eventManager.listen(this, Html5EventType.PLAYING, this._onPlaying.bind(this));
       this._eventManager.listen(this, Html5EventType.ENDED, this._onEnded.bind(this));
       this._eventManager.listen(this, CustomEventType.PLAYBACK_ENDED, this._onPlaybackEnded.bind(this));
@@ -1703,14 +1775,12 @@ export default class Player extends FakeEventTarget {
         this._onTextTrackChanged(event)
       );
       this._eventManager.listen(this._externalCaptionsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
-      if (this._adsController) {
-        this._eventManager.listen(this._adsController, AdEventType.AD_BREAK_START, () => {
-          if (this._firstPlay) {
-            this._posterManager.hide();
-            this._hideBlackCover();
-          }
-        });
-      }
+      this._eventManager.listen(this, AdEventType.AD_STARTED, () => {
+        if (this._firstPlay) {
+          this._posterManager.hide();
+          this._hideBlackCover();
+        }
+      });
       if (this.config.playback.playAdsWithMSE) {
         this._eventManager.listen(this, AdEventType.AD_LOADED, event => {
           if (event.payload.ad.linear) {
@@ -1719,6 +1789,18 @@ export default class Player extends FakeEventTarget {
         });
         this._eventManager.listen(this, AdEventType.AD_BREAK_END, this._attachMediaSource);
         this._eventManager.listen(this, AdEventType.AD_ERROR, this._attachMediaSource);
+      }
+      const rootElement = Utils.Dom.getElementBySelector(`#${this.config.targetId}`);
+      if (rootElement) {
+        this._eventManager.listen(
+          rootElement,
+          'click',
+          () => {
+            this._hasUserInteracted = true;
+            this.dispatchEvent(new FakeEvent(CustomEventType.USER_GESTURE));
+          },
+          {capture: true}
+        );
       }
     }
   }
@@ -1845,7 +1927,7 @@ export default class Player extends FakeEventTarget {
   _handleAutoPlay(): void {
     if (this._config.playback.autoplay === true) {
       const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
-      Player.getCapabilities(this.engineType, this.playsinline).then(capabilities => {
+      Player.getCapabilities(this.engineType).then(capabilities => {
         if (capabilities.autoplay) {
           onAutoPlay();
         } else {
@@ -1935,6 +2017,9 @@ export default class Player extends FakeEventTarget {
       this._engine
         .load(startTime)
         .then(data => {
+          if (this.isLive() && (startTime === -1 || startTime >= this.duration)) {
+            this._isOnLiveEdge = true;
+          }
           this._updateTracks(data.tracks);
           this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
           resetFlags();
@@ -1952,8 +2037,9 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _play(): void {
-    if (!this._engine.src) {
+    if (this._shouldLoadAfterAttach) {
       this._load();
+      this._shouldLoadAfterAttach = false;
     }
     this.ready()
       .then(() => {
@@ -1974,6 +2060,15 @@ export default class Player extends FakeEventTarget {
    */
   _pause(): void {
     this._engine.pause();
+  }
+
+  /**
+   * @function _onPause
+   * @return {void}
+   * @private
+   */
+  _onPause(): void {
+    this._isOnLiveEdge = false;
   }
 
   /**
@@ -2002,6 +2097,23 @@ export default class Player extends FakeEventTarget {
     if (!this._firstPlaying) {
       this._firstPlaying = true;
       this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAYING));
+    }
+    if (this._engine && this._pendingSelectedVideoTrack) {
+      this._engine.selectVideoTrack(this._pendingSelectedVideoTrack);
+      this._pendingSelectedVideoTrack = null;
+    }
+  }
+
+  /**
+   * @function _onPlayFailed
+   * @param {FakeEvent} event - the play failed event
+   * @return {void}
+   * @private
+   */
+  _onPlayFailed(event: FakeEvent): void {
+    if (this._firstPlay && this._config.playback.autoplay) {
+      this._posterManager.show();
+      this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED, event.payload));
     }
   }
 
@@ -2055,6 +2167,8 @@ export default class Player extends FakeEventTarget {
     if (this.config.playback.loop) {
       this.currentTime = 0;
       this.play();
+    } else {
+      this._playbackEnded = true;
     }
   }
 
@@ -2068,6 +2182,7 @@ export default class Player extends FakeEventTarget {
     this._firstPlay = true;
     this._loadingMedia = false;
     this._playbackStart = false;
+    this._playbackEnded = false;
     this._firstPlaying = false;
   }
 

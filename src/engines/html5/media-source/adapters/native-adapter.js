@@ -118,6 +118,20 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _mediaErrorRecoveryAttempts: number = 0;
 
   /**
+   * The last time detach occurred
+   * @type {number}
+   * @private
+   */
+  _lastTimeDetach: number = NaN;
+
+  /**
+   * The start time after attach
+   * @type {number}
+   * @private
+   */
+  _startTimeAttach: number = NaN;
+
+  /**
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
    * @param {string} mimeType - The mime type to check
@@ -267,8 +281,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
         this._lastTimeUpdate = startTime || 0;
+        const playbackStartTime = this._startTimeAttach || startTime || 0;
         this._loadPromiseReject = reject;
-        this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => this._onLoadedData(resolve, startTime));
+        this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => this._onLoadedData(resolve, playbackStartTime));
         this._eventManager.listen(this._videoElement, Html5EventType.TIME_UPDATE, () => this._onTimeUpdate());
         this._eventManager.listen(this._videoElement, Html5EventType.PLAY, () => this._resetHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.PAUSE, () => this._clearHeartbeatTimeout());
@@ -281,10 +296,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           this._setProgressiveSource();
         }
         if (this._sourceObj && this._sourceObj.url) {
-          this._setSrc();
-          this._trigger(CustomEventType.ABR_MODE_CHANGED, {mode: this._isProgressivePlayback() ? 'manual' : 'auto'});
+          this._setSrc().then(() => {
+            this._trigger(CustomEventType.ABR_MODE_CHANGED, {mode: this._isProgressivePlayback() ? 'manual' : 'auto'});
+            this._videoElement.load();
+          });
+        } else {
+          this._videoElement.load();
         }
-        this._videoElement.load();
       });
     }
     return this._loadPromise;
@@ -340,26 +358,44 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    * @returns {void}
    */
-  attachMediaSource(): void {}
+  attachMediaSource(): void {
+    this._startTimeAttach = this._lastTimeDetach;
+    this._lastTimeDetach = NaN;
+  }
   /**
    * detach media - will remove the media source from handling the video
    * @public
    * @returns {void}
    */
-  detachMediaSource(): void {}
+  detachMediaSource(): void {
+    this._lastTimeDetach = this.currentTime;
+    if (this._videoElement && this._videoElement.src) {
+      Utils.Dom.setAttribute(this._videoElement, 'src', '');
+      Utils.Dom.removeAttribute(this._videoElement, 'src');
+    }
+    this._loadPromise = null;
+  }
 
-  _setSrc(): void {
+  _setSrc(): Promise<*> {
     const pkRequest: PKRequestObject = {url: this._sourceObj ? this._sourceObj.url : '', body: null, headers: {}};
+    let requestFilterPromise;
     if (typeof Utils.Object.getPropertyPath(this._config, 'network.requestFilter') === 'function') {
       try {
         NativeAdapter._logger.debug('Apply request filter');
-        this._config.network.requestFilter(RequestType.MANIFEST, pkRequest);
+        requestFilterPromise = this._config.network.requestFilter(RequestType.MANIFEST, pkRequest);
       } catch (error) {
-        this._trigger(Html5EventType.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.REQUEST_FILTER_ERROR, error));
-        return;
+        requestFilterPromise = Promise.reject(error);
       }
     }
-    this._videoElement.src = pkRequest.url;
+    requestFilterPromise = requestFilterPromise || Promise.resolve(pkRequest);
+    requestFilterPromise
+      .then(updatedRequest => {
+        this._videoElement.src = updatedRequest.url;
+      })
+      .catch(error => {
+        this._trigger(Html5EventType.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.REQUEST_FILTER_ERROR, error));
+      });
+    return requestFilterPromise;
   }
 
   /**
@@ -390,6 +426,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     } else {
       this._eventManager.listenOnce(this._videoElement, Html5EventType.CAN_PLAY, parseTracksAndResolve.bind(this));
     }
+    this._startTimeAttach = NaN;
   }
 
   _onTimeUpdate(): void {
@@ -453,6 +490,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._loadPromiseReject = null;
       this._liveEdge = 0;
       this._lastTimeUpdate = 0;
+      this._lastTimeDetach = NaN;
+      this._startTimeAttach = NaN;
       this._clearHeartbeatTimeout();
       if (this._liveDurationChangeInterval) {
         clearInterval(this._liveDurationChangeInterval);
