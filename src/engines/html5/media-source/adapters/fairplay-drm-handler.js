@@ -27,6 +27,7 @@ class FairplayDrmHandler {
   _errorCallback: Function;
   _videoElement: HTMLVideoElement;
   _retryLicenseRequest: number = 4;
+  _licenseRequestTime: number;
   _defaultConfig: FairplayDrmConfigType = {
     licenseUrl: '',
     certificate: '',
@@ -144,6 +145,7 @@ class FairplayDrmHandler {
             responseText: request.responseText
           });
         };
+        this._licenseRequestTime = Date.now();
         request.send(updatedRequest.body);
       })
       .catch(error => {
@@ -192,6 +194,7 @@ class FairplayDrmHandler {
     responseFilterPromise = responseFilterPromise || Promise.resolve(response);
     responseFilterPromise
       .then(updatedResponse => {
+        // const licenseRequestResponse = Date.now();
         this._keySession.update(updatedResponse.data);
       })
       .catch(error => {
