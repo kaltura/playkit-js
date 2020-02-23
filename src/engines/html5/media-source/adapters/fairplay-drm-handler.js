@@ -25,6 +25,7 @@ class FairplayDrmHandler {
   _config: FairplayDrmConfigType;
   _onWebkitNeedKeyHandler: Function;
   _errorCallback: Function;
+  _drmResponseCallback: Function;
   _videoElement: HTMLVideoElement;
   _retryLicenseRequest: number = 4;
   _licenseRequestTime: number;
@@ -61,10 +62,12 @@ class FairplayDrmHandler {
    * @param {HTMLVideoElement} videoElement - the video element
    * @param {FairplayDrmConfigType} config - config object
    * @param {Function} errorCallback - error callback function
+   * @param {Function} drmResponseCallback - drm license response callback function
    */
-  constructor(videoElement: HTMLVideoElement, config: FairplayDrmConfigType, errorCallback: Function): void {
+  constructor(videoElement: HTMLVideoElement, config: FairplayDrmConfigType, errorCallback: Function, drmResponseCallback: Function): void {
     this._config = Utils.Object.mergeDeep({}, this._defaultConfig, config);
     this._errorCallback = errorCallback;
+    this._drmResponseCallback = drmResponseCallback;
     this._videoElement = videoElement;
     this._onWebkitNeedKeyHandler = e => this._onWebkitNeedKey(e);
     this._videoElement.addEventListener(WebkitEvents.NEED_KEY, this._onWebkitNeedKeyHandler, false);
@@ -183,6 +186,11 @@ class FairplayDrmHandler {
       });
       return;
     }
+    if (this._drmResponseCallback) {
+      const licenseTime = Date.now() - this._licenseRequestTime;
+      this._drmResponseCallback(licenseTime);
+    }
+
     const response = {data: request.response};
     this._logger.debug('Apply response filter');
     let responseFilterPromise;
