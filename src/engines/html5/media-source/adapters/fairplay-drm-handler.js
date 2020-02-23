@@ -188,7 +188,7 @@ class FairplayDrmHandler {
     }
     if (this._drmResponseCallback) {
       const licenseTime = Date.now() - this._licenseRequestTime;
-      this._drmResponseCallback(licenseTime);
+      this._drmResponseCallback(licenseTime / 1000);
     }
 
     const response = {data: request.response};
