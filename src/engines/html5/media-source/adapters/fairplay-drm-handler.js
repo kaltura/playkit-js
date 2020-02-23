@@ -6,7 +6,7 @@ import {RequestType} from '../../../../request-type';
 import type {CodeType} from '../../../../error/code';
 import type {SeverityType} from '../../../../error/severity';
 import type {CategoryType} from '../../../../error/category';
-import {DrmScheme} from '../../../../playkit';
+import {DrmScheme} from '../../../../drm/drm-scheme';
 
 const KeySystem: string = 'com.apple.fps.1_0';
 type WebkitEventsType = {[name: string]: string};

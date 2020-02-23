@@ -233,10 +233,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   /**
    * dispatches the license response time after received
    * @private
-   * @param {number} data - an object containing metrics regarding the license load
+   * @param {number} data - an object containing data regarding the license load
    * @returns {void}
    */
-  _dispatchDRMLicenseResponseMetrics(data: any): void {
+  _dispatchDRMLicenseLoaded(data: any): void {
     this._trigger(CustomEventType.DRM_LICENSE_LOADED, data);
   }
   /**
@@ -256,7 +256,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._videoElement,
         drmConfig,
         error => this._dispatchErrorCallback(error),
-        metrics => this._dispatchDRMLicenseResponseMetrics(metrics)
+        data => this._dispatchDRMLicenseLoaded(data)
       );
     }
   }
