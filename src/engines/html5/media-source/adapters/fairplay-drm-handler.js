@@ -6,6 +6,7 @@ import {RequestType} from '../../../../request-type';
 import type {CodeType} from '../../../../error/code';
 import type {SeverityType} from '../../../../error/severity';
 import type {CategoryType} from '../../../../error/category';
+import {DrmScheme} from '../../../../playkit';
 
 const KeySystem: string = 'com.apple.fps.1_0';
 type WebkitEventsType = {[name: string]: string};
@@ -188,7 +189,7 @@ class FairplayDrmHandler {
     }
     if (this._drmResponseCallback) {
       const licenseTime = Date.now() - this._licenseRequestTime;
-      this._drmResponseCallback(licenseTime / 1000);
+      this._drmResponseCallback({licenseTime: licenseTime / 1000, scheme: DrmScheme.FAIRPLAY});
     }
 
     const response = {data: request.response};
@@ -202,7 +203,6 @@ class FairplayDrmHandler {
     responseFilterPromise = responseFilterPromise || Promise.resolve(response);
     responseFilterPromise
       .then(updatedResponse => {
-        // const licenseRequestResponse = Date.now();
         this._keySession.update(updatedResponse.data);
       })
       .catch(error => {

@@ -245,9 +245,9 @@ const CustomEventType: PKEventTypes = {
    */
   USER_GESTURE: 'usergesture',
   /**
-   * Fired when the drm license request has been responded from DRM server
+   * Fired when the drm license is responded from the DRM server
    */
-  DRM_LICENSE_RESPONSE: 'drmlicenseresponse'
+  DRM_LICENSE_LOADED: 'drmlicenseloaded'
 };
 
 const EventType: PKEventTypes = Utils.Object.merge([Html5EventType, CustomEventType, AdEventType]);
