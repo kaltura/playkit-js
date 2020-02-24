@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.60.0"></a>
+# [0.60.0](https://github.com/kaltura/playkit-js/compare/v0.59.9...v0.60.0) (2020-02-24)
+
+
+### Features
+
+* **FEC-9109:** add DRM Load time metric ([#444](https://github.com/kaltura/playkit-js/issues/444)) ([84b54a1](https://github.com/kaltura/playkit-js/commit/84b54a1))
+
+
+
 <a name="0.59.9"></a>
 ## [0.59.9](https://github.com/kaltura/playkit-js/compare/v0.59.8...v0.59.9) (2020-02-03)
 
