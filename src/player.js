@@ -1736,6 +1736,7 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this, AdEventType.AD_AUTOPLAY_FAILED, (event: FakeEvent) => this._onPlayFailed(event));
       this._eventManager.listen(this._engine, CustomEventType.FPS_DROP, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._engine, CustomEventType.DRM_LICENSE_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.MANIFEST_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this, Html5EventType.PLAY, this._onPlay.bind(this));
       this._eventManager.listen(this, Html5EventType.PAUSE, this._onPause.bind(this));

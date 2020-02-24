@@ -294,6 +294,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.DRM_LICENSE_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.MANIFEST_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.TIME_UPDATE, (event: FakeEvent) => this.dispatchEvent(event));

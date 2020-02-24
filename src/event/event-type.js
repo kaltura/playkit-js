@@ -243,7 +243,11 @@ const CustomEventType: PKEventTypes = {
   /**
    * Fired when the user interact with the player ui
    */
-  USER_GESTURE: 'usergesture'
+  USER_GESTURE: 'usergesture',
+  /**
+   * Fired when the drm license is responded from the DRM server
+   */
+  DRM_LICENSE_LOADED: 'drmlicenseloaded'
 };
 
 const EventType: PKEventTypes = Utils.Object.merge([Html5EventType, CustomEventType, AdEventType]);

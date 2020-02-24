@@ -231,6 +231,15 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
+   * dispatches the license response time after received
+   * @private
+   * @param {number} data - an object containing data regarding the license load
+   * @returns {void}
+   */
+  _dispatchDRMLicenseLoaded(data: any): void {
+    this._trigger(CustomEventType.DRM_LICENSE_LOADED, data);
+  }
+  /**
    * Sets the DRM playback in case such needed.
    * @private
    * @returns {void}
@@ -243,7 +252,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         network: this._config.network
       };
       NativeAdapter._drmProtocol.setDrmPlayback(drmConfig, this._sourceObj.drmData);
-      this._drmHandler = new FairplayDrmHandler(this._videoElement, drmConfig, error => this._dispatchErrorCallback(error));
+      this._drmHandler = new FairplayDrmHandler(
+        this._videoElement,
+        drmConfig,
+        error => this._dispatchErrorCallback(error),
+        data => this._dispatchDRMLicenseLoaded(data)
+      );
     }
   }
 
