@@ -693,7 +693,7 @@ const Code: CodeType = {
   /**
    * Custom message parsing error.
    */
-  CAST_CUSTOM_MESSAGE_PARSING_ERROR: 100002,
+  CAST_CUSTOM_MESSAGE_PARSING_ERROR: 10002,
 
   /**
    * Edit tracks info error.

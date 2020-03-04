@@ -39,7 +39,7 @@ const AdErrorCode: {[code: string]: number} = {
    * Exchange is sending wrong duration in the bid request
    * Ensure duration requested is being respected
    */
-  VAST_UNEXPECTED_DURATION_ERROR: 8201,
+  VAST_UNEXPECTED_DURATION_ERROR: 8202,
   /**
    * No MediaFile is available with dimensions that are matching for the device (i.e. mobile devices that cannot play full HD).
    * No MediaFile is available with an acceptable bitrate.
