@@ -10,20 +10,29 @@ export default class Html5AutoPlayCapability implements ICapability {
   static _vid: HTMLVideoElement;
   static _playPromiseResult: Promise<*>;
   static _logger: any = getLogger('Html5AutoPlayCapability');
+  static _capabilities: Object = {};
 
   /**
    * Runs the test for autoplay capability.
    * @public
-   * @param {?boolean} playsinline - content playsinline
    * @static
    * @returns {void}
    */
-  static runCapability(playsinline: ?boolean): void {
+  static runCapability(): void {
+    if (
+      Html5AutoPlayCapability._capabilities.autoplay ||
+      (typeof Html5AutoPlayCapability._capabilities.autoplay === 'boolean' &&
+        typeof Html5AutoPlayCapability._capabilities.mutedAutoPlay === 'boolean')
+    ) {
+      Html5AutoPlayCapability._playPromiseResult = Promise.resolve(Html5AutoPlayCapability._capabilities);
+      return;
+    }
     if (!Html5AutoPlayCapability._vid) {
       Html5AutoPlayCapability._vid = Utils.Dom.createElement('video');
       Html5AutoPlayCapability._vid.src = EncodingSources.Base64Mp4Source;
+      // For iOS devices needs to turn the playsinline attribute on
+      Html5AutoPlayCapability._vid.setAttribute('playsinline', '');
     }
-    Html5AutoPlayCapability._setPlaysinline(playsinline);
     Html5AutoPlayCapability._playPromiseResult = new Promise(resolve => {
       Html5AutoPlayCapability._setMuted(false);
       Html5AutoPlayCapability._getPlayPromise()
@@ -40,19 +49,41 @@ export default class Html5AutoPlayCapability implements ICapability {
   /**
    * Gets the test result for autoplay capability.
    * @returns {Promise<CapabilityResult>} - The result object for autoplay capability.
-   * @param {?boolean} playsinline - content playsinline
    * @static
    * @public
    */
-  static getCapability(playsinline: ?boolean): Promise<CapabilityResult> {
-    return Html5AutoPlayCapability._playPromiseResult.then(res => {
-      // If autoplay is not allowed - try again and return the updated result
-      if (!res.autoplay) {
-        Html5AutoPlayCapability.runCapability(playsinline);
-        return Html5AutoPlayCapability._playPromiseResult;
+  static getCapability(): Promise<CapabilityResult> {
+    return Html5AutoPlayCapability._playPromiseResult.then(playCapability => {
+      let fallbackPlayCapabilityTest;
+      if (playCapability.autoplay) {
+        fallbackPlayCapabilityTest = Promise.resolve(playCapability);
+      } else {
+        // If autoplay is not allowed - try again and return the updated result
+        Html5AutoPlayCapability.runCapability();
+        fallbackPlayCapabilityTest = Html5AutoPlayCapability._playPromiseResult;
       }
-      return res;
+      return fallbackPlayCapabilityTest.then(fallbackPlayCapability =>
+        Utils.Object.mergeDeep(fallbackPlayCapability, Html5AutoPlayCapability._capabilities)
+      );
     });
+  }
+
+  /**
+   * Sets an engine capabilities.
+   * @param {Object} capabilities - The engine capabilities.
+   * @returns {void}
+   * @public
+   * @static
+   */
+  static setCapabilities(capabilities: {[name: string]: any}): void {
+    Html5AutoPlayCapability._logger.debug('Set player capabilities', capabilities);
+    const {autoplay, mutedAutoPlay} = capabilities;
+    if (typeof autoplay === 'boolean') {
+      Html5AutoPlayCapability._capabilities.autoplay = autoplay;
+    }
+    if (typeof mutedAutoPlay === 'boolean') {
+      Html5AutoPlayCapability._capabilities.mutedAutoPlay = mutedAutoPlay;
+    }
   }
 
   /**
@@ -78,21 +109,6 @@ export default class Html5AutoPlayCapability implements ICapability {
     } else {
       Html5AutoPlayCapability._vid.muted = false;
       Html5AutoPlayCapability._vid.removeAttribute('muted');
-    }
-  }
-
-  /**
-   * Sets the test video element playsinline value.
-   * @param {?boolean} playsinline - The playsinline value.
-   * @private
-   * @returns {void}
-   * @static
-   */
-  static _setPlaysinline(playsinline: ?boolean): void {
-    if (playsinline) {
-      Html5AutoPlayCapability._vid.setAttribute('playsinline', '');
-    } else {
-      Html5AutoPlayCapability._vid.removeAttribute('playsinline');
     }
   }
 

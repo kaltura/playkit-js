@@ -46,6 +46,7 @@ jobs:
             branch: master
             tags: true
         - provider: npm
+          edge: true
           api_key: $NPM_TOKEN
           email: $NPM_EMAIL
           skip_cleanup: true
