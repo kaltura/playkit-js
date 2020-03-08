@@ -67,13 +67,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _drmHandler: ?FairplayDrmHandler;
   /**
-   * The load promise
-   * @member {Promise<Object>} - _loadPromise
-   * @type {Promise<Object>}
-   * @private
-   */
-  _loadPromise: ?Promise<Object>;
-  /**
    * The original progressive sources
    * @member {Array<PKMediaSourceObject>} - _progressiveSources
    * @private
@@ -90,7 +83,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @member {?number} - _liveDurationChangeInterval
    * @private
    */
-  _liveDurationChangeInterval: ?number;
+  _liveDurationChangeInterval: ?IntervalID;
   /**
    * The live edge value
    * @member {number} - _liveEdge
@@ -102,7 +95,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @member {number} - _waitingIntervalId
    * @private
    */
-  _heartbeatTimeoutId: ?number;
+  _heartbeatTimeoutId: ?TimeoutID;
 
   _loadPromiseReject: ?Function;
 

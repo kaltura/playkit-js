@@ -4,7 +4,6 @@ import BaseMediaSourceAdapter from './engines/html5/media-source/base-media-sour
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider';
 import {registerEngine, unRegisterEngine} from './engines/engine-provider';
 import {registerPlugin} from './plugin/plugin-manager';
-import BaseDrmProtocol from './drm/base-drm-protocol';
 import BaseMiddleware from './middleware/base-middleware';
 import BasePlugin from './plugin/base-plugin';
 import State from './state/state';
@@ -80,9 +79,6 @@ export {Env};
 
 // Export State class
 export {State};
-
-// Export base DRM protocol
-export {BaseDrmProtocol};
 
 // Export the player capabilities
 const getCapabilities = Player.getCapabilities;

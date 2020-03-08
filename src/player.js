@@ -220,10 +220,10 @@ export default class Player extends FakeEventTarget {
   _stateManager: StateManager;
   /**
    * The tracks of the player.
-   * @type {Array<Track>}
+   * @type {Array<Track | TextTrack | AudioTrack | VideoTrack>}
    * @private
    */
-  _tracks: Array<Track>;
+  _tracks: Array<Track | TextTrack | AudioTrack | VideoTrack>;
   /**
    * The player ready promise
    * @type {Promise<*>}
@@ -1109,10 +1109,10 @@ export default class Player extends FakeEventTarget {
    * Returns the tracks according to the filter. if no filter given returns the all tracks.
    * @function getTracks
    * @param {string} [type] - a tracks filter, should be 'video', 'audio' or 'text'.
-   * @returns {Array<Track>} - The parsed tracks.
+   * @returns {Array<Track | TextTrack | AudioTrack | VideoTrack>} - The parsed tracks.
    * @public
    */
-  getTracks(type?: string): Array<Track> {
+  getTracks(type?: string): Array<Track | TextTrack | AudioTrack | VideoTrack> {
     return Utils.Object.copyDeep(this._getTracksByType(type));
   }
 
@@ -1398,6 +1398,7 @@ export default class Player extends FakeEventTarget {
    */
   toggleVrStereoMode(): void {
     const vrPlugin: ?BasePlugin = this._pluginManager.get('vr');
+    // $FlowFixMe - remove once we move plugins to kaltura player
     if (vrPlugin && typeof vrPlugin.toggleVrStereoMode === 'function') {
       vrPlugin.toggleVrStereoMode();
     }
@@ -1410,6 +1411,7 @@ export default class Player extends FakeEventTarget {
    */
   isInVrStereoMode(): boolean {
     const vrPlugin: ?BasePlugin = this._pluginManager.get('vr');
+    // $FlowFixMe - remove once we move plugins to kaltura player
     if (vrPlugin && typeof vrPlugin.isInStereoMode === 'function') {
       return vrPlugin.isInStereoMode();
     }
@@ -1475,7 +1477,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _prepareVideoElement(): void {
-    EngineProvider.getEngines().forEach((Engine: typeof IEngine) => {
+    EngineProvider.getEngines().forEach((Engine: IEngineStatic) => {
       Engine.prepareVideoElement(this._playerId);
     });
   }
@@ -1590,7 +1592,10 @@ export default class Player extends FakeEventTarget {
               this._config.plugins[name] = plugin.getConfig();
               if (typeof plugin.getMiddlewareImpl === 'function') {
                 // push the bumper middleware to the end, to play the bumper right before the content
-                plugin.name === 'bumper' ? middlewares.push(plugin.getMiddlewareImpl()) : middlewares.unshift(plugin.getMiddlewareImpl());
+                let middleware = plugin.getMiddlewareImpl();
+                if (middleware) {
+                  plugin.name === 'bumper' ? middlewares.push(middleware) : middlewares.unshift(middleware);
+                }
               }
 
               if (typeof plugin.getUIComponents === 'function') {
@@ -1657,12 +1662,12 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Loads the selected engine.
-   * @param {IEngine} Engine - The selected engine.
+   * @param {IEngineStatic} Engine - The selected engine.
    * @param {PKMediaSourceObject} source - The selected source object.
    * @private
    * @returns {void}
    */
-  _loadEngine(Engine: typeof IEngine, source: PKMediaSourceObject) {
+  _loadEngine(Engine: IEngineStatic, source: PKMediaSourceObject) {
     if (!this._engine) {
       this._createEngine(Engine, source);
       this._appendEngineEl();
@@ -1685,7 +1690,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @private
    */
-  _createEngine(Engine: typeof IEngine, source: PKMediaSourceObject): void {
+  _createEngine(Engine: IEngineStatic, source: PKMediaSourceObject): void {
     const engine = Engine.createEngine(source, this._config, this._playerId);
     const plugins = (Object.values(this._pluginManager.getAll()): any);
     this._engine = EngineDecorator.getDecorator(engine, plugins) || engine;
@@ -1754,7 +1759,7 @@ export default class Player extends FakeEventTarget {
       });
       this._eventManager.listen(this, CustomEventType.ENTER_FULLSCREEN, () => this._resetTextCuesAndReposition());
       this._eventManager.listen(this, CustomEventType.EXIT_FULLSCREEN, () => this._resetTextCuesAndReposition());
-      this._eventManager.listen(this._resizeWatcher, CustomEventType.RESIZE, event => {
+      this._eventManager.listen(this._resizeWatcher, CustomEventType.RESIZE, (event: FakeEvent) => {
         this._resetTextCuesAndReposition();
         this.dispatchEvent(event);
       });
@@ -1771,7 +1776,7 @@ export default class Player extends FakeEventTarget {
         }
       });
       if (this.config.playback.playAdsWithMSE) {
-        this._eventManager.listen(this, AdEventType.AD_LOADED, event => {
+        this._eventManager.listen(this, AdEventType.AD_LOADED, (event: FakeEvent) => {
           if (event.payload.ad.linear) {
             this._detachMediaSource();
           }
@@ -1975,7 +1980,7 @@ export default class Player extends FakeEventTarget {
       const adsPluginControllers = this._controllerProvider.getAdsControllers();
       if (adsPluginControllers.length) {
         this._adsController = new AdsController(this, adsPluginControllers);
-        this._eventManager.listen(this._adsController, AdEventType.ALL_ADS_COMPLETED, event => {
+        this._eventManager.listen(this._adsController, AdEventType.ALL_ADS_COMPLETED, (event: FakeEvent) => {
           this.dispatchEvent(event);
         });
       }
@@ -2234,10 +2239,10 @@ export default class Player extends FakeEventTarget {
    * Returns the tracks according to the filter. if no filter given returns the all tracks.
    * @function _getTracksByType
    * @param {string} [type] - a tracks filter, should be 'video', 'audio' or 'text'.
-   * @returns {Array<Track>} - The parsed tracks.
+   * @returns {Array<Track | TextTrack | AudioTrack | VideoTrack>} - The parsed tracks.
    * @private
    */
-  _getTracksByType(type?: string): Array<Track> {
+  _getTracksByType(type?: string): Array<Track | TextTrack | AudioTrack | VideoTrack> {
     return !type
       ? this._tracks
       : this._tracks.filter((track: Track) => {

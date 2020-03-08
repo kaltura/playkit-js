@@ -1,5 +1,5 @@
 //@flow
 declare interface IDrmProtocol {
-  static canPlayDrm(drmData: Array<Object>): boolean;
-  static setDrmPlayback(...any): void;
+  canPlayDrm(drmData: Array<Object>): boolean;
+  setDrmPlayback(...any): void;
 }

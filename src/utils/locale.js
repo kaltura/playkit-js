@@ -18,8 +18,7 @@ export default class Locale {
       lang = navigator.languages[0];
     } else if (navigator.userLanguage) {
       // IE only
-      //$FlowFixMe - userLanguage is IE specific and flow doesn't have it in definitions
-      lang = (navigator.userLanguage: string);
+      lang = navigator.userLanguage;
     } else {
       // latest versions of Chrome, Firefox, and Safari set this correctly
       lang = navigator.language;

@@ -70,7 +70,7 @@ class FairplayDrmHandler {
     this._errorCallback = errorCallback;
     this._drmResponseCallback = drmResponseCallback;
     this._videoElement = videoElement;
-    this._onWebkitNeedKeyHandler = e => this._onWebkitNeedKey(e);
+    this._onWebkitNeedKeyHandler = (e: Event) => this._onWebkitNeedKey(e);
     this._videoElement.addEventListener(WebkitEvents.NEED_KEY, this._onWebkitNeedKeyHandler, false);
   }
 

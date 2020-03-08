@@ -54,6 +54,14 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   _eventManager: EventManager;
 
   /**
+   * The load promise
+   * @member {Promise<{tracks: Array<Track>}>} - _loadPromise
+   * @type {Promise<{tracks: Array<Track>}>}
+   * @private
+   */
+  _loadPromise: Promise<{tracks: Array<Track>}> | null;
+
+  /**
    * Checks if the media source adapter is supported.
    * @function isSupported
    * @returns {boolean} - Whether the media source adapter is supported.
