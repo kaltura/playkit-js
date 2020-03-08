@@ -6,6 +6,7 @@ import {RequestType} from '../../../../request-type';
 import type {CodeType} from '../../../../error/code';
 import type {SeverityType} from '../../../../error/severity';
 import type {CategoryType} from '../../../../error/category';
+import {DrmScheme} from '../../../../drm/drm-scheme';
 
 const KeySystem: string = 'com.apple.fps.1_0';
 type WebkitEventsType = {[name: string]: string};
@@ -25,8 +26,10 @@ class FairplayDrmHandler {
   _config: FairplayDrmConfigType;
   _onWebkitNeedKeyHandler: Function;
   _errorCallback: Function;
+  _drmResponseCallback: Function;
   _videoElement: HTMLVideoElement;
   _retryLicenseRequest: number = 4;
+  _licenseRequestTime: number;
   _defaultConfig: FairplayDrmConfigType = {
     licenseUrl: '',
     certificate: '',
@@ -60,10 +63,12 @@ class FairplayDrmHandler {
    * @param {HTMLVideoElement} videoElement - the video element
    * @param {FairplayDrmConfigType} config - config object
    * @param {Function} errorCallback - error callback function
+   * @param {Function} drmResponseCallback - drm license response callback function
    */
-  constructor(videoElement: HTMLVideoElement, config: FairplayDrmConfigType, errorCallback: Function): void {
+  constructor(videoElement: HTMLVideoElement, config: FairplayDrmConfigType, errorCallback: Function, drmResponseCallback: Function): void {
     this._config = Utils.Object.mergeDeep({}, this._defaultConfig, config);
     this._errorCallback = errorCallback;
+    this._drmResponseCallback = drmResponseCallback;
     this._videoElement = videoElement;
     this._onWebkitNeedKeyHandler = e => this._onWebkitNeedKey(e);
     this._videoElement.addEventListener(WebkitEvents.NEED_KEY, this._onWebkitNeedKeyHandler, false);
@@ -144,6 +149,7 @@ class FairplayDrmHandler {
             responseText: request.responseText
           });
         };
+        this._licenseRequestTime = Date.now();
         request.send(updatedRequest.body);
       })
       .catch(error => {
@@ -181,6 +187,11 @@ class FairplayDrmHandler {
       });
       return;
     }
+    if (this._drmResponseCallback) {
+      const licenseTime = Date.now() - this._licenseRequestTime;
+      this._drmResponseCallback({licenseTime: licenseTime / 1000, scheme: DrmScheme.FAIRPLAY});
+    }
+
     const response = {data: request.response};
     this._logger.debug('Apply response filter');
     let responseFilterPromise;

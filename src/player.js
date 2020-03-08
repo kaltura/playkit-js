@@ -130,42 +130,32 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   static _logger: any = getLogger('Player');
-  /**
-   * The player capabilities result object.
-   * @type {Object}
-   * @private
-   * @static
-   */
-  static _playerCapabilities: Object = {};
 
   /**
    * Runs the engines capabilities tests.
-   * @param {?boolean} playsinline - content playsinline
    * @returns {void}
    * @public
    * @static
    */
-  static runCapabilities(playsinline: ?boolean): void {
+  static runCapabilities(): void {
     Player._logger.debug('Running player capabilities');
-    EngineProvider.getEngines().forEach(Engine => Engine.runCapabilities(playsinline));
+    EngineProvider.getEngines().forEach(Engine => Engine.runCapabilities());
   }
 
   /**
    * Gets the engines capabilities.
    * @param {?string} engineType - The engine type.
-   * @param {?boolean} playsinline - content playsinline
    * @return {Promise<Object>} - The engines capabilities object.
    * @public
    * @static
    */
-  static getCapabilities(engineType: ?string, playsinline: ?boolean): Promise<{[name: string]: any}> {
+  static getCapabilities(engineType: ?string): Promise<{[name: string]: any}> {
     Player._logger.debug('Get player capabilities', engineType);
     const promises = [];
-    EngineProvider.getEngines().forEach(Engine => promises.push(Engine.getCapabilities(playsinline)));
+    EngineProvider.getEngines().forEach(Engine => promises.push(Engine.getCapabilities()));
     return Promise.all(promises).then(arrayOfResults => {
       const playerCapabilities = {};
       arrayOfResults.forEach(res => Object.assign(playerCapabilities, res));
-      Utils.Object.mergeDeep(playerCapabilities, Player._playerCapabilities);
       return engineType ? playerCapabilities[engineType] : playerCapabilities;
     });
   }
@@ -180,7 +170,10 @@ export default class Player extends FakeEventTarget {
    */
   static setCapabilities(engineType: string, capabilities: {[name: string]: any}): void {
     Player._logger.debug('Set player capabilities', engineType, capabilities);
-    Player._playerCapabilities[engineType] = Utils.Object.mergeDeep({}, Player._playerCapabilities[engineType], capabilities);
+    const selectedEngine = EngineProvider.getEngines().find(Engine => Engine.id === engineType);
+    if (selectedEngine) {
+      selectedEngine.setCapabilities(capabilities);
+    }
   }
 
   /**
@@ -255,6 +248,20 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _playbackStart: boolean;
+  /**
+   * Whether the playback ended
+   * @type {boolean}
+   * @private
+   */
+
+  _playbackEnded: boolean;
+  /**
+   * If quality has changed after playback ended - pend the change
+   * @type {boolean}
+   * @private
+   */
+
+  _pendingSelectedVideoTrack: ?VideoTrack;
   /**
    * The available playback rates for the player.
    * @type {Array<number>}
@@ -433,8 +440,7 @@ export default class Player extends FakeEventTarget {
     this._setConfigLogLevel(config);
     this._playerId = Utils.Generator.uniqueId(5);
     this._prepareVideoElement();
-    const playsInline = Utils.Object.getPropertyPath(config, 'playback.playsinline');
-    Player.runCapabilities(playsInline);
+    Player.runCapabilities();
     this._env = Env;
     this._tracks = [];
     this._uiComponents = [];
@@ -443,6 +449,7 @@ export default class Player extends FakeEventTarget {
     this._loadingMedia = false;
     this._loading = false;
     this._playbackStart = false;
+    this._playbackEnded = false;
     this._firstPlaying = false;
     this._reset = true;
     this._destroyed = false;
@@ -619,6 +626,7 @@ export default class Player extends FakeEventTarget {
     this._resetStateFlags();
     this._engineType = '';
     this._streamType = '';
+    this._pendingSelectedVideoTrack = null;
     if (this._engine) {
       this._engine.reset();
     }
@@ -641,7 +649,6 @@ export default class Player extends FakeEventTarget {
     if (this._destroyed) return;
     //make sure all services are destroyed before engine and engine attributes are destroyed
     this._externalCaptionsHandler.destroy();
-    Player._playerCapabilities = {};
     this._posterManager.destroy();
     this._pluginManager.destroy();
     this._stateManager.destroy();
@@ -653,6 +660,7 @@ export default class Player extends FakeEventTarget {
     this._engineType = '';
     this._streamType = '';
     this._readyPromise = null;
+    this._pendingSelectedVideoTrack = null;
     this._resetStateFlags();
     this._playbackAttributesState = {};
     if (this._engine) {
@@ -1130,7 +1138,11 @@ export default class Player extends FakeEventTarget {
   selectTrack(track: ?Track): void {
     if (this._engine) {
       if (track instanceof VideoTrack) {
-        this._engine.selectVideoTrack(track);
+        if (this._playbackEnded) {
+          this._pendingSelectedVideoTrack = track;
+        } else {
+          this._engine.selectVideoTrack(track);
+        }
       } else if (track instanceof AudioTrack) {
         this._engine.selectAudioTrack(track);
       } else if (track instanceof TextTrack) {
@@ -1724,6 +1736,7 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this, AdEventType.AD_AUTOPLAY_FAILED, (event: FakeEvent) => this._onPlayFailed(event));
       this._eventManager.listen(this._engine, CustomEventType.FPS_DROP, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._engine, CustomEventType.DRM_LICENSE_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.MANIFEST_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this, Html5EventType.PLAY, this._onPlay.bind(this));
       this._eventManager.listen(this, Html5EventType.PAUSE, this._onPause.bind(this));
@@ -1903,7 +1916,7 @@ export default class Player extends FakeEventTarget {
   _handleAutoPlay(): void {
     if (this._config.playback.autoplay === true) {
       const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
-      Player.getCapabilities(this.engineType, this.playsinline).then(capabilities => {
+      Player.getCapabilities(this.engineType).then(capabilities => {
         if (capabilities.autoplay) {
           onAutoPlay();
         } else {
@@ -2074,6 +2087,10 @@ export default class Player extends FakeEventTarget {
       this._firstPlaying = true;
       this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAYING));
     }
+    if (this._engine && this._pendingSelectedVideoTrack) {
+      this._engine.selectVideoTrack(this._pendingSelectedVideoTrack);
+      this._pendingSelectedVideoTrack = null;
+    }
   }
 
   /**
@@ -2139,6 +2156,8 @@ export default class Player extends FakeEventTarget {
     if (this.config.playback.loop) {
       this.currentTime = 0;
       this.play();
+    } else {
+      this._playbackEnded = true;
     }
   }
 
@@ -2152,6 +2171,7 @@ export default class Player extends FakeEventTarget {
     this._firstPlay = true;
     this._loadingMedia = false;
     this._playbackStart = false;
+    this._playbackEnded = false;
     this._firstPlaying = false;
   }
 

@@ -122,30 +122,39 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Runs the html5 capabilities tests.
-   * @param {boolean} playsinline - content playsinline
    * @returns {void}
    * @public
    * @static
    */
-  static runCapabilities(playsinline: boolean): void {
-    Html5._capabilities.forEach(capability => capability.runCapability(playsinline));
+  static runCapabilities(): void {
+    Html5._capabilities.forEach(capability => capability.runCapability());
   }
 
   /**
    * Gets the html5 capabilities.
-   * @param {?boolean} playsinline - content playsinline
    * @return {Promise<Object>} - The html5 capabilities object.
    * @public
    * @static
    */
-  static getCapabilities(playsinline: ?boolean): Promise<Object> {
+  static getCapabilities(): Promise<Object> {
     let promises = [];
-    Html5._capabilities.forEach(capability => promises.push(capability.getCapability(playsinline)));
+    Html5._capabilities.forEach(capability => promises.push(capability.getCapability()));
     return Promise.all(promises).then(arrayOfResults => {
       const mergedResults = {};
       arrayOfResults.forEach(res => Object.assign(mergedResults, res));
       return {[Html5.id]: mergedResults};
     });
+  }
+
+  /**
+   * Sets an engine capabilities.
+   * @param {Object} capabilities - The engine capabilities.
+   * @returns {void}
+   * @public
+   * @static
+   */
+  static setCapabilities(capabilities: {[name: string]: any}): void {
+    Html5._capabilities.forEach(capability => capability.setCapabilities(capabilities));
   }
 
   /**
@@ -285,6 +294,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.DRM_LICENSE_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.MANIFEST_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.TIME_UPDATE, (event: FakeEvent) => this.dispatchEvent(event));

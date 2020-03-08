@@ -19,6 +19,7 @@ var player = playkit.core.loadPlayer(config);
   session: PKSessionConfigObject,
   network: PKNetworkConfigObject,
   plugins: PKPluginsConfigObject,
+  advertising: PKAdvertisingConfigObject,
   customLabels: PKCustomLabelsConfigObject,
   abr: PKAbrConfigObject,
   drm: PKDrmConfigObject
