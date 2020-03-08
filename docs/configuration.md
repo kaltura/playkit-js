@@ -102,8 +102,8 @@ var config = {
 >
 > ```js
 > {
->   level:string,
->   handler:?LogHandlerType
+>   level: string,
+>   handler: ?LogHandlerType
 > }
 > ```
 >
@@ -117,7 +117,7 @@ var config = {
 > >
 > > ### config.log.handler
 > >
-> > ##### Type `PKMediaSourceObject`
+> > ##### Type `LogHandlerType`
 > >
 > > ##### Description: Defines the player log handler.
 > >
