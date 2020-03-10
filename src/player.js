@@ -7,7 +7,7 @@ import FakeEventTarget from './event/fake-event-target';
 import {CustomEventType, EventType, Html5EventType} from './event/event-type';
 import * as Utils from './utils/util';
 import Locale from './utils/locale';
-import getLogger, {getLogLevel, LogLevel, LogLevelType, setLogLevel, setLogHandler} from './utils/logger';
+import getLogger, {getLogLevel, LogLevel, LogLevelType, setLogHandler, setLogLevel} from './utils/logger';
 import PluginManager from './plugin/plugin-manager';
 import BasePlugin from './plugin/base-plugin';
 import StateManager from './state/state-manager';
@@ -20,7 +20,6 @@ import {Cue} from './track/vtt-cue';
 import {processCues} from './track/text-track-display';
 import {StateType} from './state/state-type';
 import {TrackType} from './track/track-type';
-import {LabelToTrackMap} from './track/label-to-track-map';
 import {StreamType} from './engines/stream-type';
 import {EngineType} from './engines/engine-type';
 import {MediaType} from './media-type';
@@ -40,6 +39,7 @@ import {ControllerProvider} from './controller/controller-provider';
 import {ResizeWatcher} from './utils/resize-watcher';
 import {FullscreenController} from './fullscreen/fullscreen-controller';
 import {EngineDecorator} from './engines/engine-decorator';
+import {LabelOptions} from './track/label-options';
 
 /**
  * The black cover class name.
@@ -1108,12 +1108,22 @@ export default class Player extends FakeEventTarget {
   /**
    * Returns the tracks according to the filter. if no filter given returns the all tracks.
    * @function getTracks
+   * @template {Track | AudioTrack | TextTrack | VideoTrack} T
    * @param {string} [type] - a tracks filter, should be 'video', 'audio' or 'text'.
-   * @returns {Array<Track | TextTrack | AudioTrack | VideoTrack>} - The parsed tracks.
+   * @returns {Array<T>} - The parsed tracks.
    * @public
    */
-  getTracks(type?: string): Array<Track | TextTrack | AudioTrack | VideoTrack> {
-    return Utils.Object.copyDeep(this._getTracksByType(type));
+  getTracks<T: Track | AudioTrack | TextTrack | VideoTrack>(type?: $Values<typeof TrackType>): Array<T> {
+    switch (type) {
+      case TrackType.VIDEO:
+        return Utils.Object.copyDeep(this._getVideoTracks());
+      case TrackType.AUDIO:
+        return Utils.Object.copyDeep(this._getAudioTracks());
+      case TrackType.TEXT:
+        return Utils.Object.copyDeep(this._getTextTracks());
+      default:
+        return Utils.Object.copyDeep(this._tracks);
+    }
   }
 
   /**
@@ -1122,9 +1132,9 @@ export default class Player extends FakeEventTarget {
    */
   getActiveTracks(): Object {
     return Utils.Object.copyDeep({
-      video: this._getTracksByType(TrackType.VIDEO).find(track => track.active),
-      audio: this._getTracksByType(TrackType.AUDIO).find(track => track.active),
-      text: this._getTracksByType(TrackType.TEXT).find(track => track.active)
+      video: this._getVideoTracks().find(track => track.active),
+      audio: this._getAudioTracks().find(track => track.active),
+      text: this._getTextTracks().find(track => track.active)
     });
   }
 
@@ -1172,7 +1182,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.hideTextTrack();
       this._resetTextDisplay();
-      const textTracks = this._getTracksByType(TrackType.TEXT);
+      const textTracks = this._getTextTracks();
       textTracks.map(track => (track.active = false));
       const textTrack = textTracks.find(track => track.language === OFF);
       if (textTrack) {
@@ -2231,31 +2241,55 @@ export default class Player extends FakeEventTarget {
         const videoElement = this.getVideoElement();
         return videoElement ? Array.from(videoElement.textTracks).findIndex(track => (track ? track.language === textTrack.language : false)) : -1;
       };
-      this._getTracksByType(TrackType.TEXT).forEach(track => (track.index = getNativeLanguageTrackIndex(track)));
+      this._getTextTracks().forEach(track => (track.index = getNativeLanguageTrackIndex(track)));
     }
   }
 
   /**
-   * Returns the tracks according to the filter. if no filter given returns the all tracks.
-   * @function _getTracksByType
-   * @param {string} [type] - a tracks filter, should be 'video', 'audio' or 'text'.
-   * @returns {Array<Track | TextTrack | AudioTrack | VideoTrack>} - The parsed tracks.
+   * Returns the tracks according to a type.
+   * @function _getTextTracks
+   * @template {TextTrack | AudioTrack | VideoTrack} T
+   * @param {T} [type] - a tracks type filter.
+   * @returns {Array<T>} - The parsed tracks.
    * @private
    */
-  _getTracksByType(type?: string): Array<Track | TextTrack | AudioTrack | VideoTrack> {
-    return !type
-      ? this._tracks
-      : this._tracks.filter((track: Track) => {
-          if (type === TrackType.VIDEO) {
-            return track instanceof VideoTrack;
-          } else if (type === TrackType.AUDIO) {
-            return track instanceof AudioTrack;
-          } else if (type === TrackType.TEXT) {
-            return track instanceof TextTrack;
-          } else {
-            return true;
-          }
-        });
+  _getTracksByType<T: TextTrack | AudioTrack | VideoTrack>(type: T): Array<T> {
+    return this._tracks.reduce((arr, track) => {
+      if (track instanceof type) {
+        arr.push(track);
+      }
+      return arr;
+    }, ([]: Array<T>));
+  }
+
+  /**
+   * Returns the text tracks.
+   * @function _getTextTracks
+   * @returns {Array<TextTrack>} - The text tracks.
+   * @private
+   */
+  _getTextTracks(): Array<TextTrack> {
+    return this._getTracksByType<TextTrack>(TextTrack.prototype);
+  }
+
+  /**
+   * Returns the video tracks.
+   * @function _getVideoTracks
+   * @returns {Array<VideoTrack>} - The video tracks.
+   * @private
+   */
+  _getVideoTracks(): Array<VideoTrack> {
+    return this._getTracksByType<VideoTrack>(VideoTrack.prototype);
+  }
+
+  /**
+   * Returns the audio tracks.
+   * @function _getAudioTracks
+   * @returns {Array<AudioTrack>} - The audio tracks.
+   * @private
+   */
+  _getAudioTracks(): Array<AudioTrack> {
+    return this._getTracksByType<AudioTrack>(AudioTrack.prototype);
   }
 
   /**
@@ -2266,16 +2300,15 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _markActiveTrack(track: Track): void {
-    let type;
+    let tracks;
     if (track instanceof VideoTrack) {
-      type = TrackType.VIDEO;
+      tracks = this._getVideoTracks();
     } else if (track instanceof AudioTrack) {
-      type = TrackType.AUDIO;
+      tracks = this._getAudioTracks();
     } else if (track instanceof TextTrack) {
-      type = TrackType.TEXT;
+      tracks = this._getTextTracks();
     }
-    if (type) {
-      const tracks = this._getTracksByType(type);
+    if (tracks) {
       for (let i = 0; i < tracks.length; i++) {
         tracks[i].active = track.index === tracks[i].index;
       }
@@ -2330,7 +2363,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _addTextTrackOffOption(): void {
-    const textTracks = this._getTracksByType(TrackType.TEXT);
+    const textTracks = this._getTextTracks();
     if (textTracks && textTracks.length) {
       this._tracks.push(
         new TextTrack({
@@ -2352,27 +2385,25 @@ export default class Player extends FakeEventTarget {
   _setDefaultTracks(): void {
     const activeTracks = this.getActiveTracks();
     const playbackConfig = this.config.playback;
-    const offTextTrack: ?Track = this._getTracksByType(TrackType.TEXT).find(track => TextTrack.langComparer(OFF, track.language));
-    let currentOrConfiguredTextLang =
-      this._playbackAttributesState.textLanguage || this._getLanguage(playbackConfig.textLanguage, activeTracks.text, TrackType.TEXT);
+    const offTextTrack: ?Track = this._getTextTracks().find(track => TextTrack.langComparer(OFF, track.language));
+    let currentOrConfiguredTextLang = this._playbackAttributesState.textLanguage || this._getLanguage(playbackConfig.textLanguage, activeTracks.text);
     let currentOrConfiguredAudioLang = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
-    this._setDefaultTrack(TrackType.TEXT, currentOrConfiguredTextLang, offTextTrack);
-    this._setDefaultTrack(TrackType.AUDIO, currentOrConfiguredAudioLang, activeTracks.audio);
+    this._setDefaultTrack<TextTrack>(this._getTextTracks(), currentOrConfiguredTextLang, offTextTrack);
+    this._setDefaultTrack<AudioTrack>(this._getAudioTracks(), currentOrConfiguredAudioLang, activeTracks.audio);
   }
 
   /**
    * Gets the track language that should be set by default.
    * @param {string} configuredLanguage - The configured language (can be also "auto").
-   * @param {Track} defaultTrack - The default track.
-   * @param {string} type - The track type.
+   * @param {?TextTrack} defaultTrack - The default track.
    * @private
    * @returns {string} - The track language to set by default.
    */
-  _getLanguage(configuredLanguage: string, defaultTrack: ?Track, type: string): string {
+  _getLanguage(configuredLanguage: string, defaultTrack: ?TextTrack): string {
     let language = configuredLanguage;
     if (language === AUTO) {
-      const tracks = this._getTracksByType(type);
-      const localeTrack: ?Track = tracks.find(track => Track.langComparer(Locale.language, track.language));
+      const tracks = this._getTextTracks();
+      const localeTrack: ?TextTrack = tracks.find(track => Track.langComparer(Locale.language, track.language));
       if (localeTrack) {
         language = localeTrack.language;
       } else if (defaultTrack && defaultTrack.language !== OFF) {
@@ -2386,14 +2417,15 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Sets a specific default track.
-   * @param {string} type - The track type.
+   * @template {TextTrack | AudioTrack} T
+   * @param {Array<T>} tracks - the audio or text tracks.
    * @param {string} language - The track language.
-   * @param {?Track} defaultTrack - The default track to set in case there is no language configured.
+   * @param {Track} defaultTrack - The default track to set in case there is no language configured.
    * @returns {void}
    * @private
    */
-  _setDefaultTrack(type: string, language: string, defaultTrack: ?Track): void {
-    const track: ?Track = this._getTracksByType(type).find(track => Track.langComparer(language, track.language));
+  _setDefaultTrack<T: TextTrack | AudioTrack>(tracks: Array<T>, language: string, defaultTrack: ?Track): void {
+    const track: ?T = tracks.find(track => Track.langComparer(language, track.language));
     if (track) {
       this.selectTrack(track);
       this._markActiveTrack(track);
@@ -2412,19 +2444,33 @@ export default class Player extends FakeEventTarget {
     const customLabels = this._config.customLabels;
     if (customLabels) {
       for (let callbackType in customLabels) {
-        this._setTracksCustomLabels(this._getTracksByType(LabelToTrackMap[callbackType]), customLabels[callbackType]);
+        if (!customLabels.hasOwnProperty(callbackType)) {
+          return;
+        }
+        switch (callbackType) {
+          case LabelOptions.QUALITIES:
+            this._setTracksCustomLabels(this._getVideoTracks(), customLabels[callbackType]);
+            break;
+          case LabelOptions.AUDIO:
+            this._setTracksCustomLabels(this._getAudioTracks(), customLabels[callbackType]);
+            break;
+          case LabelOptions.CAPTIONS:
+            this._setTracksCustomLabels(this._getTextTracks(), customLabels[callbackType]);
+            break;
+        }
       }
     }
   }
 
   /**
    *
-   * @param {Array<Track>} tracks - tracks
+   * @template {AudioTrack | TextTrack | VideoTrack} T
+   * @param {Array<T>} tracks - tracks
    * @param {Function} callback - application label callback, returns a string
    * @private
    * @returns {void}
    */
-  _setTracksCustomLabels(tracks: Array<Track>, callback: Function) {
+  _setTracksCustomLabels<T: AudioTrack | TextTrack | VideoTrack>(tracks: Array<T>, callback: Function) {
     tracks.forEach(track => {
       const result = callback(Utils.Object.copyDeep(track));
       if (result) {
@@ -2467,10 +2513,10 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Gets the player tracks types.
-   * @returns {PKTrackTypes} - The tracks types of the player.
+   * @returns {TrackType} - The tracks types of the player.
    * @public
    */
-  get Track(): PKTrackTypes {
+  get Track(): typeof TrackType {
     return TrackType;
   }
 

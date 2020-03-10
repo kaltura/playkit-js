@@ -2,7 +2,6 @@
 import Error from '../error/error';
 import * as Utils from '../utils/util';
 import {Parser, StringDecoder} from './text-track-display';
-import {TrackType} from './track-type';
 import TextTrack from './text-track';
 import Track from './track';
 import {CustomEventType, Html5EventType} from '../event/event-type';
@@ -442,7 +441,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _maybeSetExternalCueIndex(): boolean {
-    const textTrack = this._player.getTracks(TrackType.TEXT).find(track => track.active && track.external);
+    let textTrack = this._player._getTextTracks().find(track => track.active && track.external);
     if (textTrack && textTrack.external) {
       const cues = this._textTrackModel[textTrack.language] ? this._textTrackModel[textTrack.language].cues : [];
       let i = 0;
