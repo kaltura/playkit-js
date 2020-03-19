@@ -104,60 +104,15 @@ var config = {
 
 ##
 
-> ### config.log
+> ### config.logLevel
 >
-> ##### Type: `PKLogConfigObject`
+> ##### Type: `string`
 >
-> ```js
-> {
->   level: string,
->   handler?: Function
-> }
-> ```
+> ##### Default: `"ERROR"`
 >
-> ##### Default:
+> ##### Description: Defines the player log level.
 >
-> ```js
-> {
->   level: "ERROR"
-> }
-> ```
->
-> ##### Description: Defines the player log level object.
->
-> ##
->
-> > ### config.log.level
-> >
-> > ##### Type: `string`
-> >
-> > ##### Default: `"ERROR"`
-> >
-> > ##### Description: Defines the player log level object.
-> >
-> > Possible values: `"DEBUG", "INFO", "TIME", "WARN", "ERROR", "OFF"`
-> >
-> > ##
-> >
-> > ### config.log.handler
-> >
-> > ##### Type: `function`
-> >
-> > ##### Default: `-`
-> >
-> > ##### Description: Defines a log handler to redirects filtered messages somewhere.
-> >
-> > #### Example:
-> >
-> > ```js
-> > var config = {
-> >   log: {
-> >     handler: function(messages, context) {
-> >       jQuery.post('/logs', { message: messages[0], level: context.level });
-> >     }
-> >   }
-> > };
-> > ```
+> Possible values: `"DEBUG", "INFO", "TIME", "WARN", "ERROR", "OFF"`
 
 ##
 
