@@ -85,9 +85,16 @@ var config = {
     ]
   },
   abr: {
+    enabled: true,
     fpsDroppedFramesInterval: 5000,
     fpsDroppedMonitoringThreshold: 0.2,
-    capLevelOnFPSDrop: true
+    capLevelOnFPSDrop: true,
+    capLevelToPlayerSize: false,
+    defaultBandwidthEstimate: 500e3,
+    restrictions: {
+      minBitrate: 0,
+      maxBitrate: Infinity
+    }
   },
   drm: {
     keySystem: ''
@@ -97,21 +104,66 @@ var config = {
 
 ##
 
-> ### config.logLevel
+> ### config.log
 >
-> ##### Type: `string`
+> ##### Type: `PKLogConfigObject`
 >
-> ##### Default: `"ERROR"`
+> ```js
+> {
+>   level: string,
+>   handler?: Function
+> }
+> ```
 >
-> ##### Description: Defines the player log level.
+> ##### Default:
 >
-> Possible values: `"DEBUG", "INFO", "TIME", "WARN", "ERROR", "OFF"`
+> ```js
+> {
+>   level: "ERROR"
+> }
+> ```
+>
+> ##### Description: Defines the player log level object.
+>
+> ##
+>
+> > ### config.log.level
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `"ERROR"`
+> >
+> > ##### Description: Defines the player log level object.
+> >
+> > Possible values: `"DEBUG", "INFO", "TIME", "WARN", "ERROR", "OFF"`
+> >
+> > ##
+> >
+> > ### config.log.handler
+> >
+> > ##### Type: `function`
+> >
+> > ##### Default: `-`
+> >
+> > ##### Description: Defines a log handler to redirects filtered messages somewhere.
+> >
+> > #### Examples:
+> >
+> > ```js
+> > var config = {
+> >   log: {
+> >     handler: function(messages, context) {
+> >       jQuery.post('/logs', { message: messages[0], level: context.level });
+> >     }
+> >   }
+> > };
+> > ```
 
 ##
 
 > ### config.sources
 >
-> ##### Type: `PKSourcesConfig`
+> ##### Type: `PKSourcesConfigObject`
 >
 > ```js
 > {
@@ -436,7 +488,7 @@ var config = {
 
 > ### config.plugins
 >
-> ##### Type: `PKPluginsObject`
+> ##### Type: `PKPluginsConfigObject`
 >
 > `{ [plugin: string]: Object }`
 >
@@ -483,7 +535,7 @@ var config = {
 
 > ### config.playback
 >
-> ##### Type: `PKPlaybackConfig`
+> ##### Type: `PKPlaybackConfigObject`
 >
 > ```js
 > {
@@ -1312,7 +1364,7 @@ var config = {
 > ```js
 > var config = {
 >   customLabels: {
->     qualities: function(videoTrack) {
+>     qualities: function(videoTrack) ±{
 >       if (videoTrack.height > 500) {
 >         return 'High';
 >       }
@@ -1334,9 +1386,16 @@ var config = {
 >
 > ```js
 > {
->  fpsDroppedMonitoringThreshold: number,
->  fpsDroppedFramesInterval: number,
->  capLevelOnFPSDrop: boolean
+>   enabled: boolean,
+>   fpsDroppedFramesInterval: number,
+>   fpsDroppedMonitoringThreshold: number,
+>   capLevelOnFPSDrop: boolean,
+>   capLevelToPlayerSize: boolean,
+>   defaultBandwidthEstimate: number,
+>   restrictions: {
+>     minBitrate: number,
+>     maxBitrate: number
+>   }
 > }
 > ```
 >
@@ -1344,14 +1403,31 @@ var config = {
 >
 > ```js
 > {
->  fpsDroppedMonitoringThreshold: 0.2,
->  fpsDroppedFramesInterval: 5000,
->  capLevelOnFPSDrop: true
+>   enabled: true,
+>   fpsDroppedFramesInterval: 5000,
+>   fpsDroppedMonitoringThreshold: 0.2,
+>   capLevelOnFPSDrop: true,
+>   capLevelToPlayerSize: false,
+>   defaultBandwidthEstimate: 500e3,
+>   restrictions: {
+>     minBitrate: 0,
+>     maxBitrate: Infinity
+>   }
 > }
 > ```
 >
-> ##### Description: Specifies flags to control / restrict the abr mechanism.
+> ##### Description: Specifies flags to control / restrict the ABR mechanism.
 >
+> > ### config.abr.enabled
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `true`
+> >
+> > ##### Description: Whether the ABR mechanism is enabled.
+> >
+> > ##
+> >
 > > ### config.abr.fpsDroppedFramesInterval
 > >
 > > ##### Type: `number`
@@ -1359,9 +1435,9 @@ var config = {
 > > ##### Default: `5000`
 > >
 > > ##### Description: Interval time in milliseconds to check if too many frames are dropped
->
-> ##
->
+> >
+> > ##
+> >
 > > ### config.abr.fpsDroppedMonitoringThreshold
 > >
 > > ##### Type: `number`
@@ -1369,9 +1445,9 @@ var config = {
 > > ##### Default: `0.2`
 > >
 > > ##### Description: The allowed frames dropped threshold.
->
-> ##
->
+> >
+> > ##
+> >
 > > ### config.abr.capLevelOnFPSDrop
 > >
 > > ##### Type: `boolean`
@@ -1379,8 +1455,56 @@ var config = {
 > > ##### Default: true
 > >
 > > ##### Description: If the player should cap the level when the fps exceeds the threshold.
->
-> ##
+> >
+> > ##
+> >
+> > ### config.abr.capLevelToPlayerSize
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: false
+> >
+> > ##### Description: If the player should cap the level to the player dimensions (width and height).
+> >
+> > ##
+> >
+> > ### config.abr.defaultBandwidthEstimate
+> >
+> > ##### Type: `number`
+> >
+> > ##### Default: 500000
+> >
+> > ##### Description: The default bandwidth estimate to use if there is not enough data, in bit/sec.                       
+> >
+> > ##
+> >
+> > ### config.abr.restrictions
+> >
+> > ##### Type: `object`
+> >
+> > ##### Default: `{}`
+> >
+> > ##### Description: The restrictions to apply to ABR decisions.
+> >
+> > ##
+> >
+> > > ### config.abr.restrictions.minBitrate
+> > >
+> > > ##### Type: `number`
+> > >
+> > > ##### Default: `0`
+> > >
+> > > ##### Description: The minimum bitrate in bit/sec.
+> > >
+> > > ##
+> > >
+> > > ### config.abr.restrictions.maxBitrate
+> > >
+> > > ##### Type: `number`
+> > >
+> > > ##### Default: `Infinity`
+> > >
+> > > ##### Description: The maximum bitrate in bit/sec.
 
 ##
 
@@ -1403,8 +1527,6 @@ var config = {
 > > ##### Default: ``
 > >
 > > ##### Description: A specific DRM key system to use.
->
-> ##
 
 ##
 
