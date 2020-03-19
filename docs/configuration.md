@@ -147,7 +147,7 @@ var config = {
 > >
 > > ##### Description: Defines a log handler to redirects filtered messages somewhere.
 > >
-> > #### Examples:
+> > #### Example:
 > >
 > > ```js
 > > var config = {
@@ -1364,7 +1364,7 @@ var config = {
 > ```js
 > var config = {
 >   customLabels: {
->     qualities: function(videoTrack) ±{
+>     qualities: function(videoTrack) {
 >       if (videoTrack.height > 500) {
 >         return 'High';
 >       }
