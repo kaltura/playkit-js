@@ -544,7 +544,11 @@ export default class Player extends FakeEventTarget {
         this._eventManager.listenOnce(this, CustomEventType.SOURCE_SELECTED, () => this._load());
       }
     };
-    this._playbackMiddleware.load(() => loadPlayer());
+    if (!this.src) {
+      this._playbackMiddleware.load(() => loadPlayer());
+    } else {
+      Player._logger.debug('The source has already been loaded. load request ignored');
+    }
   }
 
   /**
@@ -558,8 +562,8 @@ export default class Player extends FakeEventTarget {
       this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_START));
       if (!this.src) {
         this._prepareVideoElement();
-        this.load();
       }
+      this.load();
     }
     if (this._engine) {
       this._playbackMiddleware.play(() => this._play());
