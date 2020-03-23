@@ -558,8 +558,8 @@ export default class Player extends FakeEventTarget {
       this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_START));
       if (!this.src) {
         this._prepareVideoElement();
+        this.load();
       }
-      this.load();
     }
     if (this._engine) {
       this._playbackMiddleware.play(() => this._play());
