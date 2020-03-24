@@ -74,7 +74,7 @@ describe('Player', function() {
       player.load();
     });
 
-    it.only("should't load if source already exists", done => {
+    it("should't load if source already exists", done => {
       player.addEventListener(CustomEventType.TRACKS_CHANGED, () => {
         sandbox.stub(player, '_load').callsFake(function() {
           done(new Error("should't load if source already exists"));
