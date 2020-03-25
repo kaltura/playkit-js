@@ -1,4 +1,7 @@
 // @flow
 declare type PKResponseObject = {
-  data: ArrayBuffer
+  url: string,
+  originalUrl: string,
+  data: ArrayBuffer,
+  headers: { [header: string] : string }
 };

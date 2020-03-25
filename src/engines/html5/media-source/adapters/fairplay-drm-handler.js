@@ -191,8 +191,11 @@ class FairplayDrmHandler {
       const licenseTime = Date.now() - this._licenseRequestTime;
       this._drmResponseCallback({licenseTime: licenseTime / 1000, scheme: DrmScheme.FAIRPLAY});
     }
+    const {responseURL: url, response: data} = request;
+    const originalUrl = this._config.licenseUrl;
+    const headers = Utils.Http.convertHeaderRowToMap(request.getAllResponseHeaders());
 
-    const pkResponse: PKResponseObject = {data: request.response};
+    const pkResponse: PKResponseObject = {url, originalUrl, data, headers};
     this._logger.debug('Apply response filter');
     let responseFilterPromise;
     try {
