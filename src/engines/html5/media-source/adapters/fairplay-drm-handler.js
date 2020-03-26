@@ -193,7 +193,7 @@ class FairplayDrmHandler {
     }
     const {responseURL: url, response: data} = request;
     const originalUrl = this._config.licenseUrl;
-    const headers = Utils.Http.convertHeaderRowToMap(request.getAllResponseHeaders());
+    const headers = Utils.Http.convertHeadersToDictionary(request.getAllResponseHeaders());
 
     const pkResponse: PKResponseObject = {url, originalUrl, data, headers};
     this._logger.debug('Apply response filter');

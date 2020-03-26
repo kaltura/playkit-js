@@ -495,7 +495,7 @@ const _Http = {
     });
   },
   jsonp: jsonp,
-  convertHeaderRowToMap: function(headerRow: string): {[header: string]: string} {
+  convertHeadersToDictionary: function(headerRow: string): {[header: string]: string} {
     let headerMap = {};
     try {
       // Convert the header string into an array of individual headers
