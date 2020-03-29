@@ -1043,11 +1043,61 @@ var config = {
 > >
 > > ### config.network.requestFilter
 > >
-> > ##### Type: `function`
+> > ##### Type: `function(type: PKRequestType, request: PKRequestObject): (void | Promise<PKRequestObject>)`
 > >
 > > ##### Default: `-`
 > >
 > > ##### Description: Defines a filter for requests. This filter takes the request and modifies it before it is sent. A request filter can run asynchronously by returning a promise; in this case, the request will not be sent until the promise is resolved.
+> >
+> >  ##
+> >
+> > > ##### Type: PKRequestType
+> > >
+> > > ```js
+> > > {
+> > >   MANIFEST: 0,
+> > >   SEGMENT: 1,
+> > >   LICENSE: 2
+> > > }
+> > > ```
+> > >
+> > > ##
+> > >
+> > > ##### Type: PKRequestObject
+> > >
+> > > ```js
+> > > {
+> > >   url: string,
+> > >   body: ?string | ArrayBuffer,
+> > >   headers: { [header: string] : string }
+> > > }
+> > > ```
+> > >
+> > > ##
+> > > 
+> > > > ##### `PKRequestObject.url`
+> > > >
+> > > > ##### Type: `string`
+> > > >
+> > > > ##### Description: The request URL.
+> > > >
+> > > > ##
+> > > >
+> > > > ##### `PKRequestObject.body`
+> > > >
+> > > > ##### Type: `string || ArrayBuffer`
+> > > >
+> > > > ##### Description: The body of the request.
+> > > >
+> > > > ##
+> > > >
+> > > > ##### `PKRequestObject.headers`
+> > > >
+> > > > ##### Type: `{ [header: string] : string }`
+> > > >
+> > > > ##### Description: A mapping of headers for the request. e.g.: {'HEADER': 'VALUE'}.
+> >
+> > ##
 > >
 > > #### Examples:
 > >
@@ -1081,11 +1131,70 @@ var config = {
 > >
 > > ### config.network.responseFilter
 > >
-> > ##### Type: `function`
+> > ##### Type: `function(type: PKRequestType, request: PKResponseObject): (void | Promise<PKResponseObject>)`
 > >
 > > ##### Default: `-`
 > >
 > > ##### Description: Defines a filter for responses. This filter takes the response and modifies it before it is returned. A response filter can run asynchronously by returning a promise.
+> >
+> >  ##
+> >
+> > > ##### Type: PKRequestType
+> > >
+> > > ```js
+> > > {
+> > >   MANIFEST: 0,
+> > >   SEGMENT: 1,
+> > >   LICENSE: 2
+> > > }
+> > > ```
+> > >
+> > > ##
+> > >
+> > > ##### Type: PKResponseObject
+> > >
+> > > ```js
+> > > {
+> > >   url: string,
+> > >   originalUrl: string,
+> > >   data: ArrayBuffer,
+> > >   headers: { [header: string] : string }
+> > > }
+> > > ```
+> > >
+> > > ##
+> > > 
+> > > > ##### `PKResponseObject.url`
+> > > >
+> > > > ##### Type: `string`
+> > > >
+> > > > ##### Description: The URI which was loaded. Request filters and server redirects can cause this to be different from the original request URIs.
+> > > >
+> > > > ##
+> > > >
+> > > > ##### `PKResponseObject.originalUrl`
+> > > >
+> > > > ##### Type: `string`
+> > > >
+> > > > ##### Description: The original URI passed to the browser for networking. This is before any redirects, but after request filters are executed.
+> > > >
+> > > > ##
+> > > >
+> > > > ##### `PKResponseObject.body`
+> > > >
+> > > > ##### Type: `ArrayBuffer`
+> > > >
+> > > > ##### Description: The body of the response.
+> > > >
+> > > > ##
+> > > >
+> > > > ##### `PKResponseObject.headers`
+> > > >
+> > > > ##### Type: `{ [header: string] : string }`
+> > > >
+> > > > ##### Description: A map of response headers, if supported by the underlying protocol. All keys should be lowercased. For HTTP/HTTPS, may not be available cross-origin.
+> >
+> > ##
 > >
 > > #### Examples:
 > >

@@ -1051,6 +1051,25 @@ describe('NativeAdapter: request filter', () => {
     e.payload.data.should.equal('error');
   };
 
+  it('should pass the params to the request filter', done => {
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {
+      network: {
+        requestFilter: function(type, request) {
+          try {
+            type.should.equal(RequestType.MANIFEST);
+            request.url.should.equal(sourcesConfig.Mp4.progressive[0].url);
+            request.hasOwnProperty('body').should.be.true;
+            request.headers.should.be.exist;
+            done();
+          } catch (e) {
+            done(e);
+          }
+        }
+      }
+    });
+    nativeInstance.load();
+  });
+
   it('should apply void filter for manifest', done => {
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {
       network: {

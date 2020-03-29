@@ -494,7 +494,25 @@ const _Http = {
       request.send(params);
     });
   },
-  jsonp: jsonp
+  jsonp: jsonp,
+  convertHeadersToDictionary: function(headerRow: string): {[header: string]: string} {
+    let headerMap = {};
+    try {
+      // Convert the header string into an array of individual headers
+      const arr = headerRow.trim().split(/[\r\n]+/);
+
+      // Create a map of header names to values
+      arr.forEach(function(line) {
+        const parts = line.split(': ');
+        const header = parts.shift().toLowerCase();
+        const value = parts.join(': ');
+        headerMap[header] = value;
+      });
+    } catch (e) {
+      // do nothing
+    }
+    return headerMap;
+  }
 };
 
 const _VERSION = {
