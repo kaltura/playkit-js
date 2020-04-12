@@ -191,16 +191,19 @@ class FairplayDrmHandler {
       const licenseTime = Date.now() - this._licenseRequestTime;
       this._drmResponseCallback({licenseTime: licenseTime / 1000, scheme: DrmScheme.FAIRPLAY});
     }
+    const {responseURL: url, response: data} = request;
+    const originalUrl = this._config.licenseUrl;
+    const headers = Utils.Http.convertHeadersToDictionary(request.getAllResponseHeaders());
 
-    const response = {data: request.response};
+    const pkResponse: PKResponseObject = {url, originalUrl, data, headers};
     this._logger.debug('Apply response filter');
     let responseFilterPromise;
     try {
-      responseFilterPromise = this._config.network.responseFilter(RequestType.LICENSE, response);
+      responseFilterPromise = this._config.network.responseFilter(RequestType.LICENSE, pkResponse);
     } catch (error) {
       responseFilterPromise = Promise.reject(error);
     }
-    responseFilterPromise = responseFilterPromise || Promise.resolve(response);
+    responseFilterPromise = responseFilterPromise || Promise.resolve(pkResponse);
     responseFilterPromise
       .then(updatedResponse => {
         this._keySession.update(updatedResponse.data);

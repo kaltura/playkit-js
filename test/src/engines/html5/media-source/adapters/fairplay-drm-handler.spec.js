@@ -89,6 +89,30 @@ describe('Fairplay Drm Handler', function() {
       e.data.should.equal('error');
     };
 
+    it('should pass the params to the request filter', done => {
+      Utils.Object.mergeDeep(fpsDrmData, {
+        network: {
+          requestFilter: function(type, request) {
+            try {
+              type.should.equal(RequestType.LICENSE);
+              request.url.should.equal(fpsDrmData.licenseUrl);
+              request.body.should.be.exist;
+              request.headers.should.be.exist;
+            } catch (e) {
+              done(e);
+            }
+          }
+        }
+      });
+      sandbox.stub(XMLHttpRequest.prototype, 'open', () => {
+        done();
+      });
+      const fp = new FairplayDrmHandler(videoElement, fpsDrmData, () => {});
+      fp._onWebkitKeyMessage({
+        message: new Uint8Array(new ArrayBuffer(1))
+      });
+    });
+
     it('should apply void filter for license', done => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
@@ -231,6 +255,29 @@ describe('Fairplay Drm Handler', function() {
       e.data.should.equal('error');
     };
 
+    it('should pass the params to the response filter', done => {
+      Utils.Object.mergeDeep(fpsDrmData, {
+        network: {
+          responseFilter: function(type, response) {
+            try {
+              type.should.equal(RequestType.LICENSE);
+              response.url.should.be.exist;
+              response.originalUrl.should.equal(fpsDrmData.licenseUrl);
+              response.data.should.be.exist;
+              response.headers.should.be.exist;
+              done();
+            } catch (e) {
+              done(e);
+            }
+          }
+        }
+      });
+      const fp = new FairplayDrmHandler(videoElement, fpsDrmData, () => {});
+      fp._licenseRequestLoaded({
+        target: new XMLHttpRequest()
+      });
+    });
+
     it('should apply void filter for license', done => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
@@ -253,9 +300,7 @@ describe('Fairplay Drm Handler', function() {
         }
       };
       fp._licenseRequestLoaded({
-        target: {
-          response: {}
-        }
+        target: new XMLHttpRequest()
       });
     });
 
@@ -284,9 +329,7 @@ describe('Fairplay Drm Handler', function() {
         }
       };
       fp._licenseRequestLoaded({
-        target: {
-          response: {}
-        }
+        target: new XMLHttpRequest()
       });
     });
 
@@ -307,9 +350,7 @@ describe('Fairplay Drm Handler', function() {
         }
       });
       fp._licenseRequestLoaded({
-        target: {
-          response: {}
-        }
+        target: new XMLHttpRequest()
       });
     });
 
@@ -332,9 +373,7 @@ describe('Fairplay Drm Handler', function() {
         }
       });
       fp._licenseRequestLoaded({
-        target: {
-          response: {}
-        }
+        target: new XMLHttpRequest()
       });
     });
 
@@ -357,9 +396,7 @@ describe('Fairplay Drm Handler', function() {
         }
       });
       fp._licenseRequestLoaded({
-        target: {
-          response: {}
-        }
+        target: new XMLHttpRequest()
       });
     });
   });
