@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.61.0"></a>
+# [0.61.0](https://github.com/kaltura/playkit-js/compare/v0.60.1...v0.61.0) (2020-04-13)
+
+
+### Bug Fixes
+
+* **FEC-9605:** load middleware called twice when preload is 'auto' ([#448](https://github.com/kaltura/playkit-js/issues/448)) ([66dbb33](https://github.com/kaltura/playkit-js/commit/66dbb33))
+
+
+### Features
+
+* enrich the response filter params ([#449](https://github.com/kaltura/playkit-js/issues/449)) ([a9862b1](https://github.com/kaltura/playkit-js/commit/a9862b1))
+
+
+
 <a name="0.60.1"></a>
 ## [0.60.1](https://github.com/kaltura/playkit-js/compare/v0.60.0...v0.60.1) (2020-03-10)
 
