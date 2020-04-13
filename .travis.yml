@@ -36,8 +36,7 @@ jobs:
       env: TRAVIS_MODE=release
       deploy:
         - provider: releases
-          api_key:
-            secure: $GH_TOKEN
+          api_key: $GH_TOKEN
           file_glob: true
           file: dist/*
           prerelease: true
