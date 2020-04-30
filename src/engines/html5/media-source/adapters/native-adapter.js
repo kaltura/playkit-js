@@ -17,6 +17,7 @@ import type {FairplayDrmConfigType} from './fairplay-drm-handler';
 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
+let SEEK_AFTER_FOCUS: boolean = false;
 
 /**
  * An illustration of media source extension for progressive download
@@ -305,7 +306,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._eventManager.listen(this._videoElement, Html5EventType.ABORT, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.SEEKED, () => this._syncCurrentTime());
         // Sometimes when playing live in safari and switching between tabs the currentTime goes back with no seek events
-        this._eventManager.listen(window, 'focus', () => setTimeout(() => this._syncCurrentTime(), BACK_TO_FOCUS_TIMEOUT));
+        this._eventManager.listen(window, 'focus', () => setTimeout(() => this._syncCurrentTime(), BACK_TO_FOCUS_TIMEOUT, (SEEK_AFTER_FOCUS = true)));
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
         }
@@ -461,6 +462,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   _syncCurrentTime(): void {
+    if (SEEK_AFTER_FOCUS) {
+      this._videoElement.currentTime -= 0.1;
+    }
+    SEEK_AFTER_FOCUS = false;
     this._lastTimeUpdate = this._videoElement.currentTime;
   }
 
