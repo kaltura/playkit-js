@@ -307,7 +307,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         // Sometimes when playing live in safari and switching between tabs the currentTime goes back with no seek events
         this._eventManager.listen(window, 'focus', () =>
           setTimeout(() => {
-            this._videoElement.currentTime = Math.max(0, this._videoElement.currentTime - 0.1);
+            this._videoElement.currentTime = this._videoElement.currentTime > 0.1 ? this._videoElement.currentTime - 0.1 : 0;
             this._syncCurrentTime();
           }, BACK_TO_FOCUS_TIMEOUT)
         );
