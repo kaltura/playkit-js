@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.61.2"></a>
+## [0.61.2](https://github.com/kaltura/playkit-js/compare/v0.61.1...v0.61.2) (2020-05-10)
+
+
+### Bug Fixes
+
+* **FEC-10014:** Content playback fails when user minimise the browser on IOS ([#452](https://github.com/kaltura/playkit-js/issues/452)) ([1d2b92c](https://github.com/kaltura/playkit-js/commit/1d2b92c))
+* **FEC-9997:** out of DVR window will lead to live edge ([#451](https://github.com/kaltura/playkit-js/issues/451)) ([c18a013](https://github.com/kaltura/playkit-js/commit/c18a013))
+
+
+
 <a name="0.61.1"></a>
 ## [0.61.1](https://github.com/kaltura/playkit-js/compare/v0.61.0...v0.61.1) (2020-04-13)
 
