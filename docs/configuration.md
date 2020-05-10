@@ -1202,7 +1202,7 @@ var config = {
 > > > >
 > > > > ##
 > > > >
-> > > > ##### `PKResponseObject.body`
+> > > > ##### `PKResponseObject.data`
 > > > >
 > > > > ##### Type: `ArrayBuffer`
 > > > >
