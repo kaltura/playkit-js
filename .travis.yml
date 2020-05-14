@@ -52,6 +52,8 @@ jobs:
           on:
             tags: true
             branch: master
+      after_deploy:
+        - conventional-github-releaser -t $GH_NOTE_TOKEN
     # publish canary package if on master
     - stage: Release canary
       if: (branch = master) AND (type != pull_request) AND commit_message !~ /^chore\(release\)/
