@@ -212,6 +212,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   reset(): void {
     this._eventManager.removeAll();
     if (this._mediaSourceAdapter) {
+      this._droppedFramesWatcher.destroy();
+      this._droppedFramesWatcher = null;
       this._canLoadMediaSourceAdapterPromise = this._mediaSourceAdapter.destroy();
       this._mediaSourceAdapter = null;
     }
