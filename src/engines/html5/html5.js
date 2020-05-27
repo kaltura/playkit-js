@@ -51,7 +51,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _canLoadMediaSourceAdapterPromise: Promise<*>;
-  _droppedFramesWatcher: DroppedFramesWatcher;
+  _droppedFramesWatcher: ?DroppedFramesWatcher;
 
   /**
    * The html5 class logger.
