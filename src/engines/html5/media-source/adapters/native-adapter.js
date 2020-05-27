@@ -157,6 +157,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @static
    */
   static canPlayDrm(drmData: Array<Object>, drmConfig: PKDrmConfigObject): boolean {
+    NativeAdapter._drmProtocol = null;
     for (let drmProtocol of NativeAdapter._drmProtocols) {
       if (drmProtocol.isConfigured(drmData, drmConfig)) {
         NativeAdapter._drmProtocol = drmProtocol;
