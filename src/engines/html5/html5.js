@@ -212,10 +212,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   reset(): void {
     this._eventManager.removeAll();
     if (this._mediaSourceAdapter) {
-      this._droppedFramesWatcher.destroy();
-      this._droppedFramesWatcher = null;
       this._canLoadMediaSourceAdapterPromise = this._mediaSourceAdapter.destroy();
       this._mediaSourceAdapter = null;
+    }
+    if (this._droppedFramesWatcher) {
+      this._droppedFramesWatcher.destroy();
+      this._droppedFramesWatcher = null;
     }
     if (this._el && this._el.src) {
       Utils.Dom.setAttribute(this._el, 'src', '');
@@ -230,7 +232,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   destroy(): void {
     this.detach();
-    this._droppedFramesWatcher.destroy();
     if (this._el) {
       this.pause();
       Utils.Dom.removeAttribute(this._el, 'src');
@@ -241,6 +242,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.destroy();
       this._mediaSourceAdapter = null;
+    }
+    if (this._droppedFramesWatcher) {
+      this._droppedFramesWatcher.destroy();
+      this._droppedFramesWatcher = null;
     }
   }
 
