@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.61.3"></a>
+## [0.61.3](https://github.com/kaltura/playkit-js/compare/v0.61.2...v0.61.3) (2020-06-10)
+
+
+### Bug Fixes
+
+* **FEC-10122:** clear drop frame watcher and DRM selection ([#455](https://github.com/kaltura/playkit-js/issues/455)) ([6950806](https://github.com/kaltura/playkit-js/commit/6950806))
+
+
+
 <a name="0.61.2"></a>
 ## [0.61.2](https://github.com/kaltura/playkit-js/compare/v0.61.1...v0.61.2) (2020-05-10)
 
