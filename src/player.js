@@ -658,6 +658,7 @@ export default class Player extends FakeEventTarget {
     this._controllerProvider.destroy();
     this._pluginManager.destroy();
     this._fullscreenController.destroy();
+    this._adsController.destroy();
     this._clearRepositionTimeout();
     this._activeTextCues = [];
     this._textDisplaySettings = {};

@@ -261,7 +261,7 @@ class FullscreenController {
    * @public
    */
   destroy(): void {
-    this._player = null;
+    delete this._player;
   }
 }
 

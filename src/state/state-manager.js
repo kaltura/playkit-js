@@ -246,6 +246,7 @@ export default class StateManager {
   destroy(): void {
     this._history = [];
     this._eventManager.destroy();
+    delete this._player;
   }
 
   /**

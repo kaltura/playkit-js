@@ -35,7 +35,7 @@ class ControllerProvider {
    * @public
    */
   destroy(): void {
-    this._pluginManager = null;
+    delete this._pluginManager;
   }
 }
 

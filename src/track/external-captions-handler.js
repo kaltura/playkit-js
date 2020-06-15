@@ -247,6 +247,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {void}
    */
   destroy(): void {
+    delete this._player;
     this._textTrackModel = {};
     this._eventManager.destroy();
     this._activeTextCues = [];
