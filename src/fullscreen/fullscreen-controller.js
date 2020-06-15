@@ -198,29 +198,28 @@ class FullscreenController {
     this._eventManager.listen(document, 'mozfullscreenchange', () => this._fullscreenChangeHandler());
     this._eventManager.listen(document, 'fullscreenchange', () => this._fullscreenChangeHandler());
     this._eventManager.listen(document, 'MSFullscreenChange', () => this._fullscreenChangeHandler());
-    this._handleIosFullscreen(this._eventManager);
+    this._handleIosFullscreen();
   }
 
   /**
    * Handle iOS full screen changes
-   * @param {EventManager} eventManager - event manager
    * @memberof FullScreenController
    * @returns {void}
    */
-  _handleIosFullscreen(eventManager: EventManager): void {
+  _handleIosFullscreen(): void {
     if (this._player.env.os.name === 'iOS') {
       /**
        * Attach listeners to ios full screen change.
        * @returns {void}
        */
       const attachIosFullscreenListeners = () => {
-        eventManager.listen(this._player.getVideoElement(), 'webkitbeginfullscreen', () => this._fullscreenEnterHandler());
-        eventManager.listen(this._player.getVideoElement(), 'webkitendfullscreen', () => this._fullscreenExitHandler());
+        this._eventManager.listen(this._player.getVideoElement(), 'webkitbeginfullscreen', () => this._fullscreenEnterHandler());
+        this._eventManager.listen(this._player.getVideoElement(), 'webkitendfullscreen', () => this._fullscreenExitHandler());
       };
       if (this._player.getVideoElement()) {
         attachIosFullscreenListeners();
       } else {
-        eventManager.listenOnce(this._player, this._player.Event.SOURCE_SELECTED, () => attachIosFullscreenListeners());
+        this._eventManager.listenOnce(this._player, this._player.Event.SOURCE_SELECTED, () => attachIosFullscreenListeners());
       }
     }
   }
