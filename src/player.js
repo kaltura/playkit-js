@@ -654,9 +654,8 @@ export default class Player extends FakeEventTarget {
     //make sure all services are destroyed before engine and engine attributes are destroyed
     this._externalCaptionsHandler.destroy();
     this._posterManager.destroy();
-    this._stateManager.destroy();
-    this._controllerProvider.destroy();
     this._pluginManager.destroy();
+    this._stateManager.destroy();
     this._fullscreenController.destroy();
     this._clearRepositionTimeout();
     this._activeTextCues = [];
