@@ -29,6 +29,14 @@ class ControllerProvider {
     );
     return adPlugins.map(plugin => plugin.getAdsController());
   }
+  /**
+   * Destroys the ControllerProvider.
+   * @returns {void}
+   * @public
+   */
+  destroy(): void {
+    this._pluginManager = null;
+  }
 }
 
 export {ControllerProvider};

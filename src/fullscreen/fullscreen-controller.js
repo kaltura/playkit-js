@@ -255,6 +255,14 @@ class FullscreenController {
       this._player.dispatchEvent(new FakeEvent(this._player.Event.EXIT_FULLSCREEN));
     }
   }
+  /**
+   * Destroys the FullScreenController.
+   * @returns {void}
+   * @public
+   */
+  destroy(): void {
+    this._player = null;
+  }
 }
 
 export {FullscreenController};
