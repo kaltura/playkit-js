@@ -373,10 +373,6 @@ class AdsController extends FakeEventTarget implements IAdsController {
       };
     }
   }
-
-  destroy(): void {
-    delete this._player;
-  }
 }
 
 export {AdsController};
