@@ -251,7 +251,7 @@ const CustomEventType: PKEventTypes = {
   /**
    * Fired when the player got in or out of visibility (according to the minimum visible percentage threshold)
    */
-  PLAYER_VISIBILITY_CHANGED: 'playeroutofvisibility',
+  PLAYER_VISIBILITY_CHANGED: 'playervisibilitychanged',
   /**
    * Fired when the player started / stopped floating due to visibility change
    */
