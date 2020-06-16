@@ -247,7 +247,19 @@ const CustomEventType: PKEventTypes = {
   /**
    * Fired when the drm license is responded from the DRM server
    */
-  DRM_LICENSE_LOADED: 'drmlicenseloaded'
+  DRM_LICENSE_LOADED: 'drmlicenseloaded',
+  /**
+   * Fired when the player got in or out of visibility (according to the minimum visible percentage threshold)
+   */
+  PLAYER_VISIBILITY_CHANGED: 'playeroutofvisibility',
+  /**
+   * Fired when the player started / stopped floating due to visibility change
+   */
+  FLOATING_PLAYER_STATE_CHANGED: 'floatingplayerstatechanged',
+  /**
+   * Fired when the player stopped floating due to end user dismissal
+   */
+  FLOATING_PLAYER_DISMISSED: 'floatingplayerdismissed'
 };
 
 const EventType: PKEventTypes = Utils.Object.merge([Html5EventType, CustomEventType, AdEventType]);
