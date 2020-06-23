@@ -413,6 +413,33 @@ const _Dom = {
     return document.createElement(tagName);
   },
   /**
+   * Loads an external style sheet asynchronously.
+   * @param {string} url - The css url to load.
+   * @return {Promise} - The loading promise.
+   * @public
+   */
+  loadStyleSheetAsync(url: string): Promise<*> {
+    return new Promise((resolve, reject) => {
+      let r = false,
+        t = document.getElementsByTagName('link')[0],
+        s = this.createElement('link');
+      s.type = 'text/css';
+      s.rel = 'stylesheet';
+      s.href = url;
+      s.async = true;
+      s.onload = s.onreadystatechange = function() {
+        if (!r && (!this.readyState || this.readyState === 'complete')) {
+          r = true;
+          resolve(this);
+        }
+      };
+      s.onerror = s.onabort = reject;
+      if (t && t.parentNode) {
+        t.parentNode.insertBefore(s, t);
+      }
+    });
+  },
+  /**
    * Loads script asynchronously.
    * @param {string} url - The url to load.
    * @return {Promise} - The loading promise.

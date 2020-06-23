@@ -469,6 +469,7 @@ export default class Player extends FakeEventTarget {
     this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
     this._fullscreenController = new FullscreenController(this);
     this.configure(config);
+    this._handleExternalCSS();
   }
 
   // <editor-fold desc="Public API">
@@ -695,6 +696,16 @@ export default class Player extends FakeEventTarget {
     }
   }
 
+  /**
+   * if External CSS is provided load and apply to doc header
+   * @private
+   * @returns {void}
+   */
+  _handleExternalCSS(): void {
+    this._config.externalCSS = 'http://localhost:8080/assets/dummy.css';
+    if (!this._config.externalCSS) return;
+    Utils.Dom.loadStyleSheetAsync(this._config.externalCSS);
+  }
   /**
    * detach the engine's media source
    * @private
