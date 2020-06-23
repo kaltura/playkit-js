@@ -420,22 +420,22 @@ const _Dom = {
    */
   loadStyleSheetAsync(url: string): Promise<*> {
     return new Promise((resolve, reject) => {
-      let r = false,
-        t = document.getElementsByTagName('link')[0],
-        s = this.createElement('link');
-      s.type = 'text/css';
-      s.rel = 'stylesheet';
-      s.href = url;
-      s.async = true;
-      s.onload = s.onreadystatechange = function() {
-        if (!r && (!this.readyState || this.readyState === 'complete')) {
-          r = true;
-          resolve(this);
+      let resolved = false,
+        firstLinkElement = document.getElementsByTagName('link')[0],
+        cssLinkElement = this.createElement('link');
+      cssLinkElement.type = 'text/css';
+      cssLinkElement.rel = 'stylesheet';
+      cssLinkElement.href = url;
+      cssLinkElement.async = true;
+      cssLinkElement.onload = cssLinkElement.onreadystatechange = function() {
+        if (!resolved && (!this.readyState || this.readyState === 'complete')) {
+          resolved = true;
+          resolve();
         }
       };
-      s.onerror = s.onabort = reject;
-      if (t && t.parentNode) {
-        t.parentNode.insertBefore(s, t);
+      cssLinkElement.onerror = cssLinkElement.onabort = reject;
+      if (firstLinkElement && firstLinkElement.parentNode) {
+        firstLinkElement.parentNode.insertBefore(cssLinkElement, firstLinkElement);
       }
     });
   },
