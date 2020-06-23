@@ -418,7 +418,7 @@ const _Dom = {
    * @return {Promise} - The loading promise.
    * @public
    */
-  loadStyleSheetAsync(url: string): Promise<*> {
+  loadStyleSheetAsync(url: string): Promise<HTMLLinkElement> {
     return new Promise((resolve, reject) => {
       let resolved = false,
         firstLinkElement = document.getElementsByTagName('link')[0],
@@ -430,7 +430,7 @@ const _Dom = {
       cssLinkElement.onload = cssLinkElement.onreadystatechange = function() {
         if (!resolved && (!this.readyState || this.readyState === 'complete')) {
           resolved = true;
-          resolve();
+          resolve(this);
         }
       };
       cssLinkElement.onerror = cssLinkElement.onabort = reject;
