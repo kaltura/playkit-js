@@ -187,7 +187,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @private
    */
   _handleLiveTimeUpdate(): void {
-    this._videoElement.addEventListener(Html5EventType.DURATION_CHANGE, this._onDurationChanged);
+    this._videoElement.addEventListener(Html5EventType.DURATION_CHANGE, this._onDurationChanged.bind(this));
   }
 
   _onDurationChanged(): void {
