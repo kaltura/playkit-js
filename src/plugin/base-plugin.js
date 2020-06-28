@@ -138,9 +138,7 @@ export default class BasePlugin implements IPlugin {
    * @virtual
    * @returns {void}
    */
-  reset(): void {
-    this.eventManager.removeAll();
-  }
+  reset(): void {}
 
   /**
    * Getter for the plugin's name.

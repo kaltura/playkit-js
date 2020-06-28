@@ -97,6 +97,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   destroy(): Promise<*> {
     this._sourceObj = null;
     this._config = {};
+    this._videoElement.removeEventListener(Html5EventType.DURATION_CHANGE, this._onDurationChanged);
     this._eventManager.destroy();
     return Promise.resolve();
   }
@@ -186,11 +187,13 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @private
    */
   _handleLiveTimeUpdate(): void {
-    this._videoElement.addEventListener(Html5EventType.DURATION_CHANGE, () => {
-      if (this.isLive() && this._videoElement.paused) {
-        this._trigger(Html5EventType.TIME_UPDATE);
-      }
-    });
+    this._videoElement.addEventListener(Html5EventType.DURATION_CHANGE, this._onDurationChanged);
+  }
+
+  _onDurationChanged(): void {
+    if (this.isLive() && this._videoElement.paused) {
+      this._trigger(Html5EventType.TIME_UPDATE);
+    }
   }
 
   /**
