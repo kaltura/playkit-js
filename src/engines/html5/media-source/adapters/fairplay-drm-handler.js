@@ -73,7 +73,7 @@ class FairplayDrmHandler {
     this._drmResponseCallback = drmResponseCallback;
     this._videoElement = videoElement;
     this._onWebkitNeedKeyHandler = e => this._onWebkitNeedKey(e);
-    this._eventManager.listen(this._videoElement, WebkitEvents.NEED_KEY, this._onWebkitNeedKeyHandler, false);
+    this._eventManager.listen(this._videoElement, WebkitEvents.NEED_KEY, this._onWebkitNeedKeyHandler);
   }
 
   _onWebkitNeedKey(event: any): void {
@@ -100,9 +100,9 @@ class FairplayDrmHandler {
       this._onError((Error.Code: CodeType).COULD_NOT_CREATE_KEY_SESSION);
     }
     this._keySession.contentId = contentId;
-    this._eventManager.listen(this._keySession, WebkitEvents.KEY_MESSAGE, e => this._onWebkitKeyMessage(e), false);
-    this._eventManager.listen(this._keySession, WebkitEvents.KEY_ADDED, () => this._onWebkitKeyAdded(), false);
-    this._eventManager.listen(this._keySession, WebkitEvents.KEY_ERROR, e => this._onWebkitKeyError(e), false);
+    this._eventManager.listen(this._keySession, WebkitEvents.KEY_MESSAGE, e => this._onWebkitKeyMessage(e));
+    this._eventManager.listen(this._keySession, WebkitEvents.KEY_ADDED, () => this._onWebkitKeyAdded());
+    this._eventManager.listen(this._keySession, WebkitEvents.KEY_ERROR, e => this._onWebkitKeyError(e));
   }
 
   destroy(): void {
@@ -116,7 +116,7 @@ class FairplayDrmHandler {
     let message = event.message;
     let request = new XMLHttpRequest();
     request.responseType = 'arraybuffer';
-    request.addEventListener('load', (e: Event) => this._licenseRequestLoaded(e), false);
+    request.addEventListener('load', (e: Event) => this._licenseRequestLoaded(e));
     const pkRequest: PKRequestObject = {
       url: this._config.licenseUrl,
       body: FairplayDrmHandler._base64EncodeUint8Array(message),
