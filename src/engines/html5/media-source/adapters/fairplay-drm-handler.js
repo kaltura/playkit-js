@@ -117,7 +117,7 @@ class FairplayDrmHandler {
     let message = event.message;
     let request = new XMLHttpRequest();
     request.responseType = 'arraybuffer';
-    request.addEventListener('load', (e: Event) => this._licenseRequestLoaded(e));
+    this._eventManager.listenOnce(request, 'load', (e: Event) => this._licenseRequestLoaded(e));
     const pkRequest: PKRequestObject = {
       url: this._config.licenseUrl,
       body: FairplayDrmHandler._base64EncodeUint8Array(message),
