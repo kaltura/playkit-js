@@ -7,6 +7,7 @@ import type {CodeType} from '../../../../error/code';
 import type {SeverityType} from '../../../../error/severity';
 import type {CategoryType} from '../../../../error/category';
 import {DrmScheme} from '../../../../drm/drm-scheme';
+import EventManager from '../../../../event/event-manager';
 
 const KeySystem: string = 'com.apple.fps.1_0';
 type WebkitEventsType = {[name: string]: string};
@@ -22,6 +23,7 @@ type FairplayDrmConfigType = {licenseUrl: string, certificate: string, network: 
 class FairplayDrmHandler {
   static WebkitEvents: WebkitEventsType = WebkitEvents;
   _logger = getLogger('FairPlayDrmHandler');
+  _eventManager: EventManager;
   _keySession: any;
   _config: FairplayDrmConfigType;
   _onWebkitNeedKeyHandler: Function;
@@ -71,7 +73,8 @@ class FairplayDrmHandler {
     this._drmResponseCallback = drmResponseCallback;
     this._videoElement = videoElement;
     this._onWebkitNeedKeyHandler = e => this._onWebkitNeedKey(e);
-    this._videoElement.addEventListener(WebkitEvents.NEED_KEY, this._onWebkitNeedKeyHandler, false);
+    this._eventManager = new EventManager();
+    this._eventManager.listen(this._videoElement, WebkitEvents.NEED_KEY, this._onWebkitNeedKeyHandler);
   }
 
   _onWebkitNeedKey(event: any): void {
@@ -98,13 +101,13 @@ class FairplayDrmHandler {
       this._onError((Error.Code: CodeType).COULD_NOT_CREATE_KEY_SESSION);
     }
     this._keySession.contentId = contentId;
-    this._keySession.addEventListener(WebkitEvents.KEY_MESSAGE, e => this._onWebkitKeyMessage(e), false);
-    this._keySession.addEventListener(WebkitEvents.KEY_ADDED, () => this._onWebkitKeyAdded(), false);
-    this._keySession.addEventListener(WebkitEvents.KEY_ERROR, e => this._onWebkitKeyError(e), false);
+    this._eventManager.listen(this._keySession, WebkitEvents.KEY_MESSAGE, e => this._onWebkitKeyMessage(e));
+    this._eventManager.listen(this._keySession, WebkitEvents.KEY_ADDED, () => this._onWebkitKeyAdded());
+    this._eventManager.listen(this._keySession, WebkitEvents.KEY_ERROR, e => this._onWebkitKeyError(e));
   }
 
   destroy(): void {
-    this._videoElement.removeEventListener(WebkitEvents.NEED_KEY, this._onWebkitNeedKeyHandler);
+    this._eventManager.destroy();
     this._keySession.close();
     this._keySession = null;
   }
@@ -114,7 +117,7 @@ class FairplayDrmHandler {
     let message = event.message;
     let request = new XMLHttpRequest();
     request.responseType = 'arraybuffer';
-    request.addEventListener('load', (e: Event) => this._licenseRequestLoaded(e), false);
+    this._eventManager.listenOnce(request, 'load', e => this._licenseRequestLoaded(e));
     const pkRequest: PKRequestObject = {
       url: this._config.licenseUrl,
       body: FairplayDrmHandler._base64EncodeUint8Array(message),

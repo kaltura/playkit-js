@@ -1113,7 +1113,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _handleMetadataTrackEvents(): void {
     const listenToCueChange = track => {
       track.mode = 'hidden';
-      track.addEventListener('cuechange', () => {
+      this._eventManager.listen(track, 'cuechange', () => {
         this.dispatchEvent(new FakeEvent(CustomEventType.TIMED_METADATA, {cues: Array.from(track.activeCues)}));
       });
     };

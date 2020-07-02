@@ -22,6 +22,7 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
   constructor(engine: IEngine, pluginWithDecorators: Array<IEngineDecoratorProvider>) {
     super();
     this._eventManager = new EventManager();
+    this._eventManager.listen(engine, EventType.PLAYER_DESTROY, () => this._destroy());
     this._pluginDecorators = pluginWithDecorators.map(plugin => plugin.getEngineDecorator(engine, super.dispatchEvent.bind(this)));
     const events: Array<string> = (Object.values(EventType): any);
     events.forEach(event => this._eventManager.listen(engine, event, e => this.dispatchEvent(e)));
@@ -46,6 +47,11 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
   dispatchEvent(event: FakeEvent): boolean {
     const activeDecorator = this._pluginDecorators.find(decorator => decorator.active);
     return activeDecorator ? activeDecorator.dispatchEvent && activeDecorator.dispatchEvent(event) : super.dispatchEvent(event);
+  }
+
+  _destroy(): void {
+    this._pluginDecorators = [];
+    this._eventManager.destroy();
   }
 
   get active(): boolean {
