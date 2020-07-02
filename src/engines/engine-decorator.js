@@ -27,6 +27,9 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
     events.forEach(event => this._eventManager.listen(engine, event, e => this.dispatchEvent(e)));
     return new Proxy(engine, {
       get: (obj, prop) => {
+        if (prop === 'destroy') {
+          this._destroy();
+        }
         if (prop === '_listeners') {
           return this._listeners;
         }
@@ -46,6 +49,11 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
   dispatchEvent(event: FakeEvent): boolean {
     const activeDecorator = this._pluginDecorators.find(decorator => decorator.active);
     return activeDecorator ? activeDecorator.dispatchEvent && activeDecorator.dispatchEvent(event) : super.dispatchEvent(event);
+  }
+
+  _destroy(): void {
+    this._pluginDecorators = [];
+    this._eventManager.destroy();
   }
 
   get active(): boolean {

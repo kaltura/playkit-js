@@ -142,6 +142,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
     this._eventManager.listen(this._player, AdEventType.ADS_COMPLETED, () => this._onAdsCompleted());
     this._eventManager.listen(this._player, AdEventType.AD_ERROR, event => this._onAdError(event));
     this._eventManager.listen(this._player, CustomEventType.PLAYER_RESET, () => this._reset());
+    this._eventManager.listen(this._player, CustomEventType.PLAYER_DESTROY, () => this._destroy());
     this._eventManager.listenOnce(this._player, Html5EventType.ENDED, () => this._onEnded());
     this._eventManager.listenOnce(this._player, CustomEventType.PLAYBACK_ENDED, () => this._onPlaybackEnded());
   }
@@ -363,6 +364,10 @@ class AdsController extends FakeEventTarget implements IAdsController {
     this._init();
   }
 
+  _destroy(): void {
+    this._adsPluginControllers = [];
+    this._eventManager.destroy();
+  }
   _mergeAdBreaks(adBreaks: Array<RunTimeAdBreakObject>): ?RunTimeAdBreakObject {
     if (adBreaks.length) {
       adBreaks.forEach(adBreak => (adBreak.played = true));

@@ -54,6 +54,13 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   _eventManager: EventManager;
 
   /**
+   * The duration change handler.
+   * @type {Function}
+   * @private
+   */
+  _onDurationChanged: Function;
+
+  /**
    * Checks if the media source adapter is supported.
    * @function isSupported
    * @returns {boolean} - Whether the media source adapter is supported.
@@ -85,6 +92,11 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     this._videoElement = videoElement;
     this._sourceObj = source;
     this._config = config;
+    this._onDurationChanged = () => {
+      if (this.isLive() && this._videoElement.paused) {
+        this._trigger(Html5EventType.TIME_UPDATE);
+      }
+    };
     this._eventManager = new EventManager();
     this._handleLiveTimeUpdate();
   }
@@ -97,6 +109,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   destroy(): Promise<*> {
     this._sourceObj = null;
     this._config = {};
+    this._videoElement.removeEventListener(Html5EventType.DURATION_CHANGE, this._onDurationChanged);
     this._eventManager.destroy();
     return Promise.resolve();
   }
@@ -186,11 +199,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @private
    */
   _handleLiveTimeUpdate(): void {
-    this._videoElement.addEventListener(Html5EventType.DURATION_CHANGE, () => {
-      if (this.isLive() && this._videoElement.paused) {
-        this._trigger(Html5EventType.TIME_UPDATE);
-      }
-    });
+    this._videoElement.addEventListener(Html5EventType.DURATION_CHANGE, this._onDurationChanged);
   }
 
   /**

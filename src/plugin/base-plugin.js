@@ -127,7 +127,9 @@ export default class BasePlugin implements IPlugin {
    * @virtual
    * @returns {void}
    */
-  destroy(): void {}
+  destroy(): void {
+    this.eventManager.destroy();
+  }
 
   /**
    * Runs the reset logic of the plugin.
