@@ -2,8 +2,9 @@
 import Player from './player';
 import BaseMediaSourceAdapter from './engines/html5/media-source/base-media-source-adapter';
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider';
+import {registerEngineDecoratorProvider} from './engines/engine-decorator';
 import {registerEngine, unRegisterEngine} from './engines/engine-provider';
-import {registerPlugin} from './plugin/plugin-manager';
+import PluginManager, {registerPlugin} from './plugin/plugin-manager';
 import BaseDrmProtocol from './drm/base-drm-protocol';
 import BaseMiddleware from './middleware/base-middleware';
 import BasePlugin from './plugin/base-plugin';
@@ -35,7 +36,6 @@ import {Ad} from './ads/ad';
 import {AdBreak} from './ads/ad-break';
 import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
-import {AdsController} from './ads/ads-controller';
 import {AdEventType} from './ads/ad-event-type';
 
 declare var __VERSION__: string;
@@ -52,8 +52,11 @@ export function loadPlayer(config: ?Object) {
 // Export the media source adapters necessary utils
 export {registerMediaSourceAdapter, BaseMediaSourceAdapter};
 
+// Export the engine decorator provider register method
+export {registerEngineDecoratorProvider};
+
 // Export the plugin framework
-export {registerPlugin, BasePlugin, BaseMiddleware};
+export {PluginManager, registerPlugin, BasePlugin, BaseMiddleware};
 
 // Export the tracks classes
 export {Track, VideoTrack, AudioTrack, TextTrack, TextStyle};
@@ -95,7 +98,7 @@ export {getCapabilities, setCapabilities};
 export {registerEngine, unRegisterEngine};
 
 // Export ads framework
-export {Ad, AdBreak, AdBreakType, AdTagType, AdsController, AdEventType};
+export {Ad, AdBreak, AdBreakType, AdTagType, AdEventType};
 
 // Export enums
 export {

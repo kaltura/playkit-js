@@ -1,5 +1,4 @@
 //@flow
-import Player from '../player';
 import getLogger from '../utils/logger';
 import * as Utils from '../utils/util';
 import EventManager from '../event/event-manager';
@@ -31,7 +30,7 @@ export default class BasePlugin implements IPlugin {
    * Reference to the actual player.
    * @member
    */
-  player: Player;
+  player: Object;
   /**
    * The event manager of the plugin.
    * @member
@@ -49,13 +48,13 @@ export default class BasePlugin implements IPlugin {
   /**
    * Factory method to create the actual plugin.
    * @param {string} name - The plugin name
-   * @param {Player} player - The player reference
+   * @param {Object} player - The player reference
    * @param {Object} config - The plugin configuration
    * @returns {BasePlugin} - New runtime plugin instance
    * @static
    * @public
    */
-  static createPlugin(name: string, player: Player, config: Object = {}): BasePlugin {
+  static createPlugin(name: string, player: Object, config: Object = {}): BasePlugin {
     return new this(name, player, config);
   }
 
@@ -74,12 +73,12 @@ export default class BasePlugin implements IPlugin {
   /**
    * constructor
    * @param {string} name - The plugin name
-   * @param {Player} player - The player reference
+   * @param {Object} player - The player reference
    * @param {Object} config - The plugin configuration
    * @constructor
    * @private
    */
-  constructor(name: string, player: Player, config: Object) {
+  constructor(name: string, player: Object, config: Object) {
     this.name = name;
     this.player = player;
     this.eventManager = new EventManager();

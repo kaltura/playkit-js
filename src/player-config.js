@@ -8,7 +8,6 @@ const DefaultConfig = {
     },
     metadata: {}
   },
-  plugins: {},
   playback: {
     audioLanguage: '',
     textLanguage: '',

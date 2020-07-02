@@ -1,7 +1,6 @@
 //@flow
 import BasePlugin from './base-plugin';
 import Error from '../error/error';
-import Player from '../player';
 import getLogger from '../utils/logger';
 
 /**
@@ -79,12 +78,12 @@ export default class PluginManager {
   /**
    * Creates and store new instance of the plugin in case isValid() of the plugin returns true.
    * @param {string} name - The plugin name
-   * @param {Player} player - The player reference
+   * @param {Object} player - The player reference
    * @param {Object} [config={}] - The plugin configuration
    * @returns {boolean} - Whether the plugin load was successful
    * @public
    */
-  load(name: string, player: Player, config: Object = {}): boolean {
+  load(name: string, player: Object, config: Object = {}): boolean {
     if (!PluginManager._registry.has(name)) {
       logger.warn(`Plugin <${name}> loading failed, plugin is not registered`);
       throw new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_NOT_REGISTERED_PLUGIN, name);
