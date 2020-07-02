@@ -421,7 +421,6 @@ const _Dom = {
   loadStyleSheetAsync(url: string): Promise<HTMLLinkElement> {
     return new Promise((resolve, reject) => {
       let resolved = false,
-        firstLinkElement = document.getElementsByTagName('link')[0],
         cssLinkElement = this.createElement('link');
       cssLinkElement.type = 'text/css';
       cssLinkElement.rel = 'stylesheet';
@@ -434,9 +433,7 @@ const _Dom = {
         }
       };
       cssLinkElement.onerror = cssLinkElement.onabort = reject;
-      if (firstLinkElement && firstLinkElement.parentNode) {
-        firstLinkElement.parentNode.insertBefore(cssLinkElement, firstLinkElement);
-      }
+      _Dom.appendChild(document.head, cssLinkElement);
     });
   },
   /**

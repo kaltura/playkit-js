@@ -43,5 +43,8 @@ Env.isTablet = Env.device.type === UAParser.DEVICE.TABLET;
 Env.isWearable = Env.device.type === UAParser.DEVICE.WEARABLE;
 Env.isEmbedded = Env.device.type === UAParser.DEVICE.EMBEDDED;
 Env.isIPadOS = Env.os.name === 'Mac OS' && 'ontouchend' in document;
+Env.isSafari = Env.browser.name.includes('Safari');
+Env.isIOS = Env.os.name === 'iOS';
+Env.isMacOS = Env.os.name === 'Mac OS';
 
 export default Env;
