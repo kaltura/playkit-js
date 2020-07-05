@@ -1236,7 +1236,6 @@ export default class Player extends FakeEventTarget {
 
   // </editor-fold>
 
-
   // <editor-fold desc="Fullscreen API">
   /**
    * @returns {boolean} - Whether the player is in fullscreen mode.
