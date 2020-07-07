@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.62.0"></a>
+# [0.62.0](https://github.com/kaltura/playkit-js/compare/v0.61.3...v0.62.0) (2020-07-07)
+
+
+### Bug Fixes
+
+* destroy cleanup process ([#457](https://github.com/kaltura/playkit-js/issues/457)) ([8623d72](https://github.com/kaltura/playkit-js/commit/8623d72))
+
+
+### Features
+
+* **FEC-9649:** css not loaded in embed page ([#462](https://github.com/kaltura/playkit-js/issues/462)) ([af77d44](https://github.com/kaltura/playkit-js/commit/af77d44))
+* **FEC-9649:** loading external CSS ([#459](https://github.com/kaltura/playkit-js/issues/459)) ([7690ff6](https://github.com/kaltura/playkit-js/commit/7690ff6))
+
+
+
 <a name="0.61.3"></a>
 ## [0.61.3](https://github.com/kaltura/playkit-js/compare/v0.61.2...v0.61.3) (2020-06-10)
 
