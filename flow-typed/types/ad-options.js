@@ -14,4 +14,5 @@ declare type PKAdOptions = {
   height: number;
   bitrate: number;
   bumper: boolean;
+  advertiserName?: string;
 };
