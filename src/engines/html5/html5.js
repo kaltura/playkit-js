@@ -310,7 +310,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(mediaSourceAdapter, Html5EventType.WAITING, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.MEDIA_RECOVERED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, 'hlsFragParsingMetadata', (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._droppedFramesWatcher, CustomEventType.FPS_DROP, (event: FakeEvent) => this.dispatchEvent(event));
+      if (this._droppedFramesWatcher) {
+        this._eventManager.listen(this._droppedFramesWatcher, CustomEventType.FPS_DROP, (event: FakeEvent) => this.dispatchEvent(event));
+      }
     }
   }
 
