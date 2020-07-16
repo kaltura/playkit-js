@@ -6,24 +6,24 @@ import {RequestType} from '../../../../../../src/request-type';
 
 const fpsDrmData = {licenseUrl: 'LICENSE_URL', certificate: 'fpsCertificate'};
 
-describe('Fairplay Drm Handler', function() {
-  describe('constructor', function() {
+describe('Fairplay Drm Handler', function () {
+  describe('constructor', function () {
     let videoId = 'myVideoElement';
     let videoElement;
     let sandbox;
 
-    beforeEach(function() {
+    beforeEach(function () {
       sandbox = sinon.sandbox.create();
       createElement('video', videoId);
       videoElement = document.getElementById(videoId);
     });
 
-    afterEach(function() {
+    afterEach(function () {
       sandbox = sandbox.restore();
       removeVideoElementsFromTestPage();
     });
 
-    it('should register the webkitneedkey event on the video element', function() {
+    it('should register the webkitneedkey event on the video element', function () {
       let spy = sandbox.spy(HTMLVideoElement.prototype, 'addEventListener');
       new FairplayDrmHandler(videoElement, fpsDrmData, () => {});
       spy.should.have.been.calledOnce;
@@ -31,7 +31,7 @@ describe('Fairplay Drm Handler', function() {
     });
   });
 
-  describe('_validateResponse', function() {
+  describe('_validateResponse', function () {
     it('should return an object with valid=true', () => {
       let drmResponse = {
         ckc: '123',
@@ -71,13 +71,13 @@ describe('Fairplay Drm Handler', function() {
     let videoElement;
     let sandbox;
 
-    beforeEach(function() {
+    beforeEach(function () {
       sandbox = sinon.sandbox.create();
       createElement('video', videoId);
       videoElement = document.getElementById(videoId);
     });
 
-    afterEach(function() {
+    afterEach(function () {
       sandbox = sandbox.restore();
       removeVideoElementsFromTestPage();
     });
@@ -92,7 +92,7 @@ describe('Fairplay Drm Handler', function() {
     it('should pass the params to the request filter', done => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
-          requestFilter: function(type, request) {
+          requestFilter: function (type, request) {
             try {
               type.should.equal(RequestType.LICENSE);
               request.url.should.equal(fpsDrmData.licenseUrl);
@@ -116,7 +116,7 @@ describe('Fairplay Drm Handler', function() {
     it('should apply void filter for license', done => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
-          requestFilter: function(type, request) {
+          requestFilter: function (type, request) {
             if (type === RequestType.LICENSE) {
               request.url += '&test';
             }
@@ -140,7 +140,7 @@ describe('Fairplay Drm Handler', function() {
     it('should apply promise filter for license', done => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
-          requestFilter: function(type, request) {
+          requestFilter: function (type, request) {
             if (type === RequestType.LICENSE) {
               return new Promise(resolve => {
                 request.url += '&test';
@@ -167,7 +167,7 @@ describe('Fairplay Drm Handler', function() {
     it('should handle error thrown from void filter', done => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
-          requestFilter: function() {
+          requestFilter: function () {
             throw 'error';
           }
         }
@@ -188,7 +188,7 @@ describe('Fairplay Drm Handler', function() {
     it('should handle error thrown from promise filter', done => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
-          requestFilter: function() {
+          requestFilter: function () {
             return new Promise(() => {
               throw 'error';
             });
@@ -211,7 +211,7 @@ describe('Fairplay Drm Handler', function() {
     it('should handle error rejected from promise filter', done => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
-          requestFilter: function() {
+          requestFilter: function () {
             return new Promise((resolve, reject) => {
               reject('error');
             });
@@ -237,13 +237,13 @@ describe('Fairplay Drm Handler', function() {
     let videoElement;
     let sandbox;
 
-    beforeEach(function() {
+    beforeEach(function () {
       sandbox = sinon.sandbox.create();
       createElement('video', videoId);
       videoElement = document.getElementById(videoId);
     });
 
-    afterEach(function() {
+    afterEach(function () {
       sandbox = sandbox.restore();
       removeVideoElementsFromTestPage();
     });
@@ -258,7 +258,7 @@ describe('Fairplay Drm Handler', function() {
     it('should pass the params to the response filter', done => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
-          responseFilter: function(type, response) {
+          responseFilter: function (type, response) {
             try {
               type.should.equal(RequestType.LICENSE);
               response.url.should.be.exist;
@@ -281,7 +281,7 @@ describe('Fairplay Drm Handler', function() {
     it('should apply void filter for license', done => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
-          responseFilter: function(type, response) {
+          responseFilter: function (type, response) {
             if (type === RequestType.LICENSE) {
               response.data += '&test';
             }
@@ -307,7 +307,7 @@ describe('Fairplay Drm Handler', function() {
     it('should apply promise filter for license', done => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
-          responseFilter: function(type, response) {
+          responseFilter: function (type, response) {
             if (type === RequestType.LICENSE) {
               return new Promise(resolve => {
                 response.data += '&test';
@@ -336,7 +336,7 @@ describe('Fairplay Drm Handler', function() {
     it('should handle error thrown from void filter', done => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
-          responseFilter: function() {
+          responseFilter: function () {
             throw 'error';
           }
         }
@@ -357,7 +357,7 @@ describe('Fairplay Drm Handler', function() {
     it('should handle error thrown from promise filter', done => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
-          responseFilter: function() {
+          responseFilter: function () {
             return new Promise(() => {
               throw 'error';
             });
@@ -380,7 +380,7 @@ describe('Fairplay Drm Handler', function() {
     it('should handle error rejected from promise filter', done => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
-          responseFilter: function() {
+          responseFilter: function () {
             return new Promise((resolve, reject) => {
               reject('error');
             });
