@@ -210,7 +210,7 @@ describe('Player', function() {
             });
           });
 
-          it('should resolved successfully even recoverable error occurred', done => {
+          it('should resolved successfully even when recoverable error occurred', done => {
             let readyResolved = false;
             player.addEventListener(CustomEventType.TRACKS_CHANGED, () => {
               readyResolved = true;
