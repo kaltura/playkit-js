@@ -209,6 +209,24 @@ describe('Player', function() {
               done();
             });
           });
+
+          it('should resolved successfully even when recoverable error occurred', done => {
+            let readyResolved = false;
+            player.addEventListener(CustomEventType.TRACKS_CHANGED, () => {
+              readyResolved = true;
+            });
+            const error = new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_NOT_REGISTERED_PLUGIN, 'plugin');
+            player.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
+            player.load();
+            player.ready().then(() => {
+              try {
+                readyResolved.should.be.true;
+                done();
+              } catch (e) {
+                done(e);
+              }
+            });
+          });
         });
 
         describe('passing config in configure', function() {

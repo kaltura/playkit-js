@@ -1623,7 +1623,11 @@ export default class Player extends FakeEventTarget {
         this.dispatchEvent(new FakeEvent(CustomEventType.MEDIA_LOADED));
         resolve();
       });
-      this._eventManager.listen(this, Html5EventType.ERROR, reject);
+      this._eventManager.listen(this, Html5EventType.ERROR, error => {
+        if (error.payload.severity === PKError.Severity.CRITICAL) {
+          reject();
+        }
+      });
     }).catch(() => {
       // silence the promise rejection, error is handled by the error event
     });
