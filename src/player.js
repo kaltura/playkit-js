@@ -544,7 +544,11 @@ export default class Player extends FakeEventTarget {
         this._eventManager.listenOnce(this, CustomEventType.SOURCE_SELECTED, () => this._load());
       }
     };
-    this._playbackMiddleware.load(() => loadPlayer());
+    if (!this.src) {
+      this._playbackMiddleware.load(() => loadPlayer());
+    } else {
+      Player._logger.debug('The source has already been loaded. load request ignored');
+    }
   }
 
   /**
@@ -652,6 +656,7 @@ export default class Player extends FakeEventTarget {
     this._posterManager.destroy();
     this._pluginManager.destroy();
     this._stateManager.destroy();
+    this._fullscreenController.destroy();
     this._clearRepositionTimeout();
     this._activeTextCues = [];
     this._textDisplaySettings = {};
@@ -2047,7 +2052,7 @@ export default class Player extends FakeEventTarget {
     }
     this.ready()
       .then(() => {
-        if (this.isLive() && !this.isDvr()) {
+        if (this.isLive() && (!this.isDvr() || (typeof this.currentTime === 'number' && this.currentTime < 0))) {
           this.seekToLiveEdge();
         }
         this._engine.play();

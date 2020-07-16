@@ -413,6 +413,30 @@ const _Dom = {
     return document.createElement(tagName);
   },
   /**
+   * Loads an external style sheet asynchronously.
+   * @param {string} url - The css url to load.
+   * @return {Promise} - The loading promise.
+   * @public
+   */
+  loadStyleSheetAsync(url: string): Promise<HTMLLinkElement> {
+    return new Promise((resolve, reject) => {
+      let resolved = false,
+        cssLinkElement = this.createElement('link');
+      cssLinkElement.type = 'text/css';
+      cssLinkElement.rel = 'stylesheet';
+      cssLinkElement.href = url;
+      cssLinkElement.async = true;
+      cssLinkElement.onload = cssLinkElement.onreadystatechange = function() {
+        if (!resolved && (!this.readyState || this.readyState === 'complete')) {
+          resolved = true;
+          resolve(this);
+        }
+      };
+      cssLinkElement.onerror = cssLinkElement.onabort = reject;
+      _Dom.appendChild(document.head, cssLinkElement);
+    });
+  },
+  /**
    * Loads script asynchronously.
    * @param {string} url - The url to load.
    * @return {Promise} - The loading promise.
@@ -494,7 +518,25 @@ const _Http = {
       request.send(params);
     });
   },
-  jsonp: jsonp
+  jsonp: jsonp,
+  convertHeadersToDictionary: function(headerRow: string): {[header: string]: string} {
+    let headerMap = {};
+    try {
+      // Convert the header string into an array of individual headers
+      const arr = headerRow.trim().split(/[\r\n]+/);
+
+      // Create a map of header names to values
+      arr.forEach(function(line) {
+        const parts = line.split(': ');
+        const header = parts.shift().toLowerCase();
+        const value = parts.join(': ');
+        headerMap[header] = value;
+      });
+    } catch (e) {
+      // do nothing
+    }
+    return headerMap;
+  }
 };
 
 const _VERSION = {

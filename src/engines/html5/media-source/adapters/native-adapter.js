@@ -17,6 +17,7 @@ import type {FairplayDrmConfigType} from './fairplay-drm-handler';
 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
+const NUDGE_SEEK_AFTER_FOCUS: number = 0.1;
 
 /**
  * An illustration of media source extension for progressive download
@@ -149,6 +150,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @static
    */
   static canPlayDrm(drmData: Array<Object>, drmConfig: PKDrmConfigObject): boolean {
+    NativeAdapter._drmProtocol = null;
     for (let drmProtocol of NativeAdapter._drmProtocols) {
       if (drmProtocol.isConfigured(drmData, drmConfig)) {
         NativeAdapter._drmProtocol = drmProtocol;
@@ -298,7 +300,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._eventManager.listen(this._videoElement, Html5EventType.ABORT, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.SEEKED, () => this._syncCurrentTime());
         // Sometimes when playing live in safari and switching between tabs the currentTime goes back with no seek events
-        this._eventManager.listen(window, 'focus', () => setTimeout(() => this._syncCurrentTime(), BACK_TO_FOCUS_TIMEOUT));
+        this._eventManager.listen(window, 'focus', () =>
+          setTimeout(() => {
+            // In IOS HLS, sometimes when coming back from lock screen/Idle mode, the stream will get stuck, and only a small seek nudge will fix it.
+            this._videoElement.currentTime =
+              this._videoElement.currentTime > NUDGE_SEEK_AFTER_FOCUS ? this._videoElement.currentTime - NUDGE_SEEK_AFTER_FOCUS : 0;
+            this._syncCurrentTime();
+          }, BACK_TO_FOCUS_TIMEOUT)
+        );
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
         }

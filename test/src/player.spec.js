@@ -34,7 +34,7 @@ describe('Player', function() {
   });
 
   describe('load', function() {
-    let config, player, playerContainer;
+    let config, player, playerContainer, sandbox;
 
     before(() => {
       playerContainer = createElement('DIV', targetId);
@@ -43,11 +43,13 @@ describe('Player', function() {
     });
 
     beforeEach(() => {
+      sandbox = sinon.sandbox.create();
       player = new Player(config);
       playerContainer.appendChild(player.getView());
     });
 
     afterEach(() => {
+      sandbox.restore();
       player.destroy();
     });
 
@@ -73,14 +75,12 @@ describe('Player', function() {
     });
 
     it("should't load if source already exists", done => {
-      let loadCounter = 0;
-      setTimeout(() => {
-        loadCounter.should.equal(1);
-        done();
-      }, 1000);
       player.addEventListener(CustomEventType.TRACKS_CHANGED, () => {
-        loadCounter++;
-        setTimeout(() => player.load(), 200);
+        sandbox.stub(player, '_load').callsFake(function() {
+          done(new Error("should't load if source already exists"));
+        });
+        player.load();
+        done();
       });
       player.load();
     });

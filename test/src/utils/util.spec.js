@@ -223,4 +223,48 @@ describe('util', () => {
       });
     });
   });
+
+  describe('Http', function() {
+    describe('convertHeadersToDictionary', function() {
+      it('Should convert header row to map', function() {
+        const headerRow = `cache-control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+content-length: 3201
+content-type: application/json
+date: Wed, 25 Mar 2020 12:48:28 GMT
+expires: Sun, 19 Nov 2000 08:52:00 GMT
+pragma: no-cache
+server: Apache/2.4.18 (Ubuntu)
+x-kaltura-session: 2089078255
+x-me: qa-apache-php7, qa-apache-php7
+    `;
+        const headerMap = Utils.Http.convertHeadersToDictionary(headerRow);
+        headerMap['cache-control'].should.equal('no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+        headerMap['content-length'].should.equal('3201');
+        headerMap['content-type'].should.equal('application/json');
+        headerMap['date'].should.equal('Wed, 25 Mar 2020 12:48:28 GMT');
+        headerMap['expires'].should.equal('Sun, 19 Nov 2000 08:52:00 GMT');
+        headerMap['pragma'].should.equal('no-cache');
+        headerMap['server'].should.equal('Apache/2.4.18 (Ubuntu)');
+        headerMap['x-kaltura-session'].should.equal('2089078255');
+        headerMap['x-me'].should.equal('qa-apache-php7, qa-apache-php7');
+      });
+
+      it('Should convert All keys to lowercased', function() {
+        const headerRow = `cache-CONTROL: no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+content-lenGth: 3201
+conTent-type: application/json
+date: Wed, 25 Mar 2020 12:48:28 GMT
+      `;
+        const headerMap = Utils.Http.convertHeadersToDictionary(headerRow);
+        headerMap['cache-control'].should.equal('no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
+        headerMap['content-length'].should.equal('3201');
+        headerMap['content-type'].should.equal('application/json');
+        headerMap['date'].should.equal('Wed, 25 Mar 2020 12:48:28 GMT');
+      });
+
+      it('Should return empty object for null', function() {
+        Utils.Http.convertHeadersToDictionary().should.deep.equals({});
+      });
+    });
+  });
 });

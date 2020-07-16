@@ -97,15 +97,36 @@ var config = {
 
 ##
 
-> ### config.logLevel
+> ### config.log
 >
-> ##### Type: `string`
+> ##### Type: `PKLogConfigObject`
 >
-> ##### Default: `"ERROR"`
+> ```js
+> {
+>   level: string,
+>   handler: ?LogHandlerType
+> }
+> ```
 >
-> ##### Description: Defines the player log level.
->
-> Possible values: `"DEBUG", "INFO", "TIME", "WARN", "ERROR", "OFF"`
+> > ### config.log.level
+> >
+> > ##### Default: `"ERROR"`
+> >
+> > ##### Description: Defines the player log level.
+> >
+> > Possible values: `"DEBUG", "INFO", "TIME", "WARN", "ERROR", "OFF"`
+> >
+> > ### config.log.handler
+> >
+> > ##### Type `LogHandlerType`
+> >
+> > ##### Description: Defines the player log handler.
+> >
+> > ```js
+> > function(messages: any[], context: Object)
+> > ```
+> >
+> > (messages: any[], context: Object)
 
 ##
 
@@ -1043,18 +1064,68 @@ var config = {
 > >
 > > ### config.network.requestFilter
 > >
-> > ##### Type: `function`
+> > ##### Type: `function(type: PKRequestType, request: PKRequestObject): (void | Promise<PKRequestObject>)`
 > >
 > > ##### Default: `-`
 > >
 > > ##### Description: Defines a filter for requests. This filter takes the request and modifies it before it is sent. A request filter can run asynchronously by returning a promise; in this case, the request will not be sent until the promise is resolved.
+> >
+> > ##
+> >
+> > > ##### Type: PKRequestType
+> > >
+> > > ```js
+> > > {
+> > >   MANIFEST: 0,
+> > >   SEGMENT: 1,
+> > >   LICENSE: 2
+> > > }
+> > > ```
+> > >
+> > > ##
+> > >
+> > > ##### Type: PKRequestObject
+> > >
+> > > ```js
+> > > {
+> > >   url: string,
+> > >   body: ?string | ArrayBuffer,
+> > >   headers: { [header: string] : string }
+> > > }
+> > > ```
+> > >
+> > > ##
+> > >
+> > > > ##### `PKRequestObject.url`
+> > > >
+> > > > ##### Type: `string`
+> > > >
+> > > > ##### Description: The request URL.
+> > > >
+> > > > ##
+> > > >
+> > > > ##### `PKRequestObject.body`
+> > > >
+> > > > ##### Type: `string || ArrayBuffer`
+> > > >
+> > > > ##### Description: The body of the request.
+> > > >
+> > > > ##
+> > > >
+> > > > ##### `PKRequestObject.headers`
+> > > >
+> > > > ##### Type: `{ [header: string] : string }`
+> > > >
+> > > > ##### Description: A mapping of headers for the request. e.g.: {'HEADER': 'VALUE'}.
+> >
+> > ##
 > >
 > > #### Examples:
 > >
 > > ```js
 > > var config = {
 > >   network: {
-> >     requestFilter: function(type, request) {
+> >     requestFilter: function (type, request) {
 > >       if (type === KalturaPlayer.core.RequestType.LICENSE) {
 > >         request.headers['customData'] = CUSTOM_DATA;
 > >       }
@@ -1062,14 +1133,15 @@ var config = {
 > >   }
 > > };
 > > ```
+> >
 > > ```js
 > > var config = {
 > >   network: {
-> >     requestFilter: function(type, request) {
+> >     requestFilter: function (type, request) {
 > >       if (type === KalturaPlayer.core.RequestType.LICENSE) {
 > >         return new Promise(function (resolve) {
 > >           request.headers['customData'] = CUSTOM_DATA;
-> >           resolve(request); 
+> >           resolve(request);
 > >         });
 > >       }
 > >     }
@@ -1081,18 +1153,77 @@ var config = {
 > >
 > > ### config.network.responseFilter
 > >
-> > ##### Type: `function`
+> > ##### Type: `function(type: PKRequestType, request: PKResponseObject): (void | Promise<PKResponseObject>)`
 > >
 > > ##### Default: `-`
 > >
 > > ##### Description: Defines a filter for responses. This filter takes the response and modifies it before it is returned. A response filter can run asynchronously by returning a promise.
+> >
+> > ##
+> >
+> > > ##### Type: PKRequestType
+> > >
+> > > ```js
+> > > {
+> > >   MANIFEST: 0,
+> > >   SEGMENT: 1,
+> > >   LICENSE: 2
+> > > }
+> > > ```
+> > >
+> > > ##
+> > >
+> > > ##### Type: PKResponseObject
+> > >
+> > > ```js
+> > > {
+> > >   url: string,
+> > >   originalUrl: string,
+> > >   data: ArrayBuffer,
+> > >   headers: { [header: string] : string }
+> > > }
+> > > ```
+> > >
+> > > ##
+> > >
+> > > > ##### `PKResponseObject.url`
+> > > >
+> > > > ##### Type: `string`
+> > > >
+> > > > ##### Description: The URI which was loaded. Request filters and server redirects can cause this to be different from the original request URIs.
+> > > >
+> > > > ##
+> > > >
+> > > > ##### `PKResponseObject.originalUrl`
+> > > >
+> > > > ##### Type: `string`
+> > > >
+> > > > ##### Description: The original URI passed to the browser for networking. This is before any redirects, but after request filters are executed.
+> > > >
+> > > > ##
+> > > >
+> > > > ##### `PKResponseObject.data`
+> > > >
+> > > > ##### Type: `ArrayBuffer`
+> > > >
+> > > > ##### Description: The body of the response.
+> > > >
+> > > > ##
+> > > >
+> > > > ##### `PKResponseObject.headers`
+> > > >
+> > > > ##### Type: `{ [header: string] : string }`
+> > > >
+> > > > ##### Description: A map of response headers, if supported by the underlying protocol. All keys should be lowercased. For HTTP/HTTPS, may not be available cross-origin.
+> >
+> > ##
 > >
 > > #### Examples:
 > >
 > > ```js
 > > var config = {
 > >   network: {
-> >     responseFilter: function(type, response) {
+> >     responseFilter: function (type, response) {
 > >       if (type === KalturaPlayer.core.RequestType.LICENSE) {
 > >         response.data = MANIPULATED_DATA;
 > >       }
@@ -1100,14 +1231,15 @@ var config = {
 > >   }
 > > };
 > > ```
+> >
 > > ```js
 > > var config = {
 > >   network: {
-> >     responseFilter: function(type, response) {
+> >     responseFilter: function (type, response) {
 > >       if (type === KalturaPlayer.core.RequestType.LICENSE) {
 > >         return new Promise(function (resolve) {
 > >           response.data = MANIPULATED_DATA;
-> >           resolve(response); 
+> >           resolve(response);
 > >         });
 > >       }
 > >     }
@@ -1169,7 +1301,7 @@ var config = {
 > > > >
 > > > > ##### Type: `number`
 > > > >
-> > > > ##### Description: The position, in seconds, to show the ad break. 
+> > > > ##### Description: The position, in seconds, to show the ad break.
 > > > >
 > > > > ##
 > > > >
@@ -1188,11 +1320,12 @@ var config = {
 > > > > ##### Description: Alternative parameter to `position`. Play ad break every X seconds (optional).
 > > > >
 > > > > ##
-> > > > 
+> > > >
 > > > > **Important**. `position`, `percentage` and `every` are several options to configure the ad break position.
 > > > > Only one should be provided. If none will be provided, the ad break will be ignored.
-> > > > If more than one will be provided, only one configuration will be considered, by the following priority:  
-> > > > 1. `position` 2. `percentage` 3. `every`.
+> > > > If more than one will be provided, only one configuration will be considered, by the following priority:
+> > > >
+> > > > 1.  `position` 2. `percentage` 3. `every`.
 > > > >
 > > > > ##
 > > > >
@@ -1312,7 +1445,7 @@ var config = {
 > ```js
 > var config = {
 >   customLabels: {
->     qualities: function(videoTrack) {
+>     qualities: function (videoTrack) {
 >       if (videoTrack.height > 500) {
 >         return 'High';
 >       }
