@@ -12,11 +12,7 @@ const HISENSETVRegex = /^.*(vidaa).*(smarttv).*$/i;
 //recognize as safari
 const SAMSUNGBrowserParser = [
   [SAMSUNGTVRegex],
-  [
-    [UAParser.BROWSER.NAME, 'SAMSUNG_TV_BROWSER'],
-    [UAParser.BROWSER.MAJOR, ''],
-    [UAParser.BROWSER.VERSION, '']
-  ]
+  [[UAParser.BROWSER.NAME, 'SAMSUNG_TV_BROWSER'], [UAParser.BROWSER.MAJOR, ''], [UAParser.BROWSER.VERSION, '']]
 ];
 
 //recognize os of smartTV devices
@@ -25,20 +21,11 @@ const OSParser = [[LGTVRegex], [UAParser.OS.NAME], [HISENSETVRegex], [UAParser.O
 //add smart tv as smart tv devices
 const DeviceParser = [
   [LGTVRegex],
-  [
-    [UAParser.DEVICE.VENDOR, 'LG'],
-    [UAParser.DEVICE.TYPE, UAParser.DEVICE.SMARTTV]
-  ],
+  [[UAParser.DEVICE.VENDOR, 'LG'], [UAParser.DEVICE.TYPE, UAParser.DEVICE.SMARTTV]],
   [SAMSUNGTVRegex],
-  [
-    [UAParser.DEVICE.VENDOR, 'SAMSUNG'],
-    [UAParser.DEVICE.TYPE, UAParser.DEVICE.SMARTTV]
-  ],
+  [[UAParser.DEVICE.VENDOR, 'SAMSUNG'], [UAParser.DEVICE.TYPE, UAParser.DEVICE.SMARTTV]],
   [HISENSETVRegex],
-  [
-    [UAParser.DEVICE.VENDOR, 'HISENSE'],
-    [UAParser.DEVICE.TYPE, UAParser.DEVICE.SMARTTV]
-  ],
+  [[UAParser.DEVICE.VENDOR, 'HISENSE'], [UAParser.DEVICE.TYPE, UAParser.DEVICE.SMARTTV]],
   [SmartTvRegex],
   [[UAParser.DEVICE.TYPE, UAParser.DEVICE.SMARTTV]]
 ];
