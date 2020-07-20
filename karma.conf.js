@@ -29,7 +29,7 @@ module.exports = function (config) {
     customLaunchers: launchers,
     browsers: ['Chrome_browser', 'Firefox'],
     concurrency: 1,
-    singleRun: true,
+    singleRun: false,
     colors: true,
     frameworks: ['mocha'],
     files: [

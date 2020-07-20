@@ -58,12 +58,9 @@ describe('NativeAdapter: canPlayType', () => {
 describe('NativeAdapter: canPlayDrm', () => {
   const fpDrmData = [{licenseUrl: 'LICENSE_URL', scheme: DrmScheme.FAIRPLAY}];
 
-  beforeEach(() => {
-    NativeAdapter._drmProtocol = null;
-  });
-
   it('should return true for fairplay data if configured', function () {
     NativeAdapter.canPlayDrm(fpDrmData, {keySystem: DrmScheme.FAIRPLAY}).should.be.true;
+    NativeAdapter.canPlayDrm(fpDrmData, {}).should.be.false;
   });
 });
 
@@ -1051,6 +1048,25 @@ describe('NativeAdapter: request filter', () => {
     e.payload.code.should.equal(Error.Code.REQUEST_FILTER_ERROR);
     e.payload.data.should.equal('error');
   };
+
+  it('should pass the params to the request filter', done => {
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {
+      network: {
+        requestFilter: function (type, request) {
+          try {
+            type.should.equal(RequestType.MANIFEST);
+            request.url.should.equal(sourcesConfig.Mp4.progressive[0].url);
+            request.hasOwnProperty('body').should.be.true;
+            request.headers.should.be.exist;
+            done();
+          } catch (e) {
+            done(e);
+          }
+        }
+      }
+    });
+    nativeInstance.load();
+  });
 
   it('should apply void filter for manifest', done => {
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {
