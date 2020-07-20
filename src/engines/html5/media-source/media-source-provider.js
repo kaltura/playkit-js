@@ -16,27 +16,27 @@ export default class MediaSourceProvider {
   static _logger: any = getLogger('MediaSourceProvider');
   /**
    * The media source adapter registry.
-   * @member {Array<IMediaSourceAdapter>} _mediaSourceAdapters
+   * @member {Array<IMediaSourceAdapterStatic>} _mediaSourceAdapters
    * @static
    * @private
    */
-  static _mediaSourceAdapters: Array<typeof IMediaSourceAdapter> = [NativeAdapter];
+  static _mediaSourceAdapters: Array<IMediaSourceAdapterStatic> = [NativeAdapter];
   /**
    * The selected adapter for playback.
-   * @type {null|IMediaSourceAdapter}
+   * @type {null|IMediaSourceAdapterStatic}
    * @static
    * @private
    */
-  static _selectedAdapter: ?typeof IMediaSourceAdapter = null;
+  static _selectedAdapter: IMediaSourceAdapterStatic | null = null;
 
   /**
    * Add a media source adapter to the registry.
    * @function register
-   * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to register.
+   * @param {IMediaSourceAdapterStatic} mediaSourceAdapter - The media source adapter to register.
    * @static
    * @returns {void}
    */
-  static register(mediaSourceAdapter: typeof IMediaSourceAdapter): void {
+  static register(mediaSourceAdapter: IMediaSourceAdapterStatic): void {
     if (mediaSourceAdapter) {
       if (!MediaSourceProvider._mediaSourceAdapters.includes(mediaSourceAdapter)) {
         MediaSourceProvider._logger.debug(`Adapter <${mediaSourceAdapter.id}> has been registered successfully`);
@@ -50,11 +50,11 @@ export default class MediaSourceProvider {
   /**
    * Remove a media source adapter from the registry.
    * @function unRegister
-   * @param {IMediaSourceAdapter} mediaSourceAdapter - The media source adapter to unRegister.
+   * @param {IMediaSourceAdapterStatic} mediaSourceAdapter - The media source adapter to unRegister.
    * @static
    * @returns {void}
    */
-  static unRegister(mediaSourceAdapter: typeof IMediaSourceAdapter): void {
+  static unRegister(mediaSourceAdapter: IMediaSourceAdapterStatic): void {
     let index = MediaSourceProvider._mediaSourceAdapters.indexOf(mediaSourceAdapter);
     if (index > -1) {
       MediaSourceProvider._logger.debug(`Unregistered <${mediaSourceAdapter.id}> adapter`);
@@ -113,7 +113,7 @@ export default class MediaSourceProvider {
    * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists.
    * @static
    */
-  static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): ?IMediaSourceAdapter {
+  static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): IMediaSourceAdapter | null {
     if (videoElement && source && config) {
       if (!MediaSourceProvider._selectedAdapter) {
         MediaSourceProvider.canPlaySource(source, true, config.drm);

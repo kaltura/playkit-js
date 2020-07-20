@@ -1,2 +1,2 @@
 // @flow
-declare type PKEngineTypes = { [engine: string]: string };
+declare type PKEngineTypes = {[engine: string]: string};

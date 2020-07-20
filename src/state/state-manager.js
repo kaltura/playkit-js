@@ -3,7 +3,7 @@ import Player from '../player';
 import EventManager from '../event/event-manager';
 import State from './state';
 import {StateType} from './state-type';
-import {Html5EventType, CustomEventType} from '../event/event-type';
+import {CustomEventType, Html5EventType} from '../event/event-type';
 import FakeEvent from '../event/fake-event';
 import getLogger from '../utils/logger';
 

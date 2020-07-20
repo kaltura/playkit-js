@@ -134,13 +134,13 @@ class AdsController extends FakeEventTarget implements IAdsController {
   }
 
   _addBindings(): void {
-    this._eventManager.listen(this._player, AdEventType.AD_MANIFEST_LOADED, event => this._onAdManifestLoaded(event));
-    this._eventManager.listen(this._player, AdEventType.AD_BREAK_START, event => this._onAdBreakStart(event));
-    this._eventManager.listen(this._player, AdEventType.AD_LOADED, event => this._onAdLoaded(event));
-    this._eventManager.listen(this._player, AdEventType.AD_STARTED, event => this._onAdStarted(event));
+    this._eventManager.listen(this._player, AdEventType.AD_MANIFEST_LOADED, (event: FakeEvent) => this._onAdManifestLoaded(event));
+    this._eventManager.listen(this._player, AdEventType.AD_BREAK_START, (event: FakeEvent) => this._onAdBreakStart(event));
+    this._eventManager.listen(this._player, AdEventType.AD_LOADED, (event: FakeEvent) => this._onAdLoaded(event));
+    this._eventManager.listen(this._player, AdEventType.AD_STARTED, (event: FakeEvent) => this._onAdStarted(event));
     this._eventManager.listen(this._player, AdEventType.AD_BREAK_END, () => this._onAdBreakEnd());
     this._eventManager.listen(this._player, AdEventType.ADS_COMPLETED, () => this._onAdsCompleted());
-    this._eventManager.listen(this._player, AdEventType.AD_ERROR, event => this._onAdError(event));
+    this._eventManager.listen(this._player, AdEventType.AD_ERROR, (event: FakeEvent) => this._onAdError(event));
     this._eventManager.listen(this._player, CustomEventType.PLAYER_RESET, () => this._reset());
     this._eventManager.listen(this._player, CustomEventType.PLAYER_DESTROY, () => this._destroy());
     this._eventManager.listenOnce(this._player, Html5EventType.ENDED, () => this._onEnded());

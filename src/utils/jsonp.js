@@ -36,7 +36,7 @@ function jsonp(url: string, callback: Function, options: Object): Promise<*> {
 
   return new Promise((resolve, reject) => {
     if (timeout) {
-      timer = setTimeout(function() {
+      timer = setTimeout(function () {
         _cleanup();
         reject(new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.TIMEOUT, url));
       }, timeout);

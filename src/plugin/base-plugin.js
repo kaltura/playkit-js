@@ -5,6 +5,7 @@ import * as Utils from '../utils/util';
 import EventManager from '../event/event-manager';
 import Error from '../error/error';
 import FakeEvent from '../event/fake-event';
+import BaseMiddleware from '../middleware/base-middleware';
 
 /** The BasePlugin responsible to implement the plugin interface.
  * Contains several default implementations.
@@ -158,5 +159,13 @@ export default class BasePlugin implements IPlugin {
   dispatchEvent(name: string, payload: any): void {
     this.logger.debug('Fire event: ' + name, payload);
     this.player.dispatchEvent(new FakeEvent(name, payload));
+  }
+
+  getMiddlewareImpl(): BaseMiddleware | null {
+    return null;
+  }
+
+  getUIComponents(): Array<PKUIComponent> {
+    return [];
   }
 }

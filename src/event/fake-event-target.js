@@ -9,22 +9,21 @@ import MultiMap from '../utils/multi-map';
  *
  * @struct
  * @constructor
- * @implements {EventTarget}
  * @export
  */
 class FakeEventTarget {
-  _listeners: MultiMap<ListenerType>;
+  _listeners: MultiMap<(event: FakeEvent) => boolean | void>;
   dispatchTarget: FakeEventTarget;
 
   constructor() {
     /**
-     * @private {!MultiMap.<FakeEventTarget.ListenerType>}
+     * @private {!MultiMap.<FakeEventTarget.EventListener>}
      */
     this._listeners = new MultiMap();
 
     /**
      * The target of all dispatched events.  Defaults to |this|.
-     * @type {EventTarget}
+     * @type {FakeEventTarget}
      */
     this.dispatchTarget = this;
   }
@@ -33,14 +32,14 @@ class FakeEventTarget {
    * Add an event listener to this object.
    *
    * @param {string} type The event type to listen for.
-   * @param {FakeEventTarget.ListenerType} listener The callback or
+   * @param {FakeEventTarget.EventListener} listener The callback or
    *   listener object to invoke.
    * @param {boolean=} opt_capturing Ignored.  FakeEventTargets do not have
    *   parents, so events neither capture nor bubble.
    * @override
    * @export
    */
-  addEventListener(type: string, listener: ListenerType) {
+  addEventListener(type: string, listener: typeof EventListener) {
     this._listeners.push(type, listener);
   }
 
@@ -48,14 +47,14 @@ class FakeEventTarget {
    * Remove an event listener from this object.
    *
    * @param {string} type The event type for which you wish to remove a listener.
-   * @param {FakeEventTarget.ListenerType} listener The callback or
+   * @param {FakeEventTarget.EventListener} listener The callback or
    *   listener object to remove.
    * @param {boolean=} opt_capturing Ignored.  FakeEventTargets do not have
    *   parents, so events neither capture nor bubble.
    * @override
    * @export
    */
-  removeEventListener(type: string, listener: ListenerType) {
+  removeEventListener(type: string, listener: typeof EventListener) {
     this._listeners.remove(type, listener);
   }
 
@@ -77,12 +76,17 @@ class FakeEventTarget {
 
     for (let i = 0; i < list.length; ++i) {
       // Do this every time, since events can be re-dispatched from handlers.
+      //$FlowFixMe - need to cast to event target but can't yet make EventTarget inherited
       event.target = this.dispatchTarget;
+      //$FlowFixMe - need to cast to event target but can't yet make EventTarget inherited
       event.currentTarget = this.dispatchTarget;
 
       let listener = list[i];
       try {
+        // native DOM event handler
+        //$FlowFixMe
         if (listener.handleEvent) {
+          //$FlowFixMe
           listener.handleEvent(event);
         } else {
           listener.call(this, event);
@@ -107,6 +111,6 @@ class FakeEventTarget {
  * These are the listener types defined in the closure extern for EventTarget.
  * @typedef {EventListener|function(!Event):(boolean|undefined)}
  */
-declare function ListenerType(event: FakeEvent): boolean | void;
+declare function EventListener(event: FakeEvent): boolean | void;
 
 export default FakeEventTarget;

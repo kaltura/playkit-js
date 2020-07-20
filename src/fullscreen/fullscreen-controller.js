@@ -213,8 +213,11 @@ class FullscreenController {
        * @returns {void}
        */
       const attachIosFullscreenListeners = () => {
-        this._eventManager.listen(this._player.getVideoElement(), 'webkitbeginfullscreen', () => this._fullscreenEnterHandler());
-        this._eventManager.listen(this._player.getVideoElement(), 'webkitendfullscreen', () => this._fullscreenExitHandler());
+        let vidEl = this._player.getVideoElement();
+        if (vidEl) {
+          this._eventManager.listen(vidEl, 'webkitbeginfullscreen', () => this._fullscreenEnterHandler());
+          this._eventManager.listen(vidEl, 'webkitendfullscreen', () => this._fullscreenExitHandler());
+        }
       };
       if (this._player.getVideoElement()) {
         attachIosFullscreenListeners();

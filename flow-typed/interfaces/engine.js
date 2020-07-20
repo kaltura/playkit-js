@@ -2,16 +2,20 @@
 import VideoTrack from '../../src/track/video-track';
 import AudioTrack from '../../src/track/audio-track';
 import TextTrack from '../../src/track/text-track';
+import FakeEventTarget from '../../src/event/fake-event-target';
 
-declare interface IEngine {
-  static id: string;
-  static createEngine(source: PKMediaSourceObject, config: Object, playerId: string): IEngine;
-  static canPlaySource(source: PKMediaSourceObject, preferNative: boolean, drmConfig: PKDrmConfigObject): boolean;
-  static runCapabilities(): void;
-  static getCapabilities(): Promise<Object>;
-  static setCapabilities(capabilities: {[name: string]: any}): void;
-  static prepareVideoElement(playerId: string): void;
-  static isSupported(): boolean;
+declare interface IEngineStatic {
+  id: string;
+  createEngine(source: PKMediaSourceObject, config: Object, playerId: string): IEngine;
+  canPlaySource(source: PKMediaSourceObject, preferNative: boolean, drmConfig: PKDrmConfigObject): boolean;
+  runCapabilities(): void;
+  getCapabilities(): Promise<Object>;
+  setCapabilities(capabilities: {[name: string]: any}): void;
+  prepareVideoElement(playerId: string): void;
+  isSupported(): boolean;
+}
+
+declare interface IEngine extends FakeEventTarget {
   restore(source: PKMediaSourceObject, config: Object): void;
   destroy(): void;
   attach(): void;

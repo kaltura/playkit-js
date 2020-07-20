@@ -8,7 +8,7 @@ import FakeEvent from '../event/fake-event';
 const NOT_SUPPORTED: number = -1;
 
 class DroppedFramesWatcher extends FakeEventTarget {
-  _droppedFramesInterval: ?number = null;
+  _droppedFramesInterval: ?IntervalID = null;
   _lastDroppedFrames: number = 0;
   _lastDecodedFrames: number = 0;
   _lastTime: number = 0;
@@ -26,7 +26,7 @@ class DroppedFramesWatcher extends FakeEventTarget {
     this._config = config;
     this._videoElement = videoElement;
     if (this._mediaSourceAdapter.capabilities.fpsControl) {
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.FPS_DROP, event => this._triggerFPSDrop(event.payload.data));
+      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.FPS_DROP, (event: FakeEvent) => this._triggerFPSDrop(event.payload.data));
       return;
     }
     if (this._getDroppedAndDecodedFrames()[0] === NOT_SUPPORTED) {
@@ -40,7 +40,7 @@ class DroppedFramesWatcher extends FakeEventTarget {
     this._eventManager.listen(
       this._mediaSourceAdapter,
       CustomEventType.VIDEO_TRACK_CHANGED,
-      event => (this._currentBitrate = event.payload.selectedVideoTrack.bandwidth)
+      (event: FakeEvent) => (this._currentBitrate = event.payload.selectedVideoTrack.bandwidth)
     );
     this._droppedFramesInterval = setInterval(() => this._checkFPS(), this._config.fpsDroppedFramesInterval);
   }

@@ -8,7 +8,7 @@ const _Number = {
    * @param {number} n - A certain number
    * @returns {boolean} - If the input is a number
    */
-  isNumber: function(n: number): boolean {
+  isNumber: function (n: number): boolean {
     return Number(n) === n;
   },
 
@@ -16,7 +16,7 @@ const _Number = {
    * @param {number} n - A certain number
    * @returns {boolean} - If the input is an integer
    */
-  isInt: function(n: number): boolean {
+  isInt: function (n: number): boolean {
     return this.isNumber(n) && n % 1 === 0;
   },
 
@@ -24,7 +24,7 @@ const _Number = {
    * @param {number} n - A certain number
    * @returns {boolean} - If the input is a float
    */
-  isFloat: function(n: number): boolean {
+  isFloat: function (n: number): boolean {
     return this.isNumber(n) && n % 1 !== 0;
   }
 };
@@ -37,7 +37,7 @@ const _String = {
    * @public
    * @method toTitleCase
    */
-  capitlize: function(string: string): string {
+  capitlize: function (string: string): string {
     if (typeof string !== 'string') {
       return string;
     }
@@ -49,7 +49,7 @@ const _String = {
    * @param {string} searchString - Certain string
    * @returns {boolean} - Whether the string: string is ending with string: searchString
    */
-  endsWith: function(string: string, searchString: string): boolean {
+  endsWith: function (string: string, searchString: string): boolean {
     if (typeof string !== 'string' || typeof searchString !== 'string') {
       return false;
     }
@@ -62,7 +62,7 @@ const _Object = {
    * @param {Array<Object>} objects - The objects to merge
    * @returns {Object} - The merged object.
    */
-  merge: function(objects: Array<Object>): Object {
+  merge: function (objects: Array<Object>): Object {
     let target = {};
     for (let obj of objects) {
       Object.assign(target, obj);
@@ -74,7 +74,7 @@ const _Object = {
    * @param {any} item - The item to check.
    * @returns {boolean} - Whether the item is an object.
    */
-  isObject: function(item: any) {
+  isObject: function (item: any) {
     return item && typeof item === 'object' && !Array.isArray(item);
   },
 
@@ -83,7 +83,7 @@ const _Object = {
    * @param {any} sources - The objects to merge.
    * @returns {Object} - The merged object.
    */
-  mergeDeep: function(target: any, ...sources: any): Object {
+  mergeDeep: function (target: any, ...sources: any): Object {
     if (!sources.length) {
       return target;
     }
@@ -105,7 +105,7 @@ const _Object = {
    * @param {any} data - The data to copy.
    * @returns {any} - The copied data.
    */
-  copyDeep: function(data: any): any {
+  copyDeep: function (data: any): any {
     let node;
     if (Array.isArray(data)) {
       node = data.length > 0 ? data.slice(0) : [];
@@ -136,9 +136,9 @@ const _Object = {
    * @param {Object} obj - The object to check
    * @returns {boolean} - Whether the object is empty.
    */
-  isEmptyObject: function(obj: Object): boolean {
+  isEmptyObject: function (obj: Object): boolean {
     for (let key in obj) {
-      if (obj.hasOwnProperty(key)) return false;
+      if (window.Object.prototype.hasOwnProperty.call(obj, key)) return false;
     }
     return true;
   },
@@ -149,8 +149,8 @@ const _Object = {
    * @param {string} propertyPath - The path to check.
    * @returns {boolean} - The value in this path.
    */
-  getPropertyPath: function(obj: Object, propertyPath: string): any {
-    return propertyPath.split('.').reduce(function(o, x) {
+  getPropertyPath: function (obj: Object, propertyPath: string): any {
+    return propertyPath.split('.').reduce(function (o, x) {
       return typeof o === 'undefined' || o === null ? o : o[x];
     }, obj);
   },
@@ -161,14 +161,14 @@ const _Object = {
    * @param {string} propertyPath - The path to check.
    * @returns {boolean} - Whether the path exists in the object.
    */
-  hasPropertyPath: function(obj: Object, propertyPath: string): boolean {
+  hasPropertyPath: function (obj: Object, propertyPath: string): boolean {
     if (!propertyPath) {
       return false;
     }
     let properties = propertyPath.split('.');
     for (let i = 0; i < properties.length; i++) {
       let prop = properties[i];
-      if (!obj || !obj.hasOwnProperty(prop)) {
+      if (!obj || !window.Object.prototype.hasOwnProperty.call(obj, prop)) {
         return false;
       } else {
         obj = obj[prop];
@@ -184,7 +184,7 @@ const _Object = {
    * @param {any} value - The value to set in the path.
    * @returns {Object} - The result object.
    */
-  createPropertyPath: function(obj: Object, path: string, value: any = null): Object {
+  createPropertyPath: function (obj: Object, path: string, value: any = null): Object {
     let pathArray = path.split('.');
     let current = obj;
     while (pathArray.length > 1) {
@@ -205,7 +205,7 @@ const _Object = {
    * @param {string} path - The path to delete in the object.
    * @returns {void}
    */
-  deletePropertyPath: function(obj: Object, path: string): void {
+  deletePropertyPath: function (obj: Object, path: string): void {
     if (!obj || !path) {
       return;
     }
@@ -223,7 +223,7 @@ const _Object = {
    * Creates deferred promise which can resolved/rejected outside the promise scope.
    * @returns {DeferredPromise} - The promise with resolve and reject props.
    */
-  defer: function(): DeferredPromise {
+  defer: function (): DeferredPromise {
     let res, rej;
     // $FlowFixMe
     let promise = new Promise((resolve, reject) => {
@@ -234,6 +234,7 @@ const _Object = {
     promise.resolve = res;
     // $FlowFixMe
     promise.reject = rej;
+    // $FlowFixMe
     return promise;
   },
 
@@ -244,8 +245,8 @@ const _Object = {
    * @returns {Function} - The new bound function.
    * @public
    */
-  bind: function(thisObj: any, fn: Function): Function {
-    return function() {
+  bind: function (thisObj: any, fn: Function): Function {
+    return function () {
       fn.apply(thisObj, arguments);
     };
   }
@@ -257,15 +258,10 @@ const _Generator = {
    * @param {number} length - The length of the id.
    * @returns {string} - The generated id.
    */
-  uniqueId: function(length: ?number) {
+  uniqueId: function (length: ?number) {
     let from = 2;
     let to = from + (!length || length < 0 ? 0 : length - 2);
-    return (
-      '_' +
-      Math.random()
-        .toString(36)
-        .substr(from, to)
-    );
+    return '_' + Math.random().toString(36).substr(from, to);
   },
 
   /**
@@ -273,7 +269,7 @@ const _Generator = {
    * @return {string} - GUID
    * @private
    */
-  guid: function(): string {
+  guid: function (): string {
     let S4 = () => {
       return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
     };
@@ -426,7 +422,7 @@ const _Dom = {
       cssLinkElement.rel = 'stylesheet';
       cssLinkElement.href = url;
       cssLinkElement.async = true;
-      cssLinkElement.onload = cssLinkElement.onreadystatechange = function() {
+      cssLinkElement.onload = cssLinkElement.onreadystatechange = function () {
         if (!resolved && (!this.readyState || this.readyState === 'complete')) {
           resolved = true;
           resolve(this);
@@ -450,7 +446,7 @@ const _Dom = {
       s.type = 'text/javascript';
       s.src = url;
       s.async = true;
-      s.onload = s.onreadystatechange = function() {
+      s.onload = s.onreadystatechange = function () {
         if (!r && (!this.readyState || this.readyState === 'complete')) {
           r = true;
           resolve(this);
@@ -492,10 +488,10 @@ const _Dom = {
 
 const _Http = {
   protocol: /^(https?:)/i.test(document.location.protocol) ? document.location.protocol : 'https:',
-  execute: function(url: string, params: any, method: string = 'POST', headers?: Map<string, string>): Promise<any> {
+  execute: function (url: string, params: any, method: string = 'POST', headers?: Map<string, string>): Promise<any> {
     let request = new XMLHttpRequest();
     return new Promise((resolve, reject) => {
-      request.onreadystatechange = function() {
+      request.onreadystatechange = function () {
         if (request.readyState === 4) {
           if (request.status === 200) {
             try {
@@ -519,14 +515,14 @@ const _Http = {
     });
   },
   jsonp: jsonp,
-  convertHeadersToDictionary: function(headerRow: string): {[header: string]: string} {
+  convertHeadersToDictionary: function (headerRow: string): {[header: string]: string} {
     let headerMap = {};
     try {
       // Convert the header string into an array of individual headers
       const arr = headerRow.trim().split(/[\r\n]+/);
 
       // Create a map of header names to values
-      arr.forEach(function(line) {
+      arr.forEach(function (line) {
         const parts = line.split(': ');
         const header = parts.shift().toLowerCase();
         const value = parts.join(': ');
@@ -558,7 +554,7 @@ const _VERSION = {
    * - NaN if either version string is in the wrong format
    */
 
-  compare: function(v1: string, v2: string, options: Object = {}) {
+  compare: function (v1: string, v2: string, options: Object = {}) {
     options = _Object.merge([{lexicographical: false, zeroExtend: true}, options]);
     const lexicographical = options.lexicographical;
     const zeroExtend = options.zeroExtend;

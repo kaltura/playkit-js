@@ -1,2 +1,2 @@
 // @flow
-declare type PKCorsTypes = { [stream: string]: string };
+declare type PKCorsTypes = {[stream: string]: string};

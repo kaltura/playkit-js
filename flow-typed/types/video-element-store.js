@@ -1,2 +1,2 @@
 // @flow
-declare type PKVideoElementStore = { [id: string]: HTMLVideoElement } | {};
+declare type PKVideoElementStore = {[id: string]: HTMLVideoElement} | {};

@@ -24,7 +24,7 @@ import Html5AutoPlayCapability from '../../src/engines/html5/capabilities/html5-
 const targetId = 'player-placeholder_player.spec';
 let sourcesConfig = PKObject.copyDeep(SourcesConfig);
 
-describe('Player', function() {
+describe('Player', function () {
   before(() => {});
 
   beforeEach(() => {
@@ -33,7 +33,7 @@ describe('Player', function() {
     sourcesConfig = PKObject.copyDeep(SourcesConfig);
   });
 
-  describe('load', function() {
+  describe('load', function () {
     let config, player, playerContainer, sandbox;
 
     before(() => {
@@ -43,7 +43,7 @@ describe('Player', function() {
     });
 
     beforeEach(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       player = new Player(config);
       playerContainer.appendChild(player.getView());
     });
@@ -76,7 +76,7 @@ describe('Player', function() {
 
     it("should't load if source already exists", done => {
       player.addEventListener(CustomEventType.TRACKS_CHANGED, () => {
-        sandbox.stub(player, '_load').callsFake(function() {
+        sandbox.stub(player, '_load').callsFake(function () {
           done(new Error("should't load if source already exists"));
         });
         player.load();
@@ -99,7 +99,7 @@ describe('Player', function() {
     });
   });
 
-  describe('play', function() {
+  describe('play', function () {
     let config, player, playerContainer;
 
     before(() => {
@@ -138,7 +138,7 @@ describe('Player', function() {
         player.play();
       });
     });
-    describe('attach detach', function() {
+    describe('attach detach', function () {
       it('should success play after detach attach', done => {
         const playing = () => {
           player.removeEventListener(Html5EventType.PLAYING, playing);
@@ -168,7 +168,7 @@ describe('Player', function() {
     });
   });
 
-  describe('ready', function() {
+  describe('ready', function () {
     let playerContainer;
 
     before(() => {
@@ -229,7 +229,7 @@ describe('Player', function() {
           });
         });
 
-        describe('passing config in configure', function() {
+        describe('passing config in configure', function () {
           let player;
 
           beforeEach(() => {
@@ -268,7 +268,7 @@ describe('Player', function() {
       });
 
       describe('preload auto', () => {
-        describe('passing config in constructor', function() {
+        describe('passing config in constructor', function () {
           let player;
 
           beforeEach(() => {
@@ -369,7 +369,7 @@ describe('Player', function() {
       });
 
       describe('preload none', () => {
-        describe('passing config in constructor', function() {
+        describe('passing config in constructor', function () {
           let player;
 
           beforeEach(() => {
@@ -406,7 +406,7 @@ describe('Player', function() {
           });
         });
 
-        describe('passing config in configure', function() {
+        describe('passing config in configure', function () {
           let player;
 
           beforeEach(() => {
@@ -635,7 +635,7 @@ describe('Player', function() {
     });
   });
 
-  describe('getTracks real', function() {
+  describe('getTracks real', function () {
     let config;
     let player;
     let video;
@@ -731,7 +731,7 @@ describe('Player', function() {
     });
   });
 
-  describe('selectTrack - video', function() {
+  describe('selectTrack - video', function () {
     let config, player, video, playerContainer;
 
     before(() => {
@@ -801,7 +801,7 @@ describe('Player', function() {
     });
   });
 
-  describe('selectTrack - audio', function() {
+  describe('selectTrack - audio', function () {
     let config, player, video, playerContainer;
 
     before(() => {
@@ -914,7 +914,7 @@ describe('Player', function() {
     });
   });
 
-  describe('selectTrack - text', function() {
+  describe('selectTrack - text', function () {
     let config, player, video, playerContainer;
 
     before(() => {
@@ -1050,7 +1050,7 @@ describe('Player', function() {
     });
   });
 
-  describe('getActiveTracks', function() {
+  describe('getActiveTracks', function () {
     let config, player, video, track1, track2, playerContainer;
 
     before(() => {
@@ -1123,7 +1123,7 @@ describe('Player', function() {
     });
   });
 
-  describe('hideTextTrack', function() {
+  describe('hideTextTrack', function () {
     let config, player, video, track1, track2, playerContainer;
 
     before(() => {
@@ -1259,7 +1259,7 @@ describe('Player', function() {
     });
   });
 
-  describe('Track enum', function() {
+  describe('Track enum', function () {
     let playerContainer;
 
     before(() => {
@@ -1282,8 +1282,8 @@ describe('Player', function() {
     });
   });
 
-  describe('events', function() {
-    describe('tracks changed', function() {
+  describe('events', function () {
+    describe('tracks changed', function () {
       let config, player, video, track1, track2, playerContainer;
 
       before(() => {
@@ -1317,7 +1317,7 @@ describe('Player', function() {
         removeElement(targetId);
       });
 
-      it('should fire tracks changed', function(done) {
+      it('should fire tracks changed', function (done) {
         /**
          * Handles assertions after tracks changed event.
          * @param {Object} data - The event data.
@@ -1338,7 +1338,7 @@ describe('Player', function() {
       });
     });
 
-    describe('first play', function() {
+    describe('first play', function () {
       let config;
       let player;
       let playerContainer;
@@ -1392,7 +1392,7 @@ describe('Player', function() {
       });
     });
 
-    describe('auto play failed', function() {
+    describe('auto play failed', function () {
       let config;
       let player;
       let playerContainer;
@@ -1403,7 +1403,7 @@ describe('Player', function() {
       });
 
       beforeEach(() => {
-        sandbox = sinon.sandbox.create();
+        sandbox = sinon.createSandbox();
         config = PKObject.mergeDeep(getConfigStructure(), {
           sources: sourcesConfig.Mp4,
           playback: {
@@ -1435,7 +1435,7 @@ describe('Player', function() {
             done(e);
           }
         });
-        sandbox.stub(player._engine._el, 'play').callsFake(function() {
+        sandbox.stub(player._engine._el, 'play').callsFake(function () {
           return Promise.reject('mock failure');
         });
       });
@@ -1726,7 +1726,7 @@ describe('Player', function() {
     });
   });
 
-  describe('states', function() {
+  describe('states', function () {
     let player, config, playerContainer;
 
     before(() => {
@@ -1817,7 +1817,7 @@ describe('Player', function() {
     });
   });
 
-  describe('configure', function() {
+  describe('configure', function () {
     let player, config, playerContainer;
 
     before(() => {
@@ -1843,11 +1843,11 @@ describe('Player', function() {
       playerContainer.appendChild(player.getView());
       player.should.be.instanceOf(Player);
       player.configure(config);
-      player.addEventListener(Html5EventType.PLAYING, function() {
+      player.addEventListener(Html5EventType.PLAYING, function () {
         player.destroy();
         done();
       });
-      player.addEventListener(Html5EventType.ERROR, function() {
+      player.addEventListener(Html5EventType.ERROR, function () {
         player.destroy();
         done(new Error('test fail'));
       });
@@ -1868,7 +1868,7 @@ describe('Player', function() {
         PluginManager.unRegister('numbers');
       });
 
-      it('should load 2 plugins on initial config and configure them on configure', function() {
+      it('should load 2 plugins on initial config and configure them on configure', function () {
         player = new Player({
           plugins: {
             colors: {
@@ -1879,8 +1879,8 @@ describe('Player', function() {
             }
           }
         });
-        player._pluginManager.get('colors').should.exists;
-        player._pluginManager.get('numbers').should.exists;
+        player._pluginManager.get('colors').should.exist;
+        player._pluginManager.get('numbers').should.exist;
         Object.keys(player._pluginManager._plugins).length.should.equals(2);
         player.config.plugins.colors.should.deep.equals({
           size: 5,
@@ -1901,8 +1901,8 @@ describe('Player', function() {
             }
           }
         });
-        player._pluginManager.get('colors').should.exists;
-        player._pluginManager.get('numbers').should.exists;
+        player._pluginManager.get('colors').should.exist;
+        player._pluginManager.get('numbers').should.exist;
         Object.keys(player._pluginManager._plugins).length.should.equals(2);
         player.config.plugins.colors.should.deep.equals({
           size: 50,
@@ -1915,7 +1915,7 @@ describe('Player', function() {
         });
       });
 
-      it('should load 1st plugin on initial config, load 2nd plugin and configure the 1st on configure', function() {
+      it('should load 1st plugin on initial config, load 2nd plugin and configure the 1st on configure', function () {
         player = new Player({
           plugins: {
             numbers: {
@@ -1923,7 +1923,7 @@ describe('Player', function() {
             }
           }
         });
-        player._pluginManager.get('numbers').should.exists;
+        player._pluginManager.get('numbers').should.exist;
         Object.keys(player._pluginManager._plugins).length.should.equals(1);
         player.config.plugins.numbers.should.deep.equals({
           size: 20,
@@ -1940,8 +1940,8 @@ describe('Player', function() {
             }
           }
         });
-        player._pluginManager.get('colors').should.exists;
-        player._pluginManager.get('numbers').should.exists;
+        player._pluginManager.get('colors').should.exist;
+        player._pluginManager.get('numbers').should.exist;
         Object.keys(player._pluginManager._plugins).length.should.equals(2);
         player.config.plugins.colors.should.deep.equals({
           size: 50,
@@ -1954,7 +1954,7 @@ describe('Player', function() {
         });
       });
 
-      it('should create player without plugins, load plugins on configure', function() {
+      it('should create player without plugins, load plugins on configure', function () {
         player = new Player();
         Object.keys(player._pluginManager._plugins).length.should.equals(0);
         player.config.plugins.should.deep.equals({});
@@ -1968,8 +1968,8 @@ describe('Player', function() {
             }
           }
         });
-        player._pluginManager.get('colors').should.exists;
-        player._pluginManager.get('numbers').should.exists;
+        player._pluginManager.get('colors').should.exist;
+        player._pluginManager.get('numbers').should.exist;
         Object.keys(player._pluginManager._plugins).length.should.equals(2);
         player.config.plugins.colors.should.deep.equals({
           size: 50,
@@ -1982,7 +1982,7 @@ describe('Player', function() {
         });
       });
 
-      it('should create player without plugins, load 1st plugin on configure, configure 1st plugin with/after sources', function() {
+      it('should create player without plugins, load 1st plugin on configure, configure 1st plugin with/after sources', function () {
         player = new Player();
         Object.keys(player._pluginManager._plugins).length.should.equals(0);
         player.config.plugins.should.deep.equals({});
@@ -1993,7 +1993,7 @@ describe('Player', function() {
             }
           }
         });
-        player._pluginManager.get('numbers').should.exists;
+        player._pluginManager.get('numbers').should.exist;
         Object.keys(player._pluginManager._plugins).length.should.equals(1);
         player.config.plugins.numbers.should.deep.equals({
           size: 200,
@@ -2009,7 +2009,7 @@ describe('Player', function() {
             }
           }
         });
-        player._pluginManager.get('numbers').should.exists;
+        player._pluginManager.get('numbers').should.exist;
         Object.keys(player._pluginManager._plugins).length.should.equals(1);
         player.config.plugins.numbers.should.deep.equals({
           size: 2,
@@ -2030,7 +2030,7 @@ describe('Player', function() {
         });
       });
 
-      it('should create player with plugin and fail to configure other plugin after sources', function() {
+      it('should create player with plugin and fail to configure other plugin after sources', function () {
         player = new Player({
           sources: sourcesConfig.Mp4,
           plugins: {
@@ -2040,7 +2040,7 @@ describe('Player', function() {
             }
           }
         });
-        player._pluginManager.get('numbers').should.exists;
+        player._pluginManager.get('numbers').should.exist;
         Object.keys(player._pluginManager._plugins).length.should.equals(1);
         player.config.plugins.should.deep.equals({
           numbers: {
@@ -2068,7 +2068,7 @@ describe('Player', function() {
     });
 
     describe('playback lifecycle', () => {
-      it('should save initial playback config and initiate it when received sources - 1', function() {
+      it('should save initial playback config and initiate it when received sources - 1', function () {
         player = new Player({
           playback: {
             volume: 0,
@@ -2082,7 +2082,7 @@ describe('Player', function() {
         player.muted.should.be.true;
       });
 
-      it('should save initial playback config and initiate it when received sources - 2', function() {
+      it('should save initial playback config and initiate it when received sources - 2', function () {
         player = new Player({
           playback: {
             muted: true
@@ -2100,7 +2100,7 @@ describe('Player', function() {
         player.muted.should.be.true;
       });
 
-      it('should load the previous playback config and initiate the new one on updating sources', function(done) {
+      it('should load the previous playback config and initiate the new one on updating sources', function (done) {
         player = new Player({
           sources: sourcesConfig.MultipleSources,
           playback: {
@@ -2138,7 +2138,7 @@ describe('Player', function() {
         });
       });
 
-      it('should load the initial config and initiate the new one on updating sources', function(done) {
+      it('should load the initial config and initiate the new one on updating sources', function (done) {
         player = new Player({
           sources: sourcesConfig.MultipleSources,
           playback: {
@@ -2184,7 +2184,7 @@ describe('Player', function() {
     });
   });
 
-  describe('config', function() {
+  describe('config', function () {
     let player, config, playerContainer;
 
     before(() => {
@@ -2204,20 +2204,20 @@ describe('Player', function() {
       removeElement(targetId);
     });
 
-    it('should get config', function() {
+    it('should get config', function () {
       player = new Player(config);
       playerContainer.appendChild(player.getView());
       player.config.playback.streamPriority.should.deep.equal(getConfigStructure().playback.streamPriority);
     });
 
-    it('should not change the player config', function() {
+    it('should not change the player config', function () {
       player = new Player(config);
       playerContainer.appendChild(player.getView());
       player.config.playback.streamPriority = {};
       player.config.playback.streamPriority.should.deep.equal(getConfigStructure().playback.streamPriority);
     });
 
-    it('should set playbackRates', function() {
+    it('should set playbackRates', function () {
       config.sources = sourcesConfig.MultipleSources;
       config.playback.playbackRates = [18, 2, 3, 4, 20, 30, -19];
       player = new Player(config);
@@ -2225,7 +2225,7 @@ describe('Player', function() {
     });
   });
 
-  describe('abr', function() {
+  describe('abr', function () {
     let player, config, playerContainer;
 
     before(() => {
@@ -2245,7 +2245,7 @@ describe('Player', function() {
       removeElement(targetId);
     });
 
-    it('should return false for progressive playback abr', function() {
+    it('should return false for progressive playback abr', function () {
       config.sources = sourcesConfig.Mp4;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
@@ -2253,7 +2253,7 @@ describe('Player', function() {
       player.isAdaptiveBitrateEnabled().should.be.false;
     });
 
-    it('should return true for adaptive playback abr', function() {
+    it('should return true for adaptive playback abr', function () {
       config.sources = sourcesConfig.Hls;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
@@ -2264,7 +2264,7 @@ describe('Player', function() {
     });
   });
 
-  describe('isLive', function() {
+  describe('isLive', function () {
     let player, config, playerContainer;
 
     before(() => {
@@ -2284,7 +2284,7 @@ describe('Player', function() {
       removeElement(targetId);
     });
 
-    it('should return false for VOD', function(done) {
+    it('should return false for VOD', function (done) {
       config.sources = sourcesConfig.Mp4;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
@@ -2299,7 +2299,7 @@ describe('Player', function() {
       }
     });
 
-    it('should return true for VOD which configured as live', function(done) {
+    it('should return true for VOD which configured as live', function (done) {
       config.sources = sourcesConfig.Mp4;
       config.sources.type = 'Live';
       player = new Player(config);
@@ -2315,14 +2315,14 @@ describe('Player', function() {
       }
     });
 
-    it('should return false for live before loading', function() {
+    it('should return false for live before loading', function () {
       config.sources = sourcesConfig.Live;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
       player.isLive().should.be.false;
     });
 
-    it('should return true for live', function(done) {
+    it('should return true for live', function (done) {
       config.sources = sourcesConfig.Live;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
@@ -2337,7 +2337,7 @@ describe('Player', function() {
       }
     });
 
-    it('should return true for live even configured as VOD', function(done) {
+    it('should return true for live even configured as VOD', function (done) {
       config.sources = sourcesConfig.Live;
       config.sources.type = 'Vod';
       player = new Player(config);
@@ -2354,7 +2354,7 @@ describe('Player', function() {
     });
   });
 
-  describe('isDvr', function() {
+  describe('isDvr', function () {
     let player, config, playerContainer;
 
     before(() => {
@@ -2374,7 +2374,7 @@ describe('Player', function() {
       removeElement(targetId);
     });
 
-    it('should return false for VOD', function(done) {
+    it('should return false for VOD', function (done) {
       config.sources = sourcesConfig.Mp4;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
@@ -2389,7 +2389,7 @@ describe('Player', function() {
       }
     });
 
-    it('should return false for VOD even configured as dvr', function(done) {
+    it('should return false for VOD even configured as dvr', function (done) {
       config.sources = sourcesConfig.Mp4;
       config.sources.dvr = true;
       player = new Player(config);
@@ -2405,7 +2405,7 @@ describe('Player', function() {
       }
     });
 
-    it('should return true for live which configured as dvr', function(done) {
+    it('should return true for live which configured as dvr', function (done) {
       config.sources = sourcesConfig.Live;
       config.sources.dvr = true;
       player = new Player(config);
@@ -2421,7 +2421,7 @@ describe('Player', function() {
       }
     });
 
-    it('should return true for live which configured as non dvr', function(done) {
+    it('should return true for live which configured as non dvr', function (done) {
       config.sources = sourcesConfig.Live;
       config.sources.dvr = false;
       player = new Player(config);
@@ -2438,7 +2438,7 @@ describe('Player', function() {
     });
   });
 
-  describe('seekToLiveEdge', function() {
+  describe('seekToLiveEdge', function () {
     let player, config, playerContainer;
 
     before(() => {
@@ -2497,7 +2497,7 @@ describe('Player', function() {
     });
   });
 
-  describe('volume', function() {
+  describe('volume', function () {
     let player, config, playerContainer;
 
     before(() => {
@@ -2520,11 +2520,11 @@ describe('Player', function() {
       removeElement(targetId);
     });
 
-    it('should return 1 by default', function() {
+    it('should return 1 by default', function () {
       player.volume.should.equal(1);
     });
 
-    it('should enable setting the volume via API', function() {
+    it('should enable setting the volume via API', function () {
       player.volume = 0.9;
       player.volume.should.equal(0.9);
       player.volume = 0.3;
@@ -2533,13 +2533,13 @@ describe('Player', function() {
       player.volume.should.equal(0);
     });
 
-    it('should enable setting the volume via config', function() {
+    it('should enable setting the volume via config', function () {
       config.playback.volume = 0.9;
       player.configure(config);
       player.volume.should.equal(0.9);
     });
 
-    it('should cap volume values between 0 and 1(including)', function() {
+    it('should cap volume values between 0 and 1(including)', function () {
       player.volume = 1.1;
       player.volume.should.equal(1);
       player.volume = -0.1;
@@ -2547,7 +2547,7 @@ describe('Player', function() {
     });
   });
 
-  describe('set currentTime', function() {
+  describe('set currentTime', function () {
     let player, config, playerContainer;
 
     before(() => {
@@ -2570,7 +2570,7 @@ describe('Player', function() {
       removeElement(targetId);
     });
 
-    it('should set the given currentTime', function(done) {
+    it('should set the given currentTime', function (done) {
       player.ready().then(() => {
         player.currentTime = 2;
         player._engine.currentTime.should.equal(2);
@@ -2579,7 +2579,7 @@ describe('Player', function() {
       player.load();
     });
 
-    it('should do nothing for non number given', function(done) {
+    it('should do nothing for non number given', function (done) {
       player.ready().then(() => {
         player.currentTime = true;
         player._engine.currentTime.should.equal(0);
@@ -2588,7 +2588,7 @@ describe('Player', function() {
       player.load();
     });
 
-    it('should set 0 for negative number given', function(done) {
+    it('should set 0 for negative number given', function (done) {
       player.ready().then(() => {
         player.currentTime = -1;
         player._engine.currentTime.should.equal(0);
@@ -2597,7 +2597,7 @@ describe('Player', function() {
       player.load();
     });
 
-    it('should set duration -1 for duration given', function(done) {
+    it('should set duration -1 for duration given', function (done) {
       player.ready().then(() => {
         player.currentTime = player.duration;
         player._engine.currentTime.should.equal(player.duration - 0.1);
@@ -2607,7 +2607,7 @@ describe('Player', function() {
     });
   });
 
-  describe('destroy', function() {
+  describe('destroy', function () {
     let sandbox, player, config;
 
     before(() => {
@@ -2615,7 +2615,7 @@ describe('Player', function() {
     });
 
     beforeEach(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       config = getConfigStructure();
       config.sources = sourcesConfig.Mp4;
     });
@@ -2630,7 +2630,7 @@ describe('Player', function() {
       removeElement(targetId);
     });
 
-    it('should destroy the player', function() {
+    it('should destroy the player', function () {
       player = new Player(config);
       let engineSpy = sandbox.spy(player._engine, 'destroy');
       let posterMgrSpy = sandbox.spy(player._posterManager, 'destroy');
@@ -2653,7 +2653,7 @@ describe('Player', function() {
       player._firstPlay.should.be.true;
     });
 
-    it('should dispatch a player destroyed event', function(done) {
+    it('should dispatch a player destroyed event', function (done) {
       player = new Player(config);
       player.addEventListener(player.Event.PLAYER_DESTROY, () => {
         done();
@@ -2662,7 +2662,7 @@ describe('Player', function() {
     });
   });
 
-  describe('reset', function() {
+  describe('reset', function () {
     let sandbox, player, config;
 
     before(() => {
@@ -2670,7 +2670,7 @@ describe('Player', function() {
     });
 
     beforeEach(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       config = getConfigStructure();
       config.sources = sourcesConfig.Mp4;
     });
@@ -2685,7 +2685,7 @@ describe('Player', function() {
       removeElement(targetId);
     });
 
-    it('should resets the player', function() {
+    it('should resets the player', function () {
       player = new Player(config);
       player._reset = false;
       let posterMgrSpy = sandbox.spy(player._posterManager, 'reset');
@@ -2715,7 +2715,7 @@ describe('Player', function() {
     });
   });
 
-  describe('_loadEngine', function() {
+  describe('_loadEngine', function () {
     let sandbox, player, config;
 
     before(() => {
@@ -2723,7 +2723,7 @@ describe('Player', function() {
     });
 
     beforeEach(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       config = getConfigStructure();
       config.sources = sourcesConfig.Mp4;
     });
@@ -2738,13 +2738,13 @@ describe('Player', function() {
       removeElement(targetId);
     });
 
-    it('should load an engine for the first time', function() {
+    it('should load an engine for the first time', function () {
       let spy = sandbox.spy(Html5, 'createEngine');
       player = new Player(config);
       spy.should.have.been.calledOnce;
     });
 
-    it('should call restore for the same engine', function() {
+    it('should call restore for the same engine', function () {
       let createSpy = sandbox.spy(Html5, 'createEngine');
       let restoreSpy = sandbox.spy(Html5.prototype, 'restore');
       player = new Player(config);
@@ -2756,11 +2756,11 @@ describe('Player', function() {
     });
   });
 
-  describe('_getLanguage', function() {
+  describe('_getLanguage', function () {
     let config, player, sandbox;
 
     beforeEach(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       config = getConfigStructure();
       player = new Player(config);
     });
@@ -2785,7 +2785,7 @@ describe('Player', function() {
       };
       let engTrack = new TextTrack(engTrackOptions);
 
-      sandbox.stub(player, '_getTracksByType', () => {
+      sandbox.stub(player, '_getTracksByType').callsFake(() => {
         return [engTrack];
       });
 
@@ -2803,7 +2803,7 @@ describe('Player', function() {
       };
       let gerTrack = new TextTrack(gerTrackOptions);
 
-      sandbox.stub(player, '_getTracksByType', () => {
+      sandbox.stub(player, '_getTracksByType').callsFake(() => {
         return [gerTrack];
       });
 
@@ -2820,7 +2820,7 @@ describe('Player', function() {
       };
       let gerTrack = new TextTrack(gerTrackOptions);
 
-      sandbox.stub(player, '_getTracksByType', () => {
+      sandbox.stub(player, '_getTracksByType').callsFake(() => {
         return [gerTrack];
       });
 
@@ -2843,7 +2843,7 @@ describe('Player', function() {
       let gerTrack = new TextTrack(gerTrackOptions);
       let offTrack = new TextTrack(offTrackOptions);
 
-      sandbox.stub(player, '_getTracksByType', () => {
+      sandbox.stub(player, '_getTracksByType').callsFake(() => {
         return [gerTrack, offTrack];
       });
 
@@ -2851,11 +2851,11 @@ describe('Player', function() {
     });
   });
 
-  describe('_resetTextCuesAndReposition', function() {
+  describe('_resetTextCuesAndReposition', function () {
     let config, player, sandbox;
 
     beforeEach(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       config = getConfigStructure();
       player = new Player(config);
     });
@@ -2869,8 +2869,8 @@ describe('Player', function() {
       player._activeTextCues[0] = {};
       player._updateTextDisplay = () => {};
       player._engine = {
-        resetAllCues: function() {},
-        destroy: function() {}
+        resetAllCues: function () {},
+        destroy: function () {}
       };
       player._resetTextCuesAndReposition();
       let cue = player._activeTextCues[0];
@@ -2878,11 +2878,11 @@ describe('Player', function() {
     });
   });
 
-  describe('on resize event', function() {
+  describe('on resize event', function () {
     let config, player, sandbox;
 
     beforeEach(() => {
-      sandbox = sinon.sandbox.create();
+      sandbox = sinon.createSandbox();
       config = getConfigStructure();
       config.sources = sourcesConfig.Mp4;
       player = new Player(config);
@@ -3069,7 +3069,7 @@ describe('Player', function() {
     });
   });
 
-  describe('_maybeSetTracksLabels', function() {
+  describe('_maybeSetTracksLabels', function () {
     let config, player, playerContainer;
 
     before(() => {

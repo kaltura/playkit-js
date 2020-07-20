@@ -24,7 +24,7 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
     this._eventManager = new EventManager();
     this._pluginDecorators = pluginWithDecorators.map(plugin => plugin.getEngineDecorator(engine, super.dispatchEvent.bind(this)));
     const events: Array<string> = (Object.values(EventType): any);
-    events.forEach(event => this._eventManager.listen(engine, event, e => this.dispatchEvent(e)));
+    events.forEach(event => this._eventManager.listen(engine, event, (e: FakeEvent) => this.dispatchEvent(e)));
     return new Proxy(engine, {
       get: (obj, prop) => {
         if (prop === 'destroy') {

@@ -2,5 +2,5 @@
 declare type PKRequestObject = {
   url: string,
   body: string | null,
-  headers: { [header: string] : string }
+  headers: {[header: string]: string}
 };
