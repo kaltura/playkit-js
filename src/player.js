@@ -1654,8 +1654,8 @@ export default class Player extends FakeEventTarget {
         this.dispatchEvent(new FakeEvent(CustomEventType.MEDIA_LOADED));
         resolve();
       });
-      this._eventManager.listen(this, Html5EventType.ERROR, error => {
-        if (error.payload.severity === PKError.Severity.CRITICAL) {
+      this._eventManager.listen(this, Html5EventType.ERROR, (event: FakeEvent) => {
+        if (event.payload.severity === PKError.Severity.CRITICAL) {
           reject();
         }
       });

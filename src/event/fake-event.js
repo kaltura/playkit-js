@@ -7,14 +7,14 @@
  * @constructor
  * @extends {Event}
  */
-class FakeEvent {
+class FakeEvent extends Event {
   /** @const {boolean} */
   bubbles: boolean;
 
-  /** @const {boolean} */
+  /** @type {boolean} */
   cancelable: boolean;
 
-  /** @const {boolean} */
+  /** @type {boolean} */
   defaultPrevented: boolean;
 
   /**
@@ -24,7 +24,7 @@ class FakeEvent {
    * @const {number}
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp
    */
-  timeStamp: number | Date;
+  timeStamp: number;
 
   /** @const {string} */
   type: string;
@@ -33,10 +33,10 @@ class FakeEvent {
   isTrusted: boolean;
 
   /** @type {EventTarget} */
-  currentTarget: any;
+  currentTarget: EventTarget;
 
   /** @type {EventTarget} */
-  target: any;
+  target: EventTarget;
 
   /**
    * Non-standard property read by FakeEventTarget to stop processing listeners.
@@ -47,6 +47,7 @@ class FakeEvent {
   payload: any;
 
   constructor(type: string, payload: any) {
+    super(type);
     // These Properties below cannot be set by dict.  They are all provided for
     // compatibility with native events.
 
@@ -66,19 +67,13 @@ class FakeEvent {
      * @const {number}
      * @see https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp
      */
-    this.timeStamp = window.performance ? window.performance.now() : Date.now();
+    this.timeStamp = window.performance && window.performance.now ? window.performance.now() : Date.now();
 
     /** @const {string} */
     this.type = type;
 
     /** @const {boolean} */
     this.isTrusted = false;
-
-    /** @type {EventTarget} */
-    this.currentTarget = null;
-
-    /** @type {EventTarget} */
-    this.target = null;
 
     /**
      * Non-standard property read by FakeEventTarget to stop processing listeners.
@@ -94,7 +89,11 @@ class FakeEvent {
    * with native Events.
    * @override
    */
-  preventDefault() {}
+  preventDefault() {
+    if (this.cancelable) {
+      this.defaultPrevented = true;
+    }
+  }
 
   /**
    * Stops processing event listeners for this event.  Provided for compatibility

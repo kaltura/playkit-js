@@ -8,10 +8,8 @@ import sourcesConfig from '../../../../configs/sources.json';
 import * as Utils from '../../../../../../src/utils/util';
 import Env from '../../../../../../src/utils/env';
 import {CustomEventType, Html5EventType} from '../../../../../../src/event/event-type';
-import FairPlay from '../../../../../../src/drm/fairplay';
 import Error from '../../../../../../src/error/error';
 import {DrmScheme} from '../../../../../../src/drm/drm-scheme';
-import {KeySystem} from '../../../../../../src/engines/html5/media-source/adapters/fairplay-drm-handler';
 
 describe('NativeAdapter: isSupported', () => {
   it('should be supported', () => {
@@ -1056,7 +1054,7 @@ describe('NativeAdapter: request filter', () => {
           try {
             type.should.equal(RequestType.MANIFEST);
             request.url.should.equal(sourcesConfig.Mp4.progressive[0].url);
-            request.hasOwnProperty('body').should.be.true;
+            Object.prototype.hasOwnProperty.call(request, 'body').should.be.true;
             request.headers.should.be.exist;
             done();
           } catch (e) {
