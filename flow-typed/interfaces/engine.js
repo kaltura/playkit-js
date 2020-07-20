@@ -15,7 +15,7 @@ declare interface IEngineStatic {
   isSupported(): boolean;
 }
 
-declare interface IEngine extends FakeEventTarget{
+declare interface IEngine extends FakeEventTarget {
   restore(source: PKMediaSourceObject, config: Object): void;
   destroy(): void;
   attach(): void;

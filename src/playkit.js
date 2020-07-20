@@ -40,6 +40,9 @@ import {AdEventType} from './ads/ad-event-type';
 declare var __VERSION__: string;
 declare var __NAME__: string;
 
+const VERSION = __VERSION__;
+const NAME = __NAME__;
+
 /**
  * @param {Object} config - The configuration of the player
  * @returns {Player} - The player instance
@@ -68,11 +71,8 @@ export {Error};
 // Export Event system
 export {FakeEvent, FakeEventTarget, EventManager};
 
-// Export version
-export {__VERSION__ as VERSION};
-
-// Export player name
-export {__NAME__ as PLAYER_NAME};
+// Export version and player name
+export {VERSION, NAME};
 
 // Export environment data
 export {Env};

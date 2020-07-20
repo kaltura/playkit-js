@@ -5,4 +5,6 @@ import Track from './track';
  * Audio track representation of the player.
  * @classdesc
  */
-export default class AudioTrack extends Track {}
+const AudioTrack: AudioTrack = class AudioTrack extends Track {};
+
+export default AudioTrack;

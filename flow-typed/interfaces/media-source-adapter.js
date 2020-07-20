@@ -4,14 +4,13 @@ import AudioTrack from '../../src/track/audio-track';
 import TextTrack from '../../src/track/text-track';
 import {FakeEventTarget} from '../../src/playkit';
 
-
 declare interface IMediaSourceAdapterStatic {
-   +id: string;
-   isSupported(): boolean;
-   isMSESupported(): boolean;
-   canPlayType(mimeType: string): boolean;
-   canPlayDrm(drmData: Array<Object>, drmConfig: PKDrmConfigObject): boolean;
-   createAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): IMediaSourceAdapter;
+  +id: string;
+  isSupported(): boolean;
+  isMSESupported(): boolean;
+  canPlayType(mimeType: string): boolean;
+  canPlayDrm(drmData: Array<Object>, drmConfig: PKDrmConfigObject): boolean;
+  createAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): IMediaSourceAdapter;
 }
 
 declare interface IMediaSourceAdapter extends FakeEventTarget {

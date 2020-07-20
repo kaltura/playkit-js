@@ -1,17 +1,17 @@
 declare interface HTMLVideoElement extends HTMLVideoElement {
-  webkitSetPresentationMode: Function,
-  requestPictureInPicture: Function,
+  webkitSetPresentationMode: Function;
+  requestPictureInPicture: Function;
 }
 
 declare interface HTMLElement extends HTMLElement {
-  mozRequestFullScreen: Function,
-  webkitRequestFullScreen: Function,
-  msRequestFullScreen: Function,
+  mozRequestFullScreen: Function;
+  webkitRequestFullScreen: Function;
+  msRequestFullScreen: Function;
 }
 
 declare interface Document extends Document {
-  pictureInPictureEnabled: boolean,
-  exitPictureInPicture: Function,
+  pictureInPictureEnabled: boolean;
+  exitPictureInPicture: Function;
 }
 
 declare interface Navigator extends Navigator {

@@ -3,7 +3,7 @@ sudo: required
 dist: xenial
 language: node_js
 node_js:
-  - "node"
+  - 'node'
 
 addons:
   chrome: stable
@@ -16,8 +16,8 @@ cache:
     - node_modules
 
 before_install:
- - export DISPLAY=:99.0
- - chmod +x ./scripts/travis.sh
+  - export DISPLAY=:99.0
+  - chmod +x ./scripts/travis.sh
 
 script: ./scripts/travis.sh
 
@@ -31,7 +31,7 @@ jobs:
   include:
     # https://docs.travis-ci.com/user/build-stages/deploy-github-releases/
     - stage: Release
-      name: "Releasing a new version"
+      name: 'Releasing a new version'
       if: tag IS present
       env: TRAVIS_MODE=release
       deploy:
@@ -69,13 +69,13 @@ jobs:
     # Required tests
     - stage: Tests
       if: (branch = master) OR (tag IS present) OR (type = pull_request)
-      name: "Running lint"
-      env:   TRAVIS_MODE=lint
+      name: 'Running lint'
+      env: TRAVIS_MODE=lint
     - stage: Tests
       if: (branch = master) OR (tag IS present) OR (type = pull_request)
-      name: "Running Flow type check"
-      env:   TRAVIS_MODE=flow
+      name: 'Running Flow type check'
+      env: TRAVIS_MODE=flow
     - stage: Tests
       if: (branch = master) OR (tag IS present) OR (type = pull_request)
-      name: "Running unit tests"
-      env:   TRAVIS_MODE=unitTests
+      name: 'Running unit tests'
+      env: TRAVIS_MODE=unitTests

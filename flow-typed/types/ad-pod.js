@@ -1,2 +1,2 @@
 // @flow
-declare type PKAdPod = Array<PKAdObject>
+declare type PKAdPod = Array<PKAdObject>;

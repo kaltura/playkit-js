@@ -15,7 +15,7 @@ describe('AdsController', () => {
 
   beforeEach(() => {
     player = new Player(config);
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
   });
 
   afterEach(() => {
@@ -28,9 +28,7 @@ describe('AdsController', () => {
       const fakeCtrl = {
         playAdNow: () => {}
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
-        return [fakeCtrl];
-      });
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(() => [fakeCtrl]);
       player.addEventListener(AdEventType.AD_MANIFEST_LOADED, event => {
         try {
           event.payload.adBreaksPosition.should.deep.equal(['0%', 0, 2, '50%', 1, -1, '100%']);
@@ -61,15 +59,18 @@ describe('AdsController', () => {
       const fakeCtrl = {
         playAdNow: () => {}
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function () {
         return [fakeCtrl];
       });
       player.addEventListener(AdEventType.AD_MANIFEST_LOADED, () => {
-        done(new Error('Should not fireAD_MANIFEST_LOADED'));
+        done(new Error('Should not fire AD_MANIFEST_LOADED'));
       });
       player.configure({
         advertising: {
-          adBreaks: [{position: '1', ads: [{}]}, {position: 1, ads: []}]
+          adBreaks: [
+            {position: '1', ads: [{}]},
+            {position: 1, ads: []}
+          ]
         }
       });
       setTimeout(done);
@@ -95,7 +96,7 @@ describe('AdsController', () => {
           return Promise.resolve();
         }
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function () {
         return [fakeCtrl];
       });
       player.configure({
@@ -132,7 +133,7 @@ describe('AdsController', () => {
           return Promise.resolve();
         }
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function () {
         return [fakeCtrl];
       });
       player.configure({
@@ -165,7 +166,7 @@ describe('AdsController', () => {
           return Promise.resolve();
         }
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function () {
         return [fakeCtrl];
       });
       player.configure({
@@ -213,7 +214,7 @@ describe('AdsController', () => {
           return Promise.resolve();
         }
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function () {
         return [fakeCtrl];
       });
       player.configure({
@@ -252,7 +253,7 @@ describe('AdsController', () => {
           return Promise.resolve();
         }
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function () {
         return [fakeCtrl];
       });
       player.configure({
@@ -291,12 +292,16 @@ describe('AdsController', () => {
           return Promise.resolve();
         }
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function () {
         return [fakeCtrl];
       });
       player.configure({
         advertising: {
-          adBreaks: [{position: 1, ads: adBreaks[0]}, {position: 2, ads: adBreaks[1]}, {position: -1, ads: adBreaks[2]}]
+          adBreaks: [
+            {position: 1, ads: adBreaks[0]},
+            {position: 2, ads: adBreaks[1]},
+            {position: -1, ads: adBreaks[2]}
+          ]
         }
       });
       player.configure({sources: SourcesConfig.Mp4});
@@ -329,12 +334,16 @@ describe('AdsController', () => {
           return Promise.resolve();
         }
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function () {
         return [fakeCtrl];
       });
       player.configure({
         advertising: {
-          adBreaks: [{position: 1, ads: adBreaks[0]}, {position: 2, ads: adBreaks[1]}, {position: -1, ads: adBreaks[2]}]
+          adBreaks: [
+            {position: 1, ads: adBreaks[0]},
+            {position: 2, ads: adBreaks[1]},
+            {position: -1, ads: adBreaks[2]}
+          ]
         }
       });
       player.configure({sources: SourcesConfig.Mp4});
@@ -362,12 +371,15 @@ describe('AdsController', () => {
           return Promise.resolve();
         }
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function () {
         return [fakeCtrl];
       });
       player.configure({
         advertising: {
-          adBreaks: [{position: 2, ads: adBreaks[0]}, {position: 3, ads: adBreaks[1]}]
+          adBreaks: [
+            {position: 2, ads: adBreaks[0]},
+            {position: 3, ads: adBreaks[1]}
+          ]
         }
       });
       let firstPlay = true;
@@ -419,7 +431,7 @@ describe('AdsController', () => {
           return Promise.resolve();
         }
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function () {
         return [fakeCtrl];
       });
       player.configure({
@@ -461,7 +473,7 @@ describe('AdsController', () => {
           return Promise.resolve();
         }
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function () {
         return [fakeCtrl];
       });
       player.configure({
@@ -501,7 +513,7 @@ describe('AdsController', () => {
           return Promise.resolve();
         }
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function () {
         return [fakeCtrl];
       });
       player.configure({
@@ -539,7 +551,7 @@ describe('AdsController', () => {
           return Promise.resolve();
         }
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function () {
         return [fakeCtrl];
       });
       player.configure({
@@ -576,12 +588,15 @@ describe('AdsController', () => {
           return Promise.resolve();
         }
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function () {
         return [fakeCtrl];
       });
       player.configure({
         advertising: {
-          adBreaks: [{position: 0, ads: [adBreaks[0][0]]}, {position: 0, ads: [adBreaks[0][1]]}]
+          adBreaks: [
+            {position: 0, ads: [adBreaks[0][0]]},
+            {position: 0, ads: [adBreaks[0][1]]}
+          ]
         }
       });
       player.configure({sources: SourcesConfig.Mp4});
@@ -604,12 +619,15 @@ describe('AdsController', () => {
           return Promise.resolve();
         }
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function () {
         return [fakeCtrl];
       });
       player.configure({
         advertising: {
-          adBreaks: [{position: 2, ads: [adBreaks[0][0]]}, {position: 2, ads: [adBreaks[0][1]]}]
+          adBreaks: [
+            {position: 2, ads: [adBreaks[0][0]]},
+            {position: 2, ads: [adBreaks[0][1]]}
+          ]
         }
       });
       player.configure({sources: SourcesConfig.Mp4});
@@ -632,12 +650,15 @@ describe('AdsController', () => {
           return Promise.resolve();
         }
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function () {
         return [fakeCtrl];
       });
       player.configure({
         advertising: {
-          adBreaks: [{position: -1, ads: [adBreaks[0][0]]}, {position: -1, ads: [adBreaks[0][1]]}]
+          adBreaks: [
+            {position: -1, ads: [adBreaks[0][0]]},
+            {position: -1, ads: [adBreaks[0][1]]}
+          ]
         }
       });
       player.configure({sources: SourcesConfig.Mp4});
@@ -650,7 +671,7 @@ describe('AdsController', () => {
           done(new Error('Should not play an out of range ad break'));
         }
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function () {
         return [fakeCtrl];
       });
       player.configure({
@@ -674,7 +695,7 @@ describe('AdsController', () => {
       const fakeCtrl = {
         playAdNow: () => {}
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function () {
         return [fakeCtrl];
       });
       player.addEventListener(AdEventType.AD_MANIFEST_LOADED, event => {
@@ -749,7 +770,7 @@ describe('AdsController', () => {
           }
         }
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function () {
         return [fakeCtrl];
       });
       player.configure({sources: SourcesConfig.Mp4});
@@ -768,7 +789,7 @@ describe('AdsController', () => {
           }
         }
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function () {
         return [fakeCtrl];
       });
       player.configure({sources: SourcesConfig.Mp4});
@@ -785,7 +806,7 @@ describe('AdsController', () => {
           done(new Error('Should not play ad while ad break'));
         }
       };
-      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function() {
+      sandbox.stub(player._controllerProvider, 'getAdsControllers').callsFake(function () {
         return [fakeCtrl];
       });
       player.configure({sources: SourcesConfig.Mp4});

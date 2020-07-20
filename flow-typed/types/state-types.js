@@ -1,2 +1,2 @@
 // @flow
-declare type PKStateTypes = { [state: string]: string };
+declare type PKStateTypes = {[state: string]: string};

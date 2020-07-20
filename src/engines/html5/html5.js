@@ -6,7 +6,7 @@ import {CustomEventType, Html5EventType} from '../../event/event-type';
 import MediaSourceProvider from './media-source/media-source-provider';
 import VideoTrack from '../../track/video-track';
 import AudioTrack from '../../track/audio-track';
-import {TextTrack as PKTextTrack} from '../../track/text-track';
+import PKTextTrack from '../../track/text-track';
 import {Cue} from '../../track/vtt-cue';
 import * as Utils from '../../utils/util';
 import Html5AutoPlayCapability from './capabilities/html5-autoplay';

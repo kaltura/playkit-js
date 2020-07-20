@@ -1,12 +1,12 @@
 // @flow
-import type {FairplayDrmConfigType} from '../engines/html5/media-source/adapters/fairplay-drm-handler';
+import type {FairPlayDrmConfigType} from '../engines/html5/media-source/adapters/fairplay-drm-handler';
 import Env from '../../src/utils/env';
 import getLogger from '../utils/logger';
 import {DrmScheme} from './drm-scheme';
 
-let _logger = getLogger('FairPlay');
+const _logger = getLogger('FairPlay');
 
-let FairPlay: IDrmProtocol = class FairPlay {
+const FairPlay: IDrmProtocol = class FairPlay {
   /**
    * FairPlay is the configure key system.
    * @param {Array<Object>} drmData - The drm data.
@@ -29,13 +29,14 @@ let FairPlay: IDrmProtocol = class FairPlay {
     const isSafari = Env.browser.name && Env.browser.name.includes('Safari');
     return !!drmData.find(drmEntry => drmEntry.scheme === DrmScheme.FAIRPLAY) && isSafari;
   }
+
   /**
    * Sets the FairPlay playback.
-   * @param {FairplayDrmConfigType} config - The config to manipulate.
+   * @param {FairPlayDrmConfigType} config - The config to manipulate.
    * @param {Array<Object>} drmData - The drm data.
    * @returns {void}
    */
-  static setDrmPlayback(config: FairplayDrmConfigType, drmData: Array<Object>): void {
+  static setDrmPlayback(config: FairPlayDrmConfigType, drmData: Array<Object>): void {
     _logger.debug('Sets drm playback');
     let drmEntry = drmData.find(drmEntry => drmEntry.scheme === DrmScheme.FAIRPLAY);
     if (drmEntry) {

@@ -1,2 +1,2 @@
 // @flow
-declare type PKAdBreakTypes = { [type: string]: string };
+declare type PKAdBreakTypes = {[type: string]: string};

@@ -1,2 +1,2 @@
 // @flow
-declare type PKEventTypes = { [event: string]: string };
+declare type PKEventTypes = {[event: string]: string};

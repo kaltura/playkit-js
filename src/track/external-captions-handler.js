@@ -353,11 +353,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _getFileType(url: string): string {
-    return url
-      .split(/[#?]/)[0]
-      .split('.')
-      .pop()
-      .trim();
+    return url.split(/[#?]/)[0].split('.').pop().trim();
   }
 
   /**

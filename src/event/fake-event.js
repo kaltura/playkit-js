@@ -7,14 +7,14 @@
  * @constructor
  * @extends {Event}
  */
-class FakeEvent extends Event {
+class FakeEvent {
   /** @const {boolean} */
   bubbles: boolean;
 
-  /** @type {boolean} */
+  /** @const {boolean} */
   cancelable: boolean;
 
-  /** @type {boolean} */
+  /** @const {boolean} */
   defaultPrevented: boolean;
 
   /**
@@ -24,7 +24,7 @@ class FakeEvent extends Event {
    * @const {number}
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp
    */
-  timeStamp: number;
+  timeStamp: number | Date;
 
   /** @const {string} */
   type: string;
@@ -33,10 +33,10 @@ class FakeEvent extends Event {
   isTrusted: boolean;
 
   /** @type {EventTarget} */
-  currentTarget: EventTarget;
+  currentTarget: any;
 
   /** @type {EventTarget} */
-  target: EventTarget;
+  target: any;
 
   /**
    * Non-standard property read by FakeEventTarget to stop processing listeners.
@@ -47,7 +47,6 @@ class FakeEvent extends Event {
   payload: any;
 
   constructor(type: string, payload: any) {
-    super(type);
     // These Properties below cannot be set by dict.  They are all provided for
     // compatibility with native events.
 
@@ -67,13 +66,19 @@ class FakeEvent extends Event {
      * @const {number}
      * @see https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp
      */
-    this.timeStamp = window.performance && window.performance.now ? window.performance.now() : Date.now();
+    this.timeStamp = window.performance ? window.performance.now() : Date.now();
 
     /** @const {string} */
     this.type = type;
 
     /** @const {boolean} */
     this.isTrusted = false;
+
+    /** @type {EventTarget} */
+    this.currentTarget = null;
+
+    /** @type {EventTarget} */
+    this.target = null;
 
     /**
      * Non-standard property read by FakeEventTarget to stop processing listeners.
@@ -89,11 +94,7 @@ class FakeEvent extends Event {
    * with native Events.
    * @override
    */
-  preventDefault() {
-    if (this.cancelable) {
-      this.defaultPrevented = true;
-    }
-  }
+  preventDefault() {}
 
   /**
    * Stops processing event listeners for this event.  Provided for compatibility

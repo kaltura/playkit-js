@@ -13,9 +13,12 @@
     "should": true,
     "sinon": true,
     "__VERSION__": true,
-    "__NAME__": true
+    "__NAME__": true,
+    "process": true,
+    "__dirname": true
   },
   "rules": {
+    "flowtype/no-types-missing-file-annotation": 0,
     "prettier/prettier": "error",
     "mocha-no-only/mocha-no-only": "off",
     "require-jsdoc": ["error"],

@@ -12,7 +12,7 @@ import MultiMap from '../utils/multi-map';
  * @export
  */
 class FakeEventTarget {
-  _listeners: MultiMap<typeof EventListener>;
+  _listeners: MultiMap<(event: FakeEvent) => boolean | void>;
   dispatchTarget: FakeEventTarget;
 
   constructor() {
@@ -83,8 +83,10 @@ class FakeEventTarget {
 
       let listener = list[i];
       try {
-        // $FlowFixMe native DOM event handler
+        // native DOM event handler
+        //$FlowFixMe
         if (listener.handleEvent) {
+          //$FlowFixMe
           listener.handleEvent(event);
         } else {
           listener.call(this, event);

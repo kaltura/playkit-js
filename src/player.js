@@ -431,6 +431,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _shouldLoadAfterAttach: boolean = false;
+
   /**
    * @param {Object} config - The configuration for the player instance.
    * @constructor
@@ -674,6 +675,7 @@ export default class Player extends FakeEventTarget {
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_DESTROY));
     this._eventManager.destroy();
   }
+
   /**
    * Attach the engine's media source
    * @private
@@ -715,6 +717,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.buffered;
     }
+    return undefined;
   }
 
   get stats(): PKStatsObject {
@@ -761,6 +764,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.currentTime;
     }
+    return undefined;
   }
 
   /**
@@ -772,6 +776,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.duration;
     }
+    return undefined;
   }
 
   /**
@@ -804,6 +809,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.volume;
     }
+    return undefined;
   }
 
   /**
@@ -815,6 +821,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.paused;
     }
+    return undefined;
   }
 
   /**
@@ -826,6 +833,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.seeking;
     }
+    return undefined;
   }
 
   /**
@@ -850,6 +858,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.playsinline;
     }
+    return undefined;
   }
 
   /**
@@ -877,6 +886,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.muted;
     }
+    return undefined;
   }
 
   /**
@@ -888,6 +898,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.src;
     }
+    return undefined;
   }
 
   /**
@@ -928,6 +939,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.playbackRate;
     }
+    return undefined;
   }
 
   /**
@@ -1031,6 +1043,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.crossOrigin;
     }
+    return undefined;
   }
 
   /**
@@ -1041,6 +1054,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       return this._engine.ended;
     }
+    return undefined;
   }
 
   // </editor-fold>
@@ -1410,6 +1424,7 @@ export default class Player extends FakeEventTarget {
     const vrPlugin: ?BasePlugin = this._pluginManager.get('vr');
     // $FlowFixMe - remove once we move plugins to kaltura player
     if (vrPlugin && typeof vrPlugin.toggleVrStereoMode === 'function') {
+      //$FlowFixMe
       vrPlugin.toggleVrStereoMode();
     }
   }
@@ -1423,6 +1438,7 @@ export default class Player extends FakeEventTarget {
     const vrPlugin: ?BasePlugin = this._pluginManager.get('vr');
     // $FlowFixMe - remove once we move plugins to kaltura player
     if (vrPlugin && typeof vrPlugin.isInStereoMode === 'function') {
+      //$FlowFixMe
       return vrPlugin.isInStereoMode();
     }
     return false;
@@ -2269,7 +2285,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _getTextTracks(): Array<TextTrack> {
-    return this._getTracksByType<TextTrack>(TextTrack.prototype);
+    return this._getTracksByType<TextTrack>(TextTrack);
   }
 
   /**
@@ -2279,7 +2295,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _getVideoTracks(): Array<VideoTrack> {
-    return this._getTracksByType<VideoTrack>(VideoTrack.prototype);
+    return this._getTracksByType<VideoTrack>(VideoTrack);
   }
 
   /**
@@ -2289,7 +2305,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _getAudioTracks(): Array<AudioTrack> {
-    return this._getTracksByType<AudioTrack>(AudioTrack.prototype);
+    return this._getTracksByType<AudioTrack>(AudioTrack);
   }
 
   /**
@@ -2444,7 +2460,7 @@ export default class Player extends FakeEventTarget {
     const customLabels = this._config.customLabels;
     if (customLabels) {
       for (let callbackType in customLabels) {
-        if (!customLabels.hasOwnProperty(callbackType)) {
+        if (!Object.prototype.hasOwnProperty.call(customLabels, callbackType)) {
           return;
         }
         switch (callbackType) {
@@ -2478,6 +2494,7 @@ export default class Player extends FakeEventTarget {
       }
     });
   }
+
   // </editor-fold>
 
   // </editor-fold>

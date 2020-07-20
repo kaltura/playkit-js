@@ -3,16 +3,16 @@ import {FakeDashAdapter, FakeHlsAdapter} from './html5/media-source/adapters/tes
 import {CustomEventType} from '../../../src/event/event-type';
 import FakeEvent from '../../../src/event/fake-event';
 
-describe('constructor', function() {
+describe('constructor', function () {
   let videoElement, sandbox, config;
   videoElement = document.createElement('video');
   config = {capLevelOnFPSDrop: true};
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
   });
 
   afterEach(() => {
-    sandbox = sandbox.restore();
+    sandbox.restore();
   });
 
   it('should create droppedFramesWatcher and listen to the adapter FPS_DROP', () => {
@@ -62,16 +62,16 @@ describe('constructor', function() {
   });
 });
 
-describe('_getDroppedAndDecodedFrames function ', function() {
+describe('_getDroppedAndDecodedFrames function ', function () {
   let videoElement, sandbox;
   videoElement = document.createElement('video');
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
   });
 
   afterEach(() => {
-    sandbox = sandbox.restore();
+    sandbox.restore();
   });
 
   it('should return [0,0] for the decoded and dropped frames', () => {
@@ -86,16 +86,16 @@ describe('_getDroppedAndDecodedFrames function ', function() {
   });
 });
 
-describe('_checkFPS function ', function() {
+describe('_checkFPS function ', function () {
   let videoElement, sandbox;
   videoElement = document.createElement('video');
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
   });
 
   afterEach(() => {
-    sandbox = sandbox.restore();
+    sandbox.restore();
   });
 
   it('should set currentTime from 0 to the the currentTime', () => {
@@ -105,7 +105,7 @@ describe('_checkFPS function ', function() {
     };
     const dfw = new DroppedFramesWatcher(dashAdapter, {}, videoElement);
     dfw._lastTime.should.equal(0);
-    dfw._getDroppedAndDecodedFrames = function() {
+    dfw._getDroppedAndDecodedFrames = function () {
       return [5, 10];
     };
     dfw._checkFPS(5, 10);
@@ -122,7 +122,7 @@ describe('_checkFPS function ', function() {
     dfw._lastTime = performance.now() - 5000;
     dfw._lastDroppedFrames = 2;
     dfw._lastDecodedFrames = 3;
-    dfw._getDroppedAndDecodedFrames = function() {
+    dfw._getDroppedAndDecodedFrames = function () {
       return [5, 10];
     };
     dfw._checkFPS();
@@ -139,7 +139,7 @@ describe('_checkFPS function ', function() {
     dfw._lastTime = performance.now() - 5000;
     dfw._lastDroppedFrames = 2;
     dfw._lastDecodedFrames = 3;
-    dfw._getDroppedAndDecodedFrames = function() {
+    dfw._getDroppedAndDecodedFrames = function () {
       return [10, 5];
     };
     dfw._checkFPS();

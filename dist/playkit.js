@@ -1721,9 +1721,9 @@ __webpack_require__.d(__webpack_exports__, "registerPlugin", function() { return
 __webpack_require__.d(__webpack_exports__, "BasePlugin", function() { return /* reexport */ base_plugin_BasePlugin; });
 __webpack_require__.d(__webpack_exports__, "BaseMiddleware", function() { return /* reexport */ BaseMiddleware; });
 __webpack_require__.d(__webpack_exports__, "Track", function() { return /* reexport */ Track; });
-__webpack_require__.d(__webpack_exports__, "VideoTrack", function() { return /* reexport */ VideoTrack; });
-__webpack_require__.d(__webpack_exports__, "AudioTrack", function() { return /* reexport */ AudioTrack; });
-__webpack_require__.d(__webpack_exports__, "TextTrack", function() { return /* reexport */ TextTrack; });
+__webpack_require__.d(__webpack_exports__, "VideoTrack", function() { return /* reexport */ video_track; });
+__webpack_require__.d(__webpack_exports__, "AudioTrack", function() { return /* reexport */ audio_track; });
+__webpack_require__.d(__webpack_exports__, "TextTrack", function() { return /* reexport */ text_track; });
 __webpack_require__.d(__webpack_exports__, "TextStyle", function() { return /* reexport */ text_style; });
 __webpack_require__.d(__webpack_exports__, "Utils", function() { return /* reexport */ utils_namespaceObject; });
 __webpack_require__.d(__webpack_exports__, "utils", function() { return /* reexport */ utils_namespaceObject; });
@@ -5722,7 +5722,7 @@ function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.crea
  * @classdesc
  */
 
-let VideoTrack = /*#__PURE__*/function (_Track) {
+const VideoTrack = /*#__PURE__*/function (_Track) {
   _inheritsLoose(VideoTrack, _Track);
 
   video_track_createClass(VideoTrack, [{
@@ -5794,7 +5794,7 @@ let VideoTrack = /*#__PURE__*/function (_Track) {
   return VideoTrack;
 }(Track);
 
-
+/* harmony default export */ var video_track = (VideoTrack);
 // CONCATENATED MODULE: ./track/audio-track.js
 function audio_track_inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.__proto__ = superClass; }
 
@@ -5804,7 +5804,7 @@ function audio_track_inheritsLoose(subClass, superClass) { subClass.prototype = 
  * @classdesc
  */
 
-let AudioTrack = /*#__PURE__*/function (_Track) {
+const AudioTrack = /*#__PURE__*/function (_Track) {
   audio_track_inheritsLoose(AudioTrack, _Track);
 
   function AudioTrack() {
@@ -5814,7 +5814,7 @@ let AudioTrack = /*#__PURE__*/function (_Track) {
   return AudioTrack;
 }(Track);
 
-
+/* harmony default export */ var audio_track = (AudioTrack);
 // CONCATENATED MODULE: ./track/text-track.js
 function text_track_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
@@ -5828,7 +5828,7 @@ function text_track_inheritsLoose(subClass, superClass) { subClass.prototype = O
  * @classdesc
  */
 
-let TextTrack = /*#__PURE__*/function (_Track) {
+const TextTrack = /*#__PURE__*/function (_Track) {
   text_track_inheritsLoose(TextTrack, _Track);
 
   text_track_createClass(TextTrack, [{
@@ -5889,8 +5889,7 @@ let TextTrack = /*#__PURE__*/function (_Track) {
   return TextTrack;
 }(Track);
 
-
-
+/* harmony default export */ var text_track = (TextTrack);
 // CONCATENATED MODULE: ./track/text-style.js
 function text_style_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
@@ -8408,15 +8407,15 @@ let base_media_source_adapter_BaseMediaSourceAdapter = /*#__PURE__*/function (_F
   ;
 
   _proto._onTrackChanged = function _onTrackChanged(track) {
-    if (track instanceof VideoTrack) {
+    if (track instanceof video_track) {
       this._trigger(CustomEventType.VIDEO_TRACK_CHANGED, {
         selectedVideoTrack: track
       });
-    } else if (track instanceof AudioTrack) {
+    } else if (track instanceof audio_track) {
       this._trigger(CustomEventType.AUDIO_TRACK_CHANGED, {
         selectedAudioTrack: track
       });
-    } else if (track instanceof TextTrack) {
+    } else if (track instanceof text_track) {
       this._trigger(CustomEventType.TEXT_TRACK_CHANGED, {
         selectedTextTrack: track
       });
@@ -8695,9 +8694,9 @@ const DrmScheme = {
 
 
 
-let _logger = utils_logger('FairPlay');
+const _logger = utils_logger('FairPlay');
 
-let fairplay_FairPlay = /*#__PURE__*/function () {
+const fairplay_FairPlay = /*#__PURE__*/function () {
   function FairPlay() {}
 
   /**
@@ -9727,7 +9726,7 @@ let native_adapter_NativeAdapter = /*#__PURE__*/function (_BaseMediaSourceAdapt)
           active: this._sourceObj ? videoTracks[i].id === this._sourceObj.id : false,
           index: i
         };
-        parsedTracks.push(new VideoTrack(settings));
+        parsedTracks.push(new video_track(settings));
       }
     }
 
@@ -9756,7 +9755,7 @@ let native_adapter_NativeAdapter = /*#__PURE__*/function (_BaseMediaSourceAdapt)
           language: videoTracks[i].language,
           index: i
         };
-        parsedTracks.push(new VideoTrack(settings));
+        parsedTracks.push(new video_track(settings));
       }
     }
 
@@ -9783,7 +9782,7 @@ let native_adapter_NativeAdapter = /*#__PURE__*/function (_BaseMediaSourceAdapt)
           language: audioTracks[i].language,
           index: i
         };
-        parsedTracks.push(new AudioTrack(settings));
+        parsedTracks.push(new audio_track(settings));
       }
     }
 
@@ -9814,11 +9813,11 @@ let native_adapter_NativeAdapter = /*#__PURE__*/function (_BaseMediaSourceAdapt)
         };
 
         if (settings.kind === 'subtitles') {
-          parsedTracks.push(new TextTrack(settings));
+          parsedTracks.push(new text_track(settings));
         } else if (settings.kind === 'captions' && this._config.enableCEA708Captions) {
           settings.label = settings.label || captionsTextTrackLabels.shift();
           settings.language = settings.language || captionsTextTrackLanguageCodes.shift();
-          parsedTracks.push(new TextTrack(settings));
+          parsedTracks.push(new text_track(settings));
         }
       }
     }
@@ -9853,7 +9852,7 @@ let native_adapter_NativeAdapter = /*#__PURE__*/function (_BaseMediaSourceAdapt)
   _proto._selectProgressiveVideoTrack = function _selectProgressiveVideoTrack(videoTrack) {
     let videoTracks = this._progressiveSources;
 
-    if (videoTrack instanceof VideoTrack && videoTracks && videoTracks[videoTrack.index]) {
+    if (videoTrack instanceof video_track && videoTracks && videoTracks[videoTrack.index]) {
       let currentTime = this._videoElement.currentTime;
       let paused = this._videoElement.paused;
       this._sourceObj = videoTracks[videoTrack.index];
@@ -9902,7 +9901,7 @@ let native_adapter_NativeAdapter = /*#__PURE__*/function (_BaseMediaSourceAdapt)
   _proto.selectAdaptiveVideoTrack = function selectAdaptiveVideoTrack(videoTrack) {
     const videoTracks = this._videoElement.videoTracks;
 
-    if (videoTrack instanceof VideoTrack && videoTracks && videoTracks[videoTrack.index]) {
+    if (videoTrack instanceof video_track && videoTracks && videoTracks[videoTrack.index]) {
       this._disableVideoTracks();
 
       videoTracks[videoTrack.index].selected = true;
@@ -9922,7 +9921,7 @@ let native_adapter_NativeAdapter = /*#__PURE__*/function (_BaseMediaSourceAdapt)
   _proto.selectAudioTrack = function selectAudioTrack(audioTrack) {
     const audioTracks = this._videoElement.audioTracks;
 
-    if (audioTrack instanceof AudioTrack && audioTracks && audioTracks[audioTrack.index]) {
+    if (audioTrack instanceof audio_track && audioTracks && audioTracks[audioTrack.index]) {
       this._removeNativeAudioTrackChangeListener();
 
       this._disableAudioTracks();
@@ -9960,7 +9959,7 @@ let native_adapter_NativeAdapter = /*#__PURE__*/function (_BaseMediaSourceAdapt)
   };
 
   _proto._getPKAudioTracks = function _getPKAudioTracks() {
-    const audioTracks = this._playerTracks.filter(track => track instanceof AudioTrack);
+    const audioTracks = this._playerTracks.filter(track => track instanceof audio_track);
 
     return audioTracks;
   };
@@ -10022,7 +10021,7 @@ let native_adapter_NativeAdapter = /*#__PURE__*/function (_BaseMediaSourceAdapt)
   _proto.selectTextTrack = function selectTextTrack(textTrack) {
     const textTracks = this._videoElement.textTracks;
 
-    if (textTrack instanceof TextTrack && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks) {
+    if (textTrack instanceof text_track && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks) {
       this._removeNativeTextTrackChangeListener();
 
       const selectedTrack = Array.from(textTracks).find((track, index) => textTrack.index === index && track && (track.kind === 'subtitles' || track.kind === 'captions'));
@@ -10066,7 +10065,7 @@ let native_adapter_NativeAdapter = /*#__PURE__*/function (_BaseMediaSourceAdapt)
   };
 
   _proto._getPKTextTracks = function _getPKTextTracks() {
-    return this._playerTracks.filter(track => track instanceof TextTrack);
+    return this._playerTracks.filter(track => track instanceof text_track);
   };
 
   _proto._getActivePKTextTrack = function _getActivePKTextTrack() {
@@ -12350,7 +12349,7 @@ let external_captions_handler_ExternalCaptionsHandler = /*#__PURE__*/function (_
       return [];
     }
 
-    const playerTextTracks = tracks.filter(track => track instanceof TextTrack);
+    const playerTextTracks = tracks.filter(track => track instanceof text_track);
     let textTracksLength = playerTextTracks.length || 0;
     const newTextTracks = [];
     captions.forEach(caption => {
@@ -12403,7 +12402,7 @@ let external_captions_handler_ExternalCaptionsHandler = /*#__PURE__*/function (_
   ;
 
   _proto._createTextTrack = function _createTextTrack(caption, index) {
-    return new TextTrack({
+    return new text_track({
       active: !!caption.default,
       index: index,
       kind: 'subtitles',
@@ -14767,15 +14766,15 @@ let player_Player = /*#__PURE__*/function (_FakeEventTarget) {
 
   _proto.selectTrack = function selectTrack(track) {
     if (this._engine) {
-      if (track instanceof VideoTrack) {
+      if (track instanceof video_track) {
         if (this._playbackEnded) {
           this._pendingSelectedVideoTrack = track;
         } else {
           this._engine.selectVideoTrack(track);
         }
-      } else if (track instanceof AudioTrack) {
+      } else if (track instanceof audio_track) {
         this._engine.selectAudioTrack(track);
-      } else if (track instanceof TextTrack) {
+      } else if (track instanceof text_track) {
         this._resetTextDisplay();
 
         if (track.language === OFF) {
@@ -15997,7 +15996,7 @@ let player_Player = /*#__PURE__*/function (_FakeEventTarget) {
   ;
 
   _proto._getTextTracks = function _getTextTracks() {
-    return this._getTracksByType(TextTrack);
+    return this._getTracksByType(text_track);
   }
   /**
    * Returns the video tracks.
@@ -16008,7 +16007,7 @@ let player_Player = /*#__PURE__*/function (_FakeEventTarget) {
   ;
 
   _proto._getVideoTracks = function _getVideoTracks() {
-    return this._getTracksByType(VideoTrack);
+    return this._getTracksByType(video_track);
   }
   /**
    * Returns the audio tracks.
@@ -16019,7 +16018,7 @@ let player_Player = /*#__PURE__*/function (_FakeEventTarget) {
   ;
 
   _proto._getAudioTracks = function _getAudioTracks() {
-    return this._getTracksByType(AudioTrack);
+    return this._getTracksByType(audio_track);
   }
   /**
    * Mark the selected track as active
@@ -16033,11 +16032,11 @@ let player_Player = /*#__PURE__*/function (_FakeEventTarget) {
   _proto._markActiveTrack = function _markActiveTrack(track) {
     let tracks;
 
-    if (track instanceof VideoTrack) {
+    if (track instanceof video_track) {
       tracks = this._getVideoTracks();
-    } else if (track instanceof AudioTrack) {
+    } else if (track instanceof audio_track) {
       tracks = this._getAudioTracks();
-    } else if (track instanceof TextTrack) {
+    } else if (track instanceof text_track) {
       tracks = this._getTextTracks();
     }
 
@@ -16108,7 +16107,7 @@ let player_Player = /*#__PURE__*/function (_FakeEventTarget) {
     const textTracks = this._getTextTracks();
 
     if (textTracks && textTracks.length) {
-      this._tracks.push(new TextTrack({
+      this._tracks.push(new text_track({
         active: false,
         index: textTracks.length,
         kind: 'subtitles',
@@ -16128,7 +16127,7 @@ let player_Player = /*#__PURE__*/function (_FakeEventTarget) {
     const activeTracks = this.getActiveTracks();
     const playbackConfig = this.config.playback;
 
-    const offTextTrack = this._getTextTracks().find(track => TextTrack.langComparer(OFF, track.language));
+    const offTextTrack = this._getTextTracks().find(track => text_track.langComparer(OFF, track.language));
 
     let currentOrConfiguredTextLang = this._playbackAttributesState.textLanguage || this._getLanguage(playbackConfig.textLanguage, activeTracks.text);
 
@@ -16201,7 +16200,7 @@ let player_Player = /*#__PURE__*/function (_FakeEventTarget) {
 
     if (customLabels) {
       for (let callbackType in customLabels) {
-        if (!Object.prototype.hasOwnProperty.call(customLabels, 'callbackType')) {
+        if (!Object.prototype.hasOwnProperty.call(customLabels, callbackType)) {
           return;
         }
 
