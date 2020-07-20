@@ -6,7 +6,7 @@ import * as EncodingSources from '../../../assets/encoding-sources.json';
 
 const WAIT_TIME: number = 500;
 
-let Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
+const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
   static _vid: HTMLVideoElement;
   static _playPromiseResult: Promise<*>;
   static _logger: any = getLogger('Html5AutoPlayCapability');
