@@ -2073,8 +2073,13 @@ export default class Player extends FakeEventTarget {
     this.ready()
       .then(() => {
         const liveOrDvrOutOfDvrWindow = this.isLive() && (!this.isDvr() || (typeof this.currentTime === 'number' && this.currentTime < 0));
-        if (!(this._adsController && this._adsController.isAdBreak()) && liveOrDvrOutOfDvrWindow) {
-          this.seekToLiveEdge();
+        if (liveOrDvrOutOfDvrWindow) {
+          if (this._adsController && this._adsController.isAdBreak()) {
+            this._eventManager.unlisten(this, AdEventType.AD_BREAK_END, this.seekToLiveEdge);
+            this._eventManager.listenOnce(this, AdEventType.AD_BREAK_END, this.seekToLiveEdge);
+          } else {
+            this.seekToLiveEdge();
+          }
         }
         this._engine.play();
       })
