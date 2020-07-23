@@ -1811,13 +1811,14 @@ export default class Player extends FakeEventTarget {
         }
       });
       if (this.config.playback.playAdsWithMSE) {
-        this._eventManager.listen(this, AdEventType.AD_LOADED, (event: FakeEvent) => {
-          if (event.payload.ad.linear) {
+        this._eventManager.listen(this, AdEventType.AD_BREAK_START, () => {
+          const adData = this._adsController ? this._adsController.getAd() : null;
+          if (!!adData && adData.linear) {
             this._detachMediaSource();
           }
         });
-        this._eventManager.listen(this, AdEventType.AD_BREAK_END, this._attachMediaSource);
-        this._eventManager.listen(this, AdEventType.AD_ERROR, this._attachMediaSource);
+        this._eventManager.listen(this, AdEventType.AD_BREAK_END, () => this._attachMediaSource());
+        this._eventManager.listen(this, AdEventType.AD_ERROR, () => this._attachMediaSource());
       }
       const rootElement = Utils.Dom.getElementBySelector(`#${this.config.targetId}`);
       if (rootElement) {
