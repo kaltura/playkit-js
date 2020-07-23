@@ -646,7 +646,7 @@ export default class Player extends FakeEventTarget {
    * @private
    * @returns {void}
    */
-  _attachMediaSource(): void {
+  attachMediaSource(): void {
     if (this._engine) {
       this._shouldLoadAfterAttach = true;
       this._engine.attachMediaSource();
@@ -663,7 +663,7 @@ export default class Player extends FakeEventTarget {
    * @private
    * @returns {void}
    */
-  _detachMediaSource(): void {
+  detachMediaSource(): void {
     if (this._engine) {
       this.pause();
       this.hideTextTrack();
@@ -1644,15 +1644,6 @@ export default class Player extends FakeEventTarget {
           this._hideBlackCover();
         }
       });
-      if (this.config.playback.playAdsWithMSE) {
-        this._eventManager.listen(this, AdEventType.AD_LOADED, event => {
-          if (event.payload.ad.linear) {
-            this._detachMediaSource();
-          }
-        });
-        this._eventManager.listen(this, AdEventType.AD_BREAK_END, this._attachMediaSource);
-        this._eventManager.listen(this, AdEventType.AD_ERROR, this._attachMediaSource);
-      }
       const rootElement = Utils.Dom.getElementBySelector(`#${this.config.targetId}`);
       if (rootElement) {
         this._eventManager.listen(

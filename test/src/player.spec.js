@@ -142,8 +142,8 @@ describe('Player', function() {
           player.addEventListener(Html5EventType.PLAYING, () => {
             done();
           });
-          player._detachMediaSource();
-          player._attachMediaSource();
+          player.detachMediaSource();
+          player.attachMediaSource();
           player.play();
         };
         player.addEventListener(Html5EventType.PLAYING, playing);
@@ -155,8 +155,8 @@ describe('Player', function() {
         const playing = () => {
           player.removeEventListener(Html5EventType.PLAYING, playing);
           currentTime = Math.floor(player.currentTime);
-          player._detachMediaSource();
-          player._attachMediaSource();
+          player.detachMediaSource();
+          player.attachMediaSource();
           Math.floor(player.currentTime).should.equal(currentTime);
         };
         player.addEventListener(Html5EventType.PLAYING, playing);
