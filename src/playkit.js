@@ -2,10 +2,9 @@
 import Player from './player';
 import BaseMediaSourceAdapter from './engines/html5/media-source/base-media-source-adapter';
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider';
+import {registerEngineDecoratorProvider} from './engines/engine-decorator';
 import {registerEngine, unRegisterEngine} from './engines/engine-provider';
-import {registerPlugin} from './plugin/plugin-manager';
 import BaseMiddleware from './middleware/base-middleware';
-import BasePlugin from './plugin/base-plugin';
 import State from './state/state';
 import Track from './track/track';
 import VideoTrack from './track/video-track';
@@ -30,11 +29,8 @@ import {CorsType} from './engines/html5/cors-types';
 import {DrmScheme} from './drm/drm-scheme';
 import {MimeType} from './mime-type';
 import {RequestType} from './request-type';
-import {Ad} from './ads/ad';
-import {AdBreak} from './ads/ad-break';
 import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
-import {AdsController} from './ads/ads-controller';
 import {AdEventType} from './ads/ad-event-type';
 
 declare var __VERSION__: string;
@@ -54,8 +50,11 @@ export function loadPlayer(config: ?Object) {
 // Export the media source adapters necessary utils
 export {registerMediaSourceAdapter, BaseMediaSourceAdapter};
 
-// Export the plugin framework
-export {registerPlugin, BasePlugin, BaseMiddleware};
+// Export the engine decorator provider register method
+export {registerEngineDecoratorProvider};
+
+// Export the middleware framework
+export {BaseMiddleware};
 
 // Export the tracks classes
 export {Track, VideoTrack, AudioTrack, TextTrack, TextStyle};
@@ -91,7 +90,7 @@ export {getCapabilities, setCapabilities};
 export {registerEngine, unRegisterEngine};
 
 // Export ads framework
-export {Ad, AdBreak, AdBreakType, AdTagType, AdsController, AdEventType};
+export {AdBreakType, AdTagType, AdEventType};
 
 // Export enums
 export {
