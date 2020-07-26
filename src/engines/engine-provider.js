@@ -21,17 +21,17 @@ class EngineProvider {
    * @static
    * @private
    */
-  static _engineProviders: {[id: string]: typeof IEngine} = {};
+  static _engineProviders: {[id: string]: IEngineStatic} = {};
 
   /**
    * Add an engine to the registry.
    * @function register
    * @param {string} id - The engine id.
-   * @param {IEngine} engine -  The engine to register.
+   * @param {IEngineStatic} engine -  The engine to register.
    * @static
    * @returns {void}
    */
-  static register(id: string, engine: typeof IEngine): void {
+  static register(id: string, engine: IEngineStatic): void {
     if (id && !EngineProvider._engineProviders[id]) {
       EngineProvider._logger.debug(`Engine <${id}> has been registered successfully`);
       EngineProvider._engineProviders[id] = engine;
@@ -57,10 +57,10 @@ class EngineProvider {
   /**
    * Get the appropriate Engines.
    * @function getEngines
-   * @returns {Array<IEngine>} - The Array of engines, or null if such doesn't exists.
+   * @returns {Array<IEngineStatic>} - The Array of engines, or null if such doesn't exists.
    * @static
    */
-  static getEngines(): Array<typeof IEngine> {
+  static getEngines(): Array<IEngineStatic> {
     return Object.keys(EngineProvider._engineProviders).map(key => EngineProvider._engineProviders[key]);
   }
 

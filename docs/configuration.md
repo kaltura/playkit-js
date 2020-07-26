@@ -1020,7 +1020,7 @@ var config = {
 > >
 > > ##### Description: Defines a filter for requests. This filter takes the request and modifies it before it is sent. A request filter can run asynchronously by returning a promise; in this case, the request will not be sent until the promise is resolved.
 > >
-> >  ##
+> > ##
 > >
 > > > ##### Type: PKRequestType
 > > >
@@ -1045,7 +1045,7 @@ var config = {
 > > > ```
 > > >
 > > > ##
-> > > 
+> > >
 > > > > ##### `PKRequestObject.url`
 > > > >
 > > > > ##### Type: `string`
@@ -1075,7 +1075,7 @@ var config = {
 > > ```js
 > > var config = {
 > >   network: {
-> >     requestFilter: function(type, request) {
+> >     requestFilter: function (type, request) {
 > >       if (type === KalturaPlayer.core.RequestType.LICENSE) {
 > >         request.headers['customData'] = CUSTOM_DATA;
 > >       }
@@ -1087,9 +1087,9 @@ var config = {
 > > ```js
 > > var config = {
 > >   network: {
-> >     requestFilter: function(type, request) {
+> >     requestFilter: function (type, request) {
 > >       if (type === KalturaPlayer.core.RequestType.LICENSE) {
-> >         return new Promise(function(resolve) {
+> >         return new Promise(function (resolve) {
 > >           request.headers['customData'] = CUSTOM_DATA;
 > >           resolve(request);
 > >         });
@@ -1109,7 +1109,7 @@ var config = {
 > >
 > > ##### Description: Defines a filter for responses. This filter takes the response and modifies it before it is returned. A response filter can run asynchronously by returning a promise.
 > >
-> >  ##
+> > ##
 > >
 > > > ##### Type: PKRequestType
 > > >
@@ -1135,7 +1135,7 @@ var config = {
 > > > ```
 > > >
 > > > ##
-> > > 
+> > >
 > > > > ##### `PKResponseObject.url`
 > > > >
 > > > > ##### Type: `string`
@@ -1173,7 +1173,7 @@ var config = {
 > > ```js
 > > var config = {
 > >   network: {
-> >     responseFilter: function(type, response) {
+> >     responseFilter: function (type, response) {
 > >       if (type === KalturaPlayer.core.RequestType.LICENSE) {
 > >         response.data = MANIPULATED_DATA;
 > >       }
@@ -1185,9 +1185,9 @@ var config = {
 > > ```js
 > > var config = {
 > >   network: {
-> >     responseFilter: function(type, response) {
+> >     responseFilter: function (type, response) {
 > >       if (type === KalturaPlayer.core.RequestType.LICENSE) {
-> >         return new Promise(function(resolve) {
+> >         return new Promise(function (resolve) {
 > >           response.data = MANIPULATED_DATA;
 > >           resolve(response);
 > >         });
@@ -1228,7 +1228,7 @@ var config = {
 > ```js
 > var config = {
 >   customLabels: {
->     qualities: function(videoTrack) {
+>     qualities: function (videoTrack) {
 >       if (videoTrack.height > 500) {
 >         return 'High';
 >       }

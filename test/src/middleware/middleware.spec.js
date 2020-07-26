@@ -47,18 +47,18 @@ class M3 extends BaseMiddleware {
   }
 }
 
-describe('Middleware', function() {
+describe('Middleware', function () {
   let m1, m2, m3;
   let middleware;
   let actions = {DRINK: 'drink', EAT: 'eat'};
   let sandbox;
 
-  beforeEach(function() {
+  beforeEach(function () {
     middleware = new Middleware(actions);
   });
 
-  describe('use', function() {
-    beforeEach(function() {
+  describe('use', function () {
+    beforeEach(function () {
       m1 = new M1();
       m2 = new M2();
       m3 = new M3();
@@ -67,24 +67,24 @@ describe('Middleware', function() {
       middleware.use(m3);
     });
 
-    it('should register the base middlewares', function() {
+    it('should register the base middlewares', function () {
       middleware._middlewares.get(actions.DRINK).should.have.lengthOf(3);
       middleware._middlewares.get(actions.EAT).should.have.lengthOf(3);
     });
   });
 
-  describe('run', function() {
+  describe('run', function () {
     let spyM1, spyM2, spyM3;
 
-    beforeEach(function() {
-      sandbox = sinon.sandbox.create();
+    beforeEach(function () {
+      sandbox = sinon.createSandbox();
     });
 
-    afterEach(function() {
+    afterEach(function () {
       sandbox.restore();
     });
 
-    it('should run all the base middlewares for action drink', function(done) {
+    it('should run all the base middlewares for action drink', function (done) {
       spyM1 = sandbox.spy(M1.prototype, 'drink');
       spyM2 = sandbox.spy(M2.prototype, 'drink');
       spyM3 = sandbox.spy(M3.prototype, 'drink');
@@ -104,7 +104,7 @@ describe('Middleware', function() {
       });
     });
 
-    it('should run all the base middlewares for action eat', function(done) {
+    it('should run all the base middlewares for action eat', function (done) {
       spyM1 = sandbox.spy(M1.prototype, 'eat');
       spyM2 = sandbox.spy(M2.prototype, 'eat');
       spyM3 = sandbox.spy(M3.prototype, 'eat');
@@ -124,7 +124,7 @@ describe('Middleware', function() {
       });
     });
 
-    it('should run only callback for un valid action', function(done) {
+    it('should run only callback for un valid action', function (done) {
       m1 = new M1();
       m2 = new M2();
       m3 = new M3();

@@ -2,8 +2,18 @@
 import VideoTrack from '../../src/track/video-track';
 import AudioTrack from '../../src/track/audio-track';
 import TextTrack from '../../src/track/text-track';
+import {FakeEventTarget} from '../../src/playkit';
 
-declare interface IMediaSourceAdapter {
+declare interface IMediaSourceAdapterStatic {
+  +id: string;
+  isSupported(): boolean;
+  isMSESupported(): boolean;
+  canPlayType(mimeType: string): boolean;
+  canPlayDrm(drmData: Array<Object>, drmConfig: PKDrmConfigObject): boolean;
+  createAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): IMediaSourceAdapter;
+}
+
+declare interface IMediaSourceAdapter extends FakeEventTarget {
   src: string;
   currentTime: number;
   +duration: number;
@@ -24,10 +34,4 @@ declare interface IMediaSourceAdapter {
   attachMediaSource(): void;
   detachMediaSource(): void;
   +targetBuffer: number;
-  static +id: string;
-  static isSupported(): boolean;
-  static isMSESupported(): boolean;
-  static canPlayType(mimeType: string): boolean;
-  static canPlayDrm(drmData: Array<Object>, drmConfig: PKDrmConfigObject): boolean;
-  static createAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): IMediaSourceAdapter;
 }

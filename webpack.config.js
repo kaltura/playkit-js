@@ -2,7 +2,6 @@
 
 const webpack = require('webpack');
 const path = require('path');
-const PROD = process.env.NODE_ENV === 'production';
 const packageData = require('./package.json');
 
 let plugins = [
@@ -11,10 +10,6 @@ let plugins = [
     __NAME__: JSON.stringify(packageData.name)
   })
 ];
-
-if (PROD) {
-  plugins.push(new webpack.optimize.UglifyJsPlugin({sourceMap: true}));
-}
 
 module.exports = {
   context: __dirname + '/src',

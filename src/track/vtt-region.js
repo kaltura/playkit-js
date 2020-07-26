@@ -37,7 +37,7 @@ function findScrollSetting(value) {
  * @returns {boolean} - boolean
  */
 function isValidPercentValue(value) {
-  return typeof value === 'number' && (value >= 0 && value <= 100);
+  return typeof value === 'number' && value >= 0 && value <= 100;
 }
 
 // VTTRegion shim http://dev.w3.org/html5/webvtt/#vttregion-interface

@@ -5,7 +5,7 @@ import Track from './track';
  * Video track representation of the player.
  * @classdesc
  */
-export default class VideoTrack extends Track {
+const VideoTrack: VideoTrack = class VideoTrack extends Track {
   /**
    * @member {number} _bandwidth - The bandwidth of the video track
    * @type {number}
@@ -62,4 +62,6 @@ export default class VideoTrack extends Track {
     this._height = settings.height;
     this._label = settings.label ? settings.label : this._height ? this._height + 'p' : undefined;
   }
-}
+};
+
+export default VideoTrack;

@@ -8,8 +8,8 @@ import sourcesConfig from '../../../../configs/sources.json';
 import * as Utils from '../../../../../../src/utils/util';
 import Env from '../../../../../../src/utils/env';
 import {CustomEventType, Html5EventType} from '../../../../../../src/event/event-type';
-import FairPlay from '../../../../../../src/drm/fairplay';
 import Error from '../../../../../../src/error/error';
+import {DrmScheme} from '../../../../../../src/drm/drm-scheme';
 
 describe('NativeAdapter: isSupported', () => {
   it('should be supported', () => {
@@ -54,13 +54,11 @@ describe('NativeAdapter: canPlayType', () => {
 });
 
 describe('NativeAdapter: canPlayDrm', () => {
-  const fpDrmData = [{licenseUrl: 'LICENSE_URL', scheme: FairPlay.DrmScheme.FAIRPLAY}];
+  const fpDrmData = [{licenseUrl: 'LICENSE_URL', scheme: DrmScheme.FAIRPLAY}];
 
-  it('should return true for fairplay data if configured and false to configuration without fairplay', function() {
-    NativeAdapter.canPlayDrm(fpDrmData, {keySystem: FairPlay.DrmScheme.FAIRPLAY}).should.be.true;
-    NativeAdapter._drmProtocol._KeySystem.should.equal(FairPlay._KeySystem);
+  it('should return true for fairplay data if configured', function () {
+    NativeAdapter.canPlayDrm(fpDrmData, {keySystem: DrmScheme.FAIRPLAY}).should.be.true;
     NativeAdapter.canPlayDrm(fpDrmData, {}).should.be.false;
-    (NativeAdapter._drmProtocol === null).should.be.true;
   });
 });
 
@@ -120,7 +118,7 @@ describe('NativeAdapter: constructor', () => {
   });
 });
 
-describe('NativeAdapter: attach detach', function() {
+describe('NativeAdapter: attach detach', function () {
   let video, nativeInstance;
 
   beforeEach(() => {
@@ -190,7 +188,7 @@ describe('NativeAdapter: attach detach', function() {
   });
 });
 
-describe('NativeAdapter: _isProgressivePlayback', function() {
+describe('NativeAdapter: _isProgressivePlayback', function () {
   let video, nativeInstance;
 
   beforeEach(() => {
@@ -217,7 +215,7 @@ describe('NativeAdapter: _isProgressivePlayback', function() {
   });
 });
 
-describe('NativeAdapter: load', function() {
+describe('NativeAdapter: load', function () {
   let video, nativeInstance;
 
   beforeEach(() => {
@@ -252,7 +250,7 @@ describe('NativeAdapter: load', function() {
   });
 });
 
-describe('NativeAdapter: _setProgressiveSource', function() {
+describe('NativeAdapter: _setProgressiveSource', function () {
   let video, nativeInstance;
 
   beforeEach(() => {
@@ -286,7 +284,7 @@ describe('NativeAdapter: _setProgressiveSource', function() {
   });
 });
 
-describe('NativeAdapter: destroy', function() {
+describe('NativeAdapter: destroy', function () {
   let video, nativeInstance;
 
   beforeEach(() => {
@@ -299,7 +297,7 @@ describe('NativeAdapter: destroy', function() {
     nativeInstance = null;
   });
 
-  after(function() {
+  after(function () {
     removeVideoElementsFromTestPage();
   });
 
@@ -319,7 +317,7 @@ describe('NativeAdapter: destroy', function() {
   });
 });
 
-describe('NativeAdapter: _getParsedTracks', function() {
+describe('NativeAdapter: _getParsedTracks', function () {
   let video;
   let track1;
   let track2;
@@ -444,7 +442,7 @@ describe('NativeAdapter: _getParsedTracks', function() {
   });
 });
 
-describe('NativeAdapter: _selectProgressiveVideoTrack', function() {
+describe('NativeAdapter: _selectProgressiveVideoTrack', function () {
   let video;
   let nativeInstance;
 
@@ -491,7 +489,7 @@ describe('NativeAdapter: _selectProgressiveVideoTrack', function() {
   });
 });
 
-describe('NativeAdapter: selectVideoTrack - progressive', function() {
+describe('NativeAdapter: selectVideoTrack - progressive', function () {
   let video;
   let nativeInstance;
 
@@ -527,7 +525,7 @@ describe('NativeAdapter: selectVideoTrack - progressive', function() {
   });
 });
 
-describe('NativeAdapter: selectAudioTrack', function() {
+describe('NativeAdapter: selectAudioTrack', function () {
   let video;
   let nativeInstance;
 
@@ -596,7 +594,7 @@ describe('NativeAdapter: selectAudioTrack', function() {
   });
 });
 
-describe('NativeAdapter: selectTextTrack', function() {
+describe('NativeAdapter: selectTextTrack', function () {
   let video;
   let track1;
   let track2;
@@ -730,7 +728,7 @@ describe('NativeAdapter: selectTextTrack', function() {
   });
 });
 
-describe('NativeAdapter: hideTextTrack', function() {
+describe('NativeAdapter: hideTextTrack', function () {
   let video;
   let track1;
   let track2;
@@ -774,7 +772,7 @@ describe('NativeAdapter: hideTextTrack', function() {
   });
 });
 
-describe('NativeAdapter: isLive', function() {
+describe('NativeAdapter: isLive', function () {
   let video, nativeInstance;
 
   beforeEach(() => {
@@ -790,7 +788,7 @@ describe('NativeAdapter: isLive', function() {
     removeVideoElementsFromTestPage();
   });
 
-  it('should return false for VOD', function(done) {
+  it('should return false for VOD', function (done) {
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {sources: {}});
     nativeInstance.load().then(() => {
       nativeInstance.isLive().should.be.false;
@@ -1052,11 +1050,11 @@ describe('NativeAdapter: request filter', () => {
   it('should pass the params to the request filter', done => {
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {
       network: {
-        requestFilter: function(type, request) {
+        requestFilter: function (type, request) {
           try {
             type.should.equal(RequestType.MANIFEST);
             request.url.should.equal(sourcesConfig.Mp4.progressive[0].url);
-            request.hasOwnProperty('body').should.be.true;
+            Object.prototype.hasOwnProperty.call(request, 'body').should.be.true;
             request.headers.should.be.exist;
             done();
           } catch (e) {
@@ -1071,7 +1069,7 @@ describe('NativeAdapter: request filter', () => {
   it('should apply void filter for manifest', done => {
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {
       network: {
-        requestFilter: function(type, request) {
+        requestFilter: function (type, request) {
           if (type === RequestType.MANIFEST) {
             request.url += '&test';
           }
@@ -1092,7 +1090,7 @@ describe('NativeAdapter: request filter', () => {
   it('should apply promise filter for manifest', done => {
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {
       network: {
-        requestFilter: function(type, request) {
+        requestFilter: function (type, request) {
           if (type === RequestType.MANIFEST) {
             return new Promise(resolve => {
               request.url += '&test';
@@ -1116,7 +1114,7 @@ describe('NativeAdapter: request filter', () => {
   it('should handle error thrown from void filter', done => {
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {
       network: {
-        requestFilter: function() {
+        requestFilter: function () {
           throw 'error';
         }
       }
@@ -1135,7 +1133,7 @@ describe('NativeAdapter: request filter', () => {
   it('should handle error thrown from promise filter', done => {
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {
       network: {
-        requestFilter: function() {
+        requestFilter: function () {
           return new Promise(() => {
             throw 'error';
           });
@@ -1156,7 +1154,7 @@ describe('NativeAdapter: request filter', () => {
   it('should handle error rejected from promise filter', done => {
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {
       network: {
-        requestFilter: function() {
+        requestFilter: function () {
           return new Promise((resolve, reject) => {
             reject('error');
           });

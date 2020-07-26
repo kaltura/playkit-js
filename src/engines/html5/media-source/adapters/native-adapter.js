@@ -3,7 +3,7 @@ import {CustomEventType, Html5EventType} from '../../../../event/event-type';
 import Track from '../../../../track/track';
 import VideoTrack from '../../../../track/video-track';
 import AudioTrack from '../../../../track/audio-track';
-import {TextTrack as PKTextTrack} from '../../../../track/text-track';
+import PKTextTrack from '../../../../track/text-track';
 import {RequestType} from '../../../../request-type';
 import BaseMediaSourceAdapter from '../base-media-source-adapter';
 import {getSuitableSourceForResolution} from '../../../../utils/resolution';
@@ -12,8 +12,8 @@ import FairPlay from '../../../../drm/fairplay';
 import Env from '../../../../utils/env';
 import Error from '../../../../error/error';
 import defaultConfig from './native-adapter-default-config';
-import {FairplayDrmHandler} from './fairplay-drm-handler';
-import type {FairplayDrmConfigType} from './fairplay-drm-handler';
+import type {FairPlayDrmConfigType} from './fairplay-drm-handler';
+import {FairPlayDrmHandler} from './fairplay-drm-handler';
 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
@@ -63,17 +63,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   static _drmProtocol: ?Function = null;
   /**
    * The DRM handler playback.
-   * @type {?FairplayDrmHandler}
+   * @type {?FairPlayDrmHandler}
    * @private
    */
-  _drmHandler: ?FairplayDrmHandler;
-  /**
-   * The load promise
-   * @member {Promise<Object>} - _loadPromise
-   * @type {Promise<Object>}
-   * @private
-   */
-  _loadPromise: ?Promise<Object>;
+  _drmHandler: ?FairPlayDrmHandler;
   /**
    * The original progressive sources
    * @member {Array<PKMediaSourceObject>} - _progressiveSources
@@ -91,7 +84,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @member {?number} - _liveDurationChangeInterval
    * @private
    */
-  _liveDurationChangeInterval: ?number;
+  _liveDurationChangeInterval: ?IntervalID;
   /**
    * The live edge value
    * @member {number} - _liveEdge
@@ -103,7 +96,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @member {number} - _waitingIntervalId
    * @private
    */
-  _heartbeatTimeoutId: ?number;
+  _heartbeatTimeoutId: ?TimeoutID;
 
   _loadPromiseReject: ?Function;
 
@@ -248,13 +241,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _maybeSetDrmPlayback(): void {
     if (NativeAdapter._drmProtocol && this._sourceObj && this._sourceObj.drmData) {
-      const drmConfig: FairplayDrmConfigType = {
+      const drmConfig: FairPlayDrmConfigType = {
         licenseUrl: '',
         certificate: '',
         network: this._config.network
       };
       NativeAdapter._drmProtocol.setDrmPlayback(drmConfig, this._sourceObj.drmData);
-      this._drmHandler = new FairplayDrmHandler(
+      this._drmHandler = new FairPlayDrmHandler(
         this._videoElement,
         drmConfig,
         error => this._dispatchErrorCallback(error),
@@ -819,7 +812,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (textTrack instanceof PKTextTrack && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks) {
       this._removeNativeTextTrackChangeListener();
       const selectedTrack = Array.from(textTracks).find(
-        (track, index) => textTrack.index === index && (track && (track.kind === 'subtitles' || track.kind === 'captions'))
+        (track, index) => textTrack.index === index && track && (track.kind === 'subtitles' || track.kind === 'captions')
       );
       if (selectedTrack) {
         this._disableTextTracks();

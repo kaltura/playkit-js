@@ -110,7 +110,7 @@ function createVideoTrackButtons(player, videoTracks) {
   createTitle('Video Tracks');
   for (let i = 0; i < videoTracks.length; i++) {
     let element = createTrackButton(videoTracks[i].label || videoTracks[i].bandwidth || videoTracks[i].language, videoTracks[i].index);
-    element.onclick = function() {
+    element.onclick = function () {
       player.selectTrack(videoTracks[i]);
     };
   }
@@ -126,7 +126,7 @@ function createAudioTrackButtons(player, audioTracks) {
   createTitle('Audio Tracks');
   for (let i = 0; i < audioTracks.length; i++) {
     let element = createTrackButton(audioTracks[i].label || audioTracks[i].language, audioTracks[i].index);
-    element.onclick = function() {
+    element.onclick = function () {
       player.selectTrack(audioTracks[i]);
     };
   }
@@ -142,7 +142,7 @@ function createTextTrackButtons(player, textTracks) {
   createTitle('Text Tracks');
   for (let i = 0; i < textTracks.length; i++) {
     let element = createTrackButton(textTracks[i].label || textTracks[i].language, textTracks[i].index);
-    element.onclick = function() {
+    element.onclick = function () {
       player.selectTrack(textTracks[i]);
     };
   }
