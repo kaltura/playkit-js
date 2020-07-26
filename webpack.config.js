@@ -2,7 +2,6 @@
 
 const webpack = require('webpack');
 const path = require('path');
-const PROD = process.env.NODE_ENV === 'production';
 const packageData = require('./package.json');
 
 let plugins = [
@@ -71,8 +70,5 @@ module.exports = {
   },
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules']
-  },
-  optimization: {
-    minimize: PROD
   }
 };
