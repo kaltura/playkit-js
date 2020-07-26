@@ -71,8 +71,5 @@ module.exports = {
   },
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules']
-  },
-  optimization: {
-    minimize: PROD
   }
 };
