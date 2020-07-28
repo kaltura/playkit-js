@@ -232,18 +232,10 @@ export default class Player extends FakeEventTarget {
    */
   _playbackStart: boolean;
   /**
-   * Whether the playback ended
-   * @type {boolean}
-   * @private
-   */
-
-  _playbackEnded: boolean;
-  /**
    * If quality has changed after playback ended - pend the change
    * @type {boolean}
    * @private
    */
-
   _pendingSelectedVideoTrack: ?VideoTrack;
   /**
    * The available playback rates for the player.
@@ -420,7 +412,6 @@ export default class Player extends FakeEventTarget {
     this._loadingMedia = false;
     this._loading = false;
     this._playbackStart = false;
-    this._playbackEnded = false;
     this._firstPlaying = false;
     this._reset = true;
     this._destroyed = false;
@@ -523,7 +514,6 @@ export default class Player extends FakeEventTarget {
   play(): void {
     if (!this._playbackStart) {
       this._playbackStart = true;
-      this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_START));
       if (!this.src) {
         this._prepareVideoElement();
       }
@@ -1162,7 +1152,7 @@ export default class Player extends FakeEventTarget {
   selectTrack(track: ?Track): void {
     if (this._engine) {
       if (track instanceof VideoTrack) {
-        if (this._playbackEnded) {
+        if (this._stateManager.currentState.type === StateType.IDLE) {
           this._pendingSelectedVideoTrack = track;
         } else {
           this._engine.selectVideoTrack(track);
@@ -1672,7 +1662,6 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this, Html5EventType.PAUSE, this._onPause.bind(this));
       this._eventManager.listen(this, Html5EventType.PLAYING, this._onPlaying.bind(this));
       this._eventManager.listen(this, Html5EventType.ENDED, this._onEnded.bind(this));
-      this._eventManager.listen(this, CustomEventType.PLAYBACK_ENDED, this._onPlaybackEnded.bind(this));
       this._eventManager.listen(this, CustomEventType.MUTE_CHANGE, () => {
         this._playbackAttributesState.muted = this.muted;
       });
@@ -2019,21 +2008,6 @@ export default class Player extends FakeEventTarget {
       this._pause();
     }
   }
-
-  /**
-   * @function _onPlaybackEnded
-   * @return {void}
-   * @private
-   */
-  _onPlaybackEnded(): void {
-    if (this.config.playback.loop) {
-      this.currentTime = 0;
-      this.play();
-    } else {
-      this._playbackEnded = true;
-    }
-  }
-
   /**
    * Resets the state flags of the player.
    * @returns {void}
@@ -2044,7 +2018,6 @@ export default class Player extends FakeEventTarget {
     this._firstPlay = true;
     this._loadingMedia = false;
     this._playbackStart = false;
-    this._playbackEnded = false;
     this._firstPlaying = false;
   }
 
