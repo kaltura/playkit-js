@@ -14,8 +14,6 @@ import Error from '../../error/error';
 import getLogger from '../../utils/logger';
 import {DroppedFramesWatcher} from '../dropped-frames-watcher';
 
-const HIDE_METADATA_TRACK_TIMEOUT: number = 100;
-
 /**
  * Html5 engine for playback.
  * @classdesc
@@ -1127,16 +1125,15 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
         if (event.track.kind === 'metadata') {
           listenToCueChange(event.track);
-        } else {
-          // When a non metadata track has added it could change the metadata track mode to disabled. Need to return it to hidden.
-          Array.from(this._el.textTracks).forEach((track: TextTrack) => {
-            if (track.kind === 'metadata') {
-              setTimeout(() => (track.mode = 'hidden'), HIDE_METADATA_TRACK_TIMEOUT);
-            }
-          });
         }
       });
     }
+    this._eventManager.listen(this._el.textTracks, 'change', () => {
+      const metadataTrack = Array.from(this._el.textTracks).find((track: TextTrack) => track.kind === 'metadata');
+      if (metadataTrack && metadataTrack.mode !== 'hidden') {
+        metadataTrack.mode = 'hidden';
+      }
+    });
   }
 
   get targetBuffer(): number {
