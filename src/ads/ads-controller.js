@@ -29,6 +29,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
   _adBreaksLayout: Array<number | string>;
   _adBreak: ?AdBreak;
   _ad: ?Ad;
+  _pendingAd: ?Ad;
   _adPlayed: boolean;
   _snapback: number;
   _configAdBreaks: Array<RunTimeAdBreakObject>;
@@ -85,6 +86,15 @@ class AdsController extends FakeEventTarget implements IAdsController {
    */
   getAd(): ?Ad {
     return this._ad;
+  }
+
+  /**
+   * @instance
+   * @memberof AdsController
+   * @returns {?Ad} - Gets the pending ad data.
+   */
+  getPendingAd(): ?Ad {
+    return this._pendingAd;
   }
 
   /**
@@ -285,11 +295,12 @@ class AdsController extends FakeEventTarget implements IAdsController {
 
   _onAdLoaded(event: FakeEvent): void {
     this._adIsLoading = false;
-    this._ad = event.payload.ad;
+    this._pendingAd = event.payload.ad;
   }
 
   _onAdStarted(event: FakeEvent): void {
     this._ad = event.payload.ad;
+    this._pendingAd = null;
     this._adPlayed = true;
   }
 
@@ -368,6 +379,7 @@ class AdsController extends FakeEventTarget implements IAdsController {
     this._adsPluginControllers = [];
     this._eventManager.destroy();
   }
+
   _mergeAdBreaks(adBreaks: Array<RunTimeAdBreakObject>): ?RunTimeAdBreakObject {
     if (adBreaks.length) {
       adBreaks.forEach(adBreak => (adBreak.played = true));
