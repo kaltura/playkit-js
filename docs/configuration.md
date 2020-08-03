@@ -52,7 +52,6 @@ var config = {
     preload: 'none',
     autoplay: false,
     allowMutedAutoPlay: true,
-    loop: false,
     muted: false,
     pictureInPicture: true,
     options: {
@@ -473,7 +472,6 @@ var config = {
 >  preload: string,
 >  autoplay: boolean,
 >  allowMutedAutoPlay: boolean,
->  loop: boolean,
 >  muted: boolean,
 >  pictureInPicture: boolean,
 >  options: PKPlaybackOptionsObject,
@@ -502,7 +500,6 @@ var config = {
 >  preload: "none",
 >  autoplay: false,
 >  allowMutedAutoPlay: true,
->  loop: false,
 >  muted: false,
 >  pictureInPicture: true,
 >  playAdsWithMSE: false,
@@ -743,18 +740,6 @@ var config = {
 > > ### config.playback.autoplay/allowMutedAutoPlay
 > >
 > > for `autoplay` & `allowMutedAutoPlay` options read [here](autoplay.md).
->
-> ##
->
-> > ### config.playback.loop
-> >
-> > ##### Type: `boolean`
-> >
-> > ##### Default: `false`
-> >
-> > ##### Description: Indicates whether the video should play in loop.
-> >
-> > This is a Boolean attribute that indicates the default setting of the loop playback option. If set, the player will restart playback upon completion. The attribute's default value is false, which means that the video will pause when the video is finished playing.
 >
 > ##
 >
