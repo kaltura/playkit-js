@@ -3,6 +3,7 @@ import * as Utils from '../../../utils/util';
 import {Html5EventType} from '../../../event/event-type';
 import getLogger from '../../../utils/logger';
 import * as EncodingSources from '../../../assets/encoding-sources.json';
+import {CapabilityType} from '../../capability-type';
 
 const WAIT_TIME: number = 500;
 
@@ -11,6 +12,16 @@ const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
   static _playPromiseResult: Promise<*>;
   static _logger: any = getLogger('Html5AutoPlayCapability');
   static _capabilities: Object = {};
+
+  /**
+   * @public
+   * @getter
+   * @static
+   * @returns {string} - The capability type.
+   */
+  static get type(): string {
+    return CapabilityType.AUTOPLAY;
+  }
 
   /**
    * Runs the test for autoplay capability.

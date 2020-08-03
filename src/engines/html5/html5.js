@@ -13,6 +13,7 @@ import Html5AutoPlayCapability from './capabilities/html5-autoplay';
 import Error from '../../error/error';
 import getLogger from '../../utils/logger';
 import {DroppedFramesWatcher} from '../dropped-frames-watcher';
+import {CapabilityType} from '../capability-type';
 
 /**
  * Html5 engine for playback.
@@ -120,11 +121,18 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   /**
    * Runs the html5 capabilities tests.
+   * @param {?boolean} disableAutoplayCapabilityTest - Disable the platform autoplay restriction detection, forcing the player to respect the autoplay configuration only.
    * @returns {void}
    * @public
    * @static
    */
-  static runCapabilities(): void {
+  static runCapabilities(disableAutoplayCapabilityTest: ?boolean): void {
+    if (disableAutoplayCapabilityTest) {
+      const html5AutoPlayCapability = Html5._capabilities.find(capability => capability.type === CapabilityType.AUTOPLAY);
+      if (html5AutoPlayCapability) {
+        html5AutoPlayCapability.setCapabilities({autoplay: true, mutedAutoPlay: true});
+      }
+    }
     Html5._capabilities.forEach(capability => capability.runCapability());
   }
 
@@ -255,6 +263,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   get id(): string {
     return Html5.id;
   }
+
   /**
    * attach media - return the media source to handle the video tag
    * @public
@@ -265,6 +274,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._mediaSourceAdapter.attachMediaSource();
     }
   }
+
   /**
    * detach media - will remove the media source from handling the video
    * @public
@@ -275,6 +285,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._mediaSourceAdapter.detachMediaSource();
     }
   }
+
   /**
    * Listen to the video element events and triggers them from the engine.
    * @public

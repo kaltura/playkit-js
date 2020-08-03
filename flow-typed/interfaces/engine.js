@@ -8,7 +8,7 @@ declare interface IEngineStatic {
   id: string;
   createEngine(source: PKMediaSourceObject, config: Object, playerId: string): IEngine;
   canPlaySource(source: PKMediaSourceObject, preferNative: boolean, drmConfig: PKDrmConfigObject): boolean;
-  runCapabilities(): void;
+  runCapabilities(disableAutoplayCapabilityTest: ?boolean): void;
   getCapabilities(): Promise<Object>;
   setCapabilities(capabilities: {[name: string]: any}): void;
   prepareVideoElement(playerId: string): void;

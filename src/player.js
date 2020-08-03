@@ -133,13 +133,14 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Runs the engines capabilities tests.
+   * @param {?boolean} disableAutoplayCapabilityTest - Disable the platform autoplay restriction detection, forcing the player to respect the autoplay configuration only.
    * @returns {void}
    * @public
    * @static
    */
-  static runCapabilities(): void {
+  static runCapabilities(disableAutoplayCapabilityTest: ?boolean): void {
     Player._logger.debug('Running player capabilities');
-    EngineProvider.getEngines().forEach(Engine => Engine.runCapabilities());
+    EngineProvider.getEngines().forEach(Engine => Engine.runCapabilities(disableAutoplayCapabilityTest));
   }
 
   /**
@@ -441,7 +442,7 @@ export default class Player extends FakeEventTarget {
     this._setConfigLogLevel(config);
     this._playerId = Utils.Generator.uniqueId(5);
     this._prepareVideoElement();
-    Player.runCapabilities();
+    Player.runCapabilities(Utils.Object.getPropertyPath(config, 'playback.disableAutoplayCapabilityTest'));
     this._env = Env;
     this._tracks = [];
     this._uiComponents = [];
