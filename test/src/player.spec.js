@@ -8,16 +8,12 @@ import VideoTrack from '../../src/track/video-track';
 import AudioTrack from '../../src/track/audio-track';
 import TextTrack from '../../src/track/text-track';
 import {createElement, getConfigStructure, removeElement, removeVideoElementsFromTestPage} from './utils/test-utils';
-import PluginManager from '../../src/plugin/plugin-manager';
-import ColorsPlugin from './plugin/test-plugins/colors-plugin';
-import NumbersPlugin from './plugin/test-plugins/numbers-plugin';
 import Locale from '../../src/utils/locale';
 import Html5 from '../../src/engines/html5/html5';
 import Error from '../../src/error/error';
 import {Object as PKObject} from '../../src/utils/util';
 import {LabelOptions} from '../../src/track/label-options';
 import {EngineProvider} from '../../src/engines/engine-provider';
-import {AdEventType} from '../../src/ads/ad-event-type';
 import FakeEvent from '../../src/event/fake-event';
 import Html5AutoPlayCapability from '../../src/engines/html5/capabilities/html5-autoplay';
 
@@ -145,8 +141,8 @@ describe('Player', function () {
           player.addEventListener(Html5EventType.PLAYING, () => {
             done();
           });
-          player._detachMediaSource();
-          player._attachMediaSource();
+          player.detachMediaSource();
+          player.attachMediaSource();
           player.play();
         };
         player.addEventListener(Html5EventType.PLAYING, playing);
@@ -158,8 +154,8 @@ describe('Player', function () {
         const playing = () => {
           player.removeEventListener(Html5EventType.PLAYING, playing);
           currentTime = Math.floor(player.currentTime);
-          player._detachMediaSource();
-          player._attachMediaSource();
+          player.detachMediaSource();
+          player.attachMediaSource();
           Math.floor(player.currentTime).should.equal(currentTime);
         };
         player.addEventListener(Html5EventType.PLAYING, playing);
@@ -1439,19 +1435,6 @@ describe('Player', function () {
           return Promise.reject('mock failure');
         });
       });
-
-      it('should fire auto play failed and show the poster once get AD_AUTOPLAY_FAILED', done => {
-        player.addEventListener(CustomEventType.AUTOPLAY_FAILED, event => {
-          try {
-            player._posterManager._el.style.display.should.equal('');
-            event.payload.error.should.equal('mock failure');
-            done();
-          } catch (e) {
-            done(e);
-          }
-        });
-        player.dispatchEvent(new FakeEvent(AdEventType.AD_AUTOPLAY_FAILED, {error: 'mock failure'}));
-      });
     });
 
     describe('source selected', () => {
@@ -1854,216 +1837,6 @@ describe('Player', function () {
       player.load();
       player.ready().then(() => {
         player.play();
-      });
-    });
-
-    describe('plugins lifecycle', () => {
-      beforeEach(() => {
-        PluginManager.register('colors', ColorsPlugin);
-        PluginManager.register('numbers', NumbersPlugin);
-      });
-
-      afterEach(() => {
-        PluginManager.unRegister('colors');
-        PluginManager.unRegister('numbers');
-      });
-
-      it('should load 2 plugins on initial config and configure them on configure', function () {
-        player = new Player({
-          plugins: {
-            colors: {
-              size: 5
-            },
-            numbers: {
-              size: 20
-            }
-          }
-        });
-        player._pluginManager.get('colors').should.exist;
-        player._pluginManager.get('numbers').should.exist;
-        Object.keys(player._pluginManager._plugins).length.should.equals(2);
-        player.config.plugins.colors.should.deep.equals({
-          size: 5,
-          favouriteColor: 'green'
-        });
-        player.config.plugins.numbers.should.deep.equals({
-          size: 20,
-          firstCellValue: 4,
-          lastCellValue: 6
-        });
-        player.configure({
-          plugins: {
-            colors: {
-              size: 50
-            },
-            numbers: {
-              size: 200
-            }
-          }
-        });
-        player._pluginManager.get('colors').should.exist;
-        player._pluginManager.get('numbers').should.exist;
-        Object.keys(player._pluginManager._plugins).length.should.equals(2);
-        player.config.plugins.colors.should.deep.equals({
-          size: 50,
-          favouriteColor: 'green'
-        });
-        player.config.plugins.numbers.should.deep.equals({
-          size: 200,
-          firstCellValue: 4,
-          lastCellValue: 6
-        });
-      });
-
-      it('should load 1st plugin on initial config, load 2nd plugin and configure the 1st on configure', function () {
-        player = new Player({
-          plugins: {
-            numbers: {
-              size: 20
-            }
-          }
-        });
-        player._pluginManager.get('numbers').should.exist;
-        Object.keys(player._pluginManager._plugins).length.should.equals(1);
-        player.config.plugins.numbers.should.deep.equals({
-          size: 20,
-          firstCellValue: 4,
-          lastCellValue: 6
-        });
-        player.configure({
-          plugins: {
-            colors: {
-              size: 50
-            },
-            numbers: {
-              size: 200
-            }
-          }
-        });
-        player._pluginManager.get('colors').should.exist;
-        player._pluginManager.get('numbers').should.exist;
-        Object.keys(player._pluginManager._plugins).length.should.equals(2);
-        player.config.plugins.colors.should.deep.equals({
-          size: 50,
-          favouriteColor: 'green'
-        });
-        player.config.plugins.numbers.should.deep.equals({
-          size: 200,
-          firstCellValue: 4,
-          lastCellValue: 6
-        });
-      });
-
-      it('should create player without plugins, load plugins on configure', function () {
-        player = new Player();
-        Object.keys(player._pluginManager._plugins).length.should.equals(0);
-        player.config.plugins.should.deep.equals({});
-        player.configure({
-          plugins: {
-            colors: {
-              size: 50
-            },
-            numbers: {
-              size: 200
-            }
-          }
-        });
-        player._pluginManager.get('colors').should.exist;
-        player._pluginManager.get('numbers').should.exist;
-        Object.keys(player._pluginManager._plugins).length.should.equals(2);
-        player.config.plugins.colors.should.deep.equals({
-          size: 50,
-          favouriteColor: 'green'
-        });
-        player.config.plugins.numbers.should.deep.equals({
-          size: 200,
-          firstCellValue: 4,
-          lastCellValue: 6
-        });
-      });
-
-      it('should create player without plugins, load 1st plugin on configure, configure 1st plugin with/after sources', function () {
-        player = new Player();
-        Object.keys(player._pluginManager._plugins).length.should.equals(0);
-        player.config.plugins.should.deep.equals({});
-        player.configure({
-          plugins: {
-            numbers: {
-              size: 200
-            }
-          }
-        });
-        player._pluginManager.get('numbers').should.exist;
-        Object.keys(player._pluginManager._plugins).length.should.equals(1);
-        player.config.plugins.numbers.should.deep.equals({
-          size: 200,
-          firstCellValue: 4,
-          lastCellValue: 6
-        });
-        player.configure({
-          sources: sourcesConfig.Mp4,
-          plugins: {
-            numbers: {
-              size: 2,
-              firstCellValue: 3
-            }
-          }
-        });
-        player._pluginManager.get('numbers').should.exist;
-        Object.keys(player._pluginManager._plugins).length.should.equals(1);
-        player.config.plugins.numbers.should.deep.equals({
-          size: 2,
-          firstCellValue: 3,
-          lastCellValue: 6
-        });
-        player.configure({
-          plugins: {
-            numbers: {
-              size: 78
-            }
-          }
-        });
-        player.config.plugins.numbers.should.deep.equals({
-          size: 78,
-          firstCellValue: 3,
-          lastCellValue: 6
-        });
-      });
-
-      it('should create player with plugin and fail to configure other plugin after sources', function () {
-        player = new Player({
-          sources: sourcesConfig.Mp4,
-          plugins: {
-            numbers: {
-              size: 2,
-              firstCellValue: 3
-            }
-          }
-        });
-        player._pluginManager.get('numbers').should.exist;
-        Object.keys(player._pluginManager._plugins).length.should.equals(1);
-        player.config.plugins.should.deep.equals({
-          numbers: {
-            size: 2,
-            firstCellValue: 3,
-            lastCellValue: 6
-          }
-        });
-        player.configure({
-          plugins: {
-            colors: {
-              size: 200
-            }
-          }
-        });
-        Object.keys(player._pluginManager._plugins).length.should.equals(1);
-        player.config.plugins.should.deep.equals({
-          numbers: {
-            size: 2,
-            firstCellValue: 3,
-            lastCellValue: 6
-          }
-        });
       });
     });
 
@@ -2635,13 +2408,11 @@ describe('Player', function () {
       let engineSpy = sandbox.spy(player._engine, 'destroy');
       let posterMgrSpy = sandbox.spy(player._posterManager, 'destroy');
       let eventMgrSpy = sandbox.spy(player._eventManager, 'destroy');
-      let pluginMgrSpy = sandbox.spy(player._pluginManager, 'destroy');
       let stateMgrSpy = sandbox.spy(player._stateManager, 'destroy');
       player.destroy();
       engineSpy.should.have.been.calledOnce;
       posterMgrSpy.should.have.been.calledOnce;
       eventMgrSpy.should.have.been.calledOnce;
-      pluginMgrSpy.should.have.been.calledOnce;
       stateMgrSpy.should.have.been.calledOnce;
       player._activeTextCues.should.be.empty;
       player._textDisplaySettings.should.be.empty;
@@ -2691,14 +2462,12 @@ describe('Player', function () {
       let posterMgrSpy = sandbox.spy(player._posterManager, 'reset');
       let engineSpy = sandbox.spy(player._engine, 'reset');
       let eventMgrSpy = sandbox.spy(player._eventManager, 'removeAll');
-      let pluginMgrSpy = sandbox.spy(player._pluginManager, 'reset');
       let stateMgrSpy = sandbox.spy(player._stateManager, 'reset');
       let _updateTextDisplay = sandbox.spy(player, '_updateTextDisplay');
       player.reset();
       player.paused.should.be.true;
       posterMgrSpy.should.have.been.calledOnce;
       eventMgrSpy.should.have.been.calledOnce;
-      pluginMgrSpy.should.have.been.calledOnce;
       stateMgrSpy.should.have.been.calledOnce;
       engineSpy.should.have.been.calledOnce;
       player._activeTextCues.should.be.empty;
