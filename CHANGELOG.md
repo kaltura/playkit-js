@@ -1,6 +1,23 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [0.63.0](https://github.com/kaltura/playkit-js/compare/v0.62.0...v0.63.0) (2020-08-05)
+
+
+### Bug Fixes
+
+* **FEC-10266:** ima dai doesn't show ad preset ([#473](https://github.com/kaltura/playkit-js/issues/473)) ([521ae1f](https://github.com/kaltura/playkit-js/commit/521ae1f))
+* **FEC-10312:** ready promise rejected in recoverable error ([#465](https://github.com/kaltura/playkit-js/issues/465)) ([4015286](https://github.com/kaltura/playkit-js/commit/4015286))
+* **FEC-10335:** ad doesn't play correctly on same video tag with MSE ([#471](https://github.com/kaltura/playkit-js/issues/471)) ([28e7dd3](https://github.com/kaltura/playkit-js/commit/28e7dd3))
+
+
+### Features
+
+* **FEC-10057:** move the plugin manager to kaltura player ([#463](https://github.com/kaltura/playkit-js/issues/463)) ([59026c0](https://github.com/kaltura/playkit-js/commit/59026c0))
+* **FEC-10290:** upgrade NPM packages  ([#446](https://github.com/kaltura/playkit-js/issues/446)) ([724715e](https://github.com/kaltura/playkit-js/commit/724715e))
+
+
 
 <a name="0.62.0"></a>
 # [0.62.0](https://github.com/kaltura/playkit-js/compare/v0.61.3...v0.62.0) (2020-07-07)
