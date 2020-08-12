@@ -2143,7 +2143,7 @@ export default class Player extends FakeEventTarget {
     // add label check for native player that doesn't parse the video tracks from beginning.
     if (tracks) {
       for (let i = 0; i < tracks.length; i++) {
-        tracks[i].active = track.index ? track.index === tracks[i].index : track.label === tracks[i].label;
+        tracks[i].active = track.index >= 0 ? track.index === tracks[i].index : track.label === tracks[i].label;
         markedActive = markedActive ? markedActive : tracks[i].active;
       }
     }
