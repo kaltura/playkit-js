@@ -502,7 +502,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const {videoHeight, videoWidth} = this._videoElement;
     if (!this._videoDimensions || videoHeight !== this._videoDimensions.videoHeight || videoWidth !== this._videoDimensions.videoWidth) {
       this._videoDimensions = {videoHeight, videoWidth};
-      this._onTrackChanged(new VideoTrack({height: videoHeight, width: videoWidth, active: true}));
+      let setting = {
+        language: '',
+        height: videoHeight,
+        width: videoWidth,
+        active: true
+      };
+      this._onTrackChanged(new VideoTrack(setting));
+      NativeAdapter._logger.debug('Video track change', new VideoTrack(setting));
     }
   }
 
@@ -597,11 +604,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (videoTracks) {
       for (let i = 0; i < videoTracks.length; i++) {
         const settings = {
-          //TODO calculate width/height/bandwidth
+          //TODO calculate bandwidth
           id: videoTracks[i].id,
           active: videoTracks[i].selected,
           label: videoTracks[i].label,
           language: videoTracks[i].language,
+          width: videoTracks[i].width | this._videoElement.videoWidth,
+          height: videoTracks[i].height | this._videoElement.videoHeight,
           index: i
         };
         parsedTracks.push(new VideoTrack(settings));
