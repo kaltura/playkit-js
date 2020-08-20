@@ -604,13 +604,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (videoTracks) {
       for (let i = 0; i < videoTracks.length; i++) {
         const settings = {
-          //TODO calculate bandwidth
+          //TODO calculate width/height/bandwidth
           id: videoTracks[i].id,
           active: videoTracks[i].selected,
           label: videoTracks[i].label,
           language: videoTracks[i].language,
-          width: videoTracks[i].width | this._videoElement.videoWidth,
-          height: videoTracks[i].height | this._videoElement.videoHeight,
+          width: videoTracks[i].width,
+          height: videoTracks[i].height,
           index: i
         };
         parsedTracks.push(new VideoTrack(settings));

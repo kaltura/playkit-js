@@ -2132,7 +2132,6 @@ export default class Player extends FakeEventTarget {
    */
   _markActiveTrack(track: Track): void {
     let tracks;
-    let markedActive = false;
     if (track instanceof VideoTrack) {
       tracks = this._getVideoTracks();
     } else if (track instanceof AudioTrack) {
@@ -2140,16 +2139,10 @@ export default class Player extends FakeEventTarget {
     } else if (track instanceof TextTrack) {
       tracks = this._getTextTracks();
     }
-    // add label check for native player that doesn't parse the video tracks from beginning.
     if (tracks) {
       for (let i = 0; i < tracks.length; i++) {
-        tracks[i].active = track.index >= 0 ? track.index === tracks[i].index : track.label === tracks[i].label;
-        markedActive = markedActive ? markedActive : tracks[i].active;
+        tracks[i].active = track.index === tracks[i].index;
       }
-    }
-    // selected track for some cases won't be available on the parsed tracks, added to get them from the API.
-    if (!markedActive) {
-      this._tracks.push(track);
     }
   }
 
