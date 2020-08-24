@@ -502,7 +502,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const {videoHeight, videoWidth} = this._videoElement;
     if (!this._videoDimensions || videoHeight !== this._videoDimensions.videoHeight || videoWidth !== this._videoDimensions.videoWidth) {
       this._videoDimensions = {videoHeight, videoWidth};
-      let setting = {
+      const setting = {
         language: '',
         height: videoHeight,
         width: videoWidth,
