@@ -93,10 +93,16 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _liveEdge: number;
   /**
    * Id for interval that starts upon waiting/stalling event and check if we are offline
-   * @member {number} - _waitingIntervalId
+   * @member {?TimeoutID} - _heartbeatTimeoutId
    * @private
    */
   _heartbeatTimeoutId: ?TimeoutID;
+  /**
+   * video dimensions for native check if video track change and which video dimensions is the selected track
+   * @member {?PKVideoDimensionsObject} - video dimensions
+   * @private
+   */
+  _videoDimensions: ?PKVideoDimensionsObject;
 
   _loadPromiseReject: ?Function;
 
@@ -460,6 +466,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._trigger(Html5EventType.WAITING);
       }
     }
+    this._handleVideoTracksChange();
   }
 
   _syncCurrentTime(): void {
@@ -491,6 +498,21 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
+  _handleVideoTracksChange(): void {
+    const {videoHeight, videoWidth} = this._videoElement;
+    if (!this._videoDimensions || videoHeight !== this._videoDimensions.videoHeight || videoWidth !== this._videoDimensions.videoWidth) {
+      this._videoDimensions = {videoHeight, videoWidth};
+      const setting = {
+        language: '',
+        height: videoHeight,
+        width: videoWidth,
+        active: true
+      };
+      this._onTrackChanged(new VideoTrack(setting));
+      NativeAdapter._logger.debug('Video track change', new VideoTrack(setting));
+    }
+  }
+
   /**
    * Destroys the native adapter.
    * @function destroy
@@ -508,6 +530,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._lastTimeUpdate = 0;
       this._lastTimeDetach = NaN;
       this._startTimeAttach = NaN;
+      this._videoDimensions = null;
       this._clearHeartbeatTimeout();
       if (this._liveDurationChangeInterval) {
         clearInterval(this._liveDurationChangeInterval);
