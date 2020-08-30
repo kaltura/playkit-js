@@ -50,7 +50,7 @@ module.exports = function (config) {
       'test/setup/karma.js': ['webpack', 'sourcemap']
     },
     reporters: ['mocha', 'coverage'],
-    webpack: webpack: {
+    webpack: {
       ...webpackConfig,
       externals: {}, //Need to remove externals otherwise they won't be included in test
       devtool: 'inline-source-map', // Need to define inline source maps when using karma
