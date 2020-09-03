@@ -1334,6 +1334,68 @@ describe('Player', function () {
       });
     });
 
+    describe('playback start', function () {
+      let config;
+      let player;
+      let playerContainer;
+
+      before(() => {
+        playerContainer = createElement('DIV', targetId);
+      });
+
+      beforeEach(() => {
+        config = getConfigStructure();
+        player = new Player(config);
+        playerContainer.appendChild(player.getView());
+      });
+
+      afterEach(() => {
+        player.destroy();
+      });
+
+      after(() => {
+        removeVideoElementsFromTestPage();
+        removeElement(targetId);
+      });
+
+      it('should fire playback start only once', done => {
+        let counter = 0;
+        let onPlaying = () => {
+          player.removeEventListener(Html5EventType.PLAYING, onPlaying);
+          player.pause();
+          player.play();
+          setTimeout(() => {
+            try {
+              counter.should.equal(1);
+              done();
+            } catch (e) {
+              done(e);
+            }
+          }, 0);
+        };
+        player.addEventListener(CustomEventType.PLAYBACK_START, () => {
+          counter++;
+        });
+        player.addEventListener(Html5EventType.PLAYING, onPlaying);
+        player.configure({
+          sources: sourcesConfig.Mp4
+        });
+        player.play();
+      });
+
+      it('should fire playback start - autoplay', done => {
+        player.addEventListener(CustomEventType.PLAYBACK_START, () => {
+          done();
+        });
+        player.configure({
+          sources: sourcesConfig.Mp4,
+          playback: {
+            autoplay: true
+          }
+        });
+      });
+    });
+
     describe('first play', function () {
       let config;
       let player;
