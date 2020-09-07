@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.64.0](https://github.com/kaltura/playkit-js/compare/v0.63.0...v0.64.0) (2020-09-07)
+
+
+### Bug Fixes
+
+* **FEC-10468:** PLAYBACK_START not fired on autoplay ([#480](https://github.com/kaltura/playkit-js/issues/480)) ([950da7a](https://github.com/kaltura/playkit-js/commit/950da7a))
+
+
+### Build System
+
+* **FEC-10064:** add automatic release notes ([#481](https://github.com/kaltura/playkit-js/issues/481)) ([ed5cfa9](https://github.com/kaltura/playkit-js/commit/ed5cfa9))
+
+
+### Features
+
+* **FEC-10146:** Add native video track analytics data ([#478](https://github.com/kaltura/playkit-js/issues/478)) ([c125be5](https://github.com/kaltura/playkit-js/commit/c125be5))
+
+
+### Tests
+
+* faster unit tests ([#479](https://github.com/kaltura/playkit-js/issues/479)) ([27f1aa8](https://github.com/kaltura/playkit-js/commit/27f1aa8))
+
+
+
 ## [0.63.0](https://github.com/kaltura/playkit-js/compare/v0.62.0...v0.63.0) (2020-08-05)
 
 
