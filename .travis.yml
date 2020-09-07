@@ -34,8 +34,6 @@ jobs:
       name: 'Releasing a new version'
       if: tag IS present
       env: TRAVIS_MODE=release
-      script:
-        - conventional-github-releaser -p angular -t $GH_TOKEN
       deploy:
         - provider: releases
           api_key: $GH_TOKEN
