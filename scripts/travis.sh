@@ -22,6 +22,8 @@ elif [ "${TRAVIS_MODE}" = "release" ] || [ "${TRAVIS_MODE}" = "releaseCanary" ];
     sed -iE "s/$currentVersion/$newVersion/g" CHANGELOG.md
     rm package.jsonE
     rm CHANGELOG.mdE
+  else
+    conventional-github-releaser -p angular -t $GH_TOKEN
   fi
   echo "Building..."
   yarn run build
