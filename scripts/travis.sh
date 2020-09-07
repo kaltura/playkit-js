@@ -23,6 +23,7 @@ elif [ "${TRAVIS_MODE}" = "release" ] || [ "${TRAVIS_MODE}" = "releaseCanary" ];
     rm package.jsonE
     rm CHANGELOG.mdE
   else
+    echo "Run conventional-github-releaser"
     conventional-github-releaser -p angular -t $GH_TOKEN
   fi
   echo "Building..."
