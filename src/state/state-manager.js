@@ -103,10 +103,6 @@ export default class StateManager {
       [Html5EventType.ENDED]: () => {
         this._updateState(StateType.IDLE);
         this._dispatchEvent();
-      },
-      [CustomEventType.PLAYBACK_ENDED]: () => {
-        this._updateState(StateType.IDLE);
-        this._dispatchEvent();
       }
     },
     [StateType.PLAYING]: {
@@ -120,10 +116,6 @@ export default class StateManager {
         this._dispatchEvent();
       },
       [Html5EventType.ENDED]: () => {
-        this._updateState(StateType.IDLE);
-        this._dispatchEvent();
-      },
-      [CustomEventType.PLAYBACK_ENDED]: () => {
         this._updateState(StateType.IDLE);
         this._dispatchEvent();
       },
@@ -187,7 +179,6 @@ export default class StateManager {
     this._eventManager.listen(this._player, Html5EventType.WAITING, this._doTransition.bind(this));
     this._eventManager.listen(this._player, Html5EventType.SEEKED, this._doTransition.bind(this));
     this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, this._doTransition.bind(this));
-    this._eventManager.listen(this._player, CustomEventType.PLAYBACK_ENDED, this._doTransition.bind(this));
   }
 
   /**

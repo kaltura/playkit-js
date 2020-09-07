@@ -8,7 +8,6 @@ const DefaultConfig = {
     },
     metadata: {}
   },
-  plugins: {},
   playback: {
     audioLanguage: '',
     textLanguage: '',
@@ -23,7 +22,6 @@ const DefaultConfig = {
     playsinline: true,
     preload: 'none',
     autoplay: false,
-    loop: false,
     allowMutedAutoPlay: true,
     muted: false,
     pictureInPicture: true,
@@ -74,10 +72,7 @@ const DefaultConfig = {
   drm: {
     keySystem: ''
   },
-  network: {},
-  advertising: {
-    adBreaks: []
-  }
+  network: {}
 };
 
 export {DefaultConfig};

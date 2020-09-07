@@ -8,8 +8,6 @@ import {CustomEventType, EventType, Html5EventType} from './event/event-type';
 import * as Utils from './utils/util';
 import Locale from './utils/locale';
 import getLogger, {getLogLevel, LogLevel, LogLevelType, setLogHandler, setLogLevel} from './utils/logger';
-import PluginManager from './plugin/plugin-manager';
-import BasePlugin from './plugin/base-plugin';
 import StateManager from './state/state-manager';
 import Track from './track/track';
 import VideoTrack from './track/video-track';
@@ -33,9 +31,6 @@ import {EngineProvider} from './engines/engine-provider';
 import {ExternalCaptionsHandler} from './track/external-captions-handler';
 import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
-import {AdsController} from './ads/ads-controller';
-import {AdEventType} from './ads/ad-event-type';
-import {ControllerProvider} from './controller/controller-provider';
 import {ResizeWatcher} from './utils/resize-watcher';
 import {FullscreenController} from './fullscreen/fullscreen-controller';
 import {EngineDecorator} from './engines/engine-decorator';
@@ -178,18 +173,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * The plugin manager of the player.
-   * @type {PluginManager}
-   * @private
-   */
-  _pluginManager: PluginManager;
-  /**
-   * The controller provider of the player.
-   * @type {ControllerProvider}
-   * @private
-   */
-  _controllerProvider: ControllerProvider;
-  /**
    * The event manager of the player.
    * @type {EventManager}
    * @private
@@ -250,18 +233,10 @@ export default class Player extends FakeEventTarget {
    */
   _playbackStart: boolean;
   /**
-   * Whether the playback ended
-   * @type {boolean}
-   * @private
-   */
-
-  _playbackEnded: boolean;
-  /**
    * If quality has changed after playback ended - pend the change
    * @type {boolean}
    * @private
    */
-
   _pendingSelectedVideoTrack: ?VideoTrack;
   /**
    * The available playback rates for the player.
@@ -397,23 +372,11 @@ export default class Player extends FakeEventTarget {
    */
   _fullscreenController: FullscreenController;
   /**
-   * holds the ads controller
-   * @type {?AdsController}
-   * @private
-   */
-  _adsController: ?AdsController;
-  /**
    * holds the resize observer. Incharge of notifying on resize changes.
    * @type {?AdsController}
    * @private
    */
   _resizeWatcher: ResizeWatcher;
-  /**
-   * Holds preset component factories
-   * @type {?PKUIComponent}
-   * @private
-   */
-  _uiComponents: Array<PKUIComponent>;
   /**
    * Whether the user interacted with the player
    * @type {boolean}
@@ -445,13 +408,11 @@ export default class Player extends FakeEventTarget {
     Player.runCapabilities(Utils.Object.getPropertyPath(config, 'playback.disableAutoplayCapabilityTest'));
     this._env = Env;
     this._tracks = [];
-    this._uiComponents = [];
     this._firstPlay = true;
     this._repositionCuesTimeout = false;
     this._loadingMedia = false;
     this._loading = false;
     this._playbackStart = false;
-    this._playbackEnded = false;
     this._firstPlaying = false;
     this._reset = true;
     this._destroyed = false;
@@ -460,8 +421,6 @@ export default class Player extends FakeEventTarget {
     this._eventManager = new EventManager();
     this._posterManager = new PosterManager();
     this._stateManager = new StateManager(this);
-    this._pluginManager = new PluginManager();
-    this._controllerProvider = new ControllerProvider(this._pluginManager);
     this._resizeWatcher = new ResizeWatcher();
     this._playbackMiddleware = new PlaybackMiddleware();
     this._textStyle = new TextStyle();
@@ -485,13 +444,10 @@ export default class Player extends FakeEventTarget {
   configure(config: Object = {}): void {
     this._setConfigLogLevel(config);
     if (this._hasSources(config.sources)) {
-      this._configureOrLoadPlugins(config.plugins);
-      this._maybeCreateAdsController();
       this.reset();
       this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
       Player._logger.debug('Change source started');
       this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
-      this._pluginManager.loadMedia();
       Utils.Object.mergeDeep(this._config, config);
       this._reset = false;
       if (this._selectEngineByPriority()) {
@@ -519,8 +475,6 @@ export default class Player extends FakeEventTarget {
       }
     } else {
       Utils.Object.mergeDeep(this._config, config);
-      this._configureOrLoadPlugins(config.plugins);
-      this._maybeCreateAdsController();
     }
   }
 
@@ -623,7 +577,6 @@ export default class Player extends FakeEventTarget {
     //make sure all services are reset before engine and engine attributes are reset
     this._externalCaptionsHandler.reset();
     this._posterManager.reset();
-    this._pluginManager.reset();
     this._stateManager.reset();
     this._config.sources = {};
     this._activeTextCues = [];
@@ -636,7 +589,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.reset();
     }
-    this._showBlackCover();
+    this.showBlackCover();
     this._reset = true;
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET));
     this._eventManager.removeAll();
@@ -656,7 +609,6 @@ export default class Player extends FakeEventTarget {
     //make sure all services are destroyed before engine and engine attributes are destroyed
     this._externalCaptionsHandler.destroy();
     this._posterManager.destroy();
-    this._pluginManager.destroy();
     this._stateManager.destroy();
     this._fullscreenController.destroy();
     this._clearRepositionTimeout();
@@ -683,11 +635,33 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Attach the engine's media source
-   * @private
+   * Hides the black cover div.
+   * @public
    * @returns {void}
    */
-  _attachMediaSource(): void {
+  hideBlackCover(): void {
+    if (this._blackCoverEl) {
+      this._blackCoverEl.style.visibility = 'hidden';
+    }
+  }
+
+  /**
+   * Shows the black cover div.
+   * @public
+   * @returns {void}
+   */
+  showBlackCover(): void {
+    if (this._blackCoverEl) {
+      this._blackCoverEl.style.visibility = 'visible';
+    }
+  }
+
+  /**
+   * Attach the engine's media source
+   * @public
+   * @returns {void}
+   */
+  attachMediaSource(): void {
     if (this._engine) {
       this._shouldLoadAfterAttach = true;
       this._engine.attachMediaSource();
@@ -701,10 +675,10 @@ export default class Player extends FakeEventTarget {
 
   /**
    * detach the engine's media source
-   * @private
+   * @public
    * @returns {void}
    */
-  _detachMediaSource(): void {
+  detachMediaSource(): void {
     if (this._engine) {
       this.pause();
       this.hideTextTrack();
@@ -1006,10 +980,6 @@ export default class Player extends FakeEventTarget {
     return Utils.Object.mergeDeep({}, this._config);
   }
 
-  get uiComponents(): PKUIComponent[] {
-    return [...this._uiComponents];
-  }
-
   /**
    * Get whether the user already interacted with the player
    * @returns {boolean} - Whether the user interacted with the player
@@ -1061,6 +1031,22 @@ export default class Player extends FakeEventTarget {
       return this._engine.ended;
     }
     return null;
+  }
+
+  /**
+   * Get the playback middleware.
+   * @returns {PlaybackMiddleware} - The playback middleware.
+   */
+  get playbackMiddleware(): PlaybackMiddleware {
+    return this._playbackMiddleware;
+  }
+
+  /**
+   * Get the poster manager.
+   * @returns {PlaybackMiddleware} - The poster manager.
+   */
+  get posterManager(): PosterManager {
+    return this._posterManager;
   }
 
   // </editor-fold>
@@ -1168,7 +1154,7 @@ export default class Player extends FakeEventTarget {
   selectTrack(track: ?Track): void {
     if (this._engine) {
       if (track instanceof VideoTrack) {
-        if (this._playbackEnded) {
+        if (this._stateManager.currentState.type === StateType.IDLE) {
           this._pendingSelectedVideoTrack = track;
         } else {
           this._engine.selectVideoTrack(track);
@@ -1299,18 +1285,6 @@ export default class Player extends FakeEventTarget {
 
   // </editor-fold>
 
-  // <editor-fold desc="Ads API">
-
-  /**
-   * Gets the ads controller.
-   * @returns {?AdsController} - the ads controller
-   */
-  get ads(): ?AdsController {
-    return this._adsController;
-  }
-
-  // </editor-fold>
-
   // <editor-fold desc="Fullscreen API">
   /**
    * @returns {boolean} - Whether the player is in fullscreen mode.
@@ -1421,35 +1395,6 @@ export default class Player extends FakeEventTarget {
     return !!this._config.sources.vr;
   }
 
-  /**
-   * Toggling the VR mode
-   * @returns {void}
-   * @public
-   */
-  toggleVrStereoMode(): void {
-    const vrPlugin: ?BasePlugin = this._pluginManager.get('vr');
-    // $FlowFixMe - remove once we move plugins to kaltura player
-    if (vrPlugin && typeof vrPlugin.toggleVrStereoMode === 'function') {
-      //$FlowFixMe
-      vrPlugin.toggleVrStereoMode();
-    }
-  }
-
-  /**
-   * Checking if the VR stereo mode is active.
-   * @returns {boolean} - Whether is active.
-   * @public
-   */
-  isInVrStereoMode(): boolean {
-    const vrPlugin: ?BasePlugin = this._pluginManager.get('vr');
-    // $FlowFixMe - remove once we move plugins to kaltura player
-    if (vrPlugin && typeof vrPlugin.isInStereoMode === 'function') {
-      //$FlowFixMe
-      return vrPlugin.isInStereoMode();
-    }
-    return false;
-  }
-
   // </editor-fold>
 
   // <editor-fold desc="Logger API">
@@ -1471,18 +1416,6 @@ export default class Player extends FakeEventTarget {
    */
   setLogLevel(level: Object, name?: string) {
     setLogLevel(level, name);
-  }
-
-  // </editor-fold>
-
-  // <editor-fold desc="Plugins API">
-
-  /**
-   * Gets the plugins instances.
-   * @returns {Object} - Plugin name to plugin instance object map.
-   */
-  get plugins(): {[name: string]: BasePlugin} {
-    return this._pluginManager.getAll();
   }
 
   // </editor-fold>
@@ -1595,56 +1528,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Configures or load the plugins defined in the configuration.
-   * @param {Object} plugins - The new received plugins configuration.
-   * @private
-   * @returns {void}
-   */
-  _configureOrLoadPlugins(plugins: Object = {}): void {
-    if (plugins) {
-      const middlewares = [];
-      const uiComponents = [];
-      Object.keys(plugins).forEach(name => {
-        // If the plugin is already exists in the registry we are updating his config
-        const plugin = this._pluginManager.get(name);
-        if (plugin) {
-          plugin.updateConfig(plugins[name]);
-          this._config.plugins[name] = plugin.getConfig();
-        } else {
-          // We allow to load plugins as long as the player has no engine
-          if (!this._engine) {
-            try {
-              this._pluginManager.load(name, this, plugins[name]);
-            } catch (error) {
-              //bounce the plugin load error up
-              this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
-            }
-            let plugin = this._pluginManager.get(name);
-            if (plugin) {
-              this._config.plugins[name] = plugin.getConfig();
-              if (typeof plugin.getMiddlewareImpl === 'function') {
-                // push the bumper middleware to the end, to play the bumper right before the content
-                let middleware = plugin.getMiddlewareImpl();
-                if (middleware) {
-                  plugin.name === 'bumper' ? middlewares.push(middleware) : middlewares.unshift(middleware);
-                }
-              }
-
-              if (typeof plugin.getUIComponents === 'function') {
-                uiComponents.push(...(plugin.getUIComponents() || []));
-              }
-            }
-          } else {
-            delete this._config.plugins[name];
-          }
-        }
-      });
-      this._uiComponents = uiComponents;
-      middlewares.forEach(middleware => this._playbackMiddleware.use(middleware));
-    }
-  }
-
-  /**
    * Creates the ready promise.
    * @private
    * @returns {void}
@@ -1709,7 +1592,7 @@ export default class Player extends FakeEventTarget {
       this._appendEngineEl();
     } else {
       if (this._engine.id === Engine.id) {
-        // The restoring must be done by the engine itself not by the proxy (engine decorator is exists) to make sure the engine events fired by the engine itself.
+        // The restoring must be done by the engine itself not by the proxy (engine decorator if exists) to make sure the engine events fired by the engine itself.
         this._engine.restore.call(this._engine._engine || this._engine, source, this._config);
       } else {
         this._engine.destroy();
@@ -1728,8 +1611,7 @@ export default class Player extends FakeEventTarget {
    */
   _createEngine(Engine: IEngineStatic, source: PKMediaSourceObject): void {
     const engine = Engine.createEngine(source, this._config, this._playerId);
-    const plugins = (Object.values(this._pluginManager.getAll()): any);
-    this._engine = EngineDecorator.getDecorator(engine, plugins) || engine;
+    this._engine = EngineDecorator.getDecorator(engine) || engine;
   }
 
   /**
@@ -1774,7 +1656,6 @@ export default class Player extends FakeEventTarget {
         this._onPlayFailed(event);
         this.dispatchEvent(event);
       });
-      this._eventManager.listen(this, AdEventType.AD_AUTOPLAY_FAILED, (event: FakeEvent) => this._onPlayFailed(event));
       this._eventManager.listen(this._engine, CustomEventType.FPS_DROP, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.DRM_LICENSE_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
@@ -1783,7 +1664,6 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this, Html5EventType.PAUSE, this._onPause.bind(this));
       this._eventManager.listen(this, Html5EventType.PLAYING, this._onPlaying.bind(this));
       this._eventManager.listen(this, Html5EventType.ENDED, this._onEnded.bind(this));
-      this._eventManager.listen(this, CustomEventType.PLAYBACK_ENDED, this._onPlaybackEnded.bind(this));
       this._eventManager.listen(this, CustomEventType.MUTE_CHANGE, () => {
         this._playbackAttributesState.muted = this.muted;
       });
@@ -1805,22 +1685,6 @@ export default class Player extends FakeEventTarget {
         this._onTextTrackChanged(event)
       );
       this._eventManager.listen(this._externalCaptionsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this, AdEventType.AD_STARTED, () => {
-        if (this._firstPlay) {
-          this._posterManager.hide();
-          this._hideBlackCover();
-        }
-      });
-      if (this.config.playback.playAdsWithMSE) {
-        this._eventManager.listen(this, AdEventType.AD_BREAK_START, () => {
-          const adData = this._adsController ? this._adsController.getAd() : null;
-          if (!!adData && adData.linear) {
-            this._detachMediaSource();
-          }
-        });
-        this._eventManager.listen(this, AdEventType.AD_BREAK_END, () => this._attachMediaSource());
-        this._eventManager.listen(this, AdEventType.AD_ERROR, () => this._attachMediaSource());
-      }
       const rootElement = Utils.Dom.getElementBySelector(`#${this.config.targetId}`);
       if (rootElement) {
         this._eventManager.listen(
@@ -2012,18 +1876,6 @@ export default class Player extends FakeEventTarget {
     };
   }
 
-  _maybeCreateAdsController(): void {
-    if (!this._adsController) {
-      const adsPluginControllers = this._controllerProvider.getAdsControllers();
-      if (adsPluginControllers.length) {
-        this._adsController = new AdsController(this, adsPluginControllers);
-        this._eventManager.listen(this._adsController, AdEventType.ALL_ADS_COMPLETED, (event: FakeEvent) => {
-          this.dispatchEvent(event);
-        });
-      }
-    }
-  }
-
   /**
    * Play after async ads
    * @private
@@ -2112,7 +1964,7 @@ export default class Player extends FakeEventTarget {
       this._firstPlay = false;
       this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAY));
       this._posterManager.hide();
-      this._hideBlackCover();
+      this.hideBlackCover();
       if (typeof this._playbackAttributesState.rate === 'number') {
         this.playbackRate = this._playbackAttributesState.rate;
       }
@@ -2149,60 +2001,15 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Hides the black cover div.
-   * @private
-   * @returns {void}
-   */
-  _hideBlackCover(): void {
-    if (this._blackCoverEl) {
-      this._blackCoverEl.style.visibility = 'hidden';
-    }
-  }
-
-  /**
-   * Shows the black cover div.
-   * @private
-   * @returns {void}
-   */
-  _showBlackCover(): void {
-    if (this._blackCoverEl) {
-      this._blackCoverEl.style.visibility = 'visible';
-    }
-  }
-
-  /**
    * @function _onEnded
    * @return {void}
    * @private
    */
   _onEnded(): void {
-    if (this._adsController && !this._adsController.allAdsCompleted) {
-      this._eventManager.listenOnce(this._adsController, AdEventType.ALL_ADS_COMPLETED, () => {
-        this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_ENDED));
-      });
-    } else {
-      // Make sure the all ENDED listeners have been invoked
-      setTimeout(() => this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_ENDED)), 0);
-    }
     if (!this.paused) {
       this._pause();
     }
   }
-
-  /**
-   * @function _onPlaybackEnded
-   * @return {void}
-   * @private
-   */
-  _onPlaybackEnded(): void {
-    if (this.config.playback.loop) {
-      this.currentTime = 0;
-      this.play();
-    } else {
-      this._playbackEnded = true;
-    }
-  }
-
   /**
    * Resets the state flags of the player.
    * @returns {void}
@@ -2213,7 +2020,6 @@ export default class Player extends FakeEventTarget {
     this._firstPlay = true;
     this._loadingMedia = false;
     this._playbackStart = false;
-    this._playbackEnded = false;
     this._firstPlaying = false;
   }
 

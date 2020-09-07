@@ -11,18 +11,26 @@ import FakeEventTarget from '../event/fake-event-target';
  * @implements {IEngineDecorator}
  */
 class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
+  static _decoratorProviders: Array<IEngineDecoratorProvider> = [];
   _pluginDecorators: Array<IEngineDecorator>;
   _eventManager: EventManager;
 
-  static getDecorator(engine: IEngine, plugins: Array<any>): ?IEngine {
-    const pluginWithDecorators = plugins.filter(plugin => plugin.getEngineDecorator);
-    return pluginWithDecorators.length ? new this(engine, pluginWithDecorators) : null;
+  static register(decoratorProvider: IEngineDecoratorProvider): void {
+    if (decoratorProvider) {
+      if (!EngineDecorator._decoratorProviders.includes(decoratorProvider)) {
+        EngineDecorator._decoratorProviders.push(decoratorProvider);
+      }
+    }
   }
 
-  constructor(engine: IEngine, pluginWithDecorators: Array<IEngineDecoratorProvider>) {
+  static getDecorator(engine: IEngine): ?IEngine {
+    return EngineDecorator._decoratorProviders.length ? new this(engine) : null;
+  }
+
+  constructor(engine: IEngine) {
     super();
     this._eventManager = new EventManager();
-    this._pluginDecorators = pluginWithDecorators.map(plugin => plugin.getEngineDecorator(engine, super.dispatchEvent.bind(this)));
+    this._pluginDecorators = EngineDecorator._decoratorProviders.map(provider => provider.getEngineDecorator(engine, super.dispatchEvent.bind(this)));
     const events: Array<string> = (Object.values(EventType): any);
     events.forEach(event => this._eventManager.listen(engine, event, (e: FakeEvent) => this.dispatchEvent(e)));
     return new Proxy(engine, {
@@ -61,4 +69,5 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
   }
 }
 
-export {EngineDecorator};
+const registerEngineDecoratorProvider = EngineDecorator.register;
+export {EngineDecorator, registerEngineDecoratorProvider};
