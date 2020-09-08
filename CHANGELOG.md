@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.64.1](https://github.com/kaltura/playkit-js/compare/v0.64.0...v0.64.1) (2020-09-08)
+
+
+
 ## [0.64.0](https://github.com/kaltura/playkit-js/compare/v0.63.0...v0.64.0) (2020-09-07)
 
 
