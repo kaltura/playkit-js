@@ -1,6 +1,108 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [0.64.1](https://github.com/kaltura/playkit-js/compare/v0.64.0...v0.64.1) (2020-09-08)
+
+
+
+## [0.64.0](https://github.com/kaltura/playkit-js/compare/v0.63.0...v0.64.0) (2020-09-07)
+
+
+### Bug Fixes
+
+* **FEC-10468:** PLAYBACK_START not fired on autoplay ([#480](https://github.com/kaltura/playkit-js/issues/480)) ([950da7a](https://github.com/kaltura/playkit-js/commit/950da7a))
+
+
+### Build System
+
+* **FEC-10064:** add automatic release notes ([#481](https://github.com/kaltura/playkit-js/issues/481)) ([ed5cfa9](https://github.com/kaltura/playkit-js/commit/ed5cfa9))
+
+
+### Features
+
+* **FEC-10146:** Add native video track analytics data ([#478](https://github.com/kaltura/playkit-js/issues/478)) ([c125be5](https://github.com/kaltura/playkit-js/commit/c125be5))
+
+
+### Tests
+
+* faster unit tests ([#479](https://github.com/kaltura/playkit-js/issues/479)) ([27f1aa8](https://github.com/kaltura/playkit-js/commit/27f1aa8))
+
+
+
+## [0.63.0](https://github.com/kaltura/playkit-js/compare/v0.62.0...v0.63.0) (2020-08-05)
+
+
+### Bug Fixes
+
+* **FEC-10266:** ima dai doesn't show ad preset ([#473](https://github.com/kaltura/playkit-js/issues/473)) ([521ae1f](https://github.com/kaltura/playkit-js/commit/521ae1f))
+* **FEC-10312:** ready promise rejected in recoverable error ([#465](https://github.com/kaltura/playkit-js/issues/465)) ([4015286](https://github.com/kaltura/playkit-js/commit/4015286))
+* **FEC-10335:** ad doesn't play correctly on same video tag with MSE ([#471](https://github.com/kaltura/playkit-js/issues/471)) ([28e7dd3](https://github.com/kaltura/playkit-js/commit/28e7dd3))
+
+
+### Features
+
+* **FEC-10057:** move the plugin manager to kaltura player ([#463](https://github.com/kaltura/playkit-js/issues/463)) ([59026c0](https://github.com/kaltura/playkit-js/commit/59026c0))
+* **FEC-10290:** upgrade NPM packages  ([#446](https://github.com/kaltura/playkit-js/issues/446)) ([724715e](https://github.com/kaltura/playkit-js/commit/724715e))
+
+
+
+<a name="0.62.0"></a>
+# [0.62.0](https://github.com/kaltura/playkit-js/compare/v0.61.3...v0.62.0) (2020-07-07)
+
+
+### Bug Fixes
+
+* destroy cleanup process ([#457](https://github.com/kaltura/playkit-js/issues/457)) ([8623d72](https://github.com/kaltura/playkit-js/commit/8623d72))
+
+
+### Features
+
+* **FEC-9649:** css not loaded in embed page ([#462](https://github.com/kaltura/playkit-js/issues/462)) ([af77d44](https://github.com/kaltura/playkit-js/commit/af77d44))
+* **FEC-9649:** loading external CSS ([#459](https://github.com/kaltura/playkit-js/issues/459)) ([7690ff6](https://github.com/kaltura/playkit-js/commit/7690ff6))
+
+
+
+<a name="0.61.3"></a>
+## [0.61.3](https://github.com/kaltura/playkit-js/compare/v0.61.2...v0.61.3) (2020-06-10)
+
+
+### Bug Fixes
+
+* **FEC-10122:** clear drop frame watcher and DRM selection ([#455](https://github.com/kaltura/playkit-js/issues/455)) ([6950806](https://github.com/kaltura/playkit-js/commit/6950806))
+
+
+
+<a name="0.61.2"></a>
+## [0.61.2](https://github.com/kaltura/playkit-js/compare/v0.61.1...v0.61.2) (2020-05-10)
+
+
+### Bug Fixes
+
+* **FEC-10014:** Content playback fails when user minimise the browser on IOS ([#452](https://github.com/kaltura/playkit-js/issues/452)) ([1d2b92c](https://github.com/kaltura/playkit-js/commit/1d2b92c))
+* **FEC-9997:** out of DVR window will lead to live edge ([#451](https://github.com/kaltura/playkit-js/issues/451)) ([c18a013](https://github.com/kaltura/playkit-js/commit/c18a013))
+
+
+
+<a name="0.61.1"></a>
+## [0.61.1](https://github.com/kaltura/playkit-js/compare/v0.61.0...v0.61.1) (2020-04-13)
+
+
+
+<a name="0.61.0"></a>
+# [0.61.0](https://github.com/kaltura/playkit-js/compare/v0.60.1...v0.61.0) (2020-04-13)
+
+
+### Bug Fixes
+
+* **FEC-9605:** load middleware called twice when preload is 'auto' ([#448](https://github.com/kaltura/playkit-js/issues/448)) ([66dbb33](https://github.com/kaltura/playkit-js/commit/66dbb33))
+
+
+### Features
+
+* enrich the response filter params ([#449](https://github.com/kaltura/playkit-js/issues/449)) ([a9862b1](https://github.com/kaltura/playkit-js/commit/a9862b1))
+
+
 
 <a name="0.60.1"></a>
 ## [0.60.1](https://github.com/kaltura/playkit-js/compare/v0.60.0...v0.60.1) (2020-03-10)

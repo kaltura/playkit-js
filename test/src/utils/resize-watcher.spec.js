@@ -2,11 +2,12 @@ import {ResizeWatcher} from '../../../src/utils/resize-watcher';
 
 describe('ResizeWatcher', () => {
   let rw;
+
   beforeEach(() => {
     rw = new ResizeWatcher();
   });
 
-  it('create a native obeserver', () => {
+  it('create a native observer', () => {
     if (window.ResizeObserver) {
       rw._createNativeObserver();
       rw._observer.should.be.instanceof(window.ResizeObserver);
@@ -14,14 +15,14 @@ describe('ResizeWatcher', () => {
     }
   });
 
-  it('create a iframe obeserver', () => {
+  it('create a iframe observer', () => {
     rw._createIframeObserver();
     rw._observer.should.not.be.instanceof(window.ResizeObserver);
     rw._observer.should.be.an('Object');
     rw.destroy();
   });
 
-  it('iframe obeserver _createIframe', () => {
+  it('iframe observer _createIframe', () => {
     rw._createIframeObserver();
     let iframe = rw._observer._createIframe();
     iframe.should.be.instanceOf(HTMLElement);
@@ -29,7 +30,7 @@ describe('ResizeWatcher', () => {
     rw.destroy();
   });
 
-  it('iframe obeserver observe', done => {
+  it('iframe observer observe', done => {
     rw._createIframeObserver();
     let container = document.createElement('div');
     container.setAttribute('id', 'testId123456789');
@@ -49,7 +50,7 @@ describe('ResizeWatcher', () => {
     }, 100);
   });
 
-  it('iframe obeserver disconnect', done => {
+  it('iframe observer disconnect', done => {
     rw._createIframeObserver();
     let container = document.createElement('div');
     container.setAttribute('id', 'testId123456789');
@@ -79,12 +80,13 @@ describe('ResizeWatcher', () => {
     rw._triggerResize();
   });
 
-  it('create an obeserver', done => {
+  it('create an observer', done => {
     let el = document.createElement('div');
     el.setAttribute('id', 'coolObserver123');
     document.body.appendChild(el);
     rw.init(el);
     rw.addEventListener('resize', () => {
+      rw.destroy();
       document.body.removeChild(el);
       done();
     });

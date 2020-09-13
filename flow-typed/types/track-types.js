@@ -1,2 +1,2 @@
 // @flow
-declare type PKTrackTypes = { [track: string]: string };
+declare type PKTrackTypes = {[track: string]: string};

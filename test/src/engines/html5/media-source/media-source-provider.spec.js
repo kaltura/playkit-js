@@ -1,5 +1,5 @@
 import MediaSourceProvider from '../../../../../src/engines/html5/media-source/media-source-provider';
-import {Adapter1, Adapter2, Adapter3, FakeDashAdapter, FakeNativeAdapter, FakeHlsAdapter} from './adapters/test-adapters/test-adapters';
+import {Adapter1, Adapter2, Adapter3, FakeDashAdapter, FakeHlsAdapter, FakeNativeAdapter} from './adapters/test-adapters/test-adapters';
 
 let video = document.createElement('video');
 let oldMediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
@@ -99,8 +99,8 @@ describe('mediaSourceProvider:canPlaySource', () => {
   });
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-    sandbox.stub(MediaSourceProvider, '_orderMediaSourceAdapters', () => {});
+    sandbox = sinon.createSandbox();
+    sandbox.stub(MediaSourceProvider, '_orderMediaSourceAdapters').callsFake(() => {});
   });
 
   afterEach(() => {
@@ -172,9 +172,9 @@ describe('mediaSourceProvider:getMediaSourceAdapter', () => {
   beforeEach(() => {});
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     MediaSourceProvider._selectedAdapter = null;
-    sandbox.stub(MediaSourceProvider, '_orderMediaSourceAdapters', () => {});
+    sandbox.stub(MediaSourceProvider, '_orderMediaSourceAdapters').callsFake(() => {});
   });
 
   afterEach(() => {

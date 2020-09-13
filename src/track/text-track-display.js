@@ -86,7 +86,7 @@ function Settings() {
 
 Settings.prototype = {
   // Only accept the first assignment to any key.
-  set: function(k, v) {
+  set: function (k, v) {
     if (!this.get(k) && v !== '') {
       this.values[k] = v;
     }
@@ -96,18 +96,18 @@ Settings.prototype = {
   // a number of possible default values as properties where 'defaultKey' is
   // the key of the property that will be chosen; otherwise it's assumed to be
   // a single value.
-  get: function(k, dflt, defaultKey) {
+  get: function (k, dflt, defaultKey) {
     if (defaultKey) {
       return this.has(k) ? this.values[k] : dflt[defaultKey];
     }
     return this.has(k) ? this.values[k] : dflt;
   },
   // Check whether we have a value for a key.
-  has: function(k) {
+  has: function (k) {
     return k in this.values;
   },
   // Accept a setting if its one of the given alternatives.
-  alt: function(k, v, a) {
+  alt: function (k, v, a) {
     for (var n = 0; n < a.length; ++n) {
       if (v === a[n]) {
         this.set(k, v);
@@ -116,14 +116,14 @@ Settings.prototype = {
     }
   },
   // Accept a setting if its a valid (signed) integer.
-  integer: function(k, v) {
+  integer: function (k, v) {
     if (/^-?\d+$/.test(v)) {
       // integer
       this.set(k, parseInt(v, 10));
     }
   },
   // Accept a setting if its a valid percentage.
-  percent: function(k, v) {
+  percent: function (k, v) {
     var m;
     if ((m = v.match(/^([\d]{1,3})(\.[\d]*)?%$/))) {
       v = parseFloat(v);
@@ -175,7 +175,7 @@ function parseCue(input, cue, regionList) {
 
     parseOptions(
       input,
-      function(k, v) {
+      function (k, v) {
         switch (k) {
           case 'region':
             // Find the last region we parsed with the same region id.
@@ -689,7 +689,7 @@ class CueStyleBox extends StyleBox {
       });
     }
 
-    this.move = function(box) {
+    this.move = function (box) {
       this.applyStyles({
         top: this.formatStyle(box.top, 'px'),
         bottom: this.formatStyle(box.bottom, 'px'),
@@ -760,7 +760,7 @@ class BoxPosition {
   }
 
   // Check if this box overlaps another box, b2.
-  overlaps = function(b2) {
+  overlaps = function (b2) {
     return this.left < b2.right && this.right > b2.left && this.top < b2.bottom && this.bottom > b2.top;
   };
 
@@ -1030,7 +1030,7 @@ function processCues(window, cues, overlay, style) {
     textShadow: style.getTextShadow()
   };
 
-  (function() {
+  (function () {
     let styleBox, cue;
 
     for (let i = 0; i < cues.length; i++) {
@@ -1052,7 +1052,7 @@ function processCues(window, cues, overlay, style) {
   })();
 }
 
-let Parser = function(window, decoder) {
+let Parser = function (window, decoder) {
   this.window = window;
   this.state = 'INITIAL';
   this.buffer = '';
@@ -1060,9 +1060,9 @@ let Parser = function(window, decoder) {
   this.regionList = [];
 };
 
-let StringDecoder = function() {
+let StringDecoder = function () {
   return {
-    decode: function(data) {
+    decode: function (data) {
       if (!data) {
         return '';
       }
@@ -1076,10 +1076,10 @@ let StringDecoder = function() {
 
 var _objCreate =
   Object.create ||
-  (function() {
+  (function () {
     function F() {}
 
-    return function(o) {
+    return function (o) {
       if (arguments.length !== 1) {
         throw new Error('Object.create shim only accepts one parameter.');
       }
@@ -1116,14 +1116,14 @@ ParsingError.Errors = {
 Parser.prototype = {
   // If the error is a ParsingError then report it to the consumer if
   // possible. If it's not a ParsingError then throw it like normal.
-  reportOrThrowError: function(e) {
+  reportOrThrowError: function (e) {
     if (e instanceof ParsingError) {
       this.onparsingerror && this.onparsingerror(e);
     } else {
       throw e;
     }
   },
-  parse: function(data) {
+  parse: function (data) {
     var self = this;
 
     // If there is no data then we won't decode it, but will just try to parse
@@ -1158,7 +1158,7 @@ Parser.prototype = {
 
       parseOptions(
         input,
-        function(k, v) {
+        function (k, v) {
           switch (k) {
             case 'id':
               settings.set(k, v);
@@ -1221,7 +1221,7 @@ Parser.prototype = {
     function parseHeader(input) {
       parseOptions(
         input,
-        function(k, v) {
+        function (k, v) {
           switch (k) {
             case 'Region':
               // 3.3 WebVTT region metadata header syntax
@@ -1353,7 +1353,7 @@ Parser.prototype = {
     }
     return this;
   },
-  flush: function() {
+  flush: function () {
     var self = this;
     try {
       // Finish decoding the stream.

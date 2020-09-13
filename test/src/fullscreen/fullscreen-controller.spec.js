@@ -8,7 +8,7 @@ import Html5 from '../../../src/engines/html5/html5';
 const targetId = 'player-placeholder_inBrowserFullscreen.spec';
 const sourcesConfig = PKObject.copyDeep(SourcesConfig);
 
-describe('check inBrowserFullscreen config', function() {
+describe('check inBrowserFullscreen config', function () {
   let config, player, playerContainer, sandbox;
 
   before(() => {
@@ -25,7 +25,7 @@ describe('check inBrowserFullscreen config', function() {
   });
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
+    sandbox = sinon.createSandbox();
     player = new Player(config);
     playerContainer.appendChild(player.getView());
   });
@@ -40,7 +40,7 @@ describe('check inBrowserFullscreen config', function() {
   });
 
   it('should switch correctly to fullscreen in iOS between native and inBrowserFullscreen config', () => {
-    sandbox.stub(player._fullscreenController, '_isNativeFullscreen', () => {
+    sandbox.stub(player._fullscreenController, '_isNativeFullscreen').callsFake(() => {
       return false;
     });
     player.env.os.name = 'iOS';
@@ -60,7 +60,7 @@ describe('check inBrowserFullscreen config', function() {
     player.isFullscreen().should.be.false;
     player.enterFullscreen();
     sandbox.restore();
-    sandbox.stub(player._fullscreenController, '_isNativeFullscreen', () => {
+    sandbox.stub(player._fullscreenController, '_isNativeFullscreen').callsFake(() => {
       return true;
     });
     player.isFullscreen().should.be.true;
@@ -73,13 +73,13 @@ describe('check inBrowserFullscreen config', function() {
         playsinline: false
       }
     });
-    sandbox.stub(player._fullscreenController, '_isNativeFullscreen', () => {
+    sandbox.stub(player._fullscreenController, '_isNativeFullscreen').callsFake(() => {
       return true;
     });
     player.enterFullscreen();
     player.isFullscreen().should.be.true;
     sandbox.restore();
-    sandbox.stub(player._fullscreenController, '_isNativeFullscreen', () => {
+    sandbox.stub(player._fullscreenController, '_isNativeFullscreen').callsFake(() => {
       return false;
     });
     player.isFullscreen().should.be.false;

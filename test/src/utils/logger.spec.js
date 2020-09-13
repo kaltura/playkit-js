@@ -1,5 +1,4 @@
-import getLogger from '../../../src/utils/logger';
-import {LogLevel} from '../../../src/utils/logger';
+import getLogger, {LogLevel} from '../../../src/utils/logger';
 
 describe('LoggerFactory', () => {
   let loggerA = null;

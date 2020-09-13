@@ -5,7 +5,7 @@ import Track from './track';
  * Text track representation of the player.
  * @classdesc
  */
-export default class TextTrack extends Track {
+const TextTrack: TextTrack = class TextTrack extends Track {
   /**
    * The kind of the text track:
    * subtitles/captions/metadata.
@@ -51,6 +51,6 @@ export default class TextTrack extends Track {
     this._kind = settings.kind;
     this._external = settings.external;
   }
-}
+};
 
-export {TextTrack};
+export default TextTrack;

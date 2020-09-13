@@ -3,7 +3,7 @@ import {CustomEventType, Html5EventType} from '../../../../event/event-type';
 import Track from '../../../../track/track';
 import VideoTrack from '../../../../track/video-track';
 import AudioTrack from '../../../../track/audio-track';
-import {TextTrack as PKTextTrack} from '../../../../track/text-track';
+import PKTextTrack from '../../../../track/text-track';
 import {RequestType} from '../../../../request-type';
 import BaseMediaSourceAdapter from '../base-media-source-adapter';
 import {getSuitableSourceForResolution} from '../../../../utils/resolution';
@@ -12,11 +12,12 @@ import FairPlay from '../../../../drm/fairplay';
 import Env from '../../../../utils/env';
 import Error from '../../../../error/error';
 import defaultConfig from './native-adapter-default-config';
-import {FairplayDrmHandler} from './fairplay-drm-handler';
-import type {FairplayDrmConfigType} from './fairplay-drm-handler';
+import type {FairPlayDrmConfigType} from './fairplay-drm-handler';
+import {FairPlayDrmHandler} from './fairplay-drm-handler';
 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
+const NUDGE_SEEK_AFTER_FOCUS: number = 0.1;
 
 /**
  * An illustration of media source extension for progressive download
@@ -62,17 +63,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   static _drmProtocol: ?Function = null;
   /**
    * The DRM handler playback.
-   * @type {?FairplayDrmHandler}
+   * @type {?FairPlayDrmHandler}
    * @private
    */
-  _drmHandler: ?FairplayDrmHandler;
-  /**
-   * The load promise
-   * @member {Promise<Object>} - _loadPromise
-   * @type {Promise<Object>}
-   * @private
-   */
-  _loadPromise: ?Promise<Object>;
+  _drmHandler: ?FairPlayDrmHandler;
   /**
    * The original progressive sources
    * @member {Array<PKMediaSourceObject>} - _progressiveSources
@@ -90,7 +84,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @member {?number} - _liveDurationChangeInterval
    * @private
    */
-  _liveDurationChangeInterval: ?number;
+  _liveDurationChangeInterval: ?IntervalID;
   /**
    * The live edge value
    * @member {number} - _liveEdge
@@ -99,10 +93,16 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _liveEdge: number;
   /**
    * Id for interval that starts upon waiting/stalling event and check if we are offline
-   * @member {number} - _waitingIntervalId
+   * @member {?TimeoutID} - _heartbeatTimeoutId
    * @private
    */
-  _heartbeatTimeoutId: ?number;
+  _heartbeatTimeoutId: ?TimeoutID;
+  /**
+   * video dimensions for native check if video track change and which video dimensions is the selected track
+   * @member {?PKVideoDimensionsObject} - video dimensions
+   * @private
+   */
+  _videoDimensions: ?PKVideoDimensionsObject;
 
   _loadPromiseReject: ?Function;
 
@@ -156,6 +156,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @static
    */
   static canPlayDrm(drmData: Array<Object>, drmConfig: PKDrmConfigObject): boolean {
+    NativeAdapter._drmProtocol = null;
     for (let drmProtocol of NativeAdapter._drmProtocols) {
       if (drmProtocol.isConfigured(drmData, drmConfig)) {
         NativeAdapter._drmProtocol = drmProtocol;
@@ -246,13 +247,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _maybeSetDrmPlayback(): void {
     if (NativeAdapter._drmProtocol && this._sourceObj && this._sourceObj.drmData) {
-      const drmConfig: FairplayDrmConfigType = {
+      const drmConfig: FairPlayDrmConfigType = {
         licenseUrl: '',
         certificate: '',
         network: this._config.network
       };
       NativeAdapter._drmProtocol.setDrmPlayback(drmConfig, this._sourceObj.drmData);
-      this._drmHandler = new FairplayDrmHandler(
+      this._drmHandler = new FairPlayDrmHandler(
         this._videoElement,
         drmConfig,
         error => this._dispatchErrorCallback(error),
@@ -305,7 +306,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._eventManager.listen(this._videoElement, Html5EventType.ABORT, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.SEEKED, () => this._syncCurrentTime());
         // Sometimes when playing live in safari and switching between tabs the currentTime goes back with no seek events
-        this._eventManager.listen(window, 'focus', () => setTimeout(() => this._syncCurrentTime(), BACK_TO_FOCUS_TIMEOUT));
+        this._eventManager.listen(window, 'focus', () =>
+          setTimeout(() => {
+            // In IOS HLS, sometimes when coming back from lock screen/Idle mode, the stream will get stuck, and only a small seek nudge will fix it.
+            this._videoElement.currentTime =
+              this._videoElement.currentTime > NUDGE_SEEK_AFTER_FOCUS ? this._videoElement.currentTime - NUDGE_SEEK_AFTER_FOCUS : 0;
+            this._syncCurrentTime();
+          }, BACK_TO_FOCUS_TIMEOUT)
+        );
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
         }
@@ -458,6 +466,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._trigger(Html5EventType.WAITING);
       }
     }
+    this._handleVideoTracksChange();
   }
 
   _syncCurrentTime(): void {
@@ -489,6 +498,21 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
+  _handleVideoTracksChange(): void {
+    const {videoHeight, videoWidth} = this._videoElement;
+    if (!this._videoDimensions || videoHeight !== this._videoDimensions.videoHeight || videoWidth !== this._videoDimensions.videoWidth) {
+      this._videoDimensions = {videoHeight, videoWidth};
+      const setting = {
+        language: '',
+        height: videoHeight,
+        width: videoWidth,
+        active: true
+      };
+      this._onTrackChanged(new VideoTrack(setting));
+      NativeAdapter._logger.debug('Video track change', new VideoTrack(setting));
+    }
+  }
+
   /**
    * Destroys the native adapter.
    * @function destroy
@@ -506,6 +530,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._lastTimeUpdate = 0;
       this._lastTimeDetach = NaN;
       this._startTimeAttach = NaN;
+      this._videoDimensions = null;
       this._clearHeartbeatTimeout();
       if (this._liveDurationChangeInterval) {
         clearInterval(this._liveDurationChangeInterval);
@@ -810,7 +835,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (textTrack instanceof PKTextTrack && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks) {
       this._removeNativeTextTrackChangeListener();
       const selectedTrack = Array.from(textTracks).find(
-        (track, index) => textTrack.index === index && (track && (track.kind === 'subtitles' || track.kind === 'captions'))
+        (track, index) => textTrack.index === index && track && (track.kind === 'subtitles' || track.kind === 'captions')
       );
       if (selectedTrack) {
         this._disableTextTracks();

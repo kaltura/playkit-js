@@ -1,2 +1,2 @@
 // @flow
-declare type PKMediaTypes = { [media: string]: string };
+declare type PKMediaTypes = {[media: string]: string};

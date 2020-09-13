@@ -1,2 +1,2 @@
 // @flow
-declare type PKAbrModes = { [mode: string]: string };
+declare type PKAbrModes = {[mode: string]: string};

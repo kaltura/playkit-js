@@ -1,2 +1,2 @@
 // @flow
-declare type PKRequestType = { [request: string]: number };
+declare type PKRequestType = {[request: string]: number};

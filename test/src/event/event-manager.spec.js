@@ -3,7 +3,7 @@ import EventManager from '../../../src/event/event-manager';
 
 class EventTarget extends FakeEventTarget {}
 
-describe('unlisten', function() {
+describe('unlisten', function () {
   let eventTarget, eventManager;
 
   beforeEach(() => {
@@ -47,7 +47,7 @@ describe('unlisten', function() {
   });
 });
 
-describe('one', function() {
+describe('one', function () {
   let eventTarget, eventManager, listener1, listener2;
 
   beforeEach(() => {

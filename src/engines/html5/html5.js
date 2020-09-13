@@ -6,15 +6,13 @@ import {CustomEventType, Html5EventType} from '../../event/event-type';
 import MediaSourceProvider from './media-source/media-source-provider';
 import VideoTrack from '../../track/video-track';
 import AudioTrack from '../../track/audio-track';
-import {TextTrack as PKTextTrack} from '../../track/text-track';
+import PKTextTrack from '../../track/text-track';
 import {Cue} from '../../track/vtt-cue';
 import * as Utils from '../../utils/util';
 import Html5AutoPlayCapability from './capabilities/html5-autoplay';
 import Error from '../../error/error';
 import getLogger from '../../utils/logger';
 import {DroppedFramesWatcher} from '../dropped-frames-watcher';
-
-const HIDE_METADATA_TRACK_TIMEOUT: number = 100;
 
 /**
  * Html5 engine for playback.
@@ -38,7 +36,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @type {?IMediaSourceAdapter}
    * @private
    */
-  _mediaSourceAdapter: ?IMediaSourceAdapter;
+  _mediaSourceAdapter: IMediaSourceAdapter | null;
   /**
    * The player config object.
    * @type {Object}
@@ -51,7 +49,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _canLoadMediaSourceAdapterPromise: Promise<*>;
-  _droppedFramesWatcher: DroppedFramesWatcher;
+  _droppedFramesWatcher: ?DroppedFramesWatcher;
 
   /**
    * The html5 class logger.
@@ -66,7 +64,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    * @static
    */
-  static _capabilities: Array<typeof ICapability> = [Html5AutoPlayCapability];
+  static _capabilities: Array<ICapability> = [Html5AutoPlayCapability];
 
   /**
    * @type {string} - The engine id.
@@ -211,6 +209,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   reset(): void {
     this._eventManager.removeAll();
+    if (this._droppedFramesWatcher) {
+      this._droppedFramesWatcher.destroy();
+      this._droppedFramesWatcher = null;
+    }
     if (this._mediaSourceAdapter) {
       this._canLoadMediaSourceAdapterPromise = this._mediaSourceAdapter.destroy();
       this._mediaSourceAdapter = null;
@@ -228,7 +230,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   destroy(): void {
     this.detach();
-    this._droppedFramesWatcher.destroy();
     if (this._el) {
       this.pause();
       Utils.Dom.removeAttribute(this._el, 'src');
@@ -236,6 +237,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
     this._eventManager.destroy();
     MediaSourceProvider.destroy();
+    if (this._droppedFramesWatcher) {
+      this._droppedFramesWatcher.destroy();
+      this._droppedFramesWatcher = null;
+    }
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.destroy();
       this._mediaSourceAdapter = null;
@@ -286,23 +291,26 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       });
     });
     this._handleMetadataTrackEvents();
-    if (this._mediaSourceAdapter) {
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.AUDIO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.DRM_LICENSE_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.MANIFEST_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.TIME_UPDATE, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.PLAYING, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, Html5EventType.WAITING, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, CustomEventType.MEDIA_RECOVERED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._mediaSourceAdapter, 'hlsFragParsingMetadata', (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._droppedFramesWatcher, CustomEventType.FPS_DROP, (event: FakeEvent) => this.dispatchEvent(event));
+    let mediaSourceAdapter = this._mediaSourceAdapter;
+    if (mediaSourceAdapter) {
+      this._eventManager.listen(mediaSourceAdapter, CustomEventType.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(mediaSourceAdapter, CustomEventType.AUDIO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(mediaSourceAdapter, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(mediaSourceAdapter, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(mediaSourceAdapter, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(mediaSourceAdapter, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(mediaSourceAdapter, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(mediaSourceAdapter, CustomEventType.DRM_LICENSE_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(mediaSourceAdapter, CustomEventType.MANIFEST_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(mediaSourceAdapter, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(mediaSourceAdapter, Html5EventType.TIME_UPDATE, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(mediaSourceAdapter, Html5EventType.PLAYING, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(mediaSourceAdapter, Html5EventType.WAITING, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(mediaSourceAdapter, CustomEventType.MEDIA_RECOVERED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(mediaSourceAdapter, 'hlsFragParsingMetadata', (event: FakeEvent) => this.dispatchEvent(event));
+      if (this._droppedFramesWatcher) {
+        this._eventManager.listen(this._droppedFramesWatcher, CustomEventType.FPS_DROP, (event: FakeEvent) => this.dispatchEvent(event));
+      }
     }
   }
 
@@ -1002,7 +1010,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _addCueChangeListener(): void {
     let textTrackEl = Array.from(this._el.textTracks).find(track => track && track.mode !== 'disabled');
     if (textTrackEl) {
-      this._eventManager.listen(textTrackEl, 'cuechange', e => this._onCueChange(e));
+      this._eventManager.listen(textTrackEl, 'cuechange', (e: FakeEvent) => this._onCueChange(e));
     }
   }
 
@@ -1106,7 +1114,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _handleMetadataTrackEvents(): void {
     const listenToCueChange = track => {
       track.mode = 'hidden';
-      track.addEventListener('cuechange', () => {
+      this._eventManager.listen(track, 'cuechange', () => {
         this.dispatchEvent(new FakeEvent(CustomEventType.TIMED_METADATA, {cues: Array.from(track.activeCues)}));
       });
     };
@@ -1117,16 +1125,15 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
         if (event.track.kind === 'metadata') {
           listenToCueChange(event.track);
-        } else {
-          // When a non metadata track has added it could change the metadata track mode to disabled. Need to return it to hidden.
-          Array.from(this._el.textTracks).forEach((track: TextTrack) => {
-            if (track.kind === 'metadata') {
-              setTimeout(() => (track.mode = 'hidden'), HIDE_METADATA_TRACK_TIMEOUT);
-            }
-          });
         }
       });
     }
+    this._eventManager.listen(this._el.textTracks, 'change', () => {
+      const metadataTrack = Array.from(this._el.textTracks).find((track: TextTrack) => track.kind === 'metadata');
+      if (metadataTrack && metadataTrack.mode !== 'hidden') {
+        metadataTrack.mode = 'hidden';
+      }
+    });
   }
 
   get targetBuffer(): number {

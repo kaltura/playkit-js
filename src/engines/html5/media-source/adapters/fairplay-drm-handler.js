@@ -7,9 +7,11 @@ import type {CodeType} from '../../../../error/code';
 import type {SeverityType} from '../../../../error/severity';
 import type {CategoryType} from '../../../../error/category';
 import {DrmScheme} from '../../../../drm/drm-scheme';
+import EventManager from '../../../../event/event-manager';
+
+type WebkitEventsType = {[name: string]: string};
 
 const KeySystem: string = 'com.apple.fps.1_0';
-type WebkitEventsType = {[name: string]: string};
 const WebkitEvents: WebkitEventsType = {
   NEED_KEY: 'webkitneedkey',
   KEY_MESSAGE: 'webkitkeymessage',
@@ -17,20 +19,22 @@ const WebkitEvents: WebkitEventsType = {
   KEY_ERROR: 'webkitkeyerror'
 };
 
-type FairplayDrmConfigType = {licenseUrl: string, certificate: string, network: {requestFilter?: Function, responseFilter: Function}};
+type FairPlayDrmConfigType = {licenseUrl: string, certificate: string, network: {requestFilter?: Function, responseFilter: Function}};
 
-class FairplayDrmHandler {
+class FairPlayDrmHandler {
   static WebkitEvents: WebkitEventsType = WebkitEvents;
+
   _logger = getLogger('FairPlayDrmHandler');
+  _eventManager: EventManager;
   _keySession: any;
-  _config: FairplayDrmConfigType;
+  _config: FairPlayDrmConfigType;
   _onWebkitNeedKeyHandler: Function;
   _errorCallback: Function;
   _drmResponseCallback: Function;
   _videoElement: HTMLVideoElement;
   _retryLicenseRequest: number = 4;
   _licenseRequestTime: number;
-  _defaultConfig: FairplayDrmConfigType = {
+  _defaultConfig: FairPlayDrmConfigType = {
     licenseUrl: '',
     certificate: '',
     network: {
@@ -48,9 +52,9 @@ class FairplayDrmHandler {
           });
           return;
         }
-        let isValidResponse = FairplayDrmHandler._validateResponse(responseObj);
+        let isValidResponse = FairPlayDrmHandler._validateResponse(responseObj);
         if (isValidResponse.valid) {
-          response.data = FairplayDrmHandler._base64DecodeUint8Array(responseObj.ckc);
+          response.data = FairPlayDrmHandler._base64DecodeUint8Array(responseObj.ckc);
         } else {
           this._onError((Error.Code: CodeType).BAD_FAIRPLAY_RESPONSE, isValidResponse);
         }
@@ -61,17 +65,18 @@ class FairplayDrmHandler {
   /**
    * Fairplay DRM handler
    * @param {HTMLVideoElement} videoElement - the video element
-   * @param {FairplayDrmConfigType} config - config object
+   * @param {FairPlayDrmConfigType} config - config object
    * @param {Function} errorCallback - error callback function
    * @param {Function} drmResponseCallback - drm license response callback function
    */
-  constructor(videoElement: HTMLVideoElement, config: FairplayDrmConfigType, errorCallback: Function, drmResponseCallback: Function): void {
+  constructor(videoElement: HTMLVideoElement, config: FairPlayDrmConfigType, errorCallback: Function, drmResponseCallback: Function): void {
     this._config = Utils.Object.mergeDeep({}, this._defaultConfig, config);
     this._errorCallback = errorCallback;
     this._drmResponseCallback = drmResponseCallback;
     this._videoElement = videoElement;
-    this._onWebkitNeedKeyHandler = e => this._onWebkitNeedKey(e);
-    this._videoElement.addEventListener(WebkitEvents.NEED_KEY, this._onWebkitNeedKeyHandler, false);
+    this._onWebkitNeedKeyHandler = (e: Event) => this._onWebkitNeedKey(e);
+    this._eventManager = new EventManager();
+    this._eventManager.listen(this._videoElement, WebkitEvents.NEED_KEY, this._onWebkitNeedKeyHandler);
   }
 
   _onWebkitNeedKey(event: any): void {
@@ -79,10 +84,10 @@ class FairplayDrmHandler {
     let videoElement = event.target;
     let initData = event.initData;
 
-    let contentId = FairplayDrmHandler._extractContentId(initData);
-    let fpsCertificate = FairplayDrmHandler._base64DecodeUint8Array(this._config.certificate);
+    let contentId = FairPlayDrmHandler._extractContentId(initData);
+    let fpsCertificate = FairPlayDrmHandler._base64DecodeUint8Array(this._config.certificate);
 
-    initData = FairplayDrmHandler._concatInitDataIdAndCertificate(initData, contentId, fpsCertificate);
+    initData = FairPlayDrmHandler._concatInitDataIdAndCertificate(initData, contentId, fpsCertificate);
 
     if (!videoElement.webkitKeys) {
       let keySystem = this._selectKeySystem();
@@ -98,13 +103,13 @@ class FairplayDrmHandler {
       this._onError((Error.Code: CodeType).COULD_NOT_CREATE_KEY_SESSION);
     }
     this._keySession.contentId = contentId;
-    this._keySession.addEventListener(WebkitEvents.KEY_MESSAGE, e => this._onWebkitKeyMessage(e), false);
-    this._keySession.addEventListener(WebkitEvents.KEY_ADDED, () => this._onWebkitKeyAdded(), false);
-    this._keySession.addEventListener(WebkitEvents.KEY_ERROR, e => this._onWebkitKeyError(e), false);
+    this._eventManager.listen(this._keySession, WebkitEvents.KEY_MESSAGE, (e: Event) => this._onWebkitKeyMessage(e));
+    this._eventManager.listen(this._keySession, WebkitEvents.KEY_ADDED, () => this._onWebkitKeyAdded());
+    this._eventManager.listen(this._keySession, WebkitEvents.KEY_ERROR, (e: Event) => this._onWebkitKeyError(e));
   }
 
   destroy(): void {
-    this._videoElement.removeEventListener(WebkitEvents.NEED_KEY, this._onWebkitNeedKeyHandler);
+    this._eventManager.destroy();
     this._keySession.close();
     this._keySession = null;
   }
@@ -114,10 +119,10 @@ class FairplayDrmHandler {
     let message = event.message;
     let request = new XMLHttpRequest();
     request.responseType = 'arraybuffer';
-    request.addEventListener('load', (e: Event) => this._licenseRequestLoaded(e), false);
+    this._eventManager.listenOnce(request, 'load', (e: Event) => this._licenseRequestLoaded(e));
     const pkRequest: PKRequestObject = {
       url: this._config.licenseUrl,
-      body: FairplayDrmHandler._base64EncodeUint8Array(message),
+      body: FairPlayDrmHandler._base64EncodeUint8Array(message),
       headers: {}
     };
     let requestFilterPromise;
@@ -191,16 +196,19 @@ class FairplayDrmHandler {
       const licenseTime = Date.now() - this._licenseRequestTime;
       this._drmResponseCallback({licenseTime: licenseTime / 1000, scheme: DrmScheme.FAIRPLAY});
     }
+    const {responseURL: url, response: data} = request;
+    const originalUrl = this._config.licenseUrl;
+    const headers = Utils.Http.convertHeadersToDictionary(request.getAllResponseHeaders());
 
-    const response = {data: request.response};
+    const pkResponse: PKResponseObject = {url, originalUrl, data, headers};
     this._logger.debug('Apply response filter');
     let responseFilterPromise;
     try {
-      responseFilterPromise = this._config.network.responseFilter(RequestType.LICENSE, response);
+      responseFilterPromise = this._config.network.responseFilter(RequestType.LICENSE, pkResponse);
     } catch (error) {
       responseFilterPromise = Promise.reject(error);
     }
-    responseFilterPromise = responseFilterPromise || Promise.resolve(response);
+    responseFilterPromise = responseFilterPromise || Promise.resolve(pkResponse);
     responseFilterPromise
       .then(updatedResponse => {
         this._keySession.update(updatedResponse.data);
@@ -253,7 +261,7 @@ class FairplayDrmHandler {
 
   static _extractContentId(initData: Uint8Array): string {
     let link = document.createElement('a');
-    link.href = FairplayDrmHandler._arrayToString(initData);
+    link.href = FairPlayDrmHandler._arrayToString(initData);
     return link.hostname;
   }
 
@@ -273,7 +281,7 @@ class FairplayDrmHandler {
 
   static _concatInitDataIdAndCertificate(initData: Uint8Array, id: string | Uint16Array, cert: Uint8Array): Uint8Array {
     if (typeof id === 'string') {
-      id = FairplayDrmHandler._stringToArray(id);
+      id = FairPlayDrmHandler._stringToArray(id);
     }
     let offset = 0;
     let buffer = new ArrayBuffer(initData.byteLength + 4 + id.byteLength + 4 + cert.byteLength);
@@ -334,7 +342,7 @@ class FairplayDrmHandler {
   }
 }
 
-FairplayDrmHandler.WebkitEvents = WebkitEvents;
+FairPlayDrmHandler.WebkitEvents = WebkitEvents;
 
-export {FairplayDrmHandler};
-export type {FairplayDrmConfigType};
+export {FairPlayDrmHandler};
+export type {FairPlayDrmConfigType};
