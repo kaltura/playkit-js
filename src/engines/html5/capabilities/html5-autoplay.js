@@ -92,7 +92,9 @@ const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
    * @private
    */
   static _getPlayPromise(): Promise<*> {
-    return Html5AutoPlayCapability._vid.play() || Html5AutoPlayCapability._forcePromiseReturnValue();
+    const playResult = Html5AutoPlayCapability._vid.play() || Html5AutoPlayCapability._forcePromiseReturnValue();
+    Html5AutoPlayCapability._vid = null;
+    return playResult;
   }
 
   /**
