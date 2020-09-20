@@ -4,9 +4,8 @@ import Env from '../../src/utils/env';
 import getLogger from '../utils/logger';
 import {DrmScheme} from './drm-scheme';
 
-const _logger = getLogger('FairPlay');
-
 const FairPlay: IDrmProtocol = class FairPlay {
+  static _logger = getLogger('FairPlay');
   /**
    * FairPlay is the configure key system.
    * @param {Array<Object>} drmData - The drm data.
@@ -25,7 +24,7 @@ const FairPlay: IDrmProtocol = class FairPlay {
    * @return {boolean} - Whether FairPlay can be play on the current environment.
    */
   static canPlayDrm(drmData: Array<Object>): boolean {
-    _logger.debug('Can play DRM scheme of: ' + DrmScheme.FAIRPLAY);
+    FairPlay._logger.debug('Can play DRM scheme of: ' + DrmScheme.FAIRPLAY);
     const isSafari = Env.browser.name && Env.browser.name.includes('Safari');
     return !!drmData.find(drmEntry => drmEntry.scheme === DrmScheme.FAIRPLAY) && isSafari;
   }
@@ -37,7 +36,7 @@ const FairPlay: IDrmProtocol = class FairPlay {
    * @returns {void}
    */
   static setDrmPlayback(config: FairPlayDrmConfigType, drmData: Array<Object>): void {
-    _logger.debug('Sets drm playback');
+    FairPlay._logger.debug('Sets drm playback');
     let drmEntry = drmData.find(drmEntry => drmEntry.scheme === DrmScheme.FAIRPLAY);
     if (drmEntry) {
       config.licenseUrl = drmEntry.licenseUrl;

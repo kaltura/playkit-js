@@ -18,7 +18,7 @@ export default class StateManager {
    * @type {any}
    * @private
    */
-  _logger: any;
+  static _logger: any = getLogger('StateManager');
   /**
    * Reference to the actual player.
    * @member
@@ -155,7 +155,6 @@ export default class StateManager {
    */
   constructor(player: Player) {
     this._player = player;
-    this._logger = getLogger('StateManager');
     this._eventManager = new EventManager();
     this._history = [];
     this._prevState = null;
@@ -189,7 +188,7 @@ export default class StateManager {
    */
   _doTransition(event: FakeEvent): void {
     if (event.type !== Html5EventType.TIME_UPDATE || (this._curState === StateType.BUFFERING && event.type === Html5EventType.TIME_UPDATE)) {
-      this._logger.debug('Do transition request', event.type); // don't show most of 'timeupdate' events
+      StateManager._logger.debug('Do transition request', event.type); // don't show most of 'timeupdate' events
     }
     let transition = this._transitions[this._curState.type];
     if (typeof transition[event.type] === 'function') {
@@ -209,7 +208,7 @@ export default class StateManager {
       this._history.push(this._curState);
       this._prevState = this._curState;
       this._curState = new State(type);
-      this._logger.debug(`Switch player state: from ${this._prevState.type} to ${this._curState.type}`);
+      StateManager._logger.debug(`Switch player state: from ${this._prevState.type} to ${this._curState.type}`);
     }
   }
 

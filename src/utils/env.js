@@ -47,7 +47,8 @@ const EdgeChromiumParser = [[/(edg)\/((\d+)?[\w.]+)/i], [[UAParser.BROWSER.NAME,
 
 const BrowserParser = [...EdgeChromiumParser, ...SAMSUNGBrowserParser];
 
-let Env = new UAParser(undefined, {browser: BrowserParser, device: DeviceParser, os: OSParser}).getResult();
+let Env = {};
+Object.assign(Env, new UAParser(undefined, {browser: BrowserParser, device: DeviceParser, os: OSParser}).getResult());
 
 Env.isConsole = Env.device.type === UAParser.DEVICE.CONSOLE;
 Env.isSmartTV = Env.device.type === UAParser.DEVICE.SMARTTV;
