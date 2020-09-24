@@ -1359,7 +1359,6 @@ export default class Player extends FakeEventTarget {
    */
   exitPictureInPicture(): void {
     if (this._engine.isInPictureInPicture) {
-      this.exitFullscreen();
       this._engine.exitPictureInPicture();
     }
   }
