@@ -7,7 +7,7 @@ import * as EncodingSources from '../../../assets/encoding-sources.json';
 const WAIT_TIME: number = 500;
 
 const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
-  static _vid: HTMLVideoElement;
+  static _vid: ?HTMLVideoElement;
   static _playPromiseResult: Promise<*>;
   static _logger: any = getLogger('Html5AutoPlayCapability');
   static _capabilities: Object = {};
@@ -92,7 +92,7 @@ const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
    * @private
    */
   static _getPlayPromise(): Promise<*> {
-    const playResult = Html5AutoPlayCapability._vid.play() || Html5AutoPlayCapability._forcePromiseReturnValue();
+    const playResult = (Html5AutoPlayCapability._vid && Html5AutoPlayCapability._vid.play()) || Html5AutoPlayCapability._forcePromiseReturnValue();
     Html5AutoPlayCapability._vid = null;
     return playResult;
   }
@@ -105,6 +105,9 @@ const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
    * @static
    */
   static _setMuted(muted: boolean): void {
+    if (!Html5AutoPlayCapability._vid) {
+      return;
+    }
     if (muted) {
       Html5AutoPlayCapability._vid.muted = true;
       Html5AutoPlayCapability._vid.setAttribute('muted', '');
@@ -123,6 +126,10 @@ const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
    */
   static _forcePromiseReturnValue(): Promise<*> {
     return new Promise((resolve, reject) => {
+      if (!Html5AutoPlayCapability._vid) {
+        reject();
+      }
+      //$FlowFixMe
       Html5AutoPlayCapability._vid.addEventListener(Html5EventType.ERROR, () => {
         reject();
       });
@@ -130,6 +137,7 @@ const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
         Html5AutoPlayCapability._logger.debug(`Timeout ${WAIT_TIME} ms has been reached`);
         reject();
       }, WAIT_TIME);
+      //$FlowFixMe
       if (Html5AutoPlayCapability._vid.paused === true) {
         clearTimeout(supported);
         reject();
