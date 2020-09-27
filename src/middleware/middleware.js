@@ -8,6 +8,12 @@ import getLogger from '../utils/logger';
  */
 export default class Middleware {
   /**
+   * The logger of the middleware.
+   * @private
+   * @member
+   */
+  static _logger: any = getLogger('Middleware');
+  /**
    * The registered middlewares.
    * @private
    * @member
@@ -19,12 +25,6 @@ export default class Middleware {
    * @member
    */
   _actions: {[action: string]: string};
-  /**
-   * The logger of the middleware.
-   * @private
-   * @member
-   */
-  _logger: any;
 
   /**
    * @constructor
@@ -33,7 +33,6 @@ export default class Middleware {
   constructor(actions: {[action: string]: string}) {
     this._actions = actions;
     this._middlewares = new MultiMap();
-    this._logger = getLogger('Middleware');
   }
 
   /**
@@ -47,7 +46,7 @@ export default class Middleware {
       let apiAction = this._actions[action];
       // $FlowFixMe
       if (typeof middlewareInstance[apiAction] === 'function') {
-        this._logger.debug(`Register <${middlewareInstance.id}> for action ${apiAction}`);
+        Middleware._logger.debug(`Register <${middlewareInstance.id}> for action ${apiAction}`);
         // $FlowFixMe
         this._middlewares.push(apiAction, middlewareInstance[apiAction].bind(middlewareInstance));
       }
@@ -62,10 +61,10 @@ export default class Middleware {
    * @returns {void}
    */
   run(action: string, callback: Function): void {
-    this._logger.debug('Start middleware chain for action ' + action);
+    Middleware._logger.debug('Start middleware chain for action ' + action);
     let middlewares = this._middlewares.get(action);
     this._executeMiddleware(middlewares, () => {
-      this._logger.debug('Finish middleware chain for action ' + action);
+      Middleware._logger.debug('Finish middleware chain for action ' + action);
       callback();
     });
   }
