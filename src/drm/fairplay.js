@@ -43,6 +43,6 @@ const FairPlay: IDrmProtocol = class FairPlay {
       config.certificate = drmEntry.certificate;
     }
   }
-}
+};
 
 export default FairPlay;
