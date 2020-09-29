@@ -23,7 +23,7 @@ type FairPlayDrmConfigType = {licenseUrl: string, certificate: string, network: 
 
 class FairPlayDrmHandler {
   static WebkitEvents: WebkitEventsType = WebkitEvents;
-  static _logger;
+  static _logger: any;
 
   _eventManager: EventManager;
   _keySession: any;

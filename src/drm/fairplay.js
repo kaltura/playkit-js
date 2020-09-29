@@ -4,7 +4,7 @@ import Env from '../../src/utils/env';
 import getLogger from '../utils/logger';
 import {DrmScheme} from './drm-scheme';
 
-class FairPlay implements IDrmProtocol {
+const FairPlay: IDrmProtocol = class FairPlay {
   static _logger = getLogger('FairPlay');
   /**
    * FairPlay is the configure key system.
