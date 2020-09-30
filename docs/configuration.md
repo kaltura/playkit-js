@@ -1330,7 +1330,7 @@ var config = {
 > >
 > > ##### Default: 500000
 > >
-> > ##### Description: The default bandwidth estimate to use if there is not enough data, in bit/sec.                       
+> > ##### Description: The default bandwidth estimate to use if there is not enough data, in bit/sec.
 > >
 > > ##
 > >
