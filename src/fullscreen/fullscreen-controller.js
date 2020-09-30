@@ -19,6 +19,8 @@ class FullscreenController {
   _player: Player;
   _isInBrowserFullscreen: boolean;
   _eventManager: EventManager;
+  // Flag to overcome browsers which supports more than one fullscreenchange event
+  _isFullscreenEventDispatched: boolean = false;
 
   /**
    * after component mounted, set up event listeners to window fullscreen state change
@@ -244,7 +246,8 @@ class FullscreenController {
    * @returns {void}
    */
   _fullscreenEnterHandler(): void {
-    if (this.isFullscreen()) {
+    if (this.isFullscreen() && !this._isFullscreenEventDispatched) {
+      this._isFullscreenEventDispatched = true;
       this._player.dispatchEvent(new FakeEvent(this._player.Event.ENTER_FULLSCREEN));
     }
   }
@@ -255,7 +258,8 @@ class FullscreenController {
    * @returns {void}
    */
   _fullscreenExitHandler(): void {
-    if (!this.isFullscreen()) {
+    if (!this.isFullscreen() && this._isFullscreenEventDispatched) {
+      this._isFullscreenEventDispatched = false;
       this._eventManager.removeAll();
       this._player.dispatchEvent(new FakeEvent(this._player.Event.EXIT_FULLSCREEN));
     }
