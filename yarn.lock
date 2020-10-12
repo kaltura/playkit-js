@@ -804,14 +804,6 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.10.4"
 
-"@babel/plugin-transform-property-mutators@^7.10.4":
-  version "7.10.4"
-  resolved "https://registry.yarnpkg.com/@babel/plugin-transform-property-mutators/-/plugin-transform-property-mutators-7.10.4.tgz#ee8555609d717b7f73e5b9cd161adf003a0f40ea"
-  integrity sha512-9+qPYEpJvBjpcZDLffYybBTl7nZmk0sK0wkwsZQK6rvgGHnxpk9mAvFGV3h11/1UeJe1uXwXdY0HsstnCBZGGw==
-  dependencies:
-    "@babel/helper-define-map" "^7.10.4"
-    "@babel/helper-plugin-utils" "^7.10.4"
-
 "@babel/plugin-transform-react-display-name@^7.10.4":
   version "7.10.4"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-react-display-name/-/plugin-transform-react-display-name-7.10.4.tgz#b5795f4e3e3140419c3611b7a2a3832b9aef328d"
