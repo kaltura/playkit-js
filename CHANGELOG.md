@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.64.2](https://github.com/kaltura/playkit-js/compare/v0.64.1...v0.64.2) (2020-10-06)
+
+
+### Bug Fixes
+
+* **FEC-10485:** When multi players on page, 'enterfullscreen' event triggers by all players ([#488](https://github.com/kaltura/playkit-js/issues/488)) ([9438669](https://github.com/kaltura/playkit-js/commit/9438669))
+* **FEC-10512:** handle memory leaks in smart TV ([#487](https://github.com/kaltura/playkit-js/issues/487)) ([4e4a78f](https://github.com/kaltura/playkit-js/commit/4e4a78f))
+* **FEC-10516:** Fullscreen event dispatched twice from the player ([#489](https://github.com/kaltura/playkit-js/issues/489)) ([359bb68](https://github.com/kaltura/playkit-js/commit/359bb68))
+
+
+
 ### [0.64.1](https://github.com/kaltura/playkit-js/compare/v0.64.0...v0.64.1) (2020-09-08)
 
 
