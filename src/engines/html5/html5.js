@@ -530,12 +530,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   exitPictureInPicture(): void {
     try {
-      if (typeof this._el.webkitSetPresentationMode === 'function') {
-        this._el.webkitSetPresentationMode('inline');
-      } else if (document.pictureInPictureEnabled && typeof document.exitPictureInPicture === 'function') {
-        // Currently it's supported in chrome and in safari. So if we consider checking support before,
-        // we can use this flag to distinguish between the two. In the future we might need a different method.
-        // Second condition is because flow does not support this API yet
+      // Currently it's supported in chrome and in safari. So if we consider checking support before,
+      // we can use this flag to distinguish between the two. In the future we might need a different method.
+      // Second condition is because flow does not support this API yet
+      if (document.pictureInPictureEnabled && typeof document.exitPictureInPicture === 'function' && this._el === document.pictureInPictureElement) {
         document.exitPictureInPicture().catch(error => {
           this.dispatchEvent(
             new FakeEvent(
@@ -544,6 +542,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
             )
           );
         });
+      } else if (typeof this._el.webkitSetPresentationMode === 'function') {
+        this._el.webkitSetPresentationMode('inline');
       }
     } catch (error) {
       this.dispatchEvent(
