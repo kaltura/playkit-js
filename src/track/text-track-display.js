@@ -659,14 +659,17 @@ class CueStyleBox extends StyleBox {
     // position of the cue box. The reference edge will be resolved later when
     // the box orientation styles are applied.
     let textPos = 0;
-    switch (cue.positionAlign) {
+    let align = cue.positionAlign || cue.align;
+    switch (align) {
       case 'start':
+      case 'left':
         textPos = cue.position;
         break;
       case 'center':
         textPos = cue.position - cue.size / 2;
         break;
       case 'end':
+      case 'right':
         textPos = cue.position - cue.size;
         break;
     }
@@ -677,7 +680,7 @@ class CueStyleBox extends StyleBox {
     if (cue.vertical === '') {
       this.applyStyles({
         left: this.formatStyle(textPos, '%'),
-        width: this.formatStyle(cue.size, '%')
+        width: this.formatStyle(Math.min(cue.size, 100 - textPos) || cue.size, '%')
       });
       // Vertical box orientation; textPos is the distance from the top edge of the
       // area to the top edge of the box and cue.size is the height extending
@@ -685,7 +688,7 @@ class CueStyleBox extends StyleBox {
     } else {
       this.applyStyles({
         top: this.formatStyle(textPos, '%'),
-        height: this.formatStyle(cue.size, '%')
+        height: this.formatStyle(Math.min(cue.size, 100 - textPos) || cue.size, '%')
       });
     }
 
