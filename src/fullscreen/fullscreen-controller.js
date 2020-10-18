@@ -49,7 +49,10 @@ class FullscreenController {
       document.mozFullScreenElement ||
       document.msFullscreenElement ||
       // $FlowFixMe for ios mobile
-      (this._player.env.os.name === 'iOS' && !!videoElement && !!videoElement.webkitDisplayingFullscreen)
+      (this._player.env.os.name === 'iOS' &&
+        !!videoElement &&
+        !!videoElement.webkitDisplayingFullscreen &&
+        (!videoElement.webkitPresentationMode || videoElement.webkitPresentationMode === 'fullscreen'))
     );
   }
 
@@ -87,7 +90,13 @@ class FullscreenController {
         } else {
           const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
           if (videoElement && typeof videoElement.webkitEnterFullScreen === 'function') {
-            videoElement.webkitEnterFullScreen();
+            if (this._player.isInPictureInPicture()) {
+              // iOS < 13 (iPad) has an issue to enter to full screen from PiP
+              setTimeout(() => videoElement.webkitEnterFullScreen(), 1000);
+              this._player.exitPictureInPicture();
+            } else {
+              videoElement.webkitEnterFullScreen();
+            }
           }
         }
       } else {
