@@ -11,6 +11,8 @@ import * as Utils from '../utils/util';
  */
 const IN_BROWSER_FULLSCREEN: string = 'playkit-in-browser-fullscreen-mode';
 
+const EXIT_PIP_TIMEOUT: number = 1000;
+
 /**
  * @class FullscreenController
  * @param {Player} player - The player.
@@ -49,7 +51,10 @@ class FullscreenController {
       document.mozFullScreenElement ||
       document.msFullscreenElement ||
       // $FlowFixMe for ios mobile
-      (this._player.env.os.name === 'iOS' && !!videoElement && !!videoElement.webkitDisplayingFullscreen)
+      (this._player.env.os.name === 'iOS' &&
+        !!videoElement &&
+        !!videoElement.webkitDisplayingFullscreen &&
+        (!videoElement.webkitPresentationMode || videoElement.webkitPresentationMode === 'fullscreen'))
     );
   }
 
@@ -87,7 +92,13 @@ class FullscreenController {
         } else {
           const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
           if (videoElement && typeof videoElement.webkitEnterFullScreen === 'function') {
-            videoElement.webkitEnterFullScreen();
+            if (this._player.isInPictureInPicture()) {
+              // iOS < 13 (iPad) has an issue to enter to full screen from PiP
+              setTimeout(() => videoElement.webkitEnterFullScreen(), EXIT_PIP_TIMEOUT);
+              this._player.exitPictureInPicture();
+            } else {
+              videoElement.webkitEnterFullScreen();
+            }
           }
         }
       } else {
