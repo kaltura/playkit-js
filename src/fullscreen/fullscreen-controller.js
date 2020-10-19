@@ -11,6 +11,8 @@ import * as Utils from '../utils/util';
  */
 const IN_BROWSER_FULLSCREEN: string = 'playkit-in-browser-fullscreen-mode';
 
+const EXIT_PIP_TIMEOUT: number = 1000;
+
 /**
  * @class FullscreenController
  * @param {Player} player - The player.
@@ -92,7 +94,7 @@ class FullscreenController {
           if (videoElement && typeof videoElement.webkitEnterFullScreen === 'function') {
             if (this._player.isInPictureInPicture()) {
               // iOS < 13 (iPad) has an issue to enter to full screen from PiP
-              setTimeout(() => videoElement.webkitEnterFullScreen(), 1000);
+              setTimeout(() => videoElement.webkitEnterFullScreen(), EXIT_PIP_TIMEOUT);
               this._player.exitPictureInPicture();
             } else {
               videoElement.webkitEnterFullScreen();
