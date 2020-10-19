@@ -167,6 +167,9 @@ class FullscreenController {
    * @returns {void}
    */
   _enterInBrowserFullscreen(fullScreenElement: HTMLElement): void {
+    if (this._player.isInPictureInPicture()) {
+      this._player.exitPictureInPicture();
+    }
     // add class for fullscreen
     Utils.Dom.addClassName(fullScreenElement, IN_BROWSER_FULLSCREEN);
     this._isInBrowserFullscreen = true;
