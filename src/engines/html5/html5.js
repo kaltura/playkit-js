@@ -282,13 +282,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   attach(): void {
     Object.keys(Html5EventType).forEach(html5Event => {
-      this._eventManager.listen(this._el, Html5EventType[html5Event], () => {
-        if (Html5EventType[html5Event] === Html5EventType.ERROR) {
-          this._handleVideoError();
-        } else {
-          this.dispatchEvent(new FakeEvent(Html5EventType[html5Event]));
-        }
-      });
+      if (Html5EventType[html5Event] !== Html5EventType.ERROR) {
+        this._eventManager.listen(this._el, Html5EventType[html5Event], () => {
+          return this.dispatchEvent(new FakeEvent(Html5EventType[html5Event]));
+        });
+      }
+    });
+    this._eventManager.listen(this._el, Html5EventType.ERROR, () => {
+      this._handleVideoError();
     });
     this._handleMetadataTrackEvents();
     let mediaSourceAdapter = this._mediaSourceAdapter;
@@ -532,7 +533,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       // Currently it's supported in chrome and in safari. So if we consider checking support before,
       // we can use this flag to distinguish between the two. In the future we might need a different method.
       // Second condition is because flow does not support this API yet
-      if (document.pictureInPictureEnabled && typeof document.exitPictureInPicture === 'function') {
+      if (document.pictureInPictureEnabled && typeof document.exitPictureInPicture === 'function' && this._el === document.pictureInPictureElement) {
         document.exitPictureInPicture().catch(error => {
           this.dispatchEvent(
             new FakeEvent(
@@ -543,8 +544,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         });
       } else if (typeof this._el.webkitSetPresentationMode === 'function') {
         this._el.webkitSetPresentationMode('inline');
-        // Safari does not fire this event but Chrome does, normalizing the behaviour
-        setTimeout(() => this.dispatchEvent(new FakeEvent(Html5EventType.LEAVE_PICTURE_IN_PICTURE)), 0);
       }
     } catch (error) {
       this.dispatchEvent(
