@@ -454,7 +454,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _onTimeUpdate(): void {
     if (!this._videoElement.paused) {
       if (this._videoElement.currentTime > this._lastTimeUpdate) {
-        if (this._waitingEventTriggered) {
+        if (this._waitingEventTriggered && !this._videoElement.seeking) {
           this._waitingEventTriggered = false;
           this._trigger(Html5EventType.PLAYING);
         }
