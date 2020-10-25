@@ -29,6 +29,8 @@ const SRT_POSTFIX: string = 'srt';
 
 const VTT_POSTFIX: string = 'vtt';
 
+const EXTERNAL_PREFIX: string = 'external_';
+
 class ExternalCaptionsHandler extends FakeEventTarget {
   /**
    * The external captions handler class logger.
@@ -238,7 +240,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   reset(externalTracks: Array<TextTrack>): void {
     this._resetCurrentTrack();
     this._textTrackModel = {};
-    this._removeCuesFromExternalNativeTextTrack(externalTracks);
+    this._setPrefixForExternalNativeTextTrack(externalTracks);
     this._eventManager.removeAll();
   }
 
@@ -459,18 +461,16 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   }
 
   /**
-   * removing cues from an existing text element in a video tag
+   * set external prefix on reset to avoid usage of the text track on the next media
    * @param {Array<TextTrack>} externalTracks - external tracks
    * @return {void}
    */
-  _removeCuesFromExternalNativeTextTrack(externalTracks: Array<TextTrack>): void {
+  _setPrefixForExternalNativeTextTrack(externalTracks: Array<TextTrack>): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement) {
       Array.from(externalTracks).forEach(externalTrack => {
         const track = Array.from(videoElement.textTracks).find(track => (track ? track.language === externalTrack.language : false));
-        if (track.cues) {
-          Object.values(track.cues).forEach(cue => track.removeCue(cue));
-        }
+        track.language = EXTERNAL_PREFIX + track.language;
       });
     }
   }
