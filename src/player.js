@@ -574,7 +574,8 @@ export default class Player extends FakeEventTarget {
     if (this._reset) return;
     this.pause();
     //make sure all services are reset before engine and engine attributes are reset
-    this._externalCaptionsHandler.reset();
+    // $FlowFixMe
+    this._externalCaptionsHandler.reset(this._tracks.filter(track => track.external));
     this._posterManager.reset();
     this._stateManager.reset();
     this._config.sources = {};

@@ -232,11 +232,13 @@ class ExternalCaptionsHandler extends FakeEventTarget {
 
   /**
    * resets the handler
+   * @param {Array<TextTrack>} externalTracks - external tracks
    * @returns {void}
    */
-  reset(): void {
+  reset(externalTracks: Array<TextTrack>): void {
     this._resetCurrentTrack();
     this._textTrackModel = {};
+    this._removeCuesFromExternalNativeTextTrack(externalTracks);
     this._eventManager.removeAll();
   }
 
@@ -454,6 +456,23 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       return true;
     }
     return false;
+  }
+
+  /**
+   * removing cues from an existing text element in a video tag
+   * @param {Array<TextTrack>} externalTracks - external tracks
+   * @return {void}
+   */
+  _removeCuesFromExternalNativeTextTrack(externalTracks: Array<TextTrack>): void {
+    const videoElement = this._player.getVideoElement();
+    if (videoElement) {
+      Array.from(externalTracks).forEach(externalTrack => {
+        const track = Array.from(videoElement.textTracks).find(track => (track ? track.language === externalTrack.language : false));
+        if (track.cues) {
+          Object.values(track.cues).forEach(cue => track.removeCue(cue));
+        }
+      });
+    }
   }
 
   /**
