@@ -470,7 +470,9 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     if (videoElement) {
       Array.from(externalTracks).forEach(externalTrack => {
         const track = Array.from(videoElement.textTracks).find(track => (track ? track.language === externalTrack.language : false));
-        track.language = EXTERNAL_PREFIX + track.language;
+        if (track) {
+          track.language = EXTERNAL_PREFIX + track.language;
+        }
       });
     }
   }
