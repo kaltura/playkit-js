@@ -1,6 +1,5 @@
 // @flow
 import type {FairPlayDrmConfigType} from '../engines/html5/media-source/adapters/fairplay-drm-handler';
-import Env from '../../src/utils/env';
 import getLogger from '../utils/logger';
 import {DrmScheme} from './drm-scheme';
 
@@ -26,8 +25,7 @@ const FairPlay: IDrmProtocol = class FairPlay {
    */
   static canPlayDrm(drmData: Array<Object>): boolean {
     _logger.debug('Can play DRM scheme of: ' + DrmScheme.FAIRPLAY);
-    const isSafari = Env.browser.name && Env.browser.name.includes('Safari');
-    return !!drmData.find(drmEntry => drmEntry.scheme === DrmScheme.FAIRPLAY) && isSafari;
+    return !!drmData.find(drmEntry => drmEntry.scheme === DrmScheme.FAIRPLAY) && !!window.WebKitMediaKeys;
   }
 
   /**
