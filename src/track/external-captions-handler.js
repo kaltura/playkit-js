@@ -240,7 +240,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   reset(externalTracks: Array<TextTrack>): void {
     this._resetCurrentTrack();
     this._textTrackModel = {};
-    this._setPrefixForExternalNativeTextTrack(externalTracks);
+    this._deleteExternalNativeTextTrack(externalTracks);
     this._eventManager.removeAll();
   }
 
@@ -461,16 +461,17 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   }
 
   /**
-   * set external prefix on reset to avoid usage of the text track on the next media
+   * set external prefix on reset to avoid usage of the text track on the next media and reset cues
    * @param {Array<TextTrack>} externalTracks - external tracks
    * @return {void}
    */
-  _setPrefixForExternalNativeTextTrack(externalTracks: Array<TextTrack>): void {
+  _deleteExternalNativeTextTrack(externalTracks: Array<TextTrack>): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement) {
       externalTracks.forEach(externalTrack => {
         const track = Array.from(videoElement.textTracks).find(track => track && track.language === externalTrack.language);
         if (track) {
+          Object.values(track.cues).forEach(cue => track.removeCue(cue));
           track.language = EXTERNAL_PREFIX + track.language;
         }
       });
