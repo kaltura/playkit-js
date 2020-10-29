@@ -19,7 +19,7 @@ const EXIT_PIP_TIMEOUT: number = 1000;
  */
 class FullscreenController {
   _player: Player;
-  // Flag for multiple player on same page
+  // Flag to indicate that player is in fullscreen(when different element on fullscreen - api return correct state).
   _isInFullscreen: boolean = false;
   _isInBrowserFullscreen: boolean;
   _eventManager: EventManager;
