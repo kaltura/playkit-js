@@ -164,7 +164,14 @@ class FullscreenController {
       this._player.exitPictureInPicture();
     }
     Promise.resolve(this._nativeEnterFullScreen(fullScreenElement)).then(
-      () => (this._isInFullscreen = true),
+      () => {
+        this._isInFullscreen = true;
+        const screenOrientation = screen && screen.orientation && typeof screen.orientation.lock === 'function';
+        const playbackConfig = this._player.config.playback;
+        if (screenOrientation && playbackConfig.disableFullScreenOrientation) {
+          screen.orientation.lock('landscape');
+        }
+      },
       () => {}
     );
   }
@@ -195,7 +202,13 @@ class FullscreenController {
    */
   _requestExitFullscreen(): void {
     Promise.resolve(this._nativeExitFullScreen()).then(
-      () => (this._isInFullscreen = false),
+      () => {
+        this._isInFullscreen = false;
+        const screenOrientation = screen && screen.orientation && typeof screen.orientation.lock === 'function';
+        if (screenOrientation) {
+          screen.orientation.unlock();
+        }
+      },
       () => {}
     );
   }
