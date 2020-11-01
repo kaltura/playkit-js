@@ -63,6 +63,8 @@ describe('check inBrowserFullscreen config', function () {
     sandbox.stub(player._fullscreenController, '_isNativeFullscreen').callsFake(() => {
       return true;
     });
+    // indicator for specific player if it's in fullscreen or another element in fullscreen
+    player._fullscreenController._isInFullscreen = true;
     player.isFullscreen().should.be.true;
   });
 
@@ -76,12 +78,20 @@ describe('check inBrowserFullscreen config', function () {
     sandbox.stub(player._fullscreenController, '_isNativeFullscreen').callsFake(() => {
       return true;
     });
-    player.enterFullscreen();
+    // indicator for specific player if it's in fullscreen or another element in fullscreen
+    player._fullscreenController._isInFullscreen = true;
     player.isFullscreen().should.be.true;
+
+    // indicator for specific player if it's in fullscreen or another element in fullscreen
+    player._fullscreenController._isInFullscreen = false;
+    player.isFullscreen().should.be.false;
+
     sandbox.restore();
     sandbox.stub(player._fullscreenController, '_isNativeFullscreen').callsFake(() => {
       return false;
     });
+
+    player._fullscreenController._isInFullscreen = false;
     player.isFullscreen().should.be.false;
   });
 });
