@@ -168,7 +168,7 @@ class FullscreenController {
         this._isInFullscreen = true;
         const screenOrientation = screen && screen.orientation && typeof screen.orientation.lock === 'function';
         const playbackConfig = this._player.config.playback;
-        if (screenOrientation && playbackConfig.disableFullScreenOrientation) {
+        if (screenOrientation && !playbackConfig.disableFullScreenOrientation) {
           screen.orientation.lock('landscape');
         }
       },
