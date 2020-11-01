@@ -19,6 +19,8 @@ const EXIT_PIP_TIMEOUT: number = 1000;
  */
 class FullscreenController {
   _player: Player;
+  // Flag to indicate that player is in fullscreen(when different element on fullscreen - api return correct state).
+  _isInFullscreen: boolean = false;
   _isInBrowserFullscreen: boolean;
   _eventManager: EventManager;
   // Flag to overcome browsers which supports more than one fullscreenchange event
@@ -65,7 +67,7 @@ class FullscreenController {
    */
   isFullscreen(): boolean {
     return (
-      this._isNativeFullscreen() ||
+      (this._isNativeFullscreen() && this._isInFullscreen) ||
       //indicator for manually full screen in ios - with css flag
       this._isInBrowserFullscreen
     );
@@ -132,6 +134,25 @@ class FullscreenController {
   }
 
   /**
+   * get native fullscreen function response
+   *
+   * @param {HTMLElement} fullScreenElement - element to enter fullscreen
+   * @memberof FullScreenController
+   * @returns {void}
+   */
+  _nativeEnterFullScreen(fullScreenElement: HTMLElement) {
+    if (typeof fullScreenElement.requestFullscreen === 'function') {
+      return fullScreenElement.requestFullscreen();
+    } else if (typeof fullScreenElement.mozRequestFullScreen === 'function') {
+      return fullScreenElement.mozRequestFullScreen();
+    } else if (typeof fullScreenElement.webkitRequestFullScreen === 'function') {
+      return fullScreenElement.webkitRequestFullScreen();
+    } else if (typeof fullScreenElement.msRequestFullscreen === 'function') {
+      return fullScreenElement.msRequestFullscreen();
+    }
+  }
+
+  /**
    * request fullscreen function to all browsers
    *
    * @param {HTMLElement} fullScreenElement - element to enter fullscreen
@@ -142,14 +163,27 @@ class FullscreenController {
     if (this._player.isInPictureInPicture()) {
       this._player.exitPictureInPicture();
     }
-    if (typeof fullScreenElement.requestFullscreen === 'function') {
-      fullScreenElement.requestFullscreen();
-    } else if (typeof fullScreenElement.mozRequestFullScreen === 'function') {
-      fullScreenElement.mozRequestFullScreen();
-    } else if (typeof fullScreenElement.webkitRequestFullScreen === 'function') {
-      fullScreenElement.webkitRequestFullScreen();
-    } else if (typeof fullScreenElement.msRequestFullscreen === 'function') {
-      fullScreenElement.msRequestFullscreen();
+    Promise.resolve(this._nativeEnterFullScreen(fullScreenElement)).then(
+      () => (this._isInFullscreen = true),
+      () => {}
+    );
+  }
+
+  /**
+   * get native fullscreen function response
+   *
+   * @memberof FullScreenController
+   * @returns {void}
+   */
+  _nativeExitFullScreen() {
+    if (typeof document.exitFullscreen === 'function') {
+      return document.exitFullscreen();
+    } else if (typeof document.webkitExitFullscreen === 'function') {
+      return document.webkitExitFullscreen();
+    } else if (typeof document.mozCancelFullScreen === 'function') {
+      return document.mozCancelFullScreen();
+    } else if (typeof document.msExitFullscreen === 'function') {
+      return document.msExitFullscreen();
     }
   }
 
@@ -160,15 +194,10 @@ class FullscreenController {
    * @returns {void}
    */
   _requestExitFullscreen(): void {
-    if (typeof document.exitFullscreen === 'function') {
-      document.exitFullscreen();
-    } else if (typeof document.webkitExitFullscreen === 'function') {
-      document.webkitExitFullscreen();
-    } else if (typeof document.mozCancelFullScreen === 'function') {
-      document.mozCancelFullScreen();
-    } else if (typeof document.msExitFullscreen === 'function') {
-      document.msExitFullscreen();
-    }
+    Promise.resolve(this._nativeExitFullScreen()).then(
+      () => (this._isInFullscreen = false),
+      () => {}
+    );
   }
 
   /**
