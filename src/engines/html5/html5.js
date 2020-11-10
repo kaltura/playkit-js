@@ -489,7 +489,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._el.load();
     return this._canLoadMediaSourceAdapterPromise
       .then(() => {
-        this._reset = false;
         if (this._mediaSourceAdapter) {
           return this._mediaSourceAdapter.load(startTime).catch(error => {
             return Promise.reject(error);
@@ -985,6 +984,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _init(source: PKMediaSourceObject, config: Object): void {
     this._config = config;
+    this._reset = false;
     this._loadMediaSourceAdapter(source);
     this.attach();
   }
