@@ -50,7 +50,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _canLoadMediaSourceAdapterPromise: Promise<*>;
   _droppedFramesWatcher: ?DroppedFramesWatcher;
-
+  _reset: boolean = false;
   /**
    * The html5 class logger.
    * @type {any}
@@ -208,19 +208,31 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   reset(): void {
+    if (this._reset) return;
+    this._reset = true;
     this._eventManager.removeAll();
     if (this._droppedFramesWatcher) {
       this._droppedFramesWatcher.destroy();
       this._droppedFramesWatcher = null;
     }
-    if (this._mediaSourceAdapter) {
-      this._canLoadMediaSourceAdapterPromise = this._mediaSourceAdapter.destroy();
-      this._mediaSourceAdapter = null;
-    }
-    if (this._el && this._el.src) {
-      Utils.Dom.setAttribute(this._el, 'src', '');
-      Utils.Dom.removeAttribute(this._el, 'src');
-    }
+    this._canLoadMediaSourceAdapterPromise = new Promise((resolve, reject) => {
+      const mediaSourceAdapterDestroyed = this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve();
+      if (this._el && this._el.src) {
+        mediaSourceAdapterDestroyed.then(
+          () => {
+            Utils.Dom.setAttribute(this._el, 'src', '');
+            Utils.Dom.removeAttribute(this._el, 'src');
+            resolve();
+          },
+          () => {
+            reject();
+          }
+        );
+      } else {
+        resolve();
+      }
+    });
+    this._mediaSourceAdapter = null;
   }
 
   /**
@@ -477,6 +489,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._el.load();
     return this._canLoadMediaSourceAdapterPromise
       .then(() => {
+        this._reset = false;
         if (this._mediaSourceAdapter) {
           return this._mediaSourceAdapter.load(startTime).catch(error => {
             return Promise.reject(error);
