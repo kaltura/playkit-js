@@ -2518,7 +2518,7 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should resets the player', function () {
+    it.only('should resets the player', function () {
       player = new Player(config);
       player._reset = false;
       let posterMgrSpy = sandbox.spy(player._posterManager, 'reset');
@@ -2536,6 +2536,7 @@ describe('Player', function () {
       _updateTextDisplay.should.have.been.calledOnce;
       _updateTextDisplay.should.have.been.calledWith([]);
       player._config.should.not.be.empty;
+      player._config.sources.options.should.not.be.empty;
       player._tracks.should.be.empty;
       player._engineType.should.be.empty;
       player._streamType.should.be.empty;
