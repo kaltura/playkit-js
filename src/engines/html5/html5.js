@@ -218,18 +218,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._canLoadMediaSourceAdapterPromise = new Promise((resolve, reject) => {
       const mediaSourceAdapterDestroyed = this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve();
       if (this._el && this._el.src) {
-        mediaSourceAdapterDestroyed.then(
-          () => {
-            Utils.Dom.setAttribute(this._el, 'src', '');
-            Utils.Dom.removeAttribute(this._el, 'src');
-            resolve();
-          },
-          () => {
-            reject();
-          }
-        );
+        mediaSourceAdapterDestroyed.then(() => {
+          Utils.Dom.setAttribute(this._el, 'src', '');
+          Utils.Dom.removeAttribute(this._el, 'src');
+          resolve();
+        }, reject);
       } else {
-        resolve();
+        mediaSourceAdapterDestroyed.then(resolve, reject);
       }
     });
     this._mediaSourceAdapter = null;
