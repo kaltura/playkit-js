@@ -578,7 +578,7 @@ export default class Player extends FakeEventTarget {
     this._externalCaptionsHandler.reset(this._tracks.filter(track => track.external));
     this._posterManager.reset();
     this._stateManager.reset();
-    this._config.sources = {};
+    this._config.sources = {options: this.config.sources.options};
     this._activeTextCues = [];
     this._updateTextDisplay([]);
     this._tracks = [];
