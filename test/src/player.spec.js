@@ -2518,7 +2518,7 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it.only('should resets the player', function () {
+    it('should resets the player', function () {
       player = new Player(config);
       player._reset = false;
       let posterMgrSpy = sandbox.spy(player._posterManager, 'reset');
