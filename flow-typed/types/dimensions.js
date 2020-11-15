@@ -1,6 +1,6 @@
 declare type PKPlayerDimensions = {
-  width?: number | string,
-  height?: number | string
+  width: number,
+  height: number
 };
 
 declare type PKDimensionsConfig = {

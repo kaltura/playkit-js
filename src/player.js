@@ -884,13 +884,14 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Sets the dimensions of the player.
-   * @param {PKPlayerDimensions} dimensions - the player dimensions input.
+   * @param {PKDimensionsConfig} dimensions - the player dimensions config.
    * @returns {void}
    * @public
    */
-  set dimensions(dimensions?: PKPlayerDimensions) {
+  set dimensions(dimensions?: PKDimensionsConfig) {
     const targetElement = document.getElementById(this.config.targetId);
     if (!dimensions || Utils.Object.isEmptyObject(dimensions)) {
+      this._aspectRatio = null;
       targetElement.style.width = null;
       targetElement.style.height = null;
     } else {
@@ -898,36 +899,38 @@ export default class Player extends FakeEventTarget {
       targetElement.style.width = typeof width === 'number' ? `${width}px` : width;
       targetElement.style.height = typeof height === 'number' ? `${height}px` : height;
     }
-    if (Utils.Object.hasPropertyPath(this.config, 'dimensions.ratio')) {
-      this._calcRatio(targetElement, dimensions);
-    }
+    this._calcRatio(targetElement, dimensions);
   }
 
   /**
    * Calc the aspect ratio of the player.
    * @param {HTMLDivElement} targetElement - the player root element.
-   * @param {PKPlayerDimensions} dimensions - the player dimensions input.
+   * @param {PKDimensionsConfig} dimensions - the player dimensions input.
    * @returns {void}
    * @public
    */
-  _calcRatio(targetElement: HTMLDivElement, dimensions: PKPlayerDimensions) {
-    const {ratio} = this.config.dimensions;
-    const [ratioWidth, ratioHeight] = ratio.split(':').map(r => Number(r));
-    if (dimensions.width || (!dimensions.width && !dimensions.height)) {
-      const height = (ratioHeight / ratioWidth) * targetElement.clientWidth;
-      targetElement.style.height = `${height}px`;
-    } else if (dimensions.height && !dimensions.width) {
-      const width = (ratioWidth / ratioHeight) * targetElement.clientHeight;
-      targetElement.style.width = `${width}px`;
+  _calcRatio(targetElement: HTMLDivElement, dimensions: PKDimensionsConfig) {
+    if (typeof dimensions.ratio !== 'undefined') {
+      this._aspectRatio = dimensions.ratio;
+    }
+    if (this._aspectRatio) {
+      const [ratioWidth, ratioHeight] = this._aspectRatio.split(':').map(r => Number(r));
+      if (dimensions.width || (!dimensions.width && !dimensions.height)) {
+        const height = (ratioHeight / ratioWidth) * targetElement.clientWidth;
+        targetElement.style.height = `${height}px`;
+      } else if (dimensions.height && !dimensions.width) {
+        const width = (ratioWidth / ratioHeight) * targetElement.clientHeight;
+        targetElement.style.width = `${width}px`;
+      }
     }
   }
 
   /**
    * Get the dimensions of the player.
-   * @returns {{width: number, height: number}} - The dimensions of the player.
+   * @returns {PKPlayerDimensions} - The dimensions of the player.
    * @public
    */
-  get dimensions(): Object {
+  get dimensions(): PKPlayerDimensions {
     return {
       width: this._el.clientWidth,
       height: this._el.clientHeight
@@ -1955,9 +1958,12 @@ export default class Player extends FakeEventTarget {
     }
   }
 
+  _aspectRatio: ?string;
+
   _handleDimensions(): void {
     const {dimensions} = this.config;
     if (Utils.Object.isObject(dimensions) && !Utils.Object.isEmptyObject(dimensions)) {
+      this._aspectRatio = Utils.Object.getPropertyPath(this.config, 'dimensions.ratio');
       this.dimensions = dimensions;
     }
   }
@@ -2058,6 +2064,7 @@ export default class Player extends FakeEventTarget {
       this._pause();
     }
   }
+
   /**
    * Resets the state flags of the player.
    * @returns {void}
