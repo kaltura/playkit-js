@@ -909,29 +909,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Calc the aspect ratio of the player.
-   * @param {HTMLDivElement} targetElement - the player root element.
-   * @param {PKDimensionsConfig} dimensions - the player dimensions input.
-   * @returns {void}
-   * @public
-   */
-  _calcRatio(targetElement: HTMLDivElement, dimensions: PKDimensionsConfig) {
-    if (typeof dimensions.ratio !== 'undefined') {
-      this._aspectRatio = dimensions.ratio;
-    }
-    if (this._aspectRatio) {
-      const [ratioWidth, ratioHeight] = this._aspectRatio.split(':').map(r => Number(r));
-      if (dimensions.width || (!dimensions.width && !dimensions.height)) {
-        const height = (ratioHeight / ratioWidth) * targetElement.clientWidth;
-        targetElement.style.height = `${height}px`;
-      } else if (dimensions.height && !dimensions.width) {
-        const width = (ratioWidth / ratioHeight) * targetElement.clientHeight;
-        targetElement.style.width = `${width}px`;
-      }
-    }
-  }
-
-  /**
    * Get the dimensions of the player.
    * @returns {PKPlayerDimensions} - The dimensions of the player.
    * @public
@@ -2085,6 +2062,29 @@ export default class Player extends FakeEventTarget {
     this._loadingMedia = false;
     this._playbackStart = false;
     this._firstPlaying = false;
+  }
+
+  /**
+   * Calculates the aspect ratio of the player.
+   * @param {HTMLDivElement} targetElement - the player root element.
+   * @param {PKDimensionsConfig} dimensions - the player dimensions input.
+   * @returns {void}
+   * @public
+   */
+  _calcRatio(targetElement: HTMLDivElement, dimensions: PKDimensionsConfig) {
+    if (typeof dimensions.ratio !== 'undefined') {
+      this._aspectRatio = dimensions.ratio;
+    }
+    if (this._aspectRatio) {
+      const [ratioWidth, ratioHeight] = this._aspectRatio.split(':').map(r => Number(r));
+      if (dimensions.width || (!dimensions.width && !dimensions.height)) {
+        const height = (ratioHeight / ratioWidth) * targetElement.clientWidth;
+        targetElement.style.height = `${height}px`;
+      } else if (dimensions.height && !dimensions.width) {
+        const width = (ratioWidth / ratioHeight) * targetElement.clientHeight;
+        targetElement.style.width = `${width}px`;
+      }
+    }
   }
 
   /**
