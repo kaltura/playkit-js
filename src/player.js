@@ -394,6 +394,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _shouldLoadAfterAttach: boolean = false;
+  /**
+   * The aspect ratio of the player.
+   * @type {?string}
+   * @private
+   */
+  _aspectRatio: ?string;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -1958,8 +1964,11 @@ export default class Player extends FakeEventTarget {
     }
   }
 
-  _aspectRatio: ?string;
-
+  /**
+   * Handles and sets the initial dimensions configuration if such exists.
+   * @private
+   * @returns {void}
+   */
   _handleDimensions(): void {
     const {dimensions} = this.config;
     if (Utils.Object.isObject(dimensions) && !Utils.Object.isEmptyObject(dimensions)) {
