@@ -85,7 +85,7 @@ describe('Dimensions API ', function () {
     player.dimensions.should.deep.equals({height: 60, width: 200});
   });
 
-  it('should reset width and height', (done) => {
+  it('should reset width and height', done => {
     config.dimensions = {
       width: 100,
       height: 100
