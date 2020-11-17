@@ -901,11 +901,11 @@ export default class Player extends FakeEventTarget {
       targetElement.style.width = null;
       targetElement.style.height = null;
     } else {
-      const {height, width} = {...this.dimensions, ...dimensions};
+      const {height, width} = Utils.Object.mergeDeep(this.dimensions, dimensions);
       targetElement.style.width = typeof width === 'number' ? `${width}px` : width;
       targetElement.style.height = typeof height === 'number' ? `${height}px` : height;
+      this._calcRatio(targetElement, dimensions);
     }
-    this._calcRatio(targetElement, dimensions);
   }
 
   /**
@@ -1949,7 +1949,6 @@ export default class Player extends FakeEventTarget {
   _handleDimensions(): void {
     const {dimensions} = this.config;
     if (Utils.Object.isObject(dimensions) && !Utils.Object.isEmptyObject(dimensions)) {
-      this._aspectRatio = Utils.Object.getPropertyPath(this.config, 'dimensions.ratio');
       this.dimensions = dimensions;
     }
   }
