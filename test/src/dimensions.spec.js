@@ -95,11 +95,11 @@ describe('Dimensions API ', function () {
     player.ready().then(() => {
       player.dimensions.should.deep.equals({width: 100, height: 100});
       player.dimensions = {};
-      player.dimensions.should.deep.equals({width: window.innerWidth, height: window.innerHeight});
+      player.dimensions.width.should.equals(window.innerWidth);
       player.dimensions = {width: 90, height: 80};
       player.dimensions.should.deep.equals({width: 90, height: 80});
       player.dimensions = null;
-      player.dimensions.should.deep.equals({width: window.innerWidth, height: window.innerHeight});
+      player.dimensions.width.should.equals(window.innerWidth);
       done();
     });
   });
