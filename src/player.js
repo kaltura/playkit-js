@@ -28,7 +28,7 @@ import {DefaultConfig} from './player-config.js';
 import './assets/style.css';
 import PKError from './error/error';
 import {EngineProvider} from './engines/engine-provider';
-import {ExternalCaptionsHandler} from './track/external-captions-handler';
+import {EXTERNAL_TRACK_ID, ExternalCaptionsHandler} from './track/external-captions-handler';
 import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
 import {ResizeWatcher} from './utils/resize-watcher';
@@ -1167,7 +1167,7 @@ export default class Player extends FakeEventTarget {
           this.hideTextTrack();
           this._externalCaptionsHandler.hideTextTrack();
           this._playbackAttributesState.textLanguage = OFF;
-        } else if (track.external && !this._config.playback.useNativeTextTrack) {
+        } else if (track.external) {
           this._engine.hideTextTrack();
           this._externalCaptionsHandler.selectTextTrack(track);
         } else {
@@ -1720,9 +1720,6 @@ export default class Player extends FakeEventTarget {
   _onTextTrackChanged(event: FakeEvent): void {
     this.ready().then(() => (this._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language));
     this._markActiveTrack(event.payload.selectedTextTrack);
-    if (this._config.playback.useNativeTextTrack) {
-      this._externalCaptionsHandler.selectTextTrack(event.payload.selectedTextTrack);
-    }
     this.dispatchEvent(event);
   }
 
@@ -2072,7 +2069,11 @@ export default class Player extends FakeEventTarget {
     if (this._config.playback.useNativeTextTrack) {
       const getNativeLanguageTrackIndex = (textTrack: Track): number => {
         const videoElement = this.getVideoElement();
-        return videoElement ? Array.from(videoElement.textTracks).findIndex(track => (track ? track.language === textTrack.language : false)) : -1;
+        return videoElement
+          ? Array.from(videoElement.textTracks).findIndex(track =>
+              track ? track.language === textTrack.language || (!!textTrack.external && track.language === EXTERNAL_TRACK_ID) : false
+            )
+          : -1;
       };
       this._getTextTracks().forEach(track => (track.index = getNativeLanguageTrackIndex(track)));
     }
