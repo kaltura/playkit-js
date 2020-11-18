@@ -655,7 +655,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const parsedTracks = [];
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
-        if (textTracks[i].language !== EXTERNAL_TRACK_ID && textTracks[i].label !== EXTERNAL_TRACK_ID) {
+        if (textTracks[i].language !== EXTERNAL_TRACK_ID || textTracks[i].label !== EXTERNAL_TRACK_ID) {
           const settings = {
             kind: textTracks[i].kind,
             active: textTracks[i].mode === 'showing',
