@@ -216,7 +216,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _selectTextTrack(textTrack: TextTrack) {
     this.hideTextTrack();
     if (this._player.config.playback.useNativeTextTrack) {
-      this._addCuesToNativeTextTrack(textTrack, this._textTrackModel[textTrack.language].cues);
+      this._addCuesToNativeTextTrack(this._textTrackModel[textTrack.language].cues);
     } else {
       this._setTextTrack(textTrack);
     }
@@ -477,11 +477,10 @@ class ExternalCaptionsHandler extends FakeEventTarget {
 
   /**
    * adding cues to an existing text element in a video tag
-   * @param {TextTrack} textTrack - adding cues to an exiting text track element
    * @param {Array<Cue>} cues - the cues to be added
    * @return {void}
    */
-  _addCuesToNativeTextTrack(textTrack: TextTrack, cues: Array<Cue>): void {
+  _addCuesToNativeTextTrack(cues: Array<Cue>): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement) {
       const track = Array.from(videoElement.textTracks).find(track => (track ? track.language === EXTERNAL_TRACK_ID : false));
