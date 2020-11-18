@@ -2066,11 +2066,11 @@ export default class Player extends FakeEventTarget {
    */
   _maybeAdjustTextTracksIndexes(): void {
     if (this._config.playback.useNativeTextTrack) {
-      const getNativeLanguageTrackIndex = (textTrack: Track): number => {
+      const getNativeLanguageTrackIndex = (textTrack: TextTrack): number => {
         const videoElement = this.getVideoElement();
         return videoElement
           ? Array.from(videoElement.textTracks).findIndex(track =>
-              track ? track.language === textTrack.language || track.language === EXTERNAL_TRACK_ID : false
+              track ? track.language === textTrack.language || (!!textTrack.external && track.language === EXTERNAL_TRACK_ID) : false
             )
           : -1;
       };
