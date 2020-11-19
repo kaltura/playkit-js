@@ -467,10 +467,10 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _resetExternalNativeTextTrack(): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement) {
-      const track = Array.from(videoElement.textTracks).find(track => track && track.language === EXTERNAL_TRACK_ID);
+      const track = Array.from(videoElement.textTracks).find(track => (track ? track.language === EXTERNAL_TRACK_ID : false));
       if (track) {
-        track.mode = 'disabled';
         track.cues && Object.values(track.cues).forEach(cue => track.removeCue(cue));
+        track.mode = 'disabled';
       }
     }
   }

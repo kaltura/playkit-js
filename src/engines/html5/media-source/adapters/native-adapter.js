@@ -1025,7 +1025,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     let textTracks = this._videoElement.textTracks;
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
-        (textTracks[i].kind === 'subtitles' || textTracks[i].kind === 'captions') && (textTracks[i].mode = 'disabled');
+        (textTracks[i].kind === 'subtitles' || textTracks[i].kind === 'captions') &&
+          (textTracks[i].language !== EXTERNAL_TRACK_ID || textTracks[i].label !== EXTERNAL_TRACK_ID) &&
+          (textTracks[i].mode = 'disabled');
       }
     }
   }

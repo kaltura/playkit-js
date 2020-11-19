@@ -28,7 +28,7 @@ import {DefaultConfig} from './player-config.js';
 import './assets/style.css';
 import PKError from './error/error';
 import {EngineProvider} from './engines/engine-provider';
-import {EXTERNAL_TRACK_ID, ExternalCaptionsHandler} from './track/external-captions-handler';
+import {ExternalCaptionsHandler} from './track/external-captions-handler';
 import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
 import {ResizeWatcher} from './utils/resize-watcher';
@@ -2068,13 +2068,13 @@ export default class Player extends FakeEventTarget {
     if (this._config.playback.useNativeTextTrack) {
       const getNativeLanguageTrackIndex = (textTrack: TextTrack): number => {
         const videoElement = this.getVideoElement();
-        return videoElement
-          ? Array.from(videoElement.textTracks).findIndex(track =>
-              track ? track.language === textTrack.language || (!!textTrack.external && track.language === EXTERNAL_TRACK_ID) : false
-            )
-          : -1;
+        return videoElement ? Array.from(videoElement.textTracks).findIndex(track => (track ? track.language === textTrack.language : false)) : -1;
       };
-      this._getTextTracks().forEach(track => (track.index = getNativeLanguageTrackIndex(track)));
+      const textTracks = this._getTextTracks();
+      let externalTrackIndex = textTracks.length;
+      textTracks.forEach(track => {
+        track.index = track.external ? externalTrackIndex++ : getNativeLanguageTrackIndex(track);
+      });
     }
   }
 
