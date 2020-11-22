@@ -4,7 +4,8 @@ const StateType: PKStateTypes = {
   LOADING: 'loading',
   PLAYING: 'playing',
   PAUSED: 'paused',
-  BUFFERING: 'buffering'
+  BUFFERING: 'buffering',
+  SEEKING: 'seeking'
 };
 
 export {StateType};

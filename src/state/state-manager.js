@@ -7,6 +7,7 @@ import {CustomEventType, Html5EventType} from '../event/event-type';
 import FakeEvent from '../event/fake-event';
 import getLogger from '../utils/logger';
 
+const SEEKING_THRESHOLD: number = 500;
 /**
  * This class responsible to manage all the state machine of the player.
  * @classdesc
@@ -111,9 +112,18 @@ export default class StateManager {
         this._dispatchEvent();
       },
       [Html5EventType.WAITING]: () => {
-        this._updateState(StateType.BUFFERING);
-        this._lastWaitingTime = this._player.currentTime;
-        this._dispatchEvent();
+        if (this._player.seeking) {
+          this._updateState(StateType.SEEKING);
+          this._dispatchEvent();
+          //if waiting and seeking took more than threshold, it's buffering
+          setTimeout(() => {
+            if (StateType.SEEKING === this._curState.type) {
+              this._waiting();
+            }
+          }, SEEKING_THRESHOLD);
+        } else {
+          this._waiting();
+        }
       },
       [Html5EventType.ENDED]: () => {
         this._updateState(StateType.IDLE);
@@ -133,18 +143,18 @@ export default class StateManager {
         this._updateState(StateType.PAUSED);
         this._dispatchEvent();
       },
-      [Html5EventType.SEEKED]: () => {
-        if (this._prevState && this._prevState.type === StateType.PLAYING) {
-          this._updateState(StateType.PLAYING);
-          this._dispatchEvent();
-        }
-      },
       [Html5EventType.TIME_UPDATE]: () => {
         if (this._player.currentTime !== this._lastWaitingTime && this._prevState && this._prevState.type === StateType.PLAYING) {
           this._lastWaitingTime = null;
           this._updateState(StateType.PLAYING);
           this._dispatchEvent();
         }
+      }
+    },
+    [StateType.SEEKING]: {
+      [Html5EventType.SEEKED]: () => {
+        this._updateState(this._prevState.type);
+        this._dispatchEvent();
       }
     }
   };
@@ -228,7 +238,16 @@ export default class StateManager {
     );
     this._player.dispatchEvent(event);
   }
-
+  /**
+   * waiting handler on state manager
+   * @private
+   * @returns {void}
+   */
+  _waiting(): void {
+    this._updateState(StateType.BUFFERING);
+    this._lastWaitingTime = this._player.currentTime;
+    this._dispatchEvent();
+  }
   /**
    * Destroys the state manager.
    * @public
