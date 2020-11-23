@@ -2505,9 +2505,5 @@ export default class Player extends FakeEventTarget {
   get Error(): typeof PKError {
     return PKError;
   }
-
-  get orientationTypes(): PKOrientationType {
-    return ScreenOrientationType;
-  }
   // </editor-fold>
 }

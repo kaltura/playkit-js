@@ -3,6 +3,7 @@ import EventManager from '../event/event-manager';
 import Player from '../player';
 import FakeEvent from '../event/fake-event';
 import * as Utils from '../utils/util';
+import {ScreenOrientationType} from '../screen-orientation-type';
 
 /**
  * The IOS fullscreen class name.
@@ -23,6 +24,7 @@ class FullscreenController {
   _isInFullscreen: boolean = false;
   _isInBrowserFullscreen: boolean;
   _isScreenOrientationSupport: boolean =
+    // $FlowFixMe
     screen && screen.orientation && typeof screen.orientation.unlock === 'function' && typeof screen.orientation.lock === 'function';
   _eventManager: EventManager;
   // Flag to overcome browsers which supports more than one fullscreenchange event
@@ -169,9 +171,10 @@ class FullscreenController {
       () => {
         this._isInFullscreen = true;
         const screenLockOrientionMode = Utils.Object.getPropertyPath(this._player, 'config.playback.screenLockOrientionMode');
-        const validOrientation = Object.values(this._player.orientationTypes).includes(screenLockOrientionMode);
+        const validOrientation = Object.values(ScreenOrientationType).includes(screenLockOrientionMode);
         if (this._isScreenOrientationSupport && validOrientation) {
-          screen.orientation.lock(screenLockOrientionMode);
+          // $FlowFixMe
+          screen.orientation.lock(screenLockOrientionMode).catch(() => {});
         }
       },
       () => {}
@@ -207,6 +210,7 @@ class FullscreenController {
       () => {
         this._isInFullscreen = false;
         if (this._isScreenOrientationSupport) {
+          // $FlowFixMe
           screen.orientation.unlock();
         }
       },
