@@ -247,7 +247,11 @@ const CustomEventType: PKEventTypes = {
   /**
    * Fired when the drm license is responded from the DRM server
    */
-  DRM_LICENSE_LOADED: 'drmlicenseloaded'
+  DRM_LICENSE_LOADED: 'drmlicenseloaded',
+  /**
+   * Fired when browser tab becomes active / not active
+   */
+  TAB_VISIBILITY_CHANGE: 'tabvisibilitychange'
 };
 
 const EventType: PKEventTypes = Utils.Object.merge([Html5EventType, CustomEventType, AdEventType]);

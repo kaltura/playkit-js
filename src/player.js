@@ -35,6 +35,7 @@ import {ResizeWatcher} from './utils/resize-watcher';
 import {FullscreenController} from './fullscreen/fullscreen-controller';
 import {EngineDecorator} from './engines/engine-decorator';
 import {LabelOptions} from './track/label-options';
+import {TabVisibilityHandler} from './utils/tab-visibility-handler';
 
 /**
  * The black cover class name.
@@ -427,6 +428,7 @@ export default class Player extends FakeEventTarget {
     this._posterManager = new PosterManager();
     this._stateManager = new StateManager(this);
     this._resizeWatcher = new ResizeWatcher();
+    this._tabVisibilityHandler = new TabVisibilityHandler(this);
     this._playbackMiddleware = new PlaybackMiddleware();
     this._textStyle = new TextStyle();
     this._createReadyPromise();
@@ -491,6 +493,15 @@ export default class Player extends FakeEventTarget {
    */
   ready(): Promise<*> {
     return this._readyPromise ? this._readyPromise : Promise.resolve();
+  }
+
+  /**
+   * The state of the browser tab
+   * @public
+   * @returns {boolean} - The state of the browser tab (active or not)
+   */
+  get isTabActive(): boolean {
+    return this._tabVisibilityHandler.isTabActive;
   }
 
   /**
@@ -618,6 +629,7 @@ export default class Player extends FakeEventTarget {
     this._posterManager.destroy();
     this._stateManager.destroy();
     this._fullscreenController.destroy();
+    this._tabVisibilityHandler.destroy();
     this._clearRepositionTimeout();
     this._activeTextCues = [];
     this._textDisplaySettings = {};
