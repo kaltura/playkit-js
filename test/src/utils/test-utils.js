@@ -2,8 +2,9 @@
  * Configuration structure of the player.
  * @returns {Object} - The configuration structure of the player.
  */
-function getConfigStructure() {
+function getConfigStructure(targetId) {
   return {
+    targetId,
     sources: {},
     playback: {
       enableCEA708Captions: true,
