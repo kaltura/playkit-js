@@ -394,6 +394,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _shouldLoadAfterAttach: boolean = false;
+  /**
+   * The aspect ratio of the player.
+   * @type {?string}
+   * @private
+   */
+  _aspectRatio: ?string;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -454,6 +460,7 @@ export default class Player extends FakeEventTarget {
         this._attachMedia();
         this._handlePlaybackOptions();
         this._posterManager.setSrc(this._config.sources.poster);
+        this._handleDimensions();
         this._handlePreload();
         this._handleAutoPlay();
         Player._logger.debug('Change source ended');
@@ -882,11 +889,31 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Get the dimensions of the player.
-   * @returns {{width: number, height: number}} - The dimensions of the player.
+   * Sets the dimensions of the player.
+   * @param {PKDimensionsConfig} dimensions - the player dimensions config.
+   * @returns {void}
    * @public
    */
-  get dimensions(): Object {
+  set dimensions(dimensions?: PKDimensionsConfig) {
+    const targetElement = document.getElementById(this.config.targetId);
+    if (!dimensions || Utils.Object.isEmptyObject(dimensions)) {
+      this._aspectRatio = null;
+      targetElement.style.width = null;
+      targetElement.style.height = null;
+    } else {
+      const {height, width} = Utils.Object.mergeDeep(this.dimensions, dimensions);
+      targetElement.style.width = typeof width === 'number' ? `${width}px` : width;
+      targetElement.style.height = typeof height === 'number' ? `${height}px` : height;
+      this._calcRatio(targetElement, dimensions);
+    }
+  }
+
+  /**
+   * Get the dimensions of the player.
+   * @returns {PKPlayerDimensions} - The dimensions of the player.
+   * @public
+   */
+  get dimensions(): PKPlayerDimensions {
     return {
       width: this._el.clientWidth,
       height: this._el.clientHeight
@@ -1915,6 +1942,18 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Handles and sets the initial dimensions configuration if such exists.
+   * @private
+   * @returns {void}
+   */
+  _handleDimensions(): void {
+    const {dimensions} = this.config;
+    if (Utils.Object.isObject(dimensions) && !Utils.Object.isEmptyObject(dimensions)) {
+      this.dimensions = dimensions;
+    }
+  }
+
+  /**
    * Start/resume the engine playback.
    * @private
    * @returns {void}
@@ -2010,6 +2049,7 @@ export default class Player extends FakeEventTarget {
       this._pause();
     }
   }
+
   /**
    * Resets the state flags of the player.
    * @returns {void}
@@ -2021,6 +2061,29 @@ export default class Player extends FakeEventTarget {
     this._loadingMedia = false;
     this._playbackStart = false;
     this._firstPlaying = false;
+  }
+
+  /**
+   * Calculates the aspect ratio of the player.
+   * @param {HTMLDivElement} targetElement - the player root element.
+   * @param {PKDimensionsConfig} dimensions - the player dimensions input.
+   * @returns {void}
+   * @public
+   */
+  _calcRatio(targetElement: HTMLDivElement, dimensions: PKDimensionsConfig) {
+    if (typeof dimensions.ratio !== 'undefined') {
+      this._aspectRatio = dimensions.ratio;
+    }
+    if (this._aspectRatio) {
+      const [ratioWidth, ratioHeight] = this._aspectRatio.split(':').map(r => Number(r));
+      if (dimensions.width || (!dimensions.width && !dimensions.height)) {
+        const height = (ratioHeight / ratioWidth) * targetElement.clientWidth;
+        targetElement.style.height = `${height}px`;
+      } else if (dimensions.height && !dimensions.width) {
+        const width = (ratioWidth / ratioHeight) * targetElement.clientHeight;
+        targetElement.style.width = `${width}px`;
+      }
+    }
   }
 
   /**
