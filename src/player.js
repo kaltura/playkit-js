@@ -366,6 +366,12 @@ export default class Player extends FakeEventTarget {
    */
   _externalCaptionsHandler: ExternalCaptionsHandler;
   /**
+   * handles the tab state (active or not)
+   * @type {TabVisibilityHandler}
+   * @private
+   */
+  _tabVisibilityHandler: TabVisibilityHandler;
+  /**
    * holds the full screen controller
    * @type {FullscreenController}
    * @private
