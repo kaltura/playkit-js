@@ -174,8 +174,8 @@ class FullscreenController {
         const screenLockOrientionMode = Utils.Object.getPropertyPath(this._player, 'config.playback.screenLockOrientionMode');
         const validOrientation = Object.values(ScreenOrientationType).includes(screenLockOrientionMode);
         if (this._isScreenOrientationSupport && validOrientation) {
-          // $FlowFixMe
           screen.orientation
+            // $FlowFixMe
             .lock(screenLockOrientionMode)
             .then(() => (this._isScreenLocked = true))
             .catch(() => {});
