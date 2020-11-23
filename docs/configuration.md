@@ -20,7 +20,8 @@ var player = playkit.core.loadPlayer(config);
   network: PKNetworkConfigObject,
   customLabels: PKCustomLabelsConfigObject,
   abr: PKAbrConfigObject,
-  drm: PKDrmConfigObject
+  drm: PKDrmConfigObject,
+  dimensions: PKDimensionsConfig
 }
 ```
 
@@ -1383,6 +1384,55 @@ var config = {
 > > ##### Default: ``
 > >
 > > ##### Description: A specific DRM key system to use.
+
+##
+
+> ### config.dimensions
+>
+> ##### Type: `PKDimensionsConfig`
+>
+> ```js
+> {
+>   width?: string | number;
+>   height?: string | number;
+>   ratio?: string;
+> }
+> ```
+>
+> ##### Description: Dimensions configuration
+>
+> > ### config.dimensions.width
+> >
+> > ##### Type: `string | number`
+> >
+> > ##### Default: `''`
+> >
+> > ##### Description: The width of the player.
+> >
+> > If number was provided, the width will be calculated in pixels (`width: 640` equivalent to `width: '640px'`).
+> > If string was provided, any valid css syntax can be passed, for example: `width: '100%'`, `width: 'auto'`, etc.
+> >
+> > ### config.dimensions.height
+> >
+> > ##### Type: `string | number`
+> >
+> > ##### Default: `''`
+> >
+> > ##### Description: The height of the player.
+> >
+> > If number was provided, the height will be calculated in pixels (`height: 360` equivalent to `width: '360px'`).
+> > If string was provided, any valid css syntax can be passed, for example: `height: '100%'`, `height: 'auto'`, etc.
+> >
+> > ### config.dimensions.ratio
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `''`
+> >
+> > ##### Description: Defines the aspect ratio of the player.
+> >
+> > The aspect ratio should be written in the form of `'width:height'`, for example: `'4:3'` (classic TV ratio).
+> > If one of the `height` or `width` parameters is additionally provided in the configuration, the value of the other parameter not provided will be calculated accordingly to match the aspect ratio. If both were provided, the `height` value would be overridden.
 
 ##
 
