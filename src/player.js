@@ -35,7 +35,7 @@ import {ResizeWatcher} from './utils/resize-watcher';
 import {FullscreenController} from './fullscreen/fullscreen-controller';
 import {EngineDecorator} from './engines/engine-decorator';
 import {LabelOptions} from './track/label-options';
-
+import {ScreenOrientationType} from './screen-orientation-type';
 /**
  * The black cover class name.
  * @type {string}
@@ -2506,5 +2506,8 @@ export default class Player extends FakeEventTarget {
     return PKError;
   }
 
+  get orientationTypes(): PKOrientationType {
+    return ScreenOrientationType;
+  }
   // </editor-fold>
 }

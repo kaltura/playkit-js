@@ -37,7 +37,7 @@ const DefaultConfig = {
       dash: false
     },
     inBrowserFullscreen: false,
-    disableFullScreenOrientation: false,
+    screenLockOrientionMode: '',
     playAdsWithMSE: false,
     streamPriority: [
       {

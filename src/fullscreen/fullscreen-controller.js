@@ -22,6 +22,8 @@ class FullscreenController {
   // Flag to indicate that player is in fullscreen(when different element on fullscreen - api return correct state).
   _isInFullscreen: boolean = false;
   _isInBrowserFullscreen: boolean;
+  _isScreenOrientationSupport: boolean =
+    screen && screen.orientation && typeof screen.orientation.unlock === 'function' && typeof screen.orientation.lock === 'function';
   _eventManager: EventManager;
   // Flag to overcome browsers which supports more than one fullscreenchange event
   _isFullscreenEventDispatched: boolean = false;
@@ -166,10 +168,10 @@ class FullscreenController {
     Promise.resolve(this._nativeEnterFullScreen(fullScreenElement)).then(
       () => {
         this._isInFullscreen = true;
-        const screenOrientation = screen && screen.orientation && typeof screen.orientation.lock === 'function';
-        const playbackConfig = this._player.config.playback;
-        if (screenOrientation && !playbackConfig.disableFullScreenOrientation) {
-          screen.orientation.lock('landscape');
+        const screenLockOrientionMode = Utils.Object.getPropertyPath(this._player, 'config.playback.screenLockOrientionMode');
+        const validOrientation = Object.values(this._player.orientationTypes).includes(screenLockOrientionMode);
+        if (this._isScreenOrientationSupport && validOrientation) {
+          screen.orientation.lock(screenLockOrientionMode);
         }
       },
       () => {}
@@ -204,8 +206,7 @@ class FullscreenController {
     Promise.resolve(this._nativeExitFullScreen()).then(
       () => {
         this._isInFullscreen = false;
-        const screenOrientation = screen && screen.orientation && typeof screen.orientation.lock === 'function';
-        if (screenOrientation) {
+        if (this._isScreenOrientationSupport) {
           screen.orientation.unlock();
         }
       },
