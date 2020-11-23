@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.64.3](https://github.com/kaltura/playkit-js/compare/v0.64.2...v0.64.3) (2020-11-03)
+
+
+### Bug Fixes
+
+* **FEC-10427:** remove cues for native external subtitles  ([#495](https://github.com/kaltura/playkit-js/issues/495)) ([b95cc5b](https://github.com/kaltura/playkit-js/commit/b95cc5b))
+* **FEC-10510:** iOS14 -  cannot exit from native PiP by the player's PiP button ([#483](https://github.com/kaltura/playkit-js/issues/483)) ([ddf3a87](https://github.com/kaltura/playkit-js/commit/ddf3a87))
+* **FEC-10537:** When multi players on page, isFullscreen() API returns true for all of them ([#498](https://github.com/kaltura/playkit-js/issues/498)) ([40b47f9](https://github.com/kaltura/playkit-js/commit/40b47f9))
+* change modules flag to default ([#496](https://github.com/kaltura/playkit-js/issues/496)) ([3a9e305](https://github.com/kaltura/playkit-js/commit/3a9e305))
+* **FEC-10451:** captions misaligned in V7 VTT ([#491](https://github.com/kaltura/playkit-js/issues/491)) ([5822884](https://github.com/kaltura/playkit-js/commit/5822884))
+* **FEC-10513:** iOS14 -  cannot enter to full screen from PiP ([#484](https://github.com/kaltura/playkit-js/issues/484)) ([bdc8761](https://github.com/kaltura/playkit-js/commit/bdc8761))
+* **FEC-10514:** iOS14 - wrong UI on inBrowserFullscreen from PiP ([#492](https://github.com/kaltura/playkit-js/issues/492)) ([6d9b473](https://github.com/kaltura/playkit-js/commit/6d9b473))
+* **FEC-10562:** add wkwebview fairplay support ([#497](https://github.com/kaltura/playkit-js/issues/497)) ([01236c6](https://github.com/kaltura/playkit-js/commit/01236c6))
+
+
+### Build System
+
+* remove plugins that already exist on preset-env ([#490](https://github.com/kaltura/playkit-js/issues/490)) ([1c71c02](https://github.com/kaltura/playkit-js/commit/1c71c02))
+
+
+
 ### [0.64.2](https://github.com/kaltura/playkit-js/compare/v0.64.1...v0.64.2) (2020-10-06)
 
 
