@@ -1898,7 +1898,6 @@ export default class Player extends FakeEventTarget {
       Player._logger.warn('Autoplay failed, pause player');
       this._posterManager.show();
       this.load();
-      this.ready().then(() => this.pause());
       this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED));
     };
   }
