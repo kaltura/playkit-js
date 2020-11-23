@@ -23,6 +23,7 @@ class FullscreenController {
   // Flag to indicate that player is in fullscreen(when different element on fullscreen - api return correct state).
   _isInFullscreen: boolean = false;
   _isInBrowserFullscreen: boolean;
+  _isScreenLocked: boolean = false;
   _isScreenOrientationSupport: boolean =
     // $FlowFixMe
     screen && screen.orientation && typeof screen.orientation.unlock === 'function' && typeof screen.orientation.lock === 'function';
@@ -174,7 +175,10 @@ class FullscreenController {
         const validOrientation = Object.values(ScreenOrientationType).includes(screenLockOrientionMode);
         if (this._isScreenOrientationSupport && validOrientation) {
           // $FlowFixMe
-          screen.orientation.lock(screenLockOrientionMode).catch(() => {});
+          screen.orientation
+            .lock(screenLockOrientionMode)
+            .then(() => (this._isScreenLocked = true))
+            .catch(() => {});
         }
       },
       () => {}
@@ -209,9 +213,10 @@ class FullscreenController {
     Promise.resolve(this._nativeExitFullScreen()).then(
       () => {
         this._isInFullscreen = false;
-        if (this._isScreenOrientationSupport) {
+        if (this._isScreenOrientationSupport && this._isScreenLocked) {
           // $FlowFixMe
           screen.orientation.unlock();
+          this._isScreenLocked = false;
         }
       },
       () => {}
