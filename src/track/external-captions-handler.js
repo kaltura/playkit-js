@@ -121,6 +121,9 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     if (!captions) {
       return [];
     }
+    if (this._player.config.playback.useNativeTextTrack) {
+      this._addNativeTextTrack();
+    }
     const playerTextTracks = tracks.filter(track => track instanceof TextTrack);
     let textTracksLength = playerTextTracks.length || 0;
     const newTextTracks = [];
@@ -148,9 +151,6 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _maybeAddTrack(track: TextTrack, caption: PKExternalCaptionObject, playerTextTracks: Array<Track>, newTextTracks: Array<TextTrack>): void {
     const sameLangTrack = playerTextTracks.find(textTrack => Track.langComparer(caption.language, textTrack.language));
     if (!sameLangTrack) {
-      if (this._player.config.playback.useNativeTextTrack) {
-        this._addNativeTextTrack();
-      }
       newTextTracks.push(track);
       this._updateTextTracksModel(caption);
     } else {
