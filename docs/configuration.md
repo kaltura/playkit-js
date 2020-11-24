@@ -898,7 +898,7 @@ var config = {
 > > screenLockOrientionMode: string;
 > > ```
 > >
-> > > ##### Description: Gives the ability to lock the screen on fullscreen
+> > > ##### Description: Gives the ability to lock the screen orientation in fullscreen
 >
 > ##
 >
