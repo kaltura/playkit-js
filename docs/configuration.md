@@ -512,7 +512,7 @@ var config = {
 >  muted: false,
 >  pictureInPicture: true,
 >  playAdsWithMSE: false,
->  screenLockOrientionMode: '',
+>  screenLockOrientionMode: ScreenOrientationType.NONE,
 >  options: {
 >    html5: {
 >      hls: {},
