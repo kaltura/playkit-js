@@ -1964,7 +1964,8 @@ export default class Player extends FakeEventTarget {
     }
     this.ready()
       .then(() => {
-        if (this.isLive() && (!this.isDvr() || (typeof this.currentTime === 'number' && this.currentTime < 0))) {
+        const liveOrDvrOutOfWindow = this.isLive() && (!this.isDvr() || (typeof this.currentTime === 'number' && this.currentTime < 0));
+        if (!this._firstPlay && liveOrDvrOutOfWindow) {
           this.seekToLiveEdge();
         }
         this._engine.play();
