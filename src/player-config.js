@@ -1,3 +1,5 @@
+import {ScreenOrientationType} from './screen-orientation-type';
+
 const DefaultConfig = {
   log: {
     level: 'ERROR'
@@ -37,7 +39,7 @@ const DefaultConfig = {
       dash: false
     },
     inBrowserFullscreen: false,
-    screenLockOrientionMode: '',
+    screenLockOrientionMode: ScreenOrientationType.NONE,
     playAdsWithMSE: false,
     streamPriority: [
       {

@@ -1,5 +1,6 @@
 // @flow
 const ScreenOrientationType: PKOrientationType = {
+  NONE: 'none',
   ANY: 'any',
   NATURAL: 'natural',
   LANDSCAPE: 'landscape',

@@ -26,7 +26,7 @@ class FullscreenController {
   _isScreenLocked: boolean = false;
   _isScreenOrientationSupport: boolean =
     // $FlowFixMe
-    screen && screen.orientation && typeof screen.orientation.unlock === 'function' && typeof screen.orientation.lock === 'function';
+    !!screen && !!screen.orientation && typeof screen.orientation.unlock === 'function' && typeof screen.orientation.lock === 'function';
   _eventManager: EventManager;
   // Flag to overcome browsers which supports more than one fullscreenchange event
   _isFullscreenEventDispatched: boolean = false;
@@ -172,7 +172,8 @@ class FullscreenController {
       () => {
         this._isInFullscreen = true;
         const screenLockOrientionMode = Utils.Object.getPropertyPath(this._player, 'config.playback.screenLockOrientionMode');
-        const validOrientation = Object.values(ScreenOrientationType).includes(screenLockOrientionMode);
+        const validOrientation =
+          screenLockOrientionMode !== ScreenOrientationType.NONE && Object.values(ScreenOrientationType).includes(screenLockOrientionMode);
         if (this._isScreenOrientationSupport && validOrientation) {
           screen.orientation
             // $FlowFixMe
