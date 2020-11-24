@@ -487,7 +487,7 @@ var config = {
 >  preferNative: PKPreferNativeConfigObject,
 >  inBrowserFullscreen: boolean,
 >  playAdsWithMSE: boolean,
-> screenLockOrientionMode: string
+>  screenLockOrientionMode: string
 > }
 > ```
 >
@@ -512,7 +512,7 @@ var config = {
 >  muted: false,
 >  pictureInPicture: true,
 >  playAdsWithMSE: false,
-> screenLockOrientionMode: '',
+>  screenLockOrientionMode: '',
 >  options: {
 >    html5: {
 >      hls: {},
