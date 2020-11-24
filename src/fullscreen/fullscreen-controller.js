@@ -178,7 +178,7 @@ class FullscreenController {
             // $FlowFixMe
             .lock(screenLockOrientionMode)
             .then(() => (this._isScreenLocked = true))
-            .catch(() => {});
+            .catch(() => (this._isScreenLocked = false));
         }
       },
       () => {}
