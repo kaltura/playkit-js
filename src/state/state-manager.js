@@ -134,10 +134,8 @@ export default class StateManager {
         this._dispatchEvent();
       },
       [Html5EventType.SEEKED]: () => {
-        if (this._prevState && this._prevState.type === StateType.PLAYING) {
-          this._updateState(StateType.PLAYING);
-          this._dispatchEvent();
-        }
+        this._updateState(StateType.BUFFERING);
+        this._dispatchEvent();
       },
       [Html5EventType.TIME_UPDATE]: () => {
         if (this._player.currentTime !== this._lastWaitingTime && this._prevState && this._prevState.type === StateType.PLAYING) {
