@@ -199,8 +199,6 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    */
   selectTextTrack(textTrack: TextTrack): void {
     if (this._textTrackModel[textTrack.language]) {
-      textTrack.active = true;
-      this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
       if (this._textTrackModel[textTrack.language].cuesStatus === CuesStatus.DOWNLOADED) {
         this._selectTextTrack(textTrack);
       } else if (this._textTrackModel[textTrack.language].cuesStatus === CuesStatus.NOT_DOWNLOADED) {
@@ -220,6 +218,8 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     } else {
       this._setTextTrack(textTrack);
     }
+    textTrack.active = true;
+    this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
   }
   /**
    * set hasBeenReset to true for all the cues.
