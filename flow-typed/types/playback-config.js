@@ -14,5 +14,6 @@ declare type PKPlaybackConfigObject = {
   streamPriority: Array<PKStreamPriorityObject>,
   preferNative: PKPreferNativeConfigObject,
   inBrowserFullscreen: boolean,
-  playAdsWithMSE: boolean
+  playAdsWithMSE: boolean,
+  screenLockOrientionMode: string
 };

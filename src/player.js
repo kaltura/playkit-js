@@ -35,7 +35,6 @@ import {ResizeWatcher} from './utils/resize-watcher';
 import {FullscreenController} from './fullscreen/fullscreen-controller';
 import {EngineDecorator} from './engines/engine-decorator';
 import {LabelOptions} from './track/label-options';
-
 /**
  * The black cover class name.
  * @type {string}
@@ -2506,6 +2505,5 @@ export default class Player extends FakeEventTarget {
   get Error(): typeof PKError {
     return PKError;
   }
-
   // </editor-fold>
 }
