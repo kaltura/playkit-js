@@ -89,6 +89,12 @@ export default class StateManager {
       [Html5EventType.ERROR]: () => {
         this._updateState(StateType.IDLE);
         this._dispatchEvent();
+      },
+      [Html5EventType.SEEKED]: () => {
+        if (this._prevState && this._prevState.type === StateType.PLAYING) {
+          this._updateState(StateType.PLAYING);
+          this._dispatchEvent();
+        }
       }
     },
     [StateType.PAUSED]: {
@@ -112,7 +118,7 @@ export default class StateManager {
       },
       [Html5EventType.WAITING]: () => {
         if (this._player.seeking) {
-          this._updateState(StateType.SEEKING);
+          this._updateState(StateType.LOADING);
           this._dispatchEvent();
         } else {
           this._updateState(StateType.BUFFERING);
@@ -144,12 +150,6 @@ export default class StateManager {
           this._updateState(StateType.PLAYING);
           this._dispatchEvent();
         }
-      }
-    },
-    [StateType.SEEKING]: {
-      [Html5EventType.SEEKED]: () => {
-        this._updateState(this._prevState.type);
-        this._dispatchEvent();
       }
     }
   };
