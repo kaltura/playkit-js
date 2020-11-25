@@ -892,7 +892,7 @@ var config = {
 > >
 > > ##### Type: `string` - value list option in ScreenOrientationType
 > >
-> > ##### Default: ``
+> > ##### Default: `none` - ScreenOrientationType.NONE
 > >
 > > ```js
 > > screenLockOrientionMode: string;
