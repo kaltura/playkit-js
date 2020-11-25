@@ -486,7 +486,8 @@ var config = {
 >  streamPriority: Array<PKStreamPriorityObject>,
 >  preferNative: PKPreferNativeConfigObject,
 >  inBrowserFullscreen: boolean,
->  playAdsWithMSE: boolean
+>  playAdsWithMSE: boolean,
+>  disableAutoplayCapabilityTest: boolean
 > }
 > ```
 >
@@ -511,6 +512,7 @@ var config = {
 >  muted: false,
 >  pictureInPicture: true,
 >  playAdsWithMSE: false,
+>  disableAutoplayCapabilityTest: false,
 >  options: {
 >    html5: {
 >      hls: {},
@@ -883,6 +885,20 @@ var config = {
 > > ```
 > >
 > > > ##### Description: Gives the ability to share same video tag to play ads and source with media source
+>
+> ##
+>
+> > ### config.playback.disableAutoplayCapabilityTest
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ```js
+> > disableAutoplayCapabilityTest: boolean;
+> > ```
+> >
+> > > ##### Description: This would disable the platform autoplay restriction detection, forcing the player to respect the autoplay configuration only. This should be checked when player is used on smart TVs, set top boxes or other platforms which do not have such restrictions.
 >
 > ##
 >
