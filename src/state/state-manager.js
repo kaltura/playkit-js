@@ -89,6 +89,12 @@ export default class StateManager {
       [Html5EventType.ERROR]: () => {
         this._updateState(StateType.IDLE);
         this._dispatchEvent();
+      },
+      [Html5EventType.SEEKED]: () => {
+        if (this._prevState && this._prevState.type === StateType.PLAYING) {
+          this._updateState(StateType.PLAYING);
+          this._dispatchEvent();
+        }
       }
     },
     [StateType.PAUSED]: {
@@ -111,9 +117,14 @@ export default class StateManager {
         this._dispatchEvent();
       },
       [Html5EventType.WAITING]: () => {
-        this._updateState(StateType.BUFFERING);
-        this._lastWaitingTime = this._player.currentTime;
-        this._dispatchEvent();
+        if (this._player.seeking) {
+          this._updateState(StateType.LOADING);
+          this._dispatchEvent();
+        } else {
+          this._updateState(StateType.BUFFERING);
+          this._lastWaitingTime = this._player.currentTime;
+          this._dispatchEvent();
+        }
       },
       [Html5EventType.ENDED]: () => {
         this._updateState(StateType.IDLE);
@@ -132,12 +143,6 @@ export default class StateManager {
       [Html5EventType.PAUSE]: () => {
         this._updateState(StateType.PAUSED);
         this._dispatchEvent();
-      },
-      [Html5EventType.SEEKED]: () => {
-        if (this._prevState && this._prevState.type === StateType.PLAYING) {
-          this._updateState(StateType.PLAYING);
-          this._dispatchEvent();
-        }
       },
       [Html5EventType.TIME_UPDATE]: () => {
         if (this._player.currentTime !== this._lastWaitingTime && this._prevState && this._prevState.type === StateType.PLAYING) {
@@ -228,7 +233,6 @@ export default class StateManager {
     );
     this._player.dispatchEvent(event);
   }
-
   /**
    * Destroys the state manager.
    * @public

@@ -35,7 +35,6 @@ import {ResizeWatcher} from './utils/resize-watcher';
 import {FullscreenController} from './fullscreen/fullscreen-controller';
 import {EngineDecorator} from './engines/engine-decorator';
 import {LabelOptions} from './track/label-options';
-
 /**
  * The black cover class name.
  * @type {string}
@@ -1960,7 +1959,8 @@ export default class Player extends FakeEventTarget {
     }
     this.ready()
       .then(() => {
-        if (this.isLive() && (!this.isDvr() || (typeof this.currentTime === 'number' && this.currentTime < 0))) {
+        const liveOrDvrOutOfWindow = this.isLive() && (!this.isDvr() || (typeof this.currentTime === 'number' && this.currentTime < 0));
+        if (!this._firstPlay && liveOrDvrOutOfWindow) {
           this.seekToLiveEdge();
         }
         this._engine.play();
@@ -2505,6 +2505,5 @@ export default class Player extends FakeEventTarget {
   get Error(): typeof PKError {
     return PKError;
   }
-
   // </editor-fold>
 }

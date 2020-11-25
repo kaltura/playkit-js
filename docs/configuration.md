@@ -486,7 +486,8 @@ var config = {
 >  streamPriority: Array<PKStreamPriorityObject>,
 >  preferNative: PKPreferNativeConfigObject,
 >  inBrowserFullscreen: boolean,
->  playAdsWithMSE: boolean
+>  playAdsWithMSE: boolean,
+>  screenLockOrientionMode: string
 > }
 > ```
 >
@@ -511,6 +512,7 @@ var config = {
 >  muted: false,
 >  pictureInPicture: true,
 >  playAdsWithMSE: false,
+>  screenLockOrientionMode: ScreenOrientationType.NONE,
 >  options: {
 >    html5: {
 >      hls: {},
@@ -883,6 +885,20 @@ var config = {
 > > ```
 > >
 > > > ##### Description: Gives the ability to share same video tag to play ads and source with media source
+>
+> ##
+>
+> > ### config.playback.screenLockOrientionMode
+> >
+> > ##### Type: `string` - value list option in ScreenOrientationType
+> >
+> > ##### Default: `none` - ScreenOrientationType.NONE
+> >
+> > ```js
+> > screenLockOrientionMode: string;
+> > ```
+> >
+> > > ##### Description: Gives the ability to lock the screen orientation in fullscreen
 >
 > ##
 >
