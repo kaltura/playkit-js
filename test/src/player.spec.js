@@ -1236,7 +1236,7 @@ describe('Player', function () {
     });
   });
 
-  describe.only('Text Track', () => {
+  describe('Text Track', () => {
     let config, player, video, playerContainer;
 
     before(() => {
