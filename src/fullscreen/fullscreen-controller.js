@@ -3,6 +3,7 @@ import EventManager from '../event/event-manager';
 import Player from '../player';
 import FakeEvent from '../event/fake-event';
 import * as Utils from '../utils/util';
+import {ScreenOrientationType} from '../screen-orientation-type';
 
 /**
  * The IOS fullscreen class name.
@@ -22,6 +23,10 @@ class FullscreenController {
   // Flag to indicate that player is in fullscreen(when different element on fullscreen - api return correct state).
   _isInFullscreen: boolean = false;
   _isInBrowserFullscreen: boolean;
+  _isScreenLocked: boolean = false;
+  _isScreenOrientationSupport: boolean =
+    // $FlowFixMe
+    !!screen && !!screen.orientation && typeof screen.orientation.unlock === 'function' && typeof screen.orientation.lock === 'function';
   _eventManager: EventManager;
   // Flag to overcome browsers which supports more than one fullscreenchange event
   _isFullscreenEventDispatched: boolean = false;
@@ -164,7 +169,19 @@ class FullscreenController {
       this._player.exitPictureInPicture();
     }
     Promise.resolve(this._nativeEnterFullScreen(fullScreenElement)).then(
-      () => (this._isInFullscreen = true),
+      () => {
+        this._isInFullscreen = true;
+        const screenLockOrientionMode = Utils.Object.getPropertyPath(this._player, 'config.playback.screenLockOrientionMode');
+        const validOrientation =
+          screenLockOrientionMode !== ScreenOrientationType.NONE && Object.values(ScreenOrientationType).includes(screenLockOrientionMode);
+        if (this._isScreenOrientationSupport && validOrientation) {
+          screen.orientation
+            // $FlowFixMe
+            .lock(screenLockOrientionMode)
+            .then(() => (this._isScreenLocked = true))
+            .catch(() => (this._isScreenLocked = false));
+        }
+      },
       () => {}
     );
   }
@@ -195,7 +212,14 @@ class FullscreenController {
    */
   _requestExitFullscreen(): void {
     Promise.resolve(this._nativeExitFullScreen()).then(
-      () => (this._isInFullscreen = false),
+      () => {
+        this._isInFullscreen = false;
+        if (this._isScreenOrientationSupport && this._isScreenLocked) {
+          // $FlowFixMe
+          screen.orientation.unlock();
+          this._isScreenLocked = false;
+        }
+      },
       () => {}
     );
   }

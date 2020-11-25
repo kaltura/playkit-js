@@ -78,6 +78,10 @@ const _Object = {
     return item && typeof item === 'object' && !Array.isArray(item);
   },
 
+  isClassInstance: function (item: any) {
+    return item && item.constructor && item.constructor.name && item.constructor.name !== 'Object';
+  },
+
   /**
    * @param {any} target - The target object.
    * @param {any} sources - The objects to merge.
@@ -90,7 +94,7 @@ const _Object = {
     const source = sources.shift();
     if (this.isObject(target) && this.isObject(source)) {
       for (const key in source) {
-        if (this.isObject(source[key])) {
+        if (this.isObject(source[key]) && !this.isClassInstance(source[key])) {
           if (!target[key]) Object.assign(target, {[key]: {}});
           this.mergeDeep(target[key], source[key]);
         } else {
