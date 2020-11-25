@@ -7,7 +7,6 @@ import {CustomEventType, Html5EventType} from '../event/event-type';
 import FakeEvent from '../event/fake-event';
 import getLogger from '../utils/logger';
 
-const SEEKING_THRESHOLD: number = 500;
 /**
  * This class responsible to manage all the state machine of the player.
  * @classdesc
@@ -115,14 +114,10 @@ export default class StateManager {
         if (this._player.seeking) {
           this._updateState(StateType.SEEKING);
           this._dispatchEvent();
-          //if waiting and seeking took more than threshold, it's buffering
-          setTimeout(() => {
-            if (StateType.SEEKING === this._curState.type) {
-              this._waiting();
-            }
-          }, SEEKING_THRESHOLD);
         } else {
-          this._waiting();
+          this._updateState(StateType.BUFFERING);
+          this._lastWaitingTime = this._player.currentTime;
+          this._dispatchEvent();
         }
       },
       [Html5EventType.ENDED]: () => {
@@ -237,16 +232,6 @@ export default class StateManager {
       }: StateChanged)
     );
     this._player.dispatchEvent(event);
-  }
-  /**
-   * waiting handler on state manager
-   * @private
-   * @returns {void}
-   */
-  _waiting(): void {
-    this._updateState(StateType.BUFFERING);
-    this._lastWaitingTime = this._player.currentTime;
-    this._dispatchEvent();
   }
   /**
    * Destroys the state manager.
