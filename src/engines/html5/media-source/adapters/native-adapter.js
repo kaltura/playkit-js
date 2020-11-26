@@ -14,6 +14,7 @@ import Error from '../../../../error/error';
 import defaultConfig from './native-adapter-default-config';
 import type {FairPlayDrmConfigType} from './fairplay-drm-handler';
 import {FairPlayDrmHandler} from './fairplay-drm-handler';
+import {EXTERNAL_TRACK_ID} from '../../../../track/external-captions-handler';
 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
@@ -654,19 +655,21 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const parsedTracks = [];
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
-        const settings = {
-          kind: textTracks[i].kind,
-          active: textTracks[i].mode === 'showing',
-          label: textTracks[i].label,
-          language: textTracks[i].language,
-          index: i
-        };
-        if (settings.kind === 'subtitles') {
-          parsedTracks.push(new PKTextTrack(settings));
-        } else if (settings.kind === 'captions' && this._config.enableCEA708Captions) {
-          settings.label = settings.label || captionsTextTrackLabels.shift();
-          settings.language = settings.language || captionsTextTrackLanguageCodes.shift();
-          parsedTracks.push(new PKTextTrack(settings));
+        if (textTracks[i].language !== EXTERNAL_TRACK_ID || textTracks[i].label !== EXTERNAL_TRACK_ID) {
+          const settings = {
+            kind: textTracks[i].kind,
+            active: textTracks[i].mode === 'showing',
+            label: textTracks[i].label,
+            language: textTracks[i].language,
+            index: i
+          };
+          if (settings.kind === 'subtitles') {
+            parsedTracks.push(new PKTextTrack(settings));
+          } else if (settings.kind === 'captions' && this._config.enableCEA708Captions) {
+            settings.label = settings.label || captionsTextTrackLabels.shift();
+            settings.language = settings.language || captionsTextTrackLanguageCodes.shift();
+            parsedTracks.push(new PKTextTrack(settings));
+          }
         }
       }
     }
@@ -1022,7 +1025,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     let textTracks = this._videoElement.textTracks;
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
-        (textTracks[i].kind === 'subtitles' || textTracks[i].kind === 'captions') && (textTracks[i].mode = 'disabled');
+        (textTracks[i].kind === 'subtitles' || textTracks[i].kind === 'captions') &&
+          (textTracks[i].language !== EXTERNAL_TRACK_ID || textTracks[i].label !== EXTERNAL_TRACK_ID) &&
+          (textTracks[i].mode = 'disabled');
       }
     }
   }

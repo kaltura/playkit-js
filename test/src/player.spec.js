@@ -3,6 +3,7 @@ import Player from '../../src/player';
 import {StateType} from '../../src/state/state-type';
 import {CustomEventType, Html5EventType} from '../../src/event/event-type';
 import SourcesConfig from './configs/sources.json';
+import ExternalCaption from './configs/external-captions.json';
 import Track from '../../src/track/track';
 import VideoTrack from '../../src/track/video-track';
 import AudioTrack from '../../src/track/audio-track';
@@ -16,6 +17,8 @@ import {LabelOptions} from '../../src/track/label-options';
 import {EngineProvider} from '../../src/engines/engine-provider';
 import FakeEvent from '../../src/event/fake-event';
 import Html5AutoPlayCapability from '../../src/engines/html5/capabilities/html5-autoplay';
+import {EXTERNAL_TRACK_ID} from '../../src/track/external-captions-handler';
+import * as Utils from '../../src/utils/util';
 
 const targetId = 'player-placeholder_player.spec';
 let sourcesConfig = PKObject.copyDeep(SourcesConfig);
@@ -1229,6 +1232,239 @@ describe('Player', function () {
         const settings = {line: -4};
         player.setTextDisplaySettings(settings);
         player._textDisplaySettings.should.be.equal(settings);
+      });
+    });
+  });
+
+  describe('Text Track', () => {
+    let config, player, video, playerContainer;
+
+    before(() => {
+      playerContainer = createElement('div', targetId);
+    });
+
+    afterEach(() => {
+      player.destroy();
+    });
+
+    after(() => {
+      removeVideoElementsFromTestPage();
+      removeElement(targetId);
+    });
+
+    let getActiveNativeTracks = () => {};
+    let checkTrack = () => {};
+
+    const switchTextTrack = (track1, track2, done) => {
+      const tracksChangeToTrack1 = event => {
+        try {
+          player.removeEventListener(CustomEventType.TEXT_TRACK_CHANGED, tracksChangeToTrack1);
+          player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, tracksChangeToTrack2);
+          checkTrack(track1, event.payload.selectedTextTrack);
+          player.selectTrack(track2);
+        } catch (e) {
+          done(e);
+        }
+      };
+      const tracksChangeToTrack2 = event => {
+        try {
+          player.removeEventListener(CustomEventType.TEXT_TRACK_CHANGED, tracksChangeToTrack2);
+          checkTrack(track2, event.payload.selectedTextTrack);
+          done();
+        } catch (e) {
+          done(e);
+        }
+      };
+      player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, tracksChangeToTrack1);
+      player.selectTrack(track1);
+    };
+
+    describe('useNativeTextTrack = true', () => {
+      before(() => {
+        getActiveNativeTracks = () => {
+          return Array.from(video.textTracks).filter(track => {
+            return track.mode === 'showing';
+          });
+        };
+
+        checkTrack = (textTrack, selectedTrack) => {
+          const activeNativeTracks = getActiveNativeTracks();
+          activeNativeTracks.length.should.equal(1);
+          selectedTrack.language.should.equal(textTrack.language);
+          textTrack.external
+            ? activeNativeTracks[0].language.should.equal(EXTERNAL_TRACK_ID)
+            : activeNativeTracks[0].language.should.equal(textTrack.language);
+        };
+      });
+
+      beforeEach(() => {
+        config = Utils.Object.mergeDeep(getConfigStructure(), {
+          sources: Utils.Object.mergeDeep({captions: [ExternalCaption.He, ExternalCaption.Ru]}, sourcesConfig.Mp4),
+          playback: {useNativeTextTrack: true}
+        });
+        player = new Player(config);
+        playerContainer.appendChild(player.getView());
+        video = player._engine.getVideoElement();
+        video.addTextTrack('subtitles', 'English', 'en');
+        video.addTextTrack('subtitles', 'French', 'fr');
+      });
+
+      it('should switch between internal and external', done => {
+        player.ready().then(() => {
+          let externalTracks = player.getTracks().filter(track => {
+            return track instanceof TextTrack && track.external;
+          });
+          let internalTracks = player.getTracks().filter(track => {
+            return track instanceof TextTrack && !track.external;
+          });
+          switchTextTrack(externalTracks[0], internalTracks[0], done);
+        });
+        player.load();
+      });
+
+      it('should switch between internal and internal', done => {
+        player.ready().then(() => {
+          let internalTracks = player.getTracks().filter(track => {
+            return track instanceof TextTrack && !track.external;
+          });
+          switchTextTrack(internalTracks[0], internalTracks[1], done);
+        });
+        player.load();
+      });
+
+      it('should switch between external and external', done => {
+        player.ready().then(() => {
+          let externalTracks = player.getTracks().filter(track => {
+            return track instanceof TextTrack && track.external;
+          });
+          switchTextTrack(externalTracks[0], externalTracks[1], done);
+        });
+        player.load();
+      });
+
+      it('should getTracks return external and internal caption', done => {
+        player.ready().then(() => {
+          try {
+            let tracks = player.getTracks().filter(track => {
+              return track instanceof TextTrack;
+            });
+            tracks.length.should.equal(5);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+        player.load();
+      });
+
+      it('should create only one track for external', done => {
+        player.ready().then(() => {
+          try {
+            Array.from(video.textTracks).length.should.equal(3);
+            const externalTrack = Array.from(video.textTracks).filter(track => track.language === EXTERNAL_TRACK_ID);
+            externalTrack.length.should.equal(1);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+        player.load();
+      });
+    });
+
+    describe('useNativeTextTrack = false', () => {
+      before(() => {
+        getActiveNativeTracks = () => {
+          return Array.from(video.textTracks).filter(track => {
+            return track.mode === 'hidden';
+          });
+        };
+        checkTrack = (textTrack, selectedTrack) => {
+          const activeNativeTracks = getActiveNativeTracks();
+          if (!textTrack.external) {
+            activeNativeTracks.length.should.equal(1);
+            activeNativeTracks[0].language.should.equal(textTrack.language);
+            player._externalCaptionsHandler._isTextTrackActive = false;
+          } else {
+            activeNativeTracks.length.should.equal(0);
+            player._externalCaptionsHandler._isTextTrackActive = true;
+          }
+          selectedTrack.language.should.equal(textTrack.language);
+        };
+      });
+
+      beforeEach(() => {
+        config = Utils.Object.mergeDeep(getConfigStructure(), {
+          sources: Utils.Object.mergeDeep({captions: [ExternalCaption.He, ExternalCaption.Ru]}, sourcesConfig.Mp4),
+          playback: {useNativeTextTrack: false}
+        });
+        player = new Player(config);
+        playerContainer.appendChild(player.getView());
+        video = player._engine.getVideoElement();
+        video.addTextTrack('subtitles', 'English', 'en');
+        video.addTextTrack('subtitles', 'French', 'fr');
+      });
+
+      it('should switch between internal and external', done => {
+        player.ready().then(() => {
+          let externalTracks = player.getTracks().filter(track => {
+            return track instanceof TextTrack && track.external;
+          });
+          let internalTracks = player.getTracks().filter(track => {
+            return track instanceof TextTrack && !track.external;
+          });
+          switchTextTrack(externalTracks[0], internalTracks[0], done);
+        });
+        player.load();
+      });
+
+      it('should switch between internal and internal', done => {
+        player.ready().then(() => {
+          let internalTracks = player.getTracks().filter(track => {
+            return track instanceof TextTrack && !track.external;
+          });
+          switchTextTrack(internalTracks[0], internalTracks[1], done);
+        });
+        player.load();
+      });
+
+      it('should switch between external and external', done => {
+        player.ready().then(() => {
+          let externalTracks = player.getTracks().filter(track => {
+            return track instanceof TextTrack && track.external;
+          });
+          switchTextTrack(externalTracks[0], externalTracks[1], done);
+        });
+        player.load();
+      });
+
+      it('should getTracks return external and internal caption', done => {
+        player.ready().then(() => {
+          try {
+            let tracks = player.getTracks().filter(track => {
+              return track instanceof TextTrack;
+            });
+            tracks.length.should.equal(5);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+        player.load();
+      });
+
+      it('should not create native track for external', done => {
+        player.ready().then(() => {
+          try {
+            Array.from(video.textTracks).length.should.equal(2);
+            const externalTrack = Array.from(video.textTracks).filter(track => track.language === EXTERNAL_TRACK_ID);
+            externalTrack.length.should.equal(0);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+        player.load();
       });
     });
   });
