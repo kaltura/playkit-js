@@ -21,7 +21,13 @@ const TextTrack: TextTrack = class TextTrack extends Track {
    * @private
    */
   _external: boolean;
-
+  /**
+   * flag to know if it's non language track or not
+   * @member
+   * @type {boolean}
+   * @private
+   */
+  _emptyLanguage: boolean;
   /**
    * Getter for the kind of the text track.
    * @public
@@ -41,6 +47,15 @@ const TextTrack: TextTrack = class TextTrack extends Track {
   }
 
   /**
+   * Getter for the CEA of the text track.
+   * @public
+   * @returns {boolean} - The kind of the text track.
+   */
+  get emptyLanguage(): boolean {
+    return this._emptyLanguage;
+  }
+
+  /**
    * @constructor
    * @param {Object} settings - The track settings object.
    */
@@ -50,6 +65,7 @@ const TextTrack: TextTrack = class TextTrack extends Track {
     this._label = this.label || this.language;
     this._kind = settings.kind;
     this._external = settings.external;
+    this._emptyLanguage = settings.emptyLanguage;
   }
 };
 

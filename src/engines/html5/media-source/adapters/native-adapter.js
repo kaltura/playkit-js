@@ -666,6 +666,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         } else if (settings.kind === 'captions' && this._config.enableCEA708Captions) {
           settings.label = settings.label || captionsTextTrackLabels.shift();
           settings.language = settings.language || captionsTextTrackLanguageCodes.shift();
+          settings.emptyLanguage = !!settings.language;
           parsedTracks.push(new PKTextTrack(settings));
         }
       }

@@ -2074,7 +2074,11 @@ export default class Player extends FakeEventTarget {
         const videoElement = this.getVideoElement();
         return videoElement ? Array.from(videoElement.textTracks).findIndex(track => (track ? track.language === textTrack.language : false)) : -1;
       };
-      this._getTextTracks().forEach(track => (track.index = getNativeLanguageTrackIndex(track)));
+      this._getTextTracks().forEach(track => {
+        if (!track.emptyLanguage) {
+          track.index = getNativeLanguageTrackIndex(track);
+        }
+      });
     }
   }
 
