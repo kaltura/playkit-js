@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.64.4](https://github.com/kaltura/playkit-js/compare/v0.64.3...v0.64.4) (2020-11-29)
+
+
+### Bug Fixes
+
+* subtitle without language get index -1 ([3a0e18e](https://github.com/kaltura/playkit-js/commit/3a0e18e))
+
+
+
 ### [0.64.3](https://github.com/kaltura/playkit-js/compare/v0.64.2...v0.64.3) (2020-11-03)
 
 
