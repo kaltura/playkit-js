@@ -1132,6 +1132,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
         if (event.track.kind === 'metadata') {
           listenToCueChange(event.track);
+        } else if (event.track.kind === 'captions' || event.track.kind === 'subtitles') {
+          this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_ADDED, {track: event.track}));
         }
       });
     }

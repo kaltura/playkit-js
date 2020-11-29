@@ -28,7 +28,7 @@ import {DefaultConfig} from './player-config.js';
 import './assets/style.css';
 import PKError from './error/error';
 import {EngineProvider} from './engines/engine-provider';
-import {EXTERNAL_TRACK_ID, ExternalCaptionsHandler} from './track/external-captions-handler';
+import {ExternalCaptionsHandler} from './track/external-captions-handler';
 import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
 import {ResizeWatcher} from './utils/resize-watcher';
@@ -1742,6 +1742,27 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @private
    */
+  _onTextTrackAdded(event: FakeEvent): void {
+    const videoElement = this.getVideoElement();
+    const trackIndex = videoElement
+      ? Array.from(videoElement.textTracks).findIndex(track => track && track.language === event.payload.track.language)
+      : false;
+    const textTracks = this._getTextTracks();
+    if (trackIndex === 0) {
+      // new native track added to start or end of text track list so if it added to start we should fix our indexes
+      // by increasing the index by 1
+      textTracks.forEach(track => {
+        track.index = ++track.index;
+      });
+    }
+  }
+
+  /**
+   * The text track changed event object
+   * @param {FakeEvent} event - payload with text track
+   * @returns {void}
+   * @private
+   */
   _onTextTrackChanged(event: FakeEvent): void {
     this.ready().then(() => (this._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language));
     this._markActiveTrack(event.payload.selectedTextTrack);
@@ -2113,33 +2134,11 @@ export default class Player extends FakeEventTarget {
    */
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
+    this._eventManager.listen(this._engine, CustomEventType.TEXT_TRACK_ADDED, (event: FakeEvent) => this._onTextTrackAdded(event));
     this._tracks = tracks.concat(this._externalCaptionsHandler.getExternalTracks(tracks));
     this._addTextTrackOffOption();
     this._maybeSetTracksLabels();
-    this._maybeAdjustTextTracksIndexes();
     this._setDefaultTracks();
-  }
-
-  /**
-   * If we added external tracks to the video element, we might need to adjust the text tracks indexes between the video
-   * element and the players tracks list
-   * @returns {void}
-   * @private
-   */
-  _maybeAdjustTextTracksIndexes(): void {
-    if (this._config.playback.useNativeTextTrack) {
-      const videoElement = this.getVideoElement();
-      const externalIndex = videoElement
-        ? Array.from(videoElement.textTracks).findIndex(track => (track ? track.language === EXTERNAL_TRACK_ID : false))
-        : false;
-      const textTracks = this._getTextTracks();
-      let externalTrackIndex = textTracks.length;
-      // for external we make unique index to be able to select on API, external track added to start or end of native
-      // text tracks then we should fix the indexes by set to next index(only one native text track for external tracks)
-      textTracks.forEach(track => {
-        track.index = track.external ? ++externalTrackIndex : externalIndex === 0 ? ++track.index : track.index;
-      });
-    }
   }
 
   /**
