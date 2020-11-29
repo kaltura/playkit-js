@@ -28,7 +28,7 @@ import {DefaultConfig} from './player-config.js';
 import './assets/style.css';
 import PKError from './error/error';
 import {EngineProvider} from './engines/engine-provider';
-import {ExternalCaptionsHandler} from './track/external-captions-handler';
+import {EXTERNAL_TRACK_ID, ExternalCaptionsHandler} from './track/external-captions-handler';
 import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
 import {ResizeWatcher} from './utils/resize-watcher';
@@ -2128,14 +2128,16 @@ export default class Player extends FakeEventTarget {
    */
   _maybeAdjustTextTracksIndexes(): void {
     if (this._config.playback.useNativeTextTrack) {
-      const getNativeLanguageTrackIndex = (textTrack: TextTrack): number => {
-        const videoElement = this.getVideoElement();
-        return videoElement ? Array.from(videoElement.textTracks).findIndex(track => (track ? track.language === textTrack.language : false)) : -1;
-      };
+      const videoElement = this.getVideoElement();
+      const externalIndex = videoElement
+        ? Array.from(videoElement.textTracks).findIndex(track => (track ? track.language === EXTERNAL_TRACK_ID : false))
+        : false;
       const textTracks = this._getTextTracks();
       let externalTrackIndex = textTracks.length;
+      // if external track added to start of text tracks should fix the indexes by set to next index cause there
+      // is only one text track for external tracks.
       textTracks.forEach(track => {
-        track.index = track.external ? externalTrackIndex++ : getNativeLanguageTrackIndex(track);
+        track.index = track.external ? ++externalTrackIndex : externalIndex === 0 ? ++track.index : track.index;
       });
     }
   }
