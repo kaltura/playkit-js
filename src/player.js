@@ -2134,8 +2134,8 @@ export default class Player extends FakeEventTarget {
         : false;
       const textTracks = this._getTextTracks();
       let externalTrackIndex = textTracks.length;
-      // if external track added to start of text tracks should fix the indexes by set to next index cause there
-      // is only one text track for external tracks.
+      // for external we make unique index to be able to select on API, external track added to start or end of native
+      // text tracks then we should fix the indexes by set to next index(only one native text track for external tracks)
       textTracks.forEach(track => {
         track.index = track.external ? ++externalTrackIndex : externalIndex === 0 ? ++track.index : track.index;
       });
