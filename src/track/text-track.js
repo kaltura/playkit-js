@@ -49,7 +49,7 @@ const TextTrack: TextTrack = class TextTrack extends Track {
   /**
    * Getter for the CEA of the text track.
    * @public
-   * @returns {boolean} - The kind of the text track.
+   * @returns {boolean} - returns true if the text track has no language specified
    */
   get emptyLanguage(): boolean {
     return this._emptyLanguage;
