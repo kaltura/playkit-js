@@ -1747,8 +1747,8 @@ export default class Player extends FakeEventTarget {
     const trackIndex = videoElement
       ? Array.from(videoElement.textTracks).findIndex(track => track && track.language === event.payload.track.language)
       : -1;
-    const textTracks = this._getTextTracks();
     if (trackIndex === 0) {
+      const textTracks = this._getTextTracks();
       // new native track added to start or end of text track list so if it added to start we should fix our indexes
       // by increasing the index by 1
       textTracks.forEach(track => {
