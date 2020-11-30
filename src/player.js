@@ -2134,7 +2134,9 @@ export default class Player extends FakeEventTarget {
    */
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
-    this._eventManager.listen(this._engine, CustomEventType.TEXT_TRACK_ADDED, (event: FakeEvent) => this._onTextTrackAdded(event));
+    if (this.config.playback.useNativeTextTrack) {
+      this._eventManager.listen(this._engine, CustomEventType.TEXT_TRACK_ADDED, (event: FakeEvent) => this._onTextTrackAdded(event));
+    }
     this._tracks = tracks.concat(this._externalCaptionsHandler.getExternalTracks(tracks));
     this._addTextTrackOffOption();
     this._maybeSetTracksLabels();
