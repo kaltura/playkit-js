@@ -1,4 +1,6 @@
 // @flow
+import {Cue} from '../../src/track/vtt-cue';
+
 declare type PKPlaybackConfigObject = {
   audioLanguage: string,
   textLanguage: string,
@@ -14,5 +16,6 @@ declare type PKPlaybackConfigObject = {
   streamPriority: Array<PKStreamPriorityObject>,
   preferNative: PKPreferNativeConfigObject,
   inBrowserFullscreen: boolean,
-  playAdsWithMSE: boolean
+  playAdsWithMSE: boolean,
+  TextTrackDisplaySetting: Cue
 };
