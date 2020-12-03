@@ -475,7 +475,7 @@ export default class Player extends FakeEventTarget {
     } else {
       Utils.Object.mergeDeep(this._config, config);
     }
-    this.setTextDisplaySettings(this._config.playback.TextTrackDisplaySetting);
+    this.setTextDisplaySettings(this._config.playback.textTrackDisplaySetting);
   }
 
   /**

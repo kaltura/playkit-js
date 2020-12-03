@@ -38,7 +38,7 @@ const DefaultConfig = {
     },
     inBrowserFullscreen: false,
     playAdsWithMSE: false,
-    TextTrackDisplaySetting: {},
+    textTrackDisplaySetting: {},
     streamPriority: [
       {
         engine: 'html5',
