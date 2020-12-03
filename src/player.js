@@ -1226,11 +1226,11 @@ export default class Player extends FakeEventTarget {
 
   /**
    * update the text display settings
-   * @param {object} settings - text cue display settings
+   * @param {Object} settings - text cue display settings
    * @public
    * @returns {void}
    */
-  setTextDisplaySettings(settings: object): void {
+  setTextDisplaySettings(settings: Object): void {
     this._textDisplaySettings = settings;
     this._updateCueDisplaySettings();
     for (let i = 0; i < this._activeTextCues.length; i++) {
