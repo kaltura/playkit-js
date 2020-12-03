@@ -17,5 +17,5 @@ declare type PKPlaybackConfigObject = {
   preferNative: PKPreferNativeConfigObject,
   inBrowserFullscreen: boolean,
   playAdsWithMSE: boolean,
-  TextTrackDisplaySetting: Cue
+  textTrackDisplaySetting: Cue
 };
