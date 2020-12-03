@@ -475,6 +475,7 @@ export default class Player extends FakeEventTarget {
     } else {
       Utils.Object.mergeDeep(this._config, config);
     }
+    this.setTextDisplaySettings(this._config.playback.TextTrackDisplaySetting);
   }
 
   /**
@@ -1225,11 +1226,11 @@ export default class Player extends FakeEventTarget {
 
   /**
    * update the text display settings
-   * @param {Object} settings - text cue display settings
+   * @param {Cue} settings - text cue display settings
    * @public
    * @returns {void}
    */
-  setTextDisplaySettings(settings: Object): void {
+  setTextDisplaySettings(settings: Cue): void {
     this._textDisplaySettings = settings;
     this._updateCueDisplaySettings();
     for (let i = 0; i < this._activeTextCues.length; i++) {

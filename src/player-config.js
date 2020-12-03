@@ -1,3 +1,5 @@
+import {Cue} from './track/vtt-cue';
+
 const DefaultConfig = {
   log: {
     level: 'ERROR'
@@ -38,6 +40,7 @@ const DefaultConfig = {
     },
     inBrowserFullscreen: false,
     playAdsWithMSE: false,
+    TextTrackDisplaySetting: Cue,
     streamPriority: [
       {
         engine: 'html5',
