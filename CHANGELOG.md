@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.65.0](https://github.com/kaltura/playkit-js/compare/v0.64.3...v0.65.0) (2020-12-07)
+
+
+### Bug Fixes
+
+* **FEC-10324:** class instances merged like simple object ([#500](https://github.com/kaltura/playkit-js/issues/500)) ([f06aa5e](https://github.com/kaltura/playkit-js/commit/f06aa5e))
+* **FEC-10643:** seek to live edge on first play redundant ([#502](https://github.com/kaltura/playkit-js/issues/502)) ([6583361](https://github.com/kaltura/playkit-js/commit/6583361))
+* **FEC-10662:** source removed before destroy process finish ([#503](https://github.com/kaltura/playkit-js/issues/503)) ([55b2e77](https://github.com/kaltura/playkit-js/commit/55b2e77))
+* **FEC-10679:** external native text track still existing on API for next media ([#507](https://github.com/kaltura/playkit-js/issues/507)) ([6de30bb](https://github.com/kaltura/playkit-js/commit/6de30bb))
+* **FEC-10681:** pre roll stuck half way or doesn't allow the content to start playing on iphone and chrome ([#509](https://github.com/kaltura/playkit-js/issues/509)) ([6f5ded1](https://github.com/kaltura/playkit-js/commit/6f5ded1))
+
+
+### Features
+
+* **FEC-10486:** Lock orientation according to screenLockOrientionMode config when switching to full screen ([#499](https://github.com/kaltura/playkit-js/issues/499)) ([21d7227](https://github.com/kaltura/playkit-js/commit/21d7227))
+* **FEC-10632:** handle player dimensions dynamically ([#506](https://github.com/kaltura/playkit-js/issues/506)) ([9cbf0cf](https://github.com/kaltura/playkit-js/commit/9cbf0cf))
+* **FEC-10682:** signal seek in different way from buffering. ([#508](https://github.com/kaltura/playkit-js/issues/508)) ([ec69082](https://github.com/kaltura/playkit-js/commit/ec69082))
+
+
+
 ### [0.64.3](https://github.com/kaltura/playkit-js/compare/v0.64.2...v0.64.3) (2020-11-03)
 
 
