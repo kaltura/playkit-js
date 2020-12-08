@@ -595,7 +595,8 @@ var config = {
 >  streamPriority: Array<PKStreamPriorityObject>,
 >  preferNative: PKPreferNativeConfigObject,
 >  inBrowserFullscreen: boolean,
->  playAdsWithMSE: boolean
+>  playAdsWithMSE: boolean,
+>  screenLockOrientionMode: string
 > }
 > ```
 >
@@ -614,6 +615,7 @@ var config = {
 >  muted: false,
 >  pictureInPicture: true,
 >  playAdsWithMSE: false,
+>  screenLockOrientionMode: ScreenOrientationType.NONE,
 >  options: {
 >    html5: {
 >      hls: {},
@@ -924,6 +926,20 @@ var config = {
 > > ```
 > >
 > > > ##### Description: Gives the ability to share same video tag to play ads and source with media source
+>
+> ##
+>
+> > ### config.playback.screenLockOrientionMode
+> >
+> > ##### Type: `string` - value list option in ScreenOrientationType
+> >
+> > ##### Default: `none` - ScreenOrientationType.NONE
+> >
+> > ```js
+> > screenLockOrientionMode: string;
+> > ```
+> >
+> > > ##### Description: Gives the ability to lock the screen orientation in fullscreen
 >
 > ##
 >
@@ -1425,6 +1441,55 @@ var config = {
 > > ##### Default: ``
 > >
 > > ##### Description: A specific DRM key system to use.
+
+##
+
+> ### config.dimensions
+>
+> ##### Type: `PKDimensionsConfig`
+>
+> ```js
+> {
+>   width?: string | number;
+>   height?: string | number;
+>   ratio?: string;
+> }
+> ```
+>
+> ##### Description: Dimensions configuration
+>
+> > ### config.dimensions.width
+> >
+> > ##### Type: `string | number`
+> >
+> > ##### Default: `''`
+> >
+> > ##### Description: The width of the player.
+> >
+> > If number was provided, the width will be calculated in pixels (`width: 640` equivalent to `width: '640px'`).
+> > If string was provided, any valid css syntax can be passed, for example: `width: '100%'`, `width: 'auto'`, etc.
+> >
+> > ### config.dimensions.height
+> >
+> > ##### Type: `string | number`
+> >
+> > ##### Default: `''`
+> >
+> > ##### Description: The height of the player.
+> >
+> > If number was provided, the height will be calculated in pixels (`height: 360` equivalent to `width: '360px'`).
+> > If string was provided, any valid css syntax can be passed, for example: `height: '100%'`, `height: 'auto'`, etc.
+> >
+> > ### config.dimensions.ratio
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `''`
+> >
+> > ##### Description: Defines the aspect ratio of the player.
+> >
+> > The aspect ratio should be written in the form of `'width:height'`, for example: `'4:3'` (classic TV ratio).
+> > If one of the `height` or `width` parameters is additionally provided in the configuration, the value of the other parameter not provided will be calculated accordingly to match the aspect ratio. If both were provided, the `height` value would be overridden.
 
 ##
 
