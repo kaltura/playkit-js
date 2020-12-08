@@ -6,7 +6,7 @@ declare type PKTextConfigObject = {
   useNativeTextTrack: boolean,
   textTrackDisplaySetting: Object,
   textStyle: TextStyle,
-  forceCenterCaptions: boolean,
+  forceCenter: boolean,
   captionsTextTrack1Label: string,
   captionsTextTrack1LanguageCode: string,
   captionsTextTrack2Label: string,

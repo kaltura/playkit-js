@@ -1250,7 +1250,7 @@ export default class Player extends FakeEventTarget {
   }
 
   _applyTextTrackConfig(): void {
-    if (Utils.Object.getPropertyPath(this._config, 'text.forceCenterCaptions')) {
+    if (Utils.Object.getPropertyPath(this._config, 'text.forceCenter')) {
       this.setTextDisplaySettings({position: 'auto', align: 'center', size: '100'});
     } else if (Utils.Object.hasPropertyPath(this._config, 'text.textTrackDisplaySetting')) {
       this.setTextDisplaySettings(this._config.text.textTrackDisplaySetting);

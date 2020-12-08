@@ -13,7 +13,7 @@ const DefaultConfig = {
   text: {
     enableCEA708Captions: false,
     useNativeTextTrack: false,
-    forceCenterCaptions: false,
+    forceCenter: false,
     captionsTextTrack1Label: 'English',
     captionsTextTrack1LanguageCode: 'en',
     captionsTextTrack2Label: 'Spanish',
