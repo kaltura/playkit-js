@@ -98,7 +98,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @public
    */
   hideTextTrack(): void {
-    if (this._player.config.playback.useNativeTextTrack) {
+    if (this._player.config.text.useNativeTextTrack) {
       this._resetExternalNativeTextTrack();
     } else {
       // only if external text track was active we need to hide it.
@@ -121,7 +121,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     if (!captions) {
       return [];
     }
-    if (this._player.config.playback.useNativeTextTrack) {
+    if (this._player.config.text.useNativeTextTrack) {
       this._addNativeTextTrack();
     }
     const playerTextTracks = tracks.filter(track => track instanceof TextTrack);
@@ -213,7 +213,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   }
   _selectTextTrack(textTrack: TextTrack) {
     this.hideTextTrack();
-    if (this._player.config.playback.useNativeTextTrack) {
+    if (this._player.config.text.useNativeTextTrack) {
       this._addCuesToNativeTextTrack(this._textTrackModel[textTrack.language].cues);
     } else {
       this._setTextTrack(textTrack);
@@ -515,7 +515,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _setTextTrack(textTrack: TextTrack): void {
-    if (!this._player.config.playback.useNativeTextTrack) {
+    if (!this._player.config.text.useNativeTextTrack) {
       this._isTextTrackActive = true;
       ExternalCaptionsHandler._logger.debug('External text track changed', textTrack);
       this._activeTextCues = [];

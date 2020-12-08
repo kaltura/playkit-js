@@ -20,8 +20,7 @@ var player = playkit.core.loadPlayer(config);
   network: PKNetworkConfigObject,
   customLabels: PKCustomLabelsConfigObject,
   abr: PKAbrConfigObject,
-  drm: PKDrmConfigObject,
-  dimensions: PKDimensionsConfig
+  drm: PKDrmConfigObject
 }
 ```
 
@@ -38,15 +37,18 @@ var config = {
     },
     metadata: {}
   },
-  playback: {
-    audioLanguage: '',
-    textLanguage: '',
-    useNativeTextTrack: false,
+  text: {
     enableCEA708Captions: false,
+    useNativeTextTrack: false,
+    forceCenterCaptions: false,
     captionsTextTrack1Label: 'English',
     captionsTextTrack1LanguageCode: 'en',
     captionsTextTrack2Label: 'Spanish',
-    captionsTextTrack2LanguageCode: 'es',
+    captionsTextTrack2LanguageCode: 'es'
+  },
+  playback: {
+    audioLanguage: '',
+    textLanguage: '',
     volume: 1,
     startTime: -1,
     playsinline: true,
@@ -457,8 +459,120 @@ var config = {
 > > };
 > > ```
 
-##
-
+> ##
+> ### config.text
+>
+> ##### Type: `PKTextConfigObject`
+>
+> ```js
+> {
+>  useNativeTextTrack: boolean,
+>  enableCEA708Captions: boolean,
+>  textTrackDisplaySetting: Object,
+>  textStyle: TextStyle,
+>  captionsTextTrack1Label: string,
+>  captionsTextTrack1LanguageCode: string,
+>  captionsTextTrack2Label: string,
+>  captionsTextTrack2LanguageCode: string
+> }
+> ```
+>
+> ##### Default:
+>
+> ```js
+> {
+>  useNativeTextTrack: false,
+>  enableCEA708Captions: false,
+>  captionsTextTrack1Label: "English",
+>  captionsTextTrack1LanguageCode: "en",
+>  captionsTextTrack2Label: "Spanish",
+>  captionsTextTrack2LanguageCode: "es"
+> }
+> ```
+>
+> ##
+>
+> > ### config.text.useNativeTextTrack
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ##### Description: Determines whether to use native browser text tracks or not.
+> >
+> > If set to True, the native browser captions will be displayed.
+>
+> ##
+>
+> > ### config.text.enableCEA708Captions
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ##### Description: Whether or not to enable CEA-708 captions.
+>
+> ##
+>
+> > ### config.text.textTrackDisplaySetting
+> >
+> > ##### Type: `Object`
+> >
+> > ##### Default: `null`
+> >
+> > ##### Description: set the textTrackDisplaySetting to override the cues position
+>
+> ##
+>
+> > ### config.text.textStyle
+> >
+> > ##### Type: `TextStyle`
+> >
+> > ##### Default: `null`
+> >
+> > ##### Description: set the styling for text tracks
+>
+> ##
+>
+> > ### config.text.captionsTextTrack1Label
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `English`
+> >
+> > ##### Description: Label for the CEA-708 captions track 1.
+>
+> ##
+>
+> > ### config.text.captionsTextTrack1LanguageCode
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `en`
+> >
+> > ##### Description: RFC 3066 language code for the CEA-708 captions track 1.
+>
+> ##
+>
+> > ### config.text.captionsTextTrack2Label
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `Spanish`
+> >
+> > ##### Description: Label for the CEA-708 captions track 2.
+>
+> ##
+>
+> > ### config.text.captionsTextTrack2LanguageCode
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `es`
+> >
+> > ##### Description: RFC 3066 language code for the CEA-708 captions track 2.
+>
+> ##
 > ### config.playback
 >
 > ##### Type: `PKPlaybackConfigObject`
@@ -467,12 +581,6 @@ var config = {
 > {
 >  audioLanguage: string,
 >  textLanguage: string,
->  useNativeTextTrack: boolean,
->  enableCEA708Captions: boolean,
->  captionsTextTrack1Label: string,
->  captionsTextTrack1LanguageCode: string,
->  captionsTextTrack2Label: string,
->  captionsTextTrack2LanguageCode: string,
 >  volume: number,
 >  startTime: number,
 >  playsinline: boolean,
@@ -486,8 +594,7 @@ var config = {
 >  streamPriority: Array<PKStreamPriorityObject>,
 >  preferNative: PKPreferNativeConfigObject,
 >  inBrowserFullscreen: boolean,
->  playAdsWithMSE: boolean,
->  screenLockOrientionMode: string
+>  playAdsWithMSE: boolean
 > }
 > ```
 >
@@ -497,12 +604,6 @@ var config = {
 > {
 >  audioLanguage: "",
 >  textLanguage: "",
->  useNativeTextTrack: false,
->  enableCEA708Captions: false,
->  captionsTextTrack1Label: "English",
->  captionsTextTrack1LanguageCode: "en",
->  captionsTextTrack2Label: "Spanish",
->  captionsTextTrack2LanguageCode: "es",
 >  volume: 1,
 >  startTime: -1,
 >  playsinline: true,
@@ -512,7 +613,6 @@ var config = {
 >  muted: false,
 >  pictureInPicture: true,
 >  playAdsWithMSE: false,
->  screenLockOrientionMode: ScreenOrientationType.NONE,
 >  options: {
 >    html5: {
 >      hls: {},
@@ -600,68 +700,6 @@ var config = {
 > > 2.  **Manifest default language** - If a default language is specified in the manifest file then this language will be selected.
 > > 3.  **First language in manifest** - The first language specified in the manifest file will be selected.
 > > 4.  If none of the above conditions have taken place, do not display captions.
->
-> ##
->
-> > ### config.playback.useNativeTextTrack
-> >
-> > ##### Type: `boolean`
-> >
-> > ##### Default: `false`
-> >
-> > ##### Description: Determines whether to use native browser text tracks or not.
-> >
-> > If set to True, the native browser captions will be displayed.
->
-> ##
->
-> > ### config.playback.enableCEA708Captions
-> >
-> > ##### Type: `boolean`
-> >
-> > ##### Default: `false`
-> >
-> > ##### Description: Whether or not to enable CEA-708 captions.
->
-> ##
->
-> > ### config.playback.captionsTextTrack1Label
-> >
-> > ##### Type: `string`
-> >
-> > ##### Default: `English`
-> >
-> > ##### Description: Label for the CEA-708 captions track 1.
->
-> ##
->
-> > ### config.playback.captionsTextTrack1LanguageCode
-> >
-> > ##### Type: `string`
-> >
-> > ##### Default: `en`
-> >
-> > ##### Description: RFC 3066 language code for the CEA-708 captions track 1.
->
-> ##
->
-> > ### config.playback.captionsTextTrack2Label
-> >
-> > ##### Type: `string`
-> >
-> > ##### Default: `Spanish`
-> >
-> > ##### Description: Label for the CEA-708 captions track 2.
->
-> ##
->
-> > ### config.playback.captionsTextTrack2LanguageCode
-> >
-> > ##### Type: `string`
-> >
-> > ##### Default: `es`
-> >
-> > ##### Description: RFC 3066 language code for the CEA-708 captions track 2.
 >
 > ##
 >
@@ -885,20 +923,6 @@ var config = {
 > > ```
 > >
 > > > ##### Description: Gives the ability to share same video tag to play ads and source with media source
->
-> ##
->
-> > ### config.playback.screenLockOrientionMode
-> >
-> > ##### Type: `string` - value list option in ScreenOrientationType
-> >
-> > ##### Default: `none` - ScreenOrientationType.NONE
-> >
-> > ```js
-> > screenLockOrientionMode: string;
-> > ```
-> >
-> > > ##### Description: Gives the ability to lock the screen orientation in fullscreen
 >
 > ##
 >
@@ -1400,55 +1424,6 @@ var config = {
 > > ##### Default: ``
 > >
 > > ##### Description: A specific DRM key system to use.
-
-##
-
-> ### config.dimensions
->
-> ##### Type: `PKDimensionsConfig`
->
-> ```js
-> {
->   width?: string | number;
->   height?: string | number;
->   ratio?: string;
-> }
-> ```
->
-> ##### Description: Dimensions configuration
->
-> > ### config.dimensions.width
-> >
-> > ##### Type: `string | number`
-> >
-> > ##### Default: `''`
-> >
-> > ##### Description: The width of the player.
-> >
-> > If number was provided, the width will be calculated in pixels (`width: 640` equivalent to `width: '640px'`).
-> > If string was provided, any valid css syntax can be passed, for example: `width: '100%'`, `width: 'auto'`, etc.
-> >
-> > ### config.dimensions.height
-> >
-> > ##### Type: `string | number`
-> >
-> > ##### Default: `''`
-> >
-> > ##### Description: The height of the player.
-> >
-> > If number was provided, the height will be calculated in pixels (`height: 360` equivalent to `width: '360px'`).
-> > If string was provided, any valid css syntax can be passed, for example: `height: '100%'`, `height: 'auto'`, etc.
-> >
-> > ### config.dimensions.ratio
-> >
-> > ##### Type: `string`
-> >
-> > ##### Default: `''`
-> >
-> > ##### Description: Defines the aspect ratio of the player.
-> >
-> > The aspect ratio should be written in the form of `'width:height'`, for example: `'4:3'` (classic TV ratio).
-> > If one of the `height` or `width` parameters is additionally provided in the configuration, the value of the other parameter not provided will be calculated accordingly to match the aspect ratio. If both were provided, the `height` value would be overridden.
 
 ##
 

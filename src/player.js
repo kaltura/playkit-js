@@ -481,6 +481,7 @@ export default class Player extends FakeEventTarget {
     } else {
       Utils.Object.mergeDeep(this._config, config);
     }
+    this._applyTextTrackConfig();
   }
 
   /**
@@ -1248,6 +1249,21 @@ export default class Player extends FakeEventTarget {
     return false;
   }
 
+  _applyTextTrackConfig(): void {
+    if (Utils.Object.getPropertyPath(this._config, 'text.forceCenterCaptions')) {
+      this.setTextDisplaySettings({position: 'auto', align: 'center', size: '100'});
+    } else if (Utils.Object.hasPropertyPath(this._config, 'text.textTrackDisplaySetting')) {
+      this.setTextDisplaySettings(this._config.text.textTrackDisplaySetting);
+    }
+    try {
+      if (Utils.Object.hasPropertyPath(this._config, 'text.textStyle')) {
+        this.textStyle = this._config.text.textStyle;
+      }
+    } catch (e) {
+      Player._logger.warn(e);
+    }
+  }
+
   /**
    * update the text display settings
    * @param {Object} settings - text cue display settings
@@ -1287,7 +1303,7 @@ export default class Player extends FakeEventTarget {
 
     try {
       this._textStyle = style;
-      if (this._config.playback.useNativeTextTrack) {
+      if (this._config.text.useNativeTextTrack) {
         sheet.insertRule(`#${this._playerId} video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
       } else if (this._engine) {
         this._engine.resetAllCues();
@@ -2127,7 +2143,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _maybeAdjustTextTracksIndexes(): void {
-    if (this._config.playback.useNativeTextTrack) {
+    if (this._config.text.useNativeTextTrack) {
       const getNativeLanguageTrackIndex = (textTrack: TextTrack): number => {
         const videoElement = this.getVideoElement();
         return videoElement ? Array.from(videoElement.textTracks).findIndex(track => (track ? track.language === textTrack.language : false)) : -1;
@@ -2246,7 +2262,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _updateTextDisplay(cues: Array<Cue>): void {
-    if (!this._config.playback.useNativeTextTrack) {
+    if (!this._config.text.useNativeTextTrack) {
       processCues(window, cues, this._textDisplayEl, this._textStyle);
     }
   }

@@ -188,18 +188,20 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       displayTextTrack: false,
       progressiveSources: []
     };
-    if (Utils.Object.hasPropertyPath(config, 'playback.useNativeTextTrack')) {
-      adapterConfig.displayTextTrack = Utils.Object.getPropertyPath(config, 'playback.useNativeTextTrack');
+    if (Utils.Object.hasPropertyPath(config, 'text.useNativeTextTrack')) {
+      adapterConfig.displayTextTrack = Utils.Object.getPropertyPath(config, 'text.useNativeTextTrack');
     }
     if (Utils.Object.hasPropertyPath(config, 'sources.progressive')) {
       adapterConfig.progressiveSources = Utils.Object.getPropertyPath(config, 'sources.progressive');
     }
-    if (config.playback) {
-      adapterConfig.enableCEA708Captions = config.playback.enableCEA708Captions;
-      adapterConfig.captionsTextTrack1Label = config.playback.captionsTextTrack1Label;
-      adapterConfig.captionsTextTrack1LanguageCode = config.playback.captionsTextTrack1LanguageCode;
-      adapterConfig.captionsTextTrack2Label = config.playback.captionsTextTrack2Label;
-      adapterConfig.captionsTextTrack2LanguageCode = config.playback.captionsTextTrack2LanguageCode;
+    if (Utils.Object.hasPropertyPath(config, 'text')) {
+      adapterConfig.enableCEA708Captions = config.text.enableCEA708Captions;
+      adapterConfig.captionsTextTrack1Label = config.text.captionsTextTrack1Label;
+      adapterConfig.captionsTextTrack1LanguageCode = config.text.captionsTextTrack1LanguageCode;
+      adapterConfig.captionsTextTrack2Label = config.text.captionsTextTrack2Label;
+      adapterConfig.captionsTextTrack2LanguageCode = config.text.captionsTextTrack2LanguageCode;
+    }
+    if (Utils.Object.hasPropertyPath(config, 'playback')) {
       if (Utils.Object.hasPropertyPath(config.playback, 'options.html5.native')) {
         Utils.Object.mergeDeep(adapterConfig, config.playback.options.html5.native);
       }

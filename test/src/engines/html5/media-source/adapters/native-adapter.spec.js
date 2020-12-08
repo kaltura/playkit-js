@@ -346,7 +346,7 @@ describe('NativeAdapter: _getParsedTracks', function () {
     video = document.createElement('video');
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.MultipleSources.progressive[0], {
       sources: sourcesConfig.MultipleSources,
-      playback: {enableCEA708Captions: true, captionsTextTrack1Label: ''}
+      text: {enableCEA708Captions: true, captionsTextTrack1Label: ''}
     });
   });
 
