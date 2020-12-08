@@ -20,7 +20,8 @@ var player = playkit.core.loadPlayer(config);
   network: PKNetworkConfigObject,
   customLabels: PKCustomLabelsConfigObject,
   abr: PKAbrConfigObject,
-  drm: PKDrmConfigObject
+  drm: PKDrmConfigObject,
+  dimensions: PKDimensionsConfig
 }
 ```
 
