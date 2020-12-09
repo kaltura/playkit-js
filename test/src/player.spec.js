@@ -1300,7 +1300,7 @@ describe('Player', function () {
       beforeEach(() => {
         config = Utils.Object.mergeDeep(getConfigStructure(), {
           sources: Utils.Object.mergeDeep({captions: [ExternalCaption.He, ExternalCaption.Ru]}, sourcesConfig.Mp4),
-          playback: {useNativeTextTrack: true}
+          text: {useNativeTextTrack: true}
         });
         player = new Player(config);
         playerContainer.appendChild(player.getView());
@@ -1396,7 +1396,7 @@ describe('Player', function () {
       beforeEach(() => {
         config = Utils.Object.mergeDeep(getConfigStructure(), {
           sources: Utils.Object.mergeDeep({captions: [ExternalCaption.He, ExternalCaption.Ru]}, sourcesConfig.Mp4),
-          playback: {useNativeTextTrack: false}
+          text: {useNativeTextTrack: false}
         });
         player = new Player(config);
         playerContainer.appendChild(player.getView());

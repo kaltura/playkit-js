@@ -183,11 +183,11 @@ class TextStyle {
   }
 
   setTextStyle(settings: Object) {
-    for (let name in settings) {
-      if (this[name]) {
-        this[name] = settings[name];
+    Object.keys(settings).forEach(function (key) {
+      if (Object.prototype.hasOwnProperty.call(this, key)) {
+        this[key] = settings[key];
       }
-    }
+    });
   }
 
   getTextShadow(): string {
