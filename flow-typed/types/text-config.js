@@ -5,7 +5,7 @@ declare type PKTextConfigObject = {
   enableCEA708Captions: boolean,
   useNativeTextTrack: boolean,
   textTrackDisplaySetting: Object,
-  textStyle: TextStyle,
+  textStyle: TextStyle | Object,
   forceCenter: boolean,
   captionsTextTrack1Label: string,
   captionsTextTrack1LanguageCode: string,
