@@ -178,6 +178,18 @@ class TextStyle {
    */
   fontEdge: Array<Array<number>> = TextStyle.EdgeStyles.NONE;
 
+  constructor(settings: Object) {
+    this.setTextStyle(settings);
+  }
+
+  setTextStyle(settings: Object) {
+    for (let name in settings) {
+      if (this[name]) {
+        this[name] = settings[name];
+      }
+    }
+  }
+
   getTextShadow(): string {
     // A given edge effect may be implemented with multiple shadows.
     // Collect them all into an array, then combine into one attribute.

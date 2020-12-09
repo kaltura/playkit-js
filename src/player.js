@@ -1257,7 +1257,7 @@ export default class Player extends FakeEventTarget {
     }
     try {
       if (Utils.Object.hasPropertyPath(this._config, 'text.textStyle')) {
-        this.textStyle = this._config.text.textStyle;
+        this.textStyle = new TextStyle(this._config.text.textStyle);
       }
     } catch (e) {
       Player._logger.warn(e);
