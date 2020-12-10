@@ -78,7 +78,6 @@ describe('StateManager', () => {
       done();
     });
     stateManager._updateState(StateType.LOADING);
-    stateManager._dispatchEvent();
   });
 
   it('should reset the state manager', () => {
