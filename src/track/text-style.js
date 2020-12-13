@@ -184,8 +184,9 @@ class TextStyle {
 
   setTextStyle(settings: Object) {
     if (settings) {
-      Object.keys(settings).forEach(function (key) {
+      Object.keys(settings).forEach(key => {
         if (Object.prototype.hasOwnProperty.call(this, key)) {
+          //$FlowFixMe
           this[key] = settings[key];
         }
       });
