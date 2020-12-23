@@ -35,6 +35,7 @@ import {ResizeWatcher} from './utils/resize-watcher';
 import {FullscreenController} from './fullscreen/fullscreen-controller';
 import {EngineDecorator} from './engines/engine-decorator';
 import {LabelOptions} from './track/label-options';
+import {AutoPlayType} from './auto-play-type';
 /**
  * The black cover class name.
  * @type {string}
@@ -171,11 +172,12 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * The event manager of the player.
+   * The event manager of the current media.
    * @type {EventManager}
    * @private
    */
   _eventManager: EventManager;
+
   /**
    * The poster manager of the player.
    * @type {PosterManager}
@@ -399,6 +401,47 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _aspectRatio: ?string;
+  /**
+   * An intersection observer instance to track the player visibility.
+   * @type {IntersectionObserver}
+   * @private
+   */
+  _intersectionObserver: window.IntersectionObserver;
+
+  /**
+   * Whether the player is visible in the page scroll view
+   * @type {boolean}
+   * @private
+   */
+  _isVisibleInScroll: boolean;
+
+  /**
+   * Whether the player browser tab is active or not
+   * @type {boolean}
+   * @private
+   */
+  _isTabVisible: boolean;
+
+  /**
+   * Whether the player browser tab is active and in the scroll view
+   * @type {boolean}
+   * @private
+   */
+  _isVisible: boolean;
+
+  /**
+   * Whether the player is in floating mode
+   * @type {boolean}
+   * @private
+   */
+  _isFloating: boolean = false;
+
+  /**
+   * Whether the player was auto paused
+   * @type {boolean}
+   * @private
+   */
+  _autoPaused: boolean = false;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -461,7 +504,9 @@ export default class Player extends FakeEventTarget {
         this._posterManager.setSrc(this._config.sources.poster);
         this._handleDimensions();
         this._handlePreload();
-        this._handleAutoPlay();
+        this._initAutoPlay();
+        this._initAutoPause();
+        this._initIntersectionObserver(); // Must be initialized after auto play init
         Player._logger.debug('Change source ended');
         this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_ENDED));
       } else {
@@ -602,6 +647,7 @@ export default class Player extends FakeEventTarget {
     this._createReadyPromise();
     this._isOnLiveEdge = false;
     this._shouldLoadAfterAttach = false;
+    this._intersectionObserver.disconnect();
   }
 
   /**
@@ -634,6 +680,7 @@ export default class Player extends FakeEventTarget {
     if (this._el) {
       Utils.Dom.removeChild(this._el.parentNode, this._el);
     }
+    this._intersectionObserver.disconnect();
     this._destroyed = true;
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_DESTROY));
     this._eventManager.destroy();
@@ -893,7 +940,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   set dimensions(dimensions?: PKDimensionsConfig) {
-    const targetElement = document.getElementById(this.config.targetId);
+    const targetElement = this._getTargetElement();
     if (!dimensions || Utils.Object.isEmptyObject(dimensions)) {
       this._aspectRatio = null;
       targetElement.style.width = null;
@@ -904,6 +951,10 @@ export default class Player extends FakeEventTarget {
       targetElement.style.height = typeof height === 'number' ? `${height}px` : height;
       this._calcRatio(targetElement, dimensions);
     }
+  }
+
+  _getTargetElement(): HTMLElement {
+    return Utils.Dom.getElementById(this._config.targetId);
   }
 
   /**
@@ -1528,6 +1579,84 @@ export default class Player extends FakeEventTarget {
     }
   }
 
+  _initIntersectionObserver() {
+    const options = {
+      threshold: this._config.playback.visibilityThreshold / 100
+    };
+    this._intersectionObserver = new window.IntersectionObserver(this._handleScrollVisibilityChange.bind(this), options);
+    this._intersectionObserver.observe(this._getTargetElement());
+  }
+
+  _handleScrollVisibilityChange(entries: Array<window.IntersectionObserverEntry>) {
+    this._isVisibleInScroll = entries[0].intersectionRatio >= this._config.playback.visibilityThreshold / 100;
+
+    this.dispatchEvent(new FakeEvent(CustomEventType.SCROLL_VISIBILITY_CHANGE, {visible: this._isVisibleInScroll}));
+    this._handleVisibilityChange();
+    if (this._config.playback.autoplay === AutoPlayType.ON_VIEW && this._isVisibleInScroll && !this._playbackStart) {
+      this._autoPlay();
+    }
+  }
+
+  _handleVisibilityChange() {
+    const prevVisibility = this._isVisible;
+    this._isVisible = this._isTabVisible && this._isVisibleInScroll;
+
+    if (prevVisibility !== this._isVisible) {
+      this.dispatchEvent(new FakeEvent(CustomEventType.VISIBILITY_CHANGE, {visible: this._isVisible}));
+    }
+  }
+
+  _initTabVisibility(): void {
+    let hiddenAttr: string;
+    let visibilityChangeEventName: string;
+    if (typeof document.hidden !== 'undefined') {
+      // Opera 12.10 and Firefox 18 and later support
+      hiddenAttr = 'hidden';
+      visibilityChangeEventName = 'visibilitychange';
+    } else if (typeof document.msHidden !== 'undefined') {
+      hiddenAttr = 'msHidden';
+      visibilityChangeEventName = 'msvisibilitychange';
+    } else if (typeof document.webkitHidden !== 'undefined') {
+      hiddenAttr = 'webkitHidden';
+      visibilityChangeEventName = 'webkitvisibilitychange';
+    }
+
+    if (hiddenAttr && visibilityChangeEventName) {
+      this._eventManager.listen(document, visibilityChangeEventName, () => {
+        this._isTabVisible = !document[hiddenAttr];
+        this.dispatchEvent(new FakeEvent(CustomEventType.TAB_VISIBILITY_CHANGE, {visible: this._isTabVisible}));
+        this._handleVisibilityChange();
+      });
+      this._isTabVisible = !document[hiddenAttr];
+    }
+  }
+
+  /**
+   * Gets the player tab visibility state
+   * @returns {boolean} - whether the browser player tab is visible
+   * @public
+   */
+  get isTabVisible(): boolean {
+    return this._isTabVisible;
+  }
+
+  /**
+   * Gets the player visibility in scroll view state
+   * @returns {boolean} - whether the player is visible in the scroll view
+   * @public
+   */
+  get isVisibleInScroll(): boolean {
+    return this._isVisibleInScroll;
+  }
+  /**
+   * Gets the player visibility
+   * @returns {boolean} - true if the player is both in the active tab and is visible in the scroll view
+   * @public
+   */
+  get isVisible(): boolean {
+    return this._isVisible;
+  }
+
   /**
    * Appends DOM elements by the following priority:
    * 1. poster (strongest)
@@ -1722,7 +1851,18 @@ export default class Player extends FakeEventTarget {
           {capture: true}
         );
       }
+      this._initTabVisibility();
     }
+  }
+
+  /**
+   * Update the floating active state.
+   * @param {boolean} isFloating - is player floating.
+   * @returns {void}
+   * @public
+   */
+  changeFloatingState(isFloating: boolean): void {
+    this._isFloating = isFloating;
   }
 
   /**
@@ -1837,33 +1977,47 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Handles auto play.
+   * Handles auto pause.
    * @returns {void}
    * @private
    */
-  _handleAutoPlay(): void {
-    if (this._config.playback.autoplay === true) {
-      const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
-      Player.getCapabilities(this.engineType).then(capabilities => {
-        if (capabilities.autoplay) {
-          onAutoPlay();
-        } else {
-          if (capabilities.mutedAutoPlay) {
-            if (this.muted && !this._fallbackToMutedAutoPlay) {
-              onMutedAutoPlay();
-            } else if (allowMutedAutoPlay) {
-              onFallbackToMutedAutoPlay();
-            } else {
-              onAutoPlayFailed();
-            }
+  _initAutoPause(): void {
+    if (this._config.playback.autopause === true) {
+      this._eventManager.listen(this, CustomEventType.VISIBILITY_CHANGE, (e: FakeEvent) => {
+        if (!e.payload.visible) {
+          if (!this._isFloating && !this.isInPictureInPicture() && this._playbackStart && !this.paused) {
+            this.pause();
+            this._autoPaused = true;
+          }
+        } else if (this._autoPaused) {
+          if (this.paused) {
+            this.play();
+          }
+          this._autoPaused = false;
+        }
+      });
+    }
+  }
+
+  _autoPlay(): void {
+    const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
+    Player.getCapabilities(this.engineType).then(capabilities => {
+      if (capabilities.autoplay) {
+        onAutoPlay();
+      } else {
+        if (capabilities.mutedAutoPlay) {
+          if (this.muted && !this._fallbackToMutedAutoPlay) {
+            onMutedAutoPlay();
+          } else if (allowMutedAutoPlay) {
+            onFallbackToMutedAutoPlay();
           } else {
             onAutoPlayFailed();
           }
+        } else {
+          onAutoPlayFailed();
         }
-      });
-    } else {
-      this._posterManager.show();
-    }
+      }
+    });
 
     const onAutoPlay = () => {
       Player._logger.debug('Start autoplay');
@@ -1895,6 +2049,19 @@ export default class Player extends FakeEventTarget {
       this.load();
       this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED));
     };
+  }
+
+  /**
+     }
+   * Checks auto play configuration and handles initialization accordingly.
+   * @returns {void}
+   * @private
+   */
+  _initAutoPlay(): void {
+    this._posterManager.show();
+    if (this._config.playback.autoplay === true) {
+      this._autoPlay();
+    }
   }
 
   /**
@@ -1976,6 +2143,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _pause(): void {
+    this._autoPlayedOnView = false;
     this._engine.pause();
   }
 

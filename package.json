@@ -33,6 +33,7 @@
     "access": "public"
   },
   "dependencies": {
+    "intersection-observer": "^0.12.0",
     "js-logger": "^1.6.0",
     "ua-parser-js": "^0.7.21"
   },

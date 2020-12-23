@@ -58,7 +58,8 @@ const DefaultConfig = {
         engine: 'flash',
         format: 'hls'
       }
-    ]
+    ],
+    visibilityThreshold: 50
   },
   abr: {
     enabled: true,

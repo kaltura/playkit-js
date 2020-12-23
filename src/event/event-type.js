@@ -247,7 +247,19 @@ const CustomEventType: PKEventTypes = {
   /**
    * Fired when the drm license is responded from the DRM server
    */
-  DRM_LICENSE_LOADED: 'drmlicenseloaded'
+  DRM_LICENSE_LOADED: 'drmlicenseloaded',
+  /**
+   * Fired when tab state changes from in / out of focus
+   */
+  TAB_VISIBILITY_CHANGE: 'tabvisibilitychange',
+  /**
+   * Fired when the player gets in /out of scroll view
+   */
+  SCROLL_VISIBILITY_CHANGE: 'scrollvisibilitychange',
+  /**
+   * Fired when the player changes its visibility state - either by tabbing in / out or scrolling in /out of view
+   */
+  VISIBILITY_CHANGE: 'visibilitychange'
 };
 
 const EventType: PKEventTypes = Utils.Object.merge([Html5EventType, CustomEventType, AdEventType]);
