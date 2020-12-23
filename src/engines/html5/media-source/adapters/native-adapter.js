@@ -521,22 +521,28 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   destroy(): Promise<*> {
     NativeAdapter._logger.debug('destroy');
-    return super.destroy().then(() => {
-      this._drmHandler && this._drmHandler.destroy();
-      this._waitingEventTriggered = false;
-      this._progressiveSources = [];
-      this._loadPromise = null;
-      this._loadPromiseReject = null;
-      this._liveEdge = 0;
-      this._lastTimeUpdate = 0;
-      this._lastTimeDetach = NaN;
-      this._startTimeAttach = NaN;
-      this._videoDimensions = null;
-      this._clearHeartbeatTimeout();
-      if (this._liveDurationChangeInterval) {
-        clearInterval(this._liveDurationChangeInterval);
-        this._liveDurationChangeInterval = null;
-      }
+    return new Promise((resolve, reject) => {
+      super.destroy().then(
+        () => {
+          this._drmHandler && this._drmHandler.destroy();
+          this._waitingEventTriggered = false;
+          this._progressiveSources = [];
+          this._loadPromise = null;
+          this._loadPromiseReject = null;
+          this._liveEdge = 0;
+          this._lastTimeUpdate = 0;
+          this._lastTimeDetach = NaN;
+          this._startTimeAttach = NaN;
+          this._videoDimensions = null;
+          this._clearHeartbeatTimeout();
+          if (this._liveDurationChangeInterval) {
+            clearInterval(this._liveDurationChangeInterval);
+            this._liveDurationChangeInterval = null;
+          }
+          resolve();
+        },
+        () => reject
+      );
     });
   }
 
