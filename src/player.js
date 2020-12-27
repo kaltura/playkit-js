@@ -176,7 +176,13 @@ export default class Player extends FakeEventTarget {
    * @type {EventManager}
    * @private
    */
-  _eventManager: EventManager;
+  _mediaEventManager: EventManager;
+  /**
+   * The event manager of the player.
+   * @type {EventManager}
+   * @private
+   */
+  _playerEventManager: EventManager;
 
   /**
    * The poster manager of the player.
@@ -465,7 +471,8 @@ export default class Player extends FakeEventTarget {
     this._destroyed = false;
     this._fallbackToMutedAutoPlay = false;
     this._config = Player._defaultConfig;
-    this._eventManager = new EventManager();
+    this._mediaEventManager = new EventManager();
+    this._playerEventManager = new EventManager();
     this._posterManager = new PosterManager();
     this._stateManager = new StateManager(this);
     this._resizeWatcher = new ResizeWatcher();
@@ -477,6 +484,7 @@ export default class Player extends FakeEventTarget {
     this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
     this._fullscreenController = new FullscreenController(this);
     this.configure(config);
+    this._initTabVisibility();
   }
 
   // <editor-fold desc="Public API">
@@ -547,7 +555,7 @@ export default class Player extends FakeEventTarget {
       if (this._engine) {
         this._load();
       } else {
-        this._eventManager.listenOnce(this, CustomEventType.SOURCE_SELECTED, () => this._load());
+        this._mediaEventManager.listenOnce(this, CustomEventType.SOURCE_SELECTED, () => this._load());
       }
     };
     if (!this.src) {
@@ -642,7 +650,7 @@ export default class Player extends FakeEventTarget {
     this.showBlackCover();
     this._reset = true;
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET));
-    this._eventManager.removeAll();
+    this._mediaEventManager.removeAll();
     this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
     this._createReadyPromise();
     this._isOnLiveEdge = false;
@@ -683,7 +691,8 @@ export default class Player extends FakeEventTarget {
     this._intersectionObserver.disconnect();
     this._destroyed = true;
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_DESTROY));
-    this._eventManager.destroy();
+    this._mediaEventManager.destroy();
+    this._playerEventManager.destroy();
   }
 
   /**
@@ -717,7 +726,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._shouldLoadAfterAttach = true;
       this._engine.attachMediaSource();
-      this._eventManager.listenOnce(this, Html5EventType.CAN_PLAY, () => {
+      this._mediaEventManager.listenOnce(this, Html5EventType.CAN_PLAY, () => {
         if (typeof this._playbackAttributesState.rate === 'number') {
           this.playbackRate = this._playbackAttributesState.rate;
         }
@@ -1622,7 +1631,7 @@ export default class Player extends FakeEventTarget {
     }
 
     if (hiddenAttr && visibilityChangeEventName) {
-      this._eventManager.listen(document, visibilityChangeEventName, () => {
+      this._playerEventManager.listen(document, visibilityChangeEventName, () => {
         this._isTabVisible = !document[hiddenAttr];
         this.dispatchEvent(new FakeEvent(CustomEventType.TAB_VISIBILITY_CHANGE, {visible: this._isTabVisible}));
         this._handleVisibilityChange();
@@ -1688,11 +1697,11 @@ export default class Player extends FakeEventTarget {
    */
   _createReadyPromise(): void {
     this._readyPromise = new Promise((resolve, reject) => {
-      this._eventManager.listenOnce(this, CustomEventType.TRACKS_CHANGED, () => {
+      this._mediaEventManager.listenOnce(this, CustomEventType.TRACKS_CHANGED, () => {
         this.dispatchEvent(new FakeEvent(CustomEventType.MEDIA_LOADED));
         resolve();
       });
-      this._eventManager.listen(this, Html5EventType.ERROR, (event: FakeEvent) => {
+      this._mediaEventManager.listen(this, Html5EventType.ERROR, (event: FakeEvent) => {
         if (event.payload.severity === PKError.Severity.CRITICAL) {
           reject();
         }
@@ -1776,72 +1785,72 @@ export default class Player extends FakeEventTarget {
   _attachMedia(): void {
     if (this._engine) {
       Object.keys(Html5EventType).forEach(html5Event => {
-        this._eventManager.listen(this._engine, Html5EventType[html5Event], (event: FakeEvent) => {
+        this._mediaEventManager.listen(this._engine, Html5EventType[html5Event], (event: FakeEvent) => {
           return this.dispatchEvent(event);
         });
       });
-      this._eventManager.listen(this._engine, Html5EventType.SEEKING, () => {
+      this._mediaEventManager.listen(this._engine, Html5EventType.SEEKING, () => {
         if (this.isLive()) {
           this._isOnLiveEdge = this.duration && this.currentTime ? this.currentTime >= this.duration - LIVE_EDGE_THRESHOLD && !this.paused : false;
         }
       });
-      this._eventManager.listen(this._engine, Html5EventType.SEEKED, () => {
+      this._mediaEventManager.listen(this._engine, Html5EventType.SEEKED, () => {
         const browser = this._env.browser.name;
         if (browser === 'Edge' || browser === 'IE') {
           this._removeTextCuePatch();
         }
       });
-      this._eventManager.listen(this._engine, CustomEventType.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
+      this._mediaEventManager.listen(this._engine, CustomEventType.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
         this._markActiveTrack(event.payload.selectedVideoTrack);
         return this.dispatchEvent(event);
       });
-      this._eventManager.listen(this._engine, CustomEventType.AUDIO_TRACK_CHANGED, (event: FakeEvent) => {
+      this._mediaEventManager.listen(this._engine, CustomEventType.AUDIO_TRACK_CHANGED, (event: FakeEvent) => {
         this.ready().then(() => (this._playbackAttributesState.audioLanguage = event.payload.selectedAudioTrack.language));
         this._markActiveTrack(event.payload.selectedAudioTrack);
         this.dispatchEvent(event);
       });
-      this._eventManager.listen(this._engine, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this._onTextTrackChanged(event));
-      this._eventManager.listen(this._engine, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this._onTracksChanged(event));
-      this._eventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
-      this._eventManager.listen(this._engine, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._engine, CustomEventType.TIMED_METADATA, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._engine, CustomEventType.PLAY_FAILED, (event: FakeEvent) => {
+      this._mediaEventManager.listen(this._engine, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this._onTextTrackChanged(event));
+      this._mediaEventManager.listen(this._engine, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this._onTracksChanged(event));
+      this._mediaEventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
+      this._mediaEventManager.listen(this._engine, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._mediaEventManager.listen(this._engine, CustomEventType.TIMED_METADATA, (event: FakeEvent) => this.dispatchEvent(event));
+      this._mediaEventManager.listen(this._engine, CustomEventType.PLAY_FAILED, (event: FakeEvent) => {
         this.pause();
         this._onPlayFailed(event);
         this.dispatchEvent(event);
       });
-      this._eventManager.listen(this._engine, CustomEventType.FPS_DROP, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._engine, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._engine, CustomEventType.DRM_LICENSE_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this._engine, CustomEventType.MANIFEST_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(this, Html5EventType.PLAY, this._onPlay.bind(this));
-      this._eventManager.listen(this, Html5EventType.PAUSE, this._onPause.bind(this));
-      this._eventManager.listen(this, Html5EventType.PLAYING, this._onPlaying.bind(this));
-      this._eventManager.listen(this, Html5EventType.ENDED, this._onEnded.bind(this));
-      this._eventManager.listen(this, CustomEventType.MUTE_CHANGE, () => {
+      this._mediaEventManager.listen(this._engine, CustomEventType.FPS_DROP, (event: FakeEvent) => this.dispatchEvent(event));
+      this._mediaEventManager.listen(this._engine, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._mediaEventManager.listen(this._engine, CustomEventType.DRM_LICENSE_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._mediaEventManager.listen(this._engine, CustomEventType.MANIFEST_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._mediaEventManager.listen(this, Html5EventType.PLAY, this._onPlay.bind(this));
+      this._mediaEventManager.listen(this, Html5EventType.PAUSE, this._onPause.bind(this));
+      this._mediaEventManager.listen(this, Html5EventType.PLAYING, this._onPlaying.bind(this));
+      this._mediaEventManager.listen(this, Html5EventType.ENDED, this._onEnded.bind(this));
+      this._mediaEventManager.listen(this, CustomEventType.MUTE_CHANGE, () => {
         this._playbackAttributesState.muted = this.muted;
       });
-      this._eventManager.listen(this, Html5EventType.VOLUME_CHANGE, () => {
+      this._mediaEventManager.listen(this, Html5EventType.VOLUME_CHANGE, () => {
         this._playbackAttributesState.volume = this.volume;
       });
-      this._eventManager.listen(this, Html5EventType.RATE_CHANGE, () => {
+      this._mediaEventManager.listen(this, Html5EventType.RATE_CHANGE, () => {
         this._playbackAttributesState.rate = this.playbackRate;
       });
-      this._eventManager.listen(this, CustomEventType.ENTER_FULLSCREEN, () => this._resetTextCuesAndReposition());
-      this._eventManager.listen(this, CustomEventType.EXIT_FULLSCREEN, () => this._resetTextCuesAndReposition());
-      this._eventManager.listen(this._resizeWatcher, CustomEventType.RESIZE, (event: FakeEvent) => {
+      this._mediaEventManager.listen(this, CustomEventType.ENTER_FULLSCREEN, () => this._resetTextCuesAndReposition());
+      this._mediaEventManager.listen(this, CustomEventType.EXIT_FULLSCREEN, () => this._resetTextCuesAndReposition());
+      this._mediaEventManager.listen(this._resizeWatcher, CustomEventType.RESIZE, (event: FakeEvent) => {
         this._resetTextCuesAndReposition();
         this.dispatchEvent(event);
       });
-      this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => this._handleRecovered());
-      this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
-      this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) =>
+      this._mediaEventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => this._handleRecovered());
+      this._mediaEventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
+      this._mediaEventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) =>
         this._onTextTrackChanged(event)
       );
-      this._eventManager.listen(this._externalCaptionsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
+      this._mediaEventManager.listen(this._externalCaptionsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
       const rootElement = Utils.Dom.getElementBySelector(`#${this.config.targetId}`);
       if (rootElement) {
-        this._eventManager.listen(
+        this._mediaEventManager.listen(
           rootElement,
           'click',
           () => {
@@ -1851,7 +1860,6 @@ export default class Player extends FakeEventTarget {
           {capture: true}
         );
       }
-      this._initTabVisibility();
     }
   }
 
@@ -1983,7 +1991,7 @@ export default class Player extends FakeEventTarget {
    */
   _initAutoPause(): void {
     if (this._config.playback.autopause === true) {
-      this._eventManager.listen(this, CustomEventType.VISIBILITY_CHANGE, (e: FakeEvent) => {
+      this._mediaEventManager.listen(this, CustomEventType.VISIBILITY_CHANGE, (e: FakeEvent) => {
         if (!e.payload.visible) {
           if (!this._isFloating && !this.isInPictureInPicture() && this._playbackStart && !this.paused) {
             this.pause();
@@ -2073,7 +2081,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._play();
     } else {
-      this._eventManager.listenOnce(this, CustomEventType.SOURCE_SELECTED, () => this._play());
+      this._mediaEventManager.listenOnce(this, CustomEventType.SOURCE_SELECTED, () => this._play());
     }
   }
 
@@ -2143,7 +2151,6 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _pause(): void {
-    this._autoPlayedOnView = false;
     this._engine.pause();
   }
 

@@ -12,7 +12,7 @@ If you would to start playing your content automatically, simply set the value o
 >
 > If set to `true`, playback will start automatically when the player receives the content.
 > >
-> If set to `'onview'`, playback will start automatically when the player is in view.
+> If set to `'inview'`, playback will start automatically when the player is in view.
 >
 >If set to `false`, a user action will be required to start playback.
 
