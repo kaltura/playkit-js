@@ -1852,7 +1852,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _handleAutoPlay(): void {
-    if (this.isAudio() && this._config.playback.autoplay === false) {
+    if (this.isAudio() || this._config.playback.autoplay === false) {
       this._posterManager.show();
     }
     if (this._config.playback.autoplay === true) {
