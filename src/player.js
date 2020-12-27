@@ -1852,7 +1852,9 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _handleAutoPlay(): void {
-    this._posterManager.show();
+    if (this.isAudio() && this._config.playback.autoplay === false) {
+      this._posterManager.show();
+    }
     if (this._config.playback.autoplay === true) {
       const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
       Player.getCapabilities(this.engineType).then(capabilities => {
