@@ -1252,12 +1252,17 @@ export default class Player extends FakeEventTarget {
   _applyTextTrackConfig(): void {
     if (Utils.Object.getPropertyPath(this._config, 'text.forceCenter')) {
       this.setTextDisplaySettings({position: 'auto', align: 'center', size: '100'});
-    } else if (Utils.Object.hasPropertyPath(this._config, 'text.textTrackDisplaySetting')) {
+    }
+    if (Utils.Object.hasPropertyPath(this._config, 'text.textTrackDisplaySetting')) {
       this.setTextDisplaySettings(this._config.text.textTrackDisplaySetting);
     }
     try {
       if (Utils.Object.hasPropertyPath(this._config, 'text.textStyle')) {
-        this.textStyle = new TextStyle(this._config.text.textStyle);
+        if (this._config.text.textStyle instanceof TextStyle) {
+          this.textStyle = this._config.text.textStyle;
+        } else {
+          this._textStyle.setTextStyle(this._config.text.textStyle);
+        }
       }
     } catch (e) {
       Player._logger.warn(e);
