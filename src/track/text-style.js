@@ -178,9 +178,11 @@ class TextStyle {
     fontEdge: TextStyle.EdgeStyles.NONE
   };
 
-  constructor() {}
+  constructor(settings?: PKTextStyleObject) {
+    this.setTextStyle(settings);
+  }
 
-  setTextStyle(settings: PKTextStyleObject) {
+  setTextStyle(settings?: PKTextStyleObject) {
     if (settings) {
       this._config = Utils.Object.mergeDeep({}, this._config, settings);
     }
@@ -296,7 +298,7 @@ class TextStyle {
   }
 
   get fontEdge(): Array<Array<number>> {
-    return this._config.backgroundColor;
+    return this._config.fontEdge;
   }
 
   set fontEdge(fontEdge: Array<Array<number>>) {
