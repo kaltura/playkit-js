@@ -408,18 +408,31 @@ export default class Player extends FakeEventTarget {
    */
   _aspectRatio: ?string;
   /**
+   * An intersection observer instance to track the player placeholder visibility.
+   * @type {IntersectionObserver}
+   * @private
+   */
+  _placeHolderIntersectionObserver: window.IntersectionObserver;
+
+  /**
    * An intersection observer instance to track the player visibility.
    * @type {IntersectionObserver}
    * @private
    */
-  _intersectionObserver: window.IntersectionObserver;
+  _playerIntersectionObserver: window.IntersectionObserver;
 
+  /**
+   * Whether the player place holder is visible in the page scroll view
+   * @type {boolean}
+   * @private
+   */
+  _isPlaceHolderVisibleInScroll: boolean;
   /**
    * Whether the player is visible in the page scroll view
    * @type {boolean}
    * @private
    */
-  _isVisibleInScroll: boolean;
+  _isPlayerVisibleInScroll: boolean;
 
   /**
    * Whether the player browser tab is active or not
@@ -434,13 +447,6 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _isVisible: boolean;
-
-  /**
-   * Whether the player is in floating mode
-   * @type {boolean}
-   * @private
-   */
-  _isFloating: boolean = false;
 
   /**
    * Whether the player was auto paused
@@ -655,7 +661,8 @@ export default class Player extends FakeEventTarget {
     this._createReadyPromise();
     this._isOnLiveEdge = false;
     this._shouldLoadAfterAttach = false;
-    this._intersectionObserver.disconnect();
+    this._placeHolderIntersectionObserver.disconnect();
+    this._playerIntersectionObserver.disconnect();
   }
 
   /**
@@ -688,7 +695,8 @@ export default class Player extends FakeEventTarget {
     if (this._el) {
       Utils.Dom.removeChild(this._el.parentNode, this._el);
     }
-    this._intersectionObserver.disconnect();
+    this._placeHolderIntersectionObserver.disconnect();
+    this._playerIntersectionObserver.disconnect();
     this._destroyed = true;
     this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_DESTROY));
     this._mediaEventManager.destroy();
@@ -1592,23 +1600,30 @@ export default class Player extends FakeEventTarget {
     const options = {
       threshold: this._config.playback.visibilityThreshold / 100
     };
-    this._intersectionObserver = new window.IntersectionObserver(this._handleScrollVisibilityChange.bind(this), options);
-    this._intersectionObserver.observe(this._getTargetElement());
+    this._placeHolderIntersectionObserver = new window.IntersectionObserver(this._handlePlaceHolderScrollVisibilityChange.bind(this), options);
+    this._placeHolderIntersectionObserver.observe(this._getTargetElement());
+
+    this._playerIntersectionObserver = new window.IntersectionObserver(this._handlePlayerScrollVisibilityChange.bind(this), options);
+    this._playerIntersectionObserver.observe(Utils.Dom.getElementById(this._config.ui.targetId));
   }
 
-  _handleScrollVisibilityChange(entries: Array<window.IntersectionObserverEntry>) {
-    this._isVisibleInScroll = entries[0].intersectionRatio >= this._config.playback.visibilityThreshold / 100;
+  _handlePlaceHolderScrollVisibilityChange(entries: Array<window.IntersectionObserverEntry>) {
+    this._isPlaceHolderVisibleInScroll = entries[0].intersectionRatio >= this._config.playback.visibilityThreshold / 100;
+    this.dispatchEvent(new FakeEvent(CustomEventType.PLACEHOLDER_SCROLL_VISIBILITY_CHANGE, {visible: this._isPlaceHolderVisibleInScroll}));
+  }
 
-    this.dispatchEvent(new FakeEvent(CustomEventType.SCROLL_VISIBILITY_CHANGE, {visible: this._isVisibleInScroll}));
+  _handlePlayerScrollVisibilityChange(entries: Array<window.IntersectionObserverEntry>) {
+    this._isPlayerVisibleInScroll = entries[0].intersectionRatio >= this._config.playback.visibilityThreshold / 100;
+    Player._logger.debug('***** _handlePlayerScrollVisibilityChange', this._isPlayerVisibleInScroll);
     this._handleVisibilityChange();
-    if (this._config.playback.autoplay === AutoPlayType.ON_VIEW && this._isVisibleInScroll && !this._playbackStart) {
+    if (this._config.playback.autoplay === AutoPlayType.IN_VIEW && this._isPlayerVisibleInScroll && !this._playbackStart) {
       this._autoPlay();
     }
   }
 
   _handleVisibilityChange() {
     const prevVisibility = this._isVisible;
-    this._isVisible = this._isTabVisible && this._isVisibleInScroll;
+    this._isVisible = this._isTabVisible && this._isPlayerVisibleInScroll;
 
     if (prevVisibility !== this._isVisible) {
       this.dispatchEvent(new FakeEvent(CustomEventType.VISIBILITY_CHANGE, {visible: this._isVisible}));
@@ -1654,8 +1669,8 @@ export default class Player extends FakeEventTarget {
    * @returns {boolean} - whether the player is visible in the scroll view
    * @public
    */
-  get isVisibleInScroll(): boolean {
-    return this._isVisibleInScroll;
+  get isPlaceHolderVisibleInScroll(): boolean {
+    return this._isPlaceHolderVisibleInScroll;
   }
   /**
    * Gets the player visibility
@@ -1864,16 +1879,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Update the floating active state.
-   * @param {boolean} isFloating - is player floating.
-   * @returns {void}
-   * @public
-   */
-  changeFloatingState(isFloating: boolean): void {
-    this._isFloating = isFloating;
-  }
-
-  /**
    * if the media was recovered (after a media failure) then initiate play again (if that was the state before)
    * @returns {void}
    * @private
@@ -1993,12 +1998,15 @@ export default class Player extends FakeEventTarget {
     if (this._config.playback.autopause === true) {
       this._mediaEventManager.listen(this, CustomEventType.VISIBILITY_CHANGE, (e: FakeEvent) => {
         if (!e.payload.visible) {
-          if (!this._isFloating && !this.isInPictureInPicture() && this._playbackStart && !this.paused) {
+          if (!this.isInPictureInPicture() && this._playbackStart && !this.paused) {
+            Player._logger.debug('***** auto pause true');
+
             this.pause();
             this._autoPaused = true;
           }
         } else if (this._autoPaused) {
           if (this.paused) {
+            Player._logger.debug('***** auto pause resume');
             this.play();
           }
           this._autoPaused = false;
