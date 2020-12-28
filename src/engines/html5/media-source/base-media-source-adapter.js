@@ -199,7 +199,9 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   }
 
   attachMediaSource(): void {}
+
   detachMediaSource(): void {}
+
   /**
    * Handling live time update (as is not triggered when video is paused, but the current time changed)
    * @function _handleLiveTimeUpdate
@@ -240,10 +242,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    */
   get currentTime(): number {
     if (this.isLive()) {
-      return this._videoElement.currentTime - this.getStartTimeOfDvrWindow();
-    } else {
-      return this._videoElement.currentTime;
+      const ct = this._videoElement.currentTime - this.getStartTimeOfDvrWindow();
+      return ct < 0 ? 0 : ct;
     }
+    return this._videoElement.currentTime;
   }
 
   /**
