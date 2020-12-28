@@ -1221,9 +1221,25 @@ describe('Player', function () {
         textStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
         player.textStyle = textStyle;
         const currentTextStyle = player.textStyle;
-        currentTextStyle.backgroundColor.should.be.equal(textStyle.backgroundColor);
-        currentTextStyle.fontColor.should.be.equal(textStyle.fontColor);
-        currentTextStyle.fontEdge.should.be.equal(textStyle.fontEdge);
+        currentTextStyle.backgroundColor.should.deep.equal(textStyle.backgroundColor);
+        currentTextStyle.fontColor.should.deep.equal(textStyle.fontColor);
+        currentTextStyle.fontEdge.should.deep.equal(textStyle.fontEdge);
+      });
+
+      it('should change style setting by config', () => {
+        player = new Player({
+          text: {
+            textStyle: {
+              backgroundColor: TextStyle.StandardColors.RED,
+              fontColor: TextStyle.StandardColors.CYAN,
+              fontEdge: TextStyle.EdgeStyles.RAISED
+            }
+          }
+        });
+        const currentTextStyle = player.textStyle;
+        currentTextStyle.backgroundColor.should.deep.equal(TextStyle.StandardColors.RED);
+        currentTextStyle.fontColor.should.deep.equal(TextStyle.StandardColors.CYAN);
+        currentTextStyle.fontEdge.should.deep.equal(TextStyle.EdgeStyles.RAISED);
       });
     });
 
@@ -1231,7 +1247,13 @@ describe('Player', function () {
       it('should change textDisplay settings', () => {
         const settings = {line: -4};
         player.setTextDisplaySettings(settings);
-        player._textDisplaySettings.should.be.equal(settings);
+        player._textDisplaySettings.should.deep.equal(settings);
+      });
+
+      it('should change textDisplay settings by config', () => {
+        const settings = {line: -4};
+        player = new Player({text: {textTrackDisplaySetting: settings}});
+        player._textDisplaySettings.should.deep.equal(settings);
       });
     });
   });
