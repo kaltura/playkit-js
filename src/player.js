@@ -1092,6 +1092,16 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Checking if the current playback is audio only.
+   * @function isAudio
+   * @returns {boolean} - Whether playback is audio.
+   * @private
+   */
+  isAudio(): boolean {
+    return this._config.sources.type === MediaType.AUDIO;
+  }
+
+  /**
    * Get whether the video is seeked to live edge in dvr
    * @returns {boolean} - Whether the video is seeked to live edge in dvr
    * @public
@@ -1863,6 +1873,9 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _handleAutoPlay(): void {
+    if (this.isAudio() || this._config.playback.autoplay === false) {
+      this._posterManager.show();
+    }
     if (this._config.playback.autoplay === true) {
       const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
       Player.getCapabilities(this.engineType).then(capabilities => {
@@ -1882,8 +1895,6 @@ export default class Player extends FakeEventTarget {
           }
         }
       });
-    } else {
-      this._posterManager.show();
     }
 
     const onAutoPlay = () => {
@@ -2018,7 +2029,9 @@ export default class Player extends FakeEventTarget {
     if (this._firstPlay) {
       this._firstPlay = false;
       this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAY));
-      this._posterManager.hide();
+      if (!this.isAudio()) {
+        this._posterManager.hide();
+      }
       this.hideBlackCover();
       if (typeof this._playbackAttributesState.rate === 'number') {
         this.playbackRate = this._playbackAttributesState.rate;
