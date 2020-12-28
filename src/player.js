@@ -481,7 +481,7 @@ export default class Player extends FakeEventTarget {
     } else {
       Utils.Object.mergeDeep(this._config, config);
     }
-    this._applyTextTrackConfig();
+    this._applyTextTrackConfig(config);
   }
 
   /**
@@ -1249,15 +1249,30 @@ export default class Player extends FakeEventTarget {
     return false;
   }
 
-  _applyTextTrackConfig(): void {
-    if (Utils.Object.getPropertyPath(this._config, 'text.forceCenter')) {
-      this.setTextDisplaySettings({position: 'auto', align: 'center', size: '100'});
-    }
-    if (Utils.Object.hasPropertyPath(this._config, 'text.textTrackDisplaySetting')) {
-      this.setTextDisplaySettings(this._config.text.textTrackDisplaySetting);
+  /**
+   * update the text track config from current config
+   * @function _applyTextTrackConfig
+   * @returns {void}
+   * @param {Object} config - new config which configure for checking if it relevant config has changed
+   * @private
+   */
+  _applyTextTrackConfig(config: Object): void {
+    if (Utils.Object.hasPropertyPath(config, 'text.textTrackDisplaySetting') || Utils.Object.getPropertyPath(config, 'text.forceCenter')) {
+      let textDisplaySettings = {};
+      if (Utils.Object.hasPropertyPath(this._config, 'text.textTrackDisplaySetting')) {
+        textDisplaySettings = Utils.Object.mergeDeep(textDisplaySettings, this._config.text.textTrackDisplaySetting);
+      }
+      if (Utils.Object.getPropertyPath(this._config, 'text.forceCenter')) {
+        textDisplaySettings = Utils.Object.mergeDeep(textDisplaySettings, {
+          position: 'auto',
+          align: 'center',
+          size: '100'
+        });
+      }
+      this.setTextDisplaySettings(textDisplaySettings);
     }
     try {
-      if (Utils.Object.hasPropertyPath(this._config, 'text.textStyle')) {
+      if (Utils.Object.hasPropertyPath(config, 'text.textStyle')) {
         if (this._config.text.textStyle instanceof TextStyle) {
           this.textStyle = this._config.text.textStyle;
         } else {
@@ -1276,7 +1291,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   setTextDisplaySettings(settings: Object): void {
-    this._textDisplaySettings = settings;
+    this._textDisplaySettings = Utils.Object.mergeDeep(this._textDisplaySettings, settings);
     this._updateCueDisplaySettings();
     for (let i = 0; i < this._activeTextCues.length; i++) {
       this._activeTextCues[i].hasBeenReset = true;
@@ -1284,6 +1299,9 @@ export default class Player extends FakeEventTarget {
     this._updateTextDisplay(this._activeTextCues);
   }
 
+  get textDisplaySetting(): Object {
+    return Utils.Object.copyDeep(this._textDisplaySettings);
+  }
   /**
    * Sets style attributes for text tracks.
    * @param {TextStyle} style - text styling settings
@@ -2258,7 +2276,9 @@ export default class Player extends FakeEventTarget {
     for (let i = 0; i < activeCues.length; i++) {
       let cue = activeCues[i];
       for (let name in settings) {
-        cue[name] = settings[name];
+        if (settings[name]) {
+          cue[name] = settings[name];
+        }
       }
     }
   }

@@ -469,6 +469,7 @@ var config = {
 > {
 >  useNativeTextTrack: boolean,
 >  enableCEA708Captions: boolean,
+>  forceCenter: boolean,
 >  textTrackDisplaySetting: Object,
 >  textStyle: TextStyle,
 >  captionsTextTrack1Label: string,
@@ -484,6 +485,7 @@ var config = {
 > {
 >  useNativeTextTrack: false,
 >  enableCEA708Captions: false,
+>  forceCenter: false,
 >  captionsTextTrack1Label: "English",
 >  captionsTextTrack1LanguageCode: "en",
 >  captionsTextTrack2Label: "Spanish",
@@ -512,6 +514,16 @@ var config = {
 > > ##### Default: `false`
 > >
 > > ##### Description: Whether or not to enable CEA-708 captions.
+>
+> ##
+>
+> > ### config.text.forceCenter
+> >
+> > ##### Type: `Object`
+> >
+> > ##### Default: `false`
+> >
+> > ##### Description: set the forceCenter to true will override the position, align and size in textTrackDisplaySetting
 >
 > ##
 >
