@@ -481,6 +481,7 @@ export default class Player extends FakeEventTarget {
     } else {
       Utils.Object.mergeDeep(this._config, config);
     }
+    this._applyTextTrackConfig(config);
   }
 
   /**
@@ -1259,13 +1260,48 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * update the text track config from current config
+   * @function _applyTextTrackConfig
+   * @returns {void}
+   * @param {Object} config - new config which configure for checking if it relevant config has changed
+   * @private
+   */
+  _applyTextTrackConfig(config: Object): void {
+    if (Utils.Object.hasPropertyPath(config, 'text.textTrackDisplaySetting') || Utils.Object.getPropertyPath(config, 'text.forceCenter')) {
+      let textDisplaySettings = {};
+      if (Utils.Object.hasPropertyPath(this._config, 'text.textTrackDisplaySetting')) {
+        textDisplaySettings = Utils.Object.mergeDeep(textDisplaySettings, this._config.text.textTrackDisplaySetting);
+      }
+      if (Utils.Object.getPropertyPath(this._config, 'text.forceCenter')) {
+        textDisplaySettings = Utils.Object.mergeDeep(textDisplaySettings, {
+          position: 'auto',
+          align: 'center',
+          size: '100'
+        });
+      }
+      this.setTextDisplaySettings(textDisplaySettings);
+    }
+    try {
+      if (Utils.Object.hasPropertyPath(config, 'text.textStyle')) {
+        if (this._config.text.textStyle instanceof TextStyle) {
+          this.textStyle = this._config.text.textStyle;
+        } else {
+          this._textStyle.setTextStyle(this._config.text.textStyle);
+        }
+      }
+    } catch (e) {
+      Player._logger.warn(e);
+    }
+  }
+
+  /**
    * update the text display settings
    * @param {Object} settings - text cue display settings
    * @public
    * @returns {void}
    */
   setTextDisplaySettings(settings: Object): void {
-    this._textDisplaySettings = settings;
+    this._textDisplaySettings = Utils.Object.mergeDeep(this._textDisplaySettings, settings);
     this._updateCueDisplaySettings();
     for (let i = 0; i < this._activeTextCues.length; i++) {
       this._activeTextCues[i].hasBeenReset = true;
@@ -1273,6 +1309,9 @@ export default class Player extends FakeEventTarget {
     this._updateTextDisplay(this._activeTextCues);
   }
 
+  get textDisplaySetting(): Object {
+    return Utils.Object.copyDeep(this._textDisplaySettings);
+  }
   /**
    * Sets style attributes for text tracks.
    * @param {TextStyle} style - text styling settings
@@ -1297,7 +1336,7 @@ export default class Player extends FakeEventTarget {
 
     try {
       this._textStyle = style;
-      if (this._config.playback.useNativeTextTrack) {
+      if (this._config.text.useNativeTextTrack) {
         sheet.insertRule(`#${this._playerId} video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
       } else if (this._engine) {
         this._engine.resetAllCues();
@@ -2250,7 +2289,9 @@ export default class Player extends FakeEventTarget {
     for (let i = 0; i < activeCues.length; i++) {
       let cue = activeCues[i];
       for (let name in settings) {
-        cue[name] = settings[name];
+        if (settings[name]) {
+          cue[name] = settings[name];
+        }
       }
     }
   }
@@ -2262,7 +2303,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _updateTextDisplay(cues: Array<Cue>): void {
-    if (!this._config.playback.useNativeTextTrack) {
+    if (!this._config.text.useNativeTextTrack) {
       processCues(window, cues, this._textDisplayEl, this._textStyle);
     }
   }
