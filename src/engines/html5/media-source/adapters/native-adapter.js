@@ -42,13 +42,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   static _logger = BaseMediaSourceAdapter.getLogger(NativeAdapter.id);
   /**
-   * static video element for canPlayType testing
-   * @member {} TEST_VIDEO
-   * @type {HTMLVideoElement}
-   * @static
-   */
-  static TEST_VIDEO: HTMLVideoElement = Utils.Dom.createElement('video');
-  /**
    * The DRM protocols implementations for native adapter.
    * @type {Array<Function>}
    * @private
@@ -142,7 +135,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   static canPlayType(mimeType: string): boolean {
     let canPlayType = false;
     if (typeof mimeType === 'string') {
-      canPlayType = !!NativeAdapter.TEST_VIDEO.canPlayType(mimeType.toLowerCase());
+      canPlayType = !!Utils.Dom.createElement('video').canPlayType(mimeType.toLowerCase());
     }
     NativeAdapter._logger.debug('canPlayType result for mimeType:' + mimeType + ' is ' + canPlayType.toString());
     return canPlayType;

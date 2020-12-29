@@ -249,18 +249,6 @@ export default class Player extends FakeEventTarget {
    */
   _el: HTMLDivElement;
   /**
-   * The player text DOM element container.
-   * @type {HTMLDivElement}
-   * @private
-   */
-  _textDisplayEl: HTMLDivElement;
-  /**
-   * The player black cover div.
-   * @type {HTMLDivElement}
-   * @private
-   */
-  _blackCoverEl: HTMLDivElement;
-  /**
    * The player DOM id.
    * @type {string}
    * @private
@@ -639,14 +627,18 @@ export default class Player extends FakeEventTarget {
     this._eventManager.destroy();
   }
 
+  _getBlackCover(): HTMLDivElement {
+    return Utils.Dom.getElementBySelector(`#${this._playerId} .${BLACK_COVER_CLASS_NAME}`);
+  }
   /**
    * Hides the black cover div.
    * @public
    * @returns {void}
    */
   hideBlackCover(): void {
-    if (this._blackCoverEl) {
-      this._blackCoverEl.style.visibility = 'hidden';
+    const blackCover = this._getBlackCover();
+    if (blackCover) {
+      blackCover.style.visibility = 'hidden';
     }
   }
 
@@ -656,8 +648,9 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   showBlackCover(): void {
-    if (this._blackCoverEl) {
-      this._blackCoverEl.style.visibility = 'visible';
+    const blackCover = this._getBlackCover();
+    if (blackCover) {
+      blackCover.style.visibility = 'visible';
     }
   }
 
@@ -1282,7 +1275,7 @@ export default class Player extends FakeEventTarget {
     if (!(style instanceof TextStyle)) {
       throw new Error('Style must be instance of TextStyle');
     }
-    let element = Utils.Dom.getElementBySelector(`.${this._playerId}.${SUBTITLES_STYLE_CLASS_NAME}`);
+    let element = Utils.Dom.getElementBySelector(`#${this._playerId}.${SUBTITLES_STYLE_CLASS_NAME}`);
     if (!element) {
       element = Utils.Dom.createElement('style');
       Utils.Dom.addClassName(element, this._playerId);
@@ -1548,14 +1541,14 @@ export default class Player extends FakeEventTarget {
    */
   _appendDomElements(): void {
     // Append playkit-subtitles
-    this._textDisplayEl = Utils.Dom.createElement('div');
-    Utils.Dom.setAttribute(this._textDisplayEl, 'aria-live', 'polite');
-    Utils.Dom.addClassName(this._textDisplayEl, SUBTITLES_CLASS_NAME);
-    Utils.Dom.appendChild(this._el, this._textDisplayEl);
+    const textDisplayEl = Utils.Dom.createElement('div');
+    Utils.Dom.setAttribute(textDisplayEl, 'aria-live', 'polite');
+    Utils.Dom.addClassName(textDisplayEl, SUBTITLES_CLASS_NAME);
+    Utils.Dom.appendChild(this._el, textDisplayEl);
     // Append playkit-black-cover
-    this._blackCoverEl = Utils.Dom.createElement('div');
-    Utils.Dom.addClassName(this._blackCoverEl, BLACK_COVER_CLASS_NAME);
-    Utils.Dom.appendChild(this._el, this._blackCoverEl);
+    const blackCoverEl = Utils.Dom.createElement('div');
+    Utils.Dom.addClassName(blackCoverEl, BLACK_COVER_CLASS_NAME);
+    Utils.Dom.appendChild(this._el, blackCoverEl);
     // Append playkit-poster
     const el = this._posterManager.getElement();
     Utils.Dom.addClassName(el, POSTER_CLASS_NAME);
@@ -2263,7 +2256,8 @@ export default class Player extends FakeEventTarget {
    */
   _updateTextDisplay(cues: Array<Cue>): void {
     if (!this._config.playback.useNativeTextTrack) {
-      processCues(window, cues, this._textDisplayEl, this._textStyle);
+      const textDisplayEl = Utils.Dom.getElementBySelector(`#${this._playerId} .${SUBTITLES_CLASS_NAME}`);
+      processCues(window, cues, textDisplayEl, this._textStyle);
     }
   }
 
