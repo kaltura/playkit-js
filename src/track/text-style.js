@@ -154,7 +154,7 @@ class TextStyle {
   }
 
   static fromJson(setting: PKTextStyleObject): TextStyle {
-    const currentSetting = Utils.Object.mergeDeep(TextStyle.defaultValues, setting);
+    const currentSetting = Utils.Object.mergeDeep({}, TextStyle.defaultValues, setting);
     let textStyle = new TextStyle();
     textStyle.fontEdge = currentSetting.fontEdge;
     textStyle.fontSize = currentSetting.fontSize;
