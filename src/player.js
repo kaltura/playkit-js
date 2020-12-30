@@ -1635,14 +1635,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Gets the player visibility in scroll view state
-   * @returns {boolean} - whether the player is visible in the scroll view
-   * @public
-   */
-  get isVisibleInScroll(): boolean {
-    return this._isVisibleInScroll;
-  }
-  /**
    * Gets the player visibility
    * @returns {boolean} - true if the player is both in the active tab and is visible in the scroll view
    * @public
