@@ -1,6 +1,4 @@
 // @flow
-import * as Utils from '../utils/util';
-
 /**
  * We use this number to calculate the scale of the text. so it will be : 1 + 0.25 * FontSizes.value
  * So, if the user selects 400% the scale would be: 1 + 0.25 * 4 = 2. so the font size should be multiplied by 2.
@@ -140,30 +138,23 @@ class TextStyle {
     return 'rgba(' + color.concat(opacity).join(',') + ')';
   }
 
-  static get defaultValues(): PKTextStyleObject {
-    return {
-      fontEdge: TextStyle.EdgeStyles.NONE,
-      fontSize: '100%',
-      fontScale: 1,
-      fontColor: TextStyle.StandardColors.WHITE,
-      fontOpacity: TextStyle.StandardOpacities.OPAQUE,
-      backgroundColor: TextStyle.StandardColors.BLACK,
-      backgroundOpacity: TextStyle.StandardOpacities.OPAQUE,
-      fontFamily: TextStyle.FontFamily.SANS_SERIF
-    };
-  }
-
   static fromJson(setting: PKTextStyleObject): TextStyle {
-    const currentSetting = Utils.Object.mergeDeep(TextStyle.defaultValues, setting);
+    const getValue = (newValue, defaultValue) => {
+      let value = defaultValue;
+      if (typeof newValue !== 'undefined' && newValue !== null) {
+        value = newValue;
+      }
+      return value;
+    };
     let textStyle = new TextStyle();
-    textStyle.fontEdge = currentSetting.fontEdge;
-    textStyle.fontSize = currentSetting.fontSize;
-    textStyle.fontScale = currentSetting.fontScale;
-    textStyle.fontColor = currentSetting.fontColor;
-    textStyle.fontOpacity = currentSetting.fontOpacity;
-    textStyle.backgroundColor = currentSetting.backgroundColor;
-    textStyle.backgroundOpacity = currentSetting.backgroundOpacity;
-    textStyle.fontFamily = currentSetting.fontFamily;
+    textStyle.fontEdge = getValue(setting.fontEdge, textStyle.fontEdge);
+    textStyle.fontSize = getValue(setting.fontSize, textStyle.fontSize);
+    textStyle.fontScale = getValue(setting.fontScale, textStyle.fontScale);
+    textStyle.fontColor = getValue(setting.fontColor, textStyle.fontColor);
+    textStyle.fontOpacity = getValue(setting.fontOpacity, textStyle.fontOpacity);
+    textStyle.backgroundColor = getValue(setting.backgroundColor, textStyle.backgroundColor);
+    textStyle.backgroundOpacity = getValue(setting.backgroundOpacity, textStyle.backgroundOpacity);
+    textStyle.fontFamily = getValue(setting.fontFamily, textStyle.fontFamily);
     return textStyle;
   }
 
@@ -184,41 +175,41 @@ class TextStyle {
    * Font size, such as 1, 2, 3...
    * @type {number}
    */
-  fontSize: string = TextStyle.defaultValues.fontSize;
+  fontSize: string = '100%';
 
-  fontScale: number = TextStyle.defaultValues.fontScale;
+  fontScale: number = 1;
 
   /**
    * @type {TextStyle.FontFamily}
    */
-  fontFamily: string = TextStyle.defaultValues.fontFamily;
+  fontFamily: string = TextStyle.FontFamily.SANS_SERIF;
 
   /**
    * @type {TextStyle.StandardColors}
    */
-  fontColor: Array<number> = TextStyle.defaultValues.fontColor;
+  fontColor: Array<number> = TextStyle.StandardColors.WHITE;
 
   /**
    * @type {TextStyle.StandardOpacities}
    * @expose
    */
-  fontOpacity: number = TextStyle.defaultValues.fontOpacity;
+  fontOpacity: number = TextStyle.StandardOpacities.OPAQUE;
 
   /**
    * @type {TextStyle.StandardColors}
    */
-  backgroundColor: Array<number> = TextStyle.defaultValues.backgroundColor;
+  backgroundColor: Array<number> = TextStyle.StandardColors.BLACK;
 
   /**
    * @type {TextStyle.StandardOpacities}
    */
-  backgroundOpacity: number = TextStyle.defaultValues.backgroundOpacity;
+  backgroundOpacity: number = TextStyle.StandardOpacities.OPAQUE;
 
   /**
    * @type {TextStyle.EdgeStyles}
    * @expose
    */
-  fontEdge: Array<Array<number>> = TextStyle.defaultValues.fontEdge;
+  fontEdge: Array<Array<number>> = TextStyle.EdgeStyles.NONE;
 
   getTextShadow(): string {
     // A given edge effect may be implemented with multiple shadows.
