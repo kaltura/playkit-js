@@ -253,10 +253,6 @@ const CustomEventType: PKEventTypes = {
    */
   TAB_VISIBILITY_CHANGE: 'tabvisibilitychange',
   /**
-   * Fired when the player gets in /out of scroll view
-   */
-  SCROLL_VISIBILITY_CHANGE: 'scrollvisibilitychange',
-  /**
    * Fired when the player changes its visibility state - either by tabbing in / out or scrolling in /out of view
    */
   VISIBILITY_CHANGE: 'visibilitychange'

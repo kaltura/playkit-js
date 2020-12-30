@@ -1,2 +1,2 @@
 // @flow
-declare type PKAutoPlayTypes = { [type: string | boolean]: string | boolean };
+declare type PKAutoPlayTypes = {[type: string]: string | boolean};
