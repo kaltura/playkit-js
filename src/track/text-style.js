@@ -1,4 +1,6 @@
 // @flow
+import * as Utils from '../utils/util';
+
 /**
  * We use this number to calculate the scale of the text. so it will be : 1 + 0.25 * FontSizes.value
  * So, if the user selects 400% the scale would be: 1 + 0.25 * 4 = 2. so the font size should be multiplied by 2.
@@ -138,17 +140,31 @@ class TextStyle {
     return 'rgba(' + color.concat(opacity).join(',') + ')';
   }
 
+  static get defaultValues(): PKTextStyleObject {
+    return {
+      fontEdge: TextStyle.EdgeStyles.NONE,
+      fontSize: '100%',
+      fontScale: 1,
+      fontColor: TextStyle.StandardColors.WHITE,
+      fontOpacity: TextStyle.StandardOpacities.OPAQUE,
+      backgroundColor: TextStyle.StandardColors.BLACK,
+      backgroundOpacity: TextStyle.StandardOpacities.OPAQUE,
+      fontFamily: TextStyle.FontFamily.SANS_SERIF
+    };
+  }
+
   static fromJson(setting: PKTextStyleObject): TextStyle {
-    let clonedTextStyle = new TextStyle();
-    clonedTextStyle.fontEdge = setting.fontEdge || clonedTextStyle.fontEdge;
-    clonedTextStyle.fontSize = setting.fontSize || clonedTextStyle.fontSize;
-    clonedTextStyle.fontScale = setting.fontScale || clonedTextStyle.fontScale;
-    clonedTextStyle.fontColor = setting.fontColor || clonedTextStyle.fontColor;
-    clonedTextStyle.fontOpacity = setting.fontOpacity || clonedTextStyle.fontOpacity;
-    clonedTextStyle.backgroundColor = setting.backgroundColor || clonedTextStyle.backgroundColor;
-    clonedTextStyle.backgroundOpacity = setting.backgroundOpacity || clonedTextStyle.backgroundOpacity;
-    clonedTextStyle.fontFamily = setting.fontFamily || clonedTextStyle.fontFamily;
-    return clonedTextStyle;
+    const currentSetting = Utils.Object.mergeDeep(TextStyle.defaultValues, setting);
+    let textStyle = new TextStyle();
+    textStyle.fontEdge = currentSetting.fontEdge;
+    textStyle.fontSize = currentSetting.fontSize;
+    textStyle.fontScale = currentSetting.fontScale;
+    textStyle.fontColor = currentSetting.fontColor;
+    textStyle.fontOpacity = currentSetting.fontOpacity;
+    textStyle.backgroundColor = currentSetting.backgroundColor;
+    textStyle.backgroundOpacity = currentSetting.backgroundOpacity;
+    textStyle.fontFamily = currentSetting.fontFamily;
+    return textStyle;
   }
 
   static toJson(text: TextStyle): PKTextStyleObject {
@@ -168,41 +184,41 @@ class TextStyle {
    * Font size, such as 1, 2, 3...
    * @type {number}
    */
-  fontSize: string = '100%';
+  fontSize: string = TextStyle.defaultValues.fontSize;
 
-  fontScale: number = 1;
+  fontScale: number = TextStyle.defaultValues.fontScale;
 
   /**
    * @type {TextStyle.FontFamily}
    */
-  fontFamily: string = TextStyle.FontFamily.SANS_SERIF;
+  fontFamily: string = TextStyle.defaultValues.fontFamily;
 
   /**
    * @type {TextStyle.StandardColors}
    */
-  fontColor: Array<number> = TextStyle.StandardColors.WHITE;
+  fontColor: Array<number> = TextStyle.defaultValues.fontColor;
 
   /**
    * @type {TextStyle.StandardOpacities}
    * @expose
    */
-  fontOpacity: number = TextStyle.StandardOpacities.OPAQUE;
+  fontOpacity: number = TextStyle.defaultValues.fontOpacity;
 
   /**
    * @type {TextStyle.StandardColors}
    */
-  backgroundColor: Array<number> = TextStyle.StandardColors.BLACK;
+  backgroundColor: Array<number> = TextStyle.defaultValues.backgroundColor;
 
   /**
    * @type {TextStyle.StandardOpacities}
    */
-  backgroundOpacity: number = TextStyle.StandardOpacities.OPAQUE;
+  backgroundOpacity: number = TextStyle.defaultValues.backgroundOpacity;
 
   /**
    * @type {TextStyle.EdgeStyles}
    * @expose
    */
-  fontEdge: Array<Array<number>> = TextStyle.EdgeStyles.NONE;
+  fontEdge: Array<Array<number>> = TextStyle.defaultValues.fontEdge;
 
   getTextShadow(): string {
     // A given edge effect may be implemented with multiple shadows.
