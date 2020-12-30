@@ -139,7 +139,7 @@ class TextStyle {
   }
 
   static fromJson(setting: PKTextStyleObject): TextStyle {
-    const getValue = (newValue, defaultValue) => {
+    const getValue = (newValue: any, defaultValue: any): any => {
       let value = defaultValue;
       if (typeof newValue !== 'undefined' && newValue !== null) {
         value = newValue;
