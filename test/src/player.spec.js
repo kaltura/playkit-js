@@ -1219,8 +1219,8 @@ describe('Player', function () {
         textStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
         textStyle.fontSize = '75%';
         textStyle.fontScale = '3';
-        textStyle.fontColor = TextStyle.StandardColors.CYAN;
-        textStyle.fontOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        textStyle.fontColor = TextStyle.StandardColors.BLACK;
+        textStyle.fontOpacity = TextStyle.StandardOpacities.SEMI_HIGH;
         textStyle.backgroundOpacity = TextStyle.StandardOpacities.SEMI_LOW;
         textStyle.fontFamily = TextStyle.FontFamily.ARIAL;
         textStyle.backgroundColor = TextStyle.StandardColors.RED;
@@ -1238,12 +1238,12 @@ describe('Player', function () {
 
       it('should create fromJson set the correct value', () => {
         const settings = {
-          fontEdge: TextStyle.EdgeStyles.RAISED,
+          fontEdge: TextStyle.EdgeStyles.NONE,
           fontSize: '75%',
           fontScale: '3',
           fontColor: TextStyle.StandardColors.CYAN,
-          fontOpacity: TextStyle.StandardOpacities.SEMI_LOW,
-          backgroundOpacity: TextStyle.StandardOpacities.SEMI_LOW,
+          fontOpacity: TextStyle.StandardOpacities.TRANSPARENT,
+          backgroundOpacity: TextStyle.StandardOpacities.TRANSPARENT,
           fontFamily: TextStyle.FontFamily.ARIAL,
           backgroundColor: TextStyle.StandardColors.RED
         };
