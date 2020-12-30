@@ -1225,6 +1225,65 @@ describe('Player', function () {
         currentTextStyle.fontColor.should.deep.equal(textStyle.fontColor);
         currentTextStyle.fontEdge.should.deep.equal(textStyle.fontEdge);
       });
+
+      it('should fromJson return an object equal to explicit set object', () => {
+        const settings = {
+          fontEdge: TextStyle.EdgeStyles.RAISED,
+          fontSize: '75%',
+          fontScale: '3',
+          fontColor: TextStyle.StandardColors.CYAN,
+          fontOpacity: TextStyle.StandardOpacities.SEMI_LOW,
+          backgroundOpacity: TextStyle.StandardOpacities.SEMI_LOW,
+          fontFamily: TextStyle.FontFamily.ARIAL,
+          backgroundColor: TextStyle.StandardColors.RED
+        };
+        let textStyle = new TextStyle();
+        textStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
+        textStyle.fontSize = '75%';
+        textStyle.fontScale = '3';
+        textStyle.fontColor = TextStyle.StandardColors.CYAN;
+        textStyle.fontOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        textStyle.backgroundColor = TextStyle.StandardColors.RED;
+        textStyle.backgroundOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        textStyle.fontFamily = TextStyle.FontFamily.ARIAL;
+        TextStyle.fromJson(settings).isEqual(textStyle).should.be.true;
+      });
+
+      it('should toJson return same object', () => {
+        const settings = {
+          fontEdge: TextStyle.EdgeStyles.RAISED,
+          fontSize: '75%',
+          fontScale: '3',
+          fontColor: TextStyle.StandardColors.CYAN,
+          fontOpacity: TextStyle.StandardOpacities.SEMI_LOW,
+          backgroundOpacity: TextStyle.StandardOpacities.SEMI_LOW,
+          fontFamily: TextStyle.FontFamily.ARIAL,
+          backgroundColor: TextStyle.StandardColors.RED
+        };
+        let textStyle = new TextStyle();
+        textStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
+        textStyle.fontSize = '75%';
+        textStyle.fontScale = '3';
+        textStyle.fontColor = TextStyle.StandardColors.CYAN;
+        textStyle.fontOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        textStyle.backgroundColor = TextStyle.StandardColors.RED;
+        textStyle.backgroundOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        textStyle.fontFamily = TextStyle.FontFamily.ARIAL;
+        TextStyle.toJson(textStyle).should.deep.equal(settings);
+      });
+
+      it('should clone API return exact same object', () => {
+        let clonedTextStyle = new TextStyle();
+        clonedTextStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
+        clonedTextStyle.fontSize = '75%';
+        clonedTextStyle.fontScale = '3';
+        clonedTextStyle.fontColor = TextStyle.StandardColors.CYAN;
+        clonedTextStyle.fontOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        clonedTextStyle.backgroundColor = TextStyle.StandardColors.RED;
+        clonedTextStyle.backgroundOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        clonedTextStyle.fontFamily = TextStyle.FontFamily.ARIAL;
+        clonedTextStyle.clone().isEqual(clonedTextStyle).should.be.true;
+      });
     });
 
     describe('setTextDisplaySettings', () => {

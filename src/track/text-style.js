@@ -1,5 +1,4 @@
 // @flow
-import * as Utils from '../utils/util';
 /**
  * We use this number to calculate the scale of the text. so it will be : 1 + 0.25 * FontSizes.value
  * So, if the user selects 400% the scale would be: 1 + 0.25 * 4 = 2. so the font size should be multiplied by 2.
@@ -139,64 +138,81 @@ class TextStyle {
     return 'rgba(' + color.concat(opacity).join(',') + ')';
   }
 
-  _config: PKTextStyleObject = {
-    /**
-     * Font size, such as 1, 2, 3...
-     * @type {number}
-     */
-    fontSize: '100%',
-    fontScale: 1,
-    /**
-     * @type {TextStyle.FontFamily}
-     */
-    fontFamily: TextStyle.FontFamily.SANS_SERIF,
-    /**
-     * @type {TextStyle.StandardColors}
-     */
-    fontColor: TextStyle.StandardColors.WHITE,
-
-    /**
-     * @type {TextStyle.StandardOpacities}
-     * @expose
-     */
-    fontOpacity: TextStyle.StandardOpacities.OPAQUE,
-
-    /**
-     * @type {TextStyle.StandardColors}
-     */
-    backgroundColor: TextStyle.StandardColors.BLACK,
-
-    /**
-     * @type {TextStyle.StandardOpacities}
-     */
-    backgroundOpacity: TextStyle.StandardOpacities.OPAQUE,
-
-    /**
-     * @type {TextStyle.EdgeStyles}
-     * @expose
-     */
-    fontEdge: TextStyle.EdgeStyles.NONE
-  };
-
-  constructor(settings?: PKTextStyleObject) {
-    this.setTextStyle(settings);
+  static fromJson(setting: PKTextStyleObject): TextStyle {
+    let clonedTextStyle = new TextStyle();
+    clonedTextStyle.fontEdge = setting.fontEdge || clonedTextStyle.fontEdge;
+    clonedTextStyle.fontSize = setting.fontSize || clonedTextStyle.fontSize;
+    clonedTextStyle.fontScale = setting.fontScale || clonedTextStyle.fontScale;
+    clonedTextStyle.fontColor = setting.fontColor || clonedTextStyle.fontColor;
+    clonedTextStyle.fontOpacity = setting.fontOpacity || clonedTextStyle.fontOpacity;
+    clonedTextStyle.backgroundColor = setting.backgroundColor || clonedTextStyle.backgroundColor;
+    clonedTextStyle.backgroundOpacity = setting.backgroundOpacity || clonedTextStyle.backgroundOpacity;
+    clonedTextStyle.fontFamily = setting.fontFamily || clonedTextStyle.fontFamily;
+    return clonedTextStyle;
   }
 
-  setTextStyle(settings?: PKTextStyleObject) {
-    if (settings) {
-      this._config = Utils.Object.mergeDeep({}, this._config, settings);
-    }
+  static toJson(text: TextStyle): PKTextStyleObject {
+    return {
+      fontEdge: text.fontEdge,
+      fontSize: text.fontSize,
+      fontScale: text.fontScale,
+      fontColor: text.fontColor,
+      fontOpacity: text.fontOpacity,
+      backgroundColor: text.backgroundColor,
+      backgroundOpacity: text.backgroundOpacity,
+      fontFamily: text.fontFamily
+    };
   }
+
+  /**
+   * Font size, such as 1, 2, 3...
+   * @type {number}
+   */
+  fontSize: string = '100%';
+
+  fontScale: number = 1;
+
+  /**
+   * @type {TextStyle.FontFamily}
+   */
+  fontFamily: string = TextStyle.FontFamily.SANS_SERIF;
+
+  /**
+   * @type {TextStyle.StandardColors}
+   */
+  fontColor: Array<number> = TextStyle.StandardColors.WHITE;
+
+  /**
+   * @type {TextStyle.StandardOpacities}
+   * @expose
+   */
+  fontOpacity: number = TextStyle.StandardOpacities.OPAQUE;
+
+  /**
+   * @type {TextStyle.StandardColors}
+   */
+  backgroundColor: Array<number> = TextStyle.StandardColors.BLACK;
+
+  /**
+   * @type {TextStyle.StandardOpacities}
+   */
+  backgroundOpacity: number = TextStyle.StandardOpacities.OPAQUE;
+
+  /**
+   * @type {TextStyle.EdgeStyles}
+   * @expose
+   */
+  fontEdge: Array<Array<number>> = TextStyle.EdgeStyles.NONE;
 
   getTextShadow(): string {
     // A given edge effect may be implemented with multiple shadows.
     // Collect them all into an array, then combine into one attribute.
     let shadows: Array<string> = [];
-    for (let i = 0; i < this._config.fontEdge.length; i++) {
+    for (let i = 0; i < this.fontEdge.length; i++) {
       // shaka.asserts.assert(this.fontEdge[i].length == 6);
-      const color: Array<number> = this._config.fontEdge[i].slice(0, 3);
-      let shadow: Array<number> = this._config.fontEdge[i].slice(3, 6);
-      shadows.push(TextStyle.toRGBA(color, this._config.fontOpacity) + ' ' + shadow.join('px ') + 'px');
+      const color: Array<number> = this.fontEdge[i].slice(0, 3);
+      let shadow: Array<number> = this.fontEdge[i].slice(3, 6);
+      shadows.push(TextStyle.toRGBA(color, this.fontOpacity) + ' ' + shadow.join('px ') + 'px');
     }
     return shadows.join(',');
   }
@@ -209,9 +225,9 @@ class TextStyle {
    */
   toCSS(): string {
     let attributes: Array<string> = [];
-    attributes.push('font-family: ' + this._config.fontFamily);
-    attributes.push('color: ' + TextStyle.toRGBA(this._config.fontColor, this._config.fontOpacity));
-    attributes.push('background-color: ' + TextStyle.toRGBA(this._config.backgroundColor, this._config.backgroundOpacity));
+    attributes.push('font-family: ' + this.fontFamily);
+    attributes.push('color: ' + TextStyle.toRGBA(this.fontColor, this.fontOpacity));
+    attributes.push('background-color: ' + TextStyle.toRGBA(this.backgroundColor, this.backgroundOpacity));
     attributes.push('text-shadow: ' + this.getTextShadow());
     return attributes.join('!important; ');
   }
@@ -221,7 +237,7 @@ class TextStyle {
    * @returns {TextStyle} the cloned textStyle object
    */
   clone(): TextStyle {
-    return new TextStyle(Utils.Object.copyDeep(this.config));
+    return TextStyle.fromJson(TextStyle.toJson(this));
   }
 
   /**
@@ -230,79 +246,11 @@ class TextStyle {
    * @returns {boolean} - Whether the text styles are equal.
    */
   isEqual(textStyle: TextStyle): boolean {
-    return JSON.stringify(textStyle.config) === JSON.stringify(this._config);
-  }
-
-  get config(): PKTextStyleObject {
-    return Utils.Object.copyDeep(this._config);
+    return JSON.stringify(TextStyle.toJson(this)) === JSON.stringify(TextStyle.toJson(textStyle));
   }
 
   get implicitFontScale(): number {
-    return IMPLICIT_SCALE_PERCENTAGE * this._config.fontScale + 1;
-  }
-
-  get fontSize(): string {
-    return this._config.fontSize;
-  }
-
-  set fontSize(fontSize: string) {
-    this._config.fontSize = fontSize;
-  }
-
-  get fontScale(): number {
-    return this._config.fontScale;
-  }
-
-  set fontScale(fontScale: number) {
-    this._config.fontScale = fontScale;
-  }
-
-  get fontFamily(): string {
-    return this._config.fontFamily;
-  }
-
-  set fontFamily(fontFamily: string) {
-    this._config.fontFamily = fontFamily;
-  }
-
-  get fontColor(): Array<number> {
-    return this._config.fontColor;
-  }
-
-  set fontColor(fontColor: Array<number>) {
-    this._config.fontColor = fontColor;
-  }
-
-  get fontOpacity(): number {
-    return this._config.fontOpacity;
-  }
-
-  set fontOpacity(fontOpacity: number) {
-    this._config.fontOpacity = fontOpacity;
-  }
-
-  get backgroundColor(): Array<number> {
-    return this._config.backgroundColor;
-  }
-
-  set backgroundColor(backgroundColor: Array<number>) {
-    this._config.backgroundColor = backgroundColor;
-  }
-
-  get backgroundOpacity(): number {
-    return this._config.backgroundOpacity;
-  }
-
-  set backgroundOpacity(backgroundOpacity: number) {
-    this._config.backgroundOpacity = backgroundOpacity;
-  }
-
-  get fontEdge(): Array<Array<number>> {
-    return this._config.fontEdge;
-  }
-
-  set fontEdge(fontEdge: Array<Array<number>>) {
-    this._config.fontEdge = fontEdge;
+    return IMPLICIT_SCALE_PERCENTAGE * this.fontScale + 1;
   }
 }
 

@@ -1283,11 +1283,7 @@ export default class Player extends FakeEventTarget {
     }
     try {
       if (Utils.Object.hasPropertyPath(config, 'text.textStyle')) {
-        if (this._config.text.textStyle instanceof TextStyle) {
-          this.textStyle = this._config.text.textStyle;
-        } else {
-          this._textStyle.setTextStyle(this._config.text.textStyle);
-        }
+        this.textStyle = TextStyle.fromJson(this._config.text.textStyle);
       }
     } catch (e) {
       Player._logger.warn(e);
