@@ -140,11 +140,7 @@ class TextStyle {
 
   static fromJson(setting: PKTextStyleObject): TextStyle {
     const getValue = (newValue: any, defaultValue: any): any => {
-      let value = defaultValue;
-      if (typeof newValue !== 'undefined' && newValue !== null) {
-        value = newValue;
-      }
-      return value;
+      return typeof newValue !== 'undefined' && newValue !== null ? newValue : defaultValue;
     };
     let textStyle = new TextStyle();
     textStyle.fontEdge = getValue(setting.fontEdge, textStyle.fontEdge);
