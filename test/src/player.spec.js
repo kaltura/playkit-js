@@ -1216,14 +1216,46 @@ describe('Player', function () {
 
       it('should change style setting', () => {
         let textStyle = new TextStyle();
-        textStyle.backgroundColor = TextStyle.StandardColors.RED;
-        textStyle.fontColor = TextStyle.StandardColors.CYAN;
         textStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
+        textStyle.fontSize = '75%';
+        textStyle.fontScale = '3';
+        textStyle.fontColor = TextStyle.StandardColors.BLACK;
+        textStyle.fontOpacity = TextStyle.StandardOpacities.SEMI_HIGH;
+        textStyle.backgroundOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        textStyle.fontFamily = TextStyle.FontFamily.ARIAL;
+        textStyle.backgroundColor = TextStyle.StandardColors.RED;
         player.textStyle = textStyle;
         const currentTextStyle = player.textStyle;
-        currentTextStyle.backgroundColor.should.deep.equal(textStyle.backgroundColor);
-        currentTextStyle.fontColor.should.deep.equal(textStyle.fontColor);
         currentTextStyle.fontEdge.should.deep.equal(textStyle.fontEdge);
+        currentTextStyle.fontSize.should.equal(textStyle.fontSize);
+        currentTextStyle.fontScale.should.equal(textStyle.fontScale);
+        currentTextStyle.fontColor.should.deep.equal(textStyle.fontColor);
+        currentTextStyle.fontOpacity.should.equal(textStyle.fontOpacity);
+        currentTextStyle.backgroundOpacity.should.equal(textStyle.backgroundOpacity);
+        currentTextStyle.fontFamily.should.equal(textStyle.fontFamily);
+        currentTextStyle.backgroundColor.should.deep.equal(textStyle.backgroundColor);
+      });
+
+      it('should create fromJson set the correct value', () => {
+        const settings = {
+          fontEdge: TextStyle.EdgeStyles.NONE,
+          fontSize: '75%',
+          fontScale: '3',
+          fontColor: TextStyle.StandardColors.CYAN,
+          fontOpacity: TextStyle.StandardOpacities.TRANSPARENT,
+          backgroundOpacity: TextStyle.StandardOpacities.TRANSPARENT,
+          fontFamily: TextStyle.FontFamily.ARIAL,
+          backgroundColor: TextStyle.StandardColors.RED
+        };
+        const textStyle = TextStyle.fromJson(settings);
+        textStyle.fontEdge.should.deep.equal(settings.fontEdge);
+        textStyle.fontSize.should.equal(settings.fontSize);
+        textStyle.fontScale.should.equal(settings.fontScale);
+        textStyle.fontColor.should.deep.equal(settings.fontColor);
+        textStyle.fontOpacity.should.equal(settings.fontOpacity);
+        textStyle.backgroundOpacity.should.equal(settings.backgroundOpacity);
+        textStyle.fontFamily.should.equal(settings.fontFamily);
+        textStyle.backgroundColor.should.deep.equal(settings.backgroundColor);
       });
 
       it('should fromJson return an object equal to explicit set object', () => {

@@ -139,16 +139,19 @@ class TextStyle {
   }
 
   static fromJson(setting: PKTextStyleObject): TextStyle {
-    let clonedTextStyle = new TextStyle();
-    clonedTextStyle.fontEdge = setting.fontEdge || clonedTextStyle.fontEdge;
-    clonedTextStyle.fontSize = setting.fontSize || clonedTextStyle.fontSize;
-    clonedTextStyle.fontScale = setting.fontScale || clonedTextStyle.fontScale;
-    clonedTextStyle.fontColor = setting.fontColor || clonedTextStyle.fontColor;
-    clonedTextStyle.fontOpacity = setting.fontOpacity || clonedTextStyle.fontOpacity;
-    clonedTextStyle.backgroundColor = setting.backgroundColor || clonedTextStyle.backgroundColor;
-    clonedTextStyle.backgroundOpacity = setting.backgroundOpacity || clonedTextStyle.backgroundOpacity;
-    clonedTextStyle.fontFamily = setting.fontFamily || clonedTextStyle.fontFamily;
-    return clonedTextStyle;
+    const getValue = (newValue: any, defaultValue: any): any => {
+      return typeof newValue !== 'undefined' && newValue !== null ? newValue : defaultValue;
+    };
+    let textStyle = new TextStyle();
+    textStyle.fontEdge = getValue(setting.fontEdge, textStyle.fontEdge);
+    textStyle.fontSize = getValue(setting.fontSize, textStyle.fontSize);
+    textStyle.fontScale = getValue(setting.fontScale, textStyle.fontScale);
+    textStyle.fontColor = getValue(setting.fontColor, textStyle.fontColor);
+    textStyle.fontOpacity = getValue(setting.fontOpacity, textStyle.fontOpacity);
+    textStyle.backgroundColor = getValue(setting.backgroundColor, textStyle.backgroundColor);
+    textStyle.backgroundOpacity = getValue(setting.backgroundOpacity, textStyle.backgroundOpacity);
+    textStyle.fontFamily = getValue(setting.fontFamily, textStyle.fontFamily);
+    return textStyle;
   }
 
   static toJson(text: TextStyle): PKTextStyleObject {
