@@ -57,20 +57,14 @@ jobs:
       if: (branch = master) AND (type != pull_request) AND commit_message !~ /^chore\(release\)/
       env: TRAVIS_MODE=releaseCanary
       deploy:
-        - provider: npm
-          api_key: $NPM_TOKEN
-          email: $NPM_EMAIL
-          skip_cleanup: true
-          tag: canary
-          on:
-            tags: false
-            branch: master
-        - provider: script
-          tag: canary
-          on:
-            tags: false
-            branch: master
-          script: sh ./scripts/update-kaltura-player.sh $GH_TOKEN
+        provider: npm
+        api_key: $NPM_TOKEN
+        email: $NPM_EMAIL
+        skip_cleanup: true
+        tag: canary
+        on:
+          tags: false
+          branch: master
     # Required tests
     - stage: Tests
       if: (branch = master) OR (tag IS present) OR (type = pull_request)
