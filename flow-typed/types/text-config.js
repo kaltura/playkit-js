@@ -4,6 +4,7 @@ import {TextStyle} from '../../src/track/text-style';
 declare type PKTextConfigObject = {
   enableCEA708Captions: boolean,
   useNativeTextTrack: boolean,
+  useShakaTextTrackDisplay: boolean,
   textTrackDisplaySetting: Object,
   textStyle: PKTextStyleObject,
   forceCenter: boolean,
