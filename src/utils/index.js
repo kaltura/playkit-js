@@ -1,3 +1,3 @@
 export * from './util';
 export {ResizeWatcher} from './resize-watcher';
-export {ViewabilityManager} from './viewability-manager';
+export {MultiMap} from './multi-map';

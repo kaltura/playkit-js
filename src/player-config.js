@@ -58,8 +58,7 @@ const DefaultConfig = {
         engine: 'flash',
         format: 'hls'
       }
-    ],
-    visibilityThreshold: 50
+    ]
   },
   abr: {
     enabled: true,
@@ -76,7 +75,11 @@ const DefaultConfig = {
   drm: {
     keySystem: ''
   },
-  network: {}
+  network: {},
+  visibility: {
+    tolerance: 10,
+    playerThreshold: 50
+  }
 };
 
 export {DefaultConfig};

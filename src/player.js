@@ -36,7 +36,6 @@ import {FullscreenController} from './fullscreen/fullscreen-controller';
 import {EngineDecorator} from './engines/engine-decorator';
 import {LabelOptions} from './track/label-options';
 import {AutoPlayType} from './auto-play-type';
-import {ViewabilityManager} from './utils/viewability-manager';
 /**
  * The black cover class name.
  * @type {string}
@@ -178,13 +177,6 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _eventManager: EventManager;
-
-  /**
-   * The event manager of the current media.
-   * @type {EventManager}
-   * @private
-   */
-  _viewabilityManager: ViewabilityManager;
 
   /**
    * The poster manager of the player.
@@ -411,34 +403,6 @@ export default class Player extends FakeEventTarget {
   _aspectRatio: ?string;
 
   /**
-   * Whether the player is visible in the page scroll view
-   * @type {boolean}
-   * @private
-   */
-  _isVisibleInScroll: boolean;
-
-  /**
-   * Whether the player browser tab is active or not
-   * @type {boolean}
-   * @private
-   */
-  _isTabVisible: boolean;
-
-  /**
-   * Whether the player browser tab is active and in the scroll view
-   * @type {boolean}
-   * @private
-   */
-  _isVisible: boolean;
-
-  /**
-   * Whether the player was auto paused
-   * @type {boolean}
-   * @private
-   */
-  _autoPaused: boolean = false;
-
-  /**
    * @param {Object} config - The configuration for the player instance.
    * @constructor
    */
@@ -461,7 +425,6 @@ export default class Player extends FakeEventTarget {
     this._fallbackToMutedAutoPlay = false;
     this._config = Player._defaultConfig;
     this._eventManager = new EventManager();
-    this._viewabilityManager = new ViewabilityManager();
     this._posterManager = new PosterManager();
     this._stateManager = new StateManager(this);
     this._resizeWatcher = new ResizeWatcher();
@@ -501,9 +464,6 @@ export default class Player extends FakeEventTarget {
         this._handleDimensions();
         this._handlePreload();
         this._initAutoPlay();
-        this._initAutoPause();
-        this._initTabVisibility();
-        this._initScrollVisibility();
         Player._logger.debug('Change source ended');
         this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_ENDED));
       } else {
@@ -1574,75 +1534,6 @@ export default class Player extends FakeEventTarget {
     }
   }
 
-  _initScrollVisibility() {
-    this._viewabilityManager.observe(
-      Utils.Dom.getElementById(this._config.ui.targetId),
-      this._config.playback.visibilityThreshold / 100,
-      this._handleScrollVisibilityChange.bind(this)
-    );
-  }
-
-  _handleScrollVisibilityChange(visible: boolean) {
-    this._isVisibleInScroll = visible;
-    this._handleVisibilityChange();
-  }
-
-  _handleVisibilityChange() {
-    const prevVisibility = this._isVisible;
-    this._isVisible = this._isTabVisible && this._isVisibleInScroll;
-
-    if (prevVisibility !== this._isVisible) {
-      this.dispatchEvent(new FakeEvent(CustomEventType.VISIBILITY_CHANGE, {visible: this._isVisible}));
-    }
-
-    if (this._config.playback.autoplay === AutoPlayType.IN_VIEW && this._isVisible && !this._playbackStart) {
-      this._autoPlay();
-    }
-  }
-
-  _initTabVisibility(): void {
-    let hiddenAttr: string;
-    let visibilityChangeEventName: string;
-    if (typeof document.hidden !== 'undefined') {
-      // Opera 12.10 and Firefox 18 and later support
-      hiddenAttr = 'hidden';
-      visibilityChangeEventName = 'visibilitychange';
-    } else if (typeof document.msHidden !== 'undefined') {
-      hiddenAttr = 'msHidden';
-      visibilityChangeEventName = 'msvisibilitychange';
-    } else if (typeof document.webkitHidden !== 'undefined') {
-      hiddenAttr = 'webkitHidden';
-      visibilityChangeEventName = 'webkitvisibilitychange';
-    }
-
-    if (hiddenAttr && visibilityChangeEventName) {
-      this._eventManager.listen(document, visibilityChangeEventName, () => {
-        this._isTabVisible = !document[hiddenAttr];
-        this.dispatchEvent(new FakeEvent(CustomEventType.TAB_VISIBILITY_CHANGE, {visible: this._isTabVisible}));
-        this._handleVisibilityChange();
-      });
-      this._isTabVisible = !document[hiddenAttr];
-    }
-  }
-
-  /**
-   * Gets the player tab visibility state
-   * @returns {boolean} - whether the browser player tab is visible
-   * @public
-   */
-  get isTabVisible(): boolean {
-    return this._isTabVisible;
-  }
-
-  /**
-   * Gets the player visibility
-   * @returns {boolean} - true if the player is both in the active tab and is visible in the scroll view
-   * @public
-   */
-  get isVisible(): boolean {
-    return this._isVisible;
-  }
-
   /**
    * Appends DOM elements by the following priority:
    * 1. poster (strongest)
@@ -1951,30 +1842,7 @@ export default class Player extends FakeEventTarget {
     }
   }
 
-  /**
-   * Handles auto pause.
-   * @returns {void}
-   * @private
-   */
-  _initAutoPause(): void {
-    if (this._config.playback.autopause === true) {
-      this._eventManager.listen(this, CustomEventType.VISIBILITY_CHANGE, (e: FakeEvent) => {
-        if (!e.payload.visible) {
-          if (!this.isInPictureInPicture() && this._playbackStart && !this.paused) {
-            this.pause();
-            this._autoPaused = true;
-          }
-        } else if (this._autoPaused) {
-          if (this.paused) {
-            this.play();
-          }
-          this._autoPaused = false;
-        }
-      });
-    }
-  }
-
-  _autoPlay(): void {
+  autoPlay(): void {
     const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
     Player.getCapabilities(this.engineType).then(capabilities => {
       if (capabilities.autoplay) {
@@ -2034,8 +1902,8 @@ export default class Player extends FakeEventTarget {
    */
   _initAutoPlay(): void {
     this._posterManager.show();
-    if (this._config.playback.autoplay === true) {
-      this._autoPlay();
+    if (this._config.playback.autoplay === AutoPlayType.TRUE) {
+      this.autoPlay();
     }
   }
 

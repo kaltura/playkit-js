@@ -33,7 +33,6 @@ import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
 import {AdEventType} from './ads/ad-event-type';
 import {ScreenOrientationType} from './screen-orientation-type';
-import 'intersection-observer';
 import {AutoPlayType} from './auto-play-type';
 
 declare var __VERSION__: string;
