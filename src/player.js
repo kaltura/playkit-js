@@ -1967,10 +1967,10 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _initAutoPlay(): void {
-    if (this.isAudio() || this._config.playback.autoplay !== AutoPlayType.ALWAYS) {
+    if (this.isAudio() || this._config.playback.autoplay !== AutoPlayType.TRUE) {
       this._posterManager.show();
     }
-    if (this._config.playback.autoplay === AutoPlayType.ALWAYS) {
+    if (this._config.playback.autoplay === AutoPlayType.TRUE) {
       this.autoPlay();
     }
   }
