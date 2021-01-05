@@ -78,11 +78,7 @@ const DefaultConfig = {
   drm: {
     keySystem: ''
   },
-  network: {},
-  visibility: {
-    tolerance: 10,
-    playerThreshold: 50
-  }
+  network: {}
 };
 
 export {DefaultConfig};
