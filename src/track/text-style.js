@@ -138,6 +138,35 @@ class TextStyle {
     return 'rgba(' + color.concat(opacity).join(',') + ')';
   }
 
+  static fromJson(setting: PKTextStyleObject): TextStyle {
+    const getValue = (newValue: any, defaultValue: any): any => {
+      return typeof newValue !== 'undefined' && newValue !== null ? newValue : defaultValue;
+    };
+    let textStyle = new TextStyle();
+    textStyle.fontEdge = getValue(setting.fontEdge, textStyle.fontEdge);
+    textStyle.fontSize = getValue(setting.fontSize, textStyle.fontSize);
+    textStyle.fontScale = getValue(setting.fontScale, textStyle.fontScale);
+    textStyle.fontColor = getValue(setting.fontColor, textStyle.fontColor);
+    textStyle.fontOpacity = getValue(setting.fontOpacity, textStyle.fontOpacity);
+    textStyle.backgroundColor = getValue(setting.backgroundColor, textStyle.backgroundColor);
+    textStyle.backgroundOpacity = getValue(setting.backgroundOpacity, textStyle.backgroundOpacity);
+    textStyle.fontFamily = getValue(setting.fontFamily, textStyle.fontFamily);
+    return textStyle;
+  }
+
+  static toJson(text: TextStyle): PKTextStyleObject {
+    return {
+      fontEdge: text.fontEdge,
+      fontSize: text.fontSize,
+      fontScale: text.fontScale,
+      fontColor: text.fontColor,
+      fontOpacity: text.fontOpacity,
+      backgroundColor: text.backgroundColor,
+      backgroundOpacity: text.backgroundOpacity,
+      fontFamily: text.fontFamily
+    };
+  }
+
   /**
    * Font size, such as 1, 2, 3...
    * @type {number}
@@ -211,16 +240,7 @@ class TextStyle {
    * @returns {TextStyle} the cloned textStyle object
    */
   clone(): TextStyle {
-    let clonedTextStyle = new TextStyle();
-    clonedTextStyle.fontEdge = this.fontEdge;
-    clonedTextStyle.fontSize = this.fontSize;
-    clonedTextStyle.fontScale = this.fontScale;
-    clonedTextStyle.fontColor = this.fontColor;
-    clonedTextStyle.fontOpacity = this.fontOpacity;
-    clonedTextStyle.backgroundColor = this.backgroundColor;
-    clonedTextStyle.backgroundOpacity = this.backgroundOpacity;
-    clonedTextStyle.fontFamily = this.fontFamily;
-    return clonedTextStyle;
+    return TextStyle.fromJson(TextStyle.toJson(this));
   }
 
   /**
@@ -229,14 +249,7 @@ class TextStyle {
    * @returns {boolean} - Whether the text styles are equal.
    */
   isEqual(textStyle: TextStyle): boolean {
-    return (
-      textStyle.fontEdge === this.fontEdge &&
-      textStyle.fontSize === this.fontSize &&
-      textStyle.fontColor === this.fontColor &&
-      textStyle.fontOpacity === this.fontOpacity &&
-      textStyle.backgroundColor === this.backgroundColor &&
-      textStyle.backgroundOpacity === this.backgroundOpacity
-    );
+    return JSON.stringify(TextStyle.toJson(this)) === JSON.stringify(TextStyle.toJson(textStyle));
   }
 
   get implicitFontScale(): number {

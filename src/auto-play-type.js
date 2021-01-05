@@ -1,6 +1,6 @@
 // @flow
 const AutoPlayType: PKAutoPlayTypes = {
-  TRUE: true,
+  ALWAYS: true,
   FALSE: false,
   IN_VIEW: 'inview'
 };

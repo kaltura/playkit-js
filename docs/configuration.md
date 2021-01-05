@@ -38,15 +38,18 @@ var config = {
     },
     metadata: {}
   },
-  playback: {
-    audioLanguage: '',
-    textLanguage: '',
-    useNativeTextTrack: false,
+  text: {
     enableCEA708Captions: false,
+    useNativeTextTrack: false,
+    forceCenter: false,
     captionsTextTrack1Label: 'English',
     captionsTextTrack1LanguageCode: 'en',
     captionsTextTrack2Label: 'Spanish',
-    captionsTextTrack2LanguageCode: 'es',
+    captionsTextTrack2LanguageCode: 'es'
+  },
+  playback: {
+    audioLanguage: '',
+    textLanguage: '',
     volume: 1,
     startTime: -1,
     playsinline: true,
@@ -457,8 +460,132 @@ var config = {
 > > };
 > > ```
 
-##
-
+> ##
+> ### config.text
+>
+> ##### Type: `PKTextConfigObject`
+>
+> ```js
+> {
+>  useNativeTextTrack: boolean,
+>  enableCEA708Captions: boolean,
+>  forceCenter: boolean,
+>  textTrackDisplaySetting: Object,
+>  textStyle: TextStyle,
+>  captionsTextTrack1Label: string,
+>  captionsTextTrack1LanguageCode: string,
+>  captionsTextTrack2Label: string,
+>  captionsTextTrack2LanguageCode: string
+> }
+> ```
+>
+> ##### Default:
+>
+> ```js
+> {
+>  useNativeTextTrack: false,
+>  enableCEA708Captions: false,
+>  forceCenter: false,
+>  captionsTextTrack1Label: "English",
+>  captionsTextTrack1LanguageCode: "en",
+>  captionsTextTrack2Label: "Spanish",
+>  captionsTextTrack2LanguageCode: "es"
+> }
+> ```
+>
+> ##
+>
+> > ### config.text.useNativeTextTrack
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ##### Description: Determines whether to use native browser text tracks or not.
+> >
+> > If set to True, the native browser captions will be displayed.
+>
+> ##
+>
+> > ### config.text.enableCEA708Captions
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ##### Description: Whether or not to enable CEA-708 captions.
+>
+> ##
+>
+> > ### config.text.forceCenter
+> >
+> > ##### Type: `Object`
+> >
+> > ##### Default: `false`
+> >
+> > ##### Description: set the forceCenter to true will override the position, align and size in textTrackDisplaySetting
+>
+> ##
+>
+> > ### config.text.textTrackDisplaySetting
+> >
+> > ##### Type: `Object`
+> >
+> > ##### Default: `null`
+> >
+> > ##### Description: set the textTrackDisplaySetting to override the cues position
+>
+> ##
+>
+> > ### config.text.textStyle
+> >
+> > ##### Type: `TextStyle`
+> >
+> > ##### Default: `null`
+> >
+> > ##### Description: set the styling for text tracks
+>
+> ##
+>
+> > ### config.text.captionsTextTrack1Label
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `English`
+> >
+> > ##### Description: Label for the CEA-708 captions track 1.
+>
+> ##
+>
+> > ### config.text.captionsTextTrack1LanguageCode
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `en`
+> >
+> > ##### Description: RFC 3066 language code for the CEA-708 captions track 1.
+>
+> ##
+>
+> > ### config.text.captionsTextTrack2Label
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `Spanish`
+> >
+> > ##### Description: Label for the CEA-708 captions track 2.
+>
+> ##
+>
+> > ### config.text.captionsTextTrack2LanguageCode
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `es`
+> >
+> > ##### Description: RFC 3066 language code for the CEA-708 captions track 2.
+>
+> ##
 > ### config.playback
 >
 > ##### Type: `PKPlaybackConfigObject`
@@ -467,12 +594,6 @@ var config = {
 > {
 >  audioLanguage: string,
 >  textLanguage: string,
->  useNativeTextTrack: boolean,
->  enableCEA708Captions: boolean,
->  captionsTextTrack1Label: string,
->  captionsTextTrack1LanguageCode: string,
->  captionsTextTrack2Label: string,
->  captionsTextTrack2LanguageCode: string,
 >  volume: number,
 >  startTime: number,
 >  playsinline: boolean,
@@ -497,12 +618,6 @@ var config = {
 > {
 >  audioLanguage: "",
 >  textLanguage: "",
->  useNativeTextTrack: false,
->  enableCEA708Captions: false,
->  captionsTextTrack1Label: "English",
->  captionsTextTrack1LanguageCode: "en",
->  captionsTextTrack2Label: "Spanish",
->  captionsTextTrack2LanguageCode: "es",
 >  volume: 1,
 >  startTime: -1,
 >  playsinline: true,
@@ -600,68 +715,6 @@ var config = {
 > > 2.  **Manifest default language** - If a default language is specified in the manifest file then this language will be selected.
 > > 3.  **First language in manifest** - The first language specified in the manifest file will be selected.
 > > 4.  If none of the above conditions have taken place, do not display captions.
->
-> ##
->
-> > ### config.playback.useNativeTextTrack
-> >
-> > ##### Type: `boolean`
-> >
-> > ##### Default: `false`
-> >
-> > ##### Description: Determines whether to use native browser text tracks or not.
-> >
-> > If set to True, the native browser captions will be displayed.
->
-> ##
->
-> > ### config.playback.enableCEA708Captions
-> >
-> > ##### Type: `boolean`
-> >
-> > ##### Default: `false`
-> >
-> > ##### Description: Whether or not to enable CEA-708 captions.
->
-> ##
->
-> > ### config.playback.captionsTextTrack1Label
-> >
-> > ##### Type: `string`
-> >
-> > ##### Default: `English`
-> >
-> > ##### Description: Label for the CEA-708 captions track 1.
->
-> ##
->
-> > ### config.playback.captionsTextTrack1LanguageCode
-> >
-> > ##### Type: `string`
-> >
-> > ##### Default: `en`
-> >
-> > ##### Description: RFC 3066 language code for the CEA-708 captions track 1.
->
-> ##
->
-> > ### config.playback.captionsTextTrack2Label
-> >
-> > ##### Type: `string`
-> >
-> > ##### Default: `Spanish`
-> >
-> > ##### Description: Label for the CEA-708 captions track 2.
->
-> ##
->
-> > ### config.playback.captionsTextTrack2LanguageCode
-> >
-> > ##### Type: `string`
-> >
-> > ##### Default: `es`
-> >
-> > ##### Description: RFC 3066 language code for the CEA-708 captions track 2.
 >
 > ##
 >

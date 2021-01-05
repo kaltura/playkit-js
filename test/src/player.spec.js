@@ -1216,14 +1216,105 @@ describe('Player', function () {
 
       it('should change style setting', () => {
         let textStyle = new TextStyle();
-        textStyle.backgroundColor = TextStyle.StandardColors.RED;
-        textStyle.fontColor = TextStyle.StandardColors.CYAN;
         textStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
+        textStyle.fontSize = '75%';
+        textStyle.fontScale = '3';
+        textStyle.fontColor = TextStyle.StandardColors.BLACK;
+        textStyle.fontOpacity = TextStyle.StandardOpacities.SEMI_HIGH;
+        textStyle.backgroundOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        textStyle.fontFamily = TextStyle.FontFamily.ARIAL;
+        textStyle.backgroundColor = TextStyle.StandardColors.RED;
         player.textStyle = textStyle;
         const currentTextStyle = player.textStyle;
-        currentTextStyle.backgroundColor.should.be.equal(textStyle.backgroundColor);
-        currentTextStyle.fontColor.should.be.equal(textStyle.fontColor);
-        currentTextStyle.fontEdge.should.be.equal(textStyle.fontEdge);
+        currentTextStyle.fontEdge.should.deep.equal(textStyle.fontEdge);
+        currentTextStyle.fontSize.should.equal(textStyle.fontSize);
+        currentTextStyle.fontScale.should.equal(textStyle.fontScale);
+        currentTextStyle.fontColor.should.deep.equal(textStyle.fontColor);
+        currentTextStyle.fontOpacity.should.equal(textStyle.fontOpacity);
+        currentTextStyle.backgroundOpacity.should.equal(textStyle.backgroundOpacity);
+        currentTextStyle.fontFamily.should.equal(textStyle.fontFamily);
+        currentTextStyle.backgroundColor.should.deep.equal(textStyle.backgroundColor);
+      });
+
+      it('should create fromJson set the correct value', () => {
+        const settings = {
+          fontEdge: TextStyle.EdgeStyles.NONE,
+          fontSize: '75%',
+          fontScale: '3',
+          fontColor: TextStyle.StandardColors.CYAN,
+          fontOpacity: TextStyle.StandardOpacities.TRANSPARENT,
+          backgroundOpacity: TextStyle.StandardOpacities.TRANSPARENT,
+          fontFamily: TextStyle.FontFamily.ARIAL,
+          backgroundColor: TextStyle.StandardColors.RED
+        };
+        const textStyle = TextStyle.fromJson(settings);
+        textStyle.fontEdge.should.deep.equal(settings.fontEdge);
+        textStyle.fontSize.should.equal(settings.fontSize);
+        textStyle.fontScale.should.equal(settings.fontScale);
+        textStyle.fontColor.should.deep.equal(settings.fontColor);
+        textStyle.fontOpacity.should.equal(settings.fontOpacity);
+        textStyle.backgroundOpacity.should.equal(settings.backgroundOpacity);
+        textStyle.fontFamily.should.equal(settings.fontFamily);
+        textStyle.backgroundColor.should.deep.equal(settings.backgroundColor);
+      });
+
+      it('should fromJson return an object equal to explicit set object', () => {
+        const settings = {
+          fontEdge: TextStyle.EdgeStyles.RAISED,
+          fontSize: '75%',
+          fontScale: '3',
+          fontColor: TextStyle.StandardColors.CYAN,
+          fontOpacity: TextStyle.StandardOpacities.SEMI_LOW,
+          backgroundOpacity: TextStyle.StandardOpacities.SEMI_LOW,
+          fontFamily: TextStyle.FontFamily.ARIAL,
+          backgroundColor: TextStyle.StandardColors.RED
+        };
+        let textStyle = new TextStyle();
+        textStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
+        textStyle.fontSize = '75%';
+        textStyle.fontScale = '3';
+        textStyle.fontColor = TextStyle.StandardColors.CYAN;
+        textStyle.fontOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        textStyle.backgroundColor = TextStyle.StandardColors.RED;
+        textStyle.backgroundOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        textStyle.fontFamily = TextStyle.FontFamily.ARIAL;
+        TextStyle.fromJson(settings).isEqual(textStyle).should.be.true;
+      });
+
+      it('should toJson return same object', () => {
+        const settings = {
+          fontEdge: TextStyle.EdgeStyles.RAISED,
+          fontSize: '75%',
+          fontScale: '3',
+          fontColor: TextStyle.StandardColors.CYAN,
+          fontOpacity: TextStyle.StandardOpacities.SEMI_LOW,
+          backgroundOpacity: TextStyle.StandardOpacities.SEMI_LOW,
+          fontFamily: TextStyle.FontFamily.ARIAL,
+          backgroundColor: TextStyle.StandardColors.RED
+        };
+        let textStyle = new TextStyle();
+        textStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
+        textStyle.fontSize = '75%';
+        textStyle.fontScale = '3';
+        textStyle.fontColor = TextStyle.StandardColors.CYAN;
+        textStyle.fontOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        textStyle.backgroundColor = TextStyle.StandardColors.RED;
+        textStyle.backgroundOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        textStyle.fontFamily = TextStyle.FontFamily.ARIAL;
+        TextStyle.toJson(textStyle).should.deep.equal(settings);
+      });
+
+      it('should clone API return exact same object', () => {
+        let clonedTextStyle = new TextStyle();
+        clonedTextStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
+        clonedTextStyle.fontSize = '75%';
+        clonedTextStyle.fontScale = '3';
+        clonedTextStyle.fontColor = TextStyle.StandardColors.CYAN;
+        clonedTextStyle.fontOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        clonedTextStyle.backgroundColor = TextStyle.StandardColors.RED;
+        clonedTextStyle.backgroundOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        clonedTextStyle.fontFamily = TextStyle.FontFamily.ARIAL;
+        clonedTextStyle.clone().isEqual(clonedTextStyle).should.be.true;
       });
     });
 
@@ -1231,7 +1322,81 @@ describe('Player', function () {
       it('should change textDisplay settings', () => {
         const settings = {line: -4};
         player.setTextDisplaySettings(settings);
-        player._textDisplaySettings.should.be.equal(settings);
+        player._textDisplaySettings.should.deep.equal(settings);
+      });
+
+      it('should change textDisplay settings and remove setting from cue for empty values', () => {
+        const settings = {line: -4, position: '10%'};
+        player._activeTextCues[0] = {
+          position: 'auto',
+          align: 'center',
+          size: 100,
+          vertical: ''
+        };
+        player.setTextDisplaySettings(settings);
+        player._textDisplaySettings.should.deep.equal(settings);
+        player._activeTextCues[0].should.deep.equal(Utils.Object.mergeDeep(player._activeTextCues[0], settings));
+        const settingsToRemovePositionValue = {line: -4, position: ''};
+        player.setTextDisplaySettings(settingsToRemovePositionValue);
+        player._activeTextCues[0].should.deep.equal(Utils.Object.mergeDeep(player._activeTextCues[0], {line: -4}));
+      });
+    });
+
+    describe('configure text track display', () => {
+      it('should change textDisplay settings by config', () => {
+        const settings = {line: -4};
+        player = new Player({text: {textTrackDisplaySetting: settings}});
+        player._textDisplaySettings.should.deep.equal(settings);
+      });
+
+      it('should forceCenter override textTrackDisplaySetting', () => {
+        const settings = {position: '10%', align: 'left', size: '10'};
+        player = new Player({text: {forceCenter: true, textTrackDisplaySetting: settings}});
+        player._textDisplaySettings.should.deep.equal({position: 'auto', align: 'center', size: '100'});
+      });
+
+      it('should forceCenter keep the other values from textTrackDisplaySetting', () => {
+        const settings = {line: '-4', lineAlign: 'end', position: '10%'};
+        player = new Player({text: {forceCenter: true, textTrackDisplaySetting: settings}});
+        player._textDisplaySettings.should.deep.equal(Utils.Object.mergeDeep(settings, {position: 'auto', align: 'center', size: '100'}));
+      });
+
+      it('should configure change of textTrackDisplaySetting will apply forceCenter', () => {
+        const settings = {position: '10%', align: 'left', size: '10'};
+        player = new Player({text: {forceCenter: true, textTrackDisplaySetting: settings}});
+        player.configure({text: {textTrackDisplaySetting: settings}});
+        player._textDisplaySettings.should.deep.equal({position: 'auto', align: 'center', size: '100'});
+      });
+
+      it('should empty configure will not take the previous config and change the values from setTextDisplaySettings', () => {
+        const settings = {position: '10%', align: 'left', size: '10'};
+        player = new Player({text: {forceCenter: true, textTrackDisplaySetting: settings}});
+        player.setTextDisplaySettings(settings);
+        player.configure({text: {}});
+        player._textDisplaySettings.should.deep.equal(settings);
+      });
+
+      it('should keep the current setting for empty config', () => {
+        const settings = {line: '-4', lineAlign: 'end', position: '10%'};
+        player.setTextDisplaySettings(settings);
+        player.configure({text: {}});
+        player._textDisplaySettings.should.deep.equal(settings);
+      });
+
+      it('should change style setting by config', () => {
+        player = new Player({
+          text: {
+            textStyle: {
+              backgroundColor: TextStyle.StandardColors.RED,
+              fontColor: TextStyle.StandardColors.CYAN,
+              fontEdge: TextStyle.EdgeStyles.RAISED
+            }
+          }
+        });
+        const currentTextStyle = player.textStyle;
+        currentTextStyle.backgroundColor.should.deep.equal(TextStyle.StandardColors.RED);
+        currentTextStyle.fontColor.should.deep.equal(TextStyle.StandardColors.CYAN);
+        currentTextStyle.fontEdge.should.deep.equal(TextStyle.EdgeStyles.RAISED);
       });
     });
   });
@@ -1300,7 +1465,7 @@ describe('Player', function () {
       beforeEach(() => {
         config = Utils.Object.mergeDeep(getConfigStructure(), {
           sources: Utils.Object.mergeDeep({captions: [ExternalCaption.He, ExternalCaption.Ru]}, sourcesConfig.Mp4),
-          playback: {useNativeTextTrack: true}
+          text: {useNativeTextTrack: true}
         });
         player = new Player(config);
         playerContainer.appendChild(player.getView());
@@ -1396,7 +1561,7 @@ describe('Player', function () {
       beforeEach(() => {
         config = Utils.Object.mergeDeep(getConfigStructure(), {
           sources: Utils.Object.mergeDeep({captions: [ExternalCaption.He, ExternalCaption.Ru]}, sourcesConfig.Mp4),
-          playback: {useNativeTextTrack: false}
+          text: {useNativeTextTrack: false}
         });
         player = new Player(config);
         playerContainer.appendChild(player.getView());

@@ -299,6 +299,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._handleVideoError();
     });
     this._handleMetadataTrackEvents();
+    this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
+      if (event.track.kind === 'captions' || event.track.kind === 'subtitles') {
+        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_ADDED, {track: event.track}));
+      }
+    });
     let mediaSourceAdapter = this._mediaSourceAdapter;
     if (mediaSourceAdapter) {
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));

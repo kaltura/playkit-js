@@ -483,6 +483,7 @@ export default class Player extends FakeEventTarget {
     } else {
       Utils.Object.mergeDeep(this._config, config);
     }
+    this._applyTextTrackConfig(config);
   }
 
   /**
@@ -1098,6 +1099,16 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Checking if the current playback is audio only.
+   * @function isAudio
+   * @returns {boolean} - Whether playback is audio.
+   * @private
+   */
+  isAudio(): boolean {
+    return this._config.sources.type === MediaType.AUDIO;
+  }
+
+  /**
    * Get whether the video is seeked to live edge in dvr
    * @returns {boolean} - Whether the video is seeked to live edge in dvr
    * @public
@@ -1255,13 +1266,44 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * update the text track config from current config
+   * @function _applyTextTrackConfig
+   * @returns {void}
+   * @param {Object} config - new config which configure for checking if it relevant config has changed
+   * @private
+   */
+  _applyTextTrackConfig(config: Object): void {
+    if (Utils.Object.hasPropertyPath(config, 'text.textTrackDisplaySetting') || Utils.Object.getPropertyPath(config, 'text.forceCenter')) {
+      let textDisplaySettings = {};
+      if (Utils.Object.hasPropertyPath(this._config, 'text.textTrackDisplaySetting')) {
+        textDisplaySettings = Utils.Object.mergeDeep(textDisplaySettings, this._config.text.textTrackDisplaySetting);
+      }
+      if (Utils.Object.getPropertyPath(this._config, 'text.forceCenter')) {
+        textDisplaySettings = Utils.Object.mergeDeep(textDisplaySettings, {
+          position: 'auto',
+          align: 'center',
+          size: '100'
+        });
+      }
+      this.setTextDisplaySettings(textDisplaySettings);
+    }
+    try {
+      if (Utils.Object.hasPropertyPath(config, 'text.textStyle')) {
+        this.textStyle = TextStyle.fromJson(this._config.text.textStyle);
+      }
+    } catch (e) {
+      Player._logger.warn(e);
+    }
+  }
+
+  /**
    * update the text display settings
    * @param {Object} settings - text cue display settings
    * @public
    * @returns {void}
    */
   setTextDisplaySettings(settings: Object): void {
-    this._textDisplaySettings = settings;
+    this._textDisplaySettings = Utils.Object.mergeDeep(this._textDisplaySettings, settings);
     this._updateCueDisplaySettings();
     for (let i = 0; i < this._activeTextCues.length; i++) {
       this._activeTextCues[i].hasBeenReset = true;
@@ -1269,6 +1311,9 @@ export default class Player extends FakeEventTarget {
     this._updateTextDisplay(this._activeTextCues);
   }
 
+  get textDisplaySetting(): Object {
+    return Utils.Object.copyDeep(this._textDisplaySettings);
+  }
   /**
    * Sets style attributes for text tracks.
    * @param {TextStyle} style - text styling settings
@@ -1293,7 +1338,7 @@ export default class Player extends FakeEventTarget {
 
     try {
       this._textStyle = style;
-      if (this._config.playback.useNativeTextTrack) {
+      if (this._config.text.useNativeTextTrack) {
         sheet.insertRule(`#${this._playerId} video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
       } else if (this._engine) {
         this._engine.resetAllCues();
@@ -1748,6 +1793,27 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @private
    */
+  _onTextTrackAdded(event: FakeEvent): void {
+    const videoElement = this.getVideoElement();
+    const trackIndex = videoElement
+      ? Array.from(videoElement.textTracks).findIndex(track => track && track.language === event.payload.track.language)
+      : -1;
+    if (trackIndex === 0) {
+      const textTracks = this._getTextTracks();
+      // new native track added to start or end of text track list so if it added to start we should fix our indexes
+      // by increasing the index by 1
+      textTracks.forEach(track => {
+        track.index = ++track.index;
+      });
+    }
+  }
+
+  /**
+   * The text track changed event object
+   * @param {FakeEvent} event - payload with text track
+   * @returns {void}
+   * @private
+   */
   _onTextTrackChanged(event: FakeEvent): void {
     this.ready().then(() => (this._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language));
     this._markActiveTrack(event.payload.selectedTextTrack);
@@ -1901,8 +1967,10 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _initAutoPlay(): void {
-    this._posterManager.show();
-    if (this._config.playback.autoplay === AutoPlayType.TRUE) {
+    if (this.isAudio() || this._config.playback.autoplay !== AutoPlayType.ALWAYS) {
+      this._posterManager.show();
+    }
+    if (this._config.playback.autoplay === AutoPlayType.ALWAYS) {
       this.autoPlay();
     }
   }
@@ -2007,7 +2075,9 @@ export default class Player extends FakeEventTarget {
     if (this._firstPlay) {
       this._firstPlay = false;
       this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAY));
-      this._posterManager.hide();
+      if (!this.isAudio()) {
+        this._posterManager.hide();
+      }
       this.hideBlackCover();
       if (typeof this._playbackAttributesState.rate === 'number') {
         this.playbackRate = this._playbackAttributesState.rate;
@@ -2123,31 +2193,13 @@ export default class Player extends FakeEventTarget {
    */
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
+    if (this.config.playback.useNativeTextTrack) {
+      this._eventManager.listen(this._engine, CustomEventType.TEXT_TRACK_ADDED, (event: FakeEvent) => this._onTextTrackAdded(event));
+    }
     this._tracks = tracks.concat(this._externalCaptionsHandler.getExternalTracks(tracks));
     this._addTextTrackOffOption();
     this._maybeSetTracksLabels();
-    this._maybeAdjustTextTracksIndexes();
     this._setDefaultTracks();
-  }
-
-  /**
-   * If we added external tracks to the video element, we might need to adjust the text tracks indexes between the video
-   * element and the players tracks list
-   * @returns {void}
-   * @private
-   */
-  _maybeAdjustTextTracksIndexes(): void {
-    if (this._config.playback.useNativeTextTrack) {
-      const getNativeLanguageTrackIndex = (textTrack: TextTrack): number => {
-        const videoElement = this.getVideoElement();
-        return videoElement ? Array.from(videoElement.textTracks).findIndex(track => (track ? track.language === textTrack.language : false)) : -1;
-      };
-      const textTracks = this._getTextTracks();
-      let externalTrackIndex = textTracks.length;
-      textTracks.forEach(track => {
-        track.index = track.external ? externalTrackIndex++ : getNativeLanguageTrackIndex(track);
-      });
-    }
   }
 
   /**
@@ -2244,7 +2296,9 @@ export default class Player extends FakeEventTarget {
     for (let i = 0; i < activeCues.length; i++) {
       let cue = activeCues[i];
       for (let name in settings) {
-        cue[name] = settings[name];
+        if (settings[name]) {
+          cue[name] = settings[name];
+        }
       }
     }
   }
@@ -2256,7 +2310,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _updateTextDisplay(cues: Array<Cue>): void {
-    if (!this._config.playback.useNativeTextTrack) {
+    if (!this._config.text.useNativeTextTrack) {
       processCues(window, cues, this._textDisplayEl, this._textStyle);
     }
   }

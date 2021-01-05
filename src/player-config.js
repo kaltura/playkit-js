@@ -10,15 +10,18 @@ const DefaultConfig = {
     },
     metadata: {}
   },
-  playback: {
-    audioLanguage: '',
-    textLanguage: '',
-    useNativeTextTrack: false,
+  text: {
     enableCEA708Captions: false,
+    useNativeTextTrack: false,
+    forceCenter: false,
     captionsTextTrack1Label: 'English',
     captionsTextTrack1LanguageCode: 'en',
     captionsTextTrack2Label: 'Spanish',
-    captionsTextTrack2LanguageCode: 'es',
+    captionsTextTrack2LanguageCode: 'es'
+  },
+  playback: {
+    audioLanguage: '',
+    textLanguage: '',
     volume: 1,
     startTime: -1,
     playsinline: true,
