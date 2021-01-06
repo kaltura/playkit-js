@@ -1787,27 +1787,6 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @private
    */
-  _onTextTrackAdded(event: FakeEvent): void {
-    const videoElement = this.getVideoElement();
-    const trackIndex = videoElement
-      ? Array.from(videoElement.textTracks).findIndex(track => track && track.language === event.payload.track.language)
-      : -1;
-    if (trackIndex === 0) {
-      const textTracks = this._getTextTracks();
-      // new native track added to start or end of text track list so if it added to start we should fix our indexes
-      // by increasing the index by 1
-      textTracks.forEach(track => {
-        track.index = ++track.index;
-      });
-    }
-  }
-
-  /**
-   * The text track changed event object
-   * @param {FakeEvent} event - payload with text track
-   * @returns {void}
-   * @private
-   */
   _onTextTrackChanged(event: FakeEvent): void {
     this.ready().then(() => (this._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language));
     this._markActiveTrack(event.payload.selectedTextTrack);
@@ -2182,9 +2161,6 @@ export default class Player extends FakeEventTarget {
    */
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
-    if (this.config.text.useNativeTextTrack) {
-      this._eventManager.listen(this._engine, CustomEventType.TEXT_TRACK_ADDED, (event: FakeEvent) => this._onTextTrackAdded(event));
-    }
     this._tracks = tracks.concat(this._externalCaptionsHandler.getExternalTracks(tracks));
     this._addTextTrackOffOption();
     this._maybeSetTracksLabels();
