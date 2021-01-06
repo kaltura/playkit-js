@@ -467,391 +467,390 @@
 -   [MANIFEST_LOADED][463]
 -   [USER_GESTURE][464]
 -   [DRM_LICENSE_LOADED][465]
--   [VISIBILITY_CHANGE][466]
--   [FakeEventTarget][467]
-    -   [dispatchTarget][468]
-    -   [addEventListener][469]
-        -   [Parameters][470]
-    -   [removeEventListener][471]
-        -   [Parameters][472]
-    -   [dispatchEvent][473]
-        -   [Parameters][474]
--   [EventListener][475]
--   [FakeEvent][476]
-    -   [Parameters][477]
+-   [FakeEventTarget][466]
+    -   [dispatchTarget][467]
+    -   [addEventListener][468]
+        -   [Parameters][469]
+    -   [removeEventListener][470]
+        -   [Parameters][471]
+    -   [dispatchEvent][472]
+        -   [Parameters][473]
+-   [EventListener][474]
+-   [FakeEvent][475]
+    -   [Parameters][476]
+    -   [bubbles][477]
     -   [bubbles][478]
-    -   [bubbles][479]
+    -   [cancelable][479]
     -   [cancelable][480]
-    -   [cancelable][481]
+    -   [defaultPrevented][481]
     -   [defaultPrevented][482]
-    -   [defaultPrevented][483]
+    -   [timeStamp][483]
     -   [timeStamp][484]
-    -   [timeStamp][485]
+    -   [type][485]
     -   [type][486]
-    -   [type][487]
+    -   [isTrusted][487]
     -   [isTrusted][488]
-    -   [isTrusted][489]
+    -   [currentTarget][489]
     -   [currentTarget][490]
-    -   [currentTarget][491]
+    -   [target][491]
     -   [target][492]
-    -   [target][493]
+    -   [stopped][493]
     -   [stopped][494]
-    -   [stopped][495]
-    -   [preventDefault][496]
-    -   [stopImmediatePropagation][497]
-    -   [stopPropagation][498]
--   [IN_BROWSER_FULLSCREEN][499]
--   [FullscreenController][500]
-    -   [Parameters][501]
-    -   [destroy][502]
--   [\_isNativeFullscreen][503]
--   [isFullscreen][504]
--   [enterFullscreen][505]
-    -   [Parameters][506]
--   [exitFullscreen][507]
--   [\_nativeEnterFullScreen][508]
-    -   [Parameters][509]
--   [\_requestFullscreen][510]
-    -   [Parameters][511]
--   [\_nativeExitFullScreen][512]
--   [\_requestExitFullscreen][513]
--   [\_enterInBrowserFullscreen][514]
-    -   [Parameters][515]
--   [\_exitInBrowserFullscreen][516]
--   [registerFullScreenEvents][517]
--   [\_handleIosFullscreen][518]
--   [\_fullscreenChangeHandler][519]
--   [\_fullscreenEnterHandler][520]
--   [\_fullscreenExitHandler][521]
--   [attachIosFullscreenListeners][522]
--   [BaseMiddleware][523]
-    -   [id][524]
-    -   [callNext][525]
-        -   [Parameters][526]
--   [Middleware][527]
-    -   [Parameters][528]
-    -   [use][529]
-        -   [Parameters][530]
-    -   [run][531]
-        -   [Parameters][532]
--   [PlaybackMiddleware][533]
-    -   [use][534]
-        -   [Parameters][535]
-    -   [load][536]
-        -   [Parameters][537]
-    -   [play][538]
-        -   [Parameters][539]
-    -   [pause][540]
-        -   [Parameters][541]
-    -   [Actions][542]
--   [BLACK_COVER_CLASS_NAME][543]
--   [CONTAINER_CLASS_NAME][544]
--   [POSTER_CLASS_NAME][545]
--   [ENGINE_CLASS_NAME][546]
--   [SUBTITLES_STYLE_CLASS_NAME][547]
--   [SUBTITLES_CLASS_NAME][548]
--   [AUTO][549]
--   [OFF][550]
--   [DURATION_OFFSET][551]
--   [REPOSITION_CUES_TIMEOUT][552]
--   [LIVE_EDGE_THRESHOLD][553]
--   [Player][554]
-    -   [Parameters][555]
-    -   [configure][556]
-        -   [Parameters][557]
-    -   [ready][558]
-    -   [load][559]
-    -   [play][560]
-    -   [pause][561]
-    -   [getView][562]
-    -   [getVideoElement][563]
-    -   [reset][564]
-    -   [destroy][565]
-    -   [hideBlackCover][566]
-    -   [showBlackCover][567]
-    -   [attachMediaSource][568]
-    -   [detachMediaSource][569]
-    -   [buffered][570]
-    -   [currentTime][571]
-        -   [Parameters][572]
-    -   [currentTime][573]
-    -   [duration][574]
-    -   [volume][575]
-        -   [Parameters][576]
-    -   [volume][577]
-    -   [paused][578]
-    -   [seeking][579]
-    -   [playsinline][580]
-        -   [Parameters][581]
-    -   [playsinline][582]
-    -   [muted][583]
-        -   [Parameters][584]
-    -   [muted][585]
-    -   [src][586]
-    -   [dimensions][587]
-        -   [Parameters][588]
-    -   [dimensions][589]
-    -   [poster][590]
-    -   [playbackRate][591]
-        -   [Parameters][592]
-    -   [playbackRate][593]
-    -   [playbackRates][594]
-    -   [defaultPlaybackRate][595]
-    -   [engineType][596]
-    -   [streamType][597]
-    -   [env][598]
-    -   [config][599]
-    -   [hasUserInteracted][600]
-    -   [loadingMedia][601]
-        -   [Parameters][602]
-    -   [crossOrigin][603]
-        -   [Parameters][604]
-    -   [crossOrigin][605]
-    -   [ended][606]
-    -   [playbackMiddleware][607]
-    -   [posterManager][608]
-    -   [isOnLiveEdge][609]
-    -   [getStartTimeOfDvrWindow][610]
-    -   [getActiveTracks][611]
-    -   [setTextDisplaySettings][612]
-        -   [Parameters][613]
-    -   [textStyle][614]
-        -   [Parameters][615]
-    -   [textStyle][616]
-    -   [isFullscreen][617]
-    -   [notifyEnterFullscreen][618]
-    -   [notifyExitFullscreen][619]
-    -   [enterFullscreen][620]
-        -   [Parameters][621]
-    -   [exitFullscreen][622]
-    -   [enterPictureInPicture][623]
-    -   [exitPictureInPicture][624]
-    -   [isInPictureInPicture][625]
-    -   [isPictureInPictureSupported][626]
-    -   [isVr][627]
-    -   [getLogLevel][628]
-        -   [Parameters][629]
-    -   [setLogLevel][630]
-        -   [Parameters][631]
-    -   [\_calcRatio][632]
-        -   [Parameters][633]
-    -   [Event][634]
-    -   [TextStyle][635]
-    -   [State][636]
-    -   [Track][637]
-    -   [LogLevelType][638]
-    -   [LogLevel][639]
-    -   [AbrMode][640]
-    -   [MediaType][641]
-    -   [StreamType][642]
-    -   [EngineType][643]
-    -   [CorsType][644]
-    -   [AdBreakType][645]
-    -   [AdTagType][646]
-    -   [Error][647]
-    -   [runCapabilities][648]
-    -   [getCapabilities][649]
-        -   [Parameters][650]
-    -   [setCapabilities][651]
-        -   [Parameters][652]
--   [isDvr][653]
--   [getTracks][654]
-    -   [Parameters][655]
--   [selectTrack][656]
-    -   [Parameters][657]
--   [loadPlayer][658]
-    -   [Parameters][659]
--   [StateManager][660]
-    -   [Parameters][661]
-    -   [destroy][662]
-    -   [reset][663]
-    -   [currentState][664]
-    -   [previousState][665]
-    -   [history][666]
--   [State][667]
-    -   [Parameters][668]
-    -   [type][669]
+    -   [preventDefault][495]
+    -   [stopImmediatePropagation][496]
+    -   [stopPropagation][497]
+-   [IN_BROWSER_FULLSCREEN][498]
+-   [FullscreenController][499]
+    -   [Parameters][500]
+    -   [destroy][501]
+-   [\_isNativeFullscreen][502]
+-   [isFullscreen][503]
+-   [enterFullscreen][504]
+    -   [Parameters][505]
+-   [exitFullscreen][506]
+-   [\_nativeEnterFullScreen][507]
+    -   [Parameters][508]
+-   [\_requestFullscreen][509]
+    -   [Parameters][510]
+-   [\_nativeExitFullScreen][511]
+-   [\_requestExitFullscreen][512]
+-   [\_enterInBrowserFullscreen][513]
+    -   [Parameters][514]
+-   [\_exitInBrowserFullscreen][515]
+-   [registerFullScreenEvents][516]
+-   [\_handleIosFullscreen][517]
+-   [\_fullscreenChangeHandler][518]
+-   [\_fullscreenEnterHandler][519]
+-   [\_fullscreenExitHandler][520]
+-   [attachIosFullscreenListeners][521]
+-   [BaseMiddleware][522]
+    -   [id][523]
+    -   [callNext][524]
+        -   [Parameters][525]
+-   [Middleware][526]
+    -   [Parameters][527]
+    -   [use][528]
+        -   [Parameters][529]
+    -   [run][530]
+        -   [Parameters][531]
+-   [PlaybackMiddleware][532]
+    -   [use][533]
+        -   [Parameters][534]
+    -   [load][535]
+        -   [Parameters][536]
+    -   [play][537]
+        -   [Parameters][538]
+    -   [pause][539]
+        -   [Parameters][540]
+    -   [Actions][541]
+-   [BLACK_COVER_CLASS_NAME][542]
+-   [CONTAINER_CLASS_NAME][543]
+-   [POSTER_CLASS_NAME][544]
+-   [ENGINE_CLASS_NAME][545]
+-   [SUBTITLES_STYLE_CLASS_NAME][546]
+-   [SUBTITLES_CLASS_NAME][547]
+-   [AUTO][548]
+-   [OFF][549]
+-   [DURATION_OFFSET][550]
+-   [REPOSITION_CUES_TIMEOUT][551]
+-   [LIVE_EDGE_THRESHOLD][552]
+-   [Player][553]
+    -   [Parameters][554]
+    -   [configure][555]
+        -   [Parameters][556]
+    -   [ready][557]
+    -   [load][558]
+    -   [play][559]
+    -   [pause][560]
+    -   [getView][561]
+    -   [getVideoElement][562]
+    -   [reset][563]
+    -   [destroy][564]
+    -   [hideBlackCover][565]
+    -   [showBlackCover][566]
+    -   [attachMediaSource][567]
+    -   [detachMediaSource][568]
+    -   [buffered][569]
+    -   [currentTime][570]
+        -   [Parameters][571]
+    -   [currentTime][572]
+    -   [duration][573]
+    -   [volume][574]
+        -   [Parameters][575]
+    -   [volume][576]
+    -   [paused][577]
+    -   [seeking][578]
+    -   [playsinline][579]
+        -   [Parameters][580]
+    -   [playsinline][581]
+    -   [muted][582]
+        -   [Parameters][583]
+    -   [muted][584]
+    -   [src][585]
+    -   [dimensions][586]
+        -   [Parameters][587]
+    -   [dimensions][588]
+    -   [poster][589]
+    -   [playbackRate][590]
+        -   [Parameters][591]
+    -   [playbackRate][592]
+    -   [playbackRates][593]
+    -   [defaultPlaybackRate][594]
+    -   [engineType][595]
+    -   [streamType][596]
+    -   [env][597]
+    -   [config][598]
+    -   [hasUserInteracted][599]
+    -   [loadingMedia][600]
+        -   [Parameters][601]
+    -   [crossOrigin][602]
+        -   [Parameters][603]
+    -   [crossOrigin][604]
+    -   [ended][605]
+    -   [playbackMiddleware][606]
+    -   [posterManager][607]
+    -   [isOnLiveEdge][608]
+    -   [getStartTimeOfDvrWindow][609]
+    -   [getActiveTracks][610]
+    -   [setTextDisplaySettings][611]
+        -   [Parameters][612]
+    -   [textStyle][613]
+        -   [Parameters][614]
+    -   [textStyle][615]
+    -   [isFullscreen][616]
+    -   [notifyEnterFullscreen][617]
+    -   [notifyExitFullscreen][618]
+    -   [enterFullscreen][619]
+        -   [Parameters][620]
+    -   [exitFullscreen][621]
+    -   [enterPictureInPicture][622]
+    -   [exitPictureInPicture][623]
+    -   [isInPictureInPicture][624]
+    -   [isPictureInPictureSupported][625]
+    -   [isVr][626]
+    -   [getLogLevel][627]
+        -   [Parameters][628]
+    -   [setLogLevel][629]
+        -   [Parameters][630]
+    -   [\_calcRatio][631]
+        -   [Parameters][632]
+    -   [Event][633]
+    -   [TextStyle][634]
+    -   [State][635]
+    -   [Track][636]
+    -   [LogLevelType][637]
+    -   [LogLevel][638]
+    -   [AbrMode][639]
+    -   [MediaType][640]
+    -   [StreamType][641]
+    -   [EngineType][642]
+    -   [CorsType][643]
+    -   [AdBreakType][644]
+    -   [AdTagType][645]
+    -   [Error][646]
+    -   [runCapabilities][647]
+    -   [getCapabilities][648]
+        -   [Parameters][649]
+    -   [setCapabilities][650]
+        -   [Parameters][651]
+-   [isDvr][652]
+-   [getTracks][653]
+    -   [Parameters][654]
+-   [selectTrack][655]
+    -   [Parameters][656]
+-   [loadPlayer][657]
+    -   [Parameters][658]
+-   [StateManager][659]
+    -   [Parameters][660]
+    -   [destroy][661]
+    -   [reset][662]
+    -   [currentState][663]
+    -   [previousState][664]
+    -   [history][665]
+-   [State][666]
+    -   [Parameters][667]
+    -   [type][668]
+    -   [duration][669]
     -   [duration][670]
-    -   [duration][671]
-        -   [Parameters][672]
--   [AudioTrack][673]
--   [CuesStatus][674]
--   [constructor][675]
-    -   [Parameters][676]
--   [hideTextTrack][677]
--   [getExternalTracks][678]
-    -   [Parameters][679]
--   [selectTextTrack][680]
-    -   [Parameters][681]
--   [resetAllCues][682]
--   [reset][683]
--   [destroy][684]
--   [\_resetExternalNativeTextTrack][685]
--   [\_addCuesToNativeTextTrack][686]
-    -   [Parameters][687]
--   [\_addNativeTextTrack][688]
--   [IMPLICIT_SCALE_PERCENTAGE][689]
--   [TextStyle][690]
-    -   [fontSize][691]
-    -   [fontFamily][692]
-    -   [fontColor][693]
-    -   [fontOpacity][694]
-    -   [backgroundColor][695]
-    -   [backgroundOpacity][696]
-    -   [fontEdge][697]
-    -   [toCSS][698]
-    -   [clone][699]
-    -   [isEqual][700]
-        -   [Parameters][701]
-    -   [FontFamily][702]
-    -   [StandardColors][703]
-    -   [StandardOpacities][704]
-    -   [EdgeStyles][705]
--   [fontScale][706]
--   [TextTrack][707]
--   [Track][708]
-    -   [Parameters][709]
-    -   [clone][710]
-    -   [id][711]
+        -   [Parameters][671]
+-   [AudioTrack][672]
+-   [CuesStatus][673]
+-   [constructor][674]
+    -   [Parameters][675]
+-   [hideTextTrack][676]
+-   [getExternalTracks][677]
+    -   [Parameters][678]
+-   [selectTextTrack][679]
+    -   [Parameters][680]
+-   [resetAllCues][681]
+-   [reset][682]
+-   [destroy][683]
+-   [\_resetExternalNativeTextTrack][684]
+-   [\_addCuesToNativeTextTrack][685]
+    -   [Parameters][686]
+-   [\_addNativeTextTrack][687]
+-   [IMPLICIT_SCALE_PERCENTAGE][688]
+-   [TextStyle][689]
+    -   [fontSize][690]
+    -   [fontFamily][691]
+    -   [fontColor][692]
+    -   [fontOpacity][693]
+    -   [backgroundColor][694]
+    -   [backgroundOpacity][695]
+    -   [fontEdge][696]
+    -   [toCSS][697]
+    -   [clone][698]
+    -   [isEqual][699]
+        -   [Parameters][700]
+    -   [FontFamily][701]
+    -   [StandardColors][702]
+    -   [StandardOpacities][703]
+    -   [EdgeStyles][704]
+-   [fontScale][705]
+-   [TextTrack][706]
+-   [Track][707]
+    -   [Parameters][708]
+    -   [clone][709]
+    -   [id][710]
+    -   [active][711]
     -   [active][712]
-    -   [active][713]
-        -   [Parameters][714]
+        -   [Parameters][713]
+    -   [label][714]
     -   [label][715]
-    -   [label][716]
-        -   [Parameters][717]
-    -   [language][718]
+        -   [Parameters][716]
+    -   [language][717]
+    -   [index][718]
     -   [index][719]
-    -   [index][720]
-        -   [Parameters][721]
-    -   [langComparer][722]
-        -   [Parameters][723]
--   [VideoTrack][724]
--   [findDirectionSetting][725]
-    -   [Parameters][726]
--   [findAlignSetting][727]
-    -   [Parameters][728]
--   [VTTCue][729]
-    -   [Parameters][730]
-    -   [hasBeenReset][731]
-    -   [displayState][732]
-    -   [\_id][733]
--   [scrollSetting][734]
--   [findScrollSetting][735]
-    -   [Parameters][736]
--   [isValidPercentValue][737]
-    -   [Parameters][738]
--   [jsonp][739]
-    -   [Parameters][740]
--   [\_cleanup][741]
--   [callbackId][742]
-    -   [Parameters][743]
--   [Locale][744]
-    -   [language][745]
--   [getLogger][746]
-    -   [Parameters][747]
--   [getLogLevel][748]
-    -   [Parameters][749]
--   [setLogLevel][750]
-    -   [Parameters][751]
--   [MultiMap][752]
-    -   [push][753]
-        -   [Parameters][754]
-    -   [set][755]
-        -   [Parameters][756]
-    -   [has][757]
-        -   [Parameters][758]
-    -   [get][759]
-        -   [Parameters][760]
-    -   [getAll][761]
-    -   [remove][762]
-        -   [Parameters][763]
-    -   [keys][764]
-    -   [clear][765]
--   [setSrc][766]
-    -   [Parameters][767]
--   [src][768]
--   [getElement][769]
--   [hide][770]
--   [reset][771]
--   [destroy][772]
--   [ResizeWatcher][773]
-    -   [destroy][774]
-    -   [init][775]
-        -   [Parameters][776]
--   [IFrameObserver][777]
-    -   [Parameters][778]
-    -   [observe][779]
-        -   [Parameters][780]
-    -   [disconnect][781]
--   [getSuitableSourceForResolution][782]
-    -   [Parameters][783]
--   [isNumber][784]
-    -   [Parameters][785]
--   [isInt][786]
-    -   [Parameters][787]
--   [isFloat][788]
-    -   [Parameters][789]
--   [toTitleCase][790]
-    -   [Parameters][791]
--   [endsWith][792]
-    -   [Parameters][793]
--   [merge][794]
-    -   [Parameters][795]
--   [isObject][796]
-    -   [Parameters][797]
--   [mergeDeep][798]
-    -   [Parameters][799]
--   [copyDeep][800]
-    -   [Parameters][801]
--   [isEmptyObject][802]
-    -   [Parameters][803]
--   [getPropertyPath][804]
-    -   [Parameters][805]
--   [hasPropertyPath][806]
-    -   [Parameters][807]
--   [createPropertyPath][808]
-    -   [Parameters][809]
--   [deletePropertyPath][810]
-    -   [Parameters][811]
--   [defer][812]
--   [bind][813]
-    -   [Parameters][814]
--   [uniqueId][815]
-    -   [Parameters][816]
--   [addClassName][817]
-    -   [Parameters][818]
--   [removeClassName][819]
-    -   [Parameters][820]
--   [hasClassName][821]
-    -   [Parameters][822]
--   [setAttribute][823]
-    -   [Parameters][824]
--   [removeAttribute][825]
-    -   [Parameters][826]
--   [setStyle][827]
-    -   [Parameters][828]
--   [appendChild][829]
-    -   [Parameters][830]
--   [removeChild][831]
-    -   [Parameters][832]
--   [prependTo][833]
-    -   [Parameters][834]
--   [getElementById][835]
-    -   [Parameters][836]
--   [getElementsByTagName][837]
-    -   [Parameters][838]
--   [createElement][839]
-    -   [Parameters][840]
--   [loadStyleSheetAsync][841]
-    -   [Parameters][842]
--   [loadScriptAsync][843]
-    -   [Parameters][844]
--   [getElementBySelector][845]
-    -   [Parameters][846]
--   [insertBefore][847]
-    -   [Parameters][848]
--   [compare][849]
-    -   [Parameters][850]
+        -   [Parameters][720]
+    -   [langComparer][721]
+        -   [Parameters][722]
+-   [VideoTrack][723]
+-   [findDirectionSetting][724]
+    -   [Parameters][725]
+-   [findAlignSetting][726]
+    -   [Parameters][727]
+-   [VTTCue][728]
+    -   [Parameters][729]
+    -   [hasBeenReset][730]
+    -   [displayState][731]
+    -   [\_id][732]
+-   [scrollSetting][733]
+-   [findScrollSetting][734]
+    -   [Parameters][735]
+-   [isValidPercentValue][736]
+    -   [Parameters][737]
+-   [jsonp][738]
+    -   [Parameters][739]
+-   [\_cleanup][740]
+-   [callbackId][741]
+    -   [Parameters][742]
+-   [Locale][743]
+    -   [language][744]
+-   [getLogger][745]
+    -   [Parameters][746]
+-   [getLogLevel][747]
+    -   [Parameters][748]
+-   [setLogLevel][749]
+    -   [Parameters][750]
+-   [MultiMap][751]
+    -   [push][752]
+        -   [Parameters][753]
+    -   [set][754]
+        -   [Parameters][755]
+    -   [has][756]
+        -   [Parameters][757]
+    -   [get][758]
+        -   [Parameters][759]
+    -   [getAll][760]
+    -   [remove][761]
+        -   [Parameters][762]
+    -   [keys][763]
+    -   [clear][764]
+-   [setSrc][765]
+    -   [Parameters][766]
+-   [src][767]
+-   [getElement][768]
+-   [hide][769]
+-   [reset][770]
+-   [destroy][771]
+-   [ResizeWatcher][772]
+    -   [destroy][773]
+    -   [init][774]
+        -   [Parameters][775]
+-   [IFrameObserver][776]
+    -   [Parameters][777]
+    -   [observe][778]
+        -   [Parameters][779]
+    -   [disconnect][780]
+-   [getSuitableSourceForResolution][781]
+    -   [Parameters][782]
+-   [isNumber][783]
+    -   [Parameters][784]
+-   [isInt][785]
+    -   [Parameters][786]
+-   [isFloat][787]
+    -   [Parameters][788]
+-   [toTitleCase][789]
+    -   [Parameters][790]
+-   [endsWith][791]
+    -   [Parameters][792]
+-   [merge][793]
+    -   [Parameters][794]
+-   [isObject][795]
+    -   [Parameters][796]
+-   [mergeDeep][797]
+    -   [Parameters][798]
+-   [copyDeep][799]
+    -   [Parameters][800]
+-   [isEmptyObject][801]
+    -   [Parameters][802]
+-   [getPropertyPath][803]
+    -   [Parameters][804]
+-   [hasPropertyPath][805]
+    -   [Parameters][806]
+-   [createPropertyPath][807]
+    -   [Parameters][808]
+-   [deletePropertyPath][809]
+    -   [Parameters][810]
+-   [defer][811]
+-   [bind][812]
+    -   [Parameters][813]
+-   [uniqueId][814]
+    -   [Parameters][815]
+-   [addClassName][816]
+    -   [Parameters][817]
+-   [removeClassName][818]
+    -   [Parameters][819]
+-   [hasClassName][820]
+    -   [Parameters][821]
+-   [setAttribute][822]
+    -   [Parameters][823]
+-   [removeAttribute][824]
+    -   [Parameters][825]
+-   [setStyle][826]
+    -   [Parameters][827]
+-   [appendChild][828]
+    -   [Parameters][829]
+-   [removeChild][830]
+    -   [Parameters][831]
+-   [prependTo][832]
+    -   [Parameters][833]
+-   [getElementById][834]
+    -   [Parameters][835]
+-   [getElementsByTagName][836]
+    -   [Parameters][837]
+-   [createElement][838]
+    -   [Parameters][839]
+-   [loadStyleSheetAsync][840]
+    -   [Parameters][841]
+-   [loadScriptAsync][842]
+    -   [Parameters][843]
+-   [getElementBySelector][844]
+    -   [Parameters][845]
+-   [insertBefore][846]
+    -   [Parameters][847]
+-   [compare][848]
+    -   [Parameters][849]
 
 ## XML_PARSING_ERROR
 
@@ -1130,10 +1129,10 @@ FairPlay is the configure key system.
 
 ### Parameters
 
--   `drmData` **[Array][851]&lt;[Object][852]>** The drm data.
+-   `drmData` **[Array][850]&lt;[Object][851]>** The drm data.
 -   `drmConfig` **PKDrmConfigObject** The drm config.
 
-Returns **[boolean][853]** Whether FairPlay is the configure key system.
+Returns **[boolean][852]** Whether FairPlay is the configure key system.
 
 ## canPlayDrm
 
@@ -1143,9 +1142,9 @@ FairPlay playback supports in case 2 conditions are met:
 
 ### Parameters
 
--   `drmData` **[Array][851]&lt;[Object][852]>** The drm data to check.
+-   `drmData` **[Array][850]&lt;[Object][851]>** The drm data to check.
 
-Returns **[boolean][853]** Whether FairPlay can be play on the current environment.
+Returns **[boolean][852]** Whether FairPlay can be play on the current environment.
 
 ## canPlayDrm
 
@@ -1153,10 +1152,10 @@ Checks if NativeAdapter can play a given drm data.
 
 ### Parameters
 
--   `drmData` **[Array][851]&lt;[Object][852]>** The drm data to check.
+-   `drmData` **[Array][850]&lt;[Object][851]>** The drm data to check.
 -   `drmConfig` **PKDrmConfigObject** The drm config.
 
-Returns **[boolean][853]** Whether the native adapter can play a specific drm data.
+Returns **[boolean][852]** Whether the native adapter can play a specific drm data.
 
 ## setDrmPlayback
 
@@ -1165,7 +1164,7 @@ Sets the FairPlay playback.
 ### Parameters
 
 -   `config` **FairPlayDrmConfigType** The config to manipulate.
--   `drmData` **[Array][851]&lt;[Object][852]>** The drm data.
+-   `drmData` **[Array][850]&lt;[Object][851]>** The drm data.
 
 Returns **void** 
 
@@ -1193,7 +1192,7 @@ Add an engine to the registry.
 
 ### Parameters
 
--   `id` **[string][854]** The engine id.
+-   `id` **[string][853]** The engine id.
 -   `engine` **IEngineStatic**  The engine to register.
 
 Returns **void** 
@@ -1214,7 +1213,7 @@ Remove an engine from the registry.
 
 ### Parameters
 
--   `id` **[string][854]** The engine id.
+-   `id` **[string][853]** The engine id.
 
 Returns **void** 
 
@@ -1232,7 +1231,7 @@ Returns **void**
 
 Get the appropriate Engines.
 
-Returns **[Array][851]&lt;IEngineStatic>** The Array of engines, or null if such doesn't exists.
+Returns **[Array][850]&lt;IEngineStatic>** The Array of engines, or null if such doesn't exists.
 
 ## runCapability
 
@@ -1244,7 +1243,7 @@ Returns **void**
 
 Gets the test result for autoplay capability.
 
-Returns **[Promise][855]&lt;CapabilityResult>** The result object for autoplay capability.
+Returns **[Promise][854]&lt;CapabilityResult>** The result object for autoplay capability.
 
 ## setCapabilities
 
@@ -1252,7 +1251,7 @@ Sets an engine capabilities.
 
 ### Parameters
 
--   `capabilities` **[Object][852]** The engine capabilities.
+-   `capabilities` **[Object][851]** The engine capabilities.
 
 Returns **void** 
 
@@ -1265,8 +1264,8 @@ Html5 engine for playback.
 ### Parameters
 
 -   `source` **PKMediaSourceObject** The selected source object.
--   `config` **[Object][852]** The player configuration.
--   `playerId` **[string][854]** The player id.
+-   `config` **[Object][851]** The player configuration.
+-   `playerId` **[string][853]** The player id.
 
 ### restore
 
@@ -1275,7 +1274,7 @@ Restores the engine.
 #### Parameters
 
 -   `source` **PKMediaSourceObject** The selected source object.
--   `config` **[Object][852]** The player configuration.
+-   `config` **[Object][851]** The player configuration.
 
 Returns **void** 
 
@@ -1295,9 +1294,9 @@ Returns **void**
 
 Get the engine's id
 
-Type: [string][854]
+Type: [string][853]
 
-Returns **[string][854]** the engine's id
+Returns **[string][853]** the engine's id
 
 ### attachMediaSource
 
@@ -1325,7 +1324,7 @@ Returns **void**
 
 ### getVideoElement
 
-Returns **[HTMLVideoElement][856]** The video element.
+Returns **[HTMLVideoElement][855]** The video element.
 
 ### selectVideoTrack
 
@@ -1333,7 +1332,7 @@ Select a new video track.
 
 #### Parameters
 
--   `videoTrack` **[VideoTrack][857]** The video track object to set.
+-   `videoTrack` **[VideoTrack][856]** The video track object to set.
 
 Returns **void** 
 
@@ -1343,7 +1342,7 @@ Select a new audio track.
 
 #### Parameters
 
--   `audioTrack` **[AudioTrack][858]** The video track object to set.
+-   `audioTrack` **[AudioTrack][857]** The video track object to set.
 
 Returns **void** 
 
@@ -1361,13 +1360,13 @@ Returns **void**
 
 Get the start time of DVR window in live playback in seconds.
 
-Returns **[Number][859]** start time of DVR window.
+Returns **[Number][858]** start time of DVR window.
 
 ### play
 
 Start/resume playback.
 
-Returns **[Promise][855]&lt;any>?** play promise
+Returns **[Promise][854]&lt;any>?** play promise
 
 ### pause
 
@@ -1381,9 +1380,9 @@ Load media.
 
 #### Parameters
 
--   `startTime` **[number][859]** Optional time to start the video from.
+-   `startTime` **[number][858]** Optional time to start the video from.
 
-Returns **[Promise][855]&lt;[Object][852]>** The loaded data
+Returns **[Promise][854]&lt;[Object][851]>** The loaded data
 
 ### enterPictureInPicture
 
@@ -1401,17 +1400,17 @@ Returns **void**
 
 Check if the engine is in picture in picture mode
 
-Returns **[boolean][853]** if the engine is in picture in picture mode or not
+Returns **[boolean][852]** if the engine is in picture in picture mode or not
 
 ### src
 
 Set a source.
 
-Type: [string][854]
+Type: [string][853]
 
 #### Parameters
 
--   `source` **[string][854]** Source to set.
+-   `source` **[string][853]** Source to set.
 
 Returns **void** 
 
@@ -1419,27 +1418,27 @@ Returns **void**
 
 Get the source url.
 
-Type: [string][854]
+Type: [string][853]
 
-Returns **[string][854]** The source url.
+Returns **[string][853]** The source url.
 
 ### currentTime
 
 Get the current time in seconds.
 
-Type: [number][859]
+Type: [number][858]
 
-Returns **[Number][859]** The current playback time.
+Returns **[Number][858]** The current playback time.
 
 ### currentTime
 
 Set the current time in seconds.
 
-Type: [number][859]
+Type: [number][858]
 
 #### Parameters
 
--   `to` **[Number][859]** The number to set in seconds.
+-   `to` **[Number][858]** The number to set in seconds.
 
 Returns **void** 
 
@@ -1447,19 +1446,19 @@ Returns **void**
 
 Get the duration in seconds.
 
-Type: [number][859]
+Type: [number][858]
 
-Returns **[Number][859]** The playback duration.
+Returns **[Number][858]** The playback duration.
 
 ### volume
 
 Set playback volume.
 
-Type: [number][859]
+Type: [number][858]
 
 #### Parameters
 
--   `vol` **[Number][859]** The volume to set.
+-   `vol` **[Number][858]** The volume to set.
 
 Returns **void** 
 
@@ -1467,25 +1466,25 @@ Returns **void**
 
 Get playback volume.
 
-Type: [number][859]
+Type: [number][858]
 
-Returns **[Number][859]** The volume value of the video element.
+Returns **[Number][858]** The volume value of the video element.
 
 ### paused
 
 Get paused state.
 
-Type: [boolean][853]
+Type: [boolean][852]
 
-Returns **[boolean][853]** The paused value of the video element.
+Returns **[boolean][852]** The paused value of the video element.
 
 ### seeking
 
 Get seeking state.
 
-Type: [boolean][853]
+Type: [boolean][852]
 
-Returns **[boolean][853]** The seeking value of the video element.
+Returns **[boolean][852]** The seeking value of the video element.
 
 ### seekable
 
@@ -1515,11 +1514,11 @@ Returns **TimeRanges** First buffered range (part) of the video in seconds.
 
 Set player muted state.
 
-Type: [boolean][853]
+Type: [boolean][852]
 
 #### Parameters
 
--   `mute` **[boolean][853]** The new mute value.
+-   `mute` **[boolean][852]** The new mute value.
 
 Returns **void** 
 
@@ -1527,27 +1526,27 @@ Returns **void**
 
 Get player muted state.
 
-Type: [boolean][853]
+Type: [boolean][852]
 
-Returns **[boolean][853]** The muted value of the video element.
+Returns **[boolean][852]** The muted value of the video element.
 
 ### defaultMuted
 
 Get the default mute value.
 
-Type: [boolean][853]
+Type: [boolean][852]
 
-Returns **[boolean][853]** The defaultMuted of the video element.
+Returns **[boolean][852]** The defaultMuted of the video element.
 
 ### poster
 
 Sets an image to be shown while the video is downloading, or until the user hits the play button.
 
-Type: [string][854]
+Type: [string][853]
 
 #### Parameters
 
--   `poster` **[string][854]** The image url to be shown.
+-   `poster` **[string][853]** The image url to be shown.
 
 Returns **void** 
 
@@ -1555,7 +1554,7 @@ Returns **void**
 
 Gets an image to be shown while the video is downloading, or until the user hits the play button.
 
-Type: [string][854]
+Type: [string][853]
 
 Returns **poster** The image url.
 
@@ -1563,11 +1562,11 @@ Returns **poster** The image url.
 
 Specifies if and how the author thinks that the video should be loaded when the page loads.
 
-Type: [string][854]
+Type: [string][853]
 
 #### Parameters
 
--   `preload` **[string][854]** The preload value.
+-   `preload` **[string][853]** The preload value.
 
 Returns **void** 
 
@@ -1575,19 +1574,19 @@ Returns **void**
 
 Gets the preload value of the video element.
 
-Type: [string][854]
+Type: [string][853]
 
-Returns **[string][854]** The preload value.
+Returns **[string][853]** The preload value.
 
 ### autoplay
 
 Set if the video will automatically start playing as soon as it can do so without stopping.
 
-Type: [boolean][853]
+Type: [boolean][852]
 
 #### Parameters
 
--   `autoplay` **[boolean][853]** The autoplay value.
+-   `autoplay` **[boolean][852]** The autoplay value.
 
 Returns **void** 
 
@@ -1595,19 +1594,19 @@ Returns **void**
 
 Gets the autoplay value of the video element.
 
-Type: [boolean][853]
+Type: [boolean][852]
 
-Returns **[boolean][853]** The autoplay value.
+Returns **[boolean][852]** The autoplay value.
 
 ### loop
 
 Set to specifies that the video will start over again, every time it is finished.
 
-Type: [boolean][853]
+Type: [boolean][852]
 
 #### Parameters
 
--   `loop` **[boolean][853]** the loop value.
+-   `loop` **[boolean][852]** the loop value.
 
 Returns **void** 
 
@@ -1615,19 +1614,19 @@ Returns **void**
 
 Gets the loop value of the video element.
 
-Type: [boolean][853]
+Type: [boolean][852]
 
-Returns **[boolean][853]** The loop value.
+Returns **[boolean][852]** The loop value.
 
 ### controls
 
 Set to specifies that video controls should be displayed.
 
-Type: [boolean][853]
+Type: [boolean][852]
 
 #### Parameters
 
--   `controls` **[boolean][853]** the controls value.
+-   `controls` **[boolean][852]** the controls value.
 
 Returns **void** 
 
@@ -1635,19 +1634,19 @@ Returns **void**
 
 Gets the controls value of the video element.
 
-Type: [boolean][853]
+Type: [boolean][852]
 
-Returns **[boolean][853]** The controls value.
+Returns **[boolean][852]** The controls value.
 
 ### playbackRate
 
 Sets the current playback speed of the audio/video.
 
-Type: [number][859]
+Type: [number][858]
 
 #### Parameters
 
--   `playbackRate` **[Number][859]** The playback speed value.
+-   `playbackRate` **[Number][858]** The playback speed value.
 
 Returns **void** 
 
@@ -1655,19 +1654,19 @@ Returns **void**
 
 Gets the current playback speed of the audio/video.
 
-Type: [number][859]
+Type: [number][858]
 
-Returns **[Number][859]** The current playback speed value.
+Returns **[Number][858]** The current playback speed value.
 
 ### defaultPlaybackRate
 
 Sets the default playback speed of the audio/video.
 
-Type: [number][859]
+Type: [number][858]
 
 #### Parameters
 
--   `defaultPlaybackRate` **[Number][859]** The default playback speed value.
+-   `defaultPlaybackRate` **[Number][858]** The default playback speed value.
 
 Returns **void** 
 
@@ -1675,17 +1674,17 @@ Returns **void**
 
 Gets the default playback speed of the audio/video.
 
-Type: [number][859]
+Type: [number][858]
 
-Returns **[Number][859]** The default playback speed value.
+Returns **[Number][858]** The default playback speed value.
 
 ### ended
 
 The ended property returns whether the playback of the audio/video has ended.
 
-Type: [boolean][853]
+Type: [boolean][852]
 
-Returns **[boolean][853]** The ended value.
+Returns **[boolean][852]** The ended value.
 
 ### error
 
@@ -1697,17 +1696,17 @@ Returns **MediaError** The MediaError object has a code property containing the 
 
 ### networkState
 
-Type: [number][859]
+Type: [number][858]
 
-Returns **[Number][859]** The current network state (activity) of the audio/video.
+Returns **[Number][858]** The current network state (activity) of the audio/video.
 
 ### readyState
 
 Indicates if the audio/video is ready to play or not.
 
-Type: [number][859]
+Type: [number][858]
 
-Returns **[Number][859]** The current ready state of the audio/video.
+Returns **[Number][858]** The current ready state of the audio/video.
 0 = HAVE_NOTHING - no information whether or not the audio/video is ready.
 1 = HAVE_METADATA - metadata for the audio/video is ready.
 2 = HAVE_CURRENT_DATA - data for the current playback position is available, but not enough data to play next frame/millisecond.
@@ -1716,41 +1715,41 @@ Returns **[Number][859]** The current ready state of the audio/video.
 
 ### videoHeight
 
-Type: [number][859]
+Type: [number][858]
 
-Returns **[Number][859]** The height of the video player, in pixels.
+Returns **[Number][858]** The height of the video player, in pixels.
 
 ### videoWidth
 
-Type: [number][859]
+Type: [number][858]
 
-Returns **[Number][859]** The width of the video player, in pixels.
+Returns **[Number][858]** The width of the video player, in pixels.
 
 ### playsinline
 
-Type: [boolean][853]
+Type: [boolean][852]
 
 #### Parameters
 
--   `playsinline` **[boolean][853]** Whether to set on the video tag the playsinline attribute.
+-   `playsinline` **[boolean][852]** Whether to set on the video tag the playsinline attribute.
 
 Returns **void** 
 
 ### playsinline
 
-Type: [boolean][853]
+Type: [boolean][852]
 
-Returns **[boolean][853]** Whether the video tag has an attribute of playsinline.
+Returns **[boolean][852]** Whether the video tag has an attribute of playsinline.
 
 ### crossOrigin
 
 Set crossOrigin attribute.
 
-Type: [string][854]?
+Type: [string][853]?
 
 #### Parameters
 
--   `crossOrigin` **[string][854]?** 'anonymous' or 'use-credentials'
+-   `crossOrigin` **[string][853]?** 'anonymous' or 'use-credentials'
 
 Returns **void** 
 
@@ -1758,25 +1757,25 @@ Returns **void**
 
 Get crossOrigin attribute.
 
-Type: [string][854]?
+Type: [string][853]?
 
-Returns **[string][854]?** 'anonymous' or 'use-credentials'
+Returns **[string][853]?** 'anonymous' or 'use-credentials'
 
 ### playbackRates
 
 get the playback rates
 
-Type: [Array][851]&lt;[number][859]>
+Type: [Array][850]&lt;[number][858]>
 
-Returns **[Array][851]&lt;[number][859]>** playback rates
+Returns **[Array][850]&lt;[number][858]>** playback rates
 
 ### isInPictureInPicture
 
 get if the engine's video element is the one in the PIP
 
-Type: [boolean][853]
+Type: [boolean][852]
 
-Returns **[boolean][853]** boolean - is in PIP
+Returns **[boolean][852]** boolean - is in PIP
 
 ### resetAllCues
 
@@ -1786,7 +1785,7 @@ Returns **void**
 
 ### id
 
-Type: [string][854]
+Type: [string][853]
 
 ### videoElementStore
 
@@ -1796,7 +1795,7 @@ Type: PKVideoElementStore
 
 Checks if html5 is supported.
 
-Returns **[boolean][853]** Whether the html5 is supported.
+Returns **[boolean][852]** Whether the html5 is supported.
 
 ### createEngine
 
@@ -1805,8 +1804,8 @@ Factory method to create an engine.
 #### Parameters
 
 -   `source` **PKMediaSourceObject** The selected source object.
--   `config` **[Object][852]** The player configuration.
--   `playerId` **[string][854]** The player id.
+-   `config` **[Object][851]** The player configuration.
+-   `playerId` **[string][853]** The player id.
 
 Returns **IEngine** New instance of the run time engine.
 
@@ -1817,10 +1816,10 @@ Checks if the engine can play a given source.
 #### Parameters
 
 -   `source` **PKMediaSourceObject** The source object to check.
--   `preferNative` **[boolean][853]** prefer native flag.
+-   `preferNative` **[boolean][852]** prefer native flag.
 -   `drmConfig` **PKDrmConfigObject** The drm config.
 
-Returns **[boolean][853]** Whether the engine can play the source.
+Returns **[boolean][852]** Whether the engine can play the source.
 
 ### runCapabilities
 
@@ -1832,7 +1831,7 @@ Returns **void**
 
 Gets the html5 capabilities.
 
-Returns **[Promise][855]&lt;[Object][852]>** The html5 capabilities object.
+Returns **[Promise][854]&lt;[Object][851]>** The html5 capabilities object.
 
 ### setCapabilities
 
@@ -1840,7 +1839,7 @@ Sets an engine capabilities.
 
 #### Parameters
 
--   `capabilities` **[Object][852]** The engine capabilities.
+-   `capabilities` **[Object][851]** The engine capabilities.
 
 Returns **void** 
 
@@ -1850,7 +1849,7 @@ For browsers which block auto play, use the user gesture to open the video eleme
 
 #### Parameters
 
--   `playerId` **[string][854]** the id to be set as the key of the video element
+-   `playerId` **[string][853]** the id to be set as the key of the video element
 
 Returns **void** 
 
@@ -1858,7 +1857,7 @@ Returns **void**
 
 The player playback rates.
 
-Type: [Array][851]&lt;[number][859]>
+Type: [Array][850]&lt;[number][858]>
 
 ## hideTextTrack
 
@@ -1900,7 +1899,7 @@ Returns **void**
 
 Checking if adaptive bitrate switching is enabled.
 
-Returns **[boolean][853]** Whether adaptive bitrate is enabled.
+Returns **[boolean][852]** Whether adaptive bitrate is enabled.
 
 ## isAdaptiveBitrateEnabled
 
@@ -1908,13 +1907,13 @@ Checking if adaptive bitrate switching is enabled.
 For progressive playback will always returns false.
 For adaptive playback will always returns true.
 
-Returns **[boolean][853]** Whether adaptive bitrate is enabled.
+Returns **[boolean][852]** Whether adaptive bitrate is enabled.
 
 ## isAdaptiveBitrateEnabled
 
 Checking if adaptive bitrate switching is enabled.
 
-Returns **[boolean][853]** Whether adaptive bitrate is enabled.
+Returns **[boolean][852]** Whether adaptive bitrate is enabled.
 
 ## seekToLiveEdge
 
@@ -1938,19 +1937,19 @@ Returns **void**
 
 Checking if the current playback is live.
 
-Returns **[boolean][853]** Whether playback is live.
+Returns **[boolean][852]** Whether playback is live.
 
 ## isLive
 
 Checking if the current playback is live.
 
-Returns **[boolean][853]** Whether playback is live.
+Returns **[boolean][852]** Whether playback is live.
 
 ## isLive
 
 Checking if the current playback is live.
 
-Returns **[boolean][853]** Whether playback is live.
+Returns **[boolean][852]** Whether playback is live.
 
 ## constructor
 
@@ -1958,10 +1957,10 @@ Fairplay DRM handler
 
 ### Parameters
 
--   `videoElement` **[HTMLVideoElement][856]** the video element
+-   `videoElement` **[HTMLVideoElement][855]** the video element
 -   `config` **FairPlayDrmConfigType** config object
--   `errorCallback` **[Function][860]** error callback function
--   `drmResponseCallback` **[Function][860]** drm license response callback function
+-   `errorCallback` **[Function][859]** error callback function
+-   `drmResponseCallback` **[Function][859]** drm license response callback function
 
 Returns **void** 
 
@@ -1973,9 +1972,9 @@ An illustration of media source extension for progressive download
 
 ### Parameters
 
--   `videoElement` **[HTMLVideoElement][856]** The video element which bind to NativeAdapter
+-   `videoElement` **[HTMLVideoElement][855]** The video element which bind to NativeAdapter
 -   `source` **PKMediaSourceObject** The source object
--   `config` **[Object][852]** The player configuration
+-   `config` **[Object][851]** The player configuration
 
 ### attachMediaSource
 
@@ -1993,19 +1992,19 @@ Returns **void**
 
 Get the start time of DVR window in live playback in seconds.
 
-Returns **[Number][859]** start time of DVR window.
+Returns **[Number][858]** start time of DVR window.
 
 ## id
 
 The id of the Adapter
 
-Type: [string][854]
+Type: [string][853]
 
 ## TEST_VIDEO
 
 static video element for canPlayType testing
 
-Type: [HTMLVideoElement][856]
+Type: [HTMLVideoElement][855]
 
 ## canPlayType
 
@@ -2013,9 +2012,9 @@ Checks if NativeAdapter can play a given mime type.
 
 ### Parameters
 
--   `mimeType` **[string][854]** The mime type to check
+-   `mimeType` **[string][853]** The mime type to check
 
-Returns **[boolean][853]** Whether the native adapter can play a specific mime type
+Returns **[boolean][852]** Whether the native adapter can play a specific mime type
 
 ## createAdapter
 
@@ -2023,9 +2022,9 @@ Factory method to create media source adapter.
 
 ### Parameters
 
--   `videoElement` **[HTMLVideoElement][856]** The video element that the media source adapter work with.
+-   `videoElement` **[HTMLVideoElement][855]** The video element that the media source adapter work with.
 -   `source` **PKMediaSourceObject** The source Object.
--   `config` **[Object][852]** The player configuration.
+-   `config` **[Object][851]** The player configuration.
 
 Returns **IMediaSourceAdapter** New instance of the run time media source adapter.
 
@@ -2035,15 +2034,15 @@ Load the video source
 
 ### Parameters
 
--   `startTime` **[number][859]** Optional time to start the video from.
+-   `startTime` **[number][858]** Optional time to start the video from.
 
-Returns **[Promise][855]&lt;[Object][852]>** The loaded data
+Returns **[Promise][854]&lt;[Object][851]>** The loaded data
 
 ## destroy
 
 Destroys the native adapter.
 
-Returns **[Promise][855]&lt;any>** The destroy promise.
+Returns **[Promise][854]&lt;any>** The destroy promise.
 
 ## destroy
 
@@ -2057,7 +2056,7 @@ Select a video track
 
 ### Parameters
 
--   `videoTrack` **[VideoTrack][857]** the track to select
+-   `videoTrack` **[VideoTrack][856]** the track to select
 
 Returns **void** 
 
@@ -2067,7 +2066,7 @@ Select a progressive video track
 
 ### Parameters
 
--   `videoTrack` **[VideoTrack][857]** the track to select
+-   `videoTrack` **[VideoTrack][856]** the track to select
 
 Returns **void** 
 
@@ -2077,7 +2076,7 @@ Select a native video track
 
 ### Parameters
 
--   `videoTrack` **[VideoTrack][857]** the track to select
+-   `videoTrack` **[VideoTrack][856]** the track to select
 
 Returns **void** 
 
@@ -2087,7 +2086,7 @@ Select an audio track
 
 ### Parameters
 
--   `audioTrack` **[AudioTrack][858]** the  audio track to select
+-   `audioTrack` **[AudioTrack][857]** the  audio track to select
 
 Returns **void** 
 
@@ -2105,9 +2104,9 @@ Returns **void**
 
 ### Parameters
 
--   `videoElement` **[HTMLVideoElement][856]** The video element which bind to media source adapter.
+-   `videoElement` **[HTMLVideoElement][855]** The video element which bind to media source adapter.
 -   `source` **PKMediaSourceObject** The source object.
--   `config` **[Object][852]** The media source adapter configuration. (optional, default `{}`)
+-   `config` **[Object][851]** The media source adapter configuration. (optional, default `{}`)
 
 ## \_trigger
 
@@ -2115,8 +2114,8 @@ Dispatch an adapter event forward.
 
 ### Parameters
 
--   `name` **[string][854]** The name of the event.
--   `payload` **[Object][852]?** The event payload.
+-   `name` **[string][853]** The name of the event.
+-   `payload` **[Object][851]?** The event payload.
 
 Returns **void** 
 
@@ -2126,27 +2125,27 @@ Checks if the adapter can recover from an error triggered by the video element e
 
 ### Parameters
 
--   `event` **[Event][861]** the html5 video element error
+-   `event` **[Event][860]** the html5 video element error
 
-Returns **[boolean][853]** if it can recover or not
+Returns **[boolean][852]** if it can recover or not
 
 ## currentTime
 
 Get the current time in seconds.
 
-Type: [number][859]
+Type: [number][858]
 
-Returns **[Number][859]** The current playback time.
+Returns **[Number][858]** The current playback time.
 
 ## currentTime
 
 Set the current time in seconds.
 
-Type: [number][859]
+Type: [number][858]
 
 ### Parameters
 
--   `to` **[Number][859]** The number to set in seconds.
+-   `to` **[Number][858]** The number to set in seconds.
 
 Returns **void** 
 
@@ -2154,28 +2153,28 @@ Returns **void**
 
 Get the duration in seconds.
 
-Type: [number][859]
+Type: [number][858]
 
-Returns **[Number][859]** The playback duration.
+Returns **[Number][858]** The playback duration.
 
 ## src
 
 Getter for the src that the adapter plays on the video element.
 In case the adapter preformed a load it will return the manifest url.
 
-Type: [string][854]
+Type: [string][853]
 
-Returns **[string][854]** The src url.
+Returns **[string][853]** The src url.
 
 ## src
 
 Setter for the src that the adapter plays on the video element.
 
-Type: [string][854]
+Type: [string][853]
 
 ### Parameters
 
--   `source` **[string][854]** The src url.
+-   `source` **[string][853]** The src url.
 
 Returns **void** 
 
@@ -2189,13 +2188,13 @@ Returns **PKMediaSourceCapabilities** The adapter capabilities.
 
 Passing the getLogger function to the actual media source adapter.
 
-Type: [Function][860]
+Type: [Function][859]
 
 ## isMSESupported
 
 check for media source supported on browser
 
-Returns **[boolean][853]** Whether the media source is supported.
+Returns **[boolean][852]** Whether the media source is supported.
 
 ## canPlayType
 
@@ -2203,10 +2202,10 @@ Must implemented methods by the derived media source adapter \*
 
 ### Parameters
 
--   `mimeType` **[string][854]** 
--   `preferNative` **[boolean][853]** 
+-   `mimeType` **[string][853]** 
+-   `preferNative` **[boolean][852]** 
 
-Returns **[boolean][853]** 
+Returns **[boolean][852]** 
 
 ## \_throwNotImplementedError
 
@@ -2214,7 +2213,7 @@ throw a run time error
 
 ### Parameters
 
--   `name` **[string][854]** of the unimplemented function
+-   `name` **[string][853]** of the unimplemented function
 
 Returns **any** void/string/boolean
 
@@ -2222,7 +2221,7 @@ Returns **any** void/string/boolean
 
 Checks if the media source adapter is supported.
 
-Returns **[boolean][853]** Whether the media source adapter is supported.
+Returns **[boolean][852]** Whether the media source adapter is supported.
 
 ## MediaSourceProvider
 
@@ -2235,10 +2234,10 @@ Checks if the a media source adapter can play a given source.
 #### Parameters
 
 -   `source` **PKMediaSourceObject** The source object to check.
--   `preferNative` **[boolean][853]** prefer native flag. (optional, default `true`)
+-   `preferNative` **[boolean][852]** prefer native flag. (optional, default `true`)
 -   `drmConfig` **PKDrmConfigObject** The drm config.
 
-Returns **[boolean][853]** Whether a media source adapter can play the source.
+Returns **[boolean][852]** Whether a media source adapter can play the source.
 
 ### destroy
 
@@ -2252,9 +2251,9 @@ Get the appropriate media source adapter to the video source.
 
 ### Parameters
 
--   `videoElement` **[HTMLVideoElement][856]** The video element which requires adapter for a given mimeType.
+-   `videoElement` **[HTMLVideoElement][855]** The video element which requires adapter for a given mimeType.
 -   `source` **PKMediaSourceObject** The selected source object.
--   `config` **[Object][852]** The player configuration.
+-   `config` **[Object][851]** The player configuration.
 
 Returns **(IMediaSourceAdapter | null)** The selected media source adapter, or null if such doesn't exists.
 
@@ -2380,7 +2379,7 @@ the file that the external captions handler is trying to download could not be d
 ## UNKNOWN_LANGUAGE
 
 The language key in the caption object is empty / does not exist. Language is a mandatory field.
-[https://github.com/kaltura/playkit-js/blob/master/docs/configuration.md#configsourcescaptions][862]
+[https://github.com/kaltura/playkit-js/blob/master/docs/configuration.md#configsourcescaptions][861]
 
 ## BUFFER_READ_OUT_OF_BOUNDS
 
@@ -2667,7 +2666,7 @@ happen under the following conditions:
        persistent state),
  A user prompt was shown and the user denied access,
   The key system is not available from unsecure contexts. (ie.
-requires HTTPS) See [https://goo.gl/EEhZqT][863].
+requires HTTPS) See [https://goo.gl/EEhZqT][862].
 
 ## FAILED_TO_CREATE_CDM
 
@@ -2826,7 +2825,7 @@ An unknown error occurred in the IndexedDB.
 On Firefox, one common source for UnknownError calls is reverting
 Firefox to an old version. This makes the indexedDB storage inaccessible
 for older versions. The only way to fix this is to delete the storage
-data in your profile. See [https://goo.gl/eKVPPe][864].
+data in your profile. See [https://goo.gl/eKVPPe][863].
 
 ## OPERATION_ABORTED
 
@@ -2922,22 +2921,22 @@ VR plugin is not supported.
 
 ### Parameters
 
--   `severity` **[number][859]** error's severity
--   `category` **[number][859]** error's category.
--   `code` **[number][859]** error's code.
+-   `severity` **[number][858]** error's severity
+-   `category` **[number][858]** error's category.
+-   `code` **[number][858]** error's code.
 -   `data` **any** additional data for the error. (optional, default `{}`)
 
 ### Severity
 
-Type: [number][859]
+Type: [number][858]
 
 ### Category
 
-Type: [number][859]
+Type: [number][858]
 
 ### Code
 
-Type: [number][859]
+Type: [number][858]
 
 ## RECOVERABLE
 
@@ -2968,10 +2967,10 @@ Attaches an event listener to an event target for only one time.
 
 #### Parameters
 
--   `target` **[EventTarget][865]** The event target.
--   `type` **[string][854]** The event type.
--   `listener` **[ListenerType][866]** The event listener.
--   `options` **[Object][852]?** The event options.
+-   `target` **[EventTarget][864]** The event target.
+-   `type` **[string][853]** The event type.
+-   `listener` **[ListenerType][865]** The event listener.
+-   `options` **[Object][851]?** The event options.
 
 Returns **void** 
 
@@ -2981,10 +2980,10 @@ Attaches an event listener to an event target.
 
 #### Parameters
 
--   `target` **[EventTarget][865]** The event target.
--   `type` **[string][854]** The event type.
--   `listener` **[ListenerType][866]** The event listener.
--   `options` **[Object][852]?** The event options.
+-   `target` **[EventTarget][864]** The event target.
+-   `type` **[string][853]** The event type.
+-   `listener` **[ListenerType][865]** The event listener.
+-   `options` **[Object][851]?** The event options.
 
 Returns **void** 
 
@@ -2994,9 +2993,9 @@ Detaches an event listener from an event target.
 
 #### Parameters
 
--   `target` **[EventTarget][865]** The event target.
--   `type` **[string][854]** The event type.
--   `listener` **[ListenerType][866]?** The event listener to detach. If no given, detaches all event listeners of the target and type.
+-   `target` **[EventTarget][864]** The event target.
+-   `type` **[string][853]** The event type.
+-   `listener` **[ListenerType][865]?** The event listener to detach. If no given, detaches all event listeners of the target and type.
 
 Returns **void** 
 
@@ -3008,7 +3007,7 @@ Returns **void**
 
 ## ListenerType
 
-Type: function (![Event][861])
+Type: function (![Event][860])
 
 ## ABORT
 
@@ -3256,10 +3255,6 @@ Fired when the user interact with the player ui
 
 Fired when the drm license is responded from the DRM server
 
-## VISIBILITY_CHANGE
-
-Fired when the player changes its visibility state - either by tabbing in / out or scrolling in /out of view
-
 ## FakeEventTarget
 
 A work-alike for EventTarget.  Only DOM elements may be true EventTargets,
@@ -3270,7 +3265,7 @@ classes.  Only FakeEvents should be dispatched.
 
 The target of all dispatched events.  Defaults to |this|.
 
-Type: [FakeEventTarget][867]
+Type: [FakeEventTarget][866]
 
 ### addEventListener
 
@@ -3278,10 +3273,10 @@ Add an event listener to this object.
 
 #### Parameters
 
--   `type` **[string][854]** The event type to listen for.
+-   `type` **[string][853]** The event type to listen for.
 -   `listener` **FakeEventTarget.EventListener** The callback or
       listener object to invoke.
--   `opt_capturing` **[boolean][853]?** Ignored.  FakeEventTargets do not have
+-   `opt_capturing` **[boolean][852]?** Ignored.  FakeEventTargets do not have
       parents, so events neither capture nor bubble.
 
 ### removeEventListener
@@ -3290,10 +3285,10 @@ Remove an event listener from this object.
 
 #### Parameters
 
--   `type` **[string][854]** The event type for which you wish to remove a listener.
+-   `type` **[string][853]** The event type for which you wish to remove a listener.
 -   `listener` **FakeEventTarget.EventListener** The callback or
       listener object to remove.
--   `opt_capturing` **[boolean][853]?** Ignored.  FakeEventTargets do not have
+-   `opt_capturing` **[boolean][852]?** Ignored.  FakeEventTargets do not have
       parents, so events neither capture nor bubble.
 
 ### dispatchEvent
@@ -3302,15 +3297,15 @@ Dispatch an event from this object.
 
 #### Parameters
 
--   `event` **![Event][861]** The event to be dispatched from this object.
+-   `event` **![Event][860]** The event to be dispatched from this object.
 
-Returns **[boolean][853]** True if the default action was prevented.
+Returns **[boolean][852]** True if the default action was prevented.
 
 ## EventListener
 
 These are the listener types defined in the closure extern for EventTarget.
 
-Type: ([EventListener][868] | function (![Event][861]): ([boolean][853] \| [undefined][869]))
+Type: ([EventListener][867] | function (![Event][860]): ([boolean][852] \| [undefined][868]))
 
 ## FakeEvent
 
@@ -3321,99 +3316,99 @@ The event should contain all of the same properties from the dict.
 
 ### Parameters
 
--   `type` **[string][854]** \-
+-   `type` **[string][853]** \-
 -   `payload` **any** 
--   `opt_dict` **[Object][852]?** \-
+-   `opt_dict` **[Object][851]?** \-
 
 ### bubbles
 
-Type: [boolean][853]
+Type: [boolean][852]
 
 ### bubbles
 
-Type: [boolean][853]
+Type: [boolean][852]
 
 ### cancelable
 
-Type: [boolean][853]
+Type: [boolean][852]
 
 ### cancelable
 
-Type: [boolean][853]
+Type: [boolean][852]
 
 ### defaultPrevented
 
-Type: [boolean][853]
+Type: [boolean][852]
 
 ### defaultPrevented
 
-Type: [boolean][853]
+Type: [boolean][852]
 
 ### timeStamp
 
--   **See: [https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp][870]
+-   **See: [https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp][869]
     **
 
 According to MDN, Chrome uses high-res timers instead of epoch time.
 Follow suit so that timeStamps on FakeEvents use the same base as
 on native Events.
 
-Type: [number][859]
+Type: [number][858]
 
 ### timeStamp
 
--   **See: [https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp][870]
+-   **See: [https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp][869]
     **
 
 According to MDN, Chrome uses high-res timers instead of epoch time.
 Follow suit so that timeStamps on FakeEvents use the same base as
 on native Events.
 
-Type: [number][859]
+Type: [number][858]
 
 ### type
 
-Type: [string][854]
+Type: [string][853]
 
 ### type
 
-Type: [string][854]
+Type: [string][853]
 
 ### isTrusted
 
-Type: [boolean][853]
+Type: [boolean][852]
 
 ### isTrusted
 
-Type: [boolean][853]
+Type: [boolean][852]
 
 ### currentTarget
 
-Type: [EventTarget][865]
+Type: [EventTarget][864]
 
 ### currentTarget
 
-Type: [EventTarget][865]
+Type: [EventTarget][864]
 
 ### target
 
-Type: [EventTarget][865]
+Type: [EventTarget][864]
 
 ### target
 
-Type: [EventTarget][865]
+Type: [EventTarget][864]
 
 ### stopped
 
 Non-standard property read by FakeEventTarget to stop processing listeners.
 
-Type: [boolean][853]
+Type: [boolean][852]
 
 ### stopped
 
 Non-standard property read by FakeEventTarget to stop processing listeners.
 
-Type: [boolean][853]
+Type: [boolean][852]
 
 ### preventDefault
 
@@ -3434,13 +3429,13 @@ with native Events.
 
 The IOS fullscreen class name.
 
-Type: [string][854]
+Type: [string][853]
 
 ## FullscreenController
 
 ### Parameters
 
--   `player` **[Player][871]** The player.
+-   `player` **[Player][870]** The player.
 
 ### destroy
 
@@ -3452,13 +3447,13 @@ Returns **void**
 
 if native fullscreen mode
 
-Returns **[boolean][853]** the current fullscreen state of the document
+Returns **[boolean][852]** the current fullscreen state of the document
 
 ## isFullscreen
 
 if fullscreen mode
 
-Returns **[boolean][853]** the current fullscreen state of the document
+Returns **[boolean][852]** the current fullscreen state of the document
 
 ## enterFullscreen
 
@@ -3467,7 +3462,7 @@ otherwise, request fullscreen to the parent player view than includes the GUI as
 
 ### Parameters
 
--   `elementId` **[string][854]?** element to enter fullscreen
+-   `elementId` **[string][853]?** element to enter fullscreen
 
 Returns **void** 
 
@@ -3483,7 +3478,7 @@ get native fullscreen function response
 
 ### Parameters
 
--   `fullScreenElement` **[HTMLElement][872]** element to enter fullscreen
+-   `fullScreenElement` **[HTMLElement][871]** element to enter fullscreen
 
 Returns **void** 
 
@@ -3493,7 +3488,7 @@ request fullscreen function to all browsers
 
 ### Parameters
 
--   `fullScreenElement` **[HTMLElement][872]** element to enter fullscreen
+-   `fullScreenElement` **[HTMLElement][871]** element to enter fullscreen
 
 Returns **void** 
 
@@ -3515,7 +3510,7 @@ enter from ios manually method enter to fullscreen with css
 
 ### Parameters
 
--   `fullScreenElement` **[HTMLElement][872]** element to enter fullscreen
+-   `fullScreenElement` **[HTMLElement][871]** element to enter fullscreen
 
 Returns **void** 
 
@@ -3569,7 +3564,7 @@ Base middleware.
 
 Id of the middleware instance.
 
-Type: [string][854]
+Type: [string][853]
 
 ### callNext
 
@@ -3577,7 +3572,7 @@ Calls the next handler in the middleware chain.
 
 #### Parameters
 
--   `next` **[Function][860]** The next handler in the middleware chain.
+-   `next` **[Function][859]** The next handler in the middleware chain.
 
 Returns **void** 
 
@@ -3587,7 +3582,7 @@ Generic middleware implementation.
 
 ### Parameters
 
--   `actions` **[Object][852]** The actions for the middleware.
+-   `actions` **[Object][851]** The actions for the middleware.
 
 ### use
 
@@ -3595,7 +3590,7 @@ Registers a middleware instance to the middleware chain.
 
 #### Parameters
 
--   `middlewareInstance` **[BaseMiddleware][873]** The middleware instance.
+-   `middlewareInstance` **[BaseMiddleware][872]** The middleware instance.
 
 Returns **void** 
 
@@ -3605,8 +3600,8 @@ Runs a middleware chain for a specific action.
 
 #### Parameters
 
--   `action` **[string][854]** The action to run.
--   `callback` **[Function][860]** The callback function.
+-   `action` **[string][853]** The action to run.
+-   `callback` **[Function][859]** The callback function.
 
 Returns **void** 
 
@@ -3620,7 +3615,7 @@ Registers a playback middleware instance to the middleware chain.
 
 #### Parameters
 
--   `middlewareInstance` **[BaseMiddleware][873]** The middleware instance.
+-   `middlewareInstance` **[BaseMiddleware][872]** The middleware instance.
 
 Returns **void** 
 
@@ -3630,7 +3625,7 @@ Runs a load chain.
 
 #### Parameters
 
--   `callback` **[Function][860]** The last load handler in the chain.
+-   `callback` **[Function][859]** The last load handler in the chain.
 
 Returns **void** 
 
@@ -3640,7 +3635,7 @@ Runs a play chain.
 
 #### Parameters
 
--   `callback` **[Function][860]** The last play handler in the chain.
+-   `callback` **[Function][859]** The last play handler in the chain.
 
 Returns **void** 
 
@@ -3650,7 +3645,7 @@ Runs a pause chain.
 
 #### Parameters
 
--   `callback` **[Function][860]** The last pause handler in the chain.
+-   `callback` **[Function][859]** The last pause handler in the chain.
 
 Returns **void** 
 
@@ -3662,68 +3657,68 @@ The actions of the playback middleware.
 
 The black cover class name.
 
-Type: [string][854]
+Type: [string][853]
 
 ## CONTAINER_CLASS_NAME
 
 The player container class name.
 
-Type: [string][854]
+Type: [string][853]
 
 ## POSTER_CLASS_NAME
 
 /\*\*
 The player poster class name.
 
-Type: [string][854]
+Type: [string][853]
 
 ## ENGINE_CLASS_NAME
 
 The engine class name.
 
-Type: [string][854]
+Type: [string][853]
 
 ## SUBTITLES_STYLE_CLASS_NAME
 
 The text style class name.
 
-Type: [string][854]
+Type: [string][853]
 
 ## SUBTITLES_CLASS_NAME
 
 The subtitles class name.
 
-Type: [string][854]
+Type: [string][853]
 
 ## AUTO
 
 The auto string, for captions
 
-Type: [string][854]
+Type: [string][853]
 
 ## OFF
 
 The off string, for captions
 
-Type: [string][854]
+Type: [string][853]
 
 ## DURATION_OFFSET
 
 The duration offset, for seeking to duration safety.
 
-Type: [number][859]
+Type: [number][858]
 
 ## REPOSITION_CUES_TIMEOUT
 
 The toggle fullscreen rendering timeout value
 
-Type: [number][859]
+Type: [number][858]
 
 ## LIVE_EDGE_THRESHOLD
 
 The threshold in seconds from duration that we still consider it as live edge
 
-Type: [number][859]
+Type: [number][858]
 
 ## Player
 
@@ -3733,7 +3728,7 @@ The HTML5 player class.
 
 ### Parameters
 
--   `config` **[Object][852]** The configuration for the player instance. (optional, default `{}`)
+-   `config` **[Object][851]** The configuration for the player instance. (optional, default `{}`)
 
 ### configure
 
@@ -3741,7 +3736,7 @@ Configures the player according to a given configuration.
 
 #### Parameters
 
--   `config` **[Object][852]** The configuration for the player instance. (optional, default `{}`)
+-   `config` **[Object][851]** The configuration for the player instance. (optional, default `{}`)
 
 Returns **void** 
 
@@ -3749,7 +3744,7 @@ Returns **void**
 
 The player readiness
 
-Returns **[Promise][855]&lt;any>** The ready promise
+Returns **[Promise][854]&lt;any>** The ready promise
 
 ### load
 
@@ -3773,11 +3768,11 @@ Returns **void**
 
 Gets the view of the player (i.e the dom container object).
 
-Returns **[HTMLElement][872]** The dom container.
+Returns **[HTMLElement][871]** The dom container.
 
 ### getVideoElement
 
-Returns **[HTMLVideoElement][856]** The video element.
+Returns **[HTMLVideoElement][855]** The video element.
 
 ### reset
 
@@ -3827,11 +3822,11 @@ Returns **TimeRanges** First buffered range of the engine in seconds.
 
 Set the current time in seconds.
 
-Type: [number][859]
+Type: [number][858]
 
 #### Parameters
 
--   `to` **[Number][859]** The number to set in seconds.
+-   `to` **[Number][858]** The number to set in seconds.
 
 Returns **void** 
 
@@ -3839,27 +3834,27 @@ Returns **void**
 
 Get the current time in seconds.
 
-Type: [number][859]?
+Type: [number][858]?
 
-Returns **[Number][859]?** The playback current time.
+Returns **[Number][858]?** The playback current time.
 
 ### duration
 
 Get the duration in seconds.
 
-Type: [number][859]?
+Type: [number][858]?
 
-Returns **[Number][859]?** The playback duration.
+Returns **[Number][858]?** The playback duration.
 
 ### volume
 
 Set playback volume.
 
-Type: [number][859]
+Type: [number][858]
 
 #### Parameters
 
--   `vol` **[Number][859]** The volume to set.
+-   `vol` **[Number][858]** The volume to set.
 
 Returns **void** 
 
@@ -3867,25 +3862,25 @@ Returns **void**
 
 Get playback volume.
 
-Type: [number][859]?
+Type: [number][858]?
 
-Returns **[Number][859]?** The playback volume.
+Returns **[Number][858]?** The playback volume.
 
 ### paused
 
 Get paused state.
 
-Type: [boolean][853]?
+Type: [boolean][852]?
 
-Returns **[boolean][853]?** Whether the video is paused or not.
+Returns **[boolean][852]?** Whether the video is paused or not.
 
 ### seeking
 
 Get seeking state.
 
-Type: [boolean][853]?
+Type: [boolean][852]?
 
-Returns **[boolean][853]?** Whether the video is seeking or not.
+Returns **[boolean][852]?** Whether the video is seeking or not.
 
 ### playsinline
 
@@ -3893,11 +3888,11 @@ Set playsinline attribute.
 Relevant for iOS 10 and up:
 Elements will now be allowed to play inline, and will not automatically enter fullscreen mode when playback begins.
 
-Type: [boolean][853]
+Type: [boolean][852]
 
 #### Parameters
 
--   `playsinline` **[boolean][853]** Whether the video should plays in line.
+-   `playsinline` **[boolean][852]** Whether the video should plays in line.
 
 Returns **void** 
 
@@ -3907,19 +3902,19 @@ Get playsinline attribute.
 Relevant for iOS 10 and up:
 Elements will now be allowed to play inline, and will not automatically enter fullscreen mode when playback begins.
 
-Type: [boolean][853]?
+Type: [boolean][852]?
 
-Returns **[boolean][853]** Whether the video plays in line.
+Returns **[boolean][852]** Whether the video plays in line.
 
 ### muted
 
 Set player muted state.
 
-Type: [boolean][853]
+Type: [boolean][852]
 
 #### Parameters
 
--   `mute` **[boolean][853]** The mute value.
+-   `mute` **[boolean][852]** The mute value.
 
 Returns **void** 
 
@@ -3927,17 +3922,17 @@ Returns **void**
 
 Get player muted state.
 
-Type: [boolean][853]?
+Type: [boolean][852]?
 
-Returns **[boolean][853]?** Whether the video is muted or not.
+Returns **[boolean][852]?** Whether the video is muted or not.
 
 ### src
 
 Get the player source.
 
-Type: [string][854]?
+Type: [string][853]?
 
-Returns **[string][854]?** The current source of the player.
+Returns **[string][853]?** The current source of the player.
 
 ### dimensions
 
@@ -3963,19 +3958,19 @@ Returns **PKPlayerDimensions** The dimensions of the player.
 
 Get the poster source URL
 
-Type: [string][854]
+Type: [string][853]
 
-Returns **[string][854]** the poster image URL
+Returns **[string][853]** the poster image URL
 
 ### playbackRate
 
 Sets the playbackRate property.
 
-Type: [number][859]
+Type: [number][858]
 
 #### Parameters
 
--   `rate` **[number][859]** The playback speed of the video.
+-   `rate` **[number][858]** The playback speed of the video.
 
 Returns **void** 
 
@@ -3983,75 +3978,75 @@ Returns **void**
 
 Gets the current playback speed of the video.
 
-Type: [number][859]?
+Type: [number][858]?
 
-Returns **[number][859]** The current playback speed of the video.
+Returns **[number][858]** The current playback speed of the video.
 
 ### playbackRates
 
 Gets the possible playback speeds of the video.
 
-Type: [Array][851]&lt;[number][859]>
+Type: [Array][850]&lt;[number][858]>
 
-Returns **[Array][851]&lt;[number][859]>** The possible playback speeds speed of the video.
+Returns **[Array][850]&lt;[number][858]>** The possible playback speeds speed of the video.
 
 ### defaultPlaybackRate
 
 Gets the default playback speed of the video.
 
-Type: [number][859]
+Type: [number][858]
 
-Returns **[number][859]** The default playback speed of the video.
+Returns **[number][858]** The default playback speed of the video.
 
 ### engineType
 
 get the engine type
 
-Type: [string][854]?
+Type: [string][853]?
 
-Returns **[string][854]** html5
+Returns **[string][853]** html5
 
 ### streamType
 
 get the stream type
 
-Type: [string][854]?
+Type: [string][853]?
 
-Returns **[string][854]** hls|dash|progressive
+Returns **[string][853]** hls|dash|progressive
 
 ### env
 
 Getter for the environment of the player instance.
 
-Type: [Object][852]
+Type: [Object][851]
 
-Returns **[Object][852]** The current environment object.
+Returns **[Object][851]** The current environment object.
 
 ### config
 
 Get the player config.
 
-Type: [Object][852]
+Type: [Object][851]
 
-Returns **[Object][852]** A copy of the player configuration.
+Returns **[Object][851]** A copy of the player configuration.
 
 ### hasUserInteracted
 
 Get whether the user already interacted with the player
 
-Type: [boolean][853]
+Type: [boolean][852]
 
-Returns **[boolean][853]** Whether the user interacted with the player
+Returns **[boolean][852]** Whether the user interacted with the player
 
 ### loadingMedia
 
 Set the \_loadingMedia flag to inform the player that a load media request has sent.
 
-Type: [boolean][853]
+Type: [boolean][852]
 
 #### Parameters
 
--   `loading` **[boolean][853]** Whether a load media request has sent.
+-   `loading` **[boolean][852]** Whether a load media request has sent.
 
 Returns **void** 
 
@@ -4059,11 +4054,11 @@ Returns **void**
 
 Set crossOrigin attribute.
 
-Type: [string][854]?
+Type: [string][853]?
 
 #### Parameters
 
--   `crossOrigin` **[string][854]?** 'anonymous' or 'use-credentials'
+-   `crossOrigin` **[string][853]?** 'anonymous' or 'use-credentials'
     anonymous: CORS requests for this element will not have the credentials flag set.
     use-credentials: CORS requests for this element will have the credentials flag set; this means the request will provide credentials.
 
@@ -4073,25 +4068,25 @@ Returns **void**
 
 Get crossOrigin attribute.
 
-Type: [string][854]?
+Type: [string][853]?
 
-Returns **[string][854]?** 'anonymous' or 'use-credentials'
+Returns **[string][853]?** 'anonymous' or 'use-credentials'
 
 ### ended
 
 Get ended attribute state.
 
-Type: [boolean][853]?
+Type: [boolean][852]?
 
-Returns **[boolean][853]?** Whether the media has been ended.
+Returns **[boolean][852]?** Whether the media has been ended.
 
 ### playbackMiddleware
 
 Get the playback middleware.
 
-Type: [PlaybackMiddleware][874]
+Type: [PlaybackMiddleware][873]
 
-Returns **[PlaybackMiddleware][874]** The playback middleware.
+Returns **[PlaybackMiddleware][873]** The playback middleware.
 
 ### posterManager
 
@@ -4099,25 +4094,25 @@ Get the poster manager.
 
 Type: PosterManager
 
-Returns **[PlaybackMiddleware][874]** The poster manager.
+Returns **[PlaybackMiddleware][873]** The poster manager.
 
 ### isOnLiveEdge
 
 Get whether the video is seeked to live edge in dvr
 
-Returns **[boolean][853]** Whether the video is seeked to live edge in dvr
+Returns **[boolean][852]** Whether the video is seeked to live edge in dvr
 
 ### getStartTimeOfDvrWindow
 
 Get the start time of DVR window in live playback in seconds.
 
-Returns **[Number][859]** start time of DVR window.
+Returns **[Number][858]** start time of DVR window.
 
 ### getActiveTracks
 
 Get an object includes the active video/audio/text tracks
 
-Returns **{video: [VideoTrack][857], audio: [AudioTrack][858], text: [TextTrack][875]}** The active tracks object
+Returns **{video: [VideoTrack][856], audio: [AudioTrack][857], text: [TextTrack][874]}** The active tracks object
 
 ### setTextDisplaySettings
 
@@ -4125,7 +4120,7 @@ update the text display settings
 
 #### Parameters
 
--   `settings` **[Object][852]** text cue display settings
+-   `settings` **[Object][851]** text cue display settings
 
 Returns **void** 
 
@@ -4133,11 +4128,11 @@ Returns **void**
 
 Sets style attributes for text tracks.
 
-Type: [TextStyle][876]
+Type: [TextStyle][875]
 
 #### Parameters
 
--   `style` **[TextStyle][876]** text styling settings
+-   `style` **[TextStyle][875]** text styling settings
 
 Returns **void** 
 
@@ -4145,13 +4140,13 @@ Returns **void**
 
 Gets style attributes for text tracks.
 
-Type: [TextStyle][876]?
+Type: [TextStyle][875]?
 
-Returns **[TextStyle][876]?** the current style attribute
+Returns **[TextStyle][875]?** the current style attribute
 
 ### isFullscreen
 
-Returns **[boolean][853]** Whether the player is in fullscreen mode.
+Returns **[boolean][852]** Whether the player is in fullscreen mode.
 
 ### notifyEnterFullscreen
 
@@ -4171,7 +4166,7 @@ Request the player to enter fullscreen.
 
 #### Parameters
 
--   `elementId` **[string][854]** element id to full screen
+-   `elementId` **[string][853]** element id to full screen
 
 Returns **void** 
 
@@ -4197,19 +4192,19 @@ Returns **void**
 
 Check if the player is in picture in picture mode
 
-Returns **[boolean][853]** if the player is in picture in picture mode or not
+Returns **[boolean][852]** if the player is in picture in picture mode or not
 
 ### isPictureInPictureSupported
 
 Check if picture in picture supported in this environment
 
-Returns **[boolean][853]** if the picture in picture feature is supported in this environment
+Returns **[boolean][852]** if the picture in picture feature is supported in this environment
 
 ### isVr
 
 Checking if the selected source is VR.
 
-Returns **[boolean][853]** Whether is VR.
+Returns **[boolean][852]** Whether is VR.
 
 ### getLogLevel
 
@@ -4217,9 +4212,9 @@ get the log level
 
 #### Parameters
 
--   `name` **[string][854]?** the logger name
+-   `name` **[string][853]?** the logger name
 
-Returns **[Object][852]** the log level
+Returns **[Object][851]** the log level
 
 ### setLogLevel
 
@@ -4227,8 +4222,8 @@ sets the logger level
 
 #### Parameters
 
--   `level` **[Object][852]** the log level
--   `name` **[string][854]?** the logger name
+-   `level` **[Object][851]** the log level
+-   `name` **[string][853]?** the logger name
 
 Returns **void** 
 
@@ -4238,7 +4233,7 @@ Calculates the aspect ratio of the player.
 
 #### Parameters
 
--   `targetElement` **[HTMLDivElement][877]** the player root element.
+-   `targetElement` **[HTMLDivElement][876]** the player root element.
 -   `dimensions` **PKDimensionsConfig** the player dimensions input.
 
 Returns **void** 
@@ -4257,7 +4252,7 @@ Gets the player TextStyle.
 
 Type: any
 
-Returns **[TextStyle][876]** The TextStyle class
+Returns **[TextStyle][875]** The TextStyle class
 
 ### State
 
@@ -4367,9 +4362,9 @@ Gets the engines capabilities.
 
 #### Parameters
 
--   `engineType` **[string][854]?** The engine type.
+-   `engineType` **[string][853]?** The engine type.
 
-Returns **[Promise][855]&lt;[Object][852]>** The engines capabilities object.
+Returns **[Promise][854]&lt;[Object][851]>** The engines capabilities object.
 
 ### setCapabilities
 
@@ -4377,8 +4372,8 @@ Sets an engine capabilities.
 
 #### Parameters
 
--   `engineType` **[string][854]** The engine type.
--   `capabilities` **[Object][852]** The engine capabilities.
+-   `engineType` **[string][853]** The engine type.
+-   `capabilities` **[Object][851]** The engine capabilities.
 
 Returns **void** 
 
@@ -4386,7 +4381,7 @@ Returns **void**
 
 Checking if the current live playback has DVR window.
 
-Returns **[boolean][853]** Whether live playback has DVR window.
+Returns **[boolean][852]** Whether live playback has DVR window.
 
 ## getTracks
 
@@ -4394,9 +4389,9 @@ Returns the tracks according to the filter. if no filter given returns the all t
 
 ### Parameters
 
--   `type` **[string][854]?** a tracks filter, should be 'video', 'audio' or 'text'.
+-   `type` **[string][853]?** a tracks filter, should be 'video', 'audio' or 'text'.
 
-Returns **[Array][851]&lt;T>** The parsed tracks.
+Returns **[Array][850]&lt;T>** The parsed tracks.
 
 ## selectTrack
 
@@ -4404,7 +4399,7 @@ Select a track
 
 ### Parameters
 
--   `track` **[Track][878]?** the track to select
+-   `track` **[Track][877]?** the track to select
 
 Returns **void** 
 
@@ -4412,9 +4407,9 @@ Returns **void**
 
 ### Parameters
 
--   `config` **[Object][852]** The configuration of the player
+-   `config` **[Object][851]** The configuration of the player
 
-Returns **[Player][871]** The player instance
+Returns **[Player][870]** The player instance
 
 ## StateManager
 
@@ -4422,7 +4417,7 @@ This class responsible to manage all the state machine of the player.
 
 ### Parameters
 
--   `player` **[Player][871]** Reference to the player.
+-   `player` **[Player][870]** Reference to the player.
 
 ### destroy
 
@@ -4440,25 +4435,25 @@ Returns **void**
 
 Getter to the current state of the player.
 
-Type: [State][879]
+Type: [State][878]
 
-Returns **[State][879]** The current state object
+Returns **[State][878]** The current state object
 
 ### previousState
 
 Getter to the previous state of the player.
 
-Type: ([State][879] | null)
+Type: ([State][878] | null)
 
-Returns **([State][879] | null)** The previous state object, or null if such doesn't exists
+Returns **([State][878] | null)** The previous state object, or null if such doesn't exists
 
 ### history
 
 Getter to the state history of the player.
 
-Type: [Array][851]&lt;[State][879]>
+Type: [Array][850]&lt;[State][878]>
 
-Returns **[Array][851]&lt;[State][879]>** The full states history objects
+Returns **[Array][850]&lt;[State][878]>** The full states history objects
 
 ## State
 
@@ -4466,32 +4461,32 @@ This class describes a player state.
 
 ### Parameters
 
--   `type` **[string][854]** The type of the state.
+-   `type` **[string][853]** The type of the state.
 
 ### type
 
 The type of the state.
 Can be one of those describes in states.js
 
-Type: [string][854]
+Type: [string][853]
 
 ### duration
 
 Getter for the duration of the state.
 
-Type: [number][859]
+Type: [number][858]
 
-Returns **[number][859]** The duration of the state
+Returns **[number][858]** The duration of the state
 
 ### duration
 
 Setter for the duration of the state.
 
-Type: [number][859]
+Type: [number][858]
 
 #### Parameters
 
--   `endTime` **[number][859]** The timestamp of the next state.
+-   `endTime` **[number][858]** The timestamp of the next state.
 
 Returns **void** 
 
@@ -4499,13 +4494,13 @@ Returns **void**
 
 Audio track representation of the player.
 
-Type: [AudioTrack][858]
+Type: [AudioTrack][857]
 
 ## CuesStatus
 
 enum for cues statuses
 
-Type: [Object][852]
+Type: [Object][851]
 
 ## constructor
 
@@ -4513,7 +4508,7 @@ constructor
 
 ### Parameters
 
--   `player` **[Player][871]** the player object.
+-   `player` **[Player][870]** the player object.
 
 ## hideTextTrack
 
@@ -4527,9 +4522,9 @@ get external tracks (native and/or player module tracks)
 
 ### Parameters
 
--   `tracks` **[Array][851]&lt;[Track][878]>** array with the player text tracks.
+-   `tracks` **[Array][850]&lt;[Track][877]>** array with the player text tracks.
 
-Returns **[Array][851]&lt;[TextTrack][875]>** returns an array with the new external tracks
+Returns **[Array][850]&lt;[TextTrack][874]>** returns an array with the new external tracks
 
 ## selectTextTrack
 
@@ -4537,7 +4532,7 @@ selects external track start listening to cues
 
 ### Parameters
 
--   `textTrack` **[TextTrack][875]** selected text track
+-   `textTrack` **[TextTrack][874]** selected text track
 
 Returns **void** 
 
@@ -4571,7 +4566,7 @@ adding cues to an existing text element in a video tag
 
 ### Parameters
 
--   `cues` **[Array][851]&lt;Cue>** the cues to be added
+-   `cues` **[Array][850]&lt;Cue>** the cues to be added
 
 Returns **void** 
 
@@ -4590,7 +4585,7 @@ The calculation of the size of the font is done in text-track-display and not in
 the calculation in text-track-display also set the location of the container of the subtitiles according to the
 font size.
 
-Type: [number][859]
+Type: [number][858]
 
 ## TextStyle
 
@@ -4605,44 +4600,44 @@ that your application is in compliance with this or any other guideline.
 
 Font size, such as 1, 2, 3...
 
-Type: [number][859]
+Type: [number][858]
 
 ### fontFamily
 
-Type: [TextStyle.FontFamily][880]
+Type: [TextStyle.FontFamily][879]
 
 ### fontColor
 
-Type: [TextStyle.StandardColors][881]
+Type: [TextStyle.StandardColors][880]
 
 ### fontOpacity
 
-Type: [TextStyle.StandardOpacities][882]
+Type: [TextStyle.StandardOpacities][881]
 
 ### backgroundColor
 
-Type: [TextStyle.StandardColors][881]
+Type: [TextStyle.StandardColors][880]
 
 ### backgroundOpacity
 
-Type: [TextStyle.StandardOpacities][882]
+Type: [TextStyle.StandardOpacities][881]
 
 ### fontEdge
 
-Type: [TextStyle.EdgeStyles][883]
+Type: [TextStyle.EdgeStyles][882]
 
 ### toCSS
 
 Compute the CSS text necessary to represent this TextStyle.
 Output does not contain any selectors.
 
-Returns **[string][854]** ::CUE CSS string
+Returns **[string][853]** ::CUE CSS string
 
 ### clone
 
 clones the textStyle object
 
-Returns **[TextStyle][876]** the cloned textStyle object
+Returns **[TextStyle][875]** the cloned textStyle object
 
 ### isEqual
 
@@ -4650,38 +4645,38 @@ comparing between 2 textStyle objects.
 
 #### Parameters
 
--   `textStyle` **[TextStyle][876]** The textStyle to compare with.
+-   `textStyle` **[TextStyle][875]** The textStyle to compare with.
 
-Returns **[boolean][853]** Whether the text styles are equal.
+Returns **[boolean][852]** Whether the text styles are equal.
 
 ### FontFamily
 
 Defined set of font families
 
-Type: [Object][852]&lt;[string][854], [string][854]>
+Type: [Object][851]&lt;[string][853], [string][853]>
 
 ### StandardColors
 
-Defined in [FCC 12-9][884], paragraph 111, footnote
+Defined in [FCC 12-9][883], paragraph 111, footnote
 448\.  Each value is an array of the three RGB values for that color.
 
-Type: [Object][852]&lt;[string][854], [Array][851]&lt;[number][859]>>
+Type: [Object][851]&lt;[string][853], [Array][850]&lt;[number][858]>>
 
 ### StandardOpacities
 
-Defined in [FCC 12-9][884], paragraph 111.
+Defined in [FCC 12-9][883], paragraph 111.
 
-Type: [Object][852]&lt;[string][854], [number][859]>
+Type: [Object][851]&lt;[string][853], [number][858]>
 
 ### EdgeStyles
 
-Defined in [FCC 12-9][884], paragraph 111.
+Defined in [FCC 12-9][883], paragraph 111.
 The styles to achieve these effects are not specified anywhere.
 
 Each inner array represents a shadow, and is composed of RGB values for the
 shadow color, followed by pixel values for x-offset, y-offset, and blur.
 
-Type: ![Array][851]&lt;![Array][851]&lt;[number][859]>>
+Type: ![Array][850]&lt;![Array][850]&lt;[number][858]>>
 
 ## fontScale
 
@@ -4691,7 +4686,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-  [http://www.apache.org/licenses/LICENSE-2.0][885]
+  [http://www.apache.org/licenses/LICENSE-2.0][884]
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -4699,13 +4694,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-Type: [number][859]
+Type: [number][858]
 
 ## TextTrack
 
 Text track representation of the player.
 
-Type: [TextTrack][875]
+Type: [TextTrack][874]
 
 ## Track
 
@@ -4713,83 +4708,83 @@ General track representation of the player.
 
 ### Parameters
 
--   `settings` **[Object][852]** The track settings object. (optional, default `{}`)
+-   `settings` **[Object][851]** The track settings object. (optional, default `{}`)
 
 ### clone
 
 The clone function reference.
 
-Type: [Function][860]
+Type: [Function][859]
 
 ### id
 
 Getter for the track id.
 
-Type: [string][854]?
+Type: [string][853]?
 
-Returns **[string][854]?** The track id.
+Returns **[string][853]?** The track id.
 
 ### active
 
 Getter for the active mode of the track.
 
-Type: [boolean][853]
+Type: [boolean][852]
 
-Returns **[boolean][853]** The active mode of the track.
+Returns **[boolean][852]** The active mode of the track.
 
 ### active
 
 Setter for the active mode of the track.
 
-Type: [boolean][853]
+Type: [boolean][852]
 
 #### Parameters
 
--   `value` **[boolean][853]** Whether the track is active or not.
+-   `value` **[boolean][852]** Whether the track is active or not.
 
 ### label
 
 Getter for the label of the track.
 
-Type: [string][854]?
+Type: [string][853]?
 
-Returns **[string][854]** The label of the track.
+Returns **[string][853]** The label of the track.
 
 ### label
 
 Setter for the label of the track.
 
-Type: [string][854]
+Type: [string][853]
 
 #### Parameters
 
--   `value` **[string][854]** The label of the track.
+-   `value` **[string][853]** The label of the track.
 
 ### language
 
 Getter for the language of the track.
 
-Type: [string][854]
+Type: [string][853]
 
-Returns **[string][854]** The language of the track.
+Returns **[string][853]** The language of the track.
 
 ### index
 
 Getter for the index of the track.
 
-Type: [number][859]
+Type: [number][858]
 
-Returns **[number][859]** The index of the track.
+Returns **[number][858]** The index of the track.
 
 ### index
 
 Setter for the index of the track.
 
-Type: [number][859]
+Type: [number][858]
 
 #### Parameters
 
--   `value` **[number][859]** The index of the track.
+-   `value` **[number][858]** The index of the track.
 
 Returns **void** 
 
@@ -4799,16 +4794,16 @@ Comparing language strings.
 
 #### Parameters
 
--   `inputLang` **[string][854]** The configured language.
--   `trackLang` **[string][854]** The default track language.
+-   `inputLang` **[string][853]** The configured language.
+-   `trackLang` **[string][853]** The default track language.
 
-Returns **[boolean][853]** Whether the strings are equal or starts with the same substring.
+Returns **[boolean][852]** Whether the strings are equal or starts with the same substring.
 
 ## VideoTrack
 
 Video track representation of the player.
 
-Type: [VideoTrack][857]
+Type: [VideoTrack][856]
 
 ## findDirectionSetting
 
@@ -4816,9 +4811,9 @@ helper
 
 ### Parameters
 
--   `value` **[string][854]** the string to find
+-   `value` **[string][853]** the string to find
 
-Returns **([string][854] \| [boolean][853])** the aligned sting if found
+Returns **([string][853] \| [boolean][852])** the aligned sting if found
 
 ## findAlignSetting
 
@@ -4826,9 +4821,9 @@ helper
 
 ### Parameters
 
--   `value` **[string][854]** the string
+-   `value` **[string][853]** the string
 
-Returns **([string][854] \| [boolean][853])** the aligned sting if found
+Returns **([string][853] \| [boolean][852])** the aligned sting if found
 
 ## VTTCue
 
@@ -4836,28 +4831,28 @@ VTTCue model
 
 ### Parameters
 
--   `startTime` **[number][859]** 
--   `endTime` **[number][859]** 
--   `text` **[string][854]** 
+-   `startTime` **[number][858]** 
+-   `endTime` **[number][858]** 
+-   `text` **[string][853]** 
 
 ### hasBeenReset
 
 // Lets us know when the VTTCue's data has changed in such a way that we need
 to recompute its display state. This lets us compute its display state lazily.
 
-Type: [boolean][853]
+Type: [boolean][852]
 
 ### displayState
 
 This is used as part of the rendering model, to keep cues in a consistent position.
-[http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#text-track-cue-display-state][886]
+[http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#text-track-cue-display-state][885]
 
-Type: [undefined][869]
+Type: [undefined][868]
 
 ### \_id
 
 VTTCue and TextTrackCue properties
-[http://dev.w3.org/html5/webvtt/#vttcue-interface][887]
+[http://dev.w3.org/html5/webvtt/#vttcue-interface][886]
 
 ## 
 
@@ -4871,7 +4866,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-  [http://www.apache.org/licenses/LICENSE-2.0][885]
+  [http://www.apache.org/licenses/LICENSE-2.0][884]
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -4885,7 +4880,7 @@ find scroll setting
 
 ### Parameters
 
--   `value` **[string][854]** a string
+-   `value` **[string][853]** a string
 
 Returns **any** the settings
 
@@ -4895,9 +4890,9 @@ check percentage validation
 
 ### Parameters
 
--   `value` **[number][859]** percentage
+-   `value` **[number][858]** percentage
 
-Returns **[boolean][853]** boolean
+Returns **[boolean][852]** boolean
 
 ## jsonp
 
@@ -4905,11 +4900,11 @@ JSONP utility.
 
 ### Parameters
 
--   `url` **[string][854]** The url of the request.
--   `callback` **[string][854]** Callback function to be called when the request returns.
--   `options` **[Object][852]** Object contains configuration (currently only timeout).
+-   `url` **[string][853]** The url of the request.
+-   `callback` **[string][853]** Callback function to be called when the request returns.
+-   `options` **[Object][851]** Object contains configuration (currently only timeout).
 
-Returns **[Promise][855]&lt;any>** A promise with the callback output.
+Returns **[Promise][854]&lt;any>** A promise with the callback output.
 
 ## \_cleanup
 
@@ -4923,7 +4918,7 @@ a wrapper to the callback function, to save a closure
 
 ### Parameters
 
--   `data` **[Object][852]** the data we get from the server, in response to the request
+-   `data` **[Object][851]** the data we get from the server, in response to the request
 
 Returns **void** 
 
@@ -4935,9 +4930,9 @@ Locale class
 
 tries to return the locale language in IOS-693-1 format(two-letter codes, one per language for)
 
-Type: [string][854]
+Type: [string][853]
 
-Returns **[string][854]** the IOS-693-1 language string
+Returns **[string][853]** the IOS-693-1 language string
 
 ## getLogger
 
@@ -4945,9 +4940,9 @@ get a logger
 
 ### Parameters
 
--   `name` **[string][854]?** the logger name
+-   `name` **[string][853]?** the logger name
 
-Returns **[Object][852]** the logger class
+Returns **[Object][851]** the logger class
 
 ## getLogLevel
 
@@ -4955,7 +4950,7 @@ get the log level
 
 ### Parameters
 
--   `name` **[string][854]?** the logger name
+-   `name` **[string][853]?** the logger name
 
 Returns **PKLogLevelObject** the log level
 
@@ -4966,7 +4961,7 @@ sets the logger level
 ### Parameters
 
 -   `level` **PKLogLevelObject** the log level
--   `name` **[string][854]?** the logger name
+-   `name` **[string][853]?** the logger name
 
 Returns **void** 
 
@@ -4992,7 +4987,7 @@ Set an array of values for the key, overwriting any previous data.
 #### Parameters
 
 -   `key` **K** \-
--   `values` **![Array][851]&lt;T>** \-
+-   `values` **![Array][850]&lt;T>** \-
 
 Returns **void** 
 
@@ -5004,7 +4999,7 @@ Check for a key.
 
 -   `key` **K** \-
 
-Returns **[boolean][853]** true if the key exists.
+Returns **[boolean][852]** true if the key exists.
 
 ### get
 
@@ -5014,13 +5009,13 @@ Get a list of values by key.
 
 -   `key` **K** \-
 
-Returns **[Array][851]&lt;T>** or null if no such key exists.
+Returns **[Array][850]&lt;T>** or null if no such key exists.
 
 ### getAll
 
 Get a list of all values.
 
-Returns **![Array][851]&lt;T>** \-
+Returns **![Array][850]&lt;T>** \-
 
 ### remove
 
@@ -5037,7 +5032,7 @@ Returns **void**
 
 Get all keys from the multimap.
 
-Returns **![Array][851]&lt;K>** 
+Returns **![Array][850]&lt;K>** 
 
 ### clear
 
@@ -5051,7 +5046,7 @@ Set the poster source URL
 
 ### Parameters
 
--   `posterUrl` **[string][854]** the poster image URL
+-   `posterUrl` **[string][853]** the poster image URL
 
 Returns **void** 
 
@@ -5059,15 +5054,15 @@ Returns **void**
 
 Get the poster source URL
 
-Type: [string][854]
+Type: [string][853]
 
-Returns **[string][854]** the poster image URL
+Returns **[string][853]** the poster image URL
 
 ## getElement
 
 Get the poster HTML Div element
 
-Returns **[HTMLDivElement][877]** Poster HTML Dom element
+Returns **[HTMLDivElement][876]** Poster HTML Dom element
 
 ## hide
 
@@ -5105,7 +5100,7 @@ Start listening to a resize of the element.
 
 #### Parameters
 
--   `el` **[HTMLElement][872]** the element to listen to.
+-   `el` **[HTMLElement][871]** the element to listen to.
 
 Returns **void** 
 
@@ -5117,7 +5112,7 @@ the iframes resize event.
 
 ### Parameters
 
--   `callback` **[Function][860]** the function to be called when a resize event is detected.
+-   `callback` **[Function][859]** the function to be called when a resize event is detected.
 
 ### observe
 
@@ -5125,7 +5120,7 @@ start detecting resize event
 
 #### Parameters
 
--   `el` **[HTMLElement][872]** The element that is going to be resized.
+-   `el` **[HTMLElement][871]** The element that is going to be resized.
 
 Returns **void** 
 
@@ -5141,35 +5136,35 @@ Calculates the most suitable source to the container size
 
 ### Parameters
 
--   `tracks` **[Array][851]&lt;[Object][852]>** The tracks
--   `width` **[number][859]** The width to calculate with
--   `height` **[number][859]** The height to calculate with
+-   `tracks` **[Array][850]&lt;[Object][851]>** The tracks
+-   `width` **[number][858]** The width to calculate with
+-   `height` **[number][858]** The height to calculate with
 
-Returns **[Object][852]** The most suitable source to the container size
+Returns **[Object][851]** The most suitable source to the container size
 
 ## isNumber
 
 ### Parameters
 
--   `n` **[number][859]** A certain number
+-   `n` **[number][858]** A certain number
 
-Returns **[boolean][853]** If the input is a number
+Returns **[boolean][852]** If the input is a number
 
 ## isInt
 
 ### Parameters
 
--   `n` **[number][859]** A certain number
+-   `n` **[number][858]** A certain number
 
-Returns **[boolean][853]** If the input is an integer
+Returns **[boolean][852]** If the input is an integer
 
 ## isFloat
 
 ### Parameters
 
--   `n` **[number][859]** A certain number
+-   `n` **[number][858]** A certain number
 
-Returns **[boolean][853]** If the input is a float
+Returns **[boolean][852]** If the input is a float
 
 ## toTitleCase
 
@@ -5177,26 +5172,26 @@ Uppercase the first letter of a string
 
 ### Parameters
 
--   `string` **[String][854]** String to be uppercased
+-   `string` **[String][853]** String to be uppercased
 
-Returns **[String][854]** The uppercased string
+Returns **[String][853]** The uppercased string
 
 ## endsWith
 
 ### Parameters
 
--   `string` **[string][854]** Certain string
--   `searchString` **[string][854]** Certain string
+-   `string` **[string][853]** Certain string
+-   `searchString` **[string][853]** Certain string
 
-Returns **[boolean][853]** Whether the string: string is ending with string: searchString
+Returns **[boolean][852]** Whether the string: string is ending with string: searchString
 
 ## merge
 
 ### Parameters
 
--   `objects` **[Array][851]&lt;[Object][852]>** The objects to merge
+-   `objects` **[Array][850]&lt;[Object][851]>** The objects to merge
 
-Returns **[Object][852]** The merged object.
+Returns **[Object][851]** The merged object.
 
 ## isObject
 
@@ -5204,7 +5199,7 @@ Returns **[Object][852]** The merged object.
 
 -   `item` **any** The item to check.
 
-Returns **[boolean][853]** Whether the item is an object.
+Returns **[boolean][852]** Whether the item is an object.
 
 ## mergeDeep
 
@@ -5213,7 +5208,7 @@ Returns **[boolean][853]** Whether the item is an object.
 -   `target` **any** The target object.
 -   `sources` **any** The objects to merge.
 
-Returns **[Object][852]** The merged object.
+Returns **[Object][851]** The merged object.
 
 ## copyDeep
 
@@ -5229,9 +5224,9 @@ Checks if an object is an empy object.
 
 ### Parameters
 
--   `obj` **[Object][852]** The object to check
+-   `obj` **[Object][851]** The object to check
 
-Returns **[boolean][853]** Whether the object is empty.
+Returns **[boolean][852]** Whether the object is empty.
 
 ## getPropertyPath
 
@@ -5239,10 +5234,10 @@ Checks for nested object properties.
 
 ### Parameters
 
--   `obj` **[Object][852]** The object to check.
--   `propertyPath` **[string][854]** The path to check.
+-   `obj` **[Object][851]** The object to check.
+-   `propertyPath` **[string][853]** The path to check.
 
-Returns **[boolean][853]** The value in this path.
+Returns **[boolean][852]** The value in this path.
 
 ## hasPropertyPath
 
@@ -5250,10 +5245,10 @@ Checks for nested object properties.
 
 ### Parameters
 
--   `obj` **[Object][852]** The object to check.
--   `propertyPath` **[string][854]** The path to check.
+-   `obj` **[Object][851]** The object to check.
+-   `propertyPath` **[string][853]** The path to check.
 
-Returns **[boolean][853]** Whether the path exists in the object.
+Returns **[boolean][852]** Whether the path exists in the object.
 
 ## createPropertyPath
 
@@ -5261,11 +5256,11 @@ Create an object with a given property path.
 
 ### Parameters
 
--   `obj` **[Object][852]** The object to create on.
--   `path` **[string][854]** The path to create in the object.
+-   `obj` **[Object][851]** The object to create on.
+-   `path` **[string][853]** The path to create in the object.
 -   `value` **any** The value to set in the path. (optional, default `null`)
 
-Returns **[Object][852]** The result object.
+Returns **[Object][851]** The result object.
 
 ## deletePropertyPath
 
@@ -5273,8 +5268,8 @@ Deleted a property path from an object.
 
 ### Parameters
 
--   `obj` **[Object][852]** The object to delete the property path from.
--   `path` **[string][854]** The path to delete in the object.
+-   `obj` **[Object][851]** The object to delete the property path from.
+-   `path` **[string][853]** The path to delete in the object.
 
 Returns **void** 
 
@@ -5291,9 +5286,9 @@ Binds an handler to a desired context.
 ### Parameters
 
 -   `thisObj` **any** The handler context.
--   `fn` **[Function][860]** The handler.
+-   `fn` **[Function][859]** The handler.
 
-Returns **[Function][860]** The new bound function.
+Returns **[Function][859]** The new bound function.
 
 ## uniqueId
 
@@ -5301,9 +5296,9 @@ Generates unique id.
 
 ### Parameters
 
--   `length` **[number][859]** The length of the id.
+-   `length` **[number][858]** The length of the id.
 
-Returns **[string][854]** The generated id.
+Returns **[string][853]** The generated id.
 
 ## addClassName
 
@@ -5311,8 +5306,8 @@ Adds class name to an element
 
 ### Parameters
 
--   `element` **[Element][888]** an HTML element
--   `className` **[string][854]** a class name
+-   `element` **[Element][887]** an HTML element
+-   `className` **[string][853]** a class name
 
 Returns **void** 
 
@@ -5322,8 +5317,8 @@ Removes class name from an element
 
 ### Parameters
 
--   `element` **[Element][888]** an HTML element
--   `className` **[string][854]** a class name
+-   `element` **[Element][887]** an HTML element
+-   `className` **[string][853]** a class name
 
 Returns **void** 
 
@@ -5333,10 +5328,10 @@ Checks if an element has a class name
 
 ### Parameters
 
--   `element` **[Element][888]** an HTML element
--   `className` **[string][854]** a class name
+-   `element` **[Element][887]** an HTML element
+-   `className` **[string][853]** a class name
 
-Returns **[boolean][853]** weather an element contains a class name
+Returns **[boolean][852]** weather an element contains a class name
 
 ## setAttribute
 
@@ -5344,9 +5339,9 @@ Add element attribute
 
 ### Parameters
 
--   `element` **[Element][888]** an HTML element
--   `name` **[string][854]** attribute name
--   `value` **[string][854]** attribute value
+-   `element` **[Element][887]** an HTML element
+-   `name` **[string][853]** attribute name
+-   `value` **[string][853]** attribute value
 
 Returns **void** 
 
@@ -5356,8 +5351,8 @@ Remove element attribute
 
 ### Parameters
 
--   `element` **[Element][888]** an HTML element
--   `name` **[string][854]** attribute name
+-   `element` **[Element][887]** an HTML element
+-   `name` **[string][853]** attribute name
 
 Returns **void** 
 
@@ -5367,9 +5362,9 @@ Set element style
 
 ### Parameters
 
--   `element` **[Element][888]** an HTML element
--   `name` **[string][854]** style name
--   `value` **[string][854]** style value
+-   `element` **[Element][887]** an HTML element
+-   `name` **[string][853]** style name
+-   `value` **[string][853]** style value
 
 Returns **void** 
 
@@ -5379,8 +5374,8 @@ Adds a node to the end of the list of children of a specified parent node.
 
 ### Parameters
 
--   `parent` **[Element][888]** The parent node.
--   `child` **[Element][888]** The child node.
+-   `parent` **[Element][887]** The parent node.
+-   `child` **[Element][887]** The child node.
 
 Returns **void** 
 
@@ -5390,8 +5385,8 @@ Removes an element from his parent node.
 
 ### Parameters
 
--   `parent` **[Element][888]** The parent node.
--   `child` **[Element][888]** The child node.
+-   `parent` **[Element][887]** The parent node.
+-   `child` **[Element][887]** The child node.
 
 Returns **void** 
 
@@ -5401,8 +5396,8 @@ Prepend HTML element
 
 ### Parameters
 
--   `child` **[HTMLElement][872]** the child to prepend
--   `parent` **[HTMLElement][872]** the parent to preprend to
+-   `child` **[HTMLElement][871]** the child to prepend
+-   `parent` **[HTMLElement][871]** the parent to preprend to
 
 Returns **void** 
 
@@ -5412,9 +5407,9 @@ Returns a reference to the element by its ID.
 
 ### Parameters
 
--   `id` **[string][854]** The desired id.
+-   `id` **[string][853]** The desired id.
 
-Returns **[Element][888]** The element with the desired id.
+Returns **[Element][887]** The element with the desired id.
 
 ## getElementsByTagName
 
@@ -5422,9 +5417,9 @@ Returns a live HTMLCollection of elements with the given tag name.
 
 ### Parameters
 
--   `tagName` **[string][854]** The desired tag name.
+-   `tagName` **[string][853]** The desired tag name.
 
-Returns **[Element][888]** The elements with the desired tag name.
+Returns **[Element][887]** The elements with the desired tag name.
 
 ## createElement
 
@@ -5432,9 +5427,9 @@ Creates the HTML element specified by tagName.
 
 ### Parameters
 
--   `tagName` **[string][854]** The tag name.
+-   `tagName` **[string][853]** The tag name.
 
-Returns **[Element][888]** The element just created.
+Returns **[Element][887]** The element just created.
 
 ## loadStyleSheetAsync
 
@@ -5442,9 +5437,9 @@ Loads an external style sheet asynchronously.
 
 ### Parameters
 
--   `url` **[string][854]** The css url to load.
+-   `url` **[string][853]** The css url to load.
 
-Returns **[Promise][855]** The loading promise.
+Returns **[Promise][854]** The loading promise.
 
 ## loadScriptAsync
 
@@ -5452,9 +5447,9 @@ Loads script asynchronously.
 
 ### Parameters
 
--   `url` **[string][854]** The url to load.
+-   `url` **[string][853]** The url to load.
 
-Returns **[Promise][855]** The loading promise.
+Returns **[Promise][854]** The loading promise.
 
 ## getElementBySelector
 
@@ -5462,9 +5457,9 @@ Returns the first element that matches a specified CSS selector(s) in the docume
 
 ### Parameters
 
--   `selector` **[string][854]** One or more CSS selectors to match the element.
+-   `selector` **[string][853]** One or more CSS selectors to match the element.
 
-Returns **[Element][888]** The first element that matches a specified CSS selector(s) in the document.
+Returns **[Element][887]** The first element that matches a specified CSS selector(s) in the document.
 
 ## insertBefore
 
@@ -5472,11 +5467,11 @@ Inserts a node as a child, right before an existing child.
 
 ### Parameters
 
--   `parent` **[HTMLElement][872]**  The parent node object.
--   `newChild` **[HTMLElement][872]**  The node object to insert.
--   `existingChild` **[HTMLElement][872]?** The child node to insert the new node before. If set to null, the insertBefore method will insert the newChild at the end.
+-   `parent` **[HTMLElement][871]**  The parent node object.
+-   `newChild` **[HTMLElement][871]**  The node object to insert.
+-   `existingChild` **[HTMLElement][871]?** The child node to insert the new node before. If set to null, the insertBefore method will insert the newChild at the end.
 
-Returns **[Element][888]** The first element that matches a specified CSS selector(s) in the document.
+Returns **[Element][887]** The first element that matches a specified CSS selector(s) in the document.
 
 ## compare
 
@@ -5484,15 +5479,15 @@ Compares two software version numbers (e.g. "1.7.1" or "1.2b").
 
 ### Parameters
 
--   `v1` **[string][854]** The first version to be compared.
--   `v2` **[string][854]** The second version to be compared.
--   `options` **[object][852]?** Optional flags that affect comparison behavior:
+-   `v1` **[string][853]** The first version to be compared.
+-   `v2` **[string][853]** The second version to be compared.
+-   `options` **[object][851]?** Optional flags that affect comparison behavior:
     lexicographical: (true/[false]) compares each part of the version strings lexicographically instead of naturally;
                      this allows suffixes such as "b" or "dev" but will cause "1.10" to be considered smaller than "1.2".
     zeroExtend: ([true]/false) changes the result if one version string has less parts than the other. In
                 this case the shorter string will be padded with "zero" parts instead of being considered smaller. (optional, default `{}`)
 
-Returns **([number][859] \| [NaN][889])** 0 if the versions are equal-   a negative integer iff v1 &lt; v2
+Returns **([number][858] \| [NaN][888])** 0 if the versions are equal-   a negative integer iff v1 &lt; v2
 -   a positive integer iff v1 > v2
 -   NaN if either version string is in the wrong format
 
@@ -6426,850 +6421,848 @@ Returns **([number][859] \| [NaN][889])** 0 if the versions are equal-   a negat
 
 [465]: #drm_license_loaded
 
-[466]: #visibility_change
+[466]: #fakeeventtarget
 
-[467]: #fakeeventtarget
+[467]: #dispatchtarget
 
-[468]: #dispatchtarget
+[468]: #addeventlistener
 
-[469]: #addeventlistener
+[469]: #parameters-56
 
-[470]: #parameters-56
+[470]: #removeeventlistener
 
-[471]: #removeeventlistener
+[471]: #parameters-57
 
-[472]: #parameters-57
+[472]: #dispatchevent
 
-[473]: #dispatchevent
+[473]: #parameters-58
 
-[474]: #parameters-58
+[474]: #eventlistener
 
-[475]: #eventlistener
+[475]: #fakeevent
 
-[476]: #fakeevent
+[476]: #parameters-59
 
-[477]: #parameters-59
+[477]: #bubbles
 
-[478]: #bubbles
+[478]: #bubbles-1
 
-[479]: #bubbles-1
+[479]: #cancelable
 
-[480]: #cancelable
+[480]: #cancelable-1
 
-[481]: #cancelable-1
+[481]: #defaultprevented
 
-[482]: #defaultprevented
+[482]: #defaultprevented-1
 
-[483]: #defaultprevented-1
+[483]: #timestamp
 
-[484]: #timestamp
+[484]: #timestamp-1
 
-[485]: #timestamp-1
+[485]: #type
 
-[486]: #type
+[486]: #type-1
 
-[487]: #type-1
+[487]: #istrusted
 
-[488]: #istrusted
+[488]: #istrusted-1
 
-[489]: #istrusted-1
+[489]: #currenttarget
 
-[490]: #currenttarget
+[490]: #currenttarget-1
 
-[491]: #currenttarget-1
+[491]: #target
 
-[492]: #target
+[492]: #target-1
 
-[493]: #target-1
+[493]: #stopped
 
-[494]: #stopped
+[494]: #stopped-1
 
-[495]: #stopped-1
+[495]: #preventdefault
 
-[496]: #preventdefault
+[496]: #stopimmediatepropagation
 
-[497]: #stopimmediatepropagation
+[497]: #stoppropagation
 
-[498]: #stoppropagation
+[498]: #in_browser_fullscreen
 
-[499]: #in_browser_fullscreen
+[499]: #fullscreencontroller
 
-[500]: #fullscreencontroller
+[500]: #parameters-60
 
-[501]: #parameters-60
+[501]: #destroy-6
 
-[502]: #destroy-6
+[502]: #_isnativefullscreen
 
-[503]: #_isnativefullscreen
+[503]: #isfullscreen
 
-[504]: #isfullscreen
+[504]: #enterfullscreen
 
-[505]: #enterfullscreen
+[505]: #parameters-61
 
-[506]: #parameters-61
+[506]: #exitfullscreen
 
-[507]: #exitfullscreen
+[507]: #_nativeenterfullscreen
 
-[508]: #_nativeenterfullscreen
+[508]: #parameters-62
 
-[509]: #parameters-62
+[509]: #_requestfullscreen
 
-[510]: #_requestfullscreen
+[510]: #parameters-63
 
-[511]: #parameters-63
+[511]: #_nativeexitfullscreen
 
-[512]: #_nativeexitfullscreen
+[512]: #_requestexitfullscreen
 
-[513]: #_requestexitfullscreen
+[513]: #_enterinbrowserfullscreen
 
-[514]: #_enterinbrowserfullscreen
+[514]: #parameters-64
 
-[515]: #parameters-64
+[515]: #_exitinbrowserfullscreen
 
-[516]: #_exitinbrowserfullscreen
+[516]: #registerfullscreenevents
 
-[517]: #registerfullscreenevents
+[517]: #_handleiosfullscreen
 
-[518]: #_handleiosfullscreen
+[518]: #_fullscreenchangehandler
 
-[519]: #_fullscreenchangehandler
+[519]: #_fullscreenenterhandler
 
-[520]: #_fullscreenenterhandler
+[520]: #_fullscreenexithandler
 
-[521]: #_fullscreenexithandler
+[521]: #attachiosfullscreenlisteners
 
-[522]: #attachiosfullscreenlisteners
+[522]: #basemiddleware
 
-[523]: #basemiddleware
+[523]: #id-3
 
-[524]: #id-3
+[524]: #callnext
 
-[525]: #callnext
+[525]: #parameters-65
 
-[526]: #parameters-65
+[526]: #middleware
 
-[527]: #middleware
+[527]: #parameters-66
 
-[528]: #parameters-66
+[528]: #use
 
-[529]: #use
+[529]: #parameters-67
 
-[530]: #parameters-67
+[530]: #run
 
-[531]: #run
+[531]: #parameters-68
 
-[532]: #parameters-68
+[532]: #playbackmiddleware
 
-[533]: #playbackmiddleware
+[533]: #use-1
 
-[534]: #use-1
+[534]: #parameters-69
 
-[535]: #parameters-69
+[535]: #load-2
 
-[536]: #load-2
+[536]: #parameters-70
 
-[537]: #parameters-70
+[537]: #play-2
 
-[538]: #play-2
+[538]: #parameters-71
 
-[539]: #parameters-71
+[539]: #pause-2
 
-[540]: #pause-2
+[540]: #parameters-72
 
-[541]: #parameters-72
+[541]: #actions
 
-[542]: #actions
+[542]: #black_cover_class_name
 
-[543]: #black_cover_class_name
+[543]: #container_class_name
 
-[544]: #container_class_name
+[544]: #poster_class_name
 
-[545]: #poster_class_name
+[545]: #engine_class_name
 
-[546]: #engine_class_name
+[546]: #subtitles_style_class_name
 
-[547]: #subtitles_style_class_name
+[547]: #subtitles_class_name
 
-[548]: #subtitles_class_name
+[548]: #auto
 
-[549]: #auto
+[549]: #off
 
-[550]: #off
+[550]: #duration_offset
 
-[551]: #duration_offset
+[551]: #reposition_cues_timeout
 
-[552]: #reposition_cues_timeout
+[552]: #live_edge_threshold
 
-[553]: #live_edge_threshold
+[553]: #player-1
 
-[554]: #player-1
+[554]: #parameters-73
 
-[555]: #parameters-73
+[555]: #configure
 
-[556]: #configure
+[556]: #parameters-74
 
-[557]: #parameters-74
+[557]: #ready
 
-[558]: #ready
+[558]: #load-3
 
-[559]: #load-3
+[559]: #play-3
 
-[560]: #play-3
+[560]: #pause-3
 
-[561]: #pause-3
+[561]: #getview
 
-[562]: #getview
+[562]: #getvideoelement-1
 
-[563]: #getvideoelement-1
+[563]: #reset-1
 
-[564]: #reset-1
+[564]: #destroy-7
 
-[565]: #destroy-7
+[565]: #hideblackcover
 
-[566]: #hideblackcover
+[566]: #showblackcover
 
-[567]: #showblackcover
+[567]: #attachmediasource-2
 
-[568]: #attachmediasource-2
+[568]: #detachmediasource-2
 
-[569]: #detachmediasource-2
+[569]: #buffered-1
 
-[570]: #buffered-1
+[570]: #currenttime-4
 
-[571]: #currenttime-4
+[571]: #parameters-75
 
-[572]: #parameters-75
+[572]: #currenttime-5
 
-[573]: #currenttime-5
+[573]: #duration-2
 
-[574]: #duration-2
+[574]: #volume-2
 
-[575]: #volume-2
+[575]: #parameters-76
 
-[576]: #parameters-76
+[576]: #volume-3
 
-[577]: #volume-3
+[577]: #paused-1
 
-[578]: #paused-1
+[578]: #seeking-2
 
-[579]: #seeking-2
+[579]: #playsinline-2
 
-[580]: #playsinline-2
+[580]: #parameters-77
 
-[581]: #parameters-77
+[581]: #playsinline-3
 
-[582]: #playsinline-3
+[582]: #muted-2
 
-[583]: #muted-2
+[583]: #parameters-78
 
-[584]: #parameters-78
+[584]: #muted-3
 
-[585]: #muted-3
+[585]: #src-4
 
-[586]: #src-4
+[586]: #dimensions
 
-[587]: #dimensions
+[587]: #parameters-79
 
-[588]: #parameters-79
+[588]: #dimensions-1
 
-[589]: #dimensions-1
+[589]: #poster-2
 
-[590]: #poster-2
+[590]: #playbackrate-2
 
-[591]: #playbackrate-2
+[591]: #parameters-80
 
-[592]: #parameters-80
+[592]: #playbackrate-3
 
-[593]: #playbackrate-3
+[593]: #playbackrates-1
 
-[594]: #playbackrates-1
+[594]: #defaultplaybackrate-2
 
-[595]: #defaultplaybackrate-2
+[595]: #enginetype
 
-[596]: #enginetype
+[596]: #streamtype
 
-[597]: #streamtype
+[597]: #env
 
-[598]: #env
+[598]: #config
 
-[599]: #config
+[599]: #hasuserinteracted
 
-[600]: #hasuserinteracted
+[600]: #loadingmedia
 
-[601]: #loadingmedia
+[601]: #parameters-81
 
-[602]: #parameters-81
+[602]: #crossorigin-2
 
-[603]: #crossorigin-2
+[603]: #parameters-82
 
-[604]: #parameters-82
+[604]: #crossorigin-3
 
-[605]: #crossorigin-3
+[605]: #ended-2
 
-[606]: #ended-2
+[606]: #playbackmiddleware-1
 
-[607]: #playbackmiddleware-1
+[607]: #postermanager
 
-[608]: #postermanager
+[608]: #isonliveedge
 
-[609]: #isonliveedge
+[609]: #getstarttimeofdvrwindow-2
 
-[610]: #getstarttimeofdvrwindow-2
+[610]: #getactivetracks
 
-[611]: #getactivetracks
+[611]: #settextdisplaysettings
 
-[612]: #settextdisplaysettings
+[612]: #parameters-83
 
-[613]: #parameters-83
+[613]: #textstyle
 
-[614]: #textstyle
+[614]: #parameters-84
 
-[615]: #parameters-84
+[615]: #textstyle-1
 
-[616]: #textstyle-1
+[616]: #isfullscreen-1
 
-[617]: #isfullscreen-1
+[617]: #notifyenterfullscreen
 
-[618]: #notifyenterfullscreen
+[618]: #notifyexitfullscreen
 
-[619]: #notifyexitfullscreen
+[619]: #enterfullscreen-1
 
-[620]: #enterfullscreen-1
+[620]: #parameters-85
 
-[621]: #parameters-85
+[621]: #exitfullscreen-1
 
-[622]: #exitfullscreen-1
+[622]: #enterpictureinpicture-1
 
-[623]: #enterpictureinpicture-1
+[623]: #exitpictureinpicture-1
 
-[624]: #exitpictureinpicture-1
+[624]: #isinpictureinpicture-1
 
-[625]: #isinpictureinpicture-1
+[625]: #ispictureinpicturesupported-1
 
-[626]: #ispictureinpicturesupported-1
+[626]: #isvr
 
-[627]: #isvr
+[627]: #getloglevel
 
-[628]: #getloglevel
+[628]: #parameters-86
 
-[629]: #parameters-86
+[629]: #setloglevel
 
-[630]: #setloglevel
+[630]: #parameters-87
 
-[631]: #parameters-87
+[631]: #_calcratio
 
-[632]: #_calcratio
+[632]: #parameters-88
 
-[633]: #parameters-88
+[633]: #event
 
-[634]: #event
+[634]: #textstyle-2
 
-[635]: #textstyle-2
+[635]: #state
 
-[636]: #state
+[636]: #track
 
-[637]: #track
+[637]: #logleveltype
 
-[638]: #logleveltype
+[638]: #loglevel
 
-[639]: #loglevel
+[639]: #abrmode
 
-[640]: #abrmode
+[640]: #mediatype
 
-[641]: #mediatype
+[641]: #streamtype-1
 
-[642]: #streamtype-1
+[642]: #enginetype-1
 
-[643]: #enginetype-1
+[643]: #corstype
 
-[644]: #corstype
+[644]: #adbreaktype
 
-[645]: #adbreaktype
+[645]: #adtagtype
 
-[646]: #adtagtype
+[646]: #error-3
 
-[647]: #error-3
+[647]: #runcapabilities-1
 
-[648]: #runcapabilities-1
+[648]: #getcapabilities-1
 
-[649]: #getcapabilities-1
+[649]: #parameters-89
 
-[650]: #parameters-89
+[650]: #setcapabilities-2
 
-[651]: #setcapabilities-2
+[651]: #parameters-90
 
-[652]: #parameters-90
+[652]: #isdvr
 
-[653]: #isdvr
+[653]: #gettracks
 
-[654]: #gettracks
+[654]: #parameters-91
 
-[655]: #parameters-91
+[655]: #selecttrack
 
-[656]: #selecttrack
+[656]: #parameters-92
 
-[657]: #parameters-92
+[657]: #loadplayer
 
-[658]: #loadplayer
+[658]: #parameters-93
 
-[659]: #parameters-93
+[659]: #statemanager
 
-[660]: #statemanager
+[660]: #parameters-94
 
-[661]: #parameters-94
+[661]: #destroy-8
 
-[662]: #destroy-8
+[662]: #reset-2
 
-[663]: #reset-2
+[663]: #currentstate
 
-[664]: #currentstate
+[664]: #previousstate
 
-[665]: #previousstate
+[665]: #history
 
-[666]: #history
+[666]: #state-1
 
-[667]: #state-1
+[667]: #parameters-95
 
-[668]: #parameters-95
+[668]: #type-2
 
-[669]: #type-2
+[669]: #duration-3
 
-[670]: #duration-3
+[670]: #duration-4
 
-[671]: #duration-4
+[671]: #parameters-96
 
-[672]: #parameters-96
+[672]: #audiotrack
 
-[673]: #audiotrack
+[673]: #cuesstatus
 
-[674]: #cuesstatus
+[674]: #constructor-2
 
-[675]: #constructor-2
+[675]: #parameters-97
 
-[676]: #parameters-97
+[676]: #hidetexttrack-3
 
-[677]: #hidetexttrack-3
+[677]: #getexternaltracks
 
-[678]: #getexternaltracks
+[678]: #parameters-98
 
-[679]: #parameters-98
+[679]: #selecttexttrack-2
 
-[680]: #selecttexttrack-2
+[680]: #parameters-99
 
-[681]: #parameters-99
+[681]: #resetallcues-1
 
-[682]: #resetallcues-1
+[682]: #reset-3
 
-[683]: #reset-3
+[683]: #destroy-9
 
-[684]: #destroy-9
+[684]: #_resetexternalnativetexttrack
 
-[685]: #_resetexternalnativetexttrack
+[685]: #_addcuestonativetexttrack
 
-[686]: #_addcuestonativetexttrack
+[686]: #parameters-100
 
-[687]: #parameters-100
+[687]: #_addnativetexttrack
 
-[688]: #_addnativetexttrack
+[688]: #implicit_scale_percentage
 
-[689]: #implicit_scale_percentage
+[689]: #textstyle-3
 
-[690]: #textstyle-3
+[690]: #fontsize
 
-[691]: #fontsize
+[691]: #fontfamily
 
-[692]: #fontfamily
+[692]: #fontcolor
 
-[693]: #fontcolor
+[693]: #fontopacity
 
-[694]: #fontopacity
+[694]: #backgroundcolor
 
-[695]: #backgroundcolor
+[695]: #backgroundopacity
 
-[696]: #backgroundopacity
+[696]: #fontedge
 
-[697]: #fontedge
+[697]: #tocss
 
-[698]: #tocss
+[698]: #clone
 
-[699]: #clone
+[699]: #isequal
 
-[700]: #isequal
+[700]: #parameters-101
 
-[701]: #parameters-101
+[701]: #fontfamily-1
 
-[702]: #fontfamily-1
+[702]: #standardcolors
 
-[703]: #standardcolors
+[703]: #standardopacities
 
-[704]: #standardopacities
+[704]: #edgestyles
 
-[705]: #edgestyles
+[705]: #fontscale
 
-[706]: #fontscale
+[706]: #texttrack
 
-[707]: #texttrack
+[707]: #track-1
 
-[708]: #track-1
+[708]: #parameters-102
 
-[709]: #parameters-102
+[709]: #clone-1
 
-[710]: #clone-1
+[710]: #id-4
 
-[711]: #id-4
+[711]: #active
 
-[712]: #active
+[712]: #active-1
 
-[713]: #active-1
+[713]: #parameters-103
 
-[714]: #parameters-103
+[714]: #label
 
-[715]: #label
+[715]: #label-1
 
-[716]: #label-1
+[716]: #parameters-104
 
-[717]: #parameters-104
+[717]: #language
 
-[718]: #language
+[718]: #index
 
-[719]: #index
+[719]: #index-1
 
-[720]: #index-1
+[720]: #parameters-105
 
-[721]: #parameters-105
+[721]: #langcomparer
 
-[722]: #langcomparer
+[722]: #parameters-106
 
-[723]: #parameters-106
+[723]: #videotrack
 
-[724]: #videotrack
+[724]: #finddirectionsetting
 
-[725]: #finddirectionsetting
+[725]: #parameters-107
 
-[726]: #parameters-107
+[726]: #findalignsetting
 
-[727]: #findalignsetting
+[727]: #parameters-108
 
-[728]: #parameters-108
+[728]: #vttcue
 
-[729]: #vttcue
+[729]: #parameters-109
 
-[730]: #parameters-109
+[730]: #hasbeenreset
 
-[731]: #hasbeenreset
+[731]: #displaystate
 
-[732]: #displaystate
+[732]: #_id
 
-[733]: #_id
+[733]: #scrollsetting
 
-[734]: #scrollsetting
+[734]: #findscrollsetting
 
-[735]: #findscrollsetting
+[735]: #parameters-110
 
-[736]: #parameters-110
+[736]: #isvalidpercentvalue
 
-[737]: #isvalidpercentvalue
+[737]: #parameters-111
 
-[738]: #parameters-111
+[738]: #jsonp
 
-[739]: #jsonp
+[739]: #parameters-112
 
-[740]: #parameters-112
+[740]: #_cleanup
 
-[741]: #_cleanup
+[741]: #callbackid
 
-[742]: #callbackid
+[742]: #parameters-113
 
-[743]: #parameters-113
+[743]: #locale
 
-[744]: #locale
+[744]: #language-1
 
-[745]: #language-1
+[745]: #getlogger-1
 
-[746]: #getlogger-1
+[746]: #parameters-114
 
-[747]: #parameters-114
+[747]: #getloglevel-1
 
-[748]: #getloglevel-1
+[748]: #parameters-115
 
-[749]: #parameters-115
+[749]: #setloglevel-1
 
-[750]: #setloglevel-1
+[750]: #parameters-116
 
-[751]: #parameters-116
+[751]: #multimap
 
-[752]: #multimap
+[752]: #push
 
-[753]: #push
+[753]: #parameters-117
 
-[754]: #parameters-117
+[754]: #set
 
-[755]: #set
+[755]: #parameters-118
 
-[756]: #parameters-118
+[756]: #has
 
-[757]: #has
+[757]: #parameters-119
 
-[758]: #parameters-119
+[758]: #get
 
-[759]: #get
+[759]: #parameters-120
 
-[760]: #parameters-120
+[760]: #getall
 
-[761]: #getall
+[761]: #remove
 
-[762]: #remove
+[762]: #parameters-121
 
-[763]: #parameters-121
+[763]: #keys
 
-[764]: #keys
+[764]: #clear
 
-[765]: #clear
+[765]: #setsrc
 
-[766]: #setsrc
+[766]: #parameters-122
 
-[767]: #parameters-122
+[767]: #src-5
 
-[768]: #src-5
+[768]: #getelement
 
-[769]: #getelement
+[769]: #hide
 
-[770]: #hide
+[770]: #reset-4
 
-[771]: #reset-4
+[771]: #destroy-10
 
-[772]: #destroy-10
+[772]: #resizewatcher
 
-[773]: #resizewatcher
+[773]: #destroy-11
 
-[774]: #destroy-11
+[774]: #init
 
-[775]: #init
+[775]: #parameters-123
 
-[776]: #parameters-123
+[776]: #iframeobserver
 
-[777]: #iframeobserver
+[777]: #parameters-124
 
-[778]: #parameters-124
+[778]: #observe
 
-[779]: #observe
+[779]: #parameters-125
 
-[780]: #parameters-125
+[780]: #disconnect
 
-[781]: #disconnect
+[781]: #getsuitablesourceforresolution
 
-[782]: #getsuitablesourceforresolution
+[782]: #parameters-126
 
-[783]: #parameters-126
+[783]: #isnumber
 
-[784]: #isnumber
+[784]: #parameters-127
 
-[785]: #parameters-127
+[785]: #isint
 
-[786]: #isint
+[786]: #parameters-128
 
-[787]: #parameters-128
+[787]: #isfloat
 
-[788]: #isfloat
+[788]: #parameters-129
 
-[789]: #parameters-129
+[789]: #totitlecase
 
-[790]: #totitlecase
+[790]: #parameters-130
 
-[791]: #parameters-130
+[791]: #endswith
 
-[792]: #endswith
+[792]: #parameters-131
 
-[793]: #parameters-131
+[793]: #merge
 
-[794]: #merge
+[794]: #parameters-132
 
-[795]: #parameters-132
+[795]: #isobject
 
-[796]: #isobject
+[796]: #parameters-133
 
-[797]: #parameters-133
+[797]: #mergedeep
 
-[798]: #mergedeep
+[798]: #parameters-134
 
-[799]: #parameters-134
+[799]: #copydeep
 
-[800]: #copydeep
+[800]: #parameters-135
 
-[801]: #parameters-135
+[801]: #isemptyobject
 
-[802]: #isemptyobject
+[802]: #parameters-136
 
-[803]: #parameters-136
+[803]: #getpropertypath
 
-[804]: #getpropertypath
+[804]: #parameters-137
 
-[805]: #parameters-137
+[805]: #haspropertypath
 
-[806]: #haspropertypath
+[806]: #parameters-138
 
-[807]: #parameters-138
+[807]: #createpropertypath
 
-[808]: #createpropertypath
+[808]: #parameters-139
 
-[809]: #parameters-139
+[809]: #deletepropertypath
 
-[810]: #deletepropertypath
+[810]: #parameters-140
 
-[811]: #parameters-140
+[811]: #defer
 
-[812]: #defer
+[812]: #bind
 
-[813]: #bind
+[813]: #parameters-141
 
-[814]: #parameters-141
+[814]: #uniqueid
 
-[815]: #uniqueid
+[815]: #parameters-142
 
-[816]: #parameters-142
+[816]: #addclassname
 
-[817]: #addclassname
+[817]: #parameters-143
 
-[818]: #parameters-143
+[818]: #removeclassname
 
-[819]: #removeclassname
+[819]: #parameters-144
 
-[820]: #parameters-144
+[820]: #hasclassname
 
-[821]: #hasclassname
+[821]: #parameters-145
 
-[822]: #parameters-145
+[822]: #setattribute
 
-[823]: #setattribute
+[823]: #parameters-146
 
-[824]: #parameters-146
+[824]: #removeattribute
 
-[825]: #removeattribute
+[825]: #parameters-147
 
-[826]: #parameters-147
+[826]: #setstyle
 
-[827]: #setstyle
+[827]: #parameters-148
 
-[828]: #parameters-148
+[828]: #appendchild
 
-[829]: #appendchild
+[829]: #parameters-149
 
-[830]: #parameters-149
+[830]: #removechild
 
-[831]: #removechild
+[831]: #parameters-150
 
-[832]: #parameters-150
+[832]: #prependto
 
-[833]: #prependto
+[833]: #parameters-151
 
-[834]: #parameters-151
+[834]: #getelementbyid
 
-[835]: #getelementbyid
+[835]: #parameters-152
 
-[836]: #parameters-152
+[836]: #getelementsbytagname
 
-[837]: #getelementsbytagname
+[837]: #parameters-153
 
-[838]: #parameters-153
+[838]: #createelement
 
-[839]: #createelement
+[839]: #parameters-154
 
-[840]: #parameters-154
+[840]: #loadstylesheetasync
 
-[841]: #loadstylesheetasync
+[841]: #parameters-155
 
-[842]: #parameters-155
+[842]: #loadscriptasync
 
-[843]: #loadscriptasync
+[843]: #parameters-156
 
-[844]: #parameters-156
+[844]: #getelementbyselector
 
-[845]: #getelementbyselector
+[845]: #parameters-157
 
-[846]: #parameters-157
+[846]: #insertbefore
 
-[847]: #insertbefore
+[847]: #parameters-158
 
-[848]: #parameters-158
+[848]: #compare
 
-[849]: #compare
+[849]: #parameters-159
 
-[850]: #parameters-159
+[850]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[851]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[851]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[852]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[852]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[853]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[853]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[854]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[854]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-[855]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[855]: https://developer.mozilla.org/docs/Web/API/HTMLVideoElement
 
-[856]: https://developer.mozilla.org/docs/Web/API/HTMLVideoElement
+[856]: #videotrack
 
-[857]: #videotrack
+[857]: #audiotrack
 
-[858]: #audiotrack
+[858]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
 
-[859]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[859]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
 
-[860]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+[860]: https://developer.mozilla.org/docs/Web/API/Event
 
-[861]: https://developer.mozilla.org/docs/Web/API/Event
+[861]: https://github.com/kaltura/playkit-js/blob/master/docs/configuration.md#configsourcescaptions
 
-[862]: https://github.com/kaltura/playkit-js/blob/master/docs/configuration.md#configsourcescaptions
+[862]: https://goo.gl/EEhZqT
 
-[863]: https://goo.gl/EEhZqT
+[863]: https://goo.gl/eKVPPe
 
-[864]: https://goo.gl/eKVPPe
+[864]: https://developer.mozilla.org/docs/Web/API/EventTarget
 
-[865]: https://developer.mozilla.org/docs/Web/API/EventTarget
+[865]: #listenertype
 
-[866]: #listenertype
+[866]: #fakeeventtarget
 
-[867]: #fakeeventtarget
+[867]: #eventlistener
 
-[868]: #eventlistener
+[868]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined
 
-[869]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined
+[869]: https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp
 
-[870]: https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp
+[870]: #player
 
-[871]: #player
+[871]: https://developer.mozilla.org/docs/Web/HTML/Element
 
-[872]: https://developer.mozilla.org/docs/Web/HTML/Element
+[872]: #basemiddleware
 
-[873]: #basemiddleware
+[873]: #playbackmiddleware
 
-[874]: #playbackmiddleware
+[874]: #texttrack
 
-[875]: #texttrack
+[875]: #textstyle
 
-[876]: #textstyle
+[876]: https://developer.mozilla.org/docs/Web/API/HTMLDivElement
 
-[877]: https://developer.mozilla.org/docs/Web/API/HTMLDivElement
+[877]: #track
 
-[878]: #track
+[878]: #state
 
-[879]: #state
+[879]: #textstylefontfamily
 
-[880]: #textstylefontfamily
+[880]: #textstylestandardcolors
 
-[881]: #textstylestandardcolors
+[881]: #textstylestandardopacities
 
-[882]: #textstylestandardopacities
+[882]: #textstyleedgestyles
 
-[883]: #textstyleedgestyles
+[883]: https://goo.gl/ZcqOOM
 
-[884]: https://goo.gl/ZcqOOM
+[884]: http://www.apache.org/licenses/LICENSE-2.0
 
-[885]: http://www.apache.org/licenses/LICENSE-2.0
+[885]: http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#text-track-cue-display-state
 
-[886]: http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#text-track-cue-display-state
+[886]: http://dev.w3.org/html5/webvtt/#vttcue-interface
 
-[887]: http://dev.w3.org/html5/webvtt/#vttcue-interface
+[887]: https://developer.mozilla.org/docs/Web/API/Element
 
-[888]: https://developer.mozilla.org/docs/Web/API/Element
-
-[889]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/NaN
+[888]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/NaN
