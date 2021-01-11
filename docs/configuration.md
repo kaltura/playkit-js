@@ -461,6 +461,7 @@ var config = {
 > > ```
 
 > ##
+>
 > ### config.text
 >
 > ##### Type: `PKTextConfigObject`
@@ -586,6 +587,7 @@ var config = {
 > > ##### Description: RFC 3066 language code for the CEA-708 captions track 2.
 >
 > ##
+>
 > ### config.playback
 >
 > ##### Type: `PKPlaybackConfigObject`
@@ -600,6 +602,7 @@ var config = {
 >  crossOrigin: string,
 >  preload: string,
 >  autoplay: PKAutoPlayTypes,
+>  autopause: boolean,
 >  allowMutedAutoPlay: boolean,
 >  muted: boolean,
 >  pictureInPicture: boolean,
@@ -803,7 +806,15 @@ var config = {
 > > ### config.playback.autoplay/allowMutedAutoPlay
 > >
 > > for `autoplay` & `allowMutedAutoPlay` options read [here](autoplay.md).
+> ##
 >
+> > ### config.playback.autopause
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ##### Description: Indicates whether the video should be automatically paused when not in view
 > ##
 >
 > > ### config.playback.muted
