@@ -3759,7 +3759,8 @@ Start/resume playback.
 
 #### Parameters
 
--   `playOptions` **PKPlayOptionsObject** additional options to control the play. i.e. programmatic true indicates the play call was not initiated by a user gesture and should be handled like auto play.
+-   `playOptions` **PKPlayOptionsObject** additional options to control the play.
+    -   `playOptions.programmatic` **[boolean][853]** if true, the play call was not initiated by a user gesture and should be handled like auto play.
 
 Returns **void** 
 
