@@ -172,7 +172,7 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * The event manager of the current media.
+   * The event manager of the player.
    * @type {EventManager}
    * @private
    */
