@@ -461,6 +461,7 @@ var config = {
 > > ```
 
 > ##
+>
 > ### config.text
 >
 > ##### Type: `PKTextConfigObject`
@@ -586,6 +587,7 @@ var config = {
 > > ##### Description: RFC 3066 language code for the CEA-708 captions track 2.
 >
 > ##
+>
 > ### config.playback
 >
 > ##### Type: `PKPlaybackConfigObject`
@@ -1093,6 +1095,17 @@ var config = {
 > > >   LICENSE: 2
 > > > }
 > > > ```
+> >
+> > ##
+> >
+> > ### config.network.maxStaleLevelReloads
+> >
+> > ##### Type: `number`
+> >
+> > ##### Default: `20`
+> >
+> > ##### Description: The maximal amount of times player should request a manifest refresh, when no new segments appear in the refreshed manifest.
+> >
 > > >
 > > > ##
 > > >

@@ -78,7 +78,9 @@ const DefaultConfig = {
   drm: {
     keySystem: ''
   },
-  network: {}
+  network: {
+    maxStaleLevelReloads: 20
+  }
 };
 
 export {DefaultConfig};
