@@ -517,12 +517,12 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Start/resume playback.
-   * @param {boolean} programmatic - indicates the play call was not user gestured and should be handled like auto play.
+   * @param {PKPlayOptionsObject} playOptions - additional options to control the play. i.e. programmatic true indicates the play call was not initiated by a user gesture and should be handled like auto play.
    * @returns {void}
    * @public
    */
-  play(programmatic: boolean = false): void {
-    if (programmatic) {
+  play(playOptions?: PKPlayOptionsObject): void {
+    if (playOptions && playOptions.programmatic) {
       this._autoPlay();
       return;
     }
