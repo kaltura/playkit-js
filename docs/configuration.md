@@ -1095,17 +1095,6 @@ var config = {
 > > >   LICENSE: 2
 > > > }
 > > > ```
-> >
-> > ##
-> >
-> > ### config.network.maxStaleLevelReloads
-> >
-> > ##### Type: `number`
-> >
-> > ##### Default: `20`
-> >
-> > ##### Description: The maximal amount of times player should request a manifest refresh, when no new segments appear in the refreshed manifest.
-> >
 > > >
 > > > ##
 > > >
@@ -1271,9 +1260,17 @@ var config = {
 > >   }
 > > };
 > > ```
-
-##
-
+> >
+> > ##
+> >
+> > ### config.network.maxStaleLevelReloads
+> >
+> > ##### Type: `number`
+> >
+> > ##### Default: `20`
+> >
+> > ##### Description: The maximal amount of times player should request a manifest refresh, when no new segments appear in the refreshed manifest.
+> >
 > ### config.customLabels
 >
 > ##### Type: `PKCustomLabelsConfigObject`
