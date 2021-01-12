@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.66.0](https://github.com/kaltura/playkit-js/compare/v0.65.0...v0.66.0) (2021-01-07)
+
+
+### Bug Fixes
+
+* **FEC-10564:** keep the poster for display for an audio-only entry ([#520](https://github.com/kaltura/playkit-js/issues/520)) ([68a7026](https://github.com/kaltura/playkit-js/commit/68a7026))
+* **FEC-10662:** incorrect flow in destroy process ([#512](https://github.com/kaltura/playkit-js/issues/512)) ([5ffe16c](https://github.com/kaltura/playkit-js/commit/5ffe16c))
+* **FEC-10760:** Youbora - bufferUnderrun event fired when buffering started and no bufferDuration in Ping events ([#516](https://github.com/kaltura/playkit-js/issues/516)) ([a287fa4](https://github.com/kaltura/playkit-js/commit/a287fa4))
+* **FEC-10766:** create static method for copy instead inner config ([#524](https://github.com/kaltura/playkit-js/issues/524)) ([ab06f5d](https://github.com/kaltura/playkit-js/commit/ab06f5d))
+* **FEC-10816:** Invalid currentTime values on start of live DASH ([#522](https://github.com/kaltura/playkit-js/issues/522)) ([7dd6765](https://github.com/kaltura/playkit-js/commit/7dd6765))
+* **FEC-10844:** advanced caption settings custom caption is always marked even when choose sample ([#525](https://github.com/kaltura/playkit-js/issues/525)) ([2b9bbc7](https://github.com/kaltura/playkit-js/commit/2b9bbc7))
+* **FEC-10878:** order of text captions are broken on Safari browser ([#527](https://github.com/kaltura/playkit-js/issues/527)) ([37bfb4f](https://github.com/kaltura/playkit-js/commit/37bfb4f))
+* **FEC-10879:** Safari ignores explicit text track ([#528](https://github.com/kaltura/playkit-js/issues/528)) ([8c9d503](https://github.com/kaltura/playkit-js/commit/8c9d503))
+* CEA708 subtitle doesn't get correct index on native  ([#514](https://github.com/kaltura/playkit-js/issues/514)) ([d87e7b1](https://github.com/kaltura/playkit-js/commit/d87e7b1))
+
+
+### Features
+
+* **FEC-10766:** create text config section and option for styling ([#518](https://github.com/kaltura/playkit-js/issues/518)) ([c4e0cb5](https://github.com/kaltura/playkit-js/commit/c4e0cb5))
+
+
+
 ## [0.65.0](https://github.com/kaltura/playkit-js/compare/v0.64.3...v0.65.0) (2020-12-07)
 
 
