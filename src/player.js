@@ -463,7 +463,7 @@ export default class Player extends FakeEventTarget {
         this._posterManager.setSrc(this._config.sources.poster);
         this._handleDimensions();
         this._handlePreload();
-        this._initAutoPlay();
+        this._handleAutoPlay();
         Player._logger.debug('Change source ended');
         this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_ENDED));
       } else {
@@ -517,10 +517,16 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Start/resume playback.
+   * @param {boolean} programmatic - indicates the play call was not user gestured and should be handled like auto play.
    * @returns {void}
    * @public
    */
-  play(): void {
+  play(programmatic: boolean = false): void {
+    if (programmatic) {
+      this._autoPlay();
+      return;
+    }
+
     if (!this._playbackStart) {
       this._playbackStart = true;
       this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_START));
@@ -1908,7 +1914,7 @@ export default class Player extends FakeEventTarget {
     }
   }
 
-  autoPlay(): void {
+  _autoPlay(): void {
     const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
     Player.getCapabilities(this.engineType).then(capabilities => {
       if (capabilities.autoplay) {
@@ -1966,12 +1972,12 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @private
    */
-  _initAutoPlay(): void {
+  _handleAutoPlay(): void {
     if (this.isAudio() || this._config.playback.autoplay !== AutoPlayType.TRUE) {
       this._posterManager.show();
     }
     if (this._config.playback.autoplay === AutoPlayType.TRUE) {
-      this.autoPlay();
+      this._autoPlay();
     }
   }
 
