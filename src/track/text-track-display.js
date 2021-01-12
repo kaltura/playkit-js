@@ -1036,7 +1036,7 @@ function processCues(window, cues, overlay, style) {
   (function () {
     let styleBox, cue;
 
-    for (let i = 0; i < cues.length; i++) {
+    for (let i = cues.length - 1; i >= 0; i--) {
       cue = cues[i];
 
       // Compute the intial position and styles of the cue div.
