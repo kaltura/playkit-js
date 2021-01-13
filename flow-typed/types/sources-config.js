@@ -9,5 +9,6 @@ declare type PKSourcesConfigObject = {
   metadata: PKMetadataConfigObject,
   id?: string,
   poster?: string,
-  duration?: number
+  duration?: number,
+  startTime?: number
 };

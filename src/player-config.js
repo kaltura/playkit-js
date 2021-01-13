@@ -5,6 +5,7 @@ const DefaultConfig = {
     level: 'ERROR'
   },
   sources: {
+    startTime: -1,
     options: {
       forceRedirectExternalStreams: false
     },
@@ -23,7 +24,6 @@ const DefaultConfig = {
     audioLanguage: '',
     textLanguage: '',
     volume: 1,
-    startTime: -1,
     playsinline: true,
     preload: 'none',
     autoplay: false,
