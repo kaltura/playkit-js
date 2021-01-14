@@ -1,5 +1,5 @@
 //@flow
-import MultiMap from '../utils/multi-map';
+import {MultiMap} from '../utils/multi-map';
 import FakeEventTarget from './fake-event-target';
 import FakeEvent from './fake-event';
 
@@ -12,7 +12,7 @@ import FakeEvent from './fake-event';
  * @implements {IDestroyable}
  */
 class EventManager {
-  _bindingMap: MultiMap<Binding_> | null;
+  _bindingMap: MultiMap<string, Binding_> | null;
 
   constructor() {
     /**

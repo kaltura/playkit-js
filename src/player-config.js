@@ -27,6 +27,7 @@ const DefaultConfig = {
     playsinline: true,
     preload: 'none',
     autoplay: false,
+    autopause: false,
     allowMutedAutoPlay: true,
     muted: false,
     pictureInPicture: true,

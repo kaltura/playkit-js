@@ -6,21 +6,21 @@
  * @struct
  * @template T
  */
-class MultiMap<T> {
-  _map: Map<string, T[]>;
+class MultiMap<K, T> {
+  _map: Map<K, T[]>;
 
   constructor() {
-    /** @private {!Object.<string, !Array.<T>>} */
+    /** @private {!Object.<K, !Array.<T>>} */
     this._map = new Map();
   }
 
   /**
    * Add a key, value pair to the map.
-   * @param {string} key -
+   * @param {K} key -
    * @param {T} value  -
    * @returns {void}
    */
-  push(key: string, value: T): void {
+  push(key: K, value: T): void {
     if (this._map.has(key)) {
       let list = this._map.get(key);
       if (Array.isArray(list)) {
@@ -34,29 +34,29 @@ class MultiMap<T> {
 
   /**
    * Set an array of values for the key, overwriting any previous data.
-   * @param {string} key -
+   * @param {K} key -
    * @param {!Array.<T>} values -
    * @returns {void}
    */
-  set(key: string, values: T[]): void {
+  set(key: K, values: T[]): void {
     this._map.set(key, values);
   }
 
   /**
    * Check for a key.
-   * @param {string} key -
+   * @param {K} key -
    * @return {boolean} true if the key exists.
    */
-  has(key: string): boolean {
+  has(key: K): boolean {
     return this._map.has(key);
   }
 
   /**
    * Get a list of values by key.
-   * @param {string} key -
-   * @return {Array.<T>} or null if no suZch key exists.
+   * @param {K} key -
+   * @return {Array.<T>} or null if no such key exists.
    */
-  get(key: string): Array<T> {
+  get(key: K): Array<T> {
     let list = this._map.get(key);
     // slice() clones the list so that it and the map can each be modified
     // without affecting the other.
@@ -76,12 +76,12 @@ class MultiMap<T> {
   }
 
   /**
-   * Remove a specific value, if it exists.
-   * @param {string} key -
+   * Remove a specific value, if it exists. If there are no more values to the key, the key is removed
+   * @param {K} key -
    * @param {T} value -
    * @returns {void}
    */
-  remove(key: string, value: T): void {
+  remove(key: K, value: T): void {
     if (!this._map.has(key)) return;
     let list = this._map.get(key);
     if (Array.isArray(list)) {
@@ -91,15 +91,18 @@ class MultiMap<T> {
           --i;
         }
       }
+      if (list.length === 0) {
+        this._map.delete(key);
+      }
     }
   }
 
   /**
    * Get all keys from the multimap.
-   * @return {!Array.<string>}
+   * @return {!Array.<K>}
    */
   // eslint-disable-next-line no-undef
-  keys(): Iterator<string> {
+  keys(): Iterator<K> {
     return this._map.keys();
   }
 
@@ -111,5 +114,4 @@ class MultiMap<T> {
     this._map.clear();
   }
 }
-
-export default MultiMap;
+export {MultiMap};

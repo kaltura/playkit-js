@@ -617,7 +617,8 @@ var config = {
 >  playsinline: boolean,
 >  crossOrigin: string,
 >  preload: string,
->  autoplay: boolean,
+>  autoplay: PKAutoPlayTypes,
+>  autopause: boolean,
 >  allowMutedAutoPlay: boolean,
 >  muted: boolean,
 >  pictureInPicture: boolean,
@@ -804,6 +805,16 @@ var config = {
 > > ### config.playback.autoplay/allowMutedAutoPlay
 > >
 > > for `autoplay` & `allowMutedAutoPlay` options read [here](autoplay.md).
+>
+> ##
+>
+> > ### config.playback.autopause
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ##### Description: Indicates whether the video should be automatically paused when not in view
 >
 > ##
 >

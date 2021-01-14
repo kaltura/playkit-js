@@ -35,6 +35,7 @@ import {ResizeWatcher} from './utils/resize-watcher';
 import {FullscreenController} from './fullscreen/fullscreen-controller';
 import {EngineDecorator} from './engines/engine-decorator';
 import {LabelOptions} from './track/label-options';
+import {AutoPlayType} from './auto-play-type';
 /**
  * The black cover class name.
  * @type {string}
@@ -176,6 +177,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _eventManager: EventManager;
+
   /**
    * The poster manager of the player.
    * @type {PosterManager}
@@ -515,10 +517,17 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Start/resume playback.
+   * @param {PKPlayOptionsObject} playOptions - additional options to control the play.
+   * @param {boolean} playOptions.programmatic - if true, the play call was not initiated by a user gesture and should be handled like auto play.
    * @returns {void}
    * @public
    */
-  play(): void {
+  play(playOptions?: PKPlayOptionsObject): void {
+    if (playOptions && playOptions.programmatic) {
+      this._autoPlay();
+      return;
+    }
+
     if (!this._playbackStart) {
       this._playbackStart = true;
       this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_START));
@@ -894,7 +903,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   set dimensions(dimensions?: PKDimensionsConfig) {
-    const targetElement = document.getElementById(this.config.targetId);
+    const targetElement = this._getTargetElement();
     if (!dimensions || Utils.Object.isEmptyObject(dimensions)) {
       this._aspectRatio = null;
       targetElement.style.width = null;
@@ -905,6 +914,10 @@ export default class Player extends FakeEventTarget {
       targetElement.style.height = typeof height === 'number' ? `${height}px` : height;
       this._calcRatio(targetElement, dimensions);
     }
+  }
+
+  _getTargetElement(): HTMLElement {
+    return Utils.Dom.getElementById(this._config.targetId);
   }
 
   /**
@@ -1881,35 +1894,25 @@ export default class Player extends FakeEventTarget {
     }
   }
 
-  /**
-   * Handles auto play.
-   * @returns {void}
-   * @private
-   */
-  _handleAutoPlay(): void {
-    if (this.isAudio() || this._config.playback.autoplay === false) {
-      this._posterManager.show();
-    }
-    if (this._config.playback.autoplay === true) {
-      const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
-      Player.getCapabilities(this.engineType).then(capabilities => {
-        if (capabilities.autoplay) {
-          onAutoPlay();
-        } else {
-          if (capabilities.mutedAutoPlay) {
-            if (this.muted && !this._fallbackToMutedAutoPlay) {
-              onMutedAutoPlay();
-            } else if (allowMutedAutoPlay) {
-              onFallbackToMutedAutoPlay();
-            } else {
-              onAutoPlayFailed();
-            }
+  _autoPlay(): void {
+    const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
+    Player.getCapabilities(this.engineType).then(capabilities => {
+      if (capabilities.autoplay) {
+        onAutoPlay();
+      } else {
+        if (capabilities.mutedAutoPlay) {
+          if (this.muted && !this._fallbackToMutedAutoPlay) {
+            onMutedAutoPlay();
+          } else if (allowMutedAutoPlay) {
+            onFallbackToMutedAutoPlay();
           } else {
             onAutoPlayFailed();
           }
+        } else {
+          onAutoPlayFailed();
         }
-      });
-    }
+      }
+    });
 
     const onAutoPlay = () => {
       Player._logger.debug('Start autoplay');
@@ -1941,6 +1944,21 @@ export default class Player extends FakeEventTarget {
       this.load();
       this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED));
     };
+  }
+
+  /**
+     }
+   * Checks auto play configuration and handles initialization accordingly.
+   * @returns {void}
+   * @private
+   */
+  _handleAutoPlay(): void {
+    if (this.isAudio() || this._config.playback.autoplay !== AutoPlayType.TRUE) {
+      this._posterManager.show();
+    }
+    if (this._config.playback.autoplay === AutoPlayType.TRUE) {
+      this._autoPlay();
+    }
   }
 
   /**
