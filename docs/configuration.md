@@ -33,6 +33,7 @@ var config = {
     level: 'ERROR'
   },
   sources: {
+    startTime: -1,
     options: {
       forceRedirectExternalStreams: false
     },
@@ -51,7 +52,6 @@ var config = {
     audioLanguage: '',
     textLanguage: '',
     volume: 1,
-    startTime: -1,
     playsinline: true,
     preload: 'none',
     autoplay: false,
@@ -153,7 +153,8 @@ var config = {
 >  id?: string,
 >  poster?: string,
 >  duration?: number,
->  captions?: Array<PKExternalCaptionObject>
+>  captions?: Array<PKExternalCaptionObject>,
+>  startTime?: number
 > }
 > ```
 >
@@ -459,8 +460,25 @@ var config = {
 > >   }
 > > };
 > > ```
-
+> >
+> > ##
+> >
+> > ### config.sources.startTime
+> >
+> > ##### Type: `number`
+> >
+> > ##### Default: `-1`
+> >
+> > ##### Description: Optional start time, in seconds, to begin playback.
+> >
+> > Default -1 refer to automatic start time - 0 to VOD and live edge to live.
+> >
+> > > Note. `startTime` affects the ad playback, e.g. `startTime: 10` will skip ads scheduled until 10.
+> > > <br>To force playing ads scheduled before `startTime`, need to configure the ads plugin.
+> > > <br>For example with [IMA](https://github.com/kaltura/playkit-js-ima/blob/master/docs/api.md) plugin, set `adsRenderingSettings: {playAdsAfterTime: -1}`.
+>
 > ##
+>
 > ### config.text
 >
 > ##### Type: `PKTextConfigObject`
@@ -586,6 +604,7 @@ var config = {
 > > ##### Description: RFC 3066 language code for the CEA-708 captions track 2.
 >
 > ##
+>
 > ### config.playback
 >
 > ##### Type: `PKPlaybackConfigObject`
@@ -595,7 +614,6 @@ var config = {
 >  audioLanguage: string,
 >  textLanguage: string,
 >  volume: number,
->  startTime: number,
 >  playsinline: boolean,
 >  crossOrigin: string,
 >  preload: string,
@@ -619,7 +637,6 @@ var config = {
 >  audioLanguage: "",
 >  textLanguage: "",
 >  volume: 1,
->  startTime: -1,
 >  playsinline: true,
 >  preload: "none",
 >  autoplay: false,
@@ -737,22 +754,6 @@ var config = {
 > >   }
 > > };
 > > ```
->
-> ##
->
-> > ### config.playback.startTime
-> >
-> > ##### Type: `number`
-> >
-> > ##### Default: `-1`
-> >
-> > ##### Description: Optional start time, in seconds, to begin playback.
-> >
-> > Default -1 refer to automatic start time - 0 to VOD and live edge to live.
-> >
-> > > Note. `startTime` affects the ad playback, e.g. `startTime: 10` will skip ads scheduled until 10.
-> > > <br>To force playing ads scheduled before `startTime`, need to configure the ads plugin.
-> > > <br>For example with [IMA](https://github.com/kaltura/playkit-js-ima/blob/master/docs/api.md) plugin, set `adsRenderingSettings: {playAdsAfterTime: -1}`.
 >
 > ##
 >

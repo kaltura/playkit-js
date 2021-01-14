@@ -1963,7 +1963,7 @@ export default class Player extends FakeEventTarget {
     };
     if (this._engine && !this.src && !this._loading) {
       this._loading = true;
-      let startTime = this._config.playback.startTime;
+      const startTime = this._config.sources.startTime;
       this._engine
         .load(startTime)
         .then(data => {
