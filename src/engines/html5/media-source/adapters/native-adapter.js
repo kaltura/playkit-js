@@ -14,6 +14,7 @@ import Error from '../../../../error/error';
 import defaultConfig from './native-adapter-default-config';
 import type {FairPlayDrmConfigType} from './fairplay-drm-handler';
 import {FairPlayDrmHandler} from './fairplay-drm-handler';
+import {EXTERNAL_TRACK_ID} from '../../../../track/external-captions-handler';
 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
@@ -130,6 +131,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _startTimeAttach: number = NaN;
+  _nativeTextTracksMap = [];
 
   /**
    * Checks if NativeAdapter can play a given mime type.
@@ -187,18 +189,20 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       displayTextTrack: false,
       progressiveSources: []
     };
-    if (Utils.Object.hasPropertyPath(config, 'playback.useNativeTextTrack')) {
-      adapterConfig.displayTextTrack = Utils.Object.getPropertyPath(config, 'playback.useNativeTextTrack');
+    if (Utils.Object.hasPropertyPath(config, 'text.useNativeTextTrack')) {
+      adapterConfig.displayTextTrack = Utils.Object.getPropertyPath(config, 'text.useNativeTextTrack');
     }
     if (Utils.Object.hasPropertyPath(config, 'sources.progressive')) {
       adapterConfig.progressiveSources = Utils.Object.getPropertyPath(config, 'sources.progressive');
     }
-    if (config.playback) {
-      adapterConfig.enableCEA708Captions = config.playback.enableCEA708Captions;
-      adapterConfig.captionsTextTrack1Label = config.playback.captionsTextTrack1Label;
-      adapterConfig.captionsTextTrack1LanguageCode = config.playback.captionsTextTrack1LanguageCode;
-      adapterConfig.captionsTextTrack2Label = config.playback.captionsTextTrack2Label;
-      adapterConfig.captionsTextTrack2LanguageCode = config.playback.captionsTextTrack2LanguageCode;
+    if (Utils.Object.hasPropertyPath(config, 'text')) {
+      adapterConfig.enableCEA708Captions = config.text.enableCEA708Captions;
+      adapterConfig.captionsTextTrack1Label = config.text.captionsTextTrack1Label;
+      adapterConfig.captionsTextTrack1LanguageCode = config.text.captionsTextTrack1LanguageCode;
+      adapterConfig.captionsTextTrack2Label = config.text.captionsTextTrack2Label;
+      adapterConfig.captionsTextTrack2LanguageCode = config.text.captionsTextTrack2LanguageCode;
+    }
+    if (Utils.Object.hasPropertyPath(config, 'playback')) {
       if (Utils.Object.hasPropertyPath(config.playback, 'options.html5.native')) {
         Utils.Object.mergeDeep(adapterConfig, config.playback.options.html5.native);
       }
@@ -520,22 +524,29 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   destroy(): Promise<*> {
     NativeAdapter._logger.debug('destroy');
-    return super.destroy().then(() => {
-      this._drmHandler && this._drmHandler.destroy();
-      this._waitingEventTriggered = false;
-      this._progressiveSources = [];
-      this._loadPromise = null;
-      this._loadPromiseReject = null;
-      this._liveEdge = 0;
-      this._lastTimeUpdate = 0;
-      this._lastTimeDetach = NaN;
-      this._startTimeAttach = NaN;
-      this._videoDimensions = null;
-      this._clearHeartbeatTimeout();
-      if (this._liveDurationChangeInterval) {
-        clearInterval(this._liveDurationChangeInterval);
-        this._liveDurationChangeInterval = null;
-      }
+    return new Promise((resolve, reject) => {
+      super.destroy().then(
+        () => {
+          this._drmHandler && this._drmHandler.destroy();
+          this._waitingEventTriggered = false;
+          this._progressiveSources = [];
+          this._loadPromise = null;
+          this._nativeTextTracksMap = [];
+          this._loadPromiseReject = null;
+          this._liveEdge = 0;
+          this._lastTimeUpdate = 0;
+          this._lastTimeDetach = NaN;
+          this._startTimeAttach = NaN;
+          this._videoDimensions = null;
+          this._clearHeartbeatTimeout();
+          if (this._liveDurationChangeInterval) {
+            clearInterval(this._liveDurationChangeInterval);
+            this._liveDurationChangeInterval = null;
+          }
+          resolve();
+        },
+        () => reject
+      );
     });
   }
 
@@ -654,19 +665,23 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const parsedTracks = [];
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
-        const settings = {
-          kind: textTracks[i].kind,
-          active: textTracks[i].mode === 'showing',
-          label: textTracks[i].label,
-          language: textTracks[i].language,
-          index: i
-        };
-        if (settings.kind === 'subtitles') {
-          parsedTracks.push(new PKTextTrack(settings));
-        } else if (settings.kind === 'captions' && this._config.enableCEA708Captions) {
-          settings.label = settings.label || captionsTextTrackLabels.shift();
-          settings.language = settings.language || captionsTextTrackLanguageCodes.shift();
-          parsedTracks.push(new PKTextTrack(settings));
+        if (textTracks[i].language !== EXTERNAL_TRACK_ID || textTracks[i].label !== EXTERNAL_TRACK_ID) {
+          const settings = {
+            kind: textTracks[i].kind,
+            active: textTracks[i].mode === 'showing',
+            label: textTracks[i].label,
+            language: textTracks[i].language,
+            index: i
+          };
+          if (settings.kind === 'subtitles') {
+            parsedTracks.push(new PKTextTrack(settings));
+            this._nativeTextTracksMap[settings.index] = textTracks[i];
+          } else if (settings.kind === 'captions' && this._config.enableCEA708Captions) {
+            settings.label = settings.label || captionsTextTrackLabels.shift();
+            settings.language = settings.language || captionsTextTrackLanguageCodes.shift();
+            parsedTracks.push(new PKTextTrack(settings));
+            this._nativeTextTracksMap[settings.index] = textTracks[i];
+          }
         }
       }
     }
@@ -831,12 +846,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    */
   selectTextTrack(textTrack: PKTextTrack): void {
-    const textTracks = this._videoElement.textTracks;
-    if (textTrack instanceof PKTextTrack && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions') && textTracks) {
+    if (textTrack instanceof PKTextTrack && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions')) {
       this._removeNativeTextTrackChangeListener();
-      const selectedTrack = Array.from(textTracks).find(
-        (track, index) => textTrack.index === index && track && (track.kind === 'subtitles' || track.kind === 'captions')
-      );
+      const selectedTrack = this._nativeTextTracksMap[textTrack.index];
       if (selectedTrack) {
         this._disableTextTracks();
         selectedTrack.mode = this._getDisplayTextTrackModeString();
@@ -887,8 +899,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const pkTextTracks = this._getPKTextTracks();
     const pkOffTrack = pkTextTracks.find(track => track.language === 'off');
     const getActiveVidTextTrackIndex = () => {
-      for (let i = 0; i < this._videoElement.textTracks.length; i++) {
-        const textTrack = this._videoElement.textTracks[i];
+      for (let i = 0; i < this._nativeTextTracksMap.length; i++) {
+        const textTrack = this._nativeTextTracksMap[i];
         if (this._getDisplayTextTrackModeString() === textTrack.mode) {
           return i;
         }
@@ -899,7 +911,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const vidIndex = getActiveVidTextTrackIndex();
     const activePKtextTrack = this._getActivePKTextTrack();
     const pkIndex = activePKtextTrack ? activePKtextTrack.index : -1;
-
     if (vidIndex !== pkIndex) {
       // In case no text track with 'showing' mode
       // we need to set the off track
@@ -1022,7 +1033,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     let textTracks = this._videoElement.textTracks;
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
-        (textTracks[i].kind === 'subtitles' || textTracks[i].kind === 'captions') && (textTracks[i].mode = 'disabled');
+        (textTracks[i].kind === 'subtitles' || textTracks[i].kind === 'captions') &&
+          (textTracks[i].language !== EXTERNAL_TRACK_ID || textTracks[i].label !== EXTERNAL_TRACK_ID) &&
+          (textTracks[i].mode = 'disabled');
       }
     }
   }

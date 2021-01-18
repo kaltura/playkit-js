@@ -35,7 +35,7 @@ import {ResizeWatcher} from './utils/resize-watcher';
 import {FullscreenController} from './fullscreen/fullscreen-controller';
 import {EngineDecorator} from './engines/engine-decorator';
 import {LabelOptions} from './track/label-options';
-
+import {AutoPlayType} from './auto-play-type';
 /**
  * The black cover class name.
  * @type {string}
@@ -177,6 +177,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _eventManager: EventManager;
+
   /**
    * The poster manager of the player.
    * @type {PosterManager}
@@ -394,6 +395,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _shouldLoadAfterAttach: boolean = false;
+  /**
+   * The aspect ratio of the player.
+   * @type {?string}
+   * @private
+   */
+  _aspectRatio: ?string;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -454,6 +461,7 @@ export default class Player extends FakeEventTarget {
         this._attachMedia();
         this._handlePlaybackOptions();
         this._posterManager.setSrc(this._config.sources.poster);
+        this._handleDimensions();
         this._handlePreload();
         this._handleAutoPlay();
         Player._logger.debug('Change source ended');
@@ -475,6 +483,7 @@ export default class Player extends FakeEventTarget {
     } else {
       Utils.Object.mergeDeep(this._config, config);
     }
+    this._applyTextTrackConfig(config);
   }
 
   /**
@@ -508,10 +517,17 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Start/resume playback.
+   * @param {PKPlayOptionsObject} playOptions - additional options to control the play.
+   * @param {boolean} playOptions.programmatic - if true, the play call was not initiated by a user gesture and should be handled like auto play.
    * @returns {void}
    * @public
    */
-  play(): void {
+  play(playOptions?: PKPlayOptionsObject): void {
+    if (playOptions && playOptions.programmatic) {
+      this._autoPlay();
+      return;
+    }
+
     if (!this._playbackStart) {
       this._playbackStart = true;
       this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_START));
@@ -574,8 +590,7 @@ export default class Player extends FakeEventTarget {
     if (this._reset) return;
     this.pause();
     //make sure all services are reset before engine and engine attributes are reset
-    // $FlowFixMe
-    this._externalCaptionsHandler.reset(this._tracks.filter(track => track.external));
+    this._externalCaptionsHandler.reset();
     this._posterManager.reset();
     this._stateManager.reset();
     this._config.sources = {};
@@ -882,11 +897,35 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Get the dimensions of the player.
-   * @returns {{width: number, height: number}} - The dimensions of the player.
+   * Sets the dimensions of the player.
+   * @param {PKDimensionsConfig} dimensions - the player dimensions config.
+   * @returns {void}
    * @public
    */
-  get dimensions(): Object {
+  set dimensions(dimensions?: PKDimensionsConfig) {
+    const targetElement = this._getTargetElement();
+    if (!dimensions || Utils.Object.isEmptyObject(dimensions)) {
+      this._aspectRatio = null;
+      targetElement.style.width = null;
+      targetElement.style.height = null;
+    } else {
+      const {height, width} = Utils.Object.mergeDeep(this.dimensions, dimensions);
+      targetElement.style.width = typeof width === 'number' ? `${width}px` : width;
+      targetElement.style.height = typeof height === 'number' ? `${height}px` : height;
+      this._calcRatio(targetElement, dimensions);
+    }
+  }
+
+  _getTargetElement(): HTMLElement {
+    return Utils.Dom.getElementById(this._config.targetId);
+  }
+
+  /**
+   * Get the dimensions of the player.
+   * @returns {PKPlayerDimensions} - The dimensions of the player.
+   * @public
+   */
+  get dimensions(): PKPlayerDimensions {
     return {
       width: this._el.clientWidth,
       height: this._el.clientHeight
@@ -1067,6 +1106,16 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Checking if the current playback is audio only.
+   * @function isAudio
+   * @returns {boolean} - Whether playback is audio.
+   * @private
+   */
+  isAudio(): boolean {
+    return this._config.sources.type === MediaType.AUDIO;
+  }
+
+  /**
    * Get whether the video is seeked to live edge in dvr
    * @returns {boolean} - Whether the video is seeked to live edge in dvr
    * @public
@@ -1167,7 +1216,7 @@ export default class Player extends FakeEventTarget {
           this.hideTextTrack();
           this._externalCaptionsHandler.hideTextTrack();
           this._playbackAttributesState.textLanguage = OFF;
-        } else if (track.external && !this._config.playback.useNativeTextTrack) {
+        } else if (track.external) {
           this._engine.hideTextTrack();
           this._externalCaptionsHandler.selectTextTrack(track);
         } else {
@@ -1224,13 +1273,44 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * update the text track config from current config
+   * @function _applyTextTrackConfig
+   * @returns {void}
+   * @param {Object} config - new config which configure for checking if it relevant config has changed
+   * @private
+   */
+  _applyTextTrackConfig(config: Object): void {
+    if (Utils.Object.hasPropertyPath(config, 'text.textTrackDisplaySetting') || Utils.Object.getPropertyPath(config, 'text.forceCenter')) {
+      let textDisplaySettings = {};
+      if (Utils.Object.hasPropertyPath(this._config, 'text.textTrackDisplaySetting')) {
+        textDisplaySettings = Utils.Object.mergeDeep(textDisplaySettings, this._config.text.textTrackDisplaySetting);
+      }
+      if (Utils.Object.getPropertyPath(this._config, 'text.forceCenter')) {
+        textDisplaySettings = Utils.Object.mergeDeep(textDisplaySettings, {
+          position: 'auto',
+          align: 'center',
+          size: '100'
+        });
+      }
+      this.setTextDisplaySettings(textDisplaySettings);
+    }
+    try {
+      if (Utils.Object.hasPropertyPath(config, 'text.textStyle')) {
+        this.textStyle = TextStyle.fromJson(this._config.text.textStyle);
+      }
+    } catch (e) {
+      Player._logger.warn(e);
+    }
+  }
+
+  /**
    * update the text display settings
    * @param {Object} settings - text cue display settings
    * @public
    * @returns {void}
    */
   setTextDisplaySettings(settings: Object): void {
-    this._textDisplaySettings = settings;
+    this._textDisplaySettings = Utils.Object.mergeDeep(this._textDisplaySettings, settings);
     this._updateCueDisplaySettings();
     for (let i = 0; i < this._activeTextCues.length; i++) {
       this._activeTextCues[i].hasBeenReset = true;
@@ -1238,6 +1318,9 @@ export default class Player extends FakeEventTarget {
     this._updateTextDisplay(this._activeTextCues);
   }
 
+  get textDisplaySetting(): Object {
+    return Utils.Object.copyDeep(this._textDisplaySettings);
+  }
   /**
    * Sets style attributes for text tracks.
    * @param {TextStyle} style - text styling settings
@@ -1262,7 +1345,7 @@ export default class Player extends FakeEventTarget {
 
     try {
       this._textStyle = style;
-      if (this._config.playback.useNativeTextTrack) {
+      if (this._config.text.useNativeTextTrack) {
         sheet.insertRule(`#${this._playerId} video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
       } else if (this._engine) {
         this._engine.resetAllCues();
@@ -1720,9 +1803,6 @@ export default class Player extends FakeEventTarget {
   _onTextTrackChanged(event: FakeEvent): void {
     this.ready().then(() => (this._playbackAttributesState.textLanguage = event.payload.selectedTextTrack.language));
     this._markActiveTrack(event.payload.selectedTextTrack);
-    if (this._config.playback.useNativeTextTrack) {
-      this._externalCaptionsHandler.selectTextTrack(event.payload.selectedTextTrack);
-    }
     this.dispatchEvent(event);
   }
 
@@ -1814,34 +1894,25 @@ export default class Player extends FakeEventTarget {
     }
   }
 
-  /**
-   * Handles auto play.
-   * @returns {void}
-   * @private
-   */
-  _handleAutoPlay(): void {
-    if (this._config.playback.autoplay === true) {
-      const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
-      Player.getCapabilities(this.engineType).then(capabilities => {
-        if (capabilities.autoplay) {
-          onAutoPlay();
-        } else {
-          if (capabilities.mutedAutoPlay) {
-            if (this.muted && !this._fallbackToMutedAutoPlay) {
-              onMutedAutoPlay();
-            } else if (allowMutedAutoPlay) {
-              onFallbackToMutedAutoPlay();
-            } else {
-              onAutoPlayFailed();
-            }
+  _autoPlay(): void {
+    const allowMutedAutoPlay = this._config.playback.allowMutedAutoPlay;
+    Player.getCapabilities(this.engineType).then(capabilities => {
+      if (capabilities.autoplay) {
+        onAutoPlay();
+      } else {
+        if (capabilities.mutedAutoPlay) {
+          if (this.muted && !this._fallbackToMutedAutoPlay) {
+            onMutedAutoPlay();
+          } else if (allowMutedAutoPlay) {
+            onFallbackToMutedAutoPlay();
           } else {
             onAutoPlayFailed();
           }
+        } else {
+          onAutoPlayFailed();
         }
-      });
-    } else {
-      this._posterManager.show();
-    }
+      }
+    });
 
     const onAutoPlay = () => {
       Player._logger.debug('Start autoplay');
@@ -1871,9 +1942,23 @@ export default class Player extends FakeEventTarget {
       Player._logger.warn('Autoplay failed, pause player');
       this._posterManager.show();
       this.load();
-      this.ready().then(() => this.pause());
       this.dispatchEvent(new FakeEvent(CustomEventType.AUTOPLAY_FAILED));
     };
+  }
+
+  /**
+     }
+   * Checks auto play configuration and handles initialization accordingly.
+   * @returns {void}
+   * @private
+   */
+  _handleAutoPlay(): void {
+    if (this.isAudio() || this._config.playback.autoplay !== AutoPlayType.TRUE) {
+      this._posterManager.show();
+    }
+    if (this._config.playback.autoplay === AutoPlayType.TRUE) {
+      this._autoPlay();
+    }
   }
 
   /**
@@ -1896,7 +1981,7 @@ export default class Player extends FakeEventTarget {
     };
     if (this._engine && !this.src && !this._loading) {
       this._loading = true;
-      let startTime = this._config.playback.startTime;
+      const startTime = this._config.sources.startTime;
       this._engine
         .load(startTime)
         .then(data => {
@@ -1915,6 +2000,18 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Handles and sets the initial dimensions configuration if such exists.
+   * @private
+   * @returns {void}
+   */
+  _handleDimensions(): void {
+    const {dimensions} = this.config;
+    if (Utils.Object.isObject(dimensions) && !Utils.Object.isEmptyObject(dimensions)) {
+      this.dimensions = dimensions;
+    }
+  }
+
+  /**
    * Start/resume the engine playback.
    * @private
    * @returns {void}
@@ -1926,7 +2023,8 @@ export default class Player extends FakeEventTarget {
     }
     this.ready()
       .then(() => {
-        if (this.isLive() && (!this.isDvr() || (typeof this.currentTime === 'number' && this.currentTime < 0))) {
+        const liveOrDvrOutOfWindow = this.isLive() && (!this.isDvr() || (typeof this.currentTime === 'number' && this.currentTime < 0));
+        if (!this._firstPlay && liveOrDvrOutOfWindow) {
           this.seekToLiveEdge();
         }
         this._engine.play();
@@ -1963,7 +2061,9 @@ export default class Player extends FakeEventTarget {
     if (this._firstPlay) {
       this._firstPlay = false;
       this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAY));
-      this._posterManager.hide();
+      if (!this.isAudio()) {
+        this._posterManager.hide();
+      }
       this.hideBlackCover();
       if (typeof this._playbackAttributesState.rate === 'number') {
         this.playbackRate = this._playbackAttributesState.rate;
@@ -2010,6 +2110,7 @@ export default class Player extends FakeEventTarget {
       this._pause();
     }
   }
+
   /**
    * Resets the state flags of the player.
    * @returns {void}
@@ -2021,6 +2122,29 @@ export default class Player extends FakeEventTarget {
     this._loadingMedia = false;
     this._playbackStart = false;
     this._firstPlaying = false;
+  }
+
+  /**
+   * Calculates the aspect ratio of the player.
+   * @param {HTMLDivElement} targetElement - the player root element.
+   * @param {PKDimensionsConfig} dimensions - the player dimensions input.
+   * @returns {void}
+   * @public
+   */
+  _calcRatio(targetElement: HTMLDivElement, dimensions: PKDimensionsConfig) {
+    if (typeof dimensions.ratio !== 'undefined') {
+      this._aspectRatio = dimensions.ratio;
+    }
+    if (this._aspectRatio) {
+      const [ratioWidth, ratioHeight] = this._aspectRatio.split(':').map(r => Number(r));
+      if (dimensions.width || (!dimensions.width && !dimensions.height)) {
+        const height = (ratioHeight / ratioWidth) * targetElement.clientWidth;
+        targetElement.style.height = `${height}px`;
+      } else if (dimensions.height && !dimensions.width) {
+        const width = (ratioWidth / ratioHeight) * targetElement.clientHeight;
+        targetElement.style.width = `${width}px`;
+      }
+    }
   }
 
   /**
@@ -2058,24 +2182,7 @@ export default class Player extends FakeEventTarget {
     this._tracks = tracks.concat(this._externalCaptionsHandler.getExternalTracks(tracks));
     this._addTextTrackOffOption();
     this._maybeSetTracksLabels();
-    this._maybeAdjustTextTracksIndexes();
     this._setDefaultTracks();
-  }
-
-  /**
-   * If we added external tracks to the video element, we might need to adjust the text tracks indexes between the video
-   * element and the players tracks list
-   * @returns {void}
-   * @private
-   */
-  _maybeAdjustTextTracksIndexes(): void {
-    if (this._config.playback.useNativeTextTrack) {
-      const getNativeLanguageTrackIndex = (textTrack: Track): number => {
-        const videoElement = this.getVideoElement();
-        return videoElement ? Array.from(videoElement.textTracks).findIndex(track => (track ? track.language === textTrack.language : false)) : -1;
-      };
-      this._getTextTracks().forEach(track => (track.index = getNativeLanguageTrackIndex(track)));
-    }
   }
 
   /**
@@ -2172,7 +2279,9 @@ export default class Player extends FakeEventTarget {
     for (let i = 0; i < activeCues.length; i++) {
       let cue = activeCues[i];
       for (let name in settings) {
-        cue[name] = settings[name];
+        if (settings[name]) {
+          cue[name] = settings[name];
+        }
       }
     }
   }
@@ -2184,7 +2293,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _updateTextDisplay(cues: Array<Cue>): void {
-    if (!this._config.playback.useNativeTextTrack) {
+    if (!this._config.text.useNativeTextTrack) {
       processCues(window, cues, this._textDisplayEl, this._textStyle);
     }
   }
@@ -2443,6 +2552,5 @@ export default class Player extends FakeEventTarget {
   get Error(): typeof PKError {
     return PKError;
   }
-
   // </editor-fold>
 }

@@ -3,6 +3,7 @@ import Player from '../../src/player';
 import {StateType} from '../../src/state/state-type';
 import {CustomEventType, Html5EventType} from '../../src/event/event-type';
 import SourcesConfig from './configs/sources.json';
+import ExternalCaption from './configs/external-captions.json';
 import Track from '../../src/track/track';
 import VideoTrack from '../../src/track/video-track';
 import AudioTrack from '../../src/track/audio-track';
@@ -16,6 +17,8 @@ import {LabelOptions} from '../../src/track/label-options';
 import {EngineProvider} from '../../src/engines/engine-provider';
 import FakeEvent from '../../src/event/fake-event';
 import Html5AutoPlayCapability from '../../src/engines/html5/capabilities/html5-autoplay';
+import {EXTERNAL_TRACK_ID} from '../../src/track/external-captions-handler';
+import * as Utils from '../../src/utils/util';
 
 const targetId = 'player-placeholder_player.spec';
 let sourcesConfig = PKObject.copyDeep(SourcesConfig);
@@ -1213,14 +1216,105 @@ describe('Player', function () {
 
       it('should change style setting', () => {
         let textStyle = new TextStyle();
-        textStyle.backgroundColor = TextStyle.StandardColors.RED;
-        textStyle.fontColor = TextStyle.StandardColors.CYAN;
         textStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
+        textStyle.fontSize = '75%';
+        textStyle.fontScale = '3';
+        textStyle.fontColor = TextStyle.StandardColors.BLACK;
+        textStyle.fontOpacity = TextStyle.StandardOpacities.SEMI_HIGH;
+        textStyle.backgroundOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        textStyle.fontFamily = TextStyle.FontFamily.ARIAL;
+        textStyle.backgroundColor = TextStyle.StandardColors.RED;
         player.textStyle = textStyle;
         const currentTextStyle = player.textStyle;
-        currentTextStyle.backgroundColor.should.be.equal(textStyle.backgroundColor);
-        currentTextStyle.fontColor.should.be.equal(textStyle.fontColor);
-        currentTextStyle.fontEdge.should.be.equal(textStyle.fontEdge);
+        currentTextStyle.fontEdge.should.deep.equal(textStyle.fontEdge);
+        currentTextStyle.fontSize.should.equal(textStyle.fontSize);
+        currentTextStyle.fontScale.should.equal(textStyle.fontScale);
+        currentTextStyle.fontColor.should.deep.equal(textStyle.fontColor);
+        currentTextStyle.fontOpacity.should.equal(textStyle.fontOpacity);
+        currentTextStyle.backgroundOpacity.should.equal(textStyle.backgroundOpacity);
+        currentTextStyle.fontFamily.should.equal(textStyle.fontFamily);
+        currentTextStyle.backgroundColor.should.deep.equal(textStyle.backgroundColor);
+      });
+
+      it('should create fromJson set the correct value', () => {
+        const settings = {
+          fontEdge: TextStyle.EdgeStyles.NONE,
+          fontSize: '75%',
+          fontScale: '3',
+          fontColor: TextStyle.StandardColors.CYAN,
+          fontOpacity: TextStyle.StandardOpacities.TRANSPARENT,
+          backgroundOpacity: TextStyle.StandardOpacities.TRANSPARENT,
+          fontFamily: TextStyle.FontFamily.ARIAL,
+          backgroundColor: TextStyle.StandardColors.RED
+        };
+        const textStyle = TextStyle.fromJson(settings);
+        textStyle.fontEdge.should.deep.equal(settings.fontEdge);
+        textStyle.fontSize.should.equal(settings.fontSize);
+        textStyle.fontScale.should.equal(settings.fontScale);
+        textStyle.fontColor.should.deep.equal(settings.fontColor);
+        textStyle.fontOpacity.should.equal(settings.fontOpacity);
+        textStyle.backgroundOpacity.should.equal(settings.backgroundOpacity);
+        textStyle.fontFamily.should.equal(settings.fontFamily);
+        textStyle.backgroundColor.should.deep.equal(settings.backgroundColor);
+      });
+
+      it('should fromJson return an object equal to explicit set object', () => {
+        const settings = {
+          fontEdge: TextStyle.EdgeStyles.RAISED,
+          fontSize: '75%',
+          fontScale: '3',
+          fontColor: TextStyle.StandardColors.CYAN,
+          fontOpacity: TextStyle.StandardOpacities.SEMI_LOW,
+          backgroundOpacity: TextStyle.StandardOpacities.SEMI_LOW,
+          fontFamily: TextStyle.FontFamily.ARIAL,
+          backgroundColor: TextStyle.StandardColors.RED
+        };
+        let textStyle = new TextStyle();
+        textStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
+        textStyle.fontSize = '75%';
+        textStyle.fontScale = '3';
+        textStyle.fontColor = TextStyle.StandardColors.CYAN;
+        textStyle.fontOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        textStyle.backgroundColor = TextStyle.StandardColors.RED;
+        textStyle.backgroundOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        textStyle.fontFamily = TextStyle.FontFamily.ARIAL;
+        TextStyle.fromJson(settings).isEqual(textStyle).should.be.true;
+      });
+
+      it('should toJson return same object', () => {
+        const settings = {
+          fontEdge: TextStyle.EdgeStyles.RAISED,
+          fontSize: '75%',
+          fontScale: '3',
+          fontColor: TextStyle.StandardColors.CYAN,
+          fontOpacity: TextStyle.StandardOpacities.SEMI_LOW,
+          backgroundOpacity: TextStyle.StandardOpacities.SEMI_LOW,
+          fontFamily: TextStyle.FontFamily.ARIAL,
+          backgroundColor: TextStyle.StandardColors.RED
+        };
+        let textStyle = new TextStyle();
+        textStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
+        textStyle.fontSize = '75%';
+        textStyle.fontScale = '3';
+        textStyle.fontColor = TextStyle.StandardColors.CYAN;
+        textStyle.fontOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        textStyle.backgroundColor = TextStyle.StandardColors.RED;
+        textStyle.backgroundOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        textStyle.fontFamily = TextStyle.FontFamily.ARIAL;
+        TextStyle.toJson(textStyle).should.deep.equal(settings);
+      });
+
+      it('should clone API return exact same object', () => {
+        let clonedTextStyle = new TextStyle();
+        clonedTextStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
+        clonedTextStyle.fontSize = '75%';
+        clonedTextStyle.fontScale = '3';
+        clonedTextStyle.fontColor = TextStyle.StandardColors.CYAN;
+        clonedTextStyle.fontOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        clonedTextStyle.backgroundColor = TextStyle.StandardColors.RED;
+        clonedTextStyle.backgroundOpacity = TextStyle.StandardOpacities.SEMI_LOW;
+        clonedTextStyle.fontFamily = TextStyle.FontFamily.ARIAL;
+        clonedTextStyle.clone().isEqual(clonedTextStyle).should.be.true;
       });
     });
 
@@ -1228,7 +1322,314 @@ describe('Player', function () {
       it('should change textDisplay settings', () => {
         const settings = {line: -4};
         player.setTextDisplaySettings(settings);
-        player._textDisplaySettings.should.be.equal(settings);
+        player._textDisplaySettings.should.deep.equal(settings);
+      });
+
+      it('should change textDisplay settings and remove setting from cue for empty values', () => {
+        const settings = {line: -4, position: '10%'};
+        player._activeTextCues[0] = {
+          position: 'auto',
+          align: 'center',
+          size: 100,
+          vertical: ''
+        };
+        player.setTextDisplaySettings(settings);
+        player._textDisplaySettings.should.deep.equal(settings);
+        player._activeTextCues[0].should.deep.equal(Utils.Object.mergeDeep(player._activeTextCues[0], settings));
+        const settingsToRemovePositionValue = {line: -4, position: ''};
+        player.setTextDisplaySettings(settingsToRemovePositionValue);
+        player._activeTextCues[0].should.deep.equal(Utils.Object.mergeDeep(player._activeTextCues[0], {line: -4}));
+      });
+    });
+
+    describe('configure text track display', () => {
+      it('should change textDisplay settings by config', () => {
+        const settings = {line: -4};
+        player = new Player({text: {textTrackDisplaySetting: settings}});
+        player._textDisplaySettings.should.deep.equal(settings);
+      });
+
+      it('should forceCenter override textTrackDisplaySetting', () => {
+        const settings = {position: '10%', align: 'left', size: '10'};
+        player = new Player({text: {forceCenter: true, textTrackDisplaySetting: settings}});
+        player._textDisplaySettings.should.deep.equal({position: 'auto', align: 'center', size: '100'});
+      });
+
+      it('should forceCenter keep the other values from textTrackDisplaySetting', () => {
+        const settings = {line: '-4', lineAlign: 'end', position: '10%'};
+        player = new Player({text: {forceCenter: true, textTrackDisplaySetting: settings}});
+        player._textDisplaySettings.should.deep.equal(Utils.Object.mergeDeep(settings, {position: 'auto', align: 'center', size: '100'}));
+      });
+
+      it('should configure change of textTrackDisplaySetting will apply forceCenter', () => {
+        const settings = {position: '10%', align: 'left', size: '10'};
+        player = new Player({text: {forceCenter: true, textTrackDisplaySetting: settings}});
+        player.configure({text: {textTrackDisplaySetting: settings}});
+        player._textDisplaySettings.should.deep.equal({position: 'auto', align: 'center', size: '100'});
+      });
+
+      it('should empty configure will not take the previous config and change the values from setTextDisplaySettings', () => {
+        const settings = {position: '10%', align: 'left', size: '10'};
+        player = new Player({text: {forceCenter: true, textTrackDisplaySetting: settings}});
+        player.setTextDisplaySettings(settings);
+        player.configure({text: {}});
+        player._textDisplaySettings.should.deep.equal(settings);
+      });
+
+      it('should keep the current setting for empty config', () => {
+        const settings = {line: '-4', lineAlign: 'end', position: '10%'};
+        player.setTextDisplaySettings(settings);
+        player.configure({text: {}});
+        player._textDisplaySettings.should.deep.equal(settings);
+      });
+
+      it('should change style setting by config', () => {
+        player = new Player({
+          text: {
+            textStyle: {
+              backgroundColor: TextStyle.StandardColors.RED,
+              fontColor: TextStyle.StandardColors.CYAN,
+              fontEdge: TextStyle.EdgeStyles.RAISED
+            }
+          }
+        });
+        const currentTextStyle = player.textStyle;
+        currentTextStyle.backgroundColor.should.deep.equal(TextStyle.StandardColors.RED);
+        currentTextStyle.fontColor.should.deep.equal(TextStyle.StandardColors.CYAN);
+        currentTextStyle.fontEdge.should.deep.equal(TextStyle.EdgeStyles.RAISED);
+      });
+    });
+  });
+
+  describe('Text Track', () => {
+    let config, player, video, playerContainer;
+
+    before(() => {
+      playerContainer = createElement('div', targetId);
+    });
+
+    afterEach(() => {
+      player.destroy();
+    });
+
+    after(() => {
+      removeVideoElementsFromTestPage();
+      removeElement(targetId);
+    });
+
+    let getActiveNativeTracks = () => {};
+    let checkTrack = () => {};
+
+    const switchTextTrack = (track1, track2, done) => {
+      const tracksChangeToTrack1 = event => {
+        try {
+          player.removeEventListener(CustomEventType.TEXT_TRACK_CHANGED, tracksChangeToTrack1);
+          player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, tracksChangeToTrack2);
+          checkTrack(track1, event.payload.selectedTextTrack);
+          player.selectTrack(track2);
+        } catch (e) {
+          done(e);
+        }
+      };
+      const tracksChangeToTrack2 = event => {
+        try {
+          player.removeEventListener(CustomEventType.TEXT_TRACK_CHANGED, tracksChangeToTrack2);
+          checkTrack(track2, event.payload.selectedTextTrack);
+          done();
+        } catch (e) {
+          done(e);
+        }
+      };
+      player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, tracksChangeToTrack1);
+      player.selectTrack(track1);
+    };
+
+    describe('useNativeTextTrack = true', () => {
+      before(() => {
+        getActiveNativeTracks = () => {
+          return Array.from(video.textTracks).filter(track => {
+            return track.mode === 'showing';
+          });
+        };
+
+        checkTrack = (textTrack, selectedTrack) => {
+          const activeNativeTracks = getActiveNativeTracks();
+          activeNativeTracks.length.should.equal(1);
+          selectedTrack.language.should.equal(textTrack.language);
+          textTrack.external
+            ? activeNativeTracks[0].language.should.equal(EXTERNAL_TRACK_ID)
+            : activeNativeTracks[0].language.should.equal(textTrack.language);
+        };
+      });
+
+      beforeEach(() => {
+        config = Utils.Object.mergeDeep(getConfigStructure(), {
+          sources: Utils.Object.mergeDeep({captions: [ExternalCaption.He, ExternalCaption.Ru]}, sourcesConfig.Mp4),
+          text: {useNativeTextTrack: true}
+        });
+        player = new Player(config);
+        playerContainer.appendChild(player.getView());
+        video = player._engine.getVideoElement();
+        video.addTextTrack('subtitles', 'English', 'en');
+        video.addTextTrack('subtitles', 'French', 'fr');
+      });
+
+      it('should switch between internal and external', done => {
+        player.ready().then(() => {
+          let externalTracks = player.getTracks().filter(track => {
+            return track instanceof TextTrack && track.external;
+          });
+          let internalTracks = player.getTracks().filter(track => {
+            return track instanceof TextTrack && !track.external;
+          });
+          switchTextTrack(externalTracks[0], internalTracks[0], done);
+        });
+        player.load();
+      });
+
+      it('should switch between internal and internal', done => {
+        player.ready().then(() => {
+          let internalTracks = player.getTracks().filter(track => {
+            return track instanceof TextTrack && !track.external;
+          });
+          switchTextTrack(internalTracks[0], internalTracks[1], done);
+        });
+        player.load();
+      });
+
+      it('should switch between external and external', done => {
+        player.ready().then(() => {
+          let externalTracks = player.getTracks().filter(track => {
+            return track instanceof TextTrack && track.external;
+          });
+          switchTextTrack(externalTracks[0], externalTracks[1], done);
+        });
+        player.load();
+      });
+
+      it('should getTracks return external and internal caption', done => {
+        player.ready().then(() => {
+          try {
+            let tracks = player.getTracks().filter(track => {
+              return track instanceof TextTrack;
+            });
+            tracks.length.should.equal(5);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+        player.load();
+      });
+
+      it('should create only one track for external', done => {
+        player.ready().then(() => {
+          try {
+            Array.from(video.textTracks).length.should.equal(3);
+            const externalTrack = Array.from(video.textTracks).filter(track => track.language === EXTERNAL_TRACK_ID);
+            externalTrack.length.should.equal(1);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+        player.load();
+      });
+    });
+
+    describe('useNativeTextTrack = false', () => {
+      before(() => {
+        getActiveNativeTracks = () => {
+          return Array.from(video.textTracks).filter(track => {
+            return track.mode === 'hidden';
+          });
+        };
+        checkTrack = (textTrack, selectedTrack) => {
+          const activeNativeTracks = getActiveNativeTracks();
+          if (!textTrack.external) {
+            activeNativeTracks.length.should.equal(1);
+            activeNativeTracks[0].language.should.equal(textTrack.language);
+            player._externalCaptionsHandler._isTextTrackActive = false;
+          } else {
+            activeNativeTracks.length.should.equal(0);
+            player._externalCaptionsHandler._isTextTrackActive = true;
+          }
+          selectedTrack.language.should.equal(textTrack.language);
+        };
+      });
+
+      beforeEach(() => {
+        config = Utils.Object.mergeDeep(getConfigStructure(), {
+          sources: Utils.Object.mergeDeep({captions: [ExternalCaption.He, ExternalCaption.Ru]}, sourcesConfig.Mp4),
+          text: {useNativeTextTrack: false}
+        });
+        player = new Player(config);
+        playerContainer.appendChild(player.getView());
+        video = player._engine.getVideoElement();
+        video.addTextTrack('subtitles', 'English', 'en');
+        video.addTextTrack('subtitles', 'French', 'fr');
+      });
+
+      it('should switch between internal and external', done => {
+        player.ready().then(() => {
+          let externalTracks = player.getTracks().filter(track => {
+            return track instanceof TextTrack && track.external;
+          });
+          let internalTracks = player.getTracks().filter(track => {
+            return track instanceof TextTrack && !track.external;
+          });
+          switchTextTrack(externalTracks[0], internalTracks[0], done);
+        });
+        player.load();
+      });
+
+      it('should switch between internal and internal', done => {
+        player.ready().then(() => {
+          let internalTracks = player.getTracks().filter(track => {
+            return track instanceof TextTrack && !track.external;
+          });
+          switchTextTrack(internalTracks[0], internalTracks[1], done);
+        });
+        player.load();
+      });
+
+      it('should switch between external and external', done => {
+        player.ready().then(() => {
+          let externalTracks = player.getTracks().filter(track => {
+            return track instanceof TextTrack && track.external;
+          });
+          switchTextTrack(externalTracks[0], externalTracks[1], done);
+        });
+        player.load();
+      });
+
+      it('should getTracks return external and internal caption', done => {
+        player.ready().then(() => {
+          try {
+            let tracks = player.getTracks().filter(track => {
+              return track instanceof TextTrack;
+            });
+            tracks.length.should.equal(5);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+        player.load();
+      });
+
+      it('should not create native track for external', done => {
+        player.ready().then(() => {
+          try {
+            Array.from(video.textTracks).length.should.equal(2);
+            const externalTrack = Array.from(video.textTracks).filter(track => track.language === EXTERNAL_TRACK_ID);
+            externalTrack.length.should.equal(0);
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+        player.load();
       });
     });
   });

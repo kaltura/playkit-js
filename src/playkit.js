@@ -32,6 +32,8 @@ import {RequestType} from './request-type';
 import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
 import {AdEventType} from './ads/ad-event-type';
+import {ScreenOrientationType} from './screen-orientation-type';
+import {AutoPlayType} from './auto-play-type';
 
 declare var __VERSION__: string;
 declare var __NAME__: string;
@@ -107,7 +109,9 @@ export {
   CorsType,
   DrmScheme,
   MimeType,
-  RequestType
+  RequestType,
+  ScreenOrientationType,
+  AutoPlayType
 };
 
 // Export logger utils

@@ -50,7 +50,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _canLoadMediaSourceAdapterPromise: Promise<*>;
   _droppedFramesWatcher: ?DroppedFramesWatcher;
-
+  _reset: boolean = false;
   /**
    * The html5 class logger.
    * @type {any}
@@ -208,19 +208,26 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   reset(): void {
+    if (this._reset) return;
+    this._reset = true;
     this._eventManager.removeAll();
     if (this._droppedFramesWatcher) {
       this._droppedFramesWatcher.destroy();
       this._droppedFramesWatcher = null;
     }
-    if (this._mediaSourceAdapter) {
-      this._canLoadMediaSourceAdapterPromise = this._mediaSourceAdapter.destroy();
-      this._mediaSourceAdapter = null;
-    }
-    if (this._el && this._el.src) {
-      Utils.Dom.setAttribute(this._el, 'src', '');
-      Utils.Dom.removeAttribute(this._el, 'src');
-    }
+    this._canLoadMediaSourceAdapterPromise = new Promise((resolve, reject) => {
+      const mediaSourceAdapterDestroyed = this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve();
+      if (this._el && this._el.src) {
+        mediaSourceAdapterDestroyed.then(() => {
+          Utils.Dom.setAttribute(this._el, 'src', '');
+          Utils.Dom.removeAttribute(this._el, 'src');
+          resolve();
+        }, reject);
+      } else {
+        mediaSourceAdapterDestroyed.then(resolve, reject);
+      }
+    });
+    this._mediaSourceAdapter = null;
   }
 
   /**
@@ -292,6 +299,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._handleVideoError();
     });
     this._handleMetadataTrackEvents();
+    this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
+      if (event.track.kind === 'captions' || event.track.kind === 'subtitles') {
+        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_ADDED, {track: event.track}));
+      }
+    });
     let mediaSourceAdapter = this._mediaSourceAdapter;
     if (mediaSourceAdapter) {
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
@@ -972,6 +984,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   _init(source: PKMediaSourceObject, config: Object): void {
     this._config = config;
+    this._reset = false;
     this._loadMediaSourceAdapter(source);
     this.attach();
   }
