@@ -100,13 +100,6 @@ const OFF: string = 'off';
 const DURATION_OFFSET: number = 0.1;
 
 /**
- * The toggle fullscreen rendering timeout value
- * @type {number}
- * @const
- */
-const REPOSITION_CUES_TIMEOUT: number = 1000;
-
-/**
  * The threshold in seconds from duration that we still consider it as live edge
  * @type {number}
  * @const
@@ -322,13 +315,6 @@ export default class Player extends FakeEventTarget {
     audioLanguage: '',
     textLanguage: ''
   };
-
-  /**
-   * holds false or an id for the timeout the reposition the text cues after togelling full screen
-   * @type {any}
-   * @private
-   */
-  _repositionCuesTimeout: any;
   /**
    * Whether a load media request has sent, the player should wait to media.
    * @type {boolean}
@@ -415,7 +401,6 @@ export default class Player extends FakeEventTarget {
     this._env = Env;
     this._tracks = [];
     this._firstPlay = true;
-    this._repositionCuesTimeout = false;
     this._loadingMedia = false;
     this._loading = false;
     this._playbackStart = false;
@@ -626,7 +611,6 @@ export default class Player extends FakeEventTarget {
     this._posterManager.destroy();
     this._stateManager.destroy();
     this._fullscreenController.destroy();
-    this._clearRepositionTimeout();
     this._activeTextCues = [];
     this._textDisplaySettings = {};
     this._config = {};
@@ -1818,18 +1802,7 @@ export default class Player extends FakeEventTarget {
     for (let i = 0; i < this._activeTextCues.length; i++) {
       this._activeTextCues[i].hasBeenReset = true;
     }
-    // handling only the last reposition
-    this._clearRepositionTimeout();
-    this._repositionCuesTimeout = setTimeout(() => {
-      this._updateTextDisplay(this._activeTextCues);
-      this._repositionCuesTimeout = false;
-    }, REPOSITION_CUES_TIMEOUT);
-  }
-
-  _clearRepositionTimeout() {
-    if (this._repositionCuesTimeout) {
-      clearTimeout(this._repositionCuesTimeout);
-    }
+    this._updateTextDisplay(this._activeTextCues);
   }
 
   /**
