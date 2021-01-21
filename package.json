@@ -19,6 +19,11 @@
     "docs:serve": "documentation serve flow-typed/** src/** --watch",
     "prettier:fix": "prettier --write ."
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "lint-staged": {
     "*.{js,jsx}": [
       "eslint --fix",
