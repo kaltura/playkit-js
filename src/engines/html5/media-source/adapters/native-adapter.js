@@ -444,8 +444,15 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._handleLiveDurationChange();
       }
     };
-    if (startTime && startTime > -1) {
-      this._videoElement.currentTime = startTime;
+    const setStartTime = seekTo => {
+      if (seekTo && seekTo > -1) {
+        this._videoElement.currentTime = seekTo;
+      }
+    };
+    setStartTime(startTime);
+    if (!this.isLive()) {
+      //for stream that have two duration change - like ima dai sample
+      this._eventManager.listen(this._videoElement, Html5EventType.DURATION_CHANGE, () => setStartTime(startTime));
     }
     if (this._videoElement.textTracks.length > 0) {
       parseTracksAndResolve();
