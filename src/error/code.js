@@ -44,6 +44,11 @@ const Code: CodeType = {
    */
   RESPONSE_FILTER_ERROR: 1007,
 
+  /**
+   * Live manifest is refreshed more than a preconfigured amount of times without any new segment.
+   */
+  LIVE_MANIFEST_REFRESH_ERROR: 1008,
+
   /** The text parser failed to parse a text stream due to an invalid header. */
   INVALID_TEXT_HEADER: 2000,
 
