@@ -6,7 +6,7 @@ declare type PKPlaybackConfigObject = {
   playsinline: boolean,
   crossOrigin: string,
   preload: string,
-  autoplay: boolean,
+  autoplay: PKAutoPlayTypes,
   allowMutedAutoPlay: boolean,
   muted: boolean,
   pictureInPicture: boolean,
