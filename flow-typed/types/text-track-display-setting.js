@@ -6,6 +6,6 @@ declare type PKTextTrackDisplaySettingObject = {
   position: number,
   positionAlign: string,
   snapToLines: boolean,
-  vertical: string
-  size: number,
+  vertical: string,
+  size: number
 };
