@@ -488,7 +488,7 @@ var config = {
 >  useNativeTextTrack: boolean,
 >  enableCEA708Captions: boolean,
 >  forceCenter: boolean,
->  textTrackDisplaySetting: Object,
+>  textTrackDisplaySetting: PKTextTrackDisplaySettingObject,
 >  textStyle: TextStyle,
 >  captionsTextTrack1Label: string,
 >  captionsTextTrack1LanguageCode: string,
@@ -547,7 +547,7 @@ var config = {
 >
 > > ### config.text.textTrackDisplaySetting
 > >
-> > ##### Type: `Object`
+> > ##### Type: `PKTextTrackDisplaySettingObject`
 > >
 > > ##### Default: `null`
 > >

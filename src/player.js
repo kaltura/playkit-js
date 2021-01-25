@@ -276,10 +276,10 @@ export default class Player extends FakeEventTarget {
   _activeTextCues: Array<any> = [];
   /**
    * The player text disaply settings
-   * @type {Object}
+   * @type {PKTextTrackDisplaySettingObject}
    * @private
    */
-  _textDisplaySettings: Object = {};
+  _textDisplaySettings: PKTextTrackDisplaySettingObject = {};
   /**
    * The player text style settings
    * @type {TextStyle}
@@ -1305,11 +1305,11 @@ export default class Player extends FakeEventTarget {
 
   /**
    * update the text display settings
-   * @param {Object} settings - text cue display settings
+   * @param {PKTextTrackDisplaySettingObject} settings - text cue display settings
    * @public
    * @returns {void}
    */
-  setTextDisplaySettings(settings: Object): void {
+  setTextDisplaySettings(settings: PKTextTrackDisplaySettingObject): void {
     this._textDisplaySettings = Utils.Object.mergeDeep(this._textDisplaySettings, settings);
     this._updateCueDisplaySettings();
     for (let i = 0; i < this._activeTextCues.length; i++) {
