@@ -4,7 +4,7 @@ import {TextStyle} from '../../src/track/text-style';
 declare type PKTextConfigObject = {
   enableCEA708Captions: boolean,
   useNativeTextTrack: boolean,
-  textTrackDisplaySetting: Object,
+  textTrackDisplaySetting: PKTextTrackDisplaySettingObject,
   textStyle: PKTextStyleObject,
   forceCenter: boolean,
   captionsTextTrack1Label: string,
