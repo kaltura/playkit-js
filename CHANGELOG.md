@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.67.0](https://github.com/kaltura/playkit-js/compare/v0.66.0...v0.67.0) (2021-01-28)
+
+
+### Bug Fixes
+
+* **FEC-10890:** the captions aren't displayed for audio entry and UI doesn't clickable. ([#533](https://github.com/kaltura/playkit-js/issues/533)) ([bb888b1](https://github.com/kaltura/playkit-js/commit/bb888b1))
+* **FEC-10924:** add type for textTrackDisplaySetting ([#537](https://github.com/kaltura/playkit-js/issues/537)) ([8d385c8](https://github.com/kaltura/playkit-js/commit/8d385c8))
+
+
+### Features
+
+* **FEC-10657:** add max stale level reloads config ([#529](https://github.com/kaltura/playkit-js/issues/529)) ([b26065f](https://github.com/kaltura/playkit-js/commit/b26065f))
+* **FEC-10686:** move startTime config from playback to sources ([#531](https://github.com/kaltura/playkit-js/issues/531)) ([631d506](https://github.com/kaltura/playkit-js/commit/631d506))
+* **FEC-10709, FEC-10712:** player visibility - Auto-pause when player is out of view, Autoplay only when player is in view ([#521](https://github.com/kaltura/playkit-js/issues/521)) ([895f16b](https://github.com/kaltura/playkit-js/commit/895f16b))
+
+
+
 ## [0.66.0](https://github.com/kaltura/playkit-js/compare/v0.65.0...v0.66.0) (2021-01-07)
 
 
