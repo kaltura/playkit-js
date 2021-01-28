@@ -488,7 +488,7 @@ var config = {
 >  useNativeTextTrack: boolean,
 >  enableCEA708Captions: boolean,
 >  forceCenter: boolean,
->  textTrackDisplaySetting: Object,
+>  textTrackDisplaySetting: PKTextTrackDisplaySettingObject,
 >  textStyle: TextStyle,
 >  captionsTextTrack1Label: string,
 >  captionsTextTrack1LanguageCode: string,
@@ -547,7 +547,7 @@ var config = {
 >
 > > ### config.text.textTrackDisplaySetting
 > >
-> > ##### Type: `Object`
+> > ##### Type: `PKTextTrackDisplaySettingObject`
 > >
 > > ##### Default: `null`
 > >
@@ -1270,9 +1270,17 @@ var config = {
 > >   }
 > > };
 > > ```
-
-##
-
+> >
+> > ##
+> >
+> > ### config.network.maxStaleLevelReloads
+> >
+> > ##### Type: `number`
+> >
+> > ##### Default: `20`
+> >
+> > ##### Description: The maximal amount of times player should request a manifest refresh, when no new segments appear in the refreshed manifest.
+>
 > ### config.customLabels
 >
 > ##### Type: `PKCustomLabelsConfigObject`

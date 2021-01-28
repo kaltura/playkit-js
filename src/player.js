@@ -269,10 +269,10 @@ export default class Player extends FakeEventTarget {
   _activeTextCues: Array<any> = [];
   /**
    * The player text disaply settings
-   * @type {Object}
+   * @type {PKTextTrackDisplaySettingObject}
    * @private
    */
-  _textDisplaySettings: Object = {};
+  _textDisplaySettings: PKTextTrackDisplaySettingObject = {};
   /**
    * The player text style settings
    * @type {TextStyle}
@@ -1289,11 +1289,11 @@ export default class Player extends FakeEventTarget {
 
   /**
    * update the text display settings
-   * @param {Object} settings - text cue display settings
+   * @param {PKTextTrackDisplaySettingObject} settings - text cue display settings
    * @public
    * @returns {void}
    */
-  setTextDisplaySettings(settings: Object): void {
+  setTextDisplaySettings(settings: PKTextTrackDisplaySettingObject): void {
     this._textDisplaySettings = Utils.Object.mergeDeep(this._textDisplaySettings, settings);
     this._updateCueDisplaySettings();
     for (let i = 0; i < this._activeTextCues.length; i++) {
@@ -1579,11 +1579,6 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _appendDomElements(): void {
-    // Append playkit-subtitles
-    this._textDisplayEl = Utils.Dom.createElement('div');
-    Utils.Dom.setAttribute(this._textDisplayEl, 'aria-live', 'polite');
-    Utils.Dom.addClassName(this._textDisplayEl, SUBTITLES_CLASS_NAME);
-    Utils.Dom.appendChild(this._el, this._textDisplayEl);
     // Append playkit-black-cover
     this._blackCoverEl = Utils.Dom.createElement('div');
     Utils.Dom.addClassName(this._blackCoverEl, BLACK_COVER_CLASS_NAME);
@@ -1592,6 +1587,11 @@ export default class Player extends FakeEventTarget {
     const el = this._posterManager.getElement();
     Utils.Dom.addClassName(el, POSTER_CLASS_NAME);
     Utils.Dom.appendChild(this._el, el);
+    // Append playkit-subtitles
+    this._textDisplayEl = Utils.Dom.createElement('div');
+    Utils.Dom.setAttribute(this._textDisplayEl, 'aria-live', 'polite');
+    Utils.Dom.addClassName(this._textDisplayEl, SUBTITLES_CLASS_NAME);
+    Utils.Dom.appendChild(this._el, this._textDisplayEl);
   }
 
   /**
