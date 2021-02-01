@@ -43,13 +43,11 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
           return this._listeners;
         }
         const activeDecorator = this._getActiveDecorator(this._pluginDecorators);
-        console.error('activeDecorator', activeDecorator);
         // $FlowFixMe
         return activeDecorator && prop in activeDecorator ? activeDecorator[prop] : obj[prop];
       },
       set: (obj, prop, value) => {
         const activeDecorator = this._getActiveDecorator(this._pluginDecorators);
-        console.error('activeDecorator', activeDecorator);
         // $FlowFixMe
         activeDecorator && prop in activeDecorator ? (activeDecorator[prop] = value) : (obj[prop] = value);
         return true;
