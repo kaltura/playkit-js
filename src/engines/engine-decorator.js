@@ -60,7 +60,7 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
     return activeDecorator ? activeDecorator.dispatchEvent && activeDecorator.dispatchEvent(event) : super.dispatchEvent(event);
   }
 
-  _getActiveDecorator(decorators: Array<IEngineDecorator>): IEngineDecorator {
+  _getActiveDecorator(decorators: Array<IEngineDecorator>): ?IEngineDecorator {
     let selectedDecorator = {priority: EngineDecoratorPriority.NONE};
     const getHigherPriority = (selectedDecorator, decorator) => {
       const decoratorPriority = decorator.priority || EngineDecoratorPriority.FALLBACK;
