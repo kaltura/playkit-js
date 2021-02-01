@@ -3,6 +3,7 @@ import FakeEvent from '../event/fake-event';
 import {EventType} from '../event/event-type';
 import EventManager from '../event/event-manager';
 import FakeEventTarget from '../event/fake-event-target';
+import {EngineDecoratorPriority} from './engine-decorator-priority';
 
 /**
  * Engine decorator for plugin.
@@ -41,22 +42,39 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
         if (prop === '_listeners') {
           return this._listeners;
         }
-        const activeDecorator = this._pluginDecorators.find(decorator => prop in decorator && decorator.active);
+        const activeDecorator = this._getActiveDecorator(this._pluginDecorators);
+        console.error('activeDecorator', activeDecorator);
         // $FlowFixMe
-        return activeDecorator ? activeDecorator[prop] : obj[prop];
+        return activeDecorator && prop in activeDecorator ? activeDecorator[prop] : obj[prop];
       },
       set: (obj, prop, value) => {
-        const activeDecorator = this._pluginDecorators.find(decorator => prop in decorator && decorator.active);
+        const activeDecorator = this._getActiveDecorator(this._pluginDecorators);
+        console.error('activeDecorator', activeDecorator);
         // $FlowFixMe
-        activeDecorator ? (activeDecorator[prop] = value) : (obj[prop] = value);
+        activeDecorator && prop in activeDecorator ? (activeDecorator[prop] = value) : (obj[prop] = value);
         return true;
       }
     });
   }
 
   dispatchEvent(event: FakeEvent): boolean {
-    const activeDecorator = this._pluginDecorators.find(decorator => decorator.active);
+    const activeDecorator = this._getActiveDecorator(this._pluginDecorators);
     return activeDecorator ? activeDecorator.dispatchEvent && activeDecorator.dispatchEvent(event) : super.dispatchEvent(event);
+  }
+
+  _getActiveDecorator(decorators: Array<IEngineDecorator>): IEngineDecorator {
+    let selectedDecorator = {priority: EngineDecoratorPriority.NONE};
+    const getHigherPriority = (selectedDecorator, decorator) => {
+      const decoratorPriority = decorator.priority || EngineDecoratorPriority.FALLBACK;
+      if (decorator.active && decoratorPriority && decoratorPriority >= selectedDecorator.priority) {
+        return decorator;
+      }
+      return selectedDecorator;
+    };
+    return decorators.find(decorator => {
+      selectedDecorator = getHigherPriority(selectedDecorator, decorator);
+      return selectedDecorator.priority === EngineDecoratorPriority.NONE ? null : selectedDecorator;
+    });
   }
 
   _destroy(): void {
@@ -66,6 +84,10 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
 
   get active(): boolean {
     return true;
+  }
+
+  get priority(): number {
+    return EngineDecoratorPriority.FALLBACK;
   }
 }
 

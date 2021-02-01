@@ -4,6 +4,7 @@ import BaseMediaSourceAdapter from './engines/html5/media-source/base-media-sour
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider';
 import {registerEngineDecoratorProvider} from './engines/engine-decorator';
 import {registerEngine, unRegisterEngine} from './engines/engine-provider';
+import {EngineDecoratorPriority} from './engines/engine-decorator-priority';
 import BaseMiddleware from './middleware/base-middleware';
 import State from './state/state';
 import Track from './track/track';
@@ -111,7 +112,8 @@ export {
   MimeType,
   RequestType,
   ScreenOrientationType,
-  AutoPlayType
+  AutoPlayType,
+  EngineDecoratorPriority
 };
 
 // Export logger utils
