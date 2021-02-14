@@ -70,7 +70,6 @@ const DefaultConfig = {
     fpsDroppedMonitoringThreshold: 0.2,
     capLevelOnFPSDrop: true,
     capLevelToPlayerSize: false,
-    defaultBandwidthEstimate: 500e3,
     restrictions: {
       minBitrate: 0,
       maxBitrate: Infinity
