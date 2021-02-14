@@ -90,7 +90,6 @@ var config = {
     fpsDroppedMonitoringThreshold: 0.2,
     capLevelOnFPSDrop: true,
     capLevelToPlayerSize: false,
-    defaultBandwidthEstimate: 500e3,
     restrictions: {
       minBitrate: 0,
       maxBitrate: Infinity
@@ -1354,7 +1353,6 @@ var config = {
 >   fpsDroppedMonitoringThreshold: 0.2,
 >   capLevelOnFPSDrop: true,
 >   capLevelToPlayerSize: false,
->   defaultBandwidthEstimate: 500e3,
 >   restrictions: {
 >     minBitrate: 0,
 >     maxBitrate: Infinity
@@ -1417,8 +1415,6 @@ var config = {
 > > ### config.abr.defaultBandwidthEstimate
 > >
 > > ##### Type: `number`
-> >
-> > ##### Default: 500000
 > >
 > > ##### Description: The default bandwidth estimate to use if there is not enough data, in bit/sec.
 > >
