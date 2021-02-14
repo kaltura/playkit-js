@@ -2034,9 +2034,6 @@ export default class Player extends FakeEventTarget {
     if (this._firstPlay) {
       this._firstPlay = false;
       this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAY));
-      if (!this.isAudio()) {
-        this._posterManager.hide();
-      }
       this.hideBlackCover();
       if (typeof this._playbackAttributesState.rate === 'number') {
         this.playbackRate = this._playbackAttributesState.rate;
@@ -2052,6 +2049,9 @@ export default class Player extends FakeEventTarget {
   _onPlaying(): void {
     if (!this._firstPlaying) {
       this._firstPlaying = true;
+      if (!this.isAudio()) {
+        this._posterManager.hide();
+      }
       this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAYING));
     }
     if (this._engine && this._pendingSelectedVideoTrack) {
