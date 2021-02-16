@@ -2,7 +2,7 @@ import NativeAdapter from '../../../../../../src/engines/html5/media-source/adap
 import VideoTrack from '../../../../../../src/track/video-track';
 import AudioTrack from '../../../../../../src/track/audio-track';
 import TextTrack from '../../../../../../src/track/text-track';
-import {RequestType} from '../../../../../../src/request-type';
+import {RequestType} from '../../../../../../src/enums/request-type';
 import {removeVideoElementsFromTestPage} from '../../../../utils/test-utils';
 import sourcesConfig from '../../../../configs/sources.json';
 import * as Utils from '../../../../../../src/utils/util';
