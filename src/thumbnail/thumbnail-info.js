@@ -6,24 +6,13 @@ class ThumbnailInfo {
   _x: number;
   _y: number;
 
-  set url(value: string) {
-    this._url = value;
-  }
-
-  set width(value: number) {
-    this._width = value;
-  }
-
-  set height(value: number) {
-    this._height = value;
-  }
-
-  set x(value: number) {
-    this._x = value;
-  }
-
-  set y(value: number) {
-    this._y = value;
+  constructor(info: {url: string, width: number, height: number, x: number, y: number}) {
+    const {url, width, height, x, y} = info;
+    this._url = url;
+    this._width = width;
+    this._height = height;
+    this._x = x;
+    this._y = y;
   }
 
   get url(): string {
