@@ -20,7 +20,7 @@ import {StateType} from './state/state-type';
 import {TrackType} from './track/track-type';
 import {StreamType} from './engines/stream-type';
 import {EngineType} from './engines/engine-type';
-import {MediaType} from './media-type';
+import {MediaType} from './enums/media-type';
 import {AbrMode} from './track/abr-mode-type';
 import {CorsType} from './engines/html5/cors-types';
 import PlaybackMiddleware from './middleware/playback-middleware';
@@ -31,11 +31,14 @@ import {EngineProvider} from './engines/engine-provider';
 import {ExternalCaptionsHandler} from './track/external-captions-handler';
 import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
-import {ResizeWatcher} from './utils/resize-watcher';
+import {ResizeWatcher} from './utils';
 import {FullscreenController} from './fullscreen/fullscreen-controller';
 import {EngineDecorator} from './engines/engine-decorator';
 import {LabelOptions} from './track/label-options';
-import {AutoPlayType} from './auto-play-type';
+import {AutoPlayType} from './enums/auto-play-type';
+import ImageTrack from './track/image-track';
+import {ThumbnailInfo} from './thumbnail/thumbnail-info';
+
 /**
  * The black cover class name.
  * @type {string}
@@ -1152,7 +1155,7 @@ export default class Player extends FakeEventTarget {
    * @returns {Array<T>} - The parsed tracks.
    * @public
    */
-  getTracks<T: Track | AudioTrack | TextTrack | VideoTrack>(type?: $Values<typeof TrackType>): Array<T> {
+  getTracks<T: Track | AudioTrack | TextTrack | VideoTrack | ImageTrack>(type?: $Values<typeof TrackType>): Array<T> {
     switch (type) {
       case TrackType.VIDEO:
         return Utils.Object.copyDeep(this._getVideoTracks());
@@ -1160,6 +1163,8 @@ export default class Player extends FakeEventTarget {
         return Utils.Object.copyDeep(this._getAudioTracks());
       case TrackType.TEXT:
         return Utils.Object.copyDeep(this._getTextTracks());
+      case TrackType.IMAGE:
+        return Utils.Object.copyDeep(this._getImageTracks());
       default:
         return Utils.Object.copyDeep(this._tracks);
     }
@@ -1288,6 +1293,16 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   *  Returns in-stream thumbnail for a chosen time.
+   * @param {number} time - playback time.
+   * @public
+   * @return {?ThumbnailInfo} - Thumbnail info
+   */
+  getThumbnail(time: number): ?ThumbnailInfo {
+    return this._engine.getThumbnail(time);
+  }
+
+  /**
    * update the text display settings
    * @param {PKTextTrackDisplaySettingObject} settings - text cue display settings
    * @public
@@ -1305,6 +1320,7 @@ export default class Player extends FakeEventTarget {
   get textDisplaySetting(): Object {
     return Utils.Object.copyDeep(this._textDisplaySettings);
   }
+
   /**
    * Sets style attributes for text tracks.
    * @param {TextStyle} style - text styling settings
@@ -1920,7 +1936,7 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-     }
+   }
    * Checks auto play configuration and handles initialization accordingly.
    * @returns {void}
    * @private
@@ -2166,13 +2182,23 @@ export default class Player extends FakeEventTarget {
    * @returns {Array<T>} - The parsed tracks.
    * @private
    */
-  _getTracksByType<T: TextTrack | AudioTrack | VideoTrack>(type: T): Array<T> {
+  _getTracksByType<T: TextTrack | AudioTrack | VideoTrack | ImageTrack>(type: T): Array<T> {
     return this._tracks.reduce((arr, track) => {
       if (track instanceof type) {
         arr.push(track);
       }
       return arr;
     }, ([]: Array<T>));
+  }
+
+  /**
+   * Returns the image tracks.
+   * @function _getImageTracks
+   * @returns {Array<ImageTrack>} - The image tracks.
+   * @private
+   */
+  _getImageTracks(): Array<ImageTrack> {
+    return this._getTracksByType<ImageTrack>(ImageTrack);
   }
 
   /**
@@ -2525,5 +2551,6 @@ export default class Player extends FakeEventTarget {
   get Error(): typeof PKError {
     return PKError;
   }
+
   // </editor-fold>
 }

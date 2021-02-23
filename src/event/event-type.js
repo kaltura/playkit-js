@@ -163,6 +163,10 @@ const CustomEventType: PKEventTypes = {
    */
   TEXT_TRACK_CHANGED: 'texttrackchanged',
   /**
+   * Fires when the active image track has been changed.
+   */
+  IMAGE_TRACK_CHANGED: 'imagetrackchanged',
+  /**
    * Fires when the text track added to native
    */
   TEXT_TRACK_ADDED: 'texttrackadded',

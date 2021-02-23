@@ -10,6 +10,8 @@ import VideoTrack from '../../../track/video-track';
 import AudioTrack from '../../../track/audio-track';
 import TextTrack from '../../../track/text-track';
 import EventManager from '../../../event/event-manager';
+import ImageTrack from '../../../track/image-track';
+import {ThumbnailInfo} from '../../../thumbnail/thumbnail-info';
 
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
   /**
@@ -135,6 +137,8 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
       this._trigger(CustomEventType.AUDIO_TRACK_CHANGED, {selectedAudioTrack: track});
     } else if (track instanceof TextTrack) {
       this._trigger(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: track});
+    } else if (track instanceof ImageTrack) {
+      this._trigger(CustomEventType.IMAGE_TRACK_CHANGED, {selectedImageTrack: track});
     }
   }
 
@@ -169,6 +173,8 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   selectTextTrack(textTrack: TextTrack): void {
     BaseMediaSourceAdapter._throwNotImplementedError('selectTextTrack');
   }
+
+  selectImageTrack(imageTrack: ImageTrack): void {}
 
   hideTextTrack(): void {
     BaseMediaSourceAdapter._throwNotImplementedError('hideTextTrack');
@@ -224,6 +230,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
 
   getStartTimeOfDvrWindow(): number {
     return BaseMediaSourceAdapter._throwNotImplementedError('getStartTimeOfDvrWindow');
+  }
+
+  getThumbnail(time: number): ?ThumbnailInfo {
+    return null;
   }
 
   /**
