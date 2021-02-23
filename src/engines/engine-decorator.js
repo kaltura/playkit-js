@@ -18,7 +18,7 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
   static register(decoratorProvider: IEngineDecoratorProvider): void {
     if (decoratorProvider) {
       EngineDecorator._decoratorProviders = EngineDecorator._decoratorProviders.filter(
-        currentDecoratorProvider => currentDecoratorProvider.constructor.name !== decoratorProvider.constructor.name
+        currentDecoratorProvider => !(decoratorProvider instanceof currentDecoratorProvider.constructor)
       );
       EngineDecorator._decoratorProviders.push(decoratorProvider);
     }
