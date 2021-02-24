@@ -1979,9 +1979,8 @@ export default class Player extends FakeEventTarget {
           }
           this._updateTracks(data.tracks);
           this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
-          resetFlags();
         })
-        .catch(() => {
+        .finally(() => {
           resetFlags();
         });
     }

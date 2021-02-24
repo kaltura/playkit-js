@@ -495,11 +495,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._canLoadMediaSourceAdapterPromise
         .then(() => {
           if (this._mediaSourceAdapter) {
-            this._mediaSourceAdapter.load(startTime).catch(error => {
-              reject(error);
-            });
+            this._mediaSourceAdapter
+              .load(startTime)
+              .then(tracks => resolve(tracks))
+              .catch(error => reject(error));
+          } else {
+            resolve({});
           }
-          resolve({});
         })
         .catch(error => {
           reject(error);
