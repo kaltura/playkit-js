@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.68.0](https://github.com/kaltura/playkit-js/compare/v0.67.0...v0.68.0) (2021-02-24)
+
+
+### Bug Fixes
+
+* **FEC-10041:** [Web] Allow IMA and IMA DAI to be used in parallel ([#539](https://github.com/kaltura/playkit-js/issues/539)) ([c6b4a44](https://github.com/kaltura/playkit-js/commit/c6b4a44))
+* **FEC-10823:** Change initial poster hiding to first playing or ad playing ([#541](https://github.com/kaltura/playkit-js/issues/541)) ([9436db6](https://github.com/kaltura/playkit-js/commit/9436db6))
+
+
+### Features
+
+* **FEC-10768:** expose in-stream DASH thumbnails ([#543](https://github.com/kaltura/playkit-js/issues/543)) ([3b1d78e](https://github.com/kaltura/playkit-js/commit/3b1d78e))
+* **FEC-10915:** let shaka and hls.js use their own default bandwidth estimators ([#542](https://github.com/kaltura/playkit-js/issues/542)) ([e212b03](https://github.com/kaltura/playkit-js/commit/e212b03))
+* **FEC-10925:** remove captions update delay ([#534](https://github.com/kaltura/playkit-js/issues/534)) ([8497153](https://github.com/kaltura/playkit-js/commit/8497153))
+* **FEC-10970:** expose vpaid field on ad object ([#540](https://github.com/kaltura/playkit-js/issues/540)) ([791b3c4](https://github.com/kaltura/playkit-js/commit/791b3c4))
+
+
+
 ## [0.67.0](https://github.com/kaltura/playkit-js/compare/v0.66.0...v0.67.0) (2021-01-28)
 
 
