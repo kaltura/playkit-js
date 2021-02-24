@@ -1981,8 +1981,7 @@ export default class Player extends FakeEventTarget {
           this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
           resetFlags();
         })
-        .catch(error => {
-          this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
+        .catch(() => {
           resetFlags();
         });
     }
@@ -2010,17 +2009,13 @@ export default class Player extends FakeEventTarget {
       this._load();
       this._shouldLoadAfterAttach = false;
     }
-    this.ready()
-      .then(() => {
-        const liveOrDvrOutOfWindow = this.isLive() && (!this.isDvr() || (typeof this.currentTime === 'number' && this.currentTime < 0));
-        if (!this._firstPlay && liveOrDvrOutOfWindow) {
-          this.seekToLiveEdge();
-        }
-        this._engine.play();
-      })
-      .catch(error => {
-        this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
-      });
+    this.ready().then(() => {
+      const liveOrDvrOutOfWindow = this.isLive() && (!this.isDvr() || (typeof this.currentTime === 'number' && this.currentTime < 0));
+      if (!this._firstPlay && liveOrDvrOutOfWindow) {
+        this.seekToLiveEdge();
+      }
+      this._engine.play();
+    });
   }
 
   /**
