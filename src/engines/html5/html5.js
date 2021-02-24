@@ -502,10 +502,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
           resolve({});
         })
         .catch(error => {
-          this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
           reject(error);
         });
-    });
+    }).catch(error => this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error)));
   }
 
   /**
