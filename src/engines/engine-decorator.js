@@ -63,6 +63,7 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
   _destroy(): void {
     this._pluginDecorators = [];
     this._eventManager.destroy();
+    EngineDecorator._decoratorProviders = [];
   }
 
   get active(): boolean {
