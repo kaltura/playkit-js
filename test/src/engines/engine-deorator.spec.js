@@ -8,7 +8,9 @@ describe('EngineDecorator', () => {
   });
   afterEach(() => {
     engine = null;
+    EngineDecorator._decoratorProviders = [];
   });
+
   describe('EngineDecorator:register', () => {
     it('should not register decorator twice and keep the last one', () => {
       const first = new FakeDecoratorProvider();
@@ -19,14 +21,6 @@ describe('EngineDecorator', () => {
       EngineDecorator._decoratorProviders.length.should.equal(1);
       EngineDecorator._decoratorProviders[0].should.equal(second);
     });
-  });
-
-  it('should remove the decoratorProviders and instances on destroy', () => {
-    EngineDecorator.register(new FakeDecoratorProvider());
-    const engineDecorator = new EngineDecorator(engine);
-    EngineDecorator._decoratorProviders.length.should.equal(1);
-    engineDecorator.destroy();
-    EngineDecorator._decoratorProviders.length.should.equal(0);
   });
 
   it.skip('should decorator use the decorator instance as context of the function', done => {
