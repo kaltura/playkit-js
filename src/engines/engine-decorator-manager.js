@@ -5,9 +5,9 @@
  * @class EngineDecoratorManager
  */
 class EngineDecoratorManager {
-  _decoratorGenerators: Array<(engine: IEngine, dispatchEvent: Function) => IEngineDecorator> = [];
+  _decoratorGenerators: Array<EngineDecoratorGenerator> = [];
 
-  addDecorator(decoratorGenerator: (engine: IEngine, dispatchEvent: Function) => IEngineDecorator): void {
+  addDecorator(decoratorGenerator: EngineDecoratorGenerator): void {
     this._decoratorGenerators.push(decoratorGenerator);
   }
 

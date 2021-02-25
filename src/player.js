@@ -704,9 +704,9 @@ export default class Player extends FakeEventTarget {
    * detach the engine's media source
    * @public
    * @returns {void}
-   * @param {Function} decoratorGenerator - function to create the decorator
+   * @param {EngineDecoratorGenerator} decoratorGenerator - function to create the decorator
    */
-  addEngineDecorator(decoratorGenerator: (engine: IEngine, dispatchEvent: Function) => IEngineDecorator): void {
+  addEngineDecorator(decoratorGenerator: EngineDecoratorGenerator): void {
     if (!this._decoratorManager) {
       this._decoratorManager = new EngineDecoratorManager();
     }
