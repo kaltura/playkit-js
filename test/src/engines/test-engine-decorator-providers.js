@@ -1,4 +1,4 @@
-import type {IEngine, IEngineDecorator, IEngineDecoratorProvider} from '../../../flow-typed/interfaces/engine';
+import type {IEngine, IEngineDecorator} from '../../../flow-typed/interfaces/engine';
 import FakeEventTarget from '../../../src/event/fake-event-target';
 
 class FakeHTML5Engine extends FakeEventTarget implements IEngine {
@@ -19,38 +19,37 @@ class FakeHTML5Engine extends FakeEventTarget implements IEngine {
   destroy() {}
 }
 
-class FakeDecoratorProvider implements IEngineDecoratorProvider {
-  getEngineDecorator() {
+const FakeDecoratorProvider = {
+  getEngineDecorator: () => {
     return new (class EngineDecorator implements IEngineDecorator {
       constructor() {}
+
       get active(): boolean {
         return false;
       }
     })();
   }
-}
+};
 
-class FakeDecoratorProviderActive implements IEngineDecoratorProvider {
-  constructor() {
-    this._decorator = new (class EngineDecorator implements IEngineDecorator {
-      constructor() {}
+const FakeDecoratorProviderActive = {
+  _decorator: new (class EngineDecorator implements IEngineDecorator {
+    constructor() {}
 
-      load(): Promise<*> {
-        return Promise.resolve(this);
-      }
+    load(): Promise<*> {
+      return Promise.resolve(this);
+    }
 
-      isLive(): boolean {
-        return true;
-      }
+    isLive(): boolean {
+      return true;
+    }
 
-      get active(): boolean {
-        return true;
-      }
-    })();
+    get active(): boolean {
+      return true;
+    }
+  })(),
+  getEngineDecorator: () => {
+    return FakeDecoratorProviderActive._decorator;
   }
-  getEngineDecorator() {
-    return this._decorator;
-  }
-}
+};
 
 export {FakeDecoratorProvider, FakeDecoratorProviderActive, FakeHTML5Engine};

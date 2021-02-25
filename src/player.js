@@ -38,6 +38,7 @@ import {LabelOptions} from './track/label-options';
 import {AutoPlayType} from './enums/auto-play-type';
 import ImageTrack from './track/image-track';
 import {ThumbnailInfo} from './thumbnail/thumbnail-info';
+import {EngineDecoratorManager} from './engines/engine-decorator-manager';
 
 /**
  * The black cover class name.
@@ -390,6 +391,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _aspectRatio: ?string;
+  /**
+   * The engine manager.
+   * @type {?EngineDecoratorManager}
+   * @private
+   */
+  _decoratorManager: ?EngineDecoratorManager;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -627,7 +634,9 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.destroy();
     }
-    EngineDecorator.destroy();
+    if (this._decoratorManager) {
+      this._decoratorManager.destroy();
+    }
     this._resizeWatcher.destroy();
     if (this._el) {
       Utils.Dom.removeChild(this._el.parentNode, this._el);
@@ -688,6 +697,21 @@ export default class Player extends FakeEventTarget {
       this._shouldLoadAfterAttach = false;
       this._createReadyPromise();
       this._engine.detachMediaSource();
+    }
+  }
+
+  /**
+   * detach the engine's media source
+   * @public
+   * @returns {void}
+   * @param {Function} decoratorGenerator - function to create the decorator
+   */
+  addEngineDecorator(decoratorGenerator: (engine: IEngine, dispatchEvent: Function) => IEngineDecorator): void {
+    if (!this._decoratorManager) {
+      this._decoratorManager = new EngineDecoratorManager();
+    }
+    if (decoratorGenerator) {
+      this._decoratorManager.addDecorator(decoratorGenerator);
     }
   }
 
@@ -1695,7 +1719,7 @@ export default class Player extends FakeEventTarget {
    */
   _createEngine(Engine: IEngineStatic, source: PKMediaSourceObject): void {
     const engine = Engine.createEngine(source, this._config, this._playerId);
-    this._engine = EngineDecorator.getDecorator(engine) || engine;
+    this._engine = this._decoratorManager ? new EngineDecorator(engine, this._decoratorManager) : engine;
   }
 
   /**
