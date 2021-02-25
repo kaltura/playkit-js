@@ -46,13 +46,12 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
           const descriptor = Object.getOwnPropertyDescriptor(object, property);
           return descriptor && !!descriptor['get'];
         };
-        return activeDecorator && prop in activeDecorator
-          ? isGetter(activeDecorator.constructor.prototype, prop)
-            ? // $FlowFixMe
-              activeDecorator[prop]
-            : // $FlowFixMe
-              (...args) => activeDecorator[prop](...args)
-          : obj[prop];
+        const activeEngine = activeDecorator && prop in activeDecorator ? activeDecorator : obj;
+        return isGetter(activeEngine.constructor.prototype, prop)
+          ? // $FlowFixMe
+            activeEngine[prop]
+          : // $FlowFixMe
+            (...args) => activeEngine[prop](...args);
       },
       set: (obj, prop, value) => {
         const activeDecorator = this._pluginDecorators.find(decorator => prop in decorator && decorator.active);
