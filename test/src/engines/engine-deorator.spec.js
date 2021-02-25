@@ -1,5 +1,7 @@
-import {FakeDecoratorProvider, FakeDecoratorProviderActive, FakeDecoratorProviderNotActive, FakeHTML5Engine} from './test-engine-decorator-providers';
+import {FakeDecoratorProvider, FakeDecoratorProviderActive, FakeHTML5Engine} from './test-engine-decorator-providers';
 import {EngineDecorator} from '../../../src/engines/engine-decorator';
+import Player from '../../../src/player';
+import {createElement, getConfigStructure} from '../utils/test-utils';
 
 describe('EngineDecorator', () => {
   let engine;
@@ -23,6 +25,44 @@ describe('EngineDecorator', () => {
     });
   });
 
+  it('should decorator use the engine for non implemented methods on active decorator', () => {
+    EngineDecorator.register(new FakeDecoratorProviderActive());
+    const engineDecorator = new EngineDecorator(engine);
+    engineDecorator.isAdaptiveBitrateEnabled().should.be.true;
+  });
+
+  it('should decorator use the engine for implemented methods on non active decorator', () => {
+    EngineDecorator.register(new FakeDecoratorProvider());
+    const engineDecorator = new EngineDecorator(engine);
+    engineDecorator.isLive().should.be.false;
+  });
+
+  it('should decorator use the decorator for implemented methods on active decorator', () => {
+    let engineDecorator;
+    EngineDecorator.register(new FakeDecoratorProviderActive());
+    engineDecorator = new EngineDecorator(engine);
+    engineDecorator.isLive().should.be.true;
+
+    EngineDecorator._decoratorProviders = [];
+    EngineDecorator.register(new FakeDecoratorProvider());
+    engineDecorator = new EngineDecorator(engine);
+    engineDecorator.isLive().should.be.false;
+  });
+
+  it('should decorator providers should destroy on destroy', () => {
+    const targetId = 'player-placeholder_engine-decorator.spec';
+    const playerContainer = createElement('DIV', targetId);
+
+    EngineDecorator.register(new FakeDecoratorProviderActive());
+    EngineDecorator.register(new FakeDecoratorProvider());
+    EngineDecorator._decoratorProviders.length.should.equal(2);
+    const player = new Player(getConfigStructure());
+    playerContainer.appendChild(player.getView());
+
+    player.destroy();
+    EngineDecorator._decoratorProviders.length.should.equal(0);
+  });
+
   it.skip('should decorator use the decorator instance as context of the function', done => {
     const decoratorProvider = new FakeDecoratorProviderActive();
     EngineDecorator.register(decoratorProvider);
@@ -34,21 +74,12 @@ describe('EngineDecorator', () => {
         done();
       } catch (e) {
         done(e);
-      } finally {
-        engineDecorator.destroy();
       }
     });
   });
 
-  it('should decorator use the engine for non implemented methods on active decorator', () => {
-    EngineDecorator.register(new FakeDecoratorProviderActive());
-    const engineDecorator = new EngineDecorator(engine);
-    engineDecorator.isAdaptiveBitrateEnabled().should.be.true;
-    engineDecorator.destroy();
-  });
-
   it.skip('should decorator use the engine when decorator not active', done => {
-    EngineDecorator.register(new FakeDecoratorProviderNotActive());
+    EngineDecorator.register(new FakeDecoratorProvider());
     const engineDecorator = new EngineDecorator(engine);
     const loadPromise = engineDecorator.load();
     loadPromise.then(context => {
@@ -57,8 +88,6 @@ describe('EngineDecorator', () => {
         done();
       } catch (e) {
         done(e);
-      } finally {
-        engineDecorator.destroy();
       }
     });
   });

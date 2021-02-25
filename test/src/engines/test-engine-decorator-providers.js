@@ -11,6 +11,11 @@ class FakeHTML5Engine extends FakeEventTarget implements IEngine {
   isAdaptiveBitrateEnabled() {
     return true;
   }
+
+  isLive(): boolean {
+    return false;
+  }
+
   destroy() {}
 }
 
@@ -18,6 +23,9 @@ class FakeDecoratorProvider implements IEngineDecoratorProvider {
   getEngineDecorator() {
     return new (class EngineDecorator implements IEngineDecorator {
       constructor() {}
+      get active(): boolean {
+        return false;
+      }
     })();
   }
 }
@@ -31,6 +39,10 @@ class FakeDecoratorProviderActive implements IEngineDecoratorProvider {
         return Promise.resolve(this);
       }
 
+      isLive(): boolean {
+        return true;
+      }
+
       get active(): boolean {
         return true;
       }
@@ -41,20 +53,4 @@ class FakeDecoratorProviderActive implements IEngineDecoratorProvider {
   }
 }
 
-class FakeDecoratorProviderNotActive implements IEngineDecoratorProvider {
-  getEngineDecorator() {
-    return new (class EngineDecorator implements IEngineDecorator {
-      constructor() {}
-
-      load(): Promise<*> {
-        return Promise.resolve(this);
-      }
-
-      get active(): boolean {
-        return false;
-      }
-    })();
-  }
-}
-
-export {FakeDecoratorProvider, FakeDecoratorProviderActive, FakeDecoratorProviderNotActive, FakeHTML5Engine};
+export {FakeDecoratorProvider, FakeDecoratorProviderActive, FakeHTML5Engine};

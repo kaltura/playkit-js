@@ -24,6 +24,10 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
     }
   }
 
+  static destroy(): void {
+    EngineDecorator._decoratorProviders = [];
+  }
+
   static getDecorator(engine: IEngine): ?IEngine {
     return EngineDecorator._decoratorProviders.length ? new this(engine) : null;
   }

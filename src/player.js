@@ -627,6 +627,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.destroy();
     }
+    EngineDecorator.destroy();
     this._resizeWatcher.destroy();
     if (this._el) {
       Utils.Dom.removeChild(this._el.parentNode, this._el);
