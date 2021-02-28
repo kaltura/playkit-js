@@ -392,7 +392,7 @@ export default class Player extends FakeEventTarget {
    */
   _aspectRatio: ?string;
   /**
-   * The engine manager.
+   * The engine decorator manager.
    * @type {?EngineDecoratorManager}
    * @private
    */
