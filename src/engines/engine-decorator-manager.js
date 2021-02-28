@@ -18,7 +18,7 @@ class EngineDecoratorManager {
   }
 
   createDecorators(engine: IEngine, dispatchEvent: Function): Array<IEngineDecorator> {
-    this._logger.debug(`decorators created for ${Array.from(this._decoratorProviders.keys())}`);
+    this._logger.debug(`decorators created for ${Array.from(this._decoratorProviders.keys()).toString()}`);
     return Array.from(this._decoratorProviders.values(), engineDecoratorProvider =>
       engineDecoratorProvider.getEngineDecorator(engine, dispatchEvent)
     );
