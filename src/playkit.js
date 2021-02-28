@@ -2,7 +2,7 @@
 import Player from './player';
 import BaseMediaSourceAdapter from './engines/html5/media-source/base-media-source-adapter';
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider';
-import {registerEngineDecoratorProvider} from './engines/engine-decorator';
+import {EngineDecoratorProvider} from './engines/engine-decorator-provider';
 import {registerEngine, unRegisterEngine} from './engines/engine-provider';
 import BaseMiddleware from './middleware/base-middleware';
 import State from './state/state';
@@ -54,9 +54,6 @@ export function loadPlayer(config: ?Object) {
 // Export the media source adapters necessary utils
 export {registerMediaSourceAdapter, BaseMediaSourceAdapter};
 
-// Export the engine decorator provider register method
-export {registerEngineDecoratorProvider};
-
 // Export the middleware framework
 export {BaseMiddleware};
 
@@ -89,6 +86,9 @@ const setCapabilities = Player.setCapabilities;
 
 // Export capabilities utils
 export {getCapabilities, setCapabilities};
+
+// Export engineDecoratorProvider
+export {EngineDecoratorProvider};
 
 // Export engine framework
 export {registerEngine, unRegisterEngine};
