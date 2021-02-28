@@ -28,6 +28,9 @@ const FakeDecoratorProvider = {
         return false;
       }
     })();
+  },
+  getName: () => {
+    return 'fake';
   }
 };
 
@@ -49,6 +52,9 @@ const FakeDecoratorProviderActive = {
   })(),
   getEngineDecorator: () => {
     return FakeDecoratorProviderActive._decorator;
+  },
+  getName: () => {
+    return 'fakeActive';
   }
 };
 

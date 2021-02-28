@@ -8,9 +8,9 @@ import {MultiMap} from '../utils';
 class EngineDecoratorManager {
   _decoratorProviders: MultiMap<string, IEngineDecoratorProvider> = new MultiMap();
 
-  register(name: string, engineDecoratorProvider: IEngineDecoratorProvider): void {
-    if (!this._decoratorProviders.has(name)) {
-      this._decoratorProviders.push(name, engineDecoratorProvider);
+  register(engineDecoratorProvider: IEngineDecoratorProvider): void {
+    if (!this._decoratorProviders.has(engineDecoratorProvider.getName())) {
+      this._decoratorProviders.push(engineDecoratorProvider.getName(), engineDecoratorProvider);
     }
   }
 

@@ -15,22 +15,22 @@ describe('EngineDecorator', () => {
 
   it('should decorator be able to register once for same plugin name', () => {
     const decoratorManager = new EngineDecoratorManager();
-    decoratorManager.register('fakeActive', FakeDecoratorProviderActive);
-    decoratorManager.register('fakeActive', FakeDecoratorProviderActive);
-    decoratorManager.register('fakeActive', FakeDecoratorProviderActive);
+    decoratorManager.register(FakeDecoratorProviderActive);
+    decoratorManager.register(FakeDecoratorProviderActive);
+    decoratorManager.register(FakeDecoratorProviderActive);
     decoratorManager.createDecorators(null, null).length.should.equal(1);
   });
 
   it('should decorator use the engine for non implemented methods on active decorator', () => {
     const decoratorManager = new EngineDecoratorManager();
-    decoratorManager.register('fakeActive', FakeDecoratorProviderActive);
+    decoratorManager.register(FakeDecoratorProviderActive);
     const engineDecorator = new EngineDecorator(engine, decoratorManager);
     engineDecorator.isAdaptiveBitrateEnabled().should.be.true;
   });
 
   it('should decorator use the engine for implemented methods on non active decorator', () => {
     const decoratorManager = new EngineDecoratorManager();
-    decoratorManager.register('fake', FakeDecoratorProvider);
+    decoratorManager.register(FakeDecoratorProvider);
     const engineDecorator = new EngineDecorator(engine, decoratorManager);
     engineDecorator.isLive().should.be.false;
   });
@@ -38,12 +38,12 @@ describe('EngineDecorator', () => {
   it('should decorator use the decorator for implemented methods on active decorator', () => {
     let engineDecorator, decoratorManager;
     decoratorManager = new EngineDecoratorManager();
-    decoratorManager.register('fakeActive', FakeDecoratorProviderActive);
+    decoratorManager.register(FakeDecoratorProviderActive);
     engineDecorator = new EngineDecorator(engine, decoratorManager);
     engineDecorator.isLive().should.be.true;
 
     decoratorManager = new EngineDecoratorManager();
-    decoratorManager.register('fake', FakeDecoratorProvider);
+    decoratorManager.register(FakeDecoratorProvider);
     engineDecorator = new EngineDecorator(engine, decoratorManager);
     engineDecorator.isLive().should.be.false;
   });
@@ -53,8 +53,8 @@ describe('EngineDecorator', () => {
     const playerContainer = createElement('DIV', targetId);
 
     const player = new Player(getConfigStructure());
-    player.registerEngineDecoratorProvider('fakeActive', FakeDecoratorProviderActive);
-    player.registerEngineDecoratorProvider('fake', FakeDecoratorProvider);
+    player.registerEngineDecoratorProvider(FakeDecoratorProviderActive);
+    player.registerEngineDecoratorProvider(FakeDecoratorProvider);
     playerContainer.appendChild(player.getView());
 
     player.destroy();
@@ -64,7 +64,7 @@ describe('EngineDecorator', () => {
   it.skip('should decorator use the decorator instance as context of the function', done => {
     const decoratorManager = new EngineDecoratorManager();
     const decoratorProvider = FakeDecoratorProviderActive;
-    decoratorManager.register('fakeActive', decoratorProvider);
+    decoratorManager.register(decoratorProvider);
     const engineDecorator = new EngineDecorator(engine, decoratorManager);
     const loadPromise = engineDecorator.load();
     loadPromise.then(context => {
@@ -79,7 +79,7 @@ describe('EngineDecorator', () => {
 
   it.skip('should decorator use the engine when decorator not active', done => {
     const decoratorManager = new EngineDecoratorManager();
-    decoratorManager.register('fake', FakeDecoratorProvider);
+    decoratorManager.register(FakeDecoratorProvider);
     const engineDecorator = new EngineDecorator(engine, decoratorManager);
     const loadPromise = engineDecorator.load();
     loadPromise.then(context => {

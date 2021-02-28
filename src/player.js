@@ -704,15 +704,14 @@ export default class Player extends FakeEventTarget {
    * detach the engine's media source
    * @public
    * @returns {void}
-   * @param {string} name - plugin name which register the decorator
    * @param {IEngineDecoratorProvider} engineDecoratorProvider - function to create the decorator
    */
-  registerEngineDecoratorProvider(name: string, engineDecoratorProvider: IEngineDecoratorProvider): void {
+  registerEngineDecoratorProvider(engineDecoratorProvider: IEngineDecoratorProvider): void {
     if (!this._engineDecoratorManager) {
       this._engineDecoratorManager = new EngineDecoratorManager();
     }
     if (engineDecoratorProvider) {
-      this._engineDecoratorManager.register(name, engineDecoratorProvider);
+      this._engineDecoratorManager.register(engineDecoratorProvider);
     }
   }
 
