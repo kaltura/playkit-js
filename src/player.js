@@ -396,7 +396,7 @@ export default class Player extends FakeEventTarget {
    * @type {?EngineDecoratorManager}
    * @private
    */
-  _decoratorManager: ?EngineDecoratorManager;
+  _engineDecoratorManager: ?EngineDecoratorManager;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -634,8 +634,8 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.destroy();
     }
-    if (this._decoratorManager) {
-      this._decoratorManager.destroy();
+    if (this._engineDecoratorManager) {
+      this._engineDecoratorManager.destroy();
     }
     this._resizeWatcher.destroy();
     if (this._el) {
@@ -704,14 +704,15 @@ export default class Player extends FakeEventTarget {
    * detach the engine's media source
    * @public
    * @returns {void}
-   * @param {EngineDecoratorGenerator} decoratorGenerator - function to create the decorator
+   * @param {string} name - plugin name which register the decorator
+   * @param {IEngineDecoratorProvider} engineDecoratorProvider - function to create the decorator
    */
-  addEngineDecorator(decoratorGenerator: EngineDecoratorGenerator): void {
-    if (!this._decoratorManager) {
-      this._decoratorManager = new EngineDecoratorManager();
+  registerEngineDecoratorProvider(name: string, engineDecoratorProvider: IEngineDecoratorProvider): void {
+    if (!this._engineDecoratorManager) {
+      this._engineDecoratorManager = new EngineDecoratorManager();
     }
-    if (decoratorGenerator) {
-      this._decoratorManager.addDecorator(decoratorGenerator);
+    if (engineDecoratorProvider) {
+      this._engineDecoratorManager.register(name, engineDecoratorProvider);
     }
   }
 
@@ -1719,7 +1720,7 @@ export default class Player extends FakeEventTarget {
    */
   _createEngine(Engine: IEngineStatic, source: PKMediaSourceObject): void {
     const engine = Engine.createEngine(source, this._config, this._playerId);
-    this._engine = this._decoratorManager ? new EngineDecorator(engine, this._decoratorManager) : engine;
+    this._engine = this._engineDecoratorManager ? new EngineDecorator(engine, this._engineDecoratorManager) : engine;
   }
 
   /**

@@ -1,22 +1,25 @@
 // @flow
+import {MultiMap} from '../utils';
 
 /**
  * Engine decorator manager for plugins.
  * @class EngineDecoratorManager
  */
 class EngineDecoratorManager {
-  _decoratorGenerators: Array<EngineDecoratorGenerator> = [];
+  _decoratorProviders: MultiMap<string, IEngineDecoratorProvider> = new MultiMap();
 
-  addDecorator(decoratorGenerator: EngineDecoratorGenerator): void {
-    this._decoratorGenerators.push(decoratorGenerator);
+  register(name: string, engineDecoratorProvider: IEngineDecoratorProvider): void {
+    if (!this._decoratorProviders.has(name)) {
+      this._decoratorProviders.push(name, engineDecoratorProvider);
+    }
   }
 
   createDecorators(engine: IEngine, dispatchEvent: Function): Array<IEngineDecorator> {
-    return this._decoratorGenerators.map(decoratorGenerator => decoratorGenerator(engine, dispatchEvent));
+    return this._decoratorProviders.getAll().map(engineDecoratorProvider => engineDecoratorProvider.getEngineDecorator(engine, dispatchEvent));
   }
 
   destroy(): void {
-    this._decoratorGenerators = [];
+    this._decoratorProviders.clear();
   }
 }
 
