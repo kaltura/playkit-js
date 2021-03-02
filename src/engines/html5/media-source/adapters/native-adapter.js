@@ -293,7 +293,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _isProgressivePlayback(): boolean {
-    return NativeAdapter._progressiveMimeTypes.includes(this._sourceObj.mimetype.toLowerCase());
+    return this._sourceObj ? NativeAdapter._progressiveMimeTypes.includes(this._sourceObj.mimetype.toLowerCase()) : false;
   }
 
   /**
