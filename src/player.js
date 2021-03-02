@@ -2294,7 +2294,7 @@ export default class Player extends FakeEventTarget {
         if (!prevCue) {
           return true;
         }
-        return !(cue.startTime === prevCue.startTime) && cue.endTime === prevCue.endTime && cue.text.trim() === prevCue.text.trim();
+        return !(cue.startTime === prevCue.startTime && cue.endTime === prevCue.endTime && cue.text.trim() === prevCue.text.trim());
       });
     } catch (e) {
       this._activeTextCues = event.payload.cues;
