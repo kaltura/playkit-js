@@ -2,7 +2,7 @@
 import Error from '../../../../error/error';
 import getLogger from '../../../../utils/logger';
 import * as Utils from '../../../../utils/util';
-import {RequestType} from '../../../../request-type';
+import {RequestType} from '../../../../enums/request-type';
 import type {CodeType} from '../../../../error/code';
 import type {SeverityType} from '../../../../error/severity';
 import type {CategoryType} from '../../../../error/category';

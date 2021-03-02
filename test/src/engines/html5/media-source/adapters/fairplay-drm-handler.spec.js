@@ -2,7 +2,7 @@ import {FairPlayDrmHandler} from '../../../../../../src/engines/html5/media-sour
 import {createElement, removeVideoElementsFromTestPage} from '../../../../utils/test-utils';
 import {Utils} from '../../../../../../src/playkit';
 import Error from '../../../../../../src/error/error';
-import {RequestType} from '../../../../../../src/request-type';
+import {RequestType} from '../../../../../../src/enums/request-type';
 
 const fpsDrmData = {licenseUrl: 'LICENSE_URL', certificate: 'fpsCertificate'};
 

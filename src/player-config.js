@@ -1,4 +1,4 @@
-import {ScreenOrientationType} from './screen-orientation-type';
+import {ScreenOrientationType} from './enums/screen-orientation-type';
 
 const DefaultConfig = {
   log: {

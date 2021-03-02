@@ -3,6 +3,7 @@ import VideoTrack from '../../src/track/video-track';
 import AudioTrack from '../../src/track/audio-track';
 import TextTrack from '../../src/track/text-track';
 import FakeEventTarget from '../../src/event/fake-event-target';
+import {ThumbnailInfo} from '../../src/thumbnail/thumbnail-info';
 
 declare interface IEngineStatic {
   id: string;
@@ -40,6 +41,7 @@ declare interface IEngine extends FakeEventTarget {
   resetAllCues(): void;
   attachMediaSource(): void;
   detachMediaSource(): void;
+  getThumbnail(time: number): ?ThumbnailInfo;
   +id: string;
   currentTime: number;
   +duration: number;

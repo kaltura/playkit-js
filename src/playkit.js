@@ -2,11 +2,12 @@
 import Player from './player';
 import BaseMediaSourceAdapter from './engines/html5/media-source/base-media-source-adapter';
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider';
-import {registerEngineDecoratorProvider} from './engines/engine-decorator';
+import {EngineDecoratorProvider} from './engines/engine-decorator-provider';
 import {registerEngine, unRegisterEngine} from './engines/engine-provider';
 import BaseMiddleware from './middleware/base-middleware';
 import State from './state/state';
 import Track from './track/track';
+import ImageTrack from './track/image-track';
 import VideoTrack from './track/video-track';
 import AudioTrack from './track/audio-track';
 import TextTrack from './track/text-track';
@@ -21,19 +22,20 @@ import {StateType} from './state/state-type';
 import {TrackType} from './track/track-type';
 import {StreamType} from './engines/stream-type';
 import {EngineType} from './engines/engine-type';
-import {MediaType} from './media-type';
+import {MediaType} from './enums/media-type';
 import {CustomEventType, EventType, Html5EventType} from './event/event-type';
 import {AbrMode} from './track/abr-mode-type';
 import getLogger, {getLogLevel, LogLevel, LogLevelType, setLogLevel} from './utils/logger';
 import {CorsType} from './engines/html5/cors-types';
 import {DrmScheme} from './drm/drm-scheme';
-import {MimeType} from './mime-type';
-import {RequestType} from './request-type';
+import {MimeType} from './enums/mime-type';
+import {RequestType} from './enums/request-type';
 import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
 import {AdEventType} from './ads/ad-event-type';
-import {ScreenOrientationType} from './screen-orientation-type';
-import {AutoPlayType} from './auto-play-type';
+import {ScreenOrientationType} from './enums/screen-orientation-type';
+import {AutoPlayType} from './enums/auto-play-type';
+import {ThumbnailInfo} from './thumbnail/thumbnail-info';
 
 declare var __VERSION__: string;
 declare var __NAME__: string;
@@ -52,14 +54,11 @@ export function loadPlayer(config: ?Object) {
 // Export the media source adapters necessary utils
 export {registerMediaSourceAdapter, BaseMediaSourceAdapter};
 
-// Export the engine decorator provider register method
-export {registerEngineDecoratorProvider};
-
 // Export the middleware framework
 export {BaseMiddleware};
 
 // Export the tracks classes
-export {Track, VideoTrack, AudioTrack, TextTrack, TextStyle};
+export {Track, VideoTrack, AudioTrack, TextTrack, ImageTrack, TextStyle};
 
 // Export utils library
 export {Utils};
@@ -88,6 +87,9 @@ const setCapabilities = Player.setCapabilities;
 // Export capabilities utils
 export {getCapabilities, setCapabilities};
 
+// Export engineDecoratorProvider
+export {EngineDecoratorProvider};
+
 // Export engine framework
 export {registerEngine, unRegisterEngine};
 
@@ -113,6 +115,8 @@ export {
   ScreenOrientationType,
   AutoPlayType
 };
+
+export {ThumbnailInfo};
 
 // Export logger utils
 export {getLogger, LogLevel, getLogLevel, setLogLevel};

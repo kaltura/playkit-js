@@ -13,6 +13,7 @@ import Html5AutoPlayCapability from './capabilities/html5-autoplay';
 import Error from '../../error/error';
 import getLogger from '../../utils/logger';
 import {DroppedFramesWatcher} from '../dropped-frames-watcher';
+import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
 
 /**
  * Html5 engine for playback.
@@ -262,6 +263,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   get id(): string {
     return Html5.id;
   }
+
   /**
    * attach media - return the media source to handle the video tag
    * @public
@@ -272,6 +274,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._mediaSourceAdapter.attachMediaSource();
     }
   }
+
   /**
    * detach media - will remove the media source from handling the video
    * @public
@@ -282,6 +285,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._mediaSourceAdapter.detachMediaSource();
     }
   }
+
   /**
    * Listen to the video element events and triggers them from the engine.
    * @public
@@ -580,6 +584,18 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     } else {
       // $FlowFixMe
       return !!document.pictureInPictureEnabled;
+    }
+  }
+
+  /**
+   *  Returns in-stream thumbnail for a chosen time.
+   * @param {number} time - playback time.
+   * @public
+   * @return {?ThumbnailInfo} - Thumbnail info
+   */
+  getThumbnail(time: number): ?ThumbnailInfo {
+    if (this._mediaSourceAdapter) {
+      return this._mediaSourceAdapter.getThumbnail(time);
     }
   }
 

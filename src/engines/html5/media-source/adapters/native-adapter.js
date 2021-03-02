@@ -4,7 +4,7 @@ import Track from '../../../../track/track';
 import VideoTrack from '../../../../track/video-track';
 import AudioTrack from '../../../../track/audio-track';
 import PKTextTrack from '../../../../track/text-track';
-import {RequestType} from '../../../../request-type';
+import {RequestType} from '../../../../enums/request-type';
 import BaseMediaSourceAdapter from '../base-media-source-adapter';
 import {getSuitableSourceForResolution} from '../../../../utils/resolution';
 import * as Utils from '../../../../utils/util';
