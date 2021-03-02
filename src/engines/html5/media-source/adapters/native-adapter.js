@@ -321,11 +321,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           if (!this._isProgressivePlayback()) {
             setTimeout(() => {
               // In IOS HLS, sometimes when coming back from lock screen/Idle mode, the stream will get stuck, and only a small seek nudge will fix it.
-              if (!this._isProgressivePlayback()) {
-                this._videoElement.currentTime =
-                  this._videoElement.currentTime > NUDGE_SEEK_AFTER_FOCUS ? this._videoElement.currentTime - NUDGE_SEEK_AFTER_FOCUS : 0;
-                this._syncCurrentTime();
-              }
+              this._videoElement.currentTime =
+                this._videoElement.currentTime > NUDGE_SEEK_AFTER_FOCUS ? this._videoElement.currentTime - NUDGE_SEEK_AFTER_FOCUS : 0;
+              this._syncCurrentTime();
             }, BACK_TO_FOCUS_TIMEOUT);
           }
         });
