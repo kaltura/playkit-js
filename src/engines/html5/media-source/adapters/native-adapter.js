@@ -63,6 +63,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   static _drmProtocol: ?Function = null;
   /**
+   * The supported progressive mime types by the native adapter.
+   * @member {Array<string>} _progressiveMimeTypes
+   * @static
+   * @private
+   */
+  static _progressiveMimeTypes: Array<string> = ['video/mp4', 'audio/mp3'];
+  /**
    * The DRM handler playback.
    * @type {?FairPlayDrmHandler}
    * @private
@@ -286,7 +293,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _isProgressivePlayback(): boolean {
-    return this._sourceObj ? this._sourceObj.mimetype === 'video/mp4' : false;
+    return this._sourceObj ? NativeAdapter._progressiveMimeTypes.includes(this._sourceObj.mimetype.toLowerCase()) : false;
   }
 
   /**
@@ -310,14 +317,16 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._eventManager.listen(this._videoElement, Html5EventType.ABORT, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.SEEKED, () => this._syncCurrentTime());
         // Sometimes when playing live in safari and switching between tabs the currentTime goes back with no seek events
-        this._eventManager.listen(window, 'focus', () =>
-          setTimeout(() => {
-            // In IOS HLS, sometimes when coming back from lock screen/Idle mode, the stream will get stuck, and only a small seek nudge will fix it.
-            this._videoElement.currentTime =
-              this._videoElement.currentTime > NUDGE_SEEK_AFTER_FOCUS ? this._videoElement.currentTime - NUDGE_SEEK_AFTER_FOCUS : 0;
-            this._syncCurrentTime();
-          }, BACK_TO_FOCUS_TIMEOUT)
-        );
+        this._eventManager.listen(window, 'focus', () => {
+          if (!this._isProgressivePlayback()) {
+            setTimeout(() => {
+              // In IOS HLS, sometimes when coming back from lock screen/Idle mode, the stream will get stuck, and only a small seek nudge will fix it.
+              this._videoElement.currentTime =
+                this._videoElement.currentTime > NUDGE_SEEK_AFTER_FOCUS ? this._videoElement.currentTime - NUDGE_SEEK_AFTER_FOCUS : 0;
+              this._syncCurrentTime();
+            }, BACK_TO_FOCUS_TIMEOUT);
+          }
+        });
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
         }
