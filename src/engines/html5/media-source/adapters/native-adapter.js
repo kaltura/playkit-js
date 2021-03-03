@@ -1006,6 +1006,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
+   * Apply ABR restriction
+   * @function applyABRRestriction
+   * @returns {void}
+   * @public
+   */
+  applyABRRestriction(): void {}
+
+  /**
    * Disables all the existing video tracks.
    * @private
    * @returns {void}

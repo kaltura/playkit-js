@@ -431,6 +431,19 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Apply ABR restriction
+   * @function applyABRRestriction
+   * @param {Object} ABRConfig - abr config
+   * @returns {void}
+   * @public
+   */
+  applyABRRestriction(ABRConfig: Object): void {
+    if (this._mediaSourceAdapter) {
+      return this._mediaSourceAdapter.applyABRRestriction(ABRConfig);
+    }
+  }
+
+  /**
    * Seeking to live edge.
    * @function seekToLiveEdge
    * @returns {void}

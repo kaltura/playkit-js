@@ -200,11 +200,17 @@ export default class Player extends FakeEventTarget {
    */
   _stateManager: StateManager;
   /**
-   * The tracks of the player.
+   * The visible tracks of the player.
    * @type {Array<Track | TextTrack | AudioTrack | VideoTrack>}
    * @private
    */
-  _tracks: Array<Track | TextTrack | AudioTrack | VideoTrack>;
+  _availableTracks: Array<Track | TextTrack | AudioTrack | VideoTrack>;
+  /**
+   * The all available tracks of the player.
+   * @type {Array<Track | TextTrack | AudioTrack | VideoTrack>}
+   * @private
+   */
+  _allTracks: Array<Track | TextTrack | AudioTrack | VideoTrack>;
   /**
    * The player ready promise
    * @type {Promise<*>}
@@ -409,7 +415,7 @@ export default class Player extends FakeEventTarget {
     this._prepareVideoElement();
     Player.runCapabilities();
     this._env = Env;
-    this._tracks = [];
+    this._availableTracks = [];
     this._firstPlay = true;
     this._loadingMedia = false;
     this._loading = false;
@@ -479,6 +485,7 @@ export default class Player extends FakeEventTarget {
       Utils.Object.mergeDeep(this._config, config);
     }
     this._applyTextTrackConfig(config);
+    this._applyABRRestriction(config);
   }
 
   /**
@@ -591,7 +598,7 @@ export default class Player extends FakeEventTarget {
     this._config.sources = {};
     this._activeTextCues = [];
     this._updateTextDisplay([]);
-    this._tracks = [];
+    this._availableTracks = [];
     this._resetStateFlags();
     this._engineType = '';
     this._streamType = '';
@@ -624,7 +631,7 @@ export default class Player extends FakeEventTarget {
     this._activeTextCues = [];
     this._textDisplaySettings = {};
     this._config = {};
-    this._tracks = [];
+    this._availableTracks = [];
     this._engineType = '';
     this._streamType = '';
     this._readyPromise = null;
@@ -1191,7 +1198,7 @@ export default class Player extends FakeEventTarget {
       case TrackType.IMAGE:
         return Utils.Object.copyDeep(this._getImageTracks());
       default:
-        return Utils.Object.copyDeep(this._tracks);
+        return Utils.Object.copyDeep(this._availableTracks);
     }
   }
 
@@ -1286,6 +1293,24 @@ export default class Player extends FakeEventTarget {
     return false;
   }
 
+  /**
+   * update the ABR restriction config
+   * @function _applyABRRestriction
+   * @returns {void}
+   * @param {Object} config - new config which configure for checking if it relevant config has changed
+   * @private
+   */
+  _applyABRRestriction(config: Object): void {
+    if (Utils.Object.hasPropertyPath(config, 'abr.restrictions') && this._allTracks) {
+      const videoTracks = this._allTracks.filter(track => track instanceof VideoTrack);
+      const currentVideoTracks = this._filterVideoTrackNotInRange(videoTracks);
+      this._engine.applyABRRestriction(this._config.abr);
+      if (JSON.stringify(videoTracks) !== JSON.stringify(currentVideoTracks)) {
+        this._availableTracks = this._allTracks.filter(track => !(track instanceof VideoTrack)).concat(currentVideoTracks);
+        this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: currentVideoTracks}));
+      }
+    }
+  }
   /**
    * update the text track config from current config
    * @function _applyTextTrackConfig
@@ -2003,7 +2028,7 @@ export default class Player extends FakeEventTarget {
             this._isOnLiveEdge = true;
           }
           this._updateTracks(data.tracks);
-          this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
+          this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._availableTracks}));
           resetFlags();
         })
         .catch(error => {
@@ -2011,6 +2036,29 @@ export default class Player extends FakeEventTarget {
           resetFlags();
         });
     }
+  }
+
+  /**
+   * Handle and filter video tracks which isn't in range
+   * @param {Array<Track>} tracks - all tracks
+   * @private
+   * @returns {Array<Track>} - return the track which in range
+   */
+  _filterVideoTrackNotInRange(tracks: Array<Track>): Array<Track> {
+    if (this._config.abr.enabled) {
+      if (this._config.abr.restrictions) {
+        let videoTrackInRestriction = tracks.filter(
+          track =>
+            track instanceof VideoTrack &&
+            track.bandwidth > this._config.abr.restrictions.minBitrate &&
+            track.bandwidth < this._config.abr.restrictions.maxBitrate
+        );
+        const noVideoTrack = tracks.filter(track => !(track instanceof VideoTrack));
+        return videoTrackInRestriction.concat(noVideoTrack);
+      }
+      return tracks;
+    }
+    return this._allTracks;
   }
 
   /**
@@ -2193,7 +2241,8 @@ export default class Player extends FakeEventTarget {
    */
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
-    this._tracks = tracks.concat(this._externalCaptionsHandler.getExternalTracks(tracks));
+    this._allTracks = tracks.concat(this._externalCaptionsHandler.getExternalTracks(tracks));
+    this._availableTracks = this._filterVideoTrackNotInRange(this._allTracks);
     this._addTextTrackOffOption();
     this._maybeSetTracksLabels();
     this._setDefaultTracks();
@@ -2208,7 +2257,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _getTracksByType<T: TextTrack | AudioTrack | VideoTrack | ImageTrack>(type: T): Array<T> {
-    return this._tracks.reduce((arr, track) => {
+    return this._availableTracks.reduce((arr, track) => {
       if (track instanceof type) {
         arr.push(track);
       }
@@ -2331,7 +2380,7 @@ export default class Player extends FakeEventTarget {
   _addTextTrackOffOption(): void {
     const textTracks = this._getTextTracks();
     if (textTracks && textTracks.length) {
-      this._tracks.push(
+      this._availableTracks.push(
         new TextTrack({
           active: false,
           index: textTracks.length,

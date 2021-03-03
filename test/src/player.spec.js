@@ -605,7 +605,7 @@ describe('Player', function () {
       config = getConfigStructure();
       config.sources = sourcesConfig.Mp4;
       player = new Player(targetId, config);
-      player._tracks = [new VideoTrack(), new AudioTrack(), new AudioTrack(), new TextTrack(), new TextTrack(), new TextTrack()];
+      player._availableTracks = [new VideoTrack(), new AudioTrack(), new AudioTrack(), new TextTrack(), new TextTrack(), new TextTrack()];
     });
 
     after(() => {
@@ -765,7 +765,7 @@ describe('Player', function () {
         done();
       });
       player.ready().then(() => {
-        tracks = player._tracks.filter(track => {
+        tracks = player._availableTracks.filter(track => {
           return track instanceof VideoTrack;
         });
         (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.true;
@@ -781,7 +781,7 @@ describe('Player', function () {
 
     it('should not change the selected for non exist video track', done => {
       player.ready().then(() => {
-        let tracks = player._tracks.filter(track => {
+        let tracks = player._availableTracks.filter(track => {
           return track instanceof VideoTrack;
         });
         (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.true;
@@ -837,7 +837,7 @@ describe('Player', function () {
             tracks[2].active.should.be.true;
             done();
           });
-          let tracks = player._tracks.filter(track => {
+          let tracks = player._availableTracks.filter(track => {
             return track instanceof AudioTrack;
           });
           video.audioTracks[0].enabled.should.be.true;
@@ -858,7 +858,7 @@ describe('Player', function () {
     it('should not change the selected audio track', done => {
       player.ready().then(() => {
         if (video.audioTracks) {
-          let tracks = player._tracks.filter(track => {
+          let tracks = player._availableTracks.filter(track => {
             return track instanceof AudioTrack;
           });
           video.audioTracks[0].enabled.should.be.true;
@@ -887,7 +887,7 @@ describe('Player', function () {
     it('should not change the selected for non exist audio track', done => {
       player.ready().then(() => {
         if (video.audioTracks) {
-          let tracks = player._tracks.filter(track => {
+          let tracks = player._availableTracks.filter(track => {
             return track instanceof AudioTrack;
           });
           video.audioTracks[0].enabled.should.be.true;
@@ -953,7 +953,7 @@ describe('Player', function () {
             tracks[1].active.should.be.true;
             done();
           });
-          let tracks = player._tracks.filter(track => {
+          let tracks = player._availableTracks.filter(track => {
             return track instanceof TextTrack;
           });
           video.textTracks[0].mode.should.be.equal('hidden');
@@ -980,7 +980,7 @@ describe('Player', function () {
           tracks[1].active.should.be.true;
           done();
         });
-        let tracks = player._tracks.filter(track => {
+        let tracks = player._availableTracks.filter(track => {
           return track instanceof TextTrack;
         });
         video.textTracks[0].mode.should.be.equal('hidden');
@@ -993,7 +993,7 @@ describe('Player', function () {
 
     it('should not change the selected text track', done => {
       player.ready().then(() => {
-        let tracks = player._tracks.filter(track => {
+        let tracks = player._availableTracks.filter(track => {
           return track instanceof TextTrack;
         });
         video.textTracks[0].mode.should.be.equal('hidden');
@@ -1013,7 +1013,7 @@ describe('Player', function () {
     it('should not change the selected for non exist text track', done => {
       player.load();
       player.ready().then(() => {
-        let tracks = player._tracks.filter(track => {
+        let tracks = player._availableTracks.filter(track => {
           return track instanceof TextTrack;
         });
         video.textTracks[0].mode.should.be.equal('hidden');
@@ -1031,7 +1031,7 @@ describe('Player', function () {
 
     it('should not change the selected for metadata text track', done => {
       player.ready().then(() => {
-        let tracks = player._tracks.filter(track => {
+        let tracks = player._availableTracks.filter(track => {
           return track instanceof TextTrack;
         });
         video.textTracks[0].mode.should.be.equal('hidden');
@@ -1102,13 +1102,13 @@ describe('Player', function () {
         player.selectTrack(new VideoTrack({index: 1}));
       });
       player.ready().then(() => {
-        videoTracks = player._tracks.filter(track => {
+        videoTracks = player._availableTracks.filter(track => {
           return track instanceof VideoTrack;
         });
-        audioTracks = player._tracks.filter(track => {
+        audioTracks = player._availableTracks.filter(track => {
           return track instanceof AudioTrack;
         });
-        textTracks = player._tracks.filter(track => {
+        textTracks = player._availableTracks.filter(track => {
           return track instanceof TextTrack;
         });
         player.getActiveTracks().video.should.deep.equals(videoTracks[0]);
@@ -1161,7 +1161,7 @@ describe('Player', function () {
       player
         .ready()
         .then(() => {
-          let tracks = player._tracks.filter(track => {
+          let tracks = player._availableTracks.filter(track => {
             return track instanceof TextTrack;
           });
           video.textTracks[0].mode.should.be.equal('hidden');
@@ -2880,7 +2880,7 @@ describe('Player', function () {
       player._activeTextCues.should.be.empty;
       player._textDisplaySettings.should.be.empty;
       player._config.should.be.empty;
-      player._tracks.should.be.empty;
+      player._availableTracks.should.be.empty;
       player._engineType.should.be.empty;
       player._streamType.should.be.empty;
       (player._readyPromise === null).should.be.true;
@@ -2937,7 +2937,7 @@ describe('Player', function () {
       _updateTextDisplay.should.have.been.calledOnce;
       _updateTextDisplay.should.have.been.calledWith([]);
       player._config.should.not.be.empty;
-      player._tracks.should.be.empty;
+      player._availableTracks.should.be.empty;
       player._engineType.should.be.empty;
       player._streamType.should.be.empty;
       player._readyPromise.should.exist;
@@ -3345,30 +3345,30 @@ describe('Player', function () {
 
     it("should load with callback label function, and change the label of video track to 'qualities_label'", () => {
       player.configure(getConfigStructureWithLabelCallback());
-      player._tracks = [new VideoTrack()];
+      player._availableTracks = [new VideoTrack()];
       player._maybeSetTracksLabels();
-      player._tracks[0].label.should.equal('qualities_label');
+      player._availableTracks[0].label.should.equal('qualities_label');
     });
 
     it("should load with callback label function, and change the label of audio track to 'audio_label'", () => {
       player.configure(getConfigStructureWithLabelCallback());
-      player._tracks = [new AudioTrack()];
+      player._availableTracks = [new AudioTrack()];
       player._maybeSetTracksLabels();
-      player._tracks[0].label.should.equal('audio_label');
+      player._availableTracks[0].label.should.equal('audio_label');
     });
 
     it("should load with callback label function, and change the label of text track to 'captions_label'", () => {
       player.configure(getConfigStructureWithLabelCallback());
-      player._tracks = [new TextTrack()];
+      player._availableTracks = [new TextTrack()];
       player._maybeSetTracksLabels();
-      player._tracks[0].label.should.equal('captions_label');
+      player._availableTracks[0].label.should.equal('captions_label');
     });
 
     it("should load with all callback label function, and change the label respectively to the track type'", () => {
       player.configure(getConfigStructureWithLabelCallback());
-      player._tracks = [new TextTrack(), new VideoTrack(), new AudioTrack()];
+      player._availableTracks = [new TextTrack(), new VideoTrack(), new AudioTrack()];
       player._maybeSetTracksLabels();
-      player._tracks.forEach(t => {
+      player._availableTracks.forEach(t => {
         switch (t) {
           case t instanceof AudioTrack:
             t.label.should.equal('audio_label');
