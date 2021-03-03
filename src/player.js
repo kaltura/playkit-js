@@ -200,7 +200,7 @@ export default class Player extends FakeEventTarget {
    */
   _stateManager: StateManager;
   /**
-   * The visible tracks of the player.
+   * The available tracks of the player.
    * @type {Array<Track | TextTrack | AudioTrack | VideoTrack>}
    * @private
    */
@@ -416,6 +416,7 @@ export default class Player extends FakeEventTarget {
     Player.runCapabilities();
     this._env = Env;
     this._availableTracks = [];
+    this._allTracks = [];
     this._firstPlay = true;
     this._loadingMedia = false;
     this._loading = false;
@@ -599,6 +600,7 @@ export default class Player extends FakeEventTarget {
     this._activeTextCues = [];
     this._updateTextDisplay([]);
     this._availableTracks = [];
+    this._allTracks = [];
     this._resetStateFlags();
     this._engineType = '';
     this._streamType = '';
@@ -632,6 +634,7 @@ export default class Player extends FakeEventTarget {
     this._textDisplaySettings = {};
     this._config = {};
     this._availableTracks = [];
+    this._allTracks = [];
     this._engineType = '';
     this._streamType = '';
     this._readyPromise = null;
@@ -2380,7 +2383,7 @@ export default class Player extends FakeEventTarget {
   _addTextTrackOffOption(): void {
     const textTracks = this._getTextTracks();
     if (textTracks && textTracks.length) {
-      this._availableTracks.push(
+      this._allTracks.push(
         new TextTrack({
           active: false,
           index: textTracks.length,
