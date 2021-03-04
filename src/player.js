@@ -1306,11 +1306,12 @@ export default class Player extends FakeEventTarget {
   _applyABRRestriction(config: Object): void {
     if (Utils.Object.hasPropertyPath(config, 'abr.restrictions') && this._allTracks) {
       const videoTracks = this._allTracks.filter(track => track instanceof VideoTrack);
-      const currentVideoTracks = this._filterVideoTrackNotInRange(videoTracks);
+      const newVideoTracks = this._filterVideoTrackNotInRange(videoTracks);
+      const currentVideoTracks = this._availableTracks.filter(track => track instanceof VideoTrack);
       this._engine.applyABRRestriction(this._config.abr);
-      if (JSON.stringify(videoTracks) !== JSON.stringify(currentVideoTracks)) {
-        this._availableTracks = this._allTracks.filter(track => !(track instanceof VideoTrack)).concat(currentVideoTracks);
-        this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: currentVideoTracks}));
+      if (JSON.stringify(currentVideoTracks) !== JSON.stringify(newVideoTracks)) {
+        this._availableTracks = this._allTracks.filter(track => !(track instanceof VideoTrack)).concat(newVideoTracks);
+        this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: newVideoTracks}));
       }
     }
   }
@@ -2053,8 +2054,8 @@ export default class Player extends FakeEventTarget {
         let videoTrackInRestriction = tracks.filter(
           track =>
             track instanceof VideoTrack &&
-            track.bandwidth > this._config.abr.restrictions.minBitrate &&
-            track.bandwidth < this._config.abr.restrictions.maxBitrate
+            track.bandwidth >= this._config.abr.restrictions.minBitrate &&
+            track.bandwidth <= this._config.abr.restrictions.maxBitrate
         );
         const noVideoTrack = tracks.filter(track => !(track instanceof VideoTrack));
         return videoTrackInRestriction.concat(noVideoTrack);

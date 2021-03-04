@@ -598,27 +598,74 @@ describe('Player', function () {
   });
 
   describe('getTracks dummy', () => {
-    let player, config;
+    let player, config, sandbox;
 
     before(() => {
+      sandbox = sinon.createSandbox();
       createElement('DIV', targetId);
-      config = getConfigStructure();
+      config = getConfigStructure(targetId);
       config.sources = sourcesConfig.Mp4;
-      player = new Player(targetId, config);
-      player._availableTracks = [new VideoTrack(), new AudioTrack(), new AudioTrack(), new TextTrack(), new TextTrack(), new TextTrack()];
+      player = new Player(config);
+      player._availableTracks = player._allTracks = [
+        new VideoTrack({bandwidth: 15000, height: 760, width: 480}),
+        new VideoTrack({bandwidth: 20000, height: 860, width: 560}),
+        new AudioTrack(),
+        new AudioTrack(),
+        new TextTrack(),
+        new TextTrack(),
+        new TextTrack()
+      ];
+      sandbox.stub(player._engine, 'applyABRRestriction').callsFake(function () {});
     });
 
     after(() => {
       removeVideoElementsFromTestPage();
       removeElement(targetId);
+      sandbox.restore();
     });
 
     it('should return all tracks for no type', () => {
-      player.getTracks().length.should.be.equal(6);
+      player.getTracks().length.should.be.equal(7);
     });
 
     it('should return video tracks', () => {
+      player.getTracks('video').length.should.be.equal(2);
+    });
+
+    it('should return video tracks after restriction include the highest', () => {
+      player.configure({
+        abr: {
+          restrictions: {
+            minBitrate: 17000,
+            maxBitrate: 20000
+          }
+        }
+      });
       player.getTracks('video').length.should.be.equal(1);
+    });
+
+    it('should return video tracks after restriction include the lowest', () => {
+      player.configure({
+        abr: {
+          restrictions: {
+            minBitrate: 13000,
+            maxBitrate: 15000
+          }
+        }
+      });
+      player.getTracks('video').length.should.be.equal(1);
+    });
+
+    it('should return video tracks after restriction include both', () => {
+      player.configure({
+        abr: {
+          restrictions: {
+            minBitrate: 15000,
+            maxBitrate: 20000
+          }
+        }
+      });
+      player.getTracks('video').length.should.be.equal(2);
     });
 
     it('should return audio tracks', () => {
@@ -630,7 +677,7 @@ describe('Player', function () {
     });
 
     it('should return all tracks for unknown type', () => {
-      player.getTracks('some').length.should.be.equal(6);
+      player.getTracks('some').length.should.be.equal(7);
     });
   });
 
@@ -2880,6 +2927,7 @@ describe('Player', function () {
       player._activeTextCues.should.be.empty;
       player._textDisplaySettings.should.be.empty;
       player._config.should.be.empty;
+      player._allTracks.should.be.empty;
       player._availableTracks.should.be.empty;
       player._engineType.should.be.empty;
       player._streamType.should.be.empty;
@@ -2937,6 +2985,7 @@ describe('Player', function () {
       _updateTextDisplay.should.have.been.calledOnce;
       _updateTextDisplay.should.have.been.calledWith([]);
       player._config.should.not.be.empty;
+      player._allTracks.should.be.empty;
       player._availableTracks.should.be.empty;
       player._engineType.should.be.empty;
       player._streamType.should.be.empty;
