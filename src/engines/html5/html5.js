@@ -14,6 +14,7 @@ import Error from '../../error/error';
 import getLogger from '../../utils/logger';
 import {DroppedFramesWatcher} from '../dropped-frames-watcher';
 import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
+import {ImageTrack} from '../../playkit';
 
 /**
  * Html5 engine for playback.
@@ -390,6 +391,17 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
     this.resetAllCues();
     this._addCueChangeListener();
+  }
+
+  /**
+   * Select a new image track.
+   * @param {ImageTrack} imageTrack - The image track object to set.
+   * @returns {void}
+   */
+  selectImageTrack(imageTrack: ImageTrack): void {
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.selectImageTrack(imageTrack);
+    }
   }
 
   /**
