@@ -48,6 +48,7 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
           return isGetterInPrototype();
         };
         let target;
+        //For events the proxy is the target - to avoid listening to engine itself
         if (prop === 'addEventListener' || prop === 'removeEventListener') {
           target = this;
         } else {
