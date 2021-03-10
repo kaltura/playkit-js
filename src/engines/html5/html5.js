@@ -53,6 +53,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _droppedFramesWatcher: ?DroppedFramesWatcher;
   _reset: boolean = false;
   /**
+   * Handle ended comes from media source adapters and response ended getter
+   * @type {boolean}
+   * @private
+   */
+  _ended: boolean = false;
+  /**
    * The html5 class logger.
    * @type {any}
    * @static
@@ -211,6 +217,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   reset(): void {
     if (this._reset) return;
     this._reset = true;
+    this._ended = false;
     this._eventManager.removeAll();
     if (this._droppedFramesWatcher) {
       this._droppedFramesWatcher.destroy();
@@ -323,6 +330,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(mediaSourceAdapter, Html5EventType.TIME_UPDATE, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, Html5EventType.PLAYING, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, Html5EventType.WAITING, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(mediaSourceAdapter, Html5EventType.ENDED, (event: FakeEvent) => {
+        this._ended = true;
+        this.dispatchEvent(event);
+      });
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.MEDIA_RECOVERED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, 'hlsFragParsingMetadata', (event: FakeEvent) => this.dispatchEvent(event));
       if (this._droppedFramesWatcher) {
@@ -884,7 +895,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    */
   get ended(): boolean {
-    return this._el.ended;
+    return this._ended || this._el.ended;
   }
 
   /**

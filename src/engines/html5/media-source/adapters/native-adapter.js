@@ -491,6 +491,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     this._clearHeartbeatTimeout();
     const onTimeout = () => {
       this._clearHeartbeatTimeout();
+      this._trigger(Html5EventType.ENDED);
       this._trigger(
         Html5EventType.ERROR,
         new Error(
