@@ -4,6 +4,7 @@ import {EventType} from '../event/event-type';
 import EventManager from '../event/event-manager';
 import FakeEventTarget from '../event/fake-event-target';
 import {EngineDecoratorManager} from './engine-decorator-manager';
+import * as Utils from '../utils/util';
 
 /**
  * Engine decorator for plugin.
@@ -27,26 +28,6 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
           this._destroy();
         }
         const activeDecorator = this._pluginDecorators.find(decorator => decorator.active);
-        const isGetter = (target: Object, property: string) => {
-          const hasGetter = (prototype: Object) => {
-            const descriptor = Object.getOwnPropertyDescriptor(prototype, property);
-            return descriptor && !!descriptor['get'];
-          };
-          const isGetterInPrototype = () => {
-            let currentPrototype = target;
-            //check until we get the base prototype - object prototype
-            while (currentPrototype.constructor !== Object.constructor) {
-              //when descriptor exists on prototype it'll return boolean otherwise undefined
-              if (typeof hasGetter(currentPrototype) === 'boolean') {
-                return hasGetter(currentPrototype);
-              } else {
-                currentPrototype = Object.getPrototypeOf(currentPrototype);
-              }
-            }
-            return false;
-          };
-          return isGetterInPrototype();
-        };
         let target;
         //For events the proxy is the target - to avoid listening to engine itself
         if (prop === 'addEventListener' || prop === 'removeEventListener') {
@@ -54,7 +35,7 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
         } else {
           target = activeDecorator && prop in activeDecorator ? activeDecorator : obj;
         }
-        return isGetter(target, prop)
+        return Utils.Object.isGetter(target, prop)
           ? // $FlowFixMe
             target[prop]
           : // $FlowFixMe

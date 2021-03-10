@@ -78,8 +78,38 @@ const _Object = {
     return item && typeof item === 'object' && !Array.isArray(item);
   },
 
+  /**
+   * @param {any} item - The item to check if it's class
+   * @returns {boolean} - Whether the item is a class
+   */
   isClassInstance: function (item: any) {
     return item && item.constructor && item.constructor.name && item.constructor.name !== 'Object';
+  },
+
+  /**
+   * @param {Object} target - The Object to search inside it the getter.
+   * @param {string} property - The property to check if it's a getter.
+   * @returns {boolean} - Whether the property is a getter in target.
+   */
+  isGetter: function (target: Object, property: string) {
+    const hasGetter = (prototype: Object) => {
+      const descriptor = Object.getOwnPropertyDescriptor(prototype, property);
+      return descriptor && !!descriptor['get'];
+    };
+    const isGetterInPrototype = () => {
+      let currentPrototype = target;
+      //check until we get the base prototype - object prototype
+      while (currentPrototype.constructor !== Object) {
+        //when descriptor exists on prototype it'll return boolean otherwise undefined
+        if (typeof hasGetter(currentPrototype) === 'boolean') {
+          return hasGetter(currentPrototype);
+        } else {
+          currentPrototype = Object.getPrototypeOf(currentPrototype);
+        }
+      }
+      return false;
+    };
+    return isGetterInPrototype();
   },
 
   /**
