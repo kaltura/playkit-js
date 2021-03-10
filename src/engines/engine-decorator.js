@@ -4,7 +4,6 @@ import {EventType} from '../event/event-type';
 import EventManager from '../event/event-manager';
 import FakeEventTarget from '../event/fake-event-target';
 import {EngineDecoratorManager} from './engine-decorator-manager';
-import * as Utils from '../utils/util';
 
 /**
  * Engine decorator for plugin.
@@ -35,11 +34,7 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
         } else {
           target = activeDecorator && prop in activeDecorator ? activeDecorator : obj;
         }
-        return Utils.Object.isGetter(target, prop)
-          ? // $FlowFixMe
-            target[prop]
-          : // $FlowFixMe
-            (...args) => target[prop](...args);
+        return typeof target[prop].bind === 'function' ? target[prop].bind(target) : target[prop];
       },
       set: (obj, prop, value) => {
         const activeDecorator = this._pluginDecorators.find(decorator => prop in decorator && decorator.active);
