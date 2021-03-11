@@ -78,6 +78,10 @@ const _Object = {
     return item && typeof item === 'object' && !Array.isArray(item);
   },
 
+  /**
+   * @param {any} item - The item to check if it's class
+   * @returns {boolean} - Whether the item is a class
+   */
   isClassInstance: function (item: any) {
     return item && item.constructor && item.constructor.name && item.constructor.name !== 'Object';
   },

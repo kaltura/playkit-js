@@ -1700,8 +1700,7 @@ export default class Player extends FakeEventTarget {
       this._appendEngineEl();
     } else {
       if (this._engine.id === Engine.id) {
-        // The restoring must be done by the engine itself not by the proxy (engine decorator if exists) to make sure the engine events fired by the engine itself.
-        this._engine.restore.call(this._engine._engine || this._engine, source, this._config);
+        this._engine.restore(source, this._config);
       } else {
         this._engine.destroy();
         this._createEngine(Engine, source);
@@ -2281,7 +2280,18 @@ export default class Player extends FakeEventTarget {
    */
   _onCueChange(event: FakeEvent): void {
     Player._logger.debug('Text cue changed', event.payload.cues);
-    this._activeTextCues = event.payload.cues;
+    //TODO: remove filter once FEC-11048 fix is done
+    try {
+      this._activeTextCues = event.payload.cues.filter((cue, index, cues) => {
+        const prevCue = cues[index - 1];
+        if (!prevCue) {
+          return true;
+        }
+        return !(cue.startTime === prevCue.startTime && cue.endTime === prevCue.endTime && cue.text.trim() === prevCue.text.trim());
+      });
+    } catch (e) {
+      this._activeTextCues = event.payload.cues;
+    }
     this._updateCueDisplaySettings();
     this._updateTextDisplay(this._activeTextCues);
   }
