@@ -26,12 +26,16 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
         if (prop === 'destroy') {
           this._destroy();
         }
-        if (prop === '_listeners') {
-          return this._listeners;
-        }
         const activeDecorator = this._pluginDecorators.find(decorator => decorator.active);
+        let target;
+        //For events the proxy is the target - to avoid listening to engine itself
+        if (prop === 'addEventListener' || prop === 'removeEventListener') {
+          target = this;
+        } else {
+          target = activeDecorator && prop in activeDecorator ? activeDecorator : obj;
+        }
         // $FlowFixMe
-        return activeDecorator && prop in activeDecorator ? activeDecorator[prop] : obj[prop];
+        return typeof target[prop].bind === 'function' ? target[prop].bind(target) : target[prop];
       },
       set: (obj, prop, value) => {
         const activeDecorator = this._pluginDecorators.find(decorator => prop in decorator && decorator.active);
@@ -44,7 +48,7 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
 
   dispatchEvent(event: FakeEvent): boolean {
     const activeDecorator = this._pluginDecorators.find(decorator => decorator.active);
-    return activeDecorator ? activeDecorator.dispatchEvent && activeDecorator.dispatchEvent(event) : super.dispatchEvent(event);
+    return activeDecorator && activeDecorator.dispatchEvent ? activeDecorator.dispatchEvent(event) : super.dispatchEvent(event);
   }
 
   _destroy(): void {
