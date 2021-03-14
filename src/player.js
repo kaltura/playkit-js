@@ -1237,6 +1237,8 @@ export default class Player extends FakeEventTarget {
           this._externalCaptionsHandler.hideTextTrack();
           this._engine.selectTextTrack(track);
         }
+      } else if (track instanceof ImageTrack) {
+        this._engine.selectImageTrack(track);
       }
     }
   }

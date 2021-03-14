@@ -2,7 +2,7 @@
 import VideoTrack from '../../src/track/video-track';
 import AudioTrack from '../../src/track/audio-track';
 import TextTrack from '../../src/track/text-track';
-import {FakeEventTarget} from '../../src/playkit';
+import {FakeEventTarget, ImageTrack} from '../../src/playkit';
 
 declare interface IMediaSourceAdapterStatic {
   +id: string;
@@ -24,6 +24,7 @@ declare interface IMediaSourceAdapter extends FakeEventTarget {
   selectVideoTrack(videoTrack: VideoTrack): void;
   selectAudioTrack(audioTrack: AudioTrack): void;
   selectTextTrack(textTrack: TextTrack): void;
+  selectImageTrack(imageTrack: ImageTrack): void;
   hideTextTrack(): void;
   enableAdaptiveBitrate(): void;
   isAdaptiveBitrateEnabled(): boolean;

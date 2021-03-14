@@ -7,6 +7,7 @@ import MediaSourceProvider from './media-source/media-source-provider';
 import VideoTrack from '../../track/video-track';
 import AudioTrack from '../../track/audio-track';
 import PKTextTrack from '../../track/text-track';
+import ImageTrack from '../../track/image-track';
 import {Cue} from '../../track/vtt-cue';
 import * as Utils from '../../utils/util';
 import Html5AutoPlayCapability from './capabilities/html5-autoplay';
@@ -390,6 +391,17 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
     this.resetAllCues();
     this._addCueChangeListener();
+  }
+
+  /**
+   * Select a new image track.
+   * @param {ImageTrack} imageTrack - The image track object to set.
+   * @returns {void}
+   */
+  selectImageTrack(imageTrack: ImageTrack): void {
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.selectImageTrack(imageTrack);
+    }
   }
 
   /**
