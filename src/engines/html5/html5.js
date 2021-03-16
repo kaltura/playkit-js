@@ -51,6 +51,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _canLoadMediaSourceAdapterPromise: Promise<*>;
+  /**
+   * Promise for load
+   * @type {Promise<*>}
+   * @private
+   */
+  _loadPromise: ?Promise<*>;
   _droppedFramesWatcher: ?DroppedFramesWatcher;
   _reset: boolean = false;
   /**
@@ -510,17 +516,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         this._canLoadMediaSourceAdapterPromise
           .then(() => {
             if (this._mediaSourceAdapter) {
-              this._mediaSourceAdapter
-                .load(startTime)
-                .then(tracks => resolve(tracks))
-                .catch(error => reject(error));
+              this._mediaSourceAdapter.load(startTime).then(resolve).catch(reject);
             } else {
               resolve({});
             }
           })
-          .catch(error => {
-            reject(error);
-          });
+          .catch(reject);
       }).catch(error => {
         this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
         return Promise.reject(error);
