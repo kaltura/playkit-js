@@ -292,6 +292,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   detachMediaSource(): void {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.detachMediaSource();
+      this._loadPromise = null;
     }
   }
 
