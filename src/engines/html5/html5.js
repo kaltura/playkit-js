@@ -217,6 +217,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._droppedFramesWatcher.destroy();
       this._droppedFramesWatcher = null;
     }
+    this._loadPromise = null;
     this._canLoadMediaSourceAdapterPromise = new Promise((resolve, reject) => {
       const mediaSourceAdapterDestroyed = this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve();
       if (this._el && this._el.src) {
@@ -246,6 +247,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
     this._eventManager.destroy();
     MediaSourceProvider.destroy();
+    this._loadPromise = null;
     if (this._droppedFramesWatcher) {
       this._droppedFramesWatcher.destroy();
       this._droppedFramesWatcher = null;
@@ -503,22 +505,28 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   load(startTime: ?number): Promise<Object> {
     this._el.load();
-    return new Promise((resolve, reject) => {
-      this._canLoadMediaSourceAdapterPromise
-        .then(() => {
-          if (this._mediaSourceAdapter) {
-            this._mediaSourceAdapter
-              .load(startTime)
-              .then(tracks => resolve(tracks))
-              .catch(error => reject(error));
-          } else {
-            resolve({});
-          }
-        })
-        .catch(error => {
-          reject(error);
-        });
-    }).catch(error => this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error)));
+    if (!this._loadPromise) {
+      this._loadPromise = new Promise((resolve, reject) => {
+        this._canLoadMediaSourceAdapterPromise
+          .then(() => {
+            if (this._mediaSourceAdapter) {
+              this._mediaSourceAdapter
+                .load(startTime)
+                .then(tracks => resolve(tracks))
+                .catch(error => reject(error));
+            } else {
+              resolve({});
+            }
+          })
+          .catch(error => {
+            reject(error);
+          });
+      }).catch(error => {
+        this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
+        return Promise.reject(error);
+      });
+    }
+    return this._loadPromise;
   }
 
   /**
