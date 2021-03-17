@@ -188,7 +188,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return BaseMediaSourceAdapter._throwNotImplementedError('isAdaptiveBitrateEnabled');
   }
 
-  applyABRRestriction(ABRConfig: Object): void {
+  applyABRRestriction(restrictions: PKABRRestrictionObject): void {
     return BaseMediaSourceAdapter._throwNotImplementedError('applyABRRestriction');
   }
 

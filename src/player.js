@@ -39,6 +39,7 @@ import {AutoPlayType} from './enums/auto-play-type';
 import ImageTrack from './track/image-track';
 import {ThumbnailInfo} from './thumbnail/thumbnail-info';
 import {EngineDecoratorManager} from './engines/engine-decorator-manager';
+import {filterTracksByRestriction} from './utils/restrictions';
 
 /**
  * The black cover class name.
@@ -1305,10 +1306,10 @@ export default class Player extends FakeEventTarget {
    */
   _applyABRRestriction(config: Object): void {
     if (Utils.Object.hasPropertyPath(config, 'abr.restrictions') && this._engine) {
-      const videoTracks = this._allTracks.filter(track => track instanceof VideoTrack);
-      const newVideoTracks = this._filterVideoTrackNotInRange(videoTracks);
+      const {restrictions} = this._config.abr;
+      const newVideoTracks = filterTracksByRestriction(this._allTracks, restrictions);
       const currentVideoTracks = this._availableTracks.filter(track => track instanceof VideoTrack);
-      this._engine.applyABRRestriction(this._config.abr);
+      this._engine.applyABRRestriction(restrictions);
       if (JSON.stringify(currentVideoTracks) !== JSON.stringify(newVideoTracks)) {
         this._availableTracks = this._allTracks.filter(track => !(track instanceof VideoTrack)).concat(newVideoTracks);
         this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: newVideoTracks}));
@@ -2041,36 +2042,6 @@ export default class Player extends FakeEventTarget {
         });
     }
   }
-
-  /**
-   * Handle and filter video tracks which isn't in range
-   * @param {Array<Track>} tracks - all tracks
-   * @private
-   * @returns {Array<Track>} - return the track which in range
-   */
-  _filterVideoTrackNotInRange(tracks: Array<Track>): Array<Track> {
-    if (this._config.abr.enabled) {
-      if (this._config.abr.restrictions) {
-        let videoTrackInRestriction = [];
-        const {maxHeight, maxWidth} = this._config.abr.restrictions;
-        if (maxHeight || maxWidth) {
-          videoTrackInRestriction = tracks.filter(
-            track => track instanceof VideoTrack && track.height <= (maxHeight || Infinity) && track.width <= (maxWidth || Infinity)
-          );
-        } else {
-          const {minBitrate, maxBitrate} = this._config.abr.restrictions;
-          videoTrackInRestriction = tracks.filter(
-            track => track instanceof VideoTrack && track.bandwidth >= (minBitrate || 0) && track.bandwidth <= (maxBitrate || Infinity)
-          );
-        }
-        const noVideoTrack = tracks.filter(track => !(track instanceof VideoTrack));
-        return videoTrackInRestriction.concat(noVideoTrack);
-      }
-      return tracks;
-    }
-    return this._allTracks;
-  }
-
   /**
    * Handles and sets the initial dimensions configuration if such exists.
    * @private
@@ -2252,7 +2223,6 @@ export default class Player extends FakeEventTarget {
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
     this._allTracks = tracks.concat(this._externalCaptionsHandler.getExternalTracks(tracks));
-    this._availableTracks = this._filterVideoTrackNotInRange(this._allTracks);
     this._applyABRRestriction(this._config);
     this._addTextTrackOffOption();
     this._maybeSetTracksLabels();

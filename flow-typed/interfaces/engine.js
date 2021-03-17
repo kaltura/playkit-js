@@ -34,7 +34,7 @@ declare interface IEngine extends FakeEventTarget {
   hideTextTrack(): void;
   enableAdaptiveBitrate(): void;
   isAdaptiveBitrateEnabled(): boolean;
-  applyABRRestriction(ABRConfig: Object): void;
+  applyABRRestriction(restrictions: PKABRRestrictionObject): void;
   seekToLiveEdge(): void;
   getStartTimeOfDvrWindow(): number;
   isLive(): boolean;

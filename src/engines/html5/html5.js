@@ -433,13 +433,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * Apply ABR restriction
    * @function applyABRRestriction
-   * @param {Object} ABRConfig - abr config
+   * @param {PKABRRestrictionObject} restriction - abr restriction config
    * @returns {void}
    * @public
    */
-  applyABRRestriction(ABRConfig: Object): void {
+  applyABRRestriction(restriction: PKABRRestrictionObject): void {
     if (this._mediaSourceAdapter) {
-      return this._mediaSourceAdapter.applyABRRestriction(ABRConfig);
+      return this._mediaSourceAdapter.applyABRRestriction(restriction);
     }
   }
 
