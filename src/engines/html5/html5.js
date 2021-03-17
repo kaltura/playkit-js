@@ -503,22 +503,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   load(startTime: ?number): Promise<Object> {
     this._el.load();
-    return new Promise((resolve, reject) => {
-      this._canLoadMediaSourceAdapterPromise
-        .then(() => {
-          if (this._mediaSourceAdapter) {
-            this._mediaSourceAdapter
-              .load(startTime)
-              .then(tracks => resolve(tracks))
-              .catch(error => reject(error));
-          } else {
-            resolve({});
-          }
-        })
-        .catch(error => {
-          reject(error);
-        });
-    }).catch(error => this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error)));
+    return this._canLoadMediaSourceAdapterPromise
+      .then(() => {
+        return this._mediaSourceAdapter ? this._mediaSourceAdapter.load(startTime) : Promise.resolve({});
+      })
+      .catch(error => {
+        this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
+        return Promise.reject(error);
+      });
   }
 
   /**
