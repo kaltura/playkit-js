@@ -7,6 +7,7 @@ import MediaSourceProvider from './media-source/media-source-provider';
 import VideoTrack from '../../track/video-track';
 import AudioTrack from '../../track/audio-track';
 import PKTextTrack from '../../track/text-track';
+import ImageTrack from '../../track/image-track';
 import {Cue} from '../../track/vtt-cue';
 import * as Utils from '../../utils/util';
 import Html5AutoPlayCapability from './capabilities/html5-autoplay';
@@ -393,6 +394,17 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Select a new image track.
+   * @param {ImageTrack} imageTrack - The image track object to set.
+   * @returns {void}
+   */
+  selectImageTrack(imageTrack: ImageTrack): void {
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.selectImageTrack(imageTrack);
+    }
+  }
+
+  /**
    * Hide the text track
    * @function hideTextTrack
    * @returns {void}
@@ -506,14 +518,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._el.load();
     return this._canLoadMediaSourceAdapterPromise
       .then(() => {
-        if (this._mediaSourceAdapter) {
-          return this._mediaSourceAdapter.load(startTime).catch(error => {
-            return Promise.reject(error);
-          });
-        }
-        return Promise.resolve({});
+        return this._mediaSourceAdapter ? this._mediaSourceAdapter.load(startTime) : Promise.resolve({});
       })
       .catch(error => {
+        this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
         return Promise.reject(error);
       });
   }

@@ -61,7 +61,7 @@ describe('EngineDecorator', () => {
     player._engineDecoratorManager.createDecorators(null, null).length.should.equal(0);
   });
 
-  it.skip('should decorator use the decorator instance as context of the function', done => {
+  it('should decorator use the decorator instance as context of the function', done => {
     const decoratorManager = new EngineDecoratorManager();
     const decoratorProvider = FakeDecoratorProviderActive;
     decoratorManager.register(decoratorProvider);
@@ -77,7 +77,7 @@ describe('EngineDecorator', () => {
     });
   });
 
-  it.skip('should decorator use the engine when decorator not active', done => {
+  it('should decorator use the engine when decorator not active', done => {
     const decoratorManager = new EngineDecoratorManager();
     decoratorManager.register(FakeDecoratorProvider);
     const engineDecorator = new EngineDecorator(engine, decoratorManager);
