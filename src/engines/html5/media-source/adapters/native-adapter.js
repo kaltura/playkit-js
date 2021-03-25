@@ -316,6 +316,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._eventManager.listen(this._videoElement, Html5EventType.ENDED, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.ABORT, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.SEEKED, () => this._syncCurrentTime());
+        this._eventManager.listen(this._videoElement, Html5EventType.WAITING, () => (this._waitingEventTriggered = true));
+        this._eventManager.listen(this._videoElement, Html5EventType.PLAYING, () => (this._waitingEventTriggered = false));
         // Sometimes when playing live in safari and switching between tabs the currentTime goes back with no seek events
         this._eventManager.listen(window, 'focus', () => {
           if (!this._isProgressivePlayback()) {
