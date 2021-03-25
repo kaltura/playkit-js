@@ -1318,6 +1318,8 @@ export default class Player extends FakeEventTarget {
           this._availableTracks = this._allTracks.filter(track => !(track instanceof VideoTrack)).concat(newVideoTracks);
           this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: newVideoTracks}));
         }
+      } else {
+        Player._logger.warn('nothing has changed values does not meet the restriction');
       }
     }
   }

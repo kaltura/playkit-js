@@ -757,6 +757,27 @@ describe('Player', function () {
       player.getTracks('video').length.should.be.equal(2);
     });
 
+    it('should not change the result for incorrect config', () => {
+      player.configure({
+        abr: {
+          restrictions: {
+            minWidth: 400,
+            maxWidth: 500
+          }
+        }
+      });
+      player.getTracks('video').length.should.be.equal(1);
+      player.configure({
+        abr: {
+          restrictions: {
+            minWidth: 400,
+            maxWidth: 450
+          }
+        }
+      });
+      player.getTracks('video').length.should.be.equal(1);
+    });
+
     it('should filter by height and width video tracks will return the correct one', () => {
       player.configure({
         abr: {
