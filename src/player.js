@@ -1309,12 +1309,15 @@ export default class Player extends FakeEventTarget {
   _applyABRRestriction(config: Object): void {
     if (Utils.Object.hasPropertyPath(config, 'abr.restrictions') && this._engine) {
       const {restrictions} = this._config.abr;
-      const newVideoTracks = filterTracksByRestriction(this._allTracks, restrictions);
-      const currentVideoTracks = this._availableTracks.filter(track => track instanceof VideoTrack);
-      this._engine.applyABRRestriction(restrictions);
-      if (JSON.stringify(currentVideoTracks) !== JSON.stringify(newVideoTracks)) {
-        this._availableTracks = this._allTracks.filter(track => !(track instanceof VideoTrack)).concat(newVideoTracks);
-        this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: newVideoTracks}));
+      const videoTracks = this._allTracks.filter(track => track instanceof VideoTrack);
+      const newVideoTracks = filterTracksByRestriction(videoTracks, restrictions);
+      if (newVideoTracks.length) {
+        const currentVideoTracks = this._availableTracks.filter(track => track instanceof VideoTrack);
+        this._engine.applyABRRestriction(restrictions);
+        if (JSON.stringify(currentVideoTracks) !== JSON.stringify(newVideoTracks)) {
+          this._availableTracks = this._allTracks.filter(track => !(track instanceof VideoTrack)).concat(newVideoTracks);
+          this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: newVideoTracks}));
+        }
       }
     }
   }

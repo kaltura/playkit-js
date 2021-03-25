@@ -1,6 +1,5 @@
 //@flow
 
-import Track from '../track/track';
 import VideoTrack from '../track/video-track';
 
 /**
@@ -30,14 +29,13 @@ function _filterVideoTracksByRestriction(tracks: Array<VideoTrack>, restriction:
 /**
  * Filter the video tracks which not in the range
  * @function filterVideoTracksByRestriction
- * @param {Array<Track>} tracks - The tracks to filter
+ * @param {Array<VideoTrack>} videoTracks - The tracks to filter
  * @param {PKABRRestrictionObject} restriction - The restriction
- * @returns {Array<Track>} - The relevant video tracks after restrictions.
+ * @returns {Array<VideoTrack>} - The relevant video tracks after restrictions.
  */
-function filterTracksByRestriction(tracks: Array<Track>, restriction: PKABRRestrictionObject): Array<VideoTrack> {
-  const videoTracks = tracks.filter(track => track instanceof VideoTrack);
+function filterTracksByRestriction(videoTracks: Array<VideoTrack>, restriction: PKABRRestrictionObject): Array<VideoTrack> {
   const filterVideoTracks = _filterVideoTracksByRestriction(videoTracks, restriction);
-  return filterVideoTracks.length ? filterVideoTracks : videoTracks;
+  return filterVideoTracks.length ? filterVideoTracks : [];
 }
 
 export {filterTracksByRestriction};
