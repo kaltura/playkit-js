@@ -35,6 +35,7 @@
     ]
   },
   "publishConfig": {
+    "cache": "~/.npm",
     "access": "public"
   },
   "dependencies": {
