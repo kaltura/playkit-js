@@ -715,6 +715,11 @@ export default class Player extends FakeEventTarget {
     }
   }
 
+  /**
+   * Get the live relative time in seconds.
+   * @returns {?Number} - The live relative time.
+   * @public
+   */
   get liveTime(): number {
     if (this.isLive()) {
       return this._engine.liveTime;
@@ -722,6 +727,11 @@ export default class Player extends FakeEventTarget {
     return -1;
   }
 
+  /**
+   * Set the live relative time in seconds.
+   * @param {Number} time - The time to set in seconds.
+   * @public
+   */
   set liveTime(time: number): void {
     if (this.isLive()) {
       this._engine.liveTime = time;
