@@ -607,6 +607,19 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
   }
 
+  get liveTime(): number {
+    if (this.isLive()) {
+      return this._mediaSourceAdapter.liveTime;
+    }
+    return -1;
+  }
+
+  set liveTime(time: number): void {
+    if (this.isLive()) {
+      this._mediaSourceAdapter.liveTime = time;
+    }
+  }
+
   /**
    * Set a source.
    * @param {string} source - Source to set.

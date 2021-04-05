@@ -715,6 +715,19 @@ export default class Player extends FakeEventTarget {
     }
   }
 
+  get liveTime(): number {
+    if (this.isLive()) {
+      return this._engine.liveTime;
+    }
+    return -1;
+  }
+
+  set liveTime(time: number): void {
+    if (this.isLive()) {
+      this._engine.liveTime = time;
+    }
+  }
+
   /**
    * Get the first buffered range of the engine.
    * @returns {TimeRanges} - First buffered range of the engine in seconds.

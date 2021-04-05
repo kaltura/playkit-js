@@ -16,6 +16,7 @@ declare interface IMediaSourceAdapterStatic {
 declare interface IMediaSourceAdapter extends FakeEventTarget {
   src: string;
   currentTime: number;
+  liveTime: number;
   +duration: number;
   +capabilities: PKMediaSourceCapabilities;
   load(startTime: ?number): Promise<Object>;

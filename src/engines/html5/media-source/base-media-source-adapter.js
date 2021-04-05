@@ -236,6 +236,21 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return null;
   }
 
+  get liveTime(): number {
+    if (this.isLive()) {
+      const ct = this._videoElement.currentTime - this.getStartTimeOfDvrWindow();
+      return ct < 0 ? 0 : ct;
+    }
+    return -1;
+  }
+
+  set liveTime(time: number): void {
+    if (this.isLive()) {
+      time += this.getStartTimeOfDvrWindow();
+      this._videoElement.currentTime = time;
+    }
+  }
+
   /**
    * throw a run time error
    * @param {string} name of the unimplemented function
@@ -251,10 +266,6 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @public
    */
   get currentTime(): number {
-    if (this.isLive()) {
-      const ct = this._videoElement.currentTime - this.getStartTimeOfDvrWindow();
-      return ct < 0 ? 0 : ct;
-    }
     return this._videoElement.currentTime;
   }
 
@@ -265,9 +276,6 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @returns {void}
    */
   set currentTime(to: number): void {
-    if (this.isLive()) {
-      to += this.getStartTimeOfDvrWindow();
-    }
     this._videoElement.currentTime = to;
   }
 
