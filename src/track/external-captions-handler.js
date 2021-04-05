@@ -466,7 +466,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    */
   _resetExternalNativeTextTrack(): void {
     const videoElement = this._player.getVideoElement();
-    if (videoElement) {
+    if (videoElement && videoElement.textTracks) {
       const track = Array.from(videoElement.textTracks).find(track => (track ? track.language === EXTERNAL_TRACK_ID : false));
       if (track) {
         track.cues && Object.values(track.cues).forEach(cue => track.removeCue(cue));
@@ -482,7 +482,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    */
   _addCuesToNativeTextTrack(cues: Array<Cue>): void {
     const videoElement = this._player.getVideoElement();
-    if (videoElement) {
+    if (videoElement && videoElement.textTracks) {
       const track = Array.from(videoElement.textTracks).find(track => (track ? track.language === EXTERNAL_TRACK_ID : false));
       if (track) {
         track.mode = 'showing';
@@ -498,7 +498,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    */
   _addNativeTextTrack(): void {
     const videoElement = this._player.getVideoElement();
-    if (videoElement) {
+    if (videoElement && videoElement.textTracks) {
       const sameLanguageTrackIndex = Array.from(videoElement.textTracks).findIndex(track => (track ? track.language === EXTERNAL_TRACK_ID : false));
       if (sameLanguageTrackIndex > -1) {
         this._resetExternalNativeTextTrack();
