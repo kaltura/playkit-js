@@ -608,14 +608,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   get liveTime(): number {
-    if (this.isLive()) {
+    if (this._mediaSourceAdapter && this.isLive()) {
       return this._mediaSourceAdapter.liveTime;
     }
     return -1;
   }
 
   set liveTime(time: number): void {
-    if (this.isLive()) {
+    if (this._mediaSourceAdapter && this.isLive()) {
       this._mediaSourceAdapter.liveTime = time;
     }
   }
