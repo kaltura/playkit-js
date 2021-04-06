@@ -607,6 +607,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
   }
 
+  /**
+   * Get the live relative time in seconds.
+   * @returns {?Number} - The live relative time.
+   * @public
+   */
   get liveTime(): number {
     if (this._mediaSourceAdapter && this.isLive()) {
       return this._mediaSourceAdapter.liveTime;
@@ -614,6 +619,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return -1;
   }
 
+  /**
+   * Set the live relative time in seconds.
+   * @param {Number} time - The time to set in seconds.
+   * @public
+   */
   set liveTime(time: number): void {
     if (this._mediaSourceAdapter && this.isLive()) {
       this._mediaSourceAdapter.liveTime = time;
