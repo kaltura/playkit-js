@@ -721,10 +721,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   get liveTime(): number {
-    if (this.isLive()) {
-      return this._engine.liveTime;
-    }
-    return -1;
+    return this._engine.liveTime;
   }
 
   /**
@@ -733,9 +730,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   set liveTime(time: number): void {
-    if (this.isLive()) {
-      this._engine.liveTime = time;
-    }
+    this._engine.liveTime = time;
   }
 
   /**
