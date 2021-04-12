@@ -320,14 +320,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._eventManager.listen(this._videoElement, Html5EventType.PLAYING, () => (this._waitingEventTriggered = false));
         // Sometimes when playing live in safari and switching between tabs the currentTime goes back with no seek events
         this._eventManager.listen(window, 'focus', () => {
-          if (!this._isProgressivePlayback()) {
-            setTimeout(() => {
+          setTimeout(() => {
+            if (Env.isIOS) {
               // In IOS HLS, sometimes when coming back from lock screen/Idle mode, the stream will get stuck, and only a small seek nudge will fix it.
               this._videoElement.currentTime =
                 this._videoElement.currentTime > NUDGE_SEEK_AFTER_FOCUS ? this._videoElement.currentTime - NUDGE_SEEK_AFTER_FOCUS : 0;
-              this._syncCurrentTime();
-            }, BACK_TO_FOCUS_TIMEOUT);
-          }
+            }
+            this._syncCurrentTime();
+          }, BACK_TO_FOCUS_TIMEOUT);
         });
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
