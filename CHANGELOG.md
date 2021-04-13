@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.69.0](https://github.com/kaltura/playkit-js/compare/v0.68.1...v0.69.0) (2021-04-06)
+
+
+### Bug Fixes
+
+* **FEC-10590:** DOM play error on SmartTV on when stall happen on the beginning ([#552](https://github.com/kaltura/playkit-js/issues/552)) ([089018c](https://github.com/kaltura/playkit-js/commit/089018c))
+* **FEC-10963:** filter duplicate captions ([#547](https://github.com/kaltura/playkit-js/issues/547)) ([a61a710](https://github.com/kaltura/playkit-js/commit/a61a710))
+* **FEC-11035:** catch resolve the promise chain and load create promise for each call. ([#553](https://github.com/kaltura/playkit-js/issues/553)) ([f1e2fff](https://github.com/kaltura/playkit-js/commit/f1e2fff))
+* **FEC-11035:** playback error dispatch from player instead of from engine ([#545](https://github.com/kaltura/playkit-js/issues/545)) ([848bf1b](https://github.com/kaltura/playkit-js/commit/848bf1b))
+* **FEC-11038:** decorator API called with incorrect this(proxy) instead of the activeDecorator ([#546](https://github.com/kaltura/playkit-js/issues/546)) ([35b83ad](https://github.com/kaltura/playkit-js/commit/35b83ad))
+* **FEC-11052:** audio stutters/lag in the newest V7 versions ([#548](https://github.com/kaltura/playkit-js/issues/548)) ([10b1f20](https://github.com/kaltura/playkit-js/commit/10b1f20))
+* **FEC-11108:** loading spinner after unmuting on Safari ([#554](https://github.com/kaltura/playkit-js/issues/554)) ([cff3cd0](https://github.com/kaltura/playkit-js/commit/cff3cd0))
+* **FEC-11118:** video doesn't play, player crushes the application ([#558](https://github.com/kaltura/playkit-js/issues/558)) ([d5231c3](https://github.com/kaltura/playkit-js/commit/d5231c3))
+* **FEC-11119:** VR (360) media doesn't work on safari browser - no video displayed ([#557](https://github.com/kaltura/playkit-js/issues/557)) ([4da0a2c](https://github.com/kaltura/playkit-js/commit/4da0a2c))
+
+
+### Features
+
+* **FEC-10941:** Use In-Stream DASH thumbnails on the timeline ([#550](https://github.com/kaltura/playkit-js/issues/550)) ([37fc3fc](https://github.com/kaltura/playkit-js/commit/37fc3fc))
+
+
+
 ### [0.68.1](https://github.com/kaltura/playkit-js/compare/v0.68.0...v0.68.1) (2021-03-02)
 
 
