@@ -961,7 +961,7 @@ var config = {
 > > ##### Default: `true`
 > >
 > > ```js
-> > playAdsWithMSE: boolean;
+> > initializeUserGesture: boolean;
 > > ```
 > >
 > > > ##### Description: Gives the ability to prepare the video element on devices which have autoplay restrictions after user gesture
