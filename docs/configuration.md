@@ -626,6 +626,7 @@ var config = {
 >  preferNative: PKPreferNativeConfigObject,
 >  inBrowserFullscreen: boolean,
 >  playAdsWithMSE: boolean,
+>  initializeUserGesture: boolean,
 >  screenLockOrientionMode: string
 > }
 > ```
@@ -644,6 +645,7 @@ var config = {
 >  muted: false,
 >  pictureInPicture: true,
 >  playAdsWithMSE: false,
+>  initializeUserGesture: true,
 >  screenLockOrientionMode: ScreenOrientationType.NONE,
 >  options: {
 >    html5: {
@@ -949,6 +951,20 @@ var config = {
 > > ```
 > >
 > > > ##### Description: Gives the ability to share same video tag to play ads and source with media source
+>
+> ##
+>
+> > ### config.playback.initializeUserGesture
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `true`
+> >
+> > ```js
+> > playAdsWithMSE: boolean;
+> > ```
+> >
+> > > ##### Description: Gives the ability to prepare the video element on devices which have autoplay restrictions after user gesture
 >
 > ##
 >

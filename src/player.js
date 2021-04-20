@@ -406,9 +406,9 @@ export default class Player extends FakeEventTarget {
     super();
     this._setConfigLogLevel(config);
     this._playerId = Utils.Generator.uniqueId(5);
-    this._env = Env;
-    this._prepareVideoElement();
+    this._prepareVideoElement(Utils.Object.mergeDeep(Player._defaultConfig, config));
     Player.runCapabilities();
+    this._env = Env;
     this._tracks = [];
     this._firstPlay = true;
     this._loadingMedia = false;
@@ -527,7 +527,7 @@ export default class Player extends FakeEventTarget {
       this._playbackStart = true;
       this.dispatchEvent(new FakeEvent(CustomEventType.PLAYBACK_START));
       if (!this.src) {
-        this._prepareVideoElement();
+        this._prepareVideoElement(this._config);
       }
       this.load();
     }
@@ -1549,11 +1549,12 @@ export default class Player extends FakeEventTarget {
 
   /**
    * For browsers which block auto play, use the user gesture to open the video element and enable playing via API.
+   * @param {Object} config - object containing the log level.
    * @returns {void}
    * @private
    */
-  _prepareVideoElement(): void {
-    if (this._env.isSmartTV) return;
+  _prepareVideoElement(config: Object): void {
+    if (!config.initializeUserGesture) return;
     EngineProvider.getEngines().forEach((Engine: IEngineStatic) => {
       Engine.prepareVideoElement(this._playerId);
     });
