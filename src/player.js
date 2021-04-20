@@ -752,7 +752,6 @@ export default class Player extends FakeEventTarget {
         if (to < 0) {
           boundedTo = 0;
         }
-        if (!this._engine.duration) return;
         const safeDuration = this.isLive() ? this._engine.duration : this._engine.duration - DURATION_OFFSET;
 
         if (boundedTo > safeDuration) {
