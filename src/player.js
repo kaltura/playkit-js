@@ -1554,7 +1554,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _prepareVideoElement(config: Object): void {
-    if (!config.initializeUserGesture) return;
+    if (!config.playback.initializeUserGesture) return;
     EngineProvider.getEngines().forEach((Engine: IEngineStatic) => {
       Engine.prepareVideoElement(this._playerId);
     });
