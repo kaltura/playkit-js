@@ -406,9 +406,9 @@ export default class Player extends FakeEventTarget {
     super();
     this._setConfigLogLevel(config);
     this._playerId = Utils.Generator.uniqueId(5);
+    this._env = Env;
     this._prepareVideoElement();
     Player.runCapabilities();
-    this._env = Env;
     this._tracks = [];
     this._firstPlay = true;
     this._loadingMedia = false;
@@ -752,6 +752,7 @@ export default class Player extends FakeEventTarget {
         if (to < 0) {
           boundedTo = 0;
         }
+        if (!this._engine.duration) return;
         const safeDuration = this.isLive() ? this._engine.duration : this._engine.duration - DURATION_OFFSET;
 
         if (boundedTo > safeDuration) {
@@ -1552,6 +1553,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _prepareVideoElement(): void {
+    if (this._env.isSmartTV) return;
     EngineProvider.getEngines().forEach((Engine: IEngineStatic) => {
       Engine.prepareVideoElement(this._playerId);
     });
