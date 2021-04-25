@@ -45,7 +45,7 @@ const DefaultConfig = {
     inBrowserFullscreen: false,
     screenLockOrientionMode: ScreenOrientationType.NONE,
     playAdsWithMSE: false,
-    initializeUserGesture: true,
+    forceBreakStall: false,
     streamPriority: [
       {
         engine: 'html5',

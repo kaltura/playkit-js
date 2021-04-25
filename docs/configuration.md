@@ -626,7 +626,7 @@ var config = {
 >  preferNative: PKPreferNativeConfigObject,
 >  inBrowserFullscreen: boolean,
 >  playAdsWithMSE: boolean,
->  initializeUserGesture: boolean,
+>  forceBreakStall: boolean,
 >  screenLockOrientionMode: string
 > }
 > ```
@@ -645,7 +645,7 @@ var config = {
 >  muted: false,
 >  pictureInPicture: true,
 >  playAdsWithMSE: false,
->  initializeUserGesture: true,
+>  forceBreakStall: false,
 >  screenLockOrientionMode: ScreenOrientationType.NONE,
 >  options: {
 >    html5: {
@@ -954,17 +954,17 @@ var config = {
 >
 > ##
 >
-> > ### config.playback.initializeUserGesture
+> > ### config.playback.forceBreakStall
 > >
 > > ##### Type: `boolean`
 > >
-> > ##### Default: `true`
+> > ##### Default: `false`
 > >
 > > ```js
-> > initializeUserGesture: boolean;
+> > forceBreakStall: boolean;
 > > ```
 > >
-> > > ##### Description: Gives the ability to prepare the video element on devices which have autoplay restrictions after user gesture
+> > > ##### Description: Gives the ability to break stalls on low level devices which could get stuck on stall
 >
 > ##
 >
