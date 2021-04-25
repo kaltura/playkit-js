@@ -45,7 +45,6 @@ const DefaultConfig = {
     inBrowserFullscreen: false,
     screenLockOrientionMode: ScreenOrientationType.NONE,
     playAdsWithMSE: false,
-    forceBreakStall: false,
     streamPriority: [
       {
         engine: 'html5',
@@ -64,6 +63,9 @@ const DefaultConfig = {
         format: 'hls'
       }
     ]
+  },
+  streaming: {
+    forceBreakStall: false
   },
   abr: {
     enabled: true,
