@@ -1839,6 +1839,7 @@ export default class Player extends FakeEventTarget {
    */
   _resetTextCuesAndReposition(): void {
     this._engine.resetAllCues();
+    this._externalCaptionsHandler.resetAllCues();
     this._updateTextDisplay([]);
     for (let i = 0; i < this._activeTextCues.length; i++) {
       this._activeTextCues[i].hasBeenReset = true;
