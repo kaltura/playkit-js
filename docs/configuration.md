@@ -15,6 +15,7 @@ var player = playkit.core.loadPlayer(config);
 {
   log: PKLogConfigObject,
   playback: PKPlaybackConfigObject,
+  streaming: PKStreamingConfigObject,
   sources: PKSourcesConfigObject,
   session: PKSessionConfigObject,
   network: PKNetworkConfigObject,
@@ -1007,8 +1008,38 @@ var config = {
 > > As soon as the player receives the sources, it will review the configuration array and try to play the source with the matched stream format according to the matched engine.
 > > For example, in the priority configuration above, the player will try to play the hls stream using an html5 engine first. If an hls stream isn't received, the player will continue to play the dash stream using an html5 engine. If a dash stream isn't received, the player will then will continue to play the progressive stream using an html5 engine.
 
-##
-
+> ### config.streaming
+>
+> ##### Type: `PKStreamingConfigObject`
+>
+> ```js
+> {
+>   forceBreakStall: boolean;
+> }
+> ```
+>
+> ##### Default:
+>
+> ```js
+> {
+>   forceBreakStall: false;
+> }
+> ```
+>
+> > ### config.streaming.forceBreakStall
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ```js
+> > forceBreakStall: boolean;
+> > ```
+> >
+> > > ##### Description: Gives the ability to break stalls on low level devices which could get stuck on stall
+>
+> ##
+>
 > ### config.session
 >
 > ##### Type: `PKSessionConfigObject`
