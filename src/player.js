@@ -1327,7 +1327,7 @@ export default class Player extends FakeEventTarget {
    */
   getThumbnail(time: number): ?ThumbnailInfo {
     if (this._engine) {
-      this._engine.getThumbnail(time);
+      return this._engine.getThumbnail(time);
     }
     return null;
   }
