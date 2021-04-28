@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.70.0](https://github.com/kaltura/playkit-js/compare/v0.69.0...v0.70.0) (2021-04-28)
+
+
+### Bug Fixes
+
+* **FEC-11054:** subtitle container width is not getting reset when user exits full screen mode ([#563](https://github.com/kaltura/playkit-js/issues/563)) ([223b3f3](https://github.com/kaltura/playkit-js/commit/223b3f3))
+* **FEC-11126:** add useShakaTextTrackDisplay to text config ([#561](https://github.com/kaltura/playkit-js/issues/561)) ([26cfe24](https://github.com/kaltura/playkit-js/commit/26cfe24))
+* **FEC-11136:** DASH playback on Shaka player gets stuck on Samsung TV ([#562](https://github.com/kaltura/playkit-js/issues/562)) ([1578a62](https://github.com/kaltura/playkit-js/commit/1578a62))
+* **FEC-11145:** spinner is displayed while changing the focus ([#560](https://github.com/kaltura/playkit-js/issues/560)) ([55f131d](https://github.com/kaltura/playkit-js/commit/55f131d))
+* **FEC-11188:** getThumbnail is failing when engine is undefined ([#566](https://github.com/kaltura/playkit-js/issues/566)) ([e7f460f](https://github.com/kaltura/playkit-js/commit/e7f460f))
+
+
+### Features
+
+* **FEC-11091:** add support for XMLHttpRequest.withCredentials in request filter ([#565](https://github.com/kaltura/playkit-js/issues/565)) ([ba413b9](https://github.com/kaltura/playkit-js/commit/ba413b9))
+
+
+
 ## [0.69.0](https://github.com/kaltura/playkit-js/compare/v0.68.1...v0.69.0) (2021-04-06)
 
 
