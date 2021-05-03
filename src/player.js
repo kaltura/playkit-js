@@ -462,6 +462,7 @@ export default class Player extends FakeEventTarget {
   setSources(sources: PKSourcesConfigObject): void {
     if (this._hasSources(sources)) {
       this.reset();
+      this._sources = sources;
       this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
       Player._logger.debug('Change source started');
       this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
