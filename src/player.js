@@ -469,6 +469,7 @@ export default class Player extends FakeEventTarget {
       this._reset = false;
       if (this._selectEngineByPriority()) {
         this.dispatchEvent(new FakeEvent(CustomEventType.SOURCE_SELECTED, {selectedSource: this._sources[this._streamType]}));
+        this._engine.progressiveSources = this._sources.progressive;
         this._attachMedia();
         this._handlePlaybackOptions();
         this._posterManager.setSrc(this._sources.poster);
@@ -1602,6 +1603,7 @@ export default class Player extends FakeEventTarget {
    */
   _hasSources(sources: PKSourcesConfigObject): boolean {
     if (sources) {
+      // $FlowFixMe
       return !!Object.values(StreamType).find(type => sources[type] && sources[type].length > 0);
     }
     return false;
@@ -1695,6 +1697,7 @@ export default class Player extends FakeEventTarget {
       const format = typeof priority.format === 'string' ? priority.format.toLowerCase() : '';
       const Engine = EngineProvider.getEngines().find(Engine => Engine.id === engineId);
       if (Engine) {
+        // $FlowFixMe
         const formatSources = sources[format];
         if (formatSources && formatSources.length > 0) {
           const source = formatSources[0];
@@ -2022,7 +2025,7 @@ export default class Player extends FakeEventTarget {
       this._engine
         .load(startTime)
         .then(data => {
-          if (this.isLive() && (startTime === -1 || startTime >= this.duration)) {
+          if (this.isLive() && (startTime === -1 || Number(startTime) >= Number(this.duration))) {
             this._isOnLiveEdge = true;
           }
           this._updateTracks(data.tracks);

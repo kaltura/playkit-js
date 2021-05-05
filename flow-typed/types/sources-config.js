@@ -10,5 +10,6 @@ declare type PKSourcesConfigObject = {
   id?: string,
   poster?: string,
   duration?: number,
-  startTime?: number
+  startTime?: number,
+  vr: ?Object
 };

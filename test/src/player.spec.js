@@ -38,12 +38,12 @@ describe('Player', function () {
     before(() => {
       playerContainer = createElement('DIV', targetId);
       config = getConfigStructure();
-      config.sources = sourcesConfig.Mp4;
     });
 
     beforeEach(() => {
       sandbox = sinon.createSandbox();
       player = new Player(config);
+      player.setSources(sourcesConfig.Mp4);
       playerContainer.appendChild(player.getView());
     });
 
@@ -104,11 +104,11 @@ describe('Player', function () {
     before(() => {
       playerContainer = createElement('DIV', targetId);
       config = getConfigStructure();
-      config.sources = sourcesConfig.Mp4;
     });
 
     beforeEach(() => {
       player = new Player(config);
+      player.setSources(sourcesConfig.Mp4);
       playerContainer.appendChild(player.getView());
     });
 
@@ -179,7 +179,6 @@ describe('Player', function () {
 
       before(() => {
         config = getConfigStructure();
-        config.sources = sourcesConfig.Mp4;
       });
 
       describe('preload none', () => {
@@ -188,6 +187,7 @@ describe('Player', function () {
 
           beforeEach(() => {
             player = new Player(config);
+            player.setSources(sourcesConfig.Mp4);
             playerContainer.appendChild(player.getView());
           });
 
@@ -240,27 +240,27 @@ describe('Player', function () {
             player.destroy();
           });
 
-          it('should success configure -> ready -> load', done => {
-            player.configure(config);
+          it('should success setSources -> ready -> load', done => {
+            player.setSources(sourcesConfig.Mp4);
             player.ready().then(() => {
               done();
             });
             player.load();
           });
 
-          it('should success configure -> load -> ready', done => {
-            player.configure(config);
+          it('should success setSources -> load -> ready', done => {
+            player.setSources(sourcesConfig.Mp4);
             player.load();
             player.ready().then(() => {
               done();
             });
           });
 
-          it('should success ready -> configure -> load', done => {
+          it('should success ready -> setSources -> load', done => {
             player.ready().then(() => {
               done();
             });
-            player.configure(config);
+            player.setSources(sourcesConfig.Mp4);
             player.load();
           });
         });
@@ -273,6 +273,7 @@ describe('Player', function () {
           beforeEach(() => {
             config.playback.preload = 'auto';
             player = new Player(config);
+            player.setSources(sourcesConfig.Mp4);
             playerContainer.appendChild(player.getView());
           });
 
@@ -300,7 +301,7 @@ describe('Player', function () {
 
           beforeEach(() => {
             config.playback.preload = 'auto';
-            player = new Player();
+            player = new Player(config);
             playerContainer.appendChild(player.getView());
           });
 
@@ -308,52 +309,52 @@ describe('Player', function () {
             player.destroy();
           });
 
-          it('should success configure -> ready -> load', done => {
-            player.configure(config);
+          it('should success setSources -> ready -> load', done => {
+            player.setSources(sourcesConfig.Mp4);
             player.ready().then(() => {
               done();
             });
             player.load();
           });
 
-          it('should success configure -> load -> ready', done => {
-            player.configure(config);
+          it('should success setSources -> load -> ready', done => {
+            player.setSources(sourcesConfig.Mp4);
             player.load();
             player.ready().then(() => {
               done();
             });
           });
 
-          it('should success ready -> load -> configure', done => {
+          it('should success ready -> load -> setSources', done => {
             player.ready().then(() => {
               done();
             });
             player.load();
-            player.configure(config);
+            player.setSources(sourcesConfig.Mp4);
           });
 
-          it('should success ready -> configure -> load', done => {
+          it('should success ready -> setSources -> load', done => {
             player.ready().then(() => {
               done();
             });
-            player.configure(config);
+            player.setSources(sourcesConfig.Mp4);
             player.load();
           });
 
-          it('should success load -> configure -> ready', done => {
+          it('should success load -> setSources -> ready', done => {
             player.load();
-            player.configure(config);
+            player.setSources(sourcesConfig.Mp4);
             player.ready().then(() => {
               done();
             });
           });
 
-          it('should success load -> ready -> configure', done => {
+          it('should success load -> ready -> setSources', done => {
             player.load();
             player.ready().then(() => {
               done();
             });
-            player.configure(config);
+            player.setSources(sourcesConfig.Mp4);
           });
         });
       });
@@ -364,7 +365,6 @@ describe('Player', function () {
 
       before(() => {
         config = getConfigStructure();
-        config.sources = sourcesConfig.CorruptedUrl;
       });
 
       describe('preload none', () => {
@@ -373,6 +373,7 @@ describe('Player', function () {
 
           beforeEach(() => {
             player = new Player(config);
+            player.setSources(sourcesConfig.CorruptedUrl);
             playerContainer.appendChild(player.getView());
           });
 
@@ -417,33 +418,33 @@ describe('Player', function () {
             player.destroy();
           });
 
-          it('should fail configure -> ready -> load', done => {
+          it('should fail setSources -> ready -> load', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
             });
-            player.configure(config);
+            player.setSources(sourcesConfig.CorruptedUrl);
             player.ready().catch(() => {
               // catching the error is handled by the Error Event
             });
             player.load();
           });
 
-          it('should fail configure -> load -> ready', done => {
+          it('should fail setSources -> load -> ready', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
             });
-            player.configure(config);
+            player.setSources(sourcesConfig.CorruptedUrl);
             player.load();
             player.ready().catch(() => {
               // catching the error is handled by the Error Event
             });
           });
 
-          it('should fail ready -> configure -> load', done => {
+          it('should fail ready -> setSources -> load', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
@@ -452,7 +453,7 @@ describe('Player', function () {
             player.ready().catch(() => {
               // catching the error is handled by the Error Event
             });
-            player.configure(config);
+            player.setSources(sourcesConfig.CorruptedUrl);
             player.load();
           });
         });
@@ -465,6 +466,7 @@ describe('Player', function () {
           beforeEach(() => {
             config.playback.preload = 'auto';
             player = new Player(config);
+            player.setSources(sourcesConfig.CorruptedUrl);
             playerContainer.appendChild(player.getView());
           });
 
@@ -510,33 +512,35 @@ describe('Player', function () {
             player.destroy();
           });
 
-          it('should fail configure -> ready -> load', done => {
+          it('should fail setSources -> ready -> load', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
             });
             player.configure(config);
+            player.setSources(sourcesConfig.CorruptedUrl);
             player.ready().catch(() => {
               // catching the error is handled by the Error Event
             });
             player.load();
           });
 
-          it('should fail configure -> load -> ready', done => {
+          it('should fail setSources -> load -> ready', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
             });
             player.configure(config);
+            player.setSources(sourcesConfig.CorruptedUrl);
             player.load();
             player.ready().catch(() => {
               // catching the error is handled by the Error Event
             });
           });
 
-          it('should fail ready -> load -> configure', done => {
+          it('should fail ready -> load -> setSources', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
@@ -547,9 +551,10 @@ describe('Player', function () {
             });
             player.load();
             player.configure(config);
+            player.setSources(sourcesConfig.CorruptedUrl);
           });
 
-          it('should fail ready -> configure -> load', done => {
+          it('should fail ready -> setSources -> load', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
@@ -559,10 +564,11 @@ describe('Player', function () {
               // catching the error is handled by the Error Event
             });
             player.configure(config);
+            player.setSources(sourcesConfig.CorruptedUrl);
             player.load();
           });
 
-          it('should fail load -> configure -> ready', done => {
+          it('should fail load -> setSources -> ready', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
@@ -570,12 +576,13 @@ describe('Player', function () {
             });
             player.load();
             player.configure(config);
+            player.setSources(sourcesConfig.CorruptedUrl);
             player.ready().catch(() => {
               // catching the error is handled by the Error Event
             });
           });
 
-          it('should fail load -> ready -> configure', done => {
+          it('should fail load -> ready -> setSources', done => {
             player.addEventListener(Html5EventType.ERROR, error => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
@@ -586,6 +593,7 @@ describe('Player', function () {
               // catching the error is handled by the Error Event
             });
             player.configure(config);
+            player.setSources(sourcesConfig.CorruptedUrl);
           });
         });
       });
@@ -603,8 +611,8 @@ describe('Player', function () {
     before(() => {
       createElement('DIV', targetId);
       config = getConfigStructure();
-      config.sources = sourcesConfig.Mp4;
       player = new Player(targetId, config);
+      player.setSources(sourcesConfig.Mp4);
       player._tracks = [new VideoTrack(), new AudioTrack(), new AudioTrack(), new TextTrack(), new TextTrack(), new TextTrack()];
     });
 
@@ -656,8 +664,9 @@ describe('Player', function () {
 
     beforeEach(() => {
       config = getConfigStructure();
-      config.sources = sourcesConfig.MultipleSources;
+      // config.sources = ;
       player = new Player(config);
+      player.setSources(sourcesConfig.MultipleSources);
       playerContainer.appendChild(player.getView());
       video = player._engine.getVideoElement();
       video.appendChild(track1);
@@ -739,8 +748,8 @@ describe('Player', function () {
 
     beforeEach(() => {
       config = getConfigStructure();
-      config.sources = sourcesConfig.MultipleSources;
       player = new Player(config);
+      player.setSources(sourcesConfig.MultipleSources);
       playerContainer.appendChild(player.getView());
     });
 
@@ -809,8 +818,8 @@ describe('Player', function () {
 
     beforeEach(() => {
       config = getConfigStructure();
-      config.sources = sourcesConfig.Mp4;
       player = new Player(config);
+      player.setSources(sourcesConfig.Mp4);
       playerContainer.appendChild(player.getView());
     });
 
@@ -922,9 +931,9 @@ describe('Player', function () {
 
     beforeEach(() => {
       config = getConfigStructure();
-      config.sources = sourcesConfig.Mp4;
       config.playback.textLanguage = 'auto';
       player = new Player(config);
+      player.setSources(sourcesConfig.Mp4);
       playerContainer.appendChild(player.getView());
       video = player._engine.getVideoElement();
       video.addTextTrack('subtitles', 'English', 'en');
@@ -1058,8 +1067,8 @@ describe('Player', function () {
 
     beforeEach(() => {
       config = getConfigStructure();
-      config.sources = sourcesConfig.MultipleSources;
       player = new Player(config);
+      player.setSources(sourcesConfig.MultipleSources);
       playerContainer.appendChild(player.getView());
       video = player._engine.getVideoElement();
       track1 = document.createElement('track');
@@ -1131,9 +1140,9 @@ describe('Player', function () {
 
     beforeEach(() => {
       config = getConfigStructure();
-      config.sources = sourcesConfig.Mp4;
       config.playback.textLanguage = 'auto';
       player = new Player(config);
+      player.setSources(sourcesConfig.Mp4);
       playerContainer.appendChild(player.getView());
       video = player._engine.getVideoElement();
       track1 = document.createElement('track');
@@ -1464,10 +1473,10 @@ describe('Player', function () {
 
       beforeEach(() => {
         config = Utils.Object.mergeDeep(getConfigStructure(), {
-          sources: Utils.Object.mergeDeep({captions: [ExternalCaption.He, ExternalCaption.Ru]}, sourcesConfig.Mp4),
           text: {useNativeTextTrack: true}
         });
         player = new Player(config);
+        player.setSources(Utils.Object.mergeDeep({captions: [ExternalCaption.He, ExternalCaption.Ru]}, sourcesConfig.Mp4));
         playerContainer.appendChild(player.getView());
         video = player._engine.getVideoElement();
         video.addTextTrack('subtitles', 'English', 'en');
@@ -1560,10 +1569,10 @@ describe('Player', function () {
 
       beforeEach(() => {
         config = Utils.Object.mergeDeep(getConfigStructure(), {
-          sources: Utils.Object.mergeDeep({captions: [ExternalCaption.He, ExternalCaption.Ru]}, sourcesConfig.Mp4),
           text: {useNativeTextTrack: false}
         });
         player = new Player(config);
+        player.setSources(Utils.Object.mergeDeep({captions: [ExternalCaption.He, ExternalCaption.Ru]}, sourcesConfig.Mp4));
         playerContainer.appendChild(player.getView());
         video = player._engine.getVideoElement();
         video.addTextTrack('subtitles', 'English', 'en');
@@ -1670,8 +1679,8 @@ describe('Player', function () {
 
     it('should return the track enum', () => {
       let config = getConfigStructure();
-      config.sources = sourcesConfig.Mp4;
       let player = new Player(config);
+      player.setSources(sourcesConfig.Mp4);
       playerContainer.appendChild(player.getView());
       player.Track.VIDEO.should.be.equal('video');
       player.Track.AUDIO.should.be.equal('audio');
@@ -1689,8 +1698,8 @@ describe('Player', function () {
 
       beforeEach(() => {
         config = getConfigStructure();
-        config.sources = sourcesConfig.Mp4;
         player = new Player(config);
+        player.setSources(sourcesConfig.Mp4);
         playerContainer.appendChild(player.getView());
         video = player._engine.getVideoElement();
         track1 = document.createElement('track');
@@ -1778,9 +1787,7 @@ describe('Player', function () {
           counter++;
         });
         player.addEventListener(Html5EventType.PLAYING, onPlaying);
-        player.configure({
-          sources: sourcesConfig.Mp4
-        });
+        player.setSources(sourcesConfig.Mp4);
         player.play();
       });
 
@@ -1789,11 +1796,11 @@ describe('Player', function () {
           done();
         });
         player.configure({
-          sources: sourcesConfig.Mp4,
           playback: {
             autoplay: true
           }
         });
+        player.setSources(sourcesConfig.Mp4);
       });
     });
 
@@ -1808,8 +1815,8 @@ describe('Player', function () {
 
       beforeEach(() => {
         config = getConfigStructure();
-        config.sources = sourcesConfig.Mp4;
         player = new Player(config);
+        player.setSources(sourcesConfig.Mp4);
         playerContainer.appendChild(player.getView());
       });
 
@@ -1869,8 +1876,8 @@ describe('Player', function () {
             autoplay: true
           }
         });
-        config.sources = sourcesConfig.Mp4;
         player = new Player(config);
+        player.setSources(sourcesConfig.Mp4);
         playerContainer.appendChild(player.getView());
       });
 
@@ -1911,8 +1918,7 @@ describe('Player', function () {
 
       beforeEach(() => {
         config = getConfigStructure();
-        config.sources = sourcesConfig.Mp4;
-        player = new Player();
+        player = new Player(config);
         playerContainer.appendChild(player.getView());
       });
 
@@ -1930,7 +1936,7 @@ describe('Player', function () {
           event.payload.selectedSource[0].id.should.equal('1_rsrdfext_10081,url');
           done();
         });
-        player.configure(config);
+        player.setSources(sourcesConfig.Mp4);
       });
     });
 
@@ -1945,8 +1951,8 @@ describe('Player', function () {
 
       beforeEach(() => {
         config = getConfigStructure();
-        config.sources = sourcesConfig.Mp4;
         player = new Player();
+        player.setSources(sourcesConfig.Mp4);
         playerContainer.appendChild(player.getView());
         player.configure(config);
       });
@@ -1979,8 +1985,8 @@ describe('Player', function () {
 
       beforeEach(() => {
         config = getConfigStructure();
-        config.sources = sourcesConfig.Mp4;
         player = new Player();
+        player.setSources(sourcesConfig.Mp4);
         playerContainer.appendChild(player.getView());
         player.configure(config);
       });
@@ -2045,8 +2051,8 @@ describe('Player', function () {
       });
 
       it('should fire abr mode changed for progressive playback', done => {
-        config.sources = sourcesConfig.Mp4;
         player = new Player(config);
+        player.setSources(sourcesConfig.Mp4);
         playerContainer.appendChild(player.getView());
         player.addEventListener(CustomEventType.ABR_MODE_CHANGED, event => {
           event.payload.mode.should.equal('manual');
@@ -2056,8 +2062,8 @@ describe('Player', function () {
       });
 
       it('should fire abr mode changed for adaptive playback', done => {
-        config.sources = sourcesConfig.Hls;
         player = new Player(config);
+        player.setSources(sourcesConfig.Hls);
         playerContainer.appendChild(player.getView());
         player.addEventListener(CustomEventType.ABR_MODE_CHANGED, event => {
           event.payload.mode.should.equal('auto');
@@ -2103,8 +2109,8 @@ describe('Player', function () {
           player.currentTime = player.duration - 1;
         };
 
-        config.sources = sourcesConfig.Mp4;
         player = new Player(config);
+        player.setSources(sourcesConfig.Mp4);
         playerContainer.appendChild(player.getView());
         player.addEventListener(player.Event.PLAYING, onPlaying);
         player.play();
@@ -2120,7 +2126,6 @@ describe('Player', function () {
 
       beforeEach(() => {
         config = getConfigStructure();
-        config.sources = sourcesConfig.Mp4;
       });
 
       afterEach(() => {
@@ -2135,6 +2140,7 @@ describe('Player', function () {
       it('should fire change source started and change source ended', done => {
         let changeSourceStarted = false;
         player = new Player(config);
+        player.setSources(sourcesConfig.Mp4);
         player.addEventListener(player.Event.CHANGE_SOURCE_STARTED, () => {
           changeSourceStarted = true;
         });
@@ -2146,7 +2152,7 @@ describe('Player', function () {
           }
         });
         player.addEventListener(player.Event.PLAYING, () => {
-          player.configure({sources: sourcesConfig.Mp4});
+          player.setSources(sourcesConfig.Mp4);
         });
         player.play();
       });
@@ -2181,8 +2187,8 @@ describe('Player', function () {
 
     beforeEach(() => {
       config = getConfigStructure();
-      config.sources = sourcesConfig.Mp4;
       player = new Player(config);
+      player.setSources(sourcesConfig.Mp4);
       playerContainer.appendChild(player.getView());
     });
 
@@ -2284,8 +2290,8 @@ describe('Player', function () {
     });
 
     it('should create player without sources and set the sources later', done => {
-      config.sources = sourcesConfig.Mp4;
       player = new Player();
+      player.setSources(sourcesConfig.Mp4);
       playerContainer.appendChild(player.getView());
       player.should.be.instanceOf(Player);
       player.configure(config);
@@ -2311,9 +2317,7 @@ describe('Player', function () {
             muted: true
           }
         });
-        player.configure({
-          sources: sourcesConfig.Mp4
-        });
+        player.setSources(sourcesConfig.Mp4);
         player.volume.should.equals(0);
         player.muted.should.be.true;
       });
@@ -2329,21 +2333,19 @@ describe('Player', function () {
             volume: 0
           }
         });
-        player.configure({
-          sources: sourcesConfig.Mp4
-        });
+        player.setSources(sourcesConfig.Mp4);
         player.volume.should.equals(0);
         player.muted.should.be.true;
       });
 
       it('should load the previous playback config and initiate the new one on updating sources', function (done) {
         player = new Player({
-          sources: sourcesConfig.MultipleSources,
           playback: {
             muted: true,
             volume: 0.5
           }
         });
+        player.setSources(sourcesConfig.MultipleSources);
         player.load();
         player.volume.should.equals(0.5);
         player.muted.should.be.true;
@@ -2356,9 +2358,7 @@ describe('Player', function () {
             let newProgressiveConfig = {
               progressive: [sourcesConfig.MultipleSources.progressive[1]]
             };
-            player.configure({
-              sources: newProgressiveConfig
-            });
+            player.setSources(newProgressiveConfig);
             player.load();
             player.volume.should.equals(1);
             player.muted.should.be.false;
@@ -2376,12 +2376,12 @@ describe('Player', function () {
 
       it('should load the initial config and initiate the new one on updating sources', function (done) {
         player = new Player({
-          sources: sourcesConfig.MultipleSources,
           playback: {
             muted: true,
             volume: 1
           }
         });
+        player.setSources(sourcesConfig.MultipleSources);
         player.load();
         player.volume.should.equals(1);
         player.muted.should.be.true;
@@ -2403,9 +2403,7 @@ describe('Player', function () {
             progressive: [sourcesConfig.MultipleSources.progressive[1]]
           };
           player._playbackAttributesState = {};
-          player.configure({
-            sources: newProgressiveConfig
-          });
+          player.setSources(newProgressiveConfig);
           player.load();
           player.volume.should.equals(0.5);
           player.muted.should.be.false;
@@ -2454,9 +2452,9 @@ describe('Player', function () {
     });
 
     it('should set playbackRates', function () {
-      config.sources = sourcesConfig.MultipleSources;
       config.playback.playbackRates = [18, 2, 3, 4, 20, 30, -19];
       player = new Player(config);
+      player.setSources(sourcesConfig.MultipleSources);
       player._playbackRates.should.deep.equal(getConfigStructure().playback.playbackRates);
     });
   });
@@ -2482,16 +2480,16 @@ describe('Player', function () {
     });
 
     it('should return false for progressive playback abr', function () {
-      config.sources = sourcesConfig.Mp4;
       player = new Player(config);
+      player.setSources(sourcesConfig.Mp4);
       playerContainer.appendChild(player.getView());
       player.enableAdaptiveBitrate();
       player.isAdaptiveBitrateEnabled().should.be.false;
     });
 
     it('should return true for adaptive playback abr', function () {
-      config.sources = sourcesConfig.Hls;
       player = new Player(config);
+      player.setSources(sourcesConfig.Hls);
       playerContainer.appendChild(player.getView());
       if (player._engine) {
         player.enableAdaptiveBitrate();
@@ -2521,8 +2519,8 @@ describe('Player', function () {
     });
 
     it('should return false for VOD', function (done) {
-      config.sources = sourcesConfig.Mp4;
       player = new Player(config);
+      player.setSources(sourcesConfig.Mp4);
       playerContainer.appendChild(player.getView());
       player.ready().then(() => {
         player.isLive().should.be.false;
@@ -2536,9 +2534,10 @@ describe('Player', function () {
     });
 
     it('should return true for VOD which configured as live', function (done) {
-      config.sources = sourcesConfig.Mp4;
-      config.sources.type = 'Live';
+      let sources = sourcesConfig.Mp4;
+      sources.type = 'Live';
       player = new Player(config);
+      player.setSources(sources);
       playerContainer.appendChild(player.getView());
       player.ready().then(() => {
         player.isLive().should.be.true;
@@ -2552,15 +2551,15 @@ describe('Player', function () {
     });
 
     it('should return false for live before loading', function () {
-      config.sources = sourcesConfig.Live;
       player = new Player(config);
+      player.setSources(sourcesConfig.Live);
       playerContainer.appendChild(player.getView());
       player.isLive().should.be.false;
     });
 
     it('should return true for live', function (done) {
-      config.sources = sourcesConfig.Live;
       player = new Player(config);
+      player.setSources(sourcesConfig.Live);
       playerContainer.appendChild(player.getView());
       player.ready().then(() => {
         player.isLive().should.be.true;
@@ -2574,9 +2573,10 @@ describe('Player', function () {
     });
 
     it('should return true for live even configured as VOD', function (done) {
-      config.sources = sourcesConfig.Live;
-      config.sources.type = 'Vod';
+      let sources = sourcesConfig.Live;
+      sources.type = 'Vod';
       player = new Player(config);
+      player.setSources(sources);
       playerContainer.appendChild(player.getView());
       player.ready().then(() => {
         player.isLive().should.be.true;
@@ -2611,8 +2611,8 @@ describe('Player', function () {
     });
 
     it('should return false for VOD', function (done) {
-      config.sources = sourcesConfig.Mp4;
       player = new Player(config);
+      player.setSources(sourcesConfig.Mp4);
       playerContainer.appendChild(player.getView());
       player.ready().then(() => {
         player.isDvr().should.be.false;
@@ -2626,9 +2626,10 @@ describe('Player', function () {
     });
 
     it('should return false for VOD even configured as dvr', function (done) {
-      config.sources = sourcesConfig.Mp4;
-      config.sources.dvr = true;
+      let sources = sourcesConfig.Mp4;
+      sources.dvr = true;
       player = new Player(config);
+      player.setSources(sources);
       playerContainer.appendChild(player.getView());
       player.ready().then(() => {
         player.isDvr().should.be.false;
@@ -2642,9 +2643,10 @@ describe('Player', function () {
     });
 
     it('should return true for live which configured as dvr', function (done) {
-      config.sources = sourcesConfig.Live;
-      config.sources.dvr = true;
+      let sources = sourcesConfig.Live;
+      sources.dvr = true;
       player = new Player(config);
+      player.setSources(sources);
       playerContainer.appendChild(player.getView());
       player.ready().then(() => {
         player.isDvr().should.be.true;
@@ -2658,19 +2660,20 @@ describe('Player', function () {
     });
 
     it('should return true for live which configured as non dvr', function (done) {
-      config.sources = sourcesConfig.Live;
-      config.sources.dvr = false;
+      let sources = sourcesConfig.Live;
+      sources.dvr = false;
       player = new Player(config);
+      player.setSources(sources);
       playerContainer.appendChild(player.getView());
       player.ready().then(() => {
         player.isDvr().should.be.false;
         done();
       });
-      if (player._engine) {
-        player.load();
-      } else {
-        done();
-      }
+      // if (player._engine) {
+      //   player.load();
+      // } else {
+      //   done();
+      // }
     });
   });
 
@@ -2695,8 +2698,8 @@ describe('Player', function () {
     });
 
     it('should not seek to live edge in VOD', done => {
-      config.sources = sourcesConfig.Mp4;
       player = new Player(config);
+      player.setSources(sourcesConfig.Mp4);
       playerContainer.appendChild(player.getView());
       if (player._engine) {
         player.ready().then(() => {
@@ -2713,8 +2716,8 @@ describe('Player', function () {
     });
 
     it('should seek to live edge', done => {
-      config.sources = sourcesConfig.Live;
       player = new Player(config);
+      player.setSources(sourcesConfig.Live);
       playerContainer.appendChild(player.getView());
       if (player._engine) {
         player.ready().then(() => {
@@ -2742,7 +2745,6 @@ describe('Player', function () {
 
     beforeEach(() => {
       config = getConfigStructure();
-      config.sources = sourcesConfig.Mp4;
       player = new Player(config);
       playerContainer.appendChild(player.getView());
     });
@@ -2757,10 +2759,12 @@ describe('Player', function () {
     });
 
     it('should return 1 by default', function () {
+      player.setSources(sourcesConfig.Mp4);
       player.volume.should.equal(1);
     });
 
     it('should enable setting the volume via API', function () {
+      player.setSources(sourcesConfig.Mp4);
       player.volume = 0.9;
       player.volume.should.equal(0.9);
       player.volume = 0.3;
@@ -2772,10 +2776,12 @@ describe('Player', function () {
     it('should enable setting the volume via config', function () {
       config.playback.volume = 0.9;
       player.configure(config);
+      player.setSources(sourcesConfig.Mp4);
       player.volume.should.equal(0.9);
     });
 
     it('should cap volume values between 0 and 1(including)', function () {
+      player.setSources(sourcesConfig.Mp4);
       player.volume = 1.1;
       player.volume.should.equal(1);
       player.volume = -0.1;
@@ -2792,8 +2798,8 @@ describe('Player', function () {
 
     beforeEach(() => {
       config = getConfigStructure();
-      config.sources = sourcesConfig.Mp4;
       player = new Player(config);
+      player.setSources(sourcesConfig.Mp4);
       playerContainer.appendChild(player.getView());
     });
 
@@ -2853,7 +2859,6 @@ describe('Player', function () {
     beforeEach(() => {
       sandbox = sinon.createSandbox();
       config = getConfigStructure();
-      config.sources = sourcesConfig.Mp4;
     });
 
     afterEach(() => {
@@ -2868,6 +2873,7 @@ describe('Player', function () {
 
     it('should destroy the player', function () {
       player = new Player(config);
+      player.setSources(sourcesConfig.Mp4);
       let engineSpy = sandbox.spy(player._engine, 'destroy');
       let posterMgrSpy = sandbox.spy(player._posterManager, 'destroy');
       let eventMgrSpy = sandbox.spy(player._eventManager, 'destroy');
@@ -2889,6 +2895,7 @@ describe('Player', function () {
 
     it('should dispatch a player destroyed event', function (done) {
       player = new Player(config);
+      player.setSources(sourcesConfig.Mp4);
       player.addEventListener(player.Event.PLAYER_DESTROY, () => {
         done();
       });
@@ -2906,7 +2913,6 @@ describe('Player', function () {
     beforeEach(() => {
       sandbox = sinon.createSandbox();
       config = getConfigStructure();
-      config.sources = sourcesConfig.Mp4;
     });
 
     afterEach(() => {
@@ -2921,6 +2927,7 @@ describe('Player', function () {
 
     it('should resets the player', function () {
       player = new Player(config);
+      player.setSources(sourcesConfig.Mp4);
       player._reset = false;
       let posterMgrSpy = sandbox.spy(player._posterManager, 'reset');
       let engineSpy = sandbox.spy(player._engine, 'reset');
@@ -2957,7 +2964,6 @@ describe('Player', function () {
     beforeEach(() => {
       sandbox = sinon.createSandbox();
       config = getConfigStructure();
-      config.sources = sourcesConfig.Mp4;
     });
 
     afterEach(() => {
@@ -2973,6 +2979,7 @@ describe('Player', function () {
     it('should load an engine for the first time', function () {
       let spy = sandbox.spy(Html5, 'createEngine');
       player = new Player(config);
+      player.setSources(sourcesConfig.Mp4);
       spy.should.have.been.calledOnce;
     });
 
@@ -2980,9 +2987,10 @@ describe('Player', function () {
       let createSpy = sandbox.spy(Html5, 'createEngine');
       let restoreSpy = sandbox.spy(Html5.prototype, 'restore');
       player = new Player(config);
+      player.setSources(sourcesConfig.Mp4);
       createSpy.should.have.been.calledOnce;
       restoreSpy.should.have.callCount(0);
-      player.configure({sources: sourcesConfig.Mp4});
+      player.setSources(sourcesConfig.Mp4);
       createSpy.should.have.been.calledOnce;
       restoreSpy.should.have.been.calledOnce;
     });
@@ -3116,8 +3124,8 @@ describe('Player', function () {
     beforeEach(() => {
       sandbox = sinon.createSandbox();
       config = getConfigStructure();
-      config.sources = sourcesConfig.Mp4;
       player = new Player(config);
+      player.setSources(sourcesConfig.Mp4);
     });
 
     afterEach(() => {
@@ -3307,11 +3315,11 @@ describe('Player', function () {
     before(() => {
       playerContainer = createElement('DIV', targetId);
       config = getConfigStructure();
-      config.sources = sourcesConfig.MultipleSources;
     });
 
     beforeEach(() => {
       player = new Player(config);
+      player.setSources(sourcesConfig.MultipleSources);
       playerContainer.appendChild(player.getView());
     });
 
