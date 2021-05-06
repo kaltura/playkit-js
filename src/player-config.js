@@ -4,13 +4,6 @@ const DefaultConfig = {
   log: {
     level: 'ERROR'
   },
-  sources: {
-    startTime: -1,
-    options: {
-      forceRedirectExternalStreams: false
-    },
-    metadata: {}
-  },
   text: {
     enableCEA708Captions: false,
     useNativeTextTrack: false,
@@ -86,4 +79,12 @@ const DefaultConfig = {
   }
 };
 
-export {DefaultConfig};
+const DefaultSources = {
+  startTime: -1,
+  options: {
+    forceRedirectExternalStreams: false
+  },
+  metadata: {}
+};
+
+export {DefaultConfig, DefaultSources};

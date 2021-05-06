@@ -24,7 +24,7 @@ import {MediaType} from './enums/media-type';
 import {AbrMode} from './track/abr-mode-type';
 import {CorsType} from './engines/html5/cors-types';
 import PlaybackMiddleware from './middleware/playback-middleware';
-import {DefaultConfig} from './player-config.js';
+import {DefaultConfig, DefaultSources} from './player-config.js';
 import './assets/style.css';
 import PKError from './error/error';
 import {EngineProvider} from './engines/engine-provider';
@@ -192,7 +192,7 @@ export default class Player extends FakeEventTarget {
    * @type {PKSourcesConfigObject}
    * @private
    */
-  _sources: PKSourcesConfigObject;
+  _sources: PKSourcesConfigObject = {};
   /**
    * The playback engine.
    * @type {IEngine}
@@ -462,7 +462,7 @@ export default class Player extends FakeEventTarget {
   setSources(sources: PKSourcesConfigObject): void {
     if (this._hasSources(sources)) {
       this.reset();
-      this._sources = sources;
+      this._sources = Utils.Object.mergeDeep({...DefaultSources}, sources);
       this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
       Player._logger.debug('Change source started');
       this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
@@ -492,6 +492,8 @@ export default class Player extends FakeEventTarget {
           )
         );
       }
+    } else {
+      Utils.Object.mergeDeep(this._sources, sources);
     }
   }
 
