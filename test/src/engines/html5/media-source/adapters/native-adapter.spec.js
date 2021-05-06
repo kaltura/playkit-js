@@ -268,8 +268,7 @@ describe('NativeAdapter: _setProgressiveSource', function () {
   });
 
   it('should replace _sourceObj', done => {
-    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.MultipleSources.progressive[1], {});
-    nativeInstance.progressiveSources = sourcesConfig.MultipleSources.progressive;
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.MultipleSources.progressive[1], {sources: sourcesConfig.MultipleSources});
     nativeInstance.load().then(() => {
       nativeInstance._sourceObj.id.should.equal('id1');
       done();
@@ -277,8 +276,7 @@ describe('NativeAdapter: _setProgressiveSource', function () {
   });
 
   it('should not replace _sourceObj', done => {
-    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.MultipleSources.progressive[0], {});
-    nativeInstance.progressiveSources = sourcesConfig.MultipleSources.progressive;
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.MultipleSources.progressive[0], {sources: sourcesConfig.MultipleSources});
     nativeInstance.load().then(() => {
       nativeInstance._sourceObj.id.should.equal('id1');
       done();
@@ -347,9 +345,9 @@ describe('NativeAdapter: _getParsedTracks', function () {
   beforeEach(() => {
     video = document.createElement('video');
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.MultipleSources.progressive[0], {
+      sources: sourcesConfig.MultipleSources,
       text: {enableCEA708Captions: true, captionsTextTrack1Label: ''}
     });
-    nativeInstance.progressiveSources = sourcesConfig.MultipleSources.progressive;
   });
 
   afterEach(() => {
@@ -450,8 +448,7 @@ describe('NativeAdapter: _selectProgressiveVideoTrack', function () {
 
   beforeEach(() => {
     video = document.createElement('video');
-    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.MultipleSources.progressive[1], {});
-    nativeInstance.progressiveSources = sourcesConfig.MultipleSources.progressive;
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.MultipleSources.progressive[1], {sources: sourcesConfig.MultipleSources});
   });
 
   afterEach(() => {
@@ -498,8 +495,7 @@ describe('NativeAdapter: selectVideoTrack - progressive', function () {
 
   beforeEach(() => {
     video = document.createElement('video');
-    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.MultipleSources.progressive[1], {});
-    nativeInstance.progressiveSources = sourcesConfig.MultipleSources.progressive;
+    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.MultipleSources.progressive[1], {sources: sourcesConfig.MultipleSources});
   });
 
   afterEach(() => {

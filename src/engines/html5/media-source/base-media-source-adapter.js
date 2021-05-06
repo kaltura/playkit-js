@@ -320,6 +320,4 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   get targetBuffer(): number {
     return NaN;
   }
-
-  set progressiveSources(progressiveSources: Array<PKMediaSourceObject>): void {}
 }

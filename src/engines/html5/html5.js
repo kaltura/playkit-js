@@ -999,12 +999,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     );
   }
 
-  set progressiveSources(progressiveSources: Array<PKMediaSourceObject>): void {
-    if (this._mediaSourceAdapter) {
-      this._mediaSourceAdapter.progressiveSources = progressiveSources;
-    }
-  }
-
   /**
    * Initializes the engine.
    * @param {PKMediaSourceObject} source - The selected source object.

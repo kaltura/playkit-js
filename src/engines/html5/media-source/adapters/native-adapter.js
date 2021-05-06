@@ -193,10 +193,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   static createAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): IMediaSourceAdapter {
     const adapterConfig: Object = {
-      displayTextTrack: false
+      displayTextTrack: false,
+      progressiveSources: []
     };
     if (Utils.Object.hasPropertyPath(config, 'text.useNativeTextTrack')) {
       adapterConfig.displayTextTrack = Utils.Object.getPropertyPath(config, 'text.useNativeTextTrack');
+    }
+    if (Utils.Object.hasPropertyPath(config, 'sources.progressive')) {
+      adapterConfig.progressiveSources = Utils.Object.getPropertyPath(config, 'sources.progressive');
     }
     if (Utils.Object.hasPropertyPath(config, 'text')) {
       adapterConfig.enableCEA708Captions = config.text.enableCEA708Captions;
@@ -224,6 +228,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     NativeAdapter._logger.debug('Creating adapter');
     super(videoElement, source, config);
     this._config = Utils.Object.mergeDeep({}, defaultConfig, this._config);
+    this._progressiveSources = config.progressiveSources;
     this._liveEdge = 0;
   }
 
@@ -1106,9 +1111,5 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     } else {
       return 0;
     }
-  }
-
-  set progressiveSources(progressiveSources: Array<PKMediaSourceObject>): void {
-    this._progressiveSources = progressiveSources;
   }
 }

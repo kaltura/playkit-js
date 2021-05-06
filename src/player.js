@@ -469,7 +469,6 @@ export default class Player extends FakeEventTarget {
       this._reset = false;
       if (this._selectEngineByPriority()) {
         this.dispatchEvent(new FakeEvent(CustomEventType.SOURCE_SELECTED, {selectedSource: this._sources[this._streamType]}));
-        this._engine.progressiveSources = this._sources.progressive;
         this._attachMedia();
         this._handlePlaybackOptions();
         this._posterManager.setSrc(this._sources.poster);
@@ -1746,7 +1745,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _createEngine(Engine: IEngineStatic, source: PKMediaSourceObject): void {
-    const engine = Engine.createEngine(source, this._config, this._playerId);
+    const engine = Engine.createEngine(source, {...this._config, sources: this._sources}, this._playerId);
     this._engine = this._engineDecoratorManager ? new EngineDecorator(engine, this._engineDecoratorManager) : engine;
   }
 

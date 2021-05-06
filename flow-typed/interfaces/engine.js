@@ -75,5 +75,4 @@ declare interface IEngine extends FakeEventTarget {
   crossOrigin: ?string;
   +targetBuffer: number;
   +availableBuffer: number;
-  progressiveSources: Array<PKMediaSourceObject>;
 }
