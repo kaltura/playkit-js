@@ -424,9 +424,10 @@ describe('ExternalCaptionsHandler', () => {
 
     it('should return an empty array (no captions)', () => {
       config = getConfigStructure();
-      config.sources = sourcesConfig.MultipleSources;
-      config.sources.captions = null;
+      let sources = sourcesConfig.MultipleSources;
+      sources.captions = null;
       player.configure(config);
+      player.setSources(sources);
       externalCaptionsHandler = new ExternalCaptionsHandler(player);
       externalCaptionsHandler.getExternalTracks([]).length.should.equal(0);
     });
