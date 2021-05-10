@@ -1319,7 +1319,7 @@ export default class Player extends FakeEventTarget {
           this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: newVideoTracks}));
         }
       } else {
-        Player._logger.warn('nothing has changed values does not meet the restriction');
+        Player._logger.warn('Nothing has changed values do not meet the restriction');
       }
     }
   }
