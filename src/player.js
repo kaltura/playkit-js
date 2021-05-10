@@ -1313,10 +1313,15 @@ export default class Player extends FakeEventTarget {
       const newVideoTracks = filterTracksByRestriction(videoTracks, restrictions);
       if (newVideoTracks.length) {
         const currentVideoTracks = this._availableTracks.filter(track => track instanceof VideoTrack);
-        this._engine.applyABRRestriction(restrictions);
-        if (JSON.stringify(currentVideoTracks) !== JSON.stringify(newVideoTracks)) {
+        const videoTracksHasntChanged =
+          currentVideoTracks.length === newVideoTracks.length &&
+          currentVideoTracks.every(function (element, index) {
+            return element.bandwidth === newVideoTracks[index].bandwidth;
+          });
+        if (!videoTracksHasntChanged) {
+          this._engine.applyABRRestriction(restrictions);
           this._availableTracks = this._allTracks.filter(track => !(track instanceof VideoTrack)).concat(newVideoTracks);
-          this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: newVideoTracks}));
+          this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._availableTracks}));
         }
       } else {
         Player._logger.warn('nothing has changed values does not meet the restriction');
