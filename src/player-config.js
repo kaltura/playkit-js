@@ -64,6 +64,9 @@ const DefaultConfig = {
       }
     ]
   },
+  streaming: {
+    forceBreakStall: false
+  },
   abr: {
     enabled: true,
     fpsDroppedFramesInterval: 5000,

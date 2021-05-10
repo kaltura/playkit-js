@@ -1361,7 +1361,10 @@ export default class Player extends FakeEventTarget {
    * @return {?ThumbnailInfo} - Thumbnail info
    */
   getThumbnail(time: number): ?ThumbnailInfo {
-    return this._engine.getThumbnail(time);
+    if (this._engine) {
+      return this._engine.getThumbnail(time);
+    }
+    return null;
   }
 
   /**
@@ -1874,6 +1877,7 @@ export default class Player extends FakeEventTarget {
    */
   _resetTextCuesAndReposition(): void {
     this._engine.resetAllCues();
+    this._externalCaptionsHandler.resetAllCues();
     this._updateTextDisplay([]);
     for (let i = 0; i < this._activeTextCues.length; i++) {
       this._activeTextCues[i].hasBeenReset = true;

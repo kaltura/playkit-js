@@ -146,6 +146,9 @@ class FairPlayDrmHandler {
             setContentType && (setContentType = header.toLowerCase() !== 'content-type');
           });
         }
+        if (typeof updatedRequest.withCredentials === 'boolean') {
+          request.withCredentials = updatedRequest.withCredentials;
+        }
         setContentType && request.setRequestHeader('Content-type', 'application/json');
         this._logger.debug('Ready for license request');
         request.onerror = () => {
