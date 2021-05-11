@@ -7,6 +7,7 @@ import PKTextTrack from '../../../../track/text-track';
 import {RequestType} from '../../../../enums/request-type';
 import BaseMediaSourceAdapter from '../base-media-source-adapter';
 import {getSuitableSourceForResolution} from '../../../../utils/resolution';
+import {filterTracksByRestriction} from '../../../../utils/restrictions';
 import * as Utils from '../../../../utils/util';
 import FairPlay from '../../../../drm/fairplay';
 import Env from '../../../../utils/env';
@@ -212,6 +213,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (Utils.Object.hasPropertyPath(config, 'playback')) {
       if (Utils.Object.hasPropertyPath(config.playback, 'options.html5.native')) {
         Utils.Object.mergeDeep(adapterConfig, config.playback.options.html5.native);
+      }
+    }
+    if (Utils.Object.hasPropertyPath(config, 'abr')) {
+      const abr = config.abr;
+      if (abr.restrictions) {
+        Utils.Object.createPropertyPath(adapterConfig, 'abr.restrictions', abr.restrictions);
       }
     }
     adapterConfig.network = config.network;
@@ -514,17 +521,19 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   _handleVideoTracksChange(): void {
-    const {videoHeight, videoWidth} = this._videoElement;
-    if (!this._videoDimensions || videoHeight !== this._videoDimensions.videoHeight || videoWidth !== this._videoDimensions.videoWidth) {
-      this._videoDimensions = {videoHeight, videoWidth};
-      const setting = {
-        language: '',
-        height: videoHeight,
-        width: videoWidth,
-        active: true
-      };
-      this._onTrackChanged(new VideoTrack(setting));
-      NativeAdapter._logger.debug('Video track change', new VideoTrack(setting));
+    if (!this._isProgressivePlayback()) {
+      const {videoHeight, videoWidth} = this._videoElement;
+      if (!this._videoDimensions || videoHeight !== this._videoDimensions.videoHeight || videoWidth !== this._videoDimensions.videoWidth) {
+        this._videoDimensions = {videoHeight, videoWidth};
+        const setting = {
+          language: '',
+          height: videoHeight,
+          width: videoWidth,
+          active: true
+        };
+        this._onTrackChanged(new VideoTrack(setting));
+        NativeAdapter._logger.debug('Video track change', new VideoTrack(setting));
+      }
     }
   }
 
@@ -1004,10 +1013,31 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   /**
    * Apply ABR restriction
    * @function applyABRRestriction
+   * @param {PKABRRestrictionObject} restrictions - abr restrictions config
    * @returns {void}
    * @public
    */
-  applyABRRestriction(): void {}
+  applyABRRestriction(restrictions: PKABRRestrictionObject): void {
+    Utils.Object.createPropertyPath(this._config, 'abr.restrictions', restrictions);
+    this._maybeApplyAbrRestrictions(restrictions);
+  }
+
+  /**
+   * apply ABR restrictions
+   * @private
+   * @param {PKABRRestrictionObject} restrictions - abt config object
+   * @returns {void}
+   */
+  _maybeApplyAbrRestrictions(restrictions: PKABRRestrictionObject): void {
+    if (this._isProgressivePlayback()) {
+      const videoTracks = this._getParsedVideoTracks();
+      const availableTracks = filterTracksByRestriction(videoTracks, restrictions);
+      const activeTrackInRange = availableTracks.filter(track => track.active);
+      if (!activeTrackInRange.length && availableTracks.length) {
+        this.selectVideoTrack(availableTracks[0]);
+      }
+    }
+  }
 
   /**
    * Disables all the existing video tracks.

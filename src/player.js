@@ -2226,6 +2226,7 @@ export default class Player extends FakeEventTarget {
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
     this._availableTracks = this._allTracks = tracks.concat(this._externalCaptionsHandler.getExternalTracks(tracks));
+    this._applyABRRestriction(this._config);
     this._addTextTrackOffOption();
     this._maybeSetTracksLabels();
     this._setDefaultTracks();
