@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.70.1](https://github.com/kaltura/playkit-js/compare/v0.70.0...v0.70.1) (2021-05-11)
+
+
+### Bug Fixes
+
+* **FEC-11215:** forward and rewind controls are disabling ([#572](https://github.com/kaltura/playkit-js/issues/572)) ([515a04e](https://github.com/kaltura/playkit-js/commit/515a04e))
+
+
+
 ## [0.70.0](https://github.com/kaltura/playkit-js/compare/v0.69.0...v0.70.0) (2021-04-28)
 
 
