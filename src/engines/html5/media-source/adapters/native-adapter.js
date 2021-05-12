@@ -1033,8 +1033,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (this._isProgressivePlayback()) {
       const videoTracks = this._playerTracks.filter(track => track instanceof VideoTrack);
       const availableTracks = filterTracksByRestriction(videoTracks, restrictions);
-      const activeTrackInRange = availableTracks.filter(track => track.active);
-      if (!activeTrackInRange.length && availableTracks.length) {
+      const activeTrackInRange = availableTracks.find(track => track.active);
+      if (!activeTrackInRange && availableTracks.length) {
         this.selectVideoTrack(availableTracks[0]);
       }
     }
