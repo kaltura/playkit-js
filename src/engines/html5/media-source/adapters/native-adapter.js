@@ -735,6 +735,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (videoTrack instanceof VideoTrack && videoTracks && videoTracks[videoTrack.index]) {
       let currentTime = this._videoElement.currentTime;
       let paused = this._videoElement.paused;
+      videoTrack.active = true;
       this._sourceObj = videoTracks[videoTrack.index];
       this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => {
         if (Env.browser.name === 'Android Browser') {
@@ -1030,7 +1031,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _maybeApplyAbrRestrictions(restrictions: PKABRRestrictionObject): void {
     if (this._isProgressivePlayback()) {
-      const videoTracks = this._getParsedVideoTracks();
+      const videoTracks = this._playerTracks.filter(track => track instanceof VideoTrack);
       const availableTracks = filterTracksByRestriction(videoTracks, restrictions);
       const activeTrackInRange = availableTracks.filter(track => track.active);
       if (!activeTrackInRange.length && availableTracks.length) {

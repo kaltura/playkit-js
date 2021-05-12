@@ -417,7 +417,7 @@ describe('ExternalCaptionsHandler', () => {
     });
 
     it('should return an array with 1 textTracks elements (one same language)', () => {
-      player._availableTracks.push(new TextTrack({language: 'en', label: 'english'}));
+      player._tracks.push(new TextTrack({language: 'en', label: 'english'}));
       externalCaptionsHandler.getExternalTracks([new TextTrack({language: 'en', label: 'english'})]).length.should.equal(1);
     });
 
