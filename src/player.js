@@ -1306,7 +1306,7 @@ export default class Player extends FakeEventTarget {
         const currentVideoTracks = this._tracks.filter(track => track instanceof VideoTrack && track.available);
         const tracksHasChanged = !(
           currentVideoTracks.length === newVideoTracks.length &&
-          currentVideoTracks.every(function (element, index) {
+          currentVideoTracks.every((element: VideoTrack, index: number) => {
             return element.bandwidth === newVideoTracks[index].bandwidth;
           })
         );
