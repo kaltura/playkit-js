@@ -1304,7 +1304,13 @@ export default class Player extends FakeEventTarget {
       const newVideoTracks = filterTracksByRestriction(videoTracks, restrictions);
       if (newVideoTracks.length) {
         const currentVideoTracks = this._tracks.filter(track => track instanceof VideoTrack && track.available);
-        if (JSON.stringify(currentVideoTracks) !== JSON.stringify(newVideoTracks)) {
+        const tracksHasChanged = !(
+          currentVideoTracks.length === newVideoTracks.length &&
+          currentVideoTracks.every(function (element, index) {
+            return element.bandwidth === newVideoTracks[index].bandwidth;
+          })
+        );
+        if (tracksHasChanged) {
           this._engine.applyABRRestriction(restrictions);
           this._tracks.forEach(track => {
             if (newVideoTracks.includes(track) || !(track instanceof VideoTrack)) {

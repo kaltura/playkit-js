@@ -1036,6 +1036,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       const activeTrackInRange = availableTracks.find(track => track.active);
       if (!activeTrackInRange && availableTracks.length) {
         this.selectVideoTrack(availableTracks[0]);
+      } else {
+        NativeAdapter._logger.warn('Invalid restrictions, there are not tracks within the restriction range');
       }
     }
   }
