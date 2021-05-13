@@ -61,6 +61,13 @@ export default class Track {
    */
   _index: number;
   /**
+   * Indicator if track available or not.
+   * @member
+   * @type {boolean}
+   * @private
+   */
+  _available: boolean;
+  /**
    * The clone function reference.
    * @member
    * @type {Function}
@@ -123,6 +130,15 @@ export default class Track {
   }
 
   /**
+   * Getter for the available indicator
+   * @public
+   * @returns {boolean} - The indicator if track available or not.
+   */
+  get available(): boolean {
+    return this._available;
+  }
+
+  /**
    * Setter for the index of the track.
    * @public
    * @param {number} value - The index of the track.
@@ -142,6 +158,15 @@ export default class Track {
   }
 
   /**
+   * Setter for the available indicator
+   * @public
+   * @param {boolean} isAvailable - The indicator if track available or not
+   */
+  set available(isAvailable: boolean) {
+    this._available = isAvailable;
+  }
+
+  /**
    * @constructor
    * @param {Object} settings - The track settings object.
    */
@@ -151,6 +176,7 @@ export default class Track {
     this._label = settings.label;
     this._language = settings.language;
     this._index = settings.index;
+    this._available = settings.available || true;
     this.clone = Track.clone.bind(null, this);
   }
 }

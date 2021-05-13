@@ -39,6 +39,7 @@ import {AutoPlayType} from './enums/auto-play-type';
 import ImageTrack from './track/image-track';
 import {ThumbnailInfo} from './thumbnail/thumbnail-info';
 import {EngineDecoratorManager} from './engines/engine-decorator-manager';
+import {filterTracksByRestriction} from './utils/restrictions';
 
 /**
  * The black cover class name.
@@ -200,7 +201,7 @@ export default class Player extends FakeEventTarget {
    */
   _stateManager: StateManager;
   /**
-   * The tracks of the player.
+   * The all available tracks of the player.
    * @type {Array<Track | TextTrack | AudioTrack | VideoTrack>}
    * @private
    */
@@ -479,6 +480,7 @@ export default class Player extends FakeEventTarget {
       Utils.Object.mergeDeep(this._config, config);
     }
     this._applyTextTrackConfig(config);
+    this._applyABRRestriction(config);
   }
 
   /**
@@ -1288,6 +1290,43 @@ export default class Player extends FakeEventTarget {
     return false;
   }
 
+  /**
+   * update the ABR restriction config
+   * @function _applyABRRestriction
+   * @returns {void}
+   * @param {Object} config - new config which configure for checking if it relevant config has changed
+   * @private
+   */
+  _applyABRRestriction(config: Object): void {
+    if (Utils.Object.hasPropertyPath(config, 'abr.restrictions') && this._engine && this._tracks.length) {
+      const {restrictions} = this._config.abr;
+      const videoTracks = this._tracks.filter(track => track instanceof VideoTrack);
+      const newVideoTracks = filterTracksByRestriction(videoTracks, restrictions);
+      if (newVideoTracks.length) {
+        const currentVideoTracks = this._tracks.filter(track => track instanceof VideoTrack && track.available);
+        const tracksHasChanged = !(
+          currentVideoTracks.length === newVideoTracks.length &&
+          currentVideoTracks.every((element: VideoTrack, index: number) => {
+            return element.bandwidth === newVideoTracks[index].bandwidth;
+          })
+        );
+        if (tracksHasChanged) {
+          this._engine.applyABRRestriction(restrictions);
+          this._tracks.forEach(track => {
+            if (newVideoTracks.includes(track) || !(track instanceof VideoTrack)) {
+              track.available = true;
+            } else {
+              track.available = false;
+              track.active = false;
+            }
+          });
+          this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks.filter(track => track.available)}));
+        }
+      } else {
+        Player._logger.warn('Invalid restriction, Nothing has changed values do not meet the restriction');
+      }
+    }
+  }
   /**
    * update the text track config from current config
    * @function _applyTextTrackConfig
@@ -2192,6 +2231,7 @@ export default class Player extends FakeEventTarget {
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
     this._tracks = tracks.concat(this._externalCaptionsHandler.getExternalTracks(tracks));
+    this._applyABRRestriction(this._config);
     this._addTextTrackOffOption();
     this._maybeSetTracksLabels();
     this._setDefaultTracks();
@@ -2207,7 +2247,7 @@ export default class Player extends FakeEventTarget {
    */
   _getTracksByType<T: TextTrack | AudioTrack | VideoTrack | ImageTrack>(type: T): Array<T> {
     return this._tracks.reduce((arr, track) => {
-      if (track instanceof type) {
+      if (track instanceof type && track.available) {
         arr.push(track);
       }
       return arr;
