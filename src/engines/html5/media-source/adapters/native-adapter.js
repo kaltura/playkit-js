@@ -532,7 +532,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           active: true
         };
         this._onTrackChanged(new VideoTrack(setting));
-        NativeAdapter._logger.debug('Video track change', new VideoTrack(setting));
       }
     }
   }
@@ -845,7 +844,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       }
       return -1;
     };
-    NativeAdapter._logger.debug('Video element audio track change');
     const vidIndex = getActiveVidAudioTrackIndex();
     const activeAudioTrack = this._getActivePKAudioTrack();
     const pkIndex = activeAudioTrack ? activeAudioTrack.index : -1;
@@ -873,7 +871,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       if (selectedTrack) {
         this._disableTextTracks();
         selectedTrack.mode = this._getDisplayTextTrackModeString();
-        NativeAdapter._logger.debug('Text track changed', selectedTrack);
         this._onTrackChanged(textTrack);
         this._addNativeTextTrackChangeListener();
       }
@@ -922,7 +919,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const getActiveVidTextTrackIndex = () => {
       return this._nativeTextTracksMap.findIndex(textTrack => textTrack && this._getDisplayTextTrackModeString() === textTrack.mode);
     };
-    NativeAdapter._logger.debug('Video element text track change');
     const vidIndex = getActiveVidTextTrackIndex();
     const activePKtextTrack = this._getActivePKTextTrack();
     const pkIndex = activePKtextTrack ? activePKtextTrack.index : -1;

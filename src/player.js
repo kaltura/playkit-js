@@ -1323,7 +1323,7 @@ export default class Player extends FakeEventTarget {
           this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks.filter(track => track.available)}));
         }
       } else {
-        Player._logger.warn('Nothing has changed values do not meet the restriction');
+        Player._logger.warn('Invalid restriction, Nothing has changed values do not meet the restriction');
       }
     }
   }
