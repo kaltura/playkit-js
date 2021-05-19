@@ -530,9 +530,9 @@ const _Http = {
         request.timeout = timeout;
       }
       if (ontimeout) {
-        request.ontimeout = err => {
+        request.ontimeout = e => {
           ontimeout();
-          reject(err);
+          reject(e);
         };
       }
       request.send(params);
