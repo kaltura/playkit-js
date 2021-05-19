@@ -74,6 +74,10 @@ const DefaultConfig = {
     capLevelOnFPSDrop: true,
     capLevelToPlayerSize: false,
     restrictions: {
+      minHeight: 0,
+      maxHeight: Infinity,
+      minWidth: 0,
+      maxWidth: Infinity,
       minBitrate: 0,
       maxBitrate: Infinity
     }

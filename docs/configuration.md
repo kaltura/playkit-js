@@ -92,6 +92,10 @@ var config = {
     capLevelOnFPSDrop: true,
     capLevelToPlayerSize: false,
     restrictions: {
+      minHeight: 0,
+      maxHeight: Infinity,
+      minWidth: 0,
+      maxWidth: Infinity,
       minBitrate: 0,
       maxBitrate: Infinity
     }
@@ -1369,6 +1373,10 @@ var config = {
 >   capLevelToPlayerSize: boolean,
 >   defaultBandwidthEstimate: number,
 >   restrictions: {
+>     minHeight: number,
+>     maxHeight: number,
+>     minWidth: number,
+>     maxWidth: number,
 >     minBitrate: number,
 >     maxBitrate: number
 >   }
@@ -1385,6 +1393,10 @@ var config = {
 >   capLevelOnFPSDrop: true,
 >   capLevelToPlayerSize: false,
 >   restrictions: {
+>     minHeight: 0,
+>     maxHeight: Infinity,
+>     minWidth: 0,
+>     maxWidth: Infinity,
 >     minBitrate: 0,
 >     maxBitrate: Infinity
 >   }
@@ -1453,7 +1465,7 @@ var config = {
 > >
 > > ### config.abr.restrictions
 > >
-> > ##### Type: `object`
+> > ##### Type: `PKABRRestrictionObject`
 > >
 > > ##### Default: `{}`
 > >
@@ -1461,6 +1473,46 @@ var config = {
 > >
 > > ##
 > >
+> > > ### config.abr.restrictions.minHeight
+> > >
+> > > ##### Type: `number`
+> > >
+> > > ##### Default: `0`
+> > >
+> > > ##### Description: The minimum height of video track.
+> > >
+> > > ##
+> > >
+> > > ### config.abr.restrictions.maxHeight
+> > >
+> > > ##### Type: `number`
+> > >
+> > > ##### Default: `Infinity`
+> > >
+> > > ##### Description: The maximum height of video track.
+> > >
+> > > ##
+> > >
+> > > ### config.abr.restrictions.minWidth
+> > >
+> > > ##### Type: `number`
+> > >
+> > > ##### Default: `0`
+> > >
+> > > ##### Description: The minimum width of video track.
+> > >
+> > > ##
+> > >
+> > > ### config.abr.restrictions.maxWidth
+> > >
+> > > ##### Type: `number`
+> > >
+> > > ##### Default: `Infinity`
+> > >
+> > > ##### Description: The maximum width of video track.
+> > >
+> > > ##
+> > >
 > > > ### config.abr.restrictions.minBitrate
 > > >
 > > > ##### Type: `number`

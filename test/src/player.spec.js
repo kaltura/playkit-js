@@ -598,26 +598,195 @@ describe('Player', function () {
   });
 
   describe('getTracks dummy', () => {
-    let player, config;
+    let player, config, sandbox;
 
     before(() => {
+      sandbox = sinon.createSandbox();
       createElement('DIV', targetId);
-      config = getConfigStructure();
+    });
+    beforeEach(() => {
+      config = getConfigStructure(targetId);
       config.sources = sourcesConfig.Mp4;
-      player = new Player(targetId, config);
-      player._tracks = [new VideoTrack(), new AudioTrack(), new AudioTrack(), new TextTrack(), new TextTrack(), new TextTrack()];
+      player = new Player(config);
+      player._tracks = [
+        new VideoTrack({bandwidth: 15000, height: 760, width: 480}),
+        new VideoTrack({bandwidth: 20000, height: 860, width: 560}),
+        new AudioTrack(),
+        new AudioTrack(),
+        new TextTrack(),
+        new TextTrack(),
+        new TextTrack()
+      ];
+      sandbox.stub(player._engine, 'applyABRRestriction').callsFake(function () {});
     });
 
+    afterEach(() => {
+      player.destroy();
+      sandbox.restore();
+    });
     after(() => {
       removeVideoElementsFromTestPage();
       removeElement(targetId);
     });
 
     it('should return all tracks for no type', () => {
-      player.getTracks().length.should.be.equal(6);
+      player.getTracks().length.should.be.equal(7);
     });
 
     it('should return video tracks', () => {
+      player.getTracks('video').length.should.be.equal(2);
+    });
+
+    it('should filter by bitrate video tracks after restriction include the highest', () => {
+      player.configure({
+        abr: {
+          restrictions: {
+            minBitrate: 17000,
+            maxBitrate: 20000
+          }
+        }
+      });
+      player.getTracks('video').length.should.be.equal(1);
+    });
+
+    it('should filter by bitrate video tracks after restriction include the lowest', () => {
+      player.configure({
+        abr: {
+          restrictions: {
+            minBitrate: 13000,
+            maxBitrate: 15000
+          }
+        }
+      });
+      player.getTracks('video').length.should.be.equal(1);
+    });
+
+    it('should filter by bitrate video tracks after restriction include both', () => {
+      player.configure({
+        abr: {
+          restrictions: {
+            minBitrate: 15000,
+            maxBitrate: 20000
+          }
+        }
+      });
+      player.getTracks('video').length.should.be.equal(2);
+    });
+
+    it('should filter by height video tracks after restriction include the highest', () => {
+      player.configure({
+        abr: {
+          restrictions: {
+            minHeight: 800,
+            maxHeight: 900
+          }
+        }
+      });
+      player.getTracks('video').length.should.be.equal(1);
+    });
+
+    it('should filter by height video tracks after restriction include the lowest', () => {
+      player.configure({
+        abr: {
+          restrictions: {
+            minHeight: 700,
+            maxHeight: 800
+          }
+        }
+      });
+      player.getTracks('video').length.should.be.equal(1);
+    });
+
+    it('should filter by height video tracks after restriction include both', () => {
+      player.configure({
+        abr: {
+          restrictions: {
+            minHeight: 700,
+            maxHeight: 900
+          }
+        }
+      });
+      player.getTracks('video').length.should.be.equal(2);
+    });
+
+    it('should filter by width video tracks after restriction include the highest', () => {
+      player.configure({
+        abr: {
+          restrictions: {
+            minWidth: 500,
+            maxWidth: 600
+          }
+        }
+      });
+      player.getTracks('video').length.should.be.equal(1);
+    });
+
+    it('should filter by width video tracks after restriction include the lowest', () => {
+      player.configure({
+        abr: {
+          restrictions: {
+            minWidth: 400,
+            maxWidth: 500
+          }
+        }
+      });
+      player.getTracks('video').length.should.be.equal(1);
+    });
+
+    it('should filter by width video tracks after restriction include both', () => {
+      player.configure({
+        abr: {
+          restrictions: {
+            minWidth: 400,
+            maxWidth: 600
+          }
+        }
+      });
+      player.getTracks('video').length.should.be.equal(2);
+    });
+
+    it('should filter by height and width video tracks after will return all cause both of them not relevant', () => {
+      player.configure({
+        abr: {
+          restrictions: {
+            minWidth: 600,
+            minHeight: 1000
+          }
+        }
+      });
+      player.getTracks('video').length.should.be.equal(2);
+    });
+
+    it('should not change the result for incorrect config', () => {
+      player.configure({
+        abr: {
+          restrictions: {
+            minWidth: 400,
+            maxWidth: 500
+          }
+        }
+      });
+      player.getTracks('video').length.should.be.equal(1);
+      player.configure({
+        abr: {
+          restrictions: {
+            minWidth: 400,
+            maxWidth: 450
+          }
+        }
+      });
+      player.getTracks('video').length.should.be.equal(1);
+    });
+
+    it('should filter by height and width video tracks will return the correct one', () => {
+      player.configure({
+        abr: {
+          restrictions: {
+            minWidth: 500,
+            minHeight: 800
+          }
+        }
+      });
       player.getTracks('video').length.should.be.equal(1);
     });
 
@@ -630,7 +799,7 @@ describe('Player', function () {
     });
 
     it('should return all tracks for unknown type', () => {
-      player.getTracks('some').length.should.be.equal(6);
+      player.getTracks('some').length.should.be.equal(7);
     });
   });
 

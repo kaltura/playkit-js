@@ -7,6 +7,7 @@ import PKTextTrack from '../../../../track/text-track';
 import {RequestType} from '../../../../enums/request-type';
 import BaseMediaSourceAdapter from '../base-media-source-adapter';
 import {getSuitableSourceForResolution} from '../../../../utils/resolution';
+import {filterTracksByRestriction} from '../../../../utils/restrictions';
 import * as Utils from '../../../../utils/util';
 import FairPlay from '../../../../drm/fairplay';
 import Env from '../../../../utils/env';
@@ -212,6 +213,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (Utils.Object.hasPropertyPath(config, 'playback')) {
       if (Utils.Object.hasPropertyPath(config.playback, 'options.html5.native')) {
         Utils.Object.mergeDeep(adapterConfig, config.playback.options.html5.native);
+      }
+    }
+    if (Utils.Object.hasPropertyPath(config, 'abr')) {
+      const abr = config.abr;
+      if (abr.restrictions) {
+        Utils.Object.createPropertyPath(adapterConfig, 'abr.restrictions', abr.restrictions);
       }
     }
     adapterConfig.network = config.network;
@@ -514,17 +521,18 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   _handleVideoTracksChange(): void {
-    const {videoHeight, videoWidth} = this._videoElement;
-    if (!this._videoDimensions || videoHeight !== this._videoDimensions.videoHeight || videoWidth !== this._videoDimensions.videoWidth) {
-      this._videoDimensions = {videoHeight, videoWidth};
-      const setting = {
-        language: '',
-        height: videoHeight,
-        width: videoWidth,
-        active: true
-      };
-      this._onTrackChanged(new VideoTrack(setting));
-      NativeAdapter._logger.debug('Video track change', new VideoTrack(setting));
+    if (!this._isProgressivePlayback()) {
+      const {videoHeight, videoWidth} = this._videoElement;
+      if (!this._videoDimensions || videoHeight !== this._videoDimensions.videoHeight || videoWidth !== this._videoDimensions.videoWidth) {
+        this._videoDimensions = {videoHeight, videoWidth};
+        const setting = {
+          language: '',
+          height: videoHeight,
+          width: videoWidth,
+          active: true
+        };
+        this._onTrackChanged(new VideoTrack(setting));
+      }
     }
   }
 
@@ -726,6 +734,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (videoTrack instanceof VideoTrack && videoTracks && videoTracks[videoTrack.index]) {
       let currentTime = this._videoElement.currentTime;
       let paused = this._videoElement.paused;
+      videoTrack.active = true;
       this._sourceObj = videoTracks[videoTrack.index];
       this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => {
         if (Env.browser.name === 'Android Browser') {
@@ -835,7 +844,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       }
       return -1;
     };
-    NativeAdapter._logger.debug('Video element audio track change');
     const vidIndex = getActiveVidAudioTrackIndex();
     const activeAudioTrack = this._getActivePKAudioTrack();
     const pkIndex = activeAudioTrack ? activeAudioTrack.index : -1;
@@ -863,7 +871,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       if (selectedTrack) {
         this._disableTextTracks();
         selectedTrack.mode = this._getDisplayTextTrackModeString();
-        NativeAdapter._logger.debug('Text track changed', selectedTrack);
         this._onTrackChanged(textTrack);
         this._addNativeTextTrackChangeListener();
       }
@@ -912,7 +919,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const getActiveVidTextTrackIndex = () => {
       return this._nativeTextTracksMap.findIndex(textTrack => textTrack && this._getDisplayTextTrackModeString() === textTrack.mode);
     };
-    NativeAdapter._logger.debug('Video element text track change');
     const vidIndex = getActiveVidTextTrackIndex();
     const activePKtextTrack = this._getActivePKTextTrack();
     const pkIndex = activePKtextTrack ? activePKtextTrack.index : -1;
@@ -999,6 +1005,37 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   isAdaptiveBitrateEnabled(): boolean {
     return !this._isProgressivePlayback();
+  }
+
+  /**
+   * Apply ABR restriction
+   * @function applyABRRestriction
+   * @param {PKABRRestrictionObject} restrictions - abr restrictions config
+   * @returns {void}
+   * @public
+   */
+  applyABRRestriction(restrictions: PKABRRestrictionObject): void {
+    Utils.Object.createPropertyPath(this._config, 'abr.restrictions', restrictions);
+    this._maybeApplyAbrRestrictions(restrictions);
+  }
+
+  /**
+   * apply ABR restrictions
+   * @private
+   * @param {PKABRRestrictionObject} restrictions - abt config object
+   * @returns {void}
+   */
+  _maybeApplyAbrRestrictions(restrictions: PKABRRestrictionObject): void {
+    if (this._isProgressivePlayback()) {
+      const videoTracks = this._playerTracks.filter(track => track instanceof VideoTrack);
+      const availableTracks = filterTracksByRestriction(videoTracks, restrictions);
+      const activeTrackInRange = availableTracks.find(track => track.active);
+      if (!activeTrackInRange && availableTracks.length) {
+        this.selectVideoTrack(availableTracks[0]);
+      } else {
+        NativeAdapter._logger.warn('Invalid restrictions, there are not tracks within the restriction range');
+      }
+    }
   }
 
   /**

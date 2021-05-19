@@ -15,11 +15,20 @@ import {ThumbnailInfo} from '../../../thumbnail/thumbnail-info';
 
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
   /**
+   * The id of the adapter.
+   * @member {string} id
+   * @static
+   * @private
+   */
+  static id: string = 'BaseAdapter';
+  /**
    * Passing the getLogger function to the actual media source adapter.
    * @type {Function}
    * @static
    */
   static getLogger: Function = getLogger;
+
+  static _logger = BaseMediaSourceAdapter.getLogger(BaseMediaSourceAdapter.id);
 
   /**
    * The adapter config.
@@ -132,12 +141,16 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    */
   _onTrackChanged(track: Track): void {
     if (track instanceof VideoTrack) {
+      BaseMediaSourceAdapter._logger.debug('Video track changed', track);
       this._trigger(CustomEventType.VIDEO_TRACK_CHANGED, {selectedVideoTrack: track});
     } else if (track instanceof AudioTrack) {
+      BaseMediaSourceAdapter._logger.debug('Audio track changed', track);
       this._trigger(CustomEventType.AUDIO_TRACK_CHANGED, {selectedAudioTrack: track});
     } else if (track instanceof TextTrack) {
+      BaseMediaSourceAdapter._logger.debug('Text track changed', track);
       this._trigger(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: track});
     } else if (track instanceof ImageTrack) {
+      BaseMediaSourceAdapter._logger.debug('Image track changed', track);
       this._trigger(CustomEventType.IMAGE_TRACK_CHANGED, {selectedImageTrack: track});
     }
   }
@@ -186,6 +199,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
 
   isAdaptiveBitrateEnabled(): boolean {
     return BaseMediaSourceAdapter._throwNotImplementedError('isAdaptiveBitrateEnabled');
+  }
+
+  applyABRRestriction(restrictions: PKABRRestrictionObject): void {
+    return BaseMediaSourceAdapter._throwNotImplementedError('applyABRRestriction');
   }
 
   _getLiveEdge(): number {
