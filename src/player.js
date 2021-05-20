@@ -425,6 +425,7 @@ export default class Player extends FakeEventTarget {
     this._destroyed = false;
     this._fallbackToMutedAutoPlay = false;
     this._config = Player._defaultConfig;
+    this._sources = Utils.Object.copyDeep(DefaultSources);
     this._eventManager = new EventManager();
     this._posterManager = new PosterManager();
     this._stateManager = new StateManager(this);
@@ -462,7 +463,7 @@ export default class Player extends FakeEventTarget {
   setSources(sources: PKSourcesConfigObject): void {
     if (this._hasSources(sources)) {
       this.reset();
-      this._sources = Utils.Object.mergeDeep({...DefaultSources}, sources);
+      Utils.Object.mergeDeep(this._sources, sources);
       this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
       Player._logger.debug('Change source started');
       this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
@@ -603,7 +604,7 @@ export default class Player extends FakeEventTarget {
     this._externalCaptionsHandler.reset();
     this._posterManager.reset();
     this._stateManager.reset();
-    this._sources = {};
+    this._sources = Utils.Object.copyDeep(DefaultSources);
     this._activeTextCues = [];
     this._updateTextDisplay([]);
     this._tracks = [];

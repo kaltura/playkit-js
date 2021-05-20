@@ -80,10 +80,7 @@ const DefaultConfig = {
 };
 
 const DefaultSources = {
-  startTime: -1,
-  options: {
-    forceRedirectExternalStreams: false
-  },
+  options: {},
   metadata: {}
 };
 
