@@ -7,6 +7,7 @@ import {CustomEventType, Html5EventType} from '../event/event-type';
 import FakeEvent from '../event/fake-event';
 import getLogger from '../utils/logger';
 import Env from '../utils/env';
+import Error from '../error/error';
 
 /**
  * This class responsible to manage all the state machine of the player.
@@ -75,7 +76,7 @@ export default class StateManager {
     },
     [StateType.LOADING]: {
       [Html5EventType.LOADED_METADATA]: () => this._updateState(StateType.PAUSED),
-      [Html5EventType.ERROR]: () => this._updateState(StateType.IDLE),
+      [Html5EventType.ERROR]: e => e.payload.severity === Error.Severity.CRITICAL && this._updateState(StateType.IDLE),
       [Html5EventType.SEEKED]: () => {
         if (this._prevState && this._prevState.type === StateType.PLAYING) {
           this._updateState(StateType.PLAYING);
@@ -98,7 +99,7 @@ export default class StateManager {
         }
       },
       [Html5EventType.ENDED]: () => this._updateState(StateType.IDLE),
-      [Html5EventType.ERROR]: () => this._updateState(StateType.IDLE)
+      [Html5EventType.ERROR]: e => e.payload.severity === Error.Severity.CRITICAL && this._updateState(StateType.IDLE)
     },
     [StateType.BUFFERING]: {
       [Html5EventType.PLAYING]: () => this._updateState(StateType.PLAYING),
@@ -161,7 +162,7 @@ export default class StateManager {
     }
     let transition = this._transitions[this._curState.type];
     if (typeof transition[event.type] === 'function') {
-      transition[event.type]();
+      transition[event.type](event);
     }
   }
 
@@ -197,6 +198,7 @@ export default class StateManager {
     );
     this._player.dispatchEvent(event);
   }
+
   /**
    * Destroys the state manager.
    * @public

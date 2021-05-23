@@ -2,6 +2,7 @@ import State from '../../../src/state/state';
 import {StateType} from '../../../src/state/state-type';
 import StateManager from '../../../src/state/state-manager';
 import {CustomEventType, Html5EventType} from '../../../src/event/event-type';
+import Error from '../../../src/error/error';
 
 let sandbox;
 let stateManager;
@@ -131,9 +132,14 @@ describe('StateManager.Transitions:LOADING', () => {
     sandbox.restore();
   });
 
-  it('should handle transition from loading to idle', () => {
-    stateManager._doTransition({type: Html5EventType.ERROR});
+  it('should handle transition from loading to idle for critical error', () => {
+    stateManager._doTransition({type: Html5EventType.ERROR, payload: {severity: Error.Severity.CRITICAL}});
     stateManager.currentState.type.should.equal(StateType.IDLE);
+  });
+
+  it('should do nothing for non critical error', () => {
+    stateManager._doTransition({type: Html5EventType.ERROR, payload: {severity: Error.Severity.RECOVERABLE}});
+    stateManager.currentState.type.should.equal(StateType.LOADING);
   });
 
   it('should handle transition from loading to paused', () => {
@@ -232,9 +238,14 @@ describe('StateManager.Transitions:PLAYING', () => {
     sandbox.restore();
   });
 
-  it('should handle transition from playing to idle because of error', () => {
-    stateManager._doTransition({type: Html5EventType.ERROR});
+  it('should handle transition from playing to idle for critical error', () => {
+    stateManager._doTransition({type: Html5EventType.ERROR, payload: {severity: Error.Severity.CRITICAL}});
     stateManager.currentState.type.should.equal(StateType.IDLE);
+  });
+
+  it('should do nothing for non critical error', () => {
+    stateManager._doTransition({type: Html5EventType.ERROR, payload: {severity: Error.Severity.RECOVERABLE}});
+    stateManager.currentState.type.should.equal(StateType.PLAYING);
   });
 
   it('should handle transition from playing to idle because of ended', () => {

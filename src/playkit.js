@@ -36,6 +36,7 @@ import {AdEventType} from './ads/ad-event-type';
 import {ScreenOrientationType} from './enums/screen-orientation-type';
 import {AutoPlayType} from './enums/auto-play-type';
 import {ThumbnailInfo} from './thumbnail/thumbnail-info';
+import {filterTracksByRestriction} from './utils/restrictions';
 
 declare var __VERSION__: string;
 declare var __NAME__: string;
@@ -95,6 +96,9 @@ export {registerEngine, unRegisterEngine};
 
 // Export ads framework
 export {AdBreakType, AdTagType, AdEventType};
+
+//filter invalid tracks
+export {filterTracksByRestriction};
 
 // Export enums
 export {
