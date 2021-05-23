@@ -615,8 +615,8 @@ describe('Player', function () {
 
     beforeEach(() => {
       config = getConfigStructure();
-      player.setSources(sourcesConfig.Mp4);
       player = new Player(config);
+      player.setSources(sourcesConfig.Mp4);
       player._tracks = [
         new VideoTrack({bandwidth: 15000, height: 760, width: 480}),
         new VideoTrack({bandwidth: 20000, height: 860, width: 560}),
