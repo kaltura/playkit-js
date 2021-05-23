@@ -17,6 +17,7 @@ describe('Dimensions API ', function () {
 
   const createPlayer = config => {
     player = new Player(config);
+    player.setSources(origConfig.sources);
     playerContainer.appendChild(player.getView());
   };
 

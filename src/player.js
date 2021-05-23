@@ -24,7 +24,7 @@ import {MediaType} from './enums/media-type';
 import {AbrMode} from './track/abr-mode-type';
 import {CorsType} from './engines/html5/cors-types';
 import PlaybackMiddleware from './middleware/playback-middleware';
-import {DefaultConfig} from './player-config.js';
+import {DefaultConfig, DefaultSources} from './player-config.js';
 import './assets/style.css';
 import PKError from './error/error';
 import {EngineProvider} from './engines/engine-provider';
@@ -189,6 +189,12 @@ export default class Player extends FakeEventTarget {
    */
   _config: Object;
   /**
+   * The current sources object.
+   * @type {PKSourcesConfigObject}
+   * @private
+   */
+  _sources: PKSourcesConfigObject = {};
+  /**
    * The playback engine.
    * @type {IEngine}
    * @private
@@ -201,7 +207,7 @@ export default class Player extends FakeEventTarget {
    */
   _stateManager: StateManager;
   /**
-   * The all available tracks of the player.
+   * The tracks of the player.
    * @type {Array<Track | TextTrack | AudioTrack | VideoTrack>}
    * @private
    */
@@ -420,6 +426,7 @@ export default class Player extends FakeEventTarget {
     this._destroyed = false;
     this._fallbackToMutedAutoPlay = false;
     this._config = Player._defaultConfig;
+    this._sources = Utils.Object.copyDeep(DefaultSources);
     this._eventManager = new EventManager();
     this._posterManager = new PosterManager();
     this._stateManager = new StateManager(this);
@@ -445,18 +452,29 @@ export default class Player extends FakeEventTarget {
    */
   configure(config: Object = {}): void {
     this._setConfigLogLevel(config);
-    if (this._hasSources(config.sources)) {
+    Utils.Object.mergeDeep(this._config, config);
+    this._applyTextTrackConfig(config);
+    this._applyABRRestriction(config);
+  }
+
+  /**
+   * Configures the player according to a given configuration.
+   * @param {PKSourcesConfigObject} sources - The sources for the player instance.
+   * @returns {void}
+   */
+  setSources(sources: PKSourcesConfigObject): void {
+    if (this._hasSources(sources)) {
       this.reset();
+      Utils.Object.mergeDeep(this._sources, sources);
       this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
       Player._logger.debug('Change source started');
       this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
-      Utils.Object.mergeDeep(this._config, config);
       this._reset = false;
       if (this._selectEngineByPriority()) {
-        this.dispatchEvent(new FakeEvent(CustomEventType.SOURCE_SELECTED, {selectedSource: this._config.sources[this._streamType]}));
+        this.dispatchEvent(new FakeEvent(CustomEventType.SOURCE_SELECTED, {selectedSource: this._sources[this._streamType]}));
         this._attachMedia();
         this._handlePlaybackOptions();
-        this._posterManager.setSrc(this._config.sources.poster);
+        this._posterManager.setSrc(this._sources.poster);
         this._handleDimensions();
         this._handlePreload();
         this._handleAutoPlay();
@@ -477,10 +495,8 @@ export default class Player extends FakeEventTarget {
         );
       }
     } else {
-      Utils.Object.mergeDeep(this._config, config);
+      Utils.Object.mergeDeep(this._sources, sources);
     }
-    this._applyTextTrackConfig(config);
-    this._applyABRRestriction(config);
   }
 
   /**
@@ -590,7 +606,7 @@ export default class Player extends FakeEventTarget {
     this._externalCaptionsHandler.reset();
     this._posterManager.reset();
     this._stateManager.reset();
-    this._config.sources = {};
+    this._sources = Utils.Object.copyDeep(DefaultSources);
     this._activeTextCues = [];
     this._updateTextDisplay([]);
     this._tracks = [];
@@ -1034,6 +1050,15 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Get the current player sources object.
+   * @returns {Object} - A copy of the player configuration.
+   * @public
+   */
+  get sources(): PKSourcesConfigObject {
+    return Utils.Object.mergeDeep({}, this._sources);
+  }
+
+  /**
    * Get whether the user already interacted with the player
    * @returns {boolean} - Whether the user interacted with the player
    * @public
@@ -1113,10 +1138,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   isLive(): boolean {
-    return !!(
-      this._config.sources.type !== MediaType.VOD &&
-      (this._config.sources.type === MediaType.LIVE || (this._engine && this._engine.isLive()))
-    );
+    return !!(this._sources.type !== MediaType.VOD && (this._sources.type === MediaType.LIVE || (this._engine && this._engine.isLive())));
   }
 
   /**
@@ -1126,7 +1148,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   isAudio(): boolean {
-    return this._config.sources.type === MediaType.AUDIO;
+    return this._sources.type === MediaType.AUDIO;
   }
 
   /**
@@ -1145,7 +1167,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   isDvr(): boolean {
-    return this.isLive() && this._config.sources.dvr;
+    return this.isLive() && this._sources.dvr;
   }
 
   /**
@@ -1544,7 +1566,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   isVr(): boolean {
-    return !!this._config.sources.vr;
+    return !!this._sources.vr;
   }
 
   // </editor-fold>
@@ -1616,12 +1638,13 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Check if sources has been received.
-   * @param {Object} sources - sources config object.
+   * @param {PKSourcesConfigObject} sources - sources config.
    * @returns {boolean} - Whether sources has been received to the player.
    * @private
    */
-  _hasSources(sources: Object): boolean {
+  _hasSources(sources: PKSourcesConfigObject): boolean {
     if (sources) {
+      // $FlowFixMe
       return !!Object.values(StreamType).find(type => sources[type] && sources[type].length > 0);
     }
     return false;
@@ -1709,12 +1732,13 @@ export default class Player extends FakeEventTarget {
   _selectEngineByPriority(): boolean {
     const streamPriority = this._config.playback.streamPriority;
     const preferNative = this._config.playback.preferNative;
-    const sources = this._config.sources;
+    const sources = this._sources;
     for (let priority of streamPriority) {
       const engineId = typeof priority.engine === 'string' ? priority.engine.toLowerCase() : '';
       const format = typeof priority.format === 'string' ? priority.format.toLowerCase() : '';
       const Engine = EngineProvider.getEngines().find(Engine => Engine.id === engineId);
       if (Engine) {
+        // $FlowFixMe
         const formatSources = sources[format];
         if (formatSources && formatSources.length > 0) {
           const source = formatSources[0];
@@ -1761,7 +1785,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _createEngine(Engine: IEngineStatic, source: PKMediaSourceObject): void {
-    const engine = Engine.createEngine(source, this._config, this._playerId);
+    const engine = Engine.createEngine(source, {...this._config, sources: this._sources}, this._playerId);
     this._engine = this._engineDecoratorManager ? new EngineDecorator(engine, this._engineDecoratorManager) : engine;
   }
 
@@ -2038,11 +2062,11 @@ export default class Player extends FakeEventTarget {
     };
     if (this._engine && !this.src && !this._loading) {
       this._loading = true;
-      const startTime = this._config.sources.startTime;
+      const startTime = this._sources.startTime;
       this._engine
         .load(startTime)
         .then(data => {
-          if (this.isLive() && (startTime === -1 || startTime >= this.duration)) {
+          if (this.isLive() && (startTime === -1 || Number(startTime) >= Number(this.duration))) {
             this._isOnLiveEdge = true;
           }
           this._updateTracks(data.tracks);

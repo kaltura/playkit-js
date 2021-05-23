@@ -27,6 +27,7 @@ describe('check inBrowserFullscreen config', function () {
   beforeEach(() => {
     sandbox = sinon.createSandbox();
     player = new Player(config);
+    player.setSources(config.sources);
     playerContainer.appendChild(player.getView());
   });
 
