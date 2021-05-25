@@ -106,6 +106,7 @@ class FullscreenController {
             } else {
               videoElement.webkitEnterFullScreen();
             }
+            this._isInFullscreen = true;
           }
         }
       } else {
@@ -130,6 +131,7 @@ class FullscreenController {
           const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
           if (videoElement && typeof videoElement.webkitExitFullscreen === 'function') {
             videoElement.webkitExitFullscreen();
+            this._isInFullscreen = false;
           }
         }
       } else {
