@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.69.1](https://github.com/kaltura/playkit-js/compare/v0.69.0...v0.69.1) (2021-05-25)
+
+
+### Bug Fixes
+
+* **FEC-11277:** native IOS isFullscreen doesn't response correct answer ([#576](https://github.com/kaltura/playkit-js/issues/576)) ([452ea53](https://github.com/kaltura/playkit-js/commit/452ea53))
+
+
+
 ## [0.69.0](https://github.com/kaltura/playkit-js/compare/v0.68.1...v0.69.0) (2021-04-06)
 
 
