@@ -317,7 +317,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(mediaSourceAdapter, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(mediaSourceAdapter, CustomEventType.FRAG_LOADED, (event: FakeEvent) => {
+        this.dispatchEvent(event);
+        if (this.isLive()) {
+          this.dispatchEvent(new FakeEvent(Html5EventType.DURATION_CHANGE));
+        }
+      });
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.DRM_LICENSE_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.MANIFEST_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
@@ -465,6 +470,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.seekToLiveEdge();
     }
+  }
+
+  isOnLiveEdge(): boolean {
+    if (this._mediaSourceAdapter) {
+      return this.liveDuration - this.currentTime <= this._mediaSourceAdapter.getSegmentDuration();
+    }
+    return false;
   }
 
   /**
@@ -621,29 +633,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
-   * Get the live relative time in seconds.
-   * @returns {?Number} - The live relative time.
-   * @public
-   */
-  get liveTime(): number {
-    if (this._mediaSourceAdapter && this.isLive()) {
-      return this._mediaSourceAdapter.liveTime;
-    }
-    return -1;
-  }
-
-  /**
-   * Set the live relative time in seconds.
-   * @param {Number} time - The time to set in seconds.
-   * @public
-   */
-  set liveTime(time: number): void {
-    if (this._mediaSourceAdapter && this.isLive()) {
-      this._mediaSourceAdapter.liveTime = time;
-    }
-  }
-
-  /**
    * Set a source.
    * @param {string} source - Source to set.
    * @public
@@ -673,7 +662,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    */
   get currentTime(): number {
-    return this._mediaSourceAdapter ? this._mediaSourceAdapter.currentTime : 0;
+    return this._el ? this._el.currentTime : 0;
   }
 
   /**
@@ -683,8 +672,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   set currentTime(to: number): void {
-    if (this._mediaSourceAdapter) {
-      this._mediaSourceAdapter.currentTime = to;
+    if (this._el) {
+      this._el.currentTime = to;
     }
   }
 
@@ -694,7 +683,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    */
   get duration(): number {
-    return this._mediaSourceAdapter ? this._mediaSourceAdapter.duration : NaN;
+    return this._el.duration;
+  }
+
+  get liveDuration(): number {
+    return this._mediaSourceAdapter ? this._mediaSourceAdapter.liveDuration : -1;
   }
 
   /**

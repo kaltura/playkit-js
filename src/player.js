@@ -718,24 +718,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Get the live relative time in seconds.
-   * @returns {?Number} - The live relative time.
-   * @public
-   */
-  get liveTime(): number {
-    return this._engine.liveTime;
-  }
-
-  /**
-   * Set the live relative time in seconds.
-   * @param {Number} time - The time to set in seconds.
-   * @public
-   */
-  set liveTime(time: number): void {
-    this._engine.liveTime = time;
-  }
-
-  /**
    * Get the first buffered range of the engine.
    * @returns {TimeRanges} - First buffered range of the engine in seconds.
    * @public
@@ -802,6 +784,18 @@ export default class Player extends FakeEventTarget {
   get duration(): ?number {
     if (this._engine) {
       return this._engine.duration;
+    }
+    return null;
+  }
+
+  /**
+   * Get the live duration in seconds.
+   * @returns {?Number} - The live duration.
+   * @public
+   */
+  get liveDuration(): ?number {
+    if (this._engine) {
+      return this._engine.liveDuration;
     }
     return null;
   }
@@ -1153,6 +1147,11 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   isOnLiveEdge(): boolean {
+    // Only if engine implemented the API - for backward compatibility
+    if (typeof this._engine.isOnLiveEdge === 'function') {
+      return this._engine.isOnLiveEdge();
+    }
+    // else manage it by the player flag
     return this._isOnLiveEdge;
   }
 

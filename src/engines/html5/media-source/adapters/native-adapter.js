@@ -316,6 +316,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._lastTimeUpdate = startTime || 0;
         const playbackStartTime = this._startTimeAttach || startTime || 0;
         this._loadPromiseReject = reject;
+        this._loadPromiseReject = reject;
         this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => this._onLoadedData(resolve, playbackStartTime));
         this._eventManager.listen(this._videoElement, Html5EventType.TIME_UPDATE, () => this._onTimeUpdate());
         this._eventManager.listen(this._videoElement, Html5EventType.PLAY, () => this._resetHeartbeatTimeout());
@@ -412,7 +413,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {void}
    */
   detachMediaSource(): void {
-    this._lastTimeDetach = this.currentTime;
+    this._lastTimeDetach = this._videoElement.currentTime;
     if (this._videoElement && this._videoElement.src) {
       Utils.Dom.setAttribute(this._videoElement, 'src', '');
       Utils.Dom.removeAttribute(this._videoElement, 'src');

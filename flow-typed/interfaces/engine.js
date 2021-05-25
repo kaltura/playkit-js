@@ -45,10 +45,11 @@ declare interface IEngine extends FakeEventTarget {
   attachMediaSource(): void;
   detachMediaSource(): void;
   getThumbnail(time: number): ?ThumbnailInfo;
-  liveTime: number;
+  isOnLiveEdge(): boolean;
   +id: string;
   currentTime: number;
   +duration: number;
+  +liveDuration: number;
   volume: number;
   +paused: boolean;
   +seeking: boolean;
