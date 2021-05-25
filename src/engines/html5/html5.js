@@ -474,7 +474,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   isOnLiveEdge(): boolean {
     if (this._mediaSourceAdapter) {
-      return this.liveDuration - this.currentTime <= this._mediaSourceAdapter.getSegmentDuration();
+      return this.liveDuration - this.currentTime <= this._mediaSourceAdapter.getSegmentDuration() * 2;
     }
     return false;
   }

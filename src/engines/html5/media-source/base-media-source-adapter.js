@@ -260,6 +260,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   get liveDuration(): number {
     return BaseMediaSourceAdapter._throwNotImplementedError('liveDuration');
   }
+
   /**
    * throw a run time error
    * @param {string} name of the unimplemented function
