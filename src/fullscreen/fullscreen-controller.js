@@ -99,16 +99,16 @@ class FullscreenController {
         } else {
           const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
           if (videoElement && typeof videoElement.webkitEnterFullScreen === 'function') {
-            const videoEnterFullScreen = () => {
+            const iosEnterFullScreen = () => {
               videoElement.webkitEnterFullScreen();
               this._isInFullscreen = true;
             };
             if (this._player.isInPictureInPicture()) {
               // iOS < 13 (iPad) has an issue to enter to full screen from PiP
-              setTimeout(() => videoEnterFullScreen(), EXIT_PIP_TIMEOUT);
+              setTimeout(() => iosEnterFullScreen(), EXIT_PIP_TIMEOUT);
               this._player.exitPictureInPicture();
             } else {
-              videoEnterFullScreen();
+              iosEnterFullScreen();
             }
           }
         }
