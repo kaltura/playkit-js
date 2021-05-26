@@ -21,6 +21,7 @@ const EXIT_PIP_TIMEOUT: number = 1000;
 class FullscreenController {
   _player: Player;
   // Flag to indicate that player is in fullscreen(when different element on fullscreen - api return correct state).
+  // Not relevant for IOS
   _isInFullscreen: boolean = false;
   _isInBrowserFullscreen: boolean;
   _isScreenLocked: boolean = false;
@@ -50,19 +51,7 @@ class FullscreenController {
    * @returns {boolean} - the current fullscreen state of the document
    */
   _isNativeFullscreen(): boolean {
-    //for ios mobile checking video element
-    const videoElement: ?HTMLVideoElement = typeof this._player.getVideoElement === 'function' ? this._player.getVideoElement() : null;
-    return !!(
-      document.fullscreenElement ||
-      document.webkitFullscreenElement ||
-      document.mozFullScreenElement ||
-      document.msFullscreenElement ||
-      // $FlowFixMe for ios mobile
-      (this._player.env.os.name === 'iOS' &&
-        !!videoElement &&
-        !!videoElement.webkitDisplayingFullscreen &&
-        (!videoElement.webkitPresentationMode || videoElement.webkitPresentationMode === 'fullscreen'))
-    );
+    return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
   }
 
   /**
@@ -71,7 +60,15 @@ class FullscreenController {
    * @returns {boolean} - the current fullscreen state of the document
    */
   isFullscreen(): boolean {
+    //for ios mobile checking video element
+    const videoElement: ?HTMLVideoElement = typeof this._player.getVideoElement === 'function' ? this._player.getVideoElement() : null;
+    const iosFullscreen =
+      this._player.env.os.name === 'iOS' &&
+      !!videoElement &&
+      !!videoElement.webkitDisplayingFullscreen &&
+      (!videoElement.webkitPresentationMode || videoElement.webkitPresentationMode === 'fullscreen');
     return (
+      iosFullscreen ||
       (this._isNativeFullscreen() && this._isInFullscreen) ||
       //indicator for manually full screen in ios - with css flag
       this._isInBrowserFullscreen
@@ -99,16 +96,12 @@ class FullscreenController {
         } else {
           const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
           if (videoElement && typeof videoElement.webkitEnterFullScreen === 'function') {
-            const iosEnterFullScreen = () => {
-              videoElement.webkitEnterFullScreen();
-              this._isInFullscreen = true;
-            };
             if (this._player.isInPictureInPicture()) {
               // iOS < 13 (iPad) has an issue to enter to full screen from PiP
-              setTimeout(() => iosEnterFullScreen(), EXIT_PIP_TIMEOUT);
+              setTimeout(() => videoElement.webkitEnterFullScreen(), EXIT_PIP_TIMEOUT);
               this._player.exitPictureInPicture();
             } else {
-              iosEnterFullScreen();
+              videoElement.webkitEnterFullScreen();
             }
           }
         }
@@ -134,7 +127,6 @@ class FullscreenController {
           const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
           if (videoElement && typeof videoElement.webkitExitFullscreen === 'function') {
             videoElement.webkitExitFullscreen();
-            this._isInFullscreen = false;
           }
         }
       } else {
