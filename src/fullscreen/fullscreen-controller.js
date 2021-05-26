@@ -62,14 +62,15 @@ class FullscreenController {
   isFullscreen(): boolean {
     //for ios mobile checking video element
     const videoElement: ?HTMLVideoElement = typeof this._player.getVideoElement === 'function' ? this._player.getVideoElement() : null;
+    // $FlowFixMe for ios mobile
     const iosFullscreen =
       this._player.env.os.name === 'iOS' &&
       !!videoElement &&
       !!videoElement.webkitDisplayingFullscreen &&
       (!videoElement.webkitPresentationMode || videoElement.webkitPresentationMode === 'fullscreen');
     return (
-      iosFullscreen ||
       (this._isNativeFullscreen() && this._isInFullscreen) ||
+      iosFullscreen ||
       //indicator for manually full screen in ios - with css flag
       this._isInBrowserFullscreen
     );
