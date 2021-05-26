@@ -41,7 +41,7 @@ describe('check inBrowserFullscreen config', function () {
   });
 
   it('should switch correctly to fullscreen in iOS between native and inBrowserFullscreen config', () => {
-    sandbox.stub(player._fullscreenController, '_isNativeFullscreen').callsFake(() => {
+    sandbox.stub(player._fullscreenController, '_isNativeDocumentFullscreen').callsFake(() => {
       return false;
     });
     player.env.os.name = 'iOS';
@@ -61,7 +61,7 @@ describe('check inBrowserFullscreen config', function () {
     player.isFullscreen().should.be.false;
     player.enterFullscreen();
     sandbox.restore();
-    sandbox.stub(player._fullscreenController, '_isNativeFullscreen').callsFake(() => {
+    sandbox.stub(player._fullscreenController, '_isNativeDocumentFullscreen').callsFake(() => {
       return true;
     });
     // indicator for specific player if it's in fullscreen or another element in fullscreen
@@ -76,7 +76,7 @@ describe('check inBrowserFullscreen config', function () {
         playsinline: false
       }
     });
-    sandbox.stub(player._fullscreenController, '_isNativeFullscreen').callsFake(() => {
+    sandbox.stub(player._fullscreenController, '_isNativeDocumentFullscreen').callsFake(() => {
       return true;
     });
     // indicator for specific player if it's in fullscreen or another element in fullscreen
@@ -88,7 +88,7 @@ describe('check inBrowserFullscreen config', function () {
     player.isFullscreen().should.be.false;
 
     sandbox.restore();
-    sandbox.stub(player._fullscreenController, '_isNativeFullscreen').callsFake(() => {
+    sandbox.stub(player._fullscreenController, '_isNativeDocumentFullscreen').callsFake(() => {
       return false;
     });
 
