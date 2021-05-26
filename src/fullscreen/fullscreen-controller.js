@@ -22,7 +22,7 @@ class FullscreenController {
   _player: Player;
   // Flag to indicate that player is in fullscreen(when different element on fullscreen - api return correct state).
   // Not relevant for IOS
-  _isInFullscreen: boolean = false;
+  _isElementInFullscreen: boolean = false;
   _isInBrowserFullscreen: boolean;
   _isScreenLocked: boolean = false;
   _isScreenOrientationSupport: boolean =
@@ -50,7 +50,7 @@ class FullscreenController {
    * @memberof FullScreenController
    * @returns {boolean} - the current fullscreen state of the document
    */
-  _isNativeFullscreen(): boolean {
+  _isNativeDocumentFullscreen(): boolean {
     return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
   }
 
@@ -69,7 +69,7 @@ class FullscreenController {
       !!videoElement.webkitDisplayingFullscreen &&
       (!videoElement.webkitPresentationMode || videoElement.webkitPresentationMode === 'fullscreen');
     return (
-      (this._isNativeFullscreen() && this._isInFullscreen) ||
+      (this._isNativeDocumentFullscreen() && this._isElementInFullscreen) ||
       iosFullscreen ||
       //indicator for manually full screen in ios - with css flag
       this._isInBrowserFullscreen
@@ -168,7 +168,7 @@ class FullscreenController {
     }
     Promise.resolve(this._nativeEnterFullScreen(fullScreenElement)).then(
       () => {
-        this._isInFullscreen = true;
+        this._isElementInFullscreen = true;
         const screenLockOrientionMode = Utils.Object.getPropertyPath(this._player, 'config.playback.screenLockOrientionMode');
         const validOrientation =
           screenLockOrientionMode !== ScreenOrientationType.NONE && Object.values(ScreenOrientationType).includes(screenLockOrientionMode);
@@ -211,7 +211,7 @@ class FullscreenController {
   _requestExitFullscreen(): void {
     Promise.resolve(this._nativeExitFullScreen()).then(
       () => {
-        this._isInFullscreen = false;
+        this._isElementInFullscreen = false;
         if (this._isScreenOrientationSupport && this._isScreenLocked) {
           // $FlowFixMe
           screen.orientation.unlock();
