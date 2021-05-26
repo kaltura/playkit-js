@@ -55,22 +55,31 @@ class FullscreenController {
   }
 
   /**
+   * if native ios fullscreen mode
+   * @memberof FullScreenController
+   * @returns {boolean} - the current fullscreen state of the video element in ios
+   */
+  _isIOSFullscreen(): boolean {
+    //for ios mobile checking video element
+    const videoElement: ?HTMLVideoElement = typeof this._player.getVideoElement === 'function' ? this._player.getVideoElement() : null;
+    // $FlowFixMe for ios mobile
+    return (
+      this._player.env.os.name === 'iOS' &&
+      !!videoElement &&
+      !!videoElement.webkitDisplayingFullscreen &&
+      (!videoElement.webkitPresentationMode || videoElement.webkitPresentationMode === 'fullscreen')
+    );
+  }
+
+  /**
    * if fullscreen mode
    * @memberof FullScreenController
    * @returns {boolean} - the current fullscreen state of the document
    */
   isFullscreen(): boolean {
-    //for ios mobile checking video element
-    const videoElement: ?HTMLVideoElement = typeof this._player.getVideoElement === 'function' ? this._player.getVideoElement() : null;
-    // $FlowFixMe for ios mobile
-    const iosFullscreen =
-      this._player.env.os.name === 'iOS' &&
-      !!videoElement &&
-      !!videoElement.webkitDisplayingFullscreen &&
-      (!videoElement.webkitPresentationMode || videoElement.webkitPresentationMode === 'fullscreen');
     return (
       (this._isNativeDocumentFullscreen() && this._isElementInFullscreen) ||
-      iosFullscreen ||
+      this._isIOSFullscreen() ||
       //indicator for manually full screen in ios - with css flag
       this._isInBrowserFullscreen
     );
