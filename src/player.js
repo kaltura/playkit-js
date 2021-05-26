@@ -1169,11 +1169,9 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   isOnLiveEdge(): boolean {
-    // Only if engine implemented the API - for backward compatibility
-    if (typeof this._engine.isOnLiveEdge === 'function') {
+    if (this._engine && typeof this._engine.isOnLiveEdge === 'function') {
       return this._engine.isOnLiveEdge();
     }
-    // else manage it by the player flag
     return this._isOnLiveEdge;
   }
 
