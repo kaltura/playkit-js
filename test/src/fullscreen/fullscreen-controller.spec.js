@@ -21,13 +21,12 @@ describe('check inBrowserFullscreen config', function () {
         playsinline: true
       }
     };
-    config.sources = sourcesConfig.Mp4;
   });
 
   beforeEach(() => {
     sandbox = sinon.createSandbox();
     player = new Player(config);
-    player.setSources(config.sources);
+    player.setSources(sourcesConfig.Mp4);
     playerContainer.appendChild(player.getView());
   });
 
@@ -41,7 +40,7 @@ describe('check inBrowserFullscreen config', function () {
   });
 
   it('should switch correctly to fullscreen in iOS between native and inBrowserFullscreen config', () => {
-    sandbox.stub(player._fullscreenController, '_isNativeFullscreen').callsFake(() => {
+    sandbox.stub(player._fullscreenController, '_isIOSFullscreen').callsFake(() => {
       return false;
     });
     player.env.os.name = 'iOS';
@@ -61,11 +60,9 @@ describe('check inBrowserFullscreen config', function () {
     player.isFullscreen().should.be.false;
     player.enterFullscreen();
     sandbox.restore();
-    sandbox.stub(player._fullscreenController, '_isNativeFullscreen').callsFake(() => {
+    sandbox.stub(player._fullscreenController, '_isIOSFullscreen').callsFake(() => {
       return true;
     });
-    // indicator for specific player if it's in fullscreen or another element in fullscreen
-    player._fullscreenController._isInFullscreen = true;
     player.isFullscreen().should.be.true;
   });
 
@@ -76,23 +73,23 @@ describe('check inBrowserFullscreen config', function () {
         playsinline: false
       }
     });
-    sandbox.stub(player._fullscreenController, '_isNativeFullscreen').callsFake(() => {
+    sandbox.stub(player._fullscreenController, '_isNativeDocumentFullscreen').callsFake(() => {
       return true;
     });
     // indicator for specific player if it's in fullscreen or another element in fullscreen
-    player._fullscreenController._isInFullscreen = true;
+    player._fullscreenController._isElementInFullscreen = true;
     player.isFullscreen().should.be.true;
 
     // indicator for specific player if it's in fullscreen or another element in fullscreen
-    player._fullscreenController._isInFullscreen = false;
+    player._fullscreenController._isElementInFullscreen = false;
     player.isFullscreen().should.be.false;
 
     sandbox.restore();
-    sandbox.stub(player._fullscreenController, '_isNativeFullscreen').callsFake(() => {
+    sandbox.stub(player._fullscreenController, '_isNativeDocumentFullscreen').callsFake(() => {
       return false;
     });
 
-    player._fullscreenController._isInFullscreen = false;
+    player._fullscreenController._isElementInFullscreen = false;
     player.isFullscreen().should.be.false;
   });
 });

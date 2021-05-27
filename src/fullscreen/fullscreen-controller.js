@@ -21,7 +21,8 @@ const EXIT_PIP_TIMEOUT: number = 1000;
 class FullscreenController {
   _player: Player;
   // Flag to indicate that player is in fullscreen(when different element on fullscreen - api return correct state).
-  _isInFullscreen: boolean = false;
+  // Not relevant for IOS
+  _isElementInFullscreen: boolean = false;
   _isInBrowserFullscreen: boolean;
   _isScreenLocked: boolean = false;
   _isScreenOrientationSupport: boolean =
@@ -49,19 +50,24 @@ class FullscreenController {
    * @memberof FullScreenController
    * @returns {boolean} - the current fullscreen state of the document
    */
-  _isNativeFullscreen(): boolean {
+  _isNativeDocumentFullscreen(): boolean {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+  }
+
+  /**
+   * if native ios fullscreen mode
+   * @memberof FullScreenController
+   * @returns {boolean} - the current fullscreen state of the video element in ios
+   */
+  _isIOSFullscreen(): boolean {
     //for ios mobile checking video element
     const videoElement: ?HTMLVideoElement = typeof this._player.getVideoElement === 'function' ? this._player.getVideoElement() : null;
-    return !!(
-      document.fullscreenElement ||
-      document.webkitFullscreenElement ||
-      document.mozFullScreenElement ||
-      document.msFullscreenElement ||
-      // $FlowFixMe for ios mobile
-      (this._player.env.os.name === 'iOS' &&
-        !!videoElement &&
-        !!videoElement.webkitDisplayingFullscreen &&
-        (!videoElement.webkitPresentationMode || videoElement.webkitPresentationMode === 'fullscreen'))
+    // $FlowFixMe for ios mobile
+    return (
+      this._player.env.os.name === 'iOS' &&
+      !!videoElement &&
+      !!videoElement.webkitDisplayingFullscreen &&
+      (!videoElement.webkitPresentationMode || videoElement.webkitPresentationMode === 'fullscreen')
     );
   }
 
@@ -72,7 +78,8 @@ class FullscreenController {
    */
   isFullscreen(): boolean {
     return (
-      (this._isNativeFullscreen() && this._isInFullscreen) ||
+      (this._isNativeDocumentFullscreen() && this._isElementInFullscreen) ||
+      this._isIOSFullscreen() ||
       //indicator for manually full screen in ios - with css flag
       this._isInBrowserFullscreen
     );
@@ -99,16 +106,12 @@ class FullscreenController {
         } else {
           const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
           if (videoElement && typeof videoElement.webkitEnterFullScreen === 'function') {
-            const iosEnterFullScreen = () => {
-              videoElement.webkitEnterFullScreen();
-              this._isInFullscreen = true;
-            };
             if (this._player.isInPictureInPicture()) {
               // iOS < 13 (iPad) has an issue to enter to full screen from PiP
-              setTimeout(() => iosEnterFullScreen(), EXIT_PIP_TIMEOUT);
+              setTimeout(() => videoElement.webkitEnterFullScreen(), EXIT_PIP_TIMEOUT);
               this._player.exitPictureInPicture();
             } else {
-              iosEnterFullScreen();
+              videoElement.webkitEnterFullScreen();
             }
           }
         }
@@ -134,7 +137,6 @@ class FullscreenController {
           const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
           if (videoElement && typeof videoElement.webkitExitFullscreen === 'function') {
             videoElement.webkitExitFullscreen();
-            this._isInFullscreen = false;
           }
         }
       } else {
@@ -175,7 +177,7 @@ class FullscreenController {
     }
     Promise.resolve(this._nativeEnterFullScreen(fullScreenElement)).then(
       () => {
-        this._isInFullscreen = true;
+        this._isElementInFullscreen = true;
         const screenLockOrientionMode = Utils.Object.getPropertyPath(this._player, 'config.playback.screenLockOrientionMode');
         const validOrientation =
           screenLockOrientionMode !== ScreenOrientationType.NONE && Object.values(ScreenOrientationType).includes(screenLockOrientionMode);
@@ -218,7 +220,7 @@ class FullscreenController {
   _requestExitFullscreen(): void {
     Promise.resolve(this._nativeExitFullScreen()).then(
       () => {
-        this._isInFullscreen = false;
+        this._isElementInFullscreen = false;
         if (this._isScreenOrientationSupport && this._isScreenLocked) {
           // $FlowFixMe
           screen.orientation.unlock();
