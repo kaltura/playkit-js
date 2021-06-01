@@ -60,8 +60,7 @@ class FullscreenController {
       // $FlowFixMe for ios mobile
       (this._player.env.os.name === 'iOS' &&
         !!videoElement &&
-        !!videoElement.webkitDisplayingFullscreen &&
-        (!videoElement.webkitPresentationMode || videoElement.webkitPresentationMode === 'fullscreen'))
+        (videoElement.webkitPresentationMode === 'fullscreen' || (!videoElement.webkitPresentationMode && videoElement.webkitDisplayingFullscreen)))
     );
   }
 
