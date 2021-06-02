@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.69.2](https://github.com/kaltura/playkit-js/compare/v0.69.1...v0.69.2) (2021-06-02)
+
+
+### Bug Fixes
+
+* **FEC-11277:** iOS14 - captions on native player are cut and misplaced in the first few seconds ([#579](https://github.com/kaltura/playkit-js/issues/579)) ([e4b5cad](https://github.com/kaltura/playkit-js/commit/e4b5cad))
+
+
+
 ### [0.69.1](https://github.com/kaltura/playkit-js/compare/v0.69.0...v0.69.1) (2021-05-25)
 
 
