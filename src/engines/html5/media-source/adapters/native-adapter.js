@@ -258,6 +258,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _dispatchDRMLicenseLoaded(data: any): void {
     this._trigger(CustomEventType.DRM_LICENSE_LOADED, data);
   }
+
   /**
    * Sets the DRM playback in case such needed.
    * @private
@@ -407,6 +408,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     this._startTimeAttach = this._lastTimeDetach;
     this._lastTimeDetach = NaN;
   }
+
   /**
    * detach media - will remove the media source from handling the video
    * @public
@@ -1098,6 +1100,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
+  get liveDuration() {
+    return this._getLiveEdge() + this.getSegmentDuration();
+  }
+
   /**
    * Seeking to live edge.
    * @function seekToLiveEdge
@@ -1110,6 +1116,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     } catch (e) {
       return;
     }
+  }
+
+  getSegmentDuration(): number {
+    if (this._videoElement.buffered.length) {
+      return (this._videoElement.buffered.end(0) - this._videoElement.buffered.start(0)) / 3;
+    }
+    return 0;
   }
 
   /**
