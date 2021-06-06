@@ -293,11 +293,13 @@ const _Dom = {
    * @returns {void}
    */
   addClassName(element: HTMLElement, className: string): void {
-    if (element.classList) {
-      element.classList.add(className);
-    } else {
-      if (!_Dom.hasClassName(element, className)) {
-        element.className += className;
+    if (element) {
+      if (element.classList) {
+        element.classList.add(className);
+      } else {
+        if (!_Dom.hasClassName(element, className)) {
+          element.className += className;
+        }
       }
     }
   },
@@ -309,11 +311,13 @@ const _Dom = {
    * @returns {void}
    */
   removeClassName(element: HTMLElement, className: string): void {
-    if (element.classList) {
-      element.classList.remove(className);
-    } else {
-      if (_Dom.hasClassName(element, className)) {
-        element.className = element.className.replace(new RegExp('(\\s|^)' + className + '(\\s|$)'), ' ').replace(/^\s+|\s+$/g, '');
+    if (element) {
+      if (element.classList) {
+        element.classList.remove(className);
+      } else {
+        if (_Dom.hasClassName(element, className)) {
+          element.className = element.className.replace(new RegExp('(\\s|^)' + className + '(\\s|$)'), ' ').replace(/^\s+|\s+$/g, '');
+        }
       }
     }
   },
@@ -324,7 +328,7 @@ const _Dom = {
    * @returns {boolean} - weather an element contains a class name
    */
   hasClassName(element: HTMLElement, className: string) {
-    return element.className && new RegExp('(^|\\s)' + className + '(\\s|$)').test(element.className);
+    return element && element.className && new RegExp('(^|\\s)' + className + '(\\s|$)').test(element.className);
   },
   /**
    * Add element attribute
