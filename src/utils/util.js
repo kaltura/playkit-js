@@ -500,7 +500,14 @@ const _Dom = {
 
 const _Http = {
   protocol: /^(https?:)/i.test(document.location.protocol) ? document.location.protocol : 'https:',
-  execute: function (url: string, params: any, method: string = 'POST', headers?: Map<string, string>): Promise<any> {
+  execute: function (
+    url: string,
+    params: any,
+    method: string = 'POST',
+    headers?: Map<string, string>,
+    timeout?: number,
+    ontimeout?: Function
+  ): Promise<any> {
     let request = new XMLHttpRequest();
     return new Promise((resolve, reject) => {
       request.onreadystatechange = function () {
@@ -523,10 +530,19 @@ const _Http = {
           request.setRequestHeader(key, value);
         });
       }
+      if (timeout) {
+        request.timeout = timeout;
+      }
+      if (ontimeout) {
+        request.ontimeout = e => {
+          ontimeout();
+          reject(e);
+        };
+      }
       request.send(params);
     });
   },
-  jsonp: jsonp,
+  jsonp,
   convertHeadersToDictionary: function (headerRow: string): {[header: string]: string} {
     let headerMap = {};
     try {
