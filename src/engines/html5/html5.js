@@ -296,14 +296,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     Object.keys(Html5EventType).forEach(html5Event => {
       if (Html5EventType[html5Event] !== Html5EventType.ERROR) {
         this._eventManager.listen(this._el, Html5EventType[html5Event], () => {
-          console.log(':::' + Html5EventType[html5Event]);
           return this.dispatchEvent(new FakeEvent(Html5EventType[html5Event]));
         });
       }
     });
-    this._eventManager.listen(this._el, Html5EventType.ERROR, () => {
-      this._handleVideoError();
-    });
+    this._eventManager.listen(this._el, Html5EventType.ERROR, () => this._handleVideoError());
     this._handleMetadataTrackEvents();
     this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
       if (event.track.kind === 'captions' || event.track.kind === 'subtitles') {
