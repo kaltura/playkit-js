@@ -296,6 +296,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     Object.keys(Html5EventType).forEach(html5Event => {
       if (Html5EventType[html5Event] !== Html5EventType.ERROR) {
         this._eventManager.listen(this._el, Html5EventType[html5Event], () => {
+          console.log(':::' + Html5EventType[html5Event]);
           return this.dispatchEvent(new FakeEvent(Html5EventType[html5Event]));
         });
       }
@@ -317,12 +318,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
-      this._eventManager.listen(mediaSourceAdapter, CustomEventType.FRAG_LOADED, (event: FakeEvent) => {
-        this.dispatchEvent(event);
-        if (this.isLive()) {
-          this.dispatchEvent(new FakeEvent(Html5EventType.DURATION_CHANGE));
-        }
-      });
+      this._eventManager.listen(mediaSourceAdapter, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.DRM_LICENSE_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.MANIFEST_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
@@ -474,7 +470,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   isOnLiveEdge(): boolean {
     if (this._mediaSourceAdapter) {
-      return this.liveDuration - this.currentTime <= this._mediaSourceAdapter.getSegmentDuration() * 2;
+      const currentOrNextSegmentCount = 2;
+      return this.liveDuration - this.currentTime <= this._mediaSourceAdapter.getSegmentDuration() * currentOrNextSegmentCount;
     }
     return false;
   }
