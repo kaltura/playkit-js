@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.71.0](https://github.com/kaltura/playkit-js/compare/v0.70.1...v0.71.0) (2021-06-02)
+
+
+### Bug Fixes
+
+* **FEC-10381:** sources config need to be passed via setSources api ([#567](https://github.com/kaltura/playkit-js/issues/567)) ([4962b11](https://github.com/kaltura/playkit-js/commit/4962b11))
+* **FEC-11277:** iOS14 - captions on native player are cut and misplaced in the first few seconds ([#579](https://github.com/kaltura/playkit-js/issues/579)) ([f7eae2d](https://github.com/kaltura/playkit-js/commit/f7eae2d))
+* **FEC-11277:** native IOS isFullscreen doesn't response correct answer ([#576](https://github.com/kaltura/playkit-js/issues/576)) ([c64a3c3](https://github.com/kaltura/playkit-js/commit/c64a3c3))
+* **FEC-11280:** IOS playsinline=false doesn't response correctly for isFullScreen ([#577](https://github.com/kaltura/playkit-js/issues/577)) ([da9eba7](https://github.com/kaltura/playkit-js/commit/da9eba7))
+
+
+### Features
+
+* **FEC-10980:** Enable setting ABR settings on-the-fly ([#549](https://github.com/kaltura/playkit-js/issues/549)) ([a8a3e9f](https://github.com/kaltura/playkit-js/commit/a8a3e9f))
+
+
+
 ### [0.70.1](https://github.com/kaltura/playkit-js/compare/v0.70.0...v0.70.1) (2021-05-11)
 
 

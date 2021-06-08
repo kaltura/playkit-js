@@ -16,7 +16,6 @@ var player = playkit.core.loadPlayer(config);
   log: PKLogConfigObject,
   playback: PKPlaybackConfigObject,
   streaming: PKStreamingConfigObject,
-  sources: PKSourcesConfigObject,
   session: PKSessionConfigObject,
   network: PKNetworkConfigObject,
   customLabels: PKCustomLabelsConfigObject,
@@ -32,13 +31,6 @@ var player = playkit.core.loadPlayer(config);
 var config = {
   log: {
     level: 'ERROR'
-  },
-  sources: {
-    startTime: -1,
-    options: {
-      forceRedirectExternalStreams: false
-    },
-    metadata: {}
   },
   text: {
     enableCEA708Captions: false,
@@ -141,7 +133,7 @@ var config = {
 
 ##
 
-> ### config.sources
+> ### sources
 >
 > ##### Type: `PKSourcesConfigObject`
 >
@@ -232,7 +224,7 @@ var config = {
 >
 > ##
 >
-> > ### config.sources.hls
+> > ### sources.hls
 > >
 > > ##### Type: `Array<PKMediaSourceObject>`
 > >
@@ -243,21 +235,19 @@ var config = {
 > > #### Example:
 > >
 > > ```js
-> > var config = {
-> >   sources: {
-> >     hls: [
-> >       {
-> >         mimetype: 'application/x-mpegurl',
-> >         url: '//PATH/TO/MANIFEST.m3u8'
-> >       }
-> >     ]
-> >   }
+> > var sources: {
+> >   hls: [
+> >     {
+> >       mimetype: 'application/x-mpegurl',
+> >       url: '//PATH/TO/MANIFEST.m3u8'
+> >     }
+> >   ]
 > > };
 > > ```
 > >
 > > ##
 > >
-> > ### config.sources.dash
+> > ### sources.dash
 > >
 > > ##### Type: `Array<PKMediaSourceObject>`
 > >
@@ -268,21 +258,19 @@ var config = {
 > > #### Example:
 > >
 > > ```js
-> > var config = {
-> >   sources: {
-> >     dash: [
-> >       {
-> >         mimetype: 'application/x-mpegurl',
-> >         url: '//PATH/TO/MANIFEST.mpd'
-> >       }
-> >     ]
-> >   }
+> > var sources: {
+> >   dash: [
+> >     {
+> >       mimetype: 'application/x-mpegurl',
+> >       url: '//PATH/TO/MANIFEST.mpd'
+> >     }
+> >   ]
 > > };
 > > ```
 > >
 > > ##
 > >
-> > ### config.sources.progressive
+> > ### sources.progressive
 > >
 > > ##### Type: `Array<PKMediaSourceObject>`
 > >
@@ -293,21 +281,19 @@ var config = {
 > > #### Example:
 > >
 > > ```js
-> > var config = {
-> >   sources: {
-> >     progressive: [
-> >       {
-> >         mimetype: 'video/mp4',
-> >         url: '//PATH/TO/FILE.mp4'
-> >       }
-> >     ]
-> >   }
+> > var sources: {
+> >   progressive: [
+> >     {
+> >       mimetype: 'video/mp4',
+> >       url: '//PATH/TO/FILE.mp4'
+> >     }
+> >   ]
 > > };
 > > ```
 > >
 > > ##
 > >
-> > ### config.sources.options
+> > ### sources.options
 > >
 > > ##### Type: `PKMediaSourceOptionsObject`
 > >
@@ -323,7 +309,7 @@ var config = {
 > >
 > > ##
 > >
-> > > ### config.sources.options.forceRedirectExternalStreams
+> > > ### sources.options.forceRedirectExternalStreams
 > > >
 > > > ##### Type: `boolean`
 > > >
@@ -333,7 +319,7 @@ var config = {
 > > >
 > > > ##
 > > >
-> > > ### config.sources.options.redirectExternalStreamsHandler
+> > > ### sources.options.redirectExternalStreamsHandler
 > > >
 > > > ##### Type: `Function`
 > > >
@@ -343,7 +329,7 @@ var config = {
 > > >
 > > > ##
 > > >
-> > > ### config.sources.options.redirectExternalStreamsTimeout
+> > > ### sources.options.redirectExternalStreamsTimeout
 > > >
 > > > ##### Type: `number`
 > > >
@@ -353,7 +339,7 @@ var config = {
 > >
 > > ##
 > >
-> > ### config.sources.type
+> > ### sources.type
 > >
 > > ##### Type: `string`
 > >
@@ -365,7 +351,7 @@ var config = {
 > >
 > > ##
 > >
-> > ### config.sources.dvr
+> > ### sources.dvr
 > >
 > > ##### Type: `boolean`
 > >
@@ -377,7 +363,7 @@ var config = {
 > >
 > > ##
 > >
-> > ### config.sources.metadata
+> > ### sources.metadata
 > >
 > > ##### Type: `PKMetadataConfigObject`
 > >
@@ -387,7 +373,7 @@ var config = {
 > >
 > > ##
 > >
-> > > ### config.sources.metadata.name
+> > > ### sources.metadata.name
 > > >
 > > > ##### Type: `string`
 > > >
@@ -397,7 +383,7 @@ var config = {
 > > >
 > > > ##
 > > >
-> > > ### config.sources.metadata.description
+> > > ### sources.metadata.description
 > > >
 > > > ##### Type: `string`
 > > >
@@ -407,7 +393,7 @@ var config = {
 > >
 > > ##
 > >
-> > ### config.sources.id
+> > ### sources.id
 > >
 > > ##### Type: `string`
 > >
@@ -417,7 +403,7 @@ var config = {
 > >
 > > ##
 > >
-> > ### config.sources.poster
+> > ### sources.poster
 > >
 > > ##### Type: `string`
 > >
@@ -427,7 +413,7 @@ var config = {
 > >
 > > ##
 > >
-> > ### config.sources.duration
+> > ### sources.duration
 > >
 > > ##### Type: `number`
 > >
@@ -437,7 +423,7 @@ var config = {
 > >
 > > ##
 > >
-> > ### config.sources.captions
+> > ### sources.captions
 > >
 > > ##### Type: `Array<PKExternalCaptionObject>`
 > >
@@ -450,24 +436,22 @@ var config = {
 > > #### Example:
 > >
 > > ```js
-> > var config = {
-> >   sources: {
-> >     captions: [
-> >       {
-> >         url: 'www.path.to/your/captions/file',
-> >         type: 'vtt',
-> >         default: true,
-> >         language: 'en',
-> >         label: 'English'
-> >       }
-> >     ]
-> >   }
+> > var sources: {
+> >   captions: [
+> >     {
+> >       url: 'www.path.to/your/captions/file',
+> >       type: 'vtt',
+> >       default: true,
+> >       language: 'en',
+> >       label: 'English'
+> >     }
+> >   ]
 > > };
 > > ```
 > >
 > > ##
 > >
-> > ### config.sources.startTime
+> > ### sources.startTime
 > >
 > > ##### Type: `number`
 > >

@@ -117,7 +117,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @public
    */
   getExternalTracks(tracks: Array<Track>): Array<TextTrack> {
-    const captions = this._player.config.sources.captions;
+    const captions = this._player.sources.captions;
     if (!captions) {
       return [];
     }

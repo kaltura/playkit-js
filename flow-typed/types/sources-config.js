@@ -3,6 +3,7 @@ declare type PKSourcesConfigObject = {
   hls: Array<PKMediaSourceObject>,
   dash: Array<PKMediaSourceObject>,
   progressive: Array<PKMediaSourceObject>,
+  captions?: Array<PKExternalCaptionObject>,
   options: PKMediaSourceOptionsObject,
   type: string,
   dvr: boolean,
@@ -10,5 +11,6 @@ declare type PKSourcesConfigObject = {
   id?: string,
   poster?: string,
   duration?: number,
-  startTime?: number
+  startTime?: number,
+  vr: ?Object
 };
