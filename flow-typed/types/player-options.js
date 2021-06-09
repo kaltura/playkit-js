@@ -2,7 +2,7 @@
 declare type PKPlayerOptionsObject = {
   log?: PKLogConfigObject,
   playback?: PKPlaybackConfigObject,
-  sources?: PKSourcesConfigObject,
+  streaming?: PKStreamingConfigObject,
   session?: PKSessionConfigObject,
   network?: PKNetworkConfigObject,
   customLabels?: PKCustomLabelsConfigObject

@@ -15,7 +15,7 @@ var player = playkit.core.loadPlayer(config);
 {
   log: PKLogConfigObject,
   playback: PKPlaybackConfigObject,
-  sources: PKSourcesConfigObject,
+  streaming: PKStreamingConfigObject,
   session: PKSessionConfigObject,
   network: PKNetworkConfigObject,
   customLabels: PKCustomLabelsConfigObject,
@@ -32,23 +32,19 @@ var config = {
   log: {
     level: 'ERROR'
   },
-  sources: {
-    options: {
-      forceRedirectExternalStreams: false
-    },
-    metadata: {}
+  text: {
+    enableCEA708Captions: false,
+    useNativeTextTrack: false,
+    forceCenter: false,
+    captionsTextTrack1Label: 'English',
+    captionsTextTrack1LanguageCode: 'en',
+    captionsTextTrack2Label: 'Spanish',
+    captionsTextTrack2LanguageCode: 'es'
   },
   playback: {
     audioLanguage: '',
     textLanguage: '',
-    useNativeTextTrack: false,
-    enableCEA708Captions: false,
-    captionsTextTrack1Label: 'English',
-    captionsTextTrack1LanguageCode: 'en',
-    captionsTextTrack2Label: 'Spanish',
-    captionsTextTrack2LanguageCode: 'es',
     volume: 1,
-    startTime: -1,
     playsinline: true,
     preload: 'none',
     autoplay: false,
@@ -87,8 +83,11 @@ var config = {
     fpsDroppedMonitoringThreshold: 0.2,
     capLevelOnFPSDrop: true,
     capLevelToPlayerSize: false,
-    defaultBandwidthEstimate: 500e3,
     restrictions: {
+      minHeight: 0,
+      maxHeight: Infinity,
+      minWidth: 0,
+      maxWidth: Infinity,
       minBitrate: 0,
       maxBitrate: Infinity
     }
@@ -134,7 +133,7 @@ var config = {
 
 ##
 
-> ### config.sources
+> ### sources
 >
 > ##### Type: `PKSourcesConfigObject`
 >
@@ -150,7 +149,8 @@ var config = {
 >  id?: string,
 >  poster?: string,
 >  duration?: number,
->  captions?: Array<PKExternalCaptionObject>
+>  captions?: Array<PKExternalCaptionObject>,
+>  startTime?: number
 > }
 > ```
 >
@@ -224,7 +224,7 @@ var config = {
 >
 > ##
 >
-> > ### config.sources.hls
+> > ### sources.hls
 > >
 > > ##### Type: `Array<PKMediaSourceObject>`
 > >
@@ -235,21 +235,19 @@ var config = {
 > > #### Example:
 > >
 > > ```js
-> > var config = {
-> >   sources: {
-> >     hls: [
-> >       {
-> >         mimetype: 'application/x-mpegurl',
-> >         url: '//PATH/TO/MANIFEST.m3u8'
-> >       }
-> >     ]
-> >   }
+> > var sources: {
+> >   hls: [
+> >     {
+> >       mimetype: 'application/x-mpegurl',
+> >       url: '//PATH/TO/MANIFEST.m3u8'
+> >     }
+> >   ]
 > > };
 > > ```
 > >
 > > ##
 > >
-> > ### config.sources.dash
+> > ### sources.dash
 > >
 > > ##### Type: `Array<PKMediaSourceObject>`
 > >
@@ -260,21 +258,19 @@ var config = {
 > > #### Example:
 > >
 > > ```js
-> > var config = {
-> >   sources: {
-> >     dash: [
-> >       {
-> >         mimetype: 'application/x-mpegurl',
-> >         url: '//PATH/TO/MANIFEST.mpd'
-> >       }
-> >     ]
-> >   }
+> > var sources: {
+> >   dash: [
+> >     {
+> >       mimetype: 'application/x-mpegurl',
+> >       url: '//PATH/TO/MANIFEST.mpd'
+> >     }
+> >   ]
 > > };
 > > ```
 > >
 > > ##
 > >
-> > ### config.sources.progressive
+> > ### sources.progressive
 > >
 > > ##### Type: `Array<PKMediaSourceObject>`
 > >
@@ -285,21 +281,19 @@ var config = {
 > > #### Example:
 > >
 > > ```js
-> > var config = {
-> >   sources: {
-> >     progressive: [
-> >       {
-> >         mimetype: 'video/mp4',
-> >         url: '//PATH/TO/FILE.mp4'
-> >       }
-> >     ]
-> >   }
+> > var sources: {
+> >   progressive: [
+> >     {
+> >       mimetype: 'video/mp4',
+> >       url: '//PATH/TO/FILE.mp4'
+> >     }
+> >   ]
 > > };
 > > ```
 > >
 > > ##
 > >
-> > ### config.sources.options
+> > ### sources.options
 > >
 > > ##### Type: `PKMediaSourceOptionsObject`
 > >
@@ -315,7 +309,7 @@ var config = {
 > >
 > > ##
 > >
-> > > ### config.sources.options.forceRedirectExternalStreams
+> > > ### sources.options.forceRedirectExternalStreams
 > > >
 > > > ##### Type: `boolean`
 > > >
@@ -325,7 +319,7 @@ var config = {
 > > >
 > > > ##
 > > >
-> > > ### config.sources.options.redirectExternalStreamsHandler
+> > > ### sources.options.redirectExternalStreamsHandler
 > > >
 > > > ##### Type: `Function`
 > > >
@@ -335,7 +329,7 @@ var config = {
 > > >
 > > > ##
 > > >
-> > > ### config.sources.options.redirectExternalStreamsTimeout
+> > > ### sources.options.redirectExternalStreamsTimeout
 > > >
 > > > ##### Type: `number`
 > > >
@@ -345,7 +339,7 @@ var config = {
 > >
 > > ##
 > >
-> > ### config.sources.type
+> > ### sources.type
 > >
 > > ##### Type: `string`
 > >
@@ -357,7 +351,7 @@ var config = {
 > >
 > > ##
 > >
-> > ### config.sources.dvr
+> > ### sources.dvr
 > >
 > > ##### Type: `boolean`
 > >
@@ -369,7 +363,7 @@ var config = {
 > >
 > > ##
 > >
-> > ### config.sources.metadata
+> > ### sources.metadata
 > >
 > > ##### Type: `PKMetadataConfigObject`
 > >
@@ -379,7 +373,7 @@ var config = {
 > >
 > > ##
 > >
-> > > ### config.sources.metadata.name
+> > > ### sources.metadata.name
 > > >
 > > > ##### Type: `string`
 > > >
@@ -389,7 +383,7 @@ var config = {
 > > >
 > > > ##
 > > >
-> > > ### config.sources.metadata.description
+> > > ### sources.metadata.description
 > > >
 > > > ##### Type: `string`
 > > >
@@ -399,7 +393,7 @@ var config = {
 > >
 > > ##
 > >
-> > ### config.sources.id
+> > ### sources.id
 > >
 > > ##### Type: `string`
 > >
@@ -409,7 +403,7 @@ var config = {
 > >
 > > ##
 > >
-> > ### config.sources.poster
+> > ### sources.poster
 > >
 > > ##### Type: `string`
 > >
@@ -419,7 +413,7 @@ var config = {
 > >
 > > ##
 > >
-> > ### config.sources.duration
+> > ### sources.duration
 > >
 > > ##### Type: `number`
 > >
@@ -429,7 +423,7 @@ var config = {
 > >
 > > ##
 > >
-> > ### config.sources.captions
+> > ### sources.captions
 > >
 > > ##### Type: `Array<PKExternalCaptionObject>`
 > >
@@ -442,23 +436,163 @@ var config = {
 > > #### Example:
 > >
 > > ```js
-> > var config = {
-> >   sources: {
-> >     captions: [
-> >       {
-> >         url: 'www.path.to/your/captions/file',
-> >         type: 'vtt',
-> >         default: true,
-> >         language: 'en',
-> >         label: 'English'
-> >       }
-> >     ]
-> >   }
+> > var sources: {
+> >   captions: [
+> >     {
+> >       url: 'www.path.to/your/captions/file',
+> >       type: 'vtt',
+> >       default: true,
+> >       language: 'en',
+> >       label: 'English'
+> >     }
+> >   ]
 > > };
 > > ```
-
-##
-
+> >
+> > ##
+> >
+> > ### sources.startTime
+> >
+> > ##### Type: `number`
+> >
+> > ##### Default: `-1`
+> >
+> > ##### Description: Optional start time, in seconds, to begin playback.
+> >
+> > Default -1 refer to automatic start time - 0 to VOD and live edge to live.
+> >
+> > > Note. `startTime` affects the ad playback, e.g. `startTime: 10` will skip ads scheduled until 10.
+> > > <br>To force playing ads scheduled before `startTime`, need to configure the ads plugin.
+> > > <br>For example with [IMA](https://github.com/kaltura/playkit-js-ima/blob/master/docs/api.md) plugin, set `adsRenderingSettings: {playAdsAfterTime: -1}`.
+>
+> ##
+>
+> ### config.text
+>
+> ##### Type: `PKTextConfigObject`
+>
+> ```js
+> {
+>  useNativeTextTrack: boolean,
+>  enableCEA708Captions: boolean,
+>  forceCenter: boolean,
+>  textTrackDisplaySetting: PKTextTrackDisplaySettingObject,
+>  textStyle: TextStyle,
+>  captionsTextTrack1Label: string,
+>  captionsTextTrack1LanguageCode: string,
+>  captionsTextTrack2Label: string,
+>  captionsTextTrack2LanguageCode: string
+> }
+> ```
+>
+> ##### Default:
+>
+> ```js
+> {
+>  useNativeTextTrack: false,
+>  enableCEA708Captions: false,
+>  forceCenter: false,
+>  captionsTextTrack1Label: "English",
+>  captionsTextTrack1LanguageCode: "en",
+>  captionsTextTrack2Label: "Spanish",
+>  captionsTextTrack2LanguageCode: "es"
+> }
+> ```
+>
+> ##
+>
+> > ### config.text.useNativeTextTrack
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ##### Description: Determines whether to use native browser text tracks or not.
+> >
+> > If set to True, the native browser captions will be displayed.
+>
+> ##
+>
+> > ### config.text.enableCEA708Captions
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ##### Description: Whether or not to enable CEA-708 captions.
+>
+> ##
+>
+> > ### config.text.forceCenter
+> >
+> > ##### Type: `Object`
+> >
+> > ##### Default: `false`
+> >
+> > ##### Description: set the forceCenter to true will override the position, align and size in textTrackDisplaySetting
+>
+> ##
+>
+> > ### config.text.textTrackDisplaySetting
+> >
+> > ##### Type: `PKTextTrackDisplaySettingObject`
+> >
+> > ##### Default: `null`
+> >
+> > ##### Description: set the textTrackDisplaySetting to override the cues position
+>
+> ##
+>
+> > ### config.text.textStyle
+> >
+> > ##### Type: `TextStyle`
+> >
+> > ##### Default: `null`
+> >
+> > ##### Description: set the styling for text tracks
+>
+> ##
+>
+> > ### config.text.captionsTextTrack1Label
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `English`
+> >
+> > ##### Description: Label for the CEA-708 captions track 1.
+>
+> ##
+>
+> > ### config.text.captionsTextTrack1LanguageCode
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `en`
+> >
+> > ##### Description: RFC 3066 language code for the CEA-708 captions track 1.
+>
+> ##
+>
+> > ### config.text.captionsTextTrack2Label
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `Spanish`
+> >
+> > ##### Description: Label for the CEA-708 captions track 2.
+>
+> ##
+>
+> > ### config.text.captionsTextTrack2LanguageCode
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `es`
+> >
+> > ##### Description: RFC 3066 language code for the CEA-708 captions track 2.
+>
+> ##
+>
 > ### config.playback
 >
 > ##### Type: `PKPlaybackConfigObject`
@@ -467,18 +601,12 @@ var config = {
 > {
 >  audioLanguage: string,
 >  textLanguage: string,
->  useNativeTextTrack: boolean,
->  enableCEA708Captions: boolean,
->  captionsTextTrack1Label: string,
->  captionsTextTrack1LanguageCode: string,
->  captionsTextTrack2Label: string,
->  captionsTextTrack2LanguageCode: string,
 >  volume: number,
->  startTime: number,
 >  playsinline: boolean,
 >  crossOrigin: string,
 >  preload: string,
->  autoplay: boolean,
+>  autoplay: PKAutoPlayTypes,
+>  autopause: boolean,
 >  allowMutedAutoPlay: boolean,
 >  muted: boolean,
 >  pictureInPicture: boolean,
@@ -497,14 +625,7 @@ var config = {
 > {
 >  audioLanguage: "",
 >  textLanguage: "",
->  useNativeTextTrack: false,
->  enableCEA708Captions: false,
->  captionsTextTrack1Label: "English",
->  captionsTextTrack1LanguageCode: "en",
->  captionsTextTrack2Label: "Spanish",
->  captionsTextTrack2LanguageCode: "es",
 >  volume: 1,
->  startTime: -1,
 >  playsinline: true,
 >  preload: "none",
 >  autoplay: false,
@@ -603,68 +724,6 @@ var config = {
 >
 > ##
 >
-> > ### config.playback.useNativeTextTrack
-> >
-> > ##### Type: `boolean`
-> >
-> > ##### Default: `false`
-> >
-> > ##### Description: Determines whether to use native browser text tracks or not.
-> >
-> > If set to True, the native browser captions will be displayed.
->
-> ##
->
-> > ### config.playback.enableCEA708Captions
-> >
-> > ##### Type: `boolean`
-> >
-> > ##### Default: `false`
-> >
-> > ##### Description: Whether or not to enable CEA-708 captions.
->
-> ##
->
-> > ### config.playback.captionsTextTrack1Label
-> >
-> > ##### Type: `string`
-> >
-> > ##### Default: `English`
-> >
-> > ##### Description: Label for the CEA-708 captions track 1.
->
-> ##
->
-> > ### config.playback.captionsTextTrack1LanguageCode
-> >
-> > ##### Type: `string`
-> >
-> > ##### Default: `en`
-> >
-> > ##### Description: RFC 3066 language code for the CEA-708 captions track 1.
->
-> ##
->
-> > ### config.playback.captionsTextTrack2Label
-> >
-> > ##### Type: `string`
-> >
-> > ##### Default: `Spanish`
-> >
-> > ##### Description: Label for the CEA-708 captions track 2.
->
-> ##
->
-> > ### config.playback.captionsTextTrack2LanguageCode
-> >
-> > ##### Type: `string`
-> >
-> > ##### Default: `es`
-> >
-> > ##### Description: RFC 3066 language code for the CEA-708 captions track 2.
->
-> ##
->
 > > ### config.playback.volume
 > >
 > > ##### Type: `number`
@@ -684,22 +743,6 @@ var config = {
 > >   }
 > > };
 > > ```
->
-> ##
->
-> > ### config.playback.startTime
-> >
-> > ##### Type: `number`
-> >
-> > ##### Default: `-1`
-> >
-> > ##### Description: Optional start time, in seconds, to begin playback.
-> >
-> > Default -1 refer to automatic start time - 0 to VOD and live edge to live.
-> >
-> > > Note. `startTime` affects the ad playback, e.g. `startTime: 10` will skip ads scheduled until 10.
-> > > <br>To force playing ads scheduled before `startTime`, need to configure the ads plugin.
-> > > <br>For example with [IMA](https://github.com/kaltura/playkit-js-ima/blob/master/docs/api.md) plugin, set `adsRenderingSettings: {playAdsAfterTime: -1}`.
 >
 > ##
 >
@@ -750,6 +793,16 @@ var config = {
 > > ### config.playback.autoplay/allowMutedAutoPlay
 > >
 > > for `autoplay` & `allowMutedAutoPlay` options read [here](autoplay.md).
+>
+> ##
+>
+> > ### config.playback.autopause
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ##### Description: Indicates whether the video should be automatically paused when not in view
 >
 > ##
 >
@@ -943,8 +996,38 @@ var config = {
 > > As soon as the player receives the sources, it will review the configuration array and try to play the source with the matched stream format according to the matched engine.
 > > For example, in the priority configuration above, the player will try to play the hls stream using an html5 engine first. If an hls stream isn't received, the player will continue to play the dash stream using an html5 engine. If a dash stream isn't received, the player will then will continue to play the progressive stream using an html5 engine.
 
-##
-
+> ### config.streaming
+>
+> ##### Type: `PKStreamingConfigObject`
+>
+> ```js
+> {
+>   forceBreakStall: boolean;
+> }
+> ```
+>
+> ##### Default:
+>
+> ```js
+> {
+>   forceBreakStall: false;
+> }
+> ```
+>
+> > ### config.streaming.forceBreakStall
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ```js
+> > forceBreakStall: boolean;
+> > ```
+> >
+> > > ##### Description: Gives the ability to break stalls on low level devices which could get stuck on stall
+>
+> ##
+>
 > ### config.session
 >
 > ##### Type: `PKSessionConfigObject`
@@ -1205,9 +1288,17 @@ var config = {
 > >   }
 > > };
 > > ```
-
-##
-
+> >
+> > ##
+> >
+> > ### config.network.maxStaleLevelReloads
+> >
+> > ##### Type: `number`
+> >
+> > ##### Default: `20`
+> >
+> > ##### Description: The maximal amount of times player should request a manifest refresh, when no new segments appear in the refreshed manifest.
+>
 > ### config.customLabels
 >
 > ##### Type: `PKCustomLabelsConfigObject`
@@ -1266,6 +1357,10 @@ var config = {
 >   capLevelToPlayerSize: boolean,
 >   defaultBandwidthEstimate: number,
 >   restrictions: {
+>     minHeight: number,
+>     maxHeight: number,
+>     minWidth: number,
+>     maxWidth: number,
 >     minBitrate: number,
 >     maxBitrate: number
 >   }
@@ -1281,8 +1376,11 @@ var config = {
 >   fpsDroppedMonitoringThreshold: 0.2,
 >   capLevelOnFPSDrop: true,
 >   capLevelToPlayerSize: false,
->   defaultBandwidthEstimate: 500e3,
 >   restrictions: {
+>     minHeight: 0,
+>     maxHeight: Infinity,
+>     minWidth: 0,
+>     maxWidth: Infinity,
 >     minBitrate: 0,
 >     maxBitrate: Infinity
 >   }
@@ -1345,15 +1443,13 @@ var config = {
 > >
 > > ##### Type: `number`
 > >
-> > ##### Default: 500000
-> >
 > > ##### Description: The default bandwidth estimate to use if there is not enough data, in bit/sec.
 > >
 > > ##
 > >
 > > ### config.abr.restrictions
 > >
-> > ##### Type: `object`
+> > ##### Type: `PKABRRestrictionObject`
 > >
 > > ##### Default: `{}`
 > >
@@ -1361,6 +1457,46 @@ var config = {
 > >
 > > ##
 > >
+> > > ### config.abr.restrictions.minHeight
+> > >
+> > > ##### Type: `number`
+> > >
+> > > ##### Default: `0`
+> > >
+> > > ##### Description: The minimum height of video track.
+> > >
+> > > ##
+> > >
+> > > ### config.abr.restrictions.maxHeight
+> > >
+> > > ##### Type: `number`
+> > >
+> > > ##### Default: `Infinity`
+> > >
+> > > ##### Description: The maximum height of video track.
+> > >
+> > > ##
+> > >
+> > > ### config.abr.restrictions.minWidth
+> > >
+> > > ##### Type: `number`
+> > >
+> > > ##### Default: `0`
+> > >
+> > > ##### Description: The minimum width of video track.
+> > >
+> > > ##
+> > >
+> > > ### config.abr.restrictions.maxWidth
+> > >
+> > > ##### Type: `number`
+> > >
+> > > ##### Default: `Infinity`
+> > >
+> > > ##### Description: The maximum width of video track.
+> > >
+> > > ##
+> > >
 > > > ### config.abr.restrictions.minBitrate
 > > >
 > > > ##### Type: `number`

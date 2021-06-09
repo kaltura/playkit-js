@@ -2,12 +2,11 @@
 declare type PKPlaybackConfigObject = {
   audioLanguage: string,
   textLanguage: string,
-  useNativeTextTrack: boolean,
   volume: number,
   playsinline: boolean,
   crossOrigin: string,
   preload: string,
-  autoplay: boolean,
+  autoplay: PKAutoPlayTypes,
   allowMutedAutoPlay: boolean,
   muted: boolean,
   pictureInPicture: boolean,

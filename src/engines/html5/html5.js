@@ -7,12 +7,14 @@ import MediaSourceProvider from './media-source/media-source-provider';
 import VideoTrack from '../../track/video-track';
 import AudioTrack from '../../track/audio-track';
 import PKTextTrack from '../../track/text-track';
+import ImageTrack from '../../track/image-track';
 import {Cue} from '../../track/vtt-cue';
 import * as Utils from '../../utils/util';
 import Html5AutoPlayCapability from './capabilities/html5-autoplay';
 import Error from '../../error/error';
 import getLogger from '../../utils/logger';
 import {DroppedFramesWatcher} from '../dropped-frames-watcher';
+import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
 
 /**
  * Html5 engine for playback.
@@ -262,6 +264,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   get id(): string {
     return Html5.id;
   }
+
   /**
    * attach media - return the media source to handle the video tag
    * @public
@@ -272,6 +275,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._mediaSourceAdapter.attachMediaSource();
     }
   }
+
   /**
    * detach media - will remove the media source from handling the video
    * @public
@@ -282,6 +286,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._mediaSourceAdapter.detachMediaSource();
     }
   }
+
   /**
    * Listen to the video element events and triggers them from the engine.
    * @public
@@ -299,6 +304,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._handleVideoError();
     });
     this._handleMetadataTrackEvents();
+    this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
+      if (event.track.kind === 'captions' || event.track.kind === 'subtitles') {
+        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_ADDED, {track: event.track}));
+      }
+    });
     let mediaSourceAdapter = this._mediaSourceAdapter;
     if (mediaSourceAdapter) {
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
@@ -384,6 +394,17 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Select a new image track.
+   * @param {ImageTrack} imageTrack - The image track object to set.
+   * @returns {void}
+   */
+  selectImageTrack(imageTrack: ImageTrack): void {
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.selectImageTrack(imageTrack);
+    }
+  }
+
+  /**
    * Hide the text track
    * @function hideTextTrack
    * @returns {void}
@@ -419,6 +440,19 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       return this._mediaSourceAdapter.isAdaptiveBitrateEnabled();
     }
     return false;
+  }
+
+  /**
+   * Apply ABR restriction
+   * @function applyABRRestriction
+   * @param {PKABRRestrictionObject} restriction - abr restriction config
+   * @returns {void}
+   * @public
+   */
+  applyABRRestriction(restriction: PKABRRestrictionObject): void {
+    if (this._mediaSourceAdapter) {
+      return this._mediaSourceAdapter.applyABRRestriction(restriction);
+    }
   }
 
   /**
@@ -484,14 +518,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._el.load();
     return this._canLoadMediaSourceAdapterPromise
       .then(() => {
-        if (this._mediaSourceAdapter) {
-          return this._mediaSourceAdapter.load(startTime).catch(error => {
-            return Promise.reject(error);
-          });
-        }
-        return Promise.resolve({});
+        return this._mediaSourceAdapter ? this._mediaSourceAdapter.load(startTime) : Promise.resolve({});
       })
       .catch(error => {
+        this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
         return Promise.reject(error);
       });
   }
@@ -575,6 +605,18 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     } else {
       // $FlowFixMe
       return !!document.pictureInPictureEnabled;
+    }
+  }
+
+  /**
+   *  Returns in-stream thumbnail for a chosen time.
+   * @param {number} time - playback time.
+   * @public
+   * @return {?ThumbnailInfo} - Thumbnail info
+   */
+  getThumbnail(time: number): ?ThumbnailInfo {
+    if (this._mediaSourceAdapter) {
+      return this._mediaSourceAdapter.getThumbnail(time);
     }
   }
 

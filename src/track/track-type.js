@@ -1,9 +1,9 @@
 //@flow
-
 const TrackType = Object.freeze({
   VIDEO: 'video',
   AUDIO: 'audio',
-  TEXT: 'text'
+  TEXT: 'text',
+  IMAGE: 'image'
 });
 
 export {TrackType};

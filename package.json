@@ -1,6 +1,6 @@
 {
   "name": "@playkit-js/playkit-js",
-  "version": "0.65.0",
+  "version": "0.71.0",
   "main": "dist/playkit.js",
   "scripts": {
     "clean": "rm -rf ./dist",
@@ -18,6 +18,11 @@
     "docs:generate": "documentation build flow-typed/** src/** -f md -o docs/api.md",
     "docs:serve": "documentation serve flow-typed/** src/** --watch",
     "prettier:fix": "prettier --write ."
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "lint-staged": {
     "*.{js,jsx}": [

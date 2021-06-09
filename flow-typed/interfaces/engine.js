@@ -3,6 +3,8 @@ import VideoTrack from '../../src/track/video-track';
 import AudioTrack from '../../src/track/audio-track';
 import TextTrack from '../../src/track/text-track';
 import FakeEventTarget from '../../src/event/fake-event-target';
+import {ThumbnailInfo} from '../../src/thumbnail/thumbnail-info';
+import {ImageTrack} from '../../src/playkit';
 
 declare interface IEngineStatic {
   id: string;
@@ -27,12 +29,14 @@ declare interface IEngine extends FakeEventTarget {
   selectVideoTrack(videoTrack: VideoTrack): void;
   selectAudioTrack(audioTrack: AudioTrack): void;
   selectTextTrack(textTrack: TextTrack): void;
+  selectImageTrack(imageTrack: ImageTrack): void;
   isPictureInPictureSupported(): boolean;
   enterPictureInPicture(): void;
   exitPictureInPicture(): void;
   hideTextTrack(): void;
   enableAdaptiveBitrate(): void;
   isAdaptiveBitrateEnabled(): boolean;
+  applyABRRestriction(restrictions: PKABRRestrictionObject): void;
   seekToLiveEdge(): void;
   getStartTimeOfDvrWindow(): number;
   isLive(): boolean;
@@ -40,6 +44,7 @@ declare interface IEngine extends FakeEventTarget {
   resetAllCues(): void;
   attachMediaSource(): void;
   detachMediaSource(): void;
+  getThumbnail(time: number): ?ThumbnailInfo;
   +id: string;
   currentTime: number;
   +duration: number;

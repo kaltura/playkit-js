@@ -10,14 +10,25 @@ import VideoTrack from '../../../track/video-track';
 import AudioTrack from '../../../track/audio-track';
 import TextTrack from '../../../track/text-track';
 import EventManager from '../../../event/event-manager';
+import ImageTrack from '../../../track/image-track';
+import {ThumbnailInfo} from '../../../thumbnail/thumbnail-info';
 
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
+  /**
+   * The id of the adapter.
+   * @member {string} id
+   * @static
+   * @private
+   */
+  static id: string = 'BaseAdapter';
   /**
    * Passing the getLogger function to the actual media source adapter.
    * @type {Function}
    * @static
    */
   static getLogger: Function = getLogger;
+
+  static _logger = BaseMediaSourceAdapter.getLogger(BaseMediaSourceAdapter.id);
 
   /**
    * The adapter config.
@@ -130,11 +141,17 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    */
   _onTrackChanged(track: Track): void {
     if (track instanceof VideoTrack) {
+      BaseMediaSourceAdapter._logger.debug('Video track changed', track);
       this._trigger(CustomEventType.VIDEO_TRACK_CHANGED, {selectedVideoTrack: track});
     } else if (track instanceof AudioTrack) {
+      BaseMediaSourceAdapter._logger.debug('Audio track changed', track);
       this._trigger(CustomEventType.AUDIO_TRACK_CHANGED, {selectedAudioTrack: track});
     } else if (track instanceof TextTrack) {
+      BaseMediaSourceAdapter._logger.debug('Text track changed', track);
       this._trigger(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: track});
+    } else if (track instanceof ImageTrack) {
+      BaseMediaSourceAdapter._logger.debug('Image track changed', track);
+      this._trigger(CustomEventType.IMAGE_TRACK_CHANGED, {selectedImageTrack: track});
     }
   }
 
@@ -170,6 +187,8 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     BaseMediaSourceAdapter._throwNotImplementedError('selectTextTrack');
   }
 
+  selectImageTrack(imageTrack: ImageTrack): void {}
+
   hideTextTrack(): void {
     BaseMediaSourceAdapter._throwNotImplementedError('hideTextTrack');
   }
@@ -180,6 +199,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
 
   isAdaptiveBitrateEnabled(): boolean {
     return BaseMediaSourceAdapter._throwNotImplementedError('isAdaptiveBitrateEnabled');
+  }
+
+  applyABRRestriction(restrictions: PKABRRestrictionObject): void {
+    return BaseMediaSourceAdapter._throwNotImplementedError('applyABRRestriction');
   }
 
   _getLiveEdge(): number {
@@ -199,7 +222,9 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   }
 
   attachMediaSource(): void {}
+
   detachMediaSource(): void {}
+
   /**
    * Handling live time update (as is not triggered when video is paused, but the current time changed)
    * @function _handleLiveTimeUpdate
@@ -224,6 +249,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return BaseMediaSourceAdapter._throwNotImplementedError('getStartTimeOfDvrWindow');
   }
 
+  getThumbnail(time: number): ?ThumbnailInfo {
+    return null;
+  }
+
   /**
    * throw a run time error
    * @param {string} name of the unimplemented function
@@ -240,10 +269,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    */
   get currentTime(): number {
     if (this.isLive()) {
-      return this._videoElement.currentTime - this.getStartTimeOfDvrWindow();
-    } else {
-      return this._videoElement.currentTime;
+      const ct = this._videoElement.currentTime - this.getStartTimeOfDvrWindow();
+      return ct < 0 ? 0 : ct;
     }
+    return this._videoElement.currentTime;
   }
 
   /**

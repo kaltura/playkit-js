@@ -13,5 +13,7 @@ declare type PKAdOptions = {
   width: number,
   height: number,
   bitrate: number,
-  bumper: boolean
+  bumper: boolean,
+  inStream?: boolean,
+  vpaid?: boolean
 };

@@ -98,7 +98,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @public
    */
   hideTextTrack(): void {
-    if (this._player.config.playback.useNativeTextTrack) {
+    if (this._player.config.text.useNativeTextTrack) {
       this._resetExternalNativeTextTrack();
     } else {
       // only if external text track was active we need to hide it.
@@ -117,11 +117,11 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @public
    */
   getExternalTracks(tracks: Array<Track>): Array<TextTrack> {
-    const captions = this._player.config.sources.captions;
+    const captions = this._player.sources.captions;
     if (!captions) {
       return [];
     }
-    if (this._player.config.playback.useNativeTextTrack) {
+    if (this._player.config.text.useNativeTextTrack) {
       this._addNativeTextTrack();
     }
     const playerTextTracks = tracks.filter(track => track instanceof TextTrack);
@@ -213,7 +213,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   }
   _selectTextTrack(textTrack: TextTrack) {
     this.hideTextTrack();
-    if (this._player.config.playback.useNativeTextTrack) {
+    if (this._player.config.text.useNativeTextTrack) {
       this._addCuesToNativeTextTrack(this._textTrackModel[textTrack.language].cues);
     } else {
       this._setTextTrack(textTrack);
@@ -466,7 +466,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    */
   _resetExternalNativeTextTrack(): void {
     const videoElement = this._player.getVideoElement();
-    if (videoElement) {
+    if (videoElement && videoElement.textTracks) {
       const track = Array.from(videoElement.textTracks).find(track => (track ? track.language === EXTERNAL_TRACK_ID : false));
       if (track) {
         track.cues && Object.values(track.cues).forEach(cue => track.removeCue(cue));
@@ -482,7 +482,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    */
   _addCuesToNativeTextTrack(cues: Array<Cue>): void {
     const videoElement = this._player.getVideoElement();
-    if (videoElement) {
+    if (videoElement && videoElement.textTracks) {
       const track = Array.from(videoElement.textTracks).find(track => (track ? track.language === EXTERNAL_TRACK_ID : false));
       if (track) {
         track.mode = 'showing';
@@ -498,7 +498,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    */
   _addNativeTextTrack(): void {
     const videoElement = this._player.getVideoElement();
-    if (videoElement) {
+    if (videoElement && videoElement.textTracks) {
       const sameLanguageTrackIndex = Array.from(videoElement.textTracks).findIndex(track => (track ? track.language === EXTERNAL_TRACK_ID : false));
       if (sameLanguageTrackIndex > -1) {
         this._resetExternalNativeTextTrack();
@@ -515,7 +515,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _setTextTrack(textTrack: TextTrack): void {
-    if (!this._player.config.playback.useNativeTextTrack) {
+    if (!this._player.config.text.useNativeTextTrack) {
       this._isTextTrackActive = true;
       ExternalCaptionsHandler._logger.debug('External text track changed', textTrack);
       this._activeTextCues = [];

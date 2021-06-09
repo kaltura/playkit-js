@@ -1,6 +1,6 @@
 //@flow
 import FakeEvent from './fake-event';
-import MultiMap from '../utils/multi-map';
+import {MultiMap} from '../utils/multi-map';
 
 /**
  * A work-alike for EventTarget.  Only DOM elements may be true EventTargets,
@@ -12,7 +12,7 @@ import MultiMap from '../utils/multi-map';
  * @export
  */
 class FakeEventTarget {
-  _listeners: MultiMap<(event: FakeEvent) => boolean | void>;
+  _listeners: MultiMap<string, (event: FakeEvent) => boolean | void>;
   dispatchTarget: FakeEventTarget;
 
   constructor() {

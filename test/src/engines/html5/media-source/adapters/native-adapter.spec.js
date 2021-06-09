@@ -2,7 +2,7 @@ import NativeAdapter from '../../../../../../src/engines/html5/media-source/adap
 import VideoTrack from '../../../../../../src/track/video-track';
 import AudioTrack from '../../../../../../src/track/audio-track';
 import TextTrack from '../../../../../../src/track/text-track';
-import {RequestType} from '../../../../../../src/request-type';
+import {RequestType} from '../../../../../../src/enums/request-type';
 import {removeVideoElementsFromTestPage} from '../../../../utils/test-utils';
 import sourcesConfig from '../../../../configs/sources.json';
 import * as Utils from '../../../../../../src/utils/util';
@@ -346,7 +346,7 @@ describe('NativeAdapter: _getParsedTracks', function () {
     video = document.createElement('video');
     nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.MultipleSources.progressive[0], {
       sources: sourcesConfig.MultipleSources,
-      playback: {enableCEA708Captions: true, captionsTextTrack1Label: ''}
+      text: {enableCEA708Captions: true, captionsTextTrack1Label: ''}
     });
   });
 

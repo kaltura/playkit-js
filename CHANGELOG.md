@@ -2,6 +2,138 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.71.0](https://github.com/kaltura/playkit-js/compare/v0.70.1...v0.71.0) (2021-06-02)
+
+
+### Bug Fixes
+
+* **FEC-10381:** sources config need to be passed via setSources api ([#567](https://github.com/kaltura/playkit-js/issues/567)) ([4962b11](https://github.com/kaltura/playkit-js/commit/4962b11))
+* **FEC-11277:** iOS14 - captions on native player are cut and misplaced in the first few seconds ([#579](https://github.com/kaltura/playkit-js/issues/579)) ([f7eae2d](https://github.com/kaltura/playkit-js/commit/f7eae2d))
+* **FEC-11277:** native IOS isFullscreen doesn't response correct answer ([#576](https://github.com/kaltura/playkit-js/issues/576)) ([c64a3c3](https://github.com/kaltura/playkit-js/commit/c64a3c3))
+* **FEC-11280:** IOS playsinline=false doesn't response correctly for isFullScreen ([#577](https://github.com/kaltura/playkit-js/issues/577)) ([da9eba7](https://github.com/kaltura/playkit-js/commit/da9eba7))
+
+
+### Features
+
+* **FEC-10980:** Enable setting ABR settings on-the-fly ([#549](https://github.com/kaltura/playkit-js/issues/549)) ([a8a3e9f](https://github.com/kaltura/playkit-js/commit/a8a3e9f))
+
+
+
+### [0.70.1](https://github.com/kaltura/playkit-js/compare/v0.70.0...v0.70.1) (2021-05-11)
+
+
+### Bug Fixes
+
+* **FEC-11215:** forward and rewind controls are disabling ([#572](https://github.com/kaltura/playkit-js/issues/572)) ([515a04e](https://github.com/kaltura/playkit-js/commit/515a04e))
+
+
+
+## [0.70.0](https://github.com/kaltura/playkit-js/compare/v0.69.0...v0.70.0) (2021-04-28)
+
+
+### Bug Fixes
+
+* **FEC-11054:** subtitle container width is not getting reset when user exits full screen mode ([#563](https://github.com/kaltura/playkit-js/issues/563)) ([223b3f3](https://github.com/kaltura/playkit-js/commit/223b3f3))
+* **FEC-11126:** add useShakaTextTrackDisplay to text config ([#561](https://github.com/kaltura/playkit-js/issues/561)) ([26cfe24](https://github.com/kaltura/playkit-js/commit/26cfe24))
+* **FEC-11136:** DASH playback on Shaka player gets stuck on Samsung TV ([#562](https://github.com/kaltura/playkit-js/issues/562)) ([1578a62](https://github.com/kaltura/playkit-js/commit/1578a62))
+* **FEC-11145:** spinner is displayed while changing the focus ([#560](https://github.com/kaltura/playkit-js/issues/560)) ([55f131d](https://github.com/kaltura/playkit-js/commit/55f131d))
+* **FEC-11188:** getThumbnail is failing when engine is undefined ([#566](https://github.com/kaltura/playkit-js/issues/566)) ([e7f460f](https://github.com/kaltura/playkit-js/commit/e7f460f))
+
+
+### Features
+
+* **FEC-11091:** add support for XMLHttpRequest.withCredentials in request filter ([#565](https://github.com/kaltura/playkit-js/issues/565)) ([ba413b9](https://github.com/kaltura/playkit-js/commit/ba413b9))
+
+
+
+## [0.69.0](https://github.com/kaltura/playkit-js/compare/v0.68.1...v0.69.0) (2021-04-06)
+
+
+### Bug Fixes
+
+* **FEC-10590:** DOM play error on SmartTV on when stall happen on the beginning ([#552](https://github.com/kaltura/playkit-js/issues/552)) ([089018c](https://github.com/kaltura/playkit-js/commit/089018c))
+* **FEC-10963:** filter duplicate captions ([#547](https://github.com/kaltura/playkit-js/issues/547)) ([a61a710](https://github.com/kaltura/playkit-js/commit/a61a710))
+* **FEC-11035:** catch resolve the promise chain and load create promise for each call. ([#553](https://github.com/kaltura/playkit-js/issues/553)) ([f1e2fff](https://github.com/kaltura/playkit-js/commit/f1e2fff))
+* **FEC-11035:** playback error dispatch from player instead of from engine ([#545](https://github.com/kaltura/playkit-js/issues/545)) ([848bf1b](https://github.com/kaltura/playkit-js/commit/848bf1b))
+* **FEC-11038:** decorator API called with incorrect this(proxy) instead of the activeDecorator ([#546](https://github.com/kaltura/playkit-js/issues/546)) ([35b83ad](https://github.com/kaltura/playkit-js/commit/35b83ad))
+* **FEC-11052:** audio stutters/lag in the newest V7 versions ([#548](https://github.com/kaltura/playkit-js/issues/548)) ([10b1f20](https://github.com/kaltura/playkit-js/commit/10b1f20))
+* **FEC-11108:** loading spinner after unmuting on Safari ([#554](https://github.com/kaltura/playkit-js/issues/554)) ([cff3cd0](https://github.com/kaltura/playkit-js/commit/cff3cd0))
+* **FEC-11118:** video doesn't play, player crushes the application ([#558](https://github.com/kaltura/playkit-js/issues/558)) ([d5231c3](https://github.com/kaltura/playkit-js/commit/d5231c3))
+* **FEC-11119:** VR (360) media doesn't work on safari browser - no video displayed ([#557](https://github.com/kaltura/playkit-js/issues/557)) ([4da0a2c](https://github.com/kaltura/playkit-js/commit/4da0a2c))
+
+
+### Features
+
+* **FEC-10941:** Use In-Stream DASH thumbnails on the timeline ([#550](https://github.com/kaltura/playkit-js/issues/550)) ([37fc3fc](https://github.com/kaltura/playkit-js/commit/37fc3fc))
+
+
+
+### [0.68.1](https://github.com/kaltura/playkit-js/compare/v0.68.0...v0.68.1) (2021-03-02)
+
+
+### Bug Fixes
+
+* **FEC-11037:** multiple decorator exist after destroy plugin with decorator ([#544](https://github.com/kaltura/playkit-js/issues/544)) ([ee11d45](https://github.com/kaltura/playkit-js/commit/ee11d45))
+
+
+
+## [0.68.0](https://github.com/kaltura/playkit-js/compare/v0.67.0...v0.68.0) (2021-02-24)
+
+
+### Bug Fixes
+
+* **FEC-10041:** [Web] Allow IMA and IMA DAI to be used in parallel ([#539](https://github.com/kaltura/playkit-js/issues/539)) ([c6b4a44](https://github.com/kaltura/playkit-js/commit/c6b4a44))
+* **FEC-10823:** Change initial poster hiding to first playing or ad playing ([#541](https://github.com/kaltura/playkit-js/issues/541)) ([9436db6](https://github.com/kaltura/playkit-js/commit/9436db6))
+
+
+### Features
+
+* **FEC-10768:** expose in-stream DASH thumbnails ([#543](https://github.com/kaltura/playkit-js/issues/543)) ([3b1d78e](https://github.com/kaltura/playkit-js/commit/3b1d78e))
+* **FEC-10915:** let shaka and hls.js use their own default bandwidth estimators ([#542](https://github.com/kaltura/playkit-js/issues/542)) ([e212b03](https://github.com/kaltura/playkit-js/commit/e212b03))
+* **FEC-10925:** remove captions update delay ([#534](https://github.com/kaltura/playkit-js/issues/534)) ([8497153](https://github.com/kaltura/playkit-js/commit/8497153))
+* **FEC-10970:** expose vpaid field on ad object ([#540](https://github.com/kaltura/playkit-js/issues/540)) ([791b3c4](https://github.com/kaltura/playkit-js/commit/791b3c4))
+
+
+
+## [0.67.0](https://github.com/kaltura/playkit-js/compare/v0.66.0...v0.67.0) (2021-01-28)
+
+
+### Bug Fixes
+
+* **FEC-10890:** the captions aren't displayed for audio entry and UI doesn't clickable. ([#533](https://github.com/kaltura/playkit-js/issues/533)) ([bb888b1](https://github.com/kaltura/playkit-js/commit/bb888b1))
+* **FEC-10924:** add type for textTrackDisplaySetting ([#537](https://github.com/kaltura/playkit-js/issues/537)) ([8d385c8](https://github.com/kaltura/playkit-js/commit/8d385c8))
+
+
+### Features
+
+* **FEC-10657:** add max stale level reloads config ([#529](https://github.com/kaltura/playkit-js/issues/529)) ([b26065f](https://github.com/kaltura/playkit-js/commit/b26065f))
+* **FEC-10686:** move startTime config from playback to sources ([#531](https://github.com/kaltura/playkit-js/issues/531)) ([631d506](https://github.com/kaltura/playkit-js/commit/631d506))
+* **FEC-10709, FEC-10712:** player visibility - Auto-pause when player is out of view, Autoplay only when player is in view ([#521](https://github.com/kaltura/playkit-js/issues/521)) ([895f16b](https://github.com/kaltura/playkit-js/commit/895f16b))
+
+
+
+## [0.66.0](https://github.com/kaltura/playkit-js/compare/v0.65.0...v0.66.0) (2021-01-07)
+
+
+### Bug Fixes
+
+* **FEC-10564:** keep the poster for display for an audio-only entry ([#520](https://github.com/kaltura/playkit-js/issues/520)) ([68a7026](https://github.com/kaltura/playkit-js/commit/68a7026))
+* **FEC-10662:** incorrect flow in destroy process ([#512](https://github.com/kaltura/playkit-js/issues/512)) ([5ffe16c](https://github.com/kaltura/playkit-js/commit/5ffe16c))
+* **FEC-10760:** Youbora - bufferUnderrun event fired when buffering started and no bufferDuration in Ping events ([#516](https://github.com/kaltura/playkit-js/issues/516)) ([a287fa4](https://github.com/kaltura/playkit-js/commit/a287fa4))
+* **FEC-10766:** create static method for copy instead inner config ([#524](https://github.com/kaltura/playkit-js/issues/524)) ([ab06f5d](https://github.com/kaltura/playkit-js/commit/ab06f5d))
+* **FEC-10816:** Invalid currentTime values on start of live DASH ([#522](https://github.com/kaltura/playkit-js/issues/522)) ([7dd6765](https://github.com/kaltura/playkit-js/commit/7dd6765))
+* **FEC-10844:** advanced caption settings custom caption is always marked even when choose sample ([#525](https://github.com/kaltura/playkit-js/issues/525)) ([2b9bbc7](https://github.com/kaltura/playkit-js/commit/2b9bbc7))
+* **FEC-10878:** order of text captions are broken on Safari browser ([#527](https://github.com/kaltura/playkit-js/issues/527)) ([37bfb4f](https://github.com/kaltura/playkit-js/commit/37bfb4f))
+* **FEC-10879:** Safari ignores explicit text track ([#528](https://github.com/kaltura/playkit-js/issues/528)) ([8c9d503](https://github.com/kaltura/playkit-js/commit/8c9d503))
+* CEA708 subtitle doesn't get correct index on native  ([#514](https://github.com/kaltura/playkit-js/issues/514)) ([d87e7b1](https://github.com/kaltura/playkit-js/commit/d87e7b1))
+
+
+### Features
+
+* **FEC-10766:** create text config section and option for styling ([#518](https://github.com/kaltura/playkit-js/issues/518)) ([c4e0cb5](https://github.com/kaltura/playkit-js/commit/c4e0cb5))
+
+
+
 ## [0.65.0](https://github.com/kaltura/playkit-js/compare/v0.64.3...v0.65.0) (2020-12-07)
 
 
