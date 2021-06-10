@@ -20,6 +20,7 @@ import {EXTERNAL_TRACK_ID} from '../../../../track/external-captions-handler';
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
 const NUDGE_SEEK_AFTER_FOCUS: number = 0.1;
+const SAFARI_BUFFERED_SEGMENTS_COUNT: number = 3;
 
 /**
  * An illustration of media source extension for progressive download
@@ -118,6 +119,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _lastTimeUpdate: number = 0;
 
   _waitingEventTriggered: ?boolean = false;
+
+  _segmentDuration: number = 0;
 
   /**
    * A counter to track the number of attempts to recover from media error
@@ -1118,10 +1121,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   getSegmentDuration(): number {
-    if (this._videoElement.buffered.length) {
-      return (this._videoElement.buffered.end(0) - this._videoElement.buffered.start(0)) / 3;
-    }
-    return 0;
+    return this._segmentDuration;
   }
 
   /**
@@ -1147,7 +1147,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._liveEdge = liveEdge;
         this._videoElement.dispatchEvent(new window.Event(Html5EventType.DURATION_CHANGE));
       }
-    }, 2000);
+      const {buffered, seekable} = this._videoElement;
+      if (buffered.length && seekable.length) {
+        this._segmentDuration = (buffered.end(buffered.length - 1) - seekable.end(seekable.length - 1)) / SAFARI_BUFFERED_SEGMENTS_COUNT;
+      }
+    }, 1000);
   }
 
   /**
