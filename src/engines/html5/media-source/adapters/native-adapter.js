@@ -21,6 +21,7 @@ const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
 const NUDGE_SEEK_AFTER_FOCUS: number = 0.1;
 const SAFARI_BUFFERED_SEGMENTS_COUNT: number = 3;
+const LIVE_DURATION_INTERVAL_MS = 1000;
 
 /**
  * An illustration of media source extension for progressive download
@@ -1151,7 +1152,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       if (buffered.length && seekable.length) {
         this._segmentDuration = (buffered.end(buffered.length - 1) - seekable.end(seekable.length - 1)) / SAFARI_BUFFERED_SEGMENTS_COUNT;
       }
-    }, 1000);
+    }, LIVE_DURATION_INTERVAL_MS);
   }
 
   /**
