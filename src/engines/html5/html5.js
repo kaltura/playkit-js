@@ -16,6 +16,8 @@ import getLogger from '../../utils/logger';
 import {DroppedFramesWatcher} from '../dropped-frames-watcher';
 import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
 
+const CURRENT_OR_NEXT_SEGMENT_COUNT: number = 2;
+
 /**
  * Html5 engine for playback.
  * @classdesc
@@ -300,9 +302,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         });
       }
     });
-    this._eventManager.listen(this._el, Html5EventType.ERROR, () => {
-      this._handleVideoError();
-    });
+    this._eventManager.listen(this._el, Html5EventType.ERROR, () => this._handleVideoError());
     this._handleMetadataTrackEvents();
     this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
       if (event.track.kind === 'captions' || event.track.kind === 'subtitles') {
@@ -465,6 +465,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.seekToLiveEdge();
     }
+  }
+
+  isOnLiveEdge(): boolean {
+    if (this._mediaSourceAdapter) {
+      return this.liveDuration - this.currentTime <= this._mediaSourceAdapter.getSegmentDuration() * CURRENT_OR_NEXT_SEGMENT_COUNT;
+    }
+    return false;
   }
 
   /**
@@ -650,7 +657,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    */
   get currentTime(): number {
-    return this._mediaSourceAdapter ? this._mediaSourceAdapter.currentTime : 0;
+    return this._el ? this._el.currentTime : 0;
   }
 
   /**
@@ -660,8 +667,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   set currentTime(to: number): void {
-    if (this._mediaSourceAdapter) {
-      this._mediaSourceAdapter.currentTime = to;
+    if (this._el) {
+      this._el.currentTime = to;
     }
   }
 
@@ -671,7 +678,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    */
   get duration(): number {
-    return this._mediaSourceAdapter ? this._mediaSourceAdapter.duration : NaN;
+    return this._el.duration;
+  }
+
+  get liveDuration(): number {
+    return this._mediaSourceAdapter ? this._mediaSourceAdapter.liveDuration : -1;
   }
 
   /**

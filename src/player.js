@@ -805,6 +805,18 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Get the live duration in seconds.
+   * @returns {?Number} - The live duration.
+   * @public
+   */
+  get liveDuration(): ?number {
+    if (this._engine) {
+      return this._engine.liveDuration;
+    }
+    return null;
+  }
+
+  /**
    * Set playback volume.
    * @param {Number} vol - The volume to set.
    * @returns {void}
@@ -1157,6 +1169,9 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   isOnLiveEdge(): boolean {
+    if (this._engine && typeof this._engine.isOnLiveEdge === 'function') {
+      return this._engine.isOnLiveEdge();
+    }
     return this._isOnLiveEdge;
   }
 

@@ -20,6 +20,8 @@ import {EXTERNAL_TRACK_ID} from '../../../../track/external-captions-handler';
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
 const NUDGE_SEEK_AFTER_FOCUS: number = 0.1;
+const SAFARI_BUFFERED_SEGMENTS_COUNT: number = 3;
+const LIVE_DURATION_INTERVAL_MS = 1000;
 
 /**
  * An illustration of media source extension for progressive download
@@ -118,6 +120,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _lastTimeUpdate: number = 0;
 
   _waitingEventTriggered: ?boolean = false;
+
+  _segmentDuration: number = 0;
 
   /**
    * A counter to track the number of attempts to recover from media error
@@ -258,6 +262,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _dispatchDRMLicenseLoaded(data: any): void {
     this._trigger(CustomEventType.DRM_LICENSE_LOADED, data);
   }
+
   /**
    * Sets the DRM playback in case such needed.
    * @private
@@ -406,13 +411,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     this._startTimeAttach = this._lastTimeDetach;
     this._lastTimeDetach = NaN;
   }
+
   /**
    * detach media - will remove the media source from handling the video
    * @public
    * @returns {void}
    */
   detachMediaSource(): void {
-    this._lastTimeDetach = this.currentTime;
+    this._lastTimeDetach = this._videoElement.currentTime;
     if (this._videoElement && this._videoElement.src) {
       Utils.Dom.setAttribute(this._videoElement, 'src', '');
       Utils.Dom.removeAttribute(this._videoElement, 'src');
@@ -1097,6 +1103,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
+  get liveDuration() {
+    return this._getLiveEdge() + this.getSegmentDuration();
+  }
+
   /**
    * Seeking to live edge.
    * @function seekToLiveEdge
@@ -1109,6 +1119,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     } catch (e) {
       return;
     }
+  }
+
+  getSegmentDuration(): number {
+    return this._segmentDuration;
   }
 
   /**
@@ -1134,7 +1148,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._liveEdge = liveEdge;
         this._videoElement.dispatchEvent(new window.Event(Html5EventType.DURATION_CHANGE));
       }
-    }, 2000);
+      const {buffered, seekable} = this._videoElement;
+      if (buffered.length && seekable.length) {
+        this._segmentDuration = (buffered.end(buffered.length - 1) - seekable.end(seekable.length - 1)) / SAFARI_BUFFERED_SEGMENTS_COUNT;
+      }
+    }, LIVE_DURATION_INTERVAL_MS);
   }
 
   /**

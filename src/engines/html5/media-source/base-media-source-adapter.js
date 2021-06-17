@@ -253,6 +253,14 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return null;
   }
 
+  getSegmentDuration(): number {
+    return BaseMediaSourceAdapter._throwNotImplementedError('getSegmentDuration');
+  }
+
+  get liveDuration(): number {
+    return BaseMediaSourceAdapter._throwNotImplementedError('liveDuration');
+  }
+
   /**
    * throw a run time error
    * @param {string} name of the unimplemented function
@@ -260,45 +268,6 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    */
   static _throwNotImplementedError(name: string): any {
     throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, name);
-  }
-
-  /**
-   * Get the current time in seconds.
-   * @returns {Number} - The current playback time.
-   * @public
-   */
-  get currentTime(): number {
-    if (this.isLive()) {
-      const ct = this._videoElement.currentTime - this.getStartTimeOfDvrWindow();
-      return ct < 0 ? 0 : ct;
-    }
-    return this._videoElement.currentTime;
-  }
-
-  /**
-   * Set the current time in seconds.
-   * @param {Number} to - The number to set in seconds.
-   * @public
-   * @returns {void}
-   */
-  set currentTime(to: number): void {
-    if (this.isLive()) {
-      to += this.getStartTimeOfDvrWindow();
-    }
-    this._videoElement.currentTime = to;
-  }
-
-  /**
-   * Get the duration in seconds.
-   * @returns {Number} - The playback duration.
-   * @public
-   */
-  get duration(): number {
-    if (this.isLive()) {
-      return this._getLiveEdge() - this.getStartTimeOfDvrWindow();
-    } else {
-      return this._videoElement.duration;
-    }
   }
 
   /**

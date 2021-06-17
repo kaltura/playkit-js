@@ -15,9 +15,9 @@ declare interface IMediaSourceAdapterStatic {
 
 declare interface IMediaSourceAdapter extends FakeEventTarget {
   src: string;
-  currentTime: number;
-  +duration: number;
+  +liveDuration: number;
   +capabilities: PKMediaSourceCapabilities;
+  +targetBuffer: number;
   load(startTime: ?number): Promise<Object>;
   handleMediaError(error: ?MediaError): boolean;
   destroy(): Promise<*>;
@@ -34,5 +34,5 @@ declare interface IMediaSourceAdapter extends FakeEventTarget {
   setMaxBitrate(bitrate: number): void;
   attachMediaSource(): void;
   detachMediaSource(): void;
-  +targetBuffer: number;
+  getSegmentDuration(): number;
 }
