@@ -946,14 +946,6 @@ describe('NativeAdapter: get duration', () => {
     removeVideoElementsFromTestPage();
   });
 
-  it('should return video tag duration for VOD', done => {
-    nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Mp4.progressive[0], {sources: {}});
-    nativeInstance.load().then(() => {
-      nativeInstance.duration.should.be.equal(video.duration);
-      done();
-    });
-  });
-
   if (Env.browser.name === 'Safari') {
     it('should return live duration for live', done => {
       nativeInstance = NativeAdapter.createAdapter(video, sourcesConfig.Live.hls[0], {sources: {}});
