@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.72.0](https://github.com/kaltura/playkit-js/compare/v0.71.0...v0.72.0) (2021-07-01)
+
+
+### Bug Fixes
+
+* **FEC-11311:** TV Platform Studio unable to preview playlist ([#580](https://github.com/kaltura/playkit-js/issues/580)) ([9f543bc](https://github.com/kaltura/playkit-js/commit/9f543bc))
+
+
+### Features
+
+* **FEC-10817:** expose the current time of the video element in live streams ([#559](https://github.com/kaltura/playkit-js/issues/559)) ([0774c9e](https://github.com/kaltura/playkit-js/commit/0774c9e))
+* **FEC-11226:** add support for passing timeout duration and timeout handler to xhr request ([#574](https://github.com/kaltura/playkit-js/issues/574)) ([53f9f84](https://github.com/kaltura/playkit-js/commit/53f9f84))
+
+
+
 ## [0.71.0](https://github.com/kaltura/playkit-js/compare/v0.70.1...v0.71.0) (2021-06-02)
 
 
