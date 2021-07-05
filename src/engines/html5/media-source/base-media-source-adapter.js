@@ -129,9 +129,9 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   destroy(): Promise<*> {
     this._sourceObj = null;
     this._config = {};
+    this.disableNativeTextTracks();
     this._videoElement.removeEventListener(Html5EventType.DURATION_CHANGE, this._onDurationChanged);
     this._eventManager.destroy();
-    this.disableNativeTextTracks();
     return Promise.resolve();
   }
 
