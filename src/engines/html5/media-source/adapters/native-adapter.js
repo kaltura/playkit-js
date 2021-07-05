@@ -686,8 +686,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _getParsedTextTracks(): Array<PKTextTrack> {
     const captionsTextTrackLabels = [this._config.captionsTextTrack1Label, this._config.captionsTextTrack2Label];
     const captionsTextTrackLanguageCodes = [this._config.captionsTextTrack1LanguageCode, this._config.captionsTextTrack2LanguageCode];
+    const captionAvailable = Array.from(this._videoElement.textTracks).find(
+      track => track.kind === 'captions' && (track.activeCues.length > 0 || track.mode === 'showing')
+    );
     const textTracks = this._videoElement.textTracks;
     const parsedTracks = [];
+    let waitingForCaptions = false;
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
         if (textTracks[i].language !== EXTERNAL_TRACK_ID || textTracks[i].label !== EXTERNAL_TRACK_ID) {
@@ -704,8 +708,18 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           } else if (settings.kind === 'captions' && this._config.enableCEA708Captions) {
             settings.label = settings.label || captionsTextTrackLabels.shift();
             settings.language = settings.language || captionsTextTrackLanguageCodes.shift();
+            settings.available = captionAvailable;
             parsedTracks.push(new PKTextTrack(settings));
             this._nativeTextTracksMap[settings.index] = textTracks[i];
+            if (!captionAvailable && !waitingForCaptions) {
+              waitingForCaptions = true;
+              textTracks[i].mode = 'hidden';
+              this._eventManager.listenOnce(textTracks[i], 'cuechange', () => {
+                const textTracks = this._getPKTextTracks();
+                textTracks.forEach(track => (track.available = true) && (track.mode = 'disable'));
+                this._trigger(CustomEventType.TRACKS_CHANGED, {tracks: this._playerTracks});
+              });
+            }
           }
         }
       }
