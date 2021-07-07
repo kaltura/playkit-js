@@ -12,6 +12,7 @@ import TextTrack from '../../../track/text-track';
 import EventManager from '../../../event/event-manager';
 import ImageTrack from '../../../track/image-track';
 import {ThumbnailInfo} from '../../../thumbnail/thumbnail-info';
+import {EXTERNAL_TRACK_ID} from '../../../track/external-captions-handler';
 
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
   /**
@@ -128,6 +129,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   destroy(): Promise<*> {
     this._sourceObj = null;
     this._config = {};
+    this.disableNativeTextTracks();
     this._videoElement.removeEventListener(Html5EventType.DURATION_CHANGE, this._onDurationChanged);
     this._eventManager.destroy();
     return Promise.resolve();
@@ -233,6 +235,22 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    */
   _handleLiveTimeUpdate(): void {
     this._videoElement.addEventListener(Html5EventType.DURATION_CHANGE, this._onDurationChanged);
+  }
+
+  /**
+   * Disables all the existing text tracks.
+   * @public
+   * @returns {void}
+   */
+  disableNativeTextTracks(): void {
+    let textTracks = this._videoElement.textTracks;
+    if (textTracks) {
+      for (let i = 0; i < textTracks.length; i++) {
+        if (['subtitles', 'captions'].includes(textTracks[i].kind) && ![textTracks[i].language, textTracks[i].label].includes(EXTERNAL_TRACK_ID)) {
+          textTracks[i].mode = 'disabled';
+        }
+      }
+    }
   }
 
   /**
