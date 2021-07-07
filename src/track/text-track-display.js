@@ -564,7 +564,7 @@ function computeLinePos(cue) {
   const trackList = track.textTrackList;
   let count = 0;
   for (let i = 0; i < trackList.length && trackList[i] !== track; i++) {
-    if (trackList[i].mode === 'showing') {
+    if (trackList[i].mode === Utils.textTrack.SHOWING) {
       count++;
     }
   }

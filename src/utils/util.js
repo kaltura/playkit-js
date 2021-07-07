@@ -1,5 +1,6 @@
 //@flow
 import {jsonp} from './jsonp';
+import {EXTERNAL_TRACK_ID} from '../track/external-captions-handler';
 
 ('use strict');
 
@@ -638,4 +639,53 @@ const _VERSION = {
   }
 };
 
-export {_Number as Number, _String as String, _Object as Object, _Generator as Generator, _Dom as Dom, _Http as Http, _VERSION as VERSION};
+const _textTrack = {
+  DISABLED: 'disabled',
+  SHOWING: 'showing',
+  HIDDEN: 'hidden',
+
+  METADATA: 'metadata',
+  SUBTITLES: 'subtitles',
+  CAPTIONS: 'captions',
+
+  /**
+   * text track is metadata
+   * @public
+   * @param {any} track  - if text track is subtitle
+   * @returns {void}
+   */
+  isMetaDataTrack: function (track: any) {
+    return track && track.kind === this.METADATA;
+  },
+
+  /**
+   * if text track is subtitle or caption
+   * @public
+   * @param {any} track  - text track
+   * @returns {void}
+   */
+  isNativeTextTrack: function (track: any) {
+    return track && [this.SUBTITLES, this.CAPTIONS].includes(track.kind);
+  },
+
+  /**
+   * if text track is external
+   * @public
+   * @param {any} track  - text track
+   * @returns {void}
+   */
+  isExternalTrack: function (track: any) {
+    return track && [track.language, track.label].includes(EXTERNAL_TRACK_ID);
+  }
+};
+
+export {
+  _Number as Number,
+  _String as String,
+  _Object as Object,
+  _Generator as Generator,
+  _Dom as Dom,
+  _Http as Http,
+  _VERSION as VERSION,
+  _textTrack as textTrack
+};

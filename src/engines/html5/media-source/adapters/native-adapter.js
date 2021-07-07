@@ -15,7 +15,6 @@ import Error from '../../../../error/error';
 import defaultConfig from './native-adapter-default-config';
 import type {FairPlayDrmConfigType} from './fairplay-drm-handler';
 import {FairPlayDrmHandler} from './fairplay-drm-handler';
-import {isExternalTrack, isNativeTextTrack} from '../../../../utils/text-track';
 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
@@ -700,18 +699,18 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const parsedTracks = [];
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
-        if (!isExternalTrack(textTracks[i])) {
+        if (!Utils.textTrack.isExternalTrack(textTracks[i])) {
           const settings = {
             kind: textTracks[i].kind,
-            active: textTracks[i].mode === 'showing',
+            active: textTracks[i].mode === Utils.textTrack.SHOWING,
             label: textTracks[i].label,
             language: textTracks[i].language,
             index: i
           };
-          if (settings.kind === 'subtitles') {
+          if (settings.kind === Utils.textTrack.SUBTITLES) {
             parsedTracks.push(new PKTextTrack(settings));
             this._nativeTextTracksMap[settings.index] = textTracks[i];
-          } else if (settings.kind === 'captions' && this._config.enableCEA708Captions) {
+          } else if (settings.kind === Utils.textTrack.CAPTIONS && this._config.enableCEA708Captions) {
             settings.label = settings.label || captionsTextTrackLabels.shift();
             settings.language = settings.language || captionsTextTrackLanguageCodes.shift();
             settings.available = this._captionsHidden;
@@ -729,14 +728,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   _maybeShow708Captions(): void {
-    const captions = Array.from(this._videoElement.textTracks).filter(track => track.kind === 'captions');
-    const activeCaption = captions.find(track => track.mode === 'showing' || track.mode === 'hidden');
+    const captions = Array.from(this._videoElement.textTracks).filter(track => track.kind === Utils.textTrack.CAPTIONS);
+    const activeCaption = captions.find(track => track.mode === Utils.textTrack.SHOWING || track.mode === Utils.textTrack.HIDDEN);
     const textTrack = activeCaption || captions[0];
     if (textTrack) {
-      textTrack.mode = 'hidden';
+      textTrack.mode = Utils.textTrack.HIDDEN;
       this._eventManager.listenOnce(textTrack, 'cuechange', () => {
         const textTracks = this._getPKTextTracks();
-        textTracks.forEach(track => (track.available = true) && (track.mode = 'disabled'));
+        textTracks.forEach(track => (track.available = true) && (track.mode = Utils.textTrack.DISABLED));
         this._captionsHidden = true;
         this._trigger(CustomEventType.TRACKS_CHANGED, {tracks: this._playerTracks});
       });
@@ -900,7 +899,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    */
   selectTextTrack(textTrack: PKTextTrack): void {
-    if (textTrack instanceof PKTextTrack && isNativeTextTrack(textTrack)) {
+    if (textTrack instanceof PKTextTrack && Utils.textTrack.isNativeTextTrack(textTrack)) {
       this._removeNativeTextTrackChangeListener();
       const selectedTrack = this._nativeTextTracksMap[textTrack.index];
       if (selectedTrack) {
@@ -986,7 +985,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _getDisplayTextTrackModeString(): string {
-    return this._config.displayTextTrack ? 'showing' : 'hidden';
+    return this._config.displayTextTrack ? Utils.textTrack.SHOWING : Utils.textTrack.HIDDEN;
   }
 
   /**

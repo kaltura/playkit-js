@@ -15,7 +15,6 @@ import Error from '../../error/error';
 import getLogger from '../../utils/logger';
 import {DroppedFramesWatcher} from '../dropped-frames-watcher';
 import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
-import {isMetaDataTrack, isNativeTextTrack} from '../../utils/text-track';
 
 const CURRENT_OR_NEXT_SEGMENT_COUNT: number = 2;
 
@@ -306,7 +305,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._eventManager.listen(this._el, Html5EventType.ERROR, () => this._handleVideoError());
     this._handleMetadataTrackEvents();
     this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
-      if (isNativeTextTrack(event.track)) {
+      if (Utils.textTrack.isNativeTextTrack(event.track)) {
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_ADDED, {track: event.track}));
       }
     });
@@ -1069,7 +1068,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _addCueChangeListener(): void {
-    let textTrackEl = Array.from(this._el.textTracks).find(track => isNativeTextTrack(track) && track.mode !== 'disabled');
+    let textTrackEl = Array.from(this._el.textTracks).find(
+      track => Utils.textTrack.isNativeTextTrack(track) && track.mode !== Utils.textTrack.DISABLED
+    );
     if (textTrackEl) {
       this._eventManager.listen(textTrackEl, 'cuechange', (e: FakeEvent) => this._onCueChange(e));
     }
@@ -1115,7 +1116,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   resetAllCues(): void {
-    let activeTextTrack = Array.from(this._el.textTracks).find(track => isNativeTextTrack(track) && track.mode !== 'disabled');
+    let activeTextTrack = Array.from(this._el.textTracks).find(
+      track => Utils.textTrack.isNativeTextTrack(track) && track.mode !== Utils.textTrack.DISABLED
+    );
     if (activeTextTrack) {
       for (let i = 0; i < activeTextTrack.cues.length; i++) {
         activeTextTrack.cues[i].hasBeenReset = true;
@@ -1174,25 +1177,25 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   _handleMetadataTrackEvents(): void {
     const listenToCueChange = track => {
-      track.mode = 'hidden';
+      track.mode = Utils.textTrack.HIDDEN;
       this._eventManager.listen(track, 'cuechange', () => {
         this.dispatchEvent(new FakeEvent(CustomEventType.TIMED_METADATA, {cues: Array.from(track.activeCues)}));
       });
     };
-    const metadataTrack = Array.from(this._el.textTracks).find((track: TextTrack) => isMetaDataTrack(track));
+    const metadataTrack = Array.from(this._el.textTracks).find((track: TextTrack) => Utils.textTrack.isMetaDataTrack(track));
     if (metadataTrack) {
       listenToCueChange(metadataTrack);
     } else {
       this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
-        if (isMetaDataTrack(event.track)) {
+        if (Utils.textTrack.isMetaDataTrack(event.track)) {
           listenToCueChange(event.track);
         }
       });
     }
     this._eventManager.listen(this._el.textTracks, 'change', () => {
-      const metadataTrack = Array.from(this._el.textTracks).find((track: TextTrack) => isMetaDataTrack(track));
-      if (metadataTrack && metadataTrack.mode !== 'hidden') {
-        metadataTrack.mode = 'hidden';
+      const metadataTrack = Array.from(this._el.textTracks).find((track: TextTrack) => Utils.textTrack.isMetaDataTrack(track));
+      if (metadataTrack && metadataTrack.mode !== Utils.textTrack.HIDDEN) {
+        metadataTrack.mode = Utils.textTrack.HIDDEN;
       }
     });
   }

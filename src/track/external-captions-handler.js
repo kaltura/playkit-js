@@ -11,7 +11,6 @@ import EventManager from '../event/event-manager';
 import FakeEventTarget from '../event/fake-event-target';
 import {Cue} from './vtt-cue';
 import Player from '../player';
-import {isExternalTrack} from '../utils/text-track';
 
 type CueStatusType = {[status: string]: number};
 
@@ -170,7 +169,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     return new TextTrack({
       active: !!caption.default,
       index: index,
-      kind: 'subtitles',
+      kind: Utils.textTrack.SUBTITLES,
       label: caption.label,
       language: caption.language,
       external: true
@@ -468,10 +467,10 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _resetExternalNativeTextTrack(): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
-      const track = Array.from(videoElement.textTracks).find(track => (track ? isExternalTrack(track) : false));
+      const track = Array.from(videoElement.textTracks).find(track => (track ? Utils.textTrack.isExternalTrack(track) : false));
       if (track) {
         track.cues && Object.values(track.cues).forEach(cue => track.removeCue(cue));
-        track.mode = 'disabled';
+        track.mode = Utils.textTrack.DISABLED;
       }
     }
   }
@@ -484,9 +483,9 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _addCuesToNativeTextTrack(cues: Array<Cue>): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
-      const track = Array.from(videoElement.textTracks).find(track => (track ? isExternalTrack(track) : false));
+      const track = Array.from(videoElement.textTracks).find(track => (track ? Utils.textTrack.isExternalTrack(track) : false));
       if (track) {
-        track.mode = 'showing';
+        track.mode = Utils.textTrack.SHOWING;
         cues.forEach(cue => track.addCue(cue));
       }
     }
@@ -500,11 +499,11 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _addNativeTextTrack(): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
-      const sameLanguageTrackIndex = Array.from(videoElement.textTracks).findIndex(track => (track ? isExternalTrack(track) : false));
+      const sameLanguageTrackIndex = Array.from(videoElement.textTracks).findIndex(track => (track ? Utils.textTrack.isExternalTrack(track) : false));
       if (sameLanguageTrackIndex > -1) {
         this._resetExternalNativeTextTrack();
       } else {
-        videoElement.addTextTrack('subtitles', EXTERNAL_TRACK_ID, EXTERNAL_TRACK_ID);
+        videoElement.addTextTrack(Utils.textTrack.SUBTITLES, EXTERNAL_TRACK_ID, EXTERNAL_TRACK_ID);
       }
     }
   }
