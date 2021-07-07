@@ -246,9 +246,9 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     let textTracks = this._videoElement.textTracks;
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
-        (textTracks[i].kind === 'subtitles' || textTracks[i].kind === 'captions') &&
-          (textTracks[i].language !== EXTERNAL_TRACK_ID || textTracks[i].label !== EXTERNAL_TRACK_ID) &&
-          (textTracks[i].mode = 'disabled');
+        if (['subtitles', 'captions'].includes(textTracks[i].kind) && ![textTracks[i].language, textTracks[i].label].includes(EXTERNAL_TRACK_ID)) {
+          textTracks[i].mode = 'disabled';
+        }
       }
     }
   }
