@@ -883,9 +883,10 @@ describe('Player', function () {
       });
     });
 
-    it('should return text tracks', done => {
+    it('should return text tracks, captions doesnt exist before first cues', done => {
       player.ready().then(() => {
-        let textTracksLength = video.textTracks ? video.textTracks.length + 1 : 0;
+        const tracks = Array.from(video.textTracks).filter(track => track.kind === 'subtitles');
+        let textTracksLength = tracks ? tracks.length + 1 : 0;
         player.getTracks('text').length.should.be.equal(textTracksLength);
         done();
       });
