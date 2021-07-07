@@ -15,7 +15,7 @@ import Error from '../../../../error/error';
 import defaultConfig from './native-adapter-default-config';
 import type {FairPlayDrmConfigType} from './fairplay-drm-handler';
 import {FairPlayDrmHandler} from './fairplay-drm-handler';
-import {EXTERNAL_TRACK_ID} from '../../../../track/external-captions-handler';
+import {isExternalTrack, isNativeTextTrack} from '../../../../utils/text-track';
 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
@@ -700,7 +700,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const parsedTracks = [];
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
-        if (textTracks[i].language !== EXTERNAL_TRACK_ID || textTracks[i].label !== EXTERNAL_TRACK_ID) {
+        if (!isExternalTrack(textTracks[i])) {
           const settings = {
             kind: textTracks[i].kind,
             active: textTracks[i].mode === 'showing',
@@ -900,7 +900,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    */
   selectTextTrack(textTrack: PKTextTrack): void {
-    if (textTrack instanceof PKTextTrack && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions')) {
+    if (textTrack instanceof PKTextTrack && isNativeTextTrack(textTrack)) {
       this._removeNativeTextTrackChangeListener();
       const selectedTrack = this._nativeTextTracksMap[textTrack.index];
       if (selectedTrack) {

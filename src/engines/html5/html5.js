@@ -15,6 +15,7 @@ import Error from '../../error/error';
 import getLogger from '../../utils/logger';
 import {DroppedFramesWatcher} from '../dropped-frames-watcher';
 import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
+import {isMetaDataTrack, isNativeTextTrack} from '../../utils/text-track';
 
 const CURRENT_OR_NEXT_SEGMENT_COUNT: number = 2;
 
@@ -305,7 +306,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._eventManager.listen(this._el, Html5EventType.ERROR, () => this._handleVideoError());
     this._handleMetadataTrackEvents();
     this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
-      if (event.track.kind === 'captions' || event.track.kind === 'subtitles') {
+      if (isNativeTextTrack(event.track)) {
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_ADDED, {track: event.track}));
       }
     });
@@ -1068,7 +1069,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _addCueChangeListener(): void {
-    let textTrackEl = Array.from(this._el.textTracks).find(track => track && track.mode !== 'disabled');
+    let textTrackEl = Array.from(this._el.textTracks).find(track => isNativeTextTrack(track) && track.mode !== 'disabled');
     if (textTrackEl) {
       this._eventManager.listen(textTrackEl, 'cuechange', (e: FakeEvent) => this._onCueChange(e));
     }
@@ -1178,18 +1179,18 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         this.dispatchEvent(new FakeEvent(CustomEventType.TIMED_METADATA, {cues: Array.from(track.activeCues)}));
       });
     };
-    const metadataTrack = Array.from(this._el.textTracks).find((track: TextTrack) => track.kind === 'metadata');
+    const metadataTrack = Array.from(this._el.textTracks).find((track: TextTrack) => isMetaDataTrack(track));
     if (metadataTrack) {
       listenToCueChange(metadataTrack);
     } else {
       this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
-        if (event.track.kind === 'metadata') {
+        if (isMetaDataTrack(event.track)) {
           listenToCueChange(event.track);
         }
       });
     }
     this._eventManager.listen(this._el.textTracks, 'change', () => {
-      const metadataTrack = Array.from(this._el.textTracks).find((track: TextTrack) => track.kind === 'metadata');
+      const metadataTrack = Array.from(this._el.textTracks).find((track: TextTrack) => isMetaDataTrack(track));
       if (metadataTrack && metadataTrack.mode !== 'hidden') {
         metadataTrack.mode = 'hidden';
       }

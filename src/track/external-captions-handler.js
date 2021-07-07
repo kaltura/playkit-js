@@ -11,6 +11,7 @@ import EventManager from '../event/event-manager';
 import FakeEventTarget from '../event/fake-event-target';
 import {Cue} from './vtt-cue';
 import Player from '../player';
+import {isExternalTrack} from '../utils/text-track';
 
 type CueStatusType = {[status: string]: number};
 
@@ -467,7 +468,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _resetExternalNativeTextTrack(): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
-      const track = Array.from(videoElement.textTracks).find(track => (track ? track.language === EXTERNAL_TRACK_ID : false));
+      const track = Array.from(videoElement.textTracks).find(track => (track ? isExternalTrack(track) : false));
       if (track) {
         track.cues && Object.values(track.cues).forEach(cue => track.removeCue(cue));
         track.mode = 'disabled';
@@ -483,7 +484,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _addCuesToNativeTextTrack(cues: Array<Cue>): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
-      const track = Array.from(videoElement.textTracks).find(track => (track ? track.language === EXTERNAL_TRACK_ID : false));
+      const track = Array.from(videoElement.textTracks).find(track => (track ? isExternalTrack(track) : false));
       if (track) {
         track.mode = 'showing';
         cues.forEach(cue => track.addCue(cue));
@@ -499,7 +500,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _addNativeTextTrack(): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
-      const sameLanguageTrackIndex = Array.from(videoElement.textTracks).findIndex(track => (track ? track.language === EXTERNAL_TRACK_ID : false));
+      const sameLanguageTrackIndex = Array.from(videoElement.textTracks).findIndex(track => (track ? isExternalTrack(track) : false));
       if (sameLanguageTrackIndex > -1) {
         this._resetExternalNativeTextTrack();
       } else {
