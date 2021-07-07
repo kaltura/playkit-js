@@ -9,7 +9,7 @@ import {EXTERNAL_TRACK_ID} from '../track/external-captions-handler';
  * @returns {void}
  */
 function isMetaDataTrack(track: any) {
-  return track.kind === 'metadata';
+  return track && track.kind === 'metadata';
 }
 
 /**
@@ -19,7 +19,7 @@ function isMetaDataTrack(track: any) {
  * @returns {void}
  */
 function isNativeTextTrack(track: any) {
-  return ['subtitles', 'captions'].includes(track.kind);
+  return track && ['subtitles', 'captions'].includes(track.kind);
 }
 
 /**
@@ -29,7 +29,7 @@ function isNativeTextTrack(track: any) {
  * @returns {void}
  */
 function isExternalTrack(track: any) {
-  return [track.language, track.label].includes(EXTERNAL_TRACK_ID);
+  return track && [track.language, track.label].includes(EXTERNAL_TRACK_ID);
 }
 
 export {isMetaDataTrack, isNativeTextTrack, isExternalTrack};
