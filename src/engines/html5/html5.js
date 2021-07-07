@@ -1115,7 +1115,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   resetAllCues(): void {
-    let activeTextTrack = Array.from(this._el.textTracks).find(track => track && track.mode !== 'disabled');
+    let activeTextTrack = Array.from(this._el.textTracks).find(track => isNativeTextTrack(track) && track.mode !== 'disabled');
     if (activeTextTrack) {
       for (let i = 0; i < activeTextTrack.cues.length; i++) {
         activeTextTrack.cues[i].hasBeenReset = true;
