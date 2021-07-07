@@ -35,4 +35,5 @@ declare interface IMediaSourceAdapter extends FakeEventTarget {
   attachMediaSource(): void;
   detachMediaSource(): void;
   getSegmentDuration(): number;
+  disableNativeTextTracks(): void;
 }
