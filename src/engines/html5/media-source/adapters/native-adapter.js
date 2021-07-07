@@ -143,8 +143,18 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _startTimeAttach: number = NaN;
+  /**
+   * Map from our text track to native text track
+   * @type {number}
+   * @private
+   */
   _nativeTextTracksMap = [];
-
+  /**
+   *
+   * @type {number}
+   * @private
+   */
+  _captionsHidden: boolean = false;
   /**
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
@@ -686,12 +696,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _getParsedTextTracks(): Array<PKTextTrack> {
     const captionsTextTrackLabels = [this._config.captionsTextTrack1Label, this._config.captionsTextTrack2Label];
     const captionsTextTrackLanguageCodes = [this._config.captionsTextTrack1LanguageCode, this._config.captionsTextTrack2LanguageCode];
-    const captionAvailable = !!Array.from(this._videoElement.textTracks).find(
-      track => track.kind === 'captions' && ((track.activeCues && track.activeCues.length > 0) || track.mode === 'showing')
-    );
     const textTracks = this._videoElement.textTracks;
     const parsedTracks = [];
-    let waitingFor708Captions = false;
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
         if (textTracks[i].language !== EXTERNAL_TRACK_ID || textTracks[i].label !== EXTERNAL_TRACK_ID) {
@@ -708,28 +714,33 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           } else if (settings.kind === 'captions' && this._config.enableCEA708Captions) {
             settings.label = settings.label || captionsTextTrackLabels.shift();
             settings.language = settings.language || captionsTextTrackLanguageCodes.shift();
-            settings.available = captionAvailable;
+            settings.available = this._captionsHidden;
             parsedTracks.push(new PKTextTrack(settings));
             this._nativeTextTracksMap[settings.index] = textTracks[i];
-
-            if (!captionAvailable && !waitingFor708Captions) {
-              waitingFor708Captions = true;
-              this._maybeShow708Captions(textTracks[i]);
-            }
           }
         }
+      }
+
+      if (!this._captionsHidden) {
+        this._maybeShow708Captions();
       }
     }
     return parsedTracks;
   }
 
-  _maybeShow708Captions(textTrack: any): void {
-    textTrack.mode = 'hidden';
-    this._eventManager.listenOnce(textTrack, 'cuechange', () => {
-      const textTracks = this._getPKTextTracks();
-      textTracks.forEach(track => (track.available = true) && (track.mode = 'disable'));
-      this._trigger(CustomEventType.TRACKS_CHANGED, {tracks: this._playerTracks});
-    });
+  _maybeShow708Captions(): void {
+    const captions = Array.from(this._videoElement.textTracks).filter(track => track.kind === 'captions');
+    const activeCaption = captions.find(track => track.mode === 'showing' || track.mode === 'hidden');
+    const textTrack = activeCaption || captions[0];
+    if (textTrack) {
+      textTrack.mode = 'hidden';
+      this._eventManager.listenOnce(textTrack, 'cuechange', () => {
+        const textTracks = this._getPKTextTracks();
+        textTracks.forEach(track => (track.available = true) && (track.mode = 'disabled'));
+        this._captionsHidden = true;
+        this._trigger(CustomEventType.TRACKS_CHANGED, {tracks: this._playerTracks});
+      });
+    }
   }
   /**
    * Select a video track
