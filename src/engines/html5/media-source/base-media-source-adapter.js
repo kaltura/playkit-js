@@ -128,6 +128,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   destroy(): Promise<*> {
     this._sourceObj = null;
     this._config = {};
+    this.disableNativeTextTracks();
     this._videoElement.removeEventListener(Html5EventType.DURATION_CHANGE, this._onDurationChanged);
     this._eventManager.destroy();
     return Promise.resolve();
@@ -233,6 +234,19 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    */
   _handleLiveTimeUpdate(): void {
     this._videoElement.addEventListener(Html5EventType.DURATION_CHANGE, this._onDurationChanged);
+  }
+
+  /**
+   * Disables all the existing text tracks.
+   * @public
+   * @returns {void}
+   */
+  disableNativeTextTracks(): void {
+    Array.from(this._videoElement.textTracks).forEach(track => {
+      if (TextTrack.isNativeTextTrack(track) && !TextTrack.isExternalTrack(track)) {
+        track.mode = TextTrack.MODE.DISABLED;
+      }
+    });
   }
 
   /**

@@ -17,7 +17,6 @@ import {LabelOptions} from '../../src/track/label-options';
 import {EngineProvider} from '../../src/engines/engine-provider';
 import FakeEvent from '../../src/event/fake-event';
 import Html5AutoPlayCapability from '../../src/engines/html5/capabilities/html5-autoplay';
-import {EXTERNAL_TRACK_ID} from '../../src/track/external-captions-handler';
 import * as Utils from '../../src/utils/util';
 
 const targetId = 'player-placeholder_player.spec';
@@ -883,9 +882,10 @@ describe('Player', function () {
       });
     });
 
-    it('should return text tracks', done => {
+    it('should return text tracks, captions doesnt exist before first cues', done => {
       player.ready().then(() => {
-        let textTracksLength = video.textTracks ? video.textTracks.length + 1 : 0;
+        const tracks = Array.from(video.textTracks).filter(track => track.kind === 'subtitles');
+        let textTracksLength = tracks ? tracks.length + 1 : 0;
         player.getTracks('text').length.should.be.equal(textTracksLength);
         done();
       });
@@ -1637,7 +1637,7 @@ describe('Player', function () {
           activeNativeTracks.length.should.equal(1);
           selectedTrack.language.should.equal(textTrack.language);
           textTrack.external
-            ? activeNativeTracks[0].language.should.equal(EXTERNAL_TRACK_ID)
+            ? activeNativeTracks[0].language.should.equal(TextTrack.EXTERNAL_TRACK_ID)
             : activeNativeTracks[0].language.should.equal(textTrack.language);
         };
       });
@@ -1706,7 +1706,7 @@ describe('Player', function () {
         player.ready().then(() => {
           try {
             Array.from(video.textTracks).length.should.equal(3);
-            const externalTrack = Array.from(video.textTracks).filter(track => track.language === EXTERNAL_TRACK_ID);
+            const externalTrack = Array.from(video.textTracks).filter(track => TextTrack.isExternalTrack(track));
             externalTrack.length.should.equal(1);
             done();
           } catch (e) {
@@ -1802,7 +1802,7 @@ describe('Player', function () {
         player.ready().then(() => {
           try {
             Array.from(video.textTracks).length.should.equal(2);
-            const externalTrack = Array.from(video.textTracks).filter(track => track.language === EXTERNAL_TRACK_ID);
+            const externalTrack = Array.from(video.textTracks).filter(track => TextTrack.isExternalTrack(track));
             externalTrack.length.should.equal(0);
             done();
           } catch (e) {
