@@ -5,7 +5,7 @@ const DefaultConfig = {
     level: 'ERROR'
   },
   text: {
-    enableCEA708Captions: false,
+    enableCEA708Captions: true,
     useNativeTextTrack: false,
     forceCenter: false,
     captionsTextTrack1Label: 'English',

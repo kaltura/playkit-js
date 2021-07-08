@@ -15,7 +15,6 @@ import Error from '../../../../error/error';
 import defaultConfig from './native-adapter-default-config';
 import type {FairPlayDrmConfigType} from './fairplay-drm-handler';
 import {FairPlayDrmHandler} from './fairplay-drm-handler';
-import {EXTERNAL_TRACK_ID} from '../../../../track/external-captions-handler';
 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
@@ -143,8 +142,18 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _startTimeAttach: number = NaN;
+  /**
+   * Map from our text track to native text track
+   * @type {number}
+   * @private
+   */
   _nativeTextTracksMap = [];
-
+  /**
+   *
+   * @type {number}
+   * @private
+   */
+  _captionsHidden: boolean = false;
   /**
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
@@ -690,29 +699,49 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const parsedTracks = [];
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
-        if (textTracks[i].language !== EXTERNAL_TRACK_ID || textTracks[i].label !== EXTERNAL_TRACK_ID) {
+        if (!PKTextTrack.isExternalTrack(textTracks[i])) {
           const settings = {
             kind: textTracks[i].kind,
-            active: textTracks[i].mode === 'showing',
+            active: textTracks[i].mode === PKTextTrack.MODE.SHOWING,
             label: textTracks[i].label,
             language: textTracks[i].language,
+            available: true,
             index: i
           };
-          if (settings.kind === 'subtitles') {
+          if (settings.kind === PKTextTrack.KIND.SUBTITLES) {
             parsedTracks.push(new PKTextTrack(settings));
             this._nativeTextTracksMap[settings.index] = textTracks[i];
-          } else if (settings.kind === 'captions' && this._config.enableCEA708Captions) {
+          } else if (settings.kind === PKTextTrack.KIND.CAPTIONS && this._config.enableCEA708Captions) {
             settings.label = settings.label || captionsTextTrackLabels.shift();
             settings.language = settings.language || captionsTextTrackLanguageCodes.shift();
+            settings.available = this._captionsHidden;
             parsedTracks.push(new PKTextTrack(settings));
             this._nativeTextTracksMap[settings.index] = textTracks[i];
           }
         }
       }
+
+      if (!this._captionsHidden) {
+        this._maybeShow708Captions();
+      }
     }
     return parsedTracks;
   }
 
+  _maybeShow708Captions(): void {
+    const captions = Array.from(this._videoElement.textTracks).filter(track => track.kind === PKTextTrack.KIND.CAPTIONS);
+    const activeCaption = captions.find(track => track.mode === PKTextTrack.MODE.SHOWING || track.mode === PKTextTrack.MODE.HIDDEN);
+    const textTrack = activeCaption || captions[0];
+    if (textTrack) {
+      textTrack.mode = PKTextTrack.MODE.HIDDEN;
+      this._captionsHidden = true;
+      this._eventManager.listenOnce(textTrack, 'cuechange', () => {
+        const textTracks = this._getPKTextTracks();
+        textTracks.forEach(track => (track.available = true) && (track.mode = PKTextTrack.MODE.DISABLED));
+        this._trigger(CustomEventType.TRACKS_CHANGED, {tracks: this._playerTracks});
+      });
+    }
+  }
   /**
    * Select a video track
    * @function selectVideoTrack
@@ -871,7 +900,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    */
   selectTextTrack(textTrack: PKTextTrack): void {
-    if (textTrack instanceof PKTextTrack && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions')) {
+    if (textTrack instanceof PKTextTrack && PKTextTrack.isNativeTextTrack(textTrack)) {
       this._removeNativeTextTrackChangeListener();
       const selectedTrack = this._nativeTextTracksMap[textTrack.index];
       if (selectedTrack) {
@@ -957,7 +986,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _getDisplayTextTrackModeString(): string {
-    return this._config.displayTextTrack ? 'showing' : 'hidden';
+    return this._config.displayTextTrack ? PKTextTrack.MODE.SHOWING : PKTextTrack.MODE.HIDDEN;
   }
 
   /**

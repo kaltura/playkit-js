@@ -1,6 +1,7 @@
 import {Cue} from './vtt-cue';
 import {Region} from './vtt-region';
 import TextStyle from './text-style';
+import TextTrack from './text-track';
 
 /* eslint-disable */
 /**
@@ -564,7 +565,7 @@ function computeLinePos(cue) {
   const trackList = track.textTrackList;
   let count = 0;
   for (let i = 0; i < trackList.length && trackList[i] !== track; i++) {
-    if (trackList[i].mode === 'showing') {
+    if (trackList[i].mode === TextTrack.MODE.SHOWING) {
       count++;
     }
   }

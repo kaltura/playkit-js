@@ -176,7 +176,7 @@ export default class Track {
     this._label = settings.label;
     this._language = settings.language;
     this._index = settings.index;
-    this._available = settings.available || true;
+    this._available = typeof settings.available === 'boolean' ? settings.available : true;
     this.clone = Track.clone.bind(null, this);
   }
 }

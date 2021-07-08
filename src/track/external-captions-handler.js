@@ -29,8 +29,6 @@ const SRT_POSTFIX: string = 'srt';
 
 const VTT_POSTFIX: string = 'vtt';
 
-const EXTERNAL_TRACK_ID: string = 'playkit-external-track';
-
 class ExternalCaptionsHandler extends FakeEventTarget {
   /**
    * The external captions handler class logger.
@@ -169,7 +167,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     return new TextTrack({
       active: !!caption.default,
       index: index,
-      kind: 'subtitles',
+      kind: TextTrack.KIND.SUBTITLES,
       label: caption.label,
       language: caption.language,
       external: true
@@ -467,10 +465,10 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _resetExternalNativeTextTrack(): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
-      const track = Array.from(videoElement.textTracks).find(track => (track ? track.language === EXTERNAL_TRACK_ID : false));
+      const track = Array.from(videoElement.textTracks).find(track => (track ? TextTrack.isExternalTrack(track) : false));
       if (track) {
         track.cues && Object.values(track.cues).forEach(cue => track.removeCue(cue));
-        track.mode = 'disabled';
+        track.mode = TextTrack.MODE.DISABLED;
       }
     }
   }
@@ -483,9 +481,9 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _addCuesToNativeTextTrack(cues: Array<Cue>): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
-      const track = Array.from(videoElement.textTracks).find(track => (track ? track.language === EXTERNAL_TRACK_ID : false));
+      const track = Array.from(videoElement.textTracks).find(track => (track ? TextTrack.isExternalTrack(track) : false));
       if (track) {
-        track.mode = 'showing';
+        track.mode = TextTrack.MODE.SHOWING;
         cues.forEach(cue => track.addCue(cue));
       }
     }
@@ -499,11 +497,11 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _addNativeTextTrack(): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
-      const sameLanguageTrackIndex = Array.from(videoElement.textTracks).findIndex(track => (track ? track.language === EXTERNAL_TRACK_ID : false));
+      const sameLanguageTrackIndex = Array.from(videoElement.textTracks).findIndex(track => (track ? TextTrack.isExternalTrack(track) : false));
       if (sameLanguageTrackIndex > -1) {
         this._resetExternalNativeTextTrack();
       } else {
-        videoElement.addTextTrack('subtitles', EXTERNAL_TRACK_ID, EXTERNAL_TRACK_ID);
+        videoElement.addTextTrack(TextTrack.KIND.SUBTITLES, TextTrack.EXTERNAL_TRACK_ID, TextTrack.EXTERNAL_TRACK_ID);
       }
     }
   }
@@ -525,4 +523,4 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   }
 }
 
-export {ExternalCaptionsHandler, EXTERNAL_TRACK_ID};
+export {ExternalCaptionsHandler};

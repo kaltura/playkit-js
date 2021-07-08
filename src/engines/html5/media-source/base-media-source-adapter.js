@@ -12,7 +12,6 @@ import TextTrack from '../../../track/text-track';
 import EventManager from '../../../event/event-manager';
 import ImageTrack from '../../../track/image-track';
 import {ThumbnailInfo} from '../../../thumbnail/thumbnail-info';
-import {EXTERNAL_TRACK_ID} from '../../../track/external-captions-handler';
 
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
   /**
@@ -243,14 +242,11 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @returns {void}
    */
   disableNativeTextTracks(): void {
-    let textTracks = this._videoElement.textTracks;
-    if (textTracks) {
-      for (let i = 0; i < textTracks.length; i++) {
-        if (['subtitles', 'captions'].includes(textTracks[i].kind) && ![textTracks[i].language, textTracks[i].label].includes(EXTERNAL_TRACK_ID)) {
-          textTracks[i].mode = 'disabled';
-        }
+    Array.from(this._videoElement.textTracks).forEach(track => {
+      if (TextTrack.isNativeTextTrack(track) && !TextTrack.isExternalTrack(track)) {
+        track.mode = TextTrack.MODE.DISABLED;
       }
-    }
+    });
   }
 
   /**
