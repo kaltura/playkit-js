@@ -1637,7 +1637,7 @@ describe('Player', function () {
           activeNativeTracks.length.should.equal(1);
           selectedTrack.language.should.equal(textTrack.language);
           textTrack.external
-            ? activeNativeTracks[0].language.should.equal(Utils.textTrack.EXTERNAL_TRACK_ID)
+            ? activeNativeTracks[0].language.should.equal(TextTrack.EXTERNAL_TRACK_ID)
             : activeNativeTracks[0].language.should.equal(textTrack.language);
         };
       });
@@ -1706,7 +1706,7 @@ describe('Player', function () {
         player.ready().then(() => {
           try {
             Array.from(video.textTracks).length.should.equal(3);
-            const externalTrack = Array.from(video.textTracks).filter(track => Utils.textTrack.isExternalTrack(track));
+            const externalTrack = Array.from(video.textTracks).filter(track => TextTrack.isExternalTrack(track));
             externalTrack.length.should.equal(1);
             done();
           } catch (e) {
@@ -1802,7 +1802,7 @@ describe('Player', function () {
         player.ready().then(() => {
           try {
             Array.from(video.textTracks).length.should.equal(2);
-            const externalTrack = Array.from(video.textTracks).filter(track => Utils.textTrack.isExternalTrack(track));
+            const externalTrack = Array.from(video.textTracks).filter(track => TextTrack.isExternalTrack(track));
             externalTrack.length.should.equal(0);
             done();
           } catch (e) {

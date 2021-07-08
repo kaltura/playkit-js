@@ -6,6 +6,14 @@ import Track from './track';
  * @classdesc
  */
 const TextTrack: TextTrack = class TextTrack extends Track {
+  MODE: {[mode: string]: string};
+  KIND: {[kind: string]: string};
+  EXTERNAL_TRACK_ID: string;
+
+  isMetaDataTrack: Function;
+  isNativeTextTrack: Function;
+  isExternalTrack: Function;
+
   /**
    * The kind of the text track:
    * subtitles/captions/metadata.
@@ -51,6 +59,32 @@ const TextTrack: TextTrack = class TextTrack extends Track {
     this._kind = settings.kind;
     this._external = settings.external;
   }
+};
+
+TextTrack.MODE = {
+  DISABLED: 'disabled',
+  SHOWING: 'showing',
+  HIDDEN: 'hidden'
+};
+
+TextTrack.KIND = {
+  METADATA: 'metadata',
+  SUBTITLES: 'subtitles',
+  CAPTIONS: 'captions'
+};
+
+TextTrack.EXTERNAL_TRACK_ID = 'playkit-external-track';
+
+TextTrack.isMetaDataTrack = (track: any) => {
+  return track && track.kind === TextTrack.KIND.METADATA;
+};
+
+TextTrack.isNativeTextTrack = (track: any) => {
+  return track && [TextTrack.KIND.SUBTITLES, TextTrack.KIND.CAPTIONS].includes(track.kind);
+};
+
+TextTrack.isExternalTrack = (track: any) => {
+  return track && [track.language, track.label].includes(TextTrack.EXTERNAL_TRACK_ID);
 };
 
 export default TextTrack;

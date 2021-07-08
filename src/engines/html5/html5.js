@@ -305,7 +305,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._eventManager.listen(this._el, Html5EventType.ERROR, () => this._handleVideoError());
     this._handleMetadataTrackEvents();
     this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
-      if (Utils.textTrack.isNativeTextTrack(event.track)) {
+      if (PKTextTrack.isNativeTextTrack(event.track)) {
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_ADDED, {track: event.track}));
       }
     });
@@ -1068,9 +1068,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _addCueChangeListener(): void {
-    let textTrackEl = Array.from(this._el.textTracks).find(
-      track => Utils.textTrack.isNativeTextTrack(track) && track.mode !== Utils.textTrack.DISABLED
-    );
+    let textTrackEl = Array.from(this._el.textTracks).find(track => PKTextTrack.isNativeTextTrack(track) && track.mode !== PKTextTrack.MODE.DISABLED);
     if (textTrackEl) {
       this._eventManager.listen(textTrackEl, 'cuechange', (e: FakeEvent) => this._onCueChange(e));
     }
@@ -1117,7 +1115,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   resetAllCues(): void {
     let activeTextTrack = Array.from(this._el.textTracks).find(
-      track => Utils.textTrack.isNativeTextTrack(track) && track.mode !== Utils.textTrack.DISABLED
+      track => PKTextTrack.isNativeTextTrack(track) && track.mode !== PKTextTrack.MODE.DISABLED
     );
     if (activeTextTrack) {
       for (let i = 0; i < activeTextTrack.cues.length; i++) {
@@ -1177,25 +1175,25 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   _handleMetadataTrackEvents(): void {
     const listenToCueChange = track => {
-      track.mode = Utils.textTrack.HIDDEN;
+      track.mode = PKTextTrack.MODE.HIDDEN;
       this._eventManager.listen(track, 'cuechange', () => {
         this.dispatchEvent(new FakeEvent(CustomEventType.TIMED_METADATA, {cues: Array.from(track.activeCues)}));
       });
     };
-    const metadataTrack = Array.from(this._el.textTracks).find((track: TextTrack) => Utils.textTrack.isMetaDataTrack(track));
+    const metadataTrack = Array.from(this._el.textTracks).find((track: TextTrack) => PKTextTrack.isMetaDataTrack(track));
     if (metadataTrack) {
       listenToCueChange(metadataTrack);
     } else {
       this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
-        if (Utils.textTrack.isMetaDataTrack(event.track)) {
+        if (PKTextTrack.isMetaDataTrack(event.track)) {
           listenToCueChange(event.track);
         }
       });
     }
     this._eventManager.listen(this._el.textTracks, 'change', () => {
-      const metadataTrack = Array.from(this._el.textTracks).find((track: TextTrack) => Utils.textTrack.isMetaDataTrack(track));
-      if (metadataTrack && metadataTrack.mode !== Utils.textTrack.HIDDEN) {
-        metadataTrack.mode = Utils.textTrack.HIDDEN;
+      const metadataTrack = Array.from(this._el.textTracks).find((track: TextTrack) => PKTextTrack.isMetaDataTrack(track));
+      if (metadataTrack && metadataTrack.mode !== PKTextTrack.MODE.HIDDEN) {
+        metadataTrack.mode = PKTextTrack.MODE.HIDDEN;
       }
     });
   }
