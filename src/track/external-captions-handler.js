@@ -29,8 +29,6 @@ const SRT_POSTFIX: string = 'srt';
 
 const VTT_POSTFIX: string = 'vtt';
 
-const EXTERNAL_TRACK_ID: string = 'playkit-external-track';
-
 class ExternalCaptionsHandler extends FakeEventTarget {
   /**
    * The external captions handler class logger.
@@ -503,7 +501,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       if (sameLanguageTrackIndex > -1) {
         this._resetExternalNativeTextTrack();
       } else {
-        videoElement.addTextTrack(Utils.textTrack.SUBTITLES, EXTERNAL_TRACK_ID, EXTERNAL_TRACK_ID);
+        videoElement.addTextTrack(Utils.textTrack.SUBTITLES, Utils.textTrack.EXTERNAL_TRACK_ID, Utils.textTrack.EXTERNAL_TRACK_ID);
       }
     }
   }
@@ -525,4 +523,4 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   }
 }
 
-export {ExternalCaptionsHandler, EXTERNAL_TRACK_ID};
+export {ExternalCaptionsHandler};

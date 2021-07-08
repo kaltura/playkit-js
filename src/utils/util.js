@@ -1,6 +1,5 @@
 //@flow
 import {jsonp} from './jsonp';
-import {EXTERNAL_TRACK_ID} from '../track/external-captions-handler';
 
 ('use strict');
 
@@ -648,34 +647,33 @@ const _textTrack = {
   SUBTITLES: 'subtitles',
   CAPTIONS: 'captions',
 
+  EXTERNAL_TRACK_ID: 'playkit-external-track',
+
   /**
    * text track is metadata
-   * @public
    * @param {any} track  - if text track is subtitle
-   * @returns {void}
+   * @returns {boolean} - if track is metadata text track
    */
-  isMetaDataTrack: function (track: any) {
-    return track && track.kind === this.METADATA;
+  isMetaDataTrack: function (track: any): boolean {
+    return track && track.kind === _textTrack.METADATA;
   },
 
   /**
    * if text track is subtitle or caption
-   * @public
    * @param {any} track  - text track
-   * @returns {void}
+   * @returns {boolean} - if track is native text track
    */
-  isNativeTextTrack: function (track: any) {
-    return track && [this.SUBTITLES, this.CAPTIONS].includes(track.kind);
+  isNativeTextTrack: function (track: any): boolean {
+    return track && [_textTrack.SUBTITLES, _textTrack.CAPTIONS].includes(track.kind);
   },
 
   /**
    * if text track is external
-   * @public
    * @param {any} track  - text track
-   * @returns {void}
+   * @returns {boolean} - if track is external track
    */
-  isExternalTrack: function (track: any) {
-    return track && [track.language, track.label].includes(EXTERNAL_TRACK_ID);
+  isExternalTrack: function (track: any): boolean {
+    return track && [track.language, track.label].includes(_textTrack.EXTERNAL_TRACK_ID);
   }
 };
 

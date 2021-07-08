@@ -1,6 +1,7 @@
 import {Cue} from './vtt-cue';
 import {Region} from './vtt-region';
 import TextStyle from './text-style';
+import * as Utils from '../utils/util';
 
 /* eslint-disable */
 /**
