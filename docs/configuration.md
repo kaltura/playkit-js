@@ -33,7 +33,7 @@ var config = {
     level: 'ERROR'
   },
   text: {
-    enableCEA708Captions: false,
+    enableCEA708Captions: true,
     useNativeTextTrack: false,
     forceCenter: false,
     captionsTextTrack1Label: 'English',
@@ -490,7 +490,7 @@ var config = {
 > ```js
 > {
 >  useNativeTextTrack: false,
->  enableCEA708Captions: false,
+>  enableCEA708Captions: true,
 >  forceCenter: false,
 >  captionsTextTrack1Label: "English",
 >  captionsTextTrack1LanguageCode: "en",

@@ -2429,7 +2429,7 @@ export default class Player extends FakeEventTarget {
         new TextTrack({
           active: false,
           index: textTracks.length,
-          kind: 'subtitles',
+          kind: TextTrack.KIND.SUBTITLES,
           label: 'Off',
           language: OFF
         })
