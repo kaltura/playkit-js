@@ -734,10 +734,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const textTrack = activeCaption || captions[0];
     if (textTrack) {
       textTrack.mode = PKTextTrack.MODE.HIDDEN;
+      this._captionsHidden = true;
       this._eventManager.listenOnce(textTrack, 'cuechange', () => {
         const textTracks = this._getPKTextTracks();
         textTracks.forEach(track => (track.available = true) && (track.mode = PKTextTrack.MODE.DISABLED));
-        this._captionsHidden = true;
         this._trigger(CustomEventType.TRACKS_CHANGED, {tracks: this._playerTracks});
       });
     }
