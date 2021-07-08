@@ -705,6 +705,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
             active: textTracks[i].mode === PKTextTrack.MODE.SHOWING,
             label: textTracks[i].label,
             language: textTracks[i].language,
+            available: true,
             index: i
           };
           if (settings.kind === PKTextTrack.KIND.SUBTITLES) {
