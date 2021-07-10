@@ -1,6 +1,6 @@
 # PlayKit JS - State of the Art HTML5 Player
 
-[![Build Status](https://travis-ci.org/kaltura/playkit-js.svg?branch=master)](https://travis-ci.org/kaltura/playkit-js)
+[![Build Status](https://travis-ci.com/kaltura/playkit-js.svg?branch=master)](https://travis-ci.com/kaltura/playkit-js)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![](https://img.shields.io/npm/v/@playkit-js/playkit-js/latest.svg)](https://www.npmjs.com/package/@playkit-js/playkit-js)
 [![](https://img.shields.io/npm/v/@playkit-js/playkit-js/canary.svg)](https://www.npmjs.com/package/@playkit-js/playkit-js/v/canary)
