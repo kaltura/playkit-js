@@ -1841,10 +1841,7 @@ export default class Player extends FakeEventTarget {
       });
       this._eventManager.listen(this._engine, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this._onTextTrackChanged(event));
       this._eventManager.listen(this._engine, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this._onTracksChanged(event));
-      this._eventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => {
-        this._onCueChange(event);
-        this.dispatchEvent(event);
-      });
+      this._eventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.TIMED_METADATA, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.PLAY_FAILED, (event: FakeEvent) => {
@@ -2384,6 +2381,7 @@ export default class Player extends FakeEventTarget {
     }
     this._updateCueDisplaySettings();
     this._updateTextDisplay(this._activeTextCues);
+    this.dispatchEvent(event);
   }
 
   /**
