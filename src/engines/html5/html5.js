@@ -391,7 +391,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._mediaSourceAdapter.selectTextTrack(textTrack);
     }
     this.resetAllCues();
-    this._addCueChangeListener();
+    this.addCueChangeListener();
   }
 
   /**
@@ -416,7 +416,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._mediaSourceAdapter.hideTextTrack();
     }
     this._removeCueChangeListeners();
-    this._addCueChangeListener();
   }
 
   /**
@@ -1069,7 +1068,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    * @private
    */
-  _addCueChangeListener(): void {
+  addCueChangeListener(): void {
     let textTrackEl = Array.from(this._el.textTracks).find(track => PKTextTrack.isNativeTextTrack(track) && track.mode !== PKTextTrack.MODE.DISABLED);
     if (textTrackEl) {
       this._eventManager.listen(textTrackEl, 'cuechange', (e: FakeEvent) => this._onCueChange(e));
