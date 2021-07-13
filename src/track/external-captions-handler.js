@@ -2,7 +2,7 @@
 import Error from '../error/error';
 import * as Utils from '../utils/util';
 import {Parser, StringDecoder} from './text-track-display';
-import TextTrack from './text-track';
+import TextTrack, {getActiveCues} from './text-track';
 import Track from './track';
 import {CustomEventType, Html5EventType} from '../event/event-type';
 import FakeEvent from '../event/fake-event';
@@ -229,6 +229,15 @@ class ExternalCaptionsHandler extends FakeEventTarget {
         cue.hasBeenReset = true;
       });
     }
+  }
+
+  addCueChangeListener(textTrackEl: TextTrack): void {
+    this._eventManager.listen(textTrackEl, 'cuechange', (e: FakeEvent) => this._onCueChange(e));
+  }
+
+  _onCueChange(e: FakeEvent): void {
+    let activeCues = getActiveCues(e);
+    this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: activeCues}));
   }
 
   /**
@@ -481,10 +490,11 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _addCuesToNativeTextTrack(cues: Array<Cue>): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
-      const track = Array.from(videoElement.textTracks).find(track => (track ? TextTrack.isExternalTrack(track) : false));
+      const track: TextTrack = Array.from(videoElement.textTracks).find(track => (track ? TextTrack.isExternalTrack(track) : false));
       if (track) {
         track.mode = TextTrack.MODE.SHOWING;
         cues.forEach(cue => track.addCue(cue));
+        this.addCueChangeListener(track);
       }
     }
   }

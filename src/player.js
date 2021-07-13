@@ -1272,9 +1272,6 @@ export default class Player extends FakeEventTarget {
         } else if (track.external) {
           this._engine.hideTextTrack();
           this._externalCaptionsHandler.selectTextTrack(track);
-          if (this.config.text.useNativeTextTrack) {
-            this._engine.addCueChangeListener();
-          }
         } else {
           this._externalCaptionsHandler.hideTextTrack();
           this._engine.selectTextTrack(track);
