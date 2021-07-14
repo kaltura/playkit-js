@@ -95,7 +95,7 @@ TextTrack.isExternalTrack = (track: any) => {
  * @returns {void}
  * @private
  */
-function getActiveCues(e) {
+function getActiveCues(e: FakeEvent) {
   let textTrack: TextTrack = e.currentTarget;
   let activeCues: Array<Cue> = [];
   for (let cue of textTrack.activeCues) {
