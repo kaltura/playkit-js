@@ -1,7 +1,7 @@
 //@flow
 import Track from './track';
-import {Cue} from "./vtt-cue";
-import Error from "../error/error";
+import {Cue} from './vtt-cue';
+import Error from '../error/error';
 
 /**
  * Text track representation of the player.
@@ -89,6 +89,12 @@ TextTrack.isExternalTrack = (track: any) => {
   return track && [track.language, track.label].includes(TextTrack.EXTERNAL_TRACK_ID);
 };
 
+/**
+ * Normalize cues to be of type of VTT model.
+ * @param {FakeEvent} e - The native cuechange event.
+ * @returns {void}
+ * @private
+ */
 function getActiveCues(e) {
   let textTrack: TextTrack = e.currentTarget;
   let activeCues: Array<Cue> = [];
