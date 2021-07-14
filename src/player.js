@@ -596,7 +596,7 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Get video height.
-   * @returns {?number} - The the intrinsic height of the video.
+   * @returns {?number} - The intrinsic height of the video.
    * @public
    */
   get videoHeight(): ?number {
@@ -608,7 +608,7 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Get video width.
-   * @returns {?number} - The the intrinsic width of the video.
+   * @returns {?number} - The intrinsic width of the video.
    * @public
    */
   get videoWidth(): ?number {
