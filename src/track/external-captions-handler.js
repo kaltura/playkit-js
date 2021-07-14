@@ -106,6 +106,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
         this._resetCurrentTrack();
       }
     }
+    this._removeCueChangeListeners();
   }
 
   /**
@@ -196,6 +197,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @public
    */
   selectTextTrack(textTrack: TextTrack): void {
+    this._removeCueChangeListeners();
     if (this._textTrackModel[textTrack.language]) {
       if (this._textTrackModel[textTrack.language].cuesStatus === CuesStatus.DOWNLOADED) {
         this._selectTextTrack(textTrack);
@@ -231,10 +233,33 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     }
   }
 
+  /**
+   * Add cuechange listener to active textTrack.
+   * @param {TextTrack} textTrackEl - selected text track
+   * @returns {void}
+   * @private
+   */
   addCueChangeListener(textTrackEl: TextTrack): void {
     this._eventManager.listen(textTrackEl, 'cuechange', (e: FakeEvent) => this._onCueChange(e));
   }
 
+  /**
+   * Remove cuechange listeners from textTracks
+   * @returns {void}
+   * @private
+   */
+  _removeCueChangeListeners(): void {
+    for (let i = 0; i < this._player.getVideoElement().textTracks.length; i++) {
+      this._eventManager.unlisten(this._player.getVideoElement().textTracks[i], 'cuechange');
+    }
+  }
+
+  /**
+   * oncuechange event handler.
+   * @param {FakeEvent} e - The event arg.
+   * @returns {void}
+   * @private
+   */
   _onCueChange(e: FakeEvent): void {
     let activeCues = getActiveCues(e);
     this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: activeCues}));
