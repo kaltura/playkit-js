@@ -55,6 +55,8 @@ declare interface IEngine extends FakeEventTarget {
   +seeking: boolean;
   +played: TimeRanges;
   +buffered: TimeRanges;
+  +videoHeight: number;
+  +videoWidth: number;
   muted: boolean;
   +defaultMuted: boolean;
   src: string;
