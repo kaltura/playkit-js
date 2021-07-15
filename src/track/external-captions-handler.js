@@ -249,8 +249,11 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _removeCueChangeListeners(): void {
-    for (let i = 0; i < this._player.getVideoElement().textTracks.length; i++) {
-      this._eventManager.unlisten(this._player.getVideoElement().textTracks[i], 'cuechange');
+    const videoElement: HTMLVideoElement = this._player.getVideoElement();
+    if (videoElement && videoElement.textTracks) {
+      for (let i = 0; i < videoElement.textTracks.length; i++) {
+        this._eventManager.unlisten(videoElement.textTracks[i], 'cuechange');
+      }
     }
   }
 
@@ -261,8 +264,9 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _onCueChange(e: FakeEvent): void {
-    let activeCues = getActiveCues(e);
-    this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: activeCues}));
+    let activeCues: TextTrackCueList = e.currentTarget.activeCues;
+    let normalizedActiveCues = getActiveCues(activeCues);
+    this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: normalizedActiveCues}));
   }
 
   /**
@@ -519,7 +523,6 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       if (track) {
         track.mode = TextTrack.MODE.SHOWING;
         cues.forEach(cue => track.addCue(cue));
-        this.addCueChangeListener(track);
       }
     }
   }

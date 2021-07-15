@@ -14,6 +14,7 @@ import Error from '../../error/error';
 import getLogger from '../../utils/logger';
 import {DroppedFramesWatcher} from '../dropped-frames-watcher';
 import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
+import TextTrack from "../../track/text-track";
 
 const CURRENT_OR_NEXT_SEGMENT_COUNT: number = 2;
 
@@ -1092,8 +1093,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _onCueChange(e: FakeEvent): void {
-    let activeCues = getActiveCues(e);
-    this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: activeCues}));
+    let activeCues: TextTrackCueList = e.currentTarget.activeCues;
+    let normalizedActiveCues = getActiveCues(activeCues);
+    this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: normalizedActiveCues}));
   }
 
   /**

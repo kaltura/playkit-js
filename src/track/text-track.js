@@ -91,26 +91,25 @@ TextTrack.isExternalTrack = (track: any) => {
 
 /**
  * Normalize cues to be of type of VTT model.
- * @param {FakeEvent} e - The native cuechange event.
+ * @param {textTrackCueList} e - The text track cue list contains the cues.
  * @returns {void}
  * @private
  */
-function getActiveCues(e: FakeEvent) {
-  let textTrack: TextTrack = e.currentTarget;
-  let activeCues: Array<Cue> = [];
-  for (let cue of textTrack.activeCues) {
+function getActiveCues(textTrackCueList: TextTrackCueList) {
+  let normalizedCues: Array<Cue> = [];
+  for (let cue of textTrackCueList) {
     //Normalize cues to be of type of VTT model
     if (window.VTTCue && cue instanceof window.VTTCue) {
-      activeCues.push(cue);
+      normalizedCues.push(cue);
     } else if (window.TextTrackCue && cue instanceof window.TextTrackCue) {
       try {
-        activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text));
+        normalizedCues.push(new Cue(cue.startTime, cue.endTime, cue.text));
       } catch (error) {
         new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNABLE_TO_CREATE_TEXT_CUE, error);
       }
     }
   }
-  return activeCues;
+  return normalizedCues;
 }
 
 export default TextTrack;
