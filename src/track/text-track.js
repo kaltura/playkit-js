@@ -91,7 +91,7 @@ TextTrack.isExternalTrack = (track: any) => {
 
 /**
  * Normalize cues to be of type of VTT model.
- * @param {textTrackCueList} e - The text track cue list contains the cues.
+ * @param {TextTrackCueList} textTrackCueList - The text track cue list contains the cues.
  * @returns {void}
  * @private
  */
