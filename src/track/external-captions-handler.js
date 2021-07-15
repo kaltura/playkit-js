@@ -249,7 +249,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _removeCueChangeListeners(): void {
-    const videoElement: HTMLVideoElement = this._player.getVideoElement();
+    const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
       for (let i = 0; i < videoElement.textTracks.length; i++) {
         this._eventManager.unlisten(videoElement.textTracks[i], 'cuechange');
