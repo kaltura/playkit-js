@@ -11,6 +11,7 @@ import EventManager from '../event/event-manager';
 import FakeEventTarget from '../event/fake-event-target';
 import {Cue} from './vtt-cue';
 import Player from '../player';
+import PKTextTrack from './text-track';
 
 type CueStatusType = {[status: string]: number};
 
@@ -98,6 +99,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   hideTextTrack(): void {
     if (this._player.config.text.useNativeTextTrack) {
       this._resetExternalNativeTextTrack();
+      this._removeCueChangeListeners();
     } else {
       // only if external text track was active we need to hide it.
       if (this._isTextTrackActive) {
@@ -106,7 +108,6 @@ class ExternalCaptionsHandler extends FakeEventTarget {
         this._resetCurrentTrack();
       }
     }
-    this._removeCueChangeListeners();
   }
 
   /**
@@ -197,7 +198,6 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @public
    */
   selectTextTrack(textTrack: TextTrack): void {
-    this._removeCueChangeListeners();
     if (this._textTrackModel[textTrack.language]) {
       if (this._textTrackModel[textTrack.language].cuesStatus === CuesStatus.DOWNLOADED) {
         this._selectTextTrack(textTrack);
@@ -211,10 +211,13 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       }
     }
   }
+
   _selectTextTrack(textTrack: TextTrack) {
     this.hideTextTrack();
     if (this._player.config.text.useNativeTextTrack) {
       this._addCuesToNativeTextTrack(this._textTrackModel[textTrack.language].cues);
+      this._removeCueChangeListeners();
+      this._addCueChangeListener();
     } else {
       this._setTextTrack(textTrack);
     }
@@ -235,12 +238,19 @@ class ExternalCaptionsHandler extends FakeEventTarget {
 
   /**
    * Add cuechange listener to active textTrack.
-   * @param {TextTrack} textTrackEl - selected text track
    * @returns {void}
    * @private
    */
-  addCueChangeListener(textTrackEl: TextTrack): void {
-    this._eventManager.listen(textTrackEl, 'cuechange', (e: FakeEvent) => this._onCueChange(e));
+  _addCueChangeListener(): void {
+    const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
+    if (videoElement && videoElement.textTracks) {
+      let textTrackEl: TextTrack = Array.from(videoElement.textTracks).find(
+        track => PKTextTrack.isNativeTextTrack(track) && track.mode === PKTextTrack.MODE.SHOWING
+      );
+      if (textTrackEl) {
+        this._eventManager.listen(textTrackEl, 'cuechange', (e: FakeEvent) => this._onCueChange(e));
+      }
+    }
   }
 
   /**
