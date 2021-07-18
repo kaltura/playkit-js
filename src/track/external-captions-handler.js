@@ -2,7 +2,7 @@
 import Error from '../error/error';
 import * as Utils from '../utils/util';
 import {Parser, StringDecoder} from './text-track-display';
-import TextTrack from './text-track';
+import TextTrack, {getActiveCues} from './text-track';
 import Track from './track';
 import {CustomEventType, Html5EventType} from '../event/event-type';
 import FakeEvent from '../event/fake-event';
@@ -11,6 +11,7 @@ import EventManager from '../event/event-manager';
 import FakeEventTarget from '../event/fake-event-target';
 import {Cue} from './vtt-cue';
 import Player from '../player';
+import PKTextTrack from './text-track';
 
 type CueStatusType = {[status: string]: number};
 
@@ -98,6 +99,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   hideTextTrack(): void {
     if (this._player.config.text.useNativeTextTrack) {
       this._resetExternalNativeTextTrack();
+      this._removeCueChangeListeners();
     } else {
       // only if external text track was active we need to hide it.
       if (this._isTextTrackActive) {
@@ -209,10 +211,13 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       }
     }
   }
+
   _selectTextTrack(textTrack: TextTrack) {
     this.hideTextTrack();
     if (this._player.config.text.useNativeTextTrack) {
       this._addCuesToNativeTextTrack(this._textTrackModel[textTrack.language].cues);
+      this._removeCueChangeListeners();
+      this._addCueChangeListener();
     } else {
       this._setTextTrack(textTrack);
     }
@@ -229,6 +234,49 @@ class ExternalCaptionsHandler extends FakeEventTarget {
         cue.hasBeenReset = true;
       });
     }
+  }
+
+  /**
+   * Add cuechange listener to active textTrack.
+   * @returns {void}
+   * @private
+   */
+  _addCueChangeListener(): void {
+    const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
+    if (videoElement && videoElement.textTracks) {
+      let textTrackEl: TextTrack = Array.from(videoElement.textTracks).find(
+        track => PKTextTrack.isNativeTextTrack(track) && track.mode === PKTextTrack.MODE.SHOWING
+      );
+      if (textTrackEl) {
+        this._eventManager.listen(textTrackEl, 'cuechange', (e: FakeEvent) => this._onCueChange(e));
+      }
+    }
+  }
+
+  /**
+   * Remove cuechange listeners from textTracks
+   * @returns {void}
+   * @private
+   */
+  _removeCueChangeListeners(): void {
+    const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
+    if (videoElement && videoElement.textTracks) {
+      for (let i = 0; i < videoElement.textTracks.length; i++) {
+        this._eventManager.unlisten(videoElement.textTracks[i], 'cuechange');
+      }
+    }
+  }
+
+  /**
+   * oncuechange event handler.
+   * @param {FakeEvent} e - The event arg.
+   * @returns {void}
+   * @private
+   */
+  _onCueChange(e: FakeEvent): void {
+    let activeCues: TextTrackCueList = e.currentTarget.activeCues;
+    let normalizedActiveCues = getActiveCues(activeCues);
+    this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: normalizedActiveCues}));
   }
 
   /**
@@ -481,7 +529,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _addCuesToNativeTextTrack(cues: Array<Cue>): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
-      const track = Array.from(videoElement.textTracks).find(track => (track ? TextTrack.isExternalTrack(track) : false));
+      const track: TextTrack = Array.from(videoElement.textTracks).find(track => (track ? TextTrack.isExternalTrack(track) : false));
       if (track) {
         track.mode = TextTrack.MODE.SHOWING;
         cues.forEach(cue => track.addCue(cue));
