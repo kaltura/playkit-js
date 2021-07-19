@@ -486,7 +486,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
         track.mode = TextTrack.MODE.SHOWING;
         // For IE 11 which is not support VTTCue API
         if (window.VTTCue === undefined) {
-          let convertedCues: TextTrackCue[] = this._convertCues(cues);
+          let convertedCues: Array<TextTrackCue> = this._convertCues(cues);
           convertedCues.forEach(cue => track.addCue(cue));
         } else {
           cues.forEach(cue => track.addCue(cue));
@@ -499,9 +499,9 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * converting cues to be instances of TextTrackCue
    * for browser which dose not support VTTCue API
    * @param {Array<Cue>} cues - the cues to be converted
-   * @returns {TextTrackCue[]} the converted cues
+   * @returns {Array<TextTrackCue>} the converted cues
    */
-  _convertCues(cues: Array<Cue>): TextTrackCue[] {
+  _convertCues(cues: Array<Cue>): Array<TextTrackCue> {
     return cues.map(cue => new TextTrackCue(cue.startTime, cue.endTime, cue.text));
   }
 
