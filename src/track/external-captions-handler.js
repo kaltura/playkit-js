@@ -484,9 +484,25 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       const track = Array.from(videoElement.textTracks).find(track => (track ? TextTrack.isExternalTrack(track) : false));
       if (track) {
         track.mode = TextTrack.MODE.SHOWING;
-        cues.forEach(cue => track.addCue(cue));
+        // For IE 11 which is not support VTTCue API
+        if (window.VTTCue === undefined) {
+          let convertedCues: Array<TextTrackCue> = this._convertCues(cues);
+          convertedCues.forEach(cue => track.addCue(cue));
+        } else {
+          cues.forEach(cue => track.addCue(cue));
+        }
       }
     }
+  }
+
+  /**
+   * converting cues to be instances of TextTrackCue
+   * for browser which dose not support VTTCue API
+   * @param {Array<Cue>} cues - the cues to be converted
+   * @returns {Array<TextTrackCue>} the converted cues
+   */
+  _convertCues(cues: Array<Cue>): Array<TextTrackCue> {
+    return cues.map(cue => new TextTrackCue(cue.startTime, cue.endTime, cue.text));
   }
 
   /**
