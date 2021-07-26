@@ -2018,7 +2018,7 @@ describe('Player', function () {
         player.play();
       });
 
-      it('should fire first play only after media loaded', done => {
+      it.only('should fire first play only after media loaded', done => {
         player.addEventListener(CustomEventType.MEDIA_LOADED, () => {
           player.addEventListener(CustomEventType.FIRST_PLAY, () => {
             done();
