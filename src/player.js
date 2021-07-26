@@ -1807,7 +1807,7 @@ export default class Player extends FakeEventTarget {
       this._appendEngineEl();
     } else {
       if (this._engine.id === Engine.id) {
-        this._engine.restore(source, this._config);
+        this._engine.restore(source, {...this._config, sources: this._sources});
       } else {
         this._engine.destroy();
         this._createEngine(Engine, source);
