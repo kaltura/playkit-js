@@ -4,7 +4,7 @@ const isMacOS = /^darwin/.test(process.platform);
 const customLaunchers = {
   Chrome_travis_ci: {
     base: 'Chrome',
-    flags: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required']
+    flags: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required', '--version=90.0.4430.212']
   }
 };
 
