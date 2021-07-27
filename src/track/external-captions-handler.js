@@ -98,8 +98,8 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    */
   hideTextTrack(): void {
     if (this._player.config.text.useNativeTextTrack) {
-      this._resetExternalNativeTextTrack();
       this._removeCueChangeListeners();
+      this._resetExternalNativeTextTrack();
     } else {
       // only if external text track was active we need to hide it.
       if (this._isTextTrackActive) {
@@ -216,7 +216,6 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     this.hideTextTrack();
     if (this._player.config.text.useNativeTextTrack) {
       this._addCuesToNativeTextTrack(this._textTrackModel[textTrack.language].cues);
-      this._removeCueChangeListeners();
       this._addCueChangeListener();
     } else {
       this._setTextTrack(textTrack);
