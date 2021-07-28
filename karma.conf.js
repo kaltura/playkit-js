@@ -11,7 +11,7 @@ const customLaunchers = {
 const launchers = {
   Chrome_browser: {
     base: 'Chrome',
-    flags: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required']
+    flags: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required', '--max-web-media-player-count=1000']
   }
 };
 
