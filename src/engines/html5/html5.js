@@ -14,7 +14,6 @@ import Error from '../../error/error';
 import getLogger from '../../utils/logger';
 import {DroppedFramesWatcher} from '../dropped-frames-watcher';
 import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
-import TextTrack from '../../track/text-track';
 
 const CURRENT_OR_NEXT_SEGMENT_COUNT: number = 2;
 

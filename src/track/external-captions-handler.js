@@ -2,7 +2,7 @@
 import Error from '../error/error';
 import * as Utils from '../utils/util';
 import {Parser, StringDecoder} from './text-track-display';
-import TextTrack, {getActiveCues} from './text-track';
+import TextTrack from './text-track';
 import Track from './track';
 import {CustomEventType, Html5EventType} from '../event/event-type';
 import FakeEvent from '../event/fake-event';
