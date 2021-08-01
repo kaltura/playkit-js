@@ -1,5 +1,7 @@
 //@flow
 import Track from './track';
+import {Cue} from './vtt-cue';
+import Error from '../error/error';
 
 /**
  * Text track representation of the player.
@@ -87,4 +89,28 @@ TextTrack.isExternalTrack = (track: any) => {
   return track && [track.language, track.label].includes(TextTrack.EXTERNAL_TRACK_ID);
 };
 
+/**
+ * Normalize cues to be of type of VTT model.
+ * @param {TextTrackCueList} textTrackCueList - The text track cue list contains the cues.
+ * @returns {void}
+ * @private
+ */
+function getActiveCues(textTrackCueList: TextTrackCueList) {
+  let normalizedCues: Array<Cue> = [];
+  for (let cue of textTrackCueList) {
+    //Normalize cues to be of type of VTT model
+    if (window.VTTCue && cue instanceof window.VTTCue) {
+      normalizedCues.push(cue);
+    } else if (window.TextTrackCue && cue instanceof window.TextTrackCue) {
+      try {
+        normalizedCues.push(new Cue(cue.startTime, cue.endTime, cue.text));
+      } catch (error) {
+        new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNABLE_TO_CREATE_TEXT_CUE, error);
+      }
+    }
+  }
+  return normalizedCues;
+}
+
 export default TextTrack;
+export {getActiveCues};
