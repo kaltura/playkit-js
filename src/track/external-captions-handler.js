@@ -2,7 +2,7 @@
 import Error from '../error/error';
 import * as Utils from '../utils/util';
 import {Parser, StringDecoder} from './text-track-display';
-import TextTrack from './text-track';
+import TextTrack, {getActiveCues} from './text-track';
 import Track from './track';
 import {CustomEventType, Html5EventType} from '../event/event-type';
 import FakeEvent from '../event/fake-event';
@@ -11,7 +11,6 @@ import EventManager from '../event/event-manager';
 import FakeEventTarget from '../event/fake-event-target';
 import {Cue} from './vtt-cue';
 import Player from '../player';
-import PKTextTrack from './text-track';
 
 type CueStatusType = {[status: string]: number};
 
@@ -244,7 +243,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
       let textTrackEl: TextTrack = Array.from(videoElement.textTracks).find(
-        track => PKTextTrack.isNativeTextTrack(track) && track.mode === PKTextTrack.MODE.SHOWING
+        track => TextTrack.isNativeTextTrack(track) && track.mode === TextTrack.MODE.SHOWING
       );
       if (textTrackEl) {
         this._eventManager.listen(textTrackEl, 'cuechange', (e: FakeEvent) => this._onCueChange(e));
