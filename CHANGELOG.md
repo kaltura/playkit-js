@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.73.0](https://github.com/kaltura/playkit-js/compare/v0.72.0...v0.73.0) (2021-07-27)
+
+
+### Bug Fixes
+
+* **FEC-10832:** captions not shown in change media from media with 608 captions ([#583](https://github.com/kaltura/playkit-js/issues/583)) ([a7dcf4f](https://github.com/kaltura/playkit-js/commit/a7dcf4f))
+* **FEC-11402:** preview doesn't work in video ratio different than 16:9 ([#588](https://github.com/kaltura/playkit-js/issues/588)) ([e0b74cc](https://github.com/kaltura/playkit-js/commit/e0b74cc))
+* **FEC-11414:**  Externals text tracks with native subtitles not supported on IE 11 ([#589](https://github.com/kaltura/playkit-js/issues/589)) ([af0f086](https://github.com/kaltura/playkit-js/commit/af0f086))
+* **FEC-11434:** change media doesn't work on chromecast ([#590](https://github.com/kaltura/playkit-js/issues/590)) ([4b47cdb](https://github.com/kaltura/playkit-js/commit/4b47cdb))
+
+
+### Build System
+
+* **FEC-11389:** reduce builds from travis ([31eb57b](https://github.com/kaltura/playkit-js/commit/31eb57b))
+
+
+### Features
+
+* **FEC-10988:** refactor 608/708 default player handling ([#584](https://github.com/kaltura/playkit-js/issues/584)) ([7560841](https://github.com/kaltura/playkit-js/commit/7560841))
+
+
+
 ## [0.72.0](https://github.com/kaltura/playkit-js/compare/v0.71.0...v0.72.0) (2021-07-01)
 
 

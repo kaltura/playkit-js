@@ -595,6 +595,30 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Get video height.
+   * @returns {?number} - The intrinsic height of the video.
+   * @public
+   */
+  get videoHeight(): ?number {
+    if (this._engine) {
+      return this._engine.videoHeight;
+    }
+    return null;
+  }
+
+  /**
+   * Get video width.
+   * @returns {?number} - The intrinsic width of the video.
+   * @public
+   */
+  get videoWidth(): ?number {
+    if (this._engine) {
+      return this._engine.videoWidth;
+    }
+    return null;
+  }
+
+  /**
    * Resets the necessary components before change media.
    * @public
    * @returns {void}
@@ -1783,7 +1807,7 @@ export default class Player extends FakeEventTarget {
       this._appendEngineEl();
     } else {
       if (this._engine.id === Engine.id) {
-        this._engine.restore(source, this._config);
+        this._engine.restore(source, {...this._config, sources: this._sources});
       } else {
         this._engine.destroy();
         this._createEngine(Engine, source);
