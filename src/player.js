@@ -2140,12 +2140,29 @@ export default class Player extends FakeEventTarget {
       this._shouldLoadAfterAttach = false;
     }
     this.ready().then(() => {
-      const liveOrDvrOutOfWindow = this.isLive() && (!this.isDvr() || (typeof this.currentTime === 'number' && this.currentTime < 0));
-      if (!this._firstPlay && liveOrDvrOutOfWindow) {
+      const shouldPlayerSeekToLiveEdge = this._maybeSeekToLiveEdge();
+      if (shouldPlayerSeekToLiveEdge) {
         this.seekToLiveEdge();
       }
       this._engine.play();
     });
+  }
+
+  /**
+   * Checking if player should seek to live edge.
+   * @returns {boolean} - Whether player should seek to live edge.
+   * @private
+   */
+  _maybeSeekToLiveEdge(): boolean {
+    if (this.isLive()) {
+      const liveOrDvrOutOfWindow = !this.isDvr() || (typeof this.currentTime === 'number' && this.currentTime < 0);
+      if (!this._firstPlay) {
+        return liveOrDvrOutOfWindow;
+      } else {
+        return this.src && !this.isOnLiveEdge();
+      }
+    }
+    return false;
   }
 
   /**
