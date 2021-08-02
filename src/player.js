@@ -2159,7 +2159,7 @@ export default class Player extends FakeEventTarget {
       if (!this._firstPlay) {
         return liveOrDvrOutOfWindow;
       } else {
-        return this.src && !this.isOnLiveEdge();
+        return this.src !== null && this.src !== '' && !this.isOnLiveEdge();
       }
     }
     return false;
