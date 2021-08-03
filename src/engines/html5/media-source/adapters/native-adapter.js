@@ -544,7 +544,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           language: '',
           height: videoHeight,
           width: videoWidth,
-          active: true
+          active: true,
+          index: 0
         };
         this._onTrackChanged(new VideoTrack(setting));
       }
