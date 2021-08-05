@@ -2509,17 +2509,27 @@ export default class Player extends FakeEventTarget {
   _setDefaultTrack<T: TextTrack | AudioTrack>(tracks: Array<T>, language: string, defaultTrack: ?Track): void {
     const sameTrack: ?T = tracks.find(track => Track.langComparer(language, track.language, true));
     if (sameTrack) {
-      this.selectTrack(sameTrack);
-      this._markActiveTrack(sameTrack);
+      this._updateTrack(sameTrack);
     } else {
       const track: ?T = tracks.find(track => Track.langComparer(language, track.language, false));
       if (track) {
-        this.selectTrack(track);
-        this._markActiveTrack(track);
+        this._updateTrack(track);
       } else if (defaultTrack && !defaultTrack.active) {
         this.selectTrack(defaultTrack);
       }
     }
+  }
+
+  /**
+   * Selects a track and marks as active
+   * @function _updateTrack
+   * @param {?Track} track - the track to update
+   * @returns {void}
+   * @private
+   */
+  _updateTrack(track: ?Track) {
+    this.selectTrack(track);
+    this._markActiveTrack(track);
   }
 
   /**
