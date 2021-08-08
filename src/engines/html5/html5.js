@@ -6,9 +6,8 @@ import {CustomEventType, Html5EventType} from '../../event/event-type';
 import MediaSourceProvider from './media-source/media-source-provider';
 import VideoTrack from '../../track/video-track';
 import AudioTrack from '../../track/audio-track';
-import PKTextTrack from '../../track/text-track';
+import PKTextTrack, {getActiveCues} from '../../track/text-track';
 import ImageTrack from '../../track/image-track';
-import {Cue} from '../../track/vtt-cue';
 import * as Utils from '../../utils/util';
 import Html5AutoPlayCapability from './capabilities/html5-autoplay';
 import Error from '../../error/error';
@@ -314,6 +313,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.AUDIO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(mediaSourceAdapter, CustomEventType.IMAGE_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
@@ -1092,21 +1092,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _onCueChange(e: FakeEvent): void {
-    let textTrack: TextTrack = e.currentTarget;
-    let activeCues: Array<Cue> = [];
-    for (let cue of textTrack.activeCues) {
-      //Normalize cues to be of type of VTT model
-      if (window.VTTCue && cue instanceof window.VTTCue) {
-        activeCues.push(cue);
-      } else if (window.TextTrackCue && cue instanceof window.TextTrackCue) {
-        try {
-          activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text));
-        } catch (error) {
-          new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNABLE_TO_CREATE_TEXT_CUE, error);
-        }
-      }
-    }
-    this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: activeCues}));
+    let activeCues: TextTrackCueList = e.currentTarget.activeCues;
+    let normalizedActiveCues = getActiveCues(activeCues);
+    this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: normalizedActiveCues}));
   }
 
   /**
