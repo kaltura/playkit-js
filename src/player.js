@@ -2155,11 +2155,11 @@ export default class Player extends FakeEventTarget {
    */
   _maybeSeekToLiveEdge(): boolean {
     if (this.isLive()) {
-      const liveOrDvrOutOfWindow = !this.isDvr() || (typeof this.currentTime === 'number' && this.currentTime < 0);
+      const outOfDvr = !this.isDvr() || (typeof this.currentTime === 'number' && this.currentTime < 0);
       if (!this._firstPlay) {
-        return liveOrDvrOutOfWindow;
+        return outOfDvr;
       } else {
-        return this.src !== null && this.src !== '' && !this.isOnLiveEdge();
+        return !!this.src && !this.isOnLiveEdge();
       }
     }
     return false;
