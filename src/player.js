@@ -2507,7 +2507,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _setDefaultTrack<T: TextTrack | AudioTrack>(tracks: Array<T>, language: string, defaultTrack: ?Track): void {
-    const updateTrack = function (track) {
+    const updateTrack = track => {
       this.selectTrack(track);
       this._markActiveTrack(track);
     };
