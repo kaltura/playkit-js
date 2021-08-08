@@ -9,13 +9,18 @@ export default class Track {
    * Comparing language strings.
    * @param {string} inputLang - The configured language.
    * @param {string} trackLang - The default track language.
+   * @param {boolean} equal - Optional flag to check for matching languages.
    * @returns {boolean} - Whether the strings are equal or starts with the same substring.
    */
-  static langComparer(inputLang: string, trackLang: string): boolean {
+  static langComparer(inputLang: string, trackLang: string, equal: ?boolean): boolean {
     try {
       inputLang = inputLang.toLowerCase();
       trackLang = trackLang.toLowerCase();
-      return inputLang ? inputLang.startsWith(trackLang) || trackLang.startsWith(inputLang) : false;
+      if (equal) {
+        return inputLang ? inputLang === trackLang : false;
+      } else {
+        return inputLang ? inputLang.startsWith(trackLang) || trackLang.startsWith(inputLang) : false;
+      }
     } catch (e) {
       return false;
     }
