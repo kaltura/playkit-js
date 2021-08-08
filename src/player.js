@@ -2140,8 +2140,7 @@ export default class Player extends FakeEventTarget {
       this._shouldLoadAfterAttach = false;
     }
     this.ready().then(() => {
-      const shouldPlayerSeekToLiveEdge = this._maybeSeekToLiveEdge();
-      if (shouldPlayerSeekToLiveEdge) {
+      if (this._shouldPlayerSeekToLiveEdge()) {
         this.seekToLiveEdge();
       }
       this._engine.play();
@@ -2153,7 +2152,7 @@ export default class Player extends FakeEventTarget {
    * @returns {boolean} - Whether player should seek to live edge.
    * @private
    */
-  _maybeSeekToLiveEdge(): boolean {
+  _shouldPlayerSeekToLiveEdge(): boolean {
     if (this.isLive()) {
       const outOfDvr = !this.isDvr() || (typeof this.currentTime === 'number' && this.currentTime < 0);
       if (!this._firstPlay) {
