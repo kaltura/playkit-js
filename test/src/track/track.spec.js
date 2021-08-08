@@ -23,8 +23,7 @@ describe('Track', () => {
     it('should compare languages using equality flag', () => {
       Track.langComparer('zh', 'zh', true).should.be.true;
       Track.langComparer('zh_tw', 'zh', true).should.be.false;
-      Track.langComparer('zh', 'zh', false).should.be.true;
-      Track.langComparer('zh', 'en', false).should.be.false;
+      Track.langComparer('zh_tw', 'zh', false).should.be.true;
     });
   });
 });
