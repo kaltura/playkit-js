@@ -19,5 +19,11 @@ describe('Track', () => {
     it('should return false if the input lang is empty', () => {
       Track.langComparer('', 'rus').should.be.false;
     });
+
+    it('should compare languages using equality flag', () => {
+      Track.langComparer('zh', 'zh', true).should.be.true;
+      Track.langComparer('zh_tw', 'zh', true).should.be.false;
+      Track.langComparer('zh_tw', 'zh', false).should.be.true;
+    });
   });
 });
