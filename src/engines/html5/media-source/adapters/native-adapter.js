@@ -537,14 +537,15 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   _handleVideoTracksChange(): void {
     if (!this._isProgressivePlayback()) {
-      const {videoHeight, videoWidth} = this._videoElement;
+      const {videoHeight, videoWidth, videoTracks} = this._videoElement;
       if (!this._videoDimensions || videoHeight !== this._videoDimensions.videoHeight || videoWidth !== this._videoDimensions.videoWidth) {
         this._videoDimensions = {videoHeight, videoWidth};
         const setting = {
           language: '',
           height: videoHeight,
           width: videoWidth,
-          active: true
+          active: true,
+          index: Array.from(videoTracks).findIndex((track: VideoTrack) => track.selected)
         };
         this._onTrackChanged(new VideoTrack(setting));
       }
