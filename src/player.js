@@ -2143,12 +2143,28 @@ export default class Player extends FakeEventTarget {
       this._shouldLoadAfterAttach = false;
     }
     this.ready().then(() => {
-      const liveOrDvrOutOfWindow = this.isLive() && (!this.isDvr() || (typeof this.currentTime === 'number' && this.currentTime < 0));
-      if (!this._firstPlay && liveOrDvrOutOfWindow) {
+      if (this._shouldPlayerSeekToLiveEdge()) {
         this.seekToLiveEdge();
       }
       this._engine.play();
     });
+  }
+
+  /**
+   * Checking if player should seek to live edge.
+   * @returns {boolean} - Whether player should seek to live edge.
+   * @private
+   */
+  _shouldPlayerSeekToLiveEdge(): boolean {
+    if (this.isLive()) {
+      const outOfDvr = !this.isDvr() || (typeof this.currentTime === 'number' && this.currentTime < 0);
+      if (!this._firstPlay) {
+        return outOfDvr;
+      } else {
+        return !!this.src && !this.isOnLiveEdge();
+      }
+    }
+    return false;
   }
 
   /**
@@ -2507,12 +2523,20 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _setDefaultTrack<T: TextTrack | AudioTrack>(tracks: Array<T>, language: string, defaultTrack: ?Track): void {
-    const track: ?T = tracks.find(track => Track.langComparer(language, track.language));
-    if (track) {
+    const updateTrack = track => {
       this.selectTrack(track);
       this._markActiveTrack(track);
-    } else if (defaultTrack && !defaultTrack.active) {
-      this.selectTrack(defaultTrack);
+    };
+    const sameTrack: ?T = tracks.find(track => Track.langComparer(language, track.language, true));
+    if (sameTrack) {
+      updateTrack(sameTrack);
+    } else {
+      const track: ?T = tracks.find(track => Track.langComparer(language, track.language, false));
+      if (track) {
+        updateTrack(track);
+      } else if (defaultTrack && !defaultTrack.active) {
+        this.selectTrack(defaultTrack);
+      }
     }
   }
 
