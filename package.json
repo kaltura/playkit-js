@@ -9,6 +9,7 @@
     "dev": "webpack-dev-server --mode development",
     "watch": "webpack --progress --colors --watch --mode development",
     "test": "NODE_ENV=test karma start --color --mode development",
+    "test:watch": "NODE_ENV=test karma start --browsers=Chrome --single-run=false --auto-watch",
     "release": "standard-version",
     "pushTaggedRelease": "git push --follow-tags --no-verify origin master",
     "eslint": "eslint . --color",
