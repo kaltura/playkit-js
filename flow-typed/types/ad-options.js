@@ -16,5 +16,5 @@ declare type PKAdOptions = {
   bumper: boolean,
   inStream?: boolean,
   vpaid?: boolean,
-  streamId?: string,
+  streamId?: string
 };
