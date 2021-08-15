@@ -422,6 +422,11 @@ describe('ExternalCaptionsHandler', () => {
       externalCaptionsHandler.getExternalTracks([new TextTrack({language: 'en', label: 'english'})]).length.should.equal(1);
     });
 
+    it('should return an array with 2 textTracks elements both same language (the internal track is not available))', () => {
+      player._tracks.push(new TextTrack({language: 'en', label: 'english', available: false}));
+      externalCaptionsHandler.getExternalTracks(player._tracks).length.should.equal(2);
+    });
+
     it('should return an empty array (no captions)', () => {
       config = getConfigStructure();
       let sources = sourcesConfig.MultipleSources;
