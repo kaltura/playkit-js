@@ -104,9 +104,8 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
 
   /**
    * download and parse the vtt file
-   * start the parsing, creation and addition of the external captions.
-   * @param {PKExternalThumbnailsConfig} thumbnailsConfig - create a single caption. when the process ends, this._textTrackModel is updated with
-   * @returns {Promise<void>} - resolve when
+   * @param {PKExternalThumbnailsConfig} thumbnailsConfig - the thumbnails user config
+   * @returns {Promise<void>} - resolve when the loading and parsing process is complete
    * @private
    */
   async _downloadAndParseCues(thumbnailsConfig: PKExternalThumbnailsConfig): Promise<void> {
