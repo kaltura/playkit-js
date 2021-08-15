@@ -79,10 +79,10 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
   /**
    * find and return the img info for the requested time.
    * @param {number} time - playback time in milliseconds.
-   * @returns {?ThumbnailInfo} - the thumbnail img info for the requested time.
+   * @returns {ThumbnailInfo | null} - the thumbnail img info for the requested time.
    * @public
    */
-  getThumbnail(time: number): ?ThumbnailInfo {
+  getThumbnail(time: number): ThumbnailInfo | null {
     const cue: PKThumbnailVttCue = this._findCue(time);
     if (cue) {
       let {size, coordinates, imgUrl} = cue;
@@ -90,6 +90,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
       const thumbnailInfo = {url: imgUrl, ...size, ...coordinates};
       return new ThumbnailInfo(thumbnailInfo);
     }
+    return null
   }
 
   /**
@@ -200,10 +201,10 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
   /**
    * search the thumbnail cue match for the requested time int the cues array.
    * @param {number} time - playback time in milliseconds.
-   * @returns {?ThumbnailInfo} - the thumbnail cue match for the requested time.
+   * @returns {ThumbnailInfo | null} - the thumbnail cue match for the requested time.
    * @private
    */
-  _findCue(time: number) {
+  _findCue(time: number): ThumbnailInfo | null {
     let left = 0,
       right = this._cues.length;
     while (left <= right) {
