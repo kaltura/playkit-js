@@ -12,6 +12,7 @@ import VideoTrack from './track/video-track';
 import AudioTrack from './track/audio-track';
 import TextTrack from './track/text-track';
 import TextStyle from './track/text-style';
+import {Cue} from './track/vtt-cue';
 import Env from './utils/env';
 import * as Utils from './utils';
 import Error from './error/error';
@@ -59,7 +60,7 @@ export {registerMediaSourceAdapter, BaseMediaSourceAdapter};
 export {BaseMiddleware};
 
 // Export the tracks classes
-export {Track, VideoTrack, AudioTrack, TextTrack, ImageTrack, TextStyle};
+export {Track, VideoTrack, AudioTrack, TextTrack, ImageTrack, TextStyle, Cue};
 
 // Export utils library
 export {Utils};
