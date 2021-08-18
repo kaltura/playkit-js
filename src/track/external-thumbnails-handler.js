@@ -9,7 +9,6 @@ import {Cue} from './vtt-cue';
 
 const DEFAULT_THUMBNAIL_SIZE: {width: number, height: number} = {
   width: 164,
-  height: 92
 };
 
 const VTT_WITH_IMG_SIZE: RegExp = /#xy=/i;
@@ -63,6 +62,13 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
   _imgBaseUrl: string;
 
   /**
+   * computed img dimensions based on its natural ratio
+   * @type {Object}
+   * @private
+   */
+  _computedImgSize: {width:number, height: number} = {width: null, height: null};
+
+  /**
    * start the loading and parsing process of the vtt thumbnails file.
    * @returns {void}
    * @public
@@ -86,7 +92,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
     const cue: PKThumbnailVttCue = this._findCue(time);
     if (cue) {
       let {size, coordinates, imgUrl} = cue;
-      size = size ? size : DEFAULT_THUMBNAIL_SIZE;
+      size = size ? size : this._computedImgSize;
       const thumbnailInfo = {url: imgUrl, ...size, ...coordinates};
       return new ThumbnailInfo(thumbnailInfo);
     }
@@ -152,12 +158,39 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @private
    */
   _formatIntoThumbnailCues(cues: Array<Cue>): Array<any> {
+    if(this.wasNotSpecifiedSize(cues) || true) {
+      this.computeImgSize(cues);
+    }
     const thumbnailCues: Array<PKThumbnailVttCue> = [];
     for (const cue of cues) {
       const processedCue: PKThumbnailVttCue = this._extractCueMetadata(cue);
       thumbnailCues.push(processedCue);
     }
     return thumbnailCues;
+  }
+
+  /**
+   * compute the image dimensions based on its natural ratio and save it.
+   * @param {Array<Cue>} cues - array of VTTCues
+   * @returns {void}
+   * @private
+   */
+  computeImgSize(cues: Array<Cue>): void {
+    const img = new Image();
+    img.src = this._extractCueMetadata(cues[0]).imgUrl;
+    img.addEventListener("load", () => {
+      const diff: number = DEFAULT_THUMBNAIL_SIZE.width - img.naturalWidth;
+      const computedWidth: number = img.naturalWidth + diff;
+      const computedHeight: number = img.naturalHeight + diff * (img.naturalHeight / img.naturalWidth);
+      this._computedImgSize = {height: computedHeight, width: computedWidth};
+    });
+    img.addEventListener("error", (err) => {
+      console.log("12345", err);
+    });
+  }
+
+  wasNotSpecifiedSize(cues) {
+    return VTT_WITH_IMG_SIZE.test(cues[0].text) || VTT_WITH_IMG_SIZE_AND_COORDS.test(cues[0].text) || false;
   }
 
   /**
@@ -173,14 +206,13 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
 
     let imgUrl: string;
     let imgData: string;
-    let coordinates: {x: number, y: number} | null = null;
+    let coordinates: {x: number, y: number} = {x: 0, y: 0};
     let size: {width: number, height: number} = null;
 
     if (isVTTIncludesImgSize) {
       // Vtt includes just url and size metadata
       [imgUrl, imgData] = text.split(VTT_WITH_IMG_SIZE);
       const [width, height] = imgData.split(',').map(Number);
-      coordinates = {x: 0, y: 0};
       size = {width, height};
     } else if (isVTTIncludesImgSizeAndCoords) {
       // Vtt includes coordinates in addition to url and size metadata - sprite img
@@ -190,7 +222,6 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
       size = {width, height};
     } else {
       // Vtt includes just a url metadata
-      coordinates = {x: 0, y: 0};
       imgUrl = text;
     }
     imgUrl = this._imgBaseUrl ? `${this._imgBaseUrl}/${imgUrl}` : imgUrl;
@@ -218,6 +249,14 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
       }
     }
     return null;
+  }
+
+  /**
+   * resets the handler
+   * @returns {void}
+   */
+  reset(): void {
+    this._cues = [];
   }
 }
 

@@ -636,6 +636,7 @@ export default class Player extends FakeEventTarget {
     this.pause();
     //make sure all services are reset before engine and engine attributes are reset
     this._externalCaptionsHandler.reset();
+    this._externalThumbnailsHandler.reset();
     this._posterManager.reset();
     this._stateManager.reset();
     this._sources = Utils.Object.copyDeep(DefaultSources);
@@ -2123,6 +2124,7 @@ export default class Player extends FakeEventTarget {
           }
           this._updateTracks(data.tracks);
           this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
+          this._externalThumbnailsHandler.load();
         })
         .finally(() => {
           resetFlags();
@@ -2327,7 +2329,6 @@ export default class Player extends FakeEventTarget {
     this._addTextTrackOffOption();
     this._maybeSetTracksLabels();
     this._setDefaultTracks();
-    this._externalThumbnailsHandler.load();
   }
 
   /**
