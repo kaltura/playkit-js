@@ -3,5 +3,5 @@ declare type PKThumbnailVttCue = {
   endTime: number,
   imgUrl: string,
   coordinates: {x: number, y: number} | null,
-  size: {height: number, width: number}
+  size: {height: number, width: number} | null
 };

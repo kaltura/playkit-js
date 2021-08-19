@@ -40,7 +40,7 @@ import ImageTrack from './track/image-track';
 import {ThumbnailInfo} from './thumbnail/thumbnail-info';
 import {EngineDecoratorManager} from './engines/engine-decorator-manager';
 import {filterTracksByRestriction} from './utils/restrictions';
-import {ExternalThumbnailsHandler} from './track/external-thumbnails-handler';
+import {ExternalThumbnailsHandler} from './thumbnail/external-thumbnails-handler';
 
 /**
  * The black cover class name.
@@ -444,7 +444,7 @@ export default class Player extends FakeEventTarget {
     this._createPlayerContainer();
     this._appendDomElements();
     this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
-    this._externalThumbnailsHandler = new ExternalThumbnailsHandler(this);
+    this._externalThumbnailsHandler = new ExternalThumbnailsHandler();
     this._fullscreenController = new FullscreenController(this);
     this.configure(config);
   }
@@ -2124,7 +2124,7 @@ export default class Player extends FakeEventTarget {
           }
           this._updateTracks(data.tracks);
           this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
-          this._externalThumbnailsHandler.load();
+          this._externalThumbnailsHandler.load(this.sources.thumbnails);
         })
         .finally(() => {
           resetFlags();

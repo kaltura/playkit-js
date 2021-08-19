@@ -1,15 +1,13 @@
-import Player from '../player';
 import EventManager from '../event/event-manager';
 import FakeEventTarget from '../event/fake-event-target';
 import getLogger from '../utils/logger';
-import {Parser, StringDecoder} from './text-track-display';
+import {Parser, StringDecoder} from '../track/text-track-display';
 import * as Utils from '../utils/util';
-import {ThumbnailInfo} from '../thumbnail/thumbnail-info';
-import {Cue} from './vtt-cue';
-
-const DEFAULT_THUMBNAIL_SIZE: {width: number, height: number} = {
-  width: 164,
-};
+import {ThumbnailInfo} from './thumbnail-info';
+import {Cue} from '../track/vtt-cue';
+import Error from '../error/error';
+import FakeEvent from '../event/fake-event';
+import {Html5EventType} from '../event/event-type';
 
 const VTT_WITH_IMG_SIZE: RegExp = /#xy=/i;
 const VTT_WITH_IMG_SIZE_AND_COORDS: RegExp = /#xywh=/i;
@@ -19,9 +17,8 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * constructor
    * @param {Player} player - the player instance.
    */
-  constructor(player: Player) {
+  constructor() {
     super();
-    this._player = player;
     this._eventManager = new EventManager();
   }
 
@@ -32,13 +29,6 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @private
    */
   static _logger: any = getLogger('ExternalThumbnailsHandler');
-
-  /**
-   * the player instance.
-   * @type {Player}
-   * @private
-   */
-  _player: Player;
 
   /**
    * event manager for the external thumbnails handler
@@ -55,30 +45,20 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
   _cues: Array<PKThumbnailVttCue> = [];
 
   /**
-   * base url of the images or the sprite img
-   * @type {string}
-   * @private
-   */
-  _imgBaseUrl: string;
-
-  /**
    * computed img dimensions based on its natural ratio
    * @type {Object}
    * @private
    */
-  _computedImgSize: {width:number, height: number} = {width: null, height: null};
+  _naturalImgSize: {width: number, height: number};
 
   /**
    * start the loading and parsing process of the vtt thumbnails file.
+   * @param {PKExternalThumbnailsConfig} thumbnailsConfig - the external vtt thumbnails config
    * @returns {void}
    * @public
    */
-  async load(): Promise<void> {
-    const thumbnailsConfig: PKExternalThumbnailsConfig = this._player.sources.thumbnails;
-    if (!thumbnailsConfig) {
-      return [];
-    }
-    this._imgBaseUrl = this._player.sources.thumbnails.imgBaseUrl || null;
+  async load(thumbnailsConfig: PKExternalThumbnailsConfig): Promise<void> {
+    if (!thumbnailsConfig) return;
     await this._downloadAndParseCues(thumbnailsConfig);
   }
 
@@ -92,7 +72,8 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
     const cue: PKThumbnailVttCue = this._findCue(time);
     if (cue) {
       let {size, coordinates, imgUrl} = cue;
-      size = size ? size : this._computedImgSize;
+      size = size ? size : this._naturalImgSize;
+      coordinates = coordinates ? coordinates : {x: 0, y: 0};
       const thumbnailInfo = {url: imgUrl, ...size, ...coordinates};
       return new ThumbnailInfo(thumbnailInfo);
     }
@@ -105,7 +86,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @public
    */
   isUsingVttThumbnails(): boolean {
-    return !!this._cues.length;
+    return !!this._cues?.length;
   }
 
   /**
@@ -115,9 +96,13 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @private
    */
   async _downloadAndParseCues(thumbnailsConfig: PKExternalThumbnailsConfig): Promise<void> {
-    const VttStr: string = await this._downloadVttFile(thumbnailsConfig);
-    const cuesArray: Array<Cue> = await this._processVtt(VttStr);
-    this._cues = await this._formatIntoThumbnailCues(cuesArray);
+    try {
+      const VttStr: string = await this._downloadVttFile(thumbnailsConfig);
+      const cuesArray: Array<Cue> = await this._processVtt(VttStr);
+      this._cues = await this._formatIntoThumbnailCues(cuesArray, thumbnailsConfig);
+    } catch (error) {
+      this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
+    }
   }
 
   /**
@@ -127,7 +112,11 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @private
    */
   async _downloadVttFile(thumbnailsConfig: PKExternalThumbnailsConfig): Promise<string> {
-    return await Utils.Http.execute(thumbnailsConfig.vttUrl, {}, 'GET');
+    try {
+      return await Utils.Http.execute(thumbnailsConfig.vttUrl, {}, 'GET');
+    } catch (error) {
+      throw new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.HTTP_ERROR, {error});
+    }
   }
 
   /**
@@ -147,85 +136,121 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
       };
       parser.parse(vttStr);
       parser.flush();
-      parser.onparsingerror(e => reject(e));
+      parser.onparsingerror(error => reject(error));
     });
   }
 
   /**
    * format vtt text track cues into thumbnails track cues.
    * @param {Array<Cue>} cues - array of VTTCues in the vtt text track format
+   * @param {PKExternalThumbnailsConfig} thumbnailsConfig - the external vtt thumbnails config
    * @returns {Array<PKThumbnailVttCue>} - cues contains the thumbnails metadata.
    * @private
    */
-  _formatIntoThumbnailCues(cues: Array<Cue>): Array<any> {
-    if(this.wasNotSpecifiedSize(cues) || true) {
-      this.computeImgSize(cues);
+  async _formatIntoThumbnailCues(cues: Array<Cue>, thumbnailsConfig: PKExternalThumbnailsConfig): Array<any> {
+    if (!this.validateThumbnailsVTTFormat(cues)) {
+      throw new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.INVALID_VTT_THUMBNAILS_FILE, {thumbnailsConfig});
+    } else {
+      const sampleProcessedCue: PKThumbnailVttCue = this._extractCueMetadata(cues[0], thumbnailsConfig);
+      if (!(await this.validateImgUrl(sampleProcessedCue.imgUrl))) {
+        throw new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.INVALID_VTT_THUMBNAILS_FILE, {imgUrl: sampleProcessedCue.imgUrl});
+      } else {
+        this._naturalImgSize = await this.extractImgNaturalDimensions(sampleProcessedCue.imgUrl);
+        const thumbnailCues: Array<PKThumbnailVttCue> = [];
+        for (const cue of cues) {
+          const processedCue: PKThumbnailVttCue = this._extractCueMetadata(cue, thumbnailsConfig);
+          thumbnailCues.push(processedCue);
+        }
+        return thumbnailCues;
+      }
     }
-    const thumbnailCues: Array<PKThumbnailVttCue> = [];
-    for (const cue of cues) {
-      const processedCue: PKThumbnailVttCue = this._extractCueMetadata(cue);
-      thumbnailCues.push(processedCue);
-    }
-    return thumbnailCues;
+  }
+
+  validateThumbnailsVTTFormat(cues): boolean {
+    return cues.length && cues[0] instanceof Cue;
   }
 
   /**
-   * compute the image dimensions based on its natural ratio and save it.
-   * @param {Array<Cue>} cues - array of VTTCues
-   * @returns {void}
+   * extracts the image dimensions based on its natural ratio and save it.
+   * @param {string} imgUrl - the img url extracted from the vtt cue
+   * @returns {Object} - the natural image dimensions
    * @private
    */
-  computeImgSize(cues: Array<Cue>): void {
-    const img = new Image();
-    img.src = this._extractCueMetadata(cues[0]).imgUrl;
-    img.addEventListener("load", () => {
-      const diff: number = DEFAULT_THUMBNAIL_SIZE.width - img.naturalWidth;
-      const computedWidth: number = img.naturalWidth + diff;
-      const computedHeight: number = img.naturalHeight + diff * (img.naturalHeight / img.naturalWidth);
-      this._computedImgSize = {height: computedHeight, width: computedWidth};
-    });
-    img.addEventListener("error", (err) => {
-      console.log("12345", err);
+  extractImgNaturalDimensions(imgUrl: string): Promise<{height: number, width: number} | null> {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.src = imgUrl;
+      this._eventManager.listenOnce(img, 'load', () => {
+        resolve({height: img.naturalHeight, width: img.naturalWidth});
+      });
+      this._eventManager.listenOnce(img, 'error', () => resolve(null));
     });
   }
 
-  wasNotSpecifiedSize(cues) {
-    return VTT_WITH_IMG_SIZE.test(cues[0].text) || VTT_WITH_IMG_SIZE_AND_COORDS.test(cues[0].text) || false;
+  /**
+   * make sure the final constructed thumbnail img url is valid.
+   * @param {string} imgUrl - the img url extracted from the vtt cue
+   * @returns {boolean} - indicates the url is valid or not
+   * @private
+   */
+  validateImgUrl(imgUrl: string): Promise<boolean> {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.src = imgUrl;
+      this._eventManager.listenOnce(img, 'load', () => {
+        resolve(true);
+      });
+      this._eventManager.listenOnce(img, 'error', () => resolve(false));
+    });
   }
 
   /**
    * format vtt cue into thumbnail cue - by extracting the img options metadata.
-   * @param {Cue} cue - a parsed VTTCue in the vtt text cue format
+   * @param {VTTCue} vttCue - a parsed VTTCue in the vtt text cue format
+   * @param {PKExternalThumbnailsConfig} thumbnailsConfig - the thumbnails config
    * @returns {PKThumbnailVttCue} - cue object contains the img metadata.
    * @private
    */
-  _extractCueMetadata(cue: Cue): PKThumbnailVttCue {
-    const {startTime, endTime, text} = cue;
+  _extractCueMetadata(vttCue: VTTCue, thumbnailsConfig: PKExternalThumbnailsConfig): PKThumbnailVttCue {
+    const {startTime, endTime, text} = vttCue;
+    const {imgBaseUrl} = thumbnailsConfig;
     const isVTTIncludesImgSize: boolean = VTT_WITH_IMG_SIZE.test(text);
     const isVTTIncludesImgSizeAndCoords: boolean = VTT_WITH_IMG_SIZE_AND_COORDS.test(text);
+    let isValidThumbnailVTTFormat: boolean = false;
 
     let imgUrl: string;
     let imgData: string;
-    let coordinates: {x: number, y: number} = {x: 0, y: 0};
+    let coordinates: {x: number, y: number} | null = null;
     let size: {width: number, height: number} = null;
 
     if (isVTTIncludesImgSize) {
       // Vtt includes just url and size metadata
-      [imgUrl, imgData] = text.split(VTT_WITH_IMG_SIZE);
-      const [width, height] = imgData.split(',').map(Number);
-      size = {width, height};
+      [imgUrl] = text.split(VTT_WITH_IMG_SIZE);
+      ExternalThumbnailsHandler._logger.warn(`the ${VTT_WITH_IMG_SIZE} thumbnail vtt format is not supported`);
+      isValidThumbnailVTTFormat = imgUrl !== undefined;
+      // [imgUrl, imgData] = text.split(VTT_WITH_IMG_SIZE);
+      // const [width, height] = imgData.split(',').map(Number);
+      // size = {width, height};
     } else if (isVTTIncludesImgSizeAndCoords) {
       // Vtt includes coordinates in addition to url and size metadata - sprite img
       [imgUrl, imgData] = text.split(VTT_WITH_IMG_SIZE_AND_COORDS);
       const [x, y, width, height] = imgData.split(',').map(Number);
       coordinates = {x, y};
       size = {width, height};
+      isValidThumbnailVTTFormat = x !== undefined && y !== undefined && width !== undefined && height !== undefined && imgUrl !== undefined;
     } else {
       // Vtt includes just a url metadata
       imgUrl = text;
+      isValidThumbnailVTTFormat = true;
     }
-    imgUrl = this._imgBaseUrl ? `${this._imgBaseUrl}/${imgUrl}` : imgUrl;
-    return {startTime, endTime, imgUrl, size, coordinates};
+    imgUrl = imgBaseUrl ? `${imgBaseUrl}/${imgUrl}` : imgUrl;
+    if (!isValidThumbnailVTTFormat) {
+      throw new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.INVALID_VTT_THUMBNAILS_FILE, {
+        parsedCue: {startTime, endTime, options: text}
+      });
+    } else {
+      return {startTime, endTime, imgUrl, size, coordinates};
+    }
   }
 
   /**
@@ -235,6 +260,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @private
    */
   _findCue(time: number): ThumbnailInfo | null {
+    // Make sure the array is sorted ?
     let left = 0;
     let right = this._cues.length;
     while (left <= right) {
@@ -254,9 +280,22 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
   /**
    * resets the handler
    * @returns {void}
+   * * @public
    */
   reset(): void {
     this._cues = [];
+    this._eventManager.removeAll();
+    this._naturalImgSize = {};
+  }
+
+  /**
+   * destroy the handler
+   * @returns {void}
+   * * @public
+   */
+  destroy(): void {
+    this.reset();
+    this._eventManager.destroy();
   }
 }
 
