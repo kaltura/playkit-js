@@ -62,7 +62,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
 
   /**
    * find and return the img info for the requested time.
-   * @param {number} time - time point in th playback timeline in milliseconds.
+   * @param {number} time - timing in th playback timeline in milliseconds.
    * @returns {ThumbnailInfo | null} - the thumbnail img info for the requested time.
    * @public
    */
@@ -229,7 +229,9 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
 
     if (isVTTIncludesImgSize) {
       [imgUrl] = text.split(VTT_INCLUDES_SIZE_ONLY);
-      ExternalThumbnailsHandler._logger.warn(`vtt thumbnails in "${VTT_INCLUDES_SIZE_ONLY}" form - is not supported`);
+      ExternalThumbnailsHandler._logger.warn(
+        `vtt thumbnails in "${VTT_INCLUDES_SIZE_ONLY}" form - is supported but the width and height options are ignored and The images will be displayed in their natural dimensions`
+      );
       isValidThumbnailVTTFormat = imgUrl !== undefined;
     } else if (isVTTIncludesImgSizeAndCoords) {
       [imgUrl, imgData] = text.split(VTT_INCLUDES_SIZE_AND_COORDS);
@@ -253,10 +255,10 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
   }
 
   /**
-   * search the cue that matches the requested time point in the timeline - in the cues array.
-   * @param {number} time - time point in th playback timeline in milliseconds.
+   * search the cue that matches the requested timing in the timeline - in the cues array.
+   * @param {number} time - timing in th playback timeline in milliseconds.
    * @param {Array<PKThumbnailVttCue>} cues - the thumbnails cues array.
-   * @returns {ThumbnailInfo | null} - the thumbnail cue match for the requested time.
+   * @returns {ThumbnailInfo | null} - the thumbnail cue linked to that timing.
    * @private
    */
   _findCue(time: number, cues: Array<PKThumbnailVttCue>): ThumbnailInfo | null {
@@ -279,7 +281,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
   /**
    * resets the handler
    * @returns {void}
-   * * @public
+   * @public
    */
   reset(): void {
     this._cues = [];
@@ -290,7 +292,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
   /**
    * destroy the handler
    * @returns {void}
-   * * @public
+   * @public
    */
   destroy(): void {
     this.reset();

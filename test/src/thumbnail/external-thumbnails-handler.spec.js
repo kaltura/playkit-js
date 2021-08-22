@@ -3,7 +3,6 @@ import {ExternalThumbnailsHandler} from '../../../src/thumbnail/external-thumbna
 let externalThumbnailsHandler;
 
 describe('ExternalThumbnailsHandler', () => {
-
   before(() => {
     externalThumbnailsHandler = new ExternalThumbnailsHandler();
   });
