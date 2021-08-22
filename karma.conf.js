@@ -27,21 +27,10 @@ module.exports = function (config) {
     colors: true,
     frameworks: ['mocha'],
     files: [
+      'node_modules/regenerator-runtime/runtime.js',
       'test/setup/karma.js',
       {
-        pattern: 'test/src/assets/mov_bbb.mp4',
-        included: false
-      },
-      {
-        pattern: 'test/src/assets/audios.mp4',
-        included: false
-      },
-      {
-        pattern: 'test/src/assets/en.vtt',
-        included: false
-      },
-      {
-        pattern: 'test/src/assets/he.vtt',
+        pattern: 'test/src/assets/*',
         included: false
       }
     ],

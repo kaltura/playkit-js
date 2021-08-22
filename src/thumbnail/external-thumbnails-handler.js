@@ -9,14 +9,10 @@ import Error from '../error/error';
 import FakeEvent from '../event/fake-event';
 import {Html5EventType} from '../event/event-type';
 
-const VTT_WITH_IMG_SIZE: RegExp = /#xy=/i;
-const VTT_WITH_IMG_SIZE_AND_COORDS: RegExp = /#xywh=/i;
+const VTT_INCLUDES_SIZE_ONLY: RegExp = /#wh=/i;
+const VTT_INCLUDES_SIZE_AND_COORDS: RegExp = /#xywh=/i;
 
 class ExternalThumbnailsHandler extends FakeEventTarget {
-  /**
-   * constructor
-   * @param {Player} player - the player instance.
-   */
   constructor() {
     super();
     this._eventManager = new EventManager();
@@ -58,7 +54,9 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @public
    */
   async load(thumbnailsConfig: PKExternalThumbnailsConfig): Promise<void> {
-    if (!thumbnailsConfig) return;
+    if (!thumbnailsConfig) {
+      return;
+    }
     await this._downloadAndParseCues(thumbnailsConfig);
   }
 
@@ -115,7 +113,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
     try {
       return await Utils.Http.execute(thumbnailsConfig.vttUrl, {}, 'GET');
     } catch (error) {
-      throw new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.HTTP_ERROR, {error});
+      throw new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.HTTP_ERROR, error);
     }
   }
 
@@ -149,11 +147,17 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    */
   async _formatIntoThumbnailCues(cues: Array<Cue>, thumbnailsConfig: PKExternalThumbnailsConfig): Array<any> {
     if (!this.validateThumbnailsVTTFormat(cues)) {
-      throw new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.INVALID_VTT_THUMBNAILS_FILE, {thumbnailsConfig});
+      throw new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.INVALID_VTT_THUMBNAILS_FILE, {
+        message: 'invalid thumbnail vtt format',
+        vttUrl: thumbnailsConfig.vttUrl
+      });
     } else {
       const sampleProcessedCue: PKThumbnailVttCue = this._extractCueMetadata(cues[0], thumbnailsConfig);
       if (!(await this.validateImgUrl(sampleProcessedCue.imgUrl))) {
-        throw new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.INVALID_VTT_THUMBNAILS_FILE, {imgUrl: sampleProcessedCue.imgUrl});
+        throw new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.INVALID_VTT_THUMBNAILS_FILE, {
+          message: 'failed loading the image - invalid image url',
+          imgUrl: sampleProcessedCue.imgUrl
+        });
       } else {
         this._naturalImgSize = await this.extractImgNaturalDimensions(sampleProcessedCue.imgUrl);
         const thumbnailCues: Array<PKThumbnailVttCue> = [];
@@ -214,8 +218,8 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
   _extractCueMetadata(vttCue: VTTCue, thumbnailsConfig: PKExternalThumbnailsConfig): PKThumbnailVttCue {
     const {startTime, endTime, text} = vttCue;
     const {imgBaseUrl} = thumbnailsConfig;
-    const isVTTIncludesImgSize: boolean = VTT_WITH_IMG_SIZE.test(text);
-    const isVTTIncludesImgSizeAndCoords: boolean = VTT_WITH_IMG_SIZE_AND_COORDS.test(text);
+    const isVTTIncludesImgSize: boolean = VTT_INCLUDES_SIZE_ONLY.test(text);
+    const isVTTIncludesImgSizeAndCoords: boolean = VTT_INCLUDES_SIZE_AND_COORDS.test(text);
     let isValidThumbnailVTTFormat: boolean = false;
 
     let imgUrl: string;
@@ -224,28 +228,23 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
     let size: {width: number, height: number} = null;
 
     if (isVTTIncludesImgSize) {
-      // Vtt includes just url and size metadata
-      [imgUrl] = text.split(VTT_WITH_IMG_SIZE);
-      ExternalThumbnailsHandler._logger.warn(`the ${VTT_WITH_IMG_SIZE} thumbnail vtt format is not supported`);
+      [imgUrl] = text.split(VTT_INCLUDES_SIZE_ONLY);
+      ExternalThumbnailsHandler._logger.warn(`vtt thumbnails in "${VTT_INCLUDES_SIZE_ONLY}" form - is not supported`);
       isValidThumbnailVTTFormat = imgUrl !== undefined;
-      // [imgUrl, imgData] = text.split(VTT_WITH_IMG_SIZE);
-      // const [width, height] = imgData.split(',').map(Number);
-      // size = {width, height};
     } else if (isVTTIncludesImgSizeAndCoords) {
-      // Vtt includes coordinates in addition to url and size metadata - sprite img
-      [imgUrl, imgData] = text.split(VTT_WITH_IMG_SIZE_AND_COORDS);
+      [imgUrl, imgData] = text.split(VTT_INCLUDES_SIZE_AND_COORDS);
       const [x, y, width, height] = imgData.split(',').map(Number);
       coordinates = {x, y};
       size = {width, height};
-      isValidThumbnailVTTFormat = x !== undefined && y !== undefined && width !== undefined && height !== undefined && imgUrl !== undefined;
+      isValidThumbnailVTTFormat = [x, y, width, height, imgUrl].every(option => option !== undefined);
     } else {
-      // Vtt includes just a url metadata
       imgUrl = text;
-      isValidThumbnailVTTFormat = true;
+      isValidThumbnailVTTFormat = !!text;
     }
     imgUrl = imgBaseUrl ? `${imgBaseUrl}/${imgUrl}` : imgUrl;
     if (!isValidThumbnailVTTFormat) {
       throw new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.INVALID_VTT_THUMBNAILS_FILE, {
+        message: 'error while parsing the vtt cues - invalid cue',
         parsedCue: {startTime, endTime, options: text}
       });
     } else {
@@ -256,18 +255,18 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
   /**
    * search the cue that matches the requested time point in the timeline - in the cues array.
    * @param {number} time - time point in th playback timeline in milliseconds.
+   * @param {Array<PKThumbnailVttCue>} cues - the thumbnails cues array.
    * @returns {ThumbnailInfo | null} - the thumbnail cue match for the requested time.
    * @private
    */
-  _findCue(time: number): ThumbnailInfo | null {
-    // Make sure the array is sorted ?
+  _findCue(time: number, cues: Array<PKThumbnailVttCue>): ThumbnailInfo | null {
     let left = 0;
-    let right = this._cues.length;
+    let right = cues.length - 1;
     while (left <= right) {
       const middle = Math.floor((left + right) / 2);
-      const potentialCueMatch: PKThumbnailVttCue = this._cues[middle];
+      const potentialCueMatch: PKThumbnailVttCue = cues[middle];
       if (time >= potentialCueMatch.startTime && time < potentialCueMatch.endTime) {
-        return this._cues[middle];
+        return cues[middle]; // move cues as param
       } else if (time < potentialCueMatch.startTime) {
         right = middle - 1;
       } else {
