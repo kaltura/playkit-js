@@ -8,6 +8,7 @@ import sinon from 'sinon/pkg/sinon';
 export function prepareTestEnvironment() {
   chai.should();
   chai.use(sinonChai);
+  chai.use(require('chai-as-promised'));
   global.chai = chai;
   global.expect = chai.expect;
   global.should = chai.should;

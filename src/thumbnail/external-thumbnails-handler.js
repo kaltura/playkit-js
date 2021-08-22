@@ -67,7 +67,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @public
    */
   getThumbnail(time: number): ThumbnailInfo | null {
-    const cue: PKThumbnailVttCue = this._findCue(time);
+    const cue: PKThumbnailVttCue = this._findCue(time, this._cues);
     if (cue) {
       let {size, coordinates, imgUrl} = cue;
       size = size ? size : this._naturalImgSize;
@@ -218,7 +218,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
   _extractCueMetadata(vttCue: VTTCue, thumbnailsConfig: PKExternalThumbnailsConfig): PKThumbnailVttCue {
     const {startTime, endTime, text} = vttCue;
     const {imgBaseUrl} = thumbnailsConfig;
-    const isVTTIncludesImgSize: boolean = VTT_INCLUDES_SIZE_ONLY.test(text);
+    const isVTTIncludesImgSizeOnly: boolean = VTT_INCLUDES_SIZE_ONLY.test(text);
     const isVTTIncludesImgSizeAndCoords: boolean = VTT_INCLUDES_SIZE_AND_COORDS.test(text);
     let isValidThumbnailVTTFormat: boolean = false;
 
@@ -227,7 +227,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
     let coordinates: {x: number, y: number} | null = null;
     let size: {width: number, height: number} = null;
 
-    if (isVTTIncludesImgSize) {
+    if (isVTTIncludesImgSizeOnly) {
       [imgUrl] = text.split(VTT_INCLUDES_SIZE_ONLY);
       ExternalThumbnailsHandler._logger.warn(
         `vtt thumbnails in "${VTT_INCLUDES_SIZE_ONLY}" form - is supported but the width and height options are ignored and The images will be displayed in their natural dimensions`
@@ -301,4 +301,3 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
 }
 
 export {ExternalThumbnailsHandler};
-
