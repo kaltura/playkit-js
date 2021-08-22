@@ -99,7 +99,7 @@ const Code: CodeType = {
    */
   UNKNOWN_LANGUAGE: 2012,
   /**
-   * invalid thumbnail vtt file format or invalid utl option.
+   * invalid thumbnail vtt file format or invalid url option.
    */
   INVALID_VTT_THUMBNAILS_FILE: 2013,
   /**
