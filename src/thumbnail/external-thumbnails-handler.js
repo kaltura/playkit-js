@@ -268,7 +268,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
       const middle = Math.floor((left + right) / 2);
       const potentialCueMatch: PKThumbnailVttCue = cues[middle];
       if (time >= potentialCueMatch.startTime && time < potentialCueMatch.endTime) {
-        return cues[middle]; // move cues as param
+        return cues[middle];
       } else if (time < potentialCueMatch.startTime) {
         right = middle - 1;
       } else {
@@ -301,3 +301,4 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
 }
 
 export {ExternalThumbnailsHandler};
+
