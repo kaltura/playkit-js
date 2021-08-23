@@ -148,7 +148,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _maybeAddTrack(track: TextTrack, caption: PKExternalCaptionObject, playerTextTracks: Array<Track>, newTextTracks: Array<TextTrack>): void {
-    const sameLangTrack = playerTextTracks.find(textTrack => Track.langComparer(caption.language, textTrack.language));
+    const sameLangTrack = playerTextTracks.find(textTrack => textTrack.available && Track.langComparer(caption.language, textTrack.language));
     if (!sameLangTrack) {
       newTextTracks.push(track);
       this._updateTextTracksModel(caption);
