@@ -61,9 +61,9 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
   }
 
   /**
-   * find and return the img info for the requested time.
+   * returns the thumbnail info for the requested timing.
    * @param {number} time - timing in th playback timeline in milliseconds.
-   * @returns {ThumbnailInfo | null} - the thumbnail img info for the requested time.
+   * @returns {ThumbnailInfo | null} - the thumbnail img info.
    * @public
    */
   getThumbnail(time: number): ThumbnailInfo | null {
@@ -258,10 +258,10 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * search the cue that matches the requested timing in the timeline - in the cues array.
    * @param {number} time - timing in th playback timeline in milliseconds.
    * @param {Array<PKThumbnailVttCue>} cues - the thumbnails cues array.
-   * @returns {ThumbnailInfo | null} - the thumbnail cue linked to that timing.
+   * @returns {PKThumbnailVttCue | null} - the thumbnail cue linked to that timing.
    * @private
    */
-  _findCue(time: number, cues: Array<PKThumbnailVttCue>): ThumbnailInfo | null {
+  _findCue(time: number, cues: Array<PKThumbnailVttCue>): PKThumbnailVttCue | null {
     let left = 0;
     let right = cues.length - 1;
     while (left <= right) {

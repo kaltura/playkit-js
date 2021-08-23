@@ -16,8 +16,6 @@ const thumbnailsCues = [
   {startTime: 40, endTime: 45, imgUrl: 'base/test/src/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 1024, y: 0}}
 ];
 
-new VTTCue(0, 5, 'assets/bbb-sprite.jpg#xywh=0,0,128,72');
-
 describe('ExternalThumbnailsHandler', () => {
   beforeEach(() => {
     externalThumbnailsHandler = new ExternalThumbnailsHandler();
@@ -132,12 +130,12 @@ describe('ExternalThumbnailsHandler', () => {
       expect(cue).deep.equal(thumbnailsCues[0]);
     });
 
-    it('should find the correct cue  which is the last one', () => {
+    it('should find the correct cue - which is the last one', () => {
       const cue = externalThumbnailsHandler._findCue(43, thumbnailsCues);
       expect(cue).deep.equal(thumbnailsCues[8]);
     });
 
-    it('should return null - the cue dos not exist', () => {
+    it('should return null - the cue dose not exist', () => {
       const cue = externalThumbnailsHandler._findCue(55, thumbnailsCues);
       expect(cue).to.be.null;
     });
