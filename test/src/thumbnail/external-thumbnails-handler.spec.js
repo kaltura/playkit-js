@@ -1,7 +1,7 @@
 import {ExternalThumbnailsHandler} from '../../../src/thumbnail/external-thumbnails-handler';
 import Error from '../../../src/error/error';
 import {ThumbnailInfo} from '../../../src/thumbnail/thumbnail-info';
-
+import {expect} from 'chai';
 let externalThumbnailsHandler: ExternalThumbnailsHandler;
 
 const thumbnailsCues = [
