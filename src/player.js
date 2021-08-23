@@ -40,6 +40,7 @@ import ImageTrack from './track/image-track';
 import {ThumbnailInfo} from './thumbnail/thumbnail-info';
 import {EngineDecoratorManager} from './engines/engine-decorator-manager';
 import {filterTracksByRestriction} from './utils/restrictions';
+import {ExternalThumbnailsHandler} from './thumbnail/external-thumbnails-handler';
 
 /**
  * The black cover class name.
@@ -363,6 +364,12 @@ export default class Player extends FakeEventTarget {
    */
   _externalCaptionsHandler: ExternalCaptionsHandler;
   /**
+   * holds the external tracks handler controller
+   * @type {ExternalCaptionsHandler}
+   * @private
+   */
+  _externalThumbnailsHandler: ExternalThumbnailsHandler;
+  /**
    * holds the full screen controller
    * @type {FullscreenController}
    * @private
@@ -437,6 +444,7 @@ export default class Player extends FakeEventTarget {
     this._createPlayerContainer();
     this._appendDomElements();
     this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
+    this._externalThumbnailsHandler = new ExternalThumbnailsHandler();
     this._fullscreenController = new FullscreenController(this);
     this.configure(config);
   }
@@ -628,6 +636,7 @@ export default class Player extends FakeEventTarget {
     this.pause();
     //make sure all services are reset before engine and engine attributes are reset
     this._externalCaptionsHandler.reset();
+    this._externalThumbnailsHandler.reset();
     this._posterManager.reset();
     this._stateManager.reset();
     this._sources = Utils.Object.copyDeep(DefaultSources);
@@ -1426,7 +1435,9 @@ export default class Player extends FakeEventTarget {
    * @return {?ThumbnailInfo} - Thumbnail info
    */
   getThumbnail(time: number): ?ThumbnailInfo {
-    if (this._engine) {
+    if (this._externalThumbnailsHandler.isUsingVttThumbnails()) {
+      return this._externalThumbnailsHandler.getThumbnail(time);
+    } else if (this._engine) {
       return this._engine.getThumbnail(time);
     }
     return null;
@@ -2113,6 +2124,7 @@ export default class Player extends FakeEventTarget {
           }
           this._updateTracks(data.tracks);
           this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
+          this._externalThumbnailsHandler.load(this.sources.thumbnails);
         })
         .finally(() => {
           resetFlags();

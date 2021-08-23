@@ -4,6 +4,7 @@ declare type PKSourcesConfigObject = {
   dash: Array<PKMediaSourceObject>,
   progressive: Array<PKMediaSourceObject>,
   captions?: Array<PKExternalCaptionObject>,
+  thumbnails?: PKExternalThumbnailsConfig,
   options: PKMediaSourceOptionsObject,
   type: string,
   dvr: boolean,
