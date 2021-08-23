@@ -15,5 +15,6 @@ declare type PKAdOptions = {
   bitrate: number,
   bumper: boolean,
   inStream?: boolean,
-  vpaid?: boolean
+  vpaid?: boolean,
+  streamId?: string
 };
