@@ -1397,7 +1397,6 @@ describe('Player', function () {
       it('should change style setting', () => {
         let textStyle = new TextStyle();
         textStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
-        textStyle.fontSize = '75%';
         textStyle.fontScale = '3';
         textStyle.fontColor = TextStyle.StandardColors.BLACK;
         textStyle.fontOpacity = TextStyle.StandardOpacities.SEMI_HIGH;
@@ -1407,7 +1406,6 @@ describe('Player', function () {
         player.textStyle = textStyle;
         const currentTextStyle = player.textStyle;
         currentTextStyle.fontEdge.should.deep.equal(textStyle.fontEdge);
-        currentTextStyle.fontSize.should.equal(textStyle.fontSize);
         currentTextStyle.fontScale.should.equal(textStyle.fontScale);
         currentTextStyle.fontColor.should.deep.equal(textStyle.fontColor);
         currentTextStyle.fontOpacity.should.equal(textStyle.fontOpacity);
@@ -1419,7 +1417,6 @@ describe('Player', function () {
       it('should create fromJson set the correct value', () => {
         const settings = {
           fontEdge: TextStyle.EdgeStyles.NONE,
-          fontSize: '75%',
           fontScale: '3',
           fontColor: TextStyle.StandardColors.CYAN,
           fontOpacity: TextStyle.StandardOpacities.TRANSPARENT,
@@ -1429,7 +1426,6 @@ describe('Player', function () {
         };
         const textStyle = TextStyle.fromJson(settings);
         textStyle.fontEdge.should.deep.equal(settings.fontEdge);
-        textStyle.fontSize.should.equal(settings.fontSize);
         textStyle.fontScale.should.equal(settings.fontScale);
         textStyle.fontColor.should.deep.equal(settings.fontColor);
         textStyle.fontOpacity.should.equal(settings.fontOpacity);
@@ -1441,7 +1437,6 @@ describe('Player', function () {
       it('should fromJson return an object equal to explicit set object', () => {
         const settings = {
           fontEdge: TextStyle.EdgeStyles.RAISED,
-          fontSize: '75%',
           fontScale: '3',
           fontColor: TextStyle.StandardColors.CYAN,
           fontOpacity: TextStyle.StandardOpacities.SEMI_LOW,
@@ -1451,7 +1446,6 @@ describe('Player', function () {
         };
         let textStyle = new TextStyle();
         textStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
-        textStyle.fontSize = '75%';
         textStyle.fontScale = '3';
         textStyle.fontColor = TextStyle.StandardColors.CYAN;
         textStyle.fontOpacity = TextStyle.StandardOpacities.SEMI_LOW;
@@ -1464,7 +1458,6 @@ describe('Player', function () {
       it('should toJson return same object', () => {
         const settings = {
           fontEdge: TextStyle.EdgeStyles.RAISED,
-          fontSize: '75%',
           fontScale: '3',
           fontColor: TextStyle.StandardColors.CYAN,
           fontOpacity: TextStyle.StandardOpacities.SEMI_LOW,
@@ -1474,7 +1467,6 @@ describe('Player', function () {
         };
         let textStyle = new TextStyle();
         textStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
-        textStyle.fontSize = '75%';
         textStyle.fontScale = '3';
         textStyle.fontColor = TextStyle.StandardColors.CYAN;
         textStyle.fontOpacity = TextStyle.StandardOpacities.SEMI_LOW;
@@ -1487,7 +1479,6 @@ describe('Player', function () {
       it('should clone API return exact same object', () => {
         let clonedTextStyle = new TextStyle();
         clonedTextStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
-        clonedTextStyle.fontSize = '75%';
         clonedTextStyle.fontScale = '3';
         clonedTextStyle.fontColor = TextStyle.StandardColors.CYAN;
         clonedTextStyle.fontOpacity = TextStyle.StandardOpacities.SEMI_LOW;

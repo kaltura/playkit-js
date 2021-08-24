@@ -144,7 +144,6 @@ class TextStyle {
     };
     let textStyle = new TextStyle();
     textStyle.fontEdge = getValue(setting.fontEdge, textStyle.fontEdge);
-    textStyle.fontSize = getValue(setting.fontSize, textStyle.fontSize);
     textStyle.fontScale = getValue(setting.fontScale, textStyle.fontScale);
     textStyle.fontColor = getValue(setting.fontColor, textStyle.fontColor);
     textStyle.fontOpacity = getValue(setting.fontOpacity, textStyle.fontOpacity);
@@ -157,7 +156,6 @@ class TextStyle {
   static toJson(text: TextStyle): PKTextStyleObject {
     return {
       fontEdge: text.fontEdge,
-      fontSize: text.fontSize,
       fontScale: text.fontScale,
       fontColor: text.fontColor,
       fontOpacity: text.fontOpacity,
@@ -168,11 +166,9 @@ class TextStyle {
   }
 
   /**
-   * Font size, such as 1, 2, 3...
+   * Font scale, such as 1, 2, 3...
    * @type {number}
    */
-  fontSize: string = '100%';
-
   fontScale: number = 1;
 
   /**

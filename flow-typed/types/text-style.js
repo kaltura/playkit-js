@@ -1,6 +1,5 @@
 // @flow
 declare type PKTextStyleObject = {
-  fontSize: string,
   fontScale: number,
   fontFamily: string,
   fontColor: Array<number>,
