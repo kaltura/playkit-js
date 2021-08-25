@@ -1912,6 +1912,7 @@ export default class Player extends FakeEventTarget {
         this._onTextTrackChanged(event)
       );
       this._eventManager.listen(this._externalCaptionsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._externalThumbnailsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
       const rootElement = Utils.Dom.getElementBySelector(`#${this.config.targetId}`);
       if (rootElement) {
         this._eventManager.listen(

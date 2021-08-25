@@ -150,6 +150,7 @@ var config = {
 >  poster?: string,
 >  duration?: number,
 >  captions?: Array<PKExternalCaptionObject>,
+>  thumbnails?: PKExternalThumbnailsConfig,
 >  startTime?: number
 > }
 > ```
@@ -444,6 +445,31 @@ var config = {
 > >       default: true,
 > >       language: 'en',
 > >       label: 'English'
+> >     }
+> >   ]
+> > };
+> > ```
+> >
+> > ##
+> >
+> > ### sources.thumbnails
+> >
+> > ##### Type: `PKExternalThumbnailsConfig`
+> >
+> > ##### Default: `-`
+> >
+> > ##### Description: vtt thumbnails to be added to the media.
+> >
+> > The imgBaseUrl field is optional, if not provided - it would be resolved to the application domain.
+> >
+> > #### Example:
+> >
+> > ```js
+> > var sources: {
+> >   thumbnails: [
+> >     {
+> >       imgBaseUrl: 'www.path.to/your/resources/images',
+> >       vttUrl: 'www.path.to/your/thumbnails/file.vtt'
 > >     }
 > >   ]
 > > };
