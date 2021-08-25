@@ -460,7 +460,7 @@ var config = {
 > >
 > > ##### Description: vtt thumbnails to be added to the media.
 > >
-> > The imgBaseUrl field is optional, if not provided - the img base url is the application domain.
+> > The imgBaseUrl field is optional, if not provided - it would be resolved to the application domain.
 > >
 > > #### Example:
 > >
