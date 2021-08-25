@@ -57,6 +57,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
     if (!thumbnailsConfig) {
       return;
     }
+    ExternalThumbnailsHandler._logger.debug('start loading the vtt thumbnails');
     await this._downloadAndParseCues(thumbnailsConfig);
   }
 
