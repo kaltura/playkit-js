@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.73.1](https://github.com/kaltura/playkit-js/compare/v0.73.0...v0.73.1) (2021-08-26)
+
+
+### Bug Fixes
+
+* **FEC-11397:** add listening on the player core to the thumbnails handler error events ([#602](https://github.com/kaltura/playkit-js/issues/602)) ([084b8bf](https://github.com/kaltura/playkit-js/commit/084b8bf))
+* **FEV-1020:** Exported Cue module ([#600](https://github.com/kaltura/playkit-js/issues/600)) ([655d9ad](https://github.com/kaltura/playkit-js/commit/655d9ad))
+* (FEC-11484): Captions on Safari - Captions icon missing on specific entry on V7 player 1.11.1 (regression) ([#597](https://github.com/kaltura/playkit-js/issues/597)) ([ab1cb2f](https://github.com/kaltura/playkit-js/commit/ab1cb2f))
+* **FEC-10598:** add streamId to PKAdOptions ([#596](https://github.com/kaltura/playkit-js/issues/596)) ([ac2f7a0](https://github.com/kaltura/playkit-js/commit/ac2f7a0))
+* **FEC-11050:** some custom events are not dispatched from the player ([#587](https://github.com/kaltura/playkit-js/issues/587)) ([acf4e1a](https://github.com/kaltura/playkit-js/commit/acf4e1a))
+* **FEC-11435:** player not seeking to live edge after preroll ads ([#592](https://github.com/kaltura/playkit-js/issues/592)) ([f3c6d2f](https://github.com/kaltura/playkit-js/commit/f3c6d2f))
+* **FEC-11451:** video tracks are always returned with active false in native adapter ([92fd0db](https://github.com/kaltura/playkit-js/commit/92fd0db))
+* **FEC-11467:** caption selection changes across entries in playlists ([#594](https://github.com/kaltura/playkit-js/issues/594)) ([b7d3134](https://github.com/kaltura/playkit-js/commit/b7d3134))
+
+
+### Tests
+
+* fixing automation tests after chrome restrictions ([#591](https://github.com/kaltura/playkit-js/issues/591)) ([ec0c7d5](https://github.com/kaltura/playkit-js/commit/ec0c7d5)), closes [1232649#c23](https://github.com/kaltura/playkit-js/issues/c23)
+
+
+
 ## [0.73.0](https://github.com/kaltura/playkit-js/compare/v0.72.0...v0.73.0) (2021-07-27)
 
 
