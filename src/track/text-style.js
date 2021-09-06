@@ -173,7 +173,7 @@ class TextStyle {
    */
   fontSize: string = '100%';
 
-  fontScale: number = 1;
+  fontScale: number = 0;
 
   /**
    * @type {TextStyle.FontFamily}
