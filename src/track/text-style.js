@@ -99,6 +99,9 @@ class TextStyle {
     ]
   };
 
+  /**
+   * Possible font sizes are 50%, 75%, 100%, 200%, 300%, 400%
+   */
   static FontSizes: Array<Object> = [
     {
       value: -2,
@@ -145,7 +148,6 @@ class TextStyle {
     let textStyle = new TextStyle();
     textStyle.fontEdge = getValue(setting.fontEdge, textStyle.fontEdge);
     textStyle.fontSize = getValue(setting.fontSize, textStyle.fontSize);
-    textStyle.fontScale = getValue(setting.fontScale, textStyle.fontScale);
     textStyle.fontColor = getValue(setting.fontColor, textStyle.fontColor);
     textStyle.fontOpacity = getValue(setting.fontOpacity, textStyle.fontOpacity);
     textStyle.backgroundColor = getValue(setting.backgroundColor, textStyle.backgroundColor);
@@ -158,7 +160,6 @@ class TextStyle {
     return {
       fontEdge: text.fontEdge,
       fontSize: text.fontSize,
-      fontScale: text.fontScale,
       fontColor: text.fontColor,
       fontOpacity: text.fontOpacity,
       backgroundColor: text.backgroundColor,
@@ -167,13 +168,21 @@ class TextStyle {
     };
   }
 
-  /**
-   * Font size, such as 1, 2, 3...
-   * @type {number}
-   */
-  fontSize: string = '100%';
+  _fontSizeIndex: number = 2; // 100%
 
-  fontScale: number = 1;
+  set fontSize(fontSize: string) {
+    const index = TextStyle.FontSizes.findIndex(({label}) => label === fontSize);
+    if (index !== -1) {
+      this._fontSizeIndex = index;
+    }
+  }
+
+  /**
+   * Font size percentage, according to FontSizes enum
+   */
+  get fontSize() {
+    return TextStyle.FontSizes[this._fontSizeIndex].label;
+  }
 
   /**
    * @type {TextStyle.FontFamily}
@@ -253,7 +262,8 @@ class TextStyle {
   }
 
   get implicitFontScale(): number {
-    return IMPLICIT_SCALE_PERCENTAGE * this.fontScale + 1;
+    const fontSizeValue = TextStyle.FontSizes[this._fontSizeIndex].value;
+    return IMPLICIT_SCALE_PERCENTAGE * fontSizeValue + 1;
   }
 }
 

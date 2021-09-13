@@ -4,7 +4,7 @@ import TextStyle from './text-style';
 import TextTrack from './text-track';
 
 /* eslint-disable */
-/**
+/*
  * Copyright 2013 vtt.js Contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

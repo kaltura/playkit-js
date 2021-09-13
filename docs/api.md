@@ -737,7 +737,7 @@
   - [StandardColors][733]
   - [StandardOpacities][734]
   - [EdgeStyles][735]
-- [fontScale][736]
+  - [FontSizes][736]
 - [TextTrack][737]
 - [Track][738]
   - [Parameters][739]
@@ -4796,9 +4796,7 @@ that your application is in compliance with this or any other guideline.
 
 ### fontSize
 
-Font size, such as 1, 2, 3...
-
-Type: [number][898]
+font size percentage, according to the options in FontSizes enum
 
 ### fontFamily
 
@@ -4876,23 +4874,9 @@ shadow color, followed by pixel values for x-offset, y-offset, and blur.
 
 Type: ![Array][890]&lt;![Array][890]&lt;[number][898]>>
 
-## fontScale
+### FontSizes
 
-Copyright 2013 vtt.js Contributors
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-[http://www.apache.org/licenses/LICENSE-2.0][924]
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-Type: [number][898]
+Possible font sizes are 50%, 75%, 100%, 200%, 300%, 400%
 
 ## TextTrack
 
@@ -5062,14 +5046,14 @@ Type: [boolean][892]
 ### displayState
 
 This is used as part of the rendering model, to keep cues in a consistent position.
-[http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#text-track-cue-display-state][925]
+[http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#text-track-cue-display-state][924]
 
 Type: [undefined][908]
 
 ### \_id
 
 VTTCue and TextTrackCue properties
-[http://dev.w3.org/html5/webvtt/#vttcue-interface][926]
+[http://dev.w3.org/html5/webvtt/#vttcue-interface][925]
 
 ##
 
@@ -5083,7 +5067,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-[http://www.apache.org/licenses/LICENSE-2.0][924]
+[http://www.apache.org/licenses/LICENSE-2.0][926]
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -6474,7 +6458,7 @@ Returns **([number][898] \| [NaN][928])** 0 if the versions are equal- a negativ
 [733]: #standardcolors
 [734]: #standardopacities
 [735]: #edgestyles
-[736]: #fontscale
+[736]: #fontsizes
 [737]: #texttrack
 [738]: #track-1
 [739]: #parameters-113
@@ -6662,8 +6646,8 @@ Returns **([number][898] \| [NaN][928])** 0 if the versions are equal- a negativ
 [921]: #textstylestandardopacities
 [922]: #textstyleedgestyles
 [923]: https://goo.gl/ZcqOOM
-[924]: http://www.apache.org/licenses/LICENSE-2.0
-[925]: http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#text-track-cue-display-state
-[926]: http://dev.w3.org/html5/webvtt/#vttcue-interface
+[924]: http://www.whatwg.org/specs/web-apps/current-work/multipage/the-video-element.html#text-track-cue-display-state
+[925]: http://dev.w3.org/html5/webvtt/#vttcue-interface
+[926]: http://www.apache.org/licenses/LICENSE-2.0
 [927]: https://developer.mozilla.org/docs/Web/API/Element
 [928]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/NaN
