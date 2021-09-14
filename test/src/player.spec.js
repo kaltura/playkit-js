@@ -1394,6 +1394,15 @@ describe('Player', function () {
         }
       });
 
+      it('should override fontSize with fontScale if fontScale is set', () => {
+        let textStyle = TextStyle.fromJson({
+          fontScale: 4, // 400%
+          fontSize: '75%'
+        });
+        textStyle.fontScale.should.equal(4);
+        textStyle.fontSize.should.equal('400%');
+      });
+
       it('should change style setting', () => {
         let textStyle = new TextStyle();
         textStyle.fontEdge = TextStyle.EdgeStyles.RAISED;
@@ -1459,6 +1468,7 @@ describe('Player', function () {
         const settings = {
           fontEdge: TextStyle.EdgeStyles.RAISED,
           fontSize: '75%',
+          fontScale: -1,
           fontColor: TextStyle.StandardColors.CYAN,
           fontOpacity: TextStyle.StandardOpacities.SEMI_LOW,
           backgroundOpacity: TextStyle.StandardOpacities.SEMI_LOW,

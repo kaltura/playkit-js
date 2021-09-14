@@ -148,6 +148,7 @@ class TextStyle {
     let textStyle = new TextStyle();
     textStyle.fontEdge = getValue(setting.fontEdge, textStyle.fontEdge);
     textStyle.fontSize = getValue(setting.fontSize, textStyle.fontSize);
+    textStyle.fontScale = getValue(setting.fontScale, textStyle.fontScale);
     textStyle.fontColor = getValue(setting.fontColor, textStyle.fontColor);
     textStyle.fontOpacity = getValue(setting.fontOpacity, textStyle.fontOpacity);
     textStyle.backgroundColor = getValue(setting.backgroundColor, textStyle.backgroundColor);
@@ -160,6 +161,7 @@ class TextStyle {
     return {
       fontEdge: text.fontEdge,
       fontSize: text.fontSize,
+      fontScale: text.fontScale,
       fontColor: text.fontColor,
       fontOpacity: text.fontOpacity,
       backgroundColor: text.backgroundColor,
@@ -178,10 +180,24 @@ class TextStyle {
   }
 
   /**
-   * Font size percentage, according to FontSizes enum
+   * Percentage string matching a FontSizes entry
    */
   get fontSize() {
     return TextStyle.FontSizes[this._fontSizeIndex].label;
+  }
+
+  set fontScale(fontScale: number) {
+    const index = TextStyle.FontSizes.findIndex(({value}) => value === fontScale);
+    if (index !== -1) {
+      this._fontSizeIndex = index;
+    }
+  }
+
+  /**
+   * Numeric value matching a FontSizes entry (for backward compatibility)
+   */
+  get fontScale() {
+    return TextStyle.FontSizes[this._fontSizeIndex].value;
   }
 
   /**
