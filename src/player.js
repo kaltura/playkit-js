@@ -1345,7 +1345,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   addTextTrack(kind: string, label?: string, language?: string): ?TextTrack {
-    if (this._engine) {
+    if (this._engine && typeof this._engine.addTextTrack === 'function') {
       return this._engine.addTextTrack(kind, label, language);
     }
   }
