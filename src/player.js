@@ -1336,6 +1336,21 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Add text track
+   * @function addTextTrack
+   * @param {string} kind - Specifies the kind of text track.
+   * @param {?string} label - A string specifying the label for the text track.
+   * @param {?string} language - A two-letter language code that specifies the language of the text track.
+   * @returns {?TextTrack} - A TextTrack Object, which represents the new text track.
+   * @public
+   */
+  addTextTrack(kind: string, label?: string, language?: string): ?TextTrack {
+    if (this._engine && typeof this._engine.addTextTrack === 'function') {
+      return this._engine.addTextTrack(kind, label, language);
+    }
+  }
+
+  /**
    * Enables adaptive bitrate switching.
    * @function enableAdaptiveBitrate
    * @returns {void}

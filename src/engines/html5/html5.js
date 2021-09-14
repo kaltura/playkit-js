@@ -1205,4 +1205,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
     return retVal;
   }
+
+  addTextTrack(kind: string, label?: string, language?: string): ?TextTrack {
+    return this._el.addTextTrack(kind, label, language);
+  }
 }
