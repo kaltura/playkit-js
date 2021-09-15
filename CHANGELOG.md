@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.74.0](https://github.com/kaltura/playkit-js/compare/v0.73.1...v0.74.0) (2021-09-15)
+
+
+### Bug Fixes
+
+* **FEC-11510:** No default font size selected in cvaa ([#603](https://github.com/kaltura/playkit-js/issues/603)) ([1ca7316](https://github.com/kaltura/playkit-js/commit/1ca7316)), closes [kaltura/playkit-js-ui#639](https://github.com/kaltura/playkit-js/issues/639) [kaltura/kaltura-player-js#491](https://github.com/kaltura/playkit-js/issues/491)
+* **FEC-11537:** re-add fontScale ([#605](https://github.com/kaltura/playkit-js/issues/605)) ([b56f18e](https://github.com/kaltura/playkit-js/commit/b56f18e))
+
+
+### Features
+
+* **FEC-11540:** Cue-Point Manager ([#604](https://github.com/kaltura/playkit-js/issues/604)) ([78b4538](https://github.com/kaltura/playkit-js/commit/78b4538))
+* **FEC-11540:** Cue-Point Manager ([#606](https://github.com/kaltura/playkit-js/issues/606)) ([83c8786](https://github.com/kaltura/playkit-js/commit/83c8786))
+
+
+
 ### [0.73.1](https://github.com/kaltura/playkit-js/compare/v0.73.0...v0.73.1) (2021-08-26)
 
 
