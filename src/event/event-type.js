@@ -241,6 +241,10 @@ const CustomEventType: PKEventTypes = {
    */
   TIMED_METADATA: 'timedmetadata',
   /**
+   * Fires when new timed metadata added
+   */
+  TIMED_METADATA_ADDED: 'timedmetadataadded',
+  /**
    * Fired when a fragment or segment is done loading successfully
    */
   FRAG_LOADED: 'fragloaded',
