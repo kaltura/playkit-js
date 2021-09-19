@@ -218,7 +218,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    */
   _extractCueMetadata(vttCue: VTTCue, thumbnailsConfig: PKExternalThumbnailsConfig): PKThumbnailVttCue {
     const {startTime, endTime, text} = vttCue;
-    const {imgBaseUrl} = thumbnailsConfig;
+    const imgBaseUrl = thumbnailsConfig.vttUrl.substring(0, thumbnailsConfig.vttUrl.lastIndexOf('/'));
     const isVTTIncludesImgSizeOnly: boolean = VTT_INCLUDES_SIZE_ONLY.test(text);
     const isVTTIncludesImgSizeAndCoords: boolean = VTT_INCLUDES_SIZE_AND_COORDS.test(text);
     let isValidThumbnailVTTFormat: boolean = false;
@@ -241,10 +241,10 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
       size = {width, height};
       isValidThumbnailVTTFormat = [x, y, width, height, imgUrl].every(option => option !== undefined);
     } else {
-      imgUrl = text;
+      imgUrl = text[0] === '/' ? text.substring(1) : text;
       isValidThumbnailVTTFormat = !!text;
     }
-    imgUrl = imgBaseUrl ? `${imgBaseUrl}/${imgUrl}` : imgUrl;
+    imgUrl = `${imgBaseUrl}/${imgUrl}`;
     if (!isValidThumbnailVTTFormat) {
       throw new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.INVALID_VTT_THUMBNAILS_FILE, {
         message: 'error while parsing the vtt cues - invalid cue',
