@@ -6,15 +6,15 @@ import {ThumbnailInfo} from '../../../src/thumbnail/thumbnail-info';
 let externalThumbnailsHandler: ExternalThumbnailsHandler;
 
 const thumbnailsCues = [
-  {startTime: 0, endTime: 5, imgUrl: 'base/test/src/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 0, y: 0}},
-  {startTime: 5, endTime: 10, imgUrl: 'base/test/src/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 128, y: 0}},
-  {startTime: 10, endTime: 15, imgUrl: 'base/test/src/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 256, y: 0}},
-  {startTime: 15, endTime: 20, imgUrl: 'base/test/src/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 384, y: 0}},
-  {startTime: 20, endTime: 25, imgUrl: 'base/test/src/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 512, y: 0}},
-  {startTime: 25, endTime: 30, imgUrl: 'base/test/src/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 640, y: 0}},
-  {startTime: 30, endTime: 35, imgUrl: 'base/test/src/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 768, y: 0}},
-  {startTime: 35, endTime: 40, imgUrl: 'base/test/src/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 896, y: 0}},
-  {startTime: 40, endTime: 45, imgUrl: 'base/test/src/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 1024, y: 0}}
+  {startTime: 0, endTime: 5, imgUrl: '/base/test/src/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 0, y: 0}},
+  {startTime: 5, endTime: 10, imgUrl: '/base/test/src/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 128, y: 0}},
+  {startTime: 10, endTime: 15, imgUrl: '/base/test/src/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 256, y: 0}},
+  {startTime: 15, endTime: 20, imgUrl: '/base/test/src/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 384, y: 0}},
+  {startTime: 20, endTime: 25, imgUrl: '/base/test/src/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 512, y: 0}},
+  {startTime: 25, endTime: 30, imgUrl: '/base/test/src/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 640, y: 0}},
+  {startTime: 30, endTime: 35, imgUrl: '/base/test/src/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 768, y: 0}},
+  {startTime: 35, endTime: 40, imgUrl: '/base/test/src/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 896, y: 0}},
+  {startTime: 40, endTime: 45, imgUrl: '/base/test/src/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 1024, y: 0}}
 ];
 
 describe('ExternalThumbnailsHandler', () => {
@@ -43,7 +43,7 @@ describe('ExternalThumbnailsHandler', () => {
     let time = 0;
     let x = -128;
     const nativeVttCues: VTTCue[] = [...thumbnailsCues].map(() => {
-      return new VTTCue(time, (time += 5), `base/test/src/assets/bbb-sprite.jpeg#xywh=${(x += 128)},0,128,72`);
+      return new VTTCue(time, (time += 5), `bbb-sprite.jpeg#xywh=${(x += 128)},0,128,72`);
     });
     const thumbnailsConfig: PKExternalThumbnailsConfig = {
       vttUrl: '/base/test/src/assets/thumbnails3.vtt'
@@ -76,12 +76,12 @@ describe('ExternalThumbnailsHandler', () => {
     };
 
     it('should turn a vtt cue into a thumbnail cue - vtt cue with size and coords options', async () => {
-      const nativeVTTCue: VTTCue = new VTTCue(0, 5, 'base/test/src/assets/bbb-sprite.jpeg#xywh=0,0,128,72');
+      const nativeVTTCue: VTTCue = new VTTCue(0, 5, 'bbb-sprite.jpeg#xywh=0,0,128,72');
       const actualParsedCue: ThumbnailInfo = await externalThumbnailsHandler._extractCueMetadata(nativeVTTCue, thumbnailsConfig);
       const expectedParsedCue: ThumbnailInfo = {
         startTime: 0,
         endTime: 5,
-        imgUrl: 'base/test/src/assets/bbb-sprite.jpeg',
+        imgUrl: '/base/test/src/assets/bbb-sprite.jpeg',
         size: {width: 128, height: 72},
         coordinates: {x: 0, y: 0}
       };
@@ -89,12 +89,12 @@ describe('ExternalThumbnailsHandler', () => {
     });
 
     it('should turn a vtt cue into a thumbnail cue - vtt cue with size options only - (the size options should be ignored) and size and coordinates should be null', async () => {
-      const nativeVTTCue: VTTCue = new VTTCue(0, 5, 'base/test/src/assets/bbb-sprite.jpeg#wh=128,72');
+      const nativeVTTCue: VTTCue = new VTTCue(0, 5, 'bbb-sprite.jpeg#wh=128,72');
       const actualParsedCue: ThumbnailInfo = await externalThumbnailsHandler._extractCueMetadata(nativeVTTCue, thumbnailsConfig);
       const expectedParsedCue: ThumbnailInfo = {
         startTime: 0,
         endTime: 5,
-        imgUrl: 'base/test/src/assets/bbb-sprite.jpeg',
+        imgUrl: '/base/test/src/assets/bbb-sprite.jpeg',
         size: null,
         coordinates: null
       };
@@ -102,12 +102,12 @@ describe('ExternalThumbnailsHandler', () => {
     });
 
     it('should turn a vtt cue into a thumbnail cue - vtt cue with url options only - the size options should be should be null', async () => {
-      const nativeVTTCue: VTTCue = new VTTCue(0, 5, 'base/test/src/assets/bbb-sprite.jpeg#wh=128,72');
+      const nativeVTTCue: VTTCue = new VTTCue(0, 5, 'bbb-sprite.jpeg#wh=128,72');
       const actualParsedCue: ThumbnailInfo = await externalThumbnailsHandler._extractCueMetadata(nativeVTTCue, thumbnailsConfig);
       const expectedParsedCue: ThumbnailInfo = {
         startTime: 0,
         endTime: 5,
-        imgUrl: 'base/test/src/assets/bbb-sprite.jpeg',
+        imgUrl: '/base/test/src/assets/bbb-sprite.jpeg',
         size: null,
         coordinates: null
       };
@@ -115,7 +115,7 @@ describe('ExternalThumbnailsHandler', () => {
     });
 
     it('should throw an error - invalid thumbnail cue format', () => {
-      const invalidVttThumbnailFormat: VTTCue = new VTTCue(0, 5, 'base/test/src/assets/bbb-sprite.jpeg#xywh=0,128,72');
+      const invalidVttThumbnailFormat: VTTCue = new VTTCue(0, 5, 'bbb-sprite.jpeg#xywh=0,128,72');
       expect(() => externalThumbnailsHandler._extractCueMetadata(invalidVttThumbnailFormat, thumbnailsConfig)).to.throw();
     });
   });
