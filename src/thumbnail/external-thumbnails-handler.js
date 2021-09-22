@@ -12,6 +12,8 @@ import {Html5EventType} from '../event/event-type';
 const VTT_INCLUDES_SIZE_ONLY: RegExp = /#wh=/i;
 const VTT_INCLUDES_SIZE_AND_COORDS: RegExp = /#xywh=/i;
 
+const RELATIVE_PATH_PATTERN: RegExp = new RegExp('^/[^/].+');
+
 class ExternalThumbnailsHandler extends FakeEventTarget {
   constructor() {
     super();
@@ -241,10 +243,11 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
       size = {width, height};
       isValidThumbnailVTTFormat = [x, y, width, height, imgUrl].every(option => option !== undefined);
     } else {
-      imgUrl = text[0] === '/' ? text.substring(1) : text;
+      imgUrl = text;
       isValidThumbnailVTTFormat = !!text;
     }
-    imgUrl = `${imgBaseUrl}/${imgUrl}`;
+    imgUrl = RELATIVE_PATH_PATTERN.test(imgUrl) ? `${imgBaseUrl}/${imgUrl.substring(1)}` : imgUrl;
+
     if (!isValidThumbnailVTTFormat) {
       throw new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.INVALID_VTT_THUMBNAILS_FILE, {
         message: 'error while parsing the vtt cues - invalid cue',
