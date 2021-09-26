@@ -12,7 +12,7 @@ import {Html5EventType} from '../event/event-type';
 const VTT_INCLUDES_SIZE_ONLY: RegExp = /#wh=/i;
 const VTT_INCLUDES_SIZE_AND_COORDS: RegExp = /#xywh=/i;
 
-const ABSOLUTE_PATH_PATTERN: RegExp = new RegExp('^(^http|//[^/]).+');
+const ABSOLUTE_PATH_PATTERN: RegExp = new RegExp('^http.+');
 const RELATIVE_PATH_PATTERN: RegExp = new RegExp('^/[^/].+');
 
 class ExternalThumbnailsHandler extends FakeEventTarget {
