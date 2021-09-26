@@ -12,6 +12,7 @@ import {Html5EventType} from '../event/event-type';
 const VTT_INCLUDES_SIZE_ONLY: RegExp = /#wh=/i;
 const VTT_INCLUDES_SIZE_AND_COORDS: RegExp = /#xywh=/i;
 
+const ABSOLUTE_PATH_PATTERN: RegExp = new RegExp('^(^http|//[^/]).+');
 const RELATIVE_PATH_PATTERN: RegExp = new RegExp('^/[^/].+');
 
 class ExternalThumbnailsHandler extends FakeEventTarget {
@@ -246,7 +247,11 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
       imgUrl = text;
       isValidThumbnailVTTFormat = !!text;
     }
-    imgUrl = RELATIVE_PATH_PATTERN.test(imgUrl) ? `${imgBaseUrl}/${imgUrl.substring(1)}` : imgUrl;
+
+    if (!ABSOLUTE_PATH_PATTERN.test(imgUrl)) {
+      imgUrl = RELATIVE_PATH_PATTERN.test(imgUrl) ? imgUrl.substring(1) : imgUrl;
+      imgUrl = `${imgBaseUrl}/${imgUrl}`;
+    }
 
     if (!isValidThumbnailVTTFormat) {
       throw new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.INVALID_VTT_THUMBNAILS_FILE, {
