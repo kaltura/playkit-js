@@ -12,7 +12,6 @@ import {Html5EventType} from '../event/event-type';
 const VTT_INCLUDES_SIZE_ONLY: RegExp = /#wh=/i;
 const VTT_INCLUDES_SIZE_AND_COORDS: RegExp = /#xywh=/i;
 
-const ABSOLUTE_PATH_PATTERN: RegExp = new RegExp('^http.+');
 const RELATIVE_PATH_PATTERN: RegExp = new RegExp('^/[^/].+');
 
 class ExternalThumbnailsHandler extends FakeEventTarget {
@@ -248,7 +247,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
       isValidThumbnailVTTFormat = !!text;
     }
 
-    if (!ABSOLUTE_PATH_PATTERN.test(imgUrl)) {
+    if (!imgUrl.indexOf('http://') === 0 || imgUrl.indexOf('https://') === 0) {
       imgUrl = RELATIVE_PATH_PATTERN.test(imgUrl) ? imgUrl.substring(1) : imgUrl;
       imgUrl = `${imgBaseUrl}/${imgUrl}`;
     }
