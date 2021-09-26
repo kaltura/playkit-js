@@ -247,7 +247,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
       isValidThumbnailVTTFormat = !!text;
     }
 
-    if (!imgUrl.indexOf('http://') === 0 || imgUrl.indexOf('https://') === 0) {
+    if (!(imgUrl.indexOf('http://') === 0 || imgUrl.indexOf('https://') === 0)) {
       imgUrl = RELATIVE_PATH_PATTERN.test(imgUrl) ? imgUrl.substring(1) : imgUrl;
       imgUrl = `${imgBaseUrl}/${imgUrl}`;
     }
