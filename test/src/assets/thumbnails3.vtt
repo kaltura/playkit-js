@@ -1,31 +1,31 @@
 WEBVTT
 
 00:00.000 --> 00:05.000
-base/test/src/assets/bbb-sprite.jpeg#xywh=0,0,128,72
+bbb-sprite.jpeg#xywh=0,0,128,72
 
 00:05.000 --> 00:10.000
-base/test/src/assets/bbb-sprite.jpeg#xywh=128,0,128,72
+bbb-sprite.jpeg#xywh=128,0,128,72
 
 00:10.000 --> 00:15.000
-base/test/src/assets/bbb-sprite.jpeg#xywh=256,0,128,72
+bbb-sprite.jpeg#xywh=256,0,128,72
 
 00:15.000 --> 00:20.000
-base/test/src/assets/bbb-sprite.jpeg#xywh=384,0,128,72
+bbb-sprite.jpeg#xywh=384,0,128,72
 
 00:20.000 --> 00:25.000
-base/test/src/assets/bbb-sprite.jpeg#xywh=512,0,128,72
+bbb-sprite.jpeg#xywh=512,0,128,72
 
 00:25.000 --> 00:30.000
-base/test/src/assets/bbb-sprite.jpeg#xywh=640,0,128,72
+bbb-sprite.jpeg#xywh=640,0,128,72
 
 00:30.000 --> 00:35.000
-base/test/src/assets/bbb-sprite.jpeg#xywh=768,0,128,72
+bbb-sprite.jpeg#xywh=768,0,128,72
 
 00:35.000 --> 00:40.000
-base/test/src/assets/bbb-sprite.jpeg#xywh=896,0,128,72
+bbb-sprite.jpeg#xywh=896,0,128,72
 
 00:40.000 --> 00:45.000
-base/test/src/assets/bbb-sprite.jpeg#xywh=1024,0,128,72
+bbb-sprite.jpeg#xywh=1024,0,128,72
 
 
 
