@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.74.1](https://github.com/kaltura/playkit-js/compare/v0.74.0...v0.74.1) (2021-09-30)
+
+
+### Bug Fixes
+
+* **FEC-11547:** The thumbnalils images should be relative to the VTT file adress by default ([#607](https://github.com/kaltura/playkit-js/issues/607)) ([989a2c0](https://github.com/kaltura/playkit-js/commit/989a2c0))
+
+
+
 ## [0.74.0](https://github.com/kaltura/playkit-js/compare/v0.73.1...v0.74.0) (2021-09-15)
 
 
