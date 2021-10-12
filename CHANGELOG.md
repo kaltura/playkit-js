@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.74.2](https://github.com/kaltura/playkit-js/compare/v0.74.1...v0.74.2) (2021-10-12)
+
+
+### Bug Fixes
+
+* **FEC-11606:** add TextTrack label to TIMED_METADATA event ([#609](https://github.com/kaltura/playkit-js/issues/609)) ([9465501](https://github.com/kaltura/playkit-js/commit/9465501))
+
+
+
 ### [0.74.1](https://github.com/kaltura/playkit-js/compare/v0.74.0...v0.74.1) (2021-09-30)
 
 
