@@ -12,6 +12,8 @@ import {Html5EventType} from '../event/event-type';
 const VTT_INCLUDES_SIZE_ONLY: RegExp = /#wh=/i;
 const VTT_INCLUDES_SIZE_AND_COORDS: RegExp = /#xywh=/i;
 
+const RELATIVE_PATH_PATTERN: RegExp = new RegExp('^/[^/].+');
+
 class ExternalThumbnailsHandler extends FakeEventTarget {
   constructor() {
     super();
@@ -218,7 +220,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    */
   _extractCueMetadata(vttCue: VTTCue, thumbnailsConfig: PKExternalThumbnailsConfig): PKThumbnailVttCue {
     const {startTime, endTime, text} = vttCue;
-    const {imgBaseUrl} = thumbnailsConfig;
+    const imgBaseUrl = thumbnailsConfig.vttUrl.substring(0, thumbnailsConfig.vttUrl.lastIndexOf('/'));
     const isVTTIncludesImgSizeOnly: boolean = VTT_INCLUDES_SIZE_ONLY.test(text);
     const isVTTIncludesImgSizeAndCoords: boolean = VTT_INCLUDES_SIZE_AND_COORDS.test(text);
     let isValidThumbnailVTTFormat: boolean = false;
@@ -244,7 +246,12 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
       imgUrl = text;
       isValidThumbnailVTTFormat = !!text;
     }
-    imgUrl = imgBaseUrl ? `${imgBaseUrl}/${imgUrl}` : imgUrl;
+
+    if (!(imgUrl.indexOf('http://') === 0 || imgUrl.indexOf('https://') === 0)) {
+      imgUrl = RELATIVE_PATH_PATTERN.test(imgUrl) ? imgUrl.substring(1) : imgUrl;
+      imgUrl = `${imgBaseUrl}/${imgUrl}`;
+    }
+
     if (!isValidThumbnailVTTFormat) {
       throw new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.INVALID_VTT_THUMBNAILS_FILE, {
         message: 'error while parsing the vtt cues - invalid cue',
