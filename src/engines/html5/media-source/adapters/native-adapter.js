@@ -122,6 +122,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   _segmentDuration: number = 0;
 
+  _lastUpdatedCurrentTime: number = 0;
+
+  _lastUpdatedDurationProgress: number = 0;
+
   /**
    * A counter to track the number of attempts to recover from media error
    * @type {number}
@@ -1118,7 +1122,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   get liveDuration() {
-    return this._getLiveEdge() + this.getSegmentDuration();
+    const currentTime = this._videoElement.currentTime;
+    this._lastUpdatedDurationProgress += currentTime - this._lastUpdatedCurrentTime;
+    this._lastUpdatedCurrentTime = currentTime;
+    return this._liveEdge + this._lastUpdatedDurationProgress;
   }
 
   /**
@@ -1160,6 +1167,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       const liveEdge = this._getLiveEdge();
       if (this._liveEdge !== liveEdge) {
         this._liveEdge = liveEdge;
+        this._lastUpdatedDurationProgress = 0;
+        this._lastUpdatedCurrentTime = this._videoElement.currentTime;
         this._videoElement.dispatchEvent(new window.Event(Html5EventType.DURATION_CHANGE));
       }
       const {buffered, seekable} = this._videoElement;
