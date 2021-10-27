@@ -122,10 +122,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   _segmentDuration: number = 0;
 
-  _lastUpdatedCurrentTime: number = 0;
-
-  _lastUpdatedDurationProgress: number = 0;
-
   /**
    * A counter to track the number of attempts to recover from media error
    * @type {number}
@@ -1122,10 +1118,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   get liveDuration() {
-    const currentTime = this._videoElement.currentTime;
-    this._lastUpdatedDurationProgress += currentTime - this._lastUpdatedCurrentTime;
-    this._lastUpdatedCurrentTime = currentTime;
-    return this._liveEdge + this._lastUpdatedDurationProgress;
+    return this._getLiveEdge();
   }
 
   /**
@@ -1164,18 +1157,34 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _handleLiveDurationChange(): void {
     this._liveDurationChangeInterval = setInterval(() => {
+      this._calculateSegmentDuration();
       const liveEdge = this._getLiveEdge();
       if (this._liveEdge !== liveEdge) {
         this._liveEdge = liveEdge;
-        this._lastUpdatedDurationProgress = 0;
-        this._lastUpdatedCurrentTime = this._videoElement.currentTime;
         this._videoElement.dispatchEvent(new window.Event(Html5EventType.DURATION_CHANGE));
       }
+    }, LIVE_DURATION_INTERVAL_MS);
+  }
+
+  /**
+   * Calculate the segment duration
+   * @function _calculateSegmentDuration
+   * @returns {void}
+   * @private
+   */
+  _calculateSegmentDuration() {
+    if (this._videoElement.seekable.start(0) === 0) {
       const {buffered, seekable} = this._videoElement;
       if (buffered.length && seekable.length) {
         this._segmentDuration = (buffered.end(buffered.length - 1) - seekable.end(seekable.length - 1)) / SAFARI_BUFFERED_SEGMENTS_COUNT;
+        this._liveEdge = this._getLiveEdge();
       }
-    }, LIVE_DURATION_INTERVAL_MS);
+    } else {
+      const liveEdge = this._getLiveEdge();
+      if (this._liveEdge !== liveEdge) {
+        this._segmentDuration = liveEdge - this._liveEdge;
+      }
+    }
   }
 
   /**
