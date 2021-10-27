@@ -1177,7 +1177,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       const {buffered, seekable} = this._videoElement;
       if (buffered.length && seekable.length) {
         this._segmentDuration = (buffered.end(buffered.length - 1) - seekable.end(seekable.length - 1)) / SAFARI_BUFFERED_SEGMENTS_COUNT;
-        this._liveEdge = this._getLiveEdge();
       }
     } else {
       const liveEdge = this._getLiveEdge();
