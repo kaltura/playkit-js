@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.74.4](https://github.com/kaltura/playkit-js/compare/v0.74.3...v0.74.4) (2021-10-27)
+
+
+### Build System
+
+* fix node 17 issue ([5c3039f](https://github.com/kaltura/playkit-js/commit/5c3039f))
+
+
+
 ### [0.74.3](https://github.com/kaltura/playkit-js/compare/v0.74.2...v0.74.3) (2021-10-27)
 
 
