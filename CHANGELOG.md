@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.74.3](https://github.com/kaltura/playkit-js/compare/v0.74.2...v0.74.3) (2021-10-27)
+
+
+### Bug Fixes
+
+* **FEC-11536:** expose missing fields to PKAdOptions type ([#608](https://github.com/kaltura/playkit-js/issues/608)) ([54c662d](https://github.com/kaltura/playkit-js/commit/54c662d)), closes [kaltura/playkit-js-ima#211](https://github.com/kaltura/playkit-js/issues/211) [kaltura/kaltura-player-js#496](https://github.com/kaltura/playkit-js/issues/496)
+
+
+
 ### [0.74.2](https://github.com/kaltura/playkit-js/compare/v0.74.1...v0.74.2) (2021-10-12)
 
 
