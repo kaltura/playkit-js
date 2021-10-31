@@ -1118,7 +1118,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   get liveDuration() {
-    return this._getLiveEdge() + this.getSegmentDuration();
+    return this._getLiveEdge();
   }
 
   /**
@@ -1157,16 +1157,33 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _handleLiveDurationChange(): void {
     this._liveDurationChangeInterval = setInterval(() => {
+      this._calculateSegmentDuration();
       const liveEdge = this._getLiveEdge();
       if (this._liveEdge !== liveEdge) {
         this._liveEdge = liveEdge;
         this._videoElement.dispatchEvent(new window.Event(Html5EventType.DURATION_CHANGE));
       }
+    }, LIVE_DURATION_INTERVAL_MS);
+  }
+
+  /**
+   * Calculate the segment duration
+   * @function _calculateSegmentDuration
+   * @returns {void}
+   * @private
+   */
+  _calculateSegmentDuration() {
+    if (this._videoElement.seekable.start(0) === 0) {
       const {buffered, seekable} = this._videoElement;
       if (buffered.length && seekable.length) {
         this._segmentDuration = (buffered.end(buffered.length - 1) - seekable.end(seekable.length - 1)) / SAFARI_BUFFERED_SEGMENTS_COUNT;
       }
-    }, LIVE_DURATION_INTERVAL_MS);
+    } else {
+      const liveEdge = this._getLiveEdge();
+      if (this._liveEdge !== liveEdge) {
+        this._segmentDuration = liveEdge - this._liveEdge;
+      }
+    }
   }
 
   /**
