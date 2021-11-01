@@ -698,6 +698,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const captionsTextTrackLanguageCodes = [this._config.captionsTextTrack1LanguageCode, this._config.captionsTextTrack2LanguageCode];
     const textTracks = this._videoElement.textTracks;
     const parsedTracks = [];
+    let internalTrackIndex = 0;
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
         if (!PKTextTrack.isExternalTrack(textTracks[i])) {
@@ -707,7 +708,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
             label: textTracks[i].label,
             language: textTracks[i].language,
             available: true,
-            index: i
+            index: internalTrackIndex++
           };
           if (settings.kind === PKTextTrack.KIND.SUBTITLES) {
             parsedTracks.push(new PKTextTrack(settings));
