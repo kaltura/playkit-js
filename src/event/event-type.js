@@ -259,7 +259,11 @@ const CustomEventType: PKEventTypes = {
   /**
    * Fired when the drm license is responded from the DRM server
    */
-  DRM_LICENSE_LOADED: 'drmlicenseloaded'
+  DRM_LICENSE_LOADED: 'drmlicenseloaded',
+  /**
+   * Fired when the source url switched
+   */
+  SOURCE_URL_SWITCHED: 'sourceurlswitched'
 };
 
 const EventType: PKEventTypes = Utils.Object.merge([Html5EventType, CustomEventType, AdEventType]);
