@@ -1080,9 +1080,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _removeCueChangeListeners(): void {
-    for (let i = 0; i < this._el.textTracks.length; i++) {
-      this._eventManager.unlisten(this._el.textTracks[i], 'cuechange');
-    }
+    Array.from(this._el.textTracks)
+      .filter(track => !PKTextTrack.isMetaDataTrack(track))
+      .forEach(track => {
+        this._eventManager.unlisten(track, 'cuechange');
+      });
   }
 
   /**
