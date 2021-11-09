@@ -1,6 +1,6 @@
 // @flow
 declare type PKMetadataConfigObject = {
-  name: string,
+  name?: string,
   description?: string,
   mediaType?: string,
   metas?: Object,
