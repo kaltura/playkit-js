@@ -472,7 +472,7 @@ export default class Player extends FakeEventTarget {
    */
   setSourcesMetadata(sourcesMetadata: PKMetadataConfigObject): void {
     if (this._sources) {
-      if (!this?._sources?.metadata) {
+      if (!this._sources.metadata) {
         this._sources.metadata = {};
       }
       Utils.Object.mergeDeep(this._sources.metadata, sourcesMetadata);
