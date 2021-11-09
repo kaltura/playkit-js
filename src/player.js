@@ -466,12 +466,17 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Configures the player according to a given configuration.
+   * Configures the player metadata according to a given configuration.
    * @param {PKMetadataConfigObject} sourcesMetadata - The sources metadata for the player instance.
    * @returns {void}
    */
   setSourcesMetadata(sourcesMetadata: PKMetadataConfigObject): void {
-    Utils.Object.mergeDeep(this._sources.metadata, sourcesMetadata);
+    if (this._sources) {
+      if (this?._sources?.metadata) {
+        this._sources.metadata = {};
+      }
+      Utils.Object.mergeDeep(this._sources.metadata, sourcesMetadata);
+    }
   }
 
   /**
