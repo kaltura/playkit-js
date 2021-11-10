@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.75.0](https://github.com/kaltura/playkit-js/compare/v0.74.4...v0.75.0) (2021-11-10)
+
+
+### Bug Fixes
+
+* **FEC-11586:** [Player, Safari] The 'FF' (Fast forward) seek button is flashing time to time in player due to getting different values from 'isOnLiveEdge' parameter ([#611](https://github.com/kaltura/playkit-js/issues/611)) ([2d87557](https://github.com/kaltura/playkit-js/commit/2d87557))
+* **FEC-11611:** Pass the program ID when sending a bookmark ([#615](https://github.com/kaltura/playkit-js/issues/615)) ([ff40c3f](https://github.com/kaltura/playkit-js/commit/ff40c3f)), closes [kaltura/playkit-js-providers#155](https://github.com/kaltura/playkit-js/issues/155) [kaltura/playkit-js-ott-analytics#64](https://github.com/kaltura/playkit-js/issues/64) [kaltura/kaltura-player-js#504](https://github.com/kaltura/playkit-js/issues/504) [kaltura/kaltura-player-js#503](https://github.com/kaltura/playkit-js/issues/503)
+* **FEC-11645:** id3 metadata doesn't fired when streaming with captions ([#614](https://github.com/kaltura/playkit-js/issues/614)) ([a0853ac](https://github.com/kaltura/playkit-js/commit/a0853ac))
+* **FEC-11655:** System highlights 2 options (captions) after clicking the "Change media" button on Safari ([#612](https://github.com/kaltura/playkit-js/issues/612)) ([ef16680](https://github.com/kaltura/playkit-js/commit/ef16680)), closes [/github.com/kaltura/playkit-js/blob/master/src/engines/html5/media-source/adapters/native-adapter.js#L696](https://github.com/kaltura/playkit-js/issues/L696) [/github.com/kaltura/playkit-js/blob/master/src/track/external-captions-handler.js#L118](https://github.com/kaltura/playkit-js/issues/L118) [/github.com/kaltura/playkit-js/blob/master/src/player.js#L2414](https://github.com/kaltura/playkit-js/issues/L2414)
+
+
+### Features
+
+* **FEC-11666:** Primary + Redirect token reports ([#613](https://github.com/kaltura/playkit-js/issues/613)) ([88f13b0](https://github.com/kaltura/playkit-js/commit/88f13b0))
+
+
+
 ### [0.74.4](https://github.com/kaltura/playkit-js/compare/v0.74.3...v0.74.4) (2021-10-27)
 
 
