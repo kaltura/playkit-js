@@ -698,6 +698,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const captionsTextTrackLanguageCodes = [this._config.captionsTextTrack1LanguageCode, this._config.captionsTextTrack2LanguageCode];
     const textTracks = this._videoElement.textTracks;
     const parsedTracks = [];
+    let internalTrackIndex = 0;
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
         if (!PKTextTrack.isExternalTrack(textTracks[i])) {
@@ -707,7 +708,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
             label: textTracks[i].label,
             language: textTracks[i].language,
             available: true,
-            index: i
+            index: internalTrackIndex++
           };
           if (settings.kind === PKTextTrack.KIND.SUBTITLES) {
             parsedTracks.push(new PKTextTrack(settings));
@@ -1118,7 +1119,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   get liveDuration() {
-    return this._getLiveEdge() + this.getSegmentDuration();
+    return this._getLiveEdge();
   }
 
   /**
@@ -1157,16 +1158,33 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _handleLiveDurationChange(): void {
     this._liveDurationChangeInterval = setInterval(() => {
+      this._calculateSegmentDuration();
       const liveEdge = this._getLiveEdge();
       if (this._liveEdge !== liveEdge) {
         this._liveEdge = liveEdge;
         this._videoElement.dispatchEvent(new window.Event(Html5EventType.DURATION_CHANGE));
       }
+    }, LIVE_DURATION_INTERVAL_MS);
+  }
+
+  /**
+   * Calculate the segment duration
+   * @function _calculateSegmentDuration
+   * @returns {void}
+   * @private
+   */
+  _calculateSegmentDuration() {
+    if (this._videoElement.seekable.start(0) === 0) {
       const {buffered, seekable} = this._videoElement;
       if (buffered.length && seekable.length) {
         this._segmentDuration = (buffered.end(buffered.length - 1) - seekable.end(seekable.length - 1)) / SAFARI_BUFFERED_SEGMENTS_COUNT;
       }
-    }, LIVE_DURATION_INTERVAL_MS);
+    } else {
+      const liveEdge = this._getLiveEdge();
+      if (this._liveEdge !== liveEdge) {
+        this._segmentDuration = liveEdge - this._liveEdge;
+      }
+    }
   }
 
   /**
