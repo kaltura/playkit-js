@@ -1170,7 +1170,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         let activeCues = [];
         Array.from(this._el.textTracks).forEach((track: TextTrack) => {
           if (PKTextTrack.isMetaDataTrack(track)) {
-            activeCues = activeCues.concat(Array.from(track.activeCues));
+            activeCues = activeCues.concat(getActiveCues(track.activeCues));
           }
         });
         this.dispatchEvent(new FakeEvent(CustomEventType.TIMED_METADATA, {cues: activeCues}));
