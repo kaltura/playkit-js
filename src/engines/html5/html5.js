@@ -7,6 +7,7 @@ import MediaSourceProvider from './media-source/media-source-provider';
 import VideoTrack from '../../track/video-track';
 import AudioTrack from '../../track/audio-track';
 import PKTextTrack, {getActiveCues} from '../../track/text-track';
+import {Cue} from '../../track/vtt-cue';
 import ImageTrack from '../../track/image-track';
 import * as Utils from '../../utils/util';
 import Html5AutoPlayCapability from './capabilities/html5-autoplay';
@@ -1172,6 +1173,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
           if (PKTextTrack.isMetaDataTrack(track)) {
             activeCues = activeCues.concat(getActiveCues(track.activeCues));
           }
+        });
+        activeCues = activeCues.sort((a: Cue, b: Cue) => {
+          return a.startTime - b.startTime;
         });
         this.dispatchEvent(new FakeEvent(CustomEventType.TIMED_METADATA, {cues: activeCues}));
       });
