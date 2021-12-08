@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "js-logger": "^1.6.0",
-    "ua-parser-js": "^0.7.21"
+    "ua-parser-js": "1.0.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.5",
@@ -51,7 +51,6 @@
     "@babel/preset-flow": "^7.10.4",
     "@babel/register": "^7.10.5",
     "regenerator-runtime": "^0.13.5",
-    "@playkit-js/playkit-js": "^0.62.0",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
     "babel-plugin-istanbul": "^6.0.0",
