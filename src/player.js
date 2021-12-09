@@ -463,6 +463,7 @@ export default class Player extends FakeEventTarget {
     Utils.Object.mergeDeep(this._config, config);
     this._applyTextTrackConfig(config);
     this._applyABRRestriction(config);
+    this._applyPlaybackMiddlewareConfig(config);
   }
 
   /**
@@ -1387,6 +1388,19 @@ export default class Player extends FakeEventTarget {
       return this._engine.isAdaptiveBitrateEnabled();
     }
     return false;
+  }
+
+  /**
+   * update the playback middleware config
+   * @function _applyABRRestriction
+   * @returns {void}
+   * @param {Object} config - new config which configure for checking if it relevant config has changed
+   * @private
+   */
+  _applyPlaybackMiddlewareConfig(config: Object): void {
+    if (Utils.Object.hasPropertyPath(config, 'playback.middlewaresOrder') && this._playbackMiddleware) {
+      this._playbackMiddleware.setOrder(this._config.playback.middlewaresOrder);
+    }
   }
 
   /**

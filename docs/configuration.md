@@ -51,6 +51,7 @@ var config = {
     allowMutedAutoPlay: true,
     muted: false,
     pictureInPicture: true,
+    middlewaresOrder: [],
     options: {
       html5: {
         hls: {},
@@ -634,6 +635,7 @@ var config = {
 >  autoplay: PKAutoPlayTypes,
 >  autopause: boolean,
 >  allowMutedAutoPlay: boolean,
+>  middlewaresOrder: Array<string>,
 >  muted: boolean,
 >  pictureInPicture: boolean,
 >  options: PKPlaybackOptionsObject,
@@ -656,6 +658,7 @@ var config = {
 >  preload: "none",
 >  autoplay: false,
 >  allowMutedAutoPlay: true,
+>  middlewaresOrder: [],
 >  muted: false,
 >  pictureInPicture: true,
 >  playAdsWithMSE: false,
@@ -819,6 +822,12 @@ var config = {
 > > ### config.playback.autoplay/allowMutedAutoPlay
 > >
 > > for `autoplay` & `allowMutedAutoPlay` options read [here](autoplay.md).
+>
+> ##
+>
+> > ### config.playback.middlewaresOrder
+> >
+> > the execution order of playback middlewares. if not mentioned explicitly, the middleware will be executed in order of assignment after the explicitly mentioned middlewares
 >
 > ##
 >

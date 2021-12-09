@@ -30,6 +30,16 @@ export default class PlaybackMiddleware {
   }
 
   /**
+   * Sets the middlewares execution order.
+   * @param {Array<string>} order - The middlewares order.
+   * @public
+   * @returns {void}
+   */
+  setOrder(order: Array<string>) {
+    this._middleware.setOrder(order)
+  }
+
+  /**
    * Registers a playback middleware instance to the middleware chain.
    * @param {BaseMiddleware} middlewareInstance - The middleware instance.
    * @public

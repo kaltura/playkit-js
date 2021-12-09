@@ -12,7 +12,7 @@ export default class Middleware {
    * @private
    * @member
    */
-  _middlewares: MultiMap<string, *>;
+  _middlewares: MultiMap<string, { id: string, callback: Function}>;
   /**
    * The actions supported by the middleware.
    * @private
@@ -27,6 +27,13 @@ export default class Middleware {
   _logger: any;
 
   /**
+   * The order of the middlewares.
+   * @private
+   * @member
+   */
+  _order: Array<string> = [];
+
+  /**
    * @constructor
    * @param {Object} actions - The actions for the middleware.
    */
@@ -34,6 +41,16 @@ export default class Middleware {
     this._actions = actions;
     this._middlewares = new MultiMap();
     this._logger = getLogger('Middleware');
+  }
+
+  /**
+   * Sets the middlewares execution order.
+   * @param {Array<string>} order - The middlewares order.
+   * @public
+   * @returns {void}
+   */
+  setOrder(order: Array<string>) {
+    this._order = order || [];
   }
 
   /**
@@ -49,7 +66,7 @@ export default class Middleware {
       if (typeof middlewareInstance[apiAction] === 'function') {
         this._logger.debug(`Register <${middlewareInstance.id}> for action ${apiAction}`);
         // $FlowFixMe
-        this._middlewares.push(apiAction, middlewareInstance[apiAction].bind(middlewareInstance));
+        this._middlewares.push(apiAction, {id: middlewareInstance.id, callback: middlewareInstance[apiAction].bind(middlewareInstance)});
       }
     }
   }
@@ -77,8 +94,17 @@ export default class Middleware {
    * @private
    * @returns {void}
    */
-  _executeMiddleware(middlewares: Array<Function>, callback: Function): void {
-    const composition = middlewares.reduceRight(
+  _executeMiddleware(middlewares: Array<{id: string, callback: Function}>, callback: Function): void {
+    const composition = Object.assign({}, middlewares).sort((a,b) => {
+      const orderA = this._order.indexOf(a);
+      const orderB = this._order.indexOf(b);
+
+      return orderA === orderB
+        ? 0
+        : orderA !== -1 && orderA < orderB
+          ? -1
+          : 1
+    }).reduceRight(
       // eslint-disable-next-line no-unused-vars
       (next, fn) => v => {
         fn(next);
