@@ -14,6 +14,7 @@ import Error from '../../error/error';
 import getLogger from '../../utils/logger';
 import {DroppedFramesWatcher} from '../dropped-frames-watcher';
 import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
+import TextTrack from '../../track/text-track';
 
 const CURRENT_OR_NEXT_SEGMENT_COUNT: number = 2;
 
@@ -325,6 +326,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(mediaSourceAdapter, Html5EventType.PLAYING, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, Html5EventType.WAITING, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.MEDIA_RECOVERED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(mediaSourceAdapter, CustomEventType.TIMED_METADATA_ADDED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, 'hlsFragParsingMetadata', (event: FakeEvent) => this.dispatchEvent(event));
       if (this._droppedFramesWatcher) {
         this._eventManager.listen(this._droppedFramesWatcher, CustomEventType.FPS_DROP, (event: FakeEvent) => this.dispatchEvent(event));
@@ -1169,6 +1171,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(track, 'cuechange', () => {
         this.dispatchEvent(new FakeEvent(CustomEventType.TIMED_METADATA, {cues: Array.from(track.activeCues), label: track.label}));
       });
+      this._eventManager.listen(track, 'cuechange', () => {
+        this.dispatchEvent(new FakeEvent(CustomEventType.TIMED_METADATA, {cues: Array.from(track.activeCues), label: track.label}));
+      });
     };
     const metadataTrack = Array.from(this._el.textTracks).find((track: TextTrack) => PKTextTrack.isMetaDataTrack(track));
     if (metadataTrack) {
@@ -1210,5 +1215,15 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   addTextTrack(kind: string, label?: string, language?: string): ?TextTrack {
     return this._el.addTextTrack(kind, label, language);
+  }
+
+  /**
+   * get text tracks
+   * @function getTextTracks
+   * @returns {Array<TextTrack>} - The TextTracks array.
+   * @public
+   */
+  getTextTracks(): Array<TextTrack> {
+    return Array.from(this._el.textTracks);
   }
 }

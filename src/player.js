@@ -1365,6 +1365,19 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * get text tracks
+   * @function getTextTracks
+   * @returns {Array<TextTrack>} - The TextTracks array.
+   * @public
+   */
+  getTextTracks(): Array<TextTrack> {
+    if (this._engine && typeof this._engine.getTextTracks === 'function') {
+      return this._engine.getTextTracks();
+    }
+    return [];
+  }
+
+  /**
    * Enables adaptive bitrate switching.
    * @function enableAdaptiveBitrate
    * @returns {void}
@@ -1908,6 +1921,7 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.TIMED_METADATA, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._engine, CustomEventType.TIMED_METADATA_ADDED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.PLAY_FAILED, (event: FakeEvent) => {
         this._onPlayFailed(event);
         this.dispatchEvent(event);
@@ -1916,6 +1930,7 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.DRM_LICENSE_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.MANIFEST_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => this._handleRecovered());
       this._eventManager.listen(this, Html5EventType.PLAY, this._onPlay.bind(this));
       this._eventManager.listen(this, Html5EventType.PAUSE, this._onPause.bind(this));
       this._eventManager.listen(this, Html5EventType.PLAYING, this._onPlaying.bind(this));
@@ -1935,7 +1950,6 @@ export default class Player extends FakeEventTarget {
         this._resetTextCuesAndReposition();
         this.dispatchEvent(event);
       });
-      this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => this._handleRecovered());
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) =>
         this._onTextTrackChanged(event)
