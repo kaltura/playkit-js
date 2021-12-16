@@ -548,7 +548,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {Array<TextTrackCue>} the converted cues
    */
   _convertCues(cues: Array<Cue>): Array<TextTrackCue> {
-    return cues.map(cue => new TextTrackCue(cue.startTime, cue.endTime, cue.text));
+    return cues.map(cue => new window.TextTrackCue(cue.startTime, cue.endTime, cue.text));
   }
 
   /**

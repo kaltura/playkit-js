@@ -11,6 +11,7 @@ import ImageTrack from './track/image-track';
 import VideoTrack from './track/video-track';
 import AudioTrack from './track/audio-track';
 import TextTrack from './track/text-track';
+import {CuePoint, createTextTrackCue} from './track/cue-point';
 import TextStyle from './track/text-style';
 import {Cue} from './track/vtt-cue';
 import Env from './utils/env';
@@ -61,6 +62,9 @@ export {BaseMiddleware};
 
 // Export the tracks classes
 export {Track, VideoTrack, AudioTrack, TextTrack, ImageTrack, TextStyle, Cue};
+
+// Export the cue point class and function
+export {CuePoint, createTextTrackCue};
 
 // Export utils library
 export {Utils};
