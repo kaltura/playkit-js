@@ -330,8 +330,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._lastTimeUpdate = startTime || 0;
         const playbackStartTime = this._startTimeAttach || startTime || 0;
         this._loadPromiseReject = reject;
-        this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => this._onLoadedData(resolve));
-        this._eventManager.listenOnce(this._videoElement, Html5EventType.PLAY, () => this._setStartTime(playbackStartTime));
+        this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => this._onLoadedData(resolve, playbackStartTime));
+        this._eventManager.listenOnce(this._videoElement, Html5EventType.PLAY, () => this._onPlay(playbackStartTime));
         this._eventManager.listen(this._videoElement, Html5EventType.TIME_UPDATE, () => this._onTimeUpdate());
         this._eventManager.listen(this._videoElement, Html5EventType.PLAY, () => this._resetHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.PAUSE, () => this._clearHeartbeatTimeout());
@@ -459,13 +459,25 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
+   * play event handler.
+   * @param {number} startTime - Optional time to start the video from.
+   * @private
+   * @returns {void}
+   */
+  _onPlay(startTime: ?number): void {
+    if (this.isLive()) {
+      this._setStartTime(startTime);
+    }
+  }
+
+  /**
    * Loaded data event handler.
    * @param {Function} resolve - The resolve promise function.
    * @param {number} startTime - Optional time to start the video from.
    * @private
    * @returns {void}
    */
-  _onLoadedData(resolve: Function): void {
+  _onLoadedData(resolve: Function, startTime: ?number): void {
     const parseTracksAndResolve = () => {
       this._playerTracks = this._getParsedTracks();
       this._addNativeAudioTrackChangeListener();
@@ -478,6 +490,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._handleLiveDurationChange();
       }
     };
+    if (!this.isLive()) {
+      this._setStartTime(startTime);
+    }
     if (this._videoElement.textTracks.length > 0) {
       parseTracksAndResolve();
     } else {
@@ -488,7 +503,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   _setStartTime(startTime: ?number) {
     if (startTime && startTime > -1) {
-      console.log('1111111111', 'CAME HERE', startTime);
       this._videoElement.currentTime = startTime;
     }
   }
