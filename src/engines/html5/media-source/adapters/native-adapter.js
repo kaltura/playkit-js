@@ -330,7 +330,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._lastTimeUpdate = startTime || 0;
         const playbackStartTime = this._startTimeAttach || startTime || 0;
         this._loadPromiseReject = reject;
-        this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => this._onLoadedData(resolve, playbackStartTime));
+        this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => this._onLoadedData(resolve));
+        this._eventManager.listenOnce(this._videoElement, Html5EventType.PLAY, () => this._setStartTime(playbackStartTime));
         this._eventManager.listen(this._videoElement, Html5EventType.TIME_UPDATE, () => this._onTimeUpdate());
         this._eventManager.listen(this._videoElement, Html5EventType.PLAY, () => this._resetHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.PAUSE, () => this._clearHeartbeatTimeout());
@@ -464,7 +465,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    * @returns {void}
    */
-  _onLoadedData(resolve: Function, startTime: ?number): void {
+  _onLoadedData(resolve: Function): void {
     const parseTracksAndResolve = () => {
       this._playerTracks = this._getParsedTracks();
       this._addNativeAudioTrackChangeListener();
@@ -477,15 +478,19 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._handleLiveDurationChange();
       }
     };
-    if (startTime && startTime > -1) {
-      this._videoElement.currentTime = startTime;
-    }
     if (this._videoElement.textTracks.length > 0) {
       parseTracksAndResolve();
     } else {
       this._eventManager.listenOnce(this._videoElement, Html5EventType.CAN_PLAY, parseTracksAndResolve.bind(this));
     }
     this._startTimeAttach = NaN;
+  }
+
+  _setStartTime(startTime: ?number) {
+    if (startTime && startTime > -1) {
+      console.log('1111111111', 'CAME HERE', startTime);
+      this._videoElement.currentTime = startTime;
+    }
   }
 
   _onTimeUpdate(): void {
