@@ -331,6 +331,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         const playbackStartTime = this._startTimeAttach || startTime || 0;
         this._loadPromiseReject = reject;
         this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => this._onLoadedData(resolve, playbackStartTime));
+        this._eventManager.listenOnce(this._videoElement, Html5EventType.PLAYING, () => this._onPlaying(playbackStartTime));
         this._eventManager.listen(this._videoElement, Html5EventType.TIME_UPDATE, () => this._onTimeUpdate());
         this._eventManager.listen(this._videoElement, Html5EventType.PLAY, () => this._resetHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.PAUSE, () => this._clearHeartbeatTimeout());
@@ -458,6 +459,18 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
+   * play event handler.
+   * @param {number} startTime - Optional time to start the video from.
+   * @private
+   * @returns {void}
+   */
+  _onPlaying(startTime: ?number): void {
+    if (this.isLive()) {
+      this._setStartTime(startTime);
+    }
+  }
+
+  /**
    * Loaded data event handler.
    * @param {Function} resolve - The resolve promise function.
    * @param {number} startTime - Optional time to start the video from.
@@ -477,8 +490,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._handleLiveDurationChange();
       }
     };
-    if (startTime && startTime > -1) {
-      this._videoElement.currentTime = startTime;
+    if (!this.isLive()) {
+      this._setStartTime(startTime);
     }
     if (this._videoElement.textTracks.length > 0) {
       parseTracksAndResolve();
@@ -486,6 +499,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._eventManager.listenOnce(this._videoElement, Html5EventType.CAN_PLAY, parseTracksAndResolve.bind(this));
     }
     this._startTimeAttach = NaN;
+  }
+
+  _setStartTime(startTime: ?number) {
+    if (startTime && startTime > -1) {
+      this._videoElement.currentTime = startTime;
+    }
   }
 
   _onTimeUpdate(): void {
