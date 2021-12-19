@@ -331,7 +331,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         const playbackStartTime = this._startTimeAttach || startTime || 0;
         this._loadPromiseReject = reject;
         this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => this._onLoadedData(resolve, playbackStartTime));
-        this._eventManager.listenOnce(this._videoElement, Html5EventType.PLAY, () => this._onPlay(playbackStartTime));
+        this._eventManager.listenOnce(this._videoElement, Html5EventType.PLAYING, () => this._onPlaying(playbackStartTime));
         this._eventManager.listen(this._videoElement, Html5EventType.TIME_UPDATE, () => this._onTimeUpdate());
         this._eventManager.listen(this._videoElement, Html5EventType.PLAY, () => this._resetHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.PAUSE, () => this._clearHeartbeatTimeout());
@@ -464,7 +464,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    * @returns {void}
    */
-  _onPlay(startTime: ?number): void {
+  _onPlaying(startTime: ?number): void {
     if (this.isLive()) {
       this._setStartTime(startTime);
     }
