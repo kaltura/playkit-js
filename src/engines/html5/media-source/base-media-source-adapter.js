@@ -13,6 +13,8 @@ import EventManager from '../../../event/event-manager';
 import ImageTrack from '../../../track/image-track';
 import {ThumbnailInfo} from '../../../thumbnail/thumbnail-info';
 
+const CURRENT_OR_NEXT_SEGMENT_COUNT: number = 2;
+
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
   /**
    * The id of the adapter.
@@ -216,6 +218,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
 
   isLive(): boolean {
     return BaseMediaSourceAdapter._throwNotImplementedError('isLive');
+  }
+
+  isOnLiveEdge(): boolean {
+    return this.liveDuration - this._videoElement.currentTime <= this.getSegmentDuration() * CURRENT_OR_NEXT_SEGMENT_COUNT;
   }
 
   setMaxBitrate(bitrate: number): void {

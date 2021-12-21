@@ -30,6 +30,7 @@ declare interface IMediaSourceAdapter extends FakeEventTarget {
   isAdaptiveBitrateEnabled(): boolean;
   seekToLiveEdge(): void;
   isLive(): boolean;
+  isOnLiveEdge(): boolean;
   getStartTimeOfDvrWindow(): number;
   setMaxBitrate(bitrate: number): void;
   attachMediaSource(): void;
