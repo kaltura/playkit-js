@@ -507,8 +507,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _setStartTime(startTime: ?number) {
     if (startTime && startTime > -1) {
       this._videoElement.currentTime = startTime;
-      this._wasCurrentTimeSetSuccessfully = true;
     }
+    this._wasCurrentTimeSetSuccessfully = true;
   }
 
   _onTimeUpdate(): void {
