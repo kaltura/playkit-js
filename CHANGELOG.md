@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.76.0](https://github.com/kaltura/playkit-js/compare/v0.75.0...v0.76.0) (2021-12-21)
+
+
+### Bug Fixes
+
+* **FEC-11742:** components with known vulnerabilities ([#617](https://github.com/kaltura/playkit-js/issues/617)) ([3ee1dc1](https://github.com/kaltura/playkit-js/commit/3ee1dc1))
+
+
+### Features
+
+* **FEC-11632:** expose stream timed metadata ([#618](https://github.com/kaltura/playkit-js/issues/618)) ([f841b7e](https://github.com/kaltura/playkit-js/commit/f841b7e))
+
+
+
 ## [0.75.0](https://github.com/kaltura/playkit-js/compare/v0.74.4...v0.75.0) (2021-11-10)
 
 
