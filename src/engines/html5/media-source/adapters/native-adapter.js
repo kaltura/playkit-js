@@ -120,6 +120,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   _waitingEventTriggered: ?boolean = false;
 
+  _wasCurrentTimeSetSuccessfully: boolean;
+
   _segmentDuration: number = 0;
 
   /**
@@ -324,6 +326,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {Promise<Object>} - The loaded data
    */
   load(startTime: ?number): Promise<Object> {
+    this._wasCurrentTimeSetSuccessfully = false;
     this._maybeSetDrmPlayback();
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
@@ -505,6 +508,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (startTime && startTime > -1) {
       this._videoElement.currentTime = startTime;
     }
+    this._wasCurrentTimeSetSuccessfully = true;
   }
 
   _onTimeUpdate(): void {
@@ -1167,6 +1171,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   isLive(): boolean {
     return this._videoElement.duration === Infinity;
+  }
+
+  isOnLiveEdge(): boolean {
+    return this._wasCurrentTimeSetSuccessfully ? super.isOnLiveEdge() : false;
   }
 
   /**

@@ -15,8 +15,6 @@ import getLogger from '../../utils/logger';
 import {DroppedFramesWatcher} from '../dropped-frames-watcher';
 import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
 
-const CURRENT_OR_NEXT_SEGMENT_COUNT: number = 2;
-
 /**
  * Html5 engine for playback.
  * @classdesc
@@ -470,7 +468,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   isOnLiveEdge(): boolean {
     if (this._mediaSourceAdapter) {
-      return this.liveDuration - this.currentTime <= this._mediaSourceAdapter.getSegmentDuration() * CURRENT_OR_NEXT_SEGMENT_COUNT;
+      return this._mediaSourceAdapter.isOnLiveEdge();
     }
     return false;
   }
