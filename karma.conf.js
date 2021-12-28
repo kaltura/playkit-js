@@ -66,6 +66,7 @@ module.exports = function (config) {
       karmaConf.browsers.push('Safari');
     }
   }
+  karmaConf.browsers = ['Chrome_browser'];
 
   config.set(karmaConf);
 };
