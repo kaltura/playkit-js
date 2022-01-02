@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.76.1](https://github.com/kaltura/playkit-js/compare/v0.76.0...v0.76.1) (2022-01-02)
+
+
+### Bug Fixes
+
+* export setLogHandler ([#622](https://github.com/kaltura/playkit-js/issues/622)) ([be966f0](https://github.com/kaltura/playkit-js/commit/be966f0))
+* **FEC-11745:** Player_Web_Mac_Safari - Flash of live stream after Start Over ([#620](https://github.com/kaltura/playkit-js/issues/620)) ([c83adc2](https://github.com/kaltura/playkit-js/commit/c83adc2))
+
+
+
 ## [0.76.0](https://github.com/kaltura/playkit-js/compare/v0.75.0...v0.76.0) (2021-12-21)
 
 
