@@ -8,6 +8,8 @@ import VideoTrack from '../../track/video-track';
 import AudioTrack from '../../track/audio-track';
 import PKTextTrack, {getActiveCues} from '../../track/text-track';
 import ImageTrack from '../../track/image-track';
+import {Cue} from '../../track/vtt-cue';
+import {createCuePoint} from '../../track/cue-point';
 import * as Utils from '../../utils/util';
 import Html5AutoPlayCapability from './capabilities/html5-autoplay';
 import Error from '../../error/error';
@@ -325,6 +327,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.MEDIA_RECOVERED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.TIMED_METADATA_ADDED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, 'hlsFragParsingMetadata', (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(mediaSourceAdapter, 'timelineregionenter', (event: FakeEvent) => this.dispatchEvent(event));
       if (this._droppedFramesWatcher) {
         this._eventManager.listen(this._droppedFramesWatcher, CustomEventType.FPS_DROP, (event: FakeEvent) => this.dispatchEvent(event));
       }
@@ -1166,24 +1169,44 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     const listenToCueChange = track => {
       track.mode = PKTextTrack.MODE.HIDDEN;
       this._eventManager.listen(track, 'cuechange', () => {
-        this.dispatchEvent(new FakeEvent(CustomEventType.TIMED_METADATA, {cues: Array.from(track.activeCues), label: track.label}));
-      });
-    };
-    const metadataTrack = Array.from(this._el.textTracks).find((track: TextTrack) => PKTextTrack.isMetaDataTrack(track));
-    if (metadataTrack) {
-      listenToCueChange(metadataTrack);
-    } else {
-      this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
-        if (PKTextTrack.isMetaDataTrack(event.track)) {
-          listenToCueChange(event.track);
+        let activeCues = [];
+        Array.from(this._el.textTracks).forEach((track: TextTrack) => {
+          if (PKTextTrack.isMetaDataTrack(track)) {
+            activeCues = activeCues.concat(getActiveCues(track.activeCues));
+          }
+        });
+        activeCues = activeCues.sort((a: Cue, b: Cue) => {
+          return a.startTime - b.startTime;
+        });
+        this.dispatchEvent(new FakeEvent(CustomEventType.TIMED_METADATA, {cues: activeCues}));
+        if (activeCues.length) {
+          this.dispatchEvent(
+            new FakeEvent(CustomEventType.TIMED_METADATA_CHANGE, {
+              cues: activeCues.map(cue => createCuePoint(cue))
+            })
+          );
         }
       });
-    }
-    this._eventManager.listen(this._el.textTracks, 'change', () => {
-      const metadataTrack = Array.from(this._el.textTracks).find((track: TextTrack) => PKTextTrack.isMetaDataTrack(track));
-      if (metadataTrack && metadataTrack.mode !== PKTextTrack.MODE.HIDDEN) {
-        metadataTrack.mode = PKTextTrack.MODE.HIDDEN;
+    };
+
+    Array.from(this._el.textTracks).forEach((track: TextTrack) => {
+      if (PKTextTrack.isMetaDataTrack(track)) {
+        listenToCueChange(track);
       }
+    });
+
+    this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
+      if (PKTextTrack.isMetaDataTrack(event.track)) {
+        listenToCueChange(event.track);
+      }
+    });
+
+    this._eventManager.listen(this._el.textTracks, 'change', () => {
+      Array.from(this._el.textTracks).forEach((track: TextTrack) => {
+        if (PKTextTrack.isMetaDataTrack(track) && track.mode !== PKTextTrack.MODE.HIDDEN) {
+          track.mode = PKTextTrack.MODE.HIDDEN;
+        }
+      });
     });
   }
 
