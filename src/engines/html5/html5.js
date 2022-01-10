@@ -1165,9 +1165,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   _handleMetadataTrackEvents(): void {
-    const listenToCueChange = track => {
-      track.mode = PKTextTrack.MODE.HIDDEN;
-      this._eventManager.listen(track, 'cuechange', () => {
+    const listenToCueChange = metadataTrack => {
+      metadataTrack.mode = PKTextTrack.MODE.HIDDEN;
+      this._eventManager.listen(metadataTrack, 'cuechange', () => {
         let activeCues = [];
         Array.from(this._el.textTracks).forEach((track: TextTrack) => {
           if (PKTextTrack.isMetaDataTrack(track)) {
