@@ -27,6 +27,7 @@ class CuePoint {
 CuePoint.TYPE = {
   ID3: 'id3',
   EMSG: 'emsg',
+  CUE_POINT: 'cuepoint',
   CUSTOM: 'custom'
 };
 
@@ -59,8 +60,13 @@ function createTextTrackCue(cuePoint: CuePoint): TextTrackCue {
  */
 function createCuePoint(cue: TextTrackCue): ?CuePoint {
   if (cue) {
-    const {startTime, endTime, id, value} = cue;
-    return new CuePoint(startTime, endTime, id, _getType(cue), value);
+    const {
+      startTime,
+      endTime,
+      id,
+      value: {data}
+    } = cue;
+    return new CuePoint(startTime, endTime, id, _getType(cue), data);
   }
   return null;
 }
@@ -80,6 +86,7 @@ function _getType(cue: TextTrackCue): string {
   if (!cuePointType) {
     cuePointType = type === 'org.id3' || label === 'id3' ? CuePoint.TYPE.ID3 : CuePoint.TYPE.CUSTOM;
   }
+  //$FlowFixMe
   return cuePointType;
 }
 
