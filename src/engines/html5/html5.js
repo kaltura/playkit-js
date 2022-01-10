@@ -1178,13 +1178,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
           return a.startTime - b.startTime;
         });
         this.dispatchEvent(new FakeEvent(CustomEventType.TIMED_METADATA, {cues: activeCues}));
-        if (activeCues.length) {
-          this.dispatchEvent(
-            new FakeEvent(CustomEventType.TIMED_METADATA_CHANGE, {
-              cues: activeCues.map(cue => createCuePoint(cue))
-            })
-          );
-        }
+        this.dispatchEvent(
+          new FakeEvent(CustomEventType.TIMED_METADATA_CHANGE, {
+            cues: activeCues.map(cue => createCuePoint(cue))
+          })
+        );
       });
     };
 
