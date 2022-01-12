@@ -8,7 +8,7 @@ import Track from '../../src/track/track';
 import VideoTrack from '../../src/track/video-track';
 import AudioTrack from '../../src/track/audio-track';
 import TextTrack from '../../src/track/text-track';
-import {createTextTrackCue, CuePoint} from '../../src/track/cue-point';
+import {createTextTrackCue, TimedMetadata} from '../../src/track/timed-metadata';
 import {createElement, getConfigStructure, removeElement, removeVideoElementsFromTestPage} from './utils/test-utils';
 import Locale from '../../src/utils/locale';
 import Html5 from '../../src/engines/html5/html5';
@@ -2379,10 +2379,10 @@ describe('Player', function () {
           const metadataTrack2 = player.getVideoElement().addTextTrack(TextTrack.KIND.METADATA, 'metadata2');
 
           const {currentTime, duration} = player;
-          const cuePoint1 = new CuePoint(currentTime + 1, duration - 2, 'id1', 'type1', {info: 'some_info1'});
-          const cuePoint2 = new CuePoint(currentTime + 2, duration - 1, 'id2', 'type2', {info: 'some_info2'});
-          const textTrackCue1 = createTextTrackCue(cuePoint1);
-          const textTrackCue2 = createTextTrackCue(cuePoint2);
+          const timedMetadata1 = new TimedMetadata(currentTime + 1, duration - 2, 'id1', 'type1', {info: 'some_info1'});
+          const timedMetadata2 = new TimedMetadata(currentTime + 2, duration - 1, 'id2', 'type2', {info: 'some_info2'});
+          const textTrackCue1 = createTextTrackCue(timedMetadata1);
+          const textTrackCue2 = createTextTrackCue(timedMetadata2);
           metadataTrack1.addCue(textTrackCue1);
           metadataTrack2.addCue(textTrackCue2);
           let eventCounter = -1;
@@ -2420,16 +2420,16 @@ describe('Player', function () {
               switch (eventCounter) {
                 case 1:
                   e.payload.cues.length.should.equal(1);
-                  e.payload.cues[0].should.deep.equal({...cuePoint1, type: 'custom'});
+                  e.payload.cues[0].should.deep.equal({...timedMetadata1, type: 'custom'});
                   break;
                 case 3:
                   e.payload.cues.length.should.equal(2);
-                  e.payload.cues[0].should.deep.equal({...cuePoint1, type: 'custom'});
-                  e.payload.cues[1].should.deep.equal({...cuePoint2, type: 'custom'});
+                  e.payload.cues[0].should.deep.equal({...timedMetadata1, type: 'custom'});
+                  e.payload.cues[1].should.deep.equal({...timedMetadata2, type: 'custom'});
                   break;
                 case 5:
                   e.payload.cues.length.should.equal(1);
-                  e.payload.cues[0].should.deep.equal({...cuePoint2, type: 'custom'});
+                  e.payload.cues[0].should.deep.equal({...timedMetadata2, type: 'custom'});
                   break;
                 case 7:
                   e.payload.cues.length.should.equal(0);

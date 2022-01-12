@@ -1,5 +1,5 @@
 //@flow
-class CuePoint {
+class TimedMetadata {
   static TYPE: {[type: string]: string};
 
   startTime: number;
@@ -24,7 +24,7 @@ class CuePoint {
   }
 }
 
-CuePoint.TYPE = {
+TimedMetadata.TYPE = {
   ID3: 'id3',
   EMSG: 'emsg',
   CUE_POINT: 'cuepoint',
@@ -33,12 +33,12 @@ CuePoint.TYPE = {
 
 /**
  * Create a standard TextTrackCue.
- * @param {CuePoint} cuePoint - cue point.
+ * @param {TimedMetadata} timedMetadata - timed metadata object.
  * @returns {TextTrackCue} - the created text track cue
  * @private
  */
-function createTextTrackCue(cuePoint: CuePoint): TextTrackCue {
-  const {startTime, endTime, id, type, metadata} = cuePoint;
+function createTextTrackCue(timedMetadata: TimedMetadata): TextTrackCue {
+  const {startTime, endTime, id, type, metadata} = timedMetadata;
   let cue = {};
   if (window.VTTCue) {
     cue = new window.VTTCue(startTime, endTime, '');
@@ -53,41 +53,41 @@ function createTextTrackCue(cuePoint: CuePoint): TextTrackCue {
 }
 
 /**
- * Create a cue point from a standard TextTrackCue.
+ * Create a timed metadata object from a standard TextTrackCue.
  * @param {TextTrackCue} cue - text track cue.
- * @returns {?CuePoint} - the created cue point.
+ * @returns {?TimedMetadata} - the created timed metadata object.
  * @private
  */
-function createCuePoint(cue: TextTrackCue): ?CuePoint {
+function createTimedMetadata(cue: TextTrackCue): ?TimedMetadata {
   if (cue) {
-    const {
-      startTime,
-      endTime,
-      id,
-      value: {data}
-    } = cue;
-    return new CuePoint(startTime, endTime, id, _getType(cue), data);
+    const {startTime, endTime, id} = cue;
+    const {type, metadata} = _getTypeAndMetadata(cue);
+    return new TimedMetadata(startTime, endTime, id, type, metadata);
   }
   return null;
 }
 
 /**
  * @param {TextTrackCue} cue - cue
- * @return {string} - type
+ * @return {Object} - type and data
  * @private
  */
-function _getType(cue: TextTrackCue): string {
+function _getTypeAndMetadata(cue: TextTrackCue): Object {
   const {
     type,
-    track: {label},
-    value: {key}
+    value,
+    track: {label}
   } = cue;
-  let cuePointType = Object.values(CuePoint.TYPE).find(type => type === key);
-  if (!cuePointType) {
-    cuePointType = type === 'org.id3' || label === 'id3' ? CuePoint.TYPE.ID3 : CuePoint.TYPE.CUSTOM;
+  const {key, data} = value;
+  const isId3 = type === 'org.id3' || label === 'id3';
+  let timedMetadataType = Object.values(TimedMetadata.TYPE).find(type => type === key);
+  if (!timedMetadataType) {
+    timedMetadataType = isId3 ? TimedMetadata.TYPE.ID3 : TimedMetadata.TYPE.CUSTOM;
   }
-  //$FlowFixMe
-  return cuePointType;
+  return {
+    type: timedMetadataType,
+    metadata: isId3 ? value : data
+  };
 }
 
-export {CuePoint, createTextTrackCue, createCuePoint};
+export {TimedMetadata, createTextTrackCue, createTimedMetadata};

@@ -99,7 +99,7 @@ function getActiveCues(textTrackCueList: TextTrackCueList): Array<Cue> {
   let normalizedCues: Array<Cue> = [];
   for (let cue of textTrackCueList) {
     //Normalize cues to be of type of VTT model
-    if (window.VTTCue && cue instanceof window.VTTCue) {
+    if ((window.VTTCue && cue instanceof window.VTTCue) || (window.DataCue && cue instanceof window.DataCue)) {
       normalizedCues.push(cue);
     } else if (window.TextTrackCue && cue instanceof window.TextTrackCue) {
       try {

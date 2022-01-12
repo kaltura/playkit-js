@@ -9,7 +9,7 @@ import AudioTrack from '../../track/audio-track';
 import PKTextTrack, {getActiveCues} from '../../track/text-track';
 import ImageTrack from '../../track/image-track';
 import {Cue} from '../../track/vtt-cue';
-import {createCuePoint} from '../../track/cue-point';
+import {createTimedMetadata} from '../../track/timed-metadata';
 import * as Utils from '../../utils/util';
 import Html5AutoPlayCapability from './capabilities/html5-autoplay';
 import Error from '../../error/error';
@@ -1180,7 +1180,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         this.dispatchEvent(new FakeEvent(CustomEventType.TIMED_METADATA, {cues: activeCues}));
         this.dispatchEvent(
           new FakeEvent(CustomEventType.TIMED_METADATA_CHANGE, {
-            cues: activeCues.map(cue => createCuePoint(cue))
+            cues: activeCues.map(cue => createTimedMetadata(cue))
           })
         );
       });
