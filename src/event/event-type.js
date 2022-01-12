@@ -241,6 +241,10 @@ const CustomEventType: PKEventTypes = {
    */
   TIMED_METADATA: 'timedmetadata',
   /**
+   * Fired when the timed metadata triggered
+   */
+  TIMED_METADATA_CHANGE: 'timedmetadatachange',
+  /**
    * Fires when new timed metadata added
    */
   TIMED_METADATA_ADDED: 'timedmetadataadded',

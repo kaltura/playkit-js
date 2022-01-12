@@ -8,6 +8,7 @@ import Track from '../../src/track/track';
 import VideoTrack from '../../src/track/video-track';
 import AudioTrack from '../../src/track/audio-track';
 import TextTrack from '../../src/track/text-track';
+import {createTextTrackCue, TimedMetadata} from '../../src/track/timed-metadata';
 import {createElement, getConfigStructure, removeElement, removeVideoElementsFromTestPage} from './utils/test-utils';
 import Locale from '../../src/utils/locale';
 import Html5 from '../../src/engines/html5/html5';
@@ -2346,6 +2347,105 @@ describe('Player', function () {
           done();
         });
         player.textStyle = new TextStyle();
+      });
+    });
+
+    describe('timed metadata and timed metadata change', () => {
+      let config;
+      let player;
+      let playerContainer;
+
+      before(() => {
+        playerContainer = createElement('DIV', targetId);
+      });
+
+      beforeEach(() => {
+        config = getConfigStructure();
+      });
+
+      afterEach(() => {
+        player.destroy();
+      });
+
+      after(() => {
+        removeVideoElementsFromTestPage();
+        removeElement(targetId);
+      });
+
+      it('should dispatch timed metadata and timed metadata change on time', done => {
+        let onPlaying = () => {
+          player.removeEventListener(player.Event.PLAYING, onPlaying);
+          const metadataTrack1 = player.getVideoElement().addTextTrack(TextTrack.KIND.METADATA, 'metadata1');
+          const metadataTrack2 = player.getVideoElement().addTextTrack(TextTrack.KIND.METADATA, 'metadata2');
+
+          const {currentTime, duration} = player;
+          const timedMetadata1 = new TimedMetadata(currentTime + 1, duration - 2, 'id1', 'type1', {info: 'some_info1'});
+          const timedMetadata2 = new TimedMetadata(currentTime + 2, duration - 1, 'id2', 'type2', {info: 'some_info2'});
+          const textTrackCue1 = createTextTrackCue(timedMetadata1);
+          const textTrackCue2 = createTextTrackCue(timedMetadata2);
+          metadataTrack1.addCue(textTrackCue1);
+          metadataTrack2.addCue(textTrackCue2);
+          let eventCounter = -1;
+          player.addEventListener(player.Event.TIMED_METADATA, e => {
+            try {
+              eventCounter++;
+              switch (eventCounter) {
+                case 0:
+                  e.payload.cues.length.should.equal(1);
+                  e.payload.cues[0].value.key.should.equal('type1');
+                  e.payload.cues[0].value.data.should.deep.equal({info: 'some_info1'});
+                  break;
+                case 2:
+                  e.payload.cues.length.should.equal(2);
+                  e.payload.cues[0].value.key.should.equal('type1');
+                  e.payload.cues[0].value.data.should.deep.equal({info: 'some_info1'});
+                  e.payload.cues[1].value.key.should.equal('type2');
+                  e.payload.cues[1].value.data.should.deep.equal({info: 'some_info2'});
+                  break;
+                case 4:
+                  e.payload.cues.length.should.equal(1);
+                  e.payload.cues[0].value.key.should.equal('type2');
+                  e.payload.cues[0].value.data.should.deep.equal({info: 'some_info2'});
+                  break;
+                case 6:
+                  e.payload.cues.length.should.equal(0);
+              }
+            } catch (e) {
+              done(e);
+            }
+          });
+          player.addEventListener(player.Event.TIMED_METADATA_CHANGE, e => {
+            try {
+              eventCounter++;
+              switch (eventCounter) {
+                case 1:
+                  e.payload.cues.length.should.equal(1);
+                  e.payload.cues[0].should.deep.equal({...timedMetadata1, type: 'custom'});
+                  break;
+                case 3:
+                  e.payload.cues.length.should.equal(2);
+                  e.payload.cues[0].should.deep.equal({...timedMetadata1, type: 'custom'});
+                  e.payload.cues[1].should.deep.equal({...timedMetadata2, type: 'custom'});
+                  break;
+                case 5:
+                  e.payload.cues.length.should.equal(1);
+                  e.payload.cues[0].should.deep.equal({...timedMetadata2, type: 'custom'});
+                  break;
+                case 7:
+                  e.payload.cues.length.should.equal(0);
+                  done();
+              }
+            } catch (e) {
+              done(e);
+            }
+          });
+        };
+
+        player = new Player(config);
+        player.setSources(sourcesConfig.Mp4);
+        playerContainer.appendChild(player.getView());
+        player.addEventListener(player.Event.PLAYING, onPlaying);
+        player.play();
       });
     });
   });
