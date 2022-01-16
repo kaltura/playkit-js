@@ -37,7 +37,7 @@ TimedMetadata.TYPE = {
  * @returns {TextTrackCue} - the created text track cue
  * @private
  */
-function createTextTrackCue(timedMetadata: TimedMetadata): TextTrackCue {
+function createTextTrackCue(timedMetadata: TimedMetadata): ?TextTrackCue {
   try {
     const {startTime, endTime, id, type, metadata} = timedMetadata;
     let cue = {};
