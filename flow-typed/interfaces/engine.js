@@ -48,7 +48,7 @@ declare interface IEngine extends FakeEventTarget {
   isOnLiveEdge(): boolean;
   addTextTrack(kind: string, label?: string, language): ?TextTrack;
   getTextTracks(): Array<TextTrack>;
-  getDrmInfo(): ?string;
+  getDrmInfo(): ?PKDrmDataObject;
   +id: string;
   currentTime: number;
   +duration: number;

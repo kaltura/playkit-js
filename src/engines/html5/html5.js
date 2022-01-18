@@ -1241,7 +1241,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return Array.from(this._el.textTracks);
   }
 
-  getDrmInfo(): ?string {
+  getDrmInfo(): ?PKDrmDataObject {
     this._mediaSourceAdapter?.getDrmInfo();
   }
 }

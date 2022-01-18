@@ -1226,4 +1226,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       return 0;
     }
   }
+
+  getDrmInfo(): ?PKDrmDataObject {
+    return this._drmHandler ? this._sourceObj.drmData : null;
+  }
 }
