@@ -327,7 +327,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return NaN;
   }
 
-  getDrmInfo(): ?string {
+  getDrmInfo(): ?PKDrmDataObject {
     return null;
   }
 }
