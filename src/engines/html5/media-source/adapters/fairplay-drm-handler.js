@@ -108,6 +108,10 @@ class FairPlayDrmHandler {
     this._eventManager.listen(this._keySession, WebkitEvents.KEY_ERROR, (e: Event) => this._onWebkitKeyError(e));
   }
 
+  get config(): FairPlayDrmConfigType {
+    return this._config;
+  }
+
   destroy(): void {
     this._eventManager.destroy();
     this._keySession.close();
