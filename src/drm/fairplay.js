@@ -8,11 +8,11 @@ const _logger = getLogger('FairPlay');
 const FairPlay: IDrmProtocol = class FairPlay {
   /**
    * FairPlay is the configure key system.
-   * @param {Array<Object>} drmData - The drm data.
+   * @param {Array<PKDrmDataObject>} drmData - The drm data.
    * @param {PKDrmConfigObject} drmConfig - The drm config.
    * @return {boolean} - Whether FairPlay is the configure key system.
    */
-  static isConfigured(drmData: Array<Object>, drmConfig: PKDrmConfigObject): boolean {
+  static isConfigured(drmData: Array<PKDrmDataObject>, drmConfig: PKDrmConfigObject): boolean {
     return DrmScheme.FAIRPLAY === drmConfig.keySystem && !!drmData.find(drmEntry => drmEntry.scheme === drmConfig.keySystem);
   }
 
@@ -20,10 +20,10 @@ const FairPlay: IDrmProtocol = class FairPlay {
    * FairPlay playback supports in case 2 conditions are met:
    * 1. The environment supports FairPlay playback.
    * 2. The drm data of the source object contains entry with FairPlay scheme.
-   * @param {Array<Object>} drmData - The drm data to check.
+   * @param {Array<PKDrmDataObject>} drmData - The drm data to check.
    * @return {boolean} - Whether FairPlay can be play on the current environment.
    */
-  static canPlayDrm(drmData: Array<Object>): boolean {
+  static canPlayDrm(drmData: Array<PKDrmDataObject>): boolean {
     _logger.debug('Can play DRM scheme of: ' + DrmScheme.FAIRPLAY);
     return !!drmData.find(drmEntry => drmEntry.scheme === DrmScheme.FAIRPLAY) && !!window.WebKitMediaKeys;
   }
@@ -31,10 +31,10 @@ const FairPlay: IDrmProtocol = class FairPlay {
   /**
    * Sets the FairPlay playback.
    * @param {FairPlayDrmConfigType} config - The config to manipulate.
-   * @param {Array<Object>} drmData - The drm data.
+   * @param {Array<PKDrmDataObject>} drmData - The drm data.
    * @returns {void}
    */
-  static setDrmPlayback(config: FairPlayDrmConfigType, drmData: Array<Object>): void {
+  static setDrmPlayback(config: FairPlayDrmConfigType, drmData: Array<PKDrmDataObject>): void {
     _logger.debug('Sets drm playback');
     let drmEntry = drmData.find(drmEntry => drmEntry.scheme === DrmScheme.FAIRPLAY);
     if (drmEntry) {

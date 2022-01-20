@@ -1684,6 +1684,10 @@ export default class Player extends FakeEventTarget {
     setLogLevel(level, name);
   }
 
+  getDrmInfo(): ?PKDrmDataObject {
+    return this._engine?.getDrmInfo();
+  }
+
   // </editor-fold>
 
   // </editor-fold>

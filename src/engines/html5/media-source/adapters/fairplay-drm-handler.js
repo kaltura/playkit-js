@@ -19,7 +19,7 @@ const WebkitEvents: WebkitEventsType = {
   KEY_ERROR: 'webkitkeyerror'
 };
 
-type FairPlayDrmConfigType = {licenseUrl: string, certificate: string, network: {requestFilter?: Function, responseFilter: Function}};
+type FairPlayDrmConfigType = {licenseUrl: string, certificate?: string, network: {requestFilter?: Function, responseFilter: Function}};
 
 class FairPlayDrmHandler {
   static WebkitEvents: WebkitEventsType = WebkitEvents;
@@ -106,6 +106,11 @@ class FairPlayDrmHandler {
     this._eventManager.listen(this._keySession, WebkitEvents.KEY_MESSAGE, (e: Event) => this._onWebkitKeyMessage(e));
     this._eventManager.listen(this._keySession, WebkitEvents.KEY_ADDED, () => this._onWebkitKeyAdded());
     this._eventManager.listen(this._keySession, WebkitEvents.KEY_ERROR, (e: Event) => this._onWebkitKeyError(e));
+  }
+
+  getDrmInfo(): PKDrmDataObject {
+    const {certificate, licenseUrl} = this._config;
+    return {certificate, licenseUrl, scheme: DrmScheme.FAIRPLAY};
   }
 
   destroy(): void {
@@ -272,7 +277,7 @@ class FairPlayDrmHandler {
     return String.fromCharCode.apply(null, new Uint16Array(array.buffer));
   }
 
-  static _base64DecodeUint8Array(input: string): Uint8Array {
+  static _base64DecodeUint8Array(input?: string): Uint8Array {
     let raw = window.atob(input);
     let rawLength = raw.length;
     let array = new Uint8Array(new ArrayBuffer(rawLength));

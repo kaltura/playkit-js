@@ -56,14 +56,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    * @static
    */
-  static _drmProtocols: Array<Function> = [FairPlay];
+  static _drmProtocols: Array<IDrmProtocol> = [FairPlay];
   /**
    * The DRM protocol for the current playback.
    * @type {?Function}
    * @private
    * @static
    */
-  static _drmProtocol: ?Function = null;
+  static _drmProtocol: ?IDrmProtocol = null;
   /**
    * The supported progressive mime types by the native adapter.
    * @member {Array<string>} _progressiveMimeTypes
@@ -1225,5 +1225,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     } else {
       return 0;
     }
+  }
+
+  getDrmInfo(): ?PKDrmDataObject {
+    return this._drmHandler ? this._drmHandler.getDrmInfo() : null;
   }
 }
