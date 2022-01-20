@@ -37,19 +37,23 @@ TimedMetadata.TYPE = {
  * @returns {TextTrackCue} - the created text track cue
  * @private
  */
-function createTextTrackCue(timedMetadata: TimedMetadata): TextTrackCue {
-  const {startTime, endTime, id, type, metadata} = timedMetadata;
-  let cue = {};
-  if (window.VTTCue) {
-    cue = new window.VTTCue(startTime, endTime, '');
-  } else if (window.TextTrackCue) {
-    // IE11 support
-    cue = new window.TextTrackCue(startTime, endTime, '');
+function createTextTrackCue(timedMetadata: TimedMetadata): ?TextTrackCue {
+  try {
+    const {startTime, endTime, id, type, metadata} = timedMetadata;
+    let cue = {};
+    if (window.VTTCue) {
+      cue = new window.VTTCue(startTime, endTime, '');
+    } else if (window.TextTrackCue) {
+      // IE11 support
+      cue = new window.TextTrackCue(startTime, endTime, '');
+    }
+    const cueValue = {key: type, data: metadata};
+    cue.id = id;
+    cue.value = cueValue;
+    return cue;
+  } catch (e) {
+    return null;
   }
-  const cueValue = {key: type, data: metadata};
-  cue.id = id;
-  cue.value = cueValue;
-  return cue;
 }
 
 /**
@@ -61,8 +65,11 @@ function createTextTrackCue(timedMetadata: TimedMetadata): TextTrackCue {
 function createTimedMetadata(cue: TextTrackCue): ?TimedMetadata {
   if (cue) {
     const {startTime, endTime, id} = cue;
-    const {type, metadata} = _getTypeAndMetadata(cue);
-    return new TimedMetadata(startTime, endTime, id, type, metadata);
+    const typeAndMetadata = _getTypeAndMetadata(cue);
+    if (typeAndMetadata) {
+      const {type, metadata} = _getTypeAndMetadata(cue);
+      return new TimedMetadata(startTime, endTime, id, type, metadata);
+    }
   }
   return null;
 }
@@ -73,21 +80,22 @@ function createTimedMetadata(cue: TextTrackCue): ?TimedMetadata {
  * @private
  */
 function _getTypeAndMetadata(cue: TextTrackCue): Object {
-  const {
-    type,
-    value,
-    track: {label}
-  } = cue;
-  const {key, data} = value;
-  const isId3 = type === 'org.id3' || label === 'id3';
-  let timedMetadataType = Object.values(TimedMetadata.TYPE).find(type => type === key);
-  if (!timedMetadataType) {
-    timedMetadataType = isId3 ? TimedMetadata.TYPE.ID3 : TimedMetadata.TYPE.CUSTOM;
+  if (cue) {
+    const {type, value, track} = cue;
+    if (value) {
+      const {key, data} = value;
+      const isId3 = type === 'org.id3' || (track && track.label) === 'id3';
+      let timedMetadataType = Object.values(TimedMetadata.TYPE).find(type => type === key);
+      if (!timedMetadataType) {
+        timedMetadataType = isId3 ? TimedMetadata.TYPE.ID3 : TimedMetadata.TYPE.CUSTOM;
+      }
+      return {
+        type: timedMetadataType,
+        metadata: isId3 || !data ? value : data
+      };
+    }
   }
-  return {
-    type: timedMetadataType,
-    metadata: isId3 ? value : data
-  };
+  return null;
 }
 
 export {TimedMetadata, createTextTrackCue, createTimedMetadata};
