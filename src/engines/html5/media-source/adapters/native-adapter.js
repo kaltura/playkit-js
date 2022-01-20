@@ -1228,10 +1228,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   getDrmInfo(): ?PKDrmDataObject {
-    if (NativeAdapter._drmProtocol && this._drmHandler) {
-      const {certificate, licenseUrl} = this._drmHandler.config;
-      const scheme = NativeAdapter._drmProtocol.scheme;
-      return {scheme, certificate, licenseUrl};
-    }
+    return this._drmHandler ? this._drmHandler.getDrmInfo() : null;
   }
 }

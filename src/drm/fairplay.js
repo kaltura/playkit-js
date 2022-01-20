@@ -6,7 +6,6 @@ import {DrmScheme} from './drm-scheme';
 const _logger = getLogger('FairPlay');
 
 const FairPlay: IDrmProtocol = class FairPlay {
-  static scheme: string = DrmScheme.FAIRPLAY;
   /**
    * FairPlay is the configure key system.
    * @param {Array<PKDrmDataObject>} drmData - The drm data.
@@ -25,8 +24,8 @@ const FairPlay: IDrmProtocol = class FairPlay {
    * @return {boolean} - Whether FairPlay can be play on the current environment.
    */
   static canPlayDrm(drmData: Array<PKDrmDataObject>): boolean {
-    _logger.debug('Can play DRM scheme of: ' + FairPlay.scheme);
-    return !!drmData.find(drmEntry => drmEntry.scheme === FairPlay.scheme) && !!window.WebKitMediaKeys;
+    _logger.debug('Can play DRM scheme of: ' + DrmScheme.FAIRPLAY);
+    return !!drmData.find(drmEntry => drmEntry.scheme === DrmScheme.FAIRPLAY) && !!window.WebKitMediaKeys;
   }
 
   /**
@@ -37,10 +36,10 @@ const FairPlay: IDrmProtocol = class FairPlay {
    */
   static setDrmPlayback(config: FairPlayDrmConfigType, drmData: Array<PKDrmDataObject>): void {
     _logger.debug('Sets drm playback');
-    let drmEntry = drmData.find(drmEntry => drmEntry.scheme === FairPlay.scheme);
+    let drmEntry = drmData.find(drmEntry => drmEntry.scheme === DrmScheme.FAIRPLAY);
     if (drmEntry) {
       config.licenseUrl = drmEntry.licenseUrl;
-      config.certificate = drmEntry.certificate || '';
+      config.certificate = drmEntry.certificate;
     }
   }
 };
