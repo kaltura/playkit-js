@@ -39,7 +39,7 @@
     "access": "public"
   },
   "dependencies": {
-    "js-logger": "^1.6.0",
+    "js-logger": "^1.6.1",
     "ua-parser-js": "1.0.2"
   },
   "devDependencies": {
