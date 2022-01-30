@@ -1,4 +1,5 @@
 // @flow
 declare type PKStreamingConfigObject = {
-  forceBreakStall: boolean
+  forceBreakStall: boolean,
+  lowLatencyMode: boolean
 };
