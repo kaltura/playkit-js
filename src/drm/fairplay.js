@@ -24,8 +24,9 @@ const FairPlay: IDrmProtocol = class FairPlay {
    * @return {boolean} - Whether FairPlay can be play on the current environment.
    */
   static canPlayDrm(drmData: Array<PKDrmDataObject>): boolean {
-    _logger.debug('Can play DRM scheme of: ' + DrmScheme.FAIRPLAY);
-    return !!drmData.find(drmEntry => drmEntry.scheme === DrmScheme.FAIRPLAY) && !!window.WebKitMediaKeys;
+    const result = drmData.some(drmEntry => drmEntry.scheme === DrmScheme.FAIRPLAY) && !!window.WebKitMediaKeys;
+    _logger.debug(`Can play DRM scheme of: ${DrmScheme.FAIRPLAY} is ${result.toString()}`);
+    return result;
   }
 
   /**
