@@ -324,6 +324,7 @@ export default class Player extends FakeEventTarget {
     muted: undefined,
     volume: undefined,
     rate: undefined,
+    videoHeight: undefined,
     audioLanguage: '',
     textLanguage: ''
   };
@@ -1303,6 +1304,7 @@ export default class Player extends FakeEventTarget {
   selectTrack(track: ?Track): void {
     if (this._engine) {
       if (track instanceof VideoTrack) {
+        this._playbackAttributesState.videoHeight = track.height;
         if (this._stateManager.currentState.type === StateType.IDLE) {
           this._pendingSelectedVideoTrack = track;
         } else {
@@ -1387,6 +1389,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.enableAdaptiveBitrate();
     }
+    this._playbackAttributesState.videoHeight = undefined;
   }
 
   /**
@@ -2549,6 +2552,7 @@ export default class Player extends FakeEventTarget {
     let currentOrConfiguredAudioLang = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
     this._setDefaultTrack<TextTrack>(this._getTextTracks(), currentOrConfiguredTextLang, offTextTrack);
     this._setDefaultTrack<AudioTrack>(this._getAudioTracks(), currentOrConfiguredAudioLang, activeTracks.audio);
+    this._setDefaultVideoTrack();
   }
 
   /**
@@ -2598,6 +2602,20 @@ export default class Player extends FakeEventTarget {
       } else if (defaultTrack && !defaultTrack.active) {
         this.selectTrack(defaultTrack);
       }
+    }
+  }
+
+  /**
+   * Sets the video track selected by the user.
+   * @returns {void}
+   * @private
+   */
+  _setDefaultVideoTrack() {
+    const selectedVideoTrack = this._getVideoTracks()
+      .sort((track1: VideoTrack, track2: VideoTrack) => track2.bandwidth - track1.bandwidth)
+      .find((track: VideoTrack) => track.height === this._playbackAttributesState.videoHeight);
+    if (selectedVideoTrack) {
+      this.selectTrack(selectedVideoTrack);
     }
   }
 
