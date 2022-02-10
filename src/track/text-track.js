@@ -28,7 +28,7 @@ const TextTrack: TextTrack = class TextTrack extends Track {
    * @returns {number} - the next track index.
    */
   static _generateIndex(): number {
-    return Track._tracksCount++;
+    return TextTrack._tracksCount++;
   }
 
   /**
