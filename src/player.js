@@ -2527,7 +2527,6 @@ export default class Player extends FakeEventTarget {
       this._tracks.push(
         new TextTrack({
           active: false,
-          index: textTracks.length,
           kind: TextTrack.KIND.SUBTITLES,
           label: 'Off',
           language: OFF
