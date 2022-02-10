@@ -149,7 +149,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @type {number}
    * @private
    */
-  _nativeTextTracksMap = [];
+  _nativeTextTracksMap = {};
   /**
    *
    * @type {number}
@@ -589,7 +589,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           this._waitingEventTriggered = false;
           this._progressiveSources = [];
           this._loadPromise = null;
-          this._nativeTextTracksMap = [];
+          this._nativeTextTracksMap = {};
           this._loadPromiseReject = null;
           this._liveEdge = 0;
           this._lastTimeUpdate = 0;
@@ -977,7 +977,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const pkTextTracks = this._getPKTextTracks();
     const pkOffTrack = pkTextTracks.find(track => track.language === 'off');
     const getActiveVidTextTrackIndex = () => {
-      return this._nativeTextTracksMap.findIndex(textTrack => textTrack && this._getDisplayTextTrackModeString() === textTrack.mode);
+      return Object.values(this._nativeTextTracksMap).findIndex(textTrack => textTrack && this._getDisplayTextTrackModeString() === textTrack.mode);
     };
     const vidIndex = getActiveVidTextTrackIndex();
     const activePKtextTrack = this._getActivePKTextTrack();
