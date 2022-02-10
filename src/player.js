@@ -2613,7 +2613,7 @@ export default class Player extends FakeEventTarget {
   _setDefaultVideoTrack() {
     const selectedVideoTrack = this._getVideoTracks()
       .sort((track1: VideoTrack, track2: VideoTrack) => track2.bandwidth - track1.bandwidth)
-      .find((track: VideoTrack) => track.height === this._playbackAttributesState.videoHeight);
+      .find((track: VideoTrack) => track.height && track.height === this._playbackAttributesState.videoHeight);
     if (selectedVideoTrack) {
       this.selectTrack(selectedVideoTrack);
     }
