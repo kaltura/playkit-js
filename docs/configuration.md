@@ -892,7 +892,7 @@ var config = {
 > >
 > > ##### Description: Defines the media source adapters configurations.
 > >
-> > - For `hls` configuration, see the [hls.js](https://github.com/video-dev/hls.js/blob/master/doc/API.md#fine-tuning) documentation.
+> > - For `hls` configuration, see the [hls.js](https://github.com/video-dev/hls.js/blob/master/docs/API.md) documentation.
 > > - For `dash` configuration, see the [shaka-player](https://shaka-player-demo.appspot.com/docs/api/tutorial-config.html) documentation.
 >
 > ##
