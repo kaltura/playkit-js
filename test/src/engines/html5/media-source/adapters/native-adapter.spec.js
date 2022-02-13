@@ -700,7 +700,7 @@ describe('NativeAdapter: selectTextTrack', function () {
           nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
           nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
           nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
-          nativeInstance.selectTextTrack(new TextTrack({index: 3, kind: 'subtitles'}));
+          nativeInstance.selectTextTrack(new TextTrack({kind: 'subtitles'}));
           nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
           nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
           nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
@@ -713,18 +713,23 @@ describe('NativeAdapter: selectTextTrack', function () {
   });
 
   it('should not change the selected for metadata text track', done => {
-    nativeInstance.load().then(() => {
-      if (nativeInstance._videoElement.textTracks) {
-        nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
-        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
-        nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
-        nativeInstance.selectTextTrack(nativeInstance._playerTracks[1]);
-        nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
-        nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
-        nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
-      }
-      done();
-    });
+    nativeInstance
+      .load()
+      .then(() => {
+        if (nativeInstance._videoElement.textTracks) {
+          nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
+          nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
+          nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
+          nativeInstance.selectTextTrack(nativeInstance._playerTracks[1]);
+          nativeInstance._videoElement.textTracks[0].mode.should.be.equal('showing');
+          nativeInstance._videoElement.textTracks[1].mode.should.be.equal('disabled');
+          nativeInstance._videoElement.textTracks[2].mode.should.be.equal('disabled');
+        }
+        done();
+      })
+      .catch(e => {
+        done(e);
+      });
   });
 });
 
