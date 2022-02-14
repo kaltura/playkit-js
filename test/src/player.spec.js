@@ -1142,7 +1142,8 @@ describe('Player', function () {
           tracks[0].active.should.be.true;
           tracks[1].active.should.be.false;
           const track = player._tracks.find(track => track.language === 'fr');
-          player.selectTrack({...track, kind: 'subtitles'});
+          track.kind = 'subtitles';
+          player.selectTrack(track);
         })
         .catch(e => {
           done(e);
@@ -1172,7 +1173,8 @@ describe('Player', function () {
           tracks[0].active.should.be.true;
           tracks[1].active.should.be.false;
           const track = player._tracks.find(track => track.language === 'fr');
-          player.selectTrack({...track, kind: 'captions'});
+          track.kind = 'captions';
+          player.selectTrack(track);
         })
         .catch(e => {
           done(e);

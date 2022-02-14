@@ -57,6 +57,15 @@ const TextTrack: TextTrack = class TextTrack extends Track {
   }
 
   /**
+   * Setter for the kind of the text track.
+   * @public
+   * @param {string} value - The kind of text the track.
+   */
+  set kind(value: string) {
+    this._kind = value;
+  }
+
+  /**
    * Getter for the external of the text track.
    * @public
    * @returns {boolean} - The kind of the text track.
