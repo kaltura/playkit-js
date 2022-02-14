@@ -1226,7 +1226,6 @@ describe('Player', function () {
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.true;
         tracks[1].active.should.be.false;
-        // player.selectTrack(new TextTrack({index: 1, kind: 'metadata'}));
         player.selectTrack(new TextTrack({...player._tracks.find(track => track.language === 'fr'), kind: 'metadata'}));
         video.textTracks[0].mode.should.be.equal('hidden');
         video.textTracks[1].mode.should.be.equal('disabled');
