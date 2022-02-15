@@ -976,15 +976,15 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _onNativeTextTrackChange(): void {
     const pkTextTracks = this._getPKTextTracks();
     const pkOffTrack = pkTextTracks.find(track => track.language === 'off');
-    const getActiveVidTextTrackIndex = () => {
+    const getActiveVidTextTrackIndex = (): number => {
       for (const textTrackId in this._nativeTextTracksMap) {
         if (this._getDisplayTextTrackModeString() === this._nativeTextTracksMap[textTrackId].mode) {
-          return textTrackId;
+          return Number(textTrackId);
         }
       }
       return -1;
     };
-    const vidIndex = getActiveVidTextTrackIndex();
+    const vidIndex: number = getActiveVidTextTrackIndex();
     const activePKtextTrack = this._getActivePKTextTrack();
     const pkIndex = activePKtextTrack ? activePKtextTrack.index : -1;
     if (vidIndex !== pkIndex) {
