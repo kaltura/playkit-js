@@ -1152,13 +1152,13 @@ describe('Player', function () {
     });
 
     it('should select a new captions track', done => {
-      player.load();
       player
         .ready()
         .then(() => {
+          let selectedTrackIndex;
           player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, event => {
             (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
-            event.payload.selectedTextTrack.index.should.equal(1);
+            event.payload.selectedTextTrack.index.should.equal(selectedTrackIndex);
             video.textTracks[0].mode.should.be.equal('disabled');
             video.textTracks[1].mode.should.be.equal('hidden');
             tracks[0].active.should.be.false;
@@ -1174,11 +1174,13 @@ describe('Player', function () {
           tracks[1].active.should.be.false;
           const track = player._tracks.find(track => track.language === 'fr');
           track.kind = 'captions';
+          selectedTrackIndex = track.index;
           player.selectTrack(track);
         })
         .catch(e => {
           done(e);
         });
+      player.load();
     });
 
     it('should not change the selected text track', done => {
