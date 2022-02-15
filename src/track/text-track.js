@@ -30,6 +30,13 @@ const TextTrack: TextTrack = class TextTrack extends Track {
   static _generateIndex(): number {
     return TextTrack._tracksCount++;
   }
+  /**
+   * reset the track count.
+   * @returns {void}
+   */
+  static resetTracksCount(): void {
+    TextTrack._tracksCount = 0;
+  }
 
   /**
    * The kind of the text track:
@@ -85,6 +92,7 @@ const TextTrack: TextTrack = class TextTrack extends Track {
     this._kind = settings.kind;
     this._external = settings.external;
     this._index = TextTrack._generateIndex();
+    console.error('121212', this);
   }
 };
 

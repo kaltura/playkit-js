@@ -657,6 +657,7 @@ export default class Player extends FakeEventTarget {
     this._activeTextCues = [];
     this._updateTextDisplay([]);
     this._tracks = [];
+    TextTrack.resetTracksCount();
     this._resetStateFlags();
     this._engineType = '';
     this._streamType = '';

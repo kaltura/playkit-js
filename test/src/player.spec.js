@@ -19,6 +19,7 @@ import {EngineProvider} from '../../src/engines/engine-provider';
 import FakeEvent from '../../src/event/fake-event';
 import Html5AutoPlayCapability from '../../src/engines/html5/capabilities/html5-autoplay';
 import * as Utils from '../../src/utils/util';
+import {TrackType} from '../../src/track/track-type';
 
 const targetId = 'player-placeholder_player.spec';
 let sourcesConfig = PKObject.copyDeep(SourcesConfig);
@@ -1141,7 +1142,7 @@ describe('Player', function () {
           video.textTracks[1].mode.should.be.equal('disabled');
           tracks[0].active.should.be.true;
           tracks[1].active.should.be.false;
-          const track = player._tracks.find(track => track.language === 'fr');
+          const track = player.getTracks(TrackType.TEXT).find(track => track.language === 'fr');
           track.kind = 'subtitles';
           player.selectTrack(track);
         })
@@ -1172,7 +1173,7 @@ describe('Player', function () {
           video.textTracks[1].mode.should.be.equal('disabled');
           tracks[0].active.should.be.true;
           tracks[1].active.should.be.false;
-          const track = player._tracks.find(track => track.language === 'fr');
+          const track = player.getTracks(TrackType.TEXT).find(track => track.language === 'fr');
           track.kind = 'captions';
           selectedTrackIndex = track.index;
           player.selectTrack(track);
@@ -1192,7 +1193,7 @@ describe('Player', function () {
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.true;
         tracks[1].active.should.be.false;
-        player.selectTrack(player._tracks.find(track => track.language === 'en'));
+        player.selectTrack(player.getTracks(TrackType.TEXT).find(track => track.language === 'en'));
         video.textTracks[0].mode.should.be.equal('hidden');
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.true;
@@ -1230,7 +1231,8 @@ describe('Player', function () {
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.true;
         tracks[1].active.should.be.false;
-        player.selectTrack(new TextTrack({...player._tracks.find(track => track.language === 'fr'), kind: 'metadata'}));
+        const track = player.getTracks(TrackType.TEXT).find(track => track.language === 'fr');
+        track.kind = 'metadata';
         video.textTracks[0].mode.should.be.equal('hidden');
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.true;
@@ -1308,7 +1310,7 @@ describe('Player', function () {
         if (audioTracks.length) {
           player.getActiveTracks().audio.should.deep.equals(audioTracks[0]);
         }
-        player.selectTrack(player._tracks.find(track => track.language === 'fr'));
+        player.selectTrack(player.getTracks(TrackType.TEXT).find(track => track.language === 'fr'));
       });
       player.load();
     });
