@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.78.0](https://github.com/kaltura/playkit-js/compare/v0.77.0...v0.78.0) (2022-02-16)
+
+
+### Bug Fixes
+
+* log the fairplay support result ([#632](https://github.com/kaltura/playkit-js/issues/632)) ([a493f13](https://github.com/kaltura/playkit-js/commit/a493f13))
+* **FEC-11785:** [Youbora] - update youbora options for drm system that is used by the player ([#624](https://github.com/kaltura/playkit-js/issues/624)) ([8e0d032](https://github.com/kaltura/playkit-js/commit/8e0d032)), closes [kaltura/kaltura-player-js#515](https://github.com/kaltura/playkit-js/issues/515) [kaltura/playkit-js-dash#175](https://github.com/kaltura/playkit-js/issues/175) [kaltura/playkit-js-youbora#82](https://github.com/kaltura/playkit-js/issues/82)
+
+
+### Features
+
+* **FEC-10548:** Low-Latency support ([#631](https://github.com/kaltura/playkit-js/issues/631)) ([0fc5dbc](https://github.com/kaltura/playkit-js/commit/0fc5dbc))
+
+
+
 ## [0.77.0](https://github.com/kaltura/playkit-js/compare/v0.76.1...v0.77.0) (2022-01-19)
 
 
