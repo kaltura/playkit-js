@@ -2611,13 +2611,14 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _setDefaultVideoTrack() {
-    let selectedVideoTrack = this._getVideoTracks().find(
+    const sortedVideoTracks = this._getVideoTracks().sort((track1: VideoTrack, track2: VideoTrack) => track2.bandwidth - track1.bandwidth);
+    let selectedVideoTrack = sortedVideoTracks.find(
       (track: VideoTrack) => track.label && track.label === this._playbackAttributesState.videoTrack?.label
     );
     if (!selectedVideoTrack) {
-      selectedVideoTrack = this._getVideoTracks()
-        .sort((track1: VideoTrack, track2: VideoTrack) => track2.bandwidth - track1.bandwidth)
-        .find((track: VideoTrack) => track.height && track.height === this._playbackAttributesState.videoTrack?.height);
+      selectedVideoTrack = sortedVideoTracks.find(
+        (track: VideoTrack) => track.height && track.height === this._playbackAttributesState.videoTrack?.height
+      );
     }
     if (selectedVideoTrack) {
       this.selectTrack(selectedVideoTrack);
