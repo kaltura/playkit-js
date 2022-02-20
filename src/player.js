@@ -2610,7 +2610,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    * @private
    */
-  _setDefaultVideoTrack() {
+  _setDefaultVideoTrack(): void {
     const sortedVideoTracks = this._getVideoTracks().sort((track1: VideoTrack, track2: VideoTrack) => track2.bandwidth - track1.bandwidth);
     let selectedVideoTrack = sortedVideoTracks.find(
       (track: VideoTrack) => track.label && track.label === this._playbackAttributesState.videoTrack?.label
