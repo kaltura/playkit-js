@@ -124,14 +124,13 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       this._addNativeTextTrack();
     }
     const playerTextTracks = tracks.filter(track => track instanceof TextTrack);
-    let textTracksLength = playerTextTracks.length || 0;
     const newTextTracks = [];
     captions.forEach(caption => {
       if (!caption.language) {
         const error = new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNKNOWN_LANGUAGE, {caption: caption});
         this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
       } else {
-        const track = this._createTextTrack(caption, textTracksLength++);
+        const track = this._createTextTrack(caption);
         this._maybeAddTrack(track, caption, playerTextTracks, newTextTracks);
       }
     });
@@ -160,14 +159,12 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   /**
    * creates a new text track
    * @param {PKExternalCaptionObject} caption - caption to create the text track with
-   * @param {number} index - index of the text track
    * @returns {TextTrack} - new text track
    * @private
    */
-  _createTextTrack(caption: PKExternalCaptionObject, index: number): TextTrack {
+  _createTextTrack(caption: PKExternalCaptionObject): TextTrack {
     return new TextTrack({
       active: !!caption.default,
-      index: index,
       kind: TextTrack.KIND.SUBTITLES,
       label: caption.label,
       language: caption.language,

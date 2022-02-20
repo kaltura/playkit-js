@@ -658,6 +658,7 @@ export default class Player extends FakeEventTarget {
     this._activeTextCues = [];
     this._updateTextDisplay([]);
     this._tracks = [];
+    TextTrack.reset();
     this._resetStateFlags();
     this._engineType = '';
     this._streamType = '';
@@ -2530,7 +2531,6 @@ export default class Player extends FakeEventTarget {
       this._tracks.push(
         new TextTrack({
           active: false,
-          index: textTracks.length,
           kind: TextTrack.KIND.SUBTITLES,
           label: 'Off',
           language: OFF
