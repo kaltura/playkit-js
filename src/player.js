@@ -324,7 +324,7 @@ export default class Player extends FakeEventTarget {
     muted: undefined,
     volume: undefined,
     rate: undefined,
-    videoHeight: undefined,
+    videoTrack: undefined,
     audioLanguage: '',
     textLanguage: ''
   };
@@ -1304,7 +1304,7 @@ export default class Player extends FakeEventTarget {
   selectTrack(track: ?Track): void {
     if (this._engine) {
       if (track instanceof VideoTrack) {
-        this._playbackAttributesState.videoHeight = track.height;
+        this._playbackAttributesState.videoTrack = track;
         if (this._stateManager.currentState.type === StateType.IDLE) {
           this._pendingSelectedVideoTrack = track;
         } else {
@@ -1389,7 +1389,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.enableAdaptiveBitrate();
     }
-    this._playbackAttributesState.videoHeight = undefined;
+    this._playbackAttributesState.videoTrack = undefined;
   }
 
   /**
@@ -2611,9 +2611,14 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _setDefaultVideoTrack() {
-    const selectedVideoTrack = this._getVideoTracks()
-      .sort((track1: VideoTrack, track2: VideoTrack) => track2.bandwidth - track1.bandwidth)
-      .find((track: VideoTrack) => track.height && track.height === this._playbackAttributesState.videoHeight);
+    let selectedVideoTrack = this._getVideoTracks().find(
+      (track: VideoTrack) => track.label && track.label === this._playbackAttributesState.videoTrack?.label
+    );
+    if (!selectedVideoTrack) {
+      selectedVideoTrack = this._getVideoTracks()
+        .sort((track1: VideoTrack, track2: VideoTrack) => track2.bandwidth - track1.bandwidth)
+        .find((track: VideoTrack) => track.height && track.height === this._playbackAttributesState.videoTrack?.height);
+    }
     if (selectedVideoTrack) {
       this.selectTrack(selectedVideoTrack);
     }
