@@ -149,7 +149,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @type {number}
    * @private
    */
-  _nativeTextTracksMap = [];
+  _nativeTextTracksMap = {};
   /**
    *
    * @type {number}
@@ -589,7 +589,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           this._waitingEventTriggered = false;
           this._progressiveSources = [];
           this._loadPromise = null;
-          this._nativeTextTracksMap = [];
+          this._nativeTextTracksMap = {};
           this._loadPromiseReject = null;
           this._liveEdge = 0;
           this._lastTimeUpdate = 0;
@@ -721,7 +721,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const captionsTextTrackLanguageCodes = [this._config.captionsTextTrack1LanguageCode, this._config.captionsTextTrack2LanguageCode];
     const textTracks = this._videoElement.textTracks;
     const parsedTracks = [];
-    let internalTrackIndex = 0;
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
         if (!PKTextTrack.isExternalTrack(textTracks[i])) {
@@ -730,18 +729,19 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
             active: textTracks[i].mode === PKTextTrack.MODE.SHOWING,
             label: textTracks[i].label,
             language: textTracks[i].language,
-            available: true,
-            index: internalTrackIndex++
+            available: true
           };
           if (settings.kind === PKTextTrack.KIND.SUBTITLES) {
-            parsedTracks.push(new PKTextTrack(settings));
-            this._nativeTextTracksMap[settings.index] = textTracks[i];
+            const newTrack: PKTextTrack = new PKTextTrack(settings);
+            parsedTracks.push(newTrack);
+            this._nativeTextTracksMap[newTrack.index] = textTracks[i];
           } else if (settings.kind === PKTextTrack.KIND.CAPTIONS && this._config.enableCEA708Captions) {
             settings.label = settings.label || captionsTextTrackLabels.shift();
             settings.language = settings.language || captionsTextTrackLanguageCodes.shift();
             settings.available = this._captionsHidden;
-            parsedTracks.push(new PKTextTrack(settings));
-            this._nativeTextTracksMap[settings.index] = textTracks[i];
+            const newTrack: PKTextTrack = new PKTextTrack(settings);
+            parsedTracks.push(newTrack);
+            this._nativeTextTracksMap[newTrack.index] = textTracks[i];
           }
         }
       }
@@ -976,10 +976,15 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _onNativeTextTrackChange(): void {
     const pkTextTracks = this._getPKTextTracks();
     const pkOffTrack = pkTextTracks.find(track => track.language === 'off');
-    const getActiveVidTextTrackIndex = () => {
-      return this._nativeTextTracksMap.findIndex(textTrack => textTrack && this._getDisplayTextTrackModeString() === textTrack.mode);
+    const getActiveVidTextTrackIndex = (): number => {
+      for (const textTrackId in this._nativeTextTracksMap) {
+        if (this._getDisplayTextTrackModeString() === this._nativeTextTracksMap[textTrackId].mode) {
+          return Number(textTrackId);
+        }
+      }
+      return -1;
     };
-    const vidIndex = getActiveVidTextTrackIndex();
+    const vidIndex: number = getActiveVidTextTrackIndex();
     const activePKtextTrack = this._getActivePKTextTrack();
     const pkIndex = activePKtextTrack ? activePKtextTrack.index : -1;
     if (vidIndex !== pkIndex) {

@@ -17,6 +17,28 @@ const TextTrack: TextTrack = class TextTrack extends Track {
   isExternalTrack: Function;
 
   /**
+   * use as a uniq identifier of the track.
+   * @static
+   * @type {number}
+   * @private
+   */
+  static _tracksCount: number = 0;
+  /**
+   * index generator.
+   * @returns {number} - the next track index.
+   */
+  static _generateIndex(): number {
+    return TextTrack._tracksCount++;
+  }
+  /**
+   * reset the track count.
+   * @returns {void}
+   */
+  static reset(): void {
+    TextTrack._tracksCount = 0;
+  }
+
+  /**
    * The kind of the text track:
    * subtitles/captions/metadata.
    * @member
@@ -60,6 +82,7 @@ const TextTrack: TextTrack = class TextTrack extends Track {
     this._label = this.label || this.language;
     this._kind = settings.kind;
     this._external = settings.external;
+    this._index = TextTrack._generateIndex();
   }
 };
 
