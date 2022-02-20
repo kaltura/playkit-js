@@ -1111,6 +1111,7 @@ describe('Player', function () {
       video = player._engine.getVideoElement();
       video.addTextTrack('subtitles', 'English', 'en');
       video.addTextTrack('subtitles', 'French', 'fr');
+      video.addTextTrack('captions', 'German', 'de');
     });
 
     afterEach(() => {
@@ -1143,7 +1144,6 @@ describe('Player', function () {
           tracks[0].active.should.be.true;
           tracks[1].active.should.be.false;
           const track = player.getTracks(TrackType.TEXT).find(track => track.language === 'fr');
-          track.kind = 'subtitles';
           player.selectTrack(track);
         })
         .catch(e => {
@@ -1158,13 +1158,17 @@ describe('Player', function () {
         .then(() => {
           let selectedTrackIndex;
           player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, event => {
-            (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
-            event.payload.selectedTextTrack.index.should.equal(selectedTrackIndex);
-            video.textTracks[0].mode.should.be.equal('disabled');
-            video.textTracks[1].mode.should.be.equal('hidden');
-            tracks[0].active.should.be.false;
-            tracks[1].active.should.be.true;
-            done();
+            try {
+              (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
+              event.payload.selectedTextTrack.index.should.equal(selectedTrackIndex);
+              video.textTracks[0].mode.should.be.equal('disabled');
+              video.textTracks[2].mode.should.be.equal('hidden');
+              tracks[0].active.should.be.false;
+              tracks[2].active.should.be.true;
+              done();
+            } catch (e) {
+              done(e);
+            }
           });
           let tracks = player._tracks.filter(track => {
             return track instanceof TextTrack;
@@ -1173,8 +1177,8 @@ describe('Player', function () {
           video.textTracks[1].mode.should.be.equal('disabled');
           tracks[0].active.should.be.true;
           tracks[1].active.should.be.false;
-          const track = player.getTracks(TrackType.TEXT).find(track => track.language === 'fr');
-          track.kind = 'captions';
+          const track = player._tracks.find(track => track.language === 'de');
+          track.available = true;
           selectedTrackIndex = track.index;
           player.selectTrack(track);
         })
@@ -1223,6 +1227,7 @@ describe('Player', function () {
     });
 
     it('should not change the selected for metadata text track', done => {
+      player.addTextTrack('metadata', 'metadata', 'metadata');
       player.ready().then(() => {
         let tracks = player._tracks.filter(track => {
           return track instanceof TextTrack;
@@ -1231,8 +1236,8 @@ describe('Player', function () {
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.true;
         tracks[1].active.should.be.false;
-        const track = player.getTracks(TrackType.TEXT).find(track => track.language === 'fr');
-        track.kind = 'metadata';
+        const track = Object.values(player.getVideoElement().textTracks).find(track => track.kind === 'metadata');
+        player.selectTrack(track);
         video.textTracks[0].mode.should.be.equal('hidden');
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.true;
