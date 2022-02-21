@@ -935,7 +935,7 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it.skip('should select a new video track', done => {
+    it('should select a new video track', done => {
       let tracks;
       player.addEventListener(CustomEventType.VIDEO_TRACK_CHANGED, event => {
         (event.payload.selectedVideoTrack instanceof VideoTrack).should.be.true;
@@ -956,6 +956,53 @@ describe('Player', function () {
         tracks[0].active.should.be.true;
         tracks[1].active.should.be.false;
         player.selectTrack(tracks[1]);
+      });
+      player.load();
+      video = player._engine.getVideoElement();
+    });
+
+    it('should select the previous selected track', done => {
+      let tracks;
+      player.ready().then(() => {
+        tracks = player._tracks.filter(track => {
+          return track instanceof VideoTrack;
+        });
+        player.selectTrack(tracks[1]);
+        player.setSources(sourcesConfig.MultipleSources);
+        player.load();
+        player.ready().then(() => {
+          try {
+            (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.false;
+            (video.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.true;
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
+      });
+      player.load();
+      video = player._engine.getVideoElement();
+    });
+
+    it('should remove user selection once adaptive bitrate enabled', done => {
+      let tracks;
+      player.ready().then(() => {
+        tracks = player._tracks.filter(track => {
+          return track instanceof VideoTrack;
+        });
+        player.selectTrack(tracks[1]);
+        player.enableAdaptiveBitrate();
+        player.setSources(sourcesConfig.MultipleSources);
+        player.load();
+        player.ready().then(() => {
+          try {
+            (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.true;
+            (video.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.false;
+            done();
+          } catch (e) {
+            done(e);
+          }
+        });
       });
       player.load();
       video = player._engine.getVideoElement();

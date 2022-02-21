@@ -324,6 +324,7 @@ export default class Player extends FakeEventTarget {
     muted: undefined,
     volume: undefined,
     rate: undefined,
+    videoTrack: undefined,
     audioLanguage: '',
     textLanguage: ''
   };
@@ -1304,6 +1305,7 @@ export default class Player extends FakeEventTarget {
   selectTrack(track: ?Track): void {
     if (this._engine) {
       if (track instanceof VideoTrack) {
+        this._playbackAttributesState.videoTrack = track;
         if (this._stateManager.currentState.type === StateType.IDLE) {
           this._pendingSelectedVideoTrack = track;
         } else {
@@ -1388,6 +1390,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.enableAdaptiveBitrate();
     }
+    this._playbackAttributesState.videoTrack = undefined;
   }
 
   /**
@@ -2549,6 +2552,7 @@ export default class Player extends FakeEventTarget {
     let currentOrConfiguredAudioLang = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
     this._setDefaultTrack<TextTrack>(this._getTextTracks(), currentOrConfiguredTextLang, offTextTrack);
     this._setDefaultTrack<AudioTrack>(this._getAudioTracks(), currentOrConfiguredAudioLang, activeTracks.audio);
+    this._setDefaultVideoTrack();
   }
 
   /**
@@ -2598,6 +2602,26 @@ export default class Player extends FakeEventTarget {
       } else if (defaultTrack && !defaultTrack.active) {
         this.selectTrack(defaultTrack);
       }
+    }
+  }
+
+  /**
+   * Sets the video track selected by the user.
+   * @returns {void}
+   * @private
+   */
+  _setDefaultVideoTrack(): void {
+    const sortedVideoTracks = this._getVideoTracks().sort((track1: VideoTrack, track2: VideoTrack) => track2.bandwidth - track1.bandwidth);
+    let selectedVideoTrack = sortedVideoTracks.find(
+      (track: VideoTrack) => track.label && track.label === this._playbackAttributesState.videoTrack?.label
+    );
+    if (!selectedVideoTrack) {
+      selectedVideoTrack = sortedVideoTracks.find(
+        (track: VideoTrack) => track.height && track.height === this._playbackAttributesState.videoTrack?.height
+      );
+    }
+    if (selectedVideoTrack) {
+      this.selectTrack(selectedVideoTrack);
     }
   }
 
