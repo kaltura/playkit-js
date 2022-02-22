@@ -2570,7 +2570,7 @@ export default class Player extends FakeEventTarget {
   _getLanguage<T: TextTrack | AudioTrack>(tracks: Array<T>, configuredLanguage: string, defaultTrack: ?T): string {
     let language = configuredLanguage;
     if (language === AUTO) {
-      const localeTrack: ?(TextTrack | AudioTrack) = tracks.find(track => Track.langComparer(Locale.language, track.language));
+      const localeTrack: ?T = tracks.find(track => Track.langComparer(Locale.language, track.language));
       if (localeTrack) {
         language = localeTrack.language;
       } else if (defaultTrack && defaultTrack.language !== OFF) {
