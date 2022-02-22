@@ -719,10 +719,7 @@ var config = {
 > > };
 > > ```
 > >
-> > The player will choose the default audio language using the following logic:
-> >
-> > 1.  **Locale language** - If there is an audio track in the user's system language then this language will be selected.
-> > 2.  **Manifest default language** - If a default language is specified in the manifest file then this language will be selected.
+> > If there is an audio track in the user's system language then this language will be selected.
 >
 > ##
 >
