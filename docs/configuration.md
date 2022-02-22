@@ -719,7 +719,7 @@ var config = {
 > > };
 > > ```
 > >
-> > If there is an audio track in the user's system language then this language will be selected.
+> > If there is an audio track with the same language as the user's system locale language, this audio track will be selected.
 >
 > ##
 >
