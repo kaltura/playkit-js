@@ -691,7 +691,7 @@ var config = {
 >
 > > ### config.playback.audioLanguage
 > >
-> > ##### Type: `string`
+> > ##### Type: `string || "auto"`
 > >
 > > ##### Default: `""`
 > >
@@ -708,6 +708,21 @@ var config = {
 > >   }
 > > };
 > > ```
+> >
+> > If the value `"auto"` is set, i.e:
+> >
+> > ```js
+> > var config = {
+> >   playback: {
+> >     audioLanguage: 'auto'
+> >   }
+> > };
+> > ```
+> >
+> > The player will choose the default audio language using the following logic:
+> >
+> > 1.  **Locale language** - If there is an audio track in the user's system language then this language will be selected.
+> > 2.  **Manifest default language** - If a default language is specified in the manifest file then this language will be selected.
 >
 > ##
 >
