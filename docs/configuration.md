@@ -691,7 +691,7 @@ var config = {
 >
 > > ### config.playback.audioLanguage
 > >
-> > ##### Type: `string`
+> > ##### Type: `string || "auto"`
 > >
 > > ##### Default: `""`
 > >
@@ -708,6 +708,18 @@ var config = {
 > >   }
 > > };
 > > ```
+> >
+> > If the value `"auto"` is set, i.e:
+> >
+> > ```js
+> > var config = {
+> >   playback: {
+> >     audioLanguage: 'auto'
+> >   }
+> > };
+> > ```
+> >
+> > If there is an audio track with the same language as the user's system locale language, this audio track will be selected.
 >
 > ##
 >
@@ -743,7 +755,7 @@ var config = {
 > >
 > > The player will choose the default captions language using the following logic:
 > >
-> > 1.  **Locale language** - If there are captions in the user's system language then this language will be selected.
+> > 1.  **Locale language** - If there is a text track with the same language as the user's system locale language, this text track will be selected.
 > > 2.  **Manifest default language** - If a default language is specified in the manifest file then this language will be selected.
 > > 3.  **First language in manifest** - The first language specified in the manifest file will be selected.
 > > 4.  If none of the above conditions have taken place, do not display captions.

@@ -3349,7 +3349,7 @@ describe('Player', function () {
 
     it('should return the configured language', () => {
       let configuredLanguage = 'ita';
-      player._getLanguage(configuredLanguage, new TextTrack({}), 'text').should.equals(configuredLanguage);
+      player._getLanguage(player.getTracks('text'), configuredLanguage, new TextTrack({}), 'text').should.equals(configuredLanguage);
     });
 
     it('should return the locale language', () => {
@@ -3366,7 +3366,7 @@ describe('Player', function () {
         return [engTrack];
       });
 
-      let resultLang = player._getLanguage(configuredLanguage, engTrack, 'text');
+      let resultLang = player._getLanguage(player.getTracks('text'), configuredLanguage, engTrack, 'text');
       Track.langComparer(resultLang, Locale.language).should.be.true;
     });
 
@@ -3384,7 +3384,7 @@ describe('Player', function () {
         return [gerTrack];
       });
 
-      player._getLanguage(configuredLanguage, gerTrack, 'text').should.equals(gerTrack.language);
+      player._getLanguage(player.getTracks('text'), configuredLanguage, gerTrack, 'text').should.equals(gerTrack.language);
     });
 
     it('should return the first track language ', () => {
@@ -3401,7 +3401,7 @@ describe('Player', function () {
         return [gerTrack];
       });
 
-      player._getLanguage(configuredLanguage, null, 'text').should.equals(gerTrack.language);
+      player._getLanguage(player.getTracks('text'), configuredLanguage, null, 'text').should.equals(gerTrack.language);
     });
 
     it('should return the first track language even if off track sent as default ', () => {
@@ -3424,7 +3424,7 @@ describe('Player', function () {
         return [gerTrack, offTrack];
       });
 
-      player._getLanguage(configuredLanguage, offTrack, 'text').should.equals(gerTrack.language);
+      player._getLanguage(player.getTracks('text'), configuredLanguage, offTrack, 'text').should.equals(gerTrack.language);
     });
   });
 

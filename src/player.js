@@ -2548,8 +2548,12 @@ export default class Player extends FakeEventTarget {
     const activeTracks = this.getActiveTracks();
     const playbackConfig = this.config.playback;
     const offTextTrack: ?Track = this._getTextTracks().find(track => TextTrack.langComparer(OFF, track.language));
-    let currentOrConfiguredTextLang = this._playbackAttributesState.textLanguage || this._getLanguage(playbackConfig.textLanguage, activeTracks.text);
-    let currentOrConfiguredAudioLang = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
+    const currentOrConfiguredTextLang =
+      this._playbackAttributesState.textLanguage ||
+      this._getLanguage<TextTrack>(this._getTextTracks(), playbackConfig.textLanguage, activeTracks.text);
+    const currentOrConfiguredAudioLang =
+      this._playbackAttributesState.audioLanguage ||
+      this._getLanguage<AudioTrack>(this._getAudioTracks(), playbackConfig.audioLanguage, activeTracks.audio);
     this._setDefaultTrack<TextTrack>(this._getTextTracks(), currentOrConfiguredTextLang, offTextTrack);
     this._setDefaultTrack<AudioTrack>(this._getAudioTracks(), currentOrConfiguredAudioLang, activeTracks.audio);
     this._setDefaultVideoTrack();
@@ -2557,16 +2561,16 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Gets the track language that should be set by default.
+   * @param {Array<T>} tracks - the audio or text tracks.
    * @param {string} configuredLanguage - The configured language (can be also "auto").
-   * @param {?TextTrack} defaultTrack - The default track.
+   * @param {?T} defaultTrack - The default track.
    * @private
    * @returns {string} - The track language to set by default.
    */
-  _getLanguage(configuredLanguage: string, defaultTrack: ?TextTrack): string {
+  _getLanguage<T: TextTrack | AudioTrack>(tracks: Array<T>, configuredLanguage: string, defaultTrack: ?T): string {
     let language = configuredLanguage;
     if (language === AUTO) {
-      const tracks = this._getTextTracks();
-      const localeTrack: ?TextTrack = tracks.find(track => Track.langComparer(Locale.language, track.language));
+      const localeTrack: ?T = tracks.find(track => Track.langComparer(Locale.language, track.language));
       if (localeTrack) {
         language = localeTrack.language;
       } else if (defaultTrack && defaultTrack.language !== OFF) {
