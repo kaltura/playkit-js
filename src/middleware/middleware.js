@@ -87,7 +87,7 @@ export default class Middleware {
     const composition = middlewares.reduceRight(
       // eslint-disable-next-line no-unused-vars
       (next, fn) => v => {
-        params?.length > 0 ? fn(...params, next) : fn(next);
+        params?.length ? fn(...params, next) : fn(next);
       },
       callback
     );
