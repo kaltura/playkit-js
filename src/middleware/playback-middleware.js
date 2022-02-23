@@ -77,7 +77,7 @@ export default class PlaybackMiddleware {
    * @public
    * @returns {void}
    */
-  setCurrentTime(to, callback: Function): void {
+  setCurrentTime(to: number, callback: Function): void {
     this._middleware.run(PlaybackMiddleware.Actions.SET_CURRENT_TIME, callback, to);
   }
 }
