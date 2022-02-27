@@ -813,7 +813,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   set currentTime(to: number): void {
-    this._playbackMiddleware.setCurrentTime(to, this._setCurrentTime.bind(this, to));
+    this._playbackMiddleware.setCurrentTime(to, this._setCurrentTime.bind(this));
   }
 
   /**

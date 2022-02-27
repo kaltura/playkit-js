@@ -67,9 +67,9 @@ export default class Middleware {
     let middlewares = this._middlewares.get(action);
     this._executeMiddleware(
       middlewares,
-      () => {
+      (...params) => {
         this._logger.debug('Finish middleware chain for action ' + action);
-        callback();
+        callback(...params);
       },
       params
     );
@@ -79,17 +79,22 @@ export default class Middleware {
    * Executes all the middlewares one by one.
    * @param {Array<Function>} middlewares - The middlewares for a specific action.
    * @param {Function} callback - The callback function.
-   * @param {Array<any>} params - The action params.
+   * @param {Array<any>} origParams - The original action params.
    * @private
    * @returns {void}
    */
-  _executeMiddleware(middlewares: Array<Function>, callback: Function, params: Array<any>): void {
+  _executeMiddleware(middlewares: Array<Function>, callback: Function, origParams: Array<any>): void {
+    let params = origParams;
     const composition = middlewares.reduceRight(
-      // eslint-disable-next-line no-unused-vars
-      (next, fn) => v => {
+      (next, fn) => (...prevParams) => {
+        if (prevParams?.length) {
+          params = prevParams;
+        }
         params?.length ? fn(...params, next) : fn(next);
       },
-      callback
+      (...prevParams) => {
+        prevParams?.length ? callback(...prevParams) : callback(...origParams);
+      }
     );
     composition();
   }
