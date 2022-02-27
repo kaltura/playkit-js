@@ -85,7 +85,7 @@ export default class Middleware {
    */
   _executeMiddleware(middlewares: Array<Function>, callback: Function, origParams: Array<any>): void {
     let params = origParams;
-    const apply = (fn, prevParams, next) => {
+    const applyFunc = (fn, prevParams, next) => {
       if (prevParams?.length) {
         params = prevParams;
       }
@@ -93,10 +93,10 @@ export default class Middleware {
     };
     const composition = middlewares.reduceRight(
       (next, fn) => (...prevParams) => {
-        apply(fn, prevParams, next);
+        applyFunc(fn, prevParams, next);
       },
       (...prevParams) => {
-        apply(callback, prevParams);
+        applyFunc(callback, prevParams);
       }
     );
     composition();
