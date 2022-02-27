@@ -28,7 +28,7 @@ class M2 extends BaseMiddleware {
 
   eat(type1, type2, next) {
     this.logger.debug('eat', type1, type2);
-    this.callNext(next);
+    this.callNext(() => next(type2, type1));
   }
 }
 
@@ -116,10 +116,11 @@ describe('Middleware', function () {
       middleware.use(m3);
       middleware.run(
         actions.EAT,
-        () => {
+        (...types) => {
           spyM1.should.have.been.calledOnceWith('pizza', 'pasta');
           spyM2.should.have.been.calledOnceWith('pizza', 'pasta');
-          spyM3.should.have.been.calledOnceWith('pizza', 'pasta');
+          spyM3.should.have.been.calledOnceWith('pasta', 'pizza');
+          types.should.deep.equal(['pasta', 'pizza', undefined]);
           spyM2.should.have.been.calledAfter(spyM1);
           spyM3.should.have.been.calledAfter(spyM2);
           done();
