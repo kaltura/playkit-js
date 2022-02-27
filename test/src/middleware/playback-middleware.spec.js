@@ -179,12 +179,19 @@ describe('PlaybackMiddleware', function () {
       });
     });
 
-    it('should run playback middleware for action setCurrentTime and chain the original for the last', function (done) {
+    it('should run playback middleware for action setCurrentTime and chain the previous for the last', function (done) {
       pm1 = new PM1();
-      pm2 = new PM2();
       pm3 = new PM3();
       playbackMiddleware.use(pm1);
-      playbackMiddleware.use(pm2);
+      playbackMiddleware.use(pm3);
+      playbackMiddleware.setCurrentTime(100, to => {
+        to.should.equal(110);
+        done();
+      });
+    });
+
+    it('should run playback middleware for action setCurrentTime and chain the original for the last', function (done) {
+      pm3 = new PM3();
       playbackMiddleware.use(pm3);
       playbackMiddleware.setCurrentTime(100, to => {
         to.should.equal(100);

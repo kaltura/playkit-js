@@ -93,7 +93,7 @@ export default class Middleware {
         params?.length ? fn(...params, next) : fn(next);
       },
       (...prevParams) => {
-        prevParams?.length ? callback(...prevParams) : callback(...origParams);
+        prevParams?.length ? callback(...prevParams) : callback(...params);
       }
     );
     composition();
