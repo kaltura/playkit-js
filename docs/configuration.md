@@ -1052,7 +1052,7 @@ var config = {
 > ```js
 > {
 >   forceBreakStall: false,
->   lowLatencyMode: true
+>   lowLatencyMode: true // false in smart TV
 > }
 > ```
 >
@@ -1072,7 +1072,7 @@ var config = {
 > >
 > > ##### Type: `boolean`
 > >
-> > ##### Default: `true`
+> > ##### Default: `true`. `false` in smart TV due to an issue in dash on samsung.
 > >
 > > ##### Description: Enable low latency streaming mode
 
