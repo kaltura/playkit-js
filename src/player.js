@@ -813,20 +813,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   set currentTime(to: number): void {
-    if (this._engine) {
-      if (Utils.Number.isNumber(to)) {
-        let boundedTo = to;
-        if (to < 0) {
-          boundedTo = 0;
-        }
-        const safeDuration = this.isLive() ? this._engine.duration : this._engine.duration - DURATION_OFFSET;
-
-        if (boundedTo > safeDuration) {
-          boundedTo = safeDuration;
-        }
-        this._engine.currentTime = boundedTo;
-      }
-    }
+    this._playbackMiddleware.setCurrentTime(to, this._setCurrentTime.bind(this));
   }
 
   /**
@@ -2239,6 +2226,29 @@ export default class Player extends FakeEventTarget {
    */
   _pause(): void {
     this._engine.pause();
+  }
+
+  /**
+   * Set the current time in seconds.
+   * @param {Number} to - The number to set in seconds.
+   * @private
+   * @returns {void}
+   */
+  _setCurrentTime(to: number): void {
+    if (this._engine) {
+      if (Utils.Number.isNumber(to)) {
+        let boundedTo = to;
+        if (to < 0) {
+          boundedTo = 0;
+        }
+        const safeDuration = this.isLive() ? this._engine.duration : this._engine.duration - DURATION_OFFSET;
+
+        if (boundedTo > safeDuration) {
+          boundedTo = safeDuration;
+        }
+        this._engine.currentTime = boundedTo;
+      }
+    }
   }
 
   /**

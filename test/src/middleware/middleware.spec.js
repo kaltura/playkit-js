@@ -11,8 +11,8 @@ class M1 extends BaseMiddleware {
     this.callNext(next);
   }
 
-  eat(next) {
-    this.logger.debug('eat');
+  eat(type1, type2, next) {
+    this.logger.debug('eat', type1, type2);
     this.callNext(next);
   }
 }
@@ -26,9 +26,9 @@ class M2 extends BaseMiddleware {
     this.callNext(next);
   }
 
-  eat(next) {
-    this.logger.debug('eat');
-    this.callNext(next);
+  eat(type1, type2, next) {
+    this.logger.debug('eat', type1, type2);
+    this.callNext(() => next(type2, type1));
   }
 }
 
@@ -41,8 +41,8 @@ class M3 extends BaseMiddleware {
     this.callNext(next);
   }
 
-  eat(next) {
-    this.logger.debug('eat');
+  eat(type1, type2, next) {
+    this.logger.debug('eat', type1, type2);
     this.callNext(next);
   }
 }
@@ -114,14 +114,20 @@ describe('Middleware', function () {
       middleware.use(m1);
       middleware.use(m2);
       middleware.use(m3);
-      middleware.run(actions.EAT, () => {
-        spyM1.should.have.been.calledOnce;
-        spyM2.should.have.been.calledOnce;
-        spyM3.should.have.been.calledOnce;
-        spyM2.should.have.been.calledAfter(spyM1);
-        spyM3.should.have.been.calledAfter(spyM2);
-        done();
-      });
+      middleware.run(
+        actions.EAT,
+        (...types) => {
+          spyM1.should.have.been.calledOnceWith('pizza', 'pasta');
+          spyM2.should.have.been.calledOnceWith('pizza', 'pasta');
+          spyM3.should.have.been.calledOnceWith('pasta', 'pizza');
+          types.should.deep.equal(['pasta', 'pizza', undefined]);
+          spyM2.should.have.been.calledAfter(spyM1);
+          spyM3.should.have.been.calledAfter(spyM2);
+          done();
+        },
+        'pizza',
+        'pasta'
+      );
     });
 
     it('should run only callback for un valid action', function (done) {

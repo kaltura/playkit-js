@@ -13,7 +13,8 @@ export default class PlaybackMiddleware {
   static Actions: {[action: string]: string} = {
     LOAD: 'load',
     PLAY: 'play',
-    PAUSE: 'pause'
+    PAUSE: 'pause',
+    SET_CURRENT_TIME: 'setCurrentTime'
   };
   /**
    * The middleware implementation.
@@ -67,5 +68,16 @@ export default class PlaybackMiddleware {
    */
   pause(callback: Function): void {
     this._middleware.run(PlaybackMiddleware.Actions.PAUSE, callback);
+  }
+
+  /**
+   * Runs a setCurrentTime chain.
+   * @param {Number} to - The number to set in seconds.
+   * @param {Function} callback - The last setCurrentTime handler in the chain.
+   * @public
+   * @returns {void}
+   */
+  setCurrentTime(to: number, callback: Function): void {
+    this._middleware.run(PlaybackMiddleware.Actions.SET_CURRENT_TIME, callback, to);
   }
 }
