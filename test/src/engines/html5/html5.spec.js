@@ -2,6 +2,7 @@ import Html5 from '../../../../src/engines/html5/html5';
 import BaseMediaSourceAdapter from '../../../../src/engines/html5/media-source/base-media-source-adapter';
 import sourcesConfig from '../../configs/sources.json';
 import {DroppedFramesWatcher} from '../../../../src/engines/dropped-frames-watcher';
+import {Html5EventType} from '../../../../src/event/event-type';
 
 describe('Html5', () => {
   let sandbox;
@@ -29,6 +30,20 @@ describe('Html5', () => {
     engine._config.should.deep.equal(config);
     engine._mediaSourceAdapter.should.be.instanceof(BaseMediaSourceAdapter);
     engine._el.should.be.a('HTMLVideoElement');
+  });
+
+  it('should prevent too short buffering event', done => {
+    const progressiveSource = sourcesConfig.Mp4.progressive[0];
+    const engine = Html5.createEngine(progressiveSource);
+    engine._eventManager.listen(engine, Html5EventType.WAITING, () => {
+      done();
+    });
+    engine._el.dispatchEvent(new window.Event(Html5EventType.WAITING));
+    engine._el.dispatchEvent(new window.Event(Html5EventType.PLAYING));
+    engine._el.dispatchEvent(new window.Event(Html5EventType.WAITING));
+    setTimeout(() => {
+      engine._el.dispatchEvent(new window.Event(Html5EventType.PLAYING));
+    }, 300);
   });
 
   it('should restore html5 engine', () => {
