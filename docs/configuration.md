@@ -543,7 +543,7 @@ var config = {
 > >
 > > ##### Type: `boolean`
 > >
-> > ##### Default: `false`
+> > ##### Default: `true`
 > >
 > > ##### Description: Whether or not to enable CEA-708 captions.
 >
