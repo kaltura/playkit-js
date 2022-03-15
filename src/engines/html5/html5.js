@@ -17,6 +17,8 @@ import getLogger from '../../utils/logger';
 import {DroppedFramesWatcher} from '../dropped-frames-watcher';
 import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
 
+const SHORT_BUFFERING_TIMEOUT: number = 200;
+
 /**
  * Html5 engine for playback.
  * @classdesc
@@ -295,13 +297,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   attach(): void {
     Object.keys(Html5EventType).forEach(html5Event => {
-      if (Html5EventType[html5Event] !== Html5EventType.ERROR) {
+      if (![Html5EventType.ERROR, Html5EventType.WAITING].includes(Html5EventType[html5Event])) {
         this._eventManager.listen(this._el, Html5EventType[html5Event], () => {
           return this.dispatchEvent(new FakeEvent(Html5EventType[html5Event]));
         });
       }
     });
     this._eventManager.listen(this._el, Html5EventType.ERROR, () => this._handleVideoError());
+    this._eventManager.listen(this._el, Html5EventType.WAITING, () => this._handleWaiting());
     this._handleMetadataTrackEvents();
     this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
       if (PKTextTrack.isNativeTextTrack(event.track)) {
@@ -1143,6 +1146,17 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       });
       this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
     }
+  }
+
+  _handleWaiting(): void {
+    let playing = false;
+    this._eventManager.listenOnce(this._el, Html5EventType.PLAYING, () => (playing = true));
+    setTimeout(() => {
+      // prevent sending waiting event for too short buffering
+      if (!playing) {
+        this.dispatchEvent(new FakeEvent(Html5EventType.WAITING));
+      }
+    }, SHORT_BUFFERING_TIMEOUT);
   }
 
   /**
