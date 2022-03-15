@@ -1156,7 +1156,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       if (!playing) {
         this.dispatchEvent(new FakeEvent(Html5EventType.WAITING));
       }
-      playing = false;
     }, SHORT_BUFFERING_TIMEOUT);
   }
 
