@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.79.0](https://github.com/kaltura/playkit-js/compare/v0.78.0...v0.79.0) (2022-03-23)
+
+
+### Bug Fixes
+
+* **FEC-11697:** 2 captions are selected in the menu ([#633](https://github.com/kaltura/playkit-js/issues/633)) ([bf28e11](https://github.com/kaltura/playkit-js/commit/bf28e11)), closes [kaltura/playkit-js-dash#182](https://github.com/kaltura/playkit-js/issues/182) [kaltura/playkit-js-hls#161](https://github.com/kaltura/playkit-js/issues/161)
+* **FEC-11904:** Player_Web_Mac - The spinner appears when unmute the show ([#645](https://github.com/kaltura/playkit-js/issues/645)) ([c0ca395](https://github.com/kaltura/playkit-js/commit/c0ca395))
+
+
+### Features
+
+* **FEC-11894:** persist user selection during playlist playback ([#634](https://github.com/kaltura/playkit-js/issues/634)) ([f15d365](https://github.com/kaltura/playkit-js/commit/f15d365))
+* **FEC-11964:** Allow configuring player to auto-select audio track according to browser locale ([#640](https://github.com/kaltura/playkit-js/issues/640)) ([ada882c](https://github.com/kaltura/playkit-js/commit/ada882c))
+* **FEC-11979:** add setCurrentTime middleware ([#641](https://github.com/kaltura/playkit-js/issues/641)) ([366e381](https://github.com/kaltura/playkit-js/commit/366e381))
+
+
+
 ## [0.78.0](https://github.com/kaltura/playkit-js/compare/v0.77.0...v0.78.0) (2022-02-16)
 
 
