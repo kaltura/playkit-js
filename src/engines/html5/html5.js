@@ -181,7 +181,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * The player playback rates.
    * @type {Array<number>}
    */
-  static PLAYBACK_RATES: Array<number> = [0.5, 1, 2, 4];
+  static PLAYBACK_RATES: Array<number> = [0.5, 1, 1.5, 2];
 
   /**
    * @constructor
