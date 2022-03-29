@@ -2558,12 +2558,15 @@ export default class Player extends FakeEventTarget {
     const activeTracks = this.getActiveTracks();
     const playbackConfig = this.config.playback;
     const offTextTrack: ?Track = this._getTextTracks().find(track => TextTrack.langComparer(OFF, track.language));
-    const currentOrConfiguredTextLang =
-      this._playbackAttributesState.textLanguage ||
-      this._getLanguage<TextTrack>(this._getTextTracks(), playbackConfig.textLanguage, activeTracks.text);
-    const currentOrConfiguredAudioLang =
-      this._playbackAttributesState.audioLanguage ||
-      this._getLanguage<AudioTrack>(this._getAudioTracks(), playbackConfig.audioLanguage, activeTracks.audio);
+    var currentOrConfiguredTextLang = "";
+    if (!this._playbackAttributesState.textLanguage || this._playbackAttributesState.textLanguage.length === 0) {
+        currentOrConfiguredTextLang = this._getLanguage<TextTrack>(this._getTextTracks(), playbackConfig.textLanguage, activeTracks.text);
+    }
+    var currentOrConfiguredAudioLang = "";
+    if (!this._playbackAttributesState.audioLanguage || this._playbackAttributesState.audioLanguage.length === 0) {
+        currentOrConfiguredAudioLang = this._getLanguage<AudioTrack>(this._getAudioTracks(), playbackConfig.audioLanguage, activeTracks.audio);
+    }
+    this._getLanguage<AudioTrack>(this._getAudioTracks(), playbackConfig.audioLanguage, activeTracks.audio);
     this._setDefaultTrack<TextTrack>(this._getTextTracks(), currentOrConfiguredTextLang, offTextTrack);
     this._setDefaultTrack<AudioTrack>(this._getAudioTracks(), currentOrConfiguredAudioLang, activeTracks.audio);
     this._setDefaultVideoTrack();
