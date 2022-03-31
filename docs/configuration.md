@@ -727,7 +727,7 @@ var config = {
 > >
 > > ##### Type: `string || "auto"`
 > >
-> > ##### Default: `""`
+> > ##### Default: `""` no text track will be selected
 > >
 > > ##### Description: Defines the default captions language
 > >
