@@ -1347,7 +1347,13 @@ export default class Player extends FakeEventTarget {
   showTextTrack(): void {
     const textTracks = this._getTextTracks();
     const prevLanguage = this._playbackAttributesState.textLanguage !== OFF && this._playbackAttributesState.textLanguage;
-    const prevOrAutoTextLang = prevLanguage || this._getLanguage<TextTrack>(textTracks, AUTO);
+    const prevOrAutoTextLang =
+      prevLanguage ||
+      this._getLanguage<TextTrack>(
+        textTracks,
+        AUTO,
+        textTracks.find(textTrack => textTrack.default)
+      );
     this._setDefaultTrack<TextTrack>(textTracks, prevOrAutoTextLang);
   }
 
