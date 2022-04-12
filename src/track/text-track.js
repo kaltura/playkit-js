@@ -53,6 +53,13 @@ const TextTrack: TextTrack = class TextTrack extends Track {
    * @private
    */
   _external: boolean;
+  /**
+   * flag to know if it's default or not
+   * @member
+   * @type {boolean}
+   * @private
+   */
+  _default: boolean;
 
   /**
    * Getter for the kind of the text track.
