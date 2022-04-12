@@ -1428,6 +1428,139 @@ describe('Player', function () {
     });
   });
 
+  describe('showTextTrack', function () {
+    let config, player, video, track1, track2, playerContainer;
+
+    before(() => {
+      playerContainer = createElement('DIV', targetId);
+    });
+
+    beforeEach(() => {
+      config = getConfigStructure();
+      player = new Player(config);
+      player.setSources(sourcesConfig.Mp4);
+      playerContainer.appendChild(player.getView());
+      video = player._engine.getVideoElement();
+      track1 = document.createElement('track');
+      track2 = document.createElement('track');
+      track1.kind = 'subtitles';
+      track1.srclang = 'en';
+      track2.kind = 'subtitles';
+      track2.srclang = 'fr';
+      video.appendChild(track1);
+      video.appendChild(track2);
+    });
+
+    afterEach(() => {
+      player.destroy();
+    });
+
+    after(() => {
+      removeVideoElementsFromTestPage();
+      removeElement(targetId);
+    });
+
+    it('should select the prev text track', done => {
+      player
+        .ready()
+        .then(() => {
+          let tracks = player._tracks.filter(track => {
+            return track instanceof TextTrack;
+          });
+          video.textTracks[0].mode.should.be.equal('disabled');
+          video.textTracks[1].mode.should.be.equal('disabled');
+          tracks[0].active.should.be.false;
+          tracks[1].active.should.be.false;
+          player._playbackAttributesState.textLanguage = 'fr';
+          player.showTextTrack();
+          video.textTracks[0].mode.should.be.equal('disabled');
+          video.textTracks[1].mode.should.be.equal('hidden');
+          tracks[0].active.should.be.false;
+          tracks[1].active.should.be.true;
+          done();
+        })
+        .catch(e => {
+          done(e);
+        });
+      player.load();
+    });
+
+    it('should select the locale text track', done => {
+      player
+        .ready()
+        .then(() => {
+          let tracks = player._tracks.filter(track => {
+            return track instanceof TextTrack;
+          });
+          video.textTracks[0].mode.should.be.equal('disabled');
+          video.textTracks[1].mode.should.be.equal('disabled');
+          tracks[0].active.should.be.false;
+          tracks[1].active.should.be.false;
+          player.showTextTrack();
+          video.textTracks[0].mode.should.be.equal('hidden');
+          video.textTracks[1].mode.should.be.equal('disabled');
+          tracks[0].active.should.be.true;
+          tracks[1].active.should.be.false;
+          done();
+        })
+        .catch(e => {
+          done(e);
+        });
+      player.load();
+    });
+
+    it('should select the default text track', done => {
+      player
+        .ready()
+        .then(() => {
+          let tracks = player._tracks.filter(track => {
+            return track instanceof TextTrack;
+          });
+          video.textTracks[0].mode.should.be.equal('disabled');
+          video.textTracks[1].mode.should.be.equal('disabled');
+          tracks[0].active.should.be.false;
+          tracks[1].active.should.be.false;
+          tracks[0]._language = 'es';
+          tracks[1]._default = true;
+          player.showTextTrack();
+          video.textTracks[0].mode.should.be.equal('disabled');
+          video.textTracks[1].mode.should.be.equal('hidden');
+          tracks[0].active.should.be.false;
+          tracks[1].active.should.be.true;
+          done();
+        })
+        .catch(e => {
+          done(e);
+        });
+      player.load();
+    });
+
+    it('should select the first text track', done => {
+      player
+        .ready()
+        .then(() => {
+          let tracks = player._tracks.filter(track => {
+            return track instanceof TextTrack;
+          });
+          video.textTracks[0].mode.should.be.equal('disabled');
+          video.textTracks[1].mode.should.be.equal('disabled');
+          tracks[0].active.should.be.false;
+          tracks[1].active.should.be.false;
+          tracks[0]._language = 'es';
+          player.showTextTrack();
+          video.textTracks[0].mode.should.be.equal('hidden');
+          video.textTracks[1].mode.should.be.equal('disabled');
+          tracks[0].active.should.be.true;
+          tracks[1].active.should.be.false;
+          done();
+        })
+        .catch(e => {
+          done(e);
+        });
+      player.load();
+    });
+  });
+
   describe('Text Track API', () => {
     let player, playerContainer;
 

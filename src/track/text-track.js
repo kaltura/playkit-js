@@ -53,6 +53,13 @@ const TextTrack: TextTrack = class TextTrack extends Track {
    * @private
    */
   _external: boolean;
+  /**
+   * flag to know if it's default or not
+   * @member
+   * @type {boolean}
+   * @private
+   */
+  _default: boolean;
 
   /**
    * Getter for the kind of the text track.
@@ -66,10 +73,19 @@ const TextTrack: TextTrack = class TextTrack extends Track {
   /**
    * Getter for the external of the text track.
    * @public
-   * @returns {boolean} - The kind of the text track.
+   * @returns {boolean} - Whether the text track is external.
    */
   get external(): boolean {
     return this._external;
+  }
+
+  /**
+   * Getter for the default of the text track.
+   * @public
+   * @returns {boolean} - Whether the text track is default.
+   */
+  get default(): boolean {
+    return this._default;
   }
 
   /**
@@ -83,6 +99,7 @@ const TextTrack: TextTrack = class TextTrack extends Track {
     this._kind = settings.kind;
     this._external = settings.external;
     this._index = TextTrack._generateIndex();
+    this._default = this.active;
   }
 };
 
