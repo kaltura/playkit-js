@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.80.1](https://github.com/kaltura/playkit-js/compare/v0.80.0...v0.80.1) (2022-05-12)
+
+
+### Build System
+
+* use node_js 17 in travis ([ce8e029](https://github.com/kaltura/playkit-js/commit/ce8e029))
+
+
+
 ## [0.80.0](https://github.com/kaltura/playkit-js/compare/v0.79.0...v0.80.0) (2022-05-12)
 
 
