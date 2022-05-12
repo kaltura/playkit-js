@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.80.0](https://github.com/kaltura/playkit-js/compare/v0.79.0...v0.80.0) (2022-05-12)
+
+
+### Features
+
+* **FEC-12015:** CC button for on/off subtitles ([#648](https://github.com/kaltura/playkit-js/issues/648)) ([c37d2d6](https://github.com/kaltura/playkit-js/commit/c37d2d6))
+
+
+
 ## [0.79.0](https://github.com/kaltura/playkit-js/compare/v0.78.0...v0.79.0) (2022-03-23)
 
 
