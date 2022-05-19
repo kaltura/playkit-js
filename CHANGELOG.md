@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.80.2](https://github.com/kaltura/playkit-js/compare/v0.80.1...v0.80.2) (2022-05-19)
+
+
+### Build System
+
+* set prerelease false ([dc6ef0d](https://github.com/kaltura/playkit-js/commit/dc6ef0d))
+
+
+
 ### [0.80.1](https://github.com/kaltura/playkit-js/compare/v0.80.0...v0.80.1) (2022-05-12)
 
 
