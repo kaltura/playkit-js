@@ -1373,14 +1373,14 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * get text tracks
-   * @function getTextTracks
-   * @returns {Array<TextTrack>} - The TextTracks array.
+   * get the native text tracks
+   * @function getNativeTextTracks
+   * @returns {Array<TextTrack>} - The native TextTracks array.
    * @public
    */
-  getTextTracks(): Array<TextTrack> {
-    if (this._engine && typeof this._engine.getTextTracks === 'function') {
-      return this._engine.getTextTracks();
+  getNativeTextTracks(): Array<TextTrack> {
+    if (this._engine && typeof this._engine.getNativeTextTracks === 'function') {
+      return this._engine.getNativeTextTracks();
     }
     return [];
   }

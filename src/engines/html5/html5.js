@@ -1246,12 +1246,12 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
-   * get text tracks
-   * @function getTextTracks
-   * @returns {Array<TextTrack>} - The TextTracks array.
+   * get the native text tracks
+   * @function getNativeTextTracks
+   * @returns {Array<TextTrack>} - The native TextTracks array.
    * @public
    */
-  getTextTracks(): Array<TextTrack> {
+  getNativeTextTracks(): Array<TextTrack> {
     return Array.from(this._el.textTracks);
   }
 
