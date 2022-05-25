@@ -20,6 +20,7 @@ const DefaultConfig = {
     playsinline: true,
     preload: 'none',
     autoplay: false,
+    loop: false,
     autopause: false,
     allowMutedAutoPlay: true,
     muted: false,

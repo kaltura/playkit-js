@@ -48,6 +48,7 @@ var config = {
     playsinline: true,
     preload: 'none',
     autoplay: false,
+    loop: false,
     allowMutedAutoPlay: true,
     muted: false,
     pictureInPicture: true,
@@ -632,6 +633,7 @@ var config = {
 >  crossOrigin: string,
 >  preload: string,
 >  autoplay: PKAutoPlayTypes,
+>  loop: boolean,
 >  autopause: boolean,
 >  allowMutedAutoPlay: boolean,
 >  muted: boolean,
@@ -655,6 +657,7 @@ var config = {
 >  playsinline: true,
 >  preload: "none",
 >  autoplay: false,
+>  loop: false,
 >  allowMutedAutoPlay: true,
 >  muted: false,
 >  pictureInPicture: true,
@@ -831,6 +834,16 @@ var config = {
 > > ### config.playback.autoplay/allowMutedAutoPlay
 > >
 > > for `autoplay` & `allowMutedAutoPlay` options read [here](autoplay.md).
+>
+> ##
+>
+> > ### config.playback.loop
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ##### Description: Indicates whether the video should play in loop
 >
 > ##
 >
