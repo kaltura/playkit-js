@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.80.3](https://github.com/kaltura/playkit-js/compare/v0.80.2...v0.80.3) (2022-06-09)
+
+
+### Bug Fixes
+
+* **FEC-12252:** getTextTracks should be called getNativeTextTracks ([#650](https://github.com/kaltura/playkit-js/issues/650)) ([bad77bc](https://github.com/kaltura/playkit-js/commit/bad77bc))
+
+
+
 ### [0.80.2](https://github.com/kaltura/playkit-js/compare/v0.80.1...v0.80.2) (2022-05-19)
 
 
