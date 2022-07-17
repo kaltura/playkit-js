@@ -1442,7 +1442,7 @@ export default class Player extends FakeEventTarget {
             }
           });
           if (!this.getActiveTracks().video) {
-             newVideoTracks[0].active = true;
+            newVideoTracks[0].active = true;
           }
           this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks.filter(track => track.available)}));
         }
