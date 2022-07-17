@@ -501,7 +501,7 @@ export default class Player extends FakeEventTarget {
         this._handleDimensions();
         this._handlePreload();
         this._handleAutoPlay();
-        Player._logger.debug('AVC Change source ended');
+        Player._logger.debug('Change source ended');
         this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_ENDED));
       } else {
         Player._logger.warn('No playable engines was found to play the given sources');
