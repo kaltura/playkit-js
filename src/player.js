@@ -501,7 +501,7 @@ export default class Player extends FakeEventTarget {
         this._handleDimensions();
         this._handlePreload();
         this._handleAutoPlay();
-        Player._logger.debug('Change source ended');
+        Player._logger.debug('AVC Change source ended');
         this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_ENDED));
       } else {
         Player._logger.warn('No playable engines was found to play the given sources');
@@ -1441,6 +1441,10 @@ export default class Player extends FakeEventTarget {
               track.active = false;
             }
           });
+          const currentActiveVideoTrack = newVideoTracks.filter(track => track.active === true);
+          if (!currentActiveVideoTrack.length) {
+            newVideoTracks.at(-1).active = true;
+          }
           this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks.filter(track => track.available)}));
         }
       } else {
