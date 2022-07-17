@@ -1441,7 +1441,7 @@ export default class Player extends FakeEventTarget {
               track.active = false;
             }
           });
-          const currentActiveVideoTrack = newVideoTracks.filter(track => track.active === true);
+          if (!this.getActiveTracks().video)
           if (!currentActiveVideoTrack.length) {
             newVideoTracks.at(-1).active = true;
           }
