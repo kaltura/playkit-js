@@ -1213,7 +1213,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       }
     } else {
       const liveEdge = this._getLiveEdge();
-      if (this._liveEdge !== liveEdge) {
+      if (this._liveEdge && this._liveEdge !== liveEdge) {
         this._segmentDuration = liveEdge - this._liveEdge;
       }
     }
