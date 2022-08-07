@@ -1626,7 +1626,7 @@ export default class Player extends FakeEventTarget {
     if (this.isFullscreen()) {
       this.exitFullscreen();
     }
-    if (!this._engine.isInPictureInPicture) {
+    if (this._engine && !this._engine.isInPictureInPicture) {
       this._engine.enterPictureInPicture();
     }
   }
@@ -1637,7 +1637,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   exitPictureInPicture(): void {
-    if (this._engine.isInPictureInPicture) {
+    if (this._engine && this._engine.isInPictureInPicture) {
       this._engine.exitPictureInPicture();
     }
   }
@@ -1648,7 +1648,10 @@ export default class Player extends FakeEventTarget {
    * @return {boolean} if the player is in picture in picture mode or not
    */
   isInPictureInPicture(): boolean {
-    return this._engine.isInPictureInPicture;
+    if (this._engine) {
+      return this._engine.isInPictureInPicture;
+    }
+    return false;
   }
 
   /**
