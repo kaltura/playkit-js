@@ -644,9 +644,10 @@ export default class Player extends FakeEventTarget {
   /**
    * Resets the necessary components before change media.
    * @public
+   * @param {boolean} isChangeMedia - Whether or not this reset triggered due to change media
    * @returns {void}
    */
-  reset(): void {
+  reset(isChangeMedia: boolean = false): void {
     if (this._reset) return;
     this.pause();
     //make sure all services are reset before engine and engine attributes are reset
@@ -668,7 +669,7 @@ export default class Player extends FakeEventTarget {
     }
     this.showBlackCover();
     this._reset = true;
-    this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET));
+    this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET, {isChangeMedia}));
     this._eventManager.removeAll();
     this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
     this._createReadyPromise();
