@@ -140,12 +140,13 @@ var config = {
 >
 > ```js
 > {
->  dash: Array<PKMediaSourceObject>
->  hls: Array<PKMediaSourceObject>
+>  dash: Array<PKMediaSourceObject>,
+>  hls: Array<PKMediaSourceObject>,
 >  progressive: Array<PKMediaSourceObject>,
 >  options: PKMediaSourceOptionsObject,
 >  type: string,
 >  dvr: boolean,
+>  vr?: Object,
 >  metadata: PKMetadataConfigObject,
 >  id?: string,
 >  poster?: string,
