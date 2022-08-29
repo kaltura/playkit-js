@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.80.4](https://github.com/kaltura/playkit-js/compare/v0.80.3...v0.80.4) (2022-08-04)
+
+
+### Bug Fixes
+
+* **FEC-12431:** [WEB] - [O2CZ] Player_Web_MAC_Safari - The progress bar jumps front and back when seek  ([cd181f8](https://github.com/kaltura/playkit-js/commit/cd181f8))
+
+
+
 ### [0.80.3](https://github.com/kaltura/playkit-js/compare/v0.80.2...v0.80.3) (2022-06-09)
 
 

@@ -644,9 +644,10 @@ export default class Player extends FakeEventTarget {
   /**
    * Resets the necessary components before change media.
    * @public
+   * @param {boolean} isChangeMedia - Whether or not this reset triggered due to change media
    * @returns {void}
    */
-  reset(): void {
+  reset(isChangeMedia: boolean = false): void {
     if (this._reset) return;
     this.pause();
     //make sure all services are reset before engine and engine attributes are reset
@@ -668,7 +669,7 @@ export default class Player extends FakeEventTarget {
     }
     this.showBlackCover();
     this._reset = true;
-    this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET));
+    this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET, {isChangeMedia}));
     this._eventManager.removeAll();
     this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
     this._createReadyPromise();
@@ -1441,6 +1442,9 @@ export default class Player extends FakeEventTarget {
               track.active = false;
             }
           });
+          if (!this.getActiveTracks().video) {
+            newVideoTracks[0].active = true;
+          }
           this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks.filter(track => track.available)}));
         }
       } else {
@@ -1623,7 +1627,7 @@ export default class Player extends FakeEventTarget {
     if (this.isFullscreen()) {
       this.exitFullscreen();
     }
-    if (!this._engine.isInPictureInPicture) {
+    if (this._engine && !this._engine.isInPictureInPicture) {
       this._engine.enterPictureInPicture();
     }
   }
@@ -1634,7 +1638,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   exitPictureInPicture(): void {
-    if (this._engine.isInPictureInPicture) {
+    if (this._engine && this._engine.isInPictureInPicture) {
       this._engine.exitPictureInPicture();
     }
   }
@@ -1645,7 +1649,10 @@ export default class Player extends FakeEventTarget {
    * @return {boolean} if the player is in picture in picture mode or not
    */
   isInPictureInPicture(): boolean {
-    return this._engine.isInPictureInPicture;
+    if (this._engine) {
+      return this._engine.isInPictureInPicture;
+    }
+    return false;
   }
 
   /**
