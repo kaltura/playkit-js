@@ -1331,6 +1331,10 @@ export default class Player extends FakeEventTarget {
       this._engine.hideTextTrack();
       this._resetTextDisplay();
       const textTracks = this._getTextTracks();
+      const activeTextTrack = textTracks.find(track => track.active === true);
+      if (activeTextTrack && activeTextTrack.external) {
+        this._externalCaptionsHandler.hideTextTrack();
+      }
       textTracks.map(track => (track.active = false));
       const textTrack = textTracks.find(track => track.language === OFF);
       if (textTrack) {
