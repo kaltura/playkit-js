@@ -1341,6 +1341,7 @@ export default class Player extends FakeEventTarget {
         textTrack.active = true;
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
       }
+      this._playbackAttributesState.textLanguage = OFF;
     }
   }
 
