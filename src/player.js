@@ -2587,13 +2587,11 @@ export default class Player extends FakeEventTarget {
     const activeTracks = this.getActiveTracks();
     const playbackConfig = this.config.playback;
     const offTextTrack: ?Track = this._getTextTracks().find(track => TextTrack.langComparer(OFF, track.language));
-    const currentOrConfiguredTextLang =
-      this._playbackAttributesState.textLanguage ||
-      this._getLanguage<TextTrack>(this._getTextTracks(), playbackConfig.textLanguage, activeTracks.text);
+    const configuredTextLang = this._getLanguage<TextTrack>(this._getTextTracks(), playbackConfig.textLanguage, activeTracks.text);
     const currentOrConfiguredAudioLang =
       this._playbackAttributesState.audioLanguage ||
       this._getLanguage<AudioTrack>(this._getAudioTracks(), playbackConfig.audioLanguage, activeTracks.audio);
-    this._setDefaultTrack<TextTrack>(this._getTextTracks(), currentOrConfiguredTextLang, offTextTrack);
+    this._setDefaultTrack<TextTrack>(this._getTextTracks(), configuredTextLang, offTextTrack);
     this._setDefaultTrack<AudioTrack>(this._getAudioTracks(), currentOrConfiguredAudioLang, activeTracks.audio);
     this._setDefaultVideoTrack();
   }
