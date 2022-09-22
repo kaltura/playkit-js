@@ -1792,6 +1792,9 @@ export default class Player extends FakeEventTarget {
       const classNameWithId = `${ENGINE_CLASS_NAME}-${this._engine.id}`;
       Utils.Dom.addClassName(engineEl, classNameWithId);
       Utils.Dom.prependTo(engineEl, this._el);
+      if (this._engine.id === 'youtube') {
+        this._el.style.zIndex = 1;
+      }
     }
   }
 
@@ -2589,6 +2592,7 @@ export default class Player extends FakeEventTarget {
     const playbackConfig = this.config.playback;
     const offTextTrack: ?Track = this._getTextTracks().find(track => TextTrack.langComparer(OFF, track.language));
     const currentOrConfiguredTextLang =
+      window.localStorage.getItem('kaltura-player-js_textLanguage') ||
       this._playbackAttributesState.textLanguage ||
       this._getLanguage<TextTrack>(this._getTextTracks(), playbackConfig.textLanguage, activeTracks.text);
     const currentOrConfiguredAudioLang =
