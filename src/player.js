@@ -1331,12 +1331,17 @@ export default class Player extends FakeEventTarget {
       this._engine.hideTextTrack();
       this._resetTextDisplay();
       const textTracks = this._getTextTracks();
+      const activeTextTrack = textTracks.find(track => track.active === true);
+      if (activeTextTrack && activeTextTrack.external) {
+        this._externalCaptionsHandler.hideTextTrack();
+      }
       textTracks.map(track => (track.active = false));
       const textTrack = textTracks.find(track => track.language === OFF);
       if (textTrack) {
         textTrack.active = true;
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
       }
+      this._playbackAttributesState.textLanguage = OFF;
     }
   }
 
@@ -1787,6 +1792,9 @@ export default class Player extends FakeEventTarget {
       const classNameWithId = `${ENGINE_CLASS_NAME}-${this._engine.id}`;
       Utils.Dom.addClassName(engineEl, classNameWithId);
       Utils.Dom.prependTo(engineEl, this._el);
+      if (this._engine.id === 'youtube') {
+        this._el.style.zIndex = 1;
+      }
     }
   }
 
@@ -2584,6 +2592,7 @@ export default class Player extends FakeEventTarget {
     const playbackConfig = this.config.playback;
     const offTextTrack: ?Track = this._getTextTracks().find(track => TextTrack.langComparer(OFF, track.language));
     const currentOrConfiguredTextLang =
+      window.localStorage.getItem('kaltura-player-js_textLanguage') ||
       this._playbackAttributesState.textLanguage ||
       this._getLanguage<TextTrack>(this._getTextTracks(), playbackConfig.textLanguage, activeTracks.text);
     const currentOrConfiguredAudioLang =

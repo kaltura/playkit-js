@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.80.5](https://github.com/kaltura/playkit-js/compare/v0.80.3...v0.80.5) (2022-08-31)
+
+
+### Bug Fixes
+
+* **FEC-12335:** Side Panel Item gets refreshed in every 'change media' ([#659](https://github.com/kaltura/playkit-js/issues/659)) ([3e078eb](https://github.com/kaltura/playkit-js/commit/3e078eb)), closes [kaltura/kaltura-player-js#562](https://github.com/kaltura/playkit-js/issues/562) [kaltura/playkit-js-ui#687](https://github.com/kaltura/playkit-js/issues/687)
+* **FEC-12431:** [WEB] - [O2CZ] Player_Web_MAC_Safari - The progress bar jumps front and back when seek  ([cd181f8](https://github.com/kaltura/playkit-js/commit/cd181f8))
+* **FEC-12479:** [Dash] - Subtitles are too small and not centered ([#660](https://github.com/kaltura/playkit-js/issues/660)) ([009dc52](https://github.com/kaltura/playkit-js/commit/009dc52)), closes [kaltura/playkit-js-dash#204](https://github.com/kaltura/playkit-js/issues/204)
+
+
+
 ### [0.80.4](https://github.com/kaltura/playkit-js/compare/v0.80.3...v0.80.4) (2022-08-04)
 
 
