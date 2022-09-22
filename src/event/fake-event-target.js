@@ -1,6 +1,7 @@
 //@flow
 import FakeEvent from './fake-event';
 import {MultiMap} from '../utils/multi-map';
+import getLogger from '../utils/logger';
 
 /**
  * A work-alike for EventTarget.  Only DOM elements may be true EventTargets,
@@ -14,6 +15,7 @@ import {MultiMap} from '../utils/multi-map';
 class FakeEventTarget {
   _listeners: MultiMap<string, (event: FakeEvent) => boolean | void>;
   dispatchTarget: FakeEventTarget;
+  logger: any;
 
   constructor() {
     /**
@@ -26,6 +28,7 @@ class FakeEventTarget {
      * @type {FakeEventTarget}
      */
     this.dispatchTarget = this;
+    this.logger = getLogger('FakeEventTarget');
   }
 
   /**
@@ -95,7 +98,7 @@ class FakeEventTarget {
         // Exceptions during event handlers should not affect the caller,
         // but should appear on the console as uncaught, according to MDN:
         // http://goo.gl/N6Ff27
-        // TODO: add log
+        this.logger.error(`Error occurred when handling event: ${event.type}.`, exception);
       }
 
       if (event.stopped) {
