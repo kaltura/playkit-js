@@ -1086,7 +1086,7 @@ var config = {
 > >
 > > ##### Type: `boolean`
 > >
-> > ##### Default: `true`. `false` in smart TV due to an issue in dash on samsung.
+> > ##### Default: hls: `true`,  dash and smart TV: `false` (in smart TV due to an issue in dash on samsung)
 > >
 > > ##### Description: Enable low latency streaming mode
 
