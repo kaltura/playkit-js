@@ -59,8 +59,7 @@ const DefaultConfig = {
     ]
   },
   streaming: {
-    forceBreakStall: false,
-    lowLatencyMode: true
+    forceBreakStall: false
   },
   abr: {
     enabled: true,

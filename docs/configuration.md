@@ -1066,7 +1066,8 @@ var config = {
 > ```js
 > {
 >   forceBreakStall: false,
->   lowLatencyMode: true // false in smart TV
+>   lowLatencyMode: true // default for hls playback (optional) 
+>   lowLatencyMode: false // default for dash & smart TV playback (optional)
 > }
 > ```
 >
@@ -1082,11 +1083,11 @@ var config = {
 >
 > > ##
 > >
-> > ### config.streaming.lowLatencyMode
+> > ### config.streaming.lowLatencyMode (optional)
 > >
 > > ##### Type: `boolean`
 > >
-> > ##### Default: `true`. `false` in smart TV due to an issue in dash on samsung.
+> > ##### Default: hls: `true`,  dash and smart TV: `false` (in smart TV due to an issue in dash on samsung)
 > >
 > > ##### Description: Enable low latency streaming mode
 
