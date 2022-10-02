@@ -1082,7 +1082,7 @@ var config = {
 >
 > > ##
 > >
-> > ### config.streaming.lowLatencyMode
+> > ### config.streaming.lowLatencyMode (optional)
 > >
 > > ##### Type: `boolean`
 > >
