@@ -1066,7 +1066,7 @@ var config = {
 > ```js
 > {
 >   forceBreakStall: false,
->   lowLatencyMode: true // default for hls playback(optional) 
+>   lowLatencyMode: true // default for hls playback (optional) 
 >   lowLatencyMode: false // default for dash & smart TV playback (optional)
 > }
 > ```
