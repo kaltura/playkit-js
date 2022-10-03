@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.80.6](https://github.com/kaltura/playkit-js/compare/v0.80.5...v0.80.6) (2022-10-03)
+
+
+### Bug Fixes
+
+* **FEC-10833:** captions not auto selected from the user preferences ([#665](https://github.com/kaltura/playkit-js/issues/665)) ([c10c6df](https://github.com/kaltura/playkit-js/commit/c10c6df))
+* **FEC-12121:** youtube UI is not responsive for clicks ([#664](https://github.com/kaltura/playkit-js/issues/664)) ([39300fd](https://github.com/kaltura/playkit-js/commit/39300fd))
+* **FEC-12189:** Stream doesn't start if open a program with a bookmark ([#652](https://github.com/kaltura/playkit-js/issues/652)) ([2da12c9](https://github.com/kaltura/playkit-js/commit/2da12c9))
+* **FEC-12275:** add log when event exception happens ([#666](https://github.com/kaltura/playkit-js/issues/666)) ([9d467e1](https://github.com/kaltura/playkit-js/commit/9d467e1))
+* **FEC-12350:** external captions shown while cc button disabled ([#662](https://github.com/kaltura/playkit-js/issues/662)) ([788d983](https://github.com/kaltura/playkit-js/commit/788d983))
+* **FEC-12351:** cc button changed to enable during change media ([#663](https://github.com/kaltura/playkit-js/issues/663)) ([b213ab7](https://github.com/kaltura/playkit-js/commit/b213ab7))
+* **FEC-12596:** Related plugin doesn't load because of an exception ([#667](https://github.com/kaltura/playkit-js/issues/667)) ([6f799ad](https://github.com/kaltura/playkit-js/commit/6f799ad))
+
+
+
 ### [0.80.5](https://github.com/kaltura/playkit-js/compare/v0.80.3...v0.80.5) (2022-08-31)
 
 
