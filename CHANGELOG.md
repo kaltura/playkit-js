@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.80.7](https://github.com/kaltura/playkit-js/compare/v0.80.6...v0.80.7) (2022-10-06)
+
+
+### Bug Fixes
+
+* **FEC-12615:** add configuration to toggle emsg listener ([#668](https://github.com/kaltura/playkit-js/issues/668)) ([c752a2c](https://github.com/kaltura/playkit-js/commit/c752a2c))
+
+
+
 ### [0.80.6](https://github.com/kaltura/playkit-js/compare/v0.80.5...v0.80.6) (2022-10-03)
 
 
