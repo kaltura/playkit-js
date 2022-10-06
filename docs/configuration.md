@@ -1057,7 +1057,8 @@ var config = {
 > ```js
 > {
 >   forceBreakStall: boolean,
->   lowLatencyMode: boolean
+>   lowLatencyMode: boolean,
+>   trackEmsgEvents: boolean
 > }
 > ```
 >
@@ -1066,8 +1067,9 @@ var config = {
 > ```js
 > {
 >   forceBreakStall: false,
->   lowLatencyMode: true // default for hls playback (optional) 
->   lowLatencyMode: false // default for dash & smart TV playback (optional)
+>   lowLatencyMode: true, // default for hls playback (optional)
+>   lowLatencyMode: false, // default for dash & smart TV playback (optional)
+>   trackEmsgEvents: true // default for dash (optional)
 > }
 > ```
 >
@@ -1087,9 +1089,17 @@ var config = {
 > >
 > > ##### Type: `boolean`
 > >
-> > ##### Default: hls: `true`,  dash and smart TV: `false` (in smart TV due to an issue in dash on samsung)
+> > ##### Default: hls: `true`, dash and smart TV: `false` (in smart TV due to an issue in dash on samsung)
 > >
 > > ##### Description: Enable low latency streaming mode
+> >
+> > ##
+> >
+> > ### config.streaming.trackEmsgEvents (optional)
+> >
+> > ##### Default: dash: `true`
+> >
+> > ##### Description: Toggle emsg event listener on/off in dash adapter
 
 ##
 
