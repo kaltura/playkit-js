@@ -12,7 +12,7 @@
  * @property {number} backgroundOpacity=1
  */
 declare type PKTextStyleObject = {
-  fontSize?: "50%" | "75%" | "100%" | "200%" | "3000%" | "4000%",
+  fontSize?: '50%' | '75%' | '100%' | '200%' | '3000%' | '4000%',
   fontScale?: -2 | -1 | 0 | 2 | 3 | 4,
   fontFamily?: string,
   fontColor?: Array<number>,
