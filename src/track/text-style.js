@@ -261,16 +261,6 @@ class TextStyle {
     return attributes.join('!important; ');
   }
 
-  toCSSObject(): string {
-    let attributes: {[attribute]: string} = {};
-    attributes['fontFamily'] = this.fontFamily;
-    attributes['color'] = TextStyle.toRGBA(this.fontColor, this.fontOpacity);
-    attributes['backgroundColor'] = TextStyle.toRGBA(this.backgroundColor, this.backgroundOpacity);
-    attributes['textShadow'] = this.getTextShadow();
-    attributes['fontSize'] = this.fontSize;
-    return attributes;
-  }
-
   /**
    * clones the textStyle object
    * @returns {TextStyle} the cloned textStyle object
