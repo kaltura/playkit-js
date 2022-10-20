@@ -37,10 +37,10 @@ class TextStyle {
   /**
    * Defined in {@link https://goo.gl/ZcqOOM FCC 12-9}, paragraph 111, footnote
    * 448.  Each value is an array of the three RGB values for that color.
-   * @enum {Object.<string, Array.<number>>}}
+   * @enum {Object.<string, [number, number, number]>}}
    * @export
    */
-  static StandardColors: {[string]: Array<number>} = {
+  static StandardColors: {[string]: [number, number, number]} = {
     WHITE: [255, 255, 255],
     BLACK: [0, 0, 0],
     RED: [255, 0, 0],
@@ -70,10 +70,10 @@ class TextStyle {
    * Each inner array represents a shadow, and is composed of RGB values for the
    * shadow color, followed by pixel values for x-offset, y-offset, and blur.
    *
-   * @enum {!Array.<!Array.<number>>}
+   * @enum {!Array.<!Array.[number, number, number, number, number, number]>}
    * @export
    */
-  static EdgeStyles: {[string]: Array<Array<number>>} = {
+  static EdgeStyles: {[string]: Array<[number, number, number, number, number, number]>} = {
     NONE: [],
     RAISED: [
       [34, 34, 34, 1, 1, 0],
@@ -136,7 +136,7 @@ class TextStyle {
    * @return {string} - CSS rgba string
    * @private
    */
-  static toRGBA(color: Array<number>, opacity: number): string {
+  static toRGBA(color: [number, number, number], opacity: number): string {
     // shaka.asserts.assert(color.length == 3);
     return 'rgba(' + color.concat(opacity).join(',') + ')';
   }
@@ -208,7 +208,7 @@ class TextStyle {
   /**
    * @type {TextStyle.StandardColors}
    */
-  fontColor: Array<number> = TextStyle.StandardColors.WHITE;
+  fontColor: [number, number, number] = TextStyle.StandardColors.WHITE;
 
   /**
    * @type {TextStyle.StandardOpacities}
@@ -219,7 +219,7 @@ class TextStyle {
   /**
    * @type {TextStyle.StandardColors}
    */
-  backgroundColor: Array<number> = TextStyle.StandardColors.BLACK;
+  backgroundColor: [number, number, number] = TextStyle.StandardColors.BLACK;
 
   /**
    * @type {TextStyle.StandardOpacities}
@@ -230,7 +230,7 @@ class TextStyle {
    * @type {TextStyle.EdgeStyles}
    * @expose
    */
-  fontEdge: Array<Array<number>> = TextStyle.EdgeStyles.NONE;
+  fontEdge: Array<[number, number, number, number, number, number]> = TextStyle.EdgeStyles.NONE;
 
   getTextShadow(): string {
     // A given edge effect may be implemented with multiple shadows.
@@ -238,7 +238,7 @@ class TextStyle {
     let shadows: Array<string> = [];
     for (let i = 0; i < this.fontEdge.length; i++) {
       // shaka.asserts.assert(this.fontEdge[i].length == 6);
-      const color: Array<number> = this.fontEdge[i].slice(0, 3);
+      const color: [number, number, number] = (this.fontEdge[i].slice(0, 3): any);
       let shadow: Array<number> = this.fontEdge[i].slice(3, 6);
       shadows.push(TextStyle.toRGBA(color, this.fontOpacity) + ' ' + shadow.join('px ') + 'px');
     }
@@ -257,6 +257,7 @@ class TextStyle {
     attributes.push('color: ' + TextStyle.toRGBA(this.fontColor, this.fontOpacity));
     attributes.push('background-color: ' + TextStyle.toRGBA(this.backgroundColor, this.backgroundOpacity));
     attributes.push('text-shadow: ' + this.getTextShadow());
+    attributes.push('font-size: ' + this.fontSize);
     return attributes.join('!important; ');
   }
 
