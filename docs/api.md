@@ -923,11 +923,11 @@ Type: [Object][912]
 - `fontSize` **(`"50%"` \| `"75%"` \| `"100%"` \| `"200%"` \| `"3000%"` \| `"4000%"`)** ='100%' - Percentage unit relative to the parent element's font size.
 - `fontScale` **(`-2` \| `-1` \| `0` \| `2` \| `3` \| `4`)** =0 - - Integer number representing the scaling factor relative to the parent element's font size..
 - `fontFamily` **[string][913]** ='sans-serif'
-- `fontColor` **[Array][914]&lt;[number][915]>** =[255, 255, 255] - Color in RGB format.
-- `fontOpacity` **[number][915]** =1
-- `fontEdge` **[Array][914]&lt;[number][915]>** =\[]
-- `backgroundColor` **[Array][914]&lt;[number][915]>** =[0, 0, 0] - Color in RGB format.
-- `backgroundOpacity` **[number][915]** =1
+- `fontColor` **\[[number][914], [number][914], [number][914]]** =[255, 255, 255] - Color in RGB format.
+- `fontOpacity` **[number][914]** =1
+- `fontEdge` **[Array][915]&lt;\[[number][914], [number][914], [number][914], [number][914], [number][914], [number][914]]>** =\[]
+- `backgroundColor` **\[[number][914], [number][914], [number][914]]** =[0, 0, 0] - Color in RGB format.
+- `backgroundOpacity` **[number][914]** =1
 
 ## XML_PARSING_ERROR
 
@@ -1206,7 +1206,7 @@ FairPlay is the configure key system.
 
 ### Parameters
 
-- `drmData` **[Array][914]&lt;PKDrmDataObject>** The drm data.
+- `drmData` **[Array][915]&lt;PKDrmDataObject>** The drm data.
 - `drmConfig` **PKDrmConfigObject** The drm config.
 
 Returns **[boolean][916]** Whether FairPlay is the configure key system.
@@ -1219,7 +1219,7 @@ FairPlay playback supports in case 2 conditions are met:
 
 ### Parameters
 
-- `drmData` **[Array][914]&lt;PKDrmDataObject>** The drm data to check.
+- `drmData` **[Array][915]&lt;PKDrmDataObject>** The drm data to check.
 
 Returns **[boolean][916]** Whether FairPlay can be play on the current environment.
 
@@ -1229,7 +1229,7 @@ Checks if NativeAdapter can play a given drm data.
 
 ### Parameters
 
-- `drmData` **[Array][914]&lt;[Object][912]>** The drm data to check.
+- `drmData` **[Array][915]&lt;[Object][912]>** The drm data to check.
 - `drmConfig` **PKDrmConfigObject** The drm config.
 
 Returns **[boolean][916]** Whether the native adapter can play a specific drm data.
@@ -1241,7 +1241,7 @@ Sets the FairPlay playback.
 ### Parameters
 
 - `config` **FairPlayDrmConfigType** The config to manipulate.
-- `drmData` **[Array][914]&lt;PKDrmDataObject>** The drm data.
+- `drmData` **[Array][915]&lt;PKDrmDataObject>** The drm data.
 
 Returns **void**
 
@@ -1320,7 +1320,7 @@ Returns **void**
 
 Get the appropriate Engines.
 
-Returns **[Array][914]&lt;IEngineStatic>** The Array of engines, or null if such doesn't exists.
+Returns **[Array][915]&lt;IEngineStatic>** The Array of engines, or null if such doesn't exists.
 
 ## runCapability
 
@@ -1459,7 +1459,7 @@ Returns **void**
 
 Get the start time of DVR window in live playback in seconds.
 
-Returns **[Number][915]** start time of DVR window.
+Returns **[Number][914]** start time of DVR window.
 
 ### play
 
@@ -1479,7 +1479,7 @@ Load media.
 
 #### Parameters
 
-- `startTime` **[number][915]** Optional time to start the video from.
+- `startTime` **[number][914]** Optional time to start the video from.
 
 Returns **[Promise][917]&lt;[Object][912]>** The loaded data
 
@@ -1507,7 +1507,7 @@ Returns in-stream thumbnail for a chosen time.
 
 #### Parameters
 
-- `time` **[number][915]** playback time.
+- `time` **[number][914]** playback time.
 
 Returns **ThumbnailInfo?** Thumbnail info
 
@@ -1535,19 +1535,19 @@ Returns **[string][913]** The source url.
 
 Get the current time in seconds.
 
-Type: [number][915]
+Type: [number][914]
 
-Returns **[Number][915]** The current playback time.
+Returns **[Number][914]** The current playback time.
 
 ### currentTime
 
 Set the current time in seconds.
 
-Type: [number][915]
+Type: [number][914]
 
 #### Parameters
 
-- `to` **[Number][915]** The number to set in seconds.
+- `to` **[Number][914]** The number to set in seconds.
 
 Returns **void**
 
@@ -1555,19 +1555,19 @@ Returns **void**
 
 Get the duration in seconds.
 
-Type: [number][915]
+Type: [number][914]
 
-Returns **[Number][915]** The playback duration.
+Returns **[Number][914]** The playback duration.
 
 ### volume
 
 Set playback volume.
 
-Type: [number][915]
+Type: [number][914]
 
 #### Parameters
 
-- `vol` **[Number][915]** The volume to set.
+- `vol` **[Number][914]** The volume to set.
 
 Returns **void**
 
@@ -1575,9 +1575,9 @@ Returns **void**
 
 Get playback volume.
 
-Type: [number][915]
+Type: [number][914]
 
-Returns **[Number][915]** The volume value of the video element.
+Returns **[Number][914]** The volume value of the video element.
 
 ### paused
 
@@ -1751,11 +1751,11 @@ Returns **[boolean][916]** The controls value.
 
 Sets the current playback speed of the audio/video.
 
-Type: [number][915]
+Type: [number][914]
 
 #### Parameters
 
-- `playbackRate` **[Number][915]** The playback speed value.
+- `playbackRate` **[Number][914]** The playback speed value.
 
 Returns **void**
 
@@ -1763,19 +1763,19 @@ Returns **void**
 
 Gets the current playback speed of the audio/video.
 
-Type: [number][915]
+Type: [number][914]
 
-Returns **[Number][915]** The current playback speed value.
+Returns **[Number][914]** The current playback speed value.
 
 ### defaultPlaybackRate
 
 Sets the default playback speed of the audio/video.
 
-Type: [number][915]
+Type: [number][914]
 
 #### Parameters
 
-- `defaultPlaybackRate` **[Number][915]** The default playback speed value.
+- `defaultPlaybackRate` **[Number][914]** The default playback speed value.
 
 Returns **void**
 
@@ -1783,9 +1783,9 @@ Returns **void**
 
 Gets the default playback speed of the audio/video.
 
-Type: [number][915]
+Type: [number][914]
 
-Returns **[Number][915]** The default playback speed value.
+Returns **[Number][914]** The default playback speed value.
 
 ### ended
 
@@ -1805,17 +1805,17 @@ Returns **MediaError** The MediaError object has a code property containing the 
 
 ### networkState
 
-Type: [number][915]
+Type: [number][914]
 
-Returns **[Number][915]** The current network state (activity) of the audio/video.
+Returns **[Number][914]** The current network state (activity) of the audio/video.
 
 ### readyState
 
 Indicates if the audio/video is ready to play or not.
 
-Type: [number][915]
+Type: [number][914]
 
-Returns **[Number][915]** The current ready state of the audio/video.
+Returns **[Number][914]** The current ready state of the audio/video.
 0 = HAVE_NOTHING - no information whether or not the audio/video is ready.
 1 = HAVE_METADATA - metadata for the audio/video is ready.
 2 = HAVE_CURRENT_DATA - data for the current playback position is available, but not enough data to play next frame/millisecond.
@@ -1824,15 +1824,15 @@ Returns **[Number][915]** The current ready state of the audio/video.
 
 ### videoHeight
 
-Type: [number][915]
+Type: [number][914]
 
-Returns **[Number][915]** The height of the video player, in pixels.
+Returns **[Number][914]** The height of the video player, in pixels.
 
 ### videoWidth
 
-Type: [number][915]
+Type: [number][914]
 
-Returns **[Number][915]** The width of the video player, in pixels.
+Returns **[Number][914]** The width of the video player, in pixels.
 
 ### playsinline
 
@@ -1874,9 +1874,9 @@ Returns **[string][913]?** 'anonymous' or 'use-credentials'
 
 get the playback rates
 
-Type: [Array][914]&lt;[number][915]>
+Type: [Array][915]&lt;[number][914]>
 
-Returns **[Array][914]&lt;[number][915]>** playback rates
+Returns **[Array][915]&lt;[number][914]>** playback rates
 
 ### isInPictureInPicture
 
@@ -1966,7 +1966,7 @@ Returns **void**
 
 The player playback rates.
 
-Type: [Array][914]&lt;[number][915]>
+Type: [Array][915]&lt;[number][914]>
 
 ## hideTextTrack
 
@@ -2084,13 +2084,13 @@ Returns **[boolean][916]** Whether playback is live.
 
 get the native text tracks
 
-Returns **[Array][914]&lt;[TextTrack][921]>** The native TextTracks array.
+Returns **[Array][915]&lt;[TextTrack][921]>** The native TextTracks array.
 
 ## getNativeTextTracks
 
 get the native text tracks
 
-Returns **[Array][914]&lt;[TextTrack][921]>** The native TextTracks array.
+Returns **[Array][915]&lt;[TextTrack][921]>** The native TextTracks array.
 
 ## constructor
 
@@ -2133,7 +2133,7 @@ Returns **void**
 
 Get the start time of DVR window in live playback in seconds.
 
-Returns **[Number][915]** start time of DVR window.
+Returns **[Number][914]** start time of DVR window.
 
 ## id
 
@@ -2175,7 +2175,7 @@ Load the video source
 
 ### Parameters
 
-- `startTime` **[number][915]** Optional time to start the video from.
+- `startTime` **[number][914]** Optional time to start the video from.
 
 Returns **[Promise][917]&lt;[Object][912]>** The loaded data
 
@@ -3048,22 +3048,22 @@ VR plugin is not supported.
 
 ### Parameters
 
-- `severity` **[number][915]** error's severity
-- `category` **[number][915]** error's category.
-- `code` **[number][915]** error's code.
+- `severity` **[number][914]** error's severity
+- `category` **[number][914]** error's category.
+- `code` **[number][914]** error's code.
 - `data` **any** additional data for the error. (optional, default `{}`)
 
 ### Severity
 
-Type: [number][915]
+Type: [number][914]
 
 ### Category
 
-Type: [number][915]
+Type: [number][914]
 
 ### Code
 
-Type: [number][915]
+Type: [number][914]
 
 ## RECOVERABLE
 
@@ -3496,7 +3496,7 @@ According to MDN, Chrome uses high-res timers instead of epoch time.
 Follow suit so that timeStamps on FakeEvents use the same base as
 on native Events.
 
-Type: [number][915]
+Type: [number][914]
 
 ### timeStamp
 
@@ -3507,7 +3507,7 @@ According to MDN, Chrome uses high-res timers instead of epoch time.
 Follow suit so that timeStamps on FakeEvents use the same base as
 on native Events.
 
-Type: [number][915]
+Type: [number][914]
 
 ### type
 
@@ -3751,7 +3751,7 @@ Runs a middleware chain for a specific action.
 
 - `action` **[string][913]** The action to run.
 - `callback` **[Function][922]** The callback function.
-- `params` **[Array][914]&lt;any>** The action params.
+- `params` **[Array][915]&lt;any>** The action params.
 
 Returns **void**
 
@@ -3805,7 +3805,7 @@ Runs a setCurrentTime chain.
 
 #### Parameters
 
-- `to` **[Number][915]** The number to set in seconds.
+- `to` **[Number][914]** The number to set in seconds.
 - `callback` **[Function][922]** The last setCurrentTime handler in the chain.
 
 Returns **void**
@@ -3867,13 +3867,13 @@ Type: [string][913]
 
 The duration offset, for seeking to duration safety.
 
-Type: [number][915]
+Type: [number][914]
 
 ## LIVE_EDGE_THRESHOLD
 
 The threshold in seconds from duration that we still consider it as live edge
 
-Type: [number][915]
+Type: [number][914]
 
 ## Player
 
@@ -3958,17 +3958,17 @@ Returns **[HTMLVideoElement][918]** The video element.
 
 Get video height.
 
-Type: [number][915]?
+Type: [number][914]?
 
-Returns **[number][915]?** The intrinsic height of the video.
+Returns **[number][914]?** The intrinsic height of the video.
 
 ### videoWidth
 
 Get video width.
 
-Type: [number][915]?
+Type: [number][914]?
 
-Returns **[number][915]?** The intrinsic width of the video.
+Returns **[number][914]?** The intrinsic width of the video.
 
 ### reset
 
@@ -4032,11 +4032,11 @@ Returns **TimeRanges** First buffered range of the engine in seconds.
 
 Set the current time in seconds.
 
-Type: [number][915]
+Type: [number][914]
 
 #### Parameters
 
-- `to` **[Number][915]** The number to set in seconds.
+- `to` **[Number][914]** The number to set in seconds.
 
 Returns **void**
 
@@ -4044,35 +4044,35 @@ Returns **void**
 
 Get the current time in seconds.
 
-Type: [number][915]?
+Type: [number][914]?
 
-Returns **[Number][915]?** The playback current time.
+Returns **[Number][914]?** The playback current time.
 
 ### duration
 
 Get the duration in seconds.
 
-Type: [number][915]?
+Type: [number][914]?
 
-Returns **[Number][915]?** The playback duration.
+Returns **[Number][914]?** The playback duration.
 
 ### liveDuration
 
 Get the live duration in seconds.
 
-Type: [number][915]?
+Type: [number][914]?
 
-Returns **[Number][915]?** The live duration.
+Returns **[Number][914]?** The live duration.
 
 ### volume
 
 Set playback volume.
 
-Type: [number][915]
+Type: [number][914]
 
 #### Parameters
 
-- `vol` **[Number][915]** The volume to set.
+- `vol` **[Number][914]** The volume to set.
 
 Returns **void**
 
@@ -4080,9 +4080,9 @@ Returns **void**
 
 Get playback volume.
 
-Type: [number][915]?
+Type: [number][914]?
 
-Returns **[Number][915]?** The playback volume.
+Returns **[Number][914]?** The playback volume.
 
 ### paused
 
@@ -4184,11 +4184,11 @@ Returns **[string][913]** the poster image URL
 
 Sets the playbackRate property.
 
-Type: [number][915]
+Type: [number][914]
 
 #### Parameters
 
-- `rate` **[number][915]** The playback speed of the video.
+- `rate` **[number][914]** The playback speed of the video.
 
 Returns **void**
 
@@ -4196,25 +4196,25 @@ Returns **void**
 
 Gets the current playback speed of the video.
 
-Type: [number][915]?
+Type: [number][914]?
 
-Returns **[number][915]** The current playback speed of the video.
+Returns **[number][914]** The current playback speed of the video.
 
 ### playbackRates
 
 Gets the possible playback speeds of the video.
 
-Type: [Array][914]&lt;[number][915]>
+Type: [Array][915]&lt;[number][914]>
 
-Returns **[Array][914]&lt;[number][915]>** The possible playback speeds speed of the video.
+Returns **[Array][915]&lt;[number][914]>** The possible playback speeds speed of the video.
 
 ### defaultPlaybackRate
 
 Gets the default playback speed of the video.
 
-Type: [number][915]
+Type: [number][914]
 
-Returns **[number][915]** The default playback speed of the video.
+Returns **[number][914]** The default playback speed of the video.
 
 ### engineType
 
@@ -4332,7 +4332,7 @@ Returns **[boolean][916]** Whether the video is seeked to live edge in dvr
 
 Get the start time of DVR window in live playback in seconds.
 
-Returns **[Number][915]** start time of DVR window.
+Returns **[Number][914]** start time of DVR window.
 
 ### getActiveTracks
 
@@ -4352,7 +4352,7 @@ Returns in-stream thumbnail for a chosen time.
 
 #### Parameters
 
-- `time` **[number][915]** playback time.
+- `time` **[number][914]** playback time.
 
 Returns **ThumbnailInfo?** Thumbnail info
 
@@ -4633,7 +4633,7 @@ Returns the tracks according to the filter. if no filter given returns the all t
 
 - `type` **[string][913]?** a tracks filter, should be 'video', 'audio' or 'text'.
 
-Returns **[Array][914]&lt;T>** The parsed tracks.
+Returns **[Array][915]&lt;T>** The parsed tracks.
 
 ## selectTrack
 
@@ -4705,9 +4705,9 @@ Returns **([State][940] | null)** The previous state object, or null if such doe
 
 Getter to the state history of the player.
 
-Type: [Array][914]&lt;[State][940]>
+Type: [Array][915]&lt;[State][940]>
 
-Returns **[Array][914]&lt;[State][940]>** The full states history objects
+Returns **[Array][915]&lt;[State][940]>** The full states history objects
 
 ## State
 
@@ -4728,19 +4728,19 @@ Type: [string][913]
 
 Getter for the duration of the state.
 
-Type: [number][915]
+Type: [number][914]
 
-Returns **[number][915]** The duration of the state
+Returns **[number][914]** The duration of the state
 
 ### duration
 
 Setter for the duration of the state.
 
-Type: [number][915]
+Type: [number][914]
 
 #### Parameters
 
-- `endTime` **[number][915]** The timestamp of the next state.
+- `endTime` **[number][914]** The timestamp of the next state.
 
 Returns **void**
 
@@ -4760,7 +4760,7 @@ returns the thumbnail info for the requested timing.
 
 ### Parameters
 
-- `time` **[number][915]** timing in th playback timeline in milliseconds.
+- `time` **[number][914]** timing in th playback timeline in milliseconds.
 
 Returns **(ThumbnailInfo | null)** the thumbnail img info.
 
@@ -4814,9 +4814,9 @@ get external tracks (native and/or player module tracks)
 
 ### Parameters
 
-- `tracks` **[Array][914]&lt;[Track][939]>** array with the player text tracks.
+- `tracks` **[Array][915]&lt;[Track][939]>** array with the player text tracks.
 
-Returns **[Array][914]&lt;[TextTrack][921]>** returns an array with the new external tracks
+Returns **[Array][915]&lt;[TextTrack][921]>** returns an array with the new external tracks
 
 ## selectTextTrack
 
@@ -4858,7 +4858,7 @@ adding cues to an existing text element in a video tag
 
 ### Parameters
 
-- `cues` **[Array][914]&lt;Cue>** the cues to be added
+- `cues` **[Array][915]&lt;Cue>** the cues to be added
 
 Returns **void**
 
@@ -4869,9 +4869,9 @@ for browser which dose not support VTTCue API
 
 ### Parameters
 
-- `cues` **[Array][914]&lt;Cue>** the cues to be converted
+- `cues` **[Array][915]&lt;Cue>** the cues to be converted
 
-Returns **[Array][914]&lt;TextTrackCue>** the converted cues
+Returns **[Array][915]&lt;TextTrackCue>** the converted cues
 
 ## \_addNativeTextTrack
 
@@ -4888,7 +4888,7 @@ The calculation of the size of the font is done in text-track-display and not in
 the calculation in text-track-display also set the location of the container of the subtitiles according to the
 font size.
 
-Type: [number][915]
+Type: [number][914]
 
 ## TextStyle
 
@@ -4965,13 +4965,13 @@ Type: [Object][912]&lt;[string][913], [string][913]>
 Defined in [FCC 12-9][945], paragraph 111, footnote
 448\. Each value is an array of the three RGB values for that color.
 
-Type: [Object][912]&lt;[string][913], [Array][914]&lt;[number][915]>>
+Type: [Object][912]&lt;[string][913], \[[number][914], [number][914], [number][914]]>
 
 ### StandardOpacities
 
 Defined in [FCC 12-9][945], paragraph 111.
 
-Type: [Object][912]&lt;[string][913], [number][915]>
+Type: [Object][912]&lt;[string][913], [number][914]>
 
 ### EdgeStyles
 
@@ -4980,8 +4980,6 @@ The styles to achieve these effects are not specified anywhere.
 
 Each inner array represents a shadow, and is composed of RGB values for the
 shadow color, followed by pixel values for x-offset, y-offset, and blur.
-
-Type: ![Array][914]&lt;![Array][914]&lt;[number][915]>>
 
 ### FontSizes
 
@@ -4997,7 +4995,7 @@ Type: [TextTrack][921]
 
 index generator.
 
-Returns **[number][915]** the next track index.
+Returns **[number][914]** the next track index.
 
 ## reset
 
@@ -5009,8 +5007,8 @@ Returns **void**
 
 ### Parameters
 
-- `startTime` **[number][915]** start time.
-- `endTime` **[number][915]** end time.
+- `startTime` **[number][914]** start time.
+- `endTime` **[number][914]** end time.
 - `id` **[string][913]** id.
 - `type` **[string][913]** type.
 - `metadata` **any** metadata.
@@ -5085,19 +5083,19 @@ Returns **[string][913]** The language of the track.
 
 Getter for the index of the track.
 
-Type: [number][915]
+Type: [number][914]
 
-Returns **[number][915]** The index of the track.
+Returns **[number][914]** The index of the track.
 
 ### index
 
 Setter for the index of the track.
 
-Type: [number][915]
+Type: [number][914]
 
 #### Parameters
 
-- `value` **[number][915]** The index of the track.
+- `value` **[number][914]** The index of the track.
 
 Returns **void**
 
@@ -5163,8 +5161,8 @@ VTTCue model
 
 ### Parameters
 
-- `startTime` **[number][915]**
-- `endTime` **[number][915]**
+- `startTime` **[number][914]**
+- `endTime` **[number][914]**
 - `text` **[string][913]**
 
 ### hasBeenReset
@@ -5222,7 +5220,7 @@ check percentage validation
 
 ### Parameters
 
-- `value` **[number][915]** percentage
+- `value` **[number][914]** percentage
 
 Returns **[boolean][916]** boolean
 
@@ -5230,7 +5228,7 @@ Returns **[boolean][916]** boolean
 
 ### Parameters
 
-- `list` **[Array][914]&lt;any>** The array to search. (optional, default `[]`)
+- `list` **[Array][915]&lt;any>** The array to search. (optional, default `[]`)
 - `comparisonFn` **[Function][922]** Called and provided a candidate item as the first argument.
   Should return: > -1 if the item should be located at a lower index than the provided item. > 1 if the item should be located at a higher index than the provided item. > 0 if the item is the item you're looking for. (optional, default `()=>1`)
 
@@ -5329,7 +5327,7 @@ Set an array of values for the key, overwriting any previous data.
 #### Parameters
 
 - `key` **K** \-
-- `values` **![Array][914]&lt;T>** \-
+- `values` **![Array][915]&lt;T>** \-
 
 Returns **void**
 
@@ -5351,13 +5349,13 @@ Get a list of values by key.
 
 - `key` **K** \-
 
-Returns **[Array][914]&lt;T>** or null if no such key exists.
+Returns **[Array][915]&lt;T>** or null if no such key exists.
 
 ### getAll
 
 Get a list of all values.
 
-Returns **![Array][914]&lt;T>** \-
+Returns **![Array][915]&lt;T>** \-
 
 ### remove
 
@@ -5374,7 +5372,7 @@ Returns **void**
 
 Get all keys from the multimap.
 
-Returns **![Array][914]&lt;K>**
+Returns **![Array][915]&lt;K>**
 
 ### clear
 
@@ -5478,9 +5476,9 @@ Calculates the most suitable source to the container size
 
 ### Parameters
 
-- `tracks` **[Array][914]&lt;[Object][912]>** The tracks
-- `width` **[number][915]** The width to calculate with
-- `height` **[number][915]** The height to calculate with
+- `tracks` **[Array][915]&lt;[Object][912]>** The tracks
+- `width` **[number][914]** The width to calculate with
+- `height` **[number][914]** The height to calculate with
 
 Returns **[Object][912]** The most suitable source to the container size
 
@@ -5490,10 +5488,10 @@ Filter the video tracks which not in the range
 
 ### Parameters
 
-- `tracks` **[Array][914]&lt;[VideoTrack][919]>** The tracks to filter
+- `tracks` **[Array][915]&lt;[VideoTrack][919]>** The tracks to filter
 - `restriction` **PKABRRestrictionObject** The restriction
 
-Returns **[Array][914]&lt;[VideoTrack][919]>** The relevant video tracks after restrictions.
+Returns **[Array][915]&lt;[VideoTrack][919]>** The relevant video tracks after restrictions.
 
 ## filterVideoTracksByRestriction
 
@@ -5501,16 +5499,16 @@ Filter the video tracks which not in the range
 
 ### Parameters
 
-- `videoTracks` **[Array][914]&lt;[VideoTrack][919]>** The tracks to filter
+- `videoTracks` **[Array][915]&lt;[VideoTrack][919]>** The tracks to filter
 - `restriction` **PKABRRestrictionObject** The restriction
 
-Returns **[Array][914]&lt;[VideoTrack][919]>** The relevant video tracks after restrictions.
+Returns **[Array][915]&lt;[VideoTrack][919]>** The relevant video tracks after restrictions.
 
 ## isNumber
 
 ### Parameters
 
-- `n` **[number][915]** A certain number
+- `n` **[number][914]** A certain number
 
 Returns **[boolean][916]** If the input is a number
 
@@ -5518,7 +5516,7 @@ Returns **[boolean][916]** If the input is a number
 
 ### Parameters
 
-- `n` **[number][915]** A certain number
+- `n` **[number][914]** A certain number
 
 Returns **[boolean][916]** If the input is an integer
 
@@ -5526,7 +5524,7 @@ Returns **[boolean][916]** If the input is an integer
 
 ### Parameters
 
-- `n` **[number][915]** A certain number
+- `n` **[number][914]** A certain number
 
 Returns **[boolean][916]** If the input is a float
 
@@ -5553,7 +5551,7 @@ Returns **[boolean][916]** Whether the string: string is ending with string: sea
 
 ### Parameters
 
-- `objects` **[Array][914]&lt;[Object][912]>** The objects to merge
+- `objects` **[Array][915]&lt;[Object][912]>** The objects to merge
 
 Returns **[Object][912]** The merged object.
 
@@ -5668,7 +5666,7 @@ Generates unique id.
 
 ### Parameters
 
-- `length` **[number][915]** The length of the id.
+- `length` **[number][914]** The length of the id.
 
 Returns **[string][913]** The generated id.
 
@@ -5859,7 +5857,7 @@ Compares two software version numbers (e.g. "1.7.1" or "1.2b").
   zeroExtend: ([true]/false) changes the result if one version string has less parts than the other. In
   this case the shorter string will be padded with "zero" parts instead of being considered smaller. (optional, default `{}`)
 
-Returns **([number][915] \| [NaN][950])** 0 if the versions are equal- a negative integer iff v1 &lt; v2
+Returns **([number][914] \| [NaN][950])** 0 if the versions are equal- a negative integer iff v1 &lt; v2
 
 - a positive integer iff v1 > v2
 - NaN if either version string is in the wrong format
@@ -6777,8 +6775,8 @@ Returns **([number][915] \| [NaN][950])** 0 if the versions are equal- a negativ
 [911]: #parameters-180
 [912]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 [913]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
-[914]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
-[915]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[914]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[915]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 [916]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 [917]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 [918]: https://developer.mozilla.org/docs/Web/API/HTMLVideoElement
