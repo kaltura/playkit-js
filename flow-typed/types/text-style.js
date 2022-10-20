@@ -2,7 +2,7 @@
 
 /**
  * @typedef {Object} PKTextStyleObject
- * @property {"50%" | "75%" | "100%" | "200%" | "3000%" | "4000%"} fontSize='100%' - Percentage unit relative to the parent element's font size.
+ * @property {"50%" | "75%" | "100%" | "200%" | "300%" | "400%"} fontSize='100%' - Percentage unit relative to the parent element's font size.
  * @property {-2 | -1 | 0 | 2 | 3 | 4} fontScale=0 - - Integer number representing the scaling factor relative to the parent element's font size..
  * @property {string} fontFamily='sans-serif'
  * @property {[number, number, number]} fontColor=[255, 255, 255] - Color in RGB format.
