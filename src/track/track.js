@@ -12,12 +12,22 @@ export default class Track {
    * @param {boolean} equal - Optional flag to check for matching languages.
    * @returns {boolean} - Whether the strings are equal or starts with the same substring.
    */
+
   static langComparer(inputLang: string, trackLang: string, equal: ?boolean): boolean {
     try {
       inputLang = inputLang.toLowerCase();
       trackLang = trackLang.toLowerCase();
-      if (equal) {
-        return inputLang ? inputLang === trackLang : false;
+      if (equal && inputLang) {
+        if (inputLang === trackLang) {
+          return true;
+        } else {
+          const languageNames = new Intl.DisplayNames(['en'], {
+            type: 'language'
+          });
+          inputLang = inputLang.replace('_', '-');
+          trackLang = trackLang.replace('_', '-');
+          return languageNames.of(trackLang) === languageNames.of(inputLang);
+        }
       } else {
         return inputLang ? inputLang.startsWith(trackLang) || trackLang.startsWith(inputLang) : false;
       }
