@@ -17,7 +17,7 @@ import getLogger from '../../utils/logger';
 import {DroppedFramesWatcher} from '../dropped-frames-watcher';
 import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
 
-const SHORT_BUFFERING_TIMEOUT: number = 200;
+const SHORT_BUFFERING_TIMEOUT: number = 500;
 
 /**
  * Html5 engine for playback.
