@@ -2965,7 +2965,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
-var SHORT_BUFFERING_TIMEOUT = 500;
+var SHORT_BUFFERING_TIMEOUT = 750;
 /**
  * Html5 engine for playback.
  * @classdesc
