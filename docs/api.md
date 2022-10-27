@@ -1974,41 +1974,11 @@ Hide the text track
 
 Returns **void**
 
-## hideTextTrack
-
-Hide the text track
-
-Returns **void**
-
-## hideTextTrack
-
-Hide the text track
-
-Returns **void**
-
 ## enableAdaptiveBitrate
 
 Enables adaptive bitrate switching according to the media source extension logic.
 
 Returns **void**
-
-## enableAdaptiveBitrate
-
-Enables adaptive bitrate
-
-Returns **void**
-
-## enableAdaptiveBitrate
-
-Enables adaptive bitrate switching.
-
-Returns **void**
-
-## isAdaptiveBitrateEnabled
-
-Checking if adaptive bitrate switching is enabled.
-
-Returns **[boolean][916]** Whether adaptive bitrate is enabled.
 
 ## isAdaptiveBitrateEnabled
 
@@ -2017,22 +1987,6 @@ For progressive playback will always returns false.
 For adaptive playback will always returns true.
 
 Returns **[boolean][916]** Whether adaptive bitrate is enabled.
-
-## isAdaptiveBitrateEnabled
-
-Checking if adaptive bitrate switching is enabled.
-
-Returns **[boolean][916]** Whether adaptive bitrate is enabled.
-
-## applyABRRestriction
-
-Apply ABR restriction
-
-### Parameters
-
-- `restriction` **PKABRRestrictionObject** abr restriction config
-
-Returns **void**
 
 ## applyABRRestriction
 
@@ -2050,41 +2004,11 @@ Seeking to live edge.
 
 Returns **void**
 
-## seekToLiveEdge
-
-Seeking to live edge.
-
-Returns **void**
-
-## seekToLiveEdge
-
-Seeking to live edge.
-
-Returns **void**
-
 ## isLive
 
 Checking if the current playback is live.
 
 Returns **[boolean][916]** Whether playback is live.
-
-## isLive
-
-Checking if the current playback is live.
-
-Returns **[boolean][916]** Whether playback is live.
-
-## isLive
-
-Checking if the current playback is live.
-
-Returns **[boolean][916]** Whether playback is live.
-
-## getNativeTextTracks
-
-get the native text tracks
-
-Returns **[Array][915]&lt;[TextTrack][921]>** The native TextTracks array.
 
 ## getNativeTextTracks
 
