@@ -2557,7 +2557,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _updateTextDisplay(cues: Array<Cue>): void {
-    if (!this._config.text.useNativeTextTrack) {
+    if (!this._config.text.useNativeTextTrack && !this._config.text.useShakaTextTrackDisplay) {
       processCues(window, cues, this._textDisplayEl, this._textStyle);
     }
   }
