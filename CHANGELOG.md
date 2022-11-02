@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.80.8](https://github.com/kaltura/playkit-js/compare/v0.80.7...v0.80.8) (2022-11-02)
+
+
+### Bug Fixes
+
+* **FEC-12648:** Text style configuration is not working ([#669](https://github.com/kaltura/playkit-js/issues/669)) ([9fcd83c](https://github.com/kaltura/playkit-js/commit/9fcd83c))
+* **FEC-12691:** shaka Text Track Displayer does not work unless  useNativeTextTrack set to true ([c0c78fc](https://github.com/kaltura/playkit-js/commit/c0c78fc))
+
+
+
 ### [0.80.7](https://github.com/kaltura/playkit-js/compare/v0.80.6...v0.80.7) (2022-10-06)
 
 
