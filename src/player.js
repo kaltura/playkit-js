@@ -2598,17 +2598,21 @@ export default class Player extends FakeEventTarget {
     const currentOrConfiguredAudioLang =
       this._playbackAttributesState.audioLanguage ||
       this._getLanguage<AudioTrack>(this._getAudioTracks(), playbackConfig.audioLanguage, activeTracks.audio);
-    currentOrConfiguredTextLang === playbackConfig.textLanguage
-      ? this._setDefaultTrack<TextTrack>(this._getTextTracks(), currentOrConfiguredTextLang, offTextTrack, playbackConfig.additionalTextLanguage)
-      : this._setDefaultTrack<TextTrack>(this._getTextTracks(), currentOrConfiguredTextLang, offTextTrack);
-    currentOrConfiguredAudioLang === playbackConfig.audioLanguage
-      ? this._setDefaultTrack<AudioTrack>(
-          this._getAudioTracks(),
-          currentOrConfiguredAudioLang,
-          activeTracks.audio,
-          playbackConfig.additionalAudioLanguage
-        )
-      : this._setDefaultTrack<AudioTrack>(this._getAudioTracks(), currentOrConfiguredAudioLang, activeTracks.audio);
+    if (currentOrConfiguredTextLang === playbackConfig.textLanguage) {
+      this._setDefaultTrack<TextTrack>(this._getTextTracks(), currentOrConfiguredTextLang, offTextTrack, playbackConfig.additionalTextLanguage);
+    } else {
+      this._setDefaultTrack<TextTrack>(this._getTextTracks(), currentOrConfiguredTextLang, offTextTrack);
+    }
+    if (currentOrConfiguredAudioLang === playbackConfig.audioLanguage) {
+      this._setDefaultTrack<AudioTrack>(
+        this._getAudioTracks(),
+        currentOrConfiguredAudioLang,
+        activeTracks.audio,
+        playbackConfig.additionalAudioLanguage
+      );
+    } else {
+      this._setDefaultTrack<AudioTrack>(this._getAudioTracks(), currentOrConfiguredAudioLang, activeTracks.audio);
+    }
     this._setDefaultVideoTrack();
   }
 
