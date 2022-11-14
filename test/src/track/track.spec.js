@@ -21,9 +21,15 @@ describe('Track', () => {
     });
 
     it('should compare languages using equality flag', () => {
-      Track.langComparer('zh', 'zh', true).should.be.true;
-      Track.langComparer('zh_tw', 'zh', true).should.be.false;
-      Track.langComparer('zh_tw', 'zh', false).should.be.true;
+      Track.langComparer('zh', 'zh', undefined, true).should.be.true;
+      Track.langComparer('zh_tw', 'zh', undefined, true).should.be.false;
+      Track.langComparer('zh_tw', 'zh', undefined, false).should.be.true;
+    });
+
+    it('should compare languages also with the additionalLanguage from the configuration', () => {
+      Track.langComparer('zh', 'chi', 'chi', true).should.be.true;
+      Track.langComparer('es', 'spa', 'spa', true).should.be.true;
+      Track.langComparer('es', 'zh', 'spa', true).should.be.false;
     });
   });
 });

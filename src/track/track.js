@@ -9,19 +9,19 @@ export default class Track {
    * Comparing language strings.
    * @param {string} inputLang - The configured language.
    * @param {string} trackLang - The default track language.
-   * @param {string} extensionLanguage -  Additional configured language.
+   * @param {string} additionalLanguage -  Additional configured language.
    * @param {boolean} equal - Optional flag to check for matching languages.
    * @returns {boolean} - Whether the strings are equal or starts with the same substring.
    */
-  static langComparer(inputLang: string, trackLang: string, extensionLanguage: ?string, equal: ?boolean): boolean {
+  static langComparer(inputLang: string, trackLang: string, additionalLanguage: ?string, equal: ?boolean): boolean {
     try {
       inputLang = inputLang.toLowerCase();
       trackLang = trackLang.toLowerCase();
-      extensionLanguage ? (extensionLanguage = extensionLanguage.toLowerCase()) : extensionLanguage;
+      additionalLanguage ? (additionalLanguage = additionalLanguage.toLowerCase()) : additionalLanguage;
       if (equal) {
-        if (inputLang && inputLang === trackLang) {
+        if (inputLang === trackLang) {
           return true;
-        } else if (extensionLanguage && extensionLanguage === trackLang) {
+        } else if (additionalLanguage === trackLang) {
           return true;
         } else return false;
       } else {
