@@ -105,32 +105,26 @@ class TextStyle {
   static FontSizes: Array<Object> = [
     {
       value: -2,
-      px: '8px',
       label: '50%'
     },
     {
       value: -1,
-      px: '12px',
       label: '75%'
     },
     {
       value: 0,
-      px: '16px',
       label: '100%'
     },
     {
       value: 2,
-      px: '32px',
       label: '200%'
     },
     {
       value: 3,
-      px: '48px',
       label: '300%'
     },
     {
       value: 4,
-      px: '64px',
       label: '400%'
     }
   ];
@@ -190,12 +184,6 @@ class TextStyle {
    */
   get fontSize() {
     return TextStyle.FontSizes[this._fontSizeIndex].label;
-  }
-  /**
-   * px string matching a FontSizes in px instead of  %
-   */
-  get fontSizePx() {
-    return TextStyle.FontSizes[this._fontSizeIndex].px;
   }
 
   set fontScale(fontScale: number) {
@@ -269,7 +257,6 @@ class TextStyle {
     attributes.push('color: ' + TextStyle.toRGBA(this.fontColor, this.fontOpacity));
     attributes.push('background-color: ' + TextStyle.toRGBA(this.backgroundColor, this.backgroundOpacity));
     attributes.push('text-shadow: ' + this.getTextShadow());
-    attributes.push('font-size: ' + this.fontSizePx);
     return attributes.join('!important; ');
   }
 
