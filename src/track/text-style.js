@@ -257,7 +257,6 @@ class TextStyle {
     attributes.push('color: ' + TextStyle.toRGBA(this.fontColor, this.fontOpacity));
     attributes.push('background-color: ' + TextStyle.toRGBA(this.backgroundColor, this.backgroundOpacity));
     attributes.push('text-shadow: ' + this.getTextShadow());
-    attributes.push('font-size: ' + this.fontSize);
     return attributes.join('!important; ');
   }
 
