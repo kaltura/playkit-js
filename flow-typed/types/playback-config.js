@@ -2,8 +2,8 @@
 declare type PKPlaybackConfigObject = {
   audioLanguage: string,
   textLanguage: string,
-  extensionAudioLanguage: string,
-  extensionTextLanguage: string,
+  additionalAudioLanguage: string,
+  additionalTextLanguage: string,
   volume: number,
   playsinline: boolean,
   crossOrigin: string,
