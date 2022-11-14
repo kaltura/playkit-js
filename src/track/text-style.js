@@ -270,7 +270,6 @@ class TextStyle {
     attributes.push('background-color: ' + TextStyle.toRGBA(this.backgroundColor, this.backgroundOpacity));
     attributes.push('text-shadow: ' + this.getTextShadow());
     attributes.push('font-size: ' + this.fontSizePx);
-
     return attributes.join('!important; ');
   }
 
