@@ -44,6 +44,8 @@ var config = {
   playback: {
     audioLanguage: '',
     textLanguage: '',
+    additionalAudioLanguage: '',
+    additionalTextLanguage: '',
     volume: 1,
     playsinline: true,
     preload: 'none',
@@ -629,6 +631,8 @@ var config = {
 > {
 >  audioLanguage: string,
 >  textLanguage: string,
+>  additionalAudioLanguage: string,
+>  additionalTextLanguage: string,
 >  volume: number,
 >  playsinline: boolean,
 >  crossOrigin: string,
@@ -654,6 +658,8 @@ var config = {
 > {
 >  audioLanguage: "",
 >  textLanguage: "",
+>  additionalAudioLanguage: "",
+>  additionalTextLanguage: "",
 >  volume: 1,
 >  playsinline: true,
 >  preload: "none",
@@ -763,6 +769,58 @@ var config = {
 > > 2.  **Manifest default language** - If a default language is specified in the manifest file then this language will be selected.
 > > 3.  **First language in manifest** - The first language specified in the manifest file will be selected.
 > > 4.  If none of the above conditions have taken place, do not display captions.
+>
+> ##
+>
+> > ### config.playback.additionalAudioLanguage
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `""`
+> >
+> > ##### Description: Sets the default audio track language from the additionalAudioLanguage.
+> > option to add the audioLanguage with additional code (should be the same language as the audioLanguage field). 
+> > intended for cases where the 639-1 code is totaly different than the 639-2 code. 
+> > for example: Spanish 639-1: 'es' 639-2: 'spa'
+> >
+> > If an audio track with the defined language exists, this audio track will be selected as the initial audio track.
+> >
+> > #### Example:
+> >
+> > ```js
+> > var config = {
+> >   playback: {
+> >     additionalAudioLanguage: 'spa' // Start playback with Spanish audio
+> >   }
+> > };
+> > ```
+> >
+>
+> ##
+>
+> > ### config.playback.additionalTextLanguage
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `""`
+> >
+> > ##### Description: Defines the default captions language from the additionalTextLanguage
+> > option to add the textLanguage with additional code. (should be the same language as the textLanguage field).
+> > intended for cases where the 639-1 code is totaly different than the 639-2 code. 
+> > for example: Spanish 639-1: 'es' 639-2: 'spa'
+> >
+> > If captions for the defined language are available, this text track will be selected as the initial text track.
+> >
+> > #### Example:
+> >
+> > ```js
+> > var config = {
+> >   playback: {
+> >     additionalTextLanguage: 'spa' // Start playback with Spanish captions
+> >   }
+> > };
+> > ```
+> >
 >
 > ##
 >
