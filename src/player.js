@@ -2598,8 +2598,21 @@ export default class Player extends FakeEventTarget {
     const currentOrConfiguredAudioLang =
       this._playbackAttributesState.audioLanguage ||
       this._getLanguage<AudioTrack>(this._getAudioTracks(), playbackConfig.audioLanguage, activeTracks.audio);
-    this._setDefaultTrack<TextTrack>(this._getTextTracks(), currentOrConfiguredTextLang, offTextTrack);
-    this._setDefaultTrack<AudioTrack>(this._getAudioTracks(), currentOrConfiguredAudioLang, activeTracks.audio);
+    if (currentOrConfiguredTextLang === playbackConfig.textLanguage) {
+      this._setDefaultTrack<TextTrack>(this._getTextTracks(), currentOrConfiguredTextLang, offTextTrack, playbackConfig.additionalTextLanguage);
+    } else {
+      this._setDefaultTrack<TextTrack>(this._getTextTracks(), currentOrConfiguredTextLang, offTextTrack);
+    }
+    if (currentOrConfiguredAudioLang === playbackConfig.audioLanguage) {
+      this._setDefaultTrack<AudioTrack>(
+        this._getAudioTracks(),
+        currentOrConfiguredAudioLang,
+        activeTracks.audio,
+        playbackConfig.additionalAudioLanguage
+      );
+    } else {
+      this._setDefaultTrack<AudioTrack>(this._getAudioTracks(), currentOrConfiguredAudioLang, activeTracks.audio);
+    }
     this._setDefaultVideoTrack();
   }
 
@@ -2632,19 +2645,20 @@ export default class Player extends FakeEventTarget {
    * @param {Array<T>} tracks - the audio or text tracks.
    * @param {string} language - The track language.
    * @param {Track} defaultTrack - The default track to set in case there is no language configured.
+   * @param {string} additionalLanguage - additional track language.
    * @returns {void}
    * @private
    */
-  _setDefaultTrack<T: TextTrack | AudioTrack>(tracks: Array<T>, language: string, defaultTrack: ?Track): void {
+  _setDefaultTrack<T: TextTrack | AudioTrack>(tracks: Array<T>, language: string, defaultTrack: ?Track, additionalLanguage: ?string): void {
     const updateTrack = track => {
       this.selectTrack(track);
       this._markActiveTrack(track);
     };
-    const sameTrack: ?T = tracks.find(track => Track.langComparer(language, track.language, true));
+    const sameTrack: ?T = tracks.find(track => Track.langComparer(language, track.language, additionalLanguage, true));
     if (sameTrack) {
       updateTrack(sameTrack);
     } else {
-      const track: ?T = tracks.find(track => Track.langComparer(language, track.language, false));
+      const track: ?T = tracks.find(track => Track.langComparer(language, track.language, additionalLanguage, false));
       if (track) {
         updateTrack(track);
       } else if (defaultTrack && !defaultTrack.active) {
