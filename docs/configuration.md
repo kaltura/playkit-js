@@ -778,8 +778,8 @@ var config = {
 > >
 > > ##### Default: `""`
 > >
-> > ##### Description: Sets the default audio track language.
-> > option to add the audioLanguage with other code (should be the same language as the audioLanguage field). 
+> > ##### Description: Sets the default audio track language from the additionalAudioLanguage.
+> > option to add the audioLanguage with additional code (should be the same language as the audioLanguage field). 
 > > intended for cases where the 639-1 code is totaly different than the 639-2 code. 
 > > for example: Spanish 639-1: 'es' 639-2: 'spa'
 > >
@@ -804,8 +804,8 @@ var config = {
 > >
 > > ##### Default: `""`
 > >
-> > ##### Description: Defines the default captions language
-> > option to add the textLanguage with other code. (should be the same language as the textLanguage field).
+> > ##### Description: Defines the default captions language from the additionalTextLanguage
+> > option to add the textLanguage with additional code. (should be the same language as the textLanguage field).
 > > intended for cases where the 639-1 code is totaly different than the 639-2 code. 
 > > for example: Spanish 639-1: 'es' 639-2: 'spa'
 > >
