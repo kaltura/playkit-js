@@ -2591,8 +2591,9 @@ export default class Player extends FakeEventTarget {
     const activeTracks = this.getActiveTracks();
     const playbackConfig = this.config.playback;
     const offTextTrack: ?Track = this._getTextTracks().find(track => TextTrack.langComparer(OFF, track.language));
+    const localStorageTextLang = this.config.disableUserCache ? undefined : window.localStorage.getItem('kaltura-player-js_textLanguage');
     const currentOrConfiguredTextLang =
-      window.localStorage.getItem('kaltura-player-js_textLanguage') ||
+      localStorageTextLang ||
       this._playbackAttributesState.textLanguage ||
       this._getLanguage<TextTrack>(this._getTextTracks(), playbackConfig.textLanguage, activeTracks.text);
     const currentOrConfiguredAudioLang =
