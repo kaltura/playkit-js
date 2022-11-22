@@ -1303,7 +1303,12 @@ export default class Player extends FakeEventTarget {
         this._engine.selectAudioTrack(track);
       } else if (track instanceof TextTrack) {
         this._resetTextDisplay();
-        if (track.language === OFF) {
+        const activeTracks = this.getActiveTracks();
+        const playbackConfig = this.config.playback;
+        const currentTextlang =
+          this._playbackAttributesState.textLanguage ||
+          this._getLanguage<TextTrack>(this._getTextTracks(), playbackConfig.textLanguage, activeTracks.text);
+        if (track.language === OFF && (currentTextlang === '' || currentTextlang === OFF)) {
           this.hideTextTrack();
           this._externalCaptionsHandler.hideTextTrack();
           this._playbackAttributesState.textLanguage = OFF;
@@ -2591,7 +2596,7 @@ export default class Player extends FakeEventTarget {
     const activeTracks = this.getActiveTracks();
     const playbackConfig = this.config.playback;
     const offTextTrack: ?Track = this._getTextTracks().find(track => TextTrack.langComparer(OFF, track.language));
-    const localStorageTextLang = this.config.disableUserCache ? undefined : window.localStorage.getItem('kaltura-player-js_textLanguage');
+    const localStorageTextLang = this.config.disableUserCache ? undefined : undefined; //window.localStorage.getItem('kaltura-player-js_textLanguage');
     const currentOrConfiguredTextLang =
       localStorageTextLang ||
       this._playbackAttributesState.textLanguage ||
