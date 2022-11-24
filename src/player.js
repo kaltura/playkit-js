@@ -1302,7 +1302,7 @@ export default class Player extends FakeEventTarget {
       } else if (track instanceof AudioTrack) {
         this._engine.selectAudioTrack(track);
       } else if (track instanceof TextTrack) {
-        this._resetTextDisplay()
+        this._resetTextDisplay();
         if (track.language === OFF) {
           this.hideTextTrack();
           this._externalCaptionsHandler.hideTextTrack();
