@@ -649,7 +649,7 @@ var config = {
 > > The font opacity
 > > ##### fontEdge
 > > Each inner array represents a shadow, and is composed of RGB values for the
-> >   shadow color, followed by pixel values for x-offset, y-offset, and blur
+> > shadow color, followed by pixel values for x-offset, y-offset, and blur
 > > ##### backgroundColor
 > > Background color in RGB format
 > > ##### backgroundOpacity
