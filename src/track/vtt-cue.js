@@ -62,7 +62,7 @@ class VTTCue {
   displayState: any = undefined;
   /**
    * VTTCue and TextTrackCue properties
-   * http://dev.w3.org/html5/webvtt/#vttcue-interface
+   * https://developer.mozilla.org/en-US/docs/Web/API/VTTCue#instance_properties
    */
   /**
    * An arbitrary string.
