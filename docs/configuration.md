@@ -14,6 +14,7 @@ var player = playkit.core.loadPlayer(config);
 ```js
 {
   log: PKLogConfigObject,
+  text: PKTextConfigObject,
   playback: PKPlaybackConfigObject,
   streaming: PKStreamingConfigObject,
   session: PKSessionConfigObject,
