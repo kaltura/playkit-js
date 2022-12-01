@@ -183,7 +183,7 @@ export default class Track {
    */
   constructor(settings: Object = {}) {
     this._id = settings.id;
-    this._active = settings.active;
+    this._active = settings.active || false;
     this._label = settings.label;
     this._language = settings.language;
     this._index = settings.index;
