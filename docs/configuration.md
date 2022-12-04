@@ -623,7 +623,7 @@ var config = {
 > > ```js
 > > {
 > >   fontSize?: '50%' | '75%' | '100%' | '200%' | '300%' | '400%',
-> >   fontScale?: -2 | -1 | 0 | 2 | 3 | 4,
+> >   fontScale?: -2 | -1 | 0 | 2 | 3 | 4
 > >   fontFamily?: string, // font family available in browser
 > >   fontColor?: [number, number, number], // RGB 
 > >   fontOpacity?: number, // [0.0 .. 1.0]
