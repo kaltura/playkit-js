@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.80.9](https://github.com/kaltura/playkit-js/compare/v0.80.8...v0.80.9) (2022-12-07)
+
+
+### Bug Fixes
+
+* **FEC-12679:** ISO Code for Chinese and Spanish in Multi Audio ([#673](https://github.com/kaltura/playkit-js/issues/673)) ([7ad97e1](https://github.com/kaltura/playkit-js/commit/7ad97e1))
+
+
+
 ### [0.80.8](https://github.com/kaltura/playkit-js/compare/v0.80.7...v0.80.8) (2022-11-02)
 
 
