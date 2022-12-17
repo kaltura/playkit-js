@@ -208,6 +208,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @static
    */
   static createAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): IMediaSourceAdapter {
+    NativeAdapter._logger.debug('createAdapter');
     const adapterConfig: Object = {
       displayTextTrack: false,
       progressiveSources: []
@@ -387,6 +388,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     });
 
     this._eventManager.listenOnce(this._videoElement, Html5EventType.CAN_PLAY, () => {
+      NativeAdapter._logger.debug('CAN_PLAY');
       this._videoElement.currentTime = prevCurrTime;
       this._videoElement.play();
       this._videoElement.pause();
@@ -847,11 +849,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    */
   selectAudioTrack(audioTrack: AudioTrack): void {
+    NativeAdapter._logger.debug('selectAudioTrack');
     const audioTracks = this._videoElement.audioTracks;
     if (audioTrack instanceof AudioTrack && audioTracks && audioTracks[audioTrack.index]) {
       this._removeNativeAudioTrackChangeListener();
-      this._disableAudioTracks();
-      audioTracks[audioTrack.index].enabled = true;
+      this._switchAudioTrack(audioTrack.index);
       this._onTrackChanged(audioTrack);
       this._addNativeAudioTrackChangeListener();
     }
@@ -1123,10 +1125,32 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {void}
    */
   _disableAudioTracks(): void {
+    NativeAdapter._logger.debug('_disableAudioTracks');
     let audioTracks = this._videoElement.audioTracks;
     if (audioTracks) {
       for (let i = 0; i < audioTracks.length; i++) {
         audioTracks[i].enabled = false;
+      }
+    }
+  }
+
+  /**
+   * Switch an audio track
+   * @param {index} index - the audio track indexto select
+   * @private
+   * @returns {void}
+   */
+  _switchAudioTrack(index): void {
+    NativeAdapter._logger.debug('_switchAudioTracks');
+    let _videoElementaudioTracks = this._videoElement.audioTracks;
+    if (_videoElementaudioTracks) {
+      for (let i = 0; i < _videoElementaudioTracks.length; i++) {
+        if (i == index) {
+          _videoElementaudioTracks[i].enabled = false;
+          _videoElementaudioTracks[i].enabled = true;
+        } else {
+          _videoElementaudioTracks[i].enabled = false;
+        }
       }
     }
   }
