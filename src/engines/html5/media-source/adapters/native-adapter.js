@@ -1146,7 +1146,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (_videoElementaudioTracks) {
       for (let i = 0; i < _videoElementaudioTracks.length; i++) {
         if (i == index) {
-          _videoElementaudioTracks[i].enabled = false;
           _videoElementaudioTracks[i].enabled = true;
         } else {
           _videoElementaudioTracks[i].enabled = false;
