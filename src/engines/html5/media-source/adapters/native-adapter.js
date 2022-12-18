@@ -1121,19 +1121,19 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   /**
    * Switch an audio track
-   * @param {Number} index - the audio track indexto select
+   * @param {Number} index - the audio track index to select
    * @private
    * @returns {void}
    */
-  _switchAudioTrack(index): void {
+  _switchAudioTrack(index: number): void {
     NativeAdapter._logger.debug('_switchAudioTracks');
-    let _videoElementaudioTracks = this._videoElement.audioTracks;
-    if (_videoElementaudioTracks) {
-      for (let i = 0; i < _videoElementaudioTracks.length; i++) {
+    const videoElementAudioTracks = this._videoElement.audioTracks;
+    if (videoElementAudioTracks) {
+      for (let i = 0; i < videoElementAudioTracks.length; i++) {
         if (i == index) {
-          _videoElementaudioTracks[i].enabled = true;
+          videoElementAudioTracks[i].enabled = true;
         } else {
-          _videoElementaudioTracks[i].enabled = false;
+          videoElementAudioTracks[i].enabled = false;
         }
       }
     }
