@@ -1120,21 +1120,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
-   * Disables all the existing audio tracks.
-   * @private
-   * @returns {void}
-   */
-  _disableAudioTracks(): void {
-    NativeAdapter._logger.debug('_disableAudioTracks');
-    let audioTracks = this._videoElement.audioTracks;
-    if (audioTracks) {
-      for (let i = 0; i < audioTracks.length; i++) {
-        audioTracks[i].enabled = false;
-      }
-    }
-  }
-
-  /**
    * Switch an audio track
    * @param {Number} index - the audio track indexto select
    * @private
