@@ -1136,7 +1136,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   /**
    * Switch an audio track
-   * @param {index} index - the audio track indexto select
+   * @param {Number} index - the audio track indexto select
    * @private
    * @returns {void}
    */
