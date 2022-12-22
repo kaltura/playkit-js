@@ -99,7 +99,7 @@ const TextTrack: TextTrack = class TextTrack extends Track {
     this._kind = settings.kind;
     this._external = settings.external;
     this._index = TextTrack._generateIndex();
-    this._default = this.active;
+    this._default = settings.default || false;
   }
 };
 
