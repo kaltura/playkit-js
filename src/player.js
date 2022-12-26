@@ -2588,7 +2588,7 @@ export default class Player extends FakeEventTarget {
    */
   _setDefaultTracks(): void {
     const activeTracks = this.getActiveTracks();
-    const defaultStreamTrack: string = this._getTextTracks().find(track => track.default);
+    const defaultStreamTrack = this._getTextTracks().find(track => track.default);
     const playbackConfig = this.config.playback;
     const offTextTrack: ?Track = this._getTextTracks().find(track => TextTrack.langComparer(OFF, track.language));
     const defaultLanguage = this._getLanguage<TextTrack>(this._getTextTracks(), playbackConfig.textLanguage, defaultStreamTrack);
