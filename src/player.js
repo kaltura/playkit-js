@@ -2626,19 +2626,18 @@ export default class Player extends FakeEventTarget {
    * @returns {string} - The track language to set by default.
    */
   _getLanguage<T: TextTrack | AudioTrack>(tracks: Array<T>, configuredLanguage: string, defaultTrack: ?T): string {
-    let autoSelectedLanguage: string = '';
-    const defaultStreamTrack: string = tracks.find(track => track.default)?.language || '';
-    if (configuredLanguage === AUTO) {
+    let language = configuredLanguage;
+    if (language === AUTO) {
       const localeTrack: ?T = tracks.find(track => Track.langComparer(Locale.language, track.language));
       if (localeTrack) {
-        autoSelectedLanguage = localeTrack.language;
+        language = localeTrack.language;
       } else if (defaultTrack && defaultTrack.language !== OFF) {
-        autoSelectedLanguage = defaultTrack.language;
+        language = defaultTrack.language;
       } else if (tracks && tracks.length > 0) {
-        autoSelectedLanguage = tracks[0].language;
+        language = tracks[0].language;
       }
     }
-    return autoSelectedLanguage || configuredLanguage || defaultStreamTrack;
+    return language;
   }
 
   /**
