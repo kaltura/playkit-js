@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.80.10](https://github.com/kaltura/playkit-js/compare/v0.80.9...v0.80.10) (2022-12-28)
+
+
+### Bug Fixes
+
+* **FEC-12760:** Blank Transcript Box In V7 Player ([#682](https://github.com/kaltura/playkit-js/issues/682)) ([a9400ab](https://github.com/kaltura/playkit-js/commit/a9400ab)), closes [kaltura/playkit-js-hls#183](https://github.com/kaltura/playkit-js/issues/183) [kaltura/playkit-js-dash#219](https://github.com/kaltura/playkit-js/issues/219)
+* **FEC-12760:** default track stream selected when config.playback.textLanguage !== 'auto' - Regression ([#688](https://github.com/kaltura/playkit-js/issues/688)) ([3f6fd57](https://github.com/kaltura/playkit-js/commit/3f6fd57))
+* **FEC-12814:**  native adapter merge audio tracks changing code to same method ([#686](https://github.com/kaltura/playkit-js/issues/686)) ([3184d98](https://github.com/kaltura/playkit-js/commit/3184d98))
+
+
+
 ### [0.80.9](https://github.com/kaltura/playkit-js/compare/v0.80.8...v0.80.9) (2022-12-07)
 
 
