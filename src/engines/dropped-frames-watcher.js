@@ -32,7 +32,10 @@ class DroppedFramesWatcher extends FakeEventTarget {
     if (this._getDroppedAndDecodedFrames()[0] === NOT_SUPPORTED) {
       DroppedFramesWatcher._logger.debug('Dropped frame watcher is not supported');
     } else if (this._config.capLevelOnFPSDrop) {
+      DroppedFramesWatcher._logger.debug('Initialized capLevelOnFPSDrop = true');
       this._init();
+    } else {
+      DroppedFramesWatcher._logger.debug('Not Initialized');
     }
   }
 

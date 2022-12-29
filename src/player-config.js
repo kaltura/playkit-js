@@ -65,7 +65,7 @@ const DefaultConfig = {
     enabled: true,
     fpsDroppedFramesInterval: 5000,
     fpsDroppedMonitoringThreshold: 0.2,
-    capLevelOnFPSDrop: true,
+    capLevelOnFPSDrop: false,
     capLevelToPlayerSize: false,
     restrictions: {
       minHeight: 0,
