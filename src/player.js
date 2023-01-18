@@ -1817,7 +1817,6 @@ export default class Player extends FakeEventTarget {
     Utils.Dom.appendChild(this._el, el);
     // Append playkit-subtitles
     this._textDisplayEl = Utils.Dom.createElement('div');
-    Utils.Dom.setAttribute(this._textDisplayEl, 'aria-live', 'polite');
     Utils.Dom.addClassName(this._textDisplayEl, SUBTITLES_CLASS_NAME);
     Utils.Dom.appendChild(this._el, this._textDisplayEl);
   }
@@ -2589,12 +2588,14 @@ export default class Player extends FakeEventTarget {
    */
   _setDefaultTracks(): void {
     const activeTracks = this.getActiveTracks();
+    const defaultStreamTrack = this._getTextTracks().find(track => track.default);
     const playbackConfig = this.config.playback;
     const offTextTrack: ?Track = this._getTextTracks().find(track => TextTrack.langComparer(OFF, track.language));
+    const defaultLanguage = this._getLanguage<TextTrack>(this._getTextTracks(), playbackConfig.textLanguage, defaultStreamTrack);
     const currentOrConfiguredTextLang =
-      window.localStorage.getItem('kaltura-player-js_textLanguage') ||
-      this._playbackAttributesState.textLanguage ||
-      this._getLanguage<TextTrack>(this._getTextTracks(), playbackConfig.textLanguage, activeTracks.text);
+      !this._playbackAttributesState.textLanguage || this._playbackAttributesState.textLanguage === OFF
+        ? defaultLanguage
+        : this._playbackAttributesState.textLanguage;
     const currentOrConfiguredAudioLang =
       this._playbackAttributesState.audioLanguage ||
       this._getLanguage<AudioTrack>(this._getAudioTracks(), playbackConfig.audioLanguage, activeTracks.audio);
