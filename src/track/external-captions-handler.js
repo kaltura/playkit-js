@@ -416,8 +416,8 @@ class ExternalCaptionsHandler extends FakeEventTarget {
         this._activeTextCues = [];
         cueIndexUpdated = this._maybeSetExternalCueIndex();
       }
-      const activeCuesAdded = this._maybeAddToActiveCues(track);
       const activeCuesRemoved = this._maybeRemoveActiveCues();
+      const activeCuesAdded = this._maybeAddToActiveCues(track);
 
       if (cueIndexUpdated || activeCuesAdded || activeCuesRemoved) {
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: this._activeTextCues}));
@@ -466,7 +466,9 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     let hadAdded = false;
     const cues = this._textTrackModel[track.language].cues;
     while (this._externalCueIndex < cues.length && currentTime > cues[this._externalCueIndex].startTime) {
-      this._activeTextCues.push(cues[this._externalCueIndex]);
+      if (currentTime < cues[this._externalCueIndex].endTime) {
+        this._activeTextCues.push(cues[this._externalCueIndex]);
+      }
       this._externalCueIndex++;
       hadAdded = true;
     }
@@ -492,7 +494,6 @@ class ExternalCaptionsHandler extends FakeEventTarget {
           break;
         }
       }
-      this._externalCueIndex = i;
       return true;
     }
     return false;
@@ -575,6 +576,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       this._activeTextCues = [];
       this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: this._activeTextCues}));
       this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, () => this._handleCaptionOnTimeUpdate(textTrack));
+      this._externalCueIndex = 0;
     }
   }
 }
