@@ -416,8 +416,8 @@ class ExternalCaptionsHandler extends FakeEventTarget {
         this._activeTextCues = [];
         cueIndexUpdated = this._maybeSetExternalCueIndex();
       }
-      const activeCuesRemoved = this._maybeRemoveActiveCues();
       const activeCuesAdded = this._maybeAddToActiveCues(track);
+      const activeCuesRemoved = this._maybeRemoveActiveCues();
 
       if (cueIndexUpdated || activeCuesAdded || activeCuesRemoved) {
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: this._activeTextCues}));
@@ -445,14 +445,11 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     if (!currentTime) {
       return false;
     }
-    let hadRemoved = false;
-    for (let activeTextCuesIndex = 0; activeTextCuesIndex < this._activeTextCues.length; activeTextCuesIndex++) {
-      const cue = this._activeTextCues[activeTextCuesIndex];
-      if (currentTime < cue.startTime || cue.endTime < currentTime) {
-        this._activeTextCues.splice(activeTextCuesIndex, 1);
-        hadRemoved = true;
-      }
-    }
+
+    const updatedActiveTextCues = this._activeTextCues.filter(cue => cue.startTime < currentTime && currentTime < cue.endTime);
+    const hadRemoved = this._activeTextCues.length !== updatedActiveTextCues.length;
+    this._activeTextCues = updatedActiveTextCues;
+
     return hadRemoved;
   }
 
