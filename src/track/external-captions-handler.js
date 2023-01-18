@@ -574,9 +574,9 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       this._isTextTrackActive = true;
       ExternalCaptionsHandler._logger.debug('External text track changed', textTrack);
       this._activeTextCues = [];
+      this._externalCueIndex = 0;
       this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: this._activeTextCues}));
       this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, () => this._handleCaptionOnTimeUpdate(textTrack));
-      this._externalCueIndex = 0;
     }
   }
 }
