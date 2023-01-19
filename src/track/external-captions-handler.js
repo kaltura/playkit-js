@@ -445,14 +445,11 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     if (!currentTime) {
       return false;
     }
-    let hadRemoved = false;
-    for (let activeTextCuesIndex = 0; activeTextCuesIndex < this._activeTextCues.length; activeTextCuesIndex++) {
-      const cue = this._activeTextCues[activeTextCuesIndex];
-      if (currentTime < cue.startTime || cue.endTime < currentTime) {
-        this._activeTextCues.splice(activeTextCuesIndex, 1);
-        hadRemoved = true;
-      }
-    }
+
+    const updatedActiveTextCues = this._activeTextCues.filter(cue => cue.startTime < currentTime && currentTime < cue.endTime);
+    const hadRemoved = this._activeTextCues.length !== updatedActiveTextCues.length;
+    this._activeTextCues = updatedActiveTextCues;
+
     return hadRemoved;
   }
 
@@ -469,7 +466,9 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     let hadAdded = false;
     const cues = this._textTrackModel[track.language].cues;
     while (this._externalCueIndex < cues.length && currentTime > cues[this._externalCueIndex].startTime) {
-      this._activeTextCues.push(cues[this._externalCueIndex]);
+      if (currentTime < cues[this._externalCueIndex].endTime) {
+        this._activeTextCues.push(cues[this._externalCueIndex]);
+      }
       this._externalCueIndex++;
       hadAdded = true;
     }
@@ -495,7 +494,6 @@ class ExternalCaptionsHandler extends FakeEventTarget {
           break;
         }
       }
-      this._externalCueIndex = i;
       return true;
     }
     return false;
@@ -576,6 +574,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       this._isTextTrackActive = true;
       ExternalCaptionsHandler._logger.debug('External text track changed', textTrack);
       this._activeTextCues = [];
+      this._externalCueIndex = 0;
       this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: this._activeTextCues}));
       this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, () => this._handleCaptionOnTimeUpdate(textTrack));
     }

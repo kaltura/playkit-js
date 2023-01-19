@@ -85,7 +85,7 @@ var config = {
     enabled: true,
     fpsDroppedFramesInterval: 5000,
     fpsDroppedMonitoringThreshold: 0.2,
-    capLevelOnFPSDrop: true,
+    capLevelOnFPSDrop: false,
     capLevelToPlayerSize: false,
     restrictions: {
       minHeight: 0,
@@ -1584,7 +1584,7 @@ var config = {
 >   enabled: true,
 >   fpsDroppedFramesInterval: 5000,
 >   fpsDroppedMonitoringThreshold: 0.2,
->   capLevelOnFPSDrop: true,
+>   capLevelOnFPSDrop: false,
 >   capLevelToPlayerSize: false,
 >   restrictions: {
 >     minHeight: 0,
@@ -1633,7 +1633,7 @@ var config = {
 > >
 > > ##### Type: `boolean`
 > >
-> > ##### Default: true
+> > ##### Default: false
 > >
 > > ##### Description: If the player should cap the level when the fps exceeds the threshold.
 > >
