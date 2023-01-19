@@ -2,7 +2,8 @@
 const StreamType: PKStreamTypes = {
   DASH: 'dash',
   HLS: 'hls',
-  PROGRESSIVE: 'progressive'
+  PROGRESSIVE: 'progressive',
+  IMAGE: 'image'
 };
 
 export {StreamType};
