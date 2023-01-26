@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.81.0](https://github.com/kaltura/playkit-js/compare/v0.80.10...v0.81.0) (2023-01-26)
+
+
+### Bug Fixes
+
+* **FEC-12686:** Web - When changing the caption from RUS to JAP in the middle of the video, all of the past caption are shown at once ([97f97e6](https://github.com/kaltura/playkit-js/commit/97f97e6))
+* **FEC-12848:**  set abr.capLevelOnFPSDrop to default false. ([#696](https://github.com/kaltura/playkit-js/issues/696)) ([f22b4c7](https://github.com/kaltura/playkit-js/commit/f22b4c7))
+
+
+### Features
+
+* **FEC-12549:** Image Player Engine (playkitJS/v7) ([#697](https://github.com/kaltura/playkit-js/issues/697)) ([d863b1b](https://github.com/kaltura/playkit-js/commit/d863b1b)), closes [kaltura/kaltura-player-js#598](https://github.com/kaltura/playkit-js/issues/598) [kaltura/playkit-js-image-player#1](https://github.com/kaltura/playkit-js/issues/1) [kaltura/playkit-js-providers#190](https://github.com/kaltura/playkit-js/issues/190) [kaltura/playkit-js-ui#718](https://github.com/kaltura/playkit-js/issues/718)
+
+
+
 ### [0.80.10](https://github.com/kaltura/playkit-js/compare/v0.80.9...v0.80.10) (2022-12-28)
 
 
