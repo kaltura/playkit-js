@@ -569,9 +569,9 @@ var config = {
 > > ##### Type: `PKTextTrackDisplaySettingObject`
 > >
 > > ##### Default: `null`
-> > 
+> >
 > > ##### Description: set the textTrackDisplaySetting to override the vtt cues position
-> > 
+> >
 > > ##### Config:
 >
 > ```js
@@ -581,30 +581,47 @@ var config = {
 >   align: string, // ['start', 'center', 'end', 'left', 'right']
 >   position: number, //[0 .. 100]
 >   positionAlign: string, // ['start', 'center', 'end']
->   snapToLines: boolean, // [true, false] 
+>   snapToLines: boolean, // [true, false]
 >   vertical: string, //['', 'lr', 'rl']
 >   size: number //[0 .. 100]
->}
+> }
 > ```
-> 
+>
 > > ##### line
-> >  The line defines positioning of the cue box
+> >
+> > The line defines positioning of the cue box
+> >
 > > ##### lineAlign
+> >
 > > An alignment for the cue box’s line, one of start/center/end alignment
+> >
 > > ##### align
+> >
 > > An alignment for all lines of text within the cue box, in the dimension of the writing direction
-> > ##### snapToLines 
-> >  is a  boolean indicating whether the line is an integer number of lines (using the line dimensions of the first line of the cue), or whether it is a percentage of the dimension of the video. The flag is set to true when lines are counted, and false otherwise.
-> > ##### position 
+> >
+> > ##### snapToLines
+> >
+> > is a boolean indicating whether the line is an integer number of lines (using the line dimensions of the first line of the cue), or whether it is a percentage of the dimension of the video. The flag is set to true when lines are counted, and false otherwise.
+> >
+> > ##### position
+> >
 > > The position defines the indent of the cue box in the direction defined by the writing direction
-> > ##### positionAlign 
+> >
+> > ##### positionAlign
+> >
 > > An alignment for the cue box in the dimension of the writing direction, describing what the position
-> > ##### snapToLines 
-> >  is a  boolean indicating whether the line is an integer number of lines (using the line dimensions of the first line of the cue), or whether it is a percentage of the dimension of the video. The flag is set to true when lines are counted, and false otherwise.
+> >
+> > ##### snapToLines
+> >
+> > is a boolean indicating whether the line is an integer number of lines (using the line dimensions of the first line of the cue), or whether it is a percentage of the dimension of the video. The flag is set to true when lines are counted, and false otherwise.
+> >
 > > ##### vertical
-> > configures the cue to use vertical text layout rather than horizontal text layout. Vertical text layout is sometimes used in Japanese, for example. The default is horizontal layout 
+> >
+> > configures the cue to use vertical text layout rather than horizontal text layout. Vertical text layout is sometimes used in Japanese, for example. The default is horizontal layout
+> >
 > > ##### size
-> > A number giving the size of the cue box, to be interpreted as a percentage of the video, as defined by the writing direction 
+> >
+> > A number giving the size of the cue box, to be interpreted as a percentage of the video, as defined by the writing direction
 > >
 > > [instance_properties](https://developer.mozilla.org/en-US/docs/Web/API/VTTCue#instance_properties)
 >
@@ -615,21 +632,21 @@ var config = {
 > > ##### Type: `TextStyle`
 > >
 > > ##### Default: `null`
-> > 
+> >
 > > ##### Description: set the styling for text tracks
-> > 
+> >
 > > ##### Config:
-> > 
+> >
 > > ```js
 > > {
 > >   fontSize?: '50%' | '75%' | '100%' | '200%' | '300%' | '400%'
 > >   fontScale?: -2 | -1 | 0 | 2 | 3 | 4
 > >   fontFamily?: string, // font family available in browser
-> >   fontColor?: [number, number, number], // RGB 
+> >   fontColor?: [number, number, number], // RGB
 > >   fontOpacity?: number, // [0.0 .. 1.0]
 > >   fontEdge?: Array<[number, number, number, number, number, number]>, //
-> >								 TextStyle.EdgeStyles.NONE
-> >								 TextStyle.EdgeStyles.RAISED
+> > 								 TextStyle.EdgeStyles.NONE
+> > 								 TextStyle.EdgeStyles.RAISED
 > > 							 TextStyle.EdgeStyles.DEPRESSED
 > > 							 TextStyle.EdgeStyles.UNIFORM
 > > 							 TextStyle.EdgeStyles.DROP
@@ -637,27 +654,40 @@ var config = {
 > >   backgroundOpacity?: number // [0.0 .. 1.0]
 > > }
 > > ```
-> > 
+> >
 > > ##### fontSize
+> >
 > > Percentage unit relative to the parent element's font
+> >
 > > ##### fontScale
+> >
 > > Integer number representing the scaling factor relative to the parent element's font size
+> >
 > > ##### fontFamily
+> >
 > > The font family
+> >
 > > ##### fontColor
+> >
 > > Font color in RGB format
+> >
 > > ##### fontOpacity
+> >
 > > The font opacity
+> >
 > > ##### fontEdge
+> >
 > > Each inner array represents a shadow, and is composed of RGB values for the
 > > shadow color, followed by pixel values for x-offset, y-offset, and blur
-> > ##### backgroundColor
-> > Background color in RGB format
-> > ##### backgroundOpacity
-> > The background opacity
 > >
+> > ##### backgroundColor
+> >
+> > Background color in RGB format
+> >
+> > ##### backgroundOpacity
+> >
+> > The background opacity
 
->
 > ##
 >
 > > ### config.text.captionsTextTrack1Label
@@ -856,8 +886,9 @@ var config = {
 > > ##### Default: `""`
 > >
 > > ##### Description: Sets the default audio track language from the additionalAudioLanguage.
-> > option to add the audioLanguage with additional code (should be the same language as the audioLanguage field). 
-> > intended for cases where the 639-1 code is totaly different than the 639-2 code. 
+> >
+> > option to add the audioLanguage with additional code (should be the same language as the audioLanguage field).
+> > intended for cases where the 639-1 code is totaly different than the 639-2 code.
 > > for example: Spanish 639-1: 'es' 639-2: 'spa'
 > >
 > > If an audio track with the defined language exists, this audio track will be selected as the initial audio track.
@@ -871,7 +902,6 @@ var config = {
 > >   }
 > > };
 > > ```
-> >
 >
 > ##
 >
@@ -882,8 +912,9 @@ var config = {
 > > ##### Default: `""`
 > >
 > > ##### Description: Defines the default captions language from the additionalTextLanguage
+> >
 > > option to add the textLanguage with additional code. (should be the same language as the textLanguage field).
-> > intended for cases where the 639-1 code is totaly different than the 639-2 code. 
+> > intended for cases where the 639-1 code is totaly different than the 639-2 code.
 > > for example: Spanish 639-1: 'es' 639-2: 'spa'
 > >
 > > If captions for the defined language are available, this text track will be selected as the initial text track.
@@ -897,7 +928,6 @@ var config = {
 > >   }
 > > };
 > > ```
-> >
 >
 > ##
 >
@@ -1235,6 +1265,14 @@ var config = {
 > > ##### Default: dash: `true`
 > >
 > > ##### Description: Toggle emsg event listener on/off in dash adapter
+> >
+> > ##
+> >
+> > ### config.streaming.switchDynamicToStatic (optional)
+> >
+> > ##### Default: dash: `false`
+> >
+> > ##### Description: Toggle whether to switch to static manifest when live stream ends.
 
 ##
 
