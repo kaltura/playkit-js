@@ -4,7 +4,8 @@ const EngineType: PKEngineTypes = {
   FLASH: 'flash',
   SILVERLIGHT: 'silverlight',
   CAST: 'cast',
-  YOUTUBE: 'youtube'
+  YOUTUBE: 'youtube',
+  IMAGE: 'image'
 };
 
 export {EngineType};
