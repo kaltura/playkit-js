@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.82.0](https://github.com/kaltura/playkit-js/compare/v0.81.0...v0.82.0) (2023-02-22)
+
+
+### Bug Fixes
+
+* **FEC-12952:** Add playbackType of type 'Image' ([#702](https://github.com/kaltura/playkit-js/issues/702)) ([8ea9dff](https://github.com/kaltura/playkit-js/commit/8ea9dff)), closes [kaltura/playkit-js-image-player#5](https://github.com/kaltura/playkit-js/issues/5) [kaltura/playkit-js-youbora#108](https://github.com/kaltura/playkit-js/issues/108)
+
+
+### Features
+
+* **FEC-11970:** switch from dynamic manifest to static ([9f92e86](https://github.com/kaltura/playkit-js/commit/9f92e86))
+
+
+
 ## [0.81.0](https://github.com/kaltura/playkit-js/compare/v0.80.10...v0.81.0) (2023-01-26)
 
 
