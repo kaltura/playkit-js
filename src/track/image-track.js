@@ -62,11 +62,11 @@ const ImageTrack: ImageTrack = class ImageTrack extends Track {
   }
 
   get sliceWidth() {
-    return this._width / this._rows;
+    return this._width / this._cols;
   }
 
   get sliceHeight() {
-    return this._height / this._cols;
+    return this._height / this._rows;
   }
 };
 
