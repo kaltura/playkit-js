@@ -580,7 +580,7 @@ var config = {
 >   lineAlign: string, // ['start', 'center', 'end']
 >   align: string, // ['start', 'center', 'end', 'left', 'right']
 >   position: number, //[0 .. 100]
->   positionAlign: string, // ['start', 'center', 'end']
+>   positionAlign: string, // ['line-left', 'center', 'line-right']
 >   snapToLines: boolean, // [true, false]
 >   vertical: string, //['', 'lr', 'rl']
 >   size: number //[0 .. 100]

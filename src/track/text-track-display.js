@@ -664,6 +664,7 @@ class CueStyleBox extends StyleBox {
     switch (align) {
       case 'start':
       case 'left':
+      case 'line-left':
         textPos = cue.position;
         break;
       case 'center':
@@ -671,6 +672,7 @@ class CueStyleBox extends StyleBox {
         break;
       case 'end':
       case 'right':
+      case 'line-right':
         textPos = cue.position - cue.size;
         break;
     }
