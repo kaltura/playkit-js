@@ -494,6 +494,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
           break;
         }
       }
+      this._externalCueIndex = i;
       return true;
     }
     return false;
