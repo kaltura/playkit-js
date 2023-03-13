@@ -1223,7 +1223,8 @@ var config = {
 > {
 >   forceBreakStall: boolean,
 >   lowLatencyMode: boolean,
->   trackEmsgEvents: boolean
+>   trackEmsgEvents: boolean,
+>   switchDynamicToStatic: boolean
 > }
 > ```
 >
@@ -1234,7 +1235,8 @@ var config = {
 >   forceBreakStall: false,
 >   lowLatencyMode: true, // default for hls playback (optional)
 >   lowLatencyMode: false, // default for dash & smart TV playback (optional)
->   trackEmsgEvents: true // default for dash (optional)
+>   trackEmsgEvents: true, // default for dash (optional)
+>   switchDynamicToStatic: false // toggle whether to switch to static manifest when live stream ends
 > }
 > ```
 >
