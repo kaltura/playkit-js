@@ -2,7 +2,7 @@
 import Error from '../../../../error/error';
 import getLogger from '../../../../utils/logger';
 import * as Utils from '../../../../utils/util';
-import {RequestType} from '../../../../request-type';
+import {RequestType} from '../../../../enums/request-type';
 import type {CodeType} from '../../../../error/code';
 import type {SeverityType} from '../../../../error/severity';
 import type {CategoryType} from '../../../../error/category';
@@ -19,7 +19,7 @@ const WebkitEvents: WebkitEventsType = {
   KEY_ERROR: 'webkitkeyerror'
 };
 
-type FairPlayDrmConfigType = {licenseUrl: string, certificate: string, network: {requestFilter?: Function, responseFilter: Function}};
+type FairPlayDrmConfigType = {licenseUrl: string, certificate?: string, network: {requestFilter?: Function, responseFilter: Function}};
 
 class FairPlayDrmHandler {
   static WebkitEvents: WebkitEventsType = WebkitEvents;
@@ -108,6 +108,11 @@ class FairPlayDrmHandler {
     this._eventManager.listen(this._keySession, WebkitEvents.KEY_ERROR, (e: Event) => this._onWebkitKeyError(e));
   }
 
+  getDrmInfo(): PKDrmDataObject {
+    const {certificate, licenseUrl} = this._config;
+    return {certificate, licenseUrl, scheme: DrmScheme.FAIRPLAY};
+  }
+
   destroy(): void {
     this._eventManager.destroy();
     this._keySession.close();
@@ -145,6 +150,9 @@ class FairPlayDrmHandler {
             typeof value === 'string' && request.setRequestHeader(header, value);
             setContentType && (setContentType = header.toLowerCase() !== 'content-type');
           });
+        }
+        if (typeof updatedRequest.withCredentials === 'boolean') {
+          request.withCredentials = updatedRequest.withCredentials;
         }
         setContentType && request.setRequestHeader('Content-type', 'application/json');
         this._logger.debug('Ready for license request');
@@ -269,7 +277,7 @@ class FairPlayDrmHandler {
     return String.fromCharCode.apply(null, new Uint16Array(array.buffer));
   }
 
-  static _base64DecodeUint8Array(input: string): Uint8Array {
+  static _base64DecodeUint8Array(input?: string): Uint8Array {
     let raw = window.atob(input);
     let rawLength = raw.length;
     let array = new Uint8Array(new ArrayBuffer(rawLength));

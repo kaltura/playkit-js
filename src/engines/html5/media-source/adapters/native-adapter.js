@@ -4,9 +4,10 @@ import Track from '../../../../track/track';
 import VideoTrack from '../../../../track/video-track';
 import AudioTrack from '../../../../track/audio-track';
 import PKTextTrack from '../../../../track/text-track';
-import {RequestType} from '../../../../request-type';
+import {RequestType} from '../../../../enums/request-type';
 import BaseMediaSourceAdapter from '../base-media-source-adapter';
 import {getSuitableSourceForResolution} from '../../../../utils/resolution';
+import {filterTracksByRestriction} from '../../../../utils/restrictions';
 import * as Utils from '../../../../utils/util';
 import FairPlay from '../../../../drm/fairplay';
 import Env from '../../../../utils/env';
@@ -14,11 +15,12 @@ import Error from '../../../../error/error';
 import defaultConfig from './native-adapter-default-config';
 import type {FairPlayDrmConfigType} from './fairplay-drm-handler';
 import {FairPlayDrmHandler} from './fairplay-drm-handler';
-import {EXTERNAL_TRACK_ID} from '../../../../track/external-captions-handler';
 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
 const NUDGE_SEEK_AFTER_FOCUS: number = 0.1;
+const SAFARI_BUFFERED_SEGMENTS_COUNT: number = 3;
+const LIVE_DURATION_INTERVAL_MS = 1000;
 
 /**
  * An illustration of media source extension for progressive download
@@ -54,14 +56,21 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    * @static
    */
-  static _drmProtocols: Array<Function> = [FairPlay];
+  static _drmProtocols: Array<IDrmProtocol> = [FairPlay];
   /**
    * The DRM protocol for the current playback.
    * @type {?Function}
    * @private
    * @static
    */
-  static _drmProtocol: ?Function = null;
+  static _drmProtocol: ?IDrmProtocol = null;
+  /**
+   * The supported progressive mime types by the native adapter.
+   * @member {Array<string>} _progressiveMimeTypes
+   * @static
+   * @private
+   */
+  static _progressiveMimeTypes: Array<string> = ['video/mp4', 'audio/mp3'];
   /**
    * The DRM handler playback.
    * @type {?FairPlayDrmHandler}
@@ -111,6 +120,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   _waitingEventTriggered: ?boolean = false;
 
+  _wasCurrentTimeSetSuccessfully: boolean;
+
+  _segmentDuration: number = 0;
+
   /**
    * A counter to track the number of attempts to recover from media error
    * @type {number}
@@ -131,8 +144,18 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _startTimeAttach: number = NaN;
-  _nativeTextTracksMap = [];
-
+  /**
+   * Map from our text track to native text track
+   * @type {number}
+   * @private
+   */
+  _nativeTextTracksMap = {};
+  /**
+   *
+   * @type {number}
+   * @private
+   */
+  _captionsHidden: boolean = false;
   /**
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
@@ -185,6 +208,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @static
    */
   static createAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): IMediaSourceAdapter {
+    NativeAdapter._logger.debug('createAdapter');
     const adapterConfig: Object = {
       displayTextTrack: false,
       progressiveSources: []
@@ -205,6 +229,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (Utils.Object.hasPropertyPath(config, 'playback')) {
       if (Utils.Object.hasPropertyPath(config.playback, 'options.html5.native')) {
         Utils.Object.mergeDeep(adapterConfig, config.playback.options.html5.native);
+      }
+    }
+    if (Utils.Object.hasPropertyPath(config, 'abr')) {
+      const abr = config.abr;
+      if (abr.restrictions) {
+        Utils.Object.createPropertyPath(adapterConfig, 'abr.restrictions', abr.restrictions);
       }
     }
     adapterConfig.network = config.network;
@@ -244,6 +274,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _dispatchDRMLicenseLoaded(data: any): void {
     this._trigger(CustomEventType.DRM_LICENSE_LOADED, data);
   }
+
   /**
    * Sets the DRM playback in case such needed.
    * @private
@@ -286,7 +317,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _isProgressivePlayback(): boolean {
-    return this._sourceObj ? this._sourceObj.mimetype === 'video/mp4' : false;
+    return this._sourceObj ? NativeAdapter._progressiveMimeTypes.includes(this._sourceObj.mimetype.toLowerCase()) : false;
   }
 
   /**
@@ -296,6 +327,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {Promise<Object>} - The loaded data
    */
   load(startTime: ?number): Promise<Object> {
+    this._wasCurrentTimeSetSuccessfully = false;
     this._maybeSetDrmPlayback();
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
@@ -303,21 +335,26 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         const playbackStartTime = this._startTimeAttach || startTime || 0;
         this._loadPromiseReject = reject;
         this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => this._onLoadedData(resolve, playbackStartTime));
+        this._eventManager.listenOnce(this._videoElement, Html5EventType.PLAYING, () => this._onPlaying(playbackStartTime));
         this._eventManager.listen(this._videoElement, Html5EventType.TIME_UPDATE, () => this._onTimeUpdate());
         this._eventManager.listen(this._videoElement, Html5EventType.PLAY, () => this._resetHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.PAUSE, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.ENDED, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.ABORT, () => this._clearHeartbeatTimeout());
         this._eventManager.listen(this._videoElement, Html5EventType.SEEKED, () => this._syncCurrentTime());
+        this._eventManager.listen(this._videoElement, Html5EventType.WAITING, () => (this._waitingEventTriggered = true));
+        this._eventManager.listen(this._videoElement, Html5EventType.PLAYING, () => (this._waitingEventTriggered = false));
         // Sometimes when playing live in safari and switching between tabs the currentTime goes back with no seek events
-        this._eventManager.listen(window, 'focus', () =>
+        this._eventManager.listen(window, 'focus', () => {
           setTimeout(() => {
-            // In IOS HLS, sometimes when coming back from lock screen/Idle mode, the stream will get stuck, and only a small seek nudge will fix it.
-            this._videoElement.currentTime =
-              this._videoElement.currentTime > NUDGE_SEEK_AFTER_FOCUS ? this._videoElement.currentTime - NUDGE_SEEK_AFTER_FOCUS : 0;
+            if (Env.isIOS) {
+              // In IOS HLS, sometimes when coming back from lock screen/Idle mode, the stream will get stuck, and only a small seek nudge will fix it.
+              this._videoElement.currentTime =
+                this._videoElement.currentTime > NUDGE_SEEK_AFTER_FOCUS ? this._videoElement.currentTime - NUDGE_SEEK_AFTER_FOCUS : 0;
+            }
             this._syncCurrentTime();
-          }, BACK_TO_FOCUS_TIMEOUT)
-        );
+          }, BACK_TO_FOCUS_TIMEOUT);
+        });
         if (this._isProgressivePlayback()) {
           this._setProgressiveSource();
         }
@@ -351,6 +388,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     });
 
     this._eventManager.listenOnce(this._videoElement, Html5EventType.CAN_PLAY, () => {
+      NativeAdapter._logger.debug('CAN_PLAY');
       this._videoElement.currentTime = prevCurrTime;
       this._videoElement.play();
       this._videoElement.pause();
@@ -360,7 +398,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       if (prevActiveTextTrack) {
         this.selectTextTrack(prevActiveTextTrack);
       } else {
-        this._disableTextTracks();
+        this.disableNativeTextTracks();
       }
     });
   }
@@ -388,13 +426,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     this._startTimeAttach = this._lastTimeDetach;
     this._lastTimeDetach = NaN;
   }
+
   /**
    * detach media - will remove the media source from handling the video
    * @public
    * @returns {void}
    */
   detachMediaSource(): void {
-    this._lastTimeDetach = this.currentTime;
+    this._lastTimeDetach = this._videoElement.currentTime;
     if (this._videoElement && this._videoElement.src) {
       Utils.Dom.setAttribute(this._videoElement, 'src', '');
       Utils.Dom.removeAttribute(this._videoElement, 'src');
@@ -425,6 +464,18 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
+   * play event handler.
+   * @param {number} startTime - Optional time to start the video from.
+   * @private
+   * @returns {void}
+   */
+  _onPlaying(startTime: ?number): void {
+    if (this.isLive()) {
+      this._setStartTime(startTime);
+    }
+  }
+
+  /**
    * Loaded data event handler.
    * @param {Function} resolve - The resolve promise function.
    * @param {number} startTime - Optional time to start the video from.
@@ -444,8 +495,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._handleLiveDurationChange();
       }
     };
-    if (startTime && startTime > -1) {
-      this._videoElement.currentTime = startTime;
+    if (!this.isLive()) {
+      this._setStartTime(startTime);
     }
     if (this._videoElement.textTracks.length > 0) {
       parseTracksAndResolve();
@@ -453,6 +504,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._eventManager.listenOnce(this._videoElement, Html5EventType.CAN_PLAY, parseTracksAndResolve.bind(this));
     }
     this._startTimeAttach = NaN;
+  }
+
+  _setStartTime(startTime: ?number) {
+    if (startTime && startTime > -1) {
+      this._videoElement.currentTime = startTime;
+    }
+    this._wasCurrentTimeSetSuccessfully = true;
   }
 
   _onTimeUpdate(): void {
@@ -503,17 +561,19 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   _handleVideoTracksChange(): void {
-    const {videoHeight, videoWidth} = this._videoElement;
-    if (!this._videoDimensions || videoHeight !== this._videoDimensions.videoHeight || videoWidth !== this._videoDimensions.videoWidth) {
-      this._videoDimensions = {videoHeight, videoWidth};
-      const setting = {
-        language: '',
-        height: videoHeight,
-        width: videoWidth,
-        active: true
-      };
-      this._onTrackChanged(new VideoTrack(setting));
-      NativeAdapter._logger.debug('Video track change', new VideoTrack(setting));
+    if (!this._isProgressivePlayback()) {
+      const {videoHeight, videoWidth, videoTracks} = this._videoElement;
+      if (!this._videoDimensions || videoHeight !== this._videoDimensions.videoHeight || videoWidth !== this._videoDimensions.videoWidth) {
+        this._videoDimensions = {videoHeight, videoWidth};
+        const setting = {
+          language: '',
+          height: videoHeight,
+          width: videoWidth,
+          active: true,
+          index: Array.from(videoTracks).findIndex((track: VideoTrack) => track.selected)
+        };
+        this._onTrackChanged(new VideoTrack(setting));
+      }
     }
   }
 
@@ -531,7 +591,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           this._waitingEventTriggered = false;
           this._progressiveSources = [];
           this._loadPromise = null;
-          this._nativeTextTracksMap = [];
+          this._nativeTextTracksMap = {};
           this._loadPromiseReject = null;
           this._liveEdge = 0;
           this._lastTimeUpdate = 0;
@@ -665,29 +725,50 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const parsedTracks = [];
     if (textTracks) {
       for (let i = 0; i < textTracks.length; i++) {
-        if (textTracks[i].language !== EXTERNAL_TRACK_ID || textTracks[i].label !== EXTERNAL_TRACK_ID) {
+        if (!PKTextTrack.isExternalTrack(textTracks[i])) {
           const settings = {
             kind: textTracks[i].kind,
-            active: textTracks[i].mode === 'showing',
+            active: textTracks[i].mode === PKTextTrack.MODE.SHOWING,
             label: textTracks[i].label,
             language: textTracks[i].language,
-            index: i
+            available: true
           };
-          if (settings.kind === 'subtitles') {
-            parsedTracks.push(new PKTextTrack(settings));
-            this._nativeTextTracksMap[settings.index] = textTracks[i];
-          } else if (settings.kind === 'captions' && this._config.enableCEA708Captions) {
+          if (settings.kind === PKTextTrack.KIND.SUBTITLES) {
+            const newTrack: PKTextTrack = new PKTextTrack(settings);
+            parsedTracks.push(newTrack);
+            this._nativeTextTracksMap[newTrack.index] = textTracks[i];
+          } else if (settings.kind === PKTextTrack.KIND.CAPTIONS && this._config.enableCEA708Captions) {
             settings.label = settings.label || captionsTextTrackLabels.shift();
             settings.language = settings.language || captionsTextTrackLanguageCodes.shift();
-            parsedTracks.push(new PKTextTrack(settings));
-            this._nativeTextTracksMap[settings.index] = textTracks[i];
+            settings.available = this._captionsHidden;
+            const newTrack: PKTextTrack = new PKTextTrack(settings);
+            parsedTracks.push(newTrack);
+            this._nativeTextTracksMap[newTrack.index] = textTracks[i];
           }
         }
+      }
+
+      if (!this._captionsHidden) {
+        this._maybeShow708Captions();
       }
     }
     return parsedTracks;
   }
 
+  _maybeShow708Captions(): void {
+    const captions = Array.from(this._videoElement.textTracks).filter(track => track.kind === PKTextTrack.KIND.CAPTIONS);
+    const activeCaption = captions.find(track => track.mode === PKTextTrack.MODE.SHOWING || track.mode === PKTextTrack.MODE.HIDDEN);
+    const textTrack = activeCaption || captions[0];
+    if (textTrack) {
+      textTrack.mode = PKTextTrack.MODE.HIDDEN;
+      this._captionsHidden = true;
+      this._eventManager.listenOnce(textTrack, 'cuechange', () => {
+        const textTracks = this._getPKTextTracks();
+        textTracks.forEach(track => (track.available = true) && (track.mode = PKTextTrack.MODE.DISABLED));
+        this._trigger(CustomEventType.TRACKS_CHANGED, {tracks: this._playerTracks});
+      });
+    }
+  }
   /**
    * Select a video track
    * @function selectVideoTrack
@@ -715,6 +796,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (videoTrack instanceof VideoTrack && videoTracks && videoTracks[videoTrack.index]) {
       let currentTime = this._videoElement.currentTime;
       let paused = this._videoElement.paused;
+      videoTrack.active = true;
       this._sourceObj = videoTracks[videoTrack.index];
       this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => {
         if (Env.browser.name === 'Android Browser') {
@@ -767,11 +849,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    */
   selectAudioTrack(audioTrack: AudioTrack): void {
+    NativeAdapter._logger.debug('selectAudioTrack');
     const audioTracks = this._videoElement.audioTracks;
     if (audioTrack instanceof AudioTrack && audioTracks && audioTracks[audioTrack.index]) {
       this._removeNativeAudioTrackChangeListener();
-      this._disableAudioTracks();
-      audioTracks[audioTrack.index].enabled = true;
+      this._switchAudioTrack(audioTrack.index);
       this._onTrackChanged(audioTrack);
       this._addNativeAudioTrackChangeListener();
     }
@@ -824,7 +906,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       }
       return -1;
     };
-    NativeAdapter._logger.debug('Video element audio track change');
     const vidIndex = getActiveVidAudioTrackIndex();
     const activeAudioTrack = this._getActivePKAudioTrack();
     const pkIndex = activeAudioTrack ? activeAudioTrack.index : -1;
@@ -846,13 +927,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    */
   selectTextTrack(textTrack: PKTextTrack): void {
-    if (textTrack instanceof PKTextTrack && (textTrack.kind === 'subtitles' || textTrack.kind === 'captions')) {
+    if (textTrack instanceof PKTextTrack && PKTextTrack.isNativeTextTrack(textTrack)) {
       this._removeNativeTextTrackChangeListener();
       const selectedTrack = this._nativeTextTracksMap[textTrack.index];
       if (selectedTrack) {
-        this._disableTextTracks();
+        this.disableNativeTextTracks();
         selectedTrack.mode = this._getDisplayTextTrackModeString();
-        NativeAdapter._logger.debug('Text track changed', selectedTrack);
         this._onTrackChanged(textTrack);
         this._addNativeTextTrackChangeListener();
       }
@@ -898,17 +978,15 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _onNativeTextTrackChange(): void {
     const pkTextTracks = this._getPKTextTracks();
     const pkOffTrack = pkTextTracks.find(track => track.language === 'off');
-    const getActiveVidTextTrackIndex = () => {
-      for (let i = 0; i < this._nativeTextTracksMap.length; i++) {
-        const textTrack = this._nativeTextTracksMap[i];
-        if (this._getDisplayTextTrackModeString() === textTrack.mode) {
-          return i;
+    const getActiveVidTextTrackIndex = (): number => {
+      for (const textTrackId in this._nativeTextTracksMap) {
+        if (this._getDisplayTextTrackModeString() === this._nativeTextTracksMap[textTrackId].mode) {
+          return Number(textTrackId);
         }
       }
       return -1;
     };
-    NativeAdapter._logger.debug('Video element text track change');
-    const vidIndex = getActiveVidTextTrackIndex();
+    const vidIndex: number = getActiveVidTextTrackIndex();
     const activePKtextTrack = this._getActivePKTextTrack();
     const pkIndex = activePKtextTrack ? activePKtextTrack.index : -1;
     if (vidIndex !== pkIndex) {
@@ -940,7 +1018,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _getDisplayTextTrackModeString(): string {
-    return this._config.displayTextTrack ? 'showing' : 'hidden';
+    return this._config.displayTextTrack ? PKTextTrack.MODE.SHOWING : PKTextTrack.MODE.HIDDEN;
   }
 
   /**
@@ -971,7 +1049,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    */
   hideTextTrack(): void {
-    this._disableTextTracks();
+    this.disableNativeTextTracks();
   }
 
   /**
@@ -997,6 +1075,37 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
+   * Apply ABR restriction
+   * @function applyABRRestriction
+   * @param {PKABRRestrictionObject} restrictions - abr restrictions config
+   * @returns {void}
+   * @public
+   */
+  applyABRRestriction(restrictions: PKABRRestrictionObject): void {
+    Utils.Object.createPropertyPath(this._config, 'abr.restrictions', restrictions);
+    this._maybeApplyAbrRestrictions(restrictions);
+  }
+
+  /**
+   * apply ABR restrictions
+   * @private
+   * @param {PKABRRestrictionObject} restrictions - abt config object
+   * @returns {void}
+   */
+  _maybeApplyAbrRestrictions(restrictions: PKABRRestrictionObject): void {
+    if (this._isProgressivePlayback()) {
+      const videoTracks = this._playerTracks.filter(track => track instanceof VideoTrack);
+      const availableTracks = filterTracksByRestriction(videoTracks, restrictions);
+      const activeTrackInRange = availableTracks.find(track => track.active);
+      if (!activeTrackInRange && availableTracks.length) {
+        this.selectVideoTrack(availableTracks[0]);
+      } else {
+        NativeAdapter._logger.warn('Invalid restrictions, there are not tracks within the restriction range');
+      }
+    }
+  }
+
+  /**
    * Disables all the existing video tracks.
    * @private
    * @returns {void}
@@ -1011,31 +1120,21 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   /**
-   * Disables all the existing audio tracks.
+   * Switch an audio track
+   * @param {Number} index - the audio track index to select
    * @private
    * @returns {void}
    */
-  _disableAudioTracks(): void {
-    let audioTracks = this._videoElement.audioTracks;
-    if (audioTracks) {
-      for (let i = 0; i < audioTracks.length; i++) {
-        audioTracks[i].enabled = false;
-      }
-    }
-  }
-
-  /**
-   * Disables all the existing text tracks.
-   * @private
-   * @returns {void}
-   */
-  _disableTextTracks(): void {
-    let textTracks = this._videoElement.textTracks;
-    if (textTracks) {
-      for (let i = 0; i < textTracks.length; i++) {
-        (textTracks[i].kind === 'subtitles' || textTracks[i].kind === 'captions') &&
-          (textTracks[i].language !== EXTERNAL_TRACK_ID || textTracks[i].label !== EXTERNAL_TRACK_ID) &&
-          (textTracks[i].mode = 'disabled');
+  _switchAudioTrack(index: number): void {
+    NativeAdapter._logger.debug('_switchAudioTracks');
+    const videoElementAudioTracks = this._videoElement.audioTracks;
+    if (videoElementAudioTracks) {
+      for (let i = 0; i < videoElementAudioTracks.length; i++) {
+        if (i == index) {
+          videoElementAudioTracks[i].enabled = true;
+        } else {
+          videoElementAudioTracks[i].enabled = false;
+        }
       }
     }
   }
@@ -1055,6 +1154,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
+  get liveDuration() {
+    return this._getLiveEdge();
+  }
+
   /**
    * Seeking to live edge.
    * @function seekToLiveEdge
@@ -1069,6 +1172,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
   }
 
+  getSegmentDuration(): number {
+    return this._segmentDuration;
+  }
+
   /**
    * Checking if the current playback is live.
    * @function isLive
@@ -1079,6 +1186,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     return this._videoElement.duration === Infinity;
   }
 
+  isOnLiveEdge(): boolean {
+    return this._wasCurrentTimeSetSuccessfully ? super.isOnLiveEdge() : false;
+  }
+
   /**
    * Handling live duration change (as safari doesn't trigger durationchange event on live playback)
    * @function _handleLiveDurationChange
@@ -1087,12 +1198,33 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _handleLiveDurationChange(): void {
     this._liveDurationChangeInterval = setInterval(() => {
+      this._calculateSegmentDuration();
       const liveEdge = this._getLiveEdge();
       if (this._liveEdge !== liveEdge) {
         this._liveEdge = liveEdge;
         this._videoElement.dispatchEvent(new window.Event(Html5EventType.DURATION_CHANGE));
       }
-    }, 2000);
+    }, LIVE_DURATION_INTERVAL_MS);
+  }
+
+  /**
+   * Calculate the segment duration
+   * @function _calculateSegmentDuration
+   * @returns {void}
+   * @private
+   */
+  _calculateSegmentDuration() {
+    if (this._videoElement.seekable.start(0) === 0) {
+      const {buffered, seekable} = this._videoElement;
+      if (buffered.length && seekable.length) {
+        this._segmentDuration = (buffered.end(buffered.length - 1) - seekable.end(seekable.length - 1)) / SAFARI_BUFFERED_SEGMENTS_COUNT;
+      }
+    } else {
+      const liveEdge = this._getLiveEdge();
+      if (this._liveEdge && this._liveEdge !== liveEdge) {
+        this._segmentDuration = liveEdge - this._liveEdge;
+      }
+    }
   }
 
   /**
@@ -1106,5 +1238,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     } else {
       return 0;
     }
+  }
+
+  getDrmInfo(): ?PKDrmDataObject {
+    return this._drmHandler ? this._drmHandler.getDrmInfo() : null;
   }
 }

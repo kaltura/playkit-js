@@ -4,14 +4,14 @@ const isMacOS = /^darwin/.test(process.platform);
 const customLaunchers = {
   Chrome_travis_ci: {
     base: 'Chrome',
-    flags: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required']
+    flags: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required', '--max-web-media-player-count=1000']
   }
 };
 
 const launchers = {
   Chrome_browser: {
     base: 'Chrome',
-    flags: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required']
+    flags: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required', '--max-web-media-player-count=1000']
   }
 };
 
@@ -27,21 +27,10 @@ module.exports = function (config) {
     colors: true,
     frameworks: ['mocha'],
     files: [
+      'node_modules/regenerator-runtime/runtime.js',
       'test/setup/karma.js',
       {
-        pattern: 'test/src/assets/mov_bbb.mp4',
-        included: false
-      },
-      {
-        pattern: 'test/src/assets/audios.mp4',
-        included: false
-      },
-      {
-        pattern: 'test/src/assets/en.vtt',
-        included: false
-      },
-      {
-        pattern: 'test/src/assets/he.vtt',
+        pattern: 'test/src/assets/*',
         included: false
       }
     ],

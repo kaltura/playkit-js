@@ -2,7 +2,7 @@
 import VideoTrack from '../../src/track/video-track';
 import AudioTrack from '../../src/track/audio-track';
 import TextTrack from '../../src/track/text-track';
-import {FakeEventTarget} from '../../src/playkit';
+import {FakeEventTarget, ImageTrack} from '../../src/playkit';
 
 declare interface IMediaSourceAdapterStatic {
   +id: string;
@@ -15,23 +15,27 @@ declare interface IMediaSourceAdapterStatic {
 
 declare interface IMediaSourceAdapter extends FakeEventTarget {
   src: string;
-  currentTime: number;
-  +duration: number;
+  +liveDuration: number;
   +capabilities: PKMediaSourceCapabilities;
+  +targetBuffer: number;
   load(startTime: ?number): Promise<Object>;
   handleMediaError(error: ?MediaError): boolean;
   destroy(): Promise<*>;
   selectVideoTrack(videoTrack: VideoTrack): void;
   selectAudioTrack(audioTrack: AudioTrack): void;
   selectTextTrack(textTrack: TextTrack): void;
+  selectImageTrack(imageTrack: ImageTrack): void;
   hideTextTrack(): void;
   enableAdaptiveBitrate(): void;
   isAdaptiveBitrateEnabled(): boolean;
   seekToLiveEdge(): void;
   isLive(): boolean;
+  isOnLiveEdge(): boolean;
   getStartTimeOfDvrWindow(): number;
   setMaxBitrate(bitrate: number): void;
   attachMediaSource(): void;
   detachMediaSource(): void;
-  +targetBuffer: number;
+  getSegmentDuration(): number;
+  disableNativeTextTracks(): void;
+  getDrmInfo(): ?PKDrmDataObject;
 }

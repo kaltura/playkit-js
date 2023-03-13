@@ -75,7 +75,7 @@ Finally, add the bundle as a script tag in your page, and initialize the player
 ## Documentation
 
 - **[Configuration](docs/configuration.md)**
-- **API**
+- **[API](docs/api.md)**
 
 ## Running the Tests
 

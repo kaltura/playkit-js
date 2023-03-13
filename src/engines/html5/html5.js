@@ -6,13 +6,18 @@ import {CustomEventType, Html5EventType} from '../../event/event-type';
 import MediaSourceProvider from './media-source/media-source-provider';
 import VideoTrack from '../../track/video-track';
 import AudioTrack from '../../track/audio-track';
-import PKTextTrack from '../../track/text-track';
+import PKTextTrack, {getActiveCues} from '../../track/text-track';
+import ImageTrack from '../../track/image-track';
 import {Cue} from '../../track/vtt-cue';
+import {createTimedMetadata} from '../../track/timed-metadata';
 import * as Utils from '../../utils/util';
 import Html5AutoPlayCapability from './capabilities/html5-autoplay';
 import Error from '../../error/error';
 import getLogger from '../../utils/logger';
 import {DroppedFramesWatcher} from '../dropped-frames-watcher';
+import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
+
+const SHORT_BUFFERING_TIMEOUT: number = 200;
 
 /**
  * Html5 engine for playback.
@@ -176,7 +181,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * The player playback rates.
    * @type {Array<number>}
    */
-  static PLAYBACK_RATES: Array<number> = [0.5, 1, 2, 4];
+  static PLAYBACK_RATES: Array<number> = [0.5, 1, 1.5, 2];
 
   /**
    * @constructor
@@ -262,6 +267,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   get id(): string {
     return Html5.id;
   }
+
   /**
    * attach media - return the media source to handle the video tag
    * @public
@@ -272,6 +278,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._mediaSourceAdapter.attachMediaSource();
     }
   }
+
   /**
    * detach media - will remove the media source from handling the video
    * @public
@@ -282,6 +289,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._mediaSourceAdapter.detachMediaSource();
     }
   }
+
   /**
    * Listen to the video element events and triggers them from the engine.
    * @public
@@ -289,18 +297,17 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   attach(): void {
     Object.keys(Html5EventType).forEach(html5Event => {
-      if (Html5EventType[html5Event] !== Html5EventType.ERROR) {
+      if (![Html5EventType.ERROR, Html5EventType.WAITING].includes(Html5EventType[html5Event])) {
         this._eventManager.listen(this._el, Html5EventType[html5Event], () => {
           return this.dispatchEvent(new FakeEvent(Html5EventType[html5Event]));
         });
       }
     });
-    this._eventManager.listen(this._el, Html5EventType.ERROR, () => {
-      this._handleVideoError();
-    });
+    this._eventManager.listen(this._el, Html5EventType.ERROR, () => this._handleVideoError());
+    this._eventManager.listen(this._el, Html5EventType.WAITING, () => this._handleWaiting());
     this._handleMetadataTrackEvents();
     this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
-      if (event.track.kind === 'captions' || event.track.kind === 'subtitles') {
+      if (PKTextTrack.isNativeTextTrack(event.track)) {
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_ADDED, {track: event.track}));
       }
     });
@@ -309,6 +316,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.AUDIO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(mediaSourceAdapter, CustomEventType.IMAGE_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.TRACKS_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
@@ -320,6 +328,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._eventManager.listen(mediaSourceAdapter, Html5EventType.PLAYING, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, Html5EventType.WAITING, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.MEDIA_RECOVERED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(mediaSourceAdapter, CustomEventType.TIMED_METADATA_ADDED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, 'hlsFragParsingMetadata', (event: FakeEvent) => this.dispatchEvent(event));
       if (this._droppedFramesWatcher) {
         this._eventManager.listen(this._droppedFramesWatcher, CustomEventType.FPS_DROP, (event: FakeEvent) => this.dispatchEvent(event));
@@ -389,6 +398,17 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Select a new image track.
+   * @param {ImageTrack} imageTrack - The image track object to set.
+   * @returns {void}
+   */
+  selectImageTrack(imageTrack: ImageTrack): void {
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.selectImageTrack(imageTrack);
+    }
+  }
+
+  /**
    * Hide the text track
    * @function hideTextTrack
    * @returns {void}
@@ -427,6 +447,19 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   * Apply ABR restriction
+   * @function applyABRRestriction
+   * @param {PKABRRestrictionObject} restriction - abr restriction config
+   * @returns {void}
+   * @public
+   */
+  applyABRRestriction(restriction: PKABRRestrictionObject): void {
+    if (this._mediaSourceAdapter) {
+      return this._mediaSourceAdapter.applyABRRestriction(restriction);
+    }
+  }
+
+  /**
    * Seeking to live edge.
    * @function seekToLiveEdge
    * @returns {void}
@@ -436,6 +469,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.seekToLiveEdge();
     }
+  }
+
+  isOnLiveEdge(): boolean {
+    if (this._mediaSourceAdapter) {
+      return this._mediaSourceAdapter.isOnLiveEdge();
+    }
+    return false;
   }
 
   /**
@@ -489,14 +529,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._el.load();
     return this._canLoadMediaSourceAdapterPromise
       .then(() => {
-        if (this._mediaSourceAdapter) {
-          return this._mediaSourceAdapter.load(startTime).catch(error => {
-            return Promise.reject(error);
-          });
-        }
-        return Promise.resolve({});
+        return this._mediaSourceAdapter ? this._mediaSourceAdapter.load(startTime) : Promise.resolve({});
       })
       .catch(error => {
+        this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
         return Promise.reject(error);
       });
   }
@@ -584,6 +620,18 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   /**
+   *  Returns in-stream thumbnail for a chosen time.
+   * @param {number} time - playback time.
+   * @public
+   * @return {?ThumbnailInfo} - Thumbnail info
+   */
+  getThumbnail(time: number): ?ThumbnailInfo {
+    if (this._mediaSourceAdapter) {
+      return this._mediaSourceAdapter.getThumbnail(time);
+    }
+  }
+
+  /**
    * Set a source.
    * @param {string} source - Source to set.
    * @public
@@ -613,7 +661,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    */
   get currentTime(): number {
-    return this._mediaSourceAdapter ? this._mediaSourceAdapter.currentTime : 0;
+    return this._el ? this._el.currentTime : 0;
   }
 
   /**
@@ -623,8 +671,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   set currentTime(to: number): void {
-    if (this._mediaSourceAdapter) {
-      this._mediaSourceAdapter.currentTime = to;
+    if (this._el) {
+      this._el.currentTime = to;
     }
   }
 
@@ -634,7 +682,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    */
   get duration(): number {
-    return this._mediaSourceAdapter ? this._mediaSourceAdapter.duration : NaN;
+    return this._el.duration;
+  }
+
+  get liveDuration(): number {
+    return this._mediaSourceAdapter ? this._mediaSourceAdapter.liveDuration : -1;
   }
 
   /**
@@ -1020,7 +1072,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _addCueChangeListener(): void {
-    let textTrackEl = Array.from(this._el.textTracks).find(track => track && track.mode !== 'disabled');
+    let textTrackEl = Array.from(this._el.textTracks).find(track => PKTextTrack.isNativeTextTrack(track) && track.mode !== PKTextTrack.MODE.DISABLED);
     if (textTrackEl) {
       this._eventManager.listen(textTrackEl, 'cuechange', (e: FakeEvent) => this._onCueChange(e));
     }
@@ -1032,9 +1084,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _removeCueChangeListeners(): void {
-    for (let i = 0; i < this._el.textTracks.length; i++) {
-      this._eventManager.unlisten(this._el.textTracks[i], 'cuechange');
-    }
+    Array.from(this._el.textTracks)
+      .filter(track => !PKTextTrack.isMetaDataTrack(track))
+      .forEach(track => {
+        this._eventManager.unlisten(track, 'cuechange');
+      });
   }
 
   /**
@@ -1044,21 +1098,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _onCueChange(e: FakeEvent): void {
-    let textTrack: TextTrack = e.currentTarget;
-    let activeCues: Array<Cue> = [];
-    for (let cue of textTrack.activeCues) {
-      //Normalize cues to be of type of VTT model
-      if (window.VTTCue && cue instanceof window.VTTCue) {
-        activeCues.push(cue);
-      } else if (window.TextTrackCue && cue instanceof window.TextTrackCue) {
-        try {
-          activeCues.push(new Cue(cue.startTime, cue.endTime, cue.text));
-        } catch (error) {
-          new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNABLE_TO_CREATE_TEXT_CUE, error);
-        }
-      }
-    }
-    this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: activeCues}));
+    let activeCues: TextTrackCueList = e.currentTarget.activeCues;
+    let normalizedActiveCues = getActiveCues(activeCues);
+    this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: normalizedActiveCues}));
   }
 
   /**
@@ -1066,7 +1108,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   resetAllCues(): void {
-    let activeTextTrack = Array.from(this._el.textTracks).find(track => track && track.mode !== 'disabled');
+    let activeTextTrack = Array.from(this._el.textTracks).find(
+      track => PKTextTrack.isNativeTextTrack(track) && track.mode !== PKTextTrack.MODE.DISABLED
+    );
     if (activeTextTrack) {
       for (let i = 0; i < activeTextTrack.cues.length; i++) {
         activeTextTrack.cues[i].hasBeenReset = true;
@@ -1104,6 +1148,17 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
   }
 
+  _handleWaiting(): void {
+    let playing = false;
+    this._eventManager.listenOnce(this._el, Html5EventType.PLAYING, () => (playing = true));
+    setTimeout(() => {
+      // prevent sending waiting event for too short buffering
+      if (!playing) {
+        this.dispatchEvent(new FakeEvent(Html5EventType.WAITING));
+      }
+    }, SHORT_BUFFERING_TIMEOUT);
+  }
+
   /**
    * more info about the error
    * @returns {string} info about the video element error
@@ -1124,27 +1179,45 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   }
 
   _handleMetadataTrackEvents(): void {
-    const listenToCueChange = track => {
-      track.mode = 'hidden';
-      this._eventManager.listen(track, 'cuechange', () => {
-        this.dispatchEvent(new FakeEvent(CustomEventType.TIMED_METADATA, {cues: Array.from(track.activeCues)}));
+    const listenToCueChange = metadataTrack => {
+      metadataTrack.mode = PKTextTrack.MODE.HIDDEN;
+      this._eventManager.listen(metadataTrack, 'cuechange', () => {
+        let activeCues = [];
+        Array.from(this._el.textTracks).forEach((track: TextTrack) => {
+          if (PKTextTrack.isMetaDataTrack(track)) {
+            activeCues = activeCues.concat(getActiveCues(track.activeCues));
+          }
+        });
+        activeCues = activeCues.sort((a: Cue, b: Cue) => {
+          return a.startTime - b.startTime;
+        });
+        this.dispatchEvent(new FakeEvent(CustomEventType.TIMED_METADATA, {cues: activeCues}));
+        this.dispatchEvent(
+          new FakeEvent(CustomEventType.TIMED_METADATA_CHANGE, {
+            cues: activeCues.map(cue => createTimedMetadata(cue))
+          })
+        );
       });
     };
-    const metadataTrack = Array.from(this._el.textTracks).find((track: TextTrack) => track.kind === 'metadata');
-    if (metadataTrack) {
-      listenToCueChange(metadataTrack);
-    } else {
-      this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
-        if (event.track.kind === 'metadata') {
-          listenToCueChange(event.track);
+
+    Array.from(this._el.textTracks).forEach((track: TextTrack) => {
+      if (PKTextTrack.isMetaDataTrack(track)) {
+        listenToCueChange(track);
+      }
+    });
+
+    this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
+      if (PKTextTrack.isMetaDataTrack(event.track)) {
+        listenToCueChange(event.track);
+      }
+    });
+
+    this._eventManager.listen(this._el.textTracks, 'change', () => {
+      Array.from(this._el.textTracks).forEach((track: TextTrack) => {
+        if (PKTextTrack.isMetaDataTrack(track) && track.mode !== PKTextTrack.MODE.HIDDEN) {
+          track.mode = PKTextTrack.MODE.HIDDEN;
         }
       });
-    }
-    this._eventManager.listen(this._el.textTracks, 'change', () => {
-      const metadataTrack = Array.from(this._el.textTracks).find((track: TextTrack) => track.kind === 'metadata');
-      if (metadataTrack && metadataTrack.mode !== 'hidden') {
-        metadataTrack.mode = 'hidden';
-      }
     });
   }
 
@@ -1166,5 +1239,23 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       }
     }
     return retVal;
+  }
+
+  addTextTrack(kind: string, label?: string, language?: string): ?TextTrack {
+    return this._el.addTextTrack(kind, label, language);
+  }
+
+  /**
+   * get the native text tracks
+   * @function getNativeTextTracks
+   * @returns {Array<TextTrack>} - The native TextTracks array.
+   * @public
+   */
+  getNativeTextTracks(): Array<TextTrack> {
+    return Array.from(this._el.textTracks);
+  }
+
+  getDrmInfo(): ?PKDrmDataObject {
+    return this._mediaSourceAdapter?.getDrmInfo();
   }
 }

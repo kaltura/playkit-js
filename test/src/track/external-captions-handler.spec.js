@@ -275,9 +275,9 @@ describe('ExternalCaptionsHandler', () => {
 
     beforeEach(() => {
       config = getConfigStructure();
-      config.sources = sourcesConfig.MultipleSources;
       config.playback = {};
       player = new Player(config);
+      player.setSources(sourcesConfig.MultipleSources);
       externalCaptionsHandler = new ExternalCaptionsHandler(player);
       playerContainer.appendChild(player.getView());
       externalCaptionsHandler._textTrackModel['en'] = {
@@ -385,8 +385,8 @@ describe('ExternalCaptionsHandler', () => {
 
     beforeEach(() => {
       config = getConfigStructure();
-      config.sources = sourcesConfig.MultipleSources;
-      config.sources.captions = [
+      let sources = sourcesConfig.MultipleSources;
+      sources.captions = [
         {
           language: 'en',
           label: 'english',
@@ -399,6 +399,7 @@ describe('ExternalCaptionsHandler', () => {
         }
       ];
       player = new Player(config);
+      player.setSources(sources);
       externalCaptionsHandler = new ExternalCaptionsHandler(player);
       playerContainer.appendChild(player.getView());
     });
@@ -421,11 +422,17 @@ describe('ExternalCaptionsHandler', () => {
       externalCaptionsHandler.getExternalTracks([new TextTrack({language: 'en', label: 'english'})]).length.should.equal(1);
     });
 
+    it('should return an array with 2 textTracks elements both same language (the internal track is not available))', () => {
+      player._tracks.push(new TextTrack({language: 'en', label: 'english', available: false}));
+      externalCaptionsHandler.getExternalTracks(player._tracks).length.should.equal(2);
+    });
+
     it('should return an empty array (no captions)', () => {
       config = getConfigStructure();
-      config.sources = sourcesConfig.MultipleSources;
-      config.sources.captions = null;
+      let sources = sourcesConfig.MultipleSources;
+      sources.captions = null;
       player.configure(config);
+      player.setSources(sources);
       externalCaptionsHandler = new ExternalCaptionsHandler(player);
       externalCaptionsHandler.getExternalTracks([]).length.should.equal(0);
     });

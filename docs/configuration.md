@@ -14,8 +14,9 @@ var player = playkit.core.loadPlayer(config);
 ```js
 {
   log: PKLogConfigObject,
+  text: PKTextConfigObject,
   playback: PKPlaybackConfigObject,
-  sources: PKSourcesConfigObject,
+  streaming: PKStreamingConfigObject,
   session: PKSessionConfigObject,
   network: PKNetworkConfigObject,
   customLabels: PKCustomLabelsConfigObject,
@@ -32,15 +33,8 @@ var config = {
   log: {
     level: 'ERROR'
   },
-  sources: {
-    startTime: -1,
-    options: {
-      forceRedirectExternalStreams: false
-    },
-    metadata: {}
-  },
   text: {
-    enableCEA708Captions: false,
+    enableCEA708Captions: true,
     useNativeTextTrack: false,
     forceCenter: false,
     captionsTextTrack1Label: 'English',
@@ -51,10 +45,13 @@ var config = {
   playback: {
     audioLanguage: '',
     textLanguage: '',
+    additionalAudioLanguage: '',
+    additionalTextLanguage: '',
     volume: 1,
     playsinline: true,
     preload: 'none',
     autoplay: false,
+    loop: false,
     allowMutedAutoPlay: true,
     muted: false,
     pictureInPicture: true,
@@ -88,10 +85,13 @@ var config = {
     enabled: true,
     fpsDroppedFramesInterval: 5000,
     fpsDroppedMonitoringThreshold: 0.2,
-    capLevelOnFPSDrop: true,
+    capLevelOnFPSDrop: false,
     capLevelToPlayerSize: false,
-    defaultBandwidthEstimate: 500e3,
     restrictions: {
+      minHeight: 0,
+      maxHeight: Infinity,
+      minWidth: 0,
+      maxWidth: Infinity,
       minBitrate: 0,
       maxBitrate: Infinity
     }
@@ -137,23 +137,25 @@ var config = {
 
 ##
 
-> ### config.sources
+> ### sources
 >
 > ##### Type: `PKSourcesConfigObject`
 >
 > ```js
 > {
->  dash: Array<PKMediaSourceObject>
->  hls: Array<PKMediaSourceObject>
+>  dash: Array<PKMediaSourceObject>,
+>  hls: Array<PKMediaSourceObject>,
 >  progressive: Array<PKMediaSourceObject>,
 >  options: PKMediaSourceOptionsObject,
 >  type: string,
 >  dvr: boolean,
+>  vr?: Object,
 >  metadata: PKMetadataConfigObject,
 >  id?: string,
 >  poster?: string,
 >  duration?: number,
 >  captions?: Array<PKExternalCaptionObject>,
+>  thumbnails?: PKExternalThumbnailsConfig,
 >  startTime?: number
 > }
 > ```
@@ -228,7 +230,7 @@ var config = {
 >
 > ##
 >
-> > ### config.sources.hls
+> > ### sources.hls
 > >
 > > ##### Type: `Array<PKMediaSourceObject>`
 > >
@@ -239,21 +241,19 @@ var config = {
 > > #### Example:
 > >
 > > ```js
-> > var config = {
-> >   sources: {
-> >     hls: [
-> >       {
-> >         mimetype: 'application/x-mpegurl',
-> >         url: '//PATH/TO/MANIFEST.m3u8'
-> >       }
-> >     ]
-> >   }
+> > var sources: {
+> >   hls: [
+> >     {
+> >       mimetype: 'application/x-mpegurl',
+> >       url: '//PATH/TO/MANIFEST.m3u8'
+> >     }
+> >   ]
 > > };
 > > ```
 > >
 > > ##
 > >
-> > ### config.sources.dash
+> > ### sources.dash
 > >
 > > ##### Type: `Array<PKMediaSourceObject>`
 > >
@@ -264,21 +264,19 @@ var config = {
 > > #### Example:
 > >
 > > ```js
-> > var config = {
-> >   sources: {
-> >     dash: [
-> >       {
-> >         mimetype: 'application/x-mpegurl',
-> >         url: '//PATH/TO/MANIFEST.mpd'
-> >       }
-> >     ]
-> >   }
+> > var sources: {
+> >   dash: [
+> >     {
+> >       mimetype: 'application/x-mpegurl',
+> >       url: '//PATH/TO/MANIFEST.mpd'
+> >     }
+> >   ]
 > > };
 > > ```
 > >
 > > ##
 > >
-> > ### config.sources.progressive
+> > ### sources.progressive
 > >
 > > ##### Type: `Array<PKMediaSourceObject>`
 > >
@@ -289,21 +287,19 @@ var config = {
 > > #### Example:
 > >
 > > ```js
-> > var config = {
-> >   sources: {
-> >     progressive: [
-> >       {
-> >         mimetype: 'video/mp4',
-> >         url: '//PATH/TO/FILE.mp4'
-> >       }
-> >     ]
-> >   }
+> > var sources: {
+> >   progressive: [
+> >     {
+> >       mimetype: 'video/mp4',
+> >       url: '//PATH/TO/FILE.mp4'
+> >     }
+> >   ]
 > > };
 > > ```
 > >
 > > ##
 > >
-> > ### config.sources.options
+> > ### sources.options
 > >
 > > ##### Type: `PKMediaSourceOptionsObject`
 > >
@@ -319,7 +315,7 @@ var config = {
 > >
 > > ##
 > >
-> > > ### config.sources.options.forceRedirectExternalStreams
+> > > ### sources.options.forceRedirectExternalStreams
 > > >
 > > > ##### Type: `boolean`
 > > >
@@ -329,7 +325,7 @@ var config = {
 > > >
 > > > ##
 > > >
-> > > ### config.sources.options.redirectExternalStreamsHandler
+> > > ### sources.options.redirectExternalStreamsHandler
 > > >
 > > > ##### Type: `Function`
 > > >
@@ -339,7 +335,7 @@ var config = {
 > > >
 > > > ##
 > > >
-> > > ### config.sources.options.redirectExternalStreamsTimeout
+> > > ### sources.options.redirectExternalStreamsTimeout
 > > >
 > > > ##### Type: `number`
 > > >
@@ -349,7 +345,7 @@ var config = {
 > >
 > > ##
 > >
-> > ### config.sources.type
+> > ### sources.type
 > >
 > > ##### Type: `string`
 > >
@@ -361,7 +357,7 @@ var config = {
 > >
 > > ##
 > >
-> > ### config.sources.dvr
+> > ### sources.dvr
 > >
 > > ##### Type: `boolean`
 > >
@@ -373,7 +369,7 @@ var config = {
 > >
 > > ##
 > >
-> > ### config.sources.metadata
+> > ### sources.metadata
 > >
 > > ##### Type: `PKMetadataConfigObject`
 > >
@@ -383,7 +379,7 @@ var config = {
 > >
 > > ##
 > >
-> > > ### config.sources.metadata.name
+> > > ### sources.metadata.name
 > > >
 > > > ##### Type: `string`
 > > >
@@ -393,7 +389,7 @@ var config = {
 > > >
 > > > ##
 > > >
-> > > ### config.sources.metadata.description
+> > > ### sources.metadata.description
 > > >
 > > > ##### Type: `string`
 > > >
@@ -403,7 +399,7 @@ var config = {
 > >
 > > ##
 > >
-> > ### config.sources.id
+> > ### sources.id
 > >
 > > ##### Type: `string`
 > >
@@ -413,7 +409,7 @@ var config = {
 > >
 > > ##
 > >
-> > ### config.sources.poster
+> > ### sources.poster
 > >
 > > ##### Type: `string`
 > >
@@ -423,7 +419,7 @@ var config = {
 > >
 > > ##
 > >
-> > ### config.sources.duration
+> > ### sources.duration
 > >
 > > ##### Type: `number`
 > >
@@ -433,7 +429,7 @@ var config = {
 > >
 > > ##
 > >
-> > ### config.sources.captions
+> > ### sources.captions
 > >
 > > ##### Type: `Array<PKExternalCaptionObject>`
 > >
@@ -446,24 +442,47 @@ var config = {
 > > #### Example:
 > >
 > > ```js
-> > var config = {
-> >   sources: {
-> >     captions: [
-> >       {
-> >         url: 'www.path.to/your/captions/file',
-> >         type: 'vtt',
-> >         default: true,
-> >         language: 'en',
-> >         label: 'English'
-> >       }
-> >     ]
-> >   }
+> > var sources: {
+> >   captions: [
+> >     {
+> >       url: 'www.path.to/your/captions/file',
+> >       type: 'vtt',
+> >       default: true,
+> >       language: 'en',
+> >       label: 'English'
+> >     }
+> >   ]
 > > };
 > > ```
 > >
 > > ##
 > >
-> > ### config.sources.startTime
+> > ### sources.thumbnails
+> >
+> > ##### Type: `PKExternalThumbnailsConfig`
+> >
+> > ##### Default: `-`
+> >
+> > ##### Description: vtt thumbnails to be added to the media.
+> >
+> > The imgBaseUrl field is optional, if not provided - it would be resolved to the application domain.
+> >
+> > #### Example:
+> >
+> > ```js
+> > var sources: {
+> >   thumbnails: [
+> >     {
+> >       imgBaseUrl: 'www.path.to/your/resources/images',
+> >       vttUrl: 'www.path.to/your/thumbnails/file.vtt'
+> >     }
+> >   ]
+> > };
+> > ```
+> >
+> > ##
+> >
+> > ### sources.startTime
 > >
 > > ##### Type: `number`
 > >
@@ -488,7 +507,7 @@ var config = {
 >  useNativeTextTrack: boolean,
 >  enableCEA708Captions: boolean,
 >  forceCenter: boolean,
->  textTrackDisplaySetting: Object,
+>  textTrackDisplaySetting: PKTextTrackDisplaySettingObject,
 >  textStyle: TextStyle,
 >  captionsTextTrack1Label: string,
 >  captionsTextTrack1LanguageCode: string,
@@ -502,7 +521,7 @@ var config = {
 > ```js
 > {
 >  useNativeTextTrack: false,
->  enableCEA708Captions: false,
+>  enableCEA708Captions: true,
 >  forceCenter: false,
 >  captionsTextTrack1Label: "English",
 >  captionsTextTrack1LanguageCode: "en",
@@ -529,7 +548,7 @@ var config = {
 > >
 > > ##### Type: `boolean`
 > >
-> > ##### Default: `false`
+> > ##### Default: `true`
 > >
 > > ##### Description: Whether or not to enable CEA-708 captions.
 >
@@ -547,11 +566,64 @@ var config = {
 >
 > > ### config.text.textTrackDisplaySetting
 > >
-> > ##### Type: `Object`
+> > ##### Type: `PKTextTrackDisplaySettingObject`
 > >
 > > ##### Default: `null`
 > >
-> > ##### Description: set the textTrackDisplaySetting to override the cues position
+> > ##### Description: set the textTrackDisplaySetting to override the vtt cues position
+> >
+> > ##### Config:
+>
+> ```js
+> {
+>   line: string | number, // [-16 .. 16]
+>   lineAlign: string, // ['start', 'center', 'end']
+>   align: string, // ['start', 'center', 'end', 'left', 'right']
+>   position: number, //[0 .. 100]
+>   positionAlign: string, // ['line-left', 'center', 'line-right']
+>   snapToLines: boolean, // [true, false]
+>   vertical: string, //['', 'lr', 'rl']
+>   size: number //[0 .. 100]
+> }
+> ```
+>
+> > ##### line
+> >
+> > The line defines positioning of the cue box
+> >
+> > ##### lineAlign
+> >
+> > An alignment for the cue box’s line, one of start/center/end alignment
+> >
+> > ##### align
+> >
+> > An alignment for all lines of text within the cue box, in the dimension of the writing direction
+> >
+> > ##### snapToLines
+> >
+> > is a boolean indicating whether the line is an integer number of lines (using the line dimensions of the first line of the cue), or whether it is a percentage of the dimension of the video. The flag is set to true when lines are counted, and false otherwise.
+> >
+> > ##### position
+> >
+> > The position defines the indent of the cue box in the direction defined by the writing direction
+> >
+> > ##### positionAlign
+> >
+> > An alignment for the cue box in the dimension of the writing direction, describing what the position
+> >
+> > ##### snapToLines
+> >
+> > is a boolean indicating whether the line is an integer number of lines (using the line dimensions of the first line of the cue), or whether it is a percentage of the dimension of the video. The flag is set to true when lines are counted, and false otherwise.
+> >
+> > ##### vertical
+> >
+> > configures the cue to use vertical text layout rather than horizontal text layout. Vertical text layout is sometimes used in Japanese, for example. The default is horizontal layout
+> >
+> > ##### size
+> >
+> > A number giving the size of the cue box, to be interpreted as a percentage of the video, as defined by the writing direction
+> >
+> > [instance_properties](https://developer.mozilla.org/en-US/docs/Web/API/VTTCue#instance_properties)
 >
 > ##
 >
@@ -562,7 +634,60 @@ var config = {
 > > ##### Default: `null`
 > >
 > > ##### Description: set the styling for text tracks
->
+> >
+> > ##### Config:
+> >
+> > ```js
+> > {
+> >   fontSize?: '50%' | '75%' | '100%' | '200%' | '300%' | '400%'
+> >   fontScale?: -2 | -1 | 0 | 2 | 3 | 4
+> >   fontFamily?: string, // font family available in browser
+> >   fontColor?: [number, number, number], // RGB
+> >   fontOpacity?: number, // [0.0 .. 1.0]
+> >   fontEdge?: Array<[number, number, number, number, number, number]>, //
+> > 								 TextStyle.EdgeStyles.NONE
+> > 								 TextStyle.EdgeStyles.RAISED
+> > 							 TextStyle.EdgeStyles.DEPRESSED
+> > 							 TextStyle.EdgeStyles.UNIFORM
+> > 							 TextStyle.EdgeStyles.DROP
+> >   backgroundColor?: [number, number, number], // RGB
+> >   backgroundOpacity?: number // [0.0 .. 1.0]
+> > }
+> > ```
+> >
+> > ##### fontSize
+> >
+> > Percentage unit relative to the parent element's font
+> >
+> > ##### fontScale
+> >
+> > Integer number representing the scaling factor relative to the parent element's font size
+> >
+> > ##### fontFamily
+> >
+> > The font family
+> >
+> > ##### fontColor
+> >
+> > Font color in RGB format
+> >
+> > ##### fontOpacity
+> >
+> > The font opacity
+> >
+> > ##### fontEdge
+> >
+> > Each inner array represents a shadow, and is composed of RGB values for the
+> > shadow color, followed by pixel values for x-offset, y-offset, and blur
+> >
+> > ##### backgroundColor
+> >
+> > Background color in RGB format
+> >
+> > ##### backgroundOpacity
+> >
+> > The background opacity
+
 > ##
 >
 > > ### config.text.captionsTextTrack1Label
@@ -613,11 +738,14 @@ var config = {
 > {
 >  audioLanguage: string,
 >  textLanguage: string,
+>  additionalAudioLanguage: string,
+>  additionalTextLanguage: string,
 >  volume: number,
 >  playsinline: boolean,
 >  crossOrigin: string,
 >  preload: string,
 >  autoplay: PKAutoPlayTypes,
+>  loop: boolean,
 >  autopause: boolean,
 >  allowMutedAutoPlay: boolean,
 >  muted: boolean,
@@ -637,10 +765,13 @@ var config = {
 > {
 >  audioLanguage: "",
 >  textLanguage: "",
+>  additionalAudioLanguage: "",
+>  additionalTextLanguage: "",
 >  volume: 1,
 >  playsinline: true,
 >  preload: "none",
 >  autoplay: false,
+>  loop: false,
 >  allowMutedAutoPlay: true,
 >  muted: false,
 >  pictureInPicture: true,
@@ -677,7 +808,7 @@ var config = {
 >
 > > ### config.playback.audioLanguage
 > >
-> > ##### Type: `string`
+> > ##### Type: `string || "auto"`
 > >
 > > ##### Default: `""`
 > >
@@ -694,6 +825,18 @@ var config = {
 > >   }
 > > };
 > > ```
+> >
+> > If the value `"auto"` is set, i.e:
+> >
+> > ```js
+> > var config = {
+> >   playback: {
+> >     audioLanguage: 'auto'
+> >   }
+> > };
+> > ```
+> >
+> > If there is an audio track with the same language as the user's system locale language, this audio track will be selected.
 >
 > ##
 >
@@ -729,10 +872,62 @@ var config = {
 > >
 > > The player will choose the default captions language using the following logic:
 > >
-> > 1.  **Locale language** - If there are captions in the user's system language then this language will be selected.
+> > 1.  **Locale language** - If there is a text track with the same language as the user's system locale language, this text track will be selected.
 > > 2.  **Manifest default language** - If a default language is specified in the manifest file then this language will be selected.
 > > 3.  **First language in manifest** - The first language specified in the manifest file will be selected.
 > > 4.  If none of the above conditions have taken place, do not display captions.
+>
+> ##
+>
+> > ### config.playback.additionalAudioLanguage
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `""`
+> >
+> > ##### Description: Sets the default audio track language from the additionalAudioLanguage.
+> >
+> > option to add the audioLanguage with additional code (should be the same language as the audioLanguage field).
+> > intended for cases where the 639-1 code is totaly different than the 639-2 code.
+> > for example: Spanish 639-1: 'es' 639-2: 'spa'
+> >
+> > If an audio track with the defined language exists, this audio track will be selected as the initial audio track.
+> >
+> > #### Example:
+> >
+> > ```js
+> > var config = {
+> >   playback: {
+> >     additionalAudioLanguage: 'spa' // Start playback with Spanish audio
+> >   }
+> > };
+> > ```
+>
+> ##
+>
+> > ### config.playback.additionalTextLanguage
+> >
+> > ##### Type: `string`
+> >
+> > ##### Default: `""`
+> >
+> > ##### Description: Defines the default captions language from the additionalTextLanguage
+> >
+> > option to add the textLanguage with additional code. (should be the same language as the textLanguage field).
+> > intended for cases where the 639-1 code is totaly different than the 639-2 code.
+> > for example: Spanish 639-1: 'es' 639-2: 'spa'
+> >
+> > If captions for the defined language are available, this text track will be selected as the initial text track.
+> >
+> > #### Example:
+> >
+> > ```js
+> > var config = {
+> >   playback: {
+> >     additionalTextLanguage: 'spa' // Start playback with Spanish captions
+> >   }
+> > };
+> > ```
 >
 > ##
 >
@@ -808,6 +1003,16 @@ var config = {
 >
 > ##
 >
+> > ### config.playback.loop
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ##### Description: Indicates whether the video should play in loop
+>
+> ##
+>
 > > ### config.playback.autopause
 > >
 > > ##### Type: `boolean`
@@ -878,7 +1083,7 @@ var config = {
 > >
 > > ##### Description: Defines the media source adapters configurations.
 > >
-> > - For `hls` configuration, see the [hls.js](https://github.com/video-dev/hls.js/blob/master/doc/API.md#fine-tuning) documentation.
+> > - For `hls` configuration, see the [hls.js](https://github.com/video-dev/hls.js/blob/master/docs/API.md) documentation.
 > > - For `dash` configuration, see the [shaka-player](https://shaka-player-demo.appspot.com/docs/api/tutorial-config.html) documentation.
 >
 > ##
@@ -1007,6 +1212,69 @@ var config = {
 > >
 > > As soon as the player receives the sources, it will review the configuration array and try to play the source with the matched stream format according to the matched engine.
 > > For example, in the priority configuration above, the player will try to play the hls stream using an html5 engine first. If an hls stream isn't received, the player will continue to play the dash stream using an html5 engine. If a dash stream isn't received, the player will then will continue to play the progressive stream using an html5 engine.
+
+##
+
+> ### config.streaming
+>
+> ##### Type: `PKStreamingConfigObject`
+>
+> ```js
+> {
+>   forceBreakStall: boolean,
+>   lowLatencyMode: boolean,
+>   trackEmsgEvents: boolean,
+>   switchDynamicToStatic: boolean
+> }
+> ```
+>
+> ##### Default:
+>
+> ```js
+> {
+>   forceBreakStall: false,
+>   lowLatencyMode: true, // default for hls playback (optional)
+>   lowLatencyMode: false, // default for dash & smart TV playback (optional)
+>   trackEmsgEvents: true, // default for dash (optional)
+>   switchDynamicToStatic: false // toggle whether to switch to static manifest when live stream ends
+> }
+> ```
+>
+> > ##
+> >
+> > ### config.streaming.forceBreakStall
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ##### Description: Gives the ability to break stalls on low level devices which could get stuck on stall
+>
+> > ##
+> >
+> > ### config.streaming.lowLatencyMode (optional)
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: hls: `true`, dash and smart TV: `false` (in smart TV due to an issue in dash on samsung)
+> >
+> > ##### Description: Enable low latency streaming mode
+> >
+> > ##
+> >
+> > ### config.streaming.trackEmsgEvents (optional)
+> >
+> > ##### Default: dash: `true`
+> >
+> > ##### Description: Toggle emsg event listener on/off in dash adapter
+> >
+> > ##
+> >
+> > ### config.streaming.switchDynamicToStatic (optional)
+> >
+> > ##### Default: dash: `false`
+> >
+> > ##### Description: Toggle whether to switch to static manifest when live stream ends.
 
 ##
 
@@ -1270,9 +1538,17 @@ var config = {
 > >   }
 > > };
 > > ```
-
-##
-
+> >
+> > ##
+> >
+> > ### config.network.maxStaleLevelReloads
+> >
+> > ##### Type: `number`
+> >
+> > ##### Default: `20`
+> >
+> > ##### Description: The maximal amount of times player should request a manifest refresh, when no new segments appear in the refreshed manifest.
+>
 > ### config.customLabels
 >
 > ##### Type: `PKCustomLabelsConfigObject`
@@ -1331,6 +1607,10 @@ var config = {
 >   capLevelToPlayerSize: boolean,
 >   defaultBandwidthEstimate: number,
 >   restrictions: {
+>     minHeight: number,
+>     maxHeight: number,
+>     minWidth: number,
+>     maxWidth: number,
 >     minBitrate: number,
 >     maxBitrate: number
 >   }
@@ -1344,10 +1624,13 @@ var config = {
 >   enabled: true,
 >   fpsDroppedFramesInterval: 5000,
 >   fpsDroppedMonitoringThreshold: 0.2,
->   capLevelOnFPSDrop: true,
+>   capLevelOnFPSDrop: false,
 >   capLevelToPlayerSize: false,
->   defaultBandwidthEstimate: 500e3,
 >   restrictions: {
+>     minHeight: 0,
+>     maxHeight: Infinity,
+>     minWidth: 0,
+>     maxWidth: Infinity,
 >     minBitrate: 0,
 >     maxBitrate: Infinity
 >   }
@@ -1390,7 +1673,7 @@ var config = {
 > >
 > > ##### Type: `boolean`
 > >
-> > ##### Default: true
+> > ##### Default: false
 > >
 > > ##### Description: If the player should cap the level when the fps exceeds the threshold.
 > >
@@ -1410,15 +1693,13 @@ var config = {
 > >
 > > ##### Type: `number`
 > >
-> > ##### Default: 500000
-> >
 > > ##### Description: The default bandwidth estimate to use if there is not enough data, in bit/sec.
 > >
 > > ##
 > >
 > > ### config.abr.restrictions
 > >
-> > ##### Type: `object`
+> > ##### Type: `PKABRRestrictionObject`
 > >
 > > ##### Default: `{}`
 > >
@@ -1426,6 +1707,46 @@ var config = {
 > >
 > > ##
 > >
+> > > ### config.abr.restrictions.minHeight
+> > >
+> > > ##### Type: `number`
+> > >
+> > > ##### Default: `0`
+> > >
+> > > ##### Description: The minimum height of video track.
+> > >
+> > > ##
+> > >
+> > > ### config.abr.restrictions.maxHeight
+> > >
+> > > ##### Type: `number`
+> > >
+> > > ##### Default: `Infinity`
+> > >
+> > > ##### Description: The maximum height of video track.
+> > >
+> > > ##
+> > >
+> > > ### config.abr.restrictions.minWidth
+> > >
+> > > ##### Type: `number`
+> > >
+> > > ##### Default: `0`
+> > >
+> > > ##### Description: The minimum width of video track.
+> > >
+> > > ##
+> > >
+> > > ### config.abr.restrictions.maxWidth
+> > >
+> > > ##### Type: `number`
+> > >
+> > > ##### Default: `Infinity`
+> > >
+> > > ##### Description: The maximum width of video track.
+> > >
+> > > ##
+> > >
 > > > ### config.abr.restrictions.minBitrate
 > > >
 > > > ##### Type: `number`

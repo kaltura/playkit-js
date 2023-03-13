@@ -10,14 +10,27 @@ import VideoTrack from '../../../track/video-track';
 import AudioTrack from '../../../track/audio-track';
 import TextTrack from '../../../track/text-track';
 import EventManager from '../../../event/event-manager';
+import ImageTrack from '../../../track/image-track';
+import {ThumbnailInfo} from '../../../thumbnail/thumbnail-info';
+
+const CURRENT_OR_NEXT_SEGMENT_COUNT: number = 2;
 
 export default class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
+  /**
+   * The id of the adapter.
+   * @member {string} id
+   * @static
+   * @private
+   */
+  static id: string = 'BaseAdapter';
   /**
    * Passing the getLogger function to the actual media source adapter.
    * @type {Function}
    * @static
    */
   static getLogger: Function = getLogger;
+
+  static _logger = BaseMediaSourceAdapter.getLogger(BaseMediaSourceAdapter.id);
 
   /**
    * The adapter config.
@@ -117,6 +130,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   destroy(): Promise<*> {
     this._sourceObj = null;
     this._config = {};
+    this.disableNativeTextTracks();
     this._videoElement.removeEventListener(Html5EventType.DURATION_CHANGE, this._onDurationChanged);
     this._eventManager.destroy();
     return Promise.resolve();
@@ -130,11 +144,17 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    */
   _onTrackChanged(track: Track): void {
     if (track instanceof VideoTrack) {
+      BaseMediaSourceAdapter._logger.debug('Video track changed', track);
       this._trigger(CustomEventType.VIDEO_TRACK_CHANGED, {selectedVideoTrack: track});
     } else if (track instanceof AudioTrack) {
+      BaseMediaSourceAdapter._logger.debug('Audio track changed', track);
       this._trigger(CustomEventType.AUDIO_TRACK_CHANGED, {selectedAudioTrack: track});
     } else if (track instanceof TextTrack) {
+      BaseMediaSourceAdapter._logger.debug('Text track changed', track);
       this._trigger(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: track});
+    } else if (track instanceof ImageTrack) {
+      BaseMediaSourceAdapter._logger.debug('Image track changed', track);
+      this._trigger(CustomEventType.IMAGE_TRACK_CHANGED, {selectedImageTrack: track});
     }
   }
 
@@ -170,6 +190,8 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     BaseMediaSourceAdapter._throwNotImplementedError('selectTextTrack');
   }
 
+  selectImageTrack(imageTrack: ImageTrack): void {}
+
   hideTextTrack(): void {
     BaseMediaSourceAdapter._throwNotImplementedError('hideTextTrack');
   }
@@ -182,6 +204,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return BaseMediaSourceAdapter._throwNotImplementedError('isAdaptiveBitrateEnabled');
   }
 
+  applyABRRestriction(restrictions: PKABRRestrictionObject): void {
+    return BaseMediaSourceAdapter._throwNotImplementedError('applyABRRestriction');
+  }
+
   _getLiveEdge(): number {
     return BaseMediaSourceAdapter._throwNotImplementedError('_getLiveEdge');
   }
@@ -192,6 +218,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
 
   isLive(): boolean {
     return BaseMediaSourceAdapter._throwNotImplementedError('isLive');
+  }
+
+  isOnLiveEdge(): boolean {
+    return this.liveDuration - this._videoElement.currentTime <= this.getSegmentDuration() * CURRENT_OR_NEXT_SEGMENT_COUNT;
   }
 
   setMaxBitrate(bitrate: number): void {
@@ -213,6 +243,19 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   }
 
   /**
+   * Disables all the existing text tracks.
+   * @public
+   * @returns {void}
+   */
+  disableNativeTextTracks(): void {
+    Array.from(this._videoElement.textTracks).forEach(track => {
+      if (TextTrack.isNativeTextTrack(track) && !TextTrack.isExternalTrack(track)) {
+        track.mode = TextTrack.MODE.DISABLED;
+      }
+    });
+  }
+
+  /**
    * Checks if the adapter can recover from an error triggered by the video element error
    * @param {Event} event - the html5 video element error
    * @returns {boolean} - if it can recover or not
@@ -226,6 +269,18 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return BaseMediaSourceAdapter._throwNotImplementedError('getStartTimeOfDvrWindow');
   }
 
+  getThumbnail(time: number): ?ThumbnailInfo {
+    return null;
+  }
+
+  getSegmentDuration(): number {
+    return BaseMediaSourceAdapter._throwNotImplementedError('getSegmentDuration');
+  }
+
+  get liveDuration(): number {
+    return BaseMediaSourceAdapter._throwNotImplementedError('liveDuration');
+  }
+
   /**
    * throw a run time error
    * @param {string} name of the unimplemented function
@@ -233,45 +288,6 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    */
   static _throwNotImplementedError(name: string): any {
     throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, name);
-  }
-
-  /**
-   * Get the current time in seconds.
-   * @returns {Number} - The current playback time.
-   * @public
-   */
-  get currentTime(): number {
-    if (this.isLive()) {
-      const ct = this._videoElement.currentTime - this.getStartTimeOfDvrWindow();
-      return ct < 0 ? 0 : ct;
-    }
-    return this._videoElement.currentTime;
-  }
-
-  /**
-   * Set the current time in seconds.
-   * @param {Number} to - The number to set in seconds.
-   * @public
-   * @returns {void}
-   */
-  set currentTime(to: number): void {
-    if (this.isLive()) {
-      to += this.getStartTimeOfDvrWindow();
-    }
-    this._videoElement.currentTime = to;
-  }
-
-  /**
-   * Get the duration in seconds.
-   * @returns {Number} - The playback duration.
-   * @public
-   */
-  get duration(): number {
-    if (this.isLive()) {
-      return this._getLiveEdge() - this.getStartTimeOfDvrWindow();
-    } else {
-      return this._videoElement.duration;
-    }
   }
 
   /**
@@ -309,5 +325,9 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
 
   get targetBuffer(): number {
     return NaN;
+  }
+
+  getDrmInfo(): ?PKDrmDataObject {
+    return null;
   }
 }

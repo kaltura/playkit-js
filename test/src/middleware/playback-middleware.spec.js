@@ -5,6 +5,7 @@ import getLogger from '../../../src/utils/logger';
 class PM1 extends BaseMiddleware {
   id = 'PM1';
   logger = getLogger(this.id);
+  plus = 10;
 
   play(next) {
     this.logger.debug('play');
@@ -20,15 +21,26 @@ class PM1 extends BaseMiddleware {
     this.logger.debug('load');
     this.callNext(next);
   }
+
+  setCurrentTime(to, next) {
+    this.logger.debug('setCurrentTime', to);
+    this.callNext(next.bind(null, to + this.plus));
+  }
 }
 
 class PM2 extends BaseMiddleware {
   id = 'PM2';
   logger = getLogger(this.id);
+  plus = 20;
 
   play(next) {
     this.logger.debug('play');
     this.callNext(next);
+  }
+
+  setCurrentTime(to, next) {
+    this.logger.debug('setCurrentTime', to);
+    this.callNext(() => next(to + this.plus));
   }
 }
 
@@ -38,6 +50,11 @@ class PM3 extends BaseMiddleware {
 
   pause(next) {
     this.logger.debug('pause');
+    this.callNext(next);
+  }
+
+  setCurrentTime(to, next) {
+    this.logger.debug('setCurrentTime', to);
     this.callNext(next);
   }
 }
@@ -123,6 +140,63 @@ describe('PlaybackMiddleware', function () {
       spyPm4.should.have.been.calledOnce;
       spyPm4.should.have.been.calledAfter(spyPm1);
       done();
+    });
+  });
+
+  describe('setCurrentTime middleware', function () {
+    it('should run playback middleware for action setCurrentTime and chain the params', function (done) {
+      pm1 = new PM1();
+      pm2 = new PM2();
+      playbackMiddleware.use(pm1);
+      playbackMiddleware.use(pm2);
+      playbackMiddleware.setCurrentTime(100, to => {
+        to.should.equal(130);
+        done();
+      });
+    });
+
+    it('should run playback middleware for action setCurrentTime and chain the previous params', function (done) {
+      pm1 = new PM1();
+      pm2 = new PM2();
+      pm3 = new PM3();
+      playbackMiddleware.use(pm1);
+      playbackMiddleware.use(pm3);
+      playbackMiddleware.use(pm2);
+      playbackMiddleware.setCurrentTime(100, to => {
+        to.should.equal(130);
+        done();
+      });
+    });
+
+    it('should run playback middleware for action setCurrentTime and chain the original for a middleware', function (done) {
+      pm1 = new PM1();
+      pm3 = new PM3();
+      playbackMiddleware.use(pm3);
+      playbackMiddleware.use(pm1);
+      playbackMiddleware.setCurrentTime(100, to => {
+        to.should.equal(110);
+        done();
+      });
+    });
+
+    it('should run playback middleware for action setCurrentTime and chain the previous for the last', function (done) {
+      pm1 = new PM1();
+      pm3 = new PM3();
+      playbackMiddleware.use(pm1);
+      playbackMiddleware.use(pm3);
+      playbackMiddleware.setCurrentTime(100, to => {
+        to.should.equal(110);
+        done();
+      });
+    });
+
+    it('should run playback middleware for action setCurrentTime and chain the original for the last', function (done) {
+      pm3 = new PM3();
+      playbackMiddleware.use(pm3);
+      playbackMiddleware.setCurrentTime(100, to => {
+        to.should.equal(100);
+        done();
+      });
     });
   });
 });

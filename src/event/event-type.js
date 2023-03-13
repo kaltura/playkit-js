@@ -163,6 +163,10 @@ const CustomEventType: PKEventTypes = {
    */
   TEXT_TRACK_CHANGED: 'texttrackchanged',
   /**
+   * Fires when the active image track has been changed.
+   */
+  IMAGE_TRACK_CHANGED: 'imagetrackchanged',
+  /**
    * Fires when the text track added to native
    */
   TEXT_TRACK_ADDED: 'texttrackadded',
@@ -237,6 +241,14 @@ const CustomEventType: PKEventTypes = {
    */
   TIMED_METADATA: 'timedmetadata',
   /**
+   * Fired when the timed metadata triggered
+   */
+  TIMED_METADATA_CHANGE: 'timedmetadatachange',
+  /**
+   * Fires when new timed metadata added
+   */
+  TIMED_METADATA_ADDED: 'timedmetadataadded',
+  /**
    * Fired when a fragment or segment is done loading successfully
    */
   FRAG_LOADED: 'fragloaded',
@@ -251,7 +263,11 @@ const CustomEventType: PKEventTypes = {
   /**
    * Fired when the drm license is responded from the DRM server
    */
-  DRM_LICENSE_LOADED: 'drmlicenseloaded'
+  DRM_LICENSE_LOADED: 'drmlicenseloaded',
+  /**
+   * Fired when the source url switched
+   */
+  SOURCE_URL_SWITCHED: 'sourceurlswitched'
 };
 
 const EventType: PKEventTypes = Utils.Object.merge([Html5EventType, CustomEventType, AdEventType]);

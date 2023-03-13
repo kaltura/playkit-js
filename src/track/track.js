@@ -9,13 +9,24 @@ export default class Track {
    * Comparing language strings.
    * @param {string} inputLang - The configured language.
    * @param {string} trackLang - The default track language.
+   * @param {string} additionalLanguage -  Additional configured language.
+   * @param {boolean} equal - Optional flag to check for matching languages.
    * @returns {boolean} - Whether the strings are equal or starts with the same substring.
    */
-  static langComparer(inputLang: string, trackLang: string): boolean {
+  static langComparer(inputLang: string, trackLang: string, additionalLanguage: ?string, equal: ?boolean): boolean {
     try {
       inputLang = inputLang.toLowerCase();
       trackLang = trackLang.toLowerCase();
-      return inputLang ? inputLang.startsWith(trackLang) || trackLang.startsWith(inputLang) : false;
+      additionalLanguage ? (additionalLanguage = additionalLanguage.toLowerCase()) : additionalLanguage;
+      if (equal) {
+        if (inputLang === trackLang) {
+          return true;
+        } else if (additionalLanguage === trackLang) {
+          return true;
+        } else return false;
+      } else {
+        return inputLang ? inputLang.startsWith(trackLang) || trackLang.startsWith(inputLang) : false;
+      }
     } catch (e) {
       return false;
     }
@@ -60,6 +71,13 @@ export default class Track {
    * @private
    */
   _index: number;
+  /**
+   * Indicator if track available or not.
+   * @member
+   * @type {boolean}
+   * @private
+   */
+  _available: boolean;
   /**
    * The clone function reference.
    * @member
@@ -123,6 +141,15 @@ export default class Track {
   }
 
   /**
+   * Getter for the available indicator
+   * @public
+   * @returns {boolean} - The indicator if track available or not.
+   */
+  get available(): boolean {
+    return this._available;
+  }
+
+  /**
    * Setter for the index of the track.
    * @public
    * @param {number} value - The index of the track.
@@ -142,6 +169,15 @@ export default class Track {
   }
 
   /**
+   * Setter for the available indicator
+   * @public
+   * @param {boolean} isAvailable - The indicator if track available or not
+   */
+  set available(isAvailable: boolean) {
+    this._available = isAvailable;
+  }
+
+  /**
    * @constructor
    * @param {Object} settings - The track settings object.
    */
@@ -151,6 +187,7 @@ export default class Track {
     this._label = settings.label;
     this._language = settings.language;
     this._index = settings.index;
+    this._available = typeof settings.available === 'boolean' ? settings.available : true;
     this.clone = Track.clone.bind(null, this);
   }
 }

@@ -1,18 +1,11 @@
-import {ScreenOrientationType} from './screen-orientation-type';
+import {ScreenOrientationType} from './enums/screen-orientation-type';
 
 const DefaultConfig = {
   log: {
     level: 'ERROR'
   },
-  sources: {
-    startTime: -1,
-    options: {
-      forceRedirectExternalStreams: false
-    },
-    metadata: {}
-  },
   text: {
-    enableCEA708Captions: false,
+    enableCEA708Captions: true,
     useNativeTextTrack: false,
     forceCenter: false,
     captionsTextTrack1Label: 'English',
@@ -27,6 +20,7 @@ const DefaultConfig = {
     playsinline: true,
     preload: 'none',
     autoplay: false,
+    loop: false,
     autopause: false,
     allowMutedAutoPlay: true,
     muted: false,
@@ -64,14 +58,20 @@ const DefaultConfig = {
       }
     ]
   },
+  streaming: {
+    forceBreakStall: false
+  },
   abr: {
     enabled: true,
     fpsDroppedFramesInterval: 5000,
     fpsDroppedMonitoringThreshold: 0.2,
-    capLevelOnFPSDrop: true,
+    capLevelOnFPSDrop: false,
     capLevelToPlayerSize: false,
-    defaultBandwidthEstimate: 500e3,
     restrictions: {
+      minHeight: 0,
+      maxHeight: Infinity,
+      minWidth: 0,
+      maxWidth: Infinity,
       minBitrate: 0,
       maxBitrate: Infinity
     }
@@ -79,7 +79,14 @@ const DefaultConfig = {
   drm: {
     keySystem: ''
   },
-  network: {}
+  network: {
+    maxStaleLevelReloads: 20
+  }
 };
 
-export {DefaultConfig};
+const DefaultSources = {
+  options: {},
+  metadata: {}
+};
+
+export {DefaultConfig, DefaultSources};

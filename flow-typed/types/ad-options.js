@@ -13,5 +13,11 @@ declare type PKAdOptions = {
   width: number,
   height: number,
   bitrate: number,
-  bumper: boolean
+  bumper: boolean,
+  inStream?: boolean,
+  vpaid?: boolean,
+  streamId?: string,
+  wrapperAdIds: Array<string>,
+  wrapperCreativeIds: Array<string>,
+  wrapperAdSystems: Array<string>
 };

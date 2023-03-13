@@ -20,22 +20,28 @@ import {StateType} from './state/state-type';
 import {TrackType} from './track/track-type';
 import {StreamType} from './engines/stream-type';
 import {EngineType} from './engines/engine-type';
-import {MediaType} from './media-type';
+import {MediaType} from './enums/media-type';
 import {AbrMode} from './track/abr-mode-type';
 import {CorsType} from './engines/html5/cors-types';
 import PlaybackMiddleware from './middleware/playback-middleware';
-import {DefaultConfig} from './player-config.js';
+import {DefaultConfig, DefaultSources} from './player-config.js';
 import './assets/style.css';
 import PKError from './error/error';
 import {EngineProvider} from './engines/engine-provider';
 import {ExternalCaptionsHandler} from './track/external-captions-handler';
 import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
-import {ResizeWatcher} from './utils/resize-watcher';
+import {ResizeWatcher} from './utils';
 import {FullscreenController} from './fullscreen/fullscreen-controller';
 import {EngineDecorator} from './engines/engine-decorator';
 import {LabelOptions} from './track/label-options';
-import {AutoPlayType} from './auto-play-type';
+import {AutoPlayType} from './enums/auto-play-type';
+import ImageTrack from './track/image-track';
+import {ThumbnailInfo} from './thumbnail/thumbnail-info';
+import {EngineDecoratorManager} from './engines/engine-decorator-manager';
+import {filterTracksByRestriction} from './utils/restrictions';
+import {ExternalThumbnailsHandler} from './thumbnail/external-thumbnails-handler';
+
 /**
  * The black cover class name.
  * @type {string}
@@ -98,13 +104,6 @@ const OFF: string = 'off';
  *  @const
  */
 const DURATION_OFFSET: number = 0.1;
-
-/**
- * The toggle fullscreen rendering timeout value
- * @type {number}
- * @const
- */
-const REPOSITION_CUES_TIMEOUT: number = 1000;
 
 /**
  * The threshold in seconds from duration that we still consider it as live edge
@@ -191,6 +190,12 @@ export default class Player extends FakeEventTarget {
    */
   _config: Object;
   /**
+   * The current sources object.
+   * @type {PKSourcesConfigObject}
+   * @private
+   */
+  _sources: PKSourcesConfigObject = {};
+  /**
    * The playback engine.
    * @type {IEngine}
    * @private
@@ -276,10 +281,10 @@ export default class Player extends FakeEventTarget {
   _activeTextCues: Array<any> = [];
   /**
    * The player text disaply settings
-   * @type {Object}
+   * @type {PKTextTrackDisplaySettingObject}
    * @private
    */
-  _textDisplaySettings: Object = {};
+  _textDisplaySettings: PKTextTrackDisplaySettingObject = {};
   /**
    * The player text style settings
    * @type {TextStyle}
@@ -319,16 +324,10 @@ export default class Player extends FakeEventTarget {
     muted: undefined,
     volume: undefined,
     rate: undefined,
+    videoTrack: undefined,
     audioLanguage: '',
     textLanguage: ''
   };
-
-  /**
-   * holds false or an id for the timeout the reposition the text cues after togelling full screen
-   * @type {any}
-   * @private
-   */
-  _repositionCuesTimeout: any;
   /**
    * Whether a load media request has sent, the player should wait to media.
    * @type {boolean}
@@ -366,6 +365,12 @@ export default class Player extends FakeEventTarget {
    */
   _externalCaptionsHandler: ExternalCaptionsHandler;
   /**
+   * holds the external tracks handler controller
+   * @type {ExternalCaptionsHandler}
+   * @private
+   */
+  _externalThumbnailsHandler: ExternalThumbnailsHandler;
+  /**
    * holds the full screen controller
    * @type {FullscreenController}
    * @private
@@ -401,6 +406,12 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _aspectRatio: ?string;
+  /**
+   * The engine decorator manager.
+   * @type {?EngineDecoratorManager}
+   * @private
+   */
+  _engineDecoratorManager: ?EngineDecoratorManager;
 
   /**
    * @param {Object} config - The configuration for the player instance.
@@ -415,7 +426,6 @@ export default class Player extends FakeEventTarget {
     this._env = Env;
     this._tracks = [];
     this._firstPlay = true;
-    this._repositionCuesTimeout = false;
     this._loadingMedia = false;
     this._loading = false;
     this._playbackStart = false;
@@ -424,6 +434,7 @@ export default class Player extends FakeEventTarget {
     this._destroyed = false;
     this._fallbackToMutedAutoPlay = false;
     this._config = Player._defaultConfig;
+    this._sources = Utils.Object.copyDeep(DefaultSources);
     this._eventManager = new EventManager();
     this._posterManager = new PosterManager();
     this._stateManager = new StateManager(this);
@@ -434,6 +445,7 @@ export default class Player extends FakeEventTarget {
     this._createPlayerContainer();
     this._appendDomElements();
     this._externalCaptionsHandler = new ExternalCaptionsHandler(this);
+    this._externalThumbnailsHandler = new ExternalThumbnailsHandler();
     this._fullscreenController = new FullscreenController(this);
     this.configure(config);
   }
@@ -449,18 +461,43 @@ export default class Player extends FakeEventTarget {
    */
   configure(config: Object = {}): void {
     this._setConfigLogLevel(config);
-    if (this._hasSources(config.sources)) {
+    Utils.Object.mergeDeep(this._config, config);
+    this._applyTextTrackConfig(config);
+    this._applyABRRestriction(config);
+  }
+
+  /**
+   * Configures the player metadata according to a given configuration.
+   * @param {PKMetadataConfigObject} sourcesMetadata - The sources metadata for the player instance.
+   * @returns {void}
+   */
+  setSourcesMetadata(sourcesMetadata: PKMetadataConfigObject): void {
+    if (this._sources) {
+      if (!this._sources.metadata) {
+        this._sources.metadata = {};
+      }
+      Utils.Object.mergeDeep(this._sources.metadata, sourcesMetadata);
+    }
+  }
+
+  /**
+   * Configures the player according to a given configuration.
+   * @param {PKSourcesConfigObject} sources - The sources for the player instance.
+   * @returns {void}
+   */
+  setSources(sources: PKSourcesConfigObject): void {
+    if (this._hasSources(sources)) {
       this.reset();
+      Utils.Object.mergeDeep(this._sources, sources);
       this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
       Player._logger.debug('Change source started');
       this.dispatchEvent(new FakeEvent(CustomEventType.CHANGE_SOURCE_STARTED));
-      Utils.Object.mergeDeep(this._config, config);
       this._reset = false;
       if (this._selectEngineByPriority()) {
-        this.dispatchEvent(new FakeEvent(CustomEventType.SOURCE_SELECTED, {selectedSource: this._config.sources[this._streamType]}));
+        this.dispatchEvent(new FakeEvent(CustomEventType.SOURCE_SELECTED, {selectedSource: this._sources[this._streamType]}));
         this._attachMedia();
         this._handlePlaybackOptions();
-        this._posterManager.setSrc(this._config.sources.poster);
+        this._posterManager.setSrc(this._sources.poster);
         this._handleDimensions();
         this._handlePreload();
         this._handleAutoPlay();
@@ -481,9 +518,8 @@ export default class Player extends FakeEventTarget {
         );
       }
     } else {
-      Utils.Object.mergeDeep(this._config, config);
+      Utils.Object.mergeDeep(this._sources, sources);
     }
-    this._applyTextTrackConfig(config);
   }
 
   /**
@@ -582,21 +618,48 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Get video height.
+   * @returns {?number} - The intrinsic height of the video.
+   * @public
+   */
+  get videoHeight(): ?number {
+    if (this._engine) {
+      return this._engine.videoHeight;
+    }
+    return null;
+  }
+
+  /**
+   * Get video width.
+   * @returns {?number} - The intrinsic width of the video.
+   * @public
+   */
+  get videoWidth(): ?number {
+    if (this._engine) {
+      return this._engine.videoWidth;
+    }
+    return null;
+  }
+
+  /**
    * Resets the necessary components before change media.
    * @public
+   * @param {boolean} isChangeMedia - Whether or not this reset triggered due to change media
    * @returns {void}
    */
-  reset(): void {
+  reset(isChangeMedia: boolean = false): void {
     if (this._reset) return;
     this.pause();
     //make sure all services are reset before engine and engine attributes are reset
     this._externalCaptionsHandler.reset();
+    this._externalThumbnailsHandler.reset();
     this._posterManager.reset();
     this._stateManager.reset();
-    this._config.sources = {};
+    this._sources = Utils.Object.copyDeep(DefaultSources);
     this._activeTextCues = [];
     this._updateTextDisplay([]);
     this._tracks = [];
+    TextTrack.reset();
     this._resetStateFlags();
     this._engineType = '';
     this._streamType = '';
@@ -606,7 +669,7 @@ export default class Player extends FakeEventTarget {
     }
     this.showBlackCover();
     this._reset = true;
-    this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET));
+    this.dispatchEvent(new FakeEvent(CustomEventType.PLAYER_RESET, {isChangeMedia}));
     this._eventManager.removeAll();
     this._resizeWatcher.init(Utils.Dom.getElementById(this._playerId));
     this._createReadyPromise();
@@ -626,7 +689,6 @@ export default class Player extends FakeEventTarget {
     this._posterManager.destroy();
     this._stateManager.destroy();
     this._fullscreenController.destroy();
-    this._clearRepositionTimeout();
     this._activeTextCues = [];
     this._textDisplaySettings = {};
     this._config = {};
@@ -639,6 +701,9 @@ export default class Player extends FakeEventTarget {
     this._playbackAttributesState = {};
     if (this._engine) {
       this._engine.destroy();
+    }
+    if (this._engineDecoratorManager) {
+      this._engineDecoratorManager.destroy();
     }
     this._resizeWatcher.destroy();
     if (this._el) {
@@ -704,6 +769,21 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * detach the engine's media source
+   * @public
+   * @returns {void}
+   * @param {IEngineDecoratorProvider} engineDecoratorProvider - function to create the decorator
+   */
+  registerEngineDecoratorProvider(engineDecoratorProvider: IEngineDecoratorProvider): void {
+    if (!this._engineDecoratorManager) {
+      this._engineDecoratorManager = new EngineDecoratorManager();
+    }
+    if (engineDecoratorProvider) {
+      this._engineDecoratorManager.register(engineDecoratorProvider);
+    }
+  }
+
+  /**
    * Get the first buffered range of the engine.
    * @returns {TimeRanges} - First buffered range of the engine in seconds.
    * @public
@@ -734,20 +814,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   set currentTime(to: number): void {
-    if (this._engine) {
-      if (Utils.Number.isNumber(to)) {
-        let boundedTo = to;
-        if (to < 0) {
-          boundedTo = 0;
-        }
-        const safeDuration = this.isLive() ? this._engine.duration : this._engine.duration - DURATION_OFFSET;
-
-        if (boundedTo > safeDuration) {
-          boundedTo = safeDuration;
-        }
-        this._engine.currentTime = boundedTo;
-      }
-    }
+    this._playbackMiddleware.setCurrentTime(to, this._setCurrentTime.bind(this));
   }
 
   /**
@@ -770,6 +837,18 @@ export default class Player extends FakeEventTarget {
   get duration(): ?number {
     if (this._engine) {
       return this._engine.duration;
+    }
+    return null;
+  }
+
+  /**
+   * Get the live duration in seconds.
+   * @returns {?Number} - The live duration.
+   * @public
+   */
+  get liveDuration(): ?number {
+    if (this._engine) {
+      return this._engine.liveDuration;
     }
     return null;
   }
@@ -1020,6 +1099,15 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Get the current player sources object.
+   * @returns {Object} - A copy of the player configuration.
+   * @public
+   */
+  get sources(): PKSourcesConfigObject {
+    return Utils.Object.mergeDeep({}, this._sources);
+  }
+
+  /**
    * Get whether the user already interacted with the player
    * @returns {boolean} - Whether the user interacted with the player
    * @public
@@ -1099,10 +1187,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   isLive(): boolean {
-    return !!(
-      this._config.sources.type !== MediaType.VOD &&
-      (this._config.sources.type === MediaType.LIVE || (this._engine && this._engine.isLive()))
-    );
+    return !!(this._sources.type !== MediaType.VOD && (this._sources.type === MediaType.LIVE || (this._engine && this._engine.isLive())));
   }
 
   /**
@@ -1112,7 +1197,7 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   isAudio(): boolean {
-    return this._config.sources.type === MediaType.AUDIO;
+    return this._sources.type === MediaType.AUDIO;
   }
 
   /**
@@ -1121,6 +1206,9 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   isOnLiveEdge(): boolean {
+    if (this._engine && typeof this._engine.isOnLiveEdge === 'function') {
+      return this._engine.isOnLiveEdge();
+    }
     return this._isOnLiveEdge;
   }
 
@@ -1131,7 +1219,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   isDvr(): boolean {
-    return this.isLive() && this._config.sources.dvr;
+    return this.isLive() && this._sources.dvr;
   }
 
   /**
@@ -1168,7 +1256,7 @@ export default class Player extends FakeEventTarget {
    * @returns {Array<T>} - The parsed tracks.
    * @public
    */
-  getTracks<T: Track | AudioTrack | TextTrack | VideoTrack>(type?: $Values<typeof TrackType>): Array<T> {
+  getTracks<T: Track | AudioTrack | TextTrack | VideoTrack | ImageTrack>(type?: $Values<typeof TrackType>): Array<T> {
     switch (type) {
       case TrackType.VIDEO:
         return Utils.Object.copyDeep(this._getVideoTracks());
@@ -1176,6 +1264,8 @@ export default class Player extends FakeEventTarget {
         return Utils.Object.copyDeep(this._getAudioTracks());
       case TrackType.TEXT:
         return Utils.Object.copyDeep(this._getTextTracks());
+      case TrackType.IMAGE:
+        return Utils.Object.copyDeep(this._getImageTracks());
       default:
         return Utils.Object.copyDeep(this._tracks);
     }
@@ -1203,6 +1293,7 @@ export default class Player extends FakeEventTarget {
   selectTrack(track: ?Track): void {
     if (this._engine) {
       if (track instanceof VideoTrack) {
+        this._playbackAttributesState.videoTrack = track;
         if (this._stateManager.currentState.type === StateType.IDLE) {
           this._pendingSelectedVideoTrack = track;
         } else {
@@ -1223,6 +1314,8 @@ export default class Player extends FakeEventTarget {
           this._externalCaptionsHandler.hideTextTrack();
           this._engine.selectTextTrack(track);
         }
+      } else if (track instanceof ImageTrack) {
+        this._engine.selectImageTrack(track);
       }
     }
   }
@@ -1238,13 +1331,64 @@ export default class Player extends FakeEventTarget {
       this._engine.hideTextTrack();
       this._resetTextDisplay();
       const textTracks = this._getTextTracks();
+      const activeTextTrack = textTracks.find(track => track.active === true);
+      if (activeTextTrack && activeTextTrack.external) {
+        this._externalCaptionsHandler.hideTextTrack();
+      }
       textTracks.map(track => (track.active = false));
       const textTrack = textTracks.find(track => track.language === OFF);
       if (textTrack) {
         textTrack.active = true;
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
       }
+      this._playbackAttributesState.textLanguage = OFF;
     }
+  }
+
+  /**
+   * Show the text track.
+   * @returns {void}
+   * @public
+   */
+  showTextTrack(): void {
+    const textTracks = this._getTextTracks();
+    const prevLanguage = this._playbackAttributesState.textLanguage !== OFF && this._playbackAttributesState.textLanguage;
+    const prevOrAutoTextLang =
+      prevLanguage ||
+      this._getLanguage<TextTrack>(
+        textTracks,
+        AUTO,
+        textTracks.find(textTrack => textTrack.default)
+      );
+    this._setDefaultTrack<TextTrack>(textTracks, prevOrAutoTextLang);
+  }
+
+  /**
+   * Add text track
+   * @function addTextTrack
+   * @param {string} kind - Specifies the kind of text track.
+   * @param {?string} label - A string specifying the label for the text track.
+   * @param {?string} language - A two-letter language code that specifies the language of the text track.
+   * @returns {?TextTrack} - A TextTrack Object, which represents the new text track.
+   * @public
+   */
+  addTextTrack(kind: string, label?: string, language?: string): ?TextTrack {
+    if (this._engine && typeof this._engine.addTextTrack === 'function') {
+      return this._engine.addTextTrack(kind, label, language);
+    }
+  }
+
+  /**
+   * get the native text tracks
+   * @function getNativeTextTracks
+   * @returns {Array<TextTrack>} - The native TextTracks array.
+   * @public
+   */
+  getNativeTextTracks(): Array<TextTrack> {
+    if (this._engine && typeof this._engine.getNativeTextTracks === 'function') {
+      return this._engine.getNativeTextTracks();
+    }
+    return [];
   }
 
   /**
@@ -1257,6 +1401,7 @@ export default class Player extends FakeEventTarget {
     if (this._engine) {
       this._engine.enableAdaptiveBitrate();
     }
+    this._playbackAttributesState.videoTrack = undefined;
   }
 
   /**
@@ -1272,6 +1417,46 @@ export default class Player extends FakeEventTarget {
     return false;
   }
 
+  /**
+   * update the ABR restriction config
+   * @function _applyABRRestriction
+   * @returns {void}
+   * @param {Object} config - new config which configure for checking if it relevant config has changed
+   * @private
+   */
+  _applyABRRestriction(config: Object): void {
+    if (Utils.Object.hasPropertyPath(config, 'abr.restrictions') && this._engine && this._tracks.length) {
+      const {restrictions} = this._config.abr;
+      const videoTracks = this._tracks.filter(track => track instanceof VideoTrack);
+      const newVideoTracks = filterTracksByRestriction(videoTracks, restrictions);
+      if (newVideoTracks.length) {
+        const currentVideoTracks = this._tracks.filter(track => track instanceof VideoTrack && track.available);
+        const tracksHasChanged = !(
+          currentVideoTracks.length === newVideoTracks.length &&
+          currentVideoTracks.every((element: VideoTrack, index: number) => {
+            return element.bandwidth === newVideoTracks[index].bandwidth;
+          })
+        );
+        if (tracksHasChanged) {
+          this._engine.applyABRRestriction(restrictions);
+          this._tracks.forEach(track => {
+            if (newVideoTracks.includes(track) || !(track instanceof VideoTrack)) {
+              track.available = true;
+            } else {
+              track.available = false;
+              track.active = false;
+            }
+          });
+          if (!this.getActiveTracks().video) {
+            newVideoTracks[0].active = true;
+          }
+          this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks.filter(track => track.available)}));
+        }
+      } else {
+        Player._logger.warn('Invalid restriction, Nothing has changed values do not meet the restriction');
+      }
+    }
+  }
   /**
    * update the text track config from current config
    * @function _applyTextTrackConfig
@@ -1304,12 +1489,27 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   *  Returns in-stream thumbnail for a chosen time.
+   * @param {number} time - playback time.
+   * @public
+   * @return {?ThumbnailInfo} - Thumbnail info
+   */
+  getThumbnail(time: number): ?ThumbnailInfo {
+    if (this._externalThumbnailsHandler.isUsingVttThumbnails()) {
+      return this._externalThumbnailsHandler.getThumbnail(time);
+    } else if (this._engine) {
+      return this._engine.getThumbnail(time);
+    }
+    return null;
+  }
+
+  /**
    * update the text display settings
-   * @param {Object} settings - text cue display settings
+   * @param {PKTextTrackDisplaySettingObject} settings - text cue display settings
    * @public
    * @returns {void}
    */
-  setTextDisplaySettings(settings: Object): void {
+  setTextDisplaySettings(settings: PKTextTrackDisplaySettingObject): void {
     this._textDisplaySettings = Utils.Object.mergeDeep(this._textDisplaySettings, settings);
     this._updateCueDisplaySettings();
     for (let i = 0; i < this._activeTextCues.length; i++) {
@@ -1321,6 +1521,7 @@ export default class Player extends FakeEventTarget {
   get textDisplaySetting(): Object {
     return Utils.Object.copyDeep(this._textDisplaySettings);
   }
+
   /**
    * Sets style attributes for text tracks.
    * @param {TextStyle} style - text styling settings
@@ -1431,7 +1632,7 @@ export default class Player extends FakeEventTarget {
     if (this.isFullscreen()) {
       this.exitFullscreen();
     }
-    if (!this._engine.isInPictureInPicture) {
+    if (this._engine && !this._engine.isInPictureInPicture) {
       this._engine.enterPictureInPicture();
     }
   }
@@ -1442,7 +1643,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   exitPictureInPicture(): void {
-    if (this._engine.isInPictureInPicture) {
+    if (this._engine && this._engine.isInPictureInPicture) {
       this._engine.exitPictureInPicture();
     }
   }
@@ -1453,7 +1654,10 @@ export default class Player extends FakeEventTarget {
    * @return {boolean} if the player is in picture in picture mode or not
    */
   isInPictureInPicture(): boolean {
-    return this._engine.isInPictureInPicture;
+    if (this._engine) {
+      return this._engine.isInPictureInPicture;
+    }
+    return false;
   }
 
   /**
@@ -1475,7 +1679,7 @@ export default class Player extends FakeEventTarget {
    * @public
    */
   isVr(): boolean {
-    return !!this._config.sources.vr;
+    return !!this._sources.vr;
   }
 
   // </editor-fold>
@@ -1499,6 +1703,10 @@ export default class Player extends FakeEventTarget {
    */
   setLogLevel(level: Object, name?: string) {
     setLogLevel(level, name);
+  }
+
+  getDrmInfo(): ?PKDrmDataObject {
+    return this._engine?.getDrmInfo();
   }
 
   // </editor-fold>
@@ -1547,12 +1755,13 @@ export default class Player extends FakeEventTarget {
 
   /**
    * Check if sources has been received.
-   * @param {Object} sources - sources config object.
+   * @param {PKSourcesConfigObject} sources - sources config.
    * @returns {boolean} - Whether sources has been received to the player.
    * @private
    */
-  _hasSources(sources: Object): boolean {
+  _hasSources(sources: PKSourcesConfigObject): boolean {
     if (sources) {
+      // $FlowFixMe
       return !!Object.values(StreamType).find(type => sources[type] && sources[type].length > 0);
     }
     return false;
@@ -1583,6 +1792,9 @@ export default class Player extends FakeEventTarget {
       const classNameWithId = `${ENGINE_CLASS_NAME}-${this._engine.id}`;
       Utils.Dom.addClassName(engineEl, classNameWithId);
       Utils.Dom.prependTo(engineEl, this._el);
+      if (this._engine.id === 'youtube') {
+        this._el.style.zIndex = 1;
+      }
     }
   }
 
@@ -1595,11 +1807,6 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _appendDomElements(): void {
-    // Append playkit-subtitles
-    this._textDisplayEl = Utils.Dom.createElement('div');
-    Utils.Dom.setAttribute(this._textDisplayEl, 'aria-live', 'polite');
-    Utils.Dom.addClassName(this._textDisplayEl, SUBTITLES_CLASS_NAME);
-    Utils.Dom.appendChild(this._el, this._textDisplayEl);
     // Append playkit-black-cover
     this._blackCoverEl = Utils.Dom.createElement('div');
     Utils.Dom.addClassName(this._blackCoverEl, BLACK_COVER_CLASS_NAME);
@@ -1608,6 +1815,10 @@ export default class Player extends FakeEventTarget {
     const el = this._posterManager.getElement();
     Utils.Dom.addClassName(el, POSTER_CLASS_NAME);
     Utils.Dom.appendChild(this._el, el);
+    // Append playkit-subtitles
+    this._textDisplayEl = Utils.Dom.createElement('div');
+    Utils.Dom.addClassName(this._textDisplayEl, SUBTITLES_CLASS_NAME);
+    Utils.Dom.appendChild(this._el, this._textDisplayEl);
   }
 
   /**
@@ -1640,12 +1851,13 @@ export default class Player extends FakeEventTarget {
   _selectEngineByPriority(): boolean {
     const streamPriority = this._config.playback.streamPriority;
     const preferNative = this._config.playback.preferNative;
-    const sources = this._config.sources;
+    const sources = this._sources;
     for (let priority of streamPriority) {
       const engineId = typeof priority.engine === 'string' ? priority.engine.toLowerCase() : '';
       const format = typeof priority.format === 'string' ? priority.format.toLowerCase() : '';
       const Engine = EngineProvider.getEngines().find(Engine => Engine.id === engineId);
       if (Engine) {
+        // $FlowFixMe
         const formatSources = sources[format];
         if (formatSources && formatSources.length > 0) {
           const source = formatSources[0];
@@ -1675,8 +1887,7 @@ export default class Player extends FakeEventTarget {
       this._appendEngineEl();
     } else {
       if (this._engine.id === Engine.id) {
-        // The restoring must be done by the engine itself not by the proxy (engine decorator if exists) to make sure the engine events fired by the engine itself.
-        this._engine.restore.call(this._engine._engine || this._engine, source, this._config);
+        this._engine.restore(source, {...this._config, sources: this._sources});
       } else {
         this._engine.destroy();
         this._createEngine(Engine, source);
@@ -1693,8 +1904,8 @@ export default class Player extends FakeEventTarget {
    * @private
    */
   _createEngine(Engine: IEngineStatic, source: PKMediaSourceObject): void {
-    const engine = Engine.createEngine(source, this._config, this._playerId);
-    this._engine = EngineDecorator.getDecorator(engine) || engine;
+    const engine = Engine.createEngine(source, {...this._config, sources: this._sources}, this._playerId);
+    this._engine = this._engineDecoratorManager ? new EngineDecorator(engine, this._engineDecoratorManager) : engine;
   }
 
   /**
@@ -1720,6 +1931,9 @@ export default class Player extends FakeEventTarget {
           this._removeTextCuePatch();
         }
       });
+      this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._engine, CustomEventType.IMAGE_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._engine, CustomEventType.TEXT_TRACK_ADDED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.VIDEO_TRACK_CHANGED, (event: FakeEvent) => {
         this._markActiveTrack(event.payload.selectedVideoTrack);
         return this.dispatchEvent(event);
@@ -1734,8 +1948,9 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._engine, CustomEventType.ABR_MODE_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.TIMED_METADATA, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._engine, CustomEventType.TIMED_METADATA_CHANGE, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._engine, CustomEventType.TIMED_METADATA_ADDED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.PLAY_FAILED, (event: FakeEvent) => {
-        this.pause();
         this._onPlayFailed(event);
         this.dispatchEvent(event);
       });
@@ -1743,6 +1958,7 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this._engine, CustomEventType.FRAG_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.DRM_LICENSE_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.MANIFEST_LOADED, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => this._handleRecovered());
       this._eventManager.listen(this, Html5EventType.PLAY, this._onPlay.bind(this));
       this._eventManager.listen(this, Html5EventType.PAUSE, this._onPause.bind(this));
       this._eventManager.listen(this, Html5EventType.PLAYING, this._onPlaying.bind(this));
@@ -1762,12 +1978,12 @@ export default class Player extends FakeEventTarget {
         this._resetTextCuesAndReposition();
         this.dispatchEvent(event);
       });
-      this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, () => this._handleRecovered());
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_CUE_CHANGED, (event: FakeEvent) => this._onCueChange(event));
       this._eventManager.listen(this._externalCaptionsHandler, CustomEventType.TEXT_TRACK_CHANGED, (event: FakeEvent) =>
         this._onTextTrackChanged(event)
       );
       this._eventManager.listen(this._externalCaptionsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
+      this._eventManager.listen(this._externalThumbnailsHandler, Html5EventType.ERROR, (event: FakeEvent) => this.dispatchEvent(event));
       const rootElement = Utils.Dom.getElementBySelector(`#${this.config.targetId}`);
       if (rootElement) {
         this._eventManager.listen(
@@ -1814,22 +2030,12 @@ export default class Player extends FakeEventTarget {
    */
   _resetTextCuesAndReposition(): void {
     this._engine.resetAllCues();
+    this._externalCaptionsHandler.resetAllCues();
     this._updateTextDisplay([]);
     for (let i = 0; i < this._activeTextCues.length; i++) {
       this._activeTextCues[i].hasBeenReset = true;
     }
-    // handling only the last reposition
-    this._clearRepositionTimeout();
-    this._repositionCuesTimeout = setTimeout(() => {
-      this._updateTextDisplay(this._activeTextCues);
-      this._repositionCuesTimeout = false;
-    }, REPOSITION_CUES_TIMEOUT);
-  }
-
-  _clearRepositionTimeout() {
-    if (this._repositionCuesTimeout) {
-      clearTimeout(this._repositionCuesTimeout);
-    }
+    this._updateTextDisplay(this._activeTextCues);
   }
 
   /**
@@ -1947,7 +2153,7 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-     }
+   }
    * Checks auto play configuration and handles initialization accordingly.
    * @returns {void}
    * @private
@@ -1981,19 +2187,18 @@ export default class Player extends FakeEventTarget {
     };
     if (this._engine && !this.src && !this._loading) {
       this._loading = true;
-      const startTime = this._config.sources.startTime;
+      const startTime = this._sources.startTime;
       this._engine
         .load(startTime)
         .then(data => {
-          if (this.isLive() && (startTime === -1 || startTime >= this.duration)) {
+          if (this.isLive() && (startTime === -1 || Number(startTime) >= Number(this.duration))) {
             this._isOnLiveEdge = true;
           }
           this._updateTracks(data.tracks);
           this.dispatchEvent(new FakeEvent(CustomEventType.TRACKS_CHANGED, {tracks: this._tracks}));
-          resetFlags();
+          this._externalThumbnailsHandler.load(this.sources.thumbnails);
         })
-        .catch(error => {
-          this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
+        .finally(() => {
           resetFlags();
         });
     }
@@ -2021,17 +2226,29 @@ export default class Player extends FakeEventTarget {
       this._load();
       this._shouldLoadAfterAttach = false;
     }
-    this.ready()
-      .then(() => {
-        const liveOrDvrOutOfWindow = this.isLive() && (!this.isDvr() || (typeof this.currentTime === 'number' && this.currentTime < 0));
-        if (!this._firstPlay && liveOrDvrOutOfWindow) {
-          this.seekToLiveEdge();
-        }
-        this._engine.play();
-      })
-      .catch(error => {
-        this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
-      });
+    this.ready().then(() => {
+      if (this._shouldPlayerSeekToLiveEdge()) {
+        this.seekToLiveEdge();
+      }
+      this._engine.play();
+    });
+  }
+
+  /**
+   * Checking if player should seek to live edge.
+   * @returns {boolean} - Whether player should seek to live edge.
+   * @private
+   */
+  _shouldPlayerSeekToLiveEdge(): boolean {
+    if (this.isLive()) {
+      const outOfDvr = !this.isDvr() || (typeof this.currentTime === 'number' && this.currentTime < 0);
+      if (!this._firstPlay) {
+        return outOfDvr;
+      } else {
+        return !!this.src && !this.isOnLiveEdge();
+      }
+    }
+    return false;
   }
 
   /**
@@ -2041,6 +2258,29 @@ export default class Player extends FakeEventTarget {
    */
   _pause(): void {
     this._engine.pause();
+  }
+
+  /**
+   * Set the current time in seconds.
+   * @param {Number} to - The number to set in seconds.
+   * @private
+   * @returns {void}
+   */
+  _setCurrentTime(to: number): void {
+    if (this._engine) {
+      if (Utils.Number.isNumber(to)) {
+        let boundedTo = to;
+        if (to < 0) {
+          boundedTo = 0;
+        }
+        const safeDuration = this.isLive() ? this._engine.duration : this._engine.duration - DURATION_OFFSET;
+
+        if (boundedTo > safeDuration) {
+          boundedTo = safeDuration;
+        }
+        this._engine.currentTime = boundedTo;
+      }
+    }
   }
 
   /**
@@ -2061,9 +2301,6 @@ export default class Player extends FakeEventTarget {
     if (this._firstPlay) {
       this._firstPlay = false;
       this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAY));
-      if (!this.isAudio()) {
-        this._posterManager.hide();
-      }
       this.hideBlackCover();
       if (typeof this._playbackAttributesState.rate === 'number') {
         this.playbackRate = this._playbackAttributesState.rate;
@@ -2079,6 +2316,9 @@ export default class Player extends FakeEventTarget {
   _onPlaying(): void {
     if (!this._firstPlaying) {
       this._firstPlaying = true;
+      if (!this.isAudio()) {
+        this._posterManager.hide();
+      }
       this.dispatchEvent(new FakeEvent(CustomEventType.FIRST_PLAYING));
     }
     if (this._engine && this._pendingSelectedVideoTrack) {
@@ -2180,6 +2420,7 @@ export default class Player extends FakeEventTarget {
   _updateTracks(tracks: Array<Track>): void {
     Player._logger.debug('Tracks changed', tracks);
     this._tracks = tracks.concat(this._externalCaptionsHandler.getExternalTracks(tracks));
+    this._applyABRRestriction(this._config);
     this._addTextTrackOffOption();
     this._maybeSetTracksLabels();
     this._setDefaultTracks();
@@ -2193,13 +2434,23 @@ export default class Player extends FakeEventTarget {
    * @returns {Array<T>} - The parsed tracks.
    * @private
    */
-  _getTracksByType<T: TextTrack | AudioTrack | VideoTrack>(type: T): Array<T> {
+  _getTracksByType<T: TextTrack | AudioTrack | VideoTrack | ImageTrack>(type: T): Array<T> {
     return this._tracks.reduce((arr, track) => {
-      if (track instanceof type) {
+      if (track instanceof type && track.available) {
         arr.push(track);
       }
       return arr;
     }, ([]: Array<T>));
+  }
+
+  /**
+   * Returns the image tracks.
+   * @function _getImageTracks
+   * @returns {Array<ImageTrack>} - The image tracks.
+   * @private
+   */
+  _getImageTracks(): Array<ImageTrack> {
+    return this._getTracksByType<ImageTrack>(ImageTrack);
   }
 
   /**
@@ -2263,9 +2514,21 @@ export default class Player extends FakeEventTarget {
    */
   _onCueChange(event: FakeEvent): void {
     Player._logger.debug('Text cue changed', event.payload.cues);
-    this._activeTextCues = event.payload.cues;
+    //TODO: remove filter once FEC-11048 fix is done
+    try {
+      this._activeTextCues = event.payload.cues.filter((cue, index, cues) => {
+        const prevCue = cues[index - 1];
+        if (!prevCue) {
+          return true;
+        }
+        return !(cue.startTime === prevCue.startTime && cue.endTime === prevCue.endTime && cue.text.trim() === prevCue.text.trim());
+      });
+    } catch (e) {
+      this._activeTextCues = event.payload.cues;
+    }
     this._updateCueDisplaySettings();
     this._updateTextDisplay(this._activeTextCues);
+    this.dispatchEvent(event);
   }
 
   /**
@@ -2293,7 +2556,7 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   _updateTextDisplay(cues: Array<Cue>): void {
-    if (!this._config.text.useNativeTextTrack) {
+    if (!this._config.text.useNativeTextTrack && !this._config.text.useShakaTextTrackDisplay) {
       processCues(window, cues, this._textDisplayEl, this._textStyle);
     }
   }
@@ -2310,8 +2573,7 @@ export default class Player extends FakeEventTarget {
       this._tracks.push(
         new TextTrack({
           active: false,
-          index: textTracks.length,
-          kind: 'subtitles',
+          kind: TextTrack.KIND.SUBTITLES,
           label: 'Off',
           language: OFF
         })
@@ -2326,26 +2588,47 @@ export default class Player extends FakeEventTarget {
    */
   _setDefaultTracks(): void {
     const activeTracks = this.getActiveTracks();
+    const defaultStreamTrack = this._getTextTracks().find(track => track.default);
     const playbackConfig = this.config.playback;
     const offTextTrack: ?Track = this._getTextTracks().find(track => TextTrack.langComparer(OFF, track.language));
-    let currentOrConfiguredTextLang = this._playbackAttributesState.textLanguage || this._getLanguage(playbackConfig.textLanguage, activeTracks.text);
-    let currentOrConfiguredAudioLang = this._playbackAttributesState.audioLanguage || playbackConfig.audioLanguage;
-    this._setDefaultTrack<TextTrack>(this._getTextTracks(), currentOrConfiguredTextLang, offTextTrack);
-    this._setDefaultTrack<AudioTrack>(this._getAudioTracks(), currentOrConfiguredAudioLang, activeTracks.audio);
+    const defaultLanguage = this._getLanguage<TextTrack>(this._getTextTracks(), playbackConfig.textLanguage, defaultStreamTrack);
+    const currentOrConfiguredTextLang =
+      !this._playbackAttributesState.textLanguage || this._playbackAttributesState.textLanguage === OFF
+        ? defaultLanguage
+        : this._playbackAttributesState.textLanguage;
+    const currentOrConfiguredAudioLang =
+      this._playbackAttributesState.audioLanguage ||
+      this._getLanguage<AudioTrack>(this._getAudioTracks(), playbackConfig.audioLanguage, activeTracks.audio);
+    if (currentOrConfiguredTextLang === playbackConfig.textLanguage) {
+      this._setDefaultTrack<TextTrack>(this._getTextTracks(), currentOrConfiguredTextLang, offTextTrack, playbackConfig.additionalTextLanguage);
+    } else {
+      this._setDefaultTrack<TextTrack>(this._getTextTracks(), currentOrConfiguredTextLang, offTextTrack);
+    }
+    if (currentOrConfiguredAudioLang === playbackConfig.audioLanguage) {
+      this._setDefaultTrack<AudioTrack>(
+        this._getAudioTracks(),
+        currentOrConfiguredAudioLang,
+        activeTracks.audio,
+        playbackConfig.additionalAudioLanguage
+      );
+    } else {
+      this._setDefaultTrack<AudioTrack>(this._getAudioTracks(), currentOrConfiguredAudioLang, activeTracks.audio);
+    }
+    this._setDefaultVideoTrack();
   }
 
   /**
    * Gets the track language that should be set by default.
+   * @param {Array<T>} tracks - the audio or text tracks.
    * @param {string} configuredLanguage - The configured language (can be also "auto").
-   * @param {?TextTrack} defaultTrack - The default track.
+   * @param {?T} defaultTrack - The default track.
    * @private
    * @returns {string} - The track language to set by default.
    */
-  _getLanguage(configuredLanguage: string, defaultTrack: ?TextTrack): string {
+  _getLanguage<T: TextTrack | AudioTrack>(tracks: Array<T>, configuredLanguage: string, defaultTrack: ?T): string {
     let language = configuredLanguage;
     if (language === AUTO) {
-      const tracks = this._getTextTracks();
-      const localeTrack: ?TextTrack = tracks.find(track => Track.langComparer(Locale.language, track.language));
+      const localeTrack: ?T = tracks.find(track => Track.langComparer(Locale.language, track.language));
       if (localeTrack) {
         language = localeTrack.language;
       } else if (defaultTrack && defaultTrack.language !== OFF) {
@@ -2363,16 +2646,45 @@ export default class Player extends FakeEventTarget {
    * @param {Array<T>} tracks - the audio or text tracks.
    * @param {string} language - The track language.
    * @param {Track} defaultTrack - The default track to set in case there is no language configured.
+   * @param {string} additionalLanguage - additional track language.
    * @returns {void}
    * @private
    */
-  _setDefaultTrack<T: TextTrack | AudioTrack>(tracks: Array<T>, language: string, defaultTrack: ?Track): void {
-    const track: ?T = tracks.find(track => Track.langComparer(language, track.language));
-    if (track) {
+  _setDefaultTrack<T: TextTrack | AudioTrack>(tracks: Array<T>, language: string, defaultTrack: ?Track, additionalLanguage: ?string): void {
+    const updateTrack = track => {
       this.selectTrack(track);
       this._markActiveTrack(track);
-    } else if (defaultTrack && !defaultTrack.active) {
-      this.selectTrack(defaultTrack);
+    };
+    const sameTrack: ?T = tracks.find(track => Track.langComparer(language, track.language, additionalLanguage, true));
+    if (sameTrack) {
+      updateTrack(sameTrack);
+    } else {
+      const track: ?T = tracks.find(track => Track.langComparer(language, track.language, additionalLanguage, false));
+      if (track) {
+        updateTrack(track);
+      } else if (defaultTrack && !defaultTrack.active) {
+        this.selectTrack(defaultTrack);
+      }
+    }
+  }
+
+  /**
+   * Sets the video track selected by the user.
+   * @returns {void}
+   * @private
+   */
+  _setDefaultVideoTrack(): void {
+    const sortedVideoTracks = this._getVideoTracks().sort((track1: VideoTrack, track2: VideoTrack) => track2.bandwidth - track1.bandwidth);
+    let selectedVideoTrack = sortedVideoTracks.find(
+      (track: VideoTrack) => track.label && track.label === this._playbackAttributesState.videoTrack?.label
+    );
+    if (!selectedVideoTrack) {
+      selectedVideoTrack = sortedVideoTracks.find(
+        (track: VideoTrack) => track.height && track.height === this._playbackAttributesState.videoTrack?.height
+      );
+    }
+    if (selectedVideoTrack) {
+      this.selectTrack(selectedVideoTrack);
     }
   }
 
@@ -2552,5 +2864,6 @@ export default class Player extends FakeEventTarget {
   get Error(): typeof PKError {
     return PKError;
   }
+
   // </editor-fold>
 }

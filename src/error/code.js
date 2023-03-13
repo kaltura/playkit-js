@@ -44,6 +44,11 @@ const Code: CodeType = {
    */
   RESPONSE_FILTER_ERROR: 1007,
 
+  /**
+   * Live manifest is refreshed more than a preconfigured amount of times without any new segment.
+   */
+  LIVE_MANIFEST_REFRESH_ERROR: 1008,
+
   /** The text parser failed to parse a text stream due to an invalid header. */
   INVALID_TEXT_HEADER: 2000,
 
@@ -93,6 +98,10 @@ const Code: CodeType = {
    * https://github.com/kaltura/playkit-js/blob/master/docs/configuration.md#configsourcescaptions
    */
   UNKNOWN_LANGUAGE: 2012,
+  /**
+   * invalid thumbnail vtt file format or invalid url option.
+   */
+  INVALID_VTT_THUMBNAILS_FILE: 2013,
   /**
    * Some component tried to read past the end of a buffer.  The segment index,
    * init segment, or PSSH may be malformed.

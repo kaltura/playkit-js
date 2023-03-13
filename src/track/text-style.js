@@ -37,10 +37,10 @@ class TextStyle {
   /**
    * Defined in {@link https://goo.gl/ZcqOOM FCC 12-9}, paragraph 111, footnote
    * 448.  Each value is an array of the three RGB values for that color.
-   * @enum {Object.<string, Array.<number>>}}
+   * @enum {Object.<string, [number, number, number]>}}
    * @export
    */
-  static StandardColors: {[string]: Array<number>} = {
+  static StandardColors: {[string]: [number, number, number]} = {
     WHITE: [255, 255, 255],
     BLACK: [0, 0, 0],
     RED: [255, 0, 0],
@@ -70,10 +70,10 @@ class TextStyle {
    * Each inner array represents a shadow, and is composed of RGB values for the
    * shadow color, followed by pixel values for x-offset, y-offset, and blur.
    *
-   * @enum {!Array.<!Array.<number>>}
+   * @enum {!Array.<!Array.[number, number, number, number, number, number]>}
    * @export
    */
-  static EdgeStyles: {[string]: Array<Array<number>>} = {
+  static EdgeStyles: {[string]: Array<[number, number, number, number, number, number]>} = {
     NONE: [],
     RAISED: [
       [34, 34, 34, 1, 1, 0],
@@ -99,6 +99,9 @@ class TextStyle {
     ]
   };
 
+  /**
+   * Possible font sizes are 50%, 75%, 100%, 200%, 300%, 400%
+   */
   static FontSizes: Array<Object> = [
     {
       value: -2,
@@ -133,7 +136,7 @@ class TextStyle {
    * @return {string} - CSS rgba string
    * @private
    */
-  static toRGBA(color: Array<number>, opacity: number): string {
+  static toRGBA(color: [number, number, number], opacity: number): string {
     // shaka.asserts.assert(color.length == 3);
     return 'rgba(' + color.concat(opacity).join(',') + ')';
   }
@@ -167,13 +170,35 @@ class TextStyle {
     };
   }
 
-  /**
-   * Font size, such as 1, 2, 3...
-   * @type {number}
-   */
-  fontSize: string = '100%';
+  _fontSizeIndex: number = 2; // 100%
 
-  fontScale: number = 1;
+  set fontSize(fontSize: string) {
+    const index = TextStyle.FontSizes.findIndex(({label}) => label === fontSize);
+    if (index !== -1) {
+      this._fontSizeIndex = index;
+    }
+  }
+
+  /**
+   * Percentage string matching a FontSizes entry
+   */
+  get fontSize() {
+    return TextStyle.FontSizes[this._fontSizeIndex].label;
+  }
+
+  set fontScale(fontScale: number) {
+    const index = TextStyle.FontSizes.findIndex(({value}) => value === fontScale);
+    if (index !== -1) {
+      this._fontSizeIndex = index;
+    }
+  }
+
+  /**
+   * Numeric value matching a FontSizes entry (for backward compatibility)
+   */
+  get fontScale() {
+    return TextStyle.FontSizes[this._fontSizeIndex].value;
+  }
 
   /**
    * @type {TextStyle.FontFamily}
@@ -183,7 +208,7 @@ class TextStyle {
   /**
    * @type {TextStyle.StandardColors}
    */
-  fontColor: Array<number> = TextStyle.StandardColors.WHITE;
+  fontColor: [number, number, number] = TextStyle.StandardColors.WHITE;
 
   /**
    * @type {TextStyle.StandardOpacities}
@@ -194,7 +219,7 @@ class TextStyle {
   /**
    * @type {TextStyle.StandardColors}
    */
-  backgroundColor: Array<number> = TextStyle.StandardColors.BLACK;
+  backgroundColor: [number, number, number] = TextStyle.StandardColors.BLACK;
 
   /**
    * @type {TextStyle.StandardOpacities}
@@ -205,7 +230,7 @@ class TextStyle {
    * @type {TextStyle.EdgeStyles}
    * @expose
    */
-  fontEdge: Array<Array<number>> = TextStyle.EdgeStyles.NONE;
+  fontEdge: Array<[number, number, number, number, number, number]> = TextStyle.EdgeStyles.NONE;
 
   getTextShadow(): string {
     // A given edge effect may be implemented with multiple shadows.
@@ -213,7 +238,7 @@ class TextStyle {
     let shadows: Array<string> = [];
     for (let i = 0; i < this.fontEdge.length; i++) {
       // shaka.asserts.assert(this.fontEdge[i].length == 6);
-      const color: Array<number> = this.fontEdge[i].slice(0, 3);
+      const color: [number, number, number] = (this.fontEdge[i].slice(0, 3): any);
       let shadow: Array<number> = this.fontEdge[i].slice(3, 6);
       shadows.push(TextStyle.toRGBA(color, this.fontOpacity) + ' ' + shadow.join('px ') + 'px');
     }
@@ -253,7 +278,8 @@ class TextStyle {
   }
 
   get implicitFontScale(): number {
-    return IMPLICIT_SCALE_PERCENTAGE * this.fontScale + 1;
+    const fontSizeValue = TextStyle.FontSizes[this._fontSizeIndex].value;
+    return IMPLICIT_SCALE_PERCENTAGE * fontSizeValue + 1;
   }
 }
 

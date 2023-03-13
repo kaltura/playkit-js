@@ -58,32 +58,46 @@ export default class Middleware {
    * Runs a middleware chain for a specific action.
    * @param {string} action - The action to run.
    * @param {Function} callback - The callback function.
+   * @param {Array<any>} params - The action params.
    * @public
    * @returns {void}
    */
-  run(action: string, callback: Function): void {
+  run(action: string, callback: Function, ...params: Array<any>): void {
     this._logger.debug('Start middleware chain for action ' + action);
     let middlewares = this._middlewares.get(action);
-    this._executeMiddleware(middlewares, () => {
-      this._logger.debug('Finish middleware chain for action ' + action);
-      callback();
-    });
+    this._executeMiddleware(
+      middlewares,
+      (...params) => {
+        this._logger.debug('Finish middleware chain for action ' + action);
+        callback(...params);
+      },
+      params
+    );
   }
 
   /**
    * Executes all the middlewares one by one.
    * @param {Array<Function>} middlewares - The middlewares for a specific action.
    * @param {Function} callback - The callback function.
+   * @param {Array<any>} origParams - The original action params.
    * @private
    * @returns {void}
    */
-  _executeMiddleware(middlewares: Array<Function>, callback: Function): void {
+  _executeMiddleware(middlewares: Array<Function>, callback: Function, origParams: Array<any>): void {
+    let params = origParams;
+    const applyFunc = (fn, prevParams, next) => {
+      if (prevParams?.length) {
+        params = prevParams;
+      }
+      params?.length ? fn(...params, next) : fn(next);
+    };
     const composition = middlewares.reduceRight(
-      // eslint-disable-next-line no-unused-vars
-      (next, fn) => v => {
-        fn(next);
+      (next, fn) => (...prevParams) => {
+        applyFunc(fn, prevParams, next);
       },
-      callback
+      (...prevParams) => {
+        applyFunc(callback, prevParams);
+      }
     );
     composition();
   }

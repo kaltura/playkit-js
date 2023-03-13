@@ -1,9 +1,10 @@
 import {Cue} from './vtt-cue';
 import {Region} from './vtt-region';
 import TextStyle from './text-style';
+import TextTrack from './text-track';
 
 /* eslint-disable */
-/**
+/*
  * Copyright 2013 vtt.js Contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -564,7 +565,7 @@ function computeLinePos(cue) {
   const trackList = track.textTrackList;
   let count = 0;
   for (let i = 0; i < trackList.length && trackList[i] !== track; i++) {
-    if (trackList[i].mode === 'showing') {
+    if (trackList[i].mode === TextTrack.MODE.SHOWING) {
       count++;
     }
   }
@@ -663,6 +664,7 @@ class CueStyleBox extends StyleBox {
     switch (align) {
       case 'start':
       case 'left':
+      case 'line-left':
         textPos = cue.position;
         break;
       case 'center':
@@ -670,6 +672,7 @@ class CueStyleBox extends StyleBox {
         break;
       case 'end':
       case 'right':
+      case 'line-right':
         textPos = cue.position - cue.size;
         break;
     }
