@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.82.1](https://github.com/kaltura/playkit-js/compare/v0.82.0...v0.82.1) (2023-03-22)
+
+
+### Bug Fixes
+
+* **FEC-12988:** fix image tracks row/cos values got mixed ([#705](https://github.com/kaltura/playkit-js/issues/705)) ([cbb9ad0](https://github.com/kaltura/playkit-js/commit/cbb9ad0))
+* **FEC-12991:** Left-positioned captions are centered on Firefox ([#704](https://github.com/kaltura/playkit-js/issues/704)) ([0edfc96](https://github.com/kaltura/playkit-js/commit/0edfc96))
+
+
+
 ## [0.82.0](https://github.com/kaltura/playkit-js/compare/v0.81.0...v0.82.0) (2023-02-22)
 
 
