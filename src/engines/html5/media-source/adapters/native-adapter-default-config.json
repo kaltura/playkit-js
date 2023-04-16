@@ -1,3 +1,4 @@
 {
-  "heartbeatTimeout": 30000
+  "heartbeatTimeout": 30000,
+  "isStartOverType": false
 }

@@ -237,6 +237,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         Utils.Object.createPropertyPath(adapterConfig, 'abr.restrictions', abr.restrictions);
       }
     }
+    if (Utils.Object.hasPropertyPath(config, 'sources.options.isStartOverType')) {
+      adapterConfig.isStartOverType = true;
+    }
+
     adapterConfig.network = config.network;
     return new this(videoElement, source, adapterConfig);
   }
@@ -495,6 +499,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._handleLiveDurationChange();
       }
     };
+
+    this._seekRangeStart = this._videoElement.seekable.length ? this._videoElement.seekable.start(0) : 0;
     if (!this.isLive()) {
       this._setStartTime(startTime);
     }
@@ -1234,7 +1240,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   getStartTimeOfDvrWindow(): number {
     if (this.isLive() && this._videoElement.seekable.length) {
-      return this._videoElement.seekable.start(0);
+      return this._config.isStartOverType ? this._seekRangeStart : this._videoElement.seekable.start(0);
     } else {
       return 0;
     }
