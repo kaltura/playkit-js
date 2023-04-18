@@ -45,7 +45,6 @@ module.exports = function (config) {
       }
     }
   };
-
   karmaConf.customLaunchers = launchers;
   karmaConf.browsers = ['Chrome_browser'];
   config.set(karmaConf);
