@@ -156,6 +156,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _captionsHidden: boolean = false;
+
+  _seekRangeStart = 0;
   /**
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
@@ -513,7 +515,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   _setStartTime(startTime: ?number) {
-    if (startTime && startTime > -1) {
+    if (startTime > -1) {
       this._videoElement.currentTime = startTime;
     }
     this._wasCurrentTimeSetSuccessfully = true;
