@@ -102,7 +102,7 @@ export {registerEngine, unRegisterEngine};
 // Export ads framework
 export {AdBreakType, AdTagType, AdEventType};
 
-//filter invalid tracks
+// Filter invalid tracks
 export {filterTracksByRestriction};
 
 // Export enums
