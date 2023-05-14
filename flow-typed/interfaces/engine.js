@@ -46,7 +46,7 @@ declare interface IEngine extends FakeEventTarget {
   detachMediaSource(): void;
   getThumbnail(time: number): ?ThumbnailInfo;
   isOnLiveEdge(): boolean;
-  addTextTrack(kind: string, label?: string, language): ?TextTrack;
+  addTextTrack(kind: string, label?: string, language?: string): ?TextTrack;
   getNativeTextTracks(): Array<TextTrack>;
   getDrmInfo(): ?PKDrmDataObject;
   +id: string;
