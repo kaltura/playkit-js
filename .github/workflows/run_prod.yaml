@@ -21,4 +21,4 @@ jobs:
       type: "dependency"
       env: "prod"
       schema-type: "playerV3Versions"
-      tests-yarn-run-to-execute: 'eslint flow test'
+      tests-yarn-run-to-execute: 'build eslint flow test'
