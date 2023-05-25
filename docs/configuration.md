@@ -111,6 +111,7 @@ var config = {
 > ```js
 > {
 >   level: string,
+>   playerVersion: boolean,
 >   handler: ?LogHandlerType
 > }
 > ```
@@ -122,6 +123,14 @@ var config = {
 > > ##### Description: Defines the player log level.
 > >
 > > Possible values: `"DEBUG", "INFO", "TIME", "WARN", "ERROR", "OFF"`
+> > 
+> > ### config.log.playerVersion
+> >
+> > ##### Default: `true`
+> >
+> > ##### Description: Whether to show or hide player verion in logs.
+> >
+> > Possible values: `true/false`
 > >
 > > ### config.log.handler
 > >
