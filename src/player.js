@@ -2122,11 +2122,11 @@ export default class Player extends FakeEventTarget {
 
     const isMuted = () => {
       Player._logger.debug('Checking muted value');
-      // at this point it is possible that the engine hasn't loaded yet, so this.muted is not reflecting the actual state.
+      // at this point it is possible that the engine hasn't loaded yet (like youtube), so this.muted is not reflecting the actual state.
       // first, check if someone set a value in muted; if not, then check the config; lastly, check the engine.
       const muted =
         (typeof this._playbackAttributesState.muted === 'boolean' && this._playbackAttributesState.muted) ||
-        this._config.playback.muted ||
+        (typeof this._config.playback.muted === 'boolean' && this._config.playback.muted) ||
         this.muted;
       Player._logger.debug('Muted value is:', muted);
       return muted;
