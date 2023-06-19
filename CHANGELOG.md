@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.82.4 (2023-06-07)
+
+
+### Bug Fixes
+
+* **FEC-13108:** Start time can't be set to 0 in loadMedia for live with dvr ([78c2401](https://github.com/kaltura/playkit-js/commit/78c2401))
+
+
+
+### 0.82.3 (2023-05-17)
+
+
+### Bug Fixes
+
+* **FEC-13123:** replace travis with github actions ([#712](https://github.com/kaltura/playkit-js/issues/712)) ([60212bf](https://github.com/kaltura/playkit-js/commit/60212bf))
+
+
+
 ### 0.82.2 (2023-05-08)
 
 
