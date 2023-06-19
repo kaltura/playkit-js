@@ -1214,7 +1214,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _calculateSegmentDuration() {
-    if (this._videoElement.seekable.start(0) === 0) {
+    if (this._videoElement.seekable.length > 0 && this._videoElement.seekable.start(0) === 0) {
       const {buffered, seekable} = this._videoElement;
       if (buffered.length && seekable.length) {
         this._segmentDuration = (buffered.end(buffered.length - 1) - seekable.end(seekable.length - 1)) / SAFARI_BUFFERED_SEGMENTS_COUNT;
