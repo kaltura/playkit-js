@@ -1963,8 +1963,8 @@ export default class Player extends FakeEventTarget {
       this._eventManager.listen(this, Html5EventType.PAUSE, this._onPause.bind(this));
       this._eventManager.listen(this, Html5EventType.PLAYING, this._onPlaying.bind(this));
       this._eventManager.listen(this, Html5EventType.ENDED, this._onEnded.bind(this));
-      this._eventManager.listen(this, CustomEventType.MUTE_CHANGE, () => {
-        this._playbackAttributesState.muted = this.muted;
+      this._eventManager.listen(this, CustomEventType.MUTE_CHANGE, (event: FakeEvent) => {
+        this._playbackAttributesState.muted = event.payload?.mute || this.muted;
       });
       this._eventManager.listen(this, Html5EventType.VOLUME_CHANGE, () => {
         this._playbackAttributesState.volume = this.volume;
@@ -2107,7 +2107,7 @@ export default class Player extends FakeEventTarget {
         onAutoPlay();
       } else {
         if (capabilities.mutedAutoPlay) {
-          if (this.muted && !this._fallbackToMutedAutoPlay) {
+          if (isMuted() && !this._fallbackToMutedAutoPlay) {
             onMutedAutoPlay();
           } else if (allowMutedAutoPlay) {
             onFallbackToMutedAutoPlay();
@@ -2119,6 +2119,18 @@ export default class Player extends FakeEventTarget {
         }
       }
     });
+
+    const isMuted = () => {
+      Player._logger.debug('Checking muted value');
+      // at this point it is possible that the engine hasn't loaded yet (like youtube), so this.muted is not reflecting the actual state.
+      // first, check if someone set a value in muted; if not, then check the config; lastly, check the engine.
+      const muted =
+        (typeof this._playbackAttributesState.muted === 'boolean' && this._playbackAttributesState.muted) ||
+        (typeof this._config.playback.muted === 'boolean' && this._config.playback.muted) ||
+        this.muted;
+      Player._logger.debug('Muted value is:', muted);
+      return muted;
+    };
 
     const onAutoPlay = () => {
       Player._logger.debug('Start autoplay');
