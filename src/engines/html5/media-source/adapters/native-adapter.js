@@ -332,7 +332,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (!this._loadPromise) {
       this._loadPromise = new Promise((resolve, reject) => {
         this._lastTimeUpdate = startTime || 0;
-        const playbackStartTime = this._startTimeAttach || startTime || 0;
+        const realStartTime = typeof startTime === 'number' ? startTime : -1;
+        const playbackStartTime = this._startTimeAttach || realStartTime;
         this._loadPromiseReject = reject;
         this._eventManager.listenOnce(this._videoElement, Html5EventType.LOADED_DATA, () => this._onLoadedData(resolve, playbackStartTime));
         this._eventManager.listenOnce(this._videoElement, Html5EventType.PLAYING, () => this._onPlaying(playbackStartTime));
