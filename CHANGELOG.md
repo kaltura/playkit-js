@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.82.5 (2023-06-28)
+
+
+### Bug Fixes
+
+* **FEC-13240:** iOS safari will start from pos 0 instead of live edge  ([4b68e38](https://github.com/kaltura/playkit-js/commit/4b68e38))
+
+
+
 ### 0.82.4 (2023-06-07)
 
 
