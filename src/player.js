@@ -2429,7 +2429,7 @@ export default class Player extends FakeEventTarget {
    * @private
    * @returns {void}
    */
-  _updateTracks(tracks: Array<Track>): void {
+  _updateTracks(tracks: Array<Track> = []): void {
     Player._logger.debug('Tracks changed', tracks);
     this._tracks = tracks.concat(this._externalCaptionsHandler.getExternalTracks(tracks));
     this._applyABRRestriction(this._config);
