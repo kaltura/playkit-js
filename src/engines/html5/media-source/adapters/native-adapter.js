@@ -233,6 +233,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
     if (Utils.Object.hasPropertyPath(config, 'abr')) {
       const abr = config.abr;
+      if (abr.defaultBandwidthEstimate) {
+        adapterConfig.abrEwmaDefaultEstimate = abr.defaultBandwidthEstimate;
+      }
       if (abr.restrictions) {
         Utils.Object.createPropertyPath(adapterConfig, 'abr.restrictions', abr.restrictions);
       }
@@ -456,7 +459,18 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     requestFilterPromise = requestFilterPromise || Promise.resolve(pkRequest);
     requestFilterPromise
       .then(updatedRequest => {
-        this._videoElement.src = updatedRequest.url;
+        // this._videoElement.src = updatedRequest.url;
+        const options = {};
+        if (this._config.abrEwmaDefaultEstimate) {
+          options.option = {};
+          options.option.adaptiveStreaming = {};
+          options.option.adaptiveStreaming.bps = this._config.abrEwmaDefaultEstimate;
+        }
+        const mediaOption = encodeURI(JSON.stringify(options));
+        const source = document.createElement('source');
+        source.setAttribute('src', updatedRequest.url);
+        source.setAttribute('type', 'video/mp4;mediaOption=' + mediaOption);
+        this._videoElement.appendChild(source);
       })
       .catch(error => {
         this._trigger(Html5EventType.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.REQUEST_FILTER_ERROR, error));
