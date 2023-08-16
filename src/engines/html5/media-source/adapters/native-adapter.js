@@ -459,17 +459,21 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     requestFilterPromise = requestFilterPromise || Promise.resolve(pkRequest);
     requestFilterPromise
       .then(updatedRequest => {
+        //NativeAdapter._logger.debug('this._config.abrEwmaDefaultEstimate', this._config.abrEwmaDefaultEstimate);
         // this._videoElement.src = updatedRequest.url;
         const options = {};
-        if (this._config.abrEwmaDefaultEstimate) {
-          options.option = {};
-          options.option.adaptiveStreaming = {};
-          options.option.adaptiveStreaming.bps = this._config.abrEwmaDefaultEstimate;
-        }
+        //if (this._config.abrEwmaDefaultEstimate) {
+        options.option = {};
+        options.option.adaptiveStreaming = {};
+        options.option.adaptiveStreaming.bps = {
+          start: 2000000
+        };
+        NativeAdapter._logger.debug('options', options);
+        //}
         const mediaOption = encodeURI(JSON.stringify(options));
         const source = document.createElement('source');
         source.setAttribute('src', updatedRequest.url);
-        source.setAttribute('type', 'video/mp4;mediaOption=' + mediaOption);
+        source.setAttribute('type', 'application/x-mpegurl;mediaOption=' + mediaOption);
         this._videoElement.appendChild(source);
       })
       .catch(error => {
