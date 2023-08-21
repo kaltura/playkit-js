@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.82.6 (2023-08-21)
+
+
+### Bug Fixes
+
+* **FEC-12852:** When changing the background color of the player, the color is not changing on loading ([#721](https://github.com/kaltura/playkit-js/issues/721)) ([6e533f7](https://github.com/kaltura/playkit-js/commit/6e533f7))
+
+
+
 ### 0.82.5 (2023-06-28)
 
 
