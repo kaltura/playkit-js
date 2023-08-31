@@ -2,6 +2,7 @@
 declare type PKPlaybackConfigObject = {
   audioLanguage: string,
   textLanguage: string,
+  captionsDisplay: boolean,
   additionalAudioLanguage: string,
   additionalTextLanguage: string,
   volume: number,

@@ -45,6 +45,7 @@ var config = {
   playback: {
     audioLanguage: '',
     textLanguage: '',
+    captionsDisplay: false,
     additionalAudioLanguage: '',
     additionalTextLanguage: '',
     volume: 1,
@@ -123,7 +124,7 @@ var config = {
 > > ##### Description: Defines the player log level.
 > >
 > > Possible values: `"DEBUG", "INFO", "TIME", "WARN", "ERROR", "OFF"`
-> > 
+> >
 > > ### config.log.playerVersion
 > >
 > > ##### Default: `true`
@@ -749,6 +750,7 @@ var config = {
 >  textLanguage: string,
 >  additionalAudioLanguage: string,
 >  additionalTextLanguage: string,
+>  captionsDisplay: boolean,
 >  volume: number,
 >  playsinline: boolean,
 >  crossOrigin: string,
@@ -776,6 +778,7 @@ var config = {
 >  textLanguage: "",
 >  additionalAudioLanguage: "",
 >  additionalTextLanguage: "",
+>  captionsDisplay: false,
 >  volume: 1,
 >  playsinline: true,
 >  preload: "none",
@@ -934,6 +937,26 @@ var config = {
 > > var config = {
 > >   playback: {
 > >     additionalTextLanguage: 'spa' // Start playback with Spanish captions
+> >   }
+> > };
+> > ```
+>
+> ##
+>
+> > ### config.playback.captionsDisplay
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ##### Description: A Boolean attribute that indicates whether the captions are disabled or enabled by default.
+> >
+> > #### Example:
+> >
+> > ```js
+> > var config = {
+> >   playback: {
+> >     captionsDisplay: true
 > >   }
 > > };
 > > ```
