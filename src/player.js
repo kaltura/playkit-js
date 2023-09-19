@@ -326,7 +326,8 @@ export default class Player extends FakeEventTarget {
     rate: undefined,
     videoTrack: undefined,
     audioLanguage: '',
-    textLanguage: ''
+    textLanguage: '',
+    captionsDisplay: undefined
   };
   /**
    * Whether a load media request has sent, the player should wait to media.
@@ -1306,7 +1307,7 @@ export default class Player extends FakeEventTarget {
         if (track.language === OFF) {
           this.hideTextTrack();
           this._externalCaptionsHandler.hideTextTrack();
-          this._playbackAttributesState.textLanguage = OFF;
+          this._playbackAttributesState.captionsDisplay = false;
         } else if (track.external) {
           this._engine.hideTextTrack();
           this._externalCaptionsHandler.selectTextTrack(track);
@@ -1341,7 +1342,7 @@ export default class Player extends FakeEventTarget {
         textTrack.active = true;
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
       }
-      this._playbackAttributesState.textLanguage = OFF;
+      this._playbackAttributesState.captionsDisplay = false;
     }
   }
 
@@ -1352,9 +1353,9 @@ export default class Player extends FakeEventTarget {
    */
   showTextTrack(): void {
     const textTracks = this._getTextTracks();
-    const prevLanguage = this._playbackAttributesState.textLanguage !== OFF && this._playbackAttributesState.textLanguage;
+    const userPreference = this._playbackAttributesState.textLanguage;
     const prevOrAutoTextLang =
-      prevLanguage ||
+      userPreference ||
       this._getLanguage<TextTrack>(
         textTracks,
         AUTO,
@@ -2609,10 +2610,15 @@ export default class Player extends FakeEventTarget {
     const currentOrConfiguredAudioLang =
       this._playbackAttributesState.audioLanguage ||
       this._getLanguage<AudioTrack>(this._getAudioTracks(), playbackConfig.audioLanguage, activeTracks.audio);
-    if (currentOrConfiguredTextLang === playbackConfig.textLanguage) {
-      this._setDefaultTrack<TextTrack>(this._getTextTracks(), currentOrConfiguredTextLang, offTextTrack, playbackConfig.additionalTextLanguage);
+    if (!playbackConfig.captionsDisplay) {
+      this._playbackAttributesState.textLanguage = playbackConfig.textLanguage;
+      this._setDefaultTrack<TextTrack>(this._getTextTracks(), OFF, offTextTrack);
     } else {
-      this._setDefaultTrack<TextTrack>(this._getTextTracks(), currentOrConfiguredTextLang, offTextTrack);
+      if (currentOrConfiguredTextLang === playbackConfig.textLanguage) {
+        this._setDefaultTrack<TextTrack>(this._getTextTracks(), currentOrConfiguredTextLang, offTextTrack, playbackConfig.additionalTextLanguage);
+      } else {
+        this._setDefaultTrack<TextTrack>(this._getTextTracks(), currentOrConfiguredTextLang, offTextTrack);
+      }
     }
     if (currentOrConfiguredAudioLang === playbackConfig.audioLanguage) {
       this._setDefaultTrack<AudioTrack>(
