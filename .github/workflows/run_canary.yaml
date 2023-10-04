@@ -1,0 +1,17 @@
+## Canary CI/CD
+name: Canary
+run-name: Canary
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  canary:
+    if: ${{ github.actor != 'PlaykitJs-Bot' }}
+    uses: kaltura/playkit-js-common/.github/workflows/canary_dependency.yaml@master
+    secrets: inherit
+    with:
+      schema-type: "playerV3Versions"
+      tests-yarn-run-to-execute: 'build eslint flow test'
