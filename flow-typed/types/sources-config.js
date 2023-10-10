@@ -15,5 +15,7 @@ declare type PKSourcesConfigObject = {
   duration?: number,
   startTime?: number,
   vr: ?Object,
-  imageSourceOptions?: ImageSourceOptions
+  imageSourceOptions?: ImageSourceOptions,
+  seekFrom?: number,
+  clipTo?: number
 };
