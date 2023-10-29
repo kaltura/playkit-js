@@ -459,22 +459,29 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     requestFilterPromise = requestFilterPromise || Promise.resolve(pkRequest);
     requestFilterPromise
       .then(updatedRequest => {
-        //NativeAdapter._logger.debug('this._config.abrEwmaDefaultEstimate', this._config.abrEwmaDefaultEstimate);
-        // this._videoElement.src = updatedRequest.url;
-        const options = {};
-        //if (this._config.abrEwmaDefaultEstimate) {
-        options.option = {};
-        options.option.adaptiveStreaming = {};
-        options.option.adaptiveStreaming.bps = {
-          start: 2000000
-        };
-        NativeAdapter._logger.debug('options', options);
-        //}
-        const mediaOption = encodeURI(JSON.stringify(options));
-        const source = document.createElement('source');
-        source.setAttribute('src', updatedRequest.url);
-        source.setAttribute('type', 'application/x-mpegurl;mediaOption=' + mediaOption);
-        this._videoElement.appendChild(source);
+        if (this._config.playback.options.native.useSourceTag) {
+          const source = document.createElement('source');
+          source.setAttribute('src', updatedRequest.url);
+          source.setAttribute('type', 'application/x-mpegurl');
+          if (this._config.playback.options.native.useMediaOptionAttribute) {
+            NativeAdapter._logger.debug('this._config.abrEwmaDefaultEstimate', this._config.abrEwmaDefaultEstimate);
+            const options = {};
+            options.option = {};
+            if (this._config.abrEwmaDefaultEstimate) {
+              options.option.adaptiveStreaming = {};
+              options.option.adaptiveStreaming.bps = {
+                start: this._config.abrEwmaDefaultEstimate
+              };
+            }
+            NativeAdapter._logger.debug('options', options);
+            //}
+            const mediaOption = encodeURI(JSON.stringify(options));
+            source.setAttribute('type', 'application/x-mpegurl;mediaOption=' + mediaOption);
+          }
+          this._videoElement.appendChild(source);
+        } else {
+          this._videoElement.src = updatedRequest.url;
+        }
       })
       .catch(error => {
         this._trigger(Html5EventType.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.REQUEST_FILTER_ERROR, error));
