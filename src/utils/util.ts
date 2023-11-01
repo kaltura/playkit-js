@@ -144,7 +144,7 @@ const _Object = {
    * @param {Object} obj - The object to check
    * @returns {boolean} - Whether the object is empty.
    */
-  isEmptyObject: function (obj: Object): boolean {
+  isEmptyObject: function (obj: object): boolean {
     for (let key in obj) {
       if (Object.hasOwnProperty.call(obj, key)) return false;
     }
@@ -157,7 +157,7 @@ const _Object = {
    * @param {string} propertyPath - The path to check.
    * @returns {boolean} - The value in this path.
    */
-  getPropertyPath: function (obj: Object, propertyPath: string): any {
+  getPropertyPath: function (obj: object, propertyPath: string): any {
     return propertyPath.split('.').reduce(function (o, x) {
       return typeof o === 'undefined' || o === null ? o : o[x];
     }, obj);
@@ -169,7 +169,7 @@ const _Object = {
    * @param {string} propertyPath - The path to check.
    * @returns {boolean} - Whether the path exists in the object.
    */
-  hasPropertyPath: function (obj: Object, propertyPath: string): boolean {
+  hasPropertyPath: function (obj: object, propertyPath: string): boolean {
     if (!propertyPath) {
       return false;
     }
@@ -192,7 +192,7 @@ const _Object = {
    * @param {any} value - The value to set in the path.
    * @returns {Object} - The result object.
    */
-  createPropertyPath: function (obj: Object, path: string, value: any = null): Object {
+  createPropertyPath: function (obj: object, path: string, value: any = null): any {
     let pathArray = path.split('.');
     let current = obj;
     while (pathArray.length > 1) {
@@ -213,7 +213,7 @@ const _Object = {
    * @param {string} path - The path to delete in the object.
    * @returns {void}
    */
-  deletePropertyPath: function (obj: any, path: string): void {
+  deletePropertyPath: function (obj: object, path: string): void {
     if (!obj || !path) {
       return;
     }

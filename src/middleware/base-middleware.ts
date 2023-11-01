@@ -7,7 +7,7 @@ export default class BaseMiddleware {
    * Id of the middleware instance.
    * @public
    */
-  id!: string;
+  public id!: string;
 
   /**
    * Calls the next handler in the middleware chain.

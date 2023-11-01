@@ -124,7 +124,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     if (this._player.config.text.useNativeTextTrack) {
       this._addNativeTextTrack();
     }
-    const playerTextTracks = tracks.filter(track => track instanceof TextTrack);
+    const playerTextTracks = tracks.filter(track => track instanceof PKTextTrack);
     const newTextTracks = [];
     captions.forEach(caption => {
       if (!caption.language) {

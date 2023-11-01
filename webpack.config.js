@@ -7,7 +7,7 @@ const chalk = require('chalk');
 
 module.exports = (env, { mode }) => {
   return {
-    target: 'web',
+    // target: 'web',
     entry: {
       [`playkit.js`]: './src/playkit.ts',
       [`playkit.mjs`]: './src/playkit.ts'
@@ -56,6 +56,7 @@ module.exports = (env, { mode }) => {
       filename: '[name]',
       path: path.resolve(__dirname, 'dist'),
       library: {
+        umdNamedDefine: true,
         name: ['playkit', 'core'],
         type: 'umd',
       },

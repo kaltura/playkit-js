@@ -9,7 +9,7 @@ import {PKTrack} from './track/playkit-track';
 import PKImageTrack from './track/playkt-image-track';
 import {PKVideoTrack} from './track/playkit-video-track';
 import AudioTrack from './track/playkit-audio-track';
-import TextTrack from './track/playkit-text-track';
+import PKTextTrack from './track/playkit-text-track';
 import {TimedMetadata, createTextTrackCue, createTimedMetadata} from './track/timed-metadata';
 import TextStyle from './track/text-style';
 import Env from './utils/env';
@@ -59,7 +59,7 @@ export {registerMediaSourceAdapter, BaseMediaSourceAdapter};
 export {BaseMiddleware};
 
 // Export the tracks classes
-export {PKTrack, PKVideoTrack, AudioTrack, TextTrack, PKImageTrack, TextStyle};
+export {PKTrack, PKVideoTrack, AudioTrack, PKTextTrack, PKImageTrack, TextStyle};
 
 // Export the timed metadata class and function
 export {TimedMetadata, createTextTrackCue, createTimedMetadata};
@@ -102,6 +102,10 @@ export {AdBreakType, AdTagType, AdEventType};
 
 // Filter invalid tracks
 export {filterTracksByRestriction};
+
+export {Player}
+
+export * from './types'
 
 // Export enums
 export {

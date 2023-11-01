@@ -1,4 +1,5 @@
 import UAParser from 'ua-parser-js';
+import {IEnv} from '../types/ua-parser';
 
 const SmartTvRegex = /^.*(smart-tv|smarttv).*$/i;
 
@@ -46,18 +47,6 @@ const EdgeChromiumParser = [[/(edg)\/((\d+)?[\w.]+)/i], [[UAParser.BROWSER.NAME,
 
 const BrowserParser = [...EdgeChromiumParser, ...SAMSUNGBrowserParser];
 
-export interface IEnv extends UAParser.IResult {
-  isConsole: boolean;
-  isSmartTV: boolean;
-  isMobile: boolean;
-  isTablet: boolean;
-  isWearable: boolean;
-  isEmbedded: boolean;
-  isIPadOS: boolean;
-  isSafari: boolean;
-  isIOS: boolean;
-  isMacOS: boolean;
-}
 
 let Env: IEnv = new UAParser(undefined, {browser: BrowserParser, device: DeviceParser, os: OSParser}).getResult() as IEnv;
 
@@ -71,5 +60,4 @@ Env['isIPadOS'] = Env.os.name === 'Mac OS' && 'ontouchend' in document;
 Env['isSafari'] = Boolean(Env.browser.name?.includes('Safari'));
 Env['isIOS'] = Env.os.name === 'iOS';
 Env['isMacOS'] = Env.os.name === 'Mac OS';
-
 export default Env;

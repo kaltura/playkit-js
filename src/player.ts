@@ -1,4 +1,4 @@
-import Env, {IEnv} from './utils/env';
+import Env from './utils/env';
 import EventManager from './event/event-manager';
 import PosterManager from './utils/poster-manager';
 import FakeEvent from './event/fake-event';
@@ -56,6 +56,7 @@ import {
 import {PKMediaTypes} from './types/media-types';
 import {PKStateTypes} from './types/state-types';
 import {ILogLevel} from 'js-logger';
+import {IEnv} from './types/ua-parser';
 
 /**
  * The black cover class name.
@@ -293,7 +294,7 @@ export default class Player extends FakeEventTarget {
    * @type {Array<any>}
    * @private
    */
-  _activeTextCues: Array<any> = [];
+  _activeTextCues: VTTCue[] = [];
   /**
    * The player text disaply settings
    * @type {PKTextTrackDisplaySettingObject}
@@ -1518,6 +1519,7 @@ export default class Player extends FakeEventTarget {
     this._textDisplaySettings = Utils.Object.mergeDeep(this._textDisplaySettings, settings);
     this._updateCueDisplaySettings();
     for (let i = 0; i < this._activeTextCues.length; i++) {
+      // @ts-ignore - cucucuc
       this._activeTextCues[i].hasBeenReset = true;
     }
     this._updateTextDisplay(this._activeTextCues);
@@ -1907,12 +1909,7 @@ export default class Player extends FakeEventTarget {
           this._isOnLiveEdge = this.duration && this.currentTime ? this.currentTime >= this.duration - LIVE_EDGE_THRESHOLD && !this.paused : false;
         }
       });
-      this._eventManager.listen(this._engine, Html5EventType.SEEKED, () => {
-        const browser = this._env.browser.name;
-        if (browser === 'Edge' || browser === 'IE') {
-          this._removeTextCuePatch();
-        }
-      });
+
       this._eventManager.listen(this._engine, CustomEventType.MEDIA_RECOVERED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.IMAGE_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(this._engine, CustomEventType.TEXT_TRACK_ADDED, (event: FakeEvent) => this.dispatchEvent(event));
@@ -2015,27 +2012,10 @@ export default class Player extends FakeEventTarget {
     this._externalCaptionsHandler.resetAllCues();
     this._updateTextDisplay([]);
     for (let i = 0; i < this._activeTextCues.length; i++) {
+      // @ts-ignore - cucucuc
       this._activeTextCues[i].hasBeenReset = true;
     }
     this._updateTextDisplay(this._activeTextCues);
-  }
-
-  /**
-   * Handles the cue text removal issue, when seeking to a time without captions in IE \ edge the previous captions
-   * are not removed
-   * @returns {void}
-   * @private
-   */
-  _removeTextCuePatch(): void {
-    let filteredActiveTextCues = this._activeTextCues.filter(textCue => {
-      const cueEndTime = textCue._endTime;
-      const cueStartTime = textCue._startTime;
-      const currTime = this.currentTime;
-      if (currTime! < cueEndTime && currTime! > cueStartTime) {
-        return textCue;
-      }
-    });
-    this._updateTextDisplay(filteredActiveTextCues);
   }
 
   /**

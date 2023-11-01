@@ -16,15 +16,7 @@
   },
   "license": "AGPL-3.0",
   "main": "./dist/playkit.js",
-  "module": "./dist/playkit.mjs",
   "types": "./dist/playkit-js.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/playkit.js.d.ts",
-      "import": "./dist/playkit.mjs",
-      "require": "./dist/playkit.js"
-    }
-  },
   "files": [
     "dist/**/*",
     "src/**/*"
@@ -33,16 +25,17 @@
     "serve": "webpack serve --open --mode development",
     "watch": "webpack --watch --mode development",
     "build": "webpack --mode production && yarn run build:types",
-    "clean": "rm -rf dist/*",
+    "build:dev": "webpack --mode development",
     "build:types": "tsc --build tsconfig-lib.json && mkdir -p lib && api-extractor run --local --diagnostics",
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "npm run type-check -- --watch",
     "test": "karma start karma.conf.js",
     "test:debug": "DEBUG_UNIT_TESTS=1 karma start karma.conf.js --auto-watch --no-single-run --browsers Chrome",
     "test:watch": "karma start karma.conf.js --auto-watch --no-single-run",
     "lint": "eslint src/ tests/ --ext .js --ext .ts",
     "lint:fix": "npm run lint -- --fix",
     "prettier": "prettier --write .",
-    "type-check": "tsc --noEmit",
-    "type-check:watch": "npm run type-check -- --watch",
+    "clean": "rm -rf dist/*",
     "release": "standard-version",
     "pushTaggedRelease": "git push --follow-tags --no-verify origin master"
   },
