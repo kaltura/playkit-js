@@ -4,7 +4,6 @@ import getLogger from '../utils/logger';
 import {Parser, StringDecoder} from '../track/text-track-display';
 import * as Utils from '../utils/util';
 import {ThumbnailInfo} from './thumbnail-info';
-import {PKVTTCue} from '../track/playkit-vtt-cue';
 import Error from '../error/error';
 import FakeEvent from '../event/fake-event';
 import {Html5EventType} from '../event/event-type';

@@ -3,7 +3,7 @@ import Player from '../player';
 import FakeEvent from '../event/fake-event';
 import * as Utils from '../utils/util';
 import {ScreenOrientationType} from '../enums/screen-orientation-type';
-import {EngineType} from '../engine/engine-type';
+import {EngineType} from '../engines/engine-type';
 
 /**
  * The IOS fullscreen class name.

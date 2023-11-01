@@ -1,35 +1,30 @@
+//@flow
+import VideoTrack from '../../src/track/video-track';
+import AudioTrack from '../../src/track/audio-track';
+import TextTrack from '../../src/track/text-track';
+import FakeEventTarget from '../../src/event/fake-event-target';
+import {ThumbnailInfo} from '../../src/thumbnail/thumbnail-info';
+import {ImageTrack} from '../../src/playkit';
 
-import VideoTrack from '../../track/video-track';
-import AudioTrack from '../../track/audio-track';
-import TextTrack from '../../track/text-track';
-import FakeEventTarget from '../../event/fake-event-target';
-import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
-import ImageTrack from '../../track/image-track';
-import {PKMediaSourceObject} from '../media-source';
-import {PKDrmConfigObject} from '../drm-config';
-import {PKDrmDataObject} from '../drm-data';
-import {PKABRRestrictionObject} from '../restrictions-types';
-import {Track} from '../../track/track';
-
-export interface IEngineStatic {
+declare interface IEngineStatic {
   id: string;
   createEngine(source: PKMediaSourceObject, config: Object, playerId: string): IEngine;
   canPlaySource(source: PKMediaSourceObject, preferNative: boolean, drmConfig: PKDrmConfigObject): boolean;
   runCapabilities(): void;
-  getCapabilities(): Promise<any>;
+  getCapabilities(): Promise<Object>;
   setCapabilities(capabilities: {[name: string]: any}): void;
   prepareVideoElement(playerId: string): void;
   isSupported(): boolean;
 }
 
-export interface IEngine extends FakeEventTarget {
+declare interface IEngine extends FakeEventTarget {
   restore(source: PKMediaSourceObject, config: Object): void;
   destroy(): void;
   attach(): void;
   detach(): void;
-  play(): Promise<any> | undefined;
+  play(): ?Promise<*>;
   pause(): void;
-  load(startTime?: number): Promise<{tracks: Track[]}>;
+  load(startTime: ?number): Promise<Object>;
   reset(): void;
   selectVideoTrack(videoTrack: VideoTrack): void;
   selectAudioTrack(audioTrack: AudioTrack): void;
@@ -49,41 +44,43 @@ export interface IEngine extends FakeEventTarget {
   resetAllCues(): void;
   attachMediaSource(): void;
   detachMediaSource(): void;
-  getThumbnail(time: number): ThumbnailInfo | null
+  getThumbnail(time: number): ?ThumbnailInfo;
   isOnLiveEdge(): boolean;
-  addTextTrack(kind: TextTrackKind, label?: string, language?: string): TextTrack | undefined ;
+  addTextTrack(kind: string, label?: string, language?: string): ?TextTrack;
   getNativeTextTracks(): Array<TextTrack>;
-  getDrmInfo(): PKDrmDataObject | null;
-  id: string;
+  getDrmInfo(): ?PKDrmDataObject;
+  +id: string;
   currentTime: number;
-  duration: number;
-  liveDuration: number;
+  +duration: number;
+  +liveDuration: number;
   volume: number;
-  paused: boolean;
-  seeking: boolean;
-  played: TimeRanges;
-  buffered: TimeRanges;
-  videoHeight: number;
-  videoWidth: number;
+  +paused: boolean;
+  +seeking: boolean;
+  +played: TimeRanges;
+  +buffered: TimeRanges;
+  +videoHeight: number;
+  +videoWidth: number;
   muted: boolean;
-  defaultMuted: boolean;
+  +defaultMuted: boolean;
   src: string;
   poster: string;
-  preload:  "none" | "metadata" | "auto" | "";
+  preload: string;
   autoplay: boolean;
   controls: boolean;
   loop: boolean;
-  error: MediaError | null;
-  seekable: TimeRanges;
-  ended: boolean;
+  +error: ?MediaError;
+  +seekable: TimeRanges;
+  +ended: boolean;
   playbackRate: number;
-  playbackRates: Array<number>;
+  +playbackRates: Array<number>;
   defaultPlaybackRate: number;
-  isInPictureInPicture: boolean;
-  networkState: number;
-  readyState: number;
+  +isInPictureInPicture: boolean;
+  +networkState: number;
+  +readyState: number;
+  +videoWidth: number;
+  +videoHeight: number;
   playsinline: boolean;
-  crossOrigin: string | null;
-  targetBuffer: number;
-  availableBuffer: number;
+  crossOrigin: ?string;
+  +targetBuffer: number;
+  +availableBuffer: number;
 }

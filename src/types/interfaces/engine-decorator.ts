@@ -1,6 +1,6 @@
-import {PKVideoTrack} from '../../track/playkit-video-track';
-import PKAudioTrack from '../../track/playkit-audio-track';
-import PKTextTrack from '../../track/playkit-text-track';
+import VideoTrack from '../../track/video-track';
+import AudioTrack from '../../track/audio-track';
+import TextTrack from '../../track/text-track';
 import FakeEvent from '../../event/fake-event';
 import {PKMediaSourceObject} from '../media-source';
 
@@ -13,9 +13,9 @@ export interface IEngineDecorator {
   attach?: () => void;
   detach?: () => void;
   getVideoElement?: () => HTMLVideoElement;
-  selectVideoTrack?: (videoTrack: PKVideoTrack) => void;
-  selectAudioTrack?: (audioTrack: PKAudioTrack) => void;
-  selectTextTrack?: (textTrack: PKTextTrack) => void;
+  selectVideoTrack?: (videoTrack: VideoTrack) => void;
+  selectAudioTrack?: (audioTrack: AudioTrack) => void;
+  selectTextTrack?: (textTrack: TextTrack) => void;
   hideTextTrack?: () => void;
   enableAdaptiveBitrate?: () => void;
   isAdaptiveBitrateEnabled?: () => boolean;

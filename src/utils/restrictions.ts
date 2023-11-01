@@ -1,6 +1,4 @@
-//@flow
-
-import {PKVideoTrack} from '../track/playkit-video-track';
+import VideoTrack from '../track/video-track';
 import {PKABRRestrictionObject} from '../types';
 
 /**
@@ -10,7 +8,7 @@ import {PKABRRestrictionObject} from '../types';
  * @param {PKABRRestrictionObject} restriction - The restriction
  * @returns {Array<PKVideoTrack>} - The relevant video tracks after restrictions.
  */
-function _filterVideoTracksByRestriction(tracks: Array<PKVideoTrack>, restriction: PKABRRestrictionObject): Array<PKVideoTrack> {
+function _filterVideoTracksByRestriction(tracks: Array<VideoTrack>, restriction: PKABRRestrictionObject): Array<VideoTrack> {
   const MIN_DEFAULT_VALUE = 0;
   const MAX_DEFAULT_VALUE = Infinity;
   const inRange = (x, min, max) => {
@@ -34,7 +32,7 @@ function _filterVideoTracksByRestriction(tracks: Array<PKVideoTrack>, restrictio
  * @param {PKABRRestrictionObject} restriction - The restriction
  * @returns {Array<PKVideoTrack>} - The relevant video tracks after restrictions.
  */
-function filterTracksByRestriction(videoTracks: PKVideoTrack[], restriction: PKABRRestrictionObject): PKVideoTrack[] {
+function filterTracksByRestriction(videoTracks: VideoTrack[], restriction: PKABRRestrictionObject): VideoTrack[] {
   const filterVideoTracks = _filterVideoTracksByRestriction(videoTracks, restriction);
   return filterVideoTracks.length ? filterVideoTracks : [];
 }

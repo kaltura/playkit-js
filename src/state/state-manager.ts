@@ -1,5 +1,5 @@
 
-// import Player from '../player';
+import Player from '../player';
 import EventManager from '../event/event-manager';
 import State from './state';
 import {StateType} from './state-type';

@@ -8,10 +8,8 @@ const chalk = require('chalk');
 module.exports = (env, { mode }) => {
   return {
     // target: 'web',
-    entry: {
-      [`playkit.js`]: './src/playkit.ts',
-      [`playkit.mjs`]: './src/playkit.ts'
-    },
+    // entry:  './src/playkit.ts',
+    entry:  './src/playkit.js',
     optimization: {
       minimize: mode !== 'development',
       minimizer: [
@@ -25,11 +23,13 @@ module.exports = (env, { mode }) => {
         })
       ]
     },
-    devtool: 'source-map',
+    // devtool: 'source-map',
+    devtool: 'eval-source-map',
     module: {
       rules: [
         {
-          test: /\.(ts|js)$/,
+          // test: /\.(ts|js)$/,
+          test: /\.ts$/,
           exclude: /node_modules/,
           use: {
             loader: 'babel-loader',
@@ -37,9 +37,28 @@ module.exports = (env, { mode }) => {
               presets: [['@babel/preset-env', {
                 loose: true,
                 bugfixes: true,
-                targets: 'defaults'
+                "targets": {
+                  "browsers": ["chrome >= 47", "firefox >= 51", "ie >= 11", "safari >= 8", "ios >= 8", "android >= 4"]
+                }
               }], '@babel/preset-typescript'],
               plugins: [['@babel/plugin-transform-runtime']]
+            }
+          }
+        },
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: [['@babel/preset-env', {
+                loose: true,
+                bugfixes: true,
+                // targets: 'defaults'
+                "targets": {
+                  "browsers": ["chrome >= 47", "firefox >= 51", "ie >= 11", "safari >= 8", "ios >= 8", "android >= 4"]
+                }
+              }], '@babel/preset-flow']
             }
           }
         },
@@ -53,7 +72,7 @@ module.exports = (env, { mode }) => {
       extensions: ['.ts', '.js'],
     },
     output: {
-      filename: '[name]',
+      filename: 'playkit.js',
       path: path.resolve(__dirname, 'dist'),
       library: {
         umdNamedDefine: true,

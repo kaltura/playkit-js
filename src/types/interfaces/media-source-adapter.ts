@@ -1,15 +1,15 @@
 
-import {PKVideoTrack} from '../../track/playkit-video-track';
-import PKAudioTrack from '../../track/playkit-audio-track';
-import PKTextTrack from '../../track/playkit-text-track';
+import VideoTrack from '../../track/video-track';
+import AudioTrack from '../../track/audio-track';
+import TextTrack from '../../track/text-track';
 import {PKDrmConfigObject} from '../drm-config';
 import {PKMediaSourceCapabilities} from '../media-source-capabilities';
 import {PKMediaSourceObject} from '../media-source';
-import PKImageTrack from '../../track/playkt-image-track';
+import ImageTrack from '../../track/image-track';
 import {PKDrmDataObject} from '../drm-data';
 import FakeEventTarget from '../../event/fake-event-target';
 import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
-import {PKTrack} from '../../track/playkit-track';
+import {Track} from '../../track/track';
 import {PKABRRestrictionObject} from '../restrictions-types';
 
 export interface IMediaSourceAdapterStatic {
@@ -26,13 +26,13 @@ export interface IMediaSourceAdapter extends FakeEventTarget {
   liveDuration: number;
   capabilities: PKMediaSourceCapabilities;
   targetBuffer: number;
-  load(startTime?: number): Promise<{tracks: PKTrack[]}>;
+  load(startTime?: number): Promise<{tracks: Track[]}>;
   handleMediaError(error?: MediaError): boolean;
   destroy(): Promise<any>;
-  selectVideoTrack(videoTrack: PKVideoTrack): void;
-  selectAudioTrack(audioTrack: PKAudioTrack): void;
-  selectTextTrack(textTrack: PKTextTrack): void;
-  selectImageTrack(imageTrack: PKImageTrack): void;
+  selectVideoTrack(videoTrack: VideoTrack): void;
+  selectAudioTrack(audioTrack: AudioTrack): void;
+  selectTextTrack(textTrack: TextTrack): void;
+  selectImageTrack(imageTrack: ImageTrack): void;
   hideTextTrack(): void;
   enableAdaptiveBitrate(): void;
   isAdaptiveBitrateEnabled(): boolean;

@@ -24,8 +24,9 @@
   "scripts": {
     "serve": "webpack serve --open --mode development",
     "watch": "webpack --watch --mode development",
-    "build": "webpack --mode production && yarn run build:types",
     "build:dev": "webpack --mode development",
+    "build:prod": "webpack --mode production",
+    "build": "build:prod && yarn run build:types",
     "build:types": "tsc --build tsconfig-lib.json && mkdir -p lib && api-extractor run --local --diagnostics",
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
@@ -50,6 +51,7 @@
     "@babel/core": "^7.22.20",
     "@babel/plugin-transform-runtime": "^7.22.15",
     "@babel/preset-env": "^7.22.20",
+    "@babel/preset-flow": "^7.22.15",
     "@babel/preset-typescript": "^7.22.15",
     "@babel/runtime": "^7.23.1",
     "@microsoft/api-extractor": "^7.38.0",
