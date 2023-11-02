@@ -1,4 +1,3 @@
-//@flow
 import Player from './player';
 import BaseMediaSourceAdapter from './engines/html5/media-source/base-media-source-adapter';
 import {registerMediaSourceAdapter} from './engines/html5/media-source/media-source-provider';
@@ -10,7 +9,7 @@ import Track from './track/track';
 import ImageTrack from './track/image-track';
 import VideoTrack from './track/video-track';
 import AudioTrack from './track/audio-track';
-import TextTrack from './track/text-track';
+import TextTrack, {PKTextTrack} from './track/text-track';
 import {TimedMetadata, createTextTrackCue, createTimedMetadata} from './track/timed-metadata';
 import TextStyle from './track/text-style';
 import Env from './utils/env';
@@ -49,7 +48,7 @@ const NAME = __NAME__;
  * @param {Object} config - The configuration of the player
  * @returns {Player} - The player instance
  */
-export function loadPlayer(config: ?Object) {
+export function loadPlayer(config: any) {
   return new Player(config || {});
 }
 
@@ -60,7 +59,7 @@ export {registerMediaSourceAdapter, BaseMediaSourceAdapter};
 export {BaseMiddleware};
 
 // Export the tracks classes
-export {Track, VideoTrack, AudioTrack, TextTrack, ImageTrack, TextStyle};
+export {Track, VideoTrack, AudioTrack, TextTrack, PKTextTrack, ImageTrack, TextStyle};
 
 // Export the timed metadata class and function
 export {TimedMetadata, createTextTrackCue, createTimedMetadata};

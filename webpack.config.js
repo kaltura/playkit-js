@@ -8,7 +8,7 @@ module.exports = (env, { mode }) => {
   return {
     // target: 'web',
     // entry:  './src/playkit.ts',
-    entry:  './src/playkit.js',
+    entry:  './src/playkit.ts',
     optimization: {
       minimize: mode !== 'development',
       minimizer: [

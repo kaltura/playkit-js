@@ -6,7 +6,7 @@ import MediaSourceProvider from './media-source/media-source-provider';
 import VideoTrack from '../../track/video-track';
 import AudioTrack from '../../track/audio-track';
 import {PKTextTrack, getActiveCues}  from '../../track/text-track';
-import PKImageTrack from '../../track/image-track';
+import ImageTrack from '../../track/image-track';
 import {createTimedMetadata} from '../../track/timed-metadata';
 import * as Utils from '../../utils/util';
 import Html5AutoPlayCapability from './capabilities/html5-autoplay';
@@ -405,7 +405,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @param {ImageTrack} imageTrack - The image track object to set.
    * @returns {void}
    */
-  selectImageTrack(imageTrack: PKImageTrack): void {
+  selectImageTrack(imageTrack: ImageTrack): void {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.selectImageTrack(imageTrack);
     }

@@ -1,16 +1,14 @@
-//@flow
-/* eslint-disable no-unused-vars */
 import FakeEvent from '../../../event/fake-event';
 import FakeEventTarget from '../../../event/fake-event-target';
 import Error from '../../../error/error';
 import {CustomEventType, Html5EventType} from '../../../event/event-type';
 import getLogger from '../../../utils/logger';
-import PKTrack from '../../../track/track';
+import Track from '../../../track/track';
 import VideoTrack from '../../../track/video-track';
 import AudioTrack from '../../../track/audio-track';
 import PKTextTrack from '../../../track/text-track';
 import EventManager from '../../../event/event-manager';
-import PKImageTrack from '../../../track/image-track';
+import ImageTrack from '../../../track/image-track';
 import {ThumbnailInfo} from '../../../thumbnail/thumbnail-info';
 import {IMediaSourceAdapter} from '../../../types/interfaces/media-source-adapter';
 import {PKABRRestrictionObject, PKDrmDataObject, PKMediaSourceCapabilities, PKMediaSourceObject} from '../../../types';
@@ -74,7 +72,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @type {Promise<{tracks: Array<Track>}>}
    * @private
    */
-  _loadPromise: Promise<{tracks: Array<PKTrack>}> | undefined;
+  _loadPromise: Promise<{tracks: Array<Track>}> | undefined;
 
   /**
    * The duration change handler.
@@ -146,7 +144,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @private
    * @returns {void}
    */
-  _onTrackChanged(track: VideoTrack | AudioTrack | PKTextTrack | PKImageTrack): void {
+  _onTrackChanged(track: VideoTrack | AudioTrack | PKTextTrack | ImageTrack): void {
     if (track instanceof VideoTrack) {
       BaseMediaSourceAdapter._logger.debug('Video track changed', track);
       this._trigger(CustomEventType.VIDEO_TRACK_CHANGED, {selectedVideoTrack: track});
@@ -156,7 +154,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     } else if (track instanceof PKTextTrack) {
       BaseMediaSourceAdapter._logger.debug('Text track changed', track);
       this._trigger(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: track});
-    } else if (track instanceof PKImageTrack) {
+    } else if (track instanceof ImageTrack) {
       BaseMediaSourceAdapter._logger.debug('Image track changed', track);
       this._trigger(CustomEventType.IMAGE_TRACK_CHANGED, {selectedImageTrack: track});
     }
@@ -178,7 +176,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return BaseMediaSourceAdapter._throwNotImplementedError('static canPlayType');
   }
 
-  load(): Promise<{tracks: PKTrack[]}> {
+  load(): Promise<{tracks: Track[]}> {
     return BaseMediaSourceAdapter._throwNotImplementedError('load');
   }
 
@@ -194,7 +192,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     BaseMediaSourceAdapter._throwNotImplementedError('selectTextTrack');
   }
 
-  selectImageTrack(imageTrack: PKImageTrack): void {}
+  selectImageTrack(imageTrack: ImageTrack): void {}
 
   hideTextTrack(): void {
     BaseMediaSourceAdapter._throwNotImplementedError('hideTextTrack');
