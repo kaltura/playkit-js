@@ -5,7 +5,7 @@ import Track from './track';
  * Video track representation of the player.
  * @classdesc
  */
-const VideoTrack: VideoTrack = class VideoTrack extends Track {
+export default class VideoTrack extends Track {
   /**
    * @member {number} _bandwidth - The bandwidth of the video track
    * @type {number}
@@ -55,13 +55,11 @@ const VideoTrack: VideoTrack = class VideoTrack extends Track {
    * @constructor
    * @param {Object} settings - The track settings object
    */
-  constructor(settings: Object = {}) {
+  constructor(settings: any) {
     super(settings);
     this._bandwidth = settings.bandwidth;
     this._width = settings.width;
     this._height = settings.height;
     this._label = settings.label ? settings.label : this._height ? this._height + 'p' : undefined;
   }
-};
-
-export default VideoTrack;
+}

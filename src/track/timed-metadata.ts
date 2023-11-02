@@ -1,4 +1,5 @@
-//@flow
+import {PKTextTrackCue} from '../types';
+
 class TimedMetadata {
   static TYPE: {[type: string]: string};
 
@@ -37,19 +38,13 @@ TimedMetadata.TYPE = {
  * @returns {TextTrackCue} - the created text track cue
  * @private
  */
-function createTextTrackCue(timedMetadata: TimedMetadata): ?TextTrackCue {
+function createTextTrackCue(timedMetadata: TimedMetadata): PKTextTrackCue | null {
   try {
     const {startTime, endTime, id, type, metadata} = timedMetadata;
-    let cue = {};
-    if (window.VTTCue) {
-      cue = new window.VTTCue(startTime, endTime, '');
-    } else if (window.TextTrackCue) {
-      // IE11 support
-      cue = new window.TextTrackCue(startTime, endTime, '');
-    }
-    const cueValue = {key: type, data: metadata};
-    cue.id = id;
-    cue.value = cueValue;
+    let cue: PKTextTrackCue;
+    const nativeCue = new VTTCue(startTime, endTime, '');
+    const value = {key: type, data: metadata};
+    cue = {...nativeCue, id, value}
     return cue;
   } catch (e) {
     return null;
@@ -62,11 +57,13 @@ function createTextTrackCue(timedMetadata: TimedMetadata): ?TextTrackCue {
  * @returns {?TimedMetadata} - the created timed metadata object.
  * @private
  */
-function createTimedMetadata(cue: TextTrackCue): ?TimedMetadata {
+function createTimedMetadata(cue: TextTrackCue): TimedMetadata | null {
   if (cue) {
     const {startTime, endTime, id} = cue;
     const typeAndMetadata = _getTypeAndMetadata(cue);
     if (typeAndMetadata) {
+      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       const {type, metadata} = _getTypeAndMetadata(cue);
       return new TimedMetadata(startTime, endTime, id, type, metadata);
     }
@@ -79,10 +76,10 @@ function createTimedMetadata(cue: TextTrackCue): ?TimedMetadata {
  * @return {Object} - type and data
  * @private
  */
-function _getTypeAndMetadata(cue: TextTrackCue): Object {
+function _getTypeAndMetadata(cue: TextTrackCue | PKTextTrackCue): { metadata: any; type: string } | null {
   if (cue) {
-    const {type, value, track} = cue;
-    if (value) {
+    if ('value' in cue && cue.value) {
+      const {type, value, track} = cue;
       const {key, data} = value;
       const isId3 = type === 'org.id3' || (track && track.label) === 'id3';
       let timedMetadataType = Object.values(TimedMetadata.TYPE).find(type => type === key);

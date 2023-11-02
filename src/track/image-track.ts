@@ -1,7 +1,7 @@
 //@flow
 import Track from './track';
 
-const ImageTrack: ImageTrack = class ImageTrack extends Track {
+class ImageTrack extends Track {
   _url: string;
   _width: number;
   _height: number;

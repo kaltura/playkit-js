@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {Region} from './vtt-region';
 import TextStyle from './text-style';
 import TextTrack from './text-track';

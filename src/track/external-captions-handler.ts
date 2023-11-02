@@ -1,4 +1,3 @@
-//@flow
 import Error from '../error/error';
 import * as Utils from '../utils/util';
 import {Parser, StringDecoder} from './text-track-display';
@@ -10,6 +9,7 @@ import getLogger from '../utils/logger';
 import EventManager from '../event/event-manager';
 import FakeEventTarget from '../event/fake-event-target';
 import Player from '../player';
+import {PKExternalCaptionObject} from '../types/external-caption-object';
 
 type CueStatusType = {[status: string]: number};
 
@@ -47,6 +47,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @type {Player}
    * @private
    */
+  // TODO - temp
   _player: Player;
   /**
    * event manager for the external caption handler
@@ -59,7 +60,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @type {Object}
    * @private
    */
-  _textTrackModel: Object = {};
+  _textTrackModel: VTTCue = {} as VTTCue;
   /**
    * array of the active text cues of current track
    * @type {Array<Cue>}
@@ -83,7 +84,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * constructor
    * @param {Player} player - the player object.
    */
-  constructor(player: Player) {
+  constructor(player: any) {
     super();
     this._player = player;
     this._eventManager = new EventManager();
@@ -236,12 +237,14 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _addCueChangeListener(): void {
-    const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
+    const videoElement: HTMLVideoElement | undefined = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
-      let textTrackEl: TextTrack = Array.from(videoElement.textTracks).find(
+         // @ts-ignore
+      let textTrackEl: TextTrack | undefined = Array.from(videoElement.textTracks).find(
         track => TextTrack.isNativeTextTrack(track) && track.mode === TextTrack.MODE.SHOWING
       );
       if (textTrackEl) {
+        // @ts-ignore
         this._eventManager.listen(textTrackEl, 'cuechange', (e: FakeEvent) => this._onCueChange(e));
       }
     }
@@ -253,7 +256,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _removeCueChangeListeners(): void {
-    const videoElement: ?HTMLVideoElement = this._player.getVideoElement();
+    const videoElement: HTMLVideoElement | undefined = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
       for (let i = 0; i < videoElement.textTracks.length; i++) {
         this._eventManager.unlisten(videoElement.textTracks[i], 'cuechange');
@@ -279,7 +282,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    */
   reset(): void {
     this._resetCurrentTrack();
-    this._textTrackModel = {};
+    this._textTrackModel = {} as VTTCue;
     this._resetExternalNativeTextTrack();
     this._eventManager.removeAll();
   }
@@ -290,7 +293,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {void}
    */
   destroy(): void {
-    this._textTrackModel = {};
+    this._textTrackModel = {} as VTTCue;
     this._eventManager.destroy();
     this._activeTextCues = [];
   }
@@ -312,7 +315,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {Promise<any>} - resolves when the request returns and the caption string is parsed to cues.
    * @private
    */
-  _getCuesString(textTrack: TextTrack): Promise<*> {
+  _getCuesString(textTrack: TextTrack): Promise<any> {
     return new Promise((resolve, reject) => {
       const track = this._textTrackModel[textTrack.language];
       const captionType = track.type || this._getFileType(track.url);
@@ -341,10 +344,10 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {Promise<*>} - parsed cues array
    * @private
    */
-  _parseCues(vttStr: string): Promise<*> {
+  _parseCues(vttStr: string): Promise<any> {
     return new Promise((resolve, reject) => {
       const parser = new Parser(window, StringDecoder());
-      const cues = [];
+      const cues: VTTCue[] = [];
       parser.oncue = cue => cues.push(cue);
       parser.onflush = () => {
         ExternalCaptionsHandler._logger.debug('finished parsing external cues');
@@ -377,7 +380,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {Promise<any>} - a promise that the action ended
    * @private
    */
-  _downloadAndParseCues(textTrack: TextTrack): Promise<*> {
+  _downloadAndParseCues(textTrack: TextTrack): Promise<void> {
     this._textTrackModel[textTrack.language].cuesStatus = CuesStatus.DOWNLOADING;
     return new Promise((resolve, reject) => {
       this._getCuesString(textTrack)
@@ -397,7 +400,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   _getFileType(url: string): string {
-    return url.split(/[#?]/)[0].split('.').pop().trim();
+    return url.split(/[#?]/)[0].split('.').pop()!.trim();
   }
 
   /**
@@ -486,10 +489,10 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       let i = 0;
       for (; i < cues.length; i++) {
         // if there is a cue that should be displayed right now, cue start time < current time < cue end time
-        if (cues[i].startTime < this._player.currentTime && this._player.currentTime < cues[i].endTime) {
+        if (cues[i].startTime < this._player.currentTime! && this._player.currentTime! < cues[i].endTime) {
           break;
           // this is for the first cue that is after the current time
-        } else if (cues[i].endTime > this._player.currentTime && cues[i].startTime > this._player.currentTime) {
+        } else if (cues[i].endTime > this._player.currentTime! && cues[i].startTime > this._player.currentTime!) {
           break;
         }
       }
@@ -508,7 +511,9 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     if (videoElement && videoElement.textTracks) {
       const track = Array.from(videoElement.textTracks).find(track => (track ? TextTrack.isExternalTrack(track) : false));
       if (track) {
+        // @ts-ignore
         track.cues && Object.values(track.cues).forEach(cue => track.removeCue(cue));
+        // @ts-ignore
         track.mode = TextTrack.MODE.DISABLED;
       }
     }
@@ -522,14 +527,17 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   _addCuesToNativeTextTrack(cues: Array<VTTCue>): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
+      // @ts-ignore
       const track: TextTrack = Array.from(videoElement.textTracks).find(track => (track ? TextTrack.isExternalTrack(track) : false));
       if (track) {
         track.mode = TextTrack.MODE.SHOWING;
         // For IE 11 which is not support VTTCue API
-        if (window.VTTCue === undefined) {
+        if (VTTCue === undefined) {
           let convertedCues: Array<TextTrackCue> = this._convertCues(cues);
+          // @ts-ignore
           convertedCues.forEach(cue => track.addCue(cue));
         } else {
+          // @ts-ignore
           cues.forEach(cue => track.addCue(cue));
         }
       }
@@ -543,7 +551,8 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {Array<TextTrackCue>} the converted cues
    */
   _convertCues(cues: Array<VTTCue>): Array<TextTrackCue> {
-    return cues.map(cue => new window.TextTrackCue(cue.startTime, cue.endTime, cue.text));
+    // @ts-ignore
+    return cues.map(cue => new TextTrackCue(cue.startTime, cue.endTime, cue.text));
   }
 
   /**

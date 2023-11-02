@@ -9,7 +9,7 @@ import {PKMediaSourceObject} from '../media-source';
 import {PKDrmConfigObject} from '../drm-config';
 import {PKDrmDataObject} from '../drm-data';
 import {PKABRRestrictionObject} from '../restrictions-types';
-import {Track} from '../../track/track';
+import Track from '../../track/track';
 
 export interface IEngineStatic {
   id: string;

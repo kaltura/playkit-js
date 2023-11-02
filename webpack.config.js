@@ -3,7 +3,6 @@ const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
 const packageData = require('./package.json');
 const TerserPlugin = require('terser-webpack-plugin');
-const chalk = require('chalk');
 
 module.exports = (env, { mode }) => {
   return {

@@ -1,5 +1,3 @@
-//@flow
-
 /**
  * General track representation of the player.
  * @classdesc
@@ -13,7 +11,7 @@ export default class Track {
    * @param {boolean} equal - Optional flag to check for matching languages.
    * @returns {boolean} - Whether the strings are equal or starts with the same substring.
    */
-  static langComparer(inputLang: string, trackLang: string, additionalLanguage: ?string, equal: ?boolean): boolean {
+  static langComparer(inputLang: string, trackLang: string, additionalLanguage?: string, equal?: boolean): boolean {
     try {
       inputLang = inputLang.toLowerCase();
       trackLang = trackLang.toLowerCase();
@@ -33,7 +31,7 @@ export default class Track {
   }
 
   static clone<T>(track: any): T {
-    return (Object.assign(Object.create(Object.getPrototypeOf(track)), track): T);
+    return (Object.assign(Object.create(Object.getPrototypeOf(track)), track) as T);
   }
 
   /**
@@ -42,42 +40,42 @@ export default class Track {
    * @type {string}
    * @private
    */
-  _id: ?string;
+  private _id: string | undefined;
   /**
    * The active mode of the track.
    * @member
    * @type {boolean}
    * @private
    */
-  _active: boolean;
+  private _active: boolean;
   /**
    * The label of the track.
    * @member
    * @type {string}
    * @private
    */
-  _label: ?string;
+  protected _label: string | undefined;
   /**
    * The language of the track.
    * @member
    * @type {string}
    * @private
    */
-  _language: string;
+  private _language: string;
   /**
    * The index of the track.
    * @member
    * @type {number}
    * @private
    */
-  _index: number;
+  protected _index: number;
   /**
    * Indicator if track available or not.
    * @member
    * @type {boolean}
    * @private
    */
-  _available: boolean;
+  private _available: boolean;
   /**
    * The clone function reference.
    * @member
@@ -91,7 +89,7 @@ export default class Track {
    * @public
    * @returns {?string} - The track id.
    */
-  get id(): ?string {
+  get id(): string | undefined {
     return this._id;
   }
 
@@ -100,7 +98,7 @@ export default class Track {
    * @public
    * @returns {boolean} - The active mode of the track.
    */
-  get active(): boolean {
+  public get active(): boolean {
     return this._active;
   }
 
@@ -109,7 +107,7 @@ export default class Track {
    * @public
    * @param {boolean} value - Whether the track is active or not.
    */
-  set active(value: boolean) {
+  public set active(value: boolean) {
     this._active = value;
   }
 
@@ -118,7 +116,7 @@ export default class Track {
    * @public
    * @returns {string} - The label of the track.
    */
-  get label(): ?string {
+  public get label(): string | undefined {
     return this._label;
   }
 
@@ -127,7 +125,7 @@ export default class Track {
    * @public
    * @returns {string} - The language of the track.
    */
-  get language(): string {
+  public get language(): string {
     return this._language;
   }
 
@@ -136,7 +134,7 @@ export default class Track {
    * @public
    * @returns {number} - The index of the track.
    */
-  get index(): number {
+  public get index(): number {
     return this._index;
   }
 
@@ -145,7 +143,7 @@ export default class Track {
    * @public
    * @returns {boolean} - The indicator if track available or not.
    */
-  get available(): boolean {
+  public get available(): boolean {
     return this._available;
   }
 
@@ -155,7 +153,7 @@ export default class Track {
    * @param {number} value - The index of the track.
    * @returns {void}
    */
-  set index(value: number): void {
+  public set index(value: number) {
     this._index = value;
   }
 
@@ -164,7 +162,7 @@ export default class Track {
    * @public
    * @param {string} value - The label of the track.
    */
-  set label(value: string) {
+  public set label(value: string) {
     this._label = value;
   }
 
@@ -173,7 +171,7 @@ export default class Track {
    * @public
    * @param {boolean} isAvailable - The indicator if track available or not
    */
-  set available(isAvailable: boolean) {
+  public set available(isAvailable: boolean) {
     this._available = isAvailable;
   }
 
@@ -181,7 +179,7 @@ export default class Track {
    * @constructor
    * @param {Object} settings - The track settings object.
    */
-  constructor(settings: Object = {}) {
+  constructor(settings: any = {}) {
     this._id = settings.id;
     this._active = settings.active;
     this._label = settings.label;
