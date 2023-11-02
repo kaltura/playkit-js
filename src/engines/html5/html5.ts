@@ -1,4 +1,3 @@
-//@flow
 import FakeEventTarget from '../../event/fake-event-target';
 import FakeEvent from '../../event/fake-event';
 import EventManager from '../../event/event-manager';
@@ -6,8 +5,8 @@ import {CustomEventType, Html5EventType} from '../../event/event-type';
 import MediaSourceProvider from './media-source/media-source-provider';
 import VideoTrack from '../../track/video-track';
 import AudioTrack from '../../track/audio-track';
-import PKTextTrack, {getActiveCues} from '../../track/text-track';
-import ImageTrack from '../../track/image-track';
+import {PKTextTrack, getActiveCues}  from '../../track/text-track';
+import PKImageTrack from '../../track/image-track';
 import {createTimedMetadata} from '../../track/timed-metadata';
 import * as Utils from '../../utils/util';
 import Html5AutoPlayCapability from './capabilities/html5-autoplay';
@@ -15,6 +14,11 @@ import Error from '../../error/error';
 import getLogger from '../../utils/logger';
 import {DroppedFramesWatcher} from '../dropped-frames-watcher';
 import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
+import {IMediaSourceAdapter} from '../../types/interfaces/media-source-adapter';
+import {CapabilityResult, ICapability} from '../../types/interfaces/engine-capabilty';
+import {PKABRRestrictionObject, PKDrmConfigObject, PKDrmDataObject, PKMediaSourceObject, PKVideoElementStore} from '../../types';
+import {IEngine} from '../../types/interfaces/engine';
+import Track from '../../track/track';
 
 const SHORT_BUFFERING_TIMEOUT: number = 200;
 
@@ -28,7 +32,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @type {HTMLVideoElement}
    * @private
    */
-  _el: HTMLVideoElement;
+  _el!: HTMLVideoElement;
   /**
    * The event manager of the engine.
    * @type {EventManager}
@@ -40,20 +44,20 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @type {?IMediaSourceAdapter}
    * @private
    */
-  _mediaSourceAdapter: IMediaSourceAdapter | null;
+  _mediaSourceAdapter!: IMediaSourceAdapter | null;
   /**
    * The player config object.
    * @type {Object}
    * @private
    */
-  _config: Object;
+  _config: any;
   /**
    * Promise to indicate when a media source adapter can be loaded.
    * @type {Promise<*>}
    * @private
    */
-  _canLoadMediaSourceAdapterPromise: Promise<*>;
-  _droppedFramesWatcher: ?DroppedFramesWatcher;
+  _canLoadMediaSourceAdapterPromise: Promise<void>;
+  _droppedFramesWatcher: DroppedFramesWatcher | undefined;
   _reset: boolean = false;
   /**
    * The html5 class logger.
@@ -105,7 +109,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @static
    */
-  static createEngine(source: PKMediaSourceObject, config: Object, playerId: string): IEngine {
+  static createEngine(source: PKMediaSourceObject, config: any, playerId: string): IEngine {
     return new this(source, config, playerId);
   }
 
@@ -138,11 +142,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @static
    */
-  static getCapabilities(): Promise<Object> {
-    let promises = [];
+  static getCapabilities():  Promise<any> {
+    let promises: CapabilityResult[] = [];
     Html5._capabilities.forEach(capability => promises.push(capability.getCapability()));
     return Promise.all(promises).then(arrayOfResults => {
-      const mergedResults = {};
+      const mergedResults: CapabilityResult = {};
       arrayOfResults.forEach(res => Object.assign(mergedResults, res));
       return {[Html5.id]: mergedResults};
     });
@@ -217,7 +221,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._eventManager.removeAll();
     if (this._droppedFramesWatcher) {
       this._droppedFramesWatcher.destroy();
-      this._droppedFramesWatcher = null;
+      this._droppedFramesWatcher = undefined;
     }
     this._canLoadMediaSourceAdapterPromise = new Promise((resolve, reject) => {
       const mediaSourceAdapterDestroyed = this._mediaSourceAdapter ? this._mediaSourceAdapter.destroy() : Promise.resolve();
@@ -250,7 +254,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     MediaSourceProvider.destroy();
     if (this._droppedFramesWatcher) {
       this._droppedFramesWatcher.destroy();
-      this._droppedFramesWatcher = null;
+      this._droppedFramesWatcher = undefined;
     }
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.destroy();
@@ -401,7 +405,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @param {ImageTrack} imageTrack - The image track object to set.
    * @returns {void}
    */
-  selectImageTrack(imageTrack: ImageTrack): void {
+  selectImageTrack(imageTrack: PKImageTrack): void {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.selectImageTrack(imageTrack);
     }
@@ -501,7 +505,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {?Promise<*>} - play promise
    */
-  play(): ?Promise<*> {
+  play(): Promise<void> {
     let playPromise = this._el.play();
     if (playPromise) {
       playPromise.catch(err => this.dispatchEvent(new FakeEvent(CustomEventType.PLAY_FAILED, {error: err})));
@@ -524,11 +528,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {Promise<Object>} - The loaded data
    */
-  load(startTime: ?number): Promise<Object> {
+  load(startTime?: number): Promise<{tracks: Track[]}> {
     this._el.load();
     return this._canLoadMediaSourceAdapterPromise
       .then(() => {
-        return this._mediaSourceAdapter ? this._mediaSourceAdapter.load(startTime) : Promise.resolve({});
+        return this._mediaSourceAdapter ? this._mediaSourceAdapter.load(startTime) : Promise.resolve({} as {tracks: Track[]});
       })
       .catch(error => {
         this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
@@ -555,7 +559,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
             )
           );
         });
+        // @ts-ignore
       } else if (typeof this._el.webkitSetPresentationMode === 'function') {
+        // @ts-ignore
         this._el.webkitSetPresentationMode('picture-in-picture');
         // Safari does not fire this event but Chrome does, normalizing the behaviour
         setTimeout(() => this.dispatchEvent(new FakeEvent(Html5EventType.ENTER_PICTURE_IN_PICTURE)), 0);
@@ -589,7 +595,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
             )
           );
         });
-      } else if (typeof this._el.webkitSetPresentationMode === 'function') {
+      } else if (typeof this._el['webkitSetPresentationMode'] === 'function') {
+        // @ts-ignore
         this._el.webkitSetPresentationMode('inline');
       }
     } catch (error) {
@@ -610,10 +617,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   isPictureInPictureSupported(): boolean {
     // due to a bug in shaka pip_webkit which sets pictureInPictureEnabled to true in unsupported devices like iphones we will
     // first rely on the response of webkitSupportsPresentationMode (if exists) and only if not on the pictureInPictureEnabled property
+    // @ts-ignore
     if (typeof this._el.webkitSupportsPresentationMode === 'function') {
+      // @ts-ignore
       return this._el.webkitSupportsPresentationMode('picture-in-picture');
     } else {
-      // $FlowFixMe
       return !!document.pictureInPictureEnabled;
     }
   }
@@ -624,10 +632,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @return {?ThumbnailInfo} - Thumbnail info
    */
-  getThumbnail(time: number): ?ThumbnailInfo {
+  getThumbnail(time: number): ThumbnailInfo | null {
     if (this._mediaSourceAdapter) {
       return this._mediaSourceAdapter.getThumbnail(time);
     }
+    return null;
   }
 
   /**
@@ -636,7 +645,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  set src(source: string): void {
+  set src(source: string) {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.src = source;
     }
@@ -669,7 +678,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  set currentTime(to: number): void {
+  set currentTime(to: number) {
     if (this._el) {
       this._el.currentTime = to;
     }
@@ -694,7 +703,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  set volume(vol: number): void {
+  set volume(vol: number) {
     this._el.volume = vol;
   }
 
@@ -758,7 +767,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  set muted(mute: boolean): void {
+  set muted(mute: boolean) {
     this._el.muted = mute;
   }
 
@@ -786,7 +795,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    * @public
    */
-  set poster(poster: string): void {
+  set poster(poster: string) {
     this._el.poster = poster;
   }
 
@@ -805,7 +814,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  set preload(preload: string): void {
+  set preload(preload:  "none" | "metadata" | "auto" | "") {
     this._el.preload = preload;
   }
 
@@ -814,7 +823,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {string} - The preload value.
    * @public
    */
-  get preload(): string {
+  get preload():  "none" | "metadata" | "auto" | "" {
     return this._el.preload;
   }
 
@@ -824,7 +833,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  set autoplay(autoplay: boolean): void {
+  set autoplay(autoplay: boolean) {
     this._el.autoplay = autoplay;
   }
 
@@ -862,7 +871,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  set controls(controls: boolean): void {
+  set controls(controls: boolean) {
     this._el.controls = controls;
   }
 
@@ -881,7 +890,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  set playbackRate(playbackRate: number): void {
+  set playbackRate(playbackRate: number) {
     this._el.playbackRate = playbackRate;
   }
 
@@ -927,7 +936,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {MediaError} - The MediaError object has a code property containing the error state of the audio/video.
    * @public
    */
-  get error(): ?MediaError {
+  get error(): MediaError | null {
     return this._el.error;
   }
 
@@ -971,7 +980,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * @param {boolean} playsinline - Whether to set on the video tag the playsinline attribute.
    */
-  set playsinline(playsinline: boolean): void {
+  set playsinline(playsinline: boolean) {
     if (playsinline) {
       this._el.setAttribute('playsinline', '');
     } else {
@@ -990,7 +999,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * Set crossOrigin attribute.
    * @param {?string} crossOrigin - 'anonymous' or 'use-credentials'
    */
-  set crossOrigin(crossOrigin: ?string): void {
+  set crossOrigin(crossOrigin: string) {
     if (typeof crossOrigin === 'string') {
       this._el.setAttribute('crossorigin', crossOrigin);
     } else {
@@ -1002,7 +1011,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * Get crossOrigin attribute.
    * @returns {?string} - 'anonymous' or 'use-credentials'
    */
-  get crossOrigin(): ?string {
+  get crossOrigin(): string | null {
     return this._el.getAttribute('crossorigin');
   }
 
@@ -1022,6 +1031,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     // Check if the engine's video element is the one in the PIP
     return (
       (!!document.pictureInPictureElement && document.pictureInPictureElement != null && this._el === document.pictureInPictureElement) ||
+      // @ts-ignore
       (!!this._el.webkitPresentationMode && this._el.webkitPresentationMode === 'picture-in-picture')
     );
   }
@@ -1111,7 +1121,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       track => PKTextTrack.isNativeTextTrack(track) && track.mode !== PKTextTrack.MODE.DISABLED
     );
     if (activeTextTrack) {
+      // @ts-ignore
       for (let i = 0; i < activeTextTrack.cues.length; i++) {
+        // @ts-ignore
         activeTextTrack.cues[i].hasBeenReset = true;
       }
     }
@@ -1125,7 +1137,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   _handleVideoError(): void {
     if (!this._el.error) return;
     const code = this._el.error.code;
-    if (code === window.MediaError.MEDIA_ERR_ABORTED) {
+    if (code === MediaError.MEDIA_ERR_ABORTED) {
       // Ignore this error code.js, which should only occur when navigating away or
       // deliberately stopping playback of HTTP content.
       return;
@@ -1164,7 +1176,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   _getMsExtendedError(): string {
-    // $FlowFixMe
+    // @ts-ignore
     let extended = this._el.error.msExtendedCode;
     if (extended) {
       // Convert to unsigned:
@@ -1181,10 +1193,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     const listenToCueChange = metadataTrack => {
       metadataTrack.mode = PKTextTrack.MODE.HIDDEN;
       this._eventManager.listen(metadataTrack, 'cuechange', () => {
-        let activeCues = [];
+        let activeCues: VTTCue[] = [];
         Array.from(this._el.textTracks).forEach((track: TextTrack) => {
           if (PKTextTrack.isMetaDataTrack(track)) {
-            activeCues = activeCues.concat(getActiveCues(track.activeCues));
+            activeCues = activeCues.concat(getActiveCues(track.activeCues!));
           }
         });
         activeCues = activeCues.sort((a: VTTCue, b: VTTCue) => {
@@ -1240,7 +1252,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return retVal;
   }
 
-  addTextTrack(kind: string, label?: string, language?: string): ?TextTrack {
+  addTextTrack(kind: TextTrackKind, label?: string, language?: string): TextTrack | undefined {
     return this._el.addTextTrack(kind, label, language);
   }
 
@@ -1250,11 +1262,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {Array<TextTrack>} - The native TextTracks array.
    * @public
    */
-  getNativeTextTracks(): Array<TextTrack> {
+  getNativeTextTracks(): TextTrack[] {
     return Array.from(this._el.textTracks);
   }
 
-  getDrmInfo(): ?PKDrmDataObject {
-    return this._mediaSourceAdapter?.getDrmInfo();
+  getDrmInfo(): PKDrmDataObject | null {
+    return this._mediaSourceAdapter ? this._mediaSourceAdapter.getDrmInfo() : null;
   }
 }

@@ -1,9 +1,12 @@
-// @flow
 import FakeEvent from '../event/fake-event';
 import {EventType} from '../event/event-type';
 import EventManager from '../event/event-manager';
 import FakeEventTarget from '../event/fake-event-target';
 import {EngineDecoratorManager} from './engine-decorator-manager';
+import {IEngineDecorator} from '../types/interfaces/engine-decorator';
+import {IEngine} from '../types/interfaces/engine';
+
+export type EngineDecoratorType = EngineDecorator & IEngine;
 
 /**
  * Engine decorator for plugin.
@@ -12,16 +15,16 @@ import {EngineDecoratorManager} from './engine-decorator-manager';
  * @implements {IEngineDecorator}
  */
 class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
-  _pluginDecorators: Array<IEngineDecorator>;
-  _eventManager: EventManager;
+  private _pluginDecorators: Array<IEngineDecorator>;
+  private _eventManager: EventManager;
 
   constructor(engine: IEngine, decoratorManager: EngineDecoratorManager) {
     super();
     this._eventManager = new EventManager();
     this._pluginDecorators = decoratorManager.createDecorators(engine, super.dispatchEvent.bind(this));
-    const events: Array<string> = (Object.values(EventType): any);
+    const events: Array<string> = Object.values(EventType);
     events.forEach(event => this._eventManager.listen(engine, event, (e: FakeEvent) => this.dispatchEvent(e)));
-    return new Proxy(engine, {
+    return new Proxy<IEngine>(engine, {
       get: (obj, prop) => {
         if (prop === 'destroy') {
           this._destroy();
@@ -34,16 +37,14 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
         } else {
           target = activeDecorator && prop in activeDecorator ? activeDecorator : obj;
         }
-        // $FlowFixMe
         return target[prop] && typeof target[prop].bind === 'function' ? target[prop].bind(target) : target[prop];
       },
       set: (obj, prop, value) => {
         const activeDecorator = this._pluginDecorators.find(decorator => prop in decorator && decorator.active);
-        // $FlowFixMe
         activeDecorator && prop in activeDecorator ? (activeDecorator[prop] = value) : (obj[prop] = value);
         return true;
       }
-    });
+    }) as EngineDecoratorType;
   }
 
   dispatchEvent(event: FakeEvent): boolean {
@@ -51,7 +52,7 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
     return activeDecorator && activeDecorator.dispatchEvent ? activeDecorator.dispatchEvent(event) : super.dispatchEvent(event);
   }
 
-  _destroy(): void {
+  private _destroy(): void {
     this._pluginDecorators = [];
     this._eventManager.destroy();
   }

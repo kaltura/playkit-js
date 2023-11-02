@@ -1,14 +1,15 @@
-// @flow
 import FakeEventTarget from '../event/fake-event-target';
 import getLogger from '../utils/logger';
 import {CustomEventType} from '../event/event-type';
 import EventManager from '../event/event-manager';
 import FakeEvent from '../event/fake-event';
+import {IMediaSourceAdapter} from '../types/interfaces/media-source-adapter';
+import {PKAbrConfigObject} from '../types';
 
 const NOT_SUPPORTED: number = -1;
 
 class DroppedFramesWatcher extends FakeEventTarget {
-  _droppedFramesInterval: ?IntervalID = null;
+  _droppedFramesInterval: number | null = null;
   _lastDroppedFrames: number = 0;
   _lastDecodedFrames: number = 0;
   _lastTime: number = 0;
@@ -56,7 +57,11 @@ class DroppedFramesWatcher extends FakeEventTarget {
     if (typeof this._videoElement.getVideoPlaybackQuality === 'function') {
       const videoPlaybackQuality = this._videoElement.getVideoPlaybackQuality();
       return [videoPlaybackQuality.droppedVideoFrames, videoPlaybackQuality.totalVideoFrames];
+      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
+      // @ts-ignore
     } else if (typeof this._videoElement.webkitDroppedFrameCount == 'number' && typeof this._videoElement.webkitDecodedFrameCount == 'number') {
+      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       return [this._videoElement.webkitDroppedFrameCount, this._videoElement.webkitDecodedFrameCount];
     } else {
       return [NOT_SUPPORTED, NOT_SUPPORTED];

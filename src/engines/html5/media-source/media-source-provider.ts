@@ -1,6 +1,8 @@
 //@flow
 import NativeAdapter from './adapters/native-adapter';
 import getLogger from '../../../utils/logger';
+import {IMediaSourceAdapter, IMediaSourceAdapterStatic} from '../../../types/interfaces/media-source-adapter';
+import {PKDrmConfigObject, PKMediaSourceObject} from '../../../types';
 
 /**
  * Media source provider
@@ -113,7 +115,7 @@ export default class MediaSourceProvider {
    * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists.
    * @static
    */
-  static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): IMediaSourceAdapter | null {
+  static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: any): IMediaSourceAdapter | null {
     if (videoElement && source && config) {
       if (!MediaSourceProvider._selectedAdapter) {
         MediaSourceProvider.canPlaySource(source, true, config.drm);

@@ -1,16 +1,16 @@
-// @flow
 import * as Utils from '../../../utils/util';
 import {Html5EventType} from '../../../event/event-type';
 import getLogger from '../../../utils/logger';
-import * as EncodingSources from '../../../assets/encoding-sources.json';
+import EncodingSources from '../../../assets/encoding-sources.json';
+import {CapabilityResult, ICapability} from '../../../types/interfaces/engine-capabilty';
 
 const WAIT_TIME: number = 500;
 
 const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
   static _vid: HTMLVideoElement;
-  static _playPromiseResult: Promise<*>;
+  static _playPromiseResult: Promise<any>;
   static _logger: any = getLogger('Html5AutoPlayCapability');
-  static _capabilities: Object = {};
+  static _capabilities: any = {};
 
   /**
    * Runs the test for autoplay capability.
@@ -91,7 +91,7 @@ const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
    * @return {Promise<*>} - Play promise which resolved or rejected.
    * @private
    */
-  static _getPlayPromise(): Promise<*> {
+  static _getPlayPromise(): Promise<any> {
     return Html5AutoPlayCapability._vid.play() || Html5AutoPlayCapability._forcePromiseReturnValue();
   }
 
@@ -119,7 +119,7 @@ const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
    * @private
    * @static
    */
-  static _forcePromiseReturnValue(): Promise<*> {
+  static _forcePromiseReturnValue(): Promise<void> {
     return new Promise((resolve, reject) => {
       Html5AutoPlayCapability._vid.addEventListener(Html5EventType.ERROR, () => {
         reject();

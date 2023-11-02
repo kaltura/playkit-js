@@ -1,4 +1,5 @@
-// @flow
+import {PKStreamTypes} from '../types';
+
 const StreamType: PKStreamTypes = {
   DASH: 'dash',
   HLS: 'hls',

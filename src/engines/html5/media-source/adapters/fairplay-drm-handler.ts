@@ -1,13 +1,11 @@
-// @flow
+/// <reference path="../../../../types/global/globals.d.ts" />
 import Error from '../../../../error/error';
 import getLogger from '../../../../utils/logger';
 import * as Utils from '../../../../utils/util';
 import {RequestType} from '../../../../enums/request-type';
-import type {CodeType} from '../../../../error/code';
-import type {SeverityType} from '../../../../error/severity';
-import type {CategoryType} from '../../../../error/category';
 import {DrmScheme} from '../../../../drm/drm-scheme';
-import EventManager from '../../../../event/event-manager';
+import EventManager, {ListenerType} from '../../../../event/event-manager';
+import {PKDrmDataObject, PKRequestObject, PKResponseObject} from '../../../../types';
 
 type WebkitEventsType = {[name: string]: string};
 
@@ -28,25 +26,25 @@ class FairPlayDrmHandler {
   _eventManager: EventManager;
   _keySession: any;
   _config: FairPlayDrmConfigType;
-  _onWebkitNeedKeyHandler: Function;
+  _onWebkitNeedKeyHandler: ListenerType;
   _errorCallback: Function;
   _drmResponseCallback: Function;
   _videoElement: HTMLVideoElement;
   _retryLicenseRequest: number = 4;
-  _licenseRequestTime: number;
+  _licenseRequestTime: number | undefined;
   _defaultConfig: FairPlayDrmConfigType = {
     licenseUrl: '',
     certificate: '',
     network: {
       responseFilter: (type, response) => {
-        let responseObj = {};
+        let responseObj: any = {};
         try {
           const dataView = new DataView(response.data);
           const decoder = new TextDecoder();
           const keyText = decoder.decode(dataView).trim();
           responseObj = JSON.parse(keyText);
         } catch (error) {
-          this._onError((Error.Code: CodeType).BAD_FAIRPLAY_RESPONSE, {
+          this._onError(Error.Code.BAD_FAIRPLAY_RESPONSE, {
             error,
             responseText: response.data
           });
@@ -56,7 +54,7 @@ class FairPlayDrmHandler {
         if (isValidResponse.valid) {
           response.data = FairPlayDrmHandler._base64DecodeUint8Array(responseObj.ckc);
         } else {
-          this._onError((Error.Code: CodeType).BAD_FAIRPLAY_RESPONSE, isValidResponse);
+          this._onError(Error.Code.BAD_FAIRPLAY_RESPONSE, isValidResponse);
         }
       }
     }
@@ -69,7 +67,7 @@ class FairPlayDrmHandler {
    * @param {Function} errorCallback - error callback function
    * @param {Function} drmResponseCallback - drm license response callback function
    */
-  constructor(videoElement: HTMLVideoElement, config: FairPlayDrmConfigType, errorCallback: Function, drmResponseCallback: Function): void {
+  constructor(videoElement: HTMLVideoElement, config: FairPlayDrmConfigType, errorCallback: Function, drmResponseCallback: Function) {
     this._config = Utils.Object.mergeDeep({}, this._defaultConfig, config);
     this._errorCallback = errorCallback;
     this._drmResponseCallback = drmResponseCallback;
@@ -92,15 +90,15 @@ class FairPlayDrmHandler {
     if (!videoElement.webkitKeys) {
       let keySystem = this._selectKeySystem();
       this._logger.debug('Sets media keys');
-      videoElement.webkitSetMediaKeys(new window.WebKitMediaKeys(keySystem));
+      videoElement.webkitSetMediaKeys(new WebKitMediaKeys(keySystem!));
     }
     if (!videoElement.webkitKeys) {
-      this._onError((Error.Code: CodeType).COULD_NOT_CREATE_MEDIA_KEYS);
+      this._onError(Error.Code.COULD_NOT_CREATE_MEDIA_KEYS);
     }
     this._logger.debug('Creates session');
     this._keySession = videoElement.webkitKeys.createSession('video/mp4', initData);
     if (!this._keySession) {
-      this._onError((Error.Code: CodeType).COULD_NOT_CREATE_KEY_SESSION);
+      this._onError(Error.Code.COULD_NOT_CREATE_KEY_SESSION);
     }
     this._keySession.contentId = contentId;
     this._eventManager.listen(this._keySession, WebkitEvents.KEY_MESSAGE, (e: Event) => this._onWebkitKeyMessage(e));
@@ -157,7 +155,7 @@ class FairPlayDrmHandler {
         setContentType && request.setRequestHeader('Content-type', 'application/json');
         this._logger.debug('Ready for license request');
         request.onerror = () => {
-          this._onError((Error.Code: CodeType).LICENSE_REQUEST_FAILED, {
+          this._onError(Error.Code.LICENSE_REQUEST_FAILED, {
             status: request.status,
             responseText: request.responseText
           });
@@ -168,9 +166,9 @@ class FairPlayDrmHandler {
       .catch(error => {
         this._errorCallback(
           new Error(
-            (Error.Severity: SeverityType).CRITICAL,
-            (Error.Category: CategoryType).NETWORK,
-            (Error.Code: CodeType).REQUEST_FILTER_ERROR,
+            Error.Severity.CRITICAL,
+            Error.Category.NETWORK,
+            Error.Code.REQUEST_FILTER_ERROR,
             error
           )
         );
@@ -185,7 +183,7 @@ class FairPlayDrmHandler {
   _onWebkitKeyError(e: any): void {
     this._logger.error('A decryption key error was encountered', e);
     if (this._retryLicenseRequest <= 0) {
-      this._onError((Error.Code: CodeType).LICENSE_REQUEST_FAILED, e.target.error);
+      this._onError(Error.Code.LICENSE_REQUEST_FAILED, e.target.error);
     }
     this._retryLicenseRequest--;
   }
@@ -194,14 +192,14 @@ class FairPlayDrmHandler {
     this._logger.debug('License request loaded');
     let request = event.target;
     if (request.status > 299) {
-      this._onError((Error.Code: CodeType).LICENSE_REQUEST_FAILED, {
+      this._onError(Error.Code.LICENSE_REQUEST_FAILED, {
         status: request.status,
         error: request.responseText
       });
       return;
     }
     if (this._drmResponseCallback) {
-      const licenseTime = Date.now() - this._licenseRequestTime;
+      const licenseTime = Date.now() - this._licenseRequestTime!;
       this._drmResponseCallback({licenseTime: licenseTime / 1000, scheme: DrmScheme.FAIRPLAY});
     }
     const {responseURL: url, response: data} = request;
@@ -224,9 +222,9 @@ class FairPlayDrmHandler {
       .catch(error => {
         this._errorCallback(
           new Error(
-            (Error.Severity: SeverityType).CRITICAL,
-            (Error.Category: CategoryType).NETWORK,
-            (Error.Code: CodeType).RESPONSE_FILTER_ERROR,
+            Error.Severity.CRITICAL,
+            Error.Category.NETWORK,
+            Error.Code.RESPONSE_FILTER_ERROR,
             error
           )
         );
@@ -235,10 +233,10 @@ class FairPlayDrmHandler {
   }
 
   _onError(code: number, data?: Object): void {
-    this._errorCallback(new Error((Error.Severity: SeverityType).CRITICAL, (Error.Category: CategoryType).DRM, code, data));
+    this._errorCallback(new Error(Error.Severity.CRITICAL, Error.Category.DRM, code, data));
   }
 
-  static _validateResponse(responseObj: Object): Object {
+  static _validateResponse(responseObj: any): any {
     if ((responseObj.message && responseObj.message.indexOf('error') > 0) || responseObj.reference === null || responseObj.status_code === 500) {
       return {
         //todo: create & edit an error object
@@ -257,9 +255,9 @@ class FairPlayDrmHandler {
     }
   }
 
-  _selectKeySystem(): ?string {
-    let keySystem = null;
-    if (window.WebKitMediaKeys.isTypeSupported(KeySystem, 'video/mp4')) {
+  _selectKeySystem(): string | null {
+    let keySystem: string | null = null;
+    if (WebKitMediaKeys.isTypeSupported(KeySystem, 'video/mp4')) {
       keySystem = KeySystem;
     } else {
       this._logger.warn('Key System not supported');
@@ -278,7 +276,7 @@ class FairPlayDrmHandler {
   }
 
   static _base64DecodeUint8Array(input?: string): Uint8Array {
-    let raw = window.atob(input);
+    let raw = window.atob(input!);
     let rawLength = raw.length;
     let array = new Uint8Array(new ArrayBuffer(rawLength));
     for (let i = 0; i < rawLength; i++) {

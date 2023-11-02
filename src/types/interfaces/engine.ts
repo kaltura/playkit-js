@@ -1,7 +1,6 @@
 
 import VideoTrack from '../../track/video-track';
 import AudioTrack from '../../track/audio-track';
-import TextTrack from '../../track/text-track';
 import FakeEventTarget from '../../event/fake-event-target';
 import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
 import ImageTrack from '../../track/image-track';
@@ -10,6 +9,7 @@ import {PKDrmConfigObject} from '../drm-config';
 import {PKDrmDataObject} from '../drm-data';
 import {PKABRRestrictionObject} from '../restrictions-types';
 import Track from '../../track/track';
+import {PKTextTrack} from '../../track/text-track';
 
 export interface IEngineStatic {
   id: string;
@@ -33,7 +33,7 @@ export interface IEngine extends FakeEventTarget {
   reset(): void;
   selectVideoTrack(videoTrack: VideoTrack): void;
   selectAudioTrack(audioTrack: AudioTrack): void;
-  selectTextTrack(textTrack: TextTrack): void;
+  selectTextTrack(textTrack: PKTextTrack): void;
   selectImageTrack(imageTrack: ImageTrack): void;
   isPictureInPictureSupported(): boolean;
   enterPictureInPicture(): void;
@@ -52,7 +52,7 @@ export interface IEngine extends FakeEventTarget {
   getThumbnail(time: number): ThumbnailInfo | null
   isOnLiveEdge(): boolean;
   addTextTrack(kind: TextTrackKind, label?: string, language?: string): TextTrack | undefined ;
-  getNativeTextTracks(): Array<TextTrack>;
+  getNativeTextTracks(): TextTrack[];
   getDrmInfo(): PKDrmDataObject | null;
   id: string;
   currentTime: number;
@@ -83,7 +83,7 @@ export interface IEngine extends FakeEventTarget {
   networkState: number;
   readyState: number;
   playsinline: boolean;
-  crossOrigin: string | null;
+  crossOrigin: string | null
   targetBuffer: number;
   availableBuffer: number;
 }

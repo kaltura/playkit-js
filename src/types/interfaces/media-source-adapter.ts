@@ -1,7 +1,7 @@
 
 import VideoTrack from '../../track/video-track';
 import AudioTrack from '../../track/audio-track';
-import TextTrack from '../../track/text-track';
+import { PKTextTrack} from '../../track/text-track';
 import {PKDrmConfigObject} from '../drm-config';
 import {PKMediaSourceCapabilities} from '../media-source-capabilities';
 import {PKMediaSourceObject} from '../media-source';
@@ -31,7 +31,7 @@ export interface IMediaSourceAdapter extends FakeEventTarget {
   destroy(): Promise<any>;
   selectVideoTrack(videoTrack: VideoTrack): void;
   selectAudioTrack(audioTrack: AudioTrack): void;
-  selectTextTrack(textTrack: TextTrack): void;
+  selectTextTrack(textTrack: PKTextTrack): void;
   selectImageTrack(imageTrack: ImageTrack): void;
   hideTextTrack(): void;
   enableAdaptiveBitrate(): void;

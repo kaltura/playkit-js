@@ -1,4 +1,5 @@
-// @flow
+import {PKEngineTypes} from '../types/engine-types';
+
 const EngineType: PKEngineTypes = {
   HTML5: 'html5',
   FLASH: 'flash',

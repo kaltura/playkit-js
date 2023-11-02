@@ -1,6 +1,6 @@
-//@flow
 import getLogger from '../utils/logger';
 import Html5 from './html5/html5';
+import {IEngineStatic} from '../types/interfaces/engine';
 
 /**
  * Engine Provider
