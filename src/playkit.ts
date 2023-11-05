@@ -128,4 +128,8 @@ export {ThumbnailInfo};
 // Export logger utils
 export {getLogger, LogLevel, getLogLevel, setLogLevel, setLogHandler};
 
+export {Player}
+
+export * from './types'
+
 export default loadPlayer;

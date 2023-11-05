@@ -1,16 +1,12 @@
-import chai from 'chai';
+import { should, use } from 'chai';
 import sinonChai from 'sinon-chai';
 import sinon from 'sinon/pkg/sinon-esm';
-// import 'promise-polyfill/src/polyfill';
-// eslint-disable-next-line no-undef
-chai.should();
-chai.use(sinonChai);
-global.chai = chai;
-global.expect = chai.expect;
-global.should = chai.should;
+import * as chaiAsPromised from 'chai-as-promised';
+
+should();
+use(sinonChai);
+use(chaiAsPromised);
 global.sinon = sinon;
-
-
 
 const testsContext = require.context('./e2e', true);
 testsContext.keys().forEach(testsContext);

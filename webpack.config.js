@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
 const packageData = require('./package.json');
 const TerserPlugin = require('terser-webpack-plugin');
 
@@ -27,8 +26,8 @@ module.exports = (env, { mode }) => {
     module: {
       rules: [
         {
-          // test: /\.(ts|js)$/,
-          test: /\.ts$/,
+          test: /\.(ts|js)$/,
+          // test: /\.ts$/,
           exclude: /node_modules/,
           use: {
             loader: 'babel-loader',
@@ -41,23 +40,6 @@ module.exports = (env, { mode }) => {
                 }
               }], '@babel/preset-typescript'],
               plugins: [['@babel/plugin-transform-runtime']]
-            }
-          }
-        },
-        {
-          test: /\.js$/,
-          exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              presets: [['@babel/preset-env', {
-                loose: true,
-                bugfixes: true,
-                // targets: 'defaults'
-                "targets": {
-                  "browsers": ["chrome >= 47", "firefox >= 51", "ie >= 11", "safari >= 8", "ios >= 8", "android >= 4"]
-                }
-              }], '@babel/preset-flow']
             }
           }
         },
