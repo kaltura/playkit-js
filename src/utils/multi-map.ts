@@ -5,7 +5,7 @@
  * @template T
  */
 class MultiMap<K, T> {
-  _map: Map<K, T[]>;
+  private _map: Map<K, T[]>;
 
   constructor() {
     /** @private {!Object.<K, !Array.<T>>} */
@@ -18,9 +18,9 @@ class MultiMap<K, T> {
    * @param {T} value  -
    * @returns {void}
    */
-  push(key: K, value: T): void {
+  public push(key: K, value: T): void {
     if (this._map.has(key)) {
-      let list = this._map.get(key);
+      const list = this._map.get(key);
       if (Array.isArray(list)) {
         list.push(value);
         this._map.set(key, list);
@@ -36,7 +36,7 @@ class MultiMap<K, T> {
    * @param {!Array.<T>} values -
    * @returns {void}
    */
-  set(key: K, values: T[]): void {
+  public set(key: K, values: T[]): void {
     this._map.set(key, values);
   }
 
@@ -45,7 +45,7 @@ class MultiMap<K, T> {
    * @param {K} key -
    * @return {boolean} true if the key exists.
    */
-  has(key: K): boolean {
+  public has(key: K): boolean {
     return this._map.has(key);
   }
 
@@ -54,8 +54,8 @@ class MultiMap<K, T> {
    * @param {K} key -
    * @return {Array.<T>} or null if no such key exists.
    */
-  get(key: K): Array<T> {
-    let list = this._map.get(key);
+  public get(key: K): Array<T> {
+    const list = this._map.get(key);
     // slice() clones the list so that it and the map can each be modified
     // without affecting the other.
     return list ? list.slice() : [];
@@ -65,9 +65,9 @@ class MultiMap<K, T> {
    * Get a list of all values.
    * @returns {!Array.<T>} -
    */
-  getAll(): T[] {
+  public getAll(): T[] {
     let list: T[] = [];
-    for (var value of this._map.values()) {
+    for (const value of this._map.values()) {
       list = list.concat(value);
     }
     return list;
@@ -79,12 +79,12 @@ class MultiMap<K, T> {
    * @param {T} value -
    * @returns {void}
    */
-  remove(key: K, value: T): void {
+  public remove(key: K, value: T): void {
     if (!this._map.has(key)) return;
-    let list = this._map.get(key);
+    const list = this._map.get(key);
     if (Array.isArray(list)) {
       for (let i = 0; i < list.length; ++i) {
-        if (list[i] == value) {
+        if (list[i] === value) {
           list.splice(i, 1);
           --i;
         }
@@ -100,7 +100,7 @@ class MultiMap<K, T> {
    * @return {!Array.<K>}
    */
   // eslint-disable-next-line no-undef
-  keys(): Iterator<K> {
+  public keys(): Iterator<K> {
     return this._map.keys();
   }
 
@@ -108,7 +108,7 @@ class MultiMap<K, T> {
    * Clear all keys and values from the multimap.
    * @returns {void}
    */
-  clear(): void {
+  public clear(): void {
     this._map.clear();
   }
 }

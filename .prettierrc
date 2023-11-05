@@ -5,6 +5,5 @@
   "semi": true,
   "singleQuote": true,
   "trailingComma": "none",
-  "proseWrap": "preserve",
-  "arrowParens": "always"
+  "proseWrap": "preserve"
 }

@@ -29,7 +29,7 @@ export default class StateManager {
    * @private
    */
   // _player: Player;
-  private _player: any;
+  private _player: Player;
   /**
    * The event manager of the class.
    * @member
@@ -70,7 +70,7 @@ export default class StateManager {
    * @type {Array<Transition>}
    * @private
    */
-  _transitions: Transition = {
+  private _transitions: Transition = {
     [StateType.IDLE]: {
       [Html5EventType.LOAD_START]: () => this._updateState(StateType.LOADING),
       [Html5EventType.PLAY]: () => this._updateState(StateType.BUFFERING),
@@ -165,7 +165,7 @@ export default class StateManager {
     if (event.type !== Html5EventType.TIME_UPDATE || (this._curState === StateType.BUFFERING && event.type === Html5EventType.TIME_UPDATE)) {
       this._logger.debug('Do transition request', event.type); // don't show most of 'timeupdate' events
     }
-    let transition = this._transitions[this._curState.type];
+    const transition = this._transitions[this._curState.type];
     if (typeof transition[event.type] === 'function') {
       transition[event.type](event);
     }
@@ -194,7 +194,7 @@ export default class StateManager {
    * @returns {void}
    */
   private _dispatchEvent(): void {
-    let event = new FakeEvent(
+    const event = new FakeEvent(
       CustomEventType.PLAYER_STATE_CHANGED,
       ({
         oldState: this._prevState,

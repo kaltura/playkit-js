@@ -9,13 +9,13 @@
  */
 class FakeEvent {
   /** @const {boolean} */
-  bubbles: boolean;
+  public bubbles: boolean;
 
   /** @const {boolean} */
-  cancelable: boolean;
+  public cancelable: boolean;
 
   /** @const {boolean} */
-  defaultPrevented: boolean;
+  public defaultPrevented: boolean;
 
   /**
    * According to MDN, Chrome uses high-res timers instead of epoch time.
@@ -24,27 +24,27 @@ class FakeEvent {
    * @const {number}
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Event/timeStamp
    */
-  timeStamp: number | Date;
+  public timeStamp: number | Date;
 
   /** @const {string} */
-  type: string;
+  public type: string;
 
   /** @const {boolean} */
-  isTrusted: boolean;
+  public isTrusted: boolean;
 
   /** @type {EventTarget} */
-  currentTarget: any;
+  public currentTarget: any;
 
   /** @type {EventTarget} */
-  target: any;
+  public target: any;
 
   /**
    * Non-standard property read by FakeEventTarget to stop processing listeners.
    * @type {boolean}
    */
-  stopped: boolean;
+  public stopped: boolean;
 
-  payload: any;
+  public payload: any;
 
   constructor(type: string, payload?: any) {
     // These Properties below cannot be set by dict.  They are all provided for
@@ -94,14 +94,14 @@ class FakeEvent {
    * with native Events.
    * @override
    */
-  preventDefault() {}
+  public preventDefault(): void {}
 
   /**
    * Stops processing event listeners for this event.  Provided for compatibility
    * with native Events.
    * @override
    */
-  stopImmediatePropagation() {
+  public stopImmediatePropagation(): void {
     this.stopped = true;
   }
 
@@ -110,7 +110,7 @@ class FakeEvent {
    * with native Events.
    * @override
    */
-  stopPropagation() {}
+  public stopPropagation(): void {}
 }
 
 export default FakeEvent;

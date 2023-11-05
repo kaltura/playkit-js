@@ -32,65 +32,65 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @type {HTMLVideoElement}
    * @private
    */
-  _el!: HTMLVideoElement;
+  private _el!: HTMLVideoElement;
   /**
    * The event manager of the engine.
    * @type {EventManager}
    * @private
    */
-  _eventManager: EventManager;
+  private _eventManager: EventManager;
   /**
    * The selected media source adapter of the engine.
    * @type {?IMediaSourceAdapter}
    * @private
    */
-  _mediaSourceAdapter!: IMediaSourceAdapter | null;
+  private _mediaSourceAdapter!: IMediaSourceAdapter | null;
   /**
    * The player config object.
    * @type {Object}
    * @private
    */
-  _config: any;
+  private _config: any;
   /**
    * Promise to indicate when a media source adapter can be loaded.
    * @type {Promise<*>}
    * @private
    */
-  _canLoadMediaSourceAdapterPromise: Promise<void>;
-  _droppedFramesWatcher: DroppedFramesWatcher | undefined;
-  _reset: boolean = false;
+  private _canLoadMediaSourceAdapterPromise: Promise<void>;
+  private _droppedFramesWatcher: DroppedFramesWatcher | undefined;
+  private _reset: boolean = false;
   /**
    * The html5 class logger.
    * @type {any}
    * @static
    * @private
    */
-  static _logger: any = getLogger('Html5');
+  private static _logger: any = getLogger('Html5');
 
   /**
    * The html5 capabilities handlers.
    * @private
    * @static
    */
-  static _capabilities: Array<ICapability> = [Html5AutoPlayCapability];
+  private static _capabilities: Array<ICapability> = [Html5AutoPlayCapability];
 
   /**
    * @type {string} - The engine id.
    * @public
    * @static
    */
-  static id: string = 'html5';
+  public static id: string = 'html5';
 
   /**
    * @type {PKVideoElementStore} - Store object which maps between playerId to its video element.
    */
-  static videoElementStore: PKVideoElementStore = {};
+  public static videoElementStore: PKVideoElementStore = {};
 
   /**
    * Checks if html5 is supported.
    * @returns {boolean} - Whether the html5 is supported.
    */
-  static isSupported(): boolean {
+  public static isSupported(): boolean {
     try {
       const el = Utils.Dom.createElement('video');
       el.volume = 0.5;
@@ -109,7 +109,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @static
    */
-  static createEngine(source: PKMediaSourceObject, config: any, playerId: string): IEngine {
+  public static createEngine(source: PKMediaSourceObject, config: any, playerId: string): IEngine {
     return new this(source, config, playerId);
   }
 
@@ -122,7 +122,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @static
    */
-  static canPlaySource(source: PKMediaSourceObject, preferNative: boolean, drmConfig: PKDrmConfigObject): boolean {
+  public static canPlaySource(source: PKMediaSourceObject, preferNative: boolean, drmConfig: PKDrmConfigObject): boolean {
     return MediaSourceProvider.canPlaySource(source, preferNative, drmConfig);
   }
 
@@ -132,7 +132,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @static
    */
-  static runCapabilities(): void {
+  public static runCapabilities(): void {
     Html5._capabilities.forEach(capability => capability.runCapability());
   }
 
@@ -142,8 +142,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @static
    */
-  static getCapabilities():  Promise<any> {
-    let promises: CapabilityResult[] = [];
+  public static getCapabilities():  Promise<any> {
+    const promises: CapabilityResult[] = [];
     Html5._capabilities.forEach(capability => promises.push(capability.getCapability()));
     return Promise.all(promises).then(arrayOfResults => {
       const mergedResults: CapabilityResult = {};
@@ -159,7 +159,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @static
    */
-  static setCapabilities(capabilities: {[name: string]: any}): void {
+  public static setCapabilities(capabilities: {[name: string]: any}): void {
     Html5._capabilities.forEach(capability => capability.setCapabilities(capabilities));
   }
 
@@ -170,7 +170,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    * @public
    */
-  static prepareVideoElement(playerId: string): void {
+  public static prepareVideoElement(playerId: string): void {
     if (!Html5.videoElementStore[playerId]) {
       Html5._logger.debug(`Create the video element for playing ${playerId}`);
       const videoElement = Utils.Dom.createElement('video');
@@ -184,7 +184,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * The player playback rates.
    * @type {Array<number>}
    */
-  static PLAYBACK_RATES: Array<number> = [0.5, 1, 1.5, 2];
+  public static PLAYBACK_RATES: Array<number> = [0.5, 1, 1.5, 2];
 
   /**
    * @constructor
@@ -192,7 +192,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @param {Object} config - The player configuration.
    * @param {string} playerId - The player id.
    */
-  constructor(source: PKMediaSourceObject, config: Object, playerId: string) {
+  constructor(source: PKMediaSourceObject, config: any, playerId: string) {
     super();
     this._eventManager = new EventManager();
     this._canLoadMediaSourceAdapterPromise = Promise.resolve();
@@ -206,7 +206,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @param {Object} config - The player configuration.
    * @returns {void}
    */
-  restore(source: PKMediaSourceObject, config: Object): void {
+  public restore(source: PKMediaSourceObject, config: any): void {
     this.reset();
     this._init(source, config);
   }
@@ -215,7 +215,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * Resets the engine.
    * @returns {void}
    */
-  reset(): void {
+  public reset(): void {
     if (this._reset) return;
     this._reset = true;
     this._eventManager.removeAll();
@@ -243,7 +243,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  destroy(): void {
+  public destroy(): void {
     this.detach();
     if (this._el) {
       this.pause();
@@ -267,7 +267,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {string} the engine's id
    */
-  get id(): string {
+  public get id(): string {
     return Html5.id;
   }
 
@@ -276,7 +276,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  attachMediaSource(): void {
+  public attachMediaSource(): void {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.attachMediaSource();
     }
@@ -287,7 +287,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  detachMediaSource(): void {
+  public detachMediaSource(): void {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.detachMediaSource();
     }
@@ -298,7 +298,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  attach(): void {
+  public attach(): void {
     Object.keys(Html5EventType).forEach(html5Event => {
       if (![Html5EventType.ERROR, Html5EventType.WAITING].includes(Html5EventType[html5Event])) {
         this._eventManager.listen(this._el, Html5EventType[html5Event], () => {
@@ -314,7 +314,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_ADDED, {track: event.track}));
       }
     });
-    let mediaSourceAdapter = this._mediaSourceAdapter;
+    const mediaSourceAdapter = this._mediaSourceAdapter;
     if (mediaSourceAdapter) {
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.VIDEO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
       this._eventManager.listen(mediaSourceAdapter, CustomEventType.AUDIO_TRACK_CHANGED, (event: FakeEvent) => this.dispatchEvent(event));
@@ -344,7 +344,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  detach(): void {
+  public detach(): void {
     Object.keys(Html5EventType).forEach(html5Event => {
       this._eventManager.unlisten(this._el, Html5EventType[html5Event]);
     });
@@ -360,7 +360,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {HTMLVideoElement} - The video element.
    * @public
    */
-  getVideoElement(): HTMLVideoElement {
+  public getVideoElement(): HTMLVideoElement {
     return this._el;
   }
 
@@ -369,7 +369,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @param {VideoTrack} videoTrack - The video track object to set.
    * @returns {void}
    */
-  selectVideoTrack(videoTrack: VideoTrack): void {
+  public selectVideoTrack(videoTrack: VideoTrack): void {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.selectVideoTrack(videoTrack);
     }
@@ -380,7 +380,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @param {AudioTrack} audioTrack - The video track object to set.
    * @returns {void}
    */
-  selectAudioTrack(audioTrack: AudioTrack): void {
+  public selectAudioTrack(audioTrack: AudioTrack): void {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.selectAudioTrack(audioTrack);
     }
@@ -391,7 +391,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @param {PKTextTrack} textTrack - The playkit text track object to set.
    * @returns {void}
    */
-  selectTextTrack(textTrack: PKTextTrack): void {
+  public selectTextTrack(textTrack: PKTextTrack): void {
     this._removeCueChangeListeners();
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.selectTextTrack(textTrack);
@@ -405,7 +405,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @param {ImageTrack} imageTrack - The image track object to set.
    * @returns {void}
    */
-  selectImageTrack(imageTrack: ImageTrack): void {
+  public selectImageTrack(imageTrack: ImageTrack): void {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.selectImageTrack(imageTrack);
     }
@@ -417,7 +417,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    * @public
    */
-  hideTextTrack(): void {
+  public hideTextTrack(): void {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.hideTextTrack();
     }
@@ -430,7 +430,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    * @public
    */
-  enableAdaptiveBitrate(): void {
+  public enableAdaptiveBitrate(): void {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.enableAdaptiveBitrate();
     }
@@ -442,7 +442,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {boolean} - Whether adaptive bitrate is enabled.
    * @public
    */
-  isAdaptiveBitrateEnabled(): boolean {
+  public isAdaptiveBitrateEnabled(): boolean {
     if (this._mediaSourceAdapter) {
       return this._mediaSourceAdapter.isAdaptiveBitrateEnabled();
     }
@@ -456,7 +456,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    * @public
    */
-  applyABRRestriction(restriction: PKABRRestrictionObject): void {
+  public applyABRRestriction(restriction: PKABRRestrictionObject): void {
     if (this._mediaSourceAdapter) {
       return this._mediaSourceAdapter.applyABRRestriction(restriction);
     }
@@ -468,13 +468,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    * @public
    */
-  seekToLiveEdge(): void {
+  public seekToLiveEdge(): void {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.seekToLiveEdge();
     }
   }
 
-  isOnLiveEdge(): boolean {
+  public isOnLiveEdge(): boolean {
     if (this._mediaSourceAdapter) {
       return this._mediaSourceAdapter.isOnLiveEdge();
     }
@@ -486,7 +486,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {Number} - start time of DVR window.
    * @public
    */
-  getStartTimeOfDvrWindow(): number {
+  public getStartTimeOfDvrWindow(): number {
     return this._mediaSourceAdapter ? this._mediaSourceAdapter.getStartTimeOfDvrWindow() : 0;
   }
 
@@ -496,7 +496,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {boolean} - Whether playback is live.
    * @public
    */
-  isLive(): boolean {
+  public isLive(): boolean {
     return this._mediaSourceAdapter ? this._mediaSourceAdapter.isLive() : false;
   }
 
@@ -505,8 +505,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {?Promise<*>} - play promise
    */
-  play(): Promise<void> {
-    let playPromise = this._el.play();
+  public play(): Promise<void> {
+    const playPromise = this._el.play();
     if (playPromise) {
       playPromise.catch(err => this.dispatchEvent(new FakeEvent(CustomEventType.PLAY_FAILED, {error: err})));
     }
@@ -518,7 +518,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  pause(): void {
+  public pause(): void {
     return this._el.pause();
   }
 
@@ -528,7 +528,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {Promise<Object>} - The loaded data
    */
-  load(startTime?: number): Promise<{tracks: Track[]}> {
+  public load(startTime?: number): Promise<{tracks: Track[]}> {
     this._el.load();
     return this._canLoadMediaSourceAdapterPromise
       .then(() => {
@@ -545,7 +545,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  enterPictureInPicture(): void {
+  public enterPictureInPicture(): void {
     try {
       // Currently it's supported in chrome and in safari. So if we consider checking support before,
       // we can use this flag to distinguish between the two. In the future we might need a different method.
@@ -559,8 +559,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
             )
           );
         });
+        // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
         // @ts-ignore
       } else if (typeof this._el.webkitSetPresentationMode === 'function') {
+        // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this._el.webkitSetPresentationMode('picture-in-picture');
         // Safari does not fire this event but Chrome does, normalizing the behaviour
@@ -581,7 +583,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  exitPictureInPicture(): void {
+  public exitPictureInPicture(): void {
     try {
       // Currently it's supported in chrome and in safari. So if we consider checking support before,
       // we can use this flag to distinguish between the two. In the future we might need a different method.
@@ -596,6 +598,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
           );
         });
       } else if (typeof this._el['webkitSetPresentationMode'] === 'function') {
+        // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this._el.webkitSetPresentationMode('inline');
       }
@@ -614,11 +617,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @return {boolean} if the engine is in picture in picture mode or not
    */
-  isPictureInPictureSupported(): boolean {
+  public isPictureInPictureSupported(): boolean {
     // due to a bug in shaka pip_webkit which sets pictureInPictureEnabled to true in unsupported devices like iphones we will
     // first rely on the response of webkitSupportsPresentationMode (if exists) and only if not on the pictureInPictureEnabled property
+    // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
     // @ts-ignore
     if (typeof this._el.webkitSupportsPresentationMode === 'function') {
+      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
       return this._el.webkitSupportsPresentationMode('picture-in-picture');
     } else {
@@ -632,7 +637,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @return {?ThumbnailInfo} - Thumbnail info
    */
-  getThumbnail(time: number): ThumbnailInfo | null {
+  public getThumbnail(time: number): ThumbnailInfo | null {
     if (this._mediaSourceAdapter) {
       return this._mediaSourceAdapter.getThumbnail(time);
     }
@@ -645,7 +650,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  set src(source: string) {
+  public set src(source: string) {
     if (this._mediaSourceAdapter) {
       this._mediaSourceAdapter.src = source;
     }
@@ -656,7 +661,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {string} - The source url.
    * @public
    */
-  get src(): string {
+  public get src(): string {
     if (this._mediaSourceAdapter) {
       return this._mediaSourceAdapter.src;
     }
@@ -668,7 +673,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {Number} - The current playback time.
    * @public
    */
-  get currentTime(): number {
+  public get currentTime(): number {
     return this._el ? this._el.currentTime : 0;
   }
 
@@ -678,7 +683,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  set currentTime(to: number) {
+  public set currentTime(to: number) {
     if (this._el) {
       this._el.currentTime = to;
     }
@@ -689,11 +694,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {Number} - The playback duration.
    * @public
    */
-  get duration(): number {
+  public get duration(): number {
     return this._el.duration;
   }
 
-  get liveDuration(): number {
+  public get liveDuration(): number {
     return this._mediaSourceAdapter ? this._mediaSourceAdapter.liveDuration : -1;
   }
 
@@ -703,7 +708,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  set volume(vol: number) {
+  public set volume(vol: number) {
     this._el.volume = vol;
   }
 
@@ -712,7 +717,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {Number} - The volume value of the video element.
    * @public
    */
-  get volume(): number {
+  public get volume(): number {
     return this._el.volume;
   }
 
@@ -721,7 +726,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {boolean} - The paused value of the video element.
    * @public
    */
-  get paused(): boolean {
+  public get paused(): boolean {
     return this._el.paused;
   }
 
@@ -730,7 +735,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {boolean} - The seeking value of the video element.
    * @public
    */
-  get seeking(): boolean {
+  public get seeking(): boolean {
     return this._el.seeking;
   }
 
@@ -739,7 +744,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {TimeRanges} - First seekable range (part) of the video in seconds.
    * @public
    */
-  get seekable(): TimeRanges {
+  public get seekable(): TimeRanges {
     return this._el.seekable;
   }
 
@@ -748,7 +753,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {TimeRanges} - First played range (part) of the video in seconds.
    * @public
    */
-  get played(): TimeRanges {
+  public get played(): TimeRanges {
     return this._el.played;
   }
 
@@ -757,7 +762,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {TimeRanges} - First buffered range (part) of the video in seconds.
    * @public
    */
-  get buffered(): TimeRanges {
+  public get buffered(): TimeRanges {
     return this._el.buffered;
   }
 
@@ -767,7 +772,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  set muted(mute: boolean) {
+  public set muted(mute: boolean) {
     this._el.muted = mute;
   }
 
@@ -776,7 +781,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {boolean} - The muted value of the video element.
    * @public
    */
-  get muted(): boolean {
+  public get muted(): boolean {
     return this._el.muted;
   }
 
@@ -785,7 +790,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {boolean} - The defaultMuted of the video element.
    * @public
    */
-  get defaultMuted(): boolean {
+  public get defaultMuted(): boolean {
     return this._el.defaultMuted;
   }
 
@@ -795,7 +800,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    * @public
    */
-  set poster(poster: string) {
+  public set poster(poster: string) {
     this._el.poster = poster;
   }
 
@@ -804,7 +809,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {poster} - The image url.
    * @public
    */
-  get poster(): string {
+  public get poster(): string {
     return this._el.poster;
   }
 
@@ -814,7 +819,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  set preload(preload:  "none" | "metadata" | "auto" | "") {
+  public set preload(preload:  'none' | 'metadata' | 'auto' | '') {
     this._el.preload = preload;
   }
 
@@ -823,7 +828,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {string} - The preload value.
    * @public
    */
-  get preload():  "none" | "metadata" | "auto" | "" {
+  public get preload():  'none' | 'metadata' | 'auto' | '' {
     return this._el.preload;
   }
 
@@ -833,7 +838,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  set autoplay(autoplay: boolean) {
+  public set autoplay(autoplay: boolean) {
     this._el.autoplay = autoplay;
   }
 
@@ -842,7 +847,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {boolean} - The autoplay value.
    * @public
    */
-  get autoplay(): boolean {
+  public get autoplay(): boolean {
     return this._el.autoplay;
   }
 
@@ -852,7 +857,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  set loop(loop: boolean) {
+  public set loop(loop: boolean) {
     this._el.loop = loop;
   }
 
@@ -861,7 +866,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {boolean} - The loop value.
    * @public
    */
-  get loop(): boolean {
+  public get loop(): boolean {
     return this._el.loop;
   }
 
@@ -871,7 +876,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  set controls(controls: boolean) {
+  public set controls(controls: boolean) {
     this._el.controls = controls;
   }
 
@@ -880,7 +885,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {boolean} - The controls value.
    * @public
    */
-  get controls(): boolean {
+  public get controls(): boolean {
     return this._el.controls;
   }
 
@@ -890,7 +895,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  set playbackRate(playbackRate: number) {
+  public set playbackRate(playbackRate: number) {
     this._el.playbackRate = playbackRate;
   }
 
@@ -899,7 +904,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {Number} - The current playback speed value.
    * @public
    */
-  get playbackRate(): number {
+  public get playbackRate(): number {
     return this._el.playbackRate;
   }
 
@@ -909,7 +914,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  set defaultPlaybackRate(defaultPlaybackRate: number) {
+  public set defaultPlaybackRate(defaultPlaybackRate: number) {
     this._el.defaultPlaybackRate = defaultPlaybackRate;
   }
 
@@ -918,7 +923,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {Number} - The default playback speed value.
    * @public
    */
-  get defaultPlaybackRate(): number {
+  public get defaultPlaybackRate(): number {
     return this._el.defaultPlaybackRate;
   }
 
@@ -927,7 +932,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {boolean} - The ended value.
    * @public
    */
-  get ended(): boolean {
+  public get ended(): boolean {
     return this._el.ended;
   }
 
@@ -936,7 +941,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {MediaError} - The MediaError object has a code property containing the error state of the audio/video.
    * @public
    */
-  get error(): MediaError | null {
+  public get error(): MediaError | null {
     return this._el.error;
   }
 
@@ -944,7 +949,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {Number} - The current network state (activity) of the audio/video.
    * @public
    */
-  get networkState(): number {
+  public get networkState(): number {
     return this._el.networkState;
   }
 
@@ -957,7 +962,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * 3 = HAVE_FUTURE_DATA - data for the current and at least the next frame is available.
    * 4 = HAVE_ENOUGH_DATA - enough data available to start playing.
    */
-  get readyState(): number {
+  public get readyState(): number {
     return this._el.readyState;
   }
 
@@ -965,7 +970,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {Number} - The height of the video player, in pixels.
    * @public
    */
-  get videoHeight(): number {
+  public get videoHeight(): number {
     return this._el.videoHeight;
   }
 
@@ -973,14 +978,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {Number} - The width of the video player, in pixels.
    * @public
    */
-  get videoWidth(): number {
+  public get videoWidth(): number {
     return this._el.videoWidth;
   }
 
   /**
    * @param {boolean} playsinline - Whether to set on the video tag the playsinline attribute.
    */
-  set playsinline(playsinline: boolean) {
+  public set playsinline(playsinline: boolean) {
     if (playsinline) {
       this._el.setAttribute('playsinline', '');
     } else {
@@ -991,7 +996,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   /**
    * @returns {boolean} - Whether the video tag has an attribute of playsinline.
    */
-  get playsinline(): boolean {
+  public get playsinline(): boolean {
     return this._el.getAttribute('playsinline') === '';
   }
 
@@ -999,7 +1004,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * Set crossOrigin attribute.
    * @param {?string} crossOrigin - 'anonymous' or 'use-credentials'
    */
-  set crossOrigin(crossOrigin: string) {
+  public set crossOrigin(crossOrigin: string) {
     if (typeof crossOrigin === 'string') {
       this._el.setAttribute('crossorigin', crossOrigin);
     } else {
@@ -1011,7 +1016,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * Get crossOrigin attribute.
    * @returns {?string} - 'anonymous' or 'use-credentials'
    */
-  get crossOrigin(): string | null {
+  public get crossOrigin(): string | null {
     return this._el.getAttribute('crossorigin');
   }
 
@@ -1019,7 +1024,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * get the playback rates
    * @return {number[]} - playback rates
    */
-  get playbackRates(): Array<number> {
+  public get playbackRates(): Array<number> {
     return Html5.PLAYBACK_RATES;
   }
 
@@ -1027,10 +1032,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * get if the engine's video element is the one in the PIP
    * @return {boolean} boolean - is in PIP
    */
-  get isInPictureInPicture(): boolean {
+  public get isInPictureInPicture(): boolean {
     // Check if the engine's video element is the one in the PIP
     return (
-      (!!document.pictureInPictureElement && document.pictureInPictureElement != null && this._el === document.pictureInPictureElement) ||
+      (!!document.pictureInPictureElement && document.pictureInPictureElement !== null && this._el === document.pictureInPictureElement) ||
+      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
       (!!this._el.webkitPresentationMode && this._el.webkitPresentationMode === 'picture-in-picture')
     );
@@ -1043,7 +1049,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    * @returns {void}
    */
-  _init(source: PKMediaSourceObject, config: Object): void {
+  private _init(source: PKMediaSourceObject, config: any): void {
     this._config = config;
     this._reset = false;
     this._loadMediaSourceAdapter(source);
@@ -1056,7 +1062,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    * @returns {void}
    */
-  _createVideoElement(playerId: string): void {
+  private _createVideoElement(playerId: string): void {
     this._el = Html5.videoElementStore[playerId] || Utils.Dom.createElement('video');
     this._el.id = Utils.Generator.uniqueId(5);
     this._el.controls = false;
@@ -1068,7 +1074,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    * @returns {void}
    */
-  _loadMediaSourceAdapter(source: PKMediaSourceObject): void {
+  private _loadMediaSourceAdapter(source: PKMediaSourceObject): void {
     this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter(this.getVideoElement(), source, this._config);
     if (this._mediaSourceAdapter) {
       this._droppedFramesWatcher = new DroppedFramesWatcher(this._mediaSourceAdapter, this._config.abr, this._el);
@@ -1080,8 +1086,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    * @private
    */
-  _addCueChangeListener(): void {
-    let textTrackEl = Array.from(this._el.textTracks).find(track => PKTextTrack.isNativeTextTrack(track) && track.mode !== PKTextTrack.MODE.DISABLED);
+  private _addCueChangeListener(): void {
+    const textTrackEl = Array.from(this._el.textTracks).find(track => PKTextTrack.isNativeTextTrack(track) && track.mode !== PKTextTrack.MODE.DISABLED);
     if (textTrackEl) {
       this._eventManager.listen(textTrackEl, 'cuechange', (e: FakeEvent) => this._onCueChange(e));
     }
@@ -1092,7 +1098,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    * @private
    */
-  _removeCueChangeListeners(): void {
+  private _removeCueChangeListeners(): void {
     Array.from(this._el.textTracks)
       .filter(track => !PKTextTrack.isMetaDataTrack(track))
       .forEach(track => {
@@ -1106,9 +1112,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    * @private
    */
-  _onCueChange(e: FakeEvent): void {
-    let activeCues: TextTrackCueList = e.currentTarget.activeCues;
-    let normalizedActiveCues = getActiveCues(activeCues);
+  private _onCueChange(e: FakeEvent): void {
+    const activeCues: TextTrackCueList = e.currentTarget.activeCues;
+    const normalizedActiveCues = getActiveCues(activeCues);
     this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: normalizedActiveCues}));
   }
 
@@ -1116,13 +1122,15 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * set hasBeenReset to true for all the cues. (use case: when cues should be recalculated for display)
    * @returns {void}
    */
-  resetAllCues(): void {
-    let activeTextTrack = Array.from(this._el.textTracks).find(
+  public resetAllCues(): void {
+    const activeTextTrack = Array.from(this._el.textTracks).find(
       track => PKTextTrack.isNativeTextTrack(track) && track.mode !== PKTextTrack.MODE.DISABLED
     );
     if (activeTextTrack) {
+      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
       for (let i = 0; i < activeTextTrack.cues.length; i++) {
+        // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
         // @ts-ignore
         activeTextTrack.cues[i].hasBeenReset = true;
       }
@@ -1134,7 +1142,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    * @private
    */
-  _handleVideoError(): void {
+  private _handleVideoError(): void {
     if (!this._el.error) return;
     const code = this._el.error.code;
     if (code === MediaError.MEDIA_ERR_ABORTED) {
@@ -1144,7 +1152,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
 
     // Extra error information from MS Edge and IE11:
-    let extended = this._getMsExtendedError();
+    const extended = this._getMsExtendedError();
 
     // Extra error information from Chrome:
     // $FlowFixMe
@@ -1159,7 +1167,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     }
   }
 
-  _handleWaiting(): void {
+  private _handleWaiting(): void {
     let playing = false;
     this._eventManager.listenOnce(this._el, Html5EventType.PLAYING, () => (playing = true));
     setTimeout(() => {
@@ -1175,7 +1183,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {string} info about the video element error
    * @private
    */
-  _getMsExtendedError(): string {
+  private _getMsExtendedError(): string {
+    // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
     // @ts-ignore
     let extended = this._el.error.msExtendedCode;
     if (extended) {
@@ -1189,8 +1198,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return extended;
   }
 
-  _handleMetadataTrackEvents(): void {
-    const listenToCueChange = metadataTrack => {
+  private _handleMetadataTrackEvents(): void {
+    const listenToCueChange = (metadataTrack: any): void => {
       metadataTrack.mode = PKTextTrack.MODE.HIDDEN;
       this._eventManager.listen(metadataTrack, 'cuechange', () => {
         let activeCues: VTTCue[] = [];
@@ -1232,14 +1241,14 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     });
   }
 
-  get targetBuffer(): number {
+  public get targetBuffer(): number {
     if (this._mediaSourceAdapter) {
       return this._mediaSourceAdapter.targetBuffer;
     }
     return NaN;
   }
 
-  get availableBuffer(): number {
+  public get availableBuffer(): number {
     let retVal = 0;
     if (this.buffered) {
       for (let i = 0; i < this.buffered.length; i++) {
@@ -1252,7 +1261,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return retVal;
   }
 
-  addTextTrack(kind: TextTrackKind, label?: string, language?: string): TextTrack | undefined {
+  public addTextTrack(kind: TextTrackKind, label?: string, language?: string): TextTrack | undefined {
     return this._el.addTextTrack(kind, label, language);
   }
 
@@ -1262,11 +1271,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {Array<TextTrack>} - The native TextTracks array.
    * @public
    */
-  getNativeTextTracks(): TextTrack[] {
+  public getNativeTextTracks(): TextTrack[] {
     return Array.from(this._el.textTracks);
   }
 
-  getDrmInfo(): PKDrmDataObject | null {
+  public getDrmInfo(): PKDrmDataObject | null {
     return this._mediaSourceAdapter ? this._mediaSourceAdapter.getDrmInfo() : null;
   }
 }

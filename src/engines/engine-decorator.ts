@@ -25,7 +25,7 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
     const events: Array<string> = Object.values(EventType);
     events.forEach(event => this._eventManager.listen(engine, event, (e: FakeEvent) => this.dispatchEvent(e)));
     return new Proxy<IEngine>(engine, {
-      get: (obj, prop) => {
+      get: (obj, prop): IEngine => {
         if (prop === 'destroy') {
           this._destroy();
         }
@@ -33,13 +33,14 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
         let target;
         //For events the proxy is the target - to avoid listening to engine itself
         if (prop === 'addEventListener' || prop === 'removeEventListener') {
+          // eslint-disable-next-line
           target = this;
         } else {
           target = activeDecorator && prop in activeDecorator ? activeDecorator : obj;
         }
         return target[prop] && typeof target[prop].bind === 'function' ? target[prop].bind(target) : target[prop];
       },
-      set: (obj, prop, value) => {
+      set: (obj, prop, value): boolean => {
         const activeDecorator = this._pluginDecorators.find(decorator => prop in decorator && decorator.active);
         activeDecorator && prop in activeDecorator ? (activeDecorator[prop] = value) : (obj[prop] = value);
         return true;
@@ -47,7 +48,7 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
     }) as EngineDecoratorType;
   }
 
-  dispatchEvent(event: FakeEvent): boolean {
+  public dispatchEvent(event: FakeEvent): boolean {
     const activeDecorator = this._pluginDecorators.find(decorator => decorator.active);
     return activeDecorator && activeDecorator.dispatchEvent ? activeDecorator.dispatchEvent(event) : super.dispatchEvent(event);
   }
@@ -57,7 +58,7 @@ class EngineDecorator extends FakeEventTarget implements IEngineDecorator {
     this._eventManager.destroy();
   }
 
-  get active(): boolean {
+  public get active(): boolean {
     return true;
   }
 }

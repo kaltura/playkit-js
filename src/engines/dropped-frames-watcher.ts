@@ -9,16 +9,16 @@ import {PKAbrConfigObject} from '../types';
 const NOT_SUPPORTED: number = -1;
 
 class DroppedFramesWatcher extends FakeEventTarget {
-  _droppedFramesInterval: number | null = null;
-  _lastDroppedFrames: number = 0;
-  _lastDecodedFrames: number = 0;
-  _lastTime: number = 0;
-  _mediaSourceAdapter: IMediaSourceAdapter;
-  _config: PKAbrConfigObject;
-  _videoElement: HTMLVideoElement;
-  _currentBitrate: number = 0;
-  _eventManager: EventManager;
-  static _logger: any = getLogger('droppedFramesWatcher');
+  private _droppedFramesInterval: number | null = null;
+  private _lastDroppedFrames: number = 0;
+  private _lastDecodedFrames: number = 0;
+  private _lastTime: number = 0;
+  private _mediaSourceAdapter: IMediaSourceAdapter;
+  private _config: PKAbrConfigObject;
+  private _videoElement: HTMLVideoElement;
+  private _currentBitrate: number = 0;
+  private _eventManager: EventManager;
+  private static _logger: any = getLogger('droppedFramesWatcher');
 
   constructor(mediaSourceAdapter: IMediaSourceAdapter, config: PKAbrConfigObject, videoElement: HTMLVideoElement) {
     super();
@@ -40,7 +40,7 @@ class DroppedFramesWatcher extends FakeEventTarget {
     }
   }
 
-  _init(): void {
+  private _init(): void {
     this._eventManager.listen(
       this._mediaSourceAdapter,
       CustomEventType.VIDEO_TRACK_CHANGED,
@@ -49,17 +49,17 @@ class DroppedFramesWatcher extends FakeEventTarget {
     this._droppedFramesInterval = setInterval(() => this._checkFPS(), this._config.fpsDroppedFramesInterval);
   }
 
-  _triggerFPSDrop(data: Object): void {
+  private _triggerFPSDrop(data: any): void {
     this.dispatchEvent(new FakeEvent(CustomEventType.FPS_DROP, data));
   }
 
-  _getDroppedAndDecodedFrames(): [number, number] {
+  private _getDroppedAndDecodedFrames(): [number, number] {
     if (typeof this._videoElement.getVideoPlaybackQuality === 'function') {
       const videoPlaybackQuality = this._videoElement.getVideoPlaybackQuality();
       return [videoPlaybackQuality.droppedVideoFrames, videoPlaybackQuality.totalVideoFrames];
       // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
-    } else if (typeof this._videoElement.webkitDroppedFrameCount == 'number' && typeof this._videoElement.webkitDecodedFrameCount == 'number') {
+    } else if (typeof this._videoElement.webkitDroppedFrameCount === 'number' && typeof this._videoElement.webkitDecodedFrameCount === 'number') {
       // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
       return [this._videoElement.webkitDroppedFrameCount, this._videoElement.webkitDecodedFrameCount];
@@ -68,7 +68,7 @@ class DroppedFramesWatcher extends FakeEventTarget {
     }
   }
 
-  _checkFPS(): void {
+  private _checkFPS(): void {
     const [droppedFrames, decodedFrames] = this._getDroppedAndDecodedFrames();
     try {
       const currentTime = performance.now();
@@ -99,7 +99,7 @@ class DroppedFramesWatcher extends FakeEventTarget {
     }
   }
 
-  destroy(): void {
+  public destroy(): void {
     if (this._droppedFramesInterval) {
       clearInterval(this._droppedFramesInterval);
     }

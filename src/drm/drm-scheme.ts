@@ -1,4 +1,3 @@
-// @flow
 export const DrmScheme = {
   WIDEVINE: 'com.widevine.alpha',
   PLAYREADY: 'com.microsoft.playready',

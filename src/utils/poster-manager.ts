@@ -6,13 +6,13 @@ class PosterManager {
    * @type {string}
    * @private
    */
-  _posterUrl!: string;
+  private _posterUrl!: string;
   /**
    * The poster HTML Div element.
    * @type {HTMLDivElement}
    * @private
    */
-  _el!: HTMLDivElement;
+  private _el!: HTMLDivElement;
 
   constructor() {
     this._createEl();
@@ -24,7 +24,7 @@ class PosterManager {
    * @public
    * @returns {void}
    */
-  setSrc(posterUrl?: string): void {
+  public setSrc(posterUrl?: string): void {
     if (posterUrl) {
       this._posterUrl = posterUrl;
       Utils.Dom.setStyle(this._el, 'background-image', `url("${this._posterUrl}")`);
@@ -37,7 +37,7 @@ class PosterManager {
    * @public
    * @returns {string} - the poster image URL
    */
-  get src(): string {
+  public get src(): string {
     return this._posterUrl;
   }
 
@@ -46,7 +46,7 @@ class PosterManager {
    * @public
    * @returns {HTMLDivElement} - Poster HTML Dom element
    */
-  getElement(): HTMLDivElement {
+  public getElement(): HTMLDivElement {
     return this._el;
   }
 
@@ -55,7 +55,7 @@ class PosterManager {
    * @private
    * @returns {void}
    */
-  _createEl(): void {
+  private _createEl(): void {
     if (!this._el) {
       const el = (this._el = Utils.Dom.createElement('div'));
       Utils.Dom.setAttribute(el, 'id', Utils.Generator.uniqueId(5));
@@ -68,7 +68,7 @@ class PosterManager {
    * @private
    * @returns {void}
    */
-  _removeEl(): void {
+  private _removeEl(): void {
     if (this._el) {
       Utils.Dom.removeChild(this._el.parentNode || undefined, this._el);
     }
@@ -80,7 +80,7 @@ class PosterManager {
    * @private
    * @returns {void}
    */
-  show(): void {
+  public show(): void {
     Utils.Dom.setStyle(this._el, 'display', '');
   }
 
@@ -89,7 +89,7 @@ class PosterManager {
    * @public
    * @returns {void}
    */
-  hide(): void {
+  public hide(): void {
     Utils.Dom.setStyle(this._el, 'display', 'none');
   }
 
@@ -98,7 +98,7 @@ class PosterManager {
    * @public
    * @returns {void}
    */
-  reset(): void {
+  public reset(): void {
     this._posterUrl = '';
     Utils.Dom.setStyle(this._el, 'background-image', '');
   }
@@ -108,7 +108,7 @@ class PosterManager {
    * @public
    * @returns {void}
    */
-  destroy(): void {
+  public destroy(): void {
     this.reset();
     this._removeEl();
   }

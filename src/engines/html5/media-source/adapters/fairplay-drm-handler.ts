@@ -1,4 +1,3 @@
-/// <reference path="../../../../types/global/globals.d.ts" />
 import Error from '../../../../error/error';
 import getLogger from '../../../../utils/logger';
 import * as Utils from '../../../../utils/util';
@@ -17,22 +16,22 @@ const WebkitEvents: WebkitEventsType = {
   KEY_ERROR: 'webkitkeyerror'
 };
 
-type FairPlayDrmConfigType = {licenseUrl: string, certificate?: string, network: {requestFilter?: Function, responseFilter: Function}};
+type FairPlayDrmConfigType = {licenseUrl: string, certificate?: string, network: {requestFilter?: (...args: any[]) => any, responseFilter: (...args: any[]) => any}};
 
 class FairPlayDrmHandler {
-  static WebkitEvents: WebkitEventsType = WebkitEvents;
+  public static WebkitEvents: WebkitEventsType = WebkitEvents;
 
-  _logger = getLogger('FairPlayDrmHandler');
-  _eventManager: EventManager;
-  _keySession: any;
-  _config: FairPlayDrmConfigType;
-  _onWebkitNeedKeyHandler: ListenerType;
-  _errorCallback: Function;
-  _drmResponseCallback: Function;
-  _videoElement: HTMLVideoElement;
-  _retryLicenseRequest: number = 4;
-  _licenseRequestTime: number | undefined;
-  _defaultConfig: FairPlayDrmConfigType = {
+  private _logger = getLogger('FairPlayDrmHandler');
+  private _eventManager: EventManager;
+  private _keySession: any;
+  private _config: FairPlayDrmConfigType;
+  private _onWebkitNeedKeyHandler: ListenerType;
+  private _errorCallback: (...args: any[]) => any;
+  private _drmResponseCallback: (...args: any[]) => any;
+  private _videoElement: HTMLVideoElement;
+  private _retryLicenseRequest: number = 4;
+  private _licenseRequestTime: number | undefined;
+  private _defaultConfig: FairPlayDrmConfigType = {
     licenseUrl: '',
     certificate: '',
     network: {
@@ -50,7 +49,7 @@ class FairPlayDrmHandler {
           });
           return;
         }
-        let isValidResponse = FairPlayDrmHandler._validateResponse(responseObj);
+        const isValidResponse = FairPlayDrmHandler._validateResponse(responseObj);
         if (isValidResponse.valid) {
           response.data = FairPlayDrmHandler._base64DecodeUint8Array(responseObj.ckc);
         } else {
@@ -67,28 +66,28 @@ class FairPlayDrmHandler {
    * @param {Function} errorCallback - error callback function
    * @param {Function} drmResponseCallback - drm license response callback function
    */
-  constructor(videoElement: HTMLVideoElement, config: FairPlayDrmConfigType, errorCallback: Function, drmResponseCallback: Function) {
+  constructor(videoElement: HTMLVideoElement, config: FairPlayDrmConfigType, errorCallback: (...args: any[]) => any, drmResponseCallback: (...args: any[]) => any) {
     this._config = Utils.Object.mergeDeep({}, this._defaultConfig, config);
     this._errorCallback = errorCallback;
     this._drmResponseCallback = drmResponseCallback;
     this._videoElement = videoElement;
-    this._onWebkitNeedKeyHandler = (e: Event) => this._onWebkitNeedKey(e);
+    this._onWebkitNeedKeyHandler = (e: Event): void => this._onWebkitNeedKey(e);
     this._eventManager = new EventManager();
     this._eventManager.listen(this._videoElement, WebkitEvents.NEED_KEY, this._onWebkitNeedKeyHandler);
   }
 
-  _onWebkitNeedKey(event: any): void {
+  private _onWebkitNeedKey(event: any): void {
     this._logger.debug('Webkit need key triggered');
-    let videoElement = event.target;
+    const videoElement = event.target;
     let initData = event.initData;
 
-    let contentId = FairPlayDrmHandler._extractContentId(initData);
-    let fpsCertificate = FairPlayDrmHandler._base64DecodeUint8Array(this._config.certificate);
+    const contentId = FairPlayDrmHandler._extractContentId(initData);
+    const fpsCertificate = FairPlayDrmHandler._base64DecodeUint8Array(this._config.certificate);
 
     initData = FairPlayDrmHandler._concatInitDataIdAndCertificate(initData, contentId, fpsCertificate);
 
     if (!videoElement.webkitKeys) {
-      let keySystem = this._selectKeySystem();
+      const keySystem = this._selectKeySystem();
       this._logger.debug('Sets media keys');
       videoElement.webkitSetMediaKeys(new WebKitMediaKeys(keySystem!));
     }
@@ -106,21 +105,21 @@ class FairPlayDrmHandler {
     this._eventManager.listen(this._keySession, WebkitEvents.KEY_ERROR, (e: Event) => this._onWebkitKeyError(e));
   }
 
-  getDrmInfo(): PKDrmDataObject {
+  public getDrmInfo(): PKDrmDataObject {
     const {certificate, licenseUrl} = this._config;
     return {certificate, licenseUrl, scheme: DrmScheme.FAIRPLAY};
   }
 
-  destroy(): void {
+  public destroy(): void {
     this._eventManager.destroy();
     this._keySession.close();
     this._keySession = null;
   }
 
-  _onWebkitKeyMessage(event: any): void {
+  private _onWebkitKeyMessage(event: any): void {
     this._logger.debug('Webkit key message triggered');
-    let message = event.message;
-    let request = new XMLHttpRequest();
+    const message = event.message;
+    const request = new XMLHttpRequest();
     request.responseType = 'arraybuffer';
     this._eventManager.listenOnce(request, 'load', (e: Event) => this._licenseRequestLoaded(e));
     const pkRequest: PKRequestObject = {
@@ -154,7 +153,7 @@ class FairPlayDrmHandler {
         }
         setContentType && request.setRequestHeader('Content-type', 'application/json');
         this._logger.debug('Ready for license request');
-        request.onerror = () => {
+        request.onerror = (): void => {
           this._onError(Error.Code.LICENSE_REQUEST_FAILED, {
             status: request.status,
             responseText: request.responseText
@@ -176,11 +175,11 @@ class FairPlayDrmHandler {
       });
   }
 
-  _onWebkitKeyAdded(): void {
+  private _onWebkitKeyAdded(): void {
     this._logger.debug('Decryption key was added to session');
   }
 
-  _onWebkitKeyError(e: any): void {
+  private _onWebkitKeyError(e: any): void {
     this._logger.error('A decryption key error was encountered', e);
     if (this._retryLicenseRequest <= 0) {
       this._onError(Error.Code.LICENSE_REQUEST_FAILED, e.target.error);
@@ -188,9 +187,9 @@ class FairPlayDrmHandler {
     this._retryLicenseRequest--;
   }
 
-  _licenseRequestLoaded(event: any): void {
+  private _licenseRequestLoaded(event: any): void {
     this._logger.debug('License request loaded');
-    let request = event.target;
+    const request = event.target;
     if (request.status > 299) {
       this._onError(Error.Code.LICENSE_REQUEST_FAILED, {
         status: request.status,
@@ -232,11 +231,11 @@ class FairPlayDrmHandler {
       });
   }
 
-  _onError(code: number, data?: Object): void {
+  private _onError(code: number, data?: any): void {
     this._errorCallback(new Error(Error.Severity.CRITICAL, Error.Category.DRM, code, data));
   }
 
-  static _validateResponse(responseObj: any): any {
+  public static _validateResponse(responseObj: any): any {
     if ((responseObj.message && responseObj.message.indexOf('error') > 0) || responseObj.reference === null || responseObj.status_code === 500) {
       return {
         //todo: create & edit an error object
@@ -255,7 +254,7 @@ class FairPlayDrmHandler {
     }
   }
 
-  _selectKeySystem(): string | null {
+  private _selectKeySystem(): string | null {
     let keySystem: string | null = null;
     if (WebKitMediaKeys.isTypeSupported(KeySystem, 'video/mp4')) {
       keySystem = KeySystem;
@@ -265,65 +264,65 @@ class FairPlayDrmHandler {
     return keySystem;
   }
 
-  static _extractContentId(initData: Uint8Array): string {
-    let link = document.createElement('a');
+  public static _extractContentId(initData: Uint8Array): string {
+    const link = document.createElement('a');
     link.href = FairPlayDrmHandler._arrayToString(initData);
     return link.hostname;
   }
 
-  static _arrayToString(array: Uint8Array): string {
+  public static _arrayToString(array: Uint8Array): string {
     return String.fromCharCode.apply(null, new Uint16Array(array.buffer));
   }
 
-  static _base64DecodeUint8Array(input?: string): Uint8Array {
-    let raw = window.atob(input!);
-    let rawLength = raw.length;
-    let array = new Uint8Array(new ArrayBuffer(rawLength));
+  public static _base64DecodeUint8Array(input?: string): Uint8Array {
+    const raw = window.atob(input!);
+    const rawLength = raw.length;
+    const array = new Uint8Array(new ArrayBuffer(rawLength));
     for (let i = 0; i < rawLength; i++) {
       array[i] = raw.charCodeAt(i);
     }
     return array;
   }
 
-  static _concatInitDataIdAndCertificate(initData: Uint8Array, id: string | Uint16Array, cert: Uint8Array): Uint8Array {
+  public static _concatInitDataIdAndCertificate(initData: Uint8Array, id: string | Uint16Array, cert: Uint8Array): Uint8Array {
     if (typeof id === 'string') {
       id = FairPlayDrmHandler._stringToArray(id);
     }
     let offset = 0;
-    let buffer = new ArrayBuffer(initData.byteLength + 4 + id.byteLength + 4 + cert.byteLength);
-    let dataView = new DataView(buffer);
+    const buffer = new ArrayBuffer(initData.byteLength + 4 + id.byteLength + 4 + cert.byteLength);
+    const dataView = new DataView(buffer);
 
-    let initDataArray = new Uint8Array(buffer, offset, initData.byteLength);
+    const initDataArray = new Uint8Array(buffer, offset, initData.byteLength);
     initDataArray.set(initData);
     offset += initData.byteLength;
 
     dataView.setUint32(offset, id.byteLength, true);
     offset += 4;
 
-    let idArray = new Uint8Array(buffer, offset, id.byteLength);
+    const idArray = new Uint8Array(buffer, offset, id.byteLength);
     idArray.set(id);
     offset += idArray.byteLength;
 
     dataView.setUint32(offset, cert.byteLength, true);
     offset += 4;
 
-    let certArray = new Uint8Array(buffer, offset, cert.byteLength);
+    const certArray = new Uint8Array(buffer, offset, cert.byteLength);
     certArray.set(cert);
 
     return new Uint8Array(buffer, 0, buffer.byteLength);
   }
 
-  static _stringToArray(string: string): Uint16Array {
-    let buffer = new ArrayBuffer(string.length * 2);
-    let array = new Uint16Array(buffer);
+  public static _stringToArray(string: string): Uint16Array {
+    const buffer = new ArrayBuffer(string.length * 2);
+    const array = new Uint16Array(buffer);
     for (let i = 0, strLen = string.length; i < strLen; i++) {
       array[i] = string.charCodeAt(i);
     }
     return array;
   }
 
-  static _base64EncodeUint8Array(input: Uint8Array): string {
-    let keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+  public static _base64EncodeUint8Array(input: Uint8Array): string {
+    const keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
     let output = '';
     let chr1, chr2, chr3, enc1, enc2, enc3, enc4;
     let i = 0;

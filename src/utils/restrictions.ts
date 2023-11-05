@@ -11,7 +11,7 @@ import {PKABRRestrictionObject} from '../types';
 function _filterVideoTracksByRestriction(tracks: Array<VideoTrack>, restriction: PKABRRestrictionObject): Array<VideoTrack> {
   const MIN_DEFAULT_VALUE = 0;
   const MAX_DEFAULT_VALUE = Infinity;
-  const inRange = (x, min, max) => {
+  const inRange = (x, min, max): boolean => {
     return x >= (min || MIN_DEFAULT_VALUE) && x <= (max || MAX_DEFAULT_VALUE);
   };
   const {maxHeight, minHeight, maxWidth, minWidth} = restriction;

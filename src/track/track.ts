@@ -11,7 +11,7 @@ export default class Track {
    * @param {boolean} equal - Optional flag to check for matching languages.
    * @returns {boolean} - Whether the strings are equal or starts with the same substring.
    */
-  static langComparer(inputLang: string, trackLang: string, additionalLanguage?: string, equal?: boolean): boolean {
+  public static langComparer(inputLang: string, trackLang: string, additionalLanguage?: string, equal?: boolean): boolean {
     try {
       inputLang = inputLang.toLowerCase();
       trackLang = trackLang.toLowerCase();
@@ -30,7 +30,7 @@ export default class Track {
     }
   }
 
-  static clone<T>(track: any): T {
+  public static clone<T>(track: any): T {
     return (Object.assign(Object.create(Object.getPrototypeOf(track)), track) as T);
   }
 
@@ -82,14 +82,14 @@ export default class Track {
    * @type {Function}
    * @public
    */
-  clone: Function;
+  public clone: (...args: any[]) => any;
 
   /**
    * Getter for the track id.
    * @public
    * @returns {?string} - The track id.
    */
-  get id(): string | undefined {
+  public get id(): string | undefined {
     return this._id;
   }
 

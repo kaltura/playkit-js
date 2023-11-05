@@ -9,7 +9,7 @@ export default class Locale {
    * @returns {string} - the IOS-693-1 language string
    * @static
    */
-  static get language(): string {
+  public static get language(): string {
     let lang: string;
 
     if (navigator.languages && navigator.languages.length) {

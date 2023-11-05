@@ -35,50 +35,50 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @static
    * @private
    */
-  static _logger: any = getLogger('ExternalCaptionsHandler');
+  public static _logger: any = getLogger('ExternalCaptionsHandler');
   /**
    * Index that specifies the last cue that is playing / played in the text track cue array.
    * @type {number}
    * @private
    */
-  _externalCueIndex: number = 0;
+  private _externalCueIndex: number = 0;
   /**
    * the player object.
    * @type {Player}
    * @private
    */
   // TODO - temp
-  _player: Player;
+  private _player: Player;
   /**
    * event manager for the external caption handler
    * @type {EventManager}
    * @private
    */
-  _eventManager: EventManager;
+  private _eventManager: EventManager;
   /**
    * a map that holds the current cues that are in process. process may be in download or that the cues are being parsed.
    * @type {Object}
    * @private
    */
-  _textTrackModel: VTTCue = {} as VTTCue;
+  private _textTrackModel: VTTCue = {} as VTTCue;
   /**
    * array of the active text cues of current track
    * @type {Array<Cue>}
    * @private
    */
-  _activeTextCues: Array<VTTCue> = [];
+  private _activeTextCues: Array<VTTCue> = [];
   /**
    * indicates if a current external (non native) track is active or not.
    * @type {boolean}
    * @private
    */
-  _isTextTrackActive: boolean = false;
+  private _isTextTrackActive: boolean = false;
   /**
    * indicates the last player time in the last time update event.
    * @type {number}
    * @private
    */
-  _lastTimeUpdate: number = 0;
+  private _lastTimeUpdate: number = 0;
 
   /**
    * constructor
@@ -95,7 +95,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {void}
    * @public
    */
-  hideTextTrack(): void {
+  public hideTextTrack(): void {
     if (this._player.config.text.useNativeTextTrack) {
       this._removeCueChangeListeners();
       this._resetExternalNativeTextTrack();
@@ -115,7 +115,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @param {Array<Track>} tracks array with the player text tracks.
    * @public
    */
-  getExternalTracks(tracks: Array<Track>): Array<TextTrack> {
+  public getExternalTracks(tracks: Array<Track>): Array<TextTrack> {
     const captions = this._player.sources.captions;
     if (!captions) {
       return [];
@@ -146,7 +146,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {void}
    * @private
    */
-  _maybeAddTrack(track: TextTrack, caption: PKExternalCaptionObject, playerTextTracks: Array<Track>, newTextTracks: Array<TextTrack>): void {
+  public _maybeAddTrack(track: TextTrack, caption: PKExternalCaptionObject, playerTextTracks: Array<Track>, newTextTracks: Array<TextTrack>): void {
     const sameLangTrack = playerTextTracks.find(textTrack => textTrack.available && Track.langComparer(caption.language, textTrack.language));
     if (!sameLangTrack) {
       newTextTracks.push(track);
@@ -162,7 +162,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {TextTrack} - new text track
    * @private
    */
-  _createTextTrack(caption: PKExternalCaptionObject): TextTrack {
+  public _createTextTrack(caption: PKExternalCaptionObject): TextTrack {
     return new TextTrack({
       active: !!caption.default,
       kind: TextTrack.KIND.SUBTITLES,
@@ -178,7 +178,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {void}
    * @private
    */
-  _updateTextTracksModel(caption: PKExternalCaptionObject): void {
+  public _updateTextTracksModel(caption: PKExternalCaptionObject): void {
     this._textTrackModel[caption.language] = {
       cuesStatus: CuesStatus.NOT_DOWNLOADED,
       cues: [],
@@ -193,7 +193,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {void}
    * @public
    */
-  selectTextTrack(textTrack: TextTrack): void {
+  public selectTextTrack(textTrack: TextTrack): void {
     if (this._textTrackModel[textTrack.language]) {
       if (this._textTrackModel[textTrack.language].cuesStatus === CuesStatus.DOWNLOADED) {
         this._selectTextTrack(textTrack);
@@ -208,7 +208,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     }
   }
 
-  _selectTextTrack(textTrack: TextTrack) {
+  private _selectTextTrack(textTrack: TextTrack): void {
     this.hideTextTrack();
     if (this._player.config.text.useNativeTextTrack) {
       this._addCuesToNativeTextTrack(this._textTrackModel[textTrack.language].cues);
@@ -223,8 +223,8 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * set hasBeenReset to true for all the cues.
    * @returns {void}
    */
-  resetAllCues(): void {
-    for (let textTrack in this._textTrackModel) {
+  public resetAllCues(): void {
+    for (const textTrack in this._textTrackModel) {
       this._textTrackModel[textTrack].cues.forEach(cue => {
         cue.hasBeenReset = true;
       });
@@ -236,14 +236,16 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {void}
    * @private
    */
-  _addCueChangeListener(): void {
+  private _addCueChangeListener(): void {
     const videoElement: HTMLVideoElement | undefined = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
-         // @ts-ignore
-      let textTrackEl: TextTrack | undefined = Array.from(videoElement.textTracks).find(
+      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const textTrackEl: TextTrack | undefined = Array.from(videoElement.textTracks).find(
         track => TextTrack.isNativeTextTrack(track) && track.mode === TextTrack.MODE.SHOWING
       );
       if (textTrackEl) {
+        // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
         // @ts-ignore
         this._eventManager.listen(textTrackEl, 'cuechange', (e: FakeEvent) => this._onCueChange(e));
       }
@@ -255,7 +257,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {void}
    * @private
    */
-  _removeCueChangeListeners(): void {
+  private _removeCueChangeListeners(): void {
     const videoElement: HTMLVideoElement | undefined = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
       for (let i = 0; i < videoElement.textTracks.length; i++) {
@@ -270,9 +272,9 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {void}
    * @private
    */
-  _onCueChange(e: FakeEvent): void {
-    let activeCues: TextTrackCueList = e.currentTarget.activeCues;
-    let normalizedActiveCues = getActiveCues(activeCues);
+  private _onCueChange(e: FakeEvent): void {
+    const activeCues: TextTrackCueList = e.currentTarget.activeCues;
+    const normalizedActiveCues = getActiveCues(activeCues);
     this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: normalizedActiveCues}));
   }
 
@@ -280,7 +282,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * resets the handler
    * @returns {void}
    */
-  reset(): void {
+  public reset(): void {
     this._resetCurrentTrack();
     this._textTrackModel = {} as VTTCue;
     this._resetExternalNativeTextTrack();
@@ -292,7 +294,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @public
    * @returns {void}
    */
-  destroy(): void {
+  public destroy(): void {
     this._textTrackModel = {} as VTTCue;
     this._eventManager.destroy();
     this._activeTextCues = [];
@@ -303,7 +305,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {void}
    * @private
    */
-  _resetCurrentTrack(): void {
+  private _resetCurrentTrack(): void {
     this._activeTextCues = [];
     this._isTextTrackActive = false;
     this._maybeSetExternalCueIndex();
@@ -315,7 +317,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {Promise<any>} - resolves when the request returns and the caption string is parsed to cues.
    * @private
    */
-  _getCuesString(textTrack: TextTrack): Promise<any> {
+  private _getCuesString(textTrack: TextTrack): Promise<any> {
     return new Promise((resolve, reject) => {
       const track = this._textTrackModel[textTrack.language];
       const captionType = track.type || this._getFileType(track.url);
@@ -344,12 +346,12 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {Promise<*>} - parsed cues array
    * @private
    */
-  _parseCues(vttStr: string): Promise<any> {
+  private _parseCues(vttStr: string): Promise<any> {
     return new Promise((resolve, reject) => {
       const parser = new Parser(window, StringDecoder());
       const cues: VTTCue[] = [];
-      parser.oncue = cue => cues.push(cue);
-      parser.onflush = () => {
+      parser.oncue = ((cue): void => {cues.push(cue)});
+      parser.onflush = (): void => {
         ExternalCaptionsHandler._logger.debug('finished parsing external cues');
         resolve(cues);
       };
@@ -365,7 +367,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {string} - a string in a .VTT format
    * @private
    */
-  _convertSrtToVtt(str: string): string {
+  private _convertSrtToVtt(str: string): string {
     const vttStr = str.replace(/(\d\d:\d\d:\d\d),(\d\d\d) --> (\d\d:\d\d:\d\d),(\d\d\d)/g, (match, part1, part2, part3, part4) => {
       return `${part1}.${part2} --> ${part3}.${part4}`;
     });
@@ -380,7 +382,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {Promise<any>} - a promise that the action ended
    * @private
    */
-  _downloadAndParseCues(textTrack: TextTrack): Promise<void> {
+  private _downloadAndParseCues(textTrack: TextTrack): Promise<void> {
     this._textTrackModel[textTrack.language].cuesStatus = CuesStatus.DOWNLOADING;
     return new Promise((resolve, reject) => {
       this._getCuesString(textTrack)
@@ -399,7 +401,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {string} type of the file
    * @private
    */
-  _getFileType(url: string): string {
+  private _getFileType(url: string): string {
     return url.split(/[#?]/)[0].split('.').pop()!.trim();
   }
 
@@ -410,7 +412,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {void}
    * @private
    */
-  _handleCaptionOnTimeUpdate(track: TextTrack): void {
+  private _handleCaptionOnTimeUpdate(track: TextTrack): void {
     const currentTime = this._player.currentTime;
     if (currentTime) {
       let cueIndexUpdated = false;
@@ -434,7 +436,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {boolean} if there was a seek before
    * @private
    */
-  _hadSeeked(): boolean {
+  private _hadSeeked(): boolean {
     return !!this._player.currentTime && Math.abs(this._player.currentTime - this._lastTimeUpdate) > 1;
   }
 
@@ -442,7 +444,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {boolean} if a cue/cues were removed from the active text cues array
    * @private
    */
-  _maybeRemoveActiveCues(): boolean {
+  private _maybeRemoveActiveCues(): boolean {
     const currentTime = this._player.currentTime;
     if (!currentTime) {
       return false;
@@ -460,7 +462,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {boolean} - if cues were added to the active text track
    * @private
    */
-  _maybeAddToActiveCues(track: TextTrack): boolean {
+  private _maybeAddToActiveCues(track: TextTrack): boolean {
     const currentTime = this._player.currentTime;
     if (!currentTime) {
       return false;
@@ -482,8 +484,8 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {boolean} if the index was changed
    * @private
    */
-  _maybeSetExternalCueIndex(): boolean {
-    let textTrack = this._player._getTextTracks().find(track => track.active && track.external);
+  private _maybeSetExternalCueIndex(): boolean {
+    const textTrack = this._player._getTextTracks().find(track => track.active && track.external);
     if (textTrack && textTrack.external) {
       const cues = this._textTrackModel[textTrack.language] ? this._textTrackModel[textTrack.language].cues : [];
       let i = 0;
@@ -506,13 +508,15 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * delete cues on reset to avoid usage of the text track on the next media
    * @return {void}
    */
-  _resetExternalNativeTextTrack(): void {
+  private _resetExternalNativeTextTrack(): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
       const track = Array.from(videoElement.textTracks).find(track => (track ? TextTrack.isExternalTrack(track) : false));
       if (track) {
+        // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
         // @ts-ignore
         track.cues && Object.values(track.cues).forEach(cue => track.removeCue(cue));
+        // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
         // @ts-ignore
         track.mode = TextTrack.MODE.DISABLED;
       }
@@ -524,19 +528,22 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @param {Array<Cue>} cues - the cues to be added
    * @return {void}
    */
-  _addCuesToNativeTextTrack(cues: Array<VTTCue>): void {
+  private _addCuesToNativeTextTrack(cues: Array<VTTCue>): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
+      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const track: TextTrack = Array.from(videoElement.textTracks).find(track => (track ? TextTrack.isExternalTrack(track) : false));
       if (track) {
         track.mode = TextTrack.MODE.SHOWING;
         // For IE 11 which is not support VTTCue API
         if (VTTCue === undefined) {
-          let convertedCues: Array<TextTrackCue> = this._convertCues(cues);
+          const convertedCues: Array<TextTrackCue> = this._convertCues(cues);
+          // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
           // @ts-ignore
           convertedCues.forEach(cue => track.addCue(cue));
         } else {
+          // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
           // @ts-ignore
           cues.forEach(cue => track.addCue(cue));
         }
@@ -550,7 +557,8 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @param {Array<Cue>} cues - the cues to be converted
    * @returns {Array<TextTrackCue>} the converted cues
    */
-  _convertCues(cues: Array<VTTCue>): Array<TextTrackCue> {
+  private _convertCues(cues: Array<VTTCue>): Array<TextTrackCue> {
+    // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return cues.map(cue => new TextTrackCue(cue.startTime, cue.endTime, cue.text));
   }
@@ -560,7 +568,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * (when adding a text track with existing language to the video element it will remove all its cues)
    * @returns {void}
    */
-  _addNativeTextTrack(): void {
+  private _addNativeTextTrack(): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
       const sameLanguageTrackIndex = Array.from(videoElement.textTracks).findIndex(track => (track ? TextTrack.isExternalTrack(track) : false));
@@ -578,7 +586,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @returns {void}
    * @private
    */
-  _setTextTrack(textTrack: TextTrack): void {
+  private _setTextTrack(textTrack: TextTrack): void {
     if (!this._player.config.text.useNativeTextTrack) {
       this._isTextTrackActive = true;
       ExternalCaptionsHandler._logger.debug('External text track changed', textTrack);

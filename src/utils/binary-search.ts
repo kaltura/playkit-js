@@ -9,7 +9,7 @@
  *
  * @return {any} The object if it is found or null otherwise.
  */
-export function binarySearch<T>(list: Array<T> = [], comparisonFn: ((param: T) => number) = () => 1): T | null {
+export function binarySearch<T>(list: Array<T> = [], comparisonFn: ((param: T) => number) = (): number => 1): T | null {
   if (list.length === 0 || (list.length === 1 && comparisonFn(list[0]) !== 0)) {
     return null;
   }

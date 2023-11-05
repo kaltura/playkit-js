@@ -39,7 +39,7 @@ class ResizeWatcher extends FakeEventTarget {
     }
   }
 
-  _createNativeObserver(): void {
+  private _createNativeObserver(): void {
     this._observer = new ResizeObserver(entries => {
       entries.forEach(() => {
         this._triggerResize();
@@ -47,11 +47,11 @@ class ResizeWatcher extends FakeEventTarget {
     });
   }
 
-  _createIframeObserver(): void {
+  private _createIframeObserver(): void {
     this._observer = new IFrameObserver(this._triggerResize.bind(this));
   }
 
-  _triggerResize() {
+  private _triggerResize(): void {
     this.dispatchEvent(new FakeEvent(CustomEventType.RESIZE));
   }
 }
@@ -65,10 +65,10 @@ const IFRAME_CLASS_NAME: string = 'playkit-size-iframe';
  * @param {Function} callback - the function to be called when a resize event is detected.
  */
 class IFrameObserver {
-  private _observersStore: Object = {};
-  private _onChangeCallback: Function;
+  private _observersStore: {[id: number]: HTMLIFrameElement} = {};
+  private _onChangeCallback: () => void;
 
-  constructor(callback: Function) {
+  constructor(callback: () => void) {
     this._onChangeCallback = callback;
   }
 
@@ -84,7 +84,7 @@ class IFrameObserver {
     el.appendChild(iframe);
     // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    iframe.contentWindow.onresize = () => this._onChangeCallback();
+    iframe.contentWindow.onresize = (): void => this._onChangeCallback();
   }
 
   /**
@@ -92,7 +92,7 @@ class IFrameObserver {
    * @returns {void}
    */
   public disconnect(): void {
-    for (let target in this._observersStore) {
+    for (const target in this._observersStore) {
       const el = document.getElementById(target);
       const iframe = this._observersStore[target];
       iframe.onresize = null;
@@ -106,7 +106,7 @@ class IFrameObserver {
   }
 
   private _createIframe(): HTMLIFrameElement {
-    let iframe = document.createElement('iframe');
+    const iframe = document.createElement('iframe');
     iframe.className = IFRAME_CLASS_NAME;
     return iframe;
   }

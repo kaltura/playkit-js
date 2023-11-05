@@ -1,13 +1,13 @@
 import {PKTextTrackCue} from '../types';
 
 class TimedMetadata {
-  static TYPE: {[type: string]: string};
+  public static TYPE: {[type: string]: string};
 
-  startTime: number;
-  endTime: number;
-  id: string;
-  type: string;
-  metadata: string | Object;
+  public startTime: number;
+  public endTime: number;
+  public id: string;
+  public type: string;
+  public metadata: string | any;
   /**
    * @constructor
    * @param {number} startTime - start time.
@@ -41,11 +41,9 @@ TimedMetadata.TYPE = {
 function createTextTrackCue(timedMetadata: TimedMetadata): PKTextTrackCue | null {
   try {
     const {startTime, endTime, id, type, metadata} = timedMetadata;
-    let cue: PKTextTrackCue;
     const nativeCue = new VTTCue(startTime, endTime, '');
     const value = {key: type, data: metadata};
-    cue = {...nativeCue, id, value}
-    return cue;
+    return {...nativeCue, id, value}
   } catch (e) {
     return null;
   }

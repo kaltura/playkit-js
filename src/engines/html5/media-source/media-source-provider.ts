@@ -15,21 +15,21 @@ export default class MediaSourceProvider {
    * @static
    * @private
    */
-  static _logger: any = getLogger('MediaSourceProvider');
+  private static _logger: any = getLogger('MediaSourceProvider');
   /**
    * The media source adapter registry.
    * @member {Array<IMediaSourceAdapterStatic>} _mediaSourceAdapters
    * @static
    * @private
    */
-  static _mediaSourceAdapters: Array<IMediaSourceAdapterStatic> = [NativeAdapter];
+  private static _mediaSourceAdapters: Array<IMediaSourceAdapterStatic> = [NativeAdapter];
   /**
    * The selected adapter for playback.
    * @type {null|IMediaSourceAdapterStatic}
    * @static
    * @private
    */
-  static _selectedAdapter: IMediaSourceAdapterStatic | null = null;
+  private static _selectedAdapter: IMediaSourceAdapterStatic | null = null;
 
   /**
    * Add a media source adapter to the registry.
@@ -38,7 +38,7 @@ export default class MediaSourceProvider {
    * @static
    * @returns {void}
    */
-  static register(mediaSourceAdapter: IMediaSourceAdapterStatic): void {
+  public static register(mediaSourceAdapter: IMediaSourceAdapterStatic): void {
     if (mediaSourceAdapter) {
       if (!MediaSourceProvider._mediaSourceAdapters.includes(mediaSourceAdapter)) {
         MediaSourceProvider._logger.debug(`Adapter <${mediaSourceAdapter.id}> has been registered successfully`);
@@ -56,8 +56,8 @@ export default class MediaSourceProvider {
    * @static
    * @returns {void}
    */
-  static unRegister(mediaSourceAdapter: IMediaSourceAdapterStatic): void {
-    let index = MediaSourceProvider._mediaSourceAdapters.indexOf(mediaSourceAdapter);
+  public static unRegister(mediaSourceAdapter: IMediaSourceAdapterStatic): void {
+    const index = MediaSourceProvider._mediaSourceAdapters.indexOf(mediaSourceAdapter);
     if (index > -1) {
       MediaSourceProvider._logger.debug(`Unregistered <${mediaSourceAdapter.id}> adapter`);
       MediaSourceProvider._mediaSourceAdapters.splice(index, 1);
@@ -73,9 +73,9 @@ export default class MediaSourceProvider {
    * @public
    * @static
    */
-  static canPlaySource(source: PKMediaSourceObject, preferNative: boolean = true, drmConfig: PKDrmConfigObject): boolean {
+  public static canPlaySource(source: PKMediaSourceObject, preferNative: boolean = true, drmConfig: PKDrmConfigObject): boolean {
     MediaSourceProvider._orderMediaSourceAdapters(preferNative);
-    let mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
+    const mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
     if (source && source.mimetype) {
       for (let i = 0; i < mediaSourceAdapters.length; i++) {
         if (
@@ -97,7 +97,7 @@ export default class MediaSourceProvider {
    * @private
    * @returns {void}
    */
-  static _orderMediaSourceAdapters(preferNative: boolean): void {
+  public static _orderMediaSourceAdapters(preferNative: boolean): void {
     MediaSourceProvider._mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters.filter(mse => mse.id !== 'NativeAdapter');
     if (preferNative) {
       MediaSourceProvider._mediaSourceAdapters.unshift(NativeAdapter);
@@ -115,7 +115,7 @@ export default class MediaSourceProvider {
    * @returns {IMediaSourceAdapter|null} - The selected media source adapter, or null if such doesn't exists.
    * @static
    */
-  static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: any): IMediaSourceAdapter | null {
+  public static getMediaSourceAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: any): IMediaSourceAdapter | null {
     if (videoElement && source && config) {
       if (!MediaSourceProvider._selectedAdapter) {
         MediaSourceProvider.canPlaySource(source, true, config.drm);
@@ -130,7 +130,7 @@ export default class MediaSourceProvider {
    * @static
    * @returns {void}
    */
-  static destroy(): void {
+  public static destroy(): void {
     MediaSourceProvider._selectedAdapter = null;
   }
 }

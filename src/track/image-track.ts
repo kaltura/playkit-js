@@ -2,13 +2,13 @@
 import Track from './track';
 
 class ImageTrack extends Track {
-  _url: string;
-  _width: number;
-  _height: number;
-  _duration: number;
-  _rows: number;
-  _cols: number;
-  _customData: any;
+  private _url: string;
+  private _width: number;
+  private _height: number;
+  private _duration: number;
+  private _rows: number;
+  private _cols: number;
+  private _customData: any;
 
   constructor(settings: {
     id: string,
@@ -33,41 +33,41 @@ class ImageTrack extends Track {
     this._cols = cols || 1;
   }
 
-  get url() {
+  public get url(): string {
     return this._url;
   }
 
-  get width() {
+  public get width(): number {
     return this._width;
   }
 
-  get height() {
+  public get height(): number {
     return this._height;
   }
 
-  get duration() {
+  public get duration(): number {
     return this._duration;
   }
 
-  get rows() {
+  public get rows(): number {
     return this._rows;
   }
 
-  get cols() {
+  public get cols(): number {
     return this._cols;
   }
 
-  get customData() {
+  public get customData(): any {
     return this._customData;
   }
 
-  get sliceWidth() {
+  public get sliceWidth(): number {
     return this._width / this._cols;
   }
 
-  get sliceHeight() {
+  public get sliceHeight(): number {
     return this._height / this._rows;
   }
-};
+}
 
 export default ImageTrack;

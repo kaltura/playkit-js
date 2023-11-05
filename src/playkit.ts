@@ -38,8 +38,8 @@ import {AutoPlayType} from './enums/auto-play-type';
 import {ThumbnailInfo} from './thumbnail/thumbnail-info';
 import {filterTracksByRestriction} from './utils/restrictions';
 
-declare var __VERSION__: string;
-declare var __NAME__: string;
+declare let __VERSION__: string;
+declare let __NAME__: string;
 
 const VERSION = __VERSION__;
 const NAME = __NAME__;
@@ -48,7 +48,7 @@ const NAME = __NAME__;
  * @param {Object} config - The configuration of the player
  * @returns {Player} - The player instance
  */
-export function loadPlayer(config: any) {
+export function loadPlayer(config: any): Player {
   return new Player(config || {});
 }
 

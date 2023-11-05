@@ -7,21 +7,22 @@
 import {IEngineDecoratorProvider} from '../types';
 import {IEngine} from '../types/interfaces/engine';
 import {IEngineDecorator} from '../types/interfaces/engine-decorator';
+import FakeEvent from '../event/fake-event';
 
 class EngineDecoratorProvider implements IEngineDecoratorProvider {
-  _name: string;
-  _getEngineDecorator: (engine: IEngine, dispatchEventHandler: Function) => IEngineDecorator;
+  private _name: string;
+  private _getEngineDecorator: (engine: IEngine, dispatchEventHandler: (event: FakeEvent) => void) => IEngineDecorator;
 
   constructor(plugin: IEngineDecoratorProvider) {
     this._name = plugin.getName();
     this._getEngineDecorator = plugin.getEngineDecorator.bind(plugin);
   }
 
-  getEngineDecorator(engine: IEngine, dispatchEventHandler: Function): IEngineDecorator {
+  public getEngineDecorator(engine: IEngine, dispatchEventHandler: (event: FakeEvent) => void): IEngineDecorator {
     return this._getEngineDecorator(engine, dispatchEventHandler);
   }
 
-  getName(): string {
+  public getName(): string {
     return this._name;
   }
 }

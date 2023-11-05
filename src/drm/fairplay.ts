@@ -1,18 +1,19 @@
-// @flow
-import type {FairPlayDrmConfigType} from '../engines/html5/media-source/adapters/fairplay-drm-handler';
-import getLogger from '../utils/logger';
+import {FairPlayDrmConfigType} from '../engines/html5/media-source/adapters/fairplay-drm-handler';
 import {DrmScheme} from './drm-scheme';
+import {PKDrmConfigObject, PKDrmDataObject} from '../types';
+import {ILogger} from 'js-logger';
+import getLogger from '../utils/logger';
 
-const _logger = getLogger('FairPlay');
+const _logger: ILogger = getLogger('FairPlay');
 
-const FairPlay: IDrmProtocol = class FairPlay {
+class FairPlay {
   /**
    * FairPlay is the configure key system.
    * @param {Array<PKDrmDataObject>} drmData - The drm data.
    * @param {PKDrmConfigObject} drmConfig - The drm config.
    * @return {boolean} - Whether FairPlay is the configure key system.
    */
-  static isConfigured(drmData: Array<PKDrmDataObject>, drmConfig: PKDrmConfigObject): boolean {
+  public static isConfigured(drmData: Array<PKDrmDataObject>, drmConfig: PKDrmConfigObject): boolean {
     return DrmScheme.FAIRPLAY === drmConfig.keySystem && !!drmData.find(drmEntry => drmEntry.scheme === drmConfig.keySystem);
   }
 
@@ -23,7 +24,9 @@ const FairPlay: IDrmProtocol = class FairPlay {
    * @param {Array<PKDrmDataObject>} drmData - The drm data to check.
    * @return {boolean} - Whether FairPlay can be play on the current environment.
    */
-  static canPlayDrm(drmData: Array<PKDrmDataObject>): boolean {
+  public static canPlayDrm(drmData: Array<PKDrmDataObject>): boolean {
+    // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const result = drmData.some(drmEntry => drmEntry.scheme === DrmScheme.FAIRPLAY) && !!window.WebKitMediaKeys;
     _logger.debug(`Can play DRM scheme of: ${DrmScheme.FAIRPLAY} is ${result.toString()}`);
     return result;
@@ -35,14 +38,14 @@ const FairPlay: IDrmProtocol = class FairPlay {
    * @param {Array<PKDrmDataObject>} drmData - The drm data.
    * @returns {void}
    */
-  static setDrmPlayback(config: FairPlayDrmConfigType, drmData: Array<PKDrmDataObject>): void {
+  public static setDrmPlayback(config: FairPlayDrmConfigType, drmData: Array<PKDrmDataObject>): void {
     _logger.debug('Sets drm playback');
-    let drmEntry = drmData.find(drmEntry => drmEntry.scheme === DrmScheme.FAIRPLAY);
+    const drmEntry = drmData.find(drmEntry => drmEntry.scheme === DrmScheme.FAIRPLAY);
     if (drmEntry) {
       config.licenseUrl = drmEntry.licenseUrl;
       config.certificate = drmEntry.certificate;
     }
   }
-};
+}
 
 export default FairPlay;

@@ -14,7 +14,7 @@ export default class BaseMiddleware {
    * @param {Function} next - The next handler in the middleware chain.
    * @returns {void}
    */
-  callNext(next: Function): void {
+  public callNext(next: (...args: any[]) => any): void {
     if (next) {
       next();
     }

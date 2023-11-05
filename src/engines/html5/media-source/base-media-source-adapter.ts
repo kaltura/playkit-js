@@ -1,7 +1,7 @@
 import FakeEvent from '../../../event/fake-event';
 import FakeEventTarget from '../../../event/fake-event-target';
 import Error from '../../../error/error';
-import {CustomEventType, Html5EventType} from '../../../event/event-type';
+import { CustomEventType, Html5EventType } from '../../../event/event-type';
 import getLogger from '../../../utils/logger';
 import Track from '../../../track/track';
 import VideoTrack from '../../../track/video-track';
@@ -9,9 +9,10 @@ import AudioTrack from '../../../track/audio-track';
 import PKTextTrack from '../../../track/text-track';
 import EventManager from '../../../event/event-manager';
 import ImageTrack from '../../../track/image-track';
-import {ThumbnailInfo} from '../../../thumbnail/thumbnail-info';
-import {IMediaSourceAdapter} from '../../../types/interfaces/media-source-adapter';
-import {PKABRRestrictionObject, PKDrmDataObject, PKMediaSourceCapabilities, PKMediaSourceObject} from '../../../types';
+import { ThumbnailInfo } from '../../../thumbnail/thumbnail-info';
+import { IMediaSourceAdapter } from '../../../types/interfaces/media-source-adapter';
+import { PKABRRestrictionObject, PKDrmDataObject, PKMediaSourceCapabilities, PKMediaSourceObject } from '../../../types';
+import { ILogger } from 'js-logger';
 
 const CURRENT_OR_NEXT_SEGMENT_COUNT: number = 2;
 
@@ -22,49 +23,49 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @static
    * @private
    */
-  static id: string = 'BaseAdapter';
+  public static id: string = 'BaseAdapter';
   /**
    * Passing the getLogger function to the actual media source adapter.
    * @type {Function}
    * @static
    */
-  static getLogger: Function = getLogger;
+  public static getLogger: (name?: string) => ILogger = getLogger;
 
-  static _logger = BaseMediaSourceAdapter.getLogger(BaseMediaSourceAdapter.id);
+  protected static _logger = BaseMediaSourceAdapter.getLogger(BaseMediaSourceAdapter.id);
 
   /**
    * The adapter config.
    * @member {Object} _config
    * @private
    */
-  _config: any;
+  protected _config: any;
 
   /**
    * The source object.
    * @member {PKMediaSourceObject} _sourceObj
    * @private
    */
-  _sourceObj?: PKMediaSourceObject;
+  protected _sourceObj?: PKMediaSourceObject;
 
   /**
    * The dom video element.
    * @member {HTMLVideoElement} _videoElement
    * @private
    */
-  _videoElement: HTMLVideoElement;
+  protected _videoElement: HTMLVideoElement;
 
   /**
    * The adapter capabilities
    * @private
    */
-  _capabilities: PKMediaSourceCapabilities = {fpsControl: false};
+  private _capabilities: PKMediaSourceCapabilities = { fpsControl: false };
 
   /**
    * The event manager of the adapter.
    * @type {EventManager}
    * @private
    */
-  _eventManager: EventManager;
+  protected _eventManager: EventManager;
 
   /**
    * The load promise
@@ -72,14 +73,14 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @type {Promise<{tracks: Array<Track>}>}
    * @private
    */
-  _loadPromise: Promise<{tracks: Array<Track>}> | undefined;
+  protected _loadPromise: Promise<{ tracks: Array<Track> }> | undefined;
 
   /**
    * The duration change handler.
    * @type {Function}
    * @private
    */
-  _onDurationChanged: (...args: any) => any;
+  private _onDurationChanged: (...args: any) => any;
 
   /**
    * Checks if the media source adapter is supported.
@@ -87,7 +88,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @returns {boolean} - Whether the media source adapter is supported.
    * @static
    */
-  static isSupported(): boolean {
+  public static isSupported(): boolean {
     return true;
   }
 
@@ -96,7 +97,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @static
    * @returns {boolean} - Whether the media source is supported.
    */
-  static isMSESupported(): boolean {
+  public static isMSESupported(): boolean {
     // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const mediaSource = MediaSource || window.WebKitMediaSource;
@@ -110,12 +111,12 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @param {PKMediaSourceObject} source - The source object.
    * @param {Object} config - The media source adapter configuration.
    */
-  constructor(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object = {}) {
+  constructor(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: any = {}) {
     super();
     this._videoElement = videoElement;
     this._sourceObj = source;
     this._config = config;
-    this._onDurationChanged = () => {
+    this._onDurationChanged = (): void => {
       if (this.isLive() && this._videoElement.paused) {
         this._trigger(Html5EventType.TIME_UPDATE);
       }
@@ -129,7 +130,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @function destroy
    * @returns {void}
    */
-  destroy(): Promise<void> {
+  public destroy(): Promise<void> {
     this._sourceObj = undefined;
     this._config = {};
     this.disableNativeTextTracks();
@@ -144,19 +145,19 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @private
    * @returns {void}
    */
-  _onTrackChanged(track: VideoTrack | AudioTrack | PKTextTrack | ImageTrack): void {
+  protected _onTrackChanged(track: VideoTrack | AudioTrack | PKTextTrack | ImageTrack): void {
     if (track instanceof VideoTrack) {
       BaseMediaSourceAdapter._logger.debug('Video track changed', track);
-      this._trigger(CustomEventType.VIDEO_TRACK_CHANGED, {selectedVideoTrack: track});
+      this._trigger(CustomEventType.VIDEO_TRACK_CHANGED, { selectedVideoTrack: track });
     } else if (track instanceof AudioTrack) {
       BaseMediaSourceAdapter._logger.debug('Audio track changed', track);
-      this._trigger(CustomEventType.AUDIO_TRACK_CHANGED, {selectedAudioTrack: track});
+      this._trigger(CustomEventType.AUDIO_TRACK_CHANGED, { selectedAudioTrack: track });
     } else if (track instanceof PKTextTrack) {
       BaseMediaSourceAdapter._logger.debug('Text track changed', track);
-      this._trigger(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: track});
+      this._trigger(CustomEventType.TEXT_TRACK_CHANGED, { selectedTextTrack: track });
     } else if (track instanceof ImageTrack) {
       BaseMediaSourceAdapter._logger.debug('Image track changed', track);
-      this._trigger(CustomEventType.IMAGE_TRACK_CHANGED, {selectedImageTrack: track});
+      this._trigger(CustomEventType.IMAGE_TRACK_CHANGED, { selectedImageTrack: track });
     }
   }
 
@@ -166,73 +167,73 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @param {?Object} payload - The event payload.
    * @returns {void}
    */
-  _trigger(name: string, payload?: Object): void {
+  protected _trigger(name: string, payload?: any): void {
     this.dispatchEvent(new FakeEvent(name, payload));
   }
 
   /** Must implemented methods by the derived media source adapter **/
-
-  static canPlayType(mimeType: string, preferNative: boolean): boolean {
+  // eslint-disable-next-line
+  public static canPlayType(mimeType: string, preferNative: boolean): boolean {
     return BaseMediaSourceAdapter._throwNotImplementedError('static canPlayType');
   }
 
-  load(): Promise<{tracks: Track[]}> {
+  public load(): Promise<{ tracks: Track[] }> {
     return BaseMediaSourceAdapter._throwNotImplementedError('load');
   }
-
-  selectVideoTrack(videoTrack: VideoTrack): void {
+  // eslint-disable-next-line
+  public selectVideoTrack(videoTrack: VideoTrack): void {
     return BaseMediaSourceAdapter._throwNotImplementedError('selectVideoTrack');
   }
-
-  selectAudioTrack(audioTrack: AudioTrack): void {
+  // eslint-disable-next-line
+  public selectAudioTrack(audioTrack: AudioTrack): void {
     BaseMediaSourceAdapter._throwNotImplementedError('selectAudioTrack');
   }
-
-  selectTextTrack(textTrack: PKTextTrack): void {
+  // eslint-disable-next-line
+  public selectTextTrack(textTrack: PKTextTrack): void {
     BaseMediaSourceAdapter._throwNotImplementedError('selectTextTrack');
   }
+  // eslint-disable-next-line
+  public selectImageTrack(imageTrack: ImageTrack): void {}
 
-  selectImageTrack(imageTrack: ImageTrack): void {}
-
-  hideTextTrack(): void {
+  public hideTextTrack(): void {
     BaseMediaSourceAdapter._throwNotImplementedError('hideTextTrack');
   }
 
-  enableAdaptiveBitrate(): void {
+  public enableAdaptiveBitrate(): void {
     BaseMediaSourceAdapter._throwNotImplementedError('enableAdaptiveBitrate');
   }
 
-  isAdaptiveBitrateEnabled(): boolean {
+  public isAdaptiveBitrateEnabled(): boolean {
     return BaseMediaSourceAdapter._throwNotImplementedError('isAdaptiveBitrateEnabled');
   }
-
-  applyABRRestriction(restrictions: PKABRRestrictionObject): void {
+  // eslint-disable-next-line
+  public applyABRRestriction(restrictions: PKABRRestrictionObject): void {
     return BaseMediaSourceAdapter._throwNotImplementedError('applyABRRestriction');
   }
 
-  _getLiveEdge(): number {
+  protected _getLiveEdge(): number {
     return BaseMediaSourceAdapter._throwNotImplementedError('_getLiveEdge');
   }
 
-  seekToLiveEdge(): void {
+  public seekToLiveEdge(): void {
     BaseMediaSourceAdapter._throwNotImplementedError('seekToLiveEdge');
   }
 
-  isLive(): boolean {
+  public isLive(): boolean {
     return BaseMediaSourceAdapter._throwNotImplementedError('isLive');
   }
 
-  isOnLiveEdge(): boolean {
+  public isOnLiveEdge(): boolean {
     return this.liveDuration - this._videoElement.currentTime <= this.getSegmentDuration() * CURRENT_OR_NEXT_SEGMENT_COUNT;
   }
-
-  setMaxBitrate(bitrate: number): void {
+  // eslint-disable-next-line
+  public setMaxBitrate(bitrate: number): void {
     return;
   }
 
-  attachMediaSource(): void {}
+  public attachMediaSource(): void {}
 
-  detachMediaSource(): void {}
+  public detachMediaSource(): void {}
 
   /**
    * Handling live time update (as is not triggered when video is paused, but the current time changed)
@@ -240,7 +241,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @returns {void}
    * @private
    */
-  _handleLiveTimeUpdate(): void {
+  private _handleLiveTimeUpdate(): void {
     this._videoElement.addEventListener(Html5EventType.DURATION_CHANGE, this._onDurationChanged);
   }
 
@@ -249,8 +250,8 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @public
    * @returns {void}
    */
-  disableNativeTextTracks(): void {
-    Array.from(this._videoElement.textTracks).forEach(track => {
+  public disableNativeTextTracks(): void {
+    Array.from(this._videoElement.textTracks).forEach((track) => {
       if (PKTextTrack.isNativeTextTrack(track) && !PKTextTrack.isExternalTrack(track)) {
         track.mode = PKTextTrack.MODE.DISABLED;
       }
@@ -263,23 +264,24 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @returns {boolean} - if it can recover or not
    * @public
    */
-  handleMediaError(event?: MediaError): boolean {
+  // eslint-disable-next-line
+  public handleMediaError(event?: MediaError): boolean {
     return false;
   }
 
-  getStartTimeOfDvrWindow(): number {
+  public getStartTimeOfDvrWindow(): number {
     return BaseMediaSourceAdapter._throwNotImplementedError('getStartTimeOfDvrWindow');
   }
-
-  getThumbnail(time: number): ThumbnailInfo | null {
+  // eslint-disable-next-line
+  public getThumbnail(time: number): ThumbnailInfo | null {
     return null;
   }
 
-  getSegmentDuration(): number {
+  public getSegmentDuration(): number {
     return BaseMediaSourceAdapter._throwNotImplementedError('getSegmentDuration');
   }
 
-  get liveDuration(): number {
+  public get liveDuration(): number {
     return BaseMediaSourceAdapter._throwNotImplementedError('liveDuration');
   }
 
@@ -288,7 +290,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @param {string} name of the unimplemented function
    * @returns {any} void/string/boolean
    */
-  static _throwNotImplementedError(name: string): any {
+  private static _throwNotImplementedError(name: string): any {
     throw new Error(Error.Severity.CRITICAL, Error.Category.PLAYER, Error.Code.RUNTIME_ERROR_METHOD_NOT_IMPLEMENTED, name);
   }
 
@@ -298,7 +300,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @public
    * @returns {string} - The src url.
    */
-  get src(): string {
+  public get src(): string {
     if (this._loadPromise && this._sourceObj) {
       return this._sourceObj.url;
     }
@@ -311,7 +313,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @public
    * @returns {void}
    */
-  set src(source: string) {
+  public set src(source: string) {
     if (!this._loadPromise && this._sourceObj) {
       this._sourceObj.url = source;
     }
@@ -321,15 +323,15 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * @public
    * @return {PKMediaSourceCapabilities} - The adapter capabilities.
    */
-  get capabilities(): PKMediaSourceCapabilities {
+  public get capabilities(): PKMediaSourceCapabilities {
     return this._capabilities;
   }
 
-  get targetBuffer(): number {
+  public get targetBuffer(): number {
     return NaN;
   }
 
-  getDrmInfo(): PKDrmDataObject | null {
+  public getDrmInfo(): PKDrmDataObject | null {
     return null;
   }
 }

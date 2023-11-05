@@ -11,27 +11,27 @@ export default class VideoTrack extends Track {
    * @type {number}
    * @private
    */
-  _bandwidth: number;
+  private _bandwidth: number;
 
   /**
    * @member {number} _width - The width of the video track
    * @type {number}
    * @private
    */
-  _width: number;
+  private _width: number;
 
   /**
    * @member {number} _height - The height of the video track
    * @type {number}
    * @private
    */
-  _height: number;
+  private _height: number;
 
   /**
    * @public
    * @returns {number} - The bandwidth of the video track
    */
-  get bandwidth(): number {
+  public get bandwidth(): number {
     return this._bandwidth;
   }
 
@@ -39,7 +39,7 @@ export default class VideoTrack extends Track {
    * @public
    * @returns {number} - The width of the video track
    */
-  get width(): number {
+  public get width(): number {
     return this._width;
   }
 
@@ -47,7 +47,7 @@ export default class VideoTrack extends Track {
    * @public
    * @returns {number} - The height of the video track
    */
-  get height(): number {
+  public get height(): number {
     return this._height;
   }
 

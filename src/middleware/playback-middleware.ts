@@ -9,7 +9,7 @@ export default class PlaybackMiddleware {
    * The actions of the playback middleware.
    * @static
    */
-  static Actions: {[action: string]: string} = {
+  public static Actions: {[action: string]: string} = {
     LOAD: 'load',
     PLAY: 'play',
     PAUSE: 'pause',
@@ -20,7 +20,7 @@ export default class PlaybackMiddleware {
    * @private
    * @member
    */
-  _middleware: Middleware;
+  private _middleware: Middleware;
 
   /**
    * @constructor
@@ -35,7 +35,7 @@ export default class PlaybackMiddleware {
    * @public
    * @returns {void}
    */
-  use(middlewareInstance: BaseMiddleware): void {
+  public use(middlewareInstance: BaseMiddleware): void {
     this._middleware.use(middlewareInstance);
   }
 
@@ -45,7 +45,7 @@ export default class PlaybackMiddleware {
    * @public
    * @returns {void}
    */
-  load(callback: Function): void {
+  public load(callback: () => void): void {
     this._middleware.run(PlaybackMiddleware.Actions.LOAD, callback);
   }
 
@@ -55,7 +55,7 @@ export default class PlaybackMiddleware {
    * @public
    * @returns {void}
    */
-  play(callback: Function): void {
+  public play(callback: () => any): void {
     this._middleware.run(PlaybackMiddleware.Actions.PLAY, callback);
   }
 
@@ -65,7 +65,7 @@ export default class PlaybackMiddleware {
    * @public
    * @returns {void}
    */
-  pause(callback: Function): void {
+  public pause(callback: () => any): void {
     this._middleware.run(PlaybackMiddleware.Actions.PAUSE, callback);
   }
 
@@ -76,7 +76,7 @@ export default class PlaybackMiddleware {
    * @public
    * @returns {void}
    */
-  setCurrentTime(to: number, callback: Function): void {
+  public setCurrentTime(to: number, callback: () => any): void {
     this._middleware.run(PlaybackMiddleware.Actions.SET_CURRENT_TIME, callback, to);
   }
 }

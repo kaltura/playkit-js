@@ -11,19 +11,19 @@ export default class Middleware {
    * @private
    * @member
    */
-  _middlewares: MultiMap<string, any>;
+  private _middlewares: MultiMap<string, any>;
   /**
    * The actions supported by the middleware.
    * @private
    * @member
    */
-  _actions: {[action: string]: string};
+  private _actions: {[action: string]: string};
   /**
    * The logger of the middleware.
    * @private
    * @member
    */
-  _logger: any;
+  private _logger: any;
 
   /**
    * @constructor
@@ -41,9 +41,9 @@ export default class Middleware {
    * @public
    * @returns {void}
    */
-  use(middlewareInstance: BaseMiddleware): void {
-    for (let action in this._actions) {
-      let apiAction = this._actions[action];
+  public use(middlewareInstance: BaseMiddleware): void {
+    for (const action in this._actions) {
+      const apiAction = this._actions[action];
       // $FlowFixMe
       if (typeof middlewareInstance[apiAction] === 'function') {
         this._logger.debug(`Register <${middlewareInstance.id}> for action ${apiAction}`);
@@ -61,9 +61,9 @@ export default class Middleware {
    * @public
    * @returns {void}
    */
-  run(action: string, callback: Function, ...params: Array<any>): void {
+  public run(action: string, callback: (...args: any[]) => any, ...params: Array<any>): void {
     this._logger.debug('Start middleware chain for action ' + action);
-    let middlewares = this._middlewares.get(action);
+    const middlewares = this._middlewares.get(action);
     this._executeMiddleware(
       middlewares,
       (...params) => {
@@ -82,9 +82,9 @@ export default class Middleware {
    * @private
    * @returns {void}
    */
-  _executeMiddleware(middlewares: Array<Function>, callback: Function, origParams: Array<any>): void {
+  private _executeMiddleware(middlewares: Array<(...args: any[]) => any>, callback: (...args: any[]) => any, origParams: Array<any>): void {
     let params = origParams;
-    const applyFunc = (fn, prevParams, next?) => {
+    const applyFunc = (fn, prevParams, next?): void => {
       if (prevParams?.length) {
         params = prevParams;
       }

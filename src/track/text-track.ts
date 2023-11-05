@@ -11,20 +11,20 @@ type TrackSettings = {
 };
 
 export default class TextTrack extends Track {
-  static MODE: Record<'DISABLED' | 'SHOWING' | 'HIDDEN', TextTrackMode> = {
+  public static MODE: Record<'DISABLED' | 'SHOWING' | 'HIDDEN', TextTrackMode> = {
     DISABLED: 'disabled',
     SHOWING: 'showing',
     HIDDEN: 'hidden'
   };
 
-  static KIND: {[kind: string]: TextTrackKind } = {
+  public static KIND: {[kind: string]: TextTrackKind } = {
     METADATA: 'metadata',
     SUBTITLES: 'subtitles',
     CAPTIONS: 'captions'
   };
 
-  static EXTERNAL_TRACK_ID = 'playkit-external-track';
-  static _tracksCount: number = 0;
+  public static EXTERNAL_TRACK_ID = 'playkit-external-track';
+  private static _tracksCount: number = 0;
 
   private _kind: string;
   private _external: boolean;
@@ -39,42 +39,42 @@ export default class TextTrack extends Track {
     this._index = TextTrack._generateIndex();
   }
 
-  static _generateIndex(): number {
+  public static _generateIndex(): number {
     return TextTrack._tracksCount++;
   }
 
-  static reset(): void {
+  public static reset(): void {
     TextTrack._tracksCount = 0;
   }
 
-  get mode(): string | undefined {
+  public get mode(): string | undefined {
     return this._mode;
   }
-  set mode(mode: string) {
+  public set mode(mode: string) {
     this._mode = mode;
   }
 
-  get kind(): string {
+  public get kind(): string {
     return this._kind;
   }
 
-  get external(): boolean {
+  public get external(): boolean {
     return this._external;
   }
 
-  get default(): boolean {
+  public get default(): boolean {
     return this._default;
   }
 
-  static isMetaDataTrack(track: any): boolean {
+  public static isMetaDataTrack(track: any): boolean {
     return track && track.kind === TextTrack.KIND.METADATA;
   }
 
-  static isNativeTextTrack(track: any): boolean {
+  public static isNativeTextTrack(track: any): boolean {
     return track && [TextTrack.KIND.SUBTITLES, TextTrack.KIND.CAPTIONS].includes(track.kind);
   }
 
-  static isExternalTrack(track: any): boolean {
+  public static isExternalTrack(track: any): boolean {
     return track && [track.language, track.label].includes(TextTrack.EXTERNAL_TRACK_ID);
   }
 }
@@ -86,15 +86,18 @@ export default class TextTrack extends Track {
  * @private
  */
 function getActiveCues(textTrackCueList: TextTrackCueList): Array<VTTCue> {
-  let normalizedCues: Array<VTTCue> = [];
+  const normalizedCues: Array<VTTCue> = [];
+  // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  for (let cue of textTrackCueList) {
+  for (const cue of textTrackCueList) {
     //Normalize cues to be of type of VTT model
+    // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
     // @ts-ignore
     if ((VTTCue && cue instanceof VTTCue) || (DataCue && cue instanceof window.DataCue)) {
       normalizedCues.push(cue);
     } else if (TextTrackCue && cue instanceof TextTrackCue) {
       try {
+        // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
         // @ts-ignore
         normalizedCues.push(new VTTCue(cue.startTime, cue.endTime, cue.text));
       } catch (error) {

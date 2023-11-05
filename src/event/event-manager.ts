@@ -11,7 +11,7 @@ import FakeEvent from './fake-event';
  * @implements {IDestroyable}
  */
 class EventManager {
-  _bindingMap: MultiMap<string, Binding_> | null;
+  private _bindingMap: MultiMap<string, Binding_> | null;
 
   constructor() {
     /**
@@ -25,7 +25,7 @@ class EventManager {
    * Detaches all event listeners.
    * @override
    */
-  destroy() {
+  public destroy(): Promise<void> {
     this.removeAll();
     this._bindingMap = null;
     return Promise.resolve();
@@ -39,8 +39,8 @@ class EventManager {
    * @param {?Object} options - The event options.
    * @returns {void}
    */
-  listenOnce(target: EventTarget | FakeEventTarget, type: string, listener: ListenerType, options?: any): void {
-    let oneListener = (event: Event | FakeEvent) => {
+  public listenOnce(target: EventTarget | FakeEventTarget, type: string, listener: ListenerType, options?: any): void {
+    const oneListener = (event: Event | FakeEvent): void => {
       this.unlisten(target, type, oneListener);
       listener.call(this, event);
     };
@@ -55,8 +55,8 @@ class EventManager {
    * @param {?Object} options The event options.
    * @returns {void}
    */
-  listen(target: EventTarget | FakeEventTarget, type: string, listener: ListenerType, options?: any): void {
-    let binding = new Binding_(target, type, listener, options);
+  public listen(target: EventTarget | FakeEventTarget, type: string, listener: ListenerType, options?: any): void {
+    const binding = new Binding_(target, type, listener, options);
     if (this._bindingMap) {
       this._bindingMap.push(type, binding);
     }
@@ -69,12 +69,12 @@ class EventManager {
    * @param {ListenerType} [listener] The event listener to detach. If no given, detaches all event listeners of the target and type.
    * @returns {void}
    */
-  unlisten(target: any, type: string, listener?: ListenerType): void {
+  public unlisten(target: any, type: string, listener?: ListenerType): void {
     if (this._bindingMap) {
-      let list = this._bindingMap.get(type);
+      const list = this._bindingMap.get(type);
 
       for (let i = 0; i < list.length; ++i) {
-        let binding = list[i];
+        const binding = list[i];
 
         if (binding.target === target && (binding.listener === listener || !listener)) {
           binding.unlisten();
@@ -90,11 +90,11 @@ class EventManager {
    * Detaches all event listeners from all targets.
    * @returns {void}
    */
-  removeAll(): void {
+  public removeAll(): void {
     if (this._bindingMap) {
-      let listeners = this._bindingMap.getAll();
+      const listeners = this._bindingMap.getAll();
 
-      for (let listener of listeners) {
+      for (const listener of listeners) {
         listener.unlisten();
       }
       if (this._bindingMap) {
@@ -118,10 +118,10 @@ export type ListenerType = EventListener | ((event: FakeEvent) => any);
  * @private
  */
 class Binding_ {
-  target: any;
-  type: string;
-  listener: ListenerType | null;
-  options?: any;
+  public target: any;
+  public type: string;
+  public listener: ListenerType | null;
+  public options?: any;
 
   constructor(target: EventTarget | FakeEventTarget, type: string, listener: ListenerType, options?: any) {
     /** @type {EventTarget} */
@@ -145,7 +145,7 @@ class Binding_ {
    * event listener is already detached.
    * @returns {void}
    */
-  unlisten(): void {
+  public unlisten(): void {
     if (!this.target) return;
 
     this.target.removeEventListener(this.type, this.listener, this.options);

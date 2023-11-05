@@ -12,23 +12,23 @@ const CLASS_NAME: string = 'Error';
  * @classdesc This is a description of the error class.
  */
 export default class Error {
-  severity: number;
-  category: number;
-  code: number;
-  data: any;
+  public severity: number;
+  public category: number;
+  public code: number;
+  public data: any;
   /**
    * @enum {number}
    */
-  static Severity: SeverityType = Severity;
+  public static Severity: SeverityType = Severity;
   /**
    * @enum {number}
    */
-  static Category: CategoryType = Category;
+  public static Category: CategoryType = Category;
   /**
    * @enum {number}
    */
-  static Code: CodeType = Code;
-  static _logger: any = getLogger(CLASS_NAME);
+  public static Code: CodeType = Code;
+  private static _logger: any = getLogger(CLASS_NAME);
 
   /**
    * @constructor

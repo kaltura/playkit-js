@@ -7,10 +7,10 @@ import {CapabilityResult, ICapability} from '../../../types/interfaces/engine-ca
 const WAIT_TIME: number = 500;
 
 const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
-  static _vid: HTMLVideoElement;
-  static _playPromiseResult: Promise<any>;
-  static _logger: any = getLogger('Html5AutoPlayCapability');
-  static _capabilities: any = {};
+  private static _vid: HTMLVideoElement;
+  private static _playPromiseResult: Promise<any>;
+  private static _logger: any = getLogger('Html5AutoPlayCapability');
+  private static _capabilities: any = {};
 
   /**
    * Runs the test for autoplay capability.
@@ -18,7 +18,7 @@ const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
    * @static
    * @returns {void}
    */
-  static runCapability(): void {
+  public static runCapability(): void {
     if (
       Html5AutoPlayCapability._capabilities.autoplay ||
       (typeof Html5AutoPlayCapability._capabilities.autoplay === 'boolean' &&
@@ -52,7 +52,7 @@ const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
    * @static
    * @public
    */
-  static getCapability(): Promise<CapabilityResult> {
+  public static getCapability(): Promise<CapabilityResult> {
     return Html5AutoPlayCapability._playPromiseResult.then(playCapability => {
       let fallbackPlayCapabilityTest;
       if (playCapability.autoplay) {
@@ -75,7 +75,7 @@ const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
    * @public
    * @static
    */
-  static setCapabilities(capabilities: {[name: string]: any}): void {
+  public static setCapabilities(capabilities: {[name: string]: any}): void {
     Html5AutoPlayCapability._logger.debug('Set player capabilities', capabilities);
     const {autoplay, mutedAutoPlay} = capabilities;
     if (typeof autoplay === 'boolean') {
@@ -91,7 +91,7 @@ const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
    * @return {Promise<*>} - Play promise which resolved or rejected.
    * @private
    */
-  static _getPlayPromise(): Promise<any> {
+  private static _getPlayPromise(): Promise<any> {
     return Html5AutoPlayCapability._vid.play() || Html5AutoPlayCapability._forcePromiseReturnValue();
   }
 
@@ -102,7 +102,7 @@ const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
    * @returns {void}
    * @static
    */
-  static _setMuted(muted: boolean): void {
+  private static _setMuted(muted: boolean): void {
     if (muted) {
       Html5AutoPlayCapability._vid.muted = true;
       Html5AutoPlayCapability._vid.setAttribute('muted', '');
@@ -119,7 +119,7 @@ const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
    * @private
    * @static
    */
-  static _forcePromiseReturnValue(): Promise<void> {
+  private static _forcePromiseReturnValue(): Promise<void> {
     return new Promise((resolve, reject) => {
       Html5AutoPlayCapability._vid.addEventListener(Html5EventType.ERROR, () => {
         reject();

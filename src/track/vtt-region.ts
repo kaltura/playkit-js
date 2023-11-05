@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-var scrollSetting = {
+const scrollSetting = {
   '': true,
   up: true
 };
@@ -23,11 +23,11 @@ var scrollSetting = {
  * @param {string} value - a string
  * @returns {*} the settings
  */
-function findScrollSetting(value) {
+function findScrollSetting(value): string | boolean {
   if (typeof value !== 'string') {
     return false;
   }
-  var scroll = scrollSetting[value.toLowerCase()];
+  const scroll = scrollSetting[value.toLowerCase()];
   return scroll ? value.toLowerCase() : false;
 }
 
@@ -36,95 +36,95 @@ function findScrollSetting(value) {
  * @param {number} value - percentage
  * @returns {boolean} - boolean
  */
-function isValidPercentValue(value) {
+function isValidPercentValue(value): boolean {
   return typeof value === 'number' && value >= 0 && value <= 100;
 }
 
 // VTTRegion shim http://dev.w3.org/html5/webvtt/#vttregion-interface
 class VTTRegion {
-  _width: number = 100;
-  _lines: number = 3;
-  _regionAnchorX: number = 0;
-  _regionAnchorY: number = 100;
-  _viewportAnchorX: number = 0;
-  _viewportAnchorY: number = 100;
-  _scroll: string = '';
+  private _width: number = 100;
+  private _lines: number = 3;
+  private _regionAnchorX: number = 0;
+  private _regionAnchorY: number = 100;
+  private _viewportAnchorX: number = 0;
+  private _viewportAnchorY: number = 100;
+  private _scroll: string = '';
 
   constructor() {}
 
-  get width(): number {
+  public get width(): number {
     return this._width;
   }
 
-  set width(value: number) {
+  public set width(value: number) {
     if (!isValidPercentValue(value)) {
       throw new Error('Width must be between 0 and 100.');
     }
     this._width = value;
   }
 
-  get scroll(): string {
+  public get scroll(): string {
     return this._scroll;
   }
 
-  set scroll(value: number) {
-    var setting = findScrollSetting(value);
+  public set scroll(value: number) {
+    const setting = findScrollSetting(value);
     // Have to check for false as an empty string is a legal value.
     if (setting === false) {
       throw new SyntaxError('An invalid or illegal string was specified.');
     }
-    this._scroll = setting;
+    this._scroll = setting as string;
   }
 
-  get viewportAnchorY(): number {
+  public get viewportAnchorY(): number {
     return this._viewportAnchorY;
   }
 
-  set viewportAnchorY(value: number) {
+  public set viewportAnchorY(value: number) {
     if (!isValidPercentValue(value)) {
       throw new Error('ViewportAnchorY must be between 0 and 100.');
     }
     this._viewportAnchorY = value;
   }
 
-  get viewportAnchorX(): number {
+  public get viewportAnchorX(): number {
     return this._viewportAnchorX;
   }
 
-  set viewportAnchorX(value: number) {
+  public set viewportAnchorX(value: number) {
     if (!isValidPercentValue(value)) {
       throw new Error('ViewportAnchorX must be between 0 and 100.');
     }
     this._viewportAnchorX = value;
   }
 
-  get regionAnchorX(): number {
+  public get regionAnchorX(): number {
     return this._regionAnchorX;
   }
 
-  set regionAnchorX(value: number) {
+  public set regionAnchorX(value: number) {
     if (!isValidPercentValue(value)) {
       throw new Error('RegionAnchorY must be between 0 and 100.');
     }
     this._regionAnchorX = value;
   }
 
-  get lines(): number {
+  public get lines(): number {
     return this._lines;
   }
 
-  set lines(value: number) {
+  public set lines(value: number) {
     if (typeof value !== 'number') {
       throw new TypeError('Lines must be set to a number.');
     }
     this._lines = value;
   }
 
-  get regionAnchorY(): number {
+  public get regionAnchorY(): number {
     return this._regionAnchorY;
   }
 
-  set regionAnchorY(value: number) {
+  public set regionAnchorY(value: number) {
     if (!isValidPercentValue(value)) {
       throw new Error('RegionAnchorX must be between 0 and 100.');
     }

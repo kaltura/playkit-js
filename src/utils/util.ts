@@ -1,5 +1,5 @@
-import {jsonp} from './jsonp';
-import {DeferredPromise} from '../types';
+import { jsonp } from './jsonp';
+import { DeferredPromise } from '../types';
 
 ('use strict');
 
@@ -53,7 +53,7 @@ const _String = {
     if (typeof string !== 'string' || typeof searchString !== 'string') {
       return false;
     }
-    return string.indexOf(searchString, string.length - searchString.length) != -1;
+    return string.indexOf(searchString, string.length - searchString.length) !== -1;
   }
 };
 
@@ -63,8 +63,8 @@ const _Object = {
    * @returns {Object} - The merged object.
    */
   merge: function (objects: Array<any>): any {
-    let target = {};
-    for (let obj of objects) {
+    const target = {};
+    for (const obj of objects) {
       Object.assign(target, obj);
     }
     return target;
@@ -74,7 +74,7 @@ const _Object = {
    * @param {any} item - The item to check.
    * @returns {boolean} - Whether the item is an object.
    */
-  isObject: function (item: any) {
+  isObject: function (item: any): boolean {
     return item && typeof item === 'object' && !Array.isArray(item);
   },
 
@@ -82,7 +82,7 @@ const _Object = {
    * @param {any} item - The item to check if it's class
    * @returns {boolean} - Whether the item is a class
    */
-  isClassInstance: function (item: any) {
+  isClassInstance: function (item: any): boolean {
     return item && item.constructor && item.constructor.name && item.constructor.name !== 'Object';
   },
 
@@ -99,10 +99,10 @@ const _Object = {
     if (this.isObject(target) && this.isObject(source)) {
       for (const key in source) {
         if (this.isObject(source[key]) && !this.isClassInstance(source[key])) {
-          if (!target[key]) Object.assign(target, {[key]: {}});
+          if (!target[key]) Object.assign(target, { [key]: {} });
           this.mergeDeep(target[key], source[key]);
         } else {
-          Object.assign(target, {[key]: source[key]});
+          Object.assign(target, { [key]: source[key] });
         }
       }
     }
@@ -118,7 +118,7 @@ const _Object = {
     if (Array.isArray(data)) {
       node = data.length > 0 ? data.slice(0) : [];
       node.forEach((e, i) => {
-        if ((typeof e === 'object') || (Array.isArray(e) && e.length > 0)) {
+        if (typeof e === 'object' || (Array.isArray(e) && e.length > 0)) {
           node[i] = this.copyDeep(e);
         }
       });
@@ -126,9 +126,9 @@ const _Object = {
       if (data.clone && typeof data.clone === 'function') {
         node = data.clone();
       } else {
-        node = Object.assign({__proto__: data.__proto__}, data);
-        Object.keys(node).forEach(key => {
-          if ((typeof node[key] === 'object') || (Array.isArray(node[key]) && node[key].length > 0)) {
+        node = Object.assign({ __proto__: data.__proto__ }, data);
+        Object.keys(node).forEach((key) => {
+          if (typeof node[key] === 'object' || (Array.isArray(node[key]) && node[key].length > 0)) {
             node[key] = this.copyDeep(node[key]);
           }
         });
@@ -145,7 +145,7 @@ const _Object = {
    * @returns {boolean} - Whether the object is empty.
    */
   isEmptyObject: function (obj: object): boolean {
-    for (let key in obj) {
+    for (const key in obj) {
       if (Object.hasOwnProperty.call(obj, key)) return false;
     }
     return true;
@@ -158,6 +158,7 @@ const _Object = {
    * @returns {boolean} - The value in this path.
    */
   getPropertyPath: function (obj: object, propertyPath: string): any {
+    // eslint-disable-next-line
     return propertyPath.split('.').reduce(function (o, x) {
       return typeof o === 'undefined' || o === null ? o : o[x];
     }, obj);
@@ -173,9 +174,9 @@ const _Object = {
     if (!propertyPath) {
       return false;
     }
-    let properties = propertyPath.split('.');
+    const properties = propertyPath.split('.');
     for (let i = 0; i < properties.length; i++) {
-      let prop = properties[i];
+      const prop = properties[i];
       if (!obj || !Object.hasOwnProperty.call(obj, prop)) {
         return false;
       } else {
@@ -217,13 +218,14 @@ const _Object = {
     if (!obj || !path) {
       return;
     }
-    let pathArray = path.split('.');
+    const pathArray = path.split('.');
     for (let i = 0; i < pathArray.length - 1; i++) {
       obj = obj[pathArray[i]];
       if (typeof obj === 'undefined') {
         return;
       }
     }
+    // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
     // @ts-ignore
     delete obj[pathArray.pop()];
   },
@@ -234,7 +236,7 @@ const _Object = {
    */
   defer: function (): DeferredPromise {
     let res, rej;
-    let promise = new Promise<any>((resolve, reject) => {
+    const promise = new Promise<any>((resolve, reject) => {
       res = resolve;
       rej = reject;
     });
@@ -250,8 +252,9 @@ const _Object = {
    * @returns {Function} - The new bound function.
    * @public
    */
-  bind: function (thisObj: any, fn: Function): Function {
+  bind: function (thisObj: any, fn: (...args: any[]) => any): (...args: any[]) => any {
     return function () {
+      // eslint-disable-next-line  prefer-rest-params
       fn.apply(thisObj, arguments);
     };
   }
@@ -264,9 +267,14 @@ const _Generator = {
    * @returns {string} - The generated id.
    */
   uniqueId(length?: number): string {
-    let from = 2;
-    let to = from + (!length || length < 0 ? 0 : length - 2) + 2;
-    return '_' + Math.random().toString(36).substring(from, to + 1);
+    const from = 2;
+    const to = from + (!length || length < 0 ? 0 : length - 2) + 2;
+    return (
+      '_' +
+      Math.random()
+        .toString(36)
+        .substring(from, to + 1)
+    );
   },
 
   /**
@@ -275,7 +283,7 @@ const _Generator = {
    * @private
    */
   guid: function (): string {
-    let S4 = () => {
+    const S4 = () : string => {
       return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
     };
     return S4() + S4() + '-' + S4() + '-' + S4() + '-' + S4() + '-' + S4() + S4() + S4();
@@ -324,8 +332,8 @@ const _Dom = {
    * @param {string} className - a class name
    * @returns {boolean} - weather an element contains a class name
    */
-  hasClassName(element: HTMLElement, className: string) {
-    return element && element.className && new RegExp('(^|\\s)' + className + '(\\s|$)').test(element.className);
+  hasClassName(element: HTMLElement, className: string): boolean {
+    return (element && element.className && new RegExp('(^|\\s)' + className + '(\\s|$)').test(element.className)) as boolean;
   },
   /**
    * Add element attribute
@@ -425,13 +433,13 @@ const _Dom = {
    */
   loadStyleSheetAsync(url: string): Promise<HTMLLinkElement> {
     return new Promise((resolve, reject) => {
-      let resolved = false,
-        cssLinkElement = this.createElement('link');
+      let resolved = false;
+      const cssLinkElement = this.createElement('link');
       cssLinkElement.type = 'text/css';
       cssLinkElement.rel = 'stylesheet';
       cssLinkElement.href = url;
       cssLinkElement.async = true;
-      cssLinkElement.onload = cssLinkElement.onreadystatechange = function () {
+      cssLinkElement.onload = cssLinkElement.onreadystatechange = function (): void {
         if (!resolved && (!this.readyState || this.readyState === 'complete')) {
           resolved = true;
           resolve(this);
@@ -449,13 +457,13 @@ const _Dom = {
    */
   loadScriptAsync(url: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      let r = false,
-        t = document.getElementsByTagName('script')[0],
-        s = this.createElement('script');
+      let r = false;
+      const t = document.getElementsByTagName('script')[0];
+      const s = this.createElement('script');
       s.type = 'text/javascript';
       s.src = url;
       s.async = true;
-      s.onload = s.onreadystatechange = function () {
+      s.onload = s.onreadystatechange = function (): void {
         if (!r && (!this.readyState || this.readyState === 'complete')) {
           r = true;
           resolve(this);
@@ -497,21 +505,14 @@ const _Dom = {
 
 const _Http = {
   protocol: /^(https?:)/i.test(document.location.protocol) ? document.location.protocol : 'https:',
-  execute: function (
-    url: string,
-    params: any,
-    method: string = 'POST',
-    headers?: Map<string, string>,
-    timeout?: number,
-    ontimeout?: Function
-  ): Promise<any> {
-    let request = new XMLHttpRequest();
+  execute: function (url: string, params: any, method: string = 'POST', headers?: Map<string, string>, timeout?: number, ontimeout?: (...args: any[]) => any): Promise<any> {
+    const request = new XMLHttpRequest();
     return new Promise((resolve, reject) => {
-      request.onreadystatechange = function () {
+      request.onreadystatechange = function (): void {
         if (request.readyState === 4) {
           if (request.status === 200) {
             try {
-              let jsonResponse = JSON.parse(request.responseText);
+              const jsonResponse = JSON.parse(request.responseText);
               resolve(jsonResponse);
             } catch (e) {
               resolve(request.responseText);
@@ -531,7 +532,7 @@ const _Http = {
         request.timeout = timeout;
       }
       if (ontimeout) {
-        request.ontimeout = e => {
+        request.ontimeout = (e): void => {
           ontimeout();
           reject(e);
         };
@@ -540,15 +541,17 @@ const _Http = {
     });
   },
   jsonp,
-  convertHeadersToDictionary: function (headerRow: string): {[header: string]: string} {
-    let headerMap = {};
+  convertHeadersToDictionary: function (headerRow: string): { [header: string]: string } {
+    const headerMap = {};
     try {
       // Convert the header string into an array of individual headers
       const arr = headerRow.trim().split(/[\r\n]+/);
 
       // Create a map of header names to values
+      // eslint-disable-next-line
       arr.forEach(function (line) {
         const parts = line.split(': ');
+        // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
         // @ts-ignore
         const header = parts.shift().toLowerCase();
         const value = parts.join(': ');
@@ -580,19 +583,19 @@ const _VERSION = {
    * - NaN if either version string is in the wrong format
    */
 
-  compare: function (v1: string, v2: string, options: any = {}) {
-    options = _Object.merge([{lexicographical: false, zeroExtend: true}, options]);
+  compare: function (v1: string, v2: string, options: any = {}): number {
+    options = _Object.merge([{ lexicographical: false, zeroExtend: true }, options]);
     const lexicographical = options.lexicographical;
     const zeroExtend = options.zeroExtend;
     let v1parts: (string | number)[] = (v1 || '0').split('.');
     let v2parts: (string | number)[] = (v2 || '0').split('.');
 
-    const isValidPart = x => {
+    const isValidPart = (x): boolean => {
       return (lexicographical ? /^\d+[A-Za-zαß]*$/ : /^\d+[A-Za-zαß]?$/).test(x);
     };
 
-    const mapParts = (parts: Array<string>) => {
-      return parts.map(x => {
+    const mapParts = (parts: Array<string>): number[] => {
+      return parts.map((x) => {
         const match = /[A-Za-zαß]/.exec(x);
         return Number(match ? x.replace(match[0], '.' + x.charCodeAt(match.index)) : x);
       });
@@ -636,4 +639,4 @@ const _VERSION = {
   }
 };
 
-export {_Number as Number, _String as String, _Object as Object, _Generator as Generator, _Dom as Dom, _Http as Http, _VERSION as VERSION};
+export { _Number as Number, _String as String, _Object as Object, _Generator as Generator, _Dom as Dom, _Http as Http, _VERSION as VERSION };

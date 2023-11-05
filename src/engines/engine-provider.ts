@@ -13,7 +13,7 @@ class EngineProvider {
    * @static
    * @private
    */
-  static _logger: any = getLogger('EngineProvider');
+  private static _logger: any = getLogger('EngineProvider');
 
   /**
    * The Engine registry.
@@ -21,7 +21,7 @@ class EngineProvider {
    * @static
    * @private
    */
-  static _engineProviders: {[id: string]: IEngineStatic} = {};
+  private static _engineProviders: {[id: string]: IEngineStatic} = {};
 
   /**
    * Add an engine to the registry.
@@ -31,7 +31,7 @@ class EngineProvider {
    * @static
    * @returns {void}
    */
-  static register(id: string, engine: IEngineStatic): void {
+  public static register(id: string, engine: IEngineStatic): void {
     if (id && !EngineProvider._engineProviders[id]) {
       EngineProvider._logger.debug(`Engine <${id}> has been registered successfully`);
       EngineProvider._engineProviders[id] = engine;
@@ -47,7 +47,7 @@ class EngineProvider {
    * @static
    * @returns {void}
    */
-  static unRegister(id: string): void {
+  public static unRegister(id: string): void {
     if (EngineProvider._engineProviders[id]) {
       EngineProvider._logger.debug(`Unregistered <${id}> Engine`);
       delete EngineProvider._engineProviders[id];
@@ -60,7 +60,7 @@ class EngineProvider {
    * @returns {Array<IEngineStatic>} - The Array of engines, or null if such doesn't exists.
    * @static
    */
-  static getEngines(): Array<IEngineStatic> {
+  public static getEngines(): Array<IEngineStatic> {
     return Object.keys(EngineProvider._engineProviders).map(key => EngineProvider._engineProviders[key]);
   }
 
@@ -69,7 +69,7 @@ class EngineProvider {
    * @static
    * @returns {void}
    */
-  static destroy(): void {
+  public static destroy(): void {
     EngineProvider._engineProviders = {};
   }
 }

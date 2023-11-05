@@ -19,18 +19,19 @@ const EXIT_PIP_TIMEOUT: number = 1000;
  * @param {Player} player - The player.
  */
 class FullscreenController {
-  _player: Player;
+  private _player: Player;
   // Flag to indicate that player is in fullscreen(when different element on fullscreen - api return correct state).
   // Not relevant for IOS
-  _isElementInFullscreen: boolean = false;
-  _isInBrowserFullscreen: boolean;
-  _isScreenLocked: boolean = false;
-  _isScreenOrientationSupport: boolean =
+  private _isElementInFullscreen: boolean = false;
+  private _isInBrowserFullscreen: boolean;
+  private _isScreenLocked: boolean = false;
+  private _isScreenOrientationSupport: boolean =
+    // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
     // @ts-ignore
     !!screen && !!screen.orientation && typeof screen.orientation.unlock === 'function' && typeof screen.orientation.lock === 'function';
-  _eventManager: EventManager;
+  private _eventManager: EventManager;
   // Flag to overcome browsers which supports more than one fullscreenchange event
-  _isFullscreenEventDispatched: boolean = false;
+  private _isFullscreenEventDispatched: boolean = false;
 
   /**
    * after component mounted, set up event listeners to window fullscreen state change
@@ -50,7 +51,8 @@ class FullscreenController {
    * @memberof FullScreenController
    * @returns {boolean} - the current fullscreen state of the document
    */
-  _isNativeDocumentFullscreen(): boolean {
+  private _isNativeDocumentFullscreen(): boolean {
+    // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
   }
@@ -60,13 +62,14 @@ class FullscreenController {
    * @memberof FullScreenController
    * @returns {boolean} - the current fullscreen state of the video element in ios
    */
-  _isIOSFullscreen(): boolean {
+  private _isIOSFullscreen(): boolean {
     //for ios mobile checking video element
     const videoElement = typeof this._player.getVideoElement === 'function' ? this._player.getVideoElement() : null;
     // $FlowFixMe for ios mobile
     return (
       this._player.env.os.name === 'iOS' &&
       !!videoElement &&
+      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
       (videoElement.webkitPresentationMode === 'fullscreen' || (!videoElement.webkitPresentationMode && videoElement.webkitDisplayingFullscreen))
     );
@@ -77,7 +80,7 @@ class FullscreenController {
    * @memberof FullScreenController
    * @returns {boolean} - the current fullscreen state of the document
    */
-  isFullscreen(): boolean {
+  public isFullscreen(): boolean {
     return (
       (this._isNativeDocumentFullscreen() && this._isElementInFullscreen) ||
       this._isIOSFullscreen() ||
@@ -93,7 +96,7 @@ class FullscreenController {
    * @memberof FullScreenController
    * @returns {void}
    */
-  enterFullscreen(elementId?: string): void {
+  public enterFullscreen(elementId?: string): void {
     if (!this.isFullscreen()) {
       this.registerFullScreenEvents();
       let fullScreenElement = elementId && Utils.Dom.getElementById(elementId);
@@ -102,18 +105,21 @@ class FullscreenController {
         fullScreenElement = this._player.getView();
       }
       if (this._player.env.os.name === 'iOS') {
-        if ((playbackConfig.inBrowserFullscreen && playbackConfig.playsinline) || this._player._engineType === EngineType.YOUTUBE) {
+        if ((playbackConfig.inBrowserFullscreen && playbackConfig.playsinline) || this._player.engineType === EngineType.YOUTUBE) {
           this._enterInBrowserFullscreen(fullScreenElement);
         } else {
           const videoElement = this._player.getVideoElement();
+          // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
           // @ts-ignore
           if (videoElement && typeof videoElement.webkitEnterFullScreen === 'function') {
             if (this._player.isInPictureInPicture()) {
               // iOS < 13 (iPad) has an issue to enter to full screen from PiP
+              // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
               // @ts-ignore
               setTimeout(() => videoElement.webkitEnterFullScreen(), EXIT_PIP_TIMEOUT);
               this._player.exitPictureInPicture();
             } else {
+              // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
               // @ts-ignore
               videoElement.webkitEnterFullScreen();
             }
@@ -131,17 +137,20 @@ class FullscreenController {
    * @memberof FullScreenController
    * @returns {void}
    */
-  exitFullscreen(): void {
+  public exitFullscreen(): void {
     if (this.isFullscreen()) {
       if (this._player.env.os.name === 'iOS') {
         // player will be in full screen with this flag or otherwise will be natively full screen
-        if (this._isInBrowserFullscreen || this._player._engineType === EngineType.YOUTUBE) {
+        if (this._isInBrowserFullscreen || this._player.engineType === EngineType.YOUTUBE) {
           this._exitInBrowserFullscreen();
         } else {
+          // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
           // @ts-ignore
           const videoElement: HTMLVideoElement = this._player.getVideoElement();
+          // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
           // @ts-ignore
           if (videoElement && typeof videoElement.webkitExitFullscreen === 'function') {
+            // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
             // @ts-ignore
             videoElement.webkitExitFullscreen();
           }
@@ -159,19 +168,25 @@ class FullscreenController {
    * @memberof FullScreenController
    * @returns {void}
    */
-  _nativeEnterFullScreen(fullScreenElement: HTMLElement) {
+  private _nativeEnterFullScreen(fullScreenElement: HTMLElement): Promise<void> | undefined  {
     if (typeof fullScreenElement.requestFullscreen === 'function') {
       return fullScreenElement.requestFullscreen();
+      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
     } else if (typeof fullScreenElement.mozRequestFullScreen === 'function') {
+      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
       return fullScreenElement.mozRequestFullScreen();
+      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
     } else if (typeof fullScreenElement.webkitRequestFullScreen === 'function') {
+      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
       return fullScreenElement.webkitRequestFullScreen();
+      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
     } else if (typeof fullScreenElement.msRequestFullscreen === 'function') {
+      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
       return fullScreenElement.msRequestFullscreen();
     }
@@ -184,7 +199,7 @@ class FullscreenController {
    * @memberof FullScreenController
    * @returns {void}
    */
-  _requestFullscreen(fullScreenElement: HTMLElement) {
+  private _requestFullscreen(fullScreenElement: HTMLElement): void {
     if (this._player.isInPictureInPicture()) {
       this._player.exitPictureInPicture();
     }
@@ -196,6 +211,7 @@ class FullscreenController {
           screenLockOrientionMode !== ScreenOrientationType.NONE && Object.values(ScreenOrientationType).includes(screenLockOrientionMode);
         if (this._isScreenOrientationSupport && validOrientation) {
           screen.orientation
+            // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
             // @ts-ignore
             .lock(screenLockOrientionMode)
             .then(() => (this._isScreenLocked = true))
@@ -212,19 +228,25 @@ class FullscreenController {
    * @memberof FullScreenController
    * @returns {void}
    */
-  _nativeExitFullScreen() {
+  private _nativeExitFullScreen(): Promise<void> | undefined {
     if (typeof document.exitFullscreen === 'function') {
       return document.exitFullscreen();
+      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
     } else if (typeof document.webkitExitFullscreen === 'function') {
+      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
       return document.webkitExitFullscreen();
+      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
     } else if (typeof document.mozCancelFullScreen === 'function') {
+      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
       return document.mozCancelFullScreen();
+      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
     } else if (typeof document.msExitFullscreen === 'function') {
+      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
       return document.msExitFullscreen();
     }
@@ -236,7 +258,7 @@ class FullscreenController {
    * @memberof FullScreenController
    * @returns {void}
    */
-  _requestExitFullscreen(): void {
+  private _requestExitFullscreen(): void {
     Promise.resolve(this._nativeExitFullScreen()).then(
       () => {
         this._isElementInFullscreen = false;
@@ -256,7 +278,7 @@ class FullscreenController {
    * @param {HTMLElement} fullScreenElement - element to enter fullscreen
    * @returns {void}
    */
-  _enterInBrowserFullscreen(fullScreenElement: HTMLElement): void {
+  private _enterInBrowserFullscreen(fullScreenElement: HTMLElement): void {
     if (this._player.isInPictureInPicture()) {
       this._player.exitPictureInPicture();
     }
@@ -272,7 +294,7 @@ class FullscreenController {
    * @memberof FullScreenController
    * @returns {void}
    */
-  _exitInBrowserFullscreen(): void {
+  private _exitInBrowserFullscreen(): void {
     //get the element with relevant css, otherwise keep the flow of exit manually
     const fullScreenElement = Utils.Dom.getElementBySelector('.' + IN_BROWSER_FULLSCREEN);
     if (fullScreenElement) {
@@ -288,7 +310,7 @@ class FullscreenController {
    * @memberof FullScreenController
    * @returns {void}
    */
-  registerFullScreenEvents(): void {
+  public registerFullScreenEvents(): void {
     if (this._player.env.os.name === 'iOS') {
       this._handleIosFullscreen();
     } else {
@@ -304,13 +326,13 @@ class FullscreenController {
    * @memberof FullScreenController
    * @returns {void}
    */
-  _handleIosFullscreen(): void {
+  private _handleIosFullscreen(): void {
     /**
      * Attach listeners to ios full screen change.
      * @returns {void}
      */
-    const attachIosFullscreenListeners = () => {
-      let vidEl = this._player.getVideoElement();
+    const attachIosFullscreenListeners = (): void => {
+      const vidEl = this._player.getVideoElement();
       if (vidEl) {
         this._eventManager.listen(vidEl, 'webkitbeginfullscreen', () => this._fullscreenEnterHandler());
         this._eventManager.listen(vidEl, 'webkitendfullscreen', () => this._fullscreenExitHandler());
@@ -328,7 +350,7 @@ class FullscreenController {
    * @memberof FullScreenController
    * @returns {void}
    */
-  _fullscreenChangeHandler(): void {
+  private _fullscreenChangeHandler(): void {
     //fire player event for current state, if player is in fullscreen fire player fullscreen event otherwise exit
     this.isFullscreen() ? this._fullscreenEnterHandler() : this._fullscreenExitHandler();
   }
@@ -338,7 +360,7 @@ class FullscreenController {
    * @memberof FullScreenController
    * @returns {void}
    */
-  _fullscreenEnterHandler(): void {
+  private _fullscreenEnterHandler(): void {
     if (this.isFullscreen() && !this._isFullscreenEventDispatched) {
       this._isFullscreenEventDispatched = true;
       this._player.dispatchEvent(new FakeEvent(this._player.Event.ENTER_FULLSCREEN));
@@ -350,7 +372,7 @@ class FullscreenController {
    * @memberof FullScreenController
    * @returns {void}
    */
-  _fullscreenExitHandler(): void {
+  private _fullscreenExitHandler(): void {
     if (!this.isFullscreen() && this._isFullscreenEventDispatched) {
       this._isFullscreenEventDispatched = false;
       this._eventManager.removeAll();
@@ -363,7 +385,7 @@ class FullscreenController {
    * @returns {void}
    * @public
    */
-  destroy(): void {
+  public destroy(): void {
     this._eventManager.destroy();
   }
 }

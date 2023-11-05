@@ -11,7 +11,7 @@ const JSONP_FORMAT_STRING: string = 'responseFormat=jsonp&callback=';
  * @param {Object} options - Object contains configuration (currently only timeout).
  * @returns {Promise<*>} - A promise with the callback output.
  */
-function jsonp(url: string, callback: Function, options: { timeout: number}): Promise<any> {
+function jsonp(url: string, callback: (...args: any[]) => any, options: { timeout: number}): Promise<any> {
   options = options || {} as { timeout: number};
   const timeout = options.timeout ? options.timeout : JSONP_TIMEOUT;
   const script = document.createElement('script');
@@ -23,11 +23,11 @@ function jsonp(url: string, callback: Function, options: { timeout: number}): Pr
    * function to clean the DOM from the script tag and from the function
    * @returns {void}
    */
-  const _cleanup = () => {
+  const _cleanup = (): void => {
     if (script && script.parentNode) {
       script.parentNode.removeChild(script);
     }
-    window[callbackId] = () => {};
+    window[callbackId] = (): void => {};
     if (timer) {
       clearTimeout(timer);
     }
@@ -35,7 +35,7 @@ function jsonp(url: string, callback: Function, options: { timeout: number}): Pr
 
   return new Promise((resolve, reject) => {
     if (timeout) {
-      timer = setTimeout(function () {
+      timer = setTimeout( () => {
         _cleanup();
         reject(new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.TIMEOUT, url));
       }, timeout);
@@ -46,7 +46,7 @@ function jsonp(url: string, callback: Function, options: { timeout: number}): Pr
      * @param {Object} data - the data we get from the server, in response to the request
      * @returns {void}
      */
-    window[callbackId] = (data: Object) => {
+    window[callbackId] = (data: any): void => {
       const callbackResult = callback(data, url);
       _cleanup();
       resolve(callbackResult);

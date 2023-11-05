@@ -12,9 +12,9 @@ import getLogger from '../utils/logger';
  * @export
  */
 class FakeEventTarget {
-  _listeners: MultiMap<string, (event: FakeEvent) => boolean | void>;
-  dispatchTarget: FakeEventTarget;
-  __logger: any;
+  private _listeners: MultiMap<string, (event: FakeEvent) => boolean | void>;
+  private readonly dispatchTarget: FakeEventTarget;
+  private __logger: any;
 
   constructor() {
     /**
@@ -41,7 +41,7 @@ class FakeEventTarget {
    * @override
    * @export
    */
-  addEventListener(type: string, listener: typeof EventListener) {
+  public addEventListener(type: string, listener: typeof EventListener): void {
     this._listeners.push(type, listener);
   }
 
@@ -56,7 +56,7 @@ class FakeEventTarget {
    * @override
    * @export
    */
-  removeEventListener(type: string, listener: typeof EventListener) {
+  public removeEventListener(type: string, listener: typeof EventListener): void {
     this._listeners.remove(type, listener);
   }
 
@@ -68,13 +68,13 @@ class FakeEventTarget {
    * @override
    * @export
    */
-  dispatchEvent(event: FakeEvent) {
+  public dispatchEvent(event: FakeEvent): boolean {
     // In many browsers, it is complex to overwrite properties of actual Events.
     // Here we expect only to dispatch FakeEvents, which are simpler.
     //goog.asserts.assert(event instanceof FakeEvent,
     //    'FakeEventTarget can only dispatch FakeEvents!');
 
-    let list = this._listeners.get(event.type) || [];
+    const list = this._listeners.get(event.type) || [];
 
     for (let i = 0; i < list.length; ++i) {
       // Do this every time, since events can be re-dispatched from handlers.
@@ -83,7 +83,7 @@ class FakeEventTarget {
       //$FlowFixMe - need to cast to event target but can't yet make EventTarget inherited
       event.currentTarget = this.dispatchTarget;
 
-      let listener = list[i];
+      const listener = list[i];
       try {
         // native DOM event handler
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment

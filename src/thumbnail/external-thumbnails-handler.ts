@@ -26,28 +26,28 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @static
    * @private
    */
-  static _logger: any = getLogger('ExternalThumbnailsHandler');
+  private static _logger: any = getLogger('ExternalThumbnailsHandler');
 
   /**
    * event manager for the external thumbnails handler
    * @type {EventManager}
    * @private
    */
-  _eventManager: EventManager;
+  private _eventManager: EventManager;
 
   /**
    * the processed thumbnail cues
    * @type {Array<Cue>}
    * @private
    */
-  _cues: Array<PKThumbnailVttCue> = [];
+  private _cues: Array<PKThumbnailVttCue> = [];
 
   /**
    * computed img dimensions based on its natural ratio
    * @type {Object}
    * @private
    */
-  _naturalImgSize!: {width: number, height: number} | null;
+  private _naturalImgSize!: {width: number, height: number} | null;
 
   /**
    * start the loading and parsing process of the vtt thumbnails file.
@@ -55,7 +55,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @returns {void}
    * @public
    */
-  async load(thumbnailsConfig: PKExternalThumbnailsConfig): Promise<void> {
+  public async load(thumbnailsConfig: PKExternalThumbnailsConfig): Promise<void> {
     if (!thumbnailsConfig) {
       return;
     }
@@ -69,10 +69,11 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @returns {ThumbnailInfo | null} - the thumbnail img info.
    * @public
    */
-  getThumbnail(time: number): ThumbnailInfo | null {
+  public getThumbnail(time: number): ThumbnailInfo | null {
     const cue: PKThumbnailVttCue | null = this._findCue(time, this._cues);
     if (cue) {
-      let {size, coordinates, imgUrl} = cue;
+      const {imgUrl} = cue;
+      let {size, coordinates} = cue;
       size = size ? size : this._naturalImgSize;
       coordinates = coordinates ? coordinates : {x: 0, y: 0};
       const thumbnailInfo = {url: imgUrl, ...size, ...coordinates};
@@ -86,7 +87,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @returns {boolean} whether or not this player using external vtt thumbnails.
    * @public
    */
-  isUsingVttThumbnails(): boolean {
+  public isUsingVttThumbnails(): boolean {
     return !!this._cues?.length;
   }
 
@@ -96,7 +97,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @returns {Promise<void>} - resolve when the loading and parsing process is complete
    * @private
    */
-  async _downloadAndParseCues(thumbnailsConfig: PKExternalThumbnailsConfig): Promise<void> {
+  private async _downloadAndParseCues(thumbnailsConfig: PKExternalThumbnailsConfig): Promise<void> {
     try {
       const VttStr: string = await this._downloadVttFile(thumbnailsConfig);
       const cuesArray: Array<VTTCue> = await this._processVtt(VttStr);
@@ -112,7 +113,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @returns {Promise<string>} - resolves with the vtt string.
    * @private
    */
-  async _downloadVttFile(thumbnailsConfig: PKExternalThumbnailsConfig): Promise<string> {
+  private async _downloadVttFile(thumbnailsConfig: PKExternalThumbnailsConfig): Promise<string> {
     try {
       return await Utils.Http.execute(thumbnailsConfig.vttUrl, {}, 'GET');
     } catch (error) {
@@ -126,12 +127,12 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @returns {Array<Cue>} - parsed cues array
    * @private
    */
-  async _processVtt(vttStr: string): Promise<Array<VTTCue>> {
-    return new Promise((resolve, reject) => {
+  private async _processVtt(vttStr: string): Promise<VTTCue[]> {
+    return new Promise<VTTCue[]>((resolve, reject) => {
       const parser = new Parser(window, StringDecoder());
       const cues: VTTCue[] = [];
-      parser.oncue = cue => cues.push(cue);
-      parser.onflush = () => {
+      parser.oncue = ((cue): void => {cues.push(cue)});
+      parser.onflush = (): void => {
         ExternalThumbnailsHandler._logger.debug('finished parsing thumbnails cues');
         resolve(cues);
       };
@@ -148,7 +149,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @returns {Array<PKThumbnailVttCue>} - cues contains the thumbnails metadata.
    * @private
    */
-  async _formatIntoThumbnailCues(cues: Array<VTTCue>, thumbnailsConfig: PKExternalThumbnailsConfig): Promise<PKThumbnailVttCue[]> {
+  private async _formatIntoThumbnailCues(cues: Array<VTTCue>, thumbnailsConfig: PKExternalThumbnailsConfig): Promise<PKThumbnailVttCue[]> {
     if (!this.validateThumbnailsVTTFormat(cues)) {
       throw new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.INVALID_VTT_THUMBNAILS_FILE, {
         message: 'invalid thumbnail vtt format',
@@ -173,7 +174,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
     }
   }
 
-  validateThumbnailsVTTFormat(cues): boolean {
+  private validateThumbnailsVTTFormat(cues): boolean {
     return cues.length && cues[0] instanceof VTTCue;
   }
 
@@ -183,7 +184,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @returns {Object} - the natural image dimensions
    * @private
    */
-  extractImgNaturalDimensions(imgUrl: string): Promise<{height: number, width: number} | null> {
+  private extractImgNaturalDimensions(imgUrl: string): Promise<{height: number, width: number} | null> {
     return new Promise(resolve => {
       const img = new Image();
       img.src = imgUrl;
@@ -200,7 +201,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @returns {boolean} - indicates the url is valid or not
    * @private
    */
-  validateImgUrl(imgUrl: string): Promise<boolean> {
+  private validateImgUrl(imgUrl: string): Promise<boolean> {
     return new Promise(resolve => {
       const img = new Image();
       img.src = imgUrl;
@@ -218,7 +219,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @returns {PKThumbnailVttCue} - cue object contains the img metadata.
    * @private
    */
-  _extractCueMetadata(vttCue: VTTCue, thumbnailsConfig: PKExternalThumbnailsConfig): PKThumbnailVttCue {
+  private _extractCueMetadata(vttCue: VTTCue, thumbnailsConfig: PKExternalThumbnailsConfig): PKThumbnailVttCue {
     const {startTime, endTime, text} = vttCue;
     const imgBaseUrl = thumbnailsConfig.vttUrl.substring(0, thumbnailsConfig.vttUrl.lastIndexOf('/'));
     const isVTTIncludesImgSizeOnly: boolean = VTT_INCLUDES_SIZE_ONLY.test(text);
@@ -269,7 +270,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @returns {PKThumbnailVttCue | null} - the thumbnail cue linked to that timing.
    * @private
    */
-  _findCue(time: number, cues: Array<PKThumbnailVttCue>): PKThumbnailVttCue | null {
+  private _findCue(time: number, cues: Array<PKThumbnailVttCue>): PKThumbnailVttCue | null {
     let left = 0;
     let right = cues.length - 1;
     while (left <= right) {
@@ -291,7 +292,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @returns {void}
    * @public
    */
-  reset(): void {
+  public reset(): void {
     this._cues = [];
     this._eventManager.removeAll();
     this._naturalImgSize = {} as {width: number, height: number};
@@ -302,7 +303,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @returns {void}
    * @public
    */
-  destroy(): void {
+  public destroy(): void {
     this.reset();
     this._eventManager.destroy();
   }
