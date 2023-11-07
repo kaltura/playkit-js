@@ -120,7 +120,7 @@ describe('Html5', () => {
     eventMgrSpy.should.have.been.calledOnce;
     engine._el.src.should.be.empty;
     (engine._mediaSourceAdapter === null).should.be.equal(true);
-    (engine._droppedFramesWatcher === null).should.be.equal(true);
+    (engine._droppedFramesWatcher === undefined).should.be.equal(true);
     mediaSourceAdapterSpy.should.have.been.calledOnce;
     droppedFramesWatcherSpy.should.have.been.calledOnce;
     engine._init(hlsSource, config);

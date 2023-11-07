@@ -3359,7 +3359,7 @@ describe('Player', function () {
       player._tracks.should.be.empty;
       player._engineType.should.be.empty;
       player._streamType.should.be.empty;
-      (player._readyPromise === null).should.be.true;
+      (player._readyPromise === undefined).should.be.true;
       player._firstPlay.should.be.true;
     });
 

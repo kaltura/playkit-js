@@ -55,7 +55,7 @@ export default class VideoTrack extends Track {
    * @constructor
    * @param {Object} settings - The track settings object
    */
-  constructor(settings: any) {
+  constructor(settings: any = {}) {
     super(settings);
     this._bandwidth = settings.bandwidth;
     this._width = settings.width;

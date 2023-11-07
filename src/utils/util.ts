@@ -266,15 +266,10 @@ const _Generator = {
    * @param {number} length - The length of the id.
    * @returns {string} - The generated id.
    */
-  uniqueId(length?: number): string {
+  uniqueId: function (length?: number) {
     const from = 2;
-    const to = from + (!length || length < 0 ? 0 : length - 2) + 2;
-    return (
-      '_' +
-      Math.random()
-        .toString(36)
-        .substring(from, to + 1)
-    );
+    const to = from + (!length || length < 0 ? 0 : length - 2);
+    return '_' + Math.random().toString(36).slice(from, from + to);
   },
 
   /**

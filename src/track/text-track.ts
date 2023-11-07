@@ -33,10 +33,12 @@ export default class TextTrack extends Track {
 
   constructor(settings: TrackSettings = {}) {
     super(settings);
-    this._kind = settings.kind || '';
-    this._external = settings.external || false;
-    this._default = settings.default || false;
+    // use language tag if no display label is available
+    this._label = this.label || this.language;
+    this._kind = settings.kind!;
+    this._external = settings.external!;
     this._index = TextTrack._generateIndex();
+    this._default = settings.default || false;
   }
 
   public static _generateIndex(): number {
