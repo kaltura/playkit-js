@@ -31,8 +31,6 @@ export class AudioTrack extends Track {
 // @public (undocumented)
 export const AutoPlayType: PKAutoPlayTypes;
 
-// Warning: (ae-forgotten-export) The symbol "IMediaSourceAdapter" needs to be exported by the entry point playkit.d.ts
-//
 // @public (undocumented)
 export class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSourceAdapter {
     constructor(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config?: any);
@@ -116,6 +114,11 @@ export class BaseMiddleware {
 function binarySearch<T>(list?: Array<T>, comparisonFn?: ((param: T) => number)): T | null;
 
 // @public (undocumented)
+export type CapabilityResult = {
+    [capabilityName: string]: any;
+};
+
+// @public (undocumented)
 export const CorsType: PKCorsTypes;
 
 // @public
@@ -165,9 +168,6 @@ export const DrmScheme: {
 // @public (undocumented)
 export class EngineDecoratorProvider implements IEngineDecoratorProvider {
     constructor(plugin: IEngineDecoratorProvider);
-    // Warning: (ae-forgotten-export) The symbol "IEngine" needs to be exported by the entry point playkit.d.ts
-    // Warning: (ae-forgotten-export) The symbol "IEngineDecorator" needs to be exported by the entry point playkit.d.ts
-    //
     // (undocumented)
     getEngineDecorator(engine: IEngine, dispatchEventHandler: (event: FakeEvent) => void): IEngineDecorator;
     // (undocumented)
@@ -265,7 +265,7 @@ export type FontSizeOptions = '50%' | '75%' | '100%' | '200%' | '300%' | '400%';
 
 // @public (undocumented)
 const _Generator: {
-    uniqueId(length?: number): string;
+    uniqueId: (length?: number) => string;
     guid: () => string;
 };
 
@@ -292,11 +292,305 @@ const _Http: {
 };
 
 // @public (undocumented)
+export interface ICapability {
+    // (undocumented)
+    getCapability(): Promise<CapabilityResult>;
+    // (undocumented)
+    runCapability(): void;
+    // (undocumented)
+    setCapabilities(capabilities: {
+        [name: string]: any;
+    }): void;
+}
+
+// @public (undocumented)
+export interface IDrmProtocol {
+    // (undocumented)
+    canPlayDrm(drmData: Array<PKDrmDataObject>): boolean;
+    // (undocumented)
+    isConfigured(drmData: Array<PKDrmDataObject>, drmConfig: PKDrmConfigObject): boolean;
+    // (undocumented)
+    setDrmPlayback(...any: any[]): void;
+}
+
+// @public (undocumented)
+export interface IEngine extends FakeEventTarget {
+    // (undocumented)
+    addTextTrack(kind: TextTrackKind, label?: string, language?: string): TextTrack | undefined;
+    // (undocumented)
+    applyABRRestriction(restrictions: PKABRRestrictionObject): void;
+    // (undocumented)
+    attach(): void;
+    // (undocumented)
+    attachMediaSource(): void;
+    // (undocumented)
+    autoplay: boolean;
+    // (undocumented)
+    availableBuffer: number;
+    // (undocumented)
+    buffered: TimeRanges;
+    // (undocumented)
+    controls: boolean;
+    // (undocumented)
+    crossOrigin: string | null;
+    // (undocumented)
+    currentTime: number;
+    // (undocumented)
+    defaultMuted: boolean;
+    // (undocumented)
+    defaultPlaybackRate: number;
+    // (undocumented)
+    destroy(): void;
+    // (undocumented)
+    detach(): void;
+    // (undocumented)
+    detachMediaSource(): void;
+    // (undocumented)
+    duration: number;
+    // (undocumented)
+    enableAdaptiveBitrate(): void;
+    // (undocumented)
+    ended: boolean;
+    // (undocumented)
+    enterPictureInPicture(): void;
+    // (undocumented)
+    error: MediaError | null;
+    // (undocumented)
+    exitPictureInPicture(): void;
+    // (undocumented)
+    getDrmInfo(): PKDrmDataObject | null;
+    // (undocumented)
+    getNativeTextTracks(): TextTrack[];
+    // (undocumented)
+    getStartTimeOfDvrWindow(): number;
+    // (undocumented)
+    getThumbnail(time: number): ThumbnailInfo | null;
+    // (undocumented)
+    getVideoElement(): HTMLVideoElement;
+    // (undocumented)
+    hideTextTrack(): void;
+    // (undocumented)
+    id: string;
+    // (undocumented)
+    isAdaptiveBitrateEnabled(): boolean;
+    // (undocumented)
+    isInPictureInPicture: boolean;
+    // (undocumented)
+    isLive(): boolean;
+    // (undocumented)
+    isOnLiveEdge(): boolean;
+    // (undocumented)
+    isPictureInPictureSupported(): boolean;
+    // (undocumented)
+    liveDuration: number;
+    // (undocumented)
+    load(startTime?: number): Promise<{
+        tracks: Track[];
+    }>;
+    // (undocumented)
+    loop: boolean;
+    // (undocumented)
+    muted: boolean;
+    // (undocumented)
+    networkState: number;
+    // (undocumented)
+    pause(): void;
+    // (undocumented)
+    paused: boolean;
+    // (undocumented)
+    play(): Promise<any> | undefined;
+    // (undocumented)
+    playbackRate: number;
+    // (undocumented)
+    playbackRates: Array<number>;
+    // (undocumented)
+    played: TimeRanges;
+    // (undocumented)
+    playsinline: boolean;
+    // (undocumented)
+    poster: string;
+    // (undocumented)
+    preload: "none" | "metadata" | "auto" | "";
+    // (undocumented)
+    readyState: number;
+    // (undocumented)
+    reset(): void;
+    // (undocumented)
+    resetAllCues(): void;
+    // (undocumented)
+    restore(source: PKMediaSourceObject, config: Object): void;
+    // (undocumented)
+    seekable: TimeRanges;
+    // (undocumented)
+    seeking: boolean;
+    // (undocumented)
+    seekToLiveEdge(): void;
+    // (undocumented)
+    selectAudioTrack(audioTrack: AudioTrack): void;
+    // (undocumented)
+    selectImageTrack(imageTrack: ImageTrack): void;
+    // (undocumented)
+    selectTextTrack(textTrack: TextTrack_2): void;
+    // (undocumented)
+    selectVideoTrack(videoTrack: VideoTrack): void;
+    // (undocumented)
+    src: string;
+    // (undocumented)
+    targetBuffer: number;
+    // (undocumented)
+    videoHeight: number;
+    // (undocumented)
+    videoWidth: number;
+    // (undocumented)
+    volume: number;
+}
+
+// @public (undocumented)
+export interface IEngineDecorator {
+    // (undocumented)
+    active: boolean;
+    // (undocumented)
+    attach?: () => void;
+    // (undocumented)
+    attachMediaSource?: () => void;
+    // (undocumented)
+    autoplay?: boolean;
+    // (undocumented)
+    availableBuffer?: number;
+    // (undocumented)
+    buffered?: TimeRanges;
+    // (undocumented)
+    controls?: boolean;
+    // (undocumented)
+    crossOrigin?: string;
+    // (undocumented)
+    currentTime?: number;
+    // (undocumented)
+    defaultMuted?: boolean;
+    // (undocumented)
+    defaultPlaybackRate?: number;
+    // (undocumented)
+    destroy?: () => void;
+    // (undocumented)
+    detach?: () => void;
+    // (undocumented)
+    detachMediaSource?: () => void;
+    // (undocumented)
+    dispatchEvent(event: FakeEvent): boolean;
+    // (undocumented)
+    duration?: number;
+    // (undocumented)
+    enableAdaptiveBitrate?: () => void;
+    // (undocumented)
+    ended?: boolean;
+    // (undocumented)
+    enterPictureInPicture?: () => void;
+    // (undocumented)
+    error?: MediaError;
+    // (undocumented)
+    exitPictureInPicture?: () => void;
+    // (undocumented)
+    getStartTimeOfDvrWindow?: () => number;
+    // (undocumented)
+    getVideoElement?: () => HTMLVideoElement;
+    // (undocumented)
+    hideTextTrack?: () => void;
+    // (undocumented)
+    id?: string;
+    // (undocumented)
+    isAdaptiveBitrateEnabled?: () => boolean;
+    // (undocumented)
+    isInPictureInPicture?: boolean;
+    // (undocumented)
+    isLive?: () => boolean;
+    // (undocumented)
+    isPictureInPictureSupported?: () => boolean;
+    // (undocumented)
+    load?: (startTime?: number) => Promise<any>;
+    // (undocumented)
+    loop?: boolean;
+    // (undocumented)
+    muted?: boolean;
+    // (undocumented)
+    networkState?: number;
+    // (undocumented)
+    pause?: () => void;
+    // (undocumented)
+    paused?: boolean;
+    // (undocumented)
+    play?: () => void;
+    // (undocumented)
+    playbackRate?: number;
+    // (undocumented)
+    playbackRates?: Array<number>;
+    // (undocumented)
+    played?: TimeRanges;
+    // (undocumented)
+    playsinline?: boolean;
+    // (undocumented)
+    poster?: string;
+    // (undocumented)
+    preload?: string;
+    // (undocumented)
+    readyState?: number;
+    // (undocumented)
+    reset?: () => void;
+    // (undocumented)
+    resetAllCues?: () => void;
+    // (undocumented)
+    restore?: (source: PKMediaSourceObject, config: any) => void;
+    // (undocumented)
+    seekable?: TimeRanges;
+    // (undocumented)
+    seeking?: boolean;
+    // (undocumented)
+    seekToLiveEdge?: () => void;
+    // (undocumented)
+    selectAudioTrack?: (audioTrack: AudioTrack) => void;
+    // (undocumented)
+    selectTextTrack?: (textTrack: TextTrack_2) => void;
+    // (undocumented)
+    selectVideoTrack?: (videoTrack: VideoTrack) => void;
+    // (undocumented)
+    src?: string;
+    // (undocumented)
+    targetBuffer?: number;
+    // (undocumented)
+    videoHeight?: number;
+    // (undocumented)
+    videoWidth?: number;
+    // (undocumented)
+    volume?: number;
+}
+
+// @public (undocumented)
 export interface IEngineDecoratorProvider {
     // (undocumented)
     getEngineDecorator(engine: IEngine, dispatchEventHandler: Function): IEngineDecorator;
     // (undocumented)
     getName(): string;
+}
+
+// @public (undocumented)
+export interface IEngineStatic {
+    // (undocumented)
+    canPlaySource(source: PKMediaSourceObject, preferNative: boolean, drmConfig: PKDrmConfigObject): boolean;
+    // (undocumented)
+    createEngine(source: PKMediaSourceObject, config: Object, playerId: string): IEngine;
+    // (undocumented)
+    getCapabilities(): Promise<any>;
+    // (undocumented)
+    id: string;
+    // (undocumented)
+    isSupported(): boolean;
+    // (undocumented)
+    prepareVideoElement(playerId: string): void;
+    // (undocumented)
+    runCapabilities(): void;
+    // (undocumented)
+    setCapabilities(capabilities: {
+        [name: string]: any;
+    }): void;
 }
 
 // @public (undocumented)
@@ -338,6 +632,80 @@ export class ImageTrack extends Track {
     get url(): string;
     // (undocumented)
     get width(): number;
+}
+
+// @public (undocumented)
+export interface IMediaSourceAdapter extends FakeEventTarget {
+    // (undocumented)
+    applyABRRestriction(restriction: PKABRRestrictionObject): void;
+    // (undocumented)
+    attachMediaSource(): void;
+    // (undocumented)
+    capabilities: PKMediaSourceCapabilities;
+    // (undocumented)
+    destroy(): Promise<any>;
+    // (undocumented)
+    detachMediaSource(): void;
+    // (undocumented)
+    disableNativeTextTracks(): void;
+    // (undocumented)
+    enableAdaptiveBitrate(): void;
+    // (undocumented)
+    getDrmInfo(): PKDrmDataObject | null;
+    // (undocumented)
+    getSegmentDuration(): number;
+    // (undocumented)
+    getStartTimeOfDvrWindow(): number;
+    // (undocumented)
+    getThumbnail(time: number): ThumbnailInfo | null;
+    // (undocumented)
+    handleMediaError(error?: MediaError): boolean;
+    // (undocumented)
+    hideTextTrack(): void;
+    // (undocumented)
+    isAdaptiveBitrateEnabled(): boolean;
+    // (undocumented)
+    isLive(): boolean;
+    // (undocumented)
+    isOnLiveEdge(): boolean;
+    // (undocumented)
+    liveDuration: number;
+    // (undocumented)
+    load(startTime?: number): Promise<{
+        tracks: Track[];
+    }>;
+    // (undocumented)
+    seekToLiveEdge(): void;
+    // (undocumented)
+    selectAudioTrack(audioTrack: AudioTrack): void;
+    // (undocumented)
+    selectImageTrack(imageTrack: ImageTrack): void;
+    // (undocumented)
+    selectTextTrack(textTrack: TextTrack_2): void;
+    // (undocumented)
+    selectVideoTrack(videoTrack: VideoTrack): void;
+    // (undocumented)
+    setMaxBitrate(bitrate: number): void;
+    // (undocumented)
+    src: string;
+    // (undocumented)
+    targetBuffer: number;
+}
+
+// @public (undocumented)
+export interface IMediaSourceAdapterStatic {
+    // (undocumented)
+    canPlayDrm(drmData: Array<Object>, drmConfig: PKDrmConfigObject): boolean;
+    // (undocumented)
+    canPlayType(mimeType: string): boolean;
+    // (undocumented)
+    createAdapter(videoElement: HTMLVideoElement, source: PKMediaSourceObject, config: Object): IMediaSourceAdapter;
+    // (undocumented)
+    id: string;
+    // (undocumented)
+    isMSESupported(): boolean;
+    // (undocumented)
+    isSupported(): boolean;
 }
 
 // @public (undocumented)
@@ -1019,9 +1387,7 @@ class TextTrack_2 extends Track {
     // (undocumented)
     static isNativeTextTrack(track: any): boolean;
     // (undocumented)
-    static KIND: {
-        [kind: string]: TextTrackKind;
-    };
+    static KIND: Record<'METADATA' | 'SUBTITLES' | 'CAPTIONS', TextTrackKind>;
     // (undocumented)
     get kind(): string;
     // (undocumented)
@@ -1138,7 +1504,7 @@ const _VERSION: {
 
 // @public
 export class VideoTrack extends Track {
-    constructor(settings: any);
+    constructor(settings?: any);
     // (undocumented)
     get bandwidth(): number;
     // (undocumented)
@@ -1150,7 +1516,7 @@ export class VideoTrack extends Track {
 // Warnings were encountered during analysis:
 //
 // src/types/sources-config.ts:13:3 - (ae-forgotten-export) The symbol "PKExternalCaptionObject" needs to be exported by the entry point playkit.d.ts
-// src/utils/util.ts:509:4 - (ae-forgotten-export) The symbol "jsonp" needs to be exported by the entry point playkit.d.ts
+// src/utils/util.ts:504:4 - (ae-forgotten-export) The symbol "jsonp" needs to be exported by the entry point playkit.d.ts
 
 // (No @packageDocumentation comment for this package)
 

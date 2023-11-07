@@ -17,7 +17,7 @@ export default class TextTrack extends Track {
     HIDDEN: 'hidden'
   };
 
-  public static KIND: {[kind: string]: TextTrackKind } = {
+  public static KIND: Record<'METADATA' | 'SUBTITLES' | 'CAPTIONS', TextTrackKind> = {
     METADATA: 'metadata',
     SUBTITLES: 'subtitles',
     CAPTIONS: 'captions'
