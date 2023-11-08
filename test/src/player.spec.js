@@ -1186,9 +1186,9 @@ describe('Player', function () {
           let tracks = player._tracks.filter(track => {
             return track instanceof TextTrack;
           });
-          video.textTracks[0].mode.should.be.equal('hidden');
+          video.textTracks[0].mode.should.be.equal('disabled');
           video.textTracks[1].mode.should.be.equal('disabled');
-          tracks[0].active.should.be.true;
+          tracks[0].active.should.be.false;
           tracks[1].active.should.be.false;
           const track = player.getTracks(TrackType.TEXT).find(track => track.language === 'fr');
           player.selectTrack(track);
@@ -1220,9 +1220,9 @@ describe('Player', function () {
           let tracks = player._tracks.filter(track => {
             return track instanceof TextTrack;
           });
-          video.textTracks[0].mode.should.be.equal('hidden');
+          video.textTracks[0].mode.should.be.equal('disabled');
           video.textTracks[1].mode.should.be.equal('disabled');
-          tracks[0].active.should.be.true;
+          tracks[0].active.should.be.false;
           tracks[1].active.should.be.false;
           const track = player._tracks.find(track => track.language === 'de');
           track.available = true;
@@ -1240,9 +1240,9 @@ describe('Player', function () {
         let tracks = player._tracks.filter(track => {
           return track instanceof TextTrack;
         });
-        video.textTracks[0].mode.should.be.equal('hidden');
+        video.textTracks[0].mode.should.be.equal('disabled');
         video.textTracks[1].mode.should.be.equal('disabled');
-        tracks[0].active.should.be.true;
+        tracks[0].active.should.be.false;
         tracks[1].active.should.be.false;
         player.selectTrack(player.getTracks(TrackType.TEXT).find(track => track.language === 'en'));
         video.textTracks[0].mode.should.be.equal('hidden');
@@ -1260,14 +1260,14 @@ describe('Player', function () {
         let tracks = player._tracks.filter(track => {
           return track instanceof TextTrack;
         });
-        video.textTracks[0].mode.should.be.equal('hidden');
+        video.textTracks[0].mode.should.be.equal('disabled');
         video.textTracks[1].mode.should.be.equal('disabled');
-        tracks[0].active.should.be.true;
+        tracks[0].active.should.be.false;
         tracks[1].active.should.be.false;
         player.selectTrack(new TextTrack({language: 'asp'}));
-        video.textTracks[0].mode.should.be.equal('hidden');
+        video.textTracks[0].mode.should.be.equal('disabled');
         video.textTracks[1].mode.should.be.equal('disabled');
-        tracks[0].active.should.be.true;
+        tracks[0].active.should.be.false;
         tracks[1].active.should.be.false;
         done();
       });
@@ -1279,15 +1279,15 @@ describe('Player', function () {
         let tracks = player._tracks.filter(track => {
           return track instanceof TextTrack;
         });
-        video.textTracks[0].mode.should.be.equal('hidden');
+        video.textTracks[0].mode.should.be.equal('disabled');
         video.textTracks[1].mode.should.be.equal('disabled');
-        tracks[0].active.should.be.true;
+        tracks[0].active.should.be.false;
         tracks[1].active.should.be.false;
         const track = Object.values(player.getVideoElement().textTracks).find(track => track.kind === 'metadata');
         player.selectTrack(track);
-        video.textTracks[0].mode.should.be.equal('hidden');
+        video.textTracks[0].mode.should.be.equal('disabled');
         video.textTracks[1].mode.should.be.equal('disabled');
-        tracks[0].active.should.be.true;
+        tracks[0].active.should.be.false;
         tracks[1].active.should.be.false;
         done();
       });
@@ -1410,9 +1410,9 @@ describe('Player', function () {
           let tracks = player._tracks.filter(track => {
             return track instanceof TextTrack;
           });
-          video.textTracks[0].mode.should.be.equal('hidden');
+          video.textTracks[0].mode.should.be.equal('disabled');
           video.textTracks[1].mode.should.be.equal('disabled');
-          tracks[0].active.should.be.true;
+          tracks[0].active.should.be.false;
           tracks[1].active.should.be.false;
           player.hideTextTrack();
           video.textTracks[0].mode.should.be.equal('disabled');

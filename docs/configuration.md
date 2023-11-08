@@ -45,6 +45,7 @@ var config = {
   playback: {
     audioLanguage: '',
     textLanguage: '',
+    captionsDisplay: false,
     additionalAudioLanguage: '',
     additionalTextLanguage: '',
     volume: 1,
@@ -123,7 +124,7 @@ var config = {
 > > ##### Description: Defines the player log level.
 > >
 > > Possible values: `"DEBUG", "INFO", "TIME", "WARN", "ERROR", "OFF"`
-> > 
+> >
 > > ### config.log.playerVersion
 > >
 > > ##### Default: `true`
@@ -166,6 +167,8 @@ var config = {
 >  captions?: Array<PKExternalCaptionObject>,
 >  thumbnails?: PKExternalThumbnailsConfig,
 >  startTime?: number
+>  seekFrom?: number
+>  clipTo?: number
 > }
 > ```
 >
@@ -504,6 +507,32 @@ var config = {
 > > > Note. `startTime` affects the ad playback, e.g. `startTime: 10` will skip ads scheduled until 10.
 > > > <br>To force playing ads scheduled before `startTime`, need to configure the ads plugin.
 > > > <br>For example with [IMA](https://github.com/kaltura/playkit-js-ima/blob/master/docs/api.md) plugin, set `adsRenderingSettings: {playAdsAfterTime: -1}`.
+> >
+> > ##
+> >
+> > ### sources.seekFrom
+> >
+> > ##### Type: `number`
+> >
+> > ##### Default: `-`
+> >
+> > ##### Description: Optional time, in seconds, to start the playback from, by cutting the video.
+> >
+> > Unlike `startTime`, this configuration will cut and omit the part of the video that is before the configured `seekFrom` value and will start from there.
+> > This will affect the duration of the video.
+> >
+> > ##
+> >
+> > ### sources.clipTo
+> >
+> > ##### Type: `number`
+> >
+> > ##### Default: `-`
+> >
+> > ##### Description: Optional time, in seconds, to end the playback, by cutting the video.
+> >
+> > `clipTo` will cut and omit the part of the video that is after the configured value, and will end at this position.
+> > This will affect the duration of the video.
 >
 > ##
 >
@@ -749,6 +778,7 @@ var config = {
 >  textLanguage: string,
 >  additionalAudioLanguage: string,
 >  additionalTextLanguage: string,
+>  captionsDisplay: boolean,
 >  volume: number,
 >  playsinline: boolean,
 >  crossOrigin: string,
@@ -776,6 +806,7 @@ var config = {
 >  textLanguage: "",
 >  additionalAudioLanguage: "",
 >  additionalTextLanguage: "",
+>  captionsDisplay: false,
 >  volume: 1,
 >  playsinline: true,
 >  preload: "none",
@@ -934,6 +965,26 @@ var config = {
 > > var config = {
 > >   playback: {
 > >     additionalTextLanguage: 'spa' // Start playback with Spanish captions
+> >   }
+> > };
+> > ```
+>
+> ##
+>
+> > ### config.playback.captionsDisplay
+> >
+> > ##### Type: `boolean`
+> >
+> > ##### Default: `false`
+> >
+> > ##### Description: A Boolean attribute that indicates whether the captions are disabled or enabled by default.
+> >
+> > #### Example:
+> >
+> > ```js
+> > var config = {
+> >   playback: {
+> >     captionsDisplay: true
 > >   }
 > > };
 > > ```
