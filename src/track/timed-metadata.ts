@@ -41,7 +41,7 @@ TimedMetadata.TYPE = {
 function createTextTrackCue(timedMetadata: TimedMetadata): PKTextTrackCue | null {
   try {
     const {startTime, endTime, id, type, metadata} = timedMetadata;
-    let cue = new VTTCue(startTime, endTime, '');
+    const cue = new VTTCue(startTime, endTime, '');
     const cueValue = {key: type, data: metadata};
     cue.id = id;
     cue['value'] = cueValue;
