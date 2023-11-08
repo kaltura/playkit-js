@@ -459,11 +459,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     requestFilterPromise = requestFilterPromise || Promise.resolve(pkRequest);
     requestFilterPromise
       .then(updatedRequest => {
-        if (this._config.playback.options.native.useSourceTag) {
+        if (this._config.useSourceTag) {
           const source = document.createElement('source');
+          const mimetype = this._sourceObj.mimetype.toLowerCase();
           source.setAttribute('src', updatedRequest.url);
-          source.setAttribute('type', 'application/x-mpegurl');
-          if (this._config.playback.options.native.useMediaOptionAttribute) {
+          source.setAttribute('type', mimetype);
+
+          if (this._config.useMediaOptionAttribute) {
             NativeAdapter._logger.debug('this._config.abrEwmaDefaultEstimate', this._config.abrEwmaDefaultEstimate);
             const options = {};
             options.option = {};
@@ -474,9 +476,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
               };
             }
             NativeAdapter._logger.debug('options', options);
-            //}
             const mediaOption = encodeURI(JSON.stringify(options));
-            source.setAttribute('type', 'application/x-mpegurl;mediaOption=' + mediaOption);
+            source.setAttribute('type', mimetype + ';mediaOption=' + mediaOption);
           }
           this._videoElement.appendChild(source);
         } else {
