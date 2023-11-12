@@ -466,7 +466,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           source.setAttribute('type', mimetype);
 
           if (this._config.useMediaOptionAttribute) {
-            NativeAdapter._logger.debug('this._config.abrEwmaDefaultEstimate', this._config.abrEwmaDefaultEstimate);
             const options = {};
             options.option = {};
             if (this._config.abrEwmaDefaultEstimate) {
@@ -475,7 +474,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
                 start: this._config.abrEwmaDefaultEstimate
               };
             }
-            NativeAdapter._logger.debug('options', options);
+            NativeAdapter._logger.debug('Setting mediaOption -', options);
             const mediaOption = encodeURI(JSON.stringify(options));
             source.setAttribute('type', mimetype + ';mediaOption=' + mediaOption);
           }
