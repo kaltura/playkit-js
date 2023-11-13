@@ -849,8 +849,8 @@ export type PKCustomLabelsConfigObject = {
 
 // @public (undocumented)
 export type PKDimensionsConfig = {
-    width?: number | string;
-    height?: number | string;
+    width: number;
+    height: number;
     ratio?: string;
 };
 
@@ -1056,21 +1056,31 @@ export type PKStreamPriorityObject = {
 };
 
 // @public (undocumented)
-export type PKStreamTypes = {
-    [stream: string]: string;
-};
+export type PKStreamTypes = Record<'DASH' | 'HLS' | 'PROGRESSIVE' | 'IMAGE', PlayerStreamTypes>;
 
 // @public (undocumented)
-export type PKTextConfigObject = {
-    enableCEA708Captions: boolean;
-    useShakaTextTrackDisplay: boolean;
-    useNativeTextTrack: boolean;
-    forceCenter: boolean;
+export interface PKTextConfigObject {
+    // (undocumented)
     captionsTextTrack1Label: string;
+    // (undocumented)
     captionsTextTrack1LanguageCode: string;
+    // (undocumented)
     captionsTextTrack2Label: string;
+    // (undocumented)
     captionsTextTrack2LanguageCode: string;
-};
+    // (undocumented)
+    enableCEA708Captions: boolean;
+    // (undocumented)
+    forceCenter: boolean;
+    // (undocumented)
+    textStyle: PKTextStyleObject;
+    // (undocumented)
+    textTrackDisplaySetting: PKTextTrackDisplaySettingObject;
+    // (undocumented)
+    useNativeTextTrack: boolean;
+    // (undocumented)
+    useShakaTextTrackDisplay: boolean;
+}
 
 // @public
 export type PKTextStyleObject = {
@@ -1267,6 +1277,9 @@ export class Player extends FakeEventTarget {
     set volume(vol: number);
     get volume(): number | null;
 }
+
+// @public (undocumented)
+export type PlayerStreamTypes = 'dash' | 'hls' | 'progressive' | 'image';
 
 // Warning: (ae-forgotten-export) The symbol "EngineProvider" needs to be exported by the entry point playkit.d.ts
 //
@@ -1512,6 +1525,9 @@ export class VideoTrack extends Track {
     // (undocumented)
     get width(): number;
 }
+
+
+export * from "js-logger";
 
 // Warnings were encountered during analysis:
 //

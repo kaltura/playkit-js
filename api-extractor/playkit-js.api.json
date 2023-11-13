@@ -10824,7 +10824,7 @@
             },
             {
               "kind": "Content",
-              "text": "{\n    width?: number | string;\n    height?: number | string;\n    ratio?: string;\n}"
+              "text": "{\n    width: number;\n    height: number;\n    ratio?: string;\n}"
             },
             {
               "kind": "Content",
@@ -11769,8 +11769,22 @@
               "text": "export type PKStreamTypes = "
             },
             {
+              "kind": "Reference",
+              "text": "Record",
+              "canonicalReference": "!Record:type"
+            },
+            {
               "kind": "Content",
-              "text": "{\n    [stream: string]: string;\n}"
+              "text": "<'DASH' | 'HLS' | 'PROGRESSIVE' | 'IMAGE', "
+            },
+            {
+              "kind": "Reference",
+              "text": "PlayerStreamTypes",
+              "canonicalReference": "@playkit-js/playkit-js!PlayerStreamTypes:type"
+            },
+            {
+              "kind": "Content",
+              "text": ">"
             },
             {
               "kind": "Content",
@@ -11782,34 +11796,298 @@
           "name": "PKStreamTypes",
           "typeTokenRange": {
             "startIndex": 1,
-            "endIndex": 2
+            "endIndex": 5
           }
         },
         {
-          "kind": "TypeAlias",
-          "canonicalReference": "@playkit-js/playkit-js!PKTextConfigObject:type",
+          "kind": "Interface",
+          "canonicalReference": "@playkit-js/playkit-js!PKTextConfigObject:interface",
           "docComment": "",
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "export type PKTextConfigObject = "
-            },
-            {
-              "kind": "Content",
-              "text": "{\n    enableCEA708Captions: boolean;\n    useShakaTextTrackDisplay: boolean;\n    useNativeTextTrack: boolean;\n    forceCenter: boolean;\n    captionsTextTrack1Label: string;\n    captionsTextTrack1LanguageCode: string;\n    captionsTextTrack2Label: string;\n    captionsTextTrack2LanguageCode: string;\n}"
-            },
-            {
-              "kind": "Content",
-              "text": ";"
+              "text": "export interface PKTextConfigObject "
             }
           ],
           "fileUrlPath": "src/types/text-config.ts",
           "releaseTag": "Public",
           "name": "PKTextConfigObject",
-          "typeTokenRange": {
-            "startIndex": 1,
-            "endIndex": 2
-          }
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@playkit-js/playkit-js!PKTextConfigObject#captionsTextTrack1Label:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "captionsTextTrack1Label: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "captionsTextTrack1Label",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@playkit-js/playkit-js!PKTextConfigObject#captionsTextTrack1LanguageCode:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "captionsTextTrack1LanguageCode: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "captionsTextTrack1LanguageCode",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@playkit-js/playkit-js!PKTextConfigObject#captionsTextTrack2Label:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "captionsTextTrack2Label: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "captionsTextTrack2Label",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@playkit-js/playkit-js!PKTextConfigObject#captionsTextTrack2LanguageCode:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "captionsTextTrack2LanguageCode: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "captionsTextTrack2LanguageCode",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@playkit-js/playkit-js!PKTextConfigObject#enableCEA708Captions:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "enableCEA708Captions: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "enableCEA708Captions",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@playkit-js/playkit-js!PKTextConfigObject#forceCenter:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "forceCenter: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "forceCenter",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@playkit-js/playkit-js!PKTextConfigObject#textStyle:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "textStyle: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PKTextStyleObject",
+                  "canonicalReference": "@playkit-js/playkit-js!PKTextStyleObject:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "textStyle",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@playkit-js/playkit-js!PKTextConfigObject#textTrackDisplaySetting:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "textTrackDisplaySetting: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PKTextTrackDisplaySettingObject",
+                  "canonicalReference": "@playkit-js/playkit-js!PKTextTrackDisplaySettingObject:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "textTrackDisplaySetting",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@playkit-js/playkit-js!PKTextConfigObject#useNativeTextTrack:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "useNativeTextTrack: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "useNativeTextTrack",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            },
+            {
+              "kind": "PropertySignature",
+              "canonicalReference": "@playkit-js/playkit-js!PKTextConfigObject#useShakaTextTrackDisplay:member",
+              "docComment": "",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "useShakaTextTrackDisplay: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "boolean"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "useShakaTextTrackDisplay",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              }
+            }
+          ],
+          "extendsTokenRanges": []
         },
         {
           "kind": "TypeAlias",
@@ -15779,6 +16057,32 @@
             "endIndex": 2
           },
           "implementsTokenRanges": []
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@playkit-js/playkit-js!PlayerStreamTypes:type",
+          "docComment": "",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export type PlayerStreamTypes = "
+            },
+            {
+              "kind": "Content",
+              "text": "'dash' | 'hls' | 'progressive' | 'image'"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "fileUrlPath": "src/types/stream-types.ts",
+          "releaseTag": "Public",
+          "name": "PlayerStreamTypes",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 2
+          }
         },
         {
           "kind": "Variable",

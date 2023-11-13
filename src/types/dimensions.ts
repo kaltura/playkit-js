@@ -4,7 +4,7 @@ export type PKPlayerDimensions = {
 };
 
 export type PKDimensionsConfig = {
-  width?: number | string,
-  height?: number | string,
+  width: number,
+  height: number,
   ratio?: string
 };

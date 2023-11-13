@@ -34,7 +34,7 @@
     "test:debug": "DEBUG_UNIT_TESTS=1 karma start karma.conf.js --auto-watch --no-single-run --browsers Chrome",
     "test:watch": "karma start karma.conf.js --auto-watch --no-single-run",
     "lint": "eslint src/ --ext .js --ext .ts",
-    "lint:fix": "npm run lint -- --fix",
+    "lint:fix": "yarn run lint -- --fix",
     "prettier": "prettier --write .",
     "clean": "rm -rf dist/*",
     "release": "standard-version",
