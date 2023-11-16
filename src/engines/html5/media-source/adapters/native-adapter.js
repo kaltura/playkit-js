@@ -233,6 +233,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
     if (Utils.Object.hasPropertyPath(config, 'abr')) {
       const abr = config.abr;
+      if (abr.defaultBandwidthEstimate) {
+        adapterConfig.abrEwmaDefaultEstimate = abr.defaultBandwidthEstimate;
+      }
       if (abr.restrictions) {
         Utils.Object.createPropertyPath(adapterConfig, 'abr.restrictions', abr.restrictions);
       }
@@ -456,7 +459,30 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     requestFilterPromise = requestFilterPromise || Promise.resolve(pkRequest);
     requestFilterPromise
       .then(updatedRequest => {
-        this._videoElement.src = updatedRequest.url;
+        if (this._config.useSourceTag) {
+          const source = document.createElement('source');
+          const mimetype = this._sourceObj?.mimetype.toLowerCase() || '';
+
+          source.setAttribute('src', updatedRequest.url);
+          source.setAttribute('type', mimetype);
+
+          if (this._config.useMediaOptionAttribute) {
+            const options = {};
+            options.option = {};
+            if (this._config.abrEwmaDefaultEstimate) {
+              options.option.adaptiveStreaming = {};
+              options.option.adaptiveStreaming.bps = {
+                start: this._config.abrEwmaDefaultEstimate
+              };
+            }
+            NativeAdapter._logger.debug('Setting mediaOption -', options);
+            const mediaOption = encodeURI(JSON.stringify(options));
+            source.setAttribute('type', mimetype + ';mediaOption=' + mediaOption);
+          }
+          this._videoElement.appendChild(source);
+        } else {
+          this._videoElement.src = updatedRequest.url;
+        }
       })
       .catch(error => {
         this._trigger(Html5EventType.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.REQUEST_FILTER_ERROR, error));
