@@ -461,7 +461,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       .then(updatedRequest => {
         if (this._config.useSourceTag) {
           const source = document.createElement('source');
-          const mimetype = this._sourceObj.mimetype.toLowerCase();
+          const mimetype = this._sourceObj ? this._sourceObj.mimetype.toLowerCase() : 'application/dash+xml';
           source.setAttribute('src', updatedRequest.url);
           source.setAttribute('type', mimetype);
 
