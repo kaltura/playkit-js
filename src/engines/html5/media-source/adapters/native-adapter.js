@@ -459,9 +459,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     requestFilterPromise = requestFilterPromise || Promise.resolve(pkRequest);
     requestFilterPromise
       .then(updatedRequest => {
-        if (this._sourceObj && this._config.useSourceTag) {
+        if (this._config.useSourceTag) {
           const source = document.createElement('source');
-          const mimetype = this._sourceObj.mimetype.toLowerCase();
+          const mimetype = this._sourceObj?.mimetype.toLowerCase() || '';
+
           source.setAttribute('src', updatedRequest.url);
           source.setAttribute('type', mimetype);
 
