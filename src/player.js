@@ -1831,6 +1831,8 @@ export default class Player extends FakeEventTarget {
     this._readyPromise = new Promise((resolve, reject) => {
       this._eventManager.listenOnce(this, CustomEventType.TRACKS_CHANGED, () => {
         this.dispatchEvent(new FakeEvent(CustomEventType.MEDIA_LOADED));
+        // handle playback rate after media loaded, to avoid race condition, so it won't be overwritten
+        this._handlePlaybackRate();
         resolve();
       });
       this._eventManager.listen(this, Html5EventType.ERROR, (event: FakeEvent) => {
@@ -1841,6 +1843,19 @@ export default class Player extends FakeEventTarget {
     }).catch(() => {
       // silence the promise rejection, error is handled by the error event
     });
+  }
+
+  /**
+   * Handles the playback rate.
+   * @private
+   * @returns {void}
+   */
+  _handlePlaybackRate(): void {
+    if (typeof this._playbackAttributesState.rate === 'number') {
+      this.playbackRate = this._playbackAttributesState.rate;
+    } else if (typeof this._config.playback.playbackRate === 'number') {
+      this.playbackRate = this._config.playback.playbackRate;
+    }
   }
 
   /**
@@ -2079,11 +2094,6 @@ export default class Player extends FakeEventTarget {
     }
     if (typeof this._config.playback.crossOrigin === 'string') {
       this.crossOrigin = this._config.playback.crossOrigin;
-    }
-    if (typeof this._playbackAttributesState.rate === 'number') {
-      this.playbackRate = this._playbackAttributesState.rate;
-    } else if (typeof this._config.playback.playbackRate === 'number') {
-      this.playbackRate = this._config.playback.playbackRate;
     }
     if (Array.isArray(this._config.playback.playbackRates)) {
       const validPlaybackRates = this._config.playback.playbackRates
