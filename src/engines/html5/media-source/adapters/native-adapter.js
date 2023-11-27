@@ -107,8 +107,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _heartbeatTimeoutId: ?TimeoutID;
-
-  _saveTimeNotChangeTimeout: ?TimeoutID;
   /**
    * video dimensions for native check if video track change and which video dimensions is the selected track
    * @member {?PKVideoDimensionsObject} - video dimensions
@@ -158,7 +156,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   _captionsHidden: boolean = false;
-
   /**
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
@@ -556,7 +553,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       } else {
         this._waitingEventTriggered = true;
         this._trigger(Html5EventType.WAITING);
-        this._handleTimeNotChanged();
       }
     }
     this._handleVideoTracksChange();
@@ -588,18 +584,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (this._heartbeatTimeoutId) {
       clearTimeout(this._heartbeatTimeoutId);
       this._heartbeatTimeoutId = null;
-    }
-  }
-
-  _handleTimeNotChanged() {
-    if (!this._saveTimeNotChangeTimeout) {
-      this._videoElement.currentTime += 0.5;
-      this._syncCurrentTime();
-      const onTimeout = () => {
-        clearTimeout(this._saveTimeNotChangeTimeout);
-        this._saveTimeNotChangeTimeout = null;
-      };
-      this._saveTimeNotChangeTimeout = setTimeout(onTimeout, 3000);
     }
   }
 
