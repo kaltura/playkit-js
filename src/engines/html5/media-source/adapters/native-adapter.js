@@ -593,7 +593,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   _handleTimeNotChanged() {
     if (!this._saveTimeNotChangeTimeout) {
-      this._videoElement.currentTime -= 0.5;
+      this._videoElement.currentTime += 0.5;
       this._syncCurrentTime();
       const onTimeout = () => {
         clearTimeout(this._saveTimeNotChangeTimeout);
