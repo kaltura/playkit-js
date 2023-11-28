@@ -467,13 +467,25 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           source.setAttribute('type', mimetype);
 
           if (this._config.useMediaOptionAttribute) {
-            const options = {};
-            options.option = {};
+            let options = {};
+            // https://webostv.developer.lge.com/develop/guides/mediaoption-parameter
+            if (this._config.mediaOptionAttribute) {
+              /**
+               * Undocumented option.
+               * Usage example:
+               * var video = document.querySelector('video');
+               * video.addEventListener("umsmediainfo", function(e) {
+               *     console.log(JSON.parse(e.detail));
+               * });
+               * {
+               *   useUMSMediaInfo: true
+               * }
+               **/
+              options = this._config.mediaOptionAttribute;
+            }
             if (this._config.abrEwmaDefaultEstimate) {
-              options.option.adaptiveStreaming = {};
-              options.option.adaptiveStreaming.bps = {
-                start: this._config.abrEwmaDefaultEstimate
-              };
+              const bps = {start: this._config.abrEwmaDefaultEstimate};
+              Utils.Object.createPropertyPath(options, 'option.adaptiveStreaming.bps', bps);
             }
             NativeAdapter._logger.debug('Setting mediaOption -', options);
             const mediaOption = encodeURI(JSON.stringify(options));
