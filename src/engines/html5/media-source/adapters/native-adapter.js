@@ -1278,7 +1278,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   _setStarTimeOfDvrWindowInterval() {
-    const intervalTime = 250;
+    const intervalTime = 1000;
     this._startTimeOfDvrWindowInterval = setInterval(() => {
       //get Segment duration
       const duration = this._segmentDuration;
