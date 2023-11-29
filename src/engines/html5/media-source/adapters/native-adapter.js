@@ -1286,7 +1286,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         !this._waitingEventTriggered && //not in wait
         this._getStartTimeOfDvrWindow() && //value is not Zero
         duration && //Duration exist
-        Math.abs(this._getStartTimeOfDvrWindow() - this._startTimeOfDvrWindow) <= duration * 2 //Gap is more than twice the duration
+        Math.abs(this._getStartTimeOfDvrWindow() - this._startTimeOfDvrWindow) <= duration * 2 //Gap is less than twice the duration
       ) {
         this._startTimeOfDvrWindow += intervalTime / 1000;
       } else {
