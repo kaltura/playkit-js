@@ -618,7 +618,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           this._waitingEventTriggered = false;
           this._progressiveSources = [];
           this._loadPromise = null;
-          if (this._config.useSourceTag && this._videoElement) {
+          if (this._config['useSourceTag'] && this._videoElement) {
             const source = this._videoElement.firstChild;
             if (source) {
               Utils.Dom.setAttribute(source, 'src', '');
