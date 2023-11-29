@@ -260,7 +260,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     this._config = Utils.Object.mergeDeep({}, defaultConfig, this._config);
     this._progressiveSources = config.progressiveSources;
     this._liveEdge = 0;
-    this._setInterval();
+    this._setStarTimeOfDvrWindowInterval();
   }
 
   /**
@@ -1277,7 +1277,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     return this._startTimeOfDvrWindow;
   }
 
-  _setInterval() {
+  _setStarTimeOfDvrWindowInterval() {
     const intervalTime = 250;
     this._startTimeOfDvrWindowInterval = setInterval(() => {
       //get Segment duration
