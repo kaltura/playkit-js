@@ -124,6 +124,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   _segmentDuration: number = 0;
 
+  _startTimeOfDvrWindowInterval: IntervalID;
+
+  _startTimeOfDvrWindow: number = 0;
+
   /**
    * A counter to track the number of attempts to recover from media error
    * @type {number}
@@ -256,6 +260,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     this._config = Utils.Object.mergeDeep({}, defaultConfig, this._config);
     this._progressiveSources = config.progressiveSources;
     this._liveEdge = 0;
+    this._setStarTimeOfDvrWindowInterval();
   }
 
   /**
@@ -646,6 +651,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           this._startTimeAttach = NaN;
           this._videoDimensions = null;
           this._clearHeartbeatTimeout();
+          clearInterval(this._startTimeOfDvrWindowInterval);
           if (this._liveDurationChangeInterval) {
             clearInterval(this._liveDurationChangeInterval);
             this._liveDurationChangeInterval = null;
@@ -1279,12 +1285,34 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {Number} - start time of DVR window.
    * @public
    */
-  getStartTimeOfDvrWindow(): number {
+  _getStartTimeOfDvrWindow(): number {
     if (this.isLive() && this._videoElement.seekable.length) {
       return this._videoElement.seekable.start(0);
     } else {
       return 0;
     }
+  }
+
+  getStartTimeOfDvrWindow() {
+    return this._startTimeOfDvrWindow;
+  }
+
+  _setStarTimeOfDvrWindowInterval() {
+    const intervalTime = 1000;
+    this._startTimeOfDvrWindowInterval = setInterval(() => {
+      //get Segment duration
+      const duration = this._segmentDuration;
+      if (
+        !this._waitingEventTriggered && //not in wait
+        this._getStartTimeOfDvrWindow() && //value is not Zero
+        duration && //Duration exist
+        Math.abs(this._getStartTimeOfDvrWindow() - this._startTimeOfDvrWindow) <= duration * 2 //Gap is less than twice the duration
+      ) {
+        this._startTimeOfDvrWindow += intervalTime / 1000;
+      } else {
+        this._startTimeOfDvrWindow = this._getStartTimeOfDvrWindow();
+      }
+    }, intervalTime);
   }
 
   getDrmInfo(): ?PKDrmDataObject {
