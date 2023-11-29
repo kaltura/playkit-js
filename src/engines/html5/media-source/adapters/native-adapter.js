@@ -618,6 +618,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           this._waitingEventTriggered = false;
           this._progressiveSources = [];
           this._loadPromise = null;
+          if (this._config['useSourceTag'] && this._videoElement) {
+            const source = this._videoElement.firstChild;
+            if (source) {
+              Utils.Dom.setAttribute(source, 'src', '');
+              Utils.Dom.removeAttribute(source, 'src');
+              Utils.Dom.removeChild(this._videoElement, source);
+            }
+          }
           this._nativeTextTracksMap = {};
           this._loadPromiseReject = null;
           this._liveEdge = 0;
