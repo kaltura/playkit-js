@@ -124,6 +124,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   _segmentDuration: number = 0;
 
+  _startTimeOfDvrWindowInterval: number = 0;
+
+  _startTimeOfDvrWindow: number = 0;
+
   /**
    * A counter to track the number of attempts to recover from media error
    * @type {number}
@@ -233,9 +237,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
     if (Utils.Object.hasPropertyPath(config, 'abr')) {
       const abr = config.abr;
-      if (abr.defaultBandwidthEstimate) {
-        adapterConfig.abrEwmaDefaultEstimate = abr.defaultBandwidthEstimate;
-      }
       if (abr.restrictions) {
         Utils.Object.createPropertyPath(adapterConfig, 'abr.restrictions', abr.restrictions);
       }
@@ -256,6 +257,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     this._config = Utils.Object.mergeDeep({}, defaultConfig, this._config);
     this._progressiveSources = config.progressiveSources;
     this._liveEdge = 0;
+    this._setInterval();
   }
 
   /**
@@ -459,30 +461,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     requestFilterPromise = requestFilterPromise || Promise.resolve(pkRequest);
     requestFilterPromise
       .then(updatedRequest => {
-        if (this._config.useSourceTag) {
-          const source = document.createElement('source');
-          const mimetype = this._sourceObj?.mimetype.toLowerCase() || '';
-
-          source.setAttribute('src', updatedRequest.url);
-          source.setAttribute('type', mimetype);
-
-          if (this._config.useMediaOptionAttribute) {
-            const options = {};
-            options.option = {};
-            if (this._config.abrEwmaDefaultEstimate) {
-              options.option.adaptiveStreaming = {};
-              options.option.adaptiveStreaming.bps = {
-                start: this._config.abrEwmaDefaultEstimate
-              };
-            }
-            NativeAdapter._logger.debug('Setting mediaOption -', options);
-            const mediaOption = encodeURI(JSON.stringify(options));
-            source.setAttribute('type', mimetype + ';mediaOption=' + mediaOption);
-          }
-          this._videoElement.appendChild(source);
-        } else {
-          this._videoElement.src = updatedRequest.url;
-        }
+        this._videoElement.src = updatedRequest.url;
       })
       .catch(error => {
         this._trigger(Html5EventType.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.REQUEST_FILTER_ERROR, error));
@@ -618,6 +597,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           this._waitingEventTriggered = false;
           this._progressiveSources = [];
           this._loadPromise = null;
+          if (this._config['useSourceTag'] && this._videoElement) {
+            const source = this._videoElement.firstChild;
+            if (source) {
+              Utils.Dom.setAttribute(source, 'src', '');
+              Utils.Dom.removeAttribute(source, 'src');
+              Utils.Dom.removeChild(this._videoElement, source);
+            }
+          }
           this._nativeTextTracksMap = {};
           this._loadPromiseReject = null;
           this._liveEdge = 0;
@@ -626,6 +613,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           this._startTimeAttach = NaN;
           this._videoDimensions = null;
           this._clearHeartbeatTimeout();
+          clearInterval(this._startTimeOfDvrWindowInterval);
           if (this._liveDurationChangeInterval) {
             clearInterval(this._liveDurationChangeInterval);
             this._liveDurationChangeInterval = null;
@@ -1259,12 +1247,34 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {Number} - start time of DVR window.
    * @public
    */
-  getStartTimeOfDvrWindow(): number {
+  _getStartTimeOfDvrWindow(): number {
     if (this.isLive() && this._videoElement.seekable.length) {
       return this._videoElement.seekable.start(0);
     } else {
       return 0;
     }
+  }
+
+  getStartTimeOfDvrWindow() {
+    return this._startTimeOfDvrWindow;
+  }
+
+  _setInterval() {
+    const intervalTime = 250;
+    this._startTimeOfDvrWindowInterval = setInterval(() => {
+      //get Segment duration
+      const duration = this._segmentDuration;
+      if (
+        !this._waitingEventTriggered && //not in wait
+        this._getStartTimeOfDvrWindow() && //value is not Zero
+        duration && //Duration exist
+        Math.abs(this._getStartTimeOfDvrWindow() - this._startTimeOfDvrWindow) <= duration * 2 //Gap is more than twice the duration
+      ) {
+        this._startTimeOfDvrWindow += intervalTime / 1000;
+      } else {
+        this._startTimeOfDvrWindow = this._getStartTimeOfDvrWindow();
+      }
+    }, intervalTime);
   }
 
   getDrmInfo(): ?PKDrmDataObject {
