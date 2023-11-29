@@ -126,7 +126,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   _startTimeOfDvrWindowInterval: number = 0;
 
-  _startTimeOfDvrWindow: number = 0;
+  _startTimeOfDvrWindow: IntervalID = null;
 
   /**
    * A counter to track the number of attempts to recover from media error
