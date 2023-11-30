@@ -630,7 +630,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     NativeAdapter._logger.debug('destroy');
     return new Promise((resolve, reject) => {
       //must be called before super config cause it requires config which is reset in super destroy
-      this._removeSourceTag();
+      this._maybeRemoveSourceTag();
       super.destroy().then(
         () => {
           this._drmHandler && this._drmHandler.destroy();
@@ -659,11 +659,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   /**
    * remove source tag
-   * @function _removeSourceTag
+   * @function _maybeRemoveSourceTag
    * @returns {void}
    * @private
    */
-  _removeSourceTag(): void {
+  _maybeRemoveSourceTag(): void {
     if (this._config.useSourceTag && this._videoElement) {
       const source = this._videoElement.firstChild;
       if (source) {
