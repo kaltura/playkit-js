@@ -629,20 +629,14 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   destroy(): Promise<*> {
     NativeAdapter._logger.debug('destroy');
     return new Promise((resolve, reject) => {
+      //must be called before super config cause it requires config which is reset in super destroy
+      this._maybeRemoveSourceTag();
       super.destroy().then(
         () => {
           this._drmHandler && this._drmHandler.destroy();
           this._waitingEventTriggered = false;
           this._progressiveSources = [];
           this._loadPromise = null;
-          if (this._config['useSourceTag'] && this._videoElement) {
-            const source = this._videoElement.firstChild;
-            if (source) {
-              Utils.Dom.setAttribute(source, 'src', '');
-              Utils.Dom.removeAttribute(source, 'src');
-              Utils.Dom.removeChild(this._videoElement, source);
-            }
-          }
           this._nativeTextTracksMap = {};
           this._loadPromiseReject = null;
           this._liveEdge = 0;
@@ -661,6 +655,23 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         () => reject
       );
     });
+  }
+
+  /**
+   * remove source tag
+   * @function _maybeRemoveSourceTag
+   * @returns {void}
+   * @private
+   */
+  _maybeRemoveSourceTag(): void {
+    if (this._config.useSourceTag && this._videoElement) {
+      const source = this._videoElement.firstChild;
+      if (source) {
+        Utils.Dom.setAttribute(source, 'src', '');
+        Utils.Dom.removeAttribute(source, 'src');
+        Utils.Dom.removeChild(this._videoElement, source);
+      }
+    }
   }
 
   /**
