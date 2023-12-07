@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.1 (2023-12-07)
+
+
+### Bug Fixes
+
+* **ADA-82:** Caption Texts are Not Showing when Moving Cursor in Time Bar ([#738](https://github.com/kaltura/playkit-js/issues/738)) ([005b774](https://github.com/kaltura/playkit-js/commit/005b774)), closes [#147](https://github.com/kaltura/playkit-js/issues/147)
+
+
+
 ## 0.84.0 (2023-11-26)
 
 
