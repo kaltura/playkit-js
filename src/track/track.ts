@@ -40,7 +40,7 @@ export default class Track {
    * @type {string}
    * @private
    */
-  private _id: string | undefined;
+  private _id: number;
   /**
    * The active mode of the track.
    * @member
@@ -89,7 +89,7 @@ export default class Track {
    * @public
    * @returns {?string} - The track id.
    */
-  public get id(): string | undefined {
+  public get id(): number {
     return this._id;
   }
 

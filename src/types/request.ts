@@ -1,5 +1,5 @@
 export type PKRequestObject = {
   url: string,
-  body: string | null,
+  body: ArrayBuffer | ArrayBufferView | string | null;
   headers: {[header: string]: string}
 };

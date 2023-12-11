@@ -10,7 +10,7 @@ import PKTextTrack from '../../../track/text-track';
 import EventManager from '../../../event/event-manager';
 import ImageTrack from '../../../track/image-track';
 import { ThumbnailInfo } from '../../../thumbnail/thumbnail-info';
-import { IMediaSourceAdapter } from '../../../types/interfaces/media-source-adapter';
+import { IMediaSourceAdapter } from "../../../types";
 import { PKABRRestrictionObject, PKDrmDataObject, PKMediaSourceCapabilities, PKMediaSourceObject } from '../../../types';
 import { ILogger } from 'js-logger';
 
@@ -58,7 +58,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
    * The adapter capabilities
    * @private
    */
-  private _capabilities: PKMediaSourceCapabilities = { fpsControl: false };
+  protected _capabilities: PKMediaSourceCapabilities = { fpsControl: false };
 
   /**
    * The event manager of the adapter.
