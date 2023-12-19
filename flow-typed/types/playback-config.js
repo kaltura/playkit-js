@@ -17,5 +17,6 @@ declare type PKPlaybackConfigObject = {
   preferNative: PKPreferNativeConfigObject,
   inBrowserFullscreen: boolean,
   playAdsWithMSE: boolean,
-  screenLockOrientionMode: string
+  screenLockOrientionMode: string,
+  playbackRate: number
 };
