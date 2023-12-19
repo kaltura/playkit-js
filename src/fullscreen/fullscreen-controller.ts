@@ -1,6 +1,6 @@
-import EventManager from '../event/event-manager';
+import { EventManager } from '../event/event-manager';
 import Player from '../player';
-import FakeEvent from '../event/fake-event';
+import { FakeEvent } from '../event/fake-event';
 import * as Utils from '../utils/util';
 import {ScreenOrientationType} from '../enums/screen-orientation-type';
 import {EngineType} from '../engines/engine-type';

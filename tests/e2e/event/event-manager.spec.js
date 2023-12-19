@@ -1,5 +1,5 @@
-import FakeEventTarget from '../../../src/event/fake-event-target';
-import EventManager from '../../../src/event/event-manager';
+import { FakeEventTarget } from '../../../src/event/fake-event-target';
+import { EventManager } from '../../../src/event/event-manager';
 
 class EventTarget extends FakeEventTarget {}
 

@@ -1,11 +1,11 @@
-import EventManager from '../event/event-manager';
-import FakeEventTarget from '../event/fake-event-target';
+import { EventManager } from '../event/event-manager';
+import { FakeEventTarget } from '../event/fake-event-target';
 import getLogger from '../utils/logger';
 import {Parser, StringDecoder} from '../track/text-track-display';
 import * as Utils from '../utils/util';
 import {ThumbnailInfo} from './thumbnail-info';
 import Error from '../error/error';
-import FakeEvent from '../event/fake-event';
+import { FakeEvent } from '../event/fake-event';
 import {Html5EventType} from '../event/event-type';
 import {PKExternalThumbnailsConfig, PKThumbnailVttCue} from '../types';
 

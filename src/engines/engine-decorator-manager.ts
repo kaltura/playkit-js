@@ -3,7 +3,7 @@ import getLogger from '../utils/logger';
 import {IEngine} from '../types/interfaces/engine';
 import {IEngineDecorator} from '../types/interfaces/engine-decorator';
 import {IEngineDecoratorProvider} from '../types';
-import FakeEvent from '../event/fake-event';
+import { FakeEvent } from '../event/fake-event';
 
 /**
  * Engine decorator manager for plugins.

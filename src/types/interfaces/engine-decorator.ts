@@ -1,7 +1,7 @@
 import VideoTrack from '../../track/video-track';
 import AudioTrack from '../../track/audio-track';
 import TextTrack from '../../track/text-track';
-import FakeEvent from '../../event/fake-event';
+import { FakeEvent } from '../../event/fake-event';
 import {PKMediaSourceObject} from '../media-source';
 
 export interface IEngineDecorator {

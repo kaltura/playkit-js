@@ -5,7 +5,7 @@ import {createElement, getConfigStructure, removeElement, removeVideoElementsFro
 import {Object} from '../../../src/utils/util';
 import SourcesConfig from '../../configs/sources.json';
 import {CustomEventType, Html5EventType} from '../../../src/event/event-type';
-import FakeEvent from '../../../src/event/fake-event';
+import { FakeEvent } from '../../../src/event/fake-event';
 
 const targetId = 'player-placeholder_player.spec';
 let sourcesConfig = Object.copyDeep(SourcesConfig);

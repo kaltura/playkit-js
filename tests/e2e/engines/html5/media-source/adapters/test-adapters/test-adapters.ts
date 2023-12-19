@@ -1,4 +1,4 @@
-import FakeEventTarget from '../../../../../../../src/event/fake-event-target';
+import { FakeEventTarget } from '../../../../../../../src/event/fake-event-target';
 import {IMediaSourceAdapter} from '../../../../../../../src/types';
 import {PKDrmConfigObject} from '../../../../../../../lib/types';
 

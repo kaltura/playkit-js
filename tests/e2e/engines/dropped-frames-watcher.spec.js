@@ -1,7 +1,7 @@
 import {DroppedFramesWatcher} from '../../../src/engines/dropped-frames-watcher';
 import {FakeDashAdapter, FakeHlsAdapter} from './html5/media-source/adapters/test-adapters/test-adapters';
 import {CustomEventType} from '../../../src/event/event-type';
-import FakeEvent from '../../../src/event/fake-event';
+import { FakeEvent } from '../../../src/event/fake-event';
 
 describe('constructor', function () {
   let videoElement, sandbox, config;

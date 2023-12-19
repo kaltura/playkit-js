@@ -7,7 +7,7 @@
 import {IEngineDecoratorProvider} from '../types';
 import {IEngine} from '../types/interfaces/engine';
 import {IEngineDecorator} from '../types/interfaces/engine-decorator';
-import FakeEvent from '../event/fake-event';
+import { FakeEvent } from '../event/fake-event';
 
 class EngineDecoratorProvider implements IEngineDecoratorProvider {
   private _name: string;

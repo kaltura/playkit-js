@@ -1,6 +1,6 @@
-import FakeEvent from './fake-event';
-import {MultiMap} from '../utils/multi-map';
-import getLogger from '../utils/logger';
+import { FakeEvent } from './fake-event';
+import {MultiMap} from '../utils';
+import { getLogger } from '../utils/logger';
 
 /**
  * A work-alike for EventTarget.  Only DOM elements may be true EventTargets,
@@ -11,7 +11,7 @@ import getLogger from '../utils/logger';
  * @constructor
  * @export
  */
-class FakeEventTarget {
+export class FakeEventTarget {
   private _listeners: MultiMap<string, (event: FakeEvent) => boolean | void>;
   private readonly dispatchTarget: FakeEventTarget;
   private __logger: any;
@@ -116,5 +116,3 @@ class FakeEventTarget {
  * @typedef {EventListener|function(!Event):(boolean|undefined)}
  */
 declare function EventListener(event: FakeEvent): boolean | void;
-
-export default FakeEventTarget;

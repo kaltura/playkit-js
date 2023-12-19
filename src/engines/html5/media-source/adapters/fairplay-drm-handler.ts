@@ -3,7 +3,7 @@ import getLogger from '../../../../utils/logger';
 import * as Utils from '../../../../utils/util';
 import {RequestType} from '../../../../enums/request-type';
 import {DrmScheme} from '../../../../drm/drm-scheme';
-import EventManager, {ListenerType} from '../../../../event/event-manager';
+import { EventManager, ListenerType} from '../../../../event/event-manager';
 import {PKDrmDataObject, PKRequestObject, PKResponseObject} from '../../../../types';
 
 type WebkitEventsType = {[name: string]: string};

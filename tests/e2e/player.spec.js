@@ -16,7 +16,7 @@ import Error from '../../src/error/error';
 import {Object as PKObject} from '../../src/utils/util';
 import {LabelOptions} from '../../src/track/label-options';
 import {EngineProvider} from '../../src/engines/engine-provider';
-import FakeEvent from '../../src/event/fake-event';
+import { FakeEvent } from '../../src/event/fake-event';
 import Html5AutoPlayCapability from '../../src/engines/html5/capabilities/html5-autoplay';
 import * as Utils from '../../src/utils/util';
 import {TrackType} from '../../src/track/track-type';

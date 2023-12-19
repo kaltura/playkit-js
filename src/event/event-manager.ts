@@ -1,6 +1,6 @@
-import {MultiMap} from '../utils/multi-map';
-import FakeEventTarget from './fake-event-target';
-import FakeEvent from './fake-event';
+import {MultiMap} from '../utils';
+import { FakeEventTarget } from './fake-event-target';
+import { FakeEvent } from './fake-event';
 
 /**
  * Creates a new EventManager. An EventManager maintains a collection of "event
@@ -10,7 +10,7 @@ import FakeEvent from './fake-event';
  * @constructor
  * @implements {IDestroyable}
  */
-class EventManager {
+export class EventManager {
   private _bindingMap: MultiMap<string, Binding_> | null;
 
   constructor() {
@@ -155,5 +155,3 @@ class Binding_ {
     this.options = null;
   }
 }
-
-export default EventManager;

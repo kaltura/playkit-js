@@ -1,9 +1,9 @@
 import Env from './utils/env';
-import EventManager from './event/event-manager';
+import { EventManager } from './event/event-manager';
 import PosterManager from './utils/poster-manager';
-import FakeEvent from './event/fake-event';
-import FakeEventTarget from './event/fake-event-target';
-import {IEngine, IEngineStatic} from './types/interfaces/engine';
+import { FakeEvent } from './event/fake-event';
+import { FakeEventTarget }  from './event/fake-event-target';
+import {IEngine, IEngineStatic} from './types';
 import {CustomEventType, EventType, Html5EventType} from './event/event-type';
 import * as Utils from './utils/util';
 import Locale from './utils/locale';

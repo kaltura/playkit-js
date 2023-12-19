@@ -4,10 +4,10 @@ import {Parser, StringDecoder} from './text-track-display';
 import TextTrack, {getActiveCues} from './text-track';
 import Track from './track';
 import {CustomEventType, Html5EventType} from '../event/event-type';
-import FakeEvent from '../event/fake-event';
+import { FakeEvent } from '../event/fake-event';
 import getLogger from '../utils/logger';
-import EventManager from '../event/event-manager';
-import FakeEventTarget from '../event/fake-event-target';
+import { EventManager } from '../event/event-manager';
+import { FakeEventTarget } from '../event/fake-event-target';
 import Player from '../player';
 import {PKExternalCaptionObject} from '../types/external-caption-object';
 

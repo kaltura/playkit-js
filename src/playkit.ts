@@ -15,9 +15,6 @@ import TextStyle from './track/text-style';
 import Env from './utils/env';
 import * as Utils from './utils';
 import Error from './error/error';
-import FakeEvent from './event/fake-event';
-import FakeEventTarget from './event/fake-event-target';
-import EventManager from './event/event-manager';
 import {StateType} from './state/state-type';
 import {TrackType} from './track/track-type';
 import {StreamType} from './engines/stream-type';
@@ -73,7 +70,9 @@ export {Utils as utils};
 export {Error};
 
 // Export Event system
-export {FakeEvent, FakeEventTarget, EventManager};
+export {FakeEvent} from './event/fake-event';
+export {EventManager} from './event/event-manager';
+export {FakeEventTarget} from './event/fake-event-target';
 
 // Export version and player name
 export {VERSION, NAME};

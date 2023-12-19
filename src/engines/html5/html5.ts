@@ -1,6 +1,6 @@
-import FakeEventTarget from '../../event/fake-event-target';
-import FakeEvent from '../../event/fake-event';
-import EventManager from '../../event/event-manager';
+import { FakeEventTarget } from '../../event/fake-event-target';
+import { FakeEvent } from '../../event/fake-event';
+import { EventManager } from '../../event/event-manager';
 import {CustomEventType, Html5EventType} from '../../event/event-type';
 import MediaSourceProvider from './media-source/media-source-provider';
 import VideoTrack from '../../track/video-track';
@@ -14,10 +14,10 @@ import Error from '../../error/error';
 import getLogger from '../../utils/logger';
 import {DroppedFramesWatcher} from '../dropped-frames-watcher';
 import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
-import {IMediaSourceAdapter} from '../../types/interfaces/media-source-adapter';
-import {CapabilityResult, ICapability} from '../../types/interfaces/engine-capabilty';
+import {IMediaSourceAdapter} from '../../types';
+import {CapabilityResult, ICapability} from '../../types';
 import {PKABRRestrictionObject, PKDrmConfigObject, PKDrmDataObject, PKMediaSourceObject, PKVideoElementStore} from '../../types';
-import {IEngine} from '../../types/interfaces/engine';
+import {IEngine} from '../../types';
 import Track from '../../track/track';
 
 const SHORT_BUFFERING_TIMEOUT: number = 200;

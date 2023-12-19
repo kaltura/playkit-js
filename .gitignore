@@ -1,6 +1,7 @@
 dist
 lib
-api-extractor/report/
-api-extractor/report-temp/
 node_modules
 *.log
+api-extractor/report/
+api-extractor/report-temp/
+api-extractor/playkit-js-providers.api.json

@@ -7,7 +7,7 @@ import {PKMediaSourceCapabilities} from '../media-source-capabilities';
 import {PKMediaSourceObject} from '../media-source';
 import ImageTrack from '../../track/image-track';
 import {PKDrmDataObject} from '../drm-data';
-import FakeEventTarget from '../../event/fake-event-target';
+import { FakeEventTarget } from '../../event/fake-event-target';
 import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
 import Track from '../../track/track';
 import {PKABRRestrictionObject} from '../restrictions-types';

@@ -63,4 +63,4 @@ function setLogLevel(level: ILogLevel, name?: string): void {
 }
 
 export default getLogger;
-export {LogLevel, LogLevelType, getLogLevel, setLogLevel, setLogHandler};
+export {LogLevel, LogLevelType, getLogLevel, setLogLevel, setLogHandler, getLogger};

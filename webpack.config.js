@@ -6,19 +6,6 @@ const TerserPlugin = require('terser-webpack-plugin');
 module.exports = (env, { mode }) => {
   return {
     entry:  './src/playkit.ts',
-    optimization: {
-      minimize: mode !== 'development',
-      minimizer: [
-        new TerserPlugin({
-          extractComments: false,
-          terserOptions: {
-            format: {
-              comments: false
-            }
-          }
-        })
-      ]
-    },
     devtool: mode === 'development' ? 'eval-source-map' : 'source-map',
     module: {
       rules: [
@@ -29,12 +16,9 @@ module.exports = (env, { mode }) => {
             loader: 'babel-loader',
             options: {
               presets: [['@babel/preset-env', {
-                loose: true,
+                // loose: true,
                 bugfixes: true,
                 targets: "defaults"
-                // targets: {
-                //   "browsers": ["chrome >= 47", "firefox >= 51", "ie >= 11", "safari >= 8", "ios >= 8", "android >= 4"]
-                // }
               }], '@babel/preset-typescript'],
               plugins: [['@babel/plugin-transform-runtime']]
             }

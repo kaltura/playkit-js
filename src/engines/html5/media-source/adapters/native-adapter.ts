@@ -14,9 +14,9 @@ import Error from '../../../../error/error';
 import defaultConfig from './native-adapter-default-config.json';
 import type {FairPlayDrmConfigType} from './fairplay-drm-handler';
 import {FairPlayDrmHandler} from './fairplay-drm-handler';
-import {IDrmProtocol} from '../../../../types/interfaces/drm-protocol';
+import {IDrmProtocol} from '../../../../types';
 import {PKABRRestrictionObject, PKDrmConfigObject, PKDrmDataObject, PKMediaSourceObject, PKRequestObject, PKVideoDimensionsObject} from '../../../../types';
-import {IMediaSourceAdapter} from '../../../../types/interfaces/media-source-adapter';
+import {IMediaSourceAdapter} from '../../../../types';
 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;

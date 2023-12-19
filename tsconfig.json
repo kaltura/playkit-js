@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "commonjs",
+    "module": "ESNext",
     "baseUrl": ".",
     "sourceMap": true,
+    "moduleResolution": "Node",
     "strict": false,
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
@@ -18,5 +19,5 @@
     "outDir": "./lib/",
     "allowSyntheticDefaultImports": true,
   },
-  "include": ["src/**/*", "tests/unit/**/*", "demo/**/*"]
+  "include": ["src/**/*"]
 }

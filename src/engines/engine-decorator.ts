@@ -1,7 +1,7 @@
-import FakeEvent from '../event/fake-event';
+import { FakeEvent } from '../event/fake-event';
 import {EventType} from '../event/event-type';
-import EventManager from '../event/event-manager';
-import FakeEventTarget from '../event/fake-event-target';
+import { EventManager } from '../event/event-manager';
+import { FakeEventTarget } from '../event/fake-event-target';
 import {EngineDecoratorManager} from './engine-decorator-manager';
 import {IEngineDecorator} from '../types/interfaces/engine-decorator';
 import {IEngine} from '../types/interfaces/engine';

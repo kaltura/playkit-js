@@ -1,5 +1,5 @@
-import FakeEvent from '../event/fake-event';
-import FakeEventTarget from '../event/fake-event-target';
+import { FakeEvent } from '../event/fake-event';
+import { FakeEventTarget } from '../event/fake-event-target';
 import {CustomEventType} from '../event/event-type';
 
 /**

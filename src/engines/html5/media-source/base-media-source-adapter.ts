@@ -1,5 +1,5 @@
-import FakeEvent from '../../../event/fake-event';
-import FakeEventTarget from '../../../event/fake-event-target';
+import { FakeEvent } from '../../../event/fake-event';
+import { FakeEventTarget } from '../../../event/fake-event-target';
 import Error from '../../../error/error';
 import { CustomEventType, Html5EventType } from '../../../event/event-type';
 import getLogger from '../../../utils/logger';
@@ -7,10 +7,10 @@ import Track from '../../../track/track';
 import VideoTrack from '../../../track/video-track';
 import AudioTrack from '../../../track/audio-track';
 import PKTextTrack from '../../../track/text-track';
-import EventManager from '../../../event/event-manager';
+import { EventManager } from '../../../event/event-manager';
 import ImageTrack from '../../../track/image-track';
 import { ThumbnailInfo } from '../../../thumbnail/thumbnail-info';
-import { IMediaSourceAdapter } from "../../../types";
+import { IMediaSourceAdapter } from '../../../types';
 import { PKABRRestrictionObject, PKDrmDataObject, PKMediaSourceCapabilities, PKMediaSourceObject } from '../../../types';
 import { ILogger } from 'js-logger';
 

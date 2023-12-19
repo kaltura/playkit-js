@@ -7,7 +7,7 @@
  * @constructor
  * @extends {Event}
  */
-class FakeEvent {
+export class FakeEvent {
   /** @const {boolean} */
   public bubbles: boolean;
 
@@ -112,5 +112,3 @@ class FakeEvent {
    */
   public stopPropagation(): void {}
 }
-
-export default FakeEvent;

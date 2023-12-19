@@ -1,10 +1,10 @@
 
 import Player from '../player';
-import EventManager from '../event/event-manager';
+import { EventManager } from '../event/event-manager';
 import State from './state';
 import {StateType} from './state-type';
 import {CustomEventType, Html5EventType} from '../event/event-type';
-import FakeEvent from '../event/fake-event';
+import { FakeEvent } from '../event/fake-event';
 import getLogger from '../utils/logger';
 import Env from '../utils/env';
 import Error from '../error/error';

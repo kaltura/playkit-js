@@ -1,7 +1,7 @@
 
 import VideoTrack from '../../track/video-track';
 import AudioTrack from '../../track/audio-track';
-import FakeEventTarget from '../../event/fake-event-target';
+import { FakeEventTarget } from '../../event/fake-event-target';
 import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
 import ImageTrack from '../../track/image-track';
 import {PKMediaSourceObject} from '../media-source';
