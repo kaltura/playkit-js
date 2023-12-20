@@ -161,6 +161,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   _captionsHidden: boolean = false;
   /**
+   * sources for adapter
+   * @type {HTMLElement}
+   * @private
+   */
+  _sourceElement = null;
+  /**
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
    * @param {string} mimeType - The mime type to check
@@ -443,9 +449,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   detachMediaSource(): void {
     this._lastTimeDetach = this._videoElement.currentTime;
-    if (this._videoElement && this._videoElement.src) {
-      Utils.Dom.setAttribute(this._videoElement, 'src', '');
-      Utils.Dom.removeAttribute(this._videoElement, 'src');
+    if (this._sourceElement) {
+      this._videoElement.removeChild(this._sourceElement);
     }
     this._loadPromise = null;
   }
@@ -497,6 +502,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
             source.setAttribute('type', mimetype + ';mediaOption=' + mediaOption);
           }
           this._videoElement.appendChild(source);
+          this._sourceElement = source;
         } else {
           this._videoElement.src = updatedRequest.url;
         }
