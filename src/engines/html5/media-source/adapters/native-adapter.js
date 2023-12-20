@@ -162,10 +162,10 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   _captionsHidden: boolean = false;
   /**
    * sources for adapter
-   * @type {HTMLVideoElement}
+   * @type {HTMLElement}
    * @private
    */
-  _sourceElement: HTMLVideoElement = null;
+  _sourceElement = null;
   /**
    * Checks if NativeAdapter can play a given mime type.
    * @function canPlayType
