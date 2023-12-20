@@ -5,8 +5,8 @@ const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (env, { mode }) => {
   return {
-    entry:  './src/playkit.ts',
-    devtool: mode === 'development' ? 'eval-source-map' : 'source-map',
+    entry: './src/playkit.ts',
+    devtool: 'source-map',
     module: {
       rules: [
         {
@@ -15,11 +15,15 @@ module.exports = (env, { mode }) => {
           use: {
             loader: 'babel-loader',
             options: {
-              presets: [['@babel/preset-env', {
-                // loose: true,
-                bugfixes: true,
-                targets: "defaults"
-              }], '@babel/preset-typescript'],
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    bugfixes: true,
+                  }
+                ],
+                '@babel/preset-typescript'
+              ],
               plugins: [['@babel/plugin-transform-runtime']]
             }
           }
@@ -31,7 +35,7 @@ module.exports = (env, { mode }) => {
       ]
     },
     resolve: {
-      extensions: ['.ts', '.js'],
+      extensions: ['.ts', '.js']
     },
     output: {
       filename: 'playkit.js',
@@ -39,7 +43,7 @@ module.exports = (env, { mode }) => {
       library: {
         umdNamedDefine: true,
         name: ['playkit', 'core'],
-        type: 'umd',
+        type: 'umd'
       },
       clean: true
     },
@@ -57,5 +61,5 @@ module.exports = (env, { mode }) => {
         __NAME__: JSON.stringify(packageData.name)
       })
     ]
-  }
+  };
 };
