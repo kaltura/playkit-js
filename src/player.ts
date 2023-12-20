@@ -1855,7 +1855,7 @@ export default class Player extends FakeEventTarget {
    * @private
    * @returns {void}
    */
-  _handlePlaybackRate(): void {
+  private _handlePlaybackRate(): void {
     if (typeof this._playbackAttributesState.rate === 'number') {
       this.playbackRate = this._playbackAttributesState.rate;
     } else if (typeof this._config.playback.playbackRate === 'number') {

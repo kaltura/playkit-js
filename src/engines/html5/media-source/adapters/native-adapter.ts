@@ -126,9 +126,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   private _segmentDuration: number = 0;
 
-  _startTimeOfDvrWindowInterval: IntervalID;
+  private _startTimeOfDvrWindowInterval: number | undefined;
 
-  _startTimeOfDvrWindow: number = 0;
+  private _startTimeOfDvrWindow: number = 0;
 
   /**
    * A counter to track the number of attempts to recover from media error
@@ -669,13 +669,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {void}
    * @private
    */
-  _maybeRemoveSourceTag(): void {
+  private _maybeRemoveSourceTag(): void {
     if (this._config.useSourceTag && this._videoElement) {
-      const source = this._videoElement.firstChild;
+      const source = this._videoElement.firstChild as HTMLElement;
       if (source) {
-        Utils.Dom.setAttribute(source, 'src', '');
-        Utils.Dom.removeAttribute(source, 'src');
-        Utils.Dom.removeChild(this._videoElement, source);
+        source.setAttribute('src', '');
+        source.removeAttribute('src');
+        this._videoElement.removeChild(source);
       }
     }
   }
@@ -1353,7 +1353,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     return this._startTimeOfDvrWindow;
   }
 
-  _setStarTimeOfDvrWindowInterval() {
+  private _setStarTimeOfDvrWindowInterval(): void {
     const intervalTime = 1000;
     this._startTimeOfDvrWindowInterval = setInterval(() => {
       //get Segment duration
