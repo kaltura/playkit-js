@@ -1,10 +1,8 @@
-const TrackType: {[type: string]: TrackTypes} = Object.freeze({
+export const TrackType = {
   VIDEO: 'video',
   AUDIO: 'audio',
   TEXT: 'text',
   IMAGE: 'image'
-});
-
-export {TrackType};
+} as const;
 
 export type TrackTypes = 'video' | 'audio' | 'text' | 'image'

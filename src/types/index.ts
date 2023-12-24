@@ -47,4 +47,5 @@ export * from './track-types'
 export * from './video-dimensions'
 export * from './video-element-store'
 export * from './interfaces'
+export * from '../track/track-type'
 export * from 'js-logger';

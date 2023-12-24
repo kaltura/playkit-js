@@ -38,6 +38,7 @@
     "lint:fix": "yarn run lint -- --fix",
     "prettier": "prettier --write .",
     "clean": "rm -rf dist/*",
+    "precommit": "npm run build:prod && npm run type-check && npm run lint:fix",
     "release": "standard-version",
     "pushTaggedRelease": "git push --follow-tags --no-verify origin master"
   },

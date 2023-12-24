@@ -2,7 +2,7 @@ import * as Utils from '../utils/util';
 import {AdEventType} from '../ads/ad-event-type';
 import {PKEventTypes} from '../types';
 
-const Html5EventType: PKEventTypes = {
+const Html5EventType = {
   /**
    * Fires when the loading of an audio/video is aborted
    */
@@ -103,9 +103,9 @@ const Html5EventType: PKEventTypes = {
    * Fires when the engine changes presentation mode on safari webkitpresentationmodechanged
    */
   PRESENTATION_MODE_CHANGED: 'webkitpresentationmodechanged'
-};
+} as const;
 
-const CustomEventType: PKEventTypes = {
+const CustomEventType = {
   /**
    * Fires when the media is loaded.
    */
@@ -268,8 +268,8 @@ const CustomEventType: PKEventTypes = {
    * Fired when the source url switched
    */
   SOURCE_URL_SWITCHED: 'sourceurlswitched'
-};
+} as const;
 
-const EventType: PKEventTypes = Utils.Object.merge([Html5EventType, CustomEventType, AdEventType]);
+const EventType: PKEventTypes = { ...Html5EventType, ...CustomEventType, ...AdEventType};
 
 export {EventType, Html5EventType, CustomEventType};

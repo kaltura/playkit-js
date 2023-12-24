@@ -1,6 +1,4 @@
-import {PKEventTypes} from '../types';
-
-const AdEventType: PKEventTypes = {
+const AdEventType = {
   /**
    * Fired when the ad can be skip by the user.
    */
@@ -101,6 +99,6 @@ const AdEventType: PKEventTypes = {
    * Fires when browser fails to autoplay an ad.
    */
   AD_AUTOPLAY_FAILED: 'adautoplayfailed'
-};
+} as const;
 
 export {AdEventType};
