@@ -9,17 +9,52 @@ import { ILogHandler } from 'js-logger';
 import { ILogLevel } from 'js-logger';
 
 // @public (undocumented)
-export const AbrMode: PKAbrModes;
+export const AbrMode: {
+    readonly MANUAL: "manual";
+    readonly AUTO: "auto";
+};
 
 // @public (undocumented)
-export const AdBreakType: PKAdBreakTypes;
+export const AdBreakType: {
+    readonly PRE: "preroll";
+    readonly MID: "midroll";
+    readonly POST: "postroll";
+    readonly OVERLAY: "overlay";
+};
 
 // @public (undocumented)
-export const AdEventType: PKEventTypes;
+export const AdEventType: {
+    readonly AD_CAN_SKIP: "adcanskip";
+    readonly AD_MANIFEST_LOADED: "admanifestloaded";
+    readonly AD_LOADED: "adloaded";
+    readonly AD_STARTED: "adstarted";
+    readonly AD_RESUMED: "adresumed";
+    readonly AD_PAUSED: "adpaused";
+    readonly AD_CLICKED: "adclicked";
+    readonly AD_SKIPPED: "adskipped";
+    readonly AD_COMPLETED: "adcompleted";
+    readonly AD_ERROR: "aderror";
+    readonly ADS_COMPLETED: "adscompleted";
+    readonly ALL_ADS_COMPLETED: "alladscompleted";
+    readonly AD_BREAK_START: "adbreakstart";
+    readonly AD_BREAK_END: "adbreakend";
+    readonly AD_FIRST_QUARTILE: "adfirstquartile";
+    readonly AD_MIDPOINT: "admidpoint";
+    readonly AD_THIRD_QUARTILE: "adthirdquartile";
+    readonly USER_CLOSED_AD: "userclosedad";
+    readonly AD_VOLUME_CHANGED: "advolumechanged";
+    readonly AD_MUTED: "admuted";
+    readonly AD_PROGRESS: "adprogress";
+    readonly AD_BUFFERING: "adbuffering";
+    readonly AD_WATERFALLING: "adwaterfalling";
+    readonly AD_WATERFALLING_FAILED: "adwaterfallingfailed";
+    readonly AD_AUTOPLAY_FAILED: "adautoplayfailed";
+};
 
 // @public (undocumented)
 export const AdTagType: {
-    [type: string]: string;
+    readonly VAST: "vast";
+    readonly VMAP: "vmap";
 };
 
 // @public
@@ -40,6 +75,7 @@ export class BaseMediaSourceAdapter extends FakeEventTarget implements IMediaSou
     attachMediaSource(): void;
     static canPlayType(mimeType: string, preferNative: boolean): boolean;
     get capabilities(): PKMediaSourceCapabilities;
+    protected _capabilities: PKMediaSourceCapabilities;
     protected _config: any;
     destroy(): Promise<void>;
     // (undocumented)
@@ -119,7 +155,10 @@ export type CapabilityResult = {
 };
 
 // @public (undocumented)
-export const CorsType: PKCorsTypes;
+export const CorsType: {
+    readonly ANONYMOUS: "anonymous";
+    readonly USE_CREDENTIALS: "use-credentials";
+};
 
 // @public
 export function createTextTrackCue(timedMetadata: TimedMetadata): PKTextTrackCue | null;
@@ -128,7 +167,48 @@ export function createTextTrackCue(timedMetadata: TimedMetadata): PKTextTrackCue
 export function createTimedMetadata(cue: TextTrackCue): TimedMetadata | null;
 
 // @public (undocumented)
-export const CustomEventType: PKEventTypes;
+export const CustomEventType: {
+    readonly MEDIA_LOADED: "medialoaded";
+    readonly PLAYER_RESET: "playerreset";
+    readonly PLAYER_DESTROY: "playerdestroy";
+    readonly ENTER_FULLSCREEN: "enterfullscreen";
+    readonly EXIT_FULLSCREEN: "exitfullscreen";
+    readonly PLAY_FAILED: "playfailed";
+    readonly AUTOPLAY_FAILED: "autoplayfailed";
+    readonly FALLBACK_TO_MUTED_AUTOPLAY: "fallbacktomutedautoplay";
+    readonly CHANGE_SOURCE_STARTED: "changesourcestarted";
+    readonly CHANGE_SOURCE_ENDED: "changesourceended";
+    readonly MUTE_CHANGE: "mutechange";
+    readonly VIDEO_TRACK_CHANGED: "videotrackchanged";
+    readonly AUDIO_TRACK_CHANGED: "audiotrackchanged";
+    readonly TEXT_TRACK_CHANGED: "texttrackchanged";
+    readonly IMAGE_TRACK_CHANGED: "imagetrackchanged";
+    readonly TEXT_TRACK_ADDED: "texttrackadded";
+    readonly TEXT_CUE_CHANGED: "textcuechanged";
+    readonly TRACKS_CHANGED: "trackschanged";
+    readonly ABR_MODE_CHANGED: "abrmodechanged";
+    readonly PLAYER_STATE_CHANGED: "playerstatechanged";
+    readonly PLAYBACK_START: "playbackstart";
+    readonly FIRST_PLAY: "firstplay";
+    readonly FIRST_PLAYING: "firstplaying";
+    readonly PLAYBACK_ENDED: "playbackended";
+    readonly SOURCE_SELECTED: "sourceselected";
+    readonly TEXT_STYLE_CHANGED: "textstylechanged";
+    readonly MEDIA_RECOVERED: "mediarecovered";
+    readonly VR_STEREO_MODE_CHANGED: "vrstereomodechanged";
+    readonly FPS_DROP: "fpsdrop";
+    readonly BOOKMARK_ERROR: "bookmarkerror";
+    readonly CONCURRENCY_LIMIT: "concurrencylimit";
+    readonly RESIZE: "resize";
+    readonly TIMED_METADATA: "timedmetadata";
+    readonly TIMED_METADATA_CHANGE: "timedmetadatachange";
+    readonly TIMED_METADATA_ADDED: "timedmetadataadded";
+    readonly FRAG_LOADED: "fragloaded";
+    readonly MANIFEST_LOADED: "manifestloaded";
+    readonly USER_GESTURE: "usergesture";
+    readonly DRM_LICENSE_LOADED: "drmlicenseloaded";
+    readonly SOURCE_URL_SWITCHED: "sourceurlswitched";
+};
 
 // @public (undocumented)
 export type DeferredPromise = {
@@ -174,10 +254,15 @@ export class EngineDecoratorProvider implements IEngineDecoratorProvider {
     getName(): string;
 }
 
-// Warning: (ae-forgotten-export) The symbol "PKEngineTypes" needs to be exported by the entry point playkit.d.ts
-//
 // @public (undocumented)
-export const EngineType: PKEngineTypes;
+export const EngineType: {
+    readonly HTML5: "html5";
+    readonly FLASH: "flash";
+    readonly SILVERLIGHT: "silverlight";
+    readonly CAST: "cast";
+    readonly YOUTUBE: "youtube";
+    readonly IMAGE: "image";
+};
 
 // Warning: (ae-forgotten-export) The symbol "IEnv" needs to be exported by the entry point playkit.d.ts
 //
@@ -279,7 +364,33 @@ export function getLogger(name?: string): ILogger;
 export function getLogLevel(name?: string): ILogLevel;
 
 // @public (undocumented)
-export const Html5EventType: PKEventTypes;
+export const Html5EventType: {
+    readonly ABORT: "abort";
+    readonly CAN_PLAY: "canplay";
+    readonly CAN_PLAY_THROUGH: "canplaythrough";
+    readonly DURATION_CHANGE: "durationchange";
+    readonly EMPTIED: "emptied";
+    readonly ENDED: "ended";
+    readonly ERROR: "error";
+    readonly LOADED_DATA: "loadeddata";
+    readonly LOADED_METADATA: "loadedmetadata";
+    readonly LOAD_START: "loadstart";
+    readonly PAUSE: "pause";
+    readonly PLAY: "play";
+    readonly PLAYING: "playing";
+    readonly PROGRESS: "progress";
+    readonly RATE_CHANGE: "ratechange";
+    readonly SEEKED: "seeked";
+    readonly SEEKING: "seeking";
+    readonly STALLED: "stalled";
+    readonly SUSPEND: "suspend";
+    readonly TIME_UPDATE: "timeupdate";
+    readonly VOLUME_CHANGE: "volumechange";
+    readonly WAITING: "waiting";
+    readonly ENTER_PICTURE_IN_PICTURE: "enterpictureinpicture";
+    readonly LEAVE_PICTURE_IN_PICTURE: "leavepictureinpicture";
+    readonly PRESENTATION_MODE_CHANGED: "webkitpresentationmodechanged";
+};
 
 // @public (undocumented)
 const _Http: {
@@ -713,8 +824,17 @@ function loadPlayer(config: any): Player;
 export default loadPlayer;
 export { loadPlayer }
 
-// Warning: (ae-forgotten-export) The symbol "LoggerLevels" needs to be exported by the entry point playkit.d.ts
-//
+// @public (undocumented)
+export type LoggerLevels = {
+    TRACE: ILogLevel;
+    TIME: ILogLevel;
+    ERROR: ILogLevel;
+    INFO: ILogLevel;
+    DEBUG: ILogLevel;
+    WARN: ILogLevel;
+    OFF: ILogLevel;
+};
+
 // @public (undocumented)
 export const LogLevel: LoggerLevels;
 
@@ -724,10 +844,14 @@ export const LogLevelType: Record<keyof LoggerLevels, keyof LoggerLevels>;
 // @public (undocumented)
 export type MaybeState = State | null;
 
-// Warning: (ae-forgotten-export) The symbol "PKMediaTypes" needs to be exported by the entry point playkit.d.ts
-//
 // @public (undocumented)
-export const MediaType: PKMediaTypes;
+export const MediaType: {
+    readonly VOD: "Vod";
+    readonly LIVE: "Live";
+    readonly AUDIO: "Audio";
+    readonly IMAGE: "Image";
+    readonly UNKNOWN: "Unknown";
+};
 
 // @public (undocumented)
 const MimeType_2: PKMimeTypes;
@@ -780,11 +904,6 @@ export type PKAbrConfigObject = {
 };
 
 // @public (undocumented)
-export type PKAbrModes = {
-    [mode: string]: string;
-};
-
-// @public (undocumented)
 export type PKABRRestrictionObject = {
     minHeight: number;
     maxHeight: number;
@@ -799,11 +918,6 @@ export type PKAdBreakOptions = {
     type?: string;
     position?: number;
     numAds?: number;
-};
-
-// @public (undocumented)
-export type PKAdBreakTypes = {
-    [type: string]: string;
 };
 
 // @public (undocumented)
@@ -828,16 +942,6 @@ export type PKAdOptions = {
     wrapperAdIds: Array<string>;
     wrapperCreativeIds: Array<string>;
     wrapperAdSystems: Array<string>;
-};
-
-// @public (undocumented)
-export type PKAdTagTypes = {
-    [type: string]: string;
-};
-
-// @public (undocumented)
-export type PKCorsTypes = {
-    [stream: string]: string;
 };
 
 // @public (undocumented)
@@ -867,9 +971,7 @@ export type PKDrmDataObject = {
 };
 
 // @public (undocumented)
-export type PKEventTypes = {
-    [event: string]: string;
-};
+export type PKEventTypes = typeof Html5EventType & typeof CustomEventType & typeof AdEventType;
 
 // @public (undocumented)
 export type PKExternalThumbnailsConfig = {
@@ -983,7 +1085,7 @@ export type PKPreferNativeConfigObject = {
 // @public (undocumented)
 export type PKRequestObject = {
     url: string;
-    body: string | null;
+    body: ArrayBuffer | ArrayBufferView | string | null;
     headers: {
         [header: string]: string;
     };
@@ -998,7 +1100,7 @@ export type PKRequestType = {
 export type PKResponseObject = {
     url: string;
     originalUrl: string;
-    data: ArrayBuffer;
+    data: ArrayBuffer | ArrayBufferView;
     headers: {
         [header: string]: string;
     };
@@ -1151,15 +1253,15 @@ export type PKVideoElementStore = {
 // @public
 export class Player extends FakeEventTarget {
     constructor(config?: any);
-    get AbrMode(): PKAbrModes;
-    get AdBreakType(): PKAdBreakTypes;
+    get AbrMode(): typeof AbrMode;
+    get AdBreakType(): typeof AdBreakType;
     addTextTrack(kind: TextTrackKind, label?: string, language?: string): TextTrack | undefined;
-    get AdTagType(): PKAdTagTypes;
+    get AdTagType(): typeof AdTagType;
     attachMediaSource(): void;
     get buffered(): TimeRanges | null;
     get config(): any;
     configure(config?: any): void;
-    get CorsType(): PKCorsTypes;
+    get CorsType(): typeof CorsType;
     set crossOrigin(crossOrigin: string);
     get crossOrigin(): string | null;
     set currentTime(to: number);
@@ -1174,7 +1276,7 @@ export class Player extends FakeEventTarget {
     get duration(): number | null;
     enableAdaptiveBitrate(): void;
     get ended(): boolean | null;
-    get EngineType(): PKEngineTypes;
+    get EngineType(): typeof EngineType;
     get engineType(): string;
     enterFullscreen(elementId?: string): void;
     enterPictureInPicture(): void;
@@ -1198,7 +1300,6 @@ export class Player extends FakeEventTarget {
     getStartTimeOfDvrWindow(): number;
     _getTextTracks(): Array<TextTrack_2>;
     getThumbnail(time: number): ThumbnailInfo | null;
-    // Warning: (ae-forgotten-export) The symbol "TrackTypes" needs to be exported by the entry point playkit.d.ts
     getTracks<T extends Track | AudioTrack | TextTrack_2 | VideoTrack | ImageTrack>(type?: TrackTypes): T[];
     // (undocumented)
     getVideoElement(): HTMLVideoElement | undefined;
@@ -1222,7 +1323,7 @@ export class Player extends FakeEventTarget {
     static _logger: ILogger;
     get LogLevel(): LoggerLevels;
     get LogLevelType(): Record<keyof LoggerLevels, keyof LoggerLevels>;
-    get MediaType(): PKMediaTypes;
+    get MediaType(): typeof MediaType;
     set muted(mute: boolean);
     get muted(): boolean | null;
     notifyEnterFullscreen(): void;
@@ -1259,11 +1360,10 @@ export class Player extends FakeEventTarget {
     showTextTrack(): void;
     get sources(): PKSourcesConfigObject;
     get src(): string | null;
-    // Warning: (ae-forgotten-export) The symbol "PKStateTypes" needs to be exported by the entry point playkit.d.ts
-    get State(): PKStateTypes;
+    get State(): typeof StateType;
     // (undocumented)
     get stats(): PKStatsObject;
-    get StreamType(): PKStreamTypes;
+    get StreamType(): typeof StreamType;
     get streamType(): string;
     // (undocumented)
     get textDisplaySetting(): any;
@@ -1328,10 +1428,21 @@ export type StateChanged = {
 };
 
 // @public (undocumented)
-export const StateType: PKStateTypes;
+export const StateType: {
+    readonly IDLE: "idle";
+    readonly LOADING: "loading";
+    readonly PLAYING: "playing";
+    readonly PAUSED: "paused";
+    readonly BUFFERING: "buffering";
+};
 
 // @public (undocumented)
-export const StreamType: PKStreamTypes;
+export const StreamType: {
+    readonly DASH: "dash";
+    readonly HLS: "hls";
+    readonly PROGRESSIVE: "progressive";
+    readonly IMAGE: "image";
+};
 
 // @public (undocumented)
 const _String: {
@@ -1464,7 +1575,7 @@ export class Track {
     // (undocumented)
     static clone<T>(track: any): T;
     clone: (...args: any[]) => any;
-    get id(): string | undefined;
+    get id(): number;
     get index(): number;
     set index(value: number);
     protected _index: number;
@@ -1477,8 +1588,14 @@ export class Track {
 
 // @public (undocumented)
 export const TrackType: {
-    [type: string]: TrackTypes;
+    readonly VIDEO: "video";
+    readonly AUDIO: "audio";
+    readonly TEXT: "text";
+    readonly IMAGE: "image";
 };
+
+// @public (undocumented)
+export type TrackTypes = 'video' | 'audio' | 'text' | 'image';
 
 // @public (undocumented)
 export type Transition = {

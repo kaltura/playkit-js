@@ -4,4 +4,4 @@ node_modules
 *.log
 api-extractor/report/
 api-extractor/report-temp/
-api-extractor/playkit-js-providers.api.json
+api-extractor/playkit-js.api.json
