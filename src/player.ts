@@ -3,11 +3,11 @@ import { EventManager } from './event/event-manager';
 import PosterManager from './utils/poster-manager';
 import { FakeEvent } from './event/fake-event';
 import { FakeEventTarget }  from './event/fake-event-target';
-import {IEngine, IEngineStatic} from './types';
+import { IEngine, IEngineStatic, LoggerLevels } from "./types";
 import {CustomEventType, EventType, Html5EventType} from './event/event-type';
 import * as Utils from './utils/util';
 import Locale from './utils/locale';
-import getLogger, {getLogLevel, LoggerLevels, LogLevel, LogLevelType, setLogHandler, setLogLevel} from './utils/logger';
+import getLogger, {getLogLevel, LogLevel, LogLevelType, setLogHandler, setLogLevel} from './utils/logger';
 import StateManager from './state/state-manager';
 import Track from './track/track';
 import VideoTrack from './track/video-track';
@@ -40,21 +40,14 @@ import {ThumbnailInfo} from './thumbnail/thumbnail-info';
 import {EngineDecoratorManager} from './engines/engine-decorator-manager';
 import {filterTracksByRestriction} from './utils/restrictions';
 import {ExternalThumbnailsHandler} from './thumbnail/external-thumbnails-handler';
-import {PKEngineTypes} from './types/engine-types';
 import {
-  IEngineDecoratorProvider,
-  PKAbrModes,
-  PKAdBreakTypes,
-  PKAdTagTypes,
-  PKCorsTypes, PKDimensionsConfig, PKDrmDataObject,
+  IEngineDecoratorProvider, PKDimensionsConfig, PKDrmDataObject,
   PKEventTypes, PKMediaSourceObject,
   PKMetadataConfigObject, PKPlayerDimensions, PKPlayOptionsObject,
   PKSourcesConfigObject, PKStatsObject,
   PKStreamTypes,
   PKTextTrackDisplaySettingObject
 } from './types';
-import {PKMediaTypes} from './types/media-types';
-import {PKStateTypes} from './types/state-types';
 import {ILogger, ILogLevel} from 'js-logger';
 import {IEnv} from './types/ua-parser';
 
@@ -2774,7 +2767,7 @@ export default class Player extends FakeEventTarget {
    * @returns {PKStateTypes} - The state types of the player.
    * @public
    */
-  public get State(): PKStateTypes {
+  public get State(): typeof StateType {
     return StateType;
   }
 
@@ -2810,7 +2803,7 @@ export default class Player extends FakeEventTarget {
    * @returns {PKAbrModes} - The abr modes of the player.
    * @public
    */
-  public get AbrMode(): PKAbrModes {
+  public get AbrMode(): typeof AbrMode {
     return AbrMode;
   }
 
@@ -2819,7 +2812,7 @@ export default class Player extends FakeEventTarget {
    * @returns {PKMediaTypes} - The media types of the player.
    * @public
    */
-  public get MediaType(): PKMediaTypes {
+  public get MediaType(): typeof MediaType {
     return MediaType;
   }
 
@@ -2828,7 +2821,7 @@ export default class Player extends FakeEventTarget {
    * @returns {PKStreamTypes} - The stream types of the player.
    * @public
    */
-  public get StreamType(): PKStreamTypes {
+  public get StreamType(): typeof StreamType {
     return StreamType;
   }
 
@@ -2837,7 +2830,7 @@ export default class Player extends FakeEventTarget {
    * @returns {PKEngineTypes} - The engine types of the player.
    * @public
    */
-  public get EngineType(): PKEngineTypes {
+  public get EngineType(): typeof EngineType {
     return EngineType;
   }
 
@@ -2846,7 +2839,7 @@ export default class Player extends FakeEventTarget {
    * @returns {PKCorsTypes} - The player cors types.
    * @public
    */
-  public get CorsType(): PKCorsTypes {
+  public get CorsType(): typeof CorsType {
     return CorsType;
   }
 
@@ -2855,7 +2848,7 @@ export default class Player extends FakeEventTarget {
    * @returns {PKAdBreakTypes} - The ad break types of the player.
    * @public
    */
-  public get AdBreakType(): PKAdBreakTypes {
+  public get AdBreakType(): typeof AdBreakType {
     return AdBreakType;
   }
 
@@ -2864,7 +2857,7 @@ export default class Player extends FakeEventTarget {
    * @returns {PKAdTagTypes} - The ad tag types of the player.
    * @public
    */
-  public get AdTagType(): PKAdTagTypes {
+  public get AdTagType(): typeof AdTagType{
     return AdTagType;
   }
 

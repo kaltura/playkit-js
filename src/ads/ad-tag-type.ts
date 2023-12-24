@@ -1,6 +1,4 @@
-const AdTagType: {[type: string]: string} = {
+export  const AdTagType = {
   VAST: 'vast',
   VMAP: 'vmap'
-};
-
-export {AdTagType};
+} as const;

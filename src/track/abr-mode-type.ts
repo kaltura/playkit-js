@@ -1,8 +1,4 @@
-import {PKAbrModes} from '../types';
-
-const AbrMode: PKAbrModes = {
+export const AbrMode = {
   MANUAL: 'manual',
   AUTO: 'auto'
-};
-
-export {AbrMode};
+} as const;

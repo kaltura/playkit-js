@@ -1,11 +1,7 @@
-import {PKStateTypes} from '../types/state-types';
-
-const StateType: PKStateTypes = {
+export const StateType = {
   IDLE: 'idle',
   LOADING: 'loading',
   PLAYING: 'playing',
   PAUSED: 'paused',
   BUFFERING: 'buffering'
-};
-
-export {StateType};
+} as const;

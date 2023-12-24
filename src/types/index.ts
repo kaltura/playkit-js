@@ -1,10 +1,6 @@
 export * from './abr-config'
-export * from './abr-modes'
 export * from './ad-break-options'
-export * from './ad-break-types'
 export * from './ad-options'
-export * from './ad-tag-types'
-export * from './cors-types'
 export * from './custom-labels-config'
 export * from './deferred-promise'
 export * from './dimensions'
@@ -48,4 +44,5 @@ export * from './video-dimensions'
 export * from './video-element-store'
 export * from './interfaces'
 export * from '../track/track-type'
+export * from './logger-levels';
 export * from 'js-logger';

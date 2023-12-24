@@ -1,6 +1,5 @@
 import JsLogger, {ILogger, ILogHandler, ILogLevel} from 'js-logger';
-
-export type LoggerLevels = { TRACE: ILogLevel; TIME: ILogLevel; ERROR: ILogLevel; INFO: ILogLevel; DEBUG: ILogLevel; WARN: ILogLevel; OFF: ILogLevel }
+import { LoggerLevels } from "../types/logger-levels";
 
 const LogLevel: LoggerLevels = {
   DEBUG: JsLogger.DEBUG,

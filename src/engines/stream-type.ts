@@ -1,10 +1,6 @@
-import {PKStreamTypes} from '../types';
-
-const StreamType: PKStreamTypes = {
+export const StreamType = {
   DASH: 'dash',
   HLS: 'hls',
   PROGRESSIVE: 'progressive',
   IMAGE: 'image'
-};
-
-export {StreamType};
+} as const;

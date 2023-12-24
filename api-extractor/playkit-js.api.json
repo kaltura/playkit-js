@@ -182,9 +182,8 @@
               "text": "AbrMode: "
             },
             {
-              "kind": "Reference",
-              "text": "PKAbrModes",
-              "canonicalReference": "@playkit-js/playkit-js!PKAbrModes:type"
+              "kind": "Content",
+              "text": "{\n    readonly MANUAL: \"manual\";\n    readonly AUTO: \"auto\";\n}"
             }
           ],
           "fileUrlPath": "src/track/abr-mode-type.ts",
@@ -206,9 +205,8 @@
               "text": "AdBreakType: "
             },
             {
-              "kind": "Reference",
-              "text": "PKAdBreakTypes",
-              "canonicalReference": "@playkit-js/playkit-js!PKAdBreakTypes:type"
+              "kind": "Content",
+              "text": "{\n    readonly PRE: \"preroll\";\n    readonly MID: \"midroll\";\n    readonly POST: \"postroll\";\n    readonly OVERLAY: \"overlay\";\n}"
             }
           ],
           "fileUrlPath": "src/ads/ad-break-type.ts",
@@ -230,9 +228,8 @@
               "text": "AdEventType: "
             },
             {
-              "kind": "Reference",
-              "text": "PKEventTypes",
-              "canonicalReference": "@playkit-js/playkit-js!PKEventTypes:type"
+              "kind": "Content",
+              "text": "{\n    readonly AD_CAN_SKIP: \"adcanskip\";\n    readonly AD_MANIFEST_LOADED: \"admanifestloaded\";\n    readonly AD_LOADED: \"adloaded\";\n    readonly AD_STARTED: \"adstarted\";\n    readonly AD_RESUMED: \"adresumed\";\n    readonly AD_PAUSED: \"adpaused\";\n    readonly AD_CLICKED: \"adclicked\";\n    readonly AD_SKIPPED: \"adskipped\";\n    readonly AD_COMPLETED: \"adcompleted\";\n    readonly AD_ERROR: \"aderror\";\n    readonly ADS_COMPLETED: \"adscompleted\";\n    readonly ALL_ADS_COMPLETED: \"alladscompleted\";\n    readonly AD_BREAK_START: \"adbreakstart\";\n    readonly AD_BREAK_END: \"adbreakend\";\n    readonly AD_FIRST_QUARTILE: \"adfirstquartile\";\n    readonly AD_MIDPOINT: \"admidpoint\";\n    readonly AD_THIRD_QUARTILE: \"adthirdquartile\";\n    readonly USER_CLOSED_AD: \"userclosedad\";\n    readonly AD_VOLUME_CHANGED: \"advolumechanged\";\n    readonly AD_MUTED: \"admuted\";\n    readonly AD_PROGRESS: \"adprogress\";\n    readonly AD_BUFFERING: \"adbuffering\";\n    readonly AD_WATERFALLING: \"adwaterfalling\";\n    readonly AD_WATERFALLING_FAILED: \"adwaterfallingfailed\";\n    readonly AD_AUTOPLAY_FAILED: \"adautoplayfailed\";\n}"
             }
           ],
           "fileUrlPath": "src/ads/ad-event-type.ts",
@@ -255,7 +252,7 @@
             },
             {
               "kind": "Content",
-              "text": "{\n    [type: string]: string;\n}"
+              "text": "{\n    readonly VAST: \"vast\";\n    readonly VMAP: \"vmap\";\n}"
             }
           ],
           "fileUrlPath": "src/ads/ad-tag-type.ts",
@@ -356,6 +353,37 @@
           "name": "BaseMediaSourceAdapter",
           "preserveMemberOrder": false,
           "members": [
+            {
+              "kind": "Property",
+              "canonicalReference": "@playkit-js/playkit-js!BaseMediaSourceAdapter#_capabilities:member",
+              "docComment": "/**\n * The adapter capabilities  @private\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "protected _capabilities: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PKMediaSourceCapabilities",
+                  "canonicalReference": "@playkit-js/playkit-js!PKMediaSourceCapabilities:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": false,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "_capabilities",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": true,
+              "isAbstract": false
+            },
             {
               "kind": "Property",
               "canonicalReference": "@playkit-js/playkit-js!BaseMediaSourceAdapter#_config:member",
@@ -2110,9 +2138,8 @@
               "text": "CorsType: "
             },
             {
-              "kind": "Reference",
-              "text": "PKCorsTypes",
-              "canonicalReference": "@playkit-js/playkit-js!PKCorsTypes:type"
+              "kind": "Content",
+              "text": "{\n    readonly ANONYMOUS: \"anonymous\";\n    readonly USE_CREDENTIALS: \"use-credentials\";\n}"
             }
           ],
           "fileUrlPath": "src/engines/html5/cors-types.ts",
@@ -2236,9 +2263,8 @@
               "text": "CustomEventType: "
             },
             {
-              "kind": "Reference",
-              "text": "PKEventTypes",
-              "canonicalReference": "@playkit-js/playkit-js!PKEventTypes:type"
+              "kind": "Content",
+              "text": "{\n    readonly MEDIA_LOADED: \"medialoaded\";\n    readonly PLAYER_RESET: \"playerreset\";\n    readonly PLAYER_DESTROY: \"playerdestroy\";\n    readonly ENTER_FULLSCREEN: \"enterfullscreen\";\n    readonly EXIT_FULLSCREEN: \"exitfullscreen\";\n    readonly PLAY_FAILED: \"playfailed\";\n    readonly AUTOPLAY_FAILED: \"autoplayfailed\";\n    readonly FALLBACK_TO_MUTED_AUTOPLAY: \"fallbacktomutedautoplay\";\n    readonly CHANGE_SOURCE_STARTED: \"changesourcestarted\";\n    readonly CHANGE_SOURCE_ENDED: \"changesourceended\";\n    readonly MUTE_CHANGE: \"mutechange\";\n    readonly VIDEO_TRACK_CHANGED: \"videotrackchanged\";\n    readonly AUDIO_TRACK_CHANGED: \"audiotrackchanged\";\n    readonly TEXT_TRACK_CHANGED: \"texttrackchanged\";\n    readonly IMAGE_TRACK_CHANGED: \"imagetrackchanged\";\n    readonly TEXT_TRACK_ADDED: \"texttrackadded\";\n    readonly TEXT_CUE_CHANGED: \"textcuechanged\";\n    readonly TRACKS_CHANGED: \"trackschanged\";\n    readonly ABR_MODE_CHANGED: \"abrmodechanged\";\n    readonly PLAYER_STATE_CHANGED: \"playerstatechanged\";\n    readonly PLAYBACK_START: \"playbackstart\";\n    readonly FIRST_PLAY: \"firstplay\";\n    readonly FIRST_PLAYING: \"firstplaying\";\n    readonly PLAYBACK_ENDED: \"playbackended\";\n    readonly SOURCE_SELECTED: \"sourceselected\";\n    readonly TEXT_STYLE_CHANGED: \"textstylechanged\";\n    readonly MEDIA_RECOVERED: \"mediarecovered\";\n    readonly VR_STEREO_MODE_CHANGED: \"vrstereomodechanged\";\n    readonly FPS_DROP: \"fpsdrop\";\n    readonly BOOKMARK_ERROR: \"bookmarkerror\";\n    readonly CONCURRENCY_LIMIT: \"concurrencylimit\";\n    readonly RESIZE: \"resize\";\n    readonly TIMED_METADATA: \"timedmetadata\";\n    readonly TIMED_METADATA_CHANGE: \"timedmetadatachange\";\n    readonly TIMED_METADATA_ADDED: \"timedmetadataadded\";\n    readonly FRAG_LOADED: \"fragloaded\";\n    readonly MANIFEST_LOADED: \"manifestloaded\";\n    readonly USER_GESTURE: \"usergesture\";\n    readonly DRM_LICENSE_LOADED: \"drmlicenseloaded\";\n    readonly SOURCE_URL_SWITCHED: \"sourceurlswitched\";\n}"
             }
           ],
           "fileUrlPath": "src/event/event-type.ts",
@@ -2490,9 +2516,8 @@
               "text": "EngineType: "
             },
             {
-              "kind": "Reference",
-              "text": "PKEngineTypes",
-              "canonicalReference": "@playkit-js/playkit-js!~PKEngineTypes:type"
+              "kind": "Content",
+              "text": "{\n    readonly HTML5: \"html5\";\n    readonly FLASH: \"flash\";\n    readonly SILVERLIGHT: \"silverlight\";\n    readonly CAST: \"cast\";\n    readonly YOUTUBE: \"youtube\";\n    readonly IMAGE: \"image\";\n}"
             }
           ],
           "fileUrlPath": "src/engines/engine-type.ts",
@@ -2847,7 +2872,7 @@
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "declare class EventManager "
+              "text": "export declare class EventManager "
             }
           ],
           "fileUrlPath": "src/event/event-manager.ts",
@@ -3267,7 +3292,7 @@
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "declare class FakeEvent "
+              "text": "export declare class FakeEvent "
             }
           ],
           "fileUrlPath": "src/event/fake-event.ts",
@@ -3732,7 +3757,7 @@
           "excerptTokens": [
             {
               "kind": "Content",
-              "text": "declare class FakeEventTarget "
+              "text": "export declare class FakeEventTarget "
             }
           ],
           "fileUrlPath": "src/event/fake-event-target.ts",
@@ -4200,9 +4225,8 @@
               "text": "Html5EventType: "
             },
             {
-              "kind": "Reference",
-              "text": "PKEventTypes",
-              "canonicalReference": "@playkit-js/playkit-js!PKEventTypes:type"
+              "kind": "Content",
+              "text": "{\n    readonly ABORT: \"abort\";\n    readonly CAN_PLAY: \"canplay\";\n    readonly CAN_PLAY_THROUGH: \"canplaythrough\";\n    readonly DURATION_CHANGE: \"durationchange\";\n    readonly EMPTIED: \"emptied\";\n    readonly ENDED: \"ended\";\n    readonly ERROR: \"error\";\n    readonly LOADED_DATA: \"loadeddata\";\n    readonly LOADED_METADATA: \"loadedmetadata\";\n    readonly LOAD_START: \"loadstart\";\n    readonly PAUSE: \"pause\";\n    readonly PLAY: \"play\";\n    readonly PLAYING: \"playing\";\n    readonly PROGRESS: \"progress\";\n    readonly RATE_CHANGE: \"ratechange\";\n    readonly SEEKED: \"seeked\";\n    readonly SEEKING: \"seeking\";\n    readonly STALLED: \"stalled\";\n    readonly SUSPEND: \"suspend\";\n    readonly TIME_UPDATE: \"timeupdate\";\n    readonly VOLUME_CHANGE: \"volumechange\";\n    readonly WAITING: \"waiting\";\n    readonly ENTER_PICTURE_IN_PICTURE: \"enterpictureinpicture\";\n    readonly LEAVE_PICTURE_IN_PICTURE: \"leavepictureinpicture\";\n    readonly PRESENTATION_MODE_CHANGED: \"webkitpresentationmodechanged\";\n}"
             }
           ],
           "fileUrlPath": "src/event/event-type.ts",
@@ -10354,6 +10378,95 @@
           "name": "loadPlayer"
         },
         {
+          "kind": "TypeAlias",
+          "canonicalReference": "@playkit-js/playkit-js!LoggerLevels:type",
+          "docComment": "",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export type LoggerLevels = "
+            },
+            {
+              "kind": "Content",
+              "text": "{\n    TRACE: "
+            },
+            {
+              "kind": "Reference",
+              "text": "ILogLevel",
+              "canonicalReference": "js-logger!ILogLevel:interface"
+            },
+            {
+              "kind": "Content",
+              "text": ";\n    TIME: "
+            },
+            {
+              "kind": "Reference",
+              "text": "ILogLevel",
+              "canonicalReference": "js-logger!ILogLevel:interface"
+            },
+            {
+              "kind": "Content",
+              "text": ";\n    ERROR: "
+            },
+            {
+              "kind": "Reference",
+              "text": "ILogLevel",
+              "canonicalReference": "js-logger!ILogLevel:interface"
+            },
+            {
+              "kind": "Content",
+              "text": ";\n    INFO: "
+            },
+            {
+              "kind": "Reference",
+              "text": "ILogLevel",
+              "canonicalReference": "js-logger!ILogLevel:interface"
+            },
+            {
+              "kind": "Content",
+              "text": ";\n    DEBUG: "
+            },
+            {
+              "kind": "Reference",
+              "text": "ILogLevel",
+              "canonicalReference": "js-logger!ILogLevel:interface"
+            },
+            {
+              "kind": "Content",
+              "text": ";\n    WARN: "
+            },
+            {
+              "kind": "Reference",
+              "text": "ILogLevel",
+              "canonicalReference": "js-logger!ILogLevel:interface"
+            },
+            {
+              "kind": "Content",
+              "text": ";\n    OFF: "
+            },
+            {
+              "kind": "Reference",
+              "text": "ILogLevel",
+              "canonicalReference": "js-logger!ILogLevel:interface"
+            },
+            {
+              "kind": "Content",
+              "text": ";\n}"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "fileUrlPath": "src/types/logger-levels.ts",
+          "releaseTag": "Public",
+          "name": "LoggerLevels",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 16
+          }
+        },
+        {
           "kind": "Variable",
           "canonicalReference": "@playkit-js/playkit-js!LogLevel:var",
           "docComment": "",
@@ -10365,7 +10478,7 @@
             {
               "kind": "Reference",
               "text": "LoggerLevels",
-              "canonicalReference": "@playkit-js/playkit-js!~LoggerLevels:type"
+              "canonicalReference": "@playkit-js/playkit-js!LoggerLevels:type"
             }
           ],
           "fileUrlPath": "src/utils/logger.ts",
@@ -10398,7 +10511,7 @@
             {
               "kind": "Reference",
               "text": "LoggerLevels",
-              "canonicalReference": "@playkit-js/playkit-js!~LoggerLevels:type"
+              "canonicalReference": "@playkit-js/playkit-js!LoggerLevels:type"
             },
             {
               "kind": "Content",
@@ -10407,7 +10520,7 @@
             {
               "kind": "Reference",
               "text": "LoggerLevels",
-              "canonicalReference": "@playkit-js/playkit-js!~LoggerLevels:type"
+              "canonicalReference": "@playkit-js/playkit-js!LoggerLevels:type"
             },
             {
               "kind": "Content",
@@ -10464,9 +10577,8 @@
               "text": "MediaType: "
             },
             {
-              "kind": "Reference",
-              "text": "PKMediaTypes",
-              "canonicalReference": "@playkit-js/playkit-js!~PKMediaTypes:type"
+              "kind": "Content",
+              "text": "{\n    readonly VOD: \"Vod\";\n    readonly LIVE: \"Live\";\n    readonly AUDIO: \"Audio\";\n    readonly IMAGE: \"Image\";\n    readonly UNKNOWN: \"Unknown\";\n}"
             }
           ],
           "fileUrlPath": "src/enums/media-type.ts",
@@ -10553,32 +10665,6 @@
         },
         {
           "kind": "TypeAlias",
-          "canonicalReference": "@playkit-js/playkit-js!PKAbrModes:type",
-          "docComment": "",
-          "excerptTokens": [
-            {
-              "kind": "Content",
-              "text": "export type PKAbrModes = "
-            },
-            {
-              "kind": "Content",
-              "text": "{\n    [mode: string]: string;\n}"
-            },
-            {
-              "kind": "Content",
-              "text": ";"
-            }
-          ],
-          "fileUrlPath": "src/types/abr-modes.ts",
-          "releaseTag": "Public",
-          "name": "PKAbrModes",
-          "typeTokenRange": {
-            "startIndex": 1,
-            "endIndex": 2
-          }
-        },
-        {
-          "kind": "TypeAlias",
           "canonicalReference": "@playkit-js/playkit-js!PKABRRestrictionObject:type",
           "docComment": "",
           "excerptTokens": [
@@ -10624,32 +10710,6 @@
           "fileUrlPath": "src/types/ad-break-options.ts",
           "releaseTag": "Public",
           "name": "PKAdBreakOptions",
-          "typeTokenRange": {
-            "startIndex": 1,
-            "endIndex": 2
-          }
-        },
-        {
-          "kind": "TypeAlias",
-          "canonicalReference": "@playkit-js/playkit-js!PKAdBreakTypes:type",
-          "docComment": "",
-          "excerptTokens": [
-            {
-              "kind": "Content",
-              "text": "export type PKAdBreakTypes = "
-            },
-            {
-              "kind": "Content",
-              "text": "{\n    [type: string]: string;\n}"
-            },
-            {
-              "kind": "Content",
-              "text": ";"
-            }
-          ],
-          "fileUrlPath": "src/types/ad-break-types.ts",
-          "releaseTag": "Public",
-          "name": "PKAdBreakTypes",
           "typeTokenRange": {
             "startIndex": 1,
             "endIndex": 2
@@ -10706,58 +10766,6 @@
           "typeTokenRange": {
             "startIndex": 1,
             "endIndex": 8
-          }
-        },
-        {
-          "kind": "TypeAlias",
-          "canonicalReference": "@playkit-js/playkit-js!PKAdTagTypes:type",
-          "docComment": "",
-          "excerptTokens": [
-            {
-              "kind": "Content",
-              "text": "export type PKAdTagTypes = "
-            },
-            {
-              "kind": "Content",
-              "text": "{\n    [type: string]: string;\n}"
-            },
-            {
-              "kind": "Content",
-              "text": ";"
-            }
-          ],
-          "fileUrlPath": "src/types/ad-tag-types.ts",
-          "releaseTag": "Public",
-          "name": "PKAdTagTypes",
-          "typeTokenRange": {
-            "startIndex": 1,
-            "endIndex": 2
-          }
-        },
-        {
-          "kind": "TypeAlias",
-          "canonicalReference": "@playkit-js/playkit-js!PKCorsTypes:type",
-          "docComment": "",
-          "excerptTokens": [
-            {
-              "kind": "Content",
-              "text": "export type PKCorsTypes = "
-            },
-            {
-              "kind": "Content",
-              "text": "{\n    [stream: string]: string;\n}"
-            },
-            {
-              "kind": "Content",
-              "text": ";"
-            }
-          ],
-          "fileUrlPath": "src/types/cors-types.ts",
-          "releaseTag": "Public",
-          "name": "PKCorsTypes",
-          "typeTokenRange": {
-            "startIndex": 1,
-            "endIndex": 2
           }
         },
         {
@@ -10902,7 +10910,30 @@
             },
             {
               "kind": "Content",
-              "text": "{\n    [event: string]: string;\n}"
+              "text": "typeof "
+            },
+            {
+              "kind": "Reference",
+              "text": "Html5EventType",
+              "canonicalReference": "@playkit-js/playkit-js!Html5EventType:var"
+            },
+            {
+              "kind": "Content",
+              "text": " & typeof "
+            },
+            {
+              "kind": "Reference",
+              "text": "CustomEventType",
+              "canonicalReference": "@playkit-js/playkit-js!CustomEventType:var"
+            },
+            {
+              "kind": "Content",
+              "text": " & typeof "
+            },
+            {
+              "kind": "Reference",
+              "text": "AdEventType",
+              "canonicalReference": "@playkit-js/playkit-js!AdEventType:var"
             },
             {
               "kind": "Content",
@@ -10914,7 +10945,7 @@
           "name": "PKEventTypes",
           "typeTokenRange": {
             "startIndex": 1,
-            "endIndex": 2
+            "endIndex": 7
           }
         },
         {
@@ -11427,7 +11458,25 @@
             },
             {
               "kind": "Content",
-              "text": "{\n    url: string;\n    body: string | null;\n    headers: {\n        [header: string]: string;\n    };\n}"
+              "text": "{\n    url: string;\n    body: "
+            },
+            {
+              "kind": "Reference",
+              "text": "ArrayBuffer",
+              "canonicalReference": "!ArrayBuffer:interface"
+            },
+            {
+              "kind": "Content",
+              "text": " | "
+            },
+            {
+              "kind": "Reference",
+              "text": "ArrayBufferView",
+              "canonicalReference": "!ArrayBufferView:interface"
+            },
+            {
+              "kind": "Content",
+              "text": " | string | null;\n    headers: {\n        [header: string]: string;\n    };\n}"
             },
             {
               "kind": "Content",
@@ -11439,7 +11488,7 @@
           "name": "PKRequestObject",
           "typeTokenRange": {
             "startIndex": 1,
-            "endIndex": 2
+            "endIndex": 6
           }
         },
         {
@@ -11488,6 +11537,15 @@
             },
             {
               "kind": "Content",
+              "text": " | "
+            },
+            {
+              "kind": "Reference",
+              "text": "ArrayBufferView",
+              "canonicalReference": "!ArrayBufferView:interface"
+            },
+            {
+              "kind": "Content",
               "text": ";\n    headers: {\n        [header: string]: string;\n    };\n}"
             },
             {
@@ -11500,7 +11558,7 @@
           "name": "PKResponseObject",
           "typeTokenRange": {
             "startIndex": 1,
-            "endIndex": 4
+            "endIndex": 6
           }
         },
         {
@@ -12651,9 +12709,13 @@
                   "text": "get AbrMode(): "
                 },
                 {
+                  "kind": "Content",
+                  "text": "typeof "
+                },
+                {
                   "kind": "Reference",
-                  "text": "PKAbrModes",
-                  "canonicalReference": "@playkit-js/playkit-js!PKAbrModes:type"
+                  "text": "AbrMode",
+                  "canonicalReference": "@playkit-js/playkit-js!AbrMode:var"
                 },
                 {
                   "kind": "Content",
@@ -12666,7 +12728,7 @@
               "name": "AbrMode",
               "propertyTypeTokenRange": {
                 "startIndex": 1,
-                "endIndex": 2
+                "endIndex": 3
               },
               "isStatic": false,
               "isProtected": false,
@@ -12682,9 +12744,13 @@
                   "text": "get AdBreakType(): "
                 },
                 {
+                  "kind": "Content",
+                  "text": "typeof "
+                },
+                {
                   "kind": "Reference",
-                  "text": "PKAdBreakTypes",
-                  "canonicalReference": "@playkit-js/playkit-js!PKAdBreakTypes:type"
+                  "text": "AdBreakType",
+                  "canonicalReference": "@playkit-js/playkit-js!AdBreakType:var"
                 },
                 {
                   "kind": "Content",
@@ -12697,7 +12763,7 @@
               "name": "AdBreakType",
               "propertyTypeTokenRange": {
                 "startIndex": 1,
-                "endIndex": 2
+                "endIndex": 3
               },
               "isStatic": false,
               "isProtected": false,
@@ -12799,9 +12865,13 @@
                   "text": "get AdTagType(): "
                 },
                 {
+                  "kind": "Content",
+                  "text": "typeof "
+                },
+                {
                   "kind": "Reference",
-                  "text": "PKAdTagTypes",
-                  "canonicalReference": "@playkit-js/playkit-js!PKAdTagTypes:type"
+                  "text": "AdTagType",
+                  "canonicalReference": "@playkit-js/playkit-js!AdTagType:var"
                 },
                 {
                   "kind": "Content",
@@ -12814,7 +12884,7 @@
               "name": "AdTagType",
               "propertyTypeTokenRange": {
                 "startIndex": 1,
-                "endIndex": 2
+                "endIndex": 3
               },
               "isStatic": false,
               "isProtected": false,
@@ -12974,9 +13044,13 @@
                   "text": "get CorsType(): "
                 },
                 {
+                  "kind": "Content",
+                  "text": "typeof "
+                },
+                {
                   "kind": "Reference",
-                  "text": "PKCorsTypes",
-                  "canonicalReference": "@playkit-js/playkit-js!PKCorsTypes:type"
+                  "text": "CorsType",
+                  "canonicalReference": "@playkit-js/playkit-js!CorsType:var"
                 },
                 {
                   "kind": "Content",
@@ -12989,7 +13063,7 @@
               "name": "CorsType",
               "propertyTypeTokenRange": {
                 "startIndex": 1,
-                "endIndex": 2
+                "endIndex": 3
               },
               "isStatic": false,
               "isProtected": false,
@@ -13309,9 +13383,13 @@
                   "text": "get EngineType(): "
                 },
                 {
+                  "kind": "Content",
+                  "text": "typeof "
+                },
+                {
                   "kind": "Reference",
-                  "text": "PKEngineTypes",
-                  "canonicalReference": "@playkit-js/playkit-js!~PKEngineTypes:type"
+                  "text": "EngineType",
+                  "canonicalReference": "@playkit-js/playkit-js!EngineType:var"
                 },
                 {
                   "kind": "Content",
@@ -13324,7 +13402,7 @@
               "name": "EngineType",
               "propertyTypeTokenRange": {
                 "startIndex": 1,
-                "endIndex": 2
+                "endIndex": 3
               },
               "isStatic": false,
               "isProtected": false,
@@ -13950,7 +14028,7 @@
                 {
                   "kind": "Reference",
                   "text": "TrackTypes",
-                  "canonicalReference": "@playkit-js/playkit-js!~TrackTypes:type"
+                  "canonicalReference": "@playkit-js/playkit-js!TrackTypes:type"
                 },
                 {
                   "kind": "Content",
@@ -14542,7 +14620,7 @@
                 {
                   "kind": "Reference",
                   "text": "LoggerLevels",
-                  "canonicalReference": "@playkit-js/playkit-js!~LoggerLevels:type"
+                  "canonicalReference": "@playkit-js/playkit-js!LoggerLevels:type"
                 },
                 {
                   "kind": "Content",
@@ -14582,7 +14660,7 @@
                 {
                   "kind": "Reference",
                   "text": "LoggerLevels",
-                  "canonicalReference": "@playkit-js/playkit-js!~LoggerLevels:type"
+                  "canonicalReference": "@playkit-js/playkit-js!LoggerLevels:type"
                 },
                 {
                   "kind": "Content",
@@ -14591,7 +14669,7 @@
                 {
                   "kind": "Reference",
                   "text": "LoggerLevels",
-                  "canonicalReference": "@playkit-js/playkit-js!~LoggerLevels:type"
+                  "canonicalReference": "@playkit-js/playkit-js!LoggerLevels:type"
                 },
                 {
                   "kind": "Content",
@@ -14624,9 +14702,13 @@
                   "text": "get MediaType(): "
                 },
                 {
+                  "kind": "Content",
+                  "text": "typeof "
+                },
+                {
                   "kind": "Reference",
-                  "text": "PKMediaTypes",
-                  "canonicalReference": "@playkit-js/playkit-js!~PKMediaTypes:type"
+                  "text": "MediaType",
+                  "canonicalReference": "@playkit-js/playkit-js!MediaType:var"
                 },
                 {
                   "kind": "Content",
@@ -14639,7 +14721,7 @@
               "name": "MediaType",
               "propertyTypeTokenRange": {
                 "startIndex": 1,
-                "endIndex": 2
+                "endIndex": 3
               },
               "isStatic": false,
               "isProtected": false,
@@ -15717,9 +15799,13 @@
                   "text": "get State(): "
                 },
                 {
+                  "kind": "Content",
+                  "text": "typeof "
+                },
+                {
                   "kind": "Reference",
-                  "text": "PKStateTypes",
-                  "canonicalReference": "@playkit-js/playkit-js!~PKStateTypes:type"
+                  "text": "StateType",
+                  "canonicalReference": "@playkit-js/playkit-js!StateType:var"
                 },
                 {
                   "kind": "Content",
@@ -15732,7 +15818,7 @@
               "name": "State",
               "propertyTypeTokenRange": {
                 "startIndex": 1,
-                "endIndex": 2
+                "endIndex": 3
               },
               "isStatic": false,
               "isProtected": false,
@@ -15809,9 +15895,13 @@
                   "text": "get StreamType(): "
                 },
                 {
+                  "kind": "Content",
+                  "text": "typeof "
+                },
+                {
                   "kind": "Reference",
-                  "text": "PKStreamTypes",
-                  "canonicalReference": "@playkit-js/playkit-js!PKStreamTypes:type"
+                  "text": "StreamType",
+                  "canonicalReference": "@playkit-js/playkit-js!StreamType:var"
                 },
                 {
                   "kind": "Content",
@@ -15824,7 +15914,7 @@
               "name": "StreamType",
               "propertyTypeTokenRange": {
                 "startIndex": 1,
-                "endIndex": 2
+                "endIndex": 3
               },
               "isStatic": false,
               "isProtected": false,
@@ -16489,9 +16579,8 @@
               "text": "StateType: "
             },
             {
-              "kind": "Reference",
-              "text": "PKStateTypes",
-              "canonicalReference": "@playkit-js/playkit-js!~PKStateTypes:type"
+              "kind": "Content",
+              "text": "{\n    readonly IDLE: \"idle\";\n    readonly LOADING: \"loading\";\n    readonly PLAYING: \"playing\";\n    readonly PAUSED: \"paused\";\n    readonly BUFFERING: \"buffering\";\n}"
             }
           ],
           "fileUrlPath": "src/state/state-type.ts",
@@ -16513,9 +16602,8 @@
               "text": "StreamType: "
             },
             {
-              "kind": "Reference",
-              "text": "PKStreamTypes",
-              "canonicalReference": "@playkit-js/playkit-js!PKStreamTypes:type"
+              "kind": "Content",
+              "text": "{\n    readonly DASH: \"dash\";\n    readonly HLS: \"hls\";\n    readonly PROGRESSIVE: \"progressive\";\n    readonly IMAGE: \"image\";\n}"
             }
           ],
           "fileUrlPath": "src/engines/stream-type.ts",
@@ -18580,7 +18668,7 @@
                 },
                 {
                   "kind": "Content",
-                  "text": "string | undefined"
+                  "text": "number"
                 },
                 {
                   "kind": "Content",
@@ -18799,16 +18887,7 @@
             },
             {
               "kind": "Content",
-              "text": "{\n    [type: string]: "
-            },
-            {
-              "kind": "Reference",
-              "text": "TrackTypes",
-              "canonicalReference": "@playkit-js/playkit-js!~TrackTypes:type"
-            },
-            {
-              "kind": "Content",
-              "text": ";\n}"
+              "text": "{\n    readonly VIDEO: \"video\";\n    readonly AUDIO: \"audio\";\n    readonly TEXT: \"text\";\n    readonly IMAGE: \"image\";\n}"
             }
           ],
           "fileUrlPath": "src/track/track-type.ts",
@@ -18817,7 +18896,33 @@
           "name": "TrackType",
           "variableTypeTokenRange": {
             "startIndex": 1,
-            "endIndex": 4
+            "endIndex": 2
+          }
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@playkit-js/playkit-js!TrackTypes:type",
+          "docComment": "",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export type TrackTypes = "
+            },
+            {
+              "kind": "Content",
+              "text": "'video' | 'audio' | 'text' | 'image'"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "fileUrlPath": "src/track/track-type.ts",
+          "releaseTag": "Public",
+          "name": "TrackTypes",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 2
           }
         },
         {

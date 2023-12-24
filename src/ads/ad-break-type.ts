@@ -1,10 +1,6 @@
-import {PKAdBreakTypes} from '../types';
-
-const AdBreakType: PKAdBreakTypes = {
+export const AdBreakType = {
   PRE: 'preroll',
   MID: 'midroll',
   POST: 'postroll',
   OVERLAY: 'overlay'
-};
-
-export {AdBreakType};
+} as const;

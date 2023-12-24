@@ -1,8 +1,4 @@
-import {PKCorsTypes} from '../../types';
-
-const CorsType: PKCorsTypes = {
+export const CorsType = {
   ANONYMOUS: 'anonymous',
   USE_CREDENTIALS: 'use-credentials'
-};
-
-export {CorsType};
+} as const;
