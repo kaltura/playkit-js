@@ -541,7 +541,7 @@ const _Http = {
       // Convert the header string into an array of individual headers
       const arr = headerRow.trim().split(/[\r\n]+/);
 
-      arr.forEach(function (line) {
+      arr.forEach((line) => {
         const parts = line.split(': ');
         // @ts-expect-error - Object is possibly 'undefined'
         const header = parts.shift().toLowerCase();

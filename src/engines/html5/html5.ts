@@ -1031,7 +1031,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     // Check if the engine's video element is the one in the PIP
     return (
       (!!document.pictureInPictureElement && document.pictureInPictureElement !== null && this._el === document.pictureInPictureElement) ||
-       // @ts-expect-error - Property 'webkitPresentationMode' does not exist on type 'HTMLVideoElement'
+      // @ts-expect-error - Property 'webkitPresentationMode' does not exist on type 'HTMLVideoElement'
       (!!this._el.webkitPresentationMode && this._el.webkitPresentationMode === 'picture-in-picture')
     );
   }

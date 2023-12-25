@@ -108,7 +108,7 @@ class FullscreenController {
           this._enterInBrowserFullscreen(fullScreenElement);
         } else {
           const videoElement = this._player.getVideoElement();
-           // @ts-expect-error - Property 'webkitEnterFullScreen' does not exist on type 'HTMLVideoElement'
+          // @ts-expect-error - Property 'webkitEnterFullScreen' does not exist on type 'HTMLVideoElement'
           if (videoElement && typeof videoElement.webkitEnterFullScreen === 'function') {
             if (this._player.isInPictureInPicture()) {
               // iOS < 13 (iPad) has an issue to enter to full screen from PiP
