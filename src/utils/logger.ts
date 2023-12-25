@@ -1,5 +1,5 @@
 import JsLogger, {ILogger, ILogHandler, ILogLevel} from 'js-logger';
-import { LoggerLevels } from "../types/logger-levels";
+import { LoggerLevels } from '../types/logger-levels';
 
 const LogLevel: LoggerLevels = {
   DEBUG: JsLogger.DEBUG,

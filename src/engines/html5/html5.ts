@@ -559,11 +559,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
             )
           );
         });
-        // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-        // @ts-ignore
+        // @ts-expect-error -  Property 'webkitSetPresentationMode' does not exist on type 'HTMLVideoElement'
       } else if (typeof this._el.webkitSetPresentationMode === 'function') {
-        // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-        // @ts-ignore
+        // @ts-expect-error -  Property 'webkitSetPresentationMode' does not exist on type 'HTMLVideoElement'
         this._el.webkitSetPresentationMode('picture-in-picture');
         // Safari does not fire this event but Chrome does, normalizing the behaviour
         setTimeout(() => this.dispatchEvent(new FakeEvent(Html5EventType.ENTER_PICTURE_IN_PICTURE)), 0);
@@ -598,8 +596,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
           );
         });
       } else if (typeof this._el['webkitSetPresentationMode'] === 'function') {
-        // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-        // @ts-ignore
+        //@ts-expect-error - Property 'webkitSetPresentationMode' does not exist on type 'HTMLVideoElement'.
         this._el.webkitSetPresentationMode('inline');
       }
     } catch (error) {
@@ -620,11 +617,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   public isPictureInPictureSupported(): boolean {
     // due to a bug in shaka pip_webkit which sets pictureInPictureEnabled to true in unsupported devices like iphones we will
     // first rely on the response of webkitSupportsPresentationMode (if exists) and only if not on the pictureInPictureEnabled property
-    // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    //@ts-expect-error - Property 'webkitSupportsPresentationMode' does not exist on type 'HTMLVideoElement'.
     if (typeof this._el.webkitSupportsPresentationMode === 'function') {
-      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      //@ts-expect-error - Property 'webkitSupportsPresentationMode' does not exist on type 'HTMLVideoElement'.
       return this._el.webkitSupportsPresentationMode('picture-in-picture');
     } else {
       return !!document.pictureInPictureEnabled;
@@ -1036,8 +1031,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     // Check if the engine's video element is the one in the PIP
     return (
       (!!document.pictureInPictureElement && document.pictureInPictureElement !== null && this._el === document.pictureInPictureElement) ||
-      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+       // @ts-expect-error - Property 'webkitPresentationMode' does not exist on type 'HTMLVideoElement'
       (!!this._el.webkitPresentationMode && this._el.webkitPresentationMode === 'picture-in-picture')
     );
   }
@@ -1127,12 +1121,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       track => PKTextTrack.isNativeTextTrack(track) && track.mode !== PKTextTrack.MODE.DISABLED
     );
     if (activeTextTrack) {
-      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      for (let i = 0; i < activeTextTrack.cues.length; i++) {
-        // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        activeTextTrack.cues[i].hasBeenReset = true;
+      for (let i = 0; i < activeTextTrack.cues!.length; i++) {
+        // @ts-expect-error - Property 'hasBeenReset' does not exist on type 'TextTrackCue'
+        activeTextTrack.cues![i].hasBeenReset = true;
       }
     }
   }
@@ -1184,8 +1175,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   private _getMsExtendedError(): string {
-    // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    //@ts-expect-error - Property 'msExtendedCode' does not exist on type 'MediaError'
     let extended = this._el.error.msExtendedCode;
     if (extended) {
       // Convert to unsigned:

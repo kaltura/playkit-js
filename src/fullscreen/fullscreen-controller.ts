@@ -69,8 +69,7 @@ class FullscreenController {
     return (
       this._player.env.os.name === 'iOS' &&
       !!videoElement &&
-      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      // @ts-expect-error - Property 'webkitPresentationMode' does not exist on type 'HTMLVideoElement'.
       (videoElement.webkitPresentationMode === 'fullscreen' || (!videoElement.webkitPresentationMode && videoElement.webkitDisplayingFullscreen))
     );
   }
@@ -109,18 +108,15 @@ class FullscreenController {
           this._enterInBrowserFullscreen(fullScreenElement);
         } else {
           const videoElement = this._player.getVideoElement();
-          // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-          // @ts-ignore
+           // @ts-expect-error - Property 'webkitEnterFullScreen' does not exist on type 'HTMLVideoElement'
           if (videoElement && typeof videoElement.webkitEnterFullScreen === 'function') {
             if (this._player.isInPictureInPicture()) {
               // iOS < 13 (iPad) has an issue to enter to full screen from PiP
-              // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-              // @ts-ignore
+              // @ts-expect-error - Property 'webkitEnterFullScreen' does not exist on type 'HTMLVideoElement'
               setTimeout(() => videoElement.webkitEnterFullScreen(), EXIT_PIP_TIMEOUT);
               this._player.exitPictureInPicture();
             } else {
-              // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-              // @ts-ignore
+              // @ts-expect-error - Property 'webkitEnterFullScreen' does not exist on type 'HTMLVideoElement'
               videoElement.webkitEnterFullScreen();
             }
           }
@@ -144,14 +140,11 @@ class FullscreenController {
         if (this._isInBrowserFullscreen || this._player.engineType === EngineType.YOUTUBE) {
           this._exitInBrowserFullscreen();
         } else {
-          // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          const videoElement: HTMLVideoElement = this._player.getVideoElement();
-          // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-          // @ts-ignore
+
+          const videoElement: HTMLVideoElement = this._player.getVideoElement()!;
+          // @ts-expect-error - Property 'webkitEnterFullScreen' does not exist on type 'HTMLVideoElement'
           if (videoElement && typeof videoElement.webkitExitFullscreen === 'function') {
-            // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-            // @ts-ignore
+            // @ts-expect-error - Property 'webkitEnterFullScreen' does not exist on type 'HTMLVideoElement'
             videoElement.webkitExitFullscreen();
           }
         }
@@ -171,23 +164,17 @@ class FullscreenController {
   private _nativeEnterFullScreen(fullScreenElement: HTMLElement): Promise<void> | undefined  {
     if (typeof fullScreenElement.requestFullscreen === 'function') {
       return fullScreenElement.requestFullscreen();
-      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      // @ts-expect-error - Property 'mozRequestFullScreen' does not exist on type 'HTMLElement'
     } else if (typeof fullScreenElement.mozRequestFullScreen === 'function') {
-      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      // @ts-expect-error - Property 'mozRequestFullScreen' does not exist on type 'HTMLElement'
       return fullScreenElement.mozRequestFullScreen();
-      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      // @ts-expect-error - Property 'webkitRequestFullScreen' does not exist on type 'HTMLElement'
     } else if (typeof fullScreenElement.webkitRequestFullScreen === 'function') {
-      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      // @ts-expect-error - Property 'webkitRequestFullScreen' does not exist on type 'HTMLElement'
       return fullScreenElement.webkitRequestFullScreen();
-      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      // @ts-expect-error - Property 'msRequestFullscreen' does not exist on type 'HTMLElement'
     } else if (typeof fullScreenElement.msRequestFullscreen === 'function') {
-      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      // @ts-expect-error - Property 'msRequestFullscreen' does not exist on type 'HTMLElement'
       return fullScreenElement.msRequestFullscreen();
     }
   }
@@ -231,23 +218,18 @@ class FullscreenController {
   private _nativeExitFullScreen(): Promise<void> | undefined {
     if (typeof document.exitFullscreen === 'function') {
       return document.exitFullscreen();
-      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      // @ts-expect-error - Property 'webkitExitFullscreen' does not exist on type 'Document'
     } else if (typeof document.webkitExitFullscreen === 'function') {
-      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      // @ts-expect-error - Property 'webkitExitFullscreen' does not exist on type 'Document'
       return document.webkitExitFullscreen();
       // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
     } else if (typeof document.mozCancelFullScreen === 'function') {
-      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      //@ts-expect-error - Property 'mozCancelFullScreen' does not exist on type 'Document'.
       return document.mozCancelFullScreen();
-      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      //@ts-expect-error - Property 'msExitFullscreen' does not exist on type 'Document'
     } else if (typeof document.msExitFullscreen === 'function') {
-      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      //@ts-expect-error - Property 'msExitFullscreen' does not exist on type 'Document'
       return document.msExitFullscreen();
     }
   }

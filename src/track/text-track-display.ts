@@ -725,8 +725,7 @@ class BoxPosition {
       top = obj.div.offsetTop;
 
       let rects;
-      const temp =  (rects = obj.div.childNodes) && (rects = rects[0]) && rects.getClientRects && rects.getClientRects();
-      rects = temp;
+      rects =  (rects = obj.div.childNodes) && (rects = rects[0]) && rects.getClientRects && rects.getClientRects();
       obj = obj.div.getBoundingClientRect();
       // In certain cases the outter div will be slightly larger then the sum of
       // the inner div's lines. This could be due to bold text, etc, on some platforms.

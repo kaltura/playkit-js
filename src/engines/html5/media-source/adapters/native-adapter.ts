@@ -608,8 +608,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   private _handleVideoTracksChange(): void {
     if (!this._isProgressivePlayback()) {
-      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      // @ts-expect-error - Property 'videoTracks' does not exist on type 'HTMLVideoElement'
       const {videoHeight, videoWidth, videoTracks} = this._videoElement;
       if (!this._videoDimensions || videoHeight !== this._videoDimensions.videoHeight || videoWidth !== this._videoDimensions.videoWidth) {
         this._videoDimensions = {videoHeight, videoWidth};
@@ -740,9 +739,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   private _getParsedAdaptiveVideoTracks(): Array<VideoTrack> {
     //TODO check adaptation in safari hls
-    // TODO - why it is not on the type ???
-    // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    // @ts-expect-error - Property 'videoTracks' does not exist on type 'HTMLVideoElement'
     const videoTracks = this._videoElement.videoTracks;
     const parsedTracks: VideoTrack[] = [];
     if (videoTracks) {
@@ -768,9 +765,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    */
   private _getParsedAudioTracks(): Array<AudioTrack> {
-    // TODO - why it is not on the type ???
-    // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    // @ts-expect-error - Property 'audioTracks' does not exist on type 'HTMLVideoElement'
     const audioTracks = this._videoElement.audioTracks;
     const parsedTracks: AudioTrack[] = [];
     if (audioTracks) {
@@ -909,9 +904,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @public
    */
   private selectAdaptiveVideoTrack(videoTrack: VideoTrack): void {
-    // TODO - why it is not on the type ???
-    // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    // @ts-expect-error - Property 'videoTracks' does not exist on type 'HTMLVideoElement'
     const videoTracks = this._videoElement.videoTracks;
     if (videoTrack instanceof VideoTrack && videoTracks && videoTracks[videoTrack.index]) {
       this._disableVideoTracks();
@@ -929,9 +922,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   public selectAudioTrack(audioTrack: AudioTrack): void {
     NativeAdapter._logger.debug('selectAudioTrack');
-    // TODO - why it is not on the type ???
-    // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    // @ts-expect-error - Property 'audioTracks' does not exist on type 'HTMLVideoElement'
     const audioTracks = this._videoElement.audioTracks;
     if (audioTrack instanceof AudioTrack && audioTracks && audioTracks[audioTrack.index]) {
       this._removeNativeAudioTrackChangeListener();
@@ -947,13 +938,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {void}
    */
   private _removeNativeAudioTrackChangeListener(): void {
-    // TODO - why it is not on the type ???
-    // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    // @ts-expect-error - Property 'audioTracks' does not exist on type 'HTMLVideoElement'
     if (this._videoElement.audioTracks) {
-      // TODO - why it is not on the type ???
-      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+    // @ts-expect-error - Property 'audioTracks' does not exist on type 'HTMLVideoElement'
       this._eventManager.unlisten(this._videoElement.audioTracks, 'change');
     }
   }
@@ -964,13 +951,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {void}
    */
   private _addNativeAudioTrackChangeListener(): void {
-    // TODO - why it is not on the type ???
-    // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    // @ts-expect-error - Property 'audioTracks' does not exist on type 'HTMLVideoElement'
     if (this._videoElement.audioTracks) {
-      // TODO - why it is not on the type ???
-      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      // @ts-expect-error - Property 'audioTracks' does not exist on type 'HTMLVideoElement'
       this._eventManager.listen(this._videoElement.audioTracks, 'change', () => this._onNativeAudioTrackChange());
     }
   }
@@ -992,13 +975,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   private _onNativeAudioTrackChange(): void {
     const getActiveVidAudioTrackIndex = (): number => {
-      // TODO - why it is not on the type ???
-      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      // @ts-expect-error - Property 'audioTracks' does not exist on type 'HTMLVideoElement'
       for (let i = 0; i < this._videoElement.audioTracks.length; i++) {
-        // TODO - why it is not on the type ???
-        // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-        // @ts-ignore
+        // @ts-expect-error - Property 'audioTracks' does not exist on type 'HTMLVideoElement'
         const audioTrack = this._videoElement.audioTracks[i];
         if (audioTrack.enabled) {
           return i;
@@ -1194,9 +1173,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   private _maybeApplyAbrRestrictions(restrictions: PKABRRestrictionObject): void {
     if (this._isProgressivePlayback()) {
-      // TODO - why it is not on the type ???
-      // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       const videoTracks = this._playerTracks.filter(track => track instanceof VideoTrack);
       const availableTracks = filterTracksByRestriction(videoTracks as VideoTrack[], restrictions);
       const activeTrackInRange = availableTracks.find(track => track.active);
@@ -1214,9 +1190,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {void}
    */
   private _disableVideoTracks(): void {
-    // TODO - why it is not on the type ???
-    // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    // @ts-expect-error - Property 'audioTracks' does not exist on type 'HTMLVideoElement'
     const videoTracks = this._videoElement.videoTracks;
     if (videoTracks) {
       for (let i = 0; i < videoTracks.length; i++) {
@@ -1233,9 +1207,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   protected _switchAudioTrack(index: number): void {
     NativeAdapter._logger.debug('_switchAudioTracks');
-    // TODO - why it is not on the type ???
-    // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    // @ts-expect-error - Property 'audioTracks' does not exist on type 'HTMLVideoElement'
     const videoElementAudioTracks = this._videoElement.audioTracks;
     if (videoElementAudioTracks) {
       for (let i = 0; i < videoElementAudioTracks.length; i++) {

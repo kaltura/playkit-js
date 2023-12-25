@@ -3,7 +3,7 @@ import { EventManager } from './event/event-manager';
 import PosterManager from './utils/poster-manager';
 import { FakeEvent } from './event/fake-event';
 import { FakeEventTarget }  from './event/fake-event-target';
-import { IEngine, IEngineStatic, LoggerLevels } from "./types";
+import { IEngine, IEngineStatic, LoggerLevels } from './types';
 import {CustomEventType, EventType, Html5EventType} from './event/event-type';
 import * as Utils from './utils/util';
 import Locale from './utils/locale';
@@ -45,7 +45,6 @@ import {
   PKEventTypes, PKMediaSourceObject,
   PKMetadataConfigObject, PKPlayerDimensions, PKPlayOptionsObject,
   PKSourcesConfigObject, PKStatsObject,
-  PKStreamTypes,
   PKTextTrackDisplaySettingObject
 } from './types';
 import {ILogger, ILogLevel} from 'js-logger';

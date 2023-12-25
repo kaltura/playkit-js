@@ -1,4 +1,3 @@
-//@flow
 import NativeAdapter from './adapters/native-adapter';
 import getLogger from '../../../utils/logger';
 import {IMediaSourceAdapter, IMediaSourceAdapterStatic} from '../../../types/interfaces/media-source-adapter';

@@ -28,7 +28,6 @@ export default class StateManager {
    * @type {Player}
    * @private
    */
-  // _player: Player;
   private _player: Player;
   /**
    * The event manager of the class.

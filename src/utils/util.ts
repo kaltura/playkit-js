@@ -225,8 +225,7 @@ const _Object = {
         return;
       }
     }
-    // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+    // @ts-expect-error - 'undefined' cannot be used as an index type
     delete obj[pathArray.pop()];
   },
 
@@ -542,12 +541,9 @@ const _Http = {
       // Convert the header string into an array of individual headers
       const arr = headerRow.trim().split(/[\r\n]+/);
 
-      // Create a map of header names to values
-      // eslint-disable-next-line
       arr.forEach(function (line) {
         const parts = line.split(': ');
-        // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-        // @ts-ignore
+        // @ts-expect-error - Object is possibly 'undefined'
         const header = parts.shift().toLowerCase();
         const value = parts.join(': ');
         headerMap[header] = value;

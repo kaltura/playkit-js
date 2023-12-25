@@ -1,4 +1,3 @@
-import * as Utils from '../utils/util';
 import {AdEventType} from '../ads/ad-event-type';
 import {PKEventTypes} from '../types';
 

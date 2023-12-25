@@ -47,7 +47,6 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @type {Player}
    * @private
    */
-  // TODO - temp
   private _player: Player;
   /**
    * event manager for the external caption handler
