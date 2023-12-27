@@ -1,74 +1,65 @@
-'use strict';
-
 const webpack = require('webpack');
 const path = require('path');
 const packageData = require('./package.json');
+const TerserPlugin = require('terser-webpack-plugin');
 
-let plugins = [
-  new webpack.DefinePlugin({
-    __VERSION__: JSON.stringify(packageData.version),
-    __NAME__: JSON.stringify(packageData.name)
-  })
-];
-
-module.exports = {
-  context: __dirname + '/src',
-  entry: {
-    playkit: 'playkit.js'
-  },
-  output: {
-    path: __dirname + '/dist',
-    filename: '[name].js',
-    library: ['playkit', 'core'],
-    libraryTarget: 'umd',
-    umdNamedDefine: true,
-    devtoolModuleFilenameTemplate: './core/[resource-path]'
-  },
-  devtool: 'source-map',
-  plugins: plugins,
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        use: [
-          {
-            loader: 'babel-loader'
-          }
-        ],
-        exclude: [/node_modules/]
-      },
-      {
-        test: /\.js$/,
-        exclude: [/node_modules/],
-        enforce: 'pre',
-        use: [
-          {
-            loader: 'eslint-loader',
+module.exports = (env, { mode }) => {
+  return {
+    entry: './src/playkit.ts',
+    devtool: 'source-map',
+    module: {
+      rules: [
+        {
+          test: /\.(ts|js)$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
             options: {
-              rules: {
-                semi: 0
-              }
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    bugfixes: true,
+                  }
+                ],
+                '@babel/preset-typescript'
+              ],
+              plugins: [['@babel/plugin-transform-runtime']]
             }
           }
-        ]
+        },
+        {
+          test: /\.css$/i,
+          use: ['style-loader', 'css-loader']
+        }
+      ]
+    },
+    resolve: {
+      extensions: ['.ts', '.js']
+    },
+    output: {
+      filename: 'playkit.js',
+      path: path.resolve(__dirname, 'dist'),
+      library: {
+        umdNamedDefine: true,
+        name: ['playkit', 'core'],
+        type: 'umd'
       },
-      {
-        test: /\.css$/,
-        use: [
-          {
-            loader: 'style-loader'
-          },
-          {
-            loader: 'css-loader'
-          }
-        ]
+      clean: true
+    },
+    devServer: {
+      static: {
+        directory: path.join(__dirname, 'demo')
+      },
+      client: {
+        progress: true
       }
+    },
+    plugins: [
+      new webpack.DefinePlugin({
+        __VERSION__: JSON.stringify(packageData.version),
+        __NAME__: JSON.stringify(packageData.name)
+      })
     ]
-  },
-  devServer: {
-    contentBase: __dirname + '/src'
-  },
-  resolve: {
-    modules: [path.resolve(__dirname, 'src'), 'node_modules']
-  }
+  };
 };

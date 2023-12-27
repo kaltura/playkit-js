@@ -1,114 +1,98 @@
 {
   "name": "@playkit-js/playkit-js",
   "version": "0.84.1",
-  "main": "dist/playkit.js",
+  "keywords": [
+    "kaltura",
+    "player",
+    "html5 player"
+  ],
+  "homepage": "https://github.com/kaltura/playkit-js",
+  "bugs": {
+    "url": "https://github.com/kaltura/playkit-js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kaltura/playkit-js"
+  },
+  "license": "AGPL-3.0",
+  "main": "./dist/playkit.js",
+  "types": "./dist/playkit-js.d.ts",
+  "files": [
+    "dist/**/*",
+    "src/**/*",
+    "flow-typed/**/*"
+  ],
   "scripts": {
-    "clean": "rm -rf ./dist",
-    "prebuild": "npm run clean",
-    "build": "webpack --mode production",
-    "dev": "webpack-dev-server --mode development",
-    "watch": "webpack --progress --colors --watch --mode development",
-    "test": "NODE_ENV=test karma start --color --mode development",
-    "test:watch": "NODE_ENV=test karma start --browsers=Chrome --single-run=false --auto-watch",
+    "serve": "yarn run build:dev && webpack serve --open --mode development",
+    "watch": "webpack --watch --mode development",
+    "build:dev": "webpack --mode development",
+    "build:prod": "webpack --mode production",
+    "build": "yarn run build:prod && yarn run build:types",
+    "build:types": "tsc --build tsconfig-lib.json && mkdir -p lib && api-extractor run --local --diagnostics",
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "npm run type-check -- --watch",
+    "test": "karma start karma.conf.js",
+    "test:debug": "DEBUG_UNIT_TESTS=1 karma start karma.conf.js --auto-watch --no-single-run --browsers Chrome",
+    "test:watch": "karma start karma.conf.js --auto-watch --no-single-run",
+    "lint": "eslint src/ --ext .js --ext .ts",
+    "lint:fix": "yarn run lint -- --fix",
+    "prettier": "prettier --write .",
+    "clean": "rm -rf dist/*",
+    "precommit": "npm run build:prod && npm run type-check && npm run lint:fix",
     "release": "standard-version",
-    "pushTaggedRelease": "git push --follow-tags --no-verify origin master",
-    "eslint": "eslint . --color",
-    "flow": "flow check",
-    "commit:dist": "git add --force --all dist && (git commit -m 'chore: update dist' || exit 0)",
-    "precommit": "lint-staged",
-    "docs:generate": "documentation build flow-typed/** src/** -f md -o docs/api.md",
-    "docs:serve": "documentation serve flow-typed/** src/** --watch",
-    "prettier:fix": "prettier --write ."
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.{js,jsx}": [
-      "eslint --fix",
-      "git add"
-    ],
-    "*.{json,md,scss}": [
-      "prettier --write",
-      "git add"
-    ]
+    "pushTaggedRelease": "git push --follow-tags --no-verify origin master"
   },
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
     "js-logger": "^1.6.0",
-    "ua-parser-js": "1.0.2"
+    "ua-parser-js": "^1.0.36"
   },
   "devDependencies": {
-    "@babel/cli": "^7.10.5",
-    "@babel/core": "^7.10.5",
-    "@babel/plugin-proposal-class-properties": "^7.10.4",
-    "@babel/plugin-transform-flow-strip-types": "^7.10.4",
-    "@babel/preset-env": "^7.10.4",
-    "@babel/preset-flow": "^7.10.4",
-    "@babel/register": "^7.10.5",
-    "regenerator-runtime": "^0.13.5",
-    "babel-eslint": "^10.1.0",
-    "babel-loader": "^8.1.0",
-    "babel-plugin-istanbul": "^6.0.0",
-    "chai": "^4.2.0",
+    "@babel/core": "^7.22.20",
+    "@babel/plugin-transform-runtime": "^7.22.15",
+    "@babel/preset-env": "^7.22.20",
+    "@babel/preset-typescript": "^7.22.15",
+    "@babel/runtime": "^7.23.1",
+    "@microsoft/api-extractor": "^7.38.0",
+    "@types/chai": "^4.3.3",
+    "@types/mocha": "^9.1.1",
+    "@types/sinon": "^10.0.20",
+    "@types/ua-parser-js": "^0.7.38",
+    "@typescript-eslint/eslint-plugin": "^6.7.2",
+    "@typescript-eslint/parser": "^6.7.2",
+    "babel-loader": "^9.1.3",
+    "chai": "^4.3.6",
     "chai-as-promised": "^7.1.1",
-    "conventional-github-releaser": "3.1.3",
-    "cross-env": "^7.0.2",
-    "css-loader": "^3.6.0",
-    "documentation": "^13.0.2",
-    "eslint": "^7.5.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-loader": "^4.0.2",
-    "eslint-plugin-flowtype": "^5.2.0",
-    "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-mocha-no-only": "^1.1.1",
-    "eslint-plugin-prettier": "^3.1.4",
-    "flow-bin": "^0.129.0",
-    "husky": "^4.2.5",
-    "istanbul": "^0.4.5",
-    "karma": "^5.1.0",
-    "karma-chai": "^0.1.0",
-    "karma-chrome-launcher": "^3.1.0",
-    "karma-cli": "^2.0.0",
-    "karma-coverage": "^2.0.2",
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "6.8.1",
+    "eslint": "^8.56.0",
+    "eslint-plugin-mocha": "^10.2.0",
+    "karma": "^6.4.0",
+    "karma-chrome-launcher": "^3.1.1",
     "karma-firefox-launcher": "^1.3.0",
-    "karma-ie-launcher": "^1.0.0",
+    "karma-safari-launcher": "^1.0.0",
     "karma-mocha": "^2.0.1",
     "karma-mocha-reporter": "^2.2.5",
-    "karma-safari-launcher": "^1.0.0",
-    "karma-sourcemap-loader": "^0.3.7",
-    "karma-webpack": "^4.0.2",
-    "lint-staged": "^10.2.11",
-    "mocha": "^8.0.1",
-    "mocha-cli": "^1.0.1",
-    "prettier": "^2.0.5",
-    "sinon": "^9.0.2",
-    "sinon-chai": "^3.5.0",
-    "standard-version": "^6.0.1",
-    "style-loader": "^1.2.1",
-    "uglifyjs-webpack-plugin": "^2.2.0",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0"
+    "karma-sourcemap-loader": "^0.3.8",
+    "karma-webpack": "^5.0.0",
+    "mocha": "^10.0.0",
+    "prettier": "^3.0.3",
+    "sinon": "^14.0.0",
+    "sinon-chai": "latest",
+    "standard-version": "^9.5.0",
+    "style-loader": "3.3.3",
+    "terser-webpack-plugin": "^5.3.9",
+    "typescript": "^5.2.2",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1",
+    "@playkit-js/browserslist-config": "^1.0.5"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/kaltura/playkit-js"
-  },
-  "keywords": [
-    "kaltura",
-    "player",
-    "html5 player"
+  "browserslist": [
+    "extends @playkit-js/browserslist-config"
   ],
-  "license": "AGPL-3.0",
-  "bugs": {
-    "url": "https://github.com/kaltura/playkit-js/issues"
-  },
-  "homepage": "https://github.com/kaltura/playkit-js",
   "kcc": {
     "name": "playkit"
   }
