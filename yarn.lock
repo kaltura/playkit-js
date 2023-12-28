@@ -1160,10 +1160,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@playkit-js/browserslist-config@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@playkit-js/browserslist-config/-/browserslist-config-1.0.5.tgz#7d4a7f7b087caa2620d9f89263a05bd4a0af99a4"
-  integrity sha512-aEx7S4nW1XakhTtx01Use7viuuZ61ho6FeL6iHtZMpclsjEPYf0N8jQt9e3aDBKhaZZ8pKl5250hI4pjWWBfAA==
+"@playkit-js/browserslist-config@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@playkit-js/browserslist-config/-/browserslist-config-1.0.7.tgz#5c44ae48adae36651edb22c23e15b30c1af4b0fa"
+  integrity sha512-c54fhJbNPG+7gJs8ItirS2chYNymjYirtoY8rOxLVIjqHlyUBdxMl6GykEuEVSy4MHU9cu2c3+E0ppx9/u+Ghw==
 
 "@rushstack/node-core-library@3.61.0":
   version "3.61.0"

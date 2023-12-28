@@ -1,0 +1,14 @@
+dist/
+lib/
+docs/
+api-extractor/
+.github/
+flow-typed/
+samples/
+coverage/
+CHANGELOG.md
+yarn.lock
+yarn-error.log
+LICENSE
+README.md
+
