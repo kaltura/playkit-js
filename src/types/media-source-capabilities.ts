@@ -1,3 +1,3 @@
 export type PKMediaSourceCapabilities = {
-  [fpsControl: string]: boolean
+  [fpsControl: string]: boolean;
 };

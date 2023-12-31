@@ -1,22 +1,29 @@
-import {CustomEventType, Html5EventType} from '../../../../event/event-type';
+import { CustomEventType, Html5EventType } from '../../../../event/event-type';
 import Track from '../../../../track/track';
 import VideoTrack from '../../../../track/video-track';
 import AudioTrack from '../../../../track/audio-track';
 import PKTextTrack from '../../../../track/text-track';
-import {RequestType} from '../../../../enums/request-type';
+import { RequestType } from '../../../../enums/request-type';
 import BaseMediaSourceAdapter from '../base-media-source-adapter';
-import {getSuitableSourceForResolution} from '../../../../utils/resolution';
-import {filterTracksByRestriction} from '../../../../utils/restrictions';
+import { getSuitableSourceForResolution } from '../../../../utils/resolution';
+import { filterTracksByRestriction } from '../../../../utils/restrictions';
 import * as Utils from '../../../../utils/util';
 import FairPlay from '../../../../drm/fairplay';
 import Env from '../../../../utils/env';
 import Error from '../../../../error/error';
 import defaultConfig from './native-adapter-default-config.json';
-import type {FairPlayDrmConfigType} from './fairplay-drm-handler';
-import {FairPlayDrmHandler} from './fairplay-drm-handler';
-import {IDrmProtocol} from '../../../../types';
-import {PKABRRestrictionObject, PKDrmConfigObject, PKDrmDataObject, PKMediaSourceObject, PKRequestObject, PKVideoDimensionsObject} from '../../../../types';
-import {IMediaSourceAdapter} from '../../../../types';
+import type { FairPlayDrmConfigType } from './fairplay-drm-handler';
+import { FairPlayDrmHandler } from './fairplay-drm-handler';
+import { IDrmProtocol } from '../../../../types';
+import {
+  PKABRRestrictionObject,
+  PKDrmConfigObject,
+  PKDrmDataObject,
+  PKMediaSourceObject,
+  PKRequestObject,
+  PKVideoDimensionsObject
+} from '../../../../types';
+import { IMediaSourceAdapter } from '../../../../types';
 
 const BACK_TO_FOCUS_TIMEOUT: number = 1000;
 const MAX_MEDIA_RECOVERY_ATTEMPTS: number = 3;
@@ -301,8 +308,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
       this._drmHandler = new FairPlayDrmHandler(
         this._videoElement,
         drmConfig,
-        error => this._dispatchErrorCallback(error),
-        data => this._dispatchDRMLicenseLoaded(data)
+        (error) => this._dispatchErrorCallback(error),
+        (data) => this._dispatchDRMLicenseLoaded(data)
       );
     }
   }
@@ -336,11 +343,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @function load
    * @returns {Promise<Object>} - The loaded data
    */
-  public load(startTime?: number): Promise<{tracks: Track[]}> {
+  public load(startTime?: number): Promise<{ tracks: Track[] }> {
     this._wasCurrentTimeSetSuccessfully = false;
     this._maybeSetDrmPlayback();
     if (!this._loadPromise) {
-      this._loadPromise = new Promise<{tracks: Track[]}>((resolve, reject) => {
+      this._loadPromise = new Promise<{ tracks: Track[] }>((resolve, reject) => {
         this._lastTimeUpdate = startTime || 0;
         const realStartTime = typeof startTime === 'number' ? startTime : -1;
         const playbackStartTime = this._startTimeAttach || realStartTime;
@@ -371,7 +378,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         }
         if (this._sourceObj && this._sourceObj.url) {
           this._setSrc().then(() => {
-            this._trigger(CustomEventType.ABR_MODE_CHANGED, {mode: this._isProgressivePlayback() ? 'manual' : 'auto'});
+            this._trigger(CustomEventType.ABR_MODE_CHANGED, {
+              mode: this._isProgressivePlayback() ? 'manual' : 'auto'
+            });
             this._videoElement.load();
           });
         } else {
@@ -453,7 +462,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   private _setSrc(): Promise<void> {
-    const pkRequest: PKRequestObject = {url: this._sourceObj ? this._sourceObj.url : '', body: null, headers: {}};
+    const pkRequest: PKRequestObject = {
+      url: this._sourceObj ? this._sourceObj.url : '',
+      body: null,
+      headers: {}
+    };
     let requestFilterPromise;
     if (typeof Utils.Object.getPropertyPath(this._config, 'network.requestFilter') === 'function') {
       try {
@@ -465,7 +478,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     }
     requestFilterPromise = requestFilterPromise || Promise.resolve(pkRequest);
     requestFilterPromise
-      .then(updatedRequest => {
+      .then((updatedRequest) => {
         if (this._config.useSourceTag) {
           const source = document.createElement('source');
           const mimetype = this._sourceObj?.mimetype.toLowerCase() || '';
@@ -491,7 +504,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
               options = this._config.mediaOptionAttribute;
             }
             if (this._config.abrEwmaDefaultEstimate) {
-              const bps = {start: this._config.abrEwmaDefaultEstimate};
+              const bps = { start: this._config.abrEwmaDefaultEstimate };
               Utils.Object.createPropertyPath(options, 'option.adaptiveStreaming.bps', bps);
             }
             NativeAdapter._logger.debug('Setting mediaOption -', options);
@@ -503,7 +516,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
           this._videoElement.src = updatedRequest.url;
         }
       })
-      .catch(error => {
+      .catch((error) => {
         this._trigger(Html5EventType.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.REQUEST_FILTER_ERROR, error));
       });
     return requestFilterPromise;
@@ -528,15 +541,15 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @private
    * @returns {void}
    */
-  private _onLoadedData(resolve: (value: (PromiseLike<{tracks: Track[]}> | {tracks: Track[]})) => void, startTime?: number): void {
-    const parseTracksAndResolve = () : void => {
+  private _onLoadedData(resolve: (value: PromiseLike<{ tracks: Track[] }> | { tracks: Track[] }) => void, startTime?: number): void {
+    const parseTracksAndResolve = (): void => {
       this._playerTracks = this._getParsedTracks();
       this._addNativeAudioTrackChangeListener();
       this._addNativeTextTrackChangeListener();
       this._addNativeTextTrackAddedListener();
       NativeAdapter._logger.debug('The source has been loaded successfully');
       this._loadPromiseReject = undefined;
-      resolve({tracks: this._playerTracks});
+      resolve({ tracks: this._playerTracks });
       if (this.isLive()) {
         this._handleLiveDurationChange();
       }
@@ -584,7 +597,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   private _resetHeartbeatTimeout(): void {
     this._lastTimeUpdate = this._videoElement.currentTime;
     this._clearHeartbeatTimeout();
-    const onTimeout = () : void => {
+    const onTimeout = (): void => {
       this._clearHeartbeatTimeout();
       this._trigger(
         Html5EventType.ERROR,
@@ -609,9 +622,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   private _handleVideoTracksChange(): void {
     if (!this._isProgressivePlayback()) {
       // @ts-expect-error - Property 'videoTracks' does not exist on type 'HTMLVideoElement'
-      const {videoHeight, videoWidth, videoTracks} = this._videoElement;
+      const { videoHeight, videoWidth, videoTracks } = this._videoElement;
       if (!this._videoDimensions || videoHeight !== this._videoDimensions.videoHeight || videoWidth !== this._videoDimensions.videoWidth) {
-        this._videoDimensions = {videoHeight, videoWidth};
+        this._videoDimensions = { videoHeight, videoWidth };
         const setting = {
           language: '',
           height: videoHeight,
@@ -827,16 +840,18 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   private _maybeShow708Captions(): void {
-    const captions = Array.from(this._videoElement.textTracks).filter(track => track.kind === PKTextTrack.KIND.CAPTIONS);
-    const activeCaption = captions.find(track => track.mode === PKTextTrack.MODE.SHOWING || track.mode === PKTextTrack.MODE.HIDDEN);
+    const captions = Array.from(this._videoElement.textTracks).filter((track) => track.kind === PKTextTrack.KIND.CAPTIONS);
+    const activeCaption = captions.find((track) => track.mode === PKTextTrack.MODE.SHOWING || track.mode === PKTextTrack.MODE.HIDDEN);
     const textTrack = activeCaption || captions[0];
     if (textTrack) {
       textTrack.mode = PKTextTrack.MODE.HIDDEN;
       this._captionsHidden = true;
       this._eventManager.listenOnce(textTrack, 'cuechange', () => {
         const textTracks = this._getPKTextTracks();
-        textTracks.forEach(track => (track.available = true) && (track.mode = PKTextTrack.MODE.DISABLED));
-        this._trigger(CustomEventType.TRACKS_CHANGED, {tracks: this._playerTracks});
+        textTracks.forEach((track) => (track.available = true) && (track.mode = PKTextTrack.MODE.DISABLED));
+        this._trigger(CustomEventType.TRACKS_CHANGED, {
+          tracks: this._playerTracks
+        });
       });
     }
   }
@@ -940,7 +955,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   private _removeNativeAudioTrackChangeListener(): void {
     // @ts-expect-error - Property 'audioTracks' does not exist on type 'HTMLVideoElement'
     if (this._videoElement.audioTracks) {
-    // @ts-expect-error - Property 'audioTracks' does not exist on type 'HTMLVideoElement'
+      // @ts-expect-error - Property 'audioTracks' does not exist on type 'HTMLVideoElement'
       this._eventManager.unlisten(this._videoElement.audioTracks, 'change');
     }
   }
@@ -959,13 +974,13 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   private _getPKAudioTracks(): Array<AudioTrack> {
-    const audioTracks = this._playerTracks.filter(track => track instanceof AudioTrack);
+    const audioTracks = this._playerTracks.filter((track) => track instanceof AudioTrack);
     return audioTracks;
   }
 
   private _getActivePKAudioTrack(): AudioTrack | undefined {
     const pkAudioTracks = this._getPKAudioTracks();
-    return pkAudioTracks.find(track => track.active === true);
+    return pkAudioTracks.find((track) => track.active === true);
   }
 
   /**
@@ -990,7 +1005,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     const pkIndex = activeAudioTrack ? activeAudioTrack.index : -1;
     if (vidIndex !== pkIndex) {
       const audioTracks = this._getPKAudioTracks();
-      const pkAudioTrack = audioTracks.find(track => track.index === vidIndex);
+      const pkAudioTrack = audioTracks.find((track) => track.index === vidIndex);
       if (pkAudioTrack) {
         NativeAdapter._logger.debug('Native selection of track, update the player audio track (' + pkIndex + ' -> ' + vidIndex + ')');
         this._onTrackChanged(pkAudioTrack);
@@ -1041,12 +1056,12 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   }
 
   private _getPKTextTracks(): Array<PKTextTrack> {
-    return this._playerTracks.filter(track => track instanceof PKTextTrack) as PKTextTrack[];
+    return this._playerTracks.filter((track) => track instanceof PKTextTrack) as PKTextTrack[];
   }
 
   private _getActivePKTextTrack(): PKTextTrack | undefined {
     const pkTextTracks = this._getPKTextTracks();
-    return pkTextTracks.find(track => track.active === true);
+    return pkTextTracks.find((track) => track.active === true);
   }
 
   /**
@@ -1056,7 +1071,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   private _onNativeTextTrackChange(): void {
     const pkTextTracks = this._getPKTextTracks();
-    const pkOffTrack = pkTextTracks.find(track => track.language === 'off');
+    const pkOffTrack = pkTextTracks.find((track) => track.language === 'off');
     const getActiveVidTextTrackIndex = (): number => {
       for (const textTrackId in this._nativeTextTracksMap) {
         if (this._getDisplayTextTrackModeString() === this._nativeTextTracksMap[textTrackId].mode) {
@@ -1080,7 +1095,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         // In case the text track on the video element is
         // different then the text track of the player
         // we need to set the correct one
-        const pkTextTrack = pkTextTracks.find(track => track.index === vidIndex);
+        const pkTextTrack = pkTextTracks.find((track) => track.index === vidIndex);
         if (pkTextTrack) {
           NativeAdapter._logger.debug('Native selection of track, update the player text track (' + pkIndex + ' -> ' + vidIndex + ')');
           this._onTrackChanged(pkTextTrack);
@@ -1118,7 +1133,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   private _onNativeTextTrackAdded(): void {
     this._playerTracks = this._getParsedTracks();
-    this._trigger(CustomEventType.TRACKS_CHANGED, {tracks: this._playerTracks});
+    this._trigger(CustomEventType.TRACKS_CHANGED, {
+      tracks: this._playerTracks
+    });
   }
 
   /**
@@ -1173,9 +1190,9 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   private _maybeApplyAbrRestrictions(restrictions: PKABRRestrictionObject): void {
     if (this._isProgressivePlayback()) {
-      const videoTracks = this._playerTracks.filter(track => track instanceof VideoTrack);
+      const videoTracks = this._playerTracks.filter((track) => track instanceof VideoTrack);
       const availableTracks = filterTracksByRestriction(videoTracks as VideoTrack[], restrictions);
-      const activeTrackInRange = availableTracks.find(track => track.active);
+      const activeTrackInRange = availableTracks.find((track) => track.active);
       if (!activeTrackInRange && availableTracks.length) {
         this.selectVideoTrack(availableTracks[0]);
       } else {
@@ -1296,7 +1313,7 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   private _calculateSegmentDuration(): void {
     if (this._videoElement.seekable.length > 0 && this._videoElement.seekable.start(0) === 0) {
-      const {buffered, seekable} = this._videoElement;
+      const { buffered, seekable } = this._videoElement;
       if (buffered.length && seekable.length) {
         this._segmentDuration = (buffered.end(buffered.length - 1) - seekable.end(seekable.length - 1)) / SAFARI_BUFFERED_SEGMENTS_COUNT;
       }

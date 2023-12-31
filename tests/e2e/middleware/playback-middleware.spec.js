@@ -149,7 +149,7 @@ describe('PlaybackMiddleware', function () {
       pm2 = new PM2();
       playbackMiddleware.use(pm1);
       playbackMiddleware.use(pm2);
-      playbackMiddleware.setCurrentTime(100, to => {
+      playbackMiddleware.setCurrentTime(100, (to) => {
         to.should.equal(130);
         done();
       });
@@ -162,7 +162,7 @@ describe('PlaybackMiddleware', function () {
       playbackMiddleware.use(pm1);
       playbackMiddleware.use(pm3);
       playbackMiddleware.use(pm2);
-      playbackMiddleware.setCurrentTime(100, to => {
+      playbackMiddleware.setCurrentTime(100, (to) => {
         to.should.equal(130);
         done();
       });
@@ -173,7 +173,7 @@ describe('PlaybackMiddleware', function () {
       pm3 = new PM3();
       playbackMiddleware.use(pm3);
       playbackMiddleware.use(pm1);
-      playbackMiddleware.setCurrentTime(100, to => {
+      playbackMiddleware.setCurrentTime(100, (to) => {
         to.should.equal(110);
         done();
       });
@@ -184,7 +184,7 @@ describe('PlaybackMiddleware', function () {
       pm3 = new PM3();
       playbackMiddleware.use(pm1);
       playbackMiddleware.use(pm3);
-      playbackMiddleware.setCurrentTime(100, to => {
+      playbackMiddleware.setCurrentTime(100, (to) => {
         to.should.equal(110);
         done();
       });
@@ -193,7 +193,7 @@ describe('PlaybackMiddleware', function () {
     it('should run playback middleware for action setCurrentTime and chain the original for the last', function (done) {
       pm3 = new PM3();
       playbackMiddleware.use(pm3);
-      playbackMiddleware.setCurrentTime(100, to => {
+      playbackMiddleware.setCurrentTime(100, (to) => {
         to.should.equal(100);
         done();
       });

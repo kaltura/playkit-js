@@ -1,4 +1,4 @@
 export type PKPreferNativeConfigObject = {
-  hls: boolean,
-  dash: boolean
+  hls: boolean;
+  dash: boolean;
 };

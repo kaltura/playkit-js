@@ -1,25 +1,25 @@
 import TextStyle from '../../src/track/text-style';
 import Player from '../../src/player';
-import {StateType} from '../../src/state/state-type';
-import {CustomEventType, Html5EventType} from '../../src/event/event-type';
+import { StateType } from '../../src/state/state-type';
+import { CustomEventType, Html5EventType } from '../../src/event/event-type';
 import SourcesConfig from '../configs/sources.json';
 import ExternalCaption from '../configs/external-captions.json';
 import Track from '../../src/track/track';
 import VideoTrack from '../../src/track/video-track';
 import AudioTrack from '../../src/track/audio-track';
 import TextTrack from '../../src/track/text-track';
-import {createTextTrackCue, TimedMetadata} from '../../src/track/timed-metadata';
-import {createElement, getConfigStructure, removeElement, removeVideoElementsFromTestPage} from '../utils/test-utils';
+import { createTextTrackCue, TimedMetadata } from '../../src/track/timed-metadata';
+import { createElement, getConfigStructure, removeElement, removeVideoElementsFromTestPage } from '../utils/test-utils';
 import Locale from '../../src/utils/locale';
 import Html5 from '../../src/engines/html5/html5';
 import Error from '../../src/error/error';
-import {Object as PKObject} from '../../src/utils/util';
-import {LabelOptions} from '../../src/track/label-options';
-import {EngineProvider} from '../../src/engines/engine-provider';
+import { Object as PKObject } from '../../src/utils/util';
+import { LabelOptions } from '../../src/track/label-options';
+import { EngineProvider } from '../../src/engines/engine-provider';
 import { FakeEvent } from '../../src/event/fake-event';
 import Html5AutoPlayCapability from '../../src/engines/html5/capabilities/html5-autoplay';
 import * as Utils from '../../src/utils/util';
-import {TrackType} from '../../src/track/track-type';
+import { TrackType } from '../../src/track/track-type';
 
 const targetId = 'player-placeholder_player.spec';
 let sourcesConfig = PKObject.copyDeep(SourcesConfig);
@@ -58,14 +58,14 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should load if no source', done => {
+    it('should load if no source', (done) => {
       player.ready().then(() => {
         done();
       });
       player.load();
     });
 
-    it("should't load if no engine", done => {
+    it("should't load if no engine", (done) => {
       player._engine = null;
       setTimeout(done, 300);
       player.ready().then(() => {
@@ -74,7 +74,7 @@ describe('Player', function () {
       player.load();
     });
 
-    it("should't load if source already exists", done => {
+    it("should't load if source already exists", (done) => {
       player.addEventListener(CustomEventType.TRACKS_CHANGED, () => {
         sandbox.stub(player, '_load').callsFake(function () {
           done(new Error("should't load if source already exists"));
@@ -85,7 +85,7 @@ describe('Player', function () {
       player.load();
     });
 
-    it("should't load if is in loading process", done => {
+    it("should't load if is in loading process", (done) => {
       let loadCounter = 0;
       setTimeout(() => {
         loadCounter.should.equal(1);
@@ -122,14 +122,14 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should success before load', done => {
+    it('should success before load', (done) => {
       player.addEventListener('playing', () => {
         done();
       });
       player.play();
     });
 
-    it('should success after load', done => {
+    it('should success after load', (done) => {
       player.addEventListener('playing', () => {
         done();
       });
@@ -139,7 +139,7 @@ describe('Player', function () {
       });
     });
     describe('attach detach', function () {
-      it('should success play after detach attach', done => {
+      it('should success play after detach attach', (done) => {
         const playing = () => {
           player.removeEventListener(Html5EventType.PLAYING, playing);
           player.addEventListener(Html5EventType.PLAYING, () => {
@@ -196,21 +196,21 @@ describe('Player', function () {
             player.destroy();
           });
 
-          it('should success ready -> load', done => {
+          it('should success ready -> load', (done) => {
             player.ready().then(() => {
               done();
             });
             player.load();
           });
 
-          it('should success load -> ready', done => {
+          it('should success load -> ready', (done) => {
             player.load();
             player.ready().then(() => {
               done();
             });
           });
 
-          it('should resolved successfully even when recoverable error occurred', done => {
+          it('should resolved successfully even when recoverable error occurred', (done) => {
             let readyResolved = false;
             player.addEventListener(CustomEventType.TRACKS_CHANGED, () => {
               readyResolved = true;
@@ -241,7 +241,7 @@ describe('Player', function () {
             player.destroy();
           });
 
-          it('should success setSources -> ready -> load', done => {
+          it('should success setSources -> ready -> load', (done) => {
             player.setSources(sourcesConfig.Mp4);
             player.ready().then(() => {
               done();
@@ -249,7 +249,7 @@ describe('Player', function () {
             player.load();
           });
 
-          it('should success setSources -> load -> ready', done => {
+          it('should success setSources -> load -> ready', (done) => {
             player.setSources(sourcesConfig.Mp4);
             player.load();
             player.ready().then(() => {
@@ -257,7 +257,7 @@ describe('Player', function () {
             });
           });
 
-          it('should success ready -> setSources -> load', done => {
+          it('should success ready -> setSources -> load', (done) => {
             player.ready().then(() => {
               done();
             });
@@ -282,14 +282,14 @@ describe('Player', function () {
             player.destroy();
           });
 
-          it('should success ready -> load', done => {
+          it('should success ready -> load', (done) => {
             player.ready().then(() => {
               done();
             });
             player.load();
           });
 
-          it('should success load -> ready', done => {
+          it('should success load -> ready', (done) => {
             player.load();
             player.ready().then(() => {
               done();
@@ -310,7 +310,7 @@ describe('Player', function () {
             player.destroy();
           });
 
-          it('should success setSources -> ready -> load', done => {
+          it('should success setSources -> ready -> load', (done) => {
             player.setSources(sourcesConfig.Mp4);
             player.ready().then(() => {
               done();
@@ -318,7 +318,7 @@ describe('Player', function () {
             player.load();
           });
 
-          it('should success setSources -> load -> ready', done => {
+          it('should success setSources -> load -> ready', (done) => {
             player.setSources(sourcesConfig.Mp4);
             player.load();
             player.ready().then(() => {
@@ -326,7 +326,7 @@ describe('Player', function () {
             });
           });
 
-          it('should success ready -> load -> setSources', done => {
+          it('should success ready -> load -> setSources', (done) => {
             player.ready().then(() => {
               done();
             });
@@ -334,7 +334,7 @@ describe('Player', function () {
             player.setSources(sourcesConfig.Mp4);
           });
 
-          it('should success ready -> setSources -> load', done => {
+          it('should success ready -> setSources -> load', (done) => {
             player.ready().then(() => {
               done();
             });
@@ -342,7 +342,7 @@ describe('Player', function () {
             player.load();
           });
 
-          it('should success load -> setSources -> ready', done => {
+          it('should success load -> setSources -> ready', (done) => {
             player.load();
             player.setSources(sourcesConfig.Mp4);
             player.ready().then(() => {
@@ -350,7 +350,7 @@ describe('Player', function () {
             });
           });
 
-          it('should success load -> ready -> setSources', done => {
+          it('should success load -> ready -> setSources', (done) => {
             player.load();
             player.ready().then(() => {
               done();
@@ -382,8 +382,8 @@ describe('Player', function () {
             player.destroy();
           });
 
-          it('should fail ready -> load', done => {
-            player.addEventListener(Html5EventType.ERROR, error => {
+          it('should fail ready -> load', (done) => {
+            player.addEventListener(Html5EventType.ERROR, (error) => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
@@ -394,8 +394,8 @@ describe('Player', function () {
             player.load();
           });
 
-          it('should fail load -> ready', done => {
-            player.addEventListener(Html5EventType.ERROR, error => {
+          it('should fail load -> ready', (done) => {
+            player.addEventListener(Html5EventType.ERROR, (error) => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
@@ -419,8 +419,8 @@ describe('Player', function () {
             player.destroy();
           });
 
-          it('should fail setSources -> ready -> load', done => {
-            player.addEventListener(Html5EventType.ERROR, error => {
+          it('should fail setSources -> ready -> load', (done) => {
+            player.addEventListener(Html5EventType.ERROR, (error) => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
@@ -432,8 +432,8 @@ describe('Player', function () {
             player.load();
           });
 
-          it('should fail setSources -> load -> ready', done => {
-            player.addEventListener(Html5EventType.ERROR, error => {
+          it('should fail setSources -> load -> ready', (done) => {
+            player.addEventListener(Html5EventType.ERROR, (error) => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
@@ -445,8 +445,8 @@ describe('Player', function () {
             });
           });
 
-          it('should fail ready -> setSources -> load', done => {
-            player.addEventListener(Html5EventType.ERROR, error => {
+          it('should fail ready -> setSources -> load', (done) => {
+            player.addEventListener(Html5EventType.ERROR, (error) => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
@@ -475,8 +475,8 @@ describe('Player', function () {
             player.destroy();
           });
 
-          it('should fail ready -> load', done => {
-            player.addEventListener(Html5EventType.ERROR, error => {
+          it('should fail ready -> load', (done) => {
+            player.addEventListener(Html5EventType.ERROR, (error) => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
@@ -487,8 +487,8 @@ describe('Player', function () {
             player.load();
           });
 
-          it('should fail load -> ready', done => {
-            player.addEventListener(Html5EventType.ERROR, error => {
+          it('should fail load -> ready', (done) => {
+            player.addEventListener(Html5EventType.ERROR, (error) => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
@@ -513,8 +513,8 @@ describe('Player', function () {
             player.destroy();
           });
 
-          it('should fail setSources -> ready -> load', done => {
-            player.addEventListener(Html5EventType.ERROR, error => {
+          it('should fail setSources -> ready -> load', (done) => {
+            player.addEventListener(Html5EventType.ERROR, (error) => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
@@ -527,8 +527,8 @@ describe('Player', function () {
             player.load();
           });
 
-          it('should fail setSources -> load -> ready', done => {
-            player.addEventListener(Html5EventType.ERROR, error => {
+          it('should fail setSources -> load -> ready', (done) => {
+            player.addEventListener(Html5EventType.ERROR, (error) => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
@@ -541,8 +541,8 @@ describe('Player', function () {
             });
           });
 
-          it('should fail ready -> load -> setSources', done => {
-            player.addEventListener(Html5EventType.ERROR, error => {
+          it('should fail ready -> load -> setSources', (done) => {
+            player.addEventListener(Html5EventType.ERROR, (error) => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
@@ -555,8 +555,8 @@ describe('Player', function () {
             player.setSources(sourcesConfig.CorruptedUrl);
           });
 
-          it('should fail ready -> setSources -> load', done => {
-            player.addEventListener(Html5EventType.ERROR, error => {
+          it('should fail ready -> setSources -> load', (done) => {
+            player.addEventListener(Html5EventType.ERROR, (error) => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
@@ -569,8 +569,8 @@ describe('Player', function () {
             player.load();
           });
 
-          it('should fail load -> setSources -> ready', done => {
-            player.addEventListener(Html5EventType.ERROR, error => {
+          it('should fail load -> setSources -> ready', (done) => {
+            player.addEventListener(Html5EventType.ERROR, (error) => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
@@ -583,8 +583,8 @@ describe('Player', function () {
             });
           });
 
-          it('should fail load -> ready -> setSources', done => {
-            player.addEventListener(Html5EventType.ERROR, error => {
+          it('should fail load -> ready -> setSources', (done) => {
+            player.addEventListener(Html5EventType.ERROR, (error) => {
               if (error.payload.severity.should.equals(Error.Severity.CRITICAL) && error.payload.category.should.equals(Error.Category.MEDIA)) {
                 done();
               }
@@ -619,8 +619,8 @@ describe('Player', function () {
       player = new Player(config);
       player.setSources(sourcesConfig.Mp4);
       player._tracks = [
-        new VideoTrack({bandwidth: 15000, height: 760, width: 480}),
-        new VideoTrack({bandwidth: 20000, height: 860, width: 560}),
+        new VideoTrack({ bandwidth: 15000, height: 760, width: 480 }),
+        new VideoTrack({ bandwidth: 20000, height: 860, width: 560 }),
         new AudioTrack(),
         new AudioTrack(),
         new TextTrack(),
@@ -854,7 +854,7 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should return all tracks using ready', done => {
+    it('should return all tracks using ready', (done) => {
       player.ready().then(() => {
         let videoTracksLength = 2;
         let audioTracksLength = video.audioTracks ? video.audioTracks.length : 0;
@@ -866,7 +866,7 @@ describe('Player', function () {
       player.load();
     });
 
-    it('should return video tracks', done => {
+    it('should return video tracks', (done) => {
       player.ready().then(() => {
         let videoTracksLength = 2;
         player.getTracks('video').length.should.be.equal(videoTracksLength);
@@ -875,7 +875,7 @@ describe('Player', function () {
       player.load();
     });
 
-    it('should return audio tracks', done => {
+    it('should return audio tracks', (done) => {
       player.load();
       player.ready().then(() => {
         let audioTracksLength = video.audioTracks ? video.audioTracks.length : 0;
@@ -884,9 +884,9 @@ describe('Player', function () {
       });
     });
 
-    it('should return text tracks, captions doesnt exist before first cues', done => {
+    it('should return text tracks, captions doesnt exist before first cues', (done) => {
       player.ready().then(() => {
-        const tracks = Array.from(video.textTracks).filter(track => track.kind === 'subtitles');
+        const tracks = Array.from(video.textTracks).filter((track) => track.kind === 'subtitles');
         let textTracksLength = tracks ? tracks.length + 1 : 0;
         player.getTracks('text').length.should.be.equal(textTracksLength);
         done();
@@ -894,7 +894,7 @@ describe('Player', function () {
       player.load();
     });
 
-    it('should return all tracks for unknown type', done => {
+    it('should return all tracks for unknown type', (done) => {
       player.ready().then(() => {
         let videoTracksLength = 2;
         let audioTracksLength = video.audioTracks ? video.audioTracks.length : 0;
@@ -935,9 +935,9 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should select a new video track', done => {
+    it('should select a new video track', (done) => {
       let tracks;
-      player.addEventListener(CustomEventType.VIDEO_TRACK_CHANGED, event => {
+      player.addEventListener(CustomEventType.VIDEO_TRACK_CHANGED, (event) => {
         (event.payload.selectedVideoTrack instanceof VideoTrack).should.be.true;
         event.payload.selectedVideoTrack.index.should.equal(1);
         (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.false;
@@ -947,7 +947,7 @@ describe('Player', function () {
         done();
       });
       player.ready().then(() => {
-        tracks = player._tracks.filter(track => {
+        tracks = player._tracks.filter((track) => {
           return track instanceof VideoTrack;
         });
         (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.true;
@@ -961,10 +961,10 @@ describe('Player', function () {
       video = player._engine.getVideoElement();
     });
 
-    it('should select the previous selected track', done => {
+    it('should select the previous selected track', (done) => {
       let tracks;
       player.ready().then(() => {
-        tracks = player._tracks.filter(track => {
+        tracks = player._tracks.filter((track) => {
           return track instanceof VideoTrack;
         });
         player.selectTrack(tracks[1]);
@@ -984,10 +984,10 @@ describe('Player', function () {
       video = player._engine.getVideoElement();
     });
 
-    it('should remove user selection once adaptive bitrate enabled', done => {
+    it('should remove user selection once adaptive bitrate enabled', (done) => {
       let tracks;
       player.ready().then(() => {
-        tracks = player._tracks.filter(track => {
+        tracks = player._tracks.filter((track) => {
           return track instanceof VideoTrack;
         });
         player.selectTrack(tracks[1]);
@@ -1008,16 +1008,16 @@ describe('Player', function () {
       video = player._engine.getVideoElement();
     });
 
-    it('should not change the selected for non exist video track', done => {
+    it('should not change the selected for non exist video track', (done) => {
       player.ready().then(() => {
-        let tracks = player._tracks.filter(track => {
+        let tracks = player._tracks.filter((track) => {
           return track instanceof VideoTrack;
         });
         (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.true;
         (video.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.false;
         tracks[0].active.should.be.true;
         tracks[1].active.should.be.false;
-        player.selectTrack(new VideoTrack({index: 2}));
+        player.selectTrack(new VideoTrack({ index: 2 }));
         (video.src.indexOf(sourcesConfig.MultipleSources.progressive[0].url) > -1).should.be.true;
         (video.src.indexOf(sourcesConfig.MultipleSources.progressive[1].url) > -1).should.be.false;
         tracks[0].active.should.be.true;
@@ -1052,10 +1052,10 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should select a new audio track', done => {
+    it('should select a new audio track', (done) => {
       player.ready().then(() => {
         if (video.audioTracks) {
-          player.addEventListener(CustomEventType.AUDIO_TRACK_CHANGED, event => {
+          player.addEventListener(CustomEventType.AUDIO_TRACK_CHANGED, (event) => {
             (event.payload.selectedAudioTrack instanceof AudioTrack).should.be.true;
             event.payload.selectedAudioTrack.index.should.equal(2);
             video.audioTracks[0].enabled.should.be.false;
@@ -1066,7 +1066,7 @@ describe('Player', function () {
             tracks[2].active.should.be.true;
             done();
           });
-          let tracks = player._tracks.filter(track => {
+          let tracks = player._tracks.filter((track) => {
             return track instanceof AudioTrack;
           });
           video.audioTracks[0].enabled.should.be.true;
@@ -1075,7 +1075,7 @@ describe('Player', function () {
           tracks[0].active.should.be.true;
           tracks[1].active.should.be.false;
           tracks[2].active.should.be.false;
-          player.selectTrack(new AudioTrack({index: 2}));
+          player.selectTrack(new AudioTrack({ index: 2 }));
         } else {
           done();
         }
@@ -1084,10 +1084,10 @@ describe('Player', function () {
       video = player._engine.getVideoElement();
     });
 
-    it('should not change the selected audio track', done => {
+    it('should not change the selected audio track', (done) => {
       player.ready().then(() => {
         if (video.audioTracks) {
-          let tracks = player._tracks.filter(track => {
+          let tracks = player._tracks.filter((track) => {
             return track instanceof AudioTrack;
           });
           video.audioTracks[0].enabled.should.be.true;
@@ -1096,7 +1096,7 @@ describe('Player', function () {
           tracks[0].active.should.be.true;
           tracks[1].active.should.be.false;
           tracks[2].active.should.be.false;
-          player.selectTrack(new AudioTrack({index: 0}));
+          player.selectTrack(new AudioTrack({ index: 0 }));
           video.audioTracks[0].enabled.should.be.true;
           video.audioTracks[1].enabled.should.be.false;
           video.audioTracks[2].enabled.should.be.false;
@@ -1108,15 +1108,15 @@ describe('Player', function () {
           done();
         }
       });
-      player.configure({playback: {preload: 'auto'}});
+      player.configure({ playback: { preload: 'auto' } });
       video = player._engine.getVideoElement();
       player.load();
     });
 
-    it('should not change the selected for non exist audio track', done => {
+    it('should not change the selected for non exist audio track', (done) => {
       player.ready().then(() => {
         if (video.audioTracks) {
-          let tracks = player._tracks.filter(track => {
+          let tracks = player._tracks.filter((track) => {
             return track instanceof AudioTrack;
           });
           video.audioTracks[0].enabled.should.be.true;
@@ -1125,7 +1125,7 @@ describe('Player', function () {
           tracks[0].active.should.be.true;
           tracks[1].active.should.be.false;
           tracks[2].active.should.be.false;
-          player.selectTrack(new AudioTrack({index: 3}));
+          player.selectTrack(new AudioTrack({ index: 3 }));
           video.audioTracks[0].enabled.should.be.true;
           video.audioTracks[1].enabled.should.be.false;
           video.audioTracks[2].enabled.should.be.false;
@@ -1170,11 +1170,11 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should select a new subtitles track', done => {
+    it('should select a new subtitles track', (done) => {
       player
         .ready()
         .then(() => {
-          player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, event => {
+          player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, (event) => {
             (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
             event.payload.selectedTextTrack.language.should.equal('fr');
             video.textTracks[0].mode.should.be.equal('disabled');
@@ -1183,28 +1183,28 @@ describe('Player', function () {
             tracks[1].active.should.be.true;
             done();
           });
-          let tracks = player._tracks.filter(track => {
+          let tracks = player._tracks.filter((track) => {
             return track instanceof TextTrack;
           });
           video.textTracks[0].mode.should.be.equal('disabled');
           video.textTracks[1].mode.should.be.equal('disabled');
           tracks[0].active.should.be.false;
           tracks[1].active.should.be.false;
-          const track = player.getTracks(TrackType.TEXT).find(track => track.language === 'fr');
+          const track = player.getTracks(TrackType.TEXT).find((track) => track.language === 'fr');
           player.selectTrack(track);
         })
-        .catch(e => {
+        .catch((e) => {
           done(e);
         });
       player.load();
     });
 
-    it('should select a new captions track', done => {
+    it('should select a new captions track', (done) => {
       player
         .ready()
         .then(() => {
           let selectedTrackIndex;
-          player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, event => {
+          player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, (event) => {
             try {
               (event.payload.selectedTextTrack instanceof TextTrack).should.be.true;
               event.payload.selectedTextTrack.index.should.equal(selectedTrackIndex);
@@ -1217,34 +1217,34 @@ describe('Player', function () {
               done(e);
             }
           });
-          let tracks = player._tracks.filter(track => {
+          let tracks = player._tracks.filter((track) => {
             return track instanceof TextTrack;
           });
           video.textTracks[0].mode.should.be.equal('disabled');
           video.textTracks[1].mode.should.be.equal('disabled');
           tracks[0].active.should.be.false;
           tracks[1].active.should.be.false;
-          const track = player._tracks.find(track => track.language === 'de');
+          const track = player._tracks.find((track) => track.language === 'de');
           track.available = true;
           selectedTrackIndex = track.index;
           player.selectTrack(track);
         })
-        .catch(e => {
+        .catch((e) => {
           done(e);
         });
       player.load();
     });
 
-    it('should not change the selected text track', done => {
+    it('should not change the selected text track', (done) => {
       player.ready().then(() => {
-        let tracks = player._tracks.filter(track => {
+        let tracks = player._tracks.filter((track) => {
           return track instanceof TextTrack;
         });
         video.textTracks[0].mode.should.be.equal('disabled');
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.false;
         tracks[1].active.should.be.false;
-        player.selectTrack(player.getTracks(TrackType.TEXT).find(track => track.language === 'en'));
+        player.selectTrack(player.getTracks(TrackType.TEXT).find((track) => track.language === 'en'));
         video.textTracks[0].mode.should.be.equal('hidden');
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.true;
@@ -1254,17 +1254,17 @@ describe('Player', function () {
       player.load();
     });
 
-    it('should not change the selected for non exist text track', done => {
+    it('should not change the selected for non exist text track', (done) => {
       player.load();
       player.ready().then(() => {
-        let tracks = player._tracks.filter(track => {
+        let tracks = player._tracks.filter((track) => {
           return track instanceof TextTrack;
         });
         video.textTracks[0].mode.should.be.equal('disabled');
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.false;
         tracks[1].active.should.be.false;
-        player.selectTrack(new TextTrack({language: 'asp'}));
+        player.selectTrack(new TextTrack({ language: 'asp' }));
         video.textTracks[0].mode.should.be.equal('disabled');
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.false;
@@ -1273,17 +1273,17 @@ describe('Player', function () {
       });
     });
 
-    it('should not change the selected for metadata text track', done => {
+    it('should not change the selected for metadata text track', (done) => {
       player.addTextTrack('metadata', 'metadata', 'metadata');
       player.ready().then(() => {
-        let tracks = player._tracks.filter(track => {
+        let tracks = player._tracks.filter((track) => {
           return track instanceof TextTrack;
         });
         video.textTracks[0].mode.should.be.equal('disabled');
         video.textTracks[1].mode.should.be.equal('disabled');
         tracks[0].active.should.be.false;
         tracks[1].active.should.be.false;
-        const track = Object.values(player.getVideoElement().textTracks).find(track => track.kind === 'metadata');
+        const track = Object.values(player.getVideoElement().textTracks).find((track) => track.kind === 'metadata');
         player.selectTrack(track);
         video.textTracks[0].mode.should.be.equal('disabled');
         video.textTracks[1].mode.should.be.equal('disabled');
@@ -1329,7 +1329,7 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it.skip('should get the active tracks before and after switching', done => {
+    it.skip('should get the active tracks before and after switching', (done) => {
       let videoTracks, audioTracks, textTracks;
       player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, () => {
         player.addEventListener(CustomEventType.VIDEO_TRACK_CHANGED, () => {
@@ -1339,22 +1339,22 @@ describe('Player', function () {
           });
           player.getActiveTracks().video.should.deep.equals(videoTracks[1]);
           if (audioTracks.length) {
-            player.selectTrack(new AudioTrack({index: 2}));
+            player.selectTrack(new AudioTrack({ index: 2 }));
           } else {
             done();
           }
         });
         player.getActiveTracks().text.should.deep.equals(textTracks[1]);
-        player.selectTrack(new VideoTrack({index: 1}));
+        player.selectTrack(new VideoTrack({ index: 1 }));
       });
       player.ready().then(() => {
-        videoTracks = player._tracks.filter(track => {
+        videoTracks = player._tracks.filter((track) => {
           return track instanceof VideoTrack;
         });
-        audioTracks = player._tracks.filter(track => {
+        audioTracks = player._tracks.filter((track) => {
           return track instanceof AudioTrack;
         });
-        textTracks = player._tracks.filter(track => {
+        textTracks = player._tracks.filter((track) => {
           return track instanceof TextTrack;
         });
         player.getActiveTracks().video.should.deep.equals(videoTracks[0]);
@@ -1362,7 +1362,7 @@ describe('Player', function () {
         if (audioTracks.length) {
           player.getActiveTracks().audio.should.deep.equals(audioTracks[0]);
         }
-        player.selectTrack(player.getTracks(TrackType.TEXT).find(track => track.language === 'fr'));
+        player.selectTrack(player.getTracks(TrackType.TEXT).find((track) => track.language === 'fr'));
       });
       player.load();
     });
@@ -1403,11 +1403,11 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should disable the active text track', done => {
+    it('should disable the active text track', (done) => {
       player
         .ready()
         .then(() => {
-          let tracks = player._tracks.filter(track => {
+          let tracks = player._tracks.filter((track) => {
             return track instanceof TextTrack;
           });
           video.textTracks[0].mode.should.be.equal('disabled');
@@ -1421,7 +1421,7 @@ describe('Player', function () {
           tracks[1].active.should.be.false;
           done();
         })
-        .catch(e => {
+        .catch((e) => {
           done(e);
         });
       player.load();
@@ -1460,11 +1460,11 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should select the prev text track', done => {
+    it('should select the prev text track', (done) => {
       player
         .ready()
         .then(() => {
-          let tracks = player._tracks.filter(track => {
+          let tracks = player._tracks.filter((track) => {
             return track instanceof TextTrack;
           });
           video.textTracks[0].mode.should.be.equal('disabled');
@@ -1479,17 +1479,17 @@ describe('Player', function () {
           tracks[1].active.should.be.true;
           done();
         })
-        .catch(e => {
+        .catch((e) => {
           done(e);
         });
       player.load();
     });
 
-    it('should select the locale text track', done => {
+    it('should select the locale text track', (done) => {
       player
         .ready()
         .then(() => {
-          let tracks = player._tracks.filter(track => {
+          let tracks = player._tracks.filter((track) => {
             return track instanceof TextTrack;
           });
           video.textTracks[0].mode.should.be.equal('disabled');
@@ -1503,17 +1503,17 @@ describe('Player', function () {
           tracks[1].active.should.be.false;
           done();
         })
-        .catch(e => {
+        .catch((e) => {
           done(e);
         });
       player.load();
     });
 
-    it('should select the default text track', done => {
+    it('should select the default text track', (done) => {
       player
         .ready()
         .then(() => {
-          let tracks = player._tracks.filter(track => {
+          let tracks = player._tracks.filter((track) => {
             return track instanceof TextTrack;
           });
           video.textTracks[0].mode.should.be.equal('disabled');
@@ -1529,17 +1529,17 @@ describe('Player', function () {
           tracks[1].active.should.be.true;
           done();
         })
-        .catch(e => {
+        .catch((e) => {
           done(e);
         });
       player.load();
     });
 
-    it('should select the first text track', done => {
+    it('should select the first text track', (done) => {
       player
         .ready()
         .then(() => {
-          let tracks = player._tracks.filter(track => {
+          let tracks = player._tracks.filter((track) => {
             return track instanceof TextTrack;
           });
           video.textTracks[0].mode.should.be.equal('disabled');
@@ -1554,7 +1554,7 @@ describe('Player', function () {
           tracks[1].active.should.be.false;
           done();
         })
-        .catch(e => {
+        .catch((e) => {
           done(e);
         });
       player.load();
@@ -1700,13 +1700,13 @@ describe('Player', function () {
 
     describe('setTextDisplaySettings', () => {
       it('should change textDisplay settings', () => {
-        const settings = {line: -4};
+        const settings = { line: -4 };
         player.setTextDisplaySettings(settings);
         player._textDisplaySettings.should.deep.equal(settings);
       });
 
       it('should change textDisplay settings and remove setting from cue for empty values', () => {
-        const settings = {line: -4, position: '10%'};
+        const settings = { line: -4, position: '10%' };
         player._activeTextCues[0] = {
           position: 'auto',
           align: 'center',
@@ -1716,50 +1716,72 @@ describe('Player', function () {
         player.setTextDisplaySettings(settings);
         player._textDisplaySettings.should.deep.equal(settings);
         player._activeTextCues[0].should.deep.equal(Utils.Object.mergeDeep(player._activeTextCues[0], settings));
-        const settingsToRemovePositionValue = {line: -4, position: ''};
+        const settingsToRemovePositionValue = { line: -4, position: '' };
         player.setTextDisplaySettings(settingsToRemovePositionValue);
-        player._activeTextCues[0].should.deep.equal(Utils.Object.mergeDeep(player._activeTextCues[0], {line: -4}));
+        player._activeTextCues[0].should.deep.equal(Utils.Object.mergeDeep(player._activeTextCues[0], { line: -4 }));
       });
     });
 
     describe('configure text track display', () => {
       it('should change textDisplay settings by config', () => {
-        const settings = {line: -4};
-        player = new Player({text: {textTrackDisplaySetting: settings}});
+        const settings = { line: -4 };
+        player = new Player({ text: { textTrackDisplaySetting: settings } });
         player._textDisplaySettings.should.deep.equal(settings);
       });
 
       it('should forceCenter override textTrackDisplaySetting', () => {
-        const settings = {position: '10%', align: 'left', size: '10'};
-        player = new Player({text: {forceCenter: true, textTrackDisplaySetting: settings}});
-        player._textDisplaySettings.should.deep.equal({position: 'auto', align: 'center', size: '100'});
+        const settings = { position: '10%', align: 'left', size: '10' };
+        player = new Player({
+          text: { forceCenter: true, textTrackDisplaySetting: settings }
+        });
+        player._textDisplaySettings.should.deep.equal({
+          position: 'auto',
+          align: 'center',
+          size: '100'
+        });
       });
 
       it('should forceCenter keep the other values from textTrackDisplaySetting', () => {
-        const settings = {line: '-4', lineAlign: 'end', position: '10%'};
-        player = new Player({text: {forceCenter: true, textTrackDisplaySetting: settings}});
-        player._textDisplaySettings.should.deep.equal(Utils.Object.mergeDeep(settings, {position: 'auto', align: 'center', size: '100'}));
+        const settings = { line: '-4', lineAlign: 'end', position: '10%' };
+        player = new Player({
+          text: { forceCenter: true, textTrackDisplaySetting: settings }
+        });
+        player._textDisplaySettings.should.deep.equal(
+          Utils.Object.mergeDeep(settings, {
+            position: 'auto',
+            align: 'center',
+            size: '100'
+          })
+        );
       });
 
       it('should configure change of textTrackDisplaySetting will apply forceCenter', () => {
-        const settings = {position: '10%', align: 'left', size: '10'};
-        player = new Player({text: {forceCenter: true, textTrackDisplaySetting: settings}});
-        player.configure({text: {textTrackDisplaySetting: settings}});
-        player._textDisplaySettings.should.deep.equal({position: 'auto', align: 'center', size: '100'});
+        const settings = { position: '10%', align: 'left', size: '10' };
+        player = new Player({
+          text: { forceCenter: true, textTrackDisplaySetting: settings }
+        });
+        player.configure({ text: { textTrackDisplaySetting: settings } });
+        player._textDisplaySettings.should.deep.equal({
+          position: 'auto',
+          align: 'center',
+          size: '100'
+        });
       });
 
       it('should empty configure will not take the previous config and change the values from setTextDisplaySettings', () => {
-        const settings = {position: '10%', align: 'left', size: '10'};
-        player = new Player({text: {forceCenter: true, textTrackDisplaySetting: settings}});
+        const settings = { position: '10%', align: 'left', size: '10' };
+        player = new Player({
+          text: { forceCenter: true, textTrackDisplaySetting: settings }
+        });
         player.setTextDisplaySettings(settings);
-        player.configure({text: {}});
+        player.configure({ text: {} });
         player._textDisplaySettings.should.deep.equal(settings);
       });
 
       it('should keep the current setting for empty config', () => {
-        const settings = {line: '-4', lineAlign: 'end', position: '10%'};
+        const settings = { line: '-4', lineAlign: 'end', position: '10%' };
         player.setTextDisplaySettings(settings);
-        player.configure({text: {}});
+        player.configure({ text: {} });
         player._textDisplaySettings.should.deep.equal(settings);
       });
 
@@ -1801,7 +1823,7 @@ describe('Player', function () {
     let checkTrack = () => {};
 
     const switchTextTrack = (track1, track2, done) => {
-      const tracksChangeToTrack1 = event => {
+      const tracksChangeToTrack1 = (event) => {
         try {
           player.removeEventListener(CustomEventType.TEXT_TRACK_CHANGED, tracksChangeToTrack1);
           player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, tracksChangeToTrack2);
@@ -1811,7 +1833,7 @@ describe('Player', function () {
           done(e);
         }
       };
-      const tracksChangeToTrack2 = event => {
+      const tracksChangeToTrack2 = (event) => {
         try {
           player.removeEventListener(CustomEventType.TEXT_TRACK_CHANGED, tracksChangeToTrack2);
           checkTrack(track2, event.payload.selectedTextTrack);
@@ -1827,7 +1849,7 @@ describe('Player', function () {
     describe('useNativeTextTrack = true', () => {
       before(() => {
         getActiveNativeTracks = () => {
-          return Array.from(video.textTracks).filter(track => {
+          return Array.from(video.textTracks).filter((track) => {
             return track.mode === 'showing';
           });
         };
@@ -1844,22 +1866,22 @@ describe('Player', function () {
 
       beforeEach(() => {
         config = Utils.Object.mergeDeep(getConfigStructure(), {
-          text: {useNativeTextTrack: true}
+          text: { useNativeTextTrack: true }
         });
         player = new Player(config);
-        player.setSources(Utils.Object.mergeDeep({captions: [ExternalCaption.He, ExternalCaption.Ru]}, sourcesConfig.Mp4));
+        player.setSources(Utils.Object.mergeDeep({ captions: [ExternalCaption.He, ExternalCaption.Ru] }, sourcesConfig.Mp4));
         playerContainer.appendChild(player.getView());
         video = player._engine.getVideoElement();
         video.addTextTrack('subtitles', 'English', 'en');
         video.addTextTrack('subtitles', 'French', 'fr');
       });
 
-      it('should switch between internal and external', done => {
+      it('should switch between internal and external', (done) => {
         player.ready().then(() => {
-          let externalTracks = player.getTracks().filter(track => {
+          let externalTracks = player.getTracks().filter((track) => {
             return track instanceof TextTrack && track.external;
           });
-          let internalTracks = player.getTracks().filter(track => {
+          let internalTracks = player.getTracks().filter((track) => {
             return track instanceof TextTrack && !track.external;
           });
           switchTextTrack(externalTracks[0], internalTracks[0], done);
@@ -1867,9 +1889,9 @@ describe('Player', function () {
         player.load();
       });
 
-      it('should switch between internal and internal', done => {
+      it('should switch between internal and internal', (done) => {
         player.ready().then(() => {
-          let internalTracks = player.getTracks().filter(track => {
+          let internalTracks = player.getTracks().filter((track) => {
             return track instanceof TextTrack && !track.external;
           });
           switchTextTrack(internalTracks[0], internalTracks[1], done);
@@ -1877,9 +1899,9 @@ describe('Player', function () {
         player.load();
       });
 
-      it('should switch between external and external', done => {
+      it('should switch between external and external', (done) => {
         player.ready().then(() => {
-          let externalTracks = player.getTracks().filter(track => {
+          let externalTracks = player.getTracks().filter((track) => {
             return track instanceof TextTrack && track.external;
           });
           switchTextTrack(externalTracks[0], externalTracks[1], done);
@@ -1887,10 +1909,10 @@ describe('Player', function () {
         player.load();
       });
 
-      it('should getTracks return external and internal caption', done => {
+      it('should getTracks return external and internal caption', (done) => {
         player.ready().then(() => {
           try {
-            let tracks = player.getTracks().filter(track => {
+            let tracks = player.getTracks().filter((track) => {
               return track instanceof TextTrack;
             });
             tracks.length.should.equal(5);
@@ -1902,11 +1924,11 @@ describe('Player', function () {
         player.load();
       });
 
-      it('should create only one track for external', done => {
+      it('should create only one track for external', (done) => {
         player.ready().then(() => {
           try {
             Array.from(video.textTracks).length.should.equal(3);
-            const externalTrack = Array.from(video.textTracks).filter(track => TextTrack.isExternalTrack(track));
+            const externalTrack = Array.from(video.textTracks).filter((track) => TextTrack.isExternalTrack(track));
             externalTrack.length.should.equal(1);
             done();
           } catch (e) {
@@ -1920,7 +1942,7 @@ describe('Player', function () {
     describe('useNativeTextTrack = false', () => {
       before(() => {
         getActiveNativeTracks = () => {
-          return Array.from(video.textTracks).filter(track => {
+          return Array.from(video.textTracks).filter((track) => {
             return track.mode === 'hidden';
           });
         };
@@ -1940,22 +1962,22 @@ describe('Player', function () {
 
       beforeEach(() => {
         config = Utils.Object.mergeDeep(getConfigStructure(), {
-          text: {useNativeTextTrack: false}
+          text: { useNativeTextTrack: false }
         });
         player = new Player(config);
-        player.setSources(Utils.Object.mergeDeep({captions: [ExternalCaption.He, ExternalCaption.Ru]}, sourcesConfig.Mp4));
+        player.setSources(Utils.Object.mergeDeep({ captions: [ExternalCaption.He, ExternalCaption.Ru] }, sourcesConfig.Mp4));
         playerContainer.appendChild(player.getView());
         video = player._engine.getVideoElement();
         video.addTextTrack('subtitles', 'English', 'en');
         video.addTextTrack('subtitles', 'French', 'fr');
       });
 
-      it('should switch between internal and external', done => {
+      it('should switch between internal and external', (done) => {
         player.ready().then(() => {
-          let externalTracks = player.getTracks().filter(track => {
+          let externalTracks = player.getTracks().filter((track) => {
             return track instanceof TextTrack && track.external;
           });
-          let internalTracks = player.getTracks().filter(track => {
+          let internalTracks = player.getTracks().filter((track) => {
             return track instanceof TextTrack && !track.external;
           });
           switchTextTrack(externalTracks[0], internalTracks[0], done);
@@ -1963,9 +1985,9 @@ describe('Player', function () {
         player.load();
       });
 
-      it('should switch between internal and internal', done => {
+      it('should switch between internal and internal', (done) => {
         player.ready().then(() => {
-          let internalTracks = player.getTracks().filter(track => {
+          let internalTracks = player.getTracks().filter((track) => {
             return track instanceof TextTrack && !track.external;
           });
           switchTextTrack(internalTracks[0], internalTracks[1], done);
@@ -1973,9 +1995,9 @@ describe('Player', function () {
         player.load();
       });
 
-      it('should switch between external and external', done => {
+      it('should switch between external and external', (done) => {
         player.ready().then(() => {
-          let externalTracks = player.getTracks().filter(track => {
+          let externalTracks = player.getTracks().filter((track) => {
             return track instanceof TextTrack && track.external;
           });
           switchTextTrack(externalTracks[0], externalTracks[1], done);
@@ -1983,10 +2005,10 @@ describe('Player', function () {
         player.load();
       });
 
-      it('should getTracks return external and internal caption', done => {
+      it('should getTracks return external and internal caption', (done) => {
         player.ready().then(() => {
           try {
-            let tracks = player.getTracks().filter(track => {
+            let tracks = player.getTracks().filter((track) => {
               return track instanceof TextTrack;
             });
             tracks.length.should.equal(5);
@@ -1998,11 +2020,11 @@ describe('Player', function () {
         player.load();
       });
 
-      it('should not create native track for external', done => {
+      it('should not create native track for external', (done) => {
         player.ready().then(() => {
           try {
             Array.from(video.textTracks).length.should.equal(2);
-            const externalTrack = Array.from(video.textTracks).filter(track => TextTrack.isExternalTrack(track));
+            const externalTrack = Array.from(video.textTracks).filter((track) => TextTrack.isExternalTrack(track));
             externalTrack.length.should.equal(0);
             done();
           } catch (e) {
@@ -2139,7 +2161,7 @@ describe('Player', function () {
         removeElement(targetId);
       });
 
-      it('should fire playback start only once', done => {
+      it('should fire playback start only once', (done) => {
         let counter = 0;
         let onPlaying = () => {
           player.removeEventListener(Html5EventType.PLAYING, onPlaying);
@@ -2162,7 +2184,7 @@ describe('Player', function () {
         player.play();
       });
 
-      it('should fire playback start - autoplay', done => {
+      it('should fire playback start - autoplay', (done) => {
         player.addEventListener(CustomEventType.PLAYBACK_START, () => {
           done();
         });
@@ -2200,7 +2222,7 @@ describe('Player', function () {
         removeElement(targetId);
       });
 
-      it('should fire first play only once', done => {
+      it('should fire first play only once', (done) => {
         let counter = 0;
         let onPlaying = () => {
           player.removeEventListener(Html5EventType.PLAYING, onPlaying);
@@ -2218,7 +2240,7 @@ describe('Player', function () {
         player.play();
       });
 
-      it('should fire first play only after media loaded', done => {
+      it('should fire first play only after media loaded', (done) => {
         player.addEventListener(CustomEventType.MEDIA_LOADED, () => {
           player.addEventListener(CustomEventType.FIRST_PLAY, () => {
             done();
@@ -2262,8 +2284,8 @@ describe('Player', function () {
         removeElement(targetId);
       });
 
-      it('should fire auto play failed and show the poster once get PLAY_FAILED', done => {
-        player.addEventListener(CustomEventType.AUTOPLAY_FAILED, event => {
+      it('should fire auto play failed and show the poster once get PLAY_FAILED', (done) => {
+        player.addEventListener(CustomEventType.AUTOPLAY_FAILED, (event) => {
           try {
             player._posterManager._el.style.display.should.equal('');
             event.payload.error.should.equal('mock failure');
@@ -2302,8 +2324,8 @@ describe('Player', function () {
         removeElement(targetId);
       });
 
-      it('should fire source selected', done => {
-        player.addEventListener(CustomEventType.SOURCE_SELECTED, event => {
+      it('should fire source selected', (done) => {
+        player.addEventListener(CustomEventType.SOURCE_SELECTED, (event) => {
           event.payload.selectedSource[0].id.should.equal('1_rsrdfext_10081,url');
           done();
         });
@@ -2337,7 +2359,7 @@ describe('Player', function () {
         removeElement(targetId);
       });
 
-      it('should fire media loaded', done => {
+      it('should fire media loaded', (done) => {
         player.addEventListener(CustomEventType.MEDIA_LOADED, () => {
           done();
         });
@@ -2371,14 +2393,14 @@ describe('Player', function () {
         removeElement(targetId);
       });
 
-      it('should fire first playing when start to playing', done => {
+      it('should fire first playing when start to playing', (done) => {
         player.addEventListener(CustomEventType.FIRST_PLAYING, () => {
           done();
         });
         player.play();
       });
 
-      it('should fire first playing only once', done => {
+      it('should fire first playing only once', (done) => {
         let count = 0;
 
         player.addEventListener(CustomEventType.FIRST_PLAYING, () => {
@@ -2421,22 +2443,22 @@ describe('Player', function () {
         removeElement(targetId);
       });
 
-      it('should fire abr mode changed for progressive playback', done => {
+      it('should fire abr mode changed for progressive playback', (done) => {
         player = new Player(config);
         player.setSources(sourcesConfig.Mp4);
         playerContainer.appendChild(player.getView());
-        player.addEventListener(CustomEventType.ABR_MODE_CHANGED, event => {
+        player.addEventListener(CustomEventType.ABR_MODE_CHANGED, (event) => {
           event.payload.mode.should.equal('manual');
           done();
         });
         player.load();
       });
 
-      it('should fire abr mode changed for adaptive playback', done => {
+      it('should fire abr mode changed for adaptive playback', (done) => {
         player = new Player(config);
         player.setSources(sourcesConfig.Hls);
         playerContainer.appendChild(player.getView());
-        player.addEventListener(CustomEventType.ABR_MODE_CHANGED, event => {
+        player.addEventListener(CustomEventType.ABR_MODE_CHANGED, (event) => {
           event.payload.mode.should.equal('auto');
           done();
         });
@@ -2470,7 +2492,7 @@ describe('Player', function () {
         removeElement(targetId);
       });
 
-      it('should be paused', done => {
+      it('should be paused', (done) => {
         let onPlaying = () => {
           player.removeEventListener(player.Event.PLAYING, onPlaying);
           player.addEventListener(player.Event.ENDED, () => {
@@ -2508,7 +2530,7 @@ describe('Player', function () {
         removeElement(targetId);
       });
 
-      it('should fire change source started and change source ended', done => {
+      it('should fire change source started and change source ended', (done) => {
         let changeSourceStarted = false;
         player = new Player(config);
         player.setSources(sourcesConfig.Mp4);
@@ -2540,7 +2562,7 @@ describe('Player', function () {
         player.destroy();
       });
 
-      it('should fire text style changed', done => {
+      it('should fire text style changed', (done) => {
         player.addEventListener(player.Event.TEXT_STYLE_CHANGED, () => {
           done();
         });
@@ -2570,40 +2592,52 @@ describe('Player', function () {
         removeElement(targetId);
       });
 
-      it('should dispatch timed metadata and timed metadata change on time', done => {
+      it('should dispatch timed metadata and timed metadata change on time', (done) => {
         let onPlaying = () => {
           player.removeEventListener(player.Event.PLAYING, onPlaying);
           const metadataTrack1 = player.getVideoElement().addTextTrack(TextTrack.KIND.METADATA, 'metadata1');
           const metadataTrack2 = player.getVideoElement().addTextTrack(TextTrack.KIND.METADATA, 'metadata2');
 
-          const {currentTime, duration} = player;
-          const timedMetadata1 = new TimedMetadata(currentTime + 1, duration - 2, 'id1', 'type1', {info: 'some_info1'});
-          const timedMetadata2 = new TimedMetadata(currentTime + 2, duration - 1, 'id2', 'type2', {info: 'some_info2'});
+          const { currentTime, duration } = player;
+          const timedMetadata1 = new TimedMetadata(currentTime + 1, duration - 2, 'id1', 'type1', {
+            info: 'some_info1'
+          });
+          const timedMetadata2 = new TimedMetadata(currentTime + 2, duration - 1, 'id2', 'type2', {
+            info: 'some_info2'
+          });
           const textTrackCue1 = createTextTrackCue(timedMetadata1);
           const textTrackCue2 = createTextTrackCue(timedMetadata2);
           metadataTrack1.addCue(textTrackCue1);
           metadataTrack2.addCue(textTrackCue2);
           let eventCounter = -1;
-          player.addEventListener(player.Event.TIMED_METADATA, e => {
+          player.addEventListener(player.Event.TIMED_METADATA, (e) => {
             try {
               eventCounter++;
               switch (eventCounter) {
                 case 0:
                   e.payload.cues.length.should.equal(1);
                   e.payload.cues[0].value.key.should.equal('type1');
-                  e.payload.cues[0].value.data.should.deep.equal({info: 'some_info1'});
+                  e.payload.cues[0].value.data.should.deep.equal({
+                    info: 'some_info1'
+                  });
                   break;
                 case 2:
                   e.payload.cues.length.should.equal(2);
                   e.payload.cues[0].value.key.should.equal('type1');
-                  e.payload.cues[0].value.data.should.deep.equal({info: 'some_info1'});
+                  e.payload.cues[0].value.data.should.deep.equal({
+                    info: 'some_info1'
+                  });
                   e.payload.cues[1].value.key.should.equal('type2');
-                  e.payload.cues[1].value.data.should.deep.equal({info: 'some_info2'});
+                  e.payload.cues[1].value.data.should.deep.equal({
+                    info: 'some_info2'
+                  });
                   break;
                 case 4:
                   e.payload.cues.length.should.equal(1);
                   e.payload.cues[0].value.key.should.equal('type2');
-                  e.payload.cues[0].value.data.should.deep.equal({info: 'some_info2'});
+                  e.payload.cues[0].value.data.should.deep.equal({
+                    info: 'some_info2'
+                  });
                   break;
                 case 6:
                   e.payload.cues.length.should.equal(0);
@@ -2612,22 +2646,34 @@ describe('Player', function () {
               done(e);
             }
           });
-          player.addEventListener(player.Event.TIMED_METADATA_CHANGE, e => {
+          player.addEventListener(player.Event.TIMED_METADATA_CHANGE, (e) => {
             try {
               eventCounter++;
               switch (eventCounter) {
                 case 1:
                   e.payload.cues.length.should.equal(1);
-                  e.payload.cues[0].should.deep.equal({...timedMetadata1, type: 'custom'});
+                  e.payload.cues[0].should.deep.equal({
+                    ...timedMetadata1,
+                    type: 'custom'
+                  });
                   break;
                 case 3:
                   e.payload.cues.length.should.equal(2);
-                  e.payload.cues[0].should.deep.equal({...timedMetadata1, type: 'custom'});
-                  e.payload.cues[1].should.deep.equal({...timedMetadata2, type: 'custom'});
+                  e.payload.cues[0].should.deep.equal({
+                    ...timedMetadata1,
+                    type: 'custom'
+                  });
+                  e.payload.cues[1].should.deep.equal({
+                    ...timedMetadata2,
+                    type: 'custom'
+                  });
                   break;
                 case 5:
                   e.payload.cues.length.should.equal(1);
-                  e.payload.cues[0].should.deep.equal({...timedMetadata2, type: 'custom'});
+                  e.payload.cues[0].should.deep.equal({
+                    ...timedMetadata2,
+                    type: 'custom'
+                  });
                   break;
                 case 7:
                   e.payload.cues.length.should.equal(0);
@@ -2671,7 +2717,7 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should switch player states during playback', done => {
+    it('should switch player states during playback', (done) => {
       /**
        * onLoadStart handler
        * @returns {void}
@@ -2759,7 +2805,7 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should create player without sources and set the sources later', done => {
+    it('should create player without sources and set the sources later', (done) => {
       player = new Player();
       player.setSources(sourcesConfig.Mp4);
       playerContainer.appendChild(player.getView());
@@ -3167,7 +3213,7 @@ describe('Player', function () {
       removeElement(targetId);
     });
 
-    it('should not seek to live edge in VOD', done => {
+    it('should not seek to live edge in VOD', (done) => {
       player = new Player(config);
       player.setSources(sourcesConfig.Mp4);
       playerContainer.appendChild(player.getView());
@@ -3185,7 +3231,7 @@ describe('Player', function () {
       }
     });
 
-    it('should seek to live edge', done => {
+    it('should seek to live edge', (done) => {
       player = new Player(config);
       player.setSources(sourcesConfig.Live);
       playerContainer.appendChild(player.getView());
@@ -3603,7 +3649,7 @@ describe('Player', function () {
       player.destroy();
     });
 
-    it('should call _resetTextCuesAndReposition function', done => {
+    it('should call _resetTextCuesAndReposition function', (done) => {
       let spy = sandbox.spy(player, '_resetTextCuesAndReposition');
       player._resizeWatcher._triggerResize();
       setTimeout(() => {
@@ -3630,7 +3676,7 @@ describe('Player', function () {
     });
 
     it('should enable setting the current log level from config', () => {
-      const player = new Player({log: {level: 'DEBUG'}});
+      const player = new Player({ log: { level: 'DEBUG' } });
       let currentLogLevel = player.getLogLevel();
       currentLogLevel.should.equal(player.LogLevel.DEBUG);
     });
@@ -3639,9 +3685,9 @@ describe('Player', function () {
   describe('setCapabilities', () => {
     let initialOrigCapabilities;
 
-    beforeEach(done => {
+    beforeEach((done) => {
       Player.runCapabilities();
-      Player.getCapabilities().then(capabilities => {
+      Player.getCapabilities().then((capabilities) => {
         initialOrigCapabilities = capabilities;
         done();
       });
@@ -3651,27 +3697,30 @@ describe('Player', function () {
       Html5AutoPlayCapability._capabilities = {};
     });
 
-    it('should not change the original capabilities by reference', done => {
-      Player.getCapabilities().then(c1 => {
+    it('should not change the original capabilities by reference', (done) => {
+      Player.getCapabilities().then((c1) => {
         c1.should.deep.equal(initialOrigCapabilities);
         c1.html5.autoplay = 'some value';
-        Player.getCapabilities().then(c2 => {
+        Player.getCapabilities().then((c2) => {
           c2.html5.autoplay.should.equal(initialOrigCapabilities.html5.autoplay);
           done();
         });
       });
     });
 
-    it('should set custom capabilities successfully', done => {
+    it('should set custom capabilities successfully', (done) => {
       let newCapabilities = {
         autoplay: true,
         mutedAutoPlay: false,
         isSupported: false,
         fakeAttribute: true
       };
-      const existingCapabilities = (({autoplay, mutedAutoPlay}) => ({autoplay, mutedAutoPlay}))(newCapabilities);
+      const existingCapabilities = (({ autoplay, mutedAutoPlay }) => ({
+        autoplay,
+        mutedAutoPlay
+      }))(newCapabilities);
       Player.setCapabilities('html5', newCapabilities);
-      Player.getCapabilities().then(c2 => {
+      Player.getCapabilities().then((c2) => {
         try {
           c2.html5.should.deep.equal(existingCapabilities);
           done();
@@ -3681,7 +3730,7 @@ describe('Player', function () {
       });
     });
 
-    it('should support only correct type', done => {
+    it('should support only correct type', (done) => {
       let newCapabilities = {
         autoplay: 1,
         mutedAutoPlay: 2,
@@ -3689,7 +3738,7 @@ describe('Player', function () {
         fakeAttribute: true
       };
       Player.setCapabilities('html5', newCapabilities);
-      Player.getCapabilities().then(c2 => {
+      Player.getCapabilities().then((c2) => {
         try {
           c2.should.deep.equal(initialOrigCapabilities);
           done();
@@ -3699,18 +3748,21 @@ describe('Player', function () {
       });
     });
 
-    it('should set custom capabilities successfully after getCapabilities() call', done => {
+    it('should set custom capabilities successfully after getCapabilities() call', (done) => {
       let newCapabilities = {
         autoplay: false,
         mutedAutoPlay: false,
         isSupported: 5
       };
-      const existingCapabilities = (({autoplay, mutedAutoPlay}) => ({autoplay, mutedAutoPlay}))(newCapabilities);
-      Player.getCapabilities().then(c1 => {
+      const existingCapabilities = (({ autoplay, mutedAutoPlay }) => ({
+        autoplay,
+        mutedAutoPlay
+      }))(newCapabilities);
+      Player.getCapabilities().then((c1) => {
         c1.should.deep.equal(initialOrigCapabilities);
         Player.setCapabilities('html5', newCapabilities);
         Player.getCapabilities()
-          .then(c2 => {
+          .then((c2) => {
             try {
               c2.html5.should.deep.equal(existingCapabilities);
               done();
@@ -3718,24 +3770,24 @@ describe('Player', function () {
               done(err);
             }
           })
-          .catch(err => done(err));
+          .catch((err) => done(err));
       });
     });
 
-    it('should set custom capabilities after runCapabilities() successfully', done => {
+    it('should set custom capabilities after runCapabilities() successfully', (done) => {
       let newCapabilities = {
         autoplay: false,
         mutedAutoPlay: false
       };
       Player.runCapabilities();
-      Player.getCapabilities().then(c1 => {
+      Player.getCapabilities().then((c1) => {
         try {
           c1.html5.should.deep.not.equal(newCapabilities);
         } catch (err) {
           done(err);
         }
         Player.setCapabilities('html5', newCapabilities);
-        Player.getCapabilities().then(c2 => {
+        Player.getCapabilities().then((c2) => {
           try {
             c2.html5.should.deep.equal(newCapabilities);
             done();
@@ -3746,12 +3798,12 @@ describe('Player', function () {
       });
     });
 
-    it('should check for mutedAutoPlay possibility if autoplay set to false', done => {
+    it('should check for mutedAutoPlay possibility if autoplay set to false', (done) => {
       let newCapabilities = {
         autoplay: false
       };
       Player.setCapabilities('html5', newCapabilities);
-      Player.getCapabilities().then(c2 => {
+      Player.getCapabilities().then((c2) => {
         try {
           c2.html5.autoplay.should.equal(newCapabilities.autoplay);
           c2.html5.mutedAutoPlay.should.not.equal(newCapabilities.mutedAutoPlay);
@@ -3762,12 +3814,12 @@ describe('Player', function () {
       });
     });
 
-    it('should check for autoPlay possibility if mutedAutoPlay set', done => {
+    it('should check for autoPlay possibility if mutedAutoPlay set', (done) => {
       let newCapabilities = {
         mutedAutoPlay: true
       };
       Player.setCapabilities('html5', newCapabilities);
-      Player.getCapabilities().then(c2 => {
+      Player.getCapabilities().then((c2) => {
         try {
           c2.html5.autoplay.should.not.equal(newCapabilities.autoplay);
           c2.html5.mutedAutoPlay.should.equal(newCapabilities.mutedAutoPlay);
@@ -3846,7 +3898,7 @@ describe('Player', function () {
       player.configure(getConfigStructureWithLabelCallback());
       player._tracks = [new TextTrack(), new VideoTrack(), new AudioTrack()];
       player._maybeSetTracksLabels();
-      player._tracks.forEach(t => {
+      player._tracks.forEach((t) => {
         switch (t) {
           case t instanceof AudioTrack:
             t.label.should.equal('audio_label');

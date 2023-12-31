@@ -1,6 +1,6 @@
 export type PKResponseObject = {
-  url: string,
-  originalUrl: string,
+  url: string;
+  originalUrl: string;
   data: ArrayBuffer | ArrayBufferView;
-  headers: {[header: string]: string}
+  headers: { [header: string]: string };
 };

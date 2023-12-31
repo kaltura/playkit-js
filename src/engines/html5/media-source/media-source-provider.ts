@@ -1,7 +1,7 @@
 import NativeAdapter from './adapters/native-adapter';
 import getLogger from '../../../utils/logger';
-import {IMediaSourceAdapter, IMediaSourceAdapterStatic} from '../../../types/interfaces/media-source-adapter';
-import {PKDrmConfigObject, PKMediaSourceObject} from '../../../types';
+import { IMediaSourceAdapter, IMediaSourceAdapterStatic } from '../../../types/interfaces/media-source-adapter';
+import { PKDrmConfigObject, PKMediaSourceObject } from '../../../types';
 
 /**
  * Media source provider
@@ -97,7 +97,7 @@ export default class MediaSourceProvider {
    * @returns {void}
    */
   public static _orderMediaSourceAdapters(preferNative: boolean): void {
-    MediaSourceProvider._mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters.filter(mse => mse.id !== 'NativeAdapter');
+    MediaSourceProvider._mediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters.filter((mse) => mse.id !== 'NativeAdapter');
     if (preferNative) {
       MediaSourceProvider._mediaSourceAdapters.unshift(NativeAdapter);
     } else {
@@ -135,4 +135,4 @@ export default class MediaSourceProvider {
 }
 
 const registerMediaSourceAdapter = MediaSourceProvider.register;
-export {registerMediaSourceAdapter};
+export { registerMediaSourceAdapter };

@@ -1,7 +1,7 @@
-import {PKTextTrackCue} from '../types';
+import { PKTextTrackCue } from '../types';
 
 class TimedMetadata {
-  public static TYPE: {[type: string]: string};
+  public static TYPE: { [type: string]: string };
 
   public startTime: number;
   public endTime: number;
@@ -40,9 +40,9 @@ TimedMetadata.TYPE = {
  */
 function createTextTrackCue(timedMetadata: TimedMetadata): PKTextTrackCue | null {
   try {
-    const {startTime, endTime, id, type, metadata} = timedMetadata;
+    const { startTime, endTime, id, type, metadata } = timedMetadata;
     const cue = new VTTCue(startTime, endTime, '');
-    const cueValue = {key: type, data: metadata};
+    const cueValue = { key: type, data: metadata };
     cue.id = id;
     cue['value'] = cueValue;
     return cue as unknown as PKTextTrackCue;
@@ -59,12 +59,12 @@ function createTextTrackCue(timedMetadata: TimedMetadata): PKTextTrackCue | null
  */
 function createTimedMetadata(cue: TextTrackCue): TimedMetadata | null {
   if (cue) {
-    const {startTime, endTime, id} = cue;
+    const { startTime, endTime, id } = cue;
     const typeAndMetadata = _getTypeAndMetadata(cue);
     if (typeAndMetadata) {
       // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      const {type, metadata} = _getTypeAndMetadata(cue);
+      const { type, metadata } = _getTypeAndMetadata(cue);
       return new TimedMetadata(startTime, endTime, id, type, metadata);
     }
   }
@@ -79,10 +79,10 @@ function createTimedMetadata(cue: TextTrackCue): TimedMetadata | null {
 function _getTypeAndMetadata(cue: TextTrackCue | PKTextTrackCue): { metadata: any; type: string } | null {
   if (cue) {
     if ('value' in cue && cue.value) {
-      const {type, value, track} = cue;
-      const {key, data} = value;
+      const { type, value, track } = cue;
+      const { key, data } = value;
       const isId3 = type === 'org.id3' || (track && track.label) === 'id3';
-      let timedMetadataType = Object.values(TimedMetadata.TYPE).find(type => type === key);
+      let timedMetadataType = Object.values(TimedMetadata.TYPE).find((type) => type === key);
       if (!timedMetadataType) {
         timedMetadataType = isId3 ? TimedMetadata.TYPE.ID3 : TimedMetadata.TYPE.CUSTOM;
       }
@@ -95,4 +95,4 @@ function _getTypeAndMetadata(cue: TextTrackCue | PKTextTrackCue): { metadata: an
   return null;
 }
 
-export {TimedMetadata, createTextTrackCue, createTimedMetadata};
+export { TimedMetadata, createTextTrackCue, createTimedMetadata };

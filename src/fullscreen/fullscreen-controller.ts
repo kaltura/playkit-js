@@ -2,8 +2,8 @@ import { EventManager } from '../event/event-manager';
 import Player from '../player';
 import { FakeEvent } from '../event/fake-event';
 import * as Utils from '../utils/util';
-import {ScreenOrientationType} from '../enums/screen-orientation-type';
-import {EngineType} from '../engines/engine-type';
+import { ScreenOrientationType } from '../enums/screen-orientation-type';
+import { EngineType } from '../engines/engine-type';
 
 /**
  * The IOS fullscreen class name.
@@ -140,7 +140,6 @@ class FullscreenController {
         if (this._isInBrowserFullscreen || this._player.engineType === EngineType.YOUTUBE) {
           this._exitInBrowserFullscreen();
         } else {
-
           const videoElement: HTMLVideoElement = this._player.getVideoElement()!;
           // @ts-expect-error - Property 'webkitEnterFullScreen' does not exist on type 'HTMLVideoElement'
           if (videoElement && typeof videoElement.webkitExitFullscreen === 'function') {
@@ -161,7 +160,7 @@ class FullscreenController {
    * @memberof FullScreenController
    * @returns {void}
    */
-  private _nativeEnterFullScreen(fullScreenElement: HTMLElement): Promise<void> | undefined  {
+  private _nativeEnterFullScreen(fullScreenElement: HTMLElement): Promise<void> | undefined {
     if (typeof fullScreenElement.requestFullscreen === 'function') {
       return fullScreenElement.requestFullscreen();
       // @ts-expect-error - Property 'mozRequestFullScreen' does not exist on type 'HTMLElement'
@@ -372,4 +371,4 @@ class FullscreenController {
   }
 }
 
-export {FullscreenController};
+export { FullscreenController };

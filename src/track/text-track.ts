@@ -110,4 +110,4 @@ function getActiveCues(textTrackCueList: TextTrackCueList): Array<VTTCue> {
   return normalizedCues;
 }
 
-export {getActiveCues , TextTrack as PKTextTrack};
+export { getActiveCues, TextTrack as PKTextTrack };

@@ -112,4 +112,4 @@ class MultiMap<K, T> {
     this._map.clear();
   }
 }
-export {MultiMap};
+export { MultiMap };

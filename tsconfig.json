@@ -12,12 +12,9 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "types": [],
-    "lib": [
-      "dom",
-      "ESNext"
-    ],
+    "lib": ["dom", "ESNext"],
     "outDir": "./lib/",
-    "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src/**/*"]
 }

@@ -1,4 +1,4 @@
 export type PKStatsObject = {
-  targetBuffer: number,
-  availableBuffer: number
+  targetBuffer: number;
+  availableBuffer: number;
 };

@@ -1,5 +1,5 @@
 export type PKMediaSourceOptionsObject = {
-  forceRedirectExternalStreams: boolean,
-  redirectExternalStreamsHandler?: Function,
-  redirectExternalStreamsTimeout?: number
+  forceRedirectExternalStreams: boolean;
+  redirectExternalStreamsHandler?: Function;
+  redirectExternalStreamsTimeout?: number;
 };

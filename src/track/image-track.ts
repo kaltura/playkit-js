@@ -11,19 +11,19 @@ class ImageTrack extends Track {
   private _customData: any;
 
   constructor(settings: {
-    id: string,
-    active: boolean,
-    index: number,
-    url: string,
-    width: number,
-    height: number,
-    duration: number,
-    rows: number,
-    cols: number,
-    customData: any
+    id: string;
+    active: boolean;
+    index: number;
+    url: string;
+    width: number;
+    height: number;
+    duration: number;
+    rows: number;
+    cols: number;
+    customData: any;
   }) {
     super(settings);
-    const {url, width, height, duration, rows, cols, customData} = settings;
+    const { url, width, height, duration, rows, cols, customData } = settings;
     this._url = url;
     this._width = width;
     this._height = height;

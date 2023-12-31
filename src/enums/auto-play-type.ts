@@ -1,4 +1,4 @@
-import {PKAutoPlayTypes} from '../types/auto-play-types';
+import { PKAutoPlayTypes } from '../types/auto-play-types';
 
 const AutoPlayType: PKAutoPlayTypes = {
   TRUE: true,
@@ -6,4 +6,4 @@ const AutoPlayType: PKAutoPlayTypes = {
   IN_VIEW: 'inview'
 };
 
-export {AutoPlayType};
+export { AutoPlayType };

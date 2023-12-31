@@ -1,6 +1,6 @@
-import {AdErrorCode} from '../ads/ad-error-code';
+import { AdErrorCode } from '../ads/ad-error-code';
 
-type CodeType = {[code: string]: number};
+type CodeType = { [code: string]: number };
 
 const Code: CodeType = {
   /**
@@ -716,5 +716,5 @@ const Code: CodeType = {
 
 Object.assign(Code, AdErrorCode);
 
-export {Code};
-export type {CodeType};
+export { Code };
+export type { CodeType };

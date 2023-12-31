@@ -101,4 +101,4 @@ const AdEventType = {
   AD_AUTOPLAY_FAILED: 'adautoplayfailed'
 } as const;
 
-export {AdEventType};
+export { AdEventType };

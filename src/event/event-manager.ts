@@ -1,4 +1,4 @@
-import {MultiMap} from '../utils';
+import { MultiMap } from '../utils';
 import { FakeEventTarget } from './fake-event-target';
 import { FakeEvent } from './fake-event';
 

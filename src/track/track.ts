@@ -31,7 +31,7 @@ export default class Track {
   }
 
   public static clone<T>(track: any): T {
-    return (Object.assign(Object.create(Object.getPrototypeOf(track)), track) as T);
+    return Object.assign(Object.create(Object.getPrototypeOf(track)), track) as T;
   }
 
   /**

@@ -1,5 +1,5 @@
 export type PKAdBreakOptions = {
-  type?: string,
-  position?: number,
-  numAds?: number
+  type?: string;
+  position?: number;
+  numAds?: number;
 };

@@ -1,5 +1,5 @@
-import {EngineProvider} from '../../../src/engines/engine-provider';
-import {FakeFLASHEngine, FakeHTML5Engine, FakeSLEngine} from './test-engines';
+import { EngineProvider } from '../../../src/engines/engine-provider';
+import { FakeFLASHEngine, FakeHTML5Engine, FakeSLEngine } from './test-engines';
 import Html5 from '../../../src/engines/html5/html5';
 
 describe('EngineProvider:register', () => {

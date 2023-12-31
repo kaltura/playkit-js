@@ -1,4 +1,4 @@
 export type PKStreamPriorityObject = {
-  engine: string,
-  format: string
+  engine: string;
+  format: string;
 };

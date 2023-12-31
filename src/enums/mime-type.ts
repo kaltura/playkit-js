@@ -1,4 +1,4 @@
-import {PKMimeTypes} from '../types';
+import { PKMimeTypes } from '../types';
 
 const MimeType: PKMimeTypes = {
   HLS: ['application/x-mpegurl', 'application/vnd.apple.mpegurl'],
@@ -7,4 +7,4 @@ const MimeType: PKMimeTypes = {
   SMOOTH_STREAMING: ['application/vnd.ms-sstr+xml']
 };
 
-export {MimeType};
+export { MimeType };

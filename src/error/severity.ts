@@ -1,4 +1,4 @@
-type SeverityType = {[severity: string]: number};
+type SeverityType = { [severity: string]: number };
 
 const Severity: SeverityType = {
   /**
@@ -17,5 +17,5 @@ const Severity: SeverityType = {
   CRITICAL: 2
 };
 
-export {Severity};
-export type {SeverityType};
+export { Severity };
+export type { SeverityType };

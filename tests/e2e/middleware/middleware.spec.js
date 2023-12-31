@@ -50,7 +50,7 @@ class M3 extends BaseMiddleware {
 describe('Middleware', function () {
   let m1, m2, m3;
   let middleware;
-  let actions = {DRINK: 'drink', EAT: 'eat'};
+  let actions = { DRINK: 'drink', EAT: 'eat' };
   let sandbox;
 
   beforeEach(function () {

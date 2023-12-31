@@ -1,3 +1,3 @@
 export type PKPlayOptionsObject = {
-  programmatic: boolean
+  programmatic: boolean;
 };

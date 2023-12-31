@@ -1,13 +1,13 @@
 import { EventManager } from '../event/event-manager';
 import { FakeEventTarget } from '../event/fake-event-target';
 import getLogger from '../utils/logger';
-import {Parser, StringDecoder} from '../track/text-track-display';
+import { Parser, StringDecoder } from '../track/text-track-display';
 import * as Utils from '../utils/util';
-import {ThumbnailInfo} from './thumbnail-info';
+import { ThumbnailInfo } from './thumbnail-info';
 import Error from '../error/error';
 import { FakeEvent } from '../event/fake-event';
-import {Html5EventType} from '../event/event-type';
-import {PKExternalThumbnailsConfig, PKThumbnailVttCue} from '../types';
+import { Html5EventType } from '../event/event-type';
+import { PKExternalThumbnailsConfig, PKThumbnailVttCue } from '../types';
 
 const VTT_INCLUDES_SIZE_ONLY: RegExp = /#wh=/i;
 const VTT_INCLUDES_SIZE_AND_COORDS: RegExp = /#xywh=/i;
@@ -47,7 +47,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @type {Object}
    * @private
    */
-  private _naturalImgSize!: {width: number, height: number} | null;
+  private _naturalImgSize!: { width: number; height: number } | null;
 
   /**
    * start the loading and parsing process of the vtt thumbnails file.
@@ -72,11 +72,11 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
   public getThumbnail(time: number): ThumbnailInfo | null {
     const cue: PKThumbnailVttCue | null = this._findCue(time, this._cues);
     if (cue) {
-      const {imgUrl} = cue;
-      let {size, coordinates} = cue;
+      const { imgUrl } = cue;
+      let { size, coordinates } = cue;
       size = size ? size : this._naturalImgSize;
-      coordinates = coordinates ? coordinates : {x: 0, y: 0};
-      const thumbnailInfo = {url: imgUrl, ...size, ...coordinates};
+      coordinates = coordinates ? coordinates : { x: 0, y: 0 };
+      const thumbnailInfo = { url: imgUrl, ...size, ...coordinates };
       return new ThumbnailInfo(thumbnailInfo as ThumbnailInfo);
     }
     return null;
@@ -131,14 +131,16 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
     return new Promise<VTTCue[]>((resolve, reject) => {
       const parser = new Parser(window, StringDecoder());
       const cues: VTTCue[] = [];
-      parser.oncue = ((cue): void => {cues.push(cue)});
+      parser.oncue = (cue): void => {
+        cues.push(cue);
+      };
       parser.onflush = (): void => {
         ExternalThumbnailsHandler._logger.debug('finished parsing thumbnails cues');
         resolve(cues);
       };
       parser.parse(vttStr);
       parser.flush();
-      parser.onparsingerror(error => reject(error));
+      parser.onparsingerror((error) => reject(error));
     });
   }
 
@@ -184,12 +186,12 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @returns {Object} - the natural image dimensions
    * @private
    */
-  private extractImgNaturalDimensions(imgUrl: string): Promise<{height: number, width: number} | null> {
-    return new Promise(resolve => {
+  private extractImgNaturalDimensions(imgUrl: string): Promise<{ height: number; width: number } | null> {
+    return new Promise((resolve) => {
       const img = new Image();
       img.src = imgUrl;
       this._eventManager.listenOnce(img, 'load', () => {
-        resolve({height: img.naturalHeight, width: img.naturalWidth});
+        resolve({ height: img.naturalHeight, width: img.naturalWidth });
       });
       this._eventManager.listenOnce(img, 'error', () => resolve(null));
     });
@@ -202,7 +204,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @private
    */
   private validateImgUrl(imgUrl: string): Promise<boolean> {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       const img = new Image();
       img.src = imgUrl;
       this._eventManager.listenOnce(img, 'load', () => {
@@ -220,7 +222,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
    * @private
    */
   private _extractCueMetadata(vttCue: VTTCue, thumbnailsConfig: PKExternalThumbnailsConfig): PKThumbnailVttCue {
-    const {startTime, endTime, text} = vttCue;
+    const { startTime, endTime, text } = vttCue;
     const imgBaseUrl = thumbnailsConfig.vttUrl.substring(0, thumbnailsConfig.vttUrl.lastIndexOf('/'));
     const isVTTIncludesImgSizeOnly: boolean = VTT_INCLUDES_SIZE_ONLY.test(text);
     const isVTTIncludesImgSizeAndCoords: boolean = VTT_INCLUDES_SIZE_AND_COORDS.test(text);
@@ -228,8 +230,8 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
 
     let imgUrl: string;
     let imgData: string;
-    let coordinates: {x: number, y: number} | null = null;
-    let size: {width: number, height: number} | null = null;
+    let coordinates: { x: number; y: number } | null = null;
+    let size: { width: number; height: number } | null = null;
 
     if (isVTTIncludesImgSizeOnly) {
       [imgUrl] = text.split(VTT_INCLUDES_SIZE_ONLY);
@@ -240,9 +242,9 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
     } else if (isVTTIncludesImgSizeAndCoords) {
       [imgUrl, imgData] = text.split(VTT_INCLUDES_SIZE_AND_COORDS);
       const [x, y, width, height] = imgData.split(',').map(Number);
-      coordinates = {x, y};
-      size = {width, height};
-      isValidThumbnailVTTFormat = [x, y, width, height, imgUrl].every(option => option !== undefined);
+      coordinates = { x, y };
+      size = { width, height };
+      isValidThumbnailVTTFormat = [x, y, width, height, imgUrl].every((option) => option !== undefined);
     } else {
       imgUrl = text;
       isValidThumbnailVTTFormat = !!text;
@@ -256,10 +258,10 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
     if (!isValidThumbnailVTTFormat) {
       throw new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.INVALID_VTT_THUMBNAILS_FILE, {
         message: 'error while parsing the vtt cues - invalid cue',
-        parsedCue: {startTime, endTime, options: text}
+        parsedCue: { startTime, endTime, options: text }
       });
     } else {
-      return {startTime, endTime, imgUrl, size, coordinates};
+      return { startTime, endTime, imgUrl, size, coordinates };
     }
   }
 
@@ -295,7 +297,7 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
   public reset(): void {
     this._cues = [];
     this._eventManager.removeAll();
-    this._naturalImgSize = {} as {width: number, height: number};
+    this._naturalImgSize = {} as { width: number; height: number };
   }
 
   /**
@@ -309,4 +311,4 @@ class ExternalThumbnailsHandler extends FakeEventTarget {
   }
 }
 
-export {ExternalThumbnailsHandler};
+export { ExternalThumbnailsHandler };

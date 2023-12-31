@@ -1,5 +1,5 @@
 import UAParser from 'ua-parser-js';
-import {IEnv} from '../types/ua-parser';
+import { IEnv } from '../types/ua-parser';
 
 const SmartTvRegex = /^.*(smart-tv|smarttv).*$/i;
 
@@ -47,8 +47,11 @@ const EdgeChromiumParser = [[/(edg)\/((\d+)?[\w.]+)/i], [[UAParser.BROWSER.NAME,
 
 const BrowserParser = [...EdgeChromiumParser, ...SAMSUNGBrowserParser];
 
-
-const Env: IEnv = new UAParser(undefined, {browser: BrowserParser, device: DeviceParser, os: OSParser}).getResult() as IEnv;
+const Env: IEnv = new UAParser(undefined, {
+  browser: BrowserParser,
+  device: DeviceParser,
+  os: OSParser
+}).getResult() as IEnv;
 
 Env['isConsole'] = Env.device.type === UAParser.DEVICE.CONSOLE;
 Env['isSmartTV'] = Env.device.type === UAParser.DEVICE.SMARTTV;

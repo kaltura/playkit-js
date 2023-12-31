@@ -268,7 +268,12 @@ const _Generator = {
   uniqueId: function (length?: number): string {
     const from = 2;
     const to = from + (!length || length < 0 ? 0 : length - 2);
-    return '_' + Math.random().toString(36).slice(from, from + to);
+    return (
+      '_' +
+      Math.random()
+        .toString(36)
+        .slice(from, from + to)
+    );
   },
 
   /**
@@ -277,7 +282,7 @@ const _Generator = {
    * @private
    */
   guid: function (): string {
-    const S4 = () : string => {
+    const S4 = (): string => {
       return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
     };
     return S4() + S4() + '-' + S4() + '-' + S4() + '-' + S4() + '-' + S4() + S4() + S4();
@@ -499,7 +504,14 @@ const _Dom = {
 
 const _Http = {
   protocol: /^(https?:)/i.test(document.location.protocol) ? document.location.protocol : 'https:',
-  execute: function (url: string, params: any, method: string = 'POST', headers?: Map<string, string>, timeout?: number, ontimeout?: (...args: any[]) => any): Promise<any> {
+  execute: function (
+    url: string,
+    params: any,
+    method: string = 'POST',
+    headers?: Map<string, string>,
+    timeout?: number,
+    ontimeout?: (...args: any[]) => any
+  ): Promise<any> {
     const request = new XMLHttpRequest();
     return new Promise((resolve, reject) => {
       request.onreadystatechange = function (): void {
@@ -535,7 +547,9 @@ const _Http = {
     });
   },
   jsonp,
-  convertHeadersToDictionary: function (headerRow: string): { [header: string]: string } {
+  convertHeadersToDictionary: function (headerRow: string): {
+    [header: string]: string;
+  } {
     const headerMap = {};
     try {
       // Convert the header string into an array of individual headers

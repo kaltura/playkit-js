@@ -1,17 +1,17 @@
 import Error from '../error/error';
 import * as Utils from '../utils/util';
-import {Parser, StringDecoder} from './text-track-display';
-import TextTrack, {getActiveCues} from './text-track';
+import { Parser, StringDecoder } from './text-track-display';
+import TextTrack, { getActiveCues } from './text-track';
 import Track from './track';
-import {CustomEventType, Html5EventType} from '../event/event-type';
+import { CustomEventType, Html5EventType } from '../event/event-type';
 import { FakeEvent } from '../event/fake-event';
 import getLogger from '../utils/logger';
 import { EventManager } from '../event/event-manager';
 import { FakeEventTarget } from '../event/fake-event-target';
 import Player from '../player';
-import {PKExternalCaptionObject} from '../types/external-caption-object';
+import { PKExternalCaptionObject } from '../types/external-caption-object';
 
-type CueStatusType = {[status: string]: number};
+type CueStatusType = { [status: string]: number };
 
 /**
  * enum for cues statuses
@@ -102,7 +102,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       // only if external text track was active we need to hide it.
       if (this._isTextTrackActive) {
         this._eventManager.unlisten(this._player, Html5EventType.TIME_UPDATE);
-        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: []}));
+        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, { cues: [] }));
         this._resetCurrentTrack();
       }
     }
@@ -122,11 +122,13 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     if (this._player.config.text.useNativeTextTrack) {
       this._addNativeTextTrack();
     }
-    const playerTextTracks = tracks.filter(track => track instanceof TextTrack);
+    const playerTextTracks = tracks.filter((track) => track instanceof TextTrack);
     const newTextTracks = [];
-    captions.forEach(caption => {
+    captions.forEach((caption) => {
       if (!caption.language) {
-        const error = new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNKNOWN_LANGUAGE, {caption: caption});
+        const error = new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNKNOWN_LANGUAGE, {
+          caption: caption
+        });
         this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
       } else {
         const track = this._createTextTrack(caption);
@@ -146,7 +148,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   public _maybeAddTrack(track: TextTrack, caption: PKExternalCaptionObject, playerTextTracks: Array<Track>, newTextTracks: Array<TextTrack>): void {
-    const sameLangTrack = playerTextTracks.find(textTrack => textTrack.available && Track.langComparer(caption.language, textTrack.language));
+    const sameLangTrack = playerTextTracks.find((textTrack) => textTrack.available && Track.langComparer(caption.language, textTrack.language));
     if (!sameLangTrack) {
       newTextTracks.push(track);
       this._updateTextTracksModel(caption);
@@ -202,7 +204,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
             this._textTrackModel[textTrack.language].cuesStatus = CuesStatus.DOWNLOADED;
             this._selectTextTrack(textTrack);
           })
-          .catch(error => this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error)));
+          .catch((error) => this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error)));
       }
     }
   }
@@ -216,7 +218,11 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       this._setTextTrack(textTrack);
     }
     textTrack.active = true;
-    this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {selectedTextTrack: textTrack}));
+    this.dispatchEvent(
+      new FakeEvent(CustomEventType.TEXT_TRACK_CHANGED, {
+        selectedTextTrack: textTrack
+      })
+    );
   }
   /**
    * set hasBeenReset to true for all the cues.
@@ -224,7 +230,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    */
   public resetAllCues(): void {
     for (const textTrack in this._textTrackModel) {
-      this._textTrackModel[textTrack].cues.forEach(cue => {
+      this._textTrackModel[textTrack].cues.forEach((cue) => {
         cue.hasBeenReset = true;
       });
     }
@@ -241,7 +247,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const textTrackEl: TextTrack | undefined = Array.from(videoElement.textTracks).find(
-        track => TextTrack.isNativeTextTrack(track) && track.mode === TextTrack.MODE.SHOWING
+        (track) => TextTrack.isNativeTextTrack(track) && track.mode === TextTrack.MODE.SHOWING
       );
       if (textTrackEl) {
         // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
@@ -274,7 +280,11 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   private _onCueChange(e: FakeEvent): void {
     const activeCues: TextTrackCueList = e.currentTarget.activeCues;
     const normalizedActiveCues = getActiveCues(activeCues);
-    this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: normalizedActiveCues}));
+    this.dispatchEvent(
+      new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {
+        cues: normalizedActiveCues
+      })
+    );
   }
 
   /**
@@ -322,10 +332,14 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       const captionType = track.type || this._getFileType(track.url);
       if (![SRT_POSTFIX, VTT_POSTFIX].includes(captionType)) {
         this._textTrackModel[textTrack.language].cuesStatus = CuesStatus.NOT_DOWNLOADED;
-        reject(new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNKNOWN_FILE_TYPE, {captionType: captionType}));
+        reject(
+          new Error(Error.Severity.RECOVERABLE, Error.Category.TEXT, Error.Code.UNKNOWN_FILE_TYPE, {
+            captionType: captionType
+          })
+        );
       }
       Utils.Http.execute(track.url, {}, 'GET')
-        .then(response => {
+        .then((response) => {
           resolve(captionType === SRT_POSTFIX ? this._convertSrtToVtt(response) : response);
         })
         .catch(() => {
@@ -349,14 +363,16 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     return new Promise((resolve, reject) => {
       const parser = new Parser(window, StringDecoder());
       const cues: VTTCue[] = [];
-      parser.oncue = ((cue): void => {cues.push(cue)});
+      parser.oncue = (cue): void => {
+        cues.push(cue);
+      };
       parser.onflush = (): void => {
         ExternalCaptionsHandler._logger.debug('finished parsing external cues');
         resolve(cues);
       };
       parser.parse(vttStr);
       parser.flush();
-      parser.onparsingerror(e => reject(e));
+      parser.onparsingerror((e) => reject(e));
     });
   }
 
@@ -385,12 +401,12 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     this._textTrackModel[textTrack.language].cuesStatus = CuesStatus.DOWNLOADING;
     return new Promise((resolve, reject) => {
       this._getCuesString(textTrack)
-        .then(vttString => this._parseCues(vttString))
-        .then(cuesArray => {
+        .then((vttString) => this._parseCues(vttString))
+        .then((cuesArray) => {
           this._textTrackModel[textTrack.language].cues = cuesArray;
           resolve();
         })
-        .catch(error => reject(error));
+        .catch((error) => reject(error));
     });
   }
 
@@ -423,7 +439,11 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       const activeCuesAdded = this._maybeAddToActiveCues(track);
 
       if (cueIndexUpdated || activeCuesAdded || activeCuesRemoved) {
-        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: this._activeTextCues}));
+        this.dispatchEvent(
+          new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {
+            cues: this._activeTextCues
+          })
+        );
       }
       // sometimes the timeupdate event is fired before the seeked event - so we need to know the user seeked.
       this._lastTimeUpdate = currentTime;
@@ -449,7 +469,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       return false;
     }
 
-    const updatedActiveTextCues = this._activeTextCues.filter(cue => cue.startTime < currentTime && currentTime < cue.endTime);
+    const updatedActiveTextCues = this._activeTextCues.filter((cue) => cue.startTime < currentTime && currentTime < cue.endTime);
     const hadRemoved = this._activeTextCues.length !== updatedActiveTextCues.length;
     this._activeTextCues = updatedActiveTextCues;
 
@@ -484,7 +504,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
    * @private
    */
   private _maybeSetExternalCueIndex(): boolean {
-    const textTrack = this._player._getTextTracks().find(track => track.active && track.external);
+    const textTrack = this._player._getTextTracks().find((track) => track.active && track.external);
     if (textTrack && textTrack.external) {
       const cues = this._textTrackModel[textTrack.language] ? this._textTrackModel[textTrack.language].cues : [];
       let i = 0;
@@ -510,11 +530,11 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   private _resetExternalNativeTextTrack(): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
-      const track = Array.from(videoElement.textTracks).find(track => (track ? TextTrack.isExternalTrack(track) : false));
+      const track = Array.from(videoElement.textTracks).find((track) => (track ? TextTrack.isExternalTrack(track) : false));
       if (track) {
         // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        track.cues && Object.values(track.cues).forEach(cue => track.removeCue(cue));
+        track.cues && Object.values(track.cues).forEach((cue) => track.removeCue(cue));
         // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
         // @ts-ignore
         track.mode = TextTrack.MODE.DISABLED;
@@ -532,7 +552,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
     if (videoElement && videoElement.textTracks) {
       // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      const track: TextTrack = Array.from(videoElement.textTracks).find(track => (track ? TextTrack.isExternalTrack(track) : false));
+      const track: TextTrack = Array.from(videoElement.textTracks).find((track) => (track ? TextTrack.isExternalTrack(track) : false));
       if (track) {
         track.mode = TextTrack.MODE.SHOWING;
         // For IE 11 which is not support VTTCue API
@@ -540,11 +560,11 @@ class ExternalCaptionsHandler extends FakeEventTarget {
           const convertedCues: Array<TextTrackCue> = this._convertCues(cues);
           // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          convertedCues.forEach(cue => track.addCue(cue));
+          convertedCues.forEach((cue) => track.addCue(cue));
         } else {
           // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          cues.forEach(cue => track.addCue(cue));
+          cues.forEach((cue) => track.addCue(cue));
         }
       }
     }
@@ -559,7 +579,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   private _convertCues(cues: Array<VTTCue>): Array<TextTrackCue> {
     // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    return cues.map(cue => new TextTrackCue(cue.startTime, cue.endTime, cue.text));
+    return cues.map((cue) => new TextTrackCue(cue.startTime, cue.endTime, cue.text));
   }
 
   /**
@@ -570,7 +590,7 @@ class ExternalCaptionsHandler extends FakeEventTarget {
   private _addNativeTextTrack(): void {
     const videoElement = this._player.getVideoElement();
     if (videoElement && videoElement.textTracks) {
-      const sameLanguageTrackIndex = Array.from(videoElement.textTracks).findIndex(track => (track ? TextTrack.isExternalTrack(track) : false));
+      const sameLanguageTrackIndex = Array.from(videoElement.textTracks).findIndex((track) => (track ? TextTrack.isExternalTrack(track) : false));
       if (sameLanguageTrackIndex > -1) {
         this._resetExternalNativeTextTrack();
       } else {
@@ -591,10 +611,14 @@ class ExternalCaptionsHandler extends FakeEventTarget {
       ExternalCaptionsHandler._logger.debug('External text track changed', textTrack);
       this._activeTextCues = [];
       this._externalCueIndex = 0;
-      this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: this._activeTextCues}));
+      this.dispatchEvent(
+        new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {
+          cues: this._activeTextCues
+        })
+      );
       this._eventManager.listen(this._player, Html5EventType.TIME_UPDATE, () => this._handleCaptionOnTimeUpdate(textTrack));
     }
   }
 }
 
-export {ExternalCaptionsHandler};
+export { ExternalCaptionsHandler };

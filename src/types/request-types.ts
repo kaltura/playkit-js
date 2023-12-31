@@ -1,1 +1,1 @@
-export type PKRequestType = {[request: string]: number};
+export type PKRequestType = { [request: string]: number };

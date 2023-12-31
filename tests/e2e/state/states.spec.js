@@ -1,4 +1,4 @@
-import {StateType} from '../../../src/state/state-type';
+import { StateType } from '../../../src/state/state-type';
 
 describe('States', () => {
   it('should equal possible player states', () => {

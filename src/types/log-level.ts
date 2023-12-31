@@ -1,6 +1,6 @@
-import {ILogHandler} from 'js-logger';
+import { ILogHandler } from 'js-logger';
 
 export type PKLogConfigObject = {
-  level: string,
-  handler?: ILogHandler
+  level: string;
+  handler?: ILogHandler;
 };

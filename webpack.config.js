@@ -19,7 +19,7 @@ module.exports = (env, { mode }) => {
                 [
                   '@babel/preset-env',
                   {
-                    bugfixes: true,
+                    bugfixes: true
                   }
                 ],
                 '@babel/preset-typescript'

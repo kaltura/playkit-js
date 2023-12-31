@@ -1,15 +1,14 @@
-
 import VideoTrack from '../../track/video-track';
 import AudioTrack from '../../track/audio-track';
 import { FakeEventTarget } from '../../event/fake-event-target';
-import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
+import { ThumbnailInfo } from '../../thumbnail/thumbnail-info';
 import ImageTrack from '../../track/image-track';
-import {PKMediaSourceObject} from '../media-source';
-import {PKDrmConfigObject} from '../drm-config';
-import {PKDrmDataObject} from '../drm-data';
-import {PKABRRestrictionObject} from '../restrictions-types';
+import { PKMediaSourceObject } from '../media-source';
+import { PKDrmConfigObject } from '../drm-config';
+import { PKDrmDataObject } from '../drm-data';
+import { PKABRRestrictionObject } from '../restrictions-types';
 import Track from '../../track/track';
-import {PKTextTrack} from '../../track/text-track';
+import { PKTextTrack } from '../../track/text-track';
 
 export interface IEngineStatic {
   id: string;
@@ -17,7 +16,7 @@ export interface IEngineStatic {
   canPlaySource(source: PKMediaSourceObject, preferNative: boolean, drmConfig: PKDrmConfigObject): boolean;
   runCapabilities(): void;
   getCapabilities(): Promise<any>;
-  setCapabilities(capabilities: {[name: string]: any}): void;
+  setCapabilities(capabilities: { [name: string]: any }): void;
   prepareVideoElement(playerId: string): void;
   isSupported(): boolean;
 }
@@ -29,7 +28,7 @@ export interface IEngine extends FakeEventTarget {
   detach(): void;
   play(): Promise<any> | undefined;
   pause(): void;
-  load(startTime?: number): Promise<{tracks: Track[]}>;
+  load(startTime?: number): Promise<{ tracks: Track[] }>;
   reset(): void;
   selectVideoTrack(videoTrack: VideoTrack): void;
   selectAudioTrack(audioTrack: AudioTrack): void;
@@ -49,9 +48,9 @@ export interface IEngine extends FakeEventTarget {
   resetAllCues(): void;
   attachMediaSource(): void;
   detachMediaSource(): void;
-  getThumbnail(time: number): ThumbnailInfo | null
+  getThumbnail(time: number): ThumbnailInfo | null;
   isOnLiveEdge(): boolean;
-  addTextTrack(kind: TextTrackKind, label?: string, language?: string): TextTrack | undefined ;
+  addTextTrack(kind: TextTrackKind, label?: string, language?: string): TextTrack | undefined;
   getNativeTextTracks(): TextTrack[];
   getDrmInfo(): PKDrmDataObject | null;
   id: string;
@@ -69,7 +68,7 @@ export interface IEngine extends FakeEventTarget {
   defaultMuted: boolean;
   src: string;
   poster: string;
-  preload:  "none" | "metadata" | "auto" | "";
+  preload: 'none' | 'metadata' | 'auto' | '';
   autoplay: boolean;
   controls: boolean;
   loop: boolean;
@@ -83,7 +82,7 @@ export interface IEngine extends FakeEventTarget {
   networkState: number;
   readyState: number;
   playsinline: boolean;
-  crossOrigin: string | null
+  crossOrigin: string | null;
   targetBuffer: number;
   availableBuffer: number;
 }

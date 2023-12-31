@@ -1,19 +1,73 @@
-import {expect} from 'chai';
-import {ExternalThumbnailsHandler} from '../../../src/thumbnail/external-thumbnails-handler';
+import { expect } from 'chai';
+import { ExternalThumbnailsHandler } from '../../../src/thumbnail/external-thumbnails-handler';
 import Error from '../../../src/error/error';
 
 let externalThumbnailsHandler;
 
 const thumbnailsCues = [
-  {startTime: 0, endTime: 5, imgUrl: '/base/tests/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 0, y: 0}},
-  {startTime: 5, endTime: 10, imgUrl: '/base/tests/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 128, y: 0}},
-  {startTime: 10, endTime: 15, imgUrl: '/base/tests/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 256, y: 0}},
-  {startTime: 15, endTime: 20, imgUrl: '/base/tests/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 384, y: 0}},
-  {startTime: 20, endTime: 25, imgUrl: '/base/tests/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 512, y: 0}},
-  {startTime: 25, endTime: 30, imgUrl: '/base/tests/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 640, y: 0}},
-  {startTime: 30, endTime: 35, imgUrl: '/base/tests/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 768, y: 0}},
-  {startTime: 35, endTime: 40, imgUrl: '/base/tests/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 896, y: 0}},
-  {startTime: 40, endTime: 45, imgUrl: '/base/tests/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 1024, y: 0}}
+  {
+    startTime: 0,
+    endTime: 5,
+    imgUrl: '/base/tests/assets/bbb-sprite.jpeg',
+    size: { width: 128, height: 72 },
+    coordinates: { x: 0, y: 0 }
+  },
+  {
+    startTime: 5,
+    endTime: 10,
+    imgUrl: '/base/tests/assets/bbb-sprite.jpeg',
+    size: { width: 128, height: 72 },
+    coordinates: { x: 128, y: 0 }
+  },
+  {
+    startTime: 10,
+    endTime: 15,
+    imgUrl: '/base/tests/assets/bbb-sprite.jpeg',
+    size: { width: 128, height: 72 },
+    coordinates: { x: 256, y: 0 }
+  },
+  {
+    startTime: 15,
+    endTime: 20,
+    imgUrl: '/base/tests/assets/bbb-sprite.jpeg',
+    size: { width: 128, height: 72 },
+    coordinates: { x: 384, y: 0 }
+  },
+  {
+    startTime: 20,
+    endTime: 25,
+    imgUrl: '/base/tests/assets/bbb-sprite.jpeg',
+    size: { width: 128, height: 72 },
+    coordinates: { x: 512, y: 0 }
+  },
+  {
+    startTime: 25,
+    endTime: 30,
+    imgUrl: '/base/tests/assets/bbb-sprite.jpeg',
+    size: { width: 128, height: 72 },
+    coordinates: { x: 640, y: 0 }
+  },
+  {
+    startTime: 30,
+    endTime: 35,
+    imgUrl: '/base/tests/assets/bbb-sprite.jpeg',
+    size: { width: 128, height: 72 },
+    coordinates: { x: 768, y: 0 }
+  },
+  {
+    startTime: 35,
+    endTime: 40,
+    imgUrl: '/base/tests/assets/bbb-sprite.jpeg',
+    size: { width: 128, height: 72 },
+    coordinates: { x: 896, y: 0 }
+  },
+  {
+    startTime: 40,
+    endTime: 45,
+    imgUrl: '/base/tests/assets/bbb-sprite.jpeg',
+    size: { width: 128, height: 72 },
+    coordinates: { x: 1024, y: 0 }
+  }
 ];
 
 describe('ExternalThumbnailsHandler', () => {
@@ -23,17 +77,23 @@ describe('ExternalThumbnailsHandler', () => {
 
   describe('_downloadAndParseCues', () => {
     it('should download and parse the vtt file- vtt with url options only', async () => {
-      await externalThumbnailsHandler._downloadAndParseCues({vttUrl: '/base/tests/assets/thumbnails1.vtt'});
+      await externalThumbnailsHandler._downloadAndParseCues({
+        vttUrl: '/base/tests/assets/thumbnails1.vtt'
+      });
       expect(externalThumbnailsHandler._cues.length).equal(6);
     });
 
     it('should download and parse the vtt file - vtt with size options only', async () => {
-      await externalThumbnailsHandler._downloadAndParseCues({vttUrl: '/base/tests/assets/thumbnails2.vtt'});
+      await externalThumbnailsHandler._downloadAndParseCues({
+        vttUrl: '/base/tests/assets/thumbnails2.vtt'
+      });
       expect(externalThumbnailsHandler._cues.length).equal(5);
     });
 
     it('should download and parse the vtt file - vtt with size and coords options', async () => {
-      await externalThumbnailsHandler._downloadAndParseCues({vttUrl: '/base/tests/assets/thumbnails3.vtt'});
+      await externalThumbnailsHandler._downloadAndParseCues({
+        vttUrl: '/base/tests/assets/thumbnails3.vtt'
+      });
       expect(externalThumbnailsHandler._cues.length).equal(9);
     });
   });
@@ -61,8 +121,20 @@ describe('ExternalThumbnailsHandler', () => {
 
     it('should throw an error - invalid url option', async () => {
       const invalidVttCues = [
-        {startTime: 0, endTime: 5, imgUrl: 'base/tests/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 0, y: 0}},
-        {startTime: 5, endTime: 10, imgUrl: 'base/tests/assets/bbb-sprite.jpeg', size: {width: 128, height: 72}, coordinates: {x: 128, y: 0}}
+        {
+          startTime: 0,
+          endTime: 5,
+          imgUrl: 'base/tests/assets/bbb-sprite.jpeg',
+          size: { width: 128, height: 72 },
+          coordinates: { x: 0, y: 0 }
+        },
+        {
+          startTime: 5,
+          endTime: 10,
+          imgUrl: 'base/tests/assets/bbb-sprite.jpeg',
+          size: { width: 128, height: 72 },
+          coordinates: { x: 128, y: 0 }
+        }
       ];
       await expect(externalThumbnailsHandler._formatIntoThumbnailCues(invalidVttCues, thumbnailsConfig)).to.be.rejectedWith(new Error());
       expect(externalThumbnailsHandler._cues.length).equal(0);
@@ -81,8 +153,8 @@ describe('ExternalThumbnailsHandler', () => {
         startTime: 0,
         endTime: 5,
         imgUrl: '/base/tests/assets/bbb-sprite.jpeg',
-        size: {width: 128, height: 72},
-        coordinates: {x: 0, y: 0}
+        size: { width: 128, height: 72 },
+        coordinates: { x: 0, y: 0 }
       };
       expect(actualParsedCue).deep.equal(expectedParsedCue);
     });

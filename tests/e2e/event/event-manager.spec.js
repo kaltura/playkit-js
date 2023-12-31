@@ -15,7 +15,7 @@ describe('unlisten', function () {
     eventManager.removeAll();
   });
 
-  it('should remove all listeners for no specific listener given', done => {
+  it('should remove all listeners for no specific listener given', (done) => {
     let listener1 = () => {
       done(new Error('test fail'));
     };
@@ -31,7 +31,7 @@ describe('unlisten', function () {
     }, 0);
   });
 
-  it('should remove only the given listeners', done => {
+  it('should remove only the given listeners', (done) => {
     let listener1 = () => {
       done(new Error('test fail'));
     };
@@ -43,7 +43,7 @@ describe('unlisten', function () {
     eventManager.unlisten(eventTarget, 'event', listener1);
     eventManager._bindingMap.get('event').length.should.equal(1);
     eventManager._bindingMap.get('event')[0].listener.should.equal(listener2);
-    eventTarget.dispatchEvent({type: 'event'});
+    eventTarget.dispatchEvent({ type: 'event' });
   });
 });
 
@@ -59,22 +59,22 @@ describe('one', function () {
     eventManager.removeAll();
   });
 
-  it('should listen only one time', done => {
+  it('should listen only one time', (done) => {
     let counter = 0;
-    listener1 = event => {
+    listener1 = (event) => {
       counter++;
       event.type.should.equal('event1');
     };
-    listener2 = event => {
+    listener2 = (event) => {
       counter++;
       event.type.should.equal('event2');
     };
     eventManager.listenOnce(eventTarget, 'event1', listener1);
-    eventTarget.dispatchEvent({type: 'event1'});
-    eventTarget.dispatchEvent({type: 'event1'});
+    eventTarget.dispatchEvent({ type: 'event1' });
+    eventTarget.dispatchEvent({ type: 'event1' });
     eventManager.listenOnce(eventTarget, 'event2', listener2);
-    eventTarget.dispatchEvent({type: 'event2'});
-    eventTarget.dispatchEvent({type: 'event2'});
+    eventTarget.dispatchEvent({ type: 'event2' });
+    eventTarget.dispatchEvent({ type: 'event2' });
     setTimeout(() => {
       counter.should.equal(2);
       done();

@@ -1,8 +1,8 @@
 // @flow
 import getLogger from '../utils/logger';
-import {IEngine} from '../types/interfaces/engine';
-import {IEngineDecorator} from '../types/interfaces/engine-decorator';
-import {IEngineDecoratorProvider} from '../types';
+import { IEngine } from '../types/interfaces/engine';
+import { IEngineDecorator } from '../types/interfaces/engine-decorator';
+import { IEngineDecoratorProvider } from '../types';
 import { FakeEvent } from '../event/fake-event';
 
 /**
@@ -23,7 +23,7 @@ class EngineDecoratorManager {
 
   public createDecorators(engine: IEngine, dispatchEvent: (event: FakeEvent) => void): Array<IEngineDecorator> {
     this._logger.debug(`decorators created for ${Array.from(this._decoratorProviders.keys()).toString()}`);
-    return Array.from(this._decoratorProviders.values(), engineDecoratorProvider =>
+    return Array.from(this._decoratorProviders.values(), (engineDecoratorProvider) =>
       engineDecoratorProvider.getEngineDecorator(engine, dispatchEvent)
     );
   }
@@ -34,4 +34,4 @@ class EngineDecoratorManager {
   }
 }
 
-export {EngineDecoratorManager};
+export { EngineDecoratorManager };

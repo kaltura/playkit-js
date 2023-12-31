@@ -1,4 +1,4 @@
-import {ResizeWatcher} from '../../../src/utils';
+import { ResizeWatcher } from '../../../src/utils';
 
 describe('ResizeWatcher', () => {
   let rw;
@@ -30,7 +30,7 @@ describe('ResizeWatcher', () => {
     rw.destroy();
   });
 
-  it('iframe observer observe', done => {
+  it('iframe observer observe', (done) => {
     rw._createIframeObserver();
     let container = document.createElement('div');
     container.setAttribute('id', 'testId123456789');
@@ -50,7 +50,7 @@ describe('ResizeWatcher', () => {
     }, 100);
   });
 
-  it('iframe observer disconnect', done => {
+  it('iframe observer disconnect', (done) => {
     rw._createIframeObserver();
     let container = document.createElement('div');
     container.setAttribute('id', 'testId123456789');
@@ -73,14 +73,14 @@ describe('ResizeWatcher', () => {
     }, 100);
   });
 
-  it('trigger a resize event', done => {
+  it('trigger a resize event', (done) => {
     rw.addEventListener('resize', () => {
       done();
     });
     rw._triggerResize();
   });
 
-  it('create an observer', done => {
+  it('create an observer', (done) => {
     let el = document.createElement('div');
     el.setAttribute('id', 'coolObserver123');
     document.body.appendChild(el);

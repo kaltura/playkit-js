@@ -1,8 +1,8 @@
-import {createElement, removeElement} from '../../utils/test-utils';
+import { createElement, removeElement } from '../../utils/test-utils';
 import Player from '../../../src/player';
-import {Object as PKObject} from '../../../src/utils/util';
+import { Object as PKObject } from '../../../src/utils/util';
 import SourcesConfig from '../../configs/sources.json';
-import {EngineProvider} from '../../../src/engines/engine-provider';
+import { EngineProvider } from '../../../src/engines/engine-provider';
 import Html5 from '../../../src/engines/html5/html5';
 
 const targetId = 'player-placeholder_inBrowserFullscreen.spec';

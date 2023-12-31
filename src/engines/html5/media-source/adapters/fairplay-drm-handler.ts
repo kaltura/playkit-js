@@ -1,12 +1,12 @@
 import Error from '../../../../error/error';
 import getLogger from '../../../../utils/logger';
 import * as Utils from '../../../../utils/util';
-import {RequestType} from '../../../../enums/request-type';
-import {DrmScheme} from '../../../../drm/drm-scheme';
-import { EventManager, ListenerType} from '../../../../event/event-manager';
-import {PKDrmDataObject, PKRequestObject, PKResponseObject} from '../../../../types';
+import { RequestType } from '../../../../enums/request-type';
+import { DrmScheme } from '../../../../drm/drm-scheme';
+import { EventManager, ListenerType } from '../../../../event/event-manager';
+import { PKDrmDataObject, PKRequestObject, PKResponseObject } from '../../../../types';
 
-type WebkitEventsType = {[name: string]: string};
+type WebkitEventsType = { [name: string]: string };
 
 const KeySystem: string = 'com.apple.fps.1_0';
 const WebkitEvents: WebkitEventsType = {
@@ -16,7 +16,14 @@ const WebkitEvents: WebkitEventsType = {
   KEY_ERROR: 'webkitkeyerror'
 };
 
-type FairPlayDrmConfigType = {licenseUrl: string, certificate?: string, network: {requestFilter?: (...args: any[]) => any, responseFilter: (...args: any[]) => any}};
+type FairPlayDrmConfigType = {
+  licenseUrl: string;
+  certificate?: string;
+  network: {
+    requestFilter?: (...args: any[]) => any;
+    responseFilter: (...args: any[]) => any;
+  };
+};
 
 class FairPlayDrmHandler {
   public static WebkitEvents: WebkitEventsType = WebkitEvents;
@@ -66,7 +73,12 @@ class FairPlayDrmHandler {
    * @param {Function} errorCallback - error callback function
    * @param {Function} drmResponseCallback - drm license response callback function
    */
-  constructor(videoElement: HTMLVideoElement, config: FairPlayDrmConfigType, errorCallback: (...args: any[]) => any, drmResponseCallback: (...args: any[]) => any) {
+  constructor(
+    videoElement: HTMLVideoElement,
+    config: FairPlayDrmConfigType,
+    errorCallback: (...args: any[]) => any,
+    drmResponseCallback: (...args: any[]) => any
+  ) {
     this._config = Utils.Object.mergeDeep({}, this._defaultConfig, config);
     this._errorCallback = errorCallback;
     this._drmResponseCallback = drmResponseCallback;
@@ -106,8 +118,8 @@ class FairPlayDrmHandler {
   }
 
   public getDrmInfo(): PKDrmDataObject {
-    const {certificate, licenseUrl} = this._config;
-    return {certificate, licenseUrl, scheme: DrmScheme.FAIRPLAY};
+    const { certificate, licenseUrl } = this._config;
+    return { certificate, licenseUrl, scheme: DrmScheme.FAIRPLAY };
   }
 
   public destroy(): void {
@@ -139,7 +151,7 @@ class FairPlayDrmHandler {
     }
     requestFilterPromise = requestFilterPromise || Promise.resolve(pkRequest);
     requestFilterPromise
-      .then(updatedRequest => {
+      .then((updatedRequest) => {
         request.open('POST', updatedRequest.url, true);
         let setContentType = true;
         if (updatedRequest.headers) {
@@ -162,15 +174,8 @@ class FairPlayDrmHandler {
         this._licenseRequestTime = Date.now();
         request.send(updatedRequest.body);
       })
-      .catch(error => {
-        this._errorCallback(
-          new Error(
-            Error.Severity.CRITICAL,
-            Error.Category.NETWORK,
-            Error.Code.REQUEST_FILTER_ERROR,
-            error
-          )
-        );
+      .catch((error) => {
+        this._errorCallback(new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.REQUEST_FILTER_ERROR, error));
         this.destroy();
       });
   }
@@ -199,13 +204,16 @@ class FairPlayDrmHandler {
     }
     if (this._drmResponseCallback) {
       const licenseTime = Date.now() - this._licenseRequestTime!;
-      this._drmResponseCallback({licenseTime: licenseTime / 1000, scheme: DrmScheme.FAIRPLAY});
+      this._drmResponseCallback({
+        licenseTime: licenseTime / 1000,
+        scheme: DrmScheme.FAIRPLAY
+      });
     }
-    const {responseURL: url, response: data} = request;
+    const { responseURL: url, response: data } = request;
     const originalUrl = this._config.licenseUrl;
     const headers = Utils.Http.convertHeadersToDictionary(request.getAllResponseHeaders());
 
-    const pkResponse: PKResponseObject = {url, originalUrl, data, headers};
+    const pkResponse: PKResponseObject = { url, originalUrl, data, headers };
     this._logger.debug('Apply response filter');
     let responseFilterPromise;
     try {
@@ -215,18 +223,11 @@ class FairPlayDrmHandler {
     }
     responseFilterPromise = responseFilterPromise || Promise.resolve(pkResponse);
     responseFilterPromise
-      .then(updatedResponse => {
+      .then((updatedResponse) => {
         this._keySession.update(updatedResponse.data);
       })
-      .catch(error => {
-        this._errorCallback(
-          new Error(
-            Error.Severity.CRITICAL,
-            Error.Category.NETWORK,
-            Error.Code.RESPONSE_FILTER_ERROR,
-            error
-          )
-        );
+      .catch((error) => {
+        this._errorCallback(new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.RESPONSE_FILTER_ERROR, error));
         this.destroy();
       });
   }
@@ -349,5 +350,5 @@ class FairPlayDrmHandler {
 
 FairPlayDrmHandler.WebkitEvents = WebkitEvents;
 
-export {FairPlayDrmHandler};
-export type {FairPlayDrmConfigType};
+export { FairPlayDrmHandler };
+export type { FairPlayDrmConfigType };

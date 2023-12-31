@@ -1,14 +1,13 @@
-
 import Player from '../player';
 import { EventManager } from '../event/event-manager';
 import State from './state';
-import {StateType} from './state-type';
-import {CustomEventType, Html5EventType} from '../event/event-type';
+import { StateType } from './state-type';
+import { CustomEventType, Html5EventType } from '../event/event-type';
 import { FakeEvent } from '../event/fake-event';
 import getLogger from '../utils/logger';
 import Env from '../utils/env';
 import Error from '../error/error';
-import {StateChanged, Transition} from '../types';
+import { StateChanged, Transition } from '../types';
 
 /**
  * This class responsible to manage all the state machine of the player.
@@ -77,7 +76,7 @@ export default class StateManager {
     },
     [StateType.LOADING]: {
       [Html5EventType.LOADED_METADATA]: () => this._updateState(StateType.PAUSED),
-      [Html5EventType.ERROR]: e => e.payload.severity === Error.Severity.CRITICAL && this._updateState(StateType.IDLE),
+      [Html5EventType.ERROR]: (e) => e.payload.severity === Error.Severity.CRITICAL && this._updateState(StateType.IDLE),
       [Html5EventType.SEEKED]: () => {
         if (this._prevState && this._prevState.type === StateType.PLAYING) {
           this._updateState(StateType.PLAYING);
@@ -100,7 +99,7 @@ export default class StateManager {
         }
       },
       [Html5EventType.ENDED]: () => this._updateState(StateType.IDLE),
-      [Html5EventType.ERROR]: e => e.payload.severity === Error.Severity.CRITICAL && this._updateState(StateType.IDLE)
+      [Html5EventType.ERROR]: (e) => e.payload.severity === Error.Severity.CRITICAL && this._updateState(StateType.IDLE)
     },
     [StateType.BUFFERING]: {
       [Html5EventType.PLAYING]: () => this._updateState(StateType.PLAYING),
@@ -193,13 +192,10 @@ export default class StateManager {
    * @returns {void}
    */
   private _dispatchEvent(): void {
-    const event = new FakeEvent(
-      CustomEventType.PLAYER_STATE_CHANGED,
-      ({
-        oldState: this._prevState,
-        newState: this._curState
-      } as StateChanged)
-    );
+    const event = new FakeEvent(CustomEventType.PLAYER_STATE_CHANGED, {
+      oldState: this._prevState,
+      newState: this._curState
+    } as StateChanged);
     this._player.dispatchEvent(event);
   }
 

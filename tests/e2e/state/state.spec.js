@@ -1,5 +1,5 @@
 import State from '../../../src/state/state';
-import {StateType} from '../../../src/state/state-type';
+import { StateType } from '../../../src/state/state-type';
 
 describe('State', () => {
   it('should create idle state', () => {
