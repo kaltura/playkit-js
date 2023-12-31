@@ -1,6 +1,6 @@
 import getLogger from '../utils/logger';
 import Html5 from './html5/html5';
-import {IEngineStatic} from '../types';
+import { IEngineStatic } from '../types';
 
 /**
  * Engine Provider
@@ -21,7 +21,7 @@ class EngineProvider {
    * @static
    * @private
    */
-  private static _engineProviders: {[id: string]: IEngineStatic} = {};
+  private static _engineProviders: { [id: string]: IEngineStatic } = {};
 
   /**
    * Add an engine to the registry.
@@ -61,7 +61,7 @@ class EngineProvider {
    * @static
    */
   public static getEngines(): Array<IEngineStatic> {
-    return Object.keys(EngineProvider._engineProviders).map(key => EngineProvider._engineProviders[key]);
+    return Object.keys(EngineProvider._engineProviders).map((key) => EngineProvider._engineProviders[key]);
   }
 
   /**
@@ -80,4 +80,4 @@ if (Html5.isSupported()) {
 
 const registerEngine = EngineProvider.register;
 const unRegisterEngine = EngineProvider.unRegister;
-export {registerEngine, unRegisterEngine, EngineProvider};
+export { registerEngine, unRegisterEngine, EngineProvider };

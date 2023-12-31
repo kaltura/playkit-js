@@ -1,12 +1,12 @@
-import {DroppedFramesWatcher} from '../../../src/engines/dropped-frames-watcher';
-import {FakeDashAdapter, FakeHlsAdapter} from './html5/media-source/adapters/test-adapters/test-adapters';
-import {CustomEventType} from '../../../src/event/event-type';
+import { DroppedFramesWatcher } from '../../../src/engines/dropped-frames-watcher';
+import { FakeDashAdapter, FakeHlsAdapter } from './html5/media-source/adapters/test-adapters/test-adapters';
+import { CustomEventType } from '../../../src/event/event-type';
 import { FakeEvent } from '../../../src/event/fake-event';
 
 describe('constructor', function () {
   let videoElement, sandbox, config;
   videoElement = document.createElement('video');
-  config = {capLevelOnFPSDrop: true};
+  config = { capLevelOnFPSDrop: true };
   beforeEach(() => {
     sandbox = sinon.createSandbox();
   });
@@ -39,13 +39,17 @@ describe('constructor', function () {
     spy.should.have.been.calledWithMatch(CustomEventType.VIDEO_TRACK_CHANGED);
   });
 
-  it('should update currentBitrate with the the one from the event', done => {
+  it('should update currentBitrate with the the one from the event', (done) => {
     const dashAdapter = new FakeDashAdapter();
     dashAdapter.capabilities = {
       fpsControl: false
     };
     const dfw = new DroppedFramesWatcher(dashAdapter, config, videoElement);
-    dashAdapter.dispatchEvent(new FakeEvent(CustomEventType.VIDEO_TRACK_CHANGED, {selectedVideoTrack: {bandwidth: 100}}));
+    dashAdapter.dispatchEvent(
+      new FakeEvent(CustomEventType.VIDEO_TRACK_CHANGED, {
+        selectedVideoTrack: { bandwidth: 100 }
+      })
+    );
     setTimeout(() => {
       dfw._currentBitrate.should.equal(100);
       done();
@@ -118,7 +122,7 @@ describe('_checkFPS function ', function () {
     };
     dashAdapter.setMaxBitrate = () => {};
     let spy = sandbox.spy(dashAdapter, 'setMaxBitrate');
-    const dfw = new DroppedFramesWatcher(dashAdapter, {fpsDroppedMonitoringThreshold: 1}, videoElement);
+    const dfw = new DroppedFramesWatcher(dashAdapter, { fpsDroppedMonitoringThreshold: 1 }, videoElement);
     dfw._lastTime = performance.now() - 5000;
     dfw._lastDroppedFrames = 2;
     dfw._lastDecodedFrames = 3;
@@ -135,7 +139,7 @@ describe('_checkFPS function ', function () {
     };
     dashAdapter.setMaxBitrate = () => {};
     let spy = sandbox.spy(dashAdapter, 'setMaxBitrate');
-    const dfw = new DroppedFramesWatcher(dashAdapter, {fpsDroppedMonitoringThreshold: 1}, videoElement);
+    const dfw = new DroppedFramesWatcher(dashAdapter, { fpsDroppedMonitoringThreshold: 1 }, videoElement);
     dfw._lastTime = performance.now() - 5000;
     dfw._lastDroppedFrames = 2;
     dfw._lastDecodedFrames = 3;

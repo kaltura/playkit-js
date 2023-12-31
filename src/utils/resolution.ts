@@ -1,4 +1,4 @@
-import {PKMediaSourceObject} from '../types';
+import { PKMediaSourceObject } from '../types';
 /**
  * Calculates the most suitable source to the container size
  * @function getSuitableSourceForResolution
@@ -8,7 +8,7 @@ import {PKMediaSourceObject} from '../types';
  * @returns {Object} - The most suitable source to the container size
  */
 function getSuitableSourceForResolution(tracks: PKMediaSourceObject[], width: number, height: number): PKMediaSourceObject | null {
-  let mostSuitableWidth: PKMediaSourceObject| null = null;
+  let mostSuitableWidth: PKMediaSourceObject | null = null;
   if (height && tracks) {
     let mostSuitableWidthTracks: PKMediaSourceObject[] = [];
     let minWidthDiff = Infinity;
@@ -49,4 +49,4 @@ function getSuitableSourceForResolution(tracks: PKMediaSourceObject[], width: nu
   return mostSuitableWidth;
 }
 
-export {getSuitableSourceForResolution};
+export { getSuitableSourceForResolution };

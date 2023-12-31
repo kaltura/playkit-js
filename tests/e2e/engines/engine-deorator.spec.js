@@ -1,8 +1,8 @@
-import {FakeDecoratorProvider, FakeDecoratorProviderActive, FakeHTML5Engine} from './test-engine-decorator-providers';
-import {EngineDecorator} from '../../../src/engines/engine-decorator';
+import { FakeDecoratorProvider, FakeDecoratorProviderActive, FakeHTML5Engine } from './test-engine-decorator-providers';
+import { EngineDecorator } from '../../../src/engines/engine-decorator';
 import Player from '../../../src/player';
-import {createElement, getConfigStructure} from '../../utils/test-utils';
-import {EngineDecoratorManager} from '../../../src/engines/engine-decorator-manager';
+import { createElement, getConfigStructure } from '../../utils/test-utils';
+import { EngineDecoratorManager } from '../../../src/engines/engine-decorator-manager';
 
 describe('EngineDecorator', () => {
   let engine;
@@ -61,13 +61,13 @@ describe('EngineDecorator', () => {
     player._engineDecoratorManager.createDecorators(null, null).length.should.equal(0);
   });
 
-  it('should decorator use the decorator instance as context of the function', done => {
+  it('should decorator use the decorator instance as context of the function', (done) => {
     const decoratorManager = new EngineDecoratorManager();
     const decoratorProvider = FakeDecoratorProviderActive;
     decoratorManager.register(decoratorProvider);
     const engineDecorator = new EngineDecorator(engine, decoratorManager);
     const loadPromise = engineDecorator.load();
-    loadPromise.then(context => {
+    loadPromise.then((context) => {
       try {
         (context === decoratorProvider.getEngineDecorator()).should.be.true;
         done();
@@ -77,12 +77,12 @@ describe('EngineDecorator', () => {
     });
   });
 
-  it('should decorator use the engine when decorator not active', done => {
+  it('should decorator use the engine when decorator not active', (done) => {
     const decoratorManager = new EngineDecoratorManager();
     decoratorManager.register(FakeDecoratorProvider);
     const engineDecorator = new EngineDecorator(engine, decoratorManager);
     const loadPromise = engineDecorator.load();
-    loadPromise.then(context => {
+    loadPromise.then((context) => {
       try {
         (context === engine).should.be.true;
         done();

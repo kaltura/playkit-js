@@ -1,5 +1,5 @@
 export type PKAbrConfigObject = {
-  fpsDroppedMonitoringThreshold: number,
-  fpsDroppedFramesInterval: number,
-  capLevelOnFPSDrop: boolean
+  fpsDroppedMonitoringThreshold: number;
+  fpsDroppedFramesInterval: number;
+  capLevelOnFPSDrop: boolean;
 };

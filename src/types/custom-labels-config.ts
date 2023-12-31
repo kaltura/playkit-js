@@ -1,5 +1,5 @@
 export type PKCustomLabelsConfigObject = {
-  audio: Function,
-  qualities: Function,
-  video: Function
+  audio: Function;
+  qualities: Function;
+  video: Function;
 };

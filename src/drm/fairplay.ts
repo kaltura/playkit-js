@@ -1,7 +1,7 @@
-import {FairPlayDrmConfigType} from '../engines/html5/media-source/adapters/fairplay-drm-handler';
-import {DrmScheme} from './drm-scheme';
-import {PKDrmConfigObject, PKDrmDataObject} from '../types';
-import {ILogger} from 'js-logger';
+import { FairPlayDrmConfigType } from '../engines/html5/media-source/adapters/fairplay-drm-handler';
+import { DrmScheme } from './drm-scheme';
+import { PKDrmConfigObject, PKDrmDataObject } from '../types';
+import { ILogger } from 'js-logger';
 import getLogger from '../utils/logger';
 
 const _logger: ILogger = getLogger('FairPlay');
@@ -14,7 +14,7 @@ class FairPlay {
    * @return {boolean} - Whether FairPlay is the configure key system.
    */
   public static isConfigured(drmData: Array<PKDrmDataObject>, drmConfig: PKDrmConfigObject): boolean {
-    return DrmScheme.FAIRPLAY === drmConfig.keySystem && !!drmData.find(drmEntry => drmEntry.scheme === drmConfig.keySystem);
+    return DrmScheme.FAIRPLAY === drmConfig.keySystem && !!drmData.find((drmEntry) => drmEntry.scheme === drmConfig.keySystem);
   }
 
   /**
@@ -27,7 +27,7 @@ class FairPlay {
   public static canPlayDrm(drmData: Array<PKDrmDataObject>): boolean {
     // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const result = drmData.some(drmEntry => drmEntry.scheme === DrmScheme.FAIRPLAY) && !!window.WebKitMediaKeys;
+    const result = drmData.some((drmEntry) => drmEntry.scheme === DrmScheme.FAIRPLAY) && !!window.WebKitMediaKeys;
     _logger.debug(`Can play DRM scheme of: ${DrmScheme.FAIRPLAY} is ${result.toString()}`);
     return result;
   }
@@ -40,7 +40,7 @@ class FairPlay {
    */
   public static setDrmPlayback(config: FairPlayDrmConfigType, drmData: Array<PKDrmDataObject>): void {
     _logger.debug('Sets drm playback');
-    const drmEntry = drmData.find(drmEntry => drmEntry.scheme === DrmScheme.FAIRPLAY);
+    const drmEntry = drmData.find((drmEntry) => drmEntry.scheme === DrmScheme.FAIRPLAY);
     if (drmEntry) {
       config.licenseUrl = drmEntry.licenseUrl;
       config.certificate = drmEntry.certificate;

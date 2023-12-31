@@ -5,8 +5,8 @@ class ThumbnailInfo {
   private _x: number;
   private _y: number;
 
-  constructor(info: {url: string, width: number, height: number, x: number, y: number}) {
-    const {url, width, height, x, y} = info;
+  constructor(info: { url: string; width: number; height: number; x: number; y: number }) {
+    const { url, width, height, x, y } = info;
     this._url = url;
     this._width = width;
     this._height = height;
@@ -35,4 +35,4 @@ class ThumbnailInfo {
   }
 }
 
-export {ThumbnailInfo};
+export { ThumbnailInfo };

@@ -1,4 +1,4 @@
-import JsLogger, {ILogger, ILogHandler, ILogLevel} from 'js-logger';
+import JsLogger, { ILogger, ILogHandler, ILogLevel } from 'js-logger';
 import { LoggerLevels } from '../types/logger-levels';
 
 const LogLevel: LoggerLevels = {
@@ -14,11 +14,11 @@ const LogLevel: LoggerLevels = {
 const LogLevelType: Record<keyof LoggerLevels, keyof LoggerLevels> = {} as Record<keyof LoggerLevels, keyof LoggerLevels>;
 
 // Build the log level types enums according to the LogLevel object
-Object.keys(LogLevel).forEach(key => {
+Object.keys(LogLevel).forEach((key) => {
   LogLevelType[key] = key;
 });
 
-JsLogger.useDefaults({defaultLevel: JsLogger.ERROR});
+JsLogger.useDefaults({ defaultLevel: JsLogger.ERROR });
 
 /**
  * sets the logger handler
@@ -62,4 +62,4 @@ function setLogLevel(level: ILogLevel, name?: string): void {
 }
 
 export default getLogger;
-export {LogLevel, LogLevelType, getLogLevel, setLogLevel, setLogHandler, getLogger};
+export { LogLevel, LogLevelType, getLogLevel, setLogLevel, setLogHandler, getLogger };

@@ -1,4 +1,4 @@
-import {IEngine} from '../../../src/types';
+import { IEngine } from '../../../src/types';
 
 class FakeHTML5Engine implements IEngine {
   static get id() {
@@ -18,4 +18,4 @@ class FakeSLEngine implements IEngine {
   }
 }
 
-export {FakeHTML5Engine, FakeFLASHEngine, FakeSLEngine};
+export { FakeHTML5Engine, FakeFLASHEngine, FakeSLEngine };

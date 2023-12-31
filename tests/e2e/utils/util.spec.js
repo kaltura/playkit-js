@@ -35,41 +35,45 @@ describe('util', () => {
   describe('Object', function () {
     describe('merge', function () {
       it('should merge 2 objects', () => {
-        let obj1 = {x: 1},
-          obj2 = {y: 2};
-        Utils.Object.merge([obj1, obj2]).should.deep.equals({x: 1, y: 2});
+        let obj1 = { x: 1 },
+          obj2 = { y: 2 };
+        Utils.Object.merge([obj1, obj2]).should.deep.equals({ x: 1, y: 2 });
       });
 
       it('should merge 3 objects', () => {
-        let obj1 = {x: 1},
-          obj2 = {y: 2},
-          obj3 = {z: 3};
-        Utils.Object.merge([obj1, obj2, obj3]).should.deep.equals({x: 1, y: 2, z: 3});
+        let obj1 = { x: 1 },
+          obj2 = { y: 2 },
+          obj3 = { z: 3 };
+        Utils.Object.merge([obj1, obj2, obj3]).should.deep.equals({
+          x: 1,
+          y: 2,
+          z: 3
+        });
         obj1 = null;
         obj2 = null;
-        Utils.Object.merge([obj1, obj2, obj3]).should.deep.equals({z: 3});
+        Utils.Object.merge([obj1, obj2, obj3]).should.deep.equals({ z: 3 });
       });
 
       it('should override y property', () => {
-        let obj1 = {x: 1, y: 1},
-          obj2 = {y: 2};
-        Utils.Object.merge([obj1, obj2]).should.deep.equals({x: 1, y: 2});
+        let obj1 = { x: 1, y: 1 },
+          obj2 = { y: 2 };
+        Utils.Object.merge([obj1, obj2]).should.deep.equals({ x: 1, y: 2 });
       });
 
       it('should return obj1 as the result', () => {
-        let obj1 = {x: 1},
+        let obj1 = { x: 1 },
           obj2 = null;
-        Utils.Object.merge([obj1, obj2]).should.deep.equals({x: 1});
+        Utils.Object.merge([obj1, obj2]).should.deep.equals({ x: 1 });
         obj2 = {};
-        Utils.Object.merge([obj1, obj2]).should.deep.equals({x: 1});
+        Utils.Object.merge([obj1, obj2]).should.deep.equals({ x: 1 });
       });
 
       it('should return obj2 as the result', () => {
         let obj1 = null,
-          obj2 = {y: 2};
-        Utils.Object.merge([obj1, obj2]).should.deep.equals({y: 2});
+          obj2 = { y: 2 };
+        Utils.Object.merge([obj1, obj2]).should.deep.equals({ y: 2 });
         obj1 = {};
-        Utils.Object.merge([obj1, obj2]).should.deep.equals({y: 2});
+        Utils.Object.merge([obj1, obj2]).should.deep.equals({ y: 2 });
       });
 
       it('should return empty object', () => {
@@ -84,21 +88,24 @@ describe('util', () => {
 
     describe('mergeDeep', function () {
       it('should deep merge object', function () {
-        Utils.Object.mergeDeep({x: 1}, {x: 2, y: {z: 1}}).should.deep.equals({x: 2, y: {z: 1}});
-        Utils.Object.mergeDeep({y: 1}, {x: 2}).should.deep.equals({y: 1, x: 2});
-        Utils.Object.mergeDeep({}, {x: 2}).should.deep.equals({x: 2});
+        Utils.Object.mergeDeep({ x: 1 }, { x: 2, y: { z: 1 } }).should.deep.equals({ x: 2, y: { z: 1 } });
+        Utils.Object.mergeDeep({ y: 1 }, { x: 2 }).should.deep.equals({
+          y: 1,
+          x: 2
+        });
+        Utils.Object.mergeDeep({}, { x: 2 }).should.deep.equals({ x: 2 });
       });
     });
 
     describe('copyDeep', function () {
       it('should deep copy object', function () {
-        let myObj = {x: 1, y: 2};
+        let myObj = { x: 1, y: 2 };
         let resObject = Utils.Object.copyDeep(myObj);
         resObject.should.deep.equals(myObj);
         resObject.x = 2;
         resObject.y = 1;
-        myObj.should.deep.equals({x: 1, y: 2});
-        resObject.should.deep.equals({x: 2, y: 1});
+        myObj.should.deep.equals({ x: 1, y: 2 });
+        resObject.should.deep.equals({ x: 2, y: 1 });
       });
     });
 
@@ -107,7 +114,7 @@ describe('util', () => {
         Utils.Object.isEmptyObject(null).should.be.true;
         Utils.Object.isEmptyObject(undefined).should.be.true;
         Utils.Object.isEmptyObject({}).should.be.true;
-        Utils.Object.isEmptyObject({x: 1}).should.be.false;
+        Utils.Object.isEmptyObject({ x: 1 }).should.be.false;
       });
     });
 
@@ -115,13 +122,17 @@ describe('util', () => {
       let o;
 
       before(function () {
-        o = {a: {b: {c: {d: {e: 1}}}}};
+        o = { a: { b: { c: { d: { e: 1 } } } } };
       });
 
       it('should return the value at an object property path', function () {
-        Utils.Object.getPropertyPath(o, 'a.b').should.deep.equals({c: {d: {e: 1}}});
-        Utils.Object.getPropertyPath(o, 'a.b.c').should.deep.equals({d: {e: 1}});
-        Utils.Object.getPropertyPath(o, 'a.b.c.d').should.deep.equals({e: 1});
+        Utils.Object.getPropertyPath(o, 'a.b').should.deep.equals({
+          c: { d: { e: 1 } }
+        });
+        Utils.Object.getPropertyPath(o, 'a.b.c').should.deep.equals({
+          d: { e: 1 }
+        });
+        Utils.Object.getPropertyPath(o, 'a.b.c.d').should.deep.equals({ e: 1 });
         Utils.Object.getPropertyPath(o, 'a.b.c.d.e').should.deep.equals(1);
         (Utils.Object.getPropertyPath(o, 'a.o') === undefined).should.be.true;
       });
@@ -131,7 +142,7 @@ describe('util', () => {
       let o;
 
       before(function () {
-        o = {a: {b: {c: {d: {e: 1}}}}};
+        o = { a: { b: { c: { d: { e: 1 } } } } };
       });
 
       it('should return if an object has the property path', function () {
@@ -152,7 +163,7 @@ describe('util', () => {
       });
 
       it("should return the argument the same if it's not a string", () => {
-        let testArg = {notString: true};
+        let testArg = { notString: true };
         Utils.String.capitlize(testArg).should.equal(testArg);
       });
     });
@@ -163,12 +174,12 @@ describe('util', () => {
       });
 
       it('should return false if argument not string', () => {
-        let testArg = {notString: true};
+        let testArg = { notString: true };
         Utils.String.endsWith(testArg, 't').should.equal(false);
       });
 
       it('should return false if search argument not string', () => {
-        let testArg = {notString: true};
+        let testArg = { notString: true };
         Utils.String.endsWith('first', testArg).should.equal(false);
       });
     });
@@ -193,17 +204,17 @@ describe('util', () => {
         (Utils.VERSION.compare('1.6.1', '1.7.10') < 0).should.be.true;
         (Utils.VERSION.compare('1.6.20', '1.7.10') < 0).should.be.true;
         (Utils.VERSION.compare('1.7.1', '1.7.10') < 0).should.be.true;
-        (Utils.VERSION.compare('1.7', '1.7.0', {zeroExtend: false}) < 0).should.be.true;
+        (Utils.VERSION.compare('1.7', '1.7.0', { zeroExtend: false }) < 0).should.be.true;
         (Utils.VERSION.compare('1.7', '1.8.0') < 0).should.be.true;
         (Utils.VERSION.compare('1.7.2', '1.7.10b') < 0).should.be.true;
       });
 
       it('The first should be greater than the second', function () {
-        (Utils.VERSION.compare('1.7.2', '1.7.10b', {lexicographical: true}) > 0).should.be.true;
+        (Utils.VERSION.compare('1.7.2', '1.7.10b', { lexicographical: true }) > 0).should.be.true;
         (Utils.VERSION.compare('1.7.10', '1.7.1') > 0).should.be.true;
         (Utils.VERSION.compare('1.7.10', '1.6.1') > 0).should.be.true;
         (Utils.VERSION.compare('1.7.10', '1.6.20') > 0).should.be.true;
-        (Utils.VERSION.compare('1.7.0', '1.7', {zeroExtend: false}) > 0).should.be.true;
+        (Utils.VERSION.compare('1.7.0', '1.7', { zeroExtend: false }) > 0).should.be.true;
         (Utils.VERSION.compare('1.8.0', '1.7') > 0).should.be.true;
       });
 

@@ -1,3 +1,3 @@
 export type ImageSourceOptions = {
-  thumbnailAPIParams: { [parmaName: string]: string }
+  thumbnailAPIParams: { [parmaName: string]: string };
 };

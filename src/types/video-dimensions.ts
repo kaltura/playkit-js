@@ -1,4 +1,4 @@
 export type PKVideoDimensionsObject = {
-  videoHeight: number,
-  videoWidth: number
+  videoHeight: number;
+  videoWidth: number;
 };

@@ -1,5 +1,5 @@
 import { FakeEvent } from './fake-event';
-import {MultiMap} from '../utils';
+import { MultiMap } from '../utils';
 import { getLogger } from '../utils/logger';
 
 /**

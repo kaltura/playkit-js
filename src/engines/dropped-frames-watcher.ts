@@ -1,10 +1,10 @@
 import { FakeEventTarget } from '../event/fake-event-target';
 import getLogger from '../utils/logger';
-import {CustomEventType} from '../event/event-type';
+import { CustomEventType } from '../event/event-type';
 import { EventManager } from '../event/event-manager';
 import { FakeEvent } from '../event/fake-event';
-import {IMediaSourceAdapter} from '../types';
-import {PKAbrConfigObject} from '../types';
+import { IMediaSourceAdapter } from '../types';
+import { PKAbrConfigObject } from '../types';
 
 const NOT_SUPPORTED: number = -1;
 
@@ -108,4 +108,4 @@ class DroppedFramesWatcher extends FakeEventTarget {
   }
 }
 
-export {DroppedFramesWatcher};
+export { DroppedFramesWatcher };

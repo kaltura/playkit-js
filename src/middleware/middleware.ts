@@ -1,4 +1,4 @@
-import {MultiMap} from '../utils/multi-map';
+import { MultiMap } from '../utils/multi-map';
 import BaseMiddleware from './base-middleware';
 import getLogger from '../utils/logger';
 
@@ -17,7 +17,7 @@ export default class Middleware {
    * @private
    * @member
    */
-  private _actions: {[action: string]: string};
+  private _actions: { [action: string]: string };
   /**
    * The logger of the middleware.
    * @private
@@ -29,7 +29,7 @@ export default class Middleware {
    * @constructor
    * @param {Object} actions - The actions for the middleware.
    */
-  constructor(actions: {[action: string]: string}) {
+  constructor(actions: { [action: string]: string }) {
     this._actions = actions;
     this._middlewares = new MultiMap();
     this._logger = getLogger('Middleware');
@@ -91,9 +91,10 @@ export default class Middleware {
       params?.length ? fn(...params, next) : fn(next);
     };
     const composition = middlewares.reduceRight(
-      (next, fn) => (...prevParams) => {
-        applyFunc(fn, prevParams, next);
-      },
+      (next, fn) =>
+        (...prevParams) => {
+          applyFunc(fn, prevParams, next);
+        },
       (...prevParams) => {
         applyFunc(callback, prevParams);
       }

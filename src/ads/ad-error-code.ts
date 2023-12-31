@@ -1,4 +1,4 @@
-const AdErrorCode: {[code: string]: number} = {
+const AdErrorCode: { [code: string]: number } = {
   /**
    * VAST supplied in adm is not a valid XML document.
    * URL supplied in nurl does not resolve to a valid XML document.
@@ -172,4 +172,4 @@ const AdErrorCode: {[code: string]: number} = {
   GENERAL_VPAID_ERROR: 8901
 };
 
-export {AdErrorCode};
+export { AdErrorCode };

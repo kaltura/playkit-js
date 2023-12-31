@@ -1,1 +1,1 @@
-export type PKOrientationType = {[type: string]: string};
+export type PKOrientationType = { [type: string]: string };

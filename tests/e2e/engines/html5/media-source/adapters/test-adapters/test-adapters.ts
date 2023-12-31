@@ -1,6 +1,6 @@
 import { FakeEventTarget } from '../../../../../../../src/event/fake-event-target';
-import {IMediaSourceAdapter} from '../../../../../../../src/types';
-import {PKDrmConfigObject} from '../../../../../../../lib/types';
+import { IMediaSourceAdapter } from '../../../../../../../src/types';
+import { PKDrmConfigObject } from '../../../../../../../lib/types';
 
 class FakeNativeAdapter implements IMediaSourceAdapter {
   static get id() {
@@ -92,4 +92,4 @@ class Adapter3 implements IMediaSourceAdapter {
   destroy(): void {}
 }
 
-export {Adapter1, Adapter2, Adapter3, FakeDashAdapter, FakeHlsAdapter, FakeNativeAdapter};
+export { Adapter1, Adapter2, Adapter3, FakeDashAdapter, FakeHlsAdapter, FakeNativeAdapter };

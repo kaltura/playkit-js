@@ -1,5 +1,5 @@
 // @ts-nocheck
-import {IEngine, IEngineDecorator} from '../../../src/types';
+import { IEngine, IEngineDecorator } from '../../../src/types';
 import { FakeEventTarget } from '../../../src/event/fake-event-target';
 
 class FakeHTML5Engine extends FakeEventTarget implements IEngine {
@@ -59,4 +59,4 @@ const FakeDecoratorProviderActive = {
   }
 };
 
-export {FakeDecoratorProvider, FakeDecoratorProviderActive, FakeHTML5Engine};
+export { FakeDecoratorProvider, FakeDecoratorProviderActive, FakeHTML5Engine };

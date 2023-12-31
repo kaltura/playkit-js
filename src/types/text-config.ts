@@ -1,5 +1,5 @@
-import {PKTextStyleObject} from './text-style';
-import {PKTextTrackDisplaySettingObject} from './text-track-display-setting';
+import { PKTextStyleObject } from './text-style';
+import { PKTextTrackDisplaySettingObject } from './text-track-display-setting';
 
 export interface PKTextConfigObject {
   enableCEA708Captions: boolean;

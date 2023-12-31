@@ -1,8 +1,8 @@
 import Html5 from '../../../../src/engines/html5/html5';
 import BaseMediaSourceAdapter from '../../../../src/engines/html5/media-source/base-media-source-adapter';
 import sourcesConfig from '../../../configs/sources.json';
-import {DroppedFramesWatcher} from '../../../../src/engines/dropped-frames-watcher';
-import {Html5EventType} from '../../../../src/event/event-type';
+import { DroppedFramesWatcher } from '../../../../src/engines/dropped-frames-watcher';
+import { Html5EventType } from '../../../../src/event/event-type';
 
 describe('Html5', () => {
   let sandbox;
@@ -32,7 +32,7 @@ describe('Html5', () => {
     engine._el.should.be.a('HTMLVideoElement');
   });
 
-  it('should prevent too short buffering event', done => {
+  it('should prevent too short buffering event', (done) => {
     const progressiveSource = sourcesConfig.Mp4.progressive[0];
     const engine = Html5.createEngine(progressiveSource);
     engine._eventManager.listen(engine, Html5EventType.WAITING, () => {

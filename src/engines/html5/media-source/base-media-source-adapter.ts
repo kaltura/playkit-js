@@ -148,16 +148,24 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   protected _onTrackChanged(track: VideoTrack | AudioTrack | PKTextTrack | ImageTrack): void {
     if (track instanceof VideoTrack) {
       BaseMediaSourceAdapter._logger.debug('Video track changed', track);
-      this._trigger(CustomEventType.VIDEO_TRACK_CHANGED, { selectedVideoTrack: track });
+      this._trigger(CustomEventType.VIDEO_TRACK_CHANGED, {
+        selectedVideoTrack: track
+      });
     } else if (track instanceof AudioTrack) {
       BaseMediaSourceAdapter._logger.debug('Audio track changed', track);
-      this._trigger(CustomEventType.AUDIO_TRACK_CHANGED, { selectedAudioTrack: track });
+      this._trigger(CustomEventType.AUDIO_TRACK_CHANGED, {
+        selectedAudioTrack: track
+      });
     } else if (track instanceof PKTextTrack) {
       BaseMediaSourceAdapter._logger.debug('Text track changed', track);
-      this._trigger(CustomEventType.TEXT_TRACK_CHANGED, { selectedTextTrack: track });
+      this._trigger(CustomEventType.TEXT_TRACK_CHANGED, {
+        selectedTextTrack: track
+      });
     } else if (track instanceof ImageTrack) {
       BaseMediaSourceAdapter._logger.debug('Image track changed', track);
-      this._trigger(CustomEventType.IMAGE_TRACK_CHANGED, { selectedImageTrack: track });
+      this._trigger(CustomEventType.IMAGE_TRACK_CHANGED, {
+        selectedImageTrack: track
+      });
     }
   }
 

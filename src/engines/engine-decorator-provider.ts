@@ -4,9 +4,9 @@
  * @param {IEngineDecoratorProvider} plugin - The plugin which have implemented decorator.
  * @implements {IEngineDecorator}
  */
-import {IEngineDecoratorProvider} from '../types';
-import {IEngine} from '../types/interfaces/engine';
-import {IEngineDecorator} from '../types/interfaces/engine-decorator';
+import { IEngineDecoratorProvider } from '../types';
+import { IEngine } from '../types/interfaces/engine';
+import { IEngineDecorator } from '../types/interfaces/engine-decorator';
 import { FakeEvent } from '../event/fake-event';
 
 class EngineDecoratorProvider implements IEngineDecoratorProvider {
@@ -27,4 +27,4 @@ class EngineDecoratorProvider implements IEngineDecoratorProvider {
   }
 }
 
-export {EngineDecoratorProvider};
+export { EngineDecoratorProvider };

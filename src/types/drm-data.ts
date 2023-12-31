@@ -1,5 +1,5 @@
 export type PKDrmDataObject = {
-  licenseUrl: string,
-  scheme: string,
-  certificate?: string
+  licenseUrl: string;
+  scheme: string;
+  certificate?: string;
 };

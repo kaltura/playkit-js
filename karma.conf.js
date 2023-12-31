@@ -1,4 +1,6 @@
-const webpackConfig = require('./webpack.config')( null, {mode: 'development'});
+const webpackConfig = require('./webpack.config')(null, {
+  mode: 'development'
+});
 delete webpackConfig.entry;
 delete webpackConfig.externals;
 delete webpackConfig.output;
@@ -15,7 +17,7 @@ module.exports = function (config) {
       {
         pattern: 'tests/assets/**/*',
         included: false
-      },
+      }
     ],
     exclude: [],
     preprocessors: {
@@ -23,7 +25,7 @@ module.exports = function (config) {
     },
     reporters: ['mocha'],
     mochaReporter: {
-      showDiff: true,
+      showDiff: true
     },
 
     coverageIstanbulReporter: {

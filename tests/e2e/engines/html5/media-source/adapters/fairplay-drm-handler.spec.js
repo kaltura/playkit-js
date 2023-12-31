@@ -1,10 +1,10 @@
-import {FairPlayDrmHandler} from '../../../../../../src/engines/html5/media-source/adapters/fairplay-drm-handler';
-import {createElement, removeVideoElementsFromTestPage} from '../../../../../utils/test-utils';
-import {Utils} from '../../../../../../src/playkit';
+import { FairPlayDrmHandler } from '../../../../../../src/engines/html5/media-source/adapters/fairplay-drm-handler';
+import { createElement, removeVideoElementsFromTestPage } from '../../../../../utils/test-utils';
+import { Utils } from '../../../../../../src/playkit';
 import Error from '../../../../../../src/error/error';
-import {RequestType} from '../../../../../../src/enums/request-type';
+import { RequestType } from '../../../../../../src/enums/request-type';
 
-const fpsDrmData = {licenseUrl: 'LICENSE_URL', certificate: 'fpsCertificate'};
+const fpsDrmData = { licenseUrl: 'LICENSE_URL', certificate: 'fpsCertificate' };
 
 describe('Fairplay Drm Handler', function () {
   describe('constructor', function () {
@@ -82,14 +82,14 @@ describe('Fairplay Drm Handler', function () {
       removeVideoElementsFromTestPage();
     });
 
-    const validateFilterError = e => {
+    const validateFilterError = (e) => {
       e.severity.should.equal(Error.Severity.CRITICAL);
       e.category.should.equal(Error.Category.NETWORK);
       e.code.should.equal(Error.Code.REQUEST_FILTER_ERROR);
       e.data.should.equal('error');
     };
 
-    it('should pass the params to the request filter', done => {
+    it('should pass the params to the request filter', (done) => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
           requestFilter: function (type, request) {
@@ -113,7 +113,7 @@ describe('Fairplay Drm Handler', function () {
       });
     });
 
-    it('should apply void filter for license', done => {
+    it('should apply void filter for license', (done) => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
           requestFilter: function (type, request) {
@@ -137,12 +137,12 @@ describe('Fairplay Drm Handler', function () {
       });
     });
 
-    it('should apply promise filter for license', done => {
+    it('should apply promise filter for license', (done) => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
           requestFilter: function (type, request) {
             if (type === RequestType.LICENSE) {
-              return new Promise(resolve => {
+              return new Promise((resolve) => {
                 request.url += '&test';
                 resolve(request);
               });
@@ -164,7 +164,7 @@ describe('Fairplay Drm Handler', function () {
       });
     });
 
-    it('should handle error thrown from void filter', done => {
+    it('should handle error thrown from void filter', (done) => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
           requestFilter: function () {
@@ -172,7 +172,7 @@ describe('Fairplay Drm Handler', function () {
           }
         }
       });
-      const fp = new FairPlayDrmHandler(videoElement, fpsDrmData, e => {
+      const fp = new FairPlayDrmHandler(videoElement, fpsDrmData, (e) => {
         try {
           validateFilterError(e);
           done();
@@ -185,7 +185,7 @@ describe('Fairplay Drm Handler', function () {
       });
     });
 
-    it('should handle error thrown from promise filter', done => {
+    it('should handle error thrown from promise filter', (done) => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
           requestFilter: function () {
@@ -195,7 +195,7 @@ describe('Fairplay Drm Handler', function () {
           }
         }
       });
-      const fp = new FairPlayDrmHandler(videoElement, fpsDrmData, e => {
+      const fp = new FairPlayDrmHandler(videoElement, fpsDrmData, (e) => {
         try {
           validateFilterError(e);
           done();
@@ -208,7 +208,7 @@ describe('Fairplay Drm Handler', function () {
       });
     });
 
-    it('should handle error rejected from promise filter', done => {
+    it('should handle error rejected from promise filter', (done) => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
           requestFilter: function () {
@@ -218,7 +218,7 @@ describe('Fairplay Drm Handler', function () {
           }
         }
       });
-      const fp = new FairPlayDrmHandler(videoElement, fpsDrmData, e => {
+      const fp = new FairPlayDrmHandler(videoElement, fpsDrmData, (e) => {
         try {
           validateFilterError(e);
           done();
@@ -248,14 +248,14 @@ describe('Fairplay Drm Handler', function () {
       removeVideoElementsFromTestPage();
     });
 
-    const validateFilterError = e => {
+    const validateFilterError = (e) => {
       e.severity.should.equal(Error.Severity.CRITICAL);
       e.category.should.equal(Error.Category.NETWORK);
       e.code.should.equal(Error.Code.RESPONSE_FILTER_ERROR);
       e.data.should.equal('error');
     };
 
-    it('should pass the params to the response filter', done => {
+    it('should pass the params to the response filter', (done) => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
           responseFilter: function (type, response) {
@@ -278,7 +278,7 @@ describe('Fairplay Drm Handler', function () {
       });
     });
 
-    it('should apply void filter for license', done => {
+    it('should apply void filter for license', (done) => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
           responseFilter: function (type, response) {
@@ -290,7 +290,7 @@ describe('Fairplay Drm Handler', function () {
       });
       const fp = new FairPlayDrmHandler(videoElement, fpsDrmData, () => {});
       fp._keySession = {
-        update: data => {
+        update: (data) => {
           try {
             data.indexOf('&test').should.be.gt(-1);
             done();
@@ -304,12 +304,12 @@ describe('Fairplay Drm Handler', function () {
       });
     });
 
-    it('should apply promise filter for license', done => {
+    it('should apply promise filter for license', (done) => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
           responseFilter: function (type, response) {
             if (type === RequestType.LICENSE) {
-              return new Promise(resolve => {
+              return new Promise((resolve) => {
                 response.data += '&test';
                 resolve(response);
               });
@@ -319,7 +319,7 @@ describe('Fairplay Drm Handler', function () {
       });
       const fp = new FairPlayDrmHandler(videoElement, fpsDrmData, () => {});
       fp._keySession = {
-        update: data => {
+        update: (data) => {
           try {
             data.indexOf('&test').should.be.gt(-1);
             done();
@@ -333,7 +333,7 @@ describe('Fairplay Drm Handler', function () {
       });
     });
 
-    it('should handle error thrown from void filter', done => {
+    it('should handle error thrown from void filter', (done) => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
           responseFilter: function () {
@@ -341,7 +341,7 @@ describe('Fairplay Drm Handler', function () {
           }
         }
       });
-      const fp = new FairPlayDrmHandler(videoElement, fpsDrmData, e => {
+      const fp = new FairPlayDrmHandler(videoElement, fpsDrmData, (e) => {
         try {
           validateFilterError(e);
           done();
@@ -354,7 +354,7 @@ describe('Fairplay Drm Handler', function () {
       });
     });
 
-    it('should handle error thrown from promise filter', done => {
+    it('should handle error thrown from promise filter', (done) => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
           responseFilter: function () {
@@ -364,7 +364,7 @@ describe('Fairplay Drm Handler', function () {
           }
         }
       });
-      const fp = new FairPlayDrmHandler(videoElement, fpsDrmData, e => {
+      const fp = new FairPlayDrmHandler(videoElement, fpsDrmData, (e) => {
         try {
           validateFilterError(e);
           done();
@@ -377,7 +377,7 @@ describe('Fairplay Drm Handler', function () {
       });
     });
 
-    it('should handle error rejected from promise filter', done => {
+    it('should handle error rejected from promise filter', (done) => {
       Utils.Object.mergeDeep(fpsDrmData, {
         network: {
           responseFilter: function () {
@@ -387,7 +387,7 @@ describe('Fairplay Drm Handler', function () {
           }
         }
       });
-      const fp = new FairPlayDrmHandler(videoElement, fpsDrmData, e => {
+      const fp = new FairPlayDrmHandler(videoElement, fpsDrmData, (e) => {
         try {
           validateFilterError(e);
           done();

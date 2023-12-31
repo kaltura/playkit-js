@@ -1,5 +1,5 @@
 import MediaSourceProvider from '../../../../../src/engines/html5/media-source/media-source-provider';
-import {Adapter1, Adapter2, Adapter3, FakeDashAdapter, FakeHlsAdapter, FakeNativeAdapter} from './adapters/test-adapters/test-adapters';
+import { Adapter1, Adapter2, Adapter3, FakeDashAdapter, FakeHlsAdapter, FakeNativeAdapter } from './adapters/test-adapters/test-adapters';
 
 let video = document.createElement('video');
 let oldMediaSourceAdapters = MediaSourceProvider._mediaSourceAdapters;
@@ -112,49 +112,49 @@ describe('mediaSourceProvider:canPlaySource', () => {
   });
 
   it('should can play source with type mimeType1', () => {
-    MediaSourceProvider.canPlaySource({mimetype: 'mimeType1'}, true, {}).should.be.true;
+    MediaSourceProvider.canPlaySource({ mimetype: 'mimeType1' }, true, {}).should.be.true;
     MediaSourceProvider._selectedAdapter.id.should.equal('Adapter1');
   });
 
   it('should can play source with type mimeType1 and drm scheme s1', () => {
-    MediaSourceProvider.canPlaySource({mimetype: 'mimeType1', drmData: [{scheme: 's1'}]}, true, {}).should.be.true;
+    MediaSourceProvider.canPlaySource({ mimetype: 'mimeType1', drmData: [{ scheme: 's1' }] }, true, {}).should.be.true;
     MediaSourceProvider._selectedAdapter.id.should.equal('Adapter1');
   });
 
   it('should can play source with type mimeType2', () => {
-    MediaSourceProvider.canPlaySource({mimetype: 'mimeType2'}, true, {}).should.be.true;
+    MediaSourceProvider.canPlaySource({ mimetype: 'mimeType2' }, true, {}).should.be.true;
     MediaSourceProvider._selectedAdapter.id.should.equal('Adapter2');
   });
 
   it('should can play source with type video/mp4', () => {
-    MediaSourceProvider.canPlaySource({mimetype: 'video/mp4'}, true, {}).should.be.true;
+    MediaSourceProvider.canPlaySource({ mimetype: 'video/mp4' }, true, {}).should.be.true;
     MediaSourceProvider._selectedAdapter.id.should.equal('Adapter3');
   });
 
   it('should can play source with type video/mp4 and drm scheme s3', () => {
-    MediaSourceProvider.canPlaySource({mimetype: 'video/mp4', drmData: [{scheme: 's3'}]}, true, {}).should.be.true;
+    MediaSourceProvider.canPlaySource({ mimetype: 'video/mp4', drmData: [{ scheme: 's3' }] }, true, {}).should.be.true;
     MediaSourceProvider._selectedAdapter.id.should.equal('Adapter3');
   });
 
   it('should can play source with type mimeType1 and drm scheme s3 by drm config', () => {
-    MediaSourceProvider.canPlaySource({mimetype: 'mimeType1', drmData: [{scheme: 's3'}]}, true, {keySystem: 's1'}).should.be.true;
+    MediaSourceProvider.canPlaySource({ mimetype: 'mimeType1', drmData: [{ scheme: 's3' }] }, true, { keySystem: 's1' }).should.be.true;
     MediaSourceProvider._selectedAdapter.id.should.equal('Adapter1');
   });
 
   it('should can play source with type video/mp4 and drm scheme s1 by drm config', () => {
-    MediaSourceProvider.canPlaySource({mimetype: 'video/mp4', drmData: [{scheme: 's1'}]}, true, {keySystem: 's3'}).should.be.true;
+    MediaSourceProvider.canPlaySource({ mimetype: 'video/mp4', drmData: [{ scheme: 's1' }] }, true, { keySystem: 's3' }).should.be.true;
     MediaSourceProvider._selectedAdapter.id.should.equal('Adapter3');
   });
 
   it('should cannot play source with valid mime type and not valid drm scheme', () => {
-    MediaSourceProvider.canPlaySource({mimetype: 'mimeType0', drmData: [{scheme: 's4'}]}, true, {}).should.be.false;
-    MediaSourceProvider.canPlaySource({mimetype: 'mimeType1', drmData: [{scheme: 's4'}]}, true, {}).should.be.false;
-    MediaSourceProvider.canPlaySource({mimetype: 'mimeType2', drmData: [{scheme: 's4'}]}, true, {}).should.be.false;
-    MediaSourceProvider.canPlaySource({mimetype: 'video/mp4', drmData: [{scheme: 's4'}]}, true, {}).should.be.false;
+    MediaSourceProvider.canPlaySource({ mimetype: 'mimeType0', drmData: [{ scheme: 's4' }] }, true, {}).should.be.false;
+    MediaSourceProvider.canPlaySource({ mimetype: 'mimeType1', drmData: [{ scheme: 's4' }] }, true, {}).should.be.false;
+    MediaSourceProvider.canPlaySource({ mimetype: 'mimeType2', drmData: [{ scheme: 's4' }] }, true, {}).should.be.false;
+    MediaSourceProvider.canPlaySource({ mimetype: 'video/mp4', drmData: [{ scheme: 's4' }] }, true, {}).should.be.false;
   });
 
   it('should cannot play source with unknown mime type', () => {
-    MediaSourceProvider.canPlaySource({mimetype: 'unknownType'}, true, {}).should.be.false;
+    MediaSourceProvider.canPlaySource({ mimetype: 'unknownType' }, true, {}).should.be.false;
   });
 
   it('should cannot play source with no source', () => {
@@ -186,22 +186,22 @@ describe('mediaSourceProvider:getMediaSourceAdapter', () => {
   });
 
   it('should provide Adapter1', () => {
-    let adapter = MediaSourceProvider.getMediaSourceAdapter(video, {mimetype: 'mimeType1', url: 'url1'}, {});
+    let adapter = MediaSourceProvider.getMediaSourceAdapter(video, { mimetype: 'mimeType1', url: 'url1' }, {});
     adapter.constructor.id.should.equal('Adapter1');
   });
 
   it('should provide Adapter2', () => {
-    let adapter = MediaSourceProvider.getMediaSourceAdapter(video, {mimetype: 'mimeType2', url: 'url3'}, {});
+    let adapter = MediaSourceProvider.getMediaSourceAdapter(video, { mimetype: 'mimeType2', url: 'url3' }, {});
     adapter.constructor.id.should.equal('Adapter2');
   });
 
   it('should provide Adapter3', () => {
-    let adapter = MediaSourceProvider.getMediaSourceAdapter(video, {mimetype: 'video/mp4', url: 'url3'}, {});
+    let adapter = MediaSourceProvider.getMediaSourceAdapter(video, { mimetype: 'video/mp4', url: 'url3' }, {});
     adapter.constructor.id.should.equal('Adapter3');
   });
 
   it('should provide null for unknown mime type', () => {
-    let adapter = MediaSourceProvider.getMediaSourceAdapter(video, {mimetype: 'unknownType'}, {});
+    let adapter = MediaSourceProvider.getMediaSourceAdapter(video, { mimetype: 'unknownType' }, {});
     (adapter === null).should.be.true;
   });
 
@@ -211,7 +211,7 @@ describe('mediaSourceProvider:getMediaSourceAdapter', () => {
   });
 
   it('should provide null for no videoElement param', () => {
-    let adapter = MediaSourceProvider.getMediaSourceAdapter(undefined, {mimetype: 'mimeType1', src: 'url1'}, {});
+    let adapter = MediaSourceProvider.getMediaSourceAdapter(undefined, { mimetype: 'mimeType1', src: 'url1' }, {});
     (adapter === null).should.be.true;
   });
 
@@ -221,7 +221,10 @@ describe('mediaSourceProvider:getMediaSourceAdapter', () => {
   });
 
   it('should provide null for no config param', () => {
-    let adapter = MediaSourceProvider.getMediaSourceAdapter(video, {mimetype: 'mimeType1', src: 'url1'});
+    let adapter = MediaSourceProvider.getMediaSourceAdapter(video, {
+      mimetype: 'mimeType1',
+      src: 'url1'
+    });
     (adapter === null).should.be.true;
   });
 });

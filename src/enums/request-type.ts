@@ -1,4 +1,4 @@
-import {PKRequestType} from '../types';
+import { PKRequestType } from '../types';
 
 const RequestType: PKRequestType = {
   MANIFEST: 0,
@@ -6,4 +6,4 @@ const RequestType: PKRequestType = {
   LICENSE: 2
 };
 
-export {RequestType};
+export { RequestType };

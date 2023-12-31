@@ -139,4 +139,4 @@ if (typeof window !== 'undefined' && window.VTTRegion) {
   Region = VTTRegion;
 }
 
-export {Region};
+export { Region };

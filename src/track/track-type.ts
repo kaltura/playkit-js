@@ -5,4 +5,4 @@ export const TrackType = {
   IMAGE: 'image'
 } as const;
 
-export type TrackTypes = 'video' | 'audio' | 'text' | 'image'
+export type TrackTypes = 'video' | 'audio' | 'text' | 'image';

@@ -1,8 +1,8 @@
 import * as Utils from '../../../utils/util';
-import {Html5EventType} from '../../../event/event-type';
+import { Html5EventType } from '../../../event/event-type';
 import getLogger from '../../../utils/logger';
 import EncodingSources from '../../../assets/encoding-sources.json';
-import {CapabilityResult, ICapability} from '../../../types/interfaces/engine-capabilty';
+import { CapabilityResult, ICapability } from '../../../types/interfaces/engine-capabilty';
 
 const WAIT_TIME: number = 500;
 
@@ -33,15 +33,15 @@ const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
       // For iOS devices needs to turn the playsinline attribute on
       Html5AutoPlayCapability._vid.setAttribute('playsinline', '');
     }
-    Html5AutoPlayCapability._playPromiseResult = new Promise(resolve => {
+    Html5AutoPlayCapability._playPromiseResult = new Promise((resolve) => {
       Html5AutoPlayCapability._setMuted(false);
       Html5AutoPlayCapability._getPlayPromise()
-        .then(() => resolve({autoplay: true, mutedAutoPlay: true}))
+        .then(() => resolve({ autoplay: true, mutedAutoPlay: true }))
         .catch(() => {
           Html5AutoPlayCapability._setMuted(true);
           Html5AutoPlayCapability._getPlayPromise()
-            .then(() => resolve({autoplay: false, mutedAutoPlay: true}))
-            .catch(() => resolve({autoplay: false, mutedAutoPlay: false}));
+            .then(() => resolve({ autoplay: false, mutedAutoPlay: true }))
+            .catch(() => resolve({ autoplay: false, mutedAutoPlay: false }));
         });
     });
   }
@@ -53,7 +53,7 @@ const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
    * @public
    */
   public static getCapability(): Promise<CapabilityResult> {
-    return Html5AutoPlayCapability._playPromiseResult.then(playCapability => {
+    return Html5AutoPlayCapability._playPromiseResult.then((playCapability) => {
       let fallbackPlayCapabilityTest;
       if (playCapability.autoplay) {
         fallbackPlayCapabilityTest = Promise.resolve(playCapability);
@@ -62,7 +62,7 @@ const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
         Html5AutoPlayCapability.runCapability();
         fallbackPlayCapabilityTest = Html5AutoPlayCapability._playPromiseResult;
       }
-      return fallbackPlayCapabilityTest.then(fallbackPlayCapability =>
+      return fallbackPlayCapabilityTest.then((fallbackPlayCapability) =>
         Utils.Object.mergeDeep(fallbackPlayCapability, Html5AutoPlayCapability._capabilities)
       );
     });
@@ -75,9 +75,9 @@ const Html5AutoPlayCapability: ICapability = class Html5AutoPlayCapability {
    * @public
    * @static
    */
-  public static setCapabilities(capabilities: {[name: string]: any}): void {
+  public static setCapabilities(capabilities: { [name: string]: any }): void {
     Html5AutoPlayCapability._logger.debug('Set player capabilities', capabilities);
-    const {autoplay, mutedAutoPlay} = capabilities;
+    const { autoplay, mutedAutoPlay } = capabilities;
     if (typeof autoplay === 'boolean') {
       Html5AutoPlayCapability._capabilities.autoplay = autoplay;
     }

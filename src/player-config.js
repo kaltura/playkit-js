@@ -1,4 +1,4 @@
-import {ScreenOrientationType} from './enums/screen-orientation-type';
+import { ScreenOrientationType } from './enums/screen-orientation-type';
 
 const DefaultConfig = {
   log: {
@@ -89,4 +89,4 @@ const DefaultSources = {
   metadata: {}
 };
 
-export {DefaultConfig, DefaultSources};
+export { DefaultConfig, DefaultSources };

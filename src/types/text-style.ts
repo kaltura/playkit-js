@@ -12,12 +12,12 @@ export type FontScaleOptions = -2 | -1 | 0 | 2 | 3 | 4;
  * @property {number} backgroundOpacity=1
  */
 export type PKTextStyleObject = {
-  fontSize: FontSizeOptions,
-  fontScale: FontScaleOptions,
-  fontFamily: string,
-  fontColor: [number, number, number],
-  fontOpacity: number,
-  fontEdge: Array<[number, number, number, number, number, number]>,
-  backgroundColor: [number, number, number],
-  backgroundOpacity: number
+  fontSize: FontSizeOptions;
+  fontScale: FontScaleOptions;
+  fontFamily: string;
+  fontColor: [number, number, number];
+  fontOpacity: number;
+  fontEdge: Array<[number, number, number, number, number, number]>;
+  backgroundColor: [number, number, number];
+  backgroundOpacity: number;
 };

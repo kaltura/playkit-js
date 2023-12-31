@@ -4,4 +4,4 @@ const LabelOptions = {
   QUALITIES: 'qualities'
 };
 
-export {LabelOptions};
+export { LabelOptions };

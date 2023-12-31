@@ -1,4 +1,4 @@
-import {PKOrientationType} from '../types';
+import { PKOrientationType } from '../types';
 
 const ScreenOrientationType: PKOrientationType = {
   NONE: 'none',
@@ -12,4 +12,4 @@ const ScreenOrientationType: PKOrientationType = {
   LANDSCAPE_SECONDARY: 'landscape-secondary'
 };
 
-export {ScreenOrientationType};
+export { ScreenOrientationType };

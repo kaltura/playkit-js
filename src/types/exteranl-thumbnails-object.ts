@@ -1,3 +1,3 @@
 export type PKExternalThumbnailsConfig = {
-  vttUrl: string
+  vttUrl: string;
 };

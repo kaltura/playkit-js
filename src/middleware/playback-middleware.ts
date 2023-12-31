@@ -9,7 +9,7 @@ export default class PlaybackMiddleware {
    * The actions of the playback middleware.
    * @static
    */
-  public static Actions: {[action: string]: string} = {
+  public static Actions: { [action: string]: string } = {
     LOAD: 'load',
     PLAY: 'play',
     PAUSE: 'pause',
