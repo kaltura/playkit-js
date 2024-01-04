@@ -2247,7 +2247,10 @@ export default class Player extends FakeEventTarget {
       if (!this._firstPlay) {
         return outOfDvr;
       } else {
-        return !!this.src && !this.isOnLiveEdge();
+        return !!this.src && !this.isOnLiveEdge()
+            // Live video can be set with explicit start time,(e.g. startOver)
+            // in that case we don't want to move to the liveEdge
+            && this._sources.startTime === undefined;
       }
     }
     return false;
