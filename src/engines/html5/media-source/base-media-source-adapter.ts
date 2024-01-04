@@ -224,6 +224,10 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   }
 
   public isOnLiveEdge(): boolean {
+    if(this.getSegmentDuration()===0){
+      //If no segment duration, we cannot estimate live edge
+      return true;
+    }
     return this.liveDuration - this._videoElement.currentTime <= this.getSegmentDuration() * CURRENT_OR_NEXT_SEGMENT_COUNT;
   }
   // eslint-disable-next-line

@@ -122,8 +122,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
 
   private _waitingEventTriggered: boolean = false;
 
-  private _wasCurrentTimeSetSuccessfully!: boolean;
-
   private _segmentDuration: number = 0;
 
   private _startTimeOfDvrWindowInterval: number | undefined;
@@ -337,7 +335,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    * @returns {Promise<Object>} - The loaded data
    */
   public load(startTime?: number): Promise<{tracks: Track[]}> {
-    this._wasCurrentTimeSetSuccessfully = false;
     this._maybeSetDrmPlayback();
     if (!this._loadPromise) {
       this._loadPromise = new Promise<{tracks: Track[]}>((resolve, reject) => {
@@ -541,9 +538,11 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         this._handleLiveDurationChange();
       }
     };
-    if (!this.isLive()) {
-      this._setStartTime(startTime);
+
+    if (startTime !== undefined && startTime > -1) {
+      this._videoElement.currentTime = startTime;
     }
+
     if (this._videoElement.textTracks.length > 0) {
       parseTracksAndResolve();
     } else {
@@ -556,7 +555,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (typeof startTime === 'number' && startTime > -1) {
       this._videoElement.currentTime = startTime;
     }
-    this._wasCurrentTimeSetSuccessfully = true;
   }
 
   private _onTimeUpdate(): void {
@@ -1265,10 +1263,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
    */
   public isLive(): boolean {
     return this._videoElement.duration === Infinity;
-  }
-
-  public isOnLiveEdge(): boolean {
-    return this._wasCurrentTimeSetSuccessfully ? super.isOnLiveEdge() : false;
   }
 
   /**
