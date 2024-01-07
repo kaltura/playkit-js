@@ -1,6 +1,6 @@
 import { FakeEvent } from '../event/fake-event';
 import { FakeEventTarget } from '../event/fake-event-target';
-import {CustomEventType} from '../event/event-type';
+import { CustomEventType } from '../event/event-type';
 
 /**
  * A Factory class to create a resize observer for the player.
@@ -31,16 +31,16 @@ class ResizeWatcher extends FakeEventTarget {
    * @returns {void}
    */
   public init(el: HTMLElement): void {
-    if (this._observer) return
+    if (this._observer) return;
     this._el = el;
-    ResizeObserver ? this._createNativeObserver() : this._createIframeObserver();
+    window.ResizeObserver ? this._createNativeObserver() : this._createIframeObserver();
     if (this._el instanceof HTMLElement && this._observer) {
       (this._observer as ResizeObserver | IFrameObserver).observe(this._el);
     }
   }
 
   private _createNativeObserver(): void {
-    this._observer = new ResizeObserver(entries => {
+    this._observer = new ResizeObserver((entries) => {
       entries.forEach(() => {
         this._triggerResize();
       });
@@ -65,7 +65,7 @@ const IFRAME_CLASS_NAME: string = 'playkit-size-iframe';
  * @param {Function} callback - the function to be called when a resize event is detected.
  */
 class IFrameObserver {
-  private _observersStore: {[id: number]: HTMLIFrameElement} = {};
+  private _observersStore: { [id: number]: HTMLIFrameElement } = {};
   private _onChangeCallback: () => void;
 
   constructor(callback: () => void) {
@@ -112,4 +112,4 @@ class IFrameObserver {
   }
 }
 
-export {ResizeWatcher};
+export { ResizeWatcher };

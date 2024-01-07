@@ -95,7 +95,7 @@ function getActiveCues(textTrackCueList: TextTrackCueList): Array<VTTCue> {
     //Normalize cues to be of type of VTT model
     // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    if ((VTTCue && cue instanceof VTTCue) || (DataCue && cue instanceof window.DataCue)) {
+    if ((VTTCue && cue instanceof VTTCue) || (window.DataCue && cue instanceof window.DataCue)) {
       normalizedCues.push(cue);
     } else if (TextTrackCue && cue instanceof TextTrackCue) {
       try {
@@ -110,4 +110,4 @@ function getActiveCues(textTrackCueList: TextTrackCueList): Array<VTTCue> {
   return normalizedCues;
 }
 
-export {getActiveCues , TextTrack as PKTextTrack};
+export { getActiveCues, TextTrack as PKTextTrack };
