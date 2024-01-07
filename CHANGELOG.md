@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.2 (2024-01-07)
+
+
+### Bug Fixes
+
+* **SUP-39894:** fix bug in seekToLiveEdge ([#747](https://github.com/kaltura/playkit-js/issues/747)) ([3af100c](https://github.com/kaltura/playkit-js/commit/3af100c94381895f7f176899f415ffcc8b219c2f))
+
 ### 0.84.1 (2023-12-07)
 
 
