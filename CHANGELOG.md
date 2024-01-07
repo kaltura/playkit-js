@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.3 (2024-01-07)
+
+
+### Bug Fixes
+
+* restore window object where needed ([22c594e](https://github.com/kaltura/playkit-js/commit/22c594e4107a228a852ff1657211177181f90a4c))
+
 ### 0.84.2 (2024-01-07)
 
 
