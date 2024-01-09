@@ -608,17 +608,6 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   * Disable native picture-in-picture for Firefox browser.
-   * @returns {void}
-   * @public
-   */
-  public disableNativePiPInFF(): void {
-    if (Env.browser.name === 'Firefox') {
-      this._el.setAttribute('disablePictureInPicture', 'true');
-    }
-  }
-
-  /**
    * Gets the view of the player (i.e the dom container object).
    * @return {HTMLElement} - The dom container.
    * @public
