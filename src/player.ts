@@ -608,6 +608,17 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
+   * Disable native picture-in-picture for Firefox browser.
+   * @returns {void}
+   * @public
+   */
+  public disableNativePiPInFF(): void {
+    if (Env.browser.name === 'Firefox') {
+      this._el.setAttribute('disablePictureInPicture', 'true');
+    }
+  }
+
+  /**
    * Gets the view of the player (i.e the dom container object).
    * @return {HTMLElement} - The dom container.
    * @public
@@ -1792,6 +1803,9 @@ export default class Player extends FakeEventTarget {
       Utils.Dom.prependTo(engineEl, this._el);
       if (this._engine.id === 'youtube') {
         this._el.style.zIndex = '1';
+      } else if (this._el.style.zIndex) {
+        // in case the engine is not yt, need to remove the z-index value if exists
+        this._el.style.zIndex = '';
       }
     }
   }
