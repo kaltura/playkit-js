@@ -539,7 +539,6 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     if (startTime !== undefined && startTime > -1) {
       this._videoElement.currentTime = startTime;
     }
-    
     if (this._videoElement.textTracks.length > 0) {
       parseTracksAndResolve();
     } else {
