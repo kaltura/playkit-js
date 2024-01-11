@@ -17,15 +17,13 @@ jobs:
           node-version: "20.x"
 
       - name: Update NPM Tag
-        env:
-          PLAYER_CENTRAL_ACCOUNT_ID: ${{ secrets.PLAYER_CENTRAL_ACCOUNT_ID }}
-          PLAYER_SERVICES_ACCOUNT_ID: ${{ secrets.PLAYER_SERVICES_ACCOUNT_ID }}
-          PLAYER_S3_BUCKET_DEPLOYMENT: ${{ secrets.PLAYER_S3_BUCKET_DEPLOYMENT }}
-          PLAYER_S3_BUCKET_APPS: ${{ secrets.PLAYER_S3_BUCKET_APPS }}
-          PLAYER_NPM_TOKEN: ${{ secrets.PLAYER_NPM_TOKEN }}
-          PLAYER_LAMBDA_NAME: ${{ secrets.PLAYER_LAMBDA_NAME }}
-          PLAYER_MSTEAMS_WEBHOOK: ${{ secrets.PLAYER_MSTEAMS_WEBHOOK }}
-          PLAYER_GITHUB_BOT_TOKEN: ${{ secrets.PLAYER_GITHUB_BOT_TOKEN }}
         run: |
+          npm set registry "https://registry.npmjs.org"
+          echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > .npmrc
           npm dist-tag add @playkit-js/playkit-js@0.84.2-canary.0-2fe7e02 patch
+          rm -rf .npmrc
+        env:
+           NPM_AUTH_TOKEN: ${{ secrets.PLAYER_NPM_TOKEN }}
+           NPM_TOKEN: ${{ secrets.PLAYER_NPM_TOKEN }}
+           NODE_AUTH_TOKEN: ${{ secrets.PLAYER_NPM_TOKEN }}
 
