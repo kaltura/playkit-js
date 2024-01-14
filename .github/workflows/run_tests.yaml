@@ -6,7 +6,8 @@ on:
   pull_request:
     branches:
       - "*"
-
+    paths-ignore:
+      - '.github/workflows/**'
 jobs:
   build:
     uses: kaltura/ovp-pipelines-pub/.github/workflows/player_tests.yaml@master

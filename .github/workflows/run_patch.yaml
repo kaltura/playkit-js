@@ -1,0 +1,74 @@
+name: Create patch version
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update-tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20.x"
+
+      - name: Update NPM Tag
+        run: |
+          npm set registry "https://registry.npmjs.org"
+          echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > .npmrc
+          npm dist-tag add @playkit-js/kaltura-player-js@3.17.5-canary.0-21f182c patch
+          rm -rf .npmrc
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.PLAYER_NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.PLAYER_NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.PLAYER_NPM_TOKEN }}
+
+#name: Patch
+#
+#on:
+#  workflow_dispatch:
+#    inputs:
+#      npmTag:
+#        description: 'Select NPM Tag'
+#        required: true
+#        type: choice
+#        options:
+#          - experimental
+#          - patch
+#        default: 'patch'
+#
+#jobs:
+#  update-tag:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v3
+#
+#      - name: Setup Node.js
+#        uses: actions/setup-node@v3
+#        with:
+#          node-version: "20.x"
+#          registry-url: 'https://registry.npmjs.org/'
+#
+#      - name: Install Dependencies
+#        run: yarn install
+#
+#      - name: Build Project
+#        run: yarn build
+#
+#      - name: Publish to NPM
+#        run: |
+#          echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > .npmrc
+#          npm version patch
+#          npm publish --tag ${{ github.event.inputs.npmTag }}
+#          rm -rf .npmrc
+#        env:
+#           NPM_AUTH_TOKEN: ${{ secrets.PLAYER_NPM_TOKEN }}
+#           NPM_TOKEN: ${{ secrets.PLAYER_NPM_TOKEN }}
+#           NODE_AUTH_TOKEN: ${{ secrets.PLAYER_NPM_TOKEN }}
+#
