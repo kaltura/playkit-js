@@ -20,7 +20,7 @@ jobs:
         run: |
           npm set registry "https://registry.npmjs.org"
           echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > .npmrc
-          npm dist-tag add @playkit-js/kaltura-player-js@3.17.5-canary.0-21f182c patch
+          npm dist-tag add @playkit-js/kaltura-player-js@3.17.8-canary.0-cb5ceab canary
           rm -rf .npmrc
         env:
           NPM_AUTH_TOKEN: ${{ secrets.PLAYER_NPM_TOKEN }}
