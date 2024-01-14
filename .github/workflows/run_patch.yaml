@@ -1,7 +1,16 @@
-name: Create patch version
+name: Patch
 
 on:
   workflow_dispatch:
+    inputs:
+      npmTag:
+        description: 'Select NPM Tag'
+        required: true
+        type: choice
+        options:
+          - experimental
+          - patch
+        default: 'patch'
 
 jobs:
   update-tag:
@@ -15,6 +24,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "20.x"
+          registry-url: 'https://registry.npmjs.org/'
 
       - name: Install Dependencies
         run: yarn install
@@ -24,10 +34,9 @@ jobs:
 
       - name: Publish to NPM
         run: |
-          npm set registry "https://registry.npmjs.org"
           echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > .npmrc
           npm version patch
-          npm publish --tag patch
+          npm publish --tag ${{ github.event.inputs.npmTag }}
           rm -rf .npmrc
         env:
            NPM_AUTH_TOKEN: ${{ secrets.PLAYER_NPM_TOKEN }}
