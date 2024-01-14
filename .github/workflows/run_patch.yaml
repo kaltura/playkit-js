@@ -11,6 +11,10 @@ on:
           - experimental
           - patch
         default: 'patch'
+      branch:
+        description: 'branch name'
+        required: true
+        default: 'patch-version'
 
 jobs:
   update-tag:
