@@ -39,7 +39,6 @@ jobs:
       - name: Publish to NPM
         run: |
           echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > .npmrc
-          npm version patch
           npm publish --tag ${{ github.event.inputs.npmTag }}
           rm -rf .npmrc
         env:
