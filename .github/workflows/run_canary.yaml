@@ -1,0 +1,27 @@
+## Canary CI/CD
+name: Canary
+run-name: Canary
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '.github/workflows/**'
+
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'branch name'
+        required: false
+        default: 'master'
+
+jobs:
+  canary:
+    if: ${{ github.actor != 'PlaykitJs-Bot' }}
+    uses: kaltura/playkit-js-common/.github/workflows/canary_dependency.yaml@master
+    secrets: inherit
+    with:
+      node-version: "20.x"
+      schema-type: "playerV3Versions"
+      tests-yarn-run-to-execute: 'build lint type-check test'
