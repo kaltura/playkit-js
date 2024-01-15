@@ -3,5 +3,6 @@ export const MediaType = {
   LIVE: 'Live',
   AUDIO: 'Audio',
   IMAGE: 'Image',
+  DOCUMENT: 'Doc',
   UNKNOWN: 'Unknown'
 } as const;
