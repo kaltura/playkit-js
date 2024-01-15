@@ -456,7 +456,42 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
     requestFilterPromise = requestFilterPromise || Promise.resolve(pkRequest);
     requestFilterPromise
       .then(updatedRequest => {
-        this._videoElement.src = updatedRequest.url;
+        if (this._config.useSourceTag) {
+          const source = document.createElement('source');
+          const mimetype = this._sourceObj?.mimetype.toLowerCase() || '';
+
+          source.setAttribute('src', updatedRequest.url);
+          source.setAttribute('type', mimetype);
+
+          if (this._config.useMediaOptionAttribute) {
+            let options = {};
+            // https://webostv.developer.lge.com/develop/guides/mediaoption-parameter
+            if (this._config.mediaOptionAttribute) {
+              /**
+               * Undocumented option.
+               * Usage example:
+               * var video = document.querySelector('video');
+               * video.addEventListener("umsmediainfo", function(e) {
+               *     console.log(JSON.parse(e.detail));
+               * });
+               * {
+               *   useUMSMediaInfo: true
+               * }
+               **/
+              options = this._config.mediaOptionAttribute;
+            }
+            if (this._config.abrEwmaDefaultEstimate) {
+              const bps = {start: this._config.abrEwmaDefaultEstimate};
+              Utils.Object.createPropertyPath(options, 'option.adaptiveStreaming.bps', bps);
+            }
+            NativeAdapter._logger.debug('Setting mediaOption -', options);
+            const mediaOption = encodeURI(JSON.stringify(options));
+            source.setAttribute('type', mimetype + ';mediaOption=' + mediaOption);
+          }
+          this._videoElement.appendChild(source);
+        } else {
+          this._videoElement.src = updatedRequest.url;
+        }
       })
       .catch(error => {
         this._trigger(Html5EventType.ERROR, new Error(Error.Severity.CRITICAL, Error.Category.NETWORK, Error.Code.REQUEST_FILTER_ERROR, error));
@@ -586,6 +621,8 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
   destroy(): Promise<*> {
     NativeAdapter._logger.debug('destroy');
     return new Promise((resolve, reject) => {
+      //must be called before super config cause it requires config which is reset in super destroy
+      this._maybeRemoveSourceTag();
       super.destroy().then(
         () => {
           this._drmHandler && this._drmHandler.destroy();
@@ -609,6 +646,23 @@ export default class NativeAdapter extends BaseMediaSourceAdapter {
         () => reject
       );
     });
+  }
+
+  /**
+   * remove source tag
+   * @function _maybeRemoveSourceTag
+   * @returns {void}
+   * @private
+   */
+  _maybeRemoveSourceTag(): void {
+    if (this._config.useSourceTag && this._videoElement) {
+      const source = this._videoElement.firstChild;
+      if (source) {
+        Utils.Dom.setAttribute(source, 'src', '');
+        Utils.Dom.removeAttribute(source, 'src');
+        Utils.Dom.removeChild(this._videoElement, source);
+      }
+    }
   }
 
   /**
