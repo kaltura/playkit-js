@@ -221,7 +221,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   }
 
   isOnLiveEdge(): boolean {
-    if(this.getSegmentDuration()===0){
+    if (this.getSegmentDuration()===0) {
       //If no segment duration, we cannot estimate live edge
       return true;
     }
