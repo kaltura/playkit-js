@@ -3,5 +3,5 @@ export const StreamType = {
   HLS: 'hls',
   PROGRESSIVE: 'progressive',
   IMAGE: 'image',
-  DOCUMENT: 'doc'
+  DOCUMENT: 'document'
 } as const;

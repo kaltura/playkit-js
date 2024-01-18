@@ -5,5 +5,5 @@ export const EngineType = {
   CAST: 'cast',
   YOUTUBE: 'youtube',
   IMAGE: 'image',
-  DOCUMENT: 'doc'
+  DOCUMENT: 'document'
 } as const;
