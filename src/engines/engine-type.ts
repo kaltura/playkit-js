@@ -4,5 +4,6 @@ export const EngineType = {
   SILVERLIGHT: 'silverlight',
   CAST: 'cast',
   YOUTUBE: 'youtube',
-  IMAGE: 'image'
+  IMAGE: 'image',
+  DOCUMENT: 'document'
 } as const;

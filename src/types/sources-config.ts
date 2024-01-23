@@ -10,6 +10,7 @@ export type PKSourcesConfigObject = {
   dash: Array<PKMediaSourceObject>,
   progressive: Array<PKMediaSourceObject>,
   image: Array<PKMediaSourceObject>,
+  document: Array<PKMediaSourceObject>,
   captions?: Array<PKExternalCaptionObject>,
   thumbnails?: PKExternalThumbnailsConfig,
   options: PKMediaSourceOptionsObject,

@@ -2,5 +2,6 @@ export const StreamType = {
   DASH: 'dash',
   HLS: 'hls',
   PROGRESSIVE: 'progressive',
-  IMAGE: 'image'
+  IMAGE: 'image',
+  DOCUMENT: 'document'
 } as const;
