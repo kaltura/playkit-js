@@ -1792,6 +1792,9 @@ export default class Player extends FakeEventTarget {
       Utils.Dom.prependTo(engineEl, this._el);
       if (this._engine.id === 'youtube') {
         this._el.style.zIndex = '1';
+      } else if (this._el.style.zIndex) {
+        // in case the engine is not yt, need to remove the z-index value if exists
+        this._el.style.zIndex = '';
       }
     }
   }
