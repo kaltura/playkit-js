@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
 const packageData = require('./package.json');
-const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (env, { mode }) => {
   return {
