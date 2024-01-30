@@ -11,24 +11,46 @@ export default class Track {
    * @param {boolean} equal - Optional flag to check for matching languages.
    * @returns {boolean} - Whether the strings are equal or starts with the same substring.
    */
-  public static langComparer(inputLang: string, trackLang: string, additionalLanguage?: string, equal?: boolean): boolean {
+  public static langComparer(inputLang: string, trackLang: string, additionalLanguage?: string | string [], equal?: boolean): boolean {
     try {
-      inputLang = inputLang.toLowerCase();
-      trackLang = trackLang.toLowerCase();
-      additionalLanguage ? (additionalLanguage = additionalLanguage.toLowerCase()) : additionalLanguage;
-      if (equal) {
-        if (inputLang === trackLang) {
-          return true;
-        } else if (additionalLanguage === trackLang) {
-          return true;
-        } else return false;
-      } else {
-        return inputLang ? inputLang.startsWith(trackLang) || trackLang.startsWith(inputLang) : false;
+      //merge arrays
+      let languages;
+      if(Array.isArray(additionalLanguage)) {
+        languages = [inputLang, ...additionalLanguage];
       }
+      else {
+        languages = [inputLang, additionalLanguage];
+      }
+      return Track._langComparer(languages,trackLang, equal);
     } catch (e) {
       return false;
     }
   }
+
+  private static _langComparer(inputLanguages: [string, (string | undefined)], trackLang: string, equal?: boolean): boolean {
+    //first check is there is a complete match
+    for(const language of inputLanguages) {
+      if(language?.trim() !== "") {
+        if (equal) {
+          if(this._isLangEqual(language, trackLang))
+            return true;
+        }
+        else if(this._isLangPrefixEqual(language, trackLang)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  private static _isLangEqual(src,dst) : boolean {
+    return src.toLowerCase() === dst.toLowerCase();
+  }
+  private static _isLangPrefixEqual(src,dst) : boolean {
+    return src.toLowerCase().startsWith(dst.toLowerCase()) || dst.toLowerCase().startsWith(src.toLowerCase());
+  }
+
+
 
   public static clone<T>(track: any): T {
     return (Object.assign(Object.create(Object.getPrototypeOf(track)), track) as T);

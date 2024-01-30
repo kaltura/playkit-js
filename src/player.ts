@@ -2636,7 +2636,7 @@ export default class Player extends FakeEventTarget {
    * @private
    * @returns {string} - The track language to set by default.
    */
-  private _getLanguage<T extends PKTextTrack | AudioTrack>(tracks: T[], configuredLanguage: string, defaultTrack?: T): string {
+  private _getLanguage<T extends PKTextTrack | AudioTrack>(tracks: T[], configuredLanguage: string | string [], defaultTrack?: T): string {
     let language = configuredLanguage;
     if (language === AUTO) {
       const localeTrack: T | undefined = tracks.find(track => Track.langComparer(Locale.language, track.language));
@@ -2665,7 +2665,7 @@ export default class Player extends FakeEventTarget {
     tracks: T[],
     language: string,
     defaultTrack?: Track | null,
-    additionalLanguage?: string
+    additionalLanguage?: string | string []
   ): void {
     const updateTrack = (track: T): void => {
       this.selectTrack(track);
