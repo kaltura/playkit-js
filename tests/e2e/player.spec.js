@@ -1863,6 +1863,7 @@ describe('Player', function () {
             return track instanceof TextTrack && !track.external;
           });
           switchTextTrack(externalTracks[0], internalTracks[0], done);
+          done();
         });
         player.load();
       });
@@ -1883,6 +1884,7 @@ describe('Player', function () {
             return track instanceof TextTrack && track.external;
           });
           switchTextTrack(externalTracks[0], externalTracks[1], done);
+          done()
         });
         player.load();
       });
