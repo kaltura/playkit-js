@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.5 (2024-02-04)
+
+
+### Bug Fixes
+
+* **FEC-13669:** Aligning all repos with the latest kaltura-browserslist-config to eliminate different browser target among repos ([59be063](https://github.com/kaltura/playkit-js/commit/59be0631edcc70842f8d9c6efa5751d14697574e))
+
 ### 0.84.4 (2024-01-18)
 
 ### 0.84.3 (2024-01-07)
