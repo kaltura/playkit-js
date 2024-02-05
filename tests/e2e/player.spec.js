@@ -1807,6 +1807,7 @@ describe('Player', function () {
           player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, tracksChangeToTrack2);
           checkTrack(track1, event.payload.selectedTextTrack);
           player.selectTrack(track2);
+          done()
         } catch (e) {
           done(e);
         }
