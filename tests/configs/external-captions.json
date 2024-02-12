@@ -1,15 +1,22 @@
 {
   "He": {
-    "url": "http://externaltests.dev.kaltura.com/player/library_Player_V3/Captions/Caption_files_VTT/hebrew.vtt",
+    "url": "/base/tests/assets/heb.vtt",
     "label": "Heb",
     "language": "he",
     "type": "vtt",
     "default": false
   },
   "Ru": {
-    "url": "http://externaltests.dev.kaltura.com/player/library_Player_V3/Captions/Caption_files_VTT/hebrew.vtt",
+    "url": "/base/tests/assets/rus.vtt",
     "label": "Rus",
     "language": "ru",
+    "type": "vtt",
+    "default": false
+  },
+  "En": {
+    "url": "/base/tests/assets/en.vtt",
+    "label": "Eng",
+    "language": "En",
     "type": "vtt",
     "default": false
   }

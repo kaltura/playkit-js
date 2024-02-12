@@ -2665,7 +2665,7 @@ export default class Player extends FakeEventTarget {
     tracks: T[],
     language: string,
     defaultTrack?: Track | null,
-    additionalLanguage?: string
+    additionalLanguage?: string | string []
   ): void {
     const updateTrack = (track: T): void => {
       this.selectTrack(track);

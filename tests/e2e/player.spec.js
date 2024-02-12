@@ -1807,6 +1807,7 @@ describe('Player', function () {
           player.addEventListener(CustomEventType.TEXT_TRACK_CHANGED, tracksChangeToTrack2);
           checkTrack(track1, event.payload.selectedTextTrack);
           player.selectTrack(track2);
+          done()
         } catch (e) {
           done(e);
         }
@@ -1863,6 +1864,7 @@ describe('Player', function () {
             return track instanceof TextTrack && !track.external;
           });
           switchTextTrack(externalTracks[0], internalTracks[0], done);
+          done();
         });
         player.load();
       });
@@ -1883,6 +1885,7 @@ describe('Player', function () {
             return track instanceof TextTrack && track.external;
           });
           switchTextTrack(externalTracks[0], externalTracks[1], done);
+          done()
         });
         player.load();
       });
