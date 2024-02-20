@@ -24,5 +24,6 @@ export type PKSourcesConfigObject = {
   vr?: any,
   imageSourceOptions?: ImageSourceOptions,
   seekFrom?: number,
-  clipTo?: number
+  clipTo?: number,
+  mediaEntryType?: string
 };
