@@ -4,6 +4,7 @@ import {PKExternalThumbnailsConfig} from './exteranl-thumbnails-object';
 import {PKMediaSourceOptionsObject} from './media-source-options';
 import {PKMetadataConfigObject} from './metadata-config';
 import {ImageSourceOptions} from './image-player-options';
+import {PKMediaTypes} from "./media-types";
 
 export type PKSourcesConfigObject = {
   hls: Array<PKMediaSourceObject>,
@@ -24,5 +25,6 @@ export type PKSourcesConfigObject = {
   vr?: any,
   imageSourceOptions?: ImageSourceOptions,
   seekFrom?: number,
-  clipTo?: number
+  clipTo?: number,
+  mediaEntryType?: PKMediaTypes
 };
