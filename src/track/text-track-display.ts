@@ -212,7 +212,7 @@ function parseCue(input, cue, regionList) {
             settings.percent(k, v);
             break;
           case 'align':
-            settings.alt(k, v, ['start', 'center', 'end', 'left', 'right']);
+            settings.alt(k, v, ['center', 'left', 'right']);
             break;
         }
       },
@@ -641,7 +641,7 @@ class CueStyleBox extends StyleBox {
     // mirrors of them except "middle" which is "center" in CSS.
     this.div = window.document.createElement('div');
     styles = {
-      textAlign: cue.align === 'middle' ? 'center' : cue.align,
+      textAlign: styleOptions.textAlign,
       font: styleOptions.font,
       whiteSpace: 'pre-line',
       position: 'absolute'
@@ -661,19 +661,14 @@ class CueStyleBox extends StyleBox {
     // position of the cue box. The reference edge will be resolved later when
     // the box orientation styles are applied.
     let textPos = 0;
-    let align = cue.positionAlign || cue.align;
-    switch (align) {
-      case 'start':
+    switch (styleOptions.textAlign) {
       case 'left':
-      case 'line-left':
         textPos = cue.position;
         break;
       case 'center':
         textPos = cue.position - cue.size / 2;
         break;
-      case 'end':
       case 'right':
-      case 'line-right':
         textPos = cue.position - cue.size;
         break;
     }
@@ -982,7 +977,6 @@ function convertCueToDOMTree(window, cuetext) {
 }
 
 const FONT_SIZE_PERCENT = 0.058;
-const FONT_STYLE = 'sans-serif';
 const CUE_BACKGROUND_PADDING = '1.5%';
 
 // Runs the processing model over the cues and regions passed to it.
@@ -1033,6 +1027,7 @@ function processCues(window, cues, overlay, style) {
     fontSize = Math.round(dimensionSize * FONT_SIZE_PERCENT * 100) / 100;
   let styleOptions = {
     font: fontSize * fontScale * style.implicitFontScale + 'px ' + style.fontFamily,
+    textAlign: style.textAlign,
     color: TextStyle.toRGBA(style.fontColor, style.fontOpacity),
     backgroundColor: TextStyle.toRGBA(style.backgroundColor, style.backgroundOpacity),
     textShadow: style.getTextShadow()

@@ -36,7 +36,6 @@ var config = {
   text: {
     enableCEA708Captions: true,
     useNativeTextTrack: false,
-    forceCenter: false,
     captionsTextTrack1Label: 'English',
     captionsTextTrack1LanguageCode: 'en',
     captionsTextTrack2Label: 'Spanish',
@@ -544,7 +543,6 @@ var config = {
 > {
 >  useNativeTextTrack: boolean,
 >  enableCEA708Captions: boolean,
->  forceCenter: boolean,
 >  textTrackDisplaySetting: PKTextTrackDisplaySettingObject,
 >  textStyle: TextStyle,
 >  captionsTextTrack1Label: string,
@@ -560,7 +558,6 @@ var config = {
 > {
 >  useNativeTextTrack: false,
 >  enableCEA708Captions: true,
->  forceCenter: false,
 >  captionsTextTrack1Label: "English",
 >  captionsTextTrack1LanguageCode: "en",
 >  captionsTextTrack2Label: "Spanish",
@@ -592,16 +589,6 @@ var config = {
 >
 > ##
 >
-> > ### config.text.forceCenter
-> >
-> > ##### Type: `Object`
-> >
-> > ##### Default: `false`
-> >
-> > ##### Description: set the forceCenter to true will override the position, align and size in textTrackDisplaySetting
->
-> ##
->
 > > ### config.text.textTrackDisplaySetting
 > >
 > > ##### Type: `PKTextTrackDisplaySettingObject`
@@ -616,7 +603,6 @@ var config = {
 > {
 >   line: string | number, // [-16 .. 16]
 >   lineAlign: string, // ['start', 'center', 'end']
->   align: string, // ['start', 'center', 'end', 'left', 'right']
 >   position: number, //[0 .. 100]
 >   positionAlign: string, // ['line-left', 'center', 'line-right']
 >   snapToLines: boolean, // [true, false]
@@ -632,10 +618,6 @@ var config = {
 > > ##### lineAlign
 > >
 > > An alignment for the cue box’s line, one of start/center/end alignment
-> >
-> > ##### align
-> >
-> > An alignment for all lines of text within the cue box, in the dimension of the writing direction
 > >
 > > ##### snapToLines
 > >
@@ -678,6 +660,7 @@ var config = {
 > > ```js
 > > {
 > >   fontSize?: '50%' | '75%' | '100%' | '200%' | '300%' | '400%'
+> >   textAlign?: string, // ['center', 'left', 'right']
 > >   fontScale?: -2 | -1 | 0 | 2 | 3 | 4
 > >   fontFamily?: string, // font family available in browser
 > >   fontColor?: [number, number, number], // RGB
@@ -692,6 +675,10 @@ var config = {
 > >   backgroundOpacity?: number // [0.0 .. 1.0]
 > > }
 > > ```
+> >
+> > ##### textAlign
+> >
+> > An alignment for all lines of text within the cue box, in the dimension of the writing direction
 > >
 > > ##### fontSize
 > >

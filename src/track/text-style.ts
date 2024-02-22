@@ -6,7 +6,7 @@
  * font size.
  * @type {number}
  */
-import {FontScaleOptions, FontSizeOptions, PKTextStyleObject} from '../types';
+import { FontScaleOptions, FontSizeOptions, PKTextStyleObject, FontAlignmentOptions } from '../types';
 
 const IMPLICIT_SCALE_PERCENTAGE: number = 0.25;
 
@@ -131,6 +131,24 @@ class TextStyle {
   ];
 
   /**
+   * Possible font alignments are left, center, right
+   */
+  public static FontAlignment: { label: string; value: FontAlignmentOptions }[] = [
+    {
+      label: 'Left',
+      value: 'left'
+    },
+    {
+      label: 'Center',
+      value: 'center'
+    },
+    {
+      label: 'Right',
+      value: 'right'
+    }
+  ];
+
+  /**
    * Creates a CSS RGBA sctring for a given color and opacity values
    * @param {TextStyle.StandardColors} color - color value in RGB
    * @param {TextStyle.StandardOpacities} opacity - opacity value
@@ -149,6 +167,7 @@ class TextStyle {
     const textStyle = new TextStyle();
     textStyle.fontEdge = getValue(setting.fontEdge, textStyle.fontEdge);
     textStyle.fontSize = getValue(setting.fontSize, textStyle.fontSize);
+    textStyle.textAlign = getValue(setting.textAlign, textStyle.textAlign);
     textStyle.fontScale = getValue(setting.fontScale, textStyle.fontScale);
     textStyle.fontColor = getValue(setting.fontColor, textStyle.fontColor);
     textStyle.fontOpacity = getValue(setting.fontOpacity, textStyle.fontOpacity);
@@ -162,6 +181,7 @@ class TextStyle {
     return {
       fontEdge: text.fontEdge,
       fontSize: text.fontSize,
+      textAlign: text.textAlign,
       fontScale: text.fontScale,
       fontColor: text.fontColor,
       fontOpacity: text.fontOpacity,
@@ -179,6 +199,8 @@ class TextStyle {
       this._fontSizeIndex = index;
     }
   }
+
+  public textAlign: FontAlignmentOptions = TextStyle.FontAlignment[1].value;
 
   /**
    * Percentage string matching a FontSizes entry
@@ -254,6 +276,7 @@ class TextStyle {
    */
   public toCSS(): string {
     const attributes: Array<string> = [];
+    attributes.push('text-align: ' + this.textAlign);
     attributes.push('font-family: ' + this.fontFamily);
     attributes.push('color: ' + TextStyle.toRGBA(this.fontColor, this.fontOpacity));
     attributes.push('background-color: ' + TextStyle.toRGBA(this.backgroundColor, this.backgroundOpacity));

@@ -471,7 +471,7 @@ export default class Player extends FakeEventTarget {
   public configure(config: any = {}): void {
     this._setConfigLogLevel(config);
     Utils.Object.mergeDeep(this._config, config);
-    this._applyTextTrackConfig(config);
+    this._applyTextTrackConfig();
     this._applyABRRestriction(config);
   }
 
@@ -1473,24 +1473,19 @@ export default class Player extends FakeEventTarget {
    * @param {Object} config - new config which configure for checking if it relevant config has changed
    * @private
    */
-  private _applyTextTrackConfig(config: any): void {
-    if (Utils.Object.hasPropertyPath(config, 'text.textTrackDisplaySetting') || Utils.Object.getPropertyPath(config, 'text.forceCenter')) {
-      let textDisplaySettings: any = {};
-      if (Utils.Object.hasPropertyPath(this._config, 'text.textTrackDisplaySetting')) {
-        textDisplaySettings = Utils.Object.mergeDeep(textDisplaySettings, this._config.text.textTrackDisplaySetting);
-      }
-      if (Utils.Object.getPropertyPath(this._config, 'text.forceCenter')) {
-        textDisplaySettings = Utils.Object.mergeDeep(textDisplaySettings, {
-          position: 'auto',
-          align: 'center',
-          size: '100'
-        });
-      }
+  private _applyTextTrackConfig(): void {
+    const textTrackDisplaySetting = Utils.Object.getPropertyPath(this._config, 'text.textTrackDisplaySetting');
+    const textStyle = Utils.Object.getPropertyPath(this._config, 'text.textStyle');
+    if (textTrackDisplaySetting) {
+      const textDisplaySettings: any = Utils.Object.mergeDeep({}, textTrackDisplaySetting, {
+        position: 'auto',
+        align: textStyle?.textAlign || 'center' // overwrite cue align for if native text-tracks uses
+      });
       this.setTextDisplaySettings(textDisplaySettings);
     }
     try {
-      if (Utils.Object.hasPropertyPath(config, 'text.textStyle')) {
-        this.textStyle = TextStyle.fromJson(this._config.text.textStyle);
+      if (textStyle) {
+        this.textStyle = TextStyle.fromJson(textStyle);
       }
     } catch (e) {
       Player._logger.warn(e);
