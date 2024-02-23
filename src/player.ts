@@ -1537,23 +1537,13 @@ export default class Player extends FakeEventTarget {
     if (!(style instanceof TextStyle)) {
       throw new Error('Style must be instance of TextStyle');
     }
-    let element = Utils.Dom.getElementBySelector(`.${this._playerId}.${SUBTITLES_STYLE_CLASS_NAME}`);
-    if (!element) {
-      element = Utils.Dom.createElement('style');
-      Utils.Dom.addClassName(element, this._playerId);
-      Utils.Dom.addClassName(element, SUBTITLES_STYLE_CLASS_NAME);
-      Utils.Dom.appendChild(document.head, element);
-    }
-    const sheet = element.sheet;
 
-    while (sheet.cssRules.length) {
-      sheet.deleteRule(0);
-    }
+    this._resetCustomSubtitleStyles();
 
     try {
       this._textStyle = style;
       if (this._config.text.useNativeTextTrack) {
-        sheet.insertRule(`#${this._playerId} video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
+        this._applyCustomSubtitleStyles();
       } else if (this._engine) {
         this._engine.resetAllCues();
         this._externalCaptionsHandler.resetAllCues();
@@ -1709,6 +1699,46 @@ export default class Player extends FakeEventTarget {
 
   public getDrmInfo(): PKDrmDataObject | null {
     return this._engine.getDrmInfo();
+  }
+
+  private _getSubtitleStyleSheet(): CSSStyleSheet {
+    let element = Utils.Dom.getElementBySelector(`.${this._playerId}.${SUBTITLES_STYLE_CLASS_NAME}`);
+    if (!element) {
+      element = Utils.Dom.createElement('style');
+      Utils.Dom.addClassName(element, this._playerId);
+      Utils.Dom.addClassName(element, SUBTITLES_STYLE_CLASS_NAME);
+      Utils.Dom.appendChild(document.head, element);
+    }
+    return element.sheet;
+  }
+
+  private _resetCustomSubtitleStyles(): void {
+    const sheet = this._getSubtitleStyleSheet();
+    while (sheet.cssRules.length) {
+      sheet.deleteRule(0);
+    }
+  }
+
+  private _applyCustomSubtitleStyles(): void {
+    try {
+      const sheet = this._getSubtitleStyleSheet();
+
+      if (this._config.text.useNativeTextTrack) {
+        sheet.insertRule(`#${this._playerId} video.${ENGINE_CLASS_NAME}::-webkit-media-text-track-display { text-align: ${this._textStyle.textAlign}!important; }`, 0);
+        sheet.insertRule(`#${this._playerId} video.${ENGINE_CLASS_NAME}::cue { ${this._textStyle.toCSS()} }`, 0);
+      } else if (this._config.text.useShakaTextTrackDisplay) {
+        this._resetCustomSubtitleStyles();
+        const flexAlignment = {
+          left: 'flex-start',
+          center: 'center',
+          right: 'flex-end',
+        }
+        sheet.insertRule(`#${this._playerId} .shaka-text-container { padding: 0px 16px; align-items: ${flexAlignment[this._textStyle.textAlign]}!important; }`, 0);
+        sheet.insertRule(`#${this._playerId} .shaka-text-container > * { ${this._textStyle.toCSS()} }`, 0);
+      }
+    } catch (e) {
+      Player._logger.error(e.message);
+    }
   }
 
   /**
@@ -2559,6 +2589,9 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   private _updateTextDisplay(cues: Array<VTTCue>): void {
+    if (this._config.text.useShakaTextTrackDisplay) {
+      this._applyCustomSubtitleStyles();
+    }
     if (!this._config.text.useNativeTextTrack && !this._config.text.useShakaTextTrackDisplay) {
       processCues(window, cues, this._textDisplayEl, this._textStyle);
     }
