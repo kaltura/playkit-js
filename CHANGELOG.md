@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.6 (2024-02-25)
+
+
+### Bug Fixes
+
+* **SUP-41054:** Playlist Chapter display issue with Live to VOD ([#768](https://github.com/kaltura/playkit-js/issues/768)) ([8df66e2](https://github.com/kaltura/playkit-js/commit/8df66e2d690a4802b0eb3785ece446a561a9d8e7)), closes [#379](https://github.com/kaltura/playkit-js/issues/379)
+
 ### 0.84.5 (2024-02-04)
 
 
