@@ -1723,7 +1723,7 @@ export default class Player extends FakeEventTarget {
     try {
       const sheet = this._getSubtitleStyleSheet();
 
-      if (this._config.text.useNativeTextTrack) {
+      if (this._config.text.useNativeTextTrack && !this._config.text.useShakaTextTrackDisplay) {
         sheet.insertRule(`#${this._playerId} video.${ENGINE_CLASS_NAME}::-webkit-media-text-track-display { text-align: ${this._textStyle.textAlign}!important; }`, 0);
         sheet.insertRule(`#${this._playerId} video.${ENGINE_CLASS_NAME}::cue { ${this._textStyle.toCSS()} }`, 0);
       } else if (this._config.text.useShakaTextTrackDisplay) {
