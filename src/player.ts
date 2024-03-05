@@ -1479,7 +1479,8 @@ export default class Player extends FakeEventTarget {
     if (textTrackDisplaySetting) {
       const textDisplaySettings: any = Utils.Object.mergeDeep({}, textTrackDisplaySetting, {
         position: 'auto',
-        align: textStyle?.textAlign || 'center' // overwrite cue align for if native text-tracks uses
+        // align - backward compatibility || new caption alignment API || default value
+        align: textTrackDisplaySetting?.align || textStyle?.textAlign || 'center'
       });
       this.setTextDisplaySettings(textDisplaySettings);
     }
@@ -1713,10 +1714,8 @@ export default class Player extends FakeEventTarget {
   }
 
   private _resetCustomSubtitleStyles(): void {
-    const sheet = this._getSubtitleStyleSheet();
-    while (sheet.cssRules.length) {
-      sheet.deleteRule(0);
-    }
+    const element = Utils.Dom.getElementBySelector(`.${this._playerId}.${SUBTITLES_STYLE_CLASS_NAME}`);
+    element?.remove();
   }
 
   private _applyCustomSubtitleStyles(): void {
@@ -1737,7 +1736,7 @@ export default class Player extends FakeEventTarget {
         sheet.insertRule(`#${this._playerId} .shaka-text-container > * { ${this._textStyle.toCSS()} }`, 0);
       }
     } catch (e) {
-      Player._logger.error(e.message);
+      Player._logger.error(`Failed to add custom text style: ${e.message}`);
     }
   }
 
