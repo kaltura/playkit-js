@@ -1724,7 +1724,7 @@ export default class Player extends FakeEventTarget {
 
   private _applyCustomSubtitleStyles(): void {
     // TODO: move custom subtitles styling into engines
-    const SHAKA_TEXT_CONTAINER_CLASSNAME = "shaka-text-container";
+    const SHAKA_TEXT_CONTAINER_CLASSNAME = 'shaka-text-container';
     try {
       const containerId = this._el?.parentElement?.id || this._playerId;
       if (this._config.text.useNativeTextTrack && !this._config.text.useShakaTextTrackDisplay) {
