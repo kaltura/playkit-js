@@ -120,6 +120,14 @@ const DURATION_OFFSET: number = 0.1;
  */
 const LIVE_EDGE_THRESHOLD: number = 1;
 
+// TODO: move custom subtitles styling into engines
+/**
+ *  Shaka player subtitles container class
+ *  @type {string}
+ *  @const
+ */
+const SHAKA_TEXT_CONTAINER_CLASSNAME = "shaka-text-container"
+
 /**
  * The HTML5 player class.
  * @classdesc
@@ -1482,6 +1490,10 @@ export default class Player extends FakeEventTarget {
         // align - backward compatibility || new caption alignment API || default value
         align: textTrackDisplaySetting?.align || textStyle?.textAlign || 'center'
       });
+      // backward compatibility for `text.forceCenter`
+      if (Utils.Object.getPropertyPath(this._config, 'text.forceCenter')) {
+        textDisplaySettings.align = 'center';
+      }
       this.setTextDisplaySettings(textDisplaySettings);
     }
     try {
@@ -1720,20 +1732,20 @@ export default class Player extends FakeEventTarget {
 
   private _applyCustomSubtitleStyles(): void {
     try {
-      const sheet = this._getSubtitleStyleSheet();
-
       if (this._config.text.useNativeTextTrack && !this._config.text.useShakaTextTrackDisplay) {
+        const sheet = this._getSubtitleStyleSheet();
         sheet.insertRule(`#${this._playerId} video.${ENGINE_CLASS_NAME}::-webkit-media-text-track-display { text-align: ${this._textStyle.textAlign}!important; }`, 0);
         sheet.insertRule(`#${this._playerId} video.${ENGINE_CLASS_NAME}::cue { ${this._textStyle.toCSS()} }`, 0);
       } else if (this._config.text.useShakaTextTrackDisplay) {
         this._resetCustomSubtitleStyles();
+        const sheet = this._getSubtitleStyleSheet();
         const flexAlignment = {
           left: 'flex-start',
           center: 'center',
           right: 'flex-end',
         }
-        sheet.insertRule(`#${this._playerId} .shaka-text-container { padding: 0px 16px; align-items: ${flexAlignment[this._textStyle.textAlign]}!important; }`, 0);
-        sheet.insertRule(`#${this._playerId} .shaka-text-container > * { ${this._textStyle.toCSS()} }`, 0);
+        sheet.insertRule(`#${this._playerId} .${SHAKA_TEXT_CONTAINER_CLASSNAME} { padding: 0px 16px; align-items: ${flexAlignment[this._textStyle.textAlign]}!important; }`, 0);
+        sheet.insertRule(`#${this._playerId} .${SHAKA_TEXT_CONTAINER_CLASSNAME} > * { ${this._textStyle.toCSS()} }`, 0);
       }
     } catch (e) {
       Player._logger.error(`Failed to add custom text style: ${e.message}`);
