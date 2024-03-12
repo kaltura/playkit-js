@@ -178,6 +178,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return BaseMediaSourceAdapter._throwNotImplementedError('static canPlayType');
   }
 
+  // eslint-disable-next-line
   public applyTextTrackStyles(sheet: CSSStyleSheet, styles: TextStyle, containerId: string, engineClassName?: string): void {
     return BaseMediaSourceAdapter._throwNotImplementedError('applyTextTrackStyles');
   }
