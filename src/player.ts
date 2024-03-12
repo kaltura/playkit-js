@@ -30,7 +30,7 @@ import {EngineProvider} from './engines/engine-provider';
 import {ExternalCaptionsHandler} from './track/external-captions-handler';
 import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
-import {ResizeWatcher} from './utils';
+import {ResizeWatcher, getSubtitleStyleSheet, resetSubtitleStyleSheet} from './utils';
 import {FullscreenController} from './fullscreen/fullscreen-controller';
 import {EngineDecorator, EngineDecoratorType} from './engines/engine-decorator';
 import {LabelOptions} from './track/label-options';
@@ -77,13 +77,6 @@ const POSTER_CLASS_NAME: string = 'playkit-poster';
  * @const
  */
 const ENGINE_CLASS_NAME: string = 'playkit-engine';
-
-/**
- * The text style class name.
- * @type {string}
- * @const
- */
-const SUBTITLES_STYLE_CLASS_NAME: string = 'playkit-subtitles-style';
 
 /**
  * The subtitles class name.
@@ -1543,7 +1536,7 @@ export default class Player extends FakeEventTarget {
       throw new Error('Style must be instance of TextStyle');
     }
 
-    this._resetCustomSubtitleStyles();
+    resetSubtitleStyleSheet(this._playerId);
 
     try {
       this._textStyle = style;
@@ -1706,41 +1699,18 @@ export default class Player extends FakeEventTarget {
     return this._engine.getDrmInfo();
   }
 
-  private _getSubtitleStyleSheet(): CSSStyleSheet {
-    let element = Utils.Dom.getElementBySelector(`.${this._playerId}.${SUBTITLES_STYLE_CLASS_NAME}`);
-    if (!element) {
-      element = Utils.Dom.createElement('style');
-      Utils.Dom.addClassName(element, this._playerId);
-      Utils.Dom.addClassName(element, SUBTITLES_STYLE_CLASS_NAME);
-      Utils.Dom.appendChild(document.head, element);
-    }
-    return element.sheet;
-  }
-
-  private _resetCustomSubtitleStyles(): void {
-    const element = Utils.Dom.getElementBySelector(`.${this._playerId}.${SUBTITLES_STYLE_CLASS_NAME}`);
-    element?.remove();
-  }
-
   private _applyCustomSubtitleStyles(): void {
-    // TODO: move custom subtitles styling into engines
-    const SHAKA_TEXT_CONTAINER_CLASSNAME = 'shaka-text-container';
     try {
       const containerId = this._el?.parentElement?.id || this._playerId;
       if (this._config.text.useNativeTextTrack && !this._config.text.useShakaTextTrackDisplay) {
-        const sheet = this._getSubtitleStyleSheet();
-        sheet.insertRule(`#${containerId} video.${ENGINE_CLASS_NAME}::-webkit-media-text-track-display { text-align: ${this._textStyle.textAlign}!important; }`, 0);
-        sheet.insertRule(`#${containerId} video.${ENGINE_CLASS_NAME}::cue { ${this._textStyle.toCSS()} }`, 0);
+        const sheet = getSubtitleStyleSheet(this._playerId);
+        ExternalCaptionsHandler.applyNativeTextTrackStyles(sheet, this._textStyle, containerId, ENGINE_CLASS_NAME);
       } else if (this._config.text.useShakaTextTrackDisplay) {
-        this._resetCustomSubtitleStyles();
-        const sheet = this._getSubtitleStyleSheet();
-        const flexAlignment = {
-          left: 'flex-start',
-          center: 'center',
-          right: 'flex-end',
-        }
-        sheet.insertRule(`#${containerId} .${SHAKA_TEXT_CONTAINER_CLASSNAME} { padding: 0px 16px; align-items: ${flexAlignment[this._textStyle.textAlign]}!important; }`, 0);
-        sheet.insertRule(`#${containerId} .${SHAKA_TEXT_CONTAINER_CLASSNAME} > * { ${this._textStyle.toCSS()} }`, 0);
+        resetSubtitleStyleSheet(this._playerId);
+        const sheet = getSubtitleStyleSheet(this._playerId);
+        // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        this._engine._mediaSourceAdapter?.applyTextTrackStyles?.(sheet, this._textStyle, containerId);
       }
     } catch (e) {
       Player._logger.error(`Failed to add custom text style: ${e.message}`);
