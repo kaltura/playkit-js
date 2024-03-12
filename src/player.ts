@@ -1708,8 +1708,6 @@ export default class Player extends FakeEventTarget {
       } else if (this._config.text.useShakaTextTrackDisplay) {
         resetSubtitleStyleSheet(this._playerId);
         const sheet = getSubtitleStyleSheet(this._playerId);
-        // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         this._engine._mediaSourceAdapter?.applyTextTrackStyles?.(sheet, this._textStyle, containerId);
       }
     } catch (e) {

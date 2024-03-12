@@ -44,7 +44,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @type {?IMediaSourceAdapter}
    * @private
    */
-  private _mediaSourceAdapter!: IMediaSourceAdapter | null;
+  _mediaSourceAdapter!: IMediaSourceAdapter | null;
   /**
    * The player config object.
    * @type {Object}
