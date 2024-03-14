@@ -87,5 +87,5 @@ export interface IEngine extends FakeEventTarget {
   crossOrigin: string | null
   targetBuffer: number;
   availableBuffer: number;
-  _mediaSourceAdapter: IMediaSourceAdapter | null;
+  mediaSourceAdapter: IMediaSourceAdapter | null;
 }

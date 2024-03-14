@@ -44,7 +44,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @type {?IMediaSourceAdapter}
    * @private
    */
-  _mediaSourceAdapter!: IMediaSourceAdapter | null;
+  private _mediaSourceAdapter!: IMediaSourceAdapter | null;
   /**
    * The player config object.
    * @type {Object}
@@ -260,6 +260,15 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._mediaSourceAdapter.destroy();
       this._mediaSourceAdapter = null;
     }
+  }
+
+  /**
+   * Get the engine mediaSourceAdapter
+   * @public
+   * @returns {IMediaSourceAdapter | null}
+   */
+  public get mediaSourceAdapter(): IMediaSourceAdapter | null {
+    return this._mediaSourceAdapter;
   }
 
   /**

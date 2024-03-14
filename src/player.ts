@@ -1708,7 +1708,7 @@ export default class Player extends FakeEventTarget {
       } else if (this._config.text.useShakaTextTrackDisplay) {
         resetSubtitleStyleSheet(this._playerId);
         const sheet = getSubtitleStyleSheet(this._playerId);
-        this._engine._mediaSourceAdapter?.applyTextTrackStyles?.(sheet, this._textStyle, containerId);
+        this._engine.mediaSourceAdapter?.applyTextTrackStyles?.(sheet, this._textStyle, containerId);
       }
     } catch (e) {
       Player._logger.error(`Failed to add custom text style: ${e.message}`);
