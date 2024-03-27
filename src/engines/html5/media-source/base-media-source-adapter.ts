@@ -4,7 +4,6 @@ import Error from '../../../error/error';
 import { CustomEventType, Html5EventType } from '../../../event/event-type';
 import getLogger from '../../../utils/logger';
 import Track from '../../../track/track';
-import TextStyle from '../../../track/text-style';
 import VideoTrack from '../../../track/video-track';
 import AudioTrack from '../../../track/audio-track';
 import PKTextTrack from '../../../track/text-track';
@@ -176,11 +175,6 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   // eslint-disable-next-line
   public static canPlayType(mimeType: string, preferNative: boolean): boolean {
     return BaseMediaSourceAdapter._throwNotImplementedError('static canPlayType');
-  }
-
-  // eslint-disable-next-line
-  public applyTextTrackStyles(sheet: CSSStyleSheet, styles: TextStyle, containerId: string, engineClassName?: string): void {
-    return BaseMediaSourceAdapter._throwNotImplementedError('applyTextTrackStyles');
   }
 
   public load(): Promise<{ tracks: Track[] }> {

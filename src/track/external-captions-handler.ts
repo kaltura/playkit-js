@@ -2,7 +2,6 @@ import Error from '../error/error';
 import * as Utils from '../utils/util';
 import {Parser, StringDecoder} from './text-track-display';
 import TextTrack, {getActiveCues} from './text-track';
-import TextStyle from './text-style';
 import Track from './track';
 import {CustomEventType, Html5EventType} from '../event/event-type';
 import { FakeEvent } from '../event/fake-event';
@@ -30,12 +29,6 @@ const SRT_POSTFIX: string = 'srt';
 const VTT_POSTFIX: string = 'vtt';
 
 class ExternalCaptionsHandler extends FakeEventTarget {
-
-  public static applyNativeTextTrackStyles(sheet: CSSStyleSheet, styles: TextStyle, containerId: string, engineClassName: string): void {
-    sheet.insertRule(`#${containerId} video.${engineClassName}::-webkit-media-text-track-display { text-align: ${styles.textAlign}!important; }`, 0);
-    sheet.insertRule(`#${containerId} video.${engineClassName}::cue { ${styles.toCSS()} }`, 0);
-  }
-
   /**
    * The external captions handler class logger.
    * @type {any}

@@ -10,7 +10,6 @@ import {PKDrmDataObject} from '../drm-data';
 import {PKABRRestrictionObject} from '../restrictions-types';
 import Track from '../../track/track';
 import {PKTextTrack} from '../../track/text-track';
-import {IMediaSourceAdapter} from '../../types';
 
 export interface IEngineStatic {
   id: string;
@@ -87,5 +86,4 @@ export interface IEngine extends FakeEventTarget {
   crossOrigin: string | null
   targetBuffer: number;
   availableBuffer: number;
-  mediaSourceAdapter: IMediaSourceAdapter | null;
 }

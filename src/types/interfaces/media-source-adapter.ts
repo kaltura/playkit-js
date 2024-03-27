@@ -1,16 +1,16 @@
+
 import VideoTrack from '../../track/video-track';
 import AudioTrack from '../../track/audio-track';
-import { PKTextTrack } from '../../track/text-track';
-import { PKDrmConfigObject } from '../drm-config';
-import { PKMediaSourceCapabilities } from '../media-source-capabilities';
-import { PKMediaSourceObject } from '../media-source';
+import { PKTextTrack} from '../../track/text-track';
+import {PKDrmConfigObject} from '../drm-config';
+import {PKMediaSourceCapabilities} from '../media-source-capabilities';
+import {PKMediaSourceObject} from '../media-source';
 import ImageTrack from '../../track/image-track';
-import { PKDrmDataObject } from '../drm-data';
+import {PKDrmDataObject} from '../drm-data';
 import { FakeEventTarget } from '../../event/fake-event-target';
-import { ThumbnailInfo } from '../../thumbnail/thumbnail-info';
+import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
 import Track from '../../track/track';
-import TextStyle from '../../track/text-style';
-import { PKABRRestrictionObject } from '../restrictions-types';
+import {PKABRRestrictionObject} from '../restrictions-types';
 
 export interface IMediaSourceAdapterStatic {
   id: string;
@@ -26,7 +26,7 @@ export interface IMediaSourceAdapter extends FakeEventTarget {
   liveDuration: number;
   capabilities: PKMediaSourceCapabilities;
   targetBuffer: number;
-  load(startTime?: number): Promise<{ tracks: Track[] }>;
+  load(startTime?: number): Promise<{tracks: Track[]}>;
   handleMediaError(error?: MediaError): boolean;
   destroy(): Promise<any>;
   selectVideoTrack(videoTrack: VideoTrack): void;
@@ -45,8 +45,7 @@ export interface IMediaSourceAdapter extends FakeEventTarget {
   detachMediaSource(): void;
   getSegmentDuration(): number;
   disableNativeTextTracks(): void;
-  getThumbnail(time: number): ThumbnailInfo | null;
+  getThumbnail(time: number): ThumbnailInfo | null
   getDrmInfo(): PKDrmDataObject | null;
   applyABRRestriction(restriction: PKABRRestrictionObject): void;
-  applyTextTrackStyles(sheet: CSSStyleSheet, styles: TextStyle, containerId: string, engineClassName?: string): void;
 }
