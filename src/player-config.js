@@ -7,6 +7,7 @@ const DefaultConfig = {
   text: {
     enableCEA708Captions: true,
     useNativeTextTrack: false,
+    forceCenter: false,
     captionsTextTrack1Label: 'English',
     captionsTextTrack1LanguageCode: 'en',
     captionsTextTrack2Label: 'Spanish',

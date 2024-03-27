@@ -1667,7 +1667,6 @@ describe('Player', function () {
         const settings = {
           fontEdge: TextStyle.EdgeStyles.RAISED,
           fontSize: '75%',
-          textAlign: "center",
           fontScale: -1,
           fontColor: TextStyle.StandardColors.CYAN,
           fontOpacity: TextStyle.StandardOpacities.SEMI_LOW,
@@ -1725,25 +1724,36 @@ describe('Player', function () {
 
     describe('configure text track display', () => {
       it('should change textDisplay settings by config', () => {
-        const textTrackDisplaySetting = {line: -4};
-        player = new Player({text: {textTrackDisplaySetting}});
-        player._textDisplaySettings.should.deep.equal({
-          ...textTrackDisplaySetting,
-          align: "center",
-          position: "auto"
-        });
+        const settings = {line: -4};
+        player = new Player({text: {textTrackDisplaySetting: settings}});
+        player._textDisplaySettings.should.deep.equal(settings);
+      });
+
+      it('should forceCenter override textTrackDisplaySetting', () => {
+        const settings = {position: '10%', align: 'left', size: '10'};
+        player = new Player({text: {forceCenter: true, textTrackDisplaySetting: settings}});
+        player._textDisplaySettings.should.deep.equal({position: 'auto', align: 'center', size: '100'});
+      });
+
+      it('should forceCenter keep the other values from textTrackDisplaySetting', () => {
+        const settings = {line: '-4', lineAlign: 'end', position: '10%'};
+        player = new Player({text: {forceCenter: true, textTrackDisplaySetting: settings}});
+        player._textDisplaySettings.should.deep.equal(Utils.Object.mergeDeep(settings, {position: 'auto', align: 'center', size: '100'}));
+      });
+
+      it('should configure change of textTrackDisplaySetting will apply forceCenter', () => {
+        const settings = {position: '10%', align: 'left', size: '10'};
+        player = new Player({text: {forceCenter: true, textTrackDisplaySetting: settings}});
+        player.configure({text: {textTrackDisplaySetting: settings}});
+        player._textDisplaySettings.should.deep.equal({position: 'auto', align: 'center', size: '100'});
       });
 
       it('should empty configure will not take the previous config and change the values from setTextDisplaySettings', () => {
-        const settings = {position: '10%', size: '10'};
-        player = new Player({text: {textTrackDisplaySetting: settings}});
+        const settings = {position: '10%', align: 'left', size: '10'};
+        player = new Player({text: {forceCenter: true, textTrackDisplaySetting: settings}});
         player.setTextDisplaySettings(settings);
         player.configure({text: {}});
-        player._textDisplaySettings.should.deep.equal({
-          ...settings,
-          align: "center",
-          position: "auto"
-        });
+        player._textDisplaySettings.should.deep.equal(settings);
       });
 
       it('should keep the current setting for empty config', () => {
