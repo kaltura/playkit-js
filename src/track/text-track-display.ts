@@ -1,6 +1,6 @@
 // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import {Region} from './vtt-region';
+import { Region } from './vtt-region';
 import TextStyle from './text-style';
 import TextTrack from './text-track';
 
@@ -212,7 +212,7 @@ function parseCue(input, cue, regionList) {
             settings.percent(k, v);
             break;
           case 'align':
-            settings.alt(k, v, ['center', 'left', 'right']);
+            settings.alt(k, v, ['start', 'center', 'end', 'left', 'right']);
             break;
         }
       },
@@ -640,8 +640,12 @@ class CueStyleBox extends StyleBox {
     // div. Note, all WebVTT cue-setting alignments are equivalent to the CSS
     // mirrors of them except "middle" which is "center" in CSS.
     this.div = window.document.createElement('div');
+    let textAlign = cue.align === 'middle' ? 'center' : cue.align;
+    if (styleOptions.textAlign !== 'default') {
+      textAlign = styleOptions.textAlign;
+    }
     styles = {
-      textAlign: styleOptions.textAlign,
+      textAlign,
       font: styleOptions.font,
       whiteSpace: 'pre-line',
       position: 'absolute'
@@ -649,8 +653,7 @@ class CueStyleBox extends StyleBox {
 
     if (!isIE8) {
       styles.direction = determineBidi(this.cueDiv);
-      styles.writingMode =
-        cue.vertical === '' ? 'horizontal-tb' : cue.vertical === 'lr' ? 'vertical-lr' : ('vertical-rl'.stylesunicodeBidi = 'plaintext');
+      styles.writingMode = cue.vertical === '' ? 'horizontal-tb' : cue.vertical === 'lr' ? 'vertical-lr' : ('vertical-rl'.stylesunicodeBidi = 'plaintext');
     }
 
     this.applyStyles(styles);
@@ -662,13 +665,17 @@ class CueStyleBox extends StyleBox {
     // the box orientation styles are applied.
     let textPos = 0;
     switch (styleOptions.textAlign) {
+      case 'start':
       case 'left':
+      case 'line-left':
         textPos = cue.position;
         break;
       case 'center':
         textPos = cue.position - cue.size / 2;
         break;
+      case 'end':
       case 'right':
+      case 'line-right':
         textPos = cue.position - cue.size;
         break;
     }
@@ -720,7 +727,7 @@ class BoxPosition {
       top = obj.div.offsetTop;
 
       let rects;
-      rects =  (rects = obj.div.childNodes) && (rects = rects[0]) && rects.getClientRects && rects.getClientRects();
+      rects = (rects = obj.div.childNodes) && (rects = rects[0]) && rects.getClientRects && rects.getClientRects();
       obj = obj.div.getBoundingClientRect();
       // In certain cases the outter div will be slightly larger then the sum of
       // the inner div's lines. This could be due to bold text, etc, on some platforms.
@@ -1134,7 +1141,7 @@ Parser.prototype = {
     // example when flush() is called.
     if (data) {
       // Try to decode the data that we received.
-      self.buffer += self.decoder.decode(data, {stream: true});
+      self.buffer += self.decoder.decode(data, { stream: true });
     }
 
     function collectNextLine() {
@@ -1380,4 +1387,4 @@ Parser.prototype = {
   }
 };
 
-export {processCues, convertCueToDOMTree, Parser, StringDecoder};
+export { processCues, convertCueToDOMTree, Parser, StringDecoder };

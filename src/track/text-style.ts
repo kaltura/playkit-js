@@ -28,7 +28,7 @@ class TextStyle {
    * @enum {Object.<string, string>}}
    * @export
    */
-  public static FontFamily: {[font: string]: string} = {
+  public static FontFamily: { [font: string]: string } = {
     ARIAL: 'Arial',
     HELVETICA: 'Helvetica',
     VERDANA: 'Verdana',
@@ -41,7 +41,7 @@ class TextStyle {
    * @enum {Object.<string, [number, number, number]>}}
    * @export
    */
-  public static StandardColors: {[coloer: string]: [number, number, number]} = {
+  public static StandardColors: { [coloer: string]: [number, number, number] } = {
     WHITE: [255, 255, 255],
     BLACK: [0, 0, 0],
     RED: [255, 0, 0],
@@ -57,7 +57,7 @@ class TextStyle {
    * @enum {Object.<string, number>}}
    * @export
    */
-  public static StandardOpacities: {[opacityLevel: string]: number} = {
+  public static StandardOpacities: { [opacityLevel: string]: number } = {
     OPAQUE: 1,
     SEMI_HIGH: 0.75,
     SEMI_LOW: 0.25,
@@ -74,7 +74,7 @@ class TextStyle {
    * @enum {!Array.<!Array.[number, number, number, number, number, number]>}
    * @export
    */
-  public static EdgeStyles: {[edgeStyle:string]: Array<[number, number, number, number, number, number]>} = {
+  public static EdgeStyles: { [edgeStyle: string]: Array<[number, number, number, number, number, number]> } = {
     NONE: [],
     RAISED: [
       [34, 34, 34, 1, 1, 0],
@@ -135,6 +135,10 @@ class TextStyle {
    */
   public static FontAlignment: { label: string; value: FontAlignmentOptions }[] = [
     {
+      label: 'Default',
+      value: 'default'
+    },
+    {
       label: 'Left',
       value: 'left'
     },
@@ -194,13 +198,13 @@ class TextStyle {
   private _fontSizeIndex: number = 2; // 100%
 
   public set fontSize(fontSize: string) {
-    const index = TextStyle.FontSizes.findIndex(({label}) => label === fontSize);
+    const index = TextStyle.FontSizes.findIndex(({ label }) => label === fontSize);
     if (index !== -1) {
       this._fontSizeIndex = index;
     }
   }
 
-  public textAlign: FontAlignmentOptions = TextStyle.FontAlignment[1].value;
+  public textAlign: FontAlignmentOptions = TextStyle.FontAlignment[0].value;
 
   /**
    * Percentage string matching a FontSizes entry
@@ -210,7 +214,7 @@ class TextStyle {
   }
 
   public set fontScale(fontScale: number) {
-    const index = TextStyle.FontSizes.findIndex(({value}) => value === fontScale);
+    const index = TextStyle.FontSizes.findIndex(({ value }) => value === fontScale);
     if (index !== -1) {
       this._fontSizeIndex = index;
     }
@@ -261,7 +265,7 @@ class TextStyle {
     const shadows: Array<string> = [];
     for (let i = 0; i < this.fontEdge.length; i++) {
       // shaka.asserts.assert(this.fontEdge[i].length == 6);
-      const color: [number, number, number] = (this.fontEdge[i].slice(0, 3) as any);
+      const color: [number, number, number] = this.fontEdge[i].slice(0, 3) as any;
       const shadow: Array<number> = this.fontEdge[i].slice(3, 6);
       shadows.push(TextStyle.toRGBA(color, this.fontOpacity) + ' ' + shadow.join('px ') + 'px');
     }

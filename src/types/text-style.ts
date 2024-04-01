@@ -1,5 +1,5 @@
 export type FontSizeOptions = '50%' | '75%' | '100%' | '200%' | '300%' | '400%';
-export type FontAlignmentOptions = 'left' | 'center' | 'right';
+export type FontAlignmentOptions = 'default' | 'left' | 'center' | 'right';
 export type FontScaleOptions = -2 | -1 | 0 | 2 | 3 | 4;
 /**
  * @typedef {Object} PKTextStyleObject
