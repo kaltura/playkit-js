@@ -1471,13 +1471,14 @@ export default class Player extends FakeEventTarget {
     const textStyle = Utils.Object.getPropertyPath(this._config, 'text.textStyle');
     if (textTrackDisplaySetting) {
       const textDisplaySettings: any = Utils.Object.mergeDeep({}, textTrackDisplaySetting, {
-        position: 'auto',
         // align - backward compatibility || new caption alignment API || default value
         align: textTrackDisplaySetting?.align || textStyle?.textAlign || 'center'
       });
       // backward compatibility for `text.forceCenter`
       if (Utils.Object.getPropertyPath(this._config, 'text.forceCenter')) {
+        textDisplaySettings.position = 'auto';
         textDisplaySettings.align = 'center';
+        textDisplaySettings.size = '100';
       }
       this.setTextDisplaySettings(textDisplaySettings);
     }
