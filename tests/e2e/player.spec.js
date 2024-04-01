@@ -1667,7 +1667,7 @@ describe('Player', function () {
         const settings = {
           fontEdge: TextStyle.EdgeStyles.RAISED,
           fontSize: '75%',
-          textAlign: "center",
+          textAlign: "default",
           fontScale: -1,
           fontColor: TextStyle.StandardColors.CYAN,
           fontOpacity: TextStyle.StandardOpacities.SEMI_LOW,
