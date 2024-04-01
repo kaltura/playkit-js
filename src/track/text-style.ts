@@ -256,7 +256,8 @@ class TextStyle {
     const attributes: Array<string> = [];
     attributes.push('font-family: ' + this.fontFamily);
     attributes.push('color: ' + TextStyle.toRGBA(this.fontColor, this.fontOpacity));
-    attributes.push('background-color: ' + TextStyle.toRGBA(this.backgroundColor, this.backgroundOpacity));
+    attributes.push(`background: linear-gradient(0deg, ${TextStyle.toRGBA(this.backgroundColor, this.backgroundOpacity)}, ${TextStyle.toRGBA(this.backgroundColor, this.backgroundOpacity)})`);
+    attributes.push('font-size: ' + this.fontSize);
     attributes.push('text-shadow: ' + this.getTextShadow());
     return attributes.join('!important; ');
   }
