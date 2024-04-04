@@ -16,6 +16,7 @@ export default class Error {
   public category: number;
   public code: number;
   public data: any;
+  public errorDetails: any;
   /**
    * @enum {number}
    */
@@ -36,12 +37,14 @@ export default class Error {
    * @param {number} category - error's category.
    * @param {number} code - error's code.
    * @param {any} data - additional data for the error.
+   * @param {any} errorDetails - error details including title and message - optional.
    */
-  constructor(severity: number, category: number, code: number, data: any = {}) {
+  constructor(severity: number, category: number, code: number, data: any = {}, errorDetails?: any) {
     this.severity = severity;
     this.category = category;
     this.code = code;
     this.data = data;
+    this.errorDetails = errorDetails || {};
     if (getLogLevel(CLASS_NAME) !== LogLevel.OFF) {
       Error._logger.error(`Category:${category} | Code:${code} |`, data);
     }
