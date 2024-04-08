@@ -678,6 +678,7 @@ var config = {
 > > ```js
 > > {
 > >   fontSize?: '50%' | '75%' | '100%' | '200%' | '300%' | '400%'
+> >   textAlign?: string, // ['default', 'center', 'left', 'right']
 > >   fontScale?: -2 | -1 | 0 | 2 | 3 | 4
 > >   fontFamily?: string, // font family available in browser
 > >   fontColor?: [number, number, number], // RGB
@@ -692,6 +693,10 @@ var config = {
 > >   backgroundOpacity?: number // [0.0 .. 1.0]
 > > }
 > > ```
+> >
+> > ##### textAlign
+> >
+> > An alignment for all lines of text within the cue box, in the dimension of the writing direction
 > >
 > > ##### fontSize
 > >

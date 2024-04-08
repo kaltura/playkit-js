@@ -30,7 +30,7 @@ export default class Track {
   private static _langComparer(inputLanguages: [string, (string | undefined)], trackLang: string, equal?: boolean): boolean {
     //first check is there is a complete match
     for(const language of inputLanguages) {
-      if(language?.trim() !== "") {
+      if(language?.trim() !== '') {
         if (equal) {
           if(this._isLangEqual(language, trackLang))
             return true;

@@ -1,6 +1,6 @@
 // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import {Region} from './vtt-region';
+import { Region } from './vtt-region';
 import TextStyle from './text-style';
 import TextTrack from './text-track';
 
@@ -640,8 +640,12 @@ class CueStyleBox extends StyleBox {
     // div. Note, all WebVTT cue-setting alignments are equivalent to the CSS
     // mirrors of them except "middle" which is "center" in CSS.
     this.div = window.document.createElement('div');
+    let textAlign = cue.align === 'middle' ? 'center' : cue.align;
+    if (styleOptions.textAlign !== 'default') {
+      textAlign = styleOptions.textAlign;
+    }
     styles = {
-      textAlign: cue.align === 'middle' ? 'center' : cue.align,
+      textAlign,
       font: styleOptions.font,
       whiteSpace: 'pre-line',
       position: 'absolute'
@@ -649,8 +653,7 @@ class CueStyleBox extends StyleBox {
 
     if (!isIE8) {
       styles.direction = determineBidi(this.cueDiv);
-      styles.writingMode =
-        cue.vertical === '' ? 'horizontal-tb' : cue.vertical === 'lr' ? 'vertical-lr' : ('vertical-rl'.stylesunicodeBidi = 'plaintext');
+      styles.writingMode = cue.vertical === '' ? 'horizontal-tb' : cue.vertical === 'lr' ? 'vertical-lr' : ('vertical-rl'.stylesunicodeBidi = 'plaintext');
     }
 
     this.applyStyles(styles);
@@ -661,8 +664,7 @@ class CueStyleBox extends StyleBox {
     // position of the cue box. The reference edge will be resolved later when
     // the box orientation styles are applied.
     let textPos = 0;
-    let align = cue.positionAlign || cue.align;
-    switch (align) {
+    switch (styleOptions.textAlign) {
       case 'start':
       case 'left':
       case 'line-left':
@@ -725,7 +727,7 @@ class BoxPosition {
       top = obj.div.offsetTop;
 
       let rects;
-      rects =  (rects = obj.div.childNodes) && (rects = rects[0]) && rects.getClientRects && rects.getClientRects();
+      rects = (rects = obj.div.childNodes) && (rects = rects[0]) && rects.getClientRects && rects.getClientRects();
       obj = obj.div.getBoundingClientRect();
       // In certain cases the outter div will be slightly larger then the sum of
       // the inner div's lines. This could be due to bold text, etc, on some platforms.
@@ -982,7 +984,6 @@ function convertCueToDOMTree(window, cuetext) {
 }
 
 const FONT_SIZE_PERCENT = 0.058;
-const FONT_STYLE = 'sans-serif';
 const CUE_BACKGROUND_PADDING = '1.5%';
 
 // Runs the processing model over the cues and regions passed to it.
@@ -1033,6 +1034,7 @@ function processCues(window, cues, overlay, style) {
     fontSize = Math.round(dimensionSize * FONT_SIZE_PERCENT * 100) / 100;
   let styleOptions = {
     font: fontSize * fontScale * style.implicitFontScale + 'px ' + style.fontFamily,
+    textAlign: style.textAlign,
     color: TextStyle.toRGBA(style.fontColor, style.fontOpacity),
     backgroundColor: TextStyle.toRGBA(style.backgroundColor, style.backgroundOpacity),
     textShadow: style.getTextShadow()
@@ -1139,7 +1141,7 @@ Parser.prototype = {
     // example when flush() is called.
     if (data) {
       // Try to decode the data that we received.
-      self.buffer += self.decoder.decode(data, {stream: true});
+      self.buffer += self.decoder.decode(data, { stream: true });
     }
 
     function collectNextLine() {
@@ -1385,4 +1387,4 @@ Parser.prototype = {
   }
 };
 
-export {processCues, convertCueToDOMTree, Parser, StringDecoder};
+export { processCues, convertCueToDOMTree, Parser, StringDecoder };

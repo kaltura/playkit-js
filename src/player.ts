@@ -30,7 +30,7 @@ import {EngineProvider} from './engines/engine-provider';
 import {ExternalCaptionsHandler} from './track/external-captions-handler';
 import {AdBreakType} from './ads/ad-break-type';
 import {AdTagType} from './ads/ad-tag-type';
-import {ResizeWatcher} from './utils';
+import {ResizeWatcher, getSubtitleStyleSheet, resetSubtitleStyleSheet} from './utils';
 import {FullscreenController} from './fullscreen/fullscreen-controller';
 import {EngineDecorator, EngineDecoratorType} from './engines/engine-decorator';
 import {LabelOptions} from './track/label-options';
@@ -77,13 +77,6 @@ const POSTER_CLASS_NAME: string = 'playkit-poster';
  * @const
  */
 const ENGINE_CLASS_NAME: string = 'playkit-engine';
-
-/**
- * The text style class name.
- * @type {string}
- * @const
- */
-const SUBTITLES_STYLE_CLASS_NAME: string = 'playkit-subtitles-style';
 
 /**
  * The subtitles class name.
@@ -471,7 +464,7 @@ export default class Player extends FakeEventTarget {
   public configure(config: any = {}): void {
     this._setConfigLogLevel(config);
     Utils.Object.mergeDeep(this._config, config);
-    this._applyTextTrackConfig(config);
+    this._applyTextTrackConfig();
     this._applyABRRestriction(config);
   }
 
@@ -1473,24 +1466,25 @@ export default class Player extends FakeEventTarget {
    * @param {Object} config - new config which configure for checking if it relevant config has changed
    * @private
    */
-  private _applyTextTrackConfig(config: any): void {
-    if (Utils.Object.hasPropertyPath(config, 'text.textTrackDisplaySetting') || Utils.Object.getPropertyPath(config, 'text.forceCenter')) {
-      let textDisplaySettings: any = {};
-      if (Utils.Object.hasPropertyPath(this._config, 'text.textTrackDisplaySetting')) {
-        textDisplaySettings = Utils.Object.mergeDeep(textDisplaySettings, this._config.text.textTrackDisplaySetting);
-      }
+  private _applyTextTrackConfig(): void {
+    const textTrackDisplaySetting = Utils.Object.getPropertyPath(this._config, 'text.textTrackDisplaySetting');
+    const textStyle = Utils.Object.getPropertyPath(this._config, 'text.textStyle');
+    if (textTrackDisplaySetting) {
+      const textDisplaySettings: any = Utils.Object.mergeDeep({}, textTrackDisplaySetting, {
+        // align - backward compatibility || new caption alignment API || default value
+        align: textTrackDisplaySetting?.align || textStyle?.textAlign || 'center'
+      });
+      // backward compatibility for `text.forceCenter`
       if (Utils.Object.getPropertyPath(this._config, 'text.forceCenter')) {
-        textDisplaySettings = Utils.Object.mergeDeep(textDisplaySettings, {
-          position: 'auto',
-          align: 'center',
-          size: '100'
-        });
+        textDisplaySettings.position = 'auto';
+        textDisplaySettings.align = 'center';
+        textDisplaySettings.size = '100';
       }
       this.setTextDisplaySettings(textDisplaySettings);
     }
     try {
-      if (Utils.Object.hasPropertyPath(config, 'text.textStyle')) {
-        this.textStyle = TextStyle.fromJson(this._config.text.textStyle);
+      if (textStyle) {
+        this.textStyle = TextStyle.fromJson(textStyle);
       }
     } catch (e) {
       Player._logger.warn(e);
@@ -1542,23 +1536,13 @@ export default class Player extends FakeEventTarget {
     if (!(style instanceof TextStyle)) {
       throw new Error('Style must be instance of TextStyle');
     }
-    let element = Utils.Dom.getElementBySelector(`.${this._playerId}.${SUBTITLES_STYLE_CLASS_NAME}`);
-    if (!element) {
-      element = Utils.Dom.createElement('style');
-      Utils.Dom.addClassName(element, this._playerId);
-      Utils.Dom.addClassName(element, SUBTITLES_STYLE_CLASS_NAME);
-      Utils.Dom.appendChild(document.head, element);
-    }
-    const sheet = element.sheet;
 
-    while (sheet.cssRules.length) {
-      sheet.deleteRule(0);
-    }
+    resetSubtitleStyleSheet(this._playerId);
 
     try {
       this._textStyle = style;
       if (this._config.text.useNativeTextTrack) {
-        sheet.insertRule(`#${this._playerId} video.${ENGINE_CLASS_NAME}::cue { ${style.toCSS()} }`, 0);
+        this._applyCustomSubtitleStyles();
       } else if (this._engine) {
         this._engine.resetAllCues();
         this._externalCaptionsHandler.resetAllCues();
@@ -1714,6 +1698,22 @@ export default class Player extends FakeEventTarget {
 
   public getDrmInfo(): PKDrmDataObject | null {
     return this._engine.getDrmInfo();
+  }
+
+  private _applyCustomSubtitleStyles(): void {
+    try {
+      const containerId = this._el?.parentElement?.id || this._playerId;
+      if (this._config.text.useNativeTextTrack && !this._config.text.useShakaTextTrackDisplay) {
+        const sheet = getSubtitleStyleSheet(this._playerId);
+        ExternalCaptionsHandler.applyNativeTextTrackStyles(sheet, this._textStyle, containerId, ENGINE_CLASS_NAME);
+      } else if (this._config.text.useShakaTextTrackDisplay) {
+        resetSubtitleStyleSheet(this._playerId);
+        const sheet = getSubtitleStyleSheet(this._playerId);
+        this._engine.mediaSourceAdapter?.applyTextTrackStyles?.(sheet, this._textStyle, containerId);
+      }
+    } catch (e) {
+      Player._logger.error(`Failed to add custom text style: ${e.message}`);
+    }
   }
 
   /**
@@ -2564,6 +2564,9 @@ export default class Player extends FakeEventTarget {
    * @returns {void}
    */
   private _updateTextDisplay(cues: Array<VTTCue>): void {
+    if (this._config.text.useShakaTextTrackDisplay) {
+      this._applyCustomSubtitleStyles();
+    }
     if (!this._config.text.useNativeTextTrack && !this._config.text.useShakaTextTrackDisplay) {
       processCues(window, cues, this._textDisplayEl, this._textStyle);
     }
