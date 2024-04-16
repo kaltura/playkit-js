@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.84.8 (2024-04-09)
+
+
+### Features
+
+* **FEC-13664:** Add the ability to configure default alignment of captions on the player ([#772](https://github.com/kaltura/playkit-js/issues/772)) ([55c5aca](https://github.com/kaltura/playkit-js/commit/55c5acaa3fb6173d11159b59880ecd0b7c0868e9))
+
 ### 0.84.7 (2024-03-31)
 
 ### 0.84.6 (2024-02-25)

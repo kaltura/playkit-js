@@ -32,7 +32,16 @@ const Category: CategoryType = {
   CAST: 10,
 
   /** Errors from VR plugin. */
-  VR: 11
+  VR: 11,
+
+  /** Media is not ready error. */
+  MEDIA_NOT_READY: 12,
+
+  /** Geolocation restriction error. */
+  GEO_LOCATION: 13,
+
+  /** Media is unavailable error. */
+  MEDIA_UNAVAILABLE: 14
 };
 
 export {Category};
