@@ -289,6 +289,12 @@ class TextStyle {
     return attributes.join('!important; ');
   }
 
+  public webkitTextCSS(): string {
+    const attributes: Array<string> = [];
+    attributes.push('text-align: ' + this.textAlign);
+    attributes.push(`background: linear-gradient(0deg, ${TextStyle.toRGBA(this.backgroundColor, this.fontOpacity)}, ${TextStyle.toRGBA(this.backgroundColor, this.fontOpacity)})`);
+    return attributes.join('!important; ');
+  }
   /**
    * clones the textStyle object
    * @returns {TextStyle} the cloned textStyle object
