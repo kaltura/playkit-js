@@ -101,7 +101,7 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
   public static isMSESupported(): boolean {
     // eslint-disable-next-line  @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const mediaSource = MediaSource || window.WebKitMediaSource;
+    const mediaSource = window.MediaSource || window.WebKitMediaSource;
     // isTypeSupported isn't exist or not a function for old MSE implementation
     return !!mediaSource && typeof mediaSource.isTypeSupported === 'function';
   }
