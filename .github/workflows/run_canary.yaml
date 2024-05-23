@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - master
+      - patch-version
     paths-ignore:
       - '.github/workflows/**'
 
