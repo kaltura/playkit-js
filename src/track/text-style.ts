@@ -284,17 +284,10 @@ class TextStyle {
     attributes.push('font-family: ' + this.fontFamily);
     attributes.push('color: ' + TextStyle.toRGBA(this.fontColor, this.fontOpacity));
     attributes.push('background-color: ' + TextStyle.toRGBA(this.backgroundColor, this.backgroundOpacity));
-    attributes.push('font-size: ' + this.fontSize);
     attributes.push('text-shadow: ' + this.getTextShadow());
     return attributes.join('!important; ');
   }
 
-  public webkitTextCSS(): string {
-    const attributes: Array<string> = [];
-    attributes.push('text-align: ' + this.textAlign);
-    attributes.push(`background: linear-gradient(0deg, ${TextStyle.toRGBA(this.backgroundColor, this.fontOpacity)}, ${TextStyle.toRGBA(this.backgroundColor, this.fontOpacity)})`);
-    return attributes.join('!important; ');
-  }
   /**
    * clones the textStyle object
    * @returns {TextStyle} the cloned textStyle object
