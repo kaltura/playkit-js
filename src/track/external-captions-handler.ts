@@ -32,7 +32,7 @@ const VTT_POSTFIX: string = 'vtt';
 class ExternalCaptionsHandler extends FakeEventTarget {
 
   public static applyNativeTextTrackStyles(sheet: CSSStyleSheet, styles: TextStyle, containerId: string, engineClassName: string): void {
-    sheet.insertRule(`#${containerId} video.${engineClassName}::-webkit-media-text-track-display { ${styles.webkitTextCSS()} }`, 0);
+    sheet.insertRule(`#${containerId} video.${engineClassName}::-webkit-media-text-track-display { text-align: ${styles.textAlign}!important; }`, 0);
     sheet.insertRule(`#${containerId} video.${engineClassName}::cue { ${styles.toCSS()} }`, 0);
   }
 
