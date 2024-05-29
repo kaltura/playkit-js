@@ -1,23 +1,23 @@
 import { FakeEventTarget } from '../../event/fake-event-target';
 import { FakeEvent } from '../../event/fake-event';
 import { EventManager } from '../../event/event-manager';
-import {CustomEventType, Html5EventType} from '../../event/event-type';
+import { CustomEventType, Html5EventType } from '../../event/event-type';
 import MediaSourceProvider from './media-source/media-source-provider';
 import VideoTrack from '../../track/video-track';
 import AudioTrack from '../../track/audio-track';
-import {PKTextTrack, getActiveCues}  from '../../track/text-track';
+import { PKTextTrack, getActiveCues } from '../../track/text-track';
 import ImageTrack from '../../track/image-track';
-import {createTimedMetadata} from '../../track/timed-metadata';
+import { createTimedMetadata } from '../../track/timed-metadata';
 import * as Utils from '../../utils/util';
 import Html5AutoPlayCapability from './capabilities/html5-autoplay';
 import Error from '../../error/error';
 import getLogger from '../../utils/logger';
-import {DroppedFramesWatcher} from '../dropped-frames-watcher';
-import {ThumbnailInfo} from '../../thumbnail/thumbnail-info';
-import {IMediaSourceAdapter} from '../../types';
-import {CapabilityResult, ICapability} from '../../types';
-import {PKABRRestrictionObject, PKDrmConfigObject, PKDrmDataObject, PKMediaSourceObject, PKVideoElementStore} from '../../types';
-import {IEngine} from '../../types';
+import { DroppedFramesWatcher } from '../dropped-frames-watcher';
+import { ThumbnailInfo } from '../../thumbnail/thumbnail-info';
+import { IMediaSourceAdapter } from '../../types';
+import { CapabilityResult, ICapability } from '../../types';
+import { PKABRRestrictionObject, PKDrmConfigObject, PKDrmDataObject, PKMediaSourceObject, PKVideoElementStore } from '../../types';
+import { IEngine } from '../../types';
 import Track from '../../track/track';
 
 const SHORT_BUFFERING_TIMEOUT: number = 200;
@@ -133,7 +133,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @static
    */
   public static runCapabilities(): void {
-    Html5._capabilities.forEach(capability => capability.runCapability());
+    Html5._capabilities.forEach((capability) => capability.runCapability());
   }
 
   /**
@@ -142,13 +142,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @static
    */
-  public static getCapabilities():  Promise<any> {
+  public static getCapabilities(): Promise<any> {
     const promises: CapabilityResult[] = [];
-    Html5._capabilities.forEach(capability => promises.push(capability.getCapability()));
-    return Promise.all(promises).then(arrayOfResults => {
+    Html5._capabilities.forEach((capability) => promises.push(capability.getCapability()));
+    return Promise.all(promises).then((arrayOfResults) => {
       const mergedResults: CapabilityResult = {};
-      arrayOfResults.forEach(res => Object.assign(mergedResults, res));
-      return {[Html5.id]: mergedResults};
+      arrayOfResults.forEach((res) => Object.assign(mergedResults, res));
+      return { [Html5.id]: mergedResults };
     });
   }
 
@@ -159,8 +159,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @static
    */
-  public static setCapabilities(capabilities: {[name: string]: any}): void {
-    Html5._capabilities.forEach(capability => capability.setCapabilities(capabilities));
+  public static setCapabilities(capabilities: { [name: string]: any }): void {
+    Html5._capabilities.forEach((capability) => capability.setCapabilities(capabilities));
   }
 
   /**
@@ -308,7 +308,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   public attach(): void {
-    Object.keys(Html5EventType).forEach(html5Event => {
+    Object.keys(Html5EventType).forEach((html5Event) => {
       if (![Html5EventType.ERROR, Html5EventType.WAITING].includes(Html5EventType[html5Event])) {
         this._eventManager.listen(this._el, Html5EventType[html5Event], () => {
           return this.dispatchEvent(new FakeEvent(Html5EventType[html5Event]));
@@ -320,7 +320,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._handleMetadataTrackEvents();
     this._eventManager.listen(this._el.textTracks, 'addtrack', (event: any) => {
       if (PKTextTrack.isNativeTextTrack(event.track)) {
-        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_ADDED, {track: event.track}));
+        this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_TRACK_ADDED, { track: event.track }));
       }
     });
     const mediaSourceAdapter = this._mediaSourceAdapter;
@@ -354,7 +354,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   public detach(): void {
-    Object.keys(Html5EventType).forEach(html5Event => {
+    Object.keys(Html5EventType).forEach((html5Event) => {
       this._eventManager.unlisten(this._el, Html5EventType[html5Event]);
     });
     if (this._mediaSourceAdapter) {
@@ -517,7 +517,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   public play(): Promise<void> {
     const playPromise = this._el.play();
     if (playPromise) {
-      playPromise.catch(err => this.dispatchEvent(new FakeEvent(CustomEventType.PLAY_FAILED, {error: err})));
+      playPromise.catch((err) => this.dispatchEvent(new FakeEvent(CustomEventType.PLAY_FAILED, { error: err })));
     }
     return playPromise;
   }
@@ -537,13 +537,13 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {Promise<Object>} - The loaded data
    */
-  public load(startTime?: number): Promise<{tracks: Track[]}> {
+  public load(startTime?: number): Promise<{ tracks: Track[] }> {
     this._el.load();
     return this._canLoadMediaSourceAdapterPromise
       .then(() => {
-        return this._mediaSourceAdapter ? this._mediaSourceAdapter.load(startTime) : Promise.resolve({} as {tracks: Track[]});
+        return this._mediaSourceAdapter ? this._mediaSourceAdapter.load(startTime) : Promise.resolve({} as { tracks: Track[] });
       })
-      .catch(error => {
+      .catch((error) => {
         this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, error));
         return Promise.reject(error);
       });
@@ -560,13 +560,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       // we can use this flag to distinguish between the two. In the future we might need a different method.
       // Second condition is because flow does not support this API yet
       if (document.pictureInPictureEnabled && typeof this._el.requestPictureInPicture === 'function') {
-        this._el.requestPictureInPicture().catch(error => {
-          this.dispatchEvent(
-            new FakeEvent(
-              Html5EventType.ERROR,
-              new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.ENTER_PICTURE_IN_PICTURE_FAILED, error)
-            )
-          );
+        this._el.requestPictureInPicture().catch((error) => {
+          this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.ENTER_PICTURE_IN_PICTURE_FAILED, error)));
         });
         // @ts-expect-error -  Property 'webkitSetPresentationMode' does not exist on type 'HTMLVideoElement'
       } else if (typeof this._el.webkitSetPresentationMode === 'function') {
@@ -576,12 +571,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         setTimeout(() => this.dispatchEvent(new FakeEvent(Html5EventType.ENTER_PICTURE_IN_PICTURE)), 0);
       }
     } catch (error) {
-      this.dispatchEvent(
-        new FakeEvent(
-          Html5EventType.ERROR,
-          new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.ENTER_PICTURE_IN_PICTURE_FAILED, error)
-        )
-      );
+      this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.ENTER_PICTURE_IN_PICTURE_FAILED, error)));
     }
   }
 
@@ -596,25 +586,15 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       // we can use this flag to distinguish between the two. In the future we might need a different method.
       // Second condition is because flow does not support this API yet
       if (document.pictureInPictureEnabled && typeof document.exitPictureInPicture === 'function' && this._el === document.pictureInPictureElement) {
-        document.exitPictureInPicture().catch(error => {
-          this.dispatchEvent(
-            new FakeEvent(
-              Html5EventType.ERROR,
-              new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.EXIT_PICTURE_IN_PICTURE_FAILED, error)
-            )
-          );
+        document.exitPictureInPicture().catch((error) => {
+          this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.EXIT_PICTURE_IN_PICTURE_FAILED, error)));
         });
       } else if (typeof this._el['webkitSetPresentationMode'] === 'function') {
         //@ts-expect-error - Property 'webkitSetPresentationMode' does not exist on type 'HTMLVideoElement'.
         this._el.webkitSetPresentationMode('inline');
       }
     } catch (error) {
-      this.dispatchEvent(
-        new FakeEvent(
-          Html5EventType.ERROR,
-          new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.EXIT_PICTURE_IN_PICTURE_FAILED, error)
-        )
-      );
+      this.dispatchEvent(new FakeEvent(Html5EventType.ERROR, new Error(Error.Severity.RECOVERABLE, Error.Category.PLAYER, Error.Code.EXIT_PICTURE_IN_PICTURE_FAILED, error)));
     }
   }
 
@@ -823,7 +803,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @public
    * @returns {void}
    */
-  public set preload(preload:  'none' | 'metadata' | 'auto' | '') {
+  public set preload(preload: 'none' | 'metadata' | 'auto' | '') {
     this._el.preload = preload;
   }
 
@@ -832,7 +812,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {string} - The preload value.
    * @public
    */
-  public get preload():  'none' | 'metadata' | 'auto' | '' {
+  public get preload(): 'none' | 'metadata' | 'auto' | '' {
     return this._el.preload;
   }
 
@@ -1081,6 +1061,11 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     this._mediaSourceAdapter = MediaSourceProvider.getMediaSourceAdapter(this.getVideoElement(), source, this._config);
     if (this._mediaSourceAdapter) {
       this._droppedFramesWatcher = new DroppedFramesWatcher(this._mediaSourceAdapter, this._config.abr, this._el);
+
+      if (this._cachedUrls.length) {
+        this._mediaSourceAdapter.setCachedUrls(this._cachedUrls);
+        this._cachedUrls = [];
+      }
     }
   }
 
@@ -1090,7 +1075,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @private
    */
   private _addCueChangeListener(): void {
-    const textTrackEl = Array.from(this._el.textTracks).find(track => PKTextTrack.isNativeTextTrack(track) && track.mode !== PKTextTrack.MODE.DISABLED);
+    const textTrackEl = Array.from(this._el.textTracks).find((track) => PKTextTrack.isNativeTextTrack(track) && track.mode !== PKTextTrack.MODE.DISABLED);
     if (textTrackEl) {
       this._eventManager.listen(textTrackEl, 'cuechange', (e: FakeEvent) => this._onCueChange(e));
     }
@@ -1103,8 +1088,8 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    */
   private _removeCueChangeListeners(): void {
     Array.from(this._el.textTracks)
-      .filter(track => !PKTextTrack.isMetaDataTrack(track))
-      .forEach(track => {
+      .filter((track) => !PKTextTrack.isMetaDataTrack(track))
+      .forEach((track) => {
         this._eventManager.unlisten(track, 'cuechange');
       });
   }
@@ -1118,7 +1103,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   private _onCueChange(e: FakeEvent): void {
     const activeCues: TextTrackCueList = e.currentTarget.activeCues;
     const normalizedActiveCues = getActiveCues(activeCues);
-    this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, {cues: normalizedActiveCues}));
+    this.dispatchEvent(new FakeEvent(CustomEventType.TEXT_CUE_CHANGED, { cues: normalizedActiveCues }));
   }
 
   /**
@@ -1126,9 +1111,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
    * @returns {void}
    */
   public resetAllCues(): void {
-    const activeTextTrack = Array.from(this._el.textTracks).find(
-      track => PKTextTrack.isNativeTextTrack(track) && track.mode !== PKTextTrack.MODE.DISABLED
-    );
+    const activeTextTrack = Array.from(this._el.textTracks).find((track) => PKTextTrack.isNativeTextTrack(track) && track.mode !== PKTextTrack.MODE.DISABLED);
     if (activeTextTrack) {
       for (let i = 0; i < activeTextTrack.cues!.length; i++) {
         // @ts-expect-error - Property 'hasBeenReset' does not exist on type 'TextTrackCue'
@@ -1210,10 +1193,10 @@ export default class Html5 extends FakeEventTarget implements IEngine {
         activeCues = activeCues.sort((a: VTTCue, b: VTTCue) => {
           return a.startTime - b.startTime;
         });
-        this.dispatchEvent(new FakeEvent(CustomEventType.TIMED_METADATA, {cues: activeCues}));
+        this.dispatchEvent(new FakeEvent(CustomEventType.TIMED_METADATA, { cues: activeCues }));
         this.dispatchEvent(
           new FakeEvent(CustomEventType.TIMED_METADATA_CHANGE, {
-            cues: activeCues.map(cue => createTimedMetadata(cue))
+            cues: activeCues.map((cue) => createTimedMetadata(cue))
           })
         );
       });
@@ -1276,5 +1259,17 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   public getDrmInfo(): PKDrmDataObject | null {
     return this._mediaSourceAdapter ? this._mediaSourceAdapter.getDrmInfo() : null;
+  }
+
+  private _cachedUrls: string[] = [];
+
+  // TODO add to readme
+  public setCachedUrls(cachedUrls: string[]) {
+    this._cachedUrls = cachedUrls;
+
+    if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.setCachedUrls(cachedUrls);
+      this._cachedUrls = [];
+    }
   }
 }

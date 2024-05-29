@@ -49,4 +49,5 @@ export interface IMediaSourceAdapter extends FakeEventTarget {
   getDrmInfo(): PKDrmDataObject | null;
   applyABRRestriction(restriction: PKABRRestrictionObject): void;
   applyTextTrackStyles(sheet: CSSStyleSheet, styles: TextStyle, containerId: string, engineClassName?: string): void;
+  setCachedUrls(cachedUrls: string[]);
 }
