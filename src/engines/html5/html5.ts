@@ -59,6 +59,9 @@ export default class Html5 extends FakeEventTarget implements IEngine {
   private _canLoadMediaSourceAdapterPromise: Promise<void>;
   private _droppedFramesWatcher: DroppedFramesWatcher | undefined;
   private _reset: boolean = false;
+
+  private _cachedUrls: string[] = [];
+
   /**
    * The html5 class logger.
    * @type {any}
@@ -1261,9 +1264,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
     return this._mediaSourceAdapter ? this._mediaSourceAdapter.getDrmInfo() : null;
   }
 
-  private _cachedUrls: string[] = [];
-
-  public setCachedUrls(cachedUrls: string[]) {
+  public setCachedUrls(cachedUrls: string[]): void {
     this._cachedUrls = cachedUrls;
 
     if (this._mediaSourceAdapter) {

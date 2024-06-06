@@ -421,6 +421,8 @@ export default class Player extends FakeEventTarget {
    */
   private _engineDecoratorManager!: EngineDecoratorManager;
 
+  private _cachedUrls: string[] = [];
+
   /**
    * @param {Object} config - The configuration for the player instance.
    * @constructor
@@ -2858,9 +2860,7 @@ export default class Player extends FakeEventTarget {
     return PKError;
   }
 
-  private _cachedUrls: string[] = [];
-
-  public setCachedUrls(cachedUrls: string[]) {
+  public setCachedUrls(cachedUrls: string[]): void {
     this._cachedUrls = cachedUrls;
 
     if (this._engine) {
