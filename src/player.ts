@@ -70,11 +70,11 @@ const BLACK_COVER_CLASS_NAME: string = 'playkit-black-cover';
 const CONTAINER_CLASS_NAME: string = 'playkit-container';
 
 /**
- /**
- * The player poster class name.
- * @type {string}
- * @const
- */
+/**
+* The player poster class name.
+* @type {string}
+* @const
+*/
 const POSTER_CLASS_NAME: string = 'playkit-poster';
 
 /**
@@ -1255,16 +1255,16 @@ export default class Player extends FakeEventTarget {
    */
   public getTracks<T extends Track | AudioTrack | PKTextTrack | VideoTrack | ImageTrack>(type?: TrackTypes): T[] {
     switch (type) {
-      case TrackType.VIDEO:
-        return Utils.Object.copyDeep(this._getVideoTracks());
-      case TrackType.AUDIO:
-        return Utils.Object.copyDeep(this._getAudioTracks());
-      case TrackType.TEXT:
-        return Utils.Object.copyDeep(this._getTextTracks());
-      case TrackType.IMAGE:
-        return Utils.Object.copyDeep(this._getImageTracks());
-      default:
-        return Utils.Object.copyDeep(this._tracks);
+    case TrackType.VIDEO:
+      return Utils.Object.copyDeep(this._getVideoTracks());
+    case TrackType.AUDIO:
+      return Utils.Object.copyDeep(this._getAudioTracks());
+    case TrackType.TEXT:
+      return Utils.Object.copyDeep(this._getTextTracks());
+    case TrackType.IMAGE:
+      return Utils.Object.copyDeep(this._getImageTracks());
+    default:
+      return Utils.Object.copyDeep(this._tracks);
     }
   }
 
@@ -2154,11 +2154,11 @@ export default class Player extends FakeEventTarget {
   }
 
   /**
-   }
-   * Checks auto play configuration and handles initialization accordingly.
-   * @returns {void}
-   * @private
-   */
+        }
+        * Checks auto play configuration and handles initialization accordingly.
+        * @returns {void}
+        * @private
+        */
   private _handleAutoPlay(): void {
     if (this.isAudio() || this._config.playback.autoplay !== AutoPlayType.TRUE) {
       this._posterManager.show();
@@ -2703,15 +2703,15 @@ export default class Player extends FakeEventTarget {
           return;
         }
         switch (callbackType) {
-          case LabelOptions.QUALITIES:
-            this._setTracksCustomLabels(this._getVideoTracks(), customLabels[callbackType]);
-            break;
-          case LabelOptions.AUDIO:
-            this._setTracksCustomLabels(this._getAudioTracks(), customLabels[callbackType]);
-            break;
-          case LabelOptions.CAPTIONS:
-            this._setTracksCustomLabels(this._getTextTracks(), customLabels[callbackType]);
-            break;
+        case LabelOptions.QUALITIES:
+          this._setTracksCustomLabels(this._getVideoTracks(), customLabels[callbackType]);
+          break;
+        case LabelOptions.AUDIO:
+          this._setTracksCustomLabels(this._getAudioTracks(), customLabels[callbackType]);
+          break;
+        case LabelOptions.CAPTIONS:
+          this._setTracksCustomLabels(this._getTextTracks(), customLabels[callbackType]);
+          break;
         }
       }
     }
