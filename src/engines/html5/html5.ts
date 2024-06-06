@@ -1263,7 +1263,6 @@ export default class Html5 extends FakeEventTarget implements IEngine {
 
   private _cachedUrls: string[] = [];
 
-  // TODO add to readme
   public setCachedUrls(cachedUrls: string[]) {
     this._cachedUrls = cachedUrls;
 

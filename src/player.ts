@@ -2860,7 +2860,6 @@ export default class Player extends FakeEventTarget {
 
   private _cachedUrls: string[] = [];
 
-  // TODO add to readme
   public setCachedUrls(cachedUrls: string[]) {
     this._cachedUrls = cachedUrls;
 

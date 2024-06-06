@@ -345,6 +345,5 @@ export default class BaseMediaSourceAdapter extends FakeEventTarget implements I
     return null;
   }
 
-  // // TODO add to readme
   public setCachedUrls(cachedUrls: string[]) {}
 }
