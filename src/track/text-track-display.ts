@@ -635,13 +635,14 @@ class CueStyleBox extends StyleBox {
       styles.unicodeBidi = 'plaintext';
     }
     this.applyStyles(styles, this.cueDiv);
+    const useDefaultAlignment = styleOptions.textAlign === 'default';
 
     // Create an absolutely positioned div that will be used to position the cue
     // div. Note, all WebVTT cue-setting alignments are equivalent to the CSS
     // mirrors of them except "middle" which is "center" in CSS.
     this.div = window.document.createElement('div');
     let textAlign = cue.align === 'middle' ? 'center' : cue.align;
-    if (styleOptions.textAlign !== 'default') {
+    if (!useDefaultAlignment) {
       textAlign = styleOptions.textAlign;
     }
     styles = {
@@ -664,20 +665,22 @@ class CueStyleBox extends StyleBox {
     // position of the cue box. The reference edge will be resolved later when
     // the box orientation styles are applied.
     let textPos = 0;
-    switch (styleOptions.textAlign) {
-      case 'start':
-      case 'left':
-      case 'line-left':
-        textPos = cue.position;
-        break;
-      case 'center':
-        textPos = cue.position - cue.size / 2;
-        break;
-      case 'end':
-      case 'right':
-      case 'line-right':
-        textPos = cue.position - cue.size;
-        break;
+    if (useDefaultAlignment) {
+      switch (styleOptions.textAlign) {
+        case 'start':
+        case 'left':
+        case 'line-left':
+          textPos = cue.position;
+          break;
+        case 'center':
+          textPos = cue.position - cue.size / 2;
+          break;
+        case 'end':
+        case 'right':
+        case 'line-right':
+          textPos = cue.position - cue.size;
+          break;
+      }
     }
 
     // Horizontal box orientation; textPos is the distance from the left edge of the
