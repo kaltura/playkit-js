@@ -260,6 +260,7 @@ export default class Html5 extends FakeEventTarget implements IEngine {
       this._droppedFramesWatcher = undefined;
     }
     if (this._mediaSourceAdapter) {
+      this._mediaSourceAdapter.setCachedUrls([]);
       this._mediaSourceAdapter.destroy();
       this._mediaSourceAdapter = null;
     }
